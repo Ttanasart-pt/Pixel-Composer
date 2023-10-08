@@ -56,8 +56,10 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	static update = function(frame = PROJECT.animator.current_frame) { 
 		var mode = getInputData(0);
-		var a = getInputData(1);
-		var b = getInputData(2);
+		var a    = getInputData(1);
+		var b    = getInputData(2);
+		
+		//print($"compare node | Comparing {mode}: {a}, {b}.");
 		
 		var as = is_array(a);
 		var bs = is_array(b);

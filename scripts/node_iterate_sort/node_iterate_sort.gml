@@ -13,16 +13,16 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	
 	topoList = ds_list_create();
 	
-	custom_input_index = ds_list_size(inputs);
+	custom_input_index  = ds_list_size(inputs);
 	custom_output_index = ds_list_size(inputs);
-	loop_start_time = 0;
-	ALWAYS_FULL = true;
+	loop_start_time     = 0;
+	ALWAYS_FULL         = true;
 	
-	inputNodes = [];
+	inputNodes = [ noone, noone ];
 	outputNode = noone;
 	nodeValid  = false;
 	
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(!LOADING && !APPENDING && !CLONING) { #region
 		var input0 = nodeBuild("Node_Iterator_Sort_Input", -256, -64, self);
 		input0.display_name = "Value 1";
 		
@@ -30,30 +30,68 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		input1.display_name = "Value 2";
 		
 		var output = nodeBuild("Node_Iterator_Sort_Output", 256, -32, self);
-	}
+	} #endregion
 	
-	static getNextNodes = function() {
-		return __nodeLeafList(getNodeList());
-	}
+	static getNextNodes = function() { return getNextNodesExternal(); }
 	
-	static onStep = function() {
+	static onStep = function() { #region
 		var type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
 		inputs[| 0].setType(type);
-	}
+	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
-		if(frame == 0) NodeListSort(topoList, nodes);
+	static update = function(frame = PROJECT.animator.current_frame) { #region
+		if(frame == 0) {
+			NodeListSort(topoList, nodes);
+			
+			inputNodes     = [ noone, noone ];
+			outputNode     = noone;
+			var inputReady = 0;
 		
-		initLoop();
-	}
+			for( var i = 0; i < ds_list_size(nodes); i++ ) {
+				if(nodes[| i].display_name == "Value 1") {
+					inputNodes[0] = nodes[| i].inputs[| 0];
+					inputNodes[0].setType(inputs[| 0].type);
+					inputReady++;
+				} else if(nodes[| i].display_name == "Value 2") {
+					inputNodes[1] = nodes[| i].inputs[| 0];
+					inputNodes[1].setType(inputs[| 0].type);
+					inputReady++;
+				} else if(nodes[| i].name == "Swap result") {
+					outputNode = nodes[| i].inputs[| 0];
+					inputReady++;
+				}
+			}
+		
+			nodeValid = inputReady == 3;
+			if(!nodeValid) {
+				noti_warning("Sort: Missing inputs or output, need 2 inputs and 1 output for comparison.");
+				return;
+			}
+		}
+		
+		if(nodeValid) sortArray();
+	} #endregion
 	
-	static swap = function(arr, a, b) {
+	static swap = function(arr, a, b) { #region
 		var temp = arr[a];
 		arr[@ a] = arr[b];
 		arr[@ b] = temp;
-	}
+	} #endregion
 	
-	static partition = function(arr, low, high) { 
+	static compareValue = function(val1, val2) { #region
+		if(!nodeValid) return 0;
+		inputNodes[0].setValue(val1,,, false);
+		inputNodes[1].setValue(val2,,, false);
+		
+		resetRender(true);
+		RenderList(topoList, false);
+		
+		var res = outputNode.getValue();
+		LOG_IF(global.FLAG.render == 1, $"Iterating | Comparing {val1}, {val2} = {res}");
+		return res;
+	} #endregion
+	
+	static partition = function(arr, low, high) { #region
 		var pv = arr[high]; 
 		var i  = low - 1;
 		
@@ -66,62 +104,25 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		
 		swap(arr, i + 1, high);
 		return i + 1;
-	}
+	} #endregion
 	
-	static quickSort = function(arr, low, high) { 
-		if(!nodeValid)  return;
+	static quickSort = function(arr, low, high) { #region
 		if(low >= high) return;
 		
 		var p = partition(arr, low, high);
 		
 		quickSort(arr, low, p - 1);
 		quickSort(arr, p + 1, high);
-	}
+	} #endregion
 	
-	static compareValue = function(val1, val2) { 
-		if(!nodeValid) return 0;
-		inputNodes[0].setValue(val1);
-		inputNodes[1].setValue(val2);
-		
-		RenderList(topoList);
-		var res = outputNode.getValue();
-		//print("Comparing " + string(val1) + ", " + string(val2) + ": " + string(res));
-		return res;
-	}
-	
-	static initLoop = function() {
+	static sortArray = function() { #region
 		if(inputs[| 0].value_from) {
 			inputs[| 0].setType(inputs[| 0].value_from.type);
 			outputs[| 0].setType(inputs[| 0].value_from.type);
 		}
 		
-		resetRender();
 		iterated = 0;
 		loop_start_time = get_timer();
-		
-		inputNodes = [ 0, 0 ];
-		outputNode = noone;
-		var inputReady = 0;
-		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			if(nodes[| i].display_name == "Value 1") {
-				inputNodes[0] = nodes[| i].inputs[| 0];
-				inputNodes[0].setType(inputs[| 0].type);
-				inputReady++;
-			} else if(nodes[| i].display_name == "Value 2") {
-				inputNodes[1] = nodes[| i].inputs[| 0];
-				inputNodes[1].setType(inputs[| 0].type);
-				inputReady++;
-			} else if(nodes[| i].name == "Swap result") {
-				outputNode = nodes[| i].inputs[| 0];
-				inputReady++;
-			}
-		}
-		
-		nodeValid = inputReady == 3;
-		if(!nodeValid) {
-			noti_warning("Sort: Missing inputs or output, need 2 inputs and 1 output for comparison.");
-			return;
-		}
 		
 		var arrIn  = getInputData(0);
 		var arrOut = outputs[| 0].getValue();
@@ -134,7 +135,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		
 		quickSort(arrOut, 0, array_length(arrOut) - 1);
 		outputs[| 0].setValue(arrOut);
-	}
+	} #endregion
 	
 	PATCH_STATIC
 }

@@ -80,7 +80,6 @@ function ResetAllNodesRender() { #region
 } #endregion
 
 function NodeTopoSort() { #region
-	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort +++++++");
 	var _key = ds_map_find_first(PROJECT.nodeMap);
 	var amo = ds_map_size(PROJECT.nodeMap);
 		
@@ -93,7 +92,7 @@ function NodeTopoSort() { #region
 	ds_list_clear(PROJECT.nodeTopo);
 	__sortGraph(PROJECT.nodeTopo, PROJECT.nodes);
 	
-	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed {ds_list_size(PROJECT.nodeTopo)} nodes sorted +++++++");
+	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {ds_list_size(PROJECT.nodeTopo)} nodes sorted +++++++");
 } #endregion
 
 function __sortGraph(_list, _nodeList) { #region
@@ -272,7 +271,7 @@ function __renderListReset(list) { #region
 	}
 } #endregion
 
-function RenderList(list) { #region
+function RenderList(list, skipInLoop = true) { #region
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render == 1, "=============== RENDER LIST START ===============");
 	var queue = ds_queue_create();
@@ -306,7 +305,7 @@ function RenderList(list) { #region
 			if(!_node.isRenderActive())        { LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive {_node.internalName}"); continue; }
 			if(!_node.attributes.update_graph) { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  {_node.internalName}"); continue; }
 			
-			if(__nodeInLoop(_node))            { LOG_IF(global.FLAG.render == 1, $"Skip in-loop          {_node.internalName}"); continue; }
+			if(skipInLoop && __nodeInLoop(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip in-loop          {_node.internalName}"); continue; }
 			
 			if(_node.passiveDynamic)		   { 
 				_node.forwardPassiveDynamic();
@@ -344,9 +343,6 @@ function RenderList(list) { #region
 				var nextNodes = rendering.getNextNodes();
 				for( var i = 0, n = array_length(nextNodes); i < n; i++ )
 					ds_queue_enqueue(queue, nextNodes[i]);
-				
-				if(runAction && rendering.hasInspector1Update())
-					rendering.inspector1Update();
 			} 
 			
 			LOG_BLOCK_END();

@@ -549,7 +549,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	} #endregion
 	
-	static resetRender = function() { setRenderStatus(false); }
+	static resetRender = function(_clearCache = false) {  #region
+		setRenderStatus(false); 
+		if(_clearCache) clearInputCache();
+	} #endregion
+	
 	static isRenderActive = function() { return renderActive || (PREF_MAP[? "render_all_export"] && PROJECT.animator.rendering); }
 	
 	static isRenderable = function(log = false) { #region //Check if every input is ready (updated)
@@ -621,6 +625,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static setRenderStatus = function(result) { #region
 		gml_pragma("forceinline");
+		if(rendered == result) return;
 		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
 		
 		rendered = result;
@@ -917,6 +922,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static getGraphPreviewSurface = function() { #region
 		var _node = outputs[| preview_channel];
+		if(!is_instanceof(_node, NodeValue)) return noone;
+		
 		switch(_node.type) {
 			case VALUE_TYPE.surface :
 			case VALUE_TYPE.dynaSurface :

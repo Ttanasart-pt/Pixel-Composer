@@ -234,6 +234,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static setRenderStatus = function(result) { #region
 		LOG_BLOCK_START();
+		if(rendered == result) return;
+		
 		LOG_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
 		rendered = result;
 		
@@ -247,8 +249,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			break;
 		}
 		
-		if(rendered)
-			exitGroup();
+		if(rendered) exitGroup();
 		
 		if(!result && group != noone) 
 			group.setRenderStatus(result);
@@ -485,18 +486,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			node_list[| i].disable();
 	} #endregion
 	
-	static resetRender = function() { #region
-		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"Reset Render for {INAME}");
-		
-		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			LOG_IF(global.FLAG.render == 1, $"Reseting {nodes[| i].internalName}");
-			nodes[| i].resetRender();
-		}
+	static resetRender = function(_clearCache = false) { #region
+		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for {INAME}");
 		
 		setRenderStatus(false);
+		if(_clearCache) clearInputCache();
 		
-		LOG_BLOCK_END();
+		for( var i = 0; i < ds_list_size(nodes); i++ )
+			nodes[| i].resetRender(_clearCache);
 	} #endregion
 	
 	static setInstance = function(node) { #region

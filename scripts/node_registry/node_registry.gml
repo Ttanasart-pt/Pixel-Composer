@@ -46,7 +46,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		if(!_node) return noone;
 		
 		_node.clearInputCache();
-		_node.doUpdate();
+		if(!LOADING && !APPENDING) _node.doUpdate();
 		return _node;
 	}
 } #endregion
@@ -429,13 +429,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(generator, "4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points],, "Create image from 4 color points.");
 			
 			ds_list_add(generator, "Drawer");
-			addNodeObject(generator, "Line",			s_node_line,			"Node_Line",			[1, Node_Line],, "Draw line on an image. Connect path data to it to draw line from path.");
-			addNodeObject(generator, "Draw Text",		s_node_text_render,		"Node_Text",			[1, Node_Text],, "Draw text on an image.");
-			addNodeObject(generator, "Shape",			s_node_shape,			"Node_Shape",			[1, Node_Shape],, "Draw simple shapes using signed distance field.");
-			addNodeObject(generator, "Polygon Shape",	s_node_shape_polygon,	"Node_Shape_Polygon",	[1, Node_Shape_Polygon],, "Draw simple shapes using triangles.").setVersion(1130);
-			addNodeObject(generator, "Interpret Number",s_node_interpret_number,"Node_Interpret_Number",[1, Node_Interpret_Number]).setVersion(11530);
-			addNodeObject(generator, "Random Shape",	s_node_random_shape,	"Node_Random_Shape",	[1, Node_Random_Shape]).setVersion(1147);
-			addNodeObject(generator, "Pixel Builder",	s_node_pixel_builder,	"Node_Pixel_Builder",	[1, Node_Pixel_Builder]).setVersion(11540);
+			addNodeObject(generator, "Line",				s_node_line,				"Node_Line",				[1, Node_Line],, "Draw line on an image. Connect path data to it to draw line from path.");
+			addNodeObject(generator, "Draw Text",			s_node_text_render,			"Node_Text",				[1, Node_Text],, "Draw text on an image.");
+			addNodeObject(generator, "Shape",				s_node_shape,				"Node_Shape",				[1, Node_Shape],, "Draw simple shapes using signed distance field.");
+			addNodeObject(generator, "Polygon Shape",		s_node_shape_polygon,		"Node_Shape_Polygon",		[1, Node_Shape_Polygon],, "Draw simple shapes using triangles.").setVersion(1130);
+			addNodeObject(generator, "Interpret Number",	s_node_interpret_number,	"Node_Interpret_Number",	[1, Node_Interpret_Number]).setVersion(11530);
+			addNodeObject(generator, "Random Shape",		s_node_random_shape,		"Node_Random_Shape",		[1, Node_Random_Shape]).setVersion(1147);
+			addNodeObject(generator, "Pixel Builder",		s_node_pixel_builder,		"Node_Pixel_Builder",		[1, Node_Pixel_Builder]).setVersion(11540);
 			
 			ds_list_add(generator, "Noises");
 			addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise],, "Generate white noise.");
@@ -469,8 +469,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill],, "Fill connected pixel with the same color.").setVersion(1147);		
 			
 			ds_list_add(generator, "Others");
-			addNodeObject(generator, "Flood Fill",		s_node_flood_fill,		"Node_Flood_Fill",		[1, Node_Flood_Fill],, "Filled connected pixel given position and color.").setVersion(1133);
-			addNodeObject(generator, "Bar / Graph",		s_node_bar_graph,		"Node_Plot_Linear",		[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
+			addNodeObject(generator, "Flood Fill",			s_node_flood_fill,			"Node_Flood_Fill",			[1, Node_Flood_Fill],, "Filled connected pixel given position and color.").setVersion(1133);
+			addNodeObject(generator, "Bar / Graph",			s_node_bar_graph,			"Node_Plot_Linear",			[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
 		#endregion
 		
 		var compose = ds_list_create(); #region

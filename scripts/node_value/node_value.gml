@@ -1638,9 +1638,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(tags != VALUE_TAG.none) return true;
 		
-		node.triggerRender();
-		if(_update) node.valueUpdate(self.index);
-		node.clearCacheForward();
+		if(_update) {
+			node.triggerRender();
+			node.valueUpdate(self.index);
+			node.clearCacheForward();
+		}
 				
 		if(fullUpdate)	RENDER_ALL
 					
