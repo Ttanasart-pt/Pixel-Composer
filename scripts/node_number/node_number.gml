@@ -3,9 +3,10 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	color = COLORS.node_blend_number;
 	previewable   = false;
 	
-	w = 96;
-	min_h = 32 + 24 * 1;
-	draw_padding = 4;
+	w				= 96;
+	min_h			= 32 + 24 * 1;
+	draw_padding	= 4;
+	display_output	= 0;
 	
 	wd_slider = new slider(0, 1, 0.01, function(val) { inputs[| 0].setValue(val); } );
 	wd_slider.spr   = THEME.node_slider;
@@ -30,15 +31,15 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	outputs[| 0] = nodeValue("Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var __ax = inputs[| 0].getValueCached();
+		var __ax = getInputData(0);
 		if(is_array(__ax)) return;
 		
 		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static step = function() {
-		var int  = inputs[| 1].getValueCached();
-		var disp = inputs[| 2].getValueCached();
+		var int  = getInputData(1);
+		var disp = getInputData(2);
 		
 		w	  = 96;	
 		min_h = 56; 
@@ -83,9 +84,9 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var val  = display_output;
-		var disp = inputs[| 2].getValueCached();
-		var rang = inputs[| 3].getValueCached();
-		var stp  = inputs[| 4].getValueCached();
+		var disp = getInputData(2);
+		var rang = getInputData(3);
+		var stp  = getInputData(4);
 		
 		if(inputs[| 0].value_from != noone || disp == 0) {
 			draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
@@ -179,8 +180,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	wd_pan_my	= 0;
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var __ax = inputs[| 0].getValueCached();
-		var __ay = inputs[| 1].getValueCached();
+		var __ax = getInputData(0);
+		var __ay = getInputData(1);
 		
 		if(is_array(__ax) || is_array(__ay)) return;
 						
@@ -228,8 +229,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static step = function() {
-		var int  = inputs[| 2].getValueCached();
-		var disp = inputs[| 3].getValueCached();
+		var int  = getInputData(2);
+		var disp = getInputData(3);
 		
 		for( var i = 0; i < 2; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
@@ -257,7 +258,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var disp = inputs[| 3].getValueCached();
+		var disp = getInputData(3);
 		var vec  = getSingleValue(0,, true);
 		var bbox = drawGetBbox(xx, yy, _s);
 		
@@ -412,7 +413,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static step = function() {
-		var int = inputs[| 3].getValueCached();
+		var int = getInputData(3);
 		for( var i = 0; i < 3; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
@@ -467,7 +468,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	static step = function() {
-		var int = inputs[| 4].getValueCached();
+		var int = getInputData(4);
 		for( var i = 0; i < 4; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
@@ -532,7 +533,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		for( var i = 0; i < 4; i++ )
-			if(outputs[| i].visible) str += $"{outputs[| i].getValueCached()}\n";
+			if(outputs[| i].visible) str += $"{outputs[| i].getValue()}\n";
 		
 		str = string_trim(str);
 		var bbox = drawGetBbox(xx, yy, _s);

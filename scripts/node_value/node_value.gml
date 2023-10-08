@@ -1304,10 +1304,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static resetCache = function() { cache_value[0] = false; }
 	
-	static getValueCached = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0) { #region
-		return getValue(_time, applyUnit, arrIndex, true);
-	} #endregion
-	
 	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;

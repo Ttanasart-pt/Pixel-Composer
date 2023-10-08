@@ -73,7 +73,7 @@
 	function __txt_node_name(node, def = "") {
 		gml_pragma("forceinline");
 		
-		if(TESTING) return def;
+		//if(TESTING) return def;
 		
 		if(!struct_has(LOCALE.node, node)) 
 			return def;
@@ -85,7 +85,7 @@
 	function __txt_node_tooltip(node, def = "") {
 		gml_pragma("forceinline");
 		
-		if(TESTING) return def;
+		//if(TESTING) return def;
 		
 		if(!struct_has(LOCALE.node, node))
 			return def;
@@ -97,7 +97,7 @@
 	function __txt_junction_name(node, type, index, def = "") {
 		gml_pragma("forceinline");
 		
-		if(TESTING) return def;
+		//if(TESTING) return def;
 		
 		if(!struct_has(LOCALE.node, node))
 			return def;
@@ -113,7 +113,7 @@
 	function __txt_junction_tooltip(node, type, index, def = "") {
 		gml_pragma("forceinline");
 		
-		if(TESTING) return def;
+		//if(TESTING) return def;
 		
 		if(!struct_has(LOCALE.node, node))
 			return def;

@@ -436,7 +436,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 		if(!_render) return;
 		
-		triggerRender();
 		render(_time);
 	} #endregion
 	

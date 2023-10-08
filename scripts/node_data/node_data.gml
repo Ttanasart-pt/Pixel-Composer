@@ -334,7 +334,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static isActiveDynamic = function() { #region
-		//if(passiveDynamic)  return false;
 		if(update_on_frame) return true;
 		
 		for(var i = 0; i < ds_list_size(inputs); i++)

@@ -45,7 +45,6 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 		if(!_node) return noone;
 		
-		_node.clearInputCache();
 		if(!LOADING && !APPENDING) _node.doUpdate();
 		return _node;
 	}

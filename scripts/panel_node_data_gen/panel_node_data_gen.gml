@@ -1,12 +1,5 @@
-var _filter = ["x", "y", "updated", "rendered", "show_output_name", "insp2UpdateIcon", "preview_trans", "value_validation", "group", "draw_padding", "draw_droppable",
-	"preview_drop_y", "badgeInspect", "preview_mx", "temp_surface", "load_scale", "node_id", "show_input_name", "graph_h", "drawLineIndex", "draw_line_shift_x", 
-	"draw_line_shift_y", "cache_array", "drag_mx", "drag_my", "expTree", "value_to", "draw_line_thick", "expUse", "expression", "drag_sx", "drag_sy", "drag_type", "con_node",
-	"cache_value", "show_graph", "preview_x", "preview_y", "badgePreview", "data_list", "open_rx", "open_ry", "parent", "active", "cached_output", "current_data", "cache_result",
-	"draw_graph_culled", "dopesheet_y", "render_time", "renderActive", "preview_speed", "preview_drop_x", "preview_drop_y", "inspecting", "value_to_arr", "draw_name", "anim_priority",
-	"draw_line_vb", "error_notification", "animators", "junction_drawing", "draw_line_shift_hover", "value_from", "is_anim", "popup_dialog", "draw_line_blend", "is_changed", 
-	"on_end", "editWidget", "key_inter", "dyna_depo", "def_length", "con_index", "bg_sel_spr", "load_map", "preview_alpha", "icon", "junction_draw_pad_y", "previewable", "active_range", 
-	"inputMap", "tools", "preview_amount", "anim_show", "active_draw_index", "onSetDisplayName", "previewing", "on_drop_file", "autoUpdatedTrigger", "attributeEditors", "error_noti_update",
-	"bg_spr", "insp1UpdateIcon", "outputMap", "preview_surface", "manual_updated", "preview_my", "tool_settings", "isTool" ];
+var _filter = [ "name", "tooltip", "type", "input_display_list", "output_display_list", "inspector_display_list", ];
+
 global.node_data_filter = ds_map_create();
 for( var i = 0, n = array_length(_filter); i < n; i++ ) 
 	global.node_data_filter[? _filter[i]] = 1;
@@ -16,14 +9,13 @@ function __node_data_clone(struct) {
 	var _str = {};
 	
 	for( var i = 0, n = array_length(_var); i < n; i++ ) {
-		if(ds_map_exists(global.node_data_filter, _var[i])) continue;
+		if(!ds_map_exists(global.node_data_filter, _var[i])) continue;
 		
 		var val = struct[$ _var[i]];
 		if(is_struct(val)) continue;
 		if(is_array(val)) {
 			for( var j = 0; j < array_length(val); j++ ) {
-				if(is_struct(val[j]))
-					val[j] = __node_data_clone(val[j]);
+				if(is_struct(val[j])) val[j] = __node_data_clone(val[j]);
 			}
 		}
 		
@@ -54,9 +46,13 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 	game_set_speed(99999, gamespeed_fps);
 	
 	function drawContent(panel) {
+		var _n = ALL_NODES[? key];
+		var _b = _n.build(0, 0);
+		key = ds_map_find_next(ALL_NODES, key);
+		
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text);
-		draw_text(w / 2, ui(8), cur + 2 < amo? "Dumping node data... (Program terminate on complete)" : "Writing JSON");
+		draw_text_add(w / 2, ui(8), cur + 2 < amo? $"Dumping node data [{key}]" : "Writing JSON");
 		
 		var bx0 = ui(8);
 		var by0 = ui(40);
@@ -68,10 +64,6 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		
 		draw_sprite_stretched(THEME.progress_bar, 0, bx0, by0, bw, bh);
 		draw_sprite_stretched(THEME.progress_bar, 1, bx0, by0, bw * cur / amo, bh);
-		
-		var _n = ALL_NODES[? key];
-		var _b = _n.build(0, 0);
-		key = ds_map_find_next(ALL_NODES, key);
 		
 		if(_b.name == "") return;
 		
@@ -91,6 +83,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		for( var i = 0; i < ds_list_size(_b.inputs); i++ ) {
 			_din[i] = __node_data_clone(_b.inputs[| i]);
 			var _in = _b.inputs[| i];
+			if(!is_instanceof(_in, NodeValue)) continue;
 			
 			_jin[i] = {
 				type:	 _in.type,
@@ -112,19 +105,21 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		
 		for( var i = 0; i < ds_list_size(_b.outputs); i++ ) {
 			_dot[i] = __node_data_clone(_b.outputs[| i]);
+			var _ot = _b.outputs[| i];
+			if(!is_instanceof(_ot, NodeValue)) continue;
 			
 			_jot[i] = {
-				type:	 _b.outputs[| i].type,
-				visible: _b.outputs[| i].visible? 1 : 0,
+				type:	 _ot.type,
+				visible: _ot.visible? 1 : 0,
 			};
 			
 			_lot[i] = {
-				name:	 _b.outputs[| i]._initName,
-				tooltip: _b.outputs[| i].tooltip,
+				name:	 _ot._initName,
+				tooltip: _ot.tooltip,
 			};
 		}
 		
-		nodeDelete(_b);
+		try { nodeDelete(_b); } catch(e) {}
 		
 		_junc.inputs  = _jin;
 		_junc.outputs = _jot;

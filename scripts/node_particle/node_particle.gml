@@ -35,7 +35,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			var _dim		= getInputData(input_len + 0);
 			var _outSurf	= outputs[| 0].getValue();
 			
-			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+			_outSurf = surface_verify(_outSurf, array_safe_get(_dim, 0, 1), array_safe_get(_dim, 1, 1), attrDepth());
 			outputs[| 0].setValue(_outSurf);
 		}
 		
@@ -52,18 +52,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	} #endregion
 	
 	static onUpdate = function() { #region
-		if(ANIMATION_STATIC) {
-			if(!recoverCache()) {
-				var _dim		= getInputData(input_len + 0);
-				var _outSurf	= outputs[| 0].getValue();
-				_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-				outputs[| 0].setValue(_outSurf);
-			}
-			return;
-		}
-		
-		if(recoverCache())
-			return;
+		var _dim		= getInputData(input_len + 0);
+		var _outSurf	= outputs[| 0].getValue();
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		outputs[| 0].setValue(_outSurf);
 		
 		if(PROJECT.animator.current_frame == 0)
 			reset();
