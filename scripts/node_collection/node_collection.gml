@@ -90,15 +90,16 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _type = juncFrom.type;
 		var _tind = array_find(input.data_type_map, juncFrom.type);
 		
-		//input.attributes.inherit_name = false;
-		//input.setDisplayName(juncFrom.name);
-		
 		input.attributes.inherit_type = false;
 		if(_tind != -1)
 			input.inputs[| 2].setValue(_tind);
 			
 		input.inParent.setFrom(juncFrom);
+		
+		if(onNewInputFromGraph != noone) onNewInputFromGraph(juncFrom);
 	}
+	
+	onNewInputFromGraph = noone;
 	
 	tool_node = noone;
 	draw_input_overlay = true;

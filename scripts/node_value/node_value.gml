@@ -850,6 +850,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						} );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						
+						if(struct_has(display_data, "update_stat"))
+							editWidget.update_stat = display_data.update_stat;
+						
 						extract_node = "Node_Number";
 						break; #endregion
 					case VALUE_DISPLAY.slider_range :	#region
@@ -1640,7 +1643,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.clearCacheForward();
 				
 		if(fullUpdate)	RENDER_ALL
-		else			RENDER_PARTIAL
 					
 		if(!LOADING) PROJECT.modified = true;
 					

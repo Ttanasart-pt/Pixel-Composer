@@ -6,7 +6,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
-		.setDisplay(VALUE_DISPLAY.slider)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release })
 		.rejectArray();
 		
 	inputs[| 2] = nodeValue("Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)

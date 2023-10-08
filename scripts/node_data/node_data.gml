@@ -39,13 +39,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		PROJECT.nodeMap[? node_id] = self;
 		PROJECT.modified = true;
 		
-		//print($"Adding node {node_id} to {PROJECT.path} [{ds_map_size(PROJECT.nodeMap)}]");
-		
 		run_in(1, function() { 
 			if(display_name != "") return;
 			resetInternalName();
 			display_name = __txt_node_name(instanceof(self), name);
 		});
+		
+		RENDER_ALL_REORDER
 	} #endregion
 	
 	#region ---- display ----
@@ -521,7 +521,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		LOG_IF(global.FLAG.render == 1, $"Trigger render for {INAME}");
 		
 		setRenderStatus(false);
-		UPDATE |= RENDER_TYPE.partial;
+		RENDER_PARTIAL
 		
 		if(is_instanceof(group, Node_Collection) && group.reset_all_child) {
 			group.resetRender();

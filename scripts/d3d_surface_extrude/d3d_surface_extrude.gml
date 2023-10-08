@@ -35,11 +35,14 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 		surface_w = ww;
 		surface_h = hh;
 		
-		var tw = 1 / ww;
-		var th = 1 / hh;
-		var sw = -ww / 2 * tw;
-		var sh =  hh / 2 * th;
+		var ap = ww / hh;
+		var tw = ap / ww;
+		var th =  1 / hh;
+		var sw = -ap / 2;
+		var sh = 0.5;
 		var useH = is_surface(_height);
+		var fw = 1 / ww;
+		var fh = 1 / hh;
 		
 		#region ---- data prepare ----
 			if(smooth) {
@@ -103,13 +106,13 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 		for( var j = 0; j < hh; j++ ) {
 			if(!smooth && ap[i][j] == 0) continue;
 			
-			var j0 = sh - j * th;
-			var j1 = j0 - th;
 			var i0 = sw + i * tw;
+			var j0 = sh - j * th;
 			var i1 = i0 + tw;
+			var j1 = j0 - th;
 			
-			var tx0 = tw * i, tx1 = tx0 + tw;
-			var ty0 = th * j, ty1 = ty0 + th;
+			var tx0 = fw * i, tx1 = tx0 + fw;
+			var ty0 = fh * j, ty1 = ty0 + fh;
 			
 			var dep = (useH? getHeight(hei, hgtW, hgtH, i, j) : 1) * 0.5;
 			

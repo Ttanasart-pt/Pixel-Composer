@@ -67,8 +67,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		if(_typ == 0 || _typ == 1) {
 			var _for = getInputData(5);
 			
-			var fx = px + _for[0] * 10 * _s;
-			var fy = py + _for[1] * 10 * _s;
+			var fx = px + _for[0] * 4 * _s;
+			var fy = py + _for[1] * 4 * _s;
 			
 			draw_set_color(COLORS._main_accent);
 			draw_set_alpha(0.5);
@@ -76,7 +76,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_set_alpha(1);
 			
 			inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-			inputs[| 5].drawOverlay(active, px, py, _s * 10, _mx, _my, _snx, _sny, THEME.anchor, 10);
+			inputs[| 5].drawOverlay(active, px, py, _s * 4, _mx, _my, _snx, _sny, THEME.anchor, 10);
 		} else if(_typ == 3) {
 			var _rad = getInputData(8);
 			

@@ -118,9 +118,9 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var dy = bbox.yc - sh * ss / 2;
 		draw_surface_ext_safe(surf, dx, dy, ss, ss,,, 0.50);
 				
-		var st = preview_st * sw;
-		var ed = preview_ed * sw;
-		var cr = preview_cr * sw;
+		var st = clamp(preview_st, 0, 1) * sw;
+		var ed = clamp(preview_ed, 0, 1) * sw;
+		var cr = clamp(preview_cr, 0, 1) * sw;
 		
 		draw_surface_part_ext_safe(surf, st, 0, ed - st, sh, dx + st * ss, dy, ss, ss,, COLORS._main_accent);
 		

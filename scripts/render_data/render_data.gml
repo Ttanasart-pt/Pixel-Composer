@@ -80,6 +80,7 @@ function ResetAllNodesRender() { #region
 } #endregion
 
 function NodeTopoSort() { #region
+	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort +++++++");
 	var _key = ds_map_find_first(PROJECT.nodeMap);
 	var amo = ds_map_size(PROJECT.nodeMap);
 		
@@ -91,6 +92,8 @@ function NodeTopoSort() { #region
 	
 	ds_list_clear(PROJECT.nodeTopo);
 	__sortGraph(PROJECT.nodeTopo, PROJECT.nodes);
+	
+	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed {ds_list_size(PROJECT.nodeTopo)} nodes sorted +++++++");
 } #endregion
 
 function __sortGraph(_list, _nodeList) { #region
@@ -172,6 +175,7 @@ function Render(partial = false, runAction = false) { #region
 		}
 		
 		// get leaf node
+		LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {ds_list_size(PROJECT.nodeTopo)} nodes -----");
 		RENDER_QUEUE.clear();
 		for( var i = 0, n = ds_list_size(PROJECT.nodeTopo); i < n; i++ ) {
 			var _node = PROJECT.nodeTopo[| i];

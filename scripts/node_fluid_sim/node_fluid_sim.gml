@@ -55,14 +55,9 @@ function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	custom_input_index = ds_list_size(inputs);
 	
 	domain = fd_rectangle_create(PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
-	//_dim_old = [0, 0];
 	
 	if(!LOADING && !APPENDING && !CLONING) {
-		//var _domain = nodeBuild("Node_Fluid_Domain", -384, -32, self);
 		var _render = nodeBuild("Node_Fluid_Render_Output",  128, -32, self);
-		
-		//_output.inputs[| 0].setFrom(_render.outputs[| 0]);
-		//_render.inputs[| 0].setFrom(_domain.outputs[| 0]);
 	}
 	
 	static update = function() {

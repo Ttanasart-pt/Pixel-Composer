@@ -649,6 +649,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(animation, "FFT",			 s_node_FFT,			"Node_FFT",				[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
 			addNodeObject(animation, "Bar / Graph",	 s_node_bar_graph,		"Node_Plot_Linear",		[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
 			addNodeObject(animation, "Audio Window", s_node_audio_trim,		"Node_Audio_Window",	[1, Node_Audio_Window],, "Take a slice of an audio array based on the current frame.").setVersion(1144);
+			addNodeObject(animation, "Audio Volume", s_node_audio_volume,	"Node_Audio_Loudness",	[1, Node_Audio_Loudness]).setVersion(11540);
 		#endregion
 		
 		var node = ds_list_create(); #region

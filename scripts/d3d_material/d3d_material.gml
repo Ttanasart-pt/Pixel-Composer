@@ -1,15 +1,16 @@
 function __d3dMaterial(surface = noone) constructor {
 	self.surface   = surface;
 	
-	self.diffuse   = 1;
-	self.specular  = 0;
-	self.metalic   = false;
-	self.shine     = 1;
+	diffuse   = 1;
+	specular  = 0;
+	metalic   = false;
+	shine     = 1;
 	
-	self.normal    = noone;
-	self.normalStr = 1;
+	normal    = noone;
+	normalStr = 1;
 	
-	self.reflective = 0;
+	reflective = 0;
+	texFilter  = false;
 	
 	static getTexture = function() {
 		if(!is_surface(surface)) return -1;
@@ -29,5 +30,24 @@ function __d3dMaterial(surface = noone) constructor {
 		shader_set_i("mat_metalic",  metalic  );
 		
 		shader_set_f("mat_reflective", reflective);
+		gpu_set_tex_filter(texFilter);
+	}
+	
+	static clone = function() {
+		var _mat = new __d3dMaterial();
+		
+		_mat.surface   = surface;
+	
+		_mat.diffuse   = diffuse;
+		_mat.specular  = specular;
+		_mat.metalic   = metalic;
+		_mat.shine     = shine;
+	
+		_mat.normal    = normal;
+		_mat.normalStr = normalStr;
+	
+		_mat.reflective = reflective;
+		
+		return _mat;
 	}
 }

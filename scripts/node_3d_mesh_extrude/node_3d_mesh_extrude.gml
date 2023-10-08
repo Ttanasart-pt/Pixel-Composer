@@ -20,21 +20,30 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _mat  = _data[in_mesh + 0];
+		if(_mat == noone) return noone;
+		
 		var _hght = _data[in_mesh + 1];
 		var _smt  = _data[in_mesh + 2];
 		var _updt = _data[in_mesh + 3];
-		var _surf = _mat == noone? noone : _mat.surface;
+		var _surf = _mat.surface;
 		
 		var object = getObject(_array_index);
 		object.checkParameter({ surface: _surf, height: _hght, smooth: _smt }, _updt);
-		object.materials = [ _mat ];
+		
+		var _matN  = _mat.clone();
+		var _nSurf = surface_create(surface_get_width(_surf), surface_get_height(_surf));
+		surface_set_shader(_nSurf, sh_d3d_extrude_extends);
+			shader_set_f("dimension", surface_get_width(_surf), surface_get_height(_surf));
+			draw_surface_safe(_surf);
+		surface_reset_shader();
+		
+		_matN.surface = _nSurf;
+		object.materials = [ _matN ];
 		
 		setTransform(object, _data);
 		
 		return object;
 	} #endregion
 	
-	static getPreviewValues = function() { 
-		return array_safe_get(all_inputs, in_mesh + 0, noone); 
-	}
+	static getPreviewValues = function() { return array_safe_get(all_inputs, in_mesh + 0, noone); }
 }

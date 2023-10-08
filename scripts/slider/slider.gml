@@ -1,7 +1,15 @@
+enum SLIDER_UPDATE {
+	realtime,
+	release,
+	none,
+}
+
 function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widget() constructor {
 	minn = _min; curr_minn = _min;
 	maxx = _max; curr_maxx = _max;
 	stepSize = _step;
+	
+	current_value = 0;
 	
 	onModify = _onModify;
 	onRelease = _onRelease;
@@ -9,6 +17,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		if(onModify)  onModify(val);
 		if(onRelease) onRelease();
 	}
+	
+	update_stat = SLIDER_UPDATE.realtime;
 	
 	dragging = false;
 	drag_mx  = 0;
@@ -45,6 +55,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		h = _h;
 		if(!is_real(_data)) return;
 		
+		if(!dragging) current_value = _data;
+		
 		switch(halign) {
 			case fa_left:   _x = _x;			break;	
 			case fa_center: _x = _x - _w / 2;	break;	
@@ -59,8 +71,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		
 		var _rang = abs(maxx - minn);
 		if(!dragging) {
-			curr_minn = (_data >= minn)? minn : minn - ceil(abs(_data - minn) / _rang) * _rang; 
-			curr_maxx = (_data <= maxx)? maxx : maxx + ceil(abs(_data - maxx) / _rang) * _rang;
+			curr_minn = (current_value >= minn)? minn : minn - ceil(abs(current_value - minn) / _rang) * _rang; 
+			curr_maxx = (current_value <= maxx)? maxx : maxx + ceil(abs(current_value - maxx) / _rang) * _rang;
 		}
 		
 		var sw = _w;
@@ -69,7 +81,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			sw = _w - (tb_w + ui(16));
 			
 			tb_value.setFocusHover(active, hover);
-			tb_value.draw(_x + sw + ui(16), _y, tb_w, _h, _data, _m);
+			tb_value.draw(_x + sw + ui(16), _y, tb_w, _h, current_value, _m);
 		}
 		
 		if(THEME_VALUE.slider_type == "full_height")
@@ -77,7 +89,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		else if(THEME_VALUE.slider_type == "stem")
 			draw_sprite_stretched_ext(spr, 0, _x, _y + _h / 2 - ui(4), sw, ui(8), blend, 1);	
 		
-		var _pg = clamp((_data - curr_minn) / (curr_maxx - curr_minn), 0, 1) * sw;
+		var _pg = clamp((current_value - curr_minn) / (curr_maxx - curr_minn), 0, 1) * sw;
 		var _kx = _x + _pg;
 		if(THEME_VALUE.slider_type == "full_height")
 			draw_sprite_stretched_ext(spr, 1, _x, _y, _pg, _h, blend, 1);
@@ -95,15 +107,16 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			if(key_mod_press(CTRL))
 				val = round(val);
 			
-			if(onModify != noone) {
-				if(onModify(val))
-					UNDO_HOLDING = true;
-			}
+			current_value = val;
+			if(update_stat == SLIDER_UPDATE.realtime && onModify != noone && onModify(val)) 
+				UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left)) {
+				if(update_stat == SLIDER_UPDATE.release && onModify != noone) 
+					onModify(val);
+			
 				dragging = false;
-				if(onRelease != noone)
-					onRelease(val);
+				if(onRelease != noone) onRelease(val);
 				UNDO_HOLDING = false;
 			}
 		} else {

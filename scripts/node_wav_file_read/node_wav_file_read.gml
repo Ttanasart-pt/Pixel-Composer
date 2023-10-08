@@ -60,16 +60,13 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	outputs[| 4] = nodeValue("Duration (s)", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0)
 		.setVisible(false);
 	
-	outputs[| 5] = nodeValue("Loudness", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0)
-		.setVisible(false);
-	
 	content = noone;
 	path_current = "";
 	
 	first_update = false;
 	
 	input_display_list  = [ 0, 1, 2 ];
-	output_display_list = [ 0, 1, 2, 3, 4, 5 ];
+	output_display_list = [ 0, 1, 2, 3, 4 ];
 	preview_audio = -1;
 	preview_id = noone;
 	
@@ -206,23 +203,6 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!is_instanceof(content, audioObject)) return;
 		
 		content.mono = mono;
-		var len = content.packet;
-		var amp_ind = round(frame * content.sample / PROJECT.animator.framerate);
-		var amp_win = content.sample / PROJECT.animator.framerate * 3;
-		
-		var amp_st = clamp(amp_ind - amp_win, 0, len);
-		var amp_ed = clamp(amp_ind + amp_win, 0, len);
-		
-		var val = 0;
-		if(amp_ed > amp_st) {
-			for( var i = amp_st; i < amp_ed; i++ )
-				val += content.sound[0][i] * content.sound[0][i];
-			val /= amp_ed - amp_st;
-			val  = sqrt(val);
-		}
-		
-		var dec = 10 * log10(val);
-		outputs[| 5].setValue(dec);
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

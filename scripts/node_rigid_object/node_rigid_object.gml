@@ -627,7 +627,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static step = function() { #region
 		var _shp = getInputData(5);
 		
-		inputs[| 9].setVisible(_shp == 2);
+		inputs[|  9].setVisible(_shp == 2);
+		inputs[| 10].setVisible(_shp == 2);
 		
 		var _tex  = getInputData(6);
 		

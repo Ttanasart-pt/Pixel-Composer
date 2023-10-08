@@ -64,12 +64,14 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 25] = nodeValue("Value range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
+	inputs[| 26] = nodeValue("Absolute", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 
 		["Data", 	 true], 1, 12, 21, 14, 2, 3, 15, 16, 
 		["Plot",	false], 11, 4, 10, 20, 5, 22, 23, 
-		["Render",	false], 6, 13, 24, 25, 7, 17, 18, 19, 8, 9, 
+		["Render",	false], 6, 13, 24, 25, 26, 7, 17, 18, 19, 8, 9, 
 	];
 	
 	attribute_surface_depth();
@@ -135,6 +137,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _cls = _data[13];
 		var _clv = _data[24];
 		var _clv_r = _data[25];
+		var _clv_a = _data[26];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -196,7 +199,10 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				_ang_nor = _ang + 90;
 				_val	 = _smp_data[i] + _off;
 				_col_sam = _cls.eval(i / amo);
-				_col_val = _clv.eval((_val - _clv_r[0]) - (_clv_r[1] - _clv_r[0]));
+				
+				var _val_p = _clv_a? abs(_val) : _val;
+				var _val_prog = (_val_p - _clv_r[0]) / (_clv_r[1] - _clv_r[0]);
+				_col_val = _clv.eval(_val_prog);
 				
 				var _c1 = colorMultiply(_lcl, _col_sam);
 				var _c2 = _col_val;
