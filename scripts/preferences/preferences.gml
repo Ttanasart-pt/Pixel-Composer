@@ -202,6 +202,8 @@
 			
 		var f = json_load_struct(DIRECTORY + "key_nodes.json");
 		struct_override(HOTKEYS_CUSTOM, f);
+		
+		LOCALE_USE_DEFAULT = PREF_MAP[? "local"] == "en";
 	}
 	
 	function PREF_APPLY() {

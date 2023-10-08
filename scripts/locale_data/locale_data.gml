@@ -1,7 +1,8 @@
 #region locale
-	globalvar LOCALE, TEST_LOCALE;
+	globalvar LOCALE, TEST_LOCALE, LOCALE_USE_DEFAULT;
 	LOCALE = {}
 	TEST_LOCALE = false;
+	LOCALE_USE_DEFAULT = true;
 	
 	function __initLocale() {
 		var lfile = $"data/locale/en.zip";
@@ -36,6 +37,8 @@
 	function __txtx(key, def = "") {
 		gml_pragma("forceinline");
 		
+		if(LOCALE_USE_DEFAULT) return def;
+		
 		if(TEST_LOCALE) {
 			if(!struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
 				show_debug_message($"LOCALE: \"{key}\": \"{def}\",");
@@ -56,6 +59,8 @@
 	function __txt(txt, prefix = "") {
 		gml_pragma("forceinline");
 		
+		if(LOCALE_USE_DEFAULT) return txt;
+		
 		var key = string_lower(txt);
 		    key = string_replace_all(key, " ", "_");
 			
@@ -73,7 +78,7 @@
 	function __txt_node_name(node, def = "") {
 		gml_pragma("forceinline");
 		
-		//if(TESTING) return def;
+		if(LOCALE_USE_DEFAULT) return def;
 		
 		if(!struct_has(LOCALE.node, node)) 
 			return def;
@@ -85,7 +90,7 @@
 	function __txt_node_tooltip(node, def = "") {
 		gml_pragma("forceinline");
 		
-		//if(TESTING) return def;
+		if(LOCALE_USE_DEFAULT) return def;
 		
 		if(!struct_has(LOCALE.node, node))
 			return def;
@@ -97,7 +102,7 @@
 	function __txt_junction_name(node, type, index, def = "") {
 		gml_pragma("forceinline");
 		
-		//if(TESTING) return def;
+		if(LOCALE_USE_DEFAULT) return def;
 		
 		if(!struct_has(LOCALE.node, node))
 			return def;
@@ -113,7 +118,7 @@
 	function __txt_junction_tooltip(node, type, index, def = "") {
 		gml_pragma("forceinline");
 		
-		//if(TESTING) return def;
+		if(LOCALE_USE_DEFAULT) return def;
 		
 		if(!struct_has(LOCALE.node, node))
 			return def;

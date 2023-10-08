@@ -42,8 +42,6 @@ function __part(_node) constructor {
 	//wig_rot = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
 	//wig_dir = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
 	
-	atlas = noone;
-	
 	grav    = 0;
 	gravDir = -90;
 	gravX   = 0;
@@ -81,7 +79,6 @@ function __part(_node) constructor {
 		gml_pragma("forceinline");
 		
 		surf  = noone;
-		atlas = noone;
 		
 		prevx  = undefined;
 		prevy  = undefined;
@@ -260,8 +257,7 @@ function __part(_node) constructor {
 			}
 		}
 		
-		var surface = atlas == noone? node.surface_cache[$ ss] : atlas.getSurface();
-		//print($"VFX: {surface} ({is_surface(surface)}), {atlas}")
+		var surface = is_instanceof(ss, SurfaceAtlas)? ss.getSurface() : node.surface_cache[$ ss];
 		
 		if(!is_surface(surface)) return;
 		

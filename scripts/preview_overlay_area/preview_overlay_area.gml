@@ -1,4 +1,4 @@
-function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data) {
+function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) {
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
@@ -20,20 +20,27 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	var xc = (x0 + x1) / 2;
 	var yc = (y0 + y1) / 2;
 	
-	draw_set_color(COLORS._main_accent);
-	draw_set_circle_precision(32);
-	switch(__at) {
-		case AREA_SHAPE.rectangle :	draw_rectangle(x0, y0, x1, y1, true); break;
-		case AREA_SHAPE.elipse :	draw_ellipse(x0, y0, x1, y1, true); break;
+	var drawPos  = _flag & 0b0001;
+	var drawSize = _flag & 0b0010;
+	
+	if(drawSize) {
+		draw_set_color(COLORS._main_accent);
+		draw_set_circle_precision(32);
+		switch(__at) {
+			case AREA_SHAPE.rectangle :	draw_rectangle(x0, y0, x1, y1, true); break;
+			case AREA_SHAPE.elipse :	draw_ellipse(x0, y0, x1, y1, true); break;
+		}
 	}
 	
 	if(!interact) return -1;
 	
-	draw_sprite_colored(THEME.anchor, 0, xc, yc);
-	draw_sprite_colored(THEME.anchor_solid_hori, 0, xc, y0,, 0);
-	draw_sprite_colored(THEME.anchor_solid_hori, 0, xc, y1,, 0);
-	draw_sprite_colored(THEME.anchor_solid_hori, 0, x0, yc,, 90);
-	draw_sprite_colored(THEME.anchor_solid_hori, 0, x1, yc,, 90);
+	if(drawPos) draw_sprite_colored(THEME.anchor, 0, xc, yc);
+	if(drawSize) {
+		draw_sprite_colored(THEME.anchor_solid_hori, 0, xc, y0,, 0);
+		draw_sprite_colored(THEME.anchor_solid_hori, 0, xc, y1,, 0);
+		draw_sprite_colored(THEME.anchor_solid_hori, 0, x0, yc,, 90);
+		draw_sprite_colored(THEME.anchor_solid_hori, 0, x1, yc,, 90);
+	}
 	
 	if(drag_type == 1) {
 		var _xx = value_snap(drag_sx - (_mx - drag_mx) / _s, _snx);
@@ -81,7 +88,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 		UNDO_HOLDING = false;
 	}
 	
-	if(active && point_in_circle(_mx, _my, xc, y0, 16)) {
+	if(drawSize && active && point_in_circle(_mx, _my, xc, y0, 16)) {
 		draw_sprite_colored(THEME.anchor_solid_hori, 1, xc, y0);
 		hover = 1;
 		
@@ -90,7 +97,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 			drag_sy   = _t;
 			drag_my   = _my;
 		}
-	} else if(active && point_in_circle(_mx, _my, xc, y1, 16)) {
+	} else if(drawSize && active && point_in_circle(_mx, _my, xc, y1, 16)) {
 		draw_sprite_colored(THEME.anchor_solid_hori, 1, xc, y1);
 		hover = 3;
 		
@@ -99,7 +106,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 			drag_sy   = _b;
 			drag_my   = _my;
 		}
-	} else if(active && point_in_circle(_mx, _my, x0, yc, 16)) {
+	} else if(drawSize && active && point_in_circle(_mx, _my, x0, yc, 16)) {
 		draw_sprite_colored(THEME.anchor_solid_hori, 1, x0, yc,, 90);
 		hover = 0;
 		
@@ -108,7 +115,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 			drag_sx   = _l;
 			drag_mx   = _mx;
 		}
-	} else if(active && point_in_circle(_mx, _my, x1, yc, 16)) {
+	} else if(drawSize && active && point_in_circle(_mx, _my, x1, yc, 16)) {
 		draw_sprite_colored(THEME.anchor_solid_hori, 1, x1, yc,, 90);
 		hover = 2;
 		
@@ -117,7 +124,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 			drag_sx   = _r;
 			drag_mx   = _mx;
 		}
-	} else if(active && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
+	} else if(drawPos && active && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
 		draw_sprite_colored(THEME.anchor, 1, xc, yc);
 		hover = 4;
 		
@@ -133,7 +140,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	return hover;
 }
 
-function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) {
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
@@ -151,18 +158,25 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	var xc = (x0 + x1) / 2;
 	var yc = (y0 + y1) / 2;
 	
-	draw_set_color(COLORS._main_accent);
-	draw_set_circle_precision(32);
-	switch(__at) {
-		case AREA_SHAPE.rectangle :	draw_rectangle(x0, y0, x1, y1, true); break;
-		case AREA_SHAPE.elipse :	draw_ellipse(x0, y0, x1, y1, true); break;
+	var drawPos  = _flag & 0b0001;
+	var drawSize = _flag & 0b0010;
+	
+	if(drawSize) {
+		draw_set_color(COLORS._main_accent);
+		draw_set_circle_precision(32);
+		switch(__at) {
+			case AREA_SHAPE.rectangle :	draw_rectangle(x0, y0, x1, y1, true); break;
+			case AREA_SHAPE.elipse :	draw_ellipse(x0, y0, x1, y1, true); break;
+		}
 	}
 	
 	if(!interact) return -1;
 	
-	draw_sprite_colored(THEME.anchor, 1, xc, yc);
-	draw_sprite_colored(THEME.anchor_selector, 0, x0, y0);
-	draw_sprite_colored(THEME.anchor_selector, 0, x1, y1);
+	if(drawPos) draw_sprite_colored(THEME.anchor, 1, xc, yc);
+	if(drawSize) {
+		draw_sprite_colored(THEME.anchor_selector, 0, x0, y0);
+		draw_sprite_colored(THEME.anchor_selector, 0, x1, y1);
+	}
 	
 	if(drag_type == 1) {
 		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
@@ -204,7 +218,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 		}
 	}
 	
-	if(active && point_in_circle(_mx, _my, x0, y0, 8)) {
+	if(drawSize && active && point_in_circle(_mx, _my, x0, y0, 8)) {
 		draw_sprite_colored(THEME.anchor_selector, 1, x0, y0);
 		hover = 1;
 		
@@ -215,7 +229,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 			drag_mx   = _mx;
 			drag_my   = _my;
 		}
-	} else if(active && point_in_circle(_mx, _my, x1, y1, 8)) {
+	} else if(drawSize && active && point_in_circle(_mx, _my, x1, y1, 8)) {
 		draw_sprite_colored(THEME.anchor_selector, 1, x1, y1);
 		hover = 2;
 		
@@ -226,7 +240,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 			drag_mx   = _mx;
 			drag_my   = _my;
 		}
-	} else if(active && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
+	} else if(drawPos && active && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
 		draw_sprite_colored(THEME.anchor, 1, xc, yc);
 		hover = 3;
 		
@@ -242,7 +256,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	return hover;
 }
 
-function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) {
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
@@ -256,18 +270,23 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	var _ay = __ay * _s + _y;
 	var _aw = __aw * _s;
 	var _ah = __ah * _s;
-						
-	draw_set_color(COLORS._main_accent);
-	draw_set_circle_precision(32);
-	switch(__at) {
-		case AREA_SHAPE.rectangle :	draw_rectangle(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true); break;
-		case AREA_SHAPE.elipse :	draw_ellipse(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true); break;
+					
+	var drawPos  = _flag & 0b0001;
+	var drawSize = _flag & 0b0010;
+		
+	if(drawSize) {
+		draw_set_color(COLORS._main_accent);
+		draw_set_circle_precision(32);
+		switch(__at) {
+			case AREA_SHAPE.rectangle :	draw_rectangle(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true); break;
+			case AREA_SHAPE.elipse :	draw_ellipse(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true); break;
+		}
 	}
 	
 	if(!interact) return -1;
 	
-	draw_sprite_colored(THEME.anchor, 0, _ax, _ay);
-	draw_sprite_colored(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
+	if(drawPos)  draw_sprite_colored(THEME.anchor, 0, _ax, _ay);
+	if(drawSize) draw_sprite_colored(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
 						
 	if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8))
 		draw_sprite_colored(THEME.anchor_selector, 1, _ax + _aw, _ay + _ah);
@@ -319,14 +338,14 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 		}
 	}
 						
-	if(active && point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8)) {
+	if(drawSize && active && point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8)) {
 		hover = 2;
 		if(mouse_press(mb_left)) {
 			drag_type = 2;
 			drag_mx   = _ax;
 			drag_my   = _ay;
 		}
-	} else if(active && point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah)) {
+	} else if(drawPos && active && point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah)) {
 		hover = 1;
 		if(mouse_press(mb_left)) {
 			drag_type = 1;	
@@ -340,18 +359,18 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	return hover;
 }
 
-function preview_overlay_area(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data) {
+function preview_overlay_area(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) {
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	if(is_array(_val[0])) return hover;
 	
 	var mode = editWidget.mode;
 	if(mode == AREA_MODE.area)
-		hover =  preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		hover =  preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
 	else if(mode == AREA_MODE.padding) 
-		hover = preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data)
+		hover = preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data)
 	else if(mode == AREA_MODE.two_point) 
-		hover = preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		hover = preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
 	
 	return hover;
 }

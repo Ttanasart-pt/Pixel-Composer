@@ -1858,7 +1858,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return preview_overlay_vector(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
 						
 			case VALUE_DISPLAY.area :
-				return preview_overlay_area(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, struct_try_get(display_data, "onSurfaceSize"));
+				var _flag = argument_count > 8? argument[8] : 0b0011;
+				return preview_overlay_area(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, struct_try_get(display_data, "onSurfaceSize"));
 						
 			case VALUE_DISPLAY.puppet_control :
 				return preview_overlay_puppet(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny);
