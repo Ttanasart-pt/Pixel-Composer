@@ -10,45 +10,59 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	attributes.mesh = [];
 	
 	inputs[| 0] = nodeValue("Affect by force", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
-		.rejectArray();
+		.rejectArray()
+		.setAnimable(false);
 	
 	inputs[| 1] = nodeValue("Weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.rejectArray();
+		.rejectArray()
+		.setAnimable(false);
 	
 	inputs[| 2] = nodeValue("Contact friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
-		.rejectArray();
+		.rejectArray()
+		.setAnimable(false);
 	
 	inputs[| 3] = nodeValue("Air resistance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
-		.rejectArray();
+		.rejectArray()
+		.setAnimable(false);
 	
 	inputs[| 4] = nodeValue("Rotation resistance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
-		.rejectArray();
+		.rejectArray()
+		.setAnimable(false);
 	
 	inputs[| 5] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Box", "Circle", "Custom" ])
-		.rejectArray();
+		.rejectArray()
+		.setAnimable(false);
 	
-	inputs[| 6] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 6] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setAnimable(false);
 	
 	inputs[| 7] = nodeValue("Start position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setAnimable(false);
 	
 	inputs[| 8] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Make object spawn when start.")
-		.rejectArray();
+		.rejectArray()
+		.setAnimable(false);
 	
 	inputs[| 9] = nodeValue("Generate mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { generateAllMesh(); } });
 	
 	inputs[| 10] = nodeValue("Mesh expansion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -2, 2, 0.1 ] })
-		.rejectArray();
+		.rejectArray()
+		.setAnimable(false);
 	
+	inputs[| 11] = nodeValue("Add pixel collider", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		.rejectArray()
+		.setAnimable(false);
+		
 	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, self);
 	
 	input_display_list = [ 8,
 		["Texture",		false],	6, 
 		["Physical",	false],	0, 1, 2, 3, 4,
-		["Shape",		false],	7, 5, 9, 10, 
+		["Shape",		false],	7, 5, 9, 10, 11, 
 	];
 	
 	static newMesh = function(index) {
@@ -130,7 +144,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_surface_ext_safe(_tex, _pr_x, _pr_y, _s, _s, 0, c_white, 0.5);
 	} #endregion
 	
-	static drawOverlayPreview = function(_x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlayPreview = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _pos = getInputData(7);	
 		var _tex = getInputData(6);
 		
@@ -142,7 +156,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				drawOverlayPreviewSingle(i, _x, _y, _s, _pr_x, _pr_y, _tex[i]);
 		} else 
 			drawOverlayPreviewSingle(0, _x, _y, _s, _pr_x, _pr_y, _tex);
-		inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		return inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
@@ -150,13 +164,14 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
 				var _node = group.nodes[| i];
 				if(!is_instanceof(_node, Node_Rigid_Object)) continue;
-				_node.drawOverlayPreview(_x, _y, _s, _mx, _my, _snx, _sny);
+				var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
+				active &= _hov;
 			}
-			return;
+			return active;
 		}
 		
 		var _shp = getInputData(5);
-		if(_shp != 2) return;
+		if(_shp != 2) return active;
 		
 		var meshes = attributes.mesh;
 		var _hover = -1, _side = 0;
@@ -224,10 +239,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			if(mouse_release(mb_left))
 				anchor_dragging = -1;
-			return;
+			return active;
 		}
 		
-		if(hover == -1) return;
+		if(hover == -1) return active;
 			
 		if(frac(hover) == 0) {
 			if(mouse_click(mb_left, active)) {
@@ -255,11 +270,14 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				anchor_drag_my  = _my;
 			}
 		}
+		
+		return active;
 	} #endregion
 	
 	static generateMesh = function(index = 0) { #region
 		var _tex = getInputData(6);
 		var _exp = getInputData(10);
+		var _pix = getInputData(11);
 		
 		if(is_array(_tex)) _tex = array_safe_get(_tex, index);
 		
@@ -324,25 +342,30 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var cc = buffer_read(surface_buffer, buffer_u32);
 			var _a = (cc & (0b11111111 << 24)) >> 24;
 			
-			if(_a > 0) 
-				_pm[? point_direction_positive(cmX, cmY, i, j)] = [i, j];
+			if(_a > 0) _pm[? point_direction_positive(cmX, cmY, i, j)] = [ i, j ];
 		}
 		
 		if(ds_map_size(_pm)) {
 			var keys = ds_map_keys_to_array(_pm);
 			array_sort(keys, false);
 			
-			for( var i = 0, n = array_length(keys); i < n; i++ ) {
-				//print($"Getting key {keys[i]} - {_pm[? keys[i]]}");
+			var _minx = ww, _maxx = 0;
+			var _miny = hh, _maxy = 0;
 				
+			for( var i = 0, n = array_length(keys); i < n; i++ ) {
 				var px = _pm[? keys[i]][0];
 				var py = _pm[? keys[i]][1];
+				
+				_minx  = min(_minx, px + 0.5);
+				_maxx  = max(_maxx, px + 0.5);
+				_miny  = min(_miny, py + 0.5);
+				_maxy  = max(_maxy, py + 0.5);
 				
 				if(px > cmX) px++;
 				if(py > cmY) py++;
 				
 				if(_exp != 0) {
-					var dist = point_distance(cmX, cmY, px, py) + _exp;
+					var dist = max(0.5, point_distance(cmX, cmY, px, py) + _exp);
 					var dirr = point_direction(cmX, cmY, px, py);
 					
 					px = cmX + lengthdir_x(dist, dirr);
@@ -354,11 +377,13 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			mesh = removeColinear(mesh);
 			mesh = removeConcave(mesh);
-			
+					 
 			var _sm = ds_map_create();
 			
-			for( var i = 0, n = array_length(mesh); i < n; i++ )
-				_sm[? point_direction_positive(cmX, cmY, mesh[i][0], mesh[i][1])] = [ mesh[i][0], mesh[i][1] ];
+			if(array_length(mesh)) {
+				for( var i = 0, n = array_length(mesh); i < n; i++ ) 
+					_sm[? point_direction_positive(cmX, cmY, mesh[i][0], mesh[i][1])] = [ mesh[i][0], mesh[i][1] ];
+			}
 			
 			var keys = ds_map_keys_to_array(_sm);
 			mesh = [];
@@ -371,8 +396,17 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					array_push( mesh, [_sm[? k][0], _sm[? k][1]] );
 				}
 			}
-			
+				
 			ds_map_destroy(_sm);
+		}
+		
+		if(_pix && array_empty(mesh)) {
+			mesh = [ 
+				[ _minx - 0.5, _minx - 0.5 ], 
+				[ _maxx + 0.5, _minx - 0.5 ], 
+				[ _maxx + 0.5, _maxy + 0.5 ], 
+				[ _minx - 0.5, _maxy + 0.5 ],
+			];
 		}
 		
 		ds_map_destroy(_pm);
@@ -629,6 +663,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		inputs[|  9].setVisible(_shp == 2);
 		inputs[| 10].setVisible(_shp == 2);
+		inputs[| 11].setVisible(_shp == 2);
 		
 		var _tex  = getInputData(6);
 		

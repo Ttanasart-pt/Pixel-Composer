@@ -505,6 +505,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		is_anim		= false;
 		sep_axis	= false;
+		animable    = true;
 		sepable		= is_array(_value) && array_length(_value) > 1;
 		animator	= new valueAnimator(_value, self, false);
 		animators	= [];
@@ -651,6 +652,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
+	static setAnimable = function(_anim) { #region
+		animable = _anim;
+		return self;
+	} #endregion
+	
 	static rejectArray = function() { #region
 		accept_array = false;
 		return self;
@@ -694,7 +700,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static isAnimable = function() { #region
 		if(type == VALUE_TYPE.PCXnode)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
-		return true;
+		return animable;
 	} #endregion
 	
 	static setDropKey = function() { #region

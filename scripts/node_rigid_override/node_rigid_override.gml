@@ -47,14 +47,24 @@ function Node_Rigid_Override(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(obj == noone || !instance_exists(obj)) continue;
 			if(is_undefined(obj.phy_active)) continue;
 			
-			if(is_array(_pos) && array_length(_pos) > i && is_array(_pos[i])) {
-				obj.x = _pos[i][0];
-				obj.y = _pos[i][1];
+			if(is_array(_pos) && array_length(_pos)) {
+				if(is_array(_pos[0])) {
+					obj.x = _pos[i][0];
+					obj.y = _pos[i][1];
+				} else {
+					obj.x = _pos[0];
+					obj.y = _pos[1];
+				}
 			}
 			
-			if(is_array(_sca) && array_length(_sca) > i && is_array(_sca[i])) {
-				obj.xscale = _sca[i][0];
-				obj.yscale = _sca[i][1];
+			if(is_array(_sca) && array_length(_sca)) {
+				if(is_array(_sca[0])) {
+					obj.xscale = _sca[i][0];
+					obj.yscale = _sca[i][1];
+				} else {
+					obj.xscale = _sca[0];
+					obj.yscale = _sca[1];
+				}
 			}
 			
 			if(is_array(_rot) && array_length(_rot) > i)

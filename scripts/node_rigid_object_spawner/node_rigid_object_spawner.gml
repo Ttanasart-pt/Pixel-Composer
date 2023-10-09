@@ -52,7 +52,8 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
 			var _node = group.nodes[| i];
 			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
-			_node.drawOverlayPreview(_x, _y, _s, _mx, _my, _snx, _sny);
+			var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			active &= !_hov;
 		}
 		
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);

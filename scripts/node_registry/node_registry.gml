@@ -183,14 +183,15 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var rigidSim = ds_list_create(); #region
 		addNodeCatagory("RigidSim", rigidSim, ["Node_Rigid_Group"]);
 			ds_list_add(rigidSim, "Group");
-			addNodeObject(rigidSim, "Input",	s_node_group_input,	"Node_Group_Input",		[1, Node_Group_Input]);
-			addNodeObject(rigidSim, "Output",	s_node_group_output,"Node_Group_Output",	[1, Node_Group_Output]);
+			addNodeObject(rigidSim, "Input",	s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]);
+			addNodeObject(rigidSim, "Output",	s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]);
+			addNodeObject(rigidSim, "Render",	s_node_rigidSim_render_output,	"Node_Rigid_Render_Output",	[1, Node_Rigid_Render_Output]);
 			
 			ds_list_add(rigidSim, "RigidSim");
-			addNodeObject(rigidSim, "Object",			s_node_rigidSim_object,		"Node_Rigid_Object",		[1, Node_Rigid_Object]).setVersion(1110);
-			addNodeObject(rigidSim, "Object Spawner",	s_node_rigidSim_object_spawner,		"Node_Rigid_Object_Spawner",		[1, Node_Rigid_Object_Spawner]).setVersion(1110);
-			addNodeObject(rigidSim, "Render",			s_node_rigidSim_renderer,	"Node_Rigid_Render",		[1, Node_Rigid_Render]).setVersion(1110);
-			addNodeObject(rigidSim, "Apply Force",		s_node_rigidSim_force,		"Node_Rigid_Force_Apply",	[1, Node_Rigid_Force_Apply]).setVersion(1110);
+			addNodeObject(rigidSim, "Object",			s_node_rigidSim_object,				"Node_Rigid_Object",			[1, Node_Rigid_Object]).setVersion(1110);
+			addNodeObject(rigidSim, "Object Spawner",	s_node_rigidSim_object_spawner,		"Node_Rigid_Object_Spawner",	[1, Node_Rigid_Object_Spawner]).setVersion(1110);
+			addNodeObject(rigidSim, "Render",			s_node_rigidSim_renderer,			"Node_Rigid_Render",			[1, Node_Rigid_Render]).setVersion(1110);
+			addNodeObject(rigidSim, "Apply Force",		s_node_rigidSim_force,				"Node_Rigid_Force_Apply",		[1, Node_Rigid_Force_Apply]).setVersion(1110);
 			
 			ds_list_add(rigidSim, "Instance control");
 			addNodeObject(rigidSim, "Activate Physics",	s_node_rigidSim_activate,	"Node_Rigid_Activate",		[1, Node_Rigid_Activate]).setVersion(1110);
@@ -201,9 +202,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var fluidSim = ds_list_create(); #region
 		addNodeCatagory("FluidSim", fluidSim, ["Node_Fluid_Group"]);
 			ds_list_add(fluidSim, "Group");
-			addNodeObject(fluidSim, "Input",			s_node_group_input,			"Node_Group_Input",			[1, Node_Group_Input]);
-			addNodeObject(fluidSim, "Output",			s_node_group_output,		"Node_Group_Output",		[1, Node_Group_Output]);
-			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render,		"Node_Fluid_Render_Output",	[1, Node_Fluid_Render_Output]).setVersion(11540);
+			addNodeObject(fluidSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]);
+			addNodeObject(fluidSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]);
+			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render_output,	"Node_Fluid_Render_Output",	[1, Node_Fluid_Render_Output]).setVersion(11540);
 			
 			ds_list_add(fluidSim, "Domain");
 			addNodeObject(fluidSim, "Fluid Domain",		s_node_fluidSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).setVersion(1120);

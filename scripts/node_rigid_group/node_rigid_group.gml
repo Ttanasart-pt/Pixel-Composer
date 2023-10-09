@@ -9,10 +9,7 @@ function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	collIndex		= irandom_range(1, 9999);
 	
 	if(!LOADING && !APPENDING && !CLONING) {
-		var _render = nodeBuild("Node_Rigid_Render", 256, -32, self);
-		var _output = nodeBuild("Node_Group_Output", 416, -32, self);
-		
-		_output.inputs[| 0].setFrom(_render.outputs[| 0]);
+		var _output = nodeBuild("Node_Rigid_Render_Output", 256, -32, self);
 	}
 	
 	static reset = function() { 

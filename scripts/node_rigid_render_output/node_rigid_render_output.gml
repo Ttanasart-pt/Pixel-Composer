@@ -1,18 +1,19 @@
-function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y, _group) constructor {
 	name  = "Render";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	
 	use_cache = CACHE_USE.auto;
-	update_on_frame = true;
+	
+	w = 128;
+	h = 128;
+	min_h = h;
+	previewable = true;
 	
 	inputs[| 0] = nodeValue("Render dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector)
 		.rejectArray();
 		
 	inputs[| 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	setIsDynamicInput(1);
 	
@@ -35,6 +36,26 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		inputs[| index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
 			.setVisible(true, true);
 	} if(!LOADING && !APPENDING) createNewInput(); #endregion
+	
+	static createOutput = function(override_order = true) { #region
+		if(group == noone) return;
+		if(!is_struct(group)) return;
+		
+		if(override_order)
+			attributes.input_priority = ds_list_size(group.outputs);
+			
+		if(!is_undefined(outParent))
+			ds_list_remove(group.outputs, outParent);
+			
+		outParent = nodeValue("Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
+			.uncache()
+			.setVisible(true, true);
+		outParent.from = self;
+		
+		ds_list_add(group.outputs, outParent);
+		group.setHeight();
+		group.sortIO();
+	} if(!LOADING && !APPENDING) createOutput(); #endregion
 	
 	static refreshDynamicInput = function() { #region
 		var _l = ds_list_create();
@@ -75,22 +96,21 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static step = function() { #region
 		var _dim = getInputData(0);
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outParent.getValue();
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		outputs[| 0].setValue(_outSurf);
+		outParent.setValue(_outSurf);
 	} #endregion
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
-		if(recoverCache() || !PROJECT.animator.is_playing)
-			return;
-			
+		if(!is_instanceof(outParent, NodeValue)) return noone;
+		
 		var _dim = getInputData(0);
 		var _rnd = getInputData(1);
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outParent.getValue();
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		outputs[| 0].setValue(_outSurf);
+		outParent.setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
@@ -122,12 +142,6 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						var yy = _rnd? round(_o.phy_position_y) : _o.phy_position_y;
 						
 						draw_surface_ext_safe(_o.surface, xx, yy, ixs, iys, _o.image_angle, _o.image_blend, _o.image_alpha);
-						
-						//draw_set_color(c_red);
-						//draw_circle(_o.phy_com_x, _o.phy_com_y, 2, false);
-						
-						//draw_set_color(c_blue);
-						//draw_circle(_o.phy_position_x, _o.phy_position_y, 2, false);
 					}
 				}
 			}
@@ -138,5 +152,25 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		surface_reset_target();
 		cacheCurrentFrame(_outSurf);
+	} #endregion
+		
+	static recoverCache = function(frame = PROJECT.animator.current_frame) { #region
+		if(!is_instanceof(outParent, NodeValue)) return false;
+		if(!cacheExist(frame)) return false;
+		
+		var _s = cached_output[PROJECT.animator.current_frame];
+		outParent.setValue(_s);
+			
+		return true;
+	} #endregion
+	
+	static getGraphPreviewSurface = function() { #region
+		if(!is_instanceof(outParent, NodeValue)) return noone;
+		return outParent.getValue();
+	} #endregion
+	
+	static getPreviewValues = function() { #region
+		if(!is_instanceof(outParent, NodeValue)) return noone;
+		return outParent.getValue();
 	} #endregion
 }

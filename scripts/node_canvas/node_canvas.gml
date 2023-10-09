@@ -1004,31 +1004,25 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var cDep   = attrDepth();
 		apply_surfaces();
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _frames  = attributes.frames;
 		
-		if(attributes.frames == 1) {
-			if(is_array(_outSurf)) {
-				if(!array_empty(_outSurf)) _outSurf = _outSurf[0];
-				else _outSurf = noone;
-			}
-			
+		if(!is_array(output_surface)) output_surface = array_create(_frames);
+		else if(array_length(output_surface) != _frames)
+			array_resize(output_surface, _frames);
+		
+		if(_frames == 1) {
 			var _canvas_surface = getCanvasSurface(0);
-			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], cDep);
+			output_surface[0] = surface_verify(output_surface[0], _dim[0], _dim[1], cDep);
 			
-			surface_set_shader(_outSurf, noone,, BLEND.alpha);
+			surface_set_shader(output_surface[0], noone,, BLEND.alpha);
 				if(_bgr && is_surface(_bg))
 					draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
 				draw_surface_safe(_canvas_surface, 0, 0);
 			surface_reset_shader();
 			
-			outputs[| 0].setValue(_outSurf);
+			outputs[| 0].setValue(output_surface[0]);
 		} else {
-			if(!is_array(output_surface)) 
-				output_surface = array_create(attributes.frames);
-			else if(array_length(output_surface) != attributes.frames)
-				array_resize(output_surface, attributes.frames);
-				
-			for( var i = 0; i < attributes.frames; i++ ) {
+			for( var i = 0; i < _frames; i++ ) {
 				var _canvas_surface = getCanvasSurface(i);
 				output_surface[i] = surface_verify(output_surface[i], _dim[0], _dim[1], cDep);
 			
@@ -1041,7 +1035,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			if(_anim) {
-				var _fr_index = safe_mod(PROJECT.animator.current_frame * _anims, attributes.frames);
+				var _fr_index = safe_mod(PROJECT.animator.current_frame * _anims, _frames);
 				outputs[| 0].setValue(output_surface[_fr_index]);
 			} else
 				outputs[| 0].setValue(output_surface);

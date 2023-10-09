@@ -44,11 +44,18 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		["Force",	false],	1, 6, 4, 2, 3, 5, 8, 7, 
 	]
 	
-	attributes.show_objects = true;
 	array_push(attributeEditors, "Display");
+	
+	attributes.show_objects = true;
 	array_push(attributeEditors, ["Show objects", function() { return attributes.show_objects; }, 
 		new checkBox(function() { 
 			attributes.show_objects = !attributes.show_objects;
+		})]);
+	
+	attributes.display_scale = 512;
+	array_push(attributeEditors, ["Display scale", function() { return attributes.display_scale; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes.display_scale = val;
 		})]);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -56,7 +63,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
 			var _node = group.nodes[| i];
 			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
-			_node.drawOverlayPreview(_x, _y, _s, _mx, _my, _snx, _sny);
+			var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			active &= !_hov;
 		}
 		
 		var _typ = getInputData(1);
@@ -67,8 +75,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		if(_typ == 0 || _typ == 1) {
 			var _for = getInputData(5);
 			
-			var fx = px + _for[0] * 4 * _s;
-			var fy = py + _for[1] * 4 * _s;
+			var fx = px + _for[0] * attributes.display_scale * _s;
+			var fy = py + _for[1] * attributes.display_scale * _s;
 			
 			draw_set_color(COLORS._main_accent);
 			draw_set_alpha(0.5);
@@ -76,7 +84,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_set_alpha(1);
 			
 			inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-			inputs[| 5].drawOverlay(active, px, py, _s * 4, _mx, _my, _snx, _sny, THEME.anchor, 10);
+			inputs[| 5].drawOverlay(active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, THEME.anchor, 10);
 		} else if(_typ == 3) {
 			var _rad = getInputData(8);
 			

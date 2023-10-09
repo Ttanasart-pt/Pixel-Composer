@@ -438,7 +438,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		inputs_data	= array_create(ds_list_size(inputs), undefined);
 		
 		for(var i = 0; i < ds_list_size(inputs); i++)
-			inputs_data[i] = inputs[| i].getValue(,,, true);
+			inputs_data[i] = inputs[| i].getValue(,,, false);
 	} #endregion
 	
 	static forceUpdate = function() { #region

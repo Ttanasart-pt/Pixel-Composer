@@ -33,15 +33,6 @@ function __part(_node) constructor {
 	accel   = 0;
 	spVec   = [ 0, 0 ];
 	
-	//wig_psx = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
-	//wig_psy = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
-	
-	//wig_scx = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
-	//wig_scy = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
-	
-	//wig_rot = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
-	//wig_dir = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
-	
 	grav    = 0;
 	gravDir = -90;
 	gravX   = 0;
@@ -49,8 +40,8 @@ function __part(_node) constructor {
 	
 	scx   = 1;
 	scy   = 1;
-	sc_sx  = 1;
-	sc_sy  = 1;
+	sc_sx = 1;
+	sc_sy = 1;
 	sct   = CURVE_DEF_11;
 	
 	rot		= 0;
@@ -117,13 +108,6 @@ function __part(_node) constructor {
 	
 	static setWiggle = function(wiggle_maps) { #region
 		gml_pragma("forceinline");
-		
-		//wig_psx.check(_wig_pos[0], _wig_pos[1], seed + 10);
-		//wig_psy.check(_wig_pos[0], _wig_pos[1], seed + 20);
-		//wig_rot.check(_wig_rot[0], _wig_rot[1], seed + 30);
-		//wig_scx.check(_wig_sca[0], _wig_sca[1], seed + 40);
-		//wig_scy.check(_wig_sca[0], _wig_sca[1], seed + 50);
-		//wig_dir.check(_wig_dir[0], _wig_dir[1], seed + 60);
 		
 		wig_psx = wiggle_maps.wig_psx;
 		wig_psy = wiggle_maps.wig_psy;

@@ -60,19 +60,8 @@ function Node_Fluid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		outParent.name = display_name;
 	} #endregion
 	
-	static recoverCache = function(frame = PROJECT.animator.current_frame) { #region
-		if(!is_instanceof(outParent, NodeValue)) return false;
-		if(!cacheExist(frame)) return false;
-		
-		var _s = cached_output[PROJECT.animator.current_frame];
-		outParent.setValue(_s);
-			
-		return true;
-	} #endregion
-	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
 		if(!is_instanceof(outParent, NodeValue)) return noone;
-		if(recoverCache() || !PROJECT.animator.is_playing) return;
 		
 		var _dim = inputs[| 1].getValue(frame);
 		var _outSurf = outParent.getValue();
@@ -102,7 +91,17 @@ function Node_Fluid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		surface_reset_shader();
 		
 		group.outputNode = self;
-		var frm = cacheCurrentFrame(_outSurf);
+		cacheCurrentFrame(_outSurf);
+	} #endregion
+	
+	static recoverCache = function(frame = PROJECT.animator.current_frame) { #region
+		if(!is_instanceof(outParent, NodeValue)) return false;
+		if(!cacheExist(frame)) return false;
+		
+		var _s = cached_output[PROJECT.animator.current_frame];
+		outParent.setValue(_s);
+			
+		return true;
 	} #endregion
 	
 	static getGraphPreviewSurface = function() { #region

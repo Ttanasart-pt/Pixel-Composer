@@ -24,7 +24,7 @@ function Node_create_Math(_x, _y, _group = noone, _param = {}) {
 	var query = struct_try_get(_param, "query", "");
 	var node  = new Node_Math(_x, _y, _group);
 	
-	switch(query) {
+	switch(query) { #region
 		case "add" :		node.inputs[| 0].setValue(MATH_OPERATOR.add); break;
 		case "subtract" :	node.inputs[| 0].setValue(MATH_OPERATOR.subtract); break;
 		case "multiply" :	node.inputs[| 0].setValue(MATH_OPERATOR.multiply); break;
@@ -44,7 +44,7 @@ function Node_create_Math(_x, _y, _group = noone, _param = {}) {
 		
 		case "lerp" :		node.inputs[| 0].setValue(MATH_OPERATOR.lerp); break;
 		case "abs" :		node.inputs[| 0].setValue(MATH_OPERATOR.abs); break;
-	}
+	} #endregion
 	
 	return node;
 }
@@ -83,7 +83,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	use_mod = 0;
 	use_deg = false;
 	
-	static _eval = function(a, b, c = 0) {
+	static _eval = function(a, b, c = 0) { #region
 		switch(use_mod) {
 			case MATH_OPERATOR.add :		return a + b;    
 			case MATH_OPERATOR.subtract :	return a - b;
@@ -106,9 +106,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.abs :		return abs(a);
 		}
 		return 0;
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var mode = getInputData(0);
 		
 		switch(mode) {
@@ -170,9 +170,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 			default: return;
 		}
-	}
+	} #endregion
 	
-	function evalArray(a, b, c = 0) {
+	function evalArray(a, b, c = 0) { #region
 		var as = is_array(a);
 		var bs = is_array(b);
 		var cs = is_array(c);
@@ -199,9 +199,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			);
 		
 		return val;
-	}
+	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		use_mod = getInputData(0);
 		var a	= getInputData(1);
 		var b	= getInputData(2);
@@ -210,9 +210,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var val = evalArray(a, b, c);
 		outputs[| 0].setValue(val);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		switch(getInputData(0)) {
@@ -240,5 +240,5 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
-	}
+	} #endregion
 }
