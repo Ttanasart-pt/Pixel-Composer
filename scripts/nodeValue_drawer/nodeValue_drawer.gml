@@ -107,7 +107,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "", THEME.prop_keyframe, 2) == 2) {
 				for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 					var _key = jun.animator.values[| j];
-					if(_key.time > PROJECT.animator.current_frame) {
+					if(_key.time > CURRENT_FRAME) {
 						PROJECT.animator.setFrame(_key.time);
 						break;
 					}
@@ -118,7 +118,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			var cc = COLORS.panel_animation_keyframe_unselected;
 			var kfFocus = false;
 			for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
-				if(jun.animator.values[| j].time == PROJECT.animator.current_frame) {
+				if(jun.animator.values[| j].time == CURRENT_FRAME) {
 					cc = COLORS.panel_animation_keyframe_selected;
 					kfFocus = true;
 					break;
@@ -130,18 +130,18 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				var _add = false;
 				for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 					var _key = jun.animator.values[| j];
-					if(_key.time == PROJECT.animator.current_frame) {
+					if(_key.time == CURRENT_FRAME) {
 						if(ds_list_size(jun.animator.values) > 1)
 							ds_list_delete(jun.animator.values, j);
 						_add = true;
 						break;
-					} else if(_key.time > PROJECT.animator.current_frame) {
-						ds_list_insert(jun.animator.values, j, new valueKey(PROJECT.animator.current_frame, jun.showValue(), jun.animator));
+					} else if(_key.time > CURRENT_FRAME) {
+						ds_list_insert(jun.animator.values, j, new valueKey(CURRENT_FRAME, jun.showValue(), jun.animator));
 						_add = true;
 						break;	
 					}
 				}
-				if(!_add) ds_list_add(jun.animator.values, new valueKey(PROJECT.animator.current_frame, jun.showValue(), jun.animator));
+				if(!_add) ds_list_add(jun.animator.values, new valueKey(CURRENT_FRAME, jun.showValue(), jun.animator));
 			}
 						
 			bx -= ui(26);
@@ -149,7 +149,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				var _t = -1;
 				for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 					var _key = jun.animator.values[| j];
-					if(_key.time < PROJECT.animator.current_frame)
+					if(_key.time < CURRENT_FRAME)
 						_t = _key.time;
 				}
 				if(_t > -1) PROJECT.animator.setFrame(_t);

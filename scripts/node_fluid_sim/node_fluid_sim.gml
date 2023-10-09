@@ -81,7 +81,7 @@ function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 		var vMac	= getInputData(10);
 		var wrap	= getInputData(11);
 		
-		if(PROJECT.animator.current_frame == 0 || !is_surface(domain.sf_world)) {
+		if(CURRENT_FRAME == 0 || !is_surface(domain.sf_world)) {
 			fd_rectangle_clear(domain);
 			fd_rectangle_destroy(domain);
 			domain = fd_rectangle_create(_dim[0], _dim[1]);

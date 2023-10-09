@@ -39,7 +39,7 @@ function Node_Fluid_Apply_Velocity(_x, _y, _group = noone) : Node_Fluid(_x, _y, 
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _dom = inputs[| 0].getValue(frame);
 		var _mat = inputs[| 1].getValue(frame);
 		var _pos = inputs[| 2].getValue(frame);

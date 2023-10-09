@@ -34,7 +34,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static refreshDynamicInput = function() {
+	static refreshDynamicInput = function() { #region
 		var _l = ds_list_create();
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(i < input_fix_len || inputs[| i].value_from)
@@ -50,24 +50,27 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		inputs = _l;
 		
 		createNewInput();
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
 		refreshDynamicInput();
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var _dim		= getInputData(0);
 		var _outSurf	= outputs[| 0].getValue();
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
-	}
+		
+		if(previewing && is_instanceof(group, Node_VFX_Group)) 
+			group.preview_node = self;
+	} #endregion
 	
-	static update = function(_time = PROJECT.animator.current_frame) {
+	static update = function(_time = CURRENT_FRAME) { #region
 		if(!PROJECT.animator.is_playing) {
 			recoverCache();
 			return;
@@ -112,5 +115,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		surface_reset_shader();
 		
 		cacheCurrentFrame(_outSurf);
-	}
+	} #endregion
+		
+	getPreviewingNode = VFX_PREVIEW_NODE;
 }

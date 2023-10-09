@@ -91,7 +91,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		update();
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var path = getInputData(0);
 		var pad  = getInputData(1);
 		if(path == "") return;

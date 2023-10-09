@@ -158,7 +158,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		if(!compiled) return;
 		//if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
 		
@@ -172,7 +172,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length )
 			array_push(argument_val,  getInputData(i + 2));
 		
-		//if(PROJECT.animator.current_frame == 0) { //refresh state on the first frame
+		//if(CURRENT_FRAME == 0) { //refresh state on the first frame
 		//	lua_state_destroy(lua_state);
 		//	lua_state = lua_create();
 		//	addCode();

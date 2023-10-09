@@ -42,7 +42,7 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);
 		if(!is_array(_arr)) return;
 		

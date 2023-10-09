@@ -92,6 +92,7 @@ function __generate_node_data() { #region
 		
 		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
 			var _group = _json[$ _keys[i]];
+			
 			if(!struct_has(_rel, _keys[i]))
 				_rel[$ _keys[i]] = { relations : {} };
 			var _Vgroup = _rel[$ _keys[i]].relations;
@@ -103,6 +104,13 @@ function __generate_node_data() { #region
 						var _k = value_type_from_string(_types[j]);
 						if(!struct_has(_Vgroup, _k)) _Vgroup[$ _k] = [];
 						array_append(_Vgroup[$ _k], _group.relations[$ _types[j]]);
+					}
+					break;
+				case "contextNode" :
+					var _nodes = variable_struct_get_names(_group.relations);
+					for( var j = 0, m = array_length(_nodes); j < m; j++ ) {
+						if(!struct_has(_Vgroup, _nodes[j])) _Vgroup[$ _nodes[j]] = [];
+						array_append(_Vgroup[$ _nodes[j]], _group.relations[$ _nodes[j]]);
 					}
 					break;
 			}

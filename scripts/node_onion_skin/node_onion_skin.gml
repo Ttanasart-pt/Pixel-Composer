@@ -52,7 +52,7 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			
-			var fr = PROJECT.animator.current_frame;
+			var fr = CURRENT_FRAME;
 			var st = min(_rang[0], _rang[1]);
 			var ed = max(_rang[0], _rang[1]);
 			

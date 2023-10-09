@@ -18,7 +18,7 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["Activate",	false],	1,
 	]
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _obj = getInputData(0);
 		outputs[| 0].setValue(_obj);
 		

@@ -39,7 +39,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		inputs[| 0].setType(type);
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		if(frame == 0) {
 			NodeListSort(topoList, nodes);
 			

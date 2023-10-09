@@ -59,7 +59,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		inputs[| 2].setVisible(_axis != 2);
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		var _axis = getInputData(0);
 		var _alig = getInputData(1);
 		var _spac = getInputData(2);

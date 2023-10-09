@@ -177,7 +177,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	scatter_index = 0;
 	def_surface   = -1;
 	
-	current_data  = [];
 	surface_cache = {};
 	
 	wiggle_maps = {
@@ -195,46 +194,46 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	for( var i = 0; i < attributes.part_amount; i++ )
 		parts[i] = new __part(self);
 		
-	static spawn = function(_time = PROJECT.animator.current_frame, _pos = -1) { #region
-		var _inSurf = current_data[ 0];
+	static spawn = function(_time = CURRENT_FRAME, _pos = -1) { #region
+		var _inSurf = getInputData( 0);
 		
-		var _spawn_amount	= current_data[ 2];
+		var _spawn_amount	= getInputData( 2);
 		
-		var _spawn_area	= current_data[ 3];
-		var _distrib	= current_data[ 4];
-		var _dist_map	= current_data[30];
-		var _scatter	= current_data[24];
+		var _spawn_area	= getInputData( 3);
+		var _distrib	= getInputData( 4);
+		var _dist_map	= getInputData(30);
+		var _scatter	= getInputData(24);
 		
-		var _life			= current_data[ 5];
-		var _direction		= current_data[ 6];
-		var _directCenter	= current_data[29];
-		var _velocity		= current_data[18];
+		var _life			= getInputData( 5);
+		var _direction		= getInputData( 6);
+		var _directCenter	= getInputData(29);
+		var _velocity		= getInputData(18);
 		
-		var _accel	= current_data[ 7];
-		var _grav	= current_data[19];
-		var _gvDir	= current_data[33];
-		var _turn	= current_data[34];
-		var _turnBi	= current_data[35];
-		var _turnSc	= current_data[36];
+		var _accel	= getInputData( 7);
+		var _grav	= getInputData(19);
+		var _gvDir	= getInputData(33);
+		var _turn	= getInputData(34);
+		var _turnBi	= getInputData(35);
+		var _turnSc	= getInputData(36);
 		
-		var _follow			= current_data[15];
-		var _rotation		= current_data[ 8];
-		var _rotation_speed	= current_data[ 9];
-		var _scale			= current_data[10];
-		var _size 			= current_data[17];
+		var _follow			= getInputData(15);
+		var _rotation		= getInputData( 8);
+		var _rotation_speed	= getInputData( 9);
+		var _scale			= getInputData(10);
+		var _size 			= getInputData(17);
 		
-		var _color	= current_data[12];
-		var _blend	= current_data[28];
-		var _alpha	= current_data[13];
+		var _color	= getInputData(12);
+		var _blend	= getInputData(28);
+		var _alpha	= getInputData(13);
 		
-		var _arr_type	= current_data[22];
-		var _anim_speed	= current_data[23];
-		var _anim_end	= current_data[26];
+		var _arr_type	= getInputData(22);
+		var _anim_speed	= getInputData(23);
+		var _anim_end	= getInputData(26);
 		
-		var _ground			= current_data[37];
-		var _ground_offset	= current_data[38];
-		var _ground_bounce	= current_data[39];
-		var _ground_frict   = current_data[40];
+		var _ground			= getInputData(37);
+		var _ground_offset	= getInputData(38);
+		var _ground_bounce	= getInputData(39);
+		var _ground_frict   = getInputData(40);
 		
 		if(_rotation[1] < _rotation[0]) _rotation[1] += 360;
 		
@@ -244,7 +243,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _amo = irandom_range(_spawn_amount[0], _spawn_amount[1]);
 		if(_distrib == 2) _posDist = get_points_from_dist(_dist_map, _amo, seed);
 		
-		//print($"Frame {_time}: Spawning {_amo} particles, seed {seed}, {irandom(99999999)}");
+		//print($"[{display_name}] Frame {_time}: Spawning {_amo} particles, seed {seed}, at {_pos}");
+		
 		for( var i = 0; i < _amo; i++ ) {
 			seed += 100;
 			random_set_seed(seed); 
@@ -335,49 +335,60 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static updateParticleForward = function() {}
 	
-	function reset() { #region
-		spawn_index = 0;
-		scatter_index = 0;
-		for(var i = 0; i < array_length(parts); i++) {
-			if(!parts[i].active) continue;
-			parts[i].kill();
+	static getSurfaceCache = function() { #region
+		var surfs = getInputData(0);
+		
+		if(!is_array(getInputData(0))) surfs = [ surfs ];
+		if(!array_empty(getInputData(0))) {
+			if(is_array(getInputData(0)))
+				surfs = array_spread(surfs);
+			for( var i = 0, n = array_length(surfs); i < n; i++ ) {
+				if(is_surface(surface_cache[$ surfs[i]])) continue;
+				surface_cache[$ surfs[i]] = surface_clone(surfs[i]);
+			}
 		}
-		
-		render();
-		seed = getInputData(32);
-		
-		var _wigg_pos = getInputData(41);
-		var _wigg_rot = getInputData(42);
-		var _wigg_sca = getInputData(43);
-		var _wigg_dir = getInputData(20);
-		
-		wiggle_maps.wig_psx.check(_wigg_pos[0], _wigg_pos[1], seed + 10);
-		wiggle_maps.wig_psy.check(_wigg_pos[0], _wigg_pos[1], seed + 20);
-		wiggle_maps.wig_rot.check(_wigg_rot[0], _wigg_rot[1], seed + 30);
-		wiggle_maps.wig_scx.check(_wigg_sca[0], _wigg_sca[1], seed + 40);
-		wiggle_maps.wig_scy.check(_wigg_sca[0], _wigg_sca[1], seed + 50);
-		wiggle_maps.wig_dir.check(_wigg_dir[0], _wigg_dir[1], seed + 60);
-		
-		var _curve_sca = getInputData(11);
-		var _curve_alp = getInputData(14);
-		
-		curve_scale = new curveMap(_curve_sca, PROJECT.animator.frames_total);
-		curve_alpha = new curveMap(_curve_alp, PROJECT.animator.frames_total);
+	} #endregion
+	
+	function reset() { #region
+		getInputs(0);
 		
 		var keys = variable_struct_get_names(surface_cache);
 		for( var i = 0, n = array_length(keys); i < n; i++ )
 			surface_free_safe(surface_cache[$ keys[i]]);
 		surface_cache = {};
+		getSurfaceCache();
 		
-		var _loop = getInputData(21);
-		if(!_loop) return;
+		spawn_index   = 0;
+		scatter_index = 0;
 		
-		for(var i = 0; i < PROJECT.animator.frames_total; i++) {
-			runVFX(i, false);
-			updateParticleForward();
+		for(var i = 0; i < array_length(parts); i++) {
+			if(!parts[i].active) continue;
+			parts[i].kill(false);
 		}
 		
-		seed = getInputData(32);
+		#region ----- precomputes -----
+			seed = getInputData(32);
+			
+			var _wigg_pos = getInputData(41);
+			var _wigg_rot = getInputData(42);
+			var _wigg_sca = getInputData(43);
+			var _wigg_dir = getInputData(20);
+		
+			wiggle_maps.wig_psx.check(_wigg_pos[0], _wigg_pos[1], seed + 10);
+			wiggle_maps.wig_psy.check(_wigg_pos[0], _wigg_pos[1], seed + 20);
+			wiggle_maps.wig_rot.check(_wigg_rot[0], _wigg_rot[1], seed + 30);
+			wiggle_maps.wig_scx.check(_wigg_sca[0], _wigg_sca[1], seed + 40);
+			wiggle_maps.wig_scy.check(_wigg_sca[0], _wigg_sca[1], seed + 50);
+			wiggle_maps.wig_dir.check(_wigg_dir[0], _wigg_dir[1], seed + 60);
+		
+			var _curve_sca = getInputData(11);
+			var _curve_alp = getInputData(14);
+		
+			curve_scale = new curveMap(_curve_sca, TOTAL_FRAMES);
+			curve_alpha = new curveMap(_curve_alp, TOTAL_FRAMES);
+		#endregion
+		
+		render();
 	} #endregion
 	
 	function checkPartPool() { #region
@@ -392,7 +403,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 	} #endregion
 	
-	static runVFX = function(_time = PROJECT.animator.current_frame, _render = true) { #region
+	static runVFX = function(_time = CURRENT_FRAME, _render = true) { #region
 		var _spawn_delay  = inputs[| 1].getValue(_time);
 		var _spawn_type   = inputs[| 16].getValue(_time);
 		var _spawn_active = inputs[| 27].getValue(_time);
@@ -400,22 +411,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		//print($"{_time} : {_spawn_trig} | {ds_list_to_array(inputs[| 44].animator.values)}");
 		
-		for( var i = 0; i < ds_list_size(inputs); i++ )
-			current_data[i] = inputs[| i].getValue(_time);
-		
-		var surfs = current_data[0];
-		
-		if(!is_array(current_data[0])) surfs = [ surfs ];
-		if(!array_empty(current_data[0])) {
-			if(is_array(current_data[0]))
-				surfs = array_spread(surfs);
-			for( var i = 0, n = array_length(surfs); i < n; i++ ) {
-				if(is_surface(surface_cache[$ surfs[i]])) continue;
-				surface_cache[$ surfs[i]] = surface_clone(surfs[i]);
-			}
-		}
-		
-		//print(surface_cache);
+		getInputs(_time);
+		getSurfaceCache();
 		
 		if(_spawn_active) {
 			switch(_spawn_type) {
@@ -424,11 +421,16 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				case 2 : if(_spawn_trig)						spawn(_time); break;
 			}
 		}
-			
+		
+		//var activeParts = 0;
 		for(var i = 0; i < array_length(parts); i++) {
 			if(!parts[i].active) continue;
-			parts[i].step();
+			//activeParts++;
+			parts[i].step(_time);
 		}
+		
+		//print($"Run VFX frame {_time} seed {seed}");
+		//print($"[{display_name}] Running VFX frame {_time}: {activeParts} active particles.");
 			
 		if(!_render) return;
 		
@@ -493,18 +495,18 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static onDrawOverlay = -1;
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		checkPartPool();
-		onUpdate();
+		onUpdate(frame);
 	} #endregion
 	
-	static onUpdate = function() {}
+	static onUpdate = function(frame = CURRENT_FRAME) {}
 	
 	static render = function() {}
 	
-	static onPartCreate = function(part) {}
-	static onPartStep = function(part) {}
-	static onPartDestroy = function(part) {}
+	static onPartCreate  = noone;
+	static onPartStep    = noone;
+	static onPartDestroy = noone;
 	
 	static doSerialize = function(_map) { #region
 		_map.part_base_length = input_len;

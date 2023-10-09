@@ -156,12 +156,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(!draw_input_overlay) return;
+		
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in   = inputs[| i];
 			var _show = _in.from.getInputData(6);
 			
 			if(!_show) continue;
-			_in.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var _hov = _in.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(_hov != undefined) active &= !_hov;
 		}
 	} #endregion
 	
@@ -296,7 +298,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static stepBegin = function() { #region
 		use_cache = CACHE_USE.none;
 		
-		array_safe_set(cache_result, PROJECT.animator.current_frame, true);
+		array_safe_set(cache_result, CURRENT_FRAME, true);
 		
 		var node_list = getNodeList();
 		for(var i = 0; i < ds_list_size(node_list); i++) {
@@ -305,8 +307,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(!_node.use_cache) continue;
 			
 			use_cache = CACHE_USE.manual;
-			if(!array_safe_get(_node.cache_result, PROJECT.animator.current_frame))
-				array_safe_set(cache_result, PROJECT.animator.current_frame, false);
+			if(!array_safe_get(_node.cache_result, CURRENT_FRAME))
+				array_safe_set(cache_result, CURRENT_FRAME, false);
 		}
 		
 		var out_surf = false;
@@ -506,7 +508,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static onDoubleClick = function(panel) { #region
 		panel.addContext(self);
+		if(ononDoubleClick != noone)
+			ononDoubleClick(panel);
 	} #endregion
+	
+	static ononDoubleClick = noone;
 	
 	static getGraphPreviewSurface = function() { #region
 		var _output_junc = outputs[| preview_channel];

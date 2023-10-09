@@ -122,7 +122,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return true;
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var path = getInputData(0);
 		if(path == "") return;
 		if(!is_array(path)) path = [ path ];

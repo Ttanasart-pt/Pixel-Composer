@@ -34,7 +34,7 @@
 	global.FUNCTIONS[? "lerp"]   = [ ["x", "y", "amount"], function(val) { return lerp(array_safe_get(val, 0), array_safe_get(val, 1), array_safe_get(val, 2)); } ];
 	
 	global.FUNCTIONS[? "wiggle"] = [ ["time", "frequency", "octave = 1", "seed = 0"],	function(val) { 
-																								return wiggle(0, 1, PROJECT.animator.frames_total / array_safe_get(val, 1), 
+																								return wiggle(0, 1, TOTAL_FRAMES / array_safe_get(val, 1), 
 																												array_safe_get(val, 0), 
 																												array_safe_get(val, 3, 0), 
 																												array_safe_get(val, 2, 1)); 
@@ -89,11 +89,11 @@
 	PROJECT_VARIABLES = {};
 	
 	PROJECT_VARIABLES.Project = {};
-	PROJECT_VARIABLES.Project.frame			= [ function() { return PROJECT.animator.current_frame },										EXPRESS_TREE_ANIM.animated	];
-	PROJECT_VARIABLES.Project.progress		= [ function() { return PROJECT.animator.current_frame / (PROJECT.animator.frames_total - 1) }, EXPRESS_TREE_ANIM.animated	];
-	PROJECT_VARIABLES.Project.frameTotal	= [ function() { return PROJECT.animator.frames_total }, 										EXPRESS_TREE_ANIM.none		];
+	PROJECT_VARIABLES.Project.frame			= [ function() { return CURRENT_FRAME },										EXPRESS_TREE_ANIM.animated	];
+	PROJECT_VARIABLES.Project.progress		= [ function() { return CURRENT_FRAME / (TOTAL_FRAMES - 1) }, EXPRESS_TREE_ANIM.animated	];
+	PROJECT_VARIABLES.Project.frameTotal	= [ function() { return TOTAL_FRAMES }, 										EXPRESS_TREE_ANIM.none		];
 	PROJECT_VARIABLES.Project.fps			= [ function() { return PROJECT.animator.framerate }, 											EXPRESS_TREE_ANIM.none		];
-	PROJECT_VARIABLES.Project.time			= [ function() { return PROJECT.animator.current_frame / PROJECT.animator.framerate }, 			EXPRESS_TREE_ANIM.animated	];
+	PROJECT_VARIABLES.Project.time			= [ function() { return CURRENT_FRAME / PROJECT.animator.framerate }, 			EXPRESS_TREE_ANIM.animated	];
 	PROJECT_VARIABLES.Project.name			= [ function() { return filename_name_only(PROJECT.path) }, 									EXPRESS_TREE_ANIM.none		];
 	
 	PROJECT_VARIABLES.Program = {};

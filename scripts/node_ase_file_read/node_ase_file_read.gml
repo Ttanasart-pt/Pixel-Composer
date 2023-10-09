@@ -122,7 +122,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var st = tag[? "Frame start"];
 			var ed = tag[? "Frame end"];
 			var rn = ed - st + 1;
-			var progFr = safe_mod(PROJECT.animator.current_frame - _tag_delay, rn) + 1;
+			var progFr = safe_mod(CURRENT_FRAME - _tag_delay, rn) + 1;
 			var prog = progFr / rn;
 			var txt = "";
 			
@@ -299,7 +299,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) { 
+	static update = function(frame = CURRENT_FRAME) { 
 		var path = getInputData(0);
 		var current_tag = getInputData(2);
 		if(path_current != path) updatePaths(path);
@@ -316,7 +316,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		_tag_delay = 0;
 		for( var i = 0; i < ds_list_size(inputs[| 2].animator.values); i++ ) {
 			var kf = inputs[| 2].animator.values[| i];
-			if(kf.time > PROJECT.animator.current_frame) break;
+			if(kf.time > CURRENT_FRAME) break;
 			_tag_delay = kf.time;
 		}
 		
@@ -333,7 +333,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
 			layers[i].tag = tag;
-			var cel = layers[i].getCel(PROJECT.animator.current_frame - _tag_delay);
+			var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay);
 			if(!cel) continue;
 			if(!array_safe_get(vis, i, true)) continue;
 			

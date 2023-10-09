@@ -563,7 +563,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		outputs[| 0].setValue(attributes.bones);
 	} #endregion
 	

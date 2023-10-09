@@ -46,7 +46,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		update_on_frame = _anim;
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _aud = getInputData(0);
 		if(!is_instanceof(_aud, audioObject)) return;
 		

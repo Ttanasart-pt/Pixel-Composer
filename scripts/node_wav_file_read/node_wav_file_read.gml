@@ -40,7 +40,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", onClick: function() { 
 			if(content == noone) return;
 			var frm = max(1, ceil(content.duration * PROJECT.animator.framerate));
-			PROJECT.animator.frames_total = frm;
+			TOTAL_FRAMES = frm;
 		} })
 		.rejectArray();
 		
@@ -187,14 +187,14 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!attributes.play) return;
 		
 		if(PROJECT.animator.is_playing) {
-			var dur = PROJECT.animator.current_frame / PROJECT.animator.framerate - attributes.preview_shift;
+			var dur = CURRENT_FRAME / PROJECT.animator.framerate - attributes.preview_shift;
 			
 			if(!audio_is_playing(preview_audio))
 				preview_id = audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur);
 		}
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		var path = getInputData(0);
 		var mono = getInputData(2);
 		if(path == "") return;
@@ -228,7 +228,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 			draw_surface_ext_safe(surf, dx, dy, ss, ss,,, 0.50);
 				
-			var wd = clamp((PROJECT.animator.current_frame / PROJECT.animator.framerate) / content.duration, 0, 1) * sw;
+			var wd = clamp((CURRENT_FRAME / PROJECT.animator.framerate) / content.duration, 0, 1) * sw;
 			draw_surface_part_ext_safe(surf, 0, 0, min(wd, sw), sh, dx, dy, ss, ss,, attributes.play? COLORS._main_accent : c_white);
 			
 			draw_set_color(attributes.play? COLORS._main_accent : c_white);

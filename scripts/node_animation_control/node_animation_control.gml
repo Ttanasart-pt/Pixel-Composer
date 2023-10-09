@@ -39,7 +39,7 @@ function Node_Animation_Control(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		if(getInputData(5)) { 
 			var fr = getInputData(6);
-			PROJECT.animator.setFrame(PROJECT.animator.current_frame + fr);
+			PROJECT.animator.setFrame(CURRENT_FRAME + fr);
 		}
 	}
 	

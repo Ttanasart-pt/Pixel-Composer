@@ -59,7 +59,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 5] = nodeValue("Set animation length to match", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", onClick: function() { 
 				if(array_length(spr) == 0) return;
-				PROJECT.animator.frames_total = array_length(spr);
+				TOTAL_FRAMES = array_length(spr);
 			} });
 	
 	inputs[| 6]  = nodeValue("Custom frame order", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
@@ -149,7 +149,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		inputs[| 4].setVisible(!_cus && !str);
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		var path = getInputData(0);
 		if(path == "") return;
 		if(is_array(path) && !array_equals(path, path_loaded)) 
@@ -161,9 +161,9 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _cus = getInputData(6);
 		var _str = getInputData(2);
 		var _end = getInputData(4);
-		var _spd = _str? (PROJECT.animator.frames_total + 1) / array_length(spr) : 1 / getInputData(3);
+		var _spd = _str? (TOTAL_FRAMES + 1) / array_length(spr) : 1 / getInputData(3);
 		if(_spd == 0) _spd = 1;
-		var _frame = _cus? getInputData(7) : floor(PROJECT.animator.current_frame / _spd);
+		var _frame = _cus? getInputData(7) : floor(CURRENT_FRAME / _spd);
 		
 		var _len = array_length(spr);
 		var _drw = true;

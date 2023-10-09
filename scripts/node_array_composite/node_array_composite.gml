@@ -31,7 +31,7 @@ function Node_Array_Composite(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		});
 	}
 		
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);
 		var _ker = getInputData(1);
 		

@@ -108,7 +108,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 11] = nodeValue("Sequence begin", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
 	inputs[| 12] = nodeValue("Frame range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, -1])
-		.setDisplay(VALUE_DISPLAY.slider_range, { range: [0, PROJECT.animator.frames_total, 1] });
+		.setDisplay(VALUE_DISPLAY.slider_range, { range: [0, TOTAL_FRAMES, 1] });
 	
 	png_format   = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
 	png_format_r = [ "PNG4", "PNG8"  ];
@@ -369,12 +369,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 							var float_str = string_digits(str);
 							if(float_str != "") {
 								var float_val = string_digits(float_str);
-								var str_val = max(float_val - string_length(string(PROJECT.animator.current_frame + strt)), 0);
+								var str_val = max(float_val - string_length(string(CURRENT_FRAME + strt)), 0);
 								repeat(str_val)
 									_txt += "0";
 							}
 							
-							_txt += string(PROJECT.animator.current_frame + strt);
+							_txt += string(CURRENT_FRAME + strt);
 							if(_array)	array_push(s, [ "f", _txt ]);
 							else		s += _txt;
 							res = true;
@@ -510,10 +510,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(form >= 1) {
 			var rng_s = rang[0];
-			var rng_e = rang[1] == -1? PROJECT.animator.frames_total : rang[1];
+			var rng_e = rang[1] == -1? TOTAL_FRAMES : rang[1];
 			
-			if(PROJECT.animator.current_frame < rng_s) return;
-			if(PROJECT.animator.current_frame > rng_e) return;
+			if(CURRENT_FRAME < rng_s) return;
+			if(CURRENT_FRAME > rng_e) return;
 		}
 		
 		if(is_array(surf)) {
@@ -523,7 +523,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(!is_surface(_surf)) continue;
 				
 				if(form == NODE_EXPORT_FORMAT.gif) {
-					p = directory + "/" + string(i) + "/" + string_lead_zero(PROJECT.animator.current_frame, 5) + ".png";
+					p = directory + "/" + string(i) + "/" + string_lead_zero(CURRENT_FRAME, 5) + ".png";
 				} else {
 					if(is_array(path) && array_length(path) == array_length(surf))
 						p = pathString(path[ safe_mod(i, array_length(path)) ], i);
@@ -546,7 +546,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(is_array(path)) p = path[0];
 				
 			if(form == NODE_EXPORT_FORMAT.gif)
-				p = directory + "/" + string_lead_zero(PROJECT.animator.current_frame, 5) + ".png";
+				p = directory + "/" + string_lead_zero(CURRENT_FRAME, 5) + ".png";
 			else
 				p = pathString(p);
 			
@@ -596,7 +596,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		playing					= true;
 		played					= 0;
 		PROJECT.animator.real_frame		= -1;
-		PROJECT.animator.current_frame	= -1;
+		CURRENT_FRAME	= -1;
 		PROJECT.animator.is_playing		= true;
 		PROJECT.animator.rendering		= true;
 		
@@ -628,7 +628,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		inputs[|  8].setVisible(anim == 2);
 		inputs[| 11].setVisible(anim == 1);
 		inputs[| 12].setVisible(anim >  0);
-		inputs[| 12].editWidget.maxx = PROJECT.animator.frames_total;
+		inputs[| 12].editWidget.maxx = TOTAL_FRAMES;
 		inputs[| 13].setVisible(anim <  2);
 		
 		if(anim == NODE_EXPORT_FORMAT.gif) {
@@ -644,7 +644,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		outputs[| 0].visible = isInLoop();
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		var anim = getInputData(3);
 		if(anim == NODE_EXPORT_FORMAT.single) {
 			if(isInLoop()) export();
@@ -656,12 +656,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			return;
 		}
 		
-		if(!PROJECT.animator.frame_progress || !playing || PROJECT.animator.current_frame <= -1)
+		if(!PROJECT.animator.frame_progress || !playing || CURRENT_FRAME <= -1)
 			return;
 		
 		export();
 		
-		if(PROJECT.animator.current_frame < PROJECT.animator.frames_total - 1) 
+		if(CURRENT_FRAME < TOTAL_FRAMES - 1) 
 			return;
 		
 		if(anim != NODE_EXPORT_FORMAT.gif)

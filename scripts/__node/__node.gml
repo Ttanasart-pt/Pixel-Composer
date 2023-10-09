@@ -11,7 +11,7 @@ function __Node_Base(x, y) constructor {
 	anim_priority = -999;
 	
 	static step   = function() {}
-	static update = function(frame = PROJECT.animator.current_frame) {}
+	static update = function(frame = CURRENT_FRAME) {}
 	
 	static valueUpdate = function(index) {}
 	static triggerRender = function() {}

@@ -113,7 +113,7 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	onion_dragging = noone;
 	
-	prev_cache = array_create(PROJECT.animator.frames_total);
+	prev_cache = array_create(TOTAL_FRAMES);
 	
 	copy_clipboard = ds_list_create();
 	
@@ -138,7 +138,7 @@ function Panel_Animation() : PanelContent() constructor {
 		[ function() { return __txtx("panel_animation_go_to_last_frame", "Go to last frame"); }, 
 		  function() { return 2; }, 
 		  function() { return COLORS._main_icon; },
-		  function() { PROJECT.animator.setFrame(PROJECT.animator.frames_total - 1); } 
+		  function() { PROJECT.animator.setFrame(TOTAL_FRAMES - 1); } 
 		],
 		[ function() { return __txtx("panel_animation_previous_frame", "Previous frame"); }, 
 		  function() { return 5; }, 
@@ -159,9 +159,9 @@ function Panel_Animation() : PanelContent() constructor {
 	addHotkey("", "Resume/Pause",	vk_space, MOD_KEY.shift,	function() { if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); });
 	
 	addHotkey("", "First frame",	vk_home,  MOD_KEY.none,	function() { PROJECT.animator.setFrame(0); });
-	addHotkey("", "Last frame",		vk_end,   MOD_KEY.none,	function() { PROJECT.animator.setFrame(PROJECT.animator.frames_total - 1); });
+	addHotkey("", "Last frame",		vk_end,   MOD_KEY.none,	function() { PROJECT.animator.setFrame(TOTAL_FRAMES - 1); });
 	addHotkey("", "Next frame",		vk_right, MOD_KEY.none,	function() { 
-		PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, PROJECT.animator.frames_total - 1)); 
+		PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, TOTAL_FRAMES - 1)); 
 	});
 	addHotkey("", "Previous frame",	vk_left, MOD_KEY.none,	function() { 
 		PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0));
@@ -434,7 +434,7 @@ function Panel_Animation() : PanelContent() constructor {
 		var bar_y = h - timeline_h - ui(10);
 		var bar_w = timeline_w;
 		var bar_h = timeline_h;
-		var bar_total_w = PROJECT.animator.frames_total * ui(timeline_scale);
+		var bar_total_w = TOTAL_FRAMES * ui(timeline_scale);
 		var inspecting = PANEL_INSPECTOR.getInspecting();
 		
 		resetTimelineMask();
@@ -445,13 +445,13 @@ function Panel_Animation() : PanelContent() constructor {
 			
 		#region bg
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, bar_w, bar_h);
-			var __w = timeline_shift + PROJECT.animator.frames_total * ui(timeline_scale) + PANEL_PAD;
+			var __w = timeline_shift + TOTAL_FRAMES * ui(timeline_scale) + PANEL_PAD;
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, min(__w, timeline_w), bar_h, COLORS.panel_animation_timeline_blend, 1);
 			
 			if(inspecting)
 				inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
 			
-			for(var i = timeline_separate; i <= PROJECT.animator.frames_total; i += timeline_separate) {
+			for(var i = timeline_separate; i <= TOTAL_FRAMES; i += timeline_separate) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
 				draw_set_color(COLORS.panel_animation_frame_divider);
 				draw_line(bar_line_x, ui(12), bar_line_x, bar_h - PANEL_PAD);
@@ -460,18 +460,18 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_text_add(bar_line_x, ui(16), string(i));
 			}
 				
-			var bar_line_x = (PROJECT.animator.current_frame + 1) * ui(timeline_scale) + timeline_shift;
+			var bar_line_x = (CURRENT_FRAME + 1) * ui(timeline_scale) + timeline_shift;
 			var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
 			draw_set_color(cc);
 			draw_line(bar_line_x, ui(12), bar_line_x, bar_h - PANEL_PAD);
 					
 			draw_set_text(f_p2, fa_center, fa_bottom, cc);
-			draw_text_add(bar_line_x, ui(16), string(PROJECT.animator.current_frame + 1));
+			draw_text_add(bar_line_x, ui(16), string(CURRENT_FRAME + 1));
 		#endregion
 			
 		#region cache
 			if(inspecting && inspecting.use_cache) {
-				for(var i = 0; i < PROJECT.animator.frames_total; i++) {
+				for(var i = 0; i < TOTAL_FRAMES; i++) {
 					if(i >= array_length(inspecting.cache_result)) 
 						break;
 						
@@ -524,8 +524,8 @@ function Panel_Animation() : PanelContent() constructor {
 				
 			if(timeline_scubbing) {
 				var rfrm = (mx - bar_x - timeline_shift) / ui(timeline_scale) - 1;
-				PROJECT.animator.setFrame(clamp(rfrm, 0, PROJECT.animator.frames_total - 1));
-				timeline_show_time  = PROJECT.animator.current_frame;
+				PROJECT.animator.setFrame(clamp(rfrm, 0, TOTAL_FRAMES - 1));
+				timeline_show_time  = CURRENT_FRAME;
 					
 				if(timeline_show_time != _scrub_frame) {
 					_scrub_frame = timeline_show_time;
@@ -582,7 +582,7 @@ function Panel_Animation() : PanelContent() constructor {
 						
 				if(mouse_press(mb_left, pFOCUS)) {
 					timeline_scubbing = true;
-					timeline_scub_st  = PROJECT.animator.current_frame;
+					timeline_scub_st  = CURRENT_FRAME;
 					_scrub_frame = timeline_scub_st;
 				}
 			}
@@ -590,7 +590,7 @@ function Panel_Animation() : PanelContent() constructor {
 			if(pHOVER && point_in_rectangle(mx, my, bar_x, 8, bar_x + min(timeline_w, timeline_shift + bar_total_w), 8 + 16)) { //top bar
 				if(mouse_press(mb_left, pFOCUS) && timeline_draggable) {
 					timeline_scubbing = true;
-					timeline_scub_st  = PROJECT.animator.current_frame;
+					timeline_scub_st  = CURRENT_FRAME;
 					_scrub_frame = timeline_scub_st;
 				}
 			}
@@ -607,7 +607,7 @@ function Panel_Animation() : PanelContent() constructor {
 	} #endregion
 	
 	function drawDopesheetLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) { #region
-		var bar_total_w = PROJECT.animator.frames_total * ui(timeline_scale);
+		var bar_total_w = TOTAL_FRAMES * ui(timeline_scale);
 		var bar_show_w  = timeline_shift + bar_total_w;
 		var hovering	= noone;
 		var _gy_top		= key_y + ui(16);
@@ -729,7 +729,7 @@ function Panel_Animation() : PanelContent() constructor {
 				var key_last = animator.values[| ds_list_size(animator.values) - 1];
 				var t_last = (key_last.time + 1) * ui(timeline_scale) + timeline_shift;
 				
-				if(key_last.time < PROJECT.animator.frames_total) {
+				if(key_last.time < TOTAL_FRAMES) {
 					if(valArray) {
 						for( var ki = 0; ki < array_length(key_last.value); ki++ ) {
 							draw_set_color(COLORS.axis[ki]);
@@ -749,7 +749,7 @@ function Panel_Animation() : PanelContent() constructor {
 	} #endregion
 	
 	function drawDopesheetGraph(prop, key_y, msx, msy) { #region
-		var bar_total_w = PROJECT.animator.frames_total * ui(timeline_scale);
+		var bar_total_w = TOTAL_FRAMES * ui(timeline_scale);
 		var bar_show_w  = timeline_shift + bar_total_w;
 		var _gy_top		= key_y + ui(16);
 		var _gy_bottom	= _gy_top + prop.graph_h - ui(8);
@@ -783,7 +783,7 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 			
 			key_next = prop.animator.values[| ds_list_size(prop.animator.values) - 1];
-			if(key_next.time < PROJECT.animator.frames_total) {
+			if(key_next.time < TOTAL_FRAMES) {
 				draw_set_color(key_next.value);
 				draw_rectangle(key_next.dopesheet_x, _gy_top, bar_show_w, _gy_bottom, 0);
 			}
@@ -957,7 +957,7 @@ function Panel_Animation() : PanelContent() constructor {
 				var _t = -1;
 				for(var k = 0; k < ds_list_size(animator.values); k++) {
 					var _key = animator.values[| k];
-					if(_key.time < PROJECT.animator.current_frame)
+					if(_key.time < CURRENT_FRAME)
 						_t = _key.time;
 				}
 				if(_t > -1) PROJECT.animator.setFrame(_t);
@@ -967,7 +967,7 @@ function Panel_Animation() : PanelContent() constructor {
 			if(buttonInstant(noone, tx - ui(6), ty - ui(6), ui(12), ui(12), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 2, [COLORS._main_icon, COLORS._main_icon_on_inner]) == 2) {
 				for(var k = 0; k < ds_list_size(animator.values); k++) {
 					var _key = animator.values[| k];
-					if(_key.time > PROJECT.animator.current_frame) {
+					if(_key.time > CURRENT_FRAME) {
 						PROJECT.animator.setFrame(_key.time);
 						break;
 					}
@@ -981,18 +981,18 @@ function Panel_Animation() : PanelContent() constructor {
 				var _add = false;
 				for(var k = 0; k < ds_list_size(animator.values); k++) {
 					var _key = animator.values[| k];
-					if(_key.time == PROJECT.animator.current_frame) {
+					if(_key.time == CURRENT_FRAME) {
 						if(ds_list_size(animator.values) > 1)
 							ds_list_delete(animator.values, k);
 						_add = true;
 						break;
-					} else if(_key.time > PROJECT.animator.current_frame) {
-						ds_list_insert(animator.values, k, new valueKey(PROJECT.animator.current_frame, animator.getValue(), animator));
+					} else if(_key.time > CURRENT_FRAME) {
+						ds_list_insert(animator.values, k, new valueKey(CURRENT_FRAME, animator.getValue(), animator));
 						_add = true;
 						break;	
 					}
 				}
-				if(!_add) ds_list_add(animator.values, new valueKey(PROJECT.animator.current_frame, animator.getValue(, false), animator));	
+				if(!_add) ds_list_add(animator.values, new valueKey(CURRENT_FRAME, animator.getValue(, false), animator));	
 			}
 		#endregion
 				
@@ -1166,7 +1166,7 @@ function Panel_Animation() : PanelContent() constructor {
 		var bar_y = h - timeline_h - ui(10);
 		var bar_w = timeline_w;
 		var bar_h = timeline_h;
-		var bar_total_w = PROJECT.animator.frames_total * ui(timeline_scale);
+		var bar_total_w = TOTAL_FRAMES * ui(timeline_scale);
 		
 		if(!is_surface(dope_sheet_surface) || !surface_exists(dope_sheet_surface)) 
 			dope_sheet_surface = surface_create_valid(dope_sheet_w, dope_sheet_h);
@@ -1277,7 +1277,7 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			dope_sheet_y_max = max(0, dope_sheet_y_max - dope_sheet_h + ui(48));
 			
-			for(var i = timeline_sep_line; i <= PROJECT.animator.frames_total; i += timeline_sep_line) {
+			for(var i = timeline_sep_line; i <= TOTAL_FRAMES; i += timeline_sep_line) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
 				draw_set_color(COLORS.panel_animation_frame_divider);
 				draw_set_alpha(i % timeline_separate == 0? 1 : 0.1);
@@ -1294,7 +1294,7 @@ function Panel_Animation() : PanelContent() constructor {
 				var len = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 2;
 				len = max(1, len);
 				TOOLTIP = __txtx("panel_animation_length", "Animation length") + " " + string(len);
-				PROJECT.animator.frames_total = len;
+				TOTAL_FRAMES = len;
 				
 				if(mouse_release(mb_left))
 					timeline_stretch = 0;
@@ -1304,8 +1304,8 @@ function Panel_Animation() : PanelContent() constructor {
 				var len = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 2;
 				len = max(1, len);
 				TOOLTIP = __txtx("panel_animation_length", "Animation length") + " " + string(len);
-				var _len = PROJECT.animator.frames_total;
-				PROJECT.animator.frames_total = len;
+				var _len = TOTAL_FRAMES;
+				TOTAL_FRAMES = len;
 				
 				if(_len != len) {
 					var key = ds_map_find_first(PROJECT.nodeMap);
@@ -1344,7 +1344,7 @@ function Panel_Animation() : PanelContent() constructor {
 						if(mouse_press(mb_left, pFOCUS)) {
 							timeline_stretch = 2;
 							timeline_stretch_mx = msx;
-							timeline_stretch_sx = PROJECT.animator.frames_total;
+							timeline_stretch_sx = TOTAL_FRAMES;
 						}
 					} else {
 						draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
@@ -1352,7 +1352,7 @@ function Panel_Animation() : PanelContent() constructor {
 						if(mouse_press(mb_left, pFOCUS)) {
 							timeline_stretch = 1;
 							timeline_stretch_mx = msx;
-							timeline_stretch_sx = PROJECT.animator.frames_total;
+							timeline_stretch_sx = TOTAL_FRAMES;
 						}
 					}
 				} else
@@ -1505,7 +1505,7 @@ function Panel_Animation() : PanelContent() constructor {
 						ov = v;
 					}
 					
-					t = PROJECT.animator.frames_total - 1;
+					t = TOTAL_FRAMES - 1;
 					if(t > ot && ov) {
 						x0 = (ot + 1) * ui(timeline_scale) + timeline_shift;
 						x1 = ( t + 1) * ui(timeline_scale) + timeline_shift;
@@ -1633,7 +1633,7 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_set_color(COLORS.panel_animation_timeline_top);
 			draw_rectangle(PANEL_PAD, PANEL_PAD, ww - 1, hh, false);
 			
-			for(var i = timeline_separate; i <= PROJECT.animator.frames_total; i += timeline_separate) {
+			for(var i = timeline_separate; i <= TOTAL_FRAMES; i += timeline_separate) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
 				draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
 				draw_text_add(bar_line_x - ui(2), PANEL_PAD, string(i));
@@ -1643,7 +1643,7 @@ function Panel_Animation() : PanelContent() constructor {
 				var rang = PROJECT.onion_skin.range;
 				var colr = PROJECT.onion_skin.color;
 			
-				var fr = PROJECT.animator.current_frame + 1;
+				var fr = CURRENT_FRAME + 1;
 				var tx = fr * ui(timeline_scale) + timeline_shift;
 				var sx = (fr + rang[0]) * ui(timeline_scale) + timeline_shift;
 				var ex = (fr + rang[1]) * ui(timeline_scale) + timeline_shift;
@@ -1697,14 +1697,14 @@ function Panel_Animation() : PanelContent() constructor {
 				}
 			}
 			
-			var bar_line_x = (PROJECT.animator.current_frame + 1) * ui(timeline_scale) + timeline_shift;
+			var bar_line_x = (CURRENT_FRAME + 1) * ui(timeline_scale) + timeline_shift;
 			var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
 			
 			draw_set_color(cc);
 			draw_set_font(f_p2);
 			draw_line(bar_line_x, PANEL_PAD, bar_line_x, dope_sheet_h);
 			
-			var cf = string(PROJECT.animator.current_frame + 1);
+			var cf = string(CURRENT_FRAME + 1);
 			var tx = string_width(cf) + ui(4);
 			draw_rectangle(bar_line_x - tx, PANEL_PAD, bar_line_x, hh, false);
 			
@@ -1773,18 +1773,18 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), y0, w - ui(16), y1 - y0);
 			
 			var pw = w - ui(16);
-			var px = ui(8) + pw * (PROJECT.animator.current_frame / PROJECT.animator.frames_total);
+			var px = ui(8) + pw * (CURRENT_FRAME / TOTAL_FRAMES);
 			draw_set_color(COLORS._main_accent);
 			draw_line(px, y0, px, y1);
 			
 			if(point_in_rectangle(mx, my, ui(8), y0, w - ui(16), y1)) {
 				if(mouse_click(mb_left, pFOCUS)) {
-					var rfrm = (mx - ui(8)) / (w - ui(16)) * PROJECT.animator.frames_total;
-					PROJECT.animator.setFrame(clamp(rfrm, 0, PROJECT.animator.frames_total - 1));
+					var rfrm = (mx - ui(8)) / (w - ui(16)) * TOTAL_FRAMES;
+					PROJECT.animator.setFrame(clamp(rfrm, 0, TOTAL_FRAMES - 1));
 				}
 			}
 			
-			var txt = string(PROJECT.animator.current_frame + 1) + "/" + string(PROJECT.animator.frames_total);
+			var txt = string(CURRENT_FRAME + 1) + "/" + string(TOTAL_FRAMES);
 			
 			if(y1 - y0 < ui(40)) {
 				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
@@ -1872,7 +1872,7 @@ function Panel_Animation() : PanelContent() constructor {
 		drawAnimationControl();
 		
 		if(timeline_show_time > -1) {
-			TOOLTIP = __txt("Frame") + " " + string(timeline_show_time + 1) + "/" + string(PROJECT.animator.frames_total);
+			TOOLTIP = __txt("Frame") + " " + string(timeline_show_time + 1) + "/" + string(TOTAL_FRAMES);
 			timeline_show_time = -1;
 		}
 	} #endregion
@@ -1906,10 +1906,10 @@ function Panel_Animation() : PanelContent() constructor {
 		if(ds_list_empty(copy_clipboard)) return;
 		
 		var shf  = 0;
-		var minx = PROJECT.animator.frames_total + 2;
+		var minx = TOTAL_FRAMES + 2;
 		for( var i = 0; i < ds_list_size(copy_clipboard); i++ )
 			minx = min(minx, copy_clipboard[| i].time);
-		shf = PROJECT.animator.current_frame - minx;
+		shf = CURRENT_FRAME - minx;
 		
 		var multiVal = false;
 		var _val = noone;

@@ -318,17 +318,22 @@ event_inherited();
 		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT) {
 			_list = ds_list_create();
 			
+			var sug = [];
+			
 			if(node_called != noone) {
-				var sug = nodeReleatedQuery(
+				array_append(sug, nodeReleatedQuery(
 					node_called.connect_type == JUNCTION_CONNECT.input? "connectTo" : "connectFrom", 
 					node_called.type
-				);
-				
-				if(array_length(sug)) {
-					ds_list_add(_list, "Related");
-					for( var i = 0, n = array_length(sug); i < n; i++ )
-						ds_list_add(_list, ALL_NODES[? sug[i]]);
-				}
+				));
+			}
+			
+			var _cont = PANEL_GRAPH.getCurrentContext();
+			if(_cont != noone)
+				array_append(sug, nodeReleatedQuery("context", instanceof(_cont)));			
+			if(array_length(sug)) {
+				ds_list_add(_list, "Related");
+				for( var i = 0, n = array_length(sug); i < n; i++ )
+					ds_list_add(_list, ALL_NODES[? sug[i]]);
 			}
 			
 			ds_list_add(_list, "Favourites");

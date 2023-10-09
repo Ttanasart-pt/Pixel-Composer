@@ -533,8 +533,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
-		strandUpdate(PROJECT.animator.current_frame == 0);
+	static update = function(frame = CURRENT_FRAME) {
+		strandUpdate(CURRENT_FRAME == 0);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

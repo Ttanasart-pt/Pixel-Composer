@@ -117,7 +117,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 	try {
 		if(struct_has(_load_content, "animator")) {
 			var _anim_map = _load_content.animator;
-			PROJECT.animator.frames_total	= _anim_map.frames_total;
+			TOTAL_FRAMES	= _anim_map.frames_total;
 			PROJECT.animator.framerate		= _anim_map.framerate;
 		}
 	} catch(e) {

@@ -85,7 +85,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Animation",	false], 1, 
 	];
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _sur = getInputData(0);
 		if(!is_array(_sur)) {
 			outputs[| 0].setValue(_sur);
@@ -96,7 +96,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _seq = getInputData(2);
 		var _ovf = getInputData(3);
 		
-		var frm = floor(PROJECT.animator.current_frame / _spd);
+		var frm = floor(CURRENT_FRAME / _spd);
 		var ind = frm;
 		
 		if(array_length(_seq) == 0) {

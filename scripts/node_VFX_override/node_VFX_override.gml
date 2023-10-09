@@ -29,7 +29,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, -1 );
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var parts = getInputData(0);
 		if(!is_array(parts)) return;
 		
@@ -73,4 +73,6 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(node_draw_icon, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
+		
+	getPreviewingNode = VFX_PREVIEW_NODE;
 }

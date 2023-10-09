@@ -27,7 +27,7 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	
 	static doInitLoop = function() {}
 	
-	static update = function(frame = PROJECT.animator.current_frame) { initLoop(); }
+	static update = function(frame = CURRENT_FRAME) { initLoop(); }
 	
 	static outputNextNode = function() {
 		LOG_BLOCK_START();	

@@ -37,7 +37,7 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 		return _new_val;
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		if(inputs[| 0].value_from == noone) {
 			group.iterationUpdate();
 			return;

@@ -54,7 +54,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static getPreviewValues = function() { return refVal.getValue(); }
 	
-	static update = function(frame = PROJECT.animator.current_frame) { 
+	static update = function(frame = CURRENT_FRAME) { 
 		var _area	 = getInputData(0);
 		var _dist	 = getInputData(1);
 		var _scat	 = getInputData(2);

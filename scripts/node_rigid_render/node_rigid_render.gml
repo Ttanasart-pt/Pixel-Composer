@@ -81,7 +81,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[| 0].setValue(_outSurf);
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		if(recoverCache() || !PROJECT.animator.is_playing)
 			return;
 			

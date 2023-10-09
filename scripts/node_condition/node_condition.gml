@@ -51,7 +51,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		inputs[| 8].setVisible(_mode == 2, _mode == 2);
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _true = getInputData(3);
 		var _fals = getInputData(4);
 		

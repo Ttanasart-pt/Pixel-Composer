@@ -35,7 +35,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", onClick: function() { 
 				if(!spr) return;
 				if(!sprite_exists(spr)) return;
-				PROJECT.animator.frames_total = sprite_get_number(spr);
+				TOTAL_FRAMES = sprite_get_number(spr);
 				PROJECT.animator.framerate = 12;
 			} });
 	
@@ -138,7 +138,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		var path = getInputData(0);
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);
@@ -176,7 +176,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _strt = getInputData(4);
 		var _cust = getInputData(5);
 		var _spd  = getInputData(7);
-		var _frm  = _cust? getInputData(6) : PROJECT.animator.current_frame * _spd - _strt;
+		var _frm  = _cust? getInputData(6) : CURRENT_FRAME * _spd - _strt;
 		
 		var _len = sprite_get_number(spr);
 		var _drw = true;

@@ -47,7 +47,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		if(!is_undefined(outParent))
 			ds_list_remove(group.outputs, outParent);
 			
-		outParent = nodeValue("Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
+		outParent = nodeValue("Rendered", group, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
 			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;
@@ -102,7 +102,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		outParent.setValue(_outSurf);
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		if(!is_instanceof(outParent, NodeValue)) return noone;
 		
 		var _dim = getInputData(0);
@@ -154,11 +154,11 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		cacheCurrentFrame(_outSurf);
 	} #endregion
 		
-	static recoverCache = function(frame = PROJECT.animator.current_frame) { #region
+	static recoverCache = function(frame = CURRENT_FRAME) { #region
 		if(!is_instanceof(outParent, NodeValue)) return false;
 		if(!cacheExist(frame)) return false;
 		
-		var _s = cached_output[PROJECT.animator.current_frame];
+		var _s = cached_output[CURRENT_FRAME];
 		outParent.setValue(_s);
 			
 		return true;

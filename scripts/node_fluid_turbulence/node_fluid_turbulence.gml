@@ -31,7 +31,7 @@ function Node_Fluid_Turbulence(_x, _y, _group = noone) : Node_Fluid(_x, _y, _gro
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _dom = inputs[| 0].getValue(frame);
 		var _are = inputs[| 1].getValue(frame);
 		var _str = inputs[| 2].getValue(frame);
@@ -57,11 +57,9 @@ function Node_Fluid_Turbulence(_x, _y, _group = noone) : Node_Fluid(_x, _y, _gro
 			shader_reset();
 		surface_reset_target();
 		
-		with(_dom) {
-			fd_rectangle_set_target(id, _mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
-			draw_surface_safe(vSurface, 0, 0);
-			fd_rectangle_reset_target(id);
-		}
+		fd_rectangle_set_target(_dom, _mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
+		draw_surface_safe(vSurface, 0, 0);
+		fd_rectangle_reset_target(_dom);
 		
 		surface_free(vSurface);
 	}

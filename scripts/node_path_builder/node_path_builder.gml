@@ -14,7 +14,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _lines = getInputData(0);
 		var _conn  = getInputData(1);
 		
@@ -39,27 +39,27 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						  _x + p1[0] * _s, _y + p1[1] * _s);
 			}
 		}
-	}
+	} #endregion
 	
-	static getLineCount = function() { 
+	static getLineCount = function() { #region
 		var _lines = getInputData(0);
 		var _conn  = getInputData(1);
 		
 		return _conn? 1 : floor(array_length(_lines) / 2); 
-	}
+	} #endregion
 	
-	static getSegmentCount = function() { 
+	static getSegmentCount = function() { #region
 		var _lines = getInputData(0);
 		var _conn  = getInputData(1);
 		
 		return _conn? array_length(_lines) - 1 : 1; 
-	}
+	} #endregion
 	
 	static getLength = function(index) { return is_array(length)? array_safe_get(length, index) : length; }
 	
 	static getAccuLength = function(index) { return array_safe_get(lengthAcc, index, []); }
 	
-	static getPointRatio = function(_rat, _ind = 0) {
+	static getPointRatio = function(_rat, _ind = 0) { #region
 		var _lines = getInputData(0);
 		var _conn  = getInputData(1);
 		var _p0, _p1;
@@ -89,25 +89,25 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 			return new __vec2( _x, _y );
 		}
-	}
+	} #endregion
 	
-	static getPointDistance = function(_dist, ind = 0) {
+	static getPointDistance = function(_dist, ind = 0) { #region
 		var _conn  = getInputData(1);
 		
 		if(_conn) return getPointRatio(_dist / length);
 		else      return getPointRatio(_dist / length[ind], ind);
-	}
+	} #endregion
 	
-	static getBoundary		= function() { 
+	static getBoundary = function() { #region
 		var boundary = new BoundingBox();
 		var _lines = getInputData(0);
 		for( var i = 0, n = array_length(_lines); i < n; i++ )
 			boundary.addPoint(_lines[i][0], _lines[i][1]);
 		
 		return boundary; 
-	}
+	} #endregion
 	
-	static update = function() { 
+	static update = function() { #region
 		var _lines = getInputData(0);
 		var _conn  = getInputData(1);
 		
@@ -142,10 +142,10 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		outputs[| 0].setValue(self);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_path_builder, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }

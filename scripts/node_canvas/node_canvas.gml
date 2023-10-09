@@ -990,10 +990,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		update_on_frame = fram > 1 && anim;
 		
 		if(update_on_frame) 
-			preview_index = safe_mod(PROJECT.animator.current_frame * anims, fram);
+			preview_index = safe_mod(CURRENT_FRAME * anims, fram);
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		var _dim   = getInputData(0);
 		var _bg    = getInputData(8);
 		var _bga   = getInputData(9);
@@ -1035,7 +1035,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			if(_anim) {
-				var _fr_index = safe_mod(PROJECT.animator.current_frame * _anims, _frames);
+				var _fr_index = safe_mod(CURRENT_FRAME * _anims, _frames);
 				outputs[| 0].setValue(output_surface[_fr_index]);
 			} else
 				outputs[| 0].setValue(output_surface);

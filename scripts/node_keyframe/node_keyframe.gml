@@ -7,7 +7,7 @@ enum CURVE_TYPE {
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	#region ---- main ----
 		time	= _time;
-		ratio	= time / (PROJECT.animator.frames_total - 1);
+		ratio	= time / (TOTAL_FRAMES - 1);
 		value	= _value;
 		anim	= _anim;
 	
@@ -24,7 +24,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	
 	static setTime = function(time) { #region
 		self.time = time;	
-		ratio	= time / (PROJECT.animator.frames_total - 1);
+		ratio	= time / (TOTAL_FRAMES - 1);
 	} #endregion
 	
 	static clone = function(target = noone) { #region
@@ -157,7 +157,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static getName = function() { return prop.name + suffix; }
 	
-	static getValue = function(_time = PROJECT.animator.current_frame) { #region
+	static getValue = function(_time = CURRENT_FRAME) { #region
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(ds_list_size(values) == 0) 
 				return false;
@@ -206,8 +206,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var fTime = from.time;
 				var tTime = to.time;
 				
-				var prog = PROJECT.animator.frames_total - fTime + _time;
-				var totl = PROJECT.animator.frames_total - fTime + tTime;
+				var prog = TOTAL_FRAMES - fTime + _time;
+				var totl = TOTAL_FRAMES - fTime + tTime;
 				
 				var rat  = prog / totl;
 				var _lrp = interpolate(from, to, rat);
@@ -234,7 +234,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var from = values[| ds_list_size(values) - 1];
 			var to   = values[| 0];
 			var prog = _time - from.time;
-			var totl = PROJECT.animator.frames_total - from.time + to.time;
+			var totl = TOTAL_FRAMES - from.time + to.time;
 				
 			var rat  = prog / totl;
 			var _lrp = interpolate(from, to, rat);
@@ -308,7 +308,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		return 1;
 	} #endregion
 	
-	static setValue = function(_val = 0, _record = true, _time = PROJECT.animator.current_frame, ease_in = 0, ease_out = 0) { #region
+	static setValue = function(_val = 0, _record = true, _time = CURRENT_FRAME, ease_in = 0, ease_out = 0) { #region
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(!prop.is_anim) {
 				values[| 0] = new valueKey(0, _val, self);
@@ -388,7 +388,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		for(var i = 0; i < ds_list_size(values); i++) {
 			var _value_list = [];
 			if(scale)
-				_value_list[0] = values[| i].time / (PROJECT.animator.frames_total - 1);
+				_value_list[0] = values[| i].time / (TOTAL_FRAMES - 1);
 			else
 				_value_list[0] = values[| i].time;
 			
@@ -451,7 +451,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var _time = array_safe_get(_keyframe, 0);
 			
 			if(scale && _time <= 1)
-				_time = round(_time * (PROJECT.animator.frames_total - 1));
+				_time = round(_time * (TOTAL_FRAMES - 1));
 			
 			var value		  = array_safe_get(_keyframe, 1);
 			var ease_in		  = array_safe_get(_keyframe, 2);

@@ -154,8 +154,8 @@ function __addon_lua_panel_variable(lua, panel) {
 	);
 	
 	lua_add_code(lua, 
-		"Animator.frame_current = " + string(PROJECT.animator.current_frame) + "\n" + 
-		"Animator.frame_total = " +   string(PROJECT.animator.frames_total) + "\n" + 
+		"Animator.frame_current = " + string(CURRENT_FRAME) + "\n" + 
+		"Animator.frame_total = " +   string(TOTAL_FRAMES) + "\n" + 
 		"Animator.frame_rate  = " +   string(PROJECT.animator.framerate) + "\n"
 	);
 }

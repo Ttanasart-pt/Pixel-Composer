@@ -54,7 +54,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return array_safe_get(_arr, index);
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);
 		
 		if(!is_array(_arr)) return;

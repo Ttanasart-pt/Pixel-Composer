@@ -59,7 +59,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", onClick: function() { 
 			var _atl = outputs[| 1].getValue();
 			var _spd = getInputData(8);
-			PROJECT.animator.frames_total = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
+			TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
 		} });
 		
 	inputs[| 12] = nodeValue("Filter empty output", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
@@ -368,7 +368,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		surface_free(_empS);
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		if(isInLoop()) doInspectorAction();
 		
 		var _out  = getInputData(7);
@@ -382,7 +382,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		update_on_frame = true;
 		
 		if(array_length(surf_array)) {
-			var ind = safe_mod(PROJECT.animator.current_frame * _spd, array_length(surf_array));
+			var ind = safe_mod(CURRENT_FRAME * _spd, array_length(surf_array));
 			outputs[| 0].setValue(array_safe_get(surf_array, ind));
 		}
 	}

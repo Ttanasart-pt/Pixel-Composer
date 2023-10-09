@@ -236,7 +236,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(_boneCount != _b.childCount()) setBone();
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		var _b = getInputData(0);
 		if(_b == noone) return;
 		

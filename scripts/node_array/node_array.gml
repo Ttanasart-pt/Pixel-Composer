@@ -146,7 +146,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		refreshDynamicInput();
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _typ = getType();
 		
 		outputs[| 0].setType(_typ);

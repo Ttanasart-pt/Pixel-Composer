@@ -66,6 +66,8 @@ function __part(_node) constructor {
 	ground_bounce	= 0;
 	ground_friction = 1;
 	
+	frame = 0;
+	
 	static reset = function() { #region
 		gml_pragma("forceinline");
 		
@@ -85,7 +87,7 @@ function __part(_node) constructor {
 		
 		life = _life;
 		life_total = life;
-		node.onPartCreate(self);
+		if(node.onPartCreate != noone) node.onPartCreate(self);
 	} #endregion
 	
 	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _turn, _turnSpd) { #region
@@ -148,19 +150,20 @@ function __part(_node) constructor {
 		alp_fade = _fade;
 	} #endregion
 	
-	static kill = function() { #region
+	static kill = function(callDestroy = true) { #region
 		gml_pragma("forceinline");
 		
 		active = false;
-		
-		node.onPartDestroy(self);
+		if(callDestroy && node.onPartDestroy != noone)
+			node.onPartDestroy(self);
 	} #endregion
 	
-	static step = function() { #region
+	static step = function(frame = 0) { #region
 		gml_pragma("forceinline");
 		
 		if(!active) return;
 		x += speedx;
+		self.frame = frame;
 		
 		random_set_seed(seed + life);
 		
@@ -192,7 +195,7 @@ function __part(_node) constructor {
 		if(follow)  rot = spVec[1];
 		else        rot += rot_s;
 		
-		if(step_int > 0 && safe_mod(life, step_int) == 0) 
+		if(node.onPartStep != noone && step_int > 0 && safe_mod(life, step_int) == 0) 
 			node.onPartStep(self);
 		if(life-- < 0) kill();
 		
@@ -235,15 +238,21 @@ function __part(_node) constructor {
 					ss = surf[ping >= len? (len - 1) * 2 - ping : ping];
 					break;
 				case ANIM_END_ACTION.destroy:
-					if(ind >= len)	return;
-					else			ss = surf[ind];
+					if(ind >= len) {
+						//print($"Drawing part destroy when animation end");
+						kill();
+						return;
+					} else			ss = surf[ind];
 					break;
 			}
 		}
 		
 		var surface = is_instanceof(ss, SurfaceAtlas)? ss.getSurface() : node.surface_cache[$ ss];
 		
-		if(!is_surface(surface)) return;
+		if(!is_surface(surface)) {
+			//print($"Drawing part failed: Not a surface");
+			return;
+		}
 		
 		var lifeRat = 1 - life / life_total;
 		var scCurve = sct.get(lifeRat);
@@ -268,12 +277,16 @@ function __part(_node) constructor {
 		var x1 = _xx + s_w * 1.5;
 		var y1 = _yy + s_h * 1.5;
 		
-		if(x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0) return; //culling
+		if(x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0) {
+			//print($"Drawing part failed: Outside view");
+			return; //culling
+		}
 		
 		var cc = (col == -1)? c_white : col.eval(lifeRat);
 		if(blend != c_white) cc = colorMultiply(blend, cc);
 		alp_draw = alp * alp_fade.get(lifeRat);
 		
+		//print($"Draw part [{frame}]: {surface} at {_xx}, {_yy}, scale {drawsx}, {drawsy} - {scCurve} color {cc}, {alp_draw}");
 		draw_surface_ext_safe(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
 	} #endregion
 	

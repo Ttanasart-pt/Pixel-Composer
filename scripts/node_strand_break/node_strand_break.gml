@@ -13,7 +13,7 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 		["Break",	false], input_fix_len + 0, input_fix_len + 1
 	);
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _cha = getInputData(input_fix_len + 0);
 		var _sed = getInputData(input_fix_len + 1);
 		

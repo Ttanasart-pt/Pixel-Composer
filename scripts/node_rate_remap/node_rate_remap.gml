@@ -22,7 +22,7 @@ function Node_Rate_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var _surf = _data[0];
 		var _rate = _data[1];
-		var _time = PROJECT.animator.current_frame;
+		var _time = CURRENT_FRAME;
 		var _step = PROJECT.animator.framerate / _rate;
 		var _targ = floor(_time / _step) * _step;
 		

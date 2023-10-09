@@ -37,7 +37,7 @@ function Node_Fluid_Repulse(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group)
 		inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _dom = inputs[| 0].getValue(frame);
 		var _pos = inputs[| 1].getValue(frame);
 		var _rad = inputs[| 2].getValue(frame);

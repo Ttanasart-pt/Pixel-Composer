@@ -135,7 +135,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(inParent.isArray()) return;
-		inParent.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		return inParent.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static onValueUpdate = function(index = 0) { #region
@@ -358,7 +358,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	PATCH_STATIC
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		if(is_undefined(inParent)) return;
 	} #endregion
 	

@@ -15,12 +15,15 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	input_display_list = [ 0 ];
 	
 	outputs[| 0] = nodeValue("Positions", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false);
 	
 	outputs[| 1] = nodeValue("Scales", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false);
 	
-	outputs[| 2] = nodeValue("Rotations", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 );
+	outputs[| 2] = nodeValue("Rotations", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setVisible(false);
 	
 	outputs[| 3] = nodeValue("Blends", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, 0 )
 		.setVisible(false);
@@ -36,7 +39,11 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	outputs[| 7] = nodeValue("Velocity magnitude", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false);
+	
+	static update = function(frame = CURRENT_FRAME) {
 		var objNode = getInputData(0);
 		outputs[| 0].setValue(objNode);
 		if(!variable_struct_exists(objNode, "object")) return;
@@ -46,11 +53,7 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _val = [];
 		
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			_get[i] = false;
-			var _in = outputs[| i];
-			for( var j = 0; j < ds_list_size(_in.value_to); j++ )
-				if(_in.value_to[| j].value_from == _in) _get[i] = true;
-			
+			_get[i] = outputs[| i].visible;
 			_val[i] = [];
 			if(_get[i]) _val[i] = array_create(array_length(objs));
 		}
@@ -62,11 +65,12 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			if(_get[0]) _val[0][i] = [ obj.x, obj.y ];
 			if(_get[1]) _val[1][i] = [ obj.xscale, obj.yscale ];
-			if(_get[2]) _val[2][i] = [ obj.image_angle ];
-			if(_get[3]) _val[3][i] = [ obj.image_blend ];
-			if(_get[4]) _val[4][i] = [ obj.image_alpha ];
+			if(_get[2]) _val[2][i] = obj.image_angle;
+			if(_get[3]) _val[3][i] = obj.image_blend;
+			if(_get[4]) _val[4][i] = obj.image_alpha;
 			if(_get[5]) _val[5][i] = [ obj.phy_linear_velocity_x, obj.phy_linear_velocity_y ];
 			if(_get[6]) _val[6][i] = [ obj.phy_com_x, obj.phy_com_y ];
+			if(_get[7]) _val[7][i] = point_distance(0, 0, obj.phy_linear_velocity_x, obj.phy_linear_velocity_y);
 		}
 		
 		for( var i = 0; i < ds_list_size(outputs); i++ )

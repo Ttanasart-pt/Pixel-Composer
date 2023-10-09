@@ -76,7 +76,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		refreshDynamicInput();
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		var type = getInputData(0);
 		var res = 0;
 		

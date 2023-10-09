@@ -63,7 +63,7 @@ function __nodeInLoop(_node) { #region
 } #endregion
 
 function ResetAllNodesRender() { #region
-	LOG_IF(global.FLAG.render == 1, $"XXXXXXXXXXXXXXXXXXXX RESETTING ALL NODES [frame {PROJECT.animator.current_frame}] XXXXXXXXXXXXXXXXXXXX");
+	LOG_IF(global.FLAG.render == 1, $"XXXXXXXXXXXXXXXXXXXX RESETTING ALL NODES [frame {CURRENT_FRAME}] XXXXXXXXXXXXXXXXXXXX");
 	
 	var _key = ds_map_find_first(PROJECT.nodeMap);
 	var amo  = ds_map_size(PROJECT.nodeMap);
@@ -149,7 +149,7 @@ function __sortGraph(_list, _nodeList) { #region
 
 function Render(partial = false, runAction = false) { #region
 	LOG_BLOCK_START();
-	LOG_IF(global.FLAG.render, $"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {PROJECT.animator.current_frame}] ==============================");
+	LOG_IF(global.FLAG.render, $"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {CURRENT_FRAME}] ==============================");
 	
 	try {
 		var t  = get_timer();
@@ -359,7 +359,7 @@ function RenderList(list, skipInLoop = true) { #region
 } #endregion
 
 function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) { #region
-	printIf(global.FLAG.render, "=== RENDER LIST ACTION START [frame " + string(PROJECT.animator.current_frame) + "] ===");
+	printIf(global.FLAG.render, "=== RENDER LIST ACTION START [frame " + string(CURRENT_FRAME) + "] ===");
 	
 	try {
 		var rendering = noone;

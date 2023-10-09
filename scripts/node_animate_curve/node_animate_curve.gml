@@ -26,7 +26,7 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  		
 		var curve = _data[0];
-		var time  = _data[4]? PROJECT.animator.current_frame / (PROJECT.animator.frames_total - 1) : _data[1];
+		var time  = _data[4]? CURRENT_FRAME / (TOTAL_FRAMES - 1) : _data[1];
 		var _min  = _data[2];
 		var _max  = _data[3];
 		var val   = eval_curve_x(curve, time) * (_max - _min) + _min;

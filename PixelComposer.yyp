@@ -250,6 +250,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"biterator","folderPath":"folders/VCT/biterator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widget","folderPath":"folders/VCT/widget.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"effector","folderPath":"folders/nodes/data/simulation/VFX/effector.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
@@ -1618,6 +1619,7 @@
     {"id":{"name":"sh_blend_replace","path":"shaders/sh_blend_replace/sh_blend_replace.yy",},},
     {"id":{"name":"node_rigid_render","path":"scripts/node_rigid_render/node_rigid_render.yy",},},
     {"id":{"name":"node_image_splice_sheet","path":"scripts/node_image_splice_sheet/node_image_splice_sheet.yy",},},
+    {"id":{"name":"node_VFX_renderer_output","path":"scripts/node_VFX_renderer_output/node_VFX_renderer_output.yy",},},
     {"id":{"name":"sh_posterize_palette","path":"shaders/sh_posterize_palette/sh_posterize_palette.yy",},},
     {"id":{"name":"fd_rectangle_set_material_maccormack_weight","path":"scripts/fd_rectangle_set_material_maccormack_weight/fd_rectangle_set_material_maccormack_weight.yy",},},
     {"id":{"name":"collection_data","path":"scripts/collection_data/collection_data.yy",},},
@@ -2196,6 +2198,7 @@
     {"id":{"name":"fd_rectangle_add_material","path":"scripts/fd_rectangle_add_material/fd_rectangle_add_material.yy",},},
     {"id":{"name":"fd_rectangle_set_target","path":"scripts/fd_rectangle_set_target/fd_rectangle_set_target.yy",},},
     {"id":{"name":"node_wav_file_read","path":"scripts/node_wav_file_read/node_wav_file_read.yy",},},
+    {"id":{"name":"s_node_vfx_render_output","path":"sprites/s_node_vfx_render_output/s_node_vfx_render_output.yy",},},
     {"id":{"name":"draw_line_dashed","path":"scripts/draw_line_dashed/draw_line_dashed.yy",},},
     {"id":{"name":"pseudo_regex","path":"scripts/pseudo_regex/pseudo_regex.yy",},},
     {"id":{"name":"node_invert","path":"scripts/node_invert/node_invert.yy",},},

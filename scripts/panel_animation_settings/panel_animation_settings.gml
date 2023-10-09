@@ -7,10 +7,10 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 		properties = [
 			[
 				new textBox(TEXTBOX_INPUT.number, function(str) {
-					PROJECT.animator.frames_total = real(str);	
+					TOTAL_FRAMES = real(str);	
 				}),
 				__txtx("anim_length", "Animation length"),
-				function() { return PROJECT.animator.frames_total; }
+				function() { return TOTAL_FRAMES; }
 			],
 			[
 				new textBox(TEXTBOX_INPUT.number, function(str) {

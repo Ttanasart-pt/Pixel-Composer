@@ -2,7 +2,7 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 	title = __txtx("anim_scale_title", "Animation scaler");
 	
 	w = ui(380);
-	scale_to = PROJECT.animator.frames_total;
+	scale_to = TOTAL_FRAMES;
 	
 	#region data
 		properties = [
@@ -24,7 +24,7 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 	#endregion
 	
 	static scale = function() {
-		var fac = scale_to / PROJECT.animator.frames_total;
+		var fac = scale_to / TOTAL_FRAMES;
 		var key = ds_map_find_first(PROJECT.nodeMap);
 		repeat(ds_map_size(PROJECT.nodeMap)) {
 			var _node = PROJECT.nodeMap[? key];
@@ -40,7 +40,7 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 				}
 			}
 		}
-		PROJECT.animator.frames_total = scale_to;
+		TOTAL_FRAMES = scale_to;
 		close();
 	}
 	

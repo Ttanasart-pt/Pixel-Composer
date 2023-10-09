@@ -314,7 +314,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		} #endregion
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		processData_prebatch();
 		if(batch_output) processBatchOutput();
 		else			 processOutput();
@@ -337,19 +337,19 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static cacheCurrentFrameIndex = function(_frame, index) { #region
 		cacheArrayCheck();
-		if(PROJECT.animator.current_frame < 0) return;
-		if(PROJECT.animator.current_frame >= array_length(cached_output)) return;
+		if(CURRENT_FRAME < 0) return;
+		if(CURRENT_FRAME >= array_length(cached_output)) return;
 		
-		var prev = cached_output[PROJECT.animator.current_frame];
+		var prev = cached_output[CURRENT_FRAME];
 		surface_array_free(array_safe_get(prev, index));
-		cached_output[PROJECT.animator.current_frame][index] = surface_array_clone(_frame);
+		cached_output[CURRENT_FRAME][index] = surface_array_clone(_frame);
 		
-		array_safe_set(cache_result, PROJECT.animator.current_frame, true);
+		array_safe_set(cache_result, CURRENT_FRAME, true);
 		
-		return cached_output[PROJECT.animator.current_frame];
+		return cached_output[CURRENT_FRAME];
 	} #endregion
 	
-	static getCacheFrameIndex = function(frame = PROJECT.animator.current_frame, index = 0) { #region
+	static getCacheFrameIndex = function(frame = CURRENT_FRAME, index = 0) { #region
 		if(frame < 0) return false;
 		if(!cacheExist(frame)) return noone;
 		

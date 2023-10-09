@@ -201,7 +201,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return val;
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		use_mod = getInputData(0);
 		var a	= getInputData(1);
 		var b	= getInputData(2);

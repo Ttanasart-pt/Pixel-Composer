@@ -45,7 +45,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_str[i].draw(_x, _y, _s);
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
 			
 		var _dim = getInputData(0);

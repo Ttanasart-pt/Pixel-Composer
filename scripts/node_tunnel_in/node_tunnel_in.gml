@@ -52,7 +52,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) { onValueUpdate(); }
+	static update = function(frame = CURRENT_FRAME) { onValueUpdate(); }
 	
 	static resetMap = function() {
 		var _key = getInputData(0);

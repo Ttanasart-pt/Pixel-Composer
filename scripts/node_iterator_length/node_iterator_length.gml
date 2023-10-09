@@ -9,7 +9,7 @@ function Node_Iterator_Length(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	outputs[| 0] = nodeValue("Length", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
-	static update = function(frame = PROJECT.animator.current_frame) { 
+	static update = function(frame = CURRENT_FRAME) { 
 		if(!variable_struct_exists(group, "iterated")) return;
 		var val = group.getInputData(0);
 		outputs[| 0].setValue(val);

@@ -43,6 +43,18 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			PROJECT.animator.setFrame(-1);
 	} #endregion
 	
+	static reLoop = function() { #region
+		var _loop = getInputData(21);
+		if(!_loop) return;
+		
+		for(var i = 0; i < TOTAL_FRAMES; i++) {
+			runVFX(i, false);
+			updateParticleForward();
+		}
+		
+		seed = getInputData(32);
+	} #endregion
+	
 	static onStep = function() { #region
 		var _dim		= getInputData(input_len + 0);
 		var _outSurf	= outputs[| 0].getValue();
@@ -51,18 +63,20 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		outputs[| 0].setValue(_outSurf);
 	} #endregion
 	
-	static onUpdate = function() { #region
+	static onUpdate = function(frame = CURRENT_FRAME) { #region
 		var _dim		= getInputData(input_len + 0);
 		var _outSurf	= outputs[| 0].getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
-		if(PROJECT.animator.current_frame == 0)
+		if(CURRENT_FRAME == 0) {
 			reset();
-		runVFX(PROJECT.animator.current_frame);
+			reLoop();
+		}
+		runVFX(CURRENT_FRAME);
 	} #endregion
 	
-	function render(_time = PROJECT.animator.current_frame) { #region
+	function render(_time = CURRENT_FRAME) { #region
 		var _dim		= inputs[| input_len + 0].getValue(_time);
 		var _exact 		= inputs[| input_len + 1].getValue(_time);
 		var _blend 		= inputs[| input_len + 2].getValue(_time);
@@ -94,7 +108,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		surface_reset_shader();
 		
 		if(PROJECT.animator.is_playing) {
-			//print($"Cache frame {PROJECT.animator.current_frame}");
+			//print($"Cache frame {CURRENT_FRAME}");
 			cacheCurrentFrame(_outSurf);
 		}
 	} #endregion

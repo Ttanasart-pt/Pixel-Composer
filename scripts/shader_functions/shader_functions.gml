@@ -226,6 +226,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 		
 		BLEND_NORMAL;
 		surface_reset_target();
+		gpu_set_tex_filter(false);
 		
 		if(__shader_set)
 			shader_reset();

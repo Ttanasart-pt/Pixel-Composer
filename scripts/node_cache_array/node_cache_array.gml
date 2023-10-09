@@ -49,13 +49,13 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var stp = getInputData(3);
 		
 		if(str < 0) str = 1;
-		if(lst < 0) lst = PROJECT.animator.frames_total;
+		if(lst < 0) lst = TOTAL_FRAMES;
 		
 		str -= 1;
 		lst -= 1;
 		
-		if(PROJECT.animator.current_frame < str) return;
-		if(PROJECT.animator.current_frame > lst) return;
+		if(CURRENT_FRAME < str) return;
+		if(CURRENT_FRAME > lst) return;
 		
 		if(lst > str && stp > 0) 
 		for( var i = str; i <= lst; i += stp ) {

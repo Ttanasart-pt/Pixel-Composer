@@ -285,7 +285,7 @@ function curveBox(_onModify) : widget() constructor {
 			var cc = merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.5);
 			if(point_in_rectangle(_m[0], _m[1], bxF, byF, _x + _w, byF + byH)) {
 				cc = COLORS._main_icon;
-				if(mouse_click(mb_left, active)) 
+				if(mouse_press(mb_left, active)) 
 					zooming = true;
 			}
 			

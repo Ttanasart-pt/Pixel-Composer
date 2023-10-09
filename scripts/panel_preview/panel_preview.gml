@@ -283,6 +283,9 @@ function Panel_Preview() : PanelContent() constructor {
 		if(resetViewOnDoubleClick)
 			do_fullView = true;
 		
+		if(is_instanceof(node, Node) && node.getPreviewingNode != noone)
+			node = node.getPreviewingNode();
+		
 		preview_node[splitView? splitSelection : 0] = node;
 	} #endregion
 	
@@ -566,7 +569,7 @@ function Panel_Preview() : PanelContent() constructor {
 		var _step = PROJECT.onion_skin.step;
 		var _top  = PROJECT.onion_skin.on_top;
 		
-		var fr = PROJECT.animator.current_frame;
+		var fr = CURRENT_FRAME;
 		var st = min(_rang[0], _rang[1]);
 		var ed = max(_rang[0], _rang[1]);
 			
@@ -959,7 +962,7 @@ function Panel_Preview() : PanelContent() constructor {
 			right_menu_y += string_height("l");
 		
 			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
-			draw_text(w - ui(8), right_menu_y, $"{__txt("Frame")} {PROJECT.animator.current_frame}/{PROJECT.animator.frames_total}");
+			draw_text(w - ui(8), right_menu_y, $"{__txt("Frame")} {CURRENT_FRAME}/{TOTAL_FRAMES}");
 		
 			right_menu_y += string_height("l");
 			draw_text(w - ui(8), right_menu_y, $"x{canvas_s}");

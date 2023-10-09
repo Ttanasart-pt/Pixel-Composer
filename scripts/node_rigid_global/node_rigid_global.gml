@@ -12,7 +12,7 @@ function Node_Rigid_Global(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	current_gra = [0, 0];
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var _gra = getInputData(0);
 		
 		if(current_gra[0] != array_safe_get(_gra, 0) || current_gra[1] != array_safe_get(_gra, 1)) {

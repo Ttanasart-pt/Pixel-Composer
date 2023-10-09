@@ -36,7 +36,7 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			vct[$ inputs[| i].display_data.key].setDirect(_data[i]);
 			
 		var params = {
-			frame: PROJECT.animator.current_frame
+			frame: CURRENT_FRAME
 		};
 		
 		return vct.process(params);

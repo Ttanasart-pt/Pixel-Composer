@@ -22,5 +22,13 @@
     "connectTo": {
         "key": "connectionType",
         "relations": {}
+    },
+    "context": {
+        "key": "contextNode",
+        "relations": {
+            "Node_Fluid_Group":  [ "Node_Fluid_Add", "Node_Fluid_Apply_Velocity", "Node_Fluid_Update", "Node_Fluid_Render", "Node_Fluid_Render_Output" ],
+            "Node_Rigid_Group":  [ "Node_Rigid_Object", "Node_Rigid_Force_Apply", "Node_Rigid_Render", "Node_Rigid_Render_Output" ],
+            "Node_Strand_Group": [ "Node_Strand_Create", "Node_Strand_Gravity", "Node_Strand_Update", "Node_Strand_Render", "Node_Strand_Render_Texture" ]
+        }
     }
 }

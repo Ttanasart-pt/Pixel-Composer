@@ -1,8 +1,9 @@
 function Node_Fluid(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
+	update_on_frame = true;
 	
-	static updateForward = function(frame = PROJECT.animator.current_frame, _update = true) {
+	static updateForward = function(frame = CURRENT_FRAME, _update = true) {
 		if(_update) update(frame);
 		//print($"Update {frame}: {name}");
 		

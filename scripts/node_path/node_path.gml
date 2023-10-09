@@ -976,7 +976,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return new __vec2(p[0], p[1]);
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
+	static update = function(frame = CURRENT_FRAME) { #region
 		ds_map_clear(cached_pos);
 		updateLength();
 		

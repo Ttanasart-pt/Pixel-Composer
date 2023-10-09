@@ -21,7 +21,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		ds_list_add(PANEL_GRAPH.getNodeList(_group), self);
 	
 		active_index = -1;
-		active_range = [ 0, PROJECT.animator.frames_total - 1 ];
+		active_range = [ 0, TOTAL_FRAMES - 1 ];
 	#endregion
 	
 	static resetInternalName = function() { #region
@@ -163,6 +163,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 		preview_mx = 0;
 		preview_my = 0;
+		
+		getPreviewingNode = noone;
 	#endregion
 	
 	#region ---- rendering ----
@@ -434,11 +436,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return array_safe_get(inputs_data, index, def);
 	} #endregion
 	
-	static getInputs = function() { #region
+	static getInputs = function(frame = CURRENT_FRAME) { #region
 		inputs_data	= array_create(ds_list_size(inputs), undefined);
 		
 		for(var i = 0; i < ds_list_size(inputs); i++)
-			inputs_data[i] = inputs[| i].getValue(,,, false);
+			inputs_data[i] = inputs[| i].getValue(frame,,, false);
 	} #endregion
 	
 	static forceUpdate = function() { #region
@@ -1187,26 +1189,26 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static cacheArrayCheck = function() { #region
-		if(array_length(cached_output) != PROJECT.animator.frames_total)
-			array_resize(cached_output, PROJECT.animator.frames_total);
-		if(array_length(cache_result) != PROJECT.animator.frames_total)
-			array_resize(cache_result, PROJECT.animator.frames_total);
+		if(array_length(cached_output) != TOTAL_FRAMES)
+			array_resize(cached_output, TOTAL_FRAMES);
+		if(array_length(cache_result) != TOTAL_FRAMES)
+			array_resize(cache_result, TOTAL_FRAMES);
 	} #endregion
 	
 	static cacheCurrentFrame = function(_frame) { #region
 		cacheArrayCheck();
-		if(PROJECT.animator.current_frame < 0) return;
-		if(PROJECT.animator.current_frame >= array_length(cached_output)) return;
+		if(CURRENT_FRAME < 0) return;
+		if(CURRENT_FRAME >= array_length(cached_output)) return;
 		
-		surface_array_free(cached_output[PROJECT.animator.current_frame]);
-		cached_output[PROJECT.animator.current_frame] = surface_array_clone(_frame);
+		surface_array_free(cached_output[CURRENT_FRAME]);
+		cached_output[CURRENT_FRAME] = surface_array_clone(_frame);
 		
-		array_safe_set(cache_result, PROJECT.animator.current_frame, true);
+		array_safe_set(cache_result, CURRENT_FRAME, true);
 		
-		return cached_output[PROJECT.animator.current_frame];
+		return cached_output[CURRENT_FRAME];
 	} #endregion
 	
-	static cacheExist = function(frame = PROJECT.animator.current_frame) { #region
+	static cacheExist = function(frame = CURRENT_FRAME) { #region
 		if(frame < 0) return false;
 		
 		if(frame >= array_length(cached_output)) return false;
@@ -1217,7 +1219,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return is_array(s) || surface_exists(s);
 	} #endregion
 	
-	static getCacheFrame = function(frame = PROJECT.animator.current_frame) { #region
+	static getCacheFrame = function(frame = CURRENT_FRAME) { #region
 		if(frame < 0) return false;
 		
 		if(!cacheExist(frame)) return noone;
@@ -1225,10 +1227,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return surf;
 	} #endregion
 	
-	static recoverCache = function(frame = PROJECT.animator.current_frame) { #region
+	static recoverCache = function(frame = CURRENT_FRAME) { #region
 		if(!cacheExist(frame)) return false;
 		
-		var _s = cached_output[PROJECT.animator.current_frame];
+		var _s = cached_output[CURRENT_FRAME];
 		outputs[| 0].setValue(_s);
 			
 		return true;
@@ -1241,8 +1243,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!use_cache) return;
 		if(!isRenderActive()) return;
 		
-		if(array_length(cached_output) != PROJECT.animator.frames_total)
-			array_resize(cached_output, PROJECT.animator.frames_total);
+		if(array_length(cached_output) != TOTAL_FRAMES)
+			array_resize(cached_output, TOTAL_FRAMES);
 		for(var i = 0; i < array_length(cached_output); i++) {
 			var _s = cached_output[i];
 			if(is_surface(_s))
@@ -1715,5 +1717,5 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return surface_get_format(_s);
 	} #endregion
 	
-	static toString = function() { return $"PixelComposerNode: {node_id}[{internalName}] {input_hash}"; }
+	static toString = function() { return $"PixelComposerNode [{internalName}]: {node_id}"; }
 }

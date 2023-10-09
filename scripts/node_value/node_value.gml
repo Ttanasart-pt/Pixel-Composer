@@ -292,6 +292,8 @@ function value_type_from_string(str) { #region
 		case "dynaSurface"	: return VALUE_TYPE.dynaSurface;
 		case "PCXnode"	: return VALUE_TYPE.PCXnode;
 		
+		case "audioBit"	: return VALUE_TYPE.audioBit;
+		
 		case "action"	: return VALUE_TYPE.action;
 	}
 	
@@ -1310,7 +1312,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static resetCache = function() { cache_value[0] = false; }
 	
-	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region
+	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
 		
@@ -1353,7 +1355,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	} #endregion
 	
-	static __getAnimValue = function(_time = PROJECT.animator.current_frame) { #region
+	static __getAnimValue = function(_time = CURRENT_FRAME) { #region
 		if(sep_axis) {
 			var val = [];
 			for( var i = 0, n = array_length(animators); i < n; i++ )
@@ -1387,7 +1389,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	} #endregion
 	
-	static _getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, log = false) { #region
+	static _getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) { #region
 		var _val = getValueRecursive(_time);
 		var val = _val[0];
 		var nod = _val[1];
@@ -1434,7 +1436,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return valueProcess(val, nod, applyUnit, arrIndex);
 	} #endregion
 	
-	static getValueRecursive = function(_time = PROJECT.animator.current_frame) { #region
+	static getValueRecursive = function(_time = CURRENT_FRAME) { #region
 		var val = [ -1, self ];
 		
 		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger even will not propagate from input to output, need to be done manually
@@ -1480,7 +1482,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setAnim = function(anim) { #region
 		if(anim && !is_anim && ds_list_size(animator.values) == 1)
-			animator.values[| 0].time = PROJECT.animator.current_frame;
+			animator.values[| 0].time = CURRENT_FRAME;
 		
 		is_anim = anim;
 		PANEL_ANIMATION.updatePropertyList();
@@ -1587,7 +1589,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return array_length(ar);
 	} #endregion
 	
-	static setValue = function(val = 0, record = true, time = PROJECT.animator.current_frame, _update = true) { #region
+	static setValue = function(val = 0, record = true, time = CURRENT_FRAME, _update = true) { #region
 		val = unit.invApply(val);
 		return setValueDirect(val, noone, record, time, _update);
 	} #endregion
@@ -1602,7 +1604,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	} #endregion
 	
-	static setValueDirect = function(val = 0, index = noone, record = true, time = PROJECT.animator.current_frame, _update = true) { #region
+	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) { #region
 		var updated = false;
 		
 		if(sep_axis) {

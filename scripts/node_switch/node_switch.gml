@@ -85,7 +85,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		refreshDynamicInput();
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var sele = getInputData(0);
 		var _res = getInputData(1);
 		

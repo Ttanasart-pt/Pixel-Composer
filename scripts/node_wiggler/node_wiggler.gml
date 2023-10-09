@@ -30,18 +30,18 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var fre = getSingleValue(1);
 		var sed = getSingleValue(2);
 		
-		var step = PROJECT.animator.frames_total / 64;
+		var step = TOTAL_FRAMES / 64;
 		for( var i = 0; i < 64; i++ )
-			random_value[i] = getWiggle(ran[0], ran[1], PROJECT.animator.frames_total / fre, step * i, sed, 0, PROJECT.animator.frames_total);
+			random_value[i] = getWiggle(ran[0], ran[1], TOTAL_FRAMES / fre, step * i, sed, 0, TOTAL_FRAMES);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var ran = _data[0];
 		var fre = _data[1];
 		var sed = _data[2];
-		var time = PROJECT.animator.current_frame;
+		var time = CURRENT_FRAME;
 		
-		return getWiggle(ran[0], ran[1], PROJECT.animator.frames_total / fre, time, sed, 0, PROJECT.animator.frames_total);
+		return getWiggle(ran[0], ran[1], TOTAL_FRAMES / fre, time, sed, 0, TOTAL_FRAMES);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -49,15 +49,15 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var fre  = array_safe_get(current_data, 1);
 		var sed  = array_safe_get(current_data, 2);
 		var disp = array_safe_get(current_data, 3);
-		var time = PROJECT.animator.current_frame;
-		var total_time = PROJECT.animator.frames_total;
+		var time = CURRENT_FRAME;
+		var total_time = TOTAL_FRAMES;
 		
 		switch(disp) {
 			case 0 :
 				w = 96;
 				
 				draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-				var str	= getWiggle(ran[0], ran[1], PROJECT.animator.frames_total / fre, time, sed, 0, PROJECT.animator.frames_total);
+				var str	= getWiggle(ran[0], ran[1], TOTAL_FRAMES / fre, time, sed, 0, TOTAL_FRAMES);
 				var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20 * draw_name);
 				draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
 				break;

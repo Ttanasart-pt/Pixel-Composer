@@ -139,7 +139,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		onAffect(part, str);
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var val = getInputData(0);
 		outputs[| 0].setValue(val);
 		if(val == -1) return;
@@ -162,4 +162,6 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(node_draw_icon, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
+		
+	getPreviewingNode = VFX_PREVIEW_NODE;
 }

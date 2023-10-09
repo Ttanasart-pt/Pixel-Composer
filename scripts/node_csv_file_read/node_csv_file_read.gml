@@ -100,7 +100,7 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		update();
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = CURRENT_FRAME) {
 		var path = getInputData(0);
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);

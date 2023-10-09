@@ -159,8 +159,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var vfx = ds_list_create(); #region
 		addNodeCatagory("VFX", vfx, ["Node_VFX_Group"]);
 			ds_list_add(vfx, "Groups");
-			addNodeObject(vfx, "Input",			s_node_vfx_input,	"Node_Group_Input",		[1, Node_Group_Input]);
-			addNodeObject(vfx, "Output",		s_node_vfx_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+			addNodeObject(vfx, "Input",			s_node_vfx_input,			"Node_Group_Input",			[1, Node_Group_Input]);
+			addNodeObject(vfx, "Output",		s_node_vfx_output,			"Node_Group_Output",		[1, Node_Group_Output]);
+			addNodeObject(vfx, "Renderer",		s_node_vfx_render_output,	"Node_VFX_Renderer_Output",	[1, Node_VFX_Renderer_Output]);
 			
 			ds_list_add(vfx, "VFXs");
 			addNodeObject(vfx, "Spawner",		s_node_vfx_spawn,	"Node_VFX_Spawner",		[1, Node_VFX_Spawner]);
