@@ -35,6 +35,8 @@ function Node_Array_Composite(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var _arr = getInputData(0);
 		var _ker = getInputData(1);
 		
+		
+		if(!is_array(_arr) || !is_array(_ker)) return;
 		if(array_empty(_arr) || array_empty(_ker)) return;
 		
 		var res;

@@ -153,8 +153,8 @@
 		ds_map_add_list(map, "key", save_l);
 		
 		PREF_MAP[? "window_maximize"]	= gameframe_is_maximized();
-		PREF_MAP[? "window_width"]		= gameframe_restoreRect_hx[2];
-		PREF_MAP[? "window_height"]		= gameframe_restoreRect_hx[3];
+		PREF_MAP[? "window_width"]		= WIN_W;
+		PREF_MAP[? "window_height"]		= WIN_H;
 		
 		var _pref = ds_map_create();
 		ds_map_override(_pref, PREF_MAP);

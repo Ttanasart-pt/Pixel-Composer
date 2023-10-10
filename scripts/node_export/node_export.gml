@@ -111,8 +111,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.setDisplay(VALUE_DISPLAY.slider_range, { range: [0, TOTAL_FRAMES, 1] });
 	
 	png_format   = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
-	png_format_r = [ "PNG4", "PNG8"  ];
-	inputs[| 13] = nodeValue("Subformat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+	inputs[| 13] = nodeValue("Subformat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: png_format, update_hover: false });
 	
 	outputs[| 0] = nodeValue("Loop exit", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
@@ -462,18 +461,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		switch(ext) {
 			case ".png": 
-				if(indx == 0) {
-					surface_save_safe(_surf, _pathTemp);
+				switch(indx) {
+					case 0 : 	
+						surface_save_safe(_surf, _pathTemp);
 					
-					var shell_cmd = $"convert \"{_pathTemp}\" \"{_pathOut}\"";
-					shell_execute(magick, shell_cmd, self);
-				} else if(indx == 2) {
-					surface_save_safe(_surf, _pathOut);
-				} else {
-					surface_save_safe(_surf, _pathTemp);
+						var shell_cmd = $"convert \"{_pathTemp}\" \"{_pathOut}\"";
+						shell_execute(magick, shell_cmd, self);
+						break;
+					case 1 : 
+						surface_save_safe(_surf, _pathTemp);
 					
-					var shell_cmd = $"convert {_pathTemp} {png_format_r[indx]}:\"{_pathOut}\"";
-					shell_execute(magick, shell_cmd, self);
+						var shell_cmd = $"convert {_pathTemp} PNG8:\"{_pathOut}\"";
+						shell_execute(magick, shell_cmd, self);
+						break;
+					case 2 : 
+						surface_save_safe(_surf, _pathOut);
+						break;
 				}
 				break;
 				
