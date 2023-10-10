@@ -85,7 +85,8 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			}
 			
 			_outSurf.setSurface(_surf);
-		}
+		} else 
+			_outSurf = _surf;
 		
 		return _outSurf;
 	}
