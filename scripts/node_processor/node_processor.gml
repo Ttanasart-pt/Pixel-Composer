@@ -18,8 +18,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	process_length  = [];
 	dimension_index = 0;
 	
-	manage_atlas    = true;
-	atlas_index     = 0;
+	manage_atlas = true;
+	atlas_index  = 0;
 	
 	batch_output = false;	//Run processData once with all outputs as array.
 	

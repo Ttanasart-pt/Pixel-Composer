@@ -5,20 +5,20 @@ function Node_VFX_Attract(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _g
 	inputs[| 4].setVisible(false, false);
 	
 	function onAffect(part, str) {
-		var _area = current_data[1];
-		var _area_x = _area[0];
-		var _area_y = _area[1];
+		var _area      = getInputData(1);
+		var _area_x    = _area[0];
+		var _area_y    = _area[1];
 		
-		var _sten = current_data[5];
-		var _rot_range = current_data[6];
-		var _sca_range = current_data[7];
-		var _rot = random_range(_rot_range[0], _rot_range[1]);
-		var _sca = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
+		var _sten      = getInputData(5);
+		var _rot_range = getInputData(6);
+		var _sca_range = getInputData(7);
+		var _rot       = random_range(_rot_range[0], _rot_range[1]);
+		var _sca       = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
 		
-		var pv = part.getPivot();
+		var pv   = part.getPivot();
 		var dirr = point_direction(pv[0], pv[1], _area_x, _area_y);
-		part.x = part.x + lengthdir_x(_sten * str, dirr);
-		part.y = part.y + lengthdir_y(_sten * str, dirr);
+		part.x   = part.x + lengthdir_x(_sten * str, dirr);
+		part.y   = part.y + lengthdir_y(_sten * str, dirr);
 					
 		part.rot += _rot * str;
 		

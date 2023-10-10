@@ -26,7 +26,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[| 4] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
 	
-	inputs[| 5] = nodeValue("Match timeline", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Set window cursor to match animation timeline.");
+	inputs[| 5] = nodeValue("Match timeline", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Set window cursor to match animation timeline.");
 	
 	outputs[| 0] = nodeValue("Bit Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
 		.setArrayDepth(1);

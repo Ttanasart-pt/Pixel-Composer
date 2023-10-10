@@ -46,10 +46,13 @@ function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = 
 		return self;
 	}
 	
-	static clone = function() {
+	static clone = function(_surface = false) {
 		gml_pragma("forceinline");
 		
-		return new SurfaceAtlas(getSurface(), x, y, rotation, sx, sy, blend, alpha);
+		var _surf = getSurface();
+		if(_surface) _surf = surface_clone(_surf);
+		
+		return new SurfaceAtlas(_surf, x, y, rotation, sx, sy, blend, alpha);
 	}
 }
 

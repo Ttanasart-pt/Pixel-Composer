@@ -1,3 +1,13 @@
+enum FORCE_TYPE {
+	Wind,
+	Accelerate,
+	Attract,
+	Repel,
+	Vortex,
+	Turbulence,
+	Destroy
+}
+
 function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Effector";
 	color = COLORS.node_blend_vfx;
@@ -8,6 +18,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	w = 96;
 	h = 80;
 	min_h = h;
+	seed  = 1;
 	
 	inputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
 		.setVisible(true, true);
@@ -37,16 +48,21 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.vector_range, { linked : true })
 		.rejectArray();
 	
+	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999) )
+		.rejectArray();
+		
+	effector_input_length = ds_list_size(inputs);
+		
 	input_display_list = [ 0,
 		["Area",	false], 1, 2, 3,
-		["Effect",	false], 4, 5, 6, 7,
+		["Effect",	false], 8, 4, 5, 6, 7,
 	];
 	
 	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, -1 );
 	
 	UPDATE_PART_FORWARD
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var area = getInputData(1);
@@ -86,11 +102,19 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			draw_set_alpha(1);
 		}
-	}
+	} #endregion
+	
+	function reset() { #region
+		resetSeed();
+	} #endregion
+	
+	static resetSeed = function() { #region
+		seed = getInputData(8);
+	} #endregion
 	
 	function onAffect(part, str) {}
 	
-	function affect(part) {
+	function affect(part) { #region
 		if(!part.active) return;
 		
 		var _area = getInputData(1);
@@ -108,7 +132,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _area_y0 = _area_y - _area_h;
 		var _area_y1 = _area_y + _area_h;
 		
-		random_set_seed(part.seed);
+		random_set_seed(part.seed + seed);
 		
 		var str = 0, in, _dst;
 		var pv = part.getPivot();
@@ -116,9 +140,9 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(_area_t == AREA_SHAPE.rectangle) {
 			in = point_in_rectangle(pv[0], pv[1], _area_x0, _area_y0, _area_x1, _area_y1)
 			_dst = min(	distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x1, _area_y0), 
-							distance_to_line(pv[0], pv[1], _area_x0, _area_y1, _area_x1, _area_y1), 
-							distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x0, _area_y1), 
-							distance_to_line(pv[0], pv[1], _area_x1, _area_y0, _area_x1, _area_y1));
+						distance_to_line(pv[0], pv[1], _area_x0, _area_y1, _area_x1, _area_y1), 
+						distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x0, _area_y1), 
+						distance_to_line(pv[0], pv[1], _area_x1, _area_y0, _area_x1, _area_y1));
 		} else if(_area_t == AREA_SHAPE.elipse) {
 			var _dirr = point_direction(_area_x, _area_y, pv[0], pv[1]);
 			var _epx = _area_x + lengthdir_x(_area_w, _dirr);
@@ -137,9 +161,9 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(str == 0) return;
 		
 		onAffect(part, str);
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		var val = getInputData(0);
 		outputs[| 0].setValue(val);
 		if(val == -1) return;
@@ -156,12 +180,12 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(jun.value_to[| j].value_from == jun)
 				jun.value_to[| j].node.doUpdate();
 		}
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(node_draw_icon, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
-		
+	} #endregion
+	
 	getPreviewingNode = VFX_PREVIEW_NODE;
 }

@@ -3,12 +3,12 @@ function Node_VFX_Accelerate(_x, _y, _group = noone) : Node_VFX_effector(_x, _y,
 	node_draw_icon = s_node_vfx_accel;
 	
 	function onAffect(part, str) {
-		var _vect = current_data[4];
-		var _sten = current_data[5];
-		var _rot_range = current_data[6];
-		var _sca_range = current_data[7];
-		var _rot = random_range(_rot_range[0], _rot_range[1]);
-		var _sca = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
+		var _vect      = getInputData(4);
+		var _sten      = getInputData(5);
+		var _rot_range = getInputData(6);
+		var _sca_range = getInputData(7);
+		var _rot       = random_range(_rot_range[0], _rot_range[1]);
+		var _sca       = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
 		
 		part.sx = part.sx + _vect[0] * str * _sten;
 		part.sy = part.sy + _vect[1] * str * _sten;

@@ -3,7 +3,7 @@ enum COLLECTION_TAG {
 	loop = 2
 }
 
-function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) {
+function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) { #region
 	UNDO_HOLDING = true;
 	
 	if(_group == noone) {
@@ -36,9 +36,9 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 	if(record) recordAction(ACTION_TYPE.group, _group, { io: _io, content: _content });
 	
 	return _group;
-}
+} #endregion
 
-function upgroupNode(collection, record = true) {
+function upgroupNode(collection, record = true) { #region
 	UNDO_HOLDING = true;
 	var _content = [];
 	var _io = [];
@@ -57,9 +57,9 @@ function upgroupNode(collection, record = true) {
 	UNDO_HOLDING = false;
 	
 	if(record) recordAction(ACTION_TYPE.ungroup, collection, { io: _io, content: _content });
-}
+} #endregion
 
-function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 
 	nodes = ds_list_create();
 	ungroupable			= true;
 	auto_render_time	= false;
@@ -81,6 +81,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	input_dummy = nodeValue("Add to group", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
 	draw_dummy  = false;
+	
+	managedRenderOrder = false;
 	
 	input_dummy.onSetFrom = function(juncFrom) {
 		ds_list_remove(juncFrom.value_to, input_dummy);
@@ -185,7 +187,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return input_dummy;
 	} #endregion
 	
-	static getNextNodes = function() { #region //get node inside the group
+	static getNextNodes = function() { return getNextNodesInternal(); } 
+	
+	static getNextNodesInternal = function() { #region //get node inside the group
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from group");
 		
@@ -224,7 +228,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				var _node = _to.node;
 				
 				LOG_IF(global.FLAG.render == 1, $"Checking node {_node.internalName} : {_node.isRenderable()}");
-				if(!_node.isRenderable())	continue;
+				if(!_node.isRenderable()) continue;
 				
 				array_push(nodes, _to.node);
 			}
@@ -439,8 +443,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		ds_priority_destroy(ar);
 	} #endregion
 	
-	static getTool = function() {
-		for(var i = 0; i < ds_list_size(nodes); i++) { #region
+	static getTool = function() { #region
+		for(var i = 0; i < ds_list_size(nodes); i++) { 
 			var _node = nodes[| i];
 			if(_node.isTool) return _node.getTool();
 		}

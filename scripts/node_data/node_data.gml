@@ -448,7 +448,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		doUpdate();
 	} #endregion
 	
-	static doUpdate = function() { #region
+	static doUpdate = function(frame = CURRENT_FRAME) { #region
 		if(SAFE_MODE)    return;
 		if(NODE_EXTRACT) return;
 			
@@ -461,7 +461,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		} else {
 			render_cached = false;
 			var sBase = surface_get_target();	
-			getInputs();
+			getInputs(frame);
 			
 			LOG_BLOCK_START();
 			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {INAME} <<<<<<<<<<");
@@ -469,7 +469,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!is_instanceof(self, Node_Collection)) setRenderStatus(true);
 			
 			try {
-				update(); // Update only if input hash differs from previous.
+				update(frame); // Update only if input hash differs from previous.
 			} catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)

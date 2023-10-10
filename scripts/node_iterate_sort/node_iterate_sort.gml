@@ -3,8 +3,9 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;
 	
-	reset_all_child = true;
+	reset_all_child     = true;
 	combine_render_time = false;
+	managedRenderOrder  = true;
 	
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] )
 		.setVisible(true, true);

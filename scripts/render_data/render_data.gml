@@ -42,21 +42,10 @@ function __nodeLeafList(_list) { #region
 	return nodes;
 } #endregion
 
-function __nodeIsLoop(_node) { #region
-	switch(instanceof(_node)) {
-		case "Node_Iterate" : 
-		case "Node_Iterate_Each" : 
-		case "Node_Iterate_Filter" : 
-		case "Node_Iterate_Sort" : 
-			return true;
-	}
-	return false;
-} #endregion
-
-function __nodeInLoop(_node) { #region
+function __nodeManualManaged(_node) { #region
 	var gr = _node.group;
 	while(gr != noone) {
-		if(__nodeIsLoop(gr)) return true;
+		if(gr.managedRenderOrder) return true;
 		gr = gr.group;
 	}
 	return false;
@@ -194,7 +183,7 @@ function Render(partial = false, runAction = false) { #region
 			if(!_node.active)								{ LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); continue; }
 			if(!_node.isRenderActive())						{ LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive [{_node.internalName}]"); continue; }
 			if(!_node.attributes.update_graph)				{ LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); continue; }
-			if(__nodeInLoop(_node))							{ LOG_IF(global.FLAG.render == 1, $"Skip in-loop          [{_node.internalName}]"); continue; }
+			if(__nodeManualManaged(_node))							{ LOG_IF(global.FLAG.render == 1, $"Skip in-loop          [{_node.internalName}]"); continue; }
 			
 			if(_node.passiveDynamic) { 
 				_node.forwardPassiveDynamic();				  LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); continue; }
@@ -305,7 +294,7 @@ function RenderList(list, skipInLoop = true) { #region
 			if(!_node.isRenderActive())        { LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive {_node.internalName}"); continue; }
 			if(!_node.attributes.update_graph) { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  {_node.internalName}"); continue; }
 			
-			if(skipInLoop && __nodeInLoop(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip in-loop          {_node.internalName}"); continue; }
+			if(skipInLoop && __nodeManualManaged(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip in-loop          {_node.internalName}"); continue; }
 			
 			if(_node.passiveDynamic)		   { 
 				_node.forwardPassiveDynamic();

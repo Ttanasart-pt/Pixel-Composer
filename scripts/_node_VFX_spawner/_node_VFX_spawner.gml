@@ -367,7 +367,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 		
 		#region ----- precomputes -----
-			seed = getInputData(32);
+			resetSeed();
 			
 			var _wigg_pos = getInputData(41);
 			var _wigg_rot = getInputData(42);
@@ -389,6 +389,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		#endregion
 		
 		render();
+	} #endregion
+	
+	static resetSeed = function() { #region
+		seed = getInputData(32);
 	} #endregion
 	
 	function checkPartPool() { #region

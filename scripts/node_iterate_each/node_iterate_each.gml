@@ -3,8 +3,9 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Iterator(_x, _y, _grou
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;
 	
-	reset_all_child = true;
+	reset_all_child     = true;
 	combine_render_time = false;
+	managedRenderOrder  = true;
 	iterated = 0;
 	
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] )

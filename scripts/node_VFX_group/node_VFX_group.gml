@@ -7,29 +7,44 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	name  = "VFX";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
+	update_on_frame    = true;
+	managedRenderOrder = true;
 	
 	topoList	 = ds_list_create();
 	ungroupable  = false;
 	preview_node = noone;
+	allCached    = false;
 	
 	inputs[| 0] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
 		.rejectArray();
 	
 	custom_input_index = ds_list_size(inputs);
 	
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(!LOADING && !APPENDING && !CLONING) { #region
 		var input  = nodeBuild("Node_VFX_Spawner", -256, -32, self);
 		var output = nodeBuild("Node_VFX_Renderer_Output", 256 + 32 * 5, -32, self);
 		
 		output.inputs[| output.input_fix_len].setFrom(input.outputs[| 0]);
 		preview_node = output;
-	}
+	} #endregion
 	
-	static reset = function() {
+	static getNextNodes = function() { return allCached? getNextNodesExternal() : getNextNodesInternal(); } 
+	
+	insp2UpdateTooltip = "Clear cache";
+	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	
+	static onInspector2Update = function() { #region
 		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
 			var node = nodes[| i];
-			if(is_instanceof(node, Node_VFX_Spawner_Base))
-				node.reset();
+			node.clearCache(); 
+		}
+	} #endregion
+	
+	static reset = function() { #region
+		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
+			var node = nodes[| i];
+			if(!struct_has(node, "reset")) continue;
+			node.reset();
 		}
 		
 		var loop = getInputData(0);
@@ -41,23 +56,38 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 			if(is_instanceof(node, Node_VFX_Renderer_Output) ||
 			   is_instanceof(node, Node_VFX_Renderer)) continue;
 			
-			node.update(i);
+			node.doUpdate(i);
 		}
 		
 		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
 			var node = nodes[| i];
-			if(!is_instanceof(node, Node_VFX_Spawner_Base)) continue;
-				
-			node.seed = node.getInputData(32);
+			if(!struct_has(node, "resetSeed")) continue;
+			node.resetSeed();
 		}
-	}
+	} #endregion
 	
-	static update = function() {
-		if(CURRENT_FRAME == 0) {
+	static update = function() { #region
+		if(CURRENT_FRAME == 0) 
 			NodeListSort(topoList, nodes);
-			reset();
+		
+		allCached = true;
+		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
+			var node = nodes[| i];
+			if(!is_instanceof(node, Node_VFX_Renderer_Output) &&
+			   !is_instanceof(node, Node_VFX_Renderer)) continue;
+			 
+			if(!node.recoverCache()) allCached = false;
 		}
-	}
+		
+		if(!allCached && CURRENT_FRAME == 0)
+			reset();
+			
+		if(allCached) {
+			for( var i = 0, n = ds_list_size(nodes); i < n; i++ )
+				nodes[| i].setRenderStatus(true);
+			setRenderStatus(true);
+		}
+	} #endregion
 	
 	static ononDoubleClick = function(panel) { #region
 		preview_node = noone;
@@ -70,6 +100,8 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 				   break;
 			   }
 		}
+		
+		PANEL_PREVIEW.setNodePreview(self);
 	} #endregion
 	
 	getPreviewingNode = function() { return preview_node; }

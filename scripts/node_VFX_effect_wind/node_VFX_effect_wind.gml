@@ -3,12 +3,12 @@ function Node_VFX_Wind(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _grou
 	node_draw_icon = s_node_vfx_wind;
 	
 	function onAffect(part, str) {
-		var _vect = getInputData(4);
-		var _sten = getInputData(5);
+		var _vect      = getInputData(4);
+		var _sten      = getInputData(5);
 		var _rot_range = getInputData(6);
 		var _sca_range = getInputData(7);
-		var _rot = random_range(_rot_range[0], _rot_range[1]);
-		var _sca = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
+		var _rot       = random_range(_rot_range[0], _rot_range[1]);
+		var _sca       = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
 		
 		part.x = part.x + _vect[0] * _sten * str;
 		part.y = part.y + _vect[1] * _sten * str;
