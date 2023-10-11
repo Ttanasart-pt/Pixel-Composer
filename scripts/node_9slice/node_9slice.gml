@@ -23,21 +23,24 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	drag_my   = 0;
 	drag_sv   = 0;
 	
-	static onValueFromUpdate = function(index) {
-		if(index == 0) {
-			var s = getInputData(0);
-			if(is_array(s)) s = s[0];
-			inputs[| 1].setValue([surface_get_width_safe(s), surface_get_height_safe(s)]);	
-		}
+	static onValueFromUpdate = function(index = 0) {
+		if(index != 0) return;
+		
+		var s = getInputData(0);
+		if(is_array(s)) s = s[0];
+			
+		if(!is_surface(s)) return;
+		inputs[| 1].setValue( [ surface_get_width_safe(s), surface_get_height_safe(s) ] );
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < 1) return;
 		
 		var _dim		= current_data[1];
-		var _splice		= current_data[2];
-		for( var i = 0, n = array_length(_splice); i < n; i++ )
-			_splice[i] = round(_splice[i]);
+		
+		var _splice		= array_create(array_length(current_data[2]));
+		for( var i = 0, n = array_length(current_data[2]); i < n; i++ )
+			_splice[i] = round(current_data[2][i]);
 			
 		var sp_r = _x + (_dim[0] - _splice[0]) * _s;
 		var sp_l = _x + _splice[2] * _s;

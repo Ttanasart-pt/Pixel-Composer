@@ -104,8 +104,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var recPath = DIRECTORY + "Nodes/recent.json";
 		global.RECENT_NODES = file_exists(recPath)? json_load_struct(recPath) : [];
 		
-		var group = ds_list_create();
-		addNodeCatagory("Group", group, ["Node_Group"]); #region
+		var group = ds_list_create(); #region
+		addNodeCatagory("Group", group, ["Node_Group"]); 
 			ds_list_add(group, "Groups");
 			addNodeObject(group, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
 			addNodeObject(group, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);

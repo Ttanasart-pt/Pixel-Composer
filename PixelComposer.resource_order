@@ -139,7 +139,7 @@
     {"name":"path","order":5,"path":"folders/nodes/data/value/path.yy",},
     {"name":"struct","order":7,"path":"folders/nodes/data/value/struct.yy",},
     {"name":"surface","order":11,"path":"folders/nodes/data/value/surface.yy",},
-    {"name":"texts","order":6,"path":"folders/nodes/data/value/texts.yy",},
+    {"name":"text","order":6,"path":"folders/nodes/data/value/text.yy",},
     {"name":"trigger","order":9,"path":"folders/nodes/data/value/trigger.yy",},
     {"name":"3D","order":133,"path":"folders/nodes/icons/3D.yy",},
     {"name":"animation","order":135,"path":"folders/nodes/icons/animation.yy",},

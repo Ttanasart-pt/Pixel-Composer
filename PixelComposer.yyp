@@ -167,7 +167,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"path","folderPath":"folders/nodes/data/value/path.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"struct","folderPath":"folders/nodes/data/value/struct.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"surface","folderPath":"folders/nodes/data/value/surface.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"texts","folderPath":"folders/nodes/data/value/texts.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/nodes/data/value/text.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"trigger","folderPath":"folders/nodes/data/value/trigger.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"icons","folderPath":"folders/nodes/icons.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"3D","folderPath":"folders/nodes/icons/3D.yy",},
