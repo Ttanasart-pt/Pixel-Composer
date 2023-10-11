@@ -187,15 +187,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					string_foreach(_str_line, function(_chr, _ind) {
 						var _pos = __temp_pt.getPointDistance(__temp_tx);
-						var _nor = 0;
-						
-						if(__temp_tx < 0.9) {
-							var _p2 = __temp_pt.getPointDistance(__temp_tx + 0.1);
-							_nor = point_direction(_pos.x, _pos.y, _p2.x, _p2.y);
-						} else {
-							var _p2 = __temp_pt.getPointDistance(__temp_tx - 0.1);
-							_nor = point_direction(_p2.x, _p2.y, _pos.x, _pos.y);
-						}
+						var _p2  = __temp_pt.getPointDistance(__temp_tx + 0.1);
+						var _nor = point_direction(_pos.x, _pos.y, _p2.x, _p2.y);
 						
 						var _line_ang = _nor - 90;
 						var _dx = lengthdir_x(__temp_ty, _line_ang);
