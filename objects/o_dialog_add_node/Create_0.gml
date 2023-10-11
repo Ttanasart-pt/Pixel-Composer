@@ -144,7 +144,7 @@ event_inherited();
 				return;
 			}
 			
-			if(category == NODE_CATEGORY) {
+			if(category == NODE_CATEGORY && _node.show_in_recent) {
 				array_remove(global.RECENT_NODES, _node.node);
 				array_insert(global.RECENT_NODES, 0, _node.node);
 				if(array_length(global.RECENT_NODES) > 20)
@@ -341,7 +341,9 @@ event_inherited();
 				var _nodeIndex = global.FAV_NODES[i];
 				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
 				
-				ds_list_add(_list, ALL_NODES[? _nodeIndex]);
+				var _node = ALL_NODES[? _nodeIndex];
+				if(_node.show_in_recent) 
+					ds_list_add(_list, _node);
 			}
 			
 			ds_list_add(_list, "Recents");
@@ -349,7 +351,9 @@ event_inherited();
 				var _nodeIndex = global.RECENT_NODES[i];
 				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
 				
-				ds_list_add(_list, ALL_NODES[? _nodeIndex]);
+				var _node = ALL_NODES[? _nodeIndex];
+				if(_node.show_in_recent) 
+					ds_list_add(_list, _node);
 			}
 		}
 		

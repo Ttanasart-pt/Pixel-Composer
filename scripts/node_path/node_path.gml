@@ -83,7 +83,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		transform_mx = 0;   transform_my = 0;
 	#endregion
 	
-	static resetDisplayList = function() {
+	static resetDisplayList = function() { #region
 		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
 		
 		input_display_list = [
@@ -93,7 +93,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i++ ) 
 			array_push(input_display_list, i);
-	} 
+	} #endregion
 	
 	static createNewInput = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) { #region
 		var index = ds_list_size(inputs);
@@ -885,10 +885,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(ds_map_exists(cached_pos, _dist))
 			return cached_pos[? _dist].clone();
 		
-		var _oDist = _dist;
 		var loop   = getInputData(1);
 		var rond   = getInputData(3);
 		if(!is_real(rond)) rond = false;
+		
+		if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
+		var _oDist = _dist;
 		
 		var ansize = array_length(lengths);
 		var amo    = ds_list_size(inputs) - input_fix_len;

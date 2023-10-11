@@ -9,6 +9,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	tooltip_spr = noone;
 	deprecated  = false;
 	
+	show_in_recent = true;
+	
 	var pth = DIRECTORY + "Nodes/tooltip/" + node + ".png";
 	if(file_exists(pth))
 		tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
@@ -28,6 +30,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	
 	static isDeprecated = function() {
 		deprecated = true;
+		return self;
+	}
+	
+	static hideRecent = function() {
+		show_in_recent = false;
 		return self;
 	}
 	
@@ -52,10 +59,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 
 #region nodes
 	globalvar ALL_NODES, ALL_NODE_LIST, NODE_CATEGORY, NODE_PAGE_DEFAULT, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
-	ALL_NODES		 = ds_map_create();
-	ALL_NODE_LIST	 = ds_list_create();
-	NODE_CATEGORY	 = ds_list_create();
-	NODE_PB_CATEGORY = ds_list_create();
+	ALL_NODES		  = ds_map_create();
+	ALL_NODE_LIST	  = ds_list_create();
+	NODE_CATEGORY	  = ds_list_create();
+	NODE_PB_CATEGORY  = ds_list_create();
 	NODE_PCX_CATEGORY = ds_list_create();
 	
 	function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) { #region
@@ -107,139 +114,139 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var group = ds_list_create(); #region
 		addNodeCatagory("Group", group, ["Node_Group"]); 
 			ds_list_add(group, "Groups");
-			addNodeObject(group, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
-			addNodeObject(group, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
-			addNodeObject(group, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]);
+			addNodeObject(group, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
+			addNodeObject(group, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
+			addNodeObject(group, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]).hideRecent();
 		#endregion
 		
 		var iter = ds_list_create(); #region
 		addNodeCatagory("Loop", iter, ["Node_Iterate"]);
 			ds_list_add(iter, "Groups");
-			addNodeObject(iter, "Input",		s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]);
-			addNodeObject(iter, "Output",		s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]);
-			addNodeObject(iter, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]);
+			addNodeObject(iter, "Input",		s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]).hideRecent();
+			addNodeObject(iter, "Output",		s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]).hideRecent();
+			addNodeObject(iter, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]).hideRecent();
 			
 			ds_list_add(iter, "Loops");
-			addNodeObject(iter, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
-			addNodeObject(iter, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]);
+			addNodeObject(iter, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
+			addNodeObject(iter, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
 		#endregion
 		
 		var itere = ds_list_create(); #region
 		addNodeCatagory("Loop", itere, ["Node_Iterate_Each"]);
 			ds_list_add(itere, "Groups");
-			addNodeObject(itere, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
-			addNodeObject(itere, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
-			addNodeObject(itere, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]);
+			addNodeObject(itere, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
+			addNodeObject(itere, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
+			addNodeObject(itere, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]).hideRecent();
 			
 			ds_list_add(itere, "Loops");
-			addNodeObject(itere, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
-			addNodeObject(itere, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]);
+			addNodeObject(itere, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
+			addNodeObject(itere, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]).hideRecent();
 		#endregion
 			
 		var filter = ds_list_create(); #region
 		addNodeCatagory("Filter", filter, ["Node_Iterate_Filter"]);
 			ds_list_add(filter, "Groups");
-			addNodeObject(filter, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
-			addNodeObject(filter, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
-			addNodeObject(filter, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]);
+			addNodeObject(filter, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
+			addNodeObject(filter, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
+			addNodeObject(filter, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]).hideRecent();
 			
 			ds_list_add(filter, "Loops");
-			addNodeObject(filter, "Index",			s_node_iterator_index,	"Node_Iterator_Index",			[1, Node_Iterator_Index]);
-			addNodeObject(filter, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]);
+			addNodeObject(filter, "Index",			s_node_iterator_index,	"Node_Iterator_Index",			[1, Node_Iterator_Index]).hideRecent();
+			addNodeObject(filter, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]).hideRecent();
 		#endregion
 		
 		var feed = ds_list_create(); #region
 		addNodeCatagory("Feedback", feed, ["Node_Feedback"]);
 			ds_list_add(feed, "Groups");
-			addNodeObject(feed, "Input",		s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]);
-			addNodeObject(feed, "Output",		s_node_feedback_output,	"Node_Feedback_Output",	[1, Node_Feedback_Output]);
-			addNodeObject(feed, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]);
+			addNodeObject(feed, "Input",		s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]).hideRecent();
+			addNodeObject(feed, "Output",		s_node_feedback_output,	"Node_Feedback_Output",	[1, Node_Feedback_Output]).hideRecent();
+			addNodeObject(feed, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]).hideRecent();
 		#endregion
 		
 		var vfx = ds_list_create(); #region
 		addNodeCatagory("VFX", vfx, ["Node_VFX_Group"]);
 			ds_list_add(vfx, "Groups");
-			addNodeObject(vfx, "Input",			s_node_vfx_input,			"Node_Group_Input",			[1, Node_Group_Input]);
-			addNodeObject(vfx, "Output",		s_node_vfx_output,			"Node_Group_Output",		[1, Node_Group_Output]);
-			addNodeObject(vfx, "Renderer",		s_node_vfx_render_output,	"Node_VFX_Renderer_Output",	[1, Node_VFX_Renderer_Output]);
+			addNodeObject(vfx, "Input",			s_node_vfx_input,			"Node_Group_Input",			[1, Node_Group_Input]).hideRecent();
+			addNodeObject(vfx, "Output",		s_node_vfx_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent();
+			addNodeObject(vfx, "Renderer",		s_node_vfx_render_output,	"Node_VFX_Renderer_Output",	[1, Node_VFX_Renderer_Output]).hideRecent();
 			
 			ds_list_add(vfx, "VFXs");
-			addNodeObject(vfx, "Spawner",		s_node_vfx_spawn,	"Node_VFX_Spawner",		[1, Node_VFX_Spawner]);
-			addNodeObject(vfx, "Renderer",		s_node_vfx_render,	"Node_VFX_Renderer",	[1, Node_VFX_Renderer]);
+			addNodeObject(vfx, "Spawner",		s_node_vfx_spawn,	"Node_VFX_Spawner",		[1, Node_VFX_Spawner]).hideRecent();
+			addNodeObject(vfx, "Renderer",		s_node_vfx_render,	"Node_VFX_Renderer",	[1, Node_VFX_Renderer]).hideRecent();
 			
 			ds_list_add(vfx, "Affectors");
-			addNodeObject(vfx, "Accelerate",	s_node_vfx_accel,	"Node_VFX_Accelerate",	[1, Node_VFX_Accelerate]);
-			addNodeObject(vfx, "Destroy",		s_node_vfx_destroy,	"Node_VFX_Destroy",		[1, Node_VFX_Destroy]);
-			addNodeObject(vfx, "Attract",		s_node_vfx_attract,	"Node_VFX_Attract",		[1, Node_VFX_Attract]);
-			addNodeObject(vfx, "Wind",			s_node_vfx_wind,	"Node_VFX_Wind",		[1, Node_VFX_Wind]);
-			addNodeObject(vfx, "Vortex",		s_node_vfx_vortex,	"Node_VFX_Vortex",		[1, Node_VFX_Vortex]);
-			addNodeObject(vfx, "Turbulence",	s_node_vfx_turb,	"Node_VFX_Turbulence",	[1, Node_VFX_Turbulence]);
-			addNodeObject(vfx, "Repel",			s_node_vfx_repel,	"Node_VFX_Repel",		[1, Node_VFX_Repel]);
+			addNodeObject(vfx, "Accelerate",	s_node_vfx_accel,	"Node_VFX_Accelerate",	[1, Node_VFX_Accelerate]).hideRecent();
+			addNodeObject(vfx, "Destroy",		s_node_vfx_destroy,	"Node_VFX_Destroy",		[1, Node_VFX_Destroy]).hideRecent();
+			addNodeObject(vfx, "Attract",		s_node_vfx_attract,	"Node_VFX_Attract",		[1, Node_VFX_Attract]).hideRecent();
+			addNodeObject(vfx, "Wind",			s_node_vfx_wind,	"Node_VFX_Wind",		[1, Node_VFX_Wind]).hideRecent();
+			addNodeObject(vfx, "Vortex",		s_node_vfx_vortex,	"Node_VFX_Vortex",		[1, Node_VFX_Vortex]).hideRecent();
+			addNodeObject(vfx, "Turbulence",	s_node_vfx_turb,	"Node_VFX_Turbulence",	[1, Node_VFX_Turbulence]).hideRecent();
+			addNodeObject(vfx, "Repel",			s_node_vfx_repel,	"Node_VFX_Repel",		[1, Node_VFX_Repel]).hideRecent();
 			
 			ds_list_add(vfx, "Instance control");
-			addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable]).setVersion(1120);
-			addNodeObject(vfx, "VFX Override",	s_node_vfx_override,	"Node_VFX_Override",	[1, Node_VFX_Override]).setVersion(1120);
+			addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable]).hideRecent().setVersion(1120);
+			addNodeObject(vfx, "VFX Override",	s_node_vfx_override,	"Node_VFX_Override",	[1, Node_VFX_Override]).hideRecent().setVersion(1120);
 		#endregion
 		
 		var rigidSim = ds_list_create(); #region
 		addNodeCatagory("RigidSim", rigidSim, ["Node_Rigid_Group"]);
 			ds_list_add(rigidSim, "Group");
-			addNodeObject(rigidSim, "Input",	s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]);
-			addNodeObject(rigidSim, "Output",	s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]);
-			addNodeObject(rigidSim, "Render",	s_node_rigidSim_render_output,	"Node_Rigid_Render_Output",	[1, Node_Rigid_Render_Output]);
+			addNodeObject(rigidSim, "Input",	s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent();
+			addNodeObject(rigidSim, "Output",	s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent();
+			addNodeObject(rigidSim, "Render",	s_node_rigidSim_render_output,	"Node_Rigid_Render_Output",	[1, Node_Rigid_Render_Output]).hideRecent();
 			
 			ds_list_add(rigidSim, "RigidSim");
-			addNodeObject(rigidSim, "Object",			s_node_rigidSim_object,				"Node_Rigid_Object",			[1, Node_Rigid_Object]).setVersion(1110);
-			addNodeObject(rigidSim, "Object Spawner",	s_node_rigidSim_object_spawner,		"Node_Rigid_Object_Spawner",	[1, Node_Rigid_Object_Spawner]).setVersion(1110);
-			addNodeObject(rigidSim, "Render",			s_node_rigidSim_renderer,			"Node_Rigid_Render",			[1, Node_Rigid_Render]).setVersion(1110);
-			addNodeObject(rigidSim, "Apply Force",		s_node_rigidSim_force,				"Node_Rigid_Force_Apply",		[1, Node_Rigid_Force_Apply]).setVersion(1110);
+			addNodeObject(rigidSim, "Object",			s_node_rigidSim_object,				"Node_Rigid_Object",			[1, Node_Rigid_Object]).hideRecent().setVersion(1110);
+			addNodeObject(rigidSim, "Object Spawner",	s_node_rigidSim_object_spawner,		"Node_Rigid_Object_Spawner",	[1, Node_Rigid_Object_Spawner]).hideRecent().setVersion(1110);
+			addNodeObject(rigidSim, "Render",			s_node_rigidSim_renderer,			"Node_Rigid_Render",			[1, Node_Rigid_Render]).hideRecent().setVersion(1110);
+			addNodeObject(rigidSim, "Apply Force",		s_node_rigidSim_force,				"Node_Rigid_Force_Apply",		[1, Node_Rigid_Force_Apply]).hideRecent().setVersion(1110);
 			
 			ds_list_add(rigidSim, "Instance control");
-			addNodeObject(rigidSim, "Activate Physics",	s_node_rigidSim_activate,	"Node_Rigid_Activate",		[1, Node_Rigid_Activate]).setVersion(1110);
-			addNodeObject(rigidSim, "Rigidbody Variable",	s_node_rigid_variable,	"Node_Rigid_Variable",		[1, Node_Rigid_Variable]).setVersion(1120);
-			addNodeObject(rigidSim, "Rigidbody Override",	s_node_rigid_override,	"Node_Rigid_Override",		[1, Node_Rigid_Override]).setVersion(1120);
+			addNodeObject(rigidSim, "Activate Physics",	s_node_rigidSim_activate,	"Node_Rigid_Activate",		[1, Node_Rigid_Activate]).hideRecent().setVersion(1110);
+			addNodeObject(rigidSim, "Rigidbody Variable",	s_node_rigid_variable,	"Node_Rigid_Variable",		[1, Node_Rigid_Variable]).hideRecent().setVersion(1120);
+			addNodeObject(rigidSim, "Rigidbody Override",	s_node_rigid_override,	"Node_Rigid_Override",		[1, Node_Rigid_Override]).hideRecent().setVersion(1120);
 		#endregion
 		
 		var fluidSim = ds_list_create(); #region
 		addNodeCatagory("FluidSim", fluidSim, ["Node_Fluid_Group"]);
 			ds_list_add(fluidSim, "Group");
-			addNodeObject(fluidSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]);
-			addNodeObject(fluidSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]);
-			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render_output,	"Node_Fluid_Render_Output",	[1, Node_Fluid_Render_Output]).setVersion(11540);
+			addNodeObject(fluidSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent();
+			addNodeObject(fluidSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent();
+			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render_output,	"Node_Fluid_Render_Output",	[1, Node_Fluid_Render_Output]).hideRecent().setVersion(11540);
 			
 			ds_list_add(fluidSim, "Domain");
-			addNodeObject(fluidSim, "Fluid Domain",		s_node_fluidSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).setVersion(1120);
-			addNodeObject(fluidSim, "Update Domain",	s_node_fluidSim_update,			"Node_Fluid_Update",		[1, Node_Fluid_Update]).setVersion(1120);
-			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render,			"Node_Fluid_Render",		[1, Node_Fluid_Render]).setVersion(1120);
-			addNodeObject(fluidSim, "Queue Domain",		s_node_fluidSim_domain_queue,	"Node_Fluid_Domain_Queue",	[1, Node_Fluid_Domain_Queue]).setVersion(1120);
+			addNodeObject(fluidSim, "Fluid Domain",		s_node_fluidSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).hideRecent().setVersion(1120);
+			addNodeObject(fluidSim, "Update Domain",	s_node_fluidSim_update,			"Node_Fluid_Update",		[1, Node_Fluid_Update]).hideRecent().setVersion(1120);
+			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render,			"Node_Fluid_Render",		[1, Node_Fluid_Render]).hideRecent().setVersion(1120);
+			addNodeObject(fluidSim, "Queue Domain",		s_node_fluidSim_domain_queue,	"Node_Fluid_Domain_Queue",	[1, Node_Fluid_Domain_Queue]).hideRecent().setVersion(1120);
 			
 			ds_list_add(fluidSim, "Fluid");
-			addNodeObject(fluidSim, "Add Fluid",		s_node_fluidSim_add_fluid,		"Node_Fluid_Add",				[1, Node_Fluid_Add]).setVersion(1120);
-			addNodeObject(fluidSim, "Apply Velocity",	s_node_fluidSim_apply_velocity,	"Node_Fluid_Apply_Velocity",	[1, Node_Fluid_Apply_Velocity]).setVersion(1120);
-			addNodeObject(fluidSim, "Add Collider",		s_node_fluidSim_add_collider,	"Node_Fluid_Add_Collider",		[1, Node_Fluid_Add_Collider]).setVersion(1120);
-			addNodeObject(fluidSim, "Vortex",			s_node_fluidSim_vortex,			"Node_Fluid_Vortex",			[1, Node_Fluid_Vortex]).setVersion(1120);
-			addNodeObject(fluidSim, "Repulse",			s_node_fluidSim_repulse,		"Node_Fluid_Repulse",			[1, Node_Fluid_Repulse]).setVersion(1120);
-			addNodeObject(fluidSim, "Turbulence",		s_node_fluidSim_turbulence,		"Node_Fluid_Turbulence",		[1, Node_Fluid_Turbulence]).setVersion(1120);
+			addNodeObject(fluidSim, "Add Fluid",		s_node_fluidSim_add_fluid,		"Node_Fluid_Add",				[1, Node_Fluid_Add]).hideRecent().setVersion(1120);
+			addNodeObject(fluidSim, "Apply Velocity",	s_node_fluidSim_apply_velocity,	"Node_Fluid_Apply_Velocity",	[1, Node_Fluid_Apply_Velocity]).hideRecent().setVersion(1120);
+			addNodeObject(fluidSim, "Add Collider",		s_node_fluidSim_add_collider,	"Node_Fluid_Add_Collider",		[1, Node_Fluid_Add_Collider]).hideRecent().setVersion(1120);
+			addNodeObject(fluidSim, "Vortex",			s_node_fluidSim_vortex,			"Node_Fluid_Vortex",			[1, Node_Fluid_Vortex]).hideRecent().setVersion(1120);
+			addNodeObject(fluidSim, "Repulse",			s_node_fluidSim_repulse,		"Node_Fluid_Repulse",			[1, Node_Fluid_Repulse]).hideRecent().setVersion(1120);
+			addNodeObject(fluidSim, "Turbulence",		s_node_fluidSim_turbulence,		"Node_Fluid_Turbulence",		[1, Node_Fluid_Turbulence]).hideRecent().setVersion(1120);
 		#endregion
 		
 		var strandSim = ds_list_create(); #region
 		addNodeCatagory("StrandSim", strandSim, ["Node_Strand_Group"]);
 			ds_list_add(strandSim, "Group");
-			addNodeObject(strandSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
-			addNodeObject(strandSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+			addNodeObject(strandSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
+			addNodeObject(strandSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
 			
 			ds_list_add(strandSim, "System");
-			addNodeObject(strandSim, "Strand Create",	s_node_strandSim_create,	"Node_Strand_Create",	[1, Node_Strand_Create]).setVersion(1140);
-			addNodeObject(strandSim, "Strand Update",	s_node_strandSim_update,	"Node_Strand_Update",	[1, Node_Strand_Update]).setVersion(1140);
-			addNodeObject(strandSim, "Strand Render",	s_node_strandSim_render,	"Node_Strand_Render",	[1, Node_Strand_Render]).setVersion(1140);
-			addNodeObject(strandSim, "Strand Render Texture",	s_node_strandSim_render_texture,	"Node_Strand_Render_Texture",	[1, Node_Strand_Render_Texture]).setVersion(1140);
+			addNodeObject(strandSim, "Strand Create",	s_node_strandSim_create,	"Node_Strand_Create",	[1, Node_Strand_Create]).hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Update",	s_node_strandSim_update,	"Node_Strand_Update",	[1, Node_Strand_Update]).hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Render",	s_node_strandSim_render,	"Node_Strand_Render",	[1, Node_Strand_Render]).hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Render Texture",	s_node_strandSim_render_texture,	"Node_Strand_Render_Texture",	[1, Node_Strand_Render_Texture]).hideRecent().setVersion(1140);
 			
 			ds_list_add(strandSim, "Affectors");
-			addNodeObject(strandSim, "Strand Gravity",		 s_node_strandSim_gravity,	"Node_Strand_Gravity",		 [1, Node_Strand_Gravity]).setVersion(1140);
-			addNodeObject(strandSim, "Strand Force Apply",	 s_node_strandSim_force,	"Node_Strand_Force_Apply",	 [1, Node_Strand_Force_Apply]).setVersion(1140);
-			addNodeObject(strandSim, "Strand Break",		 s_node_strandSim_break,	"Node_Strand_Break",		 [1, Node_Strand_Break]).setVersion(1140);
-			addNodeObject(strandSim, "Strand Length Adjust", s_node_strandSim_length,	"Node_Strand_Length_Adjust", [1, Node_Strand_Length_Adjust]).setVersion(1140);
-			addNodeObject(strandSim, "Strand Collision",	s_node_strandSim_collide,		"Node_Strand_Collision",	[1, Node_Strand_Collision]).setVersion(1140);
+			addNodeObject(strandSim, "Strand Gravity",		 s_node_strandSim_gravity,	"Node_Strand_Gravity",		 [1, Node_Strand_Gravity]).hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Force Apply",	 s_node_strandSim_force,	"Node_Strand_Force_Apply",	 [1, Node_Strand_Force_Apply]).hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Break",		 s_node_strandSim_break,	"Node_Strand_Break",		 [1, Node_Strand_Break]).hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Length Adjust", s_node_strandSim_length,	"Node_Strand_Length_Adjust", [1, Node_Strand_Length_Adjust]).hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Collision",	s_node_strandSim_collide,		"Node_Strand_Collision",	[1, Node_Strand_Collision]).hideRecent().setVersion(1140);
 		#endregion
 		
 		NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
@@ -714,116 +721,116 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var pb_draw = ds_list_create(); #region
 		addNodePBCatagory("Draw", pb_draw);
 			ds_list_add(pb_draw, "Fill");
-			addNodeObject(pb_draw, "Fill",				s_node_pb_draw_fill,	"Node_PB_Draw_Fill",			[1, Node_PB_Draw_Fill]);
+			addNodeObject(pb_draw, "Fill",				s_node_pb_draw_fill,	"Node_PB_Draw_Fill",			[1, Node_PB_Draw_Fill]).hideRecent();
 			
 			ds_list_add(pb_draw, "Shape");
-			addNodeObject(pb_draw, "Rectangle",			s_node_pb_draw_rectangle,		"Node_PB_Draw_Rectangle",		[1, Node_PB_Draw_Rectangle]);
-			addNodeObject(pb_draw, "Round Rectangle",	s_node_pb_draw_roundrectangle,	"Node_PB_Draw_Round_Rectangle",	[1, Node_PB_Draw_Round_Rectangle]);
-			addNodeObject(pb_draw, "Trapezoid",			s_node_pb_draw_trapezoid,		"Node_PB_Draw_Trapezoid",		[1, Node_PB_Draw_Trapezoid]);
-			addNodeObject(pb_draw, "Diamond",			s_node_pb_draw_diamond,			"Node_PB_Draw_Diamond",			[1, Node_PB_Draw_Diamond]);
-			addNodeObject(pb_draw, "Ellipse",			s_node_pb_draw_ellipse,			"Node_PB_Draw_Ellipse",			[1, Node_PB_Draw_Ellipse]);
-			addNodeObject(pb_draw, "Semi-Ellipse",		s_node_pb_draw_semi_ellipse,	"Node_PB_Draw_Semi_Ellipse",	[1, Node_PB_Draw_Semi_Ellipse]);
-			addNodeObject(pb_draw, "Line",				s_node_pb_draw_line,			"Node_PB_Draw_Line",			[1, Node_PB_Draw_Line]);
-			addNodeObject(pb_draw, "Angle",				s_node_pb_draw_angle,			"Node_PB_Draw_Angle",			[1, Node_PB_Draw_Angle]);
-			addNodeObject(pb_draw, "Blob",				s_node_pb_draw_blob,			"Node_PB_Draw_Blob",			[1, Node_PB_Draw_Blob]);
+			addNodeObject(pb_draw, "Rectangle",			s_node_pb_draw_rectangle,		"Node_PB_Draw_Rectangle",		[1, Node_PB_Draw_Rectangle]).hideRecent();
+			addNodeObject(pb_draw, "Round Rectangle",	s_node_pb_draw_roundrectangle,	"Node_PB_Draw_Round_Rectangle",	[1, Node_PB_Draw_Round_Rectangle]).hideRecent();
+			addNodeObject(pb_draw, "Trapezoid",			s_node_pb_draw_trapezoid,		"Node_PB_Draw_Trapezoid",		[1, Node_PB_Draw_Trapezoid]).hideRecent();
+			addNodeObject(pb_draw, "Diamond",			s_node_pb_draw_diamond,			"Node_PB_Draw_Diamond",			[1, Node_PB_Draw_Diamond]).hideRecent();
+			addNodeObject(pb_draw, "Ellipse",			s_node_pb_draw_ellipse,			"Node_PB_Draw_Ellipse",			[1, Node_PB_Draw_Ellipse]).hideRecent();
+			addNodeObject(pb_draw, "Semi-Ellipse",		s_node_pb_draw_semi_ellipse,	"Node_PB_Draw_Semi_Ellipse",	[1, Node_PB_Draw_Semi_Ellipse]).hideRecent();
+			addNodeObject(pb_draw, "Line",				s_node_pb_draw_line,			"Node_PB_Draw_Line",			[1, Node_PB_Draw_Line]).hideRecent();
+			addNodeObject(pb_draw, "Angle",				s_node_pb_draw_angle,			"Node_PB_Draw_Angle",			[1, Node_PB_Draw_Angle]).hideRecent();
+			addNodeObject(pb_draw, "Blob",				s_node_pb_draw_blob,			"Node_PB_Draw_Blob",			[1, Node_PB_Draw_Blob]).hideRecent();
 		#endregion
 		
 		var pb_box = ds_list_create(); #region
 		addNodePBCatagory("Box", pb_box);
 			ds_list_add(pb_box, "Layer");
-			addNodeObject(pb_box, "Layer",		s_node_pb_layer,	"Node_PB_Layer",		[1, Node_PB_Layer]);
+			addNodeObject(pb_box, "Layer",		s_node_pb_layer,	"Node_PB_Layer",		[1, Node_PB_Layer]).hideRecent();
 			
 			ds_list_add(pb_box, "Box");
-			addNodeObject(pb_box, "Transform",		s_node_pb_box_transform,	"Node_PB_Box_Transform",	[1, Node_PB_Box_Transform]);
-			addNodeObject(pb_box, "Mirror",			s_node_pb_box_mirror,		"Node_PB_Box_Mirror",		[1, Node_PB_Box_Mirror]);
-			addNodeObject(pb_box, "Inset",			s_node_pb_box_inset,		"Node_PB_Box_Inset",		[1, Node_PB_Box_Inset]);
-			addNodeObject(pb_box, "Split",			s_node_pb_box_split,		"Node_PB_Box_Split",		[1, Node_PB_Box_Split]);
-			addNodeObject(pb_box, "Divide",			s_node_pb_box_divide,		"Node_PB_Box_Divide",		[1, Node_PB_Box_Divide]);
-			addNodeObject(pb_box, "Divide Grid",	s_node_pb_box_divide_grid,	"Node_PB_Box_Divide_Grid",	[1, Node_PB_Box_Divide_Grid]);
-			addNodeObject(pb_box, "Contract",		s_node_pb_box_contract,		"Node_PB_Box_Contract",		[1, Node_PB_Box_Contract]);
+			addNodeObject(pb_box, "Transform",		s_node_pb_box_transform,	"Node_PB_Box_Transform",	[1, Node_PB_Box_Transform]).hideRecent();
+			addNodeObject(pb_box, "Mirror",			s_node_pb_box_mirror,		"Node_PB_Box_Mirror",		[1, Node_PB_Box_Mirror]).hideRecent();
+			addNodeObject(pb_box, "Inset",			s_node_pb_box_inset,		"Node_PB_Box_Inset",		[1, Node_PB_Box_Inset]).hideRecent();
+			addNodeObject(pb_box, "Split",			s_node_pb_box_split,		"Node_PB_Box_Split",		[1, Node_PB_Box_Split]).hideRecent();
+			addNodeObject(pb_box, "Divide",			s_node_pb_box_divide,		"Node_PB_Box_Divide",		[1, Node_PB_Box_Divide]).hideRecent();
+			addNodeObject(pb_box, "Divide Grid",	s_node_pb_box_divide_grid,	"Node_PB_Box_Divide_Grid",	[1, Node_PB_Box_Divide_Grid]).hideRecent();
+			addNodeObject(pb_box, "Contract",		s_node_pb_box_contract,		"Node_PB_Box_Contract",		[1, Node_PB_Box_Contract]).hideRecent();
 		#endregion
 		
 		var pb_fx = ds_list_create(); #region
 		addNodePBCatagory("Effects", pb_fx);
 			ds_list_add(pb_fx, "Effect");
-			addNodeObject(pb_fx, "Outline",			s_node_pb_fx_outline,	"Node_PB_Fx_Outline",		[1, Node_PB_Fx_Outline]);
-			addNodeObject(pb_fx, "Stack",			s_node_pb_fx_stack,		"Node_PB_Fx_Stack",			[1, Node_PB_Fx_Stack]);
-			addNodeObject(pb_fx, "Radial",			s_node_pb_fx_radial,	"Node_PB_Fx_Radial",		[1, Node_PB_Fx_Radial]);
+			addNodeObject(pb_fx, "Outline",			s_node_pb_fx_outline,	"Node_PB_Fx_Outline",		[1, Node_PB_Fx_Outline]).hideRecent();
+			addNodeObject(pb_fx, "Stack",			s_node_pb_fx_stack,		"Node_PB_Fx_Stack",			[1, Node_PB_Fx_Stack]).hideRecent();
+			addNodeObject(pb_fx, "Radial",			s_node_pb_fx_radial,	"Node_PB_Fx_Radial",		[1, Node_PB_Fx_Radial]).hideRecent();
 			
 			ds_list_add(pb_fx, "Lighting");
-			addNodeObject(pb_fx, "Highlight",		s_node_pb_fx_highlight,	"Node_PB_Fx_Highlight",		[1, Node_PB_Fx_Highlight]);
-			addNodeObject(pb_fx, "Shading",			s_node_pb_fx_shading,	"Node_PB_Fx_Shading",		[1, Node_PB_Fx_Shading]);
+			addNodeObject(pb_fx, "Highlight",		s_node_pb_fx_highlight,	"Node_PB_Fx_Highlight",		[1, Node_PB_Fx_Highlight]).hideRecent();
+			addNodeObject(pb_fx, "Shading",			s_node_pb_fx_shading,	"Node_PB_Fx_Shading",		[1, Node_PB_Fx_Shading]).hideRecent();
 			
 			ds_list_add(pb_fx, "Texture");
-			addNodeObject(pb_fx, "Hashing",			s_node_pb_fx_hash,		"Node_PB_Fx_Hash",			[1, Node_PB_Fx_Hash]);
-			addNodeObject(pb_fx, "Strip",			s_node_pb_fx_strip,		"Node_PB_Fx_Strip",			[1, Node_PB_Fx_Strip]);
-			addNodeObject(pb_fx, "Brick",			s_node_pb_fx_brick,		"Node_PB_Fx_Brick",			[1, Node_PB_Fx_Brick]);
+			addNodeObject(pb_fx, "Hashing",			s_node_pb_fx_hash,		"Node_PB_Fx_Hash",			[1, Node_PB_Fx_Hash]).hideRecent();
+			addNodeObject(pb_fx, "Strip",			s_node_pb_fx_strip,		"Node_PB_Fx_Strip",			[1, Node_PB_Fx_Strip]).hideRecent();
+			addNodeObject(pb_fx, "Brick",			s_node_pb_fx_brick,		"Node_PB_Fx_Brick",			[1, Node_PB_Fx_Brick]).hideRecent();
 			
 			ds_list_add(pb_fx, "Blend");
-			addNodeObject(pb_fx, "Add",				s_node_pb_fx_add,		"Node_PB_Fx_Add",			[1, Node_PB_Fx_Add]);
-			addNodeObject(pb_fx, "Subtract",		s_node_pb_fx_subtract,	"Node_PB_Fx_Subtract",		[1, Node_PB_Fx_Subtract]);
-			addNodeObject(pb_fx, "Intersect",		s_node_pb_fx_interesct,	"Node_PB_Fx_Intersect",		[1, Node_PB_Fx_Intersect]);
+			addNodeObject(pb_fx, "Add",				s_node_pb_fx_add,		"Node_PB_Fx_Add",			[1, Node_PB_Fx_Add]).hideRecent();
+			addNodeObject(pb_fx, "Subtract",		s_node_pb_fx_subtract,	"Node_PB_Fx_Subtract",		[1, Node_PB_Fx_Subtract]).hideRecent();
+			addNodeObject(pb_fx, "Intersect",		s_node_pb_fx_interesct,	"Node_PB_Fx_Intersect",		[1, Node_PB_Fx_Intersect]).hideRecent();
 		#endregion
 		
 		var pb_arr = ds_list_create(); #region
 		addNodePBCatagory("Array", pb_arr);
-			addNodeObject(pb_arr, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
-			addNodeObject(pb_arr, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]);
-			addNodeObject(pb_arr, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set], ["set array"]).setVersion(1120);
-			addNodeObject(pb_arr, "Array Insert",	s_node_array_insert,	"Node_Array_Insert",	[1, Node_Array_Insert], ["insert array"]).setVersion(1120);
-			addNodeObject(pb_arr, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).setVersion(1120);
+			addNodeObject(pb_arr, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]).hideRecent();
+			addNodeObject(pb_arr, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]).hideRecent();
+			addNodeObject(pb_arr, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set], ["set array"]).hideRecent().setVersion(1120);
+			addNodeObject(pb_arr, "Array Insert",	s_node_array_insert,	"Node_Array_Insert",	[1, Node_Array_Insert], ["insert array"]).hideRecent().setVersion(1120);
+			addNodeObject(pb_arr, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).hideRecent().setVersion(1120);
 		#endregion
 		
 		//////////////////////////////////////////////////////////////// PCX NODES ////////////////////////////////////////////////////////////////
 		
 		var pcx_var = ds_list_create(); #region
 		addNodePCXCatagory("Variable", pcx_var);
-			addNodeObject(pcx_var, "Variable",		s_node_array,	"Node_PCX_var",		[1, Node_PCX_var]);
-			addNodeObject(pcx_var, "Fn Variable",	s_node_array,	"Node_PCX_fn_var",	[1, Node_PCX_fn_var]);
+			addNodeObject(pcx_var, "Variable",		s_node_array,	"Node_PCX_var",		[1, Node_PCX_var]).hideRecent();
+			addNodeObject(pcx_var, "Fn Variable",	s_node_array,	"Node_PCX_fn_var",	[1, Node_PCX_fn_var]).hideRecent();
 		#endregion
 		
 		var pcx_fn = ds_list_create(); #region
 		addNodePCXCatagory("Functions", pcx_fn);
-			addNodeObject(pcx_fn, "Equation",	s_node_array,	"Node_PCX_Equation",		[1, Node_PCX_Equation]);
+			addNodeObject(pcx_fn, "Equation",	s_node_array,	"Node_PCX_Equation",		[1, Node_PCX_Equation]).hideRecent();
 			
 			ds_list_add(pcx_fn, "Numbers");
-			addNodeObject(pcx_fn, "Math",		s_node_array,	"Node_PCX_fn_Math",		[1, Node_PCX_fn_Math]);
-			addNodeObject(pcx_fn, "Random",		s_node_array,	"Node_PCX_fn_Random",	[1, Node_PCX_fn_Random]);
+			addNodeObject(pcx_fn, "Math",		s_node_array,	"Node_PCX_fn_Math",		[1, Node_PCX_fn_Math]).hideRecent();
+			addNodeObject(pcx_fn, "Random",		s_node_array,	"Node_PCX_fn_Random",	[1, Node_PCX_fn_Random]).hideRecent();
 			
 			ds_list_add(pcx_fn, "Surface");
-			addNodeObject(pcx_fn, "Surface Width",		s_node_array,	"Node_PCX_fn_Surface_Width",	[1, Node_PCX_fn_Surface_Width]);
-			addNodeObject(pcx_fn, "Surface Height",		s_node_array,	"Node_PCX_fn_Surface_Height",	[1, Node_PCX_fn_Surface_Height]);
+			addNodeObject(pcx_fn, "Surface Width",		s_node_array,	"Node_PCX_fn_Surface_Width",	[1, Node_PCX_fn_Surface_Width]).hideRecent();
+			addNodeObject(pcx_fn, "Surface Height",		s_node_array,	"Node_PCX_fn_Surface_Height",	[1, Node_PCX_fn_Surface_Height]).hideRecent();
 			
 			ds_list_add(pcx_fn, "Array");
-			addNodeObject(pcx_fn, "Array Get",		s_node_array,	"Node_PCX_Array_Get",		[1, Node_PCX_Array_Get]);
-			addNodeObject(pcx_fn, "Array Set",		s_node_array,	"Node_PCX_Array_Set",		[1, Node_PCX_Array_Set]);
+			addNodeObject(pcx_fn, "Array Get",		s_node_array,	"Node_PCX_Array_Get",		[1, Node_PCX_Array_Get]).hideRecent();
+			addNodeObject(pcx_fn, "Array Set",		s_node_array,	"Node_PCX_Array_Set",		[1, Node_PCX_Array_Set]).hideRecent();
 		#endregion
 		
 		var pcx_flow = ds_list_create(); #region
 		addNodePCXCatagory("Flow Control", pcx_flow);
-			addNodeObject(pcx_flow, "Condition",		s_node_array,	"Node_PCX_Condition",		[1, Node_PCX_Condition]);
+			addNodeObject(pcx_flow, "Condition",		s_node_array,	"Node_PCX_Condition",		[1, Node_PCX_Condition]).hideRecent();
 		#endregion
 		
 		//////////////////////////////////////////////////////////////// HIDDENS ////////////////////////////////////////////////////////////////
 		
 		var hid = ds_list_create(); #region
 		addNodeCatagory("Hidden", hid, ["Hidden"]);
-			addNodeObject(hid, "Input",				s_node_loop_input,		"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]);
-			addNodeObject(hid, "Output",			s_node_loop_output,		"Node_Iterator_Each_Output",	[1, Node_Iterator_Each_Output]);
-			addNodeObject(hid, "Input",				s_node_loop_input,		"Node_Iterator_Filter_Input",	[1, Node_Iterator_Filter_Input]);
-			addNodeObject(hid, "Output",			s_node_loop_output,		"Node_Iterator_Filter_Output",	[1, Node_Iterator_Filter_Output]);
-			addNodeObject(hid, "Grid Noise",		s_node_grid_noise,		"Node_Grid_Noise",				[1, Node_Grid_Noise]);
-			addNodeObject(hid, "Triangular Noise",	s_node_grid_tri_noise,	"Node_Noise_Tri",				[1, Node_Noise_Tri]).setVersion(1090);
-			addNodeObject(hid, "Hexagonal Noise",	s_node_grid_hex_noise,	"Node_Noise_Hex",				[1, Node_Noise_Hex]).setVersion(1090);
-			addNodeObject(hid, "Sort Input",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Input",		[1, Node_Iterator_Sort_Input]);
-			addNodeObject(hid, "Sort Output",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Output",	[1, Node_Iterator_Sort_Output]);
-			addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147);
-			//addNodeObject(hid, "Pixel Builder",		s_node_pixel_builder,	"Node_Pixel_Builder",			[1, Node_Pixel_Builder]).setVersion(1150);
+			addNodeObject(hid, "Input",				s_node_loop_input,		"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]).hideRecent();
+			addNodeObject(hid, "Output",			s_node_loop_output,		"Node_Iterator_Each_Output",	[1, Node_Iterator_Each_Output]).hideRecent();
+			addNodeObject(hid, "Input",				s_node_loop_input,		"Node_Iterator_Filter_Input",	[1, Node_Iterator_Filter_Input]).hideRecent();
+			addNodeObject(hid, "Output",			s_node_loop_output,		"Node_Iterator_Filter_Output",	[1, Node_Iterator_Filter_Output]).hideRecent();
+			addNodeObject(hid, "Grid Noise",		s_node_grid_noise,		"Node_Grid_Noise",				[1, Node_Grid_Noise]).hideRecent();
+			addNodeObject(hid, "Triangular Noise",	s_node_grid_tri_noise,	"Node_Noise_Tri",				[1, Node_Noise_Tri]).hideRecent().setVersion(1090);
+			addNodeObject(hid, "Hexagonal Noise",	s_node_grid_hex_noise,	"Node_Noise_Hex",				[1, Node_Noise_Hex]).hideRecent().setVersion(1090);
+			addNodeObject(hid, "Sort Input",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Input",		[1, Node_Iterator_Sort_Input]).hideRecent();
+			addNodeObject(hid, "Sort Output",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Output",	[1, Node_Iterator_Sort_Output]).hideRecent();
+			addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147).hideRecent();
+			//addNodeObject(hid, "Pixel Builder",		s_node_pixel_builder,	"Node_Pixel_Builder",			[1, Node_Pixel_Builder]).setVersion(1150).hideRecent();
 			
-			addNodeObject(hid, "Input",		s_node_pixel_builder,	"Node_DynaSurf_In",			[1, Node_DynaSurf_In]);
-			addNodeObject(hid, "Output",	s_node_pixel_builder,	"Node_DynaSurf_Out",		[1, Node_DynaSurf_Out]);
-			addNodeObject(hid, "getWidth",	s_node_pixel_builder,	"Node_DynaSurf_Out_Width",	[1, Node_DynaSurf_Out_Width]);
-			addNodeObject(hid, "getHeight",	s_node_pixel_builder,	"Node_DynaSurf_Out_Height",	[1, Node_DynaSurf_Out_Height]);
+			addNodeObject(hid, "Input",		s_node_pixel_builder,	"Node_DynaSurf_In",			[1, Node_DynaSurf_In]).hideRecent();
+			addNodeObject(hid, "Output",	s_node_pixel_builder,	"Node_DynaSurf_Out",		[1, Node_DynaSurf_Out]).hideRecent();
+			addNodeObject(hid, "getWidth",	s_node_pixel_builder,	"Node_DynaSurf_Out_Width",	[1, Node_DynaSurf_Out_Width]).hideRecent();
+			addNodeObject(hid, "getHeight",	s_node_pixel_builder,	"Node_DynaSurf_Out_Height",	[1, Node_DynaSurf_Out_Height]).hideRecent();
 		#endregion
 	}
 #endregion

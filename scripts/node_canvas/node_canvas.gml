@@ -182,8 +182,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	mouse_cur_y = 0;
 	mouse_pre_x = 0;
 	mouse_pre_y = 0;
-	mouse_pre_draw_x = 0;
-	mouse_pre_draw_y = 0;
+	mouse_pre_draw_x = -1;
+	mouse_pre_draw_y = -1;
 	
 	mouse_holding = false;
 	
@@ -353,6 +353,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function draw_line_size(_x0, _y0, _x1, _y1, _siz, _brush) { #region 
+		if(_x1 > _x0) _x0--;
+		if(_y1 > _y0) _y0--;
+		if(_y1 < _y0) _y1--;
+		if(_x1 < _x0) _x1--;
+		
 		if(_siz == 1 && _brush == -1) 
 			draw_line(_x0, _y0, _x1, _y1);
 		else {
@@ -463,7 +468,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function ff_fillable(colorBase, colorFill, _x, _y, _thres) { #region
-		var d = color_diff(colorBase, get_color_buffer(_x, _y), true);
+		var d = color_diff(colorBase, get_color_buffer(_x, _y), true, true);
 		return d <= _thres && d != colorFill;
 	} #endregion
 	
@@ -739,7 +744,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		#endregion
 		} else if(isUsingTool("Pencil") || isUsingTool("Eraser")) { #region
-			if(key_mod_press(SHIFT) && key_mod_press(CTRL)) {
+			if(mouse_pre_draw_x > -1 && mouse_pre_draw_y > -1 && key_mod_press(SHIFT) && key_mod_press(CTRL)) {
 				var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				var _a = round(aa / 45) * 45;
@@ -757,7 +762,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_reset_shader();
 				
 				mouse_holding = true;
-				if(key_mod_press(SHIFT)) {
+				if(mouse_pre_draw_x > -1 && mouse_pre_draw_y > -1 && key_mod_press(SHIFT)) {
 					surface_set_shader(drawing_surface, noone, true, BLEND.alpha);
 						draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
 					surface_reset_shader();
@@ -911,15 +916,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						draw_surface_safe(selection_mask, sel_x0, sel_y0);
 					}
 				} else if(isUsingTool("Pencil") || isUsingTool("Eraser")) {
+					if(isUsingTool("Eraser")) draw_set_color(c_white);
+					
 					if(brush_sizing) {
 						draw_point_size(brush_sizing_dx, brush_sizing_dy, _siz, _brush);
-					} else if(mouse_holding) {
-						if(isUsingTool("Eraser")) draw_set_color(c_white);
-					
-						if(key_mod_press(SHIFT))	draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
-						else						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
-					} else 
-						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
+					} else {
+						if(mouse_pre_draw_x > -1 && mouse_pre_draw_y > -1 && key_mod_press(SHIFT)) 
+							draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
+						else
+							draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
+					}
 				} else if(isUsingTool("Rectangle"))	{
 					if(brush_sizing) 
 						draw_point_size(brush_sizing_dx, brush_sizing_dy, _siz, _brush);
