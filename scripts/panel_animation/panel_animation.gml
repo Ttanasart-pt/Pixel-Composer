@@ -846,7 +846,7 @@ function Panel_Animation() : PanelContent() constructor {
 				if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
 					key_hover = key;
 					draw_sprite_ui_uniform(THEME.timeline_keyframe, key.ease_y_lock? 2 : 5, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
-					if(mouse_press(mb_left, pFOCUS)) {
+					if(mouse_press(mb_left, pFOCUS) && !key_mod_press(SHIFT)) {
 						keyframe_dragging  = animator.values[| k];
 						keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
 					}
@@ -862,7 +862,7 @@ function Panel_Animation() : PanelContent() constructor {
 				if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
 					key_hover = key;
 					draw_sprite_ui_uniform(THEME.timeline_keyframe, key.ease_y_lock? 3 : 5, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
-					if(mouse_press(mb_left, pFOCUS)) {
+					if(mouse_press(mb_left, pFOCUS) && !key_mod_press(SHIFT)) {
 						keyframe_dragging  = animator.values[| k];
 						keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
 					}
@@ -900,7 +900,7 @@ function Panel_Animation() : PanelContent() constructor {
 				cc = COLORS.panel_animation_keyframe_selected;
 				key_hover = keyframe;
 									
-				if(pFOCUS) {
+				if(pFOCUS && !key_mod_press(SHIFT)) {
 					if(DOUBLE_CLICK) {
 						keyframe_dragging = keyframe;
 						keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_both;
@@ -1057,8 +1057,8 @@ function Panel_Animation() : PanelContent() constructor {
 		var _node_y = 0;
 		draw_set_text(f_p2, fa_left, fa_center);
 		
-		var hovering = noone;
-		var hoverIndex = 0;
+		var hovering_priority = -999999;
+		var hoverIndex	 = 0;
 		
 		value_hovering = noone;
 		if(mouse_click(mb_left, pFOCUS))
@@ -1099,7 +1099,7 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, ui(10), _node_y, 1, COLORS._main_icon, 0.75);
 		
 			draw_set_font(f_p3);
-			var nodeName = $"[{_node.name}] ";
+			var nodeName = $"[{_node.anim_priority}] [{_node.name}] ";
 			var tw = string_width(nodeName);
 			
 			draw_set_color(node_ordering == _node? COLORS._main_text_accent : COLORS._main_text);
@@ -1120,8 +1120,8 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_set_alpha(1);
 			
 			if(!_node.anim_show) {
-				if(pHOVER && point_in_rectangle(msx, msy, 0, _node_y_start, lable_w, _node_y + ui(22)))
-					hovering = _node;
+				if(pHOVER && msy > _node_y_start)
+					hovering_priority = _node.anim_priority + 0.5;
 				continue;
 			}
 			
@@ -1142,17 +1142,13 @@ function Panel_Animation() : PanelContent() constructor {
 				}
 			} //end prop loop
 			
-			if(pHOVER && point_in_rectangle(msx, msy, 0, _node_y_start, lable_w, ty))
-				hovering = _node;
+			if(pHOVER && msy > _node_y_start)
+				hovering_priority = _node.anim_priority + 0.5;
 			
 		} //end node loop
 		
-		if(hovering == noone && _node != noone)
-			hovering = _node;
-		
-		if(hovering != noone && node_ordering != noone) {
-			hoverIndex = hovering.anim_priority;
-			rearrange_priority(node_ordering, hoverIndex);
+		if(node_ordering != noone) {
+			rearrange_priority(node_ordering, hovering_priority);
 				
 			if(mouse_release(mb_left))
 				node_ordering = noone;
@@ -1573,19 +1569,20 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 		
 		if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dope_sheet_w, dope_sheet_h)) {
-			if(mouse_press(mb_left, pFOCUS) || mouse_press(mb_right, pFOCUS)) {
+			if(mouse_press(mb_right, pFOCUS) && key_hover == noone)
+				keyframe_selecting = [];
+				
+			if(mouse_press(mb_left, pFOCUS)) {
 				if(key_hover == noone) {
 					keyframe_selecting = [];
+				} else if(key_mod_press(SHIFT)) {
+					if(array_exists(keyframe_selecting, key_hover))
+						array_remove(keyframe_selecting, key_hover);
+					else
+						array_push(keyframe_selecting, key_hover)
 				} else {
-					if(key_mod_press(SHIFT)) {
-						if(array_exists(keyframe_selecting, key_hover))
-							array_remove(keyframe_selecting, key_hover);
-						else
-							array_push(keyframe_selecting, key_hover)
-					} else {
-						if(!array_exists(keyframe_selecting, key_hover))
-							keyframe_selecting = [ key_hover ];
-					}
+					if(!array_exists(keyframe_selecting, key_hover))
+						keyframe_selecting = [ key_hover ];
 				}
 			}
 							
