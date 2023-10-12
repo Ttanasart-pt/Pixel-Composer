@@ -6,9 +6,10 @@ function __Node_Base(x, y) constructor {
 	inputs  = ds_list_create();
 	outputs = ds_list_create();
 	
-	preview_index = 0;
-	anim_show = true;
-	anim_priority = -999;
+	active_index	= -1;
+	preview_index	= 0;
+	anim_show		= true;
+	anim_priority	= -999;
 	
 	static step   = function() {}
 	static update = function(frame = CURRENT_FRAME) {}

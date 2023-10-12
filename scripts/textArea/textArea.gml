@@ -100,7 +100,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		}
 		
 		var crop = string_copy(_input_text, 1, cursor);
-		var slp  = string_splice(crop, [" ", "(", ",", "\n"]);
+		var slp  = string_splice(crop, [" ", "(", "[", "{", ",", "\n"]);
 		var pmt  = array_safe_get(slp, -1,, ARRAY_OVERFLOW.loop);
 					
 		var params = [];

@@ -36,6 +36,10 @@ function pxl_autocomplete_server(prompt, params = []) {
 		ds_priority_add(pr_list, [[THEME.ac_constant, 2], gl, "local", gl], match);
 	}
 	
+	gl = "value";
+	var match = string_partial_match(string_lower(gl), string_lower(prompt));
+	if(match != -9999) ds_priority_add(pr_list, [[THEME.ac_constant, 2], gl, "local", gl], match);
+	
 	repeat(ds_priority_size(pr_list))
 		array_push(res, ds_priority_delete_max(pr_list));
 	

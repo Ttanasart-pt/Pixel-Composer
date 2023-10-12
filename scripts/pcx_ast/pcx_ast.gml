@@ -89,12 +89,12 @@
 	PROJECT_VARIABLES = {};
 	
 	PROJECT_VARIABLES.Project = {};
-	PROJECT_VARIABLES.Project.frame			= [ function() { return CURRENT_FRAME },										EXPRESS_TREE_ANIM.animated	];
-	PROJECT_VARIABLES.Project.progress		= [ function() { return CURRENT_FRAME / (TOTAL_FRAMES - 1) }, EXPRESS_TREE_ANIM.animated	];
-	PROJECT_VARIABLES.Project.frameTotal	= [ function() { return TOTAL_FRAMES }, 										EXPRESS_TREE_ANIM.none		];
-	PROJECT_VARIABLES.Project.fps			= [ function() { return PROJECT.animator.framerate }, 											EXPRESS_TREE_ANIM.none		];
-	PROJECT_VARIABLES.Project.time			= [ function() { return CURRENT_FRAME / PROJECT.animator.framerate }, 			EXPRESS_TREE_ANIM.animated	];
-	PROJECT_VARIABLES.Project.name			= [ function() { return filename_name_only(PROJECT.path) }, 									EXPRESS_TREE_ANIM.none		];
+	PROJECT_VARIABLES.Project.frame			= [ function() { return CURRENT_FRAME },								EXPRESS_TREE_ANIM.animated	];
+	PROJECT_VARIABLES.Project.progress		= [ function() { return CURRENT_FRAME / (TOTAL_FRAMES - 1) },			EXPRESS_TREE_ANIM.animated	];
+	PROJECT_VARIABLES.Project.frameTotal	= [ function() { return TOTAL_FRAMES }, 								EXPRESS_TREE_ANIM.none		];
+	PROJECT_VARIABLES.Project.fps			= [ function() { return PROJECT.animator.framerate }, 					EXPRESS_TREE_ANIM.none		];
+	PROJECT_VARIABLES.Project.time			= [ function() { return CURRENT_FRAME / PROJECT.animator.framerate }, 	EXPRESS_TREE_ANIM.animated	];
+	PROJECT_VARIABLES.Project.name			= [ function() { return filename_name_only(PROJECT.path) }, 			EXPRESS_TREE_ANIM.none		];
 	
 	PROJECT_VARIABLES.Program = {};
 	PROJECT_VARIABLES.Program.time			= [ function() { return current_time / 1000 }, EXPRESS_TREE_ANIM.animated ];
@@ -403,6 +403,8 @@
 						res = string_char_at(v1, v2 + 1);
 					}
 				}
+				
+				//print($"Array getter {v1}, {v2} = {res}");
 			} else if(symbol == "=") {													// value assignment
 				if(is_array(v1)) { 
 					var val = params[$ v1[0]];

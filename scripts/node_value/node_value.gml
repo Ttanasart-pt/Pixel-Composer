@@ -1150,7 +1150,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static expressionUpdate = function() { #region
-		expTree    = evaluateFunctionList(expression);
+		expTree = evaluateFunctionList(expression);
 		resetCache();
 		node.triggerRender();
 	} #endregion
@@ -1437,13 +1437,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static getValueRecursive = function(_time = CURRENT_FRAME) { #region
-		var val = [ -1, self ];
+		var val = [ __getAnimValue(_time), self ];
 		
-		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger even will not propagate from input to output, need to be done manually
-			return [ __getAnimValue(_time), self ];
+		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger event will not propagate from input to output, need to be done manually
+			return val;
 		
 		if(value_from && value_from != self)
-			return value_from.getValueRecursive(_time); 
+			val = value_from.getValueRecursive(_time);
 		
 		if(expUse && is_struct(expTree) && expTree.validate()) {
 			//print($"========== EXPRESSION CALLED ==========");
@@ -1452,14 +1452,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(global.EVALUATE_HEAD != noone && global.EVALUATE_HEAD == self)  {
 				noti_warning($"Expression evaluation error : recursive call detected.");
 			} else {
-				//printIf(global.LOG_EXPRESSION, $"==================== EVAL BEGIN {expTree} ====================");
+				//print($"==================== EVAL BEGIN {expTree} ====================");
 				//printCallStack();
 				
 				global.EVALUATE_HEAD = self;
 				var params = { 
 					name: name,
 					node_name: node.display_name,
-					value: val[0] 
+					node: self,
+					value: val[0]
 				};
 				
 				var _exp_res = expTree.eval(variable_clone(params));
@@ -1475,9 +1476,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 			
 			return val;
-		} 
+		}
 		
-		return [ __getAnimValue(_time), self ];
+		return val;
 	} #endregion
 	
 	static setAnim = function(anim) { #region

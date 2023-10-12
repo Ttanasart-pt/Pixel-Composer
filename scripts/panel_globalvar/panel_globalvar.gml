@@ -25,8 +25,9 @@ function Panel_Globalvar() : PanelContent() constructor {
 		
 		var hh = 0;
 		var yy = _y;
+		var _x = ui(8);
 		
-		var gvh = globalvar_viewer_draw(0, yy, contentPane.surface_w, _m, pFOCUS, _hover, contentPane, x + ui(padding), y + ui(title_height));
+		var gvh = globalvar_viewer_draw(_x, yy, contentPane.surface_w - _x - ui(8), _m, pFOCUS, _hover, contentPane, x + _x + ui(padding), y + ui(title_height));
 		yy += gvh + ui(8);
 		hh += gvh + ui(8);
 			
@@ -55,7 +56,7 @@ function Panel_Globalvar() : PanelContent() constructor {
 			PROJECT.globalNode.createValue();
 		
 		bx -= ui(32 + 4);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Edit"), var_editing? THEME.accept : THEME.gear,,,, 0.9) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Edit"), var_editing? THEME.accept : THEME.gear) == 2)
 			var_editing = !var_editing;
 	}
 }
