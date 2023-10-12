@@ -27,6 +27,7 @@ function Node_PB_Fx_Brick(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _pbox = _data[0];
 		if(_pbox == noone) return _pbox;
+		if(!is_surface(_pbox.content)) return _pbox;
 		
 		var _nbox = _pbox.clone();
 		

@@ -18,8 +18,8 @@ function Node_PB_Draw_Diamond(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _gr
 		var x0 = 0;
 		var y0 = 0;
 		
-		var x1 = _pbox.w;
-		var y1 = _pbox.h;
+		var x1 = _pbox.w + !(_pbox.w % 2);
+		var y1 = _pbox.h + !(_pbox.h % 2);
 		
 		var xc = _pbox.w / 2;
 		var yc = _pbox.h / 2;

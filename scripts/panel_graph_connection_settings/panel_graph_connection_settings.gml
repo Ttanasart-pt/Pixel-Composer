@@ -46,6 +46,13 @@ function Panel_Graph_Connection_Setting() : Panel_Linear_Setting() constructor {
 				__txtx("pref_connection_highlight_fade", "Fade connection"),
 				function() { return PREF_MAP[? "connection_line_highlight_fade"] },
 			],
+			[
+				new checkBox(function() { 
+					PREF_MAP[? "connection_line_highlight_all"] = !PREF_MAP[? "connection_line_highlight_all"]; 
+				}),
+				__txtx("pref_connection_highlight_all", "Highlight all"),
+				function() { return PREF_MAP[? "connection_line_highlight_all"] },
+			],
 		];
 		
 		setHeight();

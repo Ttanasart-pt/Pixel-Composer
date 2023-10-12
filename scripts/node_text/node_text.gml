@@ -42,10 +42,12 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 14] = nodeValue("Path shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
+	inputs[| 15] = nodeValue("Scale to fit", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [
 		["Output",		true],	9, 6, 10,
 		["Text",		false], 0, 13, 14, 7, 8, 
-		["Font",		false], 1, 2, 3, 11, 12, 
+		["Font",		false], 1, 2, 15, 3, 11, 12, 
 		["Rendering",	false], 5, 
 	];
 	
@@ -85,6 +87,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[|  8].setVisible(_dimt == 0 || _use_path);
 		inputs[|  9].setVisible(!_use_path);
 		inputs[| 14].setVisible( _use_path);
+		inputs[| 15].setVisible(_dimt == 0 && !_use_path);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -102,6 +105,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _line = _data[12];
 		var _path = _data[13];
 		var _pthS = _data[14];
+		var _scaF = _data[15];
 		
 		generateFont(_font, _size, _aa);
 		draw_set_font(font);
@@ -137,6 +141,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		hh = __temp_hh;
 		
 		var _use_path = _path != noone && struct_has(_path, "getPointDistance");
+		var _ss = 1;
 		
 		if(_use_path || _dim_type == 0) {
 			_sw = _dim[0];
@@ -146,6 +151,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			_sh = hh;
 		}
 		
+		if(_dim_type == 0 && !_use_path && _scaF)
+			_ss = min(_sw / ww, _sh / hh);
+		
 		_sw += _padd[PADDING.left] + _padd[PADDING.right];
 		_sh += _padd[PADDING.top] + _padd[PADDING.bottom];
 		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
@@ -153,9 +161,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var tx = 0, ty = _padd[PADDING.top], _ty = 0;
 		if(_dim_type == 0) {
 			switch(_vali) {
-				case 0 : ty = _padd[PADDING.top];					break;
-				case 1 : ty = (_sh - hh) / 2;						break;
-				case 2 : ty = _sh - _padd[PADDING.bottom] - hh;		break;
+				case 0 : ty = _padd[PADDING.top];						break;
+				case 1 : ty = (_sh - hh * _ss) / 2;						break;
+				case 2 : ty = _sh - _padd[PADDING.bottom] - hh * _ss;	break;
 			}
 		}
 		
@@ -205,21 +213,22 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(_dim_type == 0) 
 					switch(_hali) {
-						case 0 : tx = _padd[PADDING.left];							break;
-						case 1 : tx = (_sw - _line_width) / 2;						break;
-						case 2 : tx = _sw - _padd[PADDING.right] - _line_width;		break;
+						case 0 : tx = _padd[PADDING.left];								break;
+						case 1 : tx = (_sw - _line_width * _ss) / 2;					break;
+						case 2 : tx = _sw - _padd[PADDING.right] - _line_width * _ss;	break;
 					}
 					
 					__temp_tx   = tx;
 					__temp_ty   = ty;
+					__temp_ss   = _ss;
 					__temp_trck = _trck;
 				
 					string_foreach(_str_line, function(_chr, _ind) {
-						draw_text(__temp_tx, __temp_ty, _chr);
-						__temp_tx += string_width(_chr) + __temp_trck;
+						draw_text_transformed(__temp_tx, __temp_ty, _chr, __temp_ss, __temp_ss, 0);
+						__temp_tx += (string_width(_chr) + __temp_trck) * __temp_ss;
 					});
 				
-					ty += line_get_height() + _line;
+					ty += (line_get_height() + _line) * _ss;
 				}
 			}
 		surface_reset_shader();

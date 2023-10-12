@@ -2048,10 +2048,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			ty = LINE_STYLE.dashed;
 		
 		var c0, c1;
-		var _high = high * PREF_MAP[? "connection_line_highlight"];
-		var _selc = node.active_draw_index == 0 || value_from.node.active_draw_index == 0;
+		var _selc = node.active_draw_index == 0 || value_from.node.active_draw_index == 0 || node.branch_drawing;
 		
-		if(!thicken && (_high == 1 && key_mod_press(ALT) || _high == 2)) {
+		if(!thicken && (high == 1 && key_mod_press(ALT) || high == 2)) {
 			var _fade = PREF_MAP[? "connection_line_highlight_fade"];
 			var _colr = _selc? 1 : _fade;
 			

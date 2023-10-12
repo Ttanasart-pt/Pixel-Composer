@@ -145,6 +145,11 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	
 	refreshNodeMap();
 	
+	if(struct_has(_map, "timelines")) {
+		var _time = new timelineItemGroup().deserialize(_map.timelines);
+		array_append(PROJECT.timelines.contents, _time.contents);
+	}
+	
 	return node_create;
 }
 

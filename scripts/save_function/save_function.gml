@@ -40,6 +40,8 @@ function save_serialize(project = PROJECT, _outMap = false) {
 	_map.graphGrid   = project.graphGrid;
 	_map.attributes  = project.attributes;
 	
+	_map.timelines   = project.timelines.serialize();
+	
 	var prev = PANEL_PREVIEW.getNodePreviewSurface();
 	if(!is_surface(prev)) _map.preview = "";
 	else				  _map.preview = surface_encode(surface_size_lim(prev, 128, 128));

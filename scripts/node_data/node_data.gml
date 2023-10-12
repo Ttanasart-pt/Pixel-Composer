@@ -85,6 +85,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		draw_droppable = false;
 		
 		junction_draw_pad_y = 32;
+		
+		branch_drawing = false;
 	#endregion
 	
 	#region ---- junctions ----
@@ -186,6 +188,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	#endregion
 	
 	#region ---- timeline ----
+		timeline_item = new timelineItemNode(self);
 		anim_priority = ds_map_size(PROJECT.nodeMap);
 		
 		anim_show		= true;
@@ -705,10 +708,21 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static onPreDraw = function(_x, _y, _s, _iny, _outy) {}
 	
+	static isHighlightingInGraph = function() { #region
+		var _high = struct_try_get(display_parameter, "highlight", 0);
+		var  high = (_high == 1 && key_mod_press(ALT) || _high == 2);
+		
+		var _selc = active_draw_index == 0 || branch_drawing;
+		return !high || _selc;
+	} #endregion
+	
 	static drawNodeBase = function(xx, yy, _s) { #region
 		if(draw_graph_culled) return;
 		if(!active) return;
+		
 		var aa = 0.25 + 0.5 * renderActive;
+		if(!isHighlightingInGraph()) aa *= 0.25;
+		
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, aa);
 	} #endregion 
 	
@@ -746,6 +760,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		draw_name = true;
 		
 		var aa = 0.25 + 0.5 * renderActive;
+		if(!isHighlightingInGraph()) aa *= 0.25;
+		
 		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, aa);
 		
 		var cc = COLORS._main_text;
@@ -758,6 +774,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var ts = clamp(power(_s, 0.5), 0.5, 1);
 		
 		var aa = 0.5 + 0.5 * renderActive;
+		if(!isHighlightingInGraph()) aa *= 0.25;
+		
 		draw_set_alpha(aa);
 		
 		if(icon && _s > 0.75) {
@@ -1109,7 +1127,20 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		previewing = 0;
 	} #endregion
 	
-	static drawActive = function(_x, _y, _s, ind = 0) { active_draw_index = ind; }
+	static drawBranch = function() { #region
+		if(branch_drawing) return;
+		branch_drawing = true;
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
+			if(inputs[| i].value_from == noone) continue;
+			inputs[| i].value_from.node.drawBranch();
+		}
+	} #endregion
+	
+	static drawActive = function(_x, _y, _s, ind = 0) { #region
+		active_draw_index = ind; 
+		
+		if(PREF_MAP[? "connection_line_highlight_all"]) drawBranch();
+	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	

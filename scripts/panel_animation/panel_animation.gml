@@ -92,7 +92,12 @@ function Panel_Animation() : PanelContent() constructor {
 	#endregion
 	
 	#region ---- nodes ----
-		node_ordering	= noone;
+		_node_ordering	 = noone;
+		node_ordering	 = noone;
+		node_ordering_mx = noone;
+		node_ordering_my = noone;
+		node_ordering_dx = noone;
+		node_ordering_dy = noone;
 		node_name_type	= 0;
 	#endregion
 	
@@ -1030,7 +1035,7 @@ function Panel_Animation() : PanelContent() constructor {
 		} else
 			draw_sprite_ui_uniform(THEME.timeline_clock, 1, ui(22), ty - 1, 1, COLORS._main_icon);
 				
-		var hov = pHOVER && point_in_rectangle(msx, msy, 0, ty - ui(8), w, ty + ui(8));
+		var hov = node_ordering == noone && pHOVER && point_in_rectangle(msx, msy, 0, ty - ui(8), w, ty + ui(8));
 		if(hov) {
 			value_hovering = animator.prop;
 			if(mouse_click(mb_left, pFOCUS))
@@ -1046,13 +1051,97 @@ function Panel_Animation() : PanelContent() constructor {
 		draw_set_alpha(1);
 	} #endregion
 	
+	function drawDopesheetLabelNode(_node, _x, _y, _ys, msx, msy, _drawAnimator = true) { #region
+		var _inContext = _node == PROJECT.globalNode || _node.group == PANEL_GRAPH.getCurrentContext();
+		var aa = _inContext? 1 : 0.9;
+			
+		var lable_w = tool_width;
+		var lable_h = ui(20);
+		var hovering_priority = undefined;
+		
+		if(pHOVER && point_in_rectangle(msx, msy, _x + ui(20), _y - ui(10), _x + lable_w, _y + ui(10))) {
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y - ui(10), lable_w, lable_h, COLORS.panel_animation_dope_bg_hover, aa);
+			if(mouse_press(mb_left, pFOCUS)) {
+				_node_ordering = _node;
+				node_ordering_mx = msx;
+				node_ordering_my = msy;
+				
+				node_ordering_dx = msx - _x;
+				node_ordering_dy = msy - _y;
+			}
+		} else 
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y - ui(10), lable_w, lable_h, COLORS.panel_animation_dope_bg, aa);
+			
+		if(_node == PANEL_INSPECTOR.getInspecting())
+			draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, _x, _y - ui(10), lable_w, lable_h, COLORS._main_accent, 1);
+		else 
+			draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, _x, _y - ui(10), lable_w, lable_h, COLORS.panel_animation_node_outline, 1);
+			
+		var tx = _x + tool_width - ui(10);
+		if(buttonInstant(THEME.button_hide, tx - ui(8), _y - ui(8), ui(16), ui(16), [msx, msy], pFOCUS, pHOVER, 
+			__txtx("panel_animation_goto", "Go to node"), THEME.animate_node_go, 0, COLORS._main_icon) == 2) {
+				graphFocusNode(_node);
+			}
+			
+		if(pHOVER && point_in_rectangle(msx, msy, _x, _y - ui(10), _x + ui(20), _y + ui(10))) {
+			draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, _x + ui(10), _y, 1, COLORS._main_icon_light, 1);
+			if(mouse_press(mb_left, pFOCUS))
+				_node.anim_show = !_node.anim_show;
+		} else
+			draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, _x + ui(10), _y, 1, COLORS._main_icon, 0.75);
+		
+		draw_set_font(f_p3);
+		var nodeName = $"[{_node.name}] ";
+		var tw = string_width(nodeName);
+		
+		draw_set_color(node_ordering == _node? COLORS._main_text_accent : COLORS._main_text);
+		var txx = _x + ui(20);
+			
+		if(node_name_type == 0 || node_name_type == 1 || _node.display_name == "") {
+			draw_set_alpha(0.4);
+			draw_text_add(txx, _y - ui(2), nodeName);
+			txx += tw;
+		}
+			
+		draw_set_font(f_p2);
+		if(node_name_type == 0 || node_name_type == 2) {
+			draw_set_alpha(0.9);
+			draw_text_add(txx, _y - ui(2), _node.display_name);
+		}
+			
+		draw_set_alpha(1);
+			
+		if(!_node.anim_show) {
+			if(pHOVER && msy > _ys)
+				hovering_priority = _node.anim_priority + 0.5;
+			return hovering_priority;
+		}
+		
+		if(!_drawAnimator) return hovering_priority;
+		
+		for( var j = 0; j < ds_list_size(_node.inputs); j++ ) {
+			var prop = _node.inputs[| j];
+			if(!prop.is_anim) continue;
+				
+			if(prop.sep_axis) {
+				for( var i = 0, n = array_length(prop.animators); i < n; i++ )
+					drawDopesheetLabelAnimator(_node, prop.animators[i], msx, msy);
+			} else
+				drawDopesheetLabelAnimator(_node, prop.animator, msx, msy);
+		} //end prop loop
+		
+		if(pHOVER && msy > _ys)
+			hovering_priority = _node.anim_priority + 0.5;
+			
+		return hovering_priority;
+	} #endregion
+	
 	function drawDopesheetLabel() { #region
 		surface_set_target(ds_name_surface);	
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var msx = mx - ui(8);
 		var msy = my - ui(8);
 		
-		var lable_w = tool_width;
 		var _node = noone;
 		var _node_y = 0;
 		draw_set_text(f_p2, fa_left, fa_center);
@@ -1067,91 +1156,33 @@ function Panel_Animation() : PanelContent() constructor {
 		for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
 			_node = anim_properties[| i];
 			var _inContext = _node == PROJECT.globalNode || _node.group == PANEL_GRAPH.getCurrentContext();
-			
-			var aa = _inContext? 1 : 0.9;
 			var _node_y = _node.dopesheet_y;
 			if(!show_node_outside_context && !_inContext) continue;
+			if(node_ordering == _node) continue;
 			
 			var _node_y_start = _node_y;
 			_node_y += dope_sheet_node_padding;
 			
-			if(pHOVER && point_in_rectangle(msx, msy, ui(20), _node_y - ui(10), lable_w, _node_y + ui(10))) {
-				draw_sprite_stretched_ext(THEME.ui_label_bg, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS.panel_animation_dope_bg_hover, aa);
-				if(mouse_press(mb_left, pFOCUS))
-					node_ordering = _node;
-			} else 
-				draw_sprite_stretched_ext(THEME.ui_label_bg, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS.panel_animation_dope_bg, aa);
-			
-			if(_node == PANEL_INSPECTOR.getInspecting())
-				draw_sprite_stretched_ext(THEME.node_active, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS._main_accent, 1);
-							
-			var tx = tool_width - ui(10);
-			if(buttonInstant(THEME.button_hide, tx - ui(8), _node_y - ui(8), ui(16), ui(16), [msx, msy], pFOCUS, pHOVER, 
-				__txtx("panel_animation_goto", "Go to node"), THEME.animate_node_go, 0, COLORS._main_icon) == 2) {
-					graphFocusNode(_node);
-				}
-			
-			if(pHOVER && point_in_rectangle(msx, msy, 0, _node_y - ui(10), ui(20), _node_y + ui(10))) {
-				draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, ui(10), _node_y, 1, COLORS._main_icon_light, 1);
-				if(mouse_press(mb_left, pFOCUS))
-					_node.anim_show = !_node.anim_show;
-			} else
-				draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, ui(10), _node_y, 1, COLORS._main_icon, 0.75);
-		
-			draw_set_font(f_p3);
-			var nodeName = $"[{_node.anim_priority}] [{_node.name}] ";
-			var tw = string_width(nodeName);
-			
-			draw_set_color(node_ordering == _node? COLORS._main_text_accent : COLORS._main_text);
-			var txx = ui(20);
-			
-			if(node_name_type == 0 || node_name_type == 1 || _node.display_name == "") {
-				draw_set_alpha(0.4);
-				draw_text_add(txx, _node_y - ui(2), nodeName);
-				txx += tw;
-			}
-			
-			draw_set_font(f_p2);
-			if(node_name_type == 0 || node_name_type == 2) {
-				draw_set_alpha(0.9);
-				draw_text_add(txx, _node_y - ui(2), _node.display_name);
-			}
-			
-			draw_set_alpha(1);
-			
-			if(!_node.anim_show) {
-				if(pHOVER && msy > _node_y_start)
-					hovering_priority = _node.anim_priority + 0.5;
-				continue;
-			}
-			
-			var ty = 0;
-			
-			for( var j = 0; j < ds_list_size(_node.inputs); j++ ) {
-				var prop = _node.inputs[| j];
-				if(!prop.is_anim) continue;
-				
-				if(prop.sep_axis) {
-					for( var i = 0, n = array_length(prop.animators); i < n; i++ ) {
-						drawDopesheetLabelAnimator(_node, prop.animators[i], msx, msy);
-						ty = prop.animators[i].dopesheet_y - 1;
-					}
-				} else {
-					drawDopesheetLabelAnimator(_node, prop.animator, msx, msy);
-					ty = prop.animator.dopesheet_y - 1;
-				}
-			} //end prop loop
-			
-			if(pHOVER && msy > _node_y_start)
-				hovering_priority = _node.anim_priority + 0.5;
+			var _hov = drawDopesheetLabelNode(_node, 0, _node_y, _node_y_start, msx, msy);
+			if(_hov != undefined) 
+				hovering_priority = _hov;
 			
 		} //end node loop
 		
+		if(_node_ordering != noone) {
+			if(point_distance(msx, msy, node_ordering_mx, node_ordering_my) > 4) {
+				node_ordering  = _node_ordering;
+				_node_ordering = noone;
+			}
+		}
+		
 		if(node_ordering != noone) {
 			rearrange_priority(node_ordering, hovering_priority);
-				
-			if(mouse_release(mb_left))
-				node_ordering = noone;
+		}
+		
+		if(mouse_release(mb_left)) {
+			_node_ordering = noone;
+			node_ordering  = noone;
 		}
 		
 		surface_reset_target();
@@ -1231,7 +1262,7 @@ function Panel_Animation() : PanelContent() constructor {
 				
 				key_y += dope_sheet_node_padding;
 				
-				draw_sprite_stretched_ext(THEME.ui_label_bg, 0, 0, key_y - ui(10), bar_show_w, ui(20), COLORS.panel_animation_node_bg, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, key_y - ui(10), bar_show_w, ui(20), COLORS.panel_animation_node_bg, 1);
 				key_y += ui(22);
 				dope_sheet_y_max += ui(28);
 				
@@ -1537,12 +1568,12 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 		#endregion
 			
-		if(keyframe_boxing) {
+		if(keyframe_boxing) { #region
 			draw_sprite_stretched_points(THEME.ui_selection, 0, keyframe_box_sx, keyframe_box_sy, msx, msy);
 					
 			if(mouse_release(mb_left))
 				keyframe_boxing = false;
-		}
+		} #endregion
 		
 		#region draw keys
 			for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
@@ -1723,6 +1754,8 @@ function Panel_Animation() : PanelContent() constructor {
 		draw_surface_safe(dope_sheet_surface, bar_x, ui(8));
 		
 		draw_sprite_stretched(THEME.ui_panel_bg_cover, 1, bar_x, ui(8), bar_w, dope_sheet_h);
+		
+		if(node_ordering != noone) drawDopesheetLabelNode(node_ordering, mx - node_ordering_dx, my - node_ordering_dy, -1, -1, -1, false);
 	} #endregion
 	
 	function drawAnimationControl() { #region

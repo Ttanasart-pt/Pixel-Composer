@@ -19,6 +19,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 			avoid_label   : true,
 			preview_scale : 100,
+			highlight     : false,
 		}
 		
 		bg_color = c_black;
@@ -577,6 +578,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	function drawNodes() { #region
 		if(selection_block-- > 0) return;
 		//print("==== DRAW NODES ====");
+		display_parameter.highlight = (!ds_list_empty(nodes_select_list) || node_focus != noone) * PREF_MAP[? "connection_line_highlight"];
 		
 		var gr_x = graph_x * graph_s;
 		var gr_y = graph_y * graph_s;
@@ -603,6 +605,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(pHOVER)
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var _node = nodes_list[| i];
+				_node.branch_drawing = false;
 				if(_node.pointIn(gr_x, gr_y, mx, my, graph_s))
 					node_hovering = _node;
 			}
@@ -620,250 +623,253 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#endregion
 		printIf(log, "Hover time: " + string(current_time - t)); t = current_time;
 		
-		if(mouse_on_graph && pHOVER) {
-			if(NODE_DROPPER_TARGET != noone && node_hovering) {
-				node_hovering.draw_droppable = true;
-				if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN)) {
-					NODE_DROPPER_TARGET.expression += node_hovering.internalName;
-					NODE_DROPPER_TARGET.expressionUpdate(); 
-				}
-			} else if(mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
-				if(key_mod_press(SHIFT)) {
-					if(ds_list_empty(nodes_select_list) && node_focus) 
-						ds_list_add(nodes_select_list, node_focus);
-					if(node_focus != node_hovering)
-						ds_list_add(nodes_select_list, node_hovering);
-				} else {
-					var _prevFocus = node_focus;
-					if(node_hovering != noone || value_focus == noone)
-						node_focus = node_hovering;
-					
-					if(node_focus) {
-						if(instanceof(node_focus) == "Node_Frame") {
-							var fx0 = (node_focus.x + graph_x) * graph_s;
-							var fy0 = (node_focus.y + graph_y) * graph_s;
-							var fx1 = fx0 + node_focus.w * graph_s;
-							var fy1 = fy0 + node_focus.h * graph_s;
-							
-							ds_list_clear(nodes_select_list);
-							
-							if(!key_mod_press(CTRL))
-							for(var i = 0; i < ds_list_size(nodes_list); i++) { //select content
-								var _node = nodes_list[| i];
-								if(instanceof(_node) == "Node_Frame") continue;
-								var _x = (_node.x + graph_x) * graph_s;
-								var _y = (_node.y + graph_y) * graph_s;
-								var _w = _node.w * graph_s;
-								var _h = _node.h * graph_s;
-								
-								if(rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
-									ds_list_add(nodes_select_list, _node);	
-							}
-							ds_list_add(nodes_select_list, node_focus);	
-						} else if(DOUBLE_CLICK) {
-							PANEL_PREVIEW.setNodePreview(node_focus);
-						} else {
-							if(_prevFocus != node_focus)
-								bringNodeToFront(node_focus);
-					
-							var hover_selected = false;	
-							for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {
-								if(nodes_select_list[| i] == node_focus) {
-									hover_selected = true;
-									break;
-								}
-							}
-							if(!hover_selected)
-								ds_list_clear(nodes_select_list);
-						}
+		#region selection
+			if(mouse_on_graph && pHOVER) {
+				if(NODE_DROPPER_TARGET != noone && node_hovering) {
+					node_hovering.draw_droppable = true;
+					if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN)) {
+						NODE_DROPPER_TARGET.expression += node_hovering.internalName;
+						NODE_DROPPER_TARGET.expressionUpdate(); 
+					}
+				} else if(mouse_press(mb_left, pFOCUS)) {
+					if(key_mod_press(SHIFT)) {
+						if(ds_list_empty(nodes_select_list) && node_focus) 
+							ds_list_add(nodes_select_list, node_focus);
+						if(node_focus != node_hovering)
+							ds_list_add(nodes_select_list, node_hovering);
 					} else {
-						if(value_focus == noone)
-							ds_list_clear(nodes_select_list);
+						var _prevFocus = node_focus;
+						if(node_hovering != noone || value_focus == noone)
+							node_focus = node_hovering;
+					
+						if(node_focus) {
+							if(instanceof(node_focus) == "Node_Frame") {
+								var fx0 = (node_focus.x + graph_x) * graph_s;
+								var fy0 = (node_focus.y + graph_y) * graph_s;
+								var fx1 = fx0 + node_focus.w * graph_s;
+								var fy1 = fy0 + node_focus.h * graph_s;
+							
+								ds_list_clear(nodes_select_list);
+							
+								if(!key_mod_press(CTRL))
+								for(var i = 0; i < ds_list_size(nodes_list); i++) { //select content
+									var _node = nodes_list[| i];
+									if(instanceof(_node) == "Node_Frame") continue;
+									var _x = (_node.x + graph_x) * graph_s;
+									var _y = (_node.y + graph_y) * graph_s;
+									var _w = _node.w * graph_s;
+									var _h = _node.h * graph_s;
+								
+									if(rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
+										ds_list_add(nodes_select_list, _node);	
+								}
+								ds_list_add(nodes_select_list, node_focus);	
+							} else if(DOUBLE_CLICK) {
+								PANEL_PREVIEW.setNodePreview(node_focus);
+							} else {
+								if(_prevFocus != node_focus)
+									bringNodeToFront(node_focus);
+					
+								var hover_selected = false;	
+								for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {
+									if(nodes_select_list[| i] == node_focus) {
+										hover_selected = true;
+										break;
+									}
+								}
+								if(!hover_selected)
+									ds_list_clear(nodes_select_list);
+							}
+						} else {
+							if(value_focus == noone)
+								ds_list_clear(nodes_select_list);
 						
-						if(DOUBLE_CLICK && !PANEL_INSPECTOR.locked)
-							PANEL_INSPECTOR.inspecting = noone;
+							if(DOUBLE_CLICK && !PANEL_INSPECTOR.locked)
+								PANEL_INSPECTOR.inspecting = noone;
+						}
 					}
 				}
-			}
 			
-			if(mouse_press(mb_right, pFOCUS)) { #region
-				node_hover = node_hovering;	
-				if(node_hover) {
-					var menu = [];
-					array_push(menu,  
-						menuItem(__txtx("panel_graph_send_to_preview", "Send to preview"), function() {
-							setCurrentPreview(node_hover);
-						}));
-					array_push(menu,  
-						menuItem(__txtx("panel_graph_preview_window", "Send to preview window"), function() {
-							create_preview_window(node_hover);
-						}, noone, ["Graph", "Preview window"]));
-					array_push(menu,  
-						menuItem(__txtx("panel_graph_inspector_panel", "Send to new inspector"), function() {
-							var pan = panelAdd("Panel_Inspector", true);
-							pan.destroy_on_click_out = false;
-							pan.content.setInspecting(node_hover);
-							pan.content.locked     = true;
-						}));
-						
-					if(DEMO) {
+				if(mouse_press(mb_right, pFOCUS)) { #region
+					node_hover = node_hovering;	
+					if(node_hover) {
+						var menu = [];
 						array_push(menu,  
-							menuItem(__txtx("panel_graph_send_to_export", "Send to export"), function() {
-								setCurrentExport(node_hover);
-							}, noone, ["Graph", "Export"]));
-					}
+							menuItem(__txtx("panel_graph_send_to_preview", "Send to preview"), function() {
+								setCurrentPreview(node_hover);
+							}));
+						array_push(menu,  
+							menuItem(__txtx("panel_graph_preview_window", "Send to preview window"), function() {
+								create_preview_window(node_hover);
+							}, noone, ["Graph", "Preview window"]));
+						array_push(menu,  
+							menuItem(__txtx("panel_graph_inspector_panel", "Send to new inspector"), function() {
+								var pan = panelAdd("Panel_Inspector", true);
+								pan.destroy_on_click_out = false;
+								pan.content.setInspecting(node_hover);
+								pan.content.locked     = true;
+							}));
+						
+						if(DEMO) {
+							array_push(menu,  
+								menuItem(__txtx("panel_graph_send_to_export", "Send to export"), function() {
+									setCurrentExport(node_hover);
+								}, noone, ["Graph", "Export"]));
+						}
 					
-					array_push(menu,  
-						menuItem(__txtx("panel_graph_toggle_preview", "Toggle node preview"), function() {
-							setTriggerPreview();
-						}, noone, ["Graph", "Toggle preview"]));
-					array_push(menu,  
-						menuItem(__txtx("panel_graph_toggle_render", "Toggle node render"), function() {
-							setTriggerRender();
-						}, noone, ["Graph", "Toggle render"]));
+						array_push(menu,  
+							menuItem(__txtx("panel_graph_toggle_preview", "Toggle node preview"), function() {
+								setTriggerPreview();
+							}, noone, ["Graph", "Toggle preview"]));
+						array_push(menu,  
+							menuItem(__txtx("panel_graph_toggle_render", "Toggle node render"), function() {
+								setTriggerRender();
+							}, noone, ["Graph", "Toggle render"]));
 					
-					if(struct_has(node_hover, "nodes")) {
+						if(struct_has(node_hover, "nodes")) {
+							array_push(menu, -1);
+						
+							array_push(menu,  
+								menuItem(__txtx("panel_graph_enter_group", "Open group"), function() {
+									PANEL_GRAPH.addContext(node_hover);
+								}, THEME.group));
+							array_push(menu,  
+								menuItem(__txtx("panel_graph_enter_group_new_tab", "Open group in new tab"), function() {
+									var graph = new Panel_Graph(project);
+									panel.setContent(graph, true);
+								
+									for( var i = 0; i < ds_list_size(node_context); i++ ) 
+										graph.addContext(node_context[| i]);
+									graph.addContext(node_hover);
+								
+									setFocus(panel);
+								}, THEME.group));
+							array_push(menu,  
+								menuItem(__txt("Ungroup"), function() { 
+									doUngroup();
+								}, THEME.group, ["Graph", "Ungroup"]));		
+						}
+					
+						if(node_hover.group != noone) {
+							array_push(menu,  
+								menuItem(__txt("Set as group tool"), function() { 
+									node_hover.setTool(!node_hover.isTool);
+								}));		
+						}
+					
 						array_push(menu, -1);
 						
 						array_push(menu,  
-							menuItem(__txtx("panel_graph_enter_group", "Open group"), function() {
-								PANEL_GRAPH.addContext(node_hover);
-							}, THEME.group));
+							menuItem(__txtx("panel_graph_delete_and_merge_connection", "Delete and merge connection"), function() {
+								doDelete(true);
+							}, THEME.cross, ["Graph", "Delete (merge)"]));
 						array_push(menu,  
-							menuItem(__txtx("panel_graph_enter_group_new_tab", "Open group in new tab"), function() {
-								var graph = new Panel_Graph(project);
-								panel.setContent(graph, true);
-								
-								for( var i = 0; i < ds_list_size(node_context); i++ ) 
-									graph.addContext(node_context[| i]);
-								graph.addContext(node_hover);
-								
-								setFocus(panel);
-							}, THEME.group));
+							menuItem(__txtx("panel_graph_delete_and_cut_connection", "Delete and cut connection"), function() {
+								doDelete(false);
+							}, THEME.cross, ["Graph", "Delete (break)"]));
 						array_push(menu,  
-							menuItem(__txt("Ungroup"), function() { 
-								doUngroup();
-							}, THEME.group, ["Graph", "Ungroup"]));		
-					}
-					
-					if(node_hover.group != noone) {
+							menuItem(__txt("Duplicate"), function() {
+								doDuplicate();
+							}, THEME.duplicate, ["Graph", "Duplicate"]));
 						array_push(menu,  
-							menuItem(__txt("Set as group tool"), function() { 
-								node_hover.setTool(!node_hover.isTool);
-							}));		
-					}
+							menuItem(__txt("Copy"), function() {
+								doCopy();
+							}, THEME.copy, ["Graph", "Copy"]));
 					
-					array_push(menu, -1);
-						
-					array_push(menu,  
-						menuItem(__txtx("panel_graph_delete_and_merge_connection", "Delete and merge connection"), function() {
-							doDelete(true);
-						}, THEME.cross, ["Graph", "Delete (merge)"]));
-					array_push(menu,  
-						menuItem(__txtx("panel_graph_delete_and_cut_connection", "Delete and cut connection"), function() {
-							doDelete(false);
-						}, THEME.cross, ["Graph", "Delete (break)"]));
-					array_push(menu,  
-						menuItem(__txt("Duplicate"), function() {
-							doDuplicate();
-						}, THEME.duplicate, ["Graph", "Duplicate"]));
-					array_push(menu,  
-						menuItem(__txt("Copy"), function() {
-							doCopy();
-						}, THEME.copy, ["Graph", "Copy"]));
-					
-					array_push(menu, -1);
-					array_push(menu, menuItem(__txtx("panel_graph_add_transform", "Add transform"), doTransform, noone, ["Graph", "Transform node"]));
-					array_push(menu, menuItem(__txtx("panel_graph_canvas", "Canvas"),
-						function(_dat) { 
-							return submenuCall(_dat, [
-								menuItem(__txtx("panel_graph_copy_to_canvas", "Copy to canvas"), function() {
-									setCurrentCanvas(node_hover);
-								}, noone, ["Graph", "Canvas"]),
-								menuItem(__txtx("panel_graph_overlay_canvas", "Overlay canvas"), function() {
-									setCurrentCanvasBlend(node_hover);
-								}, noone, ["Graph", "Canvas blend"])
-							]);
-						}).setIsShelf()
-					);
-					
-					if(ds_list_size(nodes_select_list) >= 2) {
 						array_push(menu, -1);
-						array_push(menu, 
-							menuItem(__txtx("panel_graph_align_nodes", "Align nodes"), function(_dat) { 
+						array_push(menu, menuItem(__txtx("panel_graph_add_transform", "Add transform"), doTransform, noone, ["Graph", "Transform node"]));
+						array_push(menu, menuItem(__txtx("panel_graph_canvas", "Canvas"),
+							function(_dat) { 
 								return submenuCall(_dat, [
-									menuItemGroup(__txtx("horizontal", "Horizontal"), [ 
-										[ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_select_list, fa_left); } ],
-										[ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_select_list, fa_center); } ],
-										[ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_select_list, fa_right); } ],
-									]),
-									menuItemGroup(__txtx("vertical", "Vertical"), [ 
-										[ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_select_list, fa_top); } ],
-										[ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_select_list, fa_middle); } ],
-										[ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_select_list, fa_bottom); } ],
-									]),
-									menuItemGroup(__txtx("distribute", "Distribute"), [ 
-										[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_select_list); } ],
-										[ [THEME.obj_distribute_v, 0],		   function() { node_vdistribute(nodes_select_list); } ],
-									]),
+									menuItem(__txtx("panel_graph_copy_to_canvas", "Copy to canvas"), function() {
+										setCurrentCanvas(node_hover);
+									}, noone, ["Graph", "Canvas"]),
+									menuItem(__txtx("panel_graph_overlay_canvas", "Overlay canvas"), function() {
+										setCurrentCanvasBlend(node_hover);
+									}, noone, ["Graph", "Canvas blend"])
 								]);
-							}).setIsShelf());
-						array_push(menu,  
-							menuItem(__txtx("panel_graph_blend_nodes", "Blend nodes"), function() { 
-								doBlend();
-							}, noone, ["Graph", "Blend"]));
-						array_push(menu,  
-							menuItem(__txtx("panel_graph_compose_nodes", "Compose nodes"), function() { 
-								doCompose();
-							}, noone, ["Graph", "Compose"]));
-						array_push(menu,  
-							menuItem(__txtx("panel_graph_array_from_nodes", "Array from nodes"), function() { 
-								doArray();
-							}, noone, ["Graph", "Array"]));
+							}).setIsShelf()
+						);
+					
+						if(ds_list_size(nodes_select_list) >= 2) {
+							array_push(menu, -1);
+							array_push(menu, 
+								menuItem(__txtx("panel_graph_align_nodes", "Align nodes"), function(_dat) { 
+									return submenuCall(_dat, [
+										menuItemGroup(__txtx("horizontal", "Horizontal"), [ 
+											[ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_select_list, fa_left); } ],
+											[ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_select_list, fa_center); } ],
+											[ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_select_list, fa_right); } ],
+										]),
+										menuItemGroup(__txtx("vertical", "Vertical"), [ 
+											[ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_select_list, fa_top); } ],
+											[ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_select_list, fa_middle); } ],
+											[ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_select_list, fa_bottom); } ],
+										]),
+										menuItemGroup(__txtx("distribute", "Distribute"), [ 
+											[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_select_list); } ],
+											[ [THEME.obj_distribute_v, 0],		   function() { node_vdistribute(nodes_select_list); } ],
+										]),
+									]);
+								}).setIsShelf());
+							array_push(menu,  
+								menuItem(__txtx("panel_graph_blend_nodes", "Blend nodes"), function() { 
+									doBlend();
+								}, noone, ["Graph", "Blend"]));
+							array_push(menu,  
+								menuItem(__txtx("panel_graph_compose_nodes", "Compose nodes"), function() { 
+									doCompose();
+								}, noone, ["Graph", "Compose"]));
+							array_push(menu,  
+								menuItem(__txtx("panel_graph_array_from_nodes", "Array from nodes"), function() { 
+									doArray();
+								}, noone, ["Graph", "Array"]));
 						
-						array_push(menu,  
-							menuItem(__txtx("panel_graph_group_nodes", "Group nodes"), function() { 
-								doGroup();
-							}, THEME.group, ["Graph", "Group"]));	
+							array_push(menu,  
+								menuItem(__txtx("panel_graph_group_nodes", "Group nodes"), function() { 
+									doGroup();
+								}, THEME.group, ["Graph", "Group"]));	
 						
+							array_push(menu,  
+								menuItem(__txtx("panel_graph_frame_nodes", "Frame nodes"), function() { 
+									doFrame();
+								}, noone, ["Graph", "Frame"]));
+						}
+					
+						menuCall("graph_node_selected_multiple_menu",,, menu );
+					} else {
+						var menu = [];
+					
 						array_push(menu,  
-							menuItem(__txtx("panel_graph_frame_nodes", "Frame nodes"), function() { 
-								doFrame();
-							}, noone, ["Graph", "Frame"]));
+							menuItem(__txt("Copy"), function() {
+								doCopy();
+							}, THEME.copy, ["Graph", "Copy"]).setActive(node_focus != noone || ds_list_size(nodes_select_list))
+						);
+					
+						array_push(menu,  
+							menuItem(__txt("Paste"), function() {
+								doPaste();
+							}, THEME.paste, ["Graph", "Paste"]).setActive(clipboard_get_text() != "")
+						);
+					
+						callAddDialog();
+						menuCall("graph_node_selected_menu", o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
+						setFocus(o_dialog_add_node.id, "Dialog");
 					}
-					
-					menuCall("graph_node_selected_multiple_menu",,, menu );
-				} else {
-					var menu = [];
-					
-					array_push(menu,  
-						menuItem(__txt("Copy"), function() {
-							doCopy();
-						}, THEME.copy, ["Graph", "Copy"]).setActive(node_focus != noone || ds_list_size(nodes_select_list))
-					);
-					
-					array_push(menu,  
-						menuItem(__txt("Paste"), function() {
-							doPaste();
-						}, THEME.paste, ["Graph", "Paste"]).setActive(clipboard_get_text() != "")
-					);
-					
-					callAddDialog();
-					menuCall("graph_node_selected_menu", o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
-					setFocus(o_dialog_add_node.id, "Dialog");
-				}
-			} #endregion
-		}
+				} #endregion
+			}
+		#endregion
 		printIf(log, "Node selection time: " + string(current_time - t)); t = current_time;
 		
-		if(node_focus)
-			node_focus.drawActive(gr_x, gr_y, graph_s);
-		
-		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-			var _node = nodes_select_list[| i];
-			if(!_node) continue;
-			_node.drawActive(gr_x, gr_y, graph_s);
-		}
+		#region draw active
+			if(node_focus) node_focus.drawActive(gr_x, gr_y, graph_s);
+			
+			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
+				var _node = nodes_select_list[| i];
+				if(!_node) continue;
+				_node.drawActive(gr_x, gr_y, graph_s);
+			}
+		#endregion
 		printIf(log, "Draw active: " + string(current_time - t)); t = current_time;
 		
 		var aa = PREF_MAP[? "connection_line_aa"];
@@ -942,7 +948,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(mouse_press(mb_left))
 				node_dragging = noone;
 				
-			if(node_dragging) {
+			if(node_dragging && !key_mod_press(ALT)) {
 				node_focus = node_dragging;
 				
 				if(ds_list_size(nodes_select_list) == 0) { // move single node

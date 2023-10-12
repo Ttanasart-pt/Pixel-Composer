@@ -13,6 +13,10 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_PB(_x, _y, _group) construc
 	static getGraphPreviewSurface = function() {
 		var _nbox = outputs[| 0].getValue();
 		if(_nbox == noone) return noone;
+		if(is_array(_nbox)) {
+			if(array_empty(_nbox)) return noone;
+			_nbox = _nbox[0];
+		}
 		
 		return _nbox.content;
 	}
@@ -20,7 +24,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_PB(_x, _y, _group) construc
 
 #macro PB_DRAW_CREATE_MASK _nbox.mask = surface_verify(_nbox.mask, _nbox.w, _nbox.h);								\
 		surface_set_shader(_nbox.mask, sh_pb_to_mask);																\
-			draw_surface_safe(_nbox.content, -_pbox.x, -_pbox.y);													\
+			draw_surface_safe(_nbox.content, 0, 0);																	\
 		surface_reset_shader();
 		
 #macro PB_DRAW_APPLY_MASK if(_mask) {																				\

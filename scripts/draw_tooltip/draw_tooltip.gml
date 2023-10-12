@@ -61,6 +61,8 @@ function draw_tooltip_gradient(clr) {
 }
 
 function draw_tooltip_surface_array(surf) {
+	if(!is_array(surf) || array_empty(surf)) return;
+	
 	if(is_instanceof(surf[0], SurfaceAtlas)) {
 		draw_tooltip_atlas(surf);
 		return;

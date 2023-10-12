@@ -30,7 +30,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical"]);
 	
 	inputs[| 10] = nodeValue("Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0, "Automatically set amount based on sprite size.")
-		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", onClick: function() { 
+		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", onClick: function() { #region
 			var _sur = getInputData(0);
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
 			var ww = surface_get_width_safe(_sur);
@@ -47,13 +47,11 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var fill_w = floor((ww - _offs[0]) / sh_w);
 			var fill_h = floor((hh - _offs[1]) / sh_h);
 			
-			if(_orie == 0)
-				inputs[| 3].setValue([ fill_w, fill_h ]);
-			else
-				inputs[| 3].setValue([ fill_h, fill_w ]);
+			if(_orie == 0)	inputs[| 3].setValue([ fill_w, fill_h ]);
+			else			inputs[| 3].setValue([ fill_h, fill_w ]);
 		
-			inspector1Update();
-		} });
+			doUpdate();
+		} }); #endregion
 		
 	inputs[| 11] = nodeValue("Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", onClick: function() { 
@@ -92,10 +90,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	curr_amo  = [0, 0];
 	
 	sprite_valid = [];
+	spliceSurf   = noone;
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
-	function getSpritePosition(index) {
+	static onValueFromUpdate = function() { _inSurf = noone; }
+	static onValueUpdate     = function() { _inSurf = noone; }
+	
+	function getSpritePosition(index) { #region
 		var _dim = curr_dim;
 		var _col = curr_amo[0];
 		var _off = curr_off;
@@ -114,9 +116,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			return [_x, _y];
 		else
 			return [_y, _x];
-	}
+	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _inSurf  = getInputData(0);
 		if(!is_surface(_inSurf)) return;
 		
@@ -259,9 +261,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				}
 			}
 		#endregion
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var _out  = getInputData(7);
 		var _filt = getInputData(12);
 		var _flty = getInputData(13);
@@ -270,17 +272,13 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[|  8].setVisible(!_out);
 		inputs[| 13].setVisible(_filt);
 		inputs[| 14].setVisible(_filt && _flty);
-	}
+	} #endregion
 	
-	static onInspector1Update = function() {
-		if(isInLoop())	Render();
-		else			doInspectorAction();
-	}
-	
-	static doInspectorAction = function() {
+	static spliceSprite = function() { #region
 		var _atl	 = [];
 		var _inSurf  = getInputData(0);
-		if(!is_surface(_inSurf)) return;
+		if(spliceSurf == _inSurf) return;
+		spliceSurf = _inSurf;
 		
 		var _outSurf = outputs[| 0].getValue();
 		var _out	 = getInputData(7);
@@ -366,10 +364,10 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		buffer_delete(_buff);
 		surface_free(_empS);
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
-		if(isInLoop()) doInspectorAction();
+	static update = function(frame = CURRENT_FRAME) { #region
+		spliceSprite();
 		
 		var _out  = getInputData(7);
 		if(_out == 1) {
@@ -385,5 +383,5 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var ind = safe_mod(CURRENT_FRAME * _spd, array_length(surf_array));
 			outputs[| 0].setValue(array_safe_get(surf_array, ind));
 		}
-	}
+	} #endregion
 }

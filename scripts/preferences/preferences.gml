@@ -29,7 +29,8 @@
 	PREF_MAP[? "connection_line_aa"]     = 2;
 	PREF_MAP[? "connection_line_transition"] = true;
 	PREF_MAP[? "connection_line_highlight"]  = 0;
-	PREF_MAP[? "connection_line_highlight_fade"]  = 0.75;
+	PREF_MAP[? "connection_line_highlight_fade"] = 0.75;
+	PREF_MAP[? "connection_line_highlight_all"]  = false;
 	PREF_MAP[? "curve_connection_line"]	 = 1;
 	
 	PREF_MAP[? "default_surface_side"]	= 32;

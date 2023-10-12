@@ -199,15 +199,6 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 		log_warning("LOAD, connect", exception_print(e));
 	}
 	
-	//try {
-	//	for(var i = 0; i < ds_list_size(create_list); i++)
-	//		create_list[| i].doUpdate();
-	//} catch(e) {
-	//	log_warning("LOAD, update", exception_print(e));
-	//}
-	
-	//Render();
-	
 	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
 		var pass = 0;
 		
@@ -215,8 +206,8 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 			while(++pass < 4 && !ds_queue_empty(CONNECTION_CONFLICT)) {
 				var size = ds_queue_size(CONNECTION_CONFLICT);
 				log_message("LOAD", $"[Connect] {size} Connection conflict(s) detected (pass: {pass})");
-				repeat(size)
-					ds_queue_dequeue(CONNECTION_CONFLICT).connect();
+				repeat(size) ds_queue_dequeue(CONNECTION_CONFLICT).connect();
+				repeat(size) ds_queue_dequeue(CONNECTION_CONFLICT).postConnect();
 				Render();
 			}
 			
@@ -250,6 +241,9 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_load);
 	
 	refreshNodeMap();
+	
+	if(struct_has(_load_content, "timelines"))
+		PROJECT.timelines.deserialize(_load_content.timelines);
 	
 	return true;
 }
