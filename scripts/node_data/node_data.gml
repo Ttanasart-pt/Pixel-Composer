@@ -94,7 +94,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		outputs = ds_list_create();
 		inputMap  = ds_map_create();
 		outputMap = ds_map_create();
-	
+		input_value_map = {};
+		
 		use_display_list		= true;
 		input_display_list		= -1;
 		output_display_list		= -1;
@@ -439,11 +440,18 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return array_safe_get(inputs_data, index, def);
 	} #endregion
 	
+	static setInputData = function(index, value) { #region
+		gml_pragma("forceinline");
+		
+		inputs_data[index] = value;
+		input_value_map[$ inputs[| index].internalName] = value;
+	} #endregion
+	
 	static getInputs = function(frame = CURRENT_FRAME) { #region
 		inputs_data	= array_create(ds_list_size(inputs), undefined);
 		
 		for(var i = 0; i < ds_list_size(inputs); i++)
-			inputs_data[i] = inputs[| i].getValue(frame,,, false);
+			setInputData(i, inputs[| i].getValue(frame,,, false));
 	} #endregion
 	
 	static forceUpdate = function() { #region

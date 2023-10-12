@@ -261,7 +261,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			if(amo == 1) val = val[0];		//spread single array
 			amo = max(1, amo);
 			
-			inputs_data[i]     = val;
+			setInputData(i, val);
 			inputs_is_array[i] = inputs[| i].isArray(val);
 			
 			switch(attributes.array_process) {

@@ -275,9 +275,11 @@
 				return struct_try_get(params, val);
 			
 			val = string_trim(val);
+			if(_string(val)) return _string_trim(val);
 			
-			if(_string(val))
-				return _string_trim(val);
+			var _str = string_splice(val, ".");
+			if(array_length(_str) > 1 && _str[0] == "self" && struct_has(params, "node_values"))
+				return struct_try_get(params.node_values, _str[1]);
 			
 			return nodeGetData(val);
 		} #endregion

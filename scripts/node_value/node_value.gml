@@ -465,7 +465,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		static updateName = function(_name) {
 			name         = _name;
-			internalName = string_lower(string_replace_all(name, " ", "_"));
+			internalName = string_to_var(name);
 			name_custom  = true;
 		} updateName(_name);
 		
@@ -541,6 +541,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		attributes = {};
 		
 		node.inputs_data[index] = _value;
+		node.input_value_map[$ internalName] = _value;
 	#endregion
 	
 	#region ---- draw ----
@@ -592,12 +593,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expUse     = false;
 		expression = "";
 		expTree    = noone;
-	
+		expContext = { 
+			name: name,
+			node_name: node.display_name,
+			value: 0,
+			node_values: node.input_value_map,
+		};
+		
 		express_edit = new textArea(TEXTBOX_INPUT.text, function(str) { 
 			expression = str;
 			expressionUpdate();
 		});
 		express_edit.autocomplete_server	= pxl_autocomplete_server;
+		express_edit.autocomplete_context	= expContext;
 		express_edit.function_guide_server	= pxl_function_guide_server;
 		express_edit.parser_server			= pxl_document_parser;
 		express_edit.format   = TEXT_AREA_FORMAT.codeLUA;
@@ -1456,14 +1464,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				//printCallStack();
 				
 				global.EVALUATE_HEAD = self;
-				var params = { 
+				expContext = { 
 					name: name,
 					node_name: node.display_name,
-					node: self,
-					value: val[0]
+					value: val[0],
+					node_values: node.input_value_map,
 				};
 				
-				var _exp_res = expTree.eval(variable_clone(params));
+				var _exp_res = expTree.eval(variable_clone(expContext));
 				//print(json_stringify(expTree, true));
 				//print($"======= {_exp_res}");
 				
@@ -1639,7 +1647,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == JUNCTION_CONNECT.output) return;
 		
-		node.inputs_data[self.index] = animator.getValue(time);
+		node.setInputData(self.index, animator.getValue(time));
 		
 		if(tags != VALUE_TAG.none) return true;
 		
@@ -2356,7 +2364,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(APPENDING) def_val = getValue(0);
 		
 		if(connect_type == JUNCTION_CONNECT.input && index >= 0) {
-			node.inputs_data[index] = animator.getValue(0);
+			setInputData(index, animator.getValue(0));
 			//print($"Set input {node.name} - {index} = {node.inputs_data[index]} | {node.inputs_data}");
 		}
 		

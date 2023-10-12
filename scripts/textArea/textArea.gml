@@ -51,6 +51,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	autocomplete_box.textbox = self;
 	autocomplete_server		 = noone;
 	autocomplete_object		 = noone;
+	autocomplete_context	 = {};
 	
 	function_guide_box		   = instance_create(0, 0, o_dialog_textbox_function_guide);
 	function_guide_box.textbox = self;
@@ -103,11 +104,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var slp  = string_splice(crop, [" ", "(", "[", "{", ",", "\n"]);
 		var pmt  = array_safe_get(slp, -1,, ARRAY_OVERFLOW.loop);
 					
-		var params = [];
+		var localParams = [];
 		if(parser_server != noone)
-			params = parser_server(crop, autocomplete_object);
+			localParams = parser_server(crop, autocomplete_object);
 					
-		var data = autocomplete_server(pmt, params);
+		var data = autocomplete_server(pmt, localParams, autocomplete_context);
 					
 		if(array_length(data)) {
 			autocomplete_box.data   = data;

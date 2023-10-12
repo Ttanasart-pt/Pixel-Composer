@@ -43,7 +43,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		w	  = 96;	
 		min_h = 56; 
-				
+		
 		switch(disp) {
 			case 0 : 
 				inputs[| 3].setVisible(false);

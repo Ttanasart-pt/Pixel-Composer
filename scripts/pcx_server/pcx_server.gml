@@ -1,4 +1,5 @@
 global.NODE_SUB_CATAG = [ "input", "output" ];
+global.PCX_CONSTANT = [ "value", "self" ];
 
 function pxl_document_parser(prompt) {
 	var params = [];
@@ -20,9 +21,24 @@ function pxl_document_parser(prompt) {
 	return params;
 }
 
-function pxl_autocomplete_server(prompt, params = []) { 
+function pxl_autocomplete_server(prompt, params = [], context = {}) { 
 	var res = [];
 	var pr_list = ds_priority_create();
+	
+	//////////////////////////////////
+	ds_priority_clear(pr_list);
+	
+	for( var i = 0, n = array_length(global.PCX_CONSTANT); i < n; i++ ) {
+		var gl = global.PCX_CONSTANT[i];
+		
+		var match = string_partial_match(string_lower(gl), string_lower(prompt));
+		if(match == -9999) continue;
+		
+		ds_priority_add(pr_list, [[THEME.ac_constant, 2], gl, "local", gl], match);
+	}
+	
+	repeat(ds_priority_size(pr_list))
+		array_push(res, ds_priority_delete_max(pr_list));
 	
 	//////////////////////////////////
 	ds_priority_clear(pr_list);
@@ -35,10 +51,6 @@ function pxl_autocomplete_server(prompt, params = []) {
 		
 		ds_priority_add(pr_list, [[THEME.ac_constant, 2], gl, "local", gl], match);
 	}
-	
-	gl = "value";
-	var match = string_partial_match(string_lower(gl), string_lower(prompt));
-	if(match != -9999) ds_priority_add(pr_list, [[THEME.ac_constant, 2], gl, "local", gl], match);
 	
 	repeat(ds_priority_size(pr_list))
 		array_push(res, ds_priority_delete_max(pr_list));
@@ -97,6 +109,18 @@ function pxl_autocomplete_server(prompt, params = []) {
 					continue;
 				
 				ds_priority_add(pr_list, [[THEME.ac_constant, 0], _key, sp[0], $"{sp[0]}.{_key}"], match);
+			}
+		} else if(sp[0] == "self" && array_length(sp) == 2) {
+			var _val = context[$ "node_values"];
+			var _arr = variable_struct_get_names(_val);
+			
+			for( var i = 0, n = array_length(_arr); i < n; i++ ) {
+				var _key = _arr[i];
+				var match = string_partial_match(string_lower(_key), string_lower(sp[1]));
+				if(match == -9999 && sp[1] != "")
+					continue;
+				
+				ds_priority_add(pr_list, [[THEME.ac_constant, 2], _key, "self", $"{sp[0]}.{_key}"], match);
 			}
 		} else if(ds_map_exists(PROJECT.nodeNameMap, sp[0])) {
 			if(array_length(sp) == 2) {
