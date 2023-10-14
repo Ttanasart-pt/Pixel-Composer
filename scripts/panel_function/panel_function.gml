@@ -133,7 +133,6 @@
 			file = DIRECTORY + "layouts/Horizontal.json"; 
 		loadPanel(file, PANEL_MAIN);
 		
-		PANEL_ANIMATION.updatePropertyList();
 		PANEL_MAIN.refresh();
 		PANEL_MAIN.refreshSize();
 	}

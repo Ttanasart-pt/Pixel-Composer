@@ -59,7 +59,6 @@ function Action(_type, _object, _data) constructor {
 			case ACTION_TYPE.list_insert :
 				if(!ds_exists(obj, ds_type_list)) return;
 				ds_list_delete(obj, data[1]);
-				PANEL_ANIMATION.updatePropertyList();
 				break;
 			case ACTION_TYPE.list_modify :
 				if(!ds_exists(obj, ds_type_list)) return;
@@ -129,7 +128,6 @@ function Action(_type, _object, _data) constructor {
 			case ACTION_TYPE.list_insert :
 				if(!ds_exists(obj, ds_type_list)) return;
 				ds_list_insert(obj, data[1], data[0]);
-				PANEL_ANIMATION.updatePropertyList();
 				break;
 			case ACTION_TYPE.list_modify :
 				if(!ds_exists(obj, ds_type_list)) return;

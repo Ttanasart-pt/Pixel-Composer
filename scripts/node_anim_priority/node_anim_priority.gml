@@ -21,6 +21,4 @@ function rearrange_priority(node, newpri) {
 	}
 	
 	ds_priority_destroy(pr);
-	
-	PANEL_ANIMATION.updatePropertyList();
 }

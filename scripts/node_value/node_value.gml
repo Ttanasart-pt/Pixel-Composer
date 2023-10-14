@@ -1490,11 +1490,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static setAnim = function(anim) { #region
+		if(is_anim == anim) return;
+		
 		if(anim && !is_anim && ds_list_size(animator.values) == 1)
 			animator.values[| 0].time = CURRENT_FRAME;
 		
 		is_anim = anim;
-		PANEL_ANIMATION.updatePropertyList();
+		node.refreshTimeline();
 	} #endregion
 	
 	static isActiveDynamic = function() { #region
@@ -2238,7 +2240,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		ext.doUpdate();
-		PANEL_ANIMATION.updatePropertyList();
 	} #endregion
 	
 	static getJunctionTo = function() { #region
@@ -2364,8 +2365,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(APPENDING) def_val = getValue(0);
 		
 		if(connect_type == JUNCTION_CONNECT.input && index >= 0) {
-			setInputData(index, animator.getValue(0));
-			//print($"Set input {node.name} - {index} = {node.inputs_data[index]} | {node.inputs_data}");
+			var _value = animator.getValue(0);
+			node.inputs_data[index] = _value;
+			node.input_value_map[$ internalName] = _value;
 		}
 		
 		onValidate();

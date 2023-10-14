@@ -111,7 +111,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					inputs[| 2].removeFrom();
 				else
 					inputs[| 2].setAnim(!inputs[| 2].is_anim);
-				PANEL_ANIMATION.updatePropertyList();
 			}
 		}
 		

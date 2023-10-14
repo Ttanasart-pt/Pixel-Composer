@@ -159,7 +159,6 @@
 		node.destroy(_merge);
 		
 		recordAction(ACTION_TYPE.node_delete, node);
-		PANEL_ANIMATION.updatePropertyList();
 	}
 	
 	function nodeCleanUp() {

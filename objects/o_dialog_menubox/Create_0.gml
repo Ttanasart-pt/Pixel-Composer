@@ -46,7 +46,7 @@ event_inherited();
 			
 			if(instanceof(_menuItem) == "MenuItemGroup") {
 				var amo = array_length(_menuItem.group);
-				ww = max(ww, ui(16) + amo * (hght + ui(4)));
+				ww = max(ww, ui(16) + amo * (_menuItem.spacing + ui(4)));
 				dialog_h += hght;
 			} 
 			

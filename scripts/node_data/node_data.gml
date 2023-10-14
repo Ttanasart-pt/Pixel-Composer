@@ -189,10 +189,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	#endregion
 	
 	#region ---- timeline ----
-		timeline_item = new timelineItemNode(self);
-		anim_priority = ds_map_size(PROJECT.nodeMap);
+		timeline_item    = new timelineItemNode(self);
+		anim_priority    = ds_map_size(PROJECT.nodeMap);
+		is_anim_timeline = false;
 		
-		anim_show		= true;
 		dopesheet_color = COLORS.panel_animation_dope_blend_default;
 		dopesheet_y		= 0;
 	#endregion
@@ -1168,7 +1168,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(PANEL_INSPECTOR.inspecting == self) PANEL_INSPECTOR.inspecting = noone;
 		
 		PANEL_PREVIEW.removeNodePreview(self);
-		PANEL_ANIMATION.updatePropertyList();
+		timeline_item.removeSelf();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
@@ -1391,6 +1391,26 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return _tool.selecting == subtool;
 	} #endregion
 	
+	static refreshTimeline = function() { #region
+		var _pre_anim = is_anim_timeline;
+		var _cur_anim = false;
+		
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
+			var _inp = inputs[| i];
+			if(_inp.is_anim && _inp.value_from == noone) {
+				_cur_anim = true;
+				break;
+			}
+		}
+		
+		if(_pre_anim && !_cur_anim)
+			timeline_item.removeSelf();
+		else if(!_pre_anim && _cur_anim)
+			PROJECT.timelines.addItem(timeline_item);
+			
+		is_anim_timeline = _cur_anim;
+	} #endregion
+	
 	static clone = function(target = PANEL_GRAPH.getCurrentContext()) { #region
 		CLONING = true;
 		var _type = instanceof(self);
@@ -1410,8 +1430,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		PROJECT.nodeMap[? node_id] = self;
 		PROJECT.nodeMap[? _nid] = _node;
-		PANEL_ANIMATION.updatePropertyList();
 		CLONING = false;
+		refreshTimeline();
 		
 		onClone(_node, target);
 		
@@ -1708,6 +1728,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		updatedInTrigger.connect(log);
 		
 		if(!connected) ds_queue_enqueue(CONNECTION_CONFLICT, self);
+		refreshTimeline();
 		
 		return connected;
 	} #endregion

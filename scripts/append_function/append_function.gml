@@ -129,7 +129,6 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	ds_list_destroy(appended_list);
 	
 	APPENDING = false;
-	PANEL_ANIMATION.updatePropertyList();
 	
 	RENDER_ALL_REORDER
 	

@@ -547,7 +547,6 @@ function Panel_Inspector() : PanelContent() constructor {
 				
 				if(anim_toggling) {
 					jun.setAnim(!jun.is_anim);
-					PANEL_ANIMATION.updatePropertyList();
 					anim_toggling = false;
 				}
 				
@@ -566,7 +565,6 @@ function Panel_Inspector() : PanelContent() constructor {
 								}),
 							menuItem(jun.is_anim? __txtx("panel_inspector_remove", "Remove animation") : __txtx("panel_inspector_add", "Add animation"), function() { 
 								__dialog_junction.setAnim(!__dialog_junction.is_anim); 
-								PANEL_ANIMATION.updatePropertyList();
 								}),
 						);
 						
@@ -574,7 +572,6 @@ function Panel_Inspector() : PanelContent() constructor {
 							array_push(_menuItem, 
 								menuItem(jun.sep_axis? __txtx("panel_inspector_axis_combine", "Combine axis") : __txtx("panel_inspector_axis_separate", "Separate axis"), function() { 
 									__dialog_junction.sep_axis = !__dialog_junction.sep_axis; 
-									PANEL_ANIMATION.updatePropertyList();
 									}),
 							);
 						}

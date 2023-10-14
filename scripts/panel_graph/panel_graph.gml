@@ -386,7 +386,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	function onFocusBegin() { #region
 		PANEL_GRAPH = self; 
 		PROJECT = project;
-		PANEL_ANIMATION.updatePropertyList();
 	} #endregion
 	
 	function stepBegin() { #region
@@ -1258,7 +1257,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						
 						var node = getCurrentContext();
 						title = node.display_name == ""? node.name : node.display_name;
-						PANEL_ANIMATION.updatePropertyList();
 						break;
 					}
 				}
@@ -1447,7 +1445,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		title = __txt("Graph");
 		nodes_list = project.nodes;
 		toCenterNode();
-		PANEL_ANIMATION.updatePropertyList();
 	} #endregion
 	
 	function addContext(node) { #region
@@ -1464,7 +1461,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		selection_block = 1;
 		
 		toCenterNode();
-		PANEL_ANIMATION.updatePropertyList();
 	} #endregion
 	
 	function setContextFrame(dirr, node) { #region

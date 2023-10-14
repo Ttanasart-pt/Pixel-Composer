@@ -43,7 +43,6 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	var res = __LOAD_PATH(path, readonly, safe_mode);
 	if(!res) return false;
 	
-	PANEL_ANIMATION.updatePropertyList();
 	setFocus(PANEL_GRAPH.panel);
 	
 	return PROJECT;
@@ -242,7 +241,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 	
 	refreshNodeMap();
 	
-	if(struct_has(_load_content, "timelines"))
+	if(struct_has(_load_content, "timelines") && !array_empty(_load_content.timelines.contents))
 		PROJECT.timelines.deserialize(_load_content.timelines);
 	
 	return true;

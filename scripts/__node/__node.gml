@@ -8,7 +8,6 @@ function __Node_Base(x, y) constructor {
 	
 	active_index	= -1;
 	preview_index	= 0;
-	anim_show		= true;
 	anim_priority	= -999;
 	
 	static step   = function() {}

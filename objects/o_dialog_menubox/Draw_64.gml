@@ -69,20 +69,22 @@ if(!ready) exit;
 			draw_set_alpha(1);
 			
 			var amo = array_length(_submenus);
-			var _w  = (amo - 1) / 2 * (hght + ui(4));
+			var _w  = (amo - 1) / 2 * (_menuItem.spacing + ui(4));
 			var _sx = dialog_x + dialog_w / 2 - _w;
 			
 			for(var j = 0; j < amo; j++) {
 				var _submenu = _submenus[j];
-				var _bx		 = _sx + j * (hght + ui(4));
-				var _by		 = yy + hght + hght / 2 - ui(4);
-				var _spr	 = noone, _ind = 0;
-				var _sprs	 = _submenu[0];
-				var _tlp	 = array_safe_get(_submenu, 2, "");
-				var _str     = "";
+				var _bx	  = _sx + j * (_menuItem.spacing + ui(4));
+				var _by	  = yy + hght + hght / 2 - ui(4);
+				var _spr  = noone, _ind = 0;
+				var _sprs = _submenu[0];
+				var _tlp  = array_safe_get(_submenu, 2, "");
+				var _dat  = array_safe_get(_submenu, 3, {});
+				var _clr  = c_white;
+				var _str  = "";
 				
-				var _sw = ui(28);
-				var _sh = ui(28);
+				var _sw = _menuItem.spacing;
+				var _sh = _menuItem.spacing;
 				
 				if(is_string(_sprs)) {
 					_str = _sprs;
@@ -94,7 +96,11 @@ if(!ready) exit;
 					if(is_array(_sprs)) {
 						_spr = _sprs[0];
 						_ind = _sprs[1];
+						_clr = array_safe_get(_sprs, 2, c_white);
 					} else _spr = _sprs;
+					
+					_sw = sprite_get_width(_spr)  + ui(8);
+					_sh = sprite_get_height(_spr) + ui(8);
 				}
 				
 				if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _bx - _sw / 2, _by - _sh / 2, _bx + _sw / 2, _by + _sh / 2)) {
@@ -103,13 +109,13 @@ if(!ready) exit;
 					draw_sprite_stretched_ext(THEME.textbox, 1, _bx - _sw / 2, _by - _sh / 2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
 					
 					if(mouse_press(mb_left, sFOCUS)) {
-						_submenu[1]();
+						_submenu[1](_dat);
 						instance_destroy(o_dialog_menubox);
 					}
 				}
 				
 				if(_spr != noone)
-					draw_sprite_ui_uniform(_spr, _ind, _bx, _by);
+					draw_sprite_ui_uniform(_spr, _ind, _bx, _by,, _clr);
 				
 				if(_str != "")
 					draw_text(_bx, _by, _str);

@@ -38,7 +38,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					jun.setAnim(!jun.is_anim);
 					anim_hold = jun.is_anim;
 				}
-				PANEL_ANIMATION.updatePropertyList();
 			}
 		}
 	} #endregion

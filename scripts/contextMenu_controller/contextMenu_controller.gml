@@ -72,5 +72,7 @@
 		active = true;
 		self.name	= name;
 		self.group  = group;
+		
+		spacing = ui(36);
 	}
 #endregion

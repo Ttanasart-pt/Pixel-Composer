@@ -72,9 +72,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		values	 = ds_list_create();
 		sep_axis = _sep_axis;
 		
-		index	 = 0;
-		prop     = _prop;
-		dopesheet_y = 0;
+		index = 0;
+		prop  = _prop;
+		y     = 0;
 		
 		if(_prop.type != VALUE_TYPE.trigger)
 			ds_list_add(values, new valueKey(0, _val, self));
