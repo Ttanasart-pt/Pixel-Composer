@@ -41,7 +41,7 @@ function Panel_Animation() : PanelContent() constructor {
 		dopesheet_dragging = noone;
 		dopesheet_drag_mx  = 0;
 	
-		dope_sheet_node_padding = ui(2);
+		dope_sheet_node_padding = ui(0);
 	#endregion
 	
 	#region ---- timeline ----
@@ -90,7 +90,7 @@ function Panel_Animation() : PanelContent() constructor {
 		value_focusing = noone;
 	#endregion
 	
-	#region ---- display ----
+	#region ---- display ---- 
 		show_node_outside_context = true;
 	#endregion
 	
@@ -288,10 +288,10 @@ function Panel_Animation() : PanelContent() constructor {
 		
 	for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
 		_item[i] = [ 
-			[ THEME.timeline_color, 0, _clrs[i] ], 
+			[ THEME.timeline_color, i > 0, _clrs[i] ], 
 			function(_data) { 
 				context_selecting_item.item.color = _data.color;
-			}, "", { color: _clrs[i] }
+			}, "", { color: i == 0? -1 : _clrs[i] }
 		];
 	}
 	
@@ -998,12 +998,16 @@ function Panel_Animation() : PanelContent() constructor {
 		return key_hover;
 	} #endregion
 	
-	function drawDopesheetLabelAnimator(_node, animator, msx, msy) { #region
+	function drawDopesheetLabelAnimator(_item, _node, animator, msx, msy) { #region
 		var prop = animator.prop;
 		var aa   = _node.group == PANEL_GRAPH.getCurrentContext()? 1 : 0.9;
 		var tx   = tool_width;
 		var ty   = animator.y - 1;
-				
+		
+		var cc = colorMultiply(_item.item.color_cur, COLORS.panel_animation_dope_key_bg);
+		draw_set_color(cc);
+		draw_rectangle(0, ty - ui(10), tx, ty + ui(10), false);
+		
 		#region keyframe control
 			tx = tool_width - ui(20 + 16 * 3);
 			if(buttonInstant(noone, tx - ui(6), ty - ui(6), ui(12), ui(12), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 0, [COLORS._main_icon, COLORS._main_icon_on_inner]) == 2) {
@@ -1090,14 +1094,13 @@ function Panel_Animation() : PanelContent() constructor {
 	} #endregion
 	
 	function drawDopesheetLabelItem(_item, _x, _y, msx = -1, msy = -1, alpha = 1) { #region
-		var _shf = ui(12);
-		var _itx = _x + _item.depth * _shf;
+		var _itx = _x;
 		var _ity = _y;
-		var _itw = tool_width - _item.depth * _shf;
+		var _itw = tool_width;
 		var _hov = pHOVER && (msy > 0 && msy < dope_sheet_h);
 		var _foc = pFOCUS;
 		
-		var _res = _item.item.drawLabel(_itx, _ity, _itw, msx, msy, _hov, _foc, item_dragging, hovering_folder, node_name_type, alpha);
+		var _res = _item.item.drawLabel(_item, _itx, _ity, _itw, msx, msy, _hov, _foc, item_dragging, hovering_folder, node_name_type, alpha);
 		
 		if(_res == 1) {
 			if(mouse_press(mb_left, _foc)) {
@@ -1170,17 +1173,16 @@ function Panel_Animation() : PanelContent() constructor {
 				hovering_order  = last_i;
 			}
 			
+			var _itx = -1, _ity, _itw;
+			
 			for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
 				var _cont = timeline_contents[i];
 				if(!_cont.show) continue;
 				
 				if(item_dragging != noone && item_dragging.item == _cont.item) {
-					draw_set_color(COLORS._main_accent);
-					var _itx = _cont.depth * ui(20);
-					var _ity = _cont.y;
-					var _itw = tool_width - _cont.depth * ui(20);
-					
-					draw_line_width(_itx, _ity, _itx + _itw, _ity, 2);
+					_itx = _cont.depth * ui(20);
+					_ity = _cont.y;
+					_itw = tool_width - _cont.depth * ui(20);
 					continue;
 				}
 				
@@ -1188,9 +1190,14 @@ function Panel_Animation() : PanelContent() constructor {
 				
 				if(_cont.type == "node" && _cont.item.show)
 				for( var j = 0; j < array_length(_cont.animators); j++ )
-					drawDopesheetLabelAnimator(_cont.node, _cont.animators[j], msx, msy);
+					drawDopesheetLabelAnimator(_cont, _cont.node, _cont.animators[j], msx, msy);
 			} //end node loop
-		
+			
+			if(_itx != -1) {
+				draw_set_color(COLORS._main_accent);
+				draw_line_width(_itx, _ity, _itx + _itw, _ity, 2);
+			}	
+			
 			if(_item_dragging != noone) {
 				if(point_distance(msx, msy, item_dragging_mx, item_dragging_my) > 4) {
 					item_dragging  = _item_dragging;
@@ -1301,9 +1308,12 @@ function Panel_Animation() : PanelContent() constructor {
 				_cont.h	+= dope_sheet_node_padding;
 				
 				var _ks = key_y;
-				var cc = colorMultiply(_cont.item.color, COLORS.panel_animation_node_outline);
-				draw_set_color(cc);
-				draw_rectangle(0, _ks - 1, bar_show_w, _ks + ui(20), false);
+				if(_cont.item.color_cur > -1) {
+					draw_set_color(_cont.item.color_dsp);
+					draw_rectangle(0, _ks - 1, bar_show_w, _ks + ui(20), false);
+					
+					cc = colorMultiply(_cont.item.color_cur, COLORS.panel_animation_dope_key_bg);
+				}
 				
 				key_y	+= ui(20) + _expand * ui(10);
 				_cont.h	+= ui(20);
@@ -1319,7 +1329,7 @@ function Panel_Animation() : PanelContent() constructor {
 							prop.animators[k].y = key_y;
 						
 							draw_set_color(c_red);
-						
+							
 							if(_prop == value_focusing)			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, 0, key_y - ui(8), bar_show_w, ui(16), COLORS.panel_animation_graph_select, 1);
 							else if(_prop == value_hovering)	draw_sprite_stretched_ext(THEME.menu_button_mask, 0, 0, key_y - ui(6), bar_show_w, ui(12), COLORS.panel_animation_graph_bg, 1);
 							
@@ -1334,10 +1344,10 @@ function Panel_Animation() : PanelContent() constructor {
 						}
 					}
 					
-					draw_set_color(cc);
-					draw_set_alpha(0.5);
-					draw_rectangle(0, _ks, bar_show_w, key_y, false);
-					draw_set_alpha(1);
+					if(_cont.item.color_cur > -1) {
+						draw_set_color(cc);
+						draw_rectangle(0, _ks, bar_show_w, key_y - ui(10), false);
+					}
 				}
 				
 				key_y -= _expand * ui(10);
