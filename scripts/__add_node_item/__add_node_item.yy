@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "assets_data",
+  "name": "__add_node_item",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "components",
-    "path": "folders/main/components.yy",
+    "name": "__base__",
+    "path": "folders/nodes/data/__base__.yy",
   },
 }

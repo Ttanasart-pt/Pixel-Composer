@@ -29,6 +29,9 @@ function Panel_Inspector() : PanelContent() constructor {
 	#region ---- properties ----
 		prop_hover		= noone;
 		prop_selecting  = noone;
+		
+		prop_highlight      = noone;
+		prop_highlight_time = 0;
 	
 		prop_dragging   = noone;
 		prop_sel_drag_x = 0;
@@ -120,6 +123,55 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 			}),
 		]
+		
+		__dialog_junction = noone;
+		menu_junc_reset_value	 = menuItem(__txtx("panel_inspector_reset", "Reset value"),						function() { __dialog_junction.resetValue();		});
+		menu_junc_add_anim		 = menuItem(__txtx("panel_inspector_add", "Add animation"),						function() { __dialog_junction.setAnim(true);		});
+		menu_junc_rem_anim		 = menuItem(__txtx("panel_inspector_remove", "Remove animation"),				function() { __dialog_junction.setAnim(false);		});
+		menu_junc_combine_axis	 = menuItem(__txtx("panel_inspector_axis_combine", "Combine axis"),				function() { __dialog_junction.sep_axis = false;	});
+		menu_junc_separate_axis	 = menuItem(__txtx("panel_inspector_axis_separate", "Separate axis"),			function() { __dialog_junction.sep_axis = true;		});
+		menu_junc_expression_ena = menuItem(__txtx("panel_inspector_use_expression", "Use expression"),			function() { __dialog_junction.expUse = true;		});
+		menu_junc_expression_dis = menuItem(__txtx("panel_inspector_disable_expression", "Disable expression"), function() { __dialog_junction.expUse = false;		});
+		menu_junc_extract		 = menuItem(__txtx("panel_inspector_extract_single", "Extract to node"),		function() { __dialog_junction.extractNode();		});
+		
+		menu_junc_copy	= menuItem(__txt("Copy"),	function() { clipboard_set_text(__dialog_junction.getShowString()); },	THEME.copy,  ["Inspector", "Copy property"]);
+		menu_junc_paste	= menuItem(__txt("Paste"),	function() { __dialog_junction.setString(clipboard_get_text()); },		THEME.paste, ["Inspector", "Paste property"]);
+		
+		function setSelectingItemColor(color) { 
+			if(__dialog_junction == noone) return; 
+			
+			__dialog_junction.color = color;
+			
+			if(__dialog_junction.value_from != noone)
+				__dialog_junction.value_from.color = color;
+			var _val_to = __dialog_junction.getJunctionTo();
+			for( var i = 0, n = array_length(_val_to); i < n; i++ ) 
+				_val_to[i].color = color;
+		}
+		
+		var _clrs = COLORS.timeline_blend;
+		var _item = array_create(array_length(_clrs));
+	
+		for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
+			_item[i] = [ 
+				[ THEME.timeline_color, i > 0, _clrs[i] ], 
+				function(_data) { 
+					setSelectingItemColor(_data.color);
+				}, "", { color: i == 0? -1 : _clrs[i] }
+			];
+		}
+	
+		array_push(_item, [ 
+			[ THEME.timeline_color, 2 ], 
+			function(_data) { 
+				var dialog = dialogCall(o_dialog_color_selector);
+				dialog.selector.onApply = setSelectingItemColor;
+				dialog.onApply = setSelectingItemColor;
+			}
+		]);
+	
+		menu_junc_color = menuItemGroup(__txt("Color"), _item);
+		menu_junc_color.spacing = ui(24);
 	#endregion
 	
 	function setInspecting(inspecting) { #region
@@ -333,6 +385,11 @@ function Panel_Inspector() : PanelContent() constructor {
 		return hh;
 	} #endregion
 	
+	static highlightProp = function(prop) { #region
+		prop_highlight      = prop;
+		prop_highlight_time = 60;
+	} #endregion
+	
 	static drawNodeProperties = function(_y, _m, _inspecting = inspecting) { #region
 		var con_w = contentPane.surface_w - ui(4); 
 		var _hover = pHOVER && contentPane.hover;
@@ -494,28 +551,35 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 			
 			#region ++++ draw widget ++++
-				var lb_h    = line_get_height(f_p0) + ui(8);
-				var lb_w    = line_get_width(jun.getName(), f_p0) + ui(16);
-				var padd    = ui(8);
+				var lb_h = line_get_height(f_p0) + ui(8);
+				var lb_w = line_get_width(jun.getName(), f_p0) + ui(16);
+				var lb_x = ui(48) + (ui(24) * (jun.color != -1));
+				var padd = ui(8);
 			
-				var _selY	= yy - ui(0);
-				var lbHov   = point_in_rectangle(_m[0], _m[1], ui(48), _selY, ui(48) + lb_w, _selY + lb_h);
-				if(lbHov) 
-					draw_sprite_stretched_ext(THEME.group_label, 0, ui(48), _selY + ui(2), lb_w, lb_h - ui(4), COLORS._main_icon_dark, 0.85);
+				var _selY = yy;
+				var lbHov = point_in_rectangle(_m[0], _m[1], lb_x, _selY, lb_x + lb_w, _selY + lb_h);
+				if(lbHov) draw_sprite_stretched_ext(THEME.group_label, 0, lb_x, _selY + ui(2), lb_w, lb_h - ui(4), COLORS._main_icon_dark, 0.85);
 				
 				var widg    = drawWidget(ui(16), yy, contentPane.surface_w - ui(24), _m, jun, false, pHOVER && contentPane.hover, pFOCUS, contentPane, ui(16) + x, top_bar_h + y);
 				var widH    = widg[0];
 				var mbRight = widg[1];
-			
+				
 				hh += lb_h + widH + padd;
 			
 				var _selY1 = yy + lb_h + widH + ui(2);
-				var _selH  = _selY1 - _selY;
-			
+				var _selH  = _selY1 - _selY + ui(4);
+				
+				if(jun == prop_highlight && prop_highlight_time) {
+					if(prop_highlight_time == 60)
+						contentPane.setScroll(_y - yy);
+					var aa = min(1, prop_highlight_time / 30);
+					draw_sprite_stretched_ext(THEME.ui_panel_active, 0, ui(4), yy, contentPane.surface_w - ui(4), _selH, COLORS._main_accent, aa);
+				}
+				
 				if(_hover && lbHov) {
 					if(prop_dragging == noone && mouse_press(mb_left, pFOCUS)) {
 						prop_dragging = jun;
-					
+						
 						prop_sel_drag_x = mouse_mx;
 		  				prop_sel_drag_y = mouse_my;
 					}
@@ -543,7 +607,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						NODE_DROPPER_TARGET.expressionUpdate(); 
 					}
 				} else 
-					draw_sprite_stretched_ext(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
 				
 				if(anim_toggling) {
 					jun.setAnim(!jun.is_anim);
@@ -556,41 +620,15 @@ function Panel_Inspector() : PanelContent() constructor {
 					prop_selecting = jun;
 						
 				if(mouse_press(mb_right, pFOCUS && mbRight)) { #region right click menu
-					var _menuItem = [];
+					var _menuItem = [ menu_junc_color, -1 ];
 					
 					if(i < amoIn) {
-						array_push(_menuItem, 
-							menuItem(__txtx("panel_inspector_reset", "Reset value"), function() { 
-								__dialog_junction.resetValue();
-								}),
-							menuItem(jun.is_anim? __txtx("panel_inspector_remove", "Remove animation") : __txtx("panel_inspector_add", "Add animation"), function() { 
-								__dialog_junction.setAnim(!__dialog_junction.is_anim); 
-								}),
-						);
-						
-						if(jun.sepable) {
-							array_push(_menuItem, 
-								menuItem(jun.sep_axis? __txtx("panel_inspector_axis_combine", "Combine axis") : __txtx("panel_inspector_axis_separate", "Separate axis"), function() { 
-									__dialog_junction.sep_axis = !__dialog_junction.sep_axis; 
-									}),
-							);
-						}
-						
+						array_push(_menuItem, menu_junc_reset_value, jun.is_anim? menu_junc_rem_anim : menu_junc_add_anim);
+						if(jun.sepable) array_push(_menuItem, jun.sep_axis? menu_junc_combine_axis : menu_junc_separate_axis);
 						array_push(_menuItem, -1);
 					}
 						
-					array_push(_menuItem, 
-						menuItem(__txtx("panel_inspector_use_expression", "Use expression"), function() {
-							__dialog_junction.expUse = !__dialog_junction.expUse;
-							}),
-						-1,
-						menuItem(__txt("Copy"), function() {
-							clipboard_set_text(__dialog_junction.getShowString());
-							}, THEME.copy, ["Inspector", "Copy property"]),
-						menuItem(__txt("Paste"), function() {
-							__dialog_junction.setString(clipboard_get_text());
-							}, THEME.paste, ["Inspector", "Paste property"]),
-					);
+					array_push(_menuItem, jun.expUse? menu_junc_expression_dis : menu_junc_expression_ena, -1, menu_junc_copy, menu_junc_paste);	
 					
 					if(jun.extract_node != "") {
 						if(is_array(jun.extract_node)) {
@@ -603,12 +641,9 @@ function Panel_Inspector() : PanelContent() constructor {
 									
 								return submenuCall(_dat, arr);
 							}).setIsShelf();
-							array_insert(_menuItem, 2, ext);
-						} else {
-							array_insert(_menuItem, 2, menuItem(__txtx("panel_inspector_extract_single", "Extract to node"), function() { 
-								__dialog_junction.extractNode();
-							}));
-						}
+							array_push(_menuItem, ext);
+						} else
+							array_push(_menuItem, menu_junc_extract);
 					}
 					
 					var dia = menuCall("inspector_value_menu",,, _menuItem,, jun);
@@ -655,6 +690,12 @@ function Panel_Inspector() : PanelContent() constructor {
 					prop_dragging = noone;
 			}
 		#endregion
+		
+		if(prop_highlight_time) {
+			prop_highlight_time--;
+			if(prop_highlight_time == 0)
+				prop_highlight = noone;
+		}
 		
 		return hh;
 	} #endregion

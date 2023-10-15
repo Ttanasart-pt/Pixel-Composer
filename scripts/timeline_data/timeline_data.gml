@@ -2,7 +2,7 @@ function timelineItem() constructor {
 	show = true;
 	
 	color = -1;
-	color_cur = -1;
+	color_cur = CDEF.main_grey;
 	color_dsp = -1;
 	parent = noone;
 	
@@ -49,8 +49,8 @@ function timelineItemNode(node) : timelineItem() constructor {
 			col = _context.item.color;
 			break;
 		}
-		color_cur = col;
 		if(col == -1) col = CDEF.main_grey;
+		color_cur = col;
 		
 		var cc  = colorMultiply(col, COLORS.panel_animation_dope_bg);
 		
@@ -131,7 +131,10 @@ function timelineItemGroup() : timelineItem() constructor {
 	static rename = function() {
 		renaming = true;
 		tb_name.setFocusHover(true, true);
-		run_in(1, function() { tb_name.activate(); });
+		run_in(1, function() { 
+			tb_name._current_text = name;
+			tb_name.activate(); 
+		});
 	}
 	
 	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) { #region
@@ -151,8 +154,8 @@ function timelineItemGroup() : timelineItem() constructor {
 			hig = false;
 			break;
 		}
-		color_cur = col;
 		if(col == -1) col = CDEF.main_grey;
+		color_cur = col;
 		
 		var bnd = hig? merge_color(c_white, COLORS.panel_animation_dope_bg, 0.8) : COLORS.panel_animation_dope_bg;
 		var cc  = colorMultiply(col, bnd);
@@ -199,6 +202,16 @@ function timelineItemGroup() : timelineItem() constructor {
 		_item.parent = self;
 		
 		return self;
+	} #endregion
+	
+	static destroy = function() { #region
+		var ind = array_find(parent.contents, self);
+		array_delete(parent.contents, ind, 1);
+		
+		for( var i = 0, n = array_length(contents); i < n; i++ ) {
+			array_insert(parent.contents, ind++, contents[i]);
+			contents[i].parent = parent;
+		}
 	} #endregion
 	
 	static serialize = function() { #region

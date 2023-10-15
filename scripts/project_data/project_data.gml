@@ -61,6 +61,8 @@
 		
 		timelines = new timelineItemGroup();
 		
+		notes = [];
+		
 		static cleanup = function() { #region
 			if(!ds_map_empty(nodeMap))
 				array_map(ds_map_keys_to_array(nodeMap), function(_key, _ind) { 

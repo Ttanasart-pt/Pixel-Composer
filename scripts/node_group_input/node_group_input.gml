@@ -144,7 +144,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _dtype	    = getInputData(0);
 		var _range	    = getInputData(1);
 		var _type		= getInputData(2);
-		var _val_type   = data_type_map[_type];
+		var _val_type   = array_safe_get(data_type_map, _type, VALUE_TYPE.any);
 		var _enum_label = getInputData(3);
 		var _vec_size	= getInputData(4);
 		var _step		= getInputData(7);
@@ -296,7 +296,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(is_undefined(inParent)) return;
 		
 		var _type		= getInputData(2);
-		var _val_type   = data_type_map[_type];
+		var _val_type   = array_safe_get(data_type_map, _type, VALUE_TYPE.any);
 		inputs[| 0].display_data.data    = array_safe_get(display_list, _val_type);
 		inputs[| 0].editWidget.data_list = array_safe_get(display_list, _val_type);
 			
@@ -330,7 +330,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _data   = getInputData(2);
 		_dstype = array_safe_get(array_safe_get(display_list, _data, []), _dstype);
 		
-		var _datype = data_type_map[_data];
+		var _datype = array_safe_get(data_type_map, _data, VALUE_TYPE.any);
 		
 		inputs[| 1].setVisible(false);
 		inputs[| 3].setVisible(false);

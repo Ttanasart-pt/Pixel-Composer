@@ -139,40 +139,86 @@ enum VALUE_TAG {
 
 function value_color(i) { #region
 	static JUNCTION_COLORS = [ 
-		$6691ff, //int 
-		$78e4ff, //float
-		$5d3f8c, //bool
-		$5dde8f, //color
-		$976bff, //surface
-		$4b00eb, //path
-		$d1c2c2, //curve
-		$e3ff66, //text
-		$b5b5ff, //object
-		$ffa64d, //node
+		#ff9166, //int 
+		#ffe478, //float
+		#8c3f5d, //bool
+		#8fde5d, //color
+		#ff6b97, //surface
+		#eb004b, //path
+		#c2c2d1, //curve
+		#66ffe3, //text
+		#ffb5b5, //object
+		#4da6ff, //node
 		#c1007c, //3D
-		$808080, //any
-		$b5b5ff, //path
-		$5dde8f, //particle
-		$e3ff66, //rigid
+		#808080, //any
+		#ffb5b5, //path
+		#8fde5d, //particle
+		#88ffe9, //rigid
 		#4da6ff, //fdomain
-		$5d3f8c, //struct
-		$6691ff, //strand
-		$d1c2c2, //mesh
-		$5dde8f, //trigger
-		$976bff, //atlas
+		#8c3f5d, //struct
+		#ff9166, //strand
+		#c2c2d1, //mesh
+		#8fde5d, //trigger
+		#ff6b97, //atlas
 		#c1007c, //d3vertex
-		$5dde8f, //gradient
-		$6691ff, //armature
-		$808080, //buffer
-		$976bff, //pbBox
-		$ffa64d, //d3Mesh	
-		$ffa64d, //d3Light	
-		$ffa64d, //d3Camera
-		$ffa64d, //d3Scene	
-		$976bff, //d3Material
-		$976bff, //dynaSurf
+		#8fde5d, //gradient
+		#ff9166, //armature
+		#808080, //buffer
+		#ff6b97, //pbBox
+		#4da6ff, //d3Mesh	
+		#4da6ff, //d3Light	
+		#4da6ff, //d3Camera
+		#4da6ff, //d3Scene	
+		#ff6b97, //d3Material
+		#ff6b97, //dynaSurf
 		#c2c2d1, //PCX
-		$5dde8f, //audiobit
+		#8fde5d, //audiobit
+	];
+	
+	if(i == 99) return $5dde8f;
+	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
+} #endregion
+
+function value_color_bg(i) { #region
+	return #3b3b4e;
+} #endregion
+
+function value_color_bg_array(i) { #region
+	static JUNCTION_COLORS = [ 
+		#e36956, //int 
+		#ff9166, //float
+		#5e315b, //bool
+		#3ca370, //color
+		#bd4882, //surface
+		#bb003c, //path
+		#83839b, //curve
+		#4da6ff, //text
+		#e28989, //object
+		#4b5bab, //node
+		#64003f, //3D
+		#4d4d4d, //any
+		#e28989, //path
+		#3ca370, //particle
+		#4da6ff, //rigid
+		#4b5bab, //fdomain
+		#5e315b, //struct
+		#e36956, //strand
+		#83839b, //mesh
+		#3ca370, //trigger
+		#9e2a69, //atlas
+		#64003f, //d3vertex
+		#3ca370, //gradient
+		#e36956, //armature
+		#4d4d4d, //buffer
+		#bd4882, //pbBox
+		#4b5bab, //d3Mesh	
+		#4b5bab, //d3Light	
+		#4b5bab, //d3Camera
+		#4b5bab, //d3Scene	
+		#bd4882, //d3Material
+		#bd4882, //dynaSurf
+		#83839b, //PCX
+		#3ca370, //audiobit
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -561,6 +607,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		drag_my   = 0;
 		drag_sx   = 0;
 		drag_sy   = 0;
+		
+		color = -1;
+		color_display = 0;
 	#endregion
 	
 	#region ---- timeline ----
@@ -1891,28 +1940,30 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!isVisible()) return false;
 		
 		var ss  = max(0.25, _s / 2);
-		var is_hover = false;
+		var hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
+		var is_hover = hov && point_in_circle(_mx, _my, x, y, 10 * _s * sca);
 		
-		if(PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, x, y, 10 * _s * sca)) {
-			//var _to = getJunctionTo();
-			//var _ss = "";
-			//for( var i = 0, n = array_length(_to); i < n; i++ ) 
-			//	_ss += (i? ", " : "") + _to[i].internalName;
-			//TOOLTIP = _ss;
-			
-			is_hover = true;
-			if(type == VALUE_TYPE.action)
-				junction_drawing = [THEME.node_junction_inspector, 1];
-			else
-				junction_drawing = [isArray()? THEME.node_junctions_array_hover : THEME.node_junctions_single_hover, draw_junction_index];
+		var _bgS = THEME.node_junctions_bg;
+		var _fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
+		
+		var _bgC, _fgC;
+		
+		if(color == -1) {
+			_bgC = isArray()? value_color_bg_array(draw_junction_index) : value_color_bg(draw_junction_index);
+			_fgC = value_color(draw_junction_index);
 		} else {
-			if(type == VALUE_TYPE.action)
-				junction_drawing = [THEME.node_junction_inspector, 0];
-			else
-				junction_drawing = [isArray()? THEME.node_junctions_array : THEME.node_junctions_single, draw_junction_index];
+			_bgC = isArray()? merge_color(color, CDEF.main_dkgrey, 0.35) : value_color_bg(draw_junction_index);
+			_fgC = color;
 		}
 		
-		draw_sprite_ext(junction_drawing[0], junction_drawing[1], x, y, ss, ss, 0, c_white, 1);
+		if(type == VALUE_TYPE.action) {
+			draw_sprite_ext(THEME.node_junction_inspector, is_hover, x, y, ss, ss, 0, c_white, 1);
+			color_display = #8fde5d;
+		} else {
+			draw_sprite_ext(_bgS, draw_junction_index, x, y, ss, ss, 0, _bgC, 1);
+			draw_sprite_ext(_fgS, draw_junction_index, x, y, ss, ss, 0, _fgC, 1);
+			color_display = _fgC;
+		}
 		
 		return is_hover;
 	} #endregion
@@ -2065,11 +2116,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var _fade = PREF_MAP[? "connection_line_highlight_fade"];
 			var _colr = _selc? 1 : _fade;
 			
-			c0 = merge_color(bg, value_color(value_from.type), _colr);
-			c1 = merge_color(bg, value_color(type),			   _colr);
+			c0 = merge_color(bg, value_from.color_display, _colr);
+			c1 = merge_color(bg, color_display,			   _colr);
 		} else {
-			c0 = value_color(value_from.type);
-			c1 = value_color(type);
+			c0 = value_from.color_display;
+			c1 = color_display;
 		}
 		
 		var ss  = _s * aa;
@@ -2126,7 +2177,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var corner = PREF_MAP[? "connection_line_corner"] * ss;
 		var th     = PREF_MAP[? "connection_line_width"]  * ss;
 		
-		var col = value_color(type);
+		var col = color_display;
 		draw_set_color(col);
 		
 		switch(PREF_MAP[? "curve_connection_line"]) {
@@ -2313,6 +2364,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map.attributes   = attributes;
 		
 		_map.name_custom = name_custom;
+		_map.color       = color;
 		
 		return _map;
 	} #endregion
@@ -2341,7 +2393,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_y = struct_try_get(_map, "shift_y");
 		
 		name_custom = struct_try_get(_map, "name_custom", false);
-		if(name_custom) name 		= struct_try_get(_map, "name", name);
+		if(name_custom) name = struct_try_get(_map, "name", name);
+		color       = struct_try_get(_map, "color", -1);
 		
 		animator.deserialize(struct_try_get(_map, "raw_value"), scale);
 		

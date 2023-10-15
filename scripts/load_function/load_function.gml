@@ -135,6 +135,12 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 	if(struct_has(_load_content, "attributes"))
 		struct_override(PROJECT.attributes, _load_content.attributes);
 	
+	if(struct_has(_load_content, "notes")) {
+		PROJECT.notes = array_create(array_length(_load_content.notes));
+		for( var i = 0, n = array_length(_load_content.notes); i < n; i++ )
+			PROJECT.notes[i] = new Note.deserialize(_load_content.notes[i]);
+	}
+	
 	try {
 		if(struct_has(_load_content, "metadata"))
 			METADATA.deserialize(_load_content.metadata);

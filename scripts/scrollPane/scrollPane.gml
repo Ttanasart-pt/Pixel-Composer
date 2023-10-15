@@ -31,6 +31,12 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		surface_h   = _h;
 	}
 	
+	static setScroll = function(_scroll_y) { #region
+		gml_pragma("forceinline");
+		
+		scroll_y_to  = clamp(_scroll_y, -content_h, 0);
+	} #endregion
+	
 	static draw = function(x, y, _mx = mouse_mx - x, _my = mouse_my - y) {
 		self.x = x;
 		self.y = y;

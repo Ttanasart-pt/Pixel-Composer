@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "assets_data",
+  "name": "note_data",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

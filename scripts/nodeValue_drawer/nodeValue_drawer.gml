@@ -74,12 +74,19 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		cc = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 	}
 	
-	if(global_var)
-		if(string_pos(" ", _name)) cc = COLORS._main_value_negative;
+	if(global_var) if(string_pos(" ", _name)) cc = COLORS._main_value_negative;
 	
-	draw_set_text(breakLine? f_p0 : f_p1, fa_left, fa_center, cc);
-	draw_text_add(xx + ui(40), lb_y - ui(2), _name);
+	draw_set_text(f_p0, fa_left, fa_center, cc);
 	var lb_w = string_width(_name) + ui(48);
+	var lb_x = xx + ui(40);
+	
+	if(jun.color != -1) { #region
+		draw_sprite_ext(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);
+		lb_x += ui(24);
+		lb_w += ui(24);
+	} #endregion
+	
+	draw_text_add(lb_x, lb_y - ui(2), _name);
 			
 	#region tooltip
 		if(jun.tooltip != "") {

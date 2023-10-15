@@ -701,7 +701,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(node, "Widget Test",	s_node_print,		"Node_Widget_Test",	[1, Node_Widget_Test]);
 			
 			ds_list_add(node, "System");
-			addNodeObject(node, "Execute Shell",	s_node_shell_excecute,	"Node_Shell",		[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
+			addNodeObject(node, "Execute Shell",	s_node_shell_excecute,	"Node_Shell",	[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
+			//addNodeObject(node, "Note",				s_node_note,			"Node_Note",	[1, Node_Note]).setVersion(11530);
 		#endregion
 		
 		var actions = ds_list_create();

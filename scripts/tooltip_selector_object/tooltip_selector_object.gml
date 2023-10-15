@@ -14,7 +14,7 @@ function tooltipSelector(title, data, index = 0) constructor {
 		var lh = line_get_height();
 		
 		var _h = (th + ui(6)) + (lh + ui(4)) * array_length(data);
-		var _w = string_width(title);
+		var _w = ui(16) + string_width(title);
 		
 		for( var i = 0, n = array_length(data); i < n; i++ ) 
 			_w = max(_w, ui(8 + 16) + string_width(data[i]));
@@ -27,7 +27,7 @@ function tooltipSelector(title, data, index = 0) constructor {
 		
 		var yy = my + ui(8);
 		draw_set_font(f_p0);
-		draw_text(mx + ui(8), yy, title);
+		draw_text(mx + ui(12), yy, title);
 		yy += th + ui(6);
 		
 		draw_set_font(f_p1);

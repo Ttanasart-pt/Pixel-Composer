@@ -5,6 +5,7 @@ function __Node_Base(x, y) constructor {
 	display_name = "";
 	inputs  = ds_list_create();
 	outputs = ds_list_create();
+	input_value_map = {};
 	
 	active_index	= -1;
 	preview_index	= 0;

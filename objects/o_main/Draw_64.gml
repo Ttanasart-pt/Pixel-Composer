@@ -1,12 +1,14 @@
 /// @description init
 draw_clear(COLORS.bg);
 
-if(OS == os_windows && gameframe_is_minimized()) {
-	//gameframe_update();
-	exit;
-} else if(OS == os_macosx) {
-	mac_window_step();
-}
+#region gameframe
+	if(OS == os_windows && gameframe_is_minimized()) {
+		//gameframe_update();
+		exit;
+	} else if(OS == os_macosx) {
+		mac_window_step();
+	}
+#endregion
 
 #region widget scroll
 	if(!WIDGET_TAB_BLOCK) {
@@ -45,6 +47,11 @@ if(OS == os_windows && gameframe_is_minimized()) {
 	panelDraw();
 	
 	gameframe_update();
+#endregion
+
+#region notes
+	for( var i = 0, n = array_length(PROJECT.notes); i < n; i++ )
+		PROJECT.notes[i].draw();
 #endregion
 
 #region window

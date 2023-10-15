@@ -54,6 +54,8 @@ event_inherited();
 	#endregion
 	
 	function rightClick(node) { #region
+		if(!is_instanceof(node, NodeObject)) return;
+		
 		node_menu_selecting = node;
 		var fav  = array_exists(global.FAV_NODES, node.node);
 		
@@ -133,10 +135,20 @@ event_inherited();
 			return;
 		}
 		
+		if(is_instanceof(_node, AddNodeItem)) {
+			_node.onClick({
+				node_called,
+				junction_hovering
+			});
+			instance_destroy(o_dialog_menubox);
+			instance_destroy();
+			return;
+		}
+		
 		var _new_node = noone;
 		var _inputs = 0, _outputs = 0;
 		
-		if(instanceof(_node) == "NodeObject") {
+		if(is_instanceof(_node, NodeObject)) {
 			_new_node = _node.build(node_target_x, node_target_y,, _param);
 			if(!_new_node) {
 				instance_destroy();
@@ -153,7 +165,7 @@ event_inherited();
 			
 			_inputs  = _new_node.inputs;
 			_outputs = _new_node.outputs;
-		} else if(instanceof(_node) == "NodeAction") {
+		} else if(is_instanceof(_node, NodeAction)) {
 			var res = _node.build(node_target_x, node_target_y,, _param);
 			
 			if(_node.inputNode != noone)
@@ -413,10 +425,12 @@ event_inherited();
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				
 				BLEND_OVERRIDE;
-				if(instanceof(_node) == "NodeObject")
+				if(is_instanceof(_node, NodeObject))
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-				else if(instanceof(_node) == "NodeAction")
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS._main_value_positive, 1);
+				else if(is_instanceof(_node, NodeAction))
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_action, 1);
+				else if(is_instanceof(_node, AddNodeItem))
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_generic, 1);
 				else
 					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection, 1);
 				BLEND_NORMAL;
@@ -436,8 +450,8 @@ event_inherited();
 				if(sprite_exists(_node.spr)) 
 					draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y, 0.5);
 				
-				if(instanceof(_node) == "NodeAction")
-					draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS._main_value_positive);
+				if(is_instanceof(_node, NodeAction))
+					draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
 					
 				if(_node.getTooltip() != "") {
 					if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
@@ -459,10 +473,11 @@ event_inherited();
 					draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, _boxx + grid_size - ui(12), yy + ui(6));
 				}
 				
-				var fav = array_exists(global.FAV_NODES, _node.node);
-				if(fav) 
-					draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(10), yy + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
-					
+				if(is_instanceof(_node, NodeObject)) {
+					var fav = array_exists(global.FAV_NODES, _node.node);
+					if(fav) draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(10), yy + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
+				}
+				
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _node.getName(), -1, grid_width);
 				
@@ -549,8 +564,10 @@ event_inherited();
 						rightClick(_node);
 				}
 				
-				var fav = array_exists(global.FAV_NODES, _node.node);
-				if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(20), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
+				if(is_instanceof(_node, NodeObject)) {
+					var fav = array_exists(global.FAV_NODES, _node.node);
+					if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(20), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
+				}
 				
 				var spr_x = list_height / 2 + ui(32);
 				var spr_y = yy + list_height / 2;
@@ -561,8 +578,8 @@ event_inherited();
 					draw_sprite_ext(_node.spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
 				}
 				
-				if(instanceof(_node) == "NodeAction")
-					draw_sprite_ui_uniform(THEME.play_action, 0, spr_x + list_height / 2 - 8, spr_y + list_height / 2 - 8, 0.5, COLORS._main_value_positive);
+				if(is_instanceof(_node, NodeAction))
+					draw_sprite_ui_uniform(THEME.play_action, 0, spr_x + list_height / 2 - 8, spr_y + list_height / 2 - 8, 0.5, COLORS.add_node_blend_action);
 					
 				var tx = list_height + ui(40);
 				
@@ -667,7 +684,7 @@ event_inherited();
 				var _node = _content[| j];
 
 				if(is_string(_node)) continue;
-				if(ds_map_exists(search_map, _node.node)) continue;
+				if(ds_map_exists(search_map, _node)) continue;
 				if(struct_try_get(_node, "deprecated")) continue;
 				
 				var match = string_partial_match(string_lower(_node.getName()), search_lower);
@@ -683,7 +700,7 @@ event_inherited();
 				if(match == -9999) continue;
 				
 				ds_priority_add(pr_list, [_node, param], match);
-				search_map[? _node.node] = 1;
+				search_map[? _node] = 1;
 			}
 		}
 		
@@ -747,10 +764,12 @@ event_inherited();
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				
 				BLEND_OVERRIDE;
-				if(instanceof(_node) == "NodeObject")
+				if(is_instanceof(_node, NodeObject))
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-				else if(instanceof(_node) == "NodeAction")
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS._main_value_positive, 1);
+				else if(is_instanceof(_node, NodeAction))
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_action, 1);
+				else if(is_instanceof(_node, AddNodeItem))
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_generic, 1);
 				else
 					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection, 1);
 				BLEND_NORMAL;
@@ -773,8 +792,8 @@ event_inherited();
 					draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 				}
 				
-				if(instanceof(_node) == "NodeAction")
-					draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS._main_value_positive);
+				if(is_instanceof(_node, NodeAction))
+					draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
 					
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 				var txt = _node.getName();
@@ -804,10 +823,11 @@ event_inherited();
 					} else 
 						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
 				}
-				var fav = struct_has(_node, "node") && array_exists(global.FAV_NODES, _node.node);
-				if(fav) 
-					draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(10), yy + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
-					
+				if(is_instanceof(_node, NodeObject)) {
+					var fav = struct_has(_node, "node") && array_exists(global.FAV_NODES, _node.node);
+					if(fav) draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(10), yy + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
+				}
+				
 				if(node_focusing == i)
 					search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
 					
@@ -857,12 +877,14 @@ event_inherited();
 				
 					draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 					
-					if(instanceof(_node) == "NodeAction")
-						draw_sprite_ui_uniform(THEME.play_action, 0, _sx + list_height / 2 - 8, _sy + list_height / 2 - 8, 0.5, COLORS._main_value_positive);
+					if(is_instanceof(_node, NodeAction))
+						draw_sprite_ui_uniform(THEME.play_action, 0, _sx + list_height / 2 - 8, _sy + list_height / 2 - 8, 0.5, COLORS.add_node_blend_action);
 				}
 					
-				var fav = struct_has(_node, "node") && array_exists(global.FAV_NODES, _node.node);
-				if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(20), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
+				if(is_instanceof(_node, NodeObject)) {
+					var fav = struct_has(_node, "node") && array_exists(global.FAV_NODES, _node.node);
+					if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(20), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
+				}
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(list_height + ui(40), yy + list_height / 2, _node.getName());

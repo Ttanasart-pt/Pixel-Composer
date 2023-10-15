@@ -352,7 +352,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return array_exists(global.loop_nodes, instanceof(group));
 	} #endregion
 	
-	static move = function(_x, _y) { #region
+	static move = function(_x, _y, _s) { #region
 		if(x == _x && y == _y) return;
 		
 		x = _x;
@@ -730,8 +730,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		var aa = 0.25 + 0.5 * renderActive;
 		if(!isHighlightingInGraph()) aa *= 0.25;
+		var cc = timeline_item.color == -1? color : timeline_item.color;
 		
-		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, aa);
+		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, cc, aa);
 	} #endregion 
 	
 	static drawGetBbox = function(xx, yy, _s) { #region
@@ -769,8 +770,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		var aa = 0.25 + 0.5 * renderActive;
 		if(!isHighlightingInGraph()) aa *= 0.25;
+		var cc = timeline_item.color == -1? color : timeline_item.color;
 		
-		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, aa);
+		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), cc, aa);
 		
 		var cc = COLORS._main_text;
 		if(PREF_MAP[? "node_show_render_status"] && !rendered)
@@ -838,14 +840,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) { #region
 		if(draw_graph_culled) return;
 		if(!active) return;
+		
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		var jun;
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		show_input_name  = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx - 8 * _s, yy + 20 * _s, xx + 8 * _s, yy + h * _s);
-		show_output_name = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
+		var _hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == self);
+		show_input_name  = _hov && point_in_rectangle(_mx, _my, xx - 8 * _s, yy + 20 * _s, xx + 8 * _s, yy + h * _s);
+		show_output_name = _hov && point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
 		
 		if(show_input_name) {
 			for(var i = 0; i < amo; i++) {

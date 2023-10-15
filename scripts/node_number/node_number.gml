@@ -262,9 +262,12 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var vec  = getSingleValue(0,, true);
 		var bbox = drawGetBbox(xx, yy, _s);
 		
+		var v0 = array_safe_get(vec, 0);
+		var v1 = array_safe_get(vec, 1);
+		
 		if(disp == 0 || inputs[| 0].value_from != noone || inputs[| 1].value_from != noone) {
 			draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
-			var str	= string(vec[0]) + "\n" + string(vec[1]);
+			var str	= $"{v0}\n{v1}";
 			var ss	= string_scale(str, bbox.w, bbox.h);
 			draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 			return;
@@ -300,9 +303,9 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 1);
 		draw_set_alpha(1);
 		
-		var pin_x   = (vec[0] - wd_minx) / (wd_maxx - wd_minx);
-		var pin_y   = (vec[1] - wd_miny) / (wd_maxy - wd_miny);
-		if(point_in_rectangle(vec[0], vec[1], wd_minx, wd_miny, wd_maxx, wd_maxy)) {
+		var pin_x   = (v0 - wd_minx) / (wd_maxx - wd_minx);
+		var pin_y   = (v1 - wd_miny) / (wd_maxy - wd_miny);
+		if(point_in_rectangle(v0, v1, wd_minx, wd_miny, wd_maxx, wd_maxy)) {
 			var pin_dx  = bbox.x0 + bbox.w * pin_x;
 			var pin_dy  = bbox.y1 - bbox.h * pin_y;
 			draw_sprite_ext(THEME.node_coor_pin, 0, pin_dx, pin_dy, 1, 1, 0, c_white, 1);
@@ -384,7 +387,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
-		var str	= "[" + string(vec[0]) + ", " + string(vec[1]) + "]";
+		var str	= $"[{v0}, {v1}]";
 		draw_text(bbox.xc, bbox.y1 - 4, str);
 	}
 }
@@ -433,7 +436,11 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 		var vec = getSingleValue(0,, true);
-		var str	= string(vec[0]) + "\n" + string(vec[1]) + "\n" + string(vec[2]);
+		var v0 = array_safe_get(vec, 0);
+		var v1 = array_safe_get(vec, 1);
+		var v2 = array_safe_get(vec, 2);
+
+		var str	= $"{v0}\n{v1}\n{v2}";
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);
@@ -488,7 +495,12 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 		var vec = getSingleValue(0,, true);
-		var str	= string(vec[0]) + "\n" + string(vec[1]) + "\n" + string(vec[2]) + "\n" + string(vec[3]);
+		var v0 = array_safe_get(vec, 0);
+		var v1 = array_safe_get(vec, 1);
+		var v2 = array_safe_get(vec, 2);
+		var v3 = array_safe_get(vec, 3);
+		
+		var str	= $"{v0}\n{v1}\n{v2}\n{v3}";
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);

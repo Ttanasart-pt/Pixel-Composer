@@ -41,6 +41,7 @@ function save_serialize(project = PROJECT, _outMap = false) {
 	_map.attributes  = project.attributes;
 	
 	_map.timelines   = project.timelines.serialize();
+	_map.notes       = array_map(project.notes, function(note) { return node.serialize(); } );
 	
 	var prev = PANEL_PREVIEW.getNodePreviewSurface();
 	if(!is_surface(prev)) _map.preview = "";
