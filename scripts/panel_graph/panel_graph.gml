@@ -948,13 +948,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(val) {
 					if(key_mod_press(SHIFT))
 						TOOLTIP = [ val.getValue(), val.type ];
-						
-					if(key_mod_press(CTRL) && val.value_from != noone) {
-						value_focus = val.value_from;
-						if(mouse_press(mb_left))
-							val.removeFrom();
-					} else
-						value_focus = val;
+					value_focus = val;
 				}
 			}
 			
@@ -1132,6 +1126,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			if(value_focus && value_focus != value_dragging && value_focus.connect_type != value_dragging.connect_type)
 				target = value_focus;
+				
 			if(key_mod_press(CTRL) && node_hovering != noone) {
 				if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
 					target = node_hovering.getOutput(value_dragging);
@@ -1157,7 +1152,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				
 				for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
 					var _dmx = _mmx;
-					var _dmy = _mmy + (i - _stIndex) * 24 * graph_s;
+					var _dmy = value_draggings[i].connect_type == JUNCTION_CONNECT.output? _mmy + (i - _stIndex) * 24 * graph_s : _mmy;
 					
 					value_draggings[i].drawConnectionMouse(_dmx, _dmy, graph_s, target);
 				}
@@ -1169,11 +1164,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			if(mouse_release(mb_left)) {																		// CONNECT junction
 				if(target != noone) {
-					if(value_dragging.connect_type == JUNCTION_CONNECT.input)
-						value_dragging.setFrom(target);
-					else if(!_addInput)
+					if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+						if(array_empty(value_draggings))
+							value_dragging.setFrom(target);
+						else {
+							for( var i = 0, n = array_length(value_draggings); i < n; i++ )
+								value_draggings[i].setFrom(target);
+						}
+					} else if(!_addInput) {
 						target.setFrom(value_dragging);
-					else { //addInput
+					} else { //addInput
 						if(array_empty(value_draggings))
 							target.node.addInput(value_dragging);
 						else {
@@ -1204,24 +1204,44 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			value_draggings = [];
 			
 			if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
-				var _jlist = ds_priority_create();
-				
-				for( var i = 0, n = ds_list_size(nodes_select_list); i < n; i++ ) {
-					var _node = nodes_select_list[| i];
-				
-					for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
-						var _junction = _node.outputs[| j];
-						if(!_junction.visible) continue;
-						if(value_bit(_junction.type) & value_bit(value_dragging.type) == 0) continue;
+				if(key_mod_press(CTRL)) {
+					var _to = value_dragging.getJunctionTo();
 					
-						ds_priority_add(_jlist, _junction, _junction.y);
+					if(array_length(_to)) {
+						value_dragging  = _to[0];
+						value_draggings = array_create(array_length(_to));
+						
+						for( var i = 0, n = array_length(_to); i < n; i++ ) {
+							value_draggings[i] = _to[i];
+							_to[i].removeFrom();
+						}
 					}
+				} else {
+					var _jlist = ds_priority_create();
+					
+					for( var i = 0, n = ds_list_size(nodes_select_list); i < n; i++ ) {
+						var _node = nodes_select_list[| i];
+						
+						for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
+							var _junction = _node.outputs[| j];
+							if(!_junction.visible) continue;
+							if(value_bit(_junction.type) & value_bit(value_dragging.type) == 0) continue;
+							
+							ds_priority_add(_jlist, _junction, _junction.y);
+						}
+					}
+					
+					while(!ds_priority_empty(_jlist))
+						array_push(value_draggings, ds_priority_delete_min(_jlist));
+					
+					ds_priority_destroy(_jlist);
 				}
-				
-				while(!ds_priority_empty(_jlist))
-					array_push(value_draggings, ds_priority_delete_min(_jlist));
-				
-				ds_priority_destroy(_jlist);
+			} else {
+				if(key_mod_press(CTRL) && value_dragging.value_from) {
+					var fr = value_dragging.value_from;
+					value_dragging.removeFrom();
+					value_dragging = fr;
+				}
 			}
 		}
 		
