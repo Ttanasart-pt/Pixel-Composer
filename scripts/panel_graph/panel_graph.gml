@@ -1144,7 +1144,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			if(key_mod_press(CTRL) && target != noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input)
+			if(target != noone && target.value_from == noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input)
 				_addInput = true;
 			
 			var _mmx = target != noone? target.x : _mx;

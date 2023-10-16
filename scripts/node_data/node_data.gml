@@ -724,13 +724,18 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return !high || _selc;
 	} #endregion
 	
+	static getColor = function() { #region
+		gml_pragma("forceinline");
+		return timeline_item.color == -1? color : timeline_item.color;
+	} #endregion
+	
 	static drawNodeBase = function(xx, yy, _s) { #region
 		if(draw_graph_culled) return;
 		if(!active) return;
 		
 		var aa = 0.25 + 0.5 * renderActive;
 		if(!isHighlightingInGraph()) aa *= 0.25;
-		var cc = timeline_item.color == -1? color : timeline_item.color;
+		var cc = getColor();
 		
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, cc, aa);
 	} #endregion 
@@ -770,7 +775,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		var aa = 0.25 + 0.5 * renderActive;
 		if(!isHighlightingInGraph()) aa *= 0.25;
-		var cc = timeline_item.color == -1? color : timeline_item.color;
+		var cc = getColor();
 		
 		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), cc, aa);
 		

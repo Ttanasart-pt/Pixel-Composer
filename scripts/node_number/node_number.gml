@@ -11,9 +11,18 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	wd_slider = new slider(0, 1, 0.01, function(val) { inputs[| 0].setValue(val); } );
 	wd_slider.spr   = THEME.node_slider;
 	
-	wd_rotator = new rotator( function(val) { inputs[| 0].setValue(val); } );
-	wd_rotator.spr_bg   = THEME.node_rotator_bg;
-	wd_rotator.spr_knob = THEME.node_rotator_knob;
+	slider_value    = -1;
+	slider_surface  = -1;
+	slider_dragging = false;
+	slider_mx = 0;
+	slider_sx = 0;
+	slider_m  = 0;
+	
+	rotator_surface  = -1;
+	rotator_dragging = false;
+	rotator_s = 0;
+	rotator_p = 0;
+	rotator_m = 0;
 	
 	inputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
@@ -30,14 +39,14 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	outputs[| 0] = nodeValue("Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var __ax = getInputData(0);
 		if(is_array(__ax)) return;
 		
 		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var int  = getInputData(1);
 		var disp = getInputData(2);
 		
@@ -73,61 +82,140 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		}
 		
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-	}
+	} #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _res = _data[1]? round(_data[0]) : _data[0];
 		display_output = _res;
 		return _res; 
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
-		var val  = display_output;
+		var val  = getInputData(0);
 		var disp = getInputData(2);
 		var rang = getInputData(3);
 		var stp  = getInputData(4);
+		var _col = getColor();
 		
-		if(inputs[| 0].value_from != noone || disp == 0) {
+		if(inputs[| 0].value_from != noone || disp == 0) { #region
 			draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 			var str	= string(val);
 			var ss	= string_scale(str, bbox.w, bbox.h);
 			draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 			return;
-		}
+		} #endregion
 		
 		switch(disp) {
-			case 1 : 
-				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
-				var str	= string(val);
-				var ss	= min(1, string_scale(str, bbox.w, 20));
-				draw_text_transformed(bbox.xc, bbox.y0 + 20 / 2, str, ss, ss, 0);
+			case 1 : #region
+				draw_set_text(f_h2, fa_center, fa_center, _col);
+				draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, val, _s * 0.5, _s * 0.5, 0);
 				
-				var sl_x = bbox.x0 + 12 * _s;
-				var sl_y = bbox.y0 + (20 + 8 * _s);
-				var sl_w = bbox.w  - 24 * _s;
-				var sl_h = bbox.h  - (20 + 8 * _s);
+				var sl_w = bbox.w - 8 * _s;
+				var sl_h = _s * 40;
 				
-				wd_slider.minn		= rang[0];
-				wd_slider.maxx		= rang[1];
-				wd_slider.step		= stp;
-				wd_slider.handle_w  = 24 * _s;
+				var sl_x0 = bbox.x0 + 4 * _s;
+				var sl_x1 = sl_x0 + sl_w;
+				var sl_y0 = (bbox.y0 + (24 * _s) + bbox.y1) / 2 - sl_h / 2;
+				var sl_y1 = sl_y0 + sl_h;
 				
-				if(sl_h > 8) {
-					wd_slider.setFocusHover(_focus, _hover);
-					wd_slider.draw(sl_x, sl_y, sl_w, sl_h, val, [_mx, _my], 0);
-					draggable = !wd_slider.dragging;
+				var c0   = (draggable && !slider_dragging)? colorMultiply(CDEF.main_grey, _col) : colorMultiply(CDEF.main_white, _col);
+				var c1   = colorMultiply(CDEF.main_dkgrey, _col);
+				
+				var _minn = rang[0];
+				var _maxx = rang[1];
+					
+				slider_surface = surface_verify(slider_surface, sl_w, sl_h);
+				slider_value   = slider_value == -1? val : lerp_float(slider_value, val, 2.5);
+				
+				surface_set_shader(slider_surface, sh_ui_slider);
+					shader_set_color("c0", c0);
+					shader_set_color("c1", c1);
+					shader_set_dim("dimension", slider_surface);
+					shader_set_f("mouseProg", animation_curve_eval(ac_ripple, slider_m));
+					shader_set_f("prog", clamp((slider_value - _minn) / (_maxx - _minn), 0.1, 0.9));
+					
+					draw_sprite_stretched(s_fx_pixel, 0, 0, 0, sl_w, sl_h);
+				surface_reset_shader();
+				
+				draw_surface(slider_surface, sl_x0, sl_y0);
+				
+				if(slider_dragging) {
+					slider_m = lerp_float(slider_m, 1, 4);
+					
+					var _valM = (_mx - sl_x0) / (sl_x1 - sl_x0);
+					var _valL = lerp(_minn, _maxx, _valM);
+					    _valL = value_snap(_valL, stp);
+					inputs[| 0].setValue(_valL);
+					
+					if(mouse_release(mb_left))
+						slider_dragging = false;
+				} else 
+					slider_m = lerp_float(slider_m, 0, 5);
+				
+				draggable = true;
+				if(_hover && point_in_rectangle(_mx, _my, sl_x0, sl_y0, sl_x1, sl_y1)) {
+					if(mouse_press(mb_left, _focus) && is_real(val)) {
+						slider_dragging = true;
+						slider_mx = _mx;
+						slider_sx = val;
+					}
+					
+					draggable = false;
 				}
-				break;
-			case 2 : 
-				wd_rotator.scale = _s;
-				wd_rotator.setFocusHover(_focus, _hover);
-				wd_rotator.draw(bbox.xc, bbox.yc - 48 * _s, val, [_mx, _my], false);
 				
-				draggable = !wd_rotator.dragging;
-				break;
+				break; #endregion
+			case 2 : #region
+				var _ss  = min(bbox.w, bbox.h);
+				var c0   = (draggable && !rotator_dragging)? colorMultiply(CDEF.main_grey, _col) : colorMultiply(CDEF.main_white, _col);
+				var c1   = colorMultiply(CDEF.main_dkgrey, _col);
+				var _dst = point_distance(_mx, _my, bbox.xc, bbox.yc);
+				var _x0  = bbox.xc - _ss / 2;
+				var _y0  = bbox.yc - _ss / 2;
+				
+				rotator_surface = surface_verify(rotator_surface, _ss, _ss);
+				
+				surface_set_shader(rotator_surface, sh_ui_rotator);
+					shader_set_color("c0", c0);
+					shader_set_color("c1", c1);
+					shader_set_f("angle", degtorad(val));
+					shader_set_f("mouse", (_mx - _x0) / _ss, (_my - _y0) / _ss);
+					shader_set_f("mouseProg", animation_curve_eval(ac_ripple, rotator_m));
+					
+					draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _ss, _ss);
+				surface_reset_shader();
+				
+				draw_surface(rotator_surface, _x0, _y0);
+				
+				if(rotator_dragging) {
+					rotator_m = lerp_float(rotator_m, 1, 4);
+					var dir = point_direction(bbox.xc, bbox.yc, _mx, _my);
+					var dx  = angle_difference(dir, rotator_p);
+					rotator_p = dir;
+					
+					inputs[| 0].setValue(val + dx);
+					
+					if(mouse_release(mb_left))
+						rotator_dragging = false;
+				} else 
+					rotator_m = lerp_float(rotator_m, 0, 5);
+				
+				draggable = true;
+				if(_hover && point_in_circle(_mx, _my, bbox.xc, bbox.yc, _ss / 2)) {
+					if(mouse_press(mb_left, _focus) && is_real(val)) {
+						rotator_dragging = true;
+						rotator_s = val;
+						rotator_p = point_direction(bbox.xc, bbox.yc, _mx, _my);
+					}
+					
+					draggable = false;
+				}
+				
+				draw_set_text(f_h3, fa_center, fa_center, colorMultiply(CDEF.main_white, _col));
+				draw_text_transformed(bbox.xc, bbox.yc, string_format(val, -1, 2), _s * .5, _s * .5, 0);
+				break; #endregion
 		}
-	}
+	} #endregion
 }
 
 function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -179,7 +267,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	wd_pan_mx	= 0;
 	wd_pan_my	= 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var __ax = getInputData(0);
 		var __ay = getInputData(1);
 		
@@ -226,9 +314,9 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				drag_sy   = _ay;
 			}
 		} 
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var int  = getInputData(2);
 		var disp = getInputData(3);
 		
@@ -247,17 +335,17 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			w	  = 160;
 			min_h = 160;
 		}
-	}
+	} #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var vec = [ _data[0], _data[1] ];
 		for( var i = 0, n = array_length(vec); i < n; i++ ) 
 			vec[i] = _data[2]? round(vec[i]) : vec[i];
 			
 		return vec;
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var disp = getInputData(3);
 		var vec  = getSingleValue(0,, true);
 		var bbox = drawGetBbox(xx, yy, _s);
@@ -389,7 +477,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
 		var str	= $"[{v0}, {v1}]";
 		draw_text(bbox.xc, bbox.y1 - 4, str);
-	}
+	} #endregion
 }
 
 function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -415,7 +503,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	outputs[| 0] = nodeValue("Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	static step = function() {
+	static step = function() { #region
 		var int = getInputData(3);
 		for( var i = 0; i < 3; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
@@ -423,17 +511,17 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-	}
+	} #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var vec = [ _data[0], _data[1], _data[2] ];
 		for( var i = 0, n = array_length(vec); i < n; i++ ) 
 			vec[i] = _data[3]? round(vec[i]) : vec[i];
 			
 		return vec; 
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 		var vec = getSingleValue(0,, true);
 		var v0 = array_safe_get(vec, 0);
@@ -445,7 +533,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
-	}
+	} #endregion
 }
 
 function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -474,7 +562,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	outputs[| 0] = nodeValue("Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	static step = function() {
+	static step = function() { #region
 		var int = getInputData(4);
 		for( var i = 0; i < 4; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
@@ -482,17 +570,17 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-	}
+	} #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var vec = [ _data[0], _data[1], _data[2], _data[3] ];
 		for( var i = 0, n = array_length(vec); i < n; i++ ) 
 			vec[i] = _data[4]? round(vec[i]) : vec[i];
 			
 		return vec; 
-	}
+	} #endregion 
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 		var vec = getSingleValue(0,, true);
 		var v0 = array_safe_get(vec, 0);
@@ -505,7 +593,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
-	}
+	} #endregion
 }
 
 function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -526,7 +614,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	outputs[| 2] = nodeValue("z", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	outputs[| 3] = nodeValue("w", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	static step = function() {
+	static step = function() { #region
 		if(inputs[| 0].value_from == noone) return;
 		var type = VALUE_TYPE.float;
 		if(inputs[| 0].value_from.type == VALUE_TYPE.integer)
@@ -535,13 +623,13 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		inputs[| 0].setType(type);
 		for( var i = 0; i < 4; i++ )
 			outputs[| i].setType(type);
-	}
+	} #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { 
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		return array_safe_get(_data[0], _output_index);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		for( var i = 0; i < 4; i++ )
@@ -551,5 +639,5 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	 = string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
-	}
+	} #endregion
 }

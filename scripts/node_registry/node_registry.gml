@@ -110,6 +110,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		
 		var recPath = DIRECTORY + "Nodes/recent.json";
 		global.RECENT_NODES = file_exists(recPath)? json_load_struct(recPath) : [];
+		if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
 		
 		var group = ds_list_create(); #region
 		addNodeCatagory("Group", group, ["Node_Group"]); 

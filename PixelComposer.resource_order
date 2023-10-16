@@ -217,6 +217,7 @@
     {"name":"biterator","order":2,"path":"folders/VCT/biterator.yy",},
     {"name":"widget","order":3,"path":"folders/VCT/widget.yy",},
     {"name":"widgets","order":5,"path":"folders/widgets.yy",},
+    {"name":"UI","order":21,"path":"folders/shader/UI.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},
@@ -899,6 +900,7 @@
     {"name":"s_node_erode","order":23,"path":"sprites/s_node_erode/s_node_erode.yy",},
     {"name":"node_particle","order":14,"path":"scripts/node_particle/node_particle.yy",},
     {"name":"node_pb_box_contract","order":8,"path":"scripts/node_pb_box_contract/node_pb_box_contract.yy",},
+    {"name":"ac_ripple","order":1,"path":"animcurves/ac_ripple/ac_ripple.yy",},
     {"name":"histogram_drawer","order":2,"path":"scripts/histogram_drawer/histogram_drawer.yy",},
     {"name":"sh_color_picker_side_value","order":3,"path":"shaders/sh_color_picker_side_value/sh_color_picker_side_value.yy",},
     {"name":"node_array_range","order":9,"path":"scripts/node_array_range/node_array_range.yy",},
@@ -972,6 +974,7 @@
     {"name":"display_refresh","order":17,"path":"scripts/display_refresh/display_refresh.yy",},
     {"name":"panel_workspace","order":6,"path":"scripts/panel_workspace/panel_workspace.yy",},
     {"name":"fd_rectangle_assure_surfaces_exist","order":2,"path":"scripts/fd_rectangle_assure_surfaces_exist/fd_rectangle_assure_surfaces_exist.yy",},
+    {"name":"sh_ui_slider","order":1,"path":"shaders/sh_ui_slider/sh_ui_slider.yy",},
     {"name":"angle_functions","order":17,"path":"scripts/angle_functions/angle_functions.yy",},
     {"name":"fd_rectangle_material_surface_was_created","order":13,"path":"scripts/fd_rectangle_material_surface_was_created/fd_rectangle_material_surface_was_created.yy",},
     {"name":"s_node_fluidSim_apply_velocity","order":2,"path":"sprites/s_node_fluidSim_apply_velocity/s_node_fluidSim_apply_velocity.yy",},
