@@ -5,7 +5,7 @@
     "location": ["Transform", "Transformations"],
     "sprPath": "./Follow Path.png",
     "nodes": [
-        { "node": "Node_Path", "y": 64 }, 
+        { "node": "Node_Path", "y": 64, "setValues": [ { "index": 0, "expression": "Project.progress" } ] }, 
         { "node": "Node_Transform", "setValues": [ { "index": 2, "unit": "constant" } ] }
     ],
     "connections": [

@@ -8,6 +8,9 @@
 		if(!directory_exists(root))
 			directory_create(root);
 		
+		zip_unzip("data/Actions.zip", DIRECTORY);
+		
+		return;
 		var _l = root + "/version";
 		if(file_exists(_l)) {
 			var res = json_load_struct(_l);

@@ -1206,6 +1206,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	} #endregion
 	
+	static setExpression = function(_expression) { #region
+		expUse = true;
+		expression = _expression;
+		expressionUpdate();
+	} #endregion
+	
 	static expressionUpdate = function() { #region
 		expTree = evaluateFunctionList(expression);
 		resetCache();

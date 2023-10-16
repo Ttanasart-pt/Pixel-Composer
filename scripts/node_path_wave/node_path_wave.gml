@@ -34,7 +34,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static getLength = function(ind = 0) { 
 		var _path = getInputData(0);
-		var _fre  = getInputData(1);
+		var _fre  = getInputData(1); _fre = max(1, abs(_fre));
 		var _amo  = getInputData(2);
 		
 		var _len  = struct_has(_path, "getLength")? _path.getLength(ind) : 0;
@@ -45,7 +45,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static getAccuLength = function(ind = 0) { 
 		var _path = getInputData(0);
-		var _fre  = getInputData(1);
+		var _fre  = getInputData(1); _fre = max(1, abs(_fre));
 		var _amo  = getInputData(2);
 		
 		var _len  = struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : [];
@@ -59,7 +59,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 	static getPointRatio = function(_rat, ind = 0) {
 		var _path = getInputData(0);
-		var _fre  = getInputData(1);
+		var _fre  = getInputData(1); _fre = max(0.01, abs(_fre));
 		var _amo  = getInputData(2);
 		var _shf  = getInputData(3);
 		var _smt  = getInputData(4);

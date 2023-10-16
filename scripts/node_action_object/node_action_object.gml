@@ -16,11 +16,11 @@
 		outputNode  = noone;
 		
 		location = noone;
-	
+		
 		static getName    = function() { return name;	 }
 		static getTooltip = function() { return tooltip; }
 		
-		static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
+		static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) { #region
 			var _n = [];
 			for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 				var __n = nodes[i];
@@ -39,6 +39,8 @@
 							_index.setValue(_setVal.value);
 						if(struct_has(_setVal, "unit"))
 							_index.unit.setMode(_setVal.unit);
+						if(struct_has(_setVal, "expression"))
+							_index.setExpression(_setVal.expression);
 					}
 				}
 			}
@@ -50,14 +52,14 @@
 			}
 		
 			return _n;
-		}
+		} #endregion
 	
-		static serialize = function() {
+		static serialize = function() { #region
 			var map = { name, tooltip, nodes, connections, tags };
 			return map;
-		}
+		} #endregion
 		
-		static deserialize = function(path) {
+		static deserialize = function(path) { #region
 			var map = json_load_struct(path);
 			
 			name		= struct_try_get(map, "name", "");
@@ -81,11 +83,11 @@
 			}
 		
 			return self;
-		}
+		} #endregion
 	}
 
 	function __initNodeActions(list) {
-		var root = DIRECTORY + "Actions";
+		var root = $"{DIRECTORY}Actions";
 		if(!directory_exists(root)) directory_create(root);
 		
 		root += "/Nodes";

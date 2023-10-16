@@ -256,7 +256,6 @@
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Actions.zip","CopyToMask":-1,"filePath":"datafiles/data",},
-    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"icons.ai","CopyToMask":-1,"filePath":"datafiles/data/Actions",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Armature Build.json","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Armature Build.png","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Follow Path.json","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes",},
