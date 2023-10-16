@@ -7,27 +7,9 @@ function Panel_Palette() : PanelContent() constructor {
 	w = ui(320);
 	h = ui(480);
 	
-	presets = [];
 	view_mode = 0;
 	
 	color_dragging = noone;
-	
-	static presetCollect = function() {
-		presets	= [];
-		
-		var path = DIRECTORY + "Palettes/"
-		var file = file_find_first(path + "*", 0);
-		while(file != "") {
-			array_push(presets, {
-				name: filename_name(file),
-				palette: loadPalette(path + file)
-			});
-			
-			file = file_find_next();
-		}
-		file_find_close();
-	}
-	presetCollect()
 	
 	function onResize() {
 		PANEL_PADDING
@@ -48,8 +30,8 @@ function Panel_Palette() : PanelContent() constructor {
 		var yy  = _y;
 		var _height;
 		
-		for(var i = 0; i < array_length(presets); i++) {
-			var preset	= presets[i];
+		for(var i = 0; i < array_length(PALETTES); i++) {
+			var preset	= PALETTES[i];
 			var pre_amo = array_length(preset.palette);
 			var col     = floor((ww - ui(20)) / _gs);
 			var row     = ceil(pre_amo / col);

@@ -625,7 +625,7 @@
     {"name":"__node_custom","order":14,"path":"scripts/__node_custom/__node_custom.yy",},
     {"name":"s_node_note","order":35,"path":"sprites/s_node_note/s_node_note.yy",},
     {"name":"node_strand_gravity","order":4,"path":"scripts/node_strand_gravity/node_strand_gravity.yy",},
-    {"name":"load_palette","order":3,"path":"scripts/load_palette/load_palette.yy",},
+    {"name":"palette_functions","order":3,"path":"scripts/palette_functions/palette_functions.yy",},
     {"name":"luaHighlight","order":1,"path":"scripts/luaHighlight/luaHighlight.yy",},
     {"name":"d3d_rot3","order":3,"path":"scripts/d3d_rot3/d3d_rot3.yy",},
     {"name":"sh_sample_points","order":26,"path":"shaders/sh_sample_points/sh_sample_points.yy",},

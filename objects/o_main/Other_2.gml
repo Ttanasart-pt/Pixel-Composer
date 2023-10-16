@@ -82,6 +82,8 @@
 	log_message("SESSION", "> init Nodes");			__initNodes();
 	log_message("SESSION", "> init SteamUGC");		__initSteamUGC();
 	log_message("SESSION", "> init Addon");			__initAddon();
+	log_message("SESSION", "> init Palette");		__initPalette();
+	log_message("SESSION", "> init Gradient");		__initGradient();
 	
 	setPanel();
 	loadAddon();

@@ -214,7 +214,7 @@ if !ready exit;
 	var col_y = dialog_y + ui(136);
 	
 	if(palette_selecting > -1)
-		selector.palette = palettes[| palette_selecting];
+		selector.palette = PALETTES[palette_selecting].palette;
 	selector.draw(col_x, col_y, sFOCUS, sHOVER);
 #endregion
 

@@ -20,10 +20,15 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 0] = nodeValue("Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
-	static update = function(frame = CURRENT_FRAME) {
-		inputs[| 0].setType(inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type);
-		outputs[| 0].setType(inputs[| 0].type);
+	static step = function() {
+		if(inputs[| 0].value_from == noone) return;
+		
+		inputs[| 0].setType(inputs[| 0].value_from.type);
+		outputs[| 0].setType(inputs[| 0].value_from.type);
 		outputs[| 0].value_from = inputs[| 0].value_from;
+		
+		inputs[| 0].color_display  = inputs[| 0].value_from.color_display;
+		outputs[| 0].color_display = inputs[| 0].color_display;
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
@@ -77,8 +82,13 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			active_draw_index	= -1;
 		}
 		
-		if(hover_scale > 0)
-			draw_sprite_ext(THEME.node_pin_bg_active, 0, xx, yy, _s * hover_scale, _s * hover_scale, 0, COLORS._main_accent, hover_alpha);
+		if(hover_scale > 0) {
+			draw_set_color(COLORS._main_accent);
+			draw_set_alpha(hover_alpha);
+			draw_circle_border(xx, yy, _s * hover_scale * 20, 2);
+			draw_set_alpha(1);
+		}
+		
 		hover_scale    = lerp_float(hover_scale, hover_scale_to, 3);
 		hover_scale_to = 0;
 		

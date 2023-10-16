@@ -32,27 +32,7 @@ event_inherited();
 #endregion
 
 #region presets
-	presets		= ds_list_create();
-	preset_name = ds_list_create();
-	preset_selecting = 0;
-	
-	function presetCollect() {
-		ds_list_clear(presets);
-		ds_list_clear(preset_name);
-		
-		ds_list_add(presets,		DEF_PALETTE);
-		ds_list_add(preset_name,	"Project");
-		
-		var path = DIRECTORY + "Palettes/"
-		var file = file_find_first(path + "*", 0);
-		while(file != "") {
-			ds_list_add(presets,		loadPalette(path + file));
-			ds_list_add(preset_name,	filename_name(file));
-			file = file_find_next();
-		}
-		file_find_close();
-	}
-	presetCollect();
+	preset_selecting = -1;
 	
 	sp_preset_w = ui(240 - 32 - 16);
 	sp_preset_size = ui(24);
@@ -67,8 +47,13 @@ event_inherited();
 		var _hover = sHOVER && sp_presets.hover;
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		for(var i = 0; i < ds_list_size(presets); i++) {
-			pre_amo = array_length(presets[| i]);
+		for(var i = -1; i < array_length(PALETTES); i++) {
+			var pal = i == -1? {
+				name: "project",
+				palette: PROJECT.attributes.palette,
+				path: ""
+			} : PALETTES[i];
+			pre_amo = array_length(pal.palette);
 			var col = floor(ww / _gs);
 			var row = ceil(pre_amo / col);
 			
@@ -83,19 +68,19 @@ event_inherited();
 			if(isHover) 
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), _height, COLORS._main_accent, 1);
 			
-			var x0 = ui(16) + (i == 0) * ui(8 + 6);
+			var x0 = ui(16) + (i == -1) * ui(8 + 6);
 			var cc = i == preset_selecting? COLORS._main_accent : COLORS._main_text_sub;
 			draw_set_text(f_p2, fa_left, fa_top, cc);
-			draw_text(x0, yy + ui(8), preset_name[| i]);
-			if(i == 0) {
+			draw_text(x0, yy + ui(8), pal.name);
+			if(i == -1) {
 				draw_set_color(cc);
 				draw_circle_prec(ui(16) + ui(4), yy + ui(16), ui(4), false);
 			}
 			
 			if(preset_selecting == i)
-				drawPaletteGrid(presets[| i], ui(16), yy + ui(28), ww, _gs, selector.current_color);
+				drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs, selector.current_color);
 			else
-				drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(20));
+				drawPalette(pal.palette, ui(16), yy + ui(28), ww, ui(20));
 			
 			if(!click_block && mouse_click(mb_left, interactable && sFOCUS)) {
 				if(preset_selecting == i && _hover && point_in_rectangle(_m[0], _m[1], ui(16), yy + ui(28), ui(16) + ww, yy + ui(28) + _height)) {
@@ -107,7 +92,7 @@ event_inherited();
 						
 					var _index = m_gy * col + m_gx;
 					if(_index < pre_amo && _index >= 0) {
-						selector.setColor(presets[| i][_index]);
+						selector.setColor(pal.palette[_index]);
 						selector.setHSV();
 					}
 				} else if(isHover) {

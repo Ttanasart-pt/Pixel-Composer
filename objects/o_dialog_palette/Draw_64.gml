@@ -184,7 +184,8 @@ if palette == 0 exit;
 	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, __txtx("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
 		var path = get_open_filename(".hex", "");
 		key_release();
-		if(path != "") {
+		
+		if(isPaletteFile(path)) {
 			palette = loadPalette(path);
 			onApply(palette);
 		}

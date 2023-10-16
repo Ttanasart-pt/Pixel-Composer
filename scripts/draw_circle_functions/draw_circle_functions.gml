@@ -6,18 +6,18 @@ function draw_circle_prec(x, y, r, border, precision = 32) {
 function draw_circle_border(xx, yy, r, w) {
 	var step = 32;
 	var angle_step = 360 / step;
-
-	var px, py, _px, _py;
-
-	for(var i = 0; i <= step; i++){
-		var px = xx + lengthdir_x(r, i * angle_step);
-		var py = yy + lengthdir_y(r, i * angle_step);
 	
-		if(i) draw_line_round(_px, _py, px, py, w);
+	draw_primitive_begin(pr_trianglestrip);
+	for(var i = 0; i <= step; i++){
+		var p0x = xx + lengthdir_x(r - w / 2, i * angle_step);
+		var p0y = yy + lengthdir_y(r - w / 2, i * angle_step);
+		var p1x = xx + lengthdir_x(r + w / 2, i * angle_step);
+		var p1y = yy + lengthdir_y(r + w / 2, i * angle_step);
 		
-		_px = px;
-		_py = py;
+		draw_vertex(p0x, p0y);
+		draw_vertex(p1x, p1y);
 	}
+	draw_primitive_end();
 }
 
 function draw_ellipse_border(x0, y0, x1, y1, w) {

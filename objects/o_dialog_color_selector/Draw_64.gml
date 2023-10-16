@@ -60,7 +60,7 @@ if !ready exit;
 	var col_y = dialog_y + ui(52);
 	
 	if(preset_selecting > -1)
-		selector.palette = presets[| preset_selecting];
+		selector.palette = PALETTES[preset_selecting].palette;
 	selector.draw(col_x, col_y, sFOCUS, sHOVER);
 #endregion
 

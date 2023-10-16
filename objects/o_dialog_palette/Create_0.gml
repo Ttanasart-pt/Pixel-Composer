@@ -54,27 +54,6 @@ event_inherited();
 #endregion
 
 #region presets
-	presets		= ds_list_create();
-	preset_name = ds_list_create();
-	
-	function presetCollect() {
-		ds_list_clear(presets);
-		ds_list_clear(preset_name);
-		
-		ds_list_add(presets,		DEF_PALETTE);
-		ds_list_add(preset_name,	"Project");
-		
-		var path = DIRECTORY + "Palettes/"
-		var file = file_find_first(path + "*", 0);
-		while(file != "") {
-			ds_list_add(presets,		loadPalette(path + file));
-			ds_list_add(preset_name,	filename_name(file));
-			file = file_find_next();
-		}
-		file_find_close();
-	}
-	presetCollect();
-	
 	hovering_name = "";
 	
 	sp_preset_w = ui(240 - 32 - 16);
@@ -85,31 +64,36 @@ event_inherited();
 		var hg = ui(52);
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		for(var i = 0; i < ds_list_size(presets); i++) {
+		for(var i = -1; i < array_length(PALETTES); i++) {
+			var pal = i == -1? {
+				name: "project",
+				palette: PROJECT.attributes.palette,
+				path: ""
+			} : PALETTES[i];
 			var isHover = sHOVER && sp_presets.hover && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg);
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
 			if(isHover) 
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), hg, COLORS._main_accent, 1);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text(ui(16), yy + ui(8), filename_name_only(preset_name[| i]));
-			drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(16));
+			draw_text(ui(16), yy + ui(8), pal.name);
+			drawPalette(pal.palette, ui(16), yy + ui(28), ww, ui(16));
 			
 			if(isHover) {
 				if(mouse_press(mb_left, interactable && sFOCUS)) {
-					palette = array_create(array_length(presets[| i]));
-					for( var j = 0; j < array_length(presets[| i]); j++ )
-						palette[j] = presets[| i][j];
+					palette = array_create(array_length(pal.palette));
+					for( var j = 0; j < array_length(pal.palette); j++ )
+						palette[j] = pal.palette[j];
 				}
 				
 				if(mouse_press(mb_right, interactable && sFOCUS)) {
-					hovering_name = preset_name[| i];
+					hovering_name = pal.name;
 					menuCall("palette_window_preset_menu",,, [
 						menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
-							file_delete( DIRECTORY + "Palettes/" + hovering_name); 
-							presetCollect();
+							file_delete(hovering_name); 
+							__initPalette();
 						})
-					],, { name : hovering_name })
+					])
 				}
 			}
 			

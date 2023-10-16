@@ -7,25 +7,6 @@ function Panel_Gradient() : PanelContent() constructor {
 	w = ui(320);
 	h = ui(480);
 	
-	presets	= [];
-	
-	function presetCollect() {
-		presets	= [];
-		
-		var path = DIRECTORY + "Gradients/"
-		var file = file_find_first(path + "*", 0);
-		while(file != "") {
-			array_push(presets, {
-				name:    filename_name(file),
-				gradient: loadGradient(path + file)
-			});
-			
-			file = file_find_next();
-		}
-		file_find_close();
-	}
-	presetCollect();
-	
 	function onResize() {
 		PANEL_PADDING
 		
@@ -37,7 +18,7 @@ function Panel_Gradient() : PanelContent() constructor {
 		var ww  = sp_gradient.surface_w;
 		var hh  = 0;
 		
-		var amo = array_length(presets);
+		var amo = array_length(GRADIENTS);
 		var col = floor(ww / ui(160));
 		var row = ceil(amo / col);
 		
@@ -53,7 +34,7 @@ function Panel_Gradient() : PanelContent() constructor {
 				if(ind >= amo) break;
 			
 				var xx = j * gw;
-				var preset	= presets[ind];
+				var preset	= GRADIENTS[ind];
 				var isHover = pHOVER && point_in_rectangle(_m[0], _m[1], xx, max(0, yy), xx + gw - ui(8), min(sp_gradient.h, yy + hg));
 			
 				draw_sprite_stretched(THEME.ui_panel_bg, in_dialog, xx, yy, gw - ui(8), hg);
@@ -98,6 +79,6 @@ function Panel_Gradient() : PanelContent() constructor {
 		var by = title_height / 2 - ui(16 + !in_dialog * 2);
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Refresh"), THEME.refresh, 1, COLORS._main_icon) == 2) 
-			presetCollect();
+			__initGradient();
 	}
 }
