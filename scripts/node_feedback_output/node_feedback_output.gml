@@ -6,7 +6,7 @@ function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	h = 32 + 24 * 2;
 	min_h = h;
 	
-	inputs[| 2] = nodeValue("Feedback loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1)
+	inputs[| 1] = nodeValue("Feedback loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1)
 		.setVisible(true, true);
 	
 	cache_value = -1;

@@ -176,6 +176,10 @@ function Panel_Menu() : PanelContent() constructor {
 						json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
 					};
 				}));
+				
+				array_push(arr, menuItem(__txtx("panel_menu_reset_layout", "Reset layout"), function() {
+					resetPanel();
+				},, [ "", "Reset layout" ]));
 				array_push(arr, -1);
 				
 				for(var i = 0; i < array_length(lays); i++)  {

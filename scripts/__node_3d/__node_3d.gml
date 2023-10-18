@@ -51,7 +51,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 			
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 				var _prev = _prev_obj[i];
-				if(_prev == noone) continue;
+				if(!is_struct(_prev) || !struct_has(_prev, "getBBOX")) continue;
 				
 				var _b = _prev.getBBOX();
 				var _c = _prev.getCenter();

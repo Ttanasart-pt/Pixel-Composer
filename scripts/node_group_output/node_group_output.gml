@@ -29,21 +29,21 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		attributes.inherit_name = false;
 	}
 	
-	static setRenderStatus = function(result) {
+	static setRenderStatus = function(result) { #region
 		if(rendered == result) return;
 		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
 		
 		rendered = result;
 		if(group) group.setRenderStatus(result);
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = 0) { #region
 		if(is_undefined(outParent)) return;
 		
 		group.sortIO();
-	}
+	} #endregion
 	
-	static getNextNodes = function() {
+	static getNextNodes = function() { #region
 		if(is_undefined(outParent)) return [];
 		//group.setRenderStatus(true);
 		//printIf(global.FLAG.render, "Value to amount " + string(ds_list_size(outParent.value_to)));
@@ -73,9 +73,9 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		LOG_BLOCK_END();
 		
 		return nodes;
-	}
+	} #endregion
 	
-	static createOutput = function(override_order = true) {
+	static createOutput = function(override_order = true) { #region
 		if(group == noone) return;
 		if(!is_struct(group)) return;
 		
@@ -95,9 +95,9 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		group.sortIO();
 		
 		outParent.setFrom(inputs[| 0]);
-	} if(!LOADING && !APPENDING) createOutput();
+	} if(!LOADING && !APPENDING) createOutput(); #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		if(is_undefined(outParent)) return;
 		
 		outParent.name = display_name; 
@@ -118,21 +118,23 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				setDisplayName(inputs[| 0].value_from.name);
 			}
 		}
-	}
+	} #endregion
 	
-	static postDeserialize = function() {
+	static postDeserialize = function() { #region
+		if(group == noone) return;
+		
 		createOutput(false);
 		
 		if(PROJECT.version < 11520) attributes.input_priority = getInputData(1);
 		group.sortIO();
-	}
+	} #endregion
 	
-	static onDestroy = function() {
+	static onDestroy = function() { #region
 		if(is_undefined(outParent)) return;
 		ds_list_delete(group.outputs, ds_list_find_index(group.outputs, outParent));
-	}
+	} #endregion
 	
-	static ungroup = function() {
+	static ungroup = function() { #region
 		var fr = inputs[| 0].value_from;
 		
 		for( var i = 0; i < ds_list_size(outParent.value_to); i++ ) {
@@ -141,5 +143,9 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			to.setFrom(fr);
 		}
-	}
+	} #endregion
+		
+	static onLoadGroup = function() { #region
+		if(group == noone) nodeDelete(self);
+	} #endregion
 }

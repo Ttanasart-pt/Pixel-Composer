@@ -22,7 +22,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	inputs[| in_d3d + 1] = nodeValue("Clipping Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 10 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
-	
+	 
 	inputs[| in_d3d + 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -203,6 +203,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			var _qi3  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0),  90);
 		#endregion
 		
+		if(_sobj == noone || !struct_has(_sobj, "submit")) return [ noone, noone, noone ];
+		
 		switch(_posm) { #region ++++ camera positioning ++++
 			case 0 :
 				camera.useFocus = false;
@@ -246,8 +248,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		object.transform.position.set(camera.position);
 		object.transform.rotation = camera.rotation.Clone();
 		object.transform.scale.set(1, _dim[0] / _dim[1], 1);
-		
-		if(_sobj == noone) return;
 		
 		#region camera view project
 			camera.projection = _proj;

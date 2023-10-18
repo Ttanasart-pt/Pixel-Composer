@@ -93,6 +93,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		var val  = getInputData(0);
+		var _int = getInputData(1);
 		var disp = getInputData(2);
 		var rang = getInputData(3);
 		var stp  = getInputData(4);
@@ -109,7 +110,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		switch(disp) {
 			case 1 : #region
 				draw_set_text(f_h2, fa_center, fa_center, _col);
-				draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, val, _s * 0.5, _s * 0.5, 0);
+				draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, _int? round(val) : val, _s * 0.5, _s * 0.5, 0);
 				
 				var sl_w = bbox.w - 8 * _s;
 				var sl_h = _s * 40;
@@ -212,7 +213,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				}
 				
 				draw_set_text(f_h3, fa_center, fa_center, colorMultiply(CDEF.main_white, _col));
-				draw_text_transformed(bbox.xc, bbox.yc, string_format(val, -1, 2), _s * .5, _s * .5, 0);
+				draw_text_transformed(bbox.xc, bbox.yc, _int? round(val) : string_format(val, -1, 2), _s * .5, _s * .5, 0);
 				break; #endregion
 		}
 	} #endregion

@@ -175,7 +175,9 @@ output.color = surfaceColor;")
 		var vs = getInputData(0);
 		var fs = getInputData(1);
 		
-		var _dir = DIRECTORY + "shadertemp/";
+		var _dir = DIRECTORY + "temp/";
+		directory_verify(_dir);
+		
 		var vs   = @"
 #define MATRIX_WORLD                 0
 #define MATRIX_WORLD_VIEW            1
@@ -261,8 +263,7 @@ struct PixelShaderOutput {
 		shader.fs = d3d11_shader_compile_ps(_dir + "fout.shader", "main", "ps_4_0");
 		if (!d3d11_shader_exists(shader.fs))
 			noti_warning(d3d11_get_error_string());
-	} #endregion
-	if(!LOADING && !APPENDING) refreshShader();
+	} if(!LOADING && !APPENDING) refreshShader(); #endregion
 	
 	static onValueUpdate = function(index) { #region
 		var _refresh = index == 0 || index == 1 ||

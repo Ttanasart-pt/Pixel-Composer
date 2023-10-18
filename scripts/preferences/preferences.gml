@@ -74,8 +74,9 @@
 	
 	PREF_MAP[? "render_all_export"] = true;
 	
-	PREF_MAP[? "alt_picker"] = true;
-	PREF_MAP[? "clear_temp_on_close"] = true;
+	PREF_MAP[? "alt_picker"]			= true;
+	PREF_MAP[? "clear_temp_on_close"]	= true;
+	PREF_MAP[? "pan_mouse_key"]			= mb_middle;
 #endregion
 
 #region recent files

@@ -9,16 +9,17 @@ uniform vec2 dimension;
 
 void main() {
 	vec4 col  = vec4(0.);
+	vec2 tx   = 1. / dimension;
 	float wei = 0.;
 	
 	for( float i = 0.; i < down; i++ ) 
 	for( float j = 0.; j < down; j++ ) {
-		vec4 samp = texture2D( gm_BaseTexture, v_vTexcoord * down + vec2(i, j) / dimension );
+		vec4 samp = texture2D( gm_BaseTexture, v_vTexcoord * down + vec2(i, j) * tx );
 		col += samp;
 		wei += samp.a;
 	}
 	
 	col /= wei;	
 	
-    gl_FragColor = col * v_vColour;
+    gl_FragColor = col;
 }

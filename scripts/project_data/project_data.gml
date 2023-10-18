@@ -32,10 +32,12 @@
 		
 		graphGrid = { #region
 			show	: true,
+			show_origin : false,
 			snap	: true,
-			size	: 32,
+			size	: 16,
 			opacity : 0.05,
 			color   : c_white,
+			highlight : 12,
 		} #endregion
 		
 		addons = {};

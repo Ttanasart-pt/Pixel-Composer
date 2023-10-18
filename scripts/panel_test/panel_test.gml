@@ -46,10 +46,16 @@ function Panel_Test() : PanelContent() constructor {
 		scanDir(test_dir);
 		
 		for( var i = 0, n = array_length(test_files); i < n; i++ ) {
-			run_in(i * 3, function(i) { 
-				print($"TESTING: {test_files[i]}");
-				TEST_PATH(test_files[i]); 
-				test_index = i 
+			run_in(1 + i * 3, function(i) { 
+				try {
+					print($"TESTING: {test_files[i]}");
+					TEST_PATH(test_files[i]);
+					test_index = i;
+					print($"     > Test complete");
+				} catch(e) {
+					print($"     > Test failed");
+					exception_print(e);
+				}
 			}, [i]);
 		}
 	}

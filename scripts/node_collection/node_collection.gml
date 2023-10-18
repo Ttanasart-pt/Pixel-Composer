@@ -384,7 +384,32 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_dummy = false;
 	} #endregion
 	
+	static resolveGroupOrdering = function() { #region
+		var siz = ds_list_size(inputs);
+		var ar  = ds_priority_create();
+		
+		for( var i = custom_input_index; i < siz; i++ ) {
+			var _in = inputs[| i];
+			var _or = _in.from.attributes.input_priority;
+			
+			ds_priority_add(ar, _in, _or);
+		}
+		
+		var _order = 0;
+		for( var i = custom_input_index; i < siz; i++ ) {
+			var _jin = ds_priority_delete_min(ar);
+			
+			var _in = inputs[| i];
+			_in.from.attributes.input_priority = _order;
+			_order++;
+		}
+		
+		ds_priority_destroy(ar);
+	} #endregion
+	
 	static sortIO = function() { #region
+		resolveGroupOrdering();
+		
 		var sep = attributes.separator;		
 		array_sort(sep, function(a0, a1) { return a0[0] - a1[0]; });
 		var siz = ds_list_size(inputs);

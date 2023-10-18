@@ -497,7 +497,16 @@ event_inherited();
 			PREF_MAP[? "alt_picker"] = val; 
 			PREF_SAVE();
 		})
-	])
+	]);
+	
+	ds_list_add(pref_hot, [
+		__txtx("pref_pan_key", "Panning key"),
+		function() { return PREF_MAP[? "pan_mouse_key"] - 3; },
+		new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) { 
+			PREF_MAP[? "pan_mouse_key"] = val + 3; 
+			PREF_SAVE();
+		})
+	]);
 	
 	vk_list = [ 
 		vk_left, vk_right, vk_up, vk_down, vk_space, vk_backspace, vk_tab, vk_home, vk_end, vk_delete, vk_insert, 

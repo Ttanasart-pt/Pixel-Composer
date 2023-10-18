@@ -8,6 +8,11 @@ enum CACHE_USE {
 	auto
 }
 
+enum DYNA_INPUT_COND {
+	connection = 1 << 0,
+	zero       = 1 << 1,
+}
+
 function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x, _y) constructor {
 	#region ---- main & active ----
 		active  = true;
@@ -299,12 +304,53 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return self;
 	} #endregion
 	
-	static setIsDynamicInput = function(_data_length = 1, _auto_input = true) { #region
+	static setIsDynamicInput = function(_data_length = 1, _auto_input = true, _dynamic_input_cond = DYNA_INPUT_COND.connection) { #region
 		is_dynamic_input	= true;						
 		auto_input			= _auto_input;
 		input_display_len	= input_display_list == -1? 0 : array_length(input_display_list);
 		input_fix_len		= ds_list_size(inputs);
 		data_length			= _data_length;
+		
+		dynamic_input_cond  = _dynamic_input_cond;
+	} #endregion
+	
+	static createNewInput = -1;
+	
+	static refreshDynamicInput = function() { #region
+		var _in = ds_list_create();
+		
+		for( var i = 0; i < input_fix_len; i++ )
+			ds_list_add(_in, inputs[| i]);
+		
+		array_resize(input_display_list, input_display_len);
+		
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+			var _active = false;
+			if(dynamic_input_cond & DYNA_INPUT_COND.connection)
+				_active |= inputs[| i].value_from != noone;
+			if(dynamic_input_cond & DYNA_INPUT_COND.zero) {
+				var _val = inputs[| i].getValue();
+				_active |= _val != 0 || _val != "";
+			}
+			
+			if(_active) {
+				for( var j = 0; j < data_length; j++ ) {
+					ds_list_add(_in, inputs[| i + j]);
+					array_push(input_display_list, i + j);
+				}
+			} else {
+				for( var j = 0; j < data_length; j++ )
+					delete inputs[| i + j];
+			}
+		}
+		
+		for( var i = 0; i < ds_list_size(_in); i++ )
+			_in[| i].index = i;
+		
+		ds_list_destroy(inputs);
+		inputs = _in;
+		
+		createNewInput();
 	} #endregion
 	
 	static getOutput = function(junc = noone) { #region
@@ -450,8 +496,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static getInputs = function(frame = CURRENT_FRAME) { #region
 		inputs_data	= array_create(ds_list_size(inputs), undefined);
 		
-		for(var i = 0; i < ds_list_size(inputs); i++)
+		for(var i = 0; i < ds_list_size(inputs); i++) {
+			if(!is_instanceof(inputs[| i], NodeValue)) continue;
 			setInputData(i, inputs[| i].getValue(frame,,, false));
+		}
 	} #endregion
 	
 	static forceUpdate = function() { #region
@@ -1161,6 +1209,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
+	static drawPreviewToolOverlay = function(active, _mx, _my, _panel) { return false; }
+	
 	static drawAnimationTimeline = function(_w, _h, _s) {}
 	
 	static getAnimationCacheExist = function(frame) { return cacheExist(frame); }
@@ -1318,8 +1368,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static clearInputCache = function() { #region
-		for( var i = 0; i < ds_list_size(inputs); i++ )
+		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+			if(!is_instanceof(inputs[| i], NodeValue)) continue;
 			inputs[| i].resetCache();
+		}
 	} #endregion
 	
 	static checkConnectGroup = function(_type = "group") { #region
@@ -1674,10 +1726,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _inputs = load_map.inputs;
 		var amo = min(ds_list_size(inputs), array_length(_inputs));
 		
+		//print($"Applying deserialzie for {name}");
+		
 		for(var i = 0; i < amo; i++) {
 			if(inputs[| i] == noone || _inputs[i] == noone) continue;
 			
-			//if(name == "Particle") print($"Apply {i} : {inputs[| i].name}");
+			//print($"      Apply {i} : {inputs[| i].name}");
 			inputs[| i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		
@@ -1700,6 +1754,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(array_length(insInp) > 2) updatedInTrigger.applyDeserialize(insInp[2], load_scale, preset);
 			if(array_length(insInp) > 3) updatedOutTrigger.applyDeserialize(insInp[3], load_scale, preset);
 		}
+		
+		//print($"Applying deserialzie for {name} complete");
 		
 		doApplyDeserialize();
 	} #endregion
@@ -1725,7 +1781,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				throw(txt);
 			}
 		}
+		
+		onLoadGroup();
 	} #endregion
+	
+	static onLoadGroup = function() {}
 	
 	static connect = function(log = false) { #region
 		var connected = true;

@@ -10,7 +10,7 @@ function __initTheme() {
 	}
 	json_save_struct(_l, { version: BUILD_NUMBER });
 	
-	log_message("THEME", "unzipping default theme to DIRECTORY.");
+	log_message("THEME", $"unzipping default theme to {root}.");
 	zip_unzip("data/themes/default.zip", root);
 }
 

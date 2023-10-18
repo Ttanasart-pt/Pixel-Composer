@@ -17,6 +17,8 @@ function file_text_read_all_lines(path) {
 }
 
 function file_text_write_all(path, str) {
+	if(file_exists(path)) file_delete(path);
+	
 	var f = file_text_open_write(path);
 	file_text_write_string(f, str);
 	file_text_close(f);

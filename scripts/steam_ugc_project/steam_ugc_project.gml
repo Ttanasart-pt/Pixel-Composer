@@ -23,7 +23,7 @@ function steam_ugc_create_project() {
 	STEAM_UGC_ITEM_ID = steam_ugc_create_item(STEAM_APP_ID, ugc_filetype_community);
 }
 
-function steam_ugc_update_project(update_preview = false) {
+function steam_ugc_update_project(update_preview = false, update_note = "Updated") {
 	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
 	var file = new FileObject(string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), ""), PROJECT.path);
@@ -50,7 +50,7 @@ function steam_ugc_update_project(update_preview = false) {
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.tags);
 	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, DIRECTORY + "steamUGC");
 	
-	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, "Updated");
+	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, update_note);
 }
 
 function steam_ugc_project_generate(dest_path = DIRECTORY + "steamUGCthumbnail.png") {

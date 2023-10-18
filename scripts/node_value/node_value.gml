@@ -1229,9 +1229,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.path_load: 
 						var path = animator.getValue();
 						if(is_array(path)) path = path[0];
-						if(path != "" && try_get_path(path) == -1) {
+						
+						if(!is_string(path) || path == "") {
+							str = $"Path invalid: {path}";
+							break;
+						}
+						
+						if(try_get_path(path) == -1) {
 							value_validation = VALIDATION.error;	
-							str = "File not exist: " + string(path);
+							str = $"File not exist: {path}";
 						}
 						break;
 					case VALUE_DISPLAY.path_array: 
@@ -1958,7 +1964,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			_bgC = isArray()? value_color_bg_array(draw_junction_index) : value_color_bg(draw_junction_index);
 			_fgC = value_color(draw_junction_index);
 		} else {
-			_bgC = isArray()? merge_color(color, CDEF.main_dkgrey, 0.35) : value_color_bg(draw_junction_index);
+			_bgC = isArray()? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(draw_junction_index);
 			_fgC = color;
 		}
 		
@@ -2282,6 +2288,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		ext.doUpdate();
 	} #endregion
 	
+	static hasJunctionFrom = function() { gml_pragma("forceinline"); return value_from != noone; }
+	
 	static getJunctionTo = function() { #region
 		var to = [];
 		
@@ -2367,7 +2375,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return;
 		
-		//printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
+		//print($"        > Applying deserialize to junction {name} 0");
 		on_end		= struct_try_get(_map, "on_end");
 		loop_range	= struct_try_get(_map, "loop_range", -1);
 		unit.mode	= struct_try_get(_map, "unit");
@@ -2376,7 +2384,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expTree     = evaluateFunctionList(expression); 
 		
 		sep_axis	= struct_try_get(_map, "sep_axis");
-		is_anim		= struct_try_get(_map, "anim");
+		setAnim(struct_try_get(_map, "anim"));
 		
 		draw_line_shift_x = struct_try_get(_map, "shift_x");
 		draw_line_shift_y = struct_try_get(_map, "shift_y");

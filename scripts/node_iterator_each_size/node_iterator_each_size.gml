@@ -19,4 +19,8 @@ function Node_Iterator_Each_Length(_x, _y, _group = noone) : Node(_x, _y, _group
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_iterator_amount, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
+	
+	static onLoadGroup = function() { #region
+		if(group == noone) nodeDelete(self);
+	} #endregion
 }

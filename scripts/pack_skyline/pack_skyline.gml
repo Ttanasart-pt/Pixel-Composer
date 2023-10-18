@@ -2,9 +2,7 @@ function sprite_pack_skyline(rectangles, width, height) {
 	var maxw = 0;
 	var maxh = 0;
     
-    array_sort(rectangles, function(a, b) {
-        return b.w - a.w;
-    });
+    array_sort(rectangles, function(a, b) { return b.w - a.w; });
     
     var skyline = [ new Rectangle(0, 0, width, height) ];
     var packed  = [];
@@ -38,10 +36,7 @@ function sprite_pack_skyline(rectangles, width, height) {
             array_push(skyline, new Rectangle(bestStrip.x, bestStrip.y + rect.h, rect.w, bestStrip.h - rect.h));
             
         array_remove(skyline, bestStrip);
-            
-        array_sort(skyline, function(a, b) {
-            return a.x - b.x;
-        });
+        array_sort(skyline, function(a, b) { return a.x - b.x; });
 		
 		maxw = max(maxw, rect.x + rect.w);
 		maxh = max(maxh, rect.y + rect.h);

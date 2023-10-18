@@ -214,6 +214,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	function removeFrame(index = 0) { #region
 		if(attributes.frames <= 1) return;
 		
+		if(preview_index == attributes.frames) 
+			preview_index--;
 		attributes.frames--;
 		
 		array_delete(canvas_surface, index, 1);
@@ -297,6 +299,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function surface_store_buffer(index = preview_index) { #region
+		if(index >= attributes.frames) return;
+		
 		buffer_delete(canvas_buffer[index]);
 		
 		var _canvas_surface = getCanvasSurface(index);

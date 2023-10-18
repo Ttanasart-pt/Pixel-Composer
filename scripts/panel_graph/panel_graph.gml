@@ -46,7 +46,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		graph_zoom_m   = 0;
 		graph_zoom_s   = 0;
 		
-		drag_key	   = mb_middle;
+		drag_key	   = PREF_MAP[? "pan_mouse_key"];
 		drag_locking   = false;
 	#endregion
 	
@@ -91,7 +91,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		add_node_draw_y = 0;
 		
 		connection_aa = 2;
-		connection_surface = surface_create(1, 1);
+		connection_surface    = surface_create(1, 1);
+		connection_surface_aa = surface_create(1, 1);
 	
 		value_focus     = noone;
 		value_dragging  = noone;
@@ -438,6 +439,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		menu_nodes_group   = menuItem(__txtx("panel_graph_group_nodes", "Group nodes"),				function() { doGroup(); },   THEME.group, ["Graph", "Group"]);	
 		menu_nodes_frame   = menuItem(__txtx("panel_graph_frame_nodes", "Frame nodes"),				function() { doFrame(); },   noone, ["Graph", "Frame"]);
 		
+		menu_node_copy_prop  = menuItem(__txtx("panel_graph_copy_prop",  "Copy all properties"),	function() { doCopyProp();  });
+		menu_node_paste_prop = menuItem(__txtx("panel_graph_paste_prop", "Paste all properties"),	function() { doPasteProp(); });
+		
 		#region node color
 			function setSelectingNodeColor(color) { 
 				if(node_hover == noone) return; 
@@ -447,7 +451,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					nodes_select_list[| i].timeline_item.color = color;
 			}
 		
-			var _clrs = COLORS.timeline_blend;
+			var _clrs = COLORS.labels;
 			var _item = array_create(array_length(_clrs));
 	
 			for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
@@ -496,7 +500,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 		
-			var _clrs = COLORS.timeline_blend;
+			var _clrs = COLORS.labels;
 			var _item = array_create(array_length(_clrs));
 	
 			for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
@@ -626,9 +630,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var _doDragging = false;
 			var _doZooming  = false;
 			
-			if(mouse_press(mb_middle)) {
+			if(mouse_press(PREF_MAP[? "pan_mouse_key"])) {
 				_doDragging = true;
-				drag_key = mb_middle;
+				drag_key = PREF_MAP[? "pan_mouse_key"];
 			} else if(mouse_press(mb_left) && graph_dragging_key) {
 				_doDragging = true;
 				drag_key = mb_left;
@@ -696,7 +700,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	function drawGrid() { #region
 		if(!display_parameter.show_grid) return;
 		var gls = project.graphGrid.size;
-		if(graph_s <= 0.15) gls *= 10;
+		while(gls * graph_s < 8) gls *= 5;
 		
 		var gr_x  = graph_x * graph_s;
 		var gr_y  = graph_y * graph_s;
@@ -705,18 +709,26 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var yy = -gr_ls, ys = safe_mod(gr_y, gr_ls);
 		
 		draw_set_color(project.graphGrid.color);
-		draw_set_alpha(project.graphGrid.opacity * (graph_s >= 1? 1 : 0.5));
-		while(xx < w + gr_ls) {
+		var aa = 0.5;
+		if(graph_s < 0.25) 
+			aa = 0.3;
+		var oa  = project.graphGrid.opacity;
+		var ori = project.graphGrid.show_origin;
+		var hig = project.graphGrid.highlight;
+		
+		while(xx < w + gr_ls) { 
+			draw_set_alpha( oa * aa * (1 + (round((xx + xs - gr_x) / gr_ls) % hig == 0) * 2) );
 			draw_line(xx + xs, 0, xx + xs, h);
-			if(xx + xs - gr_x == 0)
-				draw_line_width(xx + xs, 0, xx + xs, h, 3);
+			
+			if(ori && xx + xs - gr_x == 0) draw_line_width(xx + xs, 0, xx + xs, h, 3);
 			xx += gr_ls;
 		}
 		
 		while(yy < h + gr_ls) {
+			draw_set_alpha( oa * aa * (1 + (round((yy + ys - gr_y) / gr_ls) % hig == 0) * 2) );
 			draw_line(0, yy + ys, w, yy + ys);
-			if(yy + ys - gr_y == 0)
-				draw_line_width(0, yy + ys, w, yy + ys, 3);
+			
+			if(ori && yy + ys - gr_y == 0) draw_line_width(0, yy + ys, w, yy + ys, 3);
 			yy += gr_ls;
 		}
 		draw_set_alpha(1);
@@ -856,6 +868,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							array_push(menu, menu_group_tool);
 					
 						array_push(menu, -1, menu_node_delete_merge, menu_node_delete_cut, menu_node_duplicate, menu_node_copy);
+						if(ds_list_empty(nodes_select_list)) array_push(menu, menu_node_copy_prop, menu_node_paste_prop);
+						
 						array_push(menu, -1, menu_node_transform, menu_node_canvas);
 						
 						if(ds_list_size(nodes_select_list) >= 2) 
@@ -893,7 +907,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		printIf(log, "Draw active: " + string(current_time - t)); t = current_time;
 		
 		var aa = PREF_MAP[? "connection_line_aa"];
-		connection_surface = surface_verify(connection_surface, w * aa, h * aa);
+		connection_surface    = surface_verify(connection_surface, w * aa, h * aa);
+		connection_surface_aa = surface_verify(connection_surface_aa, w, h);
 		surface_set_target(connection_surface);
 		DRAW_CLEAR
 		
@@ -926,11 +941,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		printIf(log, "Draw connection: " + string(current_time - t)); t = current_time;
 		
 		surface_reset_target();
-		shader_set(sh_downsample);
-		shader_set_f("down", aa);
-		shader_set_f("dimension", surface_get_width_safe(connection_surface), surface_get_height_safe(connection_surface));
-		draw_surface(connection_surface, 0, 0);
+		
+		surface_set_shader(connection_surface_aa, sh_downsample);
+			shader_set_f("down", aa);
+			shader_set_dim("dimension", connection_surface);
+			draw_surface(connection_surface, 0, 0);
+		surface_reset_shader();
+		
+		BLEND_ALPHA
+		shader_set(sh_FXAA);
+			shader_set_dim("dimension", connection_surface_aa);
+			draw_surface(connection_surface_aa, 0, 0);
 		shader_reset();
+		BLEND_NORMAL
 		
 		junction_hovering = (node_hovering == noone && !is_struct(node_hovering))? hov : noone;
 		value_focus = noone;
@@ -1397,7 +1420,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				var nw = _node.w * ss;
 				var nh = _node.h * ss;
 				
-				draw_set_color(_node.color);
+				draw_set_color(_node.getColor());
 				draw_roundrect_ext(nx, ny, nx + nw, ny + nh, THEME_VALUE.minimap_corner_radius, THEME_VALUE.minimap_corner_radius, false);
 			}
 			draw_set_alpha(1);
@@ -1424,6 +1447,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(mouse_click(mb_left, hover))
 				minimap_panning = true;
 		}
+		
 		surface_reset_target();
 		
 		draw_surface_ext_safe(minimap_surface, mx0, my0, 1, 1, 0, c_white, 0.5 + 0.35 * hover);
@@ -1905,6 +1929,36 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					nodeDelete(nodes_select_list[| i], _merge);
 			}
 			ds_list_clear(nodes_select_list);
+		} #endregion
+		
+		node_prop_clipboard = noone;
+		function doCopyProp() { #region
+			if(node_hover == noone) return;
+			node_prop_clipboard = node_hover;
+		} #endregion
+			
+		function doPasteProp() { #region
+			if(node_hover == noone) return;
+			if(node_prop_clipboard == noone) return;
+			if(!node_prop_clipboard.active) return;
+			
+			if(instanceof(node_prop_clipboard) != instanceof(node_hover)) return;
+			
+			var _vals = [];
+			for( var i = 0, n = ds_list_size(node_prop_clipboard.inputs); i < n; i++ ) {
+				var _inp = node_prop_clipboard.inputs[| i];
+				_vals[i] = _inp.serialize();
+			}
+			
+			for( var i = 0, n = ds_list_size(node_hover.inputs); i < n; i++ ) {
+				var _inp = node_hover.inputs[| i];
+				if(_inp.value_from != noone) continue;
+				
+				_inp.applyDeserialize(_vals[i]);
+			}
+			
+			node_hover.clearInputCache();
+			RENDER_PARTIAL
 		} #endregion
 	#endregion
 	

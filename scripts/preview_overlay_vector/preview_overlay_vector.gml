@@ -32,7 +32,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		}
 	}
 						
-	if(interact && point_in_circle(_mx, _my, _ax, _ay, 8)) {
+	if(interact && active && point_in_circle(_mx, _my, _ax, _ay, 8)) {
 		hover = 1;
 		draw_sprite_colored(_spr, 1, _ax, _ay);
 		if(mouse_press(mb_left, active)) {

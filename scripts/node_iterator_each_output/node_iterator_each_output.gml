@@ -56,4 +56,8 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 		group.outputs[| 0].setValue(_val);
 		group.iterationUpdate();
 	}
+	
+	static onLoadGroup = function() { #region
+		if(group == noone) nodeDelete(self);
+	} #endregion
 }

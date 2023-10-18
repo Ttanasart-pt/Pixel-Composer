@@ -11,7 +11,7 @@ function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		
 		input.inputs[| 2].setValue(4);
 		output.inputs[| 0].setFrom(input.outputs[| 0]);
-		output.inputs[| 2].setFrom(input.outputs[| 1]);
+		output.inputs[| 1].setFrom(input.outputs[| 1]);
 	}
 	
 	static doStepBegin = function() {

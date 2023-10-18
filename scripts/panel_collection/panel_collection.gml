@@ -55,6 +55,19 @@ function Panel_Collection() : PanelContent() constructor {
 					dia.updating  = _menu_node;
 					dia.doExpand();
 				}),
+				menuItem(__txtx("panel_collection_update_thumbnail", "Update thumbnail"), function() { 
+					var _path = _menu_node.path;
+					var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
+					if(!is_surface(preview_surface)) {
+						noti_warning("Please send any node to preview panel to use as a thumbnail.")
+						return;
+					}
+					
+					var icon_path = string_replace(_path, filename_ext(_path), "") + ".png";
+					surface_save_safe(preview_surface, icon_path);
+					
+					refreshContext();
+				}),
 				-1,
 				menuItem(__txt("Delete"), function() { 
 					file_delete(_menu_node.path);

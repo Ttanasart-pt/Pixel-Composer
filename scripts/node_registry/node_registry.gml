@@ -700,6 +700,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			ds_list_add(node, "Debug");
 			addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
 			addNodeObject(node, "Widget Test",	s_node_print,		"Node_Widget_Test",	[1, Node_Widget_Test]);
+			//addNodeObject(node, "Module Test",	s_node_print,		"Node_Module_Test",	[1, Node_Module_Test]);
 			
 			ds_list_add(node, "System");
 			addNodeObject(node, "Execute Shell",	s_node_shell_excecute,	"Node_Shell",	[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
@@ -719,7 +720,14 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		//	addNodeObject(vct, "Biterator",		s_node_print,		"Node_Biterator",		[1, Node_Biterator]);
 		
 		//////////////////////////////////////////////////////////////// PIXEL BUILDER ////////////////////////////////////////////////////////////////
-			
+		
+		var pb_group = ds_list_create(); #region
+		addNodePBCatagory("Group", pb_group); 
+			ds_list_add(pb_group, "Groups");
+			addNodeObject(pb_group, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
+			addNodeObject(pb_group, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
+		#endregion
+		
 		var pb_draw = ds_list_create(); #region
 		addNodePBCatagory("Draw", pb_draw);
 			ds_list_add(pb_draw, "Fill");

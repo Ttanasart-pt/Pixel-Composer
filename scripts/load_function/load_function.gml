@@ -11,7 +11,7 @@ function LOAD() {
 }
 
 function TEST_PATH(path) {
-	TESTING = true;
+	TESTING    = true;
 	TEST_ERROR = true;
 	
 	PROJECT.cleanup();
@@ -124,13 +124,13 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 	}
 	
 	if(struct_has(_load_content, "onion_skin"))
-		PROJECT.onion_skin = _load_content.onion_skin;
+		struct_override(PROJECT.onion_skin, _load_content.onion_skin);
 	
 	if(struct_has(_load_content, "previewGrid"))
-		PROJECT.previewGrid = _load_content.previewGrid;
+		struct_override(PROJECT.previewGrid, _load_content.previewGrid);
 	
 	if(struct_has(_load_content, "graphGrid"))
-		PROJECT.graphGrid = _load_content.graphGrid;
+		struct_override(PROJECT.graphGrid, _load_content.graphGrid);
 	
 	if(struct_has(_load_content, "attributes"))
 		struct_override(PROJECT.attributes, _load_content.attributes);

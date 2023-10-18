@@ -22,4 +22,7 @@ function Node_Iterator_Each_Input(_x, _y, _group = noone) : Node(_x, _y, _group)
 		outputs[| 0].setType(group.inputs[| 0].type);
 	}
 	
+	static onLoadGroup = function() { #region
+		if(group == noone) nodeDelete(self);
+	} #endregion
 }

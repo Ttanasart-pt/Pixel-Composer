@@ -21,34 +21,46 @@
 		static getTooltip = function() { return tooltip; }
 		
 		static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) { #region
-			var _n = [];
+			var _n = {};
+			
 			for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 				var __n = nodes[i];
 				var _nx = struct_has(__n, "x")? _x + __n.x : _x + 160 * i;
 				var _ny = struct_has(__n, "y")? _y + __n.y : _y;
 				
-				_n[i] = nodeBuild(__n.node, _nx, _ny, _group);
+				var _id   = struct_try_get(__n, "id", i);
+				var _node = nodeBuild(__n.node, _nx, _ny, _group);
+				_n[$ _id] = _node;
 				
 				if(struct_has(__n, "setValues")) {
 					var _setVals = __n.setValues;
 					for(var j = 0, m = array_length(_setVals); j < m; j++ ) {
 						var _setVal = _setVals[j];
-						var _index  = _n[i].inputs[| _setVal.index];
+						var _input  = is_string(_setVal.index)? _node.inputMap[? _setVal.index] : _node.inputs[| _setVal.index];
+						
+						if(_input == undefined) continue;
 						
 						if(struct_has(_setVal, "value"))
-							_index.setValue(_setVal.value);
+							_input.setValue(_setVal.value);
 						if(struct_has(_setVal, "unit"))
-							_index.unit.setMode(_setVal.unit);
+							_input.unit.setMode(_setVal.unit);
 						if(struct_has(_setVal, "expression"))
-							_index.setExpression(_setVal.expression);
+							_input.setExpression(_setVal.expression);
 					}
 				}
 			}
 		
 			for( var i = 0, n = array_length(connections); i < n; i++ ) {
-				var _c = connections[i];
-			
-				_n[_c.to].inputs[| _c.toIndex].setFrom(_n[_c.from].outputs[| _c.fromIndex]);
+				var _c   = connections[i];
+				var _frN = _n[$ _c.from];
+				var _toN = _n[$ _c.to];
+				if(_frN == undefined || _toN == undefined) continue;
+				
+				var _frO = is_string(_c.fromIndex)? _frN.outputMap[? _c.fromIndex] : _frN.outputs[| _c.fromIndex];
+				var _toI = is_string(_c.toIndex)?   _toN.inputMap[? _c.toIndex]    : _toN.inputs[| _c.toIndex];
+				if(_frO == undefined || _toI == undefined) continue;
+				
+				_toI.setFrom(_frO);
 			}
 		
 			return _n;
@@ -109,6 +121,7 @@
 						var _list  = NODE_CATEGORY[| i].list;
 						var j = 0;
 						
+						if(_grp != "")
 						for( var m = ds_list_size(_list); j < m; j++ )
 							if(_list[| j] == _grp) break;
 						

@@ -7,7 +7,7 @@ enum ITERATION_STATUS {
 function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
 	willRestart = false;		//in the next getNextNode, reset all child nodes, use in loop.	
 	
-	static initLoop = function() {
+	static initLoop = function() { #region
 		resetRender();
 		
 		iterated = 0;
@@ -23,13 +23,13 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		doInitLoop();
 		
 		LOG_LINE_IF(global.FLAG.render, "------------------< Loop begin >------------------");
-	}
+	} #endregion
 	
 	static doInitLoop = function() {}
 	
 	static update = function(frame = CURRENT_FRAME) { initLoop(); }
 	
-	static outputNextNode = function() {
+	static outputNextNode = function() { #region
 		LOG_BLOCK_START();	
 		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from Loop output");
 		
@@ -62,17 +62,17 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		LOG_BLOCK_END();
 		
 		return _nodes;
-	}
+	} #endregion
 	
 	static getIterationCount = function() { return 0; }
 	
-	static iterationStatus = function() {
+	static iterationStatus = function() { #region
 		if(iterated >= getIterationCount())
 			return ITERATION_STATUS.complete;
 		return ITERATION_STATUS.loop;
-	}
+	} #endregion
 	
-	static iterationUpdate = function() {
+	static iterationUpdate = function() { #region
 		var maxIter = getIterationCount();
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) // check if every node is updated
@@ -93,5 +93,5 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 			LOG_LINE_IF(global.FLAG.render, $"------------------< Iteration update: {iterated} / {maxIter} [RESTART] >------------------");
 			willRestart = true;
 		}
-	}
+	} #endregion
 }

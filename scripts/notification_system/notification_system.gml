@@ -40,7 +40,7 @@
 	}
 	
 	function noti_status(str, icon = noone, flash = false, ref = noone) {
-		if(TEST_ERROR) return;
+		if(TEST_ERROR) return {};
 		
 		str = string(str);
 		show_debug_message("STATUS: " + str);
@@ -68,7 +68,7 @@
 	}
 	
 	function noti_warning(str, icon = noone, ref = noone) {
-		if(TEST_ERROR) return;
+		if(TEST_ERROR) return {};
 		show_debug_message("WARNING: " + str);
 		
 		if(PANEL_MENU) {
@@ -97,7 +97,7 @@
 	}
 	
 	function noti_error(str, icon = noone, ref = noone) {
-		if(TEST_ERROR) return;
+		if(TEST_ERROR) return {};
 		show_debug_message("ERROR: " + str);
 		
 		var noti = new notification(NOTI_TYPE.error, str, icon, c_ui_red);

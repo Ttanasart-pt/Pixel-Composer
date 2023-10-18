@@ -6,7 +6,7 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 	#region data
 		properties = [
 			[
-				new checkBox(function(str) {
+				new checkBox(function() {
 					if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
 					PANEL_GRAPH.project.graphGrid.snap = !PANEL_GRAPH.project.graphGrid.snap;
 				}),
@@ -36,7 +36,24 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 				}, self),
 				__txtx("project_graphGrid_color", "Grid color"),
 				function() { return PANEL_GRAPH.project.graphGrid.color; }
-			]
+			],
+			[
+				new checkBox(function() {
+					if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
+					PANEL_GRAPH.project.graphGrid.show_origin = !PANEL_GRAPH.project.graphGrid.show_origin;
+				}),
+				__txtx("grid_show_origin", "Show origin"),
+				function() { return PANEL_GRAPH.project.graphGrid.show_origin; }
+			],
+			[
+				new textBox(TEXTBOX_INPUT.number, function(str) {
+					if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
+					PANEL_GRAPH.project.graphGrid.highlight = max(1, round(real(str)));	
+				}),
+				__txtx("grid_highlight_every", "Highlight period"),
+				function() { return PANEL_GRAPH.project.graphGrid.highlight; }
+			],
+			
 		];
 		
 		setHeight();

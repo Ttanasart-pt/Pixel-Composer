@@ -364,13 +364,16 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static postDeserialize = function() { createInput(false); }
 	
-	static doApplyDeserialize = function() {
+	static doApplyDeserialize = function() { #region
+		if(inParent == undefined) return;
+		if(group == noone) return;
+		
 		inParent.name = name;
 		getInputs();
 		if(PROJECT.version < 11520) attributes.input_priority = getInputData(5);
 		onValueUpdate();
 		group.sortIO();
-	}
+	} #endregion
 	
 	static onDestroy = function() { #region
 		if(is_undefined(inParent)) return;
@@ -387,4 +390,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			to.setFrom(fr);
 		}
 	} #endregion
+		
+	static onLoadGroup = function() { #region
+		if(group == noone) nodeDelete(self);
+	} #endregion
+	
 }

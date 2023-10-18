@@ -82,6 +82,10 @@ function Panel_Preview() : PanelContent() constructor {
 		tool_x_max   = 0;
 		tool_current = noone;
 		
+		tool_hovering     = false;
+		tool_side_drawing = false;
+		overlay_hovering  = false;
+		
 		sbChannel = new scrollBox([], function(index) { #region
 			var node = getNodePreview();
 			if(node == noone) return;
@@ -382,9 +386,9 @@ function Panel_Preview() : PanelContent() constructor {
 			var _doDragging = false;
 			var _doZooming  = false;
 			
-			if(mouse_press(mb_middle)) {
+			if(mouse_press(PREF_MAP[? "pan_mouse_key"])) {
 				_doDragging = true;
-				canvas_drag_key = mb_middle;
+				canvas_drag_key = PREF_MAP[? "pan_mouse_key"];
 			} else if(mouse_press(mb_left) && canvas_dragging_key) {
 				_doDragging = true;
 				canvas_drag_key = mb_left;
@@ -466,9 +470,9 @@ function Panel_Preview() : PanelContent() constructor {
 			var _doDragging = false;
 			var _doZooming  = false;
 			
-			if(mouse_press(mb_middle)) {
+			if(mouse_press(PREF_MAP[? "pan_mouse_key"])) {
 				_doDragging = true;
-				canvas_drag_key = mb_middle;
+				canvas_drag_key = PREF_MAP[? "pan_mouse_key"];
 			} else if(mouse_press(mb_left) && canvas_dragging_key) {
 				_doDragging = true;
 				canvas_drag_key = mb_left;
@@ -731,9 +735,9 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(is_surface(preview_surface[0])) { #region outline
 			if(PROJECT.previewGrid.show) {
-				var _gw = PROJECT.previewGrid.size[0]  * canvas_s;
+				var _gw = PROJECT.previewGrid.size[0] * canvas_s;
 				var _gh = PROJECT.previewGrid.size[1] * canvas_s;
-			
+				
 				var gw = pswd / _gw;
 				var gh = pshd / _gh;
 			
@@ -1068,9 +1072,6 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 	} #endregion
 	
-	tool_hovering = false;
-	tool_side_drawing = false;
-	
 	function drawNodeTools(active, _node) { #region
 		var _mx = mx;
 		var _my = my;
@@ -1089,7 +1090,7 @@ function Panel_Preview() : PanelContent() constructor {
 			mouse_on_preview = 0;
 		}
 		
-		var overlayHover =  tool_hovering == noone;
+		var overlayHover =  tool_hovering == noone && !overlay_hovering;
 			overlayHover &= active && isHover;
 			overlayHover &= point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 			overlayHover &= !key_mod_press(CTRL);
@@ -1112,6 +1113,20 @@ function Panel_Preview() : PanelContent() constructor {
 		
 			_node.drawOverlay(overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, { w, h });
 		}
+		
+		#region node overlay
+			overlay_hovering = false;
+		
+			if(_node.drawPreviewToolOverlay(pHOVER && pFOCUS, _mx, _my, { x, y, w, h, toolbar_height, 
+				x0: _node.tools == -1? 0 : ui(40),
+				x1: w,
+				y0: toolbar_height - ui(8), 
+				y1: h - toolbar_height 
+			})) {
+				canvas_hover     = false;
+				overlay_hovering = true;
+			}
+		#endregion
 		
 		var _tool = tool_hovering;
 		tool_hovering = noone;

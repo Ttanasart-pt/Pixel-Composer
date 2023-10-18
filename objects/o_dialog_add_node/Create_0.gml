@@ -31,12 +31,8 @@ event_inherited();
 	#region ---- category ----
 		category = NODE_CATEGORY;
 		switch(context) {
-			case "Node_Pixel_Builder" : 
-				category = NODE_PB_CATEGORY; 
-				break;
-			case "Node_DynaSurf" : 
-				category = NODE_PCX_CATEGORY; 
-				break;
+			case "Node_Pixel_Builder" : category = NODE_PB_CATEGORY;  break;
+			case "Node_DynaSurf" :      category = NODE_PCX_CATEGORY; break;
 		}
 	
 		draw_set_font(f_p0);
@@ -169,10 +165,10 @@ event_inherited();
 			var res = _node.build(node_target_x, node_target_y,, _param);
 			
 			if(_node.inputNode != noone)
-				_inputs  = res[_node.inputNode].inputs;
+				_inputs  = res[$ _node.inputNode].inputs;
 			
 			if(_node.outputNode != noone)
-				_outputs = res[_node.outputNode].outputs;
+				_outputs = res[$ _node.outputNode].outputs;
 		} else {
 			var _new_list = APPEND(_node.path);
 			_inputs  = ds_list_create();

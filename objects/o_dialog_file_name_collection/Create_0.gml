@@ -12,9 +12,10 @@ event_inherited();
 	
 	destroy_on_click_out = false;
 	
-	meta = METADATA.clone();
+	meta		= METADATA.clone();
 	meta_expand = false;
-	updating = noone;
+	updating	= noone;
+	update_note = "Updated";
 	
 	node = noone;
 	data_path = "";
@@ -29,10 +30,13 @@ event_inherited();
 	t_alias = new textArea(TEXTBOX_INPUT.text, function(str) { meta.alias	    = str; });
 	t_tags  = new textArrayBox(function() { return meta.tags; }, META_TAGS);
 	
-	t_desc.auto_update  = true;
-	t_auth.auto_update  = true;
-	t_cont.auto_update  = true;
-	t_alias.auto_update = true;
+	t_update = new textArea(TEXTBOX_INPUT.text, function(str) { update_note	    = str; });
+	
+	t_desc.auto_update   = true;
+	t_auth.auto_update   = true;
+	t_cont.auto_update   = true;
+	t_alias.auto_update  = true;
+	t_update.auto_update = true;
 	
 	function doExpand() {
 		meta_expand = true;

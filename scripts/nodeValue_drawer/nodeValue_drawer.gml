@@ -21,14 +21,14 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	var butx = xx;
 	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) { #region animation
-		var index = jun.value_from == noone? jun.is_anim : 2;
+		var index = jun.hasJunctionFrom()? 2 : jun.is_anim;
 		draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 			if(anim_hold != noone)
 				jun.setAnim(anim_hold);
 				
 			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 1);
-			TOOLTIP = jun.value_from == noone? __txtx("panel_inspector_toggle_anim", "Toggle animation") : __txtx("panel_inspector_remove_link", "Remove link");
+			TOOLTIP = jun.hasJunctionFrom()? __txtx("panel_inspector_remove_link", "Remove link") : __txtx("panel_inspector_toggle_anim", "Toggle animation");
 					
 			if(mouse_press(mb_left, _focus)) {
 				if(jun.value_from != noone)
@@ -230,7 +230,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		jun.editWidget.setFocusHover(_focus, _hover);
 			
 		if(jun.connect_type == JUNCTION_CONNECT.input) {
-			jun.editWidget.setInteract(jun.value_from == noone);
+			jun.editWidget.setInteract(!jun.hasJunctionFrom());
 			if(_focus) jun.editWidget.register(_scrollPane);
 		} else {
 			jun.editWidget.setInteract(false);

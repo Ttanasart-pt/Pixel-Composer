@@ -85,6 +85,10 @@
 	global.FUNCTIONS[? "surface_get_width"]  = [ ["surface"], function(val) { return surface_get_width_safe(array_safe_get(val, 0));  } ];
 	global.FUNCTIONS[? "surface_get_height"] = [ ["surface"], function(val) { return surface_get_height_safe(array_safe_get(val, 0)); } ];
 	
+	global.FUNCTIONS[? "color_hex"] = [ ["char"],  function(val) { return colorFromHex(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "color_rgb"] = [ ["red", "green", "blue"],  function(val) { return make_color_rgb(array_safe_get(val, 0), array_safe_get(val, 1), array_safe_get(val, 2)); } ];
+	global.FUNCTIONS[? "color_hsv"] = [ ["red", "green", "blue"],  function(val) { return make_color_hsv(array_safe_get(val, 0), array_safe_get(val, 1), array_safe_get(val, 2)); } ];
+	
 	globalvar PROJECT_VARIABLES;
 	PROJECT_VARIABLES = {};
 	

@@ -247,7 +247,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	} #endregion
 	
+	static preGetInputs = function() {}
+	
 	static getInputs = function() { #region
+		preGetInputs();
+		
 		process_amount	= 1;
 		inputs_data		= array_create(ds_list_size(inputs));
 		inputs_is_array	= array_create(ds_list_size(inputs));

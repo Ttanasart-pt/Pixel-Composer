@@ -149,7 +149,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				_val_to[i].color = color;
 		}
 		
-		var _clrs = COLORS.timeline_blend;
+		var _clrs = COLORS.labels;
 		var _item = array_create(array_length(_clrs));
 	
 		for( var i = 0, n = array_length(_clrs); i < n; i++ ) {

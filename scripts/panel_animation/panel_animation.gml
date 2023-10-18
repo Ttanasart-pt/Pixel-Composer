@@ -286,7 +286,7 @@ function Panel_Animation() : PanelContent() constructor {
 		},	THEME.folder_content),
 	];
 	
-	var _clrs = COLORS.timeline_blend;
+	var _clrs = COLORS.labels;
 	var _item = array_create(array_length(_clrs));
 	
 	function setSelectingItemColor(color) { if(context_selecting_item == noone) return; context_selecting_item.item.color = color; }

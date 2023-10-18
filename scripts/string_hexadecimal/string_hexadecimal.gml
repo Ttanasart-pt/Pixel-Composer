@@ -50,3 +50,13 @@ function color_from_rgb(str) {
 		
 	return make_color_rgb(_r, _g, _b);
 }
+
+function colorFromHex(hex) {
+	if(string_length(hex) != 6) return 0;
+	
+	var rr = string_hexadecimal(string_copy(hex, 1, 2));
+	var gg = string_hexadecimal(string_copy(hex, 3, 2));
+	var bb = string_hexadecimal(string_copy(hex, 5, 2));
+	
+	return make_color_rgb(rr, gg, bb);
+}
