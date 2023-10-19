@@ -71,6 +71,7 @@ event_inherited();
 	function filtered(node) { #region
 		if(!node_show_connectable) return true;
 		if(node_called == noone && junction_hovering == noone) return true;
+		if(!struct_has(node, "node")) return true;
 		if(!struct_has(global.NODE_GUIDE, node.node)) return true;
 		
 		var io = global.NODE_GUIDE[$ node.node];
@@ -396,6 +397,8 @@ event_inherited();
 			
 			for(var index = 0; index < node_count; index++) {
 				var _node = _list[| index];
+				if(is_undefined(_node)) continue;
+				
 				if(is_string(_node)) {
 					if(!PREF_MAP[? "dialog_add_node_grouping"])
 						continue;
@@ -520,6 +523,7 @@ event_inherited();
 			
 			for(var i = 0; i < node_count; i++) {
 				var _node = _list[| i];
+				if(is_undefined(_node)) continue;
 				
 				if(is_string(_node)) {
 					if(!PREF_MAP[? "dialog_add_node_grouping"])

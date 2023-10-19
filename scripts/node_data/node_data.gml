@@ -639,8 +639,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return true;
 	} #endregion
 	
-	static getNextNodesRaw = function() { return getNextNodes(); }
-	
 	static getNextNodes = function() { #region
 		var nodes = [];
 		var nodeNames = [];
@@ -652,6 +650,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _ot = outputs[| i];
 			if(!_ot.forward) continue;
+			if(_ot.type == VALUE_TYPE.node) continue;
 			
 			var _tos = _ot.getJunctionTo();
 			
@@ -669,6 +668,22 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		LOG_BLOCK_END();
 		LOG_BLOCK_END();
+		return nodes;
+	} #endregion
+	
+	static getNextNodesRaw = function() { #region
+		var nodes = [];
+		
+		for(var i = 0; i < ds_list_size(outputs); i++) {
+			var _ot = outputs[| i];
+			if(!_ot.forward) continue;
+			if(_ot.type == VALUE_TYPE.node) continue;
+			
+			var _tos = _ot.getJunctionTo();
+			for( var j = 0; j < array_length(_tos); j++ )
+				array_push(nodes, _tos[j].node);
+		}	
+		
 		return nodes;
 	} #endregion
 	
@@ -1352,7 +1367,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	} #endregion
 	
-	static clearCacheForward = function() { _clearCacheForward(); }
+	static clearCacheForward = function() { #region
+		_clearCacheForward(); 
+	} #endregion
 	
 	static _clearCacheForward = function() { #region
 		if(!isRenderActive()) return;
@@ -1361,10 +1378,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var arr = getNextNodesRaw();
 		for( var i = 0, n = array_length(arr); i < n; i++ )
 			arr[i]._clearCacheForward();
-		
-		//for( var i = 0; i < ds_list_size(outputs); i++ )
-		//for( var j = 0; j < ds_list_size(outputs[| i].value_to); j++ )
-		//	outputs[| i].value_to[| j].node._clearCacheForward();
 	} #endregion
 	
 	static clearInputCache = function() { #region

@@ -221,8 +221,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var nodes = [];
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
 			var _ot = outputs[| i];
+			if(!_ot.forward) continue;
+			if(_ot.type == VALUE_TYPE.node) continue;
+				
 			var _tos = _ot.getJunctionTo();
-			
 			for( var j = 0, n = array_length(_tos); j < n; j++ ) {
 				var _to   = _tos[j];
 				var _node = _to.node;

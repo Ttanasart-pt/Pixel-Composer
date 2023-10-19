@@ -22,7 +22,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	inputs[| 4] = nodeValue("Apply frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Frame index to apply force.")
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue("Force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 0 ])
+	inputs[| 5] = nodeValue("Force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.1, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.rejectArray();
 	
