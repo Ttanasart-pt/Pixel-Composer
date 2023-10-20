@@ -8,42 +8,27 @@ event_inherited();
 	destroy_on_click_out = true;
 	dragging = noone;
 	
-	sep_editing = -1;
-	tb_edit = new textBox(TEXTBOX_INPUT.text, function(str) {
-		if(sep_editing == -1) return;
-		
-		display_list[sep_editing][0] = str;
-		sep_editing = -1;
-		refreshDisplay();
-	} );
-	tb_edit.align = fa_left;
-	
 	node = noone;
 	display_list = [];
 	
 	function setNode(node) {
 		self.node = node;
-		self.display_list = node.input_display_list;
+		self.display_list = node.output_display_list;
 	}
 	
 	function refreshDisplay() {
-		var sep  = [];
 		var _ord = 0;
 			
 		for( var i = 0, n = array_length(display_list); i < n; i++ ) {
 			var ls = display_list[i];
 				
-			if(is_array(ls)) array_push(sep, [ _ord, ls[0] ]);
-			else {
-				var _inp = node.inputs[| ls];
-				_inp.from.attributes.input_priority = _ord;
-				_ord++;
-			}
+			var _inp = node.outputs[| ls];
+			_inp.from.attributes.input_priority = _ord;
+			_ord++;
 		}
-			
-		node.attributes.separator = sep;
+		
 		node.sortIO();
-		display_list = node.input_display_list;
+		display_list = node.output_display_list;
 			
 		PROJECT.modified = true;
 	}
@@ -79,43 +64,13 @@ event_inherited();
 				_ly = _y + (is_array(disp)? hg : ui(28)) + ui(4);
 			}
 				
-			if(is_array(disp)) {
-				var ed_x = hg + ui(4);
-				if(sHOVER && point_in_rectangle(_m[0], _m[1], ed_x, _y, con_w, _y + hg)) {
-					draw_sprite_stretched_ext(THEME.group_label, 0, ed_x, _y, con_w - ed_x, hg, COLORS._main_icon, 1);
-					
-					if(mouse_press(mb_left, sFOCUS)) {
-						sep_editing = i;
-						tb_edit.activate();
-					}
-				} else
-					draw_sprite_stretched_ext(THEME.group_label, 0, ed_x, _y, con_w - ed_x, hg, COLORS._main_icon_light, 1);
+			var ind = node.outputs[| disp];
+			draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
+			draw_text(hg + ui(8), _y + ui(14), ind.name);
 				
-				if(sep_editing == i) {
-					var sep = node.attributes.separator;
-					
-					WIDGET_CURRENT = tb_edit;
-					tb_edit.setFocusHover(sFOCUS, sHOVER);
-					tb_edit.draw(ed_x + ui(4), _y + ui(4), con_w - (ed_x + ui(8)), hg - ui(8), disp[0], mouse_ui);
-					
-					if(keyboard_check_pressed(vk_enter))
-						sep_editing = -1;
-				} else {
-					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-					draw_text(ed_x + ui(8), _y + hg / 2 - 1, disp[0]);
-				}
-				
-				_y += hg + ui(4);
-				_h += hg + ui(4);
-			} else {
-				var ind = node.inputs[| disp];
-				draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
-				draw_text(hg + ui(8), _y + ui(14), ind.name);
-				
-				inpt++;
-				_y += ui(28) + ui(4);
-				_h += ui(28) + ui(4);
-			}
+			inpt++;
+			_y += ui(28) + ui(4);
+			_h += ui(28) + ui(4);
 		}
 		
 		if(_drag > -1) {

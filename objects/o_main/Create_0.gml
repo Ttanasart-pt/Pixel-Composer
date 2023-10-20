@@ -30,7 +30,7 @@
 	win_hp = WIN_H;
 	win_resize = false;
 	
-	room_width = WIN_W;
+	room_width  = WIN_W;
 	room_height = WIN_H;
 	
 	draw_set_circle_precision(64);

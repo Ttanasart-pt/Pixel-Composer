@@ -106,10 +106,16 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	tool_node = noone;
 	draw_input_overlay = true;
 	
-	array_push(attributeEditors, ["Edit separator", function() { return attributes.separator; },
+	array_push(attributeEditors, ["Edit Input Display", function() { return attributes.separator; },
 		button(function() {
 			var dia = dialogCall(o_dialog_group_input_order);
-			dia.node = self;
+			dia.setNode(self);
+		}) ]);
+	
+	array_push(attributeEditors, ["Edit Output Display", function() { return attributes.separator; },
+		button(function() {
+			var dia = dialogCall(o_dialog_group_output_order);
+			dia.setNode(self);
 		}) ]);
 	
 	insp1UpdateTooltip   = __txtx("panel_inspector_execute", "Execute node contents");
@@ -386,40 +392,39 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_dummy = false;
 	} #endregion
 	
-	static resolveGroupOrdering = function() { #region
-		var siz = ds_list_size(inputs);
-		var ar  = ds_priority_create();
+	static getListFreeOrder = function(list) { #region
+		var _or  = 0;
+		var _ors = [];
 		
-		for( var i = custom_input_index; i < siz; i++ ) {
-			var _in = inputs[| i];
-			var _or = _in.from.attributes.input_priority;
-			
-			ds_priority_add(ar, _in, _or);
+		for( var i = custom_input_index; i < ds_list_size(list); i++ ) {
+			var _in = list[| i];
+			array_push(_ors, _in.from.attributes.input_priority);
 		}
 		
-		var _order = 0;
-		for( var i = custom_input_index; i < siz; i++ ) {
-			var _jin = ds_priority_delete_min(ar);
-			
-			var _in = inputs[| i];
-			_in.from.attributes.input_priority = _order;
-			_order++;
-		}
+		array_sort(_ors, true);
+		for( var i = 0, n = array_length(_ors); i < n; i++ )
+			if(_or == _ors[i]) _or++;
 		
-		ds_priority_destroy(ar);
+		return _or;
 	} #endregion
 	
+	static getInputFreeOrder  = function() { return getListFreeOrder(inputs); }
+	static getOutputFreeOrder = function() { return getListFreeOrder(outputs); }
+	
 	static sortIO = function() { #region
-		resolveGroupOrdering();
+		var sep  = attributes.separator;		
+		var siz  = ds_list_size(inputs);
+		var ar   = ds_priority_create();
+		var _ors = {};
+		var _dup = false;
 		
-		var sep = attributes.separator;		
 		array_sort(sep, function(a0, a1) { return a0[0] - a1[0]; });
-		var siz = ds_list_size(inputs);
-		var ar  = ds_priority_create();
 		
 		for( var i = custom_input_index; i < siz; i++ ) {
 			var _in = inputs[| i];
 			var _or = _in.from.attributes.input_priority;
+			if(struct_has(_ors, _or)) _dup = true;
+			_ors[$ _or] = 1;
 			
 			ds_priority_add(ar, _in, _or);
 		}
@@ -447,8 +452,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		ds_priority_destroy(ar);
 		
-		var siz = ds_list_size(outputs);
-		var ar = ds_priority_create();
+		output_display_list = [];
+		var siz  = ds_list_size(outputs);
+		var ar   = ds_priority_create();
+		var _dup = false;
 		
 		for( var i = custom_output_index; i < siz; i++ ) {
 			var _out = outputs[| i];
@@ -457,14 +464,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			ds_priority_add(ar, _out, _or);
 		}
 		
-		for( var i = siz - 1; i >= custom_output_index; i-- ) {
+		for( var i = siz - 1; i >= custom_output_index; i-- )
 			ds_list_delete(outputs, i);
-		}
 		
 		for( var i = custom_output_index; i < siz; i++ ) {
 			var _jout = ds_priority_delete_min(ar);
 			_jout.index = i;
 			ds_list_add(outputs, _jout);
+			array_push(output_display_list, i);
 		}
 		
 		ds_priority_destroy(ar);

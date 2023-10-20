@@ -19,15 +19,4 @@ if !ready exit;
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 	sc_group.setFocusHover(sFOCUS, sHOVER);
 	sc_group.draw(px, py);
-	
-	var bx = dialog_x + dialog_w - ui(32 + 16);
-	var by = dialog_y + ui(16);
-	
-	var _txt = __txtx("dialog_group_order_add", "Add separator");
-	if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.add, 1, COLORS._main_value_positive) == 2) {
-		var sep = node.attributes.separator;
-		array_push(sep, [ ds_list_size(node.inputs) - node.custom_input_index, "" ]);
-		node.sortIO();
-		display_list = node.input_display_list;
-	}
 #endregion

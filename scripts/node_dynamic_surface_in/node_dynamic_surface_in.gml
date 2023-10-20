@@ -8,15 +8,8 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inParent = undefined;
 	
-	attributes.input_priority = group == noone? 0 : ds_list_size(group.inputs);
-	array_push(attributeEditors, "Group");
-	array_push(attributeEditors, ["Input Order", function() { return attributes.input_priority; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.input_priority = val; 
-			group.setHeight();
-			group.sortIO();
-		})]);
-		
+	attributes.input_priority = group == noone? 0 : group.getInputFreeOrder();
+	
 	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone);
 	
 	static createInput = function(override_order = true) { #region
@@ -51,14 +44,22 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		if(is_undefined(inParent)) return;
 		var _val = inParent.getValue();
 		
 		outputs[| 0].setValue(new __funcTree("", _val));
-	}
+	} #endregion
 	
 	static postDeserialize = function() { #region
 		createInput(false);
 	} #endregion
+	
+	static doApplyDeserialize = function() { #region
+		if(group == noone) return;
+		
+		if(CLONING) attributes.input_priority = group.getInputFreeOrder();
+		group.sortIO();
+	} #endregion
+	
 }

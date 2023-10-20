@@ -1713,7 +1713,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				var _app  = __APPEND_MAP(_map);
 				APPENDING = false;
 				CLONING	  = false;
-			
+				
 				if(_app == noone) 
 					return;
 			

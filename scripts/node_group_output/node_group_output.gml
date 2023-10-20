@@ -4,14 +4,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	color = COLORS.node_blend_collection;
 	previewable = false;
 	
-	attributes.input_priority = group == noone? 0 : ds_list_size(group.inputs);
-	array_push(attributeEditors, "Group");
-	array_push(attributeEditors, ["Input Order", function() { return attributes.input_priority; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.input_priority = val; 
-			group.setHeight();
-			group.sortIO();
-		})]);
+	attributes.input_priority = group == noone? 0 : group.getOutputFreeOrder();
 	
 	w = 96;
 	h = 32 + 24;
@@ -39,8 +32,6 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onValueUpdate = function(index = 0) { #region
 		if(is_undefined(outParent)) return;
-		
-		group.sortIO();
 	} #endregion
 	
 	static getNextNodes = function() { #region
@@ -127,6 +118,10 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(PROJECT.version < 11520) attributes.input_priority = getInputData(1);
 		group.sortIO();
+	} #endregion
+	
+	static doApplyDeserialize = function() { #region
+		if(CLONING) attributes.input_priority = group.getOutputFreeOrder();
 	} #endregion
 	
 	static onDestroy = function() { #region

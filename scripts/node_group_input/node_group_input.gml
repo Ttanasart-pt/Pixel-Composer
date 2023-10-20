@@ -6,14 +6,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inParent = undefined;
 	
-	attributes.input_priority = group == noone? 0 : ds_list_size(group.inputs);
-	array_push(attributeEditors, "Group");
-	array_push(attributeEditors, ["Input Order", function() { return attributes.input_priority; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.input_priority = val; 
-			group.setHeight();
-			group.sortIO();
-		})]);
+	attributes.input_priority = group == noone? 0 : group.getInputFreeOrder();
 	
 	w = 96;
 	h = 32 + 24;
@@ -258,9 +251,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				inParent.setDisplay(VALUE_DISPLAY.button, { name: bname, onClick: function() { doTrigger = 1; } });
 				break;
 		}
-		
-		if(index == 5)
-			group.sortIO();
 	} #endregion
 	
 	static createInput = function(override_order = true) { #region
@@ -372,6 +362,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		getInputs();
 		if(PROJECT.version < 11520) attributes.input_priority = getInputData(5);
 		onValueUpdate();
+		
+		if(CLONING) attributes.input_priority = group.getInputFreeOrder();
 		group.sortIO();
 	} #endregion
 	
