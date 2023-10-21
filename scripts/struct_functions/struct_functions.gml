@@ -6,7 +6,7 @@ function struct_override(original, override) {
 	for( var i = 0, n = array_length(args); i < n; i++ ) {
 		var _key = args[i];
 		
-		if(!struct_has(original, _key))   continue;
+		if(!struct_has(original, _key)) continue;
 		original[$ _key] = override[$ _key];
 	}
 	

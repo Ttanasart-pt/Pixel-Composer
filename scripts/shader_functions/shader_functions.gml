@@ -166,7 +166,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	function shader_preset_interpolation(shader = sh_sample) {
 		gml_pragma("forceinline");
 		
-		var intp   = attributes.interpolation;
+		var intp   = attributes.interpolate;
 		
 		gpu_set_tex_filter(intp);
 		shader_set_uniform_i(shader_get_uniform(shader, "interpolation"),	intp);
@@ -188,7 +188,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	function shader_set_interpolation(surface) {
 		gml_pragma("forceinline");
 		
-		var intp   = attributes.interpolation;
+		var intp   = attributes.interpolate;
 		
 		gpu_set_tex_filter(intp);
 		shader_set_i("interpolation",	intp);

@@ -61,20 +61,20 @@
 	}
 	
 	function attribute_interpolation(label = false) {
-		attributes.interpolation = 0;
-		attributes.oversample = 0;
+		attributes.interpolate = 0;
+		attributes.oversample  = 0;
 		
 		if(label) array_push(attributeEditors, "Surface");
-		array_push(attributeEditors, ["Texture interpolation", function() { return attributes.interpolation; }, 
+		array_push(attributeEditors, ["Texture interpolation", function() { return attributes.interpolate; }, 
 			new scrollBox(global.SURFACE_INTERPOLATION, function(val) { 
-				attributes.interpolation = val;
+				attributes.interpolate = val;
 				triggerRender();
 			}, false)]);
 	}
 	
 	function attribute_oversample(label = false) {
-		attributes.interpolation = 0;
-		attributes.oversample = 0;
+		attributes.interpolate = 0;
+		attributes.oversample  = 0;
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Oversample", function() { return attributes.oversample; }, 
