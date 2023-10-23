@@ -76,6 +76,12 @@ function color_diff(c1, c2, fast = false, alpha = false) {
 	return sqrt(sqr(_c1_r - _c2_r) + sqr(_c1_g - _c2_g) + sqr(_c1_b - _c2_b) + sqr(_c1_a - _c2_a));
 }
 
+function color_get_brightness(col) {
+	gml_pragma("forceinline");
+	
+	return (0.299 * color_get_red(col) + 0.587 * color_get_green(col) + 0.114 * color_get_blue(col)) / 255;
+}
+
 #region sorting functions
 	function __valHSV(c, h, s, v) { return color_get_hue(c) * h + color_get_saturation(c) * s + color_get_value(c) * v; }
 	function __valRGB(c, r, g, b) { return color_get_red(c) * r + color_get_green(c) * g + color_get_blue(c) * b; }

@@ -825,8 +825,10 @@ function Panel_Preview() : PanelContent() constructor {
 				d3_scene_light0.shadow_map_scale = d3_view_camera.focus_dist * 2;
 				
 				var _prev_obj = _prev_node.getPreviewObject();
-				d3_scene_light0.submitShadow(d3_scene_preview, _prev_obj);
-				_prev_obj.submitShadow(d3_scene_preview, _prev_obj);
+				if(_prev_obj != noone) {
+					d3_scene_light0.submitShadow(d3_scene_preview, _prev_obj);
+					_prev_obj.submitShadow(d3_scene_preview, _prev_obj);
+				}
 			}
 		#endregion
 		
