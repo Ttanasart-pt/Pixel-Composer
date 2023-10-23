@@ -86,6 +86,11 @@
 	addHotkey("", "Close file", "Q",		MOD_KEY.ctrl, function() { PANEL_GRAPH.close(); });
 	addHotkey("", "Close program", vk_f4,	MOD_KEY.alt, window_close);
 	
+	addHotkey("", "Reload theme", vk_f10,	MOD_KEY.ctrl | MOD_KEY.shift, function() { 
+		loadGraphic(PREF_MAP[? "theme"]); 
+		resetPanel();
+	} );
+	
 	globalvar HOTKEY_MOD, HOTKEY_BLOCK;
 	HOTKEY_MOD = 0;
 	HOTKEY_BLOCK = false;

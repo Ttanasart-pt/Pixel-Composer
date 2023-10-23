@@ -38,7 +38,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 9] = nodeValue("Output dimension type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input", "Scale" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input", "Transformed" ]);
 	
 	inputs[| 10] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Round position to the closest integer value to avoid jittering.");
 	
@@ -64,25 +64,42 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _surf		= getSingleValue(0, arr);
 		var _out_type	= getSingleValue(9, arr);
 		var _out		= getSingleValue(1, arr);
+		var _rotate		= getSingleValue(5, arr);
 		var _scale		= getSingleValue(6, arr);
 		var ww, hh;
 		
+		var sw  = surface_get_width_safe(_surf);
+		var sh  = surface_get_height_safe(_surf);
+		
 		switch(_out_type) {
 			case OUTPUT_SCALING.same_as_input :
-				ww  = surface_get_width_safe(_surf);
-				hh  = surface_get_height_safe(_surf);
+				ww = sw;
+				hh = sh;
 				break;
 			case OUTPUT_SCALING.relative : 
-				ww  = surface_get_width_safe(_surf)  * _out[0];
-				hh  = surface_get_height_safe(_surf) * _out[1];
+				ww = sw * _out[0];
+				hh = sh * _out[1];
 				break;
 			case OUTPUT_SCALING.constant :	
-				ww  = _out[0];
-				hh  = _out[1];
+				ww = _out[0];
+				hh = _out[1];
 				break;
 			case OUTPUT_SCALING.scale :	
-				ww  = surface_get_width_safe(_surf)  * _scale[0];
-				hh  = surface_get_height_safe(_surf) * _scale[1];
+				ww = sw * _scale[0];
+				hh = sh * _scale[1];
+				
+				var p0 = point_rotate( 0,  0, ww / 2, hh / 2, _rotate);
+				var p1 = point_rotate(ww,  0, ww / 2, hh / 2, _rotate);
+				var p2 = point_rotate( 0, hh, ww / 2, hh / 2, _rotate);
+				var p3 = point_rotate(ww, hh, ww / 2, hh / 2, _rotate);
+				
+				var minx = min(p0[0], p1[0], p2[0], p3[0]);
+				var maxx = max(p0[0], p1[0], p2[0], p3[0]);
+				var miny = min(p0[1], p1[1], p2[1], p3[1]);
+				var maxy = max(p0[1], p1[1], p2[1], p3[1]);
+				
+				ww = maxx - minx;
+				hh = maxy - miny;
 				break;
 		}
 		
@@ -167,6 +184,19 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				inputs[| 1].setVisible(false);
 				_ww = ww * sca[0];
 				_hh = hh * sca[1];
+				
+				var p0 = point_rotate(  0,   0, _ww / 2, _hh / 2, rot);
+				var p1 = point_rotate(_ww,   0, _ww / 2, _hh / 2, rot);
+				var p2 = point_rotate(  0, _hh, _ww / 2, _hh / 2, rot);
+				var p3 = point_rotate(_ww, _hh, _ww / 2, _hh / 2, rot);
+				
+				var minx = min(p0[0], p1[0], p2[0], p3[0]);
+				var maxx = max(p0[0], p1[0], p2[0], p3[0]);
+				var miny = min(p0[1], p1[1], p2[1], p3[1]);
+				var maxy = max(p0[1], p1[1], p2[1], p3[1]);
+				
+				_ww = maxx - minx;
+				_hh = maxy - miny;
 				break;
 		}
 		if(_ww <= 0 || _hh <= 0) return;

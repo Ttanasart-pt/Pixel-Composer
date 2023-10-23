@@ -10,6 +10,7 @@ uniform float borderSize;
 uniform vec4  borderColor;
 
 uniform int	  side;
+uniform int	  crop_border;
 
 uniform int	  is_aa;
 uniform int	  is_blend;
@@ -54,16 +55,16 @@ void main() {
 	bool  closetCollected	= false;
 	vec4  closetColor;
 	
-	bool isBorder = false;
-	if(side == 0) 
-		isBorder = point.a == 1.;
-	else if(side == 1) 
-		isBorder = point.a < 1.;
+	#region filter out filled ot empty pixel
+		bool isBorder = false;
+		if(side == 0)      isBorder = point.a == 1.;
+		else if(side == 1) isBorder = point.a < 1.;
 	
-	if(!isBorder) {
-		gl_FragColor = col;
-		return;
-	}
+		if(!isBorder) {
+			gl_FragColor = col;
+			return;
+		}
+	#endregion
 	
 	if(borderSize + borderStart > 0.) {
 		outline_alpha = 0.;
@@ -79,14 +80,13 @@ void main() {
 					top = 1.;
 					base *= 2.;
 				}
-		
-				vec2  pxs = (pixelPosition + vec2( cos(ang),  sin(ang)) * i) / dimension;
-				vec4  sam = sampleTexture( pxs );
-					
-				if(side == 0 && sam.a > 0.)
-					continue;
-				if(side == 1 && sam.a < 1.)
-					continue;
+				
+				vec2 pxs = (pixelPosition + vec2( cos(ang),  sin(ang)) * i) / dimension;
+				if(side == 0 && crop_border == 1 && (pxs.x < 0. || pxs.x > 1. || pxs.y < 0. || pxs.y > 1.)) continue;
+				
+				vec4 sam = sampleTexture( pxs );
+				if(side == 0 && sam.a > 0.) continue; //inside border,  skip if current pixel is filled
+				if(side == 1 && sam.a < 1.) continue; //outside border, skip if current pixel is empty
 				
 				if(i < borderStart) {
 					i = 9999.;
@@ -109,6 +109,8 @@ void main() {
 		for(float j = 0.; j < 4.; j++) {
 			float ang = j * tauDiv;
 			vec2 pxs = (pixelPosition + vec2( cos(ang),  sin(ang)) ) / dimension;
+			if(side == 0 && crop_border == 1 && (pxs.x < 0. || pxs.x > 1. || pxs.y < 0. || pxs.y > 1.)) continue;
+			
 			vec4 sam = sampleTexture( pxs );
 				
 			if((side == 0 && sam.a == 0.) || (side == 1 && sam.a > 0.)) {

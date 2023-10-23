@@ -297,7 +297,7 @@ function surface_size_lim(surface, width, height) {
 	if(sw <= width && sh <= height) return surface;
 	
 	var ss = min(width / sw, height / sh);
-	var s  = surface_create(sw * ss, sh * ss);
+	var s  = surface_create(max(1, sw * ss), max(1, sh * ss));
 	surface_set_target(s);
 	DRAW_CLEAR;
 	draw_surface_ext_safe(surface, 0, 0, ss, ss, 0, c_white, 1);

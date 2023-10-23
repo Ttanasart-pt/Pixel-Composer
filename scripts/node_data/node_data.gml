@@ -494,7 +494,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static getInputs = function(frame = CURRENT_FRAME) { #region
-		inputs_data	= array_create(ds_list_size(inputs), undefined);
+		inputs_data	= array_verify(inputs_data, ds_list_size(inputs));
 		
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			if(!is_instanceof(inputs[| i], NodeValue)) continue;

@@ -56,7 +56,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	attribute_surface_depth();
 
-	static step = function() {
+	static step = function() { #region
 		var grup = getInputData(1);
 		var pack = getInputData(3);
 		
@@ -66,9 +66,11 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		inputs[| 2].setVisible(grup == SPRITE_ANIM_GROUP.animation);
 		inputs[| 4].setVisible(pack == SPRITE_STACK.grid);
 		inputs[| 5].setVisible(pack != SPRITE_STACK.grid);
-	}
+		
+		update_on_frame = grup == 0;
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) { 
+	static update = function(frame = CURRENT_FRAME) { #region
 		var inpt = getInputData(0);
 		var grup = getInputData(1);
 		var skip = getInputData(2);
@@ -178,7 +180,11 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var py = padd[1];
 						
 		for(var i = 0; i < array_length(inpt); i++) {
-			if(!is_surface(inpt[i])) break;
+			if(!is_surface(inpt[i])) {
+				_atl[i] = noone;
+				break;
+			}
+			
 			var oo = noone;
 			if(!is_array(oupt))		oo = oupt;
 			else					oo = oupt[i];
@@ -206,7 +212,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					
 					_atl[i] = array_push_create(_atl[i], new SurfaceAtlas(inpt[i], _sx, _sy));
 					draw_surface_safe(inpt[i], _sx, _sy);
-					
 					break;
 				case SPRITE_STACK.vertical :
 					var py = padd[1] + _frame * _h + max(0, _frame) * spac;
@@ -242,9 +247,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		if(drawn) array_safe_set(anim_drawn, CURRENT_FRAME, true);
 		outputs[| 1].setValue(_atl);
-	}
+	} #endregion
 	
-	static onInspector1Update = function(updateAll = true) {
+	static onInspector1Update = function(updateAll = true) { #region
 		var key = ds_map_find_first(PROJECT.nodeMap);
 		
 		repeat(ds_map_size(PROJECT.nodeMap)) {
@@ -256,9 +261,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			node.initRender();
 		}
-	}
+	} #endregion
 	
-	static initRender = function() { 
+	static initRender = function() { #region
 		for(var i = 0; i < array_length(anim_drawn); i++) anim_drawn[i] = false;
 		
 		var inpt = getInputData(0);
@@ -427,5 +432,5 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		outputs[| 0].setValue(_surf);
 		outputs[| 1].setValue(_atl);
-	}
+	} #endregion
 }

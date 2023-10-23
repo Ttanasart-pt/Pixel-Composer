@@ -4,10 +4,8 @@ function __initTheme() {
 		directory_create(root);
 			
 	var _l = root + "/version";
-	if(file_exists(_l)) {
+	if(file_exists(_l))
 		var res = json_load_struct(_l);
-		//if(res.version == BUILD_NUMBER) return;
-	}
 	json_save_struct(_l, { version: BUILD_NUMBER });
 	
 	log_message("THEME", $"unzipping default theme to {root}.");
@@ -15,12 +13,17 @@ function __initTheme() {
 }
 
 function _sprite_path(rel, theme) {
-	return DIRECTORY + "themes/" + theme + "/graphics/" + string_replace_all(rel, "./", "");
+	gml_pragma("forceinline");
+	
+	return $"{DIRECTORY}themes/{theme}/graphics/{string_replace_all(rel, "./", "")}";
 }
 
 function _sprite_load_from_struct(str, theme, key) {
+	gml_pragma("forceinline");
+	
 	var path = _sprite_path(str.path, theme);
-	var s = sprite_add(path, str.subimages, false, true, str.xorigin, str.yorigin);
+	var s    = sprite_add(path, str.subimages, false, true, str.xorigin, str.yorigin);
+	
 	if(str.slice) {
 		var slice = sprite_nineslice_create();	
 		slice.enabled = str.slice.enabled;
@@ -39,6 +42,8 @@ function _sprite_load_from_struct(str, theme, key) {
 }
 
 function __getGraphicList() {
+	gml_pragma("forceinline");
+	
 	var path = _sprite_path("./graphics.json", "default");
 	var s = file_text_read_all(path);
 	return json_try_parse(s);
@@ -48,26 +53,33 @@ function loadGraphic(theme = "default") {
 	var sprDef = __getGraphicList();
 	var path = _sprite_path("./graphics.json", theme);
 	
+	print($"Loading theme {theme}");
 	if(!file_exists(path)) {
 		noti_status("Theme not defined at " + path + ", rollback to default theme.");	
 		return;
 	}
 	
-	var s = file_text_read_all(path);
+	var s        = file_text_read_all(path);
 	var graphics = variable_struct_get_names(sprDef);
-	var sprStr = json_try_parse(s);
+	var sprStr   = json_try_parse(s);
+	var str;
 	
 	for( var i = 0, n = array_length(graphics); i < n; i++ ) {
 		var key = graphics[i];
 		
-		if(variable_struct_exists(sprStr, key)) {
-			var str = variable_struct_get(sprStr, key);
-			variable_struct_set(THEME, key, _sprite_load_from_struct(str, theme, key));
-		} else {
-			noti_status("Graphic resource for " + string(key) + " not found. Rollback to default directory.");
+		if(struct_has(THEME, key) && sprite_exists(THEME[$ key]))
+			sprite_delete(THEME[$ key]);
 			
-			var str = variable_struct_get(sprDef, key);
-			variable_struct_set(THEME, key, _sprite_load_from_struct(str, "default", key));
+		if(struct_has(sprStr, key)) {
+			str = sprStr[$ key];
+			THEME[$ key] = _sprite_load_from_struct(str, theme, key);
+		} else {
+			noti_status($"Graphic resource for {key} not found. Rollback to default directory.");
+			
+			str = sprDef[$ key];
+			THEME[$ key] = _sprite_load_from_struct(str, "default", key);
 		}
+		
+		//print($"{key}: {THEME[$ key]} [{sprite_exists(THEME[$ key])}]");
 	}
 }

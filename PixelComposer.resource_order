@@ -224,6 +224,7 @@
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},
     {"name":"sh_cell_noise_crystal","order":1,"path":"shaders/sh_cell_noise_crystal/sh_cell_noise_crystal.yy",},
     {"name":"panel_function","order":2,"path":"scripts/panel_function/panel_function.yy",},
+    {"name":"sh_shape_normalize","order":36,"path":"shaders/sh_shape_normalize/sh_shape_normalize.yy",},
     {"name":"node_time_remap","order":3,"path":"scripts/node_time_remap/node_time_remap.yy",},
     {"name":"sh_perlin","order":4,"path":"shaders/sh_perlin/sh_perlin.yy",},
     {"name":"sh_normal_light","order":1,"path":"shaders/sh_normal_light/sh_normal_light.yy",},

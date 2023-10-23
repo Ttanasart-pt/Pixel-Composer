@@ -44,16 +44,19 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _l  = output? outputs : inputs;
 		var _n  = _l[| _index];
 		var _in = output? _n.getValue() : getInputData(_index);
+		
+		//print($"Getting value {name}: {_index}: {_arr}: {_n.isArray()}: {_in}");
 		if(!_n.isArray()) return _in;
 		
+		var _aIndex = _arr;
 		switch(attributes.array_process) {
-			case ARRAY_PROCESS.loop :		_index = safe_mod(_arr, array_length(_in)); break;
-			case ARRAY_PROCESS.hold :		_index = min(_arr, array_length(_in) - 1);  break;
-			case ARRAY_PROCESS.expand :		_index = floor(_arr / process_length[_index][1]) % process_length[_index][0]; break;
-			case ARRAY_PROCESS.expand_inv : _index = floor(_arr / process_length[ds_list_size(_l) - 1 - _index][1]) % process_length[_index][0]; break;
+			case ARRAY_PROCESS.loop :		_aIndex = safe_mod(_arr, array_length(_in)); break;
+			case ARRAY_PROCESS.hold :		_aIndex = min(_arr, array_length(_in) - 1);  break;
+			case ARRAY_PROCESS.expand :		_aIndex = floor(_arr / process_length[_index][1]) % process_length[_index][0]; break;
+			case ARRAY_PROCESS.expand_inv : _aIndex = floor(_arr / process_length[ds_list_size(_l) - 1 - _index][1]) % process_length[_index][0]; break;
 		}
 				
-		return array_safe_get(_in, _index);
+		return array_safe_get(_in, _aIndex);
 	} #endregion
 	
 	static getDimension = function(arr = 0) { #region
@@ -253,9 +256,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		preGetInputs();
 		
 		process_amount	= 1;
-		inputs_data		= array_create(ds_list_size(inputs));
-		inputs_is_array	= array_create(ds_list_size(inputs));
-		process_length  = array_create(ds_list_size(inputs));
+		inputs_data		= array_verify(inputs_data,		ds_list_size(inputs));
+		inputs_is_array	= array_verify(inputs_is_array, ds_list_size(inputs));
+		process_length  = array_verify(process_length,	ds_list_size(inputs));
 		
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var val = inputs[| i].getValue();

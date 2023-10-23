@@ -774,6 +774,7 @@
     {"id":{"name":"s_node_corner","path":"sprites/s_node_corner/s_node_corner.yy",},},
     {"id":{"name":"sh_cell_noise_crystal","path":"shaders/sh_cell_noise_crystal/sh_cell_noise_crystal.yy",},},
     {"id":{"name":"panel_function","path":"scripts/panel_function/panel_function.yy",},},
+    {"id":{"name":"sh_shape_normalize","path":"shaders/sh_shape_normalize/sh_shape_normalize.yy",},},
     {"id":{"name":"node_time_remap","path":"scripts/node_time_remap/node_time_remap.yy",},},
     {"id":{"name":"sh_perlin","path":"shaders/sh_perlin/sh_perlin.yy",},},
     {"id":{"name":"sh_normal_light","path":"shaders/sh_normal_light/sh_normal_light.yy",},},

@@ -1,21 +1,6 @@
 function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Outline";
 	
-	shader = sh_outline;
-	uniform_dim          = shader_get_uniform(shader, "dimension");
-	uniform_border_start = shader_get_uniform(shader, "borderStart");
-	uniform_border_size  = shader_get_uniform(shader, "borderSize");
-	uniform_border_color = shader_get_uniform(shader, "borderColor");
-	
-	uniform_blend		= shader_get_uniform(shader, "is_blend");
-	uniform_blend_alpha = shader_get_uniform(shader, "blend_alpha");
-	
-	uniform_side		= shader_get_uniform(shader, "side");
-	uniform_aa  		= shader_get_uniform(shader, "is_aa");
-	
-	uniform_out_only	= shader_get_uniform(shader, "outline_only");
-	uniform_sam         = shader_get_uniform(shader, "sampleMode");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue("Width",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	inputs[| 2] = nodeValue("Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
@@ -43,20 +28,30 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 11;
 	
+	inputs[| 12] = nodeValue("Crop border", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Outline", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 11, 
 		["Output", 	 true], 0, 9, 10, 
-		["Outline",	false], 1, 5, 8,
+		["Outline",	false], 1, 5, 8, 12, 
 		["Render",	false], 2, 3, 4, 6,
 	];
 	
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { 
+	static step = function() { #region
+		var blend = getInputData(3);
+		var _side = getInputData(5);
+		
+		inputs[| 4].setVisible(blend);
+		inputs[| 12].setVisible(_side == 0);
+	} #endregion
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var ww = surface_get_width_safe(_data[0]);
 		var hh = surface_get_height_safe(_data[0]);
 		var wd = _data[1];
@@ -68,37 +63,27 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var aa    = _data[6];
 		var sam   = struct_try_get(attributes, "oversample");
 		var bst   = _data[8];
+		var _crop = _data[12];
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-		
-			shader_set(shader);
-			shader_set_uniform_f_array_safe(uniform_dim, [ww, hh]);
-			shader_set_uniform_f(uniform_border_start, bst);
-			shader_set_uniform_f(uniform_border_size, wd);
-			shader_set_uniform_f_array_safe(uniform_border_color, [color_get_red(cl) / 255, color_get_green(cl) / 255, color_get_blue(cl) / 255, 1.0]);
+		surface_set_shader(_outSurf, sh_outline);
+			shader_set_f("dimension", ww, hh);
+			shader_set_f("borderStart", bst);
+			shader_set_f("borderSize", wd);
+			shader_set_color("borderColor", cl);
 			
-			shader_set_uniform_i(uniform_side, side);
-			shader_set_uniform_i(uniform_aa, aa);
-			shader_set_uniform_i(uniform_out_only, _output_index);
-			shader_set_uniform_i(uniform_blend, blend);
-			shader_set_uniform_f(uniform_blend_alpha, alpha);
-			shader_set_uniform_i(uniform_sam, sam);
+			shader_set_i("side", side);
+			shader_set_i("is_aa", aa);
+			shader_set_i("outline_only", _output_index);
+			shader_set_i("is_blend", blend);
+			shader_set_f("blend_alpha", alpha);
+			shader_set_i("sampleMode", sam);
+			shader_set_i("crop_border", _crop);
 			
 			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[9], _data[10]);
 		
 		return _outSurf;  
-	}
-	
-	static step = function() {
-		var blend = getInputData(3);
-		inputs[| 4].setVisible(blend);
-	}
+	} #endregion
 }
