@@ -194,7 +194,22 @@ function __3dObject() constructor {
 	} #endregion
 		
 	static clone = function() { #region
-		var _obj = variable_clone(self);		
+		var _obj = new __3dObject();
+		
+		_obj.vertex = array_create(array_length(vertex));
+		for( var i = 0, n = array_length(vertex); i < n; i++ ) {
+			_obj.vertex[i] = array_create(array_length(vertex[i]));
+			
+			for( var j = 0, m = array_length(vertex[i]); j < m; j++ )
+				_obj.vertex[i][j] = vertex[i][j].clone();
+		}
+		
+		_obj.transform      = transform.clone();
+		_obj.size           = size.clone();
+		_obj.materials      = array_clone(materials);
+		_obj.material_index = array_clone(material_index);
+		_obj.texture_flip   = texture_flip;
+		
 		return _obj;
 	} #endregion
 	

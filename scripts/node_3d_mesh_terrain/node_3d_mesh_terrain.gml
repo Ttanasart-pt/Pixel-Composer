@@ -47,7 +47,7 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 			
 			for( var i = 0; i < _sub + 1; i++ ) 
 			for( var j = 0; j < _sub + 1; j++ ) {
-				var cc = surface_getpixel(_his, i * _pxw, j * _pxh);
+				var cc = surface_getpixel(_his, j * _pxw, i * _pxh);
 				_h[_ind] = color_get_brightness(cc);
 				_ind++;
 			}

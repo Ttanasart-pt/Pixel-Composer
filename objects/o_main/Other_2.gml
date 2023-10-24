@@ -64,12 +64,10 @@
 	log_message("DIRECTORY", DIRECTORY);
 	
 	PREF_APPLY();
-	loadGraphic(PREF_MAP[? "theme"]);
-	loadColor(PREF_MAP[? "theme"]);
 	
+	log_message("SESSION", "> init Theme");			__initTheme();
 	log_message("SESSION", "> init Locale");		__initLocale();
 	log_message("SESSION", "> init Font");			  loadFonts();
-	log_message("SESSION", "> init Theme");			__initTheme();
 	log_message("SESSION", "> init Project");		__initProject();
 	log_message("SESSION", "> init Action");		__initAction();
 	log_message("SESSION", "> init SurfaceFormat");	__initSurfaceFormat();

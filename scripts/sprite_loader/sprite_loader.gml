@@ -10,6 +10,9 @@ function __initTheme() {
 	
 	log_message("THEME", $"unzipping default theme to {root}.");
 	zip_unzip("data/themes/default.zip", root);
+	
+	loadGraphic(PREF_MAP[? "theme"]);
+	loadColor(PREF_MAP[? "theme"]);
 }
 
 function _sprite_path(rel, theme) {
@@ -49,7 +52,7 @@ function __getGraphicList() {
 	return json_try_parse(s);
 }
 
-function loadGraphic(theme = "default") {
+function loadGraphic(theme = "default") { 
 	var sprDef = __getGraphicList();
 	var path = _sprite_path("./graphics.json", theme);
 	

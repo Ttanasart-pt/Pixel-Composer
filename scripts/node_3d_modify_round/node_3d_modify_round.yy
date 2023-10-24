@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "__node_3d_mesh_modifier",
+  "name": "node_3d_modify_round",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "3D",
-    "path": "folders/nodes/data/3D.yy",
+    "name": "d3d modifier",
+    "path": "folders/nodes/data/3D/d3d modifier.yy",
   },
 }

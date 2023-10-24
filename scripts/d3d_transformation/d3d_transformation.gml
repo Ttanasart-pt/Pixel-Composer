@@ -32,4 +32,16 @@ function __transform() constructor {
 		matrix_stack_pop();
 		matrix_stack_pop();
 	}
+	
+	static clone = function() {
+		var _res = new __transform();
+		
+		_res.parent   = parent;
+		_res.position = position.clone();
+		_res.anchor   = anchor.clone();
+		_res.rotation = rotation.Clone();
+		_res.scale    = scale.clone();
+		
+		return _res;
+	}
 }

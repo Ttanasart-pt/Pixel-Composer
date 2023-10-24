@@ -36,6 +36,15 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) construc
 	
 	static clone = function() {
 		gml_pragma("forceinline");
-		return new __vertex(x, y, z, color, alpha);
+		var _v = new __vertex(x, y, z, color, alpha);
+		
+		_v.nx = nx;
+		_v.ny = ny;
+		_v.nz = nz;
+		
+		_v.u  = u;
+		_v.v  = v;
+		
+		return _v;
 	}
 }

@@ -42,7 +42,7 @@ function __3dTerrain() : __3dObject() constructor {
 			
 			_vt[_in + 0] = new __vertex(x0, y0, _h0).setNormal(_n.x, _n.y, _n.z).setUV(u0, v0); 
 			_vt[_in + 1] = new __vertex(x1, y1, _h3).setNormal(_n.x, _n.y, _n.z).setUV(u1, v1); 
-			_vt[_in + 2] = new __vertex(x1, y0, _h1).setNormal(_n.x, _n.y, _n.z).setUV(u1, v0);
+			_vt[_in + 2] = new __vertex(x1, y0, _h1).setNormal(_n.x, _n.y, _n.z).setUV(u1, v0); 
 			
 			_vt[_in + 3] = new __vertex(x0, y0, _h0).setNormal(_n.x, _n.y, _n.z).setUV(u0, v0); 
 			_vt[_in + 4] = new __vertex(x0, y1, _h2).setNormal(_n.x, _n.y, _n.z).setUV(u0, v1); 

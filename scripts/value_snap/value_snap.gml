@@ -2,8 +2,7 @@ function value_snap(val, snap = 1) {
 	gml_pragma("forceinline")
 	
 	if(!is_array(val)) {
-		if(snap == 0)
-			return val;
+		if(snap == 0) return val;
 		return round(val / snap) * snap;
 	}
 	
