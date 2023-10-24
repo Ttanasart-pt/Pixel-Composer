@@ -6,7 +6,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inParent = undefined;
 	
-	attributes.input_priority = group == noone? 0 : group.getInputFreeOrder();
+	attributes.input_priority = 0;
+	if(!CLONING && !LOADING && !APPENDING && group != noone) attributes.input_priority = group.getInputFreeOrder();
 	
 	w = 96;
 	h = 32 + 24;
@@ -363,7 +364,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(PROJECT.version < 11520) attributes.input_priority = getInputData(5);
 		onValueUpdate();
 		
-		if(CLONING) attributes.input_priority = group.getInputFreeOrder();
 		group.sortIO();
 	} #endregion
 	

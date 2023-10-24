@@ -142,7 +142,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	#region --- attributes ----
 		attributes		 = {
 			update_graph: true,
-			show_update_trigger: false
+			show_update_trigger: false,
+			color: -1,
 		};
 		
 		attributeEditors = [
@@ -789,7 +790,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static getColor = function() { #region
 		gml_pragma("forceinline");
-		return timeline_item.color == -1? color : timeline_item.color;
+		return attributes.color == -1? color : attributes.color;
 	} #endregion
 	
 	static drawNodeBase = function(xx, yy, _s) { #region

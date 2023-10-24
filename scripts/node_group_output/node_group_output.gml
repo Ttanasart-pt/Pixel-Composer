@@ -4,7 +4,8 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	color = COLORS.node_blend_collection;
 	previewable = false;
 	
-	attributes.input_priority = group == noone? 0 : group.getOutputFreeOrder();
+	attributes.input_priority = 0;
+	if(!CLONING && !LOADING && !APPENDING && group != noone) attributes.input_priority = group.getOutputFreeOrder();
 	
 	w = 96;
 	h = 32 + 24;
@@ -18,9 +19,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outParent = undefined;
 	output_index = -1;
 	
-	_onSetDisplayName = function() {
-		attributes.inherit_name = false;
-	}
+	_onSetDisplayName = function() { attributes.inherit_name = false; }
 	
 	static setRenderStatus = function(result) { #region
 		if(rendered == result) return;

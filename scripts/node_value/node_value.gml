@@ -1353,8 +1353,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		} #endregion
 		
-		if(typeFrom == VALUE_TYPE.surface && type == VALUE_TYPE.d3Material)
-			return new __d3dMaterial(value);
+		if(typeFrom == VALUE_TYPE.surface && type == VALUE_TYPE.d3Material) { #region
+			if(!is_array(value)) return new __d3dMaterial(value);
+			var _val = array_create(array_length(value));
+			for( var i = 0, n = array_length(value); i < n; i++ ) 
+				_val[i] = new __d3dMaterial(value[i]);
+			return _val;
+		} #endregion
 		
 		if((typeFrom == VALUE_TYPE.integer || typeFrom == VALUE_TYPE.float || typeFrom == VALUE_TYPE.boolean) && type == VALUE_TYPE.color)
 			return value >= 1? value : make_color_hsv(0, 0, value * 255);
@@ -1710,7 +1715,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == JUNCTION_CONNECT.output) return;
 		
-		node.setInputData(self.index, animator.getValue(time));
+		if(is_instanceof(node, Node))
+			node.setInputData(self.index, animator.getValue(time));
 		
 		if(tags != VALUE_TAG.none) return true;
 		
@@ -2173,13 +2179,27 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return hovering;
 	} #endregion
 	
-	static drawConnectionMouse = function(_mx, _my, ss, target) { #region
+	static drawConnectionMouse = function(params, _mx, _my, target) { #region
+		var ss = params.s;
+		var aa = struct_try_get(params, "aa", 1);
+		
 		var drawCorner = type == VALUE_TYPE.action;
 		if(target != noone)
 			drawCorner |= target.type == VALUE_TYPE.action;
 		
 		var corner = PREF_MAP[? "connection_line_corner"] * ss;
 		var th     = max(1, PREF_MAP[? "connection_line_width"] * ss);
+		
+		var sx = x;
+		var sy = y;
+		
+		corner *= aa;
+		th  *= aa;
+		ss  *= aa;
+		sx  *= aa;
+		sy  *= aa;
+		_mx *= aa;
+		_my *= aa;
 		
 		var col = color_display;
 		draw_set_color(col);
@@ -2188,34 +2208,32 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _output = connect_type == JUNCTION_CONNECT.output;
 		
 		switch(PREF_MAP[? "curve_connection_line"]) {
-			case 0 : 
-				draw_line_width(x, y, _mx, _my, th); 
-				break;
+			case 0 : draw_line_width(sx, sy, _mx, _my, th); break;
 			case 1 : 
 				if(drawCorner) {
-					if(_action)	draw_line_curve_corner(_mx, _my, x, y, ss, th, col, col);
-					else		draw_line_curve_corner(x, y, _mx, _my, ss, th, col, col);
+					if(_action)	draw_line_curve_corner(_mx, _my, sx, sy, ss, th, col, col);
+					else		draw_line_curve_corner(sx, sy, _mx, _my, ss, th, col, col);
 				} else {
-					if(_output) draw_line_curve_color(_mx, _my, x, y,,, ss, th, col, col);
-					else		draw_line_curve_color(x, y, _mx, _my,,, ss, th, col, col);
+					if(_output) draw_line_curve_color(_mx, _my, sx, sy,,, ss, th, col, col);
+					else		draw_line_curve_color(sx, sy, _mx, _my,,, ss, th, col, col);
 				}
 				break;
 			case 2 : 
 				if(drawCorner) {
-					if(_action)	draw_line_elbow_corner(_mx, _my, x, y, ss, th, col, col, corner);
-					else		draw_line_elbow_corner(x, y, _mx, _my, ss, th, col, col, corner);
+					if(_action)	draw_line_elbow_corner(_mx, _my, sx, sy, ss, th, col, col, corner);
+					else		draw_line_elbow_corner(sx, sy, _mx, _my, ss, th, col, col, corner);
 				} else {
-					if(_output)	draw_line_elbow_color(x, y, _mx, _my,,, ss, th, col, col, corner);
-					else		draw_line_elbow_color(_mx, _my, x, y,,, ss, th, col, col, corner);
+					if(_output)	draw_line_elbow_color(sx, sy, _mx, _my,,, ss, th, col, col, corner);
+					else		draw_line_elbow_color(_mx, _my, sx, sy,,, ss, th, col, col, corner);
 				}
 				break;
 			case 3 : 
 				if(drawCorner) {
-					if(_action)	draw_line_elbow_diag_corner(_mx, _my, x, y, ss, th, col, col, corner);
-					else		draw_line_elbow_diag_corner(x, y, _mx, _my, ss, th, col, col, corner);
+					if(_action)	draw_line_elbow_diag_corner(_mx, _my, sx, sy, ss, th, col, col, corner);
+					else		draw_line_elbow_diag_corner(sx, sy, _mx, _my, ss, th, col, col, corner);
 				} else {
-					if(_output)	draw_line_elbow_diag_color(x, y, _mx, _my,,, ss, th, col, col, corner);
-					else		draw_line_elbow_diag_color(_mx, _my, x, y,,, ss, th, col, col, corner);
+					if(_output)	draw_line_elbow_diag_color(sx, sy, _mx, _my,,, ss, th, col, col, corner);
+					else		draw_line_elbow_diag_color(_mx, _my, sx, sy,,, ss, th, col, col, corner);
 				}
 				break;
 		}

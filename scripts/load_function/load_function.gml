@@ -250,5 +250,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 	if(struct_has(_load_content, "timelines") && !array_empty(_load_content.timelines.contents))
 		PROJECT.timelines.deserialize(_load_content.timelines);
 	
+	PANEL_GRAPH.toCenterNode();
+	
 	return true;
 }

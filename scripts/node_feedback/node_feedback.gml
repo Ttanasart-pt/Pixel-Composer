@@ -3,6 +3,7 @@ function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	color = COLORS.node_blend_feedback;
 	icon  = THEME.feedback;
 	
+	update_on_frame = true;
 	reset_all_child = true;
 	
 	if(!LOADING && !APPENDING && !CLONING) {
@@ -14,12 +15,6 @@ function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		output.inputs[| 1].setFrom(input.outputs[| 1]);
 	}
 	
-	static doStepBegin = function() {
-		if(!PROJECT.animator.frame_progress) return;
-		setRenderStatus(false);
-		RENDER_ALL //force full render
-	}
-	
 	static getNextNodes = function() {
 		var allReady = true;
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
@@ -28,7 +23,7 @@ function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 			
 			allReady &= _in.isRenderable()
 		}
-			
+		
 		if(!allReady) return [];
 		
 		return __nodeLeafList(getNodeList());

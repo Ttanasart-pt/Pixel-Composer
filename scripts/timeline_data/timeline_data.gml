@@ -7,6 +7,7 @@ function timelineItem() constructor {
 	parent = noone;
 	
 	static setColor = function(color) { self.color = color; }
+	static getColor = function()      { return color; }
 	
 	static drawLabel = function(_x, _y, _w, _msx, _msy) {}
 	
@@ -40,13 +41,13 @@ function timelineItemNode(node) : timelineItem() constructor {
 		
 		var lh  = ui(20);
 		var res = 0;
-		var col = color;
+		var col = getColor();
 		var cxt = _item.contexts;
 		if(col == -1)
 		for( var i = array_length(cxt) - 1; i >= 0; i-- ) {
 			var _context = cxt[i];
-			if(_context.item.color == -1) continue;
-			col = _context.item.color;
+			if(_context.item.getColor() == -1) continue;
+			col = _context.item.getColor();
 			break;
 		}
 		if(col == -1) col = CDEF.main_grey;
@@ -99,19 +100,20 @@ function timelineItemNode(node) : timelineItem() constructor {
 		return res;
 	} #endregion
 	
+	static setColor = function(color) { node.attributes.color = color; }
+	static getColor = function()      { return node.attributes.color; }
+	
 	static serialize = function() { #region
 		var _map = {};
 		
 		_map.type    = "Node";
 		_map.show    = show;
-		_map.color   = color;
 		_map.node_id = node.node_id;
 		
 		return _map;
 	} #endregion
 	
 	static deserialize = function(_map) { #region
-		color = _map.color;
 		show  = struct_try_get(_map, "show", true);
 		
 		var _node_id = _map.node_id;
@@ -128,14 +130,14 @@ function timelineItemGroup() : timelineItem() constructor {
 	tb_name  = new textBox(TEXTBOX_INPUT.text, function(val) { name = val; renaming = false; });
 	contents = [];
 	
-	static rename = function() {
+	static rename = function() { #region
 		renaming = true;
 		tb_name.setFocusHover(true, true);
 		run_in(1, function() { 
 			tb_name._current_text = name;
 			tb_name.activate(); 
 		});
-	}
+	} #endregion
 	
 	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) { #region
 		var lx = _x + _item.depth * ui(12) + ui(2);
@@ -144,13 +146,13 @@ function timelineItemGroup() : timelineItem() constructor {
 		var lh  = ui(20);
 		var res = 0;
 		var hig = true;
-		var col = color;
+		var col = getColor();
 		var cxt = _item.contexts;
 		if(col == -1)
 		for( var i = array_length(cxt) - 1; i >= 0; i-- ) {
 			var _context = cxt[i];
-			if(_context.item.color == -1) continue;
-			col = _context.item.color;
+			if(_context.item.getColor() == -1) continue;
+			col = _context.item.getColor();
 			hig = false;
 			break;
 		}
@@ -192,10 +194,6 @@ function timelineItemGroup() : timelineItem() constructor {
 		
 		return res;
 	} #endregion
-	
-	static setColor = function(color) { 
-		self.color = color; 
-	}
 	
 	static addItem = function(_item) { #region
 		array_push(contents, _item);

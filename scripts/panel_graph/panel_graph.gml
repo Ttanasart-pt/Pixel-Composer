@@ -93,7 +93,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		connection_aa = 2;
 		connection_surface    = surface_create(1, 1);
 		connection_surface_aa = surface_create(1, 1);
-	
+		
+		connection_draw_mouse  = noone;
+		connection_draw_target = noone;
+		
 		value_focus     = noone;
 		value_dragging  = noone;
 		value_draggings = [];
@@ -445,10 +448,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#region node color
 			function setSelectingNodeColor(color) { 
 				if(node_hover == noone) return; 
-				node_hover.timeline_item.color = color;
+				node_hover.attributes.color = color;
 				
 				for(var i = 0; i < ds_list_size(nodes_select_list); i++) 
-					nodes_select_list[| i].timeline_item.color = color;
+					nodes_select_list[| i].attributes.color = color;
 			}
 		
 			var _clrs = COLORS.labels;
@@ -938,6 +941,26 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var _hov = nodes_list[| i].drawConnections(_params);
 			if(_hov != noone && is_struct(_hov)) hov = _hov;
 		}
+		
+		if(value_dragging && connection_draw_mouse != noone) {
+			var _cmx = connection_draw_mouse[0];
+			var _cmy = connection_draw_mouse[1];
+			var _cmt = connection_draw_target;
+		
+			if(array_empty(value_draggings))
+				value_dragging.drawConnectionMouse(_params, _cmx, _cmy, _cmt);
+			else {
+				var _stIndex = array_find(value_draggings, value_dragging);
+				
+				for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
+					var _dmx = _cmx;
+					var _dmy = value_draggings[i].connect_type == JUNCTION_CONNECT.output? _cmy + (i - _stIndex) * 24 * graph_s : _cmy;
+					
+					value_draggings[i].drawConnectionMouse(_params, _dmx, _dmy, _cmt);
+				}
+			}
+		}
+			
 		printIf(log, "Draw connection: " + string(current_time - t)); t = current_time;
 		
 		surface_reset_target();
@@ -948,11 +971,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			draw_surface(connection_surface, 0, 0);
 		surface_reset_shader();
 		
-		BLEND_ALPHA
-		shader_set(sh_FXAA);
-			shader_set_dim("dimension", connection_surface_aa);
-			draw_surface(connection_surface_aa, 0, 0);
-		shader_reset();
+		BLEND_ALPHA_MULP
+		draw_surface(connection_surface_aa, 0, 0);
 		BLEND_NORMAL
 		
 		junction_hovering = (node_hovering == noone && !is_struct(node_hovering))? hov : noone;
@@ -1168,18 +1188,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var _mmx = target != noone? target.x : _mx;
 			var _mmy = target != noone? target.y : _my;
 			
-			if(array_empty(value_draggings))
-				value_dragging.drawConnectionMouse(_mmx, _mmy, graph_s, target);
-			else {
-				var _stIndex = array_find(value_draggings, value_dragging);
-				
-				for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
-					var _dmx = _mmx;
-					var _dmy = value_draggings[i].connect_type == JUNCTION_CONNECT.output? _mmy + (i - _stIndex) * 24 * graph_s : _mmy;
-					
-					value_draggings[i].drawConnectionMouse(_dmx, _dmy, graph_s, target);
-				}
-			}
+			connection_draw_mouse  = [ _mmx, _mmy ];
+			connection_draw_target = target;
 			
 			value_dragging.drawJunction(graph_s, value_dragging.x, value_dragging.y);
 			if(target) 
@@ -1221,6 +1231,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 				
 				value_dragging = noone;
+				connection_draw_mouse = noone;
 			}
 		} else if(!value_dragging && value_focus && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
 			value_dragging  = value_focus;

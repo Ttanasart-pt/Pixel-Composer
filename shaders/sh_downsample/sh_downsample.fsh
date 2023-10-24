@@ -19,7 +19,9 @@ void main() {
 		wei += samp.a;
 	}
 	
-	col /= wei;	
+	float alph = wei / (down * down);
+	col  /= wei;
+	col.a = alph;
 	
     gl_FragColor = col;
 }

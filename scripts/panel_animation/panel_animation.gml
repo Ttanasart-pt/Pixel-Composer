@@ -289,7 +289,7 @@ function Panel_Animation() : PanelContent() constructor {
 	var _clrs = COLORS.labels;
 	var _item = array_create(array_length(_clrs));
 	
-	function setSelectingItemColor(color) { if(context_selecting_item == noone) return; context_selecting_item.item.color = color; }
+	function setSelectingItemColor(color) { if(context_selecting_item == noone) return; context_selecting_item.item.setColor(color); }
 	
 	for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
 		_item[i] = [ 
