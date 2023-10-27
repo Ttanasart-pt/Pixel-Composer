@@ -12,7 +12,7 @@ function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	cache_value = -1;
 	
 	static update = function(frame = CURRENT_FRAME) {
-		if(inputs[| 0].value_from == noone) return;
+		if(inputs[| 0].isLeaf()) return;
 		if(CURRENT_FRAME == TOTAL_FRAMES - 1) {
 			cache_value = noone;
 			return;

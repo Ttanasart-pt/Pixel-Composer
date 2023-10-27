@@ -1793,6 +1793,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	} #endregion
 	
+	static isLeaf = function() { gml_pragma("forceinline"); return value_from == noone; }
+	
+	static isRendered = function() { #region
+		if(type == VALUE_TYPE.node)	return true;
+		
+		if( value_from == noone)			  return true;
+		if(!value_from.node.active)			  return true;
+		if(!value_from.node.isRenderActive()) return true;
+		
+		return value_from.node.rendered;
+	} #endregion
+	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region
 		//print($"Connecting {_valueFrom.name} to {name}");
 		
@@ -1899,7 +1911,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static checkConnection = function(_remove_list = true) { #region
-		if(value_from == noone) return;
+		if(isLeaf()) return;
 		if(value_from.node.active) return;
 		
 		removeFrom(_remove_list);
@@ -1932,23 +1944,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _angle = argument_count >  8? argument[ 8] : 0;
 				var _scale = argument_count >  9? argument[ 9] : 1;
 				var _spr   = argument_count > 10? argument[10] : THEME.anchor_selector;
-				return preview_overlay_scalar(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
+				return preview_overlay_scalar(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
 						
 			case VALUE_DISPLAY.rotation :
 				var _rad = argument_count >  8? argument[ 8] : 64;
-				return preview_overlay_rotation(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
+				return preview_overlay_rotation(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
 						
 			case VALUE_DISPLAY.vector :
 				var _spr = argument_count > 8? argument[8] : THEME.anchor_selector;
 				var _sca = argument_count > 9? argument[9] : 1;
-				return preview_overlay_vector(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
+				return preview_overlay_vector(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
 						
 			case VALUE_DISPLAY.area :
 				var _flag = argument_count > 8? argument[8] : 0b0011;
-				return preview_overlay_area(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, struct_try_get(display_data, "onSurfaceSize"));
+				return preview_overlay_area(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, struct_try_get(display_data, "onSurfaceSize"));
 						
 			case VALUE_DISPLAY.puppet_control :
-				return preview_overlay_puppet(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				return preview_overlay_puppet(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
 		
 		return -1;
@@ -2029,7 +2041,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static drawConnections = function(params = {}) { #region
-		if(value_from == noone)		return noone;
+		if(isLeaf())				return noone;
 		if(!value_from.node.active) return noone;
 		if(!isVisible())			return noone;
 		
@@ -2313,7 +2325,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		for(var j = 0; j < ds_list_size(value_to); j++) {
 			var _to = value_to[| j];
-			if(!_to.node.active || _to.value_from == noone) continue; 
+			if(!_to.node.active || _to.isLeaf()) continue; 
 			if(_to.value_from != self) continue;
 			
 			array_push(to, _to);

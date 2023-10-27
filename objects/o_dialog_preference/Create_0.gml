@@ -384,14 +384,32 @@ event_inherited();
 	themes = [];
 	var f = file_find_first(DIRECTORY + "themes/*", fa_directory);
 	while(f != "") {
-		if(directory_exists(DIRECTORY + "themes/" + f))
-			array_push(themes, f);
+		var _path = $"{DIRECTORY}themes/{f}";
+		if(directory_exists(_path)) {
+			var _metaPath = _path + "/meta.json";
+			if(!file_exists(_metaPath)) {
+				var _item = new scrollItem(f, THEME.circle);
+				    _item.spr_blend = COLORS._main_accent;
+				    _item.tooltip   = "Theme made for earlier version.";
+				array_push(themes, _item);
+			} else {
+				var _meta = json_load_struct(_metaPath);
+				var _item = new scrollItem(_meta.name, _meta.version >= VERSION? noone : THEME.circle);
+				    _item.data      = f;
+					_item.spr_blend = COLORS._main_accent;
+					
+				if(_meta.version < VERSION)
+				    _item.tooltip = "Theme made for earlier version.";
+				array_push(themes, _item);
+			}
+		}
+		
 		f = file_find_next();
 	}
 	file_find_close();
 	
 	sb_theme = new scrollBox(themes, function(index) { 
-			var thm = themes[index]
+			var thm = themes[index].data;
 			if(PREF_MAP[? "theme"] == thm) return;
 			PREF_MAP[? "theme"] = thm;
 			PREF_SAVE();

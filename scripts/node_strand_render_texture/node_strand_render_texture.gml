@@ -58,7 +58,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 			return;
 		if(!is_array(_str)) 
 			_str = [ _str ];
-		if(inputs[| 4].value_from == noone) 
+		if(inputs[| 4].isLeaf()) 
 			return;
 			
 		if(!is_array(_tex)) _tex = [ _tex ];

@@ -3,16 +3,16 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	w = 32;
 	h = 32;
 	
-	auto_height = false;
+	auto_height      = false;
 	junction_shift_y = 16;
-	previewable = false;
+	previewable      = false;
 	
-	isHovering  = false;
-	hover_scale = 0;
+	isHovering     = false;
+	hover_scale    = 0;
 	hover_scale_to = 0;
-	hover_alpha = 0;
+	hover_alpha    = 0;
 	
-	bg_spr = THEME.node_pin_bg;
+	bg_spr     = THEME.node_pin_bg;
 	bg_sel_spr = THEME.node_pin_bg_active;
 	
 	inputs[| 0] = nodeValue("In", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
@@ -20,25 +20,29 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 0] = nodeValue("Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
-	static step = function() {
-		if(inputs[| 0].value_from == noone) return;
+	static step = function() { #region
+		if(inputs[| 0].isLeaf()) return;
 		
 		inputs[| 0].setType(inputs[| 0].value_from.type);
 		outputs[| 0].setType(inputs[| 0].value_from.type);
-		outputs[| 0].value_from = inputs[| 0].value_from;
 		
 		inputs[| 0].color_display  = inputs[| 0].value_from.color_display;
 		outputs[| 0].color_display = inputs[| 0].color_display;
-	}
+	} #endregion
 	
-	static pointIn = function(_x, _y, _mx, _my, _s) {
+	static update = function() { #region
+		var _val = getInputData(0);
+		outputs[| 0].setValue(_val);
+	} #endregion
+	
+	static pointIn = function(_x, _y, _mx, _my, _s) { #region
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
 		return point_in_circle(_mx, _my, xx, yy, _s * 24);
-	}
+	} #endregion
 	
-	static preDraw = function(_x, _y, _s) {
+	static preDraw = function(_x, _y, _s) { #region
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -47,11 +51,11 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		outputs[| 0].x = xx;
 		outputs[| 0].y = yy;
-	}
+	} #endregion
 	
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
 		isHovering = false;
 		var hover = noone;
 		var xx	  = x * _s + _x;
@@ -67,9 +71,9 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			hover = outputs[| 0];
 		
 		return hover;
-	}
+	} #endregion
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) {
+	static drawNode = function(_x, _y, _mx, _my, _s) { #region
 		if(group != PANEL_GRAPH.getCurrentContext()) return;
 		
 		var xx = x * _s + _x;
@@ -98,5 +102,5 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		return drawJunctions(_x, _y, _mx, _my, _s);
-	}
+	} #endregion
 }

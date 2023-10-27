@@ -86,7 +86,7 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		var cont = {};
 		
-		if(inputs[| 1].value_from == noone) {
+		if(inputs[| 1].isLeaf()) {
 			for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
 				var _key = getInputData(i + 0);
 				var _val = getInputData(i + 1);
@@ -104,7 +104,7 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static step = function() { 
 		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
 			var inp  = inputs[| i + 1];
-			var typ  = inp.value_from == noone? VALUE_TYPE.any : inp.value_from.type;
+			var typ  = inp.isLeaf()? VALUE_TYPE.any : inp.value_from.type;
 			inp.setType(typ);
 		}
 	}

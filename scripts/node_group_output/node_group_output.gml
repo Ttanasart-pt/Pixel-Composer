@@ -45,7 +45,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(!_to.node.isRenderActive()) continue;
 			//printIf(global.FLAG.render, "Value to " + _to.name);
 			
-			if(!_to.node.active || _to.value_from == noone) {
+			if(!_to.node.active || _to.isLeaf()) {
 				//printIf(global.FLAG.render, "no value from");
 				continue; 
 			}

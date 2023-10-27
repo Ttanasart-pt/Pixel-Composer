@@ -678,6 +678,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_textbox_code_line.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/widget",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_textbox.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/widget",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_widget_highlight.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/widget",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"meta.json","CopyToMask":-1,"filePath":"datafiles/data/themes/default",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"values.json","CopyToMask":-1,"filePath":"datafiles/data/themes/default",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"tooltip.zip","CopyToMask":3035426170322551022,"filePath":"datafiles/data",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"0 introduction.png","CopyToMask":-1,"filePath":"datafiles/Getting started",},

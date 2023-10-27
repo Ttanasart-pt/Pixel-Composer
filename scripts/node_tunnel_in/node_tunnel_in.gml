@@ -16,12 +16,12 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	insp2UpdateTooltip = "Create tunnel out";
 	insp2UpdateIcon    = [ THEME.tunnel, 0, c_white ];
 	
-	static onInspector2Update = function() {		
+	static onInspector2Update = function() { #region
 		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y);
 		_node.inputs[| 0].setValue(getInputData(0));
-	}
+	} #endregion
 	
-	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {
+	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) { #region
 		var xx = _x + x * _s;
 		var yy = _y + y * _s;
 		
@@ -50,17 +50,17 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			k = ds_map_find_next(TUNNELS_OUT, k);
 		}
-	}
+	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { onValueUpdate(); }
 	
-	static resetMap = function() {
+	static resetMap = function() { #region
 		var _key = getInputData(0);
 		TUNNELS_IN_MAP[? node_id] = _key;
 		TUNNELS_IN[? _key] = inputs[| 1];
-	}
+	} #endregion
 	
-	static checkDuplicate = function() {
+	static checkDuplicate = function() { #region
 		var _key = getInputData(0);
 		var amo = ds_map_size(TUNNELS_IN_MAP);
 		var k   = ds_map_find_first(TUNNELS_IN_MAP);
@@ -80,9 +80,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			noti_remove(error_notification);
 			error_notification = noone;
 		}
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index = -1) {
+	static onValueUpdate = function(index = -1) { #region
 		var _key = getInputData(0);
 		resetMap();
 		
@@ -102,23 +102,23 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		if(index == 0) { RENDER_ALL_REORDER }
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var _key = getInputData(0);
 		
 		value_validation[VALIDATION.error] = error_notification != noone;
 		
-		if(inputs[| 1].value_from == noone) {
+		if(inputs[| 1].isLeaf()) {
 			inputs[| 1].setType(VALUE_TYPE.any);
 			inputs[| 1].display_type = VALUE_DISPLAY._default;
 		} else {
 			inputs[| 1].setType(inputs[| 1].value_from.type);
 			inputs[| 1].display_type = inputs[| 1].value_from.display_type;
 		}
-	}
+	} #endregion
 	
-	static getNextNodes = function() {
+	static getNextNodes = function() { #region
 		var nodes = [];
 		var nodeNames = [];
 		var _key = getInputData(0);
@@ -143,23 +143,23 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		LOG_BLOCK_END();
 		LOG_BLOCK_END();
 		return nodes;
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var str	= string(getInputData(0));
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
-	}
+	} #endregion
 	
 	static onClone = function() { onValueUpdate(0); }
 	
 	static postConnect = function() { onValueUpdate(0); }
 	
-	static onDestroy = function() {
+	static onDestroy = function() { #region
 		if(error_notification != noone)
 			noti_remove(error_notification);
-	}
+	} #endregion
 }

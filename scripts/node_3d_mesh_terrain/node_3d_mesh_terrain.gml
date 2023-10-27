@@ -57,11 +57,12 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 			array_copy(_h, 0, _hia, 0, min(array_length(_h), array_length(_hia)));
 		}
 		
+		if(CURRENT_FRAME == 0) object.initModel();
+		
 		object.checkParameter({ subdivision: _sub });
 		object.updateHeight(_h);
 		object.materials   = [ _mat ];
 		
-		object.initModel();
 		setTransform(object, _data);
 		
 		return object;

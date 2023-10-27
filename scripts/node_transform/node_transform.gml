@@ -501,7 +501,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		#region path
-			if(inputs[| 2].is_anim && inputs[| 2].value_from == noone && !inputs[| 2].sep_axis) {
+			if(inputs[| 2].is_anim && inputs[| 2].isLeaf() && !inputs[| 2].sep_axis) {
 				var posInp = inputs[| 2];
 				var allPos = posInp.animator.values;
 				var ox, oy, nx, ny;

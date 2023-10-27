@@ -99,7 +99,7 @@ function dynaSurf_output_getNextNode() { #region
 		var _to = junc.value_to[| j];
 		if(!_to.node.isRenderActive()) continue;
 			
-		if(!_to.node.active || _to.value_from == noone) 
+		if(!_to.node.active || _to.isLeaf()) 
 			continue; 
 		if(_to.value_from.node != group)
 			continue; 

@@ -494,7 +494,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					
 					for( var j = 0, m = ds_list_size(_node.inputs); j < m; j++ ) {
 						var _input = _node.inputs[| j];
-						if(_input.value_from == noone) continue;
+						if(_input.isLeaf()) continue;
 						if(!ds_exists(_input.value_from.node, nodes_select_list)) continue;
 						
 						_input.color = color;
@@ -1165,7 +1165,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var _mx    = mx;
 			var _my    = my;
 			var target = noone;
-			var _addInput = false;
 			
 			if(value_focus && value_focus != value_dragging && value_focus.connect_type != value_dragging.connect_type)
 				target = value_focus;
@@ -1182,9 +1181,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			if(target != noone && target.value_from == noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input)
-				_addInput = true;
-			
 			var _mmx = target != noone? target.x : _mx;
 			var _mmy = target != noone? target.y : _my;
 			
@@ -1192,11 +1188,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			connection_draw_target = target;
 			
 			value_dragging.drawJunction(graph_s, value_dragging.x, value_dragging.y);
-			if(target) 
-				target.drawJunction(graph_s, target.x, target.y);
+			if(target) target.drawJunction(graph_s, target.x, target.y);
 			
 			if(mouse_release(mb_left)) {																		// CONNECT junction
 				if(target != noone) {
+					var _addInput = false;
+					if(target.isLeaf() && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input)
+						_addInput = true;
+					
 					if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
 						if(array_empty(value_draggings))
 							value_dragging.setFrom(target);
@@ -1204,16 +1203,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							for( var i = 0, n = array_length(value_draggings); i < n; i++ )
 								value_draggings[i].setFrom(target);
 						}
-					} else if(!_addInput) {
+					} else if(_addInput && !array_empty(value_draggings)) {
+						for( var i = 0, n = array_length(value_draggings); i < n; i++ )
+							target.node.addInput(value_draggings[i]);
+					} else
 						target.setFrom(value_dragging);
-					} else { //addInput
-						if(array_empty(value_draggings))
-							target.node.addInput(value_dragging);
-						else {
-							for( var i = 0, n = array_length(value_draggings); i < n; i++ )
-								target.node.addInput(value_draggings[i]);
-						}
-					}
 				} else {
 					if(value_dragging.connect_type == JUNCTION_CONNECT.input)
 						value_dragging.removeFrom();
@@ -2060,7 +2054,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				break;
 		}
 			
-		if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone) {
+		if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.isLeaf()) {
 			for( var i = 0; i < ds_list_size(node.outputs); i++ )
 				if(DRAGGING.from.setFrom(node.outputs[| i])) break;
 		}

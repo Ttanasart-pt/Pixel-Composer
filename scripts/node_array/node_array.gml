@@ -114,7 +114,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_l[| i].setVisible(i < ds_list_size(_l) - 1);
 			array_push(input_display_list, i);
 			
-			if(i >= input_fix_len && _l[| i].value_from == noone)
+			if(i >= input_fix_len && _l[| i].isLeaf())
 				extra = false;
 		}
 		array_insert(input_display_list, 1, array_adjust_tool);

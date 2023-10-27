@@ -59,7 +59,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				inputs[| 4].setVisible(false);
 				break;
 			case 1 : 
-				if(inputs[| 0].value_from == noone) {
+				if(inputs[| 0].isLeaf()) {
 					w	  = 160;
 					min_h = 96;			 
 				}
@@ -67,7 +67,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				inputs[| 4].setVisible(true);
 				break;
 			case 2 : 
-				if(inputs[| 0].value_from == noone) {
+				if(inputs[| 0].isLeaf()) {
 					w	  = 128;
 					min_h = 128;		 
 				}
@@ -332,7 +332,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		w	  = 96;	
 		min_h = 80; 
 				
-		if(disp == 1 && inputs[| 0].value_from == noone && inputs[| 1].value_from == noone) {
+		if(disp == 1 && inputs[| 0].isLeaf() && inputs[| 1].isLeaf()) {
 			w	  = 160;
 			min_h = 160;
 		}
@@ -616,7 +616,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	outputs[| 3] = nodeValue("w", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	static step = function() { #region
-		if(inputs[| 0].value_from == noone) return;
+		if(inputs[| 0].isLeaf()) return;
 		var type = VALUE_TYPE.float;
 		if(inputs[| 0].value_from.type == VALUE_TYPE.integer)
 			type = VALUE_TYPE.integer;

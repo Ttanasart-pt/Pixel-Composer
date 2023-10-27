@@ -51,7 +51,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);
 		
-		if(inputs[| 0].value_from == noone) {
+		if(inputs[| 0].isLeaf()) {
 			inputs[| 0].setType(VALUE_TYPE.any);
 			outputs[| 0].setType(VALUE_TYPE.any);
 			return;
@@ -66,7 +66,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var val = [];
 		for( var i = 0; i < ds_list_size(inputs) - 1; i += data_length ) {
 			val[i] = getInputData(i);
-			inputs[| i].setType(inputs[| i].value_from == noone? inputs[| i].value_from.type : VALUE_TYPE.any);
+			inputs[| i].setType(inputs[| i].isLeaf()? inputs[| i].value_from.type : VALUE_TYPE.any);
 			if(!is_array(val[i])) {
 				val[i] = [ val[i] ];
 				continue;

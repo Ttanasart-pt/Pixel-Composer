@@ -284,8 +284,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _hi = ui(junction_draw_pad_y);
 		var _ho = ui(junction_draw_pad_y);
 		
-		for( var i = 0; i < ds_list_size(inputs); i++ )
-			if(inputs[| i].isVisible()) _hi += 24;
+		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+			var _inp = inputs[| i];
+			if(is_instanceof(_inp, NodeValue) && _inp.isVisible()) _hi += 24;
+			if(is_instanceof(_inp, NodeModule)) {
+				for( var j = 0, m = ds_list_size(_inp.inputs); j < m; j++ ) 
+					if(_inp.inputs[| j].isVisible()) _hi += 24;
+			}
+		}
 		
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 			if(outputs[| i].isVisible()) _ho += 24;
@@ -364,8 +370,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return noone;
 	} #endregion
 	
-	static getInput = function(junc = noone) { #region
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+	static getInput = function(junc = noone, shift = input_fix_len) { #region
+		for( var i = shift; i < ds_list_size(inputs); i++ ) {
 			if(!inputs[| i].visible) continue;
 			if(inputs[| i].value_from != noone) continue;
 			if(junc != noone && !inputs[| i].isConnectable(junc, true)) continue;
@@ -379,8 +385,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return display_name == ""? name : "[" + name + "] " + display_name;
 	} #endregion
 	
-	static addInput = function(junctionFrom) { #region
-		var targ = getInput(junctionFrom);
+	static addInput = function(junctionFrom, shift = input_fix_len) { #region
+		var targ = getInput(junctionFrom, shift);
 		if(targ == noone) return;
 		
 		targ.setFrom(junctionFrom);
@@ -450,13 +456,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static _triggerCheck = function() { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(inputs[| i].type != VALUE_TYPE.trigger) continue;
-			if(!is_instanceof(inputs[| i].editWidget, buttonClass)) continue;
+			var _in = inputs[| i];
+			if(!is_instanceof(_in, NodeValue)) continue;
 			
-			var trig = inputs[| i].getValue();
-			if(trig && !inputs[| i].display_data.output) {
-				inputs[| i].editWidget.onClick();
-				inputs[| i].setValue(false);
+			if(_in.type != VALUE_TYPE.trigger) continue;
+			if(!is_instanceof(_in.editWidget, buttonClass)) continue;
+			
+			var trig = _in.getValue();
+			if(trig && !_in.display_data.output) {
+				_in.editWidget.onClick();
+				_in.setValue(false);
 			}
 		}
 		
@@ -615,27 +624,23 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(_clearCache) clearInputCache();
 	} #endregion
 	
+	static isLeaf = function() { #region
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
+			var _inp = inputs[| i];
+			if(!_inp.isLeaf()) return false;
+		}
+		
+		return true;
+	} #endregion
+	
 	static isRenderActive = function() { return renderActive || (PREF_MAP[? "render_all_export"] && PROJECT.animator.rendering); }
 	
 	static isRenderable = function(log = false) { #region //Check if every input is ready (updated)
 		if(!active)	return false;
 		if(!isRenderActive()) return false;
 		
-		//if(group && struct_has(group, "iterationStatus") && group.iterationStatus() == ITERATION_STATUS.complete) return false;
-		
-		for(var j = 0; j < ds_list_size(inputs); j++) {
-			var _in = inputs[| j];
-			if( _in.type == VALUE_TYPE.node) continue;
-			
-			var val_from = _in.value_from;
-			if( val_from == noone) continue;
-			if(!val_from.node.active) continue;
-			if(!val_from.node.isRenderActive()) continue;
-			if(!val_from.node.rendered) {
-				LOG_LINE_IF(global.FLAG.render == 1, $"Node {INAME} is not renderable because input {val_from.node.internalName} is not rendered ({val_from.node.rendered})");
-				return false;
-			}
-		}
+		for(var j = 0; j < ds_list_size(inputs); j++)
+			if(!inputs[| j].isRendered()) return false;
 		
 		return true;
 	} #endregion
@@ -990,23 +995,24 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			else if(i == -2)	jun = inspectInput2;
 			else				jun = inputs[| i];
 			
-			if(jun.value_from == noone) continue;
+			if(is_instanceof(jun, NodeModule)) {
+				jun.drawConnections(params, _inputs);
+				continue;
+			}
+			
+			if(jun.isLeaf()) continue;
 			if(!jun.value_from.node.active) continue;
 			if(!jun.isVisible()) continue;
 			
-			if(i >= 0)
-				array_push(_inputs, jun);
+			if(i >= 0) array_push(_inputs, jun);
 		}
 		
 		var len = array_length(_inputs);
 		for( var i = 0; i < len; i++ )
 			_inputs[i].drawLineIndex = 1 + (i > len / 2? (len - 1 - i) : i) * 0.5;
 		
-		for(var i = st; i < ds_list_size(inputs); i++) {
-			var jun;
-			if(i == -1)			jun = inspectInput1;
-			else if(i == -2)	jun = inspectInput2;
-			else				jun = inputs[| i];
+		for( var i = 0, n = array_length(_inputs); i < n; i++ ) {
+			var jun = _inputs[i];
 			
 			var hov = jun.drawConnections(params);
 			if(hov) hovering = hov;
@@ -1212,7 +1218,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(branch_drawing) return;
 		branch_drawing = true;
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			if(inputs[| i].value_from == noone) continue;
+			if(inputs[| i].isLeaf()) continue;
 			inputs[| i].value_from.node.drawBranch();
 		}
 	} #endregion
@@ -1250,7 +1256,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			
 			for(var j = 0; j < ds_list_size(jun.value_to); j++) {
 				var _vt = jun.value_to[| j];
-				if(_vt.value_from == noone) break;
+				if(_vt.isLeaf()) break;
 				if(_vt.value_from.node != self) break;
 				
 				_vt.removeFrom(false);
@@ -1258,7 +1264,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				if(!_merge) continue;
 				
 				for( var k = 0; k < ds_list_size(inputs); k++ ) {
-					if(inputs[| k].value_from == noone) continue;
+					if(inputs[| k].isLeaf()) continue;
 					if(_vt.setFrom(inputs[| k].value_from)) break;
 				}
 			}
@@ -1394,7 +1400,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i];
-			if(_in.value_from == noone) continue;
+			if(_in.isLeaf()) continue;
 			if(_in.value_from.node.group == group) continue;
 			var input_node = noone;
 			
@@ -1472,7 +1478,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 			var _inp = inputs[| i];
-			if(_inp.is_anim && _inp.value_from == noone) {
+			if(_inp.is_anim && _inp.isLeaf()) {
 				_cur_anim = true;
 				break;
 			}

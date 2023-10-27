@@ -90,7 +90,7 @@ function __3dObject() constructor {
 	static build = function(_buffer = VB, _vertex = vertex, counts = object_counts) { #region
 		if(is_array(_buffer)) {
 			for( var i = 0, n = array_length(_buffer); i < n; i++ )
-				vertex_delete_buffer(_buffer[i])
+				if(_buffer[i] != noone) vertex_delete_buffer(_buffer[i])
 		} else if(_buffer != noone) vertex_delete_buffer(_buffer);
 		
 		if(array_empty(_vertex)) return noone;

@@ -1,3 +1,13 @@
+function scrollItem(name, spr = noone) constructor {
+	self.name = name;
+	self.data = name;
+	self.spr  = spr;
+	self.spr_ind   = 0;
+	self.spr_blend = c_white;
+	
+	tooltip = "";
+}
+
 function scrollBox(_data, _onModify, update_hover = true) : widget() constructor {
 	onModify  = _onModify;	
 	data_list = _data;
@@ -46,7 +56,9 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		else					 data = data_list;
 		
 		if(is_array(_val)) return 0;
-		var _text = is_string(_val)? _val : array_safe_get(data, _val);
+		if(is_real(_val))  _val = array_safe_get(data, _val);
+		
+		var _text = is_instanceof(_val, scrollItem)? _val.name : _val;
 		curr_text = _text;
 		
 		w = _w;
@@ -84,14 +96,15 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		}
 		
 		var _arw = sprite_get_width(arrow_spr) + ui(8);
+		var _spr = is_instanceof(_val, scrollItem) && _val.spr;
 		
 		draw_set_text(font, align, fa_center, COLORS._main_text);
 		draw_set_alpha(0.5 + 0.5 * interactable);
-		if(align == fa_center)
-			draw_text(_x + (w - _arw) / 2, _y + _h / 2 - ui(2), _text);
-		else if(align == fa_left)
-			draw_text(_x + ui(8), _y + _h / 2 - ui(2), _text);
+				 if(align == fa_center) draw_text(_x + (w - _arw) / 2, _y + _h / 2 - ui(2), _text);
+			else if(align == fa_left)   draw_text(_x + ui(8) + _spr * _h, _y + _h / 2 - ui(2), _text);
 		draw_set_alpha(1);
+		
+		if(_spr) draw_sprite_ext(_val.spr, 0, _x + ui(8) + _h / 2, _y + _h / 2, 1, 1, 0, _val.spr_blend, 1);
 		
 		draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x + w - _arw / 2, _y + _h / 2, 1, COLORS._main_icon, 0.5 + 0.5 * interactable);
 		

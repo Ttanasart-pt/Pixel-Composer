@@ -40,7 +40,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	outputs[| 1] = nodeValue("Bool", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
 	
-	static step = function() {
+	static step = function() { #region
 		var _mode = getInputData(5);
 		
 		inputs[| 0].setVisible(_mode == 1, _mode == 1);
@@ -49,9 +49,12 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		inputs[| 6].setVisible(_mode == 0, _mode == 0);
 		inputs[| 7].setVisible(_mode == 2, _mode == 2);
 		inputs[| 8].setVisible(_mode == 2, _mode == 2);
-	}
+		
+		inputs[| 3].setType(inputs[| 3].isLeaf()? VALUE_TYPE.any : inputs[| 3].value_from.type);
+		inputs[| 4].setType(inputs[| 4].isLeaf()? VALUE_TYPE.any : inputs[| 4].value_from.type);
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		var _true = getInputData(3);
 		var _fals = getInputData(4);
 		
@@ -63,9 +66,6 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _bool = getInputData(6);
 		var _txt1 = getInputData(7);
 		var _txt2 = getInputData(8);
-		
-		inputs[| 3].setType(inputs[| 3].value_from == noone? VALUE_TYPE.any : inputs[| 3].value_from.type);
-		inputs[| 4].setType(inputs[| 4].value_from == noone? VALUE_TYPE.any : inputs[| 4].value_from.type);
 		
 		var res = false;
 		
@@ -95,9 +95,9 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		outputs[| 1].setValue(res);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var val = outputs[| 1].getValue();
 		var frm = val? inputs[| 3] : inputs[| 4];
 		var to  = outputs[| 0];
@@ -107,5 +107,5 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		draw_set_alpha(0.5);
 		draw_line_width(frm.x, frm.y, to.x, to.y, _s * 4);
 		draw_set_alpha(1);
-	}
+	} #endregion
 }

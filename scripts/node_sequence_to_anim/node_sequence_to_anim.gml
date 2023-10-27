@@ -31,7 +31,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				_ord[i] = i;
 		}
 		
-		if(_hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && inputs[| 2].value_from == noone) {
+		if(_hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && inputs[| 2].isLeaf()) {
 			draw_sprite_stretched(THEME.button, mouse_click(mb_left, _focus)? 2 : 1, _x, _y, _w, _h);
 			if(mouse_press(mb_left, _focus)) 
 				dialogPanelCall(new Panel_Array_Sequence(self));

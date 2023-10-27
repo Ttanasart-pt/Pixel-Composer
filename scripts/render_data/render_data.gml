@@ -115,7 +115,7 @@ function __sortGraph(_list, _nodeList) { #region
 		
 		for( var i = 0, n = ds_list_size(_node.inputs); i < n; i++ ) {
 			var _in = _node.inputs[| i];
-			if(_in.value_from == noone)   continue;
+			if(_in.isLeaf())   continue;
 			if(_in.value_from.node.topoSorted) continue;
 			
 			array_push(_childs, _in.value_from.node);

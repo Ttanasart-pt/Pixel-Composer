@@ -54,7 +54,7 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);
 		
-		if(inputs[| 0].value_from == noone) {
+		if(inputs[| 0].isLeaf()) {
 			inputs[| 0].setType(VALUE_TYPE.any);
 			outputs[| 0].setType(VALUE_TYPE.any);
 			return;

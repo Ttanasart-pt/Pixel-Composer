@@ -8,7 +8,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	
 	inputs[| 0].setFrom_condition = function(_valueFrom) {
 		if(instanceof(_valueFrom.node) != "Node_Iterator_Input") return true;
-		if(inputs[| 1].value_from == noone) return true;
+		if(inputs[| 1].isLeaf()) return true;
 		if(inputs[| 1].value_from.node == _valueFrom.node) {
 			noti_warning("setFrom: Immediate cycle disallowed",, self);
 			return false;
@@ -22,7 +22,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	
 	inputs[| 1].setFrom_condition = function(_valueFrom) {
 		if(instanceof(_valueFrom.node) != "Node_Iterator_Input") return true;
-		if(inputs[| 0].value_from == noone) return true;
+		if(inputs[| 0].isLeaf()) return true;
 		if(inputs[| 0].value_from.node == _valueFrom.node) {
 			noti_warning("setFrom: Immediate cycle disallowed",, self);
 			return false;
@@ -42,7 +42,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	}
 	
 	static cloneValue = function(_prev_val, _val) {
-		if(inputs[| 0].value_from == noone) return _prev_val;
+		if(inputs[| 0].isLeaf()) return _prev_val;
 		
 		var is_surf	 = inputs[| 0].value_from.type == VALUE_TYPE.surface;
 		var _new_val;
@@ -54,7 +54,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		if(inputs[| 0].value_from == noone) {
+		if(inputs[| 0].isLeaf()) {
 			group.iterationUpdate();
 			return;
 		}

@@ -11,7 +11,7 @@ function Node_Module_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	input_display_list = [ 0 ];
+	//input_display_list = [ 0 ];
 	
 	setIsDynamicInput(1);
 	

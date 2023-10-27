@@ -1,5 +1,6 @@
 /// @description init
 event_inherited();
 
-scrollbox.onModify(initVal);
+if(initVal > -1)
+	scrollbox.onModify(initVal);
 scrollbox.open = false;

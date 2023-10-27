@@ -4,7 +4,6 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	w = 96;
 	
-	
 	inputs[| 0] = nodeValue("Index", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
 		.setVisible(true, true)
 		.rejectArray();
@@ -12,16 +11,16 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 1] = nodeValue("Default value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(false, true);
 	
-	static createNewInput = function() {
+	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);
 		inputs[| index + 0] = nodeValue("Case", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
 		inputs[| index + 1] = nodeValue("value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
-			.setVisible(false, true);
+			.setVisible(false, false);
 		
 		array_push(input_display_list, index + 0);
 		array_push(input_display_list, index + 1);
-	}
+	} #endregion
 	
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
@@ -33,7 +32,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	static refreshDynamicInput = function() {
+	static refreshDynamicInput = function() { #region
 		var _in = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -45,6 +44,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(getInputData(i) != "") {
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1]);
+				inputs[| i + 1].setVisible(false, true);
 				
 				array_push(input_display_list, i + 0);
 				array_push(input_display_list, i + 1);
@@ -61,9 +61,9 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		inputs = _in;
 		
 		createNewInput();
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(LOADING || APPENDING) return;
 		
 		inputs[| 1].setType(inputs[| 1].value_from? inputs[| 1].value_from.type : VALUE_TYPE.any);
@@ -73,9 +73,9 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(inputs[| i + 1].value_from != noone)
 				inputs[| i + 1].setType(inputs[| i + 1].value_from.type);
 		}
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = 0) { #region
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
@@ -83,9 +83,18 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			inputs[| index + 1].name = getInputData(index) + " value";
 		
 		refreshDynamicInput();
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static step = function() { #region
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+			var _inp = inputs[| i + 1];
+			if(_inp.isLeaf()) continue;
+			
+			_inp.setType(_inp.value_from.type);
+		}
+	} #endregion
+	
+	static update = function(frame = CURRENT_FRAME) { #region
 		var sele = getInputData(0);
 		var _res = getInputData(1);
 		
@@ -102,9 +111,9 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		outputs[| 0].setValue(_res);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var frm = inputs[| 1];
 		var sele = getInputData(0);
 		var _res = getInputData(1);
@@ -121,9 +130,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_alpha(0.5);
 		draw_line_width(frm.x, frm.y, to.x, to.y, _s * 4);
 		draw_set_alpha(1);
-	}
+	} #endregion
 	
-	static doApplyDeserialize = function() {
-		refreshDynamicInput();
-	}
+	static doApplyDeserialize = function() { refreshDynamicInput(); }
 }

@@ -54,11 +54,20 @@ function __getGraphicList() {
 
 function loadGraphic(theme = "default") { 
 	var sprDef = __getGraphicList();
-	var path = _sprite_path("./graphics.json", theme);
+	var _metaP = $"{DIRECTORY}Themes/{theme}/meta.json";
+	if(!file_exists(_metaP))
+		noti_warning("Loading theme made for older version.");
+	else {
+		var _meta = json_load_struct(_metaP);
+		if(_meta[$ "version"] < VERSION)
+			noti_warning("Loading theme made for older version.");
+	}
+		
+	var path   = _sprite_path("./graphics.json", theme);
 	
 	print($"Loading theme {theme}");
 	if(!file_exists(path)) {
-		noti_status("Theme not defined at " + path + ", rollback to default theme.");	
+		print("Theme not defined at " + path + ", rollback to default theme.");	
 		return;
 	}
 	
@@ -70,8 +79,8 @@ function loadGraphic(theme = "default") {
 	for( var i = 0, n = array_length(graphics); i < n; i++ ) {
 		var key = graphics[i];
 		
-		if(struct_has(THEME, key) && sprite_exists(THEME[$ key]))
-			sprite_delete(THEME[$ key]);
+		//if(struct_has(THEME, key) && sprite_exists(THEME[$ key]))
+		//	sprite_delete(THEME[$ key]);
 			
 		if(struct_has(sprStr, key)) {
 			str = sprStr[$ key];

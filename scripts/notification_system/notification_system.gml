@@ -44,6 +44,7 @@
 		
 		str = string(str);
 		show_debug_message("STATUS: " + str);
+		if(PANEL_MAIN == 0) return;
 		
 		if(flash && PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
@@ -70,6 +71,7 @@
 	function noti_warning(str, icon = noone, ref = noone) {
 		if(TEST_ERROR) return {};
 		show_debug_message("WARNING: " + str);
+		if(PANEL_MAIN == 0) return;
 		
 		if(PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
@@ -99,6 +101,7 @@
 	function noti_error(str, icon = noone, ref = noone) {
 		if(TEST_ERROR) return {};
 		show_debug_message("ERROR: " + str);
+		if(PANEL_MAIN == 0) print(str);
 		
 		var noti = new notification(NOTI_TYPE.error, str, icon, c_ui_red);
 		ds_list_add(STATUSES, noti);

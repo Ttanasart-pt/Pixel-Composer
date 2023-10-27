@@ -75,7 +75,11 @@ event_inherited();
 		var hovering  = "";
 		
 		for(var i = 0; i < array_length(data); i++) {
-			var txt  = data[i];
+			var _val = data[i];
+			var txt  = is_instanceof(_val, scrollItem)? _val.name : _val;
+			var _spr = is_instanceof(_val, scrollItem) && _val.spr;
+			var _tol = is_instanceof(_val, scrollItem) && _val.tooltip != "";
+			
 			var clickable = !string_starts_with(txt, "-");
 			if(!clickable)
 				txt = string_delete(txt, 1, 1);
@@ -92,23 +96,25 @@ event_inherited();
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
 					selecting = i;
 					hovering  = data[i];
+					
+					if(_tol) TOOLTIP = _val.tooltip;
 				}
 			
 				if(selecting == i) {
 					draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
 					if(sc_content.active && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
-						initVal = array_find(scrollbox.data, txt);
+						initVal = array_find(scrollbox.data, _val);
 						instance_destroy();
 					}
 				}
 			}
-					
+				
 			draw_set_text(f_p0, align, fa_center, clickable? COLORS._main_text : COLORS._main_text_sub);
-			if(align == fa_center)
-				draw_text_cut(_dw / 2, _ly + hght / 2, txt, _dw);
-			else if(align == fa_left)
-				draw_text_cut(ui(8), _ly + hght / 2, txt, _dw);
+			     if(align == fa_center) draw_text_cut(_dw / 2, _ly + hght / 2, txt, _dw);
+			else if(align == fa_left)   draw_text_cut(ui(8) + _spr * hght, _ly + hght / 2, txt, _dw);
+			
+			if(_spr) draw_sprite_ext(_val.spr, 0, ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
 			
 			_ly += hght;
 			_h  += hght;
@@ -118,7 +124,7 @@ event_inherited();
 			UNDO_HOLDING = true;
 			if(hovering != "")
 				scrollbox.onModify(array_find(scrollbox.data, hovering));
-			else
+			else if(initVal > -1)
 				scrollbox.onModify(initVal);
 			UNDO_HOLDING = false;
 		}

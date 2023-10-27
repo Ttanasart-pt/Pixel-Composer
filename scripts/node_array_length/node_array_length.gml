@@ -13,7 +13,7 @@ function Node_Array_Length(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static update = function(frame = CURRENT_FRAME) { 
 		var _arr = getInputData(0);
-		inputs[| 0].setType(inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type);
+		inputs[| 0].setType(inputs[| 0].isLeaf()? VALUE_TYPE.any : inputs[| 0].value_from.type);
 		
 		if(!is_array(_arr) || array_length(_arr) == 0) {
 			outputs[| 0].setValue(0);
