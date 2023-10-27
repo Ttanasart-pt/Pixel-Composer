@@ -288,8 +288,9 @@ function value_type_directional(f, t) { #region
 	
 	if(f == VALUE_TYPE.strands && t == VALUE_TYPE.pathnode ) return true;
 	
-	if(f == VALUE_TYPE.color && t == VALUE_TYPE.struct ) return true;
-	if(f == VALUE_TYPE.mesh  && t == VALUE_TYPE.struct ) return true;
+	if(f == VALUE_TYPE.color    && t == VALUE_TYPE.struct ) return true;
+	if(f == VALUE_TYPE.mesh     && t == VALUE_TYPE.struct ) return true;
+	if(f == VALUE_TYPE.particle && t == VALUE_TYPE.struct ) return true;
 	
 	if(f == VALUE_TYPE.surface  && t == VALUE_TYPE.d3Material ) return true;
 	

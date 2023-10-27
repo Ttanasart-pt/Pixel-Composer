@@ -2257,6 +2257,7 @@
     {"id":{"name":"sh_draw_r16","path":"shaders/sh_draw_r16/sh_draw_r16.yy",},},
     {"id":{"name":"sh_channel_S","path":"shaders/sh_channel_S/sh_channel_S.yy",},},
     {"id":{"name":"string_scale","path":"scripts/string_scale/string_scale.yy",},},
+    {"id":{"name":"node_struct_set","path":"scripts/node_struct_set/node_struct_set.yy",},},
     {"id":{"name":"s_node_cache","path":"sprites/s_node_cache/s_node_cache.yy",},},
     {"id":{"name":"node_logic_operate","path":"scripts/node_logic_operate/node_logic_operate.yy",},},
     {"id":{"name":"node_repeat","path":"scripts/node_repeat/node_repeat.yy",},},

@@ -73,9 +73,6 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 		allCached = true;
 		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
 			var node = nodes[| i];
-			if(!is_instanceof(node, Node_VFX_Renderer_Output) &&
-			   !is_instanceof(node, Node_VFX_Renderer)) continue;
-			 
 			if(!node.recoverCache()) allCached = false;
 		}
 		

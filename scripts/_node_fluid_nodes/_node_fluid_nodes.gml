@@ -16,16 +16,4 @@ function Node_Fluid(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_to.node.updateForward(frame);
 		}
 	}
-	
-	static cachedPropagate = function() {
-		setRenderStatus(true);
-		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			var _input = inputs[| i];
-			if(_input.isLeaf()) continue;
-			if(!is_instanceof(_input.value_from.node, Node_Fluid)) continue;
-			
-			_input.value_from.node.cachedPropagate();
-		}
-	}
 }

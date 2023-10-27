@@ -1387,6 +1387,18 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			arr[i]._clearCacheForward();
 	} #endregion
 	
+	static cachedPropagate = function(_group = group) { #region
+		if(group != _group) return;
+		setRenderStatus(true);
+		
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
+			var _input = inputs[| i];
+			if(_input.isLeaf()) continue;
+			
+			_input.value_from.node.cachedPropagate(_group);
+		}
+	} #endregion
+	
 	static clearInputCache = function() { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(!is_instanceof(inputs[| i], NodeValue)) continue;

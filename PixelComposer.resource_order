@@ -1520,6 +1520,7 @@
     {"name":"sh_draw_r16","order":10,"path":"shaders/sh_draw_r16/sh_draw_r16.yy",},
     {"name":"sh_channel_S","order":5,"path":"shaders/sh_channel_S/sh_channel_S.yy",},
     {"name":"string_scale","order":4,"path":"scripts/string_scale/string_scale.yy",},
+    {"name":"node_struct_set","order":3,"path":"scripts/node_struct_set/node_struct_set.yy",},
     {"name":"s_node_cache","order":27,"path":"sprites/s_node_cache/s_node_cache.yy",},
     {"name":"node_repeat","order":9,"path":"scripts/node_repeat/node_repeat.yy",},
     {"name":"draw_arc","order":22,"path":"scripts/draw_arc/draw_arc.yy",},

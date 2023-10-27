@@ -44,6 +44,9 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
+	outputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setVisible(false);
+		
 	static update = function(frame = CURRENT_FRAME) {
 		var parts = getInputData(0);
 		if(!is_array(parts)) return;
@@ -64,7 +67,8 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(outputs[| 5].visible) _val[5][i] = part.life;
 			if(outputs[| 6].visible) _val[6][i] = part.life_total;
 			if(outputs[| 7].visible) _val[7][i] = part.surf;
-			if(outputs[| 8].visible) _val[8][i] = [part.sx, part.sy];
+			if(outputs[| 8].visible) _val[8][i] = [part.speedx, part.speedy];
+			if(outputs[| 9].visible) _val[9][i] = part.seed;
 		}
 		
 		for( var i = 0; i < ds_list_size(outputs); i++ )

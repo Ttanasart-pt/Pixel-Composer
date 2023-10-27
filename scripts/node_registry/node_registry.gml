@@ -606,6 +606,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			ds_list_add(values, "Struct");
 			addNodeObject(values, "Struct",			s_node_struct,		"Node_Struct",				[1, Node_Struct]);
 			addNodeObject(values, "Struct Get",		s_node_struct_get,	"Node_Struct_Get",			[1, Node_Struct_Get]);
+			//addNodeObject(values, "Struct Set",		s_node_struct_get,	"Node_Struct_Set",			[1, Node_Struct_Set]);
 			addNodeObject(values, "Parse JSON",		s_node_json_parse,	"Node_Struct_JSON_Parse",	[1, Node_Struct_JSON_Parse]).setVersion(1145);
 			
 			ds_list_add(values, "Mesh");

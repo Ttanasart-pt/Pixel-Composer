@@ -219,19 +219,38 @@ function array_shape(arr, first = true, isSurface = false) {
 	return (first? "" : " x ") + dim;
 }
 
-function array_spread(arr, _arr = []) {
-	if(!is_array(arr)) {
+function array_depth(arr) {
+	gml_pragma("forceinline");
+	
+	if(!is_array(arr)) return 0;
+	var d = 0;
+	var p = arr;
+	
+	while(is_array(p) && !array_empty(p)) {
+		d++;
+		p = p[0];
+	}
+	
+	return d;
+}
+
+function array_spread(arr, _arr = [], _minDepth = 0) {
+	gml_pragma("forceinline");
+	
+	if(array_depth(arr) == _minDepth) {
 		array_push(_arr, arr);
 		return _arr;
 	}
 	
 	for( var i = 0, n = array_length(arr); i < n; i++ ) 
-		array_spread(arr[i], _arr);
+		array_spread(arr[i], _arr, _minDepth);
 		
 	return _arr;
 }
 
 function array_verify(arr, length) {
+	gml_pragma("forceinline");
+	
 	if(!is_array(arr)) return array_create(length);
 	if(array_length(arr) == length) return arr;
 	
