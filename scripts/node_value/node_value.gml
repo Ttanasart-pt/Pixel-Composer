@@ -62,6 +62,7 @@ enum VALUE_TYPE {
 
 enum VALUE_DISPLAY {
 	_default,
+	none,
 	range,
 	
 	//Int

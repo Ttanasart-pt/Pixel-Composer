@@ -1242,6 +1242,7 @@
     {"id":{"name":"node_PCX_fn_math","path":"scripts/node_PCX_fn_math/node_PCX_fn_math.yy",},},
     {"id":{"name":"o_dialog_lua_reference","path":"objects/o_dialog_lua_reference/o_dialog_lua_reference.yy",},},
     {"id":{"name":"__node_custom","path":"scripts/__node_custom/__node_custom.yy",},},
+    {"id":{"name":"node_VFX_trail_path","path":"scripts/node_VFX_trail_path/node_VFX_trail_path.yy",},},
     {"id":{"name":"node_surface_data","path":"scripts/node_surface_data/node_surface_data.yy",},},
     {"id":{"name":"s_node_note","path":"sprites/s_node_note/s_node_note.yy",},},
     {"id":{"name":"node_strand_gravity","path":"scripts/node_strand_gravity/node_strand_gravity.yy",},},

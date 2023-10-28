@@ -24,6 +24,9 @@ function __part(_node) constructor {
 	turning = 0;
 	turnSpd = 0;
 	
+	x_history = [];
+	y_history = [];
+	
 	drawx   = 0;
 	drawy   = 0;
 	drawrot = 0;
@@ -56,6 +59,7 @@ function __part(_node) constructor {
 	
 	life       = 0;
 	life_total = 0;
+	life_incr  = 0;
 	step_int   = 0;
 	
 	anim_speed = 1;
@@ -85,9 +89,13 @@ function __part(_node) constructor {
 		x	= _x;
 		y	= _y;
 		
+		life_incr = 0;
 		life = _life;
 		life_total = life;
 		if(node.onPartCreate != noone) node.onPartCreate(self);
+		
+		x_history = array_create(life);
+		y_history = array_create(life);
 	} #endregion
 	
 	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _turn, _turnSpd) { #region
@@ -197,6 +205,11 @@ function __part(_node) constructor {
 		
 		if(node.onPartStep != noone && step_int > 0 && safe_mod(life, step_int) == 0) 
 			node.onPartStep(self);
+		
+		x_history[life_incr] = x;
+		y_history[life_incr] = y;
+		
+		life_incr++;
 		if(life-- < 0) kill();
 		
 		if(prevx != undefined) {

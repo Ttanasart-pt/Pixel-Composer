@@ -21,10 +21,12 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _gr
 			
 			for( var i = 0; i < part_pool_size; i++ ) 
 				parts[i].reset(_sed++);
-		} else {		
-			for( var i = 0; i < part_pool_size; i++ ) 
-				parts[i].step();
-		}
+				
+			return;
+		} 
+		
+		for( var i = 0; i < part_pool_size; i++ ) 
+			parts[i].step();
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {

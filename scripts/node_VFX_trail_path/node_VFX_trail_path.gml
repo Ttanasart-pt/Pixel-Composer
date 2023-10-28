@@ -1,5 +1,5 @@
-function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Path Builder";
+function Node_VXF_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+	name		= "Trail Path";
 	previewable = false;
 	
 	w = 96;

@@ -226,7 +226,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 		widH = wd_h - (TEXTBOX_HEIGHT * !breakLine);
 	#endregion
-	} else if(jun.editWidget) { #region edit widget
+	} else if(jun.editWidget && jun.display_type != VALUE_DISPLAY.none) { #region edit widget
 		jun.editWidget.setFocusHover(_focus, _hover);
 			
 		if(jun.connect_type == JUNCTION_CONNECT.input) {

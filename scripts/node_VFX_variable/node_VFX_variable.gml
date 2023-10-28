@@ -15,36 +15,43 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	input_display_list = [ 0 ];
 	
 	outputs[| 0] = nodeValue("Positions", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [] )
-		.setDisplay(VALUE_DISPLAY.vector)
+		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
 	outputs[| 1] = nodeValue("Scales", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [] )
-		.setDisplay(VALUE_DISPLAY.vector)
+		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
 	outputs[| 2] = nodeValue("Rotations", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
 	outputs[| 3] = nodeValue("Blending", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, 0 )
+		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
 	outputs[| 4] = nodeValue("Alpha", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
 	outputs[| 5] = nodeValue("Life", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
 	outputs[| 6] = nodeValue("Max life", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
 	outputs[| 7] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone )
+		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
 	outputs[| 8] = nodeValue("Velocity", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [] )
-		.setDisplay(VALUE_DISPLAY.vector)
+		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
 	outputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 		
 	static update = function(frame = CURRENT_FRAME) {
