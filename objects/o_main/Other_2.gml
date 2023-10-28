@@ -83,6 +83,8 @@
 	log_message("SESSION", "> init Palette");		__initPalette();
 	log_message("SESSION", "> init Gradient");		__initGradient();
 	
+	log_message("SESSION", "> init Ins Renderer");	__initInstanceRenderer();
+	
 	setPanel();
 	loadAddon();
 	

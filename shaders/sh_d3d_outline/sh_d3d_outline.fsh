@@ -14,7 +14,7 @@ void main() {
 	gl_FragColor = vec4(0.);
 	
 	vec4 sam = texture2D( gm_BaseTexture, v_vTexcoord );
-	if(sam.r > 0.5) return;
+	if(sam.r > 0.) return;
 	
 	for(float i = 1.; i <= 2.; i++) {
 		float base = 1.;
@@ -30,7 +30,7 @@ void main() {
 			vec2 pxs = (pixelPosition + vec2( cos(ang),  sin(ang)) * i) / dimension;
 			vec4 sam = texture2D( gm_BaseTexture, pxs );
 			
-			if(sam.r > 0.5) {
+			if(sam.r > 0.) {
 				gl_FragColor = outlineColor;
 				return;
 			}

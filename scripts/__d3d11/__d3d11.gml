@@ -11,12 +11,9 @@
 /// @desc Retrieves the last error message.
 ///
 /// @return {String} The last error message.
-function d3d11_get_error_string()
-{
+function d3d11_get_error_string() {
 	gml_pragma("forceinline");
-	static _fn = external_define(
-		GMD3D11_PATH, "d3d11_get_error_string", dll_cdecl, ty_string,
-		0);
+	static _fn = external_define(GMD3D11_PATH, "d3d11_get_error_string", dll_cdecl, ty_string, 0);
 	return external_call(_fn);
 }
 
@@ -29,12 +26,9 @@ function d3d11_get_error_string()
 /// @param {Pointer.Texture} _texture The texture to pass.
 ///
 /// @return {Real} Returns 1 on success or 0 on fail.
-function d3d11_texture_set_stage_vs(_slot, _texture)
-{
+function d3d11_texture_set_stage_vs(_slot, _texture) {
 	gml_pragma("forceinline");
-	static _fn = external_define(
-		GMD3D11_PATH, "d3d11_texture_set_stage_vs", dll_cdecl, ty_real,
-		1, ty_real);
+	static _fn = external_define(GMD3D11_PATH, "d3d11_texture_set_stage_vs", dll_cdecl, ty_real, 1, ty_real);
 	texture_set_stage(0, _texture);
 	return external_call(_fn, _slot);
 }
@@ -49,11 +43,9 @@ function d3d11_texture_set_stage_vs(_slot, _texture)
 /// @param {Pointer.Texture} _texture The texture to pass.
 ///
 /// @see GMD3D11_IS_SUPPORTED
-function texture_set_stage_vs(_slot, _texture)
-{
+function texture_set_stage_vs(_slot, _texture) {
 	gml_pragma("forceinline");
-	if (GMD3D11_IS_SUPPORTED)
-	{
+	if (GMD3D11_IS_SUPPORTED) {
 		d3d11_texture_set_stage_vs(_slot, _texture);
 		return;
 	}
@@ -69,12 +61,9 @@ function texture_set_stage_vs(_slot, _texture)
 /// @param {Pointer.Texture} _texture The texture to pass.
 ///
 /// @return {Real} Returns 1 on success or 0 on fail.
-function d3d11_texture_set_stage_ps(_slot, _texture)
-{
+function d3d11_texture_set_stage_ps(_slot, _texture) {
 	gml_pragma("forceinline");
-	static _fn = external_define(
-		GMD3D11_PATH, "d3d11_texture_set_stage_ps", dll_cdecl, ty_real,
-		1, ty_real);
+	static _fn = external_define(GMD3D11_PATH, "d3d11_texture_set_stage_ps", dll_cdecl, ty_real, 1, ty_real);
 	texture_set_stage(0, _texture);
 	return external_call(_fn, _slot);
 }
@@ -85,12 +74,9 @@ function d3d11_texture_set_stage_ps(_slot, _texture)
 /// is submitted. After that the number is reset back to 0!
 ///
 /// @param {Real} _count Number of instances to draw. Use 0 to disable instanced rendering.
-function d3d11_draw_instanced(_count)
-{
+function d3d11_draw_instanced(_count) {
 	gml_pragma("forceinline");
-	static _fn = external_define(
-		GMD3D11_PATH, "d3d11_draw_instanced", dll_cdecl, ty_real,
-		1, ty_real);
+	static _fn = external_define(GMD3D11_PATH, "d3d11_draw_instanced", dll_cdecl, ty_real, 1, ty_real);
 	return external_call(_fn, _count);
 }
 
@@ -102,23 +88,27 @@ function d3d11_draw_instanced(_count)
 /// @param {Constant.PrimitiveType} _prim The primitive type.
 /// @param {Pointer.Texture} _texture The texture to use.
 /// @param {Real} _count The number of instances to draw.
-function vertex_submit_instanced(_vbuff, _prim, _texture, _count)
-{
+function vertex_submit_instanced(_vbuff, _prim, _texture, _count) {
 	gml_pragma("forceinline");
 	if (!d3d11_draw_instanced(_count))
-	{
 		return false;
-	}
+		
 	vertex_submit(_vbuff, _prim, _texture);
 	return true;
 }
 
-if (GMD3D11_IS_SUPPORTED)
-{
-	var _init = external_define(
-		GMD3D11_PATH, "d3d11_init", dll_cdecl, ty_real, 2, ty_string, ty_string);
-	var _osInfo = os_get_info();
-	var _device = _osInfo[? "video_d3d11_device"];
+function vertex_buffer_load(_filename, _vformat) {
+	gml_pragma("forceinline");
+	var _buffer  = buffer_load(_filename);
+	var _vbuffer = vertex_create_buffer_from_buffer(_buffer, _vformat);
+	buffer_delete(_buffer);
+	return _vbuffer;
+}
+
+if (GMD3D11_IS_SUPPORTED) {
+	var _init    = external_define(GMD3D11_PATH, "d3d11_init", dll_cdecl, ty_real, 2, ty_string, ty_string);
+	var _osInfo  = os_get_info();
+	var _device  = _osInfo[? "video_d3d11_device"];
 	var _context = _osInfo[? "video_d3d11_context"];
 	external_call(_init, _device, _context);
 }
