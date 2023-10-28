@@ -1618,8 +1618,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static isArray = function(val = undefined) { #region
 		if(val == undefined) {
-			if(cache_array[0])
-				return cache_array[1];
+			if(cache_array[0]) return cache_array[1];
 			val = getValue();
 		}
 		
@@ -1650,8 +1649,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static arrayLength = function(val = undefined) { #region
-		if(val == undefined)
-			val = getValue();
+		if(val == undefined) val = getValue();
 		
 		if(!isArray(val)) 
 			return -1;

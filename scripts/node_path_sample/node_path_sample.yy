@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_path_eval",
+  "name": "node_path_sample",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

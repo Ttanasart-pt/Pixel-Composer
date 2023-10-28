@@ -396,15 +396,16 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _or  = 0;
 		var _ors = [];
 		
-		for( var i = custom_input_index; i < ds_list_size(list); i++ ) {
-			var _in = list[| i];
-			array_push(_ors, _in.from.attributes.input_priority);
+		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
+			var _n = nodes[| i];
+			if(!struct_has(_n.attributes, "input_priority")) continue;
+			
+			array_push(_ors, _n.attributes.input_priority);
 		}
 		
 		array_sort(_ors, true);
 		for( var i = 0, n = array_length(_ors); i < n; i++ )
 			if(_or == _ors[i]) _or++;
-		
 		return _or;
 	} #endregion
 	

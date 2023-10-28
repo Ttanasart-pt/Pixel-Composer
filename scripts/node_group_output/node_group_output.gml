@@ -65,13 +65,10 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return nodes;
 	} #endregion
 	
-	static createOutput = function(override_order = true) { #region
+	static createOutput = function() { #region
 		if(group == noone) return;
 		if(!is_struct(group)) return;
 		
-		if(override_order)
-			attributes.input_priority = ds_list_size(group.outputs);
-			
 		if(!is_undefined(outParent))
 			ds_list_remove(group.outputs, outParent);
 			
@@ -142,4 +139,10 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static onLoadGroup = function() { #region
 		if(group == noone) nodeDelete(self);
 	} #endregion
+		
+	//static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	//	var bbox = drawGetBbox(xx, yy, _s);
+	//	draw_set_text(f_h5, fa_center, fa_center, c_white);
+	//	draw_text(bbox.xc, bbox.yc, attributes.input_priority);
+	//} #endregion
 }

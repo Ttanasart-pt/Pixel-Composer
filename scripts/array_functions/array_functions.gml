@@ -219,7 +219,7 @@ function array_shape(arr, first = true, isSurface = false) {
 	return (first? "" : " x ") + dim;
 }
 
-function array_depth(arr) {
+function array_get_depth(arr) {
 	gml_pragma("forceinline");
 	
 	if(!is_array(arr)) return 0;
@@ -237,7 +237,7 @@ function array_depth(arr) {
 function array_spread(arr, _arr = [], _minDepth = 0) {
 	gml_pragma("forceinline");
 	
-	if(array_depth(arr) == _minDepth) {
+	if(array_get_depth(arr) == _minDepth) {
 		array_push(_arr, arr);
 		return _arr;
 	}

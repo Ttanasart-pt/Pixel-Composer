@@ -1342,7 +1342,7 @@
     {"name":"node_counter","order":1,"path":"scripts/node_counter/node_counter.yy",},
     {"name":"s_node_shape_polygon","order":25,"path":"sprites/s_node_shape_polygon/s_node_shape_polygon.yy",},
     {"name":"s_node_pb_fx_interesct","order":6,"path":"sprites/s_node_pb_fx_interesct/s_node_pb_fx_interesct.yy",},
-    {"name":"node_path_eval","order":4,"path":"scripts/node_path_eval/node_path_eval.yy",},
+    {"name":"node_path_sample","order":4,"path":"scripts/node_path_sample/node_path_sample.yy",},
     {"name":"sh_3d_depth","order":6,"path":"shaders/sh_3d_depth/sh_3d_depth.yy",},
     {"name":"__node_3d_displace","order":1,"path":"scripts/__node_3d_displace/__node_3d_displace.yy",},
     {"name":"node_vector_dot","order":9,"path":"scripts/node_vector_dot/node_vector_dot.yy",},

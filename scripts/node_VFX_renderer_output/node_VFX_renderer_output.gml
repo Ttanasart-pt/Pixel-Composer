@@ -35,12 +35,9 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 			.setVisible(true, true);
 	} if(!LOADING && !APPENDING) createNewInput(); #endregion
 		
-	static createOutput = function(override_order = true) { #region
+	static createOutput = function() { #region
 		if(group == noone) return;
 		if(!is_struct(group)) return;
-		
-		if(override_order)
-			attributes.input_priority = ds_list_size(group.outputs);
 			
 		if(!is_undefined(outParent))
 			ds_list_remove(group.outputs, outParent);

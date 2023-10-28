@@ -12,11 +12,8 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone);
 	
-	static createInput = function(override_order = true) { #region
+	static createInput = function() { #region
 		if(group == noone || !is_struct(group)) return noone;
-		
-		if(override_order)
-			attributes.input_priority = ds_list_size(group.inputs);
 		
 		if(!is_undefined(inParent))
 			ds_list_remove(group.inputs, inParent);

@@ -13,17 +13,16 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setIsDynamicInput(1);
 	
-	static createNewInput = function() {
+	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);
 		
 		inputs[| index] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
 			.setVisible(true, true);
 		
 		return inputs[| index];
-	}
-	if(!LOADING && !APPENDING) createNewInput();
+	} if(!LOADING && !APPENDING) createNewInput(); #endregion
 	
-	static refreshDynamicInput = function() {
+	static refreshDynamicInput = function() { #region
 		var _l = ds_list_create();
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
@@ -40,33 +39,36 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		inputs = _l;
 		
 		createNewInput();
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(LOADING || APPENDING) return;
 		
 		refreshDynamicInput();
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
-		var _arr = getInputData(0);
-		
+	static step = function() { #region
 		if(inputs[| 0].isLeaf()) {
 			inputs[| 0].setType(VALUE_TYPE.any);
 			outputs[| 0].setType(VALUE_TYPE.any);
-			return;
+		} else {
+			inputs[| 0].setType(inputs[| 0].value_from.type);
+			outputs[| 0].setType(inputs[| 0].value_from.type);
 		}
 		
-		if(!is_array(_arr)) return;
-		var _type = inputs[| 0].value_from.type;
-		inputs[| 0].setType(_type);
-		outputs[| 0].setType(_type);
+		for( var i = 0; i < ds_list_size(inputs) - 1; i += data_length )
+			inputs[| i].setType(inputs[| i].isLeaf()? VALUE_TYPE.any : inputs[| i].value_from.type);
+	} #endregion
+	
+	static update = function(frame = CURRENT_FRAME) { #region
+		var _arr = getInputData(0);
 		
+		if(!is_array(_arr)) return;
 		var len = 1;
 		var val = [];
 		for( var i = 0; i < ds_list_size(inputs) - 1; i += data_length ) {
 			val[i] = getInputData(i);
-			inputs[| i].setType(inputs[| i].isLeaf()? inputs[| i].value_from.type : VALUE_TYPE.any);
+			
 			if(!is_array(val[i])) {
 				val[i] = [ val[i] ];
 				continue;
@@ -82,10 +84,10 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		outputs[| 0].setValue(_out);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_array_zip, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }

@@ -1356,12 +1356,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return true;
 	} #endregion
 	
-	static clearCache = function() { #region
+	static clearCache = function(_force = false) { #region
 		clearInputCache();
 		
-		if(!clearCacheOnChange) return;
-		if(!use_cache) return;
-		if(!isRenderActive()) return;
+		if(!_force) {
+			if(!use_cache)          return;
+			if(!clearCacheOnChange) return;
+			if(!isRenderActive())   return;
+		}
 		
 		if(array_length(cached_output) != TOTAL_FRAMES)
 			array_resize(cached_output, TOTAL_FRAMES);

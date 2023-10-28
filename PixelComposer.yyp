@@ -2054,7 +2054,7 @@
     {"id":{"name":"s_node_shape_polygon","path":"sprites/s_node_shape_polygon/s_node_shape_polygon.yy",},},
     {"id":{"name":"sh_color_picker_hue","path":"shaders/sh_color_picker_hue/sh_color_picker_hue.yy",},},
     {"id":{"name":"s_node_pb_fx_interesct","path":"sprites/s_node_pb_fx_interesct/s_node_pb_fx_interesct.yy",},},
-    {"id":{"name":"node_path_eval","path":"scripts/node_path_eval/node_path_eval.yy",},},
+    {"id":{"name":"node_path_sample","path":"scripts/node_path_sample/node_path_sample.yy",},},
     {"id":{"name":"sh_3d_depth","path":"shaders/sh_3d_depth/sh_3d_depth.yy",},},
     {"id":{"name":"__node_3d_displace","path":"scripts/__node_3d_displace/__node_3d_displace.yy",},},
     {"id":{"name":"node_vector_dot","path":"scripts/node_vector_dot/node_vector_dot.yy",},},
