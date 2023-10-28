@@ -220,6 +220,7 @@
     {"name":"biterator","order":2,"path":"folders/VCT/biterator.yy",},
     {"name":"widget","order":3,"path":"folders/VCT/widget.yy",},
     {"name":"widgets","order":5,"path":"folders/widgets.yy",},
+    {"name":"d3d particle","order":19,"path":"folders/nodes/data/3D/d3d particle.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},
@@ -648,7 +649,6 @@
     {"name":"sh_3d_extrude_filler","order":8,"path":"shaders/sh_3d_extrude_filler/sh_3d_extrude_filler.yy",},
     {"name":"quarternionBox","order":32,"path":"scripts/quarternionBox/quarternionBox.yy",},
     {"name":"s_window_exit","order":2,"path":"sprites/s_window_exit/s_window_exit.yy",},
-    {"name":"node_3d_particle","order":4,"path":"scripts/node_3d_particle/node_3d_particle.yy",},
     {"name":"s_node_color_remove","order":7,"path":"sprites/s_node_color_remove/s_node_color_remove.yy",},
     {"name":"sh_average","order":7,"path":"shaders/sh_average/sh_average.yy",},
     {"name":"sh_warp_4points_pers","order":10,"path":"shaders/sh_warp_4points_pers/sh_warp_4points_pers.yy",},
@@ -1536,6 +1536,7 @@
     {"name":"__matrix3","order":5,"path":"scripts/__matrix3/__matrix3.yy",},
     {"name":"draw_fit","order":12,"path":"scripts/draw_fit/draw_fit.yy",},
     {"name":"node_armature_sample","order":5,"path":"scripts/node_armature_sample/node_armature_sample.yy",},
+    {"name":"__3d_particle","order":1,"path":"scripts/__3d_particle/__3d_particle.yy",},
     {"name":"sh_pb_shade","order":3,"path":"shaders/sh_pb_shade/sh_pb_shade.yy",},
     {"name":"s_node_morph_surface","order":56,"path":"sprites/s_node_morph_surface/s_node_morph_surface.yy",},
     {"name":"fd_rectangle_get_velocity_dissipation_type","order":20,"path":"scripts/fd_rectangle_get_velocity_dissipation_type/fd_rectangle_get_velocity_dissipation_type.yy",},

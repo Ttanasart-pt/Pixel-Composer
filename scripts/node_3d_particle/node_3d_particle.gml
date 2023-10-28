@@ -1,11 +1,31 @@
 function Node_3D_Particle(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group) constructor {
 	name = "3D Particle";
+	update_on_frame = true;
 	
 	inputs[| in_mesh + 0] = nodeValue("Amounts", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
-	inputs[| in_mesh + 1] = nodeValue("Positions", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setArrayDepth(1);
+	part_pool_size = 128;
+	parts = array_create(part_pool_size);
+	for( var i = 0; i < part_pool_size; i++ ) 
+		parts[i] = new __3DVFX();
+	
+	part_pos = array_create(part_pool_size);
+	part_rot = array_create(part_pool_size);
+	part_sca = array_create(part_pool_size);
+	
+	seed = irandom_range(100000, 999999);
+	
+	static processData_prebatch  = function() {
+		if(CURRENT_FRAME == 0) {
+			var _sed = seed;
+			
+			for( var i = 0; i < part_pool_size; i++ ) 
+				parts[i].reset(_sed++);
+		} else {		
+			for( var i = 0; i < part_pool_size; i++ ) 
+				parts[i].step();
+		}
+	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _obj = _data[0];
@@ -13,13 +33,25 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _gr
 		if(_obj.VF != global.VF_POS_NORM_TEX_COL)	return noone;
 		
 		var _amo = _data[in_mesh + 0];
-		var _pos = _data[in_mesh + 1];
 		
 		if(_amo <= 0) return noone;
 		var _res = new __3dObjectInstancer();
+		var _scaleZero = [ 0, 0, 0 ];
 		
 		_res.object_counts  = max(1, _amo);
-		_res.positions      = _pos;
+		
+		for( var i = 0; i < part_pool_size; i++ ) {
+			var _part = parts[i];
+			
+			part_pos[i] = _part.position;
+			part_rot[i] = _part.rotation;
+			part_sca[i] = _part.active? _part.scale : _scaleZero;
+		}
+		
+		_res.positions     = part_pos;
+		_res.rotations     = part_rot;
+		_res.scales        = part_sca;
+		_res.object_counts = part_pool_size;
 		
 		_res.vertex = _obj.vertex;
 		_res.VB     = _obj.VB;

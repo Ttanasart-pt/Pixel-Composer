@@ -253,6 +253,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"biterator","folderPath":"folders/VCT/biterator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widget","folderPath":"folders/VCT/widget.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"d3d particle","folderPath":"folders/nodes/data/3D/d3d particle.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
@@ -2280,6 +2281,7 @@
     {"id":{"name":"__matrix3","path":"scripts/__matrix3/__matrix3.yy",},},
     {"id":{"name":"draw_fit","path":"scripts/draw_fit/draw_fit.yy",},},
     {"id":{"name":"node_armature_sample","path":"scripts/node_armature_sample/node_armature_sample.yy",},},
+    {"id":{"name":"__3d_particle","path":"scripts/__3d_particle/__3d_particle.yy",},},
     {"id":{"name":"sh_pb_shade","path":"shaders/sh_pb_shade/sh_pb_shade.yy",},},
     {"id":{"name":"ds_map","path":"scripts/ds_map/ds_map.yy",},},
     {"id":{"name":"s_node_morph_surface","path":"sprites/s_node_morph_surface/s_node_morph_surface.yy",},},

@@ -21,20 +21,39 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	size      = new __vec3(1);
 	
 	positions = [];
+	rotations = [];
+	scales    = [];
 	
 	static setData = function() { #region
 		d3d11_cbuffer_begin();
-		d3d11_cbuffer_add_float(4 * object_counts);
+		d3d11_cbuffer_add_float(16 * object_counts);
 		object_data = d3d11_cbuffer_end();
 		
 		var _buffer = buffer_create(d3d11_cbuffer_get_size(object_data), buffer_fixed, 1);
 		
 		for(var i = 0; i < object_counts; i++) {
 			var pos = array_safe_get(positions, i, 0);
+			var rot = array_safe_get(rotations, i, 0);
+			var sca = array_safe_get(scales,    i, 0);
 			
 			buffer_write(_buffer, buffer_f32, array_safe_get(pos, 0, 0)); 
 			buffer_write(_buffer, buffer_f32, array_safe_get(pos, 1, 0)); 
 			buffer_write(_buffer, buffer_f32, array_safe_get(pos, 2, 0)); 
+			buffer_write(_buffer, buffer_f32, 0);
+			
+			buffer_write(_buffer, buffer_f32, array_safe_get(rot, 0, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get(rot, 1, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get(rot, 2, 0)); 
+			buffer_write(_buffer, buffer_f32, 0);
+			
+			buffer_write(_buffer, buffer_f32, array_safe_get(sca, 0, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get(sca, 1, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get(sca, 2, 0)); 
+			buffer_write(_buffer, buffer_f32, 0);
+			
+			buffer_write(_buffer, buffer_f32, 0);
+			buffer_write(_buffer, buffer_f32, 0);
+			buffer_write(_buffer, buffer_f32, 0);
 			buffer_write(_buffer, buffer_f32, 0);
 		}
 		
