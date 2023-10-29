@@ -31,7 +31,9 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
 	}
 	
-	static getPointRatio = function(_rat, ind = 0) {
+	static getPointRatio = function(_rat, ind = 0, out = undefined) {
+		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
 		var _path = getInputData(0);
 		var _shf  = getInputData(1);
 		
@@ -41,23 +43,21 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return new __vec2();
+			return out;
 		
 		var _p0 = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind);
-		var _p  = _path.getPointRatio(_rat, ind).clone();
+		var _p  = _path.getPointRatio(_rat, ind);
 		var _p1 = _path.getPointRatio(clamp(_rat + 0.001, 0, 0.999999), ind);
 		
 		var dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y) + 90;
 		
-		_p.x += lengthdir_x(_shf, dir);
-		_p.y += lengthdir_y(_shf, dir);
+		out.x += _p.x + lengthdir_x(_shf, dir);
+		out.y += _p.y + lengthdir_y(_shf, dir);
 		
-		return _p;
+		return out;
 	}
 	
-	static getPointDistance = function(_dist, ind = 0) {
-		return getPointRatio(_dist / getLength(), ind);
-	}
+	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
 	static getBoundary = function(ind = 0) { 
 		var _path = getInputData(0);

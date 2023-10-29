@@ -83,7 +83,9 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return new BoundingBox(_minx, _miny, _maxx, _maxy);
 	}
 	
-	static getPointRatio = function(_rat, ind = 0) {
+	static getPointRatio = function(_rat, ind = 0, out = undefined) {
+		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
 		var _path = getInputData(0);
 		var _pos  = getInputData(1);
 		var _rot  = getInputData(2);
@@ -96,7 +98,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return new __vec2();
+			return out;
 		
 		var _p = _path.getPointRatio(_rat, ind).clone();
 		
@@ -105,15 +107,13 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var _pp = point_rotate(_p.x, _p.y, _anc[0], _anc[1], _rot);
 		
-		_p.x = _pp[0] + _pos[0];
-		_p.y = _pp[1] + _pos[1];
+		out.x = _pp[0] + _pos[0];
+		out.y = _pp[1] + _pos[1];
 		
-		return _p;
+		return out;
 	}
 	
-	static getPointDistance = function(_dist, ind = 0) {
-		return getPointRatio(_dist / getLength(), ind);
-	}
+	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
 	static getBoundary = function(ind = 0) {
 		var _path = getInputData(0);

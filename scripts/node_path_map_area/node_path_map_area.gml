@@ -37,7 +37,9 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
 	}
 		
-	static getPointRatio = function(_rat, ind = 0) {
+	static getPointRatio = function(_rat, ind = 0, out = undefined) {
+		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
 		var _path = getInputData(0);
 		var _area = getInputData(1);
 		
@@ -47,20 +49,18 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return new __vec2();
+			return out;
 		
 		var _b = _path.getBoundary();
-		var _p = _path.getPointRatio(_rat, ind).clone();
+		var _p = _path.getPointRatio(_rat, ind);
 		
-		_p.x = (_area[AREA_INDEX.center_x] - _area[AREA_INDEX.half_w]) + (_p.x - _b.minx) / _b.width  * _area[AREA_INDEX.half_w] * 2;
-		_p.y = (_area[AREA_INDEX.center_y] - _area[AREA_INDEX.half_h]) + (_p.y - _b.miny) / _b.height * _area[AREA_INDEX.half_h] * 2;
+		out.x = (_area[AREA_INDEX.center_x] - _area[AREA_INDEX.half_w]) + (_p.x - _b.minx) / _b.width  * _area[AREA_INDEX.half_w] * 2;
+		out.y = (_area[AREA_INDEX.center_y] - _area[AREA_INDEX.half_h]) + (_p.y - _b.miny) / _b.height * _area[AREA_INDEX.half_h] * 2;
 		
-		return _p;
+		return out;
 	}
 	
-	static getPointDistance = function(_dist, ind = 0) {
-		return getPointRatio(_dist / getLength(), ind);
-	}
+	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
 	static getBoundary = function() {
 		var _area = getInputData(1);

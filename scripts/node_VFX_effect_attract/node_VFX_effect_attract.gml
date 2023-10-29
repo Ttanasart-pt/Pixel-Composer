@@ -4,6 +4,10 @@ function Node_VFX_Attract(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _g
 	
 	inputs[| 4].setVisible(false, false);
 	
+	inputs[| effector_input_length + 0] = nodeValue("Destroy when reach middle", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+		
+	array_push(input_display_list, effector_input_length + 0);
+	
 	function onAffect(part, str) {
 		var _area      = getInputData(1);
 		var _area_x    = _area[0];
@@ -14,6 +18,8 @@ function Node_VFX_Attract(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _g
 		var _sca_range = getInputData(7);
 		var _rot       = random_range(_rot_range[0], _rot_range[1]);
 		var _sca       = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
+		
+		var _dest	   = getInputData(effector_input_length + 2);
 		
 		var pv   = part.getPivot();
 		var dirr = point_direction(pv[0], pv[1], _area_x, _area_y);
@@ -29,6 +35,9 @@ function Node_VFX_Attract(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _g
 		else			part.sc_sx += sign(part.sc_sx) * scx_s;
 		if(scy_s < 0)	part.sc_sy =  lerp_linear(part.sc_sy, 0, abs(scy_s));
 		else			part.sc_sy += sign(part.sc_sy) * scy_s;
+		
+		if(_dest && point_distance(part.x, part.y, _area_x, _area_y) <= _sten)
+			part.kill();
 	}
 	
 	PATCH_STATIC

@@ -62,12 +62,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 23] = nodeValue("Texture scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	inputs[| 24] = nodeValue("Random Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
+	
 	input_display_list = [
 		["Output",			true],	0, 1, 
 		["Line data",		false], 6, 7, 19, 2, 20, 
 		["Line settings",	false], 17, 3, 11, 12, 8, 9, 13, 14, 
 		["Wiggle",			false], 4, 5, 
-		["Render",			false], 10, 15, 16, 
+		["Render",			false], 10, 24, 15, 16, 
 		["Texture",			false], 18, 21, 22, 23, 
 	];
 	
@@ -78,7 +80,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		draw_set_color(COLORS._main_accent);
 		for( var i = 0, n = array_length(lines); i < n; i++ ) {
 			var points = lines[i];
@@ -98,9 +100,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				draw_line(x0, y0, x1, y1);
 			}
 		}
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var px    = !getInputData(17);
 		var _tex  = inputs[| 18].value_from != noone;
 		var _flen = getInputData(19);
@@ -117,7 +119,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		inputs[|  2].setVisible(!_flen);
 		inputs[| 20].setVisible( _flen);
-	}
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim   = _data[0];
@@ -149,6 +151,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _texRot = _data[22];
 		var _texSca = _data[23];
 		
+		var _colb  = _data[24];
+		
 		inputs[| 14].setVisible(_cap);
 		
 		var _rangeMin = min(_ratio[0], _ratio[1]);
@@ -174,14 +178,19 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
+		var p = new __vec2();
 		var _ox, _nx, _nx1, _oy, _ny, _ny1;
 		var _ow, _nw, _oa, _na, _oc, _nc, _owg, _nwg;
+		var _pathData = [];
+		
 		lines = [];
 			
-		if(_use_path) {
+		if(_use_path) { #region
 			var lineLen = 1;
 			if(struct_has(_pat, "getLineCount"))
 				lineLen = _pat.getLineCount();
+			if(struct_has(_pat, "getPathData"))
+				_pathData = _pat.getPathData();
 				
 			if(_rtMax > 0) 
 			for( var i = 0; i < lineLen; i++ ) {
@@ -207,7 +216,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _prog		= _prog_curr + 1;	//Record previous position to delete from _total
 				var _prog_total	= 0;				//Record how far the pointer have moved so far
 				var points		= [];
-				var p, wght;
+				var wght;
 					
 				if(_useDistance) {						
 					_pathStr   *= _pathLength;
@@ -238,11 +247,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					wght = 1;
 					if(_useDistance) {
-						p = _pat.getPointDistance(_prog_curr, i);
+						p = _pat.getPointDistance(_prog_curr, i, p);
 						if(struct_has(_pat, "getWeightRatio"))
 							wght = _pat.getWeightRatio(_prog_curr, i);
 					} else {
-						p = _pat.getPointRatio(_prog_curr, i);
+						p = _pat.getPointRatio(_prog_curr, i, p);
 						if(struct_has(_pat, "getWeightDistance"))
 							wght = _pat.getWeightDistance(_prog_curr, i);
 					}
@@ -281,7 +290,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				array_push(lines, points);
 			}
-		} else {
+		#endregion
+		} else { #region
 			var x0, y0, x1, y1;
 			var _0 = point_rectangle_overlap(_dim[0], _dim[1], (_ang + 180) % 360);
 			var _1 = point_rectangle_overlap(_dim[0], _dim[1], _ang);
@@ -322,7 +332,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			}
 				
 			lines = [ points ];
-		}
+		} #endregion
 		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(0, 1);
@@ -340,11 +350,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				draw_primitive_begin_texture(pr_trianglestrip, tex);
 			}
 			
+			
 			for( var i = 0, n = array_length(lines); i < n; i++ ) {
 				var points = lines[i];
 				if(array_length(points) < 2) continue;
 				
+				random_set_seed(_sed + i);
 				var pxs = [];
+				var dat = array_safe_get(_pathData, i, noone);
+				
+				var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
 				
 				for( var j = 0; j < array_length(points); j++ ) {
 					var p0   = points[j];
@@ -362,7 +377,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_nw *= eval_curve_x(_widc, _widap? prog : prgc);
 					_nw *= p0.weight;
 					
-					_nc = _color.eval(_colP? prog : prgc);
+					_nc = colorMultiply(_col_base, _color.eval(_colP? prog : prgc));
 					
 					if(_cap) {
 						if(j == 1) {

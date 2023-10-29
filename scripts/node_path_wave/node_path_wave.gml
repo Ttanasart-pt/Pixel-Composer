@@ -57,7 +57,9 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return _len; 
 	}
 		
-	static getPointRatio = function(_rat, ind = 0) {
+	static getPointRatio = function(_rat, ind = 0, out = undefined) {
+		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
 		var _path = getInputData(0);
 		var _fre  = getInputData(1); _fre = max(0.01, abs(_fre));
 		var _amo  = getInputData(2);
@@ -70,7 +72,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return new __vec2();
+			return out;
 		
 		var _p0 = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind);
 		var _p  = _path.getPointRatio(_rat, ind).clone();
@@ -82,15 +84,13 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(_smt) prg = cos((_shf + _rat * _fre) * pi * 2);
 		else	 prg = (abs(frac(_shf + _rat * _fre) * 2 - 1) - 0.5) * 2;
 		
-		_p.x = _p.x + lengthdir_x(prg * _amo, dir);
-		_p.y = _p.y + lengthdir_y(prg * _amo, dir);
+		out.x = _p.x + lengthdir_x(prg * _amo, dir);
+		out.y = _p.y + lengthdir_y(prg * _amo, dir);
 		
-		return _p;
+		return out;
 	}
 	
-	static getPointDistance = function(_dist, ind = 0) {
-		return getPointRatio(_dist / getLength(), ind);
-	}
+	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
 	static getBoundary = function(ind = 0) { 
 		var _path = getInputData(0);

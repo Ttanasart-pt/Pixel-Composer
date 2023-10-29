@@ -428,7 +428,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		//var activeParts = 0;
 		for(var i = 0; i < array_length(parts); i++) {
-			if(!parts[i].active) continue;
 			//activeParts++;
 			parts[i].step(_time);
 		}

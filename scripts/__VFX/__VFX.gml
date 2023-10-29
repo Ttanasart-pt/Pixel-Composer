@@ -70,6 +70,9 @@ function __part(_node) constructor {
 	ground_bounce	= 0;
 	ground_friction = 1;
 	
+	trailLife   = 0;
+	trailActive = false;
+	
 	frame = 0;
 	
 	static reset = function() { #region
@@ -89,13 +92,18 @@ function __part(_node) constructor {
 		x	= _x;
 		y	= _y;
 		
+		drawx = x;
+		drawy = y;
+		
 		life_incr = 0;
 		life = _life;
 		life_total = life;
 		if(node.onPartCreate != noone) node.onPartCreate(self);
 		
-		x_history = array_create(life);
-		y_history = array_create(life);
+		trailActive = true;
+		trailLife   = 0;
+		x_history   = array_create(life);
+		y_history   = array_create(life);
 	} #endregion
 	
 	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _turn, _turnSpd) { #region
@@ -168,6 +176,7 @@ function __part(_node) constructor {
 	
 	static step = function(frame = 0) { #region
 		gml_pragma("forceinline");
+		trailLife++;
 		
 		if(!active) return;
 		x += speedx;
@@ -206,16 +215,16 @@ function __part(_node) constructor {
 		if(node.onPartStep != noone && step_int > 0 && safe_mod(life, step_int) == 0) 
 			node.onPartStep(self);
 		
-		x_history[life_incr] = x;
-		y_history[life_incr] = y;
-		
-		life_incr++;
 		if(life-- < 0) kill();
 		
 		if(prevx != undefined) {
 			spVec[0] = point_distance(prevx, prevy, x, y);
 			spVec[1] = point_direction(prevx, prevy, x, y);
 		}
+		
+		x_history[life_incr] = drawx;
+		y_history[life_incr] = drawy;
+		life_incr++;
 		
 		prevx = x;
 		prevy = y;
@@ -255,7 +264,8 @@ function __part(_node) constructor {
 						//print($"Drawing part destroy when animation end");
 						kill();
 						return;
-					} else			ss = surf[ind];
+					} else 
+						ss = surf[ind];
 					break;
 			}
 		}

@@ -50,7 +50,9 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getLength		= function(ind = 0) { return length; }
 	static getAccuLength	= function(ind = 0) { return [ length ]; }
 	
-	static getPointRatio = function(_rat, ind = 0) {
+	static getPointRatio = function(_rat, ind = 0, out = undefined) {
+		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
 		var _sca  = getInputData(0);
 		var _coor = getInputData(1);
 		var _eqa  = getInputData(2);
@@ -63,22 +65,20 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		_rat = _ran[0] + (_rat * (_ran[1] - _ran[0]));
 		
-		var _p = new __vec2();
-		
 		switch(_coor) {
 			case 0 :
 				switch(_eqa) {
 					case 0 : 
-						_p.x = _rat * _iran[0] + _shf[0];
-						_p.y = evaluateFunction(_eq0, { x: _rat * _iran[0] + _shf[0] });
+						out.x = _rat * _iran[0] + _shf[0];
+						out.y = evaluateFunction(_eq0, { x: _rat * _iran[0] + _shf[0] });
 						break;
 					case 1 : 
-						_p.x = evaluateFunction(_eq0, { y: _rat * _iran[1] + _shf[1] });
-						_p.y = _rat * _iran[1] + _shf[1];
+						out.x = evaluateFunction(_eq0, { y: _rat * _iran[1] + _shf[1] });
+						out.y = _rat * _iran[1] + _shf[1];
 						break;
 					case 2 : 
-						_p.x = evaluateFunction(_eq0, { t: _rat * _iran[0] + _shf[0] });
-						_p.y = evaluateFunction(_eq1, { t: _rat * _iran[1] + _shf[1] });
+						out.x = evaluateFunction(_eq0, { t: _rat * _iran[0] + _shf[0] });
+						out.y = evaluateFunction(_eq1, { t: _rat * _iran[1] + _shf[1] });
 						break;
 				}
 				break;
@@ -99,20 +99,18 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						break;
 				}
 				
-				_p.x =  cos(_a.y) * _a.x;
-				_p.y = -sin(_a.y) * _a.x;
+				out.x =  cos(_a.y) * _a.x;
+				out.y = -sin(_a.y) * _a.x;
 				break;
 		}
 		
-		_p.x =  _p.x * _sca[0] + _orig[0];
-		_p.y = -_p.y * _sca[1] + _orig[1];
+		out.x =  out.x * _sca[0] + _orig[0];
+		out.y = -out.y * _sca[1] + _orig[1];
 		
-		return _p;
+		return out;
 	}
 	
-	static getPointDistance = function(_dist, ind = 0) {
-		return getPointRatio(_dist / getLength(ind), ind);
-	}
+	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(ind), ind, out); }
 	
 	static getBoundary		= function() { return boundary; }
 	

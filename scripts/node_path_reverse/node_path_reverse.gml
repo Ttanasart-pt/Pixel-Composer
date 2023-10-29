@@ -34,17 +34,16 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox(0, 0, 1, 1); 
 	}
 		
-	static getPointRatio = function(_rat, ind = 0) {
+	static getPointRatio = function(_rat, ind = 0, out = undefined) {
+		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		var _path = getInputData(0);
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return new __vec2();
-		return _path.getPointRatio(1 - _rat, ind).clone();
+			return out;
+		return _path.getPointRatio(1 - _rat, ind, out);
 	}
 	
-	static getPointDistance = function(_dist, ind = 0) {
-		return getPointRatio(_dist / getLength(), ind);
-	}
+	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
 	static update = function() { 
 		outputs[| 0].setValue(self);

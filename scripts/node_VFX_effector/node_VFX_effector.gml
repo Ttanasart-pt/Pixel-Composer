@@ -9,10 +9,12 @@ enum FORCE_TYPE {
 }
 
 function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Effector";
-	color = COLORS.node_blend_vfx;
-	icon  = THEME.vfx;
-	previewable = false;
+	name   = "Effector";
+	color  = COLORS.node_blend_vfx;
+	icon   = THEME.vfx;
+	reloop = true;
+	
+	previewable    = false;
 	node_draw_icon = s_node_vfx_accel;
 	
 	w = 96;

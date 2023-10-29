@@ -183,6 +183,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(vfx, "Vortex",		s_node_vfx_vortex,	"Node_VFX_Vortex",		[1, Node_VFX_Vortex]).hideRecent();
 			addNodeObject(vfx, "Turbulence",	s_node_vfx_turb,	"Node_VFX_Turbulence",	[1, Node_VFX_Turbulence]).hideRecent();
 			addNodeObject(vfx, "Repel",			s_node_vfx_repel,	"Node_VFX_Repel",		[1, Node_VFX_Repel]).hideRecent();
+			addNodeObject(vfx, "Oscillate",		s_node_vfx_osc,		"Node_VFX_Oscillate",	[1, Node_VFX_Oscillate]).hideRecent().setVersion(11560);
+			
+			ds_list_add(vfx, "Effects");
+			addNodeObject(vfx, "VFX Trail",		s_node_vfx_trail,	"Node_VFX_Trail",		[1, Node_VFX_Trail]).hideRecent().setVersion(11560);
 			
 			ds_list_add(vfx, "Instance control");
 			addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable]).hideRecent().setVersion(1120);

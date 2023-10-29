@@ -35,26 +35,27 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static getLength		= function(index) { return array_safe_get(length, index); }
 	static getAccuLength	= function(index) { return array_safe_get(lengthAcc, index, []); }
 	
-	static getPointRatio = function(_rat, _ind = 0) { #region
+	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
+		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
 		var _p0, _p1;
 		var _x, _y;
 		
 		var line = array_safe_get(lines, _ind, []);
-		
-		var _st = _rat * (array_length(line) - 1);
+		var _st  = _rat * (array_length(line) - 1);
 		_p0 = array_safe_get(line, floor(_st) + 0);
 		_p1 = array_safe_get(line, floor(_st) + 1);
 		
-		if(!is_array(_p0)) return new __vec2();
-		if(!is_array(_p1)) return new __vec2();
+		if(!is_array(_p0)) return out;
+		if(!is_array(_p1)) return out;
 			
-		_x  = lerp(_p0[0], _p1[0], frac(_st));
-		_y  = lerp(_p0[1], _p1[1], frac(_st));
+		out.x = lerp(_p0[0], _p1[0], frac(_st));
+		out.y = lerp(_p0[1], _p1[1], frac(_st));
 		
-		return new __vec2( _x, _y );
+		return out;
 	} #endregion
 	
-	static getPointDistance = function(_dist, ind = 0) { return getPointRatio(_dist / length[ind], ind); }
+	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / length[ind], ind, out); }
 	
 	static getBoundary = function() { #region
 		var boundary = new BoundingBox();

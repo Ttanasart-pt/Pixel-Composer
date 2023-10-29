@@ -881,9 +881,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static getLength		= function() { return lengthTotal; }
 	static getAccuLength	= function() { return lengthAccs; }
 	
-	static getPointDistance = function(_dist) { #region
+	static getPointDistance = function(_dist, _ind = 0, out = undefined) { #region
 		if(ds_map_exists(cached_pos, _dist))
 			return cached_pos[? _dist].clone();
+		
+		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
 		var loop   = getInputData(1);
 		var rond   = getInputData(3);
@@ -895,7 +897,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ansize = array_length(lengths);
 		var amo    = ds_list_size(inputs) - input_fix_len;
 		
-		if(ansize == 0) return new __vec2();
+		if(ansize == 0) return out;
 		
 		var _a0, _a1;
 		
@@ -904,7 +906,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_a1 = array_clone(anchors[safe_mod(i + 1, amo)]);
 			
 			if(!is_array(_a0) || !is_array(_a1))
-				return new __vec2();
+				return out;
 			
 			if(rond) {
 				_a0[0] = round(_a0[0]);	
@@ -920,18 +922,19 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var _t = _dist / lengths[i];
 			var _p     = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-			var _point = new __vec2(_p);
+			out.x = _p[0];
+			out.y = _p[1];
 			
-			cached_pos[? _oDist] = _point.clone();
-			return _point;
+			cached_pos[? _oDist] = out.clone();
+			return out;
 		}
 		
-		return new __vec2();
+		return out;
 	} #endregion
 	
-	static getPointRatio = function(_rat) { #region
+	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
 		var pix = frac(_rat) * lengthTotal;
-		return getPointDistance(pix);
+		return getPointDistance(pix, _ind, out);
 	} #endregion
 	
 	static getPointSegment = function(_rat) { #region

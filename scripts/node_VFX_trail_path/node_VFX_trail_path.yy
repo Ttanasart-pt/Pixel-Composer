@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "VFX",
-    "path": "folders/nodes/data/simulation/VFX.yy",
+    "name": "effects",
+    "path": "folders/nodes/data/simulation/VFX/effects.yy",
   },
 }

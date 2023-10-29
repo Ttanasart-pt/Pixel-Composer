@@ -1,7 +1,8 @@
 function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
-	name = "Spawner";
-	color = COLORS.node_blend_vfx;
-	icon  = THEME.vfx;
+	name   = "Spawner";
+	color  = COLORS.node_blend_vfx;
+	icon   = THEME.vfx;
+	reloop = true;
 	
 	attributes.Output_pool = false;
 	

@@ -59,21 +59,21 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return lerp(_p0[2], _p1[2], _rat);
 	} #endregion
 	
-	static getPointDistance = function(_dist, _ind = 0) { #region
-		return getPointRatio(_dist / current_length, _ind); 
-	} #endregion
+	static getPointDistance = function(_dist, _ind = 0, out = undefined) { return getPointRatio(_dist / current_length, _ind, out); }
 	
-	static getPointRatio = function(_rat, _ind = 0) { #region
+	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
+		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
 		var _p0 = lines[_ind][0];
 		var _p1 = lines[_ind][1];
 		
-		if(!is_array(_p0) || array_length(_p0) < 2) return new __vec2();
-		if(!is_array(_p1) || array_length(_p1) < 2) return new __vec2();
+		if(!is_array(_p0) || array_length(_p0) < 2) return out;
+		if(!is_array(_p1) || array_length(_p1) < 2) return out;
 		
-		var _x  = lerp(_p0[0], _p1[0], _rat);
-		var _y  = lerp(_p0[1], _p1[1], _rat);
+		out.x = lerp(_p0[0], _p1[0], _rat);
+		out.y = lerp(_p0[1], _p1[1], _rat);
 		
-		return new __vec2( _x, _y );
+		return out;
 	} #endregion
 	
 	static update = function() { #region

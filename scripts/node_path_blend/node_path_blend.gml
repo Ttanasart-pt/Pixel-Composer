@@ -85,7 +85,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return res;
 	}
 	
-	static getPointRatio = function(_rat, ind = 0) {
+	static getPointRatio = function(_rat, ind = 0, out = undefined) {
+		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
 		var _path1 = getInputData(0);
 		var _path2 = getInputData(1);
 		var _lerp  = getInputData(2);
@@ -93,23 +95,20 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var p1 = _path1 != noone && struct_has(_path1, "getPointRatio");
 		var p2 = _path2 != noone && struct_has(_path2, "getPointRatio");
 			
-		if(!p1 && !p2) return new __vec2();
-		if( p1 && !p2) return _path1.getPointRatio(_rat, ind);
-		if(!p1 &&  p2) return _path2.getPointRatio(_rat, ind);
+		if(!p1 && !p2) return out;
+		if( p1 && !p2) return _path1.getPointRatio(_rat, ind, out);
+		if(!p1 &&  p2) return _path2.getPointRatio(_rat, ind, out);
 		
 		var _p1 = _path1.getPointRatio(_rat, ind);
 		var _p2 = _path2.getPointRatio(_rat, ind);
-		var _r  = new __vec2();
 		
-		_r.x = lerp(_p1.x, _p2.x, _lerp);
-		_r.y = lerp(_p1.y, _p2.y, _lerp);
+		out.x = lerp(_p1.x, _p2.x, _lerp);
+		out.y = lerp(_p1.y, _p2.y, _lerp);
 		
-		return _r;
+		return out;
 	}
 	
-	static getPointDistance = function(_dist, ind = 0) {
-		return getPointRatio(_dist / getLength(ind), ind);
-	}
+	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(ind), ind, out); }
 	
 	static getBoundary = function(ind = 0) {
 		var _path1 = getInputData(0);

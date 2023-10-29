@@ -10,8 +10,8 @@ function Node_VFX_Accelerate(_x, _y, _group = noone) : Node_VFX_effector(_x, _y,
 		var _rot       = random_range(_rot_range[0], _rot_range[1]);
 		var _sca       = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
 		
-		part.sx = part.sx + _vect[0] * str * _sten;
-		part.sy = part.sy + _vect[1] * str * _sten;
+		part.speedx = part.speedx + _vect[0] * str * _sten;
+		part.speedy = part.speedy + _vect[1] * str * _sten;
 					
 		part.rot += _rot * str;
 		

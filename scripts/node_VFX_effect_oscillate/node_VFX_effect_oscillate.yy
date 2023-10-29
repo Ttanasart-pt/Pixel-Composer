@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_VFX_effect_destroy",
+  "name": "node_VFX_effect_oscillate",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
