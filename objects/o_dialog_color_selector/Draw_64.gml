@@ -40,7 +40,7 @@ if !ready exit;
 	var by = dialog_y + ui(12);
 	
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh) == 2)
-		presetCollect();
+		__initPalette();
 	bx -= ui(32);
 	
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("color_selector_open_palette", "Open palette folder"), THEME.folder) == 2) {

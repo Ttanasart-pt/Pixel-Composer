@@ -99,7 +99,7 @@ function Panel_Palette() : PanelContent() constructor {
 		var by = title_height / 2 - ui(16 + !in_dialog * 2);
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Refresh"), THEME.refresh, 1, COLORS._main_icon) == 2) 
-			presetCollect();
+			__initPalette();
 		
 		bx -= ui(32)
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("palette_change_preview_size", "Change preview size"), THEME.icon_visibility, 1, COLORS._main_icon) == 2) 

@@ -98,6 +98,7 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _trail_st  = max(1, _vfx.trailLife - _life);
 			var _trail_len = _trail_ed - _trail_st;
 			
+			//if(_vfx.life_total > 0) print($"{_vfx.active} | {_vfx.seed} : {_vfx.trailLife}")
 			if(_trail_len <= 0) continue;
 			
 			var _lngh = 0;

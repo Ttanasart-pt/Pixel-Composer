@@ -1,13 +1,16 @@
+function value_snap_real(val, snap = 1) {
+	gml_pragma("forceinline")
+	return snap == 0? val : round(val / snap) * snap;
+}
+
 function value_snap(val, snap = 1) {
 	gml_pragma("forceinline")
 	
-	if(!is_array(val)) {
-		if(snap == 0) return val;
-		return round(val / snap) * snap;
-	}
+	if(!is_array(val))
+		return value_snap_real(val, snap);
 	
 	var _val = [];
 	for( var i = 0, n = array_length(val); i < n; i++ ) 
-		_val[i] = snap == 0? val[i] : round(val[i] / snap) * snap;
+		_val[i] = value_snap(val[i], snap);
 	return _val;
 }

@@ -5,7 +5,9 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	reloop = true;
 	
 	attributes.Output_pool = false;
-	
+	array_push(attributeEditors, ["Output all particles", function() { return attributes.Output_pool; },
+		new checkBox(function() { attributes.Output_pool = !attributes.Output_pool; }) ]);
+		
 	inputs[| 21].setVisible(false, false);
 	
 	inputs[| input_len + 0] = nodeValue("Spawn trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, false)
@@ -23,7 +25,8 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	UPDATE_PART_FORWARD
 	
 	static onUpdate = function(frame = CURRENT_FRAME) { #region
-		runVFX(frame);
+		if(PROJECT.animator.frame_progress)
+			runVFX(frame);
 		
 		if(attributes.Output_pool) {
 			outputs[| 0].setValue(parts);

@@ -127,7 +127,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _surf = getInputData(0);
 		var _arry = getInputData(12);
 		
-		inputs[|  2].setVisible(_arry && is_array(_surf));
+		inputs[|  2].setVisible(_arry == 0 || !is_array(_surf));
 		
 		inputs[| 10].setVisible(_high);
 		inputs[| 11].setVisible(_high);

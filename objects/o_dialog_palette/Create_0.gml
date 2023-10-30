@@ -2,17 +2,17 @@
 event_inherited();
 
 #region data
-	dialog_w = ui(812);
-	dialog_h = ui(440);
+	dialog_w     = ui(812);
+	dialog_h     = ui(440);
 	title_height = 52;
 	destroy_on_click_out = true;
 	
-	name = __txtx("palette_editor_title", "Palette editor");
+	name    = __txtx("palette_editor_title", "Palette editor");
 	palette = 0;
 	
 	index_selecting = 0;
-	index_dragging = -1;
-	interactable = true;
+	index_dragging  = -1;
+	interactable    = true;
 	
 	setColor = function(color) {
 		if(index_selecting == -1 || palette == 0) return;
@@ -22,9 +22,9 @@ event_inherited();
 		onApply(palette);
 	}
 	
-	onApply = noone;
+	onApply  = noone;
 	selector = new colorSelector(setColor);
-	selector.dropper_close = false;
+	selector.dropper_close  = false;
 	selector.discretize_pal = false;
 	
 	previous_palette = c_black;
@@ -58,7 +58,7 @@ event_inherited();
 	
 	sp_preset_w = ui(240 - 32 - 16);
 	sp_presets = new scrollPane(sp_preset_w, dialog_h - ui(62), function(_y, _m) {
-		var ww  = sp_preset_w - ui(40);
+		var ww = sp_preset_w - ui(40);
 		var hh = ui(32);
 		var yy = _y + ui(8);
 		var hg = ui(52);
@@ -87,7 +87,7 @@ event_inherited();
 				}
 				
 				if(mouse_press(mb_right, interactable && sFOCUS)) {
-					hovering_name = pal.name;
+					hovering_name = pal.path;
 					menuCall("palette_window_preset_menu",,, [
 						menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
 							file_delete(hovering_name); 

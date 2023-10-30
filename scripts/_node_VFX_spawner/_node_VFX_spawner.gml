@@ -116,7 +116,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 35] = nodeValue("Turn both directions", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply randomized 1, -1 multiplier to the turning speed." )
 		.rejectArray();
 	
-	inputs[| 36] = nodeValue("Turn scale with speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+	inputs[| 36] = nodeValue("Turn scale with speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, false )
 		.rejectArray();
 	
 	inputs[| 37] = nodeValue("Collide ground", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
@@ -426,6 +426,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			}
 		}
 		
+		//print($"\n===== Running VFX {_time} =====")
 		//var activeParts = 0;
 		for(var i = 0; i < array_length(parts); i++) {
 			//activeParts++;

@@ -122,7 +122,8 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onDestroy = function() { #region
 		if(is_undefined(outParent)) return;
-		ds_list_delete(group.outputs, ds_list_find_index(group.outputs, outParent));
+		ds_list_remove(group.outputs, outParent);
+		group.sortIO();
 	} #endregion
 	
 	static ungroup = function() { #region
@@ -139,7 +140,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static onLoadGroup = function() { #region
 		if(group == noone) nodeDelete(self);
 	} #endregion
-		
+	
 	//static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 	//	var bbox = drawGetBbox(xx, yy, _s);
 	//	draw_set_text(f_h5, fa_center, fa_center, c_white);

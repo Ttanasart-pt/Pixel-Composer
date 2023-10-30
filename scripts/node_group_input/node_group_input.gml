@@ -367,6 +367,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onDestroy = function() { #region
 		if(is_undefined(inParent)) return;
 		ds_list_remove(group.inputs, inParent);
+		group.sortIO();
 	} #endregion
 	
 	static ungroup = function() { #region

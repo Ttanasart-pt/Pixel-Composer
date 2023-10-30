@@ -100,7 +100,6 @@ function __part(_node) constructor {
 		life_total = life;
 		if(node.onPartCreate != noone) node.onPartCreate(self);
 		
-		trailActive = true;
 		trailLife   = 0;
 		x_history   = array_create(life);
 		y_history   = array_create(life);
@@ -176,6 +175,7 @@ function __part(_node) constructor {
 	
 	static step = function(frame = 0) { #region
 		gml_pragma("forceinline");
+		//if(life_total > 0) print($"Step {seed}: {trailLife}");
 		trailLife++;
 		
 		if(!active) return;
@@ -201,7 +201,11 @@ function __part(_node) constructor {
 			dirr += wig_dir.get(seed + life);
 			
 			if(turning != 0) {
-				var trn = turnSpd? turning * diss : turning;
+				var trn = turning;
+				
+				     if(turnSpd > 0) trn = turning * diss * turnSpd;
+				else if(turnSpd < 0) trn = turning / diss * turnSpd;
+				
 				dirr += trn
 			}
 		}

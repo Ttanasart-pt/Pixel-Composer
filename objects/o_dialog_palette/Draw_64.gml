@@ -53,15 +53,15 @@ if palette == 0 exit;
 				file_text_writeln(file);
 			}
 			file_text_close(file);
-			presetCollect();
+			__initPalette();
 		};
 		dia.path = DIRECTORY + "Palettes/"
 	}
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh) == 2) {
-		presetCollect();
-	}
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh) == 2)
+		__initPalette();
+	
 	draw_sprite_ui_uniform(THEME.refresh, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
 	bx -= ui(32);
 	

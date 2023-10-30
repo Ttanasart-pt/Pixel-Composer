@@ -77,6 +77,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	lines = [];
 	
+	widthMap = ds_map_create();
+	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
@@ -122,39 +124,42 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _dim   = _data[0];
-		var _bg    = _data[1];
-		var _seg   = _data[2];
-		var _wid   = _data[3];
-		var _wig   = _data[4];
-		var _sed   = _data[5];
-		var _ang   = _data[6] % 360;
-		var _pat   = _data[7];
-		var _ratio = _data[8];
-		var _shift = _data[9];
+		#region data
+			var _dim   = _data[0];
+			var _bg    = _data[1];
+			var _seg   = _data[2];
+			var _wid   = _data[3];
+			var _wig   = _data[4];
+			var _sed   = _data[5];
+			var _ang   = _data[6] % 360;
+			var _pat   = _data[7];
+			var _ratio = _data[8];
+			var _shift = _data[9];
 		
-		var _color = _data[10];
-		var _widc  = _data[11];
-		var _widap = _data[12];
+			var _color = _data[10];
+			var _widc  = _data[11];
+			var _widap = _data[12];
 		
-		var _cap   = _data[13];
-		var _capP  = _data[14];
-		var _colP  = _data[15];
-		var _colW  = _data[16];
-		var _1px   = _data[17];
+			var _cap   = _data[13];
+			var _capP  = _data[14];
+			var _colP  = _data[15];
+			var _colW  = _data[16];
+			var _1px   = _data[17];
 		
-		var _fixL  = _data[19];
-		var _segL  = _data[20];
+			var _fixL  = _data[19];
+			var _segL  = _data[20];
 		
-		var _tex    = _data[18];
-		var _texPos = _data[21];
-		var _texRot = _data[22];
-		var _texSca = _data[23];
+			var _tex    = _data[18];
+			var _texPos = _data[21];
+			var _texRot = _data[22];
+			var _texSca = _data[23];
 		
-		var _colb  = _data[24];
+			var _colb  = _data[24];
+		#endregion
 		
-		inputs[| 14].setVisible(_cap);
-		
+		if(CURRENT_FRAME == 0 || inputs[| 11].is_anim)
+			ds_map_clear(widthMap);
+			
 		var _rangeMin = min(_ratio[0], _ratio[1]);
 		var _rangeMax = max(_ratio[0], _ratio[1]);
 		if(_rangeMax == 1) _rangeMax = 0.99999;
@@ -334,6 +339,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			lines = [ points ];
 		} #endregion
 		
+		#region draw
+		
+		//print($"==== Drawing frame {CURRENT_FRAME} ====")
+		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(0, 1);
 			else	DRAW_CLEAR
@@ -347,13 +356,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				shader_set_f("scale",    _texSca);
 				
 				shader_set_interpolation(_tex);
-				draw_primitive_begin_texture(pr_trianglestrip, tex);
 			}
-			
 			
 			for( var i = 0, n = array_length(lines); i < n; i++ ) {
 				var points = lines[i];
 				if(array_length(points) < 2) continue;
+				
+				if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
+				else        draw_primitive_begin(pr_trianglestrip);
 				
 				random_set_seed(_sed + i);
 				var pxs = [];
@@ -369,12 +379,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var prgc = p0.progCrop;
 					
 					if(_1px) {
-						_nx = _nx - 0.5;	
+						_nx = _nx - 0.5;
 						_ny = _ny - 0.5;
 					}
 					
-					_nw = random_range(_wid[0], _wid[1]);
-					_nw *= eval_curve_x(_widc, _widap? prog : prgc);
+					var widProg = value_snap_real(_widap? prog : prgc, 0.01);
+					
+					_nw  = random_range(_wid[0], _wid[1]);
+					if(!ds_map_exists(widthMap, widProg))
+						widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
+					_nw *= widthMap[? widProg];
 					_nw *= p0.weight;
 					
 					_nc = colorMultiply(_col_base, _color.eval(_colP? prog : prgc));
@@ -443,8 +457,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								draw_vertex_texture_color(ox1, oy1, 1, (j - 1) / _len, _oc, 1);
 								draw_vertex_texture_color(nx0, ny0, 0, (j - 0) / _len, _nc, 1);
 								draw_vertex_texture_color(nx1, ny1, 1, (j - 0) / _len, _nc, 1);
-							} else
-								draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, _oc, _nc, _colW);
+							} else if(_colW)
+								draw_line_width2_angle_width(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, merge_color(_oc, c_black, 0.5), merge_color(_nc, c_black, 0.5));
+							else
+								draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, _oc, _nc);
 						} else {
 							var p1   = points[j + 1];
 							_nd = point_direction(_nx, _ny, p1.x, p1.y);
@@ -458,12 +474,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 				}
 				
-				if(_useTex) {
-					draw_primitive_end();
-					shader_reset();
-				}
+				draw_primitive_end();
 			}
+			
+			if(_useTex) shader_reset();
 		surface_reset_target();
+		#endregion
 		
 		return _outSurf;
 	}

@@ -409,8 +409,8 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		rootx = _x;
 		
-		var bx = w - ui(44);
-		var by = ui(12);
+		var bx = w - ui(40);
+		var by = ui(9);
 		var bs = ui(32);
 		
 		if(search_string == "") {
