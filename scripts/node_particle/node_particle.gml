@@ -111,7 +111,5 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			//print($"Cache frame {CURRENT_FRAME}");
 			cacheCurrentFrame(_outSurf);
 		}
-	} #endregion
-		
-	
+	} #endregion	
 }

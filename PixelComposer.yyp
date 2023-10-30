@@ -1318,6 +1318,7 @@
     {"id":{"name":"fd_rectangle_get_pressure_height","path":"scripts/fd_rectangle_get_pressure_height/fd_rectangle_get_pressure_height.yy",},},
     {"id":{"name":"hyperbolic_function","path":"scripts/hyperbolic_function/hyperbolic_function.yy",},},
     {"id":{"name":"s_node_fluidSim_repulse","path":"sprites/s_node_fluidSim_repulse/s_node_fluidSim_repulse.yy",},},
+    {"id":{"name":"node_tile","path":"scripts/node_tile/node_tile.yy",},},
     {"id":{"name":"sh_rsh_rotate","path":"shaders/sh_rsh_rotate/sh_rsh_rotate.yy",},},
     {"id":{"name":"node_VFX_effect_destroy","path":"scripts/node_VFX_effect_destroy/node_VFX_effect_destroy.yy",},},
     {"id":{"name":"node_cache","path":"scripts/node_cache/node_cache.yy",},},

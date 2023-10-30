@@ -593,14 +593,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- draw ----
-		draw_line_shift_x	= 0;
-		draw_line_shift_y	= 0;
-		draw_line_thick		= 1;
-		draw_line_shift_hover	= false;
-		draw_line_blend     = 1;
-		drawLineIndex		= 1;
-		draw_line_vb		= noone;
-		draw_junction_index = type;
+		draw_line_shift_x	  = 0;
+		draw_line_shift_y	  = 0;
+		draw_line_thick		  = 1;
+		draw_line_shift_hover = false;
+		draw_line_blend       = 1;
+		drawLineIndex		  = 1;
+		draw_line_vb		  = noone;
+		draw_junction_index   = type;
 		
 		junction_drawing = [ THEME.node_junctions_single, type ];
 		
@@ -1559,11 +1559,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setAnim = function(anim) { #region
 		if(is_anim == anim) return;
-		
-		if(anim && !is_anim && ds_list_size(animator.values) == 1)
-			animator.values[| 0].time = CURRENT_FRAME;
-		
 		is_anim = anim;
+		
+		if(is_anim) {
+			animator.values[| 0].time = CURRENT_FRAME;
+			
+			for( var i = 0, n = array_length(animators); i < n; i++ ) {
+				ds_list_clear(animators[i].values);
+				animators[i].values[| 0].time = CURRENT_FRAME;
+			}
+		} else {
+			ds_list_clear(animator.values);
+			animator.values[| 0] = new valueKey(0, animator.getValue(), animator);
+			
+			for( var i = 0, n = array_length(animators); i < n; i++ ) {
+				ds_list_clear(animators[i].values);
+				animators[i].values[| 0] = new valueKey(0, animators[i].getValue(), animators[i]);
+			}
+		}
+		
 		node.refreshTimeline();
 	} #endregion
 	
@@ -2355,6 +2369,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _map = {};
 		
 		_map.visible = visible;
+		_map.color   = color;
 		
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return _map;
@@ -2386,12 +2401,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _anims = [];
 		for( var i = 0, n = array_length(animators); i < n; i++ )
 			array_push(_anims, animators[i].serialize(scale));
-		_map.animators = _anims;
+		_map.animators    = _anims;
 		_map.display_data = display_data;
 		_map.attributes   = attributes;
-		
-		_map.name_custom = name_custom;
-		_map.color       = color;
+		_map.name_custom  = name_custom;
 		
 		return _map;
 	} #endregion
@@ -2402,6 +2415,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!is_struct(_map))  return;
 		
 		visible = struct_try_get(_map, "visible", visible);
+		color   = struct_try_get(_map, "color", -1);
+		
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return;
 		
@@ -2421,7 +2436,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		name_custom = struct_try_get(_map, "name_custom", false);
 		if(name_custom) name = struct_try_get(_map, "name", name);
-		color       = struct_try_get(_map, "color", -1);
 		
 		animator.deserialize(struct_try_get(_map, "raw_value"), scale);
 		

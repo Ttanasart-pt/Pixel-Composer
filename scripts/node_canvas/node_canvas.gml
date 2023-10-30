@@ -36,6 +36,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 13] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
 	
+	inputs[| 14] = nodeValue("Use background dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	frame_renderer_x     = 0;
@@ -148,11 +150,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Output",	false],	0, frame_renderer, 12, 13, 
 		["Brush",	false], 6, 2, 1, 11,
 		["Fill",	false], 3, 4, 
-		["Display", false], 8, 10, 9, 
+		["Display", false], 8, 10, 14, 9, 
 	];
 	
 	attributes.frames = 1;
 	attribute_surface_depth();
+	
+	attributes.dimension = [ 1, 1 ];
 	
 	output_surface   = [ surface_create_empty(1, 1) ];
 	canvas_surface   = [ surface_create_empty(1, 1) ];
@@ -276,7 +280,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function apply_surface(index = preview_index) { #region
-		var _dim = getInputData(0);
+		var _dim = attributes.dimension;
 		var cDep = attrDepth();
 		
 		var _canvas_surface = getCanvasSurface(index);
@@ -596,7 +600,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
-		var _dim		= getInputData(0);
+		var _dim		= attributes.dimension;
 		var _col		= getInputData(1);
 		var _siz		= getInputData(2);
 		var _thr		= getInputData(3);
@@ -1010,9 +1014,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _bgr   = getInputData(10);
 		var _anim  = getInputData(12);
 		var _anims = getInputData(13);
+		var _bgDim = getInputData(14);
 		
 		var cDep   = attrDepth();
 		apply_surfaces();
+		
+		if(_bgDim && is_surface(_bg)) _dim = [ surface_get_width_safe(_bg), surface_get_height_safe(_bg) ];
+		attributes.dimension = _dim;
 		
 		var _frames  = attributes.frames;
 		
@@ -1041,7 +1049,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
 					draw_surface_safe(_canvas_surface, 0, 0);
 				surface_reset_shader();
-			
 			}
 			
 			if(_anim) {
@@ -1067,7 +1074,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static doApplyDeserialize = function() { #region
-		var _dim     = getInputData(0);
+		var _dim     = struct_has(attributes, "dimension")? attributes.dimension : getInputData(0);
 		
 		if(!struct_has(load_map, "surfaces")) {
 			if(struct_has(load_map, "surface")) {

@@ -280,28 +280,31 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		return _val;
 	} #endregion
 	
-	static setKeyTime = function(_key, _time, _replace = true) { #region
+	static setKeyTime = function(_key, _time, _replace = true, record = false) { #region
 		if(!ds_list_exist(values, _key)) return 0;
+		if(_key.time == _time)			 return 0;
+		
 		if(!LOADING) PROJECT.modified = true;
 		
 		_time = max(_time, 0);
 		_key.setTime(_time);
 		ds_list_remove(values, _key);
 		
-		if(_replace) {
-			for( var i = 0; i < ds_list_size(values); i++ ) {
-				if(values[| i].time == _time) {
-					values[| i] = _key;
-					return 2;
-				}
-			}
+		if(_replace)
+		for( var i = 0; i < ds_list_size(values); i++ ) {
+			if(values[| i].time != _time) continue;
+			
+			if(record) recordAction(ACTION_TYPE.list_modify, values, [ values[| i], i ]);
+			values[| i] = _key;
+			return 2;
 		}
 		
 		for( var i = 0; i < ds_list_size(values); i++ ) {
-			if(values[| i].time > _time) {
-				ds_list_insert(values, i, _key);
-				return 1;
-			}
+			if(values[| i].time < _time) continue;
+			
+			if(record) recordAction(ACTION_TYPE.list_insert, values, [ _key, i ]);
+			ds_list_insert(values, i, _key);
+			return 1;
 		}
 		
 		ds_list_add(values, _key);

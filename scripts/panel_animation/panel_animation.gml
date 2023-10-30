@@ -361,7 +361,7 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var k = keyframe_selecting[i];
-			k.anim.setKeyTime(k, tt);
+			k.anim.setKeyTime(k, tt,, true);
 		}
 	} #endregion
 	
@@ -370,13 +370,17 @@ function Panel_Animation() : PanelContent() constructor {
 	} #endregion
 	
 	function staggerKeys(_index, _stag) { #region
+		var modified = false;
 		var t = keyframe_selecting[_index].time;
+		
 		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var k = keyframe_selecting[i];
 			var _t = t + abs(i -  _index) * _stag;
 			
-			k.anim.setKeyTime(k, _t);
+			modified |= k.anim.setKeyTime(k, _t);
 		}
+		
+		if(modified) UNDO_HOLDING = true;
 	} #endregion
 	
 	function onFocusBegin() { PANEL_ANIMATION = self; }
@@ -512,7 +516,7 @@ function Panel_Animation() : PanelContent() constructor {
 		#region bg
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, bar_w, bar_h);
 			var __w = timeline_shift + TOTAL_FRAMES * ui(timeline_scale) + PANEL_PAD;
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, min(__w, timeline_w), bar_h, COLORS.panel_animation_timeline_blend, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, min(__w, timeline_w) - 1, bar_h, COLORS.panel_animation_timeline_blend, 1);
 			
 			if(inspecting)
 				inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
@@ -529,7 +533,7 @@ function Panel_Animation() : PanelContent() constructor {
 			var bar_line_x = (CURRENT_FRAME + 1) * ui(timeline_scale) + timeline_shift;
 			var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
 			draw_set_color(cc);
-			draw_line(bar_line_x, ui(12), bar_line_x, bar_h - PANEL_PAD);
+			draw_line(bar_line_x, ui(15), bar_line_x, bar_h - PANEL_PAD);
 					
 			draw_set_text(f_p2, fa_center, fa_bottom, cc);
 			draw_text_add(bar_line_x, ui(16), string(CURRENT_FRAME + 1));
@@ -1320,7 +1324,7 @@ function Panel_Animation() : PanelContent() constructor {
 			var bar_show_w = timeline_shift + bar_total_w;
 			
 			var _bg_w = min(bar_total_w + PANEL_PAD, bar_w);
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, _bg_w, dope_sheet_h, COLORS.panel_animation_timeline_blend, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, _bg_w - 1, dope_sheet_h, COLORS.panel_animation_timeline_blend, 1);
 			
 			dope_sheet_y_max = 0;
 			var key_y = ui(22) + dope_sheet_y;
@@ -1395,6 +1399,7 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			for(var i = timeline_sep_line; i <= TOTAL_FRAMES; i += timeline_sep_line) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
+				
 				draw_set_color(COLORS.panel_animation_frame_divider);
 				draw_set_alpha(i % timeline_separate == 0? 1 : 0.1);
 				draw_line(bar_line_x, ui(16), bar_line_x, dope_sheet_h - PANEL_PAD);
@@ -1484,23 +1489,28 @@ function Panel_Animation() : PanelContent() constructor {
 					var tt = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 1;
 					tt = max(tt, 0);
 					var sh = tt - keyframe_dragging.time;
-								
+					var edited = false;
+					
 					for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 						var k  = keyframe_selecting[i];
 						var kt = k.time + sh;
 						
-						k.anim.setKeyTime(k, kt, false);
+						if(k.anim.setKeyTime(k, kt, false, true))
+							edited = true;
 					}
-								
-					timeline_show_time     = floor(tt);
+					
+					if(edited) UNDO_HOLDING = true;
+					timeline_show_time = floor(tt);
 								
 					if(mouse_release(mb_left) || mouse_press(mb_left)) {
 						keyframe_dragging = noone;
-									
+						
 						for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 							var k  = keyframe_selecting[i];
-							k.anim.setKeyTime(k, k.time);
+							k.anim.setKeyTime(k, k.time, true, true);
 						}
+						
+						UNDO_HOLDING = false;
 					}
 				} else {
 					var dx = abs((keyframe_dragging.time + 1) - (mx - bar_x - timeline_shift) / ui(timeline_scale)) / 2;
@@ -1556,6 +1566,7 @@ function Panel_Animation() : PanelContent() constructor {
 						recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_ot, "ease_out"]);
 								
 						keyframe_dragging = noone;
+						UNDO_HOLDING      = false;
 					}
 				}
 			}
@@ -1707,6 +1718,7 @@ function Panel_Animation() : PanelContent() constructor {
 					}
 				} else if(stagger_mode == 2) {
 					stagger_mode = 0;
+					UNDO_HOLDING = false;
 				} else if(key_hover == noone && keyframe_boxable) {
 					keyframe_boxing = true;
 					keyframe_box_sx = msx;
@@ -1735,8 +1747,12 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			for(var i = timeline_separate; i <= TOTAL_FRAMES; i += timeline_separate) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
+				
+				draw_set_color(COLORS.panel_animation_frame_divider);
+				draw_line(bar_line_x, 0, bar_line_x, ui(20));
+				
 				draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
-				draw_text_add(bar_line_x - ui(2), PANEL_PAD, string(i));
+				draw_text_add(bar_line_x - ui(2), PANEL_PAD, i);
 			}
 			
 			if(PROJECT.onion_skin.enabled) { //ONION SKIN
@@ -1928,18 +1944,14 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		if(by < ui(28)) return;
 		by = ui(8);
+		
 		var txt = __txt("New folder");
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.folder_content) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.folder_content) == 2) {
 			var _dir = new timelineItemGroup();
 			PROJECT.timelines.addItem(_dir);
 		}
 		
-		//by += ui(28);
-		//var txt = show_node_outside_context? __txtx("panel_animation_hide_node", "Hide node outside context") : __txtx("panel_animation_show_node", "Show node outside context");
-		//if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.junc_visible, show_node_outside_context) == 2)
-		//	show_node_outside_context = !show_node_outside_context;
-		
-		by += ui(28);
+		by += ui(32);
 		var txt = "";
 		switch(node_name_type) {
 			case 0 : txt = __txtx("panel_animation_name_full", "Show full name"); break;
@@ -1947,17 +1959,17 @@ function Panel_Animation() : PanelContent() constructor {
 			case 2 : txt = __txtx("panel_animation_name_only", "Show node name"); break;
 		}
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.node_name_type, node_name_type) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.node_name_type, node_name_type) == 2)
 			node_name_type = (node_name_type + 1) % 3;
 		
-		by += ui(28);
+		by += ui(32);
 		txt = __txtx("panel_animation_keyframe_override", "Override Keyframe");
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.keyframe_override, global.FLAG.keyframe_override) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.keyframe_override, global.FLAG.keyframe_override) == 2)
 			global.FLAG.keyframe_override = !global.FLAG.keyframe_override;
 		
-		by += ui(28);
+		by += ui(32);
 		txt = __txt("Onion skin");
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.onion_skin,, PROJECT.onion_skin.enabled? c_white : COLORS._main_icon) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.onion_skin,, PROJECT.onion_skin.enabled? c_white : COLORS._main_icon) == 2)
 			PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;
 	} #endregion
 	
