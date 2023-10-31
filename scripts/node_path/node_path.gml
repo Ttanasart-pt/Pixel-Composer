@@ -122,7 +122,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var sample = PREF_MAP[? "path_resolution"];
+		var sample = PREFERENCES.path_resolution;
 		var loop   = getInputData(1);
 		var ansize = ds_list_size(inputs) - input_fix_len;
 		var _edited = false;
@@ -830,7 +830,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			anchors = [];
 			return;
 		}
-		var sample = PREF_MAP[? "path_resolution"];
+		var sample = PREFERENCES.path_resolution;
 		
 		var con = loop? ansize : ansize - 1;
 		lengths	   = [];

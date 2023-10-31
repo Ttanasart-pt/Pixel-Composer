@@ -82,8 +82,8 @@ event_inherited();
 		
 		var contents = context.content;
 		var amo      = ds_list_size(contents);
-		var hh = 0;
-		var frame = current_time * PREF_MAP[? "collection_preview_speed"] / 8000;
+		var hh    = 0;
+		var frame = current_time * PREFERENCES.collection_preview_speed / 8000;
 		
 		var grid_size = ui(64);
 		var img_size  = grid_size - ui(16);

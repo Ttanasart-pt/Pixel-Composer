@@ -67,7 +67,7 @@
 	#macro WIN_SW window_get_width()
 	#macro WIN_SH window_get_height()
 	
-	#macro UI_SCALE PREF_MAP[? "display_scaling"]
+	#macro UI_SCALE PREFERENCES.display_scaling
 	
 	#macro mouse_mx device_mouse_x_to_gui(0)
 	#macro mouse_my device_mouse_y_to_gui(0)

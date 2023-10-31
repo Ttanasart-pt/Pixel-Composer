@@ -33,7 +33,7 @@ function _font_add(path, size) {
 function _font_path(rel) {
 	rel = string_replace_all(rel, "./", "");
 	
-	var defPath = $"{DIRECTORY}themes/{PREF_MAP[? "theme"]}/fonts/{rel}";
+	var defPath = $"{DIRECTORY}themes/{PREFERENCES.theme}/fonts/{rel}";
 	
 	if(LOCALE.fontDir == noone)
 		return defPath;

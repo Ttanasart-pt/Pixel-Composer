@@ -115,24 +115,24 @@ event_inherited();
 		__txtx("pref_show_welcome_screen", "Show welcome screen"),
 		"show_splash",
 		new checkBox(function() { 
-			PREF_MAP[? "show_splash"] = !PREF_MAP[? "show_splash"];
+			PREFERENCES.show_splash = !PREFERENCES.show_splash;
 			PREF_SAVE();
 		})
 	]);
 	
-	PREF_MAP[? "_display_scaling"] = PREF_MAP[? "display_scaling"];
+	PREFERENCES._display_scaling = PREFERENCES.display_scaling;
 	ds_list_add(pref_global, [
 		__txtx("pref_gui_scaling", "GUI scaling"),
 		"_display_scaling",
 		new slider(0.5, 2, 0.01, function(val) { 
-			PREF_MAP[? "_display_scaling"] = val;
+			PREFERENCES._display_scaling = val;
 			PREF_SAVE();
 		}, function() { 
-			PREF_MAP[? "_display_scaling"] = clamp(PREF_MAP[? "_display_scaling"], 0.5, 2);
-			if(PREF_MAP[? "display_scaling"] == PREF_MAP[? "_display_scaling"])
+			PREFERENCES._display_scaling = clamp(PREFERENCES._display_scaling, 0.5, 2);
+			if(PREFERENCES.display_scaling == PREFERENCES._display_scaling)
 				return;
 				
-			PREF_MAP[? "display_scaling"] = PREF_MAP[? "_display_scaling"];
+			PREFERENCES.display_scaling = PREFERENCES._display_scaling;
 			resetPanel();
 			loadFonts();
 			
@@ -144,7 +144,7 @@ event_inherited();
 		__txtx("pref_auto_save_time", "Autosave delay (-1 to disable)"),
 		"auto_save_time",
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			PREF_MAP[? "auto_save_time"] = val; 
+			PREFERENCES.auto_save_time = val; 
 			PREF_SAVE();
 		})
 	]);
@@ -153,7 +153,7 @@ event_inherited();
 		__txtx("pref_double_click_delay", "Double click delay"),
 		"double_click_delay",
 		new slider(0, 1, 0.01, function(val) { 
-			PREF_MAP[? "double_click_delay"] = val; 
+			PREFERENCES.double_click_delay = val; 
 			PREF_SAVE();
 		})
 	]);
@@ -162,7 +162,7 @@ event_inherited();
 		__txtx("pref_mouse_wheel_speed", "Scroll speed"),
 		"mouse_wheel_speed",
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			PREF_MAP[? "mouse_wheel_speed"] = val; 
+			PREFERENCES.mouse_wheel_speed = val; 
 			PREF_SAVE();
 		})
 	]);
@@ -171,7 +171,7 @@ event_inherited();
 		__txtx("pref_keyboard_hold_start", "Keyboard hold start"),
 		"keyboard_repeat_start",
 		new slider(0, 1, 0.01, function(val) { 
-			PREF_MAP[? "keyboard_repeat_start"] = val; 
+			PREFERENCES.keyboard_repeat_start = val; 
 			PREF_SAVE();
 		})
 	]);
@@ -180,7 +180,7 @@ event_inherited();
 		__txtx("pref_keyboard_repeat_delay", "Keyboard repeat delay"),
 		"keyboard_repeat_speed",
 		new slider(0, 1, 0.01, function(val) { 
-			PREF_MAP[? "keyboard_repeat_speed"] = val; 
+			PREFERENCES.keyboard_repeat_speed = val; 
 			PREF_SAVE();
 		})
 	]);
@@ -189,8 +189,8 @@ event_inherited();
 		__txtx("pref_ui_frame_rate", "UI frame rate"),
 		"ui_framerate",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "ui_framerate"] = max(15, round(real(str)));
-			game_set_speed(PREF_MAP[? "ui_framerate"], gamespeed_fps);
+			PREFERENCES.ui_framerate = max(15, round(real(str)));
+			game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
 			PREF_SAVE();
 		})
 	]);
@@ -199,7 +199,7 @@ event_inherited();
 		__txtx("pref_default_surface_size", "Default surface size"),
 		"default_surface_side",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "default_surface_side"] = max(1, round(real(str)));
+			PREFERENCES.default_surface_side = max(1, round(real(str)));
 			PREF_SAVE();
 		})
 	]);
@@ -208,7 +208,7 @@ event_inherited();
 		__txtx("pref_collection_preview_speed", "Collection preview speed"),
 		"collection_preview_speed",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "collection_preview_speed"] = max(1, round(real(str)));
+			PREFERENCES.collection_preview_speed = max(1, round(real(str)));
 			PREF_SAVE();
 		})
 	]);
@@ -218,7 +218,7 @@ event_inherited();
 		__txtx("pref_inspector_line_break_width", "Inspector line break width"),
 		"inspector_line_break_width",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "inspector_line_break_width"] = max(1, round(real(str)));
+			PREFERENCES.inspector_line_break_width = max(1, round(real(str)));
 			PREF_SAVE();
 		})
 	]);
@@ -227,7 +227,7 @@ event_inherited();
 		__txtx("pref_expand_hovering_panel", "Expand hovering panel"),
 		"expand_hover",
 		new checkBox(function() { 
-			PREF_MAP[? "expand_hover"] = !PREF_MAP[? "expand_hover"]; 
+			PREFERENCES.expand_hover = !PREFERENCES.expand_hover; 
 			PREF_SAVE();
 		})
 	]);
@@ -236,7 +236,7 @@ event_inherited();
 		__txtx("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
 		"graph_zoom_smoooth",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "graph_zoom_smoooth"] = max(1, round(real(str)));
+			PREFERENCES.graph_zoom_smoooth = max(1, round(real(str)));
 			PREF_SAVE();
 		})
 	]);
@@ -245,7 +245,7 @@ event_inherited();
 		__txtx("pref_warning_notification_time", "Warning notification time"),
 		"notification_time",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "notification_time"] = max(0, round(real(str)));
+			PREFERENCES.notification_time = max(0, round(real(str)));
 			PREF_SAVE();
 		})
 	]);
@@ -254,7 +254,7 @@ event_inherited();
 		__txtx("pref_save_file_minify", "Minify save file"),
 		"save_file_minify",
 		new checkBox(function() { 
-			PREF_MAP[? "save_file_minify"] = !PREF_MAP[? "save_file_minify"];
+			PREFERENCES.save_file_minify = !PREFERENCES.save_file_minify;
 			PREF_SAVE();
 		})
 	]);
@@ -263,7 +263,7 @@ event_inherited();
 		__txtx("pref_enable_test_mode", "Enable developer mode (require restart)"),
 		"test_mode",
 		new checkBox(function() { 
-			PREF_MAP[? "test_mode"] = !PREF_MAP[? "test_mode"]; 
+			PREFERENCES.test_mode = !PREFERENCES.test_mode; 
 			PREF_SAVE();
 		})
 	]);
@@ -272,7 +272,7 @@ event_inherited();
 		__txtx("pref_legacy_exception", "Use legacy exception handler"),
 		"use_legacy_exception",
 		new checkBox(function() { 
-			PREF_MAP[? "use_legacy_exception"] = !PREF_MAP[? "use_legacy_exception"]; 
+			PREFERENCES.use_legacy_exception = !PREFERENCES.use_legacy_exception; 
 			PREF_APPLY();
 			PREF_SAVE();
 		})
@@ -282,7 +282,7 @@ event_inherited();
 		__txtx("pref_crash_dialog", "Show dialog after crash"),
 		"show_crash_dialog",
 		new checkBox(function() { 
-			PREF_MAP[? "show_crash_dialog"] = !PREF_MAP[? "show_crash_dialog"]; 
+			PREFERENCES.show_crash_dialog = !PREFERENCES.show_crash_dialog; 
 			PREF_APPLY();
 			PREF_SAVE();
 		})
@@ -292,7 +292,7 @@ event_inherited();
 		__txtx("pref_clear_temp", "Clear temp file on close."),
 		"clear_temp_on_close",
 		new checkBox(function() { 
-			PREF_MAP[? "clear_temp_on_close"] = !PREF_MAP[? "clear_temp_on_close"]; 
+			PREFERENCES.clear_temp_on_close = !PREFERENCES.clear_temp_on_close; 
 			PREF_SAVE();
 		})
 	]);
@@ -316,7 +316,7 @@ event_inherited();
 		"local",
 		new scrollBox(locals, function(str) { 
 			if(str < 0) return;
-			PREF_MAP[? "local"] = locals[str];
+			PREFERENCES.local = locals[str];
 			PREF_SAVE();
 		}, false)
 	]);
@@ -328,7 +328,7 @@ event_inherited();
 		"curve_connection_line",
 		new buttonGroup([ THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection ], 
 		function(val) {
-			PREF_MAP[? "curve_connection_line"] = val;
+			PREFERENCES.curve_connection_line = val;
 			PREF_SAVE();
 		})
 	]);
@@ -337,7 +337,7 @@ event_inherited();
 		__txtx("pref_connection_thickness", "Connection thickness"),
 		"connection_line_width",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "connection_line_width"] = real(str); 
+			PREFERENCES.connection_line_width = real(str); 
 			PREF_SAVE();
 		})
 	]);
@@ -346,7 +346,7 @@ event_inherited();
 		__txtx("pref_connection_curve_smoothness", "Connection curve smoothness"),
 		"connection_line_sample",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "connection_line_sample"] = real(str); 
+			PREFERENCES.connection_line_sample = real(str); 
 			PREF_SAVE();
 		})
 	]);
@@ -355,7 +355,7 @@ event_inherited();
 		__txtx("pref_connection_aa", "Connection anti aliasing"),
 		"connection_line_aa",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "connection_line_aa"] = max(1, real(str)); 
+			PREFERENCES.connection_line_aa = max(1, real(str)); 
 			PREF_SAVE();
 		})
 	])
@@ -364,8 +364,7 @@ event_inherited();
 		__txtx("pref_connection_anim", "Connection line animation"),
 		"connection_line_transition",
 		new checkBox(function() { 
-			PREF_MAP[? "connection_line_transition"] = 
-				!PREF_MAP[? "connection_line_transition"];
+			PREFERENCES.connection_line_transition = !PREFERENCES.connection_line_transition;
 			PREF_SAVE();
 		})
 	])
@@ -374,7 +373,7 @@ event_inherited();
 		__txtx("pref_windows_control", "Use Windows style window control."),
 		"panel_menu_right_control",
 		new checkBox(function() { 
-			PREF_MAP[? "panel_menu_right_control"] = !PREF_MAP[? "panel_menu_right_control"]; 
+			PREFERENCES.panel_menu_right_control = !PREFERENCES.panel_menu_right_control; 
 			PREF_SAVE();
 		})
 	]);
@@ -410,8 +409,9 @@ event_inherited();
 	
 	sb_theme = new scrollBox(themes, function(index) { 
 			var thm = themes[index].data;
-			if(PREF_MAP[? "theme"] == thm) return;
-			PREF_MAP[? "theme"] = thm;
+			if(PREFERENCES.theme == thm) return;
+			
+			PREFERENCES.theme = thm;
 			PREF_SAVE();
 			
 			loadGraphic(thm);
@@ -501,7 +501,7 @@ event_inherited();
 	});
 	
 	function overrideColor() {
-		var path = DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/override.json";
+		var path = $"{DIRECTORY}themes{PREFERENCES.theme}/override.json";
 		json_save_struct(path, COLORS, true);
 	}
 #endregion
@@ -512,16 +512,16 @@ event_inherited();
 		__txtx("pref_use_alt", "Use ALT for"),
 		"alt_picker",
 		new buttonGroup([ "Pan", "Color Picker" ], function(val) { 
-			PREF_MAP[? "alt_picker"] = val; 
+			PREFERENCES.alt_picker = val; 
 			PREF_SAVE();
 		})
 	]);
 	
 	ds_list_add(pref_hot, [
 		__txtx("pref_pan_key", "Panning key"),
-		function() { return PREF_MAP[? "pan_mouse_key"] - 3; },
+		function() { return PREFERENCES.pan_mouse_key - 3; },
 		new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) { 
-			PREF_MAP[? "pan_mouse_key"] = val + 3; 
+			PREFERENCES.pan_mouse_key = val + 3; 
 			PREF_SAVE();
 		})
 	]);
@@ -555,7 +555,7 @@ event_inherited();
 			
 			var name = _pref[0];
 			var val  = _pref[1];
-			    val  = is_method(val)? val() : PREF_MAP[? val];
+			    val  = is_method(val)? val() : PREFERENCES[$ val];
 			
 			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
 				continue;
@@ -839,10 +839,7 @@ event_inherited();
 			
 			var name = _pref[0];
 			var txt  = _pref[1];
-			if(is_method(txt)) 
-				txt = txt();
-			else 
-				txt = PREF_MAP[? txt];
+			    txt  = is_method(txt)? txt() : PREFERENCES[$ txt];
 			
 			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
 				continue;

@@ -3,10 +3,10 @@ var trigger = false;
 
 KEYBOARD_PRESSED = vk_nokey;
 kb_time += DELTA_TIME;
-if(kb_hold && kb_time >= PREF_MAP[? "keyboard_repeat_speed"]) {
+if(kb_hold && kb_time >= PREFERENCES.keyboard_repeat_speed) {
 	trigger = true;
 	kb_time = 0;
-} else if(!kb_hold && kb_time >= PREF_MAP[? "keyboard_repeat_start"]) {
+} else if(!kb_hold && kb_time >= PREFERENCES.keyboard_repeat_start) {
 	trigger = true;
 	kb_time = 0;
 	kb_hold = true;

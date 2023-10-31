@@ -7,6 +7,6 @@
 	
 	__migration_check();
 	
-	if(!file_exists(file_open_parameter) && PREF_MAP[? "show_splash"])
+	if(!file_exists(file_open_parameter) && PREFERENCES.show_splash)
 		dialogCall(o_dialog_splash);
 #endregion

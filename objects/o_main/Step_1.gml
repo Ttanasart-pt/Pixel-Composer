@@ -14,7 +14,7 @@ _HOVERING_ELEMENT = noone;
 	}
 
 	if(minimized) {
-		game_set_speed(PREF_MAP[? "ui_framerate"], gamespeed_fps);
+		game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
 		minimized = false;
 	}
 #endregion
@@ -57,7 +57,7 @@ _HOVERING_ELEMENT = noone;
 #region auto save
 	AUTO_SAVE_TIMER += delta_time / 1_000_000;
 	
-	if(PROJECT.modified && PREF_MAP[? "auto_save_time"] > 0 && AUTO_SAVE_TIMER > PREF_MAP[? "auto_save_time"]) {
+	if(PROJECT.modified && PREFERENCES.auto_save_time > 0 && AUTO_SAVE_TIMER > PREFERENCES.auto_save_time) {
 		AUTO_SAVE_TIMER = 0;
 		var loc = DIRECTORY + "Autosave/";
 		if(!directory_exists(loc))
@@ -124,7 +124,7 @@ _HOVERING_ELEMENT = noone;
 				DOUBLE_CLICK = true;
 			dc_check = 0;
 		} else {
-			dc_check = PREF_MAP[? "double_click_delay"];
+			dc_check = PREFERENCES.double_click_delay;
 			DOUBLE_CLICK_POS = [ mouse_mx, mouse_my ];
 		}
 	}

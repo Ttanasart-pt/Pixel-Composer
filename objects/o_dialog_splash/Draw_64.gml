@@ -30,8 +30,8 @@ if !ready exit;
 	}
 	
 	bx -= ui(40);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(36), ui(36), mouse_ui, sFOCUS, sHOVER, __txt("Show on startup"), THEME.icon_splash_show_on_start, PREF_MAP[? "show_splash"]) == 2) {
-		PREF_MAP[? "show_splash"] = !PREF_MAP[? "show_splash"];
+	if(buttonInstant(THEME.button_hide, bx, by, ui(36), ui(36), mouse_ui, sFOCUS, sHOVER, __txt("Show on startup"), THEME.icon_splash_show_on_start, PREFERENCES.show_splash) == 2) {
+		PREFERENCES.show_splash = !PREFERENCES.show_splash;
 		PREF_SAVE();
 	}
 	
@@ -67,13 +67,13 @@ if !ready exit;
 	}
 	
 	var expandAction = false;
-	var expand = PREF_MAP[? "splash_expand_recent"];
+	var expand = PREFERENCES.splash_expand_recent;
 	
 	switch(pages[project_page]) {
 		case "Sample projects" :
 		case "Workshop" :
 			if(buttonInstant(THEME.button_hide_fill, x1, (y0 + y1) / 2 - ui(32), ui(16), ui(32), mouse_ui, sFOCUS, sHOVER,, THEME.arrow, expand? 2 : 0) == 2) {
-				PREF_MAP[? "splash_expand_recent"] = !PREF_MAP[? "splash_expand_recent"];
+				PREFERENCES.splash_expand_recent = !PREFERENCES.splash_expand_recent;
 				expandAction = true;
 			}
 			break;
@@ -112,8 +112,8 @@ if !ready exit;
 			if(mouse_click(mb_left, sFOCUS)) {
 				project_page = i;
 				
-				if(txt == "Contests" && PREF_MAP[? "splash_expand_recent"]) {
-					PREF_MAP[? "splash_expand_recent"] = false;
+				if(txt == "Contests" && PREFERENCES.splash_expand_recent) {
+					PREFERENCES.splash_expand_recent = false;
 					expandAction = true;
 				}
 			}
@@ -183,7 +183,7 @@ if !ready exit;
 	}
 	
 	if(expandAction) {
-		recent_width = PREF_MAP[? "splash_expand_recent"]? ui(564) : ui(288);
+		recent_width = PREFERENCES.splash_expand_recent? ui(564) : ui(288);
 		resize();
 	}
 #endregion

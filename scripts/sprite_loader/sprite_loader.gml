@@ -11,8 +11,8 @@ function __initTheme() {
 	log_message("THEME", $"unzipping default theme to {root}.");
 	zip_unzip("data/themes/default.zip", root);
 	
-	loadGraphic(PREF_MAP[? "theme"]);
-	loadColor(PREF_MAP[? "theme"]);
+	loadGraphic(PREFERENCES.theme);
+	loadColor(PREFERENCES.theme);
 }
 
 function _sprite_path(rel, theme) {

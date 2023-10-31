@@ -274,11 +274,11 @@ function Panel_Preview() : PanelContent() constructor {
 	addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	function() { PROJECT.previewGrid.show = !PROJECT.previewGrid.show; });
 	
 	addHotkey("Preview", "Pan",		"", MOD_KEY.alt,				function() { 
-																		if(PREF_MAP[? "alt_picker"]) return; 
+																		if(PREFERENCES.alt_picker) return; 
 																		PANEL_PREVIEW.canvas_dragging_key = true; 
 																	});
 	addHotkey("Preview", "Zoom",	"", MOD_KEY.alt | MOD_KEY.ctrl,	function() { 
-																		if(PREF_MAP[? "alt_picker"]) return; 
+																		if(PREFERENCES.alt_picker) return; 
 																		PANEL_PREVIEW.canvas_zooming_key  = true; 
 																	});
 	#endregion
@@ -386,9 +386,9 @@ function Panel_Preview() : PanelContent() constructor {
 			var _doDragging = false;
 			var _doZooming  = false;
 			
-			if(mouse_press(PREF_MAP[? "pan_mouse_key"])) {
+			if(mouse_press(PREFERENCES.pan_mouse_key)) {
 				_doDragging = true;
-				canvas_drag_key = PREF_MAP[? "pan_mouse_key"];
+				canvas_drag_key = PREFERENCES.pan_mouse_key;
 			} else if(mouse_press(mb_left) && canvas_dragging_key) {
 				_doDragging = true;
 				canvas_drag_key = mb_left;
@@ -470,9 +470,9 @@ function Panel_Preview() : PanelContent() constructor {
 			var _doDragging = false;
 			var _doZooming  = false;
 			
-			if(mouse_press(PREF_MAP[? "pan_mouse_key"])) {
+			if(mouse_press(PREFERENCES.pan_mouse_key)) {
 				_doDragging = true;
-				canvas_drag_key = PREF_MAP[? "pan_mouse_key"];
+				canvas_drag_key = PREFERENCES.pan_mouse_key;
 			} else if(mouse_press(mb_left) && canvas_dragging_key) {
 				_doDragging = true;
 				canvas_drag_key = mb_left;

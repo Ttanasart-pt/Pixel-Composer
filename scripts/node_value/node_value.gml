@@ -2099,13 +2099,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var cy  = round((fry + jy) / 2 + shy);
 			
 		var hover = false;
-		var th = max(1, PREF_MAP[? "connection_line_width"] * _s);
+		var th = max(1, PREFERENCES.connection_line_width * _s);
 		draw_line_shift_hover = false;
 			
 		var downDirection = type == VALUE_TYPE.action || value_from.type == VALUE_TYPE.action;
 			
 		if(PANEL_GRAPH.pHOVER)
-		switch(PREF_MAP[? "curve_connection_line"]) {
+		switch(PREFERENCES.curve_connection_line) {
 			case 0 : 
 				hover = distance_to_line(mx, my, jx, jy, frx, fry) < max(th * 2, 6);
 				break;
@@ -2148,7 +2148,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		th *= thicken? 2 : 1;
 			
-		var corner = PREF_MAP[? "connection_line_corner"] * _s;
+		var corner = PREFERENCES.connection_line_corner * _s;
 		var ty = LINE_STYLE.solid;
 		if(type == VALUE_TYPE.node)
 			ty = LINE_STYLE.dashed;
@@ -2157,7 +2157,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _selc = node.active_draw_index == 0 || value_from.node.active_draw_index == 0 || node.branch_drawing;
 		
 		if(!thicken && (high == 1 && key_mod_press(ALT) || high == 2)) {
-			var _fade = PREF_MAP[? "connection_line_highlight_fade"];
+			var _fade = PREFERENCES.connection_line_highlight_fade;
 			var _colr = _selc? 1 : _fade;
 			
 			c0 = merge_color(bg, value_from.color_display, _colr);
@@ -2183,7 +2183,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var fromIndex = value_from.drawLineIndex;
 		var toIndex   = drawLineIndex;
 		
-		switch(PREF_MAP[? "curve_connection_line"]) {
+		switch(PREFERENCES.curve_connection_line) {
 			case 0 : 
 				if(ty == LINE_STYLE.solid)	draw_line_width_color(jx, jy, frx, fry, th, c1, c0);
 				else						draw_line_dashed_color(jx, jy, frx, fry, th, c1, c0, 12 * ss);
@@ -2213,8 +2213,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(target != noone)
 			drawCorner |= target.type == VALUE_TYPE.action;
 		
-		var corner = PREF_MAP[? "connection_line_corner"] * ss;
-		var th     = max(1, PREF_MAP[? "connection_line_width"] * ss);
+		var corner = PREFERENCES.connection_line_corner * ss;
+		var th     = max(1, PREFERENCES.connection_line_width * ss);
 		
 		var sx = x;
 		var sy = y;
@@ -2233,7 +2233,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _action = type == VALUE_TYPE.action;
 		var _output = connect_type == JUNCTION_CONNECT.output;
 		
-		switch(PREF_MAP[? "curve_connection_line"]) {
+		switch(PREFERENCES.curve_connection_line) {
 			case 0 : draw_line_width(sx, sy, _mx, _my, th); break;
 			case 1 : 
 				if(drawCorner) {

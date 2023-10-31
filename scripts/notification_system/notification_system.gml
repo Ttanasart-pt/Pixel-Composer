@@ -83,7 +83,7 @@
 			return STATUSES[| ds_list_size(STATUSES) - 1];
 		}
 		
-		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, PREF_MAP[? "notification_time"]);
+		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, PREFERENCES.notification_time);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
 		

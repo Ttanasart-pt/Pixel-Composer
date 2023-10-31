@@ -16,7 +16,7 @@ function mouse_release(mouse, focus = true) {
 	MOUSE_WRAP = false;
 	MOUSE_WRAPPING = false;
 	
-	#macro SCROLL_SPEED PREF_MAP[? "mouse_wheel_speed"]
+	#macro SCROLL_SPEED PREFERENCES.mouse_wheel_speed
 	
 	function setMouseWrap() {
 		MOUSE_WRAP = true;

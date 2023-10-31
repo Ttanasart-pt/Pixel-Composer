@@ -39,7 +39,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 	var bbox_w = bbox_x1 - bbox_x0;
 	var bbox_h = bbox_y1 - bbox_y0;
 	
-	var aa = PREF_MAP[? "connection_line_aa"];
+	var aa = PREFERENCES.connection_line_aa;
 	var s  = surface_create(bbox_w, bbox_h);
 	var cs = surface_create(bbox_w * aa, bbox_h * aa);
 	

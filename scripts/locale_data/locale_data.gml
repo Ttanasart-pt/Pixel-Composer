@@ -16,7 +16,7 @@
 	}
 	
 	function __locale_file(file) {
-		var dirr = $"{DIRECTORY}Locale/{PREF_MAP[? "local"]}";
+		var dirr = $"{DIRECTORY}Locale/{PREFERENCES.local}";
 		if(!directory_exists(dirr) || !file_exists(dirr + file)) 
 			dirr = $"{DIRECTORY}Locale/en";
 		return dirr + file;
@@ -28,7 +28,7 @@
 		LOCALE.node = json_load_struct(__locale_file("/nodes.json"));
 		LOCALE.config = json_load_struct(__locale_file("/config.json"));
 		
-		var fontDir = $"{DIRECTORY}Locale/{PREF_MAP[? "local"]}/fonts/";
+		var fontDir = $"{DIRECTORY}Locale/{PREFERENCES.local}/fonts/";
 		LOCALE.fontDir = directory_exists(fontDir)? fontDir : noone;
 		
 		print("FONT DIR: " + fontDir);

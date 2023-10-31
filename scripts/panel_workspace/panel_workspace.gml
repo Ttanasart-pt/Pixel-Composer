@@ -53,17 +53,17 @@ function Panel_Workspace() : PanelContent() constructor {
 				if(mouse_press(mb_left, pFOCUS)) {
 					if(i == amo) {
 						var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-						dia.name = PREF_MAP[? "panel_layout_file"];
+						dia.name = PREFERENCES.panel_layout_file;
 						dia.onModify = function(name) { 
 							var cont = panelSerialize();
-							json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
+							json_save_struct($"{DIRECTORY}layouts/{name}.json", cont);
 							
-							PREF_MAP[? "panel_layout_file"] = name;
+							PREFERENCES.panel_layout_file = name;
 							PREF_SAVE();
 							refreshContent();
 						};
 					} else {
-						PREF_MAP[? "panel_layout_file"] = str;
+						PREFERENCES.panel_layout_file = str;
 						PREF_SAVE();
 						setPanel();
 					}
@@ -73,7 +73,7 @@ function Panel_Workspace() : PanelContent() constructor {
 					layout_selecting = str;
 					menuCall("workspace_menu",,, [
 						menuItem(__txt("Select"), function() { 
-							PREF_MAP[? "panel_layout_file"] = layout_selecting;
+							PREFERENCES.panel_layout_file = layout_selecting;
 							PREF_SAVE();
 							setPanel();
 						}),
@@ -90,7 +90,7 @@ function Panel_Workspace() : PanelContent() constructor {
 				}
 			}
 			
-			draw_set_color(PREF_MAP[? "panel_layout_file"] == str? COLORS._main_text : COLORS._main_text_sub)
+			draw_set_color(PREFERENCES.panel_layout_file == str? COLORS._main_text : COLORS._main_text_sub)
 			draw_text_add(hori? x0 + ui(8) : (x0 + x1) / 2, y0 + ui(4), str);
 			
 			if(hori) {

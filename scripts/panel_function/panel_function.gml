@@ -128,7 +128,7 @@
 		//if(!directory_exists(DIRECTORY + "layouts")) 
 			zip_unzip("data/Layouts.zip", DIRECTORY);
 			
-		var file = DIRECTORY + "layouts/" + PREF_MAP[? "panel_layout_file"] + ".json"; 
+		var file = $"{DIRECTORY}layouts/{PREFERENCES.panel_layout_file}.json"; 
 		if(!file_exists(file))
 			file = DIRECTORY + "layouts/Horizontal.json"; 
 		loadPanel(file, PANEL_MAIN);
@@ -354,7 +354,7 @@
 			return;
 		}
 		
-		var panel = PREF_MAP[? "expand_hover"]? HOVER : FOCUS;
+		var panel = PREFERENCES.expand_hover? HOVER : FOCUS;
 		
 		if(panel == noone) return;
 		if(!is_struct(panel)) return;

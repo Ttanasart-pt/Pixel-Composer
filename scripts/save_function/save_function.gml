@@ -50,13 +50,13 @@ function save_serialize(project = PROJECT, _outMap = false) {
 	var _addon = {};
 	with(_addon_custom) {
 		var _ser = lua_call(thread, "serialize");
-		_addon[$ name] = PREF_MAP[? "save_file_minify"]? json_stringify_minify(_ser) : json_stringify(_ser);
+		_addon[$ name] = PREFERENCES.save_file_minify? json_stringify_minify(_ser) : json_stringify(_ser);
 	}
 	_map.addon = _addon;
 	
 	if(_outMap) return _map;
 	
-	return PREF_MAP[? "save_file_minify"]? json_stringify_minify(_map) : json_stringify(_map, true);
+	return PREFERENCES.save_file_minify? json_stringify_minify(_map) : json_stringify(_map, true);
 }
 
 function SET_PATH(project, path) {
@@ -155,7 +155,7 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, c
 		SAVE_NODE(_nodes, _list[| i], cx, cy, true, context);
 	_content.nodes = _nodes;
 	
-	json_save_struct(_path, _content, !PREF_MAP[? "save_file_minify"]);
+	json_save_struct(_path, _content, !PREFERENCES.save_file_minify);
 	
 	if(metadata != noone) {
 		var _meta  = metadata.serialize();
@@ -189,7 +189,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 	SAVE_NODE(_nodes, _node, _node.x, _node.y, true, context);
 	_content.nodes = _nodes;
 	
-	json_save_struct(_path, _content, !PREF_MAP[? "save_file_minify"]);
+	json_save_struct(_path, _content, !PREFERENCES.save_file_minify);
 	
 	if(metadata != noone) {
 		var _meta  = metadata.serialize();

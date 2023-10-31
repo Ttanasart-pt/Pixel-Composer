@@ -95,7 +95,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	function() { PANEL_INSPECTOR.anim_toggling = true; });
 	
 		addHotkey("", "Color picker",		"",   MOD_KEY.alt,		function() { 
-																		if(!PREF_MAP[? "alt_picker"]) return; 
+																		if(!PREFERENCES.alt_picker) return; 
 																		PANEL_INSPECTOR.color_picking = true; 
 																	});
 	#endregion
@@ -773,7 +773,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	
 	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		lineBreak = w < PREF_MAP[? "inspector_line_break_width"];
+		lineBreak = w < PREFERENCES.inspector_line_break_width;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
 		

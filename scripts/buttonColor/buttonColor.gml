@@ -30,7 +30,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	function apply(value) {
 		if(!interactable) return;
 		current_value = value;
-		triggered = true;
+		triggered     = true;
 		onApply(value);
 	}
 	
@@ -48,8 +48,13 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		dialog.interactable = interactable;
 		dialog.drop_target = self;
 		
-		if(parentDialog)
-			parentDialog.addChildren(dialog);
+		if(parentDialog) {
+			if(is_instanceof(parentDialog, PanelContent)) {
+				if(parentDialog.panel)
+					parentDialog.panel.addChildren(dialog);
+			} else
+				parentDialog.addChildren(dialog);
+		}
 	}
 	
 	static drawParam = function(params) {

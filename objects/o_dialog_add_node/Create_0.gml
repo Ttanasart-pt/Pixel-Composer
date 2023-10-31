@@ -9,8 +9,8 @@ event_inherited();
 	node_called		  = noone;
 	junction_hovering = noone;
 	
-	dialog_w = PREF_MAP[? "dialog_add_node_w"];
-	dialog_h = PREF_MAP[? "dialog_add_node_h"];
+	dialog_w = PREFERENCES.dialog_add_node_w;
+	dialog_h = PREFERENCES.dialog_add_node_h;
 	
 	destroy_on_click_out = true;
 	
@@ -382,7 +382,7 @@ event_inherited();
 		//}
 		var group_labels = [];
 			
-		if(PREF_MAP[? "dialog_add_node_view"] == 0) { //grid
+		if(PREFERENCES.dialog_add_node_view == 0) { //grid
 			var grid_size  = ui(64);
 			var grid_width = ui(80);
 			var grid_space = ui(12);
@@ -400,7 +400,7 @@ event_inherited();
 				if(is_undefined(_node)) continue;
 				
 				if(is_string(_node)) {
-					if(!PREF_MAP[? "dialog_add_node_grouping"])
+					if(!PREFERENCES.dialog_add_node_grouping)
 						continue;
 					hh += curr_height;
 					yy += curr_height;
@@ -514,7 +514,7 @@ event_inherited();
 			
 			hh += curr_height;
 			yy += curr_height;
-		} else if(PREF_MAP[? "dialog_add_node_view"] == 1) { //list
+		} else if(PREFERENCES.dialog_add_node_view == 1) { //list
 			var list_width  = content_pane.surface_w;
 			var list_height = ui(28);
 			var yy      = _y + list_height / 2;
@@ -526,7 +526,7 @@ event_inherited();
 				if(is_undefined(_node)) continue;
 				
 				if(is_string(_node)) {
-					if(!PREF_MAP[? "dialog_add_node_grouping"])
+					if(!PREFERENCES.dialog_add_node_grouping)
 						continue;
 						
 					hh += ui(8);
@@ -642,8 +642,8 @@ event_inherited();
 		content_pane.resize(dialog_w - category_width - ui(8), dialog_h - ui(66));
 		search_pane.resize(dialog_w - ui(36), dialog_h - ui(66));
 		
-		PREF_MAP[? "dialog_add_node_w"] = dialog_w;
-		PREF_MAP[? "dialog_add_node_h"] = dialog_h;
+		PREFERENCES.dialog_add_node_w = dialog_w;
+		PREFERENCES.dialog_add_node_h = dialog_h;
 	}
 #endregion
 
@@ -742,7 +742,7 @@ event_inherited();
 			return hh;
 		}
 		
-		if(PREF_MAP[? "dialog_add_node_view"] == 0) { //grid view
+		if(PREFERENCES.dialog_add_node_view == 0) { //grid view
 			var col = floor(search_pane.surface_w / (grid_width + grid_space));
 			var yy = _y + grid_space;
 			var index = 0;
@@ -776,7 +776,7 @@ event_inherited();
 					
 				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 				if(sprite_exists(_node.spr)) {
-					var _si = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
+					var _si = current_time * PREFERENCES.collection_preview_speed / 3000;
 					var _sw = sprite_get_width(_node.spr);
 					var _sh = sprite_get_height(_node.spr);
 					var _ss = ui(32) / max(_sw, _sh);
@@ -839,7 +839,7 @@ event_inherited();
 					yy += hght;
 				}
 			}
-		} else if(PREF_MAP[? "dialog_add_node_view"] == 1) { //list view
+		} else if(PREFERENCES.dialog_add_node_view == 1) { //list view
 			var list_width  = search_pane.surface_w;
 			var list_height = ui(28);
 			var yy = _y + list_height / 2;
@@ -862,7 +862,7 @@ event_inherited();
 				
 				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 				if(sprite_exists(_node.spr)) {
-					var _si = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
+					var _si = current_time * PREFERENCES.collection_preview_speed / 3000;
 					var _sw = sprite_get_width(_node.spr);
 					var _sh = sprite_get_height(_node.spr);
 					var _ss = (list_height - ui(8)) / max(_sw, _sh);

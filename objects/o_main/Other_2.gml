@@ -108,7 +108,7 @@
 	if(parameter_count() > 1) {
 		var path = parameter_string(1);
 		if(path == "--crashed") {
-			if(PREF_MAP[? "show_crash_dialog"])
+			if(PREFERENCES.show_crash_dialog)
 				dialogCall(o_dialog_crashed);
 		} else {
 			path = string_replace_all(path, "\n", "");

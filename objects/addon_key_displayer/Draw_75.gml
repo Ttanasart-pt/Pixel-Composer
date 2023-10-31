@@ -71,7 +71,7 @@
 			var dch  = 8;
 			var dcx  = mxs - 72;
 			var dcy  = mys - 96 - 8 - dch;
-			var _dcw = dcw * clamp(o_main.dc_check / PREF_MAP[? "double_click_delay"], 0., 1.);
+			var _dcw = dcw * clamp(o_main.dc_check / PREFERENCES.double_click_delay, 0., 1.);
 		
 			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, dcx, dcy,  dcw, dch, COLORS._main_icon_dark,  0.5);
 			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, dcx, dcy, _dcw, dch, COLORS._main_icon_light, 1.0);

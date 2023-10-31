@@ -156,7 +156,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var node_list  = ds_list_size(nodes);
 		var node_count = node_list + array_length(steamNode);
 		var hh = 0;
-		var frame = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
+		var frame = current_time * PREFERENCES.collection_preview_speed / 3000;
 		var _cw = contentPane.surface_w;
 		var _hover = pHOVER && contentPane.hover;
 		

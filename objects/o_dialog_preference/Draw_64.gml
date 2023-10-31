@@ -55,9 +55,9 @@ if !ready exit;
 		var _txt = __txtx("pref_reset_color", "Reset colors");
 		var b = buttonInstant(THEME.button_hide, bx, py, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.refresh);
 		if(b == 2) {
-			var path = DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/override.json";
+			var path = $"{DIRECTORY}themes/{PREFERENCES.theme}/override.json";
 			if(file_exists(path)) file_delete(path);
-			loadColor(PREF_MAP[? "theme"]);
+			loadColor(PREFERENCES.theme);
 		}
 		
 		var x1 = dialog_x + ui(padding + page_width);
@@ -66,7 +66,7 @@ if !ready exit;
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 		draw_text(x1 + ui(8), py + _h / 2, __txt("Theme"));
 		sb_theme.setFocusHover(sFOCUS, sHOVER);
-		sb_theme.draw(x2 - ui(24) - _w, py, _w, _h, PREF_MAP[? "theme"]);
+		sb_theme.draw(x2 - ui(24) - _w, py, _w, _h, PREFERENCES.theme);
 		
 		sp_colors.setFocusHover(sFOCUS, sHOVER);
 		sp_colors.draw(px, py + ui(40));

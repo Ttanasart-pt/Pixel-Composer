@@ -42,7 +42,7 @@ function exportPortable(project = PROJECT) {
 	
 	var pro_path = DIRECTORY + "temp/" + raw_name + ".pxc";
 	var file = file_text_open_write(pro_path);
-	file_text_write_string(file, PREF_MAP[? "save_file_minify"]? json_stringify_minify(_proj) : json_stringify(_proj, true));
+	file_text_write_string(file, PREFERENCES.save_file_minify? json_stringify_minify(_proj) : json_stringify(_proj, true));
 	file_text_close(file);
 	zip_add_file(zip, raw_name + ".pxc", pro_path);
 	zip_save(zip, raw_path + ".zip");

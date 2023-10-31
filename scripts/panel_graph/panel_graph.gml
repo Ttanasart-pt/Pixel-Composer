@@ -46,7 +46,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		graph_zoom_m   = 0;
 		graph_zoom_s   = 0;
 		
-		drag_key	   = PREF_MAP[? "pan_mouse_key"];
+		drag_key	   = PREFERENCES.pan_mouse_key;
 		drag_locking   = false;
 	#endregion
 	
@@ -185,7 +185,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		],
 		[ 
 			THEME.icon_curve_connection,
-			function() { return PREF_MAP[? "curve_connection_line"];  },
+			function() { return PREFERENCES.curve_connection_line;  },
 			function() { return __txtx("panel_graph_connection_line", "Connection render settings"); }, 
 			function(param) { 
 				dialogPanelCall(new Panel_Graph_Connection_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
@@ -259,11 +259,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doPaste(); });
 	
 	addHotkey("Graph", "Pan",		"", MOD_KEY.alt,				function() { 
-																		if(PREF_MAP[? "alt_picker"]) return; 
+																		if(PREFERENCES.alt_picker) return; 
 																		PANEL_GRAPH.graph_dragging_key = true; 
 																	});
 	addHotkey("Graph", "Zoom",		"", MOD_KEY.alt | MOD_KEY.ctrl,	function() { 
-																		if(PREF_MAP[? "alt_picker"]) return; 
+																		if(PREFERENCES.alt_picker) return; 
 																		PANEL_GRAPH.graph_zooming_key = true; 
 																	});
 	#endregion
@@ -633,9 +633,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var _doDragging = false;
 			var _doZooming  = false;
 			
-			if(mouse_press(PREF_MAP[? "pan_mouse_key"])) {
+			if(mouse_press(PREFERENCES.pan_mouse_key)) {
 				_doDragging = true;
-				drag_key = PREF_MAP[? "pan_mouse_key"];
+				drag_key = PREFERENCES.pan_mouse_key;
 			} else if(mouse_press(mb_left) && graph_dragging_key) {
 				_doDragging = true;
 				drag_key = mb_left;
@@ -680,7 +680,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			graph_s = lerp_float(graph_s, graph_s_to, PREF_MAP[? "graph_zoom_smoooth"]);
+			graph_s = lerp_float(graph_s, graph_s_to, PREFERENCES.graph_zoom_smoooth);
 			
 			if(_s != graph_s) {
 				var mb_x = (mx - graph_x * _s) / _s;
@@ -740,7 +740,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	function drawNodes() { #region
 		if(selection_block-- > 0) return;
 		//print("==== DRAW NODES ====");
-		display_parameter.highlight = (!ds_list_empty(nodes_select_list) || node_focus != noone) * PREF_MAP[? "connection_line_highlight"];
+		display_parameter.highlight = (!ds_list_empty(nodes_select_list) || node_focus != noone) * PREFERENCES.connection_line_highlight;
 		
 		var gr_x = graph_x * graph_s;
 		var gr_y = graph_y * graph_s;
@@ -909,7 +909,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#endregion
 		printIf(log, "Draw active: " + string(current_time - t)); t = current_time;
 		
-		var aa = PREF_MAP[? "connection_line_aa"];
+		var aa = min(8192 / w, 8192 / h, PREFERENCES.connection_line_aa);
 		connection_surface    = surface_verify(connection_surface, w * aa, h * aa);
 		connection_surface_aa = surface_verify(connection_surface_aa, w, h);
 		surface_set_target(connection_surface);

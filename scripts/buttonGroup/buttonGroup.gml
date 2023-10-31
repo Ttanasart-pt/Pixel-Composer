@@ -73,7 +73,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				buttons[i].setFocusHover(active, hover);
 				
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
-			
+				
 				if(_selecting == i) {
 					draw_sprite_stretched(spr, 2, bx, _y, ww, _h);
 					draw_sel = [spr, bx];

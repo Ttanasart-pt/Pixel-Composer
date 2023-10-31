@@ -633,7 +633,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return true;
 	} #endregion
 	
-	static isRenderActive = function() { return renderActive || (PREF_MAP[? "render_all_export"] && PROJECT.animator.rendering); }
+	static isRenderActive = function() { return renderActive || (PREFERENCES.render_all_export && PROJECT.animator.rendering); }
 	
 	static isRenderable = function(log = false) { #region //Check if every input is ready (updated)
 		if(!active)	return false;
@@ -849,7 +849,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), cc, aa);
 		
 		var cc = COLORS._main_text;
-		if(PREF_MAP[? "node_show_render_status"] && !rendered)
+		if(PREFERENCES.node_show_render_status && !rendered)
 			cc = isRenderable()? COLORS._main_value_positive : COLORS._main_value_negative;
 		
 		draw_set_text(f_p1, fa_left, fa_center, cc);
@@ -1226,7 +1226,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static drawActive = function(_x, _y, _s, ind = 0) { #region
 		active_draw_index = ind; 
 		
-		if(PREF_MAP[? "connection_line_highlight_all"]) drawBranch();
+		if(PREFERENCES.connection_line_highlight_all) drawBranch();
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}

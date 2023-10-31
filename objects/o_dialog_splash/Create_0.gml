@@ -16,7 +16,7 @@ event_inherited();
 	recent_thumbnail	= false;
 	show_autosaves		= false;
 	
-	recent_width = PREF_MAP[? "splash_expand_recent"]? ui(576) : ui(288);
+	recent_width = PREFERENCES.splash_expand_recent? ui(576) : ui(288);
 #endregion
 
 #region content
@@ -42,7 +42,7 @@ event_inherited();
 	
 	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
-		var expand = PREF_MAP[? "splash_expand_recent"];
+		var expand = PREFERENCES.splash_expand_recent;
 		var ww  = ui(264);
 		var hh	= 0;
 		var pad = ui(8);

@@ -10,7 +10,7 @@ function Panel_Menu() : PanelContent() constructor {
 	
 	version_name_copy = 0;
 	
-	if(PREF_MAP[? "panel_menu_right_control"])
+	if(PREFERENCES.panel_menu_right_control)
 		action_buttons = ["exit", "maximize", "minimize", "fullscreen"];
 	else
 		action_buttons = ["exit", "minimize", "maximize", "fullscreen"];
@@ -156,8 +156,8 @@ function Panel_Menu() : PanelContent() constructor {
 				}
 			}),
 			menuItem(__txtx("panel_menu_export_render_all", "Render disabled node when export"),		
-				function() { PREF_MAP[? "render_all_export"] = !PREF_MAP[? "render_all_export"]; },,,	
-				function() { return PREF_MAP[? "render_all_export"]; } ),
+				function() { PREFERENCES.render_all_export = !PREFERENCES.render_all_export; },,,	
+				function() { return PREFERENCES.render_all_export; } ),
 		]],
 		[ __txt("Panels"), [
 			menuItem(__txt("Workspace"), function(_dat) { 
@@ -170,7 +170,7 @@ function Panel_Menu() : PanelContent() constructor {
 				
 				array_push(arr, menuItem(__txtx("panel_menu_save_layout", "Save layout"), function() {
 					var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-					dia.name = PREF_MAP[? "panel_layout_file"];
+					dia.name = PREFERENCES.panel_layout_file;
 					dia.onModify = function(name) { 
 						var cont = panelSerialize();
 						json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
@@ -185,10 +185,10 @@ function Panel_Menu() : PanelContent() constructor {
 				for(var i = 0; i < array_length(lays); i++)  {
 					array_push(arr, menuItem(lays[i], 
 						function(_dat) { 
-							PREF_MAP[? "panel_layout_file"] = _dat.name;
+							PREFERENCES.panel_layout_file = _dat.name;
 							PREF_SAVE();
 							setPanel();
-						},,, function(item) { return item.name == PREF_MAP[? "panel_layout_file"]; } ));
+						},,, function(item) { return item.name == PREFERENCES.panel_layout_file; } ));
 				}
 				
 				return submenuCall(_dat, arr);
@@ -315,7 +315,7 @@ function Panel_Menu() : PanelContent() constructor {
 		var yy = ui(8);
 		
 		if(hori) {
-			if(PREF_MAP[? "panel_menu_right_control"])
+			if(PREFERENCES.panel_menu_right_control)
 				xx = ui(24);
 			else {
 				xx = ui(140);
@@ -324,7 +324,7 @@ function Panel_Menu() : PanelContent() constructor {
 			}
 		
 			var bx = xx;
-			if(!PREF_MAP[? "panel_menu_right_control"])
+			if(!PREFERENCES.panel_menu_right_control)
 				bx = w - ui(24);
 		
 			draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2, 1, c_white);
@@ -344,7 +344,7 @@ function Panel_Menu() : PanelContent() constructor {
 		}
 		
 		if(hori) {
-			if(PREF_MAP[? "panel_menu_right_control"])
+			if(PREFERENCES.panel_menu_right_control)
 				xx += ui(20);
 			else
 				xx += ui(8);
@@ -514,7 +514,7 @@ function Panel_Menu() : PanelContent() constructor {
 		#endregion
 		
 		var x1 = w - ui(6);
-		if(PREF_MAP[? "panel_menu_right_control"])
+		if(PREFERENCES.panel_menu_right_control)
 			x1 = w - ui(6);
 		else
 			x1 = ui(8 + 28);
@@ -580,14 +580,14 @@ function Panel_Menu() : PanelContent() constructor {
 						break;
 				}
 				
-				if(PREF_MAP[? "panel_menu_right_control"])
+				if(PREFERENCES.panel_menu_right_control)
 					x1 -= bs + ui(4);
 				else 
 					x1 += bs + ui(4);
 			}
 		#endregion
 		
-		if(!PREF_MAP[? "panel_menu_right_control"])	x1 = w - ui(40);
+		if(!PREFERENCES.panel_menu_right_control)	x1 = w - ui(40);
 		
 		#region version
 			var txt = "v. " + string(VERSION_STRING);

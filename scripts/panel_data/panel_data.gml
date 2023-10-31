@@ -854,7 +854,7 @@ function PanelContent() constructor {
 	pFOCUS = false;
 	pHOVER = false;
 	
-	in_dialog = false;
+	in_dialog   = false;
 	
 	dragSurface = surface_create(1, 1);
 	showHeader  = true;

@@ -73,17 +73,12 @@
 		dModi	= _mod;
 		
 		static serialize = function() {
-			var ll = ds_list_create();
-			ll[| 0] = context;
-			ll[| 1] = name;
-			ll[| 2] = key;
-			ll[| 3] = modi;
-			return ll;
+			return { context, name, key, modi };
 		}
 		
 		static deserialize = function(ll) {
-			key  = ll[| 2];
-			modi = ll[| 3];
+			key  = is_struct(ll)? ll.key  : ll[2];
+			modi = is_struct(ll)? ll.modi : ll[3];
 		}
 	}
 	
@@ -110,10 +105,8 @@
 			}
 		}
 		
-		if(_context == "")
-			ds_list_insert(HOTKEYS[? _context], 0, key);
-		else
-			ds_list_add(HOTKEYS[? _context], key);
+		if(_context == "") ds_list_insert(HOTKEYS[? _context], 0, key);
+		else			   ds_list_add(HOTKEYS[? _context], key);
 	}
 #endregion
 
