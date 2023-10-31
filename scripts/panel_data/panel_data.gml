@@ -218,6 +218,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		refresh();
 	} #endregion
 	
+	function switchContent(_content) { #region
+		var _ind = array_find(content, _content);
+		if(_ind == -1) return;
+		setTab(_ind);
+	} #endregion
+	
 	function split_h(_w) { #region
 		if(abs(_w) > w) {
 			print("Error: Split panel larger than size w (" + string(_w) + " > " + string(w) + ")");
@@ -613,6 +619,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	function setTab(tabIndex) { #region
 		if(tabIndex < 0) return;
 		if(tabIndex >= array_length(content)) return;
+		if(content_index == tabIndex) return;
 		
 		var prec = array_safe_get(content, content_index);
 		if(prec) prec.onFocusEnd();

@@ -27,7 +27,7 @@ event_inherited();
 #region pages
 	page_current = 0;
 	page[0] = __txtx("pref_pages_general", "General");
-	page[1] = __txtx("pref_pages_appearance", "Appearances");
+	page[1] = __txtx("pref_pages_interface", "Interface");
 	page[2] = __txt("Theme");
 	page[3] = __txt("Hotkeys");
 	
@@ -49,8 +49,10 @@ event_inherited();
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, yl, ww, hg);
 			} else if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hg)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yl, ww, hg, c_white, 0.75);
-				if(mouse_click(mb_left, sFOCUS))
+				if(mouse_click(mb_left, sFOCUS)) {
 					page_current = i;
+					sp_pref.setScroll(0);
+				}
 			}
 		
 			draw_text_add(ui(8), yl + hg / 2, page[i]);
@@ -96,6 +98,8 @@ event_inherited();
 #region general
 	pref_global = ds_list_create();
 	
+	ds_list_add(pref_global, __txt("Paths"));
+	
 	ds_list_add(pref_global, [
 		__txtx("pref_directory", "Directory path (restart required)"),
 		function() { return PRESIST_PREF.path; },
@@ -111,43 +115,7 @@ event_inherited();
 		 .setEmpty()
 	]);
 	
-	ds_list_add(pref_global, [
-		__txtx("pref_show_welcome_screen", "Show welcome screen"),
-		"show_splash",
-		new checkBox(function() { 
-			PREFERENCES.show_splash = !PREFERENCES.show_splash;
-			PREF_SAVE();
-		})
-	]);
-	
-	PREFERENCES._display_scaling = PREFERENCES.display_scaling;
-	ds_list_add(pref_global, [
-		__txtx("pref_gui_scaling", "GUI scaling"),
-		"_display_scaling",
-		new slider(0.5, 2, 0.01, function(val) { 
-			PREFERENCES._display_scaling = val;
-			PREF_SAVE();
-		}, function() { 
-			PREFERENCES._display_scaling = clamp(PREFERENCES._display_scaling, 0.5, 2);
-			if(PREFERENCES.display_scaling == PREFERENCES._display_scaling)
-				return;
-				
-			PREFERENCES.display_scaling = PREFERENCES._display_scaling;
-			resetPanel();
-			loadFonts();
-			
-			time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, onResize));
-		})
-	]);
-	
-	ds_list_add(pref_global, [
-		__txtx("pref_auto_save_time", "Autosave delay (-1 to disable)"),
-		"auto_save_time",
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			PREFERENCES.auto_save_time = val; 
-			PREF_SAVE();
-		})
-	]);
+	ds_list_add(pref_global, __txt("Inputs"));
 	
 	ds_list_add(pref_global, [
 		__txtx("pref_double_click_delay", "Double click delay"),
@@ -186,44 +154,6 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		__txtx("pref_ui_frame_rate", "UI frame rate"),
-		"ui_framerate",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREFERENCES.ui_framerate = max(15, round(real(str)));
-			game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
-			PREF_SAVE();
-		})
-	]);
-	
-	ds_list_add(pref_global, [
-		__txtx("pref_default_surface_size", "Default surface size"),
-		"default_surface_side",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREFERENCES.default_surface_side = max(1, round(real(str)));
-			PREF_SAVE();
-		})
-	]);
-	
-	ds_list_add(pref_global, [
-		__txtx("pref_collection_preview_speed", "Collection preview speed"),
-		"collection_preview_speed",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREFERENCES.collection_preview_speed = max(1, round(real(str)));
-			PREF_SAVE();
-		})
-	]);
-	
-	
-	ds_list_add(pref_global, [
-		__txtx("pref_inspector_line_break_width", "Inspector line break width"),
-		"inspector_line_break_width",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREFERENCES.inspector_line_break_width = max(1, round(real(str)));
-			PREF_SAVE();
-		})
-	]);
-	
-	ds_list_add(pref_global, [
 		__txtx("pref_expand_hovering_panel", "Expand hovering panel"),
 		"expand_hover",
 		new checkBox(function() { 
@@ -232,23 +162,7 @@ event_inherited();
 		})
 	]);
 	
-	ds_list_add(pref_global, [
-		__txtx("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
-		"graph_zoom_smoooth",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREFERENCES.graph_zoom_smoooth = max(1, round(real(str)));
-			PREF_SAVE();
-		})
-	]);
-	
-	ds_list_add(pref_global, [
-		__txtx("pref_warning_notification_time", "Warning notification time"),
-		"notification_time",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREFERENCES.notification_time = max(0, round(real(str)));
-			PREF_SAVE();
-		})
-	]);
+	ds_list_add(pref_global, __txt("Save/Load"));
 	
 	ds_list_add(pref_global, [
 		__txtx("pref_save_file_minify", "Minify save file"),
@@ -259,15 +173,8 @@ event_inherited();
 		})
 	]);
 
-	ds_list_add(pref_global, [
-		__txtx("pref_enable_test_mode", "Enable developer mode (require restart)"),
-		"test_mode",
-		new checkBox(function() { 
-			PREFERENCES.test_mode = !PREFERENCES.test_mode; 
-			PREF_SAVE();
-		})
-	]);
-
+	ds_list_add(pref_global, __txt("Crash"));
+	
 	ds_list_add(pref_global, [
 		__txtx("pref_legacy_exception", "Use legacy exception handler"),
 		"use_legacy_exception",
@@ -288,20 +195,62 @@ event_inherited();
 		})
 	]);
 	
+	ds_list_add(pref_global, __txt("Misc"));
+	
 	ds_list_add(pref_global, [
-		__txtx("pref_clear_temp", "Clear temp file on close."),
+		__txtx("pref_clear_temp", "Clear temp file on close"),
 		"clear_temp_on_close",
 		new checkBox(function() { 
 			PREFERENCES.clear_temp_on_close = !PREFERENCES.clear_temp_on_close; 
 			PREF_SAVE();
 		})
 	]);
+	
+	ds_list_add(pref_global, [
+		__txtx("pref_enable_test_mode", "Enable developer mode (require restart)"),
+		"test_mode",
+		new checkBox(function() { 
+			PREFERENCES.test_mode = !PREFERENCES.test_mode; 
+			PREF_SAVE();
+		})
+	]);
 #endregion
 
-#region appearance
+#region interface
 	pref_appr = ds_list_create();
 	
 	ds_list_add(pref_appr, __txt("Interface"));
+	
+	PREFERENCES._display_scaling = PREFERENCES.display_scaling;
+	ds_list_add(pref_appr, [
+		__txtx("pref_gui_scaling", "GUI scaling"),
+		"_display_scaling",
+		new slider(0.5, 2, 0.01, function(val) { 
+			PREFERENCES._display_scaling = val;
+			PREF_SAVE();
+		}, function() { 
+			PREFERENCES._display_scaling = clamp(PREFERENCES._display_scaling, 0.5, 2);
+			if(PREFERENCES.display_scaling == PREFERENCES._display_scaling)
+				return;
+				
+			PREFERENCES.display_scaling = PREFERENCES._display_scaling;
+			resetPanel();
+			loadFonts();
+			
+			time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, onResize));
+		})
+	]);
+	
+	ds_list_add(pref_appr, [
+		__txtx("pref_ui_frame_rate", "UI frame rate"),
+		"ui_framerate",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREFERENCES.ui_framerate = max(15, round(real(str)));
+			game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
+			PREF_SAVE();
+		})
+	]);
+	
 	locals = [];
 	var f = file_find_first(DIRECTORY + "Locale/*", fa_directory);
 	while(f != "") {
@@ -319,6 +268,17 @@ event_inherited();
 			PREFERENCES.local = locals[str];
 			PREF_SAVE();
 		}, false)
+	]);
+	
+	ds_list_add(pref_appr, __txt("Splash"));
+	
+	ds_list_add(pref_appr, [
+		__txtx("pref_auto_save_time", "Autosave delay (-1 to disable)"),
+		"auto_save_time",
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			PREFERENCES.auto_save_time = val; 
+			PREF_SAVE();
+		})
 	]);
 	
 	ds_list_add(pref_appr, __txt("Graph"));
@@ -377,6 +337,58 @@ event_inherited();
 			PREF_SAVE();
 		})
 	]);
+	
+	ds_list_add(pref_appr, [
+		__txtx("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
+		"graph_zoom_smoooth",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREFERENCES.graph_zoom_smoooth = max(1, round(real(str)));
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_appr, __txt("Inspector"));
+	
+	ds_list_add(pref_appr, [
+		__txtx("pref_inspector_line_break_width", "Inspector line break width"),
+		"inspector_line_break_width",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREFERENCES.inspector_line_break_width = max(1, round(real(str)));
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_appr, [
+		__txtx("pref_inspector_focus_on_double_click", "Focus on double click"),
+		"PREFERENCES.inspector_focus_on_double_click",
+		new checkBox(function(str) { 
+			PREFERENCES.inspector_focus_on_double_click = !PREFERENCES.inspector_focus_on_double_click;
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_appr, __txt("Collection"));
+	
+	ds_list_add(pref_appr, [
+		__txtx("pref_collection_preview_speed", "Collection preview speed"),
+		"collection_preview_speed",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREFERENCES.collection_preview_speed = max(1, round(real(str)));
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_appr, __txt("Notification"));
+	
+	ds_list_add(pref_appr, [
+		__txtx("pref_warning_notification_time", "Warning notification time"),
+		"notification_time",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREFERENCES.notification_time = max(0, round(real(str)));
+			PREF_SAVE();
+		})
+	]);
+	
 #endregion
 
 #region theme
@@ -682,7 +694,7 @@ event_inherited();
 				if(hk_editing == key) cc = COLORS._main_text_accent;
 				
 				draw_set_text(f_p0, fa_right, fa_top, cc);
-				draw_text(key_x1 - ui(24), yy + hh, dk);
+				draw_text_add(key_x1 - ui(24), yy + hh, dk);
 				
 				if(key.key != dkey || key.modi != dmod) {
 					modified = true;
@@ -761,7 +773,7 @@ event_inherited();
 				if(hk_editing == key) cc = COLORS._main_text_accent;
 				
 				draw_set_text(f_p0, fa_right, fa_top, cc);
-				draw_text(key_x1 - ui(24), yy + hh, pkey);
+				draw_text_add(key_x1 - ui(24), yy + hh, pkey);
 				
 				if(key.key != key.dkey) {
 					modified = true;
@@ -824,13 +836,22 @@ event_inherited();
 			_pref[2].register(sp_pref);
 		}
 		
+		var sect = [];
+		var psect = "";
+		
 		for(var i = 0; i < ds_list_size(current_list); i++) {
 			var _pref = current_list[| i];
 			var th    = TEXTBOX_HEIGHT;
 			
 			if(is_string(_pref)) {
 				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text(ui(16), yy, _pref);
+				draw_text_add(ui(8), yy, _pref);
+				
+				array_push(sect, [ _pref, sp_pref, hh + ui(12) ]);
+				if(yy >= 0 && section_current == "") 
+					section_current = psect;
+				psect = _pref;
+				
 				yy += string_height(_pref) + ui(8);
 				hh += string_height(_pref) + ui(8);
 				ind = 0;
@@ -844,11 +865,10 @@ event_inherited();
 			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
 				continue;
 			
-			if(ind % 2 == 0)
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+			if(ind % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text(ui(8), yy + th / 2, _pref[0]);
+			draw_text_add(ui(24), yy + th / 2, _pref[0]);
 			_pref[2].setFocusHover(sFOCUS, sHOVER && sp_pref.hover); 
 			
 			var widget_w = ui(240);
@@ -861,15 +881,19 @@ event_inherited();
 			var widget_y = yy;
 			
 			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, txt, {}, _m, _r[0], _r[1]);
+			params.s   = ui(30);
+			
 			if(instanceof(_pref[2]) == "checkBox")
 				params.halign = fa_center;
-				
+			
 			var th     = _pref[2].drawParam(params) ?? 0;
 			
 			yy += th + padd + ui(8);
 			hh += th + padd + ui(8);
 			ind++;
 		}
+		
+		sections[page_current] = sect;
 		
 		return hh;
 	});

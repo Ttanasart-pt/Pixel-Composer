@@ -5,7 +5,14 @@ function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y,
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	inputs[| in_mesh + 1] = nodeValue("Single material", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
+	static preGetInputs = function() { #region
+		var _sing = inputs[| in_mesh + 1].getValue();
+		inputs[| in_mesh + 0].setArrayDepth(_sing? 0 : 1);
+	} #endregion
+	
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _obj = _data[0];
 		var _mat = _data[in_mesh + 0];
 		
@@ -17,10 +24,22 @@ function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y,
 		if(array_length(_mat) != array_length(_obj.materials))
 			array_resize(_mat, array_length(_obj.materials));
 			
-		_res.vertex = _obj.vertex;
-		_res.VB     = _obj.VB;
+		_res.vertex    = _obj.vertex;
+		_res.VB        = _obj.VB;
 		_res.materials = _mat;
 		
 		return _res;
-	}
+	} #endregion
+	
+	static getPreviewValues = function() { #region
+		var _sing = getSingleValue(in_mesh + 1);
+		
+		var res = array_safe_get(all_inputs, in_mesh + 0, noone);
+		if(_sing) return res; 
+		
+		var _r = array_create(array_length(res));
+		for( var i = 0, n = array_length(res); i < n; i++ ) 
+			_r[i] = array_safe_get(res[i], 0);
+		return _r;
+	} #endregion
 }

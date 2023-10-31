@@ -27,21 +27,21 @@ function buffer_from_string(str) {
 	return _b;
 }
 
-function buffer_from_surface(surface, size = true) {
+function buffer_from_surface(surface, header = true) {
 	static header_length = 24;
 	if(!is_surface(surface)) return noone;
 	
 	var bitSize = surface_format_get_bytes(surface_get_format(surface));
 	
-	var _b = buffer_create((header_length * size) + surface_get_width_safe(surface) * surface_get_height_safe(surface) * bitSize, buffer_fixed, 1);
-	if(size) {
+	var _b = buffer_create((header_length * header) + surface_get_width_safe(surface) * surface_get_height_safe(surface) * bitSize, buffer_fixed, 1);
+	if(header) {
 		buffer_write(_b, buffer_text, "PXCS");
 		buffer_write(_b, buffer_u16, surface_get_width_safe(surface));
 		buffer_write(_b, buffer_u16, surface_get_height_safe(surface));
 		buffer_write(_b, buffer_u8, surface_get_format(surface));
 	}
 	
-	buffer_get_surface(_b, surface, header_length * size);
+	buffer_get_surface(_b, surface, header_length * header);
 	return _b;
 }
 

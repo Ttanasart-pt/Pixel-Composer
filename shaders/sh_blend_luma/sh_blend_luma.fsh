@@ -19,7 +19,7 @@ float sampleMask() {
 	return (m.r + m.g + m.b) / 3. * m.a;
 }
 
-float hue2rgb( in float m1, in float m2, in float hue) {
+float hue2rgb( in float m1, in float m2, in float hue) { #region
 	if (hue < 0.0)
 		hue += 1.0;
 	else if (hue > 1.0)
@@ -33,9 +33,9 @@ float hue2rgb( in float m1, in float m2, in float hue) {
 		return m1 + (m2 - m1) * ((2.0 / 3.0) - hue) * 6.0;
 	else
 		return m1;
-}
+} #endregion
 
-vec3 hsl2rgb( in vec3 hsl ) {
+vec3 hsl2rgb( in vec3 hsl ) { #region
 	float r, g, b;
 	if(hsl.y == 0.) {
 		r = hsl.z;
@@ -55,9 +55,9 @@ vec3 hsl2rgb( in vec3 hsl ) {
 	}
 	
 	return vec3( r, g, b );
-}
+} #endregion
 
-vec3 rgb2hsl( in vec3 c ){
+vec3 rgb2hsl( in vec3 c ) { #region
 	float h = 0.0;
 	float s = 0.0;
 	float l = 0.0;
@@ -85,7 +85,7 @@ vec3 rgb2hsl( in vec3 c ){
 		h = h / 6.0;
 	}
 	return vec3( h, s, l );
-}
+} #endregion
 
 void main() {
 	vec4 _col0 = texture2D( gm_BaseTexture, v_vTexcoord );

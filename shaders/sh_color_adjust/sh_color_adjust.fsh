@@ -14,10 +14,10 @@ uniform float hue;
 uniform float sat;
 uniform float val;
 
-uniform vec4 blend;
-uniform float blendAlpha;
+uniform vec4  blend;
+uniform int   blendMode;
 
-vec3 rgb2hsv(vec3 c) {
+vec3 rgb2hsv(vec3 c) { #region
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
     vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
     vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
@@ -25,13 +25,81 @@ vec3 rgb2hsv(vec3 c) {
     float d = q.x - min(q.w, q.y);
     float e = 0.0000000001;
     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
- }
+ } #endregion
 
-vec3 hsv2rgb(vec3 c) {
+vec3 hsv2rgb(vec3 c) { #region
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
+} #endregion
+
+float hue2rgb( in float m1, in float m2, in float hue) { #region
+	if (hue < 0.0)
+		hue += 1.0;
+	else if (hue > 1.0)
+		hue -= 1.0;
+
+	if ((6.0 * hue) < 1.0)
+		return m1 + (m2 - m1) * hue * 6.0;
+	else if ((2.0 * hue) < 1.0)
+		return m2;
+	else if ((3.0 * hue) < 2.0)
+		return m1 + (m2 - m1) * ((2.0 / 3.0) - hue) * 6.0;
+	else
+		return m1;
+} #endregion
+
+vec3 hsl2rgb( in vec3 hsl ) { #region
+	float r, g, b;
+	if(hsl.y == 0.) {
+		r = hsl.z;
+		g = hsl.z;
+		b = hsl.z;
+	} else {
+		float m1, m2;
+		if(hsl.z <= 0.5)
+			m2 = hsl.z * (1. + hsl.y);
+		else 
+			m2 = hsl.z + hsl.y - hsl.z * hsl.y;
+		m1 = 2. * hsl.z - m2;
+		
+		r = hue2rgb(m1, m2, hsl.x + 1. / 3.);
+		g = hue2rgb(m1, m2, hsl.x);
+		b = hue2rgb(m1, m2, hsl.x - 1. / 3.);
+	}
+	
+	return vec3( r, g, b );
+} #endregion
+
+vec3 rgb2hsl( in vec3 c ) { #region
+	float h = 0.0;
+	float s = 0.0;
+	float l = 0.0;
+	float r = c.r;
+	float g = c.g;
+	float b = c.b;
+	float cMin = min( r, min( g, b ) );
+	float cMax = max( r, max( g, b ) );
+
+	l = ( cMax + cMin ) / 2.0;
+	if ( cMax > cMin ) {
+		float cDelta = cMax - cMin;
+		
+		s = l < .5 ? cDelta / ( cMax + cMin ) : cDelta / ( 2.0 - ( cMax + cMin ) );
+		
+		if ( r == cMax )
+			h = ( g - b ) / cDelta;
+		else if ( g == cMax )
+			h = 2.0 + ( b - r ) / cDelta;
+		else
+			h = 4.0 + ( r - g ) / cDelta;
+		
+		if ( h < 0.0)
+			h += 6.0;
+		h = h / 6.0;
+	}
+	return vec3( h, s, l );
+} #endregion
 
 void main() {
     vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
@@ -58,7 +126,49 @@ void main() {
 	col_cbh = clamp(col_cbh, vec4(0.), vec4(1.));
 	
 	//blend
-	col_cbh.rgb = mix(col_cbh.rgb, blend.rgb, blendAlpha);
+	vec3  col3 = col_cbh.rgb;
+	vec3  bld3 = blend.rgb;
+	vec3  bmix = blend.rgb;
+	
+	vec3  chsv = rgb2hsv(col3);
+	vec3  bhsv = rgb2hsv(bld3);
+	
+	float lum  = dot(col3, vec3(0.2126, 0.7152, 0.0722));
+	
+	     if(blendMode == 0)	bmix = bld3;
+	else if(blendMode == 1) bmix = col3 + bld3;
+	else if(blendMode == 2) bmix = col3 - bld3;
+	else if(blendMode == 3) bmix = col3 * bld3;
+	else if(blendMode == 4) bmix = 1. - (1. - col3) * (1. - bld3);
+	
+	else if(blendMode == 5) bmix = lum > 0.5? (1. - (1. - 2. * (col3 - 0.5)) * (1. - bld3)) : ((2. * col3) * bld3);
+	else if(blendMode == 6) bmix = hsv2rgb(vec3(bhsv.r, chsv.g, chsv.b));
+	else if(blendMode == 7) bmix = hsv2rgb(vec3(chsv.r, mix(chsv.g, bhsv.g, blend.a), chsv.b));
+	else if(blendMode == 8) { 
+		vec3 chsl = rgb2hsl(col3);
+		vec3 bhsl = rgb2hsl(bld3);
+		chsl.z    = mix(chsl.z, bhsl.z, blend.a);
+		bmix      = hsl2rgb(chsl);
+	}
+	else if(blendMode == 9) {
+		bmix.r = max(col3.r, bld3.r);
+		bmix.g = max(col3.g, bld3.g);
+		bmix.b = max(col3.b, bld3.b);
+	}
+	
+	else if(blendMode == 10) {
+		bmix.r = min(col3.r, bld3.r);
+		bmix.g = min(col3.g, bld3.g);
+		bmix.b = min(col3.b, bld3.b);
+	}
+	
+	else if(blendMode == 11) bmix = bld3;
+	else if(blendMode == 12) bmix = abs(col3 - bld3);
+	
+	if(blendMode != 7 && blendMode != 8)
+		col_cbh.rgb = mix(col_cbh.rgb, bmix, blend.a);
+	else 
+		col_cbh.rgb = bmix;
 	
 	//mask
 	if(use_mask == 1) {

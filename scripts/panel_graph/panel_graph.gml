@@ -829,6 +829,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									ds_list_add(nodes_select_list, node_focus);	
 								} else if(DOUBLE_CLICK) {
 									PANEL_PREVIEW.setNodePreview(node_focus);
+									if(PREFERENCES.inspector_focus_on_double_click) {
+										if(PANEL_INSPECTOR.panel && struct_has(PANEL_INSPECTOR.panel, "switchContent"))
+											PANEL_INSPECTOR.panel.switchContent(PANEL_INSPECTOR);
+									}
 								} else {
 									if(_prevFocus != node_focus)
 										bringNodeToFront(node_focus);
@@ -934,7 +938,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			max_layer : ds_list_size(nodes_list),
 			highlight : !ds_list_empty(nodes_select_list) || node_focus != noone,
 		};
-			
+		
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			_params.cur_layer = i + 1;
 			

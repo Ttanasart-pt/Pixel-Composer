@@ -25,8 +25,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	UPDATE_PART_FORWARD
 	
 	static onUpdate = function(frame = CURRENT_FRAME) { #region
-		if(PROJECT.animator.frame_progress)
-			runVFX(frame);
+		if(IS_PLAYING) runVFX(frame);
 		
 		if(attributes.Output_pool) {
 			outputs[| 0].setValue(parts);

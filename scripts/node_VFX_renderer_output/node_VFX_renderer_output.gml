@@ -90,6 +90,10 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	static update = function(_time = CURRENT_FRAME) { #region
 		if(!is_instanceof(outParent, NodeValue)) return noone;
+		if(!IS_PLAYING) {
+			recoverCache();
+			return;
+		}
 		
 		var _dim	= inputs[| 0].getValue(_time);
 		var _exact 	= inputs[| 1].getValue(_time);
@@ -102,13 +106,11 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		
 		surface_set_shader(_outSurf);
 		shader_set_interpolation(_outSurf);
-		
-			if(_blend == PARTICLE_BLEND_MODE.normal)
-				BLEND_NORMAL;
-			else if(_blend == PARTICLE_BLEND_MODE.alpha) 
-				BLEND_ALPHA;
-			else if(_blend == PARTICLE_BLEND_MODE.additive) 
-				BLEND_ADD;
+			switch(_blend) {
+				case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
+				case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;
+				case PARTICLE_BLEND_MODE.additive: BLEND_ADD;    break;
+			}
 			
 			var surf_w = surface_get_width_safe(_outSurf);
 			var surf_h = surface_get_height_safe(_outSurf);
@@ -119,17 +121,12 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 				if(!is_array(parts) || array_length(parts) == 0) continue;
 				if(!is_array(parts[0])) parts = [ parts ];
 				
-				//var drawnParts = 0;
-				
 				for(var j = 0; j < array_length(parts); j++)
 				for(var k = 0; k < array_length(parts[j]); k++) {
 					if(!parts[j][k].active) continue;
 					
-					//drawnParts++;
 					parts[j][k].draw(_exact, surf_w, surf_h);
 				}
-				
-				//print($"Renderer input index {i}: {drawnParts} particles drawn.");
 			}
 			
 			BLEND_NORMAL;

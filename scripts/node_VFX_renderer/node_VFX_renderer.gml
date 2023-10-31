@@ -71,7 +71,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static update = function(_time = CURRENT_FRAME) { #region
-		if(!PROJECT.animator.is_playing) {
+		if(!IS_PLAYING) {
 			recoverCache();
 			return;
 		}
@@ -87,13 +87,11 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		surface_set_shader(_outSurf);
 		shader_set_interpolation(_outSurf);
-		
-			if(_blend == PARTICLE_BLEND_MODE.normal)
-				BLEND_NORMAL;
-			else if(_blend == PARTICLE_BLEND_MODE.alpha) 
-				BLEND_ALPHA;
-			else if(_blend == PARTICLE_BLEND_MODE.additive) 
-				BLEND_ADD;
+			switch(_blend) {
+				case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
+				case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;
+				case PARTICLE_BLEND_MODE.additive: BLEND_ADD;    break;
+			}
 			
 			var surf_w = surface_get_width_safe(_outSurf);
 			var surf_h = surface_get_height_safe(_outSurf);

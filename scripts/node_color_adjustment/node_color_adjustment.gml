@@ -1,21 +1,6 @@
 function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Color Adjust";
 	
-	shader = sh_color_adjust;
-	uniform_bri = shader_get_uniform(shader, "brightness");
-	uniform_exp = shader_get_uniform(shader, "exposure");
-	uniform_con = shader_get_uniform(shader, "contrast");
-	uniform_hue = shader_get_uniform(shader, "hue");
-	uniform_sat = shader_get_uniform(shader, "sat");
-	uniform_val = shader_get_uniform(shader, "val");
-	uniform_alp = shader_get_uniform(shader, "alpha");
-	
-	uniform_bl  = shader_get_uniform(shader, "blend");
-	uniform_bla = shader_get_uniform(shader, "blendAlpha");
-	
-	uniform_mask_use	= shader_get_uniform(shader, "use_mask");
-	uniform_mask		= shader_get_sampler_index(shader, "mask");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -35,7 +20,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 6] = nodeValue("Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 7] = nodeValue("Blend alpha",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 7] = nodeValue("Blend amount",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 8] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -56,6 +41,9 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.palette)
 		.setVisible(true, true);
 	
+	inputs[| 14] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Color out", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
@@ -64,7 +52,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	input_display_list = [11, 12, 0, 8, 13, 
 		["Brightness",	false], 1, 10, 2, 
 		["HSV",			false], 3, 4, 5, 
-		["Color blend", false], 6, 7, 9
+		["Color blend", false], 6, 14, 7, 9
 	];
 	
 	temp_surface = [ surface_create(1, 1) ];
@@ -97,6 +85,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _type = _data[12];
 		var _col  = _data[13];
+		var _blm  = _data[14];
 		
 		if(_type == 0 && _output_index != 0) return [];
 		if(_type == 1 && _output_index != 1) return noone;
@@ -139,19 +128,19 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			return _col;
 		}
 		
-		surface_set_shader(_baseSurf, shader);
-			shader_set_uniform_i(uniform_mask_use, _m != DEF_SURFACE);
-			texture_set_stage(uniform_mask, surface_get_texture(_m));
+		surface_set_shader(_baseSurf, sh_color_adjust);
+			shader_set_f("brightness", _bri);
+			shader_set_f("exposure", _exp);
+			shader_set_f("contrast", _con);
+			shader_set_f("hue", _hue);
+			shader_set_f("sat", _sat);
+			shader_set_f("val", _val);
 			
-			shader_set_uniform_f(uniform_bri, _bri);
-			shader_set_uniform_f(uniform_exp, _exp);
-			shader_set_uniform_f(uniform_con, _con);
-			shader_set_uniform_f(uniform_hue, _hue);
-			shader_set_uniform_f(uniform_sat, _sat);
-			shader_set_uniform_f(uniform_val, _val);
+			shader_set_color("blend", _bl, _bla);
+			shader_set_i("blendMode", _blm);
 			
-			shader_set_uniform_f_array_safe(uniform_bl, [color_get_red(_bl) / 255, color_get_green(_bl) / 255, color_get_blue(_bl) / 255, 1.0]);
-			shader_set_uniform_f(uniform_bla, _bla);
+			shader_set_i("use_mask", _m != DEF_SURFACE);
+			shader_set_surface("mask", _m);
 			
 			gpu_set_colorwriteenable(1, 1, 1, 0);
 			draw_surface_safe(_surf, 0, 0);

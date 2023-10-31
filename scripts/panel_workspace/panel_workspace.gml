@@ -1,4 +1,5 @@
 function Panel_Workspace() : PanelContent() constructor {
+	title = "Workspace";
 	workspaces = [];
 	w = ui(480);
 	h = ui(40);

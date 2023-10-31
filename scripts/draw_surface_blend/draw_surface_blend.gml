@@ -1,5 +1,9 @@
 globalvar BLEND_TYPES;
-BLEND_TYPES = [ "Normal", "Add", "Subtract", "Multiply", "Screen", "Overlay", "Hue", "Saturation", "Luminosity", "Maximum", "Minimum", "Replace", "Difference" ];
+BLEND_TYPES = [ 
+	"Normal",  "Add",     "Subtract",   "Multiply",   "Screen", 
+	"Overlay", "Hue",     "Saturation", "Luminosity", "Maximum", 
+	"Minimum", "Replace", "Difference" 
+];
 
 function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_alp = true, _mask = 0, tile = 0) {
 	if(!is_surface(background)) return;
@@ -11,12 +15,13 @@ function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_a
 		case "Subtract" :	sh = sh_blend_subtract;		break;
 		case "Multiply" :	sh = sh_blend_multiply;		break;
 		case "Screen" :		sh = sh_blend_screen;		break;
+		
 		case "Overlay" :	sh = sh_blend_overlay;		break;
 		case "Hue" :		sh = sh_blend_hue;			break;
 		case "Saturation" :	sh = sh_blend_sat;			break;
 		case "Luminosity" :	sh = sh_blend_luma;			break;
-		
 		case "Maximum" :	sh = sh_blend_max;			break;
+		
 		case "Minimum" :	sh = sh_blend_min;			break;
 		case "Replace" :	sh = sh_blend_replace;		break;
 		case "Difference" :	sh = sh_blend_difference;	break;

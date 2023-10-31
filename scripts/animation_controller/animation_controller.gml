@@ -7,6 +7,7 @@
 	}
 	
 	#macro ANIMATION_STATIC !(PROJECT.animator.is_playing || PROJECT.animator.frame_progress)
+	#macro IS_PLAYING    PROJECT.animator.is_playing
 	#macro CURRENT_FRAME PROJECT.animator.current_frame
 	#macro TOTAL_FRAMES  PROJECT.animator.frames_total
 #endregion

@@ -784,10 +784,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			default: 
 				drop_key = "None";
 		}
-	} #endregion
-	setDropKey();
+	} setDropKey(); #endregion
 	
-	static resetDisplay = function() { #region
+	static resetDisplay = function() { #region		//////////////////// RESET DISPLAY ////////////////////
 		editWidget = noone;
 		switch(display_type) {
 			case VALUE_DISPLAY.button : #region
@@ -1042,6 +1041,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(val, index);
 						});
 						
+						extract_node = "Node_Vector4";
 						display_data.angle_display = QUARTERNION_DISPLAY.quarterion;
 						break; #endregion
 						
@@ -1196,8 +1196,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		setDropKey();
-	} #endregion
-	resetDisplay();
+	} resetDisplay(); #endregion
 	
 	static setType = function(_type) { #region
 		if(type == _type) return false;
@@ -1735,12 +1734,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(tags != VALUE_TAG.none) return true;
 		
 		if(_update) {
-			node.triggerRender();
+			if(!IS_PLAYING) node.triggerRender();
 			node.valueUpdate(self.index);
 			node.clearCacheForward();
 		}
-				
-		if(fullUpdate)	RENDER_ALL
+		
+		if(fullUpdate && !IS_PLAYING) RENDER_ALL
 					
 		if(!LOADING) PROJECT.modified = true;
 					

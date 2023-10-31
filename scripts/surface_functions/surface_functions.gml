@@ -556,3 +556,4 @@ function surface_texture(surface) {
 	if(!is_surface(surface)) return -1;
 	return surface_get_texture(surface);
 }
+

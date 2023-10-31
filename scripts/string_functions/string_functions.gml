@@ -69,3 +69,8 @@ function string_to_var(str) { #region
 	gml_pragma("forceinline");
 	return string_replace_all(string_lower(str), " ", "_");
 } #endregion
+
+function string_quote(str) { #region
+	gml_pragma("forceinline");
+	return $"\"{str}\"";
+} #endregion
