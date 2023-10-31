@@ -5,44 +5,46 @@ function Panel_Preview_Grid_Setting() : Panel_Linear_Setting() constructor {
 	
 	#region data
 		properties = [
-			[
-				new checkBox(function() {
-					PROJECT.previewGrid.show = !PROJECT.previewGrid.show;
-				}),
+			new __Panel_Linear_Setting_Item(
 				__txt("Enabled"),
-				function() { return PROJECT.previewGrid.show; }
-			],
-			[
-				new checkBox(function() {
-					PROJECT.previewGrid.snap = !PROJECT.previewGrid.snap;
-				}),
+				new checkBox(function() { PROJECT.previewGrid.show = !PROJECT.previewGrid.show; }),
+				function() { return PROJECT.previewGrid.show; },
+				function(val) { PROJECT.previewGrid.show = val; },
+				false,
+			),
+			new __Panel_Linear_Setting_Item(
 				__txtx("grid_snap", "Snap to grid"),
-				function() { return PROJECT.previewGrid.snap; }
-			],
-			[
+				new checkBox(function() { PROJECT.previewGrid.snap = !PROJECT.previewGrid.snap; }),
+				function() { return PROJECT.previewGrid.snap; },
+				function(val) { PROJECT.previewGrid.snap = val; },
+				false,
+			),
+			new __Panel_Linear_Setting_Item(
+				__txt("Grid size"),
 				new vectorBox(2, function(index, value) {
 					var _v = PROJECT.previewGrid.size[index];
 					PROJECT.previewGrid.size[index] = max(1, value);
 					
 					return _v != max(1, value);
 				}).setLinkInactiveColor(COLORS._main_icon_light),
-				__txt("Grid size"),
-				function() { return PROJECT.previewGrid.size; }
-			],
-			[
-				new slider(0, 1, .05, function(str) {
-					PROJECT.previewGrid.opacity = clamp(real(str), 0, 1);	
-				}),
+				function() { return PROJECT.previewGrid.size; },
+				function(val) { PROJECT.previewGrid.size = val; },
+				[ 16, 16 ],
+			),
+			new __Panel_Linear_Setting_Item(
 				__txt("Grid opacity"),
-				function() { return PROJECT.previewGrid.opacity; }
-			],
-			[
-				new buttonColor(function(color) {
-					PROJECT.previewGrid.color = color;
-				}, self),
+				new slider(0, 1, .05, function(str) { PROJECT.previewGrid.opacity = clamp(real(str), 0, 1);	}),
+				function() { return PROJECT.previewGrid.opacity; },
+				function(val) { PROJECT.previewGrid.opacity = val; },
+				0.5,
+			),
+			new __Panel_Linear_Setting_Item(
 				__txt("Grid color"),
-				function() { return PROJECT.previewGrid.color; }
-			]
+				new buttonColor(function(color) { PROJECT.previewGrid.color = color; }, self),
+				function() { return PROJECT.previewGrid.color; },
+				function(val) { PROJECT.previewGrid.color = val; },
+				COLORS.panel_preview_grid,
+			),
 		];
 	
 		setHeight();

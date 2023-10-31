@@ -67,7 +67,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		
 		if(display_button) {
 			var bx = _x;
-			var draw_sel = [];
+			var draw_sel = noone;
 			
 			for(var i = 0; i < amo; i++) {
 				buttons[i].setFocusHover(active, hover);
@@ -92,7 +92,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				bx += ww;
 			}
 			
-			draw_sprite_stretched_ext(draw_sel[0], 3, draw_sel[1], _y, ww, _h, COLORS._main_accent, 1);	
+			if(draw_sel != noone)
+				draw_sprite_stretched_ext(draw_sel[0], 3, draw_sel[1], _y, ww, _h, COLORS._main_accent, 1);	
 			
 			if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + _h)) {
 				if(is_array(data) && key_mod_press(SHIFT)) {

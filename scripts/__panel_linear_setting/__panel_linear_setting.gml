@@ -1,7 +1,43 @@
+function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, getDefault = noone) constructor { #region
+	self.name       = name;
+	self.editWidget = editWidget;
+	self.data       = data;
+	
+	self.onEdit     = onEdit;
+	self.getDefault = getDefault;
+} #endregion
+
+function __Panel_Linear_Setting_Item_Preference(name, key, editWidget, _data = noone) : __Panel_Linear_Setting_Item(name, editWidget, _data) constructor { #region
+	self.key = key;
+	
+	data = function() {
+		gml_pragma("forceinline");
+		return PREFERENCES[$ key];
+	}
+	
+	onEdit = function(val) {
+		gml_pragma("forceinline");
+		PREFERENCES[$ key] = val;
+		PREF_SAVE();
+	}
+	
+	getDefault = function() {
+		gml_pragma("forceinline");
+		return PREFERENCES_DEF[$ key];
+	}
+} #endregion
+
+function __Panel_Linear_Setting_Label(name, sprite, s_index = 0, s_color = c_white) constructor { #region
+	self.name    = name;
+	self.sprite  = sprite;
+	self.s_index = s_index;
+	self.s_color = s_color;
+} #endregion
+
 function Panel_Linear_Setting() : PanelContent() constructor {
 	title = __txtx("preview_3d_settings", "3D Preview Settings");
 	
-	w = ui(380);
+	w = ui(400);
 	
 	bg_y    = -1;
 	bg_y_to = -1;
@@ -21,14 +57,12 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		
 		for( var i = 0, n = array_length(properties); i < n; i++ ) {
 			var _prop = properties[i];
-		
-			var _widg = _prop[0];
 			
-			if(is_string(_widg)) {
-				var _text = _prop[0];
-				var _spr  = _prop[1];
-				var _ind  = _prop[2];
-				var _colr = _prop[3];
+			if(is_instanceof(_prop, __Panel_Linear_Setting_Label)) {
+				var _text = _prop.name;
+				var _spr  = _prop.sprite;
+				var _ind  = _prop.s_index;
+				var _colr = _prop.s_color;
 				
 				draw_sprite_stretched_ext(THEME.group_label, 0, ui(4), yy - th / 2 + ui(2), w - ui(8), th - ui(4), _colr, 1);
 				draw_sprite_ui(_spr, _ind, ui(4) + th / 2, yy);
@@ -40,29 +74,54 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				continue;
 			}
 			
-			var _text = _prop[1];
-			var _data = _prop[2]();
-		
-			_widg.setFocusHover(pFOCUS, pHOVER);
-			_widg.register();
-			
-			if(pHOVER && point_in_rectangle(mx, my, 0, yy - th / 2, w, yy + th / 2)) {
-				bg_y_to = yy - th / 2;
-				_hov = true;
-			}
+			if(is_instanceof(_prop, __Panel_Linear_Setting_Item)) {
+				var _text = _prop.name;
+				var _data = _prop.data;
+				var _widg = _prop.editWidget;
+				if(is_callable(_data)) _data = _data();
 				
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(16), yy, _text);
-		
-			var params = new widgetParam(w - ui(8) - ww, yy - wh / 2, ww, wh, _data, {}, [ mx, my ], x, y);
-			if(is_instanceof(_widg, checkBox)) {
-				params.halign = fa_center;
-				params.valign = fa_center;
-			}
+				_widg.setFocusHover(pFOCUS, pHOVER);
+				_widg.register();
 			
-			_widg.drawParam(params);
-		
-			yy += th;
+				if(pHOVER && point_in_rectangle(mx, my, 0, yy - th / 2, w, yy + th / 2)) {
+					bg_y_to = yy - th / 2;
+					_hov    = true;
+				}
+				
+				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+				draw_text_add(ui(16), yy, _text);
+			
+				var _x1  = w - ui(8);
+				var _wdw = ww;
+			
+				if(_prop.getDefault != noone)
+					_wdw -= ui(32 + 8);
+			
+				var params = new widgetParam(_x1 - ww, yy - wh / 2, _wdw, wh, _data, {}, [ mx, my ], x, y);
+				if(is_instanceof(_widg, checkBox)) {
+					params.halign = fa_center;
+					params.valign = fa_center;
+				}
+				
+				_widg.drawParam(params); 
+				
+				if(_prop.getDefault != noone) {
+					var _defVal = is_method(_prop.getDefault)? _prop.getDefault() : _prop.getDefault;
+					var _bs = ui(32);
+					var _bx = _x1 - _bs;
+					var _by = yy - _bs / 2;
+					
+					if(isEqual(_data, _defVal))
+						draw_sprite_ext(THEME.refresh_s, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon, 0.6);
+					else {
+						if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, __txt("Reset"), THEME.refresh_s) == 2)
+							_prop.onEdit(_defVal);
+					}
+				}
+				
+				yy += th;
+				continue;
+			}
 		}
 		
 		bg_a = lerp_float(bg_a, _hov, 2);

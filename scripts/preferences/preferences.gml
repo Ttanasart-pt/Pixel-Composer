@@ -1,5 +1,5 @@
 #region preference
-	globalvar PREFERENCES;
+	globalvar PREFERENCES, PREFERENCES_DEF;
 	PREFERENCES = {};
 	
 	PREFERENCES.ui_framerate					= 60;
@@ -72,6 +72,8 @@
 	PREFERENCES.alt_picker						= true;
 	PREFERENCES.clear_temp_on_close				= true;
 	PREFERENCES.pan_mouse_key					= mb_middle;
+	
+	PREFERENCES_DEF = variable_clone(PREFERENCES);
 #endregion
 
 #region recent files

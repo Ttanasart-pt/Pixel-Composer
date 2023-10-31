@@ -5,27 +5,21 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 	
 	#region data
 		properties = [
-			[
-				new textBox(TEXTBOX_INPUT.number, function(str) {
-					TOTAL_FRAMES = real(str);	
-				}),
+			new __Panel_Linear_Setting_Item(
 				__txtx("anim_length", "Animation length"),
+				new textBox(TEXTBOX_INPUT.number, function(str) { TOTAL_FRAMES = real(str);	}),
 				function() { return TOTAL_FRAMES; }
-			],
-			[
-				new textBox(TEXTBOX_INPUT.number, function(str) {
-					PROJECT.animator.framerate = real(str);	
-				}),
+			),
+			new __Panel_Linear_Setting_Item(
 				__txtx("anim_frame_rate", "Preview frame rate"),
+				new textBox(TEXTBOX_INPUT.number, function(str) { PROJECT.animator.framerate = real(str); }),
 				function() { return PROJECT.animator.framerate; }
-			],
-			[
-				new buttonGroup([__txt("Loop"), __txt("Stop")], function(b) {
-					PROJECT.animator.playback = b;	
-				}),
+			),
+			new __Panel_Linear_Setting_Item(
 				__txtx("anim_on_end", "On end"),
+				new buttonGroup([__txt("Loop"), __txt("Stop")], function(b) { PROJECT.animator.playback = b; }),
 				function() { return PROJECT.animator.playback; }
-			]
+			),
 		];
 		
 		setHeight();

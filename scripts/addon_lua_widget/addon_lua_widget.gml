@@ -36,7 +36,8 @@
 		[ "__textBox_draw",   function(wd, _x, _y, _w, _h, _text, _m) { 
 			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
 			
-			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h, _text, _m);
+			var _param = new widgetParam(_x, _y, _w, _h, _text, {}, _m)
+			global.ADDON_WIDGET[? wd].drawParam(_param);
 		} ],
 @"
 TextBox = {}
@@ -72,7 +73,8 @@ end",
 		[ "__vectorBox_draw",   function(wd, _x, _y, _w, _h, _vector, _m) { 
 			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
 			
-			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h, _vector, _m);
+			var _param = new widgetParam(_x, _y, _w, _h, _vector, {}, _m)
+			global.ADDON_WIDGET[? wd].drawParam(_param);
 		} ],
 
 @"
@@ -109,7 +111,8 @@ end",
 		[ "__checkBox_draw",   function(wd, _x, _y, _value, _m) { 
 			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
 			
-			global.ADDON_WIDGET[? wd].draw(_x, _y, _value);
+			var _param = new widgetParam(_x, _y, ui(24), ui(24), _value, {}, _m)
+			global.ADDON_WIDGET[? wd].drawParam(_param);
 		} ],
 
 @"
@@ -147,7 +150,8 @@ end",
 			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
 			
 			var _button = global.ADDON_WIDGET[? wd];
-			_button.draw(_x, _y, _w, _h);
+			var _param = new widgetParam(_x, _y, _w, _h, 0, {}, _m)
+			_button.drawParam(_param);
 		} ],
 
 @"
@@ -170,10 +174,8 @@ end",
 		for( var i = 0, n = array_length(global.__lua_widget_functions); i < n; i++ ) {
 			var _func = global.__lua_widget_functions[i];
 			
-			if(is_string(_func))
-				lua_add_code(lua, _func);
-			else if(is_array(_func))
-				lua_add_function(lua, _func[0], _func[1]);
+			if(is_string(_func))     lua_add_code(lua, _func);
+			else if(is_array(_func)) lua_add_function(lua, _func[0], _func[1]);
 		}
 	}
 #endregion

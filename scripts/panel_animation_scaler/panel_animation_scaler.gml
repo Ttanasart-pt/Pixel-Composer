@@ -6,14 +6,11 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 	
 	#region data
 		properties = [
-			[
-				new textBox(TEXTBOX_INPUT.number, function(to) {
-					to = toNumber(to);
-					scale_to = to;
-				}), 
+			new __Panel_Linear_Setting_Item(
 				__txtx("anim_scale_target_frame_length", "Target frame length"),
+				new textBox(TEXTBOX_INPUT.number, function(to) { scale_to = toNumber(to); }), 
 				function() { return scale_to; },
-			]
+			)
 		];
 		
 		setHeight();
