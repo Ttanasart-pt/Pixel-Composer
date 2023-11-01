@@ -17,7 +17,7 @@ function curveBox(_onModify) : widget() constructor {
 	
 	display_pos_x = 0;
 	display_pos_y = 0;
-	display_sel = false;
+	display_sel   = 0;
 	
 	grid_snap = false;
 	grid_step = 0.05;
@@ -329,7 +329,7 @@ function curveBox(_onModify) : widget() constructor {
 				}
 			}
 			
-			if(mouse_press(mb_right, active)) {
+			if(node_hovering == -1 && mouse_press(mb_right, active)) {
 				menuCall("widget_curve", rx + _m[0], ry + _m[1], [
 					menuItem(grid_show? __txt("Hide grid") : __txt("Show grid"), function() { grid_show = !grid_show; }),
 					menuItem(__txt("Snap to grid"), function() { grid_snap = !grid_snap; },,, function() { return grid_snap } ),
