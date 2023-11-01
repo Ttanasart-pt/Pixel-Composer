@@ -96,7 +96,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			
 				if(_prop.getDefault != noone)
 					_wdw -= ui(32 + 8);
-			
+				
 				var params = new widgetParam(_x1 - ww, yy - wh / 2, _wdw, wh, _data, {}, [ mx, my ], x, y);
 				if(is_instanceof(_widg, checkBox)) {
 					params.halign = fa_center;
@@ -112,7 +112,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 					var _by = yy - _bs / 2;
 					
 					if(isEqual(_data, _defVal))
-						draw_sprite_ext(THEME.refresh_s, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon, 0.6);
+						draw_sprite_ext(THEME.refresh_s, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
 					else {
 						if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, __txt("Reset"), THEME.refresh_s) == 2)
 							_prop.onEdit(_defVal);

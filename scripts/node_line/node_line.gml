@@ -64,10 +64,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 24] = nodeValue("Random Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
 	
+	inputs[| 25] = nodeValue("Invert", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	
 	input_display_list = [
 		["Output",			true],	0, 1, 
 		["Line data",		false], 6, 7, 19, 2, 20, 
-		["Line settings",	false], 17, 3, 11, 12, 8, 9, 13, 14, 
+		["Line settings",	false], 17, 3, 11, 12, 8, 25, 9, 13, 14, 
 		["Wiggle",			false], 4, 5, 
 		["Render",			false], 10, 24, 15, 16, 
 		["Texture",			false], 18, 21, 22, 23, 
@@ -155,6 +157,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _texSca = _data[23];
 		
 			var _colb  = _data[24];
+			var _ratInv = _data[25];
 		#endregion
 		
 		if(CURRENT_FRAME == 0 || inputs[| 11].is_anim)
@@ -251,14 +254,15 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 					wght = 1;
+					var _pathPng = _ratInv? 1 - _prog_curr : _prog_curr;
 					if(_useDistance) {
-						p = _pat.getPointDistance(_prog_curr, i, p);
+						p = _pat.getPointDistance(_pathPng, i, p);
 						if(struct_has(_pat, "getWeightRatio"))
-							wght = _pat.getWeightRatio(_prog_curr, i);
+							wght = _pat.getWeightRatio(_pathPng, i);
 					} else {
-						p = _pat.getPointRatio(_prog_curr, i, p);
+						p = _pat.getPointRatio(_pathPng, i, p);
 						if(struct_has(_pat, "getWeightDistance"))
-							wght = _pat.getWeightDistance(_prog_curr, i);
+							wght = _pat.getWeightDistance(_pathPng, i);
 					}
 					
 					_nx = p.x;

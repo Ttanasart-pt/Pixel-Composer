@@ -1,12 +1,11 @@
 #region save
-	globalvar LOADING, APPENDING, CLONING, SAFE_MODE;
+	globalvar LOADING, APPENDING, CLONING;
 	globalvar CONNECTION_CONFLICT, ALWAYS_FULL;
 	globalvar MESSAGE;
 	
 	LOADING		= false;
 	CLONING		= false;
 	APPENDING	= false;
-	SAFE_MODE	= false;
 	MESSAGE     = noone;
 	
 	CONNECTION_CONFLICT = ds_queue_create();
@@ -61,6 +60,10 @@
 #endregion
 
 #region macro
+	#macro TEMPDIR filepath_resolve(PREFERENCES.temp_path)
+	
+	#macro NOT_LOAD !LOADING && !APPENDING
+	
 	#macro WIN_W window_get_width()
 	#macro WIN_H window_get_height()
 	

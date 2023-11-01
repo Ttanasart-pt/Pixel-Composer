@@ -11,7 +11,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	
 	current_value = 0;
 	
-	onModify = _onModify;
+	onModify  = _onModify;
 	onRelease = _onRelease;
 	onApply = function(val) {
 		if(onModify)  onModify(val);

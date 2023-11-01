@@ -175,7 +175,7 @@ output.color = surfaceColor;")
 		var vs = getInputData(0);
 		var fs = getInputData(1);
 		
-		var _dir = DIRECTORY + "temp/";
+		var _dir = TEMPDIR;
 		directory_verify(_dir);
 		
 		var vs   = @"

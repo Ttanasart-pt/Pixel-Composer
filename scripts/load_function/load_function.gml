@@ -1,4 +1,4 @@
-function LOAD() {
+function LOAD(safe = false) {
 	if(DEMO) return false;
 	
 	var path = get_open_filename("Pixel Composer PROJECT (.pxc)|*.pxc", "");
@@ -7,7 +7,7 @@ function LOAD() {
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") return;
 				
 	gc_collect();
-	LOAD_PATH(path);
+	var proj = LOAD_PATH(path, false, safe);
 }
 
 function TEST_PATH(path) {
@@ -18,7 +18,7 @@ function TEST_PATH(path) {
 	PROJECT = new Project();
 	PANEL_GRAPH.setProject(PROJECT);
 	
-	__LOAD_PATH(path, false, false);
+	__LOAD_PATH(path);
 }
 
 function LOAD_PATH(path, readonly = false, safe_mode = false) {
@@ -40,17 +40,16 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 		array_push(PROJECTS, PROJECT);
 	}
 	
-	var res = __LOAD_PATH(path, readonly, safe_mode);
+	var res = __LOAD_PATH(path, readonly);
 	if(!res) return false;
 	
+	PROJECT.safeMode = safe_mode;
 	setFocus(PANEL_GRAPH.panel);
 	
 	return PROJECT;
 }
 
-function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false) {
-	SAFE_MODE = safe_mode;
-	
+function __LOAD_PATH(path, readonly = false, override = false) {
 	if(DEMO) return false;
 	
 	if(!file_exists(path)) {
@@ -74,11 +73,10 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 		ds_list_clear(ERRORS);
 	}
 	
-	var temp_path = DIRECTORY + "temp";
-	if(!directory_exists(temp_path))
-		directory_create(temp_path);
+	var temp_path = TEMPDIR;
+	directory_verify(temp_path);
 	
-	var temp_file_path = temp_path + "/" + string(UUID_generate(6));
+	var temp_file_path = TEMPDIR + string(UUID_generate(6));
 	if(file_exists(temp_file_path)) file_delete(temp_file_path);
 	file_copy(path, temp_file_path);
 	

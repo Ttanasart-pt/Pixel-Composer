@@ -17,7 +17,8 @@ function Panel_Menu() : PanelContent() constructor {
 	
 	menu_file_nondemo = [
 		menuItem(__txt("New"),				function() { NEW(); }, THEME.new_file, ["", "New file"]),
-		menuItem(__txt("Open") + "...",		function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
+		menuItem(__txt("Open") + "...",		function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"])
+			.setShiftMenu(menuItem(__txt("Open in safe mode") + "...",		function() { LOAD(true); }, THEME.noti_icon_file_load)),
 		menuItem(__txt("Save"),				function() { SAVE(); }, THEME.save, ["", "Save"]),
 		menuItem(__txt("Save as") + "...",	function() { SAVE_AS(); }, THEME.save, ["", "Save as"]),
 		menuItem(__txt("Save all"),			function() { SAVE_ALL(); }, THEME.icon_save_all, ["", "Save all"]),
@@ -649,12 +650,11 @@ function Panel_Menu() : PanelContent() constructor {
 		
 		#region title
 			var txt = "";
-			if(PROJECT.path == "") 
-				txt = "Untitled";
-			else 
-				txt = filename_name(PROJECT.path);
-			if(PROJECT.modified)
-				txt += "*";
+			if(PROJECT.safeMode) txt += "[SAFE MODE] ";
+			if(PROJECT.readonly) txt += "[READ ONLY] ";
+			
+			txt += PROJECT.path == ""? "Untitled" : filename_name(PROJECT.path);
+			if(PROJECT.modified) txt += "*";
 			txt += " - Pixel Composer";
 			if(ALPHA)		txt += " ALPHA";
 			else if(DEMO)	txt += " DEMO";

@@ -412,7 +412,7 @@ event_inherited();
 				
 				var _att_first = _att[0];
 				if(!ds_map_exists(attachment, _att_first.id)) {
-					var path = DIRECTORY + "temp/" + _att_first.id + ".png";
+					var path = TEMPDIR + _att_first.id + ".png";
 					attachment[? _att_first.id] = [ http_get_file(_att_first.url, path), path ];
 				} else if(!is_array(attachment[? _att_first.id]) && sprite_exists(attachment[? _att_first.id])) {
 					var sub   = attachment[? _att_first.id];

@@ -518,9 +518,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static doUpdate = function(frame = CURRENT_FRAME) { #region
-		if(SAFE_MODE)    return;
-		if(NODE_EXTRACT) return;
-			
+		if(PROJECT.safeMode) return;
+		if(NODE_EXTRACT)     return;
+		
 		var render_timer = get_timer();
 		
 		if(cached_manual || (use_cache == CACHE_USE.auto && recoverCache())) {
@@ -1008,6 +1008,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		var len = array_length(_inputs);
+		
 		for( var i = 0; i < len; i++ )
 			_inputs[i].drawLineIndex = 1 + (i > len / 2? (len - 1 - i) : i) * 0.5;
 		

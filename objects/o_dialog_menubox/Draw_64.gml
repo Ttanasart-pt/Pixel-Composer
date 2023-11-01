@@ -11,6 +11,9 @@ if(!ready) exit;
 	for(var i = 0; i < array_length(menu); i++) {
 		var _menuItem = menu[i];
 		
+		if(is_instanceof(_menuItem, MenuItem) && _menuItem.shiftMenu != noone && key_mod_press(SHIFT))
+			_menuItem = _menuItem.shiftMenu;
+			
 		if(_menuItem == -1) {
 			var bx = dialog_x + ui(8);
 			var bw = dialog_w - ui(16);
@@ -23,7 +26,7 @@ if(!ready) exit;
 		var _h = hght;
 		var label = _menuItem.name;
 		
-		if(instanceof(_menuItem) == "MenuItemGroup")
+		if(is_instanceof(_menuItem, MenuItemGroup))
 			_h += hght;
 		
 		var hoverable = _menuItem.active && sHOVER;
@@ -61,7 +64,7 @@ if(!ready) exit;
 		} else if(cc != c_white)
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc, 0.5);
 		
-		if(instanceof(_menuItem) == "MenuItemGroup") {
+		if(is_instanceof(_menuItem, MenuItemGroup)) {
 			var _submenus = _menuItem.group;
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
 			draw_set_alpha(_menuItem.active * 0.75 + 0.25);

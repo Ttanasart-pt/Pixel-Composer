@@ -1,6 +1,6 @@
 function close_program() {
 	PREF_SAVE();
-	if(PREFERENCES.clear_temp_on_close) directory_destroy(DIRECTORY + "temp");
+	if(PREFERENCES.clear_temp_on_close) directory_destroy(TEMPDIR);
 	game_end();
 }
 

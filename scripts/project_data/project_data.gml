@@ -12,6 +12,7 @@
 		
 		modified = false; /// @is {bool}
 		readonly = false; /// @is {bool} 
+		safeMode = false;
 		
 		nodes	    = ds_list_create();
 		nodeMap	    = ds_map_create();

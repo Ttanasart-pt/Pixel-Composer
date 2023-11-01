@@ -2,7 +2,7 @@
 if(OS == os_windows && gameframe_is_minimized()) exit;
 
 //print("===== Step start =====");
-if(PROJECT.active) {
+if(PROJECT.active && !PROJECT.safeMode) {
 	PROJECT.animator.step();
 
 	#region step
@@ -103,8 +103,8 @@ if(PROJECT.active) {
 		_modified = PROJECT.modified;
 		
 		var cap = "";
-		if(SAFE_MODE)	cap += "[SAFE MODE] ";
-		if(PROJECT.readonly)	cap += "[READ ONLY] ";
+		if(PROJECT.safeMode) cap += "[SAFE MODE] ";
+		if(PROJECT.readonly) cap += "[READ ONLY] ";
 		cap += PROJECT.path + (PROJECT.modified? "*" : "") + " - Pixel Composer";
 		
 		window_set_caption(cap);

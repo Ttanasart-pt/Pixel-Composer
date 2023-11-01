@@ -123,8 +123,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var iter = ds_list_create(); #region
 		addNodeCatagory("Loop", iter, ["Node_Iterate"]);
 			ds_list_add(iter, "Groups");
-			addNodeObject(iter, "Input",		s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]).hideRecent();
-			addNodeObject(iter, "Output",		s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]).hideRecent();
+			addNodeObject(iter, "Loop Input",	s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]).hideRecent();
+			addNodeObject(iter, "Loop Output",	s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]).hideRecent();
+			addNodeObject(iter, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
+			addNodeObject(iter, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
 			addNodeObject(iter, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]).hideRecent();
 			
 			ds_list_add(iter, "Loops");

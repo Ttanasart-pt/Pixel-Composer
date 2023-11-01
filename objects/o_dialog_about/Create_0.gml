@@ -12,6 +12,8 @@ event_inherited();
 #region scroll
 	credits = [
 		[ "ImageMagick", "ImageMagick Studio LLC" ],
+		[ "WebP", "Google" ],
+		[ "FFmpeg", "FFmpeg team" ],
 		[ "File dialog module", "Samuel Venable" ],
 		[ "gif importer\nWindow commands\nApollow LUA compiler", "YellowAfterLife" ],
 		

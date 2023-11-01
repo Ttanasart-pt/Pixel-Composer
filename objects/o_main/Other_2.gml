@@ -42,10 +42,7 @@
 	PRESIST_PREF.path = DIRECTORY;
 	json_save_struct(perstPath, PRESIST_PREF);
 	
-	if(!directory_exists(DIRECTORY))
-		directory_create(DIRECTORY);
-	if(!directory_exists(DIRECTORY + "temp"))
-		directory_create(DIRECTORY + "temp");
+	directory_verify(DIRECTORY);
 	
 	METADATA = __getdefaultMetaData();
 #endregion

@@ -80,36 +80,38 @@ _HOVERING_ELEMENT = noone;
 	//physics_pause_enable(true);
 	DEF_SURFACE_RESET();
 	
-	if(UPDATE_RENDER_ORDER) {
-		ResetAllNodesRender();
-		NodeTopoSort();
-	}
-	UPDATE_RENDER_ORDER = false;
-	
-	if(PROJECT.active) {
-		var _k = ds_map_find_first(PROJECT.nodeMap);
-		var _a = ds_map_size(PROJECT.nodeMap);
-		repeat(_a) {
-			PROJECT.nodeMap[? _k].stepBegin();
-			_k = ds_map_find_next(PROJECT.nodeMap, _k);
+	if(!PROJECT.safeMode) {
+		if(UPDATE_RENDER_ORDER) {
+			ResetAllNodesRender();
+			NodeTopoSort();
 		}
+		UPDATE_RENDER_ORDER = false;
 	
-		if(PROJECT.animator.is_playing || PROJECT.animator.rendering) {
-			if(PROJECT.animator.frame_progress) {
-				__addon_preAnim();
-				
-				if(CURRENT_FRAME == 0)
-					ResetAllNodesRender();
-				Render(true);
-				
-				__addon_postAnim();
+		if(PROJECT.active) {
+			var _k = ds_map_find_first(PROJECT.nodeMap);
+			var _a = ds_map_size(PROJECT.nodeMap);
+			repeat(_a) {
+				PROJECT.nodeMap[? _k].stepBegin();
+				_k = ds_map_find_next(PROJECT.nodeMap, _k);
 			}
-			PROJECT.animator.frame_progress = false;
-		} else {
-			if(UPDATE & RENDER_TYPE.full)
-				Render();
-			else if(UPDATE & RENDER_TYPE.partial)
-				Render(true);
+	
+			if(PROJECT.animator.is_playing || PROJECT.animator.rendering) {
+				if(PROJECT.animator.frame_progress) {
+					__addon_preAnim();
+				
+					if(CURRENT_FRAME == 0)
+						ResetAllNodesRender();
+					Render(true);
+				
+					__addon_postAnim();
+				}
+				PROJECT.animator.frame_progress = false;
+			} else {
+				if(UPDATE & RENDER_TYPE.full)
+					Render();
+				else if(UPDATE & RENDER_TYPE.partial)
+					Render(true);
+			}
 		}
 	}
 	

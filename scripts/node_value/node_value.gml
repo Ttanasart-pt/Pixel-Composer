@@ -1564,7 +1564,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			animator.values[| 0].time = CURRENT_FRAME;
 			
 			for( var i = 0, n = array_length(animators); i < n; i++ ) {
-				ds_list_clear(animators[i].values);
 				animators[i].values[| 0].time = CURRENT_FRAME;
 			}
 		} else {
@@ -2054,6 +2053,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static drawConnections = function(params = {}) { #region
+		var log  = struct_try_get(params, "log", false);
+		
 		if(isLeaf())				return noone;
 		if(!value_from.node.active) return noone;
 		if(!isVisible())			return noone;
@@ -2068,10 +2069,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var max_layer = params.max_layer;
 		
 		var aa	 = struct_try_get(params, "aa", 1);
-		var minx = struct_try_get(params, "minx", undefined);
-		var miny = struct_try_get(params, "miny", undefined);
-		var maxx = struct_try_get(params, "maxx", undefined);
-		var maxy = struct_try_get(params, "maxy", undefined);
 		var high = struct_try_get(params, "highlight", 0);
 		
 		var bg = struct_try_get(params, "bg", c_black);
@@ -2082,8 +2079,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		var frx = value_from.x;
 		var fry = value_from.y;
-			
-		if(!is_undefined(minx)) {
+		
+		if(struct_has(params, "minx")) {
+			var minx = params.minx;
+			var miny = params.miny;
+			var maxx = params.maxx;
+			var maxy = params.maxy;
+		
 			if(jx < minx && frx < minx) return noone;
 			if(jx > maxx && frx > maxx) return noone;
 				

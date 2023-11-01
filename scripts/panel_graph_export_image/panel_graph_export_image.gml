@@ -100,10 +100,11 @@ function graph_export_image(allList, nodeList, settings = {}) {
 					max_layer : 1,
 					cur_layer : 1,
 					highlight : false,
+					log: true
 				};
 			
 				for(var i = 0; i < ds_list_size(nodeList); i++)
-					nodeList[| i].drawConnections(_params);
+					nodeList[| i].drawConnections(_params, true);
 			surface_reset_target();
 		
 			shader_set(sh_downsample);

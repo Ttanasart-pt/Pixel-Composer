@@ -1760,7 +1760,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					return;
 				}
 		
-				var path = DIRECTORY + "temp/url_pasted_" + string(irandom_range(100000, 999999)) + ".png";
+				var path = TEMPDIR + "url_pasted_" + string(irandom_range(100000, 999999)) + ".png";
 				var img = http_get_file(txt, path);
 				CLONING = true;
 				var node = Node_create_Image(0, 0);

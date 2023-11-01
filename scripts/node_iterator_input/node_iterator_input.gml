@@ -11,8 +11,7 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
 	
 	outputs[| 0].getValueRecursive = function() {
-		//show_debug_message("iteration " + string(group.iterated));
-		if(!variable_struct_exists(group, "iterated"))
+		if(!struct_has(group, "iterated"))
 			return outputs[| 0].getValueDefault();
 			
 		var _node_output = noone;

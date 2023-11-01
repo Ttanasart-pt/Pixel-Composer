@@ -7,4 +7,9 @@ function textInput(_input, _onModify) : widget() constructor {
 	static _resetFocus = function() { resetFocus();	}
 	
 	static onKey = function(key) {}
+	
+	static setSideButton = function(_button) {
+		self.side_button = _button;
+		return self;
+	}
 }

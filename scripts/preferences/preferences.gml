@@ -73,6 +73,12 @@
 	PREFERENCES.clear_temp_on_close				= true;
 	PREFERENCES.pan_mouse_key					= mb_middle;
 	
+	PREFERENCES.temp_path						= "%DIR%/temp/";
+	PREFERENCES.ImageMagick_path				= "%APP%/ImageMagick/";
+	PREFERENCES.webp_path						= "%APP%/webp/";
+	PREFERENCES.gifski_path						= "%APP%/gifski/";
+	PREFERENCES.ffmpeg_path						= "%APP%/ffmpeg/";
+	
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
 #endregion
 
@@ -186,6 +192,8 @@
 		struct_override(HOTKEYS_CUSTOM, f);
 		
 		LOCALE_USE_DEFAULT = PREFERENCES.local == "en";
+		
+		directory_verify(filepath_resolve(PREFERENCES.temp_path));
 	}
 	
 	function PREF_APPLY() {

@@ -100,82 +100,93 @@ event_inherited();
 	
 	ds_list_add(pref_global, __txt("Paths"));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
 		__txtx("pref_directory", "Directory path (restart required)"),
-		function() { return PRESIST_PREF.path; },
 		new textBox(TEXTBOX_INPUT.text, function(txt) { 
 				PRESIST_PREF.path = txt;
 				json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
-			}, 
-			button(function() { 
+			})
+			.setSideButton(button(function() { 
 				PRESIST_PREF.path = get_directory(PRESIST_PREF.path);
 				json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
-			}, THEME.button_path_icon)
-		).setFont(f_p2)
-		 .setEmpty()
-	]);
+			}, THEME.button_path_icon))
+		 .setFont(f_p2)
+		 .setEmpty(),
+		function() { return PRESIST_PREF.path; },
+		function(val) { PRESIST_PREF.path = val; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); },
+		APP_DIRECTORY,
+	));
+	
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_directory_temp", "Temp path (restart required)"),
+		"temp_path",
+		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.temp_path = txt; PREF_SAVE(); })
+			.setSideButton(button(function() { PREFERENCES.temp_path = get_directory(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
+		 .setFont(f_p2)
+		 .setEmpty(),
+	));
 	
 	ds_list_add(pref_global, __txt("Inputs"));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_double_click_delay", "Double click delay"),
 		"double_click_delay",
 		new slider(0, 1, 0.01, function(val) { 
 			PREFERENCES.double_click_delay = val; 
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_mouse_wheel_speed", "Scroll speed"),
 		"mouse_wheel_speed",
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			PREFERENCES.mouse_wheel_speed = val; 
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_keyboard_hold_start", "Keyboard hold start"),
 		"keyboard_repeat_start",
 		new slider(0, 1, 0.01, function(val) { 
 			PREFERENCES.keyboard_repeat_start = val; 
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_keyboard_repeat_delay", "Keyboard repeat delay"),
 		"keyboard_repeat_speed",
 		new slider(0, 1, 0.01, function(val) { 
 			PREFERENCES.keyboard_repeat_speed = val; 
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_expand_hovering_panel", "Expand hovering panel"),
 		"expand_hover",
 		new checkBox(function() { 
 			PREFERENCES.expand_hover = !PREFERENCES.expand_hover; 
 			PREF_SAVE();
 		})
-	]);
+	));
 	
 	ds_list_add(pref_global, __txt("Save/Load"));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_save_file_minify", "Minify save file"),
 		"save_file_minify",
 		new checkBox(function() { 
 			PREFERENCES.save_file_minify = !PREFERENCES.save_file_minify;
 			PREF_SAVE();
 		})
-	]);
+	));
 
 	ds_list_add(pref_global, __txt("Crash"));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_legacy_exception", "Use legacy exception handler"),
 		"use_legacy_exception",
 		new checkBox(function() { 
@@ -183,9 +194,9 @@ event_inherited();
 			PREF_APPLY();
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_crash_dialog", "Show dialog after crash"),
 		"show_crash_dialog",
 		new checkBox(function() { 
@@ -193,27 +204,27 @@ event_inherited();
 			PREF_APPLY();
 			PREF_SAVE();
 		})
-	]);
+	));
 	
 	ds_list_add(pref_global, __txt("Misc"));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_clear_temp", "Clear temp file on close"),
 		"clear_temp_on_close",
 		new checkBox(function() { 
 			PREFERENCES.clear_temp_on_close = !PREFERENCES.clear_temp_on_close; 
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_global, [
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_enable_test_mode", "Enable developer mode (require restart)"),
 		"test_mode",
 		new checkBox(function() { 
 			PREFERENCES.test_mode = !PREFERENCES.test_mode; 
 			PREF_SAVE();
 		})
-	]);
+	));
 #endregion
 
 #region interface
@@ -222,10 +233,9 @@ event_inherited();
 	ds_list_add(pref_appr, __txt("Interface"));
 	
 	PREFERENCES._display_scaling = PREFERENCES.display_scaling;
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(
 		__txtx("pref_gui_scaling", "GUI scaling"),
-		"_display_scaling",
-		new slider(0.5, 2, 0.01, function(val) { 
+		new slider(0.5, 2, 0.01,, function(val) { 
 			PREFERENCES._display_scaling = val;
 			PREF_SAVE();
 		}, function() { 
@@ -238,10 +248,13 @@ event_inherited();
 			loadFonts();
 			
 			time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, onResize));
-		})
-	]);
+		}),
+		function() { return PREFERENCES._display_scaling; },
+		function(val) { PREFERENCES.display_scaling = val; PREFERENCES._display_scaling = val; },
+		1,
+	));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_ui_frame_rate", "UI frame rate"),
 		"ui_framerate",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
@@ -249,7 +262,7 @@ event_inherited();
 			game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
 			PREF_SAVE();
 		})
-	]);
+	));
 	
 	locals = [];
 	var f = file_find_first(DIRECTORY + "Locale/*", fa_directory);
@@ -260,7 +273,7 @@ event_inherited();
 	}
 	file_find_close();
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_interface_language", "Interface Language (restart required)"),
 		"local",
 		new scrollBox(locals, function(str) { 
@@ -268,22 +281,22 @@ event_inherited();
 			PREFERENCES.local = locals[str];
 			PREF_SAVE();
 		}, false)
-	]);
+	));
 	
 	ds_list_add(pref_appr, __txt("Splash"));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_auto_save_time", "Autosave delay (-1 to disable)"),
 		"auto_save_time",
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			PREFERENCES.auto_save_time = val; 
 			PREF_SAVE();
 		})
-	]);
+	));
 	
 	ds_list_add(pref_appr, __txt("Graph"));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_connection_type", "Connection type"),
 		"curve_connection_line",
 		new buttonGroup([ THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection ], 
@@ -291,103 +304,103 @@ event_inherited();
 			PREFERENCES.curve_connection_line = val;
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_connection_thickness", "Connection thickness"),
 		"connection_line_width",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREFERENCES.connection_line_width = real(str); 
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_connection_curve_smoothness", "Connection curve smoothness"),
 		"connection_line_sample",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREFERENCES.connection_line_sample = real(str); 
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_connection_aa", "Connection anti aliasing"),
 		"connection_line_aa",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREFERENCES.connection_line_aa = max(1, real(str)); 
 			PREF_SAVE();
 		})
-	])
+	));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_connection_anim", "Connection line animation"),
 		"connection_line_transition",
 		new checkBox(function() { 
 			PREFERENCES.connection_line_transition = !PREFERENCES.connection_line_transition;
 			PREF_SAVE();
 		})
-	])
+	));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_windows_control", "Use Windows style window control."),
 		"panel_menu_right_control",
 		new checkBox(function() { 
 			PREFERENCES.panel_menu_right_control = !PREFERENCES.panel_menu_right_control; 
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
 		"graph_zoom_smoooth",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREFERENCES.graph_zoom_smoooth = max(1, round(real(str)));
 			PREF_SAVE();
 		})
-	]);
+	));
 	
 	ds_list_add(pref_appr, __txt("Inspector"));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_inspector_line_break_width", "Inspector line break width"),
 		"inspector_line_break_width",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREFERENCES.inspector_line_break_width = max(1, round(real(str)));
 			PREF_SAVE();
 		})
-	]);
+	));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_inspector_focus_on_double_click", "Focus on double click"),
 		"PREFERENCES.inspector_focus_on_double_click",
 		new checkBox(function(str) { 
 			PREFERENCES.inspector_focus_on_double_click = !PREFERENCES.inspector_focus_on_double_click;
 			PREF_SAVE();
 		})
-	]);
+	));
 	
 	ds_list_add(pref_appr, __txt("Collection"));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_collection_preview_speed", "Collection preview speed"),
 		"collection_preview_speed",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREFERENCES.collection_preview_speed = max(1, round(real(str)));
 			PREF_SAVE();
 		})
-	]);
+	));
 	
 	ds_list_add(pref_appr, __txt("Notification"));
 	
-	ds_list_add(pref_appr, [
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_warning_notification_time", "Warning notification time"),
 		"notification_time",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREFERENCES.notification_time = max(0, round(real(str)));
 			PREF_SAVE();
 		})
-	]);
+	));
 	
 #endregion
 
@@ -507,7 +520,7 @@ event_inherited();
 			ind++;
 		}
 		
-		sections[2] = sect;
+		sections[page_current] = sect;
 		
 		return hh;
 	});
@@ -807,13 +820,13 @@ event_inherited();
 		//	}
 		//}
 		
-		sections[3] = sect;
+		sections[page_current] = sect;
 		
 		return hh;
 	})
 #endregion
 
-#region draw
+#region scrollpane
 	current_list = pref_global;
 	
 	sp_pref = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding), function(_y, _m, _r) {
@@ -829,11 +842,10 @@ event_inherited();
 			var _pref = current_list[| i];
 			if(is_string(_pref)) continue;
 			
-			var name = _pref[0];
-			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
+			if(search_text != "" && string_pos(string_lower(search_text), string_lower(_pref.name)) == 0)
 				continue;
 			
-			_pref[2].register(sp_pref);
+			_pref.editWidget.register(sp_pref);
 		}
 		
 		var sect = [];
@@ -858,9 +870,8 @@ event_inherited();
 				continue;
 			}
 			
-			var name = _pref[0];
-			var txt  = _pref[1];
-			    txt  = is_method(txt)? txt() : PREFERENCES[$ txt];
+			var name = _pref.name;
+			var data = _pref.data();
 			
 			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
 				continue;
@@ -868,26 +879,41 @@ event_inherited();
 			if(ind % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(24), yy + th / 2, _pref[0]);
-			_pref[2].setFocusHover(sFOCUS, sHOVER && sp_pref.hover); 
+			draw_text_add(ui(24), yy + th / 2, name);
+			_pref.editWidget.setFocusHover(sFOCUS, sHOVER && sp_pref.hover); 
 			
 			var widget_w = ui(240);
 			var widget_h = th;
 			
-			if(instanceof(_pref[2]) == "textBox") 
-				widget_w = _pref[2].input == TEXTBOX_INPUT.text? ui(400) : widget_w;
+			if(is_instanceof(_pref.editWidget, textBox)) 
+				widget_w = _pref.editWidget.input == TEXTBOX_INPUT.text? ui(400) : widget_w;
 			
 			var widget_x = x1 - ui(4) - widget_w;
 			var widget_y = yy;
 			
-			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, txt, {}, _m, _r[0], _r[1]);
+			if(_pref.getDefault != noone)
+				widget_w -= ui(32 + 8);
+				
+			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, data, {}, _m, _r[0], _r[1]);
 			params.s   = ui(30);
 			
-			if(instanceof(_pref[2]) == "checkBox")
-				params.halign = fa_center;
+			if(instanceof(_pref.editWidget) == "checkBox") params.halign = fa_center;
+			var th     = _pref.editWidget.drawParam(params) ?? 0;
 			
-			var th     = _pref[2].drawParam(params) ?? 0;
-			
+			if(_pref.getDefault != noone) {
+				var _defVal = is_method(_pref.getDefault)? _pref.getDefault() : _pref.getDefault;
+				var _bs = ui(32);
+				var _bx = x1 - ui(4) - _bs;
+				var _by = yy + th / 2 - _bs / 2;
+					
+				if(isEqual(data, _defVal))
+					draw_sprite_ext(THEME.refresh_s, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
+				else {
+					if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, sFOCUS, sHOVER && sp_pref.hover, __txt("Reset"), THEME.refresh_s) == 2)
+						_pref.onEdit(_defVal);
+				}
+			}
+				
 			yy += th + padd + ui(8);
 			hh += th + padd + ui(8);
 			ind++;

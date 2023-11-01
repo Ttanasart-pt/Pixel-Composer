@@ -49,26 +49,28 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	outputs[| 1] = nodeValue("Color out", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	input_display_list = [11, 12, 0, 8, 13, 
+	input_display_list = [11, 12, 0, 8, 13, 9,
 		["Brightness",	false], 1, 10, 2, 
 		["HSV",			false], 3, 4, 5, 
-		["Color blend", false], 6, 14, 7, 9
+		["Color blend", false], 6, 14, 7
 	];
 	
 	temp_surface = [ surface_create(1, 1) ];
 	
 	attribute_surface_depth();
 	
-	static step = function() {
+	static step = function() { #region
 		var type = getInputData(12);
 		
 		inputs[|  0].setVisible(type == 0, type == 0);
 		inputs[|  8].setVisible(type == 0, type == 0);
+		inputs[|  9].setVisible(type == 0);
 		inputs[| 13].setVisible(type == 1, type == 1);
+		inputs[| 14].setVisible(type == 0);
 		
 		outputs[| 0].setVisible(type == 0, type == 0);
 		outputs[| 1].setVisible(type == 1, type == 1);
-	}
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _bri = _data[1];
