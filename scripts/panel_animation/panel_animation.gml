@@ -1631,7 +1631,7 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 			
 		if(keyframe_boxing) { #region
-			draw_sprite_stretched_points(THEME.ui_selection, 0, keyframe_box_sx, keyframe_box_sy, msx, msy);
+			draw_sprite_stretched_points(THEME.ui_selection, 0, keyframe_box_sx, keyframe_box_sy, msx, msy, COLORS._main_accent);
 					
 			if(mouse_release(mb_left))
 				keyframe_boxing = false;

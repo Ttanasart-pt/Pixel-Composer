@@ -1,8 +1,6 @@
-function Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) constructor {
 	name		= "Cache";
 	use_cache   = CACHE_USE.auto;
-	clearCacheOnChange = false;
-	update_on_frame = true;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -56,5 +54,18 @@ function Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		cache_content			= json_try_parse(load_map.cache);
 		cache_loading_progress	= 0;
 		cache_loading			= true;
+	} #endregion
+		
+	static attributeDeserialize = function(attr) { #region
+		struct_override(attributes, attr); 
+		cache_group_members = [];
+		
+		if(struct_has(attributes, "cache_group")) {
+			for( var i = 0, n = array_length(attributes.cache_group); i < n; i++ ) {
+				var _node = attributes.cache_group[i];
+				if(ds_map_exists(PROJECT.nodeMap, _node))
+					array_push(cache_group_members, PROJECT.nodeMap[? _node]);
+			}
+		}
 	} #endregion
 }

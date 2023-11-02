@@ -1,8 +1,6 @@
-function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) constructor {
 	name		= "Cache Array";
 	use_cache   = CACHE_USE.manual;
-	clearCacheOnChange = false;
-	update_on_frame = true;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	

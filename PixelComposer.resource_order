@@ -1262,6 +1262,7 @@
     {"name":"node_export","order":10,"path":"scripts/node_export/node_export.yy",},
     {"name":"controlPointBox","order":21,"path":"scripts/controlPointBox/controlPointBox.yy",},
     {"name":"sh_vertex_pt","order":5,"path":"shaders/sh_vertex_pt/sh_vertex_pt.yy",},
+    {"name":"node_cache_base","order":18,"path":"scripts/node_cache_base/node_cache_base.yy",},
     {"name":"fd_rectangle_set_velocity_dissipation_type","order":13,"path":"scripts/fd_rectangle_set_velocity_dissipation_type/fd_rectangle_set_velocity_dissipation_type.yy",},
     {"name":"node_color_replacement","order":3,"path":"scripts/node_color_replacement/node_color_replacement.yy",},
     {"name":"path_reader","order":5,"path":"scripts/path_reader/path_reader.yy",},

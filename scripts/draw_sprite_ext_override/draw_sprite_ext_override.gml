@@ -29,7 +29,7 @@ function draw_sprite_ext_add(spr, ind, _x, _y, xscale = 1, yscale = 1, rot = 0, 
 	BLEND_NORMAL
 }
 
-function draw_sprite_stretched_points(spr, ind, _x0, _y0, _x1, _y1) {
+function draw_sprite_stretched_points(spr, ind, _x0, _y0, _x1, _y1, color = c_white, alpha = 1) {
 	gml_pragma("forceinline");
 	
 	var _xs = round(min(_x0, _x1));
@@ -37,7 +37,7 @@ function draw_sprite_stretched_points(spr, ind, _x0, _y0, _x1, _y1) {
 	var _w  = round(max(_x0, _x1) - _xs);
 	var _h  = round(max(_y0, _y1) - _ys);
 	
-	__draw_sprite_stretched(spr, ind, _xs, _ys, _w, _h);
+	__draw_sprite_stretched_ext(spr, ind, _xs, _ys, _w, _h, color, alpha);
 }
 
 function draw_sprite_bbox(spr, ind, _bbox) {

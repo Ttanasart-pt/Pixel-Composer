@@ -755,10 +755,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		printIf(log, "Predraw time: " + string(current_time - t)); t = current_time;
 		
 		#region draw frame
-			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				if(instanceof(nodes_list[| i]) != "Node_Frame") continue;
-				nodes_list[| i].drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
-			}
+			for(var i = 0; i < ds_list_size(nodes_list); i++)
+				nodes_list[| i].drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter);
 		#endregion
 		printIf(log, "Frame draw time: " + string(current_time - t)); t = current_time;
 		
@@ -806,7 +804,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								node_focus = node_hovering;
 					
 							if(node_focus) {
-								if(instanceof(node_focus) == "Node_Frame") {
+								if(is_instanceof(node_focus, Node_Frame)) {
 									var fx0 = (node_focus.x + graph_x) * graph_s;
 									var fy0 = (node_focus.y + graph_y) * graph_s;
 									var fx1 = fx0 + node_focus.w * graph_s;
@@ -817,7 +815,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									if(!key_mod_press(CTRL))
 									for(var i = 0; i < ds_list_size(nodes_list); i++) { //select content
 										var _node = nodes_list[| i];
-										if(instanceof(_node) == "Node_Frame") continue;
+										if(is_instanceof(_node, Node_Frame)) continue;
 										var _x = (_node.x + graph_x) * graph_s;
 										var _y = (_node.y + graph_y) * graph_s;
 										var _w = _node.w * graph_s;
@@ -989,7 +987,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var _node = nodes_list[| i];
-				if(instanceof(_node) == "Node_Frame") continue;
+				if(is_instanceof(_node, Node_Frame)) continue;
 				var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
 				
 				if(val) {
@@ -1106,11 +1104,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#region draw selection frame
 			if(nodes_select_drag) {
 				if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16) {
-					draw_sprite_stretched_points(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my);
+					draw_sprite_stretched_points(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
 					
 					for(var i = 0; i < ds_list_size(nodes_list); i++) {
 						var _node = nodes_list[| i];
-						if(instanceof(_node) == "Node_Frame") continue;
+						if(is_instanceof(_node, Node_Frame)) continue;
 						var _x = (_node.x + graph_x) * graph_s;
 						var _y = (_node.y + graph_y) * graph_s;
 						var _w = _node.w * graph_s;

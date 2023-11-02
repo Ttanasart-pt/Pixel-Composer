@@ -590,7 +590,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static attributeDeserialize = function(attr) { #region
-		attributes = attr;
+		struct_override(attributes, attr);
 		if(struct_has(attr, "separator"))
 			attributes.separator = json_parse(attr.separator);
 	} #endregion

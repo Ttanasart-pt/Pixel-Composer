@@ -69,7 +69,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	draw_scale = 1;
-	static drawNode = function(_x, _y, _mx, _my, _s) {
+	static drawNodeBG = function(_x, _y, _mx, _my, _s) {
 		draw_scale = _s;
 		
 		if(size_dragging) {

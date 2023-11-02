@@ -1969,6 +1969,7 @@
     {"id":{"name":"node_export","path":"scripts/node_export/node_export.yy",},},
     {"id":{"name":"controlPointBox","path":"scripts/controlPointBox/controlPointBox.yy",},},
     {"id":{"name":"sh_vertex_pt","path":"shaders/sh_vertex_pt/sh_vertex_pt.yy",},},
+    {"id":{"name":"node_cache_base","path":"scripts/node_cache_base/node_cache_base.yy",},},
     {"id":{"name":"fd_rectangle_set_velocity_dissipation_type","path":"scripts/fd_rectangle_set_velocity_dissipation_type/fd_rectangle_set_velocity_dissipation_type.yy",},},
     {"id":{"name":"node_color_replacement","path":"scripts/node_color_replacement/node_color_replacement.yy",},},
     {"id":{"name":"path_reader","path":"scripts/path_reader/path_reader.yy",},},
