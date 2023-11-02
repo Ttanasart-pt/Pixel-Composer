@@ -584,18 +584,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static attributeSerialize = function() { #region
-		var att = {};
+		var att = variable_clone(attributes);
 		att.separator = json_stringify(attributes.separator);
-		att.w = attributes.w;
-		att.h = attributes.h;
 		return att;
 	} #endregion
 	
 	static attributeDeserialize = function(attr) { #region
+		attributes = attr;
 		if(struct_has(attr, "separator"))
 			attributes.separator = json_parse(attr.separator);
-		attributes.w = struct_try_get(attr, "w", 128);
-		attributes.h = struct_try_get(attr, "h", 128);
 	} #endregion
 	
 }

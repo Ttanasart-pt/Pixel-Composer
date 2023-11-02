@@ -140,7 +140,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	#endregion
 	
 	#region --- attributes ----
-		attributes		 = {
+		attributes = {
 			update_graph: true,
 			show_update_trigger: false,
 			color: -1,

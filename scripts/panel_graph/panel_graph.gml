@@ -1556,7 +1556,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		dragGraph();
 		
 		var context = getCurrentContext();
-		bg_color = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.color, 0.05);
+		bg_color = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.getColor(), 0.05);
 		draw_clear(bg_color);
 		drawGrid();
 		

@@ -1611,41 +1611,6 @@ function Panel_Animation() : PanelContent() constructor {
 				
 				var _node = _cont.node;
 				
-				if(_node.active_index > -1) { #region draw active region
-					var active_inp = _node.inputs[| _node.active_index];
-					var node_y     = _cont.y + ui(2);
-					
-					var ot = 0, ov = true;
-					var x0 = 0, x1 = 0;
-					
-					for( var j = 0; j < ds_list_size(active_inp.animator.values); j++ ) {
-						var k = active_inp.animator.values[| j];
-						
-						var t = k.time;
-						var v = k.value;
-						
-						if(t > ot && ov) {
-							x0 = (ot + 1) * ui(timeline_scale) + timeline_shift;
-							x1 = ( t + 1) * ui(timeline_scale) + timeline_shift;
-							var aa = 0.25;
-							
-							draw_sprite_stretched_ext(THEME.timeline_dopesheet_bg, 0, x0, node_y - ui(4), x1 - x0, ui(8), _node.dopesheet_color, aa);
-						}
-						
-						ot = t;
-						ov = v;
-					}
-					
-					t = TOTAL_FRAMES - 1;
-					if(t > ot && ov) {
-						x0 = (ot + 1) * ui(timeline_scale) + timeline_shift;
-						x1 = ( t + 1) * ui(timeline_scale) + timeline_shift;
-						var aa = 0.25;
-						
-						draw_sprite_stretched_ext(THEME.timeline_dopesheet_bg, 0, x0, node_y - ui(4), x1 - x0, ui(8), _node.dopesheet_color, aa);
-					}
-				} #endregion
-				
 				if(_cont.item.show)
 				for( var j = 0, m = array_length(_cont.props); j < m; j++ ) {
 					var prop  = _cont.props[j];
