@@ -1840,7 +1840,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		node.valueUpdate(index, _o);
 		if(_update && connect_type == JUNCTION_CONNECT.input) {
-			node.onValueFromUpdate(index);
+			node.valueFromUpdate(index);
 			node.triggerRender();
 			node.clearCacheForward();
 			
@@ -1871,7 +1871,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		value_from = noone;
 		
 		if(connect_type == JUNCTION_CONNECT.input)
-			node.onValueFromUpdate(index);
+			node.valueFromUpdate(index);
 		node.clearCacheForward();
 		
 		PROJECT.modified = true;

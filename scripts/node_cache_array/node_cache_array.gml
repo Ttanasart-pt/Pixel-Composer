@@ -1,6 +1,6 @@
 function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) constructor {
-	name		= "Cache Array";
-	use_cache   = CACHE_USE.manual;
+	name	  = "Cache Array";
+	use_cache = CACHE_USE.manual;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -19,7 +19,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	
 	cache_loading			= false;
 	cache_content			= "";
-	cache_loading_progress  = 0;
+	cache_loading_progress	= 0;
 	
 	insp2UpdateTooltip = "Clear cache";
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
@@ -63,6 +63,8 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 			if(cacheExist(i)) array_push(ss, cached_output[i]);
 		
 		outputs[| 0].setValue(ss);
+		
+		disableNodeGroup();
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

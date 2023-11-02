@@ -70,8 +70,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	instanceBase	= noone;
 	
 	input_display_list_def = [];
-	custom_input_index  = 0;
-	custom_output_index = 0;
+	custom_input_index     = 0;
+	custom_output_index    = 0;
 	
 	metadata = new MetaDataManager();
 	
@@ -79,10 +79,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	attributes.w = 128;
 	attributes.h = 128;
 	
+	managedRenderOrder = false;
+	
 	input_dummy = nodeValue("Add to group", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
 	draw_dummy  = false;
-	
-	managedRenderOrder = false;
 	
 	input_dummy.onSetFrom = function(juncFrom) {
 		ds_list_remove(juncFrom.value_to, input_dummy);

@@ -1020,7 +1020,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					}
 					
 					node_dragging.move(nx, ny, graph_s);
-				
+					
+					if(key_mod_press(SHIFT) && node_dragging.cache_group != noone)
+						node_dragging.cache_group.removeNode(node_dragging);
+					
 					if(mouse_release(mb_left) && (nx != node_drag_sx || ny != node_drag_sy)) {
 						recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sx, "x", "node x position" ]);
 						recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sy, "y", "node y position" ]);
@@ -1053,9 +1056,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							
 							_node.move(_nx, _ny, graph_s);
 						}
-					
+						
 						node_drag_ox = nx;
 						node_drag_oy = ny;
+					}
+					
+					if(key_mod_press(SHIFT)) {
+						for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
+							var _node = nodes_select_list[| i];
+							if(_node.cache_group != noone)
+								_node.cache_group.removeNode(_node);
+						}
 					}
 					
 					if(mouse_release(mb_left) && (nx != node_drag_sx || ny != node_drag_sy)) {
@@ -2069,7 +2080,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		ds_list_add(nodes_list, node);
 	} #endregion
 	
-	function close() {  #region
+	function close() { #region
 		var panels = findPanels("Panel_Graph");
 		for( var i = 0, n = array_length(panels); i < n; i++ ) {
 			if(panels[i] == self) continue;

@@ -1,5 +1,5 @@
 function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Cache";
+	name = "Cache";
 	clearCacheOnChange = false;
 	update_on_frame    = true;
 	
@@ -9,13 +9,46 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	vertex_hash  = "";
 	
 	insp1UpdateTooltip = "Generate cache group";
-	insp1UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	insp1UpdateIcon    = [ THEME.cache_group, 0, COLORS._main_icon ];
+	
+	if(NOT_LOAD) run_in(1, function() { onInspector1Update(); });
+	
+	static removeNode = function(node) { #region
+		if(node.cache_group == noone) return;
+		
+		array_remove(attributes.cache_group, node.node_id);
+		node.cache_group = noone;
+		refreshCacheGroup();		
+	} #endregion
+	
+	static addNode = function(node) { #region
+		array_push_unique(attributes.cache_group, node.node_id);
+		refreshCacheGroup();		
+	} #endregion
+	
+	static enableNodeGroup = function() { #region
+		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
+			cache_group_members[i].renderActive = true;
+		clearCache(true);
+	} #endregion
+	
+	static disableNodeGroup = function() { #region
+		if(IS_PLAYING && CURRENT_FRAME == TOTAL_FRAMES - 1)
+		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
+			cache_group_members[i].renderActive = false;
+	} #endregion
+	
+	static refreshCacheGroup = function() { #region
+		cache_group_members = array_create(array_length(attributes.cache_group));
+		for( var i = 0, n = array_length(attributes.cache_group); i < n; i++ ) {
+			cache_group_members[i] = PROJECT.nodeMap[? attributes.cache_group[i]];
+			cache_group_members[i].cache_group = self;
+		}
+	} #endregion
 	
 	static getCacheGroup = function(node) { #region
-		if(node != self) {
+		if(node != self)
 			array_push(attributes.cache_group, node.node_id);
-			array_push(cache_group_members, node);
-		}
 		
 		for( var i = 0, n = ds_list_size(node.inputs); i < n; i++ ) {
 			var _from = node.inputs[| i].value_from;
@@ -32,6 +65,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		cache_group_members    = [];
 		
 		getCacheGroup(self);
+		refreshCacheGroup();
 	} #endregion
 	
 	static ccw = function(a, b, c) { return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]); }
@@ -148,5 +182,10 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		draw_primitive_end();
 		
 		draw_set_alpha(1);
+	} #endregion
+		
+	static attributeDeserialize = function(attr) { #region
+		struct_override(attributes, attr); 
+		refreshCacheGroup();
 	} #endregion
 }
