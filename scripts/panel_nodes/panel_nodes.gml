@@ -53,8 +53,7 @@ function Panel_Nodes() : PanelContent() constructor {
 						if(isGroup)
 							node_collapse[? node.node_id] = !node_collapse[? node.node_id];
 						PANEL_INSPECTOR.setInspecting(node);
-						ds_list_clear(PANEL_GRAPH.nodes_select_list);
-						PANEL_GRAPH.node_focus = node;
+						PANEL_GRAPH.nodes_selecting = [ node ];
 					} 
 				}
 			} else 

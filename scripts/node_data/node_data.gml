@@ -1153,6 +1153,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	} #endregion
 	
+	static groupCheck = function(_x, _y, _s, _mx, _my) {}
+	
 	static drawNodeBG = function(_x, _y, _mx, _my, _s, display_parameter = noone) {}
 	
 	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) { #region
@@ -1179,7 +1181,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		} 
 		drawDimension(xx, yy, _s);
 		
-		onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.node_focus == self);
+		onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.getFocusingNode() == self);
 		drawNodeName(xx, yy, _s);
 		
 		if(active_draw_index > -1) {
@@ -1258,7 +1260,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		disable();
 		
 		if(PANEL_GRAPH.node_hover     == self) PANEL_GRAPH.node_hover     = noone;
-		if(PANEL_GRAPH.node_focus     == self) PANEL_GRAPH.node_focus     = noone;
+		PANEL_GRAPH.nodes_selecting = [];
+		
 		if(PANEL_INSPECTOR.inspecting == self) PANEL_INSPECTOR.inspecting = noone;
 		
 		PANEL_PREVIEW.removeNodePreview(self);

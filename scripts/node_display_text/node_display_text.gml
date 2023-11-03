@@ -255,7 +255,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			draw_set_alpha(1);
 			
-			if(PANEL_GRAPH.node_hovering == self && PANEL_GRAPH.node_focus == self) {
+			if(PANEL_GRAPH.node_hovering == self && PANEL_GRAPH.getFocusingNode() == self) {
 				if(point_in_rectangle(mx, my, xx, yy, xx + ww + 8, yy + hh + 8) && DOUBLE_CLICK) {
 					ta_editor._current_text = txt;
 					ta_editor.activate();

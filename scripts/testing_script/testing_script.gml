@@ -4,7 +4,7 @@ function __test_update_current_collections() {
 	
 	print("---------- COLLECTION UPDATING STARTED ----------");
 	
-	var sel = PANEL_GRAPH.node_focus, outj = noone;
+	var sel = PANEL_GRAPH.getFocusingNode(), outj = noone;
 	if(sel != noone) outj = sel.outputs[| 0];
 	
 	while(!ds_stack_empty(st)) {
@@ -53,7 +53,7 @@ function __test_load_current_collections() {
 	
 	print("---------- COLLECTION TESTING STARTED ----------");
 	
-	var sel = PANEL_GRAPH.node_focus;
+	var sel = PANEL_GRAPH.getFocusingNode();
 	var outj = sel == noone? noone : sel.outputs[| 0];
 			
 	while(!ds_stack_empty(st)) {
@@ -113,7 +113,7 @@ function __test_load_all_nodes() {
 	var yy = 0;
 	var col = 10;
 	var ind = 0;
-	var sel = PANEL_GRAPH.node_focus;
+	var sel = PANEL_GRAPH.getFocusingNode();
 	var outj = sel == noone? noone : sel.outputs[| 0];
 	
 	var index = 0;
@@ -156,7 +156,7 @@ function __test_metadata_current_collections() {
 	
 	print("---------- COLLECTION UPDATING STARTED ----------");
 	
-	var sel   = PANEL_GRAPH.node_focus, outj = noone;
+	var sel   = PANEL_GRAPH.getFocusingNode(), outj = noone;
 	var _meta = METADATA.serialize();
 	if(sel != noone) outj = sel.outputs[| 0];
 	

@@ -844,7 +844,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		contentPane.setFocusHover(pFOCUS, pHOVER);
 		contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
 		
-		if(!locked && PANEL_GRAPH.node_focus && inspecting != PANEL_GRAPH.node_focus)
-			setInspecting(PANEL_GRAPH.node_focus);
+		if(!locked && PANEL_GRAPH.getFocusingNode() && inspecting != PANEL_GRAPH.getFocusingNode())
+			setInspecting(PANEL_GRAPH.getFocusingNode());
 	} #endregion
 }

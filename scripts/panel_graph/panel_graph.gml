@@ -70,7 +70,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		node_drag_oy  = 0;
 	
 		selection_block		= 0;
-		nodes_select_list	= ds_list_create();
+		nodes_selecting	= [];
 		nodes_select_drag   = false;
 		nodes_select_mx     = 0;
 		nodes_select_my     = 0;
@@ -81,7 +81,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 		node_hovering		= noone;
 		node_hover			= noone;
-		node_focus			= noone;
 		
 		junction_hovering	= noone;
 		add_node_draw_junc	= false;
@@ -213,7 +212,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	addHotkey("Graph", "Add node",			    "A", MOD_KEY.none,	function() { PANEL_GRAPH.callAddDialog(); });
 	addHotkey("Graph", "Focus content",			"F", MOD_KEY.none,	function() { PANEL_GRAPH.fullView(); });
 	addHotkey("Graph", "Preview focusing node",	"P", MOD_KEY.none,	function() { PANEL_GRAPH.setCurrentPreview(); });
-	addHotkey("Graph", "Preview window",		"P", MOD_KEY.ctrl,	function() { create_preview_window(PANEL_GRAPH.node_focus); });
+	addHotkey("Graph", "Preview window",		"P", MOD_KEY.ctrl,	function() { create_preview_window(PANEL_GRAPH.getFocusingNode()); });
 	addHotkey("Graph", "Import image",			"I", MOD_KEY.none,	function() { nodeBuild("Node_Image",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
 	addHotkey("Graph", "Import image array",	"I", MOD_KEY.shift,	function() { nodeBuild("Node_Image_Sequence",	PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
 	addHotkey("Graph", "Add number",			"1", MOD_KEY.none,	function() { nodeBuild("Node_Number",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
@@ -223,16 +222,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	addHotkey("Graph", "Transform node",		"T", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doTransform(); });
 	
-	addHotkey("Graph", "Select all",	"A", MOD_KEY.ctrl,	function() { 
-		ds_list_clear(nodes_select_list); 
-		for(var i = 0; i < ds_list_size(nodes_list); i++) {
-			ds_list_add(nodes_select_list, nodes_list[| i]);	
-		}
-	});
-	
-	addHotkey("Graph", "Toggle grid",	 "G", MOD_KEY.none,		function() { display_parameter.show_grid = !display_parameter.show_grid; });
-	addHotkey("Graph", "Toggle preview", "H", MOD_KEY.none,		function() { PANEL_GRAPH.setTriggerPreview(); });
-	addHotkey("Graph", "Toggle render",  "R", MOD_KEY.none,		function() { PANEL_GRAPH.setTriggerRender(); });
+	addHotkey("Graph", "Select all",	 "A", MOD_KEY.ctrl,	function() { nodes_selecting = ds_list_to_array(nodes_list); });
+	addHotkey("Graph", "Toggle grid",	 "G", MOD_KEY.none,	function() { display_parameter.show_grid = !display_parameter.show_grid; });
+	addHotkey("Graph", "Toggle preview", "H", MOD_KEY.none,	function() { PANEL_GRAPH.setTriggerPreview(); });
+	addHotkey("Graph", "Toggle render",  "R", MOD_KEY.none,	function() { PANEL_GRAPH.setTriggerRender(); });
 	
 	if(!DEMO)
 		addHotkey("Graph", "Export",	"E", MOD_KEY.ctrl,	function() { PANEL_GRAPH.setCurrentExport(); });
@@ -269,13 +262,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	#endregion
 	
 	#region ++++ node setters ++++
-		function setCurrentPreview(_node = node_focus) { #region
+		function setCurrentPreview(_node = getFocusingNode()) { #region
 			if(!_node) return;
 		
 			PANEL_PREVIEW.setNodePreview(_node);
 		} #endregion
 	
-		function setCurrentExport(_node = node_focus) { #region
+		function setCurrentExport(_node = getFocusingNode()) { #region
 			if(DEMO) return;
 			if(!_node) return;
 		
@@ -298,7 +291,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			_export.inputs[| 0].setFrom(_outp);
 		} #endregion
 	
-		function setCurrentCanvas(_node = node_focus) { #region
+		function setCurrentCanvas(_node = getFocusingNode()) { #region
 			if(!_node) return;
 		
 			var _outp = -1;
@@ -326,28 +319,22 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		} #endregion
 	
 		function setTriggerPreview() { #region
-			if(node_focus != noone)
-				node_focus.previewable = !node_focus.previewable;
-		
-			var show = false;
-			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-				if(i == 0) show = !nodes_select_list[| i].previewable;
-				nodes_select_list[| i].previewable = show;
-			}
+			__temp_show = false;
+			array_foreach(nodes_selecting, function(node, index) {
+				if(index == 0) __temp_show = !node.previewable;
+				node.previewable = __temp_show;
+			});
 		} #endregion
 	
 		function setTriggerRender() { #region
-			if(node_focus != noone)
-				node_focus.renderActive = !node_focus.renderActive;
-		
-			var show = false;
-			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-				if(i == 0) show = !nodes_select_list[| i].renderActive;
-				nodes_select_list[| i].renderActive = show;
-			}
+			__temp_active = false;
+			array_foreach(nodes_selecting, function(node, index) {
+				if(index == 0) __temp_active = !node.renderActive;
+				node.renderActive = __temp_active;
+			});
 		} #endregion
 	
-		function setCurrentCanvasBlend(_node = node_focus) { #region
+		function setCurrentCanvasBlend(_node = getFocusingNode()) { #region
 			if(!_node) return;
 		
 			var _outp = -1;
@@ -421,18 +408,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		menu_nodes_align = menuItem(__txtx("panel_graph_align_nodes", "Align nodes"), function(_dat) { 
 			return submenuCall(_dat, [
 				menuItemGroup(__txtx("horizontal", "Horizontal"), [ 
-					[ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_select_list, fa_left); } ],
-					[ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_select_list, fa_center); } ],
-					[ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_select_list, fa_right); } ],
+					[ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_selecting, fa_left); } ],
+					[ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_selecting, fa_center); } ],
+					[ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_selecting, fa_right); } ],
 				]),
 				menuItemGroup(__txtx("vertical", "Vertical"), [ 
-					[ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_select_list, fa_top); } ],
-					[ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_select_list, fa_middle); } ],
-					[ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_select_list, fa_bottom); } ],
+					[ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_selecting, fa_top); } ],
+					[ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_selecting, fa_middle); } ],
+					[ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_selecting, fa_bottom); } ],
 				]),
 				menuItemGroup(__txtx("distribute", "Distribute"), [ 
-					[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_select_list); } ],
-					[ [THEME.obj_distribute_v, 0],		   function() { node_vdistribute(nodes_select_list); } ],
+					[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_selecting); } ],
+					[ [THEME.obj_distribute_v, 0],		   function() { node_vdistribute(nodes_selecting); } ],
 				]),
 			]);
 		}).setIsShelf();
@@ -447,11 +434,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		#region node color
 			function setSelectingNodeColor(color) { 
-				if(node_hover == noone) return; 
-				node_hover.attributes.color = color;
+				__temp_color = color;
 				
-				for(var i = 0; i < ds_list_size(nodes_select_list); i++) 
-					nodes_select_list[| i].attributes.color = color;
+				if(node_hover) node_hover.attributes.color = __temp_color;
+				array_foreach(nodes_selecting, function(node) { node.attributes.color = __temp_color; });
 			}
 		
 			var _clrs = COLORS.labels;
@@ -489,13 +475,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(__junction_hovering.value_from != noone)
 					__junction_hovering.value_from.color = color;
 				
-				for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-					var _node = nodes_select_list[| i];
+				for(var i = 0; i < array_length(nodes_selecting); i++) {
+					var _node = nodes_selecting[i];
 					
 					for( var j = 0, m = ds_list_size(_node.inputs); j < m; j++ ) {
 						var _input = _node.inputs[| j];
 						if(_input.isLeaf()) continue;
-						if(!ds_exists(_input.value_from.node, nodes_select_list)) continue;
 						
 						_input.color = color;
 						_input.value_from.color = color;
@@ -529,6 +514,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#endregion
 	#endregion
 	
+	function getFocusingNode() { gml_pragma("forceinline"); return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
+	
 	function getCurrentContext() { #region
 		if(ds_list_empty(node_context)) return noone;
 		return node_context[| ds_list_size(node_context) - 1];
@@ -556,11 +543,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	function focusNode(_node) { #region
-		node_focus = _node;
-		if(_node == noone) return;
+		if(_node == noone) {
+			nodes_selecting = [];
+			return;
+		}
 		
-		var cx = node_focus.x + node_focus.w / 2;
-		var cy = node_focus.y + node_focus.h / 2;
+		nodes_selecting = [ _node ];
+		
+		var cx = _node.x + _node.w / 2;
+		var cy = _node.y + _node.h / 2;
 		
 		graph_x = w / 2 / graph_s - cx;
 		graph_y = (h - toolbar_height) / 2 / graph_s - cy;
@@ -570,13 +561,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	function fullView() { #region
-		if(node_focus == noone) {
+		var _node = getFocusingNode();
+		if(_node == noone) {
 			toCenterNode();
 			return;
 		}
 		
-		graph_x = -(node_focus.x + node_focus.w / 2) + w / 2 / graph_s;
-		graph_y = -(node_focus.y + node_focus.h / 2) + h / 2 / graph_s;
+		graph_x = -(_node.x + _node.w / 2) + w / 2 / graph_s;
+		graph_y = -(_node.y + _node.h / 2) + h / 2 / graph_s;
 			
 		graph_x = round(graph_x);
 		graph_y = round(graph_y);
@@ -740,7 +732,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	function drawNodes() { #region
 		if(selection_block-- > 0) return;
 		//print("==== DRAW NODES ====");
-		display_parameter.highlight = (!ds_list_empty(nodes_select_list) || node_focus != noone) * PREFERENCES.connection_line_highlight;
+		display_parameter.highlight = !array_empty(nodes_selecting) * PREFERENCES.connection_line_highlight;
 		
 		var gr_x = graph_x * graph_s;
 		var gr_y = graph_y * graph_s;
@@ -794,64 +786,58 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						}
 					} else if(mouse_press(mb_left, pFOCUS)) {
 						if(key_mod_press(SHIFT)) {
-							if(ds_list_empty(nodes_select_list) && node_focus) 
-								ds_list_add(nodes_select_list, node_focus);
-							if(node_focus != node_hovering)
-								ds_list_add(nodes_select_list, node_hovering);
+							if(node_hovering) {
+								if(array_exists(nodes_selecting, node_hovering))
+									array_remove(nodes_selecting, node_hovering);
+								else 
+									array_push(nodes_selecting, node_hovering);
+							} else
+								nodes_selecting = [];
+						} else if(value_focus || node_hovering == noone) {
+							nodes_selecting = [];
+							
+							if(DOUBLE_CLICK && !PANEL_INSPECTOR.locked)
+								PANEL_INSPECTOR.inspecting = noone;
 						} else {
-							var _prevFocus = node_focus;
-							if(node_hovering != noone || value_focus == noone)
-								node_focus = node_hovering;
-					
-							if(node_focus) {
-								if(is_instanceof(node_focus, Node_Frame)) {
-									var fx0 = (node_focus.x + graph_x) * graph_s;
-									var fy0 = (node_focus.y + graph_y) * graph_s;
-									var fx1 = fx0 + node_focus.w * graph_s;
-									var fy1 = fy0 + node_focus.h * graph_s;
+							if(is_instanceof(node_hovering, Node_Frame)) {
+								var fx0 = (node_hovering.x + graph_x) * graph_s;
+								var fy0 = (node_hovering.y + graph_y) * graph_s;
+								var fx1 = fx0 + node_hovering.w * graph_s;
+								var fy1 = fy0 + node_hovering.h * graph_s;
 							
-									ds_list_clear(nodes_select_list);
+								nodes_selecting = [ node_hovering ];
 							
-									if(!key_mod_press(CTRL))
-									for(var i = 0; i < ds_list_size(nodes_list); i++) { //select content
-										var _node = nodes_list[| i];
-										if(is_instanceof(_node, Node_Frame)) continue;
-										var _x = (_node.x + graph_x) * graph_s;
-										var _y = (_node.y + graph_y) * graph_s;
-										var _w = _node.w * graph_s;
-										var _h = _node.h * graph_s;
+								if(!key_mod_press(CTRL))
+								for(var i = 0; i < ds_list_size(nodes_list); i++) { //select content
+									var _node = nodes_list[| i];
+									if(is_instanceof(_node, Node_Frame)) continue;
+									var _x = (_node.x + graph_x) * graph_s;
+									var _y = (_node.y + graph_y) * graph_s;
+									var _w = _node.w * graph_s;
+									var _h = _node.h * graph_s;
 								
-										if(rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
-											ds_list_add(nodes_select_list, _node);	
-									}
-									ds_list_add(nodes_select_list, node_focus);	
-								} else if(DOUBLE_CLICK) {
-									PANEL_PREVIEW.setNodePreview(node_focus);
-									if(PREFERENCES.inspector_focus_on_double_click) {
-										if(PANEL_INSPECTOR.panel && struct_has(PANEL_INSPECTOR.panel, "switchContent"))
-											PANEL_INSPECTOR.panel.switchContent(PANEL_INSPECTOR);
-									}
-								} else {
-									if(_prevFocus != node_focus)
-										bringNodeToFront(node_focus);
-					
-									var hover_selected = false;	
-									for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {
-										if(nodes_select_list[| i] == node_focus) {
-											hover_selected = true;
-											break;
-										}
-									}
-									if(!hover_selected)
-										ds_list_clear(nodes_select_list);
+									if(rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
+										array_push(nodes_selecting, _node);	
+								}
+							} else if(DOUBLE_CLICK) {
+								PANEL_PREVIEW.setNodePreview(node_hovering);
+								if(PREFERENCES.inspector_focus_on_double_click) {
+									if(PANEL_INSPECTOR.panel && struct_has(PANEL_INSPECTOR.panel, "switchContent"))
+										PANEL_INSPECTOR.panel.switchContent(PANEL_INSPECTOR);
 								}
 							} else {
-								if(value_focus == noone)
-									ds_list_clear(nodes_select_list);
-						
-								if(DOUBLE_CLICK && !PANEL_INSPECTOR.locked)
-									PANEL_INSPECTOR.inspecting = noone;
+								var hover_selected = false;	
+								for( var i = 0; i < array_length(nodes_selecting); i++ ) {
+									if(nodes_selecting[i] != node_hovering) continue;
+										
+									hover_selected = true;
+									break;
+								}
+								if(!hover_selected)
+									nodes_selecting = [];
 							}
+							
+							array_foreach(nodes_selecting, function(node) { bringNodeToFront(node); });
 						}
 					}
 				#endregion
@@ -873,11 +859,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							array_push(menu, menu_group_tool);
 					
 						array_push(menu, -1, menu_node_delete_merge, menu_node_delete_cut, menu_node_duplicate, menu_node_copy);
-						if(ds_list_empty(nodes_select_list)) array_push(menu, menu_node_copy_prop, menu_node_paste_prop);
+						if(array_empty(nodes_selecting)) array_push(menu, menu_node_copy_prop, menu_node_paste_prop);
 						
 						array_push(menu, -1, menu_node_transform, menu_node_canvas);
 						
-						if(ds_list_size(nodes_select_list) >= 2) 
+						if(array_empty(nodes_selecting) >= 2) 
 							array_push(menu, -1, menu_nodes_align, menu_nodes_blend, menu_nodes_compose, menu_nodes_array, menu_nodes_group, menu_nodes_frame);
 					
 						menuCall("graph_node_selected_multiple_menu",,, menu );
@@ -888,7 +874,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						if(junction_hovering != noone) 
 							array_push(menu, menu_junc_color, -1);
 						
-						array_push(menu, menuItem(__txt("Copy"),  function() { doCopy(); },  THEME.copy,  ["Graph", "Copy"]).setActive(node_focus != noone || ds_list_size(nodes_select_list)));
+						array_push(menu, menuItem(__txt("Copy"),  function() { doCopy(); },  THEME.copy,  ["Graph", "Copy"]).setActive(array_length(nodes_selecting)));
 						array_push(menu, menuItem(__txt("Paste"), function() { doPaste(); }, THEME.paste, ["Graph", "Paste"]).setActive(clipboard_get_text() != ""));
 					
 						callAddDialog();
@@ -901,10 +887,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		printIf(log, "Node selection time: " + string(current_time - t)); t = current_time;
 		
 		#region draw active
-			if(node_focus) node_focus.drawActive(gr_x, gr_y, graph_s);
-			
-			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-				var _node = nodes_select_list[| i];
+			for(var i = 0; i < array_length(nodes_selecting); i++) {
+				var _node = nodes_selecting[i];
 				if(!_node) continue;
 				_node.drawActive(gr_x, gr_y, graph_s);
 			}
@@ -934,7 +918,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			maxy : h + 64,
 			active    : hoverable,
 			max_layer : ds_list_size(nodes_list),
-			highlight : !ds_list_empty(nodes_select_list) || node_focus != noone,
+			highlight : array_length(nodes_selecting),
 		};
 		
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
@@ -1006,79 +990,66 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#region dragging
 			if(mouse_press(mb_left))
 				node_dragging = noone;
-				
+			
 			if(node_dragging && !key_mod_press(ALT)) {
-				node_focus = node_dragging;
-				
-				if(ds_list_size(nodes_select_list) == 0) { // move single node
-					var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
-					var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
-					
-					if(!key_mod_press(CTRL) && project.graphGrid.snap) {
-						nx = round(nx / project.graphGrid.size) * project.graphGrid.size;
-						ny = round(ny / project.graphGrid.size) * project.graphGrid.size;
+				if(key_mod_press(SHIFT)) { ////////////// Group dragging
+					for(var i = 0; i < ds_list_size(nodes_list); i++) {
+						var _node = nodes_list[| i];
+						
+						_node.groupCheck(gr_x, gr_y, graph_s, mx, my);
 					}
-					
-					node_dragging.move(nx, ny, graph_s);
-					
-					if(key_mod_press(SHIFT) && node_dragging.cache_group != noone)
+		
+					if(node_dragging && node_dragging.cache_group != noone)
 						node_dragging.cache_group.removeNode(node_dragging);
 					
-					if(mouse_release(mb_left) && (nx != node_drag_sx || ny != node_drag_sy)) {
-						recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sx, "x", "node x position" ]);
-						recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sy, "y", "node y position" ]);
+					for(var i = 0; i < array_length(nodes_selecting); i++) {
+						var _node = nodes_selecting[i];
+						if(_node.cache_group != noone)
+							_node.cache_group.removeNode(_node);
 					}
-				} else { // move multiple nodes
-					var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
-					var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
+				}
+				
+				var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
+				var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
 					
-					if(!key_mod_press(CTRL) && project.graphGrid.snap) {
-						nx = round(nx / project.graphGrid.size) * project.graphGrid.size;
-						ny = round(ny / project.graphGrid.size) * project.graphGrid.size;
-					}
+				if(!key_mod_press(CTRL) && project.graphGrid.snap) {
+					nx = round(nx / project.graphGrid.size) * project.graphGrid.size;
+					ny = round(ny / project.graphGrid.size) * project.graphGrid.size;
+				}
 					
-					if(node_drag_ox == -1 || node_drag_oy == -1) {
-						node_drag_ox = nx;
-						node_drag_oy = ny;
-					} else if(nx != node_drag_ox || ny != node_drag_oy) {
-						var dx = nx - node_drag_ox;
-						var dy = ny - node_drag_oy;
+				if(node_drag_ox == -1 || node_drag_oy == -1) {
+					node_drag_ox = nx;
+					node_drag_oy = ny;
+				} else if(nx != node_drag_ox || ny != node_drag_oy) {
+					var dx = nx - node_drag_ox;
+					var dy = ny - node_drag_oy;
 						
-						for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-							var _node = nodes_select_list[| i];
-							var _nx = _node.x + dx;
-							var _ny = _node.y + dy;
+					for(var i = 0; i < array_length(nodes_selecting); i++) {
+						var _node = nodes_selecting[i];
+						var _nx = _node.x + dx;
+						var _ny = _node.y + dy;
 							
-							if(!key_mod_press(CTRL) && project.graphGrid.snap) {
-								_nx = round(_nx / project.graphGrid.size) * project.graphGrid.size;
-								_ny = round(_ny / project.graphGrid.size) * project.graphGrid.size;
-							}
+						if(!key_mod_press(CTRL) && project.graphGrid.snap) {
+							_nx = round(_nx / project.graphGrid.size) * project.graphGrid.size;
+							_ny = round(_ny / project.graphGrid.size) * project.graphGrid.size;
+						}
 							
-							_node.move(_nx, _ny, graph_s);
-						}
-						
-						node_drag_ox = nx;
-						node_drag_oy = ny;
+						_node.move(_nx, _ny, graph_s);
 					}
-					
-					if(key_mod_press(SHIFT)) {
-						for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-							var _node = nodes_select_list[| i];
-							if(_node.cache_group != noone)
-								_node.cache_group.removeNode(_node);
-						}
-					}
-					
-					if(mouse_release(mb_left) && (nx != node_drag_sx || ny != node_drag_sy)) {
-						var shfx = node_drag_sx - nx;
-						var shfy = node_drag_sy - ny;
 						
-						for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-							var _n = nodes_select_list[| i];
-							if(_n == noone) continue;
-							recordAction(ACTION_TYPE.var_modify, _n, [ _n.x + shfx, "x", "node x position" ]);
-							recordAction(ACTION_TYPE.var_modify, _n, [ _n.y + shfy, "y", "node y position" ]);
-						}
+					node_drag_ox = nx;
+					node_drag_oy = ny;
+				}
+					
+				if(mouse_release(mb_left) && (nx != node_drag_sx || ny != node_drag_sy)) {
+					var shfx = node_drag_sx - nx;
+					var shfy = node_drag_sy - ny;
+						
+					for(var i = 0; i < array_length(nodes_selecting); i++) {
+						var _n = nodes_selecting[i];
+						if(_n == noone) continue;
+						recordAction(ACTION_TYPE.var_modify, _n, [ _n.x + shfx, "x", "node x position" ]);
+						recordAction(ACTION_TYPE.var_modify, _n, [ _n.y + shfy, "y", "node y position" ]);
 					}
 				}
 			}
@@ -1089,14 +1060,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#endregion
 		
 		if(mouse_on_graph && pFOCUS) { #region
-			if(node_focus && node_focus.draggable && value_focus == noone) {
+			var _node = getFocusingNode();
+			if(_node && _node.draggable && value_focus == noone) {
 				if(mouse_press(mb_left) && !key_mod_press(ALT)) {
-					node_dragging = node_focus;
+					node_dragging = _node;
 					node_drag_mx  = mouse_graph_x;
 					node_drag_my  = mouse_graph_y;
-					node_drag_sx  = node_focus.x;
-					node_drag_sy  = node_focus.y;
-				
+					node_drag_sx  = _node.x;
+					node_drag_sy  = _node.y;
+					
 					node_drag_ox  = -1;
 					node_drag_oy  = -1;
 				}
@@ -1127,10 +1099,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						
 						var _sel = rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my);
 						
-						if(!ds_list_exist(nodes_select_list, _node) && _sel)
-							ds_list_add(nodes_select_list, _node);	
-						if(ds_list_exist(nodes_select_list, _node) && !_sel)
-							ds_list_remove(nodes_select_list, _node);	
+						if(!array_exists(nodes_selecting, _node) && _sel)
+							array_push(nodes_selecting, _node);	
+						if(array_exists(nodes_selecting, _node) && !_sel)
+							array_remove(nodes_selecting, _node);	
 					}
 				}
 			
@@ -1159,7 +1131,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					nodes_junction_d	= junction_hovering;
 					nodes_junction_dx	= junction_hovering.draw_line_shift_x;
 					nodes_junction_dy	= junction_hovering.draw_line_shift_y;
-				} else if(!node_focus && !value_focus && !drag_locking) {
+				} else if(array_empty(nodes_selecting) && !value_focus && !drag_locking) {
 					nodes_select_drag = true;
 					nodes_select_mx = mx;
 					nodes_select_my = my;
@@ -1260,8 +1232,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				} else {
 					var _jlist = ds_priority_create();
 					
-					for( var i = 0, n = ds_list_size(nodes_select_list); i < n; i++ ) {
-						var _node = nodes_select_list[| i];
+					for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
+						var _node = nodes_selecting[i];
 						
 						for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
 							var _junction = _node.outputs[| j];
@@ -1324,8 +1296,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			if(i < ds_list_size(node_context) - 1) {
 				if(buttonInstant(THEME.button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], pFOCUS, pHOVER) == 2) {
-					node_hover		= noone;
-					node_focus		= noone;
+					node_hover		  = noone;
+					nodes_selecting = [];
 					PANEL_PREVIEW.resetNodePreview();
 					setContextFrame(true, node_context[| i + 1]);
 					
@@ -1539,9 +1511,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		nodes_list = _node.nodes;
 		ds_list_add(node_context, _node);
 		
-		node_dragging = noone;
-		ds_list_clear(nodes_select_list);
-		selection_block = 1;
+		node_dragging     = noone;
+		nodes_selecting = [];
+		selection_block   = 1;
 		
 		toCenterNode();
 	} #endregion
@@ -1580,7 +1552,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		drawToolBar();
 		drawMinimap();
 		
-		if(pFOCUS && node_focus) node_focus.focusStep();
+		if(pFOCUS) array_foreach(nodes_selecting, function(node) { node.focusStep(); });
 		
 		if(UPDATE == RENDER_TYPE.full)
 			draw_text(w - ui(8), ui(28), __txtx("panel_graph_rendering", "Rendering") + "...");
@@ -1605,42 +1577,25 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	#region ++++ node manipulation ++++
 		function doTransform() { #region
-			if(ds_list_empty(nodes_select_list)) {
-				if(node_focus != noone && !ds_list_empty(node_focus.outputs)) {
-					var _o = node_focus.outputs[| 0];
-					if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurface) {
-						var tr = nodeBuild("Node_Transform", node_focus.x + node_focus.w + 64, node_focus.y);
-						tr.inputs[| 0].setFrom(_o);
-					}
-				}
-			} else {
-				for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {	
-					var node = nodes_select_list[| i];
-					if(ds_list_empty(node.outputs)) continue;
+			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
+				var node = nodes_selecting[i];
+				if(ds_list_empty(node.outputs)) continue;
 				
-					var _o = node.outputs[| 0];
-					if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurface) {
-						var tr = nodeBuild("Node_Transform", node.x + node.w + 64, node.y);
-						tr.inputs[| 0].setFrom(_o);
-					}
+				var _o = node.outputs[| 0];
+				if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurface) {
+					var tr = nodeBuild("Node_Transform", node.x + node.w + 64, node.y);
+					tr.inputs[| 0].setFrom(_o);
 				}
 			}
 		} #endregion
 	
 		function doDuplicate() { #region
-			var nodeArray = [];
-			if(ds_list_empty(nodes_select_list)) {
-				if(node_focus == noone) return;
-				nodeArray = [node_focus];
-			} else {
-				for(var i = 0; i < ds_list_size(nodes_select_list); i++)
-					nodeArray[i] = nodes_select_list[| i];
-			}
-		
+			if(array_empty(nodes_selecting)) return;
+			
 			var _map  = {};
 			var _node = [];
-			for(var i = 0; i < array_length(nodeArray); i++)
-				SAVE_NODE(_node, nodeArray[i],,,, getCurrentContext());
+			for(var i = 0; i < array_length(nodes_selecting); i++)
+				SAVE_NODE(_node, nodes_selecting[i],,,, getCurrentContext());
 			_map.nodes = _node;
 		
 			APPENDING = true;
@@ -1668,23 +1623,22 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			node_drag_sx  = x0; node_drag_sy  = y0;
 			node_drag_ox  = x0; node_drag_oy  = y0;
 			
-			ds_list_destroy(nodes_select_list);
-			nodes_select_list = _app;
+			nodes_selecting = array_create_from_list(_app);
 		} #endregion
 
 		function doInstance() { #region
-			if(node_focus == noone) return;
-			if(!struct_has(node_focus, "nodes")) return;
+			var node = getFocusingNode();
+			if(node == noone) return;
 		
-			if(node_focus.instanceBase == noone) {
-				node_focus.isInstancer = true;
+			if(node.instanceBase == noone) {
+				node.isInstancer = true;
 			
 				CLONING = true;
-				var _type = instanceof(node_focus);
+				var _type = instanceof(node);
 				var _node = nodeBuild(_type, x, y);
 				CLONING = false;
-			
-				_node.setInstance(node_focus);
+				
+				_node.setInstance(node);
 			}
 		
 			var _nodeNew  = _node.clone();
@@ -1696,23 +1650,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		} #endregion
 	
 		function doCopy() { #region
+			if(array_empty(nodes_selecting)) return;
 			clipboard_set_text("");
-		
-			var nodeArray = [];
-			if(ds_list_empty(nodes_select_list)) {
-				if(node_focus == noone) return;
-				nodeArray = [node_focus];
-			} else {
-				for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-					var _node = nodes_select_list[| i];
-					nodeArray[i] = _node;
-				}
-			}
 		
 			var _map  = {};
 			var _node = [];
-			for(var i = 0; i < array_length(nodeArray); i++)
-				SAVE_NODE(_node, nodeArray[i],,,, getCurrentContext());
+			for(var i = 0; i < array_length(nodes_selecting); i++)
+				SAVE_NODE(_node, nodes_selecting[i],,,, getCurrentContext());
 			_map.nodes = _node;
 		
 			clipboard_set_text(json_stringify_minify(_map));
@@ -1754,8 +1698,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				node_drag_sx  = x0; node_drag_sy  = y0;
 				node_drag_ox  = x0; node_drag_oy  = y0;
 			
-				ds_list_destroy(nodes_select_list);
-				nodes_select_list = _app;
+				nodes_selecting = array_create_from_list(_app);
 				return;
 			}
 		
@@ -1784,23 +1727,22 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		} #endregion
 	
 		function doBlend() { #region
-			if(ds_list_empty(nodes_select_list)) return;
-			if(ds_list_size(nodes_select_list) != 2) return;
+			if(array_length(nodes_selecting) != 2) return;
 		
-			var cx = nodes_select_list[| 0].x;
+			var cx = nodes_selecting[0].x;
 			var cy = 0;
-			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-				var _node = nodes_select_list[| i];
+			for(var i = 0; i < array_length(nodes_selecting); i++) {
+				var _node = nodes_selecting[i];
 				cx = max(cx, _node.x);
 				cy += _node.y;
 			}
 			cx = cx + 160;
-			cy = round(cy / ds_list_size(nodes_select_list) / 32) * 32;
+			cy = round(cy / array_length(nodes_selecting) / 32) * 32;
 		
 			var _blend = new Node_Blend(cx, cy, getCurrentContext());
 			var index = 0;
-			for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {
-				var _node = nodes_select_list[| i];
+			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
+				var _node = nodes_selecting[i];
 				if(ds_list_size(_node.outputs) == 0) continue;
 				if(_node.outputs[| 0].type == VALUE_TYPE.surface) {
 					_blend.inputs[| index].setFrom(_node.outputs[| 0]);
@@ -1808,127 +1750,108 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			ds_list_clear(nodes_select_list);
+			nodes_selecting = [];
 		} #endregion
 	
 		function doCompose() { #region
-			if(ds_list_empty(nodes_select_list)) return;
+			if(array_empty(nodes_selecting)) return;
 		
-			var cx = nodes_select_list[| 0].x;
+			var cx = nodes_selecting[0].x;
 			var cy = 0;
 		
-			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-				var _node = nodes_select_list[| i];
+			for(var i = 0; i < array_length(nodes_selecting); i++) {
+				var _node = nodes_selecting[i];
 				cx = max(cx, _node.x);
 				cy += _node.y;
 			}
 			cx = cx + 160;
-			cy = round(cy / ds_list_size(nodes_select_list) / 32) * 32;
+			cy = round(cy / array_length(nodes_selecting) / 32) * 32;
 		
 			var _compose = nodeBuild("Node_Composite", cx, cy);
 		
-			for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {
-				var _node = nodes_select_list[| i];
+			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
+				var _node = nodes_selecting[i];
 				if(ds_list_size(_node.outputs) == 0) continue;
 				if(_node.outputs[| 0].type == VALUE_TYPE.surface) {
 					_compose.addInput(_node.outputs[| 0]);
 				}
 			}
 			
-			ds_list_clear(nodes_select_list);
+			nodes_selecting = [];
 		} #endregion
 	
 		function doArray() { #region
-			if(ds_list_empty(nodes_select_list)) return;
+			if(array_empty(nodes_selecting)) return;
 		
-			var cx = nodes_select_list[| 0].x;
+			var cx = nodes_selecting[0].x;
 			var cy = 0;
 		
-			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-				var _node = nodes_select_list[| i];
+			for(var i = 0; i < array_length(nodes_selecting); i++) {
+				var _node = nodes_selecting[i];
 				cx = max(cx, _node.x);
 				cy += _node.y;
 			}
 			cx = cx + 160;
-			cy = round(cy / ds_list_size(nodes_select_list) / 32) * 32;
+			cy = round(cy / array_length(nodes_selecting) / 32) * 32;
 		
 			var _array = nodeBuild("Node_Array", cx, cy);
 		
-			for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {
-				var _node = nodes_select_list[| i];
+			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
+				var _node = nodes_selecting[i];
 				if(ds_list_size(_node.outputs) == 0) continue;
 				_array.addInput(_node.outputs[| 0]);
 			}
 			
-			ds_list_clear(nodes_select_list);
+			nodes_selecting = [];
 		} #endregion
 	
 		function doGroup() { #region
-			if(ds_list_empty(nodes_select_list) && node_focus != noone)
-				ds_list_add(nodes_select_list, node_focus);
-			node_focus = noone;
-		
-			if(ds_list_empty(nodes_select_list)) return;
-		
-			groupNodes(array_create_from_list(nodes_select_list));
+			if(array_empty(nodes_selecting)) return;
+			groupNodes(nodes_selecting);
 		} #endregion
 	
 		function doUngroup() { #region
-			if(node_focus == noone) return;
-			if(!variable_struct_exists(node_focus, "nodes")) return;
-			if(!node_focus.ungroupable) return;
+			var _node = getFocusingNode();
+			if(_node == noone) return;
+			if(!is_instanceof(_node, Node_Collection) || !_node.ungroupable) return;
 		
-			upgroupNode(node_focus);
+			upgroupNode(_node);
 		} #endregion
 	
 		function doLoop() { #region
-			if(ds_list_empty(nodes_select_list) && node_focus != noone)
-				ds_list_add(nodes_select_list, node_focus);
-		
-			if(ds_list_empty(nodes_select_list)) return;
+			if(array_empty(nodes_selecting)) return;
 		
 			var cx = 0;
 			var cy = 0;
-			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-				var _node = nodes_select_list[| i];
+			for(var i = 0; i < array_length(nodes_selecting); i++) {
+				var _node = nodes_selecting[i];
 				cx += _node.x;
 				cy += _node.y;
 			}
-			cx = round(cx / ds_list_size(nodes_select_list) / 32) * 32;
-			cy = round(cy / ds_list_size(nodes_select_list) / 32) * 32;
+			cx = round(cx / array_length(nodes_selecting) / 32) * 32;
+			cy = round(cy / array_length(nodes_selecting) / 32) * 32;
 		
 			var _group = new Node_Iterate(cx, cy, getCurrentContext());
-			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-				_group.add(nodes_select_list[| i]);
-			}
-			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-				nodes_select_list[| i].checkConnectGroup("loop");
-			}
+			for(var i = 0; i < array_length(nodes_selecting); i++) 
+				_group.add(nodes_selecting[i]);
 			
-			ds_list_clear(nodes_select_list);
+			for(var i = 0; i < array_length(nodes_selecting); i++)
+				nodes_selecting[i].checkConnectGroup("loop");
+			
+			nodes_selecting = [];
 		} #endregion
 	
 		function doFrame() { #region
 			var x0 = 999999, y0 = 999999, x1 = -999999, y1 = -999999;
-		
-			if(ds_list_empty(nodes_select_list)) {
-				if(node_focus != noone) {
-					x0 = node_focus.x;
-					y0 = node_focus.y;
-					x1 = node_focus.x + node_focus.w;
-					y1 = node_focus.y + node_focus.h;
-				} else
-					return;	
-			} else {
-				for( var i = 0; i < ds_list_size(nodes_select_list); i++ )  {
-					var _node = nodes_select_list[| i];
-					x0 = min(x0, _node.x);
-					y0 = min(y0, _node.y);
-					x1 = max(x1, _node.x + _node.w);
-					y1 = max(y1, _node.y + _node.h);
-				}
+			
+			for( var i = 0; i < array_length(nodes_selecting); i++ )  {
+				var _node = nodes_selecting[i];
+				x0 = min(x0, _node.x);
+				y0 = min(y0, _node.y);
+				x1 = max(x1, _node.x + _node.w);
+				y1 = max(y1, _node.y + _node.h);
 			}
-		
+			
 			x0 -= 64;
 			y0 -= 64;
 			x1 += 64;
@@ -1939,14 +1862,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		} #endregion
 	
 		function doDelete(_merge = false) { #region
-			if(node_focus != noone && node_focus.manual_deletable)
-				nodeDelete(node_focus, _merge);
-		
-			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-				if(nodes_select_list[| i].manual_deletable)
-					nodeDelete(nodes_select_list[| i], _merge);
-			}
-			ds_list_clear(nodes_select_list);
+			array_foreach(nodes_selecting, function(node) { if(node.manual_deletable) nodeDelete(node, _merge); });
+			nodes_selecting = [];
 		} #endregion
 		
 		node_prop_clipboard = noone;
@@ -2038,7 +1955,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				break;
 			case "Collection":
 				var path = DRAGGING.data.path;
-				ds_list_clear(nodes_select_list);
+				nodes_selecting = [];
 				
 				var app = APPEND(DRAGGING.data.path, getCurrentContext());
 			
