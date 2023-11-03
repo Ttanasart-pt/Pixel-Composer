@@ -6,9 +6,10 @@ function Panel_Test() : PanelContent() constructor {
 	test_dir = "D:\\Project\\MakhamDev\\LTS-PixelComposer\\TEST";
 	tb_test_dir = new textBox(TEXTBOX_INPUT.text, function(txt) { test_dir = txt; });
 	
-	testing = false;
-	test_files = [];
-	test_index = 0;
+	testing     = false;
+	test_files  = [];
+	start_index = 0;
+	test_index  = start_index;
 	
 	test_button_surface = surface_create(1, 1);
 	
@@ -40,20 +41,20 @@ function Panel_Test() : PanelContent() constructor {
 		if(testing) return;
 		
 		testing = true;
-		test_index = 0;
+		test_index = start_index;
 		
 		test_files = [];
 		scanDir(test_dir);
 		
-		for( var i = 0, n = array_length(test_files); i < n; i++ ) {
-			run_in(1 + i * 3, function(i) { 
+		for( var i = start_index, n = array_length(test_files); i < n; i++ ) {
+			run_in(1 + (i - start_index) * 3, function(i) { 
 				try {
-					print($"TESTING: {test_files[i]}");
+					show_debug_message($"TESTING {i}/{array_length(test_files)}: {test_files[i]}");
 					TEST_PATH(test_files[i]);
 					test_index = i;
-					print($"     > Test complete");
+					show_debug_message($"     > Test complete");
 				} catch(e) {
-					print($"     > Test failed");
+					show_debug_message($"     > Test failed");
 					exception_print(e);
 				}
 			}, [i]);

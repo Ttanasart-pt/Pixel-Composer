@@ -10,6 +10,7 @@
 	#macro IS_PLAYING    PROJECT.animator.is_playing
 	#macro CURRENT_FRAME PROJECT.animator.current_frame
 	#macro TOTAL_FRAMES  PROJECT.animator.frames_total
+	#macro RENDERING     PROJECT.animator.rendering
 #endregion
 
 #region animation class
@@ -23,8 +24,8 @@
 		frame_progress	= false;
 		play_freeze		= 0;
 		
-		rendering = false;
-		playback = ANIMATOR_END.loop;
+		rendering = 0;
+		playback  = ANIMATOR_END.loop;
 		
 		static setFrame = function(frame, resetTime = true) {
 			//if(frame == 0) resetAnimation();
@@ -37,8 +38,6 @@
 			if(current_frame == frames_total) {
 				if(rendering) {
 					is_playing = false;
-					rendering = false;
-					
 					setFrame(0);
 				} else if(playback == ANIMATOR_END.stop)
 					is_playing = false;

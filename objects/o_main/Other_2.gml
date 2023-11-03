@@ -91,10 +91,10 @@
 	environment_set_variable("IMGUI_DIALOG_WIDTH", string(800));
 	
 	var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
-	shell_execute("assoc", cmd);
+	shell_execute_async("assoc", cmd);
 	
 	var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
-	shell_execute("assoc", cmd);
+	shell_execute_async("assoc", cmd);
 	
 	//print($"Setup time: {(current_time - t)/1000}s");
 #endregion

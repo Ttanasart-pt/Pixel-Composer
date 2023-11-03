@@ -21,7 +21,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	drag_sv  = 0;
 	drag_sa  = 0;
 	
-	angle_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	angle_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var hh     = ui(240);
 		var _surfs = getInputData(1);
 		var _angle = getInputData(3);
@@ -86,7 +86,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		return hh;
-	});
+	}); #endregion
 	
 	input_display_list = [
 		["Iso",		  false], 0, 2, angle_renderer, 

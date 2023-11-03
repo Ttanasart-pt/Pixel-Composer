@@ -9,7 +9,7 @@ function draw_surface_safe(surface, _x = 0, _y = 0) {
 		} else if(is_instanceof(surface, SurfaceAtlas))
 			surface = surface.getSurface();
 	}
-	if(!is_surface(surface)) return;
+	if(!surface_exists(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface(surface, _x, _y);
@@ -26,7 +26,7 @@ function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
 		} else if(is_instanceof(surface, SurfaceAtlas))
 			surface = surface.getSurface();
 	}
-	if(!is_surface(surface)) return;
+	if(!surface_exists(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface_stretched(surface, _x, _y, _w, _h);
@@ -43,7 +43,8 @@ function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col
 		} else if(is_instanceof(surface, SurfaceAtlas))
 			surface = surface.getSurface();
 	}
-	if(!is_surface(surface)) return;
+	
+	if(!surface_exists(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface_ext(surface, _x, _y, _xs, _ys, _rot, _col, _alpha);
@@ -60,7 +61,7 @@ function draw_surface_tiled_safe(surface, _x, _y) {
 		} else if(is_instanceof(surface, SurfaceAtlas))
 			surface = surface.getSurface();
 	}
-	if(!is_surface(surface)) return;
+	if(!surface_exists(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface_tiled(surface, _x, _y);
@@ -77,7 +78,7 @@ function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c
 		} else if(is_instanceof(surface, SurfaceAtlas))
 			surface = surface.getSurface();
 	}
-	if(!is_surface(surface)) return;
+	if(!surface_exists(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface_tiled_ext(surface, _x, _y, _xs, _ys, _col, _alpha);
@@ -94,7 +95,7 @@ function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _y
 		} else if(is_instanceof(surface, SurfaceAtlas))
 			surface = surface.getSurface();
 	}
-	if(!is_surface(surface)) return;
+	if(!surface_exists(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface_part_ext(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _col, _alpha);

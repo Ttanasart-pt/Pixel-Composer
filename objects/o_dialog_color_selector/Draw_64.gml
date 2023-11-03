@@ -46,7 +46,7 @@ if !ready exit;
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("color_selector_open_palette", "Open palette folder"), THEME.folder) == 2) {
 		var _realpath = environment_get_variable("LOCALAPPDATA") + "/Pixels_Composer/Palettes";
 		var _windir   = environment_get_variable("WINDIR") + "/explorer.exe";
-		shell_execute(_windir, _realpath);
+		shell_execute_async(_windir, _realpath);
 	}
 	bx -= ui(32);
 	

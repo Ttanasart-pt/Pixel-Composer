@@ -5,8 +5,11 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	attributes.cache_group = [];
 	cache_group_members    = [];
-	group_vertex = [];
-	vertex_hash  = "";
+	group_vertex   = [];
+	group_dragging = false;
+	group_adding   = false;
+	group_alpha    = 0;
+	vertex_hash    = "";
 	
 	insp1UpdateTooltip = "Generate cache group";
 	insp1UpdateIcon    = [ THEME.cache_group, 0, COLORS._main_icon ];
@@ -47,8 +50,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	} #endregion
 	
 	static getCacheGroup = function(node) { #region
-		if(node != self)
-			array_push(attributes.cache_group, node.node_id);
+		if(node != self) array_push(attributes.cache_group, node.node_id);
 		
 		for( var i = 0, n = ds_list_size(node.inputs); i < n; i++ ) {
 			var _from = node.inputs[| i].value_from;
@@ -71,29 +73,32 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static ccw = function(a, b, c) { return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]); }
 	
 	static getNodeBorder = function(_i, _vertex, _node) { #region
-		var _rad = 8;
+		var _rad = 4;
 		var _stp = 15;
 		
 		var _nx0 = _node.x - 32 + _rad;
 		var _ny0 = _node.y - 32 + _rad;
-		var _nx1 = _node.x + _node.w + 32 - _rad;
+		var _nx1 = _node.x + (_node == self? _node.w / 2 : _node.w + 32 - _rad);
 		var _ny1 = _node.y + _node.h + 32 - _rad;
 		
 		var _ind = 0;
-		for( var i = 0; i <= 90; i += _stp ) 
-			_vertex[_i * 7 * 4 + _ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
-		
-		for( var i = 90; i <= 180; i += _stp ) 
-			_vertex[_i * 7 * 4 + _ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
-		
-		for( var i = 180; i <= 270; i += _stp ) 
-			_vertex[_i * 7 * 4 + _ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
-		
-		for( var i = 270; i <= 360; i += _stp ) 
-			_vertex[_i * 7 * 4 + _ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
+		for( var i =   0; i <=  90; i += _stp ) _vertex[_i * 7 * 4 + _ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
+		for( var i =  90; i <= 180; i += _stp ) _vertex[_i * 7 * 4 + _ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
+		for( var i = 180; i <= 270; i += _stp ) _vertex[_i * 7 * 4 + _ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
+		for( var i = 270; i <= 360; i += _stp ) _vertex[_i * 7 * 4 + _ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
 	} #endregion
 	
-	static refrshGroupBG = function() { #region
+	static refreshGroupBG = function() { #region
+		var _hash = "";
+		for( var i = -1, n = array_length(cache_group_members); i < n; i++ ) {
+			var _node = i == -1? self : cache_group_members[i];
+			_hash += $"{_node.x},{_node.y},{_node.w},{_node.h}|";
+		}
+		_hash = md5_string_utf8(_hash);
+		
+		if(vertex_hash == _hash) return;
+		vertex_hash = _hash;
+		
 		group_vertex = [];
 		
 		if(array_empty(cache_group_members)) return;
@@ -138,22 +143,60 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 	} #endregion
 	
-	static drawNodeBG = function(_x, _y, _mx, _my, _s) { #region
-		var _hash = "";
-		for( var i = -1, n = array_length(cache_group_members); i < n; i++ ) {
-			var _node = i == -1? self : cache_group_members[i];
-			_hash += $"{_node.x},{_node.y},{_node.w},{_node.h}|";
+	static groupCheck = function(_x, _y, _s, _mx, _my) { #region
+		if(array_length(group_vertex) < 3) return;
+		var _inGroup = true;
+		var _m       = [ _mx / _s - _x, _my / _s - _y ];
+		
+		group_adding = false;
+		
+		if(PANEL_GRAPH.node_dragging && key_mod_press(SHIFT)) {
+			var side = undefined;
+			for( var i = 1, n = array_length(group_vertex); i < n; i++ ) {
+				var a = group_vertex[i - 1];
+				var b = group_vertex[i - 0];
+			
+				var _side = sign(ccw(a, b, _m));
+				if(side == undefined) side = _side;
+				else if(side != _side) _inGroup = false;
+			}
+		
+			var _list    = PANEL_GRAPH.nodes_selecting;
+		
+			if(_inGroup) {
+				group_adding = true;
+				for( var i = 0, n = array_length(_list); i < n; i++ )
+					array_push_unique(attributes.cache_group, _list[i].node_id);
+			} else {
+				for( var i = 0, n = array_length(_list); i < n; i++ )
+					array_remove(attributes.cache_group, _list[i].node_id);
+			}
+			
+			if(!group_dragging) {
+				for( var i = 0, n = array_length(_list); i < n; i++ )
+					array_remove(attributes.cache_group, _list[i].node_id);
+				refreshCacheGroup();
+				refreshGroupBG();
+			}
+			group_dragging = true;
 		}
-		_hash = md5_string_utf8(_hash);
 		
-		if(vertex_hash != _hash) refrshGroupBG();
-		vertex_hash = _hash;
-		
+		if(group_dragging && mouse_release(mb_left)) {
+			refreshCacheGroup();
+			refreshGroupBG();
+			
+			group_dragging = false;
+		}
+	} #endregion
+	
+	static drawNodeBG = function(_x, _y, _mx, _my, _s) { #region
+		refreshGroupBG();
 		if(array_length(group_vertex) < 3) return;
 		
 		var _color  = getColor();
 		draw_set_color(_color);
-		draw_set_alpha(0.025);
+		group_alpha = lerp_float(group_alpha, group_adding, 4);
+		draw_set_alpha(0.025 + 0.025 * group_alpha);
 		draw_primitive_begin(pr_trianglelist);
 			var a = group_vertex[0];
 			var b = group_vertex[1];

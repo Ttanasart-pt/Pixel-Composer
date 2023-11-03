@@ -1979,15 +1979,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static drawJunction = function(_s, _mx, _my, sca = 1) { #region
-		if(!isVisible()) return false;
-		
-		var ss  = max(0.25, _s / 2);
-		var hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var is_hover = hov && point_in_circle(_mx, _my, x, y, 10 * _s * sca);
-		
-		var _bgS = THEME.node_junctions_bg;
-		var _fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
-		
 		var _bgC, _fgC;
 		
 		if(color == -1) {
@@ -1998,13 +1989,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			_fgC = color;
 		}
 		
+		color_display = type == VALUE_TYPE.action? #8fde5d : _fgC;
+		
+		if(!isVisible()) return false;
+		
+		var ss  = max(0.25, _s / 2);
+		var hov      = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
+		var is_hover = hov && point_in_circle(_mx, _my, x, y, 10 * _s * sca);
+		
+		var _bgS = THEME.node_junctions_bg;
+		var _fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
+		
 		if(type == VALUE_TYPE.action) {
 			draw_sprite_ext(THEME.node_junction_inspector, is_hover, x, y, ss, ss, 0, c_white, 1);
-			color_display = #8fde5d;
 		} else {
 			draw_sprite_ext(_bgS, draw_junction_index, x, y, ss, ss, 0, _bgC, 1);
 			draw_sprite_ext(_fgS, draw_junction_index, x, y, ss, ss, 0, _fgC, 1);
-			color_display = _fgC;
 		}
 		
 		return is_hover;

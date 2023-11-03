@@ -145,7 +145,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(itere, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 			addNodeObject(itere, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]).hideRecent();
 		#endregion
-			
+		
 		var filter = ds_list_create(); #region
 		addNodeCatagory("Filter", filter, ["Node_Iterate_Filter"]);
 			ds_list_add(filter, "Groups");

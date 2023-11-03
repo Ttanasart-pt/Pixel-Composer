@@ -169,9 +169,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		preview_alpha	= 1;
 		preview_x		= 0;
 		preview_y		= 0;
-	
+		
 		preview_mx = 0;
 		preview_my = 0;
+		
+		graph_preview_alpha	= 1;
 		
 		getPreviewingNode = noone;
 	#endregion
@@ -1078,7 +1080,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var bbox = drawGetBbox(xx, yy, _s);
 		var aa   = 0.5 + 0.5 * renderActive;
 		
-		draw_surface_bbox(preview_surface, bbox, c_white, aa);
+		draw_surface_bbox(preview_surface, bbox, c_white, aa * graph_preview_alpha);
 	} #endregion
 	
 	static getNodeDimension = function(showFormat = true) { #region

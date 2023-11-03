@@ -18,7 +18,7 @@ if(string(ev_id) == string(STEAM_UGC_ITEM_ID) && ev_type == "ugc_create_item") {
 	}
 	
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
-	steam_ugc_set_item_preview(STEAM_UGC_UPDATE_HANDLE, "steamUGCthumbnail.png");
+	steam_ugc_set_item_preview(STEAM_UGC_UPDATE_HANDLE, TEMPDIR + "steamUGCthumbnail.png");
 	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, "steamUGC");
 	
 	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, "Initial upload");
@@ -30,7 +30,7 @@ if(string(ev_id) == string(STEAM_UGC_SUBMIT_ID)) {
 	
 	var type = "";
 	switch(STEAM_UGC_TYPE) {
-		case STEAM_UGC_FILE_TYPE.collection :	type = "Collection";		break;
+		case STEAM_UGC_FILE_TYPE.collection :	type = "Collection";	break;
 		case STEAM_UGC_FILE_TYPE.project :		type = "Project";		break;
 		case STEAM_UGC_FILE_TYPE.node_preset :	type = "Node preset";	break;
 	}

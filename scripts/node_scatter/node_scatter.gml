@@ -81,24 +81,24 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	scatter_data = [];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(process_amount > 1) return;
 		
 		var _distType	= current_data[6];
 		if(_distType < 3)
 			inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index) { #region
 		if(index == 15) {
 			var _arr = getInputData(15);
 			inputs[| 0].array_depth = _arr;
 			
 			update();
 		}
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var _dis = getInputData(6);
 		var _arr = getInputData(15);
 		inputs[| 0].array_depth = _arr;
@@ -111,9 +111,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 20].setVisible(_dis == 4);
 		inputs[| 21].setVisible(_dis == 4);
 		inputs[| 22].setVisible(_dis == 4);
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		if(_output_index == 1) return scatter_data;
 		if(_output_index == 0 && _array_index == 0) scatter_data = [];
 		
@@ -287,12 +287,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		surface_reset_target(); 
 		
 		return _outSurf;
-	}
+	} #endregion
 	
-	static doApplyDeserialize = function() {
+	static doApplyDeserialize = function() { #region
 		var _arr = getInputData(15);
 		inputs[| 0].array_depth = _arr;
 			
 		doUpdate();
-	}
+	} #endregion
 }

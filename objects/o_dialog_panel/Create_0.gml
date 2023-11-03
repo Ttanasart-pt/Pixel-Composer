@@ -63,7 +63,7 @@ event_inherited();
 	}
 	
 	function onDestroy() {
-		if(!content) return;
+		if(content == noone) return;
 		content.onClose();
 	}
 	

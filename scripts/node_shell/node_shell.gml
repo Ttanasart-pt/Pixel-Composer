@@ -26,7 +26,7 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(_pro == "" || _scr == "") return;
 		
 		if(trusted) {
-			shell_execute(_pro, _scr);
+			shell_execute_async(_pro, _scr);
 		} else {
 			var dia = dialogCall(o_dialog_run_shell);
 			dia.setData(self, _pro, _scr);

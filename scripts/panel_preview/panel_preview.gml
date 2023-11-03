@@ -502,21 +502,11 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function fullView() { #region
-		var node  = getNodePreview();
-		if(node == noone) { 
-			canvas_s = 1;
-			canvas_x = w / 2;
-			canvas_y = (h - toolbar_height * 2) / 2;
-			return;
-		}
+		var bbox = noone;
 		
-		var bbox = node.getPreviewBoundingBox();
-		if(bbox == noone) { 
-			canvas_s = 1;
-			canvas_x = w / 2;
-			canvas_y = (h - toolbar_height * 2) / 2;
-			return;
-		}
+		var node = getNodePreview();
+		if(node != noone) bbox = node.getPreviewBoundingBox();
+		if(bbox == noone) bbox = BBOX().fromWH(0, 0, PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
 		
 		var ss = min((w - 32 - tool_side_drawing * 40) / bbox.w, (h - 32 - toolbar_height * 2) / bbox.h);
 		canvas_s = ss;
@@ -768,7 +758,7 @@ function Panel_Preview() : PanelContent() constructor {
 	function draw3D() { #region
 		var _prev_node = getNodePreview();
 		if(_prev_node == noone) return;
-		if(!_prev_node.is_3D)   return;
+		if(!_prev_node.is_3D)   return 
 		
 		_prev_node.previewing = 1;
 		
@@ -1435,7 +1425,7 @@ function Panel_Preview() : PanelContent() constructor {
 				dragCanvas();
 				drawNodePreview();
 			}
-		}
+		} else dragCanvas();
 		
 		drawPreviewOverlay();
 		

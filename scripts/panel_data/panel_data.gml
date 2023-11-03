@@ -924,7 +924,7 @@ function PanelContent() constructor {
 	
 	static checkClosable = function() { return true; }
 	
-	function onClose() {}
+	static onClose = function() {}
 }
 
 function setFocus(target, fstring = noone) {

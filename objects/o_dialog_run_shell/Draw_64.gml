@@ -53,7 +53,7 @@ if !ready exit;
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txtx("run", "Run"));
 	if(b == 2) {
-		shell_execute(prog, cmd);		
+		shell_execute_async(prog, cmd);		
 		node.trusted = true;
 		
 		instance_destroy();

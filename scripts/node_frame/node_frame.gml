@@ -4,17 +4,17 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Frame";
 	w = 240;
 	h = 160;
-	alpha = 1;
-	bg_spr		= THEME.node_frame_bg;
-	
-	size_dragging = false;
-	size_dragging_w = w;
-	size_dragging_h = h;
+	alpha  = 1;
+	bg_spr = THEME.node_frame_bg;
+	  
+	size_dragging    = false;
+	size_dragging_w  = w;
+	size_dragging_h  = h;
 	size_dragging_mx = w;
 	size_dragging_my = h;
 	
-	auto_height = false;
-	name_hover  = false;
+	auto_height    = false;
+	name_hover     = false;
 	hover_progress = 0;
 	
 	color = c_white;
@@ -41,11 +41,11 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	static onValueUpdate = function(index = 3) {
+	static onValueUpdate = function(index = 3) { #region
 		global.__FRAME_LABEL_SCALE = getInputData(3);
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var si = getInputData(0);
 		w = si[0];
 		h = si[1];
@@ -54,9 +54,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		alpha = getInputData(2);
 		scale = getInputData(3);
 		label_color = getInputData(4);
-	}
+	} #endregion
 	
-	static drawNodeBase = function(xx, yy, _s) {
+	static drawNodeBase = function(xx, yy, _s) { #region
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, alpha);
 		var txt = display_name == ""? name : display_name;
 		
@@ -66,10 +66,10 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		draw_set_alpha(clamp(alpha + name_hover * 0.5, 0, 1));
 		draw_text_cut(xx + 8 + 16 * hover_progress, yy + 4 * _s, txt, (w - 8) * _s - 24, scale);
 		draw_set_alpha(1);
-	}
+	} #endregion
 	
 	draw_scale = 1;
-	static drawNodeBG = function(_x, _y, _mx, _my, _s) {
+	static drawNodeBG = function(_x, _y, _mx, _my, _s) { #region
 		draw_scale = _s;
 		
 		if(size_dragging) {
@@ -119,9 +119,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		return noone;
-	}
+	} #endregion
 	
-	static pointIn = function(_x, _y, _mx, _my, _s) {
+	static pointIn = function(_x, _y, _mx, _my, _s) { #region
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -134,5 +134,5 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		name_hover = hover;
 		
 		return hover;
-	}
+	} #endregion
 }

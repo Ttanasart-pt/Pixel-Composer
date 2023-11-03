@@ -46,7 +46,7 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, update_note);
 }
 
-function steam_ugc_collection_generate(file, dest_path = DIRECTORY + "steamUGCthumbnail.png") {
+function steam_ugc_collection_generate(file, dest_path = TEMPDIR + "steamUGCthumbnail.png") {
 	file_delete(dest_path);
 	var spr       = STEAM_UGC_ITEM_FILE.getSpr();
 	var prev_size = 512;

@@ -70,7 +70,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		node_drag_oy  = 0;
 	
 		selection_block		= 0;
-		nodes_selecting	= [];
+		nodes_selecting	    = [];
 		nodes_select_drag   = false;
 		nodes_select_mx     = 0;
 		nodes_select_my     = 0;
@@ -125,10 +125,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	toolbar_height = ui(40);
 	
-	function toCenterNode() { #region
+	function toCenterNode(_list = nodes_list) { #region
 		if(!project.active) return; 
 		
-		if(ds_list_empty(nodes_list)) {
+		if(ds_list_empty(_list)) {
 			graph_x = round(w / 2 / graph_s);
 			graph_y = round(h / 2 / graph_s);
 			return;
@@ -139,8 +139,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var miny =  99999;
 		var maxy = -99999;
 			
-		for(var i = 0; i < ds_list_size(nodes_list); i++) {
-			var _node = nodes_list[| i];
+		for(var i = 0; i < ds_list_size(_list); i++) {
+			var _node = _list[| i];
 			if(!is_struct(_node) || !is_instanceof(_node, Node) || !_node.active)
 				continue;
 			
@@ -156,8 +156,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		graph_x = round(graph_x);
 		graph_y = round(graph_y);
-		
-		//print(title + ": Center " + string(graph_x) + ", " + string(graph_y));
 	} #endregion
 	
 	function initSize() { toCenterNode(); } initSize();
@@ -549,29 +547,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		}
 		
 		nodes_selecting = [ _node ];
-		
-		var cx = _node.x + _node.w / 2;
-		var cy = _node.y + _node.h / 2;
-		
-		graph_x = w / 2 / graph_s - cx;
-		graph_y = (h - toolbar_height) / 2 / graph_s - cy;
-		
-		graph_x = round(graph_x);
-		graph_y = round(graph_y);
+		fullView();
 	} #endregion
 	
 	function fullView() { #region
-		var _node = getFocusingNode();
-		if(_node == noone) {
-			toCenterNode();
-			return;
-		}
-		
-		graph_x = -(_node.x + _node.w / 2) + w / 2 / graph_s;
-		graph_y = -(_node.y + _node.h / 2) + h / 2 / graph_s;
-			
-		graph_x = round(graph_x);
-		graph_y = round(graph_y);
+		gml_pragma("forceinline");
+		var _l = ds_list_create_from_array(nodes_selecting);
+		toCenterNode(array_empty(nodes_selecting)? nodes_list : _l);
+		ds_list_destroy(_l);
 	} #endregion
 	
 	function dragGraph() { #region
@@ -815,7 +798,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									var _y = (_node.y + graph_y) * graph_s;
 									var _w = _node.w * graph_s;
 									var _h = _node.h * graph_s;
-								
+									
 									if(rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
 										array_push(nodes_selecting, _node);	
 								}
@@ -834,7 +817,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									break;
 								}
 								if(!hover_selected)
-									nodes_selecting = [];
+									nodes_selecting = [ node_hovering ];
 							}
 							
 							array_foreach(nodes_selecting, function(node) { bringNodeToFront(node); });
@@ -991,24 +974,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(mouse_press(mb_left))
 				node_dragging = noone;
 			
+			for(var i = 0; i < ds_list_size(nodes_list); i++)
+				nodes_list[| i].groupCheck(gr_x, gr_y, graph_s, mx, my);
+			
 			if(node_dragging && !key_mod_press(ALT)) {
-				if(key_mod_press(SHIFT)) { ////////////// Group dragging
-					for(var i = 0; i < ds_list_size(nodes_list); i++) {
-						var _node = nodes_list[| i];
-						
-						_node.groupCheck(gr_x, gr_y, graph_s, mx, my);
-					}
-		
-					if(node_dragging && node_dragging.cache_group != noone)
-						node_dragging.cache_group.removeNode(node_dragging);
-					
-					for(var i = 0; i < array_length(nodes_selecting); i++) {
-						var _node = nodes_selecting[i];
-						if(_node.cache_group != noone)
-							_node.cache_group.removeNode(_node);
-					}
-				}
-				
 				var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
 				var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
 					
@@ -1862,7 +1831,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		} #endregion
 	
 		function doDelete(_merge = false) { #region
-			array_foreach(nodes_selecting, function(node) { if(node.manual_deletable) nodeDelete(node, _merge); });
+			__temp_merge = _merge;
+			array_foreach(nodes_selecting, function(node) { if(node.manual_deletable) nodeDelete(node, __temp_merge); });
 			nodes_selecting = [];
 		} #endregion
 		

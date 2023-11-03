@@ -1,4 +1,4 @@
-function Node_create_Export(_x, _y, _group = noone) {
+function Node_create_Export(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_save_filename(@"Portable Network Graphics (.png)|*.png|
@@ -20,9 +20,9 @@ MPEG-4 (.mp4)|*.mp4",
 }
 
 function exportAll() {
-	PROJECT.animator.rendering = true;
+	if(RENDERING) return;
+	
 	Render();
-	PROJECT.animator.rendering = false;
 	
 	var key = ds_map_find_first(PROJECT.nodeMap);
 	repeat(ds_map_size(PROJECT.nodeMap)) {
@@ -34,7 +34,7 @@ function exportAll() {
 					
 		node.doInspectorAction();
 	}
-}
+} #endregion
 
 enum NODE_EXPORT_FORMAT {
 	single,
@@ -207,6 +207,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Quality",		false], 6, 7, 10, 13, 
 	];
 	
+	render_process_id = undefined;
+	render_type   = "";
+	render_target = "";
+	
 	directory = TEMPDIR + string(irandom_range(100000, 999999));
 	converter = filepath_resolve(PREFERENCES.ImageMagick_path) + "convert.exe";
 	magick    = filepath_resolve(PREFERENCES.ImageMagick_path) + "magick.exe";
@@ -283,13 +287,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var frames = [];
 		
 		while(_path != "") {
-		    var _frame    = "\"" + temp_path + string_replace_all(_path, ".png", "") + ".webp\"";
-			var _pathTemp = "\"" + temp_path + _path + "\"";
+		    var _frame    = string_quote(temp_path + string_replace_all(_path, ".png", "") + ".webp");
+			var _pathTemp = string_quote(temp_path + _path);
 			var shell_cmd = _pathTemp + " -define webp:lossless=true " + _frame;
 			
 			array_push(frames, _frame);
-			shell_execute(magick, shell_cmd, self);
-		
+			shell_execute_async(magick, shell_cmd, self);
+			
 		    _path = file_find_next();
 		}
 		
@@ -297,22 +301,17 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(rate == 0) rate = 1;
 		
 		var framerate = round(1 / rate * 1000);
-		
 		var cmd = "";
 		
 		for( var i = 0, n = array_length(frames); i < n; i++ )
 			cmd += "-frame " + frames[i] + " +" + string(framerate) + "+0+0+1 ";
 		
 		cmd += "-bgcolor 0,0,0,0 ";
-		cmd += "-o \"" + target_path + "\"";
+		cmd += "-o " + string_quote(target_path);
 		
-		shell_execute(webp, cmd, self); 
-		
-		var noti = log_message("EXPORT", "Export webp as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive, false);
-		noti.path = filename_dir(target_path);
-		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
-		
-		PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+		render_process_id = shell_execute_async(webp, cmd, self); 
+		render_type       = "webp";
+		render_target     = target_path;
 	} #endregion
 	
 	static renderGif = function(temp_path, target_path) { #region
@@ -329,25 +328,21 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var use_gifski = false;
 		
 		if(use_gifski) {
-			var	shell_cmd  = $"-o {target_path} -r {rate} --repeat {loop_str} -Q {qual} ";
-				shell_cmd += temp_path;
+			var	shell_cmd  = $"-o {string_quote(target_path)} -r {rate} --repeat {loop_str} -Q {qual} {string_quote(temp_path)}";
 			
 			//print($"{gifski} {shell_cmd}");
-			shell_execute(gifski, shell_cmd, self);
+			render_process_id = shell_execute_async(gifski, shell_cmd, self);
 		} else {
 			var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose previous -loop {loop_str}";
 			if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
-					 shell_cmd += " " + temp_path + " " + target_path;
+					 shell_cmd += $" {string_quote(temp_path)} {string_quote(target_path)}";
 			
 			//print($"{converter} {shell_cmd}");
-			shell_execute(converter, shell_cmd, self);
+			render_process_id = shell_execute_async(converter, shell_cmd, self);
 		}
 		
-		var noti = log_message("EXPORT", "Export gif as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive, false);
-		noti.path = filename_dir(target_path);
-		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
-		
-		PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+		render_type       = "gif";
+		render_target     = target_path;
 	} #endregion
 	 
 	static renderMp4 = function(temp_path, target_path) { #region
@@ -359,15 +354,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		temp_path   = string_replace_all(temp_path, "/", "\\");
 		target_path = string_replace_all(target_path, "/", "\\");
 		
-		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i {temp_path}%05d.png -c:v libx264 -r {rate} -pix_fmt yuv420p {target_path}";
+		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}%05d.png\" -c:v libx264 -r {rate} -pix_fmt yuv420p {string_quote(target_path)}";
+		print($"{ffmpeg} {shell_cmd}")
 		
-		shell_execute_async(ffmpeg, shell_cmd, self);
-		
-		var noti = log_message("EXPORT", "Export mp4 as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive, false);
-		noti.path = filename_dir(target_path);
-		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
-		
-		PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
+		render_type       = "mp4";
+		render_target     = target_path;
 	} #endregion
 	
 	static pathString = function(path, index = 0, _array = false) { #region
@@ -494,14 +486,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					case 0 : 	
 						surface_save_safe(_surf, _pathTemp);
 					
-						var shell_cmd = $"convert \"{_pathTemp}\" \"{_pathOut}\"";
-						shell_execute(magick, shell_cmd, self);
+						var shell_cmd = $"convert {string_quote(_pathTemp)} {string_quote(_pathOut)}";
+						shell_execute_async(magick, shell_cmd, self);
 						break;
 					case 1 : 
 						surface_save_safe(_surf, _pathTemp);
 					
-						var shell_cmd = $"convert {_pathTemp} PNG8:\"{_pathOut}\"";
-						shell_execute(magick, shell_cmd, self);
+						var shell_cmd = $"convert {string_quote(_pathTemp)} PNG8:{string_quote(_pathOut)}";
+						shell_execute_async(magick, shell_cmd, self);
 						break;
 					case 2 : 
 						surface_save_safe(_surf, _pathOut);
@@ -513,18 +505,18 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_save_safe(_surf, _pathTemp);
 					
 				_pathOut = $"\"{string_replace_all(_path, ".png", "")}.jpg\"";
-				var shell_cmd = $"\"{_pathTemp}\" -quality {qual} {_pathOut}";
+				var shell_cmd = $"{string_quote(_pathTemp)} -quality {qual} {string_quote(_pathOut)}";
 				
-				shell_execute(magick, shell_cmd, self);
+				shell_execute_async(magick, shell_cmd, self);
 				break;
 				
 			case ".webp":
 				surface_save_safe(_surf, _pathTemp);
 				
 				_pathOut = $"\"{string_replace_all(_path, ".png", "")}.webp\"";
-				var shell_cmd = $"\"{_pathTemp}\" -quality {qual} -define webp:lossless=true {_pathOut}";
+				var shell_cmd = $"{string_quote(_pathTemp)} -quality {qual} -define webp:lossless=true {string_quote(_pathOut)}";
 				
-				shell_execute(magick, shell_cmd, self);
+				shell_execute_async(magick, shell_cmd, self);
 				break;
 		}
 		
@@ -611,7 +603,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				switch(extd) {
 					case 0 :
 						target_path = string_replace(target_path, ".png", ".gif");
-						renderGif(string_quote(temp_path), string_quote(target_path));
+						renderGif(temp_path, target_path);
 						break;
 					case 1 :
 						target_path = string_replace(target_path, ".png", ".webp");
@@ -629,7 +621,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			switch(extd) {
 				case 0 :	
 					target_path = string_replace(target_path, ".png", ".gif");
-					renderGif(string_quote(directory + "/*.png"), string_quote(target_path));
+					renderGif(directory + "/*.png", target_path);
 					break;
 				case 1 : 
 					target_path = string_replace(target_path, ".png", ".webp");
@@ -652,11 +644,16 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
+		if(RENDERING) return;
+		
 		if(isInLoop())	RENDER_ALL
 		else			doInspectorAction();
 	} #endregion
 	
-	static onInspector2Update = function() { exportAll(); }
+	static onInspector2Update = function() { 
+		if(RENDERING) return;
+		exportAll(); 
+	}
 	
 	static doInspectorAction = function() { #region
 		if(LOADING || APPENDING) return;
@@ -666,9 +663,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var form = getInputData(3);
 		
 		if(form == NODE_EXPORT_FORMAT.single) {
-			PROJECT.animator.rendering = true;
+			RENDERING++;
 			Render();
-			PROJECT.animator.rendering = false;
+			RENDERING--;
 			
 			export();
 			updatedOutTrigger.setValue(true);
@@ -679,8 +676,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		played					= 0;
 		PROJECT.animator.real_frame		= -1;
 		CURRENT_FRAME	= -1;
-		PROJECT.animator.is_playing		= true;
-		PROJECT.animator.rendering		= true;
+		IS_PLAYING		= true;
+		RENDERING++;
 		
 		if(directory_exists(directory))
 			directory_destroy(directory);
@@ -688,6 +685,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static step = function() { #region
+		insp1UpdateIcon[2] = RENDERING? COLORS._main_icon_dark : COLORS._main_value_positive;
+		insp2UpdateIcon[2] = RENDERING? COLORS._main_icon_dark : COLORS._main_value_positive;
+	
 		var surf = getInputData( 0);
 		var pngf = getInputData(13);
 		
@@ -725,6 +725,19 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		outputs[| 0].visible = isInLoop();
+		
+		if(render_process_id != undefined) {
+			var res = ProcIdExists(render_process_id);
+			if(res == 0) {
+				var noti  = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
+				noti.path = filename_dir(render_target);
+				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+				render_process_id = undefined;
+				
+				RENDERING--;
+			}
+		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
@@ -746,6 +759,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(CURRENT_FRAME == TOTAL_FRAMES - 1 && anim == NODE_EXPORT_FORMAT.animation)
 			renderCompleted();
+	} #endregion
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+		graph_preview_alpha = 1;
+		if(render_process_id != undefined) {
+			graph_preview_alpha = 0.5;
+			draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
+		}
 	} #endregion
 	
 	static doApplyDeserialize = function() { onValueUpdate(3); }

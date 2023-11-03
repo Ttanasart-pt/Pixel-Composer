@@ -37,7 +37,7 @@ function addonPanel(_addon, pane) : PanelContent() constructor {
 		var runResult = lua_call(_addon.thread, drawFn);
 	}
 	
-	function onClose() {
+	static onClose = function() {
 		if(closeFn == "") return;
 		if(!_addon.ready) return;
 		var runResult = lua_call(_addon.thread, closeFn);

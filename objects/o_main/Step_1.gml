@@ -95,7 +95,7 @@ _HOVERING_ELEMENT = noone;
 				_k = ds_map_find_next(PROJECT.nodeMap, _k);
 			}
 	
-			if(PROJECT.animator.is_playing || PROJECT.animator.rendering) {
+			if(IS_PLAYING || RENDERING) {
 				if(PROJECT.animator.frame_progress) {
 					__addon_preAnim();
 				
