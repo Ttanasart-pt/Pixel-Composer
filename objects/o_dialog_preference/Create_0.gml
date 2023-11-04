@@ -101,7 +101,7 @@ event_inherited();
 	ds_list_add(pref_global, __txt("Paths"));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-		__txtx("pref_directory", "Directory path (restart required)"),
+		__txtx("pref_directory", "Main directory path*"),
 		new textBox(TEXTBOX_INPUT.text, function(txt) { 
 				PRESIST_PREF.path = txt;
 				json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
@@ -118,7 +118,7 @@ event_inherited();
 	));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_directory_temp", "Temp path (restart required)"),
+		__txtx("pref_directory_temp", "Temp directory path*"),
 		"temp_path",
 		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.temp_path = txt; PREF_SAVE(); })
 			.setSideButton(button(function() { PREFERENCES.temp_path = get_directory(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -218,7 +218,7 @@ event_inherited();
 	));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_enable_test_mode", "Enable developer mode (require restart)"),
+		__txtx("pref_enable_test_mode", "Enable developer mode*"),
 		"test_mode",
 		new checkBox(function() { 
 			PREFERENCES.test_mode = !PREFERENCES.test_mode; 
@@ -373,7 +373,7 @@ event_inherited();
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_inspector_focus_on_double_click", "Focus on double click"),
-		"PREFERENCES.inspector_focus_on_double_click",
+		"inspector_focus_on_double_click",
 		new checkBox(function(str) { 
 			PREFERENCES.inspector_focus_on_double_click = !PREFERENCES.inspector_focus_on_double_click;
 			PREF_SAVE();
