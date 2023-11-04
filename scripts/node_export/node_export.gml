@@ -20,7 +20,7 @@ MPEG-4 (.mp4)|*.mp4",
 }
 
 function exportAll() {
-	if(RENDERING) return;
+	if(IS_RENDERING) return;
 	
 	Render();
 	
@@ -207,7 +207,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Quality",		false], 6, 7, 10, 13, 
 	];
 	
-	render_process_id = undefined;
+	render_process_id = 0;
 	render_type   = "";
 	render_target = "";
 	
@@ -309,9 +309,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		cmd += "-bgcolor 0,0,0,0 ";
 		cmd += "-o " + string_quote(target_path);
 		
+		array_remove(RENDERING, node_id);
 		render_process_id = shell_execute_async(webp, cmd, self); 
 		render_type       = "webp";
 		render_target     = target_path;
+		
+		if(render_process_id != 0) array_push(RENDERING, node_id);
 	} #endregion
 	
 	static renderGif = function(temp_path, target_path) { #region
@@ -326,6 +329,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var framerate  = 100 / rate;
 		var loop_str   = loop? 0 : 1;
 		var use_gifski = false;
+		
+		array_remove(RENDERING, node_id);
 		
 		if(use_gifski) {
 			var	shell_cmd  = $"-o {string_quote(target_path)} -r {rate} --repeat {loop_str} -Q {qual} {string_quote(temp_path)}";
@@ -343,6 +348,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		render_type       = "gif";
 		render_target     = target_path;
+		
+		if(render_process_id != 0) array_push(RENDERING, node_id);
 	} #endregion
 	 
 	static renderMp4 = function(temp_path, target_path) { #region
@@ -357,9 +364,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}%05d.png\" -c:v libx264 -r {rate} -pix_fmt yuv420p {string_quote(target_path)}";
 		print($"{ffmpeg} {shell_cmd}")
 		
+		array_remove(RENDERING, node_id);
 		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
 		render_type       = "mp4";
 		render_target     = target_path;
+		
+		if(render_process_id != 0) array_push(RENDERING, node_id);
 	} #endregion
 	
 	static pathString = function(path, index = 0, _array = false) { #region
@@ -594,6 +604,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var extd = getInputData( 9);
 		var temp_path, target_path;
 		
+		update_on_frame = false;
+		
 		if(is_array(surf)) {
 			for(var i = 0; i < array_length(surf); i++) {
 				temp_path = $"{directory}/{i}/*.png";
@@ -644,16 +656,16 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
-		if(RENDERING) return;
+		if(IS_RENDERING) return;
 		
 		if(isInLoop())	RENDER_ALL
 		else			doInspectorAction();
 	} #endregion
 	
-	static onInspector2Update = function() { 
-		if(RENDERING) return;
+	static onInspector2Update = function() { #region
+		if(IS_RENDERING) return;
 		exportAll(); 
-	}
+	} #endregion
 	
 	static doInspectorAction = function() { #region
 		if(LOADING || APPENDING) return;
@@ -663,21 +675,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var form = getInputData(3);
 		
 		if(form == NODE_EXPORT_FORMAT.single) {
-			RENDERING++;
+			array_push(RENDERING, node_id);
 			Render();
-			RENDERING--;
+			array_remove(RENDERING, node_id);
 			
 			export();
 			updatedOutTrigger.setValue(true);
 			return;
 		}
 		
-		playing					= true;
-		played					= 0;
+		update_on_frame = true;
+		playing			= true;
+		played			= 0;
 		PROJECT.animator.real_frame		= -1;
 		CURRENT_FRAME	= -1;
 		IS_PLAYING		= true;
-		RENDERING++;
+		array_push(RENDERING, node_id);
 		
 		if(directory_exists(directory))
 			directory_destroy(directory);
@@ -685,8 +698,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static step = function() { #region
-		insp1UpdateIcon[2] = RENDERING? COLORS._main_icon_dark : COLORS._main_value_positive;
-		insp2UpdateIcon[2] = RENDERING? COLORS._main_icon_dark : COLORS._main_value_positive;
+		insp1UpdateActive  = !IS_RENDERING;
+		insp2UpdateActive  = !IS_RENDERING;
 	
 		var surf = getInputData( 0);
 		var pngf = getInputData(13);
@@ -726,16 +739,16 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		outputs[| 0].visible = isInLoop();
 		
-		if(render_process_id != undefined) {
+		if(render_process_id != 0) {
 			var res = ProcIdExists(render_process_id);
 			if(res == 0) {
 				var noti  = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
 				noti.path = filename_dir(render_target);
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
-				render_process_id = undefined;
+				render_process_id = 0;
 				
-				RENDERING--;
+				array_remove(RENDERING, node_id);
 			}
 		}
 	} #endregion
@@ -752,8 +765,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			return;
 		}
 		
-		if(!PROJECT.animator.frame_progress || !playing || CURRENT_FRAME <= -1)
-			return;
+		if(!playing) return;
 		
 		export();
 		
@@ -763,7 +775,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		graph_preview_alpha = 1;
-		if(render_process_id != undefined) {
+		if(render_process_id != 0) {
 			graph_preview_alpha = 0.5;
 			draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
 		}

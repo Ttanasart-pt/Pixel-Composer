@@ -123,9 +123,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		updatedInTrigger.tags  = VALUE_TAG.updateInTrigger;
 		updatedOutTrigger.tags = VALUE_TAG.updateOutTrigger;
 		
+		insp1UpdateActive   = true;
 		insp1UpdateTooltip  = __txtx("panel_inspector_execute", "Execute node");
 		insp1UpdateIcon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
+		
+		insp2UpdateActive   = true;
 		insp2UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
 		insp2UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 		
@@ -645,7 +647,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return true;
 	} #endregion
 	
-	static isRenderActive = function() { return renderActive || (PREFERENCES.render_all_export && PROJECT.animator.rendering); }
+	static isRenderActive = function() { return renderActive || (PREFERENCES.render_all_export && IS_RENDERING); }
 	
 	static isRenderable = function(log = false) { #region //Check if every input is ready (updated)
 		if(!active)	return false;

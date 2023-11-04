@@ -757,7 +757,10 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		if(inspecting.hasInspector1Update(true)) {
 			var icon = inspecting.insp1UpdateIcon;
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, inspecting.insp1UpdateTooltip, icon[0], icon[1], icon[2]) == 2)
+			var ac = inspecting.insp1UpdateActive;
+			var cc = ac? icon[2] : COLORS._main_icon_dark;
+			
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS && ac, pHOVER && ac, inspecting.insp1UpdateTooltip, icon[0], icon[1], cc) == 2)
 				inspecting.inspector1Update();
 		} else 
 			draw_sprite_ui(THEME.sequence_control, 1, bx + ui(16), by + ui(16),,,, COLORS._main_icon_dark);
@@ -765,8 +768,10 @@ function Panel_Inspector() : PanelContent() constructor {
 		if(inspecting.hasInspector2Update()) {
 			by += ui(36);
 			var icon = inspecting.insp2UpdateIcon;
+			var ac = inspecting.insp2UpdateActive;
+			var cc = ac? icon[2] : COLORS._main_icon_dark;
 			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, inspecting.insp2UpdateTooltip, icon[0], icon[1], icon[2]) = 2)
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS && ac, pHOVER && ac, inspecting.insp2UpdateTooltip, icon[0], icon[1], cc) = 2)
 				inspecting.inspector2Update();
 		}
 	} #endregion

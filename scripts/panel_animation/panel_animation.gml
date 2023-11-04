@@ -135,50 +135,50 @@ function Panel_Animation() : PanelContent() constructor {
 		[ 
 		  function() { return __txt("Stop"); }, 
 		  function() { return 4; }, 
-		  function() { if(RENDERING) return COLORS._main_icon_dark; return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
-		  function() { if(RENDERING) return; PROJECT.animator.stop(); } 
+		  function() { return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
+		  function() { return; PROJECT.animator.stop(); } 
 		],
 		[ 
 		  function() { return PROJECT.animator.is_playing? __txt("Pause") : __txt("Play"); }, 
 		  function() { return !PROJECT.animator.is_playing; }, 
-		  function() { if(RENDERING) return COLORS._main_icon_dark; return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
-		  function() { if(RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause(); else PROJECT.animator.resume(); } 
+		  function() { return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
+		  function() { return; if(PROJECT.animator.is_playing) PROJECT.animator.pause(); else PROJECT.animator.resume(); } 
 		],
 		[ 
 		  function() { return __txtx("panel_animation_go_to_first_frame", "Go to first frame"); }, 
 		  function() { return 3; }, 
-		  function() { if(RENDERING) return COLORS._main_icon_dark; return COLORS._main_icon; },
-		  function() { if(RENDERING) return; PROJECT.animator.setFrame(0); } 
+		  function() { return COLORS._main_icon; },
+		  function() { return; PROJECT.animator.setFrame(0); } 
 		],
 		[ 
 		  function() { return __txtx("panel_animation_go_to_last_frame", "Go to last frame"); }, 
 		  function() { return 2; }, 
-		  function() { if(RENDERING) return COLORS._main_icon_dark; return COLORS._main_icon; },
-		  function() { if(RENDERING) return; PROJECT.animator.setFrame(TOTAL_FRAMES - 1); } 
+		  function() { return COLORS._main_icon; },
+		  function() { return; PROJECT.animator.setFrame(TOTAL_FRAMES - 1); } 
 		],
 		[ 
 		  function() { return __txtx("panel_animation_previous_frame", "Previous frame"); }, 
 		  function() { return 5; }, 
-		  function() { if(RENDERING) return COLORS._main_icon_dark; return COLORS._main_icon; },
-		  function() { if(RENDERING) return; PROJECT.animator.setFrame(PROJECT.animator.real_frame - 1); } 
+		  function() { return COLORS._main_icon; },
+		  function() { return; PROJECT.animator.setFrame(PROJECT.animator.real_frame - 1); } 
 		],
 		[ 
 		  function() { return __txtx("panel_animation_next_frame", "Next frame"); }, 
 		  function() { return 6; }, 
-		  function() { if(RENDERING) return COLORS._main_icon_dark; return COLORS._main_icon; },
-		  function() { if(RENDERING) return; PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1); } 
+		  function() { return COLORS._main_icon; },
+		  function() { return; PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1); } 
 		],
 	];
 	#endregion
 	
 	#region ++++ hotkeys ++++
-	addHotkey("", "Play/Pause",		vk_space, MOD_KEY.none,	function() { if(RENDERING) return; if(IS_PLAYING) PROJECT.animator.pause() else PROJECT.animator.play(); });
-	addHotkey("", "Resume/Pause",	vk_space, MOD_KEY.shift,function() { if(RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); });
+	addHotkey("", "Play/Pause",		vk_space, MOD_KEY.none,	function() { if(IS_RENDERING) return; if(IS_PLAYING) PROJECT.animator.pause() else PROJECT.animator.play(); });
+	addHotkey("", "Resume/Pause",	vk_space, MOD_KEY.shift,function() { if(IS_RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); });
 	
-	addHotkey("", "First frame",	vk_home,  MOD_KEY.none,	function() { if(RENDERING) return; PROJECT.animator.setFrame(0); });
-	addHotkey("", "Last frame",		vk_end,   MOD_KEY.none,	function() { if(RENDERING) return; PROJECT.animator.setFrame(TOTAL_FRAMES - 1); });
-	addHotkey("", "Next frame",		vk_right, MOD_KEY.none,	function() { if(RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, TOTAL_FRAMES - 1)); });
-	addHotkey("", "Previous frame",	vk_left, MOD_KEY.none,	function() { if(RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0)); });
+	addHotkey("", "First frame",	vk_home,  MOD_KEY.none,	function() { if(IS_RENDERING) return; PROJECT.animator.setFrame(0); });
+	addHotkey("", "Last frame",		vk_end,   MOD_KEY.none,	function() { if(IS_RENDERING) return; PROJECT.animator.setFrame(TOTAL_FRAMES - 1); });
+	addHotkey("", "Next frame",		vk_right, MOD_KEY.none,	function() { if(IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, TOTAL_FRAMES - 1)); });
+	addHotkey("", "Previous frame",	vk_left, MOD_KEY.none,	function() { if(IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0)); });
 	
 	addHotkey("Animation", "Delete keys",	vk_delete,	MOD_KEY.none, function() { PANEL_ANIMATION.deleteKeys(); });
 	addHotkey("Animation", "Duplicate",		"D",		MOD_KEY.ctrl, function() { PANEL_ANIMATION.doDuplicate(); });
@@ -1838,6 +1838,8 @@ function Panel_Animation() : PanelContent() constructor {
 		var row = ceil(amo / col);
 		if(col < 1) return;
 		
+		var _act = !IS_RENDERING;
+		
 		for( var i = 0; i < row; i++ ) {
 			var colAmo = min(amo - i * col, col);
 			if(mini) 
@@ -1849,10 +1851,10 @@ function Panel_Animation() : PanelContent() constructor {
 				var but = control_buttons[ind];
 				var txt = but[0]();
 				var ind = but[1]();
-				var cc  = but[2]();
+				var cc  = _act? but[2]() : COLORS._main_icon_dark;
 				var fnc = but[3];
 			
-				if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, txt, THEME.sequence_control, ind, cc) == 2) 
+				if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS && _act, pHOVER && _act, txt, THEME.sequence_control, ind, cc) == 2) 
 					fnc();
 			
 				bx += ui(36);

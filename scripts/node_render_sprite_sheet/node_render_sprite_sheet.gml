@@ -87,7 +87,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(grup != SPRITE_ANIM_GROUP.animation) {
 			initRender();
 			return;
-		} else if(RENDERING && PROJECT.animator.frame_progress && CURRENT_FRAME == 0 && !refreshSurface) {
+		} else if(IS_RENDERING && PROJECT.animator.frame_progress && CURRENT_FRAME == 0 && !refreshSurface) {
 			var skip = getInputData(2);
 			
 			var arr = is_array(inpt);
