@@ -369,5 +369,25 @@
     "pref_use_alt": "Use ALT for",
     "meta_old_version": "Created on an older version",
 
+    "open_in_safe_mode": "Open in safe mode",
+    "group_properties": "Group Properties",
+    "panel_inspector_axis_combine": "Combine axis",
+    "panel_inspector_disable_expression": "Disable expression",
+    "new_folder": "New folder",
+    "panel_graph_enter_group_new_tab": "Open group in new tab",
+    "set_as_group_tool": "Set as group tool",
+    "panel_graph_align_nodes": "Align nodes",
+    "panel_graph_copy_prop": "Copy all properties",
+    "panel_graph_paste_prop": "Paste all properties",
+    "node_color": "Node Color",
+    "connection_color": "Connection Color",
+    "pref_pages_interface": "Interface",
+    "pref_directory_temp": "Temp path (restart required)",
+    "pref_inspector_focus_on_double_click": "Focus on double click",
+    "notification": "Notification",
+    "pref_pan_key": "Panning key",
+    "reload_theme": "Reload theme",
+    "reset_layout": "Reset layout",
+
     "" : ""
 }

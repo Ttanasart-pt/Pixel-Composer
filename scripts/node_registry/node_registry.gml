@@ -733,7 +733,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		//addNodeCatagory("VCT", vct);
 		//	addNodeObject(vct, "Biterator",		s_node_print,		"Node_Biterator",		[1, Node_Biterator]);
 		
-		//////////////////////////////////////////////////////////////// PIXEL BUILDER ////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////// PIXEL  BUILDER ////////////////////////////////////////////////////////////
 		
 		var pb_group = ds_list_create(); #region
 		addNodePBCatagory("Group", pb_group); 
@@ -805,7 +805,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(pb_arr, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).hideRecent().setVersion(1120);
 		#endregion
 		
-		//////////////////////////////////////////////////////////////// PCX NODES ////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////// PCX NODE ///////////////////////////////////////////////////////////////
 		
 		var pcx_var = ds_list_create(); #region
 		addNodePCXCatagory("Variable", pcx_var);
@@ -835,7 +835,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(pcx_flow, "Condition",		s_node_array,	"Node_PCX_Condition",		[1, Node_PCX_Condition]).hideRecent();
 		#endregion
 		
-		//////////////////////////////////////////////////////////////// HIDDENS ////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////// HIDDEN ////////////////////////////////////////////////////////////////
 		
 		var hid = ds_list_create(); #region
 		addNodeCatagory("Hidden", hid, ["Hidden"]);

@@ -22,14 +22,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.display_bone = 0;
 	
 	array_push(attributeEditors, "Display");
+	
 	array_push(attributeEditors, ["Display name", function() { return attributes.display_name; }, 
-		new checkBox(function() { 
-			attributes.display_name = !attributes.display_name;
-		})]);
+		new checkBox(function() { attributes.display_name = !attributes.display_name; })]);
+		
 	array_push(attributeEditors, ["Display bone", function() { return attributes.display_bone; }, 
-		new scrollBox(["Octahedral", "Stick"], function(ind) { 
-			attributes.display_bone = ind;
-		})]);
+		new scrollBox(["Octahedral", "Stick"], function(ind) { attributes.display_bone = ind; })]);
 	
 	static createNewInput = function(bone = noone) { #region
 		var index = ds_list_size(inputs);
@@ -38,8 +36,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			.setDisplay(VALUE_DISPLAY.transform);
 		inputs[| index].display_data.bone_id = bone != noone? bone.ID : noone;
 		
-		if(bone != noone)
-			boneMap[? bone.ID] = inputs[| index];
+		if(bone != noone) boneMap[? bone.ID] = inputs[| index];
 		
 		array_push(input_display_list, index);
 		
@@ -99,9 +96,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		//print(_input_display_list);
 	} #endregion
 	
-	tools = [
-		
-	];
+	tools = [];
 	
 	anchor_selecting = noone;
 	posing_bone  = noone;
@@ -132,9 +127,10 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var bx  = posing_sx + pp[0];
 				var by  = posing_sy + pp[1];
 				
-				var val = posing_input.getValue();
+				var val = array_clone(posing_input.getValue());
 				val[TRANSFORM.pos_x] = bx;
 				val[TRANSFORM.pos_y] = by;
+				
 				if(posing_input.setValue(val))
 					UNDO_HOLDING = true;
 				
@@ -144,9 +140,10 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var ang = point_direction(ori.x, ori.y, smx, smy);
 				var rot = ang - posing_sy;
 				
-				var val = posing_input.getValue();
+				var val = array_clone(posing_input.getValue());
 				val[TRANSFORM.sca_x] = ss;
 				val[TRANSFORM.rot]   = rot;
+				
 				if(posing_input.setValue(val))
 					UNDO_HOLDING = true;
 				
@@ -157,7 +154,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				posing_sy = ang;
 				posing_sx += rot;
 				
-				var val = posing_input.getValue();
+				var val = array_clone(posing_input.getValue());
 				val[TRANSFORM.rot] = posing_sx;
 				
 				if(posing_input.setValue(val))

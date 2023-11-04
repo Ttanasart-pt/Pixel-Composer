@@ -37,21 +37,19 @@
 	function __txtx(key, def = "") {
 		gml_pragma("forceinline");
 		
-		if(LOCALE_USE_DEFAULT) return def;
-		
+		if(key == "") return "";
 		if(TEST_LOCALE) {
 			if(!struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
 				show_debug_message($"LOCALE: \"{key}\": \"{def}\",");
-				//return def;
+				return def;
 			}
-			
 			return "";
 		}
 		
-		if(struct_has(LOCALE.word, key))
-			return LOCALE.word[$ key];
-		if(struct_has(LOCALE.ui, key)) 
-			return LOCALE.ui[$ key];
+		if(LOCALE_USE_DEFAULT) return def;
+		
+		if(struct_has(LOCALE.word, key)) return LOCALE.word[$ key];
+		if(struct_has(LOCALE.ui, key))   return LOCALE.ui[$ key];
 		
 		return def;
 	}
@@ -59,11 +57,18 @@
 	function __txt(txt, prefix = "") {
 		gml_pragma("forceinline");
 		
-		if(LOCALE_USE_DEFAULT) return txt;
-		
+		if(txt == "") return "";
 		var key = string_lower(txt);
 		    key = string_replace_all(key, " ", "_");
 			
+		if(TEST_LOCALE) {
+			if(!struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
+				show_debug_message($"LOCALE: \"{key}\": \"{txt}\",");
+				return txt;
+			}	
+			return "";
+		}
+		if(LOCALE_USE_DEFAULT) return txt;	
 		return __txtx(prefix + key, txt);
 	}
 	
