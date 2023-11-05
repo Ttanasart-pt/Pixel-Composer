@@ -30,22 +30,33 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	} #endregion
 	
 	static enableNodeGroup = function() { #region
+		if(LOADING || APPENDING) return; 
+		
 		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
 			cache_group_members[i].renderActive = true;
 		clearCache(true);
 	} #endregion
 	
 	static disableNodeGroup = function() { #region
+		if(LOADING || APPENDING) return;
+		
 		if(IS_PLAYING && CURRENT_FRAME == TOTAL_FRAMES - 1)
 		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
 			cache_group_members[i].renderActive = false;
 	} #endregion
 	
 	static refreshCacheGroup = function() { #region
-		cache_group_members = array_create(array_length(attributes.cache_group));
+		cache_group_members = [];
+		
 		for( var i = 0, n = array_length(attributes.cache_group); i < n; i++ ) {
-			cache_group_members[i] = PROJECT.nodeMap[? attributes.cache_group[i]];
-			cache_group_members[i].cache_group = self;
+			if(!ds_map_exists(PROJECT.nodeMap, attributes.cache_group[i])) {
+				print($"Node not found {attributes.cache_group[i]}");
+				continue;
+			}
+			
+			var _node = PROJECT.nodeMap[? attributes.cache_group[i]];
+			array_push(cache_group_members, _node);
+			_node.cache_group = self;
 		}
 	} #endregion
 	
@@ -225,10 +236,5 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		draw_primitive_end();
 		
 		draw_set_alpha(1);
-	} #endregion
-		
-	static attributeDeserialize = function(attr) { #region
-		struct_override(attributes, attr); 
-		refreshCacheGroup();
 	} #endregion
 }

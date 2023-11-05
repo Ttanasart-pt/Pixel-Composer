@@ -1681,7 +1681,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			else		  node_id = load_map.id;
 			
 			PROJECT.nodeMap[? node_id] = self;
-			//print($"D Adding node {node_id} to {PROJECT.path} [{ds_map_size(PROJECT.nodeMap)}]");
+			//print($"Adding node {node_id} to {PROJECT.path} [{ds_map_size(PROJECT.nodeMap)}]");
 			
 			if(struct_has(load_map, "name"))
 				setDisplayName(load_map.name);

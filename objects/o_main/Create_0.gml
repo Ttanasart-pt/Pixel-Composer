@@ -2,8 +2,7 @@
 #region log
 	var path = "log_temp.txt";
 	var f = file_text_open_append(path);
-	var t = _log_template();
-	file_text_write_string(f, "[MESSAGE] " + t + "session begin" + "\n");
+	file_text_write_string(f, $"[MESSAGE] {_log_template()}session begin\n");
 	file_text_close(f);
 	
 	gpu_set_tex_mip_enable(mip_off);

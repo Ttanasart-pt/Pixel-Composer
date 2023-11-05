@@ -12,6 +12,7 @@
 #endregion
 
 function _log_template() {
+	gml_pragma("forceinline");
 	return $"{current_year}/{current_month}/{current_day} {string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}:{string_lead_zero(current_second, 2)} > ";
 }
 

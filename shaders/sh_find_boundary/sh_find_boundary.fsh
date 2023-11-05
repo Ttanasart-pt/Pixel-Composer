@@ -20,7 +20,7 @@ void main() {
 		for( i = 0.; i < _w; i++ )
 		for( j = 0.; j < _h; j++ ) {
 			col = texture2D( texture, vec2(i, j) / dimension);
-			if(col.r > 0.) {
+			if(col.a > 0.) {
 				gl_FragColor = vec4(i);
 				return;
 			}
@@ -29,7 +29,7 @@ void main() {
 		for( i = 0.; i < _h; i++ )
 		for( j = bbox.x; j < _w; j++ ) {
 			col = texture2D( texture, vec2(j, i) / dimension);
-			if(col.r > 0.) {
+			if(col.a > 0.) {
 				gl_FragColor = vec4(i);
 				return;
 			}
@@ -38,7 +38,7 @@ void main() {
 		for( i = _w; i >= bbox.x; i-- )
 		for( j = bbox.y; j < _h; j++ ) {
 			col = texture2D( texture, vec2(i, j) / dimension);
-			if(col.r > 0.) {
+			if(col.a > 0.) {
 				gl_FragColor = vec4(i);
 				return;
 			}
@@ -47,7 +47,7 @@ void main() {
 		for( i = _h; i >= bbox.y; i-- )
 		for( j = bbox.x; j <= bbox.z; j++ ) {
 			col = texture2D( texture, vec2(j, i) / dimension);
-			if(col.r > 0.) {
+			if(col.a > 0.) {
 				gl_FragColor = vec4(i);
 				return;
 			}

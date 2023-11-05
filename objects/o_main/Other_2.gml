@@ -41,8 +41,8 @@
 	
 	PRESIST_PREF.path = DIRECTORY;
 	json_save_struct(perstPath, PRESIST_PREF);
-	
 	directory_verify(DIRECTORY);
+	directory_set_current_working(DIRECTORY);
 	
 	METADATA = __getdefaultMetaData();
 #endregion
@@ -105,8 +105,7 @@
 	if(parameter_count() > 1) {
 		var path = parameter_string(1);
 		if(path == "--crashed") {
-			if(PREFERENCES.show_crash_dialog)
-				dialogCall(o_dialog_crashed);
+			if(PREFERENCES.show_crash_dialog) dialogCall(o_dialog_crashed);
 		} else {
 			path = string_replace_all(path, "\n", "");
 			path = string_replace_all(path, "\"", "");
@@ -114,8 +113,6 @@
 			if(file_exists(path) && filename_ext(path) == ".pxc") {
 				file_open_parameter = path;
 				alarm[2] = 3;
-			
-				directory_set_current_working(DIRECTORY);
 			}
 		}
 	}

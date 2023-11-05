@@ -26,6 +26,7 @@ _HOVERING_ELEMENT = noone;
 		window_set_cursor(CURSOR);
 		_cursor = CURSOR;
 	}
+	
 	CURSOR = cr_default;
 	
 	if(!gameframe_is_minimized() && (win_wp != WIN_W || win_hp != WIN_H) && (WIN_W > 1 && WIN_H > 1)) {
