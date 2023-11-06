@@ -17,7 +17,10 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	insp2UpdateTooltip = "Clear cache";
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
 	
-	static onInspector2Update = function() { clearCache(true); }
+	static onInspector2Update = function() { 
+		clearCache(true); 
+		enableNodeGroup();
+	}
 	
 	static step = function() { #region
 		if(cache_loading) {
