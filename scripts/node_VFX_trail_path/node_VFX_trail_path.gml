@@ -47,8 +47,9 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var line = lines[_ind];
 		var _st  = _rat * (lineLength[_ind] - 1);
-		_p0 = line[floor(_st) + 0];
-		_p1 = line[floor(_st) + 1];
+		
+		_p0 = line[clamp(floor(_st) + 0, 0, array_length(line) - 1)];
+		_p1 = line[clamp(floor(_st) + 1, 0, array_length(line) - 1)];
 		
 		if(!is_array(_p0)) return out;
 		if(!is_array(_p1)) return out;
