@@ -195,10 +195,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		mouse_cur_y = 0;
 		mouse_pre_x = 0;
 		mouse_pre_y = 0;
-		mouse_pre_draw_x = -1;
-		mouse_pre_draw_y = -1;
-		mouse_pre_dir_x  = -1;
-		mouse_pre_dir_y  = -1;
+		mouse_pre_draw_x = undefined;
+		mouse_pre_draw_y = undefined;
+		mouse_pre_dir_x  = undefined;
+		mouse_pre_dir_y  = undefined;
 	
 		mouse_holding = false;
 	
@@ -663,11 +663,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		brush_surface  = is_surface(_brushSurf)? _brushSurf : noone;
 		if(!_brushRotD) 
 			brush_direction = 0;
-		else if(point_distance(mouse_pre_dir_x, mouse_pre_dir_y, _mx, _my) > _s) {
+		else if(mouse_pre_dir_x == undefined) {
+			mouse_pre_dir_x = _mx;
+			mouse_pre_dir_y = _my;
+		} else if(point_distance(mouse_pre_dir_x, mouse_pre_dir_y, _mx, _my) > _s) {
 			brush_direction = point_direction(mouse_pre_dir_x, mouse_pre_dir_y, _mx, _my);
 			mouse_pre_dir_x = _mx;
 			mouse_pre_dir_y = _my;
 		}
+		
 		brush_rand_dir = _brushRotR;
 		if(key_mod_press(ALT)) return;
 		
@@ -813,7 +817,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		#endregion
 		} else if(isUsingTool("Pencil") || isUsingTool("Eraser")) { #region
-			if(mouse_pre_draw_x > -1 && mouse_pre_draw_y > -1 && key_mod_press(SHIFT) && key_mod_press(CTRL)) {
+			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT) && key_mod_press(CTRL)) {
 				var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				var _a = round(aa / 45) * 45;
@@ -832,7 +836,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_reset_shader();
 				
 				mouse_holding = true;
-				if(mouse_pre_draw_x > -1 && mouse_pre_draw_y > -1 && key_mod_press(SHIFT)) { ///////////////// LINE
+				if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) { ///////////////// LINE
 					surface_set_shader(drawing_surface, noone, true, BLEND.alpha);
 						brush_next_dist = 0;
 						draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
@@ -996,7 +1000,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					if(brush_sizing) {
 						draw_point_size(brush_sizing_dx, brush_sizing_dy);
 					} else {
-						if(mouse_pre_draw_x > -1 && mouse_pre_draw_y > -1 && key_mod_press(SHIFT)) 
+						if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) 
 							draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 						else
 							draw_point_size(mouse_cur_x, mouse_cur_y);
