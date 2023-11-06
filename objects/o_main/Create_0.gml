@@ -246,6 +246,8 @@
 	globalvar DIALOGS, WIDGET_TAB_BLOCK;
 	DIALOGS = ds_list_create();
 	WIDGET_TAB_BLOCK = false;
+	
+	instance_create(0, 0, o_dialog_textbox_slider);
 #endregion
 
 #region async

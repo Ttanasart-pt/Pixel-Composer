@@ -16,8 +16,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	slidable = false;
 	sliding  = false;
-	slide_mx = 0;
-	slide_my = 0;
+	slide_sv = 0;
 	slide_speed = 1 / 10;
 	
 	starting_char = 1;
@@ -331,52 +330,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		_text = string_real(_text);
 		_current_text = _text;
 		
-		if(sliding > 0) {
-			var dx =   _m[0] - slide_mx;
-			var dy = -(_m[1] - slide_my);
-			
-			if(sliding == 1 && (abs(dx) > 16 || abs(dy) > 16)) {
-				sliding = 2;
-				slide_mx = _m[0];
-				slide_my = _m[1];
-				
-				dx = 0;
-				dy = 0;
-			}
-			
-			if(sliding == 2) {
-				var _ip = _input_text;
-				
-				if(!MOUSE_WRAPPING) {
-					var spd = (abs(dx) > abs(dy)? dx : dy) * slide_speed;
-					
-					if(key_mod_press(ALT))
-						spd /= 10;
-					if(key_mod_press(CTRL))
-						spd *= 10;
-					
-					_input_text = string_real(toNumber(_input_text) + spd);
-					
-					if(apply())
-						UNDO_HOLDING = true;
-				}
-				
-				if(MOUSE_WRAPPING || _input_text != _ip) {
-					slide_mx = _m[0];
-					slide_my = _m[1];
-				}
-				
-				setMouseWrap();
-				if(mouse_release(mb_left))
-					deactivate();
-			}
-			
-			if(mouse_release(mb_left)) {
-				sliding = 0;
-				UNDO_HOLDING = false;
-			}
-		}
-		
 		var tb_surf_x = _x + ui(8);
 		var tb_surf_y = _y;
 		
@@ -491,7 +444,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			if(!hoverRect && mouse_press(mb_left)) 
 				deactivate();
-		} else {
+		} else { #region draw
 			draw_set_text(font == noone? f_p0 : font, fa_left, fa_center);
 			var _display_text = _raw_text;
 			if(input == TEXTBOX_INPUT.number) {
@@ -545,7 +498,29 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			BLEND_ALPHA
 			draw_surface(text_surface, tb_surf_x, tb_surf_y);
 			BLEND_NORMAL
-		}
+		} #endregion
+		
+		if(sliding > 0) { #region
+			var dx =   _m[0] - slide_mx;
+			var dy = -(_m[1] - slide_my);
+			
+			if(sliding == 1 && (abs(dx) > 16 || abs(dy) > 16)) {
+				sliding  = 2;
+				slide_sv = toNumber(_input_text);
+				o_dialog_textbox_slider.activate()
+			}
+			
+			if(sliding == 2) {
+				o_dialog_textbox_slider.tb = self;
+				
+				if(mouse_release(mb_left)) deactivate();
+			}
+			
+			if(mouse_release(mb_left)) {
+				sliding = 0;
+				UNDO_HOLDING = false;
+			}
+		} #endregion
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _w, _h, COLORS._main_value_positive, 1);

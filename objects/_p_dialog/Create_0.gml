@@ -1,7 +1,8 @@
 /// @description init
 #region data
-	with(_p_dialog)
-		other.depth = min(depth - 1, other.depth);
+	with(_p_dialog) other.depth = min(depth - 1, other.depth);
+	//print($"{object_get_name(object_index)}: {depth}");
+	
 	ds_list_add(DIALOGS, self);
 	
 	active    = true;
