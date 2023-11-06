@@ -37,6 +37,8 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 4] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.01)
 	
+	inputs[| 5] = nodeValue("Clamp to range", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
 	outputs[| 0] = nodeValue("Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
@@ -57,6 +59,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			case 0 : 
 				inputs[| 3].setVisible(false);
 				inputs[| 4].setVisible(false);
+				inputs[| 5].setVisible(false);
 				break;
 			case 1 : 
 				if(inputs[| 0].isLeaf()) {
@@ -65,6 +68,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				}
 				inputs[| 3].setVisible(true);
 				inputs[| 4].setVisible(true);
+				inputs[| 5].setVisible(true);
 				break;
 			case 2 : 
 				if(inputs[| 0].isLeaf()) {
@@ -73,6 +77,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				}
 				inputs[| 3].setVisible(false);
 				inputs[| 4].setVisible(false);
+				inputs[| 5].setVisible(false);
 				break;
 		}
 		
@@ -97,6 +102,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var disp = getInputData(2);
 		var rang = getInputData(3);
 		var stp  = getInputData(4);
+		var cmp  = getInputData(5);
 		var _col = getColor();
 		
 		if(inputs[| 0].value_from != noone || disp == 0) { #region
@@ -147,6 +153,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					var _valM = (_mx - sl_x0) / (sl_x1 - sl_x0);
 					var _valL = lerp(_minn, _maxx, _valM);
 					    _valL = value_snap(_valL, stp);
+					if(cmp) _valL = clamp(_valL, _minn, _maxx);
 					inputs[| 0].setValue(_valL);
 					
 					if(mouse_release(mb_left))

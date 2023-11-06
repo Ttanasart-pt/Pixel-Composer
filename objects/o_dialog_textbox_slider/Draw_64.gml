@@ -9,12 +9,16 @@ if(!MOUSE_WRAPPING) {
 	else if(slide_da ==  0 && abs(_ady) > abs(_adx) + 8 && abs(mouse_my - slide_dy) > 64) slide_da = 1;
 	else if(slide_da ==  1 && abs(_adx) > abs(_ady) + 8 && abs(mouse_mx - slide_dx) > 64) slide_da = 0;
 	
-	var spd  = (slide_da? _ady : _adx) * tb.slide_speed;
-	var _val = value_snap(tb.slide_sv + spd, tb.slide_speed);
+	var _s = tb.slide_speed;
+	if(key_mod_press(CTRL)) _s *= 10;
+	if(key_mod_press(ALT))  _s /= 10;
+	
+	var spd  = (slide_da? _ady : _adx) * _s;
+	var _val = value_snap(tb.slide_sv + spd, _s);
 	
 	draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text);
 	
-	var _stp_sz = 50 * tb.slide_speed;
+	var _stp_sz = 50 * _s;
 	var _stp_fl = round(_val / _stp_sz) * _stp_sz;
 	var _stp_md = _val - _stp_fl;
 	
@@ -24,9 +28,9 @@ if(!MOUSE_WRAPPING) {
 		_tw = max(_tw, string_width(_v) + 16);
 	}
 	
-	var _snp_s = 50 * tb.slide_speed;
+	var _snp_s = 50 * _s;
 	var _snp_v = round(_val / _snp_s) * _snp_s;
-	if(abs(_val - _snp_v) < 5 * tb.slide_speed)
+	if(abs(_val - _snp_v) < 5 * _s)
 		_val = _snp_v;
 	
 	if(slide_da) {
@@ -41,11 +45,11 @@ if(!MOUSE_WRAPPING) {
 			var _v = _stp_fl + i * _stp_sz;
 			
 			draw_set_alpha(0.4 - abs(i) * 0.1);
-			draw_text(slide_dx, slide_dy - (_v - tb.slide_sv) / tb.slide_speed, _v);
+			draw_text(slide_dx, slide_dy - (_v - tb.slide_sv) / _s, _v);
 		}
 		
 		draw_set_alpha(1);
-		draw_text(slide_dx, slide_dy - (_val - tb.slide_sv) / tb.slide_speed, _val);
+		draw_text(slide_dx, slide_dy - (_val - tb.slide_sv) / _s, _val);
 	} else {
 		var _sdw = 240;
 		var _sdh = 48;
@@ -58,11 +62,11 @@ if(!MOUSE_WRAPPING) {
 			var _v = _stp_fl + i * _stp_sz;
 			
 			draw_set_alpha(0.4 - abs(i) * 0.1);
-			draw_text(slide_dx + (_v - tb.slide_sv) / tb.slide_speed, slide_dy, _v);
+			draw_text(slide_dx + (_v - tb.slide_sv) / _s, slide_dy, _v);
 		}
 		
 		draw_set_alpha(1);
-		draw_text(slide_dx + (_val - tb.slide_sv) / tb.slide_speed, slide_dy, _val);
+		draw_text(slide_dx + (_val - tb.slide_sv) / _s, slide_dy, _val);
 	}
 					
 	tb._input_text = string_real(_val);

@@ -468,11 +468,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for( var i = siz - 1; i >= custom_output_index; i-- )
 			ds_list_delete(outputs, i);
 		
+		for( var i = 0; i < siz; i++ ) 
+			array_push(output_display_list, i);
+			
 		for( var i = custom_output_index; i < siz; i++ ) {
 			var _jout = ds_priority_delete_min(ar);
 			_jout.index = i;
 			ds_list_add(outputs, _jout);
-			array_push(output_display_list, i);
 		}
 		
 		ds_priority_destroy(ar);
