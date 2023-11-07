@@ -15,33 +15,38 @@ var constant = ["MATRIX_VIEW", "MATRIX_PROJECTION", "MATRIX_WORLD", "MATRIX_WORL
 for( var i = 0, n = array_length(constant); i < n; i++ )
 	global.glsl_constant[? constant[i]] = 1;
 
-global.HLSL_BREAK_TOKEN = [" ", "(", ")", "[", "]", "{", "}", ".", ",", ";", "+", "-", "*", "/", "^", "="];
+global.HLSL_BREAK_TOKEN = [" ", "(", ")", "[", "]", "{", "}", ".", ",", ";", "+", "-", "*", "/", "^", "=", "//"];
 
 function hlsl_token_splice(str) {
 	var st = [];
 	var ss = str;
-	var sp;
-	var cc;
+	var sp, cc, del;
 	
 	do {
-		sp = 999999;
+		sp  = 999999;
+		del = "";
+		
 		for( var i = 0, n = array_length(global.HLSL_BREAK_TOKEN); i < n; i++ ) {
-			var _pos = string_pos(global.HLSL_BREAK_TOKEN[i], ss);
-			if(_pos != 0) sp = min(sp, _pos);
+			var _del = global.HLSL_BREAK_TOKEN[i];
+			var _pos = string_pos(_del, ss);
+			
+			if(_pos != 0 && _pos < sp || (_pos == sp && string_length(del) < string_length(_del))) {
+				sp  = _pos;
+				del = _del;
+			}
 		}
 		
-		if(sp == 999999) { //no delim left
+		if(del == "") { //no delim left
 			array_push(st, ss);
 			break;
 		}
 		
 		var _ss = string_copy(ss, 1, sp - 1);
 		array_push(st, _ss);
+		array_push(st, del);
 		
-		cc = string_char_at(ss, sp);
-		array_push(st, cc);
-		
-		ss = string_copy(ss, sp + 1, string_length(ss) - sp);
+		var dl = string_length(del);
+		ss = string_copy(ss, sp + dl, string_length(ss) - sp - dl + 1);
 	} until(sp == 0);
 	
 	return st;
@@ -50,15 +55,20 @@ function hlsl_token_splice(str) {
 function draw_code_hlsl(_x, _y, str) {
 	var tx = _x;
 	var ty = _y;
-	var words = hlsl_token_splice(str);
+	var words   = hlsl_token_splice(str);
+	var comment = false;
 	
 	for( var j = 0; j < array_length(words); j++ ) {
 		var word = words[j];
 		var wordNoS = string_trim(word);
 		
+		if(wordNoS == "//") comment = true;
+		
 		draw_set_color(COLORS._main_text);
 		
-		if(word == "(" || word == ")" || word == "[" || word == "]" || word == "{" || word == "}")
+		if(comment)
+			draw_set_color(COLORS.lua_highlight_comment);
+		else if(word == "(" || word == ")" || word == "[" || word == "]" || word == "{" || word == "}")
 			draw_set_color(COLORS.lua_highlight_bracklet);
 		else if(ds_map_exists(global.glsl_reserved, word))
 			draw_set_color(COLORS.lua_highlight_keyword);

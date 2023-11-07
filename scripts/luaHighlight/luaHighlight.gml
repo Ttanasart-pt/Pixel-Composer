@@ -8,33 +8,38 @@ var reserved = ["and", "break", "do", "else", "elseif", "end", "false",
 for( var i = 0, n = array_length(reserved); i < n; i++ )
 	global.lua_reserved[? reserved[i]] = 1;
 
-global.CODE_BREAK_TOKEN = [" ", "(", ")", "[", "]", "{", "}", ",", ";", "+", "-", "*", "/", "^", "="];
+global.CODE_BREAK_TOKEN = [" ", "(", ")", "[", "]", "{", "}", ",", ";", "+", "-", "*", "/", "^", "=", "--"];
 
 function lua_token_splice(str) {
 	var st = [];
 	var ss = str;
-	var sp;
-	var cc;
+	var sp, cc, del;
 	
 	do {
 		sp = 999999;
+		del = "";
+		
 		for( var i = 0, n = array_length(global.CODE_BREAK_TOKEN); i < n; i++ ) {
-			var _pos = string_pos(global.CODE_BREAK_TOKEN[i], ss);
-			if(_pos != 0) sp = min(sp, _pos);
+			var _del = global.CODE_BREAK_TOKEN[i];
+			var _pos = string_pos(_del, ss);
+			
+			if(_pos != 0 && _pos < sp || (_pos == sp && string_length(del) < string_length(_del))) {
+				sp  = _pos;
+				del = _del;
+			}
 		}
 		
-		if(sp == 999999) { //no delim left
+		if(del == "") { //no delim left
 			array_push(st, ss);
 			break;
 		}
 		
 		var _ss = string_copy(ss, 1, sp - 1);
 		array_push(st, _ss);
+		array_push(st, del);
 		
-		cc = string_char_at(ss, sp);
-		array_push(st, cc);
-		
-		ss = string_copy(ss, sp + 1, string_length(ss) - sp);
+		var dl = string_length(del);
+		ss = string_copy(ss, sp + dl, string_length(ss) - sp - dl + 1);
 	} until(sp == 0);
 	
 	return st;
@@ -47,6 +52,7 @@ function draw_code_lua(_x, _y, str) {
 	var isStr  = true;
 	var strSpl = string_splice(str, "\"");
 	var amo    = array_length(strSpl);
+	var comment = false;
 	var word;
 	
 	for( var i = 0; i < amo; i++ ) {
@@ -66,13 +72,17 @@ function draw_code_lua(_x, _y, str) {
 		}
 		
 		var words = lua_token_splice(_w);
-			
+		
 		for( var j = 0; j < array_length(words); j++ ) {
 			word = words[j];
 			var wordNoS = string_trim(word);
 			
+			if(wordNoS == "//") comment = true;
+			
 			draw_set_color(COLORS._main_text);
-			if(word == "(" || word == ")" || word == "[" || word == "]" || word == "{" || word == "}")
+			if(comment)
+				draw_set_color(COLORS.lua_highlight_comment);
+			else if(word == "(" || word == ")" || word == "[" || word == "]" || word == "{" || word == "}")
 				draw_set_color(COLORS.lua_highlight_bracklet);
 			else if(ds_map_exists(global.lua_reserved, word))
 				draw_set_color(COLORS.lua_highlight_keyword);
