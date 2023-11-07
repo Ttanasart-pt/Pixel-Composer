@@ -130,8 +130,6 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	
 	APPENDING = false;
 	
-	RENDER_ALL_REORDER
-	
 	if(struct_has(_map, "metadata")) {
 		var meta = _map.metadata;
 		for( var i = 0; i < ds_list_size(node_create); i++ ) {
@@ -143,6 +141,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	}
 	
 	refreshNodeMap();
+	RENDER_ALL_REORDER
 	
 	if(struct_has(_map, "timelines")) {
 		var _time = new timelineItemGroup().deserialize(_map.timelines);

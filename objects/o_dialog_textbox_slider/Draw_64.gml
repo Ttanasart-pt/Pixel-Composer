@@ -25,7 +25,7 @@ if(!MOUSE_WRAPPING) {
 	var _tw = 48;
 	for( var i = -2; i <= 2; i++ ) {
 		var _v = _stp_fl + i * _stp_sz;
-		_tw = max(_tw, string_width(_v) + 16);
+		_tw = max(_tw, string_width(_v) + 24);
 	}
 	
 	var _snp_s = 50 * _s;
@@ -44,10 +44,12 @@ if(!MOUSE_WRAPPING) {
 		for( var i = -2; i <= 2; i++ ) {
 			var _v = _stp_fl + i * _stp_sz;
 			
+			draw_set_color(_v == tb.slide_sv? COLORS._main_accent : COLORS._main_text);
 			draw_set_alpha(0.4 - abs(i) * 0.1);
 			draw_text(slide_dx, slide_dy - (_v - tb.slide_sv) / _s, _v);
 		}
 		
+		draw_set_color(_val == tb.slide_sv? COLORS._main_accent : COLORS._main_text);
 		draw_set_alpha(1);
 		draw_text(slide_dx, slide_dy - (_val - tb.slide_sv) / _s, _val);
 	} else {
@@ -61,10 +63,12 @@ if(!MOUSE_WRAPPING) {
 		for( var i = -2; i <= 2; i++ ) {
 			var _v = _stp_fl + i * _stp_sz;
 			
+			draw_set_color(_v == tb.slide_sv? COLORS._main_accent : COLORS._main_text);
 			draw_set_alpha(0.4 - abs(i) * 0.1);
 			draw_text(slide_dx + (_v - tb.slide_sv) / _s, slide_dy, _v);
 		}
 		
+		draw_set_color(_val == tb.slide_sv? COLORS._main_accent : COLORS._main_text);
 		draw_set_alpha(1);
 		draw_text(slide_dx + (_val - tb.slide_sv) / _s, slide_dy, _val);
 	}

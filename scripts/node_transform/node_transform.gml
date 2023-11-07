@@ -19,9 +19,27 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[| 3] = nodeValue("Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector, { side_button : button(function() { centerAnchor(); })
-																.setIcon(THEME.anchor)
-																.setTooltip("Set to center") });
+		.setDisplay(VALUE_DISPLAY.vector, { #region
+			side_button : new buttonAnchor(function(ind) { 
+				//var _dim = getDimension();
+				//var _pos = getSingleValue(2);
+				//var _anc = getSingleValue(3);
+				
+				switch(ind) {
+					case 0 : inputs[| 3].setValue([ 0.0, 0.0 ]); break;
+					case 1 : inputs[| 3].setValue([ 0.5, 0.0 ]); break;
+					case 2 : inputs[| 3].setValue([ 1.0, 0.0 ]); break;
+					
+					case 3 : inputs[| 3].setValue([ 0.0, 0.5 ]); break;
+					case 4 : inputs[| 3].setValue([ 0.5, 0.5 ]); break;
+					case 5 : inputs[| 3].setValue([ 1.0, 0.5 ]); break;
+					
+					case 6 : inputs[| 3].setValue([ 0.0, 1.0 ]); break;
+					case 7 : inputs[| 3].setValue([ 0.5, 1.0 ]); break;
+					case 8 : inputs[| 3].setValue([ 1.0, 1.0 ]); break;
+				}
+			}) 
+		}); #endregion
 	
 	inputs[| 4] = nodeValue("Relative anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
@@ -60,7 +78,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	vel = 0;
 	prev_pos = [ 0, 0 ];
 	
-	static getDimension = function(arr) { #region
+	static getDimension = function(arr = 0) { #region
 		var _surf		= getSingleValue(0, arr);
 		var _out_type	= getSingleValue(9, arr);
 		var _out		= getSingleValue(1, arr);
@@ -124,6 +142,22 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static step = function() { #region
 		var pos = getInputData(2);
+		var anc = getInputData(3);
+		
+		var _b = inputs[| 3].editWidget.side_button;
+		var _a = anc[0] * 2 + anc[1] * 20;
+		switch(_a) {
+			case  0 : _b.index = 0; break;
+			case  1 : _b.index = 1; break;
+			case  2 : _b.index = 2; break;
+			case 10 : _b.index = 3; break;
+			case 11 : _b.index = 4; break;
+			case 12 : _b.index = 5; break;
+			case 20 : _b.index = 6; break;
+			case 21 : _b.index = 7; break;
+			case 22 : _b.index = 8; break;
+			default : _b.index = -1; 
+		}
 		
 		if(!PROJECT.animator.frame_progress) return;
 		
@@ -301,7 +335,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_surf_out = _surf_out[preview_index];
 		}
 		
-		var __pos = getInputData(2)
+		var __pos = getInputData(2);
 		var pos   = [ __pos[0], __pos[1] ];
 		var _pos  = [ __pos[0], __pos[1] ];
 		
@@ -329,9 +363,13 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		#region bounding box
 			var bx0 = _x + pos[0] * _s;
-			var bx1 = _x + (ww + pos[0]) * _s;
 			var by0 = _y + pos[1] * _s;
-			var by1 = _y + (hh + pos[1]) * _s;
+			
+			var bx1 = _x + (pos[0] + ww) * _s;
+			var by1 = _y + (pos[1] + hh) * _s;
+			
+			var bx2 = _x + (pos[0] + ww) * _s + 18;
+			var by2 = _y + (pos[1] + hh) * _s + 18;
 			
 			var bax = _x + (pos[0] + anc[0]) * _s;
 			var bay = _y + (pos[1] + anc[1]) * _s;
@@ -340,32 +378,39 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var tr = point_rotate(bx1, by0, bax, bay, rot);
 			var bl = point_rotate(bx0, by1, bax, bay, rot);
 			var br = point_rotate(bx1, by1, bax, bay, rot);
+			var sz = point_rotate(bx2, by2, bax, bay, rot);
 			
 			var rth = point_rotate((bx0 + bx1) / 2, by0 - 16, bax, bay, rot);
-		
+			
+			var a_index  = 0;
+			var r_index  = 0;
+			var tl_index = 0;
+			var tr_index = 0;
+			var bl_index = 0;
+			var br_index = 0;
+			var sz_index = 0;
+			
 			draw_set_color(COLORS._main_accent);
-			draw_sprite_colored(THEME.anchor, 0, bax, bay);
-			
-			var r_index = 0;
-			
-			draw_sprite_colored(THEME.anchor_selector, 0, tl[0], tl[1]);
-			draw_sprite_colored(THEME.anchor_selector, 0, tr[0], tr[1]);
-			draw_sprite_colored(THEME.anchor_selector, 0, bl[0], bl[1]);
-			draw_sprite_colored(THEME.anchor_selector, 0, br[0], br[1]);
-			
-			     if(point_in_circle(_mx, _my, bax, bay, 8)) draw_sprite_colored(THEME.anchor, 0, bax, bay, 1.25);
-			else if(point_in_circle(_mx, _my, rth[0], rth[1], 8)) r_index = 1;
-			else if(point_in_circle(_mx, _my, tl[0], tl[1], 8))	draw_sprite_colored(THEME.anchor_selector, 1, tl[0], tl[1]);
-			else if(point_in_circle(_mx, _my, tr[0], tr[1], 8))	draw_sprite_colored(THEME.anchor_selector, 1, tr[0], tr[1]);			
-			else if(point_in_circle(_mx, _my, bl[0], bl[1], 8))	draw_sprite_colored(THEME.anchor_selector, 1, bl[0], bl[1]);			
-			else if(point_in_circle(_mx, _my, br[0], br[1], 8))	draw_sprite_colored(THEME.anchor_selector, 1, br[0], br[1]);
-			
-			draw_sprite_colored(THEME.anchor_rotate, r_index, rth[0], rth[1], 1, rot);
-			
 			draw_line(tl[0], tl[1], tr[0], tr[1]);
 			draw_line(tl[0], tl[1], bl[0], bl[1]);
 			draw_line(tr[0], tr[1], br[0], br[1]);
 			draw_line(bl[0], bl[1], br[0], br[1]);
+			
+			     if(point_in_circle(_mx, _my, bax, bay, 8))		  a_index  = 1;
+			else if(point_in_circle(_mx, _my, rth[0], rth[1], 8)) r_index  = 1;
+			else if(point_in_circle(_mx, _my, tl[0], tl[1], 8))	  tl_index = 1;
+			else if(point_in_circle(_mx, _my, tr[0], tr[1], 8))	  tr_index = 1;			
+			else if(point_in_circle(_mx, _my, bl[0], bl[1], 8))	  bl_index = 1;			
+			else if(point_in_circle(_mx, _my, br[0], br[1], 8))	  br_index = 1;
+			else if(point_in_circle(_mx, _my, sz[0], sz[1], 8))	  sz_index = 1;
+			
+			draw_sprite_colored(THEME.anchor, a_index, bax, bay);
+			draw_sprite_colored(THEME.anchor_selector, tl_index,  tl[0],  tl[1]);
+			draw_sprite_colored(THEME.anchor_selector, tr_index,  tr[0],  tr[1]);
+			draw_sprite_colored(THEME.anchor_selector, bl_index,  bl[0],  bl[1]);
+			draw_sprite_colored(THEME.anchor_selector, br_index,  br[0],  br[1]);
+			draw_sprite_colored(THEME.anchor_scale,    sz_index,  sz[0],  sz[1], 1, rot);
+			draw_sprite_colored(THEME.anchor_rotate,   r_index,  rth[0], rth[1], 1, rot);
 		#endregion
 		
 		if(overlay_dragging && overlay_dragging < 3) { //Transform
@@ -416,10 +461,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var da = angle_difference(overlay_drag_ma, aa);
 			var sa;
 			
-			if(key_mod_press(CTRL)) 
-				sa = round((overlay_drag_sa - da) / 15) * 15;
-			else 
-				sa = overlay_drag_sa - da;
+			if(key_mod_press(CTRL)) sa = round((overlay_drag_sa - da) / 15) * 15;
+			else					sa = overlay_drag_sa - da;
 			
 			if(inputs[| 5].setValue(sa))
 				UNDO_HOLDING = true;
@@ -429,10 +472,20 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				UNDO_HOLDING = false;
 			}
 		} else if(overlay_dragging == 4) { //Scale
-			var _p = point_rotate(_mx - overlay_drag_mx, _my - overlay_drag_my, 0, 0, -rot);
+			var ol_x = (overlay_drag_mx - _x) / _s;
+			var ol_y = (overlay_drag_my - _y) / _s;
+			var ml_x = (_mx - _x) / _s;
+			var ml_y = (_my - _y) / _s;
 			
-			var _sw = _p[0] / _s / srw;
-			var _sh = _p[1] / _s / srh;
+			var os_x = value_snap(ol_x, _snx);
+			var os_y = value_snap(ol_y, _sny);
+			var ms_x = value_snap(ml_x, _snx);
+			var ms_y = value_snap(ml_y, _sny);
+			
+			var _p   = point_rotate(ms_x - os_x, ms_y - os_y, 0, 0, -rot);
+			
+			var _sw = _p[0] / srw;
+			var _sh = _p[1] / srh;
 			var sw, sh;
 			
 			if(corner_dragging == 0) {
@@ -445,6 +498,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				sw = -_sw / _anc[0];
 				sh =  _sh / (1 - _anc[1]);
 			} else if(corner_dragging == 3) {
+				sw =  _sw / (1 - _anc[0]);
+				sh =  _sh / (1 - _anc[1]);
+			} else if(corner_dragging == 4) {
 				sw =  _sw / (1 - _anc[0]);
 				sh =  _sh / (1 - _anc[1]);
 			}
@@ -475,13 +531,18 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				overlay_drag_sy  = anc[1];
 				overlay_drag_px  = pos[0];
 				overlay_drag_py  = pos[1];
-			} else if(point_in_circle(_mx, _my, tl[0], tl[1], 8) || point_in_circle(_mx, _my, tr[0], tr[1], 8) || point_in_circle(_mx, _my, bl[0], bl[1], 8) || point_in_circle(_mx, _my, br[0], br[1], 8)) {
+			} else if(point_in_circle(_mx, _my, tl[0], tl[1], 8) || 
+			          point_in_circle(_mx, _my, tr[0], tr[1], 8) || 
+					  point_in_circle(_mx, _my, bl[0], bl[1], 8) || 
+					  point_in_circle(_mx, _my, br[0], br[1], 8) || 
+					  point_in_circle(_mx, _my, sz[0], sz[1], 8)) {
 				overlay_dragging = 4;
 				
 				if(point_in_circle(_mx, _my, tl[0], tl[1], 8))		corner_dragging = 0;
 				else if(point_in_circle(_mx, _my, tr[0], tr[1], 8)) corner_dragging = 1;
 				else if(point_in_circle(_mx, _my, bl[0], bl[1], 8)) corner_dragging = 2;
 				else if(point_in_circle(_mx, _my, br[0], br[1], 8)) corner_dragging = 3;
+				else if(point_in_circle(_mx, _my, sz[0], sz[1], 8)) corner_dragging = 4;
 				
 				overlay_drag_mx  = _mx;
 				overlay_drag_my  = _my;
@@ -491,7 +552,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				overlay_dragging = 3;
 				overlay_drag_ma  = point_direction(bax, bay, _mx, _my);
 				overlay_drag_sa  = rot;
-			} else if(point_in_triangle(_mx, _my, tl[0], tl[1], tr[0], tr[1], bl[0], bl[1]) || point_in_triangle(_mx, _my, tr[0], tr[1], bl[0], bl[1], br[0], br[1])) {
+			} else if(point_in_triangle(_mx, _my, tl[0], tl[1], tr[0], tr[1], bl[0], bl[1]) || 
+			          point_in_triangle(_mx, _my, tr[0], tr[1], bl[0], bl[1], br[0], br[1])) {
 				overlay_dragging = 1;
 				overlay_drag_mx  = _mx;
 				overlay_drag_my  = _my;

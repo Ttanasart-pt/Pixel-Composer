@@ -45,6 +45,9 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	} #endregion
 	
 	static update = function() { #region
+		if(!inputs[| 0].value_from) return;
+		if(!inputs[| 0].value_from.node.renderActive) return;
+		
 		var ss  = [];
 		var str = getInputData(1);
 		var lst = getInputData(2);

@@ -1,4 +1,4 @@
-function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
 	name = "Number";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -224,9 +224,9 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				break; #endregion
 		}
 	} #endregion
-}
+} #endregion
 
-function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
 	name = "Vector2";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -486,9 +486,9 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var str	= $"[{v0}, {v1}]";
 		draw_text(bbox.xc, bbox.y1 - 4, str);
 	} #endregion
-}
+} #endregion
 
-function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
 	name = "Vector3";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -542,9 +542,9 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	} #endregion
-}
+} #endregion
 
-function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
 	name = "Vector4";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -602,9 +602,9 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	} #endregion
-}
+} #endregion
 
-function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
 	name = "Vector Split";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -648,4 +648,4 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var ss	 = string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	} #endregion
-}
+} #endregion

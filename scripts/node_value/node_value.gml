@@ -2457,8 +2457,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				struct_try_override(display_data, _map.display_data, DISPLAY_DATA_KEYS[i]);
 		}
 		
-		if(APPENDING) def_val = getValue(0);
-		
 		if(connect_type == JUNCTION_CONNECT.input && index >= 0) {
 			var _value = animator.getValue(0);
 			node.inputs_data[index] = _value;

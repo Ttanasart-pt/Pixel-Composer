@@ -71,7 +71,5 @@ function draw_sprite_colored(spr, ind, _x, _y, scale = 1, rot = 0) {
 	var num = sprite_get_number(spr);
 	
 	draw_sprite_ui(spr, ind, _x, _y, scale, scale, rot, c_white);
-	
-	if(num % 2 == 0)
-		draw_sprite_ui(spr, num / 2 + ind, _x, _y, scale, scale, rot, COLORS._main_accent);
+	if(num % 2 == 0) draw_sprite_ui(spr, num / 2 + ind, _x, _y, scale, scale, rot, COLORS._main_accent);
 }

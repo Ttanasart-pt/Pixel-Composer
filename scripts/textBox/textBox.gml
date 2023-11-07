@@ -106,11 +106,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var _input_text_current = _input_text;
 		disp_x_to = 0;
 		
-		switch(input) {
-			case TEXTBOX_INPUT.number : 
-				_input_text_current = evaluateFunction(_input_text);
-				break;
-		}
+		if(input == TEXTBOX_INPUT.number)
+			_input_text_current = evaluateFunction(_input_text);
 		
 		if(no_empty && _input_text_current == "") 
 			_input_text_current = _last_text;

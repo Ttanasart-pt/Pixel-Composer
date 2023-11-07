@@ -1566,10 +1566,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			for(var i = 0; i < array_length(nodes_selecting); i++)
 				SAVE_NODE(_node, nodes_selecting[i],,,, getCurrentContext());
 			_map.nodes = _node;
-		
+			
 			APPENDING = true;
 			CLONING	  = true;
-			var _app = __APPEND_MAP(_map);
+			var _app  = __APPEND_MAP(_map);
 			APPENDING = false;
 			CLONING	  = false;
 		

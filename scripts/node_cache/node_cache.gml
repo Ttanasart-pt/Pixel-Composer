@@ -38,6 +38,7 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	static update = function() { #region
 		if(recoverCache()) return;
 		if(!inputs[| 0].value_from) return;
+		if(!inputs[| 0].value_from.node.renderActive) return;
 		
 		var _surf  = getInputData(0);
 		cacheCurrentFrame(_surf);

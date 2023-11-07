@@ -17,16 +17,23 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	if(NOT_LOAD) run_in(1, function() { onInspector1Update(); });
 	
 	static removeNode = function(node) { #region
-		if(node.cache_group == noone) return;
+		if(node.cache_group != self) return;
 		
 		array_remove(attributes.cache_group, node.node_id);
+		array_remove(cache_group_members, node);
+		
 		node.cache_group = noone;
-		refreshCacheGroup();		
 	} #endregion
 	
 	static addNode = function(node) { #region
-		array_push_unique(attributes.cache_group, node.node_id);
-		refreshCacheGroup();		
+		if(node.cache_group == self) return;
+		if(node.cache_group != noone)
+			node.cache_group.removeNode(node);
+		
+		array_push(attributes.cache_group, node.node_id);
+		array_push(cache_group_members, node);
+		
+		node.cache_group = self;
 	} #endregion
 	
 	static enableNodeGroup = function() { #region
@@ -61,7 +68,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	} #endregion
 	
 	static getCacheGroup = function(node) { #region
-		if(node != self) array_push(attributes.cache_group, node.node_id);
+		if(node != self) addNode(node);
 		
 		for( var i = 0, n = ds_list_size(node.inputs); i < n; i++ ) {
 			var _from = node.inputs[| i].value_from;

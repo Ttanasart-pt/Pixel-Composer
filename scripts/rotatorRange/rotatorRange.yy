@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "widgets",
-    "path": "folders/widgets.yy",
+    "name": "rotator",
+    "path": "folders/widgets/rotator.yy",
   },
 }

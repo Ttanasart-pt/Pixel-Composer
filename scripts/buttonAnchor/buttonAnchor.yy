@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "buttonGradient",
+  "name": "buttonAnchor",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
