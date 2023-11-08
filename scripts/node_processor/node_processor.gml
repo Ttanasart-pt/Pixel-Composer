@@ -33,7 +33,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			triggerRender();
 		}, false) ]);
 	
-	static getInputData = function(index, def = 0) { gml_pragma("forceinline"); return array_safe_get(inputs_data, index, def); }
+	static getInputData = function(index, def = 0) { INLINE return array_safe_get(inputs_data, index, def); }
 	
 	static processData_prebatch  = function() {}
 	static processData_postbatch = function() {}

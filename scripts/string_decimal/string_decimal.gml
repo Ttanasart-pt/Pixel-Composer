@@ -23,7 +23,7 @@ function string_decimal(str) {
 }
 
 function toNumberFast(str) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var r = real(str);
 	if(is_real(r)) return r;
@@ -31,7 +31,7 @@ function toNumberFast(str) {
 }
 
 function toNumber(str) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(is_real(str))   return str;
 	if(!isNumber(str)) return 0;

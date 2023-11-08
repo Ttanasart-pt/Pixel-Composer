@@ -3,7 +3,7 @@ function __bbox3D(first, second) constructor {
 	self.second = second;
 	
 	static getScale = function() {
-		gml_pragma("forceinline");
+		INLINE
 		return sqrt(
 			sqr(first.x - second.x) +
 			sqr(first.y - second.y) +
@@ -12,7 +12,7 @@ function __bbox3D(first, second) constructor {
 	}
 	
 	static getMaximumScale = function() {
-		gml_pragma("forceinline");
+		INLINE
 		return max(
 			abs(first.x - second.x),
 			abs(first.y - second.y),

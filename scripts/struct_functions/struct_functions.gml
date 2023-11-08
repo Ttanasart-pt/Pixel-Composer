@@ -24,7 +24,7 @@ function struct_append(original, append) {
 }
 
 function struct_try_get(struct, key, def = 0) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(struct[$ key] != undefined) return struct[$ key];
 	
@@ -33,7 +33,7 @@ function struct_try_get(struct, key, def = 0) {
 }
 
 function struct_try_override(original, override, key) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_struct(original) || !is_struct(override)) return;
 	if(!struct_has(override, key)) return;

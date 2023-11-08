@@ -76,7 +76,7 @@ function __part(_node) constructor {
 	frame = 0;
 	
 	static reset = function() { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		surf  = noone;
 		
@@ -85,7 +85,7 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static create = function(_surf, _x, _y, _life) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		active	= true;
 		surf	= _surf;
@@ -106,7 +106,7 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _turn, _turnSpd) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		speedx  = _sx;
 		speedy  = _sy;
@@ -124,7 +124,7 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static setWiggle = function(wiggle_maps) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		wig_psx = wiggle_maps.wig_psx;
 		wig_psy = wiggle_maps.wig_psy;
@@ -135,7 +135,7 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static setGround = function(_ground, _ground_offset, _ground_bounce, _ground_frict) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		ground			= _ground;
 		ground_y		= y + _ground_offset;
@@ -144,7 +144,7 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _follow) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		sc_sx = _scx;
 		sc_sy = _scy;
@@ -156,7 +156,7 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static setDraw = function(_col, _blend, _alp, _fade) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		col      = _col;
 		blend	 = _blend;
@@ -166,7 +166,7 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static kill = function(callDestroy = true) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		active = false;
 		if(callDestroy && node.onPartDestroy != noone)
@@ -174,7 +174,7 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static step = function(frame = 0) { #region
-		gml_pragma("forceinline");
+		INLINE
 		//if(life_total > 0) print($"Step {seed}: {trailLife}");
 		trailLife++;
 		
@@ -247,7 +247,7 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static draw = function(exact, surf_w, surf_h) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		var ss = surf;
 		
@@ -318,7 +318,7 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static getPivot = function() { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		return [x, y];
 	} #endregion

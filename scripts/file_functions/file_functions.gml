@@ -4,7 +4,7 @@ function file_copy_override(src, dest) {
 }
 
 function filepath_resolve(path) {
-	gml_pragma("forceinline");
+	INLINE
 	var _path = path;
 	
 	_path = string_replace_all(_path, "%DIR%/", DIRECTORY);

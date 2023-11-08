@@ -4,7 +4,7 @@ function __rot3(_x = 0, _y = 0, _z = 0) constructor {
 	z = _z;
 	
 	static set = function(_x, _y, _z) {
-		gml_pragma("forceinline");
+		INLINE
 		x = _x;
 		y = _y;
 		z = _z;
@@ -63,12 +63,12 @@ function __rot3(_x = 0, _y = 0, _z = 0) constructor {
 	}
 	
 	static equal = function(to) {
-		gml_pragma("forceinline");
+		INLINE
 		return x == to.x && y == to.y && z == to.z;
 	}
 	
 	static clone = function() {
-		gml_pragma("forceinline");
+		INLINE
 		return new __rot3(x, y, z);
 	}
 	

@@ -51,7 +51,7 @@ function __3dGroup() constructor {
 	} #endregion
 	
 	static addObject = function(_obj) { #region
-		gml_pragma("forceinline");
+		INLINE
 		array_push(objects, _obj);
 	} #endregion
 	

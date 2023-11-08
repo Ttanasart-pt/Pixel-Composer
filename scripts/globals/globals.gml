@@ -25,10 +25,10 @@
 	
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER;
 
-	VERSION			= 11561;
+	VERSION			= 11562;
 	SAVE_VERSION	= 11560;
-	VERSION_STRING  = "1.15.6.1";
-	BUILD_NUMBER	= 11561;
+	VERSION_STRING  = "1.15.6.2";
+	BUILD_NUMBER	= 11562;
 	
 	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();
@@ -82,6 +82,8 @@
 	#macro sHOVER HOVER == self.id
 	
 	#macro DELTA_TIME delta_time / 1_000_000
+	
+	#macro INLINE gml_pragma("forceinline");
 	
 	#macro CONF_TESTING false
 	globalvar TESTING, TEST_ERROR;

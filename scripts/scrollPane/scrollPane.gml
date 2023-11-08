@@ -32,7 +32,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	}
 	
 	static setScroll = function(_scroll_y) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		scroll_y_to  = clamp(_scroll_y, -content_h, 0);
 	} #endregion

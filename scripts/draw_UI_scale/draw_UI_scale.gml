@@ -25,7 +25,7 @@ function line_get_width(txt, font = noone, offset = 0) {
 	#macro BUTTON_HEIGHT  line_get_height(f_p0, 12)
 
 	function ui(val) { 
-		gml_pragma("forceinline");
+		INLINE
 		
 		return val * UI_SCALE; 
 	}

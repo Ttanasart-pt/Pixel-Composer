@@ -64,7 +64,7 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 	}
 	
 	static checkClosable = function() {
-		return !_textArea.autocomplete_box.active;
+		return o_dialog_textbox_autocomplete.textbox != _textArea;
 	}
 	
 	static onClose = function() {

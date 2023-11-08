@@ -117,13 +117,13 @@ function wiggleMap(_seed, _freq, _length) constructor { #region
 	map  = array_create(_length);
 	
 	static generate = function() {
-		gml_pragma("forceinline");
+		INLINE
 		
 		for(var i = 0; i < len; i++) map[i] = wiggle(-1, 1, freq, i, seed);
 	}
 	
 	static check = function(_amp, _freq, _seed) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		amp = _amp;
 		if(seed == _seed && freq == _freq) return;
@@ -135,7 +135,7 @@ function wiggleMap(_seed, _freq, _length) constructor { #region
 	}
 	
 	static get = function(i) { 
-		gml_pragma("forceinline");
+		INLINE
 		
 		if(amp == 0) return 0;
 		return map[abs(i) % len] * amp; 

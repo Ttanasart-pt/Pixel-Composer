@@ -9,7 +9,7 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 	attribute = {};
 	
 	static checkHotkey = function() {
-		gml_pragma("forceinline");
+		INLINE
 		
 		return getHotkey(ctx, name);
 	}

@@ -26,7 +26,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	W = _w;
 	
 	static set = function(x, y, z, w) {
-		gml_pragma("forceinline");
+		INLINE
 		X = x;
 		Y = y;
 		Z = z;
@@ -42,7 +42,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Add = function (_q) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Quaternion(
 			X + _q.X,
 			Y + _q.Y,
@@ -57,7 +57,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Clone = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Quaternion(X, Y, Z, W);
 	};
 
@@ -67,7 +67,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Conjugate = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Quaternion(-X, -Y, -Z, W);
 	};
 
@@ -79,7 +79,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static Copy = function (_dest) {
-		gml_pragma("forceinline");
+		INLINE
 		_dest.X = X;
 		_dest.Y = Y;
 		_dest.Z = Z;
@@ -95,7 +95,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Real} The dot product of the quaternions.
 	static Dot = function (_q) {
-		gml_pragma("forceinline");
+		INLINE
 		return (
 			  X * _q.X
 			+ Y * _q.Y
@@ -111,7 +111,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Exp = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _length = Length();
 		if (_length >= math_get_epsilon())
 		{
@@ -137,7 +137,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static FromArray = function (_array, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 		X = _array[_index];
 		Y = _array[_index + 1];
 		Z = _array[_index + 2];
@@ -155,7 +155,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static FromAxisAngle = function (_axis, _angle) {
-		gml_pragma("forceinline");
+		INLINE
 		_angle = -_angle;
 		var _sinHalfAngle = dsin(_angle * 0.5);
 		X = is_nan(_axis.X)? 0 : _axis.X * _sinHalfAngle;
@@ -176,7 +176,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static FromBuffer = function (_buffer, _type) {
-		gml_pragma("forceinline");
+		INLINE
 		X = buffer_read(_buffer, _type);
 		Y = buffer_read(_buffer, _type);
 		Z = buffer_read(_buffer, _type);
@@ -197,7 +197,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	/// @note The order of rotations is YXZ, same as in the `matrix_build`
 	/// function.
 	static FromEuler = function (_x, _y, _z) {
-		gml_pragma("forceinline");
+		INLINE
 
 		_x = -_x * 0.5;
 		_y = -_y * 0.5;
@@ -241,7 +241,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static FromLookRotation = function (_forward, _up) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		_forward = new BBMOD_Vec3(_forward);
 		_up      = new BBMOD_Vec3(_up);
@@ -267,7 +267,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	};
 	
 	static FromMatrix = function(rotMatrix) {
-		gml_pragma("forceinline");
+		INLINE
 
 		W = sqrt(1 + rotMatrix[0] + rotMatrix[5] + rotMatrix[10]) / 2;
 		X =  (rotMatrix[9] - rotMatrix[6]) / (4 * W);
@@ -282,7 +282,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Real} The rotation angle.
 	static GetAngle = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return radtodeg(arccos(W) * 2.0);
 	};
 
@@ -292,7 +292,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Vec3} The axis of rotation.
 	static GetAxis = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _sinThetaInv = 1.0 / sin(arccos(W));
 		return new BBMOD_Vec3(
 			X * _sinThetaInv,
@@ -308,7 +308,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Inverse = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return Conjugate().Scale(1.0 / Length());
 	};
 
@@ -318,7 +318,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Real} The length of the quaternion.
 	static Length = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return sqrt(
 			  X * X
 			+ Y * Y
@@ -333,7 +333,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Real} The squared length of the quaternion.
 	static LengthSqr = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return (
 			  X * X
 			+ Y * Y
@@ -352,7 +352,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Lerp = function (_q, _s) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Quaternion(
 			lerp(X, _q.X, _s),
 			lerp(Y, _q.Y, _s),
@@ -368,7 +368,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Log = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _length = Length();
 		var _w = logn(2.71828, _length);
 		var _a = arccos(W / _length);
@@ -394,7 +394,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Mul = function (_q) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Quaternion(
 			W * _q.X + X * _q.W + Y * _q.Z - Z * _q.Y,
 			W * _q.Y + Y * _q.W + Z * _q.X - X * _q.Z,
@@ -410,7 +410,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Normalize = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _lengthSqr = LengthSqr();
 		if(_lengthSqr == 0)
 			return new BBMOD_Quaternion();
@@ -429,7 +429,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Rotate = function (_v) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		var _tovec = is_instanceof(_v, __vec3);
 		if(_tovec) _v = new BBMOD_Vec3(_v.x, _v.y, _v.z);
@@ -454,7 +454,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Scale = function (_s) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Quaternion(
 			X * _s,
 			Y * _s,
@@ -464,7 +464,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	};
 
 	static Sinc = function (_x) {
-		gml_pragma("forceinline");
+		INLINE
 		return (_x >= math_get_epsilon()) ? (sin(_x) / _x) : 1.0;
 	};
 
@@ -478,7 +478,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Slerp = function (_q, _s) {
-		gml_pragma("forceinline");
+		INLINE
 
 		var _q10 = X;
 		var _q11 = Y;
@@ -561,7 +561,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Array<Real>} Returns the destination array.
 	static ToArray = function (_array=undefined, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 		_array ??= array_create(4, 0.0);
 		_array[@ _index]     = X;
 		_array[@ _index + 1] = Y;
@@ -579,7 +579,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static ToBuffer = function (_buffer, _type) {
-		gml_pragma("forceinline");
+		INLINE
 		buffer_write(_buffer, _type, X);
 		buffer_write(_buffer, _type, Y);
 		buffer_write(_buffer, _type, Z);
@@ -624,7 +624,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @return {Array<Real>} Returns the destination array.
 	static ToMatrix = function (_dest=undefined, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 
 		_dest ??= matrix_build_identity();
 		

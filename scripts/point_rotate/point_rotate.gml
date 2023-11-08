@@ -1,5 +1,5 @@
 function point_rotate(px, py, ox, oy, a) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	a = angle_difference(a, 0);
 	if(a == 0)   return [ px, py ];

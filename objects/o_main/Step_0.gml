@@ -4,22 +4,14 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 //print("===== Step start =====");
 if(PROJECT.active && !PROJECT.safeMode) {
 	PROJECT.animator.step();
-
-	#region step
-		PROJECT.globalNode.step();
+	PROJECT.globalNode.step();
 	
-		try {
-			if(PANEL_MAIN != 0)
-				PANEL_MAIN.step();
-		
-			for(var i = 0; i < ds_list_size(PROJECT.nodes); i++) {
-				PROJECT.nodes[| i].triggerCheck();
-				PROJECT.nodes[| i].step();
-			}
-		} catch(e) {
-			noti_warning("Step error: " + exception_print(e));
-		}
-	#endregion
+	try {
+		if(PANEL_MAIN != 0) PANEL_MAIN.step();
+		array_foreach(PROJECT.nodeArray, function(_node) { if(!_node.active) return; _node.triggerCheck(); _node.step(); });
+	} catch(e) {
+		noti_warning("Step error: " + exception_print(e));
+	}
 }
 
 #region hotkey

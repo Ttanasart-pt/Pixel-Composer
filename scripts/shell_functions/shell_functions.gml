@@ -5,7 +5,7 @@ function shellOpenExplorer(path) {
 }
 
 function shell_execute(path, command, ref = noone) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var txt = $"{path} {command}";
 	
@@ -20,7 +20,7 @@ function shell_execute(path, command, ref = noone) {
 }
 
 function shell_execute_async(path, command, ref = noone) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var txt = $"{path} {command}";
 	

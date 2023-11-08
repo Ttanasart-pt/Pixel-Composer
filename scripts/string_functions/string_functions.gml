@@ -56,7 +56,7 @@ function string_real(val, digMax = 999) { #region
 } #endregion
 
 function string_char_last(str, shift = 0) { #region
-	gml_pragma("forceinline");
+	INLINE
 	return string_char_at(str, string_length(str) - shift);
 } #endregion
 
@@ -66,11 +66,11 @@ function filename_name_only(name) { #region
 } #endregion
 	
 function string_to_var(str) { #region
-	gml_pragma("forceinline");
+	INLINE
 	return string_replace_all(string_lower(str), " ", "_");
 } #endregion
 
 function string_quote(str) { #region
-	gml_pragma("forceinline");
+	INLINE
 	return $"\"{str}\"";
 } #endregion

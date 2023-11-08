@@ -701,7 +701,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			visible = argument_count > 1? argument[1] : visible;
 		} else 
 			visible = inspector;
-			
 		return self;
 	} #endregion
 	
@@ -1580,7 +1579,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static isActiveDynamic = function() { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		if(value_from != noone) return false;
 		
@@ -1805,7 +1804,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	} #endregion
 	
-	static isLeaf = function() { gml_pragma("forceinline"); return value_from == noone; }
+	static isLeaf = function() { INLINE return value_from == noone; }
 	
 	static isRendered = function() { #region
 		if(type == VALUE_TYPE.node)	return true;
@@ -2333,7 +2332,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		ext.doUpdate();
 	} #endregion
 	
-	static hasJunctionFrom = function() { gml_pragma("forceinline"); return value_from != noone; }
+	static hasJunctionFrom = function() { INLINE return value_from != noone; }
 	
 	static getJunctionTo = function() { #region
 		var to = [];

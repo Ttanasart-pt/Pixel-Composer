@@ -5,7 +5,7 @@ function __mat4() constructor {
             0, 0, 0, 0 ];
 	
 	static setRaw = function(raw) {
-		gml_pragma("forceinline");
+		INLINE
 		self.raw = raw;
 		return self;
 	}

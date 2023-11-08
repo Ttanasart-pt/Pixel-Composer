@@ -16,7 +16,7 @@ function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = 
 	oriSurf_h = h;
 	
 	static setOrginalSurface = function(surf) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		oriSurf   = surf;
 		oriSurf_w = surface_get_width_safe(surf);
@@ -25,13 +25,13 @@ function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = 
 	}
 	
 	static getSurface = function() {
-		gml_pragma("forceinline");
+		INLINE
 		
 		return surface.get();
 	}
 	
 	static setSurface = function(surface) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		self.surface.set(surface);
 		
@@ -40,14 +40,14 @@ function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = 
 	}
 	
 	static draw = function() {
-		gml_pragma("forceinline");
+		INLINE
 		
 		draw_surface_ext_safe(surface.get(), x, y, sx, sy, rotation, blend, alpha);
 		return self;
 	}
 	
 	static clone = function(_surface = false) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		var _surf = getSurface();
 		if(_surface) _surf = surface_clone(_surf);
@@ -58,7 +58,7 @@ function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = 
 
 function Surface(surface) constructor {
 	static set = function(surface) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		self.surface = surface;
 		w = surface_get_width_safe(surface);
@@ -67,12 +67,12 @@ function Surface(surface) constructor {
 	}
 	set(surface);
 	
-	static get = function() { gml_pragma("forceinline"); return surface; }
+	static get = function() { INLINE return surface; }
 	
-	static isValid = function() { gml_pragma("forceinline"); return is_surface(surface); }
+	static isValid = function() { INLINE return is_surface(surface); }
 	
 	static resize = function(w, h) { 
-		gml_pragma("forceinline");
+		INLINE
 		
 		surface_resize(surface, w, h);
 		self.w = w;
@@ -81,21 +81,21 @@ function Surface(surface) constructor {
 	}
 	
 	static draw = function(x, y, xs = 1, ys = 1, rot = 0, col = c_white, alpha = 1) { 
-		gml_pragma("forceinline");
+		INLINE
 		
 		draw_surface_ext_safe(surface, x, y, xs, ys, rot, col, alpha);
 		return self; 
 	}
 	
 	static drawStretch = function(x, y, w = 1, h = 1, rot = 0, col = c_white, alpha = 1) { 
-		gml_pragma("forceinline");
+		INLINE
 		
 		draw_surface_stretched_ext(surface, x, y, w, h, col, alpha);
 		return self; 
 	}
 	
 	static destroy = function() {
-		gml_pragma("forceinline");
+		INLINE
 		
 		if(!isValid()) return;
 		surface_free(surface);
@@ -103,7 +103,7 @@ function Surface(surface) constructor {
 }
 
 function Surface_get(surface) {
-	gml_pragma("forceinline");
+	INLINE
 		
 	if(is_real(surface)) 
 		return surface;

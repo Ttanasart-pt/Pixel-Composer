@@ -11,18 +11,18 @@ function __Panel_Linear_Setting_Item_Preference(name, key, editWidget, _data = n
 	self.key = key;
 	
 	data = function() {
-		gml_pragma("forceinline");
+		INLINE
 		return PREFERENCES[$ key];
 	}
 	
 	onEdit = function(val) {
-		gml_pragma("forceinline");
+		INLINE
 		PREFERENCES[$ key] = val;
 		PREF_SAVE();
 	}
 	
 	getDefault = function() {
-		gml_pragma("forceinline");
+		INLINE
 		return PREFERENCES_DEF[$ key];
 	}
 } #endregion

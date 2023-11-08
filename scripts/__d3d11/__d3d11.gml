@@ -13,7 +13,7 @@
 /// @return {String} The last error message.
 function d3d11_get_error_string() {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	static _fn = external_define(GMD3D11_PATH, "d3d11_get_error_string", dll_cdecl, ty_string, 0);
 	return external_call(_fn);
 }
@@ -29,7 +29,7 @@ function d3d11_get_error_string() {
 /// @return {Real} Returns 1 on success or 0 on fail.
 function d3d11_texture_set_stage_vs(_slot, _texture) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	static _fn = external_define(GMD3D11_PATH, "d3d11_texture_set_stage_vs", dll_cdecl, ty_real, 1, ty_real);
 	texture_set_stage(0, _texture);
 	return external_call(_fn, _slot);
@@ -46,7 +46,7 @@ function d3d11_texture_set_stage_vs(_slot, _texture) {
 ///
 /// @see GMD3D11_IS_SUPPORTED
 function texture_set_stage_vs(_slot, _texture) {
-	gml_pragma("forceinline");
+	INLINE
 	if (GMD3D11_IS_SUPPORTED) {
 		d3d11_texture_set_stage_vs(_slot, _texture);
 		return;
@@ -65,7 +65,7 @@ function texture_set_stage_vs(_slot, _texture) {
 /// @return {Real} Returns 1 on success or 0 on fail.
 function d3d11_texture_set_stage_ps(_slot, _texture) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	static _fn = external_define(GMD3D11_PATH, "d3d11_texture_set_stage_ps", dll_cdecl, ty_real, 1, ty_real);
 	texture_set_stage(0, _texture);
 	return external_call(_fn, _slot);
@@ -79,7 +79,7 @@ function d3d11_texture_set_stage_ps(_slot, _texture) {
 /// @param {Real} _count Number of instances to draw. Use 0 to disable instanced rendering.
 function d3d11_draw_instanced(_count) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	static _fn = external_define(GMD3D11_PATH, "d3d11_draw_instanced", dll_cdecl, ty_real, 1, ty_real);
 	return external_call(_fn, _count);
 }
@@ -94,7 +94,7 @@ function d3d11_draw_instanced(_count) {
 /// @param {Real} _count The number of instances to draw.
 function vertex_submit_instanced(_vbuff, _prim, _texture, _count) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	if (!d3d11_draw_instanced(_count))
 		return false;
 		
@@ -104,7 +104,7 @@ function vertex_submit_instanced(_vbuff, _prim, _texture, _count) {
 
 function vertex_buffer_load(_filename, _vformat) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	var _buffer  = buffer_load(_filename);
 	var _vbuffer = vertex_create_buffer_from_buffer(_buffer, _vformat);
 	buffer_delete(_buffer);

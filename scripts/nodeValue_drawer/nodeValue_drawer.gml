@@ -50,8 +50,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		index = jun.visible;
 		draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
-			if(visi_hold != noone)
+			if(visi_hold != noone && jun.visible != visi_hold) {
 				jun.visible = visi_hold;
+				jun.node.setHeight();
+			}
 					
 			draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
 			TOOLTIP = __txt("Visibility");
@@ -59,6 +61,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			if(mouse_press(mb_left, _focus)) {
 				jun.visible = !jun.visible;
 				visi_hold = jun.visible;
+				jun.node.setHeight();
 			}
 		}
 	#endregion

@@ -12,7 +12,7 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 	normal_draw_size = 0.05;
 	
 	static getHeight = function(h, gw, gh, i, j) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		var _i = round(i * gw);
 		var _j = round(j * gh);

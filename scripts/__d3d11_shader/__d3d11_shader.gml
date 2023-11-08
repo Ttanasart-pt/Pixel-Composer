@@ -14,7 +14,7 @@
 /// @see d3d11_get_error_string
 function d3d11_shader_compile_ps(_file, _entryPoint, _profile) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_shader_compile_ps", dll_cdecl, ty_real,
 		3, ty_string, ty_string, ty_string);
@@ -34,7 +34,7 @@ function d3d11_shader_compile_ps(_file, _entryPoint, _profile) {
 /// @see d3d11_get_error_string
 function d3d11_shader_compile_vs(_file, _entryPoint, _profile) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_shader_compile_vs", dll_cdecl, ty_real,
 		3, ty_string, ty_string, ty_string);
@@ -49,7 +49,7 @@ function d3d11_shader_compile_vs(_file, _entryPoint, _profile) {
 /// @param {Real} _ps The ID of the shader or -1 to disable the override.
 function d3d11_shader_override_ps(_ps) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_shader_override_ps", dll_cdecl, ty_real,
 		1, ty_real);
@@ -66,7 +66,7 @@ function d3d11_shader_override_ps(_ps) {
 /// shader!
 function d3d11_shader_override_vs(_vs) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_shader_override_vs", dll_cdecl, ty_real,
 		1, ty_real);
@@ -82,7 +82,7 @@ function d3d11_shader_override_vs(_vs) {
 /// @return {Bool} Returns true if the shader exists.
 function d3d11_shader_exists(_shader) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_shader_exists", dll_cdecl, ty_real,
 		1, ty_real);
@@ -96,7 +96,7 @@ function d3d11_shader_exists(_shader) {
 /// @param {Real} _shader The ID of the shader to destroy.
 function d3d11_shader_destroy(_shader) {
 	if(!GMD3D11_IS_SUPPORTED) return;
-	gml_pragma("forceinline");
+	INLINE
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_shader_destroy", dll_cdecl, ty_real,
 		1, ty_real);

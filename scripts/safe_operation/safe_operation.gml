@@ -4,7 +4,7 @@ enum MOD_NEG {
 }
 
 function safe_mod(numb, modd, _neg = MOD_NEG._default) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var _md = modd == 0? 0 : numb % modd;
 	if(_md < 0)

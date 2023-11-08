@@ -47,14 +47,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	parser_server = noone;
 	
 	use_autocomplete		 = true;
-	autocomplete_box		 = instance_create(0, 0, o_dialog_textbox_autocomplete);
-	autocomplete_box.textbox = self;
 	autocomplete_server		 = noone;
 	autocomplete_object		 = noone;
 	autocomplete_context	 = {};
 	
-	function_guide_box		   = instance_create(0, 0, o_dialog_textbox_function_guide);
-	function_guide_box.textbox = self;
 	function_guide_server	   = noone;
 	
 	shift_new_line   = true;
@@ -96,7 +92,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(!isCodeFormat()) return;
 		if(autocomplete_server == noone) return;
 		if(!use_autocomplete) {
-			autocomplete_box.active   = false;
+			o_dialog_textbox_autocomplete.deactivate(self);
 			return;
 		}
 		
@@ -111,13 +107,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var data = autocomplete_server(pmt, localParams, autocomplete_context);
 					
 		if(array_length(data)) {
-			autocomplete_box.data   = data;
-						
-			autocomplete_box.active   = true;
-			autocomplete_box.prompt   = pmt;
-			autocomplete_box.selecting= 0;
-		} else 
-			autocomplete_box.active   = false;
+			o_dialog_textbox_autocomplete.data = data;
+			o_dialog_textbox_autocomplete.activate(self);
+		}
 					
 		var _c  = cursor;
 		var _v  = false;
@@ -147,13 +139,13 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var guide = function_guide_server(_fn);
 					
 		if(guide != "") {
-			function_guide_box.active   = true;
-			function_guide_box.dialog_x = rx + cursor_pos_x + 1;
-			function_guide_box.dialog_y = ry + cursor_pos_y - 12;
-			function_guide_box.prompt   = guide;
-			function_guide_box.index    = amo;
+			o_dialog_textbox_function_guide.activate(self);
+			o_dialog_textbox_function_guide.dialog_x = rx + cursor_pos_x + 1;
+			o_dialog_textbox_function_guide.dialog_y = ry + cursor_pos_y - 12;
+			o_dialog_textbox_function_guide.prompt   = guide;
+			o_dialog_textbox_function_guide.index    = amo;
 		} else 
-			function_guide_box.active   = false;
+			o_dialog_textbox_function_guide.deactivate(self);
 	} #endregion
 	
 	static breakCharacter = function(ch) { #region
@@ -166,7 +158,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(!keyboard_check_pressed(vk_enter)) 
 			return 0;
 		
-		if(use_autocomplete && autocomplete_box.active) 
+		if(use_autocomplete && o_dialog_textbox_autocomplete.textbox == self) 
 			return 0;
 		
 		return 1 + ((shift_new_line && key_mod_press(SHIFT)) || (!shift_new_line && !key_mod_press(SHIFT)));
@@ -206,7 +198,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			} 
 		}
 		
-		if(!(isCodeFormat() && autocomplete_box.active)) {
+		if(!(isCodeFormat() && o_dialog_textbox_autocomplete.textbox == self)) {
 			if(key == vk_up) {
 				var _target;
 					
@@ -527,7 +519,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			while(string_char_at(_input_text, cursor + 1) != "\n" && cursor < string_length(_input_text)) {
 				cursor++;
 			}
-		} else if(keyboard_check_pressed(vk_escape) && !autocomplete_box.active) {
+		} else if(keyboard_check_pressed(vk_escape) && o_dialog_textbox_autocomplete.textbox != self) {
 			_input_text = _last_value;
 			cut_line();
 			deactivate();
@@ -633,16 +625,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			}
 		}
 		
-		if(target != -999 && HOVER != autocomplete_box.id) {
+		if(target != -999 && HOVER != o_dialog_textbox_autocomplete.id) {
 			if(mouse_press(mb_left, active) && !click_block) {
 				cursor_select = target;
 				cursor		  = target;	
-				
-				autocomplete_box.active = true;
 			} else if(mouse_click(mb_left, active) && cursor != target) {
 				cursor		  = target;
-				
-				autocomplete_box.active = false;
 			}
 			
 			if(mouse_press(mb_left, active))
@@ -797,13 +785,13 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
 				}
 				
-				if(autocomplete_box.active) {
-					autocomplete_box.dialog_x = rx + cursor_pos_x + 1;
-					autocomplete_box.dialog_y = ry + cursor_pos_y + line_get_height() + 1;
+				if(o_dialog_textbox_autocomplete.textbox == self) {
+					o_dialog_textbox_autocomplete.dialog_x = rx + cursor_pos_x + 1;
+					o_dialog_textbox_autocomplete.dialog_y = ry + cursor_pos_y + line_get_height() + 1;
 				}
 			#endregion
 			
-			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_press(mb_left) && HOVER != autocomplete_box.id) {
+			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_press(mb_left) && HOVER != o_dialog_textbox_autocomplete.id) {
 				deactivate();
 			}
 		} else {
@@ -819,7 +807,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			
 			display_text(tx, _y + ui(7), _text);
 			
-			autocomplete_box.active   = 0;
+			o_dialog_textbox_autocomplete.deactivate(self);
 		}
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {

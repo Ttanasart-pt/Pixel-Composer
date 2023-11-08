@@ -31,7 +31,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     } set(_x, _y, _z, _w);
 	
 	static setIndex = function(index, value) {
-		gml_pragma("forceinline");
+		INLINE
 		switch(index) {
 			case 0 : x = value; break;
 			case 1 : y = value; break;
@@ -53,22 +53,22 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
 	}
 	
     static add = function(_vec4) {
-        gml_pragma("forceinline");
+        INLINE
         return new __vec4(x + _vec4.x, y + _vec4.y, z + _vec4.z, w + _vec4.w);
     }
 
     static subtract = function(_vec4) {
-        gml_pragma("forceinline");
+        INLINE
         return new __vec4(x - _vec4.x, y - _vec4.y, z - _vec4.z, w - _vec4.w);
     }
 
     static multiply = function(_scalar) {
-        gml_pragma("forceinline");
+        INLINE
         return new __vec4(x * _scalar, y * _scalar, z * _scalar, w * _scalar);
     }
 
     static divide = function(_scalar) {
-        gml_pragma("forceinline");
+        INLINE
         if (_scalar != 0)
             return new __vec4(x / _scalar, y / _scalar, z / _scalar, w / _scalar);
 
@@ -76,13 +76,13 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     }
 
     static dot = function(_vec4) {
-        gml_pragma("forceinline");
+        INLINE
         return x * _vec4.x + y * _vec4.y + z * _vec4.z + w * _vec4.w;
     }
 
     // In-place computation functions
     static _add = function(_vec4) {
-        gml_pragma("forceinline");
+        INLINE
         x += _vec4.x;
         y += _vec4.y;
         z += _vec4.z;
@@ -91,7 +91,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     }
 
     static _subtract = function(_vec4) {
-        gml_pragma("forceinline");
+        INLINE
         x -= _vec4.x;
         y -= _vec4.y;
         z -= _vec4.z;
@@ -100,7 +100,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     }
 
     static _multiply = function(_scalar) {
-        gml_pragma("forceinline");
+        INLINE
         x *= _scalar;
         y *= _scalar;
         z *= _scalar;
@@ -109,7 +109,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     }
 
     static _divide = function(_scalar) {
-        gml_pragma("forceinline");
+        INLINE
         if (_scalar != 0) {
             x /= _scalar;
             y /= _scalar;
@@ -120,7 +120,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     }
 
     static distance = function(_vec4) {
-        gml_pragma("forceinline");
+        INLINE
         var dx = _vec4.x - x;
         var dy = _vec4.y - y;
         var dz = _vec4.z - z;
@@ -129,12 +129,12 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     }
 
     static length = function() {
-        gml_pragma("forceinline");
+        INLINE
         return sqrt(x * x + y * y + z * z + w * w);
     }
 
     static _normalize = function() {
-        gml_pragma("forceinline");
+        INLINE
         var _length = length();
         if (_length != 0) {
             x /= _length;
@@ -146,7 +146,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     }
 
     static _lerpTo = function(to, speed = 0.3) {
-        gml_pragma("forceinline");
+        INLINE
         x = lerp(x, to.x, speed);
         y = lerp(y, to.y, speed);
         z = lerp(z, to.z, speed);
@@ -154,7 +154,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     }
 
     static _lerp_float = function(to, speed = 5, pre = 0.01) {
-        gml_pragma("forceinline");
+        INLINE
         x = lerp_float(x, to.x, speed, pre);
         y = lerp_float(y, to.y, speed, pre);
         z = lerp_float(z, to.z, speed, pre);
@@ -162,12 +162,12 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     }
 
     static equal = function(to) {
-        gml_pragma("forceinline");
+        INLINE
         return x == to.x && y == to.y && z == to.z && w == to.w;
     }
 
 	static minVal = function(vec) {
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec4(
 			min(x, vec.x),
 			min(y, vec.y),
@@ -177,7 +177,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
 	}
 	
 	static maxVal = function(vec) {
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec4(
 			max(x, vec.x),
 			max(y, vec.y),
@@ -187,7 +187,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
 	}
 	
     static clone = function() {
-        gml_pragma("forceinline");
+        INLINE
         return new __vec4(x, y, z, w);
     }
 

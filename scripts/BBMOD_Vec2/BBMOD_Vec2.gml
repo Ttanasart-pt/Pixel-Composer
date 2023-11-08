@@ -27,7 +27,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// new BBMOD_Vec2(-1.0, 2.0).Abs() // => BBMOD_Vec2(1.0, 2.0)
 	/// ```
 	static Abs = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			abs(X),
 			abs(Y)
@@ -42,7 +42,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} The created vector.
 	static Add = function (_v) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			X + _v.X,
 			Y + _v.Y
@@ -61,7 +61,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// new BBMOD_Vec2(0.2, 1.6).Ceil() // => BBMOD_Vec2(1.0, 2.0)
 	/// ```
 	static Ceil = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			ceil(X),
 			ceil(Y)
@@ -78,7 +78,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} The resulting vector.
 	static Clamp = function (_min, _max) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			clamp(X, _min.X, _max.X),
 			clamp(Y, _min.Y, _max.Y)
@@ -102,7 +102,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// new BBMOD_Vec2(3.0, 0.0).ClampLength(1.0, 2.0) // => BBMOD_Vec2(2.0, 0.0)
 	/// ```
 	static ClampLength = function (_min, _max) {
-		gml_pragma("forceinline");
+		INLINE
 		var _length = sqrt(
 			  X * X
 			+ Y * Y
@@ -120,7 +120,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} The creted vector.
 	static Clone = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			X,
 			Y
@@ -144,7 +144,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// show_debug_message(_v2) // Prints { X: 1.0, Y: 2.0 }
 	/// ```
 	static Copy = function (_dest) {
-		gml_pragma("forceinline");
+		INLINE
 		_dest.X = X;
 		_dest.Y = Y;
 		return self;
@@ -158,7 +158,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Real} The dot product of this vector and vector `_v`.
 	static Dot = function (_v) {
-		gml_pragma("forceinline");
+		INLINE
 		return (
 			  X * _v.X
 			+ Y * _v.Y
@@ -173,7 +173,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Bool} Returns `true` if the two vectors are equal.
 	static Equals = function (_v) {
-		gml_pragma("forceinline");
+		INLINE
 		return (
 			   X == _v.X
 			&& Y == _v.Y
@@ -192,7 +192,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// new BBMOD_Vec2(0.2, 1.6).Floor() // => BBMOD_Vec2(0.0, 1.0)
 	/// ```
 	static Floor = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			floor(X),
 			floor(Y)
@@ -211,7 +211,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// new BBMOD_Vec2(0.2, 1.6).Frac() // => BBMOD_Vec2(0.2, 0.6)
 	/// ```
 	static Frac = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			frac(X),
 			frac(Y)
@@ -228,7 +228,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} Returns `self`.
 	static FromArray = function (_array, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 		X = _array[_index];
 		Y = _array[_index + 1];
 		return self;
@@ -247,7 +247,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} Returns `self`.
 	static FromBarycentric = function (_v1, _v2, _v3, _f, _g) {
-		gml_pragma("forceinline");
+		INLINE
 		var _v1X = _v1.X;
 		var _v1Y = _v1.Y;
 		X = _v1X + _f * (_v2.X - _v1X) + _g * (_v3.X - _v1X);
@@ -264,7 +264,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} Returns `self`.
 	static FromBuffer = function (_buffer, _type) {
-		gml_pragma("forceinline");
+		INLINE
 		X = buffer_read(_buffer, _type);
 		Y = buffer_read(_buffer, _type);
 		return self;
@@ -276,7 +276,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Real} The length of the vector.
 	static Length = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return sqrt(
 			  X * X
 			+ Y * Y
@@ -289,7 +289,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Real} The squared length of the vector.
 	static LengthSqr = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return (
 			  X * X
 			+ Y * Y
@@ -303,7 +303,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// @param {Struct.BBMOD_Vec2} _v The vector to interpolate with.
 	/// @param {Real} _amount The interpolation factor.
 	static Lerp = function (_v, _amount) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			lerp(X, _v.X, _amount),
 			lerp(Y, _v.Y, _amount)
@@ -316,7 +316,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Real} The greates component of the vector.
 	static MaxComponent = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return max(
 			X,
 			Y,
@@ -339,7 +339,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// var _vMax = _v1.Maximize(_v2); // Equals to BBMOD_Vec2(2.0, 4.0)
 	/// ```
 	static Maximize = function (_v) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			max(X, _v.X),
 			max(Y, _v.Y)
@@ -352,7 +352,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Real} The smallest component of the vector.
 	static MinComponent = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return min(
 			X,
 			Y,
@@ -375,7 +375,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// var _vMin = _v1.Minimize(_v2); // Equals to BBMOD_Vec2(1.0, 3.0)
 	/// ```
 	static Minimize = function (_v) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			min(X, _v.X),
 			min(Y, _v.Y)
@@ -391,7 +391,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} The created vector.
 	static Mul = function (_v) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			X * _v.X,
 			Y * _v.Y
@@ -404,7 +404,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} The created vector.
 	static Normalize = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _lengthSqr = (
 			  X * X
 			+ Y * Y
@@ -432,7 +432,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} The created vector.
 	static Reflect = function (_v) {
-		gml_pragma("forceinline");
+		INLINE
 		var _dot2 = (
 			  X * _v.X
 			+ Y * _v.Y
@@ -455,7 +455,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// new BBMOD_Vec2(0.2, 1.6).Round() // => BBMOD_Vec2(0.0, 2.0)
 	/// ```
 	static Round = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_Vec2(
 			round(X),
 			round(Y)
@@ -493,7 +493,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @throws {BBMOD_OutOfRangeException} If an invalid index is passed.
 	static Get = function (_index) {
-		gml_pragma("forceinline");
+		INLINE
 		switch (_index)
 		{
 		case 0:
@@ -514,7 +514,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} Returns `self`.
 	static Set = function (_x=0.0, _y=undefined) {
-		gml_pragma("forceinline");
+		INLINE
 		X = _x;
 		Y = _y ?? X;
 		return self;
@@ -532,7 +532,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// @throws {BBMOD_OutOfRangeException} If the given index is out of range
 	/// of possible values.
 	static SetIndex = function (_index, _value) {
-		gml_pragma("forceinline");
+		INLINE
 		switch (_index)
 		{
 		case 0:
@@ -584,7 +584,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Array<Real>} The target array.
 	static ToArray = function (_array=undefined, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 		_array ??= array_create(2, 0.0);
 		_array[@ _index]     = X;
 		_array[@ _index + 1] = Y;
@@ -600,7 +600,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	///
 	/// @return {Struct.BBMOD_Vec2} Returns `self`.
 	static ToBuffer = function (_buffer, _type) {
-		gml_pragma("forceinline");
+		INLINE
 		buffer_write(_buffer, _type, X);
 		buffer_write(_buffer, _type, Y);
 		return self;

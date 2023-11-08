@@ -16,13 +16,13 @@ function __initTheme() {
 }
 
 function _sprite_path(rel, theme) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	return $"{DIRECTORY}themes/{theme}/graphics/{string_replace_all(rel, "./", "")}";
 }
 
 function _sprite_load_from_struct(str, theme, key) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var path = _sprite_path(str.path, theme);
 	var s    = sprite_add(path, str.subimages, false, true, str.xorigin, str.yorigin);
@@ -45,7 +45,7 @@ function _sprite_load_from_struct(str, theme, key) {
 }
 
 function __getGraphicList() {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var path = _sprite_path("./graphics.json", "default");
 	var s = file_text_read_all(path);

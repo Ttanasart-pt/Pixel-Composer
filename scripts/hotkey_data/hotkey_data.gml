@@ -112,7 +112,7 @@
 
 #region functions
 	function getHotkey(_group, _key, _def = "") {
-		gml_pragma("forceinline");
+		INLINE
 		
 		if(!struct_has(HOTKEYS_CUSTOM, _group)) return _def;
 		

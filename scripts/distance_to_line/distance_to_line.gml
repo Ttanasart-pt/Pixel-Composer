@@ -1,5 +1,5 @@
 function distance_to_line(_px, _py, _x0, _y0, _x1, _y1, log = false) {
-	gml_pragma("forceinline");
+	INLINE
 	var l2 = sqr(_x0 - _x1) + sqr(_y0 - _y1);
 	if (l2 == 0) return point_distance(_px, _py, _x0, _y0);
 	  
@@ -11,7 +11,7 @@ function distance_to_line(_px, _py, _x0, _y0, _x1, _y1, log = false) {
 }
 
 function distance_to_line_infinite(px, py, x0, y0, x1, y1) {
-	gml_pragma("forceinline");
+	INLINE
 	return abs((x1 - x0) * (y0 - py) - (x0 - px) * (y1 - y0)) / sqrt(sqr(x1 - x0) + sqr(y1 - y0));	
 }
 

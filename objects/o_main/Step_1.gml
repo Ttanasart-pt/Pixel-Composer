@@ -43,8 +43,7 @@ _HOVERING_ELEMENT = noone;
 	HOVER = noone;
 	with(_p_dialog) checkMouse();
 	
-	if(PANEL_MAIN != 0)
-		PANEL_MAIN.stepBegin();
+	if(PANEL_MAIN != 0) PANEL_MAIN.stepBegin();
 	
 	DIALOG_DEPTH_HOVER = 0;
 	
@@ -87,15 +86,10 @@ _HOVERING_ELEMENT = noone;
 			NodeTopoSort();
 		}
 		UPDATE_RENDER_ORDER = false;
-	
+		
 		if(PROJECT.active) {
-			var _k = ds_map_find_first(PROJECT.nodeMap);
-			var _a = ds_map_size(PROJECT.nodeMap);
-			repeat(_a) {
-				PROJECT.nodeMap[? _k].stepBegin();
-				_k = ds_map_find_next(PROJECT.nodeMap, _k);
-			}
-	
+			array_foreach(PROJECT.nodeArray, function(_node) { if(!_node.active) return; _node.stepBegin(); });
+			
 			if(IS_PLAYING || IS_RENDERING) {
 				if(PROJECT.animator.frame_progress) {
 					__addon_preAnim();

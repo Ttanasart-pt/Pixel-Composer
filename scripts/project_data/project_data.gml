@@ -15,6 +15,7 @@
 		safeMode = false;
 		
 		nodes	    = ds_list_create();
+		nodeArray   = [];
 		nodeMap	    = ds_map_create();
 		nodeNameMap = ds_map_create();
 		nodeTopo    = ds_list_create();

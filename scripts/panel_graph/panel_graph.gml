@@ -512,7 +512,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#endregion
 	#endregion
 	
-	function getFocusingNode() { gml_pragma("forceinline"); return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
+	function getFocusingNode() { INLINE return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
 	
 	function getCurrentContext() { #region
 		if(ds_list_empty(node_context)) return noone;
@@ -551,7 +551,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	function fullView() { #region
-		gml_pragma("forceinline");
+		INLINE
 		var _l = ds_list_create_from_array(nodes_selecting);
 		toCenterNode(array_empty(nodes_selecting)? nodes_list : _l);
 		ds_list_destroy(_l);

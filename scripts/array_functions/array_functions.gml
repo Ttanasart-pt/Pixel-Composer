@@ -43,7 +43,7 @@ enum ARRAY_OVERFLOW {
 }
 
 function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) {
-	gml_pragma("forceinline");
+	INLINE
 	if(!is_array(arr))  return def;
 	if(is_array(index)) return def;
 	
@@ -60,7 +60,7 @@ function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default)
 }
 
 function array_push_create(arr, val) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr)) return [ val ];
 	array_push(arr, val);
@@ -68,7 +68,7 @@ function array_push_create(arr, val) {
 }
 
 function array_get_decimal(arr, index, color = false) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr)) return 0;
 	if(frac(index) == 0) return array_safe_get(arr, index);
@@ -82,7 +82,7 @@ function array_get_decimal(arr, index, color = false) {
 }
 
 function array_exists(arr, val) {
-	gml_pragma("forceinline");
+	INLINE
 	self.__temp_val = val;
 	
 	if(!is_array(arr)) return false;
@@ -92,7 +92,7 @@ function array_exists(arr, val) {
 }
 
 function array_overlap(arr0, arr1) {
-	gml_pragma("forceinline");
+	INLINE
 	self.__temp_arr = arr1;
 	
 	if(!is_array(arr0)) return false;
@@ -104,12 +104,12 @@ function array_overlap(arr0, arr1) {
 }
 
 function array_empty(arr) {
-	gml_pragma("forceinline");
+	INLINE
 	return is_array(arr) && array_length(arr) == 0;
 }
 
 function array_find(arr, val) {
-	gml_pragma("forceinline");
+	INLINE
 	self.__temp_val = val;
 	
 	if(!is_array(arr)) return -1;
@@ -119,7 +119,7 @@ function array_find(arr, val) {
 }
 
 function array_remove(arr, val) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr)) return;
 	if(!array_exists(arr, val)) return;
@@ -128,7 +128,7 @@ function array_remove(arr, val) {
 }
 
 function array_push_unique(arr, val) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr)) return;
 	if(array_exists(arr, val)) return;
@@ -137,7 +137,7 @@ function array_push_unique(arr, val) {
 
 
 function array_insert_unique(arr, ind, val) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr)) return;
 	if(array_exists(arr, val)) return;
@@ -145,7 +145,7 @@ function array_insert_unique(arr, ind, val) {
 }
 
 function array_append(arr, arr0) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr))  return arr;
 	if(!is_array(arr0)) return arr;
@@ -156,7 +156,7 @@ function array_append(arr, arr0) {
 }
 
 function array_merge() {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var arr = [];
 	for( var i = 0; i < argument_count; i++ )
@@ -166,7 +166,7 @@ function array_merge() {
 }
 
 function array_clone(arr) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr)) return arr;
 	
@@ -177,7 +177,7 @@ function array_clone(arr) {
 }
 
 function array_min(arr) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr) || array_length(arr) == 0) return 0;
 	
@@ -188,7 +188,7 @@ function array_min(arr) {
 }
 
 function array_max(arr) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr) || array_length(arr) == 0) return 0;
 	
@@ -199,7 +199,7 @@ function array_max(arr) {
 }
 
 function array_get_dimension(arr) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	return is_array(arr)? array_length(arr) : 1;
 }
@@ -220,7 +220,7 @@ function array_shape(arr, first = true, isSurface = false) {
 }
 
 function array_get_depth(arr) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr)) return 0;
 	var d = 0;
@@ -235,7 +235,7 @@ function array_get_depth(arr) {
 }
 
 function array_spread(arr, _arr = [], _minDepth = 0) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(array_get_depth(arr) == _minDepth) {
 		array_push(_arr, arr);
@@ -249,7 +249,7 @@ function array_spread(arr, _arr = [], _minDepth = 0) {
 }
 
 function array_verify(arr, length) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(arr)) return array_create(length);
 	if(array_length(arr) == length) return arr;

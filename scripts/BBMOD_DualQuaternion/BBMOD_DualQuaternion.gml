@@ -42,7 +42,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Add = function (_dq) {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_DualQuaternion()
 			.FromRealDual(
 				Real.Add(_dq.Real),
@@ -55,7 +55,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Clone = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _dq = new BBMOD_DualQuaternion();
 		_dq.Real = Real;
 		_dq.Dual = Dual;
@@ -69,7 +69,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Conjugate = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return new BBMOD_DualQuaternion()
 			.FromRealDual(
 				Real.Conjugate(),
@@ -86,7 +86,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static Copy = function (_dest) {
-		gml_pragma("forceinline");
+		INLINE
 		_dest.Real = Real;
 		_dest.Dual = Dual;
 		return self;
@@ -100,7 +100,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Real} The dot product of the dual quaternions.
 	static Dot = function (_dq) {
-		gml_pragma("forceinline");
+		INLINE
 		return Real.Dot(_dq.Real);
 	};
 
@@ -111,7 +111,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Exp = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _real = Real.Exp();
 		return new BBMOD_DualQuaternion()
 			.FromRealDual(
@@ -131,7 +131,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static FromArray = function (_array, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 		Real = Real.FromArray(_array, _index);
 		Dual = Dual.FromArray(_array, _index + 4);
 		return self;
@@ -149,7 +149,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static FromBuffer = function (_buffer, _type) {
-		gml_pragma("forceinline");
+		INLINE
 		Real = Real.FromBuffer(_buffer, _type);
 		Dual = Dual.FromBuffer(_buffer, _type);
 		return self;
@@ -166,7 +166,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static FromRealDual = function (_real, _dual) {
-		gml_pragma("forceinline");
+		INLINE
 		Real = _real.Normalize();
 		Dual = _dual;
 		return self;
@@ -183,7 +183,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static FromTranslationRotation = function (_t, _r) {
-		gml_pragma("forceinline");
+		INLINE
 
 		Real = _r.Normalize();
 
@@ -216,7 +216,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static GetRotation = function () {
-		gml_pragma("forceinline");
+		INLINE
 		return Real.Clone();
 	};
 
@@ -226,7 +226,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static GetTranslation = function () {
-		gml_pragma("forceinline");
+		INLINE
 
 		// Dual.Scale(2.0)
 		var _q10 = Dual.X * 2.0;
@@ -255,7 +255,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Log = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _scale = 1.0 / Real.Length();
 		return new BBMOD_DualQuaternion()
 			.FromRealDual(
@@ -272,7 +272,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Mul = function (_dq) {
-		gml_pragma("forceinline");
+		INLINE
 
 		var _dq1r0 = Real.X;
 		var _dq1r1 = Real.Y;
@@ -317,7 +317,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Normalize = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _dq = Clone();
 		var _mag = Real.Dot(Real);
 		if (_mag > math_get_epsilon())
@@ -337,7 +337,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Pow = function (_p) {
-		gml_pragma("forceinline");
+		INLINE
 		return Log().Scale(_p).Exp();
 	};
 
@@ -350,7 +350,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Rotate = function (_v) {
-		gml_pragma("forceinline");
+		INLINE
 		return Real.Rotate(_v);
 	};
 
@@ -363,7 +363,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Scale = function (_s) {
-		gml_pragma("forceinline");
+		INLINE
 		var _dq = new BBMOD_DualQuaternion();
 		_dq.Real = Real.Scale(_s);
 		_dq.Dual = Dual.Scale(_s);
@@ -380,7 +380,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Sclerp = function (_dq, _s) {
-		gml_pragma("forceinline");
+		INLINE
 		return _dq.Mul(Conjugate()).Pow(_s).Mul(self).Normalize();
 	};
 
@@ -396,7 +396,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Array<Real>} Returns the destination array.
 	static ToArray = function (_array=undefined, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 		_array ??= array_create(8, 0.0);
 		Real.ToArray(_array, _index);
 		Dual.ToArray(_array, _index + 4);
@@ -413,7 +413,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static ToBuffer = function (_buffer, _type) {
-		gml_pragma("forceinline");
+		INLINE
 		Real.ToBuffer(_buffer, _type);
 		Dual.ToBuffer(_buffer, _type);
 		return self;
@@ -430,7 +430,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Array<Real>} Returns the destination array.
 	static ToMatrix = function (_dest=undefined, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 
 		_dest ??= array_create(16, 0.0);
 
@@ -459,7 +459,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Transform = function (_v) {
-		gml_pragma("forceinline");
+		INLINE
 		return GetTranslation().Add(Real.Rotate(_v));
 	};
 }
@@ -484,7 +484,7 @@ function BBMOD_DualQuaternion(
 function __bbmod_dual_quaternion_array_multiply(
 	_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)
 {
-	gml_pragma("forceinline");
+	INLINE
 
 	var _dq1r0 = _dq1[_dq1Index + 0];
 	var _dq1r1 = _dq1[_dq1Index + 1];

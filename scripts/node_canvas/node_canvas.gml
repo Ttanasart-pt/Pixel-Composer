@@ -269,13 +269,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function getCanvasSurface(index = preview_index) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		return array_safe_get(canvas_surface, index);
 	} #endregion
 	
 	function setCanvasSurface(surface, index = preview_index) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		canvas_surface[index] = surface;
 	} #endregion

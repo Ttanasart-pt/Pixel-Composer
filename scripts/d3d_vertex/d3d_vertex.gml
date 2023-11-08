@@ -14,7 +14,7 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) construc
 	self.alpha    = alpha;
 	
 	static setNormal = function(_nx = 0, _ny = _nx, _nz = _nx) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		nx = _nx;
 		ny = _ny;
@@ -24,7 +24,7 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) construc
 	}
 	
 	static setUV = function(_u = 0, _v = _u) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		u = _u;
 		v = _v;
@@ -35,7 +35,7 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) construc
 	static toString = function() { return $"[__vertex] ( pos: ({x}, {y}, {z}), nor: ({nx}, {ny}, {nz}), uv: ({u}, {v}), {color}, {alpha} )"; }
 	
 	static clone = function() {
-		gml_pragma("forceinline");
+		INLINE
 		var _v = new __vertex(x, y, z, color, alpha);
 		
 		_v.nx = nx;

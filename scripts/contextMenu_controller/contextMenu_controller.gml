@@ -29,7 +29,7 @@
 	}
 	
 	function menuItem(name, func, spr = noone, hotkey = noone, toggle = noone) {
-		gml_pragma("forceinline");
+		INLINE
 		return new MenuItem(name, func, spr, hotkey, toggle);
 	}
 	
@@ -46,31 +46,31 @@
 		shiftMenu = noone;
 		
 		static setIsShelf = function() {
-			gml_pragma("forceinline");
+			INLINE
 			isShelf = true;
 			return self;
 		}
 		
 		static setActive = function(active) {
-			gml_pragma("forceinline");
+			INLINE
 			self.active = active;
 			return self;
 		}
 		
 		static setColor = function(color) {
-			gml_pragma("forceinline");
+			INLINE
 			self.color = color;
 			return self;
 		}
 		
 		static setShiftMenu = function(shiftMenu) {
-			gml_pragma("forceinline");
+			INLINE
 			self.shiftMenu = shiftMenu;
 			return self;
 		}
 	
 		static deactivate = function() {
-			gml_pragma("forceinline");
+			INLINE
 			active = false;
 			return self;
 		}

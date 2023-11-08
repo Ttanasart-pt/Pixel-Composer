@@ -4,7 +4,6 @@ event_inherited();
 #region data
 	depth = -9999;
 	
-	active   = false;
 	dialog_x = 0;
 	dialog_y = 0;
 	dialog_w = 300;
@@ -17,6 +16,19 @@ event_inherited();
 	
 	destroy_on_escape    = false;
 	destroy_on_click_out = false;
+	
+	function activate(textbox) {
+		INLINE
+		self.textbox   = textbox;
+		self.selecting = 0;
+	}
+	
+	function deactivate(textbox) {
+		INLINE
+		if(textbox != self.textbox) return;
+		
+		self.textbox   = noone;
+	}
 	
 	sc_content = new scrollPane(dialog_w, dialog_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
@@ -85,8 +97,7 @@ event_inherited();
 		textbox._input_text = $"{_sPreC}{rep}{_sPosC}";
 		textbox.cursor += _repAmo - _prmAmo;
 		textbox.cut_line();
-		
-		active = false;
+		textbox = noone;
 	}	
 #endregion
 

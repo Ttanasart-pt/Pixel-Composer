@@ -77,7 +77,7 @@ function color_diff(c1, c2, fast = false, alpha = false) {
 }
 
 function color_get_brightness(col) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	return (0.299 * color_get_red(col) + 0.587 * color_get_green(col) + 0.114 * color_get_blue(col)) / 255;
 }

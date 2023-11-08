@@ -1,5 +1,5 @@
 function isEqual(val1, val2, struct_expand = false) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(is_array(val1) && is_array(val2))	return array_member_equal(val1, val2);
 	if(struct_expand && is_struct(val1) && is_struct(val2))	return struct_equal(val1, val2);
@@ -8,7 +8,7 @@ function isEqual(val1, val2, struct_expand = false) {
 }
 
 function array_member_equal(arr1, arr2) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(array_length(arr1) != array_length(arr2)) return false;
 	
@@ -19,7 +19,7 @@ function array_member_equal(arr1, arr2) {
 }
 
 function struct_equal(str1, str2) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	//return json_stringify(str1) == json_stringify(str2);
 	

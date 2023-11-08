@@ -19,14 +19,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		renderActive = true;
 	
 		node_id = UUID_generate();
-	
+		
 		group   = _group;
 		manual_deletable	 = true;
 		destroy_when_upgroup = false;
 		ds_list_add(PANEL_GRAPH.getNodeList(_group), self);
-	
+		
 		active_index = -1;
 		active_range = [ 0, TOTAL_FRAMES - 1 ];
+		
+		array_push(PROJECT.nodeArray, self);
 	#endregion
 	
 	static resetInternalName = function() { #region
@@ -289,6 +291,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static setHeight = function() { #region
+		if(!auto_height) return;
+		
 		var _hi = ui(junction_draw_pad_y);
 		var _ho = ui(junction_draw_pad_y);
 		
@@ -304,8 +308,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 			if(outputs[| i].isVisible()) _ho += 24;
 		
-		h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
-	} #endregion
+		h = max(min_h, previewable * 128, _hi, _ho);
+	} run_in(1, function() { setHeight(); }); #endregion
 	
 	static setDisplayName = function(_name) { #region
 		renamed = true;
@@ -440,22 +444,20 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static stepBegin = function() { #region
 		if(use_cache) cacheArrayCheck();
 		
-		if(auto_height)
-			setHeight();
-		
 		doStepBegin();
 		
 		if(hasInspector1Update()) inspectInput1.name = insp1UpdateTooltip;
 		if(hasInspector2Update()) inspectInput2.name = insp2UpdateTooltip;
 		
-		if(updatedInTrigger.getValue()) { 
-			getInputs();
-			update();
+		if(attributes.show_update_trigger) {
+			if(updatedInTrigger.getValue()) { 
+				getInputs();
+				update();
 			
-			updatedInTrigger.setValue(false);
+				updatedInTrigger.setValue(false);
+			}
+			updatedOutTrigger.setValue(false);
 		}
-		
-		updatedOutTrigger.setValue(false);
 	} #endregion
 	
 	static doStepBegin = function() {}
@@ -499,13 +501,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static inspectorStep = function() {}
 	
 	static getInputData = function(index, def = 0) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		return array_safe_get(inputs_data, index, def);
 	} #endregion
 	
 	static setInputData = function(index, value) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		inputs_data[index] = value;
 		input_value_map[$ inputs[| index].internalName] = value;
@@ -719,7 +721,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onInspect = function() {}
 	
 	static setRenderStatus = function(result) { #region
-		gml_pragma("forceinline");
+		INLINE
 		if(rendered == result) return;
 		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
 		
@@ -808,7 +810,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static getColor = function() { #region
-		gml_pragma("forceinline");
+		INLINE
 		return attributes.color == -1? color : attributes.color;
 	} #endregion
 	
@@ -1256,8 +1258,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static getAnimationCacheExist = function(frame) { return cacheExist(frame); }
 	
-	static enable = function() { active = true; }
-	static disable = function() { active = false; }
+	static enable  = function() { INLINE active = true; }
+	static disable = function() { INLINE active = false; }
 	
 	static destroy = function(_merge = false) { #region
 		if(!active) return;
@@ -1816,8 +1818,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static loadGroup = function(context = PANEL_GRAPH.getCurrentContext()) { #region
 		if(_group == noone) {
-			var c = context;
-			if(c != noone) c.add(self);
+			if(context != noone) context.add(self);
 		} else {
 			if(APPENDING) _group = GetAppendID(_group);
 			

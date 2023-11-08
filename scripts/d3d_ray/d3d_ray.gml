@@ -3,7 +3,7 @@ function __ray(origin, direction) constructor {
 	self.direction = direction.normalize();
 	
 	static sampleDistance = function(t) {
-		gml_pragma("forceinline");
+		INLINE
 		return origin.add(direction.multiply(t));
 	}
 }

@@ -10,7 +10,7 @@
 /// @return {Real} The resulting value.
 function bbmod_lerp_delta_time(_from, _to, _factor, _deltaTime)
 {
-	gml_pragma("forceinline");
+	INLINE
 	return lerp(
 		_from,
 		_to,

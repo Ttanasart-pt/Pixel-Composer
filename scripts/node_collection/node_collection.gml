@@ -64,6 +64,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	ungroupable			= true;
 	auto_render_time	= false;
 	combine_render_time = true;
+	previewable         = true;
+	
+	w = 128;
+	h = 128;
+	min_h = 128;
 	
 	reset_all_child = false;
 	isInstancer		= false;
@@ -141,6 +146,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getNodeList = function() { #region
+		INLINE
 		if(instanceBase == noone) return nodes;
 		return instanceBase.getNodeList();
 	} #endregion
@@ -275,8 +281,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static add = function(_node) { #region
 		ds_list_add(getNodeList(), _node);
 		var list = _node.group == noone? PANEL_GRAPH.nodes_list : _node.group.getNodeList();
-		var _pos = ds_list_find_index(list, _node);
-		ds_list_delete(list, _pos);
+		ds_list_remove(list, _node);
 		
 		recordAction(ACTION_TYPE.group_added, self, _node);
 		_node.group = self;
@@ -309,13 +314,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static stepBegin = function() { #region
 		use_cache = CACHE_USE.none;
-		
 		array_safe_set(cache_result, CURRENT_FRAME, true);
 		
 		var node_list = getNodeList();
 		for(var i = 0; i < ds_list_size(node_list); i++) {
 			var _node = node_list[| i];
-			_node.stepBegin();
 			if(!_node.use_cache) continue;
 			
 			use_cache = CACHE_USE.manual;
@@ -323,45 +326,20 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				array_safe_set(cache_result, CURRENT_FRAME, false);
 		}
 		
-		var out_surf = false;
-		
-		for( var i = 0; i < ds_list_size(outputs); i++) {
-			if(outputs[| i].type == VALUE_TYPE.surface) 
-				out_surf = true;
-		}
-		
-		if(out_surf) {
-			w = 128;
-			min_h = 128;
-		} else {
-			w = 96;
-			
-		}
-		
-		setHeight();
 		doStepBegin();
 	} #endregion
 	
 	static step = function() { #region
-		if(combine_render_time) render_time = 0;
-		
-		var node_list = getNodeList();
-		for(var i = 0; i < ds_list_size(node_list); i++) {
-			node_list[| i].step();
-			if(combine_render_time) 
+		if(combine_render_time) {
+			render_time = 0;
+			var node_list = getNodeList();
+			for(var i = 0; i < ds_list_size(node_list); i++)
 				render_time += node_list[| i].render_time;
 		}
 		
 		w = attributes.w;
 		
 		onStep();
-	} #endregion
-	
-	static triggerCheck = function() { #region 
-		_triggerCheck();
-		var node_list = getNodeList();
-		for(var i = 0; i < ds_list_size(node_list); i++)
-			node_list[| i].triggerCheck();
 	} #endregion
 	
 	static onStep = function() {}
@@ -478,6 +456,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		ds_priority_destroy(ar);
+		
+		setHeight();
 	} #endregion
 	
 	static getTool = function() { #region

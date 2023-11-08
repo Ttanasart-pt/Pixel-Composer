@@ -1,5 +1,4 @@
 /// @description 
-if(!active) exit;
 if(textbox == noone) exit;
 if(textbox != WIDGET_CURRENT) exit;
 
@@ -38,4 +37,4 @@ if(textbox != WIDGET_CURRENT) exit;
 
 
 if(keyboard_check_pressed(vk_escape))
-	active = false;
+	textbox = noone;

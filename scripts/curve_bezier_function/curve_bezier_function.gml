@@ -177,7 +177,7 @@ function curveMap(_bz, _prec = 32, _tolr = 0.00001) constructor {
 		map[i] = eval_curve_x(bz, i * size, tolr);
 		
 	static get = function(i) { #region
-		gml_pragma("forceinline");
+		INLINE
 		
 		var _ind  = clamp(i, 0, 1) * (prec - 1);
 		var _indL = floor(_ind);

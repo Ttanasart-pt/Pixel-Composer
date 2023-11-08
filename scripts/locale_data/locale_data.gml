@@ -35,7 +35,7 @@
 	}
 	
 	function __txtx(key, def = "") {
-		gml_pragma("forceinline");
+		INLINE
 		
 		if(key == "") return "";
 		if(TEST_LOCALE) {
@@ -55,7 +55,7 @@
 	}
 	
 	function __txt(txt, prefix = "") {
-		gml_pragma("forceinline");
+		INLINE
 		
 		if(txt == "") return "";
 		var key = string_lower(txt);
@@ -81,7 +81,7 @@
 	}
 	
 	function __txt_node_name(node, def = "") {
-		gml_pragma("forceinline");
+		INLINE
 		
 		if(LOCALE_USE_DEFAULT) return def;
 		
@@ -93,7 +93,7 @@
 	}
 	
 	function __txt_node_tooltip(node, def = "") {
-		gml_pragma("forceinline");
+		INLINE
 		
 		if(LOCALE_USE_DEFAULT) return def;
 		
@@ -105,7 +105,7 @@
 	}
 	
 	function __txt_junction_name(node, type, index, def = "") {
-		gml_pragma("forceinline");
+		INLINE
 		
 		if(LOCALE_USE_DEFAULT) return def;
 		
@@ -121,7 +121,7 @@
 	}
 	
 	function __txt_junction_tooltip(node, type, index, def = "") {
-		gml_pragma("forceinline");
+		INLINE
 		
 		if(LOCALE_USE_DEFAULT) return def;
 		
@@ -137,7 +137,7 @@
 	}
 	
 	function __txt_junction_data(node, type, index, def = []) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		return def;
 		

@@ -17,7 +17,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static Copy = function (_dest) {
-		gml_pragma("forceinline");
+		INLINE
 		array_copy(_dest.Raw, 0, Raw, 0, 16);
 		return self;
 	};
@@ -42,7 +42,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static Set = function (_index, _value) {
-		gml_pragma("forceinline");
+		INLINE
 		Raw[@ _index] = _value;
 		return self;
 	};
@@ -57,7 +57,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static FromArray = function (_array, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 		array_copy(Raw, 0, _array, _index, 16);
 		return self;
 	};
@@ -72,7 +72,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Array<Real>} The destination array.
 	static ToArray = function (_array=undefined, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 		_array ??= array_create(16, 0.0);
 		array_copy(_array, _index, Raw, 0, 16);
 		return _array;
@@ -88,7 +88,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static FromBuffer = function (_buffer, _type) {
-		gml_pragma("forceinline");
+		INLINE
 		var _index = 0;
 		repeat (16)
 		{
@@ -106,7 +106,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static ToBuffer = function (_buffer, _type) {
-		gml_pragma("forceinline");
+		INLINE
 		var _index = 0;
 		repeat (16)
 		{
@@ -126,7 +126,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static FromColumns = function (_c1, _c2, _c3, _c4) {
-		gml_pragma("forceinline");
+		INLINE
 		Raw = [
 			_c1.X, _c2.X, _c3.X, _c4.X,
 			_c1.Y, _c2.Y, _c3.Y, _c4.Y,
@@ -147,7 +147,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static FromRows = function (_r1, _r2, _r3, _r4) {
-		gml_pragma("forceinline");
+		INLINE
 		Raw = [
 			_r1.X, _r1.Y, _r1.Z, _r1.W,
 			_r2.X, _r2.Y, _r2.Z, _r2.W,
@@ -167,7 +167,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static FromLookAt = function (_from, _to, _up) {
-		gml_pragma("forceinline");
+		INLINE
 		Raw = matrix_build_lookat(
 			_from.X, _from.Y, _from.Z,
 			_to.X, _to.Y, _to.Z,
@@ -181,7 +181,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static FromWorld = function () {
-		gml_pragma("forceinline");
+		INLINE
 		Raw = matrix_get(matrix_world);
 		return self;
 	};
@@ -192,7 +192,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static FromView = function () {
-		gml_pragma("forceinline");
+		INLINE
 		Raw = matrix_get(matrix_view);
 		return self;
 	};
@@ -203,7 +203,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static FromProjection = function () {
-		gml_pragma("forceinline");
+		INLINE
 		Raw = matrix_get(matrix_projection);
 		return self;
 	};
@@ -215,7 +215,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static FromWorldViewProjection = function () {
-		gml_pragma("forceinline");
+		INLINE
 		Raw = matrix_multiply(
 			matrix_multiply(matrix_get(matrix_world), matrix_get(matrix_view)),
 			matrix_get(matrix_projection));
@@ -228,7 +228,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static PushMatrix = function () {
-		gml_pragma("forceinline");
+		INLINE
 		matrix_stack_push(Raw);
 		return self;
 	};
@@ -240,7 +240,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static ApplyWorld = function () {
-		gml_pragma("forceinline");
+		INLINE
 		matrix_set(matrix_world, Raw);
 		return self;
 	};
@@ -251,7 +251,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static ApplyView = function () {
-		gml_pragma("forceinline");
+		INLINE
 		matrix_set(matrix_view, Raw);
 		return self;
 	};
@@ -262,7 +262,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static ApplyProjection = function () {
-		gml_pragma("forceinline");
+		INLINE
 		matrix_set(matrix_projection, Raw);
 		return self;
 	};
@@ -278,7 +278,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Array<Real>} The destination array.
 	static ToEuler = function (_array=undefined, _index=0) {
-		gml_pragma("forceinline");
+		INLINE
 
 		_array ??= array_create(3, 0.0);
 
@@ -321,7 +321,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Real} The determinant.
 	static Determinant = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _m   = Raw;
 		var _m0  = _m[ 0];
 		var _m1  = _m[ 1];
@@ -354,7 +354,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The inverse matrix.
 	static Inverse = function () {
-		gml_pragma("forceinline");
+		INLINE
 
 		var _res = new BBMOD_Matrix();
 		var _m   = Raw;
@@ -427,7 +427,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// `world * view * projection` matrix, you can simply call
 	/// {@link BBMOD_Matrix.FromWorldViewProjection}.
 	static Mul = function (_matrix) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		var _raw = matrix_multiply(Raw, _matrix.Raw);
 		var _index = 1;
@@ -449,7 +449,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static MulComponentwise = function (_matrix) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		var _selfRaw = Raw;
 		var _otherRaw = _matrix.Raw;
@@ -471,7 +471,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static AddComponentwise = function (_matrix) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		var _selfRaw = Raw;
 		var _otherRaw = _matrix.Raw;
@@ -494,7 +494,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static SubComponentwise = function (_matrix) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		var _selfRaw = Raw;
 		var _otherRaw = _matrix.Raw;
@@ -516,7 +516,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Vec4} The tranformed vector.
 	static Transform = function (_vector) {
-		gml_pragma("forceinline");
+		INLINE
 		return _vector.Transform(Raw);
 	};
 
@@ -526,7 +526,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The transposed matrix.
 	static Transpose = function () {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		var _m = Raw;
 		_res.Raw = [
@@ -551,7 +551,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static Translate = function (_x, _y=undefined, _z=undefined) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			is_struct(_x)
@@ -568,7 +568,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static TranslateX = function (_x) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			matrix_build(_x, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
@@ -583,7 +583,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static TranslateY = function (_y) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			matrix_build(0.0, _y, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
@@ -598,7 +598,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static TranslateZ = function (_z) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			matrix_build(0.0, 0.0, _z, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
@@ -620,7 +620,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @note The order of rotations is YXZ, same as in `matrix_build`.
 	static RotateEuler = function (_x, _y=undefined, _z=undefined) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			is_struct(_x)
@@ -638,7 +638,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static RotateQuat = function (_quat) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw, _quat.ToMatrix());
 		return _res;
@@ -652,7 +652,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static RotateX = function (_x) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			matrix_build(0.0, 0.0, 0.0, _x, 0.0, 0.0, 1.0, 1.0, 1.0));
@@ -667,7 +667,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static RotateY = function (_y) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			matrix_build(0.0, 0.0, 0.0, 0.0, _y, 0.0, 1.0, 1.0, 1.0));
@@ -682,7 +682,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static RotateZ = function (_z) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, _z, 1.0, 1.0, 1.0));
@@ -702,7 +702,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static Scale = function (_x, _y=undefined, _z=undefined) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			is_struct(_x)
@@ -719,7 +719,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static ScaleComponentwise = function (_s) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		var _selfRaw = Raw;
 		var _index = 0;
@@ -739,7 +739,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static ScaleX = function (_x) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x, 1.0, 1.0));
@@ -754,7 +754,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static ScaleY = function (_y) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, _y, 1.0));
@@ -769,7 +769,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	static ScaleZ = function (_z) {
-		gml_pragma("forceinline");
+		INLINE
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, _z));
@@ -790,7 +790,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 /// @return {Array} The destination array.
 function bbmod_matrix_build_normalmatrix(_m, _dest=[], _index=0)
 {
-	gml_pragma("forceinline");
+	INLINE
 
 	var _m0  = _m[ 0];
 	var _m1  = _m[ 1];

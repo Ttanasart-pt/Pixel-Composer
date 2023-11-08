@@ -1,5 +1,5 @@
 function shader_set_i(uniform, value) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var shader = shader_current();
 	if(shader == -1) return;
@@ -22,13 +22,13 @@ function shader_set_i(uniform, value) {
 }
 
 function shader_set_i_array(shader, uniform, array) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array);
 }
 
 function shader_set_f(uniform, value) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var shader = shader_current();
 	if(shader == -1) return;
@@ -65,7 +65,7 @@ function shader_set_f(uniform, value) {
 }
 
 function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_array(array)) return;
 	
@@ -78,7 +78,7 @@ function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) {
 }
 
 function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var shader = shader_current();
 	if(shader == -1) return;
@@ -111,7 +111,7 @@ function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 //}
 
 function shader_set_surface_dimension(uniform, surface) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var shader = shader_current();
 	if(!is_surface(surface)) return;
@@ -128,7 +128,7 @@ function shader_set_surface_dimension(uniform, surface) {
 }
 
 function shader_set_dim(uniform = "dimension", surf = noone) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	if(!is_surface(surf)) return;
 	
@@ -136,13 +136,13 @@ function shader_set_dim(uniform = "dimension", surf = noone) {
 }
 
 function shader_set_color(uniform, col, alpha = 1) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	shader_set_f(uniform, colToVec4(col, alpha));
 }
 
 function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 128) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	shader_set_i(amo_uni, min(max_length, array_length(pal)));
 	
@@ -164,7 +164,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	}
 
 	function shader_preset_interpolation(shader = sh_sample) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		var intp   = attributes.interpolate;
 		
@@ -174,19 +174,19 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	}
 
 	function shader_postset_interpolation() {
-		gml_pragma("forceinline");
+		INLINE
 		
 		gpu_set_tex_filter(false);
 	}
 	
 	function shader_set_interpolation_surface(surface) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		shader_set_f("sampleDimension", surface_get_width_safe(surface), surface_get_height_safe(surface));
 	}
 	
 	function shader_set_interpolation(surface) {
-		gml_pragma("forceinline");
+		INLINE
 		
 		var intp   = attributes.interpolate;
 		

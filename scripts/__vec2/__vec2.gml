@@ -24,7 +24,7 @@ function __vec2(_x = 0, _y = _x) constructor {
 	} set(_x, _y); #endregion
 	
 	static setIndex = function(index, value) { #region
-		gml_pragma("forceinline");
+		INLINE
 		switch(index) {
 			case 0 : x = value; break;
 			case 1 : y = value; break;
@@ -41,102 +41,102 @@ function __vec2(_x = 0, _y = _x) constructor {
 	} #endregion
 
 	static  addElement = function(_x, _y) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec2(x + _x, y + _y);
 	} #endregion
 	static _addElement = function(_x, _y) { #region
-		gml_pragma("forceinline");
+		INLINE
 		x += _x;
 		y += _y;
 		return self;
 	} #endregion
 	
 	static  add = function(_vec2) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec2(x + _vec2.x, y + _vec2.y);
 	} #endregion
 	static _add = function(_vec2) { #region
-		gml_pragma("forceinline");
+		INLINE
 		x += _vec2.x;
 		y += _vec2.y;
 		return self;
 	} #endregion
 	
 	static  addElement = function(_x, _y) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec2(x + _x, y + _y);
 	} #endregion
 	static _addElement = function(_x, _y) { #region
-		gml_pragma("forceinline");
+		INLINE
 		x += _x;
 		y += _y;
 		return self;
 	} #endregion
 
 	static  subtract = function(_vec2) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec2(x - _vec2.x, y - _vec2.y);
 	} #endregion
 	static _subtract = function(_vec2) { #region
-		gml_pragma("forceinline");
+		INLINE
 		x -= _vec2.x;
 		y -= _vec2.y;
 		return self;
 	} #endregion
 
 	static  subtractElement = function(_x, _y) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec2(x - _x, y - _y);
 	} #endregion
 	static _subtractElement = function(_x, _y) { #region
-		gml_pragma("forceinline");
+		INLINE
 		x -= _x;
 		y -= _y;
 		return self;
 	} #endregion
 
 	static  multiply = function(_scalar) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec2(x * _scalar, y * _scalar);
 	} #endregion
 	static _multiply = function(_scalar) { #region
-		gml_pragma("forceinline");
+		INLINE
 		x *= _scalar;
 		y *= _scalar;
 		return self;
 	} #endregion
 
 	static  multiplyVec = function(_vec) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec2(x * _vec.x, y * _vec.y);
 	} #endregion
 	static _multiplyVec = function(_vec) { #region
-		gml_pragma("forceinline");
+		INLINE
 		x *= _vec.x;
 		y *= _vec.y;
 		return self;
 	} #endregion
 
 	static  multiplyElement = function(_x, _y) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec2(x * _x, y * _y);
 	} #endregion
 	static _multiplyElement = function(_x, _y) { #region
-		gml_pragma("forceinline");
+		INLINE
 		x *= _x;
 		y *= _y;
 		return self;
 	} #endregion
 	
 	static  divide = function(_scalar) { #region
-		gml_pragma("forceinline");
+		INLINE
 		if (_scalar != 0)
 			return new __vec2(x / _scalar, y / _scalar);
 		
 		return new __vec2(x, y, z); // Avoid division by zero
 	} #endregion
 	static _divide = function(_scalar) { #region
-		gml_pragma("forceinline");
+		INLINE
 		if (_scalar != 0) {
 			x /= _scalar;
 			y /= _scalar;
@@ -145,33 +145,33 @@ function __vec2(_x = 0, _y = _x) constructor {
 	} #endregion
 
 	static dot = function(_vec2) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return x * _vec2.x + y * _vec2.y;
 	} #endregion
 	
 	static distance = function(_vec2) { #region
-		gml_pragma("forceinline");
+		INLINE
 		var dx = _vec2.x - x;
 		var dy = _vec2.y - y;
 		return sqrt(dx * dx + dy * dy);
 	} #endregion
 	
 	static directionTo = function(_vec2) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return point_direction(x, y, _vec2.x, _vec2.y);
 	} #endregion
 	
 	static length = function() { #region
-		gml_pragma("forceinline");
+		INLINE
 		return sqrt(x * x + y * y);
 	} #endregion
 
 	static  normalize = function() { #region
-		gml_pragma("forceinline");
+		INLINE
 		return clone()._normalize();
 	} #endregion
 	static _normalize = function() { #region
-		gml_pragma("forceinline");
+		INLINE
 		var _length = length();
 		if (_length != 0) {
 			x /= _length;
@@ -181,28 +181,28 @@ function __vec2(_x = 0, _y = _x) constructor {
 	} #endregion
 	
 	static  lerpTo = function(to, speed = 0.3) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec2(lerp(x, to.x, speed), lerp(y, to.y, speed));
 	} #endregion
 	static _lerpTo = function(to, speed = 0.3) { #region
-		gml_pragma("forceinline");
+		INLINE
 		x = lerp(x, to.x, speed);
 		y = lerp(y, to.y, speed);
 	} #endregion
 	
     static _lerp_float = function(to, speed = 5, pre = 0.01) { #region
-        gml_pragma("forceinline");
+        INLINE
         x = lerp_float(x, to.x, speed, pre);
         y = lerp_float(y, to.y, speed, pre);
     } #endregion
 
 	static equal = function(to) { #region
-		gml_pragma("forceinline");
+		INLINE
 		return x == to.x && y == to.y;
 	} #endregion
 	
 	static clone = function() { #region
-		gml_pragma("forceinline");
+		INLINE
 		return new __vec2(x, y);
 	} #endregion
 	
