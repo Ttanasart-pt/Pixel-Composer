@@ -20,7 +20,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static getPreviewValues = function() { return getInputData(0); }
 	
 	input_display_list = [
-		["Output", 	 true],	0,
+		["Surfaces", true],	0,
 		["Palette",	false],	3, 1, 2,
 	]
 	

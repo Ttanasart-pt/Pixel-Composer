@@ -27,7 +27,7 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 6] = nodeValue("Invert", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Keep the selected colors and remove the rest.");
 	
 	input_display_list = [ 5, 
-		["Output", 	 true], 0, 3, 4, 
+		["Surfaces", true], 0, 3, 4, 
 		["Remove",	false], 1, 2, 6, 
 	]
 	

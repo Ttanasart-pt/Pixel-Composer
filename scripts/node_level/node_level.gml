@@ -77,7 +77,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	input_display_list = [ 8, 
 		level_renderer,
-		["Output",	 true],	0, 6, 7, 
+		["Surfaces", true],	0, 6, 7, 
 		["Level",	false],	1,
 		["Channel",	 true],	2, 3, 4, 5
 	];

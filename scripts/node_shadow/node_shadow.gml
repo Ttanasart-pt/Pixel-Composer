@@ -33,8 +33,8 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8, 
-		["Output",  true], 0, 6, 7, 
-		["Shadow", false], 1, 2, 3, 4, 5, 
+		["Surfaces", true], 0, 6, 7, 
+		["Shadow",	false], 1, 2, 3, 4, 5, 
 	];
 	
 	surface_blur_init();

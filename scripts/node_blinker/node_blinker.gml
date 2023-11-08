@@ -22,8 +22,8 @@ function Node_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	input_display_list = [ 6, 
-		["Output",	false], 0, 1, 
-		["Blink",	false], 2, 3, 4, 5, 
+		["Surfaces",	false], 0, 1, 
+		["Blink",		false], 2, 3, 4, 5, 
 	]
 	
 	temp_surface = [ surface_create( 1, 1 ) ];

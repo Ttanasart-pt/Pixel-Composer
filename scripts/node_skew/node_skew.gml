@@ -27,7 +27,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		active_index = 8;
 		
 	input_display_list = [ 8, 
-		["Output",	 true],	0, 6, 7, 
+		["Surfaces", true],	0, 6, 7, 
 		["Skew",	false],	1, 2, 4,
 	]
 	

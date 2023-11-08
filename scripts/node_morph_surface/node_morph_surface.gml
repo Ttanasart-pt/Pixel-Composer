@@ -14,7 +14,7 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
-		["Output",	 true],	0, 1,
+		["Surfaces", true],	0, 1,
 		["Morph",	false],	2, 3, 
 	];
 	

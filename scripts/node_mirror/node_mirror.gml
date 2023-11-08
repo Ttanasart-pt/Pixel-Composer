@@ -18,7 +18,7 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	outputs[| 1] = nodeValue("Mirror mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3,
-		["Output", 	 false], 0, 
+		["Surfaces", false], 0, 
 		["Mirror",	 false], 1, 2, 
 	]
 	

@@ -216,8 +216,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		brush_direction = 0;
 		brush_rand_dir  = [ 0, 0, 0, 0, 0 ];
 		brush_seed      = irandom_range(100000, 999999);
-		
-		brush_drag_dist = 0;
 		brush_next_dist = 0;
 	
 		tool_channel_edit = new checkBoxGroup(THEME.tools_canvas_channel, function(ind, val) { tool_attribute.channel[ind] = val; });

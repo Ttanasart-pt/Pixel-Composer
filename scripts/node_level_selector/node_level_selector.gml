@@ -62,7 +62,7 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	input_display_list = [ 5, 
 		level_renderer,
-		["Output", 	 true],	0, 3, 4, 
+		["Surfaces", true],	0, 3, 4, 
 		["Level",	false],	1, 2,
 	];
 	histogramInit();

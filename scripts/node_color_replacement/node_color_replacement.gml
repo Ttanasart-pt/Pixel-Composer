@@ -118,7 +118,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	}); #endregion
 	
 	input_display_list = [ 6, 
-		["Output",		 true], 0, 4, 5, 
+		["Surfaces",	 true], 0, 4, 5, 
 		["Replace",		false], render_palette, 2, 
 		["Comparison",	false], 3, 
 	];

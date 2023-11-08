@@ -7,7 +7,7 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	outputs[| 0] = nodeValue("Cache surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, 0);
 	
 	input_display_list = [
-		["Output",  true], 0, 
+		["Surfaces",  true], 0, 
 	];
 	
 	cache_loading			= false;

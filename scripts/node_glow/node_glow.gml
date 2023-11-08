@@ -28,7 +28,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		active_index = 7;
 	
 	input_display_list = [ 7, 
-		["Output", 	 true], 0, 5, 6, 
+		["Surfaces", true], 0, 5, 6, 
 		["Glow",	false], 1, 2, 3, 4, 
 	]
 	

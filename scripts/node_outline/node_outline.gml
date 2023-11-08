@@ -35,7 +35,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	outputs[| 1] = nodeValue("Outline", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 11, 
-		["Output", 	 true], 0, 9, 10, 
+		["Surfaces", true], 0, 9, 10, 
 		["Outline",	false], 1, 5, 8, 12, 
 		["Render",	false], 2, 3, 4, 6,
 	];

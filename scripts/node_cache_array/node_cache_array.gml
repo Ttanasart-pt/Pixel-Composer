@@ -13,8 +13,8 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	outputs[| 0] = nodeValue("Cache array", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
-		["Output",  true], 0, 
-		["Range",  false], 1, 2, 3,
+		["Surfaces",  true], 0, 
+		["Range",    false], 1, 2, 3,
 	];
 	
 	cache_loading			= false;

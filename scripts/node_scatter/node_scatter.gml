@@ -70,7 +70,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.rejectArrayProcess();
 	
 	input_display_list = [ 
-		["Output", 		 true], 0, 1, 15, 10, 
+		["Surfaces", 	 true], 0, 1, 15, 10, 
 		["Scatter",		false], 5, 6, 13, 14, 17, 9, 2,
 		["Path",		false], 19, 20, 21, 22, 
 		["Transform",	false], 3, 8, 7, 4,

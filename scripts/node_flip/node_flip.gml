@@ -13,7 +13,7 @@ function Node_Flip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		active_index = 2;
 		
 	input_display_list = [ 2, 
-		["Output", 	 true],	0, 
+		["Surfaces", true],	0, 
 		["Flip",	false],	1,
 	]
 	

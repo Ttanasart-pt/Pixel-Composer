@@ -15,7 +15,7 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		active_index = 3;
 		
 	input_display_list = [ 3,
-		["Output", 	 false], 0, 1, 2, 
+		["Surfaces", false], 0, 1, 2, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

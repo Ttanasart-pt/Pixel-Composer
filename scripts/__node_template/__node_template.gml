@@ -7,6 +7,8 @@ function Node_Template(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	input_display_list = [ 0 ];
 	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	
 	static step = function() {}
 	
 	static update = function() {}

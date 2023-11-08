@@ -18,8 +18,8 @@ function Node_Palette_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		active_index = 5;
 	
 	input_display_list = [ 5, 
-		["Output", 	 true], 0, 3, 4, 
-		["Palette",	false], 1, 2
+		["Surfaces", 	 true], 0, 3, 4, 
+		["Palette",		false], 1, 2
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

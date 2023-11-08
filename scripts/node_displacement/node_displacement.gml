@@ -38,7 +38,7 @@ If set, then strength value control how many times the effect applies on itself.
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Overwrite", "Min", "Max" ]);
 		
 	input_display_list = [ 10, 
-		["Output", 		 true],	0, 8, 9, 
+		["Surfaces",	 true],	0, 8, 9, 
 		["Displace",	false], 1, 3, 4,
 		["Color",		false], 5, 2, 
 		["Algorithm",	 true],	6, 11, 

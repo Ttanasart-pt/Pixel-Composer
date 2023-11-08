@@ -14,7 +14,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1,
-		["Output",	 false], 0, 2, 
+		["Surfaces", false], 0, 2, 
 		["Padding",	 false], 3, 
 	]
 	
