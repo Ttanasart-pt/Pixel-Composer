@@ -1,7 +1,7 @@
 function Node_create_Image_Animated(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_open_filenames(".png", "");
+		path = get_open_filenames_compat(".png", "");
 		key_release();
 		if(path == "") return noone;
 	}

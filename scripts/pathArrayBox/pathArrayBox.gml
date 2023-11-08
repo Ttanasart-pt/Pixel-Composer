@@ -4,7 +4,7 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 	onClick = _onClick;
 	
 	openPath = button(function() {
-		var path = get_open_filenames(data[0], data[1]);
+		var path = get_open_filenames_compat(data[0], data[1]);
 		key_release();
 		if(path == "") return noone;
 		

@@ -29,7 +29,7 @@ if !target exit;
 	var by = dialog_y + ui(18);
 	
 	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, __txt("Add") + "...", THEME.add,, COLORS._main_value_positive) == 2) {
-		var path = get_open_filenames(".png", "");
+		var path = get_open_filenames_compat(".png", "");
 		key_release();
 		if(path != "") {
 			var paths = paths_to_array(path);
