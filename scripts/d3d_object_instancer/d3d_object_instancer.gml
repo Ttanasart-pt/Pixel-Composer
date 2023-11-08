@@ -2,6 +2,7 @@
 	globalvar INSTANCE_SHADER_VS, INSTANCE_SHADER_PS;
 	
 	function __initInstanceRenderer() {
+		if(!GMD3D11_IS_SUPPORTED) return;
 		INSTANCE_SHADER_VS = d3d11_shader_compile_vs(working_directory + "Shaders/3dInstance/3dInstanceVS.hlsl", "main", "vs_4_0");
 		INSTANCE_SHADER_PS = d3d11_shader_compile_ps(working_directory + "Shaders/3dInstance/3dInstancePS.hlsl", "main", "ps_4_0");
 		
