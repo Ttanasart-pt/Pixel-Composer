@@ -3,8 +3,8 @@
 /// @desc Starts building a constant buffer.
 ///
 /// @see d3d11_cbuffer_end
-function d3d11_cbuffer_begin()
-{
+function d3d11_cbuffer_begin() {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_cbuffer_begin", dll_cdecl, ty_real,
@@ -20,8 +20,8 @@ function d3d11_cbuffer_begin()
 ///
 /// @see d3d11_cbuffer_exists
 /// @see d3d11_cbuffer_update
-function d3d11_cbuffer_end()
-{
+function d3d11_cbuffer_end() {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_cbuffer_end", dll_cdecl, ty_real,
@@ -36,8 +36,8 @@ function d3d11_cbuffer_end()
 /// @param {Real} _count Number of bools to add into the constant buffer.
 ///
 /// @see d3d11_cbuffer_begin
-function d3d11_cbuffer_add_bool(_count)
-{
+function d3d11_cbuffer_add_bool(_count) {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_cbuffer_add_bool", dll_cdecl, ty_real,
@@ -52,8 +52,8 @@ function d3d11_cbuffer_add_bool(_count)
 /// @param {Real} _count Number of ints to add into the constant buffer.
 ///
 /// @see d3d11_cbuffer_begin
-function d3d11_cbuffer_add_int(_count)
-{
+function d3d11_cbuffer_add_int(_count) {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_cbuffer_add_int", dll_cdecl, ty_real,
@@ -68,8 +68,8 @@ function d3d11_cbuffer_add_int(_count)
 /// @param {Real} _count Number of uints to add into the constant buffer.
 ///
 /// @see d3d11_cbuffer_begin
-function d3d11_cbuffer_add_uint(_count)
-{
+function d3d11_cbuffer_add_uint(_count) {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_cbuffer_add_uint", dll_cdecl, ty_real,
@@ -84,8 +84,8 @@ function d3d11_cbuffer_add_uint(_count)
 /// @param {Real} _count Number of floats to add into the constant buffer.
 ///
 /// @see d3d11_cbuffer_begin
-function d3d11_cbuffer_add_float(_count)
-{
+function d3d11_cbuffer_add_float(_count) {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_cbuffer_add_float", dll_cdecl, ty_real,
@@ -98,8 +98,8 @@ function d3d11_cbuffer_add_float(_count)
 /// @desc Retrieves size of a constant buffer in bytes.
 ///
 /// @param {Real} The size of the constant buffer in bytes.
-function d3d11_cbuffer_get_size(_cbuffer)
-{
+function d3d11_cbuffer_get_size(_cbuffer) {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_cbuffer_get_size", dll_cdecl, ty_real,
@@ -113,8 +113,8 @@ function d3d11_cbuffer_get_size(_cbuffer)
 ///
 /// @param {Real} _cbuffer The ID of the constant buffer.
 /// @param {Id.Buffer} _buffer A buffer with new data.
-function d3d11_cbuffer_update(_cbuffer, _buffer)
-{
+function d3d11_cbuffer_update(_cbuffer, _buffer) {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_cbuffer_update", dll_cdecl, ty_real,
@@ -128,8 +128,8 @@ function d3d11_cbuffer_update(_cbuffer, _buffer)
 ///
 /// @param {Real} _slot The slot to bind the constant buffer to.
 /// @param {Real} _cbuffer The ID of the constant buffer or -1 to ubind the slot.
-function d3d11_shader_set_cbuffer_ps(_slot, _cbuffer)
-{
+function d3d11_shader_set_cbuffer_ps(_slot, _cbuffer) {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_shader_set_cbuffer_ps", dll_cdecl, ty_real,
@@ -143,8 +143,8 @@ function d3d11_shader_set_cbuffer_ps(_slot, _cbuffer)
 ///
 /// @param {Real} _slot The slot to bind the constant buffer to.
 /// @param {Real} _cbuffer The ID of the constant buffer or -1 to ubind the slot.
-function d3d11_shader_set_cbuffer_vs(_slot, _cbuffer)
-{
+function d3d11_shader_set_cbuffer_vs(_slot, _cbuffer) {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_shader_set_cbuffer_vs", dll_cdecl, ty_real,
@@ -159,8 +159,8 @@ function d3d11_shader_set_cbuffer_vs(_slot, _cbuffer)
 /// @param {Real} _cbuffer The ID of the comand buffer.
 ///
 /// @return {Bool} Returns true if the constant buffer exists.
-function d3d11_cbuffer_exists(_cbuffer)
-{
+function d3d11_cbuffer_exists(_cbuffer) {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_cbuffer_exists", dll_cdecl, ty_real,
@@ -173,8 +173,8 @@ function d3d11_cbuffer_exists(_cbuffer)
 /// @desc Destroys a constant buffer.
 ///
 /// @param {Real} _cbuffer The ID of the constant buffer to destroy.
-function d3d11_cbuffer_destroy(_cbuffer)
-{
+function d3d11_cbuffer_destroy(_cbuffer) {
+	if(!GMD3D11_IS_SUPPORTED) return;
 	gml_pragma("forceinline");
 	static _fn = external_define(
 		GMD3D11_PATH, "d3d11_cbuffer_destroy", dll_cdecl, ty_real,
