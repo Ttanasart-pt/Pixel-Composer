@@ -1223,10 +1223,7 @@ function Panel_Preview() : PanelContent() constructor {
 		if(!_node) return;
 		
 		if(tool_current != noone) { #region tool settings
-			var settings = _node.getToolSettings();
-			var len      = array_length(settings);
-			for( var i = 0, n = array_length(tool_current.settings); i < n; i++ ) 
-				settings[len + i] = tool_current.settings[i];
+			var settings = array_merge(_node.getToolSettings(), tool_current.settings);
 			
 			tool_x = lerp_float(tool_x, tool_x_to, 5);
 			var tolx  = tool_x + ui(16);

@@ -24,6 +24,7 @@
 		is_playing		= false;
 		frame_progress	= false;
 		play_freeze		= 0;
+		render_stop     = false;
 		
 		rendering = [];
 		playback  = ANIMATOR_END.loop;
@@ -31,19 +32,21 @@
 		static setFrame = function(frame, resetTime = true) {
 			//if(frame == 0) resetAnimation();
 			
-			var _c = current_frame;
-			frame = clamp(frame, 0, frames_total);
-			real_frame = frame;
+			var _c        = current_frame;
+			frame         = clamp(frame, 0, frames_total);
+			real_frame    = frame;
 			current_frame = round(frame);
 			
 			if(current_frame == frames_total) {
-				if(array_length(rendering)) {
+				if(render_stop) {
 					is_playing = false;
 					setFrame(0);
-				} else if(playback == ANIMATOR_END.stop)
+					render_stop = false;
+				} else if(playback == ANIMATOR_END.stop) {
 					is_playing = false;
-				else
+				} else {
 					setFrame(0);
+				}
 			}
 			
 			if(_c != current_frame) {
@@ -53,6 +56,8 @@
 				RENDER_ALL
 			} else 
 				frame_progress = false;
+				
+			if(array_length(rendering)) render_stop = true;
 		}
 		
 		static resetAnimation = function() {

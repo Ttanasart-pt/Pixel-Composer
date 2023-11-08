@@ -50,7 +50,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _bright				= _data[1];
 		var _brightThreshold	= _data[2];
 		var _brightSmooth		= _data[3];
-
+		
 		var _alpha				= _data[7];
 		var _alphaThreshold		= _data[8];
 		var _alphaSmooth		= _data[9];

@@ -2,7 +2,7 @@
 global.cache_call = 0;
 global.cache_hit  = 0;
 
-HOVERING_ELEMENT = _HOVERING_ELEMENT;
+HOVERING_ELEMENT  = _HOVERING_ELEMENT;
 _HOVERING_ELEMENT = noone;
 
 #region minimize

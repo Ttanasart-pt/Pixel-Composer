@@ -107,7 +107,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var data = autocomplete_server(pmt, localParams, autocomplete_context);
 					
 		if(array_length(data)) {
-			o_dialog_textbox_autocomplete.data = data;
+			o_dialog_textbox_autocomplete.data   = data;
+			o_dialog_textbox_autocomplete.prompt = pmt;
 			o_dialog_textbox_autocomplete.activate(self);
 		}
 					

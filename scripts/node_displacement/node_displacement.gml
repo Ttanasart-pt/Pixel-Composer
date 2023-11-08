@@ -1,17 +1,6 @@
 function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Displace";
 	
-	shader = sh_displace;
-	displace_map_sample  = shader_get_sampler_index(shader, "map");
-	uniform_dim          = shader_get_uniform(shader, "dimension");
-	uniform_map_dim      = shader_get_uniform(shader, "map_dimension");
-	uniform_position     = shader_get_uniform(shader, "displace");
-	uniform_strength     = shader_get_uniform(shader, "strength");
-	uniform_mid          = shader_get_uniform(shader, "middle");
-	uniform_rg           = shader_get_uniform(shader, "use_rg");
-	uniform_it           = shader_get_uniform(shader, "iterate");
-	uniform_sam          = shader_get_uniform(shader, "sampleMode");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Displace map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -45,11 +34,14 @@ If set, then strength value control how many times the effect applies on itself.
 	inputs[| 10] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 10;
 	
+	inputs[| 11] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Overwrite", "Min", "Max" ]);
+		
 	input_display_list = [ 10, 
 		["Output", 		 true],	0, 8, 9, 
-		["Displace",	false], 1, 3, 4, 
+		["Displace",	false], 1, 3, 4,
 		["Color",		false], 5, 2, 
-		["Algorithm",	 true],	6
+		["Algorithm",	 true],	6, 11, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -74,18 +66,18 @@ If set, then strength value control how many times the effect applies on itself.
 		var mw = surface_get_width_safe(_data[1]);
 		var mh = surface_get_height_safe(_data[1]);
 		
-		surface_set_shader(_outSurf, shader);
+		surface_set_shader(_outSurf, sh_displace);
 		shader_set_interpolation(_data[0]);
-			texture_set_stage(displace_map_sample, surface_get_texture(_data[1]));
-			shader_set_uniform_f_array_safe(uniform_dim, [ww, hh]);
-			shader_set_uniform_f_array_safe(uniform_map_dim, [mw, mh]);
-			shader_set_uniform_f_array_safe(uniform_position, _data[2]);
-			shader_set_uniform_f(uniform_strength, _data[3]);
-			shader_set_uniform_f(uniform_mid, _data[4]);
-			shader_set_uniform_i(uniform_rg, _data[5]);
-			shader_set_uniform_i(uniform_it, _data[6]);
-			shader_set_uniform_i(uniform_sam, struct_try_get(attributes, "oversample"));
-			draw_surface_safe(_data[0], 0, 0);
+			shader_set_surface("map", _data[1]);
+			shader_set_f("dimension",     [ww, hh]);
+			shader_set_f("map_dimension", [mw, mh]);
+			shader_set_f("displace",      _data[2]);
+			shader_set_f("strength",      _data[3]);
+			shader_set_f("middle",        _data[4]);
+			shader_set_i("use_rg",        _data[5]);
+			shader_set_i("iterate",       _data[6]);
+			shader_set_i("blendMode",     _data[11]);
+			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[8], _data[9]);

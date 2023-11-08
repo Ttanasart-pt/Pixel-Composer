@@ -136,37 +136,37 @@ function Panel_Animation() : PanelContent() constructor {
 		  function() { return __txt("Stop"); }, 
 		  function() { return 4; }, 
 		  function() { return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
-		  function() { return; PROJECT.animator.stop(); } 
+		  function() { PROJECT.animator.stop(); } 
 		],
 		[ 
 		  function() { return PROJECT.animator.is_playing? __txt("Pause") : __txt("Play"); }, 
 		  function() { return !PROJECT.animator.is_playing; }, 
 		  function() { return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
-		  function() { return; if(PROJECT.animator.is_playing) PROJECT.animator.pause(); else PROJECT.animator.resume(); } 
+		  function() { if(PROJECT.animator.is_playing) PROJECT.animator.pause(); else PROJECT.animator.resume(); } 
 		],
 		[ 
 		  function() { return __txtx("panel_animation_go_to_first_frame", "Go to first frame"); }, 
 		  function() { return 3; }, 
 		  function() { return COLORS._main_icon; },
-		  function() { return; PROJECT.animator.setFrame(0); } 
+		  function() { PROJECT.animator.setFrame(0); } 
 		],
 		[ 
 		  function() { return __txtx("panel_animation_go_to_last_frame", "Go to last frame"); }, 
 		  function() { return 2; }, 
 		  function() { return COLORS._main_icon; },
-		  function() { return; PROJECT.animator.setFrame(TOTAL_FRAMES - 1); } 
+		  function() { PROJECT.animator.setFrame(TOTAL_FRAMES - 1); } 
 		],
 		[ 
 		  function() { return __txtx("panel_animation_previous_frame", "Previous frame"); }, 
 		  function() { return 5; }, 
 		  function() { return COLORS._main_icon; },
-		  function() { return; PROJECT.animator.setFrame(PROJECT.animator.real_frame - 1); } 
+		  function() { PROJECT.animator.setFrame(PROJECT.animator.real_frame - 1); } 
 		],
 		[ 
 		  function() { return __txtx("panel_animation_next_frame", "Next frame"); }, 
 		  function() { return 6; }, 
 		  function() { return COLORS._main_icon; },
-		  function() { return; PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1); } 
+		  function() { PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1); } 
 		],
 	];
 	#endregion
@@ -1838,8 +1838,6 @@ function Panel_Animation() : PanelContent() constructor {
 		var row = ceil(amo / col);
 		if(col < 1) return;
 		
-		var _act = !IS_RENDERING;
-		
 		for( var i = 0; i < row; i++ ) {
 			var colAmo = min(amo - i * col, col);
 			if(mini) 
@@ -1851,10 +1849,10 @@ function Panel_Animation() : PanelContent() constructor {
 				var but = control_buttons[ind];
 				var txt = but[0]();
 				var ind = but[1]();
-				var cc  = _act? but[2]() : COLORS._main_icon_dark;
+				var cc  = IS_RENDERING? COLORS._main_icon_dark : but[2]();
 				var fnc = but[3];
 			
-				if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS && _act, pHOVER && _act, txt, THEME.sequence_control, ind, cc) == 2) 
+				if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS && !IS_RENDERING, pHOVER && !IS_RENDERING, txt, THEME.sequence_control, ind, cc) == 2)
 					fnc();
 			
 				bx += ui(36);

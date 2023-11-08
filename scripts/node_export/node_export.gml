@@ -687,7 +687,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		update_on_frame = true;
 		playing			= true;
 		played			= 0;
-		PROJECT.animator.real_frame		= -1;
+		PROJECT.animator.real_frame = -1;
 		CURRENT_FRAME	= -1;
 		IS_PLAYING		= true;
 		array_push(RENDERING, node_id);
@@ -769,8 +769,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		export();
 		
-		if(CURRENT_FRAME == TOTAL_FRAMES - 1 && anim == NODE_EXPORT_FORMAT.animation)
-			renderCompleted();
+		if(CURRENT_FRAME == TOTAL_FRAMES - 1) {
+			if(anim == NODE_EXPORT_FORMAT.sequence)
+				array_remove(RENDERING, node_id);
+			else if(anim == NODE_EXPORT_FORMAT.animation)
+				renderCompleted();
+		}
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

@@ -1,4 +1,5 @@
 /// @description 
+active = textbox != noone;
 if(textbox == noone) exit;
 if(textbox != WIDGET_CURRENT) exit;
 
