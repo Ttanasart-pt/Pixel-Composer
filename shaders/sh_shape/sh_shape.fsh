@@ -1,4 +1,4 @@
-#extension GL_OES_standard_derivatives : require
+//#extension GL_OES_standard_derivatives : require
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
