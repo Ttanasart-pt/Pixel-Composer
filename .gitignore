@@ -13,3 +13,5 @@ shaders/BBMOD*
 shaders/__BBMOD*
 
 sprites/BBMOD*
+
+*.DS_Store
