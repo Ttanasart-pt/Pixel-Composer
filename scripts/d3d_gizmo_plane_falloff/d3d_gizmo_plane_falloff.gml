@@ -13,14 +13,28 @@ function __3dGizmoPlaneFalloff(radius = 0.5, color = c_white, alpha = 1) : __3dG
 			[
 				new __vertex( -radius, -radius, -_d, color, alpha ),
 				new __vertex( -radius,  radius, -_d, color, alpha ),
+				
+				new __vertex( -radius,  radius, -_d, color, alpha ),
+				new __vertex(  radius,  radius, -_d, color, alpha ),
+				
 				new __vertex(  radius,  radius, -_d, color, alpha ),
 				new __vertex(  radius, -radius, -_d, color, alpha ),
+				
+				new __vertex(  radius, -radius, -_d, color, alpha ),
+				new __vertex( -radius, -radius, -_d, color, alpha ),
 			],
 			[
 				new __vertex( -radius, -radius,  _d, color, alpha ),
 				new __vertex( -radius,  radius,  _d, color, alpha ),
+												 
+				new __vertex( -radius,  radius,  _d, color, alpha ),
+				new __vertex(  radius,  radius,  _d, color, alpha ),
+												 
 				new __vertex(  radius,  radius,  _d, color, alpha ),
 				new __vertex(  radius, -radius,  _d, color, alpha ),
+												 
+				new __vertex(  radius, -radius,  _d, color, alpha ),
+				new __vertex( -radius, -radius,  _d, color, alpha ),
 			],
 			[
 				new __vertex(  0, 0, _d + 0, color, alpha ),

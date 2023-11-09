@@ -66,7 +66,7 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 				gizmo_plane[0].checkParameter({ distance: _fald });
 				
 				var _prot    = new BBMOD_Quaternion(_rot[0], _rot[1], _rot[2], _rot[3]);
-				plane_normal = _prot.Rotate(new BBMOD_Vec3(0, 0, 1));
+				plane_normal = _prot.Rotate(new BBMOD_Vec3(0, 0, 1)).ToArray();
 			}
 			
 			if(CURRENT_FRAME == 0)
