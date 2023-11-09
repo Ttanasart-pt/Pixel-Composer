@@ -34,6 +34,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	cursor_pos_y	= 0;
 	cursor_pos_y_to	= 0;
 	cursor_line     = 0;
+	cursor_selecting = false;
 	
 	char_run = 0
 	
@@ -70,7 +71,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		cursor_pos_x = 0;
 		cursor_pos_y = 0;
-		click_block = 1;
+		click_block  = 1;
 		KEYBOARD_STRING = "";
 		keyboard_lastkey = -1;
 					
@@ -529,15 +530,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		}
 	} #endregion
 	
-	static display_text = function(_x, _y, _text, _mx = -1, _my = -1) { #region
+	static display_text = function(_x, _y, _text, _mx = -1, _my = -1, _hover = false) { #region
 		_text = string_real(_text);
 		if(line_width != _prev_width) {
 			_prev_width = line_width;
 			cut_line();
 		}
-		
-		var _xx = _x, _ch, _chw;
-		var target = -999;
 		
 		draw_set_text(font, fa_left, fa_top, color);
 		draw_set_alpha(0.5 + 0.5 * interactable);
@@ -545,14 +543,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var ch_x = _x;
 		var ch_y = _y;
 		var _str;
-		
-		//print("==========");
-		//print(_text);
-		//print(">>>>");
-		//print(_input_text);
-		//print("----");
-		//print(_input_text_line);
-		//print($"cursor: {cursor}");
 		
 		if(_input_text != _text) {
 			_input_text = _text;
@@ -587,56 +577,72 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		draw_set_alpha(1);
 		
-		if(_mx != -1 && _my != -1) {
+		var target = undefined;
+		
+		if(_hover) {
+			target = 0;
 			var char_run = 0, _l, _ch_w, _ch_h, _str, _chr;
-			var sx = _x;
-			var ch_x = sx;
+			var sx     = _x;
+			var ch_x   = sx;
 			var ch_cxo = sx;
 			var ch_cxn = sx;
-			var ch_y = _y;
+			var ch_y   = _y;
+			var _found_char = false;
 					
 			for( var i = 0, n = array_length(_input_text_line); i < n; i++ ) {
 				_str = string_trim_end(_input_text_line[i]);
-				_l = string_length(_str);
-				_ch_h = line_get_height();
+				_l   = string_length(_str);
+				_ch_h  = line_get_height();
 				ch_cxo = sx;
-				ch_x = sx;
+				ch_x   = sx;
 				
-				if(ch_y <= _my && ch_y + _ch_h >= _my) {
-					target = char_run + _l;
-					
-					for( var j = 0; j < string_length(_str); j++ ) {
+				//draw_set_color(c_white);
+				//draw_rectangle(ch_x, ch_y, ch_x + 100, ch_y + _ch_h, false);
+				
+				if((i == 0 || ch_y <= _my) && (i == n - 1 || _my < ch_y + _ch_h)) {
+					for( var j = 0; j < _l; j++ ) {
 						_chr = string_char_at(_str, j + 1);
 						_ch_w = string_width(_chr);
 						ch_cxn = ch_x + _ch_w / 2;
 						
-						if(ch_cxo <= _mx && _mx <= ch_cxn) {
+						if(_mx <= ch_cxn) {
 							target = char_run + j;
+							_found_char = true;
 							break;
 						}
 						
 						ch_x  += _ch_w;
 						ch_cxo = ch_cxn;
 					}
+					
+					if(!_found_char) target = char_run + _l;
+					_found_char = true;
 					break;
 				}
 				
 				char_run += string_length(_input_text_line[i]);	
 				ch_y += _ch_h;
 			}
+			
+			if(ch_y <= _my && !_found_char) target = char_run - 1;
 		}
 		
-		if(target != -999 && HOVER != o_dialog_textbox_autocomplete.id) {
-			if(mouse_press(mb_left, active) && !click_block) {
+		if(target != undefined) {
+			if(mouse_press(mb_left, active) && !click_block && (HOVER != o_dialog_textbox_autocomplete.id || cursor_selecting)) {
+				cursor_selecting = true;
 				cursor_select = target;
-				cursor		  = target;	
-			} else if(mouse_click(mb_left, active) && cursor != target) {
 				cursor		  = target;
-			}
+				
+				o_dialog_textbox_autocomplete.deactivate(self);
+			} 
 			
-			if(mouse_press(mb_left, active))
-				click_block	  = false;
+			if(mouse_click(mb_left, active))
+				cursor = target;
+			click_block = false;
 		}
+		
+		if(mouse_release(mb_left))
+			cursor_selecting = false;
 	} #endregion
 	
 	static drawParam = function(params) { #region
@@ -772,14 +778,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					cursor_pos_y = cursor_pos_y == 0? cursor_pos_y_to : lerp_float(cursor_pos_y, cursor_pos_y_to, 2);
 				#endregion
 				
-				var _mx = -1;
-				var _my = -1;
-				if(hover && hoverRect) {
-					_mx = _m[0];
-					_my = _m[1];
-				}
-				
-				display_text(tx, _y + ui(7), _input_text, _mx, _my);
+				display_text(tx, _y + ui(7), _input_text, _m[0], _m[1], (hover && hoverRect) || cursor_selecting);
 				
 				if(cursor_pos_y != 0 && cursor_pos_x != 0) {
 					draw_set_color(COLORS._main_text_accent);

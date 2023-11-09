@@ -90,4 +90,16 @@ function __3dGroup() constructor {
 		for( var i = 0, n = array_length(objects); i < n; i++ ) 
 			callback(objects[i], scene);
 	} #endregion
+	
+	static clone = function(vertex = true, cloneBuffer = false) { #region
+		var _new = new __3dGroup();
+		
+		_new.transform = transform.clone();
+		_new.objects   = array_create(array_length(objects));
+		
+		for( var i = 0, n = array_length(objects); i < n; i++ )
+			_new.objects[i] = objects[i].clone(vertex, cloneBuffer);
+		
+		return _new;
+	} #endregion
 }

@@ -10,6 +10,7 @@
 	vertex_format_add_texcoord();
 	vertex_format_add_color();
 	global.VF_POS_NORM_TEX_COL = vertex_format_end();
+	global.VF_POS_NORM_TEX_COL_size = 36;
 #endregion
 
 function __3dObject() constructor {
@@ -82,7 +83,7 @@ function __3dObject() constructor {
 				}
 			}
 		vertex_end(_buffer);
-		vertex_freeze(_buffer);
+		//vertex_freeze(_buffer);
 		
 		return _buffer;
 	} #endregion
@@ -193,7 +194,7 @@ function __3dObject() constructor {
 		
 	} #endregion
 		
-	static clone = function(_vertex = true) { #region
+	static clone = function(_vertex = true, cloneBuffer = false) { #region
 		var _obj = new __3dObject();
 		
 		if(_vertex) {
@@ -206,6 +207,21 @@ function __3dObject() constructor {
 			}
 		}
 		
+		if(cloneBuffer) {
+			_obj.VB = array_create(array_length(VB));
+			
+			for( var i = 0, n = array_length(VB); i < n; i++ ) {
+				var _vnum = vertex_get_number(VB[i]);
+				var _buff = buffer_create(1, buffer_grow, 1);
+				buffer_copy_from_vertex_buffer(VB[i], 0, _vnum - 1, _buff, 0);
+				
+				_obj.VB[i] = vertex_create_buffer_from_buffer(_buff, VF);
+			}
+		} else {
+			_obj.VB  = VB;
+		}
+		
+		_obj.NVB            = NVB;
 		_obj.VF             = VF;
 		_obj.render_type    = render_type;
 		_obj.custom_shader  = custom_shader;

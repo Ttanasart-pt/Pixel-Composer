@@ -6,6 +6,8 @@ function __transform() constructor {
 	rotation = new BBMOD_Quaternion();
 	scale    = new __vec3(1);
 	
+	matrix = new BBMOD_Matrix();
+	
 	static submitMatrix = function() {
 		if(parent) parent.submitMatrix();
 		
@@ -24,6 +26,11 @@ function __transform() constructor {
 		matrix_stack_push(rot);
 		matrix_stack_push(sca);
 		matrix_stack_push(anc);
+		
+		matrix = new BBMOD_Matrix().Mul(new BBMOD_Matrix().FromArray(pos))
+								   .Mul(new BBMOD_Matrix().FromArray(rot)) 
+								   .Mul(new BBMOD_Matrix().FromArray(sca)) 
+								   .Mul(new BBMOD_Matrix().FromArray(anc)) 
 	}
 	
 	static clearMatrix = function() {

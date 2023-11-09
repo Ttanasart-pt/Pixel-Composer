@@ -38,6 +38,8 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	inputs[| 11] = nodeValue("Scales", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [] )
 		.setArrayDepth(2);
 	
+	inputs[| 12] = nodeValue("Use Instance", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
+	
 	outputs[| 0] = nodeValue("Scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Scene, noone);
 	
 	input_display_list = [
@@ -57,17 +59,18 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _object = _data[0];
-		var _mode   = _data[1];
-		var _Spos   = _data[3];
-		var _Srot   = _data[4];
-		var _Ssca   = _data[5];
-		var _Rpos   = _data[6];
-		var _Rrot   = _data[7];
-		var _Rsca   = _data[8];
+		var _mode = _data[1];
+		var _Spos = _data[3];
+		var _Srot = _data[4];
+		var _Ssca = _data[5];
+		var _Rpos = _data[6];
+		var _Rrot = _data[7];
+		var _Rsca = _data[8];
 		
-		var _Apos   = _data[ 9];
-		var _Arot   = _data[10];
-		var _Asca   = _data[11];
+		var _Apos = _data[ 9];
+		var _Arot = _data[10];
+		var _Asca = _data[11];
+		var _inst = _data[12];
 		
 		if(_mode == 1 && !is_array(_object)) return noone;
 		var _amo = _mode == 1? array_length(_object) : _data[2];
@@ -77,6 +80,8 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		for( var i = 0; i < _amo; i++ ) {
 			var _obj = _mode == 1? _object[i] : _object;
 			if(_obj == noone) continue;
+			
+			//if(!_inst) _obj = _obj.clone(false, true);
 			
 			var _apos = array_safe_get(_Apos, i);
 			var _arot = array_safe_get(_Arot, i);
