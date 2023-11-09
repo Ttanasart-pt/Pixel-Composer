@@ -425,6 +425,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_node_resize.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_node_use_experssion.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_node_use_global.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_node_use_project.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_noti_icon_console_failed.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_noti_icon_console.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_noti_icon_error_strip2.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},

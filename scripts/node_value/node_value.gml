@@ -574,6 +574,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		def_length  = is_array(def_val)? array_length(def_val) : 0;
 		unit		= new nodeValueUnit(self);
 		dyna_depo   = ds_list_create();
+		value_tag   = "";
 		
 		is_changed  = true;
 		cache_value = [ false, false, undefined, undefined ];
@@ -849,6 +850,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							
 							if(len == 2) {
 								extract_node = [ "Node_Vector2", "Node_Path" ];
+								
+								if(def_val == DEF_SURF) {
+									value_tag = "dimension";
+									node.attributes.use_project_dimension = true;
+									editWidget.side_button = button(function() {
+										node.attributes.use_project_dimension = !node.attributes.use_project_dimension;
+										node.triggerRender();
+									}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).setTooltip("Use project dimension");
+								}
 							} else if(len == 3)
 								extract_node = "Node_Vector3";
 							else if(len == 4)
@@ -1389,6 +1399,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
+		if(value_tag == "dimension" && node.attributes.use_project_dimension)
+			return PROJECT.attributes.surface_dimension;
 		
 		global.cache_call++;
 		if(useCache && use_cache) {
@@ -1714,6 +1726,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(display_type == VALUE_DISPLAY.palette)   updated = true;
 		
 		if(!updated) return false;
+		
+		if(value_tag == "dimension" && struct_try_get(node.attributes, "use_project_dimension"))
+			node.attributes.use_project_dimension = false;
 		
 		draw_junction_index = type;
 		if(type == VALUE_TYPE.surface) {

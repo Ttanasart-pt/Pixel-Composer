@@ -236,6 +236,13 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		if(jun.connect_type == JUNCTION_CONNECT.input) {
 			wid.setInteract(!jun.hasJunctionFrom());
 			if(_focus) wid.register(_scrollPane);
+			
+			if(jun.value_tag == "dimension") {
+				var _proj = jun.node.attributes.use_project_dimension;
+				
+				wid.side_button.icon_index = _proj;
+				wid.side_button.icon_blend = _proj? c_white : COLORS._main_icon;
+			}
 		} else {
 			wid.setInteract(false);
 		}

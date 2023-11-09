@@ -831,6 +831,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static attributeDeserialize = function(attr) { #region
+		if(struct_has(attributes, "use_project_dimension") && !struct_has(attr, "use_project_dimension"))
+			attributes.use_project_dimension = false;
+			
 		if(struct_has(attr, "layer_visible"))
 			attributes.layer_visible = attr.layer_visible;
 			

@@ -1774,7 +1774,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			createNewInput();
 	} #endregion
 	
-	static attributeDeserialize = function(attr) { struct_override(attributes, attr); }
+	static attributeDeserialize = function(attr) { 
+		if(struct_has(attributes, "use_project_dimension") && !struct_has(attr, "use_project_dimension"))
+			attributes.use_project_dimension = false;
+		struct_override(attributes, attr); 
+	}
+	
 	static postDeserialize = function() {}
 	static processDeserialize = function() {}
 		

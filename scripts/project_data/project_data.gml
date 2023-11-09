@@ -59,8 +59,8 @@
 		} #endregion
 		
 		attributeEditor = [ #region
-			[ "Default Surface",	"surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; return true; }) ],
-			[ "Palette",			"palette",			 new buttonPalette(function(pal) { attributes.palette = pal; return true; }) ],
+			[ "Default Surface",	"surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; RENDER_ALL return true; }) ],
+			[ "Palette",			"palette",			 new buttonPalette(function(pal) { attributes.palette = pal; RENDER_ALL return true; }) ],
 		]; #endregion
 		
 		timelines = new timelineItemGroup();
