@@ -17,4 +17,16 @@ function __plane(origin, normal) constructor {
 		
 		return ray.sampleDistance(t);
 	}
+	
+	function d3d_point_to_plane(plane_origin, plane_normal, point) {
+		var plane_to_point = [
+			point[0] - plane_origin[0],
+			point[1] - plane_origin[1],
+			point[2] - plane_origin[2],
+		];
+		
+		var _dot = dot_product_3d(plane_to_point[0], plane_to_point[1], plane_to_point[2], plane_normal[0], plane_normal[1], plane_normal[2]);
+		var _distance = _dot / point_distance_3d(0, 0, 0, plane_normal[0], plane_normal[1], plane_normal[2]);
+		return _distance;
+	}
 #endregion

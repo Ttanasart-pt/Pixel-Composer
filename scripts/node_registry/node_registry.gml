@@ -402,8 +402,6 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			ds_list_add(d3d, "3D");
 			addNodeObject(d3d, "3D Camera",		s_node_3d_camera,		"Node_3D_Camera",		[1, Node_3D_Camera]).setVersion(11510);
 			addNodeObject(d3d, "3D Material",	s_node_3d_meterial,		"Node_3D_Material",		[1, Node_3D_Material]).setVersion(11510);
-			
-			ds_list_add(d3d, "Compose");
 			addNodeObject(d3d, "3D Scene",		s_node_3d_scene,		"Node_3D_Scene",		[1, Node_3D_Scene]).setVersion(11510);
 			addNodeObject(d3d, "3D Repeat",		s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat]).setVersion(11510);
 			
@@ -427,6 +425,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(d3d, "Set Material",		s_node_3d_set_material,		"Node_3D_Set_Material",	[1, Node_3D_Set_Material]).setVersion(11560);
 			///**/ addNodeObject(d3d, "3D Instancer",		s_node_3d_set_material,		"Node_3D_Instancer",	[1, Node_3D_Instancer]).setVersion(11560);
 			///**/ addNodeObject(d3d, "3D Particle",		s_node_3d_set_material,		"Node_3D_Particle",		[1, Node_3D_Particle]).setVersion(11560);
+			
+			ds_list_add(d3d, "Points");
+			addNodeObject(d3d, "Point Affector",	s_node_3d_discretize,		"Node_3D_Point_Affector",	[1, Node_3D_Point_Affector]).setVersion(11570);
 			
 			//ds_list_add(d3d, "Legacy"); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//addNodeObject(d3d, "3D Plane",			s_node_3d_plane,		"__Node_3D_Plane",		[1, __Node_3D_Plane],, "Put 2D image on a plane in 3D space.").isDeprecated();

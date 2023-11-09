@@ -83,7 +83,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _asca = array_safe_get(_Asca, i);
 			
 			if(!is_array(_apos) || array_length(_apos) != 3) _apos = [ 0, 0, 0 ];
-			if(!is_array(_arot) || array_length(_arot) != 4) _arot = [ 0, 0, 0, 1 ];
+			if(!is_array(_arot) || array_length(_arot) != 3) _arot = [ 0, 0, 0 ];
 			if(!is_array(_asca) || array_length(_asca) != 3) _asca = [ 0, 0, 0 ];
 			
 			var _subScene = new __3dGroup();
@@ -96,16 +96,14 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						  _Ssca[2] + _asca[2] + _Rsca[2] * i ];
 			
 			var _sRot = new BBMOD_Quaternion(_Srot[0], _Srot[1], _Srot[2], _Srot[3]);
-			var _aRot = new BBMOD_Quaternion(_arot[0], _arot[1], _arot[2], _arot[3]);
 			var _rRot = new BBMOD_Quaternion(_Rrot[0], _Rrot[1], _Rrot[2], _Rrot[3]);
 			
 			var _sRotE = _sRot.ToEuler();
-			var _aRotE = _aRot.ToEuler();
 			var _rRotE = _rRot.ToEuler();
 			
-			var _fRotE = [ _sRotE.x + _aRotE.x + _rRotE.x * i, 
-						   _sRotE.y + _aRotE.y + _rRotE.y * i, 
-						   _sRotE.z + _aRotE.z + _rRotE.z * i ];
+			var _fRotE = [ _sRotE.x + _arot[0] + _rRotE.x * i, 
+						   _sRotE.y + _arot[1] + _rRotE.y * i, 
+						   _sRotE.z + _arot[2] + _rRotE.z * i ];
 						   
 			var _fRot = new BBMOD_Quaternion().FromEuler(_fRotE[0], _fRotE[1], _fRotE[2]);
 			

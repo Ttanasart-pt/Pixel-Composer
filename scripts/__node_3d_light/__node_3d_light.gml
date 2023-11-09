@@ -17,7 +17,7 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 	
 	#macro __d3d_input_list_light ["Light", false], in_d3d + 0, in_d3d + 1, in_d3d + 2
 	
-	static setLight = function(light, _data) {
+	static setLight = function(light, _data) { #region
 		var _col = _data[in_d3d + 1];
 		var _int = _data[in_d3d + 2];
 		
@@ -25,11 +25,11 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 		light.intensity = _int;
 		
 		return light;
-	}
+	} #endregion
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { }
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var _colr = current_data[in_d3d + 1];
 		var bbox  = drawGetBbox(xx, yy, _s);
 		draw_set_color(_colr);
@@ -37,5 +37,5 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 		draw_set_circle_precision(32);
 		draw_circle(bbox.xc, bbox.yc,  8 * _s, false);
 		draw_circle(bbox.xc, bbox.yc, 12 * _s, true);
-	}
+	} #endregion
 }

@@ -1,5 +1,5 @@
 function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Scatter Points";
+	name  = "Scatter Points";
 	color = COLORS.node_blend_number;
 	previewable   = false;
 	
@@ -31,30 +31,38 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 7] = nodeValue("Reference dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	inputs[| 8] = nodeValue("Reference value", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
+	inputs[| 9] = nodeValue("Output 3D", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 10] = nodeValue("Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y", "Z" ]);
+	
+	inputs[| 11] = nodeValue("Plane position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	
 	input_display_list = [ 
 		["Base",	false], 5, 6, 7, 
 		["Scatter",	false], 0, 1, 4, 2, 3, 
+		["3D",		 true], 9, 10, 11
 	];
 	
 	outputs[| 0] = nodeValue("Points", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	refVal = nodeValue("Reference value", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	
-	static step = function() {
+	static step = function() { #region
 		var _dist = getInputData(1);
 		
 		inputs[| 2].setVisible(_dist != 2);
 		inputs[| 4].setVisible(_dist == 2, _dist == 2);
-	}
+	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
+	} #endregion
 	
-	static getPreviewValues = function() { return refVal.getValue(); }
+	static getPreviewValues = function() { return inputs[| 8].getValue(); }
 	
-	static update = function(frame = CURRENT_FRAME) { 
+	static update = function(frame = CURRENT_FRAME) { #region
 		var _area	 = getInputData(0);
 		var _dist	 = getInputData(1);
 		var _scat	 = getInputData(2);
@@ -64,13 +72,17 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _fix	 = getInputData(6);
 		var _fixRef  = getInputData(7);
 		
+		var _3d = getInputData( 9);
+		__temp_3dNorm = getInputData(10);
+		__temp_3dPos  = getInputData(11);
+		
 		inputs[| 7].setVisible(_fix);
 		var pos = [];
 		
 		if(_fix) {
-			var ref = refVal.getValue();
+			var ref = getInputData(8);
 			ref = surface_verify(ref, _fixRef[0], _fixRef[1]);
-			refVal.setValue(ref);
+			inputs[| 8].setValue(ref);
 		}
 			
 		var aBox = area_get_bbox(_area);
@@ -102,11 +114,24 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			}
 		}
 		
+		if(_3d)
+		pos = array_map(pos, function(value, index) {
+			var val = value;
+			
+			switch(__temp_3dNorm) {
+				case 0 : val = [ __temp_3dPos, value[0], value[1] ]; break;
+				case 1 : val = [ value[0], __temp_3dPos, value[1] ]; break;
+				case 2 : val = [ value[0], value[1], __temp_3dPos ]; break;
+			}
+			
+			return val;
+		});
+		
 		outputs[| 0].setValue(pos);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_scatter_point, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }

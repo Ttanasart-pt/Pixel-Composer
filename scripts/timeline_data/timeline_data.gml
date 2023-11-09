@@ -117,8 +117,10 @@ function timelineItemNode(node) : timelineItem() constructor {
 		show  = struct_try_get(_map, "show", true);
 		
 		var _node_id = _map.node_id;
-		node = PROJECT.nodeMap[? _node_id];
-		node.timeline_item = self;
+		if(ds_map_exists(PROJECT.nodeMap, _node_id)) {
+			node = PROJECT.nodeMap[? _node_id];
+			node.timeline_item = self;
+		}
 		
 		return self;
 	} #endregion

@@ -2,10 +2,6 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	name  = "3D";
 	is_3D = true;
 	
-	w = 64;
-	h = 64;
-	min_h = h;
-	
 	mesh_prev_surface = surface_create(64, 64);
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
