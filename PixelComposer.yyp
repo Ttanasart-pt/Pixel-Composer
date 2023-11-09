@@ -494,6 +494,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_youtube.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"graphics x2.ai","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/inspector",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_inspector_area_strip2.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/inspector",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_inspector_channel.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/inspector",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_inspector_corner.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/inspector",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_inspector_direction.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/inspector",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_inspector_draw_line.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/inspector",},

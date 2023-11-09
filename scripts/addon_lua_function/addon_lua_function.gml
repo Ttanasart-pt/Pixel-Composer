@@ -361,7 +361,7 @@
 		[ "window_set_fullscreen", window_set_fullscreen ],
 		[ "window_set_position", window_set_position ],
 		[ "window_set_size", window_set_size ],
-		[ "window_set_rectangle", window_set_rectangle ],
+		[ "gameframe_drag_set_rect", gameframe_drag_set_rect ],
 		[ "window_set_cursor", window_set_cursor ],
 		[ "window_set_min_width", window_set_min_width ],
 		[ "window_set_max_width", window_set_max_width ],

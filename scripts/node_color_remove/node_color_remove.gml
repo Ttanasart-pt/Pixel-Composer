@@ -26,7 +26,10 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 6] = nodeValue("Invert", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Keep the selected colors and remove the rest.");
 	
-	input_display_list = [ 5, 
+	inputs[| 7] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	
+	input_display_list = [ 5, 7, 
 		["Surfaces", true], 0, 3, 4, 
 		["Remove",	false], 1, 2, 6, 
 	]
@@ -61,6 +64,7 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_reset_target();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
+		_outSurf = channel_apply(_data[0], _outSurf, _data[7]);
 		
 		return _outSurf;
 	} #endregion

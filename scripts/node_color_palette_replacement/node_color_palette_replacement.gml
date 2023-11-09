@@ -37,7 +37,10 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 9] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 9;
 	
-	input_display_list = [ 9, 
+	inputs[| 10] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+		
+	input_display_list = [ 9, 10, 
 		["Surfaces",	 true], 0, 7, 8, 
 		["Palette",		false], 1, 2, 
 		["Comparison",	false], 3, 5, 
@@ -98,6 +101,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		surface_reset_target();
 		
 		if(!in) _outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);
+		_outSurf = channel_apply(_data[0], _outSurf, _data[10]);
 		
 		return _outSurf;
 	} #endregion

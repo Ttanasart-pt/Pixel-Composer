@@ -9,16 +9,30 @@ function mac_window_step() {
 			window_set_position(__win_drag_sx + (_mx - __win_drag_mx), __win_drag_sy + (_my - __win_drag_my));
 		else {
 			if((__win_is_dragging & WINDOW_DRAG_MODE.resize_n) != 0) {
-				window_set_size(__win_drag_sw, __win_drag_sh - (_my - __win_drag_my));
-				window_set_position(__win_drag_sx, __win_drag_sy + (_my - __win_drag_my));
+				gameframe_drag_set_rect(
+					__win_drag_sx, 
+					__win_drag_sy + (_my - __win_drag_my), 
+					__win_drag_sw, 
+					__win_drag_sh - (_my - __win_drag_my)
+				);
 			} else if((__win_is_dragging & WINDOW_DRAG_MODE.resize_s) != 0)
-				window_set_size(__win_drag_sw, __win_drag_sh + (_my - __win_drag_my));
-		
+				window_set_size(
+					max(960, __win_drag_sw), 
+					max(600, __win_drag_sh + (_my - __win_drag_my))
+				);
+			
 			if((__win_is_dragging & WINDOW_DRAG_MODE.resize_w) != 0) {
-				window_set_size(__win_drag_sw - (_mx - __win_drag_mx), __win_drag_sh);
-				window_set_position(__win_drag_sx + (_mx - __win_drag_mx), __win_drag_sy);
+				gameframe_drag_set_rect(
+					__win_drag_sx + (_mx - __win_drag_mx), 
+					__win_drag_sy,
+					__win_drag_sw - (_mx - __win_drag_mx), 
+					__win_drag_sh
+				);
 			} else if((__win_is_dragging & WINDOW_DRAG_MODE.resize_e) != 0)
-				window_set_size(__win_drag_sw + (_mx - __win_drag_mx), __win_drag_sh);
+				window_set_size(
+					max(960, __win_drag_sw + (_mx - __win_drag_mx)), 
+					max(600, __win_drag_sh)
+				);
 		}
 		
 		if(mouse_release(mb_left))

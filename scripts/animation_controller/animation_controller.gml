@@ -9,6 +9,7 @@
 	#macro ANIMATION_STATIC !(PROJECT.animator.is_playing || PROJECT.animator.frame_progress)
 	#macro IS_PLAYING    PROJECT.animator.is_playing
 	#macro CURRENT_FRAME PROJECT.animator.current_frame
+	#macro LAST_FRAME    (CURRENT_FRAME == TOTAL_FRAMES - 1)
 	#macro TOTAL_FRAMES  PROJECT.animator.frames_total
 	#macro RENDERING     PROJECT.animator.rendering
 	#macro IS_RENDERING  array_length(PROJECT.animator.rendering)

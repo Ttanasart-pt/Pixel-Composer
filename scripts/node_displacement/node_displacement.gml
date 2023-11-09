@@ -37,7 +37,10 @@ If set, then strength value control how many times the effect applies on itself.
 	inputs[| 11] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Overwrite", "Min", "Max" ]);
 		
-	input_display_list = [ 10, 
+	inputs[| 12] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	
+	input_display_list = [ 10, 12, 
 		["Surfaces",	 true],	0, 8, 9, 
 		["Displace",	false], 1, 3, 4,
 		["Color",		false], 5, 2, 
@@ -81,6 +84,7 @@ If set, then strength value control how many times the effect applies on itself.
 		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[8], _data[9]);
+		_outSurf = channel_apply(_data[0], _outSurf, _data[12]);
 		
 		return _outSurf;
 	} #endregion

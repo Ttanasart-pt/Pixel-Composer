@@ -20,7 +20,10 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 4] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 4;
 	
-	input_display_list = [ 4, 
+	inputs[| 5] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	
+	input_display_list = [ 4, 5, 
 		["Surfaces", true], 0, 2, 3, 
 		["Corner",	false], 1,
 	]
@@ -63,6 +66,7 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_free(temp);
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[2], _data[3]);
+		_outSurf = channel_apply(_data[0], _outSurf, _data[5]);
 		
 		return _outSurf;
 	}

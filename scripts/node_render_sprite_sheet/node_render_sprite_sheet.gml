@@ -87,7 +87,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(grup != SPRITE_ANIM_GROUP.animation) {
 			initRender();
 			return;
-		} else if(IS_RENDERING && PROJECT.animator.frame_progress && CURRENT_FRAME == 0 && !refreshSurface) {
+		} 
+		
+		if(IS_RENDERING && PROJECT.animator.frame_progress && CURRENT_FRAME == 0 && !refreshSurface) {
 			var skip = getInputData(2);
 			
 			var arr = is_array(inpt);
@@ -247,6 +249,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		if(drawn) array_safe_set(anim_drawn, CURRENT_FRAME, true);
 		outputs[| 1].setValue(_atl);
+		
+		if(LAST_FRAME)
+			array_remove(RENDERING, node_id);
 	} #endregion
 	
 	static onInspector1Update = function(updateAll = true) { #region
@@ -261,6 +266,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			node.initRender();
 		}
+		
+		array_push(RENDERING, node_id);
 	} #endregion
 	
 	static initRender = function() { #region

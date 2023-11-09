@@ -569,7 +569,7 @@ function gameframe_tools_rect_get_window_rect(_this1) {
 
 function gameframe_tools_rect_set_window_rect(_this1) {
 	// gameframe_tools_rect_set_window_rect(this:tools_GfRectImpl)
-	window_set_rectangle(_this1[0/* x */], _this1[1/* y */], _this1[2/* width */], _this1[3/* height */]);
+	gameframe_drag_set_rect(_this1[0/* x */], _this1[1/* y */], _this1[2/* width */], _this1[3/* height */]);
 }
 
 function gameframe_tools_rect_equals(_this1, _o) {
@@ -959,7 +959,7 @@ function gameframe_drag_stop() {
 
 function gameframe_drag_set_rect(_x, _y, _w, _h) {
 	// gameframe_drag_set_rect(x:int, y:int, w:int, h:int)
-	window_set_rectangle(_x, _y, _w, _h);
+	window_set_rectangle(_x, _y, max(960, _w), max(600, _h));
 }
 
 function gameframe_drag_update() {
@@ -985,34 +985,34 @@ function gameframe_drag_update() {
 				var __y = gameframe_drag_my - gameframe_drag_top;
 				if (gameframe_drag_mx - gameframe_drag_left < (gameframe_drag_right - gameframe_drag_left) / 2) __x = min(gameframe_drag_mx - gameframe_drag_left, (gameframe_restoreRect_hx[2/* width */] >> 1)); else __x = max(gameframe_restoreRect_hx[2/* width */] + gameframe_drag_mx - gameframe_drag_right, (gameframe_restoreRect_hx[2/* width */] >> 1));
 				gameframe_isMaximized_hx = false;
-				window_set_rectangle(__mx - __x, __my - __y, gameframe_restoreRect_hx[2/* width */], gameframe_restoreRect_hx[3/* height */]);
+				gameframe_drag_set_rect(__mx - __x, __my - __y, gameframe_restoreRect_hx[2/* width */], gameframe_restoreRect_hx[3/* height */]);
 				gameframe_drag_start(16);
 			}
 			break;
 		case 1:
 			var __x = __mx - (gameframe_drag_mx - gameframe_drag_left);
-			window_set_rectangle(__x, gameframe_drag_top, gameframe_drag_right - __x, gameframe_drag_bottom - gameframe_drag_top);
+			gameframe_drag_set_rect(__x, gameframe_drag_top, gameframe_drag_right - __x, gameframe_drag_bottom - gameframe_drag_top);
 			break;
 		case 2:
 			var __y = __my - (gameframe_drag_my - gameframe_drag_top);
-			window_set_rectangle(gameframe_drag_left, __y, gameframe_drag_right - gameframe_drag_left, gameframe_drag_bottom - __y);
+			gameframe_drag_set_rect(gameframe_drag_left, __y, gameframe_drag_right - gameframe_drag_left, gameframe_drag_bottom - __y);
 			break;
-		case 4: window_set_rectangle(gameframe_drag_left, gameframe_drag_top, gameframe_drag_right - gameframe_drag_left - gameframe_drag_mx + __mx, gameframe_drag_bottom - gameframe_drag_top); break;
-		case 8: window_set_rectangle(gameframe_drag_left, gameframe_drag_top, gameframe_drag_right - gameframe_drag_left, gameframe_drag_bottom - gameframe_drag_top - gameframe_drag_my + __my); break;
+		case 4: gameframe_drag_set_rect(gameframe_drag_left, gameframe_drag_top, gameframe_drag_right - gameframe_drag_left - gameframe_drag_mx + __mx, gameframe_drag_bottom - gameframe_drag_top); break;
+		case 8: gameframe_drag_set_rect(gameframe_drag_left, gameframe_drag_top, gameframe_drag_right - gameframe_drag_left, gameframe_drag_bottom - gameframe_drag_top - gameframe_drag_my + __my); break;
 		case 3:
 			var __x = __mx - (gameframe_drag_mx - gameframe_drag_left);
 			var __y = __my - (gameframe_drag_my - gameframe_drag_top);
-			window_set_rectangle(__x, __y, gameframe_drag_right - __x, gameframe_drag_bottom - __y);
+			gameframe_drag_set_rect(__x, __y, gameframe_drag_right - __x, gameframe_drag_bottom - __y);
 			break;
 		case 9:
 			var __x = __mx - (gameframe_drag_mx - gameframe_drag_left);
-			window_set_rectangle(__x, gameframe_drag_top, gameframe_drag_right - __x, gameframe_drag_bottom - gameframe_drag_top - gameframe_drag_my + __my);
+			gameframe_drag_set_rect(__x, gameframe_drag_top, gameframe_drag_right - __x, gameframe_drag_bottom - gameframe_drag_top - gameframe_drag_my + __my);
 			break;
 		case 6:
 			var __y = __my - (gameframe_drag_my - gameframe_drag_top);
-			window_set_rectangle(gameframe_drag_left, __y, gameframe_drag_right - gameframe_drag_left - gameframe_drag_mx + __mx, gameframe_drag_bottom - __y);
+			gameframe_drag_set_rect(gameframe_drag_left, __y, gameframe_drag_right - gameframe_drag_left - gameframe_drag_mx + __mx, gameframe_drag_bottom - __y);
 			break;
-		case 12: window_set_rectangle(gameframe_drag_left, gameframe_drag_top, gameframe_drag_right - gameframe_drag_left - gameframe_drag_mx + __mx, gameframe_drag_bottom - gameframe_drag_top - gameframe_drag_my + __my); break;
+		case 12: gameframe_drag_set_rect(gameframe_drag_left, gameframe_drag_top, gameframe_drag_right - gameframe_drag_left - gameframe_drag_mx + __mx, gameframe_drag_bottom - gameframe_drag_top - gameframe_drag_my + __my); break;
 	}
 }
 

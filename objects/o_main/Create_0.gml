@@ -11,6 +11,9 @@
 #endregion
 
 #region window
+	window_set_min_width(960);
+	window_set_min_height(600);
+	
 	if(OS == os_windows) {
 		gameframe_init();
 		gameframe_set_cursor = false;

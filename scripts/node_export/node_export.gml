@@ -769,7 +769,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		export();
 		
-		if(CURRENT_FRAME == TOTAL_FRAMES - 1) {
+		if(LAST_FRAME) {
 			if(anim == NODE_EXPORT_FORMAT.sequence)
 				array_remove(RENDERING, node_id);
 			else if(anim == NODE_EXPORT_FORMAT.animation)

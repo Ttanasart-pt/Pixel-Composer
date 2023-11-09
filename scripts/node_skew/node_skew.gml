@@ -26,7 +26,10 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 8] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 8;
 		
-	input_display_list = [ 8, 
+	inputs[| 9] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+		
+	input_display_list = [ 8, 9, 
 		["Surfaces", true],	0, 6, 7, 
 		["Skew",	false],	1, 2, 4,
 	]
@@ -67,6 +70,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[6], _data[7]);
+		_outSurf = channel_apply(_data[0], _outSurf, _data[9]);
 		
 		return _outSurf;
 	}

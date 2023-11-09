@@ -156,8 +156,8 @@
 		map.key = save_l;
 		
 		PREFERENCES.window_maximize	= gameframe_is_maximized();
-		PREFERENCES.window_width	= WIN_W;
-		PREFERENCES.window_height	= WIN_H;
+		PREFERENCES.window_width	= max(960, WIN_W);
+		PREFERENCES.window_height	= max(600, WIN_H);
 		
 		map.preferences = PREFERENCES;
 		

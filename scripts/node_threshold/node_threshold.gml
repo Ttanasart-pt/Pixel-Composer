@@ -5,10 +5,10 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 1] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 		
-	inputs[| 2] = nodeValue("Brightness Threshold",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 2] = nodeValue("Brightness Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 3] = nodeValue("Brightness Smoothness",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 3] = nodeValue("Brightness Smoothness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -21,15 +21,18 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 7] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 8] = nodeValue("Alpha Threshold",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 8] = nodeValue("Alpha Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 9] = nodeValue("Alpha Smoothness",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 9] = nodeValue("Alpha Smoothness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
+	
+	inputs[| 10] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	input_display_list = [ 6, 
+	input_display_list = [ 6, 10, 
 		["Surfaces",	 true], 0, 4, 5, 
 		["Threshold",	false], 1, 2, 3, 7, 8, 9, 
 	];
@@ -56,9 +59,9 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _alphaSmooth		= _data[9];
 
 		surface_set_shader(_outSurf, sh_threshold);
-			shader_set_i("bright",			_bright				);
-			shader_set_f("brightThreshold",	_brightThreshold	);
-			shader_set_f("brightSmooth",	_brightSmooth		);
+			shader_set_i("bright",			_bright			);
+			shader_set_f("brightThreshold",	_brightThreshold);
+			shader_set_f("brightSmooth",	_brightSmooth	);
 			
 			shader_set_i("alpha",			_alpha			);
 			shader_set_f("alphaThreshold",	_alphaThreshold	);
@@ -68,6 +71,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
+		_outSurf = channel_apply(_data[0], _outSurf, _data[10]);
 		
 		return _outSurf;
 	} #endregion

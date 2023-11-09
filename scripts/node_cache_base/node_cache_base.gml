@@ -47,7 +47,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static disableNodeGroup = function() { #region
 		if(LOADING || APPENDING) return;
 		
-		if(IS_PLAYING && CURRENT_FRAME == TOTAL_FRAMES - 1)
+		if(IS_PLAYING && LAST_FRAME)
 		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
 			cache_group_members[i].renderActive = false;
 	} #endregion

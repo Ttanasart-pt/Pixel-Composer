@@ -21,3 +21,27 @@ function mask_apply(original, edited, mask, mix = 1) {
 	surface_free(edited);
 	return _s;
 }
+
+function channel_apply(original, edited, channel) {
+	if(channel == 0b1111) return edited;
+	
+	var _f = surface_get_format(edited);
+	var _s = surface_create_size(original, _f);
+	
+	surface_set_target(_s);
+		DRAW_CLEAR
+		BLEND_ADD
+		
+		gpu_set_colorwriteenable(!(channel & 0b0001), !(channel & 0b0010), !(channel & 0b0100), !(channel & 0b1000));
+		draw_surface_safe(original);
+		
+		gpu_set_colorwriteenable(channel & 0b0001, channel & 0b0010, channel & 0b0100, channel & 0b1000);
+		draw_surface_safe(edited);
+		
+		gpu_set_colorwriteenable(1, 1, 1, 1);
+		BLEND_NORMAL
+	surface_reset_target();
+	
+	surface_free(edited);
+	return _s;
+}

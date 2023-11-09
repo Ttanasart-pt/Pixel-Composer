@@ -216,6 +216,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 	var widH	= breakLine? editBoxH : 0;
 	var mbRight	= true;
+	var wid     = jun.editWidget;
 	
 	if(jun.expUse) { #region expression editor
 		var expValid = jun.expTree != noone && jun.expTree.validate();
@@ -229,14 +230,14 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 		widH = wd_h - (TEXTBOX_HEIGHT * !breakLine);
 	#endregion
-	} else if(jun.editWidget && jun.display_type != VALUE_DISPLAY.none) { #region edit widget
-		jun.editWidget.setFocusHover(_focus, _hover);
+	} else if(wid && jun.display_type != VALUE_DISPLAY.none) { #region edit widget
+		wid.setFocusHover(_focus, _hover);
 			
 		if(jun.connect_type == JUNCTION_CONNECT.input) {
-			jun.editWidget.setInteract(!jun.hasJunctionFrom());
-			if(_focus) jun.editWidget.register(_scrollPane);
+			wid.setInteract(!jun.hasJunctionFrom());
+			if(_focus) wid.register(_scrollPane);
 		} else {
-			jun.editWidget.setInteract(false);
+			wid.setInteract(false);
 		}
 		
 		var _show = jun.showValue();
@@ -272,7 +273,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				break;
 		}
 		
-		var _widH = jun.editWidget.drawParam(param) ?? 0;
+		var _widH = wid.drawParam(param) ?? 0;
 		widH = _widH - (TEXTBOX_HEIGHT * !breakLine);
 	#endregion
 	} else if(jun.display_type == VALUE_DISPLAY.label) { #region label

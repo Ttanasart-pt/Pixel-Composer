@@ -28,7 +28,10 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 7] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 7;
 	
-	input_display_list = [ 7, 
+	inputs[| 8] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	
+	input_display_list = [ 7, 8, 
 		["Surfaces", true],	0, 5, 6, 
 		["Bloom",	false],	1, 2, 3, 4,
 	]
@@ -81,6 +84,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		surface_reset_target();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
+		_outSurf = channel_apply(_data[0], _outSurf, _data[8]);
 		
 		return _outSurf;
 	}

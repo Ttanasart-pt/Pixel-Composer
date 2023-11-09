@@ -26,7 +26,10 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 6] = nodeValue("Multiply alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	input_display_list = [ 5, 
+	inputs[| 7] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	
+	input_display_list = [ 5, 7, 
 		["Surfaces",	 true], 0, 3, 4, 
 		["Colorize",	false], 1, 2, 6, 
 	]
@@ -63,6 +66,7 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_reset_target(); 
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
+		_outSurf = channel_apply(_data[0], _outSurf, _data[7]);
 		
 		return _outSurf;
 	} #endregion

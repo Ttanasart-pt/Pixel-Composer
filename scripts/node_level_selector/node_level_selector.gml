@@ -21,6 +21,9 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 5;
 	
+	inputs[| 6] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
@@ -60,7 +63,7 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		return _h;
 	}); #endregion
 	
-	input_display_list = [ 5, 
+	input_display_list = [ 5, 6, 
 		level_renderer,
 		["Surfaces", true],	0, 3, 4, 
 		["Level",	false],	1, 2,
@@ -99,6 +102,7 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		surface_reset_target();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
+		_outSurf = channel_apply(_data[0], _outSurf, _data[6]);
 		
 		return _outSurf;
 	} #endregion

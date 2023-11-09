@@ -13,7 +13,7 @@ function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	
 	static update = function(frame = CURRENT_FRAME) {
 		if(inputs[| 0].isLeaf()) return;
-		if(CURRENT_FRAME == TOTAL_FRAMES - 1) {
+		if(LAST_FRAME) {
 			cache_value = noone;
 			return;
 		}

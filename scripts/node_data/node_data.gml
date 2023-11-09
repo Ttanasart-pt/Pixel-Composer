@@ -592,11 +592,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		onValueUpdate(index);
 		if(cache_group) cache_group.enableNodeGroup();
+		if(is_dynamic_input) setHeight();
 	} #endregion
 	
 	static valueFromUpdate = function(index) { #region
 		onValueFromUpdate(index);
 		if(cache_group) cache_group.enableNodeGroup();
+		if(is_dynamic_input) setHeight();
 	} #endregion
 	
 	static onValueUpdate = function(index = 0) {}

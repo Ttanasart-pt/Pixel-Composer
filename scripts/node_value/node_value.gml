@@ -2264,7 +2264,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 		}
 	} #endregion
-	 
+	
 	static isVisible = function() { #region
 		if(!node.active) return false;
 		
