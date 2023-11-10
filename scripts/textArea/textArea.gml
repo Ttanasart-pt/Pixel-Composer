@@ -59,6 +59,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	syntax_highlight = true;
 	
+	undo_current_text = "";
+	undo_delay = 0;
+	undo_stack = ds_stack_create();
+	redo_stack = ds_stack_create();
+	
 	_cl = -1;
 	
 	static activate = function() { #region
@@ -76,6 +81,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		keyboard_lastkey = -1;
 					
 		cut_line();
+		undo_delay = 10;
 	} #endregion
 	
 	static deactivate = function() { #region 
@@ -85,9 +91,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		UNDO_HOLDING = false;
 	} #endregion
 	
-	static isCodeFormat = function() {
-		return format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL
-	}
+	static isCodeFormat = function() { INLINE return format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL; }
 	
 	static onModified = function() { #region
 		if(!isCodeFormat()) return;
@@ -355,11 +359,36 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	static editText = function() { #region
 		var _input_text_pre = _input_text;
 		var modified = false;
+		var undoed = true;
 		
 		#region text editor
 			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
 				cursor_select	= 0;
 				cursor			= string_length(_input_text);
+			} else if(key_mod_press(CTRL) && keyboard_check_pressed(ord("Z"))) {
+				if(!ds_stack_empty(undo_stack)) {
+					ds_stack_push(redo_stack, _input_text);
+					_input_text = ds_stack_pop(undo_stack);
+					undo_current_text = _input_text;
+					cut_line();
+					move_cursor(0);
+					
+					modified   = true;
+					undoed     = false;
+					undo_delay = 10;
+				}
+			} else if(key_mod_press(CTRL) && key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {
+				if(!ds_stack_empty(redo_stack)) {
+					ds_stack_push(undo_stack, _input_text);
+					_input_text = ds_stack_pop(redo_stack);
+					undo_current_text = _input_text;
+					cut_line();
+					move_cursor(0);
+					
+					modified   = true;
+					undoed     = false;
+					undo_delay = 10;
+				}
 			} else if(key_mod_press(CTRL) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
 				if(cursor_select != -1) {
 					var minc = min(cursor, cursor_select);
@@ -392,7 +421,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						cut_line();
 						cursor = minc + string_length(ch);
 					}
-					modified = true;
+					modified   = true;
+					undo_delay = 10;
 				} else if(KEYBOARD_PRESSED == vk_backspace) {
 					if(cursor_select == -1) {
 						var str_before, str_after;
@@ -403,6 +433,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 								var ch = string_char_at(_input_text, _c);
 								if(breakCharacter(ch)) break;
 								_c--;
+								undo_delay++;
 							}
 							
 							str_before	= string_copy(_input_text, 1, _c);
@@ -411,9 +442,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						} else {
 							str_before	= string_copy(_input_text, 1, cursor - 1);
 							str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
+							undo_delay++;
 						}
 						
-						_input_text		= str_before + str_after;
+						_input_text = str_before + str_after;
 						cut_line();
 					} else {
 						var minc = min(cursor, cursor_select);
@@ -425,9 +457,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						cursor = minc + 1;
 						_input_text	= str_before + str_after;
 						cut_line();
+						undo_delay += maxc - minc;
 					}
 					
-					cursor_select	= -1;
+					cursor_select = -1;
 					move_cursor(-1);
 					modified = true;
 				} else if(KEYBOARD_PRESSED == vk_delete || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
@@ -437,6 +470,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						
 						_input_text		= str_before + str_after;
 						cut_line();
+						undo_delay++;
 					} else {
 						var minc = min(cursor, cursor_select);
 						var maxc = max(cursor, cursor_select);
@@ -445,10 +479,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
 						
 						cursor = minc;
-						_input_text		= str_before + str_after;
+						_input_text	= str_before + str_after;
 						cut_line();
+						undo_delay += maxc - minc;
 					}
-					cursor_select	= -1;
+					
+					cursor_select = -1;
 					modified = true;
 				} else if(KEYBOARD_STRING != "" && KEYBOARD_STRING != "\b" && KEYBOARD_STRING != "\r") {
 					var ch = KEYBOARD_STRING;
@@ -458,10 +494,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
 						
 						_input_text		= str_before + ch + str_after;
-						//print($"{str_before} + {ch} + {str_after}");
 						
 						cut_line();
 						move_cursor(string_length(ch));
+						undo_delay++;
 					} else {
 						var minc = min(cursor, cursor_select);
 						var maxc = max(cursor, cursor_select);
@@ -472,9 +508,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						_input_text		= str_before + ch + str_after;
 						cut_line();
 						cursor = minc + string_length(ch);
+						undo_delay += maxc - minc;
 					}
 					
-					cursor_select	= -1;
+					if(ch == " ") undo_delay = 10;
+					
+					cursor_select = -1;
 					modified = true;
 				}
 			}
@@ -483,7 +522,16 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			keyboard_lastkey = -1;
 		#endregion
 		
-		if(modified) onModified();
+		if(modified) {
+			if(undoed && undo_delay >= 10) {
+				ds_stack_push(undo_stack, undo_current_text);
+				ds_stack_clear(redo_stack);
+				
+				undo_current_text = _input_text_pre;
+				undo_delay = 0;
+			}
+			onModified();
+		}
 		
 		if(auto_update && keyboard_check_pressed(vk_anykey))
 			apply();

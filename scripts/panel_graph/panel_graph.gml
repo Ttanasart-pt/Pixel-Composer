@@ -1056,7 +1056,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#region draw selection frame
 			if(nodes_select_drag) {
 				if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16) {
-					draw_sprite_stretched_points(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
+					draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
 					
 					for(var i = 0; i < ds_list_size(nodes_list); i++) {
 						var _node = nodes_list[| i];

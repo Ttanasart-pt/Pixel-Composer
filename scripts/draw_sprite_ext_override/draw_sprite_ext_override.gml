@@ -40,6 +40,17 @@ function draw_sprite_stretched_points(spr, ind, _x0, _y0, _x1, _y1, color = c_wh
 	__draw_sprite_stretched_ext(spr, ind, _xs, _ys, _w, _h, color, alpha);
 }
 
+function draw_sprite_stretched_points_clamp(spr, ind, _x0, _y0, _x1, _y1, color = c_white, alpha = 1, _min = 12) {
+	INLINE
+	
+	var _xs = round(min(_x0, _x1));
+	var _ys = round(min(_y0, _y1));
+	var _w  = max(_min, round(max(_x0, _x1) - _xs));
+	var _h  = max(_min, round(max(_y0, _y1) - _ys));
+	
+	__draw_sprite_stretched_ext(spr, ind, _xs, _ys, _w, _h, color, alpha);
+}
+
 function draw_sprite_bbox(spr, ind, _bbox) {
 	INLINE
 	if(_bbox == noone) return;

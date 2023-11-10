@@ -42,7 +42,7 @@ function Action(_type, _object, _data) constructor {
 	
 	clear_action = noone;
 	
-	static undo = function() {
+	static undo = function() { #region
 		var _n;
 		
 		switch(type) {
@@ -110,9 +110,9 @@ function Action(_type, _object, _data) constructor {
 				data = obj(data);
 				break;
 		}
-	}
+	} #endregion
 	
-	static redo = function() {
+	static redo = function() { #region
 		var _n;
 		switch(type) {
 			case ACTION_TYPE.var_modify :
@@ -179,9 +179,9 @@ function Action(_type, _object, _data) constructor {
 				data = obj(data);
 				break;
 		}
-	}
+	} #endregion
 	
-	static toString = function() {
+	static toString = function() { #region
 		var ss = "";
 		switch(type) {
 			case ACTION_TYPE.var_modify :
@@ -237,15 +237,15 @@ function Action(_type, _object, _data) constructor {
 				break;
 		}
 		return ss;
-	}
+	} #endregion
 	
-	static destroy = function() {
+	static destroy = function() { #region
 		if(clear_action == noone) return;
 		clear_action(data);
-	}
+	} #endregion
 }
 
-function recordAction(_type, _object, _data = -1) { 
+function recordAction(_type, _object, _data = -1) { #region
 	if(IS_UNDOING)		return;
 	if(LOADING)			return;
 	if(UNDO_HOLDING)	return;
@@ -261,9 +261,9 @@ function recordAction(_type, _object, _data = -1) {
 	
 	PANEL_MENU.undoUpdate();
 	return act;
-}
+} #endregion
 
-function UNDO() {
+function UNDO() { #region
 	if(ds_stack_empty(UNDO_STACK))				return;
 	if(instance_exists(_p_dialog_undo_block))	return;
 	
@@ -276,9 +276,9 @@ function UNDO() {
 	
 	ds_stack_push(REDO_STACK, actions);
 	PANEL_MENU.undoUpdate();
-}
+} #endregion
 
-function REDO() {
+function REDO() { #region
 	if(ds_stack_empty(REDO_STACK))				return;
 	if(instance_exists(_p_dialog_undo_block))	return;
 	
@@ -291,4 +291,4 @@ function REDO() {
 	
 	ds_stack_push(UNDO_STACK, actions);	
 	PANEL_MENU.undoUpdate();
-}
+} #endregion

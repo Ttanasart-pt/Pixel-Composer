@@ -430,21 +430,6 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			ds_list_add(d3d, "Points");
 			addNodeObject(d3d, "Point Affector",	s_node_3d_point_affector,	"Node_3D_Point_Affector",	[1, Node_3D_Point_Affector]).setVersion(11570);
-			
-			//ds_list_add(d3d, "Legacy"); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//addNodeObject(d3d, "3D Plane",			s_node_3d_plane,		"__Node_3D_Plane",		[1, __Node_3D_Plane],, "Put 2D image on a plane in 3D space.").isDeprecated();
-			//addNodeObject(d3d, "3D Cube",			s_node_3d_cube,			"__Node_3D_Cube",		[1, __Node_3D_Cube]).isDeprecated();
-			//addNodeObject(d3d, "3D Cylinder",		s_node_3d_cylinder,		"__Node_3D_Cylinder",	[1, __Node_3D_Cylinder]).isDeprecated();
-			//addNodeObject(d3d, "3D Sphere",			s_node_3d_sphere,		"__Node_3D_Sphere",		[1, __Node_3D_Sphere]).setVersion(1090).isDeprecated();
-			//addNodeObject(d3d, "3D Cone",			s_node_3d_cone,			"__Node_3D_Cone",		[1, __Node_3D_Cone]).setVersion(1090).isDeprecated();
-			//addNodeObject(d3d, "3D Extrude",		s_node_3d_extrude,		"__Node_3D_Extrude",	[1, __Node_3D_Extrude],, "Extrude 2D image into 3D object.").isDeprecated();
-			
-			//addNodeObject(d3d, "3D Transform",		s_node_3d_transform,	"__Node_3D_Transform",	[1, __Node_3D_Transform]).setVersion(1080).isDeprecated();
-			//addNodeObject(d3d, "3D Combine",		s_node_3d_obj_combine,	"__Node_3D_Combine",	[1, __Node_3D_Combine],, "Combine multiple 3D object to a single scene,").setVersion(1080).isDeprecated();
-			//addNodeObject(d3d, "3D Repeat",			s_node_3d_array,		"__Node_3D_Repeat",		[1, __Node_3D_Repeat], ["3d array"], "Repeat 3D object multiple times.").setVersion(1080).isDeprecated();
-			//addNodeObject(d3d, "3D Displace",		s_node_3d_displace,		"__Node_3D_Displace",	[1, __Node_3D_Displace]).setVersion(1143).isDeprecated();
-			
-			//addNodeObject(d3d, "3D Export",			s_node_3d_export,		"__Node_3D_Export",		[1, __Node_3D_Export]).setVersion(1143).isDeprecated();
 		#endregion
 		
 		var generator = ds_list_create(); #region
