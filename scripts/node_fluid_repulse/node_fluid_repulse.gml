@@ -3,7 +3,7 @@ function Node_Fluid_Repulse(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group)
 	w = 96;
 	min_h = 96;
 	
-	inputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
+	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 0])
@@ -22,7 +22,7 @@ function Node_Fluid_Repulse(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group)
 		["Repulse",	false], 4, 1, 2, 3
 	];
 	
-	outputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
+	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pos = getInputData(1);
@@ -73,6 +73,6 @@ function Node_Fluid_Repulse(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group)
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
-		draw_sprite_fit(s_node_fluidSim_repulse, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_smokeSim_repulse, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

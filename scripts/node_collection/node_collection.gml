@@ -528,7 +528,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static onDoubleClick = function(panel) { #region
-		panel.addContext(self);
+		__temp_panel = panel;
+		
+		if(PREFERENCES.graph_open_group_in_tab)
+			run_in(1, function() { __temp_panel.openGroupTab(self) });
+		else
+			panel.addContext(self);
+		
 		if(ononDoubleClick != noone)
 			ononDoubleClick(panel);
 	} #endregion

@@ -11,7 +11,7 @@
 	prompt	  = "";
 	index     = 0;
 	
-	function activate(textbox) { return;
+	function activate(textbox) { 
 		INLINE
 		self.textbox   = textbox;
 	}

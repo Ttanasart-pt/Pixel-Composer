@@ -44,11 +44,15 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 15] = nodeValue("Scale to fit", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 16] = nodeValue("Render background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 17] = nodeValue("BG Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	
 	input_display_list = [
 		["Output",		true],	9, 6, 10,
 		["Text",		false], 0, 13, 14, 7, 8, 
 		["Font",		false], 1, 2, 15, 3, 11, 12, 
-		["Rendering",	false], 5, 
+		["Rendering",	false], 5, 16, 17, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -79,6 +83,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static step = function() { #region
 		var _dimt = getSingleValue(9);
 		var _path = getSingleValue(13);
+		var _ubg  = getSingleValue(16);
 		
 		var _use_path = _path != noone && struct_has(_path, "getPointDistance");
 		
@@ -88,6 +93,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[|  9].setVisible(!_use_path);
 		inputs[| 14].setVisible( _use_path);
 		inputs[| 15].setVisible(_dimt == 0 && !_use_path);
+		inputs[| 17].setVisible(_ubg);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -106,6 +112,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _path = _data[13];
 		var _pthS = _data[14];
 		var _scaF = _data[15];
+		var _ubg  = _data[16];
+		var _bgc  = _data[17];
 		
 		generateFont(_font, _size, _aa);
 		draw_set_font(font);
@@ -168,6 +176,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		surface_set_shader(_outSurf, noone,, BLEND.alpha);
+			if(_ubg) {
+				draw_clear(_bgc);
+				BLEND_ALPHA_MULP
+			}
+			
 			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
 				var _str_line   = _str_lines[i];
 				var _line_width = _line_widths[i];

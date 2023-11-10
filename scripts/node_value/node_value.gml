@@ -155,7 +155,7 @@ function value_color(i) { #region
 		#ffb5b5, //path
 		#8fde5d, //particle
 		#88ffe9, //rigid
-		#4da6ff, //fdomain
+		#6d6e71, //fdomain
 		#8c3f5d, //struct
 		#ff9166, //strand
 		#c2c2d1, //mesh

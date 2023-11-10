@@ -352,6 +352,15 @@ event_inherited();
 	));
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_graph_group_in_tab", "Open group in new tab"),
+		"graph_open_group_in_tab",
+		new checkBox(function() { 
+			PREFERENCES.graph_open_group_in_tab = !PREFERENCES.graph_open_group_in_tab; 
+			PREF_SAVE();
+		})
+	));
+	
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
 		"graph_zoom_smoooth",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 

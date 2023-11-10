@@ -71,7 +71,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 		selection_block		= 0;
 		nodes_selecting	    = [];
-		nodes_select_drag   = false;
+		nodes_select_drag   = 0;
 		nodes_select_mx     = 0;
 		nodes_select_my     = 0;
 	
@@ -376,16 +376,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		menu_toggle_preview = menuItem(__txtx("panel_graph_toggle_preview", "Toggle node preview"), function() { setTriggerPreview(); },			noone, ["Graph", "Toggle preview"]);
 		menu_toggle_render  = menuItem(__txtx("panel_graph_toggle_render", "Toggle node render"),	function() { setTriggerRender(); },				noone, ["Graph", "Toggle render"]);
 		menu_open_group     = menuItem(__txtx("panel_graph_enter_group", "Open group"),				function() { PANEL_GRAPH.addContext(node_hover); }, THEME.group);
-		menu_open_group_tab = menuItem(__txtx("panel_graph_enter_group_new_tab", "Open group in new tab"), function() {
+		
+		function openGroupTab(group) {
 			var graph = new Panel_Graph(project);
 			panel.setContent(graph, true);
 								
 			for( var i = 0; i < ds_list_size(node_context); i++ ) 
 				graph.addContext(node_context[| i]);
-			graph.addContext(node_hover);
-								
+			graph.addContext(group);
+			
 			setFocus(panel);
-		}, THEME.group);
+		}
+		menu_open_group_tab = menuItem(__txtx("panel_graph_enter_group_new_tab", "Open group in new tab"), function() { openGroupTab(node_hover); }, THEME.group);
 		menu_group_ungroup  = menuItem(__txt("Ungroup"),			function() { doUngroup(); }, THEME.group, ["Graph", "Ungroup"]);
 		menu_group_tool     = menuItem(__txt("Set as group tool"),	function() { node_hover.setTool(!node_hover.isTool); });
 					
@@ -526,6 +528,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	function onFocusBegin() { #region
 		PANEL_GRAPH = self; 
 		PROJECT = project;
+		
+		nodes_select_drag = 0;
 	} #endregion
 	
 	function stepBegin() { #region
@@ -750,7 +754,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			if(node_hovering != noone && pFOCUS && struct_has(node_hovering, "onDoubleClick") && DOUBLE_CLICK) {
 				node_hovering.onDoubleClick(self);
-				DOUBLE_CLICK = false;
+				DOUBLE_CLICK  = false;
 				node_hovering = noone;
 			}
 			
@@ -1055,7 +1059,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		#region draw selection frame
 			if(nodes_select_drag) {
-				if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16) {
+				if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16)
+					nodes_select_drag = 2;
+				
+				if(nodes_select_drag == 2) {
 					draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
 					
 					for(var i = 0; i < ds_list_size(nodes_list); i++) {
@@ -1076,7 +1083,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			
 				if(mouse_release(mb_left))
-					nodes_select_drag = false;
+					nodes_select_drag = 0;
 			}
 			
 			if(nodes_junction_d != noone) {
@@ -1101,7 +1108,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					nodes_junction_dx	= junction_hovering.draw_line_shift_x;
 					nodes_junction_dy	= junction_hovering.draw_line_shift_y;
 				} else if(array_empty(nodes_selecting) && !value_focus && !drag_locking) {
-					nodes_select_drag = true;
+					nodes_select_drag = 1;
 					nodes_select_mx = mx;
 					nodes_select_my = my;
 				}
@@ -1466,14 +1473,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	function resetContext() { #region
 		ds_list_clear(node_context);
-		title = __txt("Graph");
 		nodes_list = project.nodes;
 		toCenterNode();
 	} #endregion
 	
 	function addContext(node) { #region
-		title = node.display_name == ""? node.name : node.display_name;
-		
 		var _node = node.getNodeBase();
 		setContextFrame(false, _node);
 		
@@ -1506,6 +1510,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		dragGraph();
 		
 		var context = getCurrentContext();
+		if(context != noone) title += " > " + (context.display_name == ""? context.name : context.display_name);
+		
 		bg_color = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.getColor(), 0.05);
 		draw_clear(bg_color);
 		drawGrid();

@@ -1,11 +1,11 @@
 function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) constructor {
-	name  = "Add Fluid";
-	color = COLORS.node_blend_fluid;
-	icon  = THEME.fluid_sim;
+	name  = "Add Emitter";
+	color = COLORS.node_blend_smoke;
+	icon  = THEME.smoke_sim;
 	w = 96;
 	min_h = 96;
 	
-	inputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
+	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Fluid brush", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
@@ -34,7 +34,7 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 	
 	_prevPos = noone;
 	
-	outputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
+	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
 	temp_surface = [ surface_create(1, 1) ];
 	

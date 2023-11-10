@@ -46,6 +46,7 @@
 	PREFERENCES.expand_hover					= false;
 	
 	PREFERENCES.graph_zoom_smoooth				= 4;
+	PREFERENCES.graph_open_group_in_tab			= false;
 	
 	PREFERENCES.theme							= "default";
 	PREFERENCES.local							= "en";

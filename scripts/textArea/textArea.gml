@@ -365,7 +365,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
 				cursor_select	= 0;
 				cursor			= string_length(_input_text);
-			} else if(key_mod_press(CTRL) && keyboard_check_pressed(ord("Z"))) {
+			} else if(key_mod_press(CTRL) && !key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// UNDO
 				if(!ds_stack_empty(undo_stack)) {
 					ds_stack_push(redo_stack, _input_text);
 					_input_text = ds_stack_pop(undo_stack);
@@ -377,7 +377,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					undoed     = false;
 					undo_delay = 10;
 				}
-			} else if(key_mod_press(CTRL) && key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {
+			} else if(key_mod_press(CTRL) && key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// REDO
 				if(!ds_stack_empty(redo_stack)) {
 					ds_stack_push(undo_stack, _input_text);
 					_input_text = ds_stack_pop(redo_stack);

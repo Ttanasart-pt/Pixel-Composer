@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "fluidSim",
-    "path": "folders/nodes/data/simulation/fluidSim.yy",
+    "name": "smokeSim",
+    "path": "folders/nodes/data/simulation/smokeSim.yy",
   },
 }

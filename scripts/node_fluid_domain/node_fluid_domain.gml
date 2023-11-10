@@ -1,7 +1,7 @@
 function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) constructor {
-	name  = "Fluid Domain";
-	color = COLORS.node_blend_fluid;
-	icon  = THEME.fluid_sim;
+	name  = "Domain";
+	color = COLORS.node_blend_smoke;
+	icon  = THEME.smoke_sim;
 	
 	min_h = 128;
 	
@@ -39,7 +39,7 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	
 	inputs[| 11] = nodeValue("Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	outputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
+	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 11, 1,

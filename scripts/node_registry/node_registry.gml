@@ -214,26 +214,26 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(rigidSim, "Rigidbody Override",	s_node_rigid_override,	"Node_Rigid_Override",		[1, Node_Rigid_Override]).hideRecent().setVersion(1120);
 		#endregion
 		
-		var fluidSim = ds_list_create(); #region
-		addNodeCatagory("FluidSim", fluidSim, ["Node_Fluid_Group"]);
-			ds_list_add(fluidSim, "Group");
-			addNodeObject(fluidSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent();
-			addNodeObject(fluidSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent();
-			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render_output,	"Node_Fluid_Render_Output",	[1, Node_Fluid_Render_Output]).hideRecent().setVersion(11540);
+		var smokeSim = ds_list_create(); #region
+		addNodeCatagory("SmokeSim", smokeSim, ["Node_Fluid_Group"]);
+			ds_list_add(smokeSim, "Group");
+			addNodeObject(smokeSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent();
+			addNodeObject(smokeSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent();
+			addNodeObject(smokeSim, "Render Domain",	s_node_smokeSim_render_output,	"Node_Fluid_Render_Output",	[1, Node_Fluid_Render_Output]).hideRecent().setVersion(11540);
 			
-			ds_list_add(fluidSim, "Domain");
-			addNodeObject(fluidSim, "Fluid Domain",		s_node_fluidSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).hideRecent().setVersion(1120);
-			addNodeObject(fluidSim, "Update Domain",	s_node_fluidSim_update,			"Node_Fluid_Update",		[1, Node_Fluid_Update]).hideRecent().setVersion(1120);
-			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render,			"Node_Fluid_Render",		[1, Node_Fluid_Render]).hideRecent().setVersion(1120);
-			addNodeObject(fluidSim, "Queue Domain",		s_node_fluidSim_domain_queue,	"Node_Fluid_Domain_Queue",	[1, Node_Fluid_Domain_Queue]).hideRecent().setVersion(1120);
+			ds_list_add(smokeSim, "Domain");
+			addNodeObject(smokeSim, "Domain",			s_node_smokeSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Update Domain",	s_node_smokeSim_update,			"Node_Fluid_Update",		[1, Node_Fluid_Update]).hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Render Domain",	s_node_smokeSim_render,			"Node_Fluid_Render",		[1, Node_Fluid_Render]).hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Queue Domain",		s_node_smokeSim_domain_queue,	"Node_Fluid_Domain_Queue",	[1, Node_Fluid_Domain_Queue]).hideRecent().setVersion(1120);
 			
-			ds_list_add(fluidSim, "Fluid");
-			addNodeObject(fluidSim, "Add Fluid",		s_node_fluidSim_add_fluid,		"Node_Fluid_Add",				[1, Node_Fluid_Add]).hideRecent().setVersion(1120);
-			addNodeObject(fluidSim, "Apply Velocity",	s_node_fluidSim_apply_velocity,	"Node_Fluid_Apply_Velocity",	[1, Node_Fluid_Apply_Velocity]).hideRecent().setVersion(1120);
-			addNodeObject(fluidSim, "Add Collider",		s_node_fluidSim_add_collider,	"Node_Fluid_Add_Collider",		[1, Node_Fluid_Add_Collider]).hideRecent().setVersion(1120);
-			addNodeObject(fluidSim, "Vortex",			s_node_fluidSim_vortex,			"Node_Fluid_Vortex",			[1, Node_Fluid_Vortex]).hideRecent().setVersion(1120);
-			addNodeObject(fluidSim, "Repulse",			s_node_fluidSim_repulse,		"Node_Fluid_Repulse",			[1, Node_Fluid_Repulse]).hideRecent().setVersion(1120);
-			addNodeObject(fluidSim, "Turbulence",		s_node_fluidSim_turbulence,		"Node_Fluid_Turbulence",		[1, Node_Fluid_Turbulence]).hideRecent().setVersion(1120);
+			ds_list_add(smokeSim, "Smoke");
+			addNodeObject(smokeSim, "Add Emitter",		s_node_smokeSim_emitter,		"Node_Fluid_Add",				[1, Node_Fluid_Add]).hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Apply Velocity",	s_node_smokeSim_apply_velocity,	"Node_Fluid_Apply_Velocity",	[1, Node_Fluid_Apply_Velocity]).hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Add Collider",		s_node_smokeSim_add_collider,	"Node_Fluid_Add_Collider",		[1, Node_Fluid_Add_Collider]).hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Vortex",			s_node_smokeSim_vortex,			"Node_Fluid_Vortex",			[1, Node_Fluid_Vortex]).hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Repulse",			s_node_smokeSim_repulse,		"Node_Fluid_Repulse",			[1, Node_Fluid_Repulse]).hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Turbulence",		s_node_smokeSim_turbulence,		"Node_Fluid_Turbulence",		[1, Node_Fluid_Turbulence]).hideRecent().setVersion(1120);
 		#endregion
 		
 		var strandSim = ds_list_create(); #region
@@ -472,7 +472,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(generator, "VFX",					s_node_vfx,					"Node_VFX_Group",			[1, Node_VFX_Group],, "Create VFX group, which generate particles that can be manipulated using different force nodes.");
 			addNodeObject(generator, "RigidSim",			s_node_rigidSim,			"Node_Rigid_Group",			[1, Node_Rigid_Group],, "Create group for rigidbody simulation.").setVersion(1110);
 			addNodeObject(generator, "RigidSim Global",		s_node_rigidSim_global,		"Node_Rigid_Global",		[1, Node_Rigid_Global]).setVersion(1110);
-			addNodeObject(generator, "FluidSim",			s_node_fluidSim_group,		"Node_Fluid_Group",			[1, Node_Fluid_Group],, "Create group for fluid simulation.").setVersion(1120);
+			addNodeObject(generator, "SmokeSim",			s_node_smokeSim_group,		"Node_Fluid_Group",			[1, Node_Fluid_Group],, "Create group for fluid simulation.").setVersion(1120);
 			addNodeObject(generator, "StrandSim",			s_node_strandSim,			"Node_Strand_Group",		[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140);
 			
 			ds_list_add(generator, "Region");

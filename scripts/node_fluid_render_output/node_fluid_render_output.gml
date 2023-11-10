@@ -1,7 +1,7 @@
 function Node_Fluid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y, _group) constructor {
 	name  = "Render Domain";
-	color = COLORS.node_blend_fluid;
-	icon  = THEME.fluid_sim;
+	color = COLORS.node_blend_smoke;
+	icon  = THEME.smoke_sim;
 	use_cache = CACHE_USE.auto;
 	
 	w = 128;
@@ -9,7 +9,7 @@ function Node_Fluid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	min_h = h;
 	previewable = true;
 	
-	inputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
+	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)

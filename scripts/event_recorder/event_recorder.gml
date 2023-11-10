@@ -246,9 +246,9 @@ function Action(_type, _object, _data) constructor {
 }
 
 function recordAction(_type, _object, _data = -1) { #region
-	if(IS_UNDOING)		return;
-	if(LOADING)			return;
-	if(UNDO_HOLDING)	return;
+	if(IS_UNDOING)		return noone;
+	if(LOADING)			return noone;
+	if(UNDO_HOLDING)	return noone;
 	
 	var act = new Action(_type, _object, _data);
 	array_push(o_main.action_last_frame, act);
@@ -261,6 +261,18 @@ function recordAction(_type, _object, _data = -1) { #region
 	
 	PANEL_MENU.undoUpdate();
 	return act;
+} #endregion
+
+function mergeAction(act) { #region
+	if(ds_stack_empty(UNDO_STACK)) {
+		ds_stack_push(UNDO_STACK, [ act ]);
+		PANEL_MENU.undoUpdate();
+		return;
+	}
+	
+	var _top = ds_stack_pop(UNDO_STACK);
+	array_push(_top, act);
+	ds_stack_push(UNDO_STACK, _top);
 } #endregion
 
 function UNDO() { #region

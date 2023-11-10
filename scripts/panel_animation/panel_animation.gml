@@ -1505,13 +1505,12 @@ function Panel_Animation() : PanelContent() constructor {
 								
 					if(mouse_release(mb_left) || mouse_press(mb_left)) {
 						keyframe_dragging = noone;
+						UNDO_HOLDING = false;
 						
 						for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 							var k  = keyframe_selecting[i];
 							k.anim.setKeyTime(k, k.time, true, true);
 						}
-						
-						UNDO_HOLDING = false;
 					}
 				} else {
 					var dx = abs((keyframe_dragging.time + 1) - (mx - bar_x - timeline_shift) / ui(timeline_scale)) / 2;

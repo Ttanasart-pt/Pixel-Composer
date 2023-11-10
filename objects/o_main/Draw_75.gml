@@ -54,7 +54,7 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 				draw_tooltip_text("[" + __txt("Path Object") + "]");
 				break;
 			case VALUE_TYPE.fdomain :
-				draw_tooltip_text("[" + __txt("Fluid Domain") + " (id: " + string(content) + ")]");
+				draw_tooltip_text("[" + __txt("Domain") + " (id: " + string(content) + ")]");
 				break;
 			case VALUE_TYPE.strands :
 				var txt = __txt("Strands Object");

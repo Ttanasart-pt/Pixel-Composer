@@ -5,11 +5,14 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	inputs[| in_d3d + 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Mesh, noone)
 		.setVisible(true, true);
 	
+	inputs[| in_d3d + 1] = nodeValue("Target subobject", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1)
+		.setArrayDepth(1);
+	
 	outputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Mesh, noone);
 	
 	input_display_list = [ 
 		["Transform", false], 0, 1, 2,
-		in_d3d + 0,
+		["UV",		  false], in_d3d + 0, in_d3d + 1,
 	];
 	
 	remap_position = [ 0, 0, 0 ];
@@ -27,8 +30,15 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 		_obj.transform.clearMatrix();
 		
 		var _mat = _matrix.Mul(_obj.transform.matrix);
+		var _fil = _data[in_d3d + 1];
+		if(_fil != -1 && !is_array(_fil)) _fil = [ _fil ];
 		
 		for( var i = 0, n = array_length(_object.VB); i < n; i++ ) {
+			if(_fil != -1 && !array_exists(_fil, i)) {
+				_obj.VB[i] = _object.VB[i];
+				continue;
+			}
+			
 			var vb   = _object.VB[i];
 			var len  = vertex_get_number(vb);
 			var buff = buffer_create_from_vertex_buffer(vb, buffer_grow, 1);

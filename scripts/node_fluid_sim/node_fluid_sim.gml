@@ -1,9 +1,9 @@
 #macro FLUID_DOMAIN_CHECK if(!is_instanceof(group, Node_Fluid_Group)) return; if(!instance_exists(_dom)) _dom = group.domain; if(_dom == noone || !instance_exists(_dom)) return;
 
 function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
-	name  = "FluidSim";
-	color = COLORS.node_blend_fluid;
-	icon  = THEME.fluid_sim;
+	name  = "SmokeSim";
+	color = COLORS.node_blend_smoke;
+	icon  = THEME.smoke_sim;
 	
 	ungroupable = false;
 	update_on_frame = true;

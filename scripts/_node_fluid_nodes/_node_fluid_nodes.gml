@@ -1,6 +1,6 @@
 function Node_Fluid(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	color = COLORS.node_blend_fluid;
-	icon  = THEME.fluid_sim;
+	color = COLORS.node_blend_smoke;
+	icon  = THEME.smoke_sim;
 	update_on_frame = true;
 	
 	static updateForward = function(frame = CURRENT_FRAME, _update = true) {

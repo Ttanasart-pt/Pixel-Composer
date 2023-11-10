@@ -17,7 +17,7 @@ event_inherited();
 	destroy_on_escape    = false;
 	destroy_on_click_out = false;
 	
-	function activate(textbox) { return;
+	function activate(textbox) { 
 		INLINE
 		self.textbox   = textbox;
 		self.selecting = 0;

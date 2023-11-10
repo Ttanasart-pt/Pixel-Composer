@@ -17,7 +17,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	data_type_list = [	"Integer",		"Float",	"Boolean",	"Color",	"Surface", 
 						"File Path",	"Curve",	"Text",		"Object",	"Node", 
 						"3D object",	"Any",		"Path",		"Particle", "Rigidbody Object", 
-						"Fluid Domain", "Struct",	"Strands",	"Mesh",		"Trigger",
+						"Domain", "Struct",	"Strands",	"Mesh",		"Trigger",
 					 ];
 	
 	data_type_map  = [	VALUE_TYPE.integer,		VALUE_TYPE.float,	VALUE_TYPE.boolean,		VALUE_TYPE.color,		VALUE_TYPE.surface, 

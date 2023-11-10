@@ -4,7 +4,7 @@ function Node_Fluid_Domain_Queue(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 	
 	w = 96;
 	
-	outputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
+	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
@@ -52,6 +52,6 @@ function Node_Fluid_Domain_Queue(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
-		draw_sprite_fit(s_node_fluidSim_domain_queue, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_smokeSim_domain_queue, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }
