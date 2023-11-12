@@ -154,6 +154,7 @@
     {"name":"pixel builder","order":149,"path":"folders/nodes/icons/pixel builder.yy",},
     {"name":"render","order":140,"path":"folders/nodes/icons/render.yy",},
     {"name":"rigidSim","order":146,"path":"folders/nodes/icons/rigidSim.yy",},
+    {"name":"smokeSim","order":150,"path":"folders/nodes/icons/smokeSim.yy",},
     {"name":"strandSim","order":148,"path":"folders/nodes/icons/strandSim.yy",},
     {"name":"transform","order":145,"path":"folders/nodes/icons/transform.yy",},
     {"name":"value","order":144,"path":"folders/nodes/icons/value.yy",},
@@ -224,7 +225,6 @@
     {"name":"button","order":34,"path":"folders/widgets/button.yy",},
     {"name":"rotator","order":35,"path":"folders/widgets/rotator.yy",},
     {"name":"text","order":36,"path":"folders/widgets/text.yy",},
-    {"name":"smokeSim","order":150,"path":"folders/nodes/icons/smokeSim.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},

@@ -2,6 +2,7 @@
 /// @param {Struct.Project}
 function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	title = __txt("Graph");
+	title_raw   = "";
 	context_str = "Graph";
 	icon  = THEME.panel_graph;
 	
@@ -542,6 +543,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		mouse_grid_x = round(m_x / project.graphGrid.size) * project.graphGrid.size;
 		mouse_grid_y = round(m_y / project.graphGrid.size) * project.graphGrid.size;
+		
+		setTitle();
 	} #endregion
 	
 	function focusNode(_node) { #region
@@ -1284,9 +1287,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							ds_list_delete(node_context, j);
 						nodes_list = node_context[| i].getNodeList();
 						toCenterNode();
-						
-						var node = getCurrentContext();
-						title = node.display_name == ""? node.name : node.display_name;
 						break;
 					}
 				}
@@ -1501,16 +1501,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		context_frame_ey = context_frame_sy + 16;
 	} #endregion
 	
+	function setTitle() { #region
+		title = title_raw + (project.modified? "*" : "");
+	} #endregion
+	
 	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
 		if(!project.active) return;
-		if(project.path == "")	title = "New project";
-		else					title = filename_name_only(project.path);
-		title += project.modified? "*" : "";
 		
+		if(project.path == "")	title_raw = "New project";
+		else					title_raw = filename_name_only(project.path);
 		dragGraph();
 		
 		var context = getCurrentContext();
-		if(context != noone) title += " > " + (context.display_name == ""? context.name : context.display_name);
+		if(context != noone) title_raw += " > " + (context.display_name == ""? context.name : context.display_name);
 		
 		bg_color = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.getColor(), 0.05);
 		draw_clear(bg_color);

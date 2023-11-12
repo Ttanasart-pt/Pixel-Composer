@@ -297,7 +297,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function stepBegin() { #region
 		var con = getContent();
-		if(con) con.panelStepBegin(self);
+		for( var i = 0, n = array_length(content); i < n; i++ ) 
+			content[i].panelStepBegin(self);
 		
 		if(o_main.panel_dragging != noone) dragging = -1;
 		
@@ -385,19 +386,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				if(FOCUS == self && con) 
 					FOCUS_STR = con.context_str;
 			} else {
-				for(var i = 0; i < ds_list_size(childs); i++) {
-					var _panel = childs[| i];
-					_panel.stepBegin();
-				}
+				for(var i = 0; i < ds_list_size(childs); i++)
+					childs[| i].stepBegin();
 			}
 		}
 	} #endregion
 	
 	static step = function() { #region
-		for(var i = 0; i < ds_list_size(childs); i++) {
-			var _panel = childs[| i];
-			_panel.step();
-		}
+		for(var i = 0; i < ds_list_size(childs); i++)
+			childs[| i].step();
 	} #endregion
 	
 	static draw = function() { #region

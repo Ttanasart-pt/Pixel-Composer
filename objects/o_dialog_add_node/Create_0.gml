@@ -371,15 +371,7 @@ event_inherited();
 			return 0;
 		}
 		
-		var node_count = ds_list_size(_list);
-		
-		//if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && array_length(global.FAV_NODES) == 0) {
-		//	draw_set_text(f_h3, fa_center, fa_bottom, COLORS._main_text_sub);
-		//	draw_text(content_pane.w / 2, content_pane.h / 2 - ui(8), "No favorites");
-			
-		//	draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
-		//	draw_text(content_pane.w / 2, content_pane.h / 2 - ui(4), "Right click on a node and select 'Add to favorite'\nto add node to favorite panel.");
-		//}
+		var node_count   = ds_list_size(_list);
 		var group_labels = [];
 			
 		if(PREFERENCES.dialog_add_node_view == 0) { //grid
@@ -422,18 +414,17 @@ event_inherited();
 				
 				var _nx   = grid_space + (grid_width + grid_space) * cProg;
 				var _boxx = _nx + (grid_width - grid_size) / 2;
+				var cc    = c_white;
 				
-				BLEND_OVERRIDE;
-				if(is_instanceof(_node, NodeObject))
-					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-				else if(is_instanceof(_node, NodeAction))
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_action, 1);
-				else if(is_instanceof(_node, AddNodeItem))
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_generic, 1);
-				else
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection, 1);
-				BLEND_NORMAL;
-						
+				if(is_instanceof(_node, NodeObject))		cc = c_white;
+				else if(is_instanceof(_node, NodeAction))	cc = COLORS.add_node_blend_action;
+				else if(is_instanceof(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
+				else										cc = COLORS.dialog_add_node_collection;
+				
+				BLEND_OVERRIDE
+				draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, cc, 1);
+				BLEND_NORMAL
+				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, sFOCUS))
@@ -477,10 +468,12 @@ event_inherited();
 					if(fav) draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(10), yy + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
 				}
 				
-				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _node.getName(), -1, grid_width);
+				var _name = _node.getName();
 				
-				var name_height = string_height_ext(_node.getName(), -1, grid_width) + 8;
+				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
+				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _name, -1, grid_width);
+				
+				var name_height = string_height_ext(_name, -1, grid_width - 4) + 8;
 				curr_height = max(curr_height, grid_size + grid_space + name_height);
 				
 				if(++cProg >= col) {
