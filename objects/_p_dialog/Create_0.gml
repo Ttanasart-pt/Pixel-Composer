@@ -1,4 +1,8 @@
 /// @description init
+#macro DIALOG_PAD 8
+#macro DIALOG_DRAW_BG    draw_sprite_stretched(THEME.dialog_bg, 0, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16);
+#macro DIALOG_DRAW_FOCUS draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, COLORS._main_accent, 1);
+
 #region data
 	with(_p_dialog) other.depth = min(depth - 1, other.depth);
 	

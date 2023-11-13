@@ -7,9 +7,9 @@ draw_rectangle(0, 0, WIN_W, WIN_H, false);
 draw_set_alpha(1);
 
 #region base UI
-	draw_sprite_stretched(THEME.dialog_bg, 0, dialog_x, dialog_y, dialog_w, dialog_h);
+	DIALOG_DRAW_BG
 	if(sFOCUS)
-		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
+		DIALOG_DRAW_FOCUS
 #endregion
 
 #region text

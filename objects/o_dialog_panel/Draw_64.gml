@@ -6,7 +6,7 @@ if !ready exit;
 	var m_in = point_in_rectangle(mouse_mx, mouse_my, dialog_x + p, dialog_y + p, dialog_x + dialog_w - p, dialog_y + dialog_h - p);
 	var m_ot = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
 	
-	draw_sprite_stretched(THEME.dialog_bg, 0, dialog_x, dialog_y, dialog_w, dialog_h);
+	DIALOG_DRAW_BG
 #endregion
 
 #region content
@@ -68,7 +68,7 @@ if !ready exit;
 		destroy_on_click_out = !destroy_on_click_out;
 	
 	if(sFOCUS) {
-		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
+		DIALOG_DRAW_FOCUS
 		
 		if(!m_in && m_ot) {
 			draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, c_white, 0.4);

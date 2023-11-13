@@ -97,7 +97,7 @@ event_inherited();
 			var _gradient = GRADIENTS[i];
 			var isHover   = point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg);
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, ui(4), yy, sp_preset_w - ui(16), hg);
 			if(_hover && isHover) 
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), hg, COLORS._main_accent, 1);
 				
@@ -162,7 +162,7 @@ event_inherited();
 			
 			var isHover = _hover && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_palette_w - ui(16), yy + _height);
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_palette_w - ui(16), _height);
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, ui(4), yy, sp_palette_w - ui(16), _height);
 			if(isHover) 
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_palette_w - ui(16), _height, COLORS._main_accent, 1);
 			

@@ -70,11 +70,10 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				var hover = pHOVER && point_in_rectangle(_m[0], _m[1], 0, by, ww, by + hh);
 				
-				if(_addon.open)
-					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, by, ww, hh, COLORS._main_icon, 1);
+				if(_addon.open) draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, 0, by, ww, hh, COLORS._main_icon_light, 1);
 					
-				var cc = merge_color(COLORS._main_icon_light, COLORS._main_icon, hover? 0 : 0.25);
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, by, ww, hg, cc, 1);
+				var cc = hover? c_white : COLORS._main_icon_light;
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, 0, by, ww, hg, cc, 1);
 				
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(44), by + hg / 2, _addon.name);

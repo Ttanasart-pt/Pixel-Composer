@@ -264,12 +264,12 @@ event_inherited();
 			var name = "";
 			
 			if(i == -1) {
-				draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
+				//draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
 				name = "All";
 			} else {
 				var cat = category[| i];
 				name = cat.name;
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+				//draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			
 				if(array_length(cat.filter)) {
 					if(!array_exists(cat.filter, context)) {
@@ -283,7 +283,7 @@ event_inherited();
 			
 			BLEND_OVERRIDE;
 			if(i == ADD_NODE_PAGE) {
-				draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, _y + hh, category_width - ui(32), hg);
+				//draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, _y + hh, category_width - ui(32), hg);
 			} else if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, category_width - ui(32), _y + hh + hg - 1)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, category_width - ui(32), hg, CDEF.main_white, 1);
 				if(mouse_click(mb_left, sFOCUS)) {
@@ -294,6 +294,9 @@ event_inherited();
 				}
 			}
 			BLEND_NORMAL;
+			
+			if(i == ADD_NODE_PAGE) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
+			else				   draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 			
 			name = __txt(name);
 			draw_text(ui(8), _y + hh + hg / 2, name);

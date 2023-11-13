@@ -74,7 +74,7 @@ function Panel_Menu() : PanelContent() constructor {
 			else
 				gameframe_set_fullscreen(2);
 		},, ["", "Fullscreen"]),
-		menuItem(__txt("Close current file"), function() { PANEL_GRAPH.close(); },, [ "", "Close file" ]),
+		menuItem(__txt("Close current project"), function() { PANEL_GRAPH.close(); },, [ "", "Close file" ]),
 		menuItem(__txt("Close all projects"), function() { for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]); },, [ "", "Close all" ]),
 		menuItem(__txt("Close program"), function() { window_close(); },, [ "", "Close program" ]),
 	];
@@ -88,13 +88,6 @@ function Panel_Menu() : PanelContent() constructor {
 		menuItem(__txtx("panel_menu_help_wiki", "Community Wiki"), function() {
 			url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki");
 		}, THEME.wiki),
-		//-1,
-		//menuItem(__txtx("panel_menu_itch", "itch.io page"), function() {
-		//	url_open("https://makham.itch.io/pixel-composer");
-		//}, THEME.itch),
-		//menuItem(__txtx("panel_menu_steam", "Steam page"), function() {
-		//	url_open("https://store.steampowered.com/app/2299510/Pixel_Composer");
-		//}, THEME.steam),
 		-1, 
 		menuItem(__txtx("panel_menu_local_directory", "Open local directory"), function() {
 			shellOpenExplorer(DIRECTORY);

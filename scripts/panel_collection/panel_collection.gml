@@ -314,8 +314,8 @@ function Panel_Collection() : PanelContent() constructor {
 	}); #endregion
 	
 	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) { #region
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), 0, folderPane.surface_w - ui(8), folderPane.surface_h);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		//draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), 0, folderPane.surface_w - ui(8), folderPane.surface_h);
 		var hh = ui(8);
 		_y += ui(8);
 		
@@ -352,7 +352,7 @@ function Panel_Collection() : PanelContent() constructor {
 	} #endregion
 	
 	function drawContent(panel) { #region
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var content_y = ui(48);
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);

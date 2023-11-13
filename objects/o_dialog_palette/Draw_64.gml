@@ -17,11 +17,14 @@ if palette == 0 exit;
 	var content_x = dialog_x + presets_w + ui(16);
 	var content_w = dialog_w - presets_w - ui(16);
 	
-	draw_sprite_stretched(THEME.dialog_bg, 0, presets_x, dialog_y, presets_w, dialog_h);
-	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, presets_x, dialog_y, presets_w, dialog_h, COLORS._main_accent, 1);
+	var p  = DIALOG_PAD;
+	var p2 = DIALOG_PAD * 2;
 	
-	draw_sprite_stretched(THEME.dialog_bg, 0, content_x, dialog_y, content_w, dialog_h);
-	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, content_x, dialog_y, content_w, dialog_h, COLORS._main_accent, 1);
+	draw_sprite_stretched(THEME.dialog_bg, 0, presets_x - p, dialog_y - p, presets_w + p2, dialog_h + p2);
+	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, presets_x - p, dialog_y - p, presets_w + p2, dialog_h + p2, COLORS._main_accent, 1);
+	
+	draw_sprite_stretched(THEME.dialog_bg, 0, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2);
+	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(presets_x + ui(24), dialog_y + ui(16), __txt("Presets"));
@@ -31,7 +34,7 @@ if palette == 0 exit;
 #endregion
 
 #region presets
-	draw_sprite_stretched(THEME.ui_panel_bg, 0, presets_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, presets_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
 	
 	sp_presets.setFocusHover(sFOCUS, sHOVER);
 	sp_presets.draw(presets_x + ui(24), dialog_y + ui(44));

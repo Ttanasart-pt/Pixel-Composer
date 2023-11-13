@@ -35,7 +35,7 @@ event_inherited();
 	sections = array_create(array_length(page));
 	
 	sp_page = new scrollPane(page_width - ui(4), dialog_h - ui(title_height + padding), function(_y, _m, _r) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var ww = sp_page.surface_w;
 		var hh = 0;
 		
@@ -44,11 +44,13 @@ event_inherited();
 		var hs = line_get_height(f_p1, 8);
 		
 		for(var i = 0; i < array_length(page); i++) {
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+			if(i == page_current) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
+			else                  draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
+				
 			if(i == page_current) {
-				draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, yl, ww, hg);
+				//draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, yl, ww, hg);
 			} else if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hg)) {
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yl, ww, hg, c_white, 0.75);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yl, ww, hg, CDEF.main_white, 1);
 				if(mouse_click(mb_left, sFOCUS)) {
 					page_current = i;
 					sp_pref.setScroll(0);
@@ -490,7 +492,8 @@ event_inherited();
 			}
 			
 			if(ind % 2 == 0)
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_colors.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, 
+					sp_colors.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 					
 			var keyStr = string_replace_all(key, "_", " ");
 			keyStr = string_replace(keyStr, cat + " ", "");
@@ -559,7 +562,7 @@ event_inherited();
 	hk_editing = noone;
 	
 	sp_hotkey = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var padd		= ui(8);
 		var hh			= ui(8);
 		var currGroup	= noone;

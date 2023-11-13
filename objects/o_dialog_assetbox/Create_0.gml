@@ -41,16 +41,16 @@ event_inherited();
 #endregion
 
 #region surface
-	folderW = ui(204);
+	folderW = ui(200);
 	folderW_dragging = false;
 	folderW_drag_mx = 0;
 	folderW_drag_sx = 0;
 	
-	content_w = dialog_w - ui(34) - folderW;
+	content_w = dialog_w - ui(38) - folderW;
 	content_h = dialog_h - ui(32);
 	
 	function onResize() {
-		content_w = dialog_w - ui(34) - folderW;
+		content_w = dialog_w - ui(38) - folderW;
 		content_h = dialog_h - ui(32);
 		
 		contentPane.resize(content_w, content_h);
