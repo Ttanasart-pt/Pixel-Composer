@@ -4,7 +4,7 @@ function drawWidgetInit() {
 	visi_hold     = noone;
 	
 	min_w = ui(160);
-	lineBreak = true;
+	lineBreak = PREFERENCES.inspector_view_default;
 }
 
 function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0) { 
@@ -12,13 +12,23 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var xc	  = xx + ww / 2;
 	var _font = lineBreak? f_p0 : f_p1;
 	
+	var breakLine = lineBreak || jun.expUse;
 	var lb_h = line_get_height(_font) + ui(8);
 	var lb_y = yy + lb_h / 2;
 	
-	var breakLine = lineBreak || jun.expUse;
-	if(jun.type == VALUE_TYPE.text) breakLine = true;
-	
 	var _name = jun.getName();
+	var wid   = jun.editWidget;
+	
+	switch(instanceof(wid)) { #region
+		case "textArea" : 
+		case "paddingBox" : 
+		case "areaBox" : 
+		case "controlPointBox" : 
+		case "cornerBox" : 
+		case "rotatorRandom" : 
+		case "rotatorRange" : 
+			breakLine = true;
+	} #endregion
 	
 	var butx = xx;
 	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) { #region animation
@@ -217,7 +227,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 	var widH	= breakLine? editBoxH : 0;
 	var mbRight	= true;
-	var wid     = jun.editWidget;
 	
 	if(jun.expUse) { #region expression editor
 		var expValid = jun.expTree != noone && jun.expTree.validate();
@@ -257,8 +266,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				switch(jun.display_type) {
 					case VALUE_DISPLAY.padding : param.h = ui(192); break;
 					case VALUE_DISPLAY.corner :  param.h = ui(192); break;
-					case VALUE_DISPLAY.area :	 
-						param.h = ui(204); 
+					case VALUE_DISPLAY.area :	 param.h = ui(204); break;
+					case VALUE_DISPLAY.rotation :
+						param.halign = breakLine? fa_center : fa_left;
 						break;
 				}
 				break;
@@ -266,15 +276,20 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			case VALUE_TYPE.boolean : 
 				param.halign = breakLine? fa_left : fa_center;
 				param.s      = breakLine? ui(24)  : editBoxH;
+				
+				if(!breakLine) {
+					param.w = ui(128);
+					param.x = param.x + editBoxW - param.w;
+				}
 				break;
 				
 			case VALUE_TYPE.d3Material : 
 			case VALUE_TYPE.surface : 
-				param.h = ui(96); 
+				param.h = breakLine? ui(96) : ui(48);
 				break;
 				
 			case VALUE_TYPE.curve :   
-				param.h = ui(160);
+				param.h = breakLine? ui(160) : ui(100);
 				if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + param.h))
 					mbRight = false;
 				break;

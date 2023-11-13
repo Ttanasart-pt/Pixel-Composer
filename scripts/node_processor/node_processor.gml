@@ -255,17 +255,20 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getInputs = function() { #region
 		preGetInputs();
 		
-		process_amount	= 1;
-		inputs_data		= array_verify(inputs_data,		ds_list_size(inputs));
-		inputs_is_array	= array_verify(inputs_is_array, ds_list_size(inputs));
-		process_length  = array_verify(process_length,	ds_list_size(inputs));
+		var _len = ds_list_size(inputs);
 		
-		for(var i = 0; i < ds_list_size(inputs); i++) {
+		process_amount	= 1;
+		inputs_data		= array_verify(inputs_data,		_len);
+		inputs_is_array	= array_verify(inputs_is_array, _len);
+		process_length  = array_verify(process_length,	_len);
+		all_inputs      = array_verify(all_inputs,		_len);
+		
+		for(var i = 0; i < _len; i++) {
 			var val = inputs[| i].getValue();
 			var amo = inputs[| i].arrayLength(val);
 			
-			if(amo == 0) val = noone;		//empty array
-			if(amo == 1) val = val[0];		//spread single array
+			if(amo == 0)      val = noone;		//empty array
+			else if(amo == 1) val = val[0];		//spread single array
 			amo = max(1, amo);
 			
 			setInputData(i, val);
@@ -287,16 +290,16 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		var amoMax = process_amount;
-		for( var i = 0, n = array_length(process_length); i < n; i++ ) {
+		for( var i = 0; i < _len; i++ ) {
 			amoMax /= process_length[i][0];
 			process_length[i][1] = amoMax;
 		}
 		
-		for(var i = 0; i < ds_list_size(inputs); i++)
-			all_inputs[i] = array_create(process_amount);
+		for(var i = 0; i < _len; i++)
+			all_inputs[i] = array_verify(all_inputs[i], process_amount);
 		
 		for(var l = 0; l < process_amount; l++) #region input preparation
-		for(var i = 0; i < ds_list_size(inputs); i++) { 
+		for(var i = 0; i < _len; i++) { 
 			var _in = inputs_data[i];
 				
 			if(!inputs_is_array[i]) {

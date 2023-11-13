@@ -15,6 +15,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	tb_value.slidable = true;
 	tb_value.slide_speed = 1;
 	
+	halign = fa_center;
+	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
 		tb_value.interactable = interactable;
@@ -25,6 +27,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
+		halign = params.halign;
 		return draw(params.x, params.y, params.w, params.data, params.m);
 	}
 	
@@ -34,18 +37,22 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		w = _w;
 		h = ui(64);
 		
-		_x += _w / 2;
+		var _r = ui(28);
+		
+		switch(halign) {
+			case fa_left :   _x += _r; break;
+			case fa_center : _x += _w / 2; break;
+		}
 		
 		if(!is_real(_data)) return;
 		var knob_y = _y + h / 2;
-		var _r = ui(28);
 		
 		if(draw_tb) {
 			tb_value.setFocusHover(active, hover);
 			tb_value.draw(_x + ui(64), knob_y - ui(17), ui(64), TEXTBOX_HEIGHT, _data, _m);
 		}
 		
-		draw_sprite(spr_bg, 0, _x, knob_y);
+		draw_sprite(spr_bg, 0, round(_x), round(knob_y));
 		
 		draw_set_color(COLORS.widget_rotator_guide);
 		draw_line(_x, knob_y, _x + lengthdir_x(ui(20), _data) - 1, knob_y + lengthdir_y(ui(20), _data) - 1);
@@ -87,9 +94,6 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		} else {
 			draw_sprite(spr_knob, 0, px, py);
 		}
-		
-		//draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
-		//draw_text(_x, knob_y, string(_data));
 		
 		resetFocus();
 		

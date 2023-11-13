@@ -55,7 +55,7 @@ function rotatorRange(_onModify) : widget() constructor {
 			py[i] = knob_y + lengthdir_y(_r, _data[i]);
 		}
 		
-		draw_sprite(THEME.rotator_bg, 0, _x, knob_y);
+		draw_sprite(THEME.rotator_bg, 0, round(_x), round(knob_y));
 		
 		draw_set_color(COLORS.widget_rotator_guide);
 		draw_line(_x, knob_y, _x + lengthdir_x(ui(20), _data[0]) - 1, knob_y + lengthdir_y(ui(20), _data[0]) - 1);

@@ -32,8 +32,6 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _surface, _display_data, _m, _rx, _ry) {
-		_h = ui(96);
-		
 		x = _x;
 		y = _y;
 		w = _w;

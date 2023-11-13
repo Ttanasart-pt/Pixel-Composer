@@ -539,16 +539,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!is_instanceof(self, Node_Collection)) setRenderStatus(true);
 		} else {
 			render_cached = false;
-			var sBase = surface_get_target();	
 			getInputs(frame);
 			
 			LOG_BLOCK_START();
 			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {INAME} <<<<<<<<<<");
 			
 			if(!is_instanceof(self, Node_Collection)) setRenderStatus(true);
+			var sBase = surface_get_target();	
 			
 			try {
-				update(frame); // Update only if input hash differs from previous.
+				update(frame);
 			} catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)

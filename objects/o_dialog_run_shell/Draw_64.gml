@@ -12,8 +12,7 @@ if !ready exit;
 
 #region base UI
 	draw_sprite_stretched(THEME.dialog_bg, 0, dialog_x, dialog_y, dialog_w, dialog_h);
-	if(sFOCUS)
-		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
+	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
 #endregion
 
 #region text
@@ -29,7 +28,8 @@ if !ready exit;
 	
 	draw_set_text(f_code, fa_left, fa_top, COLORS._main_text);
 	var _hh = string_height_ext(ctxt[1], -1, dialog_w - ui(64));
-	draw_sprite_stretched(THEME.ui_panel_inner_bg, 0, dialog_x + ui(24), py - ui(8), dialog_w - ui(48), _hh + ui(16));
+	draw_sprite_stretched(THEME.ui_panel_inner_bg, 1, dialog_x + ui(24), py - ui(8), dialog_w - ui(48), _hh + ui(16));
+	
 	draw_text_ext(dialog_x + ui(32), py, ctxt[1], -1, dialog_w - ui(64));
 	py += _hh + ui(16);
 	

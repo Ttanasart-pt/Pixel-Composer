@@ -37,6 +37,7 @@
 	PREFERENCES.panel_preview_dragging			= MOD_KEY.alt;
 	
 	PREFERENCES.inspector_focus_on_double_click	= true;
+	PREFERENCES.inspector_view_default			= 1;
 	
 	PREFERENCES.node_show_render_status			= false;
 	PREFERENCES.node_show_time					= true;

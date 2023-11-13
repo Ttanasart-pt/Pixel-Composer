@@ -37,10 +37,10 @@ function __initAddon() {
 		}
 		
 		var _mSrt = json_load_struct(_meta);
-		var _str = {
+		var _str  = {
 			name: f,
 			path: _path,
-			meta: _mSrt.meta,
+			meta: struct_try_get(_mSrt, "meta", {}),
 			
 			open: false
 		};

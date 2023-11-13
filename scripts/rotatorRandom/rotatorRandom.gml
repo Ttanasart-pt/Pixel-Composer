@@ -53,7 +53,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 		var kny = _y + h / 2;
 		var px, py, _r = ui(28);
 		
-		draw_sprite(THEME.rotator_bg, 0, _x, kny);
+		draw_sprite(THEME.rotator_bg, 0, round(_x), round(kny));
 		
 		tooltip.index = mode;
 		if(buttonInstant(THEME.button_hide_circle_28, knx - ui(28 / 2), kny - ui(28 / 2), ui(28), ui(28), _m, active, hover, tooltip, THEME.rotator_random_mode, mode) == 2) { #region

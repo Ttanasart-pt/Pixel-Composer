@@ -28,9 +28,10 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _msk = _data[3];
 		var _msd = _data[4];
 		
-		inputs[| 4].setVisible(is_surface(_msk));
-		if(is_surface(_msk) && _msd)
-			_dim = [ surface_get_width_safe(_msk), surface_get_height_safe(_msk) ];
+		var _maskUse = is_surface(_msk);
+		
+		inputs[| 4].setVisible(_maskUse);
+		if(_maskUse && _msd) _dim = [ surface_get_width_safe(_msk), surface_get_height_safe(_msk) ];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -41,15 +42,16 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			return _outSurf;
 		}
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			
-			shader_set(sh_solid);
-			if(is_surface(_msk))
+		if(_maskUse) {
+			surface_set_shader(_outSurf, sh_solid);
 				draw_surface_stretched_ext(_msk, 0, 0, _dim[0], _dim[1], _col, 1);
-			else
-				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], _col, 1);
-			shader_reset();
+			surface_reset_shader();
+		
+			return _outSurf;
+		}
+		
+		surface_set_target(_outSurf);
+			draw_clear(_col);
 		surface_reset_target();
 		
 		return _outSurf;

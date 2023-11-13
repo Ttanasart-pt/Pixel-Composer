@@ -480,28 +480,28 @@ function Panel_Inspector() : PanelContent() constructor {
 				} else {
 					if(i >= array_length(_inspecting.input_display_list)) break;
 					var jun_disp = _inspecting.input_display_list[i];
-					if(is_array(jun_disp)) {
+					if(is_array(jun_disp)) {										// LABEL
 						var txt  = __txt(jun_disp[0]);
 						var coll = jun_disp[1] && filter_text == "";
-					
-						if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
-							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_hover, 1);
+						var lbh  = lineBreak? ui(32) : ui(26);
+						
+						if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + lbh)) {
+							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_hover, 1);
 						
 							if(mouse_press(mb_left, pFOCUS))
 								jun_disp[@ 1] = !coll;
 							if(mouse_press(mb_right, pFOCUS))
 								menuCall("inspector_group_menu",,, group_menu,, _inspecting);
 						} else
-							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
+							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_bg, 1);
 					
-						if(filter_text == "") {
-							draw_sprite_ui(THEME.arrow, 0, ui(16), yy + ui(32) / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);	
-						}
+						if(filter_text == "")
+							draw_sprite_ui(THEME.arrow, 0, ui(16), yy + lbh / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);
 						
-						draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-						draw_text_add(ui(32), yy + ui(32) / 2, txt);
+						draw_set_text(lineBreak? f_p0 : f_p1, fa_left, fa_center, COLORS._main_text);
+						draw_text_add(ui(32), yy + lbh / 2, txt);
 					
-						hh += ui(32 + 8);
+						hh += lbh + ui(lineBreak? 8 : 6);
 						
 						if(coll) {
 							var j    = i + 1;
@@ -757,8 +757,10 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		by += ui(36);
 		view_mode_tooltip.index = lineBreak;
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, view_mode_tooltip, THEME.inspector_view, lineBreak) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, view_mode_tooltip, THEME.inspector_view, lineBreak) == 2) {
 			lineBreak = !lineBreak;
+			PREFERENCES.inspector_view_default = lineBreak;
+		}
 		
 		var bx = w - ui(44);
 		var by = ui(12);

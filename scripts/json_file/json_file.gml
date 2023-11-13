@@ -35,7 +35,7 @@ function json_load_struct(path) {
 	
 	if(!file_exists(path)) return noone;
 	
-	var s = file_read_all(path);
+	var s  = file_read_all(path);
 	var js = json_try_parse(s);
 	return js;
 }
@@ -44,11 +44,8 @@ function json_save_struct(path, struct, pretty = false) {
 	gml_pragma("forceinline");
 	
 	var s;
-	
-	if(pretty)
-		s = json_stringify(struct, true);
-	else 
-		s = json_stringify_minify(struct);
+	if(pretty) s = json_stringify(struct, true);
+	else       s = json_stringify_minify(struct);
 	
 	var f = file_text_open_write(path);
 	file_text_write_string(f, s);
