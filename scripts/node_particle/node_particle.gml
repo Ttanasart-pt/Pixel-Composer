@@ -23,7 +23,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	array_insert(input_display_list, 0, ["Output", true], input_len + 0);
 	array_push(input_display_list, input_len + 1, input_len + 2);
 	
-	def_surface = -1;
+	def_surface   = -1;
+	render_amount = 0;
 	
 	insp2UpdateTooltip = "Clear cache";
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
@@ -55,18 +56,27 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		seed = getInputData(32);
 	} #endregion
 	
-	static onStep = function() { #region
-		var _dim		= getInputData(input_len + 0);
-		var _outSurf	= outputs[| 0].getValue();
-			
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		outputs[| 0].setValue(_outSurf);
-	} #endregion
-	
 	static onUpdate = function(frame = CURRENT_FRAME) { #region
-		var _dim		= getInputData(input_len + 0);
-		var _outSurf	= outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		var _inSurf   = getInputData(0);
+		var _arr_type = getInputData(22);
+		var _dim	  = getInputData(input_len + 0);
+		var _outSurf  = outputs[| 0].getValue();
+		
+		if(is_array(_inSurf) && _arr_type == 3) {
+			var _len = array_length(_inSurf);
+			if(!is_array(_outSurf)) 
+				_outSurf = array_create(_len);
+			else if(array_length(_outSurf) != _len) 
+				array_resize(_outSurf, _len);
+				
+			for( var i = 0; i < _len; i++ )
+				_outSurf[i] = surface_verify(_outSurf[i], _dim[0], _dim[1], attrDepth());
+			render_amount = _len;
+		} else {
+			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+			render_amount = 0;		
+		}
+		
 		outputs[| 0].setValue(_outSurf);
 		
 		if(CURRENT_FRAME == 0) {
@@ -81,36 +91,33 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		var _dim		= inputs[| input_len + 0].getValue(_time);
 		var _exact 		= inputs[| input_len + 1].getValue(_time);
 		var _blend 		= inputs[| input_len + 2].getValue(_time);
-		
 		var _outSurf	= outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		outputs[| 0].setValue(_outSurf);
 		
-		surface_set_shader(_outSurf);
-		shader_set_interpolation(_outSurf);
-			if(_blend == PARTICLE_BLEND_MODE.normal)
-				BLEND_NORMAL;
-			else if(_blend == PARTICLE_BLEND_MODE.alpha)
-				BLEND_ALPHA;
-			else if(_blend == PARTICLE_BLEND_MODE.additive) 
-				BLEND_ADD;
-			
-			var surf_w = surface_get_width_safe(_outSurf);
-			var surf_h = surface_get_height_safe(_outSurf);
-			
-			//print($"===== Drawing frame {_time} =====");
-			for(var i = 0; i < attributes.part_amount; i++) {
-				if(!parts[i].active) continue;
-				//print($"    > Draw part {i} = ({parts[i].x}, {parts[i].y})");
-				parts[i].draw(_exact, surf_w, surf_h);
-			}
-			
-			BLEND_NORMAL;
-		surface_reset_shader();
-		
-		if(PROJECT.animator.is_playing) {
-			//print($"Cache frame {CURRENT_FRAME}");
-			cacheCurrentFrame(_outSurf);
+		switch(_blend) {
+			case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
+			case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;
+			case PARTICLE_BLEND_MODE.additive: BLEND_ADD;    break;
 		}
+			
+		if(render_amount == 0) {
+			surface_set_shader(_outSurf);
+			shader_set_interpolation(_outSurf);
+				for(var i = 0; i < attributes.part_amount; i++)
+					if(parts[i].active) parts[i].draw(_exact, _dim[0], _dim[1]);
+			surface_reset_shader();	
+		} else if(is_array(_outSurf)) {
+			for( var o = 0, n = array_length(_outSurf); o < n; o++ ) {
+				surface_set_shader(_outSurf[o]);
+				shader_set_interpolation(_outSurf[o]);
+					for(var i = 0; i < attributes.part_amount; i++)
+						if(parts[i].active) parts[i].draw(_exact, _dim[0], _dim[1], o);
+				surface_reset_shader();
+			}
+		}
+		
+		BLEND_NORMAL
+		
+		if(PROJECT.animator.is_playing)
+			cacheCurrentFrame(_outSurf);
 	} #endregion	
 }

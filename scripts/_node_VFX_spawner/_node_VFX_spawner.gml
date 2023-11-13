@@ -68,7 +68,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.rejectArray();
 	
 	inputs[| 22] = nodeValue("Surface array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, at random, or treat array as animation." )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation" ])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation", "Array" ])
 		.setVisible(false);
 	
 	inputs[| 23] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
@@ -256,14 +256,19 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			var _spr = _inSurf, _index = 0;
 			if(is_array(_inSurf)) {
-				if(_arr_type == 0) {
-					_index = irandom(array_length(_inSurf) - 1);
-					_spr = _inSurf[_index];						
-				} else if(_arr_type == 1) {
-					_index = safe_mod(spawn_index, array_length(_inSurf));
-					_spr = _inSurf[_index];
-				} else if(_arr_type == 2) {
-					_spr = _inSurf;
+				switch(_arr_type) {
+					case 0 : 	
+						_index = irandom(array_length(_inSurf) - 1);
+						_spr = _inSurf[_index];						
+						break;
+					case 1 : 
+						_index = safe_mod(spawn_index, array_length(_inSurf));
+						_spr = _inSurf[_index];
+						break;
+					case 2 : 
+					case 3 : 
+						_spr = _inSurf;
+						break;
 				}
 			}
 			var xx = 0;
@@ -313,6 +318,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			part.create(_spr, xx, yy, _lif);
 			part.anim_speed = random_range(_anim_speed[0], _anim_speed[1]);
 			part.anim_end   = _anim_end;
+			part.arr_type   = _arr_type;
 				
 			var _trn = random_range(_turn[0], _turn[1]);
 			if(_turnBi) _trn *= choose(-1, 1);

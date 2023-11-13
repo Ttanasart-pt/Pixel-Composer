@@ -24,6 +24,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			content_h = h - top_bar_h - ui(12);
 		}
 		initSize();
+		
+		view_mode_tooltip = new tooltipSelector("View", [ "Compact", "Spacious" ])
 	#endregion
 	
 	#region ---- properties ----
@@ -292,7 +294,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						var wh = 0;
 						var _dataFunc = display[1];
 						var _data     = _dataFunc(meta);
-					
+						
 						switch(instanceof(meta_tb[j])) {
 							case "textArea" :	
 								wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], _data, _m);
@@ -551,8 +553,10 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 			
 			#region ++++ draw widget ++++
-				var lb_h = line_get_height(f_p0) + ui(8);
-				var lb_w = line_get_width(jun.getName(), f_p0) + ui(16);
+				var _font = lineBreak? f_p0 : f_p1;
+				
+				var lb_h = line_get_height(_font) + ui(8);
+				var lb_w = line_get_width(jun.getName(), _font) + ui(16);
 				var lb_x = ui(48) + (ui(24) * (jun.color != -1));
 				var padd = ui(8);
 			
@@ -567,7 +571,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				hh += lb_h + widH + padd;
 			
 				var _selY1 = yy + lb_h + widH + ui(2);
-				var _selH  = _selY1 - _selY + ui(4);
+				var _selH  = _selY1 - _selY + (lineBreak * ui(4));
 				
 				if(jun == prop_highlight && prop_highlight_time) {
 					if(prop_highlight_time == 60)
@@ -708,8 +712,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_press(mb_left, pFOCUS))
 			prop_selecting = noone;
 		
-		if(inspecting == noone) // metadata
-			return drawMeta(_y, _m);
+		if(inspecting == noone) return drawMeta(_y, _m);
 		return drawNodeProperties(_y, _m);
 	}); #endregion
 	
@@ -752,6 +755,11 @@ function Panel_Inspector() : PanelContent() constructor {
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Presets"), THEME.preset, 1) == 2)
 			dialogCall(o_dialog_preset, x + bx, y + by + ui(36), { "node": inspecting });
 		
+		by += ui(36);
+		view_mode_tooltip.index = lineBreak;
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, view_mode_tooltip, THEME.inspector_view, lineBreak) == 2)
+			lineBreak = !lineBreak;
+		
 		var bx = w - ui(44);
 		var by = ui(12);
 		
@@ -778,7 +786,6 @@ function Panel_Inspector() : PanelContent() constructor {
 	
 	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		lineBreak = w < PREFERENCES.inspector_line_break_width;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
 		

@@ -36,7 +36,6 @@
 	PREFERENCES.panel_graph_dragging			= MOD_KEY.alt;
 	PREFERENCES.panel_preview_dragging			= MOD_KEY.alt;
 	
-	PREFERENCES.inspector_line_break_width		= 500;
 	PREFERENCES.inspector_focus_on_double_click	= true;
 	
 	PREFERENCES.node_show_render_status			= false;

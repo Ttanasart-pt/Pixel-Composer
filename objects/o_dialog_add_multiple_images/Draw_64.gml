@@ -11,7 +11,7 @@ if !ready exit;
 #endregion
 
 #region nodes
-	draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(16), dialog_y + ui(44), dialog_w - ui(32), ui(112));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(16), dialog_y + ui(44), dialog_w - ui(32), ui(112));
 	var grid_size  = ui(64);
 	var grid_space = ui(16);
 	var grid_width = grid_size + grid_space;

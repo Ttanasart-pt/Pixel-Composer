@@ -37,7 +37,7 @@ function Panel_Gradient() : PanelContent() constructor {
 				var preset	= GRADIENTS[ind];
 				var isHover = pHOVER && point_in_rectangle(_m[0], _m[1], xx, max(0, yy), xx + gw - ui(8), min(sp_gradient.h, yy + hg));
 			
-				draw_sprite_stretched(THEME.ui_panel_bg, in_dialog, xx, yy, gw - ui(8), hg);
+				draw_sprite_stretched(THEME.ui_panel_bg, 3, xx, yy, gw - ui(8), hg);
 				if(isHover) 
 					draw_sprite_stretched_ext(THEME.node_active, 1, xx, yy, gw - ui(8), hg, COLORS._main_accent, 1);
 			
@@ -70,7 +70,7 @@ function Panel_Gradient() : PanelContent() constructor {
 		var pw = w - ui(padding + padding);
 		var ph = h - ui(title_height + padding);
 	
-		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		sp_gradient.setFocusHover(pFOCUS, pHOVER);
 		sp_gradient.draw(px, py, mx - px, my - py);

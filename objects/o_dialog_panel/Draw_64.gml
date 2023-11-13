@@ -28,7 +28,7 @@ if !ready exit;
 			resetMask();
 		
 		surface_set_target(panel);
-			DRAW_CLEAR
+			draw_clear(COLORS.panel_bg_clear);
 			content.drawContent(panel);
 			
 			gpu_set_blendmode(bm_subtract);

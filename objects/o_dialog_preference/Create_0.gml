@@ -372,15 +372,6 @@ event_inherited();
 	ds_list_add(pref_appr, __txt("Inspector"));
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_inspector_line_break_width", "Inspector line break width"),
-		"inspector_line_break_width",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREFERENCES.inspector_line_break_width = max(1, round(real(str)));
-			PREF_SAVE();
-		})
-	));
-	
-	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_inspector_focus_on_double_click", "Focus on double click"),
 		"inspector_focus_on_double_click",
 		new checkBox(function(str) { 

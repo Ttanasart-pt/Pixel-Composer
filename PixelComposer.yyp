@@ -386,6 +386,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_icon_export_package.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_icon_grid_setting.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_icon_grid_strip2.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_icon_inspector_view.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_icon_keyframe_override.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_icon_minimap_strip2.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_icon_node_dropper.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},

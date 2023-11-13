@@ -283,7 +283,7 @@ event_inherited();
 			
 			BLEND_OVERRIDE;
 			if(i == ADD_NODE_PAGE) {
-				draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, _y + hh, category_width, hg);
+				draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, _y + hh, category_width, hg);
 			} else if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, category_width - ui(32), _y + hh + hg - 1)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, category_width, hg, c_white, 0.75);
 				if(mouse_click(mb_left, sFOCUS)) {
@@ -498,7 +498,7 @@ event_inherited();
 				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				
 				BLEND_OVERRIDE;
-				draw_sprite_stretched(THEME.group_label, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24));
+				draw_sprite_stretched_ext(THEME.group_label, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24), c_white, 0.3);
 				BLEND_NORMAL;
 					
 				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);

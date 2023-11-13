@@ -8,10 +8,11 @@ function drawWidgetInit() {
 }
 
 function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0) { 
-	var con_w	= ww - ui(4);
-	var xc		= xx + ww / 2;
-		
-	var lb_h = line_get_height(f_p0) + ui(8);
+	var con_w = ww - ui(4);
+	var xc	  = xx + ww / 2;
+	var _font = lineBreak? f_p0 : f_p1;
+	
+	var lb_h = line_get_height(_font) + ui(8);
 	var lb_y = yy + lb_h / 2;
 	
 	var breakLine = lineBreak || jun.expUse;
@@ -79,7 +80,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	if(global_var) if(string_pos(" ", _name)) cc = COLORS._main_value_negative;
 	
-	draw_set_text(f_p0, fa_left, fa_center, cc);
+	draw_set_text(_font, fa_left, fa_center, cc);
 	var lb_w = string_width(_name) + ui(48);
 	var lb_x = xx + ui(40);
 	
@@ -264,6 +265,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			case VALUE_TYPE.boolean : 
 				param.halign = breakLine? fa_left : fa_center;
+				param.s      = breakLine? ui(24)  : editBoxH;
 				break;
 				
 			case VALUE_TYPE.d3Material : 
@@ -273,10 +275,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			case VALUE_TYPE.curve :   
 				param.h = ui(160);
-				if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + param.h)) {
+				if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + param.h))
 					mbRight = false;
-					//_scrollPane.scroll_lock = true; // Not good UX-wise
-				}
 				break;
 		}
 		

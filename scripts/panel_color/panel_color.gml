@@ -50,7 +50,7 @@ function Panel_Color() : PanelContent() constructor {
 		var pw = w - ui(padding + padding);
 		var ph = h - ui(title_height + padding);
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		var cont_x = ui(padding);
 		var cont_y = ui(title_height);

@@ -108,7 +108,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		var pw = w - ui(padding + padding);
 		var ph = h - ui(title_height + padding);
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		tb_search.setFocusHover(pFOCUS, pHOVER);
 		tb_search.draw(px, py, pw, ui(32), search_string, [mx, my]);
 		

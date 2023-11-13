@@ -40,7 +40,7 @@ function Panel_Palette() : PanelContent() constructor {
 			
 			var isHover = pHOVER && point_in_rectangle(_m[0], _m[1], 0, max(0, yy), ww, min(sp_palettes.h, yy + _height));
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, in_dialog, 0, yy, ww, _height);
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, _height);
 			if(isHover) 
 				draw_sprite_stretched_ext(THEME.node_active, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
 			
@@ -90,7 +90,7 @@ function Panel_Palette() : PanelContent() constructor {
 		var pw = w - ui(padding + padding);
 		var ph = h - ui(title_height + padding);
 	
-		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		sp_palettes.setFocusHover(pFOCUS, pHOVER);
 		sp_palettes.draw(px, py, mx - px, my - py);

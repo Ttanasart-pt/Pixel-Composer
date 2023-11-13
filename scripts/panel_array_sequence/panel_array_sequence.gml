@@ -78,7 +78,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 		var msx = mx - px;
 		var msy = my - py;
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		sequence_surface = surface_verify(sequence_surface, pw, ph);
 		surface_set_target(sequence_surface);

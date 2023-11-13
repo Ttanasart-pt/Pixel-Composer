@@ -6,7 +6,7 @@ enum ANCHOR {
 	right   = 8
 }
 
-function Panel(_parent, _x, _y, _w, _h) constructor {
+function Panel(_parent, _x, _y, _w, _h) constructor { #region
 	parent = _parent;
 	if(parent) ds_list_add(parent.childs, self);
 	
@@ -613,10 +613,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		draw_surface(tab_surface, tsx, tsy);
 	} #endregion
 	
-	function setTab(tabIndex) { #region
+	function setTab(tabIndex, forceFocus = false) { #region
 		if(tabIndex < 0) return;
 		if(tabIndex >= array_length(content)) return;
-		if(content_index == tabIndex) return;
+		if(content_index == tabIndex) {
+			if(forceFocus) content[tabIndex].onFocusBegin();
+			return;
+		}
 		
 		var prec = array_safe_get(content, content_index);
 		if(prec) prec.onFocusEnd();
@@ -813,8 +816,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		array_remove(content, con);
 		if(con) con.onClose();
-		if(con == curr) setTab(0);
-		else			setTab(array_find(content, curr));
+		if(con == curr) setTab(0, true);
+		else			setTab(array_find(content, curr), true);
 		
 		refresh();
 		if(hasContent()) return;
@@ -828,9 +831,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		parent.setContent(otherPanel.content);
 		ds_list_clear(parent.childs);
 	} #endregion
-}
+} #endregion
 
-function PanelContent() constructor {
+function PanelContent() constructor { #region
 	title	= "";
 	icon	= noone;
 	context_str = "";
@@ -922,9 +925,9 @@ function PanelContent() constructor {
 	static checkClosable = function() { return true; }
 	
 	static onClose = function() {}
-}
+} #endregion
 
-function setFocus(target, fstring = noone) {
+function setFocus(target, fstring = noone) { #region
 	if(FOCUS != noone && is_struct(FOCUS) && FOCUS.getContent())
 		FOCUS.getContent().onFocusEnd();
 	
@@ -934,4 +937,4 @@ function setFocus(target, fstring = noone) {
 	
 	if(FOCUS != noone && is_struct(FOCUS) && FOCUS.getContent())	
 		FOCUS.getContent().onFocusBegin();
-}
+} #endregion

@@ -6,7 +6,10 @@ event_inherited();
 	dialog_h = ui(400);
 	
 	destroy_on_click_out = true;
-	dragging = noone;
+	dragging    = noone;
+	drag_disp   = noone;
+	drag_insert = 0;
+	drag_shift  = 0;
 	
 	sep_editing = -1;
 	tb_edit = new textBox(TEXTBOX_INPUT.text, function(str) {
@@ -124,7 +127,7 @@ event_inherited();
 		}
 		
 		if(dragging != noone && _ly > -1) {
-			draw_set_color(COLORS._main_icon_dark);
+			draw_set_color(COLORS._main_icon);
 			draw_line_round(ui(4), _ly, con_w - ui(4), _ly, 4);
 		}
 			

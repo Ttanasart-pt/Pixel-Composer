@@ -13,7 +13,7 @@ event_inherited();
 	content		 = noone;
 	destroy_on_click_out = true;
 	
-	function setContent(content) {
+	function setContent(content) { #region
 		self.content = content;
 		
 		if(struct_has(content, "title_height"))
@@ -28,9 +28,9 @@ event_inherited();
 		content.in_dialog = true;
 		
 		if(content.auto_pin) destroy_on_click_out = false;
-	}
+	} #endregion
 	
-	function resetMask() {
+	function resetMask() { #region
 		if(!content) return;
 		mask_surface = surface_verify(mask_surface, dialog_w - content.showHeader * padding * 2, 
 											        dialog_h - content.showHeader * (padding * 2 + title_height));
@@ -42,10 +42,9 @@ event_inherited();
 														  dialog_h - content.showHeader * (padding * 2 + title_height));
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
-	}
-	resetMask();
+	} resetMask(); #endregion
 	
-	onResize = function() {
+	onResize = function() { #region
 		panel = surface_verify(panel, dialog_w, dialog_h);
 		resetMask();
 		
@@ -55,19 +54,19 @@ event_inherited();
 		
 			content.onResize();
 		}
-	}
+	} #endregion
 	
-	function checkClosable() {
+	function checkClosable() { #region
 		if(!content) return true;
 		return content.checkClosable();
-	}
+	} #endregion
 	
-	function onDestroy() {
+	function onDestroy() { #region
 		if(content == noone) return;
 		content.onClose();
-	}
+	} #endregion
 	
-	function remove() {
+	function remove() { #region
 		instance_destroy();
-	}
+	} #endregion
 #endregion

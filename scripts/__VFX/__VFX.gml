@@ -14,7 +14,10 @@ function __part(_node) constructor {
 	seed    = irandom(99999);
 	node    = _node;
 	active  = false;
-	surf    = noone;
+	
+	surf     = noone;
+	arr_type = 0;
+	
 	prevx   = 0;
 	prevy   = 0;
 	x       = 0;
@@ -246,12 +249,12 @@ function __part(_node) constructor {
 		drawsy  += wig_scy.get(seed + life);
 	} #endregion
 	
-	static draw = function(exact, surf_w, surf_h) { #region
+	static draw = function(exact, surf_w, surf_h, _index = 0) { #region
 		INLINE
 		
 		var ss = surf;
 		
-		if(surf != noone && is_array(surf)) {
+		if(arr_type == 2 && surf != noone && is_array(surf)) {
 			var ind = abs(round((life_total - life) * anim_speed));
 			var len = array_length(surf);
 			
@@ -272,14 +275,12 @@ function __part(_node) constructor {
 						ss = surf[ind];
 					break;
 			}
-		}
+		} else if(arr_type == 3) ss = ss[_index];
 		
 		var surface = is_instanceof(ss, SurfaceAtlas)? ss.getSurface() : node.surface_cache[$ ss];
 		
-		if(!is_surface(surface)) {
-			//print($"Drawing part failed: Not a surface");
+		if(!is_surface(surface))
 			return;
-		}
 		
 		var lifeRat = 1 - life / life_total;
 		var scCurve = sct == noone? 1 : sct.get(lifeRat);
@@ -304,16 +305,13 @@ function __part(_node) constructor {
 		var x1 = _xx + s_w * 1.5;
 		var y1 = _yy + s_h * 1.5;
 		
-		if(x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0) {
-			//print($"Drawing part failed: Outside view");
-			return; //culling
-		}
+		if(x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0)
+			return;
 		
 		var cc = (col == -1)? c_white : col.eval(lifeRat);
 		if(blend != c_white) cc = colorMultiply(blend, cc);
 		alp_draw = alp * (alp_fade == noone? 1 : alp_fade.get(lifeRat));
 		
-		//print($"Draw part [{frame}]: {surface} at {_xx}, {_yy}, scale {drawsx}, {drawsy} - {scCurve} color {cc}, {alp_draw}");
 		draw_surface_ext_safe(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
 	} #endregion
 	
