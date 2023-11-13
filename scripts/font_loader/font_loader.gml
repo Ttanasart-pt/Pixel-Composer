@@ -98,7 +98,7 @@ function loadFonts() {
 		return;
 	}
 	
-	var s = file_text_read_all(path);
+	var s = file_read_all(path);
 	var fontDef = json_try_parse(s);
 	
 	f_h1 = _font_load_from_struct(fontDef, "h1", _f_h1);

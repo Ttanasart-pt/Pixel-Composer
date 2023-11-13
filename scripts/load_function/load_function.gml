@@ -80,7 +80,6 @@ function __LOAD_PATH(path, readonly = false, override = false) {
 	if(file_exists(temp_file_path)) file_delete(temp_file_path);
 	file_copy(path, temp_file_path);
 	
-	//ALWAYS_FULL = false;
 	PROJECT.readonly = readonly;
 	SET_PATH(PROJECT, path);
 	

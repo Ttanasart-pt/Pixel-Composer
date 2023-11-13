@@ -73,7 +73,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			case ".txt":
 				outputs[| 1].setValue(path);
 				
-				content = file_text_read_all(path);
+				content = file_read_all(path);
 				
 				if(path_current == "") 
 					first_update = true;

@@ -275,7 +275,7 @@ function __part(_node) constructor {
 						ss = surf[ind];
 					break;
 			}
-		} else if(arr_type == 3) ss = ss[_index];
+		} else if(arr_type == 3) ss = array_safe_get(ss, _index);
 		
 		var surface = is_instanceof(ss, SurfaceAtlas)? ss.getSurface() : node.surface_cache[$ ss];
 		
@@ -319,6 +319,12 @@ function __part(_node) constructor {
 		INLINE
 		
 		return [x, y];
+	} #endregion
+		
+	static clone = function() { #region
+		var _p = new __part(node);
+		struct_override(_p, self);
+		return _p;
 	} #endregion
 }
 

@@ -48,7 +48,7 @@ function __getGraphicList() {
 	INLINE
 	
 	var path = _sprite_path("./graphics.json", "default");
-	var s = file_text_read_all(path);
+	var s = file_read_all(path);
 	return json_try_parse(s);
 }
 
@@ -71,7 +71,7 @@ function loadGraphic(theme = "default") {
 		return;
 	}
 	
-	var s        = file_text_read_all(path);
+	var s        = file_read_all(path);
 	var graphics = variable_struct_get_names(sprDef);
 	var sprStr   = json_try_parse(s);
 	var str;

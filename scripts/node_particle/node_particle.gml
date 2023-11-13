@@ -5,6 +5,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	onSurfaceSize = function() { return getInputData(input_len, DEF_SURF); };
 	inputs[| 3].setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
+	inputs[| 22].setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation", "Array" ]);
+		
 	inputs[| input_len + 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 		

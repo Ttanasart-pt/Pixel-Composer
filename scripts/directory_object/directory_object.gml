@@ -212,10 +212,8 @@ function DirectoryObject(name, path) constructor {
 			}
 		}
 		
-		if(ds_list_empty(subDir))
-			draw_sprite_ui_uniform(THEME.folder_content, parent.context == self, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_empty);
-		else
-			draw_sprite_ui_uniform(THEME.folder_content, open, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_nonempty);
+		if(ds_list_empty(subDir)) draw_sprite_ui_uniform(THEME.folder_content, parent.context == self, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_empty);
+		else                      draw_sprite_ui_uniform(THEME.folder_content, open, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_nonempty);
 		
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 		draw_text(_x + ui(32), _y + hg / 2, name);

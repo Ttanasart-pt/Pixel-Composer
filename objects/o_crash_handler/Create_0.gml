@@ -40,7 +40,7 @@ gameframe_button_array = [];
 	path = DIRECTORY + "log/crash_log.txt";
 	if(!file_exists(path)) game_end(1);
 	
-	crash_content = file_text_read_all(path);
+	crash_content = file_read_all(path);
 	log_surface   = surface_create(1, 1);
 	log_y         = 0;
 	log_y_to      = 0;

@@ -64,11 +64,8 @@ event_inherited();
 		for(var i = 0; i < ds_list_size(global.ASSETS.subDir); i++) {
 			var _w     = folderPane.surface_w - ui(16);
 			var _hover = sHOVER && folderPane.hover;
-			var _clr   = {
-				selecting : COLORS.assetbox_current_bg
-			}
 			
-			var hg = global.ASSETS.subDir[| i].draw(self, ui(8), _y + 8, _m, _w, _hover, sFOCUS, global.ASSETS, _clr);
+			var hg = global.ASSETS.subDir[| i].draw(self, ui(8), _y + 8, _m, _w, _hover, sFOCUS, global.ASSETS);
 			hh += hg;
 			_y += hg;
 		}
