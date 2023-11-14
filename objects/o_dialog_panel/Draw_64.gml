@@ -44,7 +44,7 @@ if !ready exit;
 
 #region overlay
 	if(content.showHeader) {
-		draw_sprite_stretched_ext(THEME.dialog_bg, 0, dialog_x, dialog_y, dialog_w, title_height + ui(8), COLORS._main_icon_light, 1);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, dialog_x + 3, dialog_y + 3, dialog_w - 6, title_height + 2, COLORS._main_icon_light, 1);
 		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 		draw_text_cut(dialog_x + ui(32), dialog_y + ui(8), content.title, dialog_w - ui(32 + 32));
 		
@@ -71,7 +71,9 @@ if !ready exit;
 		DIALOG_DRAW_FOCUS
 		
 		if(!m_in && m_ot) {
-			draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, c_white, 0.4);
+			var p  = DIALOG_PAD;
+			var p2 = DIALOG_PAD * 2;
+			draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x - p, dialog_y - p, dialog_w + p2, dialog_h + p2, c_white, 0.4);
 				
 			if(DOUBLE_CLICK) {
 				content.dragSurface = surface_clone(panel);
