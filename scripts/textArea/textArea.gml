@@ -47,10 +47,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	parser_server = noone;
 	
-	use_autocomplete		 = true;
-	autocomplete_server		 = noone;
-	autocomplete_object		 = noone;
-	autocomplete_context	 = {};
+	autocomplete_delay   = 0;
+	autocomplete_modi    = false;	
+	use_autocomplete	 = true;
+	autocomplete_server	 = noone;
+	autocomplete_object	 = noone;
+	autocomplete_context = {};
 	
 	function_guide_server	   = noone;
 	
@@ -110,11 +112,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			localParams = parser_server(crop, autocomplete_object);
 					
 		var data = autocomplete_server(pmt, localParams, autocomplete_context);
-					
 		if(array_length(data)) {
 			o_dialog_textbox_autocomplete.data   = data;
 			o_dialog_textbox_autocomplete.prompt = pmt;
-			o_dialog_textbox_autocomplete.activate(self);
+			autocomplete_modi = true;
 		}
 					
 		var _c  = cursor;
@@ -531,6 +532,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				undo_delay = 0;
 			}
 			onModified();
+			autocomplete_delay = 0;
 		}
 		
 		if(auto_update && keyboard_check_pressed(vk_anykey))
@@ -706,6 +708,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		w = _w;
 		h = _h;
 		
+		autocomplete_delay += delta_time / 1000;
 		_stretch_width = _w < 0;
 		_text = string_real(_text);
 		_current_text = _text;
@@ -839,6 +842,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				}
 			#endregion
 			
+			if(autocomplete_modi && PREFERENCES.widget_autocomplete_delay >= 0 && autocomplete_delay >= PREFERENCES.widget_autocomplete_delay) {
+				o_dialog_textbox_autocomplete.activate(self);
+				autocomplete_modi = false;
+			}
+				
 			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_press(mb_left) && HOVER != o_dialog_textbox_autocomplete.id) {
 				deactivate();
 			}

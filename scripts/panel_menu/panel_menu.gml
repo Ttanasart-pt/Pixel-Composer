@@ -99,6 +99,10 @@ function Panel_Menu() : PanelContent() constructor {
 			zip_unzip("data/Collections.zip", DIRECTORY + "Collections");
 			zip_unzip("data/Assets.zip", DIRECTORY + "Assets");
 		}),
+		-1,
+		menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon"), function() {
+			dialogPanelCall(new Panel_Patreon());
+		}, THEME.patreon),
 	];
 	
 	menu_help_steam = array_clone(menu_help);
@@ -301,7 +305,7 @@ function Panel_Menu() : PanelContent() constructor {
 	}
 	
 	function drawContent(panel) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		menus[6][1] = STEAM_ENABLED? menu_help_steam : menu_help;
 		var hori = w > h;
 		
@@ -610,7 +614,7 @@ function Panel_Menu() : PanelContent() constructor {
 				
 				if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
 					draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
-			
+					
 					if(mouse_press(mb_left, pFOCUS))
 						dialogCall(o_dialog_release_note); 
 					if(mouse_press(mb_right, pFOCUS)) {
@@ -638,6 +642,22 @@ function Panel_Menu() : PanelContent() constructor {
 				}
 				
 				draw_text(x1 + ui(6), y1, txt);
+			}
+		#endregion
+		
+		#region patreon
+			if(IS_PATREON && PREFERENCES.show_supporter_icon) {
+				_x1  = _x0 - 8;
+				_x0 -= ui(32);
+				
+				var _cx = (_x0 + _x1) / 2;
+				var _cy = (_y0 + _y1) / 2;
+				
+				if(pHOVER && point_in_rectangle(mx, my, _cx - 16, _y0, _cx + 16, _y1)) {
+					TOOLTIP = "Verified supporter";
+				}
+				
+				draw_sprite_ext(s_patreon_supporter, 0, _cx, _cy, 1, 1, 0, tc, 1);
 			}
 		#endregion
 		

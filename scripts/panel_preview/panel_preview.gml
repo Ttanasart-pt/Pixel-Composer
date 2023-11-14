@@ -1086,6 +1086,7 @@ function Panel_Preview() : PanelContent() constructor {
 			overlayHover &= active && isHover;
 			overlayHover &= point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 			overlayHover &= !key_mod_press(CTRL);
+		var params = { w, h, toolbar_height };
 		
 		if(_node.is_3D)	{
 			if(key_mod_press(CTRL) || d3_tool_snap) {
@@ -1093,7 +1094,7 @@ function Panel_Preview() : PanelContent() constructor {
 				_sny = d3_tool_snap_rotation;
 			}
 			
-			_node.drawOverlay3D(overlayHover, d3_scene, _mx, _my, _snx, _sny, { w, h });
+			_node.drawOverlay3D(overlayHover, d3_scene, _mx, _my, _snx, _sny, params);
 		} else {
 			if(key_mod_press(CTRL)) {
 				_snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
@@ -1103,7 +1104,7 @@ function Panel_Preview() : PanelContent() constructor {
 				_sny = PROJECT.previewGrid.size[1];
 			}
 		
-			_node.drawOverlay(overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, { w, h });
+			_node.drawOverlay(overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
 		}
 		
 		#region node overlay

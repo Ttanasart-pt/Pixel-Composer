@@ -74,6 +74,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	inputs[| in_d3d + 21] = nodeValue("Round Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 );
 	
+	in_cam = ds_list_size(inputs);
+	
 	outputs[| 0] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
 	
 	outputs[| 1] = nodeValue("Normal", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone )
@@ -85,10 +87,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	input_display_list = [ in_d3d + 4,
 		["Output",		false], in_d3d + 2,
 		["Transform",	false], in_d3d + 9, 0, 1, in_d3d + 10, in_d3d + 11, in_d3d + 12, in_d3d + 13, in_d3d + 14, 
-		["Camera",		false], in_d3d + 3, in_d3d + 0, in_d3d + 1, in_d3d + 8, 
-		["Render",		false], in_d3d + 5, in_d3d + 16, in_d3d + 6, in_d3d + 7, in_d3d + 15, 
-		["Ambient Occlusion",	false], in_d3d + 17, in_d3d + 20, in_d3d + 18, in_d3d + 19, 
-		["Effects",		false], in_d3d + 21,
+		["Camera",		 true], in_d3d + 3, in_d3d + 0, in_d3d + 1, in_d3d + 8, 
+		["Render",		 true], in_d3d + 5, in_d3d + 16, in_d3d + 6, in_d3d + 7, in_d3d + 15, 
+		["Ambient Occlusion",	true], in_d3d + 17, in_d3d + 20, in_d3d + 18, in_d3d + 19, 
+		["Effects",		 true], in_d3d + 21,
 	];
 	
 	tool_lookat = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
@@ -126,6 +128,26 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			drag_axis = noone;
 			UNDO_HOLDING = false;
 		}
+		
+		var _outSurf = outputs[| 0].getValue();
+		if(is_array(_outSurf)) _outSurf = array_safe_get(_outSurf, 0);
+		if(!is_surface(_outSurf)) return;
+		
+		var _w = _panel.w;
+		var _h = _panel.h - _panel.toolbar_height;
+		var _pw = surface_get_width_safe(_outSurf);
+		var _ph = surface_get_height_safe(_outSurf);
+		var _ps = min(128 / _ph, 160 / _pw);
+		
+		var _pws = _pw * _ps;
+		var _phs = _ph * _ps;
+		
+		var _px = _w - 16 - _pws;
+		var _py = _h - 16 - _phs;
+		
+		draw_surface_ext_safe(_outSurf, _px, _py, _ps, _ps);
+		draw_set_color(COLORS._main_icon);
+		draw_rectangle(_px, _py, _px + _pws, _py + _phs, true);
 	} #endregion
 	
 	static onValueUpdate = function(index) { #region
@@ -166,6 +188,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				break;
 		}	
 	} #endregion
+	
+	static preProcessData = function(_data) {}
+	
+	static submitShadow = function() {}
+	static submitShader = function() {}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		#region data
@@ -249,6 +276,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		object.transform.rotation = camera.rotation.Clone();
 		object.transform.scale.set(1, _dim[0] / _dim[1], 1);
 		
+		preProcessData(_data);
+		
 		#region camera view project
 			camera.projection = _proj;
 			camera.setViewFov(_fov, _clip[0], _clip[1]);
@@ -274,6 +303,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		#region submit
 			var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
 			_sobj.submitShadow(scene, _sobj);
+			submitShadow();
+			
 			deferData   = scene.deferPass(_sobj, _dim[0], _dim[1], deferData);
 			
 			var _render = outputs[| 0].getValue();
@@ -297,6 +328,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			camera.applyCamera();
 			scene.reset();
 			scene.submitShader(_sobj);
+			submitShader();
+			
 			scene.apply(deferData);
 			scene.submit(_sobj);
 			
@@ -353,4 +386,15 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	} #endregion
 	
 	static getPreviewObjectOutline = function() { return isUsingTool("Move Target")? [ lookat ] : [ object ]; }
+	
+	static doSerialize = function(_map) { #region
+		_map.camera_base_length = in_cam;
+	} #endregion
+	
+	static postDeserialize = function() { #region
+		var _tlen = struct_try_get(load_map, "camera_base_length", in_d3d + 22);
+		
+		for( var i = _tlen; i < in_cam; i++ )
+			array_insert(load_map.inputs, i, noone);
+	} #endregion
 }

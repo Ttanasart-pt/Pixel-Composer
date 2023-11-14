@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "3D",
-    "path": "folders/nodes/data/3D.yy",
+    "name": "d3d camera",
+    "path": "folders/nodes/data/3D/d3d camera.yy",
   },
 }

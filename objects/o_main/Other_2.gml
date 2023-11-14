@@ -62,6 +62,7 @@
 	
 	PREF_APPLY();
 	
+	log_message("SESSION", "> init Patreon");		__initPatreon();
 	log_message("SESSION", "> init Theme");			__initTheme();
 	log_message("SESSION", "> init Locale");		__initLocale();
 	log_message("SESSION", "> init Font");			  loadFonts();

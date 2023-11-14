@@ -1,4 +1,4 @@
-function steam_ugc_create_project() {
+function steam_ugc_create_project() { #region
 	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
 	var file = new FileObject(string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), ""), PROJECT.path);
@@ -19,9 +19,9 @@ function steam_ugc_create_project() {
 	surface_save_safe(preview_surface, DIRECTORY + "steamUGC/thumbnail.png");
 	
 	STEAM_UGC_ITEM_ID = steam_ugc_create_item(STEAM_APP_ID, ugc_filetype_community);
-}
+} #endregion
 
-function steam_ugc_update_project(update_preview = false, update_note = "Updated") {
+function steam_ugc_update_project(update_preview = false, update_note = "Updated") { #region
 	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
 	var file = new FileObject(string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), ""), PROJECT.path);
@@ -44,14 +44,18 @@ function steam_ugc_update_project(update_preview = false, update_note = "Updated
 	steam_ugc_set_item_title(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.name);
 	steam_ugc_set_item_description(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.description);
 	
-	array_insert(STEAM_UGC_ITEM_FILE.meta.tags, 0, "Project");
-	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.tags);
+	var tgs = STEAM_UGC_ITEM_FILE.meta.tags;
+	
+	array_insert(tgs, 0, "Project");
+	array_push(tgs, VERSION_STRING);
+	
+	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
 	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, DIRECTORY + "steamUGC");
 	
 	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, update_note);
-}
+} #endregion
 
-function steam_ugc_project_generate(dest_path = TEMPDIR + "steamUGCthumbnail.png") {
+function steam_ugc_project_generate(dest_path = TEMPDIR + "steamUGCthumbnail.png") { #region
 	file_delete(dest_path);
 	
 	var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
@@ -71,7 +75,13 @@ function steam_ugc_project_generate(dest_path = TEMPDIR + "steamUGCthumbnail.png
 		
 		draw_sprite_stretched(s_workshop_badge, 0, 8, 8, 88, 88);
 		draw_sprite_ext(THEME.workshop_project, 0, 40, 40, 1, 1, 0, COLORS._main_icon_dark, 1);
+		
+		draw_set_text(f_h2, fa_right, fa_bottom, COLORS._main_icon_dark);
+		var _bw = 48 + string_width(VERSION_STRING);
+		var _bh = 88;
+		draw_sprite_stretched(s_workshop_badge_version, 0, prev_size - 8 - _bw, prev_size - 8 - _bh, _bw, _bh);
+		draw_text(prev_size - 16, prev_size - 12, VERSION_STRING);
 	surface_reset_target();
 	surface_save_safe(_s, dest_path);
 	surface_free(_s);
-}
+} #endregion

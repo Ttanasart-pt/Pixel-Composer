@@ -120,7 +120,6 @@ function Panel_Collection() : PanelContent() constructor {
 					var del_id = meta.file_id;
 					
 					for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
-						print(STEAM_COLLECTION[| i].meta.file_id);
 						if(STEAM_COLLECTION[| i].getMetadata().file_id == del_id) {
 							ds_list_delete(STEAM_COLLECTION, i);
 							break;

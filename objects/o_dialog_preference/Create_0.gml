@@ -46,12 +46,11 @@ event_inherited();
 		for(var i = 0; i < array_length(page); i++) {
 			if(i == page_current) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
 			else                  draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
-				
-			if(i == page_current) {
-				//draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, yl, ww, hg);
-			} else if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hg)) {
+			
+			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hg)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yl, ww, hg, CDEF.main_white, 1);
-				if(mouse_click(mb_left, sFOCUS)) {
+				
+				if(i != page_current && mouse_click(mb_left, sFOCUS)) {
 					page_current = i;
 					sp_pref.setScroll(0);
 				}
@@ -296,6 +295,16 @@ event_inherited();
 		})
 	));
 	
+	if(IS_PATREON)
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_supporter_icon", "Show supporter icon"),
+		"show_supporter_icon",
+		new checkBox(function() { 
+			PREFERENCES.show_supporter_icon = !PREFERENCES.show_supporter_icon;
+			PREF_SAVE();
+		})
+	));
+	
 	ds_list_add(pref_appr, __txt("Graph"));
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
@@ -400,6 +409,17 @@ event_inherited();
 		"notification_time",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREFERENCES.notification_time = max(0, round(real(str)));
+			PREF_SAVE();
+		})
+	));
+	
+	ds_list_add(pref_appr, __txt("Text Area"));
+	
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_widget_autocomplete_delay", "Code Autocomplete delay"),
+		"widget_autocomplete_delay",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREFERENCES.widget_autocomplete_delay = round(real(str));
 			PREF_SAVE();
 		})
 	));

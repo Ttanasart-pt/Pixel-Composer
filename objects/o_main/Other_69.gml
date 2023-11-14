@@ -17,6 +17,8 @@ if(string(ev_id) == string(STEAM_UGC_ITEM_ID) && ev_type == "ugc_create_item") {
 		case STEAM_UGC_FILE_TYPE.node_preset :	array_insert_unique(tgs, 0, "Node preset");	break;
 	}
 	
+	array_push_unique(tgs, VERSION_STRING);
+	
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
 	steam_ugc_set_item_preview(STEAM_UGC_UPDATE_HANDLE, TEMPDIR + "steamUGCthumbnail.png");
 	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, "steamUGC");

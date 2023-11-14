@@ -401,6 +401,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			ds_list_add(d3d, "3D");
 			addNodeObject(d3d, "3D Camera",		s_node_3d_camera,		"Node_3D_Camera",		[1, Node_3D_Camera]).setVersion(11510);
+			addNodeObject(d3d, "3D Camera Set",	s_node_3d_camera_set,	"Node_3D_Camera_Set",	[1, Node_3D_Camera_Set]).setVersion(11571);
 			addNodeObject(d3d, "3D Material",	s_node_3d_meterial,		"Node_3D_Material",		[1, Node_3D_Material]).setVersion(11510);
 			addNodeObject(d3d, "3D Scene",		s_node_3d_scene,		"Node_3D_Scene",		[1, Node_3D_Scene]).setVersion(11510);
 			addNodeObject(d3d, "3D Repeat",		s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat]).setVersion(11510);

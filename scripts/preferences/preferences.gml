@@ -74,6 +74,10 @@
 	PREFERENCES.clear_temp_on_close				= true;
 	PREFERENCES.pan_mouse_key					= mb_middle;
 	
+	PREFERENCES.widget_autocomplete_delay       = 500;
+	
+	PREFERENCES.show_supporter_icon				= true;
+	
 	PREFERENCES.temp_path						= "%DIR%/temp/";
 	PREFERENCES.ImageMagick_path				= "%APP%/ImageMagick/";
 	PREFERENCES.webp_path						= "%APP%/webp/";

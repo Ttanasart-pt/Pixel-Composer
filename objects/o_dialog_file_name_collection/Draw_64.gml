@@ -6,7 +6,7 @@
 #endregion
 
 #region draw TB
-	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_icon);
 	draw_text_add(dialog_x + ui(16), dialog_y + ui(32), __txt("Name"));
 	
 	//var is_author = !meta.steam || meta.author_steam_id == 0 || meta.author_steam_id == STEAM_USER_ID;
@@ -93,7 +93,7 @@
 		var yy = dialog_y + ui(56);
 	
 		if(ugc == 2) {
-			draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+			draw_set_text(f_p0, fa_left, fa_top, COLORS._main_icon);
 			draw_text(dialog_x + ui(16), yy, __txt("Update note"));
 			yy		 += line_get_height() + ui(4);
 			dialog_h += line_get_height() + ui(4);
@@ -107,7 +107,7 @@
 		}
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_icon);
 		draw_text(dialog_x + ui(16), yy, __txt("Description"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
@@ -120,7 +120,7 @@
 		dialog_h += wd_h + ui(8);
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_icon);
 		draw_text(dialog_x + ui(16), yy, __txt("Author"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
@@ -133,7 +133,7 @@
 		dialog_h += wd_h + ui(8);
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_icon);
 		draw_text(dialog_x + ui(16), yy, __txt("Contact info"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
@@ -146,7 +146,7 @@
 		dialog_h += wd_h + ui(8);
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_icon);
 		draw_text(dialog_x + ui(16), yy, __txt("Alias"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
@@ -159,7 +159,7 @@
 		dialog_h += wd_h + ui(8);
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_icon);
 		draw_text(dialog_x + ui(16), yy, __txt("Tags"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);

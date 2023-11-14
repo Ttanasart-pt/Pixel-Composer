@@ -277,7 +277,6 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static spliceSprite = function() { #region
 		var _atl	 = [];
 		var _inSurf  = getInputData(0);
-		if(spliceSurf == _inSurf) return;
 		spliceSurf = _inSurf;
 		
 		var _outSurf = outputs[| 0].getValue();
@@ -306,10 +305,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _buff = buffer_create(filSize * filSize * surface_format_get_bytes(cDep), buffer_fixed, 2);
 		
 		surf_array = [];
-		for( var i = 0, n = array_length(surf_array); i < n; i++ ) {
-			if(is_surface(surf_array[i]))
-				surface_free(surf_array[i]);
-		}
+		for( var i = 0, n = array_length(surf_array); i < n; i++ )
+			if(is_surface(surf_array[i])) surface_free(surf_array[i]);
 		
 		for(var i = 0; i < _total; i++) {
 			var _s = surface_create_valid(ww, hh, cDep);
@@ -358,7 +355,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				sprite_valid[i] = true;
 			}
 		}
-			
+		
 		if(_out == 1) outputs[| 0].setValue(surf_array);
 		outputs[| 1].setValue(_atl);
 		

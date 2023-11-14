@@ -282,11 +282,9 @@ event_inherited();
 			}
 			
 			BLEND_OVERRIDE;
-			if(i == ADD_NODE_PAGE) {
-				//draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, _y + hh, category_width - ui(32), hg);
-			} else if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, category_width - ui(32), _y + hh + hg - 1)) {
+			if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, category_width - ui(32), _y + hh + hg - 1)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, category_width - ui(32), hg, CDEF.main_white, 1);
-				if(mouse_click(mb_left, sFOCUS)) {
+				if(i != ADD_NODE_PAGE && mouse_click(mb_left, sFOCUS)) {
 					setPage(i);
 					content_pane.scroll_y		= 0;
 					content_pane.scroll_y_raw	= 0;
