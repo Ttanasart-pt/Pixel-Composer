@@ -809,9 +809,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(val);
 						} );
 						editWidget.slidable = true;
-						if(type == VALUE_TYPE.integer) editWidget.slide_speed = 1;
+						if(type == VALUE_TYPE.integer) editWidget.setSlidable();
 						
-						if(struct_has(display_data, "slide_speed")) editWidget.slide_speed	= display_data.slide_speed;
+						if(struct_has(display_data, "slide_speed")) editWidget.setSlidable(display_data.slide_speed);
 						if(struct_has(display_data, "unit"))		editWidget.unit			= display_data.unit;
 						if(struct_has(display_data, "side_button")) editWidget.side_button	= display_data.side_button;
 						
@@ -1347,6 +1347,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} #endregion
 		
 		if(display_type == VALUE_DISPLAY.d3quarternion) { #region
+			if(!applyUnit) return value;
 			var dispType = struct_try_get(nodeFrom.display_data, "angle_display");
 			switch(dispType) {
 				case QUARTERNION_DISPLAY.quarterion : return value;
@@ -1399,8 +1400,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
-		if(value_tag == "dimension" && node.attributes.use_project_dimension)
-			return PROJECT.attributes.surface_dimension;
 		
 		global.cache_call++;
 		if(useCache && use_cache) {
@@ -1442,6 +1441,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) { #region
+		if(value_tag == "dimension" && node.attributes.use_project_dimension)
+			return PROJECT.attributes.surface_dimension;
+		
 		if(sep_axis) {
 			var val = [];
 			for( var i = 0, n = array_length(animators); i < n; i++ )
@@ -1706,6 +1708,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) { #region
 		var updated = false;
+		var _val;
 		
 		if(sep_axis) {
 			if(index == noone) {
@@ -1715,11 +1718,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				updated = animators[index].setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
 		} else {
 			if(index != noone) {
-				var _val = variable_clone(animator.getValue(time));
+				_val = variable_clone(animator.getValue(time));
 				_val[index] = val;
-				updated = animator.setValue(_val, connect_type == JUNCTION_CONNECT.input && record, time); 
 			} else
-				updated = animator.setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
+				_val = val;
+			updated = animator.setValue(_val, connect_type == JUNCTION_CONNECT.input && record, time); 
 		}
 		
 		if(type == VALUE_TYPE.gradient)				updated = true;

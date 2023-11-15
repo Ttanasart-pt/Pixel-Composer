@@ -527,6 +527,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		doUpdate();
 	} #endregion
 	
+	static postupdate = function(frame = CURRENT_FRAME) {}
+	
 	static doUpdate = function(frame = CURRENT_FRAME) { #region
 		if(PROJECT.safeMode) return;
 		if(NODE_EXTRACT)     return;
@@ -558,6 +560,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			}
 		}
 		
+		postupdate(frame);
 		cached_manual = false;
 		
 		if(!use_cache && PROJECT.onion_skin.enabled) {
@@ -1260,8 +1263,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static getAnimationCacheExist = function(frame) { return cacheExist(frame); }
 	
-	static enable  = function() { INLINE active = true; }
-	static disable = function() { INLINE active = false; }
+	static enable  = function() { INLINE active = true;  timeline_item.active = true;  }
+	static disable = function() { INLINE active = false; timeline_item.active = false; }
 	
 	static destroy = function(_merge = false) { #region
 		if(!active) return;
@@ -1273,7 +1276,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(PANEL_INSPECTOR.inspecting == self) PANEL_INSPECTOR.inspecting = noone;
 		
 		PANEL_PREVIEW.removeNodePreview(self);
-		timeline_item.removeSelf();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
@@ -1774,11 +1776,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			createNewInput();
 	} #endregion
 	
-	static attributeDeserialize = function(attr) { 
+	static attributeDeserialize = function(attr) { #region
 		if(struct_has(attributes, "use_project_dimension") && !struct_has(attr, "use_project_dimension"))
 			attributes.use_project_dimension = false;
 		struct_override(attributes, attr); 
-	}
+	} #endregion
 	
 	static postDeserialize = function() {}
 	static processDeserialize = function() {}

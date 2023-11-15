@@ -742,7 +742,7 @@ function Panel_Menu() : PanelContent() constructor {
 				var _ib = COLORS._main_text_sub;
 				
 				if(pHOVER && point_in_rectangle(mx, my, _cx - 12, _cy - 12, _cx + 12, _cy + 12)) {
-					TOOLTIP = "Verified supporter";
+					TOOLTIP = "Supporter";
 					_ib = COLORS._main_accent;
 				}
 				

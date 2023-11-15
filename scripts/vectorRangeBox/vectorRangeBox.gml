@@ -35,7 +35,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	
 	static setSlideSpeed = function(speed) {
 		for(var i = 0; i < size; i++)
-			tb[i].slide_speed = speed;
+			tb[i].setSlidable(speed);
 	}
 	
 	static setInteract = function(interactable = noone) { 

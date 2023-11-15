@@ -27,7 +27,7 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	
 	static setSlideSpeed = function(speed) {
 		for(var i = 0; i < 4; i++)
-			tb[i].slide_speed = speed;
+			tb[i].setSlidable(speed);
 	}
 	
 	static setInteract = function(interactable = noone) { 

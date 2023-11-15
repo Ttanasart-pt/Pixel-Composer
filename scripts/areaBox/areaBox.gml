@@ -87,7 +87,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	
 	static setSlideSpeed = function(speed) { #region
 		for(var i = 0; i < 4; i++)
-			tb[i].slide_speed = speed;
+			tb[i].setSlidable(speed);
 	} #endregion
 	
 	static setInteract = function(interactable = noone) { #region

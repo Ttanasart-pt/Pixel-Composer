@@ -226,6 +226,45 @@ event_inherited();
 			PREF_SAVE();
 		})
 	));
+	
+	ds_list_add(pref_global, __txt("Libraries"));
+	
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_directory_ImageMagick", "ImageMagick path*"),
+		"ImageMagick_path",
+		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.ImageMagick_path = txt; PREF_SAVE(); })
+			.setSideButton(button(function() { PREFERENCES.ImageMagick_path = get_directory(PREFERENCES.ImageMagick_path); PREF_SAVE(); }, THEME.button_path_icon))
+		 .setFont(f_p2)
+		 .setEmpty(),
+	));
+	
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_directory_webp", "Webp path*"),
+		"webp_path",
+		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.webp_path = txt; PREF_SAVE(); })
+			.setSideButton(button(function() { PREFERENCES.webp_path = get_directory(PREFERENCES.webp_path); PREF_SAVE(); }, THEME.button_path_icon))
+		 .setFont(f_p2)
+		 .setEmpty(),
+	));
+	
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_directory_gifski", "Gifski path*"),
+		"gifski_path",
+		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.gifski_path = txt; PREF_SAVE(); })
+			.setSideButton(button(function() { PREFERENCES.gifski_path = get_directory(PREFERENCES.gifski_path); PREF_SAVE(); }, THEME.button_path_icon))
+		 .setFont(f_p2)
+		 .setEmpty(),
+	));
+	
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_directory_FFmpeg", "FFmpeg path*"),
+		"ffmpeg_path",
+		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.gifski_path = txt; PREF_SAVE(); })
+			.setSideButton(button(function() { PREFERENCES.ffmpeg_path = get_directory(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
+		 .setFont(f_p2)
+		 .setEmpty(),
+	));
+	
 #endregion
 
 #region interface

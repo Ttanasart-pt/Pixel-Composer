@@ -273,14 +273,8 @@ function Panel_Preview() : PanelContent() constructor {
 	addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	function() { create_preview_window(PANEL_PREVIEW.getNodePreview()); });
 	addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	function() { PROJECT.previewGrid.show = !PROJECT.previewGrid.show; });
 	
-	addHotkey("Preview", "Pan",		"", MOD_KEY.alt,				function() { 
-																		if(PREFERENCES.alt_picker) return; 
-																		PANEL_PREVIEW.canvas_dragging_key = true; 
-																	});
-	addHotkey("Preview", "Zoom",	"", MOD_KEY.alt | MOD_KEY.ctrl,	function() { 
-																		if(PREFERENCES.alt_picker) return; 
-																		PANEL_PREVIEW.canvas_zooming_key  = true; 
-																	});
+	addHotkey("Preview", "Pan",		"", MOD_KEY.ctrl,				function() { PANEL_PREVIEW.canvas_dragging_key = true; });
+	addHotkey("Preview", "Zoom",	"", MOD_KEY.alt | MOD_KEY.ctrl,	function() { PANEL_PREVIEW.canvas_zooming_key  = true; });
 	#endregion
 	
 	function setNodePreview(node) { #region

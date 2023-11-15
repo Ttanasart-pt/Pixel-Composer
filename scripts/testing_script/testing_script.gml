@@ -13,9 +13,9 @@ function __test_update_current_collections() {
 			var _node = _st.content[| i];
 			
 			print("  > Updating " + _node.path);
-			var _map = json_load(_node.path);
-			_map[? "version"] = SAVE_VERSION;
-			json_save(_node.meta_path, _map);
+			var _map = json_load_struct(_node.path);
+			_map.version = SAVE_VERSION;
+			json_save_struct(_node.meta_path, _map);
 		}
 		
 		for( var i = 0; i < ds_list_size(_st.subDir); i++ )

@@ -32,7 +32,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	tb_value = new textBox(TEXTBOX_INPUT.number, onApply);
 	
 	static setSlideSpeed = function(speed) {
-		tb_value.slide_speed = speed;
+		tb_value.setSlidable(speed);
 	}
 	
 	static setInteract = function(interactable = noone) { 

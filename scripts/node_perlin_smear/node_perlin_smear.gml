@@ -1,13 +1,6 @@
 function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Smear noise";
 	
-	shader = sh_perlin_smear;
-	uniform_dim = shader_get_uniform(shader, "u_resolution");
-	uniform_pos = shader_get_uniform(shader, "position");
-	uniform_sca = shader_get_uniform(shader, "scale");
-	uniform_ite = shader_get_uniform(shader, "iteration");
-	uniform_bri = shader_get_uniform(shader, "bright");
-	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -36,16 +29,14 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
-		surface_set_target(_outSurf);
-		shader_set(shader);
-			shader_set_uniform_f_array_safe(uniform_dim, _dim);
-			shader_set_uniform_f_array_safe(uniform_pos, _pos);
-			shader_set_uniform_f_array_safe(uniform_sca, _sca);
-			shader_set_uniform_f(uniform_bri, _bri);
-			shader_set_uniform_i(uniform_ite, _ite);
+		surface_set_shader(_outSurf, sh_perlin_smear);
+			shader_set_f("u_resolution", _dim);
+			shader_set_f("position",	 _pos);
+			shader_set_f("scale",		 _sca);
+			shader_set_f("bright",		 _bri);
+			shader_set_i("iteration",	 _ite);
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
-		shader_reset();
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

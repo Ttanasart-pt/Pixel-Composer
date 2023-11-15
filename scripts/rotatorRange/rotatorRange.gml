@@ -6,13 +6,9 @@ function rotatorRange(_onModify) : widget() constructor {
 	drag_sa  = 0;
 	drag_sc  = 0;
 	
-	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, val); } );
-	tb_min.slidable = true;
-	tb_min.slide_speed = 1;
+	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, val); } ).setSlidable();
 	
-	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } );
-	tb_max.slidable = true;
-	tb_max.slide_speed = 1;
+	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable();
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;

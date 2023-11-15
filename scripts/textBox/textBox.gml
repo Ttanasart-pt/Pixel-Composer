@@ -42,9 +42,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	text_surface = surface_create(1, 1);
 	
-	static setSlidable = function(slidable = true, slideStep = slide_speed) { #region
-		self.slidable = slidable;
-		slide_speed   = slideStep;
+	static setSlidable = function(slideStep = slide_speed) { #region
+		slidable    = true;
+		slide_speed = slideStep;
+		
 		return self;
 	} #endregion
 	
@@ -498,8 +499,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		} #endregion
 		
 		if(sliding > 0) { #region
-			var dx =   _m[0] - slide_mx;
-			var dy = -(_m[1] - slide_my);
+			var dx = _m[0] - slide_mx;
+			var dy = _m[1] - slide_my;
 			
 			if(sliding == 1 && (abs(dx) > 16 || abs(dy) > 16)) {
 				sliding  = 2;

@@ -197,6 +197,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 		var _name  = filename_name_only(_path);
 		var _mpath = $"{_dir}/{_name}.meta";
 		
+		_meta.version = SAVE_VERSION;
 		json_save_struct(_mpath, _meta, true);
 	}
 	

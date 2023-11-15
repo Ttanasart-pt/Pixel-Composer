@@ -112,11 +112,20 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		if(prop.display_type == VALUE_DISPLAY.d3quarternion) {
-			var _qf = new BBMOD_Quaternion(_f[0], _f[1], _f[2], _f[3]);
-			var _qt = new BBMOD_Quaternion(_t[0], _t[1], _t[2], _t[3]);
-			
-			var _ql = _qf.Slerp(_qt, _lrp);
-			return _ql.ToArray();
+			if(prop.display_data.angle_display == 0) {
+				var _qf = new BBMOD_Quaternion(_f[0], _f[1], _f[2], _f[3]);
+				var _qt = new BBMOD_Quaternion(_t[0], _t[1], _t[2], _t[3]);
+				var _ql = _qf.Slerp(_qt, _lrp);
+				
+				return _ql.ToArray();
+			} else {
+				return [
+					lerp(_f[0], _t[0], _lrp),
+					lerp(_f[1], _t[1], _lrp),
+					lerp(_f[2], _t[2], _lrp),
+					0,
+				];
+			}
 		}
 			
 		if(prop.type == VALUE_TYPE.color) {

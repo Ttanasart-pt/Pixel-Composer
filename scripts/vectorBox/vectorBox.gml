@@ -58,7 +58,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	static setSlideSpeed = function(speed) {
 		for(var i = 0; i < size; i++)
-			tb[i].slide_speed = speed;
+			tb[i].setSlidable(speed);
 		return self;
 	}
 	

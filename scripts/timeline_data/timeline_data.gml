@@ -1,5 +1,6 @@
 function timelineItem() constructor { 
 	show = true;
+	active = true;
 	
 	color = -1;
 	color_cur = CDEF.main_grey;

@@ -250,14 +250,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	addHotkey("Graph", "Copy",		"C", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doCopy(); });
 	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doPaste(); });
 	
-	addHotkey("Graph", "Pan",		"", MOD_KEY.alt,				function() { 
-																		if(PREFERENCES.alt_picker) return; 
-																		PANEL_GRAPH.graph_dragging_key = true; 
-																	});
-	addHotkey("Graph", "Zoom",		"", MOD_KEY.alt | MOD_KEY.ctrl,	function() { 
-																		if(PREFERENCES.alt_picker) return; 
-																		PANEL_GRAPH.graph_zooming_key = true; 
-																	});
+	addHotkey("Graph", "Pan",		"", MOD_KEY.ctrl,				function() { PANEL_GRAPH.graph_dragging_key = true; });
+	addHotkey("Graph", "Zoom",		"", MOD_KEY.alt | MOD_KEY.ctrl,	function() { PANEL_GRAPH.graph_zooming_key = true; });
 	#endregion
 	
 	#region ++++ node setters ++++

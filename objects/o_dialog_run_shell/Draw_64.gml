@@ -28,7 +28,7 @@ if !ready exit;
 	
 	draw_set_text(f_code, fa_left, fa_top, COLORS._main_text);
 	var _hh = string_height_ext(ctxt[1], -1, dialog_w - ui(64));
-	draw_sprite_stretched(THEME.ui_panel_inner_bg, 1, dialog_x + ui(24), py - ui(8), dialog_w - ui(48), _hh + ui(16));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(24), py - ui(8), dialog_w - ui(48), _hh + ui(16));
 	
 	draw_text_ext(dialog_x + ui(32), py, ctxt[1], -1, dialog_w - ui(64));
 	py += _hh + ui(16);

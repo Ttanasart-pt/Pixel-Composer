@@ -31,8 +31,8 @@ function rangeBox(_type, _onModify) : widget() constructor {
 	}
 	
 	static setSlideSpeed = function(speed) {
-		tb[0].slide_speed = speed;
-		tb[1].slide_speed = speed;
+		tb[0].setSlidable(speed);
+		tb[1].setSlidable(speed);
 	}
 	
 	static setInteract = function(interactable = noone) { 

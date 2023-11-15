@@ -70,6 +70,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		update_on_frame = grup == 0;
 	} #endregion
 	
+	static postupdate = function(frame = CURRENT_FRAME) {
+		if(LAST_FRAME) array_remove(RENDERING, node_id);
+	}
+	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var inpt = getInputData(0);
 		var grup = getInputData(1);
@@ -249,9 +253,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		if(drawn) array_safe_set(anim_drawn, CURRENT_FRAME, true);
 		outputs[| 1].setValue(_atl);
-		
-		if(LAST_FRAME)
-			array_remove(RENDERING, node_id);
 	} #endregion
 	
 	static onInspector1Update = function(updateAll = true) { #region

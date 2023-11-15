@@ -8,11 +8,15 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	inputs[| in_d3d + 1] = nodeValue("Target subobject", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1)
 		.setArrayDepth(1);
 	
+	inputs[| in_d3d + 2] = nodeValue("Bake UV", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", onClick: function() { attributes.bakedUV = !attributes.bakedUV; triggerRender(); } });
+	
 	outputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Mesh, noone);
 	
 	input_display_list = [ 
 		["Transform", false], 0, 1, 2,
 		["UV",		  false], in_d3d + 0, in_d3d + 1,
+		["Bake",	  false], in_d3d + 2,
 	];
 	
 	remap_position = [ 0, 0, 0 ];
@@ -20,6 +24,15 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	remap_normal_x = [ 0, 0, 0 ];
 	remap_normal_y = [ 0, 0, 0 ];
 	remap_scale    = [ 1, 1, 1 ];
+	
+	attributes.bakedUV     = false;
+	attributes.bakedUVdata = [];
+	
+	modify_object_index = 0;
+	
+	static step = function() { #region
+		inputs[| in_d3d + 2].editWidget.text = attributes.bakedUV? "Unbake" : "Bake";
+	} #endregion
 	
 	static modify_object = function(_object, _data, _matrix) { #region
 		if(_object.VF != global.VF_POS_NORM_TEX_COL) return _object;
@@ -32,6 +45,10 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 		var _mat = _matrix.Mul(_obj.transform.matrix);
 		var _fil = _data[in_d3d + 1];
 		if(_fil != -1 && !is_array(_fil)) _fil = [ _fil ];
+		
+		var _vertex_index = 0;
+		if(!attributes.bakedUV) attributes.bakedUVdata[modify_object_index] = [];
+		var _baked_vertex = attributes.bakedUVdata[modify_object_index];
 		
 		for( var i = 0, n = array_length(_object.VB); i < n; i++ ) {
 			if(_fil != -1 && !array_exists(_fil, i)) {
@@ -64,9 +81,14 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 				var _v4 = new BBMOD_Vec4(_x, _y, _z, 1);
 				var _vt = _mat.Transform(_v4);
 				
-				var _posOnMap = d3d_point_project_plane_uv(remap_position, remap_normal, [_vt.X, _vt.Y, _vt.Z], remap_normal_x, remap_normal_y);
-				_posOnMap[0] = _posOnMap[0] / remap_scale[0] + 0.5;
-				_posOnMap[1] = _posOnMap[1] / remap_scale[1] + 0.5;
+				if(attributes.bakedUV) {
+					_posOnMap = _baked_vertex[_vertex_index];
+				} else {
+					var _posOnMap = d3d_point_project_plane_uv(remap_position, remap_normal, [_vt.X, _vt.Y, _vt.Z], remap_normal_x, remap_normal_y);
+					_posOnMap[0] = _posOnMap[0] / remap_scale[0] + 0.5;
+					_posOnMap[1] = _posOnMap[1] / remap_scale[1] + 0.5;
+					_baked_vertex[_vertex_index] = _posOnMap;
+				}
 				
 				buffer_seek(buff, buffer_seek_relative, -12);
 				
@@ -74,11 +96,13 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 				buffer_write(buff, buffer_f32, _posOnMap[1]);
 				
 				buffer_seek(buff, buffer_seek_relative, 4);
+				_vertex_index++;
 			}
 			
 			_obj.VB[i] = vertex_create_buffer_from_buffer(buff, global.VF_POS_NORM_TEX_COL);
 		}
 		
+		modify_object_index++;
 		return _obj;
 	} #endregion
 	
@@ -115,6 +139,7 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 		remap_position = _data[0];
 		remap_scale    = _data[2];
 		
+		modify_object_index = 0;
 		return modify(_data[in_d3d + 0], _data);
 	} #endregion
 	

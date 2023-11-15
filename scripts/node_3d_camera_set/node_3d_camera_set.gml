@@ -7,7 +7,7 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 	inputs[| in_cam + 0] = nodeValue("Horizontal angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| in_cam + 1] = nodeValue("Vertical angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
+	inputs[| in_cam + 1] = nodeValue("Vertical angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 215 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 1] });
 	
 	inputs[| in_cam + 2] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )

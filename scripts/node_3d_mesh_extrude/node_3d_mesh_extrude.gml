@@ -32,8 +32,9 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		
 		var _matN  = _mat.clone();
 		var _nSurf = surface_create(surface_get_width(_surf), surface_get_height(_surf));
+		
 		surface_set_shader(_nSurf, sh_d3d_extrude_extends);
-			shader_set_f("dimension", surface_get_width(_surf), surface_get_height(_surf));
+			shader_set_dim("dimension", _surf);
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		

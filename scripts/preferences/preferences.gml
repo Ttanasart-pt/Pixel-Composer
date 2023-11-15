@@ -4,6 +4,8 @@
 	
 	PREFERENCES.ui_framerate					= 60;
 	PREFERENCES.path_resolution					= 32;
+	
+	PREFERENCES.node_recents_amount				= 20;
 												
 	PREFERENCES.double_click_delay				= 0.25;
 	PREFERENCES.mouse_wheel_speed				= 1.00;

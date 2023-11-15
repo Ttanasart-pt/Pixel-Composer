@@ -97,19 +97,6 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 				draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - ui(20), _y + _h / 2, 1, COLORS._main_icon);
 		}
 		
-		//if(_type == VALUE_TYPE.atlas) {
-		//	draw_sprite_stretched_ext(THEME.ui_panel_inner_bg, 1, _x, _y + _h + ui(8), _w, ui(40), COLORS.node_composite_bg_blend, 1);
-			
-		//	var set_y = _y + _h + ui(16);
-		//	var set_w = ui(64);
-		//	var set_h = ui(24);
-			
-		//	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		//	draw_text_add(_x + ui(16), set_y + set_h / 2, __txt("Crop atlas"));
-			
-		//	cb_atlas_crop.drawParam(new widgetParam(_x + _w - set_w, set_y, set_w, set_h, display_data.atlas_crop,, _m, _rx, _ry));
-		//}
-		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	
 		

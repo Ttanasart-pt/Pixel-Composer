@@ -83,7 +83,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		for( var i = 0; i < 1; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
+			inputs[| i].editWidget.setSlidable(int? 0.1 : 0.01);
 		}
 		
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
@@ -330,7 +330,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		for( var i = 0; i < 2; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
+			inputs[| i].editWidget.setSlidable(int? 0.1 : 0.01);
 		}
 		
 		inputs[| 4].setVisible(disp == 1, disp == 1);
@@ -515,7 +515,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var int = getInputData(3);
 		for( var i = 0; i < 3; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
+			inputs[| i].editWidget.setSlidable(int? 0.1 : 0.01);
 		}
 		
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
@@ -574,7 +574,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var int = getInputData(4);
 		for( var i = 0; i < 4; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
+			inputs[| i].editWidget.setSlidable(int? 0.1 : 0.01);
 		}
 		
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);

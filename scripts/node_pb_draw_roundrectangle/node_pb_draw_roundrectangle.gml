@@ -47,14 +47,14 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 			inputs[| 4].setType(VALUE_TYPE.float);
 			inputs[| 5].setType(VALUE_TYPE.float);
 			
-			inputs[| 4].editWidget.slide_speed = 0.01;
-			inputs[| 5].editWidget.setSlideSpeed(0.01);
+			inputs[| 4].editWidget.setSlideSpeed(0.001);
+			inputs[| 5].editWidget.setSlideSpeed(0.001);
 		} else {
 			inputs[| 4].setType(VALUE_TYPE.integer);
 			inputs[| 5].setType(VALUE_TYPE.integer);
 			
-			inputs[| 4].editWidget.slide_speed = 1;
-			inputs[| 5].editWidget.setSlideSpeed(1);
+			inputs[| 4].editWidget.setSlideSpeed(0.01);
+			inputs[| 5].editWidget.setSlideSpeed(0.01);
 		}
 	}
 	

@@ -11,6 +11,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	
 	show_in_recent = true;
 	
+	is_patreon_extra = false;
+	
 	var pth = DIRECTORY + "Nodes/tooltip/" + node + ".png";
 	if(file_exists(pth))
 		tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
@@ -24,17 +26,26 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	}
 	
 	static setVersion = function(version) {
+		INLINE 
 		new_node = version == VERSION;
 		return self;
 	}
 	
 	static isDeprecated = function() {
+		INLINE 
 		deprecated = true;
 		return self;
 	}
 	
 	static hideRecent = function() {
+		INLINE 
 		show_in_recent = false;
+		return self;
+	}
+	
+	static patreonExtra = function() {
+		INLINE 
+		is_patreon_extra = true;
 		return self;
 	}
 	
@@ -55,6 +66,89 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		if(!LOADING && !APPENDING) _node.doUpdate();
 		return _node;
 	}
+	
+	static drawGrid = function(_x, _y, _mx, _my, grid_size) { #region
+		var spr_x = _x + grid_size / 2;
+		var spr_y = _y + grid_size / 2;
+				
+		draw_sprite_ui_uniform(spr, 0, spr_x, spr_y, 0.5);
+				
+		if(new_node) {
+			draw_sprite_ui_uniform(THEME.node_new_badge, 0, _x + grid_size - ui(12), _y + ui(6),, COLORS._main_accent);
+			draw_sprite_ui_uniform(THEME.node_new_badge, 1, _x + grid_size - ui(12), _y + ui(6));
+		}
+				
+		if(deprecated) {
+			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 0, _x + grid_size - ui(12), _y + ui(6),, COLORS._main_value_negative);
+			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, _x + grid_size - ui(12), _y + ui(6));
+		}
+		
+		var fav = array_exists(global.FAV_NODES, node);
+		if(fav) draw_sprite_ui_uniform(THEME.star, 0, _x + grid_size - ui(10), _y + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
+					
+		if(IS_PATREON && is_patreon_extra) {
+			var spr_x = _x + grid_size - 4;
+			var spr_y = _y + 4;
+						
+			BLEND_SUBTRACT
+			gpu_set_colorwriteenable(0, 0, 0, 1);
+			draw_sprite_ext(s_patreon_supporter, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
+			gpu_set_colorwriteenable(1, 1, 1, 1);
+			BLEND_NORMAL
+			
+			draw_sprite_ext(s_patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
+			
+			if(point_in_circle(_mx, _my, spr_x, spr_y, 10)) TOOLTIP = "Supporter exclusive";
+		}
+	} #endregion
+	
+	static drawList = function(_x, _y, _mx, _my, list_height) { #region
+		var fav = array_exists(global.FAV_NODES, node);
+		if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(32), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
+				
+		var spr_x = list_height / 2 + ui(44);
+		var spr_y = _y + list_height / 2;
+				
+		var ss = (list_height - ui(8)) / max(sprite_get_width(spr), sprite_get_height(spr));
+		draw_sprite_ext(spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
+					
+		var tx = list_height + ui(52);
+				
+		if(new_node) {
+			draw_sprite_ui_uniform(THEME.node_new_badge, 0, tx + ui(16), _y + list_height / 2 + ui(1),, COLORS._main_accent);
+			draw_sprite_ui_uniform(THEME.node_new_badge, 1, tx + ui(16), _y + list_height / 2 + ui(1));
+			tx += ui(40);
+		}
+				
+		if(deprecated) {
+			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 0, tx + ui(16), _y + list_height / 2 + ui(1),, COLORS._main_value_negative);
+			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, tx + ui(16), _y + list_height / 2 + ui(1));
+			tx += ui(40);
+		}	
+		
+		var _txt = getName();
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(tx, _y + list_height / 2, _txt);
+		
+		tx += string_width(_txt);
+		
+		if(IS_PATREON && is_patreon_extra) {
+			var spr_x = tx + 8;
+			var spr_y = _y + list_height / 2 - 4;
+						
+			BLEND_SUBTRACT
+			gpu_set_colorwriteenable(0, 0, 0, 1);
+			draw_sprite_ext(s_patreon_supporter, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
+			gpu_set_colorwriteenable(1, 1, 1, 1);
+			BLEND_NORMAL
+			
+			draw_sprite_ext(s_patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
+			
+			if(point_in_circle(_mx, _my, spr_x, spr_y, 10)) TOOLTIP = "Supporter exclusive";
+		}
+		
+		return tx;
+	} #endregion
 } #endregion
 
 #region nodes
@@ -455,6 +549,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(generator, "Simplex Noise",		s_node_noise_simplex,		"Node_Noise_Simplex",		[1, Node_Noise_Simplex], ["perlin"], "Generate simplex noise, similiar to perlin noise with better fidelity but non-tilable.").setVersion(1080);
 			addNodeObject(generator, "Cellular Noise",		s_node_noise_cell,			"Node_Cellular",			[1, Node_Cellular], ["voronoi", "worley"], "Generate voronoi pattern.");
 			addNodeObject(generator, "Anisotropic Noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			[1, Node_Noise_Aniso],, "Generate anisotropic noise.");
+			/**/ addNodeObject(generator, "Extra Perlins",	s_node_noise_aniso,			"Node_Perlin_Extra",		[1, Node_Perlin_Extra], ["noise"], "Random perlin noise made with different algorithms.").patreonExtra();
 			
 			ds_list_add(generator, "Patterns");
 			addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe],, "Generate stripe pattern.");

@@ -560,6 +560,16 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return noone;
 	} #endregion
 	
+	static enable = function() { #region
+		active = true; timeline_item.active = true;
+		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) nodes[| i].enable();
+	} #endregion
+	
+	static disable = function() { #region
+		active = false; timeline_item.active = false;
+		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) nodes[| i].disable();
+	} #endregion
+	
 	static processSerialize = function(_map) { #region
 		_map[? "instance_base"]	= instanceBase? instanceBase.node_id : noone;
 	} #endregion

@@ -443,6 +443,8 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		for( var i = 0, n = array_length(folder.contents); i < n; i++ ) {
 			var _cont = folder.contents[i];
+			if(!_cont.active) continue;
+			
 			var _content = {
 				item:	  _cont,
 				parent:   _cont.parent,

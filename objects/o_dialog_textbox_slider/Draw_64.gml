@@ -1,13 +1,25 @@
 /// @description 
 if(tb == noone) exit;
 
+if(slide_da == -1) {
+	var _dist = point_distance(slide_dx, slide_dy, mouse_mx, mouse_my);
+	var _dirr = point_direction(slide_dx, slide_dy, mouse_mx, mouse_my);
+	
+	if(_dist > 16) {
+		     if(_dirr <  45) slide_da = 0;
+		else if(_dirr < 135) slide_da = 1;
+		else if(_dirr < 225) slide_da = 0;
+		else if(_dirr < 315) slide_da = 1;
+		else                 slide_da = 0;
+	}
+	
+	tb = noone;
+	exit;
+}
+
 if(!MOUSE_WRAPPING) {
 	var _adx = mouse_mx - slide_dx;
 	var _ady = slide_dy - mouse_my;
-	
-		 if(slide_da == -1 && abs(_ady - _adx) > 8) slide_da = abs(_adx) > abs(_ady);
-	else if(slide_da ==  0 && abs(_ady) > abs(_adx) + 8 && abs(mouse_my - slide_dy) > 64) slide_da = 1;
-	else if(slide_da ==  1 && abs(_adx) > abs(_ady) + 8 && abs(mouse_mx - slide_dx) > 64) slide_da = 0;
 	
 	var _s = tb.slide_speed;
 	if(key_mod_press(CTRL)) _s *= 10;

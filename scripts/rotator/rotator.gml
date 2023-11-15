@@ -11,9 +11,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	spr_bg   = THEME.rotator_bg;
 	spr_knob = THEME.rotator_knob;
 	
-	tb_value = new textBox(TEXTBOX_INPUT.number, onModify);
-	tb_value.slidable = true;
-	tb_value.slide_speed = 1;
+	tb_value = new textBox(TEXTBOX_INPUT.number, onModify).setSlidable();
 	
 	halign = fa_center;
 	

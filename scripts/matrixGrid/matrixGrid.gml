@@ -73,7 +73,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 	
 	static setSlideSpeed = function(speed) {
 		for(var i = 0; i < inputs; i++)
-			tb[i].slide_speed = speed;
+			tb[i].setSlidable(speed);
 	}
 	
 	static drawParam = function(params) {

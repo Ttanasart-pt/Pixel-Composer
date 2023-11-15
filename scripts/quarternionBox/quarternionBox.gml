@@ -34,7 +34,7 @@ function quarternionBox(_onModify) : widget() constructor {
 	
 	static setSlideSpeed = function(speed) {
 		for(var i = 0; i < size; i++)
-			tb[i].slide_speed = speed;
+			tb[i].setSlidable(speed);
 	}
 	
 	static setInteract = function(interactable) { 
@@ -82,9 +82,13 @@ function quarternionBox(_onModify) : widget() constructor {
 		var bx = _x;
 		disp_w = disp_w == noone? ww : lerp_float(disp_w, ww, 3);
 		
+		var _dispDat = _data;
+		
 		for(var i = 0; i < size; i++) {
+			var _a = _dispDat[i];
+			
 			tb[i].setFocusHover(clickable && active, hover);
-			tb[i].draw(bx + ui(24), _y, disp_w - ui(24), _h, _data[i], _m);
+			tb[i].draw(bx + ui(24), _y, disp_w - ui(24), _h, _a, _m);
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 			draw_text(bx + ui(8), _y + _h / 2, axis[i]);
