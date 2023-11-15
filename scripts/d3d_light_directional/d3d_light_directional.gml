@@ -1,5 +1,5 @@
 function __3dLightDirectional() : __3dLight() constructor {
-	vertex		= [[ new __vertex(1, 0, 0, c_yellow, 0.8), new __vertex(3, 0, 0, c_yellow, 0.8) ]];
+	vertex		= [[ new __vertex(1, 0, 0, c_white), new __vertex(3, 0, 0, c_white) ]];
 	VF		    = global.VF_POS_COL;
 	render_type = pr_linelist;
 	VB			= build();
@@ -13,6 +13,8 @@ function __3dLightDirectional() : __3dLight() constructor {
 	
 	static submitSel = function(params = {}) { #region
 		shader_set(sh_d3d_wireframe);
+		shader_set_color("blend", color);
+		
 		preSubmitVertex(params); 
 		shader_reset();
 	} #endregion

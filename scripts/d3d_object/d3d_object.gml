@@ -181,6 +181,8 @@ function __3dObject() constructor {
 			if(NVB == noone) generateNormal();
 			if(NVB != noone) {
 				shader_set(sh_d3d_wireframe);
+				shader_set_color("blend", c_white);
+				
 				for( var i = 0, n = array_length(NVB); i < n; i++ ) 
 					vertex_submit(NVB[i], pr_linelist, -1);
 				shader_reset();

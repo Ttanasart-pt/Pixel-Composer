@@ -645,22 +645,6 @@ function Panel_Menu() : PanelContent() constructor {
 			}
 		#endregion
 		
-		#region patreon
-			if(IS_PATREON && PREFERENCES.show_supporter_icon) {
-				_x1  = _x0 - 8;
-				_x0 -= ui(32);
-				
-				var _cx = (_x0 + _x1) / 2;
-				var _cy = (_y0 + _y1) / 2;
-				
-				if(pHOVER && point_in_rectangle(mx, my, _cx - 16, _y0, _cx + 16, _y1)) {
-					TOOLTIP = "Verified supporter";
-				}
-				
-				draw_sprite_ext(s_patreon_supporter, 0, _cx, _cy, 1, 1, 0, tc, 1);
-			}
-		#endregion
-		
 		#region title
 			var txt = "";
 			if(PROJECT.safeMode) txt += "[SAFE MODE] ";
@@ -713,7 +697,11 @@ function Panel_Menu() : PanelContent() constructor {
 				tby0 = ty0;
 			}
 			
-			if(buttonInstant(THEME.button_hide_fill, tbx0, tby0, tw, th, [mx, my], pFOCUS, pHOVER) == 2) {
+			var _b   = buttonInstant(THEME.button_hide_fill, tbx0, tby0, tw, th, [mx, my], pFOCUS, pHOVER);
+			var _hov = _b > 0;
+			
+			if(_b == 2) {
+				_hov = true;
 				var arr = [];
 				var tip = [];
 				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
@@ -733,6 +721,33 @@ function Panel_Menu() : PanelContent() constructor {
 			} else {
 				draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
 				draw_text(tx0 + ui(8), tby0 + th / 2, tc);
+			}
+			
+			if(IS_PATREON && PREFERENCES.show_supporter_icon) {
+				var _tw = string_width(tc);
+				var _th = string_height(tc);
+				var _cx, _cy;
+				
+				if(hori) {
+					_cx = tcx + _tw / 2;
+					_cy = (ty0 + ty1) / 2 - _th / 2;
+				} else {
+					_cx = tx0 + ui(8) + _tw;
+					_cy = tby0 + th / 2 - _th / 2;
+				}
+				
+				_cx += ui(2);
+				_cy += ui(6);
+				
+				var _ib = COLORS._main_text_sub;
+				
+				if(pHOVER && point_in_rectangle(mx, my, _cx - 12, _cy - 12, _cx + 12, _cy + 12)) {
+					TOOLTIP = "Verified supporter";
+					_ib = COLORS._main_accent;
+				}
+				
+				draw_sprite_ext(s_patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
+				draw_sprite_ext(s_patreon_supporter, 1, _cx, _cy, 1, 1, 0, _ib, 1);
 			}
 		#endregion
 	}

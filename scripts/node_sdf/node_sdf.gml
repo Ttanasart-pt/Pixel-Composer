@@ -43,16 +43,9 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		temp_surface[1]  = surface_verify(temp_surface[1], _n, _n, cDep);
 		_outSurf = surface_verify(_outSurf, sw, sh, cDep);
 		
-		surface_set_target(temp_surface[0]);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(sh_sdf_tex);
+		surface_set_shader(temp_surface[0], sh_sdf_tex);
 			draw_surface_safe(inSurf, 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		var _step    = ceil(log2(_n));
 		var stepSize = power(2, _step);
@@ -62,33 +55,19 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			stepSize /= 2;
 			bg = !bg;
 			
-			surface_set_target(temp_surface[bg]);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-			
-			shader_set(sh_sdf);
+			surface_set_shader(temp_surface[bg], sh_sdf);
 				shader_set_uniform_f(uniform_sdf_dim, _n, _n );
 				shader_set_uniform_f(uniform_sdf_stp, stepSize);
 				shader_set_uniform_i(uniform_sdf_sid, _side);
 				draw_surface_safe(temp_surface[!bg], 0, 0);
-			shader_reset();
-			
-			BLEND_NORMAL;
-			surface_reset_target();
+			surface_reset_shader();
 		}
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(sh_sdf_dist);
+		surface_set_shader(_outSurf, sh_sdf_dist);
 			shader_set_uniform_i(uniform_dst_sid, _side);
 			shader_set_uniform_f(uniform_dst_dst, _dist);
 			draw_surface_safe(temp_surface[bg], 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return _outSurf;
 	} #endregion

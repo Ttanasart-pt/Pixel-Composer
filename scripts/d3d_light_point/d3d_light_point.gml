@@ -11,6 +11,7 @@ function __3dLightPoint() : __3dLight() constructor {
 	
 	static submitSel = function(params = {}) { 
 		shader_set(sh_d3d_wireframe);
+		shader_set_color("blend", color);
 		preSubmitVertex(params); 
 		shader_reset();
 	}

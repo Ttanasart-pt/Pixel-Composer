@@ -36,6 +36,7 @@ function __3dCamera_object() : __3dObject() constructor {
 	
 	static submitSel = function(params = {}) { 
 		shader_set(sh_d3d_wireframe);
+		shader_set_color("blend", c_white);
 		submitVertex(params); 
 		shader_reset();
 	}

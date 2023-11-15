@@ -81,8 +81,23 @@ function Panel_Patreon() : PanelContent() constructor {
 		_yy += 100 + 16;
 		
 		if(IS_PATREON) {
-			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_value_positive);
-			draw_text(w / 2, (_yy + h) / 2, "Patreon verified, thank you for supporting Pixel Composer.");
+			var _y = (_yy + h) / 2;
+			
+			draw_set_text(f_p0, fa_center, fa_bottom, COLORS._main_value_positive);
+			draw_text(w / 2, _y - 16, "Patreon verified, thank you for supporting Pixel Composer.");
+			
+			var _bw = 200;
+			var _bh = TEXTBOX_HEIGHT + ui(8);
+			var _bx = w / 2 - _bw / 2;
+		
+			if(buttonInstant(THEME.button, _bx, _y, _bw, _bh, [ mx, my ], pFOCUS, pHOVER) == 2) {
+				var path = DIRECTORY + "patreon";
+				file_delete(path);
+				IS_PATREON = false;
+			}
+			
+			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
+			draw_text(_bx + _bw / 2, _y + _bh / 2, "Remove verification");
 			return;
 		}
 		
@@ -117,7 +132,7 @@ function Panel_Patreon() : PanelContent() constructor {
 				break;
 			case 1 :
 				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text_inner);
-				draw_text(w / 2, _yy, "Enter verification code send to your email:");
+				draw_text(w / 2, _yy, "Enter verification code:");
 				
 				tb_code.setInteract(true);
 				tb_code.setFocusHover(pFOCUS, pHOVER);
