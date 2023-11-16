@@ -8,6 +8,7 @@ function __3dGroup() constructor {
 		var _i = 0;
 		
 		for( var i = 0, n = array_length(objects); i < n; i++ ) {
+			if(!is_struct(objects[i])) continue;
 			var _c = objects[i].getCenter();
 			if(_c == noone) continue;
 			_v._add(objects[i].getCenter());
@@ -27,6 +28,7 @@ function __3dGroup() constructor {
 		var _cc = getCenter();
 		
 		for( var i = 0, n = array_length(objects); i < n; i++ ) {
+			if(!is_struct(objects[i])) continue;
 			var _c = objects[i].getCenter();
 			var _b = objects[i].getBBOX();
 			

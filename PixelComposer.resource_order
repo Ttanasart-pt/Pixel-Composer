@@ -127,6 +127,7 @@
     {"name":"for sort","order":5,"path":"folders/nodes/data/iterate/for sort.yy",},
     {"name":"lua","order":12,"path":"folders/nodes/data/lua.yy",},
     {"name":"misc","order":10,"path":"folders/nodes/data/misc.yy",},
+    {"name":"PC effects","order":24,"path":"folders/nodes/data/PC effects.yy",},
     {"name":"PCX","order":15,"path":"folders/nodes/data/PCX.yy",},
     {"name":"array","order":6,"path":"folders/nodes/data/PCX/array.yy",},
     {"name":"flow control","order":7,"path":"folders/nodes/data/PCX/flow control.yy",},
@@ -240,7 +241,6 @@
     {"name":"button","order":34,"path":"folders/widgets/button.yy",},
     {"name":"rotator","order":35,"path":"folders/widgets/rotator.yy",},
     {"name":"text","order":36,"path":"folders/widgets/text.yy",},
-    {"name":"PC effects","order":24,"path":"folders/nodes/data/PC effects.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},

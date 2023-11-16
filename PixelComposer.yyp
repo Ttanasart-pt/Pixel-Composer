@@ -155,6 +155,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for","folderPath":"folders/nodes/data/iterate/for.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"lua","folderPath":"folders/nodes/data/lua.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"misc","folderPath":"folders/nodes/data/misc.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"PC effects","folderPath":"folders/nodes/data/PC effects.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"PCX","folderPath":"folders/nodes/data/PCX.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"array","folderPath":"folders/nodes/data/PCX/array.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"flow control","folderPath":"folders/nodes/data/PCX/flow control.yy",},
@@ -275,7 +276,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"button","folderPath":"folders/widgets/button.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"rotator","folderPath":"folders/widgets/rotator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/widgets/text.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"PC effects","folderPath":"folders/nodes/data/PC effects.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},

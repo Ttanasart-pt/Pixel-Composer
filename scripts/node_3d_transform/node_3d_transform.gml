@@ -11,9 +11,14 @@ function Node_3D_Transform(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _gro
 	];
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
-		var _mesh = _data[in_d3d + 0].clone();
-		setTransform(_mesh, _data);
+		var _mesh = _data[in_d3d + 0];
 		
-		return _mesh;
+		var _scene = new __3dGroup();
+		if(!is_struct(_mesh)) return _scene;
+		
+		setTransform(_scene, _data);
+		_scene.addObject(_mesh);
+		
+		return _scene;
 	} #endregion
 }

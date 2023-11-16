@@ -409,6 +409,7 @@ event_inherited();
 			for(var index = 0; index < node_count; index++) {
 				var _node = _list[| index];
 				if(is_undefined(_node)) continue;
+				if(is_instanceof(_node, NodeObject) && _node.is_patreon_extra && !IS_PATREON) continue;
 				
 				if(is_string(_node)) {
 					if(!PREFERENCES.dialog_add_node_grouping)
@@ -527,6 +528,7 @@ event_inherited();
 			for(var i = 0; i < node_count; i++) {
 				var _node = _list[| i];
 				if(is_undefined(_node)) continue;
+				if(is_instanceof(_node, NodeObject) && _node.is_patreon_extra && !IS_PATREON) continue;
 				
 				if(is_string(_node)) {
 					if(!PREFERENCES.dialog_add_node_grouping)
@@ -678,6 +680,7 @@ event_inherited();
 				if(is_string(_node)) continue;
 				if(ds_map_exists(search_map, _node)) continue;
 				if(struct_try_get(_node, "deprecated")) continue;
+				if(is_instanceof(_node, NodeObject) && _node.is_patreon_extra && !IS_PATREON) continue;
 				
 				var match = string_partial_match(string_lower(_node.getName()), search_lower);
 				var param = "";

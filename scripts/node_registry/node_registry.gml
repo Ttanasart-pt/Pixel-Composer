@@ -522,6 +522,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			ds_list_add(d3d, "Modify");
 			addNodeObject(d3d, "Discretize vertex",	s_node_3d_discretize,		"Node_3D_Round_Vertex",		[1, Node_3D_Round_Vertex]).setVersion(11560);
 			addNodeObject(d3d, "Set Material",		s_node_3d_set_material,		"Node_3D_Set_Material",		[1, Node_3D_Set_Material]).setVersion(11560);
+			addNodeObject(d3d, "Transform",			s_node_3d_transform,		"Node_3D_Transform",		[1, Node_3D_Transform]).setVersion(11570);
 			addNodeObject(d3d, "Transform Scene",	s_node_3d_transform_scene,	"Node_3D_Transform_Scene",	[1, Node_3D_Transform_Scene]).setVersion(11570);
 			addNodeObject(d3d, "UV Remap",			s_node_uv_remap,			"Node_3D_UV_Remap",			[1, Node_3D_UV_Remap]).setVersion(11570);
 			///**/ addNodeObject(d3d, "3D Instancer",		s_node_3d_set_material,		"Node_3D_Instancer",	[1, Node_3D_Instancer]).setVersion(11560);
