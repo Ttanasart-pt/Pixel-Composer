@@ -1,6 +1,5 @@
-//
-// Simple passthrough fragment shader
-//
+#define TAU 6.28318530718
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -11,8 +10,10 @@ uniform vec2  u_resolution;
 uniform vec2  scale;
 uniform int   iteration;
 uniform float seed;
-uniform float param;
 uniform int   tile;
+
+uniform float paramA;
+uniform float paramB;
 
 uniform int  colored;
 uniform vec2 colorRanR;
@@ -34,6 +35,16 @@ float randomFloat (in vec2 st, float seed) { #region
 	return mix(random(st, sedSt), random(st, sedSt + 1.), sedFr);
 } #endregion
 
+float smooth(in float n, in float itr) { #region
+	float _fr  = fract(itr);
+	float _itr = floor(itr);
+	
+	for(float i = 0.; i < _itr; i++)
+		n = n * n * (3.0 - 2.0 * n);
+	float _n1 = n * n * (3.0 - 2.0 * n);
+	return mix(n, _n1, _fr);
+} #endregion
+
 vec2 random2 (in vec2 st, float seed) { return vec2(randomFloat(st, seed), randomFloat(st, seed + 1.864354564)); }
 
 float noise (in vec2 st, in vec2 scale) { #region
@@ -47,6 +58,10 @@ float noise (in vec2 st, in vec2 scale) { #region
 	
 	vec2 f = fract(st);
 	vec2 u = f * f * (3.0 - 2.0 * f);
+	if(type == 4) {
+		u.x = smooth(f.x, 2. + paramA * 4.);
+		u.y = smooth(f.y, 2. + paramA * 4.);
+	}
 	
 	float a = 0., b = 0., c = 0., d = 0.;
 	
@@ -57,7 +72,7 @@ float noise (in vec2 st, in vec2 scale) { #region
 	    d = dot( random2(vec2(cellMax.x, cellMax.y) * 2. - 1., seed), f - vec2(1., 1.) );
 		
 		return abs(mix(mix(a, b, u.x), mix(c, d, u.x), u.y));
-	} else if(type == 1 || type == 2 || type == 3) {
+	} else {
 	    a = randomFloat(vec2(cellMin.x, cellMin.y), seed);
 	    b = randomFloat(vec2(cellMax.x, cellMin.y), seed);
 	    c = randomFloat(vec2(cellMin.x, cellMax.y), seed);
@@ -71,7 +86,7 @@ float noise (in vec2 st, in vec2 scale) { #region
 	return 0.;
 } #endregion
 
-float perlin(in vec2 st) { #region
+float _perlin(in vec2 st) { #region
 	float amp = pow(2., float(iteration) - 1.)  / (pow(2., float(iteration)) - 1.);
 	if(type == 0) amp = pow(2., float(iteration) + 1.)  / (pow(2., float(iteration)) - 1.);
 	if(type == 3) amp *= 1.25;
@@ -89,7 +104,7 @@ float perlin(in vec2 st) { #region
 		if(type == 3) {
 			m += _n * amp;
 			if(mod(i, 3.) == 2.) {
-				n += smoothstep(0.5 - param, 0.5 + param, m) * amp;
+				n += smoothstep(0.5 - paramA, 0.5 + paramA, m) * amp;
 				m = 0.;
 				
 				sc  /= 1.5;
@@ -100,28 +115,49 @@ float perlin(in vec2 st) { #region
 				amp *= .75;
 				pos *= 1.5;
 			}
+		} else if(type == 4) {
+			n += smooth(_n, 1. + paramA * 5. * i / it) * amp;
+		} else if(type == 5) {
+			n = max(n, _n);
+			sc  *= 1. + paramA * 0.1;
+			pos *= 1. + paramA * 0.1;
 		} else 
 			n += _n * amp;
 		
 		pos += random2(vec2(float(i)), 0.574186) * sc;
 		
-		if(type == 0) {
+		if(type == 1) {
 			sc  *= 2.;
 			amp *= .5;
-			pos *= 2.;
-		} else if(type == 1) {
-			sc  *= 2.;
-			amp *= .5;
-			pos *= 1. + _n + param;
+			pos *= 1. + _n + paramA;
 		} else if(type == 2) {
 			sc  *= 2.;
 			amp *= .5;
 			pos += random2(vec2(n), seed) / sc;
-			pos *= (2. + param);
+			pos *= (2. + paramA);
+		} else if(type == 3) {
+		} else if(type == 5) {
+		} else {
+			sc  *= 2.;
+			amp *= .5;
+			pos *= 2.;
 		}
+		
 	}
 	
 	return n;
+} #endregion
+
+float perlin(in vec2 st) { #region
+	if(type == 6) {
+		float p1 = _perlin(st - vec2(1., 0.) / scale * (1. + paramA));
+	    float p2 = _perlin(st - vec2(0., 1.) / scale * (1. + paramA));
+	    float p3 = _perlin(st - vec2(-1., 0.) / scale * (1. + paramA));
+	    float p4 = _perlin(st - vec2(0., -1.) / scale * (1. + paramA));
+		return abs(p1 - p3) + abs(p2 - p4);
+	}
+	
+	return _perlin(st);
 } #endregion
 
 void main() { #region

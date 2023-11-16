@@ -84,7 +84,7 @@ function Panel_Patreon() : PanelContent() constructor {
 			var _y = (_yy + h) / 2;
 			
 			draw_set_text(f_p0, fa_center, fa_bottom, COLORS._main_value_positive);
-			draw_text(w / 2, _y - 16, "Patreon verified, thank you for supporting Pixel Composer.");
+			draw_text(w / 2, _y - 16, "Patreon verified, thank you for supporting Pixel Composer.\nRestart to enable extra contents.");
 			
 			var _bw = 200;
 			var _bh = TEXTBOX_HEIGHT + ui(8);
