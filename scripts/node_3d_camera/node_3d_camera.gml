@@ -129,25 +129,27 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			UNDO_HOLDING = false;
 		}
 		
-		var _outSurf = outputs[| 0].getValue();
-		if(is_array(_outSurf)) _outSurf = array_safe_get(_outSurf, 0);
-		if(!is_surface(_outSurf)) return;
+		#region draw result
+			var _outSurf = outputs[| 0].getValue();
+			if(is_array(_outSurf)) _outSurf = array_safe_get(_outSurf, 0);
+			if(!is_surface(_outSurf)) return;
 		
-		var _w = _panel.w;
-		var _h = _panel.h - _panel.toolbar_height;
-		var _pw = surface_get_width_safe(_outSurf);
-		var _ph = surface_get_height_safe(_outSurf);
-		var _ps = min(128 / _ph, 160 / _pw);
+			var _w = _panel.w;
+			var _h = _panel.h - _panel.toolbar_height;
+			var _pw = surface_get_width_safe(_outSurf);
+			var _ph = surface_get_height_safe(_outSurf);
+			var _ps = min(128 / _ph, 160 / _pw);
 		
-		var _pws = _pw * _ps;
-		var _phs = _ph * _ps;
+			var _pws = _pw * _ps;
+			var _phs = _ph * _ps;
 		
-		var _px = _w - 16 - _pws;
-		var _py = _h - 16 - _phs;
+			var _px = _w - 16 - _pws;
+			var _py = _h - 16 - _phs;
 		
-		draw_surface_ext_safe(_outSurf, _px, _py, _ps, _ps);
-		draw_set_color(COLORS._main_icon);
-		draw_rectangle(_px, _py, _px + _pws, _py + _phs, true);
+			draw_surface_ext_safe(_outSurf, _px, _py, _ps, _ps);
+			draw_set_color(COLORS._main_icon);
+			draw_rectangle(_px, _py, _px + _pws, _py + _phs, true);
+		#endregion
 	} #endregion
 	
 	static onValueUpdate = function(index) { #region

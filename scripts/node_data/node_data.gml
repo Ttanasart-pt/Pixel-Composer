@@ -295,6 +295,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		var _hi = ui(junction_draw_pad_y);
 		var _ho = ui(junction_draw_pad_y);
+		var _prev_surf = previewable && (preview_channel < ds_list_size(outputs) && outputs[| preview_channel].type == VALUE_TYPE.surface);
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
@@ -308,7 +309,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 			if(outputs[| i].isVisible()) _ho += 24;
 		
-		h = max(min_h, previewable * 128, _hi, _ho);
+		h = max(min_h, _prev_surf * 128, _hi, _ho);
 	} run_in(1, function() { setHeight(); }); #endregion
 	
 	static setDisplayName = function(_name) { #region

@@ -11,7 +11,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "K-mean", "Frequency", "All colors" ])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "K-mean", "Frequency", "All colors" ], update_hover: false })
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [ ])

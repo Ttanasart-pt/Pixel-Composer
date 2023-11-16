@@ -594,7 +594,11 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			drag_axis = noone;
 			UNDO_HOLDING = false;
 		}
+		
+		if(onDrawOverlay3D != 0) onDrawOverlay3D(active, params, _mx, _my, _snx, _sny, _panel);
 	} #endregion
+	
+	static onDrawOverlay3D = 0;
 	
 	static setTransform = function(object, _data) { #region
 		if(object == noone) return;

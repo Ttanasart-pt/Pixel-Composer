@@ -498,11 +498,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(d3d, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 			
 			ds_list_add(d3d, "3D");
-			addNodeObject(d3d, "3D Camera",		s_node_3d_camera,		"Node_3D_Camera",		[1, Node_3D_Camera]).setVersion(11510);
-			addNodeObject(d3d, "3D Camera Set",	s_node_3d_camera_set,	"Node_3D_Camera_Set",	[1, Node_3D_Camera_Set]).setVersion(11571);
-			addNodeObject(d3d, "3D Material",	s_node_3d_meterial,		"Node_3D_Material",		[1, Node_3D_Material]).setVersion(11510);
-			addNodeObject(d3d, "3D Scene",		s_node_3d_scene,		"Node_3D_Scene",		[1, Node_3D_Scene]).setVersion(11510);
-			addNodeObject(d3d, "3D Repeat",		s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat]).setVersion(11510);
+			addNodeObject(d3d, "3D Camera",		s_node_3d_camera,			"Node_3D_Camera",			[1, Node_3D_Camera]).setVersion(11510);
+			addNodeObject(d3d, "3D Camera Set",	s_node_3d_camera_set,		"Node_3D_Camera_Set",		[1, Node_3D_Camera_Set]).setVersion(11571);
+			addNodeObject(d3d, "3D Material",	s_node_3d_meterial,			"Node_3D_Material",			[1, Node_3D_Material]).setVersion(11510);
+			addNodeObject(d3d, "3D Scene",		s_node_3d_scene,			"Node_3D_Scene",			[1, Node_3D_Scene]).setVersion(11510);
+			addNodeObject(d3d, "3D Repeat",		s_node_3d_array,			"Node_3D_Repeat",			[1, Node_3D_Repeat]).setVersion(11510);
+			addNodeObject(d3d, "Transform 3D",	s_node_image_transform_3d,	"Node_3D_Transform_Image",	[1, Node_3D_Transform_Image],, "Transform image in 3D space").setVersion(11600);
 			
 			ds_list_add(d3d, "Mesh");
 			addNodeObject(d3d, "3D Object",		s_node_3d_obj,			"Node_3D_Mesh_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.").setVersion(11510);
