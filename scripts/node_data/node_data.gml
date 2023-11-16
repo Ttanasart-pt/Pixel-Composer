@@ -1166,7 +1166,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) {}
 	
-	static drawNodeBG = function(_x, _y, _mx, _my, _s, display_parameter = noone) {}
+	static drawNodeBG = function(_x, _y, _mx, _my, _s, display_parameter = noone) { return false; }
 	
 	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) { #region
 		if(draw_graph_culled) return;

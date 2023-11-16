@@ -240,6 +240,7 @@
     {"name":"button","order":34,"path":"folders/widgets/button.yy",},
     {"name":"rotator","order":35,"path":"folders/widgets/rotator.yy",},
     {"name":"text","order":36,"path":"folders/widgets/text.yy",},
+    {"name":"PC effects","order":24,"path":"folders/nodes/data/PC effects.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},
@@ -1116,6 +1117,7 @@
     {"name":"sh_pb_shade_half","order":5,"path":"shaders/sh_pb_shade_half/sh_pb_shade_half.yy",},
     {"name":"node_polar","order":4,"path":"scripts/node_polar/node_polar.yy",},
     {"name":"s_node_twirl","order":41,"path":"sprites/s_node_twirl/s_node_twirl.yy",},
+    {"name":"s_node_perlin_extra","order":31,"path":"sprites/s_node_perlin_extra/s_node_perlin_extra.yy",},
     {"name":"sh_2d_light","order":28,"path":"shaders/sh_2d_light/sh_2d_light.yy",},
     {"name":"node_image_animated","order":2,"path":"scripts/node_image_animated/node_image_animated.yy",},
     {"name":"s_node_transform_array","order":17,"path":"sprites/s_node_transform_array/s_node_transform_array.yy",},

@@ -265,13 +265,11 @@ event_inherited();
 			var name = "";
 			
 			if(i == -1) {
-				//draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
 				name = "All";
 			} else {
 				var cat = category[| i];
 				name = cat.name;
-				//draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			
+				
 				if(array_length(cat.filter)) {
 					if(!array_exists(cat.filter, context)) {
 						if(ADD_NODE_PAGE == i) 
@@ -282,9 +280,12 @@ event_inherited();
 				}
 			}
 			
-			BLEND_OVERRIDE;
+			var _hov = false;
+			BLEND_OVERRIDE
 			if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, category_width - ui(32), _y + hh + hg - 1)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, category_width - ui(32), hg, CDEF.main_white, 1);
+				_hov = true;
+				
 				if(i != ADD_NODE_PAGE && mouse_click(mb_left, sFOCUS)) {
 					setPage(i);
 					content_pane.scroll_y		= 0;
@@ -292,13 +293,29 @@ event_inherited();
 					content_pane.scroll_y_to	= 0;
 				}
 			}
-			BLEND_NORMAL;
+			BLEND_NORMAL
 			
 			if(i == ADD_NODE_PAGE) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
 			else				   draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 			
+			var _is_extra = name == "Extra";
 			name = __txt(name);
-			draw_text(ui(8), _y + hh + hg / 2, name);
+			
+			var _tx = ui(8);
+			var _ty = _y + hh + hg / 2;
+			draw_text(_tx, _ty, name);
+			
+			if(_is_extra) {
+				var _cx = _tx + string_width(name) + ui(4);
+				var _cy = _ty - string_height(name) / 2 + ui(6);
+				
+				gpu_set_colorwriteenable(1, 1, 1, 0);
+				draw_sprite_ext(s_patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
+				gpu_set_colorwriteenable(1, 1, 1, 1);
+				
+				draw_sprite_ext(s_patreon_supporter, 1, _cx, _cy, 1, 1, 0, i == ADD_NODE_PAGE? COLORS._main_text_accent : COLORS._main_text_inner, 1);
+			}
+			
 			hh += hg;
 		}
 		

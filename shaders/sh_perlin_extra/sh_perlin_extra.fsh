@@ -11,6 +11,7 @@ uniform vec2  u_resolution;
 uniform vec2  scale;
 uniform int   iteration;
 uniform float seed;
+uniform float param;
 uniform int   tile;
 
 uniform int  colored;
@@ -88,7 +89,7 @@ float perlin(in vec2 st) { #region
 		if(type == 3) {
 			m += _n * amp;
 			if(mod(i, 3.) == 2.) {
-				n += smoothstep(0.4, 0.6, m) * amp;
+				n += smoothstep(0.5 - param, 0.5 + param, m) * amp;
 				m = 0.;
 				
 				sc  /= 1.5;
@@ -111,12 +112,12 @@ float perlin(in vec2 st) { #region
 		} else if(type == 1) {
 			sc  *= 2.;
 			amp *= .5;
-			pos *= 1. + _n;
+			pos *= 1. + _n + param;
 		} else if(type == 2) {
 			sc  *= 2.;
 			amp *= .5;
 			pos += random2(vec2(n), seed) / sc;
-			pos *= 2.;
+			pos *= (2. + param);
 		}
 	}
 	

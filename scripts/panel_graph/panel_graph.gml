@@ -73,6 +73,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		selection_block		= 0;
 		nodes_selecting	    = [];
 		nodes_select_drag   = 0;
+		nodes_select_frame  = 0;
 		nodes_select_mx     = 0;
 		nodes_select_my     = 0;
 	
@@ -724,6 +725,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var log = false;
 		var t = current_time;
 		
+		var frame_hovering = noone;
+		
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			nodes_list[| i].cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
 			nodes_list[| i].preDraw(gr_x, gr_y, graph_s, gr_x, gr_y);
@@ -731,8 +734,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		printIf(log, "Predraw time: " + string(current_time - t)); t = current_time;
 		
 		#region draw frame
-			for(var i = 0; i < ds_list_size(nodes_list); i++)
-				nodes_list[| i].drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter);
+			for(var i = 0; i < ds_list_size(nodes_list); i++) {
+				if(nodes_list[| i].drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter))
+					frame_hovering = nodes_list[| i];
+			}
 		#endregion
 		printIf(log, "Frame draw time: " + string(current_time - t)); t = current_time;
 		
@@ -1064,7 +1069,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					
 					for(var i = 0; i < ds_list_size(nodes_list); i++) {
 						var _node = nodes_list[| i];
-						if(is_instanceof(_node, Node_Frame)) continue;
+						if(is_instanceof(_node, Node_Frame) && !nodes_select_frame) continue;
 						var _x = (_node.x + graph_x) * graph_s;
 						var _y = (_node.y + graph_y) * graph_s;
 						var _w = _node.w * graph_s;
@@ -1096,7 +1101,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(mouse_release(mb_left))
 					nodes_junction_d = noone;
 			}
-		
+			
 			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !graph_dragging_key && !graph_zooming_key) {
 				if(junction_hovering && junction_hovering.draw_line_shift_hover) {
 					nodes_select_mx		= mx;
@@ -1105,7 +1110,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					nodes_junction_dx	= junction_hovering.draw_line_shift_x;
 					nodes_junction_dy	= junction_hovering.draw_line_shift_y;
 				} else if(array_empty(nodes_selecting) && !value_focus && !drag_locking) {
-					nodes_select_drag = 1;
+					nodes_select_drag  = 1;
+					nodes_select_frame = frame_hovering == noone;
+					
 					nodes_select_mx = mx;
 					nodes_select_my = my;
 				}

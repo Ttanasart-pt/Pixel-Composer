@@ -40,9 +40,13 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Absolute worley", "Fluid", "Noisy perlin", "Camo" ]);
 		addShaderProp(SHADER_UNIFORM.integer, "type");
 		
+	inputs[| 11] = nodeValue("Parameter A", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider);
+		addShaderProp(SHADER_UNIFORM.float, "param");
+		
 	input_display_list = [
 		["Output", 	 true],	0, 5, 
-		["Noise",	false],	10, 1, 2, 3, 4, 
+		["Noise",	false],	10, 1, 2, 3, 4, 11,
 		["Render",	false], 6, 7, 8, 9, 
 	];
 	

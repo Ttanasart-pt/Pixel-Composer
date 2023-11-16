@@ -46,6 +46,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	static patreonExtra = function() {
 		INLINE 
 		is_patreon_extra = true;
+		
+		ds_list_add(global.SUPPORTER_NODES, self);
 		return self;
 	}
 	
@@ -205,6 +207,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var recPath = DIRECTORY + "Nodes/recent.json";
 		global.RECENT_NODES = file_exists(recPath)? json_load_struct(recPath) : [];
 		if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
+		
+		global.SUPPORTER_NODES = ds_list_create();
 		
 		var group = ds_list_create(); #region
 		addNodeCatagory("Group", group, ["Node_Group"]); 
@@ -549,7 +553,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(generator, "Simplex Noise",		s_node_noise_simplex,		"Node_Noise_Simplex",		[1, Node_Noise_Simplex], ["perlin"], "Generate simplex noise, similiar to perlin noise with better fidelity but non-tilable.").setVersion(1080);
 			addNodeObject(generator, "Cellular Noise",		s_node_noise_cell,			"Node_Cellular",			[1, Node_Cellular], ["voronoi", "worley"], "Generate voronoi pattern.");
 			addNodeObject(generator, "Anisotropic Noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			[1, Node_Noise_Aniso],, "Generate anisotropic noise.");
-			/**/ addNodeObject(generator, "Extra Perlins",	s_node_noise_aniso,			"Node_Perlin_Extra",		[1, Node_Perlin_Extra], ["noise"], "Random perlin noise made with different algorithms.").patreonExtra();
+			addNodeObject(generator, "Extra Perlins",		s_node_perlin_extra,		"Node_Perlin_Extra",		[1, Node_Perlin_Extra], ["noise"], "Random perlin noise made with different algorithms.").patreonExtra();
 			
 			ds_list_add(generator, "Patterns");
 			addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe],, "Generate stripe pattern.");
@@ -813,6 +817,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var customs = ds_list_create();
 		addNodeCatagory("Custom", customs);
 			__initNodeCustom(customs);
+		
+		if(IS_PATREON) addNodeCatagory("Extra", global.SUPPORTER_NODES);
 		
 		//var vct = ds_list_create();
 		//addNodeCatagory("VCT", vct);

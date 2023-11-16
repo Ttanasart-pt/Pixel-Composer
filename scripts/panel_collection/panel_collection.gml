@@ -314,9 +314,20 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) { #region
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
-		//draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), 0, folderPane.surface_w - ui(8), folderPane.surface_h);
 		var hh = ui(8);
 		_y += ui(8);
+		
+		if(pHOVER && folderPane.hover && point_in_rectangle(_m[0], _m[1], ui(32), _y - ui(2), group_w - ui(32), _y + ui(24))) {
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(32), _y - ui(2), group_w - ui(64), ui(24), CDEF.main_white, 1);
+			if(mouse_press(mb_left, pFOCUS))
+				setContext(root);
+		}
+		
+		draw_set_alpha(0.25 + (context == root) * 0.5);
+		draw_set_text(f_p2, fa_center, fa_top, context == root? COLORS._main_text_accent : COLORS._main_text_inner);
+		draw_text(group_w / 2, _y, __txt("uncategorized"));
+		draw_set_alpha(1);
+		_y += ui(24);
 		
 		for(var i = 0; i < ds_list_size(root.subDir); i++) {
 			var hg = root.subDir[| i].draw(self, ui(8 + in_dialog * 8), _y, _m, folderPane.w - ui(20), pHOVER && folderPane.hover, pFOCUS, root);

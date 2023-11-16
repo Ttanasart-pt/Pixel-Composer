@@ -118,7 +118,8 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				size_dragging_my = mouse_my;
 			}
 		}
-		return noone;
+		
+		return point_in_rectangle(_mx, _my, xx, yy, x1, y1);
 	} #endregion
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) { #region

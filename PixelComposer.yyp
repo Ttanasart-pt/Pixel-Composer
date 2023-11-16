@@ -275,6 +275,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"button","folderPath":"folders/widgets/button.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"rotator","folderPath":"folders/widgets/rotator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/widgets/text.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"PC effects","folderPath":"folders/nodes/data/PC effects.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
@@ -1799,6 +1800,7 @@
     {"id":{"name":"sh_pb_shade_half","path":"shaders/sh_pb_shade_half/sh_pb_shade_half.yy",},},
     {"id":{"name":"node_polar","path":"scripts/node_polar/node_polar.yy",},},
     {"id":{"name":"s_node_twirl","path":"sprites/s_node_twirl/s_node_twirl.yy",},},
+    {"id":{"name":"s_node_perlin_extra","path":"sprites/s_node_perlin_extra/s_node_perlin_extra.yy",},},
     {"id":{"name":"sh_2d_light","path":"shaders/sh_2d_light/sh_2d_light.yy",},},
     {"id":{"name":"instance_variable_set","path":"scripts/instance_variable_set/instance_variable_set.yy",},},
     {"id":{"name":"node_image_animated","path":"scripts/node_image_animated/node_image_animated.yy",},},
@@ -1878,6 +1880,7 @@
     {"id":{"name":"_f_p0b","path":"fonts/_f_p0b/_f_p0b.yy",},},
     {"id":{"name":"s_node_armature_pose","path":"sprites/s_node_armature_pose/s_node_armature_pose.yy",},},
     {"id":{"name":"sh_fd_visualize_pressure_glsl","path":"shaders/sh_fd_visualize_pressure_glsl/sh_fd_visualize_pressure_glsl.yy",},},
+    {"id":{"name":"node_pc_balls","path":"scripts/node_pc_balls/node_pc_balls.yy",},},
     {"id":{"name":"s_node_rigidSim_force","path":"sprites/s_node_rigidSim_force/s_node_rigidSim_force.yy",},},
     {"id":{"name":"fd_rectangle_set_acceleration","path":"scripts/fd_rectangle_set_acceleration/fd_rectangle_set_acceleration.yy",},},
     {"id":{"name":"s_node_vec2","path":"sprites/s_node_vec2/s_node_vec2.yy",},},
