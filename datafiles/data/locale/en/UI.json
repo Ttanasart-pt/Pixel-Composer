@@ -389,5 +389,17 @@
     "reload_theme": "Reload theme",
     "reset_layout": "Reset layout",
 
+    "close_current_project": "Close current project",
+    "panel_menu_connect_patreon": "Connect to Patreon",
+    "pref_directory_ImageMagick": "ImageMagick path*",
+    "pref_directory_webp": "Webp path*",
+    "pref_directory_gifski": "Gifski path*",
+    "pref_directory_FFmpeg": "FFmpeg path*",
+    "pref_supporter_icon": "Show supporter icon",
+    "pref_graph_group_in_tab": "Open group in new tab",
+    "pref_widget_autocomplete_delay": "Code Autocomplete delay",
+    "panel_collection_workshop_update": "Update Steam Workshop content",
+    "meta_new_version": "Created on a newer version",
+
     "" : ""
 }

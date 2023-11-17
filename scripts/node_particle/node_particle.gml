@@ -95,14 +95,15 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		var _blend 		= inputs[| input_len + 2].getValue(_time);
 		var _outSurf	= outputs[| 0].getValue();
 		
-		switch(_blend) {
-			case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
-			case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;
-			case PARTICLE_BLEND_MODE.additive: BLEND_ADD;    break;
-		}
-			
 		if(render_amount == 0) {
 			surface_set_shader(_outSurf);
+			
+			switch(_blend) {
+				case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
+				case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;
+				case PARTICLE_BLEND_MODE.additive: BLEND_ADD;    break;
+			}
+		
 			shader_set_interpolation(_outSurf);
 				for(var i = 0; i < attributes.part_amount; i++)
 					if(parts[i].active) parts[i].draw(_exact, _dim[0], _dim[1]);
@@ -110,6 +111,13 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		} else if(is_array(_outSurf)) {
 			for( var o = 0, n = array_length(_outSurf); o < n; o++ ) {
 				surface_set_shader(_outSurf[o]);
+				
+				switch(_blend) {
+					case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
+					case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;
+					case PARTICLE_BLEND_MODE.additive: BLEND_ADD;    break;
+				}
+		
 				shader_set_interpolation(_outSurf[o]);
 					for(var i = 0; i < attributes.part_amount; i++)
 						if(parts[i].active) parts[i].draw(_exact, _dim[0], _dim[1], o);

@@ -118,7 +118,10 @@ function timelineItemNode(node) : timelineItem() constructor {
 		show  = struct_try_get(_map, "show", true);
 		
 		var _node_id = _map.node_id;
-		if(ds_map_exists(PROJECT.nodeMap, _node_id)) {
+		if(_node_id == 0) {
+			node = PROJECT.globalNode;
+			node.timeline_item = self;
+		} else if(ds_map_exists(PROJECT.nodeMap, _node_id)) {
 			node = PROJECT.nodeMap[? _node_id];
 			node.timeline_item = self;
 		}

@@ -22,6 +22,8 @@ function pxl_document_parser(prompt) {
 }
 
 function pxl_autocomplete_server(prompt, params = [], context = {}) { 
+	if(isNumber(prompt)) return [];
+	
 	var res = [];
 	var pr_list = ds_priority_create();
 	

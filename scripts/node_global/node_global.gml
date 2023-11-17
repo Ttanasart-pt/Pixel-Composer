@@ -1,4 +1,4 @@
-function variable_editor(nodeVal) constructor {
+function variable_editor(nodeVal) constructor { #region
 	value = nodeVal;
 	
 	val_type      = [ VALUE_TYPE.integer, VALUE_TYPE.float, VALUE_TYPE.boolean, VALUE_TYPE.color, VALUE_TYPE.gradient, VALUE_TYPE.path, VALUE_TYPE.curve, VALUE_TYPE.text ];
@@ -177,15 +177,18 @@ function variable_editor(nodeVal) constructor {
 		
 		return _h;
 	}
-}
+} #endregion
 
 function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	name = "GLOBAL";
 	display_name = "";
 	
-	group = noone;
+	node_id = 0;
+	group   = noone;
+	
 	use_cache = CACHE_USE.none;
-	value = ds_map_create();
+	value     = ds_map_create();
+	
 	input_display_list = -1;
 	anim_priority = -999;
 	
@@ -193,19 +196,19 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		RENDER_ALL
 	}
 	
-	static createValue = function() {
+	static createValue = function() { #region
 		var _in    = nodeValue("NewValue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 		_in.editor = new variable_editor(_in);
 		ds_list_add(inputs, _in);
 		
 		return _in;
-	}
+	} #endregion
 	
-	static inputExist = function(key) {
+	static inputExist = function(key) { #region
 		return ds_map_exists(value, key);
-	}
+	} #endregion
 	
-	static inputGetable = function(from, key) {
+	static inputGetable = function(from, key) { #region
 		if(!inputExist(key)) return false;
 		var to = value[? key];
 		
@@ -215,14 +218,14 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 			return false;
 		
 		return true;
-	}
+	} #endregion
 	
-	static getInput = function(key, def = noone) {
+	static getInput = function(key, def = noone) { #region
 		if(!ds_map_exists(value, key)) return def;
 		return value[? key];
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
 			value[? _inp.name] = _inp;
@@ -231,9 +234,9 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 			if(string_pos(" ", _inp.name)) val = false;
 			_inp.editor.tb_name.boxColor = val? c_white : COLORS._main_value_negative;
 		}
-	}
+	} #endregion
 	
-	static serialize = function() {
+	static serialize = function() { #region
 		var _map = {};
 		
 		var _inputs = [];
@@ -250,10 +253,12 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		}
 		
 		_map.inputs = _inputs;
+		_map.attri  = attributes;
+		
 		return _map;
-	}
+	} #endregion
 	
-	static deserialize = function(_map) {
+	static deserialize = function(_map) { #region
 		var _inputs = _map.inputs;
 		
 		for(var i = 0; i < array_length(_inputs); i++) {
@@ -273,6 +278,8 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 			_in.applyDeserialize(_des);
 		}
 		
+		if(struct_has(_map, "attr")) struct_override(attributes, _map.attr); 
+		
 		step();
-	}
+	} #endregion
 }

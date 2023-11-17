@@ -112,6 +112,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			localParams = parser_server(crop, autocomplete_object);
 					
 		var data = autocomplete_server(pmt, localParams, autocomplete_context);
+		o_dialog_textbox_autocomplete.data   = data;
 		if(array_length(data)) {
 			o_dialog_textbox_autocomplete.data   = data;
 			o_dialog_textbox_autocomplete.prompt = pmt;

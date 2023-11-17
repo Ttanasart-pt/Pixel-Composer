@@ -204,9 +204,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		timeline_item    = new timelineItemNode(self);
 		anim_priority    = ds_map_size(PROJECT.nodeMap);
 		is_anim_timeline = false;
-		
-		dopesheet_color = COLORS.panel_animation_dope_blend_default;
-		dopesheet_y		= 0;
 	#endregion
 	
 	#region ---- notification ----
@@ -1514,26 +1511,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			return true;
 			
 		return _tool.selecting == subtool;
-	} #endregion
-	
-	static refreshTimeline = function() { #region
-		var _pre_anim = is_anim_timeline;
-		var _cur_anim = false;
-		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			var _inp = inputs[| i];
-			if(_inp.is_anim && _inp.isLeaf()) {
-				_cur_anim = true;
-				break;
-			}
-		}
-		
-		if(_pre_anim && !_cur_anim)
-			timeline_item.removeSelf();
-		else if(!_pre_anim && _cur_anim)
-			PROJECT.timelines.addItem(timeline_item);
-			
-		is_anim_timeline = _cur_anim;
 	} #endregion
 	
 	static clone = function(target = PANEL_GRAPH.getCurrentContext()) { #region

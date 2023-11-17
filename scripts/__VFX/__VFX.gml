@@ -268,7 +268,6 @@ function __part(_node) constructor {
 					break;
 				case ANIM_END_ACTION.destroy:
 					if(ind >= len) {
-						//print($"Drawing part destroy when animation end");
 						kill();
 						return;
 					} else 

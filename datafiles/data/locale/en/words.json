@@ -330,5 +330,12 @@
     "pattern": "Pattern",
     "related": "Related",
 
+    "uncategorized": "uncategorized",
+    "libraries": "Libraries",
+    "extra": "Extra",
+    "modify": "Modify",
+    "points": "Points",
+    "text_area": "Text Area",
+
     "" : ""
 }

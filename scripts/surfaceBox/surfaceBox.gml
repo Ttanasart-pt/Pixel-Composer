@@ -51,6 +51,8 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 			_type = VALUE_TYPE.dynaSurface;
 		} else if(is_instanceof(_surf_single, SurfaceAtlas)) {
 			_type = VALUE_TYPE.atlas;
+		} else if(is_instanceof(_surf_single, __d3dMaterial)) {
+			_type = VALUE_TYPE.d3Material;
 		}
 		
 		if(!open) {
@@ -82,6 +84,8 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 			
 			if(is_array(_surface) && array_length(_surface))
 				_surface = _surface[safe_mod(round(current_time / 250), array_length(_surface))];
+			if(is_instanceof(_surface, __d3dMaterial))
+				_surface = _surface.surface;
 			
 			if(is_surface(_surface)) {
 				var sfw = surface_get_width_safe(_surface);	
