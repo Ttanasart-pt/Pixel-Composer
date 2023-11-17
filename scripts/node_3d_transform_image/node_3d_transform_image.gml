@@ -11,9 +11,9 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	objectPreview.materials[0] = materialPreview;
 	
 	camera  = camera_create();
-	viewMat = matrix_build_lookat(0,  0, 1, 
-	                              0,  0, 0,
-								  1,  0, 0);
+	viewMat = matrix_build_lookat(0, 0, 1, 
+	                              0, 0, 0,
+								  1, 0, 0);
 	
 	projMat = matrix_build_projection_ortho(1, 1, 0.001, 10);
 	

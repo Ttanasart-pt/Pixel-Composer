@@ -8,6 +8,8 @@ enum RENDER_TYPE {
 	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER, UPDATE_RENDER_ORDER;
 	UPDATE_RENDER_ORDER = false;
 	global.FLAG.render  = 0;
+	global.FLAG.renderTime = false;
+	
 	global.group_io = [ 
 		"Node_Group_Input",				"Node_Group_Output", 
 		"Node_Feedback_Input", 			"Node_Feedback_Output", 
@@ -228,7 +230,7 @@ function Render(partial = false, runAction = false) { #region
 		
 		_render_time /= 1000;
 		
-		LOG_IF(global.FLAG.render >= 1, $"=== RENDER COMPLETE IN {(get_timer() - t1) / 1000} ms ===\n");
+		LOG_IF(global.FLAG.renderTime || global.FLAG.render >= 1, $"=== RENDER FRAME {CURRENT_FRAME} COMPLETE IN {(get_timer() - t1) / 1000} ms ===\n");
 		LOG_IF(global.FLAG.render >  1, $"=== RENDER SUMMARY STA ===");
 		LOG_IF(global.FLAG.render >  1, $"  total time:  {(get_timer() - t1) / 1000} ms");
 		LOG_IF(global.FLAG.render >  1, $"  leaf:        {_leaf_time / 1000} ms");

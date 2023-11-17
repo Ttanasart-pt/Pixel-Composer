@@ -1404,7 +1404,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		global.cache_call++;
 		if(useCache && use_cache) {
 			var cache_hit = cache_value[0];
-			cache_hit &= !isActiveDynamic() || cache_value[1] == _time;
+			cache_hit &= !isActiveDynamic(_time) || cache_value[1] == _time;
 			cache_hit &= cache_value[2] != undefined;
 			cache_hit &= cache_value[3] == applyUnit;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
@@ -1592,7 +1592,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.refreshTimeline();
 	} #endregion
 	
-	static isActiveDynamic = function() { #region
+	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
 		INLINE
 		
 		if(value_from != noone) return false;

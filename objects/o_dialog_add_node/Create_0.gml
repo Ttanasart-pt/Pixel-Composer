@@ -46,7 +46,7 @@ event_inherited();
 			var name = __txt(cat.name);
 			maxLen   = max(maxLen, string_width(name));
 		}
-		category_width = maxLen + ui(48);
+		category_width = maxLen + ui(56);
 	#endregion
 	
 	function rightClick(node) { #region

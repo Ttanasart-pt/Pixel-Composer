@@ -141,8 +141,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static step = function() { #region
-		var pos = getInputData(2);
-		var anc = getInputData(3);
+		var pos = getSingleValue(2);
+		var anc = getSingleValue(3);
 		
 		var _b = inputs[| 3].editWidget.side_button;
 		var _a = anc[0] * 2 + anc[1] * 20;
@@ -335,16 +335,16 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_surf_out = _surf_out[preview_index];
 		}
 		
-		var __pos = getInputData(2);
+		var __pos = getSingleValue(2);
 		var pos   = [ __pos[0], __pos[1] ];
 		var _pos  = [ __pos[0], __pos[1] ];
 		
-		var __anc = getInputData(3);
+		var __anc = getSingleValue(3);
 		var anc   = [ __anc[0], __anc[1] ];
 		var _anc  = [ __anc[0], __anc[1] ];
 		
-		var rot = getInputData(5);
-		var sca = getInputData(6);
+		var rot = getSingleValue(5);
+		var sca = getSingleValue(6);
 		
 		var srw = surface_get_width_safe(_surf);
 		var srh = surface_get_height_safe(_surf);

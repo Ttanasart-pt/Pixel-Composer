@@ -165,10 +165,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		switch(_dtype) {
 			case "Range" :	
+				if(!is_array(_val) || array_length(_val) != 2) 
+					inParent.animator = new valueAnimator([0, 0], inParent);
 				inParent.setDisplay(VALUE_DISPLAY.range); 
 				break;
 			
 			case "Slider" :	
+				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
 				inParent.setDisplay(VALUE_DISPLAY.slider, { range: [_range[0], _range[1], _step] });	
 				break;
 			case "Slider range" :	
@@ -178,6 +181,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 				
 			case "Rotation" : 
+				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
 				inParent.setDisplay(VALUE_DISPLAY.rotation);	
 				break;
 				
@@ -219,8 +223,15 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				else if(_dtype == "Vector range")	inParent.setDisplay(VALUE_DISPLAY.vector_range);
 				break;
 			
-			case "Enum button" : inParent.setDisplay(VALUE_DISPLAY.enum_button, string_splice(_enum_label, ",")); break;
-			case "Menu scroll" : inParent.setDisplay(VALUE_DISPLAY.enum_scroll, string_splice(_enum_label, ",")); break;
+			case "Enum button" : 
+				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
+				inParent.setDisplay(VALUE_DISPLAY.enum_button, string_splice(_enum_label, ",")); 
+				break;
+				
+			case "Menu scroll" : 
+				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
+				inParent.setDisplay(VALUE_DISPLAY.enum_scroll, string_splice(_enum_label, ",")); 
+				break;
 			
 			case "Palette" :
 				if(!is_array(_val))
@@ -242,6 +253,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 				
 			default:
+				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
 				inParent.setDisplay(VALUE_DISPLAY._default);
 				break;
 		}

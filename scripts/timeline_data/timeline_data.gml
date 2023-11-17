@@ -109,7 +109,7 @@ function timelineItemNode(node) : timelineItem() constructor {
 		
 		_map.type    = "Node";
 		_map.show    = show;
-		_map.node_id = node.node_id;
+		_map.node_id = is_struct(node)? node.node_id : -4;
 		
 		return _map;
 	} #endregion

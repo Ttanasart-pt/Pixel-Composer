@@ -1,4 +1,4 @@
-function array_create_from_list(list) {
+function array_create_from_list(list) { #region
 	if(list == undefined) return [];
 	if(!ds_exists(list, ds_type_list)) return [];
 	
@@ -6,9 +6,9 @@ function array_create_from_list(list) {
 	for( var i = 0; i < ds_list_size(list); i++ )
 		arr[i] = list[| i];
 	return arr;
-}
+} #endregion
 
-function array_safe_set(arr, index, value, fill = 0) {
+function array_safe_set(arr, index, value, fill = 0) { #region
 	if(!is_array(arr))  return arr;
 	if(is_array(index)) return arr;
 	
@@ -23,9 +23,16 @@ function array_safe_set(arr, index, value, fill = 0) {
 	
 	array_set(arr, index, value);
 	return arr;
-}
+} #endregion
 
-function array_resize_fill(arr, size, fill = 0) {
+function array_fill(arr, startIndex, endIndex, value = 0) { #region
+	INLINE
+	
+	for( var i = startIndex; i < endIndex; i++ ) 
+		arr[i] = value;
+} #endregion
+
+function array_resize_fill(arr, size, fill = 0) { #region
 	if(size < array_length(arr)) {
 		array_resize(arr, size);
 		return arr;
@@ -35,14 +42,14 @@ function array_resize_fill(arr, size, fill = 0) {
 	for(; i < size; i++)
 		arr[i] = fill;
 	return arr;
-}
+} #endregion
 
 enum ARRAY_OVERFLOW {
 	_default,
 	loop
 }
 
-function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) {
+function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) { #region
 	INLINE
 	if(!is_array(arr))  return def;
 	if(is_array(index)) return def;
@@ -57,17 +64,17 @@ function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default)
 	if(index < 0) return def;
 	if(index >= array_length(arr)) return def;
 	return arr[index] == undefined? def : arr[index];
-}
+} #endregion
 
-function array_push_create(arr, val) {
+function array_push_create(arr, val) { #region
 	INLINE
 	
 	if(!is_array(arr)) return [ val ];
 	array_push(arr, val);
 	return arr;
-}
+} #endregion
 
-function array_get_decimal(arr, index, color = false) {
+function array_get_decimal(arr, index, color = false) { #region
 	INLINE
 	
 	if(!is_array(arr)) return 0;
@@ -79,9 +86,9 @@ function array_get_decimal(arr, index, color = false) {
 	return color? 
 		merge_color(v0, v1, frac(index)) : 
 		lerp(v0, v1, frac(index));
-}
+} #endregion
 
-function array_exists(arr, val) {
+function array_exists(arr, val) { #region
 	INLINE
 	self.__temp_val = val;
 	
@@ -89,9 +96,9 @@ function array_exists(arr, val) {
 	return array_any(arr, function(_val, _ind) {
 		return isEqual(_val, self.__temp_val);
 	});
-}
+} #endregion
 
-function array_overlap(arr0, arr1) {
+function array_overlap(arr0, arr1) { #region
 	INLINE
 	self.__temp_arr = arr1;
 	
@@ -101,14 +108,14 @@ function array_overlap(arr0, arr1) {
 	return array_any(arr0, function(_val, _ind) {
 		return array_exists(self.__temp_arr, _val);
 	});
-}
+} #endregion
 
-function array_empty(arr) {
+function array_empty(arr) { #region
 	INLINE
 	return is_array(arr) && array_length(arr) == 0;
-}
+} #endregion
 
-function array_find(arr, val) {
+function array_find(arr, val) { #region
 	INLINE
 	self.__temp_val = val;
 	
@@ -116,35 +123,34 @@ function array_find(arr, val) {
 	return array_find_index(arr, function(_val, _ind) {
 		return isEqual(_val, self.__temp_val);
 	});
-}
+} #endregion
 
-function array_remove(arr, val) {
+function array_remove(arr, val) { #region
 	INLINE
 	
 	if(!is_array(arr)) return;
 	if(!array_exists(arr, val)) return;
 	var ind = array_find(arr, val);
 	array_delete(arr, ind, 1);
-}
+} #endregion
 
-function array_push_unique(arr, val) {
+function array_push_unique(arr, val) { #region
 	INLINE
 	
 	if(!is_array(arr)) return;
 	if(array_exists(arr, val)) return;
 	array_push(arr, val);
-}
+} #endregion
 
-
-function array_insert_unique(arr, ind, val) {
+function array_insert_unique(arr, ind, val) { #region
 	INLINE
 	
 	if(!is_array(arr)) return;
 	if(array_exists(arr, val)) return;
 	array_insert(arr, ind, val);
-}
+} #endregion
 
-function array_append(arr, arr0) {
+function array_append(arr, arr0) { #region
 	INLINE
 	
 	if(!is_array(arr))  return arr;
@@ -153,9 +159,9 @@ function array_append(arr, arr0) {
 	for( var i = 0, n = array_length(arr0); i < n; i++ )
 		array_push(arr, arr0[i]);
 	return arr;
-}
+} #endregion
 
-function array_merge() {
+function array_merge() { #region
 	INLINE
 	
 	var arr = [];
@@ -163,9 +169,9 @@ function array_merge() {
 		array_append(arr, argument[i]);
 	
 	return arr;
-}
+} #endregion
 
-function array_clone(arr) {
+function array_clone(arr) { #region
 	INLINE
 	
 	if(!is_array(arr)) return arr;
@@ -174,9 +180,9 @@ function array_clone(arr) {
 	 for( var i = 0, n = array_length(arr); i < n; i++ )
 		 _res[i] = array_clone(arr[i]);
 	 return _res;
-}
+} #endregion
 
-function array_min(arr) {
+function array_min(arr) { #region
 	INLINE
 	
 	if(!is_array(arr) || array_length(arr) == 0) return 0;
@@ -185,9 +191,9 @@ function array_min(arr) {
 	for( var i = 0, n = array_length(arr); i < n; i++ )
 		mn = min(mn, arr[i]);
 	return mn;
-}
+} #endregion
 
-function array_max(arr) {
+function array_max(arr) { #region
 	INLINE
 	
 	if(!is_array(arr) || array_length(arr) == 0) return 0;
@@ -196,15 +202,15 @@ function array_max(arr) {
 	for( var i = 0, n = array_length(arr); i < n; i++ )
 		mx = max(mx, arr[i]);
 	return mx;
-}
+} #endregion
 
-function array_get_dimension(arr) {
+function array_get_dimension(arr) { #region
 	INLINE
 	
 	return is_array(arr)? array_length(arr) : 1;
-}
+} #endregion
 
-function array_shape(arr, first = true, isSurface = false) {
+function array_shape(arr, first = true, isSurface = false) { #region
 	if(!is_array(arr)) {
 		if(isSurface && is_surface(arr)) 
 			return (first? "" : " x ") + string(surface_get_width_safe(arr)) + " x " + string(surface_get_height_safe(arr)) + " px";
@@ -217,9 +223,9 @@ function array_shape(arr, first = true, isSurface = false) {
 		dim += array_shape(arr[0], false, isSurface);
 	
 	return (first? "" : " x ") + dim;
-}
+} #endregion
 
-function array_get_depth(arr) {
+function array_get_depth(arr) { #region
 	INLINE
 	
 	if(!is_array(arr)) return 0;
@@ -232,9 +238,9 @@ function array_get_depth(arr) {
 	}
 	
 	return d;
-}
+} #endregion
 
-function array_spread(arr, _arr = [], _minDepth = 0) {
+function array_spread(arr, _arr = [], _minDepth = 0) { #region
 	INLINE
 	
 	if(array_get_depth(arr) == _minDepth) {
@@ -246,9 +252,9 @@ function array_spread(arr, _arr = [], _minDepth = 0) {
 		array_spread(arr[i], _arr, _minDepth);
 		
 	return _arr;
-}
+} #endregion
 
-function array_verify(arr, length) {
+function array_verify(arr, length) { #region
 	INLINE
 	
 	if(!is_array(arr)) return array_create(length);
@@ -256,4 +262,4 @@ function array_verify(arr, length) {
 	
 	array_resize(arr, length);
 	return arr;
-}
+} #endregion

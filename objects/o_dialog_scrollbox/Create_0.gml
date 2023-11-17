@@ -93,7 +93,7 @@ event_inherited();
 			}
 			
 			if(clickable) {
-				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
+				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					selecting = i;
 					hovering  = data[i];
 					

@@ -395,7 +395,7 @@
 				res = v1;
 			} else if(symbol == "【") {													// array builder
 				res = array_create(array_length(v1));
-				for( var i = 0, n = array_length(res); i < n; i++ )
+				for( var i = 0, n = array_length(v1); i < n; i++ )
 					res[i] = getVal(v1[i], params);
 			} else if(symbol == "@") {													// array getter
 				if(isLeft)	

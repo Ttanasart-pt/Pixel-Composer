@@ -469,10 +469,11 @@ function Panel_Animation() : PanelContent() constructor {
 					getTimelineContentFolder(_cont, _context_folder, _depth + 1, _show && _cont.show);
 			} else if(is_instanceof(_cont, timelineItemNode)) {
 				var _node = _cont.node;
-				//if(_node != PROJECT.globalNode && !show_node_outside_context && _node.group != PANEL_GRAPH.getCurrentContext()) continue;
+				if(!is_struct(_node)) continue;
+				
 				var _anim = [];
 				var _prop = [];
-			
+				
 				for( var j = 0, m = ds_list_size(_node.inputs); j < m; j++ ) {
 					var prop = _node.inputs[| j];
 					if(!prop.is_anim || prop.value_from != noone) continue;

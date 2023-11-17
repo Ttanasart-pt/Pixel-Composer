@@ -1383,6 +1383,7 @@
     {"name":"__node_3d_prim_cylinder","order":2,"path":"scripts/__node_3d_prim_cylinder/__node_3d_prim_cylinder.yy",},
     {"name":"s_discord","order":7,"path":"sprites/s_discord/s_discord.yy",},
     {"name":"Obj_FirebaseFirestore_Collection_Query_options","order":10,"path":"objects/Obj_FirebaseFirestore_Collection_Query_options/Obj_FirebaseFirestore_Collection_Query_options.yy",},
+    {"name":"stack_functions","order":7,"path":"scripts/stack_functions/stack_functions.yy",},
     {"name":"panel_nodes","order":2,"path":"scripts/panel_nodes/panel_nodes.yy",},
     {"name":"sh_gradient_points","order":19,"path":"shaders/sh_gradient_points/sh_gradient_points.yy",},
     {"name":"node_array_composite","order":17,"path":"scripts/node_array_composite/node_array_composite.yy",},

@@ -405,11 +405,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		targ.setFrom(junctionFrom);
 	} #endregion
 	
-	static isActiveDynamic = function() { #region
+	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
 		if(update_on_frame) return true;
 		
 		for(var i = 0; i < ds_list_size(inputs); i++)
-			if(inputs[| i].isActiveDynamic()) return true;
+			if(inputs[| i].isActiveDynamic(frame)) return true;
 		
 		return false;
 	} #endregion
@@ -898,6 +898,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var hover = noone;
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		var jun;
+		gpu_set_texfilter(true);
 		
 		for(var i = 0; i < amo; i++) {
 			var ind = getInputJunctionIndex(i);
@@ -928,6 +929,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		onDrawJunctions(_x, _y, _mx, _my, _s);
+		gpu_set_texfilter(false);
+		
 		return hover;
 	} #endregion
 	

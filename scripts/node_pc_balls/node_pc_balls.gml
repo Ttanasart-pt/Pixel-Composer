@@ -42,7 +42,7 @@ function Node_PC_Balls(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	input_display_list = [ 8, 
 		["Input",		true],	0, 1,
 		["Movement",   false],	5, 2, 3, 
-		["Color",		true],	4, 6, 7
+		["Color",		true],	4, 6, 7,
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

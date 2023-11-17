@@ -12,7 +12,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	onModify  = _onModify;	
 	data_list = _data;
 	self.update_hover = update_hover;
-	data      = [];
+	data      = _data;
 	curr_text = 0;
 	
 	font      = f_p0;
@@ -55,10 +55,12 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		if(is_method(data_list)) data = data_list();
 		else					 data = data_list;
 		
-		if(is_array(_val)) return 0;
-		if(is_real(_val))  _val = array_safe_get(data, _val);
+		var _selVal = _val;
 		
-		var _text = is_instanceof(_val, scrollItem)? _val.name : _val;
+		if(is_array(_val)) return 0;
+		if(is_numeric(_val)) _selVal = array_safe_get(data, _val);
+		
+		var _text = is_instanceof(_selVal, scrollItem)? _selVal.name : _selVal;
 		curr_text = _text;
 		
 		w = _w;
@@ -96,7 +98,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		}
 		
 		var _arw = sprite_get_width(arrow_spr) + ui(8);
-		var _spr = is_instanceof(_val, scrollItem) && _val.spr;
+		var _spr = is_instanceof(_selVal, scrollItem) && _selVal.spr;
 		
 		draw_set_text(font, align, fa_center, COLORS._main_text);
 		draw_set_alpha(0.5 + 0.5 * interactable);
@@ -104,7 +106,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 			else if(align == fa_left)   draw_text(_x + ui(8) + _spr * _h, _y + _h / 2 - ui(2), _text);
 		draw_set_alpha(1);
 		
-		if(_spr) draw_sprite_ext(_val.spr, 0, _x + ui(8) + _h / 2, _y + _h / 2, 1, 1, 0, _val.spr_blend, 1);
+		if(_spr) draw_sprite_ext(_selVal.spr, 0, _x + ui(8) + _h / 2, _y + _h / 2, 1, 1, 0, _selVal.spr_blend, 1);
 		
 		draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x + w - _arw / 2, _y + _h / 2, 1, COLORS._main_icon, 0.5 + 0.5 * interactable);
 		

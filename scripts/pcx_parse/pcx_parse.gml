@@ -81,6 +81,8 @@
 		fx = string_replace_all(fx, "-=", "⊖");
 		fx = string_replace_all(fx, "*=", "⊗");
 		fx = string_replace_all(fx, "/=", "⊘");
+		
+		fx = string_replace_all(fx, "]", ",］");
 	
 		fx = string_trim(fx);
 	
@@ -199,7 +201,7 @@
 	}
 	
 	function evaluateFunctionTree(fx) {
-		static __BRACKETS = [ "(", ")", "[", "]" ];
+		static __BRACKETS = [ "(", ")", "[", "]", "］" ];
 		
 		var pres = global.EQUATION_PRES;
 		var vl   = ds_stack_create();
@@ -219,7 +221,7 @@
 		while(l <= len) {
 			ch = string_char_at(fx, l);
 			
-			//print($"Analyzing {ch}");
+			printIf(global.LOG_EXPRESSION, $"Analyzing {ch}");
 			
 			if(ds_map_exists(pres, ch)) { //symbol is operator
 				last_push = "op";
@@ -261,15 +263,15 @@
 				last_push = "vl";
 				l++;
 			} else if (ch == "[") {
-				if(last_push == "vl") {
+				if(last_push == "vl") {									// Get array member | a[1]
 					ds_stack_push(op, "@");
 					ds_stack_push(op, ch);
-				} else
+				} else													// Create array member | a = [1]
 					ds_stack_push(op, [ "{", ds_stack_size(vl) ]);
 				
 				last_push = "op";
 				l++;
-			} else if (ch == "]") {
+			} else if (ch == "］") {
 				while(!ds_stack_empty(op)) {
 					var _top = ds_stack_pop(op);
 					if(_top == "[") break;
@@ -277,6 +279,7 @@
 						var arr = [];
 						while(ds_stack_size(vl) > _top[1])
 							array_insert(arr, 0, ds_stack_pop(vl));
+						
 						ds_stack_push(vl, new __funcTree("【", arr));
 						break;
 					}
@@ -291,10 +294,11 @@
 					var _top = ds_stack_top(op);
 					if(_top == "[" || _top == "(" || (is_array(_top) && _top[0] == "{")) break;
 					
+					var _top = ds_stack_pop(op);
 					ds_stack_push(vl, buildFuncTree(_top, vl));
 				}
 				
-				last_push = "vl";
+				last_push = "op";
 				l++;
 			} else {
 				var vsl = "";
@@ -302,10 +306,8 @@
 				while(l <= len) {
 					cch = string_char_at(fx, l);
 					if(ds_map_exists(pres, cch) || array_exists(__BRACKETS, cch)) break;
-					if(cch == ",") {
-						l++;
+					if(cch == ",")
 						break;
-					}
 					
 					vsl += cch;
 					l++;
@@ -329,7 +331,7 @@
 				}
 			}
 			
-			//print($"op: {ds_stack_size(op)}; vl: {ds_stack_size(vl)}");
+			printIf(global.LOG_EXPRESSION, $"\tvl = {ds_stack_to_array(vl)}\n\top = {ds_stack_to_array(op)}");
 			
 			_ch = ch;
 		}

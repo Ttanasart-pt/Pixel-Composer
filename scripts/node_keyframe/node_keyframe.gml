@@ -76,9 +76,35 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		prop  = _prop;
 		y     = 0;
 		
+		animate_frames = [];
+		
 		if(_prop.type != VALUE_TYPE.trigger)
 			ds_list_add(values, new valueKey(0, _val, self));
 	#endregion
+	
+	static refreshAnimation = function() { #region
+		animate_frames = array_verify(animate_frames, TOTAL_FRAMES);
+		
+		var _anim = false;
+		var _fr   = noone;
+		
+		for( var i = 0, n = ds_list_size(values); i < n; i++ ) {
+			var _key = values[| i];
+			
+			if(_fr == noone) {
+				array_fill(animate_frames, 0, _key.time, 0);
+			} else {
+				if(array_equals(_fr.ease_out, [0, 0]) && array_equals(_fr.ease_in, [0, 1]) && isEqual(_fr.value, _key.value))
+					array_fill(animate_frames, _fr.time, _key.time, 0);
+				else
+					array_fill(animate_frames, _fr.time, _key.time, 1);
+			}
+			
+			_fr = _key;
+		}
+		
+		if(_fr) array_fill(animate_frames, _fr.time, TOTAL_FRAMES, 0);
+	} #endregion
 	
 	static interpolate = function(from, to, rat) { #region
 		if(prop.type == VALUE_TYPE.boolean)
