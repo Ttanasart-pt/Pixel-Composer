@@ -1,27 +1,25 @@
-function __initTheme() {
+function __initTheme() { #region
 	var root = DIRECTORY + "Themes";
-	if(!directory_exists(root))
-		directory_create(root);
-			
-	var _l = root + "/version";
-	if(file_exists(_l))
-		var res = json_load_struct(_l);
-	json_save_struct(_l, { version: BUILD_NUMBER });
 	
-	log_message("THEME", $"unzipping default theme to {root}.");
-	zip_unzip("data/themes/default.zip", root);
+	directory_verify(root);
+	if(check_version($"{root}/version")) {
+		log_message("THEME", $"unzipping default theme to {root}.");
+		zip_unzip("data/themes/default.zip", root);
+	}
 	
 	loadGraphic(PREFERENCES.theme);
 	loadColor(PREFERENCES.theme);
-}
+	
+	print($">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OBJECT CHECK: {THEME.ui_panel_bg} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+} #endregion
 
-function _sprite_path(rel, theme) {
+function _sprite_path(rel, theme) { #region
 	INLINE
 	
 	return $"{DIRECTORY}themes/{theme}/graphics/{string_replace_all(rel, "./", "")}";
-}
+} #endregion
 
-function _sprite_load_from_struct(str, theme, key) {
+function _sprite_load_from_struct(str, theme, key) { #region
 	INLINE
 	
 	var path = _sprite_path(str.path, theme);
@@ -42,17 +40,17 @@ function _sprite_load_from_struct(str, theme, key) {
 		else log_message("THEME", $"Load sprite {path} failed.");
 	}
 	return s; 
-}
+} #endregion
 
-function __getGraphicList() {
+function __getGraphicList() { #region
 	INLINE
 	
 	var path = _sprite_path("./graphics.json", "default");
 	var s = file_read_all(path);
 	return json_try_parse(s);
-}
+} #endregion
 
-function loadGraphic(theme = "default") { 
+function loadGraphic(theme = "default") { #region
 	var sprDef = __getGraphicList();
 	var _metaP = $"{DIRECTORY}Themes/{theme}/meta.json";
 	if(!file_exists(_metaP))
@@ -78,9 +76,6 @@ function loadGraphic(theme = "default") {
 	
 	for( var i = 0, n = array_length(graphics); i < n; i++ ) {
 		var key = graphics[i];
-		
-		//if(struct_has(THEME, key) && sprite_exists(THEME[$ key]))
-		//	sprite_delete(THEME[$ key]);
 			
 		if(struct_has(sprStr, key)) {
 			str = sprStr[$ key];
@@ -91,7 +86,5 @@ function loadGraphic(theme = "default") {
 			str = sprDef[$ key];
 			THEME[$ key] = _sprite_load_from_struct(str, "default", key);
 		}
-		
-		//print($"{key}: {THEME[$ key]} [{sprite_exists(THEME[$ key])}]");
 	}
-}
+} #endregion

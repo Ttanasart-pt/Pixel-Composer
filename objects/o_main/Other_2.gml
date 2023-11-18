@@ -17,7 +17,7 @@
 	}
 	show_debug_message("App directory: " + string(APP_DIRECTORY));
 	
-	if(!directory_exists(APP_DIRECTORY)) directory_create(APP_DIRECTORY);
+	directory_verify(APP_DIRECTORY);
 	
 	var perstPath = APP_DIRECTORY + "persistPreference.json"; 
 	if(file_exists(perstPath)) {
@@ -45,6 +45,8 @@
 	directory_set_current_working(DIRECTORY);
 	
 	METADATA = __getdefaultMetaData();
+	
+	//print($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
 #endregion
 
 #region Set up
@@ -52,8 +54,7 @@
 	PREF_LOAD();
 	
 	var dir  = string(DIRECTORY) + "log";
-	if(!directory_exists(dir))
-		directory_create(dir);
+	directory_verify(dir);
 	
 	log_clear();
 	log_newline();
@@ -83,7 +84,7 @@
 	
 	log_message("SESSION", "> init Ins Renderer");	__initInstanceRenderer();
 	
-	setPanel();
+	__initPanel();
 	loadAddon();
 	
 	if(file_exists("icon.png"))

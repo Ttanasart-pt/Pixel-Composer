@@ -51,7 +51,7 @@ if(PROJECT.active && !PROJECT.safeMode) {
 	HOTKEY_BLOCK = false;
 #endregion
 
-#region coroutine
+#region GIF builder
 	for( var i = 0; i < ds_list_size(GIF_READER); i++ ) {
 		var _reader = GIF_READER[| i];
 		

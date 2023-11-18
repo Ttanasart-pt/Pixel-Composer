@@ -1675,7 +1675,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static arrayLength = function(val = undefined) { #region
-		if(val == undefined) val = getValue();
+		val ??= getValue();
 		
 		if(!isArray(val)) 
 			return -1;

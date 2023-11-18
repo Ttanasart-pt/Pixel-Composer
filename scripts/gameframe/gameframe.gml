@@ -551,10 +551,10 @@ function gameframe_button_add_defaults() {
 
 function gameframe_tools_rect__new(_x, _y, _w, _h) {
 	// gameframe_tools_rect__new(...:int)->gameframe_tools_rect
-	if (_x == undefined) _x = 0;
-	if (_y == undefined) _y = 0;
-	if (_w == undefined) _w = 0;
-	if (_h == undefined) _h = 0;
+	_x ??= 0;
+	_y ??= 0;
+	_w ??= 0;
+	_h ??= 0;
 	if (false) show_debug_message(argument[3]);
 	return [/* x: */_x, /* y: */_y, /* width: */_w, /* height: */_h];
 }
@@ -674,7 +674,7 @@ function gameframe_restore(__force) {
 	/// gameframe_restore(_force:bool = false)
 	/// @param {bool} [_force=false]
 	/// @returns {void}
-	if (__force == undefined) __force = false;
+	__force ??= false;
 	if (false) show_debug_message(argument[0]);
 	if (window_get_fullscreen()) {
 		window_set_fullscreen(false);

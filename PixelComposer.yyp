@@ -1852,6 +1852,7 @@
     {"id":{"name":"widget","path":"scripts/widget/widget.yy",},},
     {"id":{"name":"node_VFX_effect_vortex","path":"scripts/node_VFX_effect_vortex/node_VFX_effect_vortex.yy",},},
     {"id":{"name":"s_node_skew","path":"sprites/s_node_skew/s_node_skew.yy",},},
+    {"id":{"name":"version_checker","path":"scripts/version_checker/version_checker.yy",},},
     {"id":{"name":"s_node_feedback_input","path":"sprites/s_node_feedback_input/s_node_feedback_input.yy",},},
     {"id":{"name":"s_node_path_builder","path":"sprites/s_node_path_builder/s_node_path_builder.yy",},},
     {"id":{"name":"Obj_FirebaseFirestore_Document_Listener","path":"objects/Obj_FirebaseFirestore_Document_Listener/Obj_FirebaseFirestore_Document_Listener.yy",},},

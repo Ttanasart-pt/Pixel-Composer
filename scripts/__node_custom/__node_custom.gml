@@ -166,19 +166,13 @@ function Node_Custom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 
 function __initNodeCustom(list) { #region
 	var root = DIRECTORY + "Nodes";
-	if(!directory_exists(root)) directory_create(root);
+	directory_verify(root);
 	
 	root += "/Custom";
-	if(!directory_exists(root)) directory_create(root);
+	directory_verify(root);
 	
-	var _l = root + "/version";
-	if(file_exists(_l)) {
-		var res = json_load_struct(_l);
-		if(!is_struct(res) || !struct_has(res, "version") || res.version != BUILD_NUMBER) 
-			zip_unzip("data/Nodes.zip", root);
-	} else 
+	if(check_version($"{root}/version"))
 		zip_unzip("data/Nodes.zip", root);
-	json_save_struct(_l, { version: BUILD_NUMBER });
 		
 	var f = file_find_first(root + "/*", fa_directory);
 		

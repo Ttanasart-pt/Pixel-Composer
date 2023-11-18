@@ -8,9 +8,9 @@
 		var lfile = $"data/locale/en.zip";
 		var root  = $"{DIRECTORY}Locale";
 		
-		if(!directory_exists(root))
-			directory_create(root);
-		zip_unzip(lfile, root);
+		directory_verify(root);
+		if(check_version($"{root}/version"))
+			zip_unzip(lfile, root);
 		
 		loadLocale();
 	}

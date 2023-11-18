@@ -1164,6 +1164,7 @@
     {"name":"widget","order":25,"path":"scripts/widget/widget.yy",},
     {"name":"node_VFX_effect_vortex","order":6,"path":"scripts/node_VFX_effect_vortex/node_VFX_effect_vortex.yy",},
     {"name":"s_node_skew","order":11,"path":"sprites/s_node_skew/s_node_skew.yy",},
+    {"name":"version_checker","order":11,"path":"scripts/version_checker/version_checker.yy",},
     {"name":"s_node_feedback_input","order":10,"path":"sprites/s_node_feedback_input/s_node_feedback_input.yy",},
     {"name":"s_node_path_builder","order":9,"path":"sprites/s_node_path_builder/s_node_path_builder.yy",},
     {"name":"Obj_FirebaseFirestore_Document_Listener","order":4,"path":"objects/Obj_FirebaseFirestore_Document_Listener/Obj_FirebaseFirestore_Document_Listener.yy",},

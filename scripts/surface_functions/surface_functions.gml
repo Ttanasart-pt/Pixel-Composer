@@ -179,7 +179,7 @@ function is_surface(s) {
 	INLINE
 	
 	if(is_instanceof(s, dynaSurf) || is_instanceof(s, SurfaceAtlas)) return true;
-	if(is_real(s) && s > 0 && surface_exists(s))   return true;
+	if(is_numeric(s) && s > 0 && surface_exists(s))   return true;
 	return false;
 }
 
@@ -198,7 +198,7 @@ function surface_get_pixel(surface, _x, _y) {
 	var f  = surface_get_format(surface);
 	var px = surface_getpixel(surface, _x, _y);
 	
-	if(is_real(px)) return px;
+	if(is_numeric(px)) return px;
 	return round(px[0] * (255 * power(256, 0))) + round(px[1] * (255 * power(256, 1))) + round(px[2] * (255 * power(256, 2)));
 }
 
@@ -208,7 +208,7 @@ function surface_get_pixel_ext(surface, _x, _y) {
 	if(!is_surface(surface)) return;
 	var px = surface_getpixel_ext(surface, _x, _y);
 	
-	if(is_real(px)) return px;
+	if(is_numeric(px)) return px;
 	return round(px[0] * (255 * power(256, 0))) + round(px[1] * (255 * power(256, 1))) + round(px[2] * (255 * power(256, 2))) + round(px[3] * (255 * power(256, 3)));
 }
 
@@ -424,7 +424,7 @@ function surface_copy_size(dest, source, format = noone) {
 function surface_valid_size(s) {
 	INLINE
 	
-	if(!is_real(s))    return 1;
+	if(!is_numeric(s))    return 1;
 	if(is_infinity(s)) return 1;
 	return clamp(s, 1, 8196);
 }

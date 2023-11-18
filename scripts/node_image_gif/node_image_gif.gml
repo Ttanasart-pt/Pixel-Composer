@@ -1,4 +1,4 @@
-function Node_create_Image_gif(_x, _y, _group = noone) {
+function Node_create_Image_gif(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".gif", "");
@@ -11,9 +11,9 @@ function Node_create_Image_gif(_x, _y, _group = noone) {
 	node.doUpdate();
 	
 	return node;
-}
+} #endregion
 
-function Node_create_Image_gif_path(_x, _y, path) {
+function Node_create_Image_gif_path(_x, _y, path) { #region
 	if(!file_exists(path)) return noone;
 	
 	var node = new Node_Image_gif(_x, _y, PANEL_GRAPH.getCurrentContext());
@@ -21,7 +21,7 @@ function Node_create_Image_gif_path(_x, _y, path) {
 	node.doUpdate();
 	
 	return node;
-}
+} #endregion
 
 function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name			= "Image GIF";
@@ -131,6 +131,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(loading == 2 && spr_builder != noone && spr_builder.building()) {
 			surfaces = [];
 			spr = spr_builder._spr;
+			print($"{spr}: {sprite_get_width(spr)}, {sprite_get_height(spr)}");
+			
 			triggerRender();
 			loading = 0;
 			
@@ -207,12 +209,11 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		surface_reset_shader();
 	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		if(loading) draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
-	}
+	} #endregion
 	
-	static onDestroy = function() {
-		if(sprite_exists(spr))
-			sprite_flush(spr);
-	}
+	static onDestroy = function() { #region
+		if(sprite_exists(spr)) sprite_flush(spr);
+	} #endregion
 }

@@ -9,7 +9,8 @@ function __generate_node_data() { #region
 	NODE_EXTRACT = true;
 	
 	var dir  = DIRECTORY + "Nodes/";
-	if(!directory_exists(dir)) directory_create(dir);
+	directory_verify(dir);
+	
 	var data   = {};
 	var junc   = {};
 	var locale = {};
@@ -122,7 +123,7 @@ function __generate_node_data() { #region
 		global.NODE_RELATION = {};
 		
 		var _dir = DIRECTORY + "Nodes/Related";
-		if(!directory_exists(_dir)) return;
+		directory_verify(_dir);
 		
 		var f = file_find_first(_dir + "/*.json", fa_none);
 		

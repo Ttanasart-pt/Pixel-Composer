@@ -5,17 +5,10 @@ function __initCollection() {
 	COLLECTIONS = -1;
 	
 	var root = DIRECTORY + "Collections";
-	if(!directory_exists(root))
-		directory_create(root);
+	directory_verify(root);
 	
-	var _l = root + "/version";
-	if(file_exists(_l)) {
-		var res = json_load_struct(_l);
-		if(!is_struct(res) || !struct_has(res, "version") || res.version != BUILD_NUMBER) 
-			zip_unzip("data/Collections.zip", root);
-	} else 
+	if(check_version($"{root}/version"))
 		zip_unzip("data/Collections.zip", root);
-	json_save_struct(_l, { version: BUILD_NUMBER });
 	
 	refreshCollections();
 }

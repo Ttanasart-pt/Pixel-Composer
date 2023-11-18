@@ -121,13 +121,17 @@
 		PANEL_MAIN.refresh();
 	}
 	
+	function __initPanel() {
+		if(check_version($"{DIRECTORY}layouts/version"))
+			zip_unzip("data/Layouts.zip", DIRECTORY);
+		setPanel();
+	}
+	
 	function setPanel() {
 		globalvar CURRENT_PANEL;
 		
 		panelObjectInit();
-		//if(!directory_exists(DIRECTORY + "layouts")) 
-			zip_unzip("data/Layouts.zip", DIRECTORY);
-			
+		
 		var file = $"{DIRECTORY}layouts/{PREFERENCES.panel_layout_file}.json"; 
 		if(!file_exists(file))
 			file = DIRECTORY + "layouts/Horizontal.json"; 

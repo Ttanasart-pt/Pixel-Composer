@@ -38,7 +38,8 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 	NODE_EXTRACT = true;
 	
 	dir  = DIRECTORY + "Nodes/";
-	if(!directory_exists(dir)) directory_create(dir);
+	directory_verify(dir);
+	
 	data   = {};
 	junc   = {};
 	locale = {};

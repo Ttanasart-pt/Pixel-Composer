@@ -60,8 +60,7 @@ _HOVERING_ELEMENT = noone;
 	if(PROJECT.modified && PREFERENCES.auto_save_time > 0 && AUTO_SAVE_TIMER > PREFERENCES.auto_save_time) {
 		AUTO_SAVE_TIMER = 0;
 		var loc = DIRECTORY + "Autosave/";
-		if(!directory_exists(loc))
-			directory_create(loc);
+		directory_verify(loc);
 		
 		var fname = string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), "") + 
 			"_autosave" + string(current_year) + "-" + 

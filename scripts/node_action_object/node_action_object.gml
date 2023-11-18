@@ -100,10 +100,10 @@
 
 	function __initNodeActions(list) {
 		var root = $"{DIRECTORY}Actions";
-		if(!directory_exists(root)) directory_create(root);
+		directory_verify(root);
 		
 		root += "/Nodes";
-		if(!directory_exists(root)) directory_create(root);
+		directory_verify(root);
 		
 		var f = file_find_first(root + "/*", 0);
 		

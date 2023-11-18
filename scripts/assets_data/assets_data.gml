@@ -6,17 +6,10 @@
 		ds_map_clear(global.ASSET_MAP);
 		
 		var root = DIRECTORY + "Assets";
-		if(!directory_exists(root))
-			directory_create(root);
+		directory_verify(root);
 		
-		var _l = root + "/version";
-		if(file_exists(_l)) {
-			var res = json_load_struct(_l);
-			if(!is_struct(res) || !struct_has(res, "version") || res.version != BUILD_NUMBER) 
-				zip_unzip("data/Assets.zip", root);
-		} else 
+		if(check_version($"{root}/version"))
 			zip_unzip("data/Assets.zip", root);
-		json_save_struct(_l, { version: BUILD_NUMBER });
 	
 		global.ASSETS = new DirectoryObject("Assets", root);
 		global.ASSETS.scan([".png"]);

@@ -61,8 +61,7 @@ event_inherited();
 	function newPresetFromNode(name) {
 		if(node == noone) return;
 		var dir = $"{DIRECTORY}Presets/{instanceof(node)}/";
-		if(!directory_exists(dir))
-			directory_create(dir);
+		directory_verify(dir);
 		
 		var pth = dir + name + ".json";
 		var map = node.serialize(true, true);
