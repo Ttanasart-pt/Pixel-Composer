@@ -1,6 +1,7 @@
 #region preference
-	globalvar PREFERENCES, PREFERENCES_DEF;
-	PREFERENCES = {};
+	globalvar PREFERENCES, PREFERENCES_DEF, HOTKEYS_DATA;
+	PREFERENCES  = {};
+	HOTKEYS_DATA = {};
 	
 	PREFERENCES.ui_framerate					= 60;
 	PREFERENCES.path_resolution					= 32;
@@ -179,15 +180,14 @@
 		if(!file_exists(path)) return;
 		
 		var map = json_load_struct(path);	
+		HOTKEYS_DATA = {};
 		
-		var key = map.key;
-		for(var i = 0; i < array_length(key); i++) {
-			var key_list    = key[i];
+		for(var i = 0; i < array_length(map.key); i++) {
+			var key_list    = map.key[i];
 			var _context	= is_struct(key_list)? key_list.context : key_list[0];
 			var name		= is_struct(key_list)? key_list.name    : key_list[1];
 			
-			var _key = find_hotkey(_context, name);
-			if(_key) _key.deserialize(key_list);
+			HOTKEYS_DATA[$ $"{_context}_{name}"] = key_list;
 		}
 		
 		struct_override(PREFERENCES, map.preferences);

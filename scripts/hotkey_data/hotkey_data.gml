@@ -72,14 +72,16 @@
 		dKey	= _key;
 		dModi	= _mod;
 		
-		static serialize = function() {
-			return { context, name, key, modi };
-		}
+		static serialize = function() { return { context, name, key, modi }; }
 		
 		static deserialize = function(ll) {
 			key  = is_struct(ll)? ll.key  : ll[2];
 			modi = is_struct(ll)? ll.modi : ll[3];
 		}
+		
+		var _loadKey = $"{context}_{name}";
+		if(struct_has(HOTKEYS_DATA, _loadKey))
+			deserialize(HOTKEYS_DATA[$ _loadKey]);
 	}
 	
 	function addHotkey(_context, _name, _key, _mod, _action) {

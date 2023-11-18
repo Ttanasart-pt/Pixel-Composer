@@ -48,9 +48,6 @@ event_inherited();
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			draw_text(ui(8), _yy + hh / 2, preset.name);
-			
-			//draw_set_color(COLORS._main_text_sub);
-			//draw_line(ui(8), _yy + hh, sc_presets.w - ui(16), _yy + hh);
 		}
 		
 		return _h;

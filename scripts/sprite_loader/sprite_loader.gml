@@ -9,8 +9,6 @@ function __initTheme() { #region
 	
 	loadGraphic(PREFERENCES.theme);
 	loadColor(PREFERENCES.theme);
-	
-	print($">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OBJECT CHECK: {THEME.ui_panel_bg} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 } #endregion
 
 function _sprite_path(rel, theme) { #region
