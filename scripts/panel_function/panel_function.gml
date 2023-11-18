@@ -27,7 +27,7 @@
 #endregion
 
 #region functions 
-	function clearPanel() {
+	function clearPanel() { #region
 		delete PANEL_MAIN;
 		delete PANEL_MENU;
 		delete PANEL_INSPECTOR;
@@ -35,15 +35,15 @@
 		delete PANEL_GRAPH;
 		delete PANEL_COLLECTION;
 		
-		PANEL_MAIN = {};
-		PANEL_MENU = {};
-		PANEL_INSPECTOR = {};
-		PANEL_PREVIEW = {};
-		PANEL_GRAPH = {};
+		PANEL_MAIN       = {};
+		PANEL_MENU       = {};
+		PANEL_INSPECTOR  = {};
+		PANEL_PREVIEW    = {};
+		PANEL_GRAPH      = {};
 		PANEL_COLLECTION = {};
-	}
+	} #endregion
 	
-	function getPanelFromName(name, create = false) {
+	function getPanelFromName(name, create = false) { #region
 		switch(name) {
 			case "Panel_Menu"       : return (create || findPanel(name))? new Panel_Menu()		 : PANEL_MENU;
 			case "Panel_Inspector"  : return (create || findPanel(name))? new Panel_Inspector()	 : PANEL_INSPECTOR;
@@ -67,9 +67,9 @@
 		}
 		
 		return noone;
-	}
+	} #endregion
 	
-	function loadPanelStruct(panel, str) {
+	function loadPanelStruct(panel, str) { #region
 		var cont = str.content;
 		
 		if(variable_struct_exists(str, "split")) {
@@ -90,21 +90,21 @@
 				if(_cont != noone) panel.setContent(_cont);
 			}
 		}
-	}
+	} #endregion
 	
-	function loadPanel(path, panel) {
+	function loadPanel(path, panel) { #region
 		CURRENT_PANEL = json_load_struct(path);
 		loadPanelStruct(panel, CURRENT_PANEL.panel);
-	}
+	} #endregion
 	
-	function panelAdd(panel, create = false) {
+	function panelAdd(panel, create = false) { #region
 		var pan = getPanelFromName(panel, create);
 		if(pan == noone) return noone;
 		
 		return dialogPanelCall(pan);
-	}
+	} #endregion
 	
-	function panelObjectInit() {
+	function panelObjectInit() { #region
 		PANEL_MAIN       = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
 		PANEL_MENU       = new Panel_Menu();
 		PANEL_INSPECTOR  = new Panel_Inspector();
@@ -112,22 +112,25 @@
 		PANEL_PREVIEW    = new Panel_Preview();
 		PANEL_GRAPH      = new Panel_Graph();
 		PANEL_COLLECTION = new Panel_Collection();
-	}
+	} #endregion
 	
-	function resetPanel() {
+	function resetPanel() { #region
 		clearPanel();
 		panelObjectInit();
 		loadPanelStruct(PANEL_MAIN, CURRENT_PANEL.panel);
 		PANEL_MAIN.refresh();
-	}
+	} #endregion
 	
-	function __initPanel() {
+	function __initPanel() { #region
+		directory_verify($"{DIRECTORY}layouts");
+		
 		if(check_version($"{DIRECTORY}layouts/version"))
 			zip_unzip("data/Layouts.zip", DIRECTORY);
+		
 		setPanel();
-	}
+	} #endregion
 	
-	function setPanel() {
+	function setPanel() { #region
 		globalvar CURRENT_PANEL;
 		
 		panelObjectInit();
@@ -139,9 +142,9 @@
 		
 		PANEL_MAIN.refresh();
 		PANEL_MAIN.refreshSize();
-	}
+	} #endregion
 	
-	function findPanel(_type, _pane = PANEL_MAIN) {
+	function findPanel(_type, _pane = PANEL_MAIN) { #region
 		var pan = _findPanel(_type, _pane);
 		if(pan) return pan;
 		
@@ -151,9 +154,9 @@
 		}
 		
 		return noone;
-	}
+	} #endregion
 	
-	function _findPanel(_type, _pane, _res = noone) {
+	function _findPanel(_type, _pane, _res = noone) { #region
 		if(instanceof(_pane) != "Panel")
 			return _res;
 		if(!ds_exists(_pane.childs, ds_type_list))
@@ -171,13 +174,13 @@
 		}
 		
 		return _res;
-	}
+	} #endregion
 	
-	function findPanels(_type, _pane = PANEL_MAIN) {
+	function findPanels(_type, _pane = PANEL_MAIN) { #region
 		return _findPanels(_type, _pane, []);
-	}
+	} #endregion
 	
-	function _findPanels(_type, _pane, _arr = []) {
+	function _findPanels(_type, _pane, _arr = []) { #region
 		if(!is_instanceof(_pane, Panel))
 			return _arr;
 		if(!ds_exists(_pane.childs, ds_type_list))
@@ -194,9 +197,9 @@
 			_arr = _findPanels(_type, _pane.childs[| i], _arr);
 		
 		return _arr;
-	}
+	} #endregion
 	
-	function panelInit() {
+	function panelInit() { #region
 		panel_dragging = noone;
 		panel_hovering = noone;
 		panel_split = 0;
@@ -209,9 +212,9 @@
 		panel_draw_y1 = noone; panel_draw_y1_to = noone;
 		
 		panel_draw_depth = 0;
-	}
+	} #endregion
 	
-	function panelDraw() {
+	function panelDraw() { #region
 		panel_draw_x0 = panel_draw_x0 == noone? panel_draw_x0_to : lerp_float(panel_draw_x0, panel_draw_x0_to, 3);
 		panel_draw_y0 = panel_draw_y0 == noone? panel_draw_y0_to : lerp_float(panel_draw_y0, panel_draw_y0_to, 3);
 		panel_draw_x1 = panel_draw_x1 == noone? panel_draw_x1_to : lerp_float(panel_draw_x1, panel_draw_x1_to, 3);
@@ -295,15 +298,15 @@
 				panel_draw_depth = 0;
 			}
 		}
-	}
+	} #endregion
 	
-	function panelSerialize() {
+	function panelSerialize() { #region
 		var cont = {};
 		cont.panel = _panelSerialize(PANEL_MAIN);
 		return cont;
-	}
+	} #endregion
 	
-	function _panelSerialize(panel) {
+	function _panelSerialize(panel) { #region
 		var cont = {};
 		var ind = 0;
 		
@@ -328,13 +331,13 @@
 		}
 		
 		return cont;
-	}
+	} #endregion
 	
-	function panelSerializeArray() {
+	function panelSerializeArray() { #region
 		return _panelSerializeArray(PANEL_MAIN);
-	}
+	} #endregion
 	
-	function _panelSerializeArray(panel) {
+	function _panelSerializeArray(panel) { #region
 		var cont = [];
 		
 		if(!ds_list_empty(panel.childs)) {
@@ -346,7 +349,7 @@
 		}
 		
 		return cont;
-	}
+	} #endregion
 #endregion
 
 #region fullscreen

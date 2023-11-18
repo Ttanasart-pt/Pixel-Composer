@@ -42,7 +42,7 @@
 	PRESIST_PREF.path = DIRECTORY;
 	json_save_struct(perstPath, PRESIST_PREF);
 	directory_verify(DIRECTORY);
-	directory_set_current_working(DIRECTORY);
+	//directory_set_current_working(DIRECTORY);
 	
 	METADATA = __getdefaultMetaData();
 	
@@ -83,9 +83,11 @@
 	log_message("SESSION", "> init Gradient");		__initGradient();
 	
 	log_message("SESSION", "> init Ins Renderer");	__initInstanceRenderer();
+	log_message("SESSION", "> init Addons");		  loadAddon();
+	
+	log_message("SESSION", ">> Initialization complete");
 	
 	__initPanel();
-	loadAddon();
 	
 	if(file_exists("icon.png"))
 		file_copy("icon.png", DIRECTORY + "icon.png");
@@ -98,6 +100,7 @@
 	var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
 	shell_execute_async("assoc", cmd);
 	
+	directory_set_current_working(DIRECTORY);
 	//print($"Setup time: {(current_time - t)/1000}s");
 #endregion
 

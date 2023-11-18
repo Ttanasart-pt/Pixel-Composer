@@ -126,14 +126,30 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	insp1UpdateTooltip   = __txtx("panel_inspector_execute", "Execute node contents");
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
+	insp2UpdateTooltip = "Clear cache";
+	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	
 	static inspector1Update   = function() { onInspector1Update(); }
 	static onInspector1Update = function() { RenderListAction(nodes, group); }
-	
 	static hasInspector1Update = function(group = false) { #region
-		if(!group) return false;
-		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
 			if(nodes[| i].hasInspector1Update())
+				return true;
+		}
+		
+		return false;
+	} #endregion
+	
+	static inspector2Update   = function() { onInspector2Update(); }
+	static onInspector2Update = function() { #region
+		for( var i = 0; i < ds_list_size(nodes); i++ ) {
+			if(nodes[| i].hasInspector2Update())
+				nodes[| i].inspector2Update();
+		}
+	} #endregion
+	static hasInspector2Update = function(group = false) { #region
+		for( var i = 0; i < ds_list_size(nodes); i++ ) {
+			if(nodes[| i].hasInspector2Update())
 				return true;
 		}
 		
@@ -312,22 +328,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	} #endregion
 	
-	static stepBegin = function() { #region
-		use_cache = CACHE_USE.none;
-		array_safe_set(cache_result, CURRENT_FRAME, true);
-		
-		var node_list = getNodeList();
-		for(var i = 0; i < ds_list_size(node_list); i++) {
-			var _node = node_list[| i];
-			if(!_node.use_cache) continue;
-			
-			use_cache = CACHE_USE.manual;
-			if(!array_safe_get(_node.cache_result, CURRENT_FRAME))
-				array_safe_set(cache_result, CURRENT_FRAME, false);
-		}
-		
-		doStepBegin();
-	} #endregion
+	static stepBegin = function() { doStepBegin(); }
 	
 	static step = function() { #region
 		if(combine_render_time) {

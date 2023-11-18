@@ -34,7 +34,7 @@ function __Panel_Linear_Setting_Label(name, sprite, s_index = 0, s_color = c_whi
 	self.s_color = s_color;
 } #endregion
 
-function Panel_Linear_Setting() : PanelContent() constructor {
+function Panel_Linear_Setting() : PanelContent() constructor { #region
 	title = __txtx("preview_3d_settings", "3D Preview Settings");
 	
 	w = ui(400);
@@ -46,7 +46,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	properties = []
 	static setHeight = function() { h = ui(12 + 36 * array_length(properties)); }
 	
-	static drawSettings = function(panel) {
+	static drawSettings = function(panel) { #region
 		var yy = ui(24);
 		var th = ui(36);
 		var ww = w - ui(180);
@@ -128,7 +128,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		
 		if(bg_y == -1) bg_y = bg_y_to;
 		else           bg_y = lerp_float(bg_y, bg_y_to, 2);
-	}
+	} #endregion
 	
 	function drawContent(panel) { drawSettings(panel); }
-}
+} #endregion

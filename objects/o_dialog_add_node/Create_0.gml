@@ -356,8 +356,8 @@ event_inherited();
 			}
 			
 			var _cont = PANEL_GRAPH.getCurrentContext();
-			if(_cont != noone)
-				array_append(sug, nodeReleatedQuery("context", instanceof(_cont)));			
+			if(_cont != noone) array_append(sug, nodeReleatedQuery("context", instanceof(_cont)));			
+			
 			if(array_length(sug)) {
 				ds_list_add(_list, "Related");
 				for( var i = 0, n = array_length(sug); i < n; i++ )

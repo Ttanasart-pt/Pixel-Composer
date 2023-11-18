@@ -1,4 +1,4 @@
-function FileObject(_name, _path) constructor {
+function FileObject(_name, _path) constructor { #region
 	static loadThumbnailAsync = false;
 	
 	name = _name;
@@ -16,7 +16,7 @@ function FileObject(_name, _path) constructor {
 	meta	   = noone;
 	type	   = FILE_TYPE.collection;
 	
-	switch(string_lower(filename_ext(path))) {
+	switch(string_lower(filename_ext(path))) { #region
 		case ".png" :	
 		case ".jpg" :	
 		case ".gif" :	
@@ -25,7 +25,7 @@ function FileObject(_name, _path) constructor {
 		case ".pxc" :	
 			type = FILE_TYPE.project;
 			break;
-	}
+	} #endregion
 	
 	retrive_data	= false;
 	thumbnail_data	= -1;
@@ -34,14 +34,14 @@ function FileObject(_name, _path) constructor {
 	
 	static getName = function() { return name; }
 	
-	static getSurface = function() {
+	static getSurface = function() { #region
 		if(is_surface(surface)) return surface;
 		var spr = getSpr();
 		surface = surface_create_from_sprite_ext(spr, 0);
 		return surface;
-	}
+	} #endregion
 	
-	static getThumbnail = function() {
+	static getThumbnail = function() { #region
 		if(size > 100000) return noone;
 		if(!retrive_data) getMetadata();
 		
@@ -49,9 +49,9 @@ function FileObject(_name, _path) constructor {
 		if(thumbnail != noone && is_surface(thumbnail)) return thumbnail;
 		
 		thumbnail = surface_decode(thumbnail_data);
-	}
+	} #endregion
 	
-	static getSpr = function() {
+	static getSpr = function() { #region
 		if(spr != -1)			return spr;
 		if(sprFetchID != noone) return -1;
 		
@@ -88,9 +88,9 @@ function FileObject(_name, _path) constructor {
 		}
 		
 		return spr;
-	}
+	} #endregion
 	
-	static getMetadata = function() {
+	static getMetadata = function() { #region
 		retrive_data = true;
 		
 		if(meta != noone)		return meta;  
@@ -117,21 +117,22 @@ function FileObject(_name, _path) constructor {
 		}
 		
 		return meta;
-	}
-}
+	} #endregion
+} #endregion
 
-function DirectoryObject(name, path) constructor {
+function DirectoryObject(name, path) constructor { #region
 	self.name = name;
 	self.path = path;
 	
 	subDir  = ds_list_create();
 	content = ds_list_create();
 	open    = false;
+	triggered = false;
 	
 	static destroy = function() { ds_list_destroy(subDir); }
 	static getName = function() { return name; }
 	
-	static scan = function(file_type) {
+	static scan = function(file_type) { #region
 		var _temp_name = ds_list_create();
 		var folder = file_find_first(path + "/*", fa_directory);
 		while(folder != "") {
@@ -182,16 +183,13 @@ function DirectoryObject(name, path) constructor {
 		}
 		
 		ds_list_destroy(_temp_name);
-	}
+	} #endregion
 	
-	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _colors = {}) {
+	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _colors = {}) { #region
 		var hg = ui(28);
 		var hh = 0;
 		
 		var color_selecting = struct_try_get(_colors, "selecting", COLORS.collection_path_current_bg);
-		
-		//if(path == parent.context.path)
-			//draw_sprite_stretched_ext(THEME.group_label, 1, _x + ui(28), _y, _w - ui(36), hg, color_selecting, 1); 
 		
 		if(!ds_list_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, ui(32), _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, CDEF.main_white, 1);
@@ -201,16 +199,17 @@ function DirectoryObject(name, path) constructor {
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _x + ui(32), _y, _w, _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(36), hg, CDEF.main_white, 1);
-			if(mouse_press(mb_left, _focus)) {
+			if(!triggered && mouse_click(mb_left, _focus)) {
 				if(!ds_list_empty(subDir))
 					open = !open;
-				
-				if(parent.context == self)
-					parent.setContext(_homedir);
-				else
-					parent.setContext(self);
+				parent.setContext(parent.context == self? _homedir : self);
+				triggered = true;
 			}
-		}
+		} else 
+			triggered = false;
+			
+		if(triggered && mouse_release(mb_left))
+			triggered = false;
 		
 		if(ds_list_empty(subDir)) draw_sprite_ui_uniform(THEME.folder_content, parent.context == self, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_empty);
 		else                      draw_sprite_ui_uniform(THEME.folder_content, open, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_nonempty);
@@ -236,5 +235,5 @@ function DirectoryObject(name, path) constructor {
 		}
 		
 		return hh;
-	}
-}
+	} #endregion
+} #endregion

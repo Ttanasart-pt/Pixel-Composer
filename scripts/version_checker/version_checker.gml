@@ -4,6 +4,8 @@ function check_version(path) {
 		return true;
 	}
 	
+	if(TESTING) return true;
+	
 	var res = json_load_struct(path);
 	return struct_try_get(res, "version") != BUILD_NUMBER;
 }

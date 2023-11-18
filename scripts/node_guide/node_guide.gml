@@ -148,20 +148,21 @@ function __initNodeData() {
 	global.NODE_GUIDE = {};
 	
 	var nodeDir = DIRECTORY + "Nodes/";
-	var _l = nodeDir + "/version";
 	
-	if(file_exists("data/tooltip.zip"))
+	if(file_exists("data/tooltip.zip")) 
 		zip_unzip("data/tooltip.zip", nodeDir);
-	else
-		noti_status("Tooltip image file not found.")
 	
 	if(file_exists("data/nodes.json")) {
 		file_delete(nodeDir + "nodes.json");
 		file_copy_override("data/nodes.json", nodeDir + "nodes.json");
 	}
 	
-	directory_verify(nodeDir + "/Related");
-	file_copy_override("data/related_node.json", nodeDir + "/Related/default.json");
+	var _relFrom = $"data/related_node.json";
+	var _relTo   = nodeDir + "Related/default.json";
+	
+	directory_verify(nodeDir + "Related");
+	file_copy_override(_relFrom, _relTo);
+	//print($"Copying related nodes from {_relFrom} to {_relTo}\n\t{file_exists(_relFrom)}, {file_exists(_relTo)}");
 	
 	__initNodeReleated();
 }

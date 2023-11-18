@@ -191,12 +191,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		updated			 = false;
 		passiveDynamic   = false;
 		topoSorted		 = false;
-	
-		use_cache		= CACHE_USE.none;
-		cached_manual	= false;
-		clearCacheOnChange	= true;
-		cached_output	= [];
-		cache_result	= [];
 		temp_surface    = [];
 	#endregion
 	
@@ -226,7 +220,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	#endregion
 	
 	#region ---- cache ----
-		cache_group = noone;
+		use_cache		= CACHE_USE.none;
+		cached_manual	= false;
+		cached_output	= [];
+		cache_result	= [];
+		cache_group     = noone;
+		
+		clearCacheOnChange	= true;
 	#endregion
 	
 	static createNewInput = noone;
@@ -1336,10 +1336,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static cacheArrayCheck = function() { #region
-		if(array_length(cached_output) != TOTAL_FRAMES)
-			array_resize(cached_output, TOTAL_FRAMES);
-		if(array_length(cache_result) != TOTAL_FRAMES)
-			array_resize(cache_result, TOTAL_FRAMES);
+		cached_output = array_verify(cached_output, TOTAL_FRAMES);
+		cache_result  = array_verify(cache_result,  TOTAL_FRAMES);
 	} #endregion
 	
 	static cacheCurrentFrame = function(_frame) { #region
