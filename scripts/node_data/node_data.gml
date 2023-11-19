@@ -405,6 +405,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
 		if(update_on_frame) return true;
+		if(!rendered) return true;
 		
 		for(var i = 0; i < ds_list_size(inputs); i++)
 			if(inputs[| i].isActiveDynamic(frame)) return true;

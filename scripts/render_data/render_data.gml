@@ -136,13 +136,12 @@ function __nodeIsRenderLeaf(_node) { #region
 	if(array_exists(global.group_io, instanceof(_node)))	 { LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); return false; }
 			
 	if(!_node.active)										 { LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); return false; }
-	if(!_node.isRenderActive())								 { LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive [{_node.internalName}]"); return false; }
+	if(!_node.isRenderActive())								 { LOG_IF(global.FLAG.render == 1, $"Skip render inactive  [{_node.internalName}]"); return false; }
 	if(!_node.attributes.update_graph)						 { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); return false; }
 			
 	if(_node.passiveDynamic) { _node.forwardPassiveDynamic();  LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); return false; }
 	
-	if((_node.rendered || (is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)) && !_node.isActiveDynamic())			 
-															 { LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); return false; }
+	if(!_node.isActiveDynamic())							 { LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); return false; }
 	
 	return true;
 } #endregion
