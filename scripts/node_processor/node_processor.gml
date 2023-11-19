@@ -330,10 +330,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		else			 processOutput();
 		processData_postbatch();
 		
-		postUpdate();
+		postProcess();
 	} #endregion
 	
-	static postUpdate = function() {}
+	static postProcess = function() {}
 	
 	static processSerialize = function(_map) { #region
 		_map.array_process = attributes.array_process;

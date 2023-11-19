@@ -65,7 +65,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		D3D_GLOBAL_PREVIEW.camera.resetCamera();
 	} #endregion
 	
-	static postUpdate = function() { refreshPreview(); }
+	static postProcess = function() { refreshPreview(); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) { #region
 		if(!is_surface(mesh_prev_surface)) return;

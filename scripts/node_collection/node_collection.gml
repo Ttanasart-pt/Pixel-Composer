@@ -89,7 +89,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	input_dummy = nodeValue("Add to group", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
 	draw_dummy  = false;
 	
-	input_dummy.onSetFrom = function(juncFrom) {
+	input_dummy.onSetFrom = function(juncFrom) { #region
 		ds_list_remove(juncFrom.value_to, input_dummy);
 		input_dummy.value_from = noone;
 		
@@ -104,7 +104,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		input.inParent.setFrom(juncFrom);
 		
 		if(onNewInputFromGraph != noone) onNewInputFromGraph(juncFrom);
-	}
+	} #endregion
 	
 	onNewInputFromGraph = noone;
 	
@@ -292,6 +292,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		LOG_BLOCK_END();
 	} #endregion
 	
+	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
+		if(update_on_frame) return true;
+		
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) 
+			if(inputs[| i].isActiveDynamic(frame) || !inputs[| i].from.rendered) return true;
+		
+		return false;
+	} #endregion
+	
 	static exitGroup = function() {}
 	
 	static add = function(_node) { #region
@@ -344,8 +353,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static onStep = function() {}
-	
-	PATCH_STATIC
 	
 	static onPreDraw = function(_x, _y, _s, _iny, _outy) { #region
 		var xx = x * _s + _x;

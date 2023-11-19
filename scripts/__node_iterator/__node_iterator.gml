@@ -50,6 +50,7 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from Loop output");
 		
 		var _nodes = [];
+		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) { // check if every node is updated
 			if(!nodes[| i].rendered) {
 				LOG_IF(global.FLAG.render == 1, $"Skipped due to node {nodes[| i].internalName} not rendered.");

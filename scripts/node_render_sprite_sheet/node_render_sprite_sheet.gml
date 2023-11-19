@@ -70,7 +70,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		update_on_frame = grup == 0;
 	} #endregion
 	
-	static postupdate = function(frame = CURRENT_FRAME) {
+	static postProcess = function(frame = CURRENT_FRAME) {
 		if(LAST_FRAME) array_remove(RENDERING, node_id);
 	}
 	

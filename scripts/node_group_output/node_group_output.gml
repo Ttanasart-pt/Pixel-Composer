@@ -1,8 +1,9 @@
 function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Group Output";
-	destroy_when_upgroup = true;
 	color = COLORS.node_blend_collection;
 	previewable = false;
+	
+	destroy_when_upgroup = true;
 	
 	attributes.input_priority = 0;
 	if(!CLONING && !LOADING && !APPENDING && group != noone) attributes.input_priority = group.getOutputFreeOrder();
@@ -16,7 +17,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setVisible(true, true);
 	
 	attributes.inherit_name = !LOADING && !APPENDING;
-	outParent = undefined;
+	outParent    = undefined;
 	output_index = -1;
 	
 	_onSetDisplayName = function() { attributes.inherit_name = false; }
@@ -140,10 +141,4 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static onLoadGroup = function() { #region
 		if(group == noone) nodeDelete(self);
 	} #endregion
-	
-	//static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
-	//	var bbox = drawGetBbox(xx, yy, _s);
-	//	draw_set_text(f_h5, fa_center, fa_center, c_white);
-	//	draw_text(bbox.xc, bbox.yc, attributes.input_priority);
-	//} #endregion
 }

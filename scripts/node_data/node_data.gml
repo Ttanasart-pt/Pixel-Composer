@@ -526,7 +526,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		doUpdate();
 	} #endregion
 	
-	static postupdate = function(frame = CURRENT_FRAME) {}
+	static postUpdate = function(frame = CURRENT_FRAME) {}
 	
 	static doUpdate = function(frame = CURRENT_FRAME) { #region
 		if(PROJECT.safeMode) return;
@@ -559,7 +559,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			}
 		}
 		
-		postupdate(frame);
+		postUpdate(frame);
 		cached_manual = false;
 		
 		if(!use_cache && PROJECT.onion_skin.enabled) {
