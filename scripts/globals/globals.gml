@@ -1,6 +1,6 @@
 #region save
 	globalvar LOADING, APPENDING, CLONING;
-	globalvar CONNECTION_CONFLICT, ALWAYS_FULL;
+	globalvar CONNECTION_CONFLICT;
 	globalvar MESSAGE;
 	
 	LOADING		= false;
@@ -11,7 +11,6 @@
 	CONNECTION_CONFLICT = ds_queue_create();
 	
 	randomize();
-	ALWAYS_FULL = false;
 #endregion
 
 #region main

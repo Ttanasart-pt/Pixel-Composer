@@ -1,5 +1,5 @@
 function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
-	name = "Sort Array";
+	name  = "Sort Array";
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;
 	
@@ -17,7 +17,6 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	custom_input_index  = ds_list_size(inputs);
 	custom_output_index = ds_list_size(inputs);
 	loop_start_time     = 0;
-	ALWAYS_FULL         = true;
 	
 	inputNodes = [ noone, noone ];
 	outputNode = noone;
@@ -31,6 +30,13 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		input1.display_name = "Value 2";
 		
 		var output = nodeBuild("Node_Iterator_Sort_Output", 256, -32, self);
+	} #endregion
+	
+	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
+		for( var i = 0, n = ds_list_size(nodes); i < n; i++ )
+			if(nodes[| i].isActiveDynamic(frame)) return true;
+		
+		return false;
 	} #endregion
 	
 	static getNextNodes = function() { return getNextNodesExternal(); }

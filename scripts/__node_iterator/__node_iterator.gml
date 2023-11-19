@@ -5,7 +5,23 @@ enum ITERATION_STATUS {
 }
 
 function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
-	willRestart = false;		//in the next getNextNode, reset all child nodes, use in loop.	
+	color = COLORS.node_blend_loop;
+	icon  = THEME.loop;
+	
+	willRestart         = false;		//in the next getNextNode, reset all child nodes, use in loop.	
+	managedRenderOrder  = true;
+	reset_all_child     = true;
+	combine_render_time = false;
+	loop_start_time     = 0;
+	
+	iterated = 0;
+	
+	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
+		for( var i = 0, n = ds_list_size(nodes); i < n; i++ )
+			if(nodes[| i].isActiveDynamic(frame)) return true;
+		
+		return false;
+	} #endregion
 	
 	static initLoop = function() { #region
 		resetRender();

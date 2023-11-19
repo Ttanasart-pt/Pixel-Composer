@@ -44,15 +44,6 @@ function __nodeLeafList(_list) { #region
 	return nodes;
 } #endregion
 
-function __nodeManualManaged(_node) { #region
-	var gr = _node.group;
-	while(gr != noone) {
-		if(gr.managedRenderOrder) return true;
-		gr = gr.group;
-	}
-	return false;
-} #endregion
-
 function ResetAllNodesRender() { #region
 	LOG_IF(global.FLAG.render == 1, $"XXXXXXXXXXXXXXXXXXXX RESETTING ALL NODES [frame {CURRENT_FRAME}] XXXXXXXXXXXXXXXXXXXX");
 	
@@ -128,7 +119,7 @@ function __sortGraph(_list, _nodeList) { #region
 			ds_list_add(_list, _node);
 			_node.topoSorted = true;
 			
-			if(is_instanceof(_node, Node_Collection))
+			if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
 				__sortGraph(_list, _node.nodes);
 		} else {
 			ds_stack_push(_st, _node);
@@ -136,6 +127,22 @@ function __sortGraph(_list, _nodeList) { #region
 				ds_stack_push(_st, _childs[i]);
 		}
 	}
+} #endregion
+
+function __nodeIsRenderLeaf(_node) { #region
+	if(is_undefined(_node))									 { LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); return false; }
+	if(!is_instanceof(_node, Node))							 { LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); return false; }
+			
+	if(array_exists(global.group_io, instanceof(_node)))	 { LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); return false; }
+			
+	if(!_node.active)										 { LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); return false; }
+	if(!_node.isRenderActive())								 { LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive [{_node.internalName}]"); return false; }
+	if(!_node.attributes.update_graph)						 { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); return false; }
+			
+	if(_node.passiveDynamic) { _node.forwardPassiveDynamic();  LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); return false; }
+	if(_node.rendered && !_node.isActiveDynamic())			 { LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); return false; }
+	
+	return true;
 } #endregion
 
 function Render(partial = false, runAction = false) { #region
@@ -151,7 +158,7 @@ function Render(partial = false, runAction = false) { #region
 		
 		var rendering = noone;
 		var error     = 0;
-		var reset_all = !partial || ALWAYS_FULL;
+		var reset_all = !partial;
 		
 		if(reset_all) {
 			var _key = ds_map_find_first(PROJECT.nodeMap);
@@ -174,23 +181,10 @@ function Render(partial = false, runAction = false) { #region
 		
 		for( var i = 0, n = ds_list_size(PROJECT.nodeTopo); i < n; i++ ) {
 			var _node = PROJECT.nodeTopo[| i];
-			
-			if(is_undefined(_node))							{ LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); continue; }
-			if(!is_instanceof(_node, Node))					{ LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); continue; }
 			_node.render_time = 0;
 			
-			if(array_exists(global.group_io, instanceof(_node))) {
-															  LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); continue; }
-			
-			if(!_node.active)								{ LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); continue; }
-			if(!_node.isRenderActive())						{ LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive [{_node.internalName}]"); continue; }
-			if(!_node.attributes.update_graph)				{ LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); continue; }
-			if(__nodeManualManaged(_node))							{ LOG_IF(global.FLAG.render == 1, $"Skip in-loop          [{_node.internalName}]"); continue; }
-			
-			if(_node.passiveDynamic) { 
-				_node.forwardPassiveDynamic();				  LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); continue; }
-			
-			if(_node.rendered && !_node.isActiveDynamic())	{ LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); continue; }
+			if(!__nodeIsRenderLeaf(_node))
+				continue;
 			
 			LOG_IF(global.FLAG.render == 1, $"    Found leaf [{_node.internalName}]");
 			RENDER_QUEUE.enqueue(_node);
