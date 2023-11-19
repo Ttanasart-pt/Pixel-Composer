@@ -647,10 +647,10 @@ function Panel_Menu() : PanelContent() constructor {
 		
 		#region title
 			var txt = "";
-			if(PROJECT.safeMode) txt += "[SAFE MODE] ";
-			if(PROJECT.readonly) txt += "[READ ONLY] ";
+			if(PROJECT.safeMode) txt += $"[{__txt("SAFE MODE")}] ";
+			if(PROJECT.readonly) txt += $"[{__txt("READ ONLY")}] ";
 			
-			txt += PROJECT.path == ""? "Untitled" : filename_name(PROJECT.path);
+			txt += PROJECT.path == ""? __txt("Untitled") : filename_name(PROJECT.path);
 			if(PROJECT.modified) txt += "*";
 			txt += " - Pixel Composer";
 			if(ALPHA)		txt += " ALPHA";
@@ -742,7 +742,7 @@ function Panel_Menu() : PanelContent() constructor {
 				var _ib = COLORS._main_text_sub;
 				
 				if(pHOVER && point_in_rectangle(mx, my, _cx - 12, _cy - 12, _cx + 12, _cy + 12)) {
-					TOOLTIP = "Supporter";
+					TOOLTIP = __txt("Supporter");
 					_ib = COLORS._main_accent;
 				}
 				

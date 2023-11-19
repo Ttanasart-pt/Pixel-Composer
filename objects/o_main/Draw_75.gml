@@ -78,10 +78,8 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 				break;
 			default :
 				var tt = "";
-				if(is_struct(content))
-					tt = $"[{instanceof(content)}] {content}";
-				else 
-					tt = string(content);
+				if(is_struct(content)) tt = $"[{instanceof(content)}] {content}";
+				else                   tt = string(content);
 				
 				draw_tooltip_text(tt);
 		} 

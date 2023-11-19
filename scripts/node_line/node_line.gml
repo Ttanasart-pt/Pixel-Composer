@@ -225,6 +225,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _prog_total	= 0;				//Record how far the pointer have moved so far
 				var points		= [];
 				var wght;
+				var _pathPng;
 					
 				if(_useDistance) {						
 					_pathStr   *= _pathLength;
@@ -246,15 +247,17 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							
 						if(_prog_next == segmentLength)
 							_segIndex = (_segIndex + 1) % array_length(_segLength);
+						_pathPng = _ratInv? _pathLength - _prog_curr : _prog_curr;
 					} else {
 						if(_prog_curr >= 1) //Wrap overflow path
 							_prog_next = frac(_prog_curr);
 						else 
 							_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
+						_pathPng = _ratInv? 1 - _prog_curr : _prog_curr;
 					}
 					
 					wght = 1;
-					var _pathPng = _ratInv? 1 - _prog_curr : _prog_curr;
+					
 					if(_useDistance) {
 						p = _pat.getPointDistance(_pathPng, i, p);
 						if(struct_has(_pat, "getWeightRatio"))

@@ -2,7 +2,7 @@
 //print("===== Game Start Begin =====");
 
 #region directory
-	globalvar DIRECTORY, APP_DIRECTORY, PRESIST_PREF;
+	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF;
 	DIRECTORY = "";
 	PRESIST_PREF = {};
 	
@@ -45,7 +45,7 @@
 	//directory_set_current_working(DIRECTORY);
 	
 	METADATA = __getdefaultMetaData();
-	
+	APP_LOCATION = program_directory;
 	//print($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
 #endregion
 

@@ -72,10 +72,10 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		var _Asca = _data[11];
 		var _inst = _data[12];
 		
-		if(_mode == 1 && !is_array(_object)) return noone;
-		var _amo = _mode == 1? array_length(_object) : _data[2];
-		
 		var _scene = new __3dGroup();
+		
+		if(_mode == 1 && !is_array(_object)) return _scene;
+		var _amo = _mode == 1? array_length(_object) : _data[2];
 		
 		for( var i = 0; i < _amo; i++ ) {
 			var _obj = _mode == 1? _object[i] : _object;

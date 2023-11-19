@@ -129,7 +129,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 					
 						draw_sprite_ui(THEME.tunnel, 0, ui(32), _y + ui(10), 0.75, 0.75, 0, COLORS._main_icon);
 						draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
-						draw_text(ui(32 + 16), _y + ui(10), _node.display_name == ""? _node.name : _node.display_name);
+						draw_text(ui(32 + 16), _y + ui(10), _node.renamed? _node.display_name : _node.name);
 					
 					
 						if(point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + ui(20))) 

@@ -732,7 +732,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		tb_node_name.setFocusHover(pFOCUS, pHOVER);
 		tb_node_name.align  = fa_center;
 		tb_node_name.format = TEXT_AREA_FORMAT.node_title;
-		var txt = inspecting.display_name == ""? inspecting.name : inspecting.display_name;
+		var txt = inspecting.renamed? inspecting.display_name : inspecting.name;
 		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), txt, [mx, my]);
 		
 		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
@@ -795,7 +795,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			inspecting = noone;
 		
 		if(inspecting) {
-			title = inspecting.display_name == ""? inspecting.name : inspecting.display_name;
+			title = inspecting.renamed? inspecting.display_name : inspecting.name;
 			inspecting.inspectorStep();
 			drawInspectingNode();
 		} else {

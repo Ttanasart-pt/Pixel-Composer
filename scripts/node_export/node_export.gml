@@ -218,10 +218,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	gifski    = filepath_resolve(PREFERENCES.gifski_path) 	   + "win/gifski.exe";
 	ffmpeg    = filepath_resolve(PREFERENCES.ffmpeg_path) 	   + "bin/ffmpeg.exe";
 	
-	if(!file_exists(converter) || !file_exists(magick)) noti_warning("No ImageMagick deteced, please make sure the installation is complete and ImageMagick path is set properly in preference.");
-	if(!file_exists(webp))                              noti_warning("No webp deteced, please make sure the installation is complete and webp path is set properly in preference.");
-	if(!file_exists(gifski))                            noti_warning("No gifski deteced, please make sure the installation is complete and gifski path is set properly in preference.");
-	if(!file_exists(ffmpeg))                            noti_warning("No ffmpeg deteced, please make sure the installation is complete and ffmpeg path is set properly in preference.");
+	if(!file_exists(converter) || !file_exists(magick)) noti_warning($"No ImageMagick detected at {magick}, please make sure the installation is complete and ImageMagick path is set properly in preference.");
+	if(!file_exists(webp))                              noti_warning($"No webp detected at {webp}, please make sure the installation is complete and webp path is set properly in preference.");
+	if(!file_exists(gifski))                            noti_warning($"No gifski detected at {gifski}, please make sure the installation is complete and gifski path is set properly in preference.");
+	if(!file_exists(ffmpeg))                            noti_warning($"No ffmpeg detected at {ffmpeg}, please make sure the installation is complete and ffmpeg path is set properly in preference.");
 	
 	static onValueUpdate = function(_index) { #region
 		var form = getInputData(3);

@@ -33,7 +33,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		
 		for( var i = 0; i < ds_list_size(_list); i++ ) {
 			var node = _list[| i];
-			var name = node.display_name == ""? node.name : node.display_name;
+			var name = node.renamed? node.display_name : node.name;
 			
 			if(string_lower(search_string) != "" && string_lower(string_pos(search_string, name)) == 0)
 				continue;

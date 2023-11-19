@@ -8,7 +8,7 @@ function filepath_resolve(path) {
 	var _path = path;
 	
 	_path = string_replace_all(_path, "%DIR%/", DIRECTORY);
-	_path = string_replace_all(_path, "%APP%/", program_directory);
+	_path = string_replace_all(_path, "%APP%/", APP_LOCATION);
 	
 	return _path;
 }

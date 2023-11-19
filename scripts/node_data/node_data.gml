@@ -47,9 +47,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		PROJECT.modified = true;
 		
 		run_in(1, function() { 
-			if(display_name != "") return;
 			resetInternalName();
 			display_name = __txt_node_name(instanceof(self), name);
+			if(!LOCALE_DEF || TESTING) renamed = true;
 		});
 		
 		RENDER_ALL_REORDER
@@ -392,7 +392,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static getFullName = function() { #region
-		return display_name == ""? name : "[" + name + "] " + display_name;
+		INLINE
+		return renamed? "[" + name + "] " + display_name : name;
 	} #endregion
 	
 	static addInput = function(junctionFrom, shift = input_fix_len) { #region
@@ -856,7 +857,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!active) return;
 		
 		draw_name = false;
-		var _name = display_name == ""? name : display_name;
+		var _name = renamed? display_name : name;
 		if(_name == "") return;
 		if(_s < 0.75) return;
 		draw_name = true;

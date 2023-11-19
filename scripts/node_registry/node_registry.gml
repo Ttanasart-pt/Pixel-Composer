@@ -100,7 +100,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			draw_sprite_ext(s_patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
 			
-			if(point_in_circle(_mx, _my, spr_x, spr_y, 10)) TOOLTIP = "Supporter exclusive";
+			if(point_in_circle(_mx, _my, spr_x, spr_y, 10)) TOOLTIP = __txt("Supporter exclusive");
 		}
 	} #endregion
 	
@@ -146,7 +146,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			draw_sprite_ext(s_patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
 			
-			if(point_in_circle(_mx, _my, spr_x, spr_y, 10)) TOOLTIP = "Supporter exclusive";
+			if(point_in_circle(_mx, _my, spr_x, spr_y, 10)) TOOLTIP = __txt("Supporter exclusive");
 		}
 		
 		return tx;
@@ -356,7 +356,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		
 		NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
 		ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
-			
+			 
 		var fav = ds_list_create();
 		addNodeCatagory("Favourites", fav);
 			

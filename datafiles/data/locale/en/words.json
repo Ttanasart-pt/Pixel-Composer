@@ -337,5 +337,11 @@
     "points": "Points",
     "text_area": "Text Area",
 
+    "safe_mode": "SAFE MODE",
+    "read_only": "READ ONLY",
+    "untitled": "Untitled",
+    "supporter": "Supporter",
+    "supporter_exclusive": "Supporter exclusive",
+
     "" : ""
 }

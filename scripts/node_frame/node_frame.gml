@@ -58,7 +58,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static drawNodeBase = function(xx, yy, _s) { #region
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, alpha);
-		var txt = display_name == ""? name : display_name;
+		var txt = renamed? display_name : name;
 		
 		hover_progress = lerp_float(hover_progress, name_hover, 2);
 		
@@ -126,7 +126,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		var txt = display_name == ""? name : display_name;
+		var txt = renamed? display_name : name;
 		draw_set_font(f_h5);
 		var ww  = string_width(txt) + 24 + 8;
 		var hh  = string_height("l") + 8;

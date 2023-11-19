@@ -60,7 +60,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		if(!active) return;
 		if(_s < 0.75) return;
 		
-		var _name = display_name == ""? name : display_name;
+		var _name = renamed? display_name : name;
 		if(_name == "") return;
 		
 		var hid   = getInputData(1);

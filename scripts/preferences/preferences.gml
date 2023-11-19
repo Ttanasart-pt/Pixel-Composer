@@ -198,7 +198,7 @@
 		var f = json_load_struct(DIRECTORY + "key_nodes.json");
 		struct_override(HOTKEYS_CUSTOM, f);
 		
-		LOCALE_USE_DEFAULT = PREFERENCES.local == "en";
+		LOCALE_DEF = PREFERENCES.local == "en";
 		
 		directory_verify(filepath_resolve(PREFERENCES.temp_path));
 	}

@@ -87,7 +87,7 @@ function timelineItemNode(node) : timelineItem() constructor {
 		draw_set_color(itHover == self? COLORS._main_text_accent : COLORS._main_text);
 		var txx = lx + ui(24);
 			
-		if(nameType == 0 || nameType == 1 || node.display_name == "") {
+		if(nameType == 0 || nameType == 1 || !node.renamed) {
 			draw_set_alpha(0.6);
 			draw_text_add(txx, _y + lh / 2 - ui(2), nodeName);
 			txx += tw;

@@ -298,7 +298,7 @@ event_inherited();
 			if(i == ADD_NODE_PAGE) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
 			else				   draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 			
-			var _is_extra = name == "Extra";
+			var _is_extra = name == "Supporter";
 			name = __txt(name);
 			
 			var _tx = ui(8);

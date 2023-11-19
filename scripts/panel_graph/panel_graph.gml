@@ -1268,7 +1268,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				tt = __txt("Global");
 			} else {
 				var _cnt = node_context[| i];
-				tt = _cnt.display_name == ""? _cnt.name : _cnt.display_name;
+				tt = _cnt.renamed? _cnt.display_name : _cnt.name;
 			}
 			
 			tw = string_width(tt);
@@ -1514,7 +1514,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		dragGraph();
 		
 		var context = getCurrentContext();
-		if(context != noone) title_raw += " > " + (context.display_name == ""? context.name : context.display_name);
+		if(context != noone) title_raw += " > " + (context.renamed? context.display_name : context.name);
 		
 		bg_color = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.getColor(), 0.05);
 		draw_clear(bg_color);

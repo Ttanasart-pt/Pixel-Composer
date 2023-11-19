@@ -49,4 +49,6 @@ function audioObject(sample = 8, channel = 2) constructor {
 	
 	static getChannel = function() { return mono? 1 : channels; }
 	static getData    = function() { return mono? soundF : sound; }
+	
+	static toString = function() { return $"\{duration:{duration}, channels:{channels}\}"; }
 }

@@ -615,7 +615,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		var _node = getNodePreview();
 		if(_node)
-			title = _node.display_name == ""? _node.name : _node.display_name;
+			title = _node.renamed? _node.display_name : _node.name;
 		
 		if(splitView == 0 && tileMode == 0 && is_surface(preview_surface[0])) {
 			var node = preview_node[0];
