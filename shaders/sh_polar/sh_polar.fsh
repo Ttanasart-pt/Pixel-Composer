@@ -3,8 +3,9 @@
 //
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
+uniform int invert;
 
-/////////////// SAMPLING ///////////////
+#region /////////////// SAMPLING ///////////////
 
 const float PI = 3.14159265358979323846;
 uniform int interpolation;
@@ -50,13 +51,23 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 	return texture2D( texture, uv );
 }
 
-/////////////// SAMPLING ///////////////
+#endregion /////////////// SAMPLING ///////////////
 
 void main() {
-	vec2  center	= v_vTexcoord - vec2(0.5, 0.5);
-	float radius	= distance(v_vTexcoord, vec2(0.5, 0.5)) / (sqrt(2.) * .5);
-	float angle		= (atan(center.y, center.x) / PI + 1.) / 2.;
+	vec2 center = vec2(0.5, 0.5);
 	
-	vec2 polar = vec2(radius, angle);
-    gl_FragColor = v_vColour * texture2D( gm_BaseTexture, polar );
+	if(invert == 0) {
+		float radius = distance(v_vTexcoord, center) / (sqrt(2.) * .5);
+		vec2  cenPos = v_vTexcoord - center;
+		float angle	 = (atan(cenPos.y, cenPos.x) / PI + 1.) / 2.;
+		
+		vec2 coord = vec2(radius, angle);
+	    gl_FragColor = v_vColour * texture2D( gm_BaseTexture, coord );
+	} else if(invert == 1) {
+		float dist = v_vTexcoord.x * 0.5;
+		float ang  = v_vTexcoord.y * PI * 2.;
+		
+		vec2 coord = center + vec2(cos(ang), sin(ang)) * dist;
+	    gl_FragColor = v_vColour * texture2D( gm_BaseTexture, coord );
+	}
 }

@@ -120,8 +120,9 @@ event_inherited();
 	#region ---- set page ----
 		function setPage(pageIndex) {
 			ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);
-			node_list		= pageIndex == -1? noone : category[| ADD_NODE_PAGE].list;
+			node_list		= pageIndex < 0? noone : category[| ADD_NODE_PAGE].list;
 		}
+		
 		ADD_NODE_PAGE = 0;
 		setPage(NODE_PAGE_DEFAULT);
 	#endregion
@@ -259,14 +260,14 @@ event_inherited();
 		var context = PANEL_GRAPH.getCurrentContext();
 		context = context == noone? "" : instanceof(context);
 		
-		var start = category == NODE_CATEGORY? -1 : 0;
+		var start = category == NODE_CATEGORY? -2 : 0;
 		
 		for(var i = start; i < ds_list_size(category); i++) {
 			var name = "";
 			
-			if(i == -1) {
-				name = "All";
-			} else {
+			     if(i == -2) name = "All";
+			else if(i == -1) name = "New";
+			else {
 				var cat = category[| i];
 				name = cat.name;
 				
@@ -298,7 +299,7 @@ event_inherited();
 			if(i == ADD_NODE_PAGE) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
 			else				   draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 			
-			var _is_extra = name == "Supporter";
+			var _is_extra = name == "Extra";
 			name = __txt(name);
 			
 			var _tx = ui(8);
@@ -328,10 +329,10 @@ event_inherited();
 		var _hover = sHOVER && content_pane.hover;
 		var _list  = node_list;
 		
-		if(ADD_NODE_PAGE == -1) { #region
+		if(ADD_NODE_PAGE == -2) { #region
 			var context = PANEL_GRAPH.getCurrentContext();
 			context = context == noone? "" : instanceof(context);
-		
+			
 			_list = ds_list_create();
 			for(var i = 0; i < ds_list_size(category); i++) {
 				var cat = category[| i];			
@@ -343,6 +344,9 @@ event_inherited();
 					ds_list_add(_list, cat.list[| j]);
 				}
 			}
+		#endregion
+		} else if(ADD_NODE_PAGE == -1) { #region
+			_list = NEW_NODES;
 		#endregion
 		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT) { #region
 			_list = ds_list_create();
@@ -395,7 +399,7 @@ event_inherited();
 		var group_labels  = [];
 		
 		var _hoverContent = _hover;
-		if(ADD_NODE_PAGE > -1 && PREFERENCES.dialog_add_node_grouping) 
+		if(ADD_NODE_PAGE >= 0 && PREFERENCES.dialog_add_node_grouping) 
 			_hoverContent &= _m[1] > ui(8 + 24);
 			
 		if(PREFERENCES.dialog_add_node_view == 0) { #region grid
@@ -499,7 +503,7 @@ event_inherited();
 				}
 			}
 			
-			if(ADD_NODE_PAGE > -1 && PREFERENCES.dialog_add_node_grouping) {
+			if(ADD_NODE_PAGE > -2 && PREFERENCES.dialog_add_node_grouping) {
 				var len = array_length(group_labels);
 				if(len) {
 					gpu_set_blendmode(bm_subtract);
@@ -600,12 +604,12 @@ event_inherited();
 				hh += list_height;
 			}
 			
-			if(ADD_NODE_PAGE > -1 && PREFERENCES.dialog_add_node_grouping) {
+			if(ADD_NODE_PAGE > -2 && PREFERENCES.dialog_add_node_grouping) {
 				gpu_set_blendmode(bm_subtract);
 				draw_set_color(c_white);
 				draw_rectangle(0, 0, content_pane.surface_w, ui(16 + 24 / 2), false);
 				gpu_set_blendmode(bm_normal);
-			
+				
 				var len = array_length(group_labels);
 				for( var i = 0; i < len; i++ ) {
 					var lb = group_labels[i];
@@ -622,7 +626,7 @@ event_inherited();
 		#endregion
 		}
 		
-		if(ADD_NODE_PAGE == -1) 
+		if(ADD_NODE_PAGE == -2) 
 			ds_list_destroy(_list);
 		
 		return hh;

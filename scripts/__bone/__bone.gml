@@ -144,13 +144,12 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		control_x1 = p1.x; control_y1 = p1.y;
 	
 		if(parent != noone) {
-			
-			if(hovering != noone && hovering[0] == self && hovering[1] == 2) {
-				draw_set_color(c_white);
-				draw_set_alpha(1);
-			} else if(selecting == self) {
+			if(selecting && selecting.ID == self.ID) {
 				draw_set_color(COLORS._main_value_positive);
 				draw_set_alpha(0.75);
+			} else if(hovering != noone && hovering[0].ID == self.ID && hovering[1] == 2) {
+				draw_set_color(c_white);
+				draw_set_alpha(1);
 			} else {
 				draw_set_color(COLORS._main_accent);
 				draw_set_alpha(0.75);

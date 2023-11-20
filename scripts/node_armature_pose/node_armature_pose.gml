@@ -112,7 +112,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _b = outputs[| 0].getValue();
 		if(_b == noone) return;
 		
-		anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
+		anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting, posing_bone);
 		
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;

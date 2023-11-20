@@ -24,7 +24,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 		var input  = nodeBuild("Node_VFX_Spawner", -256, -32, self);
 		var output = nodeBuild("Node_VFX_Renderer_Output", 256 + 32 * 5, -32, self);
 		
-		output.inputs[| output.input_fix_len].setFrom(input.outputs[| 0]);
+		output.inputs[| output.input_fix_len + 1].setFrom(input.outputs[| 0]);
 		preview_node = output;
 	} #endregion
 	

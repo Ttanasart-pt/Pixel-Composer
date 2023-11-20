@@ -559,9 +559,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		}
 	} #endregion
 	
-	static step = function() {
-		
-	}
+	static step = function() {}
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		outputs[| 0].setValue(attributes.bones);

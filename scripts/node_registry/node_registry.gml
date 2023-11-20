@@ -27,7 +27,16 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	
 	static setVersion = function(version) { #region
 		INLINE 
-		new_node = version == VERSION;
+		new_node = version >= LATEST_VERSION;
+		
+		if(new_node) {
+			if(global.__currPage != global.__currNewPage) {
+				ds_list_add(NEW_NODES, global.__currPage);
+				global.__currNewPage = global.__currPage;
+			}
+			
+			ds_list_add(NEW_NODES, self);
+		}
 		return self;
 	} #endregion
 	
@@ -47,7 +56,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		INLINE 
 		is_patreon_extra = true;
 		
-		ds_list_add(global.SUPPORTER_NODES, self);
+		ds_list_add(SUPPORTER_NODES, self);
 		return self;
 	} #endregion
 	
@@ -154,12 +163,21 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 } #endregion
 
 #region nodes
-	globalvar ALL_NODES, ALL_NODE_LIST, NODE_CATEGORY, NODE_PAGE_DEFAULT, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
+	globalvar ALL_NODES, ALL_NODE_LIST, NODE_CATEGORY, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
+	globalvar SUPPORTER_NODES, NEW_NODES;
+	
+	globalvar NODE_PAGE_DEFAULT;
+	
 	ALL_NODES		  = ds_map_create();
 	ALL_NODE_LIST	  = ds_list_create();
 	NODE_CATEGORY	  = ds_list_create();
 	NODE_PB_CATEGORY  = ds_list_create();
 	NODE_PCX_CATEGORY = ds_list_create();
+	SUPPORTER_NODES   = ds_list_create();
+	NEW_NODES		  = ds_list_create();
+	
+	global.__currPage    = "";
+	global.__currNewPage = "";
 	
 	function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) { #region
 		if(!ds_map_exists(ALL_NODES, _name)) {
@@ -189,6 +207,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	} #endregion
 	
 	function addNodeCatagory(name, list, filter = []) { #region
+		global.__currPage = name;
 		ds_list_add(NODE_CATEGORY, { name: name, list: list, filter: filter });
 	} #endregion
 	
@@ -201,14 +220,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	} #endregion
 	
 	function __initNodes() {
+		global.__currPage = "";
 		var favPath = DIRECTORY + "Nodes/fav.json";
 		global.FAV_NODES = file_exists(favPath)? json_load_struct(favPath) : [];
 		
 		var recPath = DIRECTORY + "Nodes/recent.json";
 		global.RECENT_NODES = file_exists(recPath)? json_load_struct(recPath) : [];
 		if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
-		
-		global.SUPPORTER_NODES = ds_list_create();
 		
 		var group = ds_list_create(); #region
 		addNodeCatagory("Group", group, ["Node_Group"]); 
@@ -272,25 +290,25 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(vfx, "Renderer",		s_node_vfx_render_output,	"Node_VFX_Renderer_Output",	[1, Node_VFX_Renderer_Output]).hideRecent();
 			
 			ds_list_add(vfx, "VFXs");
-			addNodeObject(vfx, "Spawner",		s_node_vfx_spawn,	"Node_VFX_Spawner",		[1, Node_VFX_Spawner]).hideRecent();
-			addNodeObject(vfx, "Renderer",		s_node_vfx_render,	"Node_VFX_Renderer",	[1, Node_VFX_Renderer]).hideRecent();
+			addNodeObject(vfx, "Spawner",		s_node_vfx_spawn,	"Node_VFX_Spawner",		[1, Node_VFX_Spawner],, "Spawn new particles.").hideRecent();
+			addNodeObject(vfx, "Renderer",		s_node_vfx_render,	"Node_VFX_Renderer",	[1, Node_VFX_Renderer],, "Render particle objects to surface.").hideRecent();
 			
 			ds_list_add(vfx, "Affectors");
-			addNodeObject(vfx, "Accelerate",	s_node_vfx_accel,	"Node_VFX_Accelerate",	[1, Node_VFX_Accelerate]).hideRecent();
-			addNodeObject(vfx, "Destroy",		s_node_vfx_destroy,	"Node_VFX_Destroy",		[1, Node_VFX_Destroy]).hideRecent();
-			addNodeObject(vfx, "Attract",		s_node_vfx_attract,	"Node_VFX_Attract",		[1, Node_VFX_Attract]).hideRecent();
-			addNodeObject(vfx, "Wind",			s_node_vfx_wind,	"Node_VFX_Wind",		[1, Node_VFX_Wind]).hideRecent();
-			addNodeObject(vfx, "Vortex",		s_node_vfx_vortex,	"Node_VFX_Vortex",		[1, Node_VFX_Vortex]).hideRecent();
-			addNodeObject(vfx, "Turbulence",	s_node_vfx_turb,	"Node_VFX_Turbulence",	[1, Node_VFX_Turbulence]).hideRecent();
-			addNodeObject(vfx, "Repel",			s_node_vfx_repel,	"Node_VFX_Repel",		[1, Node_VFX_Repel]).hideRecent();
-			addNodeObject(vfx, "Oscillate",		s_node_vfx_osc,		"Node_VFX_Oscillate",	[1, Node_VFX_Oscillate]).hideRecent().setVersion(11560);
+			addNodeObject(vfx, "Accelerate",	s_node_vfx_accel,	"Node_VFX_Accelerate",	[1, Node_VFX_Accelerate],, "Change the speed of particle in range.").hideRecent();
+			addNodeObject(vfx, "Destroy",		s_node_vfx_destroy,	"Node_VFX_Destroy",		[1, Node_VFX_Destroy],, "Destroy particle in range.").hideRecent();
+			addNodeObject(vfx, "Attract",		s_node_vfx_attract,	"Node_VFX_Attract",		[1, Node_VFX_Attract],, "Attract particle in range to one point.").hideRecent();
+			addNodeObject(vfx, "Wind",			s_node_vfx_wind,	"Node_VFX_Wind",		[1, Node_VFX_Wind],, "Move particle in range.").hideRecent();
+			addNodeObject(vfx, "Vortex",		s_node_vfx_vortex,	"Node_VFX_Vortex",		[1, Node_VFX_Vortex],, "Rotate particle around a point.").hideRecent();
+			addNodeObject(vfx, "Turbulence",	s_node_vfx_turb,	"Node_VFX_Turbulence",	[1, Node_VFX_Turbulence],, "Move particle in range randomly.").hideRecent();
+			addNodeObject(vfx, "Repel",			s_node_vfx_repel,	"Node_VFX_Repel",		[1, Node_VFX_Repel],, "Move particle away from point.").hideRecent();
+			addNodeObject(vfx, "Oscillate",		s_node_vfx_osc,		"Node_VFX_Oscillate",	[1, Node_VFX_Oscillate],, "Swing particle around its original trajectory.").hideRecent().setVersion(11560);
 			
 			ds_list_add(vfx, "Effects");
-			addNodeObject(vfx, "VFX Trail",		s_node_vfx_trail,	"Node_VFX_Trail",		[1, Node_VFX_Trail]).hideRecent().setVersion(11560);
+			addNodeObject(vfx, "VFX Trail",		s_node_vfx_trail,	"Node_VFX_Trail",		[1, Node_VFX_Trail],, "Generate path from particle movement.").hideRecent().setVersion(11560);
 			
 			ds_list_add(vfx, "Instance control");
-			addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable]).hideRecent().setVersion(1120);
-			addNodeObject(vfx, "VFX Override",	s_node_vfx_override,	"Node_VFX_Override",	[1, Node_VFX_Override]).hideRecent().setVersion(1120);
+			addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable],, "Extract variable from particle objects.").hideRecent().setVersion(1120);
+			addNodeObject(vfx, "VFX Override",	s_node_vfx_override,	"Node_VFX_Override",	[1, Node_VFX_Override],, "Replace particle variable with a new one.").hideRecent().setVersion(1120);
 		#endregion
 		
 		var rigidSim = ds_list_create(); #region
@@ -301,15 +319,15 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(rigidSim, "Render",	s_node_rigidSim_render_output,	"Node_Rigid_Render_Output",	[1, Node_Rigid_Render_Output]).hideRecent();
 			
 			ds_list_add(rigidSim, "RigidSim");
-			addNodeObject(rigidSim, "Object",			s_node_rigidSim_object,				"Node_Rigid_Object",			[1, Node_Rigid_Object]).hideRecent().setVersion(1110);
-			addNodeObject(rigidSim, "Object Spawner",	s_node_rigidSim_object_spawner,		"Node_Rigid_Object_Spawner",	[1, Node_Rigid_Object_Spawner]).hideRecent().setVersion(1110);
-			addNodeObject(rigidSim, "Render",			s_node_rigidSim_renderer,			"Node_Rigid_Render",			[1, Node_Rigid_Render]).hideRecent().setVersion(1110);
-			addNodeObject(rigidSim, "Apply Force",		s_node_rigidSim_force,				"Node_Rigid_Force_Apply",		[1, Node_Rigid_Force_Apply]).hideRecent().setVersion(1110);
+			addNodeObject(rigidSim, "Object",			s_node_rigidSim_object,				"Node_Rigid_Object",			[1, Node_Rigid_Object],, "Spawn a rigidbody object.").hideRecent().setVersion(1110);
+			addNodeObject(rigidSim, "Object Spawner",	s_node_rigidSim_object_spawner,		"Node_Rigid_Object_Spawner",	[1, Node_Rigid_Object_Spawner],, "Spawn multiple rigidbody objects.").hideRecent().setVersion(1110);
+			addNodeObject(rigidSim, "Render",			s_node_rigidSim_renderer,			"Node_Rigid_Render",			[1, Node_Rigid_Render],, "Render rigidbody object to surface.").hideRecent().setVersion(1110);
+			addNodeObject(rigidSim, "Apply Force",		s_node_rigidSim_force,				"Node_Rigid_Force_Apply",		[1, Node_Rigid_Force_Apply],, "Apply force to objects.").hideRecent().setVersion(1110);
 			
 			ds_list_add(rigidSim, "Instance control");
-			addNodeObject(rigidSim, "Activate Physics",	s_node_rigidSim_activate,	"Node_Rigid_Activate",		[1, Node_Rigid_Activate]).hideRecent().setVersion(1110);
-			addNodeObject(rigidSim, "Rigidbody Variable",	s_node_rigid_variable,	"Node_Rigid_Variable",		[1, Node_Rigid_Variable]).hideRecent().setVersion(1120);
-			addNodeObject(rigidSim, "Rigidbody Override",	s_node_rigid_override,	"Node_Rigid_Override",		[1, Node_Rigid_Override]).hideRecent().setVersion(1120);
+			addNodeObject(rigidSim, "Activate Physics",	s_node_rigidSim_activate,	"Node_Rigid_Activate",		[1, Node_Rigid_Activate],, "Enable or disable rigidbody object.").hideRecent().setVersion(1110);
+			addNodeObject(rigidSim, "Rigidbody Variable",	s_node_rigid_variable,	"Node_Rigid_Variable",		[1, Node_Rigid_Variable],, "Extract veriable from rigidbody object.").hideRecent().setVersion(1120);
+			addNodeObject(rigidSim, "Rigidbody Override",	s_node_rigid_override,	"Node_Rigid_Override",		[1, Node_Rigid_Override],, "Replace rigidbody object variable with a new one.").hideRecent().setVersion(1120);
 		#endregion
 		
 		var smokeSim = ds_list_create(); #region
@@ -321,17 +339,17 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			ds_list_add(smokeSim, "Domain");
 			addNodeObject(smokeSim, "Domain",			s_node_smokeSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).hideRecent().setVersion(1120);
-			addNodeObject(smokeSim, "Update Domain",	s_node_smokeSim_update,			"Node_Fluid_Update",		[1, Node_Fluid_Update]).hideRecent().setVersion(1120);
-			addNodeObject(smokeSim, "Render Domain",	s_node_smokeSim_render,			"Node_Fluid_Render",		[1, Node_Fluid_Render]).hideRecent().setVersion(1120);
-			addNodeObject(smokeSim, "Queue Domain",		s_node_smokeSim_domain_queue,	"Node_Fluid_Domain_Queue",	[1, Node_Fluid_Domain_Queue]).hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Update Domain",	s_node_smokeSim_update,			"Node_Fluid_Update",		[1, Node_Fluid_Update],, "Run smoke by one step.").hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Render Domain",	s_node_smokeSim_render,			"Node_Fluid_Render",		[1, Node_Fluid_Render],, "Render smoke to surface. This node also have update function build in.").hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Queue Domain",		s_node_smokeSim_domain_queue,	"Node_Fluid_Domain_Queue",	[1, Node_Fluid_Domain_Queue],, "Sync multiple domains to be render at the same time.").hideRecent().setVersion(1120);
 			
 			ds_list_add(smokeSim, "Smoke");
-			addNodeObject(smokeSim, "Add Emitter",		s_node_smokeSim_emitter,		"Node_Fluid_Add",				[1, Node_Fluid_Add]).hideRecent().setVersion(1120);
-			addNodeObject(smokeSim, "Apply Velocity",	s_node_smokeSim_apply_velocity,	"Node_Fluid_Apply_Velocity",	[1, Node_Fluid_Apply_Velocity]).hideRecent().setVersion(1120);
-			addNodeObject(smokeSim, "Add Collider",		s_node_smokeSim_add_collider,	"Node_Fluid_Add_Collider",		[1, Node_Fluid_Add_Collider]).hideRecent().setVersion(1120);
-			addNodeObject(smokeSim, "Vortex",			s_node_smokeSim_vortex,			"Node_Fluid_Vortex",			[1, Node_Fluid_Vortex]).hideRecent().setVersion(1120);
-			addNodeObject(smokeSim, "Repulse",			s_node_smokeSim_repulse,		"Node_Fluid_Repulse",			[1, Node_Fluid_Repulse]).hideRecent().setVersion(1120);
-			addNodeObject(smokeSim, "Turbulence",		s_node_smokeSim_turbulence,		"Node_Fluid_Turbulence",		[1, Node_Fluid_Turbulence]).hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Add Emitter",		s_node_smokeSim_emitter,		"Node_Fluid_Add",				[1, Node_Fluid_Add],, "Add smoke emitter.").hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Apply Velocity",	s_node_smokeSim_apply_velocity,	"Node_Fluid_Apply_Velocity",	[1, Node_Fluid_Apply_Velocity],, "Apply velocity to smoke.").hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Add Collider",		s_node_smokeSim_add_collider,	"Node_Fluid_Add_Collider",		[1, Node_Fluid_Add_Collider],, "Add solid object that smoke can collides to.").hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Vortex",			s_node_smokeSim_vortex,			"Node_Fluid_Vortex",			[1, Node_Fluid_Vortex],, "Apply rotational force around a point.").hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Repulse",			s_node_smokeSim_repulse,		"Node_Fluid_Repulse",			[1, Node_Fluid_Repulse],, "Spread smoke away from a point.").hideRecent().setVersion(1120);
+			addNodeObject(smokeSim, "Turbulence",		s_node_smokeSim_turbulence,		"Node_Fluid_Turbulence",		[1, Node_Fluid_Turbulence],, "Apply random velocity map to the smoke.").hideRecent().setVersion(1120);
 		#endregion
 		
 		var strandSim = ds_list_create(); #region
@@ -341,17 +359,17 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(strandSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
 			
 			ds_list_add(strandSim, "System");
-			addNodeObject(strandSim, "Strand Create",	s_node_strandSim_create,	"Node_Strand_Create",	[1, Node_Strand_Create]).hideRecent().setVersion(1140);
-			addNodeObject(strandSim, "Strand Update",	s_node_strandSim_update,	"Node_Strand_Update",	[1, Node_Strand_Update]).hideRecent().setVersion(1140);
-			addNodeObject(strandSim, "Strand Render",	s_node_strandSim_render,	"Node_Strand_Render",	[1, Node_Strand_Render]).hideRecent().setVersion(1140);
-			addNodeObject(strandSim, "Strand Render Texture",	s_node_strandSim_render_texture,	"Node_Strand_Render_Texture",	[1, Node_Strand_Render_Texture]).hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Create",	s_node_strandSim_create,	"Node_Strand_Create",	[1, Node_Strand_Create],, "Create strands from point, path, or mesh.").hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Update",	s_node_strandSim_update,	"Node_Strand_Update",	[1, Node_Strand_Update],, "Update strands by one step.").hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Render",	s_node_strandSim_render,	"Node_Strand_Render",	[1, Node_Strand_Render],, "Render strands to surface as a single path.").hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Render Texture",	s_node_strandSim_render_texture,	"Node_Strand_Render_Texture",	[1, Node_Strand_Render_Texture],, "Render strands to surface as a textured path.").hideRecent().setVersion(1140);
 			
 			ds_list_add(strandSim, "Affectors");
-			addNodeObject(strandSim, "Strand Gravity",		 s_node_strandSim_gravity,	"Node_Strand_Gravity",		 [1, Node_Strand_Gravity]).hideRecent().setVersion(1140);
-			addNodeObject(strandSim, "Strand Force Apply",	 s_node_strandSim_force,	"Node_Strand_Force_Apply",	 [1, Node_Strand_Force_Apply]).hideRecent().setVersion(1140);
-			addNodeObject(strandSim, "Strand Break",		 s_node_strandSim_break,	"Node_Strand_Break",		 [1, Node_Strand_Break]).hideRecent().setVersion(1140);
-			addNodeObject(strandSim, "Strand Length Adjust", s_node_strandSim_length,	"Node_Strand_Length_Adjust", [1, Node_Strand_Length_Adjust]).hideRecent().setVersion(1140);
-			addNodeObject(strandSim, "Strand Collision",	s_node_strandSim_collide,		"Node_Strand_Collision",	[1, Node_Strand_Collision]).hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Gravity",		 s_node_strandSim_gravity,	"Node_Strand_Gravity",		 [1, Node_Strand_Gravity],, "Apply downward acceleration to strands.").hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Force Apply",	 s_node_strandSim_force,	"Node_Strand_Force_Apply",	 [1, Node_Strand_Force_Apply],, "Apply general force to strands.").hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Break",		 s_node_strandSim_break,	"Node_Strand_Break",		 [1, Node_Strand_Break],, "Detach strands from its origin.").hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Length Adjust", s_node_strandSim_length,	"Node_Strand_Length_Adjust", [1, Node_Strand_Length_Adjust],, "Adjust length of strands in area.").hideRecent().setVersion(1140);
+			addNodeObject(strandSim, "Strand Collision",	 s_node_strandSim_collide,	"Node_Strand_Collision",	 [1, Node_Strand_Collision],, "Create solid object for strands to collides to.").hideRecent().setVersion(1140);
 		#endregion
 		
 		NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
@@ -381,7 +399,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(input, "JSON File In",		s_node_json_file_read,	"Node_Json_File_Read",		[1, Node_Json_File_Read],,  "Load .json file using keys.").setVersion(1090);
 			addNodeObject(input, "JSON File Out",		s_node_json_file_write,	"Node_Json_File_Write",		[1, Node_Json_File_Write],, "Save data to .json file.").setVersion(1090);
 			addNodeObject(input, "ASE File In",			s_node_ase_file,		"Node_ASE_File_Read",		[0, Node_create_ASE_File_Read],, "Load Aseprite file with support for layers, tags.").setVersion(1100);
-			addNodeObject(input, "ASE Layer",			s_node_ase_layer,		"Node_ASE_layer",			[1, Node_ASE_layer]).setVersion(1100);
+			addNodeObject(input, "ASE Layer",			s_node_ase_layer,		"Node_ASE_layer",			[1, Node_ASE_layer],, "Load Aseprite project file").setVersion(1100);
 			addNodeObject(input, "WAV File In",			s_node_wav_file_read,	"Node_WAV_File_Read",		[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
 			addNodeObject(input, "WAV File Out",		s_node_wav_file_write,	"Node_WAV_File_Write",		[1, Node_WAV_File_Write],, "Save wav audio file.").setVersion(1145);
 			
@@ -456,9 +474,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(filter, "Convolution",		s_node_convolution,		"Node_Convolution",		[1, Node_Convolution], ["kernel"], "Apply convolution operation on each pixel using a custom 3x3 kernel.").setVersion(1090);
 			addNodeObject(filter, "Local Analyze",		s_node_local_analyze,	"Node_Local_Analyze",	[1, Node_Local_Analyze],, "Apply non-linear operation (minimum, maximum) on each pixel locally.").setVersion(1110);
 			addNodeObject(filter, "SDF",				s_node_sdf,				"Node_SDF",				[1, Node_SDF],, "Create signed distance field using jump flooding algorithm.").setVersion(1130);
-			addNodeObject(filter, "Replace Image",		s_node_image_replace,	"Node_Surface_Replace",	[1, Node_Surface_Replace], ["image replace"]).setVersion(1140);
+			addNodeObject(filter, "Replace Image",		s_node_image_replace,	"Node_Surface_Replace",	[1, Node_Surface_Replace], ["image replace"], "Replace instances of an image with a new one.").setVersion(1140);
 			addNodeObject(filter, "Chromatic Aberration",	s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	[1, Node_Chromatic_Aberration],, "Apply chromatic aberration effect to the image.");
-			addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA]);
+			addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA],, "Apply fast approximate anti-aliasing to the image.");
 			
 			ds_list_add(filter, "Colors");
 			addNodeObject(filter, "Replace Palette",	s_node_replace_palette,	"Node_Color_replace",	[1, Node_Color_replace], ["isolate color", "select color", "palette swap", "color replace"], "Replace color that match one palette with another palette.");
@@ -468,7 +486,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(filter, "Posterize",			s_node_posterize,		"Node_Posterize",		[1, Node_Posterize],, "Reduce and remap color to match a palette.");
 			addNodeObject(filter, "Dither",				s_node_dithering,		"Node_Dither",			[1, Node_Dither],, "Reduce color and use dithering to preserve original color.");
 			addNodeObject(filter, "Color Adjust",		s_node_color_adjust,	"Node_Color_adjust",	[1, Node_Color_adjust], ["brightness", "contrast", "hue", "saturation", "value", "color blend", "alpha"], "Adjust brightness, contrast, hue, saturation, value, alpha, and blend image with color.");
-			addNodeObject(filter, "Palette Shift",		s_node_palette_shift,	"Node_Palette_Shift",	[1, Node_Palette_Shift]).setVersion(1147);
+			addNodeObject(filter, "Palette Shift",		s_node_palette_shift,	"Node_Palette_Shift",	[1, Node_Palette_Shift],, "Shift the order of color in palette.").setVersion(1147);
 			addNodeObject(filter, "BW",					s_node_BW,				"Node_BW",				[1, Node_BW], ["black and white"], "Convert color image to black and white.");
 			addNodeObject(filter, "Greyscale",			s_node_greyscale,		"Node_Greyscale",		[1, Node_Greyscale],, "Convert color image to greyscale.");
 			addNodeObject(filter, "Invert",				s_node_invert,			"Node_Invert",			[1, Node_Invert], ["negate"], "Invert color.");
@@ -498,11 +516,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(d3d, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 			
 			ds_list_add(d3d, "3D");
-			addNodeObject(d3d, "3D Camera",		s_node_3d_camera,			"Node_3D_Camera",			[1, Node_3D_Camera]).setVersion(11510);
-			addNodeObject(d3d, "3D Camera Set",	s_node_3d_camera_set,		"Node_3D_Camera_Set",		[1, Node_3D_Camera_Set]).setVersion(11571);
-			addNodeObject(d3d, "3D Material",	s_node_3d_meterial,			"Node_3D_Material",			[1, Node_3D_Material]).setVersion(11510);
-			addNodeObject(d3d, "3D Scene",		s_node_3d_scene,			"Node_3D_Scene",			[1, Node_3D_Scene]).setVersion(11510);
-			addNodeObject(d3d, "3D Repeat",		s_node_3d_array,			"Node_3D_Repeat",			[1, Node_3D_Repeat]).setVersion(11510);
+			addNodeObject(d3d, "3D Camera",		s_node_3d_camera,			"Node_3D_Camera",			[1, Node_3D_Camera],, "Create 3D camera that render scene to surface.").setVersion(11510);
+			addNodeObject(d3d, "3D Camera Set",	s_node_3d_camera_set,		"Node_3D_Camera_Set",		[1, Node_3D_Camera_Set],, "3D camera with build-in key and fill directional lights.").setVersion(11571);
+			addNodeObject(d3d, "3D Material",	s_node_3d_meterial,			"Node_3D_Material",			[1, Node_3D_Material],, "Create 3D material with adjustable parameters.").setVersion(11510);
+			addNodeObject(d3d, "3D Scene",		s_node_3d_scene,			"Node_3D_Scene",			[1, Node_3D_Scene],, "Combine multiple 3D objects into a single junction.").setVersion(11510);
+			addNodeObject(d3d, "3D Repeat",		s_node_3d_array,			"Node_3D_Repeat",			[1, Node_3D_Repeat],, "Repeat the same 3D mesh multiple times.").setVersion(11510);
 			addNodeObject(d3d, "Transform 3D",	s_node_image_transform_3d,	"Node_3D_Transform_Image",	[1, Node_3D_Transform_Image],, "Transform image in 3D space").setVersion(11600);
 			
 			ds_list_add(d3d, "Mesh");
@@ -513,24 +531,24 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(d3d, "3D UV Sphere",	s_node_3d_sphere_uv,	"Node_3D_Mesh_Sphere_UV",	[1, Node_3D_Mesh_Sphere_UV]).setVersion(11510);
 			addNodeObject(d3d, "3D Icosphere",	s_node_3d_sphere_ico,	"Node_3D_Mesh_Sphere_Ico",	[1, Node_3D_Mesh_Sphere_Ico]).setVersion(11510);
 			addNodeObject(d3d, "3D Cone",		s_node_3d_cone,			"Node_3D_Mesh_Cone",		[1, Node_3D_Mesh_Cone]).setVersion(11510);
-			addNodeObject(d3d, "3D Terrain",	s_node_3d_displace,		"Node_3D_Mesh_Terrain",		[1, Node_3D_Mesh_Terrain]).setVersion(11560);
+			addNodeObject(d3d, "3D Terrain",	s_node_3d_displace,		"Node_3D_Mesh_Terrain",		[1, Node_3D_Mesh_Terrain],, "Create 3D terrain from height map.").setVersion(11560);
 			addNodeObject(d3d, "Surface Extrude",	s_node_3d_extrude,	"Node_3D_Mesh_Extrude",		[1, Node_3D_Mesh_Extrude],, "Extrude 2D image into 3D object.").setVersion(11510);
 			
 			ds_list_add(d3d, "Light");
-			addNodeObject(d3d, "Directional Light",	s_node_3d_light_directi,	"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional]).setVersion(11510);
-			addNodeObject(d3d, "Point Light",		s_node_3d_light_point,		"Node_3D_Light_Point",			[1, Node_3D_Light_Point]).setVersion(11510);
+			addNodeObject(d3d, "Directional Light",	s_node_3d_light_directi,	"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional],, "Create directional light directed at the origin point.").setVersion(11510);
+			addNodeObject(d3d, "Point Light",		s_node_3d_light_point,		"Node_3D_Light_Point",			[1, Node_3D_Light_Point],, "Create point light to illuminate surrounding area.").setVersion(11510);
 			
 			ds_list_add(d3d, "Modify");
-			addNodeObject(d3d, "Discretize vertex",	s_node_3d_discretize,		"Node_3D_Round_Vertex",		[1, Node_3D_Round_Vertex]).setVersion(11560);
-			addNodeObject(d3d, "Set Material",		s_node_3d_set_material,		"Node_3D_Set_Material",		[1, Node_3D_Set_Material]).setVersion(11560);
-			addNodeObject(d3d, "Transform",			s_node_3d_transform,		"Node_3D_Transform",		[1, Node_3D_Transform]).setVersion(11570);
-			addNodeObject(d3d, "Transform Scene",	s_node_3d_transform_scene,	"Node_3D_Transform_Scene",	[1, Node_3D_Transform_Scene]).setVersion(11570);
-			addNodeObject(d3d, "UV Remap",			s_node_uv_remap,			"Node_3D_UV_Remap",			[1, Node_3D_UV_Remap]).setVersion(11570);
+			addNodeObject(d3d, "Discretize vertex",	s_node_3d_discretize,		"Node_3D_Round_Vertex",		[1, Node_3D_Round_Vertex],, "Round out vertex position to a specified step.").setVersion(11560);
+			addNodeObject(d3d, "Set Material",		s_node_3d_set_material,		"Node_3D_Set_Material",		[1, Node_3D_Set_Material],, "Replace mesh material with a new one.").setVersion(11560);
+			addNodeObject(d3d, "Transform",			s_node_3d_transform,		"Node_3D_Transform",		[1, Node_3D_Transform],, "Transform 3D object.").setVersion(11570);
+			addNodeObject(d3d, "Transform Scene",	s_node_3d_transform_scene,	"Node_3D_Transform_Scene",	[1, Node_3D_Transform_Scene],, "Transform 3D scene, accepts array of transformations for each objects.").setVersion(11570);
+			addNodeObject(d3d, "UV Remap",			s_node_uv_remap,			"Node_3D_UV_Remap",			[1, Node_3D_UV_Remap],, "Remap UV map using plane.").setVersion(11570);
 			///**/ addNodeObject(d3d, "3D Instancer",		s_node_3d_set_material,		"Node_3D_Instancer",	[1, Node_3D_Instancer]).setVersion(11560);
 			///**/ addNodeObject(d3d, "3D Particle",		s_node_3d_set_material,		"Node_3D_Particle",		[1, Node_3D_Particle]).setVersion(11560);
 			
 			ds_list_add(d3d, "Points");
-			addNodeObject(d3d, "Point Affector",	s_node_3d_point_affector,	"Node_3D_Point_Affector",	[1, Node_3D_Point_Affector]).setVersion(11570);
+			addNodeObject(d3d, "Point Affector",	s_node_3d_point_affector,	"Node_3D_Point_Affector",	[1, Node_3D_Point_Affector],, "Generate array of 3D points interpolating between two values based on the distance.").setVersion(11570);
 		#endregion
 		
 		var generator = ds_list_create(); #region
@@ -545,8 +563,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(generator, "Draw Text",			s_node_text_render,			"Node_Text",				[1, Node_Text],, "Draw text on an image.");
 			addNodeObject(generator, "Shape",				s_node_shape,				"Node_Shape",				[1, Node_Shape],, "Draw simple shapes using signed distance field.");
 			addNodeObject(generator, "Polygon Shape",		s_node_shape_polygon,		"Node_Shape_Polygon",		[1, Node_Shape_Polygon],, "Draw simple shapes using triangles.").setVersion(1130);
-			addNodeObject(generator, "Interpret Number",	s_node_interpret_number,	"Node_Interpret_Number",	[1, Node_Interpret_Number]).setVersion(11530);
-			addNodeObject(generator, "Random Shape",		s_node_random_shape,		"Node_Random_Shape",		[1, Node_Random_Shape]).setVersion(1147);
+			addNodeObject(generator, "Interpret Number",	s_node_interpret_number,	"Node_Interpret_Number",	[1, Node_Interpret_Number],, "Convert array of number into surface.").setVersion(11530);
+			addNodeObject(generator, "Random Shape",		s_node_random_shape,		"Node_Random_Shape",		[1, Node_Random_Shape],, "Generate random shape, use for testing purposes.").setVersion(1147);
 			addNodeObject(generator, "Pixel Builder",		s_node_pixel_builder,		"Node_Pixel_Builder",		[1, Node_Pixel_Builder]).setVersion(11540);
 			
 			ds_list_add(generator, "Noises");
@@ -589,23 +607,23 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var compose = ds_list_create(); #region
 		addNodeCatagory("Compose", compose);
 			ds_list_add(compose, "Composes");
-			addNodeObject(compose, "Blend",					s_node_blend,			"Node_Blend",				[1, Node_Blend]);
-			addNodeObject(compose, "Composite",				s_node_compose,			"Node_Composite",			[1, Node_Composite]);
+			addNodeObject(compose, "Blend",					s_node_blend,			"Node_Blend",				[1, Node_Blend],, "Combine 2 images using different blend modes.");
+			addNodeObject(compose, "Composite",				s_node_compose,			"Node_Composite",			[1, Node_Composite],, "Combine multiple images with custom transformation.");
 			addNodeObject(compose, "Stack",					s_node_draw_stack,		"Node_Stack",				[1, Node_Stack],, "Place image next to each other linearly, or on top of each other.").setVersion(1070);
 			addNodeObject(compose, "Camera",				s_node_camera,			"Node_Camera",				[1, Node_Camera],, "Create camera that crop image to fix dimension with control of position, zoom. Also can be use to create parallax effect.");
 			addNodeObject(compose, "Render Spritesheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	[1, Node_Render_Sprite_Sheet],, "Create spritesheet from image array or animation.");
 			addNodeObject(compose, "Pack Sprites",			s_node_pack_sprite,		"Node_Pack_Sprites",		[1, Node_Pack_Sprites],, "Combine array of images with different dimension using different algorithms.").setVersion(1140);
 			
 			ds_list_add(compose, "Armature");
-			addNodeObject(compose, "Armature Create",	s_node_armature_create,	"Node_Armature",		[1, Node_Armature], ["rigging", "bone"]).setVersion(1146);
-			addNodeObject(compose, "Armature Pose",		s_node_armature_pose,	"Node_Armature_Pose",	[1, Node_Armature_Pose], ["rigging", "bone"]).setVersion(1146);
-			addNodeObject(compose, "Armature Bind",		s_node_armature_bind,	"Node_Armature_Bind",	[1, Node_Armature_Bind], ["rigging", "bone"]).setVersion(1146);
-			addNodeObject(compose, "Armature Path",		s_node_armature_path,	"Node_Armature_Path",	[1, Node_Armature_Path], ["rigging", "bone"]).setVersion(1146);
-			addNodeObject(compose, "Armature Sample",	s_node_armature_sample,	"Node_Armature_Sample",	[1, Node_Armature_Sample], ["rigging", "bone"]).setVersion(1147);
+			addNodeObject(compose, "Armature Create",	s_node_armature_create,	"Node_Armature",		[1, Node_Armature], ["rigging", "bone"], "Create new armature system.").setVersion(1146);
+			addNodeObject(compose, "Armature Pose",		s_node_armature_pose,	"Node_Armature_Pose",	[1, Node_Armature_Pose], ["rigging", "bone"], "Pose armature system.").setVersion(1146);
+			addNodeObject(compose, "Armature Bind",		s_node_armature_bind,	"Node_Armature_Bind",	[1, Node_Armature_Bind], ["rigging", "bone"], "Bind and render image to an armature system.").setVersion(1146);
+			addNodeObject(compose, "Armature Path",		s_node_armature_path,	"Node_Armature_Path",	[1, Node_Armature_Path], ["rigging", "bone"], "Generate path from armature system.").setVersion(1146);
+			addNodeObject(compose, "Armature Sample",	s_node_armature_sample,	"Node_Armature_Sample",	[1, Node_Armature_Sample], ["rigging", "bone"], "Sample point from armature system.").setVersion(1147);
 			
 			if(!DEMO) {
 				ds_list_add(compose, "Export");
-				addNodeObject(compose, "Export",	s_node_export,		"Node_Export",			[0, Node_create_Export]);
+				addNodeObject(compose, "Export",	s_node_export,		"Node_Export",			[0, Node_create_Export],, "Export image/animation to file(s).");
 			}
 		#endregion
 		
@@ -729,7 +747,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var color = ds_list_create(); #region
 		addNodeCatagory("Color", color);
 			ds_list_add(color, "Colors");
-			addNodeObject(color, "Color",			s_node_color_out,		"Node_Color",			[1, Node_Color]);
+			addNodeObject(color, "Color",			s_node_color_out,		"Node_Color",			[1, Node_Color],, "Create color value.");
 			addNodeObject(color, "RGB Color",		s_node_color_from_rgb,	"Node_Color_RGB",		[1, Node_Color_RGB],, "Create color from RGB value.");
 			addNodeObject(color, "HSV Color",		s_node_color_from_hsv,	"Node_Color_HSV",		[1, Node_Color_HSV],, "Create color from HSV value.");
 			addNodeObject(color, "Sampler",			s_node_sampler,			"Node_Sampler",			[1, Node_Sampler],, "Sample color from an image.");
@@ -738,16 +756,16 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(color, "Mix Color",		s_node_color_mix,		"Node_Color_Mix",		[1, Node_Color_Mix]).setVersion(1140);
 			
 			ds_list_add(color, "Palettes");
-			addNodeObject(color, "Palette",			s_node_palette,			"Node_Palette",			[1, Node_Palette]);
-			addNodeObject(color, "Sort Palette",	s_node_palette_sort,	"Node_Palette_Sort",	[1, Node_Palette_Sort]).setVersion(1130);
+			addNodeObject(color, "Palette",			s_node_palette,			"Node_Palette",			[1, Node_Palette],, "Create palette value. Note that palette is simple an array of colors.");
+			addNodeObject(color, "Sort Palette",	s_node_palette_sort,	"Node_Palette_Sort",	[1, Node_Palette_Sort],, "Sort palette with specified order.").setVersion(1130);
 			addNodeObject(color, "Palette Extract",	s_node_palette_extract,	"Node_Palette_Extract",	[1, Node_Palette_Extract],, "Extract palette from an image.").setVersion(1100);
-			addNodeObject(color, "Palette Replace",	s_node_palette_replace,	"Node_Palette_Replace",	[1, Node_Palette_Replace]).setVersion(1120);
+			addNodeObject(color, "Palette Replace",	s_node_palette_replace,	"Node_Palette_Replace",	[1, Node_Palette_Replace],, "Replace colors in a palette with new one.").setVersion(1120);
 			
 			ds_list_add(color, "Gradient");
-			addNodeObject(color, "Gradient",			s_node_gradient_out,		"Node_Gradient_Out",			[1, Node_Gradient_Out]);
+			addNodeObject(color, "Gradient",			s_node_gradient_out,		"Node_Gradient_Out",			[1, Node_Gradient_Out],, "Create gradient object");
 			addNodeObject(color, "Palette to Gradient",	s_node_gradient_palette,	"Node_Gradient_Palette",		[1, Node_Gradient_Palette],, "Create gradient from palette.").setVersion(1135);
 			addNodeObject(color, "Gradient Shift",		s_node_gradient_shift,		"Node_Gradient_Shift",			[1, Node_Gradient_Shift],, "Move gradients keys.");
-			addNodeObject(color, "Gradient Replace",	s_node_gradient_replace,	"Node_Gradient_Replace_Color",	[1, Node_Gradient_Replace_Color]).setVersion(1135);
+			addNodeObject(color, "Gradient Replace",	s_node_gradient_replace,	"Node_Gradient_Replace_Color",	[1, Node_Gradient_Replace_Color],, "Replace color inside a gradient.").setVersion(1135);
 			addNodeObject(color, "Gradient Data",		s_node_gradient_data,		"Node_Gradient_Extract",		[1, Node_Gradient_Extract],, "Get palatte and array of key positions from gradient.").setVersion(1135);
 		#endregion
 		
@@ -765,19 +783,19 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(animation, "FFT",			 s_node_FFT,			"Node_FFT",				[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
 			addNodeObject(animation, "Bar / Graph",	 s_node_bar_graph,		"Node_Plot_Linear",		[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
 			addNodeObject(animation, "Audio Window", s_node_audio_trim,		"Node_Audio_Window",	[1, Node_Audio_Window],, "Take a slice of an audio array based on the current frame.").setVersion(1144);
-			addNodeObject(animation, "Audio Volume", s_node_audio_volume,	"Node_Audio_Loudness",	[1, Node_Audio_Loudness]).setVersion(11540);
+			addNodeObject(animation, "Audio Volume", s_node_audio_volume,	"Node_Audio_Loudness",	[1, Node_Audio_Loudness],, "Calculate volume of an audio bit array.").setVersion(11540);
 		#endregion
 		
 		var node = ds_list_create(); #region
 		addNodeCatagory("Misc", node);
 			ds_list_add(node, "Control");
-			addNodeObject(node, "Condition",	s_node_condition,	"Node_Condition",	[1, Node_Condition],, "Given a condition, output one value if true, another value is false.");
-			addNodeObject(node, "Switch",		s_node_switch,		"Node_Switch",		[1, Node_Switch],, "Given an index, output value base on index matching.").setVersion(1090);
-			addNodeObject(node, "Animation Control",	s_node_animation_control,			"Node_Animation_Control",	[1, Node_Animation_Control],, "Control animation state with triggers.").setVersion(1145);
+			addNodeObject(node, "Condition",			s_node_condition,			"Node_Condition",			[1, Node_Condition],, "Given a condition, output one value if true, another value is false.");
+			addNodeObject(node, "Switch",				s_node_switch,				"Node_Switch",				[1, Node_Switch],, "Given an index, output a value labeled by the same index.").setVersion(1090);
+			addNodeObject(node, "Animation Control",	s_node_animation_control,	"Node_Animation_Control",	[1, Node_Animation_Control],, "Control animation state with triggers.").setVersion(1145);
 			
 			ds_list_add(node, "Groups");
 			addNodeObject(node, "Group",			s_node_group,		"Node_Group",			[1, Node_Group]);
-			addNodeObject(node, "Feedback",			s_node_feedback,	"Node_Feedback",		[1, Node_Feedback],, "Create group that reuse output from last frame to the current one.");
+			addNodeObject(node, "Feedback",			s_node_feedback,	"Node_Feedback",		[1, Node_Feedback],, "Create a group that reuse output from last frame to the current one.");
 			addNodeObject(node, "Loop",				s_node_loop,		"Node_Iterate",			[1, Node_Iterate], ["iterate", "for"], "Create group that reuse output as input repeatedly in one frame.");
 			addNodeObject(node, "Loop Array",		s_node_loop_array,	"Node_Iterate_Each",	[1, Node_Iterate_Each], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
 			addNodeObject(node, "Filter Array",		s_node_filter_array,"Node_Iterate_Filter",	[1, Node_Iterate_Filter],, "Filter array using condition.").setVersion(1140);
@@ -788,7 +806,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(node, "Lua Compute",		s_node_lua_compute,	"Node_Lua_Compute",		[1, Node_Lua_Compute]).setVersion(1090);
 			
 			ds_list_add(node, "Shader");
-			addNodeObject(node, "HLSL",				s_node_hlsl,		"Node_HLSL",			[1, Node_HLSL]).setVersion(11520);
+			addNodeObject(node, "HLSL",				s_node_hlsl,		"Node_HLSL",			[1, Node_HLSL],, "Execute HLSL shader on a surface.").setVersion(11520);
 			
 			ds_list_add(node, "Organize");
 			addNodeObject(node, "Pin",				s_node_pin,			"Node_Pin",				[1, Node_Pin],, "Craete pin to organize your connection. Can be create by double clicking on a connection line.");
@@ -820,7 +838,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		addNodeCatagory("Custom", customs);
 			__initNodeCustom(customs);
 		
-		if(IS_PATREON) addNodeCatagory("Extra", global.SUPPORTER_NODES);
+		if(IS_PATREON) addNodeCatagory("Extra", SUPPORTER_NODES);
 		
 		//var vct = ds_list_create();
 		//addNodeCatagory("VCT", vct);

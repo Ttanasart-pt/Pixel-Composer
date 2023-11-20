@@ -891,9 +891,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		if(icon && _s > 0.75) {
 			draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10),,, aa);	
-			draw_text_cut(xx + ui(24), yy + ui(10), _name, w * _s - ui(24), ts);
+			draw_text_cut(round(xx + ui(24)), round(yy + ui(10)), _name, w * _s - ui(24), ts);
 		} else
-			draw_text_cut(xx + ui(8), yy + ui(10), _name, w * _s - ui(8), ts);
+			draw_text_cut(round(xx + ui(8)), round(yy + ui(10)), _name, w * _s - ui(8), ts);
 			
 		draw_set_alpha(1);
 	} #endregion
