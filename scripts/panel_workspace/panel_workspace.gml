@@ -16,7 +16,8 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 		var f   = file_find_first(DIRECTORY + "layouts/*", 0);
 		while(f != "") {
-			array_push(workspaces, filename_name_only(f));
+			if(filename_ext(f) == ".json")
+				array_push(workspaces, filename_name_only(f));
 			f = file_find_next();
 		}
 	}

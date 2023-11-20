@@ -18,43 +18,43 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
 	new_node = false;
 	
-	if(struct_has(global.NODE_GUIDE, node)) {
+	if(struct_has(global.NODE_GUIDE, node)) { #region
 		var _n = global.NODE_GUIDEarn[$ node];
 		name   = _n.name;
 		if(_n.tooltip != "")
 			tooltip = _n.tooltip;
-	}
+	} #endregion
 	
-	static setVersion = function(version) {
+	static setVersion = function(version) { #region
 		INLINE 
 		new_node = version == VERSION;
 		return self;
-	}
+	} #endregion
 	
-	static isDeprecated = function() {
+	static isDeprecated = function() { #region
 		INLINE 
 		deprecated = true;
 		return self;
-	}
+	} #endregion
 	
-	static hideRecent = function() {
+	static hideRecent = function() { #region
 		INLINE 
 		show_in_recent = false;
 		return self;
-	}
+	} #endregion
 	
-	static patreonExtra = function() {
+	static patreonExtra = function() { #region
 		INLINE 
 		is_patreon_extra = true;
 		
 		ds_list_add(global.SUPPORTER_NODES, self);
 		return self;
-	}
+	} #endregion
 	
 	static getName    = function() { return __txt_node_name(node, name);	   }
 	static getTooltip = function() { return __txt_node_tooltip(node, tooltip); }
 	
-	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
+	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) { #region
 		var _node;
 		var _buildCon = createNode[0];
 		if(array_length(createNode) > 2)
@@ -67,7 +67,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		
 		if(!LOADING && !APPENDING) _node.doUpdate();
 		return _node;
-	}
+	} #endregion
 	
 	static drawGrid = function(_x, _y, _mx, _my, grid_size) { #region
 		var spr_x = _x + grid_size / 2;

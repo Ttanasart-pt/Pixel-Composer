@@ -88,6 +88,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	static deactivate = function() { #region 
 		if(WIDGET_CURRENT != self) return;
+		
 		apply();
 		WIDGET_CURRENT = noone;
 		UNDO_HOLDING = false;

@@ -328,7 +328,7 @@ event_inherited();
 		var _hover = sHOVER && content_pane.hover;
 		var _list  = node_list;
 		
-		if(ADD_NODE_PAGE == -1) {
+		if(ADD_NODE_PAGE == -1) { #region
 			var context = PANEL_GRAPH.getCurrentContext();
 			context = context == noone? "" : instanceof(context);
 		
@@ -343,7 +343,8 @@ event_inherited();
 					ds_list_add(_list, cat.list[| j]);
 				}
 			}
-		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT) {
+		#endregion
+		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT) { #region
 			_list = ds_list_create();
 			
 			var sug = [];
@@ -383,17 +384,21 @@ event_inherited();
 				if(_node.show_in_recent) 
 					ds_list_add(_list, _node);
 			}
-		}
+		} #endregion
 		
 		if(_list == noone) {
 			setPage(NODE_PAGE_DEFAULT);
 			return 0;
 		}
 		
-		var node_count   = ds_list_size(_list);
-		var group_labels = [];
+		var node_count    = ds_list_size(_list);
+		var group_labels  = [];
+		
+		var _hoverContent = _hover;
+		if(ADD_NODE_PAGE > -1 && PREFERENCES.dialog_add_node_grouping) 
+			_hoverContent &= _m[1] > ui(8 + 24);
 			
-		if(PREFERENCES.dialog_add_node_view == 0) { //grid
+		if(PREFERENCES.dialog_add_node_view == 0) { #region grid
 			var grid_size  = ui(64);
 			var grid_width = ui(80);
 			var grid_space = ui(12);
@@ -445,7 +450,7 @@ event_inherited();
 				draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, cc, 1);
 				BLEND_NORMAL
 				
-				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+				if(_hoverContent && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node);
@@ -518,7 +523,8 @@ event_inherited();
 			
 			hh += curr_height;
 			yy += curr_height;
-		} else if(PREFERENCES.dialog_add_node_view == 1) { //list
+		#endregion
+		} else if(PREFERENCES.dialog_add_node_view == 1) { #region list
 			var list_width  = content_pane.surface_w;
 			var list_height = ui(28);
 			var yy      = _y + list_height / 2;
@@ -555,7 +561,7 @@ event_inherited();
 					BLEND_NORMAL;
 				}
 				
-				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+				if(_hoverContent && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					if(_node.getTooltip() != "") {
 						node_tooltip   = _node;
 						node_tooltip_x = content_pane.x + ui(16);
@@ -613,6 +619,7 @@ event_inherited();
 					draw_text(ui(16 + 16), _yy + ui(12), lb.text);
 				}
 			}
+		#endregion
 		}
 		
 		if(ADD_NODE_PAGE == -1) 
@@ -656,7 +663,7 @@ event_inherited();
 	tb_search.auto_update	= true;
 	WIDGET_CURRENT			= tb_search;
 	
-	function searchNodes() {
+	function searchNodes() { #region
 		ds_list_clear(search_list);
 		var pr_list = ds_priority_create();
 		
@@ -707,7 +714,7 @@ event_inherited();
 			ds_list_add(search_list, ds_priority_delete_max(pr_list));
 		
 		ds_priority_destroy(pr_list);
-	}
+	} #endregion
 	
 	search_pane = new scrollPane(dialog_w - ui(36), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
@@ -721,7 +728,7 @@ event_inherited();
 		var grid_width = ui(80);
 		var grid_space = ui(16);
 			
-		if(equation) {
+		if(equation) { #region
 			var eq = string_replace(search_string, "=", "");
 			
 			draw_set_text(f_h5, fa_center, fa_bottom, COLORS._main_text_sub);
@@ -735,9 +742,9 @@ event_inherited();
 			if(keyboard_check_pressed(vk_enter))
 				buildNode(ALL_NODES[? "Node_Equation"], { query: eq } );
 			return hh;
-		}
+		} #endregion
 		
-		if(PREFERENCES.dialog_add_node_view == 0) { //grid view
+		if(PREFERENCES.dialog_add_node_view == 0) { #region grid
 			var col = floor(search_pane.surface_w / (grid_width + grid_space));
 			var yy = _y + grid_space;
 			var index = 0;
@@ -836,7 +843,8 @@ event_inherited();
 					yy += hght;
 				}
 			}
-		} else if(PREFERENCES.dialog_add_node_view == 1) { //list view
+		#endregion
+		} else if(PREFERENCES.dialog_add_node_view == 1) { #region list
 			var list_width  = search_pane.surface_w;
 			var list_height = ui(28);
 			var yy = _y + list_height / 2;
@@ -910,6 +918,7 @@ event_inherited();
 				hh += list_height;
 				yy += list_height;
 			}
+		#endregion
 		}
 		
 		node_focusing = -1;

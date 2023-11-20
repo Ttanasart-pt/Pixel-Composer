@@ -50,7 +50,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 	widgets[10] = [ "Border Opacity",	new textBox(TEXTBOX_INPUT.number, function(val) { settings.borderAlpha = val; refresh(); }),
 		function() { return settings.borderAlpha }	];
 	
-	b_export = button(function() {
+	b_export = button(function() { #region
 		if(!is_surface(surface)) return;
 		
 		var path = get_save_filename("*.png", "Screenshot");
@@ -59,9 +59,9 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		if(filename_ext(path) != ".png") path += ".png";
 		surface_save(surface, path);
 		noti_status($"Graph image exported at {path}");
-	});
+	}); #endregion
 	
-	sc_settings = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding + 204), function(_y, _m) {
+	sc_settings = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding + 204), function(_y, _m) { #region
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var _ww = ui(160);
@@ -89,13 +89,13 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		
 		var _h = wh * array_length(widgets) + _hh;
 		return _h;
-	})
+	}); #endregion
 	
-	function onResize() {
+	function onResize() { #region
 		sc_settings.resize(w - ui(padding + padding), h - ui(title_height + padding + 204));
-	}
+	} #endregion
 	
-	function refresh() {
+	function refresh() { #region
 		if(is_surface(surface))
 			surface_free(surface);
 		surface = noone;
@@ -104,9 +104,9 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 			return;
 			
 		surface = graph_export_image(targetPanel.nodes_list, nodeList, settings);
-	} refresh();
+	} refresh(); #endregion
 	
-	function drawContent(panel) {
+	function drawContent(panel) { #region
 		var tx = padding;
 		var ty = padding;
 		var sh = 160;
@@ -139,17 +139,19 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		sc_settings.setFocusHover(pFOCUS, pHOVER);
 		sc_settings.draw(sx, sy, mx - sx, my - sy);
 		
-		if(is_surface(surface)) {
-			var txt = __txt("Export") + "...";
-			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-			var _bw = string_width(txt) + ui(32);
-			var _bh = string_height(txt) + ui(12);
-			bx = w - padding - _bw;
-			by = h - padding - _bh;
+		var txt = __txt("Export") + "...";
+		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
+		var _bw = string_width(txt) + ui(32);
+		var _bh = string_height(txt) + ui(12);
+		bx = w - padding - _bw;
+		by = h - padding - _bh;
+			
+		b_export.setInteract(is_surface(surface));
+		b_export.setFocusHover(pFOCUS, pHOVER);
+		b_export.draw(bx, by, _bw, _bh, _m);
 		
-			b_export.setFocusHover(pFOCUS, pHOVER);
-			b_export.draw(bx, by, _bw, _bh, _m);
-			draw_text(bx + ui(16), by + ui(6), txt);
-		}
-	}
+		draw_set_alpha(is_surface(surface) * 0.5 + 0.5);
+		draw_text(bx + ui(16), by + ui(6), txt);
+		draw_set_alpha(1);
+	} #endregion
 }

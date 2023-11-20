@@ -830,11 +830,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						}
 					}
 				#endregion
-			
+				
 				if(mouse_press(mb_right, pFOCUS)) { #region
 					node_hover = node_hovering;	
 					
-					if(node_hover) {
+					if(node_hover && node_hover.draggable) {
 						var menu = [];
 						array_push(menu, menu_node_color, -1, menu_sent_to_preview, menu_send_to_window, menu_sent_to_inspector);
 						if(!DEMO) 
@@ -856,7 +856,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							array_push(menu, -1, menu_nodes_align, menu_nodes_blend, menu_nodes_compose, menu_nodes_array, menu_nodes_group, menu_nodes_frame);
 					
 						menuCall("graph_node_selected_multiple_menu",,, menu );
-					} else {
+					} else if(node_hover == noone) {
 						var menu = [];
 						
 						__junction_hovering = junction_hovering;

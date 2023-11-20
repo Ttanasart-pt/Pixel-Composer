@@ -76,6 +76,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	} #endregion
 	
 	static deactivate = function() { #region
+		if(WIDGET_CURRENT != self) return;
+		
 		apply();
 		WIDGET_CURRENT = noone;
 		UNDO_HOLDING = false;

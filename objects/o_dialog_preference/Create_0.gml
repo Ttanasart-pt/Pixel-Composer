@@ -569,7 +569,7 @@ event_inherited();
 				dialog.setDefault(val);
 				self.key = key;
 				dialog.onApply = function(color) { 
-					variable_struct_set(COLORS, self.key, color); 
+					variable_struct_set(COLORS, key, color); 
 					overrideColor();
 				};
 				dialog.selector.onApply = dialog.onApply;
@@ -588,7 +588,7 @@ event_inherited();
 	});
 	
 	function overrideColor() {
-		var path = $"{DIRECTORY}themes{PREFERENCES.theme}/override.json";
+		var path = $"{DIRECTORY}themes/{PREFERENCES.theme}/override.json";
 		json_save_struct(path, COLORS, true);
 	}
 #endregion

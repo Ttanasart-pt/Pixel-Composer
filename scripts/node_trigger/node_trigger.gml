@@ -20,12 +20,12 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	doTrigger = 0;
 	
-	static onInspector2Update = function() {
+	static onInspector2Update = function() { #region
 		inputs[| 0].setAnim(true);
 		inputs[| 0].setValue(true);
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		if(doTrigger == 1) {
 			outputs[| 0].setValue(true);
 			doTrigger = -1;
@@ -33,14 +33,14 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			outputs[| 0].setValue(false);
 			doTrigger = 0;
 		}
-	}
+	} #endregion
 	
-	static update = function() {
+	static update = function() { #region
 		var trg = getInputData(0);
 		if(trg) doTrigger = 1;
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var bbox = drawGetBbox(xx, yy, _s);
 		var trg  = outputs[| 0].getValue();
@@ -55,5 +55,5 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		draw_set_circle_precision(32);
 		if(trg) draw_circle(bbox.xc, bbox.yc, rr - 6, false);
-	}
+	} #endregion
 }

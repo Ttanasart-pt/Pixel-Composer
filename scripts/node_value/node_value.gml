@@ -511,6 +511,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		forward = true;
 		_initName = _name;
 		
+		node.will_setHeight = true;
+		
 		static updateName = function(_name) {
 			name         = _name;
 			internalName = string_to_var(name);
@@ -686,6 +688,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return __txt_junction_name(instanceof(node), connect_type, index, name);
 	} #endregion
 	
+	static setName = function(_name) { #region
+		INLINE
+		name = _name;
+		return self;
+	} #endregion
+	
 	static resetValue = function() { setValue(def_val); }
 	
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) { #region
@@ -702,6 +710,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			visible = argument_count > 1? argument[1] : visible;
 		} else 
 			visible = inspector;
+		node.will_setHeight = true;
 		return self;
 	} #endregion
 	
@@ -1574,9 +1583,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		is_anim = anim;
 		
 		if(is_anim) {
+			if(ds_list_empty(animator.values))
+				ds_list_add(animator.values, new valueKey(CURRENT_FRAME, animator.getValue(), animator));
 			animator.values[| 0].time = CURRENT_FRAME;
 			
 			for( var i = 0, n = array_length(animators); i < n; i++ ) {
+				if(ds_list_empty(animators[i].values))
+					ds_list_add(animators[i].values, new valueKey(CURRENT_FRAME, animators[i].getValue(), animators[i]));
 				animators[i].values[| 0].time = CURRENT_FRAME;
 			}
 		} else {
@@ -1903,6 +1916,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static setString = function(str) { #region
+		if(connect_type == JUNCTION_CONNECT.output) return;
 		var _o = animator.getValue();
 		
 		if(string_pos(",", str) > 0) {

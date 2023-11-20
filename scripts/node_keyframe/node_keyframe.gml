@@ -177,10 +177,17 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return processType(merge_color(_f, _t, _lrp));
 		}
 		
-		if(is_array(_f)) {
-			var _vec = array_create(array_length(_f));
-			for(var i = 0; i < array_length(_vec); i++) 
-				_vec[i] = processType(lerp(_f[i], _t[i], _lrp));
+		if(is_array(_f) || is_array(_t)) {
+			var _len = max(array_safe_length(_f), array_safe_length(_t));
+			var _vec = array_create(_len);
+			
+			for(var i = 0; i < _len; i++) 
+				_vec[i] = processType(
+					lerp(
+						is_array(_f)? array_safe_get(_f, i, 0) : _f, 
+						is_array(_t)? array_safe_get(_t, i, 0) : _t, 
+					_lrp)
+				);
 			return _vec;
 		}
 			

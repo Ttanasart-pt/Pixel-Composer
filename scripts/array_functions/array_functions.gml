@@ -25,6 +25,11 @@ function array_safe_set(arr, index, value, fill = 0) { #region
 	return arr;
 } #endregion
 
+function array_safe_length(arr) { #region
+	INLINE
+	return is_array(arr)? array_length(arr) : 0;
+} #endregion
+
 function array_fill(arr, startIndex, endIndex, value = 0) { #region
 	INLINE
 	

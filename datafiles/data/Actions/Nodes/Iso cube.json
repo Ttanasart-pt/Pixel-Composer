@@ -6,20 +6,19 @@
     "sprPath": "./Iso cube.png",
     "nodes": [
         { "id": "cube",   "node": "Node_3D_Mesh_Cube",          "x":   0, "y":   0 }, 
-        { "id": "light",  "node": "Node_3D_Light_Directional",  "x":   0, "y": 160 },
-        { "id": "scene",  "node": "Node_3D_Scene",              "x": 160, "y":   0 },
-        { "id": "camera", "node": "Node_3D_Camera",             "x": 320, "y":   0,
+        { "id": "camera", "node": "Node_3D_Camera_Set",         "x": 320, "y":   0,
           "setValues": [ { "index": "projection", "value": 1 }, 
                          { "index": "orthographic_scale", "value": 0.5 }, 
                          { "index": "postioning_mode", "value": 2 }, 
                          { "index": "horizontal_angle", "value": 45 }, 
-                         { "index": "vertical_angle", "value": 30 } 
+                         { "index": "vertical_angle", "value": 30 },
+                         { "index": "l1_h_angle", "value": 0 },
+                         { "index": "l1_v_angle", "value": 75 },
+                         { "index": "l2_intensity", "value": 0 }
                        ]
         }
     ],
     "connections": [
-        { "from": "cube",  "fromIndex": 0, "to": "scene",  "toIndex": 0 },
-        { "from": "light", "fromIndex": 0, "to": "scene",  "toIndex": 1 },
-        { "from": "scene", "fromIndex": 0, "to": "camera", "toIndex": "scene" }
+        { "from": "cube", "fromIndex": 0, "to": "camera", "toIndex": "scene" }
     ]
 }

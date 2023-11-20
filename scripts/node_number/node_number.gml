@@ -52,6 +52,8 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var int  = getInputData(1);
 		var disp = getInputData(2);
 		
+		var _h = min_h;
+		
 		w	  = 96;	
 		min_h = 56; 
 		
@@ -64,7 +66,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			case 1 : 
 				if(inputs[| 0].isLeaf()) {
 					w	  = 160;
-					min_h = 96;			 
+					min_h = 96;
 				}
 				inputs[| 3].setVisible(true);
 				inputs[| 4].setVisible(true);
@@ -80,6 +82,8 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				inputs[| 5].setVisible(false);
 				break;
 		}
+		
+		if(_h != min_h) setHeight();
 		
 		for( var i = 0; i < 1; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
@@ -154,10 +158,14 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					var _valL = lerp(_minn, _maxx, _valM);
 					    _valL = value_snap(_valL, stp);
 					if(cmp) _valL = clamp(_valL, _minn, _maxx);
-					inputs[| 0].setValue(_valL);
 					
-					if(mouse_release(mb_left))
+					if(inputs[| 0].setValue(_valL))
+						UNDO_HOLDING = true;
+					
+					if(mouse_release(mb_left)) {
 						slider_dragging = false;
+						UNDO_HOLDING    = false;
+					}
 				} else 
 					slider_m = lerp_float(slider_m, 0, 5);
 				
@@ -201,10 +209,13 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					var dx  = angle_difference(dir, rotator_p);
 					rotator_p = dir;
 					
-					inputs[| 0].setValue(val + dx);
+					if(inputs[| 0].setValue(val + dx))
+						UNDO_HOLDING = true;
 					
-					if(mouse_release(mb_left))
+					if(mouse_release(mb_left)) {
 						rotator_dragging = false;
+						UNDO_HOLDING     = false;
+					}
 				} else 
 					rotator_m = lerp_float(rotator_m, 0, 5);
 				
@@ -246,14 +257,6 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 3] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Coordinate" ]);
 	
-	inputs[| 4] = nodeValue("Reset to center", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, { name: "To center", onClick: function () { 
-			wd_minx		= -1;
-			wd_miny		= -1;
-			wd_maxx		=  1;
-			wd_maxy		=  1;
-		} });
-	
 	outputs[| 0] = nodeValue("Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -274,6 +277,24 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	wd_pan_sy	= 0;
 	wd_pan_mx	= 0;
 	wd_pan_my	= 0;
+	
+	coordinate_menu = [
+		menuItem(__txt("Reset view"),  function() {
+			wd_minx		= -1;
+			wd_miny		= -1;
+			wd_maxx		=  1;
+			wd_maxy		=  1;
+		}),
+		menuItem(__txt("Focus value"),  function() {
+			var _x = inputs[| 0].getValue();
+			var _y = inputs[| 1].getValue();
+			
+			wd_minx		= _x - 1;
+			wd_miny		= _y - 1;
+			wd_maxx		= _x + 1;
+			wd_maxy		= _y + 1;
+		}),
+	];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var __ax = getInputData(0);
@@ -333,9 +354,9 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			inputs[| i].editWidget.setSlidable(int? 0.1 : 0.01);
 		}
 		
-		inputs[| 4].setVisible(disp == 1, disp == 1);
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 		
+		var _h = min_h;
 		w	  = 96;	
 		min_h = 80; 
 				
@@ -343,6 +364,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			w	  = 160;
 			min_h = 160;
 		}
+		
+		if(min_h != _h) setHeight();
 	} #endregion
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
@@ -399,29 +422,33 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 1);
 		draw_set_alpha(1);
 		
-		var pin_x   = (v0 - wd_minx) / (wd_maxx - wd_minx);
-		var pin_y   = (v1 - wd_miny) / (wd_maxy - wd_miny);
-		if(point_in_rectangle(v0, v1, wd_minx, wd_miny, wd_maxx, wd_maxy)) {
-			var pin_dx  = bbox.x0 + bbox.w * pin_x;
-			var pin_dy  = bbox.y1 - bbox.h * pin_y;
+		var pin_x = (v0 - wd_minx) / (wd_maxx - wd_minx);
+		var pin_y = (v1 - wd_miny) / (wd_maxy - wd_miny);
+		if(point_in_rectangle(v0, v1, wd_minx, wd_miny, wd_maxx, wd_maxy)) { #region draw pin
+			var pin_dx = bbox.x0 + bbox.w * pin_x;
+			var pin_dy = bbox.y1 - bbox.h * pin_y;
 			draw_sprite_ext(THEME.node_coor_pin, 0, pin_dx, pin_dy, 1, 1, 0, c_white, 1);
-		}
+		} #endregion
 		
-		if(wd_dragging) {
+		if(wd_dragging) { #region
 			var mx = wd_minx + (_mx - bbox.x0) / bbox.w * (wd_maxx - wd_minx);
 			var my = wd_maxy - (_my - bbox.y0) / bbox.h * (wd_maxy - wd_miny);
-				
+			
 			if(key_mod_press(CTRL)) {
 				mx = round(mx);
 				my = round(my);
 			}
+			
+			var _i0 = inputs[| 0].setValue(mx);
+			var _i1 = inputs[| 1].setValue(my);
+			if(_i0 || _i1) UNDO_HOLDING = true;
 				
-			inputs[| 0].setValue(mx);
-			inputs[| 1].setValue(my);
-				
-			if(mouse_release(mb_left)) 
-				wd_dragging = false;
-		} else if(wd_panning) {
+			if(mouse_release(mb_left)) {
+				wd_dragging  = false;
+				UNDO_HOLDING = false;
+			}
+		#endregion
+		} else if(wd_panning) { #region
 			draw_set_color(color);
 			draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 1);
 			
@@ -435,11 +462,12 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			wd_maxx = wd_minx + rx;
 			wd_maxy = wd_miny + ry;
 				
-			if(mouse_release(mb_middle)) 
-				wd_panning = false;
+			if(mouse_release(mb_middle))
+				wd_panning   = false;
+		#endregion
 		}
 		
-		if(point_in_rectangle(_mx, _my, bbox.x0, bbox.y0, bbox.x1, bbox.y1)) {
+		if(_hover && point_in_rectangle(_mx, _my, bbox.x0, bbox.y0, bbox.x1, bbox.y1)) { #region
 			draw_set_color(color);
 			draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 1);
 			
@@ -480,11 +508,16 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				wd_maxx = wd_cx + rx;
 				wd_maxy = wd_cy + ry;
 			}
-		}
+			
+			if(mouse_press(mb_right, _focus)) {
+				menuCall("node_vec2_coordinate",,, coordinate_menu);
+			}
+		} #endregion
 		
 		draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
 		var str	= $"[{v0}, {v1}]";
-		draw_text(bbox.xc, bbox.y1 - 4, str);
+		var ss	= min(1, string_scale(str, bbox.w - 16 * _s, bbox.h));
+		draw_text_transformed(bbox.xc, bbox.y1 - 4, str, ss, ss, 0);
 	} #endregion
 } #endregion
 

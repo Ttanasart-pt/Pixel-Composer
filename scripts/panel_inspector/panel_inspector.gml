@@ -340,9 +340,9 @@ function Panel_Inspector() : PanelContent() constructor {
 						var byc = by + bh / 2;
 						draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
 						draw_text_add(bxc + ui(48), byc, txt);
-				
+						
 						bx += bw + ui(4);
-				
+						
 						if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
 							PROJECT.globalNode.createValue();
 					
@@ -631,10 +631,12 @@ function Panel_Inspector() : PanelContent() constructor {
 						if(jun.sepable) array_push(_menuItem, jun.sep_axis? menu_junc_combine_axis : menu_junc_separate_axis);
 						array_push(_menuItem, -1);
 					}
-						
-					array_push(_menuItem, jun.expUse? menu_junc_expression_dis : menu_junc_expression_ena, -1, menu_junc_copy, menu_junc_paste);	
 					
-					if(jun.extract_node != "") {
+					array_push(_menuItem, jun.expUse? menu_junc_expression_dis : menu_junc_expression_ena, -1, menu_junc_copy);
+					if(jun.connect_type == JUNCTION_CONNECT.input)
+						array_push(_menuItem, menu_junc_paste);
+					
+					if(jun.connect_type == JUNCTION_CONNECT.input && jun.extract_node != "") {
 						if(is_array(jun.extract_node)) {
 							var ext = menuItem(__txtx("panel_inspector_extract_multiple", "Extract to..."),	function(_dat) { 
 								var arr = [];
@@ -723,6 +725,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	
 	function propSelectPaste() { #region
 		if(!prop_selecting) return;
+		
 		prop_selecting.setString(clipboard_get_text());
 	} #endregion
 	

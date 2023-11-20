@@ -658,11 +658,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 			
 		surface_set_target(content_surface);
 			draw_clear(COLORS.panel_bg_clear);
+			
 			if(con) {
 				min_w = con.min_w;
 				min_h = con.min_h;
 				if(tw >= min_w && th >= min_h)
 					con.draw(self);
+				else {
+					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
+					draw_text(tw / 2, th / 2, "Panel too small for content");
+				}
+			} else {
+				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
+				draw_text(tw / 2, th / 2, "No content");
 			}
 			
 			gpu_set_blendmode(bm_subtract);

@@ -4,26 +4,34 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 	light_key  = new __3dLightDirectional();
 	light_fill = new __3dLightDirectional();
 	
-	inputs[| in_cam + 0] = nodeValue("Horizontal angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
+	inputs[| in_cam + 0] = nodeValue("L1 H angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
+		.setName("Horizontal angle")
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| in_cam + 1] = nodeValue("Vertical angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 215 )
+	inputs[| in_cam + 1] = nodeValue("L1 V angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
+		.setName("Vertical angle")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 1] });
 	
-	inputs[| in_cam + 2] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+	inputs[| in_cam + 2] = nodeValue("L1 Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+		.setName("Color")
 	
-	inputs[| in_cam + 3] = nodeValue("Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| in_cam + 3] = nodeValue("L1 Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+		.setName("Intensity")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| in_cam + 4] = nodeValue("Horizontal angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -45 )
+	inputs[| in_cam + 4] = nodeValue("L2 H angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -45 )
+		.setName("Horizontal angle")
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| in_cam + 5] = nodeValue("Vertical angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
+	inputs[| in_cam + 5] = nodeValue("L2 V angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
+		.setName("Vertical angle")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 1] });
 	
-	inputs[| in_cam + 6] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+	inputs[| in_cam + 6] = nodeValue("L2 Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+		.setName("Color")
 	
-	inputs[| in_cam + 7] = nodeValue("Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| in_cam + 7] = nodeValue("L2 Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+		.setName("Intensity")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	array_append(input_display_list, [
@@ -31,15 +39,15 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 		["Fill light", false], in_cam + 4, in_cam + 5, in_cam + 6, in_cam + 7, 
 	]);
 	
-	static submitShadow = function() {
+	static submitShadow = function() { #region
 		light_key.submitShadow(scene, light_key);
 		light_fill.submitShadow(scene, light_fill);
-	}
+	} #endregion
 	
-	static submitShader = function() {
+	static submitShader = function() { #region
 		scene.submitShader(light_key);
 		scene.submitShader(light_fill);
-	}
+	} #endregion
 	
 	static preProcessData = function(_data) { #region
 		var _han = _data[in_cam + 0];

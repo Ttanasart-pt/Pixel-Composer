@@ -73,7 +73,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 		w = 128;
 		h = 128;
+		min_w = 0;
 		min_h = 0;
+		will_setHeight = false;
+		
 		draw_padding = 4;
 		auto_height  = true;
 		
@@ -144,11 +147,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	#endregion
 	
 	#region --- attributes ----
-		attributes = {
-			update_graph: true,
-			show_update_trigger: false,
-			color: -1,
-		};
+		attributes.node_width  = 0;
+		attributes.node_height = 0;
 		
 		attributeEditors = [
 			"Node update",
@@ -306,7 +306,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 			if(outputs[| i].isVisible()) _ho += 24;
 		
-		h = max(min_h, _prev_surf * 128, _hi, _ho);
+		//w = max(min_w, attributes.node_width);
+		h = max(min_h, _prev_surf * 128, _hi, _ho, attributes.node_height);
 	} run_in(1, function() { setHeight(); }); #endregion
 	
 	static setDisplayName = function(_name) { #region
@@ -458,6 +459,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			}
 			updatedOutTrigger.setValue(false);
 		}
+		
+		if(will_setHeight) {
+			setHeight();
+			will_setHeight = false;
+		}
 	} #endregion
 	
 	static doStepBegin = function() {}
@@ -595,13 +601,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		onValueUpdate(index);
 		if(cache_group) cache_group.enableNodeGroup();
-		if(is_dynamic_input) setHeight();
+		if(is_dynamic_input) will_setHeight = true;
 	} #endregion
 	
 	static valueFromUpdate = function(index) { #region
 		onValueFromUpdate(index);
 		if(cache_group) cache_group.enableNodeGroup();
-		if(is_dynamic_input) setHeight();
+		if(is_dynamic_input) will_setHeight = true;
 	} #endregion
 	
 	static onValueUpdate = function(index = 0) {}

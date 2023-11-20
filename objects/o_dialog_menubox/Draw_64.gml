@@ -29,8 +29,7 @@ if(!ready) exit;
 		if(is_instanceof(_menuItem, MenuItemGroup))
 			_h += hght;
 		
-		var hoverable = _menuItem.active && sHOVER;
-		if(hoverable && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
+		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
 			selecting = i;
 			var tips = array_safe_get(tooltips, i, noone);
 			if(tips != noone) TOOLTIP = tips;
@@ -46,7 +45,9 @@ if(!ready) exit;
 			else 
 				draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc, 0.8);
 			
-			if(instanceof(_menuItem) == "MenuItem" && sFOCUS && (mouse_release(mb_left) || keyboard_check_released(vk_enter))) {
+			if(instanceof(_menuItem) == "MenuItem" && _menuItem.active && sFOCUS && 
+				(mouse_release(mb_left) || keyboard_check_released(vk_enter))) {
+					
 				var _dat = {
 					_x: dialog_x,
 					x: dialog_x + dialog_w,

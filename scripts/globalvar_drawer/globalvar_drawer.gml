@@ -72,6 +72,8 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 			_edit.sc_type.setFocusHover(_foc, _hov);
 			_edit.sc_disp.setFocusHover(_foc, _hov);
 			
+			if(_foc) _edit.tb_name.register(_scrollPane);
+			
 			_edit.tb_name.draw(_wd_x + ui(32), yy, wd_w - wd_h - ui(32 + 4), wd_h, _inpu.name, _m, TEXTBOX_INPUT.text);
 			if(buttonInstant(THEME.button_hide, _wd_x + wd_w - wd_h, yy, wd_h, wd_h, _m, _foc, _hov,, THEME.icon_delete,, COLORS._main_value_negative) == 2) 
 				del = j;

@@ -65,7 +65,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	attributes.size = 1;
 	attributes.spread_value = false;
 	
-	static getType = function() {
+	static getType = function() { #region
 		var _type = getInputData(0);
 		
 		switch(_type) {
@@ -75,21 +75,20 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case 4 : return VALUE_TYPE.text; 
 			default : return VALUE_TYPE.any;
 		}
-	}
+	} #endregion
 	
-	static createNewInput = function() {
+	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);
-		var _typ = getType();
+		var _typ  = getType();
 		
 		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, _typ, -1 )
 			.setVisible(true, true);
 		array_push(input_display_list, index);
 		
 		return inputs[| index];
-	}
-	if(!LOADING && !APPENDING) createNewInput();
+	} if(!LOADING && !APPENDING) createNewInput(); #endregion
 	
-	static refreshDynamicInput = function() {
+	static refreshDynamicInput = function() { #region
 		var _l       = ds_list_create();
 		var amo      = attributes.size;
 		var extra    = true;
@@ -124,9 +123,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(extra) 
 			lastNode = createNewInput();
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = 0) { #region
 		if(index != 0) return;
 		
 		var ls = ds_list_create();
@@ -138,15 +137,15 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		input_display_list = [ 0, array_adjust_tool, 1 ];
 		
 		refreshDynamicInput();
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(LOADING || APPENDING) return;
 		
 		refreshDynamicInput();
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		var _typ = getType();
 		
 		outputs[| 0].setType(_typ);
@@ -169,9 +168,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		outputs[| 0].setValue(res);
-	}
+	} #endregion
 	
-	static doApplyDeserialize = function() {
+	static doApplyDeserialize = function() { #region
 		var _typ = getType();
 		if(_typ == VALUE_TYPE.any) return;
 		
@@ -179,6 +178,5 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			inputs[| i].setType(_typ);
 			inputs[| i].resetDisplay();
 		}
-	}
-	
+	} #endregion
 }
