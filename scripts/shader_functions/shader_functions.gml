@@ -81,13 +81,13 @@ function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 	INLINE
 	
 	var shader = shader_current();
-	if(shader == -1) return;
-	
-	if(is_struct(shader) && is_instanceof(shader, dynaSurf)) 
-		shader = shader.surfaces[0];
-	if(!is_surface(surface)) return;
+	if(shader == -1) return noone;
 	
 	var t = shader_get_sampler_index(shader, sampler);
+	
+	if(is_instanceof(surface, dynaSurf)) 
+		surface = surface.surfaces[0];
+	if(!is_surface(surface)) return t;
 	
 	texture_set_stage(t, surface_get_texture(surface));
 	gpu_set_tex_filter_ext(t, linear);

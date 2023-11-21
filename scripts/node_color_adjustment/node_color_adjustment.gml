@@ -44,12 +44,16 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 14] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES);
 		
+	inputs[| 15] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Color out", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	input_display_list = [11, 12, 0, 8, 13, 9,
+	input_display_list = [11, 12, 15, 9, 
+		["Surface",		false], 0, 8, 13, 
 		["Brightness",	false], 1, 10, 2, 
 		["HSV",			false], 3, 4, 5, 
 		["Color blend", false], 6, 14, 7
@@ -141,7 +145,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_color("blend", _bl, _bla);
 			shader_set_i("blendMode", _blm);
 			
-			shader_set_i("use_mask", _m != DEF_SURFACE);
+			shader_set_i("use_mask", is_surface(_m));
 			shader_set_surface("mask", _m);
 			
 			gpu_set_colorwriteenable(1, 1, 1, 0);
