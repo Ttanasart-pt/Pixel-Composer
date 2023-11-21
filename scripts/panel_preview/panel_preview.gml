@@ -614,18 +614,17 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		var _node = getNodePreview();
-		if(_node)
-			title = _node.renamed? _node.display_name : _node.name;
+		if(_node) title = _node.renamed? _node.display_name : _node.name;
 		
-		if(splitView == 0 && tileMode == 0 && is_surface(preview_surface[0])) {
+		if(splitView == 0 && tileMode == 0) {
 			var node = preview_node[0];
-			node.previewing = 1;
-			var aa = node.preview_alpha;
+			if(is_surface(preview_surface[0])) {
+				node.previewing = 1;
+				var aa = node.preview_alpha;
 			
-			if(PROJECT.onion_skin.enabled) {
-				drawOnionSkin(node, psx, psy, ss); 
-			} else
-				draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, aa); 
+				if(PROJECT.onion_skin.enabled) drawOnionSkin(node, psx, psy, ss); 
+				else                           draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, aa); 
+			}
 		}
 		
 		switch(splitView) { #region draw surfaces
@@ -752,7 +751,7 @@ function Panel_Preview() : PanelContent() constructor {
 	function draw3D() { #region
 		var _prev_node = getNodePreview();
 		if(_prev_node == noone) return;
-		if(!_prev_node.is_3D)   return 
+		if(!_prev_node.is_3D)   return;
 		
 		_prev_node.previewing = 1;
 		
@@ -763,7 +762,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var _pos, targ, _blend = 1;
 			
 			targ = d3_camTarget;
-			_pos = calculate_3d_position(targ.x, targ.y, targ.z, d3_view_camera.focus_angle_x, d3_view_camera.focus_angle_y, d3_view_camera.focus_dist);
+			_pos = d3d_PolarToCart(targ.x, targ.y, targ.z, d3_view_camera.focus_angle_x, d3_view_camera.focus_angle_y, d3_view_camera.focus_dist);
 			
 			if(d3_active_transition == 1) {
 				var _up  = new __vec3(0, 0, -1);

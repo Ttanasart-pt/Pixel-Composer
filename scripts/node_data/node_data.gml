@@ -1231,7 +1231,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		badgeInspect = lerp_float(badgeInspect,   inspecting, 2);
 		
 		if(badgePreview > 0) {
-			draw_sprite_ext(THEME.node_state, 0, xx, yy, badgePreview, badgePreview, 0, c_white, 1);
+			draw_sprite_ext(THEME.node_state, is_3D? 3 : 0, xx, yy, badgePreview, badgePreview, 0, c_white, 1);
 			xx -= 28 * badgePreview;
 		}
 		

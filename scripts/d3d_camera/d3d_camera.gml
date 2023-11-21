@@ -77,6 +77,8 @@ function __3dCamera() constructor {
 	} #endregion
 	
 	static setFocusAngle = function(ax, ay, dist) { #region
+		if(ay % 90 == 0) ay += 0.01;
+		
 		focus_angle_x = ax;
 		focus_angle_y = ay;
 		focus_dist    = dist;
@@ -101,7 +103,7 @@ function __3dCamera() constructor {
 	} #endregion
 	
 	static setCameraLookRotate = function() { #region
-		var _fPos = calculate_3d_position(focus.x, focus.y, focus.z, focus_angle_x, focus_angle_y, focus_dist);
+		var _fPos = d3d_PolarToCart(focus.x, focus.y, focus.z, focus_angle_x, focus_angle_y, focus_dist);
 		position.set(_fPos);
 	} #endregion
 	

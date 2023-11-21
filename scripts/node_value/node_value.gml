@@ -2071,15 +2071,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(type == VALUE_TYPE.action) {
 			var tx = x;
 			draw_set_text(f_p1, fa_center, fa_center, _draw_cc);
-			draw_text(tx, y - (line_get_height() + 16) / 2, name);
+			draw_text(round(tx), round(y - (line_get_height() + 16) / 2), name);
 		} else if(connect_type == JUNCTION_CONNECT.input) {
 			var tx = x - 12 * _s;
 			draw_set_halign(fa_right);
-			draw_text(tx, y, name);
+			draw_text(round(tx), round(y), name);
 		} else {
 			var tx = x + 12 * _s;
 			draw_set_halign(fa_left);
-			draw_text(tx, y, name);
+			draw_text(round(tx), round(y), name);
 		}
 	} #endregion
 	

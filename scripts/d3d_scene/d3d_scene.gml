@@ -5,7 +5,7 @@
 		var d3_view_camera = new __3dCamera();
 		d3_view_camera.setViewSize(2, 2);
 		d3_view_camera.setFocusAngle(135, 45, 8);
-		d3_view_camera.position.set(calculate_3d_position(0, 0, 0, d3_view_camera.focus_angle_x, d3_view_camera.focus_angle_y, d3_view_camera.focus_dist));
+		d3_view_camera.position.set(d3d_PolarToCart(0, 0, 0, d3_view_camera.focus_angle_x, d3_view_camera.focus_angle_y, d3_view_camera.focus_dist));
 		
 		d3_view_camera.projection = CAMERA_PROJECTION.orthograph;
 		d3_view_camera.setMatrix();

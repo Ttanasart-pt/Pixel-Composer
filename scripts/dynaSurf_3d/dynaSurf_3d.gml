@@ -23,7 +23,7 @@ function dynaSurf_3d() : dynaSurf() constructor {
 		#region view
 			var _pos, _blend = 1;
 			
-			_pos = calculate_3d_position(camTarget.x, camTarget.y, camTarget.z, _rot, camera_ay, camera.focus_dist);
+			_pos = d3d_PolarToCart(camTarget.x, camTarget.y, camTarget.z, _rot, camera_ay, camera.focus_dist);
 			
 			camera.position.set(_pos);
 			camera.focus.set(camTarget);

@@ -55,7 +55,7 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 		var _col = _data[in_cam + 2];
 		var _int = _data[in_cam + 3];
 		
-		var pos = calculate_3d_position(0, 0, 0, _han, _van, 4)
+		var pos = d3d_PolarToCart(0, 0, 0, _han, _van, 4)
 		light_key.transform.position.set(pos.x, pos.y, pos.z);
 		var _rot = new __rot3().lookAt(light_key.transform.position, new __vec3());
 		light_key.transform.rotation.FromEuler(_rot.x, _rot.y, _rot.z);
@@ -68,7 +68,7 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 		var _col = _data[in_cam + 6];
 		var _int = _data[in_cam + 7];
 		
-		var pos = calculate_3d_position(0, 0, 0, _han, _van, 4)
+		var pos = d3d_PolarToCart(0, 0, 0, _han, _van, 4)
 		light_fill.transform.position.set(pos.x, pos.y, pos.z);
 		var _rot = new __rot3().lookAt(light_fill.transform.position, new __vec3());
 		light_fill.transform.rotation.FromEuler(_rot.x, _rot.y, _rot.z);
