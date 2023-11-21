@@ -246,8 +246,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		_forward = new BBMOD_Vec3(_forward);
 		_up      = new BBMOD_Vec3(_up);
 
-		if (!_forward.Orthonormalize(_up))
-		{
+		if (!_forward.Orthonormalize(_up)) {
 			X = 0.0;
 			Y = 0.0;
 			Z = 0.0;
@@ -257,8 +256,8 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 
 		var _right = _up.Cross(_forward);
 		var _w = sqrt(abs(1.0 + _right.X + _up.Y + _forward.Z)) * 0.5;
-		var _w4Recip = 1.0 / (4.0 * _w);
-
+		var _w4Recip = _w == 0? 0 : 1.0 / (4.0 * _w);
+		
 		X = (_up.Z - _forward.Y) * _w4Recip;
 		Y = (_forward.X - _right.Z) * _w4Recip;
 		Z = (_right.Y - _up.X) * _w4Recip;
@@ -309,7 +308,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Inverse = function () {
 		INLINE
-		return Conjugate().Scale(1.0 / Length());
+		return Length() == 0? new BBMOD_Quaternion() : Conjugate().Scale(1.0 / Length());
 	};
 
 	/// @func Length()
@@ -412,6 +411,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	static Normalize = function () {
 		INLINE
 		var _lengthSqr = LengthSqr();
+		
 		if(_lengthSqr == 0)
 			return new BBMOD_Quaternion();
 		
@@ -627,6 +627,8 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		INLINE
 
 		_dest ??= matrix_build_identity();
+		
+		if(is_nan(X)) return _dest;
 		
 		var _norm = Normalize();
 		

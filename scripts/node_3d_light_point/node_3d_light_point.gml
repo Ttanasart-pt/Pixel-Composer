@@ -21,7 +21,7 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 	tool_settings = [];
 	tool_attribute.context = 1;
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { 
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _active = _data[in_d3d + 0];
 		if(!_active) return noone;
 		
@@ -39,10 +39,5 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 		object.shadow_bias = _shadow_bias;
 		
 		return object;
-	}
-	
-	//static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-	//	var object = getObject(0);
-	//	draw_surface_stretched_safe(object.shadow_map, xx, yy, 96, 96);
-	//}
+	} #endregion
 }

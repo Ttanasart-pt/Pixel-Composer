@@ -22,8 +22,9 @@ if(!MOUSE_WRAPPING) {
 	var _ady = slide_dy - mouse_my;
 	
 	var _s = tb.slide_speed;
-	if(key_mod_press(CTRL)) _s *= 10;
-	if(key_mod_press(ALT))  _s /= 10;
+	var sc = 10;
+	if(key_mod_press(CTRL)) _s *= sc;
+	if(key_mod_press(ALT))  _s /= sc;
 	
 	var spd  = (slide_da? _ady : _adx) * _s;
 	var _val = value_snap(tb.slide_sv + spd, _s);

@@ -1,26 +1,29 @@
-function colorFromRGBArray(arr) {
+function colorFromRGBArray(arr) { #region
 	var r = round(real(arr[0]) * 255);
 	var g = round(real(arr[1]) * 255);
 	var b = round(real(arr[2]) * 255);
 	return make_color_rgb(r, g, b);
-}
+} #endregion
 
-function color_get_alpha(color) {
+function color_get_alpha(color) { #region
+	INLINE
 	return (color & (0xFF << 24)) >> 24;
-}
+} #endregion
 
-function colorArrayFromReal(clr) {
+function colorArrayFromReal(clr) { #region
+	INLINE
 	return [color_get_red(clr) / 255, color_get_green(clr) / 255, color_get_blue(clr) / 255 ];	
-}
+} #endregion
 
-function colorBrightness(clr, normalize = true) {
+function colorBrightness(clr, normalize = true) { #region
+	INLINE
 	var r2 = color_get_red(clr) /	(normalize? 255 : 1);
 	var g2 = color_get_green(clr) / (normalize? 255 : 1);
 	var b2 = color_get_blue(clr) /	(normalize? 255 : 1);
 	return 0.299 * r2 + 0.587 * g2 + 0.224 * b2;
-}
+} #endregion
 
-function colorMultiply(c1, c2) {
+function colorMultiply(c1, c2) { #region
 	if(c1 * c2 == 0) return 0;
 	if(c1 == c_white) return c2;
 	if(c2 == c_white) return c1;
@@ -34,9 +37,9 @@ function colorMultiply(c1, c2) {
 	var b2 = color_get_blue(c2);
 	
 	return make_color_rgb((r1 * r2) / 255, (g1 * g2) / 255, (b1 * b2) / 255);
-}
+} #endregion
 
-function colorAdd(c1, c2) {
+function colorAdd(c1, c2) { #region
 	if(c1 == 0) return c2;
 	if(c2 == 0) return c1;
 	
@@ -49,9 +52,9 @@ function colorAdd(c1, c2) {
 	var b2 = color_get_blue(c2);
 	
 	return make_color_rgb(min(r1 + r2, 255), min(g1 + g2, 255), min(b1 + b2, 255));
-}
+} #endregion
 
-function color_diff(c1, c2, fast = false, alpha = false) {
+function color_diff(c1, c2, fast = false, alpha = false) { #region
 	var _c1_r = color_get_red(c1);
 	var _c1_g = color_get_green(c1);
 	var _c1_b = color_get_blue(c1);
@@ -74,13 +77,17 @@ function color_diff(c1, c2, fast = false, alpha = false) {
 	
 	if(fast) return abs(_c1_r - _c2_r) + abs(_c1_g - _c2_g) + abs(_c1_b - _c2_b) + abs(_c1_a - _c2_a);
 	return sqrt(sqr(_c1_r - _c2_r) + sqr(_c1_g - _c2_g) + sqr(_c1_b - _c2_b) + sqr(_c1_a - _c2_a));
-}
+} #endregion
 
-function color_get_brightness(col) {
+function color_get_brightness(col) { #region
 	INLINE
-	
 	return (0.299 * color_get_red(col) + 0.587 * color_get_green(col) + 0.114 * color_get_blue(col)) / 255;
-}
+} #endregion
+
+function color_rgb(col) { #region
+	INLINE
+	return [ color_get_red(col) / 255, color_get_green(col) / 255, color_get_blue(col) / 255 ];
+} #endregion
 
 #region sorting functions
 	function __valHSV(c, h, s, v) { return color_get_hue(c) * h + color_get_saturation(c) * s + color_get_value(c) * v; }

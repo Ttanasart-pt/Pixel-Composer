@@ -46,6 +46,8 @@
 	
 	METADATA = __getdefaultMetaData();
 	APP_LOCATION = program_directory;
+	if(string_pos("GameMakerStudio2\\Cache\\runtimes", APP_LOCATION))
+		APP_LOCATION = working_directory;
 	//print($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
 #endregion
 

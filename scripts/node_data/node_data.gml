@@ -595,19 +595,28 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		LOG_BLOCK_END();
 	} #endregion
 	
+	static cacheCheck = function() { #region
+		INLINE
+		
+		if(cache_group) cache_group.enableNodeGroup();
+		if(group != noone) group.cacheCheck();
+	} #endregion
+	
 	static valueUpdate = function(index) { #region
 		if(error_update_enabled && error_noti_update == noone)
 			error_noti_update = noti_error(getFullName() + " node require manual execution.",, self);
 		
 		onValueUpdate(index);
-		if(cache_group) cache_group.enableNodeGroup();
+		
 		if(is_dynamic_input) will_setHeight = true;
+		cacheCheck();
 	} #endregion
 	
 	static valueFromUpdate = function(index) { #region
 		onValueFromUpdate(index);
-		if(cache_group) cache_group.enableNodeGroup();
+		
 		if(is_dynamic_input) will_setHeight = true;
+		cacheCheck();
 	} #endregion
 	
 	static onValueUpdate = function(index = 0) {}

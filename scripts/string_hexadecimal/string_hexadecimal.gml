@@ -1,4 +1,4 @@
-function string_hexadecimal(str){
+function string_hexadecimal(str) {
 	static HEX = "0123456789ABCDEF";
 	
 	var i = string_length(str);

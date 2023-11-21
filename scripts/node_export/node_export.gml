@@ -741,6 +741,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(render_process_id != 0) {
 			var res = ProcIdExists(render_process_id);
+			
 			if(res == 0) {
 				var noti  = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
 				noti.path = filename_dir(render_target);
@@ -749,6 +750,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				render_process_id = 0;
 				
 				array_remove(RENDERING, node_id);
+			} else {
+				//var stdOut = ExecutedProcessReadFromStandardOutput(render_process_id);
+				//print(stdOut);
 			}
 		}
 	} #endregion

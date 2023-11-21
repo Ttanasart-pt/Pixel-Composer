@@ -244,4 +244,6 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		draw_set_alpha(1);
 	} #endregion
+		
+	static onDestroy = function() { enableNodeGroup(); }
 }

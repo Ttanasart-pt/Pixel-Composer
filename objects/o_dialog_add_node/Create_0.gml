@@ -296,8 +296,21 @@ event_inherited();
 			}
 			BLEND_NORMAL
 			
+			var cc = COLORS._main_text_inner;
+			
+			switch(name) {
+				case "All" : 
+				case "New" : 
+				case "Favourites" : 
+				case "Action" : 
+				case "Custom" : 
+				case "Extra" : 
+					cc = COLORS._main_text_sub;
+					break;
+			}
+			
 			if(i == ADD_NODE_PAGE) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
-			else				   draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
+			else				   draw_set_text(f_p0, fa_left, fa_center, cc);
 			
 			var _is_extra = name == "Extra";
 			name = __txt(name);
@@ -314,7 +327,7 @@ event_inherited();
 				draw_sprite_ext(s_patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
 				gpu_set_colorwriteenable(1, 1, 1, 1);
 				
-				draw_sprite_ext(s_patreon_supporter, 1, _cx, _cy, 1, 1, 0, i == ADD_NODE_PAGE? COLORS._main_text_accent : COLORS._main_text_inner, 1);
+				draw_sprite_ext(s_patreon_supporter, 1, _cx, _cy, 1, 1, 0, i == ADD_NODE_PAGE? COLORS._main_text_accent : cc, 1);
 			}
 			
 			hh += hg;

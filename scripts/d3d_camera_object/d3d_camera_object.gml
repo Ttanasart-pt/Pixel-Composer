@@ -45,7 +45,9 @@ function __3dCamera_object() : __3dObject() constructor {
 function d3d_PolarToCart(camFx, camFy, camFz, camAx, camAy, camDist) {
     var pos = new __vec3();
     
-	if(camAy % 90 == 0) camAy += 0.01;
+	if(camAy % 90 == 0) camAy += 0.1;
+	if(camAx % 90 == 0) camAx += 0.1;
+	
     var radAx = degtorad(camAx);
     var radAy = degtorad(camAy);
     

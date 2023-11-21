@@ -220,15 +220,18 @@ void main() {
 					
 					float v_lightDistance = screenSpace.z / screenSpace.w;
 					vec2 lightMapPosition = (screenSpace.xy / screenSpace.w * 0.5) + 0.5;
-				
-					light_map_depth = sampleDirShadowMap(shadow_map_index, lightMapPosition);
-					shadow_map_index++;
-					lightDistance = v_lightDistance;
-					float shadowFactor = dot(normal, lightVector);
-					float bias = mix(light_dir_shadow_bias[i], 0., shadowFactor);
 					
-					if(lightDistance > light_map_depth + bias)
-						continue;
+					if(lightMapPosition.x >= 0. && lightMapPosition.x <= 1. && lightMapPosition.y >= 0. && lightMapPosition.y <= 1.) {
+						light_map_depth = sampleDirShadowMap(shadow_map_index, lightMapPosition);
+					
+						shadow_map_index++;
+						lightDistance = v_lightDistance;
+						float shadowFactor = dot(normal, lightVector);
+						float bias = mix(light_dir_shadow_bias[i], 0., shadowFactor);
+					
+						if(lightDistance > light_map_depth + bias)
+							continue;
+					}
 				} 
 				
 				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_dir_color[i].rgb);
@@ -264,14 +267,16 @@ void main() {
 					float v_lightDistance = screenSpace.z / screenSpace.w;
 					vec2 lightMapPosition = (screenSpace.xy / screenSpace.w * 0.5) + 0.5;
 					
-					float shadowFactor = dot(normal, lightVector);
-					float bias = mix(light_pnt_shadow_bias[i], 0., shadowFactor);
+					if(lightMapPosition.x >= 0. && lightMapPosition.x <= 1. && lightMapPosition.y >= 0. && lightMapPosition.y <= 1.) {
+						float shadowFactor = dot(normal, lightVector);
+						float bias = mix(light_pnt_shadow_bias[i], 0., shadowFactor);
 					
-					light_map_depth = samplePntShadowMap(shadow_map_index, lightMapPosition, side);
-					shadow_map_index++;
+						light_map_depth = samplePntShadowMap(shadow_map_index, lightMapPosition, side);
+						shadow_map_index++;
 					
-					if(v_lightDistance > light_map_depth + bias)
-						continue;
+						if(v_lightDistance > light_map_depth + bias)
+							continue;
+					}
 				} 
 				
 				light_attenuation = 1. - pow(light_distance / light_pnt_radius[i], 2.);

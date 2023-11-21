@@ -216,8 +216,10 @@ function __3dScene(camera, name = "New scene") constructor {
 				shader_set_f("light_dir_color",		lightDir_color);
 				shader_set_f("light_dir_intensity", lightDir_intensity);
 				shader_set_i("light_dir_shadow_active", lightDir_shadow);
-				for( var i = 0, n = array_length(lightDir_shadowMap); i < n; i++ ) 
-					shader_set_surface($"light_dir_shadowmap_{i}", lightDir_shadowMap[i], true);
+				for( var i = 0, n = array_length(lightDir_shadowMap); i < n; i++ ) {
+					var _sid = shader_set_surface($"light_dir_shadowmap_{i}", lightDir_shadowMap[i], true);
+					gpu_set_tex_repeat_ext(_sid, false);
+				}
 				shader_set_f("light_dir_view",		lightDir_viewMat);
 				shader_set_f("light_dir_proj",		lightDir_projMat);
 				shader_set_f("light_dir_shadow_bias", lightDir_shadowBias);
@@ -230,8 +232,10 @@ function __3dScene(camera, name = "New scene") constructor {
 				shader_set_f("light_pnt_intensity", lightPnt_intensity);
 				shader_set_f("light_pnt_radius",    lightPnt_radius);
 				shader_set_i("light_pnt_shadow_active", lightPnt_shadow);
-				for( var i = 0, n = array_length(lightPnt_shadowMap); i < n; i++ )
-					shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, true);
+				for( var i = 0, n = array_length(lightPnt_shadowMap); i < n; i++ ) {
+					var _sid = shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, true);
+					gpu_set_tex_repeat_ext(_sid, false);
+				}
 				shader_set_f("light_pnt_view",		lightPnt_viewMat);
 				shader_set_f("light_pnt_proj",		lightPnt_projMat);
 				shader_set_f("light_pnt_shadow_bias", lightPnt_shadowBias);

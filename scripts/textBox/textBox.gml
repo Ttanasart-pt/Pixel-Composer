@@ -223,7 +223,16 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(keyboard_check_pressed(vk_left))	 onKey(vk_left);
 		if(keyboard_check_pressed(vk_right)) onKey(vk_right);
+		
+		if(input == TEXTBOX_INPUT.number) {
+			var _inc = 1;
+			if(key_mod_press(CTRL)) _inc *= 10;
+			if(key_mod_press(ALT))  _inc /= 10;
 			
+			if(KEYBOARD_PRESSED == vk_up   || keyboard_check_pressed(vk_up))   { _input_text = string(toNumber(_input_text) + _inc); apply(); }
+			if(KEYBOARD_PRESSED == vk_down || keyboard_check_pressed(vk_down)) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
+		}
+		
 		if(keyboard_check_pressed(vk_home)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)

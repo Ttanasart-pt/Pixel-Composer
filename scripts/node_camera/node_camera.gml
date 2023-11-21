@@ -38,7 +38,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	temp_surface = [ noone, noone ];
 	
-	static createNewInput = function() {
+	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
@@ -52,10 +52,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Repeat", "Repeat X", "Repeat Y" ]);
 		
 		array_append(input_display_list, [ index + 0, index + 1, index + 2 ]);
-	}
-	if(!LOADING && !APPENDING) createNewInput();
+	} if(!LOADING && !APPENDING) createNewInput(); #endregion
 	
-	static refreshDynamicInput = function() {
+	static refreshDynamicInput = function() { #region
 		var _in = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -86,18 +85,18 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs = _in;
 		
 		createNewInput();
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
 		refreshDynamicInput();
-	}
+	} #endregion
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(array_length(current_data) == 0) return;
 		
 		var _out = outputs[| 0].getValue();
@@ -117,9 +116,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var y1 = y0 + _area[3] * 2 * _zoom * _s;
 		
 		draw_rectangle_dashed(x0, y0, x1, y1);
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		if(!is_surface(_data[0])) return;
 		var _area = _data[1];
 		var _zoom = _data[2];
@@ -223,5 +222,5 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_reset_target();
 		
 		return _outSurf;
-	}
+	} #endregion
 }
