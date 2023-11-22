@@ -7,7 +7,7 @@ Node base VFX editor for pixel art.
 ![sample 2](https://github.com/Ttanasart-pt/Pixel-Composer/blob/2986c4c6131e8729437bdd785bde11980056678c/img/sample%202.gif)
 
 ## Set up guides
-- Install GameMaker: Studio IDE (2023.2.0.71)
+- Install GameMaker: Studio IDE (runtime 2023.6.0.139)
 - Download and install extensions: (Some are optional, however an adjustment in code is required)
 	+ YellowAfterLife File dropper (Free) [itch](https://yellowafterlife.itch.io/gamemaker-file-dropper)
 	+ Samuel Venable xProcess, Border toggler, FileDropper (Free) [itch](https://samuel-venable.itch.io/gamemaker-extension-collection)
