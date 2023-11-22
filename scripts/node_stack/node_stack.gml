@@ -97,7 +97,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
-			BLEND_ALPHA;
+			BLEND_ALPHA_MULP
 			
 			var sx = 0, sy = 0;
 			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {

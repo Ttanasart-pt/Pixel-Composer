@@ -639,6 +639,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_control_pin.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/tool",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_control_remove.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/tool",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_control_unpin.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/tool",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_crop_tool.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/tool",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_mesh_delete.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/tool",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_mesh_edit.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/tool",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_path_tools_add.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/tool",},

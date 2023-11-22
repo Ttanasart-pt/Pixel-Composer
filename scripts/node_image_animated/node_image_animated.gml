@@ -1,4 +1,4 @@
-function Node_create_Image_Animated(_x, _y, _group = noone) {
+function Node_create_Image_Animated(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filenames_compat(".png", "");
@@ -11,19 +11,17 @@ function Node_create_Image_Animated(_x, _y, _group = noone) {
 	node.inputs[| 0].setValue(paths);
 	node.doUpdate();
 	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
-}
+} #endregion
 
-function Node_create_Image_Animated_path(_x, _y, _path) {
+function Node_create_Image_Animated_path(_x, _y, _path) { #region
 	var node = new Node_Image_Animated(_x, _y, PANEL_GRAPH.getCurrentContext());
 	
 	node.inputs[| 0].setValue(_path);
 	node.doUpdate();
 	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
-}
+} #endregion
 
 enum ANIMATION_END {
 	loop,
@@ -65,11 +63,15 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 6]  = nodeValue("Custom frame order", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 7]  = nodeValue("Frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
-	
+
+	inputs[| 8] = nodeValue("Canvas size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2) 
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "First", "Minimum", "Maximum" ])
+		.rejectArray();
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
-		["Image", false],		0, 1,
+		["Image", false],		0, 1, 8, 
 		["Animation", false],	5, 4, 6, 7, 2, 3, 
 	];
 	
@@ -168,8 +170,28 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _len = array_length(spr);
 		var _drw = true;
 		
-		var ww = sprite_get_width(spr[0]); 
-		var hh = sprite_get_height(spr[0]);
+		var _siz = getInputData(8); 
+		var sw = sprite_get_width(spr[0]); 
+		var sh = sprite_get_height(spr[0]);
+		
+		if(_siz) {
+			for( var i = 1, n = array_length(spr); i < n; i++ ) {
+				var _sw = sprite_get_width(spr[i]); 
+				var _sh = sprite_get_height(spr[i]);
+				
+				if(_siz == 1) {
+					sw = min(_sw, sw);
+					sh = min(_sh, sh);
+				} else if(_siz == 2) {
+					sw = max(_sw, sw);
+					sh = max(_sh, sh);
+				}
+			}
+		}
+		
+		var ww = sw;
+		var hh = sh;
+		
 		ww += _pad[0] + _pad[2];
 		hh += _pad[1] + _pad[3];
 		
@@ -200,8 +222,8 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var curr_w = sprite_get_width(spr[_frame]);
 		var curr_h = sprite_get_height(spr[_frame]);
-		var curr_x = _pad[2] + (ww - curr_w) / 2;
-		var curr_y = _pad[1] + (hh - curr_h) / 2;
+		var curr_x = _pad[2] + (sw - curr_w) / 2;
+		var curr_y = _pad[1] + (sh - curr_h) / 2;
 		
 		surface_set_shader(surfs);
 			if(_drw) draw_sprite(spr[_frame], 0, curr_x, curr_y);

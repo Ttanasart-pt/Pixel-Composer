@@ -19,7 +19,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	port   = 0;
 	socket = noone;
 	
-	function setPort(newPort) {
+	function setPort(newPort) { #region
 		if(ds_map_exists(PORT_MAP, port))
 			array_remove(PORT_MAP[? port], self);
 		
@@ -28,27 +28,27 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			PORT_MAP[? port] = [];
 		array_push(PORT_MAP[? port], self);
 		
-		if(ds_map_exists(NETWORK_SERVERS, newPort))
+		if(ds_map_exists(NETWORK_SERVERS, port))
 			return;
 		
 		if(socket >= 0) network_destroy(socket);
-		socket = network_create_server_raw(network_socket_ws, newPort, 16)
+		socket = network_create_server_raw(network_socket_ws, port, 16)
 		if(socket < 0) return;
 		
 		NETWORK_SERVERS[? newPort] = socket;
-	}
+	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh Server");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() {
+	static onInspector1Update = function() { #region
 		var _port = getInputData(0);
 		
 		setPort(_port);
-	}
+	} #endregion
 	
 	network_trigger = 0;
-	static asyncPackets = function(_async_load) {
+	static asyncPackets = function(_async_load) { #region
 		if(!active) return;
 		
 		var _active = getInputData(1);
@@ -78,9 +78,9 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 				network_trigger = true;
 				break;
 		}
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		if(network_trigger == 1) {
 			outputs[| 1].setValue(1);
 			network_trigger = -1;
@@ -88,17 +88,17 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			outputs[| 1].setValue(0);
 			network_trigger = 0;
 		}
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) { 
+	static update = function(frame = CURRENT_FRAME) { #region
 		if(CLONING) return;
 		var _port = getInputData(0);
 		
 		if(port != _port)
 			setPort(_port);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var _active = getInputData(1);
 		var bbox    = drawGetBbox(xx, yy, _s);
 		var network = ds_map_try_get(NETWORK_SERVERS, port, noone);
@@ -119,5 +119,5 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		draw_set_alpha(1);
 		
 		draw_sprite_fit(THEME.node_websocket_receive, 0, bbox.xc, (_y0 + _y1) / 2, bbox.w, _y1 - _y0, cc, aa);
-	}
+	} #endregion
 }

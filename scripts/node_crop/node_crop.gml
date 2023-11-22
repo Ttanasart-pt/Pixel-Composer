@@ -19,14 +19,14 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	attribute_surface_depth();
 	
-	drag_side = -1;
+	drag_side = noone;
 	drag_mx   = 0;
 	drag_my   = 0;
 	drag_sv   = 0;
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
 		if(array_length(current_data) < 2) return;
 		
 		var _inSurf	= current_data[0];
@@ -43,87 +43,132 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var sp_t = _y + _splice[1] * _s;
 		var sp_b = _y + (dim[1] - _splice[3]) * _s;
 		
-		var ww = WIN_W;
-		var hh = WIN_H;
-		
 		var _out = outputs[| 0].getValue();
 		draw_surface_ext_safe(_out, sp_l, sp_t, _s, _s);
 		
 		draw_set_color(COLORS._main_accent);
-		draw_line(sp_r, -hh, sp_r, hh);
-		draw_line(sp_l, -hh, sp_l, hh);
-		draw_line(-ww, sp_t, ww, sp_t);
-		draw_line(-ww, sp_b, ww, sp_b);
+		draw_set_alpha(0.50);
+		draw_line(sp_r, 0, sp_r, params.h);
+		draw_line(sp_l, 0, sp_l, params.h);
+		draw_line(0, sp_t, params.w, sp_t);
+		draw_line(0, sp_b, params.w, sp_b);
+		draw_set_alpha(1);
 		
-		if(drag_side > -1) {
+		draw_line_width(sp_r, sp_t - 1, sp_r, sp_b + 1, 2);
+		draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, 2);
+		draw_line_width(sp_l - 1, sp_t, sp_r + 1, sp_t, 2);
+		draw_line_width(sp_l - 1, sp_b, sp_r + 1, sp_b, 2);
+		
+		var _hov = noone;
+		
+		if(drag_side != noone) {
 			var vv;
 			
-			if(drag_side == 0)		vv = value_snap(drag_sv - (_mx - drag_mx) / _s, _snx);
-			else if(drag_side == 2)	vv = value_snap(drag_sv + (_mx - drag_mx) / _s, _snx);
-			else if(drag_side == 1)	vv = value_snap(drag_sv + (_my - drag_my) / _s, _sny);
-			else					vv = value_snap(drag_sv - (_my - drag_my) / _s, _sny);
+			if(drag_side < 4) {
+				     if(drag_side == 0)	vv = value_snap(drag_sv - (_mx - drag_mx) / _s, _snx);
+				else if(drag_side == 1)	vv = value_snap(drag_sv + (_my - drag_my) / _s, _sny);
+				else if(drag_side == 2)	vv = value_snap(drag_sv + (_mx - drag_mx) / _s, _snx);
+				else if(drag_side == 3)	vv = value_snap(drag_sv - (_my - drag_my) / _s, _sny);
+				
+				_splice[drag_side] = vv;
+			} else if(drag_side < 8) {
+				if(drag_side == 4)	{
+					_splice[2] = value_snap(drag_sv[2] + (_mx - drag_mx) / _s, _snx);
+					_splice[1] = value_snap(drag_sv[1] + (_my - drag_my) / _s, _sny);
+				} else if(drag_side == 5)	{
+					_splice[0] = value_snap(drag_sv[0] - (_mx - drag_mx) / _s, _snx);
+					_splice[1] = value_snap(drag_sv[1] + (_my - drag_my) / _s, _sny);
+				} else if(drag_side == 6)	{
+					_splice[2] = value_snap(drag_sv[2] + (_mx - drag_mx) / _s, _snx);
+					_splice[3] = value_snap(drag_sv[3] - (_my - drag_my) / _s, _sny);
+				} else if(drag_side == 7)	{
+					_splice[0] = value_snap(drag_sv[0] - (_mx - drag_mx) / _s, _snx);
+					_splice[3] = value_snap(drag_sv[3] - (_my - drag_my) / _s, _sny);
+				}
+			} else if(drag_side == 8) {
+				_splice[0] = value_snap(drag_sv[0] - (_mx - drag_mx) / _s, _snx);
+				_splice[1] = value_snap(drag_sv[1] + (_my - drag_my) / _s, _sny);
+				_splice[2] = value_snap(drag_sv[2] + (_mx - drag_mx) / _s, _snx);
+				_splice[3] = value_snap(drag_sv[3] - (_my - drag_my) / _s, _sny);
+			}
 			
-			_splice[drag_side] = vv;
 			if(inputs[| 1].setValue(_splice))
 				UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left, active)) {
-				drag_side = -1;
+				drag_side    = noone;
 				UNDO_HOLDING = false;
 			}
 		}
 		
-		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
-			draw_line_width(sp_r, -hh, sp_r, hh, 3);
+		draw_set_color(merge_color(c_white, COLORS._main_accent, 0.5));
+		
+		if(drag_side == 4 || point_in_circle(_mx, _my, sp_l, sp_t, 12)) {
+			draw_line_width(sp_l, 0, sp_l, params.h, 4);
+			draw_line_width(0, sp_t, params.w, sp_t, 4);
+			draw_sprite_colored(THEME.anchor_selector, 1, sp_l, sp_t);
+			_hov = 4;
+		} else if(drag_side == 5 || point_in_circle(_mx, _my, sp_r, sp_t, 12)) {
+			draw_line_width(sp_r, 0, sp_r, params.h, 4);
+			draw_line_width(0, sp_t, params.w, sp_t, 4);
+			draw_sprite_colored(THEME.anchor_selector, 1, sp_r, sp_t);
+			_hov = 5;
+		} else if(drag_side == 6 || point_in_circle(_mx, _my, sp_l, sp_b, 12)) {
+			draw_line_width(sp_l, 0, sp_l, params.h, 4);
+			draw_line_width(0, sp_b, params.w, sp_b, 4);
+			draw_sprite_colored(THEME.anchor_selector, 1, sp_l, sp_b);
+			_hov = 6;
+		} else if(drag_side == 7 || point_in_circle(_mx, _my, sp_r, sp_b, 12)) {
+			draw_line_width(sp_r, 0, sp_r, params.h, 4);
+			draw_line_width(0, sp_b, params.w, sp_b, 4);
+			draw_sprite_colored(THEME.anchor_selector, 1, sp_r, sp_b);
+			_hov = 7;
+		} else if(drag_side == 0 || distance_to_line(_mx, _my, sp_r, 0, sp_r, params.h) < 12) {
+			draw_line_width(sp_r, 0, sp_r, params.h, 4);
+			_hov = 0;
+		} else if(drag_side == 1 || distance_to_line(_mx, _my, 0, sp_t, params.w, sp_t) < 12) {
+			draw_line_width(0, sp_t, params.w, sp_t, 4);
+			_hov = 1;
+		} else if(drag_side == 2 || distance_to_line(_mx, _my, sp_l, 0, sp_l, params.h) < 12) {
+			draw_line_width(sp_l, 0, sp_l, params.h, 4);
+			_hov = 2;
+		} else if(drag_side == 3 || distance_to_line(_mx, _my, 0, sp_b, params.w, sp_b) < 12) {
+			draw_line_width(0, sp_b, params.w, sp_b, 4);
+			_hov = 3;
+		} else if(drag_side == 8 || point_in_rectangle(_mx, _my, sp_l, sp_t, sp_r, sp_b)) {
+			draw_line_width(sp_r, sp_t - 1, sp_r, sp_b + 1, 4);
+			draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, 4);
+			draw_line_width(sp_l - 1, sp_t, sp_r + 1, sp_t, 4);
+			draw_line_width(sp_l - 1, sp_b, sp_r + 1, sp_b, 4);
+			_hov = 8;
+		}
+		
+		if(_hov != 4) draw_sprite_colored(THEME.anchor_selector, 0, sp_l, sp_t);
+		if(_hov != 5) draw_sprite_colored(THEME.anchor_selector, 0, sp_r, sp_t);
+		if(_hov != 6) draw_sprite_colored(THEME.anchor_selector, 0, sp_l, sp_b);
+		if(_hov != 7) draw_sprite_colored(THEME.anchor_selector, 0, sp_r, sp_b);
+		
+		if(drag_side == noone && _hov != noone) {
 			if(mouse_press(mb_left, active)) {
-				drag_side = 0;
+				drag_side = _hov;
 				drag_mx   = _mx;
 				drag_my   = _my;
-				drag_sv   = _splice[0];
-			}
-		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_t, ww, sp_t) < 12) {
-			draw_line_width(-ww, sp_t, ww, sp_t, 3);
-			if(mouse_press(mb_left, active)) {
-				drag_side = 1;
-				drag_mx   = _mx;
-				drag_my   = _my;
-				drag_sv   = _splice[1];
-			}
-		} else if(distance_to_line_infinite(_mx, _my, sp_l, -hh, sp_l, hh) < 12) {
-			draw_line_width(sp_l, -hh, sp_l, hh, 3);
-			if(mouse_press(mb_left, active)) {
-				drag_side = 2;
-				drag_mx   = _mx;
-				drag_my   = _my;
-				drag_sv   = _splice[2];
-			}
-		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_b, ww, sp_b) < 12) {
-			draw_line_width(-ww, sp_b, ww, sp_b, 3);
-			if(mouse_press(mb_left, active)) {
-				drag_side = 3;
-				drag_mx   = _mx;
-				drag_my   = _my;
-				drag_sv   = _splice[3];
+				drag_sv   = _hov < 4? _splice[_hov] : _splice;
 			}
 		}
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _inSurf		= _data[0];
 		var _crop		= _data[1];
 		var _dim		= [ surface_get_width_safe(_inSurf) - _crop[0] - _crop[2], surface_get_height_safe(_inSurf) - _crop[1] - _crop[3] ];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-			
+		surface_set_shader(_outSurf, noone);
 			draw_surface_safe(_inSurf, -_crop[2], -_crop[1]);
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return _outSurf;
-	}
+	} #endregion
 }

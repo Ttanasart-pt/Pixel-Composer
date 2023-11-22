@@ -14,11 +14,6 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
 		
-		draw_set_color(COLORS._main_icon);
-		draw_set_alpha(0.75);
-		//draw_line_width(_x + ui(8), _y + _h, _x + _w - ui(16), _y + _h, 2);
-		draw_set_alpha(1);
-		
 		var bw = _w / 2 - ui(4);
 		var bh = ui(36);
 		var bx = _x;
@@ -95,10 +90,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var lastNode = noone;
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+			
 			if(i < input_fix_len || i < amo || inputs[| i].value_from)
 				ds_list_add(_l, inputs[| i]);
-			else
-				delete inputs[| i];	
 		}
 		
 		var _add = amo - (ds_list_size(_l) - input_fix_len);
@@ -121,20 +115,12 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		ds_list_destroy(inputs);
 		inputs = _l;
 		
-		if(extra) 
-			lastNode = createNewInput();
+		print($"Refresh inputs [{ds_list_size(inputs)}]: {input_display_list}");
+		if(extra) lastNode = createNewInput();
 	} #endregion
 	
 	static onValueUpdate = function(index = 0) { #region
-		if(index != 0) return;
-		
-		var ls = ds_list_create();
-		ls[| 0] = inputs[| 0];
-		ls[| 1] = inputs[| 1];
-		ds_list_destroy(inputs);
-		inputs = ls;
-		
-		input_display_list = [ 0, array_adjust_tool, 1 ];
+		if(index < input_fix_len) return;
 		
 		refreshDynamicInput();
 	} #endregion
@@ -156,10 +142,8 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 			var val = getInputData(i);
 			
-			if(is_array(val) && spd)
-				array_append(res, val);
-			else
-				array_push(res, val);
+			if(is_array(val) && spd) array_append(res, val);
+			else                     array_push(res, val);
 			
 			inputs[| i].setType(inputs[| i].value_from? inputs[| i].value_from.type : _typ);
 			
@@ -168,6 +152,14 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		outputs[| 0].setValue(res);
+		
+		if(outputs[| 0].type == VALUE_TYPE.surface) {
+			w = 128;
+			previewable = true;
+		} else {
+			w = 96;
+			previewable = false;
+		}
 	} #endregion
 	
 	static doApplyDeserialize = function() { #region

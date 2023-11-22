@@ -267,6 +267,8 @@
 	IMAGE_FETCH_MAP = ds_map_create();
 	
 	asyncInit();
+	
+	network_set_config(network_config_use_non_blocking_socket, 0);
 #endregion
 
 #region steam

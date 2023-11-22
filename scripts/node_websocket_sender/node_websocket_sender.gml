@@ -24,111 +24,128 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	input_display_list = [ 5, 0, 1, 2, 3, 4, 6 ];
 	
-	port = 0;
-	url  = "";
+	port      = 0;
+	url       = "";
 	connected = false;
-	socket = noone;
 	
-	static connectTo = function(newPort, newUrl) {
+	callbackMap = {};
+	
+	attributes.network_timeout = 1000;
+	array_push(attributeEditors, "Network");
+	array_push(attributeEditors, [ "Connection timeout", function() { return attributes.network_timeout; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes.network_timeout = val; 
+			network_set_config(network_config_connect_timeout, val);
+		}) ]);
+		
+	static connectTo = function(newPort, newUrl, params) { #region
+		//print($"Connecting to {newUrl}:{newPort}");
+		
 		if(ds_map_exists(PORT_MAP, port))
 			array_remove(PORT_MAP[? port], self);
 		
 		port = newPort;
 		url  = newUrl;
 		
-		if(!ds_map_exists(PORT_MAP, port))
-			PORT_MAP[? port] = [];
-		array_push(PORT_MAP[? port], self);
+		if(ds_map_exists(NETWORK_CLIENTS, port)) 
+			network_destroy(NETWORK_CLIENTS[? port]);
 		
-		if(ds_map_exists(NETWORK_CLIENTS, newPort))
+		var socket = network_create_socket(network_socket_ws);
+		if(socket < 0) {
+			noti_warning("Websocket sender: Fail to create new socket.");
 			return;
+		}
 		
-		if(socket >= 0) network_destroy(socket);
-		socket = network_create_socket(network_socket_ws);
-		if(socket < 0) return;
+		var _conId = network_connect_raw_async(socket, url, port);
+		PORT_MAP[? _conId]        = self;
+		callbackMap[$ _conId]     = params;
+		NETWORK_CLIENTS[? _conId] = socket;
 		
-		network_connect_raw_async(socket, newUrl, newPort);
-		connected = false;
-		NETWORK_CLIENTS[? newPort] = socket;
-	}
+		//print($"Connecting to {newUrl}:{newPort} complete");
+	} #endregion
 	
-	insp1UpdateTooltip  = __txt("Reconnect");
+	insp1UpdateTooltip  = __txt("Resend");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() {
-		var _port = getInputData(0);
-		var _url  = getInputData(5);
-		connectTo(_port, _url);
+	static onInspector1Update = function() { #region
+		triggerRender();
+	} #endregion
+	
+	static sendCall = function(ID, params) {
+		var network = ds_map_try_get(NETWORK_CLIENTS, ID, noone);
+		if(network < 0) {
+			noti_warning("Websocket sender: No client.");
+			return;
+		}
+		
+		var content = params.content;
+		var res = network_send_raw(network, content, buffer_get_size(content), network_send_text);
+		if(res < 0) noti_warning("Websocket sender: Send error.");
 	}
 	
-	static asyncPackets = function(_async_load) {
+	static asyncPackets = function(_async_load) { #region
 		if(!active) return;
 		
+		var aid  = async_load[? "id"];
 		var type = async_load[? "type"];
 		
-		switch(type) {
-			case network_type_non_blocking_connect :
-				noti_status($"Websocket client: Connected at port {port} on node {display_name}");
-				connected = true;
-				break;
+		if(type == network_type_non_blocking_connect) {
+			noti_status($"Websocket sender: Connected at port {port} on node {display_name}");
+			connected = true;
+			var callBack = callbackMap[$ aid];
+			sendCall(aid, callBack);
 		}
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var _type = getInputData(1);
 		
 		inputs[| 2].setVisible(_type == 0, _type == 0);
 		inputs[| 3].setVisible(_type == 1, _type == 1);
 		inputs[| 4].setVisible(_type == 2, _type == 2);
 		inputs[| 6].setVisible(_type == 3, _type == 3);
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) { 
+	static update = function(frame = CURRENT_FRAME) { #region
 		var _port   = getInputData(0);
 		var _target = getInputData(5);
 		
-		if(port != _port || url != _target)
-			connectTo(_port, _target);
-		
-		var network = ds_map_try_get(NETWORK_CLIENTS, _port, noone);
-		if(network < 0) return;
-		
 		var _type = getInputData(1);
 		var _buff, res;
+		var params = {};
 		
 		switch(_type) {
 			case 0 :
 				var _stru = getInputData(2);
 				var _str  = json_stringify(_stru);
 				_buff = buffer_from_string(_str);
-				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;
 			case 1 :
 				var _surf = getInputData(3);
 				if(!is_surface(_surf)) return;
 				_buff = buffer_from_surface(_surf);
-				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;
 			case 2 :
 				var _path = getInputData(4);
 				if(!file_exists(_path)) return;
 				_buff = buffer_from_file(_path);
-				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;
 			case 3 :
 				_buff = getInputData(6);
 				if(!buffer_exists(_buff)) return;
-				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;
 		}
-	}
+		
+		params.content = _buff;
+		connectTo(_port, _target, params);
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox    = drawGetBbox(xx, yy, _s);
 		var network = ds_map_try_get(NETWORK_CLIENTS, port, noone);
 		
-		var cc = CDEF.red, aa = 1;
-		if(network >= 0) cc = CDEF.lime;
+		var cc = CDEF.lime, aa = 1;
+		//if(network >= 0) cc = CDEF.lime;
 		
 		var _y0 = bbox.y0 + ui(16);
 		var _y1 = bbox.y1 - ui(16);
@@ -140,5 +157,9 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		draw_set_alpha(1);
 		
 		draw_sprite_fit(THEME.node_websocket_send, 0, bbox.xc, (_y0 + _y1) / 2, bbox.w, _y1 - _y0, cc, aa);
-	}
+	} #endregion
+		
+	static doApplyDeserialize = function() { #region
+		if(struct_has(attributes, "network_timeout")) network_set_config(network_config_connect_timeout, attributes.network_timeout);
+	} #endregion
 }

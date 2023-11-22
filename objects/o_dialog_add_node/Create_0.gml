@@ -58,6 +58,8 @@ event_inherited();
 		var menu = [
 			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), 
 			function() {
+				if(!is_array(global.FAV_NODES)) global.FAV_NODES = [];
+				
 				if(array_exists(global.FAV_NODES, node_menu_selecting.node))
 					array_remove(global.FAV_NODES, node_menu_selecting.node);
 				else 
@@ -305,7 +307,7 @@ event_inherited();
 				case "Action" : 
 				case "Custom" : 
 				case "Extra" : 
-					cc = COLORS._main_text_sub;
+					cc = merge_color(COLORS._main_text_inner, COLORS._main_text_sub, 0.75);
 					break;
 			}
 			
