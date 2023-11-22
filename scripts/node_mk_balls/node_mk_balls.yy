@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_pc_balls",
+  "name": "node_mk_balls",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "PC effects",
-    "path": "folders/nodes/data/PC effects.yy",
+    "name": "MK effects",
+    "path": "folders/nodes/data/MK effects.yy",
   },
 }

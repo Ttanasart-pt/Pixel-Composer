@@ -16,11 +16,14 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 5] = nodeValue("Invert", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
+	inputs[| 6] = nodeValue("Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3, 4,
 		["Surfaces", false], 0, 1, 2, 
-		["Effect",   false], 5, 
+		["Effect",   false], 5, 6, 
 	]
 	
 	attribute_surface_depth();
@@ -30,6 +33,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		surface_set_shader(_outSurf, sh_polar);
 			shader_set_interpolation(_data[0]);
 			shader_set_i("invert", _data[5]);
+			shader_set_f("blend", _data[6]);
 			
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();

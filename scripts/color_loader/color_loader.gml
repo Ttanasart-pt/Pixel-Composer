@@ -27,7 +27,11 @@ function _loadColor(theme = "default", replace = false) {
 	
 	var clrs = json_load_struct(path);
 	var oclr = file_exists(pathO)? json_load_struct(pathO) : {};
-	print(clrs);
+	
+	if(!struct_has(clrs, "values")) {
+		print("Load color error");
+		return;
+	}
 	
 	var valkeys = variable_struct_get_names(clrs.values);
 	if(replace)	THEME_VALUE = clrs.values;

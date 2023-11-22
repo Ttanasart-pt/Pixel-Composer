@@ -316,6 +316,10 @@
 	NODE_COLOR_SHOW_PALETTE = false;
 #endregion
 
+#region draw
+	
+#endregion
+
 #region 3D
 	set3DGlobalPreview();
 #endregion

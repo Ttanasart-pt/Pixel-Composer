@@ -106,8 +106,11 @@ event_inherited();
 			_gradient.gradient.draw(ui(16), yy + ui(28), ww, ui(16));
 			
 			if(_hover && isHover) {
-				if(mouse_press(mb_left, interactable && sFOCUS))
-					gradient.keys = _gradient.gradient.keys;
+				if(mouse_press(mb_left, interactable && sFOCUS)) {
+					gradient.keys = [];
+					for( var i = 0, n = array_length(_gradient.gradient.keys); i < n; i++ ) 
+						gradient.keys[i] = _gradient.gradient.keys[i].clone();
+				}
 				
 				if(mouse_press(mb_right, interactable && sFOCUS)) {
 					hovering_name = _gradient.path;

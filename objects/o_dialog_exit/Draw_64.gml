@@ -18,8 +18,7 @@ if !ready exit;
 
 #region base UI
 	DIALOG_DRAW_BG
-	if(sFOCUS)
-		DIALOG_DRAW_FOCUS
+	if(sFOCUS) DIALOG_DRAW_FOCUS
 #endregion
 
 #region text
@@ -31,7 +30,8 @@ if !ready exit;
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	var txt = __txta("Save project '{1}' before exit?", filename_name(project.path));
-	draw_text(dialog_x + ui(24), py, txt);
+	draw_text_ext(dialog_x + ui(24), py, txt, -1, dialog_w - ui(48));
+	_dialog_h = ui(118) + string_height_ext(txt, -1, dialog_w - ui(48));
 	
 	var bw = ui(96), bh = BUTTON_HEIGHT;
 	var bx1 = dialog_x + dialog_w - ui(16);
@@ -62,4 +62,6 @@ if !ready exit;
 			close_program();
 		instance_destroy();
 	}
+	
+	dialog_h = _dialog_h;
 #endregion

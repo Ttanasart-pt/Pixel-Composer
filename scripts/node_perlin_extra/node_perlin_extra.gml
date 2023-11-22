@@ -68,8 +68,4 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		inputs[| 11].setVisible(_typ > 0);
 		inputs[| 12].setVisible(false);
 	} #endregion
-	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		return generateShader(_outSurf, _data);
-	} #endregion
 }

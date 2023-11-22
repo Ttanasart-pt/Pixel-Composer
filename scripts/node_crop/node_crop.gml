@@ -19,6 +19,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	attribute_surface_depth();
 	
+	tools = [ new NodeTool("Draw crop area", THEME.crop_tool, "Node_Crop") ]
+	
 	drag_side = noone;
 	drag_mx   = 0;
 	drag_my   = 0;
@@ -27,15 +29,14 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static getPreviewValues = function() { return getInputData(0); }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
-		if(array_length(current_data) < 2) return;
+		var _inSurf	= getSingleValue(0);
+		var _spRaw 	= getSingleValue(1);
+		var _splice;
 		
-		var _inSurf	= current_data[0];
-		var _splice	= current_data[1];
-		_splice = array_clone(_splice);
-		for( var i = 0, n = array_length(_splice); i < n; i++ )
-			_splice[i] = round(_splice[i]);
+		for( var i = 0, n = array_length(_spRaw); i < n; i++ )
+			_splice[i] = round(_spRaw[i]);
 		
-		var dim = [ surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf) ]
+		var dim = [ surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf) ];
 		
 		var sp_r = _x + (dim[0] - _splice[0]) * _s;
 		var sp_l = _x + _splice[2] * _s;
@@ -45,6 +46,58 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		var _out = outputs[| 0].getValue();
 		draw_surface_ext_safe(_out, sp_l, sp_t, _s, _s);
+		
+		if(isUsingTool(0)) {
+			if(drag_side) {
+				var _mx0 = min(_mx, drag_mx);
+				var _mx1 = max(_mx, drag_mx);
+				var _my0 = min(_my, drag_my);
+				var _my1 = max(_my, drag_my);
+				
+				_mx0 = value_snap(round((_mx0 - _x) / _s), _snx);
+				_mx1 = value_snap(round((_mx1 - _x) / _s), _snx);
+				_my0 = value_snap(round((_my0 - _y) / _s), _sny);
+				_my1 = value_snap(round((_my1 - _y) / _s), _sny);
+				
+				if(inputs[| 1].setValue([dim[0] - _mx1, _my0, _mx0, dim[1] - _my1]))
+					UNDO_HOLDING = true;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_set_alpha(0.50);
+				draw_line(_x + _mx0 * _s, 0, _x + _mx0 * _s, params.h);
+				draw_line(0, _y + _my0 * _s, params.w, _y + _my0 * _s);
+				draw_line(_x + _mx1 * _s, 0, _x + _mx1 * _s, params.h);
+				draw_line(0, _y + _my1 * _s, params.w, _y + _my1 * _s);
+				draw_set_alpha(1);
+				
+				if(mouse_release(mb_left, active)) {
+					drag_side    = noone;
+					UNDO_HOLDING = false;
+				}
+			} else {
+				var _mxs = _x + value_snap(round((_mx - _x) / _s), _snx) * _s;
+				var _mys = _y + value_snap(round((_my - _y) / _s), _sny) * _s;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_set_alpha(0.50);
+				draw_line(_mxs, 0, _mxs, params.h);
+				draw_line(0, _mys, params.w, _mys);
+				draw_set_alpha(1);
+			
+				if(mouse_press(mb_left, active)) {
+					drag_side = 1;
+					drag_mx   = _mx;
+					drag_my   = _my;
+				}
+			}
+			
+			draw_set_color(COLORS._main_accent);
+			draw_line_width(sp_r, sp_t - 1, sp_r, sp_b + 1, 2);
+			draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, 2);
+			draw_line_width(sp_l - 1, sp_t, sp_r + 1, sp_t, 2);
+			draw_line_width(sp_l - 1, sp_b, sp_r + 1, sp_b, 2);
+			return;
+		}
 		
 		draw_set_color(COLORS._main_accent);
 		draw_set_alpha(0.50);

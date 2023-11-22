@@ -85,7 +85,7 @@ if !ready exit;
 	var tab_cover = noone;
 	var th = ui(36) + THEME_VALUE.panel_tab_extend;
 	
-	for( var i = 0, n = array_length(pages); i < n; i++ ) {
+	for( var i = 0, n = array_length(pages); i < n; i++ ) { #region
 		draw_set_text(f_p0, fa_left, fa_bottom, project_page == i? COLORS._main_text : COLORS._main_text_sub);
 		var txt  = pages[i];
 		var dtxt = __txt(txt);
@@ -100,14 +100,15 @@ if !ready exit;
 		var tw = ui(16) + string_width(dtxt);
 		if(amo) tw += ui(8) + string_width(amo) + ui(8);
 		
-		if(txt == "Contests") 
-			tw += ui(32);
+		if(txt == "Contests") tw += ui(32);
+		var _x1 = min(bx + tw, x1);
+		var _tabW = _x1 - bx;
 		
 		if(project_page == i) {
-			draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, bx, y0 - ui(32), tw, th, COLORS.panel_tab, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab, 1);
 			tab_cover = BBOX().fromWH(bx, y0, tw, THEME_VALUE.panel_tab_extend);
-		} else if(point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + tw, y0)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), tw, th, COLORS.panel_tab_hover, 1);
+		} else if(point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + _tabW, y0)) {
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab_hover, 1);
 			
 			if(mouse_click(mb_left, sFOCUS)) {
 				project_page = i;
@@ -118,7 +119,7 @@ if !ready exit;
 				}
 			}
 		} else
-			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), tw, th, COLORS.panel_tab_inactive, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab_inactive, 1);
 		
 		var _btx = bx + ui(8);
 		if(txt == "Contests") {
@@ -130,11 +131,11 @@ if !ready exit;
 		if(project_page == i) cc = txt == "Contests"? CDEF.yellow : COLORS._main_text;
 		
 		draw_set_color(cc);
-		draw_text(_btx, y0 - ui(4), dtxt);
+		draw_text_cut(_btx, y0 - ui(4), dtxt, _tabW - ui(16));
 		
 		_btx += ui(8) + string_width(dtxt);
 		
-		if(amo) {
+		if(amo && _x1 + ui(32) < x1) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), string_width(amo) + ui(8), ui(24), COLORS._main_icon, 1);
 		
 			_btx += ui(4);
@@ -144,8 +145,8 @@ if !ready exit;
 			draw_text(_btx, y0 - ui(4), amo);
 		}
 		
-		bx += tw;
-	}
+		bx += _tabW;
+	} #endregion
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
 	draw_sprite_stretched(THEME.ui_panel_fg, 0, x0, y0, x1 - x0, y1 - y0);

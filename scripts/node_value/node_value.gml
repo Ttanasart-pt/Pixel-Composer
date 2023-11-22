@@ -1768,7 +1768,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.clearCacheForward();
 		}
 		
-		if(fullUpdate && !IS_PLAYING) RENDER_ALL
+		if(fullUpdate) RENDER_ALL
 					
 		if(!LOADING) PROJECT.modified = true;
 					

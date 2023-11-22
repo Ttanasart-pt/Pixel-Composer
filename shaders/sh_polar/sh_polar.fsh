@@ -1,9 +1,10 @@
 //
 // Simple passthrough fragment shader
 //
-varying vec2 v_vTexcoord;
-varying vec4 v_vColour;
-uniform int invert;
+varying vec2  v_vTexcoord;
+varying vec4  v_vColour;
+uniform int   invert;
+uniform float blend;
 
 #region /////////////// SAMPLING ///////////////
 
@@ -55,19 +56,20 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 
 void main() {
 	vec2 center = vec2(0.5, 0.5);
+	vec2 coord;
 	
 	if(invert == 0) {
 		float radius = distance(v_vTexcoord, center) / (sqrt(2.) * .5);
 		vec2  cenPos = v_vTexcoord - center;
 		float angle	 = (atan(cenPos.y, cenPos.x) / PI + 1.) / 2.;
 		
-		vec2 coord = vec2(radius, angle);
-	    gl_FragColor = v_vColour * texture2D( gm_BaseTexture, coord );
+		coord = vec2(radius, angle);
 	} else if(invert == 1) {
 		float dist = v_vTexcoord.x * 0.5;
 		float ang  = v_vTexcoord.y * PI * 2.;
 		
-		vec2 coord = center + vec2(cos(ang), sin(ang)) * dist;
-	    gl_FragColor = v_vColour * texture2D( gm_BaseTexture, coord );
+		coord = center + vec2(cos(ang), sin(ang)) * dist;
 	}
+	
+	gl_FragColor = texture2D( gm_BaseTexture, mix(v_vTexcoord, coord, blend) );
 }
