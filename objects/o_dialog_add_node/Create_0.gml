@@ -414,8 +414,8 @@ event_inherited();
 		var group_labels  = [];
 		
 		var _hoverContent = _hover;
-		if(ADD_NODE_PAGE >= 0 && PREFERENCES.dialog_add_node_grouping) 
-			_hoverContent &= _m[1] > ui(8 + 24);
+		//if(ADD_NODE_PAGE >= 0 && PREFERENCES.dialog_add_node_grouping) 
+		//	_hoverContent &= _m[1] > ui(8 + 24);
 			
 		if(PREFERENCES.dialog_add_node_view == 0) { #region grid
 			var grid_size  = ui(64);

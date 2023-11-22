@@ -505,6 +505,10 @@
 			
 			return v1;
 		} #endregion
+			
+		static toString = function() { #region
+			return $"[PCX funcTree] \{ symbol: {symbol}, l: {l}, r: {r}\}";
+		} #endregion
 	} #endregion
 	
 	function evaluateFunction(fx, params = {}) { #region

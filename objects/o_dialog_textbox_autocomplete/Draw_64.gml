@@ -1,5 +1,5 @@
 /// @description 
-active = textbox != noone;
+active = textbox != noone && array_length(data);
 if(textbox == noone) exit;
 if(textbox != WIDGET_CURRENT) exit;
 if(array_empty(data)) exit;

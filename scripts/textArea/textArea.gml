@@ -167,7 +167,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(!keyboard_check_pressed(vk_enter)) 
 			return 0;
 		
-		if(use_autocomplete && o_dialog_textbox_autocomplete.textbox == self) 
+		if(use_autocomplete && o_dialog_textbox_autocomplete.active && o_dialog_textbox_autocomplete.textbox == self) 
 			return 0;
 		
 		return 1 + ((shift_new_line && key_mod_press(SHIFT)) || (!shift_new_line && !key_mod_press(SHIFT)));

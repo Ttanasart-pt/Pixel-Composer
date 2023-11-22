@@ -1,5 +1,5 @@
 #region symbols
-	global.LOG_EXPRESSION = false;
+	global.LOG_EXPRESSION = true;
 	
 	global.EQUATION_PRES = ds_map_create();
 	global.EQUATION_PRES[? "+"] = 1;
@@ -292,7 +292,7 @@
 			} else if (ch == ",") {
 				while(!ds_stack_empty(op)) {
 					var _top = ds_stack_top(op);
-					if(_top == "[" || _top == "(" || (is_array(_top) && _top[0] == "{")) break;
+					if(_top == "[" || _top == "(" || _top == "〚" || (is_array(_top) && _top[0] == "{")) break;
 					
 					var _top = ds_stack_pop(op);
 					ds_stack_push(vl, buildFuncTree(_top, vl));
