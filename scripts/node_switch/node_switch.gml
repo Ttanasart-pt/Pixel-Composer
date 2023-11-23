@@ -106,7 +106,8 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(sele == _cas) {
 				_res = _val;
-				outputs[| 0].setType(inputs[| i + 1].type);
+				var _typ = inputs[| i + 1].value_from? inputs[| i + 1].value_from.type : inputs[| i + 1].type;
+				outputs[| 0].setType(_typ);
 			}
 		}
 		
