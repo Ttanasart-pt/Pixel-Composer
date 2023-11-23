@@ -229,6 +229,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		global.RECENT_NODES = file_exists(recPath)? json_load_struct(recPath) : [];
 		if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
 		
+		NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
+		ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
+			 
+		var fav = ds_list_create();
+		addNodeCatagory("Favourites", fav);
+		
 		var group = ds_list_create(); #region
 		addNodeCatagory("Group", group, ["Node_Group"]); 
 			ds_list_add(group, "Groups");
@@ -373,12 +379,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(strandSim, "Strand Collision",	 s_node_strandSim_collide,	"Node_Strand_Collision",	 [1, Node_Strand_Collision],, "Create solid object for strands to collides to.").hideRecent().setVersion(1140);
 		#endregion
 		
-		NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
-		ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
-			 
-		var fav = ds_list_create();
-		addNodeCatagory("Favourites", fav);
-			
+		//////////////////////////////////////////////////////////////////////////////////
+		
 		var input = ds_list_create(); #region
 		addNodeCatagory("IO", input);
 			ds_list_add(input, "Images");

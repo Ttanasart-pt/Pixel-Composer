@@ -1,4 +1,4 @@
-function __test_update_current_collections() {
+function __test_update_current_collections() { #region
 	var st = ds_stack_create();
 	ds_stack_push(st, PANEL_COLLECTION.context);
 	
@@ -25,9 +25,9 @@ function __test_update_current_collections() {
 	ds_stack_destroy(st);
 	
 	print("---------- COLLECTION UPDATING ENDED ----------");
-}
+} #endregion
 
-function __test_update_sample_projects() {
+function __test_update_sample_projects() { #region
 	print("---------- PROJECT UPDATING STARTED ----------");
 	
 	for( var i = 0; i < ds_list_size(SAMPLE_PROJECTS); i++ ) {
@@ -40,9 +40,9 @@ function __test_update_sample_projects() {
 	}
 	
 	print("---------- PROJECT UPDATING ENDED ----------");
-}
+} #endregion
 
-function __test_load_current_collections() {
+function __test_load_current_collections() { #region
 	var st = ds_stack_create();
 	ds_stack_push(st, PANEL_COLLECTION.context);
 	
@@ -104,9 +104,9 @@ function __test_load_current_collections() {
 	ds_stack_destroy(st);
 	
 	print("---------- COLLECTION TESTING ENDED ----------");
-}
+} #endregion
 
-function __test_load_all_nodes() {
+function __test_load_all_nodes() { #region
 	var amo = ds_map_size(ALL_NODES);
 	var k = ds_map_find_first(ALL_NODES);
 	var xx = 0;
@@ -148,9 +148,9 @@ function __test_load_all_nodes() {
 		k = ds_map_find_next(ALL_NODES, k);
 	}
 	LOADING = false;
-}
+} #endregion
 
-function __test_metadata_current_collections() {
+function __test_metadata_current_collections() { #region
 	var st = ds_stack_create();
 	ds_stack_push(st, PANEL_COLLECTION.context);
 	
@@ -176,4 +176,15 @@ function __test_metadata_current_collections() {
 	ds_stack_destroy(st);
 	
 	print("---------- COLLECTION UPDATING ENDED ----------");
-}
+} #endregion
+	
+function __test_generate_theme() { #region
+	var _txt = "function Theme() constructor {\n";
+	var _spr = struct_get_names(THEME);
+	
+	for( var i = 0, n = array_length(_spr); i < n; i++ )
+		_txt += $"\t{_spr[i]} = noone;\n";
+	_txt += "}";
+	
+	clipboard_set_text(_txt);
+} #endregion

@@ -956,6 +956,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new areaBox(function(index, val) { 
 							return setValueDirect(val, index);
 						}, unit);
+						
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						if(struct_has(display_data, "onSurfaceSize")) editWidget.onSurfaceSize = display_data.onSurfaceSize;
 						

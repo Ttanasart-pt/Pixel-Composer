@@ -25,7 +25,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	drag_my   = 0;
 	drag_sv   = 0;
 	
-	temp_surface = [ surface_create(1, 1, surface_r32float) ];
+	temp_surface = [ surface_create(1, 1, surface_r32float), surface_create(1, 1, surface_r32float) ];
 	
 	static update = function() {
 		var _inSurf	= getInputData(0);
@@ -44,6 +44,11 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		var _arr = is_array(_inSurf);
+		_array &= _arr;
+		
+		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
+		if( is_array(_inSurf) && array_empty(_inSurf)) return;
+		
 		if(!_arr) _inSurf = [ _inSurf ];
 		var _amo = array_length(_inSurf);
 		
@@ -57,36 +62,25 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _surf = _inSurf[j];
 			
 			var _dim  = [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ]; 
-			var _minx = 0, _miny = 0, _maxx = _dim[0], _maxy = _dim[1];
-			temp_surface[0] = surface_verify(temp_surface[0], 1, 1, surface_r32float);
+			var _minx = 0, _miny = 0, _maxx = _dim[0] - 1, _maxy = _dim[1] - 1;
 			
-			for( var i = 0; i < 4; i++ ) {
-				surface_set_target(temp_surface[0]);
-					shader_set(sh_find_boundary);
-					shader_set_f("dimension", _dim);
-					shader_set_surface("texture", _surf);
-					
-					shader_set_i("mode", i);
-					shader_set_f("bbox", [ _minx, _miny, _maxx, _maxy ]);
-					
-					DRAW_CLEAR
-					BLEND_OVERRIDE
-					draw_sprite(s_fx_pixel, 0, 0, 0);
-					BLEND_NORMAL
-					
-					shader_reset();
-				surface_reset_target();
-				
-				var px = surface_getpixel(temp_surface[0], 0, 0);
-				px = px[0];
-				
-				switch(i) {
-					case 0 : _minx = px; break;
-					case 1 : _miny = px; break;
-					case 2 : _maxx = px; break;
-					case 3 : _maxy = px; break;
-				}
-			}
+			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r32float);
+			temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], surface_r32float);
+			
+			surface_set_shader(temp_surface[0], sh_find_boundary_stretch_x);
+				shader_set_f("dimension", _dim);
+				draw_surface_safe(_surf);
+			surface_reset_shader();
+			
+			surface_set_shader(temp_surface[1], sh_find_boundary_stretch_y);
+				shader_set_f("dimension", _dim);
+				draw_surface_safe(_surf);
+			surface_reset_shader();
+			
+			for( ; _minx < _dim[0]; _minx++ ) if(surface_get_pixel(temp_surface[0], _minx, 0) > 0) break;
+			for( ; _maxx >= 0; _maxx-- )      if(surface_get_pixel(temp_surface[0], _maxx, 0) > 0) break;
+			for( ; _miny < _dim[1]; _miny++ ) if(surface_get_pixel(temp_surface[1], 0, _miny) > 0) break;
+			for( ; _maxy >= 0; _maxy-- )      if(surface_get_pixel(temp_surface[1], 0, _maxy) > 0) break;
 			
 			if(_array) {
 				minx[j] = _minx;
@@ -115,12 +109,10 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				res[i] = surface_create_valid(resDim[DIMENSION.width], resDim[DIMENSION.height], cDep);
 				
-				surface_set_target(res[i]);
-					DRAW_CLEAR
-					BLEND_OVERRIDE
+				surface_set_shader(res[i], noone);
 					draw_surface_safe(_surf, -minx + _padd[PADDING.left], -miny + _padd[PADDING.top]);
-					BLEND_NORMAL
-				surface_reset_target();
+				surface_reset_shader();
+				
 			} else if(_array == 1) {
 				var resDim  = [maxx[i] - minx[i] + 1, maxy[i] - miny[i] + 1];
 				resDim[DIMENSION.width]  += _padd[PADDING.left] + _padd[PADDING.right];
@@ -128,12 +120,9 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				res[i] = surface_create_valid(resDim[DIMENSION.width], resDim[DIMENSION.height], cDep);
 			
-				surface_set_target(res[i]);
-					DRAW_CLEAR
-					BLEND_OVERRIDE
+				surface_set_shader(res[i], noone);
 					draw_surface_safe(_surf, -minx[i] + _padd[PADDING.left], -miny[i] + _padd[PADDING.top]);
-					BLEND_NORMAL
-				surface_reset_target();
+				surface_reset_shader();
 			}
 		}
 		

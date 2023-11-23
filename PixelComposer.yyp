@@ -276,6 +276,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"button","folderPath":"folders/widgets/button.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"rotator","folderPath":"folders/widgets/rotator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/widgets/text.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"find boundary","folderPath":"folders/shader/misc/find boundary.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
@@ -1088,6 +1089,7 @@
     {"id":{"name":"s_node_gabor","path":"sprites/s_node_gabor/s_node_gabor.yy",},},
     {"id":{"name":"s_node_dithering","path":"sprites/s_node_dithering/s_node_dithering.yy",},},
     {"id":{"name":"node_3d_mesh_extrude","path":"scripts/node_3d_mesh_extrude/node_3d_mesh_extrude.yy",},},
+    {"id":{"name":"sh_find_boundary_stretch_x","path":"shaders/sh_find_boundary_stretch_x/sh_find_boundary_stretch_x.yy",},},
     {"id":{"name":"s_node_boolean","path":"sprites/s_node_boolean/s_node_boolean.yy",},},
     {"id":{"name":"s_workshop_badge","path":"sprites/s_workshop_badge/s_workshop_badge.yy",},},
     {"id":{"name":"node_pb_fx_brick","path":"scripts/node_pb_fx_brick/node_pb_fx_brick.yy",},},
@@ -1487,6 +1489,7 @@
     {"id":{"name":"pcx_parse","path":"scripts/pcx_parse/pcx_parse.yy",},},
     {"id":{"name":"node_9slice","path":"scripts/node_9slice/node_9slice.yy",},},
     {"id":{"name":"fd_rectangle_add_velocity_surface","path":"scripts/fd_rectangle_add_velocity_surface/fd_rectangle_add_velocity_surface.yy",},},
+    {"id":{"name":"sh_find_boundary_stretch_y","path":"shaders/sh_find_boundary_stretch_y/sh_find_boundary_stretch_y.yy",},},
     {"id":{"name":"sprite_add_functions","path":"scripts/sprite_add_functions/sprite_add_functions.yy",},},
     {"id":{"name":"BBMOD_Vec2","path":"scripts/BBMOD_Vec2/BBMOD_Vec2.yy",},},
     {"id":{"name":"sh_grid_hex","path":"shaders/sh_grid_hex/sh_grid_hex.yy",},},

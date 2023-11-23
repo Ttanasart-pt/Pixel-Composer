@@ -22,8 +22,8 @@ function Node_create_Image_path(_x, _y, path) {
 }
 
 function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Image";
-	color			= COLORS.node_blend_input;
+	name  = "Image";
+	color = COLORS.node_blend_input;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.png" })
@@ -106,12 +106,9 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		_outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
 		outputs[| 0].setValue(_outsurf);
 		
-		surface_set_target(_outsurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE; 
-		draw_sprite(spr, 0, pad[2], pad[1]);
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_set_shader(_outsurf, noone);
+			draw_sprite(spr, 0, pad[2], pad[1]);
+		surface_reset_shader();
 		
 		if(!first_update) return;
 		first_update = false;

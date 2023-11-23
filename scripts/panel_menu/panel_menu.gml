@@ -261,6 +261,9 @@ function Panel_Menu() : PanelContent() constructor {
 				var dia = dialogPanelCall(new Panel_Node_Data_Gen());
 				dia.destroy_on_click_out = false;
 			}),
+			menuItem(__txtx("panel_menu_test_gen_theme", "Generate theme object"), function() { 
+				__test_generate_theme();
+			}),
 			-1,
 			menuItem(__txtx("panel_menu_test_crash", "Force crash"), function() { 
 				print(1 + "a");

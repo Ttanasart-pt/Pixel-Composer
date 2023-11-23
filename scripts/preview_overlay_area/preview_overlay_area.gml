@@ -1,17 +1,28 @@
-function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) {
+function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) { #region
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
 	if(!is_callable(display_data)) return hover;
 	
-	var ss = display_data();
+	var __ax = array_safe_get(_val, 0);
+	var __ay = array_safe_get(_val, 1);
+	var __aw = array_safe_get(_val, 2);
+	var __ah = array_safe_get(_val, 3);
 	var __at = array_safe_get(_val, 4);
-	var _r = array_safe_get(_val, 0);
-	var _t = array_safe_get(_val, 1);
-	var _l = array_safe_get(_val, 2);
-	var _b = array_safe_get(_val, 3);
-	var _xc = ((ss[0] - _r) + _l) / 2;
-	var _yc = ((ss[1] - _b) + _t) / 2;
+	
+	var _x0 = __ax - __aw;
+	var _x1 = __ax + __aw;
+	var _y0 = __ay - __ah;
+	var _y1 = __ay + __ah;
+	
+	var ss = display_data();
+	
+	var _l  = _x0;
+	var _r  = ss[0] - _x1;
+	var _t  = _y0;
+	var _b  = ss[1] - _y1;
+	var _xc = __ax;
+	var _yc = __ay;
 	
 	var x0 = _l * _s + _x;
 	var y0 = _t * _s + _y;
@@ -42,50 +53,19 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 		draw_sprite_colored(THEME.anchor_solid_hori, 0, x1, yc,, 90);
 	}
 	
-	if(drag_type == 1) {
-		var _xx = value_snap(drag_sx - (_mx - drag_mx) / _s, _snx);
-		_val[0] = _xx;
-		
-		if(setValue(_val))
-			UNDO_HOLDING = true;
-	} else if(drag_type == 2) {
-		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-		_val[1] = _yy;
-		
-		if(setValue(_val))
-			UNDO_HOLDING = true;
-	} else if(drag_type == 3) {
-		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		_val[2] = _xx;
-		
-		if(setValue(_val))
-			UNDO_HOLDING = true;
-	} else if(drag_type == 4) {
-		var _yy = value_snap(drag_sy - (_my - drag_my) / _s, _sny);
-		_val[3] = _yy;
-		
-		if(setValue(_val))
-			UNDO_HOLDING = true;
-	} else if(drag_type == 5) {
-		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-		var _w  = ss[0] - _r - _l;
-		var _h  = ss[1] - _b - _t;
-		
-		var nr  = ss[0] - (_xx + _w / 2);
-		var nl  = _xx - _w / 2;
-		var nt  = _yy - _h / 2;
-		var nb  = ss[1] - (_yy + _h / 2);
-		
-		_val = [ nr, nt, nl, nb, __at ];
-		
-		if(setValue(_val))
-			UNDO_HOLDING = true;
-	}
+	     if(drag_type == 1) _r = value_snap(drag_sx - (_mx - drag_mx) / _s, _snx);
+	else if(drag_type == 2) _t = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+	else if(drag_type == 3) _l = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+	else if(drag_type == 4) _b = value_snap(drag_sy - (_my - drag_my) / _s, _sny);
 	
-	if(drag_type && mouse_release(mb_left)) {
-		drag_type = 0;
-		UNDO_HOLDING = false;
+	if(drag_type) {
+		var _val = [ _r, _t, _l, _b, __at ];
+		if(setValue(_val)) UNDO_HOLDING = true;
+		
+		if(mouse_release(mb_left)) {
+			drag_type = 0;
+			UNDO_HOLDING = false;
+		}
 	}
 	
 	if(drawSize && active && point_in_circle(_mx, _my, xc, y0, 16)) {
@@ -124,32 +104,25 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 			drag_sx   = _r;
 			drag_mx   = _mx;
 		}
-	} else if(drawPos && active && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-		draw_sprite_colored(THEME.anchor, 1, xc, yc);
-		hover = 4;
-		
-		if(mouse_press(mb_left)) {
-			drag_type = 5;
-			drag_sx   = _xc;
-			drag_sy   = _yc;
-			drag_mx   = _mx;
-			drag_my   = _my;
-		}
 	}
 	
 	return hover;
-}
+} #endregion
 
-function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) {
+function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) { #region
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
+	var __ax = array_safe_get(_val, 0);
+	var __ay = array_safe_get(_val, 1);
+	var __aw = array_safe_get(_val, 2);
+	var __ah = array_safe_get(_val, 3);
 	var __at = array_safe_get(_val, 4);
 	
-	var _x0 = array_safe_get(_val, 0);
-	var _y0 = array_safe_get(_val, 1);
-	var _x1 = array_safe_get(_val, 2);
-	var _y1 = array_safe_get(_val, 3);
+	var _x0  = __ax - __aw;
+	var _y0  = __ay - __ah;
+	var _x1  = __ax + __aw;
+	var _y1  = __ay + __ah;
 	
 	var x0 = _x0 * _s + _x;
 	var y0 = _y0 * _s + _y;
@@ -254,9 +227,9 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	}
 	
 	return hover;
-}
+} #endregion
 
-function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) {
+function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) { #region
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
@@ -265,7 +238,7 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	var __aw = array_safe_get(_val, 2);
 	var __ah = array_safe_get(_val, 3);
 	var __at = array_safe_get(_val, 4);
-						
+	
 	var _ax = __ax * _s + _x;
 	var _ay = __ay * _s + _y;
 	var _aw = __aw * _s;
@@ -357,7 +330,7 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	}
 	
 	return hover;
-}
+} #endregion
 
 function preview_overlay_area(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) {
 	var _val  = array_clone(getValue());

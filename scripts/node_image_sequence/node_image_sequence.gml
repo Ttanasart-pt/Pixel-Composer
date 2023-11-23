@@ -107,6 +107,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var path = try_get_path(paths[i]);
 			if(path == -1) continue;
 			var ext = string_lower(filename_ext(path));
+			setDisplayName(filename_name_only(path));
 			
 			switch(ext) {
 				case ".png"	 :

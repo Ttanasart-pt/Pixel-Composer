@@ -101,9 +101,10 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(ext != ".gif")
 			return false;
-			
+		
+		setDisplayName(_name);
 		outputs[| 1].setValue(path);
-				
+		
 		if(spr) sprite_delete(spr);
 		sprite_add_gif(path, function(_spr) { 
 			spr_builder = _spr; 

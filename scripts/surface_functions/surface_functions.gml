@@ -174,6 +174,13 @@ function surface_get_height_safe(s, crop = true) {
 	return surface_get_height(s);
 }
 
+function surface_get_dimension(s) {
+	INLINE
+	
+	if(!is_surface(s)) return [ 1, 1 ];
+	return [ surface_get_width_safe(s), surface_get_height_safe(s) ];
+}
+
 //check
 function is_surface(s) {
 	INLINE

@@ -48,6 +48,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		run_in(1, function() { 
 			resetInternalName();
+			
+			if(renamed) return;
 			display_name = __txt_node_name(instanceof(self), name);
 			if(!LOCALE_DEF || TESTING) renamed = true;
 		});
@@ -1660,8 +1662,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		array_push(_trigger, inspectInput2.serialize(scale, preset));
 		array_push(_trigger, updatedInTrigger.serialize(scale, preset));
 		array_push(_trigger, updatedOutTrigger.serialize(scale, preset));
+		
 		_map.inspectInputs = _trigger;
-		_map.renamed = renamed;
+		_map.renamed       = renamed;
 		
 		doSerialize(_map);
 		processSerialize(_map);
