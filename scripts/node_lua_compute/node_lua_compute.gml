@@ -15,19 +15,6 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 4]  = nodeValue("Execute on frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
-	static createNewInput = function() {
-		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
-		
-		inputs[| index + 1] = nodeValue("Argument type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-			.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Number", "String", "Surface", "Struct" ], update_hover: false });
-		inputs[| index + 1].editWidget.interactable = false;
-		
-		inputs[| index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-			.setVisible(true, true);
-		inputs[| index + 2].editWidget.interactable = false;
-	}
-	
 	outputs[| 0] = nodeValue("Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
 	
 	outputs[| 1] = nodeValue("Return value", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, 0);
@@ -51,9 +38,20 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	error_notification = noone;
 	compiled = false;
 	
-	if(!LOADING && !APPENDING) createNewInput();
+	static createNewInput = function() { #region
+		var index = ds_list_size(inputs);
+		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+		
+		inputs[| index + 1] = nodeValue("Argument type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+			.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Number", "String", "Surface", "Struct" ], update_hover: false });
+		inputs[| index + 1].editWidget.interactable = false;
+		
+		inputs[| index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+			.setVisible(true, true);
+		inputs[| index + 2].editWidget.interactable = false;
+	} if(!LOADING && !APPENDING) createNewInput(); #endregion
 	
-	static stepBegin = function() {
+	static stepBegin = function() { #region
 		if(PROJECT.animator.frame_progress)
 			setRenderStatus(false);
 		
@@ -77,15 +75,15 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			case 1 : outputs[| 1].setType(VALUE_TYPE.text);   break;
 			case 2 : outputs[| 1].setType(VALUE_TYPE.struct); break;
 		}
-	}
+	} #endregion
 	
-	static getState = function() {
+	static getState = function() { #region
 		if(inputs[| 3].isLeaf())
 			return lua_state;
 		return inputs[| 3].value_from.node.getState();
-	}
+	} #endregion
 	
-	static refreshDynamicInput = function() {
+	static refreshDynamicInput = function() { #region
 		var _in = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -127,13 +125,13 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs = _in;
 		
 		createNewInput();
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(index == 0 || index == 2) compiled = false;
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = 0) { #region
 		if(index == 0 || index == 2) compiled = false;
 		
 		if(index == 3) {
@@ -149,16 +147,16 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		compiled = false;
 		refreshDynamicInput();
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
 			var name = getInputData(i + 0);
 			inputs[| i + 2].name = name;
 		}
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		if(!compiled) return;
 		//if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
 		
@@ -172,12 +170,6 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length )
 			array_push(argument_val,  getInputData(i + 2));
 		
-		//if(CURRENT_FRAME == 0) { //refresh state on the first frame
-		//	lua_state_destroy(lua_state);
-		//	lua_state = lua_create();
-		//	addCode();
-		//}
-		
 		lua_projectData(getState());
 		
 		var res = 0;
@@ -188,9 +180,9 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		outputs[| 1].setValue(res);
-	}
+	} #endregion
 	
-	static addCode = function() {
+	static addCode = function() { #region
 		var _func = getInputData(0);
 		var _code = getInputData(2);
 		argument_name = [];
@@ -207,15 +199,14 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lua_code += ")\n";
 		lua_code += _code;
 		lua_code += "\nend";
-		//print(lua_code);
 		
 		lua_add_code(getState(), lua_code);
-	}
+	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Compile");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { //compile
+	static onInspector1Update = function() { #region
 		var thrd = inputs[| 3].value_from;
 		if(thrd == noone) {
 			doCompile();
@@ -223,9 +214,9 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		thrd.node.onInspector1Update();
-	}
+	} #endregion
 	
-	static doCompile = function() {
+	static doCompile = function() { #region
 		compiled = true;
 		addCode();
 		
@@ -236,9 +227,9 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		doUpdate();
-	}
+	} #endregion
 	
-	static doApplyDeserialize = function() {
+	static doApplyDeserialize = function() { #region
 		refreshDynamicInput();
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
@@ -256,11 +247,13 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);
 		}
-	}
+		
+		doCompile();
+	} #endregion
 	
-	static onDestroy = function() {
+	static onDestroy = function() { #region
 		lua_state_destroy(lua_state);
 		if(error_notification != noone)
 			noti_remove(error_notification);
-	}
+	} #endregion
 }

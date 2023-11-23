@@ -49,6 +49,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(!_n.isArray()) return _in;
 		
 		var _aIndex = _arr;
+		if(!is_array(_arr)) return 0;
+		
 		switch(attributes.array_process) {
 			case ARRAY_PROCESS.loop :		_aIndex = safe_mod(_arr, array_length(_in)); break;
 			case ARRAY_PROCESS.hold :		_aIndex = min(_arr, array_length(_in) - 1);  break;

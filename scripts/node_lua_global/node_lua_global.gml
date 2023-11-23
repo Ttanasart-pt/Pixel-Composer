@@ -24,7 +24,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	error_notification = noone;
 	compiled = false;
 	
-	static stepBegin = function() {
+	static stepBegin = function() { #region
 		var _type = getInputData(1);
 		
 		if(PROJECT.animator.is_playing && PROJECT.animator.frame_progress && (CURRENT_FRAME == 0 || _type == 1))
@@ -43,22 +43,22 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			noti_remove(error_notification);
 			error_notification = noone;
 		}
-	}
+	} #endregion
 	
-	static getState = function() {
+	static getState = function() { #region
 		if(inputs[| 2].isLeaf()) return lua_state;
 		return inputs[| 2].value_from.node.getState();
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(index == 0 || index == 2) compiled = false;
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = 0) { #region
 		if(index == 0 || index == 2) compiled = false;
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		if(!compiled) return;
 		//if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
 		
@@ -77,9 +77,9 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			try		 { lua_add_code(getState(), _code); }
 			catch(e) { noti_warning(exception_print(e),, self); }
 		}
-	}
+	} #endregion
 	
-	static onInspector1Update = function() { //compile
+	static onInspector1Update = function() { #region
 		var thrd = inputs[| 2].value_from;
 		if(thrd == noone) {
 			doCompile();
@@ -87,9 +87,9 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		thrd.node.onInspector1Update();
-	}
+	} #endregion
 	
-	static doCompile = function() {
+	static doCompile = function() { #region
 		compiled = true;
 		
 		for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
@@ -99,11 +99,13 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		doUpdate();
-	}
+	} #endregion
 	
-	static onDestroy = function() {
+	static doApplyDeserialize = function() { doCompile(); }
+	
+	static onDestroy = function() { #region
 		lua_state_destroy(lua_state);
 		if(error_notification != noone)
 			noti_remove(error_notification);
-	}
+	} #endregion
 }

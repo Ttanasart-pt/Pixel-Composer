@@ -42,10 +42,10 @@ function Node_3D_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var right_y = sin(x_rad) * sin(y_rad) * cos(z_rad) - cos(x_rad) * sin(z_rad);
 		var right_z = cos(x_rad) * sin(y_rad) * cos(z_rad) + sin(x_rad) * sin(z_rad);
 		
-		print($"POS:   {_cx}, {_cy}, {_cz}");
-		print($"UP:    {up_x}, {up_y}, {up_z}");
-		print($"RIGHT: {right_x}, {right_y}, {right_z}");
-		print("");
+		//print($"POS:   {_cx}, {_cy}, {_cz}");
+		//print($"UP:    {up_x}, {up_y}, {up_z}");
+		//print($"RIGHT: {right_x}, {right_y}, {right_z}");
+		//print("");
 		
 		surface_set_shader(_outSurf, sh_3d_depth);
 			DRAW_CLEAR

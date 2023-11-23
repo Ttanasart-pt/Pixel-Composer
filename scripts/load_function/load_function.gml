@@ -1,4 +1,4 @@
-function LOAD(safe = false) {
+function LOAD(safe = false) { #region
 	if(DEMO) return false;
 	
 	var path = get_open_filename("Pixel Composer PROJECT (.pxc)|*.pxc", "");
@@ -8,9 +8,9 @@ function LOAD(safe = false) {
 				
 	gc_collect();
 	var proj = LOAD_PATH(path, false, safe);
-}
+} #endregion
 
-function TEST_PATH(path) {
+function TEST_PATH(path) { #region
 	TESTING    = true;
 	TEST_ERROR = true;
 	
@@ -19,9 +19,9 @@ function TEST_PATH(path) {
 	PANEL_GRAPH.setProject(PROJECT);
 	
 	__LOAD_PATH(path);
-}
+} #endregion
 
-function LOAD_PATH(path, readonly = false, safe_mode = false) {
+function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 	for( var i = 0, n = array_length(PROJECTS); i < n; i++ )
 		if(PROJECTS[i].path == path) return;
 	
@@ -47,9 +47,9 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	setFocus(PANEL_GRAPH.panel);
 	
 	return PROJECT;
-}
+} #endregion
 
-function __LOAD_PATH(path, readonly = false, override = false) {
+function __LOAD_PATH(path, readonly = false, override = false) { #region
 	if(DEMO) return false;
 	
 	if(!file_exists(path)) {
@@ -250,4 +250,24 @@ function __LOAD_PATH(path, readonly = false, override = false) {
 	PANEL_GRAPH.toCenterNode();
 	
 	return true;
-}
+} #endregion
+
+function __IMPORT_ZIP() { #region
+	var path = get_open_filename("Pixel Composer portable project (.zip)|*.zip", "");
+	
+	var _fname = filename_name_only(path);
+	var _fext  = filename_ext(path);
+	if(_fext != ".zip") return false;
+	
+	directory_verify(TEMPDIR + "proj/");
+	var _dir = TEMPDIR + "proj/" + _fname;
+	directory_create(_dir);
+	zip_unzip(path, _dir);
+	
+	var _f    = file_find_first(_dir + "/*.pxc", fa_none);
+	var _proj = $"{_dir}/{_f}";
+	print(_proj);
+	if(!file_exists(_proj)) return false;
+	
+	LOAD_PATH(_proj, true);
+} #endregion

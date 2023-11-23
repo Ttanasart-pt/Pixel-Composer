@@ -119,13 +119,13 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		use_display_list = true;
 		if(obj_raw == noone) return;
 		
-		var txt = $"========== OBJ import ==========\n";
-		txt += $"Vertex counts:   {obj_raw.vertex_count}\n";
-		txt += $"Object counts:   {obj_raw.object_counts}\n";
-		txt += $"Material counts: {array_length(obj_raw.materials)}\n";
-		txt += $"Model BBOX:      {obj_raw.model_size}\n";
-		txt += $"Load completed in {(get_timer() - obj_read_time) / 1000} ms\n";
-		print(txt);
+		//var txt = $"========== OBJ import ==========\n";
+		//txt += $"Vertex counts:   {obj_raw.vertex_count}\n";
+		//txt += $"Object counts:   {obj_raw.object_counts}\n";
+		//txt += $"Material counts: {array_length(obj_raw.materials)}\n";
+		//txt += $"Model BBOX:      {obj_raw.model_size}\n";
+		//txt += $"Load completed in {(get_timer() - obj_read_time) / 1000} ms\n";
+		//print(txt);
 		
 		var span = max(abs(obj_raw.model_size.x), abs(obj_raw.model_size.y), abs(obj_raw.model_size.z));
 		if(span > 10) noti_warning($"The model is tool large to display properly ({span}u). Scale the model down to preview.");

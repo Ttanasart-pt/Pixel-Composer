@@ -551,6 +551,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getGraphPreviewSurface = function() { #region
 		var _output_junc = outputs[| preview_channel];
+		
 		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
 			if(!nodes[| i].active) continue;
 			if(is_instanceof(nodes[| i], Node_Group_Thumbnail))
