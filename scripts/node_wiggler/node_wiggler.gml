@@ -56,7 +56,7 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			case 0 :
 				w = 96;
 				
-				draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+				draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 				var str	= getWiggle(ran[0], ran[1], TOTAL_FRAMES / fre, time, sed, 0, TOTAL_FRAMES);
 				var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20 * draw_name);
 				draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);

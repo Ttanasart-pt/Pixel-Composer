@@ -59,7 +59,7 @@ function Node_Struct_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var bbox = drawGetBbox(xx, yy, _s);
 		var str  = getInputData(1);
 		
-		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}

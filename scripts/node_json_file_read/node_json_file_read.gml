@@ -182,7 +182,7 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var str = filename_name(path_current);
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);

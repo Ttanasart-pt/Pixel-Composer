@@ -30,7 +30,7 @@ function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var str = getInputData(0);
 		var edd = getInputData(1);
 		var stp = getInputData(2);

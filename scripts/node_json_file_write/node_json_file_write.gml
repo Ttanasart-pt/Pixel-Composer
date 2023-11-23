@@ -119,7 +119,7 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		if(filename_ext(str) != ".json")
 			str += ".json";
 			
-		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}

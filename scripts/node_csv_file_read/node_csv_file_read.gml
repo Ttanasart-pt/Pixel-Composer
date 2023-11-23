@@ -1,4 +1,4 @@
-function Node_create_CSV_File_Read(_x, _y, _group = noone) {
+function Node_create_CSV_File_Read(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".csv", "");
@@ -11,9 +11,9 @@ function Node_create_CSV_File_Read(_x, _y, _group = noone) {
 	node.doUpdate();
 	
 	return node;
-}
+} #endregion
 
-function Node_create_CSV_File_Read_path(_x, _y, path) {
+function Node_create_CSV_File_Read_path(_x, _y, path) { #region
 	if(!file_exists(path)) return noone;
 	
 	var node = new Node_CSV_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext());
@@ -21,7 +21,7 @@ function Node_create_CSV_File_Read_path(_x, _y, path) {
 	node.doUpdate();
 	
 	return node;	
-}
+} #endregion
 
 function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "CSV File In";
@@ -47,16 +47,16 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	first_update = false;
 	
-	on_drop_file = function(path) {
+	on_drop_file = function(path) { #region
 		if(updatePaths(path)) {
 			doUpdate();
 			return true;
 		}
 		
 		return false;
-	}
+	} #endregion
 	
-	function updatePaths(path) {
+	function updatePaths(path) { #region
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
@@ -88,32 +88,32 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		path_current = path;
 				
 		return true;
-	}
+	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() {
+	static onInspector1Update = function() { #region
 		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		var path = getInputData(0);
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);
 		
 		outputs[| 0].setValue(content);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		var str = filename_name(path_current);
-		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
-	}
+	} #endregion
 }

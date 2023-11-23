@@ -110,7 +110,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _col = getColor();
 		
 		if(inputs[| 0].value_from != noone || disp == 0) { #region
-			draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
+			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 			var str	= string(val);
 			var ss	= string_scale(str, bbox.w, bbox.h);
 			draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
@@ -119,7 +119,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		switch(disp) {
 			case 1 : #region
-				draw_set_text(f_h2, fa_center, fa_center, _col);
+				draw_set_text(f_sdf, fa_center, fa_center, _col);
 				draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, _int? round(val) : val, _s * 0.5, _s * 0.5, 0);
 				
 				var sl_w = bbox.w - 8 * _s;
@@ -230,7 +230,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					draggable = false;
 				}
 				
-				draw_set_text(f_h3, fa_center, fa_center, colorMultiply(CDEF.main_white, _col));
+				draw_set_text(f_sdf, fa_center, fa_center, colorMultiply(CDEF.main_white, _col));
 				draw_text_transformed(bbox.xc, bbox.yc, _int? round(val) : string_format(val, -1, 2), _s * .5, _s * .5, 0);
 				break; #endregion
 		}
@@ -385,7 +385,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var v1 = array_safe_get(vec, 1);
 		
 		if(disp == 0 || inputs[| 0].value_from != noone || inputs[| 1].value_from != noone) {
-			draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
+			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 			var str	= $"{v0}\n{v1}";
 			var ss	= string_scale(str, bbox.w, bbox.h);
 			draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
@@ -514,7 +514,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			}
 		} #endregion
 		
-		draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
 		var str	= $"[{v0}, {v1}]";
 		var ss	= min(1, string_scale(str, bbox.w - 16 * _s, bbox.h));
 		draw_text_transformed(bbox.xc, bbox.y1 - 4, str, ss, ss, 0);
@@ -563,7 +563,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
-		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var vec = getSingleValue(0,, true);
 		var v0 = array_safe_get(vec, 0);
 		var v1 = array_safe_get(vec, 1);
@@ -622,7 +622,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	} #endregion 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
-		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var vec = getSingleValue(0,, true);
 		var v0 = array_safe_get(vec, 0);
 		var v1 = array_safe_get(vec, 1);
@@ -671,7 +671,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
-		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		for( var i = 0; i < 4; i++ )
 			if(outputs[| i].visible) str += $"{outputs[| i].getValue()}\n";

@@ -258,6 +258,7 @@
     {"name":"__node_3d","order":2,"path":"scripts/__node_3d/__node_3d.yy",},
     {"name":"node_csv_file_write","order":12,"path":"scripts/node_csv_file_write/node_csv_file_write.yy",},
     {"name":"surface_functions","order":5,"path":"scripts/surface_functions/surface_functions.yy",},
+    {"name":"_f_sdf","order":13,"path":"fonts/_f_sdf/_f_sdf.yy",},
     {"name":"dynaSurf_iso","order":1,"path":"scripts/dynaSurf_iso/dynaSurf_iso.yy",},
     {"name":"sh_fd_add_velocity_glsl","order":1,"path":"shaders/sh_fd_add_velocity_glsl/sh_fd_add_velocity_glsl.yy",},
     {"name":"s_node_normal","order":30,"path":"sprites/s_node_normal/s_node_normal.yy",},

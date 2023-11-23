@@ -44,7 +44,7 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(THEME.node_trigger, preview, bbox.xc, bbox.yc, bbox.w, bbox.h, preview? COLORS._main_accent : COLORS._main_icon);
 	}

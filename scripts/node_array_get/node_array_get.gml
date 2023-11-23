@@ -73,7 +73,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var idx = getInputData(1);
 		
 		var str	= string(idx);

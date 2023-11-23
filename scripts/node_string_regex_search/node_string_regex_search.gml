@@ -27,7 +27,7 @@ function Node_String_Regex_Search(_x, _y, _group = noone) : Node_Processor(_x, _
 		var str  = outputs[| 0].getValue();
 		var bbox = drawGetBbox(xx, yy, _s);
 		
-		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		draw_text_bbox(bbox, str);
 	}
 }

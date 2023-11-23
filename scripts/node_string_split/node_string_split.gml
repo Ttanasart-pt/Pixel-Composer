@@ -1,9 +1,7 @@
 function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Split Text";
-	previewable   = false;
-	
+	previewable = false;
 	w = 96;
-	
 	
 	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(true, true);
@@ -29,16 +27,18 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var cy = bbox.yc;
 		
 		if(string_length(str) == 0) {
-			draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
-			draw_text_cut(cx, cy, __txt("None"), w - ui(6), _s);
+			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text_sub);
+			draw_text_bbox(bbox, __txt("None"));
 			return;
 		}
 		
-		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+		_s *= 0.5;
+		
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		draw_text_cut(cx, cy, str, bbox.w, _s);
 		
 		var ww = (string_width(str) / 2) * _s;
-		draw_set_text(f_h5, fa_right, fa_center, COLORS._main_text_sub);
+		draw_set_text(f_sdf, fa_right, fa_center, COLORS._main_text_sub);
 		draw_text_transformed(cx - ww, cy, "|", _s, _s, 0);
 		
 		draw_set_halign(fa_left);

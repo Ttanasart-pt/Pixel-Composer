@@ -82,14 +82,16 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
+		
+		draw_set_text(f_sdf, fa_left, fa_center, COLORS._main_text);
 		
 		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
 			var key = getInputData(i + 0);
 			var val = inputs[| i + 1];
+			var _ss = min(_s * 0.5, string_scale(key, bbox.w - 12 * _s, 9999));
 			
 			draw_set_color(value_color(val.type));
-			draw_text_transformed(bbox.x0 + 6 * _s, inputs[| i + 0].y - 1 * _s, key, _s, _s, 0);
+			draw_text_transformed(bbox.x0 + 6 * _s, inputs[| i + 0].y, key, _ss, _ss, 0);
 		}
 		
 	}

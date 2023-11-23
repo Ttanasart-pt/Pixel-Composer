@@ -1,4 +1,4 @@
-function Node_create_ASE_File_Read(_x, _y, _group = noone) {
+function Node_create_ASE_File_Read(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".ase", "");
@@ -11,9 +11,9 @@ function Node_create_ASE_File_Read(_x, _y, _group = noone) {
 	node.doUpdate();
 	
 	return node;
-}
+} #endregion
 
-function Node_create_ASE_File_Read_path(_x, _y, path) {
+function Node_create_ASE_File_Read_path(_x, _y, path) { #region
 	if(!file_exists(path)) return noone;
 	
 	var node = new Node_ASE_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext());
@@ -21,7 +21,7 @@ function Node_create_ASE_File_Read_path(_x, _y, path) {
 	node.doUpdate();
 	
 	return node;	
-}
+} #endregion
 
 function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "ASE File In";
@@ -49,7 +49,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	hold_visibility = true;
-	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var amo = array_length(layers);
 		var hh = 28;
 		var _h = hh * amo + 16;
@@ -85,9 +85,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		return _h;
-	});
+	}); #endregion
 	
-	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {		
+	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var current_tag = getInputData(2);
 		var amo = array_length(tags);
 		var abx = ui(24);
@@ -152,7 +152,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		tag_renderer.h = _h;
 		return _h;
-	});
+	}); #endregion
 
 	input_display_list = [
 		["File",	 true], 0,
@@ -170,15 +170,15 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	first_update = false;
 	
-	on_drop_file = function(path) {
+	on_drop_file = function(path) { #region
 		if(updatePaths(path)) {
 			doUpdate();
 			return true;
 		}
 		return false;
-	}
+	} #endregion
 	
-	function refreshLayers() {		
+	function refreshLayers() { #region
 		var _nh = 64;
 		var nx = x + w + 32;
 		var nh = (array_length(layers) - 1) / 2 * _nh;
@@ -210,9 +210,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			lvs[i].inputs[| 1].setValue(use_cel);
 			lvs[i].setDisplayName(_name);
 		}
-	}
+	} #endregion
 	
-	function updatePaths(path) {
+	function updatePaths(path) { #region
 		path_current = path;
 		
 		path = try_get_path(path);
@@ -280,12 +280,12 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		return true;
-	}
+	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() {
+	static onInspector1Update = function() { #region
 		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
@@ -296,9 +296,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_targNode._name = "";
 			_targNode.update();
 		}
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) { 
+	static update = function(frame = CURRENT_FRAME) { #region
 		var path = getInputData(0);
 		var current_tag = getInputData(2);
 		if(path_current != path) updatePaths(path);
@@ -347,17 +347,17 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		surface_reset_target();
-	}
+	} #endregion
 	
-	static attributeSerialize = function() {
+	static attributeSerialize = function() { #region
 		var att = {};
 		att.layer_visible = attributes.layer_visible;
 		
 		return att;
-	}
+	} #endregion
 	
-	static attributeDeserialize = function(attr) {
+	static attributeDeserialize = function(attr) { #region
 		if(struct_has(attr, "layer_visible"))
 			attributes.layer_visible = attr.layer_visible;
-	}
+	} #endregion
 }

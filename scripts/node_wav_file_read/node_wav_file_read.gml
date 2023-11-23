@@ -236,8 +236,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		var str = filename_name(path_current);
-		draw_set_text(f_p0, fa_center, fa_bottom, COLORS._main_text);
-		var ss	= min(1, string_scale(str, bbox.w, bbox.h));
+		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
+		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.y1, str, ss, ss, 0);
 	} #endregion
 	

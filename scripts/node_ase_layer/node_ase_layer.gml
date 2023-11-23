@@ -15,11 +15,9 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	layer_object = noone;
 	_name = "";
 	
-	static onValueFromUpdate = function(index) {
-		findLayer();
-	}
+	static onValueFromUpdate = function(index) { findLayer(); }
 	
-	static findLayer = function() {
+	static findLayer = function() { #region
 		var data = getInputData(0);
 		if(data == noone) return;
 		
@@ -32,9 +30,9 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			layer_object = data.layers[i];
 			break;
 		}
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) { 
+	static update = function(frame = CURRENT_FRAME) { #region
 		var data = getInputData(0);
 		if(data == noone) return;
 		
@@ -75,5 +73,5 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		draw_surface_safe(_inSurf, xx, yy);
 		BLEND_NORMAL;
 		surface_reset_target();
-	}
+	} #endregion
 }

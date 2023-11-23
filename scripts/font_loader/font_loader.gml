@@ -1,14 +1,14 @@
 globalvar FONT_ISLOADED, FONT_CACHE;
-globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code;
+globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code, f_sdf;
 
 FONT_CACHE = {};
 FONT_ISLOADED = false;
 
-function _font_add(path, size) {
+function _font_add(path, size, sdf = false) {
 	var font_cache_dir = DIRECTORY + "font_cache";
 	directory_verify(font_cache_dir);
 	
-	var _key = $"{filename_name_only(path)}_{size}";
+	var _key = $"{filename_name_only(path)}_{size}_{sdf}";
 	if(struct_has(FONT_CACHE, _key) && font_exists(FONT_CACHE[$ _key])) {
 		//print($"Add font {_key}: restore from cache");
 		return FONT_CACHE[$ _key];
@@ -16,16 +16,11 @@ function _font_add(path, size) {
 	
 	var _t = current_time;
 	var _f = font_add(path, size, false, false, 0, 0);
-	//font_enable_sdf(_f, true);
-	//font_sdf_spread(_f, 8);
-	//font_enable_effects(_f, true, {
-	//    outlineEnable: true,
-	//    outlineDistance: 0.1,
-	//    outlineColour: c_white
-	//});
+	if(sdf) {
+		font_enable_sdf(_f, true);
+	}
 	
 	FONT_CACHE[$ _key] = _f;
-	//print($"Add font {_key}: {current_time - _t} ms");
 	
 	return _f;
 }
@@ -55,8 +50,11 @@ function _font_load_from_struct(str, name, def) {
 		return def;
 	}
 	
+	var _sdf = struct_try_get(font, "sdf", false);
+	//print($"Font [{name}] {font} : {_sdf}")
+	
 	font_add_enable_aa(THEME_VALUE.font_aa);
-	var _font = _font_add(path, font.size * UI_SCALE);
+	var _font = _font_add(path, font.size * UI_SCALE, _sdf);
 	
 	return _font;
 }
@@ -78,6 +76,7 @@ function loadFonts() {
 		font_clear(f_p3);
 		
 		font_clear(f_code);
+		font_clear(f_sdf);
 	}
 	
 	var path = _font_path("./fonts.json");
@@ -94,6 +93,7 @@ function loadFonts() {
 		f_p2  = _f_p2;
 		f_p3  = _f_p3;
 		f_code = _f_code;
+		f_sdf  = _f_sdf;
 		FONT_ISLOADED = false;
 		return;
 	}
@@ -114,6 +114,7 @@ function loadFonts() {
 	f_p3 = _font_load_from_struct(fontDef, "p3", _f_p3);
 	
 	f_code = _font_load_from_struct(fontDef, "code", _f_code);
+	f_sdf  = _font_load_from_struct(fontDef, "sdf",  _f_sdf);
 	
 	FONT_ISLOADED = true;
 }

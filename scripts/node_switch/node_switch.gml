@@ -131,6 +131,25 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_alpha(0.5);
 		draw_line_width(frm.x, frm.y, to.x, to.y, _s * 4);
 		draw_set_alpha(1);
+		
+		draw_set_text(f_sdf, fa_left, fa_center);
+		var bbox = drawGetBbox(xx, yy, _s);
+		
+		if(inputs[| 1].visible) {
+			var str = string("default");
+			var ss	= min(_s * 0.4, string_scale(str, bbox.w - 16 * _s, 999));
+			draw_set_color(value_color(inputs[| 1].type));
+			draw_text_transformed(bbox.x0 + 8 * _s, inputs[| 1].y, str, ss, ss, 0);
+		}
+		
+		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
+			if(!inputs[| i + 1].visible) continue;
+			
+			var str = string(getInputData(i));
+			var ss	= min(_s * 0.4, string_scale(str, bbox.w - 16 * _s, 999));
+			draw_set_color(value_color(inputs[| i + 1].type));
+			draw_text_transformed(bbox.x0 + 8 * _s, inputs[| i + 1].y, str, ss, ss, 0);
+		}
 	} #endregion
 	
 	static doApplyDeserialize = function() { refreshDynamicInput(); }

@@ -11,7 +11,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 1] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
 		.rejectArray();
 	
-	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var _h = ui(48);
 		
 		var bw = _w / 2 - ui(4);
@@ -49,7 +49,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		draw_set_alpha(1);
 		
 		return _h;
-	});
+	}); #endregion
 	
 	input_display_list = [ 0, array_adjust_tool, 1 ];
 	
