@@ -1,5 +1,5 @@
 #region symbols
-	global.LOG_EXPRESSION = true;
+	global.LOG_EXPRESSION = false;
 	
 	global.EQUATION_PRES = ds_map_create();
 	global.EQUATION_PRES[? "+"] = 1;
@@ -36,7 +36,7 @@
 #endregion
 
 #region parser
-	function functionStringClean(fx) {
+	function functionStringClean(fx) { #region
 		static __BRACKETS = [ "(", "[" ];
 		
 		var ch = "", ind = 0, len = string_length(fx);
@@ -87,9 +87,9 @@
 		fx = string_trim(fx);
 	
 		return fx;
-	}
+	} #endregion
 	
-	function functionStrip(fx) {
+	function functionStrip(fx) { #region
 		var el_st = 1;
 		var el_ed = 1;
 		
@@ -110,9 +110,9 @@
 		}
 		
 		return string_copy(fx, el_st, el_ed - el_st)
-	}
+	} #endregion
 	
-	function evaluateFunctionList(fx) {
+	function evaluateFunctionList(fx) { #region
 		fx = string_replace_all(fx, "{", "\n{\n");
 		fx = string_replace_all(fx, "}", "\n}\n");
 		
@@ -198,9 +198,9 @@
 		ds_stack_destroy(blok_st);
 		
 		return flist;
-	}
+	} #endregion
 	
-	function evaluateFunctionTree(fx) {
+	function evaluateFunctionTree(fx) { #region                  //////////////////////////////////////////// STATEMENT PARSER ////////////////////////////////////////////
 		static __BRACKETS = [ "(", ")", "[", "]", "］" ];
 		
 		var pres = global.EQUATION_PRES;
@@ -292,7 +292,8 @@
 			} else if (ch == ",") {
 				while(!ds_stack_empty(op)) {
 					var _top = ds_stack_top(op);
-					if(_top == "[" || _top == "(" || _top == "〚" || (is_array(_top) && _top[0] == "{")) break;
+					if(_top == "[" || _top == "(") break;
+					if(is_array(_top) && (_top[0] == "{" || _top[0] == "〚")) break;
 					
 					var _top = ds_stack_pop(op);
 					ds_stack_push(vl, buildFuncTree(_top, vl));
@@ -351,9 +352,9 @@
 		printIf(global.LOG_EXPRESSION, "");
 		
 		return tree;
-	}
+	} #endregion
 	
-	function buildFuncTree(operator, vl) {
+	function buildFuncTree(operator, vl) { #region
 		if(ds_stack_empty(vl)) return noone;
 		
 		if(ds_map_exists(global.FUNCTIONS, operator)) {
@@ -408,5 +409,5 @@
 		}
 		
 		return noone;
-	}
+	} #endregion
 #endregion
