@@ -6,8 +6,8 @@ function Node_create_Image_Animated(_x, _y, _group = noone) { #region
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_Image_Animated(_x, _y, _group);
-	var paths = paths_to_array(path);
+	var node  = new Node_Image_Animated(_x, _y, _group);
+	var paths = string_splice(path, "\n");
 	node.inputs[| 0].setValue(paths);
 	node.doUpdate();
 	
@@ -102,7 +102,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	function updatePaths(paths) { #region
 		if(!is_array(paths) && ds_exists(paths, ds_type_list))
 			paths = ds_list_to_array(paths);
-			
+		
 		for(var i = 0; i < array_length(spr); i++) {
 			if(spr[i] && sprite_exists(spr[i]))
 				sprite_delete(spr[i]);
