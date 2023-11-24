@@ -1280,6 +1280,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					nodes_selecting = [];
 					PANEL_PREVIEW.resetNodePreview();
 					setContextFrame(true, node_context[| i + 1]);
+					var _nodeFocus = node_context[| i + 1];
 					
 					if(i == -1)
 						resetContext();
@@ -1287,9 +1288,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						for(var j = ds_list_size(node_context) - 1; j > i; j--)
 							ds_list_delete(node_context, j);
 						nodes_list = node_context[| i].getNodeList();
-						toCenterNode();
-						break;
 					}
+					
+					nodes_selecting = [ _nodeFocus ];
+					var _l = ds_list_create_from_array(nodes_selecting)
+					print(ds_list_size(_l));
+					toCenterNode(_l);
+					ds_list_destroy(_l);
+					break;
 				}
 				
 				draw_sprite_ui_uniform(THEME.arrow, 0, xx + tw + ui(16), tbh, 1, COLORS._main_icon);

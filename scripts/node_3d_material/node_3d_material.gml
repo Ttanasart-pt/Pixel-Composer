@@ -63,12 +63,13 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		var _mat  = outputs[| 0].getValue();
 		
 		if(_mat == noone) return;
+		
 		if(is_array(_mat)) {
 			if(array_empty(_mat)) return;
 			_mat = _mat[0];
 		}
 		
-		if(is_surface(_mat.surface))
+		if(is_instanceof(_mat, __d3dMaterial) && is_surface(_mat.surface))
 			draw_surface_bbox(_mat.surface, bbox);
 	}
 }

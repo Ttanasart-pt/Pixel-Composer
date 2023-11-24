@@ -151,7 +151,7 @@ function __3dObject() constructor {
 				var _tex = _mat == noone? -1 : _mat.getTexture();
 					
 				if(_shader == sh_d3d_default) {
-					if(_mat == noone) {
+					if(!is_instanceof(_mat, __d3dMaterial)) {
 						shader_set_f("mat_diffuse",    1);
 						shader_set_f("mat_specular",   0);
 						shader_set_f("mat_shine",      1);
@@ -162,7 +162,7 @@ function __3dObject() constructor {
 					
 					vertex_submit(VB[i], render_type, _tex);
 				} else if(_shader == sh_d3d_geometry) {
-					if(_mat == noone)
+					if(!is_instanceof(_mat, __d3dMaterial))
 						shader_set_i("use_normal", 0);
 					else 
 						_mat.submitGeometry();

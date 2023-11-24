@@ -20,7 +20,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _mat  = _data[in_mesh + 0];
-		if(_mat == noone) return noone;
+		if(!is_instanceof(_mat, __d3dMaterial)) return noone;
 		
 		var _hght = _data[in_mesh + 1];
 		var _smt  = _data[in_mesh + 2];

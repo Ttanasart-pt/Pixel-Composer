@@ -1375,10 +1375,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} #endregion
 		
 		if(typeFrom == VALUE_TYPE.surface && type == VALUE_TYPE.d3Material) { #region
-			if(!is_array(value)) return new __d3dMaterial(value);
+			if(!is_array(value)) return is_surface(value)? new __d3dMaterial(value) : noone;
+			
 			var _val = array_create(array_length(value));
 			for( var i = 0, n = array_length(value); i < n; i++ ) 
-				_val[i] = new __d3dMaterial(value[i]);
+				_val[i] = is_surface(value[i])? new __d3dMaterial(value[i]) : noone;
 			return _val;
 		} #endregion
 		

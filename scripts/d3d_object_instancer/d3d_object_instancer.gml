@@ -83,7 +83,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		for( var i = 0, n = array_length(VB); i < n; i++ ) {
 			var _ind = array_safe_get(material_index, i, i);
 			var _mat = array_safe_get(materials, _ind, noone);
-			var _tex = _mat == noone? -1 : _mat.getTexture();
+			var _tex = is_instanceof(_mat, __d3dMaterial)? _mat.getTexture() : -1;
 					
 			vertex_submit_instanced(VB[i], render_type, _tex, object_counts);
 		}
