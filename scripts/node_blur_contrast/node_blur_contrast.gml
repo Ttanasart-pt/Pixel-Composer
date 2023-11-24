@@ -1,12 +1,6 @@
 function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Contrast Blur";
 	
-	shader = sh_blur_box_contrast;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_siz = shader_get_uniform(shader, "size");
-	uniform_tes = shader_get_uniform(shader, "treshold");
-	uniform_dir = shader_get_uniform(shader, "direction");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
@@ -26,8 +20,10 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 6] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 		
+	__init_mask_modifier(3); // inputs 7, 8
+	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true], 0, 3, 4, 
+		["Surfaces", true], 0, 3, 4, 7, 8, 
 		["Blur",	false], 1, 2,
 	]
 	
@@ -36,6 +32,10 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	temp_surface = [ surface_create(1, 1) ];
 	
 	attribute_surface_depth();
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _surf = _data[0];
@@ -49,29 +49,24 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, attrDepth());
 		
-		surface_set_target(temp_surface[0]);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-			shader_set(shader);
-			shader_set_uniform_f_array_safe(uniform_dim, [ ww, hh ]);
-			shader_set_uniform_f(uniform_siz, _size);
-			shader_set_uniform_f(uniform_tes, _tres);
-			shader_set_uniform_i(uniform_dir, 0);
+		surface_set_shader(temp_surface[0], sh_blur_box_contrast);
+			shader_set_surface("baseSurface", _surf);
+			shader_set_f("dimension", [ ww, hh ]);
+			shader_set_f("size", _size);
+			shader_set_f("treshold", _tres);
+			shader_set_i("direction", 0);
+			
 			draw_surface_safe(_surf, 0, 0);
-			shader_reset();
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-			shader_set(shader);
-			shader_set_uniform_i(uniform_dir, 1);
+		surface_set_shader(_outSurf, sh_blur_box_contrast);
+			shader_set(sh_blur_box_contrast);
+			shader_set_i("direction", 1);
+			
 			draw_surface_safe(temp_surface[0], 0, 0);
-			shader_reset();
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[6]);
 		

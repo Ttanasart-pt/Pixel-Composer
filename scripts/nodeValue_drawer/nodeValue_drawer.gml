@@ -33,7 +33,12 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var butx = xx;
 	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) { #region animation
 		var index = jun.hasJunctionFrom()? 2 : jun.is_anim;
-		draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 0.8);
+		
+		var cc = c_white;
+		if(jun.is_anim) cc = COLORS._main_value_positive;
+		if(index == 2)  cc = COLORS._main_accent;
+		
+		draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, cc, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 			if(anim_hold != noone)
 				jun.setAnim(anim_hold);
@@ -88,7 +93,12 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		cc = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 	}
 	
-	if(global_var) if(string_pos(" ", _name)) cc = COLORS._main_value_negative;
+	if(global_var) {
+		if(string_pos(" ", _name))	cc = COLORS._main_value_negative;
+	} else {
+		if(jun.hasJunctionFrom())	cc = COLORS._main_accent;
+		if(jun.is_anim)				cc = COLORS._main_value_positive;
+	}
 	
 	draw_set_text(_font, fa_left, fa_center, cc);
 	var lb_w = string_width(_name) + ui(48);
@@ -190,8 +200,15 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 	#region expression, pop up editor
 		if(jun.connect_type == JUNCTION_CONNECT.input && breakLine && !jun.is_anim && !global_var) {
-			var bx = xx + ww - ui(12);
+			var bx = xx + ww + ui(16);
 			var by = lb_y;
+			
+			bx -= ui(28);
+			if(jun.is_modified && buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_reset", "Reset value"), THEME.refresh_s, 0, COLORS._main_icon) == 2) {
+				jun.resetValue();
+			}
+			
+			bx -= ui(28);
 			var ic_b = jun.expUse? c_white : COLORS._main_icon;
 			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_use_expression", "Use expression"), THEME.node_use_expression, jun.expUse, ic_b) == 2) {
 				jun.expUse = !jun.expUse;

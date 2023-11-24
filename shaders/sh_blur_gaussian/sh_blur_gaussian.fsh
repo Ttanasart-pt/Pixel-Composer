@@ -7,7 +7,7 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 uniform int  horizontal;
 
-uniform float weight[32];
+uniform float weight[128];
 uniform int	  size;
 uniform int	  sampleMode;
 

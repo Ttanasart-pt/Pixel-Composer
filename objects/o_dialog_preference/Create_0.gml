@@ -261,8 +261,8 @@ event_inherited();
 		"ffmpeg_path",
 		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.gifski_path = txt; PREF_SAVE(); })
 			.setSideButton(button(function() { PREFERENCES.ffmpeg_path = get_directory(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
-		 .setFont(f_p2)
-		 .setEmpty(),
+			.setFont(f_p2)
+			.setEmpty(),
 	));
 	
 #endregion
@@ -307,20 +307,30 @@ event_inherited();
 	locals = [];
 	var f = file_find_first(DIRECTORY + "Locale/*", fa_directory);
 	while(f != "") {
-		if(directory_exists(DIRECTORY + "Locale/" + f))
-			array_push(locals, f);
+		if(directory_exists(DIRECTORY + "Locale/" + f)) {
+			if(f != "_extend") array_push(locals, f);
+		}
 		f = file_find_next();
 	}
 	file_find_close();
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_interface_language", "Interface Language (restart required)"),
+		__txtx("pref_interface_language", "Interface Language*"),
 		"local",
 		new scrollBox(locals, function(str) { 
 			if(str < 0) return;
 			PREFERENCES.local = locals[str];
 			PREF_SAVE();
 		}, false)
+	));
+	
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_ui_font", "Overwrite UI font*"),
+		"font_overwrite",
+		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.font_overwrite = txt; PREF_SAVE(); })
+			.setSideButton(button(function() { PREFERENCES.font_overwrite = get_open_filename("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
+			.setFont(f_p2)
+			.setEmpty()
 	));
 	
 	ds_list_add(pref_appr, __txt("Splash"));

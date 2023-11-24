@@ -34,6 +34,7 @@ function shader_set_f(uniform, value) {
 	if(shader == -1) return;
 	
 	if(is_array(value)) {
+		if(array_empty(value)) return;
 		shader_set_uniform_f_array_safe(shader_get_uniform(shader, uniform), value);
 		return;
 	}
@@ -71,8 +72,7 @@ function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) {
 	
 	var _len = array_length(array);
 	if(_len == 0) return;
-	if(_len > max_length)
-		array_resize(array, max_length)
+	if(_len > max_length) array_resize(array, max_length)
 	
 	shader_set_uniform_f_array(uniform, array);
 }

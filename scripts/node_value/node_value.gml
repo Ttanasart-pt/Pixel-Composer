@@ -578,7 +578,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dyna_depo   = ds_list_create();
 		value_tag   = "";
 		
-		is_changed  = true;
+		is_modified = false;
 		cache_value = [ false, false, undefined, undefined ];
 		cache_array = [ false, false ];
 		use_cache   = true;
@@ -694,7 +694,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
-	static resetValue = function() { setValue(def_val); }
+	static resetValue = function() { setValue(def_val); is_modified = false; }
 	
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) { #region
 		unit.reference  = ref;
@@ -1439,7 +1439,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(useCache) {
-			is_changed = !isEqual(cache_value[2], val);
 			cache_value[0] = true;
 			cache_value[1] = _time;
 		}
@@ -1721,6 +1720,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) { #region
+		is_modified = true;
 		var updated = false;
 		var _val;
 		
@@ -2414,6 +2414,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map.sep_axis	= sep_axis;
 		_map.shift_x	= draw_line_shift_x;
 		_map.shift_y	= draw_line_shift_y;
+		_map.is_modified= is_modified;
 		
 		if(!preset && value_from) {
 			_map.from_node  = value_from.node.node_id;
@@ -2466,6 +2467,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		draw_line_shift_x = struct_try_get(_map, "shift_x");
 		draw_line_shift_y = struct_try_get(_map, "shift_y");
+		is_modified       = struct_try_get(_map, "is_modified", true);
 		
 		name_custom = struct_try_get(_map, "name_custom", false);
 		if(name_custom) name = struct_try_get(_map, "name", name);

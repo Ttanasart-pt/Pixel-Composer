@@ -30,10 +30,12 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 10] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
+	__init_mask_modifier(4); // inputs 11, 12
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 6, 10, 
-		["Surfaces",	 true], 0, 4, 5, 
+		["Surfaces",	 true], 0, 4, 5, 11, 12, 
 		["Threshold",	false], 1, 2, 3, 7, 8, 9, 
 	];
 	
@@ -47,6 +49,8 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _alpha  = getInputData(7);
 		inputs[| 8].setVisible(_alpha);
 		inputs[| 9].setVisible(_alpha);
+		
+		__step_mask_modifier();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -70,6 +74,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[10]);
 		

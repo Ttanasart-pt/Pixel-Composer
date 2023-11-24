@@ -25,15 +25,21 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 6] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
+	__init_mask_modifier(3); // inputs 7, 8, 
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 5, 6,
-		["Surfaces", true],	0, 3, 4, 
+		["Surfaces", true],	0, 3, 4, 7, 8, 
 		["Kernel",	false],	1, 
 	];
 	
 	attribute_surface_depth();
 	attribute_oversample();
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _ker = _data[1];
@@ -53,6 +59,7 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		BLEND_NORMAL;
 		surface_reset_target();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[6]);
 		

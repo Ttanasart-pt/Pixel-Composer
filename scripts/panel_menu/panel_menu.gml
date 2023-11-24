@@ -8,13 +8,14 @@ function Panel_Menu() : PanelContent() constructor {
 	noti_icon_show   = 0;
 	noti_icon_time   = 0;
 	
+	vertical_break    = ui(240);
 	version_name_copy = 0;
 	
-	if(PREFERENCES.panel_menu_right_control)
-		action_buttons = ["exit", "maximize", "minimize", "fullscreen"];
-	else
-		action_buttons = ["exit", "minimize", "maximize", "fullscreen"];
+	var _right = PREFERENCES.panel_menu_right_control;
+	if(_right) action_buttons = ["exit", "maximize", "minimize", "fullscreen"];
+	else	   action_buttons = ["exit", "minimize", "maximize", "fullscreen"];
 	
+	#region file
 	menu_file_nondemo = [
 		menuItem(__txt("New"),				function() { NEW(); }, THEME.new_file, ["", "New file"]),
 		menuItem(__txt("Open") + "...",		function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"])
@@ -84,11 +85,13 @@ function Panel_Menu() : PanelContent() constructor {
 		menuItem(__txt("Close current project"), function() { PANEL_GRAPH.close(); },, [ "", "Close file" ]),
 		menuItem(__txt("Close all projects"), function() { for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]); },, [ "", "Close all" ]),
 		menuItem(__txt("Close program"), function() { window_close(); },, [ "", "Close program" ]),
-	];
+	]; 
 	
 	if(!DEMO) menu_file = array_append(menu_file_nondemo, menu_file);
+	#endregion
 	
-	menu_help = [
+	#region help
+	menu_help = [ 
 		menuItem(__txtx("panel_menu_help_video", "Tutorial videos"), function() {
 			url_open("https://www.youtube.com/@makhamdev");
 		}, THEME.youtube),
@@ -111,13 +114,9 @@ function Panel_Menu() : PanelContent() constructor {
 			dialogPanelCall(new Panel_Patreon());
 		}, THEME.patreon),
 	];
+	#endregion
 	
-	menu_help_steam = array_clone(menu_help);
-	array_push(menu_help_steam, -1, 
-		menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() {
-			steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
-		}, THEME.steam) );
-	
+	#region //////// MENU ////////
 	menus = [
 		[ __txt("File"), menu_file ],
 		[ __txt("Edit"), [
@@ -225,9 +224,10 @@ function Panel_Menu() : PanelContent() constructor {
 			} ).setIsShelf(),
 		]],
 		[ __txt("Help"), menu_help ],
-	]
+	]; 
+	#endregion
 	
-	if(TESTING) {
+	if(TESTING) { #region
 		array_push(menus, [ __txt("Dev"), [
 			menuItem(__txtx("panel_debug_console", "Debug console"), function() { 
 				panelAdd("Panel_Console", true)
@@ -275,16 +275,22 @@ function Panel_Menu() : PanelContent() constructor {
 				]);
 			} ).setIsShelf(),
 		]]);
-	}
+	} #endregion
+	
+	menu_help_steam = array_clone(menu_help);
+	array_push(menu_help_steam, -1, 
+		menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() {
+			steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
+		}, THEME.steam) );
 	
 	function onFocusBegin() { PANEL_MENU = self; }
 	
-	function setNotiIcon(icon) {
+	function setNotiIcon(icon) { #region
 		noti_icon = icon;
 		noti_icon_time = 90;
-	}
+	} #endregion
 	
-	function undoUpdate() {
+	function undoUpdate() { #region
 		var txt;
 		
 		if(ds_stack_empty(UNDO_STACK)) {
@@ -312,9 +318,11 @@ function Panel_Menu() : PanelContent() constructor {
 		
 		menus[1][1][1].active = !ds_stack_empty(REDO_STACK);
 		menus[1][1][1].name = txt;
-	}
+	} #endregion
 	
-	function drawContent(panel) {
+	function drawContent(panel) { #region
+		var _right = PREFERENCES.panel_menu_right_control;
+		
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		menus[6][1] = STEAM_ENABLED? menu_help_steam : menu_help;
 		var hori = w > h;
@@ -322,114 +330,119 @@ function Panel_Menu() : PanelContent() constructor {
 		var xx = ui(40);
 		var yy = ui(8);
 		
-		if(hori) {
-			if(PREFERENCES.panel_menu_right_control)
-				xx = ui(24);
-			else {
-				xx = ui(140);
-				draw_set_color(COLORS._main_icon_dark);
-				draw_line_round(xx, ui(8), xx, h - ui(8), 3);
-			}
-		
-			var bx = xx;
-			if(!PREFERENCES.panel_menu_right_control)
-				bx = w - ui(24);
-		
-			draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2, 1, c_white);
-			if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
-				if(mouse_press(mb_left, pFOCUS))
-					dialogCall(o_dialog_about);
-			}
-		} else {
-			var bx = ui(20);
-			var by = h - ui(20);
-			
-			draw_sprite_ui_uniform(THEME.icon_24, 0, bx, by, 1, c_white);
-			if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
-				if(mouse_press(mb_left, pFOCUS))
-					dialogCall(o_dialog_about);
-			}
-		}
-		
-		if(hori) {
-			if(PREFERENCES.panel_menu_right_control)
-				xx += ui(20);
-			else
-				xx += ui(8);
-			yy = 0;
-		} else {
-			xx = ui(8);
-			yy = w < ui(200)? ui(72) : ui(40);
-		}
-		
-		var sx = xx;
-		var xc, x0, x1, yc, y0, y1, _mx = xx;
-		var row = 1, maxRow = ceil(h / ui(40));
-		
-		var _ww = 0;
-		for(var i = 0; i < array_length(menus) - 1; i++) {
-			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-			var ww = string_width(menus[i][0]) + ui(16 + 8);
-			_ww += ww;
-			if(_ww > w * 0.4 - sx) {
-				row++;
-				_ww = 0;
-			} 
-		}
-		
-		row = min(row, maxRow);
-		var _curRow = 0, currY;
-		var _rowH   = (h - ui(12)) / row;
-		var _ww     = 0;
-		
-		for(var i = 0; i < array_length(menus); i++) {
-			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-			var ww = string_width(menus[i][0]) + ui(16);
-			var hh = line_get_height() + ui(8);
-			
+		#region about icon
 			if(hori) {
-				xc = xx + ww / 2;
-				
-				x0 = xx;
-				x1 = xx + ww;
-				y0 = ui(6) + _rowH * _curRow;
-				y1 = y0 + _rowH;
-				
-				yc = (y0 + y1) / 2;
-				currY = yc;
+				if(PREFERENCES.panel_menu_right_control)
+					xx = ui(24);
+				else {
+					xx = ui(140);
+					draw_set_color(COLORS._main_icon_dark);
+					draw_line_round(xx, ui(8), xx, h - ui(8), 3);
+				}
+		
+				var bx = xx;
+				if(!PREFERENCES.panel_menu_right_control)
+					bx = w - ui(24);
+		
+				draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2, 1, c_white);
+				if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
+					if(mouse_press(mb_left, pFOCUS))
+						dialogCall(o_dialog_about);
+				}
 			} else {
-				xc = w / 2;
-				yc = yy + hh / 2;
-				
-				x0 = ui(6);
-				x1 = w - ui(6);
-				y0 = yy;
-				y1 = yy + hh;
-			}
+				var bx = ui(20);
+				var by = h - ui(20);
 			
-			if(pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
-				draw_sprite_stretched(THEME.menu_button, 0, x0, y0, x1 - x0, y1 - y0);
-					
-				if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
-					if(hori) menuCall("main_" + menus[i][0] + "_menu", x + x0, y + y1, menus[i][1]);
-					else     menuCall("main_" + menus[i][0] + "_menu", x + x1, y + y0, menus[i][1]);
+				draw_sprite_ui_uniform(THEME.icon_24, 0, bx, by, 1, c_white);
+				if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
+					if(mouse_press(mb_left, pFOCUS))
+						dialogCall(o_dialog_about);
 				}
 			}
-			
-			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-			draw_text_add(xc, yc, menus[i][0]);
-			
+		#endregion
+		
+		#region menu
 			if(hori) {
-				xx  += ww + 8;
-				_mx  = max(_mx, xx);
-				_ww += ww + 8;
+				if(PREFERENCES.panel_menu_right_control)
+					xx += ui(20);
+				else
+					xx += ui(8);
+				yy = 0;
+			} else {
+				xx = ui(8);
+				yy = w < vertical_break? ui(72) : ui(40);
+			}
+		
+			var sx = xx;
+			var xc, x0, x1, yc, y0, y1, _mx = xx;
+			var row = 1, maxRow = ceil(h / ui(40));
+		
+			var _ww = 0;
+			for(var i = 0; i < array_length(menus) - 1; i++) {
+				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+				var ww = string_width(menus[i][0]) + ui(16 + 8);
+				_ww += ww;
 				if(_ww > w * 0.4 - sx) {
-					_curRow++;
+					row++;
 					_ww = 0;
-					xx  = sx;
+				} 
+			}
+		
+			row = min(row, maxRow);
+			var _curRow = 0, currY;
+			var _rowH   = (h - ui(12)) / row;
+			var _ww     = 0;
+		
+			for(var i = 0; i < array_length(menus); i++) {
+				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+				var ww = string_width(menus[i][0]) + ui(16);
+				var hh = line_get_height() + ui(8);
+			
+				if(hori) {
+					xc = xx + ww / 2;
+				
+					x0 = xx;
+					x1 = xx + ww;
+					y0 = ui(6) + _rowH * _curRow;
+					y1 = y0 + _rowH;
+				
+					yc = (y0 + y1) / 2;
+					currY = yc;
+				} else {
+					xc = w / 2;
+					yc = yy + hh / 2;
+				
+					x0 = ui(6);
+					x1 = w - ui(6);
+					y0 = yy;
+					y1 = yy + hh;
 				}
-			} else     yy += hh + 8;
-		}
+			
+				if(pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
+					draw_sprite_stretched(THEME.menu_button, 0, x0, y0, x1 - x0, y1 - y0);
+					
+					if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
+						if(hori) menuCall("main_" + menus[i][0] + "_menu", x + x0, y + y1, menus[i][1]);
+						else     menuCall("main_" + menus[i][0] + "_menu", x + x1, y + y0, menus[i][1]);
+					}
+				}
+			
+				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+				draw_text_add(xc, yc, menus[i][0]);
+			
+				if(hori) {
+					xx  += ww + 8;
+					_mx  = max(_mx, xx);
+					_ww += ww + 8;
+					if(_ww > w * 0.4 - sx) {
+						_curRow++;
+						_ww = 0;
+						xx  = sx;
+					}
+				} else
+					yy += hh + 8;
+			}
+		#endregion
 		
 		#region notification
 			var warning_amo = 0;
@@ -521,11 +534,7 @@ function Panel_Menu() : PanelContent() constructor {
 			}
 		#endregion
 		
-		var x1 = w - ui(6);
-		if(PREFERENCES.panel_menu_right_control)
-			x1 = w - ui(6);
-		else
-			x1 = ui(8 + 28);
+		var x1 = _right? w - ui(6) : ui(8 + 28);
 		
 		#region actions
 			var bs = ui(28);
@@ -588,16 +597,14 @@ function Panel_Menu() : PanelContent() constructor {
 						break;
 				}
 				
-				if(PREFERENCES.panel_menu_right_control)
-					x1 -= bs + ui(4);
-				else 
-					x1 += bs + ui(4);
+				if(_right) x1 -= bs + ui(4);
+				else       x1 += bs + ui(4);
 			}
 		#endregion
 		
-		if(!PREFERENCES.panel_menu_right_control)	x1 = w - ui(40);
-		
 		#region version
+			var _xx1 = _right? x1 : w - ui(40);
+			
 			var txt = "v. " + string(VERSION_STRING);
 			if(STEAM_ENABLED) txt += " Steam";
 			
@@ -607,20 +614,11 @@ function Panel_Menu() : PanelContent() constructor {
 			
 			if(hori) {
 				draw_set_text(f_p0, fa_center, fa_center, tc);
-				var ww = string_width(txt) + ui(12);
-				
-				if(h > ui(76)) {
-					ww += ui(16);
-					var _x0 = w - ui(8) - ww;
-					var _y0 = h - ui(40);
-					var _x1 = w - ui(8);
-					var _y1 = h - ui(8);
-				} else {
-					var _x0 = x1 - ww;
-					var _y0 = ui(6);
-					var _x1 = x1;
-					var _y1 = h - ui(6);
-				}
+				var  ww = string_width(txt) + ui(12);
+				var _x0 = _xx1 - ww;
+				var _y0 = ui(6);
+				var _x1 = _xx1;
+				var _y1 = h - ui(6);
 				
 				if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
 					draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
@@ -635,13 +633,13 @@ function Panel_Menu() : PanelContent() constructor {
 				
 				draw_text((_x0 + _x1) / 2, (_y0 + _y1) / 2, txt);
 			} else {
-				var x1 = ui(40);
+				var _xx1 = ui(40);
 				var y1 = h - ui(20);
 				
 				draw_set_text(f_p0, fa_left, fa_center, tc);
 				var ww = string_width(txt) + ui(12);
-				if(pHOVER && point_in_rectangle(mx, my, x1, y1 - ui(16), x1 + ww, y1 + ui(16))) {
-					draw_sprite_stretched_ext(THEME.button_hide_fill, 1, x1, y1 - ui(16), ww, ui(32), sc, 1);
+				if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
+					draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _xx1, y1 - ui(16), ww, ui(32), sc, 1);
 					
 					if(mouse_press(mb_left, pFOCUS))
 						dialogCall(o_dialog_release_note); 
@@ -651,7 +649,7 @@ function Panel_Menu() : PanelContent() constructor {
 					}
 				}
 				
-				draw_text(x1 + ui(6), y1, txt);
+				draw_text(_xx1 + ui(6), y1, txt);
 			}
 		#endregion
 		
@@ -666,30 +664,27 @@ function Panel_Menu() : PanelContent() constructor {
 			if(ALPHA)		txt += " ALPHA";
 			else if(DEMO)	txt += " DEMO";
 			
-			var tx0, tx1, maxW, tcx;
+			var tx0, tx1, tcx;
 			var ty0, ty1;
 			var tbx0, tby0;
+			var maxW;
 			
 			if(hori) {
-				if(h > ui(76)) {
-					tx0 = nx0;
-					tx1 = w - ui(8);
-					ty0 = 0;
-					ty1 = h;
-				} else {
-					tx0 = nx0;
-					tx1 = x1 - ww;
-					ty0 = 0;
-					ty1 = h;
-				}
-				
+				tx0 = nx0;
+				tx1 = w - ui(16);
+				ty0 = 0;
+				ty1 = h;
 				tcx  = (tx0 + tx1) / 2;
 			} else {
 				tx0 = ui(8);
-				tx1 = w < ui(200)? w - ui(16) : w - ui(144);
-				ty0 = w < ui(200)? ui(36) : ui(6);
+				tx1 = w < vertical_break? w - ui(16) : w - ui(144);
+				ty0 = w < vertical_break? ui(36) : ui(6);
 				
-				tcx  = tx0;
+				tcx = tx0;
+				if(!_right && w >= vertical_break) {
+					tx0 = x1 - bs;
+					tx1 = w - ui(16);
+				}
 			}
 			
 			maxW = abs(tx0 - tx1);
@@ -760,5 +755,5 @@ function Panel_Menu() : PanelContent() constructor {
 				draw_sprite_ext(s_patreon_supporter, 1, _cx, _cy, 1, 1, 0, _ib, 1);
 			}
 		#endregion
-	}
+	} #endregion
 }

@@ -34,9 +34,9 @@ function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_a
 	
 	if(is_surface(foreground)) {
 		shader_set(sh);
-		shader_set_surface("fore", foreground);
-		shader_set_surface("mask", _mask);
-		shader_set_i("useMask",			_mask != 0? 1 : 0);
+		shader_set_surface("fore",		foreground);
+		shader_set_surface("mask",		_mask);
+		shader_set_i("useMask",			is_surface(_mask));
 		shader_set_f("dimension",		surface_get_width_safe(background) / surface_get_width_safe(foreground), surface_get_height_safe(background) / surface_get_height_safe(foreground));
 		shader_set_f("opacity",			alpha);
 		shader_set_i("preserveAlpha",	_pre_alp);

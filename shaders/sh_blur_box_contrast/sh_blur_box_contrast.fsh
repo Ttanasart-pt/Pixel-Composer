@@ -4,11 +4,11 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 dimension;
+uniform sampler2D baseSurface;
+uniform vec2  dimension;
 uniform float size;
 uniform float treshold;
-//#define size 5.
-uniform int direction;
+uniform int   direction;
 
 vec3 rgb2xyz( vec3 c ) {
     vec3 tmp;
@@ -43,25 +43,29 @@ float colorDifferent(in vec4 c1, in vec4 c2) {
 }
 
 void main() {
-	vec4 base_col = texture2D( gm_BaseTexture, v_vTexcoord);
+	vec4 base_col = texture2D( baseSurface, v_vTexcoord);
+	vec4 curr_col = texture2D( gm_BaseTexture, v_vTexcoord);
+	
 	if(base_col.a > 0.5) {
-		vec4 col = base_col;
-		vec4 _col;
+		vec4 col = curr_col;
+		vec4 _bcol, _ccol;
 		float mulp = 1.;
 	
 		if(direction == 0) {
 			for(float i = 1.; i < 32.; i++) {
 				if(i >= size) break;
 				
-				_col = texture2D( gm_BaseTexture, v_vTexcoord + vec2(i / dimension.x, 0.));
-				if(_col.a > 0.5 && colorDifferent(base_col, _col) < treshold) {
-					col += _col;
+				_bcol = texture2D( baseSurface, v_vTexcoord + vec2(i / dimension.x, 0.));
+				if(_bcol.a > 0.5 && colorDifferent(base_col, _bcol) < treshold) {
+					_ccol = texture2D( gm_BaseTexture, v_vTexcoord + vec2(i / dimension.x, 0.));
+					col += _ccol;
 					mulp++;
 				}
 				
-				_col = texture2D( gm_BaseTexture, v_vTexcoord - vec2(i / dimension.x, 0.));
-				if(_col.a > 0.5 && colorDifferent(base_col, _col) < treshold) {
-					col += _col;
+				_bcol = texture2D( baseSurface, v_vTexcoord - vec2(i / dimension.x, 0.));
+				if(_bcol.a > 0.5 && colorDifferent(base_col, _bcol) < treshold) {
+					_ccol = texture2D( gm_BaseTexture, v_vTexcoord - vec2(i / dimension.x, 0.));
+					col += _ccol;
 					mulp++;
 				}
 			}
@@ -70,21 +74,25 @@ void main() {
 		} else if(direction == 1) {
 			for(float i = 1.; i < 32.; i++) {
 				if(i >= size) break;
-				_col = texture2D( gm_BaseTexture, v_vTexcoord + vec2(0., i / dimension.y));
-				if(_col.a > 0.5 && colorDifferent(base_col, _col) < treshold) {
-					col += _col;
+				
+				_bcol = texture2D( baseSurface, v_vTexcoord + vec2(0., i / dimension.y));
+				if(_bcol.a > 0.5 && colorDifferent(base_col, _bcol) < treshold) {
+					_ccol = texture2D( gm_BaseTexture, v_vTexcoord + vec2(0., i / dimension.y));
+					col += _ccol;
 					mulp++;
 				}
 				
-				_col = texture2D( gm_BaseTexture, v_vTexcoord - vec2(0., i / dimension.y));
-				if(_col.a > 0.5 && colorDifferent(base_col, _col) < treshold) {
-					col += _col;
+				_bcol = texture2D( baseSurface, v_vTexcoord - vec2(0., i / dimension.y));
+				if(_bcol.a > 0.5 && colorDifferent(base_col, _bcol) < treshold) {
+					_ccol = texture2D( gm_BaseTexture, v_vTexcoord - vec2(0., i / dimension.y));
+					col += _ccol;
 					mulp++;
 				}
 			}
 		
 			col /= mulp;
 		}
+		
 		col.a = base_col.a;
 		gl_FragColor = col;
 	} else {

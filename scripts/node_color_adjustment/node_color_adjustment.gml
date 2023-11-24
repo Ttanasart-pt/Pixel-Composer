@@ -47,13 +47,18 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 15] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
+	inputs[| 16] = nodeValue("Invert mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 17] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] });
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Color out", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [11, 12, 15, 9, 
-		["Surface",		false], 0, 8, 13, 
+		["Surface",		false], 0, 8, 16, 17, 13, 
 		["Brightness",	false], 1, 10, 2, 
 		["HSV",			false], 3, 4, 5, 
 		["Color blend", false], 6, 14, 7
@@ -74,6 +79,10 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		outputs[| 0].setVisible(type == 0, type == 0);
 		outputs[| 1].setVisible(type == 1, type == 1);
+		
+		var _msk = is_surface(getSingleValue(8));
+		inputs[| 16].setVisible(_msk);
+		inputs[| 17].setVisible(_msk);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -92,6 +101,9 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _type = _data[12];
 		var _col  = _data[13];
 		var _blm  = _data[14];
+		
+		var _mskInv = _data[16];
+		var _mskFea = _data[17];
 		
 		if(_type == 0 && _output_index != 0) return [];
 		if(_type == 1 && _output_index != 1) return noone;
@@ -133,6 +145,8 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			return _col;
 		}
+		
+		_m = mask_modify(_m, _mskInv, _mskFea);
 		
 		surface_set_shader(_baseSurf, sh_color_adjust);
 			shader_set_f("brightness", _bri);

@@ -14,13 +14,19 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 4] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 		
+	__init_mask_modifier(1); // inputs 5, 6
+	
 	input_display_list = [ 3, 4, 
-		["Surfaces",	 true], 0, 1, 2, 
+		["Surfaces",	 true], 0, 1, 2, 5, 6, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
 		surface_set_target(_outSurf);
@@ -34,6 +40,7 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		BLEND_NORMAL;
 		surface_reset_target();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[1], _data[2]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[4]);
 		

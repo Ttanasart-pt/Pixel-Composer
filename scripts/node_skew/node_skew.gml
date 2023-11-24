@@ -29,8 +29,10 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 9] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 		
+	__init_mask_modifier(6); // inputs 10, 11
+	
 	input_display_list = [ 8, 9, 
-		["Surfaces", true],	0, 6, 7, 
+		["Surfaces", true],	0, 6, 7, 10, 11, 
 		["Skew",	false],	1, 2, 4,
 	]
 	
@@ -52,6 +54,10 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _axis = _data[1];
 		var _amou = _data[2];
@@ -69,6 +75,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[6], _data[7]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[9]);
 		

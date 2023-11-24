@@ -17,8 +17,10 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 4] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
+	__init_mask_modifier(1); // inputs 5, 6, 
+	
 	input_display_list = [ 3, 4, 
-		["Surfaces", false], 0, 1, 2, 
+		["Surfaces", false], 0, 1, 2, 5, 6, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -28,6 +30,10 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_surface_depth();
 
 	colors = [];
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var inSurf = _data[0];
@@ -77,6 +83,7 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		draw_clear(cc);
 		surface_reset_target();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[1], _data[2]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[4]);
 		colors[_array_index] = cc;

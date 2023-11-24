@@ -27,8 +27,10 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 7] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 7;
 	
+	__init_mask_modifier(5); // inputs 8, 9, 
+	
 	input_display_list = [ 7, 
-		["Surfaces", true], 0, 5, 6, 
+		["Surfaces", true], 0, 5, 6, 8, 9, 
 		["Glow",	false], 1, 2, 3, 4, 
 	]
 	
@@ -36,6 +38,10 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	surface_blur_init();
 	attribute_surface_depth();
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _border = _data[1];
@@ -73,6 +79,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_free(pass1);
 		surface_free(s);
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
 		
 		return _outSurf;

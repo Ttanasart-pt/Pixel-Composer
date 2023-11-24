@@ -30,6 +30,8 @@ function Panel_Collection() : PanelContent() constructor {
 	updated_prog = 0;
 	data_path    = "";
 	
+	view_tooltip = new tooltipSelector("View", [ "Grid", "List" ])
+	
 	static initMenu = function() { #region
 		if(_menu_node == noone) return;
 		var meta = _menu_node.getMetadata();
@@ -141,7 +143,7 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	contentView = 0;
 	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) { #region
-		draw_clear_alpha(COLORS._main_text_inner, 0);
+		draw_clear_alpha(c_white, 0);
 		
 		var nodes = search_string == ""? context.content : search_list;
 		if(mode == 0 && context == root) nodes = STEAM_COLLECTION;
@@ -154,10 +156,10 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		var node_list  = ds_list_size(nodes);
 		var node_count = node_list + array_length(steamNode);
-		var hh = 0;
-		var frame = current_time * PREFERENCES.collection_preview_speed / 3000;
-		var _cw = contentPane.surface_w;
+		var frame  = current_time * PREFERENCES.collection_preview_speed / 3000;
+		var _cw    = contentPane.surface_w;
 		var _hover = pHOVER && contentPane.hover;
+		var hh = 0;
 		
 		updated_prog = lerp_linear(updated_prog, 0, 0.01);
 		
@@ -219,7 +221,7 @@ function Panel_Collection() : PanelContent() constructor {
 					if(sprite_exists(_node.spr)) {
 						var sw = sprite_get_width(_node.spr);
 						var sh = sprite_get_height(_node.spr);
-						var ss = ui(32) / max(sw, sh);
+						var ss = (grid_size - ui(10)) / max(sw, sh);
 							
 						var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
 						var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
@@ -247,8 +249,8 @@ function Panel_Collection() : PanelContent() constructor {
 					}
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_inner);
-					name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + 8);
-					draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
+					var _txtH = draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width,, true);
+					name_height = max(name_height, _txtH + 8);
 				}
 				
 				var hght = grid_size + name_height + ui(8);
@@ -425,10 +427,9 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(search_string == "") {
 			if(bx > rootx) {
-				var txt = contentView? __txtx("view_grid", "Grid view") : __txtx("view_list", "List view");
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.view_mode, contentView) == 2) {
+				view_tooltip.index = contentView;
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, view_tooltip, THEME.view_mode, contentView) == 2)
 					contentView = !contentView;
-				}
 			}
 			bx -= ui(36);
 			
@@ -451,7 +452,7 @@ function Panel_Collection() : PanelContent() constructor {
 						draw_sprite_ui_uniform(THEME.add, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon_dark);	
 				}
 				bx -= ui(36);
-		
+				
 				if(bx > rootx) {
 					var txt = __txtx("panel_collection_add_folder", "Add folder");
 					if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt) == 2) {
@@ -470,7 +471,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 			if(bx > rootx) {
 				var txt = __txtx("panel_collection_open_file", "Open in file explorer");
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.folder) == 2)
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.button_path_open) == 2)
 					shellOpenExplorer(context.path);
 			}
 			bx -= ui(36);

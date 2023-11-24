@@ -45,15 +45,21 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 10] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
+	__init_mask_modifier(7); // inputs 11, 12, 
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 9, 10, 
-		["Surfaces", true], 0, 7, 8, 
+		["Surfaces", true], 0, 7, 8, 11, 12, 
 		["Pattern",	false], 2, 3, 
 		["Dither",	false], 6, 1, 4, 5
 	]
 	
 	attribute_surface_depth();
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _pal = _data[1];
@@ -142,6 +148,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			BLEND_NORMAL; 
 		surface_reset_target();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[10]);
 		

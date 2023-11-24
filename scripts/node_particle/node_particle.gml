@@ -2,7 +2,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	name = "Particle";
 	use_cache = CACHE_USE.auto;
 
-	onSurfaceSize = function() { return surface_get_dimension(getInputData(input_len, DEF_SURF)); };
+	onSurfaceSize = function() { return getInputData(input_len, DEF_SURF); };
 	inputs[| 3].setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 22].setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation", "Array" ]);

@@ -19,15 +19,21 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 6] = nodeValue("Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
+	__init_mask_modifier(1); // inputs 7, 8, 
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3, 4,
-		["Surfaces", false], 0, 1, 2, 
+		["Surfaces", false], 0, 1, 2, 7, 8, 
 		["Effect",   false], 5, 6, 
 	]
 	
 	attribute_surface_depth();
 	attribute_interpolation();
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_shader(_outSurf, sh_polar);
@@ -38,6 +44,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[1], _data[2]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[4]);
 		

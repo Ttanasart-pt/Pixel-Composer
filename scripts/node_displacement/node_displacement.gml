@@ -40,8 +40,10 @@ If set, then strength value control how many times the effect applies on itself.
 	inputs[| 12] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
+	__init_mask_modifier(8); // inputs 13, 14
+	
 	input_display_list = [ 10, 12, 
-		["Surfaces",	 true],	0, 8, 9, 
+		["Surfaces",	 true],	0, 8, 9, 13, 14, 
 		["Displace",	false], 1, 3, 4,
 		["Color",		false], 5, 2, 
 		["Algorithm",	 true],	6, 11, 
@@ -52,6 +54,10 @@ If set, then strength value control how many times the effect applies on itself.
 	attribute_surface_depth();
 	attribute_oversample();
 	attribute_interpolation();
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		switch(_data[5]) {
@@ -83,6 +89,7 @@ If set, then strength value control how many times the effect applies on itself.
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[8], _data[9]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[12]);
 		

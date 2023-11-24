@@ -14,7 +14,7 @@
 	var x1  = x0 + ww;
 	var y1  = y0 + hh;
 	
-	draw_sprite_stretched(THEME.dialog_bg, 0, x0, y0, ww, hh);
+	draw_sprite_stretched(THEME.dialog_bg, 0, x0 - ui(8), y0 - ui(8), ww + ui(8) * 2, hh + ui(8) * 2);
 	
 	for( var i = 0, n = array_length(pal); i < n; i++ ) {
 		var r = floor(i / col);

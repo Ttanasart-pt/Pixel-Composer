@@ -29,14 +29,20 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 7] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
+	__init_mask_modifier(3); // inputs 8, 9, 
+	
 	input_display_list = [ 5, 7, 
-		["Surfaces", true], 0, 3, 4, 
+		["Surfaces", true], 0, 3, 4, 8, 9, 
 		["Remove",	false], 1, 2, 6, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var frm = _data[1];
@@ -63,6 +69,7 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		BLEND_NORMAL;
 		surface_reset_target();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[7]);
 		

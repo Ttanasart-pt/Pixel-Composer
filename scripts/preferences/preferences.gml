@@ -53,6 +53,7 @@
 	
 	PREFERENCES.theme							= "default";
 	PREFERENCES.local							= "en";
+	PREFERENCES.font_overwrite					= "";
 	
 	PREFERENCES.dialog_add_node_grouping		= true;
 	PREFERENCES.dialog_add_node_view			= 0;

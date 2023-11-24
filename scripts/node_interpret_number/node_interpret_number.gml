@@ -31,17 +31,18 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		static BATCH_SIZE = 1024;
 		
-		var _num = _data[0];
+		var _val = _data[0];
 		var _mod = _data[1];
 		var _ran = _data[2];
 		var _grd = _data[3];
 		
-		if(!is_array(_num)) _num = [ _num ];
-		_num = array_spread(_num);
-		
+		if(is_array(_val) && array_empty(_val)) return _outSurf;
+		if(!is_array(_val)) _val = [ _val ];
+		var _num = array_spread(_val);
 		var _amo = array_length(_num);
 		
 		_outSurf = surface_verify(_outSurf, _amo, 1, attrDepth());
+		if(_amo == 0) return _outSurf;
 		
 		surface_set_shader(_outSurf, sh_interpret_number);
 			shader_set_i("mode", _mod);

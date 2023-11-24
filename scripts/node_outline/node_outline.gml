@@ -30,12 +30,14 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 12] = nodeValue("Crop border", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	__init_mask_modifier(9); // inputs 13, 14
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Outline", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 11, 
-		["Surfaces", true], 0, 9, 10, 
+		["Surfaces", true], 0, 9, 10, 13, 14, 
 		["Outline",	false], 1, 5, 8, 12, 
 		["Render",	false], 2, 3, 4, 6,
 	];
@@ -49,6 +51,8 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		inputs[| 4].setVisible(blend);
 		inputs[| 12].setVisible(_side == 0);
+		
+		__step_mask_modifier();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -82,6 +86,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[9], _data[10]);
 		
 		return _outSurf;  

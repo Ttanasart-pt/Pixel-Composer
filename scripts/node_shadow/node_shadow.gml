@@ -30,10 +30,12 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 8] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 8;
 	
+	__init_mask_modifier(6); // inputs 9, 10
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8, 
-		["Surfaces", true], 0, 6, 7, 
+		["Surfaces", true], 0, 6, 7, 9, 10, 
 		["Shadow",	false], 1, 2, 3, 4, 5, 
 	];
 	
@@ -52,6 +54,10 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		inputs[| 3].drawOverlay(active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny);
 	}
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var cl      = _data[1];
@@ -84,6 +90,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_reset_target();
 		surface_free(pass1);
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[6], _data[7]);
 		
 		return _outSurf;

@@ -35,8 +35,10 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 9] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
+	__init_mask_modifier(6); // inputs 10, 11, 
+	
 	input_display_list = [ 8, 9, 
-		["Surfaces", true],	0, 6, 7, 
+		["Surfaces", true],	0, 6, 7, 10, 11, 
 		["Blur",	false],	1, 3, 4, 5, 
 	];
 	
@@ -44,6 +46,10 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	attribute_oversample();
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
 		if(!is_surface(_data[0])) return _outSurf;
@@ -79,6 +85,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			BLEND_NORMAL;
 		surface_reset_target();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _msk, _mix);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[9]);
 		

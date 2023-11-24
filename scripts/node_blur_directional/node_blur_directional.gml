@@ -20,8 +20,10 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	inputs[| 6] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
+	__init_mask_modifier(3); // inputs 7, 8
+	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true], 0, 3, 4, 
+		["Surfaces", true], 0, 3, 4, 7, 8, 
 		["Blur",	false], 1, 2,
 	]
 	
@@ -43,6 +45,10 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		inputs[| 2].drawOverlay(active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _str  = _data[1];
 		var _dir  = _data[2];
@@ -57,6 +63,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[6]);
 		

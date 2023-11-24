@@ -1,6 +1,30 @@
+globalvar GAUSSIAN_COEFF;
+GAUSSIAN_COEFF = {};
+
 function surface_blur_init() {
 	__blur_hori = surface_create(1, 1);
 	__blur_vert = surface_create(1, 1);
+}
+
+function __gaussian_get_kernel(size) {
+	size = max(1, round(size));
+	if(struct_has(GAUSSIAN_COEFF, size)) return GAUSSIAN_COEFF[$ size];
+	
+	var gau_array = array_create(size);
+	var we = 0;
+	var b  = 0.3 * ((size - 1) * 0.5 - 1) + 0.8;
+	for(var i = 0; i < size; i++) {
+		var _x = i * .5;
+		
+		gau_array[i] = (1 / sqrt(2 * pi * b)) * exp( -sqr(_x) / (2 * sqr(b)) );
+		we += i? gau_array[i] * 2 : gau_array[i];
+	}
+	
+	for(var i = 0; i < size; i++)
+		gau_array[i] /= we;
+	
+	GAUSSIAN_COEFF[$ size] = gau_array;
+	return gau_array;
 }
 
 function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampleMode = 0, overColor = noone) {
@@ -16,21 +40,8 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 	__blur_hori = surface_verify(__blur_hori, surface_get_width_safe(surface), surface_get_height_safe(surface), format);	
 	__blur_vert = surface_verify(__blur_vert, surface_get_width_safe(surface), surface_get_height_safe(surface), format);	
 	
-	#region kernel generation
-		size = max(1, round(size));
-		var gau_array = array_create(size);
-		var we = 0;
-		var b  = 0.3 * ((size - 1) * 0.5 - 1) + 0.8;
-		for(var i = 0; i < size; i++) {
-			var _x = i * .5;
-		
-			gau_array[i] = (1 / sqrt(2 * pi * b)) * exp( -sqr(_x) / (2 * sqr(b)) );
-			we += i? gau_array[i] * 2 : gau_array[i];
-		}
-		for(var i = 0; i < size; i++) {
-			gau_array[i] /= we;
-		}
-	#endregion
+	size = min(size, 128);
+	var gau_array = __gaussian_get_kernel(size);
 	
 	BLEND_OVERRIDE;
 	gpu_set_tex_filter(true);

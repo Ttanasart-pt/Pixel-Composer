@@ -14,14 +14,20 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 4] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 4;
 	
+	__init_mask_modifier(2); // inputs 5, 6, 
+	
 	input_display_list = [ 4, 
-		["Surfaces", true], 0, 2, 3,
+		["Surfaces", true], 0, 2, 3, 5, 6, 
 		["Cutoff",	false], 1, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
 		surface_set_target(_outSurf);
@@ -36,6 +42,7 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		BLEND_NORMAL;
 		surface_reset_target();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[2], _data[3]);
 		
 		return _outSurf;

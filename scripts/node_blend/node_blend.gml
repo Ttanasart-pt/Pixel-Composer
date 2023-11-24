@@ -40,10 +40,15 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 11] = nodeValue("Vertical Align", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign]);
 	
+	inputs[| 12] = nodeValue("Invert mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 13] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] });
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8, 
-		["Surfaces",	 true],	0, 1, 4, 6, 7,
+		["Surfaces",	 true],	0, 1, 4, 12, 13, 6, 7,
 		["Blend",		false], 2, 3, 9,
 		["Transform",	false], 5, 10, 11, 
 	]
@@ -67,6 +72,10 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		inputs[| 10].setVisible(_fill == 0 && !_atlas);
 		inputs[| 11].setVisible(_fill == 0 && !_atlas);
+		
+		var _msk = is_surface(getSingleValue(4));
+		inputs[| 12].setVisible(_msk);
+		inputs[| 12].setVisible(_msk);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -83,6 +92,10 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		var _halign = _data[10];
 		var _valign = _data[11];
+		
+		var _mskInv = _data[12];
+		var _mskFea = _data[13];
+		
 		var cDep    = attrDepth();
 		
 		var ww = 1, hh  = 1;
@@ -167,6 +180,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			_output = surface_verify(_outSurf.surface.surface, ww, hh, cDep);
 		else	  
 			_output = surface_verify(_outSurf, ww, hh, cDep);
+		
+		_mask = mask_modify(_mask, _mskInv, _mskFea);
 		
 		surface_set_shader(_output, noone);
 			draw_surface_blend(_backDraw, _foreDraw, _type, _opacity, _pre_alp, _mask, _fill == 2);

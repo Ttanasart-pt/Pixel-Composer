@@ -20,10 +20,12 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	inputs[| 6] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 6;
 		
+	__init_mask_modifier(4); // inputs 7, 8, 
+	
 	selecting_index = 0;
 	
 	function setColor(colr) { #region
-		var _to   = getInputData(2);
+		var _to   = array_clone(getInputData(2));
 		_to[selecting_index] = colr;
 		
 		inputs[| 2].setValue(_to);			// Not necessary due to array reference
@@ -118,7 +120,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	}); #endregion
 	
 	input_display_list = [ 6, 
-		["Surfaces",	 true], 0, 4, 5, 
+		["Surfaces",	 true], 0, 4, 5, 7, 8, 
 		["Replace",		false], render_palette, 2, 
 		["Comparison",	false], 3, 
 	];
@@ -166,6 +168,10 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		inputs[| 2].setValue(palette);
 	} #endregion
 	
+	static step = function() { #region
+		__step_mask_modifier();
+	} #endregion
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region		
 		var fr  = _data[1];
 		var to  = _data[2];
@@ -183,6 +189,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		surface_reset_shader();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
 		
 		return _outSurf;

@@ -41,6 +41,8 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 9] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 		
+	__init_mask_modifier(6); // inputs 10, 11
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
@@ -80,7 +82,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	input_display_list = [ 8, 9, 
 		level_renderer,
-		["Surfaces", true],	0, 6, 7, 
+		["Surfaces", true],	0, 6, 7, 10, 11,
 		["Level",	false],	1,
 		["Channel",	 true],	2, 3, 4, 5
 	];
@@ -97,6 +99,10 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			if(array_length(current_data) > 0)
 				histogramUpdate(current_data[0]);
 		}
+	} #endregion
+	
+	static step = function() { #region
+		__step_mask_modifier();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
@@ -133,6 +139,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		BLEND_NORMAL;
 		surface_reset_target();
 		
+		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[6], _data[7]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[9]);
 		
