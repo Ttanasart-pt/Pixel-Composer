@@ -235,11 +235,8 @@ function Panel_Collection() : PanelContent() constructor {
 					if(meta != noone && mode == 0) {
 						if(struct_try_get(meta, "steam")) {
 							draw_sprite_ui_uniform(THEME.steam, 0, _boxx + ui(12), yy + ui(12), 1, COLORS._main_icon_dark, 1);
-							if(meta.author_steam_id == STEAM_USER_ID) {
+							if(meta.author_steam_id == STEAM_USER_ID)
 								draw_sprite_ui_uniform(THEME.steam_creator, 0, _boxx + grid_size - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);
-								if(point_in_rectangle(_m[0], _m[1], gr_x1 - ui(24), yy, gr_x1, yy + ui(24)))
-									TOOLTIP = __txtx("panel_collection_you_created", "You created this item");
-							}
 						}
 						
 						if(meta.version != SAVE_VERSION) {

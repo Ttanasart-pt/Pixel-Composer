@@ -69,6 +69,8 @@ function MetaDataManager() constructor {
 	}
 	
 	static drawTooltip = function() {
+		var _pd = ui(10);
+		
 		var ww = ui(320), _w = 0;
 		var _h = 0;
 		
@@ -77,18 +79,20 @@ function MetaDataManager() constructor {
 			_h = string_height(name);
 			_w = string_width(name);
 			
-			var mx = min(mouse_mx + ui(16), WIN_W - (_w + ui(16)));
-			var my = min(mouse_my + ui(16), WIN_H - (_h + ui(16)));
+			var mx = min(mouse_mx + _pd * 2, WIN_W - (_w + _pd * 2));
+			var my = min(mouse_my + _pd * 2, WIN_H - (_h + _pd * 2));
 			
-			draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + ui(16), _h + ui(16));
-			draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + ui(16), _h + ui(16));
+			draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + _pd * 2, _h + _pd * 2);
+			draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + _pd * 2, _h + _pd * 2);
 			
 			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-			draw_text(mx + ui(8), my + ui(8), name);
+			draw_text(mx + _pd, my + _pd, name);
 			return;
 		}
 		
-		var _aut = __txt("By") + " " + author;
+		var _own = author_steam_id == STEAM_USER_ID;
+		var _ont = "Your creation";
+		var _aut = $"{__txt("By")} {author}";
 		var _ver = version < SAVE_VERSION? __txtx("meta_old_version", "Created on an older version") : __txtx("meta_new_version", "Created on a newer version");
 		
 		draw_set_font(f_h5);
@@ -97,11 +101,11 @@ function MetaDataManager() constructor {
 		
 		draw_set_font(f_p1);
 		_h += string_height_ext(_aut, -1, ww);
-		_w = max(_w, string_width_ext(_aut, -1, ww));
+		_w = max(_w, string_width_ext(_aut, -1, ww) + _own * (ui(24) + string_width(_ont)));
 		
 		if(contact != "") { 
 			draw_set_font(f_p2);
-			_h += string_height_ext(contact, -1, ww) + ui(-2);
+			_h += string_height_ext(contact, -1, ww);
 			_w = max(_w, string_width_ext(contact, -1, ww));
 		}
 		
@@ -141,47 +145,57 @@ function MetaDataManager() constructor {
 			_h += th;
 		}
 		
-		var mx = min(mouse_mx + ui(16), WIN_W - (_w + ui(16)));
-		var my = min(mouse_my + ui(16), WIN_H - (_h + ui(16)));
+		var mx = min(mouse_mx + _pd * 2, WIN_W - (_w + _pd * 2));
+		var my = min(mouse_my + _pd * 2, WIN_H - (_h + _pd * 2));
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + ui(16), _h + ui(16));
-		draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + ui(16), _h + ui(16));
+		draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + _pd * 2, _h + _pd * 2);
+		draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + _pd * 2, _h + _pd * 2);
 		
 		var ty = my + ui(8);
 		
 		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
-		draw_text_line(mx + ui(8), ty, name, -1, _w);
+		draw_text_line(mx + _pd, ty, name, -1, _w);
 		ty += string_height_ext(name, -1, _w) - ui(4);
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_line(mx + ui(8), ty, _aut, -1, _w);
+		draw_text_line(mx + _pd, ty, _aut, -1, _w);
+		if(_own) {
+			var _owX = mx + _pd + string_width_ext(_aut, -1, _w) + ui(12);
+			
+			draw_set_font(f_p2);
+			var _owW = string_width( _ont);
+			var _owH = string_height(_ont);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _owX - ui(4), ty + ui(1) - ui(2), _owW + ui(8), _owH + ui(4), COLORS._main_icon_dark, 1);
+			
+			draw_set_color(COLORS._main_text_accent);
+			draw_text_line(_owX, ty + ui(1), _ont, -1, _w);
+		}
 		ty += string_height_ext(_aut, -1, _w);
 		
 		if(contact != "") {
-			ty += ui(-2);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_line(mx + ui(8), ty, contact, -1, _w);
+			draw_text_line(mx + _pd, ty, contact, -1, _w);
 			ty += string_height_ext(contact, -1, _w);
 		}
 		
 		ty += ui(8);
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-		draw_text_line(mx + ui(8), ty, description, -1, _w);
+		draw_text_line(mx + _pd, ty, description, -1, _w);
 		ty += string_height_ext(description, -1, _w);
 		
 		if(alias != "") { 
 			ty += ui(16);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_line(mx + ui(8), ty, alias, -1, _w);
+			draw_text_line(mx + _pd, ty, alias, -1, _w);
 			ty += string_height_ext(alias, -1, _w);
 		}
 		
 		if(version != SAVE_VERSION) {
 			ty += ui(8);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_accent);
-			draw_text_line(mx + ui(8), ty, _ver, -1, _w);
+			draw_text_line(mx + _pd, ty, _ver, -1, _w);
 			ty += string_height_ext(_ver, -1, _w);
 		}
 		

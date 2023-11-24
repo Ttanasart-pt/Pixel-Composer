@@ -1292,7 +1292,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					
 					nodes_selecting = [ _nodeFocus ];
 					var _l = ds_list_create_from_array(nodes_selecting)
-					print(ds_list_size(_l));
 					toCenterNode(_l);
 					ds_list_destroy(_l);
 					break;

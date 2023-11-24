@@ -96,8 +96,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	if(global_var) {
 		if(string_pos(" ", _name))	cc = COLORS._main_value_negative;
 	} else {
-		if(jun.hasJunctionFrom())	cc = COLORS._main_accent;
 		if(jun.is_anim)				cc = COLORS._main_value_positive;
+		if(jun.hasJunctionFrom())	cc = COLORS._main_accent;
 	}
 	
 	draw_set_text(_font, fa_left, fa_center, cc);
@@ -204,9 +204,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			var by = lb_y;
 			
 			bx -= ui(28);
-			if(jun.is_modified && buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_reset", "Reset value"), THEME.refresh_s, 0, COLORS._main_icon) == 2) {
-				jun.resetValue();
-			}
+			if(jun.is_modified) {
+				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_reset", "Reset value"), THEME.refresh_s, 0, COLORS._main_icon) == 2)
+					jun.resetValue();
+			} else 
+				draw_sprite_ui(THEME.refresh_s, 0, bx, by,,,, COLORS._main_icon, 0.5);
 			
 			bx -= ui(28);
 			var ic_b = jun.expUse? c_white : COLORS._main_icon;

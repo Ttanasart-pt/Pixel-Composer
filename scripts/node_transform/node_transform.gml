@@ -58,7 +58,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 9] = nodeValue("Output dimension type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input", "Transformed" ]);
 	
-	inputs[| 10] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Round position to the closest integer value to avoid jittering.");
+	inputs[| 10] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Round position to the nearest integer value to avoid jittering.");
 	
 	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 11;
