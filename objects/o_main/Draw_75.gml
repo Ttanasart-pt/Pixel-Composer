@@ -150,6 +150,8 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 		NODE_DROPPER_TARGET_CAN = true;
 	} else	
 		NODE_DROPPER_TARGET_CAN = false;
+		
+	panelDisplayDraw();
 #endregion
 
 #region debug

@@ -2,7 +2,7 @@
 if(OS == os_windows && gameframe_is_minimized()) exit;
 
 //print("===== Step start =====");
-if(PROJECT.active && !PROJECT.safeMode) {
+if(PROJECT.active && !PROJECT.safeMode) { #region
 	PROJECT.animator.step();
 	PROJECT.globalNode.step();
 	
@@ -12,7 +12,7 @@ if(PROJECT.active && !PROJECT.safeMode) {
 	} catch(e) {
 		noti_warning("Step error: " + exception_print(e));
 	}
-}
+} #endregion
 
 #region hotkey
 	HOTKEY_MOD = 0;

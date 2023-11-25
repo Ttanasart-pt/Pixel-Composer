@@ -44,7 +44,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var sp_t = _y + _splice[1] * _s;
 		var sp_b = _y + (dim[1] - _splice[3]) * _s;
 		
-		var _out = outputs[| 0].getValue();
+		var _out = getSingleValue(0,, true);
 		draw_surface_ext_safe(_out, sp_l, sp_t, _s, _s);
 		
 		if(isUsingTool(0)) {

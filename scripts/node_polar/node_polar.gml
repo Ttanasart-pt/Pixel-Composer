@@ -21,11 +21,14 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	__init_mask_modifier(1); // inputs 7, 8, 
 	
+	inputs[| 9] = nodeValue("Radius mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Linear", "Inverse Square", "Logarithm" ]);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3, 4,
 		["Surfaces", false], 0, 1, 2, 7, 8, 
-		["Effect",   false], 5, 6, 
+		["Effect",   false], 5, 6, 9, 
 	]
 	
 	attribute_surface_depth();
@@ -38,8 +41,9 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_shader(_outSurf, sh_polar);
 			shader_set_interpolation(_data[0]);
-			shader_set_i("invert", _data[5]);
-			shader_set_f("blend", _data[6]);
+			shader_set_i("invert",   _data[5]);
+			shader_set_i("distMode", _data[9]);
+			shader_set_f("blend",    _data[6]);
 			
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();

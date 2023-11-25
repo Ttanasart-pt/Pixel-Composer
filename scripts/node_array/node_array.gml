@@ -115,7 +115,6 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		ds_list_destroy(inputs);
 		inputs = _l;
 		
-		print($"Refresh inputs [{ds_list_size(inputs)}]: {input_display_list}");
 		if(extra) lastNode = createNewInput();
 	} #endregion
 	

@@ -38,13 +38,33 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	click_block = 0;
 	
+	use_range = false;
+	range_min = 0;
+	range_max = 0;
+	
 	sprite_index = -1;
 	
 	text_surface = surface_create(1, 1);
 	
+	static modifyValue = function(value) { #region
+		if(input == TEXTBOX_INPUT.number) {
+			if(use_range) value = clamp(value, range_min, range_max);
+		}
+		
+		onModify(value);
+	} #endregion
+	
 	static setSlidable = function(slideStep = slide_speed) { #region
 		slidable    = true;
 		slide_speed = slideStep;
+		
+		return self;
+	} #endregion
+	
+	static setRange = function(_rng_min, _rng_max) { #region
+		use_range = true;
+		range_min = _rng_min;
+		range_max = _rng_max;
 		
 		return self;
 	} #endregion
@@ -482,8 +502,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					if(key_mod_press(CTRL)) amo *= 10;
 					if(key_mod_press(ALT))  amo /= 10;
 					
-					if(mouse_wheel_down())	onModify(toNumber(_text) + amo * SCROLL_SPEED);
-					if(mouse_wheel_up())	onModify(toNumber(_text) - amo * SCROLL_SPEED);
+					if(mouse_wheel_down())	modifyValue(toNumber(_text) + amo * SCROLL_SPEED);
+					if(mouse_wheel_up())	modifyValue(toNumber(_text) - amo * SCROLL_SPEED);
 				}
 			} else if(!hide)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);

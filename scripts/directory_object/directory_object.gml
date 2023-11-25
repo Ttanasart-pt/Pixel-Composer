@@ -133,32 +133,33 @@ function DirectoryObject(name, path) constructor { #region
 	static getName = function() { return name; }
 	
 	static scan = function(file_type) { #region
-		var _temp_name = ds_list_create();
-		var folder = file_find_first(path + "/*", fa_directory);
-		while(folder != "") {
-			ds_list_add(_temp_name, folder);
-			folder = file_find_next();
+		var _temp_name = [];
+		var _file = file_find_first(path + "/*", fa_directory);
+		while(_file != "") {
+			array_push(_temp_name, _file);
+			_file = file_find_next();
 		}
 		file_find_close();
 		
 		ds_list_clear(subDir);
 		ds_list_clear(content);
 		
-		ds_list_sort(_temp_name, true);
-		for( var i = 0; i < ds_list_size(_temp_name); i++ ) {
-			var file = _temp_name[| i];
+		array_sort(_temp_name, true);
+		for( var i = 0; i < array_length(_temp_name); i++ ) {
+			var file  = _temp_name[i];
+			var _path = path + "/" + file;
 			
-			if(directory_exists(path + "/" + file)) {
-				var _fol_path = path + "/" + file;
+			if(directory_exists(_path)) {
+				var _fol_path = _path;
 				var fol = new DirectoryObject(file, _fol_path);
 				fol.scan(file_type);
 				ds_list_add(subDir, fol);
 			} else if(array_exists(file_type, filename_ext(file))) {
-				var f = new FileObject(string_replace(file, filename_ext(file), ""), path + "/" + file);
+				var f = new FileObject(string_replace(file, filename_ext(file), ""), _path);
 				ds_list_add(content, f);
 				
 				if(string_lower(filename_ext(file)) == ".png") {
-					var icon_path = path + "/" + file;
+					var icon_path = _path;
 					var amo = 1;
 					var p = string_pos("strip", icon_path);
 					if(p) {
@@ -181,8 +182,6 @@ function DirectoryObject(name, path) constructor { #region
 				}
 			}
 		}
-		
-		ds_list_destroy(_temp_name);
 	} #endregion
 	
 	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _colors = {}) { #region
@@ -205,7 +204,7 @@ function DirectoryObject(name, path) constructor { #region
 				parent.setContext(parent.context == self? _homedir : self);
 				triggered = true;
 			}
-		} else 
+		} else if(_hover)
 			triggered = false;
 			
 		if(triggered && mouse_release(mb_left))

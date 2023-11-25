@@ -40,16 +40,16 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
-	static getSingleValue = function(_index, _arr = 0, output = false) { #region
+	static getSingleValue = function(_index, _arr = preview_index, output = false) { #region
 		var _l  = output? outputs : inputs;
 		var _n  = _l[| _index];
 		var _in = output? _n.getValue() : getInputData(_index);
 		
-		//print($"Getting value {name}: {_index}: {_arr}: {_n.isArray()}: {_in}");
+		//print($"Getting value {name} [{_index}, {_arr}]: {_n.isArray()} = {_in}");
 		if(!_n.isArray()) return _in;
 		
 		var _aIndex = _arr;
-		if(!is_array(_arr)) return 0;
+		if(!is_array(_in)) return 0;
 		
 		switch(attributes.array_process) {
 			case ARRAY_PROCESS.loop :		_aIndex = safe_mod(_arr, array_length(_in)); break;
@@ -57,7 +57,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			case ARRAY_PROCESS.expand :		_aIndex = floor(_arr / process_length[_index][1]) % process_length[_index][0]; break;
 			case ARRAY_PROCESS.expand_inv : _aIndex = floor(_arr / process_length[ds_list_size(_l) - 1 - _index][1]) % process_length[_index][0]; break;
 		}
-				
+		
+		//print($"Getting value {name} [{_index}, {_arr}]: {_in}[{_aIndex}] = {array_safe_get(_in, _aIndex)}");
 		return array_safe_get(_in, _aIndex);
 	} #endregion
 	

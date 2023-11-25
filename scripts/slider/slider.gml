@@ -10,10 +10,11 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	stepSize = _step;
 	
 	current_value = 0;
+	slide_speed   = 1 / 10;
 	
 	onModify  = _onModify;
 	onRelease = _onRelease;
-	onApply = function(val) {
+	onApply   = function(val) {
 		if(onModify)  onModify(val);
 		if(onRelease) onRelease();
 	}
@@ -30,6 +31,11 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	handle_w = ui(20);
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onApply);
+	
+	static modifyValue = function(value) { #region
+		value = clamp(value, curr_minn, curr_maxx);
+		onModify(value);
+	} #endregion
 	
 	static setSlideSpeed = function(speed) {
 		tb_value.setSlidable(speed);
@@ -82,6 +88,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			
 			tb_value.setFocusHover(active, hover);
 			tb_value.draw(_x + sw + ui(16), _y, tb_w, _h, current_value, _m);
+			tb_value.setRange(curr_minn, curr_maxx);
 		}
 		
 		if(THEME_VALUE.slider_type == "full_height")
@@ -120,6 +127,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 				UNDO_HOLDING = false;
 			}
 		} else {
+			
 			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - handle_w / 2, _y, _kx + handle_w / 2, _y + _h))) {
 				if(THEME_VALUE.slider_type == "stem")
 					draw_sprite_stretched_ext(spr, 2, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
@@ -129,6 +137,13 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 					drag_mx  = _m[0];
 					drag_sx  = _data;
 				}
+				
+				var amo = slide_speed;
+				if(key_mod_press(CTRL)) amo *= 10;
+				if(key_mod_press(ALT))  amo /= 10;
+				
+				if(mouse_wheel_down())	modifyValue(_data + amo * SCROLL_SPEED);
+				if(mouse_wheel_up())	modifyValue(_data - amo * SCROLL_SPEED);
 			}
 		}
 		

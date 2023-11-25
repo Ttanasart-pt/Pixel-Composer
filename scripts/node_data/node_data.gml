@@ -1678,8 +1678,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	load_scale = false;
 	load_map = -1;
 	static deserialize = function(_map, scale = false, preset = false) { #region
-		load_map = _map;
+		load_map   = _map;
 		load_scale = scale;
+		renamed    = struct_try_get(load_map, "renamed", false);
 		
 		if(!preset) {
 			if(APPENDING) APPEND_MAP[? load_map.id] = node_id;
@@ -1721,8 +1722,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			
 			triggerRender();
 		}
-		
-		renamed = struct_try_get(load_map, "renamed", false);
 	} #endregion
 	
 	static inputBalance = function() { #region //Cross version compatibility for dynamic input nodes

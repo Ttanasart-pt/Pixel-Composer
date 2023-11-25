@@ -92,7 +92,7 @@ _HOVERING_ELEMENT = noone;
 			if(IS_PLAYING || IS_RENDERING) {
 				if(PROJECT.animator.frame_progress) {
 					__addon_preAnim();
-				
+					
 					if(CURRENT_FRAME == 0)
 						ResetAllNodesRender();
 					Render(true);

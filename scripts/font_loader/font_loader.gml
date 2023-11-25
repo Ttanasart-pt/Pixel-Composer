@@ -1,5 +1,5 @@
 globalvar FONT_ISLOADED, FONT_CACHE, GLYPH_MAP;
-globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code, f_sdf;
+globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code, f_sdf, f_sdf_medium;
 
 FONT_CACHE = {};
 FONT_ISLOADED = false;
@@ -96,6 +96,7 @@ function loadFonts() { #region
 		
 		font_clear(f_code);
 		font_clear(f_sdf);
+		font_clear(f_sdf_medium);
 	}
 	
 	var path = _font_path("./fonts.json");
@@ -113,6 +114,7 @@ function loadFonts() { #region
 		f_p3   = _f_p3;
 		f_code = _f_code;
 		f_sdf  = _f_sdf;
+		f_sdf_medium  = _f_sdf_medium;
 		FONT_ISLOADED = false;
 		return;
 	}
@@ -134,6 +136,7 @@ function loadFonts() { #region
 	
 	f_code = _font_load_from_struct(fontDef, "code", _f_code, false);
 	f_sdf  = _font_load_from_struct(fontDef, "sdf",  _f_sdf);
+	f_sdf_medium = _font_load_from_struct(fontDef, "sdf_medium",  _f_sdf_medium);
 	
 	FONT_ISLOADED = true;
 } #endregion

@@ -128,6 +128,7 @@
 			zip_unzip("data/Layouts.zip", DIRECTORY);
 		
 		setPanel();
+		panelDisplayInit();
 	} #endregion
 	
 	function setPanel() { #region

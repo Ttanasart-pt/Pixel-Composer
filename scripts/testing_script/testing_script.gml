@@ -12,10 +12,14 @@ function __test_update_current_collections() { #region
 		for( var i = 0; i < ds_list_size(_st.content); i++ ) {
 			var _node = _st.content[| i];
 			
-			print("  > Updating " + _node.path);
-			var _map = json_load_struct(_node.path);
+			print("  > Updating " + _node.meta_path);
+			var _map = json_load_struct(_node.meta_path);
 			_map.version = SAVE_VERSION;
 			json_save_struct(_node.meta_path, _map);
+			
+			var _map = json_load_struct(_node.path);
+			_map.version = SAVE_VERSION;
+			json_save_struct(_node.path, _map);
 		}
 		
 		for( var i = 0; i < ds_list_size(_st.subDir); i++ )
@@ -33,10 +37,14 @@ function __test_update_sample_projects() { #region
 	for( var i = 0; i < ds_list_size(SAMPLE_PROJECTS); i++ ) {
 		var _proj = SAMPLE_PROJECTS[| i];
 			
-		print("  > Updating " + _proj.path);
-		var _map = json_load(_proj.path);
-		_map[? "version"] = SAVE_VERSION;
-		json_save(_proj.meta_path, _map);
+		print("  > Updating " + _proj.meta_path);
+		var _map = json_load_struct(_proj.meta_path);
+		_map.version = SAVE_VERSION;
+		json_save_struct(_proj.meta_path, _map);
+		
+		var _map = json_load_struct(_proj.path);
+		_map.version = SAVE_VERSION;
+		json_save_struct(_proj.path, _map);
 	}
 	
 	print("---------- PROJECT UPDATING ENDED ----------");

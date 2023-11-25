@@ -34,26 +34,118 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 4] = nodeValue("Line width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -1)
 		.rejectArray();
 	
+	inputs[| 5]  = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ x, y ])
+		.setDisplay(VALUE_DISPLAY.vector)
+		.rejectArray();
+	
+	inputs[| 6]  = nodeValue("Smooth transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		.rejectArray();
+	
 	input_display_list = [1, 
-		["Styling", false], 2, 0, 3, 4];
+		["Styling", false], 2, 0, 3, 4,
+		["Display", false], 5, 6, 
+	];
 	
 	_prev_text = "";
-	font = f_p1;
+	font   = f_sdf_medium;
+	fsize  = 1;
 	_lines = [];
 	
-	static draw_text_style = function(_x, _y, txt, _s) {
+	smooth = true;
+	pos_x  = x;
+	pos_y  = y;
+	
+	ml_press   = 0;
+	ml_release = 0;
+	ml_double  = 0;
+	mr_press   = 0;
+	mr_release = 0;
+	mm_press   = 0;
+	mm_release = 0;
+	
+	static move = function(_x, _y, _s) { #region
+		if(x == _x && y == _y) return;
+		if(!LOADING) PROJECT.modified = true;
+		
+		x = _x;
+		y = _y;
+		
+		if(inputs[| 5].setValue([ _x, _y ]))
+			UNDO_HOLDING = true;
+	} #endregion
+	
+	static button_reactive_update = function(key) { #region
+		ml_press   = lerp_float(ml_press  , 0, 10);
+		ml_release = lerp_float(ml_release, 0, 10);
+		ml_double  = lerp_float(ml_double,  0, 10);
+		mr_press   = lerp_float(mr_press  , 0, 10);
+		mr_release = lerp_float(mr_release, 0, 10);
+		mm_press   = lerp_float(mm_press  , 0, 10);
+		mm_release = lerp_float(mm_release, 0, 10);
+		
+		if(mouse_press(mb_left))     ml_press   = 2;
+		if(mouse_release(mb_left))   ml_release = 2;
+		if(DOUBLE_CLICK)		     ml_double  = 2;
+		if(mouse_press(mb_right))    mr_press   = 2;
+		if(mouse_release(mb_right))  mr_release = 2;
+		if(mouse_press(mb_middle))   mm_press   = 2;
+		if(mouse_release(mb_middle)) mm_release = 2;
+	} #endregion
+	
+	static button_reactive = function(key) { #region
+		switch(key) {
+			case "left_mouse_click" :		 return clamp(ml_press, 0, 1);
+			case "left_mouse_double_click" : return clamp(ml_double, 0, 1);
+			case "left_mouse_release" :		 return clamp(ml_release, 0, 1);
+			case "left_mouse_drag" :		 return mouse_click(mb_left);
+			
+			case "right_mouse_click" :		 return clamp(mr_press, 0, 1);
+			case "right_mouse_release" :	 return clamp(mr_release, 0, 1);
+			case "right_mouse_drag" :		 return mouse_click(mb_right);
+			
+			case "middle_mouse_click" :		 return clamp(mm_press, 0, 1);
+			case "middle_mouse_release" :	 return clamp(mm_release, 0, 1);
+			case "middle_mouse_drag" :		 return mouse_click(mb_middle);
+			
+			case "ctrl" :  return key_mod_press(CTRL);
+			case "alt" :   return key_mod_press(ALT);
+			case "shift" : return key_mod_press(SHIFT);
+			
+			case "space" : return keyboard_check(vk_space);
+			case "f1" :    return keyboard_check(vk_f1);
+			case "f2" :    return keyboard_check(vk_f2);
+			case "f3" :    return keyboard_check(vk_f3);
+			case "f4" :    return keyboard_check(vk_f4);
+			case "f5" :    return keyboard_check(vk_f5);
+			case "f6" :    return keyboard_check(vk_f6);
+			case "f7" :    return keyboard_check(vk_f7);
+			case "f8" :    return keyboard_check(vk_f8);
+			case "f9" :    return keyboard_check(vk_f9);
+			case "f10" :   return keyboard_check(vk_f10);
+			case "f11" :   return keyboard_check(vk_f11);
+			case "f12" :   return keyboard_check(vk_f12);
+		}
+		
+		if(string_length(key) == 1) return keyboard_check(ord(string_upper(key)));
+		
+		return 0;
+	} #endregion
+	
+	static draw_text_style = function(_x, _y, txt, _s, _mx, _my) { #region
 		var _tx = _x;
 		var index = 1;
 		var _len = string_length(txt);
 		var _ch = "";
 		var _tw, _th;
-		var _ch_h = string_height("l") * _s;
+		var _ch_h = string_height("l") * _s * fsize;
 		var _mode = 0;
 		var _cmd = "";
 		
 		var width = 0;
 		
+		var _ff = draw_get_font();
 		var _cc = draw_get_color();
+		var _aa = draw_get_alpha();
 		
 		while(index <= _len) {
 			_ch = string_char_at(txt, index);
@@ -74,16 +166,58 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 									if(i > 1) _bch += " ";
 									_bch += _c[i];
 								}
-								_tw = string_width(_bch) * _s;
-								_th = string_height(_bch) * _s;
-									
+								_tw = string_width(_bch)  * _s * fsize;
+								_th = string_height(_bch) * _s * fsize;
+								
 								draw_sprite_stretched_points(THEME.ui_panel_bg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_icon_light);
 								draw_sprite_stretched_points(THEME.ui_panel_fg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4);
 									
 								draw_set_color(_cc);
-								draw_text_transformed(_tx, _y, _bch, _s, _s, 0);
+								draw_text_transformed(_tx, _y, _bch, _s * fsize, _s * fsize, 0);
+								
+								var _reac = button_reactive(string_to_var(_bch));
+								if(_reac > 0) {
+									draw_sprite_stretched_points(THEME.ui_panel_bg, 4, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_accent, _reac);
+									
+									draw_set_color(merge_color(0, COLORS.panel_bg_clear_inner, 0.5));
+									draw_set_alpha(_reac);
+									draw_text_transformed(_tx, _y, _bch, _s * fsize, _s * fsize, 0);
+									draw_set_alpha(_aa);
+									draw_set_color(_cc);
+								} 
+								
 								_tx += _tw;
-								width += string_width(_bch);
+								width += string_width(_bch) * fsize;
+								break;
+							case "panel" :
+								var _key = _c[1] + " panel";
+								var _tss = 11 / 32;
+								draw_set_color(_cc);
+								draw_set_font(f_sdf);
+								
+								_tw = string_width(_key)  * _s * _tss;
+								_th = string_height(_key) * _s * _tss;
+								
+								if(point_in_rectangle(_mx, _my, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4)) {
+									draw_set_color(COLORS._main_accent);
+									draw_set_alpha(1);
+									
+									switch(string_lower(_c[1])) {
+										case "graph" :      FOCUSING_PANEL = PANEL_GRAPH;      break;
+										case "preview" :    FOCUSING_PANEL = PANEL_PREVIEW;    break;
+										case "inspector" :  FOCUSING_PANEL = PANEL_INSPECTOR;  break;
+										case "animation" :  FOCUSING_PANEL = PANEL_ANIMATION;  break;
+										case "collection" : FOCUSING_PANEL = findPanel("Panel_Collection"); break;
+									}
+								}
+								draw_text_transformed(_tx, _y, _key, _s * _tss, _s * _tss, 0);
+								
+								_tx += _tw;
+								width += string_width(_key) * _tss;
+								
+								draw_set_font(_ff);
+								draw_set_color(_cc);
+								draw_set_alpha(_aa);
 								break;
 							case "spr" :
 								var _spr_t = _c[1];
@@ -116,9 +250,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					_tw = string_width(_ch);
 					_th = string_height(_ch);
 			
-					draw_text_transformed(_tx, _y, _ch, _s, _s, 0);
-					_tx += _tw * _s;
-					width += _tw;
+					draw_text_transformed(_tx, _y, _ch, _s * fsize, _s * fsize, 0);
+					_tx += _tw * _s * fsize;
+					width += _tw * fsize;
 					break;
 				case 1 : 
 					_cmd += _ch;
@@ -127,9 +261,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		return width;
-	}
+	} #endregion
 	
-	static string_raw = function(txt) {
+	static string_raw = function(txt) { #region
 		var index = 1;
 		var _len = string_length(txt);
 		var _ch = "";
@@ -173,9 +307,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		return ss;
-	}
+	} #endregion
 	
-	static line_update = function(txt, line_width = -1) {
+	static line_update = function(txt, line_width = -1) { #region
 		_prev_text = txt;
 		_lines = [];
 		
@@ -196,7 +330,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _ps = string_copy(_tx, 1, sp);
 				_tx = string_copy(_tx, sp + 1, string_length(_tx) - sp);
 			
-				if(line_width > 0 && string_width(string_raw(ss + _ps)) >= line_width) {
+				if(line_width > 0 && string_width(string_raw(ss + _ps)) * fsize >= line_width) {
 					array_push(_lines, ss);
 					ss = _ps;
 				} else if(string_length(_tx) <= 0) {
@@ -208,26 +342,32 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		if(ss != "") array_push(_lines, ss);
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = 0) { #region
 		if(index == 1 || index == 4)
 			line_update(getInputData(1), getInputData(4));
-	}
+	} #endregion
 	
-	static drawNodeBase = function(xx, yy, mx, my, _s) {
+	static drawNodeBase = function(xx, yy, mx, my, _s) { #region
 		var color  = getInputData(0);
-		var txt = getInputData(1);
+		var txt    = getInputData(1);
 		if(txt == "") txt = "..."
-		var sty = getInputData(2);
-		var alp = getInputData(3);
-		var wid = getInputData(4);
+		
+		var sty  = getInputData(2);
+		var alp  = getInputData(3);
+		var wid  = getInputData(4);
+		var posi = getInputData(5);
+		smooth   = getInputData(6);
+		
+		pos_x = posi[0];
+		pos_y = posi[1];
 		
 		font = f_p1;
 		switch(sty) {
-			case 0 : font = f_h3; break;
-			case 1 : font = f_h5; break;
-			case 2 : font = f_p1; break;
+			case 0 : font = f_sdf;        fsize  = 20 / 32; break;
+			case 1 : font = f_sdf;        fsize  = 0.5;     break;
+			case 2 : font = f_sdf_medium; fsize  = 0.5;     break;
 		}
 		
 		var ww = 0;
@@ -237,7 +377,12 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var ty = yy + 4;
 			
 		if(WIDGET_CURRENT == ta_editor) {
-			ta_editor.font = font;
+			switch(sty) {
+				case 0 : ta_editor.font = f_h3; break;
+				case 1 : ta_editor.font = f_h5; break;
+				case 2 : ta_editor.font = f_p1; break;
+			}
+			
 			ta_editor.draw(tx, ty, wid * _s, 0, txt, [ mx, my ] );
 		} else {
 			if(_prev_text != txt)
@@ -247,8 +392,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_set_text(font, fa_left, fa_top, color);
 			for( var i = 0, n = array_length(_lines); i < n; i++ ) {
 				var _line = _lines[i];
-				var _h = line_get_height(font);
-				var _w = draw_text_style(tx, ty, _line, _s);
+				var _h = line_get_height(font) * fsize;
+				var _w = draw_text_style(tx, ty, _line, _s, mx, my);
 			
 				ww = max(ww, _w);
 				hh += _h;
@@ -267,9 +412,12 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_scale = _s;
 		w = ww + 8;
 		h = hh + 8;
-	}
+	} #endregion
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) {
+	static drawNode = function(_x, _y, _mx, _my, _s) { #region
+		x = smooth? lerp_float(x, pos_x, 4) : pos_x;
+		y = smooth? lerp_float(y, pos_y, 4) : pos_y;
+		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -278,7 +426,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			active_draw_index = -1;
 		}
 		
+		button_reactive_update();
 		drawNodeBase(xx, yy, _mx, _my, _s);
 		return noone;
-	}
+	} #endregion
 }

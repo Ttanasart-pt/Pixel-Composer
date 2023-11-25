@@ -190,58 +190,62 @@ function Panel_Collection() : PanelContent() constructor {
 					var gr_x1 = _boxx + grid_size;
 					var gr_y1 = yy + grid_size;
 					
-					BLEND_OVERRIDE;
-					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-					BLEND_NORMAL;
-						
-					var meta = noone;
-					if(variable_struct_exists(_node, "getMetadata")) 
-						meta = _node.getMetadata();
-						
-					if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-						if(mouse_press(mb_left, pFOCUS))
-							DRAGGING = { type : _node.type == FILE_TYPE.collection? "Collection" : "Asset", data : _node }
-							
-						if(!DEMO && mouse_press(mb_right, pFOCUS)) {
-							_menu_node = _node;
-							initMenu();
-							menuCall("collection_menu",,, contentMenu,, _menu_node);	
-						}
-						
-						if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined)
-							TOOLTIP = meta;
-					}
-						
-					if(_node.path == updated_path && updated_prog > 0) 
-						draw_sprite_stretched_ext(THEME.node_glow, 0, _boxx - 9, yy - 9, grid_size + 18, grid_size + 18, COLORS._main_value_positive, updated_prog);
-						
-					if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
-						
-					if(sprite_exists(_node.spr)) {
-						var sw = sprite_get_width(_node.spr);
-						var sh = sprite_get_height(_node.spr);
-						var ss = (grid_size - ui(10)) / max(sw, sh);
-							
-						var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
-						var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
-						var sx = _boxx + grid_size / 2 + xo;
-						var sy = yy + grid_size / 2 + yo;
-							
-						draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
-					} else
-						draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
+					if(yy + grid_size >= 0 && yy <= contentPane.surface_h) {
+						BLEND_OVERRIDE;
+						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
+						BLEND_NORMAL;
 					
-					if(meta != noone && mode == 0) {
-						if(struct_try_get(meta, "steam")) {
-							draw_sprite_ui_uniform(THEME.steam, 0, _boxx + ui(12), yy + ui(12), 1, COLORS._main_icon_dark, 1);
-							if(meta.author_steam_id == STEAM_USER_ID)
-								draw_sprite_ui_uniform(THEME.steam_creator, 0, _boxx + grid_size - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);
+						var meta = noone;
+						if(variable_struct_exists(_node, "getMetadata")) 
+							meta = _node.getMetadata();
+						
+						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+							if(mouse_press(mb_left, pFOCUS))
+								DRAGGING = { type : _node.type == FILE_TYPE.collection? "Collection" : "Asset", data : _node }
+							
+							if(!DEMO && mouse_press(mb_right, pFOCUS)) {
+								_menu_node = _node;
+								initMenu();
+								menuCall("collection_menu",,, contentMenu,, _menu_node);	
+							}
+						
+							if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined)
+								TOOLTIP = meta;
 						}
 						
-						if(meta.version != SAVE_VERSION) {
-							draw_set_color(COLORS._main_accent);
-							draw_circle_prec(_boxx + grid_size - ui(8), yy + grid_size - ui(8), 3, false);
+						if(_node.path == updated_path && updated_prog > 0) 
+							draw_sprite_stretched_ext(THEME.node_glow, 0, _boxx - 9, yy - 9, grid_size + 18, grid_size + 18, COLORS._main_value_positive, updated_prog);
+						
+						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+					
+						if(sprite_exists(_node.spr)) {
+							var sw = sprite_get_width(_node.spr);
+							var sh = sprite_get_height(_node.spr);
+							var ss = (grid_size - ui(10)) / max(sw, sh);
+							
+							var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
+							var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
+							var sx = _boxx + grid_size / 2 + xo;
+							var sy = yy + grid_size / 2 + yo;
+							
+							BLEND_ALPHA_MULP
+							draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
+							BLEND_NORMAL
+						} else
+							draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
+					
+						if(meta != noone && mode == 0) {
+							if(struct_try_get(meta, "steam")) {
+								draw_sprite_ui_uniform(THEME.steam, 0, _boxx + ui(12), yy + ui(12), 1, COLORS._main_icon_dark, 1);
+								if(meta.author_steam_id == STEAM_USER_ID)
+									draw_sprite_ui_uniform(THEME.steam_creator, 0, _boxx + grid_size - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);
+							}
+						
+							if(meta.version != SAVE_VERSION) {
+								draw_set_color(COLORS._main_accent);
+								draw_circle_prec(_boxx + grid_size - ui(8), yy + grid_size - ui(8), 3, false);
+							}
 						}
 					}
 					
@@ -264,44 +268,46 @@ function Panel_Collection() : PanelContent() constructor {
 				var _node = i < node_list? nodes[| i] : steamNode[i - node_list];
 				if(!_node) continue;
 				
-				if(i % 2) {
-					BLEND_OVERRIDE;
-					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - 8, list_height, c_white, 0.2);
-					BLEND_NORMAL;
-				}
-				
-				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
-					draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
-					if(mouse_press(mb_left, pFOCUS))
-						DRAGGING = { type : _node.type == FILE_TYPE.collection? "Collection" : "Asset", data : _node }
-						
-					if(!DEMO && mouse_press(mb_right, pFOCUS)) {
-						_menu_node = _node;
-						initMenu();
-						menuCall("collection_menu",,, contentMenu,, _menu_node);
+				if(yy + list_height >= 0 && yy <= contentPane.surface_h) {
+					if(i % 2) {
+						BLEND_OVERRIDE;
+						draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - 8, list_height, c_white, 0.2);
+						BLEND_NORMAL;
 					}
-				}
 				
-				var spr_x = list_height / 2 + ui(14);
-				var spr_y = yy + list_height / 2;
-				var spr_s = list_height - ui(8);
-				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
-				if(sprite_exists(_node.spr)) {
-					var sw = sprite_get_width(_node.spr);
-					var sh = sprite_get_height(_node.spr);
-					var ss = spr_s / max(sw, sh);
+					if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+						draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
+						if(mouse_press(mb_left, pFOCUS))
+							DRAGGING = { type : _node.type == FILE_TYPE.collection? "Collection" : "Asset", data : _node }
+						
+						if(!DEMO && mouse_press(mb_right, pFOCUS)) {
+							_menu_node = _node;
+							initMenu();
+							menuCall("collection_menu",,, contentMenu,, _menu_node);
+						}
+					}
+				
+					var spr_x = list_height / 2 + ui(14);
+					var spr_y = yy + list_height / 2;
+					var spr_s = list_height - ui(8);
+					if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+					if(sprite_exists(_node.spr)) {
+						var sw = sprite_get_width(_node.spr);
+						var sh = sprite_get_height(_node.spr);
+						var ss = spr_s / max(sw, sh);
 							
-					var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
-					var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
-					var sx = spr_x + xo;
-					var sy = spr_y + yo;
+						var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
+						var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
+						var sx = spr_x + xo;
+						var sy = spr_y + yo;
 					
-					draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
-				} else
-					draw_sprite_ui_uniform(THEME.group, 0, spr_x, spr_y, 0.75, c_white);
+						draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
+					} else
+						draw_sprite_ui_uniform(THEME.group, 0, spr_x, spr_y, 0.75, c_white);
 				
-				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_inner);
-				draw_text_add(list_height + ui(20), yy + list_height / 2, _node.name);
+					draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_inner);
+					draw_text_add(list_height + ui(20), yy + list_height / 2, _node.name);
+				}
 				
 				yy += list_height;
 				hh += list_height;
@@ -334,7 +340,7 @@ function Panel_Collection() : PanelContent() constructor {
 			_y += hg;
 		}
 		
-		return hh;
+		return hh + ui(28);
 	}); #endregion
 	
 	function onFocusBegin() { PANEL_COLLECTION = self; }

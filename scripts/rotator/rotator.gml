@@ -7,6 +7,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	drag_sv  = 0;
 	drag_sa  = 0;
 	real_val = 0;
+	slide_speed = 1 / 10;
 	
 	spr_bg   = THEME.rotator_bg;
 	spr_knob = THEME.rotator_knob;
@@ -89,6 +90,13 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 				drag_sv  = _data;
 				drag_sa  = point_direction(_x, knob_y, _m[0], _m[1]);
 			}
+			
+			var amo = 1;
+			if(key_mod_press(CTRL)) amo *= 10;
+			if(key_mod_press(ALT))  amo /= 10;
+				
+			if(mouse_wheel_down())	onModify(_data + amo * SCROLL_SPEED);
+			if(mouse_wheel_up())	onModify(_data - amo * SCROLL_SPEED);
 		} else {
 			draw_sprite(spr_knob, 0, px, py);
 		}

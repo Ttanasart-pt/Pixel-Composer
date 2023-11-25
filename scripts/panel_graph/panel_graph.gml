@@ -72,6 +72,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 		selection_block		= 0;
 		nodes_selecting	    = [];
+		nodes_selecting_jun = [];
 		nodes_select_drag   = 0;
 		nodes_select_frame  = 0;
 		nodes_select_mx     = 0;
@@ -1019,7 +1020,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(mouse_release(mb_left) && (nx != node_drag_sx || ny != node_drag_sy)) {
 					var shfx = node_drag_sx - nx;
 					var shfy = node_drag_sy - ny;
-						
+					
+					UNDO_HOLDING = false;	
 					for(var i = 0; i < array_length(nodes_selecting); i++) {
 						var _n = nodes_selecting[i];
 						if(_n == noone) continue;
@@ -1209,11 +1211,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							_to[i].removeFrom();
 						}
 					}
-				} else {
+				} else if(array_exists(nodes_selecting_jun, value_dragging.node)) {
 					var _jlist = ds_priority_create();
 					
-					for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
-						var _node = nodes_selecting[i];
+					for( var i = 0, n = array_length(nodes_selecting_jun); i < n; i++ ) {
+						var _node = nodes_selecting_jun[i];
 						
 						for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
 							var _junction = _node.outputs[| j];
@@ -1237,6 +1239,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 		}
+		
+		nodes_selecting_jun = array_clone(nodes_selecting);
 		
 		#region draw junction name
 			var gr_x = graph_x * graph_s;
