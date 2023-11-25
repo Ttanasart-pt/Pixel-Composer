@@ -287,6 +287,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static spliceSprite = function() { #region
 		var _inSurf = getInputData(0);
+		if(!is_surface(_inSurf)) return;
+		
 		spliceSurf  = _inSurf;
 		
 		var _outSurf = outputs[| 0].getValue();
