@@ -97,7 +97,11 @@ event_inherited();
 		textbox._input_text = $"{_sPreC}{rep}{_sPosC}";
 		textbox.cursor += _repAmo - _prmAmo;
 		textbox.cut_line();
+		textbox.autocomplete_delay = 0;
 		textbox = noone;
+		
+		prompt = "";
+		data   = [];
 	}	
 #endregion
 

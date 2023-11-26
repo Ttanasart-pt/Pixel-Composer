@@ -575,6 +575,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		def_val	    = _value;
 		def_length  = is_array(def_val)? array_length(def_val) : 0;
 		unit		= new nodeValueUnit(self);
+		def_unit    = VALUE_UNIT.constant;
 		dyna_depo   = ds_list_create();
 		value_tag   = "";
 		
@@ -694,11 +695,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
-	static resetValue = function() { setValue(def_val); is_modified = false; }
+	static resetValue = function() { #region
+		unit.mode = def_unit;
+		setValue(unit.apply(def_val)); 
+		is_modified = false; 
+	} #endregion
 	
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) { #region
 		unit.reference  = ref;
 		unit.mode		= mode;
+		def_unit        = mode;
 		cache_value[0]  = false;
 		
 		return self;
@@ -1406,6 +1412,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return value;
 	} #endregion
 	
+	static valueExpressionProcess = function(value) { #region
+		switch(type) {
+			case VALUE_TYPE.float : 
+			case VALUE_TYPE.integer : 
+				if(!is_numeric(value))
+					return toNumber(value);
+				break;
+			case VALUE_TYPE.boolean : 
+				return bool(value);
+		}
+		
+		return value;
+	} #endregion
+	
 	static resetCache = function() { cache_value[0] = false; }
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region
@@ -1497,6 +1517,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == JUNCTION_CONNECT.output)
 			return val;
 		
+		if(expUse) {
+			if(is_array(val)) {
+				for( var i = 0, n = array_length(val); i < n; i++ )
+					val[i] = valueExpressionProcess(val[i]);
+			} else 
+				val = valueExpressionProcess(val);
+			return arrayBalance(val);
+		}
+		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float) && accept_array) { //Dimension conversion
 			if(is_array(val)) {
 				var eqSize = true;
@@ -1529,7 +1558,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			for( var i = 0, n = array_length(val); i < n; i++ )
 				_val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
 			return _val;
-		} 
+		}
 		
 		return valueProcess(val, nod, applyUnit, arrIndex);
 	} #endregion
@@ -1562,12 +1591,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				};
 				
 				var _exp_res = expTree.eval(variable_clone(expContext));
-				//print(json_stringify(expTree, true));
-				//print($"======= {_exp_res}");
+				printIf(global.LOG_EXPRESSION, $">>>> Result = {_exp_res}");
 				
 				if(is_undefined(_exp_res)) {
 					val[0] = 0;
-					noti_warning("Expression not returning any values.");
+					noti_warning("Expression not returning valid values.");
 				} else 
 					val[0] = _exp_res;
 				global.EVALUATE_HEAD = noone;
@@ -1594,12 +1622,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				animators[i].values[| 0].time = CURRENT_FRAME;
 			}
 		} else {
+			var _val = animator.getValue();
 			ds_list_clear(animator.values);
-			animator.values[| 0] = new valueKey(0, animator.getValue(), animator);
+			animator.values[| 0] = new valueKey(0, _val, animator);
 			
 			for( var i = 0, n = array_length(animators); i < n; i++ ) {
+				var _val = animators[i].getValue();
 				ds_list_clear(animators[i].values);
-				animators[i].values[| 0] = new valueKey(0, animators[i].getValue(), animators[i]);
+				animators[i].values[| 0] = new valueKey(0, _val, animators[i]);
 			}
 		}
 		

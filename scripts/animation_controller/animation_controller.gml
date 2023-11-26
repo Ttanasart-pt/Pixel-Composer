@@ -24,15 +24,14 @@
 		framerate		= 30;
 		is_playing		= false;
 		frame_progress	= false;
-		play_freeze		= 0;
 		render_stop     = false;
+		
+		__debug_animator_counter = 0;
 		
 		rendering = [];
 		playback  = ANIMATOR_END.loop;
 		
-		static setFrame = function(frame, resetTime = true) {
-			//if(frame == 0) resetAnimation();
-			
+		static setFrame = function(frame, resetTime = true) { #region
 			var _c        = current_frame;
 			frame         = clamp(frame, 0, frames_total);
 			real_frame    = frame;
@@ -41,12 +40,12 @@
 			if(current_frame == frames_total) {
 				if(render_stop) {
 					is_playing = false;
-					setFrame(0);
+					setFrame(0, resetTime);
 					render_stop = false;
 				} else if(playback == ANIMATOR_END.stop) {
 					is_playing = false;
 				} else {
-					setFrame(0);
+					setFrame(0, resetTime);
 				}
 			}
 			
@@ -59,9 +58,9 @@
 				frame_progress = false;
 				
 			if(array_length(rendering)) render_stop = true;
-		}
+		} #endregion
 		
-		static resetAnimation = function() {
+		static resetAnimation = function() { #region
 			var _key = ds_map_find_first(PROJECT.nodeMap);
 			var amo = ds_map_size(PROJECT.nodeMap);
 		
@@ -70,61 +69,63 @@
 				_node.resetAnimation();
 				_key = ds_map_find_next(PROJECT.nodeMap, _key);	
 			}
-		}
+		} #endregion
 		
-		static render = function() {
+		static render = function() { #region
 			setFrame(0);
 			is_playing = true;
 			frame_progress = true;
 			time_since_last_frame = 0;
-		}
+		} #endregion
 		
-		static toggle = function() {
+		static toggle = function() { #region
 			is_playing = !is_playing;
 			frame_progress = true;
 			time_since_last_frame = 0;
-		}
+		} #endregion
 		
-		static pause = function() {
+		static pause = function() { #region
 			is_playing = false;
 			frame_progress = true;
 			time_since_last_frame = 0;
-		}
+		} #endregion
 		
-		static play = function() {
+		static play = function() { #region
 			setFrame(0);
 			is_playing = true;
 			frame_progress = true;
 			time_since_last_frame = 0;
-		}
+		} #endregion
 		
-		static resume = function() {
+		static resume = function() { #region
 			is_playing = true;
 			frame_progress = true;
 			time_since_last_frame = 0;
-		}
+		} #endregion
 		
-		static stop = function() {
+		static stop = function() { #region
 			setFrame(0);
 			is_playing = false;
 			time_since_last_frame = 0;
-		}
+		} #endregion
 		
-		static step = function() {
-			if(is_playing && play_freeze == 0) {
-				time_since_last_frame += framerate * (delta_time / 1000000);
+		static step = function() { #region
+			if(!is_playing) return;
+			
+			var _frTime = 1 / framerate;
+			time_since_last_frame += delta_time / 1_000_000;
+			var tslf = time_since_last_frame;
 				
-				if(time_since_last_frame >= 1) {
-					setFrame(real_frame + 1, false);
-					time_since_last_frame -= 1;
-				}
-			} else {
-				frame_progress = false;
-				//setFrame(real_frame);
-				time_since_last_frame = 0;
+			if(time_since_last_frame >= _frTime) {
+				setFrame(real_frame + 1, false);
+				time_since_last_frame -= _frTime;
+					
+				//var _t = get_timer();
+				//print($"Frame progress {current_frame} delay {(_t - __debug_animator_counter) / 1000}");
+				//__debug_animator_counter = _t;
 			}
-	
-			play_freeze = max(0, play_freeze - 1);
-		}
+			
+			//print($"    > TSLF: {tslf} > {_frTime} > {time_since_last_frame}");
+		} #endregion
 	}
 #endregion

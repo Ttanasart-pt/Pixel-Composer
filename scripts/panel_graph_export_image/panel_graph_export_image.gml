@@ -136,14 +136,14 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		if(bgEnable) draw_clear(bgColor);
 		else		 draw_clear_alpha(0, 0);
 		
+		BLEND_ALPHA_MULP
 		draw_surface(s, borderPad, borderPad);
 		
 		draw_set_color(borderColor);
 		draw_set_alpha(borderAlpha);
-		
-		draw_rectangle(borderPad, borderPad, bbox_w + borderPad, bbox_h + borderPad, 1);
-		
+			draw_rectangle(borderPad, borderPad, bbox_w + borderPad, bbox_h + borderPad, 1);
 		draw_set_alpha(1);
+		BLEND_NORMAL
 	surface_reset_target();
 	
 	

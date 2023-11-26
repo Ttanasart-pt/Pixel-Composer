@@ -38,10 +38,8 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 		
 		var _res = noone;
 		
-		if(_output_index == 0)
-			_res = array_create(_amou);
-		else if(_output_index == 1)
-			_res = array_create(_amou - 1);
+		if(_output_index == 0)      _res = array_create(_amou);
+		else if(_output_index == 1) _res = array_create(_amou - 1);
 			
 		var _spAmo = _amou;
 		switch(_spacing) {
@@ -52,7 +50,7 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 		}
 			
 		if(_axis == 0) {
-			var _ww  = (_pbox.w - _spac * _spAmo) / _amou;
+			var _ww = (_pbox.w - _spac * _spAmo) / _amou;
 			
 			if(_output_index == 0)
 			for( var i = 0; i < _amou; i++ ) {

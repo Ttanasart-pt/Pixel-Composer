@@ -42,7 +42,7 @@ if !ready exit;
 	
 	draw_set_text(f_p0, fa_left, fa_bottom, COLORS._main_text_sub);
 	draw_text(x0, y0 - ui(4), __txt("Recent files"));
-	//draw_sprite_stretched(THEME.ui_panel_bg, 1, x0, y0, x1 - x0, y1 - y0);
+	
 	sp_recent.setFocusHover(sFOCUS, sHOVER);
 	sp_recent.draw(x0 + ui(6), y0);
 	draw_sprite_stretched(THEME.ui_panel_fg, 0, x0, y0, x1 - x0, y1 - y0);

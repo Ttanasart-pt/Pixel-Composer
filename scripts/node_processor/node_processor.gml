@@ -267,11 +267,12 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		all_inputs      = array_verify(all_inputs,		_len);
 		
 		for(var i = 0; i < _len; i++) {
-			var val = inputs[| i].getValue();
-			var amo = inputs[| i].arrayLength(val);
+			var raw = inputs[| i].getValue();
+			var amo = inputs[| i].arrayLength(raw);
+			var val = raw;
 			
 			if(amo == 0)      val = noone;		//empty array
-			else if(amo == 1) val = val[0];		//spread single array
+			else if(amo == 1) val = raw[0];		//spread single array
 			amo = max(1, amo);
 			
 			setInputData(i, val);

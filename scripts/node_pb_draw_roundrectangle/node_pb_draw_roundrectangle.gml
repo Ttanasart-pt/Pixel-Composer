@@ -46,15 +46,9 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 		if(_rela) {
 			inputs[| 4].setType(VALUE_TYPE.float);
 			inputs[| 5].setType(VALUE_TYPE.float);
-			
-			inputs[| 4].editWidget.setSlideSpeed(0.001);
-			inputs[| 5].editWidget.setSlideSpeed(0.001);
 		} else {
 			inputs[| 4].setType(VALUE_TYPE.integer);
 			inputs[| 5].setType(VALUE_TYPE.integer);
-			
-			inputs[| 4].editWidget.setSlideSpeed(0.01);
-			inputs[| 5].editWidget.setSlideSpeed(0.01);
 		}
 	}
 	
@@ -112,7 +106,7 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 					if(_rela) _corn = max(0, round(_corn * min(_pbox.w, _pbox.h)));
 				
 					if(_corn > array_length(corner_pixels)) 
-						draw_roundrect_ext(_x0, _y0, _x1, _y1, 6 + _corn, 6 + _corn, false);
+						draw_roundrect_ext(_x0 - 1, _y0 - 1, _x1, _y1, 6 + _corn, 6 + _corn, false);
 					else {
 						draw_rectangle(_x0, _y0, _x1, _y1, false);
 						BLEND_SUBTRACT

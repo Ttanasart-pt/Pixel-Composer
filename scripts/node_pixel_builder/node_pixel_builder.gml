@@ -18,7 +18,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		RENDER_ALL 
 	}
 	
-	static getNextNodes = function() {
+	static getNextNodes = function() { #region
 		var allReady = true;
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i].from;
@@ -30,9 +30,9 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		if(!allReady) return [];
 		
 		return __nodeLeafList(getNodeList());
-	}
+	} #endregion
 	
-	static checkComplete = function() {
+	static checkComplete = function() { #region
 		for( var i = 0; i < ds_list_size(nodes); i++ )
 			if(!nodes[| i].rendered) return [];
 		
@@ -47,33 +47,9 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		}
 		
 		return _nodes;
-	}
+	} #endregion
 	
-	static update = function() {
-		var _dim     = getInputData(0);
-		
-		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			var _n = nodes[| i];
-			
-			if(!is_instanceof(_n, Node_PB_Layer))
-				continue;
-			
-			var _layer = _n.getInputData(0);
-			
-			var _box = new __pbBox();
-			_box.layer	 = _layer;
-			_box.w		 = _dim[0];
-			_box.h		 = _dim[1];
-			_box.layer_w = _dim[0];
-			_box.layer_h = _dim[1];
-			
-			_n.outputs[| 0].setValue(_box);
-		}
-		
-		outputs[| 0].setValue(surface_create(_dim[0], _dim[1]));
-	}
-	
-	static buildPixel = function() {
+	static buildPixel = function() { #region
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"================== BUILD PIXEL ==================");
 		LOG_BLOCK_START();
@@ -119,28 +95,24 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		}
 		
 		var _layers = ds_map_keys_to_array(_surfs);
-		
 		array_sort(_layers, true);
 		
-		_outSurf = surface_create(_dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
-			
-		for( var k = 0; k < array_length(_layers); k++ ) {
-			var _s = _surfs[? _layers[k]];
+			for( var k = 0; k < array_length(_layers); k++ ) {
+				var _s = _surfs[? _layers[k]];
 				
-			for( var j = 0; j < array_length(_s); j++ ) {
-				var _box = _s[j];
-				draw_surface_safe(_box.content, _box.x, _box.y);
-			}
-		}
-			
+				for( var j = 0; j < array_length(_s); j++ ) {
+					var _box = _s[j];
+					draw_surface_safe(_box.content, _box.x, _box.y);
+				}
+			}	
 		surface_reset_target();
 		
 		ds_map_destroy(_surfs);
 		
 		outputs[| 0].setValue(_outSurf);
-	}
-	
-	PATCH_STATIC
+	} #endregion
 }

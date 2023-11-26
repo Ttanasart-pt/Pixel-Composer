@@ -8,12 +8,13 @@ function steam_ugc_create_collection(file) { #region
 	
 	directory_destroy(DIRECTORY + "steamUGC");
 	directory_create(DIRECTORY + "steamUGC");
+	
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
 	file_copy(file.meta_path, DIRECTORY + "steamUGC/" + filename_name(file.meta_path));
 	
-	if(array_safe_get(file.spr_path, 0, 0) != 0)
+	if(array_safe_get(file.spr_path, 0) != 0)
 		file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
-	steam_ugc_collection_generate(file);
+	steam_ugc_collection_generate(array_safe_get(file.spr_path, 0));
 	
 	STEAM_UGC_ITEM_ID = steam_ugc_create_item(STEAM_APP_ID, ugc_filetype_community);
 } #endregion
@@ -28,6 +29,7 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 	
 	directory_destroy(DIRECTORY + "steamUGC");
 	directory_create(DIRECTORY + "steamUGC");
+	
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
 	file_copy(file.meta_path, DIRECTORY + "steamUGC/" + filename_name(file.meta_path));
 	if(array_safe_get(file.spr_path, 0, 0) != 0)
@@ -44,17 +46,23 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 	array_insert(tgs, 0, "Collection");
 	array_push(tgs, VERSION_STRING);
 	
+	steam_ugc_collection_generate(array_safe_get(file.spr_path, 0));
+	
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
 	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, DIRECTORY + "steamUGC");
+	if(file_exists(TEMPDIR + "steamUGCthumbnail.png"))
+		steam_ugc_set_item_preview(STEAM_UGC_UPDATE_HANDLE, TEMPDIR + "steamUGCthumbnail.png");
 	
 	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, update_note);
 } #endregion
 
 function steam_ugc_collection_generate(file, dest_path = TEMPDIR + "steamUGCthumbnail.png") { #region
 	file_delete(dest_path);
-	var spr       = STEAM_UGC_ITEM_FILE.getSpr();
+	
 	var prev_size = 512;
-	var _s = surface_create(prev_size, prev_size);
+	var spr = sprite_add(file, 0, false, false, 0, 0);
+	var _s  = surface_create(prev_size, prev_size);
+	
 	surface_set_target(_s);
 		draw_clear(COLORS._main_icon_dark);
 		draw_sprite_tiled(s_workshop_bg, 0, -64, -64);
@@ -71,9 +79,9 @@ function steam_ugc_collection_generate(file, dest_path = TEMPDIR + "steamUGCthum
 		
 		draw_set_text(f_h2, fa_right, fa_bottom, COLORS._main_icon_dark);
 		var _bw = 48 + string_width(VERSION_STRING);
-		var _bh = 88;
+		var _bh = 80;
 		draw_sprite_stretched(s_workshop_badge_version, 0, prev_size - 8 - _bw, prev_size - 8 - _bh, _bw, _bh);
-		draw_text(prev_size - 16, prev_size - 12, VERSION_STRING);
+		draw_text(prev_size - 16, prev_size - 8, VERSION_STRING);
 	surface_reset_target();
 	surface_save_safe(_s, dest_path);
 	surface_free(_s);

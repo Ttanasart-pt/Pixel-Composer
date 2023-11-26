@@ -100,6 +100,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	sprite_valid = [];
 	spliceSurf   = noone;
 	
+	temp_surface = [ noone ];
+	
 	static getPreviewValues = function() { return getInputData(0); }
 	
 	static onValueFromUpdate = function() { _inSurf = noone; }
@@ -300,6 +302,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _total  = _amo[0] * _amo[1];
 		var _pad	= getInputData(6);
 		
+		surf_space  = getInputData(5);
+		surf_origin = getInputData(9);
+		
 		var ww   = _dim[0] + _pad[0] + _pad[2];
 		var hh   = _dim[1] + _pad[1] + _pad[3];
 		
@@ -321,28 +326,37 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(_filt) {
 			var filSize = 4;
-			var _empS = surface_create_valid(filSize, filSize, cDep);
-			var _buff = buffer_create(filSize * filSize * surface_format_get_bytes(cDep), buffer_fixed, 2);
+			temp_surface[0] = surface_verify(temp_surface[0], surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf));
+			
+			surface_set_shader(temp_surface[0], sh_slice_spritesheet_empty_scan);
+				shader_set_dim("dimension",  _inSurf);
+				shader_set_f("paddingStart", _pad[2], _pad[1]);
+				shader_set_f("spacing",		 surf_space[0], surf_space[1]);
+				shader_set_f("spriteDim",	 _dim[0], _dim[1]);
+				shader_set_color("color",	 _flcl);
+				shader_set_i("empty",		 !_fltp);
+				
+				draw_surface(_inSurf, 0, 0);
+			surface_reset_shader();
 		}
 		
 		var _atl = array_create(_total);
 		var _sar = array_create(_total);
 		var _arrAmo = 0;
 		
-		surf_space  = getInputData(5);
-		surf_origin = getInputData(9);
-	
 		for(var i = 0; i < _total; i++) 
 			sprite_pos[i] = getSpritePosition(i);
 		
 		for(var i = 0; i < _total; i++) {
 			var _s = array_safe_get(surf_array, i);
 			
-			if(!surface_exists(_s)) _s = surface_create(ww, hh, cDep);
+			if(!is_surface(_s)) 
+				_s = surface_create(ww, hh, cDep);
 			else if(surface_get_format(_s) != cDep) {
 				surface_free(_s);
 				_s = surface_create(ww, hh, cDep);
-			} else if(_resizeSurf) _s = surface_resize(_s, ww, hh);
+			} else if(_resizeSurf) 
+				surface_resize(_s, ww, hh);
 			
 			var _a = array_safe_get(atls_array, i, 0);
 			if(_a == 0) _a = new SurfaceAtlas(_s, 0, 0);
@@ -367,27 +381,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				continue;
 			}
 			
-			gpu_set_tex_filter(true);
-			surface_set_target(_empS);
-			DRAW_CLEAR
-			draw_surface_stretched_safe(_s, 0, 0, filSize, filSize);
-			surface_reset_target();
-			gpu_set_tex_filter(false);
-				
-			buffer_get_surface(_buff, _empS, 0);
-			buffer_seek(_buff, buffer_seek_start, 0);
-			var empty = true;
-				
-			repeat(filSize * filSize - 1) {
-				var c = buffer_read(_buff, buffer_u32);
-				if(_fltp == 0 && ((c & 0xFF000000) >> 24) != 0) {
-					empty = false;
-					break;
-				} else if(_fltp == 1 && (c & 0x00FFFFFF) != _flcl) {
-					empty = false;
-					break;
-				}
-			}
+			var empPx = surface_get_pixel(temp_surface[0], _spr_pos[0], _spr_pos[1]);
+			var empty = empPx == 0.;
 					
 			if(!empty) {
 				_atl[_arrAmo] = _a;
@@ -408,11 +403,6 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(_out == 1) outputs[| 0].setValue(surf_array);
 		outputs[| 1].setValue(atls_array);
-		
-		if(_filt) {
-			buffer_delete(_buff);
-			surface_free(_empS);
-		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
@@ -422,6 +412,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(_out == 1) {
 			outputs[| 0].setValue(surf_array);
 			update_on_frame = false;
+			
+			//outputs[| 0].setValue(temp_surface[0]);
 			return;
 		}
 		

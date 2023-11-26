@@ -326,4 +326,6 @@
 
 #region debug
 	//instance_create_depth(0, 0, 0, addon_key_displayer);
+	
+	__debug_animator_counter = 0;
 #endregion

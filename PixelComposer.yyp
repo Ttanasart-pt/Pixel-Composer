@@ -1891,6 +1891,7 @@
     {"id":{"name":"Regex","path":"extensions/Regex/Regex.yy",},},
     {"id":{"name":"s_node_path_shift","path":"sprites/s_node_path_shift/s_node_path_shift.yy",},},
     {"id":{"name":"node_rigid_group","path":"scripts/node_rigid_group/node_rigid_group.yy",},},
+    {"id":{"name":"sh_slice_spritesheet_empty_scan","path":"shaders/sh_slice_spritesheet_empty_scan/sh_slice_spritesheet_empty_scan.yy",},},
     {"id":{"name":"s_node_grid_tri","path":"sprites/s_node_grid_tri/s_node_grid_tri.yy",},},
     {"id":{"name":"s_node_local_analyze","path":"sprites/s_node_local_analyze/s_node_local_analyze.yy",},},
     {"id":{"name":"_f_p0b","path":"fonts/_f_p0b/_f_p0b.yy",},},

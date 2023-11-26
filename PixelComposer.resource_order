@@ -1198,6 +1198,7 @@
     {"name":"s_node_3d_plane","order":6,"path":"sprites/s_node_3d_plane/s_node_3d_plane.yy",},
     {"name":"Regex","order":7,"path":"extensions/Regex/Regex.yy",},
     {"name":"s_node_path_shift","order":4,"path":"sprites/s_node_path_shift/s_node_path_shift.yy",},
+    {"name":"sh_slice_spritesheet_empty_scan","order":10,"path":"shaders/sh_slice_spritesheet_empty_scan/sh_slice_spritesheet_empty_scan.yy",},
     {"name":"s_node_grid_tri","order":6,"path":"sprites/s_node_grid_tri/s_node_grid_tri.yy",},
     {"name":"s_node_local_analyze","order":52,"path":"sprites/s_node_local_analyze/s_node_local_analyze.yy",},
     {"name":"_f_p0b","order":5,"path":"fonts/_f_p0b/_f_p0b.yy",},

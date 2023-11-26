@@ -69,8 +69,8 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 			w  = round(_nbox.w * _widt);
 			h  = round(_nbox.h * _high);
 			
-			x0 = _nbox.x + (_nbox.w - w) * (_nbox.mirror_h? 1. - _hali : _hali);
-			y0 = _nbox.y + (_nbox.h - h) * (_nbox.mirror_v? 1. - _vali : _vali);
+			x0 = round(_nbox.x + (_nbox.w - w) * (_nbox.mirror_h? 1. - _hali : _hali));
+			y0 = round(_nbox.y + (_nbox.h - h) * (_nbox.mirror_v? 1. - _vali : _vali));
 		}
 		
 		if(_output_index == 0) {

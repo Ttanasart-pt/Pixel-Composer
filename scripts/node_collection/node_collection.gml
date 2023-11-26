@@ -295,7 +295,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
 		if(update_on_frame) return true;
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) 
+		for( var i = custom_input_index, n = ds_list_size(inputs); i < n; i++ ) 
 			if(inputs[| i].isActiveDynamic(frame) || !inputs[| i].from.rendered) return true;
 		
 		return false;

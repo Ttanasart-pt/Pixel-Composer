@@ -44,15 +44,18 @@ event_inherited();
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
 		var expand = PREFERENCES.splash_expand_recent;
 		var ww  = ui(264);
-		var hh	= 0;
+		var hh	= ui(8);
 		var pad = ui(8);
 		var hgt	= ui(16) + line_get_height(f_p0b) + line_get_height(f_p1);
 		_y += pad;
 		
 		var col = expand? 2 : 1;
 		var row = ceil(ds_list_size(RECENT_FILES) / col);
+		var hg  = recent_thumbnail? ui(100) : hgt;
 		
 		for(var i = 0; i < row; i++) {
+			
+			if(_y > -(hg + pad) && _y < sp_recent.surface_h)
 			for(var j = 0; j < col; j++) {
 				var ind  = i * col + j;
 				if(ind >= ds_list_size(RECENT_FILES)) break;
@@ -61,14 +64,8 @@ event_inherited();
 				var _dat = RECENT_FILE_DATA[| ind];
 				if(!file_exists(_rec)) continue;
 			
-				var thmb = noone;
-				var hg = hgt;
-				if(recent_thumbnail) {
-					hg = ui(100);
-					thmb = _dat.getThumbnail();
-				}
-				
-				var fx = j * (ww + ui(8));
+				var thmb = recent_thumbnail? _dat.getThumbnail() : noone;
+				var fx   = j * (ww + ui(8));
 			
 				draw_sprite_stretched(THEME.ui_panel_bg, 1, fx, _y, ww, hg);
 				if(thmb && _y + hg > 0 && _y < sp_recent.h) {

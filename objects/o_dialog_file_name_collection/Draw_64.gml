@@ -55,7 +55,7 @@
 			if(meta.author_steam_id == 0)
 				meta.author_steam_id = STEAM_USER_ID;
 			
-			if(updating == noone) {
+			if(updating == noone && node != noone) {
 				saveCollection(node, data_path, meta.name, true, meta);
 			} else {
 				var _map     = json_load_struct(updating.path);
@@ -64,7 +64,22 @@
 				json_save_struct(updating.path,		 _map);
 				json_save_struct(updating.meta_path, _meta);
 				
-				updating.meta = meta;
+				var _newPath = $"{filename_dir(updating.path)}/{meta.name}.pxcc";
+				var _newMeta = $"{filename_dir(updating.meta_path)}/{meta.name}.meta";
+				var _oldSpr  = $"{filename_dir(updating.path)}/{filename_name_only(updating.path)}.png";
+				var _newSpr  = $"{filename_dir(updating.path)}/{meta.name}.png";
+				
+				if(_newPath != updating.path) {
+					file_rename(updating.path,		_newPath);
+					file_rename(updating.meta_path, _newMeta);
+					if(file_exists(_oldSpr)) file_rename(_oldSpr, _newSpr);
+				}
+				
+				updating.path        = _newPath;
+				updating.meta_path   = _newMeta;
+				updating.spr_path[0] = _newSpr;
+				updating.meta        = meta;
+				
 				PANEL_COLLECTION.refreshContext();
 			}
 			
@@ -73,7 +88,7 @@
 				ugc_loading = true;
 			} else if(ugc == 2) {
 				saveCollection(node, data_path, updating.path, false, updating.meta);
-				steam_ugc_update_collection(updating,, update_note);
+				steam_ugc_update_collection(updating, false, update_note);
 				ugc_loading = true;
 			} else 
 				instance_destroy();
@@ -86,7 +101,7 @@
 		doExpand();
 #endregion
 
-#region metadata
+#region display
 	dialog_h = ui(64);
 	
 	if(meta_expand) {

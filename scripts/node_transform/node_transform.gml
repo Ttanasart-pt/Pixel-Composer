@@ -197,7 +197,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var ww  = surface_get_width_safe(ins);
 		var hh  = surface_get_height_safe(ins);
-		var _ww = ww, _hh = hh;
+		var _ww = ww;
+		var _hh = hh;
 		if(_ww <= 1 && _hh <= 1) return _outSurf;
 		
 		switch(out_type) {
@@ -244,7 +245,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		pos = point_rotate(pos[0], pos[1], pos[0] + anc[0], pos[1] + anc[1], rot);
 		
-		if(mode == 1) {
+		if(mode == 1) { #region
 			var _w = _ww * sqrt(2);
 			var _h = _hh * sqrt(2);
 			var _px = (_w - _ww) / 2;
@@ -253,8 +254,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			surface_set_target(_s);
 				DRAW_CLEAR
-				BLEND_OVERRIDE;
-			
+				BLEND_OVERRIDE
+				
 				if(is_surface(ins)) {
 					var draw_x, draw_y;
 					draw_x = _px + pos[0];
@@ -267,17 +268,18 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], c_white, 1);
 				}
 				
-				BLEND_NORMAL;
+				BLEND_NORMAL
 			surface_reset_target();
 			
 			var _cc = point_rotate(-_px, -_py, _ww / 2, _hh / 2, rot);
 			surface_set_shader(_outSurf);
-			shader_set_interpolation_surface(_s);
+			shader_set_interpolation(_s);
 			draw_surface_ext_safe(_s, _cc[0], _cc[1], 1, 1, rot, c_white, 1);
 			surface_reset_shader();
 			
 			surface_free(_s);
-		} else {
+		#endregion
+		} else { #region
 			var draw_x, draw_y;
 			draw_x = pos[0];
 			draw_y = pos[1];
@@ -288,7 +290,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 			
 			surface_set_shader(_outSurf);
-			shader_set_interpolation_surface(ins);
+			shader_set_interpolation(ins);
 			draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, 1);
 			
 			if(mode == 2) {
@@ -304,6 +306,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_surface_ext_safe(ins, draw_x + _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, 1);
 			}
 			surface_reset_shader();
+		#endregion
 		}
 		
 		return _outSurf;

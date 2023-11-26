@@ -363,7 +363,7 @@ event_inherited();
 		} else if(ADD_NODE_PAGE == -1) { #region
 			_list = NEW_NODES;
 		#endregion
-		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT) { #region
+		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && category == NODE_CATEGORY) { #region
 			_list = ds_list_create();
 			
 			var sug = [];

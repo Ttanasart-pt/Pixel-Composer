@@ -95,6 +95,8 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _res = _data[1]? round(_data[0]) : _data[0];
+		if(!is_numeric(_res)) _res = real(_res);
+		
 		display_output = _res;
 		return _res; 
 	} #endregion

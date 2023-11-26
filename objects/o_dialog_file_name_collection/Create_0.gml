@@ -16,13 +16,16 @@ event_inherited();
 	meta_expand = false;
 	updating	= noone;
 	update_note = "Updated";
+	onModify    = -1;
 	
-	node = noone;
+	node      = noone;
 	data_path = "";
 	
 	ugc  = 0;
 	ugc_loading = false;
-	//name = __txtx("new_collection_placeholder", "New collection");
+	
+	tb_name  = new textBox(TEXTBOX_INPUT.text, function(str) { meta.name = str; });
+	KEYBOARD_STRING = "";
 	
 	t_desc  = new textArea(TEXTBOX_INPUT.text, function(str) { meta.description = str; });
 	t_auth  = new textArea(TEXTBOX_INPUT.text, function(str) { meta.author	    = str; });
@@ -44,11 +47,4 @@ event_inherited();
 		dialog_w = dialog_w_expand;
 		dialog_h = dialog_h_expand;
 	}
-#endregion
-
-#region text
-	onModify = -1;
-	tb_name  = new textBox(TEXTBOX_INPUT.text, function(str) { meta.name = str; });
-	
-	KEYBOARD_STRING = "";
 #endregion

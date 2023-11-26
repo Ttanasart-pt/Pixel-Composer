@@ -18,7 +18,7 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	roots = [ ["Collections", COLLECTIONS] , ["Assets", global.ASSETS] ];
 	mode  = 0;
-	root = roots[mode][1];
+	root  = roots[mode][1];
 	context = root;
 	
 	search_list = ds_list_create();
@@ -65,7 +65,7 @@ function Panel_Collection() : PanelContent() constructor {
 						return;
 					}
 					
-					var icon_path = string_replace(_path, filename_ext(_path), "") + ".png";
+					var icon_path = string_replace(_path, filename_ext(_path), ".png");
 					surface_save_safe(preview_surface, icon_path);
 					
 					refreshContext();
@@ -84,18 +84,11 @@ function Panel_Collection() : PanelContent() constructor {
 		if(STEAM_ENABLED) {
 			if(!meta.steam) {
 				array_push(contentMenu, menuItem(__txtx("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
-					var s = PANEL_PREVIEW.getNodePreviewSurface();
-					if(!is_surface(s)) {
-						noti_warning("Please send any node to preview panel to use as a thumbnail.")
-						return;
-					}
-					
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();
 					if(meta != noone && meta != undefined) 
 						dia.meta = meta;
-				
-					dia.node		= PANEL_INSPECTOR.getInspecting();
+					
 					dia.data_path	= data_path;
 					dia.ugc			= 1;
 					dia.updating	= _menu_node;
@@ -104,12 +97,17 @@ function Panel_Collection() : PanelContent() constructor {
 			} else {
 				if(meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0) {
 					array_push(contentMenu, menuItem(__txtx("panel_collection_workshop_update", "Update Steam Workshop content") + "...", function() { 
+						var _node = PANEL_INSPECTOR.getInspecting();
+						if(_node == noone) {
+							noti_warning("No node selected. Select a node in graph panel to update workshop content.");
+							return;
+						}
 						var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 						var meta = _menu_node.getMetadata();
 						if(meta != noone && meta != undefined) 
 							dia.meta = meta;
 						
-						dia.node		= PANEL_INSPECTOR.getInspecting();
+						dia.node		= _node;
 						dia.data_path	= data_path;
 						dia.ugc			= 2;
 						dia.updating	= _menu_node;

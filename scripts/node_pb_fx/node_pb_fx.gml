@@ -5,6 +5,17 @@ function Node_PB_Fx(_x, _y, _group = noone) : Node_PB(_x, _y, _group) constructo
 		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue("pBox", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, noone);
+	
+	static getGraphPreviewSurface = function() {
+		var _nbox = outputs[| 0].getValue();
+		if(_nbox == noone) return noone;
+		if(is_array(_nbox)) {
+			if(array_empty(_nbox)) return noone;
+			_nbox = _nbox[0];
+		}
+		
+		return _nbox.content;
+	}
 }
 
 #macro PB_FX_PBOX if(_output_index == 1) {																		\

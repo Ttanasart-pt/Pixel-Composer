@@ -166,7 +166,7 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 						if(_mirr) 
 							draw_surface_ext_safe(_pbox.mask, 0, _nbox.h + shf, 1, -1, 0, c_white, 1);
 						else 
-							draw_surface_safe(_pbox.mask, -shf, 0);
+							draw_surface_safe(_pbox.mask, 0, -shf);
 					surface_reset_target();
 				}
 				
@@ -177,7 +177,7 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 						if(_mirr) 
 							draw_surface_ext_safe(_pbox.content, 0, _nbox.h + shf, 1, -1, 0, c_white, 1);
 						else 
-							draw_surface_safe(_pbox.content, -shf, 0);
+							draw_surface_safe(_pbox.content, 0, -shf);
 					surface_reset_target();
 				}
 			}
@@ -195,9 +195,7 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 		draw_set_color(c_white);
 		draw_rectangle_border(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 2);
 		
-		if(_axs == 0)
-			draw_line(bbox.xc, bbox.y0, bbox.xc, bbox.y1);
-		else 
-			draw_line(bbox.x0, bbox.yc, bbox.x1, bbox.yc);
+		if(_axs == 0) draw_line(bbox.xc, bbox.y0, bbox.xc, bbox.y1);
+		else          draw_line(bbox.x0, bbox.yc, bbox.x1, bbox.yc);
 	}
 }

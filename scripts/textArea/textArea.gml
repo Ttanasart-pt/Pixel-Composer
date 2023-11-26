@@ -146,11 +146,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			_c--;
 		}
 		var guide = function_guide_server(_fn);
-					
+		
+		o_dialog_textbox_function_guide.dialog_x = rx + cursor_pos_x + 1;
+		o_dialog_textbox_function_guide.dialog_y = ry + cursor_pos_y - 12;
+			
 		if(guide != "") {
 			o_dialog_textbox_function_guide.activate(self);
-			o_dialog_textbox_function_guide.dialog_x = rx + cursor_pos_x + 1;
-			o_dialog_textbox_function_guide.dialog_y = ry + cursor_pos_y - 12;
 			o_dialog_textbox_function_guide.prompt   = guide;
 			o_dialog_textbox_function_guide.index    = amo;
 		} else 
@@ -207,10 +208,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			} 
 		}
 		
-		if(!(isCodeFormat() && o_dialog_textbox_autocomplete.textbox == self)) {
+		var tbActive = o_dialog_textbox_autocomplete.active && o_dialog_textbox_autocomplete.textbox == self;
+		
+		if(!(isCodeFormat() && tbActive)) {
 			if(key == vk_up) {
 				var _target;
-					
+				
 				if(cursor_line == 0) 
 					_target = 0;
 				else {

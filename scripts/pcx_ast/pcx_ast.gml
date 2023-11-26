@@ -82,8 +82,9 @@
 			return true;
 		} ];
 	
-	global.FUNCTIONS[? "surface_get_width"]  = [ ["surface"], function(val) { return surface_get_width_safe(array_safe_get(val, 0));  } ];
-	global.FUNCTIONS[? "surface_get_height"] = [ ["surface"], function(val) { return surface_get_height_safe(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "surface_get_dimension"] = [ ["surface"], function(val) { var s = array_safe_get(val, 0); return [ surface_get_width_safe(s), surface_get_height_safe(s) ];  } ];
+	global.FUNCTIONS[? "surface_get_width"]     = [ ["surface"], function(val) { return surface_get_width_safe(array_safe_get(val, 0));  } ];
+	global.FUNCTIONS[? "surface_get_height"]    = [ ["surface"], function(val) { return surface_get_height_safe(array_safe_get(val, 0)); } ];
 	
 	global.FUNCTIONS[? "color_hex"] = [ ["char"],  function(val) { return colorFromHex(array_safe_get(val, 0)); } ];
 	global.FUNCTIONS[? "color_rgb"] = [ ["red", "green", "blue"],  function(val) { return make_color_rgb(array_safe_get(val, 0), array_safe_get(val, 1), array_safe_get(val, 2)); } ];
@@ -464,6 +465,7 @@
 					printIf(global.LOG_EXPRESSION, $"symbol : {symbol}");
 					printIf(global.LOG_EXPRESSION, $"l      : | {typeof(l)} |{l}|");
 					printIf(global.LOG_EXPRESSION, $"r      : | {typeof(r)} |{r}|");
+					printIf(global.LOG_EXPRESSION, $"params : {params}");
 					printIf(global.LOG_EXPRESSION, "====================");
 					break;
 			}

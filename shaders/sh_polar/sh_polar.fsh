@@ -6,6 +6,7 @@ varying vec4  v_vColour;
 uniform int   invert;
 uniform float blend;
 uniform int   distMode;
+uniform int   swap;
 
 #region /////////////// SAMPLING ///////////////
 
@@ -67,7 +68,7 @@ void main() {
 		vec2  cenPos = v_vTexcoord - center;
 		float angle	 = (atan(cenPos.y, cenPos.x) / PI + 1.) / 2.;
 		
-		coord = fract(vec2(angle, dist));
+		coord = fract(vec2(dist, angle));
 	} else if(invert == 1) {
 		float dist = v_vTexcoord.x * 0.5;
 		if(distMode == 1)      dist = sqrt(dist);
@@ -78,5 +79,6 @@ void main() {
 		coord = fract(center + vec2(cos(ang), sin(ang)) * dist);
 	}
 	
-	gl_FragColor = texture2D( gm_BaseTexture, mix(v_vTexcoord, coord, blend) );
+	if(swap == 1) coord.xy = coord.yx;
+	gl_FragColor = texture2Dintp( gm_BaseTexture, mix(v_vTexcoord, coord, blend) );
 }
