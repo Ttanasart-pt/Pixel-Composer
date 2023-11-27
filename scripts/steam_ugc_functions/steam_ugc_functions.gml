@@ -73,7 +73,7 @@ function __loadSteamUGCCollection(file_id, f, path) {
 	ds_list_add(STEAM_COLLECTION, file);
 				
 	var meta = file.getMetadata();
-	meta.steam = true;
+	meta.steam   = FILE_STEAM_TYPE.steamOpen;
 	meta.file_id = file_id;
 }
 
@@ -86,6 +86,6 @@ function __loadSteamUGCProject(file_id, f, path) {
 	ds_list_add(STEAM_PROJECTS, file);
 	
 	var meta = file.getMetadata();
-	meta.steam = true;
+	meta.steam   = FILE_STEAM_TYPE.steamOpen;
 	meta.file_id = file_id;
 }

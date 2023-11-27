@@ -165,7 +165,7 @@ function __test_metadata_current_collections() { #region
 	print("---------- COLLECTION UPDATING STARTED ----------");
 	
 	var sel   = PANEL_GRAPH.getFocusingNode(), outj = noone;
-	var _meta = METADATA.serialize();
+	var _meta = PROJECT.meta.serialize();
 	if(sel != noone) outj = sel.outputs[| 0];
 	
 	while(!ds_stack_empty(st)) {

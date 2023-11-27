@@ -6,6 +6,7 @@
 	function Project() constructor {
 		active	= true; /// @is {bool}
 		
+		meta      = __getdefaultMetaData();
 		path	  = ""; /// @is {string}
 		thumbnail = "";
 		version   = SAVE_VERSION; /// @is {number}

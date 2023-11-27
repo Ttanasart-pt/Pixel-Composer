@@ -7,6 +7,12 @@
 		collection,
 		assets
 	}
+	
+	enum FILE_STEAM_TYPE {
+		local,
+		steamUpload,
+		steamOpen
+	}
 #endregion
 
 function MetaDataManager() constructor {
@@ -20,7 +26,7 @@ function MetaDataManager() constructor {
 	file_id		= 0;
 	tags		= [];
 	version		= SAVE_VERSION;
-	steam		= false;
+	steam		= FILE_STEAM_TYPE.local;
 	
 	static displays = [
 		[ "Description",  function(meta) { return meta.description; }	, line_get_height() * 5],
@@ -53,8 +59,6 @@ function MetaDataManager() constructor {
 		file_id			= struct_try_get(m, "file_id",		file_id);
 		tags			= struct_try_get(m, "tags",			tags);
 		version			= struct_try_get(m, "version",		version);
-		
-		//if(STEAM_ENABLED && author_steam_id == STEAM_USER_ID) steam = true;
 		
 		return self;
 	}
@@ -225,9 +229,6 @@ function MetaDataManager() constructor {
 }
 
 #region 
-	globalvar METADATA;
-	METADATA = noone;
-	
 	function __getdefaultMetaData() {
 		var meta = new MetaDataManager();
 		var path = DIRECTORY + "meta.json";

@@ -309,7 +309,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		cmd += "-bgcolor 0,0,0,0 ";
 		cmd += "-o " + string_quote(target_path);
 		
-		array_remove(RENDERING, node_id);
 		render_process_id = shell_execute_async(webp, cmd, self); 
 		render_type       = "webp";
 		render_target     = target_path;
@@ -329,8 +328,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var framerate  = 100 / rate;
 		var loop_str   = loop? 0 : 1;
 		var use_gifski = false;
-		
-		array_remove(RENDERING, node_id);
 		
 		if(use_gifski) {
 			var	shell_cmd  = $"-o {string_quote(target_path)} -r {rate} --repeat {loop_str} -Q {qual} {string_quote(temp_path)}";
@@ -364,7 +361,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}%05d.png\" -c:v libx264 -r {rate} -pix_fmt yuv420p {string_quote(target_path)}";
 		print($"{ffmpeg} {shell_cmd}")
 		
-		array_remove(RENDERING, node_id);
 		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
 		render_type       = "mp4";
 		render_target     = target_path;
@@ -675,9 +671,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var form = getInputData(3);
 		
 		if(form == NODE_EXPORT_FORMAT.single) {
-			array_push(RENDERING, node_id);
 			Render();
-			array_remove(RENDERING, node_id);
 			
 			export();
 			updatedOutTrigger.setValue(true);
@@ -748,11 +742,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 				render_process_id = 0;
-				
-				array_remove(RENDERING, node_id);
-			} else {
-				//var stdOut = ExecutedProcessReadFromStandardOutput(render_process_id);
-				//print(stdOut);
 			}
 		}
 	} #endregion
@@ -774,9 +763,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		export();
 		
 		if(LAST_FRAME) {
-			if(anim == NODE_EXPORT_FORMAT.sequence)
-				array_remove(RENDERING, node_id);
-			else if(anim == NODE_EXPORT_FORMAT.animation)
+			if(anim == NODE_EXPORT_FORMAT.animation)
 				renderCompleted();
 		}
 	} #endregion

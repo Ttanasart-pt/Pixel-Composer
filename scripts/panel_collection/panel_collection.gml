@@ -82,7 +82,7 @@ function Panel_Collection() : PanelContent() constructor {
 		} 
 		
 		if(STEAM_ENABLED) {
-			if(!meta.steam) {
+			if(meta.steam == FILE_STEAM_TYPE.local) {
 				array_push(contentMenu, menuItem(__txtx("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();

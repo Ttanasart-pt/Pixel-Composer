@@ -150,9 +150,11 @@ event_inherited();
 						if(mouse_press(mb_left, sFOCUS)) {
 							LOAD_PATH(_project.path, true);
 							PROJECT.thumbnail = _project.spr_path[0];
-							METADATA.steam = txt == "Workshop";
-							if(txt == "Workshop")
-								METADATA.file_id = _meta.file_id;
+							
+							if(txt == "Workshop") {
+								PROJECT.meta.file_id = _meta.file_id;
+								PROJECT.meta.steam   = FILE_STEAM_TYPE.steamOpen;
+							}
 							instance_destroy();
 						}
 					}

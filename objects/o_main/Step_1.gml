@@ -109,6 +109,7 @@ _HOVERING_ELEMENT = noone;
 		}
 	}
 	
+	if(LAST_FRAME) RENDERING = [];
 	UPDATE = RENDER_TYPE.none;
 #endregion
 

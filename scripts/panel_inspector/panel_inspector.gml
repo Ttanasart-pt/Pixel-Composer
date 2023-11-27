@@ -206,7 +206,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		var _hover = pHOVER && contentPane.hover;
 		
 		var context = PANEL_GRAPH.getCurrentContext();
-		var meta = context == noone? METADATA : context.metadata;
+		var meta = context == noone? PROJECT.meta : context.metadata;
 		if(meta == noone) return 0;
 		current_meta = meta;
 		
@@ -815,12 +815,17 @@ function Panel_Inspector() : PanelContent() constructor {
 			draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 			draw_text_add(w / 2, ui(30), txt);
 			
+			if(PROJECT.meta.steam == FILE_STEAM_TYPE.steamOpen) {
+				var _tw = string_width(txt) / 2;
+				draw_sprite_ui(THEME.steam, 0, w / 2 - _tw - ui(16), ui(32),,,, COLORS._main_icon);
+			}
+			
 			var bx = w - ui(44);
 			var by = ui(12);
 			
 			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_set_default", "Set Metadata as default"), THEME.save, 0, COLORS._main_icon) == 2) {
 				var path = DIRECTORY + "meta.json";
-				json_save_struct(path, METADATA.serialize());
+				json_save_struct(path, PROJECT.meta.serialize());
 			}
 			
 			by += ui(36);
@@ -828,12 +833,12 @@ function Panel_Inspector() : PanelContent() constructor {
 				if(PROJECT.path == "") {
 					buttonInstant(noone, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_workshop_save", "Save file before upload"), THEME.workshop_upload, 0, COLORS._main_icon, 0.5);
 				} else {
-					if(!METADATA.steam) { //project made locally
+					if(PROJECT.meta.steam == FILE_STEAM_TYPE.local) { //project made locally
 						if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop"), THEME.workshop_upload, 0, COLORS._main_icon) == 2) {
 							var s = PANEL_PREVIEW.getNodePreviewSurface();
 							if(is_surface(s)) {
-								METADATA.author_steam_id = STEAM_USER_ID;
-								METADATA.steam = true;
+								PROJECT.meta.author_steam_id = STEAM_USER_ID;
+								PROJECT.meta.steam = FILE_STEAM_TYPE.steamUpload;
 								SAVE_AT(PROJECT, PROJECT.path);
 								
 								steam_ugc_create_project();
@@ -843,8 +848,8 @@ function Panel_Inspector() : PanelContent() constructor {
 						}
 					}
 					
-					if(METADATA.steam && METADATA.author_steam_id == STEAM_USER_ID) {
-						if(METADATA.file_id == 0) {
+					if(PROJECT.meta.steam && PROJECT.meta.author_steam_id == STEAM_USER_ID) {
+						if(PROJECT.meta.steam == FILE_STEAM_TYPE.steamUpload) {
 							buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], false, pHOVER, __txtx("panel_inspector_workshop_restart", "Open project from the workshop tab to update."), THEME.workshop_update, 0, COLORS._main_icon);
 						} else if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_workshop_update", "Update Steam Workshop content"), THEME.workshop_update, 0, COLORS._main_icon) == 2) {
 							SAVE_AT(PROJECT, PROJECT.path);

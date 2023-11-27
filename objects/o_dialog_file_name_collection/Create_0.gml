@@ -12,7 +12,7 @@ event_inherited();
 	
 	destroy_on_click_out = false;
 	
-	meta		= METADATA.clone();
+	meta		= PROJECT.meta.clone();
 	meta_expand = false;
 	updating	= noone;
 	update_note = "Updated";

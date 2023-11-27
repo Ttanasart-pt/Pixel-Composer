@@ -32,7 +32,7 @@ function save_serialize(project = PROJECT, _outMap = false) { #region
 	_anim_map.framerate    = project.animator.framerate;
 	_map.animator		   = _anim_map;
 	
-	_map.metadata    = METADATA.serialize();
+	_map.metadata    = PROJECT.meta.serialize();
 	_map.global_node = project.globalNode.serialize();
 	_map.onion_skin  = project.onion_skin;
 	
@@ -110,8 +110,8 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
 	if(DEMO) return false;
 	
 	SAVING = true;
-	if(TESTING && string_char_at(filename_name(path), 1) != "[")
-		path = $"{filename_dir(path)}/[{VERSION_STRING}] {filename_name(path)}";
+	//if(TESTING && string_char_at(filename_name(path), 1) != "[")
+	//	path = $"{filename_dir(path)}/[{VERSION_STRING}] {filename_name(path)}";
 	
 	if(file_exists(path)) file_delete(path);
 	file_text_write_all(path, save_serialize(project));

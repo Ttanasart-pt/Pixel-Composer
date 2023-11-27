@@ -140,7 +140,7 @@ function __LOAD_PATH(path, readonly = false, override = false) { #region
 	
 	try {
 		if(struct_has(_load_content, "metadata"))
-			METADATA.deserialize(_load_content.metadata);
+			PROJECT.meta.deserialize(_load_content.metadata);
 	} catch(e) {
 		log_warning("LOAD, metadata", exception_print(e));
 	}
