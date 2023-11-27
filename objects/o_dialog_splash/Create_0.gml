@@ -40,7 +40,7 @@ event_inherited();
 	var y0 = dialog_y + ui(128);
 	var y1 = dialog_y + dialog_h - ui(16);
 	
-	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) {
+	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) { #region
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
 		var expand = PREFERENCES.splash_expand_recent;
 		var ww  = ui(264);
@@ -104,12 +104,12 @@ event_inherited();
 		}
 		
 		return hh;
-	});
+	}); #endregion
 	
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
 	
-	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) {
+	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) { #region
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
 		
 		var txt = pages[project_page];
@@ -149,6 +149,7 @@ event_inherited();
 						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
 						if(mouse_press(mb_left, sFOCUS)) {
 							LOAD_PATH(_project.path, true);
+							PROJECT.thumbnail = _project.spr_path[0];
 							METADATA.steam = txt == "Workshop";
 							if(txt == "Workshop")
 								METADATA.file_id = _meta.file_id;
@@ -201,7 +202,7 @@ event_inherited();
 		}
 		
 		return hh;
-	});
+	}); #endregion
 #endregion
 
 #region contest

@@ -182,6 +182,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		graph_preview_alpha	= 1;
 		
 		getPreviewingNode = noone;
+		
+		preview_value = 0;
+		preview_array = "";
 	#endregion
 	
 	#region ---- rendering ----
@@ -824,9 +827,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onPreDraw = function(_x, _y, _s, _iny, _outy) {}
 	
 	static isHighlightingInGraph = function() { #region
-		var _high = struct_try_get(display_parameter, "highlight", 0);
-		var  high = (_high == 1 && key_mod_press(ALT) || _high == 2);
-		
+		var  high = struct_try_get(display_parameter, "highlight", 0);
 		var _selc = active_draw_index == 0 || branch_drawing;
 		return !high || _selc;
 	} #endregion
@@ -1009,6 +1010,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var hovering = noone;
 		var drawLineIndex = 1;
 		
+		var high = struct_try_get(params, "highlight", 0);
+		var bg   = struct_try_get(params, "bg", c_black);
+			
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun       = outputs[| i];
 			var connected = false;
@@ -1022,6 +1026,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				jun.drawLineIndex = drawLineIndex;
 				drawLineIndex += 0.5;
 			}
+			
+			if(high) {
+				jun.draw_blend_color = bg;
+				jun.draw_blend       = PREFERENCES.connection_line_highlight_fade;
+			}
+		
 		}
 		
 		var st = 0;
@@ -1035,6 +1045,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(i == -1)			jun = inspectInput1;
 			else if(i == -2)	jun = inspectInput2;
 			else				jun = inputs[| i];
+			
+			if(high) {
+				jun.draw_blend_color = bg;
+				jun.draw_blend       = PREFERENCES.connection_line_highlight_fade;
+			}
 			
 			if(is_instanceof(jun, NodeModule)) {
 				jun.drawConnections(params, _inputs);
@@ -1108,23 +1123,21 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var aa   = 0.5 + 0.5 * renderActive;
+		if(!isHighlightingInGraph()) aa *= 0.25;
 		
 		draw_surface_bbox(preview_surface, bbox, c_white, aa * graph_preview_alpha);
 	} #endregion
 	
 	static getNodeDimension = function(showFormat = true) { #region
-		if(!is_surface(preview_surface)) {	
-			if(ds_list_size(outputs))
-				return "[" + array_shape(outputs[| 0].getValue()) + "]";
-			return "";
-		}
+		if(!is_surface(preview_surface))
+			return preview_array;
 		
 		var pw = surface_get_width_safe(preview_surface);
 		var ph = surface_get_height_safe(preview_surface);
 		var format = surface_get_format(preview_surface);
 		
-		var txt = "[" + string(pw) + " x " + string(ph) + " ";
-		if(preview_amount) txt = string(preview_amount) + " x " + txt;
+		var txt = $"[{pw} x {ph} ";
+		if(preview_amount) txt = $"{preview_amount} x {txt}";
 		
 		switch(format) {
 			case surface_rgba4unorm	 : txt += showFormat? "4RGBA"	: "4R";  break;
@@ -1205,11 +1218,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			draw_sprite_stretched_ext(THEME.node_glow, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
-		if(previewable) {
-			if(preview_channel >= ds_list_size(outputs))
-				preview_channel = 0;
-			drawPreview(xx, yy, _s);
-		} 
+		if(previewable) drawPreview(xx, yy, _s);
 		drawDimension(xx, yy, _s);
 		
 		onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.getFocusingNode() == self);
@@ -1220,9 +1229,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			active_draw_index = -1;
 		}
 		
-		if(draw_droppable)
+		if(draw_droppable) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, w * _s, h * _s, COLORS._main_value_positive, 1);
-		draw_droppable = false;
+			draw_droppable = false;
+		}
 		
 		return drawJunctions(xx, yy, _mx, _my, _s);
 	} #endregion
@@ -1260,19 +1270,23 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		previewing = 0;
 	} #endregion
 	
-	static drawBranch = function() { #region
+	static drawBranch = function(_depth = 0) { #region
 		if(branch_drawing) return;
 		branch_drawing = true;
+		
+		if(!PREFERENCES.connection_line_highlight_all && _depth == 1) return;
+		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 			if(inputs[| i].isLeaf()) continue;
-			inputs[| i].value_from.node.drawBranch();
+			inputs[| i].value_from.node.drawBranch(_depth + 1);
 		}
 	} #endregion
 	
 	static drawActive = function(_x, _y, _s, ind = 0) { #region
 		active_draw_index = ind; 
 		
-		if(PREFERENCES.connection_line_highlight_all) drawBranch();
+		var high = struct_try_get(display_parameter, "highlight", 0);
+		if(high) drawBranch();
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}

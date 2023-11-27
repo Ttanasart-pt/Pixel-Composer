@@ -616,6 +616,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		color = -1;
 		color_display = 0;
+		
+		draw_bg = c_black;
+		draw_fg = c_black;
+		
+		draw_blend       = 1;
+		draw_blend_color = 1;
 	#endregion
 	
 	#region ---- timeline ----
@@ -1221,13 +1227,29 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		setDropKey();
+		updateColor();
 	} resetDisplay(); #endregion
+	
+	static updateColor = function(val) { #region
+		INLINE
+		
+		if(color == -1) {
+			draw_bg = isArray(val)? value_color_bg_array(draw_junction_index) : value_color_bg(draw_junction_index);
+			draw_fg = value_color(draw_junction_index);
+		} else {
+			draw_bg = isArray(val)? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(draw_junction_index);
+			draw_fg = color;
+		}
+		
+		color_display = type == VALUE_TYPE.action? #8fde5d : draw_fg;
+	} #endregion
 	
 	static setType = function(_type) { #region
 		if(type == _type) return false;
 		
 		type = _type;
 		draw_junction_index = type;
+		updateColor();
 		
 		return true;
 	} #endregion
@@ -1466,6 +1488,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		cache_value[2] = array_clone(val);
 		cache_value[3] = applyUnit;
+		updateColor(val);
 		
 		return val;
 	} #endregion
@@ -1787,7 +1810,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				draw_junction_index = VALUE_TYPE.atlas;
 		}
 		
-		if(connect_type == JUNCTION_CONNECT.output) return;
+		if(connect_type == JUNCTION_CONNECT.output) {
+			if(self.index == 0) {
+				node.preview_value = getValue();
+				node.preview_array = "[" + array_shape(node.preview_value) + "]";
+			}
+			return;
+		}
 		
 		if(is_instanceof(node, Node))
 			node.setInputData(self.index, animator.getValue(time));
@@ -2042,21 +2071,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static drawJunction = function(_s, _mx, _my, sca = 1) { #region
-		var _bgC, _fgC;
-		
-		if(color == -1) {
-			_bgC = isArray()? value_color_bg_array(draw_junction_index) : value_color_bg(draw_junction_index);
-			_fgC = value_color(draw_junction_index);
-		} else {
-			_bgC = isArray()? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(draw_junction_index);
-			_fgC = color;
-		}
-		
-		color_display = type == VALUE_TYPE.action? #8fde5d : _fgC;
-		
 		if(!isVisible()) return false;
 		
-		var ss  = max(0.25, _s / 2);
+		var ss       = max(0.25, _s / 2);
 		var hov      = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
 		var is_hover = hov && point_in_circle(_mx, _my, x, y, 10 * _s * sca);
 		
@@ -2064,10 +2081,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
 		
 		if(type == VALUE_TYPE.action) {
-			draw_sprite_ext(THEME.node_junction_inspector, is_hover, x, y, ss, ss, 0, c_white, 1);
+			var _cbg = c_white;
+			
+			if(draw_blend != -1)
+				_cbg = merge_color(draw_blend_color, _cbg, draw_blend);
+		
+			draw_sprite_ext(THEME.node_junction_inspector, is_hover, x, y, ss, ss, 0, _cbg, 1);
 		} else {
-			draw_sprite_ext(_bgS, draw_junction_index, x, y, ss, ss, 0, _bgC, 1);
-			draw_sprite_ext(_fgS, draw_junction_index, x, y, ss, ss, 0, _fgC, 1);
+			var _cbg = draw_bg;
+			var _cfg = draw_fg;
+			
+			if(draw_blend != -1) {
+				_cbg = merge_color(draw_blend_color, _cbg, draw_blend);
+				_cfg = merge_color(draw_blend_color, _cfg, draw_blend);
+			}
+		
+			draw_sprite_ext(_bgS, draw_junction_index, x, y, ss, ss, 0, _cbg, 1);
+			draw_sprite_ext(_fgS, draw_junction_index, x, y, ss, ss, 0, _cfg, 1);
 		}
 		
 		return is_hover;
@@ -2117,6 +2147,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static drawConnections = function(params = {}) { #region
 		var log  = struct_try_get(params, "log", false);
+		var high = struct_try_get(params, "highlight", 0);
+		var bg   = struct_try_get(params, "bg", c_black);
 		
 		if(isLeaf())				return noone;
 		if(!value_from.node.active) return noone;
@@ -2131,10 +2163,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var cur_layer = params.cur_layer;
 		var max_layer = params.max_layer;
 		
-		var aa	 = struct_try_get(params, "aa", 1);
-		var high = struct_try_get(params, "highlight", 0);
-		
-		var bg = struct_try_get(params, "bg", c_black);
+		var aa = struct_try_get(params, "aa", 1);
 		
 		var hovering = noone;
 		var jx  = x;
@@ -2218,17 +2247,24 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			ty = LINE_STYLE.dashed;
 		
 		var c0, c1;
-		var _selc = node.active_draw_index == 0 || value_from.node.active_draw_index == 0 || node.branch_drawing;
+		var _selc = node.branch_drawing && value_from.node.branch_drawing;
 		
-		if(!thicken && (high == 1 && key_mod_press(ALT) || high == 2)) {
+		if(high) {
 			var _fade = PREFERENCES.connection_line_highlight_fade;
 			var _colr = _selc? 1 : _fade;
 			
 			c0 = merge_color(bg, value_from.color_display, _colr);
 			c1 = merge_color(bg, color_display,			   _colr);
+			
+			draw_blend_color = bg;
+			draw_blend       = _colr;
+			value_from.draw_blend = max(value_from.draw_blend, _colr);
 		} else {
 			c0 = value_from.color_display;
 			c1 = color_display;
+			
+			draw_blend_color = bg;
+			draw_blend       = -1;
 		}
 		
 		var ss  = _s * aa;

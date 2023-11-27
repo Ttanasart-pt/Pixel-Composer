@@ -833,17 +833,21 @@ function Panel_Inspector() : PanelContent() constructor {
 							var s = PANEL_PREVIEW.getNodePreviewSurface();
 							if(is_surface(s)) {
 								METADATA.author_steam_id = STEAM_USER_ID;
-								SAVE();
+								METADATA.steam = true;
+								SAVE_AT(PROJECT, PROJECT.path);
+								
 								steam_ugc_create_project();
 								workshop_uploading = true;
 							} else 
 								noti_warning("Please send any node to preview panel to use as a thumbnail.")
 						}
 					}
-				
-					if(METADATA.steam && METADATA.author_steam_id == STEAM_USER_ID && METADATA.file_id != 0) {
-						if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_workshop_update", "Update Steam Workshop"), THEME.workshop_update, 0, COLORS._main_icon) == 2) {
-							SAVE();
+					
+					if(METADATA.steam && METADATA.author_steam_id == STEAM_USER_ID) {
+						if(METADATA.file_id == 0) {
+							buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], false, pHOVER, __txtx("panel_inspector_workshop_restart", "Open project from the workshop tab to update."), THEME.workshop_update, 0, COLORS._main_icon);
+						} else if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_workshop_update", "Update Steam Workshop content"), THEME.workshop_update, 0, COLORS._main_icon) == 2) {
+							SAVE_AT(PROJECT, PROJECT.path);
 							steam_ugc_update_project();
 							workshop_uploading = true;
 						}

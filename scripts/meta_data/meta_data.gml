@@ -54,6 +54,8 @@ function MetaDataManager() constructor {
 		tags			= struct_try_get(m, "tags",			tags);
 		version			= struct_try_get(m, "version",		version);
 		
+		//if(STEAM_ENABLED && author_steam_id == STEAM_USER_ID) steam = true;
+		
 		return self;
 	}
 	

@@ -8,8 +8,10 @@ function textInput(_input, _onModify) : widget() constructor {
 	
 	static onKey = function(key) {}
 	
-	static setSideButton = function(_button) {
+	static setSideButton = function(_button) { #region
 		self.side_button = _button;
 		return self;
-	}
+	} #endregion
+	
+	static breakCharacter = function(ch) { return ch == " " || ch == "\n"; }
 }

@@ -247,7 +247,7 @@ function __LOAD_PATH(path, readonly = false, override = false) { #region
 	if(struct_has(_load_content, "timelines") && !array_empty(_load_content.timelines.contents))
 		PROJECT.timelines.deserialize(_load_content.timelines);
 	
-	PANEL_GRAPH.toCenterNode();
+	run_in(1, PANEL_GRAPH.toCenterNode);
 	
 	return true;
 } #endregion

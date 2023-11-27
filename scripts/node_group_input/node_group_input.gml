@@ -16,40 +16,54 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	#region data
 	data_type_list = [	"Integer",		"Float",	"Boolean",	"Color",	"Surface", 
 						"File Path",	"Curve",	"Text",		"Object",	"Node", 
-						"3D object",	"Any",		"Path",		"Particle", "Rigidbody Object", 
-						"Domain", "Struct",	"Strands",	"Mesh",		"Trigger",
+						-1,				"Any",		"Path",		"Particle", "Rigidbody Object", 
+						"Domain",		"Struct",	"Strands",	"Mesh",		"Trigger",
+						-1,				"3D Mesh",	"3D Light",	"3D Scene",	"3D Material",
+						-1,				"Audio"
 					 ];
 	
-	data_type_map  = [	VALUE_TYPE.integer,		VALUE_TYPE.float,	VALUE_TYPE.boolean,		VALUE_TYPE.color,		VALUE_TYPE.surface, 
-						VALUE_TYPE.path,		VALUE_TYPE.curve,	VALUE_TYPE.text,		VALUE_TYPE.object,		VALUE_TYPE.node, 
-						VALUE_TYPE.d3object,	VALUE_TYPE.any,		VALUE_TYPE.pathnode,	VALUE_TYPE.particle,	VALUE_TYPE.rigid, 
-						VALUE_TYPE.fdomain,		VALUE_TYPE.struct,	VALUE_TYPE.strands,		VALUE_TYPE.mesh,		VALUE_TYPE.trigger,
+	data_type_map  = [	VALUE_TYPE.integer,		VALUE_TYPE.float,		VALUE_TYPE.boolean,		VALUE_TYPE.color,		VALUE_TYPE.surface, 
+						VALUE_TYPE.path,		VALUE_TYPE.curve,		VALUE_TYPE.text,		VALUE_TYPE.object,		VALUE_TYPE.node, 
+						noone,					VALUE_TYPE.any,			VALUE_TYPE.pathnode,	VALUE_TYPE.particle,	VALUE_TYPE.rigid, 
+						VALUE_TYPE.fdomain,		VALUE_TYPE.struct,		VALUE_TYPE.strands,		VALUE_TYPE.mesh,		VALUE_TYPE.trigger,
+						
+						noone,					VALUE_TYPE.d3Mesh,		VALUE_TYPE.d3Light,		VALUE_TYPE.d3Scene,		VALUE_TYPE.d3Material,
+						noone,					VALUE_TYPE.audioBit,
 					 ];
 	
 	display_list = [
 		/*Integer*/	[ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area", "Enum button", "Menu scroll" ],
 		/*Float*/	[ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area" ],
-		/*Boolean*/	[ "Default" ],
+		/*Boolean*/	0,
 		/*Color*/	[ "Default", "Gradient", "Palette" ],
-		/*Surface*/	[ "Default", ],
+		/*Surface*/	0,
 		
-		/*Path*/	[ "Default", ],
+		/*Path*/	0,
 		/*Curve*/	[ "Curve", ],
-		/*Text*/	[ "Default", ],
-		/*Object*/	[ "Default", ],
-		/*Node*/	[ "Default", ],
+		/*Text*/	0,
+		/*Object*/	0,
+		/*Node*/	0,
 		
-		/*3D*/		[ "Default", ],
-		/*Any*/		[ "Default", ],
-		/*Pathnode*/[ "Default", ],
-		/*Particle*/[ "Default", ],
-		/*Rigid*/	[ "Default", ],
+		/*3D*/		0,
+		/*Any*/		0,
+		/*Pathnode*/0,
+		/*Particle*/0,
+		/*Rigid*/	0,
 		
-		/*Fdomain*/	[ "Default", ],
-		/*Struct*/	[ "Default", ],
-		/*Strand*/	[ "Default", ],
-		/*Mesh*/	[ "Default", ],
-		/*Trigger*/	[ "Default", ],
+		/*Fdomain*/	0,
+		/*Struct*/	0,
+		/*Strand*/	0,
+		/*Mesh*/	0,
+		/*Trigger*/	0,
+		
+		/*noone*/	    0,
+		/*3D Mesh*/     0,
+		/*3D Light*/    0,
+		/*3D Scene*/    0,
+		/*3D Material*/ 0,
+		
+		/*noone*/	0,
+		/*Audio*/   0,
 	];
 	#endregion
 	
@@ -157,7 +171,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			attributes.inherit_type = false;
 		}
 		
-		_dtype = array_safe_get(array_safe_get(display_list, _val_type, []), _dtype);
+		_dtype = array_safe_get(array_safe_get(display_list, _val_type), _dtype);
 		
 		inParent.setType(_val_type);
 		outputs[| 0].setType(_val_type);
@@ -297,8 +311,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _type		= getInputData(2);
 		var _val_type   = array_safe_get(data_type_map, _type, VALUE_TYPE.any);
-		inputs[| 0].display_data.data    = array_safe_get(display_list, _val_type);
-		inputs[| 0].editWidget.data_list = array_safe_get(display_list, _val_type);
+		var _dsList     = array_safe_get(display_list, _val_type);
+		if(_dsList == 0) _dsList = [ "Default" ];
+		inputs[| 0].display_data.data    = _dsList;
+		inputs[| 0].editWidget.data_list = _dsList;
 			
 		if(inParent.name != display_name) {
 			inParent.name = display_name;
@@ -328,7 +344,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _dstype = getInputData(0);
 		var _data   = getInputData(2);
-		_dstype = array_safe_get(array_safe_get(display_list, _data, []), _dstype);
+		var _dsList = array_safe_get(display_list, _data);
+		_dstype = _dsList == 0? "Default" : array_safe_get(_dsList, _dstype);
 		
 		var _datype = array_safe_get(data_type_map, _data, VALUE_TYPE.any);
 		

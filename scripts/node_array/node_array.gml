@@ -8,7 +8,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+	inputs[| 1] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Unpack array and push the contents into the output one by one." )
 		.rejectArray();
 	
 	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
@@ -64,10 +64,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _type = getInputData(0);
 		
 		switch(_type) {
-			case 1 : return VALUE_TYPE.surface; 
-			case 2 : return VALUE_TYPE.float;
-			case 3 : return VALUE_TYPE.color;
-			case 4 : return VALUE_TYPE.text; 
+			case 1 :  return VALUE_TYPE.surface; 
+			case 2 :  return VALUE_TYPE.float;
+			case 3 :  return VALUE_TYPE.color;
+			case 4 :  return VALUE_TYPE.text; 
 			default : return VALUE_TYPE.any;
 		}
 	} #endregion
@@ -104,7 +104,6 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		input_display_list = [];
 		for( var i = 0; i < ds_list_size(_l); i++ ) {
 			_l[| i].index = i;
-			_l[| i].setVisible(i < ds_list_size(_l) - 1);
 			array_push(input_display_list, i);
 			
 			if(i >= input_fix_len && _l[| i].isLeaf())
@@ -118,8 +117,29 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(extra) lastNode = createNewInput();
 	} #endregion
 	
+	static updateType = function(resetVal = false) { #region
+		var _typ = getType();
+		outputs[| 0].setType(_typ);
+		
+		for( var i = ds_list_size(inputs) - 1; i >= input_fix_len; i-- ) {
+			if(resetVal) inputs[| i].resetValue();
+			
+			if(inputs[| i].value_from == noone || (value_bit(inputs[| i].value_from.type) & value_bit(_typ) != 0)) {
+				inputs[| i].setType(inputs[| i].value_from? inputs[| i].value_from.type : _typ);
+				inputs[| i].resetDisplay();
+			} else {
+				inputs[| i].removeFrom();
+			}
+		}
+		
+		refreshDynamicInput();
+	} #endregion
+	
 	static onValueUpdate = function(index = 0) { #region
-		if(index < input_fix_len) return;
+		if(LOADING || APPENDING) return;
+		
+		if(index == 0) { updateType(true); return; }
+		if(index == 1) return;
 		
 		refreshDynamicInput();
 	} #endregion
@@ -128,28 +148,29 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(LOADING || APPENDING) return;
 		
 		refreshDynamicInput();
+		
+		var _typ = getType();
+		if(_typ != VALUE_TYPE.any) return;
+		
+		inputs[| index].setType(inputs[| index].value_from? inputs[| index].value_from.type : _typ);
+		inputs[| index].resetDisplay();
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var _typ = getType();
-		
-		outputs[| 0].setType(_typ);
-		var res = [];
-		var ind = 0;
-		var spd = getInputData(1);
+		var res  = [];
+		var ind  = 0;
+		var spd  = getInputData(1);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 			var val = getInputData(i);
 			
 			if(is_array(val) && spd) array_append(res, val);
 			else                     array_push(res, val);
-			
-			inputs[| i].setType(inputs[| i].value_from? inputs[| i].value_from.type : _typ);
-			
-			if(i == input_fix_len && _typ == VALUE_TYPE.any && inputs[| i].value_from)
-				outputs[| 0].setType(inputs[| i].value_from.type);
 		}
 		
+		if(_typ == VALUE_TYPE.any && inputs[| input_fix_len].value_from)
+			outputs[| 0].setType(inputs[| input_fix_len].value_from.type);
 		outputs[| 0].setValue(res);
 		
 		if(outputs[| 0].type == VALUE_TYPE.surface) {
@@ -161,13 +182,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 	} #endregion
 	
-	static doApplyDeserialize = function() { #region
-		var _typ = getType();
-		if(_typ == VALUE_TYPE.any) return;
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-			inputs[| i].setType(_typ);
-			inputs[| i].resetDisplay();
-		}
+	static postConnect = function() { #region
+		updateType(false);
 	} #endregion
 }

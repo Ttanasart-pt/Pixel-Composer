@@ -59,6 +59,8 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		if(!previewable) return;
+		
 		var bbox  = drawGetBbox(xx, yy, _s);
 		var _mat  = outputs[| 0].getValue();
 		
@@ -69,7 +71,11 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			_mat = _mat[0];
 		}
 		
-		if(is_instanceof(_mat, __d3dMaterial) && is_surface(_mat.surface))
-			draw_surface_bbox(_mat.surface, bbox);
+		if(is_instanceof(_mat, __d3dMaterial) && is_surface(_mat.surface)) {
+			var aa   = 0.5 + 0.5 * renderActive;
+			if(!isHighlightingInGraph()) aa *= 0.25;
+		
+			draw_surface_bbox(_mat.surface, bbox,, aa);
+		}
 	}
 }

@@ -3,7 +3,7 @@
 	PREFERENCES  = {};
 	HOTKEYS_DATA = {};
 	
-	PREFERENCES.ui_framerate					= 60;
+	PREFERENCES.ui_framerate					= 120;
 	PREFERENCES.path_resolution					= 32;
 	
 	PREFERENCES.node_recents_amount				= 20;

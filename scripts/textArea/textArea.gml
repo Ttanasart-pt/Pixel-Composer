@@ -96,6 +96,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	static isCodeFormat = function() { INLINE return format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL; }
 	
+	static breakCharacter = function(ch) { #region
+		if(isCodeFormat()) 
+			return ch == "\n" || array_exists(global.CODE_BREAK_TOKEN, ch);	
+		return ch == " " || ch == "\n";	
+	} #endregion
+	
 	static onModified = function() { #region
 		if(!isCodeFormat()) return;
 		if(autocomplete_server == noone) return;
@@ -156,12 +162,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			o_dialog_textbox_function_guide.index    = amo;
 		} else 
 			o_dialog_textbox_function_guide.deactivate(self);
-	} #endregion
-	
-	static breakCharacter = function(ch) { #region
-		if(isCodeFormat()) 
-			return ch == "\n" || array_exists(global.CODE_BREAK_TOKEN, ch);	
-		return ch == " " || ch == "\n";	
 	} #endregion
 	
 	static keyboardEnter = function() { #region

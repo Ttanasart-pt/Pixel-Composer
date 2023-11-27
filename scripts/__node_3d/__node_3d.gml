@@ -69,8 +69,12 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) { #region
 		if(!is_surface(mesh_prev_surface)) return;
+		if(!previewable) return;
 		
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_surface_bbox(mesh_prev_surface, bbox);
+		var aa   = 0.5 + 0.5 * renderActive;
+		if(!isHighlightingInGraph()) aa *= 0.25;
+		
+		draw_surface_bbox(mesh_prev_surface, bbox,, aa);
 	} #endregion
 }

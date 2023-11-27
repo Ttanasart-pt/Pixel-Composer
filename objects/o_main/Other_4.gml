@@ -1,6 +1,5 @@
 /// @description init
 PROJECT.modified = false;
-PREF_LOAD();
 
 #region reset data
 	ds_stack_clear(UNDO_STACK);

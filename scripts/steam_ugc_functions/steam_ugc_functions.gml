@@ -7,6 +7,7 @@ function __initSteamUGC() {
 	if(DEMO) return;
 	if(!STEAM_ENABLED) return;
 	
+	directory_verify(DIRECTORY + "steamUGC");
 	steamUCGload();
 }
 
@@ -19,7 +20,6 @@ function steamUCGload() {
 	
 	for( var i = 0; i < ds_list_size(STEAM_SUBS); i++ ) {
 		var item_map = ds_map_create();
-		//print("Querying item ID " + string(STEAM_SUBS[| i]));
 		
 		if (steam_ugc_get_item_install_info(STEAM_SUBS[| i], item_map)) {
 			var info_map = ds_map_create();
@@ -30,16 +30,10 @@ function steamUCGload() {
 			
 			ds_map_destroy(info_map);
 			
-			if(_update) {
-				steam_ugc_subscribe_item(STEAM_SUBS[| i]);
-				//print("Item need update");
-			} else {
-				__loadSteamUGC(STEAM_SUBS[| i], item_map);
-			}
-		} else {
+			if(_update) steam_ugc_subscribe_item(STEAM_SUBS[| i]);
+			else        __loadSteamUGC(STEAM_SUBS[| i], item_map);
+		} else
 			steam_ugc_subscribe_item(STEAM_SUBS[| i]);
-			//print("Item not downloaded");
-		}
 		
 		ds_map_destroy(item_map);
 	}
@@ -73,7 +67,7 @@ function __loadSteamUGCCollection(file_id, f, path) {
 		var hh = sprite_get_height(_temp);
 		var amo = safe_mod(ww, hh) == 0? ww / hh : 1;
 		sprite_delete(_temp);
-		file.spr_path = [icon_path, amo, false];
+		file.spr_path = [ icon_path, amo, false ];
 	}
 	
 	ds_list_add(STEAM_COLLECTION, file);
@@ -87,7 +81,7 @@ function __loadSteamUGCProject(file_id, f, path) {
 	var name = string_replace(filename_name(f), ".pxc", "");
 	var file = new FileObject(name, path + "/" + f);
 	var icon_path = path + "/thumbnail.png";
-	file.spr_path = [icon_path, 1, false];
+	file.spr_path = [ icon_path, 1, false ];
 	
 	ds_list_add(STEAM_PROJECTS, file);
 	

@@ -61,7 +61,7 @@ event_inherited();
 			hh += data[i] == -1? ui(8) : hght;
 		
 		dialog_h = min(max_h, hh);
-		sc_content.resize(dialog_w, dialog_h);
+		sc_content.resize(dialog_w, dialog_h - ui(40));
 		
 		resetPosition();
 	}

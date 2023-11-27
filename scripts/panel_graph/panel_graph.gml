@@ -718,7 +718,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	function drawNodes() { #region
 		if(selection_block-- > 0) return;
 		//print("==== DRAW NODES ====");
-		display_parameter.highlight = !array_empty(nodes_selecting) * PREFERENCES.connection_line_highlight;
+		display_parameter.highlight = 
+			!array_empty(nodes_selecting) && (
+				(PREFERENCES.connection_line_highlight == 1 && key_mod_press(ALT)) || 
+				 PREFERENCES.connection_line_highlight == 2
+			);
 		
 		var gr_x = graph_x * graph_s;
 		var gr_y = graph_y * graph_s;
@@ -908,7 +912,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			maxy : h + 64,
 			active    : hoverable,
 			max_layer : ds_list_size(nodes_list),
-			highlight : array_length(nodes_selecting),
+			highlight : display_parameter.highlight,
 		};
 		
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
@@ -1157,7 +1161,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			value_dragging.drawJunction(graph_s, value_dragging.x, value_dragging.y);
 			if(target) target.drawJunction(graph_s, target.x, target.y);
 			
-			if(mouse_release(mb_left)) {																		// CONNECT junction
+			if(mouse_release(mb_left)) {																				// CONNECT junction
 				if(target != noone) {
 					var _addInput = false;
 					if(target.isLeaf() && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input)
@@ -1223,6 +1227,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							if(value_bit(_junction.type) & value_bit(value_dragging.type) == 0) continue;
 							
 							ds_priority_add(_jlist, _junction, _junction.y);
+							break;
 						}
 					}
 					

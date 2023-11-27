@@ -604,7 +604,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			ds_list_add(generator, "Region");
 			addNodeObject(generator, "Separate Shape",		s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape],, "Separate disconnected pixel each into an image in an image array.");
-			addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill],, "Fill connected pixel with the same color.").setVersion(1147);		
+			addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill],, "Fill connected pixel with colors.").setVersion(1147);		
 			
 			ds_list_add(generator, "Others");
 			addNodeObject(generator, "Flood Fill",			s_node_flood_fill,			"Node_Flood_Fill",			[1, Node_Flood_Fill],, "Filled connected pixel given position and color.").setVersion(1133);

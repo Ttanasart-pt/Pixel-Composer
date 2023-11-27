@@ -1,10 +1,10 @@
 function steam_ugc_create_collection(file) { #region
 	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
-	STEAM_UGC_UPDATE = false;
+	STEAM_UGC_UPDATE		 = false;
 	STEAM_UGC_ITEM_UPLOADING = true;
-	STEAM_UGC_ITEM_FILE = file;
-	STEAM_UGC_TYPE = STEAM_UGC_FILE_TYPE.collection;
+	STEAM_UGC_ITEM_FILE		 = file;
+	STEAM_UGC_TYPE			 = STEAM_UGC_FILE_TYPE.collection;
 	
 	directory_destroy(DIRECTORY + "steamUGC");
 	directory_create(DIRECTORY + "steamUGC");
@@ -22,10 +22,10 @@ function steam_ugc_create_collection(file) { #region
 function steam_ugc_update_collection(file, update_preview = false, update_note = "Updated") { #region
 	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
-	STEAM_UGC_UPDATE = true;
+	STEAM_UGC_UPDATE		 = true;
 	STEAM_UGC_ITEM_UPLOADING = true;
-	STEAM_UGC_ITEM_FILE = file;
-	STEAM_UGC_TYPE = STEAM_UGC_FILE_TYPE.collection;
+	STEAM_UGC_ITEM_FILE		 = file;
+	STEAM_UGC_TYPE			 = STEAM_UGC_FILE_TYPE.collection;
 	
 	directory_destroy(DIRECTORY + "steamUGC");
 	directory_create(DIRECTORY + "steamUGC");
@@ -43,8 +43,8 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 	
 	var tgs = STEAM_UGC_ITEM_FILE.meta.tags;
 	
-	array_insert(tgs, 0, "Collection");
-	array_push(tgs, VERSION_STRING);
+	array_insert_unique(tgs, 0, "Collection");
+	array_push_unique(tgs, VERSION_STRING);
 	
 	steam_ugc_collection_generate(array_safe_get(file.spr_path, 0));
 	

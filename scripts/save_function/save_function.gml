@@ -110,12 +110,11 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
 	if(DEMO) return false;
 	
 	SAVING = true;
+	if(TESTING && string_char_at(filename_name(path), 1) != "[")
+		path = $"{filename_dir(path)}/[{VERSION_STRING}] {filename_name(path)}";
 	
-	if(file_exists(path))
-		file_delete(path);
-	var file = file_text_open_write(path);
-	file_text_write_string(file, save_serialize(project));
-	file_text_close(file);
+	if(file_exists(path)) file_delete(path);
+	file_text_write_all(path, save_serialize(project));
 	
 	SAVING    = false;
 	project.readonly  = false;

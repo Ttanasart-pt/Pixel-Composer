@@ -6,9 +6,10 @@
 	function Project() constructor {
 		active	= true; /// @is {bool}
 		
-		path	= ""; /// @is {string}
-		version = SAVE_VERSION; /// @is {number}
-		seed    = irandom_range(100000, 999999); /// @is {number}
+		path	  = ""; /// @is {string}
+		thumbnail = "";
+		version   = SAVE_VERSION; /// @is {number}
+		seed      = irandom_range(100000, 999999); /// @is {number}
 		
 		modified = false; /// @is {bool}
 		readonly = false; /// @is {bool} 

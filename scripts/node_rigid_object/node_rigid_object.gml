@@ -695,6 +695,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+		if(!previewable) return;
+		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var _tex = getInputData(6);
 		
@@ -703,7 +705,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			_tex = _tex[0];
 		}
 		
-		draw_surface_bbox(_tex, bbox);
+		var aa   = 0.5 + 0.5 * renderActive;
+		if(!isHighlightingInGraph()) aa *= 0.25;
+		draw_surface_bbox(_tex, bbox,, aa);
 	} #endregion
 	
 	static attributeSerialize = function() { #region
