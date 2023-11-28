@@ -23,10 +23,12 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	inputs[| 7] = nodeValue("Roughness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
+	inputs[| 8] = nodeValue("Anti aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	
 	outputs[| 0] = nodeValue("Material", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Material, noone);
 	
-	input_display_list = [ 0, 
-		["Properties",	false], 1, 2, 3, 4, 7, 
+	input_display_list = [ 0, 8, 
+		["Properties",	false], 1, 2, 3, 4, 7,
 		["Normal",		false], 5, 6, 
 	];
 	
@@ -39,6 +41,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		var _nor  = _data[5];
 		var _norS = _data[6];
 		var _roug = _data[7];
+		var _aa   = _data[8];
 		
 		if(!is_surface(_surf)) {
 			solid_surf = surface_verify(solid_surf, 1, 1);
@@ -50,6 +53,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		_mat.specular  = _spec;
 		_mat.shine     = _shin;
 		_mat.metalic   = _metl;
+		_mat.texFilter = _aa;
 		
 		_mat.normal    = _nor;
 		_mat.normalStr = _norS;

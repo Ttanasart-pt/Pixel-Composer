@@ -136,7 +136,7 @@ function winManStep() { #region
 		if(window_drag_hold == 0 && window_is_maximized) {
 			if(point_distance(mx, my, _mx, _my) > 8)
 				window_drag_hold = 1;
-		} else if(window_drag_hold == 1) {
+		} else {
 			if(window_is_maximized) {
 				winMan_Unmaximize();
 				window_drag_sw = window_minimize_size[0];

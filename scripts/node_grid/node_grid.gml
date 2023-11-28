@@ -1,23 +1,6 @@
 function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid";
 	
-	shader = sh_grid;
-	uniform_pos = shader_get_uniform(shader, "position");
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_sca = shader_get_uniform(shader, "scale");
-	uniform_wid = shader_get_uniform(shader, "width");
-	uniform_ang = shader_get_uniform(shader, "angle");
-	uniform_shf = shader_get_uniform(shader, "shift");
-	uniform_shx = shader_get_uniform(shader, "shiftAxis");
-	uniform_mod = shader_get_uniform(shader, "mode");
-	uniform_sed = shader_get_uniform(shader, "seed");
-	
-	uniform_grad_blend	= shader_get_uniform(shader, "gradient_blend");
-	uniform_grad		= shader_get_uniform(shader, "gradient_color");
-	uniform_grad_time	= shader_get_uniform(shader, "gradient_time");
-	uniform_grad_key	= shader_get_uniform(shader, "gradient_keys");
-	uniform_col_gap		= shader_get_uniform(shader, "gapCol");
-	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -51,10 +34,12 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	inputs[| 11] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(10000, 99999));
 	
+	inputs[| 12] = nodeValue("Anti aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 4, 2, 3, 9, 8,
-		["Render",	false], 10, 11, 5, 6, 7
+		["Render",	false], 10, 11, 5, 6, 7, 12, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -76,6 +61,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _shx  = _data[9];
 		var _mode = _data[10];
 		var _sed  = _data[11];
+		var _aa   = _data[12];
 		
 		var _col_gap = _data[6];
 		var _gra	 = _data[5];
@@ -90,32 +76,24 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		shader_set(shader);
-			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_uniform_f(uniform_dim, _dim[0], _dim[1]);
-			shader_set_uniform_f_array_safe(uniform_sca, _sca);
-			shader_set_uniform_f(uniform_wid, _wid);
-			shader_set_uniform_f(uniform_ang, degtorad(_ang));
-			shader_set_uniform_f(uniform_shf, _shx? _shf / _sca[1] : _shf / _sca[0]);
-			shader_set_uniform_f(uniform_sed, _sed);
-			shader_set_uniform_i(uniform_shx, _shx);
-			shader_set_uniform_i(uniform_mod, _mode);
+		surface_set_shader(_outSurf, sh_grid);
+			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
+			shader_set_f("dimension",	_dim[0], _dim[1]);
+			shader_set_f("scale",		_sca);
+			shader_set_f("width",		_wid);
+			shader_set_f("angle",		degtorad(_ang));
+			shader_set_f("shift",		_shx? _shf / _sca[1] : _shf / _sca[0]);
+			shader_set_f("seed", 		_sed);
+			shader_set_i("shiftAxis",	_shx);
+			shader_set_i("mode",		_mode);
+			shader_set_i("aa",			_aa);
+			shader_set_color("gapCol",  _col_gap);
 			
-			shader_set_uniform_f_array_safe(uniform_col_gap, colToVec4(_col_gap));
+			_gra.shader_submit();
 			
-			shader_set_uniform_i(uniform_grad_blend, _gra.type);
-			shader_set_uniform_f_array_safe(uniform_grad, _grad_color);
-			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
-			shader_set_uniform_i(uniform_grad_key, array_length(_gra.keys));
-			
-			if(is_surface(_sam))
-				draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);
-			else
-				draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
-		shader_reset();
-		surface_reset_target();
+			if(is_surface(_sam))	draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);
+			else					draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

@@ -14,19 +14,20 @@ uniform vec2  scale;
 uniform float angle;
 uniform float width;
 uniform float seed;
+uniform int   aa;
 
 uniform int mode;
 
-uniform vec4 gapCol;
-uniform int gradient_use;
-uniform int gradient_blend;
-uniform vec4 gradient_color[GRADIENT_LIMIT];
+uniform vec4  gapCol;
+uniform int   gradient_use;
+uniform int   gradient_blend;
+uniform vec4  gradient_color[GRADIENT_LIMIT];
 uniform float gradient_time[GRADIENT_LIMIT];
-uniform int gradient_keys;
+uniform int   gradient_keys;
 
 float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 
-vec3 rgb2hsv(vec3 c) {
+vec3 rgb2hsv(vec3 c) { #region
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
     vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
     vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
@@ -34,21 +35,21 @@ vec3 rgb2hsv(vec3 c) {
     float d = q.x - min(q.w, q.y);
     float e = 0.0000000001;
     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
- }
+} #endregion
 
-vec3 hsv2rgb(vec3 c) {
+vec3 hsv2rgb(vec3 c) { #region
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
+} #endregion
 
-float hueDist(float a0, float a1, float t) {
+float hueDist(float a0, float a1, float t) { #region
 	float da = fract(a1 - a0);
     float ds = fract(2. * da) - da;
     return a0 + ds * t;
-}
+} #endregion
 
-vec3 hsvMix(vec3 c1, vec3 c2, float t) {
+vec3 hsvMix(vec3 c1, vec3 c2, float t) { #region
 	vec3 h1 = rgb2hsv(c1);
 	vec3 h2 = rgb2hsv(c2);
 	
@@ -58,9 +59,9 @@ vec3 hsvMix(vec3 c1, vec3 c2, float t) {
 	h.z = mix(h1.z, h2.z, t);
 	
 	return hsv2rgb(h);
-}
+} #endregion
 
-vec4 gradientEval(in float prog) {
+vec4 gradientEval(in float prog) { #region
 	vec4 col = vec4(0.);
 	
 	for(int i = 0; i < GRADIENT_LIMIT; i++) {
@@ -88,9 +89,9 @@ vec4 gradientEval(in float prog) {
 	}
 	
 	return col;
-}
+} #endregion
 
-vec3 triGrid(vec2 p){
+vec3 triGrid(vec2 p){ #region
     float _stx = (p.x + c30 / 2.0 * p.y);
     float stx  = abs(fract(_stx) - 0.5);
    	
@@ -105,9 +106,9 @@ vec3 triGrid(vec2 p){
 	n = (n - .16) / (.35 - .16);
 	
     return vec3((floor(_stx) + floor(_sty) + 1.) / 2., floor(p.y * c30), n);
-}
+} #endregion
 
-void main() {
+void main() { #region
     vec2 pos = (v_vTexcoord - position) * scale, _pos;
 	float ratio = dimension.x / dimension.y;
 	_pos.x = pos.x * ratio * cos(angle) - pos.y * sin(angle);
@@ -115,18 +116,24 @@ void main() {
 	
 	vec3  tri   = triGrid(_pos);
 	float dist  = max(0., tri.z);
-	bool  isGap = dist < width * 2.;
+	vec4 colr;
+	
+	if(mode == 1) {
+		gl_FragColor = vec4(vec3(dist), 1.);
+		return;
+	}
 	
 	if(mode == 0) {
 		vec2 uv = fract(tri.xy / scale);
-		gl_FragColor = isGap? gapCol : vec4(gradientEval(random(uv)).rgb, 1.); 
-	} else if(mode == 1) {
-		gl_FragColor = vec4(vec3(dist), 1.);
+		colr = vec4(gradientEval(random(uv)).rgb, 1.); 
 	} else if(mode == 2) {
 		vec2 uv = fract((_pos * vec2(1., c30) - tri.xy) + vec2(0.5, 0.));
-		gl_FragColor = isGap? gapCol : texture2D( gm_BaseTexture, uv );
+		colr = texture2D( gm_BaseTexture, uv );
 	} else if(mode == 3) {
 		vec2 uv = clamp(tri.xy / scale, 0., 1.);
-		gl_FragColor = isGap? gapCol : texture2D( gm_BaseTexture, uv );
+		colr = texture2D( gm_BaseTexture, uv );
 	}
-}
+	
+	float _aa = 3. / max(dimension.x, dimension.y);
+	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(width * 2. - _aa, width * 2., dist) : step(width * 2., dist));
+} #endregion

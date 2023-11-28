@@ -223,6 +223,7 @@
 				
 				window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
 				window_set_size(ww, hh);
+				gameframe_set_shadow(true);
 			}
 		}
 		

@@ -17,7 +17,7 @@ uniform int useB;
 uniform int useA;
 
 float sample(vec4 col, int ch) {
-	if(mode == 0) return (col[0] + col[1] + col[2]) / 3.;
+	if(mode == 0) return (col[0] + col[1] + col[2]) / 3. * col[3];
 	return col[ch];
 }
 

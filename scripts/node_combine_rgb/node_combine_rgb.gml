@@ -1,5 +1,6 @@
 function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RGB Combine";
+	dimension_index = -1;
 	
 	inputs[| 0] = nodeValue("Red",   self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	inputs[| 1] = nodeValue("Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
@@ -28,6 +29,13 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _a    = _data[3];
 		var _mode = _data[4];
 		var _base = _data[5];
+		
+		var _baseS = _r;
+		if(!is_surface(_baseS)) _baseS = _g;
+		if(!is_surface(_baseS)) _baseS = _b;
+		if(!is_surface(_baseS)) return _outSurf;
+		
+		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_baseS), surface_get_height_safe(_baseS));
 		
 		surface_set_shader(_outSurf, sh_combine_rgb);
 			shader_set_surface("samplerR", _r);

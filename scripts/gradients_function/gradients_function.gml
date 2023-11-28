@@ -242,7 +242,7 @@ function loadGradient(path) { #region
 globalvar GRADIENTS;
 GRADIENTS = [];
 
-function __initGradient() {
+function __initGradient() { #region
 	GRADIENTS = [];
 	
 	var path = DIRECTORY + "Gradients/"
@@ -256,4 +256,4 @@ function __initGradient() {
 		file = file_find_next();
 	}
 	file_find_close();
-}
+} #endregion

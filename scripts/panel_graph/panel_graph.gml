@@ -1721,27 +1721,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 		function doBlend() { #region
 			if(array_length(nodes_selecting) != 2) return;
-		
-			var cx = nodes_selecting[0].x;
-			var cy = 0;
-			for(var i = 0; i < array_length(nodes_selecting); i++) {
-				var _node = nodes_selecting[i];
-				cx = max(cx, _node.x);
-				cy += _node.y;
-			}
-			cx = cx + 160;
-			cy = round(cy / array_length(nodes_selecting) / 32) * 32;
+			
+			var _n0 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[0] : nodes_selecting[1];
+			var _n1 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[1] : nodes_selecting[0];
+			
+			if(_n0.outputs[| 0].type != VALUE_TYPE.surface || _n1.outputs[| 0].type != VALUE_TYPE.surface) return;
+			
+			var cx = max(_n0.x, _n1.x) + 160;
+			var cy = round((_n0.y + _n1.y) / 2 / 32) * 32;
 			
 			var _blend = new Node_Blend(cx, cy, getCurrentContext());
-			var index = 0;
-			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
-				var _node = nodes_selecting[i];
-				if(ds_list_size(_node.outputs) == 0) continue;
-				if(_node.outputs[| 0].type == VALUE_TYPE.surface) {
-					_blend.inputs[| index].setFrom(_node.outputs[| 0]);
-					index++;
-				}
-			}
+			_blend.inputs[| 0].setFrom(_n0.outputs[| 0]);
+			_blend.inputs[| 1].setFrom(_n1.outputs[| 0]);
 			
 			nodes_selecting = [];
 		} #endregion
@@ -1751,26 +1742,34 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 			var cx = nodes_selecting[0].x;
 			var cy = 0;
-		
-			for(var i = 0; i < array_length(nodes_selecting); i++) {
-				var _node = nodes_selecting[i];
-				cx = max(cx, _node.x);
-				cy += _node.y;
-			}
-			cx = cx + 160;
-			cy = round(cy / array_length(nodes_selecting) / 32) * 32;
-		
-			var _compose = nodeBuild("Node_Composite", cx, cy);
-		
-			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
+			var pr  = ds_priority_create();
+			var amo = array_length(nodes_selecting);
+			var len = 0;
+			
+			for(var i = 0; i < amo; i++) {
 				var _node = nodes_selecting[i];
 				if(ds_list_size(_node.outputs) == 0) continue;
-				if(_node.outputs[| 0].type == VALUE_TYPE.surface) {
-					_compose.addInput(_node.outputs[| 0]);
-				}
+				if(_node.outputs[| 0].type != VALUE_TYPE.surface) continue;
+					
+				cx = max(cx, _node.x);
+				cy += _node.y;
+				
+				ds_priority_add(pr, _node, _node.y);
+				len++;
+			}
+			
+			cx = cx + 160;
+			cy = round(cy / len / 32) * 32;
+			
+			var _compose = nodeBuild("Node_Composite", cx, cy);
+			
+			repeat(len) {
+				var _node = ds_priority_delete_min(pr);
+				_compose.addInput(_node.outputs[| 0]);
 			}
 			
 			nodes_selecting = [];
+			ds_priority_destroy(pr);
 		} #endregion
 	
 		function doArray() { #region

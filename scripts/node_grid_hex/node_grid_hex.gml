@@ -1,21 +1,6 @@
 function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Hexagonal Grid";
 	
-	shader = sh_grid_hex;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_pos = shader_get_uniform(shader, "position");
-	uniform_sca = shader_get_uniform(shader, "scale");
-	uniform_rot = shader_get_uniform(shader, "angle");
-	uniform_thk = shader_get_uniform(shader, "thick");
-	uniform_mod = shader_get_uniform(shader, "mode");
-	uniform_sed = shader_get_uniform(shader, "seed");
-	
-	uniform_grad_blend	= shader_get_uniform(shader, "gradient_blend");
-	uniform_grad		= shader_get_uniform(shader, "gradient_color");
-	uniform_grad_time	= shader_get_uniform(shader, "gradient_time");
-	uniform_grad_key	= shader_get_uniform(shader, "gradient_keys");
-	uniform_col_gap		= shader_get_uniform(shader, "gapCol");
-	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -43,10 +28,12 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 	inputs[| 9] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
+	inputs[| 10] = nodeValue("Anti aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 3, 2, 4,
-		["Render",	false], 7, 8, 5, 6, 9, 
+		["Render",	false], 7, 8, 5, 6, 9, 10, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -66,6 +53,7 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _mode = _data[7];
 		var _sed  = _data[8];
 		var _sam  = _data[9];
+		var _aa   = _data[10];
 		
 		var _col_gap = _data[6];
 		var _gra	 = _data[5];
@@ -80,30 +68,22 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		shader_set(shader);
-			shader_set_uniform_f(uniform_dim, _dim[0], _dim[1]);
-			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_uniform_f(uniform_sca, _sca[0], _sca[1]);
-			shader_set_uniform_f(uniform_rot, degtorad(_rot));
-			shader_set_uniform_f(uniform_thk, _thk);
-			shader_set_uniform_f(uniform_sed, _sed);
-			shader_set_uniform_i(uniform_mod, _mode);
+		surface_set_shader(_outSurf, sh_grid_hex);
+			shader_set_f("dimension", _dim[0], _dim[1]);
+			shader_set_f("position",  _pos[0] / _dim[0], _pos[1] / _dim[1]);
+			shader_set_f("scale",     _sca[0], _sca[1]);
+			shader_set_f("angle",     degtorad(_rot));
+			shader_set_f("thick",     _thk);
+			shader_set_f("seed",      _sed);
+			shader_set_i("mode",      _mode);
+			shader_set_i("aa",        _aa);
+			shader_set_color("gapCol",_col_gap);
 			
-			shader_set_uniform_f_array_safe(uniform_col_gap, colToVec4(_col_gap));
+			_gra.shader_submit();
 			
-			shader_set_uniform_i(uniform_grad_blend, _gra.type);
-			shader_set_uniform_f_array_safe(uniform_grad, _grad_color);
-			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
-			shader_set_uniform_i(uniform_grad_key, array_length(_gra.keys));
-			
-			if(is_surface(_sam))
-				draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);
-			else
-				draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
-		shader_reset();
-		surface_reset_target();
+			if(is_surface(_sam)) draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);
+			else                 draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
+		surface_reset_shader();
 		
 		return _outSurf;
 	}
