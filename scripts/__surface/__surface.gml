@@ -15,6 +15,24 @@ function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = 
 	oriSurf_w = w;
 	oriSurf_h = h;
 	
+	static set = function(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1) {
+		INLINE
+		
+		self.surface  = new Surface(surface);
+		self.x = _x;
+		self.y = _y;
+		self.rotation = rot;
+		self.sx = sx;
+		self.sy = sy;
+		self.blend = blend;
+		self.alpha = alpha;
+		
+		w = surface_get_width_safe(surface);
+		h = surface_get_height_safe(surface);
+		
+		return self;
+	}
+	
 	static setOrginalSurface = function(surf) {
 		INLINE
 		

@@ -1,6 +1,4 @@
 /// @description 
-gameframe_update();
-
 draw_clear(#1c1c23);
 var w = 640;
 var h = 480;

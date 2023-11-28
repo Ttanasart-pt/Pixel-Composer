@@ -6,7 +6,7 @@ HOVERING_ELEMENT  = _HOVERING_ELEMENT;
 _HOVERING_ELEMENT = noone;
 
 #region minimize
-	if(OS == os_windows && gameframe_is_minimized()) {
+	if(OS == os_windows && winMan_isMinimized()) {
 		if(!minimized)
 			game_set_speed(1, gamespeed_fps);
 		minimized = true;
@@ -28,13 +28,6 @@ _HOVERING_ELEMENT = noone;
 	}
 	
 	CURSOR = cr_default;
-	
-	if(!gameframe_is_minimized() && (win_wp != WIN_W || win_hp != WIN_H) && (WIN_W > 1 && WIN_H > 1)) {
-		if(!win_resize) CURRENT_PANEL = panelSerialize();
-		display_refresh();
-		win_resize = true;
-	} else 
-		win_resize = false;
 #endregion
 
 #region focus

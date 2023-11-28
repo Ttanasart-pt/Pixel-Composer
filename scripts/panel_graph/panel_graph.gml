@@ -1731,7 +1731,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			}
 			cx = cx + 160;
 			cy = round(cy / array_length(nodes_selecting) / 32) * 32;
-		
+			
 			var _blend = new Node_Blend(cx, cy, getCurrentContext());
 			var index = 0;
 			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
@@ -1776,26 +1776,35 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		function doArray() { #region
 			if(array_empty(nodes_selecting)) return;
 		
-			var cx = nodes_selecting[0].x;
-			var cy = 0;
-		
-			for(var i = 0; i < array_length(nodes_selecting); i++) {
-				var _node = nodes_selecting[i];
-				cx = max(cx, _node.x);
-				cy += _node.y;
-			}
-			cx = cx + 160;
-			cy = round(cy / array_length(nodes_selecting) / 32) * 32;
-		
-			var _array = nodeBuild("Node_Array", cx, cy);
-		
-			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
+			var cx  = nodes_selecting[0].x;
+			var cy  = 0;
+			var pr  = ds_priority_create();
+			var amo = array_length(nodes_selecting);
+			var len = 0;
+			
+			for(var i = 0; i < amo; i++) {
 				var _node = nodes_selecting[i];
 				if(ds_list_size(_node.outputs) == 0) continue;
+				
+				cx = max(cx, _node.x);
+				cy += _node.y;
+				
+				ds_priority_add(pr, _node, _node.y);
+				len++;
+			}
+			
+			cx = cx + 160;
+			cy = round(cy / len / 32) * 32;
+		
+			var _array = nodeBuild("Node_Array", cx, cy);
+			
+			repeat(len) {
+				var _node = ds_priority_delete_min(pr);
 				_array.addInput(_node.outputs[| 0]);
 			}
 			
 			nodes_selecting = [];
+			ds_priority_destroy(pr);
 		} #endregion
 	
 		function doGroup() { #region

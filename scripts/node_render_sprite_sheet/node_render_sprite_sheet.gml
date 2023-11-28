@@ -199,7 +199,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _h = surface_get_height_safe(inpt[i]);
 			
 			surface_set_target(oo);
-			BLEND_OVERRIDE;
+			BLEND_OVERRIDE
 			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :

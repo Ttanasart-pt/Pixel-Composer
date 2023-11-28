@@ -164,9 +164,9 @@
 		
 		map.key = save_l;
 		
-		PREFERENCES.window_maximize	= gameframe_is_maximized();
-		PREFERENCES.window_width	= max(960, WIN_W);
-		PREFERENCES.window_height	= max(600, WIN_H);
+		PREFERENCES.window_maximize	= window_is_maximized;
+		PREFERENCES.window_width	= max(960, window_minimize_size[0]);
+		PREFERENCES.window_height	= max(600, window_minimize_size[1]);
 		
 		map.preferences = PREFERENCES;
 		
@@ -215,15 +215,18 @@
 		
 		if(OS != os_macosx && !LOADING) {
 			if(PREFERENCES.window_maximize) {
-				gameframe_maximize();
+				winMan_Maximize();
 			} else {
 				var ww = PREFERENCES.window_width;
 				var hh = PREFERENCES.window_height;
+				window_minimize_size = [ ww, hh ];
 				
 				window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
 				window_set_size(ww, hh);
 			}
 		}
+		
+		window_refresh();
 		game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
 		
 		var grav = struct_try_get(PREFERENCES, "physics_gravity", [ 0, 10 ]);

@@ -1,5 +1,6 @@
 /// @description init
-if(OS == os_windows && gameframe_is_minimized()) exit;
+if(OS == os_windows && winMan_isMinimized()) exit;
+winManStep()
 
 //print("===== Step start =====");
 if(PROJECT.active && !PROJECT.safeMode) { #region

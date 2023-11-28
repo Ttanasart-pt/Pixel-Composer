@@ -41,6 +41,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	outputs[| 1] = nodeValue("Path data", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 		
 	outputs[| 2] = nodeValue("Anchors", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
+		.setVisible(false)
 		.setArrayDepth(1);
 	
 	tool_pathDrawer = new NodeTool( "Draw path", THEME.path_tools_draw )	

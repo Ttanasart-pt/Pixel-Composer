@@ -1,5 +1,5 @@
 /// @description tooltip filedrop
-if(OS == os_windows && gameframe_is_minimized()) exit;
+if(OS == os_windows && winMan_isMinimized()) exit;
 
 #region tooltip
 	if(is_struct(TOOLTIP)) {

@@ -1,3 +1,12 @@
+enum NODE_SCATTER_DIST {
+	area,
+	border,
+	map,
+	data,
+	path,
+	tile
+}
+
 function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scatter";
 	dimension_index = 1;
@@ -115,7 +124,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		if(_output_index == 1) return scatter_data;
-		if(_output_index == 0 && _array_index == 0) scatter_data = [];
 		
 		var _inSurf = _data[0];
 		if(_inSurf == 0)
@@ -158,6 +166,23 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _posDist = [];
 		if(_dist == 2 && is_surface(_distMap)) 
 			_posDist = get_points_from_dist(_distMap, _amount, seed);
+			
+		if(_dist == 4) {
+			var path_valid    = path != noone && struct_has(path, "getPointRatio");
+			
+			if(!path_valid) return _outSurf;
+			
+			var _pathProgress = 0;
+			var path_amount   = struct_has(path, "getLineCount")? path.getLineCount() : 1;
+			var _pre_amount   = _amount;
+			_amount *= path_amount;
+			
+			var path_line_index = 0;
+		}
+		
+		var _sed = seed;
+		var _sct = array_create(_amount);
+		var _sct_len = 0;
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -171,45 +196,37 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					break;
 			}
 			
-			var _pathProgress = 0;
-			var _sed = seed;
-			var res_index = 0, bg = 0;
-			
 			for(var i = 0; i < _amount; i++) {
 				var sp = noone, _x = 0, _y = 0;
 				var _v = noone;
 				
-				if(_dist < 2) {
+				if(_dist == NODE_SCATTER_DIST.area || _dist == NODE_SCATTER_DIST.border) {
 					sp = area_get_random_point(_area, _dist, _scat, i, _amount, _sed); _sed += 20;
 					_x = sp[0];
 					_y = sp[1];
-				} else if(_dist == 2) {
+				} else if(_dist == NODE_SCATTER_DIST.data) {
 					sp = array_safe_get(_posDist, i);
 					if(!is_array(sp)) continue;
 				
 					_x = _area[0] + _area[2] * (sp[0] * 2 - 1.);
 					_y = _area[1] + _area[3] * (sp[1] * 2 - 1.);
-				} else if(_dist == 3) {
+				} else if(_dist == NODE_SCATTER_DIST.map) {
 					sp = array_safe_get(_distData, i);
 					if(!is_array(sp)) continue;
 					
 					_x = array_safe_get(sp, 0);
 					_y = array_safe_get(sp, 1);
 					_v = array_safe_get(sp, 2, noone);
-				} else if(_dist == 4) {
-					if(path != noone && struct_has(path, "getPointRatio")) {
-						_pathProgress = _scat? random_seed(1, _sed) : i / max(1, _amount); _sed++;
-						_pathProgress = frac((_pathProgress + pathShf) * 0.9999);
-						
-						var pp = path.getPointRatio(_pathProgress);
-						_x = pp.x + random_range_seed(-pathDis, pathDis, _sed); _sed++;
-						_y = pp.y + random_range_seed(-pathDis, pathDis, _sed); _sed++;
-					}
-				} else if(_dist == 5) {
+				} else if(_dist == NODE_SCATTER_DIST.path) {
+					_pathProgress = _scat? random_seed(1, _sed) : i / max(1, _pre_amount); _sed++;
+					_pathProgress = frac((_pathProgress + pathShf) * 0.9999);
+					
+					var pp = path.getPointRatio(_pathProgress, path_line_index);
+					_x = pp.x + random_range_seed(-pathDis, pathDis, _sed); _sed++;
+					_y = pp.y + random_range_seed(-pathDis, pathDis, _sed); _sed++;
+				} else if(_dist == NODE_SCATTER_DIST.tile) {
 					_x = random_range_seed(0, _dim[0], _sed); _sed++;
 					_y = random_range_seed(0, _dim[1], _sed); _sed++;
-					
-					//print(string(_x) + ", " + string(_y));
 				}
 				
 				var posS = _dist < 4? seed + _y * _dim[0] + _x : seed + i * 100;
@@ -222,14 +239,14 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_scy *= _v;
 				}
 				
-				var _r	 = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval(_rota, posS); posS++;
+				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval(_rota, posS); posS++;
 				
 				if(vRot && _v != noone)
 					_r *= _v;
 					
-				if(_dist == 4 && path != noone && pathRot) {
-					var p0  = path.getPointRatio(clamp(_pathProgress - 0.001, 0, 0.9999));
-					var p1  = path.getPointRatio(clamp(_pathProgress + 0.001, 0, 0.9999));
+				if(_dist == NODE_SCATTER_DIST.path && pathRot) {
+					var p0 = path.getPointRatio(clamp(_pathProgress - 0.001, 0, 0.9999), path_line_index);
+					var p1 = path.getPointRatio(clamp(_pathProgress + 0.001, 0, 0.9999), path_line_index);
 					
 					var dirr = point_direction(p0.x, p0.y, p1.x, p1.y);
 					_r += dirr;
@@ -248,7 +265,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var sw = surface_get_width_safe(surf);
 				var sh = surface_get_height_safe(surf);
 			
-				if(_dist != AREA_DISTRIBUTION.area || _scat != AREA_SCATTER.uniform) {
+				if(_dist != NODE_SCATTER_DIST.area || _scat != AREA_SCATTER.uniform) {
 					var p = point_rotate(-sw / 2 * _scx, -sh * _scy / 2, 0, 0, _r);
 					_x += p[0];
 					_y += p[1];
@@ -261,30 +278,36 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var clr = color.eval(grSamp); 
 				var alp = random_range_seed(alpha[0], alpha[1], posS); posS++;
 				
-				array_push(scatter_data, new SurfaceAtlas(surf, _x, _y, _r, _scx, _scy, clr, alp));
+				var _atl = array_safe_get(scatter_data, _sct_len);
+				if(!is_instanceof(_atl, SurfaceAtlas)) 
+					_atl = new SurfaceAtlas(surf, _x, _y, _r, _scx, _scy, clr, alp);
+				else 
+					_atl.set(surf, _x, _y, _r, _scx, _scy, clr, alp);
+				_sct[_sct_len] = _atl;
+				_sct_len++;
+				
 				draw_surface_ext_safe(surf, _x, _y, _scx, _scy, _r, clr, alp);
 				
-				if(_dist == 5) {
+				if(_dist == NODE_SCATTER_DIST.path) {
+					path_line_index = floor(i / _pre_amount);
+				} else if(_dist == NODE_SCATTER_DIST.tile) {
 					var _sw = surface_get_width_safe(surf)  * _scx;
 					var _sh = surface_get_height_safe(surf) * _scy;
 					
-					if(_x < _sw)
-						draw_surface_ext_safe(surf, _dim[0] + _x, _y, _scx, _scy, _r, clr, alp);
-					if(_y < _sh)
-						draw_surface_ext_safe(surf, _x, _dim[1] + _y, _scx, _scy, _r, clr, alp);
-					if(_x < _sw && _y < _sh)
-						draw_surface_ext_safe(surf, _dim[0] + _x, _dim[1] + _y, _scx, _scy, _r, clr, alp);
+					if(_x < _sw)				draw_surface_ext_safe(surf, _dim[0] + _x, _y, _scx, _scy, _r, clr, alp);
+					if(_y < _sh)				draw_surface_ext_safe(surf, _x, _dim[1] + _y, _scx, _scy, _r, clr, alp);
+					if(_x < _sw && _y < _sh)	draw_surface_ext_safe(surf, _dim[0] + _x, _dim[1] + _y, _scx, _scy, _r, clr, alp);
 					
-					if(_x > _dim[0] - _sw)
-						draw_surface_ext_safe(surf, _x - _dim[0], _y, _scx, _scy, _r, clr, alp);
-					if(_y > _dim[1] - _sh)
-						draw_surface_ext_safe(surf, _x, _y - _dim[1], _scx, _scy, _r, clr, alp);
-					if(_x > _dim[0] - _sw || _y > _dim[1] - _sh)
-						draw_surface_ext_safe(surf, _x - _dim[0], _y - _dim[1], _scx, _scy, _r, clr, alp);
+					if(_x > _dim[0] - _sw)							draw_surface_ext_safe(surf, _x - _dim[0], _y, _scx, _scy, _r, clr, alp);
+					if(_y > _dim[1] - _sh)							draw_surface_ext_safe(surf, _x, _y - _dim[1], _scx, _scy, _r, clr, alp);
+					if(_x > _dim[0] - _sw || _y > _dim[1] - _sh)	draw_surface_ext_safe(surf, _x - _dim[0], _y - _dim[1], _scx, _scy, _r, clr, alp);
 				}
 			}
 			BLEND_NORMAL;
 		surface_reset_target(); 
+		
+		array_resize(_sct, _sct_len);
+		scatter_data = _sct;
 		
 		return _outSurf;
 	} #endregion

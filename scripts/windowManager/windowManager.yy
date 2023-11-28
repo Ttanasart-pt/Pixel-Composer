@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "gameframe",
+  "name": "windowManager",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Gameframe",
-    "path": "folders/_extensions/Gameframe.yy",
+    "name": "WinMan",
+    "path": "folders/_extensions/WinMan.yy",
   },
 }

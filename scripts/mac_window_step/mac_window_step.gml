@@ -9,7 +9,7 @@ function mac_window_step() {
 			window_set_position(__win_drag_sx + (_mx - __win_drag_mx), __win_drag_sy + (_my - __win_drag_my));
 		else {
 			if((__win_is_dragging & WINDOW_DRAG_MODE.resize_n) != 0) {
-				gameframe_drag_set_rect(
+				winMan_setRect(
 					__win_drag_sx, 
 					__win_drag_sy + (_my - __win_drag_my), 
 					__win_drag_sw, 
@@ -22,7 +22,7 @@ function mac_window_step() {
 				);
 			
 			if((__win_is_dragging & WINDOW_DRAG_MODE.resize_w) != 0) {
-				gameframe_drag_set_rect(
+				winMan_setRect(
 					__win_drag_sx + (_mx - __win_drag_mx), 
 					__win_drag_sy,
 					__win_drag_sw - (_mx - __win_drag_mx), 

@@ -90,24 +90,24 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return 0;
 	} #endregion
 	
-	static get__vec2Ratio = function(_rat, ind = 0) { #region
+	static getPointRatio = function(_rat, ind = 0) { #region
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _path = getInputData(i);
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
-			if(ind < lc) return _path.get__vec2Ratio(_rat, ind).clone();
+			if(ind < lc) return _path.getPointRatio(_rat, ind).clone();
 			ind -= lc;
 		}
 		
 		return new __vec2();
 	} #endregion
 	
-	static get__vec2Distance = function(_dist, ind = 0) { #region
+	static getPointDistance = function(_dist, ind = 0) { #region
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _path = getInputData(i);
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
-			if(ind < lc) return _path.get__vec2Distance(_dist, ind).clone();
+			if(ind < lc) return _path.getPointDistance(_dist, ind).clone();
 			ind -= lc;
 		}
 		
@@ -124,6 +124,15 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		return 0;
+	} #endregion
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+			var _path = getInputData(i);
+			if(!struct_has(_path, "drawOverlay")) continue;
+			
+			_path.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region

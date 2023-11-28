@@ -78,6 +78,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) { #region
 			appended_list[| i].preConnect();
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].connect();
+		for(var i = 0; i < ds_list_size(appended_list); i++)
+			appended_list[| i].postConnect();
 	} catch(e) {
 		log_warning("APPEND, connect", exception_print(e));
 	}

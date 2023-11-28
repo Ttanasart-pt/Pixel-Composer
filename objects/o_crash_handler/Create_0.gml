@@ -1,7 +1,4 @@
 /// @description 
-gameframe_init();
-gameframe_button_array = [];
-
 #region setup
 	window_set_size(640, 480);
 	display_set_gui_size(640, 480);

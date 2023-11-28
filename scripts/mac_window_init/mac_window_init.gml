@@ -41,7 +41,7 @@ function mac_window_maximize() {
 	room_height = _h;
 		
 	display_set_gui_size(_w, _h);
-	gameframe_drag_set_rect(0, 0, _w, _h);
+	winMan_setRect(0, 0, _w, _h);
 	
 	display_refresh();
 }
@@ -51,6 +51,6 @@ function mac_window_minimize() {
 	
 	__win_is_maximized = false;
 	
-	gameframe_drag_set_rect(__win_min_x, __win_min_y, __win_min_w, __win_min_h);
+	winMan_setRect(__win_min_x, __win_min_y, __win_min_w, __win_min_h);
 	display_refresh();
 }

@@ -1,13 +1,11 @@
 /// @description init
 draw_clear(COLORS.bg);
 
-#region gameframe
-	if(OS == os_windows && gameframe_is_minimized()) {
-		//gameframe_update();
+#region windows init
+	if(OS == os_windows && winMan_isMinimized())
 		exit;
-	} else if(OS == os_macosx) {
+	else if(OS == os_macosx)
 		mac_window_step();
-	}
 #endregion
 
 #region widget scroll
@@ -45,8 +43,6 @@ draw_clear(COLORS.bg);
 	}
 	
 	panelDraw();
-	
-	gameframe_update();
 #endregion
 
 #region notes
@@ -55,25 +51,5 @@ draw_clear(COLORS.bg);
 #endregion
 
 #region window
-	var pd = gameframe_resize_padding;
-	
-	if(mouse_mx > 0 && mouse_mx < pd && mouse_my > 0 && mouse_my < WIN_H)
-		CURSOR = cr_size_we;
-	if(mouse_mx > WIN_W - pd && mouse_mx < WIN_W && mouse_my > 0 && mouse_my < WIN_H)
-		CURSOR = cr_size_we;
-		
-	if(mouse_mx > 0 && mouse_mx < WIN_W && mouse_my > 0 && mouse_my < pd)
-		CURSOR = cr_size_ns;
-	if(mouse_mx > 0 && mouse_mx < WIN_W && mouse_my > WIN_H - pd && mouse_my < WIN_H)
-		CURSOR = cr_size_ns;
-	
-	if(mouse_mx > 0 && mouse_mx < pd && mouse_my > 0 && mouse_my < pd)
-		CURSOR = cr_size_nwse;
-	if(mouse_mx > WIN_W - pd && mouse_mx < WIN_W && mouse_my > WIN_H - pd && mouse_my < WIN_H)
-		CURSOR = cr_size_nwse;
-	
-	if(mouse_mx > 0 && mouse_mx < pd && mouse_my > WIN_H - pd && mouse_my < WIN_H)
-		CURSOR = cr_size_nesw;
-	if(mouse_mx > WIN_W - pd && mouse_mx < WIN_W && mouse_my > 0 && mouse_my < pd)
-		CURSOR = cr_size_nesw;
+	winManDraw();
 #endregion

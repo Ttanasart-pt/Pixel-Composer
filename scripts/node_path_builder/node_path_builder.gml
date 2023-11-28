@@ -26,6 +26,9 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				draw_line(_x + p0[0] * _s, _y + p0[1] * _s, 
 						  _x + p1[0] * _s, _y + p1[1] * _s);
+						  
+				if(j == 1) draw_circle(_x + p0[0] * _s, _y + p0[1] * _s, 4, false);
+				draw_circle(_x + p1[0] * _s, _y + p1[1] * _s, 4, false);
 			}
 		}
 	} #endregion

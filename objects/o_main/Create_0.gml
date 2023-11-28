@@ -14,17 +14,7 @@
 	window_set_min_width(960);
 	window_set_min_height(600);
 	
-	if(OS == os_windows) {
-		gameframe_init();
-		gameframe_set_cursor = false;
-		gameframe_caption_height_normal		= ui(40);
-		gameframe_caption_height_maximized  = ui(40);
-		
-		gameframe_button_array = [  
-									game_frame_button_create("", s_kenney, 0, function() {}),
-									game_frame_button_create("", s_kenney, 0, function() {}),
-								 ];
-	} else if(OS == os_macosx)
+	if(OS == os_macosx)
 		mac_window_init();
 	
 	depth = 0;
@@ -57,9 +47,6 @@
 	
 	panelInit();
 	
-	//show_debug_overlay(true);
-	//display_set_timing_method(tm_sleep);
-	
 	addHotkey("", "New file", "N",	MOD_KEY.ctrl, NEW);
 	if(!DEMO) {
 		addHotkey("", "Save", "S",		MOD_KEY.ctrl, SAVE );
@@ -76,12 +63,7 @@
 	
 	addHotkey("", "Open notification", vk_f12,	MOD_KEY.none, function() { dialogPanelCall(new Panel_Notification()); });
 	
-	addHotkey("", "Fullscreen", vk_f11,	MOD_KEY.none, function() { 
-		if(gameframe_is_fullscreen_window())
-			gameframe_set_fullscreen(0);
-		else
-			gameframe_set_fullscreen(2);
-	});
+	addHotkey("", "Fullscreen", vk_f11,	MOD_KEY.none, function() { winMan_setFullscreen(!window_is_fullscreen); });
 	
 	addHotkey("", "Render all", vk_f5,		MOD_KEY.none, function() { RENDER_ALL_REORDER });
 	

@@ -76,15 +76,10 @@ function Panel_Menu() : PanelContent() constructor {
 			return submenuCall(_dat, arr);
 		}, THEME.addon_icon ).setIsShelf(),
 		-1,
-		menuItem(__txt("Fullscreen"), function() { 
-			if(gameframe_is_fullscreen_window())
-				gameframe_set_fullscreen(0);
-			else
-				gameframe_set_fullscreen(2);
-		},, ["", "Fullscreen"]),
+		menuItem(__txt("Fullscreen"),			 function() { winMan_setFullscreen(!window_is_fullscreen); },, ["", "Fullscreen"]),
 		menuItem(__txt("Close current project"), function() { PANEL_GRAPH.close(); },, [ "", "Close file" ]),
-		menuItem(__txt("Close all projects"), function() { for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]); },, [ "", "Close all" ]),
-		menuItem(__txt("Close program"), function() { window_close(); },, [ "", "Close program" ]),
+		menuItem(__txt("Close all projects"),	 function() { for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]); },, [ "", "Close all" ]),
+		menuItem(__txt("Close program"),		 function() { window_close(); },, [ "", "Close program" ]),
 	]; 
 	
 	if(!DEMO) menu_file = array_append(menu_file_nondemo, menu_file);
@@ -321,7 +316,8 @@ function Panel_Menu() : PanelContent() constructor {
 	} #endregion
 	
 	function drawContent(panel) { #region
-		var _right = PREFERENCES.panel_menu_right_control;
+		var _right     = PREFERENCES.panel_menu_right_control;
+		var _draggable = pFOCUS;
 		
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		menus[6][1] = STEAM_ENABLED? menu_help_steam : menu_help;
@@ -343,9 +339,10 @@ function Panel_Menu() : PanelContent() constructor {
 				var bx = xx;
 				if(!PREFERENCES.panel_menu_right_control)
 					bx = w - ui(24);
-		
+				
 				draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2, 1, c_white);
 				if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
+					_draggable = false;
 					if(mouse_press(mb_left, pFOCUS))
 						dialogCall(o_dialog_about);
 				}
@@ -355,6 +352,7 @@ function Panel_Menu() : PanelContent() constructor {
 			
 				draw_sprite_ui_uniform(THEME.icon_24, 0, bx, by, 1, c_white);
 				if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
+					_draggable = false;
 					if(mouse_press(mb_left, pFOCUS))
 						dialogCall(o_dialog_about);
 				}
@@ -419,6 +417,7 @@ function Panel_Menu() : PanelContent() constructor {
 				}
 			
 				if(pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
+					_draggable = false;
 					draw_sprite_stretched(THEME.menu_button, 0, x0, y0, x1 - x0, y1 - y0);
 					
 					if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
@@ -479,6 +478,7 @@ function Panel_Menu() : PanelContent() constructor {
 			var cc = merge_color(c_white, noti_flash_color, ev);
 			
 			if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - nh / 2, nx0 + nw, ny0 + nh / 2)) {
+				_draggable = false;
 				draw_sprite_stretched_ext(THEME.menu_button, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
 				if(mouse_press(mb_left, pFOCUS)) {
 					var dia = dialogPanelCall(new Panel_Notification(), nx0, ny0 + nh / 2 + ui(4));
@@ -520,6 +520,7 @@ function Panel_Menu() : PanelContent() constructor {
 				var ww = hori? string_width(name) + ui(40) : w - ui(16);
 				
 				if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
+					_draggable = false;
 					TOOLTIP = __txt("Addons");
 					draw_sprite_stretched(THEME.menu_button, 1, nx0, ny0 - wh / 2, ww, wh);
 					if(mouse_press(mb_left, pFOCUS))
@@ -544,23 +545,29 @@ function Panel_Menu() : PanelContent() constructor {
 				
 				switch(action) {
 					case "exit":
-						if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_exit, 0, COLORS._main_accent) == 2)
-							window_close();
+						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_exit, 0, COLORS._main_accent);
+						if(b) _draggable = false;
+						if(b == 2) window_close();
 						break;
 					case "maximize":
-						var win_max = gameframe_is_maximized() || gameframe_is_fullscreen_window();
+						var win_max = window_is_maximized || window_is_fullscreen;
 						if(OS == os_macosx)
 							win_max = __win_is_maximized;
 						
-						if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_maximize, win_max, [ COLORS._main_icon, CDEF.lime ]) == 2) {
+						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_maximize, win_max, [ COLORS._main_icon, CDEF.lime ]);
+						if(b) _draggable = false;
+						if(b == 2) {
 							if(OS == os_windows) {
-								if(gameframe_is_fullscreen_window()) {
-									gameframe_set_fullscreen(0);
-									gameframe_restore();
-								} else if(gameframe_is_maximized())
-									gameframe_restore();
-								else
-									gameframe_maximize();
+								if(window_is_fullscreen) {
+									winMan_setFullscreen(false);
+									winMan_Unmaximize();
+								} else if(window_is_maximized) {
+									winMan_Unmaximize();
+									DISPLAY_REFRESH
+								} else {
+									winMan_Maximize();
+									DISPLAY_REFRESH
+								}
 							} else if(OS == os_macosx) {
 								if(__win_is_maximized)  mac_window_minimize();
 								else                    mac_window_maximize();
@@ -568,30 +575,35 @@ function Panel_Menu() : PanelContent() constructor {
 						}
 						break;
 					case "minimize":
-						if(OS == os_windows)
-						if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]) == -2) {
-							if(OS == os_windows)
-								gameframe_minimize();
-							else if(OS == os_macosx) {
+						if(OS == os_windows) {
+							var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]);
+							if(b) _draggable = false;
+							if(b == -2) {
+								if(OS == os_windows)
+									winMan_Minimize();
+								else if(OS == os_macosx) {
 								
+								}
 							}
 						}
 						
-						if(OS == os_macosx) {
-							buttonInstant(THEME.button_hide, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, COLORS._main_icon ]);
-						}
+						//if(OS == os_macosx) {
+						//	buttonInstant(THEME.button_hide, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, COLORS._main_icon ]);
+						//}
 						break;
 					case "fullscreen":
-						var win_full = OS == os_windows? gameframe_is_fullscreen_window() : window_get_fullscreen();
-						if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_fullscreen, win_full, [ COLORS._main_icon, CDEF.cyan ]) == 2) {
+						var win_full = window_is_fullscreen;
+						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_fullscreen, win_full, [ COLORS._main_icon, CDEF.cyan ]);
+						if(b) _draggable = false;
+						if(b == 2) {
 							if(OS == os_windows)
-								gameframe_set_fullscreen(gameframe_is_fullscreen_window()? 0 : 2);
+								winMan_setFullscreen(!win_full);
 							else if(OS == os_macosx) {
-								if(window_get_fullscreen()) {
-									window_set_fullscreen(false);
+								if(win_full) {
+									winMan_setFullscreen(false);
 									mac_window_minimize();
 								} else
-									window_set_fullscreen(true);
+									winMan_setFullscreen(true);
 							}
 						}
 						break;
@@ -621,6 +633,7 @@ function Panel_Menu() : PanelContent() constructor {
 				var _y1 = h - ui(6);
 				
 				if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
+					_draggable = false;
 					draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
 					
 					if(mouse_press(mb_left, pFOCUS))
@@ -639,6 +652,7 @@ function Panel_Menu() : PanelContent() constructor {
 				draw_set_text(f_p0, fa_left, fa_center, tc);
 				var ww = string_width(txt) + ui(12);
 				if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
+					_draggable = false;
 					draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _xx1, y1 - ui(16), ww, ui(32), sc, 1);
 					
 					if(mouse_press(mb_left, pFOCUS))
@@ -705,6 +719,7 @@ function Panel_Menu() : PanelContent() constructor {
 			var _b   = buttonInstant(THEME.button_hide_fill, tbx0, tby0, tw, th, [mx, my], pFOCUS, pHOVER);
 			var _hov = _b > 0;
 			
+			if(_b) _draggable = false;
 			if(_b == 2) {
 				_hov = true;
 				var arr = [];
@@ -754,6 +769,11 @@ function Panel_Menu() : PanelContent() constructor {
 				draw_sprite_ext(s_patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
 				draw_sprite_ext(s_patreon_supporter, 1, _cx, _cy, 1, 1, 0, _ib, 1);
 			}
+		#endregion
+		
+		#region drag
+			if(mouse_press(mb_left, _draggable))
+				winMan_initDrag(0b10000);
 		#endregion
 	} #endregion
 }
