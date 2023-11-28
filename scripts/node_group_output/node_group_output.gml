@@ -100,7 +100,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outParent.display_type = inputs[| 0].display_type;
 		
 		onSetDisplayName = _onSetDisplayName;
-		if(attributes.inherit_name && inputs[| 0].value_from != noone) {
+		if(!renamed && attributes.inherit_name && inputs[| 0].value_from != noone) {
 			if(display_name != inputs[| 0].value_from.name) {
 				onSetDisplayName = noone;
 				setDisplayName(inputs[| 0].value_from.name);

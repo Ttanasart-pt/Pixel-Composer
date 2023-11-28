@@ -323,7 +323,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _to_list = outputs[| 0].value_to;
 		onSetDisplayName = _onSetDisplayName;
-		if(attributes.inherit_name && !ds_list_empty(_to_list)) {
+		if(!renamed && attributes.inherit_name && !ds_list_empty(_to_list)) {
 			for( var i = 0; i < ds_list_size(_to_list); i++ ) {
 				if(_to_list[| i].value_from != outputs[| 0]) continue;
 				if(display_name == _to_list[| i].name) break;

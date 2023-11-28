@@ -1,6 +1,5 @@
-//
-// Simple passthrough fragment shader
-//
+// Cellular noise
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -27,36 +26,35 @@ void main() {
 
     st *= scale;
 
-    float md = 1.;
+    float md = 8.;
     vec2 mg, mr;
 
 	if(pattern == 0) {
 		vec2 i_st = floor(st);
 	    vec2 f_st = fract(st);
 	
-	    for (int y = -1; y <= 1; y++) {
-	        for (int x = -1; x <= 1; x++) {
-	            vec2 neighbor = vec2(float(x), float(y));
-	            vec2 point = random2(mod(i_st + neighbor, scale));
-				point += 0.5 + 0.5 * sin(time + TAU * point);
+	    for (int y = -1; y <= 1; y++)
+	    for (int x = -1; x <= 1; x++) {
+	        vec2 neighbor = vec2(float(x), float(y));
+	        vec2 point = random2(mod(i_st + neighbor, scale));
+			point = 0.5 + 0.5 * sin(time + TAU * point);
 			
-	            vec2 _diff = neighbor + point - f_st;
-	            float dist = length(_diff);
+	        vec2 _diff = neighbor + point - f_st;
+	        float dist = length(_diff);
 
-	            if(dist < md) {
-					md = dist;
-					mr = _diff;
-					mg = neighbor;
-				}
-	        }
+	        if(dist < md) {
+				md = dist;
+				mr = _diff;
+				mg = neighbor;
+			}
 	    }
 		
-		md = 1.;
+		md = 8.;
 		for(int y = -2; y <= 2; y++)
 		for(int x = -2; x <= 2; x++) {
 			vec2 g = mg + vec2(float(x), float(y));
 			vec2 point = random2(mod(i_st + g, scale));
-			point += 0.5 + 0.5 * sin(time + TAU * point);
+			point = 0.5 + 0.5 * sin(time + TAU * point);
 		
 			vec2 r = g + point - f_st;
 			if(dot(mr - r, mr - r) > .000001)
