@@ -9,7 +9,11 @@ if(PROJECT.active && !PROJECT.safeMode) { #region
 	
 	try {
 		if(PANEL_MAIN != 0) PANEL_MAIN.step();
-		array_foreach(PROJECT.nodeArray, function(_node) { if(!_node.active) return; _node.triggerCheck(); _node.step(); });
+		array_foreach(PROJECT.nodeArray, function(_node) { 
+			if(!_node.active) return; 
+			_node.triggerCheck(); 
+			_node.step(); 
+		});
 	} catch(e) {
 		noti_warning("Step error: " + exception_print(e));
 	}

@@ -1638,21 +1638,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(ds_list_empty(animator.values))
 				ds_list_add(animator.values, new valueKey(CURRENT_FRAME, animator.getValue(), animator));
 			animator.values[| 0].time = CURRENT_FRAME;
+			animator.updateKeyMap();
 			
 			for( var i = 0, n = array_length(animators); i < n; i++ ) {
 				if(ds_list_empty(animators[i].values))
 					ds_list_add(animators[i].values, new valueKey(CURRENT_FRAME, animators[i].getValue(), animators[i]));
 				animators[i].values[| 0].time = CURRENT_FRAME;
+				animators[i].updateKeyMap();
 			}
 		} else {
 			var _val = animator.getValue();
 			ds_list_clear(animator.values);
 			animator.values[| 0] = new valueKey(0, _val, animator);
+			animator.updateKeyMap();
 			
 			for( var i = 0, n = array_length(animators); i < n; i++ ) {
 				var _val = animators[i].getValue();
 				ds_list_clear(animators[i].values);
 				animators[i].values[| 0] = new valueKey(0, _val, animators[i]);
+				animators[i].updateKeyMap();
 			}
 		}
 		

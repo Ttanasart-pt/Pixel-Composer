@@ -10,15 +10,6 @@ enum RENDER_TYPE {
 	global.FLAG.render  = 0;
 	global.FLAG.renderTime = false;
 	
-	global.group_io = [ 
-		"Node_Group_Input",				"Node_Group_Output", 
-		"Node_Feedback_Input", 			"Node_Feedback_Output", 
-		"Node_Iterator_Input", 			"Node_Iterator_Output", 
-		"Node_Iterator_Each_Input", 	"Node_Iterator_Each_Output", 
-		"Node_Iterator_Filter_Input", 	"Node_Iterator_Filter_Output",
-		"Node_Tunnel_In",				"Node_Tunnel_Out"
-	];
-	
 	#macro RENDER_ALL_REORDER	UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
 	#macro RENDER_ALL									    UPDATE |= RENDER_TYPE.full;
 	#macro RENDER_PARTIAL								    UPDATE |= RENDER_TYPE.partial;
@@ -133,7 +124,7 @@ function __nodeIsRenderLeaf(_node) { #region
 	if(is_undefined(_node))									 { LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); return false; }
 	if(!is_instanceof(_node, Node))							 { LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); return false; }
 			
-	if(array_exists(global.group_io, instanceof(_node)))	 { LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); return false; }
+	if(_node.is_group_io)									 { LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); return false; }
 			
 	if(!_node.active)										 { LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); return false; }
 	if(!_node.isRenderActive())								 { LOG_IF(global.FLAG.render == 1, $"Skip render inactive  [{_node.internalName}]"); return false; }
@@ -282,10 +273,7 @@ function RenderList(list, skipInLoop = true) { #region
 			if(!is_instanceof(_node, Node))	{ LOG_IF(global.FLAG.render == 1, $"Skip non-node  {_node}"); continue; }
 			_node.render_time = 0;
 			
-			if(array_exists(global.group_io, instanceof(_node))) {
-				LOG_IF(global.FLAG.render == 1, $"Skip group IO {_node.internalName}");
-				continue;
-			}
+			if(_node.is_group_io)			{	LOG_IF(global.FLAG.render == 1, $"Skip group IO {_node.internalName}"); continue; }
 			
 			if(!_node.active)			       { LOG_IF(global.FLAG.render == 1, $"Skip inactive         {_node.internalName}"); continue; }
 			if(!_node.isRenderActive())        { LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive {_node.internalName}"); continue; }

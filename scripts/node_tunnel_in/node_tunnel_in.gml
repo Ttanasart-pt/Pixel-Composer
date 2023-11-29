@@ -2,6 +2,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Tunnel In";
 	previewable = false;
 	color = COLORS.node_blend_tunnel;
+	is_group_io = true;
 	
 	w = 96;
 	

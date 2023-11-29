@@ -1,7 +1,8 @@
 function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Tunnel Out";
-	previewable = false;
 	color = COLORS.node_blend_tunnel;
+	previewable = false;
+	is_group_io = true;
 	
 	w = 96;
 	

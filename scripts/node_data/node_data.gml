@@ -196,7 +196,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		updated			 = false;
 		passiveDynamic   = false;
 		topoSorted		 = false;
-		temp_surface    = [];
+		temp_surface     = [];
+		
+		is_group_io = false;
 	#endregion
 	
 	#region ---- timeline ----

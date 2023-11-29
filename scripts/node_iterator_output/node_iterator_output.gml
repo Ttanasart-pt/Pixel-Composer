@@ -1,6 +1,7 @@
 function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y, _group) constructor {
 	name  = "Loop Output";
 	color = COLORS.node_blend_loop;
+	is_group_io = true;
 	
 	w = 96;
 	h = 32 + 24 * 2;

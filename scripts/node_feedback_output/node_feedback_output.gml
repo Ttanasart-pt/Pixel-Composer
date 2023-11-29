@@ -1,6 +1,7 @@
 function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y, _group) constructor {
 	name  = "Feedback Output";
 	color = COLORS.node_blend_feedback;
+	is_group_io = true;
 	
 	w = 96;
 	h = 32 + 24 * 2;
