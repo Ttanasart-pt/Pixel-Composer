@@ -61,7 +61,7 @@ output.color = surfaceColor;")
 	input_display_list = [ 2, 
 		["Shader",		false], 1,
 		["Arguments",	false], argument_renderer,
-		["Values",		false], 
+		["Values",		 true], 
 	];
 
 	setIsDynamicInput(3, false);
@@ -170,6 +170,10 @@ output.color = surfaceColor;")
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { refreshShader(); }
+	
+	static step = function() { #region
+		argument_renderer.showValue = input_display_list[5][1];
+	} #endregion
 	
 	static refreshShader = function() { #region
 		var vs = getInputData(0);

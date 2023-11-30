@@ -1,4 +1,5 @@
 /// @description init
+global.__debug_runner++;
 global.cache_call = 0;
 global.cache_hit  = 0;
 

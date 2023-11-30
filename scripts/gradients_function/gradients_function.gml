@@ -52,25 +52,28 @@ function gradientObject(color = c_black) constructor { #region
 	} #endregion
 	
 	static eval = function(position) { #region
-		if(array_length(keys) == 0) return c_black;
-		if(array_length(keys) == 1) return keys[0].value;
+		var _len = array_length(keys);
+		if(_len == 0) return c_black;
+		if(_len == 1) return keys[0].value;
 	
-		for(var i = 0; i < array_length(keys); i++) {
+		if(position <= keys[0].time)        return keys[0].value;
+		if(position >= keys[_len - 1].time) return keys[_len - 1].value;
+		
+		var _pkey = keys[0];
+		
+		for(var i = 1; i < _len; i++) {
 			var _key = keys[i];
 			if(_key.time < position) continue;
 			if(_key.time == position) return keys[i].value;
-		
-			if(i == 0) //before first color
-				return keys[0].value;
-		
-			var c0 = keys[i - 1].value;
+			
 			if(type == GRADIENT_INTER.smooth) {
-				var rat = (position - keys[i - 1].time) / (keys[i].time - keys[i - 1].time);
-				var c1 = keys[i].value;
-				return merge_color(c0, c1, rat);
+				var rat = (position - _pkey.time) / (_key.time - _pkey.time);
+				return merge_color(_pkey.value, _key.value, rat);
 			} else if(type == GRADIENT_INTER.none) {
-				return c0;
+				return _pkey.value;
 			}
+			
+			_pkey = _key;
 		}
 	
 		return keys[array_length(keys) - 1].value; //after last color

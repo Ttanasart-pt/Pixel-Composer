@@ -219,7 +219,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getNextNodesInternal = function() { #region //get node inside the group
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from group");
+		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from group: {INAME}");
 		
 		var nodes = [];
 		if(isRenderActive()) {

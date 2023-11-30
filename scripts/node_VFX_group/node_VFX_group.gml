@@ -53,8 +53,13 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 		for( var i = 0; i < TOTAL_FRAMES; i++ )
 		for( var j = 0, m = ds_list_size(topoList); j < m; j++ ) {
 			var node = topoList[| j];
-			if(is_instanceof(node, Node_VFX_Renderer_Output) ||
-			   is_instanceof(node, Node_VFX_Renderer)) continue;
+			var _ins = instanceof(node);
+			
+			if(!string_pos("Node_VFX", _ins)) 
+				continue;
+			
+			if(_ins == "Node_VFX_Renderer" || _ins == "Node_VFX_Renderer_Output") 
+				continue;
 			
 			node.doUpdate(i);
 		}

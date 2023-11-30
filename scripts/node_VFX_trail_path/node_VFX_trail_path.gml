@@ -46,16 +46,18 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _x, _y;
 		
 		var line = lines[_ind];
-		var _st  = _rat * (lineLength[_ind] - 1);
+		var _len = lineLength[_ind] - 1;
+		var _st  = _rat * _len;
+		var _fl  = floor(_st);
+		var _fr  = frac(_st);
+				   
+		_p0 = line[clamp(_fl + 0, 0, _len)];
+		_p1 = line[clamp(_fl + 1, 0, _len)];
 		
-		_p0 = line[clamp(floor(_st) + 0, 0, array_length(line) - 1)];
-		_p1 = line[clamp(floor(_st) + 1, 0, array_length(line) - 1)];
+		if(!is_array(_p0) || !is_array(_p1)) return out;
 		
-		if(!is_array(_p0)) return out;
-		if(!is_array(_p1)) return out;
-		
-		out.x = lerp(_p0[0], _p1[0], frac(_st));
-		out.y = lerp(_p0[1], _p1[1], frac(_st));
+		out.x = lerp(_p0[0], _p1[0], _fr);
+		out.y = lerp(_p0[1], _p1[1], _fr);
 		
 		return out;
 	} #endregion
@@ -83,13 +85,16 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _life = getInputData(1); _life = max(_life, 1);
 		var _colr = getInputData(2);
 		
-		lines      = [];
-		length     = [];
-		lengthAcc  = [];
-		lineLength = [];
-		lineData   = [];
+		var _totlLen = array_length(_vfxs);
+		lines      = array_verify(lines,      _totlLen);
+		length     = array_verify(length,     _totlLen);
+		lengthAcc  = array_verify(lengthAcc,  _totlLen);
+		lineLength = array_verify(lineLength, _totlLen);
+		lineData   = array_verify(lineData,   _totlLen);
 		
-		for( var i = 0; i < array_length(_vfxs); i++ ) {
+		var _len = 0;
+		
+		for( var i = 0; i < _totlLen; i++ ) {
 			var _vfx = _vfxs[i];
 			
 			var _posx = _vfx.x_history;
@@ -99,14 +104,13 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _trail_st  = max(1, _vfx.trailLife - _life);
 			var _trail_len = _trail_ed - _trail_st;
 			
-			//if(_vfx.life_total > 0) print($"{_vfx.active} | {_vfx.seed} : {_vfx.trailLife}")
 			if(_trail_len <= 0) continue;
 			
 			var _lngh = 0;
 			var _ox   = _posx[_trail_st], _nx;
 			var _oy   = _posy[_trail_st], _ny;
-			var _line = array_create(_trail_len);
-			var _lenA = array_create(_trail_len - 1);
+			var _line = array_verify(lines[_len],     _trail_len);
+			var _lenA = array_verify(lengthAcc[_len], _trail_len - 1);
 			_line[0]  = [ _ox, _oy ];
 			
 			for( var j = 0; j <= _trail_len; j++ ) {
@@ -127,16 +131,19 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				_ox = _nx;
 			}
 			
-			array_push(lines,      _line);
-			array_push(length,     _lngh);
-			array_push(lengthAcc,  _lenA);
-			array_push(lineLength, array_length(_line));
-			
-			if(_colr)
-			array_push(lineData, {
-				color: _vfx.blend,
-			});
+			lines[_len]      = _line;
+			length[_len]     = _lngh;
+			lengthAcc[_len]  = _lenA;
+			lineLength[_len] = _trail_len;
+			lineData[_len]   = { color: _vfx.blend, };
+			_len++;
 		}
+		
+		array_resize(lines,      _len);
+		array_resize(length,     _len);
+		array_resize(lengthAcc,  _len);
+		array_resize(lineLength, _len);
+		array_resize(lineData,   _len);
 		
 		outputs[| 0].setValue(self);
 	} #endregion

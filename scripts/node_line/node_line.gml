@@ -162,7 +162,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		if(CURRENT_FRAME == 0 || inputs[| 11].is_anim)
 			ds_map_clear(widthMap);
-			
+		
+		var __debug_timer = get_timer();
+		
 		var _rangeMin = min(_ratio[0], _ratio[1]);
 		var _rangeMax = max(_ratio[0], _ratio[1]);
 		if(_rangeMax == 1) _rangeMax = 0.99999;
@@ -191,23 +193,25 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _ow, _nw, _oa, _na, _oc, _nc, _owg, _nwg;
 		var _pathData = [];
 		
-		lines = [];
-			
 		if(_use_path) { #region
 			var lineLen = 1;
 			if(struct_has(_pat, "getLineCount"))
 				lineLen = _pat.getLineCount();
 			if(struct_has(_pat, "getPathData"))
 				_pathData = _pat.getPathData();
-				
+			
+			lines = array_verify(lines, lineLen);
+			var _lineAmo = 0;
+			
 			if(_rtMax > 0) 
 			for( var i = 0; i < lineLen; i++ ) {
 				var _useDistance = _fixL && struct_has(_pat, "getLength");
 				var _pathLength  = _useDistance? _pat.getLength(i) : 1;
 				if(_pathLength == 0) continue;
 					
-				var _segLength   = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
-				var _segIndex    = 0;
+				var _segLength    = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
+				var _segLengthAmo = array_length(_segLength);
+				var _segIndex     = 0;
 				
 				var _pathStr = _rtStr;
 				var _pathEnd = _rtMax;
@@ -223,7 +227,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _prog_next  = 0;
 				var _prog		= _prog_curr + 1;	//Record previous position to delete from _total
 				var _prog_total	= 0;				//Record how far the pointer have moved so far
-				var points		= [];
+				var points		= is_array(lines[i])? lines[i] : [];
+				var pointArrLen = array_length(points);
+				var pointAmo    = 0;
 				var wght;
 				var _pathPng;
 					
@@ -240,13 +246,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				while(_total >= 0) {
 					if(_useDistance) {
-						var segmentLength = array_safe_get(_segLength, _segIndex, 99999);
+						var segmentLength = _segIndex < _segLengthAmo? _segLength[_segIndex] : 99999;
 							
 						_prog_next = _prog_curr % _pathLength; //Wrap overflow path
 						_prog_next = min(_prog_curr + _stepLen, _pathLength, segmentLength);
 							
 						if(_prog_next == segmentLength)
-							_segIndex = (_segIndex + 1) % array_length(_segLength);
+							_segIndex = (_segIndex + 1) % _segLengthAmo;
 						_pathPng = _ratInv? _pathLength - _prog_curr : _prog_curr;
 					} else {
 						if(_prog_curr >= 1) //Wrap overflow path
@@ -277,14 +283,28 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_ny   += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
 					}
 						
-					if(_prog_total >= _pathStr) //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
-						array_push(points, { 
-							x: _nx, 
-							y: _ny, 
-							prog: _prog_total / _pathEnd, 
-							progCrop: _prog_curr / _pathLength, 
-							weight: wght 
-						});
+					if(_prog_total >= _pathStr) { //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
+						var _pntData;
+						if(pointAmo < pointArrLen && is_struct(points[pointAmo])) {
+							_pntData          = points[pointAmo];
+							_pntData.x        = _nx;
+							_pntData.y        = _ny; 
+							_pntData.prog     = _prog_total / _pathEnd;
+							_pntData.progCrop = _prog_curr / _pathLength;
+							_pntData.weight   = wght;
+						} else {
+							_pntData = { 
+								x:        _nx, 
+								y:        _ny, 
+								prog:     _prog_total / _pathEnd, 
+								progCrop: _prog_curr / _pathLength, 
+								weight:   wght 
+							}
+							points[pointAmo] = _pntData;
+						} 
+						
+						pointAmo++;
+					}
 					
 					if(_prog_next > _prog_curr) {
 						_prog_total += _prog_next - _prog_curr;
@@ -300,8 +320,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_total_prev = _total;
 				}
 				
-				array_push(lines, points);
+				array_resize(points, pointAmo);
+				lines[_lineAmo++] = points;
 			}
+			
+			array_resize(lines, _lineAmo);
 		#endregion
 		} else { #region
 			var x0, y0, x1, y1;
@@ -354,7 +377,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(_bg) draw_clear_alpha(0, 1);
 			else	DRAW_CLEAR
 			
-			if(_useTex) {
+			if(_useTex) { #region
 				var tex = surface_get_texture(_tex);
 				
 				shader_set(sh_draw_mapping);
@@ -363,7 +386,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				shader_set_f("scale",    _texSca);
 				
 				shader_set_interpolation(_tex);
-			}
+			} #endregion
 			
 			for( var i = 0, n = array_length(lines); i < n; i++ ) {
 				var points = lines[i];
@@ -380,15 +403,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				for( var j = 0; j < array_length(points); j++ ) {
 					var p0   = points[j];
-					var _nx  = p0.x;
-					var _ny  = p0.y;
+					var _nx  = p0.x - 0.5 * _1px;
+					var _ny  = p0.y - 0.5 * _1px;
 					var prog = p0.prog;
 					var prgc = p0.progCrop;
-					
-					if(_1px) {
-						_nx = _nx - 0.5;
-						_ny = _ny - 0.5;
-					}
+					var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 0;
 					
 					var widProg = value_snap_real(_widap? prog : prgc, 0.01);
 					
@@ -400,11 +419,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					_nc = colorMultiply(_col_base, _color.eval(_colP? prog : prgc));
 					
-					if(_cap) {
+					if(_cap) { #region
 						if(j == 1) {
 							draw_set_color(_oc);
 							
-							_d = point_direction(_ox, _oy, _nx, _ny) + 180;
+							_d = _dir + 180;
 							draw_circle_angle(_ox, _oy, _ow / 2, _d - 90, _d, _capP);
 							draw_circle_angle(_ox, _oy, _ow / 2, _d, _d + 90, _capP);
 						}
@@ -412,31 +431,28 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						if(j == array_length(points) - 1) {
 							draw_set_color(_nc);
 							
-							_d = point_direction(_ox, _oy, _nx, _ny);
+							_d = _dir;
 							draw_circle_angle(_nx, _ny, _nw / 2, _d - 90, _d, _capP);
 							draw_circle_angle(_nx, _ny, _nw / 2, _d, _d + 90, _capP);
 						}
-					}
+					} #endregion
 					
-					if(_1px) {
+					if(_1px) { #region
 						if(j) {
 							var dst = point_distance(_ox, _oy, _nx, _ny);
 							if(dst <= 1 && i < array_length(points) - 1) continue;
-							
-							//_nc = make_color_hsv(random(255), 255, 255);
-							//_oc = _nc;
-							//line_bresenham(pxs, _ox, _oy, _nx, _ny, _oc, _nc);
 							draw_line_color(_ox, _oy, _nx, _ny, _oc, _nc);
 						}
 						
 						_ox = _nx;
 						_oy = _ny;
 						_oc = _nc;
-					} else {
+					#endregion
+					} else { #region
 						if(j) {
-							var _nd0 = point_direction(_ox, _oy, _nx, _ny);
+							var _nd0 = _dir;
 							var _nd1 = _nd0;
-					
+							
 							if(j < array_length(points) - 1) {
 								var p2 = points[j + 1];
 								var _nnx = p2.x;
@@ -445,7 +461,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								_nd1 = point_direction(_nx, _ny, _nnx, _nny);
 								_nd = _nd0 + angle_difference(_nd1, _nd0) / 2;
 							} else 
-								_nd = point_direction(_ox, _oy, _nx, _ny);
+								_nd = _nd0;
 							
 							if(_useTex) {
 								var _len = array_length(points) - 1;
@@ -479,6 +495,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_ow = _nw;
 						_oc = _nc;
 					}
+				#endregion
 				}
 				
 				draw_primitive_end();
@@ -487,6 +504,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(_useTex) shader_reset();
 		surface_reset_target();
 		#endregion
+		
+		//print($"Processing line {global.__debug_runner} = {get_timer() - __debug_timer} ms");
+		//printCallStack();
 		
 		return _outSurf;
 	}

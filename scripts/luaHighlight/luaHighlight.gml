@@ -8,7 +8,7 @@ var reserved = ["and", "break", "do", "else", "elseif", "end", "false",
 for( var i = 0, n = array_length(reserved); i < n; i++ )
 	global.lua_reserved[? reserved[i]] = 1;
 
-global.CODE_BREAK_TOKEN = [" ", "(", ")", "[", "]", "{", "}", ",", ";", "+", "-", "*", "/", "^", "=", "--"];
+global.CODE_BREAK_TOKEN = [" ", "(", ")", "[", "]", "{", "}", ".", ",", ";", "+", "-", "*", "/", "^", "=", "--"];
 
 function lua_token_splice(str) {
 	var st = [];

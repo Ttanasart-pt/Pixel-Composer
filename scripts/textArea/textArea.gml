@@ -103,21 +103,22 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	} #endregion
 	
 	static onModified = function() { #region
+		autocomplete_delay = 0;
+		o_dialog_textbox_autocomplete.deactivate(self);
+		o_dialog_textbox_function_guide.deactivate(self);
+		
 		if(!isCodeFormat()) return;
 		if(autocomplete_server == noone) return;
-		if(!use_autocomplete) {
-			o_dialog_textbox_autocomplete.deactivate(self);
-			return;
-		}
+		if(!use_autocomplete) return;
 		
 		var crop = string_copy(_input_text, 1, cursor);
 		var slp  = string_splice(crop, [" ", "(", "[", "{", ",", "\n"]);
 		var pmt  = array_safe_get(slp, -1,, ARRAY_OVERFLOW.loop);
-					
+		
 		var localParams = [];
 		if(parser_server != noone)
 			localParams = parser_server(crop, autocomplete_object);
-					
+		
 		var data = autocomplete_server(pmt, localParams, autocomplete_context);
 		o_dialog_textbox_autocomplete.data   = data;
 		if(array_length(data)) {
@@ -160,8 +161,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			o_dialog_textbox_function_guide.activate(self);
 			o_dialog_textbox_function_guide.prompt   = guide;
 			o_dialog_textbox_function_guide.index    = amo;
-		} else 
-			o_dialog_textbox_function_guide.deactivate(self);
+		}
 	} #endregion
 	
 	static keyboardEnter = function() { #region
@@ -537,7 +537,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				undo_delay = 0;
 			}
 			onModified();
-			autocomplete_delay = 0;
 		}
 		
 		if(auto_update && keyboard_check_pressed(vk_anykey))
@@ -565,6 +564,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				}
 			}
 			
+			autocomplete_delay = 0;
+			o_dialog_textbox_autocomplete.deactivate(self);
+			o_dialog_textbox_function_guide.deactivate(self);
 		} else if(keyboard_check_pressed(vk_end)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
@@ -576,6 +578,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			while(string_char_at(_input_text, cursor + 1) != "\n" && cursor < string_length(_input_text)) {
 				cursor++;
 			}
+			
+			autocomplete_delay = 0;
+			o_dialog_textbox_autocomplete.deactivate(self);
+			o_dialog_textbox_function_guide.deactivate(self);
 		} else if(keyboard_check_pressed(vk_escape) && o_dialog_textbox_autocomplete.textbox != self) {
 			_input_text = _last_value;
 			cut_line();

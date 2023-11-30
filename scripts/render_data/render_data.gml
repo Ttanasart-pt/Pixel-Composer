@@ -23,9 +23,9 @@ function __nodeLeafList(_list) { #region
 		var _node = _list[| i];
 		if(!_node.active) continue;
 		if(!_node.isRenderActive()) continue;
+		if(!_node.isLeaf()) continue;
 		
-		var _startNode = _node.isRenderable();
-		if(_startNode) {
+		if(_node.isRenderable()) {
 			array_push(nodes, _node);
 			array_push(nodeNames, _node.internalName);
 		}
@@ -195,7 +195,7 @@ function Render(partial = false, runAction = false) { #region
 			rendering = RENDER_QUEUE.dequeue();
 			var renderable = rendering.isRenderable();
 			
-			LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"}");
+			LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"} ({rendering.rendered})");
 			
 			if(renderable) {
 				var _render_pt = get_timer();
@@ -204,7 +204,8 @@ function Render(partial = false, runAction = false) { #region
 				
 				var nextNodes = rendering.getNextNodes();
 				for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
-					RENDER_QUEUE.enqueue(nextNodes[i]);
+					if(nextNodes[i].isRenderable())
+						RENDER_QUEUE.enqueue(nextNodes[i]);
 				}
 				
 				if(runAction && rendering.hasInspector1Update())
