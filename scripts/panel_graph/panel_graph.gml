@@ -23,6 +23,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			highlight     : false,
 		}
 		
+		connection_param = {};
+		
 		bg_color = c_black;
 	#endregion
 	
@@ -717,7 +719,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	function drawNodes() { #region
 		if(selection_block-- > 0) return;
-		//print("==== DRAW NODES ====");
+		
 		display_parameter.highlight = 
 			!array_empty(nodes_selecting) && (
 				(PREFERENCES.connection_line_highlight == 1 && key_mod_press(ALT)) || 
@@ -728,7 +730,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var gr_y = graph_y * graph_s;
 		
 		var log = false;
-		var t = current_time;
+		var t   = get_timer();
+		printIf(log, "============ Draw start ============");
 		
 		var frame_hovering = noone;
 		
@@ -736,7 +739,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			nodes_list[| i].cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
 			nodes_list[| i].preDraw(gr_x, gr_y, graph_s, gr_x, gr_y);
 		}
-		printIf(log, "Predraw time: " + string(current_time - t)); t = current_time;
+		printIf(log, $"Predraw time: {get_timer() - t}"); t = get_timer();
 		
 		#region draw frame
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
@@ -744,7 +747,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					frame_hovering = nodes_list[| i];
 			}
 		#endregion
-		printIf(log, "Frame draw time: " + string(current_time - t)); t = current_time;
+		printIf(log, $"Frame draw time: {get_timer() - t}"); t = get_timer();
 		
 		#region hover
 			node_hovering = noone;
@@ -767,7 +770,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			if(node_hovering) node_hovering.onDrawHover(gr_x, gr_y, mx, my, graph_s);
 		#endregion
-		printIf(log, "Hover time: " + string(current_time - t)); t = current_time;
+		printIf(log, $"Hover time: {get_timer() - t}"); t = get_timer();
 		
 		#region selection
 			if(mouse_on_graph && pHOVER) {
@@ -878,7 +881,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				} #endregion
 			}
 		#endregion
-		printIf(log, "Node selection time: " + string(current_time - t)); t = current_time;
+		printIf(log, $"Node selection time: {get_timer() - t}"); t = get_timer();
 		
 		#region draw active
 			for(var i = 0; i < array_length(nodes_selecting); i++) {
@@ -887,79 +890,78 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				_node.drawActive(gr_x, gr_y, graph_s);
 			}
 		#endregion
-		printIf(log, "Draw active: " + string(current_time - t)); t = current_time;
+		printIf(log, $"Draw active: {get_timer() - t}"); t = get_timer();
 		
-		var aa = min(8192 / w, 8192 / h, PREFERENCES.connection_line_aa);
-		connection_surface    = surface_verify(connection_surface, w * aa, h * aa);
-		connection_surface_aa = surface_verify(connection_surface_aa, w, h);
-		surface_set_target(connection_surface);
-		DRAW_CLEAR
+		#region draw connections
+			var aa = min(8192 / w, 8192 / h, PREFERENCES.connection_line_aa);
+			connection_surface    = surface_verify(connection_surface, w * aa, h * aa);
+			connection_surface_aa = surface_verify(connection_surface_aa, w, h);
+			surface_set_target(connection_surface);
+			DRAW_CLEAR
 		
-		var hov = noone;
-		var hoverable = !bool(node_dragging) && pHOVER;
+			var hov = noone;
+			var hoverable = !bool(node_dragging) && pHOVER;
 		
-		var _params = {
-			x  : gr_x,
-			y  : gr_y,
-			s  : graph_s,
-			mx : mx,
-			my : my,
-			aa : aa,
-			bg : bg_color,
-			minx : -64,
-			miny : -64,
-			maxx : w + 64,
-			maxy : h + 64,
-			active    : hoverable,
-			max_layer : ds_list_size(nodes_list),
-			highlight : display_parameter.highlight,
-		};
+			connection_param.x         = gr_x;
+			connection_param.y         = gr_y;
+			connection_param.s         = graph_s;
+			connection_param.mx        = mx;
+			connection_param.my        = my;
+			connection_param.aa        = aa;
+			connection_param.bg        = bg_color;
+			connection_param.minx      = -64;
+			connection_param.miny      = -64;
+			connection_param.maxx      = w + 64;
+			connection_param.maxy      = h + 64;
+			connection_param.active    = hoverable;
+			connection_param.max_layer = ds_list_size(nodes_list);
+			connection_param.highlight = display_parameter.highlight;
 		
-		for(var i = 0; i < ds_list_size(nodes_list); i++) {
-			_params.cur_layer = i + 1;
+			for(var i = 0; i < ds_list_size(nodes_list); i++) {
+				connection_param.cur_layer = i + 1;
 			
-			var _hov = nodes_list[| i].drawConnections(_params);
-			if(_hov != noone && is_struct(_hov)) hov = _hov;
-		}
+				var _hov = nodes_list[| i].drawConnections(connection_param);
+				if(_hov != noone && is_struct(_hov)) hov = _hov;
+			}
 		
-		if(value_dragging && connection_draw_mouse != noone) {
-			var _cmx = connection_draw_mouse[0];
-			var _cmy = connection_draw_mouse[1];
-			var _cmt = connection_draw_target;
+			if(value_dragging && connection_draw_mouse != noone) {
+				var _cmx = connection_draw_mouse[0];
+				var _cmy = connection_draw_mouse[1];
+				var _cmt = connection_draw_target;
 		
-			if(array_empty(value_draggings))
-				value_dragging.drawConnectionMouse(_params, _cmx, _cmy, _cmt);
-			else {
-				var _stIndex = array_find(value_draggings, value_dragging);
+				if(array_empty(value_draggings))
+					value_dragging.drawConnectionMouse(connection_param, _cmx, _cmy, _cmt);
+				else {
+					var _stIndex = array_find(value_draggings, value_dragging);
 				
-				for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
-					var _dmx = _cmx;
-					var _dmy = value_draggings[i].connect_type == JUNCTION_CONNECT.output? _cmy + (i - _stIndex) * 24 * graph_s : _cmy;
+					for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
+						var _dmx = _cmx;
+						var _dmy = value_draggings[i].connect_type == JUNCTION_CONNECT.output? _cmy + (i - _stIndex) * 24 * graph_s : _cmy;
 					
-					value_draggings[i].drawConnectionMouse(_params, _dmx, _dmy, _cmt);
+						value_draggings[i].drawConnectionMouse(connection_param, _dmx, _dmy, _cmt);
+					}
 				}
 			}
-		}
 			
-		printIf(log, "Draw connection: " + string(current_time - t)); t = current_time;
+			surface_reset_target();
 		
-		surface_reset_target();
+			surface_set_shader(connection_surface_aa, sh_downsample);
+				shader_set_f("down", aa);
+				shader_set_dim("dimension", connection_surface);
+				draw_surface(connection_surface, 0, 0);
+			surface_reset_shader();
 		
-		surface_set_shader(connection_surface_aa, sh_downsample);
-			shader_set_f("down", aa);
-			shader_set_dim("dimension", connection_surface);
-			draw_surface(connection_surface, 0, 0);
-		surface_reset_shader();
+			BLEND_ALPHA_MULP
+			draw_surface(connection_surface_aa, 0, 0);
+			BLEND_NORMAL
 		
-		BLEND_ALPHA_MULP
-		draw_surface(connection_surface_aa, 0, 0);
-		BLEND_NORMAL
-		
-		junction_hovering = (node_hovering == noone && !is_struct(node_hovering))? hov : noone;
-		value_focus = noone;
+			junction_hovering = (node_hovering == noone && !is_struct(node_hovering))? hov : noone;
+			value_focus = noone;
+		#endregion
+		printIf(log, $"Draw connection: {get_timer() - t}"); t = get_timer();
 		
 		#region draw node
-			var t = current_time;
+			var t = get_timer();
 			for(var i = 0; i < ds_list_size(nodes_list); i++)
 				nodes_list[| i].onDrawNodeBehind(gr_x, gr_y, mx, my, graph_s);
 			
@@ -977,9 +979,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++)
 				nodes_list[| i].drawBadge(gr_x, gr_y, graph_s);	
-			
-			printIf(log, "Draw node: " + string(current_time - t)); t = current_time;
 		#endregion
+		printIf(log, $"Draw node: {get_timer() - t}"); t = get_timer();
 		
 		#region dragging
 			if(mouse_press(mb_left))
@@ -1034,11 +1035,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					}
 				}
 			}
-			printIf(log, "Drag node time : " + string(current_time - t)); t = current_time;
 			
 			if(mouse_release(mb_left))
 				node_dragging = noone;
 		#endregion
+		printIf(log, $"Drag node time : {get_timer() - t}"); t = get_timer();
 		
 		if(mouse_on_graph && pFOCUS) { #region
 			var _node = getFocusingNode();
@@ -1125,8 +1126,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				drag_locking = false;
 			}
 		#endregion
-		
-		printIf(log, "Draw selection frame : " + string(current_time - t)); t = current_time;
+		printIf(log, $"Draw selection frame : {get_timer() - t}"); t = get_timer();
 	} #endregion
 	
 	function drawJunctionConnect() { #region

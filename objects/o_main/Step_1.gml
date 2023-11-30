@@ -89,7 +89,7 @@ _HOVERING_ELEMENT = noone;
 					if(CURRENT_FRAME == 0)
 						ResetAllNodesRender();
 					Render(true);
-				
+					
 					__addon_postAnim();
 				}
 				PROJECT.animator.frame_progress = false;

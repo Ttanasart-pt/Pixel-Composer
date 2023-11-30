@@ -146,6 +146,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		inputs_data		  = [];
 		input_hash		  = "";
 		input_hash_raw	  = "";
+		
+		inputs_amount  = 0;
+		in_cache_len   = 0;
+		inputs_index   = [];
+		outputs_amount = 0;
+		outputs_index  = [];
+		out_cache_len  = 0;
 	#endregion
 	
 	#region --- attributes ----
@@ -292,6 +299,23 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(output_display_list == -1)
 			return index;
 		return output_display_list[index];
+	} #endregion
+	
+	static updateIO = function() { #region
+		inputs_amount = (input_display_list == -1 || !use_display_list)? ds_list_size(inputs) : array_length(input_display_list);
+		inputs_index  = array_create(inputs_amount);
+		var _i = 0;
+		for( var i = 0; i < inputs_amount; i++ ) {
+			var _input = getInputJunctionIndex(i);
+			if(_input == noone) continue;
+			
+			inputs_index[_i++] = _input;
+		}
+		inputs_amount = _i;
+		array_resize(inputs_index, inputs_amount);
+		
+		outputs_amount = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
+		outputs_index  = array_create_ext(outputs_amount, function(index) { return getOutputJunctionIndex(index); });
 	} #endregion
 	
 	static setHeight = function() { #region
@@ -796,26 +820,28 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		updatedOutTrigger.x = xx + w * _s;
 		updatedOutTrigger.y = yy + 10;
 		
-		var inamo = (input_display_list == -1 || !use_display_list)? ds_list_size(inputs) : array_length(input_display_list);
+		if(in_cache_len != ds_list_size(inputs) || out_cache_len != ds_list_size(outputs)) {
+			updateIO();
+			
+			in_cache_len  = ds_list_size(inputs);
+			out_cache_len = ds_list_size(outputs);
+		}
+			
 		var _iny = yy + ui(junction_draw_pad_y) * _s;
 		
-		for(var i = 0; i < inamo; i++) {
-			var idx = getInputJunctionIndex(i);
-			if(idx == noone) continue;
+		for(var i = 0; i < inputs_amount; i++) {
+			var idx = inputs_index[i];
+			jun = inputs[| idx];
 			
-			jun = ds_list_get(inputs, idx, noone);
-			if(jun == noone || is_undefined(jun)) continue;
 			jun.x = xx;
 			jun.y = _iny;
 			_iny += 24 * _s * jun.isVisible();
 		}
 		
-		var outamo = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
-		
-		 xx = xx + w * _s;
+		xx = xx + w * _s;
 		var _outy = yy + ui(junction_draw_pad_y) * _s;
-		for(var i = 0; i < outamo; i++) {
-			var idx = getOutputJunctionIndex(i);
+		for(var i = 0; i < outputs_amount; i++) {
+			var idx = outputs_index[i];
 			jun = outputs[| idx];
 			
 			jun.x = xx;
@@ -1014,7 +1040,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		var high = struct_try_get(params, "highlight", 0);
 		var bg   = struct_try_get(params, "bg", c_black);
-			
+		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun       = outputs[| i];
 			var connected = false;
@@ -1040,7 +1066,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(hasInspector1Update()) st = -1;
 		if(hasInspector2Update()) st = -2;
 		
-		var _inputs = [];
+		var _inputs = array_create(ds_list_size(inputs));
+		var _len    = 0;
+		
 		var drawLineIndex = 1;
 		for(var i = st; i < ds_list_size(inputs); i++) {
 			var jun;
@@ -1062,17 +1090,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!jun.value_from.node.active) continue;
 			if(!jun.isVisible()) continue;
 			
-			if(i >= 0) array_push(_inputs, jun);
+			if(i >= 0) _inputs[_len++] = jun;
 		}
 		
-		var len = array_length(_inputs);
-		
-		for( var i = 0; i < len; i++ )
-			_inputs[i].drawLineIndex = 1 + (i > len / 2? (len - 1 - i) : i) * 0.5;
-		
-		for( var i = 0, n = array_length(_inputs); i < n; i++ ) {
+		for( var i = 0; i < _len; i++ ) {
 			var jun = _inputs[i];
 			
+			jun.drawLineIndex = 1 + (i > _len / 2? (_len - 1 - i) : i) * 0.5;
 			var hov = jun.drawConnections(params);
 			if(hov) hovering = hov;
 		}

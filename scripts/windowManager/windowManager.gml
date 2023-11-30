@@ -168,12 +168,14 @@ function winManStep() { #region
 		}
 		
 		winMan_setRect(sx, sy, sw, sh);
+		
+		if(mouse_release(mb_left))
+			DISPLAY_REFRESH
 	}
 	
 	if(mouse_release(mb_left)) {
 		window_minimize_size = [ sw, sh ];
 		window_drag_status = 0;
-		DISPLAY_REFRESH
 	}
 } #endregion
 
