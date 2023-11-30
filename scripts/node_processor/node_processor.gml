@@ -45,8 +45,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _n  = _l[| _index];
 		var _in = output? _n.getValue() : getInputData(_index);
 		
-		//print($"Getting value {name} [{_index}, {_arr}]: {_n.isArray()} = {_in}");
-		if(!_n.isArray()) return _in;
+		//if(_index == 3) print($"Getting value {name} [{_index}, {_arr}]: {_n.isArray(_in)} = {_in}");
+		if(!_n.isArray(_in)) return _in;
 		
 		var _aIndex = _arr;
 		if(!is_array(_in)) return 0;

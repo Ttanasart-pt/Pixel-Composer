@@ -1512,7 +1512,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!is_array(def_val))
 			return val;
 			
-		if(isDynamicArray(display_type)) 
+		if(isDynamicArray()) 
 			return val;
 		
 		if(isArray(val))
@@ -1714,35 +1714,36 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static isArray = function(val = undefined) { #region
-		if(val == undefined) {
+		var _cac = val == undefined;
+		
+		if(_cac) {
 			if(cache_array[0]) return cache_array[1];
 			val = getValue();
+			cache_array[0] = true;
 		}
 		
-		cache_array[0] = true;
-		
-		if(!is_array(val)) { //Value is array
-			cache_array[1] = false;
-			return cache_array[1];
+		if(!is_array(val)) { //Value is scalar
+			if(_cac) cache_array[1] = false;
+			return false;
 		}
 		
 		if(array_depth == 0 && !typeArray(display_type)) { //Value is not an array by default, and no array depth enforced
-			cache_array[1] = true;
-			return cache_array[1];
+			if(_cac) cache_array[1] = true;
+			return false;
 		}
 		
 		var ar = val;
 		repeat(array_depth + typeArray(display_type)) { //Recursively get the first member of subarray to check if value has depth of "array_depth" or not
 			if(!is_array(ar) || !array_length(ar)) { //empty array
-				cache_array[1] = false;
-				return cache_array[1];
+				if(_cac) cache_array[1] = false;
+				return false;
 			}
 			
 			ar = ar[0];
 		}
 		
-		cache_array[1] = is_array(ar);
-		return cache_array[1];
+		if(_cac) cache_array[1] = is_array(ar);
+		return is_array(ar);
 	} #endregion
 	
 	static arrayLength = function(val = undefined) { #region

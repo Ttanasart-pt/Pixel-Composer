@@ -21,10 +21,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 3] = nodeValue("Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector, { #region
 			side_button : new buttonAnchor(function(ind) { 
-				//var _dim = getDimension();
-				//var _pos = getSingleValue(2);
-				//var _anc = getSingleValue(3);
-				
 				switch(ind) {
 					case 0 : inputs[| 3].setValue([ 0.0, 0.0 ]); break;
 					case 1 : inputs[| 3].setValue([ 0.5, 0.0 ]); break;
@@ -146,6 +142,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _b = inputs[| 3].editWidget.side_button;
 		var _a = anc[0] * 2 + anc[1] * 20;
+		
 		switch(_a) {
 			case  0 : _b.index = 0; break;
 			case  1 : _b.index = 1; break;
