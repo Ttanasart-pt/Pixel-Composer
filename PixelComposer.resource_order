@@ -242,6 +242,7 @@
     {"name":"button","order":34,"path":"folders/widgets/button.yy",},
     {"name":"rotator","order":35,"path":"folders/widgets/rotator.yy",},
     {"name":"text","order":36,"path":"folders/widgets/text.yy",},
+    {"name":"MK effects","order":151,"path":"folders/nodes/icons/MK effects.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},
@@ -1226,6 +1227,7 @@
     {"name":"node_text","order":4,"path":"scripts/node_text/node_text.yy",},
     {"name":"panel_collection","order":3,"path":"scripts/panel_collection/panel_collection.yy",},
     {"name":"node_string_trim","order":4,"path":"scripts/node_string_trim/node_string_trim.yy",},
+    {"name":"node_mk_rain","order":1,"path":"scripts/node_mk_rain/node_mk_rain.yy",},
     {"name":"Obj_FirebaseFirestore_Collection_Query_OrderBy","order":13,"path":"objects/Obj_FirebaseFirestore_Collection_Query_OrderBy/Obj_FirebaseFirestore_Collection_Query_OrderBy.yy",},
     {"name":"d3d_material","order":9,"path":"scripts/d3d_material/d3d_material.yy",},
     {"name":"lerp_float","order":1,"path":"scripts/lerp_float/lerp_float.yy",},

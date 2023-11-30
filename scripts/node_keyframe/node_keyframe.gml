@@ -110,15 +110,20 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static updateKeyMap = function() { #region
 		if(!prop.is_anim && !LOADING && !APPENDING) return;
 		
-		if(array_length(key_map) != TOTAL_FRAMES)
+		if(ds_list_empty(values)) {
 			array_resize(key_map, TOTAL_FRAMES);
-		
-		if(ds_list_size(values) < 2) {
-			array_fill(key_map, 0, TOTAL_FRAMES, 0);
 			return;
 		}
 		
-		//print($"Update key map {prop.node.name} - {prop.name}");
+		var _len = max(TOTAL_FRAMES, values[| ds_list_size(values) - 1].time);
+		
+		if(array_length(key_map) != _len)
+			array_resize(key_map, _len);
+		
+		if(ds_list_size(values) < 2) {
+			array_fill(key_map, 0, _len, 0);
+			return;
+		}
 		
 		var _firstKey = values[| 0].time;
 		array_fill(key_map, 0, _firstKey, -1);
@@ -130,7 +135,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			_keyIndex = _k1;
 		}
 		
-		array_fill(key_map, _keyIndex, TOTAL_FRAMES, 999_999);
+		array_fill(key_map, _keyIndex, _len, 999_999);
 	} #endregion
 	
 	static interpolate = function(from, to, rat) { #region
@@ -250,7 +255,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
 		if(!prop.is_anim)				 return processType(values[| 0].value);
-		if(array_length(key_map) != TOTAL_FRAMES) updateKeyMap();
+		var _len = max(TOTAL_FRAMES, values[| ds_list_size(values) - 1].time);
+		if(array_length(key_map) != _len) updateKeyMap();
 		
 		var _time_first = prop.loop_range == -1? values[| 0].time : values[| ds_list_size(values) - 1 - prop.loop_range].time;
 		var _time_last  = values[| ds_list_size(values) - 1].time;
@@ -271,8 +277,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			}
 		} #endregion
 		
-		var _keyIndex = key_map[_time];
-		//print(_keyIndex);
+		var _keyIndex = _time >= _len? 999_999 : key_map[_time];
 		
 		if(_keyIndex == -1) { #region Before first key
 			if(prop.on_end == KEYFRAME_END.wrap) {

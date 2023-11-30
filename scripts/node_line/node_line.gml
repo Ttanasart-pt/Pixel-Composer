@@ -505,9 +505,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_reset_target();
 		#endregion
 		
-		//print($"Processing line {global.__debug_runner} = {get_timer() - __debug_timer} ms");
-		//printCallStack();
-		
 		return _outSurf;
 	}
 }

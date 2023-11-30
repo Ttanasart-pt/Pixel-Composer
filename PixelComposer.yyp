@@ -277,6 +277,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"button","folderPath":"folders/widgets/button.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"rotator","folderPath":"folders/widgets/rotator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/widgets/text.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"MK effects","folderPath":"folders/nodes/icons/MK effects.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
@@ -1805,6 +1806,7 @@
     {"id":{"name":"node_random","path":"scripts/node_random/node_random.yy",},},
     {"id":{"name":"Obj_FirebaseFirestore_Collection_Query_LessThan","path":"objects/Obj_FirebaseFirestore_Collection_Query_LessThan/Obj_FirebaseFirestore_Collection_Query_LessThan.yy",},},
     {"id":{"name":"sh_channel_A","path":"shaders/sh_channel_A/sh_channel_A.yy",},},
+    {"id":{"name":"s_node_mk_rain","path":"sprites/s_node_mk_rain/s_node_mk_rain.yy",},},
     {"id":{"name":"node_atlas","path":"scripts/node_atlas/node_atlas.yy",},},
     {"id":{"name":"sh_blend_sat","path":"shaders/sh_blend_sat/sh_blend_sat.yy",},},
     {"id":{"name":"s_node_feedback","path":"sprites/s_node_feedback/s_node_feedback.yy",},},
@@ -1924,6 +1926,7 @@
     {"id":{"name":"panel_collection","path":"scripts/panel_collection/panel_collection.yy",},},
     {"id":{"name":"contextMenu_controller","path":"scripts/contextMenu_controller/contextMenu_controller.yy",},},
     {"id":{"name":"node_string_trim","path":"scripts/node_string_trim/node_string_trim.yy",},},
+    {"id":{"name":"node_mk_rain","path":"scripts/node_mk_rain/node_mk_rain.yy",},},
     {"id":{"name":"Obj_FirebaseFirestore_Collection_Query_OrderBy","path":"objects/Obj_FirebaseFirestore_Collection_Query_OrderBy/Obj_FirebaseFirestore_Collection_Query_OrderBy.yy",},},
     {"id":{"name":"d3d_material","path":"scripts/d3d_material/d3d_material.yy",},},
     {"id":{"name":"lerp_float","path":"scripts/lerp_float/lerp_float.yy",},},

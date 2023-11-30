@@ -569,6 +569,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(generator, "Interpret Number",	s_node_interpret_number,	"Node_Interpret_Number",	[1, Node_Interpret_Number],, "Convert array of number into surface.").setVersion(11530);
 			addNodeObject(generator, "Random Shape",		s_node_random_shape,		"Node_Random_Shape",		[1, Node_Random_Shape],, "Generate random shape, use for testing purposes.").setVersion(1147);
 			addNodeObject(generator, "Pixel Builder",		s_node_pixel_builder,		"Node_Pixel_Builder",		[1, Node_Pixel_Builder]).setVersion(11540);
+			addNodeObject(generator, "Bar / Graph",			s_node_bar_graph,			"Node_Plot_Linear",			[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
 			
 			ds_list_add(generator, "Noises");
 			addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise],, "Generate white noise.");
@@ -606,10 +607,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			ds_list_add(generator, "Region");
 			addNodeObject(generator, "Separate Shape",		s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape],, "Separate disconnected pixel each into an image in an image array.");
 			addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill],, "Fill connected pixel with colors.").setVersion(1147);		
-			
-			ds_list_add(generator, "Others");
 			addNodeObject(generator, "Flood Fill",			s_node_flood_fill,			"Node_Flood_Fill",			[1, Node_Flood_Fill],, "Filled connected pixel given position and color.").setVersion(1133);
-			addNodeObject(generator, "Bar / Graph",			s_node_bar_graph,			"Node_Plot_Linear",			[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
+			
+			ds_list_add(generator, "MK Effects");
+			addNodeObject(generator, "MK Rains",			s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain]).setVersion(11600);
 		#endregion
 		
 		var compose = ds_list_create(); #region
@@ -970,6 +971,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147).hideRecent();
 			//addNodeObject(hid, "Pixel Builder",		s_node_pixel_builder,	"Node_Pixel_Builder",			[1, Node_Pixel_Builder]).setVersion(1150).hideRecent();
 			
+			ds_list_add(values, "DynaSurf");
 			addNodeObject(hid, "Input",		s_node_pixel_builder,	"Node_DynaSurf_In",			[1, Node_DynaSurf_In]).hideRecent();
 			addNodeObject(hid, "Output",	s_node_pixel_builder,	"Node_DynaSurf_Out",		[1, Node_DynaSurf_Out]).hideRecent();
 			addNodeObject(hid, "getWidth",	s_node_pixel_builder,	"Node_DynaSurf_Out_Width",	[1, Node_DynaSurf_Out_Width]).hideRecent();
