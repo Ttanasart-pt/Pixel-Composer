@@ -332,14 +332,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static clearProcessCache = function(_val) { process_cache = {}; }
 	
 	static processType = function(_val) { #region
-		if(process_cache_type != prop.type || process_cache_disp != prop.display_type) {
-			clearProcessCache();
-			process_cache_type = prop.type;
-			process_cache_disp = prop.display_type;
-		}
+		//if(process_cache_type != prop.type || process_cache_disp != prop.display_type) {
+		//	clearProcessCache();
+		//	process_cache_type = prop.type;
+		//	process_cache_disp = prop.display_type;
+		//}
 		
-		if(struct_has(process_cache, _val))
-			return process_cache[$ _val];
+		//if(struct_has(process_cache, _val))
+		//	return process_cache[$ _val];
 		
 		var _res = _val;
 		if(!sep_axis && typeArray(prop.display_type) && is_array(_val)) {
@@ -348,7 +348,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		} else 
 			_res = processValue(_val);
 			
-		process_cache[$ _val] = _res;
+		//process_cache[$ _val] = _res;
 		return _res;
 	} #endregion
 	
