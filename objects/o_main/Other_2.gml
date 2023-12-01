@@ -13,9 +13,9 @@
 		if(string(home_dir) == "0")
 			log_message("DIRECTORY", "Directory not found.");
 		else 
-			APP_DIRECTORY = string(home_dir) + "/PixelComposer/";
+			APP_DIRECTORY = $"{home_dir}/PixelComposer/";
 	}
-	show_debug_message("App directory: " + string(APP_DIRECTORY));
+	show_debug_message($"App directory: {APP_DIRECTORY}");
 	
 	directory_verify(APP_DIRECTORY);
 	
@@ -25,29 +25,29 @@
 		DIRECTORY    = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
 	}
 	
-	show_debug_message("Env directory: " + string(DIRECTORY));
+	show_debug_message($"Env directory: {DIRECTORY}");
 	var dir_valid = DIRECTORY != "" && directory_exists(DIRECTORY);
 	var tmp = file_text_open_write(DIRECTORY + "val_check.txt");
 	
 	if(tmp == -1) {
 		dir_valid = false;
-		print("WARNING: Inaccessible directory [" + DIRECTORY + "] this may be caused by non existing folder, or Pixel Composer has no permission to open the folder.");
+		show_message($"WARNING: Inaccessible main directory ({DIRECTORY}) this may be caused by non existing folder, or Pixel Composer has no permission to open the folder.");
 	} else {
 		file_text_close(tmp);
-		file_delete(DIRECTORY + "val_check.txt");
+		file_delete($"{DIRECTORY}val_check.txt");
 	}
 	
-	if(!dir_valid) DIRECTORY = APP_DIRECTORY;
+	if(!dir_valid) {
+		show_debug_message("Invalid directory revert back to default %APPDATA%");
+		DIRECTORY = APP_DIRECTORY;
+	}
 	
-	PRESIST_PREF.path = DIRECTORY;
-	json_save_struct(perstPath, PRESIST_PREF);
 	directory_verify(DIRECTORY);
-	//directory_set_current_working(DIRECTORY);
 	
 	APP_LOCATION = program_directory;
 	if(string_pos("GameMakerStudio2\\Cache\\runtimes", APP_LOCATION))
 		APP_LOCATION = working_directory;
-	//print($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
+	print($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
 #endregion
 
 #region Set up

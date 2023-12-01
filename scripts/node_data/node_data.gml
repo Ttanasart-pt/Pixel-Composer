@@ -1058,6 +1058,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(high) {
 				jun.draw_blend_color = bg;
 				jun.draw_blend       = PREFERENCES.connection_line_highlight_fade;
+			} else {
+				jun.draw_blend_color = bg;
+				jun.draw_blend       = -1;
 			}
 		
 		}
@@ -1079,6 +1082,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(high) {
 				jun.draw_blend_color = bg;
 				jun.draw_blend       = PREFERENCES.connection_line_highlight_fade;
+			} else {
+				jun.draw_blend_color = bg;
+				jun.draw_blend       = -1;
 			}
 			
 			if(is_instanceof(jun, NodeModule)) {

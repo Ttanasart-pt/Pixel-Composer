@@ -5,6 +5,7 @@
 	
 	PREFERENCES.ui_framerate					= 120;
 	PREFERENCES.path_resolution					= 32;
+	PREFERENCES.move_directory					= false;
 	
 	PREFERENCES.node_recents_amount				= 20;
 												
@@ -202,6 +203,8 @@
 		LOCALE_DEF = PREFERENCES.local == "en";
 		
 		directory_verify(filepath_resolve(PREFERENCES.temp_path));
+		
+		if(PREFERENCES.move_directory) directory_set_current_working(DIRECTORY);
 	}
 	
 	function PREF_APPLY() {

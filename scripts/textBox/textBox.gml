@@ -87,10 +87,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		_input_text	= _current_text;
 		_last_text  = _current_text;
 		
+		cursor        = string_length(_current_text);
 		cursor_select = 0;
-		cursor = string_length(_current_text);
-					
-		click_block = 1;
+		click_block   = 1;
+		
 		KEYBOARD_STRING = "";
 		keyboard_lastkey = -1;
 	} #endregion
@@ -110,8 +110,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					cursor_select = cursor;
 			} else if(cursor_select != -1)
 				cursor_select = -1;
-			else 
-				move_cursor(-1);
+			
+			move_cursor(-1);
 		}
 				
 		if(KEYBOARD_PRESSED == vk_right) {
@@ -120,8 +120,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					cursor_select = cursor;
 			} else if(cursor_select != -1)
 				cursor_select = -1;
-			else 
-				move_cursor(1);
+			
+			move_cursor(1);
 		}
 	} #endregion
 	
@@ -445,9 +445,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 				if(cursor_select > -1) { //draw highlight
 					draw_set_color(COLORS.widget_text_highlight);
-					var x1 = tx + string_width(string_copy(txt, 1, cursor_select));
+					var c_x1 = tx + disp_x + string_width(string_copy(txt, 1, cursor_select));
+					var _rx0 = clamp(min(cursor_pos, c_x1), tx, tx + _w);
+					var _rx1 = clamp(max(cursor_pos, c_x1), tx, tx + _w);
 					
-					draw_roundrect_ext(cursor_pos, c_y0, x1, c_y1, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
+					draw_roundrect_ext(_rx0, c_y0, _rx1, c_y1, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
 				}
 				
 				var _mx = -1;

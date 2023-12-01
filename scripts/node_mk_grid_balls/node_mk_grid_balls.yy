@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_mk_balls",
+  "name": "node_mk_grid_balls",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

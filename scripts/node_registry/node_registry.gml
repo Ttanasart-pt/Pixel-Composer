@@ -81,8 +81,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	static drawGrid = function(_x, _y, _mx, _my, grid_size) { #region
 		var spr_x = _x + grid_size / 2;
 		var spr_y = _y + grid_size / 2;
-				
+		
+		gpu_set_tex_filter(true);
 		draw_sprite_ui_uniform(spr, 0, spr_x, spr_y, 0.5);
+		gpu_set_tex_filter(false);
 				
 		if(new_node) {
 			draw_sprite_ui_uniform(THEME.node_new_badge, 0, _x + grid_size - ui(12), _y + ui(6),, COLORS._main_accent);
@@ -121,8 +123,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var spr_y = _y + list_height / 2;
 				
 		var ss = (list_height - ui(8)) / max(sprite_get_width(spr), sprite_get_height(spr));
+		gpu_set_tex_filter(true);
 		draw_sprite_ext(spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
-					
+		gpu_set_tex_filter(false);
+		
 		var tx = list_height + ui(52);
 				
 		if(new_node) {
@@ -611,6 +615,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			ds_list_add(generator, "MK Effects");
 			addNodeObject(generator, "MK Rains",			s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain]).setVersion(11600);
+			addNodeObject(generator, "MK GridBalls",		s_node_mk_ball_grid,		"Node_MK_GridBalls",		[1, Node_MK_GridBalls]).setVersion(11600);
 		#endregion
 		
 		var compose = ds_list_create(); #region

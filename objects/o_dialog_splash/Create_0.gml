@@ -156,7 +156,7 @@ event_inherited();
 						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
 						if(mouse_press(mb_left, sFOCUS)) {
 							LOAD_PATH(_project.path, true);
-							PROJECT.thumbnail = _project.spr_path[0];
+							PROJECT.thumbnail = array_safe_get(_project.spr_path, 0);
 							
 							if(txt == "Workshop") {
 								PROJECT.meta.file_id = _meta.file_id;
