@@ -1,7 +1,7 @@
 function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK GridBalls";
 	
-	inputs[| 0] = nodeValue("Surfce in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -56,7 +56,6 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	attribute_surface_depth();
 	
 	dimension_index = 1;
-	balls = [];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 8].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -89,8 +88,8 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _sw  = _dim[0];
 		var _sh  = _dim[1];
-		var _row = _bamo[0];
-		var _col = _bamo[1];
+		var _col = _bamo[0];
+		var _row = _bamo[1];
 		var _amo = _row * _col;
 		
 		var _irow = 1 / _row;
@@ -148,8 +147,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				} #endregion
 				
 				if(_strh != 0) { #region
-					var _cdirr = _strh_dir + 90 - point_direction(_cx, _cy, _bx, _by);
-					
+					var _cdirr  = _strh_dir + 90 - point_direction(_cx, _cy, _bx, _by);
 					var _st_prg = _cdist * dsin(_cdirr) + _strh_shf;
 					var _st_str = max(0, _st_prg * _strh);
 					
