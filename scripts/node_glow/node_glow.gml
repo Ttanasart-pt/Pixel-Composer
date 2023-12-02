@@ -1,11 +1,6 @@
 function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Glow";
 	
-	shader = sh_outline_only;
-	uniform_dim  = shader_get_uniform(shader, "dimension");
-	uniform_size = shader_get_uniform(shader, "borderSize");
-	uniform_colr = shader_get_uniform(shader, "borderColor");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Border", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -52,30 +47,33 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		surface_set_target(pass1);
 		draw_clear_alpha(c_black, 1);
-			shader_set(shader);
-				shader_set_uniform_f_array_safe(uniform_dim,  [ surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf) ]);
-				shader_set_uniform_f(uniform_size, _size + _border);
-				shader_set_uniform_f_array_safe(uniform_colr, [ 1., 1., 1., 1. ]);
+			shader_set(sh_outline_only);
+				shader_set_f("dimension",  [ surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf) ]);
+				shader_set_f("borderSize", _size + _border);
+				shader_set_f("borderColor", [ 1., 1., 1., 1. ]);
 				
 				if(is_surface(_data[0])) draw_surface_safe(_data[0], 0, 0);
 			shader_reset();
 		surface_reset_target();
 		
+		var s = surface_apply_gaussian(pass1, _size, false, c_black, 1, noone);
+		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		var s = surface_apply_gaussian(pass1, _size, false, c_black, 0);
+		BLEND_OVERRIDE
 		
 		shader_set(sh_lum2alpha);
-		shader_set_uniform_f_array_safe(shader_get_uniform(sh_lum2alpha, "color"), colToVec4(cl));
-			draw_surface_ext_safe(s, 0, 0, 1, 1, 0, c_white, _stre);
+			shader_set_color("color", cl);
+			shader_set_f("intensity", _stre);
+			draw_surface_ext_safe(s, 0, 0, 1, 1, 0, c_white, 1);
 		shader_reset();
 		
-		BLEND_NORMAL;
-		
+		BLEND_ALPHA_MULP
 		draw_surface_safe(_data[0], 0, 0);
+		BLEND_NORMAL
+		
 		surface_reset_target();
+		
 		surface_free(pass1);
 		surface_free(s);
 		

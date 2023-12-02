@@ -76,6 +76,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		prop    = _prop;
 		y       = 0;
 		key_map = array_create(TOTAL_FRAMES);
+		key_map_mode = KEYFRAME_END.hold;
 		
 		animate_frames = [];
 		
@@ -116,6 +117,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		var _len = max(TOTAL_FRAMES, values[| ds_list_size(values) - 1].time);
+		key_map_mode = prop.on_end;
 		
 		if(array_length(key_map) != _len)
 			array_resize(key_map, _len);
@@ -277,7 +279,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			}
 		} #endregion
 		
-		var _keyIndex = _time >= _len? 999_999 : key_map[_time];
+		var _keyIndex;
+		if(_time >= _len)		_keyIndex = 999_999;
+		else if(_time < _len)	_keyIndex = 0;
+		else					_keyIndex = key_map[_time];
 		
 		if(_keyIndex == -1) { #region Before first key
 			if(prop.on_end == KEYFRAME_END.wrap) {
@@ -300,7 +305,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		} #endregion
 		
 		if(_keyIndex == 999_999) { #region After last key
-			if(_keyIndex == KEYFRAME_END.wrap) {
+			if(prop.on_end == KEYFRAME_END.wrap) {
 				var from = values[| ds_list_size(values) - 1];
 				var to   = values[| 0];
 				var prog = _time - from.time;

@@ -142,8 +142,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 				if(key_mod_press(CTRL)) amo *= 10;
 				if(key_mod_press(ALT))  amo /= 10;
 				
-				if(mouse_wheel_down())	modifyValue(_data + amo * SCROLL_SPEED);
-				if(mouse_wheel_up())	modifyValue(_data - amo * SCROLL_SPEED);
+				if(key_mod_press(SHIFT) && mouse_wheel_down())	modifyValue(_data + amo * SCROLL_SPEED);
+				if(key_mod_press(SHIFT) && mouse_wheel_up())	modifyValue(_data - amo * SCROLL_SPEED);
 			}
 		}
 		
