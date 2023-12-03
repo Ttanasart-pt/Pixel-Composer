@@ -1,6 +1,5 @@
 function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Armature Sample";
-	previewable = false;
 	w = 96;
 	h = 72;
 	min_h = h;

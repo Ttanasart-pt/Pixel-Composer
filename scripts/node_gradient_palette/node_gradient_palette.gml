@@ -1,6 +1,5 @@
 function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Palette to Gradient";
-	previewable = false;
 	
 	w = 96;
 	

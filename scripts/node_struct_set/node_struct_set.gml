@@ -1,6 +1,5 @@
 function Node_Struct_Set(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Struct Set";
-	previewable = false;
 	
 	w = 96;
 	

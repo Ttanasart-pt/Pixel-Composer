@@ -320,6 +320,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			array_foreach(nodes_selecting, function(node, index) {
 				if(index == 0) __temp_show = !node.previewable;
 				node.previewable = __temp_show;
+				node.setHeight();
 			});
 		} #endregion
 	

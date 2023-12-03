@@ -1,7 +1,6 @@
 function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Scatter Points";
 	color = COLORS.node_blend_number;
-	previewable   = false;
 	
 	w = 96;
 	

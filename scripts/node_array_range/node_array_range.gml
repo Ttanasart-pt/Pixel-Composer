@@ -1,6 +1,5 @@
 function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Range";
-	previewable = false;
 	
 	w = 96;
 	

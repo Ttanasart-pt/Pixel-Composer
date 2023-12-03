@@ -1,6 +1,5 @@
 function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Mesh Transform";
-	previewable = false;
 	
 	w = 96;
 	

@@ -1,6 +1,5 @@
 function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Shift Path";
-	previewable = false;
 	
 	w = 96;
 	

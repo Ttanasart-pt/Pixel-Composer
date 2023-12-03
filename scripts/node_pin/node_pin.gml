@@ -5,7 +5,6 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	auto_height      = false;
 	junction_shift_y = 16;
-	previewable      = false;
 	
 	isHovering     = false;
 	hover_scale    = 0;

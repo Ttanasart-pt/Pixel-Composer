@@ -1,6 +1,5 @@
 function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Mix Color";
-	previewable = false;
 	
 	w = 96;
 	

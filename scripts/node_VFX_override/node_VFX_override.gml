@@ -1,8 +1,7 @@
 function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "VFX Override";
+	name  = "VFX Override";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
-	previewable = false;
 	node_draw_icon = s_node_vfx_override;
 	
 	w = 96;

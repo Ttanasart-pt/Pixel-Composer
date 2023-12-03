@@ -1,6 +1,5 @@
 function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Remap Path";
-	previewable = false;
 	
 	w = 96;
 	

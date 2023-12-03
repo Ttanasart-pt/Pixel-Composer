@@ -1,7 +1,6 @@
 function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Group Input";
 	color = COLORS.node_blend_collection;
-	previewable = false;
 	is_group_io = true;
 	destroy_when_upgroup = true;
 	
@@ -121,15 +120,18 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0)
 		.uncache();
 	
-	attributes.inherit_name = !LOADING && !APPENDING;
-	attributes.inherit_type = !LOADING && !APPENDING;
+	attributes.inherit_name = true;
+	attributes.inherit_type = true;
 	doTrigger = 0;
 	
-	_onSetDisplayName = function() {
-		attributes.inherit_name = false;
-	}
+	onSetDisplayName = function() { attributes.inherit_name = false; }
 	
 	outputs[| 0].onSetTo = function(juncTo) {
+		if(attributes.inherit_name) {
+			setDisplayName(juncTo.name);
+			attributes.inherit_name = false;
+		}
+		
 		if(!attributes.inherit_type) return;
 		attributes.inherit_type = false;
 		
@@ -320,17 +322,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(inParent.name != display_name) {
 			inParent.name = display_name;
 			group.inputMap[? string_replace_all(display_name, " ", "_")] = inParent;
-		}
-		
-		var _to_list = outputs[| 0].value_to;
-		onSetDisplayName = _onSetDisplayName;
-		if(!renamed && attributes.inherit_name && !ds_list_empty(_to_list)) {
-			for( var i = 0; i < ds_list_size(_to_list); i++ ) {
-				if(_to_list[| i].value_from != outputs[| 0]) continue;
-				if(display_name == _to_list[| i].name) break;
-				onSetDisplayName = noone;
-				setDisplayName(_to_list[| i].name);
-			}
 		}
 		
 		if(inParent.type == VALUE_TYPE.trigger) {

@@ -1,6 +1,5 @@
 function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Lua Compute";
-	previewable = false;
 	
 	inputs[| 0]  = nodeValue("Function name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "render" + string(irandom_range(100000, 999999)));
 	

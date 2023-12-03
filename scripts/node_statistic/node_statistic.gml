@@ -24,7 +24,6 @@ function Node_create_Statistic(_x, _y, _group = noone, _param = {}) {
 
 function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Statistic";
-	previewable = false;
 	
 	w = 96;
 	

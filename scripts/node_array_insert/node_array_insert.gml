@@ -1,6 +1,5 @@
 function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Array Insert";
-	previewable = false;
 	
 	w = 96;
 	h = 32 + 24;

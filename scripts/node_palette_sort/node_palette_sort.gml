@@ -1,6 +1,5 @@
 function Node_Palette_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Sort Palette";
-	previewable = false;
 	
 	w = 96;
 	

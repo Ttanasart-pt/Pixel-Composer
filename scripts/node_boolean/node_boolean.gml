@@ -1,7 +1,6 @@
 function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Boolean";
+	name  = "Boolean";
 	color = COLORS.node_blend_number;
-	previewable   = false;
 	
 	w = 64;
 	min_h = 64;

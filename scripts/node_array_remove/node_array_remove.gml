@@ -1,6 +1,5 @@
 function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Array Remove";
-	previewable = false;
 	
 	w = 96;
 	h = 32 + 24;

@@ -1,7 +1,6 @@
 function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
-	name = "Number";
+	name  = "Number";
 	color = COLORS.node_blend_number;
-	previewable   = false;
 	
 	w				= 96;
 	min_h			= 32 + 24 * 1;
@@ -242,7 +241,6 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
 	name = "Vector2";
 	color = COLORS.node_blend_number;
-	previewable   = false;
 	
 	w = 96;
 	min_h = 32 + 24 * 2;
@@ -524,9 +522,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 } #endregion
 
 function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
-	name = "Vector3";
+	name  = "Vector3";
 	color = COLORS.node_blend_number;
-	previewable   = false;
 	
 	w = 96;
 	min_h = 32 + 24 * 3;
@@ -580,9 +577,8 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 } #endregion
 
 function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
-	name = "Vector4";
+	name  = "Vector4";
 	color = COLORS.node_blend_number;
-	previewable   = false;
 	
 	w = 96;
 	min_h = 32 + 24 * 4;
@@ -640,9 +636,8 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 } #endregion
 
 function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
-	name = "Vector Split";
+	name  = "Vector Split";
 	color = COLORS.node_blend_number;
-	previewable   = false;
 	
 	w = 96;
 	min_h = 32;

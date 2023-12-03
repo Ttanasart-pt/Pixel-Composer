@@ -1,6 +1,5 @@
 function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Split Text";
-	previewable = false;
 	w = 96;
 	
 	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")

@@ -1,7 +1,6 @@
 function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Evaluate Curve";
 	update_on_frame = true;
-	previewable = false;
 	
 	w = 96;
 	

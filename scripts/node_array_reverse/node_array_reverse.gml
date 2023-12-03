@@ -1,6 +1,5 @@
 function Node_Array_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Array Reverse";
-	previewable = false;
 	
 	w = 96;
 	h = 32 + 24;

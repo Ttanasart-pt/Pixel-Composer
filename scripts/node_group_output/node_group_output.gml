@@ -1,7 +1,6 @@
 function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Group Output";
 	color = COLORS.node_blend_collection;
-	previewable = false;
 	is_group_io = true;
 	
 	destroy_when_upgroup = true;
@@ -17,11 +16,18 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.uncache()
 		.setVisible(true, true);
 	
-	attributes.inherit_name = !LOADING && !APPENDING;
+	attributes.inherit_name = true;
 	outParent    = undefined;
 	output_index = -1;
 	
-	_onSetDisplayName = function() { attributes.inherit_name = false; }
+	onSetDisplayName = function() { attributes.inherit_name = false; }
+	
+	inputs[| 0].onSetFrom = function(juncFrom) {
+		if(attributes.inherit_name) {
+			setDisplayName(juncFrom.name);
+			attributes.inherit_name = false;
+		}
+	}
 	
 	static setRenderStatus = function(result) { #region
 		if(rendered == result) return;
@@ -99,14 +105,6 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		outParent.setType(inputs[| 0].type);
 		outParent.display_type = inputs[| 0].display_type;
-		
-		onSetDisplayName = _onSetDisplayName;
-		if(!renamed && attributes.inherit_name && inputs[| 0].value_from != noone) {
-			if(display_name != inputs[| 0].value_from.name) {
-				onSetDisplayName = noone;
-				setDisplayName(inputs[| 0].value_from.name);
-			}
-		}
 	} #endregion
 	
 	static postDeserialize = function() { #region

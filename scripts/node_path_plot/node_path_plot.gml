@@ -1,6 +1,5 @@
 function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Plot Path";
-	previewable = false;
 	
 	length = 0;
 	w = 96;

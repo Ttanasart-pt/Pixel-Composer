@@ -1,6 +1,5 @@
 function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Trim Path";
-	previewable = false;
 	
 	w = 96;
 	

@@ -1,6 +1,5 @@
 function Node_Array_Find(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Array Find";
-	previewable = false;
 	
 	w = 96;
 	h = 32 + 24;

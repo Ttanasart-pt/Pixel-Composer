@@ -27,7 +27,6 @@ function Node_create_Logic(_x, _y, _group = noone, _param = {}) {
 function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Logic Opr";
 	color		= COLORS.node_blend_number;
-	previewable = false;
 	
 	w = 96;
 	

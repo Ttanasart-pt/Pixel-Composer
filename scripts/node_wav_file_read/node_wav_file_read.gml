@@ -24,9 +24,8 @@ function Node_create_WAV_File_Read_path(_x, _y, path) { #region
 } #endregion
 
 function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "WAV File In";
+	name  = "WAV File In";
 	color = COLORS.node_blend_input;
-	previewable = false;
 	
 	w = 128;
 	h = 128;

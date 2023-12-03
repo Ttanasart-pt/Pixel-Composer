@@ -1,6 +1,5 @@
 function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Gradient Shift";
-	previewable = false;
 	
 	w = 96;
 	

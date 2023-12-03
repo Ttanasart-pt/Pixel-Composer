@@ -1,7 +1,6 @@
 function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Random";
 	color		= COLORS.node_blend_number;
-	previewable = false;
 	
 	w = 96;
 	

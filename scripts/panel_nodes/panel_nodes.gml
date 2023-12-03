@@ -70,12 +70,12 @@ function Panel_Nodes() : PanelContent() constructor {
 			
 			var _n  = ALL_NODES[? instanceof(node)];
 			var spr = _n.spr;
-			draw_sprite_ui(spr, 1, _x0 + ui(4 + 16), _y + hg / 2, 0.5, 0.5, 0, c_white, 0.75);
+			draw_sprite_ui(spr, 1, _x0 + ui(4 + 16), _y + hg / 2, 0.25, 0.25, 0, c_white, 0.75);
 			var cc  = COLORS._main_text;
 			draw_set_text(f_p1, fa_left, fa_center, cc);
 			draw_text(_x0 + hg + ui(8) + (isGroup * ui(20)), _y + hg / 2, name);
 			if(isGroup)
-				draw_sprite_ui(THEME.arrow, node_collapse[? node.node_id] * 3, _x0 + hg + ui(16), _y + hg / 2,,,,, 0.75);
+				draw_sprite_ui(THEME.arrow, (!node_collapse[? node.node_id]) * 3, _x0 + hg + ui(16), _y + hg / 2,,,,, 0.75);
 			
 			_y += hg + ui(4);
 			_h += hg + ui(4);

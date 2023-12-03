@@ -1,6 +1,5 @@
 function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Struct Get";
-	previewable = false;
 	
 	w = 96;
 	

@@ -1,6 +1,5 @@
 function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Sample Path";
-	previewable = false;
 	
 	w = 96;
 	

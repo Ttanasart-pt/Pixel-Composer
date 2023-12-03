@@ -1,6 +1,5 @@
 function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name		= "Point Affector";
-	previewable = false;
 	
 	gizmo_sphere = [ new __3dGizmoSphere(,, 0.75), new __3dGizmoSphere(,, 0.5) ];
 	gizmo_plane  = [ new __3dGizmoPlaneFalloff(,, 0.75) ];

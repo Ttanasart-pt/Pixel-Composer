@@ -1,6 +1,5 @@
 function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Array Sample";
-	previewable = false;
 	
 	w = 96;
 	h = 32 + 24;

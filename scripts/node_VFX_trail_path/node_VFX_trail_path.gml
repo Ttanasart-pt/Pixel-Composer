@@ -1,6 +1,5 @@
 function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "VFX Trail";
-	previewable = false;
 	
 	w = 96;
 	length     = [];

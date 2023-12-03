@@ -1,6 +1,5 @@
 function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Audio Window";
-	previewable = false;
 	
 	w = 128;
 	h = 128;

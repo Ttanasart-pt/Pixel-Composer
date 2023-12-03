@@ -1,6 +1,5 @@
 function Node_To_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "To Text";
-	previewable = false;
 	
 	w = 96;
 	

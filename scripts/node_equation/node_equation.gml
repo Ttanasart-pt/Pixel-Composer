@@ -32,7 +32,6 @@ function Node_create_Equation(_x, _y, _group = noone, _param = {}) { #region
 function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Equation";
 	color		= COLORS.node_blend_number;
-	previewable = false;
 	
 	w   = 96;
 	ast = [];

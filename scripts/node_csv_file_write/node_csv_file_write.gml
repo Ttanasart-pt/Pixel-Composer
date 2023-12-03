@@ -11,7 +11,6 @@ function Node_create_CSV_File_Write(_x, _y, _group = noone) { #region
 function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "CSV File Out";
 	color = COLORS.node_blend_input;
-	previewable = false;
 	
 	w = 128;
 	

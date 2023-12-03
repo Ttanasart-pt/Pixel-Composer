@@ -337,7 +337,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 			if(outputs[| i].isVisible()) _ho += 24;
 		
-		//w = max(min_w, attributes.node_width);
 		h = max(min_h, _prev_surf * 128, _hi, _ho, attributes.node_height);
 	} run_in(1, function() { setHeight(); }); #endregion
 	
@@ -623,6 +622,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!is_instanceof(self, Node_Collection)) 
 			render_time = get_timer() - render_timer;
 		
+		setHeight();
 		LOG_BLOCK_END();
 	} #endregion
 	
@@ -1250,10 +1250,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			draw_sprite_stretched_ext(THEME.node_glow, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
-		if(previewable) drawPreview(xx, yy, _s);
 		drawDimension(xx, yy, _s);
 		
-		onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.getFocusingNode() == self);
+		if(previewable) {
+			drawPreview(xx, yy, _s);
+			onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.getFocusingNode() == self);
+		} else {
+			var bbox = drawGetBbox(xx, yy, _s);
+			draw_sprite_ext(THEME.preview_hide, 0, bbox.xc, bbox.yc, _s, _s, 0, c_white, 0.25);
+		}
+		
 		drawNodeName(xx, yy, _s);
 		
 		if(active_draw_index > -1) {
@@ -1682,8 +1688,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			_map.y		 = y;
 			_map.type    = instanceof(self);
 			_map.group   = group == noone? group : group.node_id;
-			_map.preview = previewable;
 			_map.tool    = isTool;
+			_map.previewable = previewable;
 		}
 		
 		_map.attri = attributeSerialize();
@@ -1748,7 +1754,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			x = struct_try_get(load_map, "x");
 			y = struct_try_get(load_map, "y");
 			renderActive = struct_try_get(load_map, "render", true);
-			previewable  = struct_try_get(load_map, "preview", previewable);
+			previewable  = struct_try_get(load_map, "previewable", previewable);
 			isTool       = struct_try_get(load_map, "tool");
 		}
 		

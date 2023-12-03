@@ -1,6 +1,5 @@
 function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Mesh to Path";
-	previewable = false;
 	
 	w = 96;
 	

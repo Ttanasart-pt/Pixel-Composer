@@ -1,6 +1,5 @@
 function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Condition";
-	previewable = false;
 	
 	w = 96;
 	

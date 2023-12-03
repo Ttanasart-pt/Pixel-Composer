@@ -1,6 +1,5 @@
 function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Array";
-	previewable = false;
 	
 	w = 96;
 	

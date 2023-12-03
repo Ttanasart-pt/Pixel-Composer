@@ -1,6 +1,5 @@
 function Node_Audio_Loudness(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Audio Loudness";
-	previewable = false;
 	
 	w = 96;
 	h = 72;

@@ -1,6 +1,5 @@
 function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Blend Path";
-	previewable = false;
 	
 	w = 96;
 	length = 0;

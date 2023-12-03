@@ -1,6 +1,5 @@
 function Node_Path_Separate_Folder(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Separate File Path";
-	previewable = false;
 	
 	w = 96;
 	

@@ -1,6 +1,5 @@
 function Node_String_Regex_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RegEx Replace";
-	previewable = false;
 	
 	w = 96;
 	

@@ -1,6 +1,5 @@
 function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Path to Mesh";
-	previewable = false;
 	
 	w = 96;
 	

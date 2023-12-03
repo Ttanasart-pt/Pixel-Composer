@@ -1,8 +1,7 @@
 function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Rigidbody Variable";
+	name  = "Rigidbody Variable";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	previewable = false;
 	node_draw_icon = s_node_rigid_variable;
 	
 	w = 96;

@@ -1,7 +1,6 @@
 function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "WAV File Out";
+	name  = "WAV File Out";
 	color = COLORS.node_blend_input;
-	previewable = false;
 	
 	h = 72;
 	min_h = h;

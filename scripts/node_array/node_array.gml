@@ -1,6 +1,5 @@
 function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array";
-	previewable = false;
 	
 	w = 96;
 	
@@ -173,13 +172,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			outputs[| 0].setType(inputs[| input_fix_len].value_from.type);
 		outputs[| 0].setValue(res);
 		
-		if(outputs[| 0].type == VALUE_TYPE.surface) {
+		if(outputs[| 0].type == VALUE_TYPE.surface)
 			w = 128;
-			previewable = true;
-		} else {
+		else
 			w = 96;
-			previewable = false;
-		}
 	} #endregion
 	
 	static postConnect = function() { #region

@@ -1,8 +1,7 @@
 function Node_Iterator_Each_Length(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Array Length";
-	destroy_when_upgroup = true;
+	name  = "Array Length";
 	color = COLORS.node_blend_loop;
-	previewable = false;
+	destroy_when_upgroup = true;
 	
 	w = 96;
 	min_h = 80;

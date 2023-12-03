@@ -1,6 +1,5 @@
 function Node_FFT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "FFT";
-	previewable = false;
 	
 	w = 96;
 	h = 72;

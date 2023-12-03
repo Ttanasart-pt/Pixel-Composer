@@ -1,6 +1,5 @@
 function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Boolean Trigger";
-	previewable = false;
 	update_on_frame = true;
 	
 	w = 96;

@@ -1,6 +1,5 @@
 function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Switch";
-	previewable = false;
 	
 	w = 96;
 	

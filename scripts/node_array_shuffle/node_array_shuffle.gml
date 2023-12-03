@@ -1,6 +1,5 @@
 function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Shuffle Array";
-	previewable = false;
 	
 	w = 96;
 	

@@ -1,8 +1,7 @@
 function Node_Iterator_Index(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Index";
-	destroy_when_upgroup = true;
+	name  = "Index";
 	color = COLORS.node_blend_loop;
-	previewable = false;
+	destroy_when_upgroup = true;
 	
 	w = 96;
 	min_h = 80;

@@ -1,6 +1,5 @@
 function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Struct";
-	previewable = false;
 	
 	w = 96;
 	

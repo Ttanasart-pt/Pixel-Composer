@@ -1,6 +1,5 @@
 function Node_Path_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Reverse Path";
-	previewable = false;
 	
 	w = 96;
 	

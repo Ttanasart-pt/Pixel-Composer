@@ -1,6 +1,5 @@
 function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Gradient Replace";
-	previewable = false;
 	
 	w = 96;
 	

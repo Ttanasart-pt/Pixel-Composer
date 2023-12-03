@@ -1,6 +1,5 @@
 function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Transform Path";
-	previewable = false;
 	
 	w = 96;
 	

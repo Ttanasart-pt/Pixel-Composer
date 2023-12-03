@@ -52,7 +52,6 @@ function Node_create_Math(_x, _y, _group = noone, _param = {}) {
 function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Math";
 	color		= COLORS.node_blend_number;
-	previewable = false;
 	
 	w = 96;
 	

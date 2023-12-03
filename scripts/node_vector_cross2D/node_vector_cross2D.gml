@@ -1,7 +1,6 @@
 function Node_Vector_Cross_2D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Cross Product 2D";
 	color		= COLORS.node_blend_number;
-	previewable = false;
 	
 	w = 96;
 	

@@ -398,6 +398,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_hamburger_s.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_hamburger.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_heart.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_hide_preview.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_icon_accept_16.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_icon_accept_24.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_icon_accept_32.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},

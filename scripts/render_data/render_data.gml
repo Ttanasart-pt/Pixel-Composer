@@ -6,8 +6,8 @@ enum RENDER_TYPE {
 
 #region globalvar
 	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER, UPDATE_RENDER_ORDER;
-	UPDATE_RENDER_ORDER = false;
-	global.FLAG.render  = 0;
+	UPDATE_RENDER_ORDER    = false;
+	global.FLAG.render     = 0;
 	global.FLAG.renderTime = false;
 	
 	#macro RENDER_ALL_REORDER	UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
@@ -204,8 +204,12 @@ function Render(partial = false, runAction = false) { #region
 				
 				var nextNodes = rendering.getNextNodes();
 				for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
-					if(nextNodes[i].isRenderable())
+					if(nextNodes[i].isRenderable()) {
+						//LOG($"push {nextNodes[i].internalName} to render stack.");
 						RENDER_QUEUE.enqueue(nextNodes[i]);
+					} else {
+						//LOG($"skip {nextNodes[i].internalName}.");
+					}
 				}
 				
 				if(runAction && rendering.hasInspector1Update())

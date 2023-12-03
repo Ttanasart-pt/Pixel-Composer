@@ -1906,11 +1906,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static isRendered = function() { #region
 		if(type == VALUE_TYPE.node)	return true;
 		
-		if( value_from == noone)			  return true;
-		if(!value_from.node.active)			  return true;
-		if(!value_from.node.isRenderActive()) return true;
+		if( value_from == noone) return true;
 		
-		return value_from.node.rendered;
+		var controlNode = struct_has(value_from, "from")? value_from.from : value_from.node;
+		if(!controlNode.active)			  return true;
+		if(!controlNode.isRenderActive()) return true;
+		
+		return controlNode.rendered;
 	} #endregion
 	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region

@@ -25,7 +25,6 @@ function Node_create_Compare(_x, _y, _group = noone, _param = {}) {
 function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Compare";
 	color		= COLORS.node_blend_number;
-	previewable = false;
 	
 	w = 96;
 	
