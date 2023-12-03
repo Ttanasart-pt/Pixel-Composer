@@ -843,7 +843,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(val, index);
 						} );
 						
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
@@ -867,7 +867,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							if(struct_has(display_data, "linked"))		 editWidget.linked      = display_data.linked;
 							if(struct_has(display_data, "side_button"))	 editWidget.side_button = display_data.side_button;
 							
-							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 							
 							if(len == 2) {
 								extract_node = [ "Node_Vector2", "Node_Path" ];
@@ -897,7 +897,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(val, index);
 						}, unit );
 						
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
@@ -944,7 +944,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new slider(_range[0], _range[1], _range[2], function(val) { 
 							return setValueDirect(toNumber(val));
 						} );
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						if(struct_has(display_data, "update_stat"))
 							editWidget.update_stat = display_data.update_stat;
@@ -957,7 +957,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new sliderRange(_range[0], _range[1], _range[2], function(index, val) {
 							return setValueDirect(val, index);
 						} );
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
@@ -969,7 +969,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(val, index);
 						}, unit);
 						
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						if(struct_has(display_data, "onSurfaceSize")) editWidget.onSurfaceSize = display_data.onSurfaceSize;
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
@@ -984,7 +984,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							//_val[index] = val;
 							return setValueDirect(val, index);
 						}, unit);
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
@@ -995,7 +995,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new cornerBox(function(index, val) { 
 							return setValueDirect(val, index);
 						}, unit);
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
@@ -1042,7 +1042,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new matrixGrid(_txt, display_data.size, function(index, val) {
 							return setValueDirect(val, index);
 						}, unit );
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + string(i);
