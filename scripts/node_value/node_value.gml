@@ -1729,7 +1729,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(array_depth == 0 && !typeArray(display_type)) { //Value is not an array by default, and no array depth enforced
 			if(_cac) cache_array[1] = true;
-			return false;
+			return true;
 		}
 		
 		var ar = val;

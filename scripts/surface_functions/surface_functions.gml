@@ -519,7 +519,8 @@ function __surface_array_deserialize(arr) {
 }
 
 function surface_encode(surface) {
-	if(!is_surface(surface)) return "";
+	if(!is_real(surface)) return "";
+	if(!surface_exists(surface)) return "";
 	
 	var buff = buffer_create(surface_get_width_safe(surface) * surface_get_height_safe(surface) * 4, buffer_fixed, 1);
 	buffer_get_surface(buff, surface, 0);

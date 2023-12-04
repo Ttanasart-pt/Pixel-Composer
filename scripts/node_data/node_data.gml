@@ -172,10 +172,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 		inspecting	  = false;
 		previewing	  = 0;
-	
+		
 		preview_surface	= noone;
 		preview_amount  = 0;
 		previewable		= true;
+		preview_draw    = true;
 		preview_speed	= 0;
 		preview_index	= 0;
 		preview_channel = 0;
@@ -1253,7 +1254,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		drawDimension(xx, yy, _s);
 		
 		if(previewable) {
-			drawPreview(xx, yy, _s);
+			if(preview_draw) drawPreview(xx, yy, _s);
 			onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.getFocusingNode() == self);
 		} else {
 			var bbox = drawGetBbox(xx, yy, _s);

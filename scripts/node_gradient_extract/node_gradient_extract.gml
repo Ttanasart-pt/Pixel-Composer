@@ -14,7 +14,7 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	outputs[| 2] = nodeValue("Type", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0 );
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var gra  = _data[0];
 		
 		switch(_output_index) {
@@ -33,9 +33,9 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		}
 		
 		return 0;
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
@@ -46,5 +46,5 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		}
 		
 		grad.draw(bbox.x0, bbox.y0, bbox.w, bbox.h);
-	}
+	} #endregion
 }

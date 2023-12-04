@@ -1,7 +1,8 @@
 function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Tunnel In";
 	color = COLORS.node_blend_tunnel;
-	is_group_io = true;
+	is_group_io  = true;
+	preview_draw = false;
 	
 	w = 96;
 	
@@ -19,37 +20,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static onInspector2Update = function() { #region
 		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y);
 		_node.inputs[| 0].setValue(getInputData(0));
-	} #endregion
-	
-	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) { #region
-		var xx = _x + x * _s;
-		var yy = _y + y * _s;
-		
-		var hover = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
-		var tun   = findPanel("Panel_Tunnels");
-		hover |= tun && tun.tunnel_hover == self;
-		if(!hover) return;
-		
-		var _key = getInputData(0);
-		var amo  = ds_map_size(TUNNELS_OUT);
-		var k    = ds_map_find_first(TUNNELS_OUT);
-		repeat(amo) {
-			if(TUNNELS_OUT[? k] == _key && ds_map_exists(PROJECT.nodeMap, k)) {
-				var node = PROJECT.nodeMap[? k];
-				if(node.group != group) continue;
-				
-				draw_set_color(COLORS.node_blend_tunnel);
-				draw_set_alpha(0.35);
-				var frx = xx + w * _s / 2;
-				var fry = yy + h * _s / 2;
-				var tox = _x + (node.x + node.w / 2) * _s;
-				var toy = _y + (node.y + node.h / 2) * _s;
-				draw_line_dashed(frx, fry, tox, toy, 8 * _s, 16 * _s, current_time / 10);
-				draw_set_alpha(1);
-			}
-			
-			k = ds_map_find_next(TUNNELS_OUT, k);
-		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { onValueUpdate(); }
@@ -143,6 +113,37 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		LOG_BLOCK_END();
 		LOG_BLOCK_END();
 		return nodes;
+	} #endregion
+	
+	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) { #region
+		var xx = _x + x * _s;
+		var yy = _y + y * _s;
+		
+		var hover = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
+		var tun   = findPanel("Panel_Tunnels");
+		hover |= tun && tun.tunnel_hover == self;
+		if(!hover) return;
+		
+		var _key = getInputData(0);
+		var amo  = ds_map_size(TUNNELS_OUT);
+		var k    = ds_map_find_first(TUNNELS_OUT);
+		repeat(amo) {
+			if(TUNNELS_OUT[? k] == _key && ds_map_exists(PROJECT.nodeMap, k)) {
+				var node = PROJECT.nodeMap[? k];
+				if(node.group != group) continue;
+				
+				draw_set_color(COLORS.node_blend_tunnel);
+				draw_set_alpha(0.35);
+				var frx = xx + w * _s / 2;
+				var fry = yy + h * _s / 2;
+				var tox = _x + (node.x + node.w / 2) * _s;
+				var toy = _y + (node.y + node.h / 2) * _s;
+				draw_line_dashed(frx, fry, tox, toy, 8 * _s, 16 * _s, current_time / 10);
+				draw_set_alpha(1);
+			}
+			
+			k = ds_map_find_next(TUNNELS_OUT, k);
+		}
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

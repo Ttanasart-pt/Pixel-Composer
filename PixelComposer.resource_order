@@ -245,6 +245,7 @@
     {"name":"button","order":34,"path":"folders/widgets/button.yy",},
     {"name":"rotator","order":35,"path":"folders/widgets/rotator.yy",},
     {"name":"text","order":36,"path":"folders/widgets/text.yy",},
+    {"name":"math","order":43,"path":"folders/functions/math.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},

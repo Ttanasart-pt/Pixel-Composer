@@ -280,6 +280,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"button","folderPath":"folders/widgets/button.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"rotator","folderPath":"folders/widgets/rotator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/widgets/text.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"math","folderPath":"folders/functions/math.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
@@ -2265,6 +2266,7 @@
     {"id":{"name":"s_node_texture_map","path":"sprites/s_node_texture_map/s_node_texture_map.yy",},},
     {"id":{"name":"fd_rectangle_create","path":"scripts/fd_rectangle_create/fd_rectangle_create.yy",},},
     {"id":{"name":"s_node_level_selector","path":"sprites/s_node_level_selector/s_node_level_selector.yy",},},
+    {"id":{"name":"real_number_functions","path":"scripts/real_number_functions/real_number_functions.yy",},},
     {"id":{"name":"random_function","path":"scripts/random_function/random_function.yy",},},
     {"id":{"name":"FriebaseREST_Firestore_urlUpdateMask","path":"scripts/FriebaseREST_Firestore_urlUpdateMask/FriebaseREST_Firestore_urlUpdateMask.yy",},},
     {"id":{"name":"s_node_input","path":"sprites/s_node_input/s_node_input.yy",},},
