@@ -21,13 +21,9 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	
 	update_stat = SLIDER_UPDATE.realtime;
 	
-	dragging = false;
-	drag_mx  = 0;
-	drag_sx  = 0;
-	
-	spr		= THEME.slider;
-	blend   = c_white;
-	
+	spr		 = THEME.slider;
+	blend    = c_white;
+	dragging = noone;
 	handle_w = ui(20);
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onApply);
@@ -37,24 +33,24 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		onModify(value);
 	} #endregion
 	
-	static setSlideSpeed = function(speed) {
+	static setSlideSpeed = function(speed) { #region
 		tb_value.setSlidable(speed);
-	}
+	} #endregion
 	
-	static setInteract = function(interactable = noone) { 
+	static setInteract = function(interactable = noone) { #region
 		self.interactable = interactable;
 		tb_value.interactable = interactable;
-	}
+	} #endregion
 	
-	static register = function(parent = noone) {
+	static register = function(parent = noone) { #region
 		tb_value.register(parent);
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 64, halign = fa_left, valign = fa_top) {
+	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 64, halign = fa_left, valign = fa_top) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -63,17 +59,17 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		
 		if(!dragging) current_value = _data;
 		
-		switch(halign) {
+		switch(halign) { #region
 			case fa_left:   _x = _x;			break;	
 			case fa_center: _x = _x - _w / 2;	break;	
 			case fa_right:  _x = _x - _w;		break;	
-		}
+		} #endregion
 		
-		switch(valign) {
+		switch(valign) { #region
 			case fa_top:    _y = _y;			break;	
 			case fa_center: _y = _y - _h / 2;	break;	
 			case fa_bottom: _y = _y - _h;		break;	
-		}
+		} #endregion
 		
 		var _rang = abs(maxx - minn);
 		if(!dragging) {
@@ -94,7 +90,15 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		if(THEME_VALUE.slider_type == "full_height")
 			draw_sprite_stretched_ext(spr, 0, _x, _y, sw, _h, blend, 1);
 		else if(THEME_VALUE.slider_type == "stem")
-			draw_sprite_stretched_ext(spr, 0, _x, _y + _h / 2 - ui(4), sw, ui(8), blend, 1);	
+			draw_sprite_stretched_ext(spr, 0, _x - ui(4), _y + _h / 2 - ui(4), sw + ui(8), ui(8), blend, 1);
+			
+		if(stepSize >= 1 && sw / ((curr_maxx - curr_minn) / stepSize) > ui(8)) {
+			for( var i = curr_minn; i <= curr_maxx; i += stepSize ) {
+				var _v  = round(i / stepSize) * stepSize;
+				var _cx = _x + clamp((_v - curr_minn) / (curr_maxx - curr_minn), 0, 1) * sw;
+				draw_sprite_stretched_ext(spr, 4, _cx - ui(4), _y + _h / 2 - ui(4), ui(8), ui(8), COLORS.widget_slider_step, 1);	
+			}
+		}
 		
 		var _pg = clamp((current_value - curr_minn) / (curr_maxx - curr_minn), 0, 1) * sw;
 		var _kx = _x + _pg;
@@ -107,7 +111,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			if(THEME_VALUE.slider_type == "stem")
 				draw_sprite_stretched_ext(spr, 3, _kx - handle_w / 2, _y, handle_w, _h, COLORS._main_accent, 1);
 			
-			var val = (_m[0] - _x) / sw * (curr_maxx - curr_minn) + curr_minn;
+			var val = (dragging.drag_sx - dragging.drag_msx) / dragging.drag_sw * (curr_maxx - curr_minn) + curr_minn;
 			val = round(val / stepSize) * stepSize;
 			val = clamp(val, curr_minn, curr_maxx);
 			
@@ -121,21 +125,22 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			if(mouse_release(mb_left)) {
 				if(update_stat == SLIDER_UPDATE.release && onModify != noone) 
 					onModify(val);
-			
-				dragging = false;
+				
+				instance_destroy(dragging);
+				dragging = noone;
 				if(onRelease != noone) onRelease(val);
 				UNDO_HOLDING = false;
 			}
 		} else {
-			
 			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - handle_w / 2, _y, _kx + handle_w / 2, _y + _h))) {
 				if(THEME_VALUE.slider_type == "stem")
 					draw_sprite_stretched_ext(spr, 2, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
 				
 				if(mouse_press(mb_left, active)) {
-					dragging = true;
-					drag_mx  = _m[0];
-					drag_sx  = _data;
+					dragging = instance_create(0, 0, slider_Slider);
+					dragging.drag_sx   = _m[0];
+					dragging.drag_msx  = _x;
+					dragging.drag_sw   = sw;
 				}
 				
 				var amo = slide_speed;
@@ -150,5 +155,5 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
 }

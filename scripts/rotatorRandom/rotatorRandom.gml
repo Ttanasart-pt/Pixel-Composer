@@ -1,9 +1,9 @@
 function rotatorRandom(_onModify) : widget() constructor {
 	onModify = _onModify;
 	
-	dragging = -1;
+	dragging = false;
+	dragging_index = -1;
 	drag_sv  = 0;
-	drag_sa  = 0;
 	
 	mode = 0;
 	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable(true, 1);
@@ -18,28 +18,28 @@ function rotatorRandom(_onModify) : widget() constructor {
 		__txtx("widget_rotator_random_double_span",  "Double Span")
 	]);
 	
-	static setInteract = function(interactable = noone) { 
+	static setInteract = function(interactable = noone) { #region
 		self.interactable = interactable;
 		tb_min_0.interactable = interactable;
 		tb_max_0.interactable = interactable;
 		
 		if(mode == 2 || mode == 3)	tb_min_1.interactable = interactable;
 		if(mode == 2)				tb_max_1.interactable = interactable;
-	}
+	} #endregion
 	
-	static register = function(parent = noone) {
+	static register = function(parent = noone) { #region
 		tb_min_0.register(parent);
 		tb_max_0.register(parent);
 		
 		if(mode == 2 || mode == 3)	tb_min_1.register(parent);
 		if(mode == 2)				tb_max_1.register(parent);
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		return draw(params.x, params.y, params.w, params.data, params.m);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _data, _m) {
+	static draw = function(_x, _y, _w, _data, _m) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -98,7 +98,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				#region draw arc
 					var hover_arc = false;
 					var diss = point_distance(_m[0], _m[1], knx, kny);
-					if(abs(diss - _r) < 6 || dragging == 2)
+					if(abs(diss - _r) < 6 || dragging_index == 2)
 						hover_arc = true;
 						
 					for(var i = 0; i < 2; i++) {
@@ -113,68 +113,73 @@ function rotatorRandom(_onModify) : widget() constructor {
 						draw_sprite(THEME.rotator_knob, 0, px[i], py[i]);
 				#endregion
 				
-				if(dragging > -1) { #region
+				if(dragging_index > -1) { #region
 					var val = point_direction(knx, kny, _m[0], _m[1]);
 					if(key_mod_press(CTRL)) val = round(val / 15) * 15;
 					
-					var delta = angle_difference(point_direction(knx, kny, _m[0], _m[1]), drag_sa);
-					var val, real_val = drag_sv;
+					var val;
 					
-					if(dragging == 2) {
-						var modi = false;
-						real_val[1]   = round(delta + drag_sv[1]);
-						val = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
+					if(dragging_index == 2) {
+						var curr_val = [ drag_sv[0], drag_sv[1], drag_sv[2], drag_sv[3], drag_sv[4] ];
+						var modi     = false;
+						
+						curr_val[1] = round(dragging.delta_acc + drag_sv[1]);
+						curr_val[2] = round(dragging.delta_acc + drag_sv[2]);
+						
+						val   = key_mod_press(CTRL)? round(curr_val[1] / 15) * 15 : curr_val[1];
 						modi |= onModify(1, val);
-				
-						real_val[2]   = round(delta + drag_sv[2]);
-						val = key_mod_press(CTRL)? round(real_val[2] / 15) * 15 : real_val[2];
+						
+						val   = key_mod_press(CTRL)? round(curr_val[2] / 15) * 15 : curr_val[2];
 						modi |= onModify(2, val);
 				
 						if(modi) UNDO_HOLDING = true;
 					} else {
-						var _o = _data[dragging];
-						real_val = round(delta + drag_sv);
-						val = key_mod_press(CTRL)? round(real_val / 15) * 15 : real_val;
-				
-						draw_sprite(THEME.rotator_knob, 1, px[dragging], py[dragging]);
-				
-						if(_data[dragging] != val) {
+						var _o       = _data[dragging_index];
+						var curr_val = round(dragging.delta_acc + drag_sv);
+						val          = key_mod_press(CTRL)? round(curr_val / 15) * 15 : curr_val;
+						
+						draw_sprite(THEME.rotator_knob, 1, px[dragging_index], py[dragging_index]);
+						
+						if(_data[dragging_index] != val) {
 							var modi = false;
-							modi |= onModify(1 + dragging, val);
+							modi    |= onModify(1 + dragging_index, val);
 					
 							if(key_mod_press(ALT)) {
 								var dt = val - _o;
-								modi |= onModify(1 + !dragging, _data[!dragging] - dt);
+								modi  |= onModify(1 + !dragging_index, _data[!dragging_index] - dt);
 							}
 				
 							if(modi) UNDO_HOLDING = true;
 						}
 					}
-			
-					drag_sa = point_direction(knx, kny, _m[0], _m[1]);
-					drag_sv = real_val;
-			
+					
 					if(mouse_release(mb_left)) {
-						dragging = -1;
-						UNDO_HOLDING = false;
+						instance_destroy(dragging);
+						dragging       = noone;
+						dragging_index = -1;
+						UNDO_HOLDING   = false;
 					}
 					#endregion
 				} else if(hover) { #region
+					
 					for(var i = 0; i < 2; i++) {
 						if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(20))) {
 							draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
 						
 							if(mouse_press(mb_left, active)) {
-								dragging = i;
+								dragging_index = i;
+								
 								drag_sv  = _data[1 + i];
-								drag_sa  = point_direction(knx, kny, _m[0], _m[1]);
+								dragging = instance_create(0, 0, rotator_Rotator).init(_m, knx, kny);
 							}
 						}
 					}
-					if(dragging == -1 && hover_arc && mouse_press(mb_left, active)) {
-						dragging = 2;
-						drag_sv  = _data;
-						drag_sa  = point_direction(knx, kny, _m[0], _m[1]);
+					
+					if(dragging_index == -1 && hover_arc && mouse_press(mb_left, active)) {
+						dragging_index = 2;
+						
+						drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
+						dragging = instance_create(0, 0, rotator_Rotator).init(_m, knx, kny);
 					}
 					#endregion
 				}
@@ -206,34 +211,33 @@ function rotatorRandom(_onModify) : widget() constructor {
 						draw_sprite(THEME.rotator_knob, 0, px[i], py[i]);
 				#endregion
 				
-				if(dragging > -1) { #region
+				if(dragging_index > -1) { #region
 					var val = point_direction(knx, kny, _m[0], _m[1]);
 					if(key_mod_press(CTRL)) val = round(val / 15) * 15;
 					
-					var delta = angle_difference(point_direction(knx, kny, _m[0], _m[1]), drag_sa);
-					var val, real_val = drag_sv;
+					var val;
+					var real_val = [ drag_sv[0], drag_sv[1], drag_sv[2], drag_sv[3], drag_sv[4] ];
 					
-					if(dragging == 2) {
-						real_val[1] = round(delta + drag_sv[1]);
+					if(dragging_index == 2) {
+						real_val[1] = round(dragging.delta_acc + drag_sv[1]);
 						val = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
 						
 						draw_sprite(THEME.rotator_knob, 1, px[2], py[2]);
 						
 						if(onModify(1, val)) UNDO_HOLDING = true;
 					} else {
-						real_val[2] = round(drag_sv[2] + (delta * (dragging? 1 : -1)));
+						real_val[2] = round(drag_sv[2] + (dragging.delta_acc * (dragging_index? 1 : -1)));
 						val = key_mod_press(CTRL)? round(real_val[2] / 15) * 15 : real_val[2];
 						
-						draw_sprite(THEME.rotator_knob, 1, px[dragging], py[dragging]);
+						draw_sprite(THEME.rotator_knob, 1, px[dragging_index], py[dragging_index]);
 						
 						if(onModify(2, val)) UNDO_HOLDING = true;
 					}
 					
-					drag_sa = point_direction(knx, kny, _m[0], _m[1]);
-					drag_sv = real_val;
-			
 					if(mouse_release(mb_left)) {
-						dragging = -1;
+						instance_destroy(dragging);
+						dragging = noone;
+						dragging_index = -1;
 						UNDO_HOLDING = false;
 					}
 					#endregion
@@ -243,9 +247,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 							draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
 						
 							if(mouse_press(mb_left, active)) {
-								dragging = i;
-								drag_sv  = _data;
-								drag_sa  = point_direction(knx, kny, _m[0], _m[1]);
+								dragging_index = i;
+								drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
+								dragging = instance_create(0, 0, rotator_Rotator).init(_m, knx, kny);
 							}
 						}
 					}
@@ -289,26 +293,25 @@ function rotatorRandom(_onModify) : widget() constructor {
 						draw_sprite(THEME.rotator_knob, 0, px[i], py[i]);
 				#endregion
 				
-				if(dragging > -1) { #region
+				if(dragging_index > -1) { #region
 					var val = point_direction(knx, kny, _m[0], _m[1]);
 					if(key_mod_press(CTRL)) val = round(val / 15) * 15;
 					
-					var delta = angle_difference(point_direction(knx, kny, _m[0], _m[1]), drag_sa);
-					var val, real_val = drag_sv;
-					var ind = dragging + 1;
+					var val;
+					var real_val = [ drag_sv[0], drag_sv[1], drag_sv[2], drag_sv[3], drag_sv[4] ];
+					var ind = dragging_index + 1;
 					
-					real_val[ind] = round(drag_sv[ind] + (delta * (ind? 1 : -1)));
+					real_val[ind] = round(drag_sv[ind] + (dragging.delta_acc * (ind? 1 : -1)));
 					val = key_mod_press(CTRL)? round(real_val[ind] / 15) * 15 : real_val[ind];
 						
-					draw_sprite(THEME.rotator_knob, 1, px[dragging], py[dragging]);
+					draw_sprite(THEME.rotator_knob, 1, px[dragging_index], py[dragging_index]);
 						
 					if(onModify(ind, val)) UNDO_HOLDING = true;
 					
-					drag_sa = point_direction(knx, kny, _m[0], _m[1]);
-					drag_sv = real_val;
-			
 					if(mouse_release(mb_left)) {
-						dragging = -1;
+						instance_destroy(dragging);
+						dragging = noone;
+						dragging_index = -1;
 						UNDO_HOLDING = false;
 					}
 					#endregion
@@ -318,9 +321,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 							draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
 						
 							if(mouse_press(mb_left, active)) {
-								dragging = i;
-								drag_sv  = _data;
-								drag_sa  = point_direction(knx, kny, _m[0], _m[1]);
+								dragging_index = i;
+								drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
+								dragging = instance_create(0, 0, rotator_Rotator).init(_m, knx, kny);
 							}
 						}
 					}
@@ -371,26 +374,25 @@ function rotatorRandom(_onModify) : widget() constructor {
 					draw_sprite(THEME.rotator_knob, 0, px[1], py[1]);
 				#endregion
 				
-				if(dragging > -1) { #region
+				if(dragging_index > -1) { #region
 					var val = point_direction(knx, kny, _m[0], _m[1]);
 					if(key_mod_press(CTRL)) val = round(val / 15) * 15;
 					
-					var delta = angle_difference(point_direction(knx, kny, _m[0], _m[1]), drag_sa);
-					var val, real_val = drag_sv;
-					var ind = dragging + 1;
+					var real_val = [ drag_sv[0], drag_sv[1], drag_sv[2], drag_sv[3], drag_sv[4] ];
+					var val;
+					var ind = dragging_index + 1;
 					
-					real_val[ind] = round(drag_sv[ind] + (delta * (ind? 1 : -1)));
+					real_val[ind] = round(drag_sv[ind] + (dragging.delta_acc * (ind? 1 : -1)));
 					val = key_mod_press(CTRL)? round(real_val[ind] / 15) * 15 : real_val[ind];
 						
-					draw_sprite(THEME.rotator_knob, 1, px[dragging], py[dragging]);
+					draw_sprite(THEME.rotator_knob, 1, px[dragging_index], py[dragging_index]);
 						
 					if(onModify(ind, val)) UNDO_HOLDING = true;
 					
-					drag_sa = point_direction(knx, kny, _m[0], _m[1]);
-					drag_sv = real_val;
-			
 					if(mouse_release(mb_left)) {
-						dragging = -1;
+						instance_destroy(dragging);
+						dragging = noone;
+						dragging_index = -1;
 						UNDO_HOLDING = false;
 					}
 					#endregion
@@ -400,9 +402,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 							draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
 							
 							if(mouse_press(mb_left, active)) {
-								dragging = i;
-								drag_sv  = _data;
-								drag_sa  = point_direction(knx, kny, _m[0], _m[1]);
+								dragging_index = i;
+								drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
+								dragging = instance_create(0, 0, rotator_Rotator).init(_m, knx, kny);
 							}
 						}
 					}
@@ -414,5 +416,5 @@ function rotatorRandom(_onModify) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
 }

@@ -1,31 +1,30 @@
 function rotatorRange(_onModify) : widget() constructor {
 	onModify = _onModify;
 	
-	dragging = -1;
+	dragging_index = -1;
+	dragging = noone;
 	drag_sv  = 0;
-	drag_sa  = 0;
-	drag_sc  = 0;
 	
 	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, val); } ).setSlidable();
 	
 	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable();
 	
-	static setInteract = function(interactable = noone) { 
+	static setInteract = function(interactable = noone) { #region
 		self.interactable = interactable;
 		tb_min.interactable = interactable;
 		tb_max.interactable = interactable;
-	}
+	} #endregion
 	
-	static register = function(parent = noone) {
+	static register = function(parent = noone) { #region
 		tb_min.register(parent);
 		tb_max.register(parent);
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		return draw(params.x, params.y, params.w, params.data, params.m);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _data, _m) {
+	static draw = function(_x, _y, _w, _data, _m) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -60,95 +59,89 @@ function rotatorRange(_onModify) : widget() constructor {
 		#region draw arc
 			var hover_arc = false;
 			var diss = point_distance(_m[0], _m[1], _x, knob_y);
-			if(abs(diss - _r) < 6 || dragging == 2)
+			
+			if(abs(diss - _r) < 6 || dragging_index == 2)
 				hover_arc = true;
+				
 			for(var i = 0; i < 2; i++) {
 				if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(20))) 
 					hover_arc = false;
 			}
-					
+			
 			draw_set_color(hover_arc? COLORS.widget_rotator_range_hover : COLORS.widget_rotator_range);
-			draw_arc_width(_x, knob_y, _r, 3, _data[0], _data[1]);
+			draw_arc_forward(_x, knob_y, _r, 3, _data[0], _data[1]);
 		#endregion
 		
 		for(var i = 0; i < 2; i++)
 			draw_sprite(THEME.rotator_knob, 0, px[i], py[i]);
 			
-		if(dragging > -1) {
+		if(dragging_index > -1) { #region
 			var val = point_direction(_x, knob_y, _m[0], _m[1]);
 			if(key_mod_press(CTRL)) val = round(val / 15) * 15;
 			
-			var delta = angle_difference(point_direction(_x, knob_y, _m[0], _m[1]), drag_sa);
 			var val, real_val;
 			
-			if(dragging == 2) {
+			if(dragging_index == 2) {
 				var modi = false;
-				real_val[0]   = round(delta + drag_sv[0]);
-				val = key_mod_press(CTRL)? round(real_val[0] / 15) * 15 : real_val[0];
+				
+				real_val[0]   = round(dragging.delta_acc + drag_sv[0]);
+				real_val[1]   = round(dragging.delta_acc + drag_sv[1]);
+				
+				val   = key_mod_press(CTRL)? round(real_val[0] / 15) * 15 : real_val[0];
 				modi |= onModify(0, val);
 				
-				real_val[1]   = round(delta + drag_sv[1]);
-				val = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
+				val   = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
 				modi |= onModify(1, val);
 				
-				if(modi)
-					UNDO_HOLDING = true;
+				if(modi) UNDO_HOLDING = true;
 			} else {
-				var _o = _data[dragging];
-				real_val   = round(delta + drag_sv);
+				var _o   = _data[dragging_index];
+				real_val = round(dragging.delta_acc + drag_sv);
 				val = key_mod_press(CTRL)? round(real_val / 15) * 15 : real_val;
 				
-				draw_sprite(THEME.rotator_knob, 1, px[dragging], py[dragging]);
+				draw_sprite(THEME.rotator_knob, 1, px[dragging_index], py[dragging_index]);
 				
-				if(_data[dragging] != val) {
+				if(_data[dragging_index] != val) {
 					var modi = false;
-					modi |= onModify(dragging, val);
+					modi    |= onModify(dragging_index, val);
 					
 					if(key_mod_press(ALT)) {
 						var dt = val - _o;
-						modi |= onModify(!dragging, _data[!dragging] - dt);
+						modi  |= onModify(!dragging_index, _data[!dragging_index] - dt);
 					}
 				
-					if(modi)
-						UNDO_HOLDING = true;
+					if(modi) UNDO_HOLDING = true;
 				}
-				
-				drag_sv = real_val;
 			}
-			
-			drag_sa = point_direction(_x, knob_y, _m[0], _m[1]);
-			drag_sv = real_val;
 			
 			if(mouse_release(mb_left)) {
-				dragging = -1;
+				instance_destroy(dragging);
+				dragging = noone;
+				dragging_index = -1;
 				UNDO_HOLDING = false;
 			}
-		} else if(hover) {
+		#endregion
+		} else if(hover) { #region
 			for(var i = 0; i < 2; i++) {
 				if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(20))) {
 					draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
 						
 					if(mouse_press(mb_left, active)) {
-						dragging = i;
+						dragging_index = i;
 						drag_sv  = _data[i];
-						drag_sa  = point_direction(_x, knob_y, _m[0], _m[1]);
-						drag_sc  = lerp_angle(_data[0], _data[1], 0.5);
+						dragging = instance_create(0, 0, rotator_Rotator).init(_m, _x, knob_y);
 					}
 				}
 			}
-			if(dragging == -1 && hover_arc && mouse_press(mb_left, active)) {
-				dragging = 2;
-				drag_sv  = _data;
-				drag_sa  = point_direction(_x, knob_y, _m[0], _m[1]);
+			if(dragging_index == -1 && hover_arc && mouse_press(mb_left, active)) {
+				dragging_index = 2;
+				drag_sv  = [ _data[0], _data[1] ];
+				dragging = instance_create(0, 0, rotator_Rotator).init(_m, _x, knob_y);
 			}
-		}
-		
-		//draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-		//draw_text(_x, knob_y - ui(8), string(_data[0]));
-		//draw_text(_x, knob_y + ui(8), string(_data[1]));
+		} #endregion
 		
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
 }

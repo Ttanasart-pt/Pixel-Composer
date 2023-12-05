@@ -3,9 +3,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	step	 = _step;
 	
 	scale    = 1;
-	dragging = false;
+	dragging = noone;
 	drag_sv  = 0;
-	drag_sa  = 0;
 	real_val = 0;
 	slide_speed = 1 / 10;
 	
@@ -16,21 +15,21 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	
 	halign = fa_center;
 	
-	static setInteract = function(interactable = noone) { 
+	static setInteract = function(interactable = noone) { #region
 		self.interactable = interactable;
 		tb_value.interactable = interactable;
-	}
+	} #endregion
 	
-	static register = function(parent = noone) {
+	static register = function(parent = noone) { #region
 		tb_value.register(parent);
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		halign = params.halign;
 		return draw(params.x, params.y, params.w, params.data, params.m);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _data, _m, draw_tb = true) {
+	static draw = function(_x, _y, _w, _data, _m, draw_tb = true) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -60,12 +59,10 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		var py = knob_y + lengthdir_y(_r, _data);
 		
 		if(dragging) {
-			var delta    = angle_difference(point_direction(_x, knob_y, _m[0], _m[1]), drag_sa);
-			var real_val = round(delta + drag_sv);
+			var real_val = round(dragging.delta_acc + drag_sv);
 			var val      = key_mod_press(CTRL)? round(real_val / 15) * 15 : real_val;
 			
-			if(step != -1)
-				val = round(real_val / step) * step;
+			if(step != -1) val = round(real_val / step) * step;
 			
 			draw_sprite(spr_knob, 1, px, py);
 			
@@ -74,11 +71,9 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 					UNDO_HOLDING = true;
 			}
 			
-			drag_sa = point_direction(_x, knob_y, _m[0], _m[1]);
-			drag_sv = real_val;
-			
 			if(mouse_release(mb_left)) {
-				dragging = false;
+				instance_destroy(dragging);
+				dragging = noone;
 				UNDO_HOLDING = false;
 			}
 			
@@ -86,9 +81,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			draw_sprite(spr_knob, 1, px, py);
 				
 			if(mouse_press(mb_left, active)) {
-				dragging = true;
+				dragging = instance_create(0, 0, rotator_Rotator).init(_m, _x, knob_y);
 				drag_sv  = _data;
-				drag_sa  = point_direction(_x, knob_y, _m[0], _m[1]);
 			}
 			
 			var amo = 1;
@@ -106,5 +100,5 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
 }

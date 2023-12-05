@@ -315,15 +315,17 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 		
 		if(target != -999) {
-			if(mouse_press(mb_left, active) && !click_block) {
-				cursor_select = target;
-				cursor		  = target;	
-			} else if(mouse_click(mb_left, active) && cursor != target)
-				cursor = target;	
-				
-			if(mouse_press(mb_left, active))
-				click_block	  = false;
+			if(!click_block) {
+				if(mouse_press(mb_left, active)) {
+					cursor_select = target;
+					cursor		  = target;	
+				} else if(mouse_click(mb_left, active) && cursor != target)
+					cursor = target;
+			}
 		}
+		
+		if(mouse_release(mb_left, active))
+			click_block	  = false;
 	} #endregion
 	
 	static drawParam = function(params) { #region
@@ -538,11 +540,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(sliding == 1 && (abs(dx) > 16 || abs(dy) > 16)) {
 				sliding  = 2;
 				slide_sv = toNumber(_input_text);
-				o_dialog_textbox_slider.activate()
+				textBox_slider.activate()
 			}
 			
 			if(sliding == 2) {
-				o_dialog_textbox_slider.tb = self;
+				textBox_slider.tb = self;
 				
 				if(mouse_release(mb_left)) deactivate();
 			}

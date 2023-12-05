@@ -17,23 +17,24 @@ if(slide_da == -1) {
 	exit;
 }
 
+var _s = tb.slide_speed;
+
 if(!MOUSE_WRAPPING) {
 	var _adx = mouse_mx - slide_dx;
 	var _ady = slide_dy - mouse_my;
 	
-	var _s = tb.slide_speed;
 	var sc = 10;
 	if(key_mod_press(CTRL)) _s *= sc;
 	if(key_mod_press(ALT))  _s /= sc;
 	
-	var spd  = (slide_da? _ady : _adx) * _s;
-	var _val = value_snap(tb.slide_sv + spd, _s);
-	
-	draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text);
+	var spd = (slide_da? _ady : _adx) * _s;
+	    val = value_snap(tb.slide_sv + spd, _s);
 	
 	var _stp_sz = 50 * _s;
-	var _stp_fl = round(_val / _stp_sz) * _stp_sz;
-	var _stp_md = _val - _stp_fl;
+	var _stp_fl = round(val / _stp_sz) * _stp_sz;
+	var _stp_md = val - _stp_fl;
+	
+	draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text);
 	
 	var _tw = 48;
 	for( var i = -2; i <= 2; i++ ) {
@@ -42,9 +43,9 @@ if(!MOUSE_WRAPPING) {
 	}
 	
 	var _snp_s = 50 * _s;
-	var _snp_v = round(_val / _snp_s) * _snp_s;
-	if(abs(_val - _snp_v) < 5 * _s)
-		_val = _snp_v;
+	var _snp_v = round(val / _snp_s) * _snp_s;
+	if(abs(val - _snp_v) < 5 * _s)
+		val = _snp_v;
 	
 	if(slide_da) {
 		var _sdw = _tw;
@@ -62,9 +63,9 @@ if(!MOUSE_WRAPPING) {
 			draw_text(slide_dx, slide_dy - (_v - tb.slide_sv) / _s, _v);
 		}
 		
-		draw_set_color(_val == tb.slide_sv? COLORS._main_accent : COLORS._main_text);
+		draw_set_color(val == tb.slide_sv? COLORS._main_accent : COLORS._main_text);
 		draw_set_alpha(1);
-		draw_text(slide_dx, slide_dy - (_val - tb.slide_sv) / _s, _val);
+		draw_text(slide_dx, slide_dy - (val - tb.slide_sv) / _s, val);
 	} else {
 		var _sdw = 240;
 		var _sdh = 48;
@@ -81,18 +82,18 @@ if(!MOUSE_WRAPPING) {
 			draw_text(slide_dx + (_v - tb.slide_sv) / _s, slide_dy, _v);
 		}
 		
-		draw_set_color(_val == tb.slide_sv? COLORS._main_accent : COLORS._main_text);
+		draw_set_color(val == tb.slide_sv? COLORS._main_accent : COLORS._main_text);
 		draw_set_alpha(1);
-		draw_text(slide_dx + (_val - tb.slide_sv) / _s, slide_dy, _val);
+		draw_text(slide_dx + (val - tb.slide_sv) / _s, slide_dy, val);
 	}
 					
-	tb._input_text = string_real(_val);
+	tb._input_text = string_real(val);
 	if(tb.apply()) UNDO_HOLDING = true;
 }
 				
 if(MOUSE_WRAPPING) {
-	slide_dx = mouse_mx;
-	slide_dy = mouse_my;
+	if(slide_da) slide_dy = mouse_my + (val - tb.slide_sv) / _s;
+	else         slide_dx = mouse_mx - (val - tb.slide_sv) / _s;
 }
 				
 setMouseWrap();

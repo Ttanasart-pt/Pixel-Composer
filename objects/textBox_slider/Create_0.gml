@@ -1,6 +1,7 @@
 /// @description 
-depth  = -19999;
-tb     = noone;
+depth = -19999;
+tb    = noone;
+val   = 0;
 
 function activate() {
 	slide_da = -1;

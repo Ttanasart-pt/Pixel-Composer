@@ -6,9 +6,7 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	spr = THEME.slider;
 	onModify = _onModify;
 	
-	dragging = -1;
-	drag_mx  = 0;
-	drag_sx  = 0;
+	dragging = noone;
 	
 	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, clamp(val, minn, maxx)); });
 	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, clamp(val, minn, maxx)); });
@@ -16,33 +14,33 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	tb_value_min.slidable = true;
 	tb_value_max.slidable = true;
 	
-	static setSlideSpeed = function(speed) {
+	static setSlideSpeed = function(speed) { #region
 		tb_value_min.setSlidable(speed);
 		tb_value_max.setSlidable(speed);
-	}
+	} #endregion
 	
-	static setInteract = function(interactable = noone) { 
+	static setInteract = function(interactable = noone) { #region
 		self.interactable = interactable;
 		tb_value_min.interactable = interactable;
 		tb_value_max.interactable = interactable;
-	}
+	} #endregion
 	
-	static register = function(parent = noone) {
+	static register = function(parent = noone) { #region
 		tb_value_min.register(parent);
 		tb_value_max.register(parent);
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _m) { #region
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
-		if(!is_real(_data[0])) return;
-		if(!is_real(_data[1])) return;
+		if(!is_real(_data[0])) return h;
+		if(!is_real(_data[1])) return h;
 		
 		var tb_w = ui(64);
 		var sw = _w - (tb_w + ui(16)) * 2;
@@ -56,6 +54,14 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 		var _x0 = _x + tb_w + ui(16);
 		draw_sprite_stretched(spr, 0, _x0, _y + _h / 2 - ui(4), sw, ui(8));	
 		
+		if(stepSize >= 1 && sw / ((maxx - minn) / stepSize) > ui(8)) {
+			for( var i = minn; i <= maxx; i += stepSize ) {
+				var _v  = round(i / stepSize) * stepSize;
+				var _cx = _x + clamp((_v - minn) / (maxx - minn), 0, 1) * sw;
+				draw_sprite_stretched_ext(spr, 4, _cx - ui(4), _y + _h / 2 - ui(4), ui(8), ui(8), COLORS.widget_slider_step, 1);	
+			}
+		}
+		
 		var _slider_x0 = _x0 + clamp((_data[0] - minn) / (maxx - minn), 0, 1) * sw;
 		var _slider_x1 = _x0 + clamp((_data[1] - minn) / (maxx - minn), 0, 1) * sw;
 		
@@ -63,46 +69,50 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 		draw_sprite_stretched(spr, 1, _slider_x0 - ui(10), _y, ui(20), _h);
 		draw_sprite_stretched(spr, 1, _slider_x1 - ui(10), _y, ui(20), _h);
 		
-		if(dragging > -1) {
-			if(dragging == 0)
+		if(dragging) {
+			if(dragging_index == 0)
 				draw_sprite_stretched_ext(spr, 3, _slider_x0 - ui(10), _y, ui(20), _h, COLORS._main_accent, 1);
-			else if(dragging == 1)
+			else if(dragging_index == 1)
 				draw_sprite_stretched_ext(spr, 3, _slider_x1 - ui(10), _y, ui(20), _h, COLORS._main_accent, 1);
 			
-			var val = (_m[0] - _x0) / sw * (maxx - minn) + minn;
+			var val = (dragging.drag_sx - dragging.drag_msx) / dragging.drag_sw * (maxx - minn) + minn;
 			val = round(val / stepSize) * stepSize;
 			val = clamp(val, minn, maxx);
 			if(key_mod_press(CTRL))
 				val = round(val);
 			
-			if(onModify(dragging, val))
+			if(onModify(dragging_index, val))
 				UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left)) {
+				instance_destroy(dragging);
+				dragging = noone;
 				UNDO_HOLDING = false;
-				dragging = -1;
 			}
 		} else if(hover) {
 			var _hover = -1;
-				
+			
 			if(point_in_rectangle(_m[0], _m[1], _slider_x0 - ui(10), _y, _slider_x0 + ui(10), _y + _h)) {
 				draw_sprite_stretched(spr, 2, _slider_x0 - ui(10), _y, ui(20), _h);
 				_hover = 0;
 			}
+			
 			if(point_in_rectangle(_m[0], _m[1], _slider_x1 - ui(10), _y, _slider_x1 + ui(10), _y + _h)) {
 				draw_sprite_stretched(spr, 2, _slider_x1 - ui(10), _y, ui(20), _h);
 				_hover = 1;
 			}
-				
+			
 			if(_hover > -1 && mouse_press(mb_left, active)) {
-				dragging = _hover;
-				drag_mx  = _m[0];
-				drag_sx  = _data[_hover];
+				dragging           = instance_create(0, 0, slider_Slider);
+				dragging_index     = _hover;
+				dragging.drag_sx   = _m[0];
+				dragging.drag_msx  = _x0;
+				dragging.drag_sw   = sw;
 			}
 		}
 		
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
 }

@@ -1,9 +1,9 @@
-function draw_circle_prec(x, y, r, border, precision = 32) {
+function draw_circle_prec(x, y, r, border, precision = 32) { #region
 	draw_set_circle_precision(precision);
 	draw_circle(x, y, r, border);
-}
+} #endregion
 
-function draw_circle_border(xx, yy, r, w) {
+function draw_circle_border(xx, yy, r, w) { #region
 	var step = 32;
 	var angle_step = 360 / step;
 	
@@ -18,9 +18,9 @@ function draw_circle_border(xx, yy, r, w) {
 		draw_vertex(p1x, p1y);
 	}
 	draw_primitive_end();
-}
+} #endregion
 
-function draw_ellipse_border(x0, y0, x1, y1, w) {
+function draw_ellipse_border(x0, y0, x1, y1, w) { #region
 	var step = 32;
 	var angle_step = 360 / step;
 	
@@ -41,9 +41,9 @@ function draw_ellipse_border(x0, y0, x1, y1, w) {
 		_px = px;
 		_py = py;
 	}
-}
+} #endregion
 
-function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32) {
+function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32) { #region
 	var ox, oy, nx, ny, oa, na;
 	
 	draw_primitive_begin(pr_trianglelist);
@@ -65,9 +65,9 @@ function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32) {
 	}
 	
 	draw_primitive_end();
-}
+} #endregion
 
-function draw_arc_width(_x, _y, _r, _th, _angSt, _angEd) {
+function draw_arc_width(_x, _y, _r, _th, _angSt, _angEd) { #region
 	draw_primitive_begin(pr_trianglelist);
 	var oxI, oyI, oxO, oyO;
 	
@@ -99,4 +99,38 @@ function draw_arc_width(_x, _y, _r, _th, _angSt, _angEd) {
 	}
 	
 	draw_primitive_end();
-}
+} #endregion
+
+function draw_arc_forward(_x, _y, _r, _th, _angSt, _angEd) { #region
+	draw_primitive_begin(pr_trianglelist);
+	var oxI, oyI, oxO, oyO;
+	
+	var _aSt = min(_angSt, _angEd);
+	var _aEd = max(_angSt, _angEd);
+	var diff = _aEd - _aSt;
+	
+	for(var i = 0; i <= abs(diff); i += 4) {
+		var as = _aSt + i * sign(diff);
+		var nxI = _x + lengthdir_x(_r - _th / 2, as);
+		var nyI = _y + lengthdir_y(_r - _th / 2, as);
+		var nxO = _x + lengthdir_x(_r + _th / 2, as);
+		var nyO = _y + lengthdir_y(_r + _th / 2, as);
+		
+		if(i) {
+			draw_vertex(oxI, oyI);
+			draw_vertex(oxO, oyO);
+			draw_vertex(nxI, nyI);
+			
+			draw_vertex(oxO, oyO);
+			draw_vertex(nxI, nyI);
+			draw_vertex(nxO, nyO);
+		}
+		
+		oxI = nxI;
+		oyI = nyI;
+		oxO = nxO;
+		oyO = nyO;
+	}
+	
+	draw_primitive_end();
+} #endregion
