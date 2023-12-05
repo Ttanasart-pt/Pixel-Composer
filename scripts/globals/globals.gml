@@ -142,10 +142,8 @@
 
 #region presets
 	function INIT_FOLDERS() {
-		if(!directory_exists(DIRECTORY + "Palettes"))
-			directory_create(DIRECTORY + "Palettes");
-		if(!directory_exists(DIRECTORY + "Gradients"))
-			directory_create(DIRECTORY + "Gradients");
+		directory_verify(DIRECTORY + "Palettes");
+		directory_verify(DIRECTORY + "Gradients");
 	}
 #endregion
 

@@ -1,7 +1,8 @@
 function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Group Output";
 	color = COLORS.node_blend_collection;
-	is_group_io = true;
+	preview_draw = false;
+	is_group_io  = true;
 	
 	destroy_when_upgroup = true;
 	

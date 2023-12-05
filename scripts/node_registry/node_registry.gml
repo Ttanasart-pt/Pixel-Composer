@@ -248,7 +248,7 @@ function __initNodes() {
 		addNodeObject(group, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
 		addNodeObject(group, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]).hideRecent();
 	#endregion
-		
+	
 	var iter = ds_list_create(); #region
 	addNodeCatagory("Loop", iter, ["Node_Iterate"]);
 		ds_list_add(iter, "Groups");
@@ -262,7 +262,7 @@ function __initNodes() {
 		addNodeObject(iter, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(iter, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
 	#endregion
-		
+	
 	var itere = ds_list_create(); #region
 	addNodeCatagory("Loop", itere, ["Node_Iterate_Each"]);
 		ds_list_add(itere, "Groups");
@@ -274,7 +274,7 @@ function __initNodes() {
 		addNodeObject(itere, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(itere, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]).hideRecent();
 	#endregion
-		
+	
 	var filter = ds_list_create(); #region
 	addNodeCatagory("Filter", filter, ["Node_Iterate_Filter"]);
 		ds_list_add(filter, "Groups");
@@ -286,7 +286,7 @@ function __initNodes() {
 		addNodeObject(filter, "Index",			s_node_iterator_index,	"Node_Iterator_Index",			[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(filter, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]).hideRecent();
 	#endregion
-		
+	
 	var feed = ds_list_create(); #region
 	addNodeCatagory("Feedback", feed, ["Node_Feedback"]);
 		ds_list_add(feed, "Groups");
@@ -981,7 +981,7 @@ function __initNodes() {
 		addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147).hideRecent();
 		//addNodeObject(hid, "Pixel Builder",		s_node_pixel_builder,	"Node_Pixel_Builder",			[1, Node_Pixel_Builder]).setVersion(1150).hideRecent();
 			
-		ds_list_add(values, "DynaSurf");
+		ds_list_add(hid, "DynaSurf");
 		addNodeObject(hid, "Input",		s_node_pixel_builder,	"Node_DynaSurf_In",			[1, Node_DynaSurf_In]).hideRecent();
 		addNodeObject(hid, "Output",	s_node_pixel_builder,	"Node_DynaSurf_Out",		[1, Node_DynaSurf_Out]).hideRecent();
 		addNodeObject(hid, "getWidth",	s_node_pixel_builder,	"Node_DynaSurf_Out_Width",	[1, Node_DynaSurf_Out_Width]).hideRecent();

@@ -3,8 +3,8 @@
 	SAMPLE_PROJECTS = ds_list_create();
 #endregion
 
-function LOAD_FOLDER(list, folder) {
-	var path = DIRECTORY + "Welcome files/" + folder;
+function LOAD_FOLDER(list, folder) { #region
+	var path = $"{DIRECTORY}Welcome files/{folder}";
 	var file = file_find_first(path + "/*", fa_directory);
 	
 	while(file != "") {		
@@ -25,13 +25,16 @@ function LOAD_FOLDER(list, folder) {
 		file = file_find_next();
 	}
 	file_find_close();
-}
+} #endregion
 
-function LOAD_SAMPLE() {
+function LOAD_SAMPLE() { #region
 	ds_list_clear(SAMPLE_PROJECTS);
+	var zzip = "Welcome files.zip";
+	var targ = $"{DIRECTORY}Welcome files";
 	
-	zip_unzip("Welcome files.zip", DIRECTORY + "Welcome files")
+	directory_verify(targ);
+	zip_unzip(zzip, targ);
 	
 	LOAD_FOLDER(SAMPLE_PROJECTS, "Getting started");
 	LOAD_FOLDER(SAMPLE_PROJECTS, "Sample Projects");
-}
+} #endregion

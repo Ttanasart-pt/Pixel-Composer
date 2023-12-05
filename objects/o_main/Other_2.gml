@@ -25,22 +25,28 @@
 		DIRECTORY    = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
 	}
 	
-	show_debug_message($"Env directory: {DIRECTORY}");
-	var dir_valid = DIRECTORY != "" && directory_exists(DIRECTORY);
-	var tmp = file_text_open_write(DIRECTORY + "val_check.txt");
+	if(DIRECTORY != "") {
+		var _ch = string_char_last(DIRECTORY);
+		if(_ch != "\\" && _ch != "/") DIRECTORY += "\\";
 	
-	if(tmp == -1) {
-		dir_valid = false;
-		show_message($"WARNING: Inaccessible main directory ({DIRECTORY}) this may be caused by non existing folder, or Pixel Composer has no permission to open the folder.");
-	} else {
-		file_text_close(tmp);
-		file_delete($"{DIRECTORY}val_check.txt");
-	}
+		show_debug_message($"Env directory: {DIRECTORY}");
+		var dir_valid = DIRECTORY != "" && directory_exists(DIRECTORY);
+		var tmp = file_text_open_write(DIRECTORY + "val_check.txt");
 	
-	if(!dir_valid) {
-		show_debug_message("Invalid directory revert back to default %APPDATA%");
+		if(tmp == -1) {
+			dir_valid = false;
+			show_message($"WARNING: Inaccessible main directory ({DIRECTORY}) this may be caused by non existing folder, or Pixel Composer has no permission to open the folder.");
+		} else {
+			file_text_close(tmp);
+			file_delete($"{DIRECTORY}val_check.txt");
+		}
+		
+		if(!dir_valid) {
+			show_debug_message("Invalid directory revert back to default %APPDATA%");
+			DIRECTORY = APP_DIRECTORY;
+		}
+	} else 
 		DIRECTORY = APP_DIRECTORY;
-	}
 	
 	directory_verify(DIRECTORY);
 	
@@ -85,6 +91,10 @@
 	
 	log_message("SESSION", "> init Ins Renderer");	__initInstanceRenderer();
 	log_message("SESSION", "> init Addons");		  loadAddon();
+	
+	log_message("SESSION", "> init sample");		LOAD_SAMPLE();
+	log_message("SESSION", "> init folders");		INIT_FOLDERS();
+	log_message("SESSION", "> init recents");		RECENT_LOAD();
 	
 	log_message("SESSION", ">> Initialization complete");
 	

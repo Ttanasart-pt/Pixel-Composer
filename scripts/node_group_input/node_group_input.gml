@@ -1,9 +1,10 @@
 function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Group Input";
 	color = COLORS.node_blend_collection;
-	is_group_io = true;
-	destroy_when_upgroup = true;
+	preview_draw = false;
+	is_group_io  = true;
 	
+	destroy_when_upgroup = true;
 	inParent = undefined;
 	
 	attributes.input_priority = 0;

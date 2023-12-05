@@ -7,6 +7,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	w = 96;
 	
 	inputs[| 0] = nodeValue("Name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+		.setDisplay(VALUE_DISPLAY.text_tunnel)
 		.rejectArray();
 		
 	inputs[| 1] = nodeValue("Value in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, noone )

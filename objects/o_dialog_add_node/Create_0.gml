@@ -340,9 +340,9 @@ event_inherited();
 	
 	content_pane = new scrollPane(dialog_w - category_width - ui(8), dialog_h - ui(66), function(_y, _m) { #region
 		draw_clear_alpha(c_white, 0);
-		var hh = 0;
 		var _hover = sHOVER && content_pane.hover;
 		var _list  = node_list;
+		var hh = 0;
 		
 		if(ADD_NODE_PAGE == -2) { #region
 			var context = PANEL_GRAPH.getCurrentContext();
@@ -412,10 +412,7 @@ event_inherited();
 		
 		var node_count    = ds_list_size(_list);
 		var group_labels  = [];
-		
 		var _hoverContent = _hover;
-		//if(ADD_NODE_PAGE >= 0 && PREFERENCES.dialog_add_node_grouping) 
-		//	_hoverContent &= _m[1] > ui(8 + 24);
 			
 		if(PREFERENCES.dialog_add_node_view == 0) { #region grid
 			var grid_size  = ui(64);

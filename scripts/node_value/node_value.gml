@@ -103,6 +103,7 @@ enum VALUE_DISPLAY {
 	codeHLSL,
 	text_array,
 	text_box,
+	text_tunnel,
 	
 	//path
 	path_save,
@@ -1185,6 +1186,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget.min_lines = 4;
 						extract_node = "Node_String";
 						break;
+						
 					case VALUE_DISPLAY.codeHLSL:
 						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
 							return setValueDirect(str); 
@@ -1194,10 +1196,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget.function_guide_server = hlsl_function_guide_server;
 						editWidget.parser_server		 = hlsl_document_parser;
 						editWidget.autocomplete_object	 = node;
-		
+						
 						editWidget.font = f_code;
 						editWidget.format = TEXT_AREA_FORMAT.codeHLSL;
 						editWidget.min_lines = 4;
+						extract_node = "Node_String";
+						break;
+					
+					case VALUE_DISPLAY.text_tunnel :
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { 
+							return setValueDirect(str); 
+						});
 						extract_node = "Node_String";
 						break;
 					
