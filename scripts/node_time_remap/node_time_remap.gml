@@ -1,6 +1,7 @@
 function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Time Remap";
+	name      = "Time Remap";
 	use_cache = CACHE_USE.manual;
+	update_on_frame = true;
 	
 	shader = sh_time_remap;
 	uniform_map = shader_get_sampler_index(shader, "map");

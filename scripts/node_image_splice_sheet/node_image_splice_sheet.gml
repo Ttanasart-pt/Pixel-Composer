@@ -20,7 +20,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.padding);
 	
 	inputs[| 7]  = nodeValue("Output", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Array"]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Array" ]);
 	
 	inputs[| 8]  = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
@@ -143,7 +143,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(_amo < 256) {
 			for(var i = _amo - 1; i >= 0; i--) {
-				if(!array_safe_get(sprite_valid, i, true))
+				if(!array_safe_get(sprite_valid, i, false))
 					continue;
 				
 				var _f = sprite_pos[i];
@@ -211,7 +211,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				var _xx = value_snap(round(drag_sx + (_mx - drag_mx) / _s), _snx);
 				var _yy = value_snap(round(drag_sy + (_my - drag_my) / _s), _sny);
 							
-				var off = [_xx, _yy];
+				var off = [ _xx, _yy ];
 				curr_off = off;
 			
 				if(mouse_release(mb_left)) {
@@ -236,7 +236,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				}
 			} else if(drag_type == 3) {
 				var _col = floor((abs(_mx - drag_mx) / _s - _spc[0]) / (__dim[0] + _spc[0]));
-				curr_amo[0] = _col;
+				curr_amo = [ _col, curr_amo[1] ];
 				
 				if(mouse_release(mb_left)) {
 					drag_type = 0;
@@ -244,7 +244,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				}
 			} else if(drag_type == 4) {
 				var _row = floor((abs(_my - drag_my) / _s - _spc[1]) / (__dim[1] + _spc[1]));
-				curr_amo[1] = _row;
+				curr_amo = [ curr_amo[0], _row ];
 				
 				if(mouse_release(mb_left)) {
 					drag_type = 0;
@@ -330,7 +330,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			surface_set_shader(temp_surface[0], sh_slice_spritesheet_empty_scan);
 				shader_set_dim("dimension",  _inSurf);
-				shader_set_f("paddingStart", _pad[2], _pad[1]);
+				shader_set_f("paddingStart", _off[0], _off[1]);
 				shader_set_f("spacing",		 surf_space[0], surf_space[1]);
 				shader_set_f("spriteDim",	 _dim[0], _dim[1]);
 				shader_set_color("color",	 _flcl);
@@ -381,7 +381,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				continue;
 			}
 			
-			var empPx = surface_get_pixel(temp_surface[0], _spr_pos[0], _spr_pos[1]);
+			var empPx = surface_get_pixel_ext(temp_surface[0], _spr_pos[0], _spr_pos[1]);
 			var empty = empPx == 0.;
 					
 			if(!empty) {
@@ -410,10 +410,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _out = getInputData(7);
 		if(_out == 1) {
-			outputs[| 0].setValue(surf_array);
 			update_on_frame = false;
-			
-			//outputs[| 0].setValue(temp_surface[0]);
 			return;
 		}
 		

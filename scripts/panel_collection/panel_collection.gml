@@ -154,7 +154,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		var node_list  = ds_list_size(nodes);
 		var node_count = node_list + array_length(steamNode);
-		var frame  = current_time * PREFERENCES.collection_preview_speed / 3000;
+		var frame  = PREFERENCES.collection_animated? current_time * PREFERENCES.collection_preview_speed / 3000 : 0;
 		var _cw    = contentPane.surface_w;
 		var _hover = pHOVER && contentPane.hover;
 		var hh = 0;
@@ -240,7 +240,7 @@ function Panel_Collection() : PanelContent() constructor {
 									draw_sprite_ui_uniform(THEME.steam_creator, 0, _boxx + grid_size - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);
 							}
 						
-							if(meta.version != SAVE_VERSION) {
+							if(floor(meta.version) != floor(SAVE_VERSION)) {
 								draw_set_color(COLORS._main_accent);
 								draw_circle_prec(_boxx + grid_size - ui(8), yy + grid_size - ui(8), 3, false);
 							}

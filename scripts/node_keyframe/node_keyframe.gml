@@ -281,7 +281,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		var _keyIndex;
 		if(_time >= _len)		_keyIndex = 999_999;
-		else if(_time < _len)	_keyIndex = 0;
+		else if(_time <= 0)		_keyIndex = 0;
 		else					_keyIndex = key_map[_time];
 		
 		if(_keyIndex == -1) { #region Before first key
@@ -317,7 +317,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				return lerpValue(from, to, _lrp);
 			}
 			
-			return processType(values[| ds_list_size(values) - 1].value); //First frame
+			return processType(values[| ds_list_size(values) - 1].value); //Last frame
 		} #endregion
 		
 		#region In between

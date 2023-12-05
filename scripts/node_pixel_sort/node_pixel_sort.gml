@@ -50,7 +50,15 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _tr = _data[2];
 		var _dr = floor(_data[3] / 90) % 4;
 		if(_dr < 0)  _dr = 4 + _dr;
-		if(_it <= 0) return _outSurf;
+		if(_it <= 0) {
+			surface_set_target(_outSurf);
+				BLEND_OVERRIDE;
+				draw_surface_safe(_in, 0, 0);
+				BLEND_NORMAL;
+			surface_reset_target();
+		
+			return _outSurf;
+		}
 		
 		var sw = surface_get_width_safe(_outSurf);
 		var sh = surface_get_height_safe(_outSurf);

@@ -94,9 +94,11 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			var amo = 1;
 			if(key_mod_press(CTRL)) amo *= 10;
 			if(key_mod_press(ALT))  amo /= 10;
-				
-			if(mouse_wheel_down())	onModify(_data + amo * SCROLL_SPEED);
-			if(mouse_wheel_up())	onModify(_data - amo * SCROLL_SPEED);
+			
+			if(key_mod_press(SHIFT)) {
+				if(mouse_wheel_down())	onModify(_data + amo * SCROLL_SPEED);
+				if(mouse_wheel_up())	onModify(_data - amo * SCROLL_SPEED);
+			}
 		} else {
 			draw_sprite(spr_knob, 0, px, py);
 		}

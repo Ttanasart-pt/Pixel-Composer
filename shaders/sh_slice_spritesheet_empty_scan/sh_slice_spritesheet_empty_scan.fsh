@@ -22,7 +22,7 @@ void main() {
 		vec2 tx = (cls + vec2(i, j)) / dimension;
 		vec4 col = texture2D( gm_BaseTexture, tx );
 		
-		if((empty == 1 && col.a != 0.) || (empty == 0 && col != color)) {
+		if((empty == 0 && col != color) || (empty == 1 && col.a != 0.)) {
 			gl_FragColor = col;
 			return;
 		}

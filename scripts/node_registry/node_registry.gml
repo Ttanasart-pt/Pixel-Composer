@@ -235,7 +235,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		
 		NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
 		ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
-			 
+		
 		var fav = ds_list_create();
 		addNodeCatagory("Favourites", fav);
 		

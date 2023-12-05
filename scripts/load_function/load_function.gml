@@ -88,7 +88,7 @@ function __LOAD_PATH(path, readonly = false, override = false) { #region
 	if(struct_has(_load_content, "version")) {
 		var _v = _load_content.version;
 		PROJECT.version = _v;
-		if(_v != SAVE_VERSION) {
+		if(floor(_v) != floor(SAVE_VERSION)) {
 			var warn = $"File version mismatch : loading file version {_v} to Pixel Composer {SAVE_VERSION}";
 			log_warning("LOAD", warn);
 		}

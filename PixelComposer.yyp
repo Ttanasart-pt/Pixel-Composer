@@ -95,6 +95,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"importers","folderPath":"folders/functions/importers.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"inputs","folderPath":"folders/functions/inputs.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"lua","folderPath":"folders/functions/lua.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"math","folderPath":"folders/functions/math.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"migration","folderPath":"folders/functions/migration.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"nodes","folderPath":"folders/functions/nodes.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"packing","folderPath":"folders/functions/packing.yy",},
@@ -280,7 +281,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"button","folderPath":"folders/widgets/button.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"rotator","folderPath":"folders/widgets/rotator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/widgets/text.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"math","folderPath":"folders/functions/math.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},

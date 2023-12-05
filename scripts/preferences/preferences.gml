@@ -46,7 +46,6 @@
 	PREFERENCES.node_show_render_status			= false;
 	PREFERENCES.node_show_time					= true;
 	
-	PREFERENCES.collection_preview_speed		= 60;
 	PREFERENCES.expand_hover					= false;
 	
 	PREFERENCES.graph_zoom_smoooth				= 4;
@@ -88,6 +87,10 @@
 	PREFERENCES.webp_path						= "%APP%/webp/";
 	PREFERENCES.gifski_path						= "%APP%/gifski/";
 	PREFERENCES.ffmpeg_path						= "%APP%/ffmpeg/";
+	
+	PREFERENCES.collection_animated				= true;
+	PREFERENCES.collection_preview_speed		= 60;
+	PREFERENCES.collection_scale				= 1;
 	
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
 #endregion

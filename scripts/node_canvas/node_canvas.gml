@@ -641,6 +641,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		if(instance_exists(o_dialog_color_selector)) return;
+		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		

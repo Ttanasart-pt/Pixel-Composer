@@ -116,8 +116,8 @@ function controlPointBox(_onModify) : widget() constructor {
 				tbW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _wid, _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				
-				rot.draw(_x + _w / 2, yy, _w, _fy, _m);
-				yy += ui(94 + 8);
+				var _rh = rot.draw(_x, yy, _w, _fy, _m);
+				yy += _rh + ui(8);
 				break;
 		}
 		
