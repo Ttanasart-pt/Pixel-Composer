@@ -689,7 +689,7 @@ function __initNodes() {
 		addNodeObject(values, "RegEx Search",		s_node_regex_search,		"Node_String_Regex_Search",		[1, Node_String_Regex_Search]).setVersion(1140);
 		addNodeObject(values, "RegEx Replace",		s_node_regex_replace,		"Node_String_Regex_Replace",	[1, Node_String_Regex_Replace]).setVersion(1140);
 		addNodeObject(values, "Separate File Path",	s_node_separate_file_path,	"Node_Path_Separate_Folder",	[1, Node_Path_Separate_Folder]).setVersion(1145);
-			
+		
 		ds_list_add(values, "Arrays");
 		addNodeObject(values, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
 		addNodeObject(values, "Array Range",	s_node_array_range,		"Node_Array_Range",		[1, Node_Array_Range],, "Create array of numbers by setting start, end and step length.");

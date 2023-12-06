@@ -1123,7 +1123,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		switch(_node.type) {
 			case VALUE_TYPE.surface :
 			case VALUE_TYPE.dynaSurface :
-				return _node.getValue();
+				var val = _node.getValue();
+				return val;
 		}
 		
 		return noone;
