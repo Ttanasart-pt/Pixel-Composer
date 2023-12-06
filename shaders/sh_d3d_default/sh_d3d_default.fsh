@@ -11,6 +11,8 @@ varying float v_cameraDistance;
 #define PI  3.14159265359
 #define TAU 6.28318530718
 
+uniform int use_8bit; 
+
 #region ---- light ----
 	uniform vec4  light_ambient;
 	uniform float shadowBias;
@@ -145,6 +147,10 @@ varying float v_cameraDistance;
 		vec3 n = normalize(dir);
 		return vec2((atan(n.x, n.y) / TAU) + 0.5, 1. - acos(n.z) / PI);
 	}
+	
+	vec4 unormToFloat(vec4 vec) {
+		return vec - 1. * 65536.;
+	}
 #endregion
 
 void main() {
@@ -164,8 +170,11 @@ void main() {
 	#region ++++ normal ++++
 		vec3 _norm = v_vNormal;
 		
-		if(mat_defer_normal == 1)
+		if(mat_defer_normal == 1) {
 			_norm = texture2D(mat_normal_map, viewProjPos.xy).rgb;
+			if(use_8bit == 1)
+				_norm = unormToFloat(_norm);
+		}
 		
 		vec3 normal = normalize(_norm);
 	#endregion

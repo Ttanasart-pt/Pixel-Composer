@@ -5,6 +5,7 @@ varying vec3 v_vNormal;
 
 uniform int			mat_flip;
 uniform int			use_normal;
+uniform int         use_8bit;
 uniform float		normal_strength;
 uniform sampler2D	normal_map;
 
@@ -14,11 +15,16 @@ void main() {
 	vec4 mat_baseColor = texture2D( gm_BaseTexture, uv_coord );
 	if(mat_baseColor.a < 0.1) discard;
 	
-	gl_FragData[0] = vec4(v_worldPosition.xyz, mat_baseColor.a);
-	gl_FragData[1] = vec4(v_viewPosition, mat_baseColor.a);
-	
 	vec3 normal = v_vNormal;
 	if(use_normal == 1) normal += (texture2D(normal_map, uv_coord).rgb * 2. - 1.) * normal_strength;
 	
+	gl_FragData[0] = vec4(v_worldPosition.xyz, mat_baseColor.a);
+	gl_FragData[1] = vec4(v_viewPosition, mat_baseColor.a);
 	gl_FragData[2] = vec4(normalize(normal), mat_baseColor.a);
+	
+	if(use_8bit == 1) {
+		gl_FragData[0] = gl_FragData[0] / 65536. + 1.;
+		gl_FragData[1] = gl_FragData[1] / 65536. + 1.;
+		gl_FragData[2] = gl_FragData[2] / 65536. + 1.;
+	}
 }

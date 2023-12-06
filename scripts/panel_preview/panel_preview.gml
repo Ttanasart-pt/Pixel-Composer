@@ -835,25 +835,27 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			d3_view_camera.applyCamera();
 			
-			gpu_set_cullmode(cull_noculling); 
-			gpu_set_ztestenable(true);
-			gpu_set_zwriteenable(false);
+			if(OS != os_macosx) {
+				gpu_set_cullmode(cull_noculling); 
+				gpu_set_ztestenable(true);
+				gpu_set_zwriteenable(false);
 			
-			shader_set(sh_d3d_grid_view);
-				var _dist = round(d3_view_camera.focus.distance(d3_view_camera.position));
-				var _tx   = round(d3_view_camera.focus.x);
-				var _ty   = round(d3_view_camera.focus.y);
+				shader_set(sh_d3d_grid_view);
+					var _dist = round(d3_view_camera.focus.distance(d3_view_camera.position));
+					var _tx   = round(d3_view_camera.focus.x);
+					var _ty   = round(d3_view_camera.focus.y);
 				
-				var _scale = _dist * 2;
-				while(_scale > 32) _scale /= 2;
+					var _scale = _dist * 2;
+					while(_scale > 32) _scale /= 2;
 				
-				shader_set_f("axisBlend", _blend);
-				shader_set_f("scale", _scale);
-				shader_set_f("shift", _tx / _dist / 2, _ty / _dist / 2);
-				draw_sprite_stretched(s_fx_pixel, 0, _tx - _dist, _ty - _dist, _dist * 2, _dist * 2);
-			shader_reset();
+					shader_set_f("axisBlend", _blend);
+					shader_set_f("scale", _scale);
+					shader_set_f("shift", _tx / _dist / 2, _ty / _dist / 2);
+					draw_sprite_stretched(s_fx_pixel, 0, _tx - _dist, _ty - _dist, _dist * 2, _dist * 2);
+				shader_reset();
 			
-			gpu_set_zwriteenable(true);
+				gpu_set_zwriteenable(true);
+			}
 		#endregion
 		
 		#region draw

@@ -60,6 +60,7 @@ function __3dLightDirectional() : __3dLight() constructor {
 		surface_set_target(shadow_map);
 		draw_clear(c_black);
 		shader_set(shadow_mapper);
+		shader_set_i("use_8bit",  OS == os_macosx);
 		gpu_set_ztestenable(true);
 		
 		camera_set_view_mat(shadow_map_camera, shadow_map_view);

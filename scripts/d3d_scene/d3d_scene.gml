@@ -129,9 +129,9 @@ function __3dScene(camera, name = "New scene") constructor {
 	} #endregion
 	
 	static geometryPass = function(deferData, object, w = 512, h = 512) { #region
-		deferData.geometry_data[0] = surface_verify(deferData.geometry_data[0], w, h, surface_rgba32float);
-		deferData.geometry_data[1] = surface_verify(deferData.geometry_data[1], w, h, surface_rgba32float);
-		deferData.geometry_data[2] = surface_verify(deferData.geometry_data[2], w, h, surface_rgba32float);
+		deferData.geometry_data[0] = surface_verify(deferData.geometry_data[0], w, h, OS == os_macosx? surface_rgba8unorm : surface_rgba32float);
+		deferData.geometry_data[1] = surface_verify(deferData.geometry_data[1], w, h, OS == os_macosx? surface_rgba8unorm : surface_rgba32float);
+		deferData.geometry_data[2] = surface_verify(deferData.geometry_data[2], w, h, OS == os_macosx? surface_rgba8unorm : surface_rgba32float);
 		
 		surface_set_target_ext(0, deferData.geometry_data[0]);
 		surface_set_target_ext(1, deferData.geometry_data[1]);
@@ -149,6 +149,7 @@ function __3dScene(camera, name = "New scene") constructor {
 			shader_set(sh_d3d_geometry);
 			shader_set_f("planeNear", camera.view_near);
 			shader_set_f("planeFar",  camera.view_far);
+			shader_set_i("use_8bit",  OS == os_macosx);
 			
 			submit(object, sh_d3d_geometry);
 			
@@ -158,10 +159,12 @@ function __3dScene(camera, name = "New scene") constructor {
 		surface_reset_target();
 		
 		if(defer_normal_radius) {
-			var _normal_blurred = surface_create_size(deferData.geometry_data[2], surface_rgba32float);
+			var _normal_blurred = surface_create_size(deferData.geometry_data[2], OS == os_macosx? surface_rgba8unorm : surface_rgba32float);
 			surface_set_shader(_normal_blurred, sh_d3d_normal_blur);
 				shader_set_f("radius", defer_normal_radius);
+				shader_set_i("use_8bit",  OS == os_macosx);
 				shader_set_dim("dimension", deferData.geometry_data[2]);
+				
 				draw_surface_safe(deferData.geometry_data[2]);
 			surface_reset_shader();
 		
@@ -202,6 +205,8 @@ function __3dScene(camera, name = "New scene") constructor {
 	
 	static apply = function(deferData = noone) { #region
 		shader_set(sh_d3d_default);
+		shader_set_i("use_8bit",  OS == os_macosx);
+			
 			#region ---- background ----
 				shader_set_f("light_ambient",		colToVec4(lightAmbient));
 				shader_set_i("env_use_mapping",		is_surface(enviroment_map) );

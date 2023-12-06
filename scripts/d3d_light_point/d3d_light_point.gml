@@ -62,6 +62,8 @@ function __3dLightPoint() : __3dLight() constructor {
 		
 		draw_clear(c_black);
 		shader_set(shadow_mapper);
+		shader_set_i("use_8bit",  OS == os_macosx);
+		
 		gpu_set_ztestenable(true);
 		
 		camera_set_view_mat(shadow_map_camera, shadow_map_views[index]);
@@ -80,7 +82,7 @@ function __3dLightPoint() : __3dLight() constructor {
 		if(!shadow_active) return;
 		
 		for( var i = 0; i < 6; i++ ) 
-			shadow_maps[i] = surface_verify(shadow_maps[i], shadow_map_size, shadow_map_size, surface_r32float);
+			shadow_maps[i] = surface_verify(shadow_maps[i], shadow_map_size, shadow_map_size, OS == os_macosx? surface_rgba8unorm : surface_r32float);
 		
 		var position = transform.position;
 		
@@ -101,7 +103,7 @@ function __3dLightPoint() : __3dLight() constructor {
 			shadowProjectEnd();
 		}
 		
-		shadow_map = surface_verify(shadow_map, shadow_map_size * 2, shadow_map_size, surface_rgba32float);
+		shadow_map = surface_verify(shadow_map, shadow_map_size * 2, shadow_map_size, OS == os_macosx? surface_rgba8unorm : surface_rgba32float);
 		
 		surface_set_target(shadow_map);
 			draw_clear(c_black);

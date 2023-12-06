@@ -21,6 +21,10 @@
 function winMan_getData(curr = true) { #region
 	INLINE
 	var _monitors = display_measure_all();
+	if(!is_array(_monitors) || array_empty(_monitors)) 
+		return [ 0, 0, display_get_width(), display_get_height(), 
+		         0, 0, display_get_width(), display_get_height(), ];
+				 
 	var _x = window_get_x();
 	var _y = window_get_y();
 	
@@ -38,9 +42,6 @@ function winMan_getData(curr = true) { #region
 		)) return _monitor;
 	}
 	
-	if(!is_array(_monitor) || array_length(_monitor) < 8) 
-		return [ 0, 0, display_get_width(), display_get_height(), 
-		         0, 0, display_get_width(), display_get_height(), ];
 	return _monitors[0];
 } #endregion
 

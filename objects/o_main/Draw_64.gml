@@ -4,8 +4,6 @@ draw_clear(COLORS.bg);
 #region windows init
 	if(OS == os_windows && winMan_isMinimized())
 		exit;
-	else if(OS == os_macosx)
-		mac_window_step();
 #endregion
 
 #region widget scroll
