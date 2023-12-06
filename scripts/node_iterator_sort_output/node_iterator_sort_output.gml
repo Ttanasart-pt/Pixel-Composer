@@ -6,7 +6,9 @@ function Node_Iterator_Sort_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	inputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
 		.setVisible(true, true);
-		
+	
+	attributes.sort_inputs = 0;
+	
 	static getNextNodes = function() { return []; }
 	
 	static step = function() {}

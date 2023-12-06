@@ -25,10 +25,10 @@
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION;
 
 	LATEST_VERSION	= 11500;
-	VERSION			= 11589;
+	VERSION			= 11590;
 	SAVE_VERSION	= 11600.1;
-	VERSION_STRING  = "1.16rc9";
-	BUILD_NUMBER	= 11589;
+	VERSION_STRING  = "1.16rc10";
+	BUILD_NUMBER	= 11590;
 	
 	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();
@@ -48,11 +48,14 @@
 	
 	DOUBLE_CLICK_POS = [ 0, 0 ];
 	DOUBLE_CLICK = false;
-	FOCUS = noone;
+	
+	FOCUS     = noone;
 	FOCUS_STR = "";
-	HOVER = noone;
+	
+	HOVER             = noone;
 	HOVERING_ELEMENT  = noone;
 	_HOVERING_ELEMENT = noone;
+	
 	DIALOG_CLICK = true;
 	
 	globalvar ADD_NODE_PAGE;

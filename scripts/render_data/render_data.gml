@@ -204,12 +204,8 @@ function Render(partial = false, runAction = false) { #region
 				
 				var nextNodes = rendering.getNextNodes();
 				for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
-					if(nextNodes[i].isRenderable()) {
-						//LOG($"push {nextNodes[i].internalName} to render stack.");
+					if(nextNodes[i].isRenderable())
 						RENDER_QUEUE.enqueue(nextNodes[i]);
-					} else {
-						//LOG($"skip {nextNodes[i].internalName}.");
-					}
 				}
 				
 				if(runAction && rendering.hasInspector1Update())
@@ -274,28 +270,8 @@ function RenderList(list, skipInLoop = true) { #region
 		for( var i = 0, n = ds_list_size(list); i < n; i++ ) {
 			var _node = list[| i];
 			
-			if(is_undefined(_node))			{ LOG_IF(global.FLAG.render == 1, $"Skip undefiend {_node}"); continue; }
-			if(!is_instanceof(_node, Node))	{ LOG_IF(global.FLAG.render == 1, $"Skip non-node  {_node}"); continue; }
-			_node.render_time = 0;
-			
-			if(_node.is_group_io)			{	LOG_IF(global.FLAG.render == 1, $"Skip group IO {_node.internalName}"); continue; }
-			
-			if(!_node.active)			       { LOG_IF(global.FLAG.render == 1, $"Skip inactive         {_node.internalName}"); continue; }
-			if(!_node.isRenderActive())        { LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive {_node.internalName}"); continue; }
-			if(!_node.attributes.update_graph) { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  {_node.internalName}"); continue; }
-			
-			if(skipInLoop && __nodeManualManaged(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip in-loop          {_node.internalName}"); continue; }
-			
-			if(_node.passiveDynamic)		   { 
-				_node.forwardPassiveDynamic();
-				LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  {_node.internalName}"); 
-				continue; 
-			}
-			
-			if(_node.rendered && !_node.isActiveDynamic())	   { LOG_IF(global.FLAG.render == 1, $"Skip rendered static {_node.internalName}"); continue; }
-			//if()	   { LOG_IF(global.FLAG.render == 1, $"Skip static   {_node.internalName}"); continue; }
-			
-			LOG_BLOCK_START();
+			if(!__nodeIsRenderLeaf(_node))
+				continue;
 			
 			LOG_IF(global.FLAG.render == 1, $"Found leaf {_node.internalName}");
 			ds_queue_enqueue(queue, _node);
@@ -321,7 +297,8 @@ function RenderList(list, skipInLoop = true) { #region
 				
 				var nextNodes = rendering.getNextNodes();
 				for( var i = 0, n = array_length(nextNodes); i < n; i++ )
-					ds_queue_enqueue(queue, nextNodes[i]);
+					if(nextNodes[i].isRenderable())
+						ds_queue_enqueue(queue, nextNodes[i]);
 			} 
 			
 			LOG_BLOCK_END();

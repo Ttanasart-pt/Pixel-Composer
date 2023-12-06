@@ -20,9 +20,12 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 		if(!variable_struct_exists(group, "iterated")) return;
 		
 		var type = inputs[| 0].isLeaf()? VALUE_TYPE.any : inputs[| 0].value_from.type;
+		
 		inputs[| 0].setType(type);
 		group.outputs[| 0].setType(type);
-		outputs[| 0].setType(type);
+		
+		if(outputs[| 0].setType(type))
+			will_setHeight = true;
 	} #endregion
 	
 	static cloneValue = function(_prev_val, _val) { #region
@@ -31,7 +34,9 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 		var is_surf	 = inputs[| 0].value_from.type == VALUE_TYPE.surface;
 		var _new_val = [];
 		
-		surface_array_free(_prev_val);
+		if(!is_instanceof(inputs[| 0].value_from.node, Node_Iterator_Each_Input)) 
+			surface_array_free(_prev_val);
+			
 		if(is_surf)	_new_val = surface_array_clone(_val);
 		else		_new_val = array_clone(_val);
 		
@@ -44,7 +49,7 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 			return;
 		}
 			
-		var ind = group.iterated;
+		var ind  = group.iterated;
 		var _val = group.outputs[| 0].getValue();
 		if(!is_array(_val)) {
 			group.iterationUpdate();

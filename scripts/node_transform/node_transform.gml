@@ -176,19 +176,15 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var ins = _data[0];
 		
-		var out_type = _data[9];
-		var out		 = _data[1];
-		
+		var out_type  = _data[9];
+		var out		  = _data[1];
 		var pos		  = [ _data[2][0], _data[2][1] ];
 		var pos_exact = _data[10];
-		
-		var anc = [ _data[3][0], _data[3][1] ];
-		
-		var rot_vel = vel * _data[8];
-		var rot		= _data[5] + rot_vel;
-		
-		var sca  = _data[6];
-		var mode = _data[7];
+		var anc       = [ _data[3][0], _data[3][1] ];
+		var rot_vel   = vel * _data[8];
+		var rot		  = _data[5] + rot_vel;
+		var sca       = _data[6];
+		var mode      = _data[7];
 		
 		var cDep = attrDepth();
 		
@@ -198,7 +194,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _hh = hh;
 		if(_ww <= 1 && _hh <= 1) return _outSurf;
 		
-		switch(out_type) {
+		switch(out_type) { #region output dimension
 			case OUTPUT_SCALING.same_as_input :
 				inputs[| 1].setVisible(false);
 				break;
@@ -230,7 +226,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_ww = maxx - minx;
 				_hh = maxy - miny;
 				break;
-		}
+		} #endregion
+		
 		if(_ww <= 0 || _hh <= 0) return;
 		_outSurf = surface_verify(_outSurf, _ww, _hh, cDep);
 		

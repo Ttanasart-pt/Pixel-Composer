@@ -22,13 +22,11 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Iterator(_x, _y, _grou
 	} #endregion
 	
 	static doInitLoop = function() { #region
-		var arrIn = getInputData(0);
+		var arrIn  = getInputData(0);
 		var arrOut = outputs[| 0].getValue();
 		
-		if(array_length(arrOut) != array_length(arrIn)) {
-			surface_array_free(arrOut);
-			outputs[| 0].setValue([])
-		}
+		if(array_length(arrOut) != array_length(arrIn))
+			outputs[| 0].setValue([]);
 	} #endregion
 	
 	static getIterationCount = function() { #region

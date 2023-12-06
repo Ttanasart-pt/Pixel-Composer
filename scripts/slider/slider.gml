@@ -87,10 +87,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			tb_value.setRange(curr_minn, curr_maxx);
 		}
 		
-		if(THEME_VALUE.slider_type == "full_height")
-			draw_sprite_stretched_ext(spr, 0, _x, _y, sw, _h, blend, 1);
-		else if(THEME_VALUE.slider_type == "stem")
-			draw_sprite_stretched_ext(spr, 0, _x - ui(4), _y + _h / 2 - ui(4), sw + ui(8), ui(8), blend, 1);
+		draw_sprite_stretched_ext(spr, 0, _x - ui(4), _y + _h / 2 - ui(4), sw + ui(8), ui(8), blend, 1);
 			
 		if(stepSize >= 1 && sw / ((curr_maxx - curr_minn) / stepSize) > ui(8)) {
 			for( var i = curr_minn; i <= curr_maxx; i += stepSize ) {
@@ -102,14 +99,10 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		
 		var _pg = clamp((current_value - curr_minn) / (curr_maxx - curr_minn), 0, 1) * sw;
 		var _kx = _x + _pg;
-		if(THEME_VALUE.slider_type == "full_height")
-			draw_sprite_stretched_ext(spr, 1, _x, _y, _pg, _h, blend, 1);
-		else if(THEME_VALUE.slider_type == "stem")
-			draw_sprite_stretched_ext(spr, 1, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
+		draw_sprite_stretched_ext(spr, 1, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
 		
 		if(dragging) {
-			if(THEME_VALUE.slider_type == "stem")
-				draw_sprite_stretched_ext(spr, 3, _kx - handle_w / 2, _y, handle_w, _h, COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(spr, 3, _kx - handle_w / 2, _y, handle_w, _h, COLORS._main_accent, 1);
 			
 			var val = (dragging.drag_sx - dragging.drag_msx) / dragging.drag_sw * (curr_maxx - curr_minn) + curr_minn;
 			val = round(val / stepSize) * stepSize;
@@ -133,8 +126,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			}
 		} else {
 			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - handle_w / 2, _y, _kx + handle_w / 2, _y + _h))) {
-				if(THEME_VALUE.slider_type == "stem")
-					draw_sprite_stretched_ext(spr, 2, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
+				draw_sprite_stretched_ext(spr, 2, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
 				
 				if(mouse_press(mb_left, active)) {
 					dragging = instance_create(0, 0, slider_Slider);

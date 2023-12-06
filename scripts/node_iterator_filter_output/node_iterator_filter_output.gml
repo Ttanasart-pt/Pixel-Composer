@@ -20,7 +20,7 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 		if(!variable_struct_exists(group, "iterated")) return;
 		
 		var type = inputs[| 0].isLeaf()? VALUE_TYPE.any : inputs[| 0].value_from.type;
-		inputs[| 0].setType(type);
+		inputs[| 0].setType(type)
 		group.outputs[| 0].setType(type);
 	}
 	
@@ -42,12 +42,13 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 		if(res) {
 			var is_surf	 = inputs[| 0].value_from.type == VALUE_TYPE.surface;
 			var _new_val = val;
+			
 			if(is_surf)	_new_val = surface_array_clone(val);
 			else		_new_val = array_clone(val);
 			array_push(_val, _new_val);
 		}
 		
-		LOG_IF(global.FLAG.render == 1, "Value " + string(val) + " filter result " + string(res) + " to array " + string(_val));
+		LOG_IF(global.FLAG.render == 1, $"Value {val} filter result {res} to array {_val}");
 		
 		group.outputs[| 0].setValue(_val);
 		group.iterationUpdate();

@@ -14,19 +14,22 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	outputs[| 0].getValueRecursive = function() {
 		if(!struct_has(group, "iterated"))
 			return outputs[| 0].getValueDefault();
-			
-		var _node_output = noone;
+		
 		var _to = outputs[| 1].getJunctionTo();
 		
-		if(array_empty(_to)) 
+		// Not connect to any loop output
+		if(array_empty(_to))
 			return [ noone, inParent ];
 		
-		_node_output = _to[0];
+		var _node_output = _to[0];
 		
-		if(_node_output == noone || group.iterated == 0)
-			return outputs[| 0].getValueDefault();
+		// First iteration, get value from outside
+		if(_node_output == noone || group.iterated == 0) {
+			var _def = outputs[| 0].getValueDefault();
+			return [ variable_clone(_def[0]), _def[1] ];
+		}
 		
-		//print($"Iteration {group.iterated} got {_node_output.node.cache_value}")
+		// Later iteration, get value from output
 		return [ _node_output.node.cache_value, inParent ];
 	}
 	

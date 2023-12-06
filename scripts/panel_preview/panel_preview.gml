@@ -328,6 +328,7 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		var prevS = getNodePreviewSurface();
+		
 		if(is_surface(prevS)) {
 			canvas_w = surface_get_width_safe(prevS);
 			canvas_h = surface_get_height_safe(prevS);	

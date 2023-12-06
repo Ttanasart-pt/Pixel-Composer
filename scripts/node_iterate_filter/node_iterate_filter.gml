@@ -25,7 +25,32 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _gr
 		var arrIn  = getInputData(0);
 		var arrOut = outputs[| 0].getValue();
 		
-		surface_array_free(arrOut);
+		var _int = noone;
+		var _oup = noone;
+		
+		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
+			var _n = nodes[| i];
+			
+			if(is_instanceof(_n, Node_Iterator_Filter_Input))
+				_int = _n;
+			if(is_instanceof(_n, Node_Iterator_Filter_Output))
+				_oup = _n;
+		}
+		
+		if(_int == noone) {
+			noti_warning("Filter Array: Input node not found.");
+			return;
+		}
+		
+		if(_oup == noone) {
+			noti_warning("Filter Array: Output node not found.");
+			return;
+		}
+		
+		var _ofr = _oup.inputs[| 0].value_from;
+		var _imm = _ofr && is_instanceof(_ofr.node, Node_Iterator_Filter_Input);
+		
+		if(!_imm) surface_array_free(arrOut);
 		outputs[| 0].setValue([])
 	} #endregion
 	

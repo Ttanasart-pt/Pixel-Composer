@@ -9,9 +9,9 @@ function Node_Iterator_Sort_Input(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Value in", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0 );
 	
+	attributes.sort_inputs = 0;
+	
 	static update = function() {
-		outputs[| 0].setType(inputs[| 0].type);
-		
 		var val = getInputData(0);
 		outputs[| 0].setValue(val);
 	}

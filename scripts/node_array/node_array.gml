@@ -118,7 +118,11 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static updateType = function(resetVal = false) { #region
 		var _typ = getType();
-		outputs[| 0].setType(_typ);
+		
+		if(_typ == VALUE_TYPE.any && inputs[| input_fix_len].value_from)
+			outputs[| 0].setType(inputs[| input_fix_len].value_from.type);
+		else 
+			outputs[| 0].setType(_typ);
 		
 		for( var i = ds_list_size(inputs) - 1; i >= input_fix_len; i-- ) {
 			if(resetVal) inputs[| i].resetValue();
