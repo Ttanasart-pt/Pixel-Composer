@@ -15,7 +15,7 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	w = 128;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_save, { filter: "*.csv" })
+		.setDisplay(VALUE_DISPLAY.path_save, { filter: "csv file|*.csv" })
 		.rejectArray();
 	
 	inputs[| 1]  = nodeValue("Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, "")

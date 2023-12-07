@@ -1,7 +1,7 @@
 function Node_create_3D_Obj(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_open_filename(".obj", "");
+		path = get_open_filename("30 object|*.obj", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -26,7 +26,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	object_class = __3dObject;
 	
 	inputs[| in_mesh + 0] = nodeValue("File Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "" )
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.obj" })
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" })
 		.rejectArray();
 	
 	inputs[| in_mesh + 1] = nodeValue("Flip UV", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Flip UV axis, can be use to fix some texture mapping error.")

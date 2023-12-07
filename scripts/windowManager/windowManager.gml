@@ -170,8 +170,9 @@ function winManStep() { #region
 		
 		winMan_setRect(sx, sy, sw, sh);
 		
-		if(mouse_release(mb_left))
+		if(mouse_release(mb_left)) {
 			DISPLAY_REFRESH
+		}
 	}
 	
 	if(mouse_release(mb_left)) {

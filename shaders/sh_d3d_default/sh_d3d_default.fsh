@@ -76,6 +76,18 @@ uniform int use_8bit;
 	uniform mat4 viewProjMat;
 #endregion
 
+#region ++++ mapping ++++
+	vec2 equirectangularUv(vec3 dir) {
+		vec3 n = normalize(dir);
+		return vec2((atan(n.x, n.y) / TAU) + 0.5, 1. - acos(n.z) / PI);
+	}
+	
+	float unormToFloat(vec3 v) { 
+		v *= 256.;
+		return (v.r * 65536. + v.g * 256. + v.b) / (65536.); 
+	}
+#endregion
+
 #region ++++ matrix ++++
 	float matrixGet(mat4 matrix, int index) { 
 		if(index < 0 || index > 15) return 0.;
@@ -97,25 +109,33 @@ uniform int use_8bit;
 
 #region ++++ shadow sampler ++++
 	float sampleDirShadowMap(int index, vec2 position) {
-		if(index == 0) return texture2D(light_dir_shadowmap_0, position).r;
-		if(index == 1) return texture2D(light_dir_shadowmap_1, position).r;
-		//if(index == 2) return texture2D(light_dir_shadowmap_2, position).r;
-		//if(index == 3) return texture2D(light_dir_shadowmap_3, position).r;
-		return 0.;
+		vec4 d;
+		
+		       if(index == 0) d = texture2D(light_dir_shadowmap_0, position);
+		  else if(index == 1) d = texture2D(light_dir_shadowmap_1, position);
+		//else if(index == 2) d = texture2D(light_dir_shadowmap_2, position);
+		//else if(index == 3) d = texture2D(light_dir_shadowmap_3, position);
+		
+		if(use_8bit == 1) 
+			return unormToFloat(d.rgb);
+		return d.r;
 	}
 
 	float samplePntShadowMap(int index, vec2 position, int side) {
+		float d = 0.;
+		
 		position.x /= 2.;
 		if(side >= 3) {
 			position.x += 0.5;
 			side -= 3;
 		}
 	
-		if(index == 0) return texture2D(light_pnt_shadowmap_0, position)[side];
-		if(index == 1) return texture2D(light_pnt_shadowmap_1, position)[side];
-		//if(index == 2) return texture2D(light_pnt_shadowmap_2, position)[side];
-		//if(index == 3) return texture2D(light_pnt_shadowmap_3, position)[side];
-		return 0.;
+		       if(index == 0) d = texture2D(light_pnt_shadowmap_0, position)[side];
+		  else if(index == 1) d = texture2D(light_pnt_shadowmap_1, position)[side];
+		//else if(index == 2) d = texture2D(light_pnt_shadowmap_2, position)[side];
+		//else if(index == 3) d = texture2D(light_pnt_shadowmap_3, position)[side];
+		
+		return d;
 	}
 #endregion
 
@@ -142,17 +162,6 @@ uniform int use_8bit;
 	}
 #endregion
 
-#region ++++ mapping ++++
-	vec2 equirectangularUv(vec3 dir) {
-		vec3 n = normalize(dir);
-		return vec2((atan(n.x, n.y) / TAU) + 0.5, 1. - acos(n.z) / PI);
-	}
-	
-	vec4 unormToFloat(vec4 vec) {
-		return vec - 1. * 65536.;
-	}
-#endregion
-
 void main() {
 	vec2 uv_coord = v_vTexcoord;
 	if(mat_flip == 1) uv_coord.y = -uv_coord.y;
@@ -170,11 +179,8 @@ void main() {
 	#region ++++ normal ++++
 		vec3 _norm = v_vNormal;
 		
-		if(mat_defer_normal == 1) {
+		if(mat_defer_normal == 1)
 			_norm = texture2D(mat_normal_map, viewProjPos.xy).rgb;
-			if(use_8bit == 1)
-				_norm = unormToFloat(_norm);
-		}
 		
 		vec3 normal = normalize(_norm);
 	#endregion
@@ -232,12 +238,15 @@ void main() {
 					
 					if(lightMapPosition.x >= 0. && lightMapPosition.x <= 1. && lightMapPosition.y >= 0. && lightMapPosition.y <= 1.) {
 						light_map_depth = sampleDirShadowMap(shadow_map_index, lightMapPosition);
-					
+						
+						//gl_FragData[0] = texture2D(light_dir_shadowmap_0, lightMapPosition);
+						//return;
+						
 						shadow_map_index++;
 						lightDistance = v_lightDistance;
 						float shadowFactor = dot(normal, lightVector);
 						float bias = mix(light_dir_shadow_bias[i], 0., shadowFactor);
-					
+						
 						if(lightDistance > light_map_depth + bias)
 							continue;
 					}

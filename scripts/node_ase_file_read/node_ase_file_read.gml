@@ -1,7 +1,7 @@
 function Node_create_ASE_File_Read(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_open_filename(".ase", "");
+		path = get_open_filename("aseprite|*.ase", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -30,7 +30,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	w = 128;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.ase, *.aseprite" });
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
 		
 	inputs[| 1]  = nodeValue("Generate layers", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { refreshLayers(); } });

@@ -5,7 +5,7 @@ function Node_Text_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	w = 128;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_save, { filter: "*.txt" })
+		.setDisplay(VALUE_DISPLAY.path_save, { filter: "text file|*.txt" })
 		.rejectArray();
 		
 	inputs[| 1] = nodeValue("Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")

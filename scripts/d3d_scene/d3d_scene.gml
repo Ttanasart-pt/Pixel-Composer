@@ -236,17 +236,21 @@ function __3dScene(camera, name = "New scene") constructor {
 				shader_set_f("light_pnt_color",		lightPnt_color);
 				shader_set_f("light_pnt_intensity", lightPnt_intensity);
 				shader_set_f("light_pnt_radius",    lightPnt_radius);
+				
 				shader_set_i("light_pnt_shadow_active", lightPnt_shadow);
-				for( var i = 0, n = array_length(lightPnt_shadowMap); i < n; i++ ) {
-					var _sid = shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, true);
-					gpu_set_tex_repeat_ext(_sid, false);
+				
+				if(OS == os_windows) {
+					for( var i = 0, n = array_length(lightPnt_shadowMap); i < n; i++ ) {
+						var _sid = shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, true);
+						gpu_set_tex_repeat_ext(_sid, false);
+					}
+					shader_set_f("light_pnt_view",		lightPnt_viewMat);
+					shader_set_f("light_pnt_proj",		lightPnt_projMat);
+					shader_set_f("light_pnt_shadow_bias", lightPnt_shadowBias);
 				}
-				shader_set_f("light_pnt_view",		lightPnt_viewMat);
-				shader_set_f("light_pnt_proj",		lightPnt_projMat);
-				shader_set_f("light_pnt_shadow_bias", lightPnt_shadowBias);
 			} #endregion
 			
-			if(defer_normal && deferData != noone && array_length(deferData.geometry_data) > 2) {
+			if(OS == os_windows && defer_normal && deferData != noone && array_length(deferData.geometry_data) > 2) {
 				shader_set_i("mat_defer_normal", 1);
 				shader_set_surface("mat_normal_map", deferData.geometry_data[2]);
 			} else 
@@ -303,7 +307,7 @@ function __3dScene(camera, name = "New scene") constructor {
 		
 		array_push(lightPnt_intensity, light.intensity);
 		array_push(lightPnt_radius,    light.radius);
-		array_push(lightPnt_shadow,    light.shadow_active);
+		array_push(lightPnt_shadow,    OS == os_windows && light.shadow_active);
 		
 		if(light.shadow_active) {
 			if(lightPnt_shadow_count < lightPnt_shadow_max) {

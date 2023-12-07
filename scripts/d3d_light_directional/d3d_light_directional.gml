@@ -52,7 +52,7 @@ function __3dLightDirectional() : __3dLight() constructor {
 	} #endregion
 	
 	static shadowProjectBegin = function() { #region
-		shadow_map = surface_verify(shadow_map, shadow_map_size, shadow_map_size, surface_r32float);
+		shadow_map = surface_verify(shadow_map, shadow_map_size, shadow_map_size, OS == os_macosx? surface_rgba8unorm : surface_r32float);
 		
 		shadow_map_view = matrix_build_lookat(transform.position.x, transform.position.y, transform.position.z, 0, 0, 0, 0, 0, -1);
 		shadow_map_proj = matrix_build_projection_ortho(shadow_map_scale, shadow_map_scale, .01, 100);

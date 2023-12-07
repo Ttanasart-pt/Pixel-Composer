@@ -31,7 +31,7 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 21] = nodeValue("buttonPalette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE)                      .setDisplay(VALUE_DISPLAY.palette)
 	inputs[| 22] = nodeValue("buttonGradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white))  .setDisplay(VALUE_DISPLAY._default)
 
-	inputs[| 23] = nodeValue("pathArrayBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])                                 .setDisplay(VALUE_DISPLAY.path_array, { filter: [ "*.png", "" ] })
+	inputs[| 23] = nodeValue("pathArrayBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])                                 .setDisplay(VALUE_DISPLAY.path_array, { filter: [ "image|*.png;*.jpg", "" ] })
 	inputs[| 24] = nodeValue("pathLoad", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")                                      .setDisplay(VALUE_DISPLAY.path_load)
 	inputs[| 25] = nodeValue("pathSave", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")                                      .setDisplay(VALUE_DISPLAY.path_save)
 	inputs[| 26] = nodeValue("fontScrollBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")                                .setDisplay(VALUE_DISPLAY.path_font)

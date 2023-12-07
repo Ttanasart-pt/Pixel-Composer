@@ -103,7 +103,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		if(!previewable) return;
 		
 		var _surf = outputs[| 1].getValue();
-		if(is_array(_surf)) _surf = array_safe_get(_surf[preview_index]);
+		if(is_array(_surf)) _surf = array_safe_get(_surf, preview_index);
 		if(!is_surface(_surf)) return;
 		
 		var bbox = drawGetBbox(xx, yy, _s);

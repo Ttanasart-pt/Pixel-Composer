@@ -1,7 +1,7 @@
 function Node_create_Image(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_open_filename(".png", "");
+		path = get_open_filename("image|*.png;*.jpg", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -26,7 +26,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	color = COLORS.node_blend_input;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.png" })
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" })
 		.rejectArray();
 		
 	inputs[| 1]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])

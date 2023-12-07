@@ -2,7 +2,7 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	name = "3D Object";
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.obj" })
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" })
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)

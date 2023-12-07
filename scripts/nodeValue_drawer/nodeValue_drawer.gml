@@ -110,6 +110,24 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		lb_w += ui(24);
 	} #endregion
 	
+	if(!jun.active) {
+		draw_set_text(_font, fa_left, fa_center, COLORS._main_text_sub_inner);
+		draw_text_add(lb_x, lb_y - ui(2), _name);
+		
+		if(jun.active_tooltip != "") {
+			var tx = xx + ui(40) + string_width(_name) + ui(16);
+			var ty = lb_y - ui(1);
+			
+			if(point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
+				TOOLTIP = jun.active_tooltip;
+				draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 1);
+			} else 
+				draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 0.75);
+		}
+		
+		return [ 0, true ];
+	}
+	
 	draw_text_add(lb_x, lb_y - ui(2), _name);
 			
 	#region tooltip

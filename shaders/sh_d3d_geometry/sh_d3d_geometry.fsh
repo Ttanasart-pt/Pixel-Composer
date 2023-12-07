@@ -21,10 +21,4 @@ void main() {
 	gl_FragData[0] = vec4(v_worldPosition.xyz, mat_baseColor.a);
 	gl_FragData[1] = vec4(v_viewPosition, mat_baseColor.a);
 	gl_FragData[2] = vec4(normalize(normal), mat_baseColor.a);
-	
-	if(use_8bit == 1) {
-		gl_FragData[0] = gl_FragData[0] / 65536. + 1.;
-		gl_FragData[1] = gl_FragData[1] / 65536. + 1.;
-		gl_FragData[2] = gl_FragData[2] / 65536. + 1.;
-	}
 }

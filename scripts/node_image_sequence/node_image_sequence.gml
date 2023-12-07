@@ -1,7 +1,7 @@
 function Node_create_Image_Sequence(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_open_filenames_compat(".png", "");
+		path = get_open_filenames_compat("image|*.png;*.jpg", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -37,7 +37,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_input;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
-		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["*.png", ""] });
+		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
 	
 	inputs[| 1]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding)

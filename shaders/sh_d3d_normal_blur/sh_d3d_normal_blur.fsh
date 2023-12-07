@@ -7,7 +7,7 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform float radius;
 uniform int   use_8bit;
-
+	
 void main() {
 	vec3 current = texture2D( gm_BaseTexture, v_vTexcoord ).rgb;
 	if(length(current) == 0.) {
@@ -39,6 +39,6 @@ void main() {
     gl_FragColor = vec4(sampled / weight, 1.);
 	
 	if(use_8bit == 1) {
-		gl_FragColor = gl_FragColor / 65536. + 1.;
+		gl_FragColor = gl_FragColor / 256.;
 	}
 }

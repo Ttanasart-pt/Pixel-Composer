@@ -504,11 +504,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "area_type", "unit", "atlas_crop" ];
 	
 	#region ---- main ----
-		node  = _node;
-		x	  = node.x;
-		y     = node.y;
-		index = _connect == JUNCTION_CONNECT.input? ds_list_size(node.inputs) : ds_list_size(node.outputs);
-		type  = _type;
+		active  = true;
+		node    = _node;
+		x	    = node.x;
+		y       = node.y;
+		index   = _connect == JUNCTION_CONNECT.input? ds_list_size(node.inputs) : ds_list_size(node.outputs);
+		type    = _type;
 		forward = true;
 		_initName = _name;
 		
@@ -535,6 +536,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		tooltip    = _tooltip;
 		editWidget = noone;
+		active_tooltip = "";
 		
 		tags = VALUE_TAG.none;
 	#endregion
@@ -699,6 +701,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setName = function(_name) { #region
 		INLINE
 		name = _name;
+		return self;
+	} #endregion
+	
+	static setActive = function(_active, _tooltip) { #region
+		INLINE
+		active = _active;
+		active_tooltip = _tooltip;
+		
+		return self;
+	} #endregion
+	
+	static setWindows = function() { #region
+		INLINE
+		setActive(OS == os_windows, "Not available on MacOS");
+		
 		return self;
 	} #endregion
 	

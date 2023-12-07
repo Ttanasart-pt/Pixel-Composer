@@ -1,7 +1,7 @@
 function Node_create_Json_File_Read(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_open_filename(".json", "");
+		path = get_open_filename("JSON file|*.json", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -31,7 +31,7 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.json" })
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "JSON file|*.json" })
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")

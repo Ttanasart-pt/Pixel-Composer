@@ -37,7 +37,7 @@
 
 #region parser
 	function functionStringClean(fx) { #region
-		static __BRACKETS = [ "(", "[" ];
+		static __BRACKETS = [ "(", "[", "," ];
 		
 		var ch = "", ind = 0, len = string_length(fx);
 		var _fx = "", str = false;

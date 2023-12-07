@@ -53,7 +53,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 	b_export = button(function() { #region
 		if(!is_surface(surface)) return;
 		
-		var path = get_save_filename("*.png", "Screenshot");
+		var path = get_save_filename("image|*.png;*.jpg", "Screenshot");
 		if(path == -1) return;
 		
 		if(filename_ext(path) != ".png") path += ".png";

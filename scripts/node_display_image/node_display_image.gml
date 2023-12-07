@@ -1,7 +1,7 @@
 function Node_create_Display_Image(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_open_filename(".png", "");
+		path = get_open_filename("image|*.png;*.jpg", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -28,7 +28,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setVisible(false)
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.png" })
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" })
 		.rejectArray();
 	
 	inputs[| 1]  = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ x, y ])
