@@ -102,7 +102,7 @@ event_inherited();
 	ds_list_add(pref_global, __txt("Paths"));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-		__txtx("pref_directory", "Main directory path*"),
+		__txtx("pref_directory", "Main directory path" + "*"),
 		new textBox(TEXTBOX_INPUT.text, function(txt) { 
 				PRESIST_PREF.path = txt;
 				json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
@@ -119,7 +119,7 @@ event_inherited();
 	));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_directory_temp", "Temp directory path*"),
+		__txtx("pref_directory_temp", "Temp directory path" + "*"),
 		"temp_path",
 		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.temp_path = txt; PREF_SAVE(); })
 			.setSideButton(button(function() { PREFERENCES.temp_path = get_directory(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -219,7 +219,7 @@ event_inherited();
 	));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_enable_test_mode", "Enable developer mode*"),
+		__txtx("pref_enable_test_mode", "Enable developer mode" + "*"),
 		"test_mode",
 		new checkBox(function() { 
 			PREFERENCES.test_mode = !PREFERENCES.test_mode; 
@@ -230,7 +230,7 @@ event_inherited();
 	ds_list_add(pref_global, __txt("Libraries"));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_directory_ImageMagick", "ImageMagick path*"),
+		__txtx("pref_directory_ImageMagick", "ImageMagick path" + "*"),
 		"ImageMagick_path",
 		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.ImageMagick_path = txt; PREF_SAVE(); })
 			.setSideButton(button(function() { PREFERENCES.ImageMagick_path = get_directory(PREFERENCES.ImageMagick_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -239,7 +239,7 @@ event_inherited();
 	));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_directory_webp", "Webp path*"),
+		__txtx("pref_directory_webp", "Webp path" + "*"),
 		"webp_path",
 		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.webp_path = txt; PREF_SAVE(); })
 			.setSideButton(button(function() { PREFERENCES.webp_path = get_directory(PREFERENCES.webp_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -248,7 +248,7 @@ event_inherited();
 	));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_directory_gifski", "Gifski path*"),
+		__txtx("pref_directory_gifski", "Gifski path" + "*"),
 		"gifski_path",
 		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.gifski_path = txt; PREF_SAVE(); })
 			.setSideButton(button(function() { PREFERENCES.gifski_path = get_directory(PREFERENCES.gifski_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -257,7 +257,7 @@ event_inherited();
 	));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_directory_FFmpeg", "FFmpeg path*"),
+		__txtx("pref_directory_FFmpeg", "FFmpeg path" + "*"),
 		"ffmpeg_path",
 		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.gifski_path = txt; PREF_SAVE(); })
 			.setSideButton(button(function() { PREFERENCES.ffmpeg_path = get_directory(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -315,7 +315,7 @@ event_inherited();
 	file_find_close();
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_interface_language", "Interface Language*"),
+		__txtx("pref_interface_language", "Interface Language" + "*"),
 		"local",
 		new scrollBox(locals, function(str) { 
 			if(str < 0) return;
@@ -325,7 +325,7 @@ event_inherited();
 	));
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_ui_font", "Overwrite UI font*"),
+		__txtx("pref_ui_font", "Overwrite UI font") + "*",
 		"font_overwrite",
 		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.font_overwrite = txt; PREF_SAVE(); })
 			.setSideButton(button(function() { PREFERENCES.font_overwrite = get_open_filename("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))

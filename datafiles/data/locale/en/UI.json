@@ -401,5 +401,8 @@
     "panel_collection_workshop_update": "Update Steam Workshop content",
     "meta_new_version": "Created on a newer version",
 
+    "pref_ui_font": "Overwrite UI font",
+    "panel_menu_node_credit": "Node credit dialog",
+
     "" : ""
 }
