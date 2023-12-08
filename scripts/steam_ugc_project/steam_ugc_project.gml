@@ -37,7 +37,7 @@ function steam_ugc_update_project(update_preview = false, update_note = "Updated
 	directory_create(DIRECTORY + "steamUGC");
 	
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
-	if(file_exists(PROJECT.thumbnail))
+	if(file_exists_empty(PROJECT.thumbnail))
 		file_copy(PROJECT.thumbnail, DIRECTORY + "steamUGC/thumbnail.png");
 	
 	STEAM_UGC_PUBLISH_ID = file.meta.file_id;
@@ -55,7 +55,7 @@ function steam_ugc_update_project(update_preview = false, update_note = "Updated
 	
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
 	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, DIRECTORY + "steamUGC");
-	if(file_exists(TEMPDIR + "steamUGCthumbnail.png"))
+	if(file_exists_empty(TEMPDIR + "steamUGCthumbnail.png"))
 		steam_ugc_set_item_preview(STEAM_UGC_UPDATE_HANDLE, TEMPDIR + "steamUGCthumbnail.png");
 		
 	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, update_note);

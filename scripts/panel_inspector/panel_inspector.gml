@@ -807,7 +807,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			var txt = "Untitled";
 			var context = PANEL_GRAPH.getCurrentContext();
 			
-			if(context == noone && file_exists(PROJECT.path))
+			if(context == noone && file_exists_empty(PROJECT.path))
 				txt = string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), "");
 			else if(context != noone)
 				txt = context.name;

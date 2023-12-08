@@ -17,7 +17,7 @@
 	
 	function __locale_file(file) { #region
 		var dirr = $"{DIRECTORY}Locale/{PREFERENCES.local}";
-		if(!directory_exists(dirr) || !file_exists(dirr + file)) 
+		if(!directory_exists(dirr) || !file_exists_empty(dirr + file)) 
 			dirr = $"{DIRECTORY}Locale/en";
 		return dirr + file;
 	} #endregion

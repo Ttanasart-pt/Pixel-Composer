@@ -46,7 +46,7 @@ function buffer_from_surface(surface, header = true) {
 }
 
 function buffer_from_file(path) {
-	if(!file_exists(path)) return;
+	if(!file_exists_empty(path)) return;
 	var _b = buffer_load(path);
 	return _b;
 }

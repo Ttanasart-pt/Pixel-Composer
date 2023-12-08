@@ -1,5 +1,5 @@
 function sprite_add_center(path) {
-	if(!file_exists(path)) return noone;
+	if(!file_exists_empty(path)) return noone;
 	
 	var _s = sprite_add(path, 0, 0, 0, 0, 0);
 	

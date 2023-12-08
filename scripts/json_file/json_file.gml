@@ -13,7 +13,7 @@ function json_stringify_minify(map) {
 function json_load(path) {
 	gml_pragma("forceinline");
 	
-	if(!file_exists(path)) return noone;
+	if(!file_exists_empty(path)) return noone;
 	
 	var s = file_read_all(path);
 	var js = json_decode(s);
@@ -33,7 +33,7 @@ function json_save(path, map) {
 function json_load_struct(path) {
 	gml_pragma("forceinline");
 	
-	if(!file_exists(path)) return noone;
+	if(!file_exists_empty(path)) return noone;
 	
 	var s  = file_read_all(path);
 	var js = json_try_parse(s);

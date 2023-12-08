@@ -22,7 +22,7 @@ function __initPatreon() {
 	IS_PATREON = false;
 	var _path = DIRECTORY + "patreon";
 	
-	if(!file_exists(_path)) return;
+	if(!file_exists_empty(_path)) return;
 	
 	var _map  = ds_map_secure_load(_path);
 	

@@ -1,14 +1,16 @@
 function file_read_all(path) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var f = file_text_open_read(path);
-	var s = file_text_read_all(f);
+	var s = "";
+	while(!file_text_eof(f))
+		s += file_text_readln(f);
 	file_text_close(f);
 	return s;
 }
 
 function file_text_read_all_lines(path) {
-	gml_pragma("forceinline");
+	INLINE
 	
 	var f = file_text_open_read(path);
 	var s = [];
@@ -19,9 +21,9 @@ function file_text_read_all_lines(path) {
 }
 
 function file_text_write_all(path, str) {
-	gml_pragma("forceinline");
+	INLINE
 	
-	if(file_exists(path)) file_delete(path);
+	if(file_exists_empty(path)) file_delete(path);
 	
 	var f = file_text_open_write(path);
 	file_text_write_string(f, str);

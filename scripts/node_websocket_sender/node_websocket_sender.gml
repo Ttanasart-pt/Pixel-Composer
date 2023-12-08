@@ -127,7 +127,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				break;
 			case 2 :
 				var _path = getInputData(4);
-				if(!file_exists(_path)) return;
+				if(!file_exists_empty(_path)) return;
 				_buff = buffer_from_file(_path);
 				break;
 			case 3 :

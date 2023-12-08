@@ -20,7 +20,7 @@
 	directory_verify(APP_DIRECTORY);
 	
 	var perstPath = APP_DIRECTORY + "persistPreference.json"; 
-	if(file_exists(perstPath)) {
+	if(file_exists_empty(perstPath)) {
 		PRESIST_PREF = json_load_struct(perstPath);
 		DIRECTORY    = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
 	}
@@ -100,7 +100,7 @@
 	
 	__initPanel();
 	
-	if(file_exists("icon.png"))
+	if(file_exists_empty("icon.png"))
 		file_copy("icon.png", DIRECTORY + "icon.png");
 	
 	environment_set_variable("IMGUI_DIALOG_WIDTH", string(800));
@@ -126,7 +126,7 @@
 			path = string_replace_all(path, "\n", "");
 			path = string_replace_all(path, "\"", "");
 		
-			if(file_exists(path) && filename_ext(path) == ".pxc") {
+			if(file_exists_empty(path) && filename_ext(path) == ".pxc") {
 				file_open_parameter = path;
 				alarm[2] = 3;
 			}

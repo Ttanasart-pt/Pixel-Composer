@@ -641,7 +641,7 @@
 		[ "rectangle_in_circle", rectangle_in_circle ],
 
 		//file
-		[ "file_exists", file_exists ],
+		[ "file_exists_empty", file_exists_empty ],
 		[ "file_delete", file_delete ],
 		[ "file_rename", file_rename ],
 		[ "file_copy", file_copy ],

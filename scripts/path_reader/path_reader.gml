@@ -33,14 +33,14 @@ function paths_to_array(paths, recur = false, _filter = "") {
 		}
 		
 		ds_stack_destroy(st);
-	} else if(file_exists(paths))
+	} else if(file_exists_empty(paths))
 		array_push(_paths, paths);
 	
 	return _paths;
 }
 
 function path_is_image(path) {
-	if(!file_exists(path)) return false;	
+	if(!file_exists_empty(path)) return false;	
 	
 	var ext = filename_ext(path);
 	switch(ext) {

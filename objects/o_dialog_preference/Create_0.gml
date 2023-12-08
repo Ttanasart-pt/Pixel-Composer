@@ -482,7 +482,7 @@ event_inherited();
 		var _path = $"{DIRECTORY}themes/{f}";
 		if(directory_exists(_path)) {
 			var _metaPath = _path + "/meta.json";
-			if(!file_exists(_metaPath)) {
+			if(!file_exists_empty(_metaPath)) {
 				var _item = new scrollItem(f, THEME.circle);
 				    _item.spr_blend = COLORS._main_accent;
 				    _item.tooltip   = "Theme made for earlier version.";

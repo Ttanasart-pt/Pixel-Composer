@@ -43,14 +43,13 @@ function _font_extend_locale(baseFont, localFont, override = false) { #region
 
 function _font_path(rel) { #region
 	rel = string_replace_all(rel, "./", "");
-	
-	var defPath = $"{DIRECTORY}themes/{PREFERENCES.theme}/fonts/{rel}";
+	var defPath = $"{DIRECTORY}Themes/{PREFERENCES.theme}/fonts/{rel}";
 	
 	if(LOCALE.fontDir == noone)
 		return defPath;
 	
 	var overridePath = $"{LOCALE.fontDir}{rel}";
-	if(file_exists(overridePath))
+	if(file_exists_empty(overridePath))
 		return overridePath;
 	
 	return defPath;
@@ -62,13 +61,14 @@ function _font_load_from_struct(str, name, def, over = true) { #region
 	var font = str[$ name];
 	var path = "";
 	
-	if(over && file_exists(PREFERENCES.font_overwrite)) path = PREFERENCES.font_overwrite;
-	else {
+	if(over && file_exists_empty(PREFERENCES.font_overwrite)) 
+		path = PREFERENCES.font_overwrite;
+	else
 		path = _font_path(font.path);
-		if(!file_exists(path)) {
-			noti_status($"Font resource {path} not found. Rollback to default font.");
-			return def;
-		}
+	
+	if(!file_exists_empty(path)) {
+		noti_status($"Font resource {path} not found. Rollback to default font.");
+		return def;
 	}
 	
 	font_add_enable_aa(THEME_VALUE.font_aa);
@@ -101,7 +101,7 @@ function loadFonts() { #region
 	
 	var path = _font_path("./fonts.json");
 	
-	if(!file_exists(path)) {
+	if(!file_exists_empty(path)) {
 		noti_status("Font not defined at " + path + ", rollback to default fonts.");
 		f_h1   = _f_h1;
 		f_h2   = _f_h2;

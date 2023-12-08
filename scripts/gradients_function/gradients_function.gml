@@ -213,7 +213,7 @@ function gradientObject(color = c_black) constructor { #region
 
 function loadGradient(path) { #region
 	if(path == "") return noone;
-	if(!file_exists(path)) return noone;
+	if(!file_exists_empty(path)) return noone;
 		
 	var grad = new gradientObject();
 	grad.keys = [];

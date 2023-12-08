@@ -98,7 +98,7 @@ function SAVE_AS(project = PROJECT) { #region
 	if(filename_ext(path) != ".pxc")
 		path += ".pxc";
 	
-	if(file_exists(path))
+	if(file_exists_empty(path))
 		log_warning("SAVE", "Overrided file : " + path);
 	SAVE_AT(project, path);
 	SET_PATH(project, path);
@@ -113,7 +113,7 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
 	//if(TESTING && string_char_at(filename_name(path), 1) != "[")
 	//	path = $"{filename_dir(path)}/[{VERSION_STRING}] {filename_name(path)}";
 	
-	if(file_exists(path)) file_delete(path);
+	if(file_exists_empty(path)) file_delete(path);
 	file_text_write_all(path, save_serialize(project));
 	
 	SAVING    = false;

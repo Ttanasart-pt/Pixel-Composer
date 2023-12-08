@@ -24,7 +24,7 @@
 	}
 	
 	var perstPath = APP_DIRECTORY + "persistPreference.json"; 
-	if(file_exists(perstPath)) {
+	if(file_exists_empty(perstPath)) {
 		PRESIST_PREF = json_load_struct(perstPath);
 		DIRECTORY    = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
 	}
@@ -35,7 +35,7 @@
 
 #region log
 	path = DIRECTORY + "log/crash_log.txt";
-	if(!file_exists(path)) game_end(1);
+	if(!file_exists_empty(path)) game_end(1);
 	
 	crash_content = file_read_all(path);
 	log_surface   = surface_create(1, 1);

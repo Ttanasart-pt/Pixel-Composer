@@ -52,7 +52,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 function __LOAD_PATH(path, readonly = false, override = false) { #region
 	if(DEMO) return false;
 	
-	if(!file_exists(path)) {
+	if(!file_exists_empty(path)) {
 		log_warning("LOAD", "File not found");
 		return false;
 	}
@@ -77,7 +77,7 @@ function __LOAD_PATH(path, readonly = false, override = false) { #region
 	directory_verify(temp_path);
 	
 	var temp_file_path = TEMPDIR + string(UUID_generate(6));
-	if(file_exists(temp_file_path)) file_delete(temp_file_path);
+	if(file_exists_empty(temp_file_path)) file_delete(temp_file_path);
 	file_copy(path, temp_file_path);
 	
 	PROJECT.readonly = readonly;
@@ -267,7 +267,7 @@ function __IMPORT_ZIP() { #region
 	var _f    = file_find_first(_dir + "/*.pxc", fa_none);
 	var _proj = $"{_dir}/{_f}";
 	print(_proj);
-	if(!file_exists(_proj)) return false;
+	if(!file_exists_empty(_proj)) return false;
 	
 	LOAD_PATH(_proj, true);
 } #endregion

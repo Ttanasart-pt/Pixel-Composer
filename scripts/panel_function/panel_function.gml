@@ -137,7 +137,7 @@
 		panelObjectInit();
 		
 		var file = $"{DIRECTORY}layouts/{PREFERENCES.panel_layout_file}.json"; 
-		if(!file_exists(file))
+		if(!file_exists_empty(file))
 			file = DIRECTORY + "layouts/Horizontal.json"; 
 		loadPanel(file, PANEL_MAIN);
 		

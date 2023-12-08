@@ -14,7 +14,7 @@ function __initTheme() { #region
 function _sprite_path(rel, theme) { #region
 	INLINE
 	
-	return $"{DIRECTORY}themes/{theme}/graphics/{string_replace_all(rel, "./", "")}";
+	return $"{DIRECTORY}Themes/{theme}/graphics/{string_replace_all(rel, "./", "")}";
 } #endregion
 
 function _sprite_load_from_struct(str, theme, key) { #region
@@ -51,7 +51,8 @@ function __getGraphicList() { #region
 function loadGraphic(theme = "default") { #region
 	var sprDef = __getGraphicList();
 	var _metaP = $"{DIRECTORY}Themes/{theme}/meta.json";
-	if(!file_exists(_metaP))
+	
+	if(!file_exists_empty(_metaP))
 		noti_warning("Loading theme made for older version.");
 	else {
 		var _meta = json_load_struct(_metaP);
@@ -62,7 +63,7 @@ function loadGraphic(theme = "default") { #region
 	var path   = _sprite_path("./graphics.json", theme);
 	
 	print($"Loading theme {theme}");
-	if(!file_exists(path)) {
+	if(!file_exists_empty(path)) {
 		print("Theme not defined at " + path + ", rollback to default theme.");	
 		return;
 	}

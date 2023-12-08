@@ -14,7 +14,7 @@ function Node_create_ASE_File_Read(_x, _y, _group = noone) { #region
 } #endregion
 
 function Node_create_ASE_File_Read_path(_x, _y, path) { #region
-	if(!file_exists(path)) return noone;
+	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_ASE_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.inputs[| 0].setValue(path);

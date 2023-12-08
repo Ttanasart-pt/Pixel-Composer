@@ -17,7 +17,7 @@ function str_strip_nr(str) {
 }
 
 function readMtl(path) {
-	if(!file_exists(path)) return [];
+	if(!file_exists_empty(path)) return [];
 	
 	var mat = [];
 	var cur_mat = noone;

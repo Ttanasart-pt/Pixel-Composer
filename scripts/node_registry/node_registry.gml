@@ -14,7 +14,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	is_patreon_extra = false;
 	
 	var pth = DIRECTORY + "Nodes/tooltip/" + node + ".png";
-	if(file_exists(pth))
+	if(file_exists_empty(pth))
 		tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
 	new_node = false;
 	
@@ -228,11 +228,11 @@ function __initNodes() {
 	global.__currPage = "";
 	
 	var favPath = DIRECTORY + "Nodes/fav.json";
-	global.FAV_NODES = file_exists(favPath)? json_load_struct(favPath) : [];
+	global.FAV_NODES = file_exists_empty(favPath)? json_load_struct(favPath) : [];
 	if(!is_array(global.FAV_NODES)) global.FAV_NODES = [];
 	
 	var recPath = DIRECTORY + "Nodes/recent.json";
-	global.RECENT_NODES = file_exists(recPath)? json_load_struct(recPath) : [];
+	global.RECENT_NODES = file_exists_empty(recPath)? json_load_struct(recPath) : [];
 	if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
 		
 	NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);

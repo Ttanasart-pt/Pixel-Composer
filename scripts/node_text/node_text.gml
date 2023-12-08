@@ -71,7 +71,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		_size_current    = _size;
 		_aa_current      = _aa;
 		
-		if(!file_exists(_path)) return;
+		if(!file_exists_empty(_path)) return;
 		
 		if(font != f_p0 && font_exists(font)) 
 			font_delete(font);

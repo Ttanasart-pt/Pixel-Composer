@@ -54,7 +54,7 @@ function log_newline() {
 
 function log_clear() {
 	var path = DIRECTORY + "log/log.txt";
-	if(file_exists(path))
+	if(file_exists_empty(path))
 		file_delete(path);
 }
 

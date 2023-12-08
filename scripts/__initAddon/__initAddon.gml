@@ -22,7 +22,7 @@ function __initAddon() {
 		var _path = dirPath + "\\" + f;
 		var _meta = _path + "\\meta.json";
 		
-		if(!file_exists(_meta)) {
+		if(!file_exists_empty(_meta)) {
 			f = file_find_next();
 			continue;
 		}
@@ -45,7 +45,7 @@ function __initAddon() {
 
 function loadAddon() {
 	var _path = DIRECTORY + "Addons\\__init.json";
-	if(!file_exists(_path)) return;
+	if(!file_exists_empty(_path)) return;
 	
 	ADDONS_ON_START = json_load_struct(_path);
 	for( var i = 0, n = array_length(ADDONS_ON_START); i < n; i++ ) 

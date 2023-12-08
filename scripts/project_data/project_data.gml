@@ -6,11 +6,11 @@
 	function Project() constructor {
 		active	= true; /// @is {bool}
 		
-		meta      = __getdefaultMetaData();
-		path	  = ""; /// @is {string}
-		thumbnail = "";
-		version   = SAVE_VERSION; /// @is {number}
-		seed      = irandom_range(100000, 999999); /// @is {number}
+		meta      = __getdefaultMetaData();	
+		path	  = ""; /// @is {string}								
+		thumbnail = "";													
+		version   = SAVE_VERSION; /// @is {number}						
+		seed      = irandom_range(100000, 999999); /// @is {number}		
 		
 		modified = false; /// @is {bool}
 		readonly = false; /// @is {bool} 
@@ -23,7 +23,6 @@
 		nodeTopo    = ds_list_create();
 		
 		animator	= new AnimationManager();
-		
 		globalNode	= new Node_Global();
 		
 		previewGrid = { #region

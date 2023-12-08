@@ -7,7 +7,7 @@ function Node_create_Custom(_x, _y, _group = noone, _param = {}) {
 }
 
 function Node_create_Custom_path(_x, _y, path) {
-	if(!file_exists(path)) return noone;
+	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_Custom(_x, _y, PANEL_GRAPH.getCurrentContext());
 	if(!node.setPath(path)) return noone;
@@ -31,7 +31,7 @@ function Node_Custom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static setPath = function(_path) {
 		var _info = _path + "/info.json";
-		if(!file_exists(_info)) return false;
+		if(!file_exists_empty(_info)) return false;
 		
 		info = json_load_struct(_info);
 		path = _path;
@@ -191,7 +191,7 @@ function __initNodeCustom(list) { #region
 		_n.tooltip = _info.tooltip;
 		
 		var _tol = _dir + _info.tooltip_spr;
-		if(file_exists(_tol)) _n.tooltip_spr = sprite_add(_tol, 0, false, false, 0, 0);
+		if(file_exists_empty(_tol)) _n.tooltip_spr = sprite_add(_tol, 0, false, false, 0, 0);
 		
 		ds_list_add(list, _n);
 				

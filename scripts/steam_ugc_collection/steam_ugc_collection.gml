@@ -50,7 +50,7 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 	
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
 	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, DIRECTORY + "steamUGC");
-	if(file_exists(TEMPDIR + "steamUGCthumbnail.png"))
+	if(file_exists_empty(TEMPDIR + "steamUGCthumbnail.png"))
 		steam_ugc_set_item_preview(STEAM_UGC_UPDATE_HANDLE, TEMPDIR + "steamUGCthumbnail.png");
 	
 	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, update_note);

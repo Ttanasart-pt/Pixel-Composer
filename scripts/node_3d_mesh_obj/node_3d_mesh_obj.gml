@@ -12,7 +12,7 @@ function Node_create_3D_Obj(_x, _y, _group = noone) { #region
 } #endregion
 
 function Node_create_3D_Obj_path(_x, _y, path) { #region
-	if(!file_exists(path)) return noone;
+	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_3D_Mesh_Obj(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.setPath(path);
@@ -82,7 +82,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		var mat  = materials[m_index];
 		inputs[| index].name = materialNames[m_index] + " Material";
 		
-		if(file_exists(mat.diff_path)) {
+		if(file_exists_empty(mat.diff_path)) {
 			var sol = Node_create_Image_path(x - (w + 128), matY + m_index * (128 + 32), mat.diff_path);
 			sol.name = mat.name + " texture";
 			
@@ -97,7 +97,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	} #endregion
 	
 	static updateObj = function(_path) { #region
-		if(!file_exists(_path)) return;
+		if(!file_exists_empty(_path)) return;
 		current_path = _path;
 		
 		readObj_init();

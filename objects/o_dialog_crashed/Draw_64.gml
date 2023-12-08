@@ -46,6 +46,6 @@ draw_set_alpha(1);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txtx("crashed_log", "Log file") + "...");
 	if(b == 2) {
 		var path = string(DIRECTORY) + "crash_log.txt";
-		if(file_exists(path)) shellOpenExplorer(path);
+		if(file_exists_empty(path)) shellOpenExplorer(path);
 	}
 #endregion

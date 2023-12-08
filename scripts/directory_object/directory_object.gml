@@ -95,11 +95,11 @@ function FileObject(_name, _path) constructor { #region
 		
 		if(meta != noone)		return meta;  
 		if(meta == undefined)	return noone; 
-		if(!file_exists(path))	return noone;
+		if(!file_exists_empty(path))	return noone;
 		
 		meta = new MetaDataManager();
 		
-		if(file_exists(meta_path)) {
+		if(file_exists_empty(meta_path)) {
 			meta.deserialize(json_load_struct(meta_path));
 		} else {
 			var m  = json_load_struct(path);
@@ -170,7 +170,7 @@ function DirectoryObject(name, path) constructor { #region
 					f.spr_path = [icon_path, amo, false];
 				} else {
 					var icon_path = path + "/" + filename_change_ext(file, ".png");
-					if(!file_exists(icon_path)) continue;
+					if(!file_exists_empty(icon_path)) continue;
 					
 					var _temp = sprite_add(icon_path, 0, false, false, 0, 0);
 					var ww = sprite_get_width(_temp);

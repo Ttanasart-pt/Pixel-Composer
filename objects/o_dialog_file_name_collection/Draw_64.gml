@@ -70,7 +70,7 @@
 				if(_newPath != updating.path) {
 					file_rename(updating.path,		_newPath);
 					file_rename(updating.meta_path, _newMeta);
-					if(file_exists(_oldSpr)) file_rename(_oldSpr, _newSpr);
+					if(file_exists_empty(_oldSpr)) file_rename(_oldSpr, _newSpr);
 				}
 				
 				updating.path        = _newPath;

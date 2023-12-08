@@ -1705,7 +1705,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			else if(filename_ext(txt) == ".pxcc")
 				APPEND(txt);
 			else if(filename_ext(txt) == ".png") {
-				if(file_exists(txt)) {
+				if(file_exists_empty(txt)) {
 					Node_create_Image_path(0, 0, txt);
 					return;
 				}

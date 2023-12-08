@@ -3,7 +3,7 @@ function __migration_check() {
 	if(!directory_exists(oldDir)) return;
 	
 	var mig = oldDir + "migration";
-	if(file_exists(mig)) return;
+	if(file_exists_empty(mig)) return;
 	
 	var f = file_text_open_write(mig);	
 	file_text_close(f);

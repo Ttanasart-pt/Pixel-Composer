@@ -19,7 +19,7 @@ event_inherited();
 		context_menus = {};
 		panels = {};
 	
-		if(file_exists(propPath)) {
+		if(file_exists_empty(propPath)) {
 			var meta = json_load_struct(propPath);
 			if(struct_has(meta, "panels")) {
 				panels = meta.panels;
@@ -52,7 +52,7 @@ event_inherited();
 		}
 		
 		scriptPath = directory + "\\script.lua";
-		if(!file_exists(scriptPath)) {
+		if(!file_exists_empty(scriptPath)) {
 			noti_warning(title + " Addon error: script.lua not found.");
 			return self;
 		}

@@ -112,7 +112,7 @@ for( var i = 0, n = array_length(keys); i < n; i++ ) {
 	
 	var path = att[1];
 	
-	if(!file_exists(path)) {
+	if(!file_exists_empty(path)) {
 		attachment[? keys[i]] = noone;
 		exit;
 	}

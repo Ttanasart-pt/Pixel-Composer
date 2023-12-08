@@ -28,11 +28,11 @@ function exportPortable(project = PROJECT) {
 			for( var k = 0, o = array_length(_input.raw_value); k < o; k++ ) {
 				var _val = _input.raw_value[k][1];
 				
-				if(is_string(_val) && file_exists(_val))
+				if(is_string(_val) && file_exists_empty(_val))
 					_input.raw_value[k][1] = __pack_file_strip(zip, _val);
 				else if(is_array(_val)) {
 					for( var l = 0, p = array_length(_val); l < p; l++ ) {
-						if(is_string(_val[l]) && file_exists(_val[l]))
+						if(is_string(_val[l]) && file_exists_empty(_val[l]))
 							_input.raw_value[k][1][l] = __pack_file_strip(zip, _val[l]);	
 					}
 				}

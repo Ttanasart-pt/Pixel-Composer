@@ -64,7 +64,7 @@ event_inherited();
 			
 				var _rec = RECENT_FILES[| ind];
 				var _dat = RECENT_FILE_DATA[| ind];
-				if(!file_exists(_rec)) continue;
+				if(!file_exists_empty(_rec)) continue;
 			
 				var thmb = recent_thumbnail? _dat.getThumbnail() : noone;
 				var fx   = j * (ww + ui(8));

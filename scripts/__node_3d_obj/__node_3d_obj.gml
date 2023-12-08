@@ -122,7 +122,7 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var matY = y - (array_length(materials) - 1) / 2 * (128 + 32);
 		var mat = materials[m_index];
 		
-		if(file_exists(mat.diff_path)) {
+		if(file_exists_empty(mat.diff_path)) {
 			var sol = Node_create_Image_path(x - (w + 64), matY + m_index * (128 + 32), mat.diff_path);
 			sol.name = mat.name + " texture";
 			
@@ -138,7 +138,7 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	static updateObj = function(updateMat = true) {
 		var _path = getInputData(0);
-		if(!file_exists(_path)) return;
+		if(!file_exists_empty(_path)) return;
 		
 		var _flip = getInputData(12);
 		var _dir  = filename_dir(_path);

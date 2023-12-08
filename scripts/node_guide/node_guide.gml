@@ -149,10 +149,10 @@ function __initNodeData() {
 	
 	var nodeDir = DIRECTORY + "Nodes/";
 	
-	if(file_exists("data/tooltip.zip")) 
+	if(file_exists_empty("data/tooltip.zip")) 
 		zip_unzip("data/tooltip.zip", nodeDir);
 	
-	if(file_exists("data/nodes.json")) {
+	if(file_exists_empty("data/nodes.json")) {
 		file_delete(nodeDir + "nodes.json");
 		file_copy_override("data/nodes.json", nodeDir + "nodes.json");
 	}
@@ -162,7 +162,7 @@ function __initNodeData() {
 	
 	directory_verify(nodeDir + "Related");
 	file_copy_override(_relFrom, _relTo);
-	//print($"Copying related nodes from {_relFrom} to {_relTo}\n\t{file_exists(_relFrom)}, {file_exists(_relTo)}");
+	//print($"Copying related nodes from {_relFrom} to {_relTo}\n\t{file_exists_empty(_relFrom)}, {file_exists_empty(_relTo)}");
 	
 	__initNodeReleated();
 }

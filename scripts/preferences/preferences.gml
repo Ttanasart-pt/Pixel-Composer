@@ -115,7 +115,7 @@
 	
 	function RECENT_LOAD() {
 		var path = DIRECTORY + "recent.json";
-		if(!file_exists(path)) return;
+		if(!file_exists_empty(path)) return;
 		
 		var file = file_text_open_read(path);
 		var load_str = "";
@@ -130,7 +130,7 @@
 			ds_list_clear(RECENT_FILES);
 			
 			for(var i = 0; i < ds_list_size(l); i++) {
-				if(!file_exists(l[| i])) continue;
+				if(!file_exists_empty(l[| i])) continue;
 				ds_list_add(RECENT_FILES, l[| i]);
 			}
 		}
@@ -182,7 +182,7 @@
 	
 	function PREF_LOAD() {
 		var path = DIRECTORY + "keys.json";
-		if(!file_exists(path)) return;
+		if(!file_exists_empty(path)) return;
 		
 		var map = json_load_struct(path);
 		if(array_empty(variable_struct_get_names(map))) return;

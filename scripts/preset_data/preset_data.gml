@@ -7,7 +7,7 @@
 		var _preset_path = "data/Preset.zip";
 		var root = DIRECTORY + "Presets";
 		directory_verify(root);
-		if(check_version($"{root}/version") && file_exists(_preset_path))
+		if(check_version($"{root}/version") && file_exists_empty(_preset_path))
 			zip_unzip(_preset_path, root);
 	
 		global.PRESETS = new DirectoryObject("Presets", root);

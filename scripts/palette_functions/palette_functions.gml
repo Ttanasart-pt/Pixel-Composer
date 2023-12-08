@@ -12,7 +12,7 @@ function isPaletteFile(path) { #region
 } #endregion
 
 function loadPalette(path) { #region
-	if(!file_exists(path))   return [];
+	if(!file_exists_empty(path))   return [];
 	if(!isPaletteFile(path)) return [];
 	
 	var ext = string_lower(filename_ext(path));

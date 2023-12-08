@@ -16,17 +16,17 @@ function loadColor(theme = "default") {
 }
 
 function _loadColor(theme = "default", replace = false) {
-	var dirr = DIRECTORY + "themes/" + theme;
+	var dirr = DIRECTORY + "Themes/" + theme;
 	var path  = dirr + "/values.json";
 	var pathO = dirr + "/override.json";
 	
-	if(!file_exists(path)) {
+	if(!file_exists_empty(path)) {
 		noti_status("Colors not defined at " + path + ", rollback to default color.");
 		return;
 	}
 	
 	var clrs = json_load_struct(path);
-	var oclr = file_exists(pathO)? json_load_struct(pathO) : {};
+	var oclr = file_exists_empty(pathO)? json_load_struct(pathO) : {};
 	
 	if(!struct_has(clrs, "values")) {
 		print("Load color error");
