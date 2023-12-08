@@ -1,0 +1,38 @@
+{
+    "h1": {
+        "path": "./NotoSans-Medium.ttf",
+        "size": 48
+    },
+    "h3": {
+        "path": "./NotoSans-Bold.ttf",
+        "size": 20
+    },
+    "h5": {
+        "path": "./NotoSans-Bold.ttf",
+        "size": 16
+    },
+    "p0": {
+        "path": "./NotoSans-Medium.ttf",
+        "size": 12
+    },
+    "p0b": {
+        "path": "./NotoSans-Bold.ttf",
+        "size": 12
+    },
+    "p1": {
+        "path": "./NotoSans-SemiBold.ttf",
+        "size": 11
+    },
+    "p2": {
+        "path": "./NotoSans-SemiBold.ttf",
+        "size": 10
+    },
+    "p3": {
+        "path": "./NotoSans-SemiBold.ttf",
+        "size": 9
+    },
+    "code": {
+        "path": "./FiraCode-Medium.ttf",
+        "size": 12
+    }
+}

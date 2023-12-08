@@ -477,9 +477,9 @@ event_inherited();
 
 #region theme
 	themes = [];
-	var f = file_find_first(DIRECTORY + "themes/*", fa_directory);
+	var f = file_find_first(DIRECTORY + "Themes/*", fa_directory);
 	while(f != "") {
-		var _path = $"{DIRECTORY}themes/{f}";
+		var _path = $"{DIRECTORY}Themes/{f}";
 		if(directory_exists(_path)) {
 			var _metaPath = _path + "/meta.json";
 			if(!file_exists_empty(_metaPath)) {
@@ -598,7 +598,7 @@ event_inherited();
 	});
 	
 	function overrideColor() {
-		var path = $"{DIRECTORY}themes/{PREFERENCES.theme}/override.json";
+		var path = $"{DIRECTORY}Themes/{PREFERENCES.theme}/override.json";
 		json_save_struct(path, COLORS, true);
 	}
 #endregion

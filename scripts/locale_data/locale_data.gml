@@ -5,7 +5,7 @@
 	LOCALE_DEF  = true;
 	
 	function __initLocale() { #region
-		var lfile = $"data/locale/en.zip";
+		var lfile = $"data/Locale/en.zip";
 		var root  = $"{DIRECTORY}Locale";
 		
 		directory_verify(root);

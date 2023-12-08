@@ -4,7 +4,7 @@ function __initTheme() { #region
 	directory_verify(root);
 	if(check_version($"{root}/version")) {
 		log_message("THEME", $"unzipping default theme to {root}.");
-		zip_unzip("data/themes/default.zip", root);
+		zip_unzip("data/Themes/default.zip", root);
 	}
 	
 	loadGraphic(PREFERENCES.theme);

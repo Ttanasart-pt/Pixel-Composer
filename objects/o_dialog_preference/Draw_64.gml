@@ -55,7 +55,7 @@ if !ready exit;
 		var _txt = __txtx("pref_reset_color", "Reset colors");
 		var b = buttonInstant(THEME.button_hide, bx, py, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.refresh);
 		if(b == 2) {
-			var path = $"{DIRECTORY}themes/{PREFERENCES.theme}/override.json";
+			var path = $"{DIRECTORY}Themes/{PREFERENCES.theme}/override.json";
 			if(file_exists_empty(path)) file_delete(path);
 			loadColor(PREFERENCES.theme);
 		}
