@@ -439,7 +439,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(node_hover) node_hover.attributes.color = __temp_color;
 				array_foreach(nodes_selecting, function(node) { node.attributes.color = __temp_color; });
 			}
-		
+			
 			var _clrs = COLORS.labels;
 			var _item = array_create(array_length(_clrs));
 	
@@ -470,10 +470,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			function setSelectingJuncColor(color) { 
 				if(__junction_hovering == noone) return; 
-				__junction_hovering.color = color;
-				
-				if(__junction_hovering.value_from != noone)
-					__junction_hovering.value_from.color = color;
+				__junction_hovering.setColor(color);
 				
 				for(var i = 0; i < array_length(nodes_selecting); i++) {
 					var _node = nodes_selecting[i];
@@ -481,9 +478,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					for( var j = 0, m = ds_list_size(_node.inputs); j < m; j++ ) {
 						var _input = _node.inputs[| j];
 						if(_input.isLeaf()) continue;
-						
-						_input.color = color;
-						_input.value_from.color = color;
+						_input.setColor(color);
 					}
 				}
 			}

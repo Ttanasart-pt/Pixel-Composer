@@ -1256,6 +1256,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		updateColor();
 	} resetDisplay(); #endregion
 	
+	static setColor = function(col) { #region
+		color = col;
+		updateColor();
+		
+		if(value_from != noone)
+			value_from.setColor(col);
+		
+		return self;
+	} #endregion
+	
 	static updateColor = function(val = undefined) { #region
 		INLINE
 		

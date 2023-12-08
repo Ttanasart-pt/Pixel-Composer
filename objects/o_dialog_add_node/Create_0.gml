@@ -378,10 +378,10 @@ event_inherited();
 			var _cont = PANEL_GRAPH.getCurrentContext();
 			if(_cont != noone) array_append(sug, nodeReleatedQuery("context", instanceof(_cont)));			
 			
-			if(array_length(sug)) {
+			if(!array_empty(sug)) {
 				ds_list_add(_list, "Related");
 				for( var i = 0, n = array_length(sug); i < n; i++ )
-					ds_list_add(_list, ALL_NODES[? sug[i]]);
+					ds_list_add(_list, ALL_NODES[? array_safe_get(sug, i)]);
 			}
 			
 			ds_list_add(_list, "Favourites");

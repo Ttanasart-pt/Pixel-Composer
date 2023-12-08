@@ -142,13 +142,11 @@ function Panel_Inspector() : PanelContent() constructor {
 		function setSelectingItemColor(color) { 
 			if(__dialog_junction == noone) return; 
 			
-			__dialog_junction.color = color;
+			__dialog_junction.setColor(color);
 			
-			if(__dialog_junction.value_from != noone)
-				__dialog_junction.value_from.color = color;
 			var _val_to = __dialog_junction.getJunctionTo();
 			for( var i = 0, n = array_length(_val_to); i < n; i++ ) 
-				_val_to[i].color = color;
+				_val_to[i].setColor(color);
 		}
 		
 		var _clrs = COLORS.labels;
