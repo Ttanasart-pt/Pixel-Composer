@@ -894,7 +894,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		printIf(log, $"Draw active: {get_timer() - t}"); t = get_timer();
 		
 		#region draw connections
-			var aa = min(8192 / w, 8192 / h, PREFERENCES.connection_line_aa);
+			var aa = floor(min(8192 / w, 8192 / h, PREFERENCES.connection_line_aa));
+			
 			connection_surface    = surface_verify(connection_surface, w * aa, h * aa);
 			connection_surface_aa = surface_verify(connection_surface_aa, w, h);
 			surface_set_target(connection_surface);
@@ -945,17 +946,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			}
 			
 			surface_reset_target();
-		
+			
+			gpu_set_texfilter(true);
 			surface_set_shader(connection_surface_aa, sh_downsample);
 				shader_set_f("down", aa);
 				shader_set_dim("dimension", connection_surface);
 				draw_surface(connection_surface, 0, 0);
 			surface_reset_shader();
-		
+			gpu_set_texfilter(false);
+			
 			BLEND_ALPHA_MULP
 			draw_surface(connection_surface_aa, 0, 0);
 			BLEND_NORMAL
-		
+			
 			junction_hovering = (node_hovering == noone && !is_struct(node_hovering))? hov : noone;
 			value_focus = noone;
 		#endregion

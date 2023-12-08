@@ -74,7 +74,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			UNDO_HOLDING = true;
 	} #endregion
 	
-	static button_reactive_update = function(key) { #region
+	static button_reactive_update = function() { #region
 		ml_press   = lerp_float(ml_press  , 0, 10);
 		ml_release = lerp_float(ml_release, 0, 10);
 		ml_double  = lerp_float(ml_double,  0, 10);

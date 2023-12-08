@@ -1256,7 +1256,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		updateColor();
 	} resetDisplay(); #endregion
 	
-	static updateColor = function(val) { #region
+	static updateColor = function(val = undefined) { #region
 		INLINE
 		
 		if(color == -1) {
