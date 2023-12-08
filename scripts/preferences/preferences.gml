@@ -184,7 +184,9 @@
 		var path = DIRECTORY + "keys.json";
 		if(!file_exists(path)) return;
 		
-		var map = json_load_struct(path);	
+		var map = json_load_struct(path);
+		if(array_empty(variable_struct_get_names(map))) return;
+		
 		HOTKEYS_DATA = {};
 		
 		for(var i = 0; i < array_length(map.key); i++) {
