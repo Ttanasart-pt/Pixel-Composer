@@ -369,9 +369,9 @@ function gif_std_enum_getIndex() { return __enumIndex__; }
 		blocks = [];
 		
 		static readBegin = function() { #region
-			if (self.i.readByte() != 71) throw string("Invalid header");
-			if (self.i.readByte() != 73) throw string("Invalid header");
-			if (self.i.readByte() != 70) throw string("Invalid header");
+			if (self.i.readByte() != 71) throw string("Gif loader: Invalid header");
+			if (self.i.readByte() != 73) throw string("Gif loader: Invalid header");
+			if (self.i.readByte() != 70) throw string("Gif loader: Invalid header");
 			
 			var _gifVer  = self.i.readString(3);
 			var _version = format_gif_Version_GIF89a;

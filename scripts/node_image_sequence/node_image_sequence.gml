@@ -1,4 +1,4 @@
-function Node_create_Image_Sequence(_x, _y, _group = noone) {
+function Node_create_Image_Sequence(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filenames_compat("image|*.png;*.jpg", "");
@@ -11,14 +11,14 @@ function Node_create_Image_Sequence(_x, _y, _group = noone) {
 	node.inputs[| 0].setValue(paths);
 	node.doUpdate();
 	return node;
-}
+} #endregion
 
-function Node_create_Image_Sequence_path(_x, _y, _path) {
+function Node_create_Image_Sequence_path(_x, _y, _path) { #region
 	var node = new Node_Image_Sequence(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.inputs[| 0].setValue(_path);
 	node.doUpdate();
 	return node;
-}
+} #endregion
 
 enum CANVAS_SIZE {
 	individual,
@@ -63,7 +63,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	path_loaded = [];
 	
-	on_drop_file = function(path) {
+	on_drop_file = function(path) { #region
 		if(directory_exists(path)) {
 			with(dialogCall(o_dialog_drag_folder, WIN_W / 2, WIN_H / 2)) {
 				dir_paths = path;
@@ -81,19 +81,19 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		return false;
-	}
+	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() {
+	static onInspector1Update = function() { #region
 		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
-	}
+	} #endregion
 	
-	function updatePaths(paths) {
+	function updatePaths(paths) { #region
 		for(var i = 0; i < array_length(spr); i++) {
 			if(spr[i] && sprite_exists(spr[i]))
 				sprite_delete(spr[i]);
@@ -113,7 +113,14 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				case ".png"	 :
 				case ".jpg"	 :
 				case ".jpeg" :
-					array_push(spr, sprite_add(path, 1, false, false, 0, 0));
+					var _spr = sprite_add(path, 1, false, false, 0, 0);
+					
+					if(_spr == -1) {
+						noti_warning($"Image node: File not a valid image.");
+						return false;
+					}
+					
+					array_push(spr, _spr);
 					break;
 			}
 		}
@@ -121,9 +128,9 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[| 1].setValue(paths);
 		
 		return true;
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		var path = getInputData(0);
 		if(path == "") return;
 		if(!is_array(path)) path = [ path ];
@@ -219,5 +226,5 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		outputs[| 0].setValue(surfs);
-	}
+	} #endregion
 }

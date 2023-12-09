@@ -1,4 +1,4 @@
-function Node_create_Image(_x, _y, _group = noone) {
+function Node_create_Image(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename("image|*.png;*.jpg", "");
@@ -10,16 +10,16 @@ function Node_create_Image(_x, _y, _group = noone) {
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	return node;
-}
+} #endregion
 
-function Node_create_Image_path(_x, _y, path) {
+function Node_create_Image_path(_x, _y, path) { #region
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_Image(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	return node;	
-}
+} #endregion
 
 function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Image";
@@ -43,7 +43,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	first_update = false;
 	
-	on_drop_file = function(path) {
+	on_drop_file = function(path) { #region
 		inputs[| 0].setValue(path);
 		
 		if(updatePaths(path)) {
@@ -52,9 +52,9 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		return false;
-	}
+	} #endregion
 	
-	function updatePaths(path) {
+	function updatePaths(path) { #region
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
@@ -76,22 +76,27 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					first_update = true;
 				path_current = path;
 				
+				if(spr == -1) {
+					noti_warning($"Image node: File not a valid image.");
+					return false;
+				}
+				
 				return true;
 		}
 		return false;
-	}
+	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() {
+	static onInspector1Update = function() { #region
 		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		var path = getInputData(0);
 		var pad  = getInputData(1);
 		if(path == "") return;
@@ -131,5 +136,5 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_splice.inputs[| 3].setValue([ amo, 1 ]);
 			_splice.inspector1Update();
 		}	
-	}
+	} #endregion
 }
