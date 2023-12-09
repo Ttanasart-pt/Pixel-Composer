@@ -130,7 +130,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
 	
 	static inspector1Update   = function() { onInspector1Update(); }
-	static onInspector1Update = function() { RenderListAction(nodes, group); }
+	static onInspector1Update = function() { RenderList(nodes, true); }
 	static hasInspector1Update = function(group = false) { #region
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
 			if(nodes[| i].hasInspector1Update())

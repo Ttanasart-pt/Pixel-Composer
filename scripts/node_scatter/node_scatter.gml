@@ -164,8 +164,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var vCol = array_exists(useV, "Color");
 		
 		var _posDist = [];
-		if(_dist == 2 && is_surface(_distMap)) 
+		if(_dist == NODE_SCATTER_DIST.map) {
+			if(!is_surface(_distMap))
+				return _outSurf;
 			_posDist = get_points_from_dist(_distMap, _amount, seed);
+		}
 			
 		if(_dist == 4) {
 			var path_valid    = path != noone && struct_has(path, "getPointRatio");
@@ -204,13 +207,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					sp = area_get_random_point(_area, _dist, _scat, i, _amount, _sed); _sed += 20;
 					_x = sp[0];
 					_y = sp[1];
-				} else if(_dist == NODE_SCATTER_DIST.data) {
+				} else if(_dist == NODE_SCATTER_DIST.map) {
 					sp = array_safe_get(_posDist, i);
 					if(!is_array(sp)) continue;
 				
 					_x = _area[0] + _area[2] * (sp[0] * 2 - 1.);
 					_y = _area[1] + _area[3] * (sp[1] * 2 - 1.);
-				} else if(_dist == NODE_SCATTER_DIST.map) {
+				} else if(_dist == NODE_SCATTER_DIST.data) {
 					sp = array_safe_get(_distData, i);
 					if(!is_array(sp)) continue;
 					

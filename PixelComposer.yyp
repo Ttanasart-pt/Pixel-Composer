@@ -281,6 +281,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"button","folderPath":"folders/widgets/button.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"rotator","folderPath":"folders/widgets/rotator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/widgets/text.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"collection","folderPath":"folders/panels/collection.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
@@ -2854,6 +2855,7 @@
     {"id":{"name":"node_level","path":"scripts/node_level/node_level.yy",},},
     {"id":{"name":"node_pb","path":"scripts/node_pb/node_pb.yy",},},
     {"id":{"name":"panel_test","path":"scripts/panel_test/panel_test.yy",},},
+    {"id":{"name":"panel_collections_settings","path":"scripts/panel_collections_settings/panel_collections_settings.yy",},},
     {"id":{"name":"o_dialog_warning","path":"objects/o_dialog_warning/o_dialog_warning.yy",},},
     {"id":{"name":"s_node_group_output","path":"sprites/s_node_group_output/s_node_group_output.yy",},},
     {"id":{"name":"node_path_l_system","path":"scripts/node_path_l_system/node_path_l_system.yy",},},

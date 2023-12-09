@@ -220,7 +220,7 @@ function Panel_Collection() : PanelContent() constructor {
 						if(sprite_exists(_node.spr)) {
 							var sw = sprite_get_width(_node.spr);
 							var sh = sprite_get_height(_node.spr);
-							var ss = (grid_size - ui(10)) / max(sw, sh);
+							var ss = (grid_size - ui(10)) * PREFERENCES.collection_scale / max(sw, sh);
 							
 							var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
 							var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
@@ -426,7 +426,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var by = ui(9);
 		var bs = ui(32);
 		
-		if(search_string == "") {
+		if(search_string == "") { #region
 			if(bx > rootx) {
 				view_tooltip.index = contentView;
 				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, view_tooltip, THEME.view_mode, contentView) == 2)
@@ -483,12 +483,21 @@ function Panel_Collection() : PanelContent() constructor {
 					refreshContext();
 			}
 			bx -= ui(36);
-		} else {
+			
+			if(bx > rootx) {
+				var txt = __txt("Settings");
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.gear) == 2)
+					dialogPanelCall(new Panel_Collections_Setting(), x + bx, y + by - 8, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+			}
+			bx -= ui(36);
+		#endregion
+		} else { #region
 			var tb_w = ui(200);
 			var tb_x = w - ui(10) - tb_w;
 			var tb_y = ui(10);
 			
 			tb_search.draw(tb_x, tb_y, tb_w, TEXTBOX_HEIGHT, search_string, [mx, my]);
+		#endregion
 		}
 	} #endregion
 }

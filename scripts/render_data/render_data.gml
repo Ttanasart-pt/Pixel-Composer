@@ -249,7 +249,7 @@ function __renderListReset(list) { #region
 	}
 } #endregion
 
-function RenderList(list, skipInLoop = true) { #region
+function RenderList(list, runAction = false) { #region
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render == 1, "=============== RENDER LIST START ===============");
 	var queue = ds_queue_create();
@@ -287,18 +287,20 @@ function RenderList(list, skipInLoop = true) { #region
 		while(!ds_queue_empty(queue)) {
 			LOG_BLOCK_START();
 			rendering = ds_queue_dequeue(queue)
-			if(!ds_list_exist(list, rendering)) continue;
 			var renderable = rendering.isRenderable();
 			
 			LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"}");
 			
 			if(renderable) {
+				if(runAction && rendering.hasInspector1Update()) rendering.inspector1Update();
 				rendering.doUpdate();
 				
 				var nextNodes = rendering.getNextNodes();
-				for( var i = 0, n = array_length(nextNodes); i < n; i++ )
-					if(nextNodes[i].isRenderable())
-						ds_queue_enqueue(queue, nextNodes[i]);
+				for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
+					var _node = nextNodes[i];
+					if(ds_list_exist(list, _node) && _node.isRenderable())
+						ds_queue_enqueue(queue, _node);
+				}
 			} 
 			
 			LOG_BLOCK_END();
@@ -312,64 +314,4 @@ function RenderList(list, skipInLoop = true) { #region
 	LOG_END();
 	
 	ds_queue_destroy(queue);
-} #endregion
-
-function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) { #region
-	printIf(global.FLAG.render, "=== RENDER LIST ACTION START [frame " + string(CURRENT_FRAME) + "] ===");
-	
-	try {
-		var rendering = noone;
-		var error	  = 0;
-		var t		  = current_time;
-		
-		__renderListReset(list);
-		
-		// get leaf node
-		RENDER_QUEUE.clear();
-		for( var i = 0; i < ds_list_size(list); i++ ) {
-			var _node = list[| i];
-			
-			if(is_undefined(_node)) continue;
-			if(!is_struct(_node)) continue;
-			
-			if(!_node.active) continue;
-			if(!_node.isRenderActive()) continue;
-			if(_node.rendered) continue;
-		
-			if(_node.isRenderable()) {
-				RENDER_QUEUE.enqueue(_node);
-				printIf(global.FLAG.render, $"		> Push {_node.internalName} node to queue");
-			}
-		}
-		
-		// render forward
-		while(!RENDER_QUEUE.empty()) {
-			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render == 1, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE}");
-			rendering = RENDER_QUEUE.dequeue();
-			if(!ds_list_exist(list, rendering)) continue;
-			var renderable = rendering.isRenderable();
-			
-			LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"}");
-			
-			if(renderable) {
-				rendering.doUpdate();
-				
-				var nextNodes = rendering.getNextNodes();
-				for( var i = 0, n = array_length(nextNodes); i < n; i++ )
-					RENDER_QUEUE.enqueue(nextNodes[i]);
-				
-				if(runAction && rendering.hasInspector1Update())
-					rendering.inspector1Update();
-			} else if(rendering.isRenderActive()) {
-				RENDER_QUEUE.enqueue(rendering);
-			}
-			
-			LOG_BLOCK_END();
-		}
-	
-		printIf(global.FLAG.render, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
-	} catch(e) {
-		noti_warning(exception_print(e));
-	}
 } #endregion

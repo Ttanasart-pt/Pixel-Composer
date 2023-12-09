@@ -111,7 +111,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		inputNodes[1].setValue(val2,,, false);
 		
 		resetRender(true);
-		RenderList(topoList, false);
+		RenderList(topoList);
 		
 		var res = outputNode.getValue();
 		LOG_IF(global.FLAG.render == 1, $"Iterating | Comparing {val1}, {val2} = {res}");

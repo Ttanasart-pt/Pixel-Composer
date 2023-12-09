@@ -658,7 +658,7 @@ function __initNodes() {
 		ds_list_add(values, "Numbers");
 		addNodeObject(values, "Number",			s_node_number,			"Node_Number",			[1, Node_Number]);
 		addNodeObject(values, "To Number",		s_node_to_number,		"Node_To_Number",		[1, Node_To_Number]).setVersion(1145);
-		addNodeObject(values, "Math",			s_node_math,			"Node_Math",			[0, Node_create_Math], [ "add", "subtract", "multiply", "divide", "power", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan", "abs" ]);
+		addNodeObject(values, "Math",			s_node_math,			"Node_Math",			[0, Node_create_Math], [ "add", "subtract", "multiply", "divide", "power", "root", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan", "lerp", "abs" ]);
 		addNodeObject(values, "Equation",		s_node_equation,		"Node_Equation",		[0, Node_create_Equation],, "Evaluate string of equation. With an option for setting variables.");
 		addNodeObject(values, "Random",			s_node_random,			"Node_Random",			[1, Node_Random]);
 		addNodeObject(values, "Statistic",		s_node_statistic,		"Node_Statistic",		[0, Node_create_Statistic], ["sum", "average", "mean", "median", "min", "max"]);
@@ -670,11 +670,11 @@ function __initNodes() {
 		addNodeObject(values, "Scatter Points",	s_node_scatter_point,	"Node_Scatter_Points",	[1, Node_Scatter_Points],, "Generate array of vector 2 points for scattering.").setVersion(1120);
 		addNodeObject(values, "Translate Point",s_node_translate_point,	"Node_Move_Point",		[1, Node_Move_Point]).setVersion(1141);
 		addNodeObject(values, "Dot product",	s_node_dot_product,		"Node_Vector_Dot",		[1, Node_Vector_Dot]).setVersion(1141);
-		addNodeObject(values, "Cross product 3D",	s_node_cross_product_2d,	"Node_Vector_Cross_3D",	[1, Node_Vector_Cross_3D]).setVersion(1141);
-		addNodeObject(values, "Cross product 2D",	s_node_cross_product_3d,	"Node_Vector_Cross_2D",	[1, Node_Vector_Cross_2D]).setVersion(1141);
-		addNodeObject(values, "FFT",			s_node_FFT,				"Node_FFT",				[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
-		addNodeObject(values, "Transform Array",s_node_transform_array,	"Node_Transform_Array",	[1, Node_Transform_Array]).setVersion(1146);
-			
+		addNodeObject(values, "Cross product 3D",	s_node_cross_product_2d,	"Node_Vector_Cross_3D",		[1, Node_Vector_Cross_3D]).setVersion(1141);
+		addNodeObject(values, "Cross product 2D",	s_node_cross_product_3d,	"Node_Vector_Cross_2D",		[1, Node_Vector_Cross_2D]).setVersion(1141);
+		addNodeObject(values, "FFT",				s_node_FFT,					"Node_FFT",					[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
+		addNodeObject(values, "Transform Array",	s_node_transform_array,		"Node_Transform_Array",		[1, Node_Transform_Array]).setVersion(1146);
+		
 		ds_list_add(values, "Texts");
 		addNodeObject(values, "Text",				s_node_text,				"Node_String",					[1, Node_String]);
 		addNodeObject(values, "To Text",			s_node_to_text,				"Node_To_Text",					[1, Node_To_Text]).setVersion(1145);
