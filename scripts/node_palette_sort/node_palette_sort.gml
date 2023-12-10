@@ -1,7 +1,6 @@
-function Node_Palette_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Sort Palette";
-	
-	w = 96;
+function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+	name = "Sort Palette";	
+	w    = 96;
 	
 	inputs[| 0] = nodeValue("Palette in", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
 		.setDisplay(VALUE_DISPLAY.palette)
@@ -26,14 +25,14 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		0, 1, 3, 2, 
 	]
 	
-	static step = function() {
+	static step = function() { #region
 		var _typ = getInputData(1);
 		
 		inputs[| 3].setVisible(_typ == 10);
-	}
+	} #endregion
 	
 	sort_string = "";
-	static customSort = function(c) {
+	static customSort = function(c) { #region
 		var len = string_length(sort_string);
 		var val = power(256, len - 1);
 		var res = 0;
@@ -58,13 +57,13 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		return res;
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
-		var _arr = getInputData(0);
-		var _ord = getInputData(1);
-		var _rev = getInputData(2);
-		sort_string = getInputData(3);
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+		var _arr = _data[0];
+		var _ord = _data[1];
+		var _rev = _data[2];
+		sort_string = _data[3];
 		if(!is_array(_arr)) return;
 		
 		var _pal = array_clone(_arr);
@@ -85,16 +84,27 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(_rev) _pal = array_reverse(_pal);
 		
-		outputs[| 0].setValue(_pal);
-	}
+		return _pal;
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
 		var pal = outputs[| 0].getValue();
-		if(array_length(pal) && is_array(pal[0])) return;
+		if(array_empty(pal)) return;
+		if(!is_array(pal[0])) pal = [ pal ];
 		
-		drawPalette(pal, bbox.x0, bbox.y0, bbox.w, bbox.h);
-	}
+		var _h = array_length(pal) * 32;
+		var _y = bbox.y0;
+		var gh = bbox.h / array_length(pal);
+			
+		for( var i = 0, n = array_length(pal); i < n; i++ ) {
+			drawPalette(pal[i], bbox.x0, _y, bbox.w, gh);
+			_y += gh;
+		}
+		
+		if(_h != min_h) will_setHeight = true;
+		min_h = _h;	
+	} #endregion
 }

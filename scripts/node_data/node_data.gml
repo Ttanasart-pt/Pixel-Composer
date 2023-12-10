@@ -1256,7 +1256,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		if(previewable) {
 			if(preview_draw) drawPreview(xx, yy, _s);
-			onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.getFocusingNode() == self);
+			try {
+				onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.getFocusingNode() == self);
+			} catch(e) {
+				log_warning("NODE onDRAW", exception_print(e));
+			}
 		} else {
 			var bbox = drawGetBbox(xx, yy, _s);
 			draw_sprite_ext(THEME.preview_hide, 0, bbox.xc, bbox.yc, _s, _s, 0, c_white, 0.25);

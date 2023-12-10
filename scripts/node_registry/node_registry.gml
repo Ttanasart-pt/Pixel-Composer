@@ -860,7 +860,7 @@ function __initNodes() {
 		__initNodeCustom(customs);
 		
 	if(IS_PATREON) addNodeCatagory("Extra", SUPPORTER_NODES);
-		
+	
 	//var vct = ds_list_create();
 	//addNodeCatagory("VCT", vct);
 	//	addNodeObject(vct, "Biterator",		s_node_print,		"Node_Biterator",		[1, Node_Biterator]);

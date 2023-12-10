@@ -1,6 +1,6 @@
-function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Palette Extract";
-	w = 96;
+	w    = 96;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -295,34 +295,33 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		return [];
 	} #endregion
 	
-	static extractPalettes = function() { #region
-		var _surf = getInputData(0);
-		var _size = getInputData(1);
-		var _seed = getInputData(2);
-		var _algo = getInputData(3);
-		var res = [];
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+		var _surf = _data[0];
+		var _size = _data[1];
+		var _seed = _data[2];
+		var _algo = _data[3];
 		
-		if(is_surface(_surf)) {
-			res = extractPalette(_surf, _algo, _size, _seed);
-		} else if(is_array(_surf)) {
-			res = array_create(array_length(_surf));
-			for( var i = 0, n = array_length(_surf); i < n; i++ )
-				res[i] = extractPalette(_surf[i], _algo, _size, _seed);
-		}
-		
-		outputs[| 0].setValue(res);
+		return extractPalette(_surf, _algo, _size, _seed);
 	} #endregion
-	
-	static onInspector1Update = function() { extractPalettes(); triggerRender(); }
-	static onValueUpdate	  = function() { extractPalettes(); }
-	static onValueFromUpdate  = function() { extractPalettes(); }
-	
-	static update = function() { extractPalettes(); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
-		drawPalette(outputs[| 0].getValue(), bbox.x0, bbox.y0, bbox.w, bbox.h);
+		var pal = outputs[| 0].getValue();
+		if(array_empty(pal)) return;
+		if(!is_array(pal[0])) pal = [ pal ];
+		
+		var _h = array_length(pal) * 32;
+		var _y = bbox.y0;
+		var gh = bbox.h / array_length(pal);
+			
+		for( var i = 0, n = array_length(pal); i < n; i++ ) {
+			drawPalette(pal[i], bbox.x0, _y, bbox.w, gh);
+			_y += gh;
+		}
+		
+		if(_h != min_h) will_setHeight = true;
+		min_h = _h;	
 	} #endregion
 }

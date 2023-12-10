@@ -189,6 +189,7 @@
     {"name":"VFX","order":134,"path":"folders/nodes/icons/VFX.yy",},
     {"name":"panels","order":2,"path":"folders/panels.yy",},
     {"name":"animation","order":9,"path":"folders/panels/animation.yy",},
+    {"name":"collection","order":11,"path":"folders/panels/collection.yy",},
     {"name":"colors","order":4,"path":"folders/panels/colors.yy",},
     {"name":"context menu","order":5,"path":"folders/panels/context menu.yy",},
     {"name":"graph","order":1,"path":"folders/panels/graph.yy",},
@@ -246,7 +247,6 @@
     {"name":"button","order":34,"path":"folders/widgets/button.yy",},
     {"name":"rotator","order":35,"path":"folders/widgets/rotator.yy",},
     {"name":"text","order":36,"path":"folders/widgets/text.yy",},
-    {"name":"collection","order":11,"path":"folders/panels/collection.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},

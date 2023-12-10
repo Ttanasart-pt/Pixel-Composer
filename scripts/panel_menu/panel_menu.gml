@@ -444,13 +444,8 @@ function Panel_Menu() : PanelContent() constructor {
 		#endregion
 		
 		#region notification
-			var warning_amo = 0;
-			for( var i = 0; i < ds_list_size(WARNING); i++ )
-				warning_amo += WARNING[| i].amount;
-			
-			var error_amo = 0;
-			for( var i = 0; i < ds_list_size(ERRORS); i++ )
-				error_amo += ERRORS[| i].amount;
+			var warning_amo = ds_list_size(WARNING);
+			var error_amo   = ds_list_size(ERRORS);
 			
 			if(hori) {
 				var nx0 = _mx + ui(24);

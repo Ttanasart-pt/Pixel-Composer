@@ -23,7 +23,7 @@ function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [ ] )
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var pal = _data[0];
 		var pfr = _data[1];
 		var pto = _data[2];
@@ -49,14 +49,26 @@ function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		}
 		
 		return palo;
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
 		var pal = outputs[| 0].getValue();
-		if(array_length(pal) && is_array(pal[0])) return;
-		drawPalette(pal, bbox.x0, bbox.y0, bbox.w, bbox.h);
-	}
+		if(array_empty(pal)) return;
+		if(!is_array(pal[0])) pal = [ pal ];
+		
+		var _h = array_length(pal) * 32;
+		var _y = bbox.y0;
+		var gh = bbox.h / array_length(pal);
+			
+		for( var i = 0, n = array_length(pal); i < n; i++ ) {
+			drawPalette(pal[i], bbox.x0, _y, bbox.w, gh);
+			_y += gh;
+		}
+		
+		if(_h != min_h) will_setHeight = true;
+		min_h = _h;	
+	} #endregion
 }

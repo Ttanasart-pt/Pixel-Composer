@@ -967,12 +967,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var _node = nodes_list[| i];
 				if(is_instanceof(_node, Node_Frame)) continue;
-				var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
-				
-				if(val) {
-					if(key_mod_press(SHIFT))
-						TOOLTIP = [ val.getValue(), val.type ];
-					value_focus = val;
+				try {
+					var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
+					if(val) {
+						if(key_mod_press(SHIFT))
+							TOOLTIP = [ val.getValue(), val.type ];
+						value_focus = val;
+					}
+				} catch(e) {
+					log_warning("NODE DRAW", exception_print(e));
 				}
 			}
 			

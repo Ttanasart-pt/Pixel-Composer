@@ -173,14 +173,30 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var type = getInputData(12);
+		if(preview_draw != (type == 0)) { 
+			preview_draw   = (type == 0);
+			will_setHeight = true;
+		}
+		
 		if(type == 0) return;
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
 		var pal = outputs[| 1].getValue();
-		if(array_length(pal) && is_array(pal[0])) return;
+		if(array_empty(pal)) return;
+		if(!is_array(pal[0])) pal = [ pal ];
 		
-		drawPalette(pal, bbox.x0, bbox.y0, bbox.w, bbox.h);
+		var _h = array_length(pal) * 32;
+		var _y = bbox.y0;
+		var gh = bbox.h / array_length(pal);
+			
+		for( var i = 0, n = array_length(pal); i < n; i++ ) {
+			drawPalette(pal[i], bbox.x0, _y, bbox.w, gh);
+			_y += gh;
+		}
+		
+		if(_h != min_h) will_setHeight = true;
+		min_h = _h;	
 	} #endregion
 }

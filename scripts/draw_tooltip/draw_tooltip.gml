@@ -35,21 +35,37 @@ function draw_tooltip_color(clr) {
 }
 
 function draw_tooltip_palette(clr) {
-	var ww = min(ui(160), ui(32) * array_length(clr));
-	var hh = ui(32);
-		
+	if(array_empty(clr)) return;
+	
+	var ph = ui(32);
+	if(!is_array(clr[0])) clr = [ clr ];
+	
+	var pal_len = 0;
+	for( var i = 0, n = array_length(clr); i < n; i++ ) 
+		pal_len = max(pal_len, array_length(clr[i]));
+	
+	var ww = min(ui(160), ui(32) * pal_len);
+	var hh = array_length(clr) * ph;
+	
 	var mx = min(mouse_mx + ui(16), WIN_W - (ww + ui(16)));
 	var my = min(mouse_my + ui(16), WIN_H - (hh + ui(16)));
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + ui(16), hh + ui(16));
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + ui(16), hh + ui(16));
 	
-	drawPalette(clr, mx + ui(8), my + ui(8), ui(ww), ui(hh));
+	var _y = my + ui(8);
+	for( var i = 0, n = array_length(clr); i < n; i++ ) {
+		drawPalette(clr[i], mx + ui(8), _y, ui(ww), ph);
+		_y += ph;
+	}
 }
 
 function draw_tooltip_gradient(clr) {
+	var gh = ui(32);
+	if(!is_array(clr)) clr = [ clr ];
+	
 	var ww = ui(160);
-	var hh = ui(32);
+	var hh = array_length(clr) * gh;
 		
 	var mx = min(mouse_mx + ui(16), WIN_W - (ww + ui(16)));
 	var my = min(mouse_my + ui(16), WIN_H - (hh + ui(16)));
@@ -57,7 +73,11 @@ function draw_tooltip_gradient(clr) {
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + ui(16), hh + ui(16));
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + ui(16), hh + ui(16));
 	
-	clr.draw(mx + ui(8), my + ui(8), ui(ww), ui(hh));
+	var _y = my + ui(8);
+	for( var i = 0, n = array_length(clr); i < n; i++ ) {
+		clr[i].draw(mx + ui(8), _y, ui(ww), gh);
+		_y += gh;
+	}
 }
 
 function draw_tooltip_surface_array(surf) {

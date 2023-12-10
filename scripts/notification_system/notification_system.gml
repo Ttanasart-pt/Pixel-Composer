@@ -14,13 +14,13 @@
 	}
 	
 	function notification(type, str, icon = noone, color = c_ui_blue_dkgrey, life = -1) constructor {
-		self.type = type;
-		self.txt = str;
-		self.icon = icon;
+		self.type  = type;
+		self.txt   = str;
+		self.icon  = icon;
 		self.color = color;
 		
 		self.life_max = life;
-		self.life = life;
+		self.life     = life;
 		
 		self.onClick = noone;
 		self.tooltip = "";
@@ -70,7 +70,6 @@
 	
 	function noti_warning(str, icon = noone, ref = noone) {
 		if(TEST_ERROR) return {};
-		show_debug_message("WARNING: " + str);
 		if(PANEL_MAIN == 0) return;
 		
 		if(PANEL_MENU) {
@@ -79,10 +78,14 @@
 		}
 		
 		if(!ds_list_empty(STATUSES) && STATUSES[| ds_list_size(STATUSES) - 1].txt == str) {
-			STATUSES[| ds_list_size(STATUSES) - 1].amount++;
-			return STATUSES[| ds_list_size(STATUSES) - 1];
+			var noti = STATUSES[| ds_list_size(STATUSES) - 1];
+			
+			noti.amount++;
+			noti.life = noti.life_max;
+			return noti;
 		}
 		
+		show_debug_message("WARNING: " + str);
 		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, PREFERENCES.notification_time);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);

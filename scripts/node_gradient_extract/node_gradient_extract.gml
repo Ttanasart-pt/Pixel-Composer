@@ -1,7 +1,6 @@
 function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name		= "Gradient Data";
-	
-	w = 96;
+	name = "Gradient Data";
+	w    = 96;
 	
 	inputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) )
 		.setVisible(true, true);
@@ -39,12 +38,19 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
-		var grad = getInputData(0);
-		if(is_array(grad)) {
-			if(array_length(grad) == 0) return;
-			grad = grad[0];
+		var grad = inputs[| 0].getValue();
+		if(!is_array(grad)) grad = [ grad ];
+		var _h = array_length(grad) * 32;
+		
+		var _y = bbox.y0;
+		var gh = bbox.h / array_length(grad);
+			
+		for( var i = 0, n = array_length(grad); i < n; i++ ) {
+			grad[i].draw(bbox.x0, _y, bbox.w, gh);
+			_y += gh;
 		}
 		
-		grad.draw(bbox.x0, bbox.y0, bbox.w, bbox.h);
+		if(_h != min_h) will_setHeight = true;
+		min_h = _h;	
 	} #endregion
 }
