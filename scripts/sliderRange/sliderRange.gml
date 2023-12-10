@@ -54,7 +54,7 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 		var _x0 = _x + tb_w + ui(16);
 		draw_sprite_stretched(spr, 0, _x0, _y + _h / 2 - ui(4), sw, ui(8));	
 		
-		if(stepSize >= 1 && sw / ((maxx - minn) / stepSize) > ui(8)) {
+		if(stepSize >= 1 && sw / ((maxx - minn) / stepSize) > ui(16)) {
 			for( var i = minn; i <= maxx; i += stepSize ) {
 				var _v  = round(i / stepSize) * stepSize;
 				var _cx = _x + clamp((_v - minn) / (maxx - minn), 0, 1) * sw;

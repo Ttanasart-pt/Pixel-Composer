@@ -408,7 +408,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		//draw_sprite_ui(THEME.search, 0, ui(32 + 16), _y + ui(4 + 14), 1, 1, 0, COLORS._main_icon, 1);
 		
 		prop_page_button.setFocusHover(pFOCUS, pHOVER);
-		prop_page_button.draw(ui(32), _y + ui(4), contentPane.w - ui(76), ui(28), prop_page, _m);
+		prop_page_button.draw(ui(32), _y + ui(4), contentPane.w - ui(76), ui(28), prop_page, _m, x + contentPane.x, y + contentPane.y);
 		
 		var xc = con_w / 2;
 		

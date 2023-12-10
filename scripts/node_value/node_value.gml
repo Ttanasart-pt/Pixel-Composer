@@ -1710,8 +1710,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			switch(res) {
 				case EXPRESS_TREE_ANIM.none :		return false;
-				case EXPRESS_TREE_ANIM.base_value : return is_anim;
-				case EXPRESS_TREE_ANIM.animated :	return true;
+				case EXPRESS_TREE_ANIM.base_value : force_requeue = true; return is_anim;
+				case EXPRESS_TREE_ANIM.animated :	force_requeue = true; return true;
 			}
 		}
 		

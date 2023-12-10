@@ -67,9 +67,9 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_cen[1] /= surface_get_height_safe(_outSurf);
 		
 		surface_set_shader(_outSurf, sh_blur_zoom);
-			shader_set_f("strength", _str);
-			shader_set_f("center", _cen);
-			shader_set_i("blurMode", _blr);
+			shader_set_f("strength",   _str);
+			shader_set_f("center",     _cen);
+			shader_set_i("blurMode",   _blr);
 			shader_set_i("sampleMode", _sam);
 			
 			shader_set_i("useMask", is_surface(_msk));

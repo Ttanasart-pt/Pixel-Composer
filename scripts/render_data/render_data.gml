@@ -210,7 +210,8 @@ function Render(partial = false, runAction = false) { #region
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
-			}
+			} else if(rendering.force_requeue)
+				RENDER_QUEUE.enqueue(rendering);
 			
 			LOG_BLOCK_END();
 		}

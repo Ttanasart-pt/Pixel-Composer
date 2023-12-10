@@ -399,7 +399,7 @@ function __initNodes() {
 		addNodeObject(input, "Animation",			s_node_image_animation, "Node_Image_Animated",			[0, Node_create_Image_Animated],, "Load multiple images from your computer as animation.");
 		addNodeObject(input, "Array to Anim",		s_node_image_sequence_to_anim, "Node_Sequence_Anim",	[1, Node_Sequence_Anim],, "Convert array of images into animation.");
 		if(!DEMO) addNodeObject(input, "Export",	s_node_export,			"Node_Export",					[0, Node_create_Export],, "Export image, image array to file, image sequence, animation.");
-			
+		
 		ds_list_add(input, "Files");
 		addNodeObject(input, "Text File In",		s_node_text_file_read,	"Node_Text_File_Read",		[1, Node_Text_File_Read],  ["txt"], "Load .txt in as text.").setVersion(1080);
 		addNodeObject(input, "Text File Out",		s_node_text_file_write,	"Node_Text_File_Write",		[1, Node_Text_File_Write], ["txt"], "Save text as a .txt file.").setVersion(1090);
@@ -438,6 +438,7 @@ function __initNodes() {
 		addNodeObject(transform, "Composite",		s_node_compose,			"Node_Composite",		[1, Node_Composite], ["merge"], "Combine multiple images with controllable position, rotation, scale.");
 		addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9 slice", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");
 		addNodeObject(transform, "Padding",			s_node_padding,			"Node_Padding",			[1, Node_Padding],, "Make image bigger by adding space in 4 directions.");
+		//addNodeObject(transform, "Tile Random",		s_node_padding,			"Node_Tile_Random",		[1, Node_Tile_Random]);
 	#endregion
 	
 	var filter = ds_list_create(); #region
@@ -620,7 +621,8 @@ function __initNodes() {
 		addNodeObject(generator, "MK GridBalls",		s_node_mk_ball_grid,		"Node_MK_GridBalls",		[1, Node_MK_GridBalls]).setVersion(11600);
 		addNodeObject(generator, "MK GridFlip",			s_node_mk_flip_grid,		"Node_MK_GridFlip",			[1, Node_MK_GridFlip]).setVersion(11600);
 		addNodeObject(generator, "MK Saber",			s_node_mk_saber,			"Node_MK_Saber",			[1, Node_MK_Saber]).setVersion(11600);
-		if(TESTING) addNodeObject(generator, "MK Tile",			s_node_mk_saber,			"Node_MK_Tile",			[1, Node_MK_Tile]).setVersion(11600);
+		addNodeObject(generator, "MK Tile",				s_node_mk_tile,				"Node_MK_Tile",				[1, Node_MK_Tile]).setVersion(11600);
+		if(TESTING) addNodeObject(generator, "MK Flag",				s_node_mk_tile,				"Node_MK_Flag",				[1, Node_MK_Flag]).setVersion(11600);
 	#endregion
 	
 	var compose = ds_list_create(); #region

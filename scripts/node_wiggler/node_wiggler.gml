@@ -4,16 +4,16 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	w = 96;
 	
-	inputs[| 0] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+	inputs[| 0] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue("Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 1] });
 	
-	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(9999999) );
+	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(1000000, 9999999) );
 	
 	inputs[| 3] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Number", "Graph"])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Graph" ])
 	
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
@@ -24,7 +24,7 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	random_value = array_create(64, 0);
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = 0) { #region
 		var ran = getSingleValue(0);
 		var fre = getSingleValue(1);
 		var sed = getSingleValue(2);
@@ -32,18 +32,18 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var step = TOTAL_FRAMES / 64;
 		for( var i = 0; i < 64; i++ )
 			random_value[i] = getWiggle(array_safe_get(ran, 0), array_safe_get(ran, 1), TOTAL_FRAMES / fre, step * i, sed, 0, TOTAL_FRAMES);
-	}
+	} run_in(1, function() { onValueUpdate(); }); #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var ran = _data[0];
 		var fre = _data[1];
 		var sed = _data[2];
 		var time = CURRENT_FRAME;
 		
 		return getWiggle(array_safe_get(ran, 0), array_safe_get(ran, 1), TOTAL_FRAMES / fre, time, sed, 0, TOTAL_FRAMES);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var ran  = array_safe_get(current_data, 0);
 		var fre  = array_safe_get(current_data, 1);
 		var sed  = array_safe_get(current_data, 2);
@@ -53,9 +53,12 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		if(!is_array(ran)) return;
 		
+		var _h = min_h;
+		
 		switch(disp) {
 			case 0 :
-				w = 96;
+				w  = 96;
+				_h = 0;
 				
 				draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 				var str	= getWiggle(ran[0], ran[1], TOTAL_FRAMES / fre, time, sed, 0, TOTAL_FRAMES);
@@ -63,8 +66,8 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
 				break;
 			case 1 :
-				w = 128;
-				min_h = 96;
+				w  = 128;
+				_h = 96;
 				
 				var _min = ran[0];
 				var _max = ran[1];
@@ -80,26 +83,35 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				var yc = (y0 + y1) / 2;
 				draw_set_color(COLORS.node_wiggler_frame);
+				draw_set_alpha(0.5);
 				draw_line(x0, yc, x1, yc);
-				var _fx = x0 + (time / total_time * ww);
-				draw_line(_fx, y0, _fx, y1);
+				draw_set_alpha(1);
 				
 				var lw = ww / (64 - 1);
-				draw_set_color(COLORS.node_wiggler_frame);
 				var ox, oy;
+				draw_set_color(c_white);
 				for( var i = 0; i < 64; i++ ) {
 					var _x = x0 + i * lw;
 					var _y = yc - (random_value[i] - val) / _ran * hh;
-					if(i)
-						draw_line(ox, oy, _x, _y);
+					if(i) draw_line(ox, oy, _x, _y);
 					
 					ox = _x;
 					oy = _y;
 				}
+				draw_set_color(COLORS._main_accent);
+				var _fx = x0 + (time / total_time * ww);
+				draw_line(_fx, y0, _fx, y1);
 				
 				draw_set_color(COLORS.node_wiggler_frame);
 				draw_rectangle(x0, y0, x1, y1, true);
 				break;
 		}
-	}
+		
+		if(min_h != _h) {
+			min_h = _h;
+			will_setHeight = true;
+		}
+	} #endregion
+	
+	static doApplyDeserialize = function() { onValueUpdate(); }
 }

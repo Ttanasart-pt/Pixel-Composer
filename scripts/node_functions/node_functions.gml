@@ -247,19 +247,19 @@
 		str = string_trim(str);
 		var strs = string_splice(str, ".");
 		
-		if(array_length(strs) == 0) return [ 0, true ];
+		if(array_length(strs) == 0) return 0;
 		
 		if(array_length(strs) == 1) {
-			return [ EXPRESS_TREE_ANIM.none, true ];
+			return EXPRESS_TREE_ANIM.none;
 		} else if(struct_has(PROJECT_VARIABLES, strs[0])) {
 			var _str_var = PROJECT_VARIABLES[$ strs[0]];
-			if(!struct_has(_str_var, strs[1])) return [ EXPRESS_TREE_ANIM.none, true ];
+			if(!struct_has(_str_var, strs[1])) return EXPRESS_TREE_ANIM.none;
 			
 			var val = _str_var[$ strs[1]][1];
-			return [ val, true ];
+			return val;
 		} else if(array_length(strs) > 2) { 
 			var key = strs[0];
-			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return [ EXPRESS_TREE_ANIM.none, true ];
+			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return EXPRESS_TREE_ANIM.none;
 		
 			var node = PROJECT.nodeNameMap[? key];
 			var map  = noone;
@@ -272,18 +272,18 @@
 				case "output" :	
 					map  = node.outputMap;
 					break;
-				default : return [ EXPRESS_TREE_ANIM.none, true ];
+				default : return EXPRESS_TREE_ANIM.none;
 			}
 			
 			var _junc_key = string_lower(strs[2]);
 			var _junc     = ds_map_try_get(map, _junc_key, noone);
 			
-			if(_junc == noone) return [ EXPRESS_TREE_ANIM.none, true ];
+			if(_junc == noone) return EXPRESS_TREE_ANIM.none;
 			
-			return [ _junc.is_anim * 2, false ];
+			return _junc.is_anim * 2;
 		}
 		
-		return [ EXPRESS_TREE_ANIM.none, true ];
+		return EXPRESS_TREE_ANIM.none;
 	}
 
 	function create_preview_window(node) {

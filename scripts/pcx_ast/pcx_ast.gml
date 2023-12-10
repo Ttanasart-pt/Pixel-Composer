@@ -259,7 +259,6 @@
 		self.r = r;
 		dependency = [];
 		anim_stat  = undefined;
-		anim_cache = true;
 		
 		static _string = function(str) { #region
 			return string_char_at(str, 1) == "\"" &&  string_char_at(str, string_length(str)) == "\"";
@@ -340,15 +339,11 @@
 			}
 			
 			if(val == "value") return EXPRESS_TREE_ANIM.base_value;
-			var anim = nodeGetDataAnim(val);
-			anim_cache &= anim[1];
-			
-			return anim[0];
+			//var anim = nodeGetDataAnim(val);
+			return EXPRESS_TREE_ANIM.animated;
 		} #endregion
 		
 		static isDynamic = function() { #region
-			if(anim_cache && anim_stat != undefined) return anim_stat;
-			
 			anim_stat = EXPRESS_TREE_ANIM.none;
 			anim_stat = max(anim_stat, _isAnimated(l));
 			if(symbol != "@") anim_stat = max(anim_stat, _isAnimated(r));

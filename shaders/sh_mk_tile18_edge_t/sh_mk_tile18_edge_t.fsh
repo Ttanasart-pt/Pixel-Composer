@@ -18,29 +18,29 @@ void main() {
 	
 	if(edge == 8) {
 		if(fullEdge == 0 && tx.x < tx.y)  discard;
-		if(fullEdge == 1 && extendEdge == 0 && tx.x < crop[2] ) discard;
+		//if(fullEdge == 1 && extendEdge == 0 && tx.x < crop[2] ) discard;
 		
 	} else if(edge == 12) {
 		
 	} else if(edge == 4) {
 		if(fullEdge == 0 && tx.x > h - tx.y) discard;
-		if(fullEdge == 1 && extendEdge == 0 && tx.x > w - crop[0]) discard;
+		//if(fullEdge == 1 && extendEdge == 0 && tx.x > w - crop[0]) discard;
 		
 	} else if(edge == 13) {
 		if(fullEdge == 0 && tx.x - crop[2] < h - tx.y - crop[3]) discard;
-		if(fullEdge == 1 && extendEdge == 0 && tx.x < crop[2])   discard;
+		//if(fullEdge == 1 && extendEdge == 0 && tx.x < crop[2])   discard;
 		
 	} else if(edge == 14) {
 		if(fullEdge == 0 && tx.x + crop[0] > tx.y + crop[1])       discard;
-		if(fullEdge == 1 && extendEdge == 0 && tx.x > w - crop[0]) discard;
+		//if(fullEdge == 1 && extendEdge == 0 && tx.x > w - crop[0]) discard;
 		
 	} else if(edge ==  9) {
 		if(fullEdge == 0 && tx.x - crop[2] < tx.y - crop[1])   discard;
-		if(fullEdge == 1 && extendEdge == 0 && tx.x < crop[2]) discard;
+		//if(fullEdge == 1 && extendEdge == 0 && tx.x < crop[2]) discard;
 		
 	} else if(edge ==  6) {
 		if(fullEdge == 0 && tx.x + crop[0] > h - tx.y + crop[3])   discard;
-		if(fullEdge == 1 && extendEdge == 0 && tx.x > w - crop[0]) discard;
+		//if(fullEdge == 1 && extendEdge == 0 && tx.x > w - crop[0]) discard;
 		
 	} else {
 		discard;

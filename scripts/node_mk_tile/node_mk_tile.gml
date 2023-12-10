@@ -4,18 +4,18 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 0] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 1] = nodeValue("Background Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 1] = nodeValue("Background texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 2] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Corner (18 sprites)", "Corner + Side (55 sprites)" ] );
 	
-	inputs[| 3] = nodeValue("Output Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 3] = nodeValue("Output type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Sheet", "Array" ] );
 	
 	inputs[| 4] = nodeValue("Crop", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 8, 8, 8, 8 ])
 		.setDisplay(VALUE_DISPLAY.padding);
 	
-	inputs[| 5] = nodeValue("Edge Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 5] = nodeValue("Edge type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Individual" ] );
 	
 	inputs[| 6] = nodeValue("Edge",			self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
@@ -29,17 +29,18 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 11] = nodeValue("Full edge", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: [ "T", "B", "L", "R" ] });
 	
-	inputs[| 12] = nodeValue("Extend edge", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-	
-	inputs[| 13] = nodeValue("Edge sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 12] = nodeValue("Edge sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Single", "Side + Center", "Side + Center + Side" ] );
 	
+	inputs[| 13] = nodeValue("Edge transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Flip", "Rotate" ] );
+		
 	input_display_list = [ 
-		["Surfaces", false], 0, 1, 
-		["Tiling",	 false], 2, 4, 
-		["Edge",	 false], 5, 13, 10, 11, 12, 
+		["Surfaces",	  true], 0, 1, 
+		["Tile set",	 false], 2, 4, 
+		["Edge",		 false], 5, 12, 13, 10, 11,
 		["Edge Textures", true], 6, 7, 8, 9, 
-		["Output",	 false], 3, 
+		["Output",		 false], 3, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -48,30 +49,31 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
 		temp_surface[i] = array_create(1, 1);
 	
-	__edge_surface = array_create(12);
-	__edge_buffer  = [ surface_create(1, 1), surface_create(1, 1)];
+	__edge_uniform = array_create(4);
+	__edge_surface = array_create(4 * 7);
+	__edge_buffer  = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	edge_surface   = [];
 	
 	#region index
-		index_18 = [ 0,  8, 12,  4,  7, 11, 
-					 0, 10, 15,  5, 13, 14, 
-					 0,  2,  3,  1,  9,  6];
+		index_18 = [ 0, /**/  8, 12,  4, /**/  7, 11, 
+					 0, /**/ 10, 15,  5, /**/ 13, 14, 
+					 0, /**/  2,  3,  1, /**/  9,  6];
 		
-		index_18_et = [ 0, 0, 1, 2, 0, 0, 
-					    0, 0, 0, 0, 0, 2, 
-					    0, 0, 0, 0, 0, 2];
+		index_18_et = [ 0, /**/ 0, 1, 2, /**/ 0, 0, 
+					    0, /**/ 0, 0, 0, /**/ 3, 4, 
+					    0, /**/ 0, 0, 0, /**/ 3, 4];
 		
-		index_18_eb = [ 0, 0, 0, 0, 0, 2, 
-					    0, 0, 0, 0, 0, 0, 
-					    0, 0, 1, 2, 2, 0];
+		index_18_eb = [ 0, /**/ 0, 0, 0, /**/ 3, 4, 
+					    0, /**/ 0, 0, 0, /**/ 0, 0, 
+					    0, /**/ 0, 1, 2, /**/ 4, 3];
 		
-		index_18_el = [ 0, 0, 0, 0, 0, 0, 
-					    0, 1, 0, 0, 0, 2, 
-					    0, 2, 0, 0, 0, 2];
+		index_18_el = [ 0, /**/ 0, 0, 0, /**/ 0, 3, 
+					    0, /**/ 1, 0, 0, /**/ 0, 4, 
+					    0, /**/ 2, 0, 0, /**/ 3, 4];
 		
-		index_18_er = [ 0, 0, 0, 0, 0, 0, 
-					    0, 0, 0, 1, 2, 0, 
-					    0, 0, 0, 2, 2, 0];
+		index_18_er = [ 0, /**/ 0, 0, 0, /**/ 3, 0, 
+					    0, /**/ 0, 0, 1, /**/ 4, 0, 
+					    0, /**/ 0, 0, 2, /**/ 4, 3];
 		
 		index_55 = [208, 224, 104, /**/  64, /**/  80, 120, 216,  72, /**/  88, 219,  -1, 
 					148, 255,  41, /**/  66, /**/  86, 127, 223,  75, /**/  95, 126,  -1, 
@@ -79,29 +81,29 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					 16,  24,   8, /**/   0, /**/  18,  27,  30,  10, /**/  26,  94,  91, 
 					 -1,  -1,  -1, /**/  -1, /**/  82, 123, 222,  74, /**/  90,  -1,  -1];
 		
-		index_55_et = [ 0, 1, 2, /**/ 1, /**/ 0, 1, 1, 0, /**/ 1, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 2, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 2, 2, /**/ 0, 0, 0, 
-						0, 1, 2, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0, ];
+		index_55_et = [ 0, 1, 2, /**/ 5, /**/ 0, 1, 1, 2, /**/ 1, 3, 0,  
+					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 4, 0,  
+					    0, 0, 0, /**/ 0, /**/ 3, 3, 4, 4, /**/ 6, 6, 6, 
+						0, 1, 2, /**/ 5, /**/ 3, 3, 4, 4, /**/ 6, 3, 4,  
+					    0, 0, 0, /**/ 0, /**/ 3, 3, 4, 4, /**/ 6, 0, 0, ];
 		
-		index_55_eb = [ 0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0, 
-						0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0, ];
+		index_55_eb = [ 0, 0, 0, /**/ 0, /**/ 3, 3, 4, 4, /**/ 6, 4, 0, 
+					    0, 0, 0, /**/ 0, /**/ 3, 3, 4, 4, /**/ 6, 3, 0,  
+					    0, 1, 2, /**/ 5, /**/ 0, 0, 0, 0, /**/ 0, 4, 3, 
+						0, 1, 2, /**/ 5, /**/ 0, 1, 1, 2, /**/ 1, 6, 6, 
+					    0, 0, 0, /**/ 0, /**/ 3, 3, 4, 4, /**/ 6, 0, 0, ];
 		
-		index_55_el = [ 0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0, 
-						0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0, ];
+		index_55_el = [ 0, 0, 0, /**/ 0, /**/ 0, 0, 3, 3, /**/ 4, 3, 0,  
+					    1, 0, 0, /**/ 1, /**/ 1, 0, 3, 3, /**/ 4, 4, 0,  
+					    2, 0, 0, /**/ 2, /**/ 1, 0, 4, 4, /**/ 4, 6, 4, 
+						5, 0, 0, /**/ 5, /**/ 2, 0, 4, 4, /**/ 4, 6, 3,  
+					    0, 0, 0, /**/ 0, /**/ 1, 0, 6, 6, /**/ 6, 0, 0, ];
 		
-		index_55_er = [ 0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0, 
-						0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0,  
-					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0, ];
+		index_55_er = [ 0, 0, 0, /**/ 0, /**/ 3, 3, 0, 0, /**/ 3, 4, 0,  
+					    0, 0, 1, /**/ 1, /**/ 3, 3, 0, 1, /**/ 3, 3, 0,  
+					    0, 0, 2, /**/ 2, /**/ 4, 4, 0, 1, /**/ 4, 4, 6, 
+						0, 0, 5, /**/ 5, /**/ 4, 4, 0, 2, /**/ 4, 3, 6,  
+					    0, 0, 0, /**/ 0, /**/ 6, 6, 0, 1, /**/ 6, 0, 0, ];
 	#endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
@@ -112,10 +114,11 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _edgType = getSingleValue( 5);
 		var _edgFull = getSingleValue(11);
 		
-		inputs[| 6].name = _edgType == 1? "Edge top" : "Edge"
-		inputs[| 7].setVisible(_edgType == 1, _edgType == 1);
-		inputs[| 8].setVisible(_edgType == 1, _edgType == 1);
-		inputs[| 9].setVisible(_edgType == 1, _edgType == 1);
+		inputs[|  6].name = _edgType == 1? "Edge top" : "Edge"
+		inputs[|  7].setVisible(_edgType == 1, _edgType == 1);
+		inputs[|  8].setVisible(_edgType == 1, _edgType == 1);
+		inputs[|  9].setVisible(_edgType == 1, _edgType == 1);
+		inputs[| 13].setVisible(_edgType == 0);
 	} #endregion
 	
 	static generate18 = function(_data, _tex0, _tex1, _edge, _crop) { #region
@@ -131,7 +134,6 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var _edgeShf = _data[10];
 		var _edgFull = _data[11];
-		var _edgExtn = _data[12];
 		
 		for( var i = 0; i < 18; i++ ) {
 			var _index = index_18[i];
@@ -169,8 +171,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					shader_set_f("crop", _crop);
 					shader_set_i("edge", _index);
 					shader_set_i("fullEdge", bool(_edgFull & 0b0100));
-					shader_set_i("extendEdge", _edgExtn);
-						
+					
 					draw_surface_ext(_el, 0, 0, 1, 1, 0, c_white, 1);
 					shader_reset();
 				} #endregion
@@ -181,8 +182,6 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					shader_set_f("crop", _crop);
 					shader_set_i("edge", _index);
 					shader_set_i("fullEdge", bool(_edgFull & 0b1000));
-					shader_set_i("extendEdge", _edgExtn);
-					
 					
 					draw_surface_ext(_er, 0, 0, 1, 1, 0, c_white, 1);
 					shader_reset();
@@ -194,7 +193,6 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					shader_set_f("crop", _crop);
 					shader_set_i("edge", _index);
 					shader_set_i("fullEdge", bool(_edgFull & 0b0001));
-					shader_set_i("extendEdge", _edgExtn);
 					
 					draw_surface_ext(_et, 0, 0, 1, 1, 0, c_white, 1);
 					shader_reset();
@@ -206,7 +204,6 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					shader_set_f("crop", _crop);
 					shader_set_i("edge", _index);
 					shader_set_i("fullEdge", bool(_edgFull & 0b0010));
-					shader_set_i("extendEdge", _edgExtn);
 						
 					draw_surface_ext(_eb, 0, 0, 1, 1, 0, c_white, 1);
 					shader_reset();
@@ -233,7 +230,6 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var b = _crop[3];
 		
 		var _edgFull = _data[11];
-		var _edgExtn = _data[12];
 		
 		for( var i = 0; i < 55; i++ ) {
 			var _index = index_55[i];
@@ -268,54 +264,50 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(_index & 0b0000_1011 >= 0b0000_1011) draw_surface_part(_tex0, 0, 0, _sw - r, _sh - b, 0, 0);
 				if(_index & 0b0001_0110 >= 0b0001_0110) draw_surface_part(_tex0, l, 0, _sw - l, _sh - b, l, 0);
 				
-				var _et = _edge[0][1];
-				var _eb = _edge[1][1];
-				var _el = _edge[2][1];
-				var _er = _edge[3][1];
+				var _et = _edge[0][index_55_et[i]];
+				var _eb = _edge[1][index_55_eb[i]];
+				var _el = _edge[2][index_55_el[i]];
+				var _er = _edge[3][index_55_er[i]];
 				
-				if(_el == noone) { #region
+				if(_el != noone) { #region
 					shader_set(sh_mk_tile55_edge_l);
 					shader_set_f("dimension", _sw, _sh);
 					shader_set_f("crop", _crop);
 					shader_set_i("edge", _index);
 					shader_set_i("fullEdge", bool(_edgFull & 0b0100));
-					shader_set_i("extendEdge", _edgExtn);
 						
 					draw_surface_ext(_el, 0, 0, 1, 1, 0, c_white, 1);
 					shader_reset();
 				} #endregion
 				
-				if(_er == noone) { #region
+				if(_er != noone) { #region
 					shader_set(sh_mk_tile55_edge_r);
 					shader_set_f("dimension", _sw, _sh);
 					shader_set_f("crop", _crop);
 					shader_set_i("edge", _index);
 					shader_set_i("fullEdge", bool(_edgFull & 0b1000));
-					shader_set_i("extendEdge", _edgExtn);
 						
 					draw_surface_ext(_er, 0, 0, 1, 1, 0, c_white, 1);
 					shader_reset();
 				} #endregion
 				
-				if(_et == noone) { #region
+				if(_et != noone) { #region
 					shader_set(sh_mk_tile55_edge_t);
 					shader_set_f("dimension", _sw, _sh);
 					shader_set_f("crop", _crop);
 					shader_set_i("edge", _index);
 					shader_set_i("fullEdge", bool(_edgFull & 0b0001));
-					shader_set_i("extendEdge", _edgExtn);
 						
 					draw_surface_ext(_et, 0, 0, 1, 1, 0, c_white, 1);
 					shader_reset();
 				} #endregion
 				
-				if(_eb == noone) { #region
+				if(_eb != noone) { #region
 					shader_set(sh_mk_tile55_edge_b);
 					shader_set_f("dimension", _sw, _sh);
 					shader_set_f("crop", _crop);
 					shader_set_i("edge", _index);
 					shader_set_i("fullEdge", bool(_edgFull & 0b0010));
-					shader_set_i("extendEdge", _edgExtn);
 						
 					draw_surface_ext(_eb, 0, 0, 1, 1, 0, c_white, 1);
 					shader_reset();
@@ -340,11 +332,11 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _edgType = _data[5];
 		var _edgeShf = _data[10];
 		var _edgFull = _data[11];
-		var _edgSprt = _data[13];
+		var _edgSprt = _data[12];
+		var _edgTran = _data[13];
 		var _edges   = _edgType == 0? [ _data[6], _data[6], _data[6], _data[6] ] : [ _data[6], _data[7], _data[8], _data[9] ];
 		var _edge;
 		
-		var _rot = [ 0, 180, 90, 270 ];
 		var _shi = [ 1, 3, 2, 0 ];
 		
 		var _sw = surface_get_width_safe(_tex0);
@@ -354,11 +346,39 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		for( var i = 0, n = array_length(__edge_buffer); i < n; i++ )
 			__edge_buffer[i] = surface_verify(__edge_buffer[i], _sw, _sh);
 		
+		if(_edgType == 0 && is_surface(_data[6])) { #region
+			var _esw = surface_get_width_safe(_data[6]);
+			var _esh = surface_get_height_safe(_data[6]);
+			
+			__edge_uniform[0] = surface_verify(__edge_uniform[0], _esw, _esh);
+			__edge_uniform[1] = surface_verify(__edge_uniform[1], _esw, _esh);
+			__edge_uniform[2] = surface_verify(__edge_uniform[2], _esh, _esw);
+			__edge_uniform[3] = surface_verify(__edge_uniform[3], _esh, _esw);
+			
+			surface_set_shader(__edge_uniform[0], noone);
+				draw_surface(_data[6], 0, 0);
+			surface_reset_shader();
+			
+			surface_set_shader(__edge_uniform[1], noone);
+				draw_surface_ext(_data[6], 0, _esh, 1, -1, 0, c_white, 1);
+			surface_reset_shader();
+			
+			surface_set_shader(__edge_uniform[2], noone);
+				draw_surface_ext(_data[6], 0, 0, -1, 1, 90, c_white, 1);
+			surface_reset_shader();
+			
+			surface_set_shader(__edge_uniform[3], noone);
+				draw_surface_ext(_data[6], _esh, 0, -1, -1, 90, c_white, 1);
+			surface_reset_shader();
+			
+			_edges = __edge_uniform;
+		} #endregion
+		
 		for( var i = 0; i < 4; i++ ) {
 			var _ed    = _edges[i];
 			var _edShf = _edgeShf[_shi[i]];
 			
-			edge_surface[i] = [ noone, noone, noone ];
+			edge_surface[i] = array_create(7, noone);
 			if(!is_surface(_ed)) continue;
 			
 			var _ew  = surface_get_width_safe(_ed);
@@ -367,72 +387,106 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _esw = _ew > _eh? _ew / _am : 0;
 			var _esh = _ew > _eh? 0 : _eh / _am;
 			
-			for( var j = 0; j < 3; j++ ) {
-				var _sIndx = i * 3 + j;
+			for( var j = 0; j < 7; j++ ) {
+				var _sIndx = i * 7 + j;
 				var _edBuf = _ed;
 				
 				__edge_surface[_sIndx] = surface_verify(__edge_surface[_sIndx], _sw, _sh);
 				
-				if(_edgSprt) {
-					surface_set_target(__edge_buffer[0]); #region
-						DRAW_CLEAR
-						BLEND_OVERRIDE
+				surface_set_target(__edge_buffer[0]); #region
+					DRAW_CLEAR
+					BLEND_OVERRIDE
 					
-						if(_edgSprt == 1) {
-							switch(j) {
-								case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
-								case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
-								case 2 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
-							}
-						} else if(_edgSprt == 2) {
-							switch(j) {
-								case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
-								case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
-								case 2 : draw_surface(_ed, -_esw * 2, -_esh * 2); break;
-							}
+					if(_edgSprt == 0) { 
+						draw_surface(_ed, 0, 0); 
+					} else if(_edgSprt == 1) { // flip side
+						switch(j) {
+							case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
+							case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
+							case 2 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
+							case 3 : 
+							case 4 : 
+							case 5 : 
+							case 6 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
 						}
+					} else if(_edgSprt == 2) { // indiviual sides
+						switch(j) {
+							case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
+							case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
+							case 2 : draw_surface(_ed, -_esw * 2, -_esh * 2); break;
+						}
+					}
 					
+					BLEND_NORMAL
+				surface_reset_target(); #endregion
+					
+				_edBuf = __edge_buffer[0];
+				
+				if(_edgType == 0 && _edgTran == 1) { // rotate surface for uniform edge type
+					surface_set_target(__edge_buffer[1]); #region
+						DRAW_CLEAR
+						BLEND_ALPHA_MULP
+						
+						switch(i) {
+							//case 1 : draw_surface_ext(_edBuf, _sw, 0, -1, 1, 0, c_white, 1); break;
+							case 3 : draw_surface_ext(_edBuf, 0, _sh, 1, -1, 0, c_white, 1); break;
+							default: draw_surface_ext(_edBuf, 0, 0, 1, 1, 0, c_white, 1);    break;
+						}
+						
 						BLEND_NORMAL
 					surface_reset_target(); #endregion
-					
-					_edBuf = __edge_buffer[0];
-					
-					if(_edgSprt == 1 && j == 2) {
-						surface_set_target(__edge_buffer[1]); #region
-							DRAW_CLEAR
-							BLEND_OVERRIDE
-					
-							if(i == 0 || i == 1) draw_surface_ext(__edge_buffer[0], _sw, 0, -1, 1, 0, c_white, 1);
-							if(i == 2 || i == 3) draw_surface_ext(__edge_buffer[0], 0, _sh, 1, -1, 0, c_white, 1);
 						
-							BLEND_NORMAL
-						surface_reset_target(); #endregion
+					_edBuf = __edge_buffer[1];
+				} 
+				
+				if(_edgSprt == 1 && j >= 2) {
+					surface_set_target(__edge_buffer[2]); #region
+						DRAW_CLEAR
+						BLEND_ALPHA_MULP
+							
+						if(j == 2) { // flip surface
+							if(i == 0 || i == 1) draw_surface_ext(_edBuf, _sw, 0, -1, 1, 0, c_white, 1); // flip x
+							if(i == 2 || i == 3) draw_surface_ext(_edBuf, 0, _sh, 1, -1, 0, c_white, 1); // flip y
+						} else if(j == 3) {
+							if(i == 0 || i == 1) draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0,  1, 1, c_white, 1);
+							if(i == 2 || i == 3) draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh / 2,  1, 1, c_white, 1);
+						} else if(j == 4) {
+							if(i == 0 || i == 1) draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0, -1, 1, c_white, 1);
+							if(i == 2 || i == 3) draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh / 2, 1, -1, c_white, 1);
+						} else if(j == 5) {
+							if(i == 0 || i == 1) {
+								draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh,   0, 0,  1, 1, c_white, 1);
+								draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw, 0, -1, 1, c_white, 1);
+							}
+								
+							if(i == 2 || i == 3) {
+								draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0,   0, 1,  1, c_white, 1);
+								draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh, 1, -1, c_white, 1);
+							}
+						} else if(j == 6) {
+							if(i == 0 || i == 1) {
+								draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0,  1, 1, c_white, 1);
+								draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0, -1, 1, c_white, 1);
+							}
+								
+							if(i == 2 || i == 3) {
+								draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh / 2, 1,  1, c_white, 1);
+								draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh / 2, 1, -1, c_white, 1);
+							}
+						}
+							
+						BLEND_NORMAL
+					surface_reset_target(); #endregion
 						
-						_edBuf = __edge_buffer[1];
-					}
+					_edBuf = __edge_buffer[2];
 				}
 				
 				surface_set_target(__edge_surface[_sIndx]); #region
 					DRAW_CLEAR
 					BLEND_OVERRIDE
 					
-					var _rr = 0;
 					var _xx = 0;
 					var _yy = 0;
-					
-					if(_edgType == 0) {
-						_rr = _rot[i];
-						
-						if(_edgSprt) {
-							if(i == 1 && j != 1) _rr += 180;
-							if(i == 2 && j == 0) _rr += 180;
-							if(i == 3 && j == 2) _rr += 180;
-						}
-						
-						_pp = point_rotate(0, 0, _sw / 2, _sh / 2, _rr);
-						_xx = _pp[0];
-						_yy = _pp[1];
-					} 
 					
 					switch(i) {
 						case 0 : _yy += _edShf; break;
@@ -441,7 +495,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						case 3 : _xx -= _edShf; break;
 					}
 					
-					draw_surface_ext(_edBuf, _xx, _yy, 1, 1, _rr, c_white, 1);
+					draw_surface(_edBuf, _xx, _yy);
 					
 					BLEND_NORMAL
 				surface_reset_target(); #endregion

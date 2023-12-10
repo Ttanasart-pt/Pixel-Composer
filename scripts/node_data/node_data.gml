@@ -205,6 +205,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		passiveDynamic   = false;
 		topoSorted		 = false;
 		temp_surface     = [];
+		force_requeue    = false;
 		
 		is_group_io = false;
 	#endregion
@@ -242,6 +243,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		cache_group     = noone;
 		
 		clearCacheOnChange	= true;
+	#endregion
+	
+	#region ---- log ----
+		messages = [];
 	#endregion
 	
 	static createNewInput = noone;
@@ -439,6 +444,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(update_on_frame) return true;
 		if(!rendered) return true;
 		
+		force_requeue = false;
 		for(var i = 0; i < ds_list_size(inputs); i++)
 			if(inputs[| i].isActiveDynamic(frame)) return true;
 		
