@@ -227,6 +227,7 @@
     {"name":"misc","order":13,"path":"folders/shader/misc.yy",},
     {"name":"find boundary","order":9,"path":"folders/shader/misc/find boundary.yy",},
     {"name":"MK effects","order":22,"path":"folders/shader/MK effects.yy",},
+    {"name":"Flag","order":9,"path":"folders/shader/MK effects/Flag.yy",},
     {"name":"Tile","order":7,"path":"folders/shader/MK effects/Tile.yy",},
     {"name":"morph","order":17,"path":"folders/shader/morph.yy",},
     {"name":"pixel builder","order":18,"path":"folders/shader/pixel builder.yy",},
@@ -247,7 +248,6 @@
     {"name":"button","order":34,"path":"folders/widgets/button.yy",},
     {"name":"rotator","order":35,"path":"folders/widgets/rotator.yy",},
     {"name":"text","order":36,"path":"folders/widgets/text.yy",},
-    {"name":"Flag","order":9,"path":"folders/shader/MK effects/Flag.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},

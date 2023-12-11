@@ -5,6 +5,8 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
 	if(registerFn != noone) register = registerFn;
 }
 
+function Inspector_Sprite(spr) constructor { self.spr = spr; }
+
 function Panel_Inspector() : PanelContent() constructor {
 	#region ---- main ----
 		title = __txt("Inspector");
@@ -478,7 +480,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				} else {
 					if(i >= array_length(_inspecting.input_display_list)) break;
 					var jun_disp = _inspecting.input_display_list[i];
-					if(is_struct(jun_disp)) {										// others
+					if(is_instanceof(jun_disp, Inspector_Sprite)) {										// others
 						var _spr = jun_disp.spr;
 						var _sh  = sprite_get_height(_spr);
 						

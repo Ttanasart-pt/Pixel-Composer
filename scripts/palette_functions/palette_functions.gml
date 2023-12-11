@@ -77,6 +77,7 @@ function __initPalette() {
 	
 	var path = DIRECTORY + "Palettes/"
 	var file = file_find_first(path + "*", 0);
+	
 	while(file != "") {
 		if(isPaletteFile(file)) {
 			array_push(PALETTES, {

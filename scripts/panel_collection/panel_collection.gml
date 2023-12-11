@@ -143,8 +143,14 @@ function Panel_Collection() : PanelContent() constructor {
 	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) { #region
 		draw_clear_alpha(c_white, 0);
 		
-		var nodes = search_string == ""? context.content : search_list;
+		switch(mode) {
+			case 0 : if(!COLLECTIONS.scanned)   COLLECTIONS.scan([".json", ".pxcc"]); break;
+		}
+		
+		var nodes;
 		if(mode == 0 && context == root) nodes = STEAM_COLLECTION;
+		else nodes = search_string == ""? context.content : search_list;
+		
 		var steamNode = [];
 		for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
 			var meta = STEAM_COLLECTION[| i].meta;	

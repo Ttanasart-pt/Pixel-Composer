@@ -28,7 +28,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 10] = nodeValue("Trace texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.setVisible(true, true);
 	
-	input_display_list = [ { spr: s_MKFX }, 0, 
+	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		["Saber",		false], 1, 2, 3, 6, 
 		["Render",		false], 4, 7, 5, 8, 9, 10,
 	];

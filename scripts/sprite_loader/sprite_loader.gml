@@ -1,3 +1,6 @@
+globalvar THEME_DEF;
+THEME_DEF = true;
+
 function __initTheme() { #region
 	var root = DIRECTORY + "Themes";
 	
@@ -7,13 +10,14 @@ function __initTheme() { #region
 		zip_unzip("data/Themes/default.zip", root);
 	}
 	
-	loadGraphic(PREFERENCES.theme);
-	loadColor(PREFERENCES.theme);
+	var t = get_timer();
+	
+	loadGraphic(PREFERENCES.theme);	print($"     > Load graphic | complete in {get_timer() - t}");    t = get_timer();
+	loadColor(PREFERENCES.theme);	print($"     > Load color   | complete in {get_timer() - t}");    t = get_timer();
 } #endregion
 
 function _sprite_path(rel, theme) { #region
 	INLINE
-	
 	return $"{DIRECTORY}Themes/{theme}/graphics/{string_replace_all(rel, "./", "")}";
 } #endregion
 
@@ -40,16 +44,31 @@ function _sprite_load_from_struct(str, theme, key) { #region
 	return s; 
 } #endregion
 
-function __getGraphicList() { #region
-	INLINE
-	
-	var path = _sprite_path("./graphics.json", "default");
-	var s = file_read_all(path);
-	return json_try_parse(s);
-} #endregion
-
 function loadGraphic(theme = "default") { #region
-	var sprDef = __getGraphicList();
+	var path   = _sprite_path("./graphics.json", theme);
+	
+	if(THEME_DEF) {
+		var sprStr   = json_load_struct(path);
+		var graphics = variable_struct_get_names(sprStr);
+		var str;
+	
+		for( var i = 0, n = array_length(graphics); i < n; i++ ) {
+			var key = graphics[i];
+			
+			if(struct_has(sprStr, key)) {
+				str = sprStr[$ key];
+				THEME[$ key] = _sprite_load_from_struct(str, theme, key);
+			} else {
+				noti_status($"Graphic resource for {key} not found. Rollback to default directory.");
+			
+				str = sprDef[$ key];
+				THEME[$ key] = _sprite_load_from_struct(str, "default", key);
+			}
+		}
+		return;
+	}
+	
+	var sprDef = json_load_struct(_sprite_path("./graphics.json", "default"));
 	var _metaP = $"{DIRECTORY}Themes/{theme}/meta.json";
 	
 	if(!file_exists_empty(_metaP))
@@ -59,8 +78,6 @@ function loadGraphic(theme = "default") { #region
 		if(_meta[$ "version"] < VERSION)
 			noti_warning("Loading theme made for older version.");
 	}
-		
-	var path   = _sprite_path("./graphics.json", theme);
 	
 	print($"Loading theme {theme}");
 	if(!file_exists_empty(path)) {
@@ -68,9 +85,8 @@ function loadGraphic(theme = "default") { #region
 		return;
 	}
 	
-	var s        = file_read_all(path);
 	var graphics = variable_struct_get_names(sprDef);
-	var sprStr   = json_try_parse(s);
+	var sprStr   = json_load_struct(path);
 	var str;
 	
 	for( var i = 0, n = array_length(graphics); i < n; i++ ) {

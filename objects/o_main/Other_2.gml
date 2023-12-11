@@ -4,7 +4,9 @@
 #region directory
 	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF;
 	DIRECTORY = "";
-	PRESIST_PREF = {};
+	PRESIST_PREF = {
+		path: ""
+	};
 	
 	if(OS == os_windows) {	
 		APP_DIRECTORY = environment_get_variable("userprofile") + "\\AppData\\Local\\PixelComposer\\";
@@ -21,7 +23,7 @@
 	
 	var perstPath = APP_DIRECTORY + "persistPreference.json"; 
 	if(file_exists_empty(perstPath)) {
-		PRESIST_PREF = json_load_struct(perstPath);
+		struct_override(PRESIST_PREF, json_load_struct(perstPath));
 		DIRECTORY    = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
 	}
 	
@@ -69,34 +71,35 @@
 	log_message("DIRECTORY", DIRECTORY);
 	
 	PREF_APPLY();
+	var t0 = get_timer();
+	var t  = get_timer();
 	
-	log_message("SESSION", "> init Patreon");		__initPatreon();
-	log_message("SESSION", "> init Theme");			__initTheme();
-	log_message("SESSION", "> init Locale");		__initLocale();
-	log_message("SESSION", "> init Font");			  loadFonts();
-	log_message("SESSION", "> init Project");		__initProject();
-	log_message("SESSION", "> init Action");		__initAction();
-	log_message("SESSION", "> init SurfaceFormat");	__initSurfaceFormat();
-	log_message("SESSION", "> init Collection");	__initCollection();
-	log_message("SESSION", "> init Assets");		__initAssets();
-	log_message("SESSION", "> init Presets");		__initPresets();
-	log_message("SESSION", "> init FontFolder");	__initFontFolder();
-	log_message("SESSION", "> init Lua");			__initLua();
-	log_message("SESSION", "> init NodeData");		__initNodeData();
-	log_message("SESSION", "> init Nodes");			__initNodes();
-	log_message("SESSION", "> init SteamUGC");		__initSteamUGC();
-	log_message("SESSION", "> init Addon");			__initAddon();
-	log_message("SESSION", "> init Palette");		__initPalette();
-	log_message("SESSION", "> init Gradient");		__initGradient();
-	
-	log_message("SESSION", "> init Ins Renderer");	__initInstanceRenderer();
-	log_message("SESSION", "> init Addons");		  loadAddon();
-	
-	log_message("SESSION", "> init sample");		LOAD_SAMPLE();
-	log_message("SESSION", "> init folders");		INIT_FOLDERS();
-	log_message("SESSION", "> init recents");		RECENT_LOAD();
-	
-	log_message("SESSION", ">> Initialization complete");
+    __initPatreon();              log_message("SESSION", $"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
+    __initTheme();                log_message("SESSION", $"> init Theme         | complete in {get_timer() - t}");    t = get_timer();
+    __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer();
+    loadFonts();                  log_message("SESSION", $"> init Font          | complete in {get_timer() - t}");    t = get_timer();
+    __initProject();              log_message("SESSION", $"> init Project       | complete in {get_timer() - t}");    t = get_timer();
+    __initAction();               log_message("SESSION", $"> init Action        | complete in {get_timer() - t}");    t = get_timer();
+    __initSurfaceFormat();        log_message("SESSION", $"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
+    __initCollection();           log_message("SESSION", $"> init Collection    | complete in {get_timer() - t}");    t = get_timer();
+    __initAssets();               log_message("SESSION", $"> init Assets        | complete in {get_timer() - t}");    t = get_timer();
+    __initPresets();              log_message("SESSION", $"> init Presets       | complete in {get_timer() - t}");    t = get_timer();
+    __initFontFolder();           log_message("SESSION", $"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer();
+    __initLua();                  log_message("SESSION", $"> init Lua           | complete in {get_timer() - t}");    t = get_timer();
+    __initNodeData();             log_message("SESSION", $"> init NodeData      | complete in {get_timer() - t}");    t = get_timer();
+    __initNodes();                log_message("SESSION", $"> init Nodes         | complete in {get_timer() - t}");    t = get_timer();
+    __initSteamUGC();             log_message("SESSION", $"> init SteamUGC      | complete in {get_timer() - t}");    t = get_timer();
+    __initAddon();                log_message("SESSION", $"> init Addon         | complete in {get_timer() - t}");    t = get_timer();
+    __initPalette();              log_message("SESSION", $"> init Palette       | complete in {get_timer() - t}");    t = get_timer();
+    __initGradient();             log_message("SESSION", $"> init Gradient      | complete in {get_timer() - t}");    t = get_timer();
+    
+    loadAddon();                  log_message("SESSION", $"> init Addons        | complete in {get_timer() - t}");    t = get_timer();
+    
+    LOAD_SAMPLE();                log_message("SESSION", $"> init sample        | complete in {get_timer() - t}");    t = get_timer();
+    INIT_FOLDERS();               log_message("SESSION", $"> init folders       | complete in {get_timer() - t}");    t = get_timer();
+    RECENT_LOAD();                log_message("SESSION", $"> init recents       | complete in {get_timer() - t}");    t = get_timer();
+    
+	log_message("SESSION", $">> Initialization complete in {get_timer() - t0}");
 	
 	__initPanel();
 	

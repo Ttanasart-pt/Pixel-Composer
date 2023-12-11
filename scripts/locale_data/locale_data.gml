@@ -1,6 +1,9 @@
 #region locale
 	globalvar LOCALE, TEST_LOCALE, LOCALE_DEF;
-	LOCALE      = {}
+	LOCALE      = {
+		fontDir: "",
+		config: { per_character_line_break: false },
+	};
 	TEST_LOCALE = false;
 	LOCALE_DEF  = true;
 	
@@ -11,6 +14,8 @@
 		directory_verify(root);
 		if(check_version($"{root}/version"))
 			zip_unzip(lfile, root);
+		
+		if(LOCALE_DEF) return;
 		
 		loadLocale();
 	} #endregion
@@ -23,15 +28,13 @@
 	} #endregion
 	
 	function loadLocale() { #region
-		LOCALE.word = json_load_struct(__locale_file("/words.json"));
-		LOCALE.ui   = json_load_struct(__locale_file("/UI.json"));
-		LOCALE.node = json_load_struct(__locale_file("/nodes.json"));
+		LOCALE.word   = json_load_struct(__locale_file("/words.json"));
+		LOCALE.ui     = json_load_struct(__locale_file("/UI.json"));
+		LOCALE.node   = json_load_struct(__locale_file("/nodes.json"));
 		LOCALE.config = json_load_struct(__locale_file("/config.json"));
 		
 		var fontDir = $"{DIRECTORY}Locale/{PREFERENCES.local}/fonts/";
 		LOCALE.fontDir = directory_exists(fontDir)? fontDir : noone;
-		
-		print("FONT DIR: " + fontDir);
 	} #endregion
 	
 	function __txtx(key, def = "") { #region

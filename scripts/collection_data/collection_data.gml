@@ -10,7 +10,8 @@ function __initCollection() {
 	if(check_version($"{root}/version"))
 		zip_unzip("data/Collections.zip", root);
 	
-	refreshCollections();
+	COLLECTIONS = new DirectoryObject("Collections", DIRECTORY + "Collections");
+	COLLECTIONS.open = true;
 }
 
 function refreshCollections() {

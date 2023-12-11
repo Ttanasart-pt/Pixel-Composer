@@ -206,6 +206,8 @@
 		struct_override(HOTKEYS_CUSTOM, f);
 		
 		LOCALE_DEF = PREFERENCES.local == "en";
+		THEME_DEF  = PREFERENCES.theme == "default";
+		FONT_DEF   = PREFERENCES.theme == "default" && PREFERENCES.local == "en" && PREFERENCES.display_scaling == 1;
 		
 		directory_verify(filepath_resolve(PREFERENCES.temp_path));
 		

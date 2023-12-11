@@ -149,20 +149,24 @@ function __initNodeData() {
 	
 	var nodeDir = DIRECTORY + "Nodes/";
 	
-	if(file_exists_empty("data/tooltip.zip")) 
+	directory_verify(nodeDir);
+	if(check_version($"{nodeDir}version")) {
 		zip_unzip("data/tooltip.zip", nodeDir);
 	
-	if(file_exists_empty("data/nodes.json")) {
 		file_delete(nodeDir + "nodes.json");
 		file_copy_override("data/nodes.json", nodeDir + "nodes.json");
 	}
 	
-	var _relFrom = $"data/related_node.json";
-	var _relTo   = nodeDir + "Related/default.json";
+	var dir = $"{nodeDir}Related/";
 	
-	directory_verify(nodeDir + "Related");
-	file_copy_override(_relFrom, _relTo);
-	//print($"Copying related nodes from {_relFrom} to {_relTo}\n\t{file_exists_empty(_relFrom)}, {file_exists_empty(_relTo)}");
+	directory_verify(dir);
+	if(check_version($"{dir}version")) {
+		
+		var _relFrom = $"data/related_node.json";
+		var _relTo   = $"{dir}default.json";
+		
+		file_copy_override(_relFrom, _relTo);
+	}
 	
 	__initNodeReleated();
 }

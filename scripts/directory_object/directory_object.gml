@@ -128,11 +128,13 @@ function DirectoryObject(name, path) constructor { #region
 	content = ds_list_create();
 	open    = false;
 	triggered = false;
+	scanned = false;
 	
 	static destroy = function() { ds_list_destroy(subDir); }
 	static getName = function() { return name; }
 	
 	static scan = function(file_type) { #region
+		scanned = true;
 		var _temp_name = [];
 		var _file = file_find_first(path + "/*", fa_directory);
 		while(_file != "") {

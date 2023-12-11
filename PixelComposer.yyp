@@ -259,6 +259,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"misc","folderPath":"folders/shader/misc.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"find boundary","folderPath":"folders/shader/misc/find boundary.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"MK effects","folderPath":"folders/shader/MK effects.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Flag","folderPath":"folders/shader/MK effects/Flag.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Tile","folderPath":"folders/shader/MK effects/Tile.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"morph","folderPath":"folders/shader/morph.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"pixel builder","folderPath":"folders/shader/pixel builder.yy",},
@@ -282,7 +283,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"button","folderPath":"folders/widgets/button.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"rotator","folderPath":"folders/widgets/rotator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/widgets/text.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Flag","folderPath":"folders/shader/MK effects/Flag.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},

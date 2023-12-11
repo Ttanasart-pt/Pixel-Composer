@@ -1,9 +1,10 @@
-globalvar FONT_ISLOADED, FONT_CACHE, GLYPH_MAP;
+globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, GLYPH_MAP;
 globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code, f_sdf, f_sdf_medium;
 
-FONT_CACHE = {};
+FONT_DEF      = true;
+FONT_CACHE    = {};
 FONT_ISLOADED = false;
-GLYPH_MAP = {};
+GLYPH_MAP     = {};
 
 function _font_add(path, size, sdf = false) { #region
 	var font_cache_dir = DIRECTORY + "font_cache";
@@ -101,8 +102,7 @@ function loadFonts() { #region
 	
 	var path = _font_path("./fonts.json");
 	
-	if(!file_exists_empty(path)) {
-		noti_status("Font not defined at " + path + ", rollback to default fonts.");
+	if(FONT_DEF || !file_exists_empty(path)) {
 		f_h1   = _f_h1;
 		f_h2   = _f_h2;
 		f_h3   = _f_h3;
@@ -122,17 +122,17 @@ function loadFonts() { #region
 	var s = file_read_all(path);
 	var fontDef = json_try_parse(s);
 	
-	f_h1 = _font_load_from_struct(fontDef, "h1", _f_h1);
-	f_h2 = _font_load_from_struct(fontDef, "h2", _f_h2);
-	f_h3 = _font_load_from_struct(fontDef, "h3", _f_h3);
-	f_h5 = _font_load_from_struct(fontDef, "h5", _f_h5);
+	f_h1  = _font_load_from_struct(fontDef, "h1", _f_h1);
+	f_h2  = _font_load_from_struct(fontDef, "h2", _f_h2);
+	f_h3  = _font_load_from_struct(fontDef, "h3", _f_h3);
+	f_h5  = _font_load_from_struct(fontDef, "h5", _f_h5);
 	
 	f_p0  = _font_load_from_struct(fontDef, "p0",  _f_p0);
 	f_p0b = _font_load_from_struct(fontDef, "p0b", _f_p0b);
 	
-	f_p1 = _font_load_from_struct(fontDef, "p1", _f_p1);
-	f_p2 = _font_load_from_struct(fontDef, "p2", _f_p2);
-	f_p3 = _font_load_from_struct(fontDef, "p3", _f_p3);
+	f_p1  = _font_load_from_struct(fontDef, "p1", _f_p1);
+	f_p2  = _font_load_from_struct(fontDef, "p2", _f_p2);
+	f_p3  = _font_load_from_struct(fontDef, "p3", _f_p3);
 	
 	f_code = _font_load_from_struct(fontDef, "code", _f_code, false);
 	f_sdf  = _font_load_from_struct(fontDef, "sdf",  _f_sdf);

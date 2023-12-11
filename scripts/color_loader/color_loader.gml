@@ -6,16 +6,17 @@
 	THEME_VALUE = new ThemeValue();
 #endregion
 
-function loadColor(theme = "default") {
+function loadColor(theme = "default") { #region
 	CDEF		= {};
 	COLORS		= new ThemeColor();
 	THEME_VALUE = new ThemeValue();
 	
 	_loadColor("default", true);
-	_loadColor(theme);
-}
+	
+	if(!THEME_DEF) _loadColor(theme);
+} #endregion
 
-function _loadColor(theme = "default", replace = false) {
+function _loadColor(theme = "default", replace = false) { #region
 	var dirr = DIRECTORY + "Themes/" + theme;
 	var path  = dirr + "/values.json";
 	var pathO = dirr + "/override.json";
@@ -96,4 +97,4 @@ function _loadColor(theme = "default", replace = false) {
 		}
 		variable_struct_set(COLORS, key, c);
 	}
-}
+} #endregion
