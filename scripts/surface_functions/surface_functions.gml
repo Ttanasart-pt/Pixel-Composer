@@ -434,7 +434,7 @@ function surface_valid_size(s) {
 	
 	if(!is_numeric(s))    return 1;
 	if(is_infinity(s)) return 1;
-	return clamp(s, 1, 8196);
+	return clamp(round(s), 1, 8196);
 }
 
 function surface_array_free(arr) {

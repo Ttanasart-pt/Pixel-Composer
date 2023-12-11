@@ -478,7 +478,15 @@ function Panel_Inspector() : PanelContent() constructor {
 				} else {
 					if(i >= array_length(_inspecting.input_display_list)) break;
 					var jun_disp = _inspecting.input_display_list[i];
-					if(is_array(jun_disp)) {										// LABEL
+					if(is_struct(jun_disp)) {										// others
+						var _spr = jun_disp.spr;
+						var _sh  = sprite_get_height(_spr);
+						
+						draw_sprite(_spr, 0, xc, yy);
+						
+						hh += _sh + ui(8);
+						continue;
+					} if(is_array(jun_disp)) {										// LABEL
 						var txt  = __txt(jun_disp[0]);
 						var coll = jun_disp[1] && filter_text == "";
 						var lbh  = lineBreak? ui(32) : ui(26);

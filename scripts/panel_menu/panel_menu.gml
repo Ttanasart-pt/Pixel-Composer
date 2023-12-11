@@ -427,7 +427,7 @@ function Panel_Menu() : PanelContent() constructor {
 				}
 			
 				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-				draw_text_add(round(xc), round(yc), menus[i][0]);
+				draw_text_add(xc, yc, menus[i][0]);
 			
 				if(hori) {
 					xx  += ww + 8;
@@ -494,11 +494,11 @@ function Panel_Menu() : PanelContent() constructor {
 			draw_set_color(COLORS._main_text_inner);
 			var wr_x = hori? nx0 + ui(8) : w / 2 - (wr_w + er_w + ui(16)) / 2;
 			draw_sprite_ui_uniform(THEME.noti_icon_warning, warning_amo? 1 : 0, wr_x + ui(10), ny0);
-			draw_text(round(wr_x + ui(28)), round(ny0), warning_amo);
+			draw_text_int(wr_x + ui(28), ny0, warning_amo);
 			
 			wr_x += wr_w + ui(16);
 			draw_sprite_ui_uniform(THEME.noti_icon_error, error_amo? 1 : 0, wr_x + ui(10), ny0);
-			draw_text(round(wr_x + ui(28)), round(ny0), error_amo);
+			draw_text_int(wr_x + ui(28), ny0, error_amo);
 			
 			if(hori) nx0 += nw + ui(8);
 			else	 ny0 += nh + ui(8);
@@ -522,7 +522,7 @@ function Panel_Menu() : PanelContent() constructor {
 						dialogPanelCall(new Panel_Addon());
 				} else 
 					draw_sprite_stretched(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh);
-				draw_text(round(nx0 + ui(8)), round(ny0), name);
+				draw_text_int(nx0 + ui(8), ny0, name);
 				draw_sprite_ui(THEME.addon_icon, 0, nx0 + ui(20) + string_width(name), ny0 + ui(1),,,, COLORS._main_icon);
 				
 				if(hori) nx0 += ww + ui(4);
@@ -639,7 +639,7 @@ function Panel_Menu() : PanelContent() constructor {
 					}
 				}
 				
-				draw_text(round((_x0 + _x1) / 2), round((_y0 + _y1) / 2), txt);
+				draw_text_int((_x0 + _x1) / 2, (_y0 + _y1) / 2, txt);
 			} else {
 				var _xx1 = ui(40);
 				var y1 = h - ui(20);
@@ -658,7 +658,7 @@ function Panel_Menu() : PanelContent() constructor {
 					}
 				}
 				
-				draw_text(round(_xx1 + ui(6)), round(y1), txt);
+				draw_text_int(_xx1 + ui(6), y1, txt);
 			}
 		#endregion
 		
@@ -732,10 +732,10 @@ function Panel_Menu() : PanelContent() constructor {
 			
 			if(hori) {
 				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
-				draw_text(round(tcx), round((ty0 + ty1) / 2), tc);
+				draw_text_int(tcx, (ty0 + ty1) / 2, tc);
 			} else {
 				draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
-				draw_text(round(tx0 + ui(8)), round(tby0 + th / 2), tc);
+				draw_text_int(tx0 + ui(8), tby0 + th / 2, tc);
 			}
 			
 			if(IS_PATREON && PREFERENCES.show_supporter_icon) {

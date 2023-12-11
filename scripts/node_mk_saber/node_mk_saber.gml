@@ -25,9 +25,12 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 9] = nodeValue("Glow radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
-	input_display_list = [ 0, 
+	inputs[| 10] = nodeValue("Trace texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(true, true);
+	
+	input_display_list = [ { spr: s_MKFX }, 0, 
 		["Saber",		false], 1, 2, 3, 6, 
-		["Render",		false], 4, 7, 5, 8, 9, 
+		["Render",		false], 4, 7, 5, 8, 9, 10,
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -65,6 +68,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _grds = max(1, _data[7]);
 		var _gint = _data[8];
 		var _grad = _data[9];
+		var _trcTex = _data[10];
 		
 		draw_set_circle_precision(32);
 		
@@ -132,6 +136,12 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			if(_trac > 0 && CURRENT_FRAME > 0 && prev_points != noone) { #region
 				var _prevArr = prev_points[_array_index];
 				var _inds    = max(0, array_length(_prevArr) - _trac);
+				var useTex   = is_surface(_trcTex);
+				
+				if(useTex)
+					draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_trcTex));
+				else 
+					draw_primitive_begin(pr_trianglelist);
 				
 				for( var i = _inds, n = array_length(_prevArr); i < n; i++ ) {
 					var _prev = _prevArr[i];
@@ -147,9 +157,29 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					var _pp2x = _curr[1][0];
 					var _pp2y = _curr[1][1];
 					
-					draw_triangle(_pr1x, _pr1y, _pr2x, _pr2y, _pp1x, _pp1y, false);
-					draw_triangle(_pr2x, _pr2y, _pp1x, _pp1y, _pp2x, _pp2y, false);
+					if(useTex) {
+						var _v0 = (i - _inds + 0) / (n - _inds);
+						var _v1 = (i - _inds + 1) / (n - _inds);
+						
+						draw_vertex_texture(ceil(_pr1x), ceil(_pr1y), 0, _v0);
+						draw_vertex_texture(ceil(_pr2x), ceil(_pr2y), 1, _v0);
+						draw_vertex_texture(ceil(_pp1x), ceil(_pp1y), 0, _v1);
+											
+						draw_vertex_texture(ceil(_pr2x), ceil(_pr2y), 1, _v0);
+						draw_vertex_texture(ceil(_pp1x), ceil(_pp1y), 0, _v1);
+						draw_vertex_texture(ceil(_pp2x), ceil(_pp2y), 1, _v1);
+					} else {
+						draw_vertex(ceil(_pr1x), ceil(_pr1y));
+						draw_vertex(ceil(_pr2x), ceil(_pr2y));
+						draw_vertex(ceil(_pp1x), ceil(_pp1y));
+						
+						draw_vertex(ceil(_pr2x), ceil(_pr2y));
+						draw_vertex(ceil(_pp1x), ceil(_pp1y));
+						draw_vertex(ceil(_pp2x), ceil(_pp2y));
+					}
 				}
+				
+				draw_primitive_end();
 			} #endregion
 			
 			if(_thck == 1) {

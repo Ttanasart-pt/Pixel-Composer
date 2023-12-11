@@ -6,14 +6,15 @@ function draw_text_line(_x, _y, _text, _sep, _w) { #region
 function draw_text_add(_x, _y, _text, scale = 1) { #region
 	INLINE
 	BLEND_ALPHA_MULP;
-	draw_text_transformed(_x, _y, _text, scale, scale, 0);
+	if(scale == 1) draw_text(round(_x), round(_y), _text);
+	else           draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
 	BLEND_NORMAL;
 } #endregion
 
 function draw_text_over(_x, _y, _text, scale = 1) { #region
 	INLINE
 	BLEND_OVERRIDE;
-	draw_text_transformed(_x, _y, _text, scale, scale, 0);
+	draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
 	BLEND_NORMAL;
 } #endregion
 
@@ -62,7 +63,7 @@ function draw_text_lang(_x, _y, _text, scale = 1) { #region
 		
 		if(_font != _ff) draw_set_font(_ff);
 		_font = _ff;
-		draw_text_transformed(_x, _y, _g, scale, scale, 0);
+		draw_text_transformed(round(_x), round(_y), _g, scale, scale, 0);
 		_x += string_width(_g) * scale;
 	}
 	
@@ -92,12 +93,19 @@ function draw_text_bbox(bbox, text) { #region
 function draw_text_cut(x, y, str, w, scale = 1) { #region
 	INLINE
 	BLEND_ALPHA_MULP;
-	draw_text_transformed(x, y, string_cut(str, w,, scale), scale, scale, 0);
+	draw_text_transformed(round(x), round(y), string_cut(str, w,, scale), scale, scale, 0);
 	BLEND_NORMAL;
+} #endregion
+
+function draw_text_int(x, y, str) { #region
+	INLINE
+	draw_text(round(x), round(y), str);
 } #endregion
 
 function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation, forceCut = false) { #region
 	INLINE
+	_x = round(_x);
+	_y = round(_y);
 	
 	if(!LOCALE.config.per_character_line_break && !forceCut) {
 		BLEND_ALPHA_MULP;

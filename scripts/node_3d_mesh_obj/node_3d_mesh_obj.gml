@@ -1,7 +1,7 @@
 function Node_create_3D_Obj(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_open_filename("30 object|*.obj", "");
+		path = get_open_filename("3d object|*.obj", "");
 		key_release();
 		if(path == "") return noone;
 	}

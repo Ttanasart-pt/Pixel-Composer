@@ -44,7 +44,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 15] = nodeValue("Twist shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 		
-	input_display_list = [ 5, 1, 
+	input_display_list = [ { spr: s_MKFX }, 5, 1, 
 		["Surface",		 true], 0,
 		["Grid",		false], 2,
 		["Movement",	false], 8, 4, 7, 9, 10, 11, 13, 14, 15, 

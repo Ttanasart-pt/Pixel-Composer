@@ -35,7 +35,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 13] = nodeValue("Edge transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Flip", "Rotate" ] );
 		
-	input_display_list = [ 
+	input_display_list = [ { spr: s_MKFX }, 
 		["Surfaces",	  true], 0, 1, 
 		["Tile set",	 false], 2, 4, 
 		["Edge",		 false], 5, 12, 13, 10, 11,

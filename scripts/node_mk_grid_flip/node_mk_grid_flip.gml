@@ -30,7 +30,7 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 10] = nodeValue("Flip limit", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "None", "90", "180" ]);
 	
-	input_display_list = [ 3, 1, 
+	input_display_list = [ { spr: s_MKFX }, 3, 1, 
 		["Surface",		 true], 0, 4, 
 		["Grid",		false], 2,
 		["Flip",		false], 6, 10, 5, 7, 8, 9, 

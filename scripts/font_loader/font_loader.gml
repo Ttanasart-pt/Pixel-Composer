@@ -73,7 +73,7 @@ function _font_load_from_struct(str, name, def, over = true) { #region
 	
 	font_add_enable_aa(THEME_VALUE.font_aa);
 	var _sdf  = struct_try_get(font, "sdf", false);
-	var _font = _font_add(path, font.size * UI_SCALE, _sdf);
+	var _font = _font_add(path, round(font.size * UI_SCALE), _sdf);
 	
 	return _font;
 } #endregion

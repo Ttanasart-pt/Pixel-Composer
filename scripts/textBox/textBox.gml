@@ -25,6 +25,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	_input_text   = "";
 	_last_text    = "";
 	current_value = "";
+	_disp_text    = "";
 	
 	cursor			= 0;
 	cursor_pos		= 0;
@@ -277,7 +278,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	} #endregion
 	
 	static display_text = function(_x, _y, _text, _w, _m = -1) { #region
-		_text = string_real(_text);
 		draw_set_alpha(0.5 + 0.5 * interactable);
 		
 		switch(format) {
@@ -374,6 +374,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 		
 		text_surface = surface_verify(text_surface, _w - ui(16), _h);
+		
 		if(!hide) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
 		disp_x = lerp_float(disp_x, disp_x_to, 5);
 		
@@ -462,7 +463,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 				
 				surface_set_shader(text_surface, noone, true, BLEND.add);
-					display_text(tx - tb_surf_x, _h / 2 - th / 2, txt, _w - ui(4), _mx - tb_surf_x);
+					display_text(tx - tb_surf_x, _h / 2 - th / 2, string_real(txt), _w - ui(4), _mx - tb_surf_x);
 				surface_reset_shader();
 				
 				BLEND_ALPHA

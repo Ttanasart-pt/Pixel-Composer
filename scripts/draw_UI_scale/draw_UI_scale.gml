@@ -26,7 +26,17 @@ function line_get_width(txt, font = noone, offset = 0) {
 
 	function ui(val) { 
 		INLINE
+		return round(val * UI_SCALE); 
+	}
+	
+	function resetScale(scale) {
+		if(scale == PREFERENCES.display_scaling) return;
 		
-		return val * UI_SCALE; 
+		PREFERENCES.display_scaling = scale;
+		resetPanel();
+		loadFonts();
+			
+		time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, onResize));
+		PREF_SAVE();
 	}
 #endregion

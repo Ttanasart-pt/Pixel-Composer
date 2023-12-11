@@ -10,7 +10,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 2] = nodeValue("Point 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	input_display_list = [ 0, 
+	input_display_list = [ { spr: s_MKFX }, 0, 
 		["Saber",		false], 1, 2, 
 	];
 	

@@ -274,20 +274,12 @@ event_inherited();
 	
 	PREFERENCES._display_scaling = PREFERENCES.display_scaling;
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(
-		__txtx("pref_gui_scaling", "GUI scaling"),
-		new slider(0.5, 2, 0.01,, function(val) { 
+		__txtx("pref_gui_scaling", "GUI scaling*"),
+		new slider(0.5, 2, 0.01, function(val) { 
 			PREFERENCES._display_scaling = val;
-			PREF_SAVE();
 		}, function() { 
 			PREFERENCES._display_scaling = clamp(PREFERENCES._display_scaling, 0.5, 2);
-			if(PREFERENCES.display_scaling == PREFERENCES._display_scaling)
-				return;
-				
-			PREFERENCES.display_scaling = PREFERENCES._display_scaling;
-			resetPanel();
-			loadFonts();
-			
-			time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, onResize));
+			resetScale(PREFERENCES._display_scaling);
 		}),
 		function() { return PREFERENCES._display_scaling; },
 		function(val) { PREFERENCES.display_scaling = val; PREFERENCES._display_scaling = val; },
@@ -954,7 +946,7 @@ event_inherited();
 			draw_text_add(ui(24), yy + th / 2, name);
 			_pref.editWidget.setFocusHover(sFOCUS, sHOVER && sp_pref.hover); 
 			
-			var widget_w = ui(240);
+			var widget_w = ui(260);
 			var widget_h = th;
 			
 			if(is_instanceof(_pref.editWidget, textBox)) 

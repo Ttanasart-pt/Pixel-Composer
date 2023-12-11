@@ -37,6 +37,8 @@
 	function __txtx(key, def = "") { #region
 		INLINE
 		
+		if(LOCALE_DEF) return def;
+		
 		if(key == "") return "";
 		if(TEST_LOCALE) {
 			if(!struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
@@ -46,8 +48,6 @@
 			return "";
 		}
 		
-		if(LOCALE_DEF) return def;
-		
 		if(struct_has(LOCALE.word, key)) return LOCALE.word[$ key];
 		if(struct_has(LOCALE.ui, key))   return LOCALE.ui[$ key];
 		
@@ -56,6 +56,8 @@
 	
 	function __txt(txt, prefix = "") { #region
 		INLINE
+		
+		if(LOCALE_DEF) return txt;
 		
 		if(txt == "") return "";
 		var key = string_lower(txt);
@@ -68,7 +70,7 @@
 			}	
 			return "";
 		}
-		if(LOCALE_DEF) return txt;	
+		
 		return __txtx(prefix + key, txt);
 	} #endregion
 	
@@ -83,6 +85,8 @@
 	function __txt_node_name(node, def = "") { #region
 		INLINE
 		
+		if(LOCALE_DEF) return def;
+		
 		if(TEST_LOCALE) {
 			if(!struct_has(LOCALE.node, node)) {
 				show_debug_message($"LOCALE [NODE]: \"{node}\": \"{def}\",");
@@ -90,8 +94,6 @@
 			}
 			return "";
 		}
-		
-		if(LOCALE_DEF) return def;
 		
 		if(!struct_has(LOCALE.node, node)) 
 			return def;
@@ -101,6 +103,8 @@
 	
 	function __txt_node_tooltip(node, def = "") { #region
 		INLINE
+		
+		if(LOCALE_DEF) return def;
 			
 		if(TEST_LOCALE) {
 			if(!struct_has(LOCALE.node, node)) {
@@ -109,8 +113,6 @@
 			}
 			return "";
 		}
-		
-		if(LOCALE_DEF) return def;
 		
 		if(!struct_has(LOCALE.node, node)) 
 			return def;
@@ -121,6 +123,8 @@
 	function __txt_junction_name(node, type, index, def = "") { #region
 		INLINE
 		
+		if(LOCALE_DEF) return def;
+		
 		if(TEST_LOCALE) {
 			if(!struct_has(LOCALE.node, node)) {
 				show_debug_message($"LOCALE [JNAME]: \"{node}\": \"{def}\",");
@@ -128,8 +132,6 @@
 			}
 			return "";
 		}
-		
-		if(LOCALE_DEF) return def;
 		
 		if(!struct_has(LOCALE.node, node)) 
 			return def;
@@ -144,6 +146,8 @@
 	function __txt_junction_tooltip(node, type, index, def = "") { #region
 		INLINE
 		
+		if(LOCALE_DEF) return def;
+		
 		if(TEST_LOCALE) {
 			if(!struct_has(LOCALE.node, node)) {
 				show_debug_message($"LOCALE [JTIP]: \"{node}\": \"{def}\",");
@@ -151,8 +155,6 @@
 			}
 			return "";
 		}
-		
-		if(LOCALE_DEF) return def;
 		
 		if(!struct_has(LOCALE.node, node)) 
 			return def;
@@ -167,6 +169,8 @@
 	function __txt_junction_data(node, type, index, def = []) { #region
 		INLINE
 		
+		if(LOCALE_DEF) return def;
+		
 		if(TEST_LOCALE) {
 			if(!struct_has(LOCALE.node, node)) {
 				show_debug_message($"LOCALE [DDATA]: \"{node}\": \"{def}\",");
@@ -174,8 +178,6 @@
 			}
 			return [ "" ];
 		}
-		
-		if(LOCALE_DEF) return def;
 		
 		if(!struct_has(LOCALE.node, node)) 
 			return def;

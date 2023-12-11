@@ -17,16 +17,30 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 5] = nodeValue("Wind speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2);
 	
-	inputs[| 6] = nodeValue("Wave width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2);
+	inputs[| 6] = nodeValue("Wave width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
 	
-	inputs[| 7] = nodeValue("Wave size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
+	inputs[| 7] = nodeValue("Wave size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 8] = nodeValue("Phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	input_display_list = [ 0, 
-		["Flag",	false], 4, 1, 2, 3, 
-		["Wave",	false], 6, 7, 5, 8, 
+	inputs[| 9] = nodeValue("Clip", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	inputs[| 10] = nodeValue("Shadow", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	inputs[| 11] = nodeValue("Shadow threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.1, 0.1, 0.001] });
+	
+	inputs[| 12] = nodeValue("Invert shadow", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0);
+	
+	input_display_list = [ { spr: s_MKFX }, 0, 
+		["Flag",	    false], 4, 1, 2, 3, 
+		["Wave",	    false], 6, 7, 5, 8, 9, 
+		["Rendering",	false], 10, 11, 12, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -38,7 +52,9 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			attributes.iteration = val; 
 			triggerRender();
 		})]);
-		
+	
+	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	
 	function fPoints(_x, _y, _u, _v) constructor { #region
 		x   = _x;
 		y   = _y;
@@ -65,14 +81,13 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	links  = [];
 	meshes = [];
 	
+	static onValueUpdate = function(index = 0) { #region
+		if(index == 3) setGeometry();
+	} #endregion
+	
 	static setGeometry = function() { #region
-		var _surf  = getSingleValue(1); if(!is_surface(_surf)) return;
-		var _start = getSingleValue(2);
 		var _pinn  = getSingleValue(3);
 		var _subd  = getSingleValue(4);
-		
-		var _sw = surface_get_width_safe(_surf);
-		var _sh = surface_get_height_safe(_surf);
 		
 		points = array_create((_subd + 1) * (_subd + 1));
 		links  = array_create(2 * _subd * (_subd + 1));
@@ -81,10 +96,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _ind = 0;
 		for( var i = 0; i <= _subd; i++ ) 
 		for( var j = 0; j <= _subd; j++ ) {
-			var _x = _start[0] + i / _subd * _sw;
-			var _y = _start[1] + j / _subd * _sh;
-			
-			points[_ind++] = new fPoints(_x, _y, i / _subd, j / _subd);
+			points[_ind++] = new fPoints(i / _subd, j / _subd, i / _subd, j / _subd);
 		}
 		
 		switch(_pinn) {
@@ -127,23 +139,43 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	} #endregion
 	
 	static stepFlag = function() { #region
-		var _pinn = getSingleValue(3);
-		var _wspd = getSingleValue(5);
-		var _wave = getSingleValue(6);
-		var _wavz = getSingleValue(7);
-		var _wphs = getSingleValue(8);
+		var _pinn  = getSingleValue(3);
+		var _wspd  = getSingleValue(5);
+		var _wave  = getSingleValue(6);
+		var _wavz  = getSingleValue(7);
+		var _wphs  = getSingleValue(8);
+		var _clip  = getSingleValue(9);
 		
 		var _tps = CURRENT_FRAME / TOTAL_FRAMES * _wspd * pi * 2;
+		var _wve = _wave * pi;
 		
 		for( var i = 0, n = array_length(points); i < n; i++ ) {
 			var p = points[i];
 			
 			switch(_pinn) {
 				case 0 : 
-					var y0 = p.sy + max(-0.2, sin(p.u           * pi * _wave - _tps)) * _wavz * p.u; 
-					var y1 = p.sy + min( 0.2, sin((p.u - _wphs) * pi * _wave - _tps)) * _wavz * p.u;
+					var y0 = p.sy + max(-_clip, sin(p.u           * _wve - _tps)) * _wavz * p.u; 
+					var y1 = p.sy + min( _clip, sin((p.u - _wphs) * _wve - _tps)) * _wavz * p.u;
 					
 					p.y = lerp(y0, y1, p.v);
+					break;
+				case 1 : 
+					var y0 = p.sy + max(-_clip, sin((1 - p.u)           * _wve - _tps)) * _wavz * (1 - p.u); 
+					var y1 = p.sy + min( _clip, sin(((1 - p.u) - _wphs) * _wve - _tps)) * _wavz * (1 - p.u);
+					
+					p.y = lerp(y0, y1, p.v);
+					break;
+				case 2 : 
+					var x0 = p.sx + max(-_clip, sin(p.v           * _wve - _tps)) * _wavz * p.v; 
+					var x1 = p.sx + min( _clip, sin((p.v - _wphs) * _wve - _tps)) * _wavz * p.v;
+					
+					p.x = lerp(x0, x1, p.u);
+					break;
+				case 3 : 
+					var x0 = p.sx + max(-_clip, sin((1 - p.v)           * _wve - _tps)) * _wavz * (1 - p.v); 
+					var x1 = p.sx + min( _clip, sin(((1 - p.v) - _wphs) * _wve - _tps)) * _wavz * (1 - p.v);
+					
+					p.x = lerp(x0, x1, p.u);
 					break;
 			}
 		}
@@ -179,13 +211,47 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _dim = _data[0];
-		var _tex = _data[1];
+		var _dim   = _data[0];
+		var _tex   = _data[1];
+		var _start = _data[2];
+		var _pinn  = _data[3];
+		
+		var _shadow = _data[10];
+		var _shdThr = _data[11];
+		var _shdInv = _data[12];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		if(!is_surface(_tex)) return _outSurf;
 		
-		surface_set_target(_outSurf);
+		var _sx, _sy;
+		var _sw = surface_get_width_safe(_tex);
+		var _sh = surface_get_height_safe(_tex);
+		
+		switch(_pinn) {
+			case 0 :
+				_sx = _start[0];
+				_sy = _start[1];
+				break;
+			case 1 :
+				_sx = _start[0] - _sw;
+				_sy = _start[1];
+				break;
+			case 2 :
+				_sx = _start[0];
+				_sy = _start[1];
+				break;
+			case 3 :
+				_sx = _start[0];
+				_sy = _start[1] - _sh;
+				break;
+		}
+		
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
+		
+		surface_set_target_ext(0, temp_surface[0]);
+		surface_set_target_ext(1, temp_surface[1]);
+		shader_set(sh_mk_flag_mrt);
 			DRAW_CLEAR
 			
 			draw_set_color(c_white);
@@ -198,13 +264,27 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var p1 = m.p1;
 				var p2 = m.p2;
 				
-				draw_vertex_texture(p0.x, p0.y, p0.u, p0.v);
-				draw_vertex_texture(p1.x, p1.y, p1.u, p1.v);
-				draw_vertex_texture(p2.x, p2.y, p2.u, p2.v);
+				draw_vertex_texture(_sx + p0.x * _sw, _sy + p0.y * _sh, p0.u, p0.v);
+				draw_vertex_texture(_sx + p1.x * _sw, _sy + p1.y * _sh, p1.u, p1.v);
+				draw_vertex_texture(_sx + p2.x * _sw, _sy + p2.y * _sh, p2.u, p2.v);
 			}
 			
 			draw_primitive_end();
+		shader_reset();
 		surface_reset_target();
+		
+		surface_set_shader(_outSurf, sh_mk_flag_shade);
+			shader_set_surface("textureMap", temp_surface[1]);
+			shader_set_f("dimension",   _dim);
+			shader_set_f("oriPosition", _start);
+			shader_set_f("oriScale",    _sw, _sh);
+			shader_set_f("shadow",      1 - _shadow);
+			shader_set_f("shadowThres", _shdThr);
+			shader_set_i("shadowInv",   _shdInv);
+			shader_set_i("side",        _pinn > 1);
+			
+			draw_surface(temp_surface[0], 0, 0);
+		surface_reset_shader();
 		
 		return _outSurf;
 	} #endregion

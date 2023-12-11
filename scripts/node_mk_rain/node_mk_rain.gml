@@ -33,7 +33,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 11] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 		
-	input_display_list = [ 0, 8, 
+	input_display_list = [ { spr: s_MKFX }, 0, 8, 
 		["Shape",	false], 9, 3, 4, 10, 11, 
 		["Effect",	false], 2, 1, 7, 
 		["Render",	false], 5, 6, 
