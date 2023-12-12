@@ -663,8 +663,7 @@ function Panel_Menu() : PanelContent() constructor {
 			txt += PROJECT.path == ""? __txt("Untitled") : filename_name(PROJECT.path);
 			if(PROJECT.modified) txt += "*";
 			txt += " - Pixel Composer";
-			if(ALPHA)		txt += " ALPHA";
-			else if(DEMO)	txt += " DEMO";
+			if(DEMO)	txt += " DEMO";
 			
 			var tx0, tx1, tcx;
 			var ty0, ty1;

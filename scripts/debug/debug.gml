@@ -73,6 +73,8 @@ function exception_print(e) {
 }
 
 function setException() {
+	if(OS == os_macosx) return;
+	
 	exception_unhandled_handler(function(ex) {
 		var path = string(DIRECTORY) + "prev_crash.pxc";
 		if(!SAVING && !TESTING) SAVE_AT(PROJECT, path);
@@ -98,9 +100,7 @@ function setException() {
 }
 //setException();
 
-function resetException() {
-	exception_unhandled_handler(undefined);
-}
+function resetException() { exception_unhandled_handler(undefined); }
 
 function printCallStack(maxDepth = 32) {
 	var stack = debug_get_callstack(maxDepth);

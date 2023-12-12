@@ -25,10 +25,10 @@
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION;
 
 	LATEST_VERSION	= 11500;
-	VERSION			= 11604;
+	VERSION			= 11603;
 	SAVE_VERSION	= 11600.1;
-	VERSION_STRING  = "1.16.0.4";
-	BUILD_NUMBER	= 11604;
+	VERSION_STRING  = "1.16.0.3";
+	BUILD_NUMBER	= 11603;
 	
 	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();
@@ -96,10 +96,6 @@
 	#macro DEMO	false
 	#macro ItchDemo:DEMO  true
 	#macro SteamDemo:DEMO true
-	#macro MacAlpha:DEMO  true
-	
-	#macro ALPHA false
-	#macro MacAlpha:ALPHA true
 	
 	#region color
 		#macro c_ui_blue_dkblack	$251919

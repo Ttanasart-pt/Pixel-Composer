@@ -16,6 +16,7 @@ function filepath_resolve(path) {
 }
 
 function get_open_filenames_compat(ext, sel) {
+	INLINE
 	if(OS == os_windows) return get_open_filenames(ext, sel);
 	return get_open_filename(ext, sel);
 }

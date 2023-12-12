@@ -91,7 +91,7 @@ function SAVE(project = PROJECT) { #region
 function SAVE_AS(project = PROJECT) { #region
 	if(DEMO) return false;
 	
-	var path = get_save_filename("Pixel Composer project (.pxc)|*.pxc", ""); 
+	var path = get_save_filename("Pixel Composer project (.pxc)|*.pxc", "");
 	key_release();
 	if(path == "") return false;
 	

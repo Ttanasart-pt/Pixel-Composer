@@ -4,6 +4,9 @@ THEME_DEF = true;
 function __initTheme() { #region
 	var root = DIRECTORY + "Themes";
 	
+	show_message(root);
+	show_message(directory_exists(root));
+	
 	directory_verify(root);
 	if(check_version($"{root}/version")) {
 		log_message("THEME", $"unzipping default theme to {root}.");

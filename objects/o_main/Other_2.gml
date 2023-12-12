@@ -115,7 +115,6 @@
 	shell_execute_async("assoc", cmd);
 	
 	directory_set_current_working(DIRECTORY);
-	//print($"Setup time: {(current_time - t)/1000}s");
 #endregion
 
 #region parameter

@@ -125,7 +125,7 @@ draw_sprite_ext(s_noti_icon_error, 0, 18, 18, 0.5, 0.5, 0, c_white, 1);
 
 	if(point_in_rectangle(mouse_mx, mouse_my, bx0, by0, bx0 + bw, by0 + bh)) {
 		if(mouse_check_button_pressed(mb_left)) {
-			EnvironmentUnsetVariable("process_id");
+			environment_set_variable("process_id", string(0));
 			
 			var path = executable_get_pathname();
 			shell_execute_async(path, "--crashed");

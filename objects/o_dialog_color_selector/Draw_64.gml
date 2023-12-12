@@ -47,11 +47,9 @@ if !ready exit;
 		__initPalette();
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("color_selector_open_palette", "Open palette folder"), THEME.folder) == 2) {
-		var _realpath = environment_get_variable("LOCALAPPDATA") + "/Pixels_Composer/Palettes";
-		var _windir   = environment_get_variable("WINDIR") + "/explorer.exe";
-		shell_execute_async(_windir, _realpath);
-	}
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("color_selector_open_palette", "Open palette folder"), THEME.folder) == 2)
+		shellOpenExplorer($"{DIRECTORY}Palettes");
+	
 	bx -= ui(32);
 	
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white) == 2)
