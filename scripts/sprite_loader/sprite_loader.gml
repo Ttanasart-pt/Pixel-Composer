@@ -7,7 +7,7 @@ function __initTheme() { #region
 	directory_verify(root);
 	if(check_version($"{root}/version")) {
 		log_message("THEME", $"unzipping default theme to {root}.");
-		zip_unzip("data/Themes/default.zip", root);
+		zip_unzip("data/Theme.zip", root);
 	}
 	
 	var t = get_timer();

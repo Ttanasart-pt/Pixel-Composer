@@ -38,7 +38,7 @@ if(PROJECT.active && !PROJECT.safeMode) { #region
 				}
 			}
 		}
-	
+		
 		if(ds_map_exists(HOTKEYS, FOCUS_STR)) {
 			var list = HOTKEYS[? FOCUS_STR];
 			for(var i = 0; i < ds_list_size(list); i++) {
