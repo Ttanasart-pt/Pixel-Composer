@@ -61,8 +61,7 @@ float perlin(in vec2 st) { #region
 	for(int i = 0; i < iteration; i++) {
 		n += noise(pos, sc) * amp;
 		
-		pos.x += random(vec2(float(i)), 0.574186) * sc;
-		pos.y += random(vec2(float(i)), 0.821458) * sc;
+		pos += random2(vec2(float(i), float(i)), seed + 1.574186) * sc;
 		
 		sc  *= 2.;
 		amp *= .5;

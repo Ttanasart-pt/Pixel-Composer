@@ -1644,6 +1644,7 @@
     {"name":"paddingBox","order":7,"path":"scripts/paddingBox/paddingBox.yy",},
     {"name":"fd_rectangle_set_visualization_shader","order":18,"path":"scripts/fd_rectangle_set_visualization_shader/fd_rectangle_set_visualization_shader.yy",},
     {"name":"s_biterator_bg","order":2,"path":"sprites/s_biterator_bg/s_biterator_bg.yy",},
+    {"name":"macMinimize","order":2,"path":"extensions/macMinimize/macMinimize.yy",},
     {"name":"s_node_ase_layer","order":14,"path":"sprites/s_node_ase_layer/s_node_ase_layer.yy",},
     {"name":"directory_functions","order":9,"path":"scripts/directory_functions/directory_functions.yy",},
     {"name":"_f_p1","order":1,"path":"fonts/_f_p1/_f_p1.yy",},

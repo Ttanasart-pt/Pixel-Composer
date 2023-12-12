@@ -118,6 +118,17 @@ function winMan_setFullscreen(full) { #region
 } #endregion
 
 function winManStep() { #region
+	if(OS == os_macosx) {
+		if(__win_to_dock) {
+			_window_set_showborder(window_handle(), true);
+			mac_minimize_to_dock(window_handle());
+			__win_to_dock = false;
+		} else {
+			if(_window_get_showborder(window_handle()))
+				_window_set_showborder(window_handle(), false);
+		}
+	}
+	
 	if(window_drag_status == 0) return;
 	var _mx = window_drag_mx;
 	var _my = window_drag_my;

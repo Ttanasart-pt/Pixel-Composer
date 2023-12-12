@@ -15,7 +15,7 @@ void main() {
 	vec4 zero = vec4(0.);
 	vec3 baseCol = sampVal(texture2D( map, v_vTexcoord ));
 	
-	if(ignore == 1 && baseCol == 0.) {
+	if(ignore == 1 && baseCol == vec3(0.)) {
 		gl_FragColor = vec4(0.);
 		return;
 	}
@@ -28,7 +28,7 @@ void main() {
 		vec2 pos = clamp(v_vTexcoord + vec2(i, j) / dimension, 0., 1.);
 		vec3 samCl = sampVal(texture2D( map, pos ));
 		
-		if(ignore == 1 && samCl == 0.)
+		if(ignore == 1 && samCl == vec3(0.))
 			continue;
 		
 		if(distance(samCl, baseCol) <= threshold) {

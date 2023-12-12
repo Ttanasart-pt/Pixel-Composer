@@ -2821,6 +2821,7 @@
     {"id":{"name":"sh_mk_flag_mrt","path":"shaders/sh_mk_flag_mrt/sh_mk_flag_mrt.yy",},},
     {"id":{"name":"s_biterator_bg","path":"sprites/s_biterator_bg/s_biterator_bg.yy",},},
     {"id":{"name":"addonPanel","path":"scripts/addonPanel/addonPanel.yy",},},
+    {"id":{"name":"macMinimize","path":"extensions/macMinimize/macMinimize.yy",},},
     {"id":{"name":"s_node_ase_layer","path":"sprites/s_node_ase_layer/s_node_ase_layer.yy",},},
     {"id":{"name":"directory_functions","path":"scripts/directory_functions/directory_functions.yy",},},
     {"id":{"name":"_f_p1","path":"fonts/_f_p1/_f_p1.yy",},},

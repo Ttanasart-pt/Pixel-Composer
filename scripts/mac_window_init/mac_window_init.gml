@@ -18,13 +18,15 @@ function mac_window_init() {
 	__win_drag_sw = 0;
 	__win_drag_sh = 0;
 	
+	__win_to_dock = false;
+	
 	__win_is_maximized = false;
 	__win_min_x = 0;
 	__win_min_y = 0;
 	__win_min_w = 0;
 	__win_min_h = 0;
 	
-	ext_window_set_showborder(false);
+	_window_set_showborder(window_handle(), false);
 }
 
 function mac_window_maximize() {
@@ -55,4 +57,8 @@ function mac_window_minimize() {
 	
 	winMan_setRect(__win_min_x, __win_min_y, __win_min_w, __win_min_h);
 	display_refresh();
+}
+
+function mac_window_dock() {
+	o_main.__win_to_dock = true;
 }

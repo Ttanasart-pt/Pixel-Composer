@@ -96,7 +96,7 @@ void main() {
 		float _B = (A.x * py) + c1 - (A.y * px);
 		float _C = (B.x * py) + c2 - (B.y * px);
 
-		u =  A == 0.?              0. : (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
+		u =  A == vec2(0.)?        0. : (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
 		v = (u * A.x + B.x) == 0.? 0. : (px - (u * C.x) - D.x) / (u * A.x + B.x);
 		uv = vec2(1. - u, v);
 	}

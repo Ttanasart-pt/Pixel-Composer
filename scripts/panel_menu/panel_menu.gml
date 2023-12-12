@@ -570,21 +570,14 @@ function Panel_Menu() : PanelContent() constructor {
 						}
 						break;
 					case "minimize":
-						if(OS == os_windows) {
-							var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]);
-							if(b) _draggable = false;
-							if(b == -2) {
-								if(OS == os_windows)
-									winMan_Minimize();
-								else if(OS == os_macosx) {
-								
-								}
-							}
+						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]);
+						if(b) _draggable = false;
+						if(b == -2) {
+							if(OS == os_windows)
+								winMan_Minimize();
+							else if(OS == os_macosx)
+								mac_window_dock();
 						}
-						
-						//if(OS == os_macosx) {
-						//	buttonInstant(THEME.button_hide, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, COLORS._main_icon ]);
-						//}
 						break;
 					case "fullscreen":
 						var win_full = window_is_fullscreen;
