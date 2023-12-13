@@ -29,7 +29,7 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		static BATCH_SIZE = 1024;
+		static BATCH_SIZE = 128;
 		
 		var _val = _data[0];
 		var _mod = _data[1];

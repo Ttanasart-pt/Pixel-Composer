@@ -1,5 +1,5 @@
 function __migration_check() {
-	var oldDir = environment_get_variable("userprofile") + "/AppData/Local/Pixels_Composer/";
+	var oldDir = env_user() + "/AppData/Local/Pixels_Composer/";
 	if(!directory_exists(oldDir)) return;
 	
 	var mig = oldDir + "migration";

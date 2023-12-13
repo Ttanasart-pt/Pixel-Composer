@@ -88,13 +88,15 @@ function setException() {
 		}
 		tt += "\n---------------------------- :( ----------------------------\n";
 		
-		var path = DIRECTORY + "log/crash_log.txt";
+		var path = program_directory + "report/crash_log.txt";
 		file_text_write_all(path, tt);
 		clipboard_set_text(tt);
 		show_debug_message(tt);
 		
-		ExecProcessFromArgVAsync(GetArgVFromProcid(ProcIdFromSelf())); //create new dialog
-
+		var rep = $"{program_directory}report\\PXC crash reporter.exe";
+		//show_message($"Save crash report at {path} : Opening crash reporter at {rep} [{file_exists(rep)}]");
+		shell_execute_async(rep, DIRECTORY);
+		
 	    return 0;
 	});
 }

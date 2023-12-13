@@ -1,7 +1,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-#define BATCH_SIZE 1024
+#define BATCH_SIZE 128
 
 uniform int mode;
 uniform vec2 range;

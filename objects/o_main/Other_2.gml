@@ -8,15 +8,7 @@
 		path: ""
 	};
 	
-	if(OS == os_windows) {	
-		APP_DIRECTORY = environment_get_variable("userprofile") + "\\AppData\\Local\\PixelComposer\\";
-	} else if(OS == os_macosx) {
-		var home_dir = environment_get_variable("HOME");
-		if(string(home_dir) == "0")
-			log_message("DIRECTORY", "Directory not found.");
-		else 
-			APP_DIRECTORY = $"{home_dir}/PixelComposer/";
-	}
+	APP_DIRECTORY = env_user();
 	show_debug_message($"App directory: {APP_DIRECTORY}");
 	
 	directory_verify(APP_DIRECTORY);
@@ -105,8 +97,6 @@
 	
 	if(file_exists_empty("icon.png"))
 		file_copy("icon.png", DIRECTORY + "icon.png");
-	
-	environment_set_variable("IMGUI_DIALOG_WIDTH", string(800));
 	
 	var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
 	shell_execute_async("assoc", cmd);

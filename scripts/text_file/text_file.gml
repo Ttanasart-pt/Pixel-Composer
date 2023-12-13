@@ -4,7 +4,7 @@ function file_read_all(path) {
 	var f = file_text_open_read(path);
 	var s = "";
 	while(!file_text_eof(f))
-		s += file_text_readln(f);
+		s += string(file_text_readln(f));
 	file_text_close(f);
 	return s;
 }

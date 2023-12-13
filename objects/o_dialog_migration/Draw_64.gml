@@ -37,7 +37,7 @@ draw_set_alpha(1);
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Migrate files"));
 	if(b == 2) {
-		var oldDir = environment_get_variable("userprofile") + "/AppData/Local/Pixels_Composer/";
+		var oldDir  = env_user();
 		var folders = [ "Assets", "Collections", "Fonts", "Gradients", "Palettes", "Presets", "Themes"];
 		for( var i = 0, n = array_length(folders); i < n; i++ ) {
 			var _o = oldDir + folders[i] + "/";
