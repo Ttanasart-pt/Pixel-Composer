@@ -858,7 +858,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				applyScal:	_psca,
 			});
 			
-			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
+			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.alphamulp);
 				blend_temp_surface = temp_surface[2];
 				draw_surface_blend_ext(temp_surface[!_bg], _s, _pos[0], _pos[1], _sca[0], _sca[1], _rot);
 			surface_reset_shader();

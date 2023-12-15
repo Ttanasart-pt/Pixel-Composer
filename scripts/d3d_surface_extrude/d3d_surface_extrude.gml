@@ -68,7 +68,7 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 				var hgh = surface_get_height_safe(_height);
 				var hgtW = hgw / ww;
 				var hgtH = hgh / hh;
-			
+				
 				var height_buffer = buffer_create(hgw * hgh * 4, buffer_fixed, 2);
 				buffer_get_surface(height_buffer, _height, 0);
 				buffer_seek(height_buffer, buffer_seek_start, 0);

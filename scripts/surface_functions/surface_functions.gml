@@ -150,6 +150,32 @@ function surface_save_safe(surface, path) {
 	return;
 }
 
+function surface_cvt_8unorm(target, surface) { #region
+	if(!is_surface(surface)) return target;
+	
+	target = surface_verify(target, surface_get_width_safe(surface), surface_get_height_safe(surface));
+	var _typ = surface_get_format(surface);
+	
+	switch(_typ) {
+		case surface_rgba4unorm  :
+		case surface_rgba8unorm	 :
+		case surface_rgba16float :
+		case surface_rgba32float :
+			surface_set_shader(target, sh_draw_normal);
+			break;
+		case surface_r8unorm	 :	
+		case surface_r16float	 :	
+		case surface_r32float	 :	
+			surface_set_shader(target, sh_draw_single_channel);
+			break;
+	}
+			
+	draw_surface(surface, 0, 0);
+	surface_reset_shader();
+	
+	return target;
+} #endregion
+
 function surface_get_width_safe(s, crop = true) {
 	INLINE
 	
@@ -307,7 +333,7 @@ function surface_size_lim(surface, width, height) {
 	var ss = min(width / sw, height / sh);
 	var s  = surface_create(max(1, sw * ss), max(1, sh * ss));
 	surface_set_target(s);
-	DRAW_CLEAR;
+	DRAW_CLEAR
 	draw_surface_ext_safe(surface, 0, 0, ss, ss, 0, c_white, 1);
 	surface_reset_target();
 	return s;

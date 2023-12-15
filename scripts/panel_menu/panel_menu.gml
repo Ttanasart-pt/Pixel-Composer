@@ -433,7 +433,7 @@ function Panel_Menu() : PanelContent() constructor {
 					xx  += ww + 8;
 					_mx  = max(_mx, xx);
 					_ww += ww + 8;
-					if(_ww > w * 0.4 - sx) {
+					if(_ww > w * 0.6 - sx) {
 						_curRow++;
 						_ww = 0;
 						xx  = sx;

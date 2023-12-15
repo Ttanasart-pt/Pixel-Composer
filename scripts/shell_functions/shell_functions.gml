@@ -12,8 +12,14 @@ function shellOpenExplorer(path) { #region
 function shell_execute(path, command, ref = noone) { #region
 	INLINE
 	
+	if(OS == os_macosx) {
+		path    = string_replace_all(path,    "\\", "/");
+		command = string_replace_all(command, "\\", "/");
+	}
+	
 	var txt = $"{path} {command}";
 	var res = ProcessExecute(txt);
+	print($"Execute {path} {command} | {res}");
 	
 	return res;
 } #endregion
@@ -21,8 +27,14 @@ function shell_execute(path, command, ref = noone) { #region
 function shell_execute_async(path, command, ref = noone) { #region
 	INLINE
 	
+	if(OS == os_macosx) {
+		path    = string_replace_all(path,    "\\", "/");
+		command = string_replace_all(command, "\\", "/");
+	}
+	
 	var txt = $"{path} {command}";
 	var res = ProcessExecuteAsync(txt);
+	print($"Execute async {path} {command} | {res}");
 	
 	return res;
 } #endregion

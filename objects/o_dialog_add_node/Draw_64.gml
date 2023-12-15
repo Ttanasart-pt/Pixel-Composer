@@ -8,11 +8,9 @@ if !ready exit;
 
 #region search
 	WIDGET_CURRENT = tb_search;
+	tb_search.setFocusHover(sFOCUS, sHOVER);
 	
 	if(search_string == "") {
-		tb_search.setFocusHover(false, false);
-		tb_search.sprite_index = 1;
-		
 		catagory_pane.setFocusHover(sFOCUS, sHOVER);
 		catagory_pane.draw(dialog_x + ui(14), dialog_y + ui(52));
 		
@@ -23,7 +21,6 @@ if !ready exit;
 		
 		node_selecting = 0;
 	} else {
-		tb_search.setFocusHover(true, true);
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(14), dialog_y + ui(52), dialog_w - ui(28), dialog_h - ui(66));
 		search_pane.setFocusHover(sFOCUS, sHOVER);
 		search_pane.draw(dialog_x + ui(16), dialog_y + ui(52));

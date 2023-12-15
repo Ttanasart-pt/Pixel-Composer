@@ -148,6 +148,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	} #endregion
 	
 	static editText = function() { #region
+		var edited = false;
+		
 		#region text editor
 			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
 				cursor_select	= 0;
@@ -159,9 +161,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					clipboard_set_text(string_copy(_input_text, minc, maxc - minc));
 				}
 			} else {
-				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V")))
+				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V"))) {
 					KEYBOARD_STRING = clipboard_get_text();
-				
+					edited = true;
+				}
+					
 				if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
 				} else if(KEYBOARD_PRESSED == vk_backspace) {
 					if(cursor_select == -1) {
@@ -195,6 +199,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						_input_text		= str_before + str_after;
 					}
 					
+					edited = true;
 					cursor_select	= -1;
 					move_cursor(-1);
 				} else if(KEYBOARD_PRESSED == vk_delete || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
@@ -213,6 +218,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						cursor = minc;
 						_input_text		= str_before + str_after;
 					}
+					
+					edited = true;
 					cursor_select	= -1;
 				} else if(KEYBOARD_STRING != "") {
 					var ch			= KEYBOARD_STRING;
@@ -234,6 +241,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						cursor = minc + string_length(ch);
 					}
 					
+					edited = true;
 					cursor_select	= -1;
 				}
 			}
@@ -273,7 +281,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			deactivate();
 		} else if(keyboard_check_pressed(vk_enter))
 			deactivate();
-		else if(auto_update && keyboard_check_pressed(vk_anykey))
+		else if(auto_update && (edited || keyboard_check_pressed(vk_anykey)))
 			apply();
 	} #endregion
 	
@@ -414,7 +422,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				var txt = _input_text;
 				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top);
 				var tw = string_width(txt);
-				var th = string_height(txt);
+				var th = string_height(txt == ""? "l" : txt);
 				
 				var cs   = string_copy(txt, 1, cursor);
 				var c_w  = string_width(cs);
@@ -444,7 +452,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				if(cursor_pos_to > _x + _w - ui(16))  
 					disp_x_to -= _w - ui(16);
 				
-				cursor_pos		= cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 2);
+				cursor_pos = cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 2);
 				
 				if(cursor_select > -1) { //draw highlight
 					draw_set_color(COLORS.widget_text_highlight);
@@ -469,7 +477,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				BLEND_ALPHA
 				draw_surface(text_surface, tb_surf_x, tb_surf_y);
 				BLEND_NORMAL
-		
+				
 				draw_set_color(COLORS._main_text_accent);
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
 			#endregion

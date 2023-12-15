@@ -66,10 +66,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 25] = nodeValue("Invert", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
+	inputs[| 26] = nodeValue("Clamp range", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	
 	input_display_list = [
 		["Output",			true],	0, 1, 
 		["Line data",		false], 6, 7, 19, 2, 20, 
-		["Line settings",	false], 17, 3, 11, 12, 8, 25, 9, 13, 14, 
+		["Line settings",	false], 17, 3, 11, 12, 8, 25, 9, 26, 13, 14, 
 		["Wiggle",			false], 4, 5, 
 		["Render",			false], 10, 24, 15, 16, 
 		["Texture",			false], 18, 21, 22, 23, 
@@ -125,7 +127,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[| 20].setVisible( _flen);
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static onValueUpdate = function(index = 0) { #region
+		if(index == 11) ds_map_clear(widthMap);
+	} #endregion
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		#region data
 			var _dim   = _data[0];
 			var _bg    = _data[1];
@@ -156,8 +162,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _texRot = _data[22];
 			var _texSca = _data[23];
 		
-			var _colb  = _data[24];
+			var _colb   = _data[24];
 			var _ratInv = _data[25];
+			var _clamp  = _data[26];
 		#endregion
 		
 		if(CURRENT_FRAME == 0 || inputs[| 11].is_anim)
@@ -209,10 +216,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _pathLength  = _useDistance? _pat.getLength(i) : 1;
 				if(_pathLength == 0) continue;
 					
-				var _segLength    = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
-				var _segLengthAmo = array_length(_segLength);
-				var _segIndex     = 0;
-				
 				var _pathStr = _rtStr;
 				var _pathEnd = _rtMax;
 					
@@ -223,10 +226,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _total_prev = _total;	//Use to prevent infinite loop
 				var _freeze		= 0;		//Use to prevent infinite loop
 					
-				var _prog_curr	= frac(_shift);		//Pointer to the current position
+				var _prog_curr	= _clamp? _shift : frac(_shift);		//Pointer to the current position
 				var _prog_next  = 0;
 				var _prog		= _prog_curr + 1;	//Record previous position to delete from _total
-				var _prog_total	= 0;				//Record how far the pointer have moved so far
+				var _prog_total	= 0;				//Record the distance the pointer has moved so far
 				var points		= is_array(lines[i])? lines[i] : [];
 				var pointArrLen = array_length(points);
 				var pointAmo    = 0;
@@ -244,34 +247,47 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_prog_curr *= _pathLength;
 				}
 				
-				while(_total >= 0) {
-					if(_useDistance) {
-						var segmentLength = _segIndex < _segLengthAmo? _segLength[_segIndex] : 99999;
-							
-						_prog_next = _prog_curr % _pathLength; //Wrap overflow path
-						_prog_next = min(_prog_curr + _stepLen, _pathLength, segmentLength);
-							
-						if(_prog_next == segmentLength)
-							_segIndex = (_segIndex + 1) % _segLengthAmo;
-						_pathPng = _ratInv? _pathLength - _prog_curr : _prog_curr;
-					} else {
-						if(_prog_curr >= 1) //Wrap overflow path
-							_prog_next = frac(_prog_curr);
-						else 
-							_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
-						_pathPng = _ratInv? 1 - _prog_curr : _prog_curr;
+				var _segLength    = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
+				var _segLengthAmo = array_length(_segLength);
+				var _segIndex     = 0;
+				
+				if(_segLengthAmo)
+				while(_prog_curr > _segLength[_segIndex]) {
+					_segIndex++;
+					if(_segIndex == _segLengthAmo) {
+						_segIndex = 0;
+						break;
 					}
-					
+				}
+				
+				//print($"===== {_prog_curr}/{_segLength} : {_segIndex} =====");
+				while(_total >= 0) {
 					wght = 1;
 					
 					if(_useDistance) {
-						p = _pat.getPointDistance(_pathPng, i, p);
-						if(struct_has(_pat, "getWeightRatio"))
-							wght = _pat.getWeightRatio(_pathPng, i);
-					} else {
-						p = _pat.getPointRatio(_pathPng, i, p);
+						var segmentLength = array_safe_get(_segLength, _segIndex, _pathLength);
+						
+						_prog_next = min(_prog_curr + _stepLen, _pathLength, segmentLength);
+						_pathPng   = _ratInv? _pathLength - _prog_curr : _prog_curr;
+						
+						//print($"{segmentLength}/{_pathLength} = {_prog_next}");
+						if(_prog_next == segmentLength) _segIndex++;
+						
+						var _pp = _clamp? clamp(_pathPng, 0, _pathLength) : _pathPng
+						//print($"_pp = {_pp}");
+						
+						p = _pat.getPointDistance(_pp, i, p);
 						if(struct_has(_pat, "getWeightDistance"))
-							wght = _pat.getWeightDistance(_pathPng, i);
+							wght = _pat.getWeightDistance(_pp, i);
+					} else {
+						_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
+						_pathPng   = _ratInv? 1 - _prog_curr : _prog_curr;
+						
+						var _pp = _clamp? clamp(_pathPng, 0, 1) : _pathPng
+						
+						p = _pat.getPointRatio(_pp, i, p);
+						if(struct_has(_pat, "getWeightRatio"))
+							wght = _pat.getWeightRatio(_pp, i);
 					}
 					
 					_nx = p.x;
@@ -306,7 +322,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						pointAmo++;
 					}
 					
-					if(_prog_next > _prog_curr) {
+					if(_prog_next == _prog_curr) break;
+					else if(_prog_next > _prog_curr) {
 						_prog_total += _prog_next - _prog_curr;
 						_total      -= _prog_next - _prog_curr;
 					}
@@ -506,5 +523,5 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#endregion
 		
 		return _outSurf;
-	}
+	} #endregion
 }

@@ -264,7 +264,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var _time_last  = values[| ds_list_size(values) - 1].time;
 		var _time_dura  = _time_last - _time_first;
 			
-		if(_time > _time_last) { #region //loop
+		if(_time > _time_last) { #region //loop time
 			switch(prop.on_end) {
 				case KEYFRAME_END.loop : 
 					_time = _time_first + safe_mod(_time - _time_last, _time_dura + 1);
@@ -281,7 +281,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		var _keyIndex;
 		if(_time >= _len)		_keyIndex = 999_999;
-		else if(_time <= 0)		_keyIndex = 0;
+		else if(_time <= 0)		_keyIndex = -1;
 		else					_keyIndex = key_map[_time];
 		
 		if(_keyIndex == -1) { #region Before first key

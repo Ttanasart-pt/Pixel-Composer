@@ -116,9 +116,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		if(inputs[| 0].value_from != noone || disp == 0) { #region
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-			var str	= string(val);
-			var ss	= string_scale(str, bbox.w, bbox.h);
-			draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
+			draw_text_bbox(bbox, string(val));
 			return;
 		} #endregion
 		

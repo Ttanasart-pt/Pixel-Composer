@@ -163,6 +163,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 		over,
 		alpha,
 		alphamulp,
+		subtract,
 	}
 
 	function shader_preset_interpolation(shader = sh_sample) {

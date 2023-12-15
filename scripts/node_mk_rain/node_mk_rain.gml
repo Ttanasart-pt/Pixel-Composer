@@ -20,7 +20,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 6] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 		
-	inputs[| 7] = nodeValue("Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 2 ])
+	inputs[| 7] = nodeValue("Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 1, 2 ])
 		.setDisplay(VALUE_DISPLAY.vector_range);
 	
 	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100_000, 999_999));
@@ -32,10 +32,13 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.vector_range);
 	
 	inputs[| 11] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	
+	inputs[| 12] = nodeValue("Track extension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.slider_range, { range: [ 0, 10, 0.01 ] });
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 8, 
 		["Shape",	false], 9, 3, 4, 10, 11, 
-		["Effect",	false], 2, 1, 7, 
+		["Effect",	false], 2, 1, 7, 12, 
 		["Render",	false], 5, 6, 
 	];
 	
@@ -63,10 +66,10 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _shap = _data[9];
 		var _snws = _data[10];
 		var _text = _data[11];
+		var _trex = _data[12];
 		
 		if(!is_surface(_surf)) return _outSurf;
 		if(_shap == 2 && !is_surface(_text)) return _outSurf;
-		random_set_seed(_seed);
 		
 		var _sw  = surface_get_width_safe(_surf);
 		var _sh  = surface_get_height_safe(_surf);
@@ -97,8 +100,11 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			if(_1c) draw_set_color(_cc);
 			BLEND_ALPHA_MULP
 			repeat(_dens) {
-				var _r_shf = random_range(-_rad, _rad);
-				var _y_shf = random(1);
+				random_set_seed(_seed); _seed += 100;
+				
+				var _rrad   = _rad * (1 + random_range(_trex[0], _trex[1]));
+				var _r_shf = random_range( -_rad,  _rad);
+				var _y_shf  = random(1);
 				
 				var _drpW, _drpH, _drpS;
 				switch(_shap) {
@@ -119,11 +125,11 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var _rmx = _rx + _in_span_x * _r_shf;
 				var _rmy = _ry + _in_span_y * _r_shf;
 				
-				var _radH  = _rad + _drpH;
+				var _radH  = _rrad + _drpH;
 				var _radHx = _radH * _tr_span_x;
 				var _radHy = _radH * _tr_span_y;
 				
-				var _vel = irandom_range(_velo[0], _velo[1]);
+				var _vel = max(1, irandom_range(_velo[0], _velo[1]));
 				var _prg = _y_shf + _vel * prg;
 				    _prg = frac(_prg) - 0.5;
 				
@@ -145,6 +151,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						);
 						break;
 					case 1 :
+						//draw_circle(round(_drpX), round(_drpY), _drpW, false);
 						draw_circle(_drpX, _drpY, _drpW, false);
 						break;
 					case 2 :

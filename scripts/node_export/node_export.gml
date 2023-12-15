@@ -96,13 +96,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.rejectArray();
 	
 	format_image     = [ ".png", ".jpg", ".webp" ];
-	format_animation = [ ".gif", ".webp", ".mp4" ];
+	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
 	
 	inputs[| 9] = nodeValue("Format", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: format_image, update_hover: false })
 		.rejectArray();
 	
-	inputs[| 10] = nodeValue("Quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 80)
+	inputs[| 10] = nodeValue("Quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 23)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 100, 1 ] })
 		.rejectArray();
 	
@@ -202,9 +202,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [
 		["Export",		false], 0, 1, 2, export_template, 
-		["Format ",		false], 3, 9, 
+		["Format ",		false], 3, 9, 6, 7, 10, 13, 
 		["Animation",	false], 12, 8, 5, 11, 14, 
-		["Quality",		false], 6, 7, 10, 13, 
 	];
 	
 	render_process_id = 0;
@@ -218,10 +217,27 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	gifski    = filepath_resolve(PREFERENCES.gifski_path) 	   + "win/gifski.exe";
 	ffmpeg    = filepath_resolve(PREFERENCES.ffmpeg_path) 	   + "bin/ffmpeg.exe";
 	
-	if(!file_exists_empty(converter) || !file_exists_empty(magick)) noti_warning($"No ImageMagick detected at {magick}, please make sure the installation is complete and ImageMagick path is set properly in preference.");
-	if(!file_exists_empty(webp))                              noti_warning($"No webp detected at {webp}, please make sure the installation is complete and webp path is set properly in preference.");
-	if(!file_exists_empty(gifski))                            noti_warning($"No gifski detected at {gifski}, please make sure the installation is complete and gifski path is set properly in preference.");
-	if(!file_exists_empty(ffmpeg))                            noti_warning($"No ffmpeg detected at {ffmpeg}, please make sure the installation is complete and ffmpeg path is set properly in preference.");
+	if(OS == os_windows) {
+		if(!file_exists_empty(converter) || !file_exists_empty(magick)) noti_warning($"No ImageMagick detected at {magick}, please make sure the installation is complete and ImageMagick path is set properly in preference.");
+		if(!file_exists_empty(webp))    noti_warning($"No webp detected at {webp}, please make sure the installation is complete and webp path is set properly in preference.");
+		if(!file_exists_empty(gifski))  noti_warning($"No gifski detected at {gifski}, please make sure the installation is complete and gifski path is set properly in preference.");
+		if(!file_exists_empty(ffmpeg))  noti_warning($"No FFmpeg detected at {ffmpeg}, please make sure the installation is complete and FFmpeg path is set properly in preference.");
+	} else if(OS == os_macosx) {
+		var check_convert = ExecutedProcessReadFromStandardOutput(shell_execute("convert", ""));
+		if(string_pos(check_convert, "not found")) noti_warning($"No ImageMagick installed, please install imagemagick with homebrew or use the provided 'mac-libraries-installer.command'.");
+		
+		var check_webp = ExecutedProcessReadFromStandardOutput(shell_execute("webp", ""));
+		if(string_pos(check_webp, "not found")) noti_warning($"No webp installed, please install webp with homwbrew or use the provided 'mac-libraries-installer.command'.");
+		
+		var check_ffmpeg = ExecutedProcessReadFromStandardOutput(shell_execute("ffmpeg", ""));
+		if(string_pos(check_ffmpeg, "not found")) noti_warning($"No FFmpeg installed, please install FFmpeg with homebrew or use the provided 'mac-libraries-installer.command'.");
+		
+		var _opt = "/opt/homebrew/bin/";
+		converter = _opt + "convert";
+		magick    = _opt + "magick";
+		webp      = _opt + "webp";
+		ffmpeg    = _opt + "ffmpeg";
+	}
 	
 	static onValueUpdate = function(_index) { #region
 		var form = getInputData(3);
@@ -329,20 +345,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var loop_str   = loop? 0 : 1;
 		var use_gifski = false;
 		
-		if(use_gifski) {
-			var	shell_cmd  = $"-o {string_quote(target_path)} -r {rate} --repeat {loop_str} -Q {qual} {string_quote(temp_path)}";
+		var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose previous -loop {loop_str}";
+		if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
+				 shell_cmd += $" {string_quote(temp_path)} {string_quote(target_path)}";
 			
-			//print($"{gifski} {shell_cmd}");
-			render_process_id = shell_execute_async(gifski, shell_cmd, self);
-		} else {
-			var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose previous -loop {loop_str}";
-			if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
-					 shell_cmd += $" {string_quote(temp_path)} {string_quote(target_path)}";
-			
-			//print($"{converter} {shell_cmd}");
-			render_process_id = shell_execute_async(converter, shell_cmd, self);
-		}
-		
+		render_process_id = shell_execute_async(converter, shell_cmd, self);
 		render_type       = "gif";
 		render_target     = target_path;
 		
@@ -351,6 +358,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	 
 	static renderMp4 = function(temp_path, target_path) { #region
 		var rate = getInputData( 8);
+		var qual = getInputData(10); qual = clamp(qual, 0, 51);
 		if(rate == 0) rate = 1;
 		
 		if(file_exists_empty(target_path)) file_delete(target_path);
@@ -358,11 +366,28 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		temp_path   = string_replace_all(temp_path, "/", "\\");
 		target_path = string_replace_all(target_path, "/", "\\");
 		
-		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}%05d.png\" -c:v libx264 -r {rate} -pix_fmt yuv420p {string_quote(target_path)}";
-		print($"{ffmpeg} {shell_cmd}")
+		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}%05d.png\" -c:v libx264 -r {rate} -pix_fmt yuv420p -crf {qual} {string_quote(target_path)}";
 		
 		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
 		render_type       = "mp4";
+		render_target     = target_path;
+		
+		if(render_process_id != 0) array_push(RENDERING, node_id);
+	} #endregion
+	 
+	static renderApng = function(temp_path, target_path) { #region
+		var rate = getInputData( 8);
+		if(rate == 0) rate = 1;
+		
+		if(file_exists_empty(target_path)) file_delete(target_path);
+		
+		temp_path   = string_replace_all(temp_path, "/", "\\");
+		target_path = string_replace_all(target_path, "/", "\\");
+		
+		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}%05d.png\" -plays 0 {string_quote(target_path)}";
+		
+		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
+		render_type       = "apng";
 		render_target     = target_path;
 		
 		if(render_process_id != 0) array_push(RENDERING, node_id);
@@ -608,36 +633,44 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(is_array(path)) target_path = pathString(array_safe_get(path, i), i);
 				else               target_path = pathString(path, i);
 				
-				switch(extd) {
-					case 0 :
+				switch(format_animation[extd]) {
+					case ".gif" :
 						target_path = string_replace(target_path, ".png", ".gif");
 						renderGif(temp_path, target_path);
 						break;
-					case 1 :
+					case ".webp" :
 						target_path = string_replace(target_path, ".png", ".webp");
 						renderWebp(temp_path, target_path);
 						break;
-					case 2 :
+					case ".mp4" :
 						target_path = string_replace(target_path, ".png", ".mp4");
 						renderMp4(temp_path, target_path);
+						break;
+					case ".apng" :
+						target_path = string_replace(target_path, ".png", ".apng");
+						renderApng(temp_path, target_path);
 						break;
 				}
 			}
 		} else {
 			target_path = pathString(path);
 			
-			switch(extd) {
-				case 0 :	
+			switch(format_animation[extd]) {
+				case ".gif" :	
 					target_path = string_replace(target_path, ".png", ".gif");
 					renderGif(directory + "/*.png", target_path);
 					break;
-				case 1 : 
+				case ".webp" : 
 					target_path = string_replace(target_path, ".png", ".webp");
 					renderWebp(directory + "/", target_path);
 					break;
-				case 2 : 
+				case ".mp4" : 
 					target_path = string_replace(target_path, ".png", ".mp4");
 					renderMp4(directory + "/", target_path);
+					break;
+				case ".apng" : 
+					target_path = string_replace(target_path, ".png", ".apng");
+					renderApng(directory + "/", target_path);
 					break;
 			}
 		}
@@ -711,24 +744,56 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var anim = getInputData(3); // single, sequence, animation
 		var extn = getInputData(9);
 		
-		inputs[|  5].setVisible(anim == 2 && extn != 2);
-		inputs[|  6].setVisible(anim == 2 && extn != 2);
-		inputs[|  7].setVisible(anim == 2 && extn != 2);
-		inputs[|  8].setVisible(anim == 2);
 		inputs[| 11].setVisible(anim == 1);
 		inputs[| 12].setVisible(anim >  0);
 		inputs[| 12].editWidget.maxx = TOTAL_FRAMES;
-		inputs[| 13].setVisible(anim <  2);
+		
 		inputs[| 14].setVisible(anim >  0);
 		
 		if(anim == NODE_EXPORT_FORMAT.animation) {
+			var _fmt = array_safe_get(format_animation, extn);
+			
+			inputs[|  5].setVisible(_fmt == ".gif");
+			inputs[|  6].setVisible(_fmt == ".gif");
+			inputs[|  7].setVisible(_fmt == ".gif");
+			inputs[|  8].setVisible(true);
+		
 			inputs[|  9].display_data.data	  = format_animation;
 			inputs[|  9].editWidget.data_list = format_animation;
-			inputs[| 10].setVisible(extn != 2);
+			
+			inputs[| 13].setVisible(false);
+			
+			if(_fmt == ".mp4") {
+				inputs[| 10].setName("CRF value");
+				inputs[| 10].tooltip = "Quality of the output, with 0 being the highest (and largest file size), and 51 being the lowest.";
+				
+				inputs[| 10].setVisible(true);
+				inputs[| 10].editWidget.minn =  0;
+				inputs[| 10].editWidget.maxx = 51;
+			} else 
+				inputs[| 10].setVisible(false);
 		} else {
+			var _fmt = array_safe_get(format_image, extn);
+			
+			inputs[|  5].setVisible(false);
+			inputs[|  6].setVisible(false);
+			inputs[|  7].setVisible(false);
+			inputs[|  8].setVisible(false);
+		
 			inputs[|  9].display_data.data	  = format_image;
 			inputs[|  9].editWidget.data_list = format_image;
-			inputs[| 10].setVisible(extn != 0);
+			
+			inputs[| 13].setVisible(_fmt == ".png");
+			
+			if(_fmt == ".jpg" || _fmt == ".webp") {
+				inputs[| 10].setName("Quality");
+				inputs[| 10].tooltip = "Quality of the output.";
+				
+				inputs[| 10].setVisible(true);
+				inputs[| 10].editWidget.minn =   0;
+				inputs[| 10].editWidget.maxx = 100;
+			} else 
+				inputs[| 10].setVisible(false);
 		}
 		
 		outputs[| 0].visible = isInLoop();
@@ -736,7 +801,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(render_process_id != 0) {
 			var res = ProcIdExists(render_process_id);
 			
-			if(res == 0) {
+			if(res == 0 || OS == os_macosx) {
 				var noti  = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
 				noti.path = filename_dir(render_target);
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);

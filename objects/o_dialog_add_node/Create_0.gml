@@ -355,7 +355,7 @@ event_inherited();
 					continue;
 				
 				for( var j = 0; j < ds_list_size(cat.list); j++ ) {
-					if(is_string(cat.list[| j])) continue;
+					//if(is_string(cat.list[| j])) continue;
 					ds_list_add(_list, cat.list[| j]);
 				}
 			}
@@ -519,7 +519,7 @@ event_inherited();
 				}
 			}
 			
-			if(ADD_NODE_PAGE > -2 && PREFERENCES.dialog_add_node_grouping) {
+			if(PREFERENCES.dialog_add_node_grouping) {
 				var len = array_length(group_labels);
 				if(len) {
 					gpu_set_blendmode(bm_subtract);
@@ -620,7 +620,7 @@ event_inherited();
 				hh += list_height;
 			}
 			
-			if(ADD_NODE_PAGE > -2 && PREFERENCES.dialog_add_node_grouping) {
+			if(PREFERENCES.dialog_add_node_grouping) {
 				gpu_set_blendmode(bm_subtract);
 				draw_set_color(c_white);
 				draw_rectangle(0, 0, content_pane.surface_w, ui(16 + 24 / 2), false);

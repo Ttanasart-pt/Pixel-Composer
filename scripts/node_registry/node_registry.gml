@@ -617,12 +617,13 @@ function __initNodes() {
 		addNodeObject(generator, "Flood Fill",			s_node_flood_fill,			"Node_Flood_Fill",			[1, Node_Flood_Fill],, "Filled connected pixel given position and color.").setVersion(1133);
 		
 		ds_list_add(generator, "MK Effects");
-		addNodeObject(generator, "MK Rains",			s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain]).setVersion(11600);
+		addNodeObject(generator, "MK Rain",				s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain]).setVersion(11600);
 		addNodeObject(generator, "MK GridBalls",		s_node_mk_ball_grid,		"Node_MK_GridBalls",		[1, Node_MK_GridBalls]).setVersion(11600);
 		addNodeObject(generator, "MK GridFlip",			s_node_mk_flip_grid,		"Node_MK_GridFlip",			[1, Node_MK_GridFlip]).setVersion(11600);
 		addNodeObject(generator, "MK Saber",			s_node_mk_saber,			"Node_MK_Saber",			[1, Node_MK_Saber]).setVersion(11600);
 		addNodeObject(generator, "MK Tile",				s_node_mk_tile,				"Node_MK_Tile",				[1, Node_MK_Tile]).setVersion(11600);
 		addNodeObject(generator, "MK Flag",				s_node_mk_flag,				"Node_MK_Flag",				[1, Node_MK_Flag]).setVersion(11600);
+		if(TESTING) addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle]).setVersion(11600);
 	#endregion
 	
 	var compose = ds_list_create(); #region

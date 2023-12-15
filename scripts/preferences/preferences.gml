@@ -83,7 +83,7 @@
 	PREFERENCES.show_supporter_icon				= true;
 	
 	PREFERENCES.temp_path						= "%DIR%/temp/";
-	PREFERENCES.ImageMagick_path				= "%APP%/ImageMagick/";
+	PREFERENCES.ImageMagick_path				= "%APP%/imagemagick/";
 	PREFERENCES.webp_path						= "%APP%/webp/";
 	PREFERENCES.gifski_path						= "%APP%/gifski/";
 	PREFERENCES.ffmpeg_path						= "%APP%/ffmpeg/";
@@ -219,6 +219,7 @@
 			PREFERENCES.double_click_delay /= 60;
 		
 		TESTING = struct_try_get(PREFERENCES, "test_mode", false);
+		if(TESTING) log_message("PREFERENCE", "Test mode enabled");
 		
 		if(PREFERENCES.use_legacy_exception) resetException();
 		else                                 setException();

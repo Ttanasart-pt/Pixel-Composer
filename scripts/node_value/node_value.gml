@@ -1422,9 +1422,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(display_type == VALUE_DISPLAY.d3quarternion) { #region
 			if(!applyUnit) return value;
-			var dispType = struct_try_get(nodeFrom.display_data, "angle_display");
+			var dispType = struct_try_get(display_data, "angle_display");
+			
 			switch(dispType) {
-				case QUARTERNION_DISPLAY.quarterion : return value;
+				case QUARTERNION_DISPLAY.quarterion : 
+					return value;
 				case QUARTERNION_DISPLAY.euler : 
 					var euler = new BBMOD_Quaternion().FromEuler(value[0], value[1], value[2]).ToArray();
 					return euler;

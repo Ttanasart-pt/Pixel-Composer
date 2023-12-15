@@ -18,6 +18,8 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		["Extrude",	false], in_mesh + 0, in_mesh + 1, in_mesh + 3, 
 	]
 	
+	temp_surface = [ noone, noone ];
+	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _mat  = _data[in_mesh + 0];
 		if(!is_instanceof(_mat, __d3dMaterial)) return noone;
@@ -27,8 +29,11 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		var _updt = _data[in_mesh + 3];
 		var _surf = _mat.surface;
 		
+		temp_surface[0] = surface_cvt_8unorm(temp_surface[0], _surf);
+		temp_surface[1] = surface_cvt_8unorm(temp_surface[1], _hght);
+		
 		var object = getObject(_array_index);
-		object.checkParameter({ surface: _surf, height: _hght, smooth: _smt }, _updt);
+		object.checkParameter({ surface: temp_surface[0], height: temp_surface[1], smooth: _smt }, _updt);
 		
 		var _matN  = _mat.clone();
 		var _nSurf = surface_create(surface_get_width(_surf), surface_get_height(_surf));
@@ -38,7 +43,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
-		_matN.surface = _nSurf;
+		_matN.surface    = _nSurf;
 		object.materials = [ _matN ];
 		
 		setTransform(object, _data);

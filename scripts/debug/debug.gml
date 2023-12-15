@@ -11,54 +11,54 @@
 	}
 #endregion
 
-function _log_template() {
+function _log_template() { #region
 	INLINE
 	return $"{current_year}/{current_month}/{current_day} {string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}:{string_lead_zero(current_second, 2)} > ";
-}
+} #endregion
 
-function __log(title, str, fname = "log/log.txt") {
+function __log(title, str, fname = "log/log.txt") { #region
 	var path = DIRECTORY + fname;
 	var f = file_text_open_append(path);
 	var t = _log_template();
 	file_text_write_string(f, $"{title}{t}{str}\n");
 	file_text_close(f);
-}
+} #endregion
 
-function log_message(title, str, icon = noone, flash = false, write = true) {
+function log_message(title, str, icon = noone, flash = false, write = true) { #region
 	if(TEST_ERROR) return;
 	if(write) __log("[MESSAGE] ", string(title) + ": " + string(str));
 	
 	return noti_status(string(title) + ": " + string(str), icon, flash);
-}
+} #endregion
 
-function log_warning(title, str, ref = noone) { 
+function log_warning(title, str, ref = noone) { #region
 	if(TEST_ERROR) return;
 	__log("[WARNING] ", string(title) + ": " + string(str));
 	
 	return noti_warning(string(title) + ": " + string(str),, ref);
-}
+} #endregion
 
-function log_crash(str) {
+function log_crash(str) { #region
 	if(TEST_ERROR) return;
 	__log("[ERROR] ", string(str));
 	
 	return noti_error(string(str));
-}
+} #endregion
 
-function log_newline() {
+function log_newline() { #region
 	var path = DIRECTORY + "log/log.txt";
 	var f = file_text_open_write(path);
 	file_text_writeln(f);
 	file_text_close(f);
-}
+} #endregion
 
-function log_clear() {
+function log_clear() { #region
 	var path = DIRECTORY + "log/log.txt";
 	if(file_exists_empty(path))
 		file_delete(path);
-}
+} #endregion
 
-function exception_print(e) {
+function exception_print(e) { #region
 	if(!is_struct(e) || !struct_has(e, "longMessage")) return string(e);
 	
 	var str = "\n\n==========  Crash log  ==========\n\n" + e.longMessage;	
@@ -70,10 +70,10 @@ function exception_print(e) {
 	str += "\n\n========= Crash log end =========\n";	
 	
 	return str;
-}
+} #endregion
 
-function setException() {
-	if(OS == os_macosx) return;
+function setException() { #region
+	if(OS == os_macosx) return noone;
 	
 	exception_unhandled_handler(function(ex) {
 		var path = string(DIRECTORY) + "prev_crash.pxc";
@@ -88,23 +88,25 @@ function setException() {
 		}
 		tt += "\n---------------------------- :( ----------------------------\n";
 		
-		var path = program_directory + "report/crash_log.txt";
+		var path = $"{env_user()}crash_log.txt";
+		
 		file_text_write_all(path, tt);
 		clipboard_set_text(tt);
 		show_debug_message(tt);
 		
 		var rep = $"{program_directory}report\\PXC crash reporter.exe";
-		//show_message($"Save crash report at {path} : Opening crash reporter at {rep} [{file_exists(rep)}]");
-		shell_execute_async(rep, DIRECTORY);
+		if(OS == os_macosx) rep = $"{program_directory}PXC_crash_reporter.app";
+		
+		var pid = shell_execute_async(rep, DIRECTORY);
+		show_message($"{rep} [{file_exists(rep)}]: {pid}");	
 		
 	    return 0;
 	});
-}
-//setException();
+} #endregion
 
 function resetException() { exception_unhandled_handler(undefined); }
 
-function printCallStack(maxDepth = 32) {
+function printCallStack(maxDepth = 32) { #region
 	var stack = debug_get_callstack(maxDepth);
 	
 	print($"Call Stack:");
@@ -133,4 +135,4 @@ function printCallStack(maxDepth = 32) {
 		}
 	}
 	print("")
-}
+} #endregion

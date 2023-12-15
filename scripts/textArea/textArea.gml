@@ -542,7 +542,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			onModified();
 		}
 		
-		if(auto_update && keyboard_check_pressed(vk_anykey))
+		if(auto_update && (keyboard_check_pressed(vk_anykey) || modified))
 			apply();
 			
 		if(keyboard_check_pressed(vk_left))	 onKey(vk_left);

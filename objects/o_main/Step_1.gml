@@ -7,11 +7,13 @@ HOVERING_ELEMENT  = _HOVERING_ELEMENT;
 _HOVERING_ELEMENT = noone;
 
 #region minimize
-	if(OS == os_windows && winMan_isMinimized()) {
-		if(!minimized)
-			game_set_speed(1, gamespeed_fps);
-		minimized = true;
-		exit;
+	if(OS == os_windows) {
+		if(winMan_isMinimized()) {
+			if(!minimized)
+				game_set_speed(1, gamespeed_fps);
+			minimized = true;
+			exit;
+		}
 	}
 
 	if(minimized) {

@@ -13,5 +13,5 @@
 	#macro BLEND_MULTIPLY	gpu_set_blendmode_ext(bm_dest_colour, bm_zero)
 	#macro BLEND_SUBTRACT	gpu_set_blendmode(bm_subtract)
 	
-	#macro DRAW_CLEAR draw_clear_alpha(0, 0)
+	#macro DRAW_CLEAR draw_clear_alpha(0, 0);
 #endregion

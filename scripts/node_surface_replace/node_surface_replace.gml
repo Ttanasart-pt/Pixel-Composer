@@ -92,7 +92,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		
 		temp_surface[0] = surface_verify(temp_surface[0], surface_get_width_safe(_bas), surface_get_height_safe(_bas));
 		surface_set_target(temp_surface[0]);
-			DRAW_CLEAR;
+			DRAW_CLEAR
 		surface_reset_target();
 			
 		var amo = array_length(_tar);
@@ -102,7 +102,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		
 		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_bas), surface_get_height_safe(_bas));
 		surface_set_target(_outSurf);
-			DRAW_CLEAR;
+			DRAW_CLEAR
 			if(_drw) draw_surface_safe(_bas);
 		surface_reset_target();
 			

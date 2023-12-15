@@ -25,6 +25,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
 	
+	temp_surface = [ noone, noone ];
+	
 	attribute_surface_depth();
 	
 	static refreshDynamicInput = function() { #region
@@ -90,55 +92,78 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, ww, hh, attrDepth());
-		outputs[| 0].setValue(_outSurf);
+		_outSurf     = surface_verify(_outSurf,        ww, hh, attrDepth());
+		
+		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, attrDepth());
+		temp_surface[1] = surface_verify(temp_surface[1], ww, hh, attrDepth());
+		
+		surface_set_target(temp_surface[0]); DRAW_CLEAR surface_reset_target();
+		surface_set_target(temp_surface[1]); DRAW_CLEAR surface_reset_target();
 		
 		var atlas = [];
+		var ppind = 0;
+		var sx = 0, sy = 0;
+		
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+			var _surf = getInputData(i);
+			if(!is_array(_surf)) _surf = [ _surf ];
+				
+			for( var j = 0; j < array_length(_surf); j++ ) {
+				if(!is_surface(_surf[j])) continue;
+				var sw = surface_get_width_safe(_surf[j]);
+				var sh = surface_get_height_safe(_surf[j]);
+					
+				if(_axis == 0) {
+					switch(_alig) {
+						case fa_left:	sy = 0;					break;
+						case fa_center:	sy = hh / 2 - sh / 2;	break;
+						case fa_right:	sy = hh - sh;			break;
+					}
+				} else if(_axis == 1) {
+					switch(_alig) {
+						case fa_left:	sx = 0;					break;
+						case fa_center:	sx = ww / 2 - sw / 2;	break;
+						case fa_right:	sx = ww - sw;			break;
+					}
+				} else if(_axis == 2) {
+					sx = ww / 2 - sw / 2;
+					sy = hh / 2 - sh / 2;
+				}
+					
+				array_push(atlas, new SurfaceAtlas(_surf[j], sx, sy));
+				surface_set_shader(temp_surface[!ppind], sh_draw_surface);
+					DRAW_CLEAR
+					BLEND_OVERRIDE
+					shader_set_f("dimension", ww, hh);
+					
+					shader_set_surface("fore", _surf[j]);
+					shader_set_f("fdimension", sw, sh);
+					shader_set_f("position", sx, sy);
+					
+					draw_surface(temp_surface[ppind], 0, 0);
+					
+					BLEND_NORMAL
+				surface_reset_shader();
+					
+				ppind = !ppind;
+					
+				if(_axis == 0)
+					sx += sw + _spac;
+				else if(_axis == 1)
+					sy += sh + _spac;
+			}
+		}
 		
 		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_ALPHA_MULP
+			DRAW_CLEAR 
+			BLEND_OVERRIDE
 			
-			var sx = 0, sy = 0;
-			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-				var _surf = getInputData(i);
-				if(!is_array(_surf)) _surf = [ _surf ];
-				
-				for( var j = 0; j < array_length(_surf); j++ ) {
-					if(!is_surface(_surf[j])) continue;
-					var sw = surface_get_width_safe(_surf[j]);
-					var sh = surface_get_height_safe(_surf[j]);
-					
-					if(_axis == 0) {
-						switch(_alig) {
-							case fa_left:	sy = 0;					break;
-							case fa_center:	sy = hh / 2 - sh / 2;	break;
-							case fa_right:	sy = hh - sh;			break;
-						}
-					} else if(_axis == 1) {
-						switch(_alig) {
-							case fa_left:	sx = 0;					break;
-							case fa_center:	sx = ww / 2 - sw / 2;	break;
-							case fa_right:	sx = ww - sw;			break;
-						}
-					} else if(_axis == 2) {
-						sx = ww / 2 - sw / 2;
-						sy = hh / 2 - sh / 2;
-					}
-					
-					array_push(atlas, new SurfaceAtlas(_surf[j], sx, sy));
-					draw_surface_safe(_surf[j], sx, sy);
-					
-					if(_axis == 0)
-						sx += sw + _spac;
-					else if(_axis == 1)
-						sy += sh + _spac;
-				}
-			}
+			draw_surface(temp_surface[ppind], 0, 0);
 			
-			BLEND_NORMAL;
+			BLEND_NORMAL
 		surface_reset_target();
 		
+		outputs[| 0].setValue(_outSurf);
 		outputs[| 1].setValue(atlas);
 	} #endregion
 }

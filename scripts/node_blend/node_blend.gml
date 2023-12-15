@@ -1,7 +1,7 @@
-function Node_create_Blend(_x, _y, _group = noone, _param = {}) {
+function Node_create_Blend(_x, _y, _group = noone, _param = {}) { #region
 	var node = new Node_Blend(_x, _y, _group);
 	return node;
-}
+} #endregion
 
 function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend";
@@ -44,19 +44,82 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 13] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] });
+	
+	inputs[| 14] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
+		.setDisplay(VALUE_DISPLAY.vector);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8, 
 		["Surfaces",	 true],	0, 1, 4, 12, 13, 6, 7,
 		["Blend",		false], 2, 3, 9,
-		["Transform",	false], 5, 10, 11, 
+		["Transform",	false], 5, 14, 
 	]
 	
 	attribute_surface_depth();
 	
 	temp_surface	   = [ surface_create(1, 1), surface_create(1, 1) ];
 	blend_temp_surface = temp_surface[1];
+	
+	dragging = false;
+	drag_sx  = 0;
+	drag_sy  = 0;
+	drag_mx  = 0;
+	drag_my  = 0;
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var _surf = outputs[| 0].getValue();
+		if(is_array(_surf)) _surf = array_safe_get(_surf, preview_index);
+		if(is_struct(_surf)) return;
+		if(!surface_exists(_surf)) return;
+		
+		var _fore = getSingleValue( 1);
+		var _fill = getSingleValue( 5);
+		var _posi = getSingleValue(14);
+		if(_fill) return;
+		
+		var sw = surface_get_width_safe( _surf);
+		var sh = surface_get_height_safe(_surf);
+		var fw = surface_get_width_safe( _fore);
+		var fh = surface_get_height_safe(_fore);
+		
+		var _rx = _posi[0] * sw - fw / 2;
+		var _ry = _posi[1] * sh - fh / 2;
+		    _rx = _x + _rx * _s;
+			_ry = _y + _ry * _s;
+		var _rw = fw * _s;
+		var _rh = fh * _s;
+		
+		if(dragging) {
+			var px = drag_sx + (_mx - drag_mx) / _s;
+			var py = drag_sy + (_my - drag_my) / _s;
+			
+			px /= sw;
+			py /= sh;
+			
+			if(inputs[| 14].setValue([ px, py ]))
+				UNDO_HOLDING = true;
+			
+			if(mouse_release(mb_left)) {
+				UNDO_HOLDING = false;
+				dragging     = false;
+			}
+		} 
+		
+		draw_set_color(COLORS._main_accent);
+		if(dragging || (active && point_in_rectangle(_mx, _my, _rx, _ry, _rx + _rw, _ry + _rh))) {
+			draw_rectangle_width(_rx, _ry, _rx + _rw, _ry + _rh, 2);
+			
+			if(mouse_press(mb_left)) {
+				dragging = true;
+				drag_sx  = _posi[0] * sw;
+				drag_sy  = _posi[1] * sh;
+				drag_mx  = _mx;
+				drag_my  = _my;
+			}
+		} else 
+			draw_rectangle(_rx, _ry, _rx + _rw, _ry + _rh, true);
+	} #endregion
 	
 	static step = function() { #region
 		var _back = getSingleValue(0);
@@ -70,8 +133,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[| 6].editWidget.data_list = _atlas? [ "Background", "Forground" ] : [ "Background", "Forground", "Mask", "Maximum", "Constant" ];
 		inputs[| 7].setVisible(_outp == 4);
 		
-		inputs[| 10].setVisible(_fill == 0 && !_atlas);
-		inputs[| 11].setVisible(_fill == 0 && !_atlas);
+		inputs[| 14].setVisible(_fill == 0 && !_atlas);
 		
 		var _msk = is_surface(getSingleValue(4));
 		inputs[| 12].setVisible(_msk);
@@ -92,6 +154,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		var _halign = _data[10];
 		var _valign = _data[11];
+		var _posit  = _data[14];
 		
 		var _mskInv = _data[12];
 		var _mskFea = _data[13];
@@ -156,20 +219,11 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				var fw = surface_get_width_safe(_fore);
 				var fh = surface_get_height_safe(_fore);
 			
-				switch(_halign) {
-					case 0 : sx = 0; break;
-					case 1 : sx = ww / 2 - fw / 2; break;
-					case 2 : sx = ww - fw; break;
-				}
-			
-				switch(_valign) {
-					case 0 : sy = 0; break;
-					case 1 : sy = hh / 2 - fh / 2; break;
-					case 2 : sy = hh - fh; break;
-				}
-			
+				var px = _posit[0] * ww;
+				var py = _posit[1] * hh;
+				
 				surface_set_shader(_foreDraw, noone,, BLEND.over);
-					draw_surface_safe(_fore, sx, sy);
+					draw_surface_safe(_fore, px - fw / 2, py - fh / 2);
 				surface_reset_shader();
 			}
 		}
