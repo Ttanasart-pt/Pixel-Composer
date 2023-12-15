@@ -393,6 +393,10 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"mfcore.dll","CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"mfplat.dll","CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"README.txt","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"data.win","CopyToMask":-1,"filePath":"datafiles/report",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"PXC crash reporter.exe","CopyToMask":-1,"filePath":"datafiles/report",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"arrowRight.png","CopyToMask":-1,"filePath":"datafiles/Sample Projects",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Bevel.png","CopyToMask":-1,"filePath":"datafiles/Sample Projects",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Broken heart.png","CopyToMask":-1,"filePath":"datafiles/Sample Projects",},
@@ -432,7 +436,7 @@
   "isEcma": false,
   "LibraryEmitters": [],
   "MetaData": {
-    "IDEVersion": "2023.8.2.108",
+    "IDEVersion": "2023.11.1.129",
   },
   "resources": [
     {"id":{"name":"s_node_corner","path":"sprites/s_node_corner/s_node_corner.yy",},},

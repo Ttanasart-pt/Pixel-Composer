@@ -94,11 +94,11 @@ function setException() { #region
 		clipboard_set_text(tt);
 		show_debug_message(tt);
 		
-		var rep = $"{program_directory}report\\PXC crash reporter.exe";
-		if(OS == os_macosx) rep = $"{program_directory}PXC_crash_reporter.app";
+		var rep = $"{APP_LOCATION}report\\PXC crash reporter.exe";
+		//if(OS == os_macosx) rep = $"{program_directory}PXC_crash_reporter.app";
 		
-		var pid = shell_execute_async(rep, DIRECTORY);
-		show_message($"{rep} [{file_exists(rep)}]: {pid}");	
+		var pid = shell_execute(rep, DIRECTORY);
+		print($"{rep} [{file_exists(rep)}]: {pid}");
 		
 	    return 0;
 	});
