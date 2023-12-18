@@ -41,6 +41,4 @@ function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		return _n? val / 255 : val;
 	}
-	
-	PATCH_STATIC
 }

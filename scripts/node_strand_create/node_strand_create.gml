@@ -70,52 +70,54 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	groomed = new StrandMesh();
 	strands = new StrandMesh();
 	
-	tool_push = new NodeTool( "Push", THEME.strand_push )
-		.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_push.attribute.radius = val; }, "radius", 6)
-		.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_push.attribute.strength = val; }, "strength", 0.2)
-		.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_push.attribute.fall = val; }, "fall", 0.1)
-		.addSetting("Fix length", VALUE_TYPE.boolean,	function() { tool_push.attribute.fix = !tool_push.attribute.fix; }, "fix", false)
+	#region ---- tools ----
+		tool_push = new NodeTool( "Push", THEME.strand_push )
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_push.attribute.radius = val; }, "radius", 6)
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_push.attribute.strength = val; }, "strength", 0.2)
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_push.attribute.fall = val; }, "fall", 0.1)
+			.addSetting("Fix length", VALUE_TYPE.boolean,	function() { tool_push.attribute.fix = !tool_push.attribute.fix; }, "fix", false)
 	
-	tool_comb = new NodeTool( "Comb", THEME.strand_comb )
-		.addSetting("Width",	  VALUE_TYPE.float,		function(val) { tool_comb.attribute.width = val; }, "width", 8)
-		.addSetting("Thick",	  VALUE_TYPE.float,		function(val) { tool_comb.attribute.thick = val; }, "thick", 4)
-		.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_comb.attribute.strength = val; }, "strength", 0.75)
+		tool_comb = new NodeTool( "Comb", THEME.strand_comb )
+			.addSetting("Width",	  VALUE_TYPE.float,		function(val) { tool_comb.attribute.width = val; }, "width", 8)
+			.addSetting("Thick",	  VALUE_TYPE.float,		function(val) { tool_comb.attribute.thick = val; }, "thick", 4)
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_comb.attribute.strength = val; }, "strength", 0.75)
 	
-	tool_stretch = new NodeTool( "Stretch", THEME.strand_stretch )
-		.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_stretch.attribute.radius = val; }, "radius", 6)
-		.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_stretch.attribute.strength = val; }, "strength", 0.5)
-		.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_stretch.attribute.fall = val; }, "fall", 0.1)
+		tool_stretch = new NodeTool( "Stretch", THEME.strand_stretch )
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_stretch.attribute.radius = val; }, "radius", 6)
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_stretch.attribute.strength = val; }, "strength", 0.5)
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_stretch.attribute.fall = val; }, "fall", 0.1)
 	
-	tool_cut = new NodeTool( "Shorten", THEME.strand_cut )
-		.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_cut.attribute.radius = val; }, "radius", 6)
-		.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_cut.attribute.strength = val; }, "strength", 0.5)
-		.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_cut.attribute.fall = val; }, "fall", 0.1)
+		tool_cut = new NodeTool( "Shorten", THEME.strand_cut )
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_cut.attribute.radius = val; }, "radius", 6)
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_cut.attribute.strength = val; }, "strength", 0.5)
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_cut.attribute.fall = val; }, "fall", 0.1)
 	
-	tool_grab = new NodeTool( "Grab", THEME.strand_grab )
-		.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_grab.attribute.radius = val; }, "radius", 4)
-		.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_grab.attribute.strength = val; }, "strength", 1)
-		.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_grab.attribute.fall = val; }, "fall", 0.2)
+		tool_grab = new NodeTool( "Grab", THEME.strand_grab )
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_grab.attribute.radius = val; }, "radius", 4)
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_grab.attribute.strength = val; }, "strength", 1)
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_grab.attribute.fall = val; }, "fall", 0.2)
 	
-	groomTools = [
-		tool_push,
-		tool_comb,
-		tool_stretch,
-		tool_cut,
-		tool_grab,
-	];
+		groomTools = [
+			tool_push,
+			tool_comb,
+			tool_stretch,
+			tool_cut,
+			tool_grab,
+		];
 	
-	tool_dragging = noone;
-	tool_mx  = 0;
-	tool_my  = 0;
-	tool_dmx = 0;
-	tool_dmy = 0;
-	tool_dir = 0;
-	tool_dir_fix = 0;
-	tool_dir_to = 0;
+		tool_dragging = noone;
+		tool_mx  = 0;
+		tool_my  = 0;
+		tool_dmx = 0;
+		tool_dmy = 0;
+		tool_dir = 0;
+		tool_dir_fix = 0;
+		tool_dir_to = 0;
 	
-	tool_grabbing = [];
+		tool_grabbing = [];
+	#endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _typ = getInputData(0);
 		var _pre = getInputData(16);
 		if(!attributes.use_groom) 
@@ -418,9 +420,9 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		tool_dmx = __mx;
 		tool_dmy = __my;
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var _typ = getInputData(0);
 		
 		inputs[|  5].setVisible(_typ == 1, _typ == 1);
@@ -430,9 +432,9 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		inputs[| 15].editWidget.text  = attributes.use_groom? "Unbake" : "Bake";
 		inputs[| 15].editWidget.blend = attributes.use_groom? COLORS._main_value_negative : COLORS._main_value_positive;
-	}
+	} #endregion
 	
-	static strandUpdate = function(willReset = false) {
+	static strandUpdate = function(willReset = false) { #region
 		var _typ = getInputData(0);
 		var _den = getInputData(1);
 		var _len = getInputData(2);
@@ -531,28 +533,28 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			ind++;
 		}
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		strandUpdate(CURRENT_FRAME == 0);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_strandSim_create, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 	
-	static attributeSerialize = function() {
+	static attributeSerialize = function() { #region
 		var att = {};
 		att.use_groom = attributes.use_groom;
 		att.fixStrand = groomed.serialize();
 		return att;
-	}
+	} #endregion
 	
-	static attributeDeserialize = function(attr) {
+	static attributeDeserialize = function(attr) { #region
 		if(struct_has(attr, "fixStrand"))
 			groomed.deserialize(attr.fixStrand);
 			
 		attributes.use_groom = struct_try_get(attr, "use_groom", false);
-	}
+	} #endregion
 }

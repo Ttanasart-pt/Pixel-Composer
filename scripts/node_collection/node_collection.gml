@@ -4,6 +4,24 @@ enum COLLECTION_TAG {
 }
 
 function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) { #region
+	var _ctx_nodes = [];
+	
+	for(var i = 0; i < array_length(nodeArray); i++) {
+		var node = nodeArray[i];
+		
+		for( var j = 0, m = array_length(node.context_data); j < m; j++ ) {
+			var _cnt = node.context_data[i];
+			array_push_unique(_ctx_nodes, _cnt);
+			
+			for( var k = 0, n = array_length(_cnt.members); k < n; k++ ) {
+				if(!array_exists(nodeArray, _cnt.members[k])) {
+					noti_warning("Grouping incomplete inline group is not allowed.");
+					return;
+				}	
+			}
+		}
+	}
+	
 	UNDO_HOLDING = true;
 	
 	if(_group == noone) {
@@ -21,12 +39,17 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 	}
 	
 	var _content = [];
-		
+	
 	for(var i = 0; i < array_length(nodeArray); i++) {
 		_group.add(nodeArray[i]);
 		_content[i] = nodeArray[i];
 	}
-		
+	
+	for( var i = 0, n = array_length(_ctx_nodes); i < n; i++ ) {
+		_group.add(_ctx_nodes[i]);
+		_content[i] = _ctx_nodes[i];
+	}
+	
 	var _io = [];
 	if(check_connect) 
 	for(var i = 0; i < array_length(nodeArray); i++)

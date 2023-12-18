@@ -31,6 +31,4 @@ function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 		if(CURRENT_FRAME == 0)
 			reset();
 	}
-	
-	PATCH_STATIC
 }

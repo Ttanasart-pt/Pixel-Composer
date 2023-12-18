@@ -33,6 +33,4 @@ function Node_VFX_Oscillate(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, 
 		part.drawx += _dx;
 		part.drawy += _dy;
 	}
-	
-	PATCH_STATIC
 }

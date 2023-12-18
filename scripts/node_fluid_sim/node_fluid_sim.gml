@@ -116,6 +116,4 @@ function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 		if(outputNode == noone) return false;
 		return outputNode.cacheExist(frame); 
 	}
-	
-	PATCH_STATIC
 }

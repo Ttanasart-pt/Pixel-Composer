@@ -39,6 +39,4 @@ function Node_VFX_Attract(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _g
 		if(_dest && point_distance(part.x, part.y, _area_x, _area_y) <= _sten)
 			part.kill();
 	}
-	
-	PATCH_STATIC
 }

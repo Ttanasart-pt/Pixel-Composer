@@ -366,8 +366,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	} #endregion
 	
-	PATCH_STATIC
-	
 	static update = function(frame = CURRENT_FRAME) { #region
 		if(is_undefined(inParent)) return;
 	} #endregion

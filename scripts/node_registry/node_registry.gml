@@ -512,7 +512,7 @@ function __initNodes() {
 		addNodeObject(filter, "HSV Extract",		s_node_HSV,				"Node_HSV_Channel",		[1, Node_HSV_Channel],, "Extract HSVA channel on an image, each channel becomes its own image.").setVersion(1070);
 		addNodeObject(filter, "Alpha to Grey",		s_node_alpha_grey,		"Node_Alpha_Grey",		[1, Node_Alpha_Grey],, "Convert alpha value into solid greyscale.");
 		addNodeObject(filter, "Grey to Alpha",		s_node_grey_alpha,		"Node_Grey_Alpha",		[1, Node_Grey_Alpha],, "Convert greyscale to alpha value.");
-			
+		
 		ds_list_add(filter, "Fixes");
 		addNodeObject(filter, "De-Corner",			s_node_decorner,		"Node_De_Corner",		[1, Node_De_Corner], ["decorner"], "Attempt to remove single pixel corner from the image.");
 		addNodeObject(filter, "De-Stray",			s_node_destray,			"Node_De_Stray",		[1, Node_De_Stray], ["destray"], "Attempt to remove orphan pixel.");

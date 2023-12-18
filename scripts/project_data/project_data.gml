@@ -22,8 +22,9 @@
 		nodeNameMap = ds_map_create();
 		nodeTopo    = ds_list_create();
 		
-		animator	= new AnimationManager();
-		globalNode	= new Node_Global();
+		animator	   = new AnimationManager();
+		globalNode	   = new Node_Global();
+		nodeController = new __Node_Controller(self);
 		
 		previewGrid = { #region
 			show	: false,

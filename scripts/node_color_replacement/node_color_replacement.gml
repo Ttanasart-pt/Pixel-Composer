@@ -155,7 +155,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			for( var i = 0; i < ww * hh; i++ ) {
 				var b = buffer_read(c_buffer, buffer_u32);
 				var c = b & ~(0b11111111 << 24);
-				var a = b & (0b11111111 << 24);
+				var a = b &  (0b11111111 << 24);
 				if(a == 0) continue;
 				c = make_color_rgb(color_get_red(c), color_get_green(c), color_get_blue(c));
 				_pall[? c] = 1;

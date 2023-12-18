@@ -25,12 +25,9 @@ event_inherited();
 	anchor = ANCHOR.left | ANCHOR.top;
 	node_menu_selecting = noone;
 	
-	var _con    = PANEL_GRAPH.getCurrentContext();
-	var context = _con == noone? "" : instanceof(_con);
-	
 	#region ---- category ----
 		category = NODE_CATEGORY;
-		switch(context) {
+		switch(instanceof(context)) {
 			case "Node_Pixel_Builder" : category = NODE_PB_CATEGORY;  break;
 			case "Node_DynaSurf" :      category = NODE_PCX_CATEGORY; break;
 		}
@@ -40,7 +37,7 @@ event_inherited();
 		for(var i = 0; i < ds_list_size(category); i++) {
 			var cat  = category[| i];
 		
-			if(array_length(cat.filter) && !array_exists(cat.filter, context))
+			if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
 				continue;
 			
 			var name = __txt(cat.name);
@@ -164,6 +161,9 @@ event_inherited();
 					array_pop(global.RECENT_NODES);
 			}
 			
+			if(is_instanceof(context, Node_Collection_Inline))
+				context.addNode(_new_node);
+			
 			_inputs  = _new_node.inputs;
 			_outputs = _new_node.outputs;
 		} else if(is_instanceof(_node, NodeAction)) {
@@ -184,6 +184,9 @@ event_inherited();
 			for( var i = 0; i < ds_list_size(_new_list); i++ ) {
 				tx = min(tx, _new_list[| i].x);
 				ty = min(tx, _new_list[| i].y);
+				
+				if(is_instanceof(context, Node_Collection_Inline))
+					context.addNode(_new_list[| i]);
 			}
 			
 			var shx = tx - node_target_x;
@@ -259,8 +262,6 @@ event_inherited();
 		
 		var hh  = 0;
 		var hg  = ui(28);
-		var context = PANEL_GRAPH.getCurrentContext();
-		context = context == noone? "" : instanceof(context);
 		
 		var start = category == NODE_CATEGORY? -2 : 0;
 		
@@ -274,7 +275,7 @@ event_inherited();
 				name = cat.name;
 				
 				if(array_length(cat.filter)) {
-					if(!array_exists(cat.filter, context)) {
+					if(!array_exists(cat.filter, instanceof(context))) {
 						if(ADD_NODE_PAGE == i) 
 							setPage(NODE_PAGE_DEFAULT);
 						continue;
@@ -345,13 +346,10 @@ event_inherited();
 		var hh = 0;
 		
 		if(ADD_NODE_PAGE == -2) { #region
-			var context = PANEL_GRAPH.getCurrentContext();
-			context = context == noone? "" : instanceof(context);
-			
 			_list = ds_list_create();
 			for(var i = 0; i < ds_list_size(category); i++) {
 				var cat = category[| i];			
-				if(array_length(cat.filter) && !array_exists(cat.filter, context))
+				if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
 					continue;
 				
 				for( var j = 0; j < ds_list_size(cat.list); j++ ) {
@@ -375,8 +373,7 @@ event_inherited();
 				));
 			}
 			
-			var _cont = PANEL_GRAPH.getCurrentContext();
-			if(_cont != noone) array_append(sug, nodeReleatedQuery("context", instanceof(_cont)));			
+			array_append(sug, nodeReleatedQuery("context", instanceof(context)));
 			
 			if(!array_empty(sug)) {
 				ds_list_add(_list, "Related");
@@ -687,8 +684,6 @@ event_inherited();
 		ds_list_clear(search_list);
 		var pr_list = ds_priority_create();
 		
-		var cnt			 = PANEL_GRAPH.getCurrentContext();
-		var context		 = cnt == noone? "" : instanceof(cnt);
 		var search_lower = string_lower(search_string);
 		var search_map	 = ds_map_create();
 		
@@ -697,7 +692,7 @@ event_inherited();
 			
 			if(!struct_has(cat, "list"))
 				continue;
-			if(array_length(cat.filter) && !array_exists(cat.filter, context))
+			if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
 				continue;
 			
 			var _content = cat.list;

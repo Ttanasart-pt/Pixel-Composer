@@ -37,10 +37,10 @@ function StrandPoint(x, y) constructor {
 	static clone = function() { return new StrandPoint(x, y); }
 }
 
-function Strand(sx = 0, sy = 0, amount = 5, length = 8, direct = 0, curlFreq = 4, curlSize = 8) constructor {
+function Strand(sx = 0, sy = 0, amount = 5, _length = 8, direct = 0, curlFreq = 4, curlSize = 8) constructor {
 	points = [];
 	id = irandom_range(10000, 99999);
-	self.length = array_create(amount, length);
+	self.length = array_create(amount, _length);
 	self.direct = direct;
 	curl_freq = curlFreq;
 	curl_size = curlSize;

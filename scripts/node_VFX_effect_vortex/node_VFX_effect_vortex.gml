@@ -49,6 +49,4 @@ function Node_VFX_Vortex(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _gr
 		if(_dest && point_distance(pv[0], pv[1], _area_x, _area_y) <= 1)
 			part.kill();
 	}
-	
-	PATCH_STATIC
 }

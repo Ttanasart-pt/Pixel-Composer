@@ -15,11 +15,10 @@ enum DYNA_INPUT_COND {
 
 function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x, _y) constructor {
 	#region ---- main & active ----
-		active  = true;
+		active       = true;
 		renderActive = true;
 	
 		node_id = UUID_generate();
-		
 		group   = _group;
 		manual_deletable	 = true;
 		destroy_when_upgroup = false;
@@ -29,6 +28,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		active_range = [ 0, TOTAL_FRAMES - 1 ];
 		
 		array_push(PROJECT.nodeArray, self);
+		
+		context_data = [];
 	#endregion
 	
 	static resetInternalName = function() { #region

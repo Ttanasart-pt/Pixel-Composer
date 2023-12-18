@@ -104,6 +104,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		value_focus     = noone;
 		value_dragging  = noone;
 		value_draggings = [];
+		
+		frame_hovering  = noone;
 	#endregion
 	
 	#region ---- minimap ----
@@ -729,7 +731,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var t   = get_timer();
 		printIf(log, "============ Draw start ============");
 		
-		var frame_hovering = noone;
+		frame_hovering = noone;
 		
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			nodes_list[| i].cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
@@ -870,7 +872,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						array_push(menu, menuItem(__txt("Copy"),  function() { doCopy(); },  THEME.copy,  ["Graph", "Copy"]).setActive(array_length(nodes_selecting)));
 						array_push(menu, menuItem(__txt("Paste"), function() { doPaste(); }, THEME.paste, ["Graph", "Paste"]).setActive(clipboard_get_text() != ""));
 					
-						callAddDialog();
+						var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+						callAddDialog(ctx);
+						
 						menuCall("graph_node_selected_menu", o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
 						setFocus(o_dialog_add_node.id, "Dialog");
 					}
@@ -1187,7 +1191,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					value_dragging.node.triggerRender();
 					
 					if(value_focus != value_dragging) {
-						with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8)) {	
+						var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+						with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {	
 							node_target_x = other.mouse_grid_x;
 							node_target_y = other.mouse_grid_y;
 							node_called   = other.value_dragging;
@@ -1261,10 +1266,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#endregion
 	} #endregion
 	
-	function callAddDialog() { #region
-		with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8)) {	
-			node_target_x = other.mouse_grid_x;
-			node_target_y = other.mouse_grid_y;
+	function callAddDialog(ctx = getCurrentContext()) { #region
+		
+		with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {	
+			node_target_x     = other.mouse_grid_x;
+			node_target_y     = other.mouse_grid_y;
 			junction_hovering = other.junction_hovering;
 			
 			resetPosition();

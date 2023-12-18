@@ -23,9 +23,11 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 7] = nodeValue("Child", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Render extra strands between the real strands.");
 	
+	inputs[| 8] = nodeValue("Update quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	input_display_list = [ 6, 
+	input_display_list = [ 6, 8, 
 		["Output",  false], 0,
 		["Strand",  false], 7, 1, 2, 3, 
 		["Color",   false], 4, 5, 
@@ -36,14 +38,14 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _str = getInputData(1);
 		if(_str == noone) return;
 		if(!is_array(_str)) _str = [ _str ];
 		
 		for( var i = 0, n = array_length(_str); i < n; i++ )
 			_str[i].draw(_x, _y, _s);
-	}
+	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) {
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
@@ -56,6 +58,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _col = getInputData(5);
 		var _sed = getInputData(6);
 		var _chd = getInputData(7);
+		var _stp = getInputData(8);
 		
 		var _surf = outputs[| 0].getValue();
 		_surf = surface_verify(_surf, _dim[0], _dim[1]);
@@ -74,6 +77,8 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			for( var h = 0; h < array_length(_str); h++ ) {
 				var _strand = _str[h];
 				var hairs   = _strand.hairs;
+				
+				if(_stp) _strand.step(_stp);
 				
 				for( var i = 0, n = array_length(hairs); i < n; i++ ) {
 					var hair = hairs[i];

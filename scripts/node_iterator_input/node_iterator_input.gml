@@ -35,6 +35,4 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	
 	outputs[| 1] = nodeValue("Loop entrance", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0)
 		.nonForward();
-	
-	PATCH_STATIC
 }

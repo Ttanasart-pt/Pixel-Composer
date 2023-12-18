@@ -158,6 +158,4 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		quickSort(arrOut, 0, array_length(arrOut) - 1);
 		outputs[| 0].setValue(arrOut);
 	} #endregion
-	
-	PATCH_STATIC
 }
