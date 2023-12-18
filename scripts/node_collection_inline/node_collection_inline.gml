@@ -4,10 +4,10 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_vertex   = [];
 	group_dragging = false;
 	group_adding   = false;
-	group_alpha    = 0;
 	vertex_hash    = "";
 	
 	group_hovering = false;
+	group_hover_al = 0;
 	
 	static removeNode = function(node) { #region
 		array_remove(attributes.members, node.node_id);
@@ -51,6 +51,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			}
 			
 			var _node = PROJECT.nodeMap[? attributes.members[i]];
+			array_push_unique(_node.context_data, self);
 			array_push(members, _node);
 		}
 	} #endregion
@@ -123,25 +124,16 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) { #region
 		if(array_length(group_vertex) < 3) return;
-		var _inGroup = true;
 		var _m       = [ _mx / _s - _x, _my / _s - _y ];
 		
 		group_adding = false;
 		
 		if(PANEL_GRAPH.node_dragging && key_mod_press(SHIFT)) {
 			var side = undefined;
-			for( var i = 1, n = array_length(group_vertex); i < n; i++ ) {
-				var a = group_vertex[i - 1];
-				var b = group_vertex[i - 0];
-				
-				var _side = sign(ccw(a, b, _m));
-				if(side == undefined) side = _side;
-				else if(side != _side) _inGroup = false;
-			}
+			
+			var _list = PANEL_GRAPH.nodes_selecting;
 		
-			var _list    = PANEL_GRAPH.nodes_selecting;
-		
-			if(_inGroup) {
+			if(group_hovering) {
 				group_adding = true;
 				for( var i = 0, n = array_length(_list); i < n; i++ )
 					array_push_unique(attributes.members, _list[i].node_id);
@@ -175,8 +167,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _color  = getColor();
 		
 		draw_set_color(_color);
-		group_alpha = lerp_float(group_alpha, group_adding, 4);
-		draw_set_alpha(0.025 + 0.025 * group_alpha + 0.025 * group_hovering);
+		group_hover_al = lerp_float(group_hover_al, group_hovering, 4);
+		draw_set_alpha(0.025 + 0.050 * group_hover_al);
 		draw_primitive_begin(pr_trianglelist);
 			var a = group_vertex[0];
 			var b = group_vertex[1];

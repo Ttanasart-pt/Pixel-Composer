@@ -25,6 +25,8 @@ event_inherited();
 	anchor = ANCHOR.left | ANCHOR.top;
 	node_menu_selecting = noone;
 	
+	is_global = PANEL_GRAPH.getCurrentContext() == noone;
+	
 	#region ---- category ----
 		category = NODE_CATEGORY;
 		switch(instanceof(context)) {
@@ -72,7 +74,11 @@ event_inherited();
 		if(node_called == noone && junction_hovering == noone) return true;
 		if(!struct_has(node, "node")) return true;
 		if(!struct_has(global.NODE_GUIDE, node.node)) return true;
-		if(is_instanceof(node, NodeObject) && node.is_patreon_extra && !IS_PATREON) return false;
+		
+		if(is_instanceof(node, NodeObject)) {
+			if(node.is_patreon_extra && !IS_PATREON) return true;
+			if(is_global && !node.show_in_global)    return true;
+		}
 		
 		var io = global.NODE_GUIDE[$ node.node];
 		
@@ -431,7 +437,10 @@ event_inherited();
 			for(var index = 0; index < node_count; index++) {
 				var _node = _list[| index];
 				if(is_undefined(_node)) continue;
-				if(is_instanceof(_node, NodeObject) && _node.is_patreon_extra && !IS_PATREON) continue;
+				if(is_instanceof(_node, NodeObject)) {
+					if(_node.is_patreon_extra && !IS_PATREON) continue;
+					if(is_global && !_node.show_in_global)    continue;
+				}
 				
 				if(is_string(_node)) {
 					if(!PREFERENCES.dialog_add_node_grouping)
@@ -551,7 +560,10 @@ event_inherited();
 			for(var i = 0; i < node_count; i++) {
 				var _node = _list[| i];
 				if(is_undefined(_node)) continue;
-				if(is_instanceof(_node, NodeObject) && _node.is_patreon_extra && !IS_PATREON) continue;
+				if(is_instanceof(_node, NodeObject)) {
+					if(_node.is_patreon_extra && !IS_PATREON) continue;
+					if(is_global && !_node.show_in_global)    continue;
+				}
 				
 				if(is_string(_node)) {
 					if(!PREFERENCES.dialog_add_node_grouping)
@@ -702,7 +714,11 @@ event_inherited();
 				if(is_string(_node)) continue;
 				if(ds_map_exists(search_map, _node)) continue;
 				if(struct_try_get(_node, "deprecated")) continue;
-				if(is_instanceof(_node, NodeObject) && _node.is_patreon_extra && !IS_PATREON) continue;
+				
+				if(is_instanceof(_node, NodeObject)) {
+					if(_node.is_patreon_extra && !IS_PATREON) continue;
+					if(is_global && !_node.show_in_global)    continue;
+				}
 				
 				var match = string_partial_match(string_lower(_node.getName()), search_lower);
 				var param = "";

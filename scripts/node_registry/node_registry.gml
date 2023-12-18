@@ -10,6 +10,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	deprecated  = false;
 	
 	show_in_recent = true;
+	show_in_global = true;
 	
 	is_patreon_extra = false;
 	
@@ -49,6 +50,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	static hideRecent = function() { #region
 		INLINE 
 		show_in_recent = false;
+		return self;
+	} #endregion
+	
+	static hideGlobal = function() { #region
+		INLINE 
+		show_in_global = false;
 		return self;
 	} #endregion
 	
@@ -296,11 +303,11 @@ function __initNodes() {
 	#endregion
 	
 	var vfx = ds_list_create(); #region
-	addNodeCatagory("VFX", vfx, ["Node_VFX_Group"]);
+	addNodeCatagory("VFX", vfx, ["Node_VFX_Group", "Node_VFX_Group_Inline"]);
 		ds_list_add(vfx, "Groups");
-		addNodeObject(vfx, "Input",			s_node_vfx_input,			"Node_Group_Input",			[1, Node_Group_Input]).hideRecent();
-		addNodeObject(vfx, "Output",		s_node_vfx_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent();
-		addNodeObject(vfx, "Renderer",		s_node_vfx_render_output,	"Node_VFX_Renderer_Output",	[1, Node_VFX_Renderer_Output]).hideRecent();
+		addNodeObject(vfx, "Input",			s_node_vfx_input,			"Node_Group_Input",			[1, Node_Group_Input]).hideRecent().hideGlobal();
+		addNodeObject(vfx, "Output",		s_node_vfx_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent().hideGlobal();
+		addNodeObject(vfx, "Renderer",		s_node_vfx_render_output,	"Node_VFX_Renderer_Output",	[1, Node_VFX_Renderer_Output]).hideRecent().hideGlobal();
 			
 		ds_list_add(vfx, "VFXs");
 		addNodeObject(vfx, "Spawner",		s_node_vfx_spawn,	"Node_VFX_Spawner",		[1, Node_VFX_Spawner],, "Spawn new particles.").hideRecent();
@@ -325,11 +332,11 @@ function __initNodes() {
 	#endregion
 	
 	var rigidSim = ds_list_create(); #region
-	addNodeCatagory("RigidSim", rigidSim, ["Node_Rigid_Group"]);
+	addNodeCatagory("RigidSim", rigidSim, ["Node_Rigid_Group", "Node_Rigid_Group_Inline"]);
 		ds_list_add(rigidSim, "Group");
-		addNodeObject(rigidSim, "Input",	s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent();
-		addNodeObject(rigidSim, "Output",	s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent();
-		addNodeObject(rigidSim, "Render",	s_node_rigidSim_render_output,	"Node_Rigid_Render_Output",	[1, Node_Rigid_Render_Output]).hideRecent();
+		addNodeObject(rigidSim, "Input",	s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent().hideGlobal();
+		addNodeObject(rigidSim, "Output",	s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent().hideGlobal();
+		addNodeObject(rigidSim, "Render",	s_node_rigidSim_render_output,	"Node_Rigid_Render_Output",	[1, Node_Rigid_Render_Output]).hideRecent().hideGlobal();
 			
 		ds_list_add(rigidSim, "RigidSim");
 		addNodeObject(rigidSim, "Object",			s_node_rigidSim_object,				"Node_Rigid_Object",			[1, Node_Rigid_Object],, "Spawn a rigidbody object.").hideRecent().setVersion(1110);
@@ -344,12 +351,12 @@ function __initNodes() {
 	#endregion
 	
 	var smokeSim = ds_list_create(); #region
-	addNodeCatagory("SmokeSim", smokeSim, ["Node_Fluid_Group"]);
+	addNodeCatagory("SmokeSim", smokeSim, ["Node_Fluid_Group", "Node_Fluid_Group_Inline"]);
 		ds_list_add(smokeSim, "Group");
-		addNodeObject(smokeSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent();
-		addNodeObject(smokeSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent();
-		addNodeObject(smokeSim, "Render Domain",	s_node_smokeSim_render_output,	"Node_Fluid_Render_Output",	[1, Node_Fluid_Render_Output]).hideRecent().setVersion(11540);
-			
+		addNodeObject(smokeSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent().hideGlobal();
+		addNodeObject(smokeSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent().hideGlobal();
+		addNodeObject(smokeSim, "Render Domain",	s_node_smokeSim_render_output,	"Node_Fluid_Render_Output",	[1, Node_Fluid_Render_Output]).hideRecent().setVersion(11540).hideGlobal();
+		
 		ds_list_add(smokeSim, "Domain");
 		addNodeObject(smokeSim, "Domain",			s_node_smokeSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).hideRecent().setVersion(1120);
 		addNodeObject(smokeSim, "Update Domain",	s_node_smokeSim_update,			"Node_Fluid_Update",		[1, Node_Fluid_Update],, "Run smoke by one step.").hideRecent().setVersion(1120);
@@ -366,10 +373,10 @@ function __initNodes() {
 	#endregion
 	
 	var strandSim = ds_list_create(); #region
-	addNodeCatagory("StrandSim", strandSim, ["Node_Strand_Group"]);
+	addNodeCatagory("StrandSim", strandSim, ["Node_Strand_Group", "Node_Strand_Group_Inline"]);
 		ds_list_add(strandSim, "Group");
-		addNodeObject(strandSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
-		addNodeObject(strandSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
+		addNodeObject(strandSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent().hideGlobal();
+		addNodeObject(strandSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent().hideGlobal();
 			
 		ds_list_add(strandSim, "System");
 		addNodeObject(strandSim, "Strand Create",	s_node_strandSim_create,	"Node_Strand_Create",	[1, Node_Strand_Create],, "Create strands from point, path, or mesh.").hideRecent().setVersion(1140);
@@ -607,10 +614,10 @@ function __initNodes() {
 		ds_list_add(generator, "Simulation");
 		addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			[1, Node_Particle],, "Generate particle effect.");
 		addNodeObject(generator, "VFX",					s_node_vfx,					"Node_VFX_Group",			[1, Node_VFX_Group],, "Create VFX group, which generate particles that can be manipulated using different force nodes.");
-		addNodeObject(generator, "RigidSim",			s_node_rigidSim,			"Node_Rigid_Group",			[1, Node_Rigid_Group],, "Create group for rigidbody simulation.").setVersion(1110);
-		addNodeObject(generator, "RigidSim Global",		s_node_rigidSim_global,		"Node_Rigid_Global",		[1, Node_Rigid_Global]).setVersion(1110);
-		addNodeObject(generator, "SmokeSim",			s_node_smokeSim_group,		"Node_Fluid_Group",			[1, Node_Fluid_Group],, "Create group for fluid simulation.").setVersion(1120);
-		addNodeObject(generator, "StrandSim",			s_node_strandSim,			"Node_Strand_Group",		[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140);
+		addNodeObject(generator, "Inline VFX",			s_node_vfx,					"Node_VFX_Group_Inline",	[1, Node_VFX_Group_Inline],, "Create VFX group, which generate particles that can be manipulated using different force nodes.");
+		addNodeObject(generator, "RigidSim",			s_node_rigidSim,			"Node_Rigid_Group_Inline",	[1, Node_Rigid_Group_Inline],, "Create group for rigidbody simulation.").setVersion(1110);
+		addNodeObject(generator, "SmokeSim",			s_node_smokeSim_group,		"Node_Fluid_Group_Inline",	[1, Node_Fluid_Group_Inline],, "Create group for fluid simulation.").setVersion(1120);
+		addNodeObject(generator, "StrandSim",			s_node_strandSim,			"Node_Strand_Group_Inline",	[1, Node_Strand_Group_Inline], ["Hair"], "Create group for hair simulation.").setVersion(1140);
 			
 		ds_list_add(generator, "Region");
 		addNodeObject(generator, "Separate Shape",		s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape],, "Separate disconnected pixel each into an image in an image array.");
@@ -985,8 +992,11 @@ function __initNodes() {
 		addNodeObject(hid, "Sort Input",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Input",		[1, Node_Iterator_Sort_Input]).hideRecent();
 		addNodeObject(hid, "Sort Output",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Output",	[1, Node_Iterator_Sort_Output]).hideRecent();
 		addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147).hideRecent();
-		//addNodeObject(hid, "Pixel Builder",		s_node_pixel_builder,	"Node_Pixel_Builder",			[1, Node_Pixel_Builder]).setVersion(1150).hideRecent();
-			
+		addNodeObject(hid, "RigidSim",			s_node_rigidSim,		"Node_Rigid_Group",				[1, Node_Rigid_Group],, "Create group for rigidbody simulation.").setVersion(1110).hideRecent();
+		addNodeObject(hid, "RigidSim Global",	s_node_rigidSim_global,	"Node_Rigid_Global",			[1, Node_Rigid_Global]).setVersion(1110).hideRecent();
+		addNodeObject(hid, "SmokeSim",			s_node_smokeSim_group,		"Node_Fluid_Group",			[1, Node_Fluid_Group],, "Create group for fluid simulation.").setVersion(1120).hideRecent();
+		addNodeObject(hid, "StrandSim",			s_node_strandSim,			"Node_Strand_Group",		[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140).hideRecent();
+		
 		ds_list_add(hid, "DynaSurf");
 		addNodeObject(hid, "Input",		s_node_pixel_builder,	"Node_DynaSurf_In",			[1, Node_DynaSurf_In]).hideRecent();
 		addNodeObject(hid, "Output",	s_node_pixel_builder,	"Node_DynaSurf_Out",		[1, Node_DynaSurf_Out]).hideRecent();

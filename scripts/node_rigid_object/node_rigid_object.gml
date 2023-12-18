@@ -57,11 +57,14 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray()
 		.setAnimable(false);
 		
+	inputs[| 12] = nodeValue("Collision group", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.rejectArray()
+		
 	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, self);
 	
-	input_display_list = [ 8,
+	input_display_list = [ 8, 12, 
 		["Texture",		false],	6, 
-		["Physical",	false],	0, 1, 2, 3, 4,
+		["Physical",	false],	0, 1, 2, 3, 4, 
 		["Shape",		false],	7, 5, 9, 10, 11, 
 	];
 	
@@ -514,11 +517,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static fixtureCreate = function(fixture, object, dx = 0, dy = 0) { #region
-		var _mov	 = getInputData(0);
-		var _den	 = getInputData(1);
-		var _cnt_frc = getInputData(2);
-		var _air_frc = getInputData(3);
-		var _rot_frc = getInputData(4);
+		var _mov	  = getInputData(0);
+		var _den	  = getInputData(1);
+		var _cnt_frc  = getInputData(2);
+		var _air_frc  = getInputData(3);
+		var _rot_frc  = getInputData(4);
+		var collIndex = getInputData(12);
 		
 		if(!_mov) {
 			physics_fixture_set_kinematic(fixture);
@@ -530,8 +534,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		physics_fixture_set_linear_damping(fixture, _air_frc);
 		physics_fixture_set_angular_damping(fixture, _rot_frc);
 		physics_fixture_set_awake(fixture, true);
-		if(group != noone)
-			physics_fixture_set_collision_group(fixture, group.collIndex);
+		physics_fixture_set_collision_group(fixture, collIndex);
 		
 		array_push(object.fixture, physics_fixture_bind_ext(fixture, object, dx, dy));
 		physics_fixture_delete(fixture);

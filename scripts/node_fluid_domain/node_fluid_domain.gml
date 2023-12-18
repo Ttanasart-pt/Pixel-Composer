@@ -2,7 +2,6 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	name  = "Domain";
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
-	
 	min_h = 128;
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
@@ -103,11 +102,11 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		outputs[| 0].setValue(domain);
 	} #region
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		var _mat = getInputData(1);
 		if(!is_surface(_mat)) return;
 		
 		draw_surface_fit(_mat, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }

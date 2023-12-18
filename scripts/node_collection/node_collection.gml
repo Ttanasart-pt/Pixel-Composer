@@ -10,7 +10,7 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 		var node = nodeArray[i];
 		
 		for( var j = 0, m = array_length(node.context_data); j < m; j++ ) {
-			var _cnt = node.context_data[i];
+			var _cnt = node.context_data[j];
 			array_push_unique(_ctx_nodes, _cnt);
 			
 			for( var k = 0, n = array_length(_cnt.members); k < n; k++ ) {
