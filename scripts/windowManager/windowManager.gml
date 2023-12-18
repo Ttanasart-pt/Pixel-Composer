@@ -15,8 +15,16 @@
 	globalvar window_min_w;				window_min_w = 960;
 	globalvar window_min_h;				window_min_h = 600;
 	
+	globalvar window_preminimize_rect;  window_preminimize_rect = [ 0, 0, 1, 1 ];
+	
 	#macro DISPLAY_REFRESH CURRENT_PANEL = panelSerialize(); display_refresh();
 #endregion
+
+function winManInit() { #region
+	if(OS == os_macosx) mac_window_init();
+	
+	window_preminimize_rect = [ 0, 0, 1, 1 ];
+} #endregion
 
 function winMan_getData(curr = true) { #region
 	INLINE
@@ -55,6 +63,7 @@ function winMan_setRect(_x, _y, _w, _h) { #region
 
 function winMan_isMinimized() { #region
 	INLINE
+	if(OS == os_macosx) return false;
 	return gameframe_is_natively_minimized();
 } #endregion
 

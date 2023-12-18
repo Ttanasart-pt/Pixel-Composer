@@ -1,5 +1,5 @@
 /// @description init
-if(OS == os_windows && winMan_isMinimized()) exit;
+if(winMan_isMinimized()) exit;
 winManStep()
 
 //print("===== Step start =====");

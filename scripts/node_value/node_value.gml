@@ -1668,8 +1668,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	} #endregion
 	
-	static setAnim = function(anim) { #region
+	static setAnim = function(anim, record = false) { #region
 		if(is_anim == anim) return;
+		if(record) {
+			recordAction(ACTION_TYPE.custom, function(data) {
+				setAnim(data.is_anim);
+				data.is_anim = !data.is_anim;
+			}, { anim: is_anim });
+		}
 		is_anim = anim;
 		
 		if(is_anim) {

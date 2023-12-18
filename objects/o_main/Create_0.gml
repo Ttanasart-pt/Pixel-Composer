@@ -14,8 +14,7 @@
 	window_set_min_width(960);
 	window_set_min_height(600);
 	
-	//if(OS == os_windows) gameframe_init_native();
-	if(OS == os_macosx)  mac_window_init();
+	winManInit();
 	
 	depth = 0;
 	win_wp = WIN_W;

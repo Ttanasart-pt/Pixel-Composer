@@ -25,9 +25,15 @@ event_inherited();
 		dialog_h_min = content.min_h;
 		dialog_resizable = content.resizable;
 		
+		content.panel     = self;
 		content.in_dialog = true;
 		
 		if(content.auto_pin) destroy_on_click_out = false;
+	} #endregion
+	
+	function contentResize() { #region
+		dialog_w = content.w + content.showHeader * padding * 2;
+		dialog_h = content.h + content.showHeader * (padding * 2 + title_height);
 	} #endregion
 	
 	function resetMask() { #region

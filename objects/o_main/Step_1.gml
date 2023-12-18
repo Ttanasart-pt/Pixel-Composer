@@ -7,17 +7,17 @@ HOVERING_ELEMENT  = _HOVERING_ELEMENT;
 _HOVERING_ELEMENT = noone;
 
 #region minimize
-	if(OS == os_windows) {
-		if(winMan_isMinimized()) {
-			if(!minimized)
-				game_set_speed(1, gamespeed_fps);
-			minimized = true;
-			exit;
-		}
-	}
+	if(winMan_isMinimized()) {
+		if(!minimized) game_set_speed(1, gamespeed_fps);
+		minimized = true;
+		exit;
+	} else if(!minimized)
+		window_preminimize_rect = [ window_get_x(), window_get_y(), window_get_width(), window_get_height() ];
 
 	if(minimized) {
 		game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
+		window_set_rectangle(window_preminimize_rect[0], window_preminimize_rect[1], window_preminimize_rect[2], window_preminimize_rect[3]);
+		
 		minimized = false;
 	}
 #endregion

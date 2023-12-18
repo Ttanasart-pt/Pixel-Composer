@@ -289,7 +289,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			surface_store_buffer(data.index); 
 			surface_free(data.surface);
 			
-			return { surface: _canvas, tooltip: data.tooltip, index: preview_index }
+			data.surface = _canvas;
+			data.index   = preview_index;
 		}, { surface: surface_clone(getCanvasSurface()), tooltip: "Modify canvas", index: preview_index });
 		
 		action.clear_action = function(data) { surface_free_safe(data.surface); };

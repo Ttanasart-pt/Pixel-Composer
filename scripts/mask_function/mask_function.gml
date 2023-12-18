@@ -3,7 +3,7 @@ function __init_mask_modifier(_mask_index) { #region
 	
 	inputs[| _ind + 0] = nodeValue("Invert mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| _ind + 1] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16)
+	inputs[| _ind + 1] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 32, 1] });
 		
 	__mask_index     = _mask_index;

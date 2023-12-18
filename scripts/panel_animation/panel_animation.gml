@@ -267,6 +267,7 @@ function Panel_Animation() : PanelContent() constructor {
 			[ [THEME.object_halign, 2], function() { alignKeys(fa_right); } ],
 		]),
 		menuItem(__txtx("panel_animation_stagger", "Stagger"), function() { stagger_mode = 1; }),
+		menuItem(__txtx("panel_driver", "Driver..."), function() { dialogPanelCall(new Panel_Keyframe_Driver(keyframe_selecting[0]), mouse_mx + ui(8), mouse_my + ui(8)); }),
 		-1,
 		menuItem(__txt("Delete"),	 function() { deleteKeys(); },				noone,			 [ "Animation", "Delete keys" ]),
 		menuItem(__txt("Duplicate"), function() { doDuplicate(); },				THEME.duplicate, [ "Animation", "Duplicate" ]),
@@ -573,11 +574,12 @@ function Panel_Animation() : PanelContent() constructor {
 					var _anim = _anims[j];
 					
 					for(var k = 0; k < ds_list_size(_anim.values); k++) {
-						var t = (_anim.values[| k].time + 1) * ui(timeline_scale) + timeline_shift;
-						_anim.values[| k].dopesheet_x = t;
-							
-						var ind = _anim.values[| k].ease_in_type == CURVE_TYPE.cut? 4 : 1;
-						draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, key_y, 1, COLORS.panel_animation_keyframe_hide);
+						var _keyframe = _anim.values[| k];
+						
+						var t = (_keyframe.time + 1) * ui(timeline_scale) + timeline_shift;
+						_keyframe.dopesheet_x = t;
+						
+						draw_sprite_ui_uniform(THEME.timeline_keyframe, _keyframe.getDrawIndex(), t, key_y, 1, COLORS.panel_animation_keyframe_hide);
 					}
 				}
 			}
@@ -670,146 +672,214 @@ function Panel_Animation() : PanelContent() constructor {
 		draw_surface_safe(timeline_surface, bar_x, bar_y);
 	} #endregion
 	
-	function drawDopesheetLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) { #region
+	function drawDopesheetGraphLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) { #region
 		var bar_total_w = TOTAL_FRAMES * ui(timeline_scale);
 		var bar_show_w  = timeline_shift + bar_total_w;
 		var hovering	= noone;
 		var _gy_top		= key_y + ui(16);
 		var _gy_bottom	= _gy_top + animator.prop.graph_h - ui(8);
 		
-		var amo		 = ds_list_size(animator.values);
+		var amo = ds_list_size(animator.values);
 		
-		for(var k = 0; k < amo; k++) {
-			var key_val = animator.values[| k].value;
-			if(is_array(key_val)) {
-				for( var ki = 0; ki < array_length(key_val); ki++ ) {
-					_gy_val_min = min(_gy_val_min, key_val[ki]);
-					_gy_val_max = max(_gy_val_max, key_val[ki]);
-				}
-			} else {
-				_gy_val_min = min(_gy_val_min, key_val);
-				_gy_val_max = max(_gy_val_max, key_val);
-			}
-		}
-		
-		var valArray = is_array(animator.values[| 0].value);
-		var ox = 0, oy = valArray? [] : noone, nx = 0, ny = noone, oly = 0, nly = 0;
-		
-		for(var k = 0; k < amo - 1; k++) {
-			var key = animator.values[| k];
-			var t   = key.dopesheet_x;
-			var key_next = animator.values[| k + 1];
-			var dx = key_next.time - key.time;
+		#region get range
+			var _prevDelt = [ 0, 0 ];
 			
-			if(key.ease_out_type == CURVE_TYPE.linear && key_next.ease_in_type == CURVE_TYPE.linear) { //linear draw
-				nx = (key_next.time + 1) * ui(timeline_scale) + timeline_shift;
-				if(valArray) {
-					for( var ki = 0; ki < array_length(key.value); ki++ ) {
-						draw_set_color(COLORS.axis[ki]);
-						ny[ki] = value_map(key.value[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-						
-						if(array_length(oy) > ki)
-							draw_line(t, oy[ki], t, ny[ki]);
-						oy[ki] = ny[ki];
-						
-						ny[ki] = value_map(key_next.value[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-						draw_line(t, oy[ki], nx, ny[ki]);
-						oy[ki] = ny[ki];
+			for(var k = 0; k < amo; k++) { 
+				var key     = animator.values[| k];
+				var key_val = key.value;
+				
+				var _minn = _gy_val_min;
+				var _maxx = _gy_val_max;
+				
+				if(is_array(key_val)) {
+					for( var ki = 0; ki < array_length(key_val); ki++ ) {
+						_minn = min(_minn, key_val[ki]);
+						_maxx = max(_maxx, key_val[ki]);
 					}
 				} else {
-					draw_set_color(animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line);
-					ny = value_map(key.value, _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-					if(oy != noone) draw_line(t, oy, t, ny);
-					oy = ny;
+					_minn = min(_minn, key_val);
+					_maxx = max(_maxx, key_val);
+				}
+				
+				_minn += _prevDelt[0];
+				_maxx += _prevDelt[1];
+				_prevDelt = [ 0, 0 ];
+				
+				switch(key.drivers.type) {
+					case DRIVER_TYPE.linear :
+						var nk = k + 1 < amo? animator.values[| k + 1].time : TOTAL_FRAMES;
 					
-					ny = value_map(key_next.value, _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-					draw_line(t, oy, nx, ny);
-					oy = ny;
+						var spd = key.drivers.speed * (nk - key.time);
+						_minn += min(spd, 0);
+						_maxx += max(spd, 0);
+						_prevDelt = [ min(spd, 0), max(spd, 0) ];
+						break;
+					case DRIVER_TYPE.wiggle :
+					case DRIVER_TYPE.sine   :
+						_minn -= abs(key.drivers.amplitude);
+						_maxx += abs(key.drivers.amplitude);
+						_prevDelt = [ -key.drivers.amplitude, key.drivers.amplitude ];
+						break;
+				}
+				
+				_gy_val_min = min(_minn, _gy_val_min);
+				_gy_val_max = max(_maxx, _gy_val_max);
+			}
+		#endregion
+		
+		var valArray = is_array(animator.values[| 0].value);
+		var ox  = 0;
+		var nx  = 0;
+		var ny  = noone;
+		var oly = 0;
+		var nly = 0;
+		var _kv, _kn;
+		var sy;
+		
+		var _oy  = animator.values[| 0].value;
+		if(!valArray) _oy = [ _oy ];
+		
+		var oy = array_create(array_length(_oy));
+		for( var ki = 0; ki < array_length(oy); ki++ ) 
+			oy[ki] = value_map(oy[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
+		
+		for(var k = 0; k < amo - 1; k++) { #region draw line in between
+			var key      = animator.values[| k];
+			var t        = key.dopesheet_x;
+			var key_next = animator.values[| k + 1];
+			var dx       = key_next.time - key.time;
+			
+			if(key.drivers.type) { // driver
+				nx = (key.time + 1) * ui(timeline_scale) + timeline_shift;
+					
+				for( var _time = key.time; _time <= key_next.time; _time++ ) {
+					var rat  = (_time - key.time) / (key_next.time - key.time);
+					var _lrp = animator.interpolate(key, key_next, rat);
+					
+					_kv = animator.processDriver(_time, key, animator.lerpValue(key, key_next, _lrp), rat);
+					
+					if(!valArray) _kv = [ _kv ];
+						
+					for( var ki = 0; ki < array_length(_kv); ki++ ) {
+						draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+						ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
+						
+						if(_time == key.time) draw_line(nx, oy[ki], nx, ny[ki]);
+						else                  draw_line(ox, oy[ki], nx, ny[ki]);
+							
+						oy[ki] = ny[ki];
+					}
+					
+					ox  = nx;
+					nx += ui(timeline_scale);
+				}
+			} else if(key.ease_out_type == CURVE_TYPE.linear && key_next.ease_in_type == CURVE_TYPE.linear) { //linear draw
+				nx  = (key_next.time + 1) * ui(timeline_scale) + timeline_shift;
+				
+				_kv = key.value;
+				_kn = key_next.value;
+				
+				if(!valArray) {
+					_kv = [ _kv ];
+					_kn = [ _kn ];
+				}
+				
+				for( var ki = 0; ki < array_length(_kv); ki++ ) {
+					draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+					
+					ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
+						
+					if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
+					oy[ki] = ny[ki];
+						
+					ny[ki] = value_map(_kn[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
+					draw_line(t, oy[ki], nx, ny[ki]);
+					oy[ki] = ny[ki];
 				}
 				
 				ox = nx;
 			} else { //bezier easing
 				var _step = 1 / dx;
 				for( var _r = 0; _r <= 1; _r += _step ) {
-					nx = t + _r * dx * ui(timeline_scale);
+					nx  = t + _r * dx * ui(timeline_scale);
 					nly = animator.interpolate(key, key_next, _r);
 					
-					if(valArray) {
-						for( var ki = 0; ki < array_length(key.value); ki++ ) {
-							draw_set_color(COLORS.axis[ki]);
-							ny[ki] = value_map(lerp(key.value[ki], key_next.value[ki], nly), _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
+					_kv = key.value;
+					_kn = key_next.value;
+				
+					if(!valArray) {
+						_kv = [ _kv ];
+						_kn = [ _kn ];
+					}
+				
+					for( var ki = 0; ki < array_length(_kv); ki++ ) {
+						draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+						ny[ki] = value_map(lerp(_kv[ki], _kn[ki], nly), _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
+						
+						if(array_length(oy) > ki) draw_line(ox, oy[ki], nx, ny[ki]);
 							
-							if(array_length(oy) > ki)
-								draw_line(ox, oy[ki], nx, ny[ki]);
-							
-							oy[ki] = ny[ki];
-						}
-					} else {
-						draw_set_color(animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line);
-						ny = value_map(lerp(key.value, key_next.value, nly), _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-						if(oy != noone)
-							draw_line(ox, oy, nx, ny);
-						oy = ny;
+						oy[ki] = ny[ki];
 					}
 					
 					ox = nx;
 					oly = nly;
 				}
 			}
-		}
+		} #endregion
 		
-		if(animator.prop.show_graph && ds_list_size(animator.values) > 0) {
-			if(ds_list_size(animator.values) == 1) { //draw graph before and after
-				var key_first = animator.values[| 0];
-				
-				if(valArray) {
-					for( var ki = 0; ki < array_length(key_first.value); ki++ ) {
-						draw_set_color(COLORS.axis[ki]);
-						sy = value_map(key_first.value[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-						draw_line(0, sy, bar_show_w, sy);
-					}
-				} else {
-					draw_set_color(animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line);
-					sy = value_map(key_first.value, _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-					draw_line(0, sy, bar_show_w, sy);
-				}
-			} else { //draw graph before and after
-				var key_first = animator.values[| 0];
-				var t_first = (key_first.time + 1) * ui(timeline_scale) + timeline_shift;
-				var sy;
+		if(animator.prop.show_graph && ds_list_size(animator.values) > 0) { #region draw line outside keyframe range
+			var key_first = animator.values[| 0];
+			var t_first  = (key_first.time + 1) * ui(timeline_scale) + timeline_shift;
 			
-				if(valArray) {
-					for( var ki = 0; ki < array_length(key_first.value); ki++ ) {
-						draw_set_color(COLORS.axis[ki]);
-						sy = value_map(key_first.value[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-						draw_line(0, sy, t_first, sy);
-					}
-				} else {
-					draw_set_color(animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line);
-					sy = value_map(key_first.value, _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-					draw_line(0, sy, t_first, sy);
-				}
-			
-				var key_last = animator.values[| ds_list_size(animator.values) - 1];
-				var t_last = (key_last.time + 1) * ui(timeline_scale) + timeline_shift;
+			_kv = key_first.value;
+			if(!valArray) _kv = [ _kv ];
 				
-				if(key_last.time < TOTAL_FRAMES) {
-					if(valArray) {
-						for( var ki = 0; ki < array_length(key_last.value); ki++ ) {
-							draw_set_color(COLORS.axis[ki]);
-							ny[ki] = value_map(key_last.value[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-							draw_line(t_last, oy[ki], t_last, ny[ki]);
-							draw_line(t_last, oy[ki], bar_show_w, oy[ki]);
+			for( var ki = 0; ki < array_length(_kv); ki++ ) {
+				draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+				sy = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
+				draw_line(0, sy, t_first, sy);
+					
+				if(ds_list_size(animator.values) == 1) oy[ki] = sy;
+			}
+				
+			var key_last = animator.values[| ds_list_size(animator.values) - 1];
+			var t_last = (key_last.time + 1) * ui(timeline_scale) + timeline_shift;
+				
+			if(key_last.time < TOTAL_FRAMES) {
+				if(key_last.drivers.type) {
+					nx = t_last;
+					
+					for( var _time = key_last.time; _time < TOTAL_FRAMES; _time++ ) {
+						_kv = animator.processDriver(_time, key_last);
+						if(!valArray) _kv = [ _kv ];
+						
+						for( var ki = 0; ki < array_length(_kv); ki++ ) {
+							draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+							ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
+							if(_time == key_last.time)
+								draw_line(t_last, oy[ki], t_last, ny[ki]);
+							else 
+								draw_line(ox, oy[ki], nx, ny[ki]);
+							
+							oy[ki] = ny[ki];
 						}
-					} else {
-						draw_set_color(animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line);
-						ny = value_map(key_last.value, _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-						draw_line(t_last, oy, t_last, ny);
-						draw_line(t_last, ny, bar_show_w, ny);
+						
+						ox  = nx;
+						nx += ui(timeline_scale);
+					}
+				} else {
+					_kv = key_last.value;
+					if(!valArray) _kv = [ _kv ];
+					
+					for( var ki = 0; ki < array_length(_kv); ki++ ) {
+						draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+						ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
+						draw_line(t_last, oy[ki], t_last, ny[ki]);
+						draw_line(t_last, ny[ki], bar_show_w, ny[ki]);
 					}
 				}
 			}
-		}
+		} #endregion
 	} #endregion
 	
 	function drawDopesheetGraph(prop, key_y, msx, msy) { #region
@@ -818,7 +888,7 @@ function Panel_Animation() : PanelContent() constructor {
 		var _gy_top		= key_y + ui(16);
 		var _gy_bottom	= _gy_top + prop.graph_h - ui(8);
 		
-		if(prop.type == VALUE_TYPE.color) {
+		if(prop.type == VALUE_TYPE.color) { #region draw color
 			var amo = ds_list_size(prop.animator.values);
 			var _prevKey = prop.animator.values[| 0];
 			
@@ -838,8 +908,7 @@ function Panel_Animation() : PanelContent() constructor {
 					var lrp = prop.animator.interpolate(key, key_next, _r);
 					nc = merge_color(key.value, key_next.value, lrp);
 					
-					if(_r > 0)
-						draw_rectangle_color(ox, _gy_top, nx, _gy_bottom, oc, nc, nc, oc, 0);
+					if(_r > 0) draw_rectangle_color(ox, _gy_top, nx, _gy_bottom, oc, nc, nc, oc, 0);
 						
 					ox = nx;
 					oc = nc;
@@ -852,9 +921,9 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_rectangle(key_next.dopesheet_x, _gy_top, bar_show_w, _gy_bottom, 0);
 			}
 			return;
-		} 
+		} #endregion
 		
-		if(prop.sep_axis) {
+		if(prop.sep_axis) { #region draw number graphs
 			var _min =  999999;
 			var _max = -999999;
 			
@@ -875,9 +944,10 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 			
 			for( var i = 0, n = array_length(prop.animators); i < n; i++ )
-				drawDopesheetLine(prop.animators[i], key_y, msx, msy, _min, _max);
+				drawDopesheetGraphLine(prop.animators[i], key_y, msx, msy, _min, _max);
 		} else
-			drawDopesheetLine(prop.animator, key_y, msx, msy);
+			drawDopesheetGraphLine(prop.animator, key_y, msx, msy);
+		#endregion
 	} #endregion
 	
 	function drawDopesheetAnimatorKeysBG(animator, msx, msy) { #region
@@ -909,13 +979,13 @@ function Panel_Animation() : PanelContent() constructor {
 											
 				if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
 					key_hover = key;
-					draw_sprite_ui_uniform(THEME.timeline_keyframe, key.ease_y_lock? 2 : 5, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
+					draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
 					if(mouse_press(mb_left, pFOCUS) && !key_mod_press(SHIFT)) {
 						keyframe_dragging  = animator.values[| k];
 						keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
 					}
 				} else 
-					draw_sprite_ui_uniform(THEME.timeline_keyframe, key.ease_y_lock? 2 : 5, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
+					draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
 			} 
 						
 			if(key.ease_out_type == CURVE_TYPE.bezier) {
@@ -925,13 +995,13 @@ function Panel_Animation() : PanelContent() constructor {
 										
 				if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
 					key_hover = key;
-					draw_sprite_ui_uniform(THEME.timeline_keyframe, key.ease_y_lock? 3 : 5, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
+					draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
 					if(mouse_press(mb_left, pFOCUS) && !key_mod_press(SHIFT)) {
 						keyframe_dragging  = animator.values[| k];
 						keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
 					}
 				} else
-					draw_sprite_ui_uniform(THEME.timeline_keyframe, key.ease_y_lock? 3 : 5, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
+					draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
 			}
 		}
 		
@@ -952,11 +1022,11 @@ function Panel_Animation() : PanelContent() constructor {
 			for( var j = 0, n = array_length(_cont.contexts); j < n; j++ ) {
 				var _cxt = _cont.contexts[j];
 				if(!_cxt.show) continue;
-				draw_sprite_ui_uniform(THEME.timeline_keyframe, 0, t, _cxt.y + ui(10), 1, COLORS._main_icon);
+				draw_sprite_ui_uniform(THEME.timeline_key_empty, 0, t, _cxt.y + ui(10), 1, COLORS._main_icon);
 			}
 			
 			if(!_cont.show)      continue;
-			draw_sprite_ui_uniform(THEME.timeline_keyframe, 0, t, node_y + ui(10), 1, COLORS._main_icon);
+			draw_sprite_ui_uniform(THEME.timeline_key_empty, 0, t, node_y + ui(10), 1, COLORS._main_icon);
 			
 			if(!_cont.item.show) continue;
 			
@@ -993,15 +1063,11 @@ function Panel_Animation() : PanelContent() constructor {
 			if(stagger_mode == 1 && array_exists(keyframe_selecting, keyframe))
 				cc = key_hover == keyframe? COLORS.panel_animation_keyframe_selected : COLORS._main_accent;
 			
-			var ind = 1;
-			if(keyframe.ease_in_type == CURVE_TYPE.cut)
-				ind = 4;
-			if(keyframe.anim.prop.type == VALUE_TYPE.trigger)
-				ind = 4;
+			var ind = keyframe.getDrawIndex();
 			
 			draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc);
 			if(array_exists(keyframe_selecting, keyframe)) 
-				draw_sprite_ui_uniform(THEME.timeline_keyframe_selecting, ind != 1, t, prop_y, 1, COLORS._main_accent);
+				draw_sprite_ui_uniform(THEME.timeline_keyframe_selecting, ind, t, prop_y, 1, COLORS._main_accent);
 						
 			if(keyframe_boxing) {
 				var box_x0 = min(keyframe_box_sx, msx);

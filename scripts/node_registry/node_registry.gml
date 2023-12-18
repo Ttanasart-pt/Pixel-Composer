@@ -412,9 +412,10 @@ function __initNodes() {
 		addNodeObject(input, "WAV File In",			s_node_wav_file_read,	"Node_WAV_File_Read",		[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
 		addNodeObject(input, "WAV File Out",		s_node_wav_file_write,	"Node_WAV_File_Write",		[1, Node_WAV_File_Write],, "Save wav audio file.").setVersion(1145);
 			
-		ds_list_add(input, "Network");
+		ds_list_add(input, "External");
 		addNodeObject(input, "Websocket Receiver",	s_node_websocket_receive,	"Node_Websocket_Receiver",	[1, Node_Websocket_Receiver],, "Create websocket server to receive data from the network.").setVersion(1145);
 		addNodeObject(input, "Websocket Sender",	s_node_websocket_send,		"Node_Websocket_Sender",	[1, Node_Websocket_Sender],, "Create websocket server to send data to the network.").setVersion(1145);
+		addNodeObject(input, "Spout Sender",		s_node_spout,				"Node_Spout_Send",			[1, Node_Spout_Send],, "Send surface through Spout.").setVersion(11600);
 	#endregion
 	
 	var transform = ds_list_create(); #region
@@ -623,7 +624,7 @@ function __initNodes() {
 		addNodeObject(generator, "MK Saber",			s_node_mk_saber,			"Node_MK_Saber",			[1, Node_MK_Saber]).setVersion(11600);
 		addNodeObject(generator, "MK Tile",				s_node_mk_tile,				"Node_MK_Tile",				[1, Node_MK_Tile]).setVersion(11600);
 		addNodeObject(generator, "MK Flag",				s_node_mk_flag,				"Node_MK_Flag",				[1, Node_MK_Flag]).setVersion(11600);
-		if(TESTING) addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle]).setVersion(11600);
+		//addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle]).patreonExtra();
 	#endregion
 	
 	var compose = ds_list_create(); #region

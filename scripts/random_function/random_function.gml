@@ -64,32 +64,34 @@ function random1D(seed, startRange = 0, endRange = 1) { #region
 	return lerp(f1, f2, _f);
 } #endregion
 
-function perlin1D(seed, scale = 1, octave = 1, startRange = 0, endRange = 1) { #region
+function __noise(_x) { #region
+    var i = floor(_x);
+    var f = frac(_x);
+	
+    var a = random1D(i);
+    var b = random1D(i + 1);
+
+    var u = f * f * (3.0 - 2.0 * f);
+
+    return lerp(a, b, u);
+} #endregion
+
+function perlin1D(pos, seed, scale = 1, octave = 1, startRange = 0, endRange = 1) { #region
 	var amp = power(2., octave - 1.)  / (power(2., octave) - 1.);
-	var val = 0;
+    var n = 0.;
 	
 	repeat(octave) {
-		val = random1D(seed * scale) * amp;
-		scale *= 2;
-		amp /= 2;
+		n += __noise(seed + pos * scale) * amp;
+		
+		amp *= .5;
+		pos *= 2.;
 	}
 	
-	return lerp(startRange, endRange, val);
+	return lerp(startRange, endRange, n);
 } #endregion
 
 function wiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, _octave = 1) { #region
-	_freq = max(1, _freq);
-	
-	var sdMin = floor(_time / _freq) * _freq;
-	var sdMax = sdMin + _freq;
-	
-	var _x0 = perlin1D(PROJECT.seed + _seed + sdMin, 1, _octave);
-	var _x1 = perlin1D(PROJECT.seed + _seed + sdMax, 1, _octave);
-	
-	var t = (_time - sdMin) / (sdMax - sdMin);
-	t = -(cos(pi * t) - 1) / 2;
-	var _lrp = lerp(_x0, _x1, t);
-	return lerp(_min, _max, _lrp);
+	return perlin1D(_time, _seed, _freq, _octave, _min, _max);
 } #endregion
 
 function getWiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, startTime = noone, endTime = noone) { #region

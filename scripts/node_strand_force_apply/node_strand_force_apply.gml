@@ -31,7 +31,7 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 		
 		inputs[| 4].setVisible(true);
 		
-		var _strTur = _tur == 0? _stn : perlin1D(_sed + CURRENT_FRAME, _tfr, _toc, _stn - _tur, _stn + _tur);
+		var _strTur = _tur == 0? _stn : perlin1D(CURRENT_FRAME, _sed, _tfr, _toc, _stn - _tur, _stn + _tur);
 		var gx = lengthdir_x(_strTur, _dir);
 		var gy = lengthdir_y(_strTur, _dir);
 		

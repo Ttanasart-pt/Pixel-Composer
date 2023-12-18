@@ -545,6 +545,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(auto_update && (keyboard_check_pressed(vk_anykey) || modified))
 			apply();
 			
+		if(modified) typing = 100;
+		
 		if(keyboard_check_pressed(vk_left))	 onKey(vk_left);
 		if(keyboard_check_pressed(vk_right)) onKey(vk_right);
 		if(keyboard_check_pressed(vk_up))	 onKey(vk_up);
@@ -603,6 +605,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		draw_set_text(font, fa_left, fa_top, color);
 		draw_set_alpha(0.5 + 0.5 * interactable);
+		_y += ui(1);
 		
 		var ch_x = _x;
 		var ch_y = _y;
@@ -860,13 +863,17 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				
 				if(cursor_pos_y != 0 && cursor_pos_x != 0) {
 					draw_set_color(COLORS._main_text_accent);
+					draw_set_alpha(typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000);
 					draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
+					draw_set_alpha(1);
 				}
 				
 				if(o_dialog_textbox_autocomplete.textbox == self) {
 					o_dialog_textbox_autocomplete.dialog_x = rx + cursor_pos_x + 1;
 					o_dialog_textbox_autocomplete.dialog_y = ry + cursor_pos_y + line_get_height() + 1;
 				}
+				
+				if(typing) typing--;
 			#endregion
 			
 			if(autocomplete_modi && PREFERENCES.widget_autocomplete_delay >= 0 && autocomplete_delay >= PREFERENCES.widget_autocomplete_delay) {

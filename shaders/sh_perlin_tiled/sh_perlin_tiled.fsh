@@ -22,7 +22,8 @@ vec3 hsv2rgb(vec3 c) { #region
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 } #endregion
 
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + vec2(21.4564, 46.8564), vec2(12.9898, 78.233))) * (43758.5453123 + seed)); }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + seed)); }
+
 float randomFloat (in vec2 st, float seed) { #region
 	float sedSt = floor(seed);
 	float sedFr = fract(seed);
@@ -30,7 +31,7 @@ float randomFloat (in vec2 st, float seed) { #region
 	return mix(random(st, sedSt), random(st, sedSt + 1.), sedFr);
 } #endregion
 
-vec2 random2 (in vec2 st, float seed) { return vec2(random(st, seed), random(st, seed + 1.864354564)); }
+vec2 random2 (in vec2 st, float seed) { return vec2(random(st, seed), random(st, seed + 1.864)); }
 
 float noise (in vec2 st, in vec2 scale) { #region
     vec2 cellMin = floor(st);

@@ -130,7 +130,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	attribute_surface_depth();
 	
 	static refreshPalette = function() { #region
-		var _surf = array_safe_get(current_data, 0);
+		var _surf = inputs[| 0].getValue();
 		
 		inputs[| 1].setValue([]);
 		inputs[| 2].setValue([]);
@@ -141,12 +141,15 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _pall = ds_map_create();
 		
 		for( var i = 0, n = array_length(_surf); i < n; i++ ) {
-			var ww = surface_get_width_safe(_surf[i]);
-			var hh = surface_get_height_safe(_surf[i]);
+			var _s = _surf[i];
+			if(!is_surface(_s)) continue;
+			
+			var ww = surface_get_width_safe(_s);
+			var hh = surface_get_height_safe(_s);
 		
 			var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
-		
-			buffer_get_surface(c_buffer, _surf[i], 0);
+			
+			buffer_get_surface(c_buffer, _s, 0);
 			buffer_seek(c_buffer, buffer_seek_start, 0);
 		
 			for( var i = 0; i < ww * hh; i++ ) {
@@ -166,6 +169,12 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		inputs[| 1].setValue(palette);
 		inputs[| 2].setValue(palette);
+	} #endregion
+	
+	static onValueFromUpdate = function(index) { #region
+		if(LOADING || APPENDING || CLONING) return;
+		
+		if(index == 0) refreshPalette();
 	} #endregion
 	
 	static step = function() { #region

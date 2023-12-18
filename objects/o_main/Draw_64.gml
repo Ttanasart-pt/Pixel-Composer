@@ -1,10 +1,6 @@
 /// @description init
+if(winMan_isMinimized()) exit;
 draw_clear(COLORS.bg);
-
-#region windows init
-	if(OS == os_windows && winMan_isMinimized())
-		exit;
-#endregion
 
 #region widget scroll
 	if(!WIDGET_TAB_BLOCK) {

@@ -34,10 +34,11 @@ enum DS_TYPE {
 	list,
 }
 
-function Action(_type, _object, _data) constructor {
-	type = _type;
-	obj  = _object;
-	data = _data;
+function Action(_type, _object, _data, _trigger = 0) constructor {
+	type    = _type;
+	obj     = _object;
+	data    = _data;
+	trigger = _trigger;
 	extra_data = 0;
 	
 	clear_action = noone;
@@ -107,9 +108,11 @@ function Action(_type, _object, _data) constructor {
 				data = _data;
 				break;
 			case ACTION_TYPE.custom : 
-				data = obj(data);
+				obj(data);
 				break;
 		}
+		
+		if(trigger) trigger();
 	} #endregion
 	
 	static redo = function() { #region
@@ -176,9 +179,11 @@ function Action(_type, _object, _data) constructor {
 				data = _data;
 				break;
 			case ACTION_TYPE.custom : 
-				data = obj(data);
+				obj(data);
 				break;
 		}
+		
+		if(trigger) trigger();
 	} #endregion
 	
 	static toString = function() { #region
@@ -245,12 +250,12 @@ function Action(_type, _object, _data) constructor {
 	} #endregion
 }
 
-function recordAction(_type, _object, _data = -1) { #region
+function recordAction(_type, _object, _data = -1, _trigger = 0) { #region
 	if(IS_UNDOING)		return noone;
 	if(LOADING)			return noone;
 	if(UNDO_HOLDING)	return noone;
 	
-	var act = new Action(_type, _object, _data);
+	var act = new Action(_type, _object, _data, _trigger);
 	array_push(o_main.action_last_frame, act);
 	
 	while(!ds_stack_empty(REDO_STACK)) {

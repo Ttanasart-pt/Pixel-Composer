@@ -3,9 +3,6 @@ function Panel_History() : PanelContent() constructor {
 	w = ui(400);
 	h = ui(480);
 	
-	title_height = 64;
-	padding = 24;
-	
 	anchor = ANCHOR.left | ANCHOR.top;
 	hold = false;
 	
@@ -13,10 +10,9 @@ function Panel_History() : PanelContent() constructor {
 	h_min = 320;
 	hovering = -1;
 		
-	redo_list = ds_list_create();
-	undo_list = ds_list_create();
+	redo_list  = ds_list_create();
+	undo_list  = ds_list_create();
 	click_hold = noone;
-	showHeader  = false;
 	
 	function refreshList() {
 		ds_list_clear(redo_list);
@@ -158,13 +154,10 @@ function Panel_History() : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		PANEL_PADDING
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(in_dialog? ui(56) : ui(24), title_height / 2, title);
-		
 		var px = ui(padding);
-		var py = ui(title_height);
+		var py = ui(padding);
 		var pw = w - ui(padding + padding);
-		var ph = h - ui(title_height + padding);
+		var ph = h - ui(padding + padding);
 	
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		sc_history.setFocusHover(pFOCUS, pHOVER);

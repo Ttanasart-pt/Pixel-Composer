@@ -43,6 +43,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	range_min = 0;
 	range_max = 0;
 	
+	disp_text_fx = [];
+	
 	sprite_index = -1;
 	
 	text_surface = surface_create(1, 1);
@@ -246,7 +248,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 			}
 			
-			KEYBOARD_STRING = "";
+			KEYBOARD_STRING  = "";
 			keyboard_lastkey = -1;
 		#endregion
 		
@@ -261,6 +263,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(KEYBOARD_PRESSED == vk_up   || keyboard_check_pressed(vk_up))   { _input_text = string(toNumber(_input_text) + _inc); apply(); }
 			if(KEYBOARD_PRESSED == vk_down || keyboard_check_pressed(vk_down)) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
 		}
+		
+		if(edited) typing = 100;
 		
 		if(keyboard_check_pressed(vk_home)) {
 			if(key_mod_press(SHIFT)) {
@@ -287,18 +291,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static display_text = function(_x, _y, _text, _w, _m = -1) { #region
 		draw_set_alpha(0.5 + 0.5 * interactable);
+		_y += ui(1);
 		
-		switch(format) {
-			case TEXT_AREA_FORMAT._default :
-				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, color);
-				draw_text_add(_x + disp_x, _y, _text);
-				break;
-			case TEXT_AREA_FORMAT.node_title :
-				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, color);
-				draw_text_add(_x + disp_x, _y, _text);
-				break;
-		}
-		
+		draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, color);
+		draw_text_add(_x + disp_x, _y, _text);
 		draw_set_alpha(1);
 		
 		var _xx = _x + disp_x;
@@ -479,7 +475,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				BLEND_NORMAL
 				
 				draw_set_color(COLORS._main_text_accent);
+				draw_set_alpha(typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000);
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
+				draw_set_alpha(1);
+				
+				if(typing) typing--;
 			#endregion
 			
 			disp_x_to = clamp(disp_x_to, disp_x_min, disp_x_max);

@@ -92,6 +92,8 @@
 	PREFERENCES.collection_preview_speed		= 60;
 	PREFERENCES.collection_scale				= 1;
 	
+	PREFERENCES.caret_blink						= 0.75;
+	
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
 #endregion
 

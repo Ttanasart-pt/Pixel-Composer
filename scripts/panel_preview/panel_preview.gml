@@ -377,17 +377,17 @@ function Panel_Preview() : PanelContent() constructor {
 				canvas_zooming = false;
 		}
 		
-		if(pFOCUS && pHOVER && canvas_hover) {
+		if(pHOVER && canvas_hover) {
 			var _doDragging = false;
 			var _doZooming  = false;
 			
-			if(mouse_press(PREFERENCES.pan_mouse_key)) {
+			if(mouse_press(PREFERENCES.pan_mouse_key, pFOCUS)) {
 				_doDragging = true;
 				canvas_drag_key = PREFERENCES.pan_mouse_key;
-			} else if(mouse_press(mb_left) && canvas_dragging_key) {
+			} else if(mouse_press(mb_left, pFOCUS) && canvas_dragging_key) {
 				_doDragging = true;
 				canvas_drag_key = mb_left;
-			} else if(mouse_press(mb_left) && canvas_zooming_key) {
+			} else if(mouse_press(mb_left, pFOCUS) && canvas_zooming_key) {
 				_doZooming = true;
 				canvas_drag_key = mb_left;
 			}
@@ -461,17 +461,17 @@ function Panel_Preview() : PanelContent() constructor {
 				canvas_zooming = false;
 		}
 		
-		if(pFOCUS && pHOVER && canvas_hover) {
+		if(pHOVER && canvas_hover) {
 			var _doDragging = false;
 			var _doZooming  = false;
 			
-			if(mouse_press(PREFERENCES.pan_mouse_key)) {
+			if(mouse_press(PREFERENCES.pan_mouse_key, pFOCUS)) {
 				_doDragging = true;
 				canvas_drag_key = PREFERENCES.pan_mouse_key;
-			} else if(mouse_press(mb_left) && canvas_dragging_key) {
+			} else if(mouse_press(mb_left, pFOCUS) && canvas_dragging_key) {
 				_doDragging = true;
 				canvas_drag_key = mb_left;
-			} else if(mouse_press(mb_left) && canvas_zooming_key) {
+			} else if(mouse_press(mb_left, pFOCUS) && canvas_zooming_key) {
 				_doZooming = true;
 				canvas_drag_key = mb_left;
 			}

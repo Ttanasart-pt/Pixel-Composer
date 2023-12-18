@@ -1,18 +1,6 @@
 function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Palette";
 	
-	shader = sh_palette_replace;
-	uniform_from       = shader_get_uniform(shader, "colorFrom");
-	uniform_from_count = shader_get_uniform(shader, "colorFrom_amo");
-	
-	uniform_to		   = shader_get_uniform(shader, "colorTo");
-	uniform_to_count   = shader_get_uniform(shader, "colorTo_amo");
-	
-	uniform_ter  = shader_get_uniform(shader, "treshold");
-	uniform_alp  = shader_get_uniform(shader, "alphacmp");
-	uniform_inv  = shader_get_uniform(shader, "inverted");
-	uniform_hrd  = shader_get_uniform(shader, "hardReplace");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue("Palette from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE, "Color to be replaced.")
 		.setDisplay(VALUE_DISPLAY.palette);
@@ -82,29 +70,22 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			_colorTo[i * 4 + 3] = 1;
 		}
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(shader);
-			shader_set_uniform_f_array_safe(uniform_from, _colorFrom);
-			shader_set_uniform_i(uniform_from_count, array_length(fr));
-			shader_set_uniform_i(uniform_alp, alp);
-			shader_set_uniform_i(uniform_hrd, hrd);
+		surface_set_shader(_outSurf, sh_palette_replace);
+			shader_set_f("colorFrom",     _colorFrom);
+			shader_set_i("colorFrom_amo", array_length(fr));
+			shader_set_f("colorTo",		  _colorTo);
+			shader_set_i("colorTo_amo",   array_length(to));
 			
-			shader_set_uniform_f_array_safe(uniform_to, _colorTo);
-			shader_set_uniform_i(uniform_to_count, array_length(to));
-			shader_set_uniform_f(uniform_ter, tr);
-			shader_set_uniform_i(uniform_inv, in);
+			shader_set_i("alphacmp",	alp);
+			shader_set_i("hardReplace", hrd);
+			shader_set_f("treshold",	tr);
+			shader_set_i("inverted",	in);
 			
 			shader_set_i("useMask", is_surface(msk));
 			shader_set_surface("mask", msk);
 			
 			draw_surface_safe(_data[0], 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL
-		surface_reset_target();
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		if(!in) _outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);
