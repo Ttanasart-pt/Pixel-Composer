@@ -62,11 +62,16 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(!is_instanceof(group, Node_Rigid_Group)) return;
+		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
+		for( var i = 0, n = array_length(context_data); i < n; i++ ) 
+			if(is_instanceof(context_data[i], Node_Rigid_Group_Inline))
+				gr = context_data[i];
+					
+		if(gr == noone) return;
 		if(!attributes.show_objects) return;
 		
-		for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
-			var _node = group.nodes[| i];
+		for( var i = 0, n = ds_list_size(gr.nodes); i < n; i++ ) {
+			var _node = gr.nodes[| i];
 			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
 			var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
 			active &= !_hov;
@@ -112,6 +117,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					for( var k = 0; k < array_length(obj); k++ ) {
 						var _o = obj[k]; 
+						
 						if(_o == noone || !instance_exists(_o)) continue;
 						if(is_undefined(_o.phy_active)) continue;
 						
@@ -122,12 +128,6 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						var yy = _rnd? round(_o.phy_position_y) : _o.phy_position_y;
 						
 						draw_surface_ext_safe(_o.surface, xx, yy, ixs, iys, _o.image_angle, _o.image_blend, _o.image_alpha);
-						
-						//draw_set_color(c_red);
-						//draw_circle(_o.phy_com_x, _o.phy_com_y, 2, false);
-						
-						//draw_set_color(c_blue);
-						//draw_circle(_o.phy_position_x, _o.phy_position_y, 2, false);
 					}
 				}
 			}

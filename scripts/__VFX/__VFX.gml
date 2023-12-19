@@ -330,8 +330,8 @@ function __part(_node) constructor {
 #region helper
 	#macro UPDATE_PART_FORWARD static updateParticleForward = function() {		\
 		var pt = outputs[| 0];													\
-		for( var i = 0; i < ds_list_size(pt.value_to); i++ ) {					\
-			var _n = pt.value_to[| i];											\
+		for( var i = 0; i < array_length(pt.value_to); i++ ) {					\
+			var _n = pt.value_to[i];											\
 			if(_n.value_from != pt) continue;									\
 																				\
 			if(variable_struct_exists(_n.node, "updateParticleForward"))		\

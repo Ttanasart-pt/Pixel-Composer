@@ -161,49 +161,50 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		var cDep    = attrDepth();
 		
-		var ww = 1, hh  = 1;
-		var _backDraw   = _back;
-		var _foreDraw   = _fore;
+		#region dimension
+			var ww = 1;
+			var hh = 1;
+			var _atlas  = is_instanceof(_fore, SurfaceAtlas);
 		
-		var _atlas  = is_instanceof(_fore, SurfaceAtlas);
+			switch(_outp) {
+				case 0 :
+					ww = surface_get_width_safe(_back);
+					hh = surface_get_height_safe(_back);
+					break;
+				case 1 :
+					ww = surface_get_width_safe(_fore);
+					hh = surface_get_height_safe(_fore);
+					break;
+				case 2 :
+					ww = surface_get_width_safe(_mask);
+					hh = surface_get_height_safe(_mask);
+					break;
+				case 3 :
+					ww = max(surface_get_width_safe(_back),  surface_get_width_safe(_fore),  surface_get_width_safe(_mask));
+					hh = max(surface_get_height_safe(_back), surface_get_height_safe(_fore), surface_get_height_safe(_mask));
+					break;
+				case 4 :
+					ww = _out_dim[0];
+					hh = _out_dim[1];
+					break;
+			}
+		#endregion
 		
-		switch(_outp) { // Dimension
-			case 0 :
-				ww = surface_get_width_safe(_back);
-				hh = surface_get_height_safe(_back);
-				break;
-			case 1 :
-				ww = surface_get_width_safe(_fore);
-				hh = surface_get_height_safe(_fore);
-				break;
-			case 2 :
-				ww = surface_get_width_safe(_mask);
-				hh = surface_get_height_safe(_mask);
-				break;
-			case 3 :
-				ww = max(surface_get_width_safe(_back),  surface_get_width_safe(_fore),  surface_get_width_safe(_mask));
-				hh = max(surface_get_height_safe(_back), surface_get_height_safe(_fore), surface_get_height_safe(_mask));
-				break;
-			case 4 :
-				ww = _out_dim[0];
-				hh = _out_dim[1];
-				break;
-		}
+		for( var i = 0; i < 2; i++ )
+			temp_surface[i] = surface_verify(temp_surface[i], ww, hh, cDep);
 		
-		if(_fill == 0 || _atlas) { // Direct placement
-			for( var i = 0; i < 2; i++ )
-				temp_surface[i] = surface_verify(temp_surface[i], ww, hh, cDep);
-			
-			_foreDraw = temp_surface[1];
-				
+		var _backDraw   = temp_surface[0];
+		var _foreDraw   = temp_surface[1];
+		
+		if(_fill == 0 || _atlas) { #region surface position
 			if(_atlas) {
 				if(_outp == 0) {
 					surface_set_shader(_foreDraw, noone,, BLEND.over);
 						draw_surface_safe(_fore.getSurface(), _fore.x, _fore.y);
 					surface_reset_shader();
-				} else if(_outp == 1) {
-					_backDraw = temp_surface[0];
 					
+					_backDraw = _back;
+				} else if(_outp == 1) {
 					surface_set_shader(_foreDraw, noone,, BLEND.over);
 						draw_surface_safe(_fore, 0, 0);
 					surface_reset_shader();
@@ -225,20 +226,24 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				surface_set_shader(_foreDraw, noone,, BLEND.over);
 					draw_surface_safe(_fore, px - fw / 2, py - fh / 2);
 				surface_reset_shader();
+				
+				_backDraw = _back;
 			}
-		}
+		} #endregion
 		
-		var _output = noone;
-		
-		if(is_instanceof(_outSurf, SurfaceAtlas)) 
-			_output = surface_verify(_outSurf.surface.surface, ww, hh, cDep);
-		else	  
-			_output = surface_verify(_outSurf, ww, hh, cDep);
+		var _osurf  = is_instanceof(_outSurf, SurfaceAtlas)? _outSurf.surface.surface : _outSurf;
+		var _output = surface_verify(_osurf, ww, hh, cDep);
 		
 		_mask = mask_modify(_mask, _mskInv, _mskFea);
 		
 		surface_set_shader(_output, noone);
-			draw_surface_blend(_backDraw, _foreDraw, _type, _opacity, _pre_alp, _mask, _fill == 2);
+			if(is_surface(_fore)) {
+				draw_surface_blend(_backDraw, _foreDraw, _type, _opacity, _pre_alp, _mask, _fill == 2);
+			} else { 
+				BLEND_OVERRIDE
+				draw_surface(_backDraw, 0, 0);
+				BLEND_NORMAL
+			}
 		surface_reset_shader();
 		
 		if(_atlas) {

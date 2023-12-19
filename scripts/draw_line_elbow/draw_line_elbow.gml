@@ -46,9 +46,9 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 			draw_set_color(col1);	draw_line_width(x0, y0, xx0, y0, thick);
 			draw_set_color(col2);	draw_line_width(xx1, y1, x1, y1, thick);
 		
-			draw_line_dashed_color(xx0, y0, xx0, cy, thick, col1,   cm, 12);
-			draw_line_dashed_color(xx0, cy, xx1, cy, thick,   cm,   cm, 12);
-			draw_line_dashed_color(xx1, cy, xx1, y1, thick,   cm, col2, 12);
+			draw_line_dashed_color(xx0, y0, xx0, cy, thick, col1,   cm, 6 * _s);
+			draw_line_dashed_color(xx0, cy, xx1, cy, thick,   cm,   cm, 6 * _s);
+			draw_line_dashed_color(xx1, cy, xx1, y1, thick,   cm, col2, 6 * _s);
 		}
 	} else {
 		if(type == LINE_STYLE.solid) {
@@ -63,9 +63,9 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 				draw_corner(cx, y1 - corner * iy, cx, y1, cx + corner * sign(x1 - cx), y1, thick, cm, sample);
 			}
 		} else {
-			draw_line_dashed_color(x0, y0, cx, y0, thick, col1,   cm, 12);
-			draw_line_dashed_color(cx, y0, cx, y1, thick,   cm,   cm, 12);
-			draw_line_dashed_color(cx, y1, x1, y1, thick,   cm, col2, 12);
+			draw_line_dashed_color(x0, y0, cx, y0, thick, col1,   cm, 6 * _s);
+			draw_line_dashed_color(cx, y0, cx, y1, thick,   cm,   cm, 6 * _s);
+			draw_line_dashed_color(cx, y1, x1, y1, thick,   cm, col2, 6 * _s);
 		}
 	}
 }

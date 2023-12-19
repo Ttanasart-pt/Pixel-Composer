@@ -80,11 +80,16 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(!is_instanceof(group, Node_Rigid_Group)) return;
+		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
+		for( var i = 0, n = array_length(context_data); i < n; i++ ) 
+			if(is_instanceof(context_data[i], Node_Rigid_Group_Inline))
+				gr = context_data[i];
+					
+		if(gr == noone) return;
 		if(!attributes.show_objects) return;
 		
-		for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
-			var _node = group.nodes[| i];
+		for( var i = 0, n = ds_list_size(gr.nodes); i < n; i++ ) {
+			var _node = gr.nodes[| i];
 			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
 			var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
 			active &= !_hov;

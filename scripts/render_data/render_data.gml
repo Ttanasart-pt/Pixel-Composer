@@ -133,6 +133,8 @@ function __nodeIsRenderLeaf(_node) { #region
 	if(_node.passiveDynamic) { _node.forwardPassiveDynamic();  LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); return false; }
 	
 	if(!_node.isActiveDynamic())							 { LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); return false; }
+	for( var i = 0, n = array_length(_node.context_data); i < n; i++ ) 
+		if(_node.context_data[i].managedRenderOrder) return false;
 	
 	return true;
 } #endregion

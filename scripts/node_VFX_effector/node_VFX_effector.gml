@@ -177,9 +177,9 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		var jun = outputs[| 0];
-		for(var j = 0; j < ds_list_size(jun.value_to); j++) {
-			if(jun.value_to[| j].value_from == jun)
-				jun.value_to[| j].node.doUpdate();
+		for(var j = 0; j < array_length(jun.value_to); j++) {
+			if(jun.value_to[j].value_from == jun)
+				jun.value_to[j].node.doUpdate();
 		}
 	} #endregion
 	

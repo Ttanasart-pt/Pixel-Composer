@@ -41,6 +41,7 @@ function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, t
 	
 	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 32 * PREFERENCES.connection_line_sample);
 	sample = clamp(sample, 2, 128);
+	if(type == LINE_STYLE.dashed) sample *= 2;
 	
 	var x2 = lerp(x0, x1, 0. - sign(x1 - x0) * 0.2) - abs(y1 - y0) * 0.1;
 	var x3 = lerp(x0, x1, 1. + sign(x1 - x0) * 0.2) + abs(y1 - y0) * 0.1;
@@ -49,9 +50,6 @@ function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, t
 	
 	var c   = draw_get_color();
 	var ox, oy, nx, ny, t, it, oc, nc;
-	var dash_distance = 2;
-	
-	var line = new LineDrawer(thick);
 	
 	for( var i = 0; i <= sample; i++ )  {
 		t = i / sample;
@@ -77,7 +75,7 @@ function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, t
 					draw_line_round_color(ox, oy, nx, ny, thick, oc, nc, i == 1, i == sample);
 					break;
 				case LINE_STYLE.dashed :
-					if(floor(i / dash_distance) % 2)
+					if(floor(i % 2))
 						draw_line_round_color(ox, oy, nx, ny, thick, oc, nc);
 					break;
 			}
@@ -87,8 +85,6 @@ function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, t
 		oy = ny;
 		oc = nc;
 	}
-	
-	line.finish();
 }
 
 function draw_line_curve_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white) {

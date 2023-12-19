@@ -113,7 +113,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	draw_dummy  = false;
 	
 	input_dummy.onSetFrom = function(juncFrom) { #region
-		ds_list_remove(juncFrom.value_to, input_dummy);
+		array_remove(juncFrom.value_to, input_dummy);
 		input_dummy.value_from = noone;
 		
 		var input = nodeBuild("Node_Group_Input", 0, 0, self);
@@ -225,8 +225,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for( var i = custom_output_index; i < ds_list_size(outputs); i++ ) {
 			var _junc = outputs[| i];
 			
-			for( var j = 0; j < ds_list_size(_junc.value_to); j++ ) {
-				var _to = _junc.value_to[| j];
+			for( var j = 0; j < array_length(_junc.value_to); j++ ) {
+				var _to = _junc.value_to[j];
 				if(_to.value_from != _junc) continue;
 				array_push_unique(nodes, _to.node);
 			}

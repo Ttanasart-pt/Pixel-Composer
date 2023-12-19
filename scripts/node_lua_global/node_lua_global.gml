@@ -91,8 +91,8 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static doCompile = function() { #region
 		compiled = true;
 		
-		for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
-			var _j = outputs[| 0].value_to[| i];
+		for( var i = 0; i < array_length(outputs[| 0].value_to); i++ ) {
+			var _j = outputs[| 0].value_to[i];
 			if(_j.value_from != outputs[| 0]) continue;
 			_j.node.doCompile();
 		}

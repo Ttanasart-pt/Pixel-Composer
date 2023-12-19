@@ -164,8 +164,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(index == 2) {
 			if(outputs[| 0].type != _val_type) {
 				var _o = outputs[| 0];
-				for(var j = 0; j < ds_list_size(_o.value_to); j++) {
-					var _to = _o.value_to[| j];
+				for(var j = 0; j < array_length(_o.value_to); j++) {
+					var _to = _o.value_to[j];
 					if(_to.value_from == _o)
 						_to.removeFrom();
 				}
@@ -393,8 +393,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static ungroup = function() { #region
 		var fr = inParent.value_from;
 		
-		for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
-			var to = outputs[| 0].value_to[| i];
+		for( var i = 0; i < array_length(outputs[| 0].value_to); i++ ) {
+			var to = outputs[| 0].value_to[i];
 			if(to.value_from != outputs[| 0]) continue;
 			
 			to.setFrom(fr);

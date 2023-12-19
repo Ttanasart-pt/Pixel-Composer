@@ -95,8 +95,8 @@ function dynaSurf_output_getNextNode() { #region
 		
 	var junc  = group.outputs[| 0];
 	var nodes = [];
-	for(var j = 0; j < ds_list_size(junc.value_to); j++) {
-		var _to = junc.value_to[| j];
+	for(var j = 0; j < array_length(junc.value_to); j++) {
+		var _to = junc.value_to[j];
 		if(!_to.node.isRenderActive()) continue;
 			
 		if(!_to.node.active || _to.isLeaf()) 

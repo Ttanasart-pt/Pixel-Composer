@@ -129,8 +129,8 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(index == 0 || index == 2) compiled = false;
 		
 		if(index == 3) {
-			for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
-				var _j = outputs[| 0].value_to[| i];
+			for( var i = 0; i < array_length(outputs[| 0].value_to); i++ ) {
+				var _j = outputs[| 0].value_to[i];
 				if(_j.value_from != outputs[| 0]) continue;
 				_j.node.compiled = false;
 			}
@@ -222,8 +222,8 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		addCode();
 		compiled = true;
 		
-		for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
-			var _j = outputs[| 0].value_to[| i];
+		for( var i = 0; i < array_length(outputs[| 0].value_to); i++ ) {
+			var _j = outputs[| 0].value_to[i];
 			if(_j.value_from != outputs[| 0]) continue;
 			_j.node.doCompile();
 		}

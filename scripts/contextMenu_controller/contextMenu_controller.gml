@@ -28,18 +28,19 @@
 		return dia;
 	}
 	
-	function menuItem(name, func, spr = noone, hotkey = noone, toggle = noone) {
+	function menuItem(name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) {
 		INLINE
-		return new MenuItem(name, func, spr, hotkey, toggle);
+		return new MenuItem(name, func, spr, hotkey, toggle, params);
 	}
 	
-	function MenuItem(name, func, spr = noone, hotkey = noone, toggle = noone) constructor {
+	function MenuItem(name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) constructor {
 		active = true;
 		self.name	= name;
 		self.func	= func;
 		self.spr	= spr;
 		self.hotkey = hotkey;
 		self.toggle = toggle;
+		self.params = params;
 		color   = c_white;
 		isShelf = false;
 		

@@ -44,13 +44,11 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static getNextNodes = function() { #region
 		if(is_undefined(outParent)) return [];
-		//group.setRenderStatus(true);
-		//printIf(global.FLAG.render, "Value to amount " + string(ds_list_size(outParent.value_to)));
 		
 		LOG_BLOCK_START();
 		var nodes = [];
-		for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
-			var _to = outParent.value_to[| j];
+		for(var j = 0; j < array_length(outParent.value_to); j++) {
+			var _to = outParent.value_to[j];
 			if(!_to.node.isRenderActive()) continue;
 			//printIf(global.FLAG.render, "Value to " + _to.name);
 			
@@ -130,8 +128,8 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static ungroup = function() { #region
 		var fr = inputs[| 0].value_from;
 		
-		for( var i = 0; i < ds_list_size(outParent.value_to); i++ ) {
-			var to = outParent.value_to[| i];
+		for( var i = 0; i < array_length(outParent.value_to); i++ ) {
+			var to = outParent.value_to[i];
 			if(to.value_from != outParent) continue;
 			
 			to.setFrom(fr);

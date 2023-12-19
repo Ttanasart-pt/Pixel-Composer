@@ -78,13 +78,15 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	newMesh(0);
 	
-	tools = [
+	tools = [];
+	
+	mesh_tools = [
 		new NodeTool( "Mesh edit",		THEME.mesh_tool_edit ),
 		new NodeTool( "Anchor remove",  THEME.mesh_tool_delete ),
 	];
 		
 	is_convex = true;
-	hover = -1;
+	hover     = -1;
 	anchor_dragging = -1;
 	anchor_drag_sx  = -1;
 	anchor_drag_sy  = -1;
@@ -159,13 +161,21 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				drawOverlayPreviewSingle(i, _x, _y, _s, _pr_x, _pr_y, _tex[i]);
 		} else 
 			drawOverlayPreviewSingle(0, _x, _y, _s, _pr_x, _pr_y, _tex);
+			
 		return inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(previewing == 0 && is_instanceof(group, Node_Rigid_Group)) {
-			for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
-				var _node = group.nodes[| i];
+		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
+		for( var i = 0, n = array_length(context_data); i < n; i++ ) 
+			if(is_instanceof(context_data[i], Node_Rigid_Group_Inline))
+				gr = context_data[i];
+					
+		if(gr == noone) return;
+		
+		if(previewing == 0) {
+			for( var i = 0, n = ds_list_size(gr.nodes); i < n; i++ ) {
+				var _node = gr.nodes[| i];
 				if(!is_instanceof(_node, Node_Rigid_Object)) continue;
 				var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
 				active &= _hov;
@@ -658,7 +668,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		//
+		if(frame == 0) reset();
 	} #endregion
 	
 	static step = function() { #region
@@ -667,6 +677,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		inputs[|  9].setVisible(_shp == 2);
 		inputs[| 10].setVisible(_shp == 2);
 		inputs[| 11].setVisible(_shp == 2);
+		
+		tools = _shp == 2? mesh_tools : -1;
 		
 		var _tex  = getInputData(6);
 		

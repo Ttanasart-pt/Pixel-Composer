@@ -69,7 +69,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		internalName = "";
 		onSetDisplayName = noone;
 		renamed = false;
-	
+		
 		tooltip = "";
 		x = _x;
 		y = _y;
@@ -80,6 +80,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		min_h = 0;
 		will_setHeight = false;
 		
+		selectable   = true;
 		draw_padding = 4;
 		auto_height  = true;
 		
@@ -685,8 +686,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		for( var i = 0, n = ds_list_size(outputs); i < n; i++ ) {
 			var _outp = outputs[| i];
 			
-			for(var j = 0; j < ds_list_size(_outp.value_to); j++) {
-				var _to = _outp.value_to[| j];
+			for(var j = 0; j < array_length(_outp.value_to); j++) {
+				var _to = _outp.value_to[j];
 				if(!_to.node.active || _to.value_from != _outp) continue; 
 				
 				_to.node.passiveDynamic = true;
@@ -733,8 +734,18 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!_ot.forward) continue;
 			if(_ot.type == VALUE_TYPE.node) continue;
 			
+			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
+				var _to = _ot.value_to_loop[j];
+				if(!_to.active) continue; 
+				if(!_to.bypassNextNode()) continue;
+				
+				LOG_BLOCK_END();
+				LOG_BLOCK_END();
+		
+				return _to.getNextNodes();
+			}
+		
 			var _tos = _ot.getJunctionTo();
-			
 			for( var j = 0; j < array_length(_tos); j++ ) {
 				var _to = _tos[j];
 				
@@ -760,6 +771,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!_ot.forward) continue;
 			if(_ot.type == VALUE_TYPE.node) continue;
 			
+			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
+				var _to = _ot.value_to_loop[j];
+				if(!_to.active) continue; 
+				if(!_to.bypassNextNode()) continue;
+			
+				return _to.getNextNodes();
+			}
+		
 			var _tos = _ot.getJunctionTo();
 			for( var j = 0; j < array_length(_tos); j++ )
 				array_push(nodes, _tos[j].node);
@@ -1053,8 +1072,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			var jun       = outputs[| i];
 			var connected = false;
 			
-			for( var j = 0; j < ds_list_size(jun.value_to); j++ ) {
-				if(jun.value_to[| j].value_from == jun) 
+			for( var j = 0; j < array_length(jun.value_to); j++ ) {
+				if(jun.value_to[j].value_from == jun) 
 					connected = true;
 			}
 			
@@ -1365,8 +1384,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
 			
-			for(var j = 0; j < ds_list_size(jun.value_to); j++) {
-				var _vt = jun.value_to[| j];
+			for(var j = 0; j < array_length(jun.value_to); j++) {
+				var _vt = jun.value_to[j];
 				if(_vt.isLeaf()) break;
 				if(_vt.value_from.node != self) break;
 				
@@ -1380,7 +1399,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				}
 			}
 			
-			ds_list_clear(jun.value_to);
+			jun.value_to = [];
 		}
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ )
@@ -1546,8 +1565,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _ou = outputs[| i];
-			for(var j = 0; j < ds_list_size(_ou.value_to); j++) {
-				var _to = _ou.value_to[| j];
+			for(var j = 0; j < array_length(_ou.value_to); j++) {
+				var _to = _ou.value_to[j];
 				if(_to.value_from != _ou) continue;
 				if(!_to.node.active) continue;
 				if(_to.node.group == group) continue;

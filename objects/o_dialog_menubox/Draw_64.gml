@@ -56,6 +56,7 @@ if(!ready) exit;
 					name: _menuItem.name,
 					index: i,
 					context: context,
+					params: _menuItem.params,
 				};
 				
 				var _res = _menuItem.func(_dat);

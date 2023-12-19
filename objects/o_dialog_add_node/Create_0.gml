@@ -212,7 +212,7 @@ event_inherited();
 				
 				var _ot = _new_list[| i].outputs;
 				for( var j = 0; j < ds_list_size(_ot); j++ ) {
-					if(ds_list_empty(_ot[| j].value_to))
+					if(array_empty(_ot[| j].value_to))
 						ds_list_add(_outputs, _ot[| j]);
 				}
 			}

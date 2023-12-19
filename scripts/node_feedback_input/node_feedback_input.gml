@@ -1,6 +1,6 @@
 function Node_Feedback_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, _group) constructor {
-	name  = "Feedback Input";
-	color = COLORS.node_blend_feedback;
+	name        = "Feedback Input";
+	color       = COLORS.node_blend_feedback;
 	is_group_io = true;
 	
 	w = 96;
@@ -10,8 +10,8 @@ function Node_Feedback_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
 	outputs[| 0].getValueRecursive = function(_time) {
 		var _node_output = noone;
-		for( var i = 0; i < ds_list_size(outputs[| 1].value_to); i++ ) {
-			var vt = outputs[| 1].value_to[| i];
+		for( var i = 0; i < array_length(outputs[| 1].value_to); i++ ) {
+			var vt = outputs[| 1].value_to[i];
 			if(vt.value_from == outputs[| 1])
 				_node_output = vt;
 		}

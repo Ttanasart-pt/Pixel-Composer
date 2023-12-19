@@ -270,6 +270,13 @@ function __initNodes() {
 		addNodeObject(iter, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
 	#endregion
 	
+	var iter_il = ds_list_create(); #region
+	addNodeCatagory("Loop", iter_il, ["Node_Iterate_Inline"]);
+		ds_list_add(iter_il, "Loops");
+		addNodeObject(iter_il, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
+		addNodeObject(iter_il, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
+	#endregion
+	
 	var itere = ds_list_create(); #region
 	addNodeCatagory("Loop", itere, ["Node_Iterate_Each"]);
 		ds_list_add(itere, "Groups");
@@ -994,8 +1001,10 @@ function __initNodes() {
 		addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147).hideRecent();
 		addNodeObject(hid, "RigidSim",			s_node_rigidSim,		"Node_Rigid_Group",				[1, Node_Rigid_Group],, "Create group for rigidbody simulation.").setVersion(1110).hideRecent();
 		addNodeObject(hid, "RigidSim Global",	s_node_rigidSim_global,	"Node_Rigid_Global",			[1, Node_Rigid_Global]).setVersion(1110).hideRecent();
-		addNodeObject(hid, "SmokeSim",			s_node_smokeSim_group,		"Node_Fluid_Group",			[1, Node_Fluid_Group],, "Create group for fluid simulation.").setVersion(1120).hideRecent();
-		addNodeObject(hid, "StrandSim",			s_node_strandSim,			"Node_Strand_Group",		[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140).hideRecent();
+		addNodeObject(hid, "SmokeSim",			s_node_smokeSim_group,	"Node_Fluid_Group",				[1, Node_Fluid_Group],, "Create group for fluid simulation.").setVersion(1120).hideRecent();
+		addNodeObject(hid, "StrandSim",			s_node_strandSim,		"Node_Strand_Group",			[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140).hideRecent();
+		addNodeObject(hid, "Feedback",			s_node_feedback,		"Node_Feedback_Inline",			[1, Node_Feedback_Inline]).hideRecent();
+		addNodeObject(hid, "Loop",				s_node_loop,			"Node_Iterate_Inline",			[1, Node_Iterate_Inline]).hideRecent();
 		
 		ds_list_add(hid, "DynaSurf");
 		addNodeObject(hid, "Input",		s_node_pixel_builder,	"Node_DynaSurf_In",			[1, Node_DynaSurf_In]).hideRecent();

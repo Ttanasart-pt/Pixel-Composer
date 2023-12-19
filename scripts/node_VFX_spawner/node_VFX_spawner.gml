@@ -46,12 +46,12 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	
 	static onPartCreate = function(part) { #region
 		var vt = outputs[| 1];
-		if(ds_list_empty(vt.value_to)) return;
+		if(array_empty(vt.value_to)) return;
 		
 		var pv = part.getPivot();
 		
-		for( var i = 0; i < ds_list_size(vt.value_to); i++ ) {
-			var _n = vt.value_to[| i];
+		for( var i = 0; i < array_length(vt.value_to); i++ ) {
+			var _n = vt.value_to[i];
 			if(_n.value_from != vt) continue;
 			_n.node.spawn(part.frame, pv);
 		}
@@ -59,12 +59,12 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	
 	static onPartStep = function(part) { #region
 		var vt = outputs[| 2];
-		if(ds_list_empty(vt.value_to)) return;
+		if(array_empty(vt.value_to)) return;
 		
 		var pv = part.getPivot();
 		
-		for( var i = 0; i < ds_list_size(vt.value_to); i++ ) {
-			var _n = vt.value_to[| i];
+		for( var i = 0; i < array_length(vt.value_to); i++ ) {
+			var _n = vt.value_to[i];
 			if(_n.value_from != vt) continue;
 			_n.node.spawn(part.frame, pv);
 		}
@@ -72,12 +72,12 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	
 	static onPartDestroy = function(part) { #region
 		var vt = outputs[| 3];
-		if(ds_list_empty(vt.value_to)) return;
+		if(array_empty(vt.value_to)) return;
 		
 		var pv = part.getPivot();
 			
-		for( var i = 0; i < ds_list_size(vt.value_to); i++ ) {
-			var _n = vt.value_to[| i];
+		for( var i = 0; i < array_length(vt.value_to); i++ ) {
+			var _n = vt.value_to[i];
 			if(_n.value_from != vt) continue;
 			_n.node.spawn(part.frame, pv);
 		}
