@@ -76,10 +76,16 @@ function __sortGraph(_list, _nodeList) { #region
 		var _isRoot = true;
 		
 		for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
-			if(!array_empty(_node.outputs[| j].getJunctionTo())) {
-				_isRoot = false;
-				break;
+			var _to = _node.outputs[| j].getJunctionTo();
+			
+			for( var k = 0, p = array_length(_to); k < p; k++ ) {
+				if(ds_list_exist(_nodeList, _to[k].node)) {
+					_isRoot = false;
+					break;
+				}
 			}
+			
+			if(!_isRoot) break;
 		}
 		
 		if(_isRoot) array_push(_root, _node);
@@ -94,19 +100,20 @@ function __sortGraph(_list, _nodeList) { #region
 		var _node = ds_stack_pop(_st);
 		if(_node.topoSorted) continue;
 		
-		var _isLeaf = true;
 		var _childs = [];
 		
 		for( var i = 0, n = ds_list_size(_node.inputs); i < n; i++ ) {
 			var _in = _node.inputs[| i];
-			if(_in.isLeaf())   continue;
-			if(_in.value_from.node.topoSorted) continue;
+			var _fr = _in.value_from;
 			
-			array_push(_childs, _in.value_from.node);
-			_isLeaf = false;
+			if(_fr == noone)						continue;
+			if(!ds_list_exist(_nodeList, _fr.node)) continue;
+			if(_fr.node.topoSorted)					continue;
+			
+			array_push(_childs, _fr.node);
 		}
 		
-		if(_isLeaf) {
+		if(array_empty(_childs)) {
 			ds_list_add(_list, _node);
 			_node.topoSorted = true;
 			
@@ -118,6 +125,14 @@ function __sortGraph(_list, _nodeList) { #region
 				ds_stack_push(_st, _childs[i]);
 		}
 	}
+} #endregion
+
+function NodeListSort(_list, _nodeList) { #region
+	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ )
+		_nodeList[| i].topoSorted = false;
+	
+	ds_list_clear(_list);
+	__sortGraph(_list, _nodeList);
 } #endregion
 
 function __nodeIsRenderLeaf(_node) { #region
@@ -235,14 +250,6 @@ function Render(partial = false, runAction = false) { #region
 	LOG_END();
 } #endregion
 
-function NodeListSort(_list, _nodeList) { #region
-	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ )
-		_nodeList[| i].topoSorted = false;
-	
-	ds_list_clear(_list);
-	__sortGraph(_list, _nodeList);
-} #endregion
-
 function __renderListReset(list) { #region
 	for( var i = 0; i < ds_list_size(list); i++ ) {
 		list[| i].setRenderStatus(false);
@@ -252,9 +259,9 @@ function __renderListReset(list) { #region
 	}
 } #endregion
 
-function RenderList(list, runAction = false) { #region
+function RenderList(list) { #region
 	LOG_BLOCK_START();
-	LOG_IF(global.FLAG.render == 1, "=============== RENDER LIST START ===============");
+	LOG_IF(global.FLAG.render == 1, $"=============== RENDER LIST START [{ds_list_size(list)}] ===============");
 	var queue = ds_queue_create();
 	
 	try {
@@ -295,7 +302,6 @@ function RenderList(list, runAction = false) { #region
 			LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"}");
 			
 			if(renderable) {
-				if(runAction && rendering.hasInspector1Update()) rendering.inspector1Update();
 				rendering.doUpdate();
 				
 				var nextNodes = rendering.getNextNodes();

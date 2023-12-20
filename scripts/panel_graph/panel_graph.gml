@@ -866,7 +866,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								var _to = value_focus.value_to_loop[i];
 								array_push(menu, menuItem($"[{_to.junc_in.node.display_name}] {_to.junc_in.getName()}", function(data) {
 									nodeDelete(data.params.juncTo);
-								}, THEME.feedback,,, { juncTo: _to }));
+								}, _to.icon_24,,, { juncTo: _to }));
 							}
 						} else {
 							var sep = false;
@@ -886,7 +886,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								var _jun = value_focus.value_from_loop.junc_out;
 								array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", function(data) {
 									__junction_hovering.removeFromLoop();
-								}, THEME.feedback));
+								}, value_focus.value_from_loop.icon_24));
 							}
 						}
 						
@@ -1283,11 +1283,32 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(_connect[0] == -9) {
 					if(_connect[1].value_from_loop != noone)
 						nodeDelete(_connect[1].value_from_loop);
+						
+					var menu = [
+						menuItem("Feedback", function(data) {
+							var junc_in  = data.params.junc_in;
+							var junc_out = data.params.junc_out;
+							
+							var feed = nodeBuild("Node_Feedback_Inline", 0, 0);
+							feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
+							feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
+							feed.scanJunc();
+							
+						}, THEME.feedback_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
+						
+						menuItem("Loop", function(data) {
+							var junc_in  = data.params.junc_in;
+							var junc_out = data.params.junc_out;
+							
+							var feed = nodeBuild("Node_Iterate_Inline", 0, 0);
+							feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
+							feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
+							feed.scanJunc();
+							
+						}, THEME.loop_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
+					];
 					
-					var feed = nodeBuild(key_mod_press(SHIFT)? "Node_Iterate_Inline" : "Node_Feedback_Inline", 0, 0);
-					feed.attributes.junc_in  = [ _connect[1].node.node_id, _connect[1].index ];
-					feed.attributes.junc_out = [ _connect[2].node.node_id, _connect[2].index ];
-					feed.scanJunc();
+					menuCall(,,, menu);
 				}
 			}
 		} else if(!value_dragging && value_focus && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {

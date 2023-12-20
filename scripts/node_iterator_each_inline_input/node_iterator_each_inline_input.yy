@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "draw_line_curve",
+  "name": "node_iterator_each_inline_input",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "draw",
-    "path": "folders/functions/draw.yy",
+    "name": "for each",
+    "path": "folders/nodes/data/iterate/for each.yy",
   },
 }

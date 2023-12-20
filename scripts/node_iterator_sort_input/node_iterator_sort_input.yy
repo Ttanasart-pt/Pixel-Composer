@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "for sort",
-    "path": "folders/nodes/data/iterate/for sort.yy",
+    "path": "folders/nodes/data/iterate/_legacy/for sort.yy",
   },
 }

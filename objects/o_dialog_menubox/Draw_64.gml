@@ -126,8 +126,6 @@ if(!ready) exit;
 					draw_text(_bx, _by, _str);
 			}
 		} else {
-			var tx = dialog_x + show_icon * ui(32) + ui(16);
-			
 			if(_menuItem.spr != noone) {
 				var spr = is_array(_menuItem.spr)? _menuItem.spr[0] : _menuItem.spr;
 				var ind = is_array(_menuItem.spr)? _menuItem.spr[1] : 0;
@@ -139,6 +137,7 @@ if(!ready) exit;
 				if(tog) draw_sprite_ui(THEME.icon_toggle, 0, dialog_x + ui(24), yy + hght / 2,,,, COLORS._main_icon);
 			}
 			
+			var tx = dialog_x + show_icon * ui(32) + ui(16);
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			draw_set_alpha(_menuItem.active * 0.75 + 0.25);
 			draw_text(tx, yy + hght / 2, label);

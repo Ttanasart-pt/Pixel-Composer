@@ -16,6 +16,21 @@
 		dia.setMenu(menu, align);
 		return dia;
 	}
+	
+	function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = [], context = noone) {
+		var dia = instance_create(_x, _y, o_pie_menu);
+		if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
+			var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
+			
+			for( var i = 0, n = array_length(callbacks); i < n; i++ ) 
+				array_append(menu, callbacks[i].populate());
+		}
+		
+		dia.menu_id = menu_id;
+		dia.context = context;
+		dia.setMenu(menu);
+		return dia;
+	}
 
 	function submenuCall(_data, menu = []) {
 		var dia = instance_create_depth(_data.x - ui(4), _data.y, _data.depth - 1, o_dialog_menubox);

@@ -1,7 +1,8 @@
 function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Feedback";
-	color = COLORS.node_blend_feedback;
-	icon  = THEME.feedback;
+	name    = "Feedback";
+	color   = COLORS.node_blend_feedback;
+	icon    = THEME.feedback;
+	icon_24 = THEME.feedback_24;
 	
 	selectable      = false;
 	update_on_frame = true;

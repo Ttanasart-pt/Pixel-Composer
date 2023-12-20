@@ -11,6 +11,9 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_hover_al = 0;
 	selectable     = false;
 	
+	input_node_type  = noone;
+	output_node_type = noone;
+	
 	static removeNode = function(node) { #region
 		array_remove(attributes.members, node.node_id);
 		ds_list_remove(nodes, node);
@@ -33,9 +36,9 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _rad = 6;
 		var _stp = 15;
 		
-		var _nx0 = _node.x - 32 + _rad;
+		var _nx0 = is_instanceof(_node, input_node_type)?  _node.x + _node.w / 2 : _node.x - 32 + _rad;
 		var _ny0 = _node.y - 32 + _rad;
-		var _nx1 = _node.x + (_node == self? _node.w / 2 : _node.w + 32 - _rad);
+		var _nx1 = is_instanceof(_node, output_node_type)? _node.x + _node.w / 2 : _node.x + _node.w + 32 - _rad;
 		var _ny1 = _node.y + _node.h + 32 - _rad;
 		
 		for( var i =   0; i <  90; i += _stp ) _vertex[_ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];

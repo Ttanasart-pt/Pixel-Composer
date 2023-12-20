@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "for each",
-    "path": "folders/nodes/data/iterate/for each.yy",
+    "path": "folders/nodes/data/iterate/_legacy/for each.yy",
   },
 }

@@ -1,12 +1,13 @@
 function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x, _y, _group) constructor {
-	name  = "Loop";
-	color = COLORS.node_blend_loop;
+	name    = "Loop";
+	color   = COLORS.node_blend_loop;
+	icon    = THEME.loop;
+	icon_24 = THEME.loop_24;
 	
 	inputs[| 0] = nodeValue("Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.uncache();
 		
 	managedRenderOrder = true;
-	selectable         = false;
 	
 	draw_line_feed        = true;
 	draw_line_shift_x	  = 0;

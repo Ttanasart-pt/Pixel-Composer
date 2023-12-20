@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "for filter",
-    "path": "folders/nodes/data/iterate/for filter.yy",
+    "path": "folders/nodes/data/iterate/_legacy/for filter.yy",
   },
 }

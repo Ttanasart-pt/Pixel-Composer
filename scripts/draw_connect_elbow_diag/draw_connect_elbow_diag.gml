@@ -1,4 +1,4 @@
-function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, c1 = c_white, c2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) {
+function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, c1 = c_white, c2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) { #region
 	var __dash = 6 * _s;
 	var __line = type == LINE_STYLE.solid? draw_line_width_color : draw_line_dashed_color;
 	
@@ -203,9 +203,9 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 			draw_corner(_xc1 - cor2, y1 - cor2 * iy, _xc1, y1, _xc1 + corn, y1, thick, cm, sample);
 		}
 	}
-}
+} #endregion
 
-function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) {
+function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) { #region
 	var sample = floor(corner / 8);
 	sample = clamp(sample, 0, 8);
 	if(sample == 0) corner = 0;
@@ -228,9 +228,9 @@ function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c
 	
 	//draw_circle(x1 - diag * sx, y0, 4, false);
 	//draw_circle(x1, y0 + diag * sy, 4, false);
-}
+} #endregion
 
-function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, indexIn = 1, indexOut = 1) {
+function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, indexIn = 1, indexOut = 1) { #region
 	var iy  = sign(y1 - y0);
 	var xx0 = x0 + 16 * _s * indexIn;
 	var xx1 = x1 - 16 * _s * indexOut;
@@ -327,9 +327,9 @@ function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, indexIn = 1,
 		
 		return dist;
 	}
-}
+} #endregion
 
-function distance_to_elbow_diag_corner(mx, my, x0, y0, x1, y1) {
+function distance_to_elbow_diag_corner(mx, my, x0, y0, x1, y1) { #region
 	var sx   = sign(x1 - x0);
 	var sy   = sign(y1 - y0);
 	var diag = min(abs(x0 - x1) / 2, abs(y0 - y1) / 2);
@@ -340,4 +340,4 @@ function distance_to_elbow_diag_corner(mx, my, x0, y0, x1, y1) {
 	dist = min(dist, distance_to_line(mx, my,             x1, y0 + diag * sy,             x1,             y1));
 	
 	return dist;
-}
+} #endregion

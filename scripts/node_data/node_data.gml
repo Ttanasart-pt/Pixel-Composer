@@ -61,6 +61,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	#region ---- display ----
 		color   = c_white;
 		icon    = noone;
+		icon_24 = noone;
 		bg_spr  = THEME.node_bg;
 		bg_sel_spr	  = THEME.node_active;
 	
