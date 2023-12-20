@@ -5,7 +5,7 @@ function dynaSurf_3d() : dynaSurf() constructor {
 	camTarget = new __vec3();
 	camera_ay = 45;
 	
-	scene  = new __3dScene(camera);
+	scene  = new __3dScene(camera, "Dynamic surf scene");
 	
 	w = 1;
 	h = 1;

@@ -170,6 +170,8 @@ function __3dObject() constructor {
 					vertex_submit(VB[i], render_type, _tex);
 				} else
 					vertex_submit(VB[i], render_type, _tex);
+					
+				//print($"Submit vertex ({scene}) [{VB[i]}]");
 			}
 			
 			gpu_set_tex_repeat(false);

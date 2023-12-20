@@ -57,36 +57,38 @@ function __3dGroup() constructor {
 		array_push(objects, _obj);
 	} #endregion
 	
-	static submit       = function(scene = {}, shader = noone) { 
+	static submit       = function(scene = {}, shader = noone) { #region
 		transform.submitMatrix();
 		for( var i = 0, n = array_length(objects); i < n; i++ )
 			objects[i].submit(scene, shader);
 		transform.clearMatrix();
-	}
+	} #endregion
 	
-	static submitUI     = function(scene = {}, shader = noone) {
+	static submitUI     = function(scene = {}, shader = noone) { #region
 		transform.submitMatrix();
 		for( var i = 0, n = array_length(objects); i < n; i++ )
 			objects[i].submitUI(scene, shader);
 		transform.clearMatrix();
-	}
-	static submitSel    = function(scene = {}, shader = noone) { 
+	} #endregion
+	
+	static submitSel    = function(scene = {}, shader = noone) { #region
 		transform.submitMatrix();
 		for( var i = 0, n = array_length(objects); i < n; i++ )
 			objects[i].submitSel(scene, shader);
 		transform.clearMatrix();
-	}
-	static submitShader = function(scene = {}, shader = noone) { 
+	} #endregion
+	
+	static submitShader = function(scene = {}, shader = noone) { #region
 		transform.submitMatrix();
 		for( var i = 0, n = array_length(objects); i < n; i++ )
 			objects[i].submitShader(scene, shader);
 		transform.clearMatrix();
-	}
+	} #endregion
 	
-	static submitShadow = function(scene = {}, object = noone) { 
+	static submitShadow = function(scene = {}, object = noone) { #region
 		for( var i = 0, n = array_length(objects); i < n; i++ )
 			objects[i].submitShadow(scene, object);
-	}
+	} #endregion
 	
 	static map = function(callback, scene = {}) { #region
 		for( var i = 0, n = array_length(objects); i < n; i++ ) 

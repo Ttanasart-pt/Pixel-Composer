@@ -1100,6 +1100,7 @@
     {"id":{"name":"s_node_pb_fx_radial","path":"sprites/s_node_pb_fx_radial/s_node_pb_fx_radial.yy",},},
     {"id":{"name":"__background_get_internal","path":"scripts/__background_get_internal/__background_get_internal.yy",},},
     {"id":{"name":"s_node_array_sample","path":"sprites/s_node_array_sample/s_node_array_sample.yy",},},
+    {"id":{"name":"o_pie_menu","path":"objects/o_pie_menu/o_pie_menu.yy",},},
     {"id":{"name":"s_biterator_b_labels","path":"sprites/s_biterator_b_labels/s_biterator_b_labels.yy",},},
     {"id":{"name":"FirebaseREST_Firestore_collection_decode","path":"scripts/FirebaseREST_Firestore_collection_decode/FirebaseREST_Firestore_collection_decode.yy",},},
     {"id":{"name":"s_node_mk_flip_grid","path":"sprites/s_node_mk_flip_grid/s_node_mk_flip_grid.yy",},},

@@ -132,7 +132,7 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 		
 		#region scene
-			d3_scene  = new __3dScene(d3_view_camera, "Preview");
+			d3_scene  = new __3dScene(d3_view_camera, "Preview panel");
 			d3_scene.lightAmbient = $404040;
 			d3_scene.cull_mode    = cull_counterclockwise;
 			d3_scene_preview	  = d3_scene;
@@ -881,11 +881,13 @@ function Panel_Preview() : PanelContent() constructor {
 				
 			d3_scene_preview.apply(d3_deferData);
 			
+			//print("========= Submit begin =========");
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 				var _prev = _prev_obj[i];
 				if(_prev == noone) continue;
 				_prev.submitUI(d3_scene_preview);							//////////////// SUBMIT ////////////////
 			}
+			//print("=========  Submit end  =========");
 			
 			gpu_set_cullmode(cull_noculling); 
 			surface_reset_target();

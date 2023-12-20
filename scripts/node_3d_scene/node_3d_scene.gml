@@ -44,9 +44,8 @@ function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 		
 		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i += data_length ) {
 			var _obj = _data[i];
-			if(!is_instanceof(_obj, __3dObject)) continue;
-			
-			_scene.addObject(_obj);
+			if(is_instanceof(_obj, __3dObject) || is_instanceof(_obj, __3dGroup)) 
+				_scene.addObject(_obj);
 		}
 		
 		return _scene;

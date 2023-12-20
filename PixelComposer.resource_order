@@ -827,6 +827,7 @@
     {"name":"s_node_pb_fx_radial","order":4,"path":"sprites/s_node_pb_fx_radial/s_node_pb_fx_radial.yy",},
     {"name":"__background_get_internal","order":2,"path":"scripts/__background_get_internal/__background_get_internal.yy",},
     {"name":"s_node_array_sample","order":18,"path":"sprites/s_node_array_sample/s_node_array_sample.yy",},
+    {"name":"o_pie_menu","order":14,"path":"objects/o_pie_menu/o_pie_menu.yy",},
     {"name":"s_biterator_b_labels","order":9,"path":"sprites/s_biterator_b_labels/s_biterator_b_labels.yy",},
     {"name":"FirebaseREST_Firestore_collection_decode","order":6,"path":"scripts/FirebaseREST_Firestore_collection_decode/FirebaseREST_Firestore_collection_decode.yy",},
     {"name":"s_node_mk_flip_grid","order":2,"path":"sprites/s_node_mk_flip_grid/s_node_mk_flip_grid.yy",},

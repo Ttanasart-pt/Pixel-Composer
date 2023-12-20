@@ -10,7 +10,7 @@
 		d3_view_camera.projection = CAMERA_PROJECTION.orthograph;
 		d3_view_camera.setMatrix();
 		
-		D3D_GLOBAL_PREVIEW = new __3dScene(d3_view_camera);
+		D3D_GLOBAL_PREVIEW = new __3dScene(d3_view_camera, "Global node preview");
 		D3D_GLOBAL_PREVIEW.apply_transform = true;
 		D3D_GLOBAL_PREVIEW.defer_normal    = false;
 	
@@ -322,5 +322,9 @@ function __3dScene(camera, name = "New scene") constructor {
 		lightPnt_count++;
 		
 		return self;
+	} #endregion
+		
+	static toString = function() { #region
+		return $"[3D Scene] {name}";
 	} #endregion
 }
