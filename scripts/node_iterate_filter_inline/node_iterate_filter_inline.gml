@@ -60,7 +60,7 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 			}
 			
 			var _node = PROJECT.nodeMap[? attributes.members[i]];
-			array_push_unique(_node.context_data, self);
+			_node.inline_context = self;
 			ds_list_add(nodes, _node);
 			
 			if(is_instanceof(_node, Node_Iterator_Filter_Inline_Input)) {

@@ -1,9 +1,11 @@
 function Node_Rigid_Global(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "RigidSim Global";
+	name  = "RigidSim Global";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	w = 96;
+	w     = 96;
 	min_h = 96;
+	
+	manual_ungroupable	 = false;
 	
 	object = noone;
 	

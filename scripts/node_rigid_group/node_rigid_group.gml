@@ -4,6 +4,8 @@ function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	icon  = THEME.rigidSim;
 	update_on_frame = true;
 	
+	manual_ungroupable	 = false;
+	
 	ungroupable		= false;
 	update_on_frame = true;
 	collIndex		= irandom_range(1, 9999);

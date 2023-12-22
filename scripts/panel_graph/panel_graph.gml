@@ -107,6 +107,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		value_draggings = [];
 		
 		frame_hovering  = noone;
+		_frame_hovering = noone;
 	#endregion
 	
 	#region ---- minimap ----
@@ -732,7 +733,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var t   = get_timer();
 		printIf(log, "============ Draw start ============");
 		
-		frame_hovering = noone;
+		_frame_hovering = frame_hovering;
+		frame_hovering  = noone;
 		
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			nodes_list[| i].cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);

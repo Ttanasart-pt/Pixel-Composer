@@ -4,6 +4,8 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	icon  = THEME.rigidSim;
 	use_cache = CACHE_USE.auto;
 	
+	manual_ungroupable	 = false;
+	
 	w = 128;
 	h = 128;
 	min_h = h;
@@ -81,9 +83,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
-		for( var i = 0, n = array_length(context_data); i < n; i++ ) 
-			if(is_instanceof(context_data[i], Node_Rigid_Group_Inline))
-				gr = context_data[i];
+		if(inline_context != noone) gr = inline_context;
 					
 		if(gr == noone) return;
 		if(!attributes.show_objects) return;

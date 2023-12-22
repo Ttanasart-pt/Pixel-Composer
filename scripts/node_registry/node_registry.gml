@@ -878,8 +878,9 @@ function __initNodes() {
 		//addNodeObject(node, "Module Test",	s_node_print,		"Node_Module_Test",	[1, Node_Module_Test]);
 			
 		ds_list_add(node, "System");
-		addNodeObject(node, "Execute Shell",	s_node_shell_excecute,	"Node_Shell",	[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
-		//addNodeObject(node, "Note",				s_node_note,			"Node_Note",	[1, Node_Note]).setVersion(11530);
+		addNodeObject(node, "Execute Shell",	s_node_shell_excecute,	"Node_Shell",			[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
+		//addNodeObject(node, "GUI In",			s_node_shell_excecute,	"Node_Application_In",	[1, Node_Application_In]);
+		//addNodeObject(node, "GUI Out",			s_node_shell_excecute,	"Node_Application_Out",	[1, Node_Application_Out]);
 	#endregion
 	
 	var actions = ds_list_create();

@@ -1,8 +1,10 @@
 function Node_Strand_Update(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Strand Update";
+	name  = "Strand Update";
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
-	w = 96;
+	w     = 96;
+	
+	manual_ungroupable	 = false;
 	
 	inputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);

@@ -4,6 +4,8 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	icon  = THEME.smoke_sim;
 	min_h = 128;
 	
+	manual_ungroupable	 = false;
+	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 	

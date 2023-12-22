@@ -21,6 +21,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		node_id = UUID_generate();
 		group   = _group;
 		manual_deletable	 = true;
+		manual_ungroupable	 = true;
 		destroy_when_upgroup = false;
 		ds_list_add(PANEL_GRAPH.getNodeList(_group), self);
 		
@@ -29,7 +30,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		array_push(PROJECT.nodeArray, self);
 		
-		context_data = [];
+		inline_context = noone;
 	#endregion
 	
 	static resetInternalName = function() { #region

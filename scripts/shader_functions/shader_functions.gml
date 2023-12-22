@@ -96,6 +96,13 @@ function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 	return t;
 }
 
+function shader_set_surface_i(sampler, useSampler, surface) {
+	INLINE
+	
+	shader_set_surface(sampler, surface);
+	shader_set_i(useSampler, is_surface(surface));
+}	
+
 //function shader_set_surface_ext(sampler, surface, linear = false, _repeat = false) {
 //	var shader = shader_current();
 //	if(!is_surface(surface)) return;

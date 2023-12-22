@@ -14,7 +14,8 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	icon   = THEME.vfx;
 	reloop = true;
 	
-	node_draw_icon = s_node_vfx_accel;
+	manual_ungroupable	 = false;
+	node_draw_icon       = s_node_vfx_accel;
 	
 	w = 96;
 	h = 80;

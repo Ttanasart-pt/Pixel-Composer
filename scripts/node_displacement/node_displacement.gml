@@ -9,7 +9,14 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 3] = nodeValue("Strength",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 3] = nodeValue("Strength",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY._default, { side_button: button(function() { 
+			var jun = inputs[| 15];
+			
+			jun.visible = !jun.visible;
+			setHeight();
+		}).setIcon( THEME.value_use_surface, [ function() { return inputs[| 15].visible; } ], COLORS._main_icon )
+		  .setTooltip("Use map") });
 	
 	inputs[| 4] = nodeValue("Mid value",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0., "Brightness value to be use as a basis for 'no displacement'.")
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -42,9 +49,12 @@ If set, then strength value control how many times the effect applies on itself.
 	
 	__init_mask_modifier(8); // inputs 13, 14
 	
+	inputs[| 15] = nodeValue("Strength map",   self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
 	input_display_list = [ 10, 12, 
 		["Surfaces",	 true],	0, 8, 9, 13, 14, 
-		["Displace",	false], 1, 3, 4,
+		["Displace",	false], 1, 3, 15, 4,
 		["Color",		false], 5, 2, 
 		["Algorithm",	 true],	6, 11, 
 	];
@@ -80,11 +90,14 @@ If set, then strength value control how many times the effect applies on itself.
 			shader_set_surface("map", _data[1]);
 			shader_set_f("dimension",     [ww, hh]);
 			shader_set_f("map_dimension", [mw, mh]);
-			shader_set_f("displace",      _data[2]);
-			shader_set_f("strength",      _data[3]);
-			shader_set_f("middle",        _data[4]);
-			shader_set_i("use_rg",        _data[5]);
-			shader_set_i("iterate",       _data[6]);
+			shader_set_f("displace",      _data[ 2]);
+			shader_set_f("strength",      _data[ 3]);
+			
+			shader_set_surface_i("strengthSurf", "strengthUseSurf", _data[15]);
+			
+			shader_set_f("middle",        _data[ 4]);
+			shader_set_i("use_rg",        _data[ 5]);
+			shader_set_i("iterate",       _data[ 6]);
 			shader_set_i("blendMode",     _data[11]);
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

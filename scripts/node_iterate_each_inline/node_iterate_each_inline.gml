@@ -60,7 +60,8 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			}
 			
 			var _node = PROJECT.nodeMap[? attributes.members[i]];
-			array_push_unique(_node.context_data, self);
+			_node.inline_context = self;
+			
 			ds_list_add(nodes, _node);
 			
 			if(is_instanceof(_node, Node_Iterator_Each_Inline_Input)) {

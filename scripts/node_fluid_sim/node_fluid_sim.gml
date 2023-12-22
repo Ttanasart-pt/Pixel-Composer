@@ -5,8 +5,10 @@ function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
 	
-	ungroupable = false;
+	ungroupable     = false;
 	update_on_frame = true;
+	
+	manual_ungroupable	 = false;
 	
 	outputNode = noone;
 	

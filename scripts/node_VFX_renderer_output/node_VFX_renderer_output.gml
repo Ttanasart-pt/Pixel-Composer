@@ -1,8 +1,10 @@
 function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y, _group) constructor {
-	name = "Renderer";
+	name  = "Renderer";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	use_cache = CACHE_USE.auto;
+	
+	manual_ungroupable	 = false;
 	
 	w = 128;
 	h = 128;

@@ -2,8 +2,10 @@ function Node_Fluid_Update(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	name  = "Update Fluid";
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
-	w = 96;
+	w     = 96;
 	min_h = 96;
+	
+	manual_ungroupable	 = false;
 	
 	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
 		.setVisible(true, true);

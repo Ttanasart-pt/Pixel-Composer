@@ -1,9 +1,11 @@
 function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Activate Physics";
+	name  = "Activate Physics";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	w = 96;
+	w     = 96;
 	min_h = 96;
+	
+	manual_ungroupable	 = false;
 	
 	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
 		.setVisible(true, true);

@@ -1,5 +1,14 @@
 /// @description init
 if(winMan_isMinimized()) exit;
+
+if(APP_SURF_OVERRIDE) {
+	APP_SURF      = surface_verify(APP_SURF,      WIN_W, WIN_H);
+	PRE_APP_SURF  = surface_verify(PRE_APP_SURF,  WIN_W, WIN_H);
+	POST_APP_SURF = surface_verify(POST_APP_SURF, WIN_W, WIN_H);
+
+	surface_set_target(APP_SURF);
+}
+
 draw_clear(COLORS.bg);
 
 #region widget scroll
@@ -47,3 +56,12 @@ draw_clear(COLORS.bg);
 #region window
 	winManDraw();
 #endregion
+
+if(APP_SURF_OVERRIDE) {
+	surface_reset_target();
+	draw_surface(POST_APP_SURF, 0, 0);
+	
+	surface_set_target(PRE_APP_SURF);
+		draw_surface(APP_SURF, 0, 0);
+	surface_reset_target();
+}

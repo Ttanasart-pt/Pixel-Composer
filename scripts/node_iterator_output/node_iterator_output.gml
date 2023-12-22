@@ -3,6 +3,8 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	color = COLORS.node_blend_loop;
 	is_group_io = true;
 	
+	manual_ungroupable	 = false;
+	
 	w = 96;
 	h = 32 + 24 * 2;
 	min_h = h;

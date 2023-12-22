@@ -3,6 +3,8 @@ function Node_Fluid_Add_Collider(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
 	
+	manual_ungroupable	 = false;
+	
 	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
 		.setVisible(true, true);
 	

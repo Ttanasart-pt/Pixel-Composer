@@ -4,6 +4,8 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	icon  = THEME.vfx;
 	node_draw_icon = s_node_vfx_override;
 	
+	manual_ungroupable	 = false;
+	
 	w = 96;
 	h = 80;
 	min_h = h;

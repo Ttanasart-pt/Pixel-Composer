@@ -4,6 +4,8 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	icon  = THEME.rigidSim;
 	node_draw_icon = s_node_rigid_variable;
 	
+	manual_ungroupable	 = false;
+	
 	w = 96;
 	h = 80;
 	min_h = h;

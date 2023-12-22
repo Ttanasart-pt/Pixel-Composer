@@ -10,10 +10,13 @@ uniform vec2  map_dimension;
 uniform vec2  displace;
 uniform float strength;
 uniform float middle;
-uniform int iterate;
-uniform int use_rg;
-uniform int sampleMode;
-uniform int blendMode;
+uniform int   iterate;
+uniform int   use_rg;
+uniform int   sampleMode;
+uniform int   blendMode;
+
+uniform sampler2D strengthSurf;
+uniform int strengthUseSurf;
 
 float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
 
@@ -79,11 +82,16 @@ float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * 
 
 #endregion /////////////// SAMPLING ///////////////
 
-vec2 shiftMap(in vec2 pos, in float str) {
-	vec4 disP = texture2Dintp( map, pos );
-	vec2 sam_pos;
-	vec2 raw_displace = displace / dimension;
+vec2 shiftMap(in vec2 pos, in float str) { #region
+	vec4  disP = texture2Dintp( map, pos );
+	vec2  sam_pos;
+	vec2  raw_displace = displace / dimension;
 	float _str;
+	
+	if(strengthUseSurf == 1) {
+		vec4 strMap = texture2Dintp( strengthSurf, pos );
+		str *= (strMap.r + strMap.g + strMap.b) / 3.;
+	}
 	
 	if(use_rg == 1) {
 		vec2 _disp = vec2(disP.r - middle, disP.g - middle) * vec2((disP.r + disP.g + disP.b) / 3. - middle) * str;
@@ -101,9 +109,9 @@ vec2 shiftMap(in vec2 pos, in float str) {
 	}
 	
 	return sam_pos;
-}
+} #endregion
 
-vec4 blend(in vec4 c0, in vec4 c1) {
+vec4 blend(in vec4 c0, in vec4 c1) { #region
 	       if(blendMode == 0) return c1;
 	  else if(blendMode == 1) {
 		float b0 = bright(c0);
@@ -116,9 +124,9 @@ vec4 blend(in vec4 c0, in vec4 c1) {
 	}
 	
 	return c1;
-}
+} #endregion
 
-void main() {
+void main() { #region
 	vec2 samPos = v_vTexcoord;
 	vec4 ccol   = sampleTexture( v_vTexcoord ), ncol;
 	
@@ -133,4 +141,4 @@ void main() {
 	}
 	
     gl_FragColor = blend(ccol, ncol);
-}
+} #endregion

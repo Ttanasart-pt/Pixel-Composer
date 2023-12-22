@@ -9,6 +9,8 @@ function Node_Fluid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	min_h = h;
 	previewable = true;
 	
+	manual_ungroupable	 = false;
+	
 	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
 		.setVisible(true, true);
 	

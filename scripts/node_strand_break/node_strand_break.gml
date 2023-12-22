@@ -1,8 +1,10 @@
 function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _y, _group) constructor {
-	name = "Strand Break";
+	name  = "Strand Break";
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
-	w = 96;
+	w     = 96;
+	
+	manual_ungroupable	 = false;
 	
 	inputs[| input_fix_len + 0] = nodeValue("Chance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

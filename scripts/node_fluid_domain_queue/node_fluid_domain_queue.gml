@@ -1,7 +1,8 @@
 function Node_Fluid_Domain_Queue(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) constructor {
 	name = "Queue Domain";
+	w    = 96;
 	
-	w = 96;
+	manual_ungroupable	 = false;
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	

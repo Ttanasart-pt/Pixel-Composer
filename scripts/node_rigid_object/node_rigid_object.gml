@@ -1,12 +1,13 @@
 function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Object";
+	name  = "Object";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	
-	w = 96;
+	w     = 96;
 	min_h = 96;
 	
-	object     = [];
+	manual_ungroupable	 = false;
+	
+	object = [];
 	attributes.mesh = [];
 	
 	inputs[| 0] = nodeValue("Affect by force", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
@@ -167,10 +168,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
-		for( var i = 0, n = array_length(context_data); i < n; i++ ) 
-			if(is_instanceof(context_data[i], Node_Rigid_Group_Inline))
-				gr = context_data[i];
-					
+		if(inline_context != noone) gr = inline_context;
+		
 		if(gr == noone) return;
 		
 		if(previewing == 0) {

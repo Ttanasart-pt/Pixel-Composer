@@ -72,10 +72,11 @@ _HOVERING_ELEMENT = noone;
 #endregion
 
 #region animation & render
-	//physics_pause_enable(true);
 	DEF_SURFACE_RESET();
 	
-	if(!PROJECT.safeMode) {
+	if(APP_SURF_OVERRIDE)
+		Render();
+	else if(!PROJECT.safeMode) {
 		if(UPDATE_RENDER_ORDER) {
 			ResetAllNodesRender();
 			NodeTopoSort();

@@ -3,8 +3,9 @@ function Node_Strand_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
 	
-	ungroupable = false;
-	update_on_frame = true;
+	manual_ungroupable	 = false;
+	ungroupable          = false;
+	update_on_frame      = true;
 	
 	if(!LOADING && !APPENDING && !CLONING) {
 		var _create = nodeBuild("Node_Strand_Create", -384, -32, self);

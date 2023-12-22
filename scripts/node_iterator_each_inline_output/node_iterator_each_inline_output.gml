@@ -3,6 +3,8 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	color = COLORS.node_blend_loop;
 	loop  = noone;
 	
+	manual_ungroupable	 = false;
+	
 	inputs[| 0] = nodeValue("Value out", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(true, true);
 	

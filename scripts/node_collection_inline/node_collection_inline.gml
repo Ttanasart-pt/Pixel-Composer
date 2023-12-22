@@ -25,19 +25,23 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		ds_list_remove(nodes, node);
 		
-		array_remove(node.context_data, self);
+		if(node.inline_context == self)
+			node.inline_context = noone;
 		onRemoveNode(node); 
 	} #endregion
 	
 	static onRemoveNode = function(node) {}
 	
 	static addNode = function(node) { #region
+		if(node.inline_context != noone && node.inline_context != self)
+			node.inline_context.removeNode(node);
+		node.inline_context = self;
+		
 		array_push_unique(attributes.members, node.node_id);
 		
 		if(!ds_list_exist(nodes, node))
 			ds_list_add(nodes, node);
 		
-		array_push_unique(node.context_data, self);
 		onAddNode(node);
 	} #endregion
 	
@@ -148,25 +152,32 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		group_adding = false;
 		
-		if(PANEL_GRAPH.node_dragging && key_mod_press(SHIFT)) {
+		if(PANEL_GRAPH.node_dragging && PANEL_GRAPH.frame_hovering == self) {
 			var _list = PANEL_GRAPH.nodes_selecting;
 		
-			if(group_hovering) {
-				group_adding = true;
-				for( var i = 0, n = array_length(_list); i < n; i++ )
-					addNode(_list[i]);
-			} else {
-				for( var i = 0, n = array_length(_list); i < n; i++ )
-					removeNode(_list[i]);
+			if(key_mod_press(SHIFT)) {
+				if(group_hovering) {
+					group_adding = true;
+					for( var i = 0, n = array_length(_list); i < n; i++ ) {
+						if(_list[i].manual_ungroupable)
+							addNode(_list[i]);
+					}
+				} else {
+					for( var i = 0, n = array_length(_list); i < n; i++ ) {
+						if(_list[i].manual_ungroupable)
+							removeNode(_list[i]);
+					}
+				}
 			}
 			
-			if(!group_dragging) {
-				for( var i = 0, n = array_length(_list); i < n; i++ )
-					removeNode(_list[i]);
+			if(keyboard_check_pressed(vk_shift)) {
+				for( var i = 0, n = array_length(_list); i < n; i++ ) {
+					if(_list[i].manual_ungroupable)
+						removeNode(_list[i]);
+				}
 				refreshMember();
 				refreshGroupBG();
 			}
-			group_dragging = true;
 		}
 		
 		if(group_dragging && mouse_release(mb_left)) {
@@ -223,7 +234,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				draw_vertex(round(v2x), round(v2y));
 				
 				if(!_hov && point_in_triangle(_mx, _my, v0x, v0y, v1x, v1y, v2x, v2y)) {
-					group_hovering = 1 + key_mod_press(SHIFT) * 2;
+					group_hovering = 1 + (PANEL_GRAPH._frame_hovering == self && key_mod_press(SHIFT)) * 2;
 					_hov = true;
 				}
 				
