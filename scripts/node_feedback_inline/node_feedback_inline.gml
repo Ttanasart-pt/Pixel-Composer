@@ -4,6 +4,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	icon    = THEME.feedback;
 	icon_24 = THEME.feedback_24;
 	
+	is_root         = false;
 	selectable      = false;
 	update_on_frame = true;
 	

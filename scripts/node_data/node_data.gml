@@ -210,6 +210,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		temp_surface     = [];
 		force_requeue    = false;
 		
+		in_VFX = false;
+		
 		is_group_io = false;
 	#endregion
 	
@@ -683,7 +685,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		LOG_BLOCK_END();
 	} #endregion
 	
+	static clearTopoSorted = function() { INLINE topoSorted = false; }
+	
 	static forwardPassiveDynamic = function() { #region
+		rendered = false;
+		
 		for( var i = 0, n = ds_list_size(outputs); i < n; i++ ) {
 			var _outp = outputs[| i];
 			
@@ -692,6 +698,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				if(!_to.node.active || _to.value_from != _outp) continue; 
 				
 				_to.node.passiveDynamic = true;
+				_to.node.rendered = false;
 			}
 		}
 	} #endregion
@@ -701,10 +708,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(_clearCache) clearInputCache();
 	} #endregion
 	
-	static isLeaf = function() { #region
+	static isLeaf = function(list = noone) { #region
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 			var _inp = inputs[| i];
-			if(!_inp.isLeaf()) return false;
+			if(!_inp.isLeaf(list)) return false;
 		}
 		
 		return true;
@@ -722,6 +729,32 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return true;
 	} #endregion
 	
+	static getPreviousNodes = function() { #region
+		var prev = [];
+		
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
+			var _in = inputs[| i];
+			
+			if(_in.value_from != noone) {
+				if(in_VFX && !_in.value_from.node.in_VFX) {
+					array_push(in_VFX.prev_nodes, _in.value_from.node);
+					array_push(prev, in_VFX);
+					continue;
+				}
+				
+				array_push_unique(prev, _in.value_from.node);
+			}
+				
+			if(_in.value_from_loop != noone)
+				array_push_unique(prev, _in.value_from_loop);
+		}
+		
+		onGetPreviousNodes(prev);
+		return prev;
+	} #endregion
+	
+	static onGetPreviousNodes = function(arr) {}
+	
 	static getNextNodes = function() { #region
 		var nodes = [];
 		var nodeNames = [];
@@ -732,8 +765,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _ot = outputs[| i];
-			if(!_ot.forward) continue;
-			if(_ot.type == VALUE_TYPE.node) continue;
+			if(!_ot.forward)				continue;
 			
 			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
 				var _to = _ot.value_to_loop[j];

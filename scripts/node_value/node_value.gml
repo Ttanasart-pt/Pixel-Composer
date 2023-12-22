@@ -1951,7 +1951,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return 1;
 	} #endregion
 	
-	static isLeaf = function() { INLINE return value_from == noone; }
+	static isLeaf = function(list = noone) { INLINE return (value_from == noone) || (list != noone && !ds_list_exist(list, value_from.node)); }
 	
 	static isRendered = function() { #region
 		if(type == VALUE_TYPE.node)	return true;

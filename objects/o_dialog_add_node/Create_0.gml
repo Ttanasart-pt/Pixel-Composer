@@ -272,7 +272,8 @@ event_inherited();
 		var start = category == NODE_CATEGORY? -2 : 0;
 		
 		for(var i = start; i < ds_list_size(category); i++) {
-			var name = "";
+			var name  = "";
+			var color = noone;
 			
 			     if(i == -2) name = "All";
 			else if(i == -1) name = "New";
@@ -286,14 +287,18 @@ event_inherited();
 							setPage(NODE_PAGE_DEFAULT);
 						continue;
 					}
+					color = context.color;
 					draw_set_color(COLORS._main_text_accent);
 				}
 			}
 			
 			var _hov = false;
-			BLEND_OVERRIDE
+			
 			if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, category_width - ui(32), _y + hh + hg - 1)) {
+				BLEND_OVERRIDE
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, category_width - ui(32), hg, CDEF.main_white, 1);
+				BLEND_NORMAL
+				
 				_hov = true;
 				
 				if(i != ADD_NODE_PAGE && mouse_click(mb_left, sFOCUS)) {
@@ -303,7 +308,6 @@ event_inherited();
 					content_pane.scroll_y_to	= 0;
 				}
 			}
-			BLEND_NORMAL
 			
 			var cc = COLORS._main_text_inner;
 			
@@ -319,7 +323,7 @@ event_inherited();
 			}
 			
 			if(i == ADD_NODE_PAGE) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
-			else				   draw_set_text(f_p0, fa_left, fa_center, cc);
+			else				   draw_set_text(f_p0,  fa_left, fa_center, cc);
 			
 			var _is_extra = name == "Extra";
 			name = __txt(name);

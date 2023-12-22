@@ -2,6 +2,7 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	name  = "Loop Array";
 	color = COLORS.node_blend_loop;
 	
+	is_root     = false;
 	input_node  = noone;
 	output_node = noone;
 	

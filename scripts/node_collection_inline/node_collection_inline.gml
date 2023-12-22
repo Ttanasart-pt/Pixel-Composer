@@ -14,21 +14,34 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	input_node_type  = noone;
 	output_node_type = noone;
 	
+	is_root = true;
+	
+	static topoSortable = function() { #region
+		return false;
+	} #endregion
+	
 	static removeNode = function(node) { #region
 		array_remove(attributes.members, node.node_id);
+		
 		ds_list_remove(nodes, node);
 		
 		array_remove(node.context_data, self);
+		onRemoveNode(node); 
 	} #endregion
 	
+	static onRemoveNode = function(node) {}
+	
 	static addNode = function(node) { #region
-		if(array_exists(attributes.members, node.node_id)) return;
+		array_push_unique(attributes.members, node.node_id);
 		
-		array_push(attributes.members, node.node_id);
-		ds_list_add(nodes, node);
+		if(!ds_list_exist(nodes, node))
+			ds_list_add(nodes, node);
 		
 		array_push_unique(node.context_data, self);
+		onAddNode(node);
 	} #endregion
+	
+	static onAddNode = function(node) {}
 	
 	static ccw = function(a, b, c) { return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]); }
 	
@@ -58,9 +71,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				continue;
 			}
 			
-			var _node = PROJECT.nodeMap[? attributes.members[i]];
-			array_push_unique(_node.context_data, self);
-			ds_list_add(nodes, _node);
+			addNode(PROJECT.nodeMap[? attributes.members[i]]);
 		}
 	} #endregion
 	
@@ -138,22 +149,20 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		group_adding = false;
 		
 		if(PANEL_GRAPH.node_dragging && key_mod_press(SHIFT)) {
-			var side = undefined;
-			
 			var _list = PANEL_GRAPH.nodes_selecting;
 		
 			if(group_hovering) {
 				group_adding = true;
 				for( var i = 0, n = array_length(_list); i < n; i++ )
-					array_push_unique(attributes.members, _list[i].node_id);
+					addNode(_list[i]);
 			} else {
 				for( var i = 0, n = array_length(_list); i < n; i++ )
-					array_remove(attributes.members, _list[i].node_id);
+					removeNode(_list[i]);
 			}
 			
 			if(!group_dragging) {
 				for( var i = 0, n = array_length(_list); i < n; i++ )
-					array_remove(attributes.members, _list[i].node_id);
+					removeNode(_list[i]);
 				refreshMember();
 				refreshGroupBG();
 			}
@@ -191,7 +200,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		draw_set_color(_color);
 		group_hover_al = lerp_float(group_hover_al, group_hovering, 4);
-		draw_set_alpha(_sel? 0.1 : 0.025 + 0.050 * group_hover_al);
+		group_hovering = 0;
+		draw_set_alpha(_sel? 0.1 : 0.025 + 0.025 * group_hover_al);
 		
 		draw_primitive_begin(pr_trianglelist);
 			var a = group_vertex[0];
@@ -208,12 +218,14 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				var v2x = _x + c[0] * _s;
 				var v2y = _y + c[1] * _s;
 				
-				draw_vertex(v0x, v0y);
-				draw_vertex(v1x, v1y);
-				draw_vertex(v2x, v2y);
+				draw_vertex(round(v0x), round(v0y));
+				draw_vertex(round(v1x), round(v1y));
+				draw_vertex(round(v2x), round(v2y));
 				
-				if(!_hov && point_in_triangle(_mx, _my, v0x, v0y, v1x, v1y, v2x, v2y)) 
+				if(!_hov && point_in_triangle(_mx, _my, v0x, v0y, v1x, v1y, v2x, v2y)) {
+					group_hovering = 1 + key_mod_press(SHIFT) * 2;
 					_hov = true;
+				}
 				
 				b = group_vertex[i];
 			}
@@ -232,7 +244,6 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		draw_set_alpha(1);
 		
-		group_hovering = _hov;
 		return _hov;
 	} #endregion
 	

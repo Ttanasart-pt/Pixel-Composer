@@ -2,6 +2,7 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 	name  = "Filter Array";
 	color = COLORS.node_blend_loop;
 	
+	is_root     = false;
 	input_node  = noone;
 	output_node = noone;
 	

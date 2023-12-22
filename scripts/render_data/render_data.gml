@@ -21,14 +21,12 @@ function __nodeLeafList(_list) { #region
 	
 	for( var i = 0, n = ds_list_size(_list); i < n; i++ ) {
 		var _node = _list[| i];
-		if(!_node.active) continue;
-		if(!_node.isRenderActive()) continue;
-		if(!_node.isLeaf()) continue;
+		if(!_node.active)         { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [inactive]");       continue; }
+		if(!_node.isLeaf(_list))  { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not leaf]");       continue; }
+		if(!_node.isRenderable()) { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not renderable]"); continue; }
 		
-		if(_node.isRenderable()) {
-			array_push(nodes, _node);
-			array_push(nodeNames, _node.internalName);
-		}
+		array_push(nodes, _node);
+		array_push(nodeNames, _node.internalName);
 	}
 	
 	LOG_LINE_IF(global.FLAG.render == 1, $"Push node {nodeNames} to queue");
@@ -58,7 +56,7 @@ function NodeTopoSort() { #region
 		
 	repeat(amo) {
 		var _node = PROJECT.nodeMap[? _key];
-		_node.topoSorted = false;
+		_node.clearTopoSorted();
 		_key = ds_map_find_next(PROJECT.nodeMap, _key);	
 	}
 	
@@ -70,10 +68,16 @@ function NodeTopoSort() { #region
 
 function __sortGraph(_list, _nodeList) { #region
 	var _root = [];
+	var _leftOver = [];
 	
 	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ ) {
 		var _node = _nodeList[| i];
 		var _isRoot = true;
+		
+		if(is_instanceof(_node, Node_Collection_Inline) && !_node.is_root) {
+			array_push(_leftOver, _node);
+			continue;
+		}
 		
 		for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
 			var _to = _node.outputs[| j].getJunctionTo();
@@ -91,26 +95,25 @@ function __sortGraph(_list, _nodeList) { #region
 		if(_isRoot) array_push(_root, _node);
 	}
 	
-	var _st = ds_stack_create();
+	var _st = ds_queue_create();
 	
 	for( var i = 0, n = array_length(_root); i < n; i++ ) 
-		ds_stack_push(_st, _root[i]);
+		ds_queue_enqueue(_st, _root[i]);
 		
-	while(!ds_stack_empty(_st)) {
-		var _node = ds_stack_pop(_st);
+	while(!ds_queue_empty(_st)) {
+		var _node = ds_queue_dequeue(_st);
 		if(_node.topoSorted) continue;
 		
 		var _childs = [];
+		var _prev   = _node.getPreviousNodes();
 		
-		for( var i = 0, n = ds_list_size(_node.inputs); i < n; i++ ) {
-			var _in = _node.inputs[| i];
-			var _fr = _in.value_from;
+		for( var i = 0, n = array_length(_prev); i < n; i++ ) {
+			var _in = _prev[i];
 			
-			if(_fr == noone)						continue;
-			if(!ds_list_exist(_nodeList, _fr.node)) continue;
-			if(_fr.node.topoSorted)					continue;
+			if(!ds_list_exist(_nodeList, _in)) continue;
+			if(_in.topoSorted)				   continue;
 			
-			array_push(_childs, _fr.node);
+			array_push(_childs, _in);
 		}
 		
 		if(array_empty(_childs)) {
@@ -120,10 +123,15 @@ function __sortGraph(_list, _nodeList) { #region
 			if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
 				__sortGraph(_list, _node.nodes);
 		} else {
-			ds_stack_push(_st, _node);
 			for( var i = 0, n = array_length(_childs); i < n; i++ ) 
-				ds_stack_push(_st, _childs[i]);
+				ds_queue_enqueue(_st, _childs[i]);
+			ds_queue_enqueue(_st, _node);
 		}
+	}
+	
+	for( var i = 0, n = array_length(_leftOver); i < n; i++ ) {
+		if(!_leftOver[i].topoSorted)
+			ds_list_insert(_list, 0, _leftOver[i]);
 	}
 } #endregion
 
@@ -138,9 +146,9 @@ function NodeListSort(_list, _nodeList) { #region
 function __nodeIsRenderLeaf(_node) { #region
 	if(is_undefined(_node))									 { LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); return false; }
 	if(!is_instanceof(_node, Node))							 { LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); return false; }
-			
+	
 	if(_node.is_group_io)									 { LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); return false; }
-			
+	
 	if(!_node.active)										 { LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); return false; }
 	if(!_node.isRenderActive())								 { LOG_IF(global.FLAG.render == 1, $"Skip render inactive  [{_node.internalName}]"); return false; }
 	if(!_node.attributes.update_graph)						 { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); return false; }
@@ -172,7 +180,7 @@ function Render(partial = false, runAction = false) { #region
 		if(reset_all) {
 			var _key = ds_map_find_first(PROJECT.nodeMap);
 			var amo = ds_map_size(PROJECT.nodeMap);
-		
+			
 			repeat(amo) {
 				var _node = PROJECT.nodeMap[? _key];
 				_node.setRenderStatus(false);

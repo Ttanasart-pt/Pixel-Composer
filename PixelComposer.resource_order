@@ -127,7 +127,7 @@
     {"name":"feedback","order":7,"path":"folders/nodes/data/iterate/feedback.yy",},
     {"name":"for each","order":9,"path":"folders/nodes/data/iterate/for each.yy",},
     {"name":"for filter","order":10,"path":"folders/nodes/data/iterate/for filter.yy",},
-    {"name":"for sort inline","order":11,"path":"folders/nodes/data/iterate/for sort inline.yy",},
+    {"name":"for sort","order":11,"path":"folders/nodes/data/iterate/for sort.yy",},
     {"name":"lua","order":12,"path":"folders/nodes/data/lua.yy",},
     {"name":"misc","order":10,"path":"folders/nodes/data/misc.yy",},
     {"name":"MK effects","order":24,"path":"folders/nodes/data/MK effects.yy",},

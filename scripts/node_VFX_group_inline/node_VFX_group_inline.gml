@@ -3,13 +3,16 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	
+	is_root  = false;
+	topoList = ds_list_create();
+	
 	inputs[| 0] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
 		.rejectArray();
 	
-	topoList	 = ds_list_create();
-	
 	update_on_frame    = true;
 	managedRenderOrder = true;
+	
+	prev_nodes = [];
 	
 	if(!LOADING && !APPENDING && !CLONING) { #region
 		var input  = nodeBuild("Node_VFX_Spawner",  x,       y);
@@ -21,9 +24,17 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		addNode(output);
 	} #endregion
 	
-	static getNextNodes = function() { #region
-		return __nodeLeafList(nodes);
+	static clearTopoSorted = function() { INLINE topoSorted = false; prev_nodes = []; }
+	
+	static getPreviousNodes = function() { #region
+		onGetPreviousNodes(prev_nodes);
+		return prev_nodes;
 	} #endregion
+	
+	static onRemoveNode = function(node) { node.in_VFX = noone; }
+	static onAddNode    = function(node) { node.in_VFX = self;  }
+	
+	static getNextNodes = function() { return __nodeLeafList(nodes); }
 	
 	static reset = function() { #region
 		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {

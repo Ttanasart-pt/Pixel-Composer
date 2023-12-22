@@ -9,4 +9,9 @@ function Node_Iterator_Sort_Inline_Input(_x, _y, _group = noone) : Node(_x, _y, 
 	outputs[| 0] = nodeValue("Value 1", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0 );
 	
 	outputs[| 1] = nodeValue("Value 2", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0 );
+	
+	static onGetPreviousNodes = function(arr) {
+		array_push(arr, loop);
+	}
+	
 }

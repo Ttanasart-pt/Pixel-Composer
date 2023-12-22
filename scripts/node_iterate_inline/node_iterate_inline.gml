@@ -4,6 +4,8 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	icon    = THEME.loop;
 	icon_24 = THEME.loop_24;
 	
+	is_root     = false;
+	
 	inputs[| 0] = nodeValue("Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.uncache();
 		

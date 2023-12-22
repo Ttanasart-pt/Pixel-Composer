@@ -2,6 +2,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	name  = "Sort Array";
 	color = COLORS.node_blend_loop;
 	
+	is_root  = false;
 	topoList = ds_list_create();
 	
 	input_node  = noone;
@@ -143,10 +144,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		
 		arrOut = array_clone(arrIn);
 		
-		print($"===== Sort begin =====");
 		quickSort(arrOut, 0, array_length(arrOut) - 1);
-		print($"Sorted {arrIn} > {arrOut}")
-		
 		output_node.outputs[| 0].setValue(arrOut);
 	} #endregion
 	

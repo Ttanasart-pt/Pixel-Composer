@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "for sort inline",
-    "path": "folders/nodes/data/iterate/for sort inline.yy",
+    "name": "for sort",
+    "path": "folders/nodes/data/iterate/for sort.yy",
   },
 }

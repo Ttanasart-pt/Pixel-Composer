@@ -8,6 +8,10 @@ function Node_Iterator_Filter_Inline_Input(_x, _y, _group = noone) : Node(_x, _y
 	
 	outputs[| 0] = nodeValue("Value in", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0 );
 	
+	static onGetPreviousNodes = function(arr) {
+		array_push(arr, loop);
+	}
+	
 	static update = function() { #region
 		if(!is_instanceof(loop, Node_Iterate_Filter_Inline)) return;
 		

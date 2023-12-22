@@ -634,8 +634,7 @@ function __initNodes() {
 			
 		ds_list_add(generator, "Simulation");
 		addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			[1, Node_Particle],, "Generate particle effect.");
-		addNodeObject(generator, "VFX",					s_node_vfx,					"Node_VFX_Group",			[1, Node_VFX_Group],, "Create VFX group, which generate particles that can be manipulated using different force nodes.");
-		addNodeObject(generator, "Inline VFX",			s_node_vfx,					"Node_VFX_Group_Inline",	[1, Node_VFX_Group_Inline],, "Create VFX group, which generate particles that can be manipulated using different force nodes.");
+		addNodeObject(generator, "VFX",					s_node_vfx,					"Node_VFX_Group_Inline",	[1, Node_VFX_Group_Inline],, "Create VFX group, which generate particles that can be manipulated using different force nodes.");
 		addNodeObject(generator, "RigidSim",			s_node_rigidSim,			"Node_Rigid_Group_Inline",	[1, Node_Rigid_Group_Inline],, "Create group for rigidbody simulation.").setVersion(1110);
 		addNodeObject(generator, "SmokeSim",			s_node_smokeSim_group,		"Node_Fluid_Group_Inline",	[1, Node_Fluid_Group_Inline],, "Create group for fluid simulation.").setVersion(1120);
 		addNodeObject(generator, "StrandSim",			s_node_strandSim,			"Node_Strand_Group_Inline",	[1, Node_Strand_Group_Inline], ["Hair"], "Create group for hair simulation.").setVersion(1140);
@@ -745,7 +744,7 @@ function __initNodes() {
 		addNodeObject(values, "Filter Array",	s_node_filter_array,	"Node_Iterate_Filter_Inline",	[1, Node_Iterate_Filter_Inline],, "Filter array using condition.").setVersion(1140);
 		addNodeObject(values, "Sort Array",		s_node_sort_array,		"Node_Iterate_Sort_Inline",		[1, Node_Iterate_Sort_Inline],, "Sort array using node graph.").setVersion(1143);
 		addNodeObject(values, "Parse CSV",		s_node_csv_parse,		"Node_Array_CSV_Parse",			[1, Node_Array_CSV_Parse]).setVersion(1145);
-			
+		
 		ds_list_add(values, "Paths");
 		addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path]);
 		addNodeObject(values, "Path Anchor",	s_node_path_anchor,		"Node_Path_Anchor",		[1, Node_Path_Anchor]).setVersion(1140);
@@ -1019,6 +1018,7 @@ function __initNodes() {
 		addNodeObject(hid, "StrandSim",			s_node_strandSim,		"Node_Strand_Group",			[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140).hideRecent();
 		addNodeObject(hid, "Feedback",			s_node_feedback,		"Node_Feedback_Inline",			[1, Node_Feedback_Inline]).hideRecent();
 		addNodeObject(hid, "Loop",				s_node_loop,			"Node_Iterate_Inline",			[1, Node_Iterate_Inline]).hideRecent();
+		addNodeObject(hid, "VFX",				s_node_vfx,				"Node_VFX_Group",				[1, Node_VFX_Group]).hideRecent();
 		
 		addNodeObject(hid, "Loop Array",		s_node_loop_array,		"Node_Iterate_Each",					[1, Node_Iterate_Each]).hideRecent();
 		addNodeObject(hid, "Loop Input",		s_node_loop_array,		"Node_Iterator_Each_Inline_Input",		[1, Node_Iterator_Each_Inline_Input]).hideRecent();
