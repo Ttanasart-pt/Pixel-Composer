@@ -51,6 +51,12 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		tb[i].slidable = true;
 	}
 	
+	static setMinMax = function() {
+		linkable = false;
+		axis     = [ "min", "max" ];
+		return self;
+	}
+	
 	static setLinkInactiveColor = function(color) {
 		link_inactive_color = color;
 		return self;
@@ -140,7 +146,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		for(var i = 0; i < sz; i++) {
 			draw_set_font(f_p0);
-			var lw = max(ui(24), string_width(axis[i]) + ui(16));
+			var lw = sz > 1? max(ui(24), string_width(axis[i]) + ui(16)) : 0;
 			
 			var bx = per_line? _x : _x + ww * i;
 			var by = per_line? _y + (_h + ui(8)) * i : _y;
@@ -148,8 +154,10 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			tb[i].setFocusHover(active, hover);
 			tb[i].draw(bx + lw, by, ww - lw, _h, _data[i], _m);
 			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
-			draw_text_add(bx + ui(8), by + _h / 2, axis[i]);
+			if(sz > 1) {
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
+				draw_text_add(bx + ui(8), by + _h / 2, axis[i]);
+			}
 		}
 		
 		resetFocus();

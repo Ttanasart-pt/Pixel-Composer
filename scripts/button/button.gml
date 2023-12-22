@@ -1,6 +1,4 @@
-function button(_onClick, _icon = noone) {
-	return new buttonClass(_onClick, _icon);
-}
+function button(_onClick, _icon = noone) { INLINE return new buttonClass(_onClick, _icon); }
 
 function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	icon	   = _icon;
@@ -19,49 +17,49 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	
 	toggled = false;
 	
-	static setLua = function(_lua_thread, _lua_key, _lua_func) { 
+	static setLua = function(_lua_thread, _lua_key, _lua_func) { #region
 		lua_thread = _lua_thread;
 		lua_thread_key = _lua_key;
 		onClick = method(self, _lua_func);
-	}
+	} #endregion
 	
-	static trigger = function() { 
+	static trigger = function() { #region
 		clicked = true;
 		
 		if(!is_callable(onClick))
 			return noone;
 		triggered = true;
 		onClick();
-	}
+	} #endregion
 	
-	static isTriggered = function() {
+	static isTriggered = function() { #region
 		var t = triggered;
 		triggered = false;
 		return t;
-	}
+	} #endregion
 	
-	static setIcon = function(_icon, _index = 0, _blend = c_white) { 
+	static setIcon = function(_icon, _index = 0, _blend = c_white) { #region
 		icon       = _icon; 
 		icon_index = _index;
 		icon_blend = _blend;
 		return self; 
-	}
+	} #endregion
 	
-	static setText = function(_text) { 
+	static setText = function(_text) { #region
 		text = _text; 
 		return self; 
-	}
+	} #endregion
 	
-	static setTooltip = function(_tip) { 
+	static setTooltip = function(_tip) { #region
 		tooltip = _tip; 
 		return self; 
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		return draw(params.x, params.y, params.w, params.h, params.m);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _m, spr = THEME.button, blend = c_white) {
+	static draw = function(_x, _y, _w, _h, _m, spr = THEME.button, blend = c_white) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -106,10 +104,10 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		resetFocus();
 		
 		return _h;
-	}
+	} #endregion
 }
 
-function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1) {
+function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1) { #region
 	var res = 0;
 	var cc  = is_array(_icon_blend)? _icon_blend[0] : _icon_blend;
 	
@@ -138,4 +136,4 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 		draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, _icon_scale, cc, _icon_alpha);
 	
 	return res;
-}
+} #endregion

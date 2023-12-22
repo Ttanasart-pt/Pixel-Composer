@@ -4,32 +4,40 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
+		.setMappable(18);
 	
 	inputs[| 2] = nodeValue("Contrast",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider);
+		.setDisplay(VALUE_DISPLAY.slider)
+		.setMappable(19);
 	
 	inputs[| 3] = nodeValue("Hue",        self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
+		.setMappable(20);
 	
 	inputs[| 4] = nodeValue("Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
+		.setMappable(21);
 	
 	inputs[| 5] = nodeValue("Value",      self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
+		.setMappable(22);
 	
 	inputs[| 6] = nodeValue("Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
 	inputs[| 7] = nodeValue("Blend amount",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider);
+		.setDisplay(VALUE_DISPLAY.slider)
+		.setMappable(23);
 	
 	inputs[| 8] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 9] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider);
+		.setDisplay(VALUE_DISPLAY.slider)
+		.setMappable(24);
 	
 	inputs[| 10] = nodeValue("Exposure", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] })
+		.setMappable(25);
 	
 	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 11;
@@ -52,19 +60,47 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 17] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] });
 	
+	////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 18] = nodeValue("Brightness map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
+	inputs[| 19] = nodeValue("Contrast map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
+	inputs[| 20] = nodeValue("Hue map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
+	inputs[| 21] = nodeValue("Saturation map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
+	inputs[| 22] = nodeValue("Value map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
+	inputs[| 23] = nodeValue("Blend map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
+	inputs[| 24] = nodeValue("Alpha map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
+	inputs[| 25] = nodeValue("Exposure map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+		
+	////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Color out", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	input_display_list = [11, 12, 15, 9, 
+	input_display_list = [11, 12, 15, 9, 24, 
 		["Surface",		false], 0, 8, 16, 17, 13, 
-		["Brightness",	false], 1, 10, 2, 
-		["HSV",			false], 3, 4, 5, 
-		["Color blend", false], 6, 14, 7
+		["Brightness",	false], 1, 18, 10, 25, 2, 19, 
+		["HSV",			false], 3, 20, 4, 21, 5, 22, 
+		["Color blend", false], 6, 14, 7, 23, 
 	];
 	
-	temp_surface = [ surface_create(1, 1) ];
+	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
 	attribute_surface_depth();
 	
@@ -83,6 +119,15 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _msk = is_surface(getSingleValue(8));
 		inputs[| 16].setVisible(_msk);
 		inputs[| 17].setVisible(_msk);
+		
+		inputs[|  1].mappableStep();
+		inputs[|  2].mappableStep();
+		inputs[|  3].mappableStep();
+		inputs[|  4].mappableStep();
+		inputs[|  5].mappableStep();
+		inputs[|  7].mappableStep();
+		inputs[|  9].mappableStep();
+		inputs[| 10].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -113,7 +158,16 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		_col = array_clone(_col);
 		
-		if(_type == 1) {
+		if(_type == 1) { #region color adjust
+			if(is_array(_bri)) _bri = array_safe_get(_bri, 0);
+			if(is_array(_con)) _con = array_safe_get(_con, 0);
+			if(is_array(_hue)) _hue = array_safe_get(_hue, 0);
+			if(is_array(_sat)) _sat = array_safe_get(_sat, 0);
+			if(is_array(_val)) _val = array_safe_get(_val, 0);
+			if(is_array(_bla)) _bla = array_safe_get(_bla, 0);
+			if(is_array(_alp)) _alp = array_safe_get(_alp, 0);
+			if(is_array(_exp)) _exp = array_safe_get(_exp, 0);
+			
 			if(!is_array(_col)) _col = [ _col ];
 			
 			for( var i = 0, n = array_length(_col); i < n; i++ ) {
@@ -144,29 +198,62 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			}
 			
 			return _col;
-		}
+		} #endregion
 		
-		_m = mask_modify(_m, _mskInv, _mskFea);
+		#region param
+			var sw = surface_get_width_safe(_baseSurf);
+			var sh = surface_get_height_safe(_baseSurf);
 		
-		surface_set_shader(_baseSurf, sh_color_adjust);
-			shader_set_f("brightness", _bri);
-			shader_set_f("exposure", _exp);
-			shader_set_f("contrast", _con);
-			shader_set_f("hue", _hue);
-			shader_set_f("sat", _sat);
-			shader_set_f("val", _val);
+			temp_surface[0] = surface_verify(temp_surface[0], sw * 2, sh * 2);
+			temp_surface[1] = surface_verify(temp_surface[1], sw * 2, sh * 2);
+		
+			surface_set_target(temp_surface[0]);
+				DRAW_CLEAR
+				
+				draw_surface_stretched_safe(_data[18], sw * 0, sh * 0, sw, sh); //Brightness
+				draw_surface_stretched_safe(_data[25], sw * 1, sh * 0, sw, sh); //Exposure
+				draw_surface_stretched_safe(_data[19], sw * 0, sh * 1, sw, sh); //Contrast
+				draw_surface_stretched_safe(_data[20], sw * 1, sh * 1, sw, sh); //Hue
+			surface_reset_target();
+		
+			surface_set_target(temp_surface[1]);
+				DRAW_CLEAR
+				
+				draw_surface_stretched_safe(_data[21], sw * 0, sh * 0, sw, sh); //Sat
+				draw_surface_stretched_safe(_data[22], sw * 1, sh * 0, sw, sh); //Val
+				draw_surface_stretched_safe(_data[23], sw * 0, sh * 1, sw, sh); //Blend
+				draw_surface_stretched_safe(_data[24], sw * 1, sh * 1, sw, sh); //Alpha
+			surface_reset_target();
+		#endregion
+		
+		#region surface adjust
+			_m = mask_modify(_m, _mskInv, _mskFea);
+			surface_set_shader(_baseSurf, sh_color_adjust);
+				shader_set_surface("param0", temp_surface[0]);
+				shader_set_surface("param1", temp_surface[1]);
+				
+				shader_set_f_map_s("brightness", _bri, _data[18], inputs[|  1]);
+				shader_set_f_map_s("exposure",   _exp, _data[25], inputs[| 10]);
+				shader_set_f_map_s("contrast",   _con, _data[19], inputs[|  2]);
+				shader_set_f_map_s("hue",        _hue, _data[20], inputs[|  3]);
+				shader_set_f_map_s("sat",        _sat, _data[21], inputs[|  4]);
+				shader_set_f_map_s("val",        _val, _data[22], inputs[|  5]);
 			
-			shader_set_color("blend", _bl, _bla);
-			shader_set_i("blendMode", _blm);
+				shader_set_color("blend",   _bl);
+				shader_set_f_map_s("blendAmount", _bla, _data[23], inputs[| 7]);
+				shader_set_i("blendMode",   _blm);
+				
+				shader_set_f_map_s("alpha", _alp, _data[24], inputs[| 9]);
+				shader_set_i("use_mask", is_surface(_m));
+				shader_set_surface("mask", _m);
+				
+				gpu_set_colorwriteenable(1, 1, 1, 0);
+				draw_surface_safe(_surf, 0, 0);				//replace clear color with surface color
+				gpu_set_colorwriteenable(1, 1, 1, 1);
 			
-			shader_set_i("use_mask", is_surface(_m));
-			shader_set_surface("mask", _m);
-			
-			gpu_set_colorwriteenable(1, 1, 1, 0);
-			draw_surface_safe(_surf, 0, 0);
-			gpu_set_colorwriteenable(1, 1, 1, 1);
-			draw_surface_ext_safe(_surf, 0, 0, 1, 1, 0, c_white, _alp);
-		surface_reset_shader();
+				draw_surface_ext_safe(_surf, 0, 0, 1, 1, 0, c_white, 1);
+			surface_reset_shader();
+		#endregion
 		
 		return _outSurf;
 	} #endregion

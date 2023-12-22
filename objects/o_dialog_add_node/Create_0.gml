@@ -482,9 +482,9 @@ event_inherited();
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-					if(mouse_press(mb_left, sFOCUS))
+					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node);
-					else if(mouse_press(mb_right, sFOCUS))
+					else if(mouse_release(mb_right, sFOCUS))
 						rightClick(_node);
 				}
 				
@@ -602,9 +602,9 @@ event_inherited();
 					}
 					
 					draw_sprite_stretched_ext(THEME.node_active, 0, ui(16), yy, list_width - ui(32), list_height, COLORS._main_accent, 1);
-					if(mouse_press(mb_left, sFOCUS))
+					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node);
-					else if(mouse_press(mb_right, sFOCUS))
+					else if(mouse_release(mb_right, sFOCUS))
 						rightClick(_node);
 				}
 				
@@ -813,9 +813,9 @@ event_inherited();
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					node_selecting = i;
-					if(mouse_press(mb_left, sFOCUS))
+					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node, _param);
-					else if(struct_has(_node, "node") && mouse_press(mb_right, sFOCUS))
+					else if(struct_has(_node, "node") && mouse_release(mb_right, sFOCUS))
 						rightClick(_node);
 				}
 				
@@ -908,9 +908,9 @@ event_inherited();
 					}
 					
 					node_selecting = i;
-					if(mouse_press(mb_left, sFOCUS))
+					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node, _param);
-					else if(struct_has(_node, "node") && mouse_press(mb_right, sFOCUS))
+					else if(struct_has(_node, "node") && mouse_release(mb_right, sFOCUS))
 						rightClick(_node);
 				}
 				

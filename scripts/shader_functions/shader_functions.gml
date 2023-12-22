@@ -1,4 +1,4 @@
-function shader_set_i(uniform, value) {
+function shader_set_i(uniform, value) { #region
 	INLINE
 	
 	var shader = shader_current();
@@ -19,15 +19,15 @@ function shader_set_i(uniform, value) {
 				array[i - 1] = argument[i];
 			shader_set_i_array(shader, uniform, array)
 	}
-}
+} #endregion
 
-function shader_set_i_array(shader, uniform, array) {
+function shader_set_i_array(shader, uniform, array) { #region
 	INLINE
 	
 	shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array);
-}
+} #endregion
 
-function shader_set_f(uniform, value) {
+function shader_set_f(uniform, value) { #region
 	INLINE
 	
 	var shader = shader_current();
@@ -63,9 +63,24 @@ function shader_set_f(uniform, value) {
 			array[i - 1] = argument[i];
 		shader_set_uniform_f_array(shader_get_uniform(shader, uniform), array);
 	}
-}
+} #endregion
 
-function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) {
+function shader_set_f_map(uniform, value, surface, junc) { #region
+	INLINE
+	
+	shader_set_f(      uniform, is_array(value)? value : [ value, value ]); 
+	shader_set_i(      uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
+	shader_set_surface(uniform + "Surf",    surface);
+} #endregion
+
+function shader_set_f_map_s(uniform, value, surface, junc) { #region
+	INLINE
+	
+	shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
+	shader_set_i(uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
+} #endregion
+
+function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) { #region
 	INLINE
 	
 	if(!is_array(array)) return;
@@ -75,9 +90,9 @@ function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) {
 	if(_len > max_length) array_resize(array, max_length)
 	
 	shader_set_uniform_f_array(uniform, array);
-}
+} #endregion
 
-function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
+function shader_set_surface(sampler, surface, linear = false, _repeat = false) { #region
 	INLINE
 	
 	var shader = shader_current();
@@ -94,32 +109,9 @@ function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 	gpu_set_tex_repeat_ext(t, _repeat);
 	
 	return t;
-}
+} #endregion
 
-function shader_set_surface_i(sampler, useSampler, surface) {
-	INLINE
-	
-	shader_set_surface(sampler, surface);
-	shader_set_i(useSampler, is_surface(surface));
-}	
-
-//function shader_set_surface_ext(sampler, surface, linear = false, _repeat = false) {
-//	var shader = shader_current();
-//	if(!is_surface(surface)) return;
-	
-//	if (!GMD3D11_IS_SUPPORTED) {
-//		shader_set_surface(sampler, surface, linear, _repeat);
-//		return;
-//	}
-	
-//	var t = shader_get_sampler_index(shader, sampler);
-//	gpu_set_tex_filter_ext(t, linear);
-//	gpu_set_tex_repeat_ext(t, _repeat);
-	
-//	d3d11_texture_set_stage_ps(t, surface_get_texture(surface));
-//}
-
-function shader_set_surface_dimension(uniform, surface) {
+function shader_set_surface_dimension(uniform, surface) { #region
 	INLINE
 	
 	var shader = shader_current();
@@ -134,23 +126,22 @@ function shader_set_surface_dimension(uniform, surface) {
 	th = 2048;
 	
 	shader_set_uniform_f(shader_get_uniform(shader, uniform), tw, th);
-}
+} #endregion
 
-function shader_set_dim(uniform = "dimension", surf = noone) {
+function shader_set_dim(uniform = "dimension", surf = noone) { #region
 	INLINE
 	
 	if(!is_surface(surf)) return;
-	
 	shader_set_f(uniform, surface_get_width_safe(surf), surface_get_height_safe(surf));
-}
+} #endregion
 
-function shader_set_color(uniform, col, alpha = 1) {
+function shader_set_color(uniform, col, alpha = 1) { #region
 	INLINE
 	
 	shader_set_f(uniform, colToVec4(col, alpha));
-}
+} #endregion
 
-function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 128) {
+function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 128) { #region
 	INLINE
 	
 	shader_set_i(amo_uni, min(max_length, array_length(pal)));
@@ -161,7 +152,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	
 	if(array_length(_pal))
 		shader_set_f(pal_uni, _pal);
-}
+} #endregion
 
 #region prebuild
 	enum BLEND {

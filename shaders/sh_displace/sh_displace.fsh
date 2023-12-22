@@ -8,15 +8,15 @@ uniform sampler2D map;
 uniform vec2  dimension;
 uniform vec2  map_dimension;
 uniform vec2  displace;
-uniform float strength;
 uniform float middle;
 uniform int   iterate;
 uniform int   use_rg;
 uniform int   sampleMode;
 uniform int   blendMode;
 
+uniform vec2      strength;
+uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
-uniform int strengthUseSurf;
 
 float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
 
@@ -88,11 +88,6 @@ vec2 shiftMap(in vec2 pos, in float str) { #region
 	vec2  raw_displace = displace / dimension;
 	float _str;
 	
-	if(strengthUseSurf == 1) {
-		vec4 strMap = texture2Dintp( strengthSurf, pos );
-		str *= (strMap.r + strMap.g + strMap.b) / 3.;
-	}
-	
 	if(use_rg == 1) {
 		vec2 _disp = vec2(disP.r - middle, disP.g - middle) * vec2((disP.r + disP.g + disP.b) / 3. - middle) * str;
 		
@@ -130,13 +125,23 @@ void main() { #region
 	vec2 samPos = v_vTexcoord;
 	vec4 ccol   = sampleTexture( v_vTexcoord ), ncol;
 	
+	float stren = strength.x;
+	float stMax = strength.x;
+	if(strengthUseSurf == 1) {
+		vec4 strMap = texture2Dintp( strengthSurf, v_vTexcoord );
+		stren = mix(strength.x, strength.y, (strMap.r + strMap.g + strMap.b) / 3.);
+		stMax = strength.y;
+	}
+	
 	if(iterate == 1) {
-		for(float i = 0.; i < strength; i++) {
+		for(float i = 0.; i < stMax; i++) {
+			if(i >= stren) break;
+			
 			samPos = shiftMap(samPos, 1.);
 			ncol   = blend(ccol, sampleTexture( samPos ));
 		}
 	} else {
-		samPos = shiftMap(samPos, strength);
+		samPos = shiftMap(samPos, stren);
 		ncol   = sampleTexture( samPos );
 	}
 	

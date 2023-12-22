@@ -12,9 +12,10 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	current_value = 0;
 	slide_speed   = 1 / 10;
 	
-	onModify  = _onModify;
-	onRelease = _onRelease;
-	onApply   = function(val) {
+	side_button = noone;
+	onModify    = _onModify;
+	onRelease   = _onRelease;
+	onApply     = function(val) {
 		if(onModify)  onModify(val);
 		if(onRelease) onRelease();
 	}
@@ -58,6 +59,12 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		if(!is_real(_data)) return;
 		
 		if(!dragging) current_value = _data;
+		
+		if(side_button) {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
+			_w -= ui(40);
+		}
 		
 		switch(halign) { #region
 			case fa_left:   _x = _x;			break;	

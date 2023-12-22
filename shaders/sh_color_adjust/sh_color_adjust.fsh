@@ -7,15 +7,28 @@ varying vec4 v_vColour;
 uniform int use_mask;
 uniform sampler2D mask;
 
-uniform float brightness;
-uniform float contrast;
-uniform float exposure;
-uniform float hue;
-uniform float sat;
-uniform float val;
+uniform sampler2D param0;
+uniform sampler2D param1;
 
-uniform vec4  blend;
-uniform int   blendMode;
+uniform vec2 brightness;
+uniform int  brightnessUseSurf;
+uniform vec2 contrast;
+uniform int  contrastUseSurf;
+uniform vec2 exposure;
+uniform int  exposureUseSurf;
+uniform vec2 hue;
+uniform int  hueUseSurf;
+uniform vec2 sat;
+uniform int  satUseSurf;
+uniform vec2 val;
+uniform int  valUseSurf;
+uniform vec2 alpha;
+uniform int  alphaUseSurf;
+
+uniform vec4 blend;
+uniform vec2 blendAmount;
+uniform int  blendAmountUseSurf;
+uniform int  blendMode;
 
 vec3 rgb2hsv(vec3 c) { #region
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -104,22 +117,74 @@ vec3 rgb2hsl( in vec3 c ) { #region
 void main() {
     vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
     
+	#region get param
+		vec2 htx = v_vTexcoord * 0.5;
+	
+		float bri = brightness.x;
+		if(brightnessUseSurf == 1) {
+			vec4 _vMap = texture2D( param0, htx );
+			bri = mix(brightness.x, brightness.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float exo = exposure.x;
+		if(exposureUseSurf == 1) {
+			vec4 _vMap = texture2D( param0, vec2(0.5, 0.0) + htx );
+			exo = mix(exposure.x, exposure.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float con = contrast.x;
+		if(contrastUseSurf == 1) {
+			vec4 _vMap = texture2D( param0, vec2(0.0, 0.5) + htx );
+			con = mix(contrast.x, contrast.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float hhe = hue.x;
+		if(hueUseSurf == 1) {
+			vec4 _vMap = texture2D( param0, vec2(0.5, 0.5) + htx );
+			hhe = mix(hue.x, hue.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float sst = sat.x;
+		if(satUseSurf == 1) {
+			vec4 _vMap = texture2D( param1, htx );
+			sst = mix(sat.x, sat.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float vvl = val.x;
+		if(valUseSurf == 1) {
+			vec4 _vMap = texture2D( param1, vec2(0.5, 0.0) + htx );
+			vvl = mix(val.x, val.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float bld = blendAmount.x;
+		if(blendAmountUseSurf == 1) {
+			vec4 _vMap = texture2D( param1, vec2(0.0, 0.5) + htx );
+			bld = mix(blendAmount.x, blendAmount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float alp = alpha.x;
+		if(alphaUseSurf == 1) {
+			vec4 _vMap = texture2D( param1, vec2(0.5, 0.5) + htx );
+			alp = mix(alpha.x, alpha.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	#endregion
+	
 	//contrast
-	vec4 col_c = .5 + (contrast * 2.) * (col - .5);
+	vec4 col_c = .5 + (con * 2.) * (col - .5);
 	col_c = clamp(col_c, vec4(0.), vec4(1.));
 	
 	//brightness
-	vec4 col_cb = col_c + vec4(brightness, brightness, brightness, 0.0);
+	vec4 col_cb = col_c + vec4(bri, bri, bri, 0.0);
 	col_cb = clamp(col_cb, vec4(0.), vec4(1.));
 	
 	//exposure
-	col_cb = clamp(col_cb * exposure, vec4(0.), vec4(1.));
+	col_cb = clamp(col_cb * exo, vec4(0.), vec4(1.));
 	
 	//hsv
 	vec3 _hsv = rgb2hsv(col_cb.rgb);
-	_hsv.x = clamp(_hsv.x + hue, -1., 1.);
-	_hsv.z = clamp((_hsv.z + val) * (1. + sat * _hsv.y * .5), 0., 1.);
-	_hsv.y = clamp(_hsv.y * (sat + 1.), 0., 1.);
+	_hsv.x = clamp(_hsv.x + hhe, -1., 1.);
+	_hsv.z = clamp((_hsv.z + vvl) * (1. + sst * _hsv.y * .5), 0., 1.);
+	_hsv.y = clamp(_hsv.y * (sst + 1.), 0., 1.);
 	
 	vec3 _col_cbh = hsv2rgb(_hsv);
 	vec4 col_cbh = vec4(_col_cbh.r, _col_cbh.g, _col_cbh.b, col.a);
@@ -143,11 +208,11 @@ void main() {
 	
 	else if(blendMode == 5) bmix = lum > 0.5? (1. - (1. - 2. * (col3 - 0.5)) * (1. - bld3)) : ((2. * col3) * bld3);
 	else if(blendMode == 6) bmix = hsv2rgb(vec3(bhsv.r, chsv.g, chsv.b));
-	else if(blendMode == 7) bmix = hsv2rgb(vec3(chsv.r, mix(chsv.g, bhsv.g, blend.a), chsv.b));
+	else if(blendMode == 7) bmix = hsv2rgb(vec3(chsv.r, mix(chsv.g, bhsv.g, bld), chsv.b));
 	else if(blendMode == 8) { 
 		vec3 chsl = rgb2hsl(col3);
 		vec3 bhsl = rgb2hsl(bld3);
-		chsl.z    = mix(chsl.z, bhsl.z, blend.a);
+		chsl.z    = mix(chsl.z, bhsl.z, bld);
 		bmix      = hsl2rgb(chsl);
 	}
 	else if(blendMode == 9) {
@@ -166,7 +231,7 @@ void main() {
 	else if(blendMode == 12) bmix = abs(col3 - bld3);
 	
 	if(blendMode != 7 && blendMode != 8)
-		col_cbh.rgb = mix(col_cbh.rgb, bmix, blend.a);
+		col_cbh.rgb = mix(col_cbh.rgb, bmix, bld);
 	else 
 		col_cbh.rgb = bmix;
 	
@@ -175,9 +240,9 @@ void main() {
 		vec4 mas = texture2D( mask, v_vTexcoord );
 		mas.rgb *= mas.a;
 		gl_FragColor = col_cbh * mas + col * (vec4(1.) - mas);
-		gl_FragColor.a = col.a * mix(1., v_vColour.a, mas.r);
+		gl_FragColor.a = col.a * mix(1., alp, mas.r);
 	} else {
 		gl_FragColor = col_cbh;
-		gl_FragColor.a = col.a * v_vColour.a;
+		gl_FragColor.a = col.a * alp;
 	}
 }

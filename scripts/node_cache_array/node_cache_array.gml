@@ -46,7 +46,11 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	
 	static update = function() { #region
 		if(!inputs[| 0].value_from) return;
-		if(!inputs[| 0].value_from.node.renderActive) return;
+		if(!inputs[| 0].value_from.node.renderActive) {
+			if(!cacheExist(CURRENT_FRAME))
+				enableNodeGroup();
+			return;
+		}
 		
 		var ss  = [];
 		var str = getInputData(1);

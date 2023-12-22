@@ -1264,6 +1264,43 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		updateColor();
 	} resetDisplay(); #endregion
 	
+	static setMappable = function(index) { #region
+		attributes.mapped    = false;
+		attributes.map_index = index;
+		
+		editWidgetRaw = editWidget;
+		
+		mapButton = button(function() { 
+						attributes.mapped = !attributes.mapped;
+						var val = getValue();
+						if( attributes.mapped && is_numeric(val)) setValue([0, val]);
+						if(!attributes.mapped && is_array(val))   setValue(array_safe_get(val, 0));
+						setArrayDepth(attributes.mapped);
+						
+						node.triggerRender(); 
+					})
+				.setIcon( THEME.value_use_surface, [ function() { return attributes.mapped; } ], COLORS._main_icon )
+				.setTooltip("Use map");
+		
+		mapWidget = new vectorBox(2, function(index, val) { return setValueDirect(val, index); });
+		mapWidget.side_button = mapButton;
+		mapWidget.setMinMax();
+		
+		editWidget.side_button = mapButton;
+		
+		return self;
+	} #endregion
+	
+	static mappableStep = function() { #region
+		editWidget = attributes.mapped? mapWidget : editWidgetRaw;
+		setArrayDepth(attributes.mapped);
+		
+		if(node.inputs[| attributes.map_index].visible != attributes.mapped) {
+			node.inputs[| attributes.map_index].visible = attributes.mapped;
+			node.setHeight();
+		}
+	} #endregion
+	
 	static setColor = function(col) { #region
 		color = col;
 		updateColor();
@@ -2447,6 +2484,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_y = struct_try_get(_map, "shift_y");
 		is_modified       = struct_try_get(_map, "is_modified", true);
 		
+		struct_append(attributes, struct_try_get(_map, "attributes"))
 		name_custom = struct_try_get(_map, "name_custom", false);
 		if(name_custom) name = struct_try_get(_map, "name", name);
 		
@@ -2475,7 +2513,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.input_value_map[$ internalName] = _value;
 		}
 		
+		attributeApply();
+		
 		onValidate();
+	} #endregion
+	
+	static attributeApply = function() { #region
+		if(struct_has(attributes, "mapped")) mappableStep();
 	} #endregion
 	
 	static connect = function(log = false) { #region

@@ -7,9 +7,12 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 uniform vec2 center;
 uniform int axis;
-uniform float amount;
 
-/////////////// SAMPLING ///////////////
+uniform vec2      amount;
+uniform int       amountUseSurf;
+uniform sampler2D amountSurf;
+
+#region /////////////// SAMPLING ///////////////
 
 const float PI = 3.14159265358979323846;
 uniform int interpolation;
@@ -56,9 +59,9 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 	return texture2D( texture, uv );
 }
 
-/////////////// SAMPLING ///////////////
+#endregion /////////////// SAMPLING ///////////////
 
-vec4 sampleTexture(vec2 pos) {
+vec4 sampleTexture(vec2 pos) { #region
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2Dintp(gm_BaseTexture, pos);
 	
@@ -70,16 +73,20 @@ vec4 sampleTexture(vec2 pos) {
 		return texture2Dintp(gm_BaseTexture, fract(pos));
 	
 	return vec4(0.);
-}
+} #endregion
 
 void main() {
 	vec2 pos = v_vTexcoord;
 	vec2 cnt = center / dimension;
 	
-	if(axis == 0)
-		pos.x += (pos.y - cnt.y) * amount;
-	else
-		pos.y += (pos.x - cnt.x) * amount;
+	float amo = amount.x;
+	if(amountUseSurf == 1) {
+		vec4 _vMap = texture2Dintp( amountSurf, v_vTexcoord );
+		amo = mix(amount.x, amount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
+	if(axis == 0) pos.x += (pos.y - cnt.y) * amo;
+	else          pos.y += (pos.x - cnt.x) * amo;
 	
     gl_FragColor = sampleTexture( pos );
 }

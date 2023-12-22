@@ -10,13 +10,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 3] = nodeValue("Strength",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY._default, { side_button: button(function() { 
-			var jun = inputs[| 15];
-			
-			jun.visible = !jun.visible;
-			setHeight();
-		}).setIcon( THEME.value_use_surface, [ function() { return inputs[| 15].visible; } ], COLORS._main_icon )
-		  .setTooltip("Use map") });
+		.setMappable(15);
 	
 	inputs[| 4] = nodeValue("Mid value",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0., "Brightness value to be use as a basis for 'no displacement'.")
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -67,19 +61,12 @@ If set, then strength value control how many times the effect applies on itself.
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		inputs[| 2].setVisible(getInputData(5) == 0);
+		inputs[| 3].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		switch(_data[5]) {
-			case 0 :
-				inputs[| 2].setVisible(true);
-				break;
-			case 1 :
-			case 2 :
-				inputs[| 2].setVisible(false);
-				break;
-		}
-		
 		var ww = surface_get_width_safe(_data[0]);
 		var hh = surface_get_height_safe(_data[0]);
 		var mw = surface_get_width_safe(_data[1]);
@@ -91,10 +78,7 @@ If set, then strength value control how many times the effect applies on itself.
 			shader_set_f("dimension",     [ww, hh]);
 			shader_set_f("map_dimension", [mw, mh]);
 			shader_set_f("displace",      _data[ 2]);
-			shader_set_f("strength",      _data[ 3]);
-			
-			shader_set_surface_i("strengthSurf", "strengthUseSurf", _data[15]);
-			
+			shader_set_f_map("strength",  _data[ 3], _data[15], inputs[| 3].attributes.mapped);
 			shader_set_f("middle",        _data[ 4]);
 			shader_set_i("use_rg",        _data[ 5]);
 			shader_set_i("iterate",       _data[ 6]);
