@@ -8,7 +8,8 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
 	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setMappable(13);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 	
 	inputs[| 3] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
@@ -41,15 +42,27 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		addShaderProp(SHADER_UNIFORM.integer, "type");
 		
 	inputs[| 11] = nodeValue("Parameter A", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider);
+		.setDisplay(VALUE_DISPLAY.slider)
+		.setMappable(14);
 		addShaderProp(SHADER_UNIFORM.float, "paramA");
 		
-	inputs[| 12] = nodeValue("Parameter B", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 12] = nodeValue("Parameter B", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setMappable(15);
 		addShaderProp(SHADER_UNIFORM.float, "paramB");
 		
+	//////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 13] = nodeValueMap("Scale map", self);			addShaderProp();
+	
+	inputs[| 14] = nodeValueMap("Parameter A map", self);	addShaderProp();
+	
+	inputs[| 15] = nodeValueMap("Parameter B map", self);	addShaderProp();
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	
 	input_display_list = [
 		["Output", 	 true],	0, 5, 
-		["Noise",	false],	10, 1, 2, 3, 4, 11, 12, 
+		["Noise",	false],	10, 1, 2, 13, 3, 4, 11, 14, 12, 15,
 		["Render",	false], 6, 7, 8, 9, 
 	];
 	
@@ -67,5 +80,9 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		
 		inputs[| 11].setVisible(_typ > 0);
 		inputs[| 12].setVisible(false);
+		
+		inputs[|  2].mappableStep();
+		inputs[| 11].mappableStep();
+		inputs[| 12].mappableStep();
 	} #endregion
 }

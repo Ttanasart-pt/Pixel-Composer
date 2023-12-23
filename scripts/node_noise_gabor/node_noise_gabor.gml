@@ -48,6 +48,14 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	
 	input_display_list = [
 		["Output", 	 true],	0, 3, 
-		["Noise",	false],	1, 2, 4, 7, 5, 
+		["Noise",	false],	1, 2, 8, 4, 9, 7, 11, 5, 10, 
 	];
+	
+	static step = function() {
+		inputs[| 2].mappableStep();
+		inputs[| 4].mappableStep();
+		inputs[| 5].mappableStep();
+		inputs[| 7].mappableStep();
+	}
+	
 }

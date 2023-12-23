@@ -11,11 +11,20 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform float seed;
-uniform float progress;
-uniform float detail;
 uniform vec2  u_resolution;
 uniform vec2  position;
-uniform vec2  scale;
+
+uniform vec2      progress;
+uniform int       progressUseSurf;
+uniform sampler2D progressSurf;
+
+uniform vec2      detail;
+uniform int       detailUseSurf;
+uniform sampler2D detailSurf;
+
+uniform vec2      scale;
+uniform int       scaleUseSurf;
+uniform sampler2D scaleSurf;
 
 float WaveletNoise(vec2 p, float z, float k) {
     float d = 0., s = 1., m = 0., a;
@@ -36,12 +45,32 @@ float WaveletNoise(vec2 p, float z, float k) {
 }
 
 void main() {
+	#region params
+		vec2 sca = scale;
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
+		}
+		
+		float prog = progress.x;
+		if(progressUseSurf == 1) {
+			vec4 _vMap = texture2D( progressSurf, v_vTexcoord );
+			prog = mix(progress.x, progress.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float detl = detail.x;
+		if(detailUseSurf == 1) {
+			vec4 _vMap = texture2D( detailSurf, v_vTexcoord );
+			detl = mix(detail.x, detail.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	#endregion
+	
 	vec2 pos    = v_vTexcoord - .5;
 	     pos.x *= (u_resolution.x / u_resolution.y);
-         pos    = (pos + position) * scale / 16.;
+         pos    = (pos + position) * sca / 16.;
 	
     vec3 col  = vec3(0.);
-	     col += WaveletNoise(pos * 5., (2.9864 + progress), detail) * .5 + .5; 
+	     col += WaveletNoise(pos * 5., (2.9864 + prog), detl) * .5 + .5; 
 	
     gl_FragColor = vec4(col, 1.0);
 }

@@ -7,13 +7,24 @@ uniform int  type;
 
 uniform vec2  position;
 uniform vec2  u_resolution;
-uniform vec2  scale;
 uniform int   iteration;
 uniform float seed;
 uniform int   tile;
 
-uniform float paramA;
-uniform float paramB;
+uniform vec2      scale;
+uniform int       scaleUseSurf;
+uniform sampler2D scaleSurf;
+		vec2      sca;
+
+uniform vec2      paramA;
+uniform int       paramAUseSurf;
+uniform sampler2D paramASurf;
+		float     A;
+
+uniform vec2      paramB;
+uniform int       paramBUseSurf;
+uniform sampler2D paramBSurf;
+        float     B;
 
 uniform int  colored;
 uniform vec2 colorRanR;
@@ -59,8 +70,8 @@ float noise (in vec2 st, in vec2 scale) { #region
 	vec2 f = fract(st);
 	vec2 u = f * f * (3.0 - 2.0 * f);
 	if(type == 4) {
-		u.x = smooth(f.x, 2. + paramA * 4.);
-		u.y = smooth(f.y, 2. + paramA * 4.);
+		u.x = smooth(f.x, 2. + A * 4.);
+		u.y = smooth(f.y, 2. + A * 4.);
 	}
 	
 	float a = 0., b = 0., c = 0., d = 0.;
@@ -93,7 +104,7 @@ float _perlin(in vec2 st) { #region
 	
     float n  = 0., m = 0.;
 	vec2 pos = st;
-	vec2  sc = scale;
+	vec2  sc = sca;
 	float it = float(iteration);
 	
 	if(type == 3) it *= 3.;
@@ -104,7 +115,7 @@ float _perlin(in vec2 st) { #region
 		if(type == 3) {
 			m += _n * amp;
 			if(mod(i, 3.) == 2.) {
-				n += smoothstep(0.5 - paramA, 0.5 + paramA, m) * amp;
+				n += smoothstep(0.5 - A, 0.5 + A, m) * amp;
 				m = 0.;
 				
 				sc  /= 1.5;
@@ -116,11 +127,11 @@ float _perlin(in vec2 st) { #region
 				pos *= 1.5;
 			}
 		} else if(type == 4) {
-			n += smooth(_n, 1. + paramA * 5. * i / it) * amp;
+			n += smooth(_n, 1. + A * 5. * i / it) * amp;
 		} else if(type == 5) {
 			n = max(n, _n);
-			sc  *= 1. + paramA * 0.1;
-			pos *= 1. + paramA * 0.1;
+			sc  *= 1. + A * 0.1;
+			pos *= 1. + A * 0.1;
 		} else 
 			n += _n * amp;
 		
@@ -129,12 +140,12 @@ float _perlin(in vec2 st) { #region
 		if(type == 1) {
 			sc  *= 2.;
 			amp *= .5;
-			pos *= 1. + _n + paramA;
+			pos *= 1. + _n + A;
 		} else if(type == 2) {
 			sc  *= 2.;
 			amp *= .5;
 			pos += random2(vec2(n), seed) / sc;
-			pos *= (2. + paramA);
+			pos *= (2. + A);
 		} else if(type == 3) {
 		} else if(type == 5) {
 		} else {
@@ -150,10 +161,10 @@ float _perlin(in vec2 st) { #region
 
 float perlin(in vec2 st) { #region
 	if(type == 6) {
-		float p1 = _perlin(st - vec2(1., 0.) / scale * (1. + paramA));
-	    float p2 = _perlin(st - vec2(0., 1.) / scale * (1. + paramA));
-	    float p3 = _perlin(st - vec2(-1., 0.) / scale * (1. + paramA));
-	    float p4 = _perlin(st - vec2(0., -1.) / scale * (1. + paramA));
+		float p1 = _perlin(st - vec2( 1.,  0.) / sca * (1. + A));
+	    float p2 = _perlin(st - vec2( 0.,  1.) / sca * (1. + A));
+	    float p3 = _perlin(st - vec2(-1.,  0.) / sca * (1. + A));
+	    float p4 = _perlin(st - vec2( 0., -1.) / sca * (1. + A));
 		return abs(p1 - p3) + abs(p2 - p4);
 	}
 	
@@ -161,19 +172,39 @@ float perlin(in vec2 st) { #region
 } #endregion
 
 void main() { #region
+	#region params
+		sca = scale;
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
+		}
+		
+		A = paramA.x;
+		if(paramAUseSurf == 1) {
+			vec4 _vMap = texture2D( paramASurf, v_vTexcoord );
+			A = mix(paramA.x, paramA.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		B = paramB.x;
+		if(paramBUseSurf == 1) {
+			vec4 _vMap = texture2D( paramBSurf, v_vTexcoord );
+			B = mix(paramB.x, paramB.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	#endregion
+	
 	if(colored == 0) {
-		vec2 pos = (v_vTexcoord + position) * scale;
+		vec2 pos = (v_vTexcoord + position) * sca;
 		gl_FragColor = vec4(vec3(perlin(pos)), 1.0);
 	} else if(colored == 1) {
-		float randR = colorRanR[0] + perlin((v_vTexcoord + position) * scale) * (colorRanR[1] - colorRanR[0]);
-		float randG = colorRanG[0] + perlin((v_vTexcoord + position + vec2(1.7227, 4.55529)) * scale) * (colorRanG[1] - colorRanG[0]);
-		float randB = colorRanB[0] + perlin((v_vTexcoord + position + vec2(6.9950, 6.82063)) * scale) * (colorRanB[1] - colorRanB[0]);
+		float randR = colorRanR[0] + perlin((v_vTexcoord + position                        ) * sca) * (colorRanR[1] - colorRanR[0]);
+		float randG = colorRanG[0] + perlin((v_vTexcoord + position + vec2(1.7227, 4.55529)) * sca) * (colorRanG[1] - colorRanG[0]);
+		float randB = colorRanB[0] + perlin((v_vTexcoord + position + vec2(6.9950, 6.82063)) * sca) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(randR, randG, randB, 1.0);
 	} else if(colored == 2) {
-		float randH = colorRanR[0] + perlin((v_vTexcoord + position) * scale) * (colorRanR[1] - colorRanR[0]);
-		float randS = colorRanG[0] + perlin((v_vTexcoord + position + vec2(1.7227, 4.55529)) * scale) * (colorRanG[1] - colorRanG[0]);
-		float randV = colorRanB[0] + perlin((v_vTexcoord + position + vec2(6.9950, 6.82063)) * scale) * (colorRanB[1] - colorRanB[0]);
+		float randH = colorRanR[0] + perlin((v_vTexcoord + position                        ) * sca) * (colorRanR[1] - colorRanR[0]);
+		float randS = colorRanG[0] + perlin((v_vTexcoord + position + vec2(1.7227, 4.55529)) * sca) * (colorRanG[1] - colorRanG[0]);
+		float randV = colorRanB[0] + perlin((v_vTexcoord + position + vec2(6.9950, 6.82063)) * sca) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
 	}
