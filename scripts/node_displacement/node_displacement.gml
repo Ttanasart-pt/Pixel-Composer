@@ -43,8 +43,12 @@ If set, then strength value control how many times the effect applies on itself.
 	
 	__init_mask_modifier(8); // inputs 13, 14
 	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	inputs[| 15] = nodeValue("Strength map",   self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.setVisible(false, false);
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	input_display_list = [ 10, 12, 
 		["Surfaces",	 true],	0, 8, 9, 13, 14, 

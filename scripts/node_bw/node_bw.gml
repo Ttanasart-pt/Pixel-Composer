@@ -24,11 +24,13 @@ function Node_BW(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	__init_mask_modifier(3); // inputs 7, 8 
 	
-	inputs[| 9] = nodeValue("Brightness map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
-		.setVisible(false, false);
+	////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 10] = nodeValue("Contrast map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
-		.setVisible(false, false);
+	inputs[| 9] = nodeValueMap("Brightness map", self);
+	
+	inputs[| 10] = nodeValueMap("Contrast map", self);
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true], 0, 3, 4, 7, 8, 

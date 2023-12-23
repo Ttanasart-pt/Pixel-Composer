@@ -76,14 +76,14 @@ vec4 sampleTexture(vec2 pos) { #region
 } #endregion
 
 void main() {
-	vec2 pos = v_vTexcoord;
-	vec2 cnt = center / dimension;
-	
 	float amo = amount.x;
 	if(amountUseSurf == 1) {
 		vec4 _vMap = texture2Dintp( amountSurf, v_vTexcoord );
 		amo = mix(amount.x, amount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
+	
+	vec2 pos = v_vTexcoord;
+	vec2 cnt = center / dimension;
 	
 	if(axis == 0) pos.x += (pos.y - cnt.y) * amo;
 	else          pos.y += (pos.x - cnt.x) * amo;

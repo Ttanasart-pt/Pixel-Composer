@@ -6,9 +6,12 @@ varying vec4 v_vColour;
 
 uniform vec2 dimension;
 uniform vec2 center;
-uniform float strength;
 
-/////////////// SAMPLING ///////////////
+uniform vec2      strength;
+uniform int       strengthUseSurf;
+uniform sampler2D strengthSurf;
+
+#region /////////////// SAMPLING ///////////////
 
 const float PI = 3.14159265358979323846;
 uniform int interpolation;
@@ -54,14 +57,20 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 	return texture2D( texture, uv );
 }
 
-/////////////// SAMPLING ///////////////
+#endregion /////////////// SAMPLING ///////////////
 
 void main() {
+	float str = strength.x;
+	if(strengthUseSurf == 1) {
+		vec4 _vMap = texture2Dintp( strengthSurf, v_vTexcoord );
+		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 texel = 1.0 / dimension;
     vec2 coords = (v_vTexcoord - center / dimension) * 2.0;
     float coordDot = dot(coords, coords);
     
-    vec2 precompute = strength * coordDot * coords;
+    vec2 precompute = str * coordDot * coords;
     vec2 uvR = v_vTexcoord - texel.xy * precompute;
     vec2 uvB = v_vTexcoord + texel.xy * precompute;
     

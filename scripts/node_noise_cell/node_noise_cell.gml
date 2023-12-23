@@ -8,7 +8,8 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
+	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4)
+		.setMappable(11);
 	
 	inputs[| 3] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
@@ -32,9 +33,15 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 10] = nodeValue("Colored", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
+	//////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 11] = nodeValueMap("Scale map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	
 	input_display_list = [
 		["Output",		false], 0, 
-		["Noise",		false], 4, 6, 3, 1, 2, 
+		["Noise",		false], 4, 6, 3, 1, 2, 11, 
 		["Radial",		false], 8, 9,
 		["Rendering",	false], 5, 7, 10, 
 	];
@@ -47,10 +54,13 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
+	static step = function() { #region
+		inputs[| 2].mappableStep();
+	} #endregion
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim  = _data[0];
 		var _pos  = _data[1];
-		var _sca  = _data[2];
 		var _tim  = _data[3];
 		var _type = _data[4];
 		var _con  = _data[5];
@@ -79,7 +89,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_f("dimension",		_dim);
 			shader_set_f("time",			_tim);
 			shader_set_f("position",		_pos);
-			shader_set_f("scale",			_sca);
+			shader_set_f_map("scale",	_data[2], _data[11], inputs[| 2]);
 			shader_set_f("contrast",		_con);
 			shader_set_f("middle",			_mid);
 			shader_set_f("radiusScale",		_rad);

@@ -122,7 +122,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	input_display_list = [ 6, 
 		["Surfaces",	 true], 0, 4, 5, 7, 8, 
 		["Replace",		false], render_palette, 2, 
-		["Comparison",	false], 3, 
+		//["Comparison",	false], 3, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

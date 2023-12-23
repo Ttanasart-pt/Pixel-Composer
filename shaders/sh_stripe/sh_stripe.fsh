@@ -8,22 +8,33 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 uniform vec2  position;
-uniform float angle;
-uniform float amount;
-uniform float ratio;
-uniform float randomAmount;
 uniform int   blend;
 
-#define GRADIENT_LIMIT 128
+uniform vec2      amount;
+uniform int       amountUseSurf;
+uniform sampler2D amountSurf;
 
+uniform vec2      angle;
+uniform int       angleUseSurf;
+uniform sampler2D angleSurf;
+
+uniform vec2      randomAmount;
+uniform int       randomAmountUseSurf;
+uniform sampler2D randomAmountSurf;
+
+uniform vec2      ratio;
+uniform int       ratioUseSurf;
+uniform sampler2D ratioSurf;
+
+uniform vec4  color0;
+uniform vec4  color1;
+
+#define GRADIENT_LIMIT 128
 uniform int   gradient_use;
 uniform int   gradient_blend;
 uniform vec4  gradient_color[GRADIENT_LIMIT];
 uniform float gradient_time[GRADIENT_LIMIT];
 uniform int   gradient_keys;
-
-uniform vec4  color0;
-uniform vec4  color1;
 
 vec3 rgb2hsv(vec3 c) { #region
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -92,21 +103,48 @@ vec4 gradientEval(in float prog) { #region
 float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
 
 void main() { #region
+	#region params
+		float amo = amount.x;
+		if(amountUseSurf == 1) {
+			vec4 _vMap = texture2D( amountSurf, v_vTexcoord );
+			amo = mix(amount.x, amount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float ang = angle.x;
+		if(angleUseSurf == 1) {
+			vec4 _vMap = texture2D( angleSurf, v_vTexcoord );
+			ang = mix(angle.x, angle.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		ang = radians(ang);
+		
+		float rnd = randomAmount.x;
+		if(randomAmountUseSurf == 1) {
+			vec4 _vMap = texture2D( randomAmountSurf, v_vTexcoord );
+			rnd = mix(randomAmount.x, randomAmount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float rat = ratio.x;
+		if(ratioUseSurf == 1) {
+			vec4 _vMap = texture2D( ratioSurf, v_vTexcoord );
+			rat = mix(ratio.x, ratio.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	#endregion
+	
 	vec2  pos     = v_vTexcoord - position;
 	float aspect  = dimension.x / dimension.y;
-	float prog    = pos.x * aspect * cos(angle) - pos.y * sin(angle);
-    float _a      = 1. / amount;
+	float prog    = pos.x * aspect * cos(ang) - pos.y * sin(ang);
+    float _a      = 1. / amo;
 	
 	float slot    = floor(prog / _a);
-	float ground  = (slot + (random(vec2(slot + 0.)) * 2. - 1.) * randomAmount * 0.5 + 0.) * _a;
-	float ceiling = (slot + (random(vec2(slot + 1.)) * 2. - 1.) * randomAmount * 0.5 + 1.) * _a;
+	float ground  = (slot + (random(vec2(slot + 0.)) * 2. - 1.) * rnd * 0.5 + 0.) * _a;
+	float ceiling = (slot + (random(vec2(slot + 1.)) * 2. - 1.) * rnd * 0.5 + 1.) * _a;
 	float _s      = (prog - ground) / (ceiling - ground);
 	
 	if(gradient_use == 0) {
-		if(blend == 0)	gl_FragColor = _s > ratio? color0 : color1;
+		if(blend == 0)	gl_FragColor = _s > rat? color0 : color1;
 		else			gl_FragColor = vec4(vec3(sin(_s * 2. * PI) * 0.5 + 0.5), 1.);
 	} else {
-		if(_s > ratio)	gl_FragColor = vec4(gradientEval(random(vec2(slot))).rgb, 1.);
+		if(_s > rat)	gl_FragColor = vec4(gradientEval(random(vec2(slot))).rgb, 1.);
 		else			gl_FragColor = vec4(gradientEval(random(vec2(slot + 1.))).rgb, 1.);
 	}
 } #endregion

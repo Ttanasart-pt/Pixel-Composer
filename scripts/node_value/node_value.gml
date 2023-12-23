@@ -504,6 +504,7 @@ function nodeValueUnit(_nodeValue) constructor { #region
 } #endregion
 
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
+function nodeValueMap(_name, _node) { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false, false); }
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
 	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "area_type", "unit", "atlas_crop" ];
@@ -1280,7 +1281,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						node.triggerRender(); 
 					})
 				.setIcon( THEME.value_use_surface, [ function() { return attributes.mapped; } ], COLORS._main_icon )
-				.setTooltip("Use map");
+				.setTooltip("Toggle map");
 		
 		mapWidget = new vectorBox(2, function(index, val) { return setValueDirect(val, index); });
 		mapWidget.side_button = mapButton;
@@ -1295,8 +1296,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidget = attributes.mapped? mapWidget : editWidgetRaw;
 		setArrayDepth(attributes.mapped);
 		
-		if(node.inputs[| attributes.map_index].visible != attributes.mapped) {
-			node.inputs[| attributes.map_index].visible = attributes.mapped;
+		var inp = node.inputs[| attributes.map_index];
+		var vis = attributes.mapped && show_in_inspector;
+		
+		if(inp.visible != vis) {
+			inp.visible = vis;
 			node.setHeight();
 		}
 	} #endregion

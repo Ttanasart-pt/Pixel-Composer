@@ -11,24 +11,33 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Brightness", "Channel value"]);
 	
 	inputs[| 5] = nodeValue("Base value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Set value to the unconnected color channels.")
-		.setDisplay(VALUE_DISPLAY.slider);
+		.setDisplay(VALUE_DISPLAY.slider)
+		.setMappable(6);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 6] = nodeValueMap("Base value", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
-		["Sampling",	false], 4, 5, 
+		["Sampling",	false], 4, 5, 6, 
 		["Surfaces",	 true], 0, 1, 2, 3,
 	]
 	
 	attribute_surface_depth();
+	
+	static step = function() { #region
+		inputs[| 5].mappableStep();
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _r    = _data[0];
 		var _g    = _data[1];
 		var _b    = _data[2];
 		var _a    = _data[3];
-		var _mode = _data[4];
-		var _base = _data[5];
 		
 		var _baseS = _r;
 		if(!is_surface(_baseS)) _baseS = _g;
@@ -48,8 +57,8 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i("useB", is_surface(_b));
 			shader_set_i("useA", is_surface(_a));
 			
-			shader_set_f("base", _base);
-			shader_set_i("mode", _mode);
+			shader_set_i("mode", _data[4]);
+			shader_set_f_map("base", _data[5], _data[6], inputs[| 5]);
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
 		surface_reset_shader();

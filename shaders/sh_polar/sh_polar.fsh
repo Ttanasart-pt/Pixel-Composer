@@ -4,9 +4,12 @@
 varying vec2  v_vTexcoord;
 varying vec4  v_vColour;
 uniform int   invert;
-uniform float blend;
 uniform int   distMode;
 uniform int   swap;
+
+uniform vec2      blend;
+uniform int       blendUseSurf;
+uniform sampler2D blendSurf;
 
 #region /////////////// SAMPLING ///////////////
 
@@ -60,6 +63,12 @@ void main() {
 	vec2 center = vec2(0.5, 0.5);
 	vec2 coord;
 	
+	float bld = blend.x;
+	if(blendUseSurf == 1) {
+		vec4 _vMap = texture2Dintp( blendSurf, v_vTexcoord );
+		bld = mix(blend.x, blend.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	if(invert == 0) {
 		float dist = distance(v_vTexcoord, center) / (sqrt(2.) * .5);
 		if(distMode == 1)      dist = sqrt(dist);
@@ -80,5 +89,5 @@ void main() {
 	}
 	
 	if(swap == 1) coord.xy = coord.yx;
-	gl_FragColor = texture2Dintp( gm_BaseTexture, mix(v_vTexcoord, coord, blend) );
+	gl_FragColor = texture2Dintp( gm_BaseTexture, mix(v_vTexcoord, coord, bld) );
 }

@@ -7,6 +7,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	drag_sv  = 0;
 	real_val = 0;
 	slide_speed = 1 / 10;
+	side_button = noone;
 	
 	spr_bg   = THEME.rotator_bg;
 	spr_knob = THEME.rotator_knob;
@@ -36,6 +37,12 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		h = ui(64);
 		
 		var _r = ui(28);
+		
+		if(side_button) {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - ui(32), _y + h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
+			_w -= ui(40);
+		}
 		
 		switch(halign) {
 			case fa_left :   _x += _r; break;

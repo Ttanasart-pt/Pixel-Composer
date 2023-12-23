@@ -9,13 +9,16 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 2 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setMappable(11);
 	
 	inputs[| 3] = nodeValue("Gap", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.01] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.01] })
+		.setMappable(12);
 	
 	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+		.setDisplay(VALUE_DISPLAY.rotation)
+		.setMappable(13);
 		
 	inputs[| 5] = nodeValue("Tile color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
 		
@@ -30,9 +33,19 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 10] = nodeValue("Anti aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	//////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 11] = nodeValueMap("Scale map", self);
+	
+	inputs[| 12] = nodeValueMap("Gap map", self);
+	
+	inputs[| 13] = nodeValueMap("Angle map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	
 	input_display_list = [
 		["Output",  false], 0,
-		["Pattern",	false], 1, 4, 2, 3, 
+		["Pattern",	false], 1, 4, 13, 2, 11, 3, 12, 
 		["Render",	false], 8, 9, 5, 6, 7, 10, 
 	];
 	
@@ -44,12 +57,15 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
+	static step = function() { #region
+		inputs[| 2].mappableStep();
+		inputs[| 3].mappableStep();
+		inputs[| 4].mappableStep();
+	} #endregion
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim  = _data[0];
 		var _pos  = _data[1];
-		var _sca  = _data[2];
-		var _wid  = _data[3];
-		var _ang  = _data[4];
 		var _sam  = _data[7];
 		var _mode = _data[8];
 		var _sed  = _data[9];
@@ -71,9 +87,11 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_set_shader(_outSurf, sh_grid_tri);
 			shader_set_f("position",  _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f("dimension", _dim[0], _dim[1]);
-			shader_set_f("scale",     _sca);
-			shader_set_f("width",     _wid);
-			shader_set_f("angle",     degtorad(_ang));
+			
+			shader_set_f_map("scale", _data[2], _data[11], inputs[| 2]);
+			shader_set_f_map("width", _data[3], _data[12], inputs[| 3]);
+			shader_set_f_map("angle", _data[4], _data[13], inputs[| 4]);
+			
 			shader_set_f("seed",      _sed);
 			shader_set_i("mode",      _mode);
 			shader_set_i("aa",        _aa);

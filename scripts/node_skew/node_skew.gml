@@ -5,7 +5,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 1] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, ["x", "y"]);
 	
-	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] })
 		.setMappable(12);
 		
@@ -32,8 +32,11 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	__init_mask_modifier(6); // inputs 10, 11
 	
-	inputs[| 12] = nodeValue("Strength map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
-		.setVisible(false, false);
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 12] = nodeValueMap("Strength map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	input_display_list = [ 8, 9, 
 		["Surfaces", true],	0, 6, 7, 10, 11, 
@@ -65,18 +68,14 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _axis = _data[1];
-		var _amou = _data[2];
-		var _wrap = _data[3];
-		var _cent = _data[4];
 		var _samp = struct_try_get(attributes, "oversample");
 		
 		surface_set_shader(_outSurf, sh_skew);
 		shader_set_interpolation(_data[0]);
 			shader_set_dim("dimension",	_data[0]);
-			shader_set_f("center",		_cent);
-			shader_set_i("axis",		_axis);
-			shader_set_f_map("amount",  _amou, _data[12], inputs[| 2]);
+			shader_set_f("center",		_data[4]);
+			shader_set_i("axis",		_data[1]);
+			shader_set_f_map("amount",  _data[2], _data[12], inputs[| 2]);
 			shader_set_i("sampleMode",	_samp);
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();

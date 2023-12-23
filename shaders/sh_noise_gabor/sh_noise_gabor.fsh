@@ -6,12 +6,18 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform float seed;
+
 uniform float alignment;
+
 uniform float sharpness;
+
 uniform float rotation;
+
 uniform vec2  u_resolution;
 uniform vec2  position;
+
 uniform vec2  scale;
+
 uniform vec2  augment;
 
 vec2 hash(vec2 p) { return fract(sin(vec2(

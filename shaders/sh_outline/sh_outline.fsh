@@ -5,29 +5,37 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform float borderStart;
-uniform float borderSize;
-uniform vec4  borderColor;
 
+uniform vec2      borderStart;
+uniform int       borderStartUseSurf;
+uniform sampler2D borderStartSurf;
+
+uniform vec2      borderSize;
+uniform int       borderSizeUseSurf;
+uniform sampler2D borderSizeSurf;
+
+uniform vec4  borderColor;
 uniform int	  side;
 uniform int	  crop_border;
-
 uniform int	  is_aa;
 uniform int	  is_blend;
-uniform float blend_alpha;
-uniform int	  sampleMode;
 
+uniform vec2      blend_alpha;
+uniform int       blend_alphaUseSurf;
+uniform sampler2D blend_alphaSurf;
+
+uniform int sampleMode;
 uniform int outline_only;
 
 #define TAU 6.283185307179586
 
-vec2 round(in vec2 v) {
+vec2 round(in vec2 v) { #region
 	v.x = fract(v.x) > 0.5? ceil(v.x) : floor(v.x);	
 	v.y = fract(v.y) > 0.5? ceil(v.y) : floor(v.y);	
 	return v;
-}
+} #endregion
 
-vec4 sampleTexture(vec2 pos) {
+vec4 sampleTexture(vec2 pos) { #region
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2D(gm_BaseTexture, pos);
 	
@@ -39,16 +47,33 @@ vec4 sampleTexture(vec2 pos) {
 		return texture2D(gm_BaseTexture, fract(pos));
 	
 	return vec4(0.);
-}
+} #endregion
 
-void main() {
+void main() { #region
+	#region params
+		float bStr = borderStart.x;
+		if(borderStartUseSurf == 1) {
+			vec4 _vMap = texture2D( borderStartSurf, v_vTexcoord );
+			bStr = mix(borderStart.x, borderStart.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	
+		float bSiz = borderSize.x;
+		if(borderSizeUseSurf == 1) {
+			vec4 _vMap = texture2D( borderSizeSurf, v_vTexcoord );
+			bSiz = mix(borderSize.x, borderSize.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	
+		float bld = blend_alpha.x;
+		if(blend_alphaUseSurf == 1) {
+			vec4 _vMap = texture2D( blend_alphaSurf, v_vTexcoord );
+			bld = mix(blend_alpha.x, blend_alpha.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	
+	#endregion
+	
 	vec2 pixelPosition = v_vTexcoord * dimension;
 	vec4 point = texture2D( gm_BaseTexture, v_vTexcoord );
-	vec4 col;
-	if(outline_only == 0) 
-		col = point;
-	else 
-		col = vec4(0.);
+	vec4 col   = outline_only == 0? point : vec4(0.);
 	
 	bool  isOutline			= false;
 	float outline_alpha		= 1.;
@@ -66,10 +91,10 @@ void main() {
 		}
 	#endregion
 	
-	if(borderSize + borderStart > 0.) {
+	if(bSiz + bStr > 0.) {
 		outline_alpha = 0.;
 		for(float i = 1.; i <= 32.; i++) {
-			if(i > borderStart + borderSize) break;
+			if(i > bStr + bSiz) break;
 			
 			float base = 1.;
 			float top  = 0.;
@@ -88,7 +113,7 @@ void main() {
 				if(side == 0 && sam.a > 0.) continue; //inside border,  skip if current pixel is filled
 				if(side == 1 && sam.a < 1.) continue; //outside border, skip if current pixel is empty
 				
-				if(i < borderStart) {
+				if(i < bStr) {
 					i = 9999.;
 					break;
 				}
@@ -99,8 +124,8 @@ void main() {
 					closetColor     = sam;
 				}
 				
-				if(i == borderSize) outline_alpha += sam.a;
-				else				outline_alpha = 1.;
+				if(i == bSiz) outline_alpha += sam.a;
+				else		  outline_alpha = 1.;
 			}
 		}
 	} else {
@@ -149,9 +174,9 @@ void main() {
 		else if(side == 1)
 			bcol = closetColor;
 				
-		float blend = blend_alpha * outline_alpha;
+		float blend = bld * outline_alpha;
 		if(is_aa == 0)
-			blend = blend_alpha;
+			blend = bld;
 					
 		float alpha = bcol.a + blend * (1. - bcol.a);
 		col = (borderColor * blend + bcol * bcol.a * ( 1. - blend )) / alpha;
@@ -159,4 +184,4 @@ void main() {
 	}
 	
     gl_FragColor = col;
-}
+} #endregion

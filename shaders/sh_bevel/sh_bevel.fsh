@@ -9,15 +9,16 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform vec2  scale;
 uniform vec2  shift;
-uniform float height;
 uniform int   slope;
 uniform int   sampleMode;
 
-float bright(in vec4 col) {
-	return (col.r + col.g + col.b) / 3. * col.a;
-}
+uniform vec2      height;
+uniform int       heightUseSurf;
+uniform sampler2D heightSurf;
 
-vec4 sampleTexture(vec2 pos) {
+float bright(in vec4 col) { return (col.r + col.g + col.b) / 3. * col.a; }
+
+vec4 sampleTexture(vec2 pos) { #region
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2D(gm_BaseTexture, pos);
 	
@@ -29,9 +30,17 @@ vec4 sampleTexture(vec2 pos) {
 		return texture2D(gm_BaseTexture, fract(pos));
 	
 	return vec4(0.);
-}
+} #endregion
 
 void main() {
+	float hei    = height.x;
+	float heiMax = max(height.x, height.y);
+	
+	if(heightUseSurf == 1) {
+		vec4 _vMap = texture2D( heightSurf, v_vTexcoord );
+		hei = mix(height.x, height.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 pixelStep = 1. / dimension;
     
     vec4 col = texture2D(gm_BaseTexture, v_vTexcoord);
@@ -39,12 +48,12 @@ void main() {
 	gl_FragColor = col;
 	bool done = false;
 	
-	vec2 shiftPx = -shift / dimension;
-	float b0 = bright(col);
+	vec2 shiftPx         = -shift / dimension;
+	float b0             = bright(col);
 	float shift_angle    = atan(shiftPx.y, shiftPx.x);
 	float shift_distance = length(shiftPx);
-	float slope_distance = height * b0;
-	float max_distance = height;
+	float slope_distance = hei * b0;
+	float max_distance   = hei;
 	
 	if(b0 == 0.) return;
 	
@@ -52,7 +61,9 @@ void main() {
 	float added_distance, _b1;
 	vec2 shf, pxs;
 	
-	for(float i = 1.; i < height; i++) {
+	for(float i = 1.; i < heiMax; i++) {
+		if(i >= hei) break;
+		
 		float base = 1.;
 		float top  = 0.;
 		for(float j = 0.; j <= 64.; j++) {
@@ -73,10 +84,10 @@ void main() {
 				
 			if(_b1 < b1) {
 				slope_distance = min(slope_distance, i);
-				max_distance = min(max_distance, (b0 - _b1) * height);
+				max_distance = min(max_distance, (b0 - _b1) * hei);
 				b1 = min(b1, _b1);
 				
-				i = height;
+				i = hei;
 				break;
 			}
 		}

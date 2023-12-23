@@ -12,12 +12,8 @@ function Node_Rate_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 2,
-		0, 1
+		["Remap",  false], 0, 1
 	];
-	
-	static step = function() {
-		
-	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var _surf = _data[0];

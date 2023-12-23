@@ -8,14 +8,26 @@ varying vec4 v_vColour;
 
 uniform vec2  position;
 uniform vec2  dimension;
-uniform vec2  scale;
-uniform float angle;
-uniform float width;
-uniform float shift;
 uniform float seed;
 uniform int   shiftAxis;
 uniform int   mode;
 uniform int   aa;
+
+uniform vec2      scale;
+uniform int       scaleUseSurf;
+uniform sampler2D scaleSurf;
+
+uniform vec2      angle;
+uniform int       angleUseSurf;
+uniform sampler2D angleSurf;
+
+uniform vec2      width;
+uniform int       widthUseSurf;
+uniform sampler2D widthSurf;
+
+uniform vec2      shift;
+uniform int       shiftUseSurf;
+uniform sampler2D shiftSurf;
 
 uniform vec4  gapCol;
 uniform int   gradient_use;
@@ -91,26 +103,57 @@ vec4 gradientEval(in float prog) { #region
 } #endregion
 
 void main() { #region
+	#region params
+		vec2 sca = scale;
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
+		}
+		
+		float ang = angle.x;
+		if(angleUseSurf == 1) {
+			vec4 _vMap = texture2D( angleSurf, v_vTexcoord );
+			ang = mix(angle.x, angle.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		ang = radians(ang);
+		
+		float wid = width.x;
+		if(widthUseSurf == 1) {
+			vec4 _vMap = texture2D( widthSurf, v_vTexcoord );
+			wid = mix(width.x, width.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float shf = shift.x;
+		if(shiftUseSurf == 1) {
+			vec4 _vMap = texture2D( shiftSurf, v_vTexcoord );
+			shf = mix(shift.x, shift.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	#endregion
+	
 	vec2 pos = v_vTexcoord - position, _pos;
 	float ratio = dimension.x / dimension.y;
-	_pos.x = pos.x * ratio * cos(angle) - pos.y * sin(angle);
-	_pos.y = pos.x * ratio * sin(angle) + pos.y * cos(angle);
+	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
+	_pos.y = pos.x * ratio * sin(ang) + pos.y * cos(ang);
 	
 	if(shiftAxis == 0) {
-		float cellY = floor(_pos.y * scale.y);
-		float shiftX = mod(cellY, 2.) * shift;
-	
+		shf /= sca.x;
+		
+		float cellY = floor(_pos.y * sca.y);
+		float shiftX = mod(cellY, 2.) * shf;
+		
 		_pos.x += shiftX;
 	} else {
-		float cellX = floor(_pos.x * scale.x);
-		float shiftY = mod(cellX, 2.) * shift;
+		shf /= sca.y;
+		
+		float cellX = floor(_pos.x * sca.x);
+		float shiftY = mod(cellX, 2.) * shf;
 	
 		_pos.y += shiftY;
 	}
 	
-	vec2 sqSt  = floor(_pos * scale) / scale;
+	vec2 sqSt  = floor(_pos * sca) / sca;
 	vec2 _dist = _pos - sqSt;
-	vec2 nPos  = abs(_dist * scale - vec2(0.5)) * 2.; //distance in x, y axis
+	vec2 nPos  = abs(_dist * sca - vec2(0.5)) * 2.; //distance in x, y axis
 	float dist = 1. - max(nPos.x, nPos.y);
 		
 	vec4 colr;
@@ -123,7 +166,7 @@ void main() { #region
 	if(mode == 0) {
 		colr = vec4(gradientEval(random(sqSt)).rgb, 1.);
 	} else if(mode == 2) {
-		vec2 uv = fract(_pos * scale);
+		vec2 uv = fract(_pos * sca);
 		colr = texture2D( gm_BaseTexture, uv );
 	} else if(mode == 3) {
 		vec2 uv = fract(sqSt);
@@ -131,5 +174,5 @@ void main() { #region
 	}
 	
 	float _aa = 4. / max(dimension.x, dimension.y);
-	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(width - _aa, width, dist) : step(width, dist));
+	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(wid - _aa, wid, dist) : step(wid, dist));
 } #endregion

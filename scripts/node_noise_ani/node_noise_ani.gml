@@ -1,17 +1,11 @@
 function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Anisotropic Noise";
 	
-	shader = sh_ani_noise;
-	uniform_noi = shader_get_uniform(shader, "noiseAmount");
-	uniform_sed = shader_get_uniform(shader, "seed");
-	uniform_pos = shader_get_uniform(shader, "position");
-	uniform_ang = shader_get_uniform(shader, "angle");
-	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 16 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue("X Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
+		.setMappable(6);
 	
 	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(9999999));
 	
@@ -20,11 +14,25 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 4] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+		.setDisplay(VALUE_DISPLAY.rotation)
+		.setMappable(8);
+	
+	inputs[| 5] = nodeValue("Y Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16)
+		.setMappable(7);
+		
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 6] = nodeValueMap("X Amount map", self);
+	
+	inputs[| 7] = nodeValueMap("Y Amount map", self);
+	
+	inputs[| 8] = nodeValueMap("Rotation map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	input_display_list = [
 		["Output",	false], 0, 
-		["Noise",	false], 2, 1, 3, 4
+		["Noise",	false], 2, 1, 6, 5, 7, 3, 4, 8
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -35,25 +43,28 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
+	static step = function() { #region
+		inputs[| 1].mappableStep();
+		inputs[| 4].mappableStep();
+		inputs[| 5].mappableStep();
+	} #endregion
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
-		var _amo = _data[1];
-		var _sed = _data[2];
 		var _pos = _data[3];
-		var _ang = _data[4];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
-		surface_set_target(_outSurf);
-		shader_set(shader);
-			shader_set_uniform_f_array_safe(uniform_noi, _amo);
-			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_uniform_f(uniform_sed, _sed);
-			shader_set_uniform_f(uniform_ang, degtorad(_ang));
+		surface_set_shader(_outSurf, sh_ani_noise);
+			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
+			shader_set_f("seed",		_data[2]);
 			
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
-		shader_reset();
-		surface_reset_target();
+			shader_set_f_map("noiseX",  _data[1], _data[6], inputs[| 1]);
+			shader_set_f_map("noiseY",  _data[5], _data[7], inputs[| 5]);
+			shader_set_f_map("angle",	_data[4], _data[8], inputs[| 4]);
+			
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

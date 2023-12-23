@@ -8,18 +8,21 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
 	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setMappable(8);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
 	inputs[| 3] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(99999));
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
 	inputs[| 4] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] })
+		.setMappable(9);
 		addShaderProp(SHADER_UNIFORM.float, "alignment");
 				
 	inputs[| 5] = nodeValue("Sharpness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 5, 0.01 ] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 5, 0.01 ] })
+		.setMappable(10);
 		addShaderProp(SHADER_UNIFORM.float, "sharpness");
 				
 	inputs[| 6] = nodeValue("Augment", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 11, 31 ])
@@ -27,9 +30,22 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		addShaderProp(SHADER_UNIFORM.float, "augment");
 		
 	inputs[| 7] = nodeValue("Phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+		.setDisplay(VALUE_DISPLAY.rotation)
+		.setMappable(11);
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 		
+	//////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[|  8] = nodeValueMap("Scale map", self);		addShaderProp();
+	
+	inputs[|  9] = nodeValueMap("Density map", self);	addShaderProp();
+	
+	inputs[| 10] = nodeValueMap("Sharpness map", self); addShaderProp();
+	
+	inputs[| 11] = nodeValueMap("Phase map", self);		addShaderProp();
+		
+	//////////////////////////////////////////////////////////////////////////////////
+	
 	input_display_list = [
 		["Output", 	 true],	0, 3, 
 		["Noise",	false],	1, 2, 4, 7, 5, 

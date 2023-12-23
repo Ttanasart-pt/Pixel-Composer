@@ -4,14 +4,17 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform float strength;
 uniform vec2 dimension;
 
+uniform vec2      strength;
+uniform int       strengthUseSurf;
+uniform sampler2D strengthSurf;
+
 const float GoldenAngle = 2.39996323;
-const float Iterations = 400.0;
+const float Iterations  = 400.0;
 
 const float ContrastAmount = 150.0;
-const vec3 ContrastFactor = vec3(9.0);
+const vec3  ContrastFactor = vec3(9.0);
 const float Smooth = 2.0;
 
 vec4 bokeh(sampler2D tex, vec2 uv, float radius) {
@@ -47,5 +50,11 @@ vec4 bokeh(sampler2D tex, vec2 uv, float radius) {
 }
 
 void main() {
-	gl_FragColor = bokeh(gm_BaseTexture, v_vTexcoord, strength);
+	float str = strength.x;
+	if(strengthUseSurf == 1) {
+		vec4 _vMap = texture2D( strengthSurf, v_vTexcoord );
+		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
+	gl_FragColor = bokeh(gm_BaseTexture, v_vTexcoord, str);
 }

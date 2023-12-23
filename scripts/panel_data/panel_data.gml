@@ -928,6 +928,8 @@ function PanelContent() constructor { #region
 	
 	function drawGUI() {}
 	
+	static onFullScreen = function() {}
+	
 	function close() { panel.remove(self); }
 	
 	static checkClosable = function() { return true; }

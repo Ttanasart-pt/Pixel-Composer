@@ -1457,6 +1457,8 @@ function Panel_Preview() : PanelContent() constructor {
 		drawToolBar(tool);
 	} #endregion
 	
+	static onFullScreen = function() { run_in(1, fullView); }
+	
 	function copyCurrentFrame() { #region
 		var prevS = getNodePreviewSurface();
 		if(!is_surface(prevS)) return;

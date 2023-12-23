@@ -1,15 +1,10 @@
 function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Erode";
 	
-	shader = sh_erode;
-	uniform_dim   = shader_get_uniform(shader, "dimension");
-	uniform_size  = shader_get_uniform(shader, "size");
-	uniform_bor   = shader_get_uniform(shader, "border");
-	uniform_alp   = shader_get_uniform(shader, "alpha");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 1] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+		.setMappable(10);
 	
 	inputs[| 2] = nodeValue("Preserve border",self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -28,9 +23,16 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	__init_mask_modifier(4); // inputs 8, 9, 
 	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 10] = nodeValue("Width map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	input_display_list = [ 6, 7,
 		["Surfaces", true], 0, 4, 5, 8, 9, 
-		["Erode",	false], 1, 2, 3, 
+		["Erode",	false], 1, 10, 2, 3, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -39,25 +41,19 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		inputs[| 1].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var wd = _data[1];
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(shader);
-			shader_set_uniform_f_array_safe(uniform_dim, [surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0])]);
-			shader_set_uniform_f(uniform_size, wd);
-			shader_set_uniform_i(uniform_bor, _data[2]? 1 : 0);
-			shader_set_uniform_i(uniform_alp, _data[3]? 1 : 0);
+		surface_set_shader(_outSurf, sh_erode);
+			shader_set_f("dimension", surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
+			shader_set_f_map("size" , _data[1], _data[10], inputs[| 1]);
+			shader_set_i("border"   , _data[2]);
+			shader_set_i("alpha"    , _data[3]);
 			draw_surface_safe(_data[0], 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);

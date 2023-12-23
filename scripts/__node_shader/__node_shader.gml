@@ -22,13 +22,20 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _dat = shader_data[i];
 			if(_dat == 0) continue;
 			
-			var _val = _data[i];
+			var _inp = inputs[| i];
 			
 			switch(_dat.type) {
-				case SHADER_UNIFORM.integer : shader_set_i(_dat.key, _val);     break;
-				case SHADER_UNIFORM.float   : shader_set_f(_dat.key, _val);     break;
-				case SHADER_UNIFORM.color   : shader_set_color(_dat.key, _val); break;
+				case SHADER_UNIFORM.integer : shader_set_i(_dat.key, _data[i]); break;
+				
+				case SHADER_UNIFORM.float   : 
+					if(struct_has(_inp.attributes, "mapped") && _inp.attributes.mapped)
+						shader_set_f_map(_dat.key, _data[i], _data[_inp.attributes.map_index], _inp);
+					else 
+						shader_set_f(_dat.key, _data[i]);     
+					break;
+				case SHADER_UNIFORM.color   : shader_set_color(_dat.key, _data[i]); break;
 			}
+			
 		}
 	} #endregion
 	

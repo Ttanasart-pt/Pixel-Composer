@@ -1,13 +1,6 @@
 function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Local Analyze";
 	
-	shader = sh_local_analyze;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_alg = shader_get_uniform(shader, "algorithm");
-	uniform_siz = shader_get_uniform(shader, "size");
-	uniform_sha = shader_get_uniform(shader, "shape");
-	uniform_sam = shader_get_uniform(shader, "sampleMode");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -52,23 +45,16 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _alg = _data[1];
 		var _siz = _data[2];
-		var _sam = struct_try_get(attributes, "oversample");
 		var _shp = _data[4];
+		var _sam = struct_try_get(attributes, "oversample");
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(shader);
-			shader_set_uniform_f(uniform_dim, surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
-			shader_set_uniform_i(uniform_alg, _alg);
-			shader_set_uniform_i(uniform_sam, _sam);
-			shader_set_uniform_i(uniform_sha, _shp);
-			shader_set_uniform_f(uniform_siz, _siz);
+		surface_set_shader(_outSurf, sh_local_analyze);
+			shader_set_f("dimension" , surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
+			shader_set_i("algorithm" , _alg);
+			shader_set_f("size"      , _siz);
+			shader_set_i("shape"     , _shp);
+			shader_set_i("sampleMode", _sam);
 			draw_surface_safe(_data[0], 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL;
 		surface_reset_target();
 		
 		__process_mask_modifier(_data);

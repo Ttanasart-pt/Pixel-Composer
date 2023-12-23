@@ -4,10 +4,13 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform float strength;
 uniform vec2  center;
 uniform int   sampleMode;
 uniform int   blurMode;
+
+uniform vec2      strength;
+uniform int       strengthUseSurf;
+uniform sampler2D strengthSurf;
 
 uniform int useMask;
 uniform sampler2D mask;
@@ -52,13 +55,19 @@ vec4 sampleTexture(vec2 pos) { #region
 } #endregion
 
 void main() { #region
+	float str = strength.x;
+	if(strengthUseSurf == 1) {
+		vec4 _vMap = texture2D( strengthSurf, v_vTexcoord );
+		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
     vec2 uv = v_vTexcoord - center;
 	
-	float str = sampleParameter(0, strength) * sampleMask();
-	float nsamples = 64.;
-	float scale_factor = str * (1. / (nsamples * 2. - 1.));
-	vec4  color = vec4(0.0);
-    float blrStart = 0.;
+	float _str         = sampleParameter(0, str) * sampleMask();
+	float nsamples     = 64.;
+	float scale_factor = _str * (1. / (nsamples * 2. - 1.));
+	vec4  color        = vec4(0.0);
+    float blrStart     = 0.;
 	
 	if(blurMode == 0)		blrStart = 0.;
 	else if(blurMode == 1)	blrStart = -nsamples;
@@ -66,7 +75,7 @@ void main() { #region
 	
     for(float i = 0.; i < nsamples * 2. + 1.; i++) {
         float scale = 1.0 + ((blrStart + i) * scale_factor);
-		vec2 pos = uv * scale + center;
+		vec2 pos    = uv * scale + center;
 		color += sampleTexture(pos);
     }
     

@@ -6,12 +6,16 @@ varying vec4 v_vColour;
 
 uniform vec2 center;
 uniform vec2 dimension;
-uniform float strength;
 uniform int sampleMode;
+
+uniform vec2      strength;
+uniform int       strengthUseSurf;
+uniform sampler2D strengthSurf;
+
 
 #define ITERATION 64.
 
-/////////////// SAMPLING ///////////////
+#region /////////////// SAMPLING ///////////////
 
 const float PI = 3.14159265358979323846;
 uniform int interpolation;
@@ -57,9 +61,9 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 	return texture2D( texture, uv );
 }
 
-/////////////// SAMPLING ///////////////
+#endregion /////////////// SAMPLING ///////////////
 
-vec4 sampleTexture(vec2 pos) {
+vec4 sampleTexture(vec2 pos) { #region
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2Dintp(gm_BaseTexture, pos);
 	
@@ -71,9 +75,16 @@ vec4 sampleTexture(vec2 pos) {
 		return texture2Dintp(gm_BaseTexture, fract(pos));
 	
 	return vec4(0.);
-}
+} #endregion
 
 void main() {
+	float str    = strength.x;
+	float strMax = max(strength.x, strength.y);
+	if(strengthUseSurf == 1) {
+		vec4 _vMap = texture2D( strengthSurf, v_vTexcoord );
+		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 pxPos = v_vTexcoord * dimension;
 	vec2 pxCen = center * dimension;
 	vec2 vecPc  = pxPos - pxCen;
@@ -83,7 +94,10 @@ void main() {
 	vec4 clr = vec4(0.);
 	float weight = 0.;
 	
-	for(float i = -strength; i <= strength; i++) {
+	for(float i = -strMax; i <= strMax; i++) {
+		if(i < -str) continue;
+		if(i >  str) break;
+		
 		float ang = angle + i / 100.;
 		vec4 col = sampleTexture((pxCen + vec2(cos(ang), sin(ang)) * dist) / dimension);
 		

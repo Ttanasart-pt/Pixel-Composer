@@ -1,17 +1,15 @@
 function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Level Selector";
 	
-	shader = sh_level_selector;
-	uniform_middle = shader_get_uniform(shader, "middle");
-	uniform_range  = shader_get_uniform(shader, "range");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue("Mid point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider);
+	inputs[| 1] = nodeValue("Midpoint", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider)
+		.setMappable(9);
 	
 	inputs[| 2] = nodeValue("Range",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider);
+		.setDisplay(VALUE_DISPLAY.slider)
+		.setMappable(10);
 	
 	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -25,6 +23,14 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
 	__init_mask_modifier(3); // inputs 7, 8, 
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[|  9] = nodeValueMap("Midpoint map", self);
+	
+	inputs[| 10] = nodeValueMap("Range map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -40,6 +46,10 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		var _middle = getInputData(1);
 		var _span   = getInputData(2);
+		
+		if(is_array(_middle)) _middle = array_safe_get(_middle, 0);
+		if(is_array(_span))   _span   = array_safe_get(_span,   0);
+		
 		var _min    = _middle - _span;
 		var _max    = _middle + _span;
 		
@@ -68,7 +78,7 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	input_display_list = [ 5, 6, 
 		level_renderer,
 		["Surfaces", true],	0, 3, 4, 7, 8, 
-		["Level",	false],	1, 2,
+		["Level",	false],	1, 9, 2, 10, 
 	];
 	histogramInit();
 	
@@ -87,25 +97,19 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		inputs[| 1].mappableStep();
+		inputs[| 2].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _middle = _data[1];
-		var _range  = _data[2];
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-			
-			shader_set(shader);
-			shader_set_uniform_f(uniform_middle, _middle);
-			shader_set_uniform_f(uniform_range , _range );
+		surface_set_shader(_outSurf, sh_level_selector);
+			shader_set_f_map("middle", _data[1], _data[ 9], inputs[| 1]);
+			shader_set_f_map("range" , _data[2], _data[10], inputs[| 2]);
 			
 			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);

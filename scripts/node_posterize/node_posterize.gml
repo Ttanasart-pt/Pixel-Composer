@@ -12,16 +12,23 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 1] });
 	
 	inputs[| 4] = nodeValue("Gamma", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.6)
-		.setDisplay(VALUE_DISPLAY.slider);
+		.setDisplay(VALUE_DISPLAY.slider)
+		.setMappable(7);
 	
 	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 5;
 		
 	inputs[| 6] = nodeValue("Posterize alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 7] = nodeValueMap("Gamma map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	input_display_list = [ 5, 
-		["Effect settings", false], 0, 2, 1, 6, 
-		["Auto color",		false], 3, 4 
+		["Effect settings", false], 0, 2, 1, 6,
+		["Auto color",		false], 3, 4, 7,
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -34,6 +41,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		inputs[| 1].setVisible(_use_pal);
 		inputs[| 3].setVisible(!_use_pal);
 		inputs[| 4].setVisible(!_use_pal);
+		inputs[| 4].mappableStep();
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -58,13 +66,10 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_surface_safe(_data[0], 0, 0);
 			surface_reset_shader();
 		} else {
-			var _colors = _data[3];
-			var _gamma = _data[4];
-			
 			surface_set_shader(_outSurf, sh_posterize);
-				shader_set_i("colors", _colors);
-				shader_set_f("gamma", _gamma);
-				shader_set_i("alpha", _alp);
+				shader_set_i("colors",    _data[3]);
+				shader_set_f_map("gamma", _data[4], _data[7], inputs[| 4]);
+				shader_set_i("alpha",     _alp);
 			
 				draw_surface_safe(_data[0], 0, 0);
 			surface_reset_shader();

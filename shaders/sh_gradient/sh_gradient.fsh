@@ -7,20 +7,35 @@ varying vec4 v_vColour;
 #define TAU 6.283185307179586
 
 uniform vec2 center;
-uniform float angle;
-uniform float radius;
-uniform float shift;
-uniform int type;
 
+uniform vec2      angle;
+uniform int       angleUseSurf;
+uniform sampler2D angleSurf;
+
+uniform vec2      radius;
+uniform int       radiusUseSurf;
+uniform sampler2D radiusSurf;
+
+uniform vec2      shift;
+uniform int       shiftUseSurf;
+uniform sampler2D shiftSurf;
+
+uniform vec2      scale;
+uniform int       scaleUseSurf;
+uniform sampler2D scaleSurf;
+
+uniform int type;
 uniform int gradient_loop;
+
+float sca;
 
 #region ////////////////////////////////////////// GRADIENT BEGIN //////////////////////////////////////////
 
 #define GRADIENT_LIMIT 128
-uniform int gradient_blend;
-uniform vec4 gradient_color[GRADIENT_LIMIT];
+uniform int   gradient_blend;
+uniform vec4  gradient_color[GRADIENT_LIMIT];
 uniform float gradient_time[GRADIENT_LIMIT];
-uniform int gradient_keys;
+uniform int   gradient_keys;
 
 vec3 rgb2hsv(vec3 c) {
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -57,17 +72,26 @@ vec3 hsvMix(vec3 c1, vec3 c2, float t) {
 }
 
 vec4 gradientEval(in float prog) {
-	vec4 col = vec4(0.);
+	vec4 col     = vec4(0.);
+	float _ptime = 0.;
 	
 	for(int i = 0; i < GRADIENT_LIMIT; i++) {
-		if(gradient_time[i] == prog) {
+		if(i >= gradient_keys) {
+			col = gradient_color[i - 1];
+			break;
+		}
+		
+		float _time = gradient_time[i];
+		_time = 0.5 + (_time - 0.5) * sca;
+		
+		if(_time == prog) {
 			col = gradient_color[i];
 			break;
-		} else if(gradient_time[i] > prog) {
+		} else if(_time > prog) {
 			if(i == 0) 
 				col = gradient_color[i];
 			else {
-				float t = (prog - gradient_time[i - 1]) / (gradient_time[i] - gradient_time[i - 1]);
+				float t = (prog - _ptime) / (_time - _ptime);
 				if(gradient_blend == 0)
 					col = mix(gradient_color[i - 1], gradient_color[i], t);
 				else if(gradient_blend == 1)
@@ -77,10 +101,8 @@ vec4 gradientEval(in float prog) {
 			}
 			break;
 		}
-		if(i >= gradient_keys - 1) {
-			col = gradient_color[gradient_keys - 1];
-			break;
-		}
+		
+		_ptime = _time;
 	}
 	
 	return col;
@@ -89,25 +111,51 @@ vec4 gradientEval(in float prog) {
 #endregion ////////////////////////////////////////// GRADIENT END //////////////////////////////////////////
 
 void main() {
+	#region params
+		float ang = angle.x;
+		if(angleUseSurf == 1) {
+			vec4 _vMap = texture2D( angleSurf, v_vTexcoord );
+			ang = mix(angle.x, angle.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		ang = radians(ang);
+		
+		float rad = radius.x;
+		if(radiusUseSurf == 1) {
+			vec4 _vMap = texture2D( radiusSurf, v_vTexcoord );
+			rad = mix(radius.x, radius.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		rad *= sqrt(2.);
+		
+		float shf = shift.x;
+		if(shiftUseSurf == 1) {
+			vec4 _vMap = texture2D( shiftSurf, v_vTexcoord );
+			shf = mix(shift.x, shift.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		sca = scale.x;
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			sca = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	#endregion
+	
 	float prog = 0.;
 	if(type == 0) {
-		prog = .5 + (v_vTexcoord.x - center.x) * cos(angle) - (v_vTexcoord.y - center.y) * sin(angle);
+		prog = .5 + (v_vTexcoord.x - center.x) * cos(ang) - (v_vTexcoord.y - center.y) * sin(ang);
 	} else if(type == 1) {
-		prog = distance(v_vTexcoord, center) / radius;
+		prog = distance(v_vTexcoord, center) / rad;
 	} else if(type == 2) {
 		vec2  _p = v_vTexcoord - center;
-		float _a = atan(_p.y, _p.x) + angle;
+		float _a = atan(_p.y, _p.x) + ang;
 		prog = (_a - floor(_a / TAU) * TAU) / TAU;
 	}
-	prog = prog + shift;
+	
+	prog += shf;
+	
 	if(gradient_loop == 1) { 
 		prog = abs(prog);
-		if(prog > 1.) {
-			if(prog == floor(prog))
-				prog = 1.;
-			else 
-				prog = fract(prog);
-		}
+		if(prog > 1.)
+			prog = prog == floor(prog)? 1. : fract(prog);
 	}
 	
 	vec4 col = gradientEval(prog);

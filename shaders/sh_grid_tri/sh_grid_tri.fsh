@@ -10,13 +10,21 @@ varying vec4 v_vColour;
 
 uniform vec2  position;
 uniform vec2  dimension;
-uniform vec2  scale;
-uniform float angle;
-uniform float width;
 uniform float seed;
+uniform int   mode;
 uniform int   aa;
 
-uniform int mode;
+uniform vec2      scale;
+uniform int       scaleUseSurf;
+uniform sampler2D scaleSurf;
+
+uniform vec2      angle;
+uniform int       angleUseSurf;
+uniform sampler2D angleSurf;
+
+uniform vec2      width;
+uniform int       widthUseSurf;
+uniform sampler2D widthSurf;
 
 uniform vec4  gapCol;
 uniform int   gradient_use;
@@ -109,10 +117,31 @@ vec3 triGrid(vec2 p){ #region
 } #endregion
 
 void main() { #region
-    vec2 pos = (v_vTexcoord - position) * scale, _pos;
+	#region params
+		vec2 sca = scale;
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
+		}
+		
+		float ang = angle.x;
+		if(angleUseSurf == 1) {
+			vec4 _vMap = texture2D( angleSurf, v_vTexcoord );
+			ang = mix(angle.x, angle.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		ang = radians(ang);
+		
+		float wid = width.x;
+		if(widthUseSurf == 1) {
+			vec4 _vMap = texture2D( widthSurf, v_vTexcoord );
+			wid = mix(width.x, width.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	#endregion
+	
+    vec2 pos = (v_vTexcoord - position) * sca, _pos;
 	float ratio = dimension.x / dimension.y;
-	_pos.x = pos.x * ratio * cos(angle) - pos.y * sin(angle);
-	_pos.y = pos.x * ratio * sin(angle) + pos.y * cos(angle);
+	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
+	_pos.y = pos.x * ratio * sin(ang) + pos.y * cos(ang);
 	
 	vec3  tri   = triGrid(_pos);
 	float dist  = max(0., tri.z);
@@ -124,16 +153,16 @@ void main() { #region
 	}
 	
 	if(mode == 0) {
-		vec2 uv = fract(tri.xy / scale);
+		vec2 uv = fract(tri.xy / sca);
 		colr = vec4(gradientEval(random(uv)).rgb, 1.); 
 	} else if(mode == 2) {
 		vec2 uv = fract((_pos * vec2(1., c30) - tri.xy) + vec2(0.5, 0.));
 		colr = texture2D( gm_BaseTexture, uv );
 	} else if(mode == 3) {
-		vec2 uv = clamp(tri.xy / scale, 0., 1.);
+		vec2 uv = clamp(tri.xy / sca, 0., 1.);
 		colr = texture2D( gm_BaseTexture, uv );
 	}
 	
 	float _aa = 3. / max(dimension.x, dimension.y);
-	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(width * 2. - _aa, width * 2., dist) : step(width * 2., dist));
+	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(wid * 2. - _aa, wid * 2., dist) : step(wid * 2., dist));
 } #endregion

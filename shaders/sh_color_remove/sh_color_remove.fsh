@@ -6,8 +6,11 @@ varying vec4 v_vColour;
 
 uniform vec4	colorFrom[32];
 uniform int		colorFrom_amo;
-uniform float	treshold;
 uniform int		invert;
+
+uniform vec2      treshold;
+uniform int       tresholdUseSurf;
+uniform sampler2D tresholdSurf;
 
 vec3 rgb2xyz( vec3 c ) {
     vec3 tmp;
@@ -35,6 +38,12 @@ vec3 rgb2lab(vec3 c) {
 }
 
 void main() {
+	float trh = treshold.x;
+	if(tresholdUseSurf == 1) {
+		vec4 _vMap = texture2D( tresholdSurf, v_vTexcoord );
+		trh = mix(treshold.x, treshold.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
     vec4 col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
 	vec4 baseColor;
 	baseColor = col;
@@ -49,7 +58,7 @@ void main() {
 		min_df = min(min_df, df);
 	}
 	
-	if((invert == 0 && min_df <= treshold) || (invert == 1 && min_df > treshold))
+	if((invert == 0 && min_df <= trh) || (invert == 1 && min_df > trh))
 		gl_FragColor = vec4(0.);
 	else	
 		gl_FragColor = baseColor;

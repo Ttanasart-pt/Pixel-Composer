@@ -1,16 +1,10 @@
 function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bevel";
 	
-	shader = sh_bevel;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_shf = shader_get_uniform(shader, "shift");
-	uniform_sca = shader_get_uniform(shader, "scale");
-	uniform_hei = shader_get_uniform(shader, "height");
-	uniform_slp = shader_get_uniform(shader, "slope");
-	uniform_sam = shader_get_uniform(shader, "sampleMode");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	
+	inputs[| 1] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+		.setMappable(11);
 	
 	inputs[| 2] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -34,18 +28,24 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	__init_mask_modifier(5); // inputs 9, 10
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 11] = nodeValueMap("Height map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 7, 
 		["Surfaces",	 true], 0, 5, 6, 9, 10, 
-		["Bevel",		false], 4, 1, 
+		["Bevel",		false], 4, 1, 11, 
 		["Transform",	false], 2, 3, 
 	];
 	
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _surf = current_data[0];
@@ -55,10 +55,12 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _ph = surface_get_height_safe(_surf) * _s / 2;
 		
 		inputs[| 2].drawOverlay(active, _x + _pw, _y + _ph, _s, _mx, _my, _snx, _sny);
-	}
+	} #endregion
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		inputs[| 1].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -68,15 +70,15 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _slp = _data[4];
 		var _sam = struct_try_get(attributes, "oversample");
 		
-		surface_set_shader(_outSurf, shader);
-			shader_set_uniform_f(uniform_hei, _hei);
-			shader_set_uniform_f_array_safe(uniform_shf, _shf);
-			shader_set_uniform_f_array_safe(uniform_sca, _sca);
-			shader_set_uniform_i(uniform_slp, _slp);
-			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ]);
-			shader_set_uniform_i(uniform_sam, _sam);
+		surface_set_shader(_outSurf, sh_bevel);
+			shader_set_f("dimension", surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
+			shader_set_f_map("height", _hei, _data[11], inputs[| 1]);
+			shader_set_f("shift",      _shf);
+			shader_set_f("scale",      _sca);
+			shader_set_i("slope",      _slp);
+			shader_set_i("sampleMode", _sam);
 			
-			draw_surface_safe(_data[0], 0, 0);
+			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);

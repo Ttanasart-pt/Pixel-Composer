@@ -3,7 +3,8 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2);
+	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+		.setMappable(12);
 	
 	inputs[| 2] = nodeValue("Center",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -30,11 +31,17 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	__init_mask_modifier(6); // inputs 10, 11
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 12] = nodeValueMap("Strength map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8, 9,
 		["Surfaces", true],	0, 6, 7, 10, 11, 
-		["Blur",	false],	1, 2, 4, 5
+		["Blur",	false],	1, 12, 2, 4, 5
 	];
 	
 	attribute_surface_depth();
@@ -51,35 +58,31 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		inputs[| 1].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _str = _data[1];
-		var _cen = _data[2];
 		var _sam = struct_try_get(attributes, "oversample");
-		var _blr = _data[4];
-		var _msk = _data[5];
-		var _mask = _data[6];
-		var _mix  = _data[7];
 		
-		_cen = array_clone(_cen);
+		var _cen = array_clone(_data[2]);
 		_cen[0] /= surface_get_width_safe(_outSurf);
 		_cen[1] /= surface_get_height_safe(_outSurf);
 		
 		surface_set_shader(_outSurf, sh_blur_zoom);
-			shader_set_f("strength",   _str);
-			shader_set_f("center",     _cen);
-			shader_set_i("blurMode",   _blr);
-			shader_set_i("sampleMode", _sam);
+			shader_set_f("center",       _cen);
+			shader_set_f_map("strength", _data[1], _data[12], inputs[| 1]);
+			shader_set_i("blurMode",     _data[4]);
+			shader_set_i("sampleMode",   _sam);
 			
-			shader_set_i("useMask", is_surface(_msk));
-			shader_set_surface("mask", _msk);
+			shader_set_i("useMask", is_surface(_data[5]));
+			shader_set_surface("mask", _data[5]);
 				
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
+		_outSurf = mask_apply(_data[0], _outSurf, _data[6], _data[7]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[9]);
 		
 		return _outSurf;

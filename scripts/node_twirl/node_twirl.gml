@@ -1,13 +1,6 @@
 function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Twirl";
 	
-	shader = sh_twirl;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_cen = shader_get_uniform(shader, "center");
-	uniform_str = shader_get_uniform(shader, "strength");
-	uniform_rad = shader_get_uniform(shader, "radius");
-	uniform_sam = shader_get_uniform(shader, "sampleMode");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
@@ -15,9 +8,11 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-10, 10, 0.01] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-10, 10, 0.01] })
+		.setMappable(11);
 	
-	inputs[| 3] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
+	inputs[| 3] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16)	
+		.setMappable(12);
 	
 	inputs[| 4] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
@@ -35,11 +30,21 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	__init_mask_modifier(5); // inputs 9, 10
 	
+	////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 11] = nodeValue("Strength map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
+	inputs[| 12] = nodeValue("Radius map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.setVisible(false, false);
+	
+	////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 7, 8,
 		["Surfaces", true],	0, 5, 6, 9, 10, 
-		["Twirl",	false],	1, 2, 3,
+		["Twirl",	false],	1, 2, 11, 3, 12,
 	];
 	
 	attribute_surface_depth();
@@ -57,22 +62,23 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		inputs[| 2].mappableStep();
+		inputs[| 3].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
-		var center = _data[1];
-		var stren  = _data[2];
-		var rad    = _data[3];
 		var sam    = struct_try_get(attributes, "oversample");
 		
-		surface_set_shader(_outSurf, shader);
+		surface_set_shader(_outSurf, sh_twirl);
 		shader_set_interpolation(_data[0]);
-			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ]);
-			shader_set_uniform_f_array_safe(uniform_cen, center);
-			shader_set_uniform_f(uniform_str, stren);
-			shader_set_uniform_f(uniform_rad, rad);
-			shader_set_uniform_i(uniform_sam, sam);
-			draw_surface_safe(_data[0], 0, 0);
+			shader_set_f("dimension" , surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
+			shader_set_f("center"    ,   _data[1]);
+			shader_set_f_map("strength", _data[2], _data[11], inputs[| 2]);
+			shader_set_f_map("radius"  , _data[3], _data[12], inputs[| 3]);
+			shader_set_i("sampleMode",   sam);
+			
+			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);

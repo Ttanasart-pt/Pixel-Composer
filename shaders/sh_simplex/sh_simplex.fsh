@@ -13,10 +13,16 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 scale;
 uniform vec3 position;
-uniform int  iteration;
 uniform int  layerMode;
+
+uniform vec2      scale;
+uniform int       scaleUseSurf;
+uniform sampler2D scaleSurf;
+
+uniform vec2      iteration;
+uniform int       iterationUseSurf;
+uniform sampler2D iterationSurf;
 
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -28,13 +34,16 @@ uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
 
-vec3 hsv2rgb(vec3 c) {
+vec2 sca;
+float itrMax, itr;
+
+vec3 hsv2rgb(vec3 c) { #region
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
+} #endregion
 
-float snoise(vec3 vec) { 
+float snoise(vec3 vec) { #region
 	vec3 v = vec * 4.;
 	
 	const vec2 C = vec2(1.0 / 6.0, 1.0 / 3.0);
@@ -110,19 +119,21 @@ float snoise(vec3 vec) {
 	float n = 105.0 * dot( m * m, vec4( dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3) ) );
 	n = mix(0.0, 0.5 + 0.5 * n, smoothstep(0.0, 0.003, vec.z));
 	return n;
-}
+} #endregion
 
-float simplex(in vec2 st) {
-    vec2 p   = ((st + position.xy) / scale) * 2.0 - 1.0;
+float simplex(in vec2 st) { #region
+    vec2 p   = ((st + position.xy) / sca) * 2.0 - 1.0;
 	float _z = 1. + position.z;
     vec3 xyz = vec3(p, _z);
     
-	float amp = pow(2., float(iteration) - 1.)  / (pow(2., float(iteration)) - 1.);
+	float amp = pow(2., float(itr) - 1.)  / (pow(2., float(itr)) - 1.);
     float n = 0.;
 	if(layerMode == 0)		n = 0.;
 	else if(layerMode == 1) n = 1.;
 	
-	for(int i = 0; i < iteration; i++) {
+	for(float i = 0.; i < itrMax; i++) {
+		if(i >= itr) break;
+		
 		if(layerMode == 0)		n +=  snoise(xyz) * amp;
 		else if(layerMode == 1) n *= (snoise(xyz) * amp) + (1. - amp);
 		
@@ -131,9 +142,25 @@ float simplex(in vec2 st) {
 	}
 	
 	return n;
-}
+} #endregion
 
-void main() {
+void main() { #region
+	#region params
+		sca = scale;
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
+		}
+		
+		itr    = iteration.x;
+		itrMax = max(iteration.x, iteration.y);
+		if(iterationUseSurf == 1) {
+			vec4 _vMap = texture2D( iterationSurf, v_vTexcoord );
+			itr = mix(iteration.x, iteration.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+	#endregion
+	
 	if(colored == 0) {
 		gl_FragColor = vec4(vec3(simplex(v_vTexcoord)), 1.0);
 	} else if(colored == 1) {
@@ -149,4 +176,4 @@ void main() {
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
 	}
-}
+} #endregion

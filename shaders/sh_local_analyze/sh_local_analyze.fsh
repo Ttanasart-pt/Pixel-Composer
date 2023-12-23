@@ -4,14 +4,14 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 dimension;
-uniform int algorithm;
-uniform int shape;
+uniform vec2  dimension;
+uniform int   algorithm;
+uniform int   shape;
 uniform float size;
 
 uniform int sampleMode;
 
-vec4 sampleTexture(vec2 pos) {
+vec4 sampleTexture(vec2 pos) { #region
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2D(gm_BaseTexture, pos);
 	
@@ -23,18 +23,16 @@ vec4 sampleTexture(vec2 pos) {
 		return texture2D(gm_BaseTexture, fract(pos));
 	
 	return vec4(0.);
-}
+} #endregion
 
-float bright(in vec4 col) {
-	return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a;
-}
+float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
 
-void main() {
-	vec2 tex = 1. / dimension;
-	vec4 acc = vec4(0.);
-	vec4 maxx = vec4(0.), minn = vec4(1.);
+void main() { 
+	vec2 tex     = 1. / dimension;
+	vec4 acc     = vec4(0.);
+	vec4 maxx    = vec4(0.), minn = vec4(1.);
 	float weight = 0., _w;
-	vec4 col = sampleTexture(v_vTexcoord);
+	vec4 col     = sampleTexture(v_vTexcoord);
 	
 	for(float i = -size; i <= size; i++)
 	for(float j = -size; j <= size; j++) {

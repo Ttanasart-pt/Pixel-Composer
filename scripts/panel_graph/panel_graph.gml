@@ -2119,6 +2119,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		ds_list_add(nodes_list, node);
 	} #endregion
 	
+	static onFullScreen = function() { run_in(1, fullView); }
+	
 	function close() { #region
 		var panels = findPanels("Panel_Graph");
 		for( var i = 0, n = array_length(panels); i < n; i++ ) {

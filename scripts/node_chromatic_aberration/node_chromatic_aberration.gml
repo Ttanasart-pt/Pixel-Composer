@@ -1,11 +1,6 @@
 function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Chromatic Aberration";
 	
-	shader = sh_chromatic_aberration;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_cen = shader_get_uniform(shader, "center");
-	uniform_str = shader_get_uniform(shader, "strength");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
@@ -13,16 +8,23 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-16, 16, 0.01] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-16, 16, 0.01] })
+		.setMappable(4);
 	
 	inputs[| 3] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 3;
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 4] = nodeValueMap("Strength map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3, 
 		["Surface",  false], 0, 
-		["Effect",   false], 1, 2, 
+		["Effect",   false], 1, 2, 4, 
 	]
 	
 	attribute_surface_depth();
@@ -36,16 +38,18 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
+	static step = function() { #region
+		inputs[| 2].mappableStep();
+	} #endregion
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var center = _data[1];
-		var stren  = _data[2];
 		
-		surface_set_shader(_outSurf, shader);
+		surface_set_shader(_outSurf, sh_chromatic_aberration);
 		shader_set_interpolation(_data[0]);
-			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ]);
-			shader_set_uniform_f_array_safe(uniform_cen, center);
-			shader_set_uniform_f(uniform_str, stren);
-			draw_surface_safe(_data[0], 0, 0);
+			shader_set_f("dimension", surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
+			shader_set_f("center",       _data[1]);
+			shader_set_f_map("strength", _data[2], _data[4], inputs[| 2]);
+			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
 		return _outSurf;

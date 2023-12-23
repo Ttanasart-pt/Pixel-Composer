@@ -5,12 +5,21 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 uniform vec2  position;
-uniform vec2  scale;
-uniform float angle;
-uniform float thick;
 uniform float seed;
 uniform int   mode;
 uniform int   aa;
+
+uniform vec2      scale;
+uniform int       scaleUseSurf;
+uniform sampler2D scaleSurf;
+
+uniform vec2      angle;
+uniform int       angleUseSurf;
+uniform sampler2D angleSurf;
+
+uniform vec2      thick;
+uniform int       thickUseSurf;
+uniform sampler2D thickSurf;
 
 uniform vec4  gapCol;
 uniform int   gradient_use;
@@ -112,10 +121,31 @@ vec4 HexCoords(vec2 uv) { #region
 } #endregion
 
 void main() { #region
-	vec2 pos = (v_vTexcoord - position) * scale, _pos;
+	#region params
+		vec2 sca = scale;
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
+		}
+		
+		float ang = angle.x;
+		if(angleUseSurf == 1) {
+			vec4 _vMap = texture2D( angleSurf, v_vTexcoord );
+			ang = mix(angle.x, angle.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		ang = radians(ang);
+		
+		float thk = thick.x;
+		if(thickUseSurf == 1) {
+			vec4 _vMap = texture2D( thickSurf, v_vTexcoord );
+			thk = mix(thick.x, thick.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	#endregion
+	
+	vec2 pos = (v_vTexcoord - position) * sca, _pos;
 	float ratio = dimension.x / dimension.y;
-	_pos.x = pos.x * ratio * cos(angle) - pos.y * sin(angle);
-	_pos.y = pos.x * ratio * sin(angle) + pos.y * cos(angle);
+	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
+	_pos.y = pos.x * ratio * sin(ang) + pos.y * cos(ang);
 	
     vec4 hc = HexCoords(_pos);
 	vec4 colr;
@@ -126,11 +156,11 @@ void main() { #region
 	}
 	
 	if(mode == 0) {
-		vec2 uv = abs(hc.zw) / scale;
+		vec2 uv = abs(hc.zw) / sca;
 		uv.x = fract(uv.x);
 		uv.y = clamp(uv.y, 0., 1.);
 		
-		float tileY = floor(scale.y * 4. / 3.);
+		float tileY = floor(sca.y * 4. / 3.);
 		uv.y = mod(floor(uv.y * (tileY + 1.)), tileY) / tileY;
 		
 		colr = vec4(gradientEval(random(uv)).rgb, 1.);
@@ -140,10 +170,10 @@ void main() { #region
 		
 		colr = texture2D( gm_BaseTexture, uv );
 	} else if(mode == 3) {
-		vec2 uv = clamp(abs(hc.zw) / scale, 0., 1.);
+		vec2 uv = clamp(abs(hc.zw) / sca, 0., 1.);
 		colr = texture2D( gm_BaseTexture, uv );
 	}
 	
 	float _aa = 3. / max(dimension.x, dimension.y);
-	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(thick - _aa, thick, hc.y) : step(thick, hc.y));
+	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(thk - _aa, thk, hc.y) : step(thk, hc.y));
 } #endregion

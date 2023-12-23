@@ -4,10 +4,12 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.1, 0.001] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
+		.setMappable(9);
 	
 	inputs[| 2] = nodeValue("Direction",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+		.setDisplay(VALUE_DISPLAY.rotation)
+		.setMappable(10);
 	
 	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -22,9 +24,17 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	__init_mask_modifier(3); // inputs 7, 8
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[|  9] = nodeValueMap("Strength map", self);
+	
+	inputs[| 10] = nodeValueMap("Direction map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true], 0, 3, 4, 7, 8, 
-		["Blur",	false], 1, 2,
+		["Blur",	false], 1, 9, 2, 10, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -47,24 +57,24 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		inputs[| 1].mappableStep();
+		inputs[| 2].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _str  = _data[1];
-		var _dir  = _data[2];
-		var _mask = _data[3];
-		var _mix  = _data[4];
 		
 		surface_set_shader(_outSurf, sh_blur_directional);
-			shader_set_f("size", max(surface_get_width_safe(_data[0]), surface_get_height_safe( _data[1])));
-			shader_set_f("strength", _str);
-			shader_set_f("direction", _dir + 90);
-			shader_set_i("sampleMode",	struct_try_get(attributes, "oversample"));
+			shader_set_f("size",          max(surface_get_width_safe(_data[0]), surface_get_height_safe( _data[0])));
+			shader_set_f_map("strength",  _data[1], _data[ 9], inputs[| 1]);
+			shader_set_f_map("direction", _data[2], _data[10], inputs[| 2]);
+			shader_set_i("sampleMode",	  struct_try_get(attributes, "oversample"));
+			
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
+		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[6]);
 		
 		return _outSurf;

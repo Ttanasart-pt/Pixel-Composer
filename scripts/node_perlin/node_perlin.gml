@@ -9,7 +9,8 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 5, 5 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setMappable(10);
 	
 	inputs[| 3] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
 	
@@ -29,9 +30,15 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 9] = nodeValue("Color B range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 	
+	//////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 10] = nodeValueMap("Scale map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	
 	input_display_list = [
 		["Output", 	 true],	0, 5, 
-		["Noise",	false],	1, 2, 3, 4, 
+		["Noise",	false],	1, 2, 10, 3, 4, 
 		["Render",	false], 6, 7, 8, 9, 
 	];
 	
@@ -49,12 +56,13 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[| 7].name = _col == 1? "Color R range" : "Color H range";
 		inputs[| 8].name = _col == 1? "Color G range" : "Color S range";
 		inputs[| 9].name = _col == 1? "Color B range" : "Color V range";
+		
+		inputs[| 2].mappableStep();
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		var _pos = _data[1];
-		var _sca = _data[2];
 		var _ite = _data[3];
 		var _til = _data[4];
 		var _sed = _data[5];
@@ -69,7 +77,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_set_shader(_outSurf, sh_perlin_tiled);
 			shader_set_f("u_resolution", _dim);
 			shader_set_f("position",     _pos);
-			shader_set_f("scale",        _sca);
+			shader_set_f_map("scale",    _data[2], _data[10], inputs[| 2]);
 			shader_set_f("seed",         _sed);
 			shader_set_i("tile",         _til);
 			shader_set_i("iteration",    _ite);

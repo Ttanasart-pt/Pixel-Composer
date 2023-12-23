@@ -4,13 +4,19 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 dimension;
-uniform vec2 center;
-uniform float strength;
-uniform float radius;
-uniform int sampleMode;
+uniform vec2  dimension;
+uniform vec2  center;
+uniform int   sampleMode;
 
-/////////////// SAMPLING ///////////////
+uniform vec2      radius;
+uniform int       radiusUseSurf;
+uniform sampler2D radiusSurf;
+
+uniform vec2      strength;
+uniform int       strengthUseSurf;
+uniform sampler2D strengthSurf;
+
+#region /////////////// SAMPLING ///////////////
 
 const float PI = 3.14159265358979323846;
 uniform int interpolation;
@@ -56,9 +62,9 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 	return texture2D( texture, uv );
 }
 
-/////////////// SAMPLING ///////////////
+#endregion /////////////// SAMPLING ///////////////
 
-vec4 sampleTexture(vec2 pos) {
+vec4 sampleTexture(vec2 pos) { #region
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2Dintp(gm_BaseTexture, pos);
 	
@@ -70,15 +76,27 @@ vec4 sampleTexture(vec2 pos) {
 		return texture2Dintp(gm_BaseTexture, fract(pos));
 	
 	return vec4(0.);
-}
+} #endregion
 
 void main() {
+	float rad = radius.x;
+	if(radiusUseSurf == 1) {
+		vec4 _vMap = texture2Dintp( radiusSurf, v_vTexcoord );
+		rad = mix(radius.x, radius.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
+	float str = strength.x;
+	if(strengthUseSurf == 1) {
+		vec4 _vMap = texture2Dintp( strengthSurf, v_vTexcoord );
+		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 pixelPos = v_vTexcoord * dimension;
 	vec2 to		= center - pixelPos;
 	float dis	= distance(center, pixelPos);
-	float eff	= 1. - clamp(dis / radius, 0., 1.);
+	float eff	= 1. - clamp(dis / rad, 0., 1.);
 	
-	vec2 tex = pixelPos + to * eff * strength;
+	vec2 tex = pixelPos + to * eff * str;
 	tex /= dimension;
     gl_FragColor = sampleTexture( tex );
 }

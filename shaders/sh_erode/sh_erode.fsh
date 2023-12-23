@@ -5,29 +5,38 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
-uniform float size;
-uniform int border;
-uniform int alpha;
+uniform int  border;
+uniform int  alpha;
+
+uniform vec2      size;
+uniform int       sizeUseSurf;
+uniform sampler2D sizeSurf;
 
 #define TAU 6.283185307179586
 
-float bright(in vec4 col) {
-	return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a;
-}
+float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
 
 void main() {
 	vec2 pixelPosition = v_vTexcoord * dimension;
 	vec4 point = texture2D( gm_BaseTexture, v_vTexcoord );
-	vec4 fill = vec4(0.);
+	vec4 fill  = vec4(0.);
+	
 	if(alpha == 0) fill.a = 1.;
 	gl_FragColor = point;
 	
-	if(alpha == 0 && length(point.rgb) <= 0.) 
-		return;
-	if(alpha == 1 && point.a <= 0.)
-		return;
+	if(alpha == 0 && length(point.rgb) <= 0.)  return;
+	if(alpha == 1 && point.a <= 0.)            return;
+	
+	float siz    = size.x;
+	float sizMax = max(size.x, size.y);
+	if(sizeUseSurf == 1) {
+		vec4 _vMap = texture2D( sizeSurf, v_vTexcoord );
+		siz = mix(size.x, size.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
+	for(float i = 1.; i < sizMax; i++) {
+		if(i >= siz) break;
 		
-	for(float i = 1.; i < size; i++) {
 		float base = 1.;
 		float top  = 0.;
 		for(float j = 0.; j <= 64.; j++) {

@@ -4,7 +4,8 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45)
-		.setDisplay(VALUE_DISPLAY.rotation);
+		.setDisplay(VALUE_DISPLAY.rotation)
+		.setMappable(10);
 	
 	inputs[| 2] = nodeValue("Center",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -26,11 +27,17 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	__init_mask_modifier(4); // inputs 8, 9, 
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 10] = nodeValueMap("Strength map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 6, 7, 
 		["Surfaces", true],	0, 4, 5, 8, 9, 
-		["Blur",	false],	1, 2,
+		["Blur",	false],	1, 10, 2,
 	];
 	
 	attribute_surface_depth();
@@ -48,13 +55,12 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		inputs[| 1].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {		
-		var _str = _data[1];
-		var _cen = _data[2];
-		var _mask = _data[4];
-		var _mix  = _data[5];
+		var _cen  = _data[2];
 		
 		_cen = array_clone(_cen);
 		_cen[0] /= surface_get_width_safe(_outSurf);
@@ -63,14 +69,14 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		surface_set_shader(_outSurf, sh_blur_radial);
 			shader_set_interpolation(_data[0]);
 			shader_set_f("dimension", surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
-			shader_set_f("strength", abs(_str));
-			shader_set_f("center", _cen);
+			shader_set_f_map("strength", _data[1], _data[10], inputs[| 1]);
+			shader_set_f("center",       _cen);
 			
-			draw_surface_safe(_data[0], 0, 0);
+			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
+		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[7]);
 		
 		return _outSurf;

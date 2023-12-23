@@ -6,7 +6,8 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 1] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 		
 	inputs[| 2] = nodeValue("Brightness Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider);
+		.setDisplay(VALUE_DISPLAY.slider)
+		.setMappable(13);
 		
 	inputs[| 3] = nodeValue("Brightness Smoothness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -22,7 +23,8 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 7] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 8] = nodeValue("Alpha Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider);
+		.setDisplay(VALUE_DISPLAY.slider)
+		.setMappable(14);
 		
 	inputs[| 9] = nodeValue("Alpha Smoothness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -32,11 +34,19 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	__init_mask_modifier(4); // inputs 11, 12
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 13] = nodeValueMap("Brightness map", self);
+	
+	inputs[| 14] = nodeValueMap("Alpha map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 6, 10, 
 		["Surfaces",	 true], 0, 4, 5, 11, 12, 
-		["Threshold",	false], 1, 2, 3, 7, 8, 9, 
+		["Threshold",	false], 1, 2, 13, 3, 7, 8, 14, 9, 
 	];
 	
 	attribute_surface_depth();
@@ -51,25 +61,21 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		inputs[| 9].setVisible(_alpha);
 		
 		__step_mask_modifier();
+		
+		inputs[| 2].mappableStep();
+		inputs[| 8].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _bright				= _data[1];
-		var _brightThreshold	= _data[2];
-		var _brightSmooth		= _data[3];
 		
-		var _alpha				= _data[7];
-		var _alphaThreshold		= _data[8];
-		var _alphaSmooth		= _data[9];
-
 		surface_set_shader(_outSurf, sh_threshold);
-			shader_set_i("bright",			_bright			);
-			shader_set_f("brightThreshold",	_brightThreshold);
-			shader_set_f("brightSmooth",	_brightSmooth	);
+			shader_set_i("bright",			    _data[1]);
+			shader_set_f_map("brightThreshold", _data[2], _data[13], inputs[| 2]);
+			shader_set_f("brightSmooth",	    _data[3]);
 			
-			shader_set_i("alpha",			_alpha			);
-			shader_set_f("alphaThreshold",	_alphaThreshold	);
-			shader_set_f("alphaSmooth",		_alphaSmooth	);
+			shader_set_i("alpha",			    _data[7]);
+			shader_set_f_map("alphaThreshold",  _data[8], _data[14], inputs[| 8]);
+			shader_set_f("alphaSmooth",		    _data[9]);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();
