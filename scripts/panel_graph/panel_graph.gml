@@ -1364,7 +1364,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			}
 		}
 		
-		nodes_selecting_jun = array_clone(nodes_selecting);
+		nodes_selecting_jun = array_clone(nodes_selecting, 1);
 		
 		#region draw junction name
 			var gr_x = graph_x * graph_s;

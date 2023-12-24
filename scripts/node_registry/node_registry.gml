@@ -413,7 +413,7 @@ function __initNodes() {
 		addNodeObject(strandSim, "Strand Collision",	 s_node_strandSim_collide,	"Node_Strand_Collision",	 [1, Node_Strand_Collision],, "Create solid object for strands to collides to.").hideRecent().setVersion(1140);
 	#endregion
 	
-	//////////////////////////////////////////////////////////////////////////////////
+	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 	
 	var input = ds_list_create(); #region
 	addNodeCatagory("IO", input);
@@ -861,7 +861,7 @@ function __initNodes() {
 		}
 			
 		ds_list_add(node, "Organize");
-		addNodeObject(node, "Pin",				s_node_pin,			"Node_Pin",				[1, Node_Pin],, "Craete pin to organize your connection. Can be create by double clicking on a connection line.");
+		addNodeObject(node, "Pin",				s_node_pin,			"Node_Pin",				[1, Node_Pin],, "Create pin to organize your connection. Can be create by double clicking on a connection line.");
 		addNodeObject(node, "Frame",			s_node_frame,		"Node_Frame",			[1, Node_Frame],, "Create frame surrounding nodes.");
 		addNodeObject(node, "Tunnel In",		s_node_tunnel_in,	"Node_Tunnel_In",		[1, Node_Tunnel_In],, "Create tunnel for sending value based on key matching.");
 		addNodeObject(node, "Tunnel Out",		s_node_tunnel_out,	"Node_Tunnel_Out",		[1, Node_Tunnel_Out],, "Receive value from tunnel in of the same key.");

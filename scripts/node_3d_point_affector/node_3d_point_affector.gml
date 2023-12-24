@@ -73,8 +73,10 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 		}
 		
 		var _res = array_create(array_length(_iVal));
-		var _dis = 0, _inR = 0, _ouR = 1;
-					  
+		var _dis = 0;
+		var _inR = 0;
+		var _ouR = 1;
+		
 		if(_ftyp == 0) {
 			_dis = point_distance_3d(_pos[0], _pos[1], _pos[2], _p[0], _p[1], _p[2]);
 			_inR = (_maxs - _fald) / 2;
@@ -85,8 +87,8 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 			_ouR =  _fald / 2;
 		}
 		
-		if(_dis >= _ouR) _res = _iVal;
-		else if(_dis <= _inR) _res = _fVal;
+		     if(_dis >= _ouR) _res = array_clone(_iVal);
+		else if(_dis <= _inR) _res = array_clone(_fVal);
 		else {
 			var _inf = (_dis - _inR) / (_fald);
 			    _inf = curve_falloff == noone? _inf : curve_falloff.get(_inf);

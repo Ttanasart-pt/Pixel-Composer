@@ -3,8 +3,7 @@ if !ready exit;
 
 #region base UI
 	DIALOG_DRAW_BG
-	if(sFOCUS)
-		DIALOG_DRAW_FOCUS
+	if(sFOCUS) DIALOG_DRAW_FOCUS
 #endregion
 
 #region content

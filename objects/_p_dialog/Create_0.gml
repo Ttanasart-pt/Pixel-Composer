@@ -23,7 +23,7 @@
 	parent   = noone;
 	
 	alarm[0] = 1;
-	ready = false;
+	ready    = false;
 	
 	destroy_on_escape    = true;
 	destroy_on_click_out = false;

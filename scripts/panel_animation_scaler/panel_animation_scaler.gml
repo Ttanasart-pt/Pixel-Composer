@@ -1,5 +1,5 @@
 function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
-	title = __txtx("anim_scale_title", "Animation scaler");
+	title = __txtx("anim_scale_title", "Animation Scaler");
 	
 	w = ui(380);
 	scale_to = TOTAL_FRAMES;

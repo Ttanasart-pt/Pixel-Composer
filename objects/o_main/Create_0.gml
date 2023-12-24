@@ -306,8 +306,8 @@
 #endregion
 
 #region debug
-	//instance_create_depth(0, 0, 0, addon_key_displayer);
-	
 	global.__debug_runner = 0;
 	__debug_animator_counter = 0;
+	
+	instance_create(0, 0, o_video_banner);
 #endregion

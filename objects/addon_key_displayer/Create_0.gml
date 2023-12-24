@@ -2,10 +2,11 @@
 event_inherited();
 
 #region keys
-	name = "Key display";
-	alpha = 0;
+	name      = "Key display";
+	alpha     = 0;
 	disp_text = "";
-	depth = -999;
+	depth     = -999;
+	last_key  = "";
 	
 	show_doubleclick = false;
 	show_graph		 = false;

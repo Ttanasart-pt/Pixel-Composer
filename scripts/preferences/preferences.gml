@@ -157,7 +157,7 @@
 #endregion
 
 #region save load
-	function PREF_SAVE() {
+	function PREF_SAVE() { #region
 		var map = {};
 		
 		var save_l = [];
@@ -180,9 +180,9 @@
 		json_save_struct(DIRECTORY + "Nodes/fav.json",	  global.FAV_NODES);
 		json_save_struct(DIRECTORY + "Nodes/recent.json", global.RECENT_NODES);
 		json_save_struct(DIRECTORY + "key_nodes.json",    HOTKEYS_CUSTOM);
-	}
+	} #endregion
 	
-	function PREF_LOAD() {
+	function PREF_LOAD() { #region
 		var path = DIRECTORY + "keys.json";
 		if(!file_exists_empty(path)) return;
 		
@@ -214,14 +214,17 @@
 		directory_verify(filepath_resolve(PREFERENCES.temp_path));
 		
 		if(PREFERENCES.move_directory) directory_set_current_working(DIRECTORY);
-	}
+	} #endregion
 	
-	function PREF_APPLY() {
+	function PREF_APPLY() { #region
 		if(PREFERENCES.double_click_delay > 1)
 			PREFERENCES.double_click_delay /= 60;
 		
 		TESTING = struct_try_get(PREFERENCES, "test_mode", false);
-		if(TESTING) log_message("PREFERENCE", "Test mode enabled");
+		if(TESTING) {
+			log_message("PREFERENCE", "Test mode enabled");
+			instance_create_depth(0, 0, 0, addon_key_displayer);
+		}
 		
 		if(PREFERENCES.use_legacy_exception) resetException();
 		else                                 setException();
@@ -245,14 +248,14 @@
 		
 		var grav = struct_try_get(PREFERENCES, "physics_gravity", [ 0, 10 ]);
 		physics_world_gravity(array_safe_get(grav, 0, 0), array_safe_get(grav, 1, 10));
-	}
+	} #endregion
 	
-	function find_hotkey(_context, _name) {
+	function find_hotkey(_context, _name) { #region
 		if(!ds_map_exists(HOTKEYS, _context)) return noone;
 		
 		for(var j = 0; j < ds_list_size(HOTKEYS[? _context]); j++) {
 			if(HOTKEYS[? _context][| j].name == _name)
 				return HOTKEYS[? _context][| j];
 		}
-	}
+	} #endregion
 #endregion

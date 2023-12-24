@@ -129,12 +129,12 @@ function Panel_Menu() : PanelContent() constructor {
 			]),
 		]], 
 		[ __txt("Animation"), [
-			menuItem(__txtx("panel_menu_animation_setting", "Animation setting..."), function() { 
+			menuItem(__txtx("panel_menu_animation_setting", "Animation Settings..."), function() { 
 				var dia = dialogPanelCall(new Panel_Animation_Setting()); 
 				dia.anchor = ANCHOR.none;
 			}, THEME.animation_setting),
 			-1,
-			menuItem(__txtx("panel_menu_animation_scaler", "Animation scaler..."), function() { 
+			menuItem(__txtx("panel_menu_animation_scaler", "Animation Scaler..."), function() { 
 				dialogPanelCall(new Panel_Animation_Scaler()); 
 			}, THEME.animation_timing),
 		]],

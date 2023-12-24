@@ -176,14 +176,15 @@ function array_merge() { #region
 	return arr;
 } #endregion
 
-function array_clone(arr) { #region
+function array_clone(arr, _depth = -1) { #region
 	INLINE
 	
+	if(_depth == 0)    return arr;
 	if(!is_array(arr)) return arr;
 	
 	var _res = [];
 	 for( var i = 0, n = array_length(arr); i < n; i++ )
-		 _res[i] = array_clone(arr[i]);
+		 _res[i] = array_clone(arr[i], _depth--);
 	 return _res;
 } #endregion
 
