@@ -43,9 +43,8 @@ void main() {
 	#endregion
 	
 	vec2 pos = position / dimension;
-    vec2 st = v_vTexcoord - pos;
+    vec2 st = v_vTexcoord * sca - pos;
     vec3 color = vec3(.0);
-    st *= sca;
 
     vec2 i_st = floor(st);
     vec2 f_st = fract(st);

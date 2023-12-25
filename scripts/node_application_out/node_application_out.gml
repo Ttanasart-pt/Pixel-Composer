@@ -10,7 +10,13 @@ function Node_Application_Out(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	outputs[| 0] = nodeValue("GUI", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	APP_SURF_OVERRIDE = true;
+	
 	static step = function() { #region
+		LIVE_UPDATE = true;
+	} #endregion
+	
+	static update = function() { #region
 		outputs[| 0].setValue(PRE_APP_SURF);
 	} #endregion
 }

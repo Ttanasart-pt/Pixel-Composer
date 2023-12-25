@@ -82,7 +82,7 @@ If set, then strength value control how many times the effect applies on itself.
 			shader_set_f("dimension",     [ww, hh]);
 			shader_set_f("map_dimension", [mw, mh]);
 			shader_set_f("displace",      _data[ 2]);
-			shader_set_f_map("strength",  _data[ 3], _data[15], inputs[| 3].attributes.mapped);
+			shader_set_f_map("strength",  _data[ 3], _data[15], inputs[| 3]);
 			shader_set_f("middle",        _data[ 4]);
 			shader_set_i("use_rg",        _data[ 5]);
 			shader_set_i("iterate",       _data[ 6]);

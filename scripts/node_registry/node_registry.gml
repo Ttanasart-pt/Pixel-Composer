@@ -871,16 +871,17 @@ function __initNodes() {
 		ds_list_add(node, "Cache");
 		addNodeObject(node, "Cache",		s_node_cache,		"Node_Cache",		[1, Node_Cache],, "Store current animation. Cache persisted between save.").setVersion(1134);
 		addNodeObject(node, "Cache Array",	s_node_cache_array,	"Node_Cache_Array",	[1, Node_Cache_Array],, "Store current animation as array.  Cache persisted between save.").setVersion(1130);
-			
+		
 		ds_list_add(node, "Debug");
 		addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
 		addNodeObject(node, "Widget Test",	s_node_print,		"Node_Widget_Test",	[1, Node_Widget_Test]);
 		//addNodeObject(node, "Module Test",	s_node_print,		"Node_Module_Test",	[1, Node_Module_Test]);
-			
+		
 		ds_list_add(node, "System");
-		addNodeObject(node, "Execute Shell",	s_node_shell_excecute,	"Node_Shell",			[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
-		//addNodeObject(node, "GUI In",			s_node_shell_excecute,	"Node_Application_In",	[1, Node_Application_In]);
-		//addNodeObject(node, "GUI Out",			s_node_shell_excecute,	"Node_Application_Out",	[1, Node_Application_Out]);
+		addNodeObject(node, "Execute Shell",	s_node_shell_excecute,		"Node_Shell",				[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
+		addNodeObject(node, "Monitor Capture",	s_node_monitor_capture,		"Node_Monitor_Capture",		[1, Node_Monitor_Capture]);
+		addNodeObject(node, "GUI In",			s_node_gui_in,				"Node_Application_In",		[1, Node_Application_In]);
+		addNodeObject(node, "GUI Out",			s_node_gui_out,				"Node_Application_Out",		[1, Node_Application_Out]);
 	#endregion
 	
 	var actions = ds_list_create();

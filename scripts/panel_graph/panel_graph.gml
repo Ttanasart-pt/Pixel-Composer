@@ -1686,6 +1686,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		graph_dragging_key = false;
 		graph_zooming_key  = false;
+		
+		if(LIVE_UPDATE) {
+			draw_set_text(f_p0b, fa_right, fa_bottom, COLORS._main_value_negative);
+			draw_text(w - 8, h - toolbar_height, "Live Update");
+		}
 	} #endregion
 	
 	#region ++++ node manipulation ++++

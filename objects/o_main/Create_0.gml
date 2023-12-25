@@ -309,5 +309,5 @@
 	global.__debug_runner = 0;
 	__debug_animator_counter = 0;
 	
-	instance_create(0, 0, o_video_banner);
+	//instance_create(0, 0, o_video_banner);
 #endregion

@@ -8,7 +8,7 @@ surface = surface_verify(surface, w, h);
 surface_set_target(surface);
 	DRAW_CLEAR
 	
-	draw_sprite_stretched_ext(s_dialog_bg_l, 0, 0, 0, w, h, c_white, .99);
+	draw_sprite_stretched(s_dialog_bg_l, 0, 0, 0, w, h);
 	draw_sprite(s_icon_64, 0, h / 2, h / 2);
 
 	draw_set_text(f_h2, fa_left, fa_bottom, c_white);

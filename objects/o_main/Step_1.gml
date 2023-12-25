@@ -74,13 +74,14 @@ _HOVERING_ELEMENT = noone;
 #region animation & render
 	DEF_SURFACE_RESET();
 	
-	if(APP_SURF_OVERRIDE)
+	if(!PROJECT.safeMode&& UPDATE_RENDER_ORDER) {
+		ResetAllNodesRender();
+		NodeTopoSort();
+	}
+	
+	if(LIVE_UPDATE)
 		Render();
 	else if(!PROJECT.safeMode) {
-		if(UPDATE_RENDER_ORDER) {
-			ResetAllNodesRender();
-			NodeTopoSort();
-		}
 		UPDATE_RENDER_ORDER = false;
 		
 		if(PROJECT.active) {

@@ -74,7 +74,7 @@ void main() {
 		}
 	#endregion
 	
-    vec2 p  = (v_vTexcoord - position / dimension) * sca * 2.0 - 1.0;
+    vec2 p  = (v_vTexcoord * sca - position / dimension) * 2.0 - 1.0;
     float n = cellular(p).y;
 	
     gl_FragColor = vec4(vec3(n), 1.);

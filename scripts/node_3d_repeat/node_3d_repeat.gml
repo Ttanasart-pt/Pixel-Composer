@@ -1,5 +1,6 @@
 function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
-	name = "3D Repeat";
+	name  = "3D Repeat";
+	min_h = 128;
 	
 	inputs[| 0] = nodeValue("Objects", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Mesh, noone )
 		.setArrayDepth(1)

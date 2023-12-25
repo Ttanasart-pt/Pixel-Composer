@@ -6,6 +6,7 @@ winManStep()
 if(PROJECT.active && !PROJECT.safeMode) { #region
 	PROJECT.animator.step();
 	PROJECT.globalNode.step();
+	LIVE_UPDATE = false;
 	
 	try {
 		if(PANEL_MAIN != 0) PANEL_MAIN.step();

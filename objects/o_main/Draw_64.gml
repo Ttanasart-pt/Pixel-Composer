@@ -64,4 +64,8 @@ if(APP_SURF_OVERRIDE) {
 	surface_set_target(PRE_APP_SURF);
 		draw_surface(APP_SURF, 0, 0);
 	surface_reset_target();
+	
+	surface_set_target(POST_APP_SURF);
+		draw_surface(APP_SURF, 0, 0);
+	surface_reset_target();
 }

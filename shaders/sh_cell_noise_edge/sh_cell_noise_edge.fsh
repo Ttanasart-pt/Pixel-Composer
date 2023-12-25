@@ -34,10 +34,8 @@ void main() {
 	#endregion
 	
 	vec2 pos = position / dimension;
-    vec2 st = v_vTexcoord - pos;
-
-    st *= sca;
-
+    vec2 st = v_vTexcoord * sca - pos;
+	
     float md = 8.;
     vec2 mg, mr;
 

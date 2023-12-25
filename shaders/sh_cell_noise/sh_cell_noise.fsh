@@ -37,11 +37,9 @@ void main() {
 	#endregion
 		
 	vec2 pos = position / dimension;
-    vec2 st = v_vTexcoord - pos;
+    vec2 st = v_vTexcoord * sca - pos;
     vec3 color = vec3(.0);
-
-    st *= sca;
-
+	
     float m_dist = 1.;
 	
 	if(pattern == 0) {

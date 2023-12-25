@@ -5,7 +5,9 @@ enum RENDER_TYPE {
 }
 
 #region globalvar
-	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER, UPDATE_RENDER_ORDER;
+	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER, UPDATE_RENDER_ORDER, LIVE_UPDATE;
+	
+	LIVE_UPDATE            = false;
 	UPDATE_RENDER_ORDER    = false;
 	global.FLAG.render     = 0;
 	global.FLAG.renderTime = false;
@@ -177,6 +179,7 @@ function Render(partial = false, runAction = false) { #region
 		var reset_all = !partial;
 		
 		if(reset_all) {
+			LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {ds_list_size(PROJECT.nodeTopo)} nodes xxxxxxxxxx");
 			var _key = ds_map_find_first(PROJECT.nodeMap);
 			var amo = ds_map_size(PROJECT.nodeMap);
 			
