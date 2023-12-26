@@ -198,7 +198,7 @@ function Panel_Collection() : PanelContent() constructor {
 						BLEND_OVERRIDE;
 						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 						BLEND_NORMAL;
-					
+						
 						var meta = noone;
 						if(variable_struct_exists(_node, "getMetadata")) 
 							meta = _node.getMetadata();
@@ -213,7 +213,7 @@ function Panel_Collection() : PanelContent() constructor {
 								initMenu();
 								menuCall("collection_menu",,, contentMenu,, _menu_node);	
 							}
-						
+							
 							if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined)
 								TOOLTIP = meta;
 						}
@@ -222,7 +222,7 @@ function Panel_Collection() : PanelContent() constructor {
 							draw_sprite_stretched_ext(THEME.node_glow, 0, _boxx - 9, yy - 9, grid_size + 18, grid_size + 18, COLORS._main_value_positive, updated_prog);
 						
 						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
-					
+						
 						if(sprite_exists(_node.spr)) {
 							var sw = sprite_get_width(_node.spr);
 							var sh = sprite_get_height(_node.spr);

@@ -1257,7 +1257,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var tx = xx + w * _s / 2;
 		var ty = yy + (h + 4) * _s - 2;
 		
-		if(display_parameter.show_dimension) {
+		if(struct_get(display_parameter, "show_dimension")) {
 			var txt = string(getNodeDimension(_s > 0.65));
 			draw_text(round(tx), round(ty), txt);
 			ty += string_height(txt) - 2;
@@ -1265,7 +1265,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		draw_set_font(f_p3);
 		
-		if(display_parameter.show_compute) {
+		if(struct_get(display_parameter, "show_compute")) {
 			var rt = 0, unit = "";
 			
 			if(render_time == 0) {

@@ -84,21 +84,20 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			case 3 : shader = sh_cell_noise_crystal;	break;
 		}
 		
-		surface_set_target(_outSurf);
-		shader_set(shader);
+		surface_set_shader(_outSurf, shader);
 			shader_set_f("dimension",		_dim);
 			shader_set_f("time",			_tim);
 			shader_set_f("position",		_pos);
-			shader_set_f_map("scale",	_data[2], _data[11], inputs[| 2]);
+			shader_set_f_map("scale",		_data[2], _data[11], inputs[| 2]);
 			shader_set_f("contrast",		_con);
 			shader_set_f("middle",			_mid);
 			shader_set_f("radiusScale",		_rad);
 			shader_set_f("radiusShatter",	_sht);
 			shader_set_i("pattern",			_pat);
 			shader_set_i("colored",			_col);
+			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
-		shader_reset();
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

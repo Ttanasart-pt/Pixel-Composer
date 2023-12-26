@@ -9,11 +9,11 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 	for(var i = 0; i < array_length(nodeArray); i++) {
 		var node = nodeArray[i];
 		
-		if(inline_context != noone) {
-			array_push_unique(_ctx_nodes, inline_context);
+		if(node.inline_context != noone) {
+			array_push_unique(_ctx_nodes, node.inline_context);
 			
-			for( var k = 0, n = array_length(inline_context.members); k < n; k++ ) {
-				if(!array_exists(nodeArray, inline_context.members[k])) {
+			for( var k = 0, n = array_length(node.inline_context.members); k < n; k++ ) {
+				if(!array_exists(nodeArray, node.inline_context.members[k])) {
 					noti_warning("Grouping incomplete inline group is not allowed.");
 					return;
 				}	

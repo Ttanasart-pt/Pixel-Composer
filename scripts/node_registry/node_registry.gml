@@ -859,7 +859,7 @@ function __initNodes() {
 			ds_list_add(node, "Shader");
 			addNodeObject(node, "HLSL",				s_node_hlsl,		"Node_HLSL",			[1, Node_HLSL],, "Execute HLSL shader on a surface.").setVersion(11520);
 		}
-			
+		
 		ds_list_add(node, "Organize");
 		addNodeObject(node, "Pin",				s_node_pin,			"Node_Pin",				[1, Node_Pin],, "Create pin to organize your connection. Can be create by double clicking on a connection line.");
 		addNodeObject(node, "Frame",			s_node_frame,		"Node_Frame",			[1, Node_Frame],, "Create frame surrounding nodes.");
