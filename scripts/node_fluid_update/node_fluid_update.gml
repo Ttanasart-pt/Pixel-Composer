@@ -7,7 +7,7 @@ function Node_Fluid_Update(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
+	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
@@ -17,7 +17,7 @@ function Node_Fluid_Update(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		["Update",	false], 1,
 	]
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
+	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdomain, noone);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		if(!PROJECT.animator.is_playing) return;

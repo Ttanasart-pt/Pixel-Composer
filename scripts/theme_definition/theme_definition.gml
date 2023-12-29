@@ -138,7 +138,7 @@ function Theme() constructor {
 	timeline_graph = noone;
 	canvas_tools_pencil = noone;
 	path_tools_draw = noone;
-	refresh_s = noone;
+	refresh_16 = noone;
 	menu_button = noone;
 	icon_save_all = noone;
 	button_hide_middle = noone;

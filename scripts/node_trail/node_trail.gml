@@ -3,23 +3,23 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	use_cache   = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in",		self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue("Max life", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
+	inputs[| 1] = nodeValue("Max life",			self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
 	
-	inputs[| 2] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 2] = nodeValue("Loop",				self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 3] = nodeValue("Max distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1, "Maximum distance to search for movement, set to -1 to search the entire image.");
+	inputs[| 3] = nodeValue("Max distance",		self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1, "Maximum distance to search for movement, set to -1 to search the entire image.");
 	
-	inputs[| 4] = nodeValue("Match color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Make trail track pixels of the same color, instead of the closet pixels.");
+	inputs[| 4] = nodeValue("Match color",		self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Make trail track pixels of the same color, instead of the closet pixels.");
 	
-	inputs[| 5] = nodeValue("Blend color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Blend color between two pixel smoothly.");
+	inputs[| 5] = nodeValue("Blend color",		self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Blend color between two pixel smoothly.");
 	
-	inputs[| 6] = nodeValue("Alpha over life", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[| 6] = nodeValue("Alpha over life",	self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue("Surface out",		self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Trail UV", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue("Trail UV",		self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surfaces",		 true], 0, 
@@ -30,7 +30,19 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	
+	cached_trail = [];
+	
 	attribute_surface_depth();
+	
+	insp2UpdateTooltip = "Clear cache";
+	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	
+	static onInspector2Update = function() { 
+		clearCache(true); 
+		for( var i = 0, n = array_length(cached_trail); i < n; i++ ) 
+			surface_free_safe(cached_trail[i]);
+		cached_trail = [];
+	}
 	
 	static step = function() {
 		var _colr  = getInputData(4);
@@ -73,7 +85,6 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var frame_amo = _loop? _life : min(_life, curf);
 		var st_frame  = curf - frame_amo;
 		
-		BLEND_NORMAL
 		for(var i = 0; i <= frame_amo; i++) {
 			var frame_idx = st_frame + i;
 			var prog  = (frame_idx - (curf - _life)) / _life;
@@ -123,7 +134,6 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			shader_reset();
 		}
-		BLEND_NORMAL
 		
 		surface_set_target(temp_surface[1]);
 			shader_set(sh_trail_filler_pass2);

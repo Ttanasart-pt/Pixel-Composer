@@ -4,12 +4,12 @@ function Node_Fluid_Domain_Queue(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 	
 	manual_ungroupable	 = false;
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
+	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdomain, noone);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		
-		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone )
+		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone )
 			.setVisible(true, true);
 		
 		return inputs[| index];

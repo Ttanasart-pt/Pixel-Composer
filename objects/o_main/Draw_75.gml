@@ -53,7 +53,7 @@ if(winMan_isMinimized()) exit;
 			case VALUE_TYPE.pathnode :
 				draw_tooltip_text("[" + __txt("Path Object") + "]");
 				break;
-			case VALUE_TYPE.fdomain :
+			case VALUE_TYPE.sdomain :
 				draw_tooltip_text("[" + __txt("Domain") + " (id: " + string(content) + ")]");
 				break;
 			case VALUE_TYPE.strands :

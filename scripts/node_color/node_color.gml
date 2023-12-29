@@ -1,5 +1,5 @@
 function Node_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name		= "Color";
+	name = "Color";
 	w = 96;
 	
 	inputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
@@ -21,7 +21,6 @@ function Node_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			return;
 		}
 		
-		draw_set_color(col);
-		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 0);
+		draw_sprite_stretched_ext(THEME.palette_mask, 1, bbox.x0, bbox.y0, bbox.w, bbox.h, col, 1);
 	}
 }

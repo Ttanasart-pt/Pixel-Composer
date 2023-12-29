@@ -1048,9 +1048,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				try {
 					var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
 					if(val) {
+						value_focus = val;
 						if(key_mod_press(SHIFT))
 							TOOLTIP = [ val.getValue(), val.type ];
-						value_focus = val;
 					}
 				} catch(e) {
 					log_warning("NODE DRAW", exception_print(e));
@@ -1059,6 +1059,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++)
 				nodes_list[| i].drawBadge(gr_x, gr_y, graph_s);	
+				
+			if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
+				value_focus = PANEL_INSPECTOR.prop_hover;
 		#endregion
 		printIf(log, $"Draw node: {get_timer() - t}"); t = get_timer();
 		

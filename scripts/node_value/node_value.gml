@@ -32,7 +32,7 @@ enum VALUE_TYPE {
 	pathnode  = 12,
 	particle  = 13,
 	rigid     = 14,
-	fdomain   = 15,
+	sdomain   = 15,
 	struct    = 16,
 	strands   = 17,
 	mesh	  = 18,
@@ -56,6 +56,8 @@ enum VALUE_TYPE {
 	PCXnode     = 32,
 	
 	audioBit  = 33,
+	
+	fdomain   = 34,
 	
 	action	  = 99,
 }
@@ -161,7 +163,7 @@ function value_color(i) { #region
 		#ffb5b5, //path
 		#8fde5d, //particle
 		#88ffe9, //rigid
-		#6d6e71, //fdomain
+		#6d6e71, //sdomain
 		#8c3f5d, //struct
 		#ff9166, //strand
 		#c2c2d1, //mesh
@@ -180,6 +182,7 @@ function value_color(i) { #region
 		#ff6b97, //dynaSurf
 		#c2c2d1, //PCX
 		#8fde5d, //audiobit
+		#4da6ff, //flipfluid
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -207,7 +210,7 @@ function value_color_bg_array(i) { #region
 		#e28989, //path
 		#3ca370, //particle
 		#4da6ff, //rigid
-		#4b5bab, //fdomain
+		#4b5bab, //sdomain
 		#5e315b, //struct
 		#e36956, //strand
 		#83839b, //mesh
@@ -250,7 +253,7 @@ function value_bit(i) { #region
 		case VALUE_TYPE.pathnode	: return 1 << 15;
 		case VALUE_TYPE.particle	: return 1 << 16;
 		case VALUE_TYPE.rigid   	: return 1 << 17;
-		case VALUE_TYPE.fdomain 	: return 1 << 18;
+		case VALUE_TYPE.sdomain 	: return 1 << 18;
 		case VALUE_TYPE.struct   	: return 1 << 19;
 		case VALUE_TYPE.strands   	: return 1 << 20;
 		case VALUE_TYPE.mesh	  	: return 1 << 21;
@@ -273,6 +276,7 @@ function value_bit(i) { #region
 		
 		case VALUE_TYPE.PCXnode		: return 1 << 34;
 		case VALUE_TYPE.audioBit	: return 1 << 35;
+		case VALUE_TYPE.fdomain 	: return 1 << 36;
 		
 		case VALUE_TYPE.any			: return ~0 & ~(1 << 32);
 	}
@@ -324,7 +328,7 @@ function value_type_from_string(str) { #region
 		case "pathnode" : return VALUE_TYPE.pathnode;
 		case "particle" : return VALUE_TYPE.particle;
 		case "rigid"	: return VALUE_TYPE.rigid;
-		case "fdomain"	: return VALUE_TYPE.fdomain;
+		case "sdomain"	: return VALUE_TYPE.sdomain;
 		case "struct"	: return VALUE_TYPE.struct;
 		case "strands"	: return VALUE_TYPE.strands;
 		case "mesh"		: return VALUE_TYPE.mesh;

@@ -13,10 +13,10 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	
 	drawFunc    = ondraw;
 	
-	content_h   = 0;
-	is_scroll	= true;
+	content_h     = 0;
+	is_scroll	  = true;
 	always_scroll = false;
-	show_scroll = true;
+	show_scroll   = true;
 	
 	scroll_step = 64;
 	scroll_lock = false;

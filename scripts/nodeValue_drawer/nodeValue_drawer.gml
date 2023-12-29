@@ -223,10 +223,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 			bx -= ui(28);
 			if(jun.is_modified) {
-				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_reset", "Reset value"), THEME.refresh_s, 0, COLORS._main_icon) == 2)
+				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_reset", "Reset value"), THEME.refresh_16, 0, COLORS._main_icon) == 2)
 					jun.resetValue();
 			} else 
-				draw_sprite_ui(THEME.refresh_s, 0, bx, by,,,, COLORS._main_icon, 0.5);
+				draw_sprite_ui(THEME.refresh_16, 0, bx, by,,,, COLORS._main_icon, 0.5);
 			
 			bx -= ui(28);
 			var ic_b = jun.expUse? c_white : COLORS._main_icon;

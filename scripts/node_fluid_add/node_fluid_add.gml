@@ -7,7 +7,7 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
+	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Fluid brush", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
@@ -36,7 +36,7 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 	
 	_prevPos = noone;
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
+	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdomain, noone);
 	
 	temp_surface = [ surface_create(1, 1) ];
 	

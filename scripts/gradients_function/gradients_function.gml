@@ -18,6 +18,7 @@ function gradientObject(color = c_black) constructor { #region
 	if(is_array(color)) keys = [ new gradientKey(0, color[0]), new gradientKey(1, color[1]) ];
 	else				keys = [ new gradientKey(0, color) ];
 	type = GRADIENT_INTER.smooth;
+	surf = noone;
 	
 	static clone = function() { #region
 		var g = new gradientObject();
@@ -93,25 +94,39 @@ function gradientObject(color = c_black) constructor { #region
 		for(var i = 0; i < len; i++) {
 			if(keys[i].value == undefined) return;
 		
-			_grad_color[i * 4 + 0] = color_get_red(keys[i].value) / 255;
+			_grad_color[i * 4 + 0] = color_get_red(keys[i].value)   / 255;
 			_grad_color[i * 4 + 1] = color_get_green(keys[i].value) / 255;
-			_grad_color[i * 4 + 2] = color_get_blue(keys[i].value) / 255;
+			_grad_color[i * 4 + 2] = color_get_blue(keys[i].value)  / 255;
 			_grad_color[i * 4 + 3] = 1;
-			_grad_time[i]  = keys[i].time;
+			_grad_time[i] = keys[i].time;
 		}
-	
-		if(len == 0) {
-			draw_sprite_stretched_ext(s_fx_pixel, 0, _x, _y, _w, _h, c_white, _a)
-		} else {
-			shader_set(sh_gradient_display);
-			shader_set_uniform_i(uniform_grad_blend, type);
-			shader_set_uniform_f_array_safe(uniform_grad, _grad_color, GRADIENT_LIMIT * 4);
-			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
-			shader_set_uniform_i(uniform_grad_key, len);
+		
+		surf = surface_verify(surf, _w, _h);
+		
+		surface_set_target(surf);
+			DRAW_CLEAR
 			
-			draw_sprite_stretched_ext(s_fx_pixel, 0, _x, _y, _w, _h, c_white, _a)
-			shader_reset();
-		}
+			gpu_set_colorwriteenable(0, 0, 0, 1);
+				draw_sprite_stretched_ext(THEME.gradient_mask, 0, 0, 0, _w, _h, c_white, _a)
+			gpu_set_colorwriteenable(1, 1, 1, 0);
+			
+			if(len == 0) {
+				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _w, _h, c_white, 1);
+			} else {
+				shader_set(sh_gradient_display);
+				shader_set_uniform_i(uniform_grad_blend, type);
+				shader_set_uniform_f_array_safe(uniform_grad, _grad_color, GRADIENT_LIMIT * 4);
+				shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
+				shader_set_uniform_i(uniform_grad_key, len);
+			
+				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _w, _h, c_white, 1);
+				shader_reset();
+			}
+			
+			gpu_set_colorwriteenable(1, 1, 1, 1);
+		surface_reset_target();
+		
+		draw_surface(surf, _x, _y);
 	} #endregion
 	
 	static toArray = function() { #region

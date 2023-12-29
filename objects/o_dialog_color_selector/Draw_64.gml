@@ -42,17 +42,18 @@ if !ready exit;
 	
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);
+	var bs = ui(28);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh_20) == 2)
 		__initPalette();
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("color_selector_open_palette", "Open palette folder"), THEME.folder) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txtx("color_selector_open_palette", "Open palette folder"), THEME.path_open_20) == 2)
 		shellOpenExplorer($"{DIRECTORY}Palettes");
-	
+	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white) == 2)
 		NODE_COLOR_SHOW_PALETTE = !NODE_COLOR_SHOW_PALETTE;
 	bx -= ui(32);
 #endregion

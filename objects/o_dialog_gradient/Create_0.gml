@@ -128,7 +128,9 @@ event_inherited();
 		}
 		
 		return hh;
-	})
+	});
+	
+	sp_presets.always_scroll = true;
 #endregion
 
 #region palette
@@ -210,7 +212,9 @@ event_inherited();
 			click_block = false;
 		
 		return hh;
-	})
+	});
+	
+	sp_palettes.always_scroll = true;
 #endregion
 
 #region action

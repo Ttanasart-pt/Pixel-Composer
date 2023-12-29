@@ -588,13 +588,11 @@ function Panel_Inspector() : PanelContent() constructor {
 					draw_sprite_stretched_ext(THEME.ui_panel_active, 0, ui(4), yy, contentPane.surface_w - ui(4), _selH, COLORS._main_accent, aa);
 				}
 				
-				if(_hover && lbHov) {
-					if(prop_dragging == noone && mouse_press(mb_left, pFOCUS)) {
-						prop_dragging = jun;
+				if(_hover && lbHov && prop_dragging == noone && mouse_press(mb_left, pFOCUS)) {
+					prop_dragging = jun;
 						
-						prop_sel_drag_x = mouse_mx;
-		  				prop_sel_drag_y = mouse_my;
-					}
+					prop_sel_drag_x = mouse_mx;
+		  			prop_sel_drag_y = mouse_my;
 				}
 			#endregion
 			
@@ -612,7 +610,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(_hover && point_in_rectangle(_m[0], _m[1], ui(4), _selY, contentPane.surface_w - ui(4), _selY + _selH)) { #region mouse in widget
 				_HOVERING_ELEMENT = jun;
 				
-				if(NODE_DROPPER_TARGET != noone && NODE_DROPPER_TARGET != jun) {
+				var hov = PANEL_GRAPH.value_dragging != noone || (NODE_DROPPER_TARGET != noone && NODE_DROPPER_TARGET != jun);
+				
+				if(hov) {
 					draw_sprite_stretched_ext(THEME.ui_panel_active, 0, ui(4), _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_value_positive, 1);
 					if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN)) {
 						NODE_DROPPER_TARGET.expression += $"{jun.node.internalName}.{jun.connect_type == JUNCTION_CONNECT.input? "inputs" : "outputs"}.{jun.internalName}";

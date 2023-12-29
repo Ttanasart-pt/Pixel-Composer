@@ -47,37 +47,34 @@ if !ready exit;
 	
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);
+	var bs = ui(28);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("add_preset", "Add to preset")) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txtx("add_preset", "Add to preset"), THEME.add_20) == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
 			var gradStr = "";
+			
 			for(var i = 0; i < array_length(gradient.keys); i++) {
 				var gr = gradient.keys[i];
-				var cc = gr.value;
-				var tt = gr.time;
-				
-				gradStr += string(cc) + "," + string(tt) + "\n";
+				gradStr += $"{gr.value},{gr.time}\n";
 			}
 			
-			var file = file_text_open_write(txt + ".txt");
-			file_text_write_string(file, gradStr);
-			file_text_close(file);
+			file_text_write_all(txt + ".txt", gradStr);
 			__initGradient();
 		};
 		dia.path = DIRECTORY + "Gradients/"
 	}
-	draw_sprite_ui_uniform(THEME.add, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh_20) == 2)
 		__initGradient();
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.folder) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.path_open_20) == 2) {
 		var _realpath = DIRECTORY + "Gradients";
 		shellOpenExplorer(_realpath)
 	}
+	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
 	bx -= ui(32);
 #endregion
 

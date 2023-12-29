@@ -36,7 +36,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var by = _y;
 		
 		var bs = ui(24);
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.refresh_s) == 2) 
+		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.refresh_16) == 2) 
 			refreshPalette();
 			
 		bx += bs + ui(4);

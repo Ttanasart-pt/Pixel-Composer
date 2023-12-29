@@ -982,7 +982,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		draw_set_text(f_p1, fa_left, fa_center, cc);
 		
-		if(hasInspector1Update()) icon = THEME.refresh_s;
+		if(hasInspector1Update()) icon = THEME.refresh_16;
 		var ts = clamp(power(_s, 0.5), 0.5, 1);
 		
 		var aa = 0.5 + 0.5 * renderActive;

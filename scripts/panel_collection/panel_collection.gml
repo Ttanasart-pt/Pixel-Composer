@@ -478,8 +478,9 @@ function Panel_Collection() : PanelContent() constructor {
 		
 			if(bx > rootx) {
 				var txt = __txtx("panel_collection_open_file", "Open in file explorer");
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.button_path_open) == 2)
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.path_open) == 2)
 					shellOpenExplorer(context.path);
+				draw_sprite_ui_uniform(THEME.path_open, 1, bx + bs / 2, by + bs / 2, 1, c_white);
 			}
 			bx -= ui(36);
 			

@@ -309,5 +309,7 @@
 	global.__debug_runner = 0;
 	__debug_animator_counter = 0;
 	
-	//instance_create(0, 0, o_video_banner);
+	//instance_create(0, 0, o_video_banner, { title: "Trail effect" });
+	//instance_create_depth(0, 0, -32000, FLIP_Domain);
+	//instance_create_depth(0, 0, -32000, FLIP_Domain);
 #endregion

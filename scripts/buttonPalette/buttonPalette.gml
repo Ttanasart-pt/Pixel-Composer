@@ -28,8 +28,8 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		w = _w;
 		h = _h;
 		
-		var _pw = _w - ui(12);
-		var _ph = _h - ui(12);
+		var _pw = _w - ui(8);
+		var _ph = _h - ui(8);
 		
 		current_palette = _color;
 		
@@ -64,8 +64,8 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		
 		for( var i = 0, n = array_length(_color); i < n; i++ ) {
 			var _pal = _color[i];
-			var _px  = _x + ui(6);
-			var _py  = _y + ui(6) + i * _ph;
+			var _px  = _x + ui(4);
+			var _py  = _y + ui(4) + i * _ph;
 			
 			if(is_array(_pal))
 				drawPalette(_pal, _px, _py, _pw, _ph);
@@ -86,21 +86,35 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	}
 }
 
-function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { 
-	var ww = _w / array_length(_pal);
-	draw_set_alpha(_a);
-	for(var i = 0; i < array_length(_pal); i++) {
-		if(!is_real(_pal[i])) continue;
-		draw_set_color(_pal[i]);
-		var _x0 = _x + i * ww;
-		var _x1 = _x0 + ww - 1;
-		draw_rectangle(_x0, _y, _x1, _y + _h, false);
+function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { #region
+	var aa = array_length(_pal);
+	
+	if(aa == 1) {
+		draw_sprite_stretched_ext(THEME.palette_mask, 1, _x, _y, _w, _h, _pal[0], _a);
+		return;
 	}
-	draw_set_alpha(1);
-}
+	
+	var ww  = _w / aa;
+	var _x0 = _x;
+	
+	for(var i = 0; i < aa; i++) {
+		if(!is_real(_pal[i])) continue;
+		
+		var _in = 0;
+		
+		if(i == 0)
+			_in = 2;
+		else if(i == aa - 1) 
+			_in = 3;
+		
+		draw_sprite_stretched_ext(THEME.palette_mask, _in, floor(_x0), _y, ceil(ww), _h, _pal[i], _a);
+		
+		_x0 += ww;
+	}
+} #endregion
 
 
-function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) {
+function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
 	var amo = array_length(_pal);
 	var col = floor(_w / _gs);
 	var row = ceil(amo / col);
@@ -123,4 +137,4 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) {
 		draw_set_color(c_white);
 		draw_rectangle_border(_x0, _y0 + 1, _x0 + _gs, _y0 + _gs, 2);
 	}
-}
+} #endregion

@@ -16,7 +16,7 @@ surface_set_target(surface);
 
 	draw_set_text(f_h3, fa_left, fa_top, c_white);
 	draw_set_alpha(0.7);
-	draw_text(210, h / 2 + 10, "Tutorial 20: 3D in 1.16");
+	draw_text(210, h / 2 + 10, title);
 	draw_set_alpha(1);
 	
 surface_reset_target();

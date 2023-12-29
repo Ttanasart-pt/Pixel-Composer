@@ -777,7 +777,7 @@ event_inherited();
 					modified = true;
 					var bx = x1 - ui(32);
 					var by = yy + hh;
-					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_s) == 2) {
+					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_16) == 2) {
 						key.key = dkey;
 						key.modi = dmod;
 						
@@ -856,7 +856,7 @@ event_inherited();
 					modified = true;
 					var bx = x1 - ui(32);
 					var by = yy + hh;
-					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_s) == 2) {
+					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_16) == 2) {
 						key.key = key.dkey;
 						
 						PREF_SAVE();
@@ -870,7 +870,7 @@ event_inherited();
 		//if(modified) {
 		//	var bx = x1 - ui(32);
 		//	var by = yy + ui(2);
-		//	if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset all"), THEME.refresh_s) == 2) {
+		//	if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset all"), THEME.refresh_16) == 2) {
 		//		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 		//			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
 		//			for(var i = 0; i < ds_list_size(ll); i++) {
@@ -971,9 +971,9 @@ event_inherited();
 				var _by = yy + th / 2 - _bs / 2;
 					
 				if(isEqual(data, _defVal))
-					draw_sprite_ext(THEME.refresh_s, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
+					draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
 				else {
-					if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, sFOCUS, sHOVER && sp_pref.hover, __txt("Reset"), THEME.refresh_s) == 2)
+					if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, sFOCUS, sHOVER && sp_pref.hover, __txt("Reset"), THEME.refresh_16) == 2)
 						_pref.onEdit(_defVal);
 				}
 			}

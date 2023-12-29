@@ -41,8 +41,9 @@ if palette == 0 exit;
 	
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);
+	var bs = ui(28);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("add_preset", "Add to preset"), THEME.add) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txtx("add_preset", "Add to preset"), THEME.add_20) == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
 			var file = file_text_open_write(txt + ".hex");
@@ -52,8 +53,7 @@ if palette == 0 exit;
 				var g  = number_to_hex(color_get_green(cc));
 				var b  = number_to_hex(color_get_blue(cc));
 				
-				file_text_write_string(file, r + g + b);
-				file_text_writeln(file);
+				file_text_write_string(file, $"{r}{g}{b}\n");
 			}
 			file_text_close(file);
 			__initPalette();
@@ -62,17 +62,15 @@ if palette == 0 exit;
 	}
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh_20) == 2)
 		__initPalette();
-	
-	draw_sprite_ui_uniform(THEME.refresh, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("color_selector_open_palette", "Open palette folder"), THEME.folder) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txtx("color_selector_open_palette", "Open palette folder"), THEME.path_open_20) == 2) {
 		var _realpath = DIRECTORY + "Palettes";
 		shellOpenExplorer(_realpath)
 	}
-	draw_sprite_ui_uniform(THEME.folder, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
+	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
 	bx -= ui(32);
 #endregion
 
