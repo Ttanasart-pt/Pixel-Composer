@@ -191,7 +191,7 @@ event_inherited();
 				tx = min(tx, _new_list[| i].x);
 				ty = min(tx, _new_list[| i].y);
 				
-				if(is_instanceof(context, Node_Collection_Inline))
+				if(is_instanceof(context, Node_Collection_Inline) && !is_instanceof(_new_list[| i], Node_Collection_Inline))
 					context.addNode(_new_list[| i]);
 			}
 			

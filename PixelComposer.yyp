@@ -966,6 +966,7 @@
     {"id":{"name":"node_strand_gravity","path":"scripts/node_strand_gravity/node_strand_gravity.yy",},},
     {"id":{"name":"palette_functions","path":"scripts/palette_functions/palette_functions.yy",},},
     {"id":{"name":"sh_alpha_cutoff","path":"shaders/sh_alpha_cutoff/sh_alpha_cutoff.yy",},},
+    {"id":{"name":"node_FLIP_apply_velocity","path":"scripts/node_FLIP_apply_velocity/node_FLIP_apply_velocity.yy",},},
     {"id":{"name":"luaHighlight","path":"scripts/luaHighlight/luaHighlight.yy",},},
     {"id":{"name":"d3d_rot3","path":"scripts/d3d_rot3/d3d_rot3.yy",},},
     {"id":{"name":"sh_sample_points","path":"shaders/sh_sample_points/sh_sample_points.yy",},},

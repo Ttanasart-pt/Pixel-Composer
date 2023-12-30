@@ -394,13 +394,14 @@ function __initNodes() {
 	#endregion
 	
 	var flipSim = ds_list_create(); #region
-	addNodeCatagory("FLIP Fluid", smokeSim, ["Node_FLIP_Group_Inline"]);
+	addNodeCatagory("FLIP Fluid", flipSim, ["Node_FLIP_Group_Inline"]);
 		ds_list_add(flipSim, "Domain");
-		addNodeObject(flipSim, "Domain",			s_node_smokeSim_domain,			"Node_FLIP_Domain",		[1, Node_FLIP_Domain]).hideRecent().setVersion(11620);
-		addNodeObject(flipSim, "Render",			s_node_smokeSim_domain,			"Node_FLIP_Render",		[1, Node_FLIP_Render]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Domain",			s_node_fluidSim_domain,			"Node_FLIP_Domain",		[1, Node_FLIP_Domain]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Render",			s_node_fluidSim_render,			"Node_FLIP_Render",		[1, Node_FLIP_Render]).hideRecent().setVersion(11620);
 		
 		ds_list_add(flipSim, "Fluid");
-		addNodeObject(flipSim, "Spawner",			s_node_smokeSim_domain,			"Node_FLIP_Spawner",		[1, Node_FLIP_Spawner]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Spawner",			s_node_fluidSim_add_fluid,			"Node_FLIP_Spawner",		[1, Node_FLIP_Spawner]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Apply Velocity",	s_node_fluidSim_apply_velocity,		"Node_FLIP_Apply_Velocity",	[1, Node_FLIP_Apply_Velocity]).hideRecent().setVersion(11620);
 	#endregion
 	
 	var strandSim = ds_list_create(); #region
@@ -646,7 +647,7 @@ function __initNodes() {
 		addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			[1, Node_Particle],, "Generate particle effect.");
 		addNodeObject(generator, "VFX",					s_node_vfx,					"Node_VFX_Group_Inline",	[1, Node_VFX_Group_Inline],, "Create VFX group, which generate particles that can be manipulated using different force nodes.");
 		addNodeObject(generator, "RigidSim",			s_node_rigidSim,			"Node_Rigid_Group_Inline",	[1, Node_Rigid_Group_Inline],, "Create group for rigidbody simulation.").setVersion(1110);
-		/**/ addNodeObject(generator, "FLIP Fluid",			s_node_rigidSim,			"Node_FLIP_Group_Inline",	[1, Node_FLIP_Group_Inline],, "Create group for fluid simulation.").setVersion(11620);
+		addNodeObject(generator, "FLIP Fluid",			s_node_fluidSim_group,		"Node_FLIP_Group_Inline",	[1, Node_FLIP_Group_Inline],, "Create group for fluid simulation.").setVersion(11620);
 		addNodeObject(generator, "SmokeSim",			s_node_smokeSim_group,		"Node_Fluid_Group_Inline",	[1, Node_Fluid_Group_Inline],, "Create group for smoke simulation.").setVersion(1120);
 		addNodeObject(generator, "StrandSim",			s_node_strandSim,			"Node_Strand_Group_Inline",	[1, Node_Strand_Group_Inline], ["Hair"], "Create group for hair simulation.").setVersion(1140);
 			

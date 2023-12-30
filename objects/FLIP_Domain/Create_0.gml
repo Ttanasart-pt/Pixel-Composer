@@ -7,6 +7,8 @@
 	height           = 0;
 	particleSize     = 0;
 	density          = 0;
+	viscosity        = 0;
+	friction         = 0;
 	maxParticles     = 0;
 	
 	numParticles     = 0;
@@ -20,12 +22,15 @@
 	numPressureIters = 3;
 	numParticleIters = 3;
 	overRelaxation   = 1.5;
+	
+	wallCollide      = true;
 #endregion
 
 function init(width, height, particleSize, density, maxParticles) { #region domain init
-	particlePos     = array_create(2 * maxParticles);
-	obstracles      = [];
-	numParticles    = 0;
+	particlePos  = array_create(maxParticles * 2);
+	particleLife = array_create(maxParticles);
+	obstracles   = [];
+	numParticles = 0;
 	
 	if(domain            != noone        && 
 	   self.width        == width        && 
@@ -45,6 +50,11 @@ function init(width, height, particleSize, density, maxParticles) { #region doma
 	self.maxParticles = maxParticles;
 	
 	particlePosBuff   = buffer_create(maxParticles * 2 * 8, buffer_grow, 8);
+	particleLifeBuff  = buffer_create(maxParticles * 8, buffer_grow, 8);
+	
+	aPosBuff  = buffer_get_address(particlePosBuff);
+	aLifeBuff = buffer_get_address(particleLifeBuff);
+	
 	domain            = FLIP_initDomain(width, height, particleSize, density, maxParticles);
 	particleRadius    = FLIP_getParticleRadius(domain);
 } #endregion
@@ -52,9 +62,12 @@ function init(width, height, particleSize, density, maxParticles) { #region doma
 function update() { #region
 	FLIP_setQuality(		 domain, iteration, numPressureIters, numParticleIters);
 	FLIP_setGravity(		 domain, g);
+	FLIP_setViscosity(		 domain, viscosity);
+	FLIP_setFriction(		 domain, power(1 - friction, 0.025));
 	FLIP_setFlipRatio(		 domain, flipRatio);
 	FLIP_setVelocityDamping( domain, velocityDamping);
 	FLIP_setOverRelaxation(	 domain, overRelaxation);
+	FLIP_setWallCollisions(  domain, wallCollide);
 } #endregion
 
 function step() { #region
@@ -65,8 +78,25 @@ function step() { #region
 
 	FLIP_simulate(domain, dt);
 	
-	FLIP_setParticleBuffer(domain, buffer_get_address(particlePosBuff));
-	buffer_seek(particlePosBuff, buffer_seek_start, 0);
-	for(var i = 0; i < 2 * maxParticles; i++)
+	//FLIP_setTimeStep(domain, dt);
+	//repeat(iteration) {
+	//	FLIP_simulate_integrateParticles(domain);
+	//	FLIP_simulate_pushParticlesApart(domain);
+	//	FLIP_simulate_handleParticleCollisions(domain);
+	//	FLIP_simulate_transferVelocities(domain, 1);
+	//	FLIP_simulate_updateParticleDensity(domain);
+	//	FLIP_simulate_solveIncompressibility(domain);
+	//	FLIP_simulate_transferVelocities(domain, 0);
+	//}
+	
+	FLIP_setParticleBuffer(domain, aPosBuff, aLifeBuff);
+	
+	buffer_seek(particlePosBuff,  buffer_seek_start, 0);
+	buffer_seek(particleLifeBuff, buffer_seek_start, 0);
+	
+	for(var i = 0; i < maxParticles * 2; i++)
 		particlePos[i] = buffer_read(particlePosBuff, buffer_f64);
+	
+	for(var i = 0; i < maxParticles; i++)
+		particleLife[i] = buffer_read(particleLifeBuff, buffer_f64);
 } #endregion
