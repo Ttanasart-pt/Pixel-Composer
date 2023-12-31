@@ -19,8 +19,14 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	inputs[| 3] = nodeValue("Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	inputs[| 4] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Circle", "Rectangle" ]);
+		
+	inputs[| 5] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ] )
+		.setDisplay(VALUE_DISPLAY.vector);
+		
 	input_display_list = [ 0, 
-		["Velocity",	false], 1, 2, 3, 
+		["Velocity",	false], 4, 1, 2, 5, 3, 
 	]
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone );
@@ -29,17 +35,22 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		var _velo  = getInputData(3);
+		var _shp   = getInputData(4);
+		var _siz   = getInputData(5);
 		
 		var _px = _x + _posit[0] * _s;
 		var _py = _y + _posit[1] * _s;
 		
 		var _vx = _px + _velo[0] * _s;
 		var _vy = _py + _velo[1] * _s;
-			
-		if(inputs[| 2].drawOverlay(active, _px, _py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori)) active = false;
-			
+		
+		var _r = _rad * _s;
+		var _w = _siz[0] * _s;
+		var _h = _siz[1] * _s;
+		
 		draw_set_color(COLORS._main_accent);
-		draw_circle(_px, _py, _rad * _s, true);
+		     if(_shp == 0) draw_circle(_px, _py, _r, true);
+		else if(_shp == 1) draw_rectangle(_px - _w, _py - _h, _px + _w, _py + _h, true);
 		
 		draw_set_color(COLORS._main_accent);
 		draw_set_alpha(0.5);
@@ -51,7 +62,14 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static step = function() { #region
+		var _shp = getInputData(4);
+		
+		inputs[| 2].setVisible(_shp == 0);
+		inputs[| 5].setVisible(_shp == 1);
+	} #endregion
+	
+	static update = function(frame = CURRENT_FRAME) { #region
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		
@@ -60,7 +78,15 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		var _velo  = getInputData(3);
+		var _shp   = getInputData(4);
+		var _siz   = getInputData(5);
 		
-		FLIP_applyVelocity_circle(domain.domain, _posit[0], _posit[1], _rad, _velo[0], _velo[1]);
+		     if(_shp == 0) FLIP_applyVelocity_circle(domain.domain, _posit[0], _posit[1], _rad, _velo[0], _velo[1]);
+		else if(_shp == 1) FLIP_applyVelocity_rectangle(domain.domain, _posit[0] - _siz[0], _posit[1] - _siz[1], _siz[0] * 2, _siz[1] * 2, _velo[0], _velo[1]);
+	} #endregion
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		var bbox = drawGetBbox(xx, yy, _s);
+		draw_sprite_fit(s_node_fluidSim_apply_velocity, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

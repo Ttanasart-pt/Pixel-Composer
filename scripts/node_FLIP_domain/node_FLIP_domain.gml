@@ -32,21 +32,55 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 9] = nodeValue("Collide wall", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	inputs[| 10] = nodeValue("Viscosity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
-		.setDisplay(VALUE_DISPLAY.slider);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
 	inputs[| 11] = nodeValue("Friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	input_display_list = [
 		["Domain",	false], 0, 1, 2, 9, 
-		["Solver",  false], 3, 4, 5, 8, 
+		["Solver",  false], 3, 8, 
 		["Physics", false], 6, 7, 10, 11, 
 	]
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
-	attributes.max_particles = 10000;
+	array_push(attributeEditors, "FLIP Solver");
 	
+	attributes.max_particles = 10000;
+	array_push(attributeEditors, ["Maximum particles", function() { return attributes.max_particles; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes.max_particles = val; 
+		})]);
+	
+	attributes.iteration = 8;
+	array_push(attributeEditors, ["Global iteration", function() { return attributes.iteration; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes.iteration = val; 
+			triggerRender();
+		})]);
+	
+	attributes.iteration_pressure = 2;
+	array_push(attributeEditors, ["Pressure iteration", function() { return attributes.iteration_pressure; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes.iteration_pressure = val; 
+			triggerRender();
+		})]);
+	
+	attributes.iteration_particle = 2;
+	array_push(attributeEditors, ["Particle iteration", function() { return attributes.iteration_particle; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes.iteration_particle = val; 
+			triggerRender();
+		})]);
+	
+	attributes.overrelax = 1.5;
+	array_push(attributeEditors, ["Overrelaxation", function() { return attributes.overrelax; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes.overrelax = val; 
+			triggerRender();
+		})]);
+		
 	domain = instance_create(0, 0, FLIP_Domain);
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -55,8 +89,6 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _den = getInputData(2);
 		
 		var _flp = getInputData(3);
-		var _ovr = getInputData(4);
-		var _itr = getInputData(5);
 		 
 		var _dmp = getInputData(6);
 		var _grv = getInputData(7);
@@ -66,7 +98,13 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _vis  = getInputData(10);
 		var _fric = getInputData(11);
 		
-		if(frame == 0 || domain == noone) {
+		var _ovr  = attributes.overrelax;
+		
+		var _itr  = attributes.iteration;
+		var _itrP = attributes.iteration_pressure;
+		var _itrR = attributes.iteration_particle;
+		
+		if(frame == 0) {
 			var width        = _dim[0] + _siz * 2;
 			var height       = _dim[1] + _siz * 2;
 			var particleSize = _siz;
@@ -78,12 +116,13 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		domain.velocityDamping  = _dmp;
 		domain.dt               = _dt;
+		
 		domain.iteration        = _itr;
+		domain.numPressureIters = _itrP;
+		domain.numParticleIters = _itrR;
 			
 		domain.g                = _grv;
 		domain.flipRatio        = _flp;
-		domain.numPressureIters = 3;
-		domain.numParticleIters = 3;
 		domain.overRelaxation   = _ovr;
 		domain.viscosity        = _vis;
 		domain.friction         = _fric;

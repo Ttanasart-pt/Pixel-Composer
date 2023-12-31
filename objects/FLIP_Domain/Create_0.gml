@@ -16,13 +16,14 @@
 
 	dt               = 0.1;
 	iteration        = 8;
-
+	numPressureIters = 2;
+	numParticleIters = 2;
+	
 	g                = 1;
 	flipRatio        = 0.8;
-	numPressureIters = 3;
-	numParticleIters = 3;
 	overRelaxation   = 1.5;
 	
+	obstracles       = [];
 	wallCollide      = true;
 #endregion
 
@@ -57,6 +58,9 @@ function init(width, height, particleSize, density, maxParticles) { #region doma
 	
 	domain            = FLIP_initDomain(width, height, particleSize, density, maxParticles);
 	particleRadius    = FLIP_getParticleRadius(domain);
+	
+	cellX = floor(width  / particleSize) + 1;
+	cellY = floor(height / particleSize) + 1;
 } #endregion
 
 function update() { #region
@@ -72,10 +76,6 @@ function update() { #region
 
 function step() { #region
 	FLIP_resetDensity(domain);
-	
-	for( var i = 0, n = array_length(obstracles); i < n; i++ ) 
-		obstracles[i].apply();
-
 	FLIP_simulate(domain, dt);
 	
 	//FLIP_setTimeStep(domain, dt);

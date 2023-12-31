@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "_FLIP",
+  "name": "node_FLIP_apply_force",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

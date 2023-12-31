@@ -10,6 +10,18 @@ if !ready exit;
 		}
 		doDrag();
 	}
+	
+	if(sFOCUS) {
+		if(keyboard_check_pressed(vk_enter)) {
+			onApply(palette);
+			instance_destroy();
+		}
+		
+		if(keyboard_check_pressed(vk_escape)) {
+			onApply(previous_palette);
+			instance_destroy();
+		}
+	}
 #endregion
 
 #region resize

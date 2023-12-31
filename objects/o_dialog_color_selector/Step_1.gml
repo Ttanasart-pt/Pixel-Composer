@@ -10,4 +10,16 @@ if !ready exit;
 			instance_destroy(self);
 	}
 	doDrag();
+	
+	if(sFOCUS) {
+		if(keyboard_check_pressed(vk_enter)) {
+			onApply(selector.current_color);
+			instance_destroy();
+		}
+		
+		if(keyboard_check_pressed(vk_escape)) {
+			onApply(previous_color);
+			instance_destroy();
+		}
+	}
 #endregion

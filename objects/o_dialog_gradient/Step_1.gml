@@ -9,4 +9,16 @@ if !ready exit;
 			instance_destroy(self);
 	}
 	doDrag();
+	
+	if(sFOCUS) {
+		if(keyboard_check_pressed(vk_enter)) {
+			onApply(gradient);
+			instance_destroy();
+		}
+		
+		if(keyboard_check_pressed(vk_escape)) {
+			onApply(previous_gradient);
+			instance_destroy();
+		}
+	}
 #endregion
