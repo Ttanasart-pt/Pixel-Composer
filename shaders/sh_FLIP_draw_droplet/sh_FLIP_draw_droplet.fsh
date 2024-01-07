@@ -6,7 +6,7 @@ varying vec4 v_vColour;
 
 void main() {
 	float g = v_vColour.g;
-	      g = g * g;
+	      g = pow(g, 5.);
 	
-    gl_FragColor = vec4(vec3(g), 1.);
+    gl_FragColor = vec4(vec3(g), v_vColour.a);
 }

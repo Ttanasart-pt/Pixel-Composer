@@ -1,13 +1,4 @@
-enum NODE_SHAPE_TYPE {
-	rectangle,
-	elipse,
-	regular,
-	star,
-	arc,
-	teardrop,
-	cross,
-	leaf
-}
+enum NODE_SHAPE_TYPE { rectangle, elipse, regular, star, arc, teardrop, cross, leaf, crescent }
 
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shape";
@@ -18,7 +9,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 1] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 2] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Rectangle", "Ellipse", "Regular polygon", "Star", "Arc", "Teardrop", "Cross", "Leaf" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Rectangle", "Ellipse", "Regular polygon", "Star", "Arc", "Teardrop", "Cross", "Leaf", "Crescent" ]);
 	
 	onSurfaceSize = function() { return getInputData(0, DEF_SURF); };
 	inputs[| 3] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ])
@@ -55,12 +46,26 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 14] = nodeValue("Shape path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);
 	
+	inputs[| 15] = nodeValue("Positioning Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Center + Scale", "Full Image" ])
+		
+	inputs[| 16] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getInputData(0, DEF_SURF); });
+		
+	inputs[| 17] = nodeValue("Half Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getInputData(0, DEF_SURF); });
+		
+	inputs[| 18] = nodeValue("Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
-		["Output",  false], 0, 6, 
-		["Shape",	false], 2, 14, 3, 9, 4, 13, 5, 7, 8, 
-		["Render",	 true],	10, 1, 11, 12
+		["Output",     false], 0, 6, 
+		["Transform",  false], 15, 3, 16, 17, 
+		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 
+		["Render",	    true], 10, 1, 11, 12, 18
 	];
 	
 	temp_surface = [ noone ];
@@ -70,14 +75,25 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _path	= getInputData(14);
 		if(_path != noone && struct_has(_path, "getPointRatio")) return;
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		var _type = getInputData(15);
+		
+		if(_type == 0) {
+			inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		} else if(_type == 1) {
+			var _pos = getInputData(16);
+			var _px  = _x + _pos[0] * _s;
+			var _py  = _y + _pos[1] * _s;
+			
+			inputs[| 16].drawOverlay(active,  _x,  _y, _s, _mx, _my, _snx, _sny);
+			inputs[| 17].drawOverlay(active, _px, _py, _s, _mx, _my, _snx, _sny);
+		}
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _dim	= _data[0];
 		var _bg		= _data[1];
 		var _shape	= _data[2];
-		var _posit	= _data[3];
 		var _aa		= _data[6];
 		var _corner = _data[9];
 		var _color  = _data[10];
@@ -86,7 +102,36 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _bgC    = _data[11];
 		var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];
 		
-		inputs[|  3].setVisible(true);
+		var _posTyp	= _data[15];
+		var _tile   = _data[18];
+		
+		var _center = [ 0, 0 ];
+		var _scale  = [ 0, 0 ];
+		
+		switch(_posTyp) {
+			case 0 :
+				var _area = _data[3];
+				
+				_center = [ _area[0] / _dim[0], _area[1] / _dim[1] ];
+				_scale  = [ _area[2] / _dim[0], _area[3] / _dim[1] ];
+				break;
+			case 1 :
+				var _posit	= _data[16];
+				var _scal 	= _data[17];
+				
+				_center = [ _posit[0] / _dim[0], _posit[1] / _dim[1] ];
+				_scale  = [  _scal[0] / _dim[0],  _scal[1] / _dim[1] ];
+				break;
+			case 2 :
+				_center = [ 0.5, 0.5 ];
+				_scale  = [ 0.5, 0.5 ];
+				break;
+		}
+		
+		inputs[|  3].setVisible(_posTyp == 0);
+		inputs[| 16].setVisible(_posTyp == 1);
+		inputs[| 17].setVisible(_posTyp == 1);
+		
 		inputs[|  4].setVisible(true);
 		inputs[|  5].setVisible(true);
 		inputs[|  6].setVisible(_path == noone);
@@ -95,6 +140,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[|  9].setVisible(true);
 		inputs[| 11].setVisible(_bg);
 		inputs[| 13].setVisible(true);
+		inputs[| 15].setVisible(true);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -106,6 +152,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			inputs[|  8].setVisible(false);
 			inputs[|  9].setVisible(false);
 			inputs[| 13].setVisible(false);
+			inputs[| 15].setVisible(false);
 			
 			surface_set_target(_outSurf);
 				if(_bg) draw_clear_alpha(0, 1);
@@ -155,10 +202,12 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			inputs[|  8].setVisible(false);
 			inputs[|  9].setVisible(false);
 			inputs[| 13].setVisible(false);
+			inputs[| 18].setVisible( true);
 			
 			switch(_shape) { #region
 				case NODE_SHAPE_TYPE.rectangle :
-					inputs[| 9].setVisible(true);
+					inputs[|  9].setVisible( true);
+					inputs[| 18].setVisible(false);
 					break;
 				case NODE_SHAPE_TYPE.elipse :	
 					break;
@@ -223,17 +272,28 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_f("inner", _data[ 5]);
 					shader_set_f("outer", _data[13]);
 					break;
+				case NODE_SHAPE_TYPE.crescent :
+					inputs[|  5].setVisible(true);
+					inputs[| 13].setVisible(true);
+					
+					inputs[|  5].name = "Shift";
+					inputs[| 13].name = "Inner circle";
+					
+					shader_set_f("outer", _data[ 5]);
+					shader_set_f("inner", _data[13]);
+					break;
 			} #endregion
 			
 			shader_set_f("dimension", _dim);
-			shader_set_i("shape", _shape);
-			shader_set_f("bgColor", _bgcol);
-			shader_set_i("aa", _aa);
-			shader_set_i("drawDF", _df);
-			shader_set_f("corner", _corner);
+			shader_set_i("shape",     _shape);
+			shader_set_f("bgColor",   _bgcol);
+			shader_set_i("aa",        _aa);
+			shader_set_i("drawDF",    _df);
+			shader_set_i("tile",      _tile);
+			shader_set_f("corner",    _corner);
 			
-			shader_set_f("center", [ _posit[0] / _dim[0], _posit[1] / _dim[1] ]);
-			shader_set_f("scale",  [ _posit[2] / _dim[0], _posit[3] / _dim[1] ]);
+			shader_set_f("center",    _center);
+			shader_set_f("scale",     _scale );
 			
 			draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], _color, 1);
 		surface_reset_shader();

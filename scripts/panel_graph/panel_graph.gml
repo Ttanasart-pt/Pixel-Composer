@@ -816,7 +816,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									var _w = _node.w * graph_s;
 									var _h = _node.h * graph_s;
 									
-									if(rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
+									if(_w && _h && rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
 										array_push(nodes_selecting, _node);	
 								}
 							} else if(DOUBLE_CLICK) {
@@ -1165,7 +1165,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						var _w = _node.w * graph_s;
 						var _h = _node.h * graph_s;
 						
-						var _sel = rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my);
+						var _sel = _w && _h && rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my);
 						
 						if(!array_exists(nodes_selecting, _node) && _sel)
 							array_push(nodes_selecting, _node);	

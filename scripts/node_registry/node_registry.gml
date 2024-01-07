@@ -398,12 +398,12 @@ function __initNodes() {
 		ds_list_add(flipSim, "Domain");
 		addNodeObject(flipSim, "Domain",			s_node_fluidSim_domain,			"Node_FLIP_Domain",		[1, Node_FLIP_Domain]).hideRecent().setVersion(11620);
 		addNodeObject(flipSim, "Render",			s_node_fluidSim_render,			"Node_FLIP_Render",		[1, Node_FLIP_Render]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Update",			s_node_fluidSim_update,			"Node_FLIP_Update",		[1, Node_FLIP_Update]).hideRecent().setVersion(11620);
 		
 		ds_list_add(flipSim, "Fluid");
 		addNodeObject(flipSim, "Spawner",			s_node_fluidSim_add_fluid,			"Node_FLIP_Spawner",		[1, Node_FLIP_Spawner]).hideRecent().setVersion(11620);
 		addNodeObject(flipSim, "Apply Velocity",	s_node_fluidSim_apply_velocity,		"Node_FLIP_Apply_Velocity",	[1, Node_FLIP_Apply_Velocity]).hideRecent().setVersion(11620);
-		addNodeObject(flipSim, "Apply Force",		s_node_fluidSim_add_collider,		"Node_FLIP_Apply_Force",	[1, Node_FLIP_Apply_Force]).hideRecent().setVersion(11620);
-		addNodeObject(flipSim, "Wall",				s_node_fluidSim_wall,				"Node_FLIP_Wall",			[1, Node_FLIP_Wall]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Apply Force",		s_node_fluidSim_force,				"Node_FLIP_Apply_Force",	[1, Node_FLIP_Apply_Force]).hideRecent().setVersion(11620);
 	#endregion
 	
 	var strandSim = ds_list_create(); #region

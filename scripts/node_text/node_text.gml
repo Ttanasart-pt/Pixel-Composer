@@ -48,11 +48,24 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 17] = nodeValue("BG Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
+	inputs[| 18] = nodeValue("Wave", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 19] = nodeValue("Wave amplitude", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
+	
+	inputs[| 20] = nodeValue("Wave scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30);
+	
+	inputs[| 21] = nodeValue("Wave phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+	
+	inputs[| 22] = nodeValue("Wave shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 3, 0.01 ] });
+	
 	input_display_list = [
-		["Output",		true],	9, 6, 10,
+		["Output",		true],	9,  6, 10,
 		["Text",		false], 0, 13, 14, 7, 8, 
-		["Font",		false], 1, 2, 15, 3, 11, 12, 
+		["Font",		false], 1,  2, 15, 3, 11, 12, 
 		["Rendering",	false], 5, 16, 17, 
+		["Wave",	     true, 18], 22, 19, 20, 21, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -62,6 +75,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	_font_current = "";
 	_size_current = 0;
 	_aa_current   = false;
+	seed          = irandom_range(10000, 99999);
 	
 	static generateFont = function(_path, _size, _aa) { #region
 		if(PROJECT.animator.is_playing) return;
@@ -96,6 +110,26 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[| 17].setVisible(_ubg);
 	} #endregion
 	
+	static waveGet = function(_ind) { #region
+		var _x = __wave_phase + _ind * __wave_scale;
+		
+		var _sine = dsin(_x) * __wave_ampli;
+		
+		var _squr = sign(_sine) * __wave_ampli;
+		    _squr = _squr != 0? _squr : __wave_ampli;
+			
+		var _taup = abs(_x + 90) % 360;
+		var _tria = _taup > 180? 360 - _taup : _taup;
+		    _tria = (_tria / 180 * 2 - 1) * __wave_ampli;
+		
+		     if(__wave_shape < 0) return _sine;
+		else if(__wave_shape < 1) return lerp(_sine, _tria, frac(__wave_shape));
+		else if(__wave_shape < 2) return lerp(_tria, _squr, frac(__wave_shape));
+		else if(__wave_shape < 3) return abs(_x) % 360 > 360 * (0.5 - frac(__wave_shape) / 2)? -__wave_ampli : __wave_ampli;
+		
+		return random_range_seed(-1, 1, _x + seed) * __wave_ampli;
+	} #endregion
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var str   = _data[0];
 		var _font = _data[1];
@@ -115,65 +149,89 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _ubg  = _data[16];
 		var _bgc  = _data[17];
 		
+		var _wave  = _data[18];
+		var _waveA = _data[19];
+		var _waveS = _data[20];
+		var _waveP = _data[21];
+		var _waveH = _data[22];
+		
 		generateFont(_font, _size, _aa);
 		draw_set_font(font);
 		
-		var _str_lines   = string_splice(str, "\n");
-		_line_widths = [];
+		#region cut string
+			var _str_lines   = string_splice(str, "\n");
+			_line_widths = [];
 		
-		var ww = 0, _sw = 0;
-		var hh = 0, _sh = 0;
-		
-		__temp_len  = string_length(str);
-		__temp_lw   = 0;
-		__temp_ww   = 0;
-		__temp_hh   = line_get_height();
-		__temp_trck = _trck;
-		__temp_line = _line;
+			__temp_len  = string_length(str);
+			__temp_lw   = 0;
+			__temp_ww   = 0;
+			__temp_hh   = line_get_height();
+			__temp_trck = _trck;
+			__temp_line = _line;
 			
-		string_foreach(str, function(_chr, _ind) {
-			if(_chr == "\n") {
-				var _lw = max(0, __temp_lw - __temp_trck);
-				array_push(_line_widths, _lw);
-				__temp_ww = max(__temp_ww, _lw);
-				__temp_hh += string_height(_chr) + __temp_line;
-				__temp_lw = 0;
-			} else
-				__temp_lw += string_width(_chr) + __temp_trck;
-		});
-			
-		var _lw = max(0, __temp_lw - __temp_trck);
-		array_push(_line_widths, _lw);
-		__temp_ww = max(__temp_ww, _lw);
-		ww = __temp_ww;
-		hh = __temp_hh;
+			string_foreach(str, function(_chr, _ind) {
+				if(_chr == "\n") {
+					var _lw = max(0, __temp_lw - __temp_trck);
+					array_push(_line_widths, _lw);
+					__temp_ww = max(__temp_ww, _lw);
+					__temp_hh += string_height(_chr) + __temp_line;
+					__temp_lw = 0;
+				} else
+					__temp_lw += string_width(_chr) + __temp_trck;
+			});
+		#endregion
 		
-		var _use_path = _path != noone && struct_has(_path, "getPointDistance");
-		var _ss = 1;
+		#region dimension
+			var ww = 0, _sw = 0;
+			var hh = 0, _sh = 0;
 		
-		if(_use_path || _dim_type == 0) {
-			_sw = _dim[0];
-			_sh = _dim[1];
-		} else {
-			_sw = ww;
-			_sh = hh;
-		}
+			var _lw = max(0, __temp_lw - __temp_trck);
+			array_push(_line_widths, _lw);
+			__temp_ww = max(__temp_ww, _lw);
+			ww = __temp_ww;
+			hh = __temp_hh;
 		
-		if(_dim_type == 0 && !_use_path && _scaF)
-			_ss = min(_sw / ww, _sh / hh);
+			var _use_path = _path != noone && struct_has(_path, "getPointDistance");
+			var _ss = 1;
 		
-		_sw += _padd[PADDING.left] + _padd[PADDING.right];
-		_sh += _padd[PADDING.top] + _padd[PADDING.bottom];
-		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
-		
-		var tx = 0, ty = _padd[PADDING.top], _ty = 0;
-		if(_dim_type == 0) {
-			switch(_vali) {
-				case 0 : ty = _padd[PADDING.top];						break;
-				case 1 : ty = (_sh - hh * _ss) / 2;						break;
-				case 2 : ty = _sh - _padd[PADDING.bottom] - hh * _ss;	break;
+			if(_use_path || _dim_type == 0) {
+				_sw = _dim[0];
+				_sh = _dim[1];
+			} else {
+				_sw = ww;
+				_sh = hh;
 			}
-		}
+		
+			if(_dim_type == 0 && !_use_path && _scaF)
+				_ss = min(_sw / ww, _sh / hh);
+			
+			if(_wave) _sh += abs(_waveA) * 2;
+			
+			_sw += _padd[PADDING.left] + _padd[PADDING.right];
+			_sh += _padd[PADDING.top] + _padd[PADDING.bottom];
+			_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
+		#endregion
+		
+		#region position
+			var tx = 0, ty = _padd[PADDING.top], _ty = 0;
+			if(_dim_type == 0) {
+				switch(_vali) {
+					case 0 : ty = _padd[PADDING.top];						break;
+					case 1 : ty = (_sh - hh * _ss) / 2;						break;
+					case 2 : ty = _sh - _padd[PADDING.bottom] - hh * _ss;	break;
+				}
+			}
+			
+			if(_wave) ty += abs(_waveA);
+		#endregion
+		
+		#region wave
+			__wave       =  _wave;
+			__wave_ampli =  _waveA;
+			__wave_scale =  _waveS;
+			__wave_phase = -_waveP;
+			__wave_shape =  _waveH;
+		#endregion
 		
 		surface_set_shader(_outSurf, noone,, BLEND.alpha);
 			if(_ubg) {
@@ -215,7 +273,16 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _dx = lengthdir_x(__temp_ty, _line_ang);
 						var _dy = lengthdir_y(__temp_ty, _line_ang);
 						
-						draw_text_transformed(_pos.x + _dx, _pos.y + _dy, _chr, 1, 1, _nor);
+						var _tx = _pos.x + _dx;
+						var _ty = _pos.y + _dy;
+						
+						if(__wave) {
+							var _wd = waveGet(_ind);
+							_tx += lengthdir_x(_wd, _line_ang + 90);
+							_ty += lengthdir_y(_wd, _line_ang + 90);
+						}
+						
+						draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
 						__temp_tx += string_width(_chr) + __temp_trck;
 					});
 					
@@ -237,7 +304,15 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					__temp_trck = _trck;
 				
 					string_foreach(_str_line, function(_chr, _ind) {
-						draw_text_transformed(__temp_tx, __temp_ty, _chr, __temp_ss, __temp_ss, 0);
+						var _tx = __temp_tx;
+						var _ty = __temp_ty;
+						
+						if(__wave) {
+							var _wd = waveGet(_ind);
+							_ty += _wd;
+						}
+						
+						draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
 						__temp_tx += (string_width(_chr) + __temp_trck) * __temp_ss;
 					});
 				

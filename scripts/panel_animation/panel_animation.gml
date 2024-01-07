@@ -740,8 +740,8 @@ function Panel_Animation() : PanelContent() constructor {
 		if(!valArray) _oy = [ _oy ];
 		
 		var oy = array_create(array_length(_oy));
-		for( var ki = 0; ki < array_length(oy); ki++ ) 
-			oy[ki] = value_map(oy[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
+		for( var ki = 0; ki < array_length(_oy); ki++ ) 
+			oy[ki] = value_map(_oy[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
 		
 		for(var k = 0; k < amo - 1; k++) { #region draw line in between
 			var key      = animator.values[| k];
@@ -788,10 +788,10 @@ function Panel_Animation() : PanelContent() constructor {
 					draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
 					
 					ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
-						
+					
 					if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
 					oy[ki] = ny[ki];
-						
+					
 					ny[ki] = value_map(_kn[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
 					draw_line(t, oy[ki], nx, ny[ki]);
 					oy[ki] = ny[ki];

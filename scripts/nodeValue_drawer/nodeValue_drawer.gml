@@ -128,7 +128,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		return [ 0, true ];
 	} #endregion
 	
-	draw_text_add(lb_x, lb_y - ui(2), _name);
+	draw_text_add(lb_x, lb_y, _name);
 			
 	#region tooltip
 		if(jun.tooltip != "") {

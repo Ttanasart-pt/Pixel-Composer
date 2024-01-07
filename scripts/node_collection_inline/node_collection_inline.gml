@@ -111,20 +111,22 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		}
 		
 		#region create convex shape
-			__temp_minP = [ x, y ];
+			__temp_minP = _vtrx[0];
 			__temp_minI = 0;
-		
-			for( var i = 0, n = array_length(_vtrx); i < n; i++ ) {
-				var _v = _vtrx[i];
 			
-				if(_v[1] > __temp_minP[1] || (_v[1] == __temp_minP[1] && _v[0] < __temp_minP[0])) {
+			for( var i = 0, n = array_length(_vtrx); i < n; i++ ) {
+				var _v  = _vtrx[i];
+				var _vx = _v[0];
+				var _vy = _v[1];
+			
+				if(_vy > __temp_minP[1] || (_vy == __temp_minP[1] && _vx < __temp_minP[0])) {
 					__temp_minP = _v;
 					__temp_minI = i;
 				}
 			}
-		
-			_vtrx = array_map( _vtrx, function(a, i) { return [ a[0], a[1], i == __temp_minI? -999 : point_direction(__temp_minP[0], __temp_minP[1], a[0], a[1]) + 360 ] });
-			array_sort(_vtrx, function(a0, a1) { return a0[2] == a1[2]? sign(a0[0] - a1[0]) : sign(a0[2] - a1[2]); });
+			
+			_vtrx = array_map( _vtrx, function(a, i)   { return [ a[0], a[1], i == __temp_minI? -999 : point_direction(__temp_minP[0], __temp_minP[1], a[0], a[1]) + 360 ] });
+			        array_sort(_vtrx, function(a0, a1) { return a0[2] == a1[2]? sign(a0[0] - a1[0]) : sign(a0[2] - a1[2]); });
 		
 			var _linS = 0;
 			for( var i = 1, n = array_length(_vtrx); i < n; i++ ) {
@@ -254,6 +256,15 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		draw_primitive_end();
 		
 		draw_set_alpha(1);
+		
+		//draw_set_color(c_white);
+		//for( var i = 0, n = array_length(group_vertex); i < n; i++ ) {
+		//	a = group_vertex[i];
+		//	var _vx = _x + a[0] * _s;
+		//	var _vy = _y + a[1] * _s;
+			
+		//	draw_circle(_vx, _vy, 3, false);
+		//}
 		
 		return _hov;
 	} #endregion

@@ -11,7 +11,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue("Particle Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
+	inputs[| 1] = nodeValue("Particle Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
 	inputs[| 2] = nodeValue("Particle Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 10);
 	
@@ -29,7 +29,8 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 8] = nodeValue("Time Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05);
 	
-	inputs[| 9] = nodeValue("Collide wall", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 9] = nodeValue("Wall type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "None", "Surround", "Ground only" ]);
 	
 	inputs[| 10] = nodeValue("Viscosity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
@@ -37,50 +38,62 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 11] = nodeValue("Friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
+	inputs[| 12] = nodeValue("Wall Elasticity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
+		
 	input_display_list = [
-		["Domain",	false], 0, 1, 2, 9, 
+		["Domain",	false], 0, 1, 2, 9, 12, 
 		["Solver",  false], 3, 8, 
 		["Physics", false], 6, 7, 10, 11, 
 	]
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
-	array_push(attributeEditors, "FLIP Solver");
+	#region attributes
+		array_push(attributeEditors, "FLIP Solver");
 	
-	attributes.max_particles = 10000;
-	array_push(attributeEditors, ["Maximum particles", function() { return attributes.max_particles; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.max_particles = val; 
-		})]);
+		attributes.max_particles = 10000;
+		array_push(attributeEditors, ["Maximum particles", function() { return attributes.max_particles; }, 
+			new textBox(TEXTBOX_INPUT.number, function(val) { 
+				attributes.max_particles = val; 
+			})]);
 	
-	attributes.iteration = 8;
-	array_push(attributeEditors, ["Global iteration", function() { return attributes.iteration; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.iteration = val; 
-			triggerRender();
-		})]);
+		attributes.iteration = 8;
+		array_push(attributeEditors, ["Global iteration", function() { return attributes.iteration; }, 
+			new textBox(TEXTBOX_INPUT.number, function(val) { 
+				attributes.iteration = val; 
+				triggerRender();
+			})]);
 	
-	attributes.iteration_pressure = 2;
-	array_push(attributeEditors, ["Pressure iteration", function() { return attributes.iteration_pressure; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.iteration_pressure = val; 
-			triggerRender();
-		})]);
+		attributes.iteration_pressure = 2;
+		array_push(attributeEditors, ["Pressure iteration", function() { return attributes.iteration_pressure; }, 
+			new textBox(TEXTBOX_INPUT.number, function(val) { 
+				attributes.iteration_pressure = val; 
+				triggerRender();
+			})]);
 	
-	attributes.iteration_particle = 2;
-	array_push(attributeEditors, ["Particle iteration", function() { return attributes.iteration_particle; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.iteration_particle = val; 
-			triggerRender();
-		})]);
+		attributes.iteration_particle = 2;
+		array_push(attributeEditors, ["Particle iteration", function() { return attributes.iteration_particle; }, 
+			new textBox(TEXTBOX_INPUT.number, function(val) { 
+				attributes.iteration_particle = val; 
+				triggerRender();
+			})]);
 	
-	attributes.overrelax = 1.5;
-	array_push(attributeEditors, ["Overrelaxation", function() { return attributes.overrelax; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.overrelax = val; 
-			triggerRender();
-		})]);
-		
+		attributes.overrelax = 1.5;
+		array_push(attributeEditors, ["Overrelaxation", function() { return attributes.overrelax; }, 
+			new textBox(TEXTBOX_INPUT.number, function(val) { 
+				attributes.overrelax = val; 
+				triggerRender();
+			})]);
+	
+		attributes.skip_incompressible = false;
+		array_push(attributeEditors, ["Skip incompressible", function() { return attributes.skip_incompressible; }, 
+			new checkBox(function() { 
+				attributes.skip_incompressible = !attributes.skip_incompressible;
+				triggerRender();
+			})]);
+	#endregion
+	
 	domain = instance_create(0, 0, FLIP_Domain);
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -97,6 +110,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _vis  = getInputData(10);
 		var _fric = getInputData(11);
+		var _ela  = getInputData(12);
 		
 		var _ovr  = attributes.overrelax;
 		
@@ -128,6 +142,8 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		domain.friction         = _fric;
 		
 		domain.wallCollide      = _col;
+		domain.wallElasticity   = _ela;
+		domain.skip_incompressible      = attributes.skip_incompressible;
 		
 		domain.update();
 		

@@ -21,14 +21,14 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[| 4] = nodeValue("Spawn frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 );
 	
-	inputs[| 5] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
+	inputs[| 5] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8 );
 	
 	inputs[| 6] = nodeValue("Spawn velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 7] = nodeValue("Spawn surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
-	inputs[| 8] = nodeValue("Spawn radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )	
+	inputs[| 8] = nodeValue("Spawn radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2 )	
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	inputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999) );
@@ -36,14 +36,18 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 10] = nodeValue("Spawn direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 45, 135, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_random);
 		
+	inputs[| 11] = nodeValue("Inherit velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )	
+		.setDisplay(VALUE_DISPLAY.slider);
+		
 	input_display_list = [ 0, 9, 
 		["Spawner",	false], 1, 7, 8, 2, 3, 4, 5, 
-		["Physics", false], 10, 6, 
+		["Physics", false], 10, 6, 11, 
 	]
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone );
 	
-	spawn_amo = 0;
+	spawn_amo     = 0;
+	prev_position = [ 0, 0 ];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _shp   = getInputData(1);
@@ -80,7 +84,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		inputs[| 8].setVisible(_shp == 0);
 	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		
@@ -97,6 +101,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var _vel   = getInputData( 6);
 		var _dirr  = getInputData(10);
+		var _ivel  = getInputData(11);
 		
 		if(frame == 0) spawn_amo = 0;
 		
@@ -110,12 +115,15 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _samo  = floor(spawn_amo);
 		spawn_amo -= _samo;
 		
+		var _points = [];
+		
 		if(_shape == 1) {
 			var _sw = surface_get_width(_surf);
 			var _sh = surface_get_height(_surf);
 			
-			var _points = get_points_from_dist(_surf, _samo, _seed + ceil(_amo) * frame);
-			_samo = array_length(_points);
+			_points = get_points_from_dist(_surf, _samo, _seed + ceil(_amo) * frame);
+			_points = array_filter(_points, function(a) { return is_array(a); });
+			_samo   = array_length(_points);
 			
 			if(_samo == 0) return;
 		}
@@ -152,8 +160,11 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _vdis = random_range(_vel[0], _vel[1]);
 			var _vdir = angle_random_eval(_dirr);
 			
-			buffer_write(_buffV, buffer_f64, lengthdir_x(_vdis, _vdir));
-			buffer_write(_buffV, buffer_f64, lengthdir_y(_vdis, _vdir));
+			var _vx = lengthdir_x(_vdis, _vdir) + (frame? (_posit[0] - prev_position[0]) * _ivel : 0);
+			var _vy = lengthdir_y(_vdis, _vdir) + (frame? (_posit[1] - prev_position[1]) * _ivel : 0);
+			
+			buffer_write(_buffV, buffer_f64, _vx);
+			buffer_write(_buffV, buffer_f64, _vy);
 			
 			ind++;
 		}
@@ -162,10 +173,13 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		buffer_delete(_buffP);
 		buffer_delete(_buffV);
-	}
+		
+		prev_position[0] = _posit[0];
+		prev_position[1] = _posit[1];
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_fluidSim_add_fluid, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }
