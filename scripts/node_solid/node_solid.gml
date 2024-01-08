@@ -4,7 +4,7 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, cola(c_white));
 	
 	inputs[| 2] = nodeValue("Empty", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -44,7 +44,7 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		if(_maskUse) {
 			surface_set_shader(_outSurf, sh_solid);
-				draw_surface_stretched_ext(_msk, 0, 0, _dim[0], _dim[1], _col, 1);
+				draw_surface_stretched_ext(_msk, 0, 0, _dim[0], _dim[1], _col, _color_get_alpha(_col));
 			surface_reset_shader();
 		
 			return _outSurf;

@@ -163,7 +163,7 @@ void main() { #region
 		float tileY = floor(sca.y * 4. / 3.);
 		uv.y = mod(floor(uv.y * (tileY + 1.)), tileY) / tileY;
 		
-		colr = vec4(gradientEval(random(uv)).rgb, 1.);
+		colr = gradientEval(random(uv));
 	} else if(mode == 2) {
 		vec2 uv = hc.xy;
 		uv.x = (uv.x + PI / 2.) / PI;

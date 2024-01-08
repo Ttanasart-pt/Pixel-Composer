@@ -26,6 +26,10 @@ function irandom_range_seed(from, to, seed) { #region
 	return irandom_range(from, to);
 } #endregion
 
+function seed_random(digits = 6) { #region
+	return irandom_range(power(10, digits - 1), power(10, digits) - 1);
+} #endregion
+
 function random_seed(val, seed) { #region
 	random_set_seed(floor(seed));
 	var _s0 = random(val);

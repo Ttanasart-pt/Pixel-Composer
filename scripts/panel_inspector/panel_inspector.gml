@@ -468,8 +468,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		} #endregion
 		
 		var color_picker_selecting = noone;
-		var color_picker_index = 0;
+		var color_picker_index     = 0;
 		var pickers = [];
+		var _colsp  = false;
 		
 		for(var i = 0; i < amo; i++) {
 			var yy = hh + _y;
@@ -490,6 +491,10 @@ function Panel_Inspector() : PanelContent() constructor {
 						continue;
 						
 					} if(is_array(jun_disp)) {										// LABEL
+						var pad = i && _colsp == false? ui(4) : 0
+						_colsp  = false;
+						yy += pad;
+						
 						var txt  = __txt(jun_disp[0]);
 						var coll = jun_disp[1] && filter_text == "";
 						var lbh  = lineBreak? ui(32) : ui(26);
@@ -537,9 +542,10 @@ function Panel_Inspector() : PanelContent() constructor {
 						draw_text_add(ltx, yy + lbh / 2, txt);
 						draw_set_alpha(1);
 						
-						hh += lbh + ui(lineBreak? 8 : 6);
+						hh += lbh + ui(lineBreak? 8 : 6) + pad;
 						
 						if(coll) { // skip 
+							_colsp   = true;
 							var j    = i + 1;
 							var _len = array_length(_inspecting.input_display_list);
 							

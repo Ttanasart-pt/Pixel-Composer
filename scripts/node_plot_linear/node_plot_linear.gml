@@ -71,7 +71,8 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	input_display_list = [ 0, 
 		["Data", 	 true], 1, 12, 21, 14, 2, 3, 15, 16, 
 		["Plot",	false], 11, 4, 10, 20, 5, 22, 23, 
-		["Render",	false], 6, 13, 24, 25, 26, 7, 17, 18, 19, 8, 9, 
+		["Render",	false], 6, 13, 24, 25, 26, 7, 17, 18, 19, 
+		["Background",	true, 8], 9, 
 	];
 	
 	attribute_surface_depth();

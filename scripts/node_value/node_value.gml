@@ -610,6 +610,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		node.inputs_data[index] = _value;
 		node.input_value_map[$ internalName] = _value;
+		
 	#endregion
 	
 	#region ---- draw ----

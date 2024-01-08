@@ -65,7 +65,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Output",     false], 0, 6, 
 		["Transform",  false], 15, 3, 16, 17, 
 		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 
-		["Render",	    true], 10, 1, 11, 12, 18
+		["Render",	    true], 10, 12, 18,
+		["Background",	true, 1], 11, 
 	];
 	
 	temp_surface = [ noone ];
@@ -295,7 +296,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_f("center",    _center);
 			shader_set_f("scale",     _scale );
 			
-			draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], _color, 1);
+			draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], _color, _color_get_alpha(_color));
 		surface_reset_shader();
 		
 		return _outSurf;

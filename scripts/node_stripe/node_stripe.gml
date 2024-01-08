@@ -98,8 +98,8 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_f_map("randomAmount", _data[ 5], _data[13], inputs[|  5]);
 			shader_set_f_map("ratio",        _data[10], _data[14], inputs[| 10]);
 			
-			shader_set_f("color0", colToVec4(_clr0));
-			shader_set_f("color1", colToVec4(_clr1));
+			shader_set_color("color0", _clr0);
+			shader_set_color("color1", _clr1);
 			
 			shader_set_i("gradient_use",	_grad_use);
 			_gra.shader_submit();

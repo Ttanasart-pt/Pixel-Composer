@@ -42,7 +42,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray();
 	
 	input_display_list = [1, 
-		["Styling", false], 2, 0, 3, 4,
+		["Styling", false], 2, 0, 4,
 		["Display", false], 5, 6, 
 	];
 	
@@ -355,7 +355,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(txt == "") txt = "..."
 		
 		var sty  = getInputData(2);
-		var alp  = getInputData(3);
+		var alp  = _color_get_alpha(color);
 		var wid  = getInputData(4);
 		var posi = getInputData(5);
 		smooth   = getInputData(6);

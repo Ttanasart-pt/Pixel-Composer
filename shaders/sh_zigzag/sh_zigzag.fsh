@@ -37,14 +37,14 @@ void main() {
 	
 	if(blend == 0) {
 		if(mod(_yind, 2.) == 1.) {
-			if(_x > _y)	gl_FragColor = vec4(col1.rgb, 1.);
-			else		gl_FragColor = vec4(col2.rgb, 1.);
+			if(_x > _y)	gl_FragColor = col1;
+			else		gl_FragColor = col2;
 		} else {
-			if(_x > _y) gl_FragColor = vec4(col2.rgb, 1.);
-			else		gl_FragColor = vec4(col1.rgb, 1.);
+			if(_x > _y) gl_FragColor = col2;
+			else		gl_FragColor = col1;
 		}
 	} else {
-		if(_x > _y) gl_FragColor = vec4(mix(col1.rgb, col2.rgb, _y + (1. - _x)), 1.);
-		else		gl_FragColor = vec4(mix(col1.rgb, col2.rgb, _y - _x), 1.);
+		if(_x > _y) gl_FragColor = mix(col1, col2, _y + (1. - _x));
+		else		gl_FragColor = mix(col1, col2, _y - _x);
 	}
 }

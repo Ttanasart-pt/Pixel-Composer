@@ -33,8 +33,10 @@ event_inherited();
 	
 	function setGradient(grad) { 
 		gradient = grad;
-		if(array_length(grad.keys))
-			key_selecting = grad.keys[0];
+		if(array_empty(grad.keys)) return;
+		
+		key_selecting = grad.keys[0];
+		selector.setColor(key_selecting.value, false);
 	}
 	
 	selector = new colorSelector(setColor);
@@ -108,8 +110,14 @@ event_inherited();
 			if(_hover && isHover) {
 				if(mouse_press(mb_left, interactable && sFOCUS)) {
 					gradient.keys = [];
-					for( var i = 0, n = array_length(_gradient.gradient.keys); i < n; i++ ) 
-						gradient.keys[i] = _gradient.gradient.keys[i].clone();
+					for( var i = 0, n = array_length(_gradient.gradient.keys); i < n; i++ ) {
+						var k = _gradient.gradient.keys[i].clone();
+						gradient.keys[i] = k;
+						
+						if(is_real(k.value)) k.value = cola(k.value);
+					}
+					
+					onApply(gradient);
 				}
 				
 				if(mouse_press(mb_right, interactable && sFOCUS)) {
@@ -195,7 +203,11 @@ event_inherited();
 						
 					var _index = m_gy * col + m_gx;
 					if(_index < pre_amo && _index >= 0) {
-						selector.setColor(pal.palette[_index]);
+						var c = pal.palette[_index];
+						
+						if(is_real(c)) c = cola(c);
+						
+						selector.setColor(c);
 						selector.setHSV();
 					}
 				} else if(isHover) {

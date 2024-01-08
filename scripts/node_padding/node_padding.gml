@@ -92,7 +92,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				DRAW_CLEAR
 				BLEND_OVERRIDE;
 			} else if(fill == 1)
-				draw_clear_alpha(fillClr, 1);
+				draw_clear(fillClr);
 			
 			var sx = 0;
 			var sy = 0;

@@ -1,5 +1,6 @@
 function colToVec4(color, alpha = 1) {
-	return [ color_get_red(color) / 255, color_get_green(color) / 255, color_get_blue(color) / 255, alpha ];
+	var a = is_int64(color)? _color_get_alpha(color) : alpha;
+	return [ _color_get_red(color), _color_get_green(color), _color_get_blue(color), a ];
 }
 
 function colaToVec4(color) {

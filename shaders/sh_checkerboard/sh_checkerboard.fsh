@@ -41,7 +41,7 @@ void main() {
 	float _a = 1. / amo;
 	
 	if(mod(floor(_x / _a) + floor(_y / _a), 2.) > 0.5)
-		gl_FragColor = vec4(col1.rgb, 1.);
+		gl_FragColor = col1;
 	else
-		gl_FragColor = vec4(col2.rgb, 1.);
+		gl_FragColor = col2;
 }

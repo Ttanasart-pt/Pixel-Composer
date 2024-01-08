@@ -62,7 +62,8 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Output", 		false], 0, 
 		["Transform",	false], 5, 6, 7, 
 		["Shape",		false], 4, 8, 9, 10, 11, 12, 13, 14, 15, 
-		["Render",		 true],	1, 2, 3, 
+		["Render",		 true],	3, 
+		["Background",	 true, 1], 2, 
 	];
 	
 	attribute_surface_depth();
@@ -134,7 +135,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		};
 		
 		surface_set_target(_outSurf);
-			if(_bg) draw_clear_alpha(_bgc, 1);
+			if(_bg) draw_clear(_bgc);
 			else	DRAW_CLEAR
 			
 			draw_set_color(_shc);
@@ -191,7 +192,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				mesh.triangles = [];
 				for( var i = 0, n = array_length(shapes); i < n; i++ ) {
 					var triangles = shapes[i];
-				
+					
 					for( var j = 0; j < array_length(triangles); j++ ) {
 						var tri = triangles[j];
 						
@@ -204,6 +205,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				}
 			}
 			draw_primitive_end();
+			draw_set_alpha(1);
 			
 		surface_reset_target();
 		

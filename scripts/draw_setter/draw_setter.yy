@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "draw_set_text",
+  "name": "draw_setter",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

@@ -1,0 +1,35 @@
+#macro draw_set_color draw_set_color_ext
+#macro __draw_set_color draw_set_color
+
+#macro draw_clear draw_clear_ext
+#macro __draw_clear draw_clear
+
+function draw_set_color_ext(col) {
+	INLINE
+	
+	__draw_set_color(col);
+	if(is_real(col)) return;
+	
+	var a = _color_get_alpha(col);
+	draw_set_alpha(a);
+}
+
+function draw_clear_ext(col) {
+	if(is_real(col)) {
+		__draw_clear(col);
+		return;
+	}
+	
+	var a = _color_get_alpha(col);
+	draw_clear_alpha(col, a);
+}
+
+function draw_set_text(font, halign, valign) {
+	INLINE
+	
+	if(argument_count > 3) draw_set_color(argument[3]);
+	
+	draw_set_font(font);
+	draw_set_halign(halign);
+	draw_set_valign(valign);
+}

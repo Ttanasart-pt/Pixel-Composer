@@ -89,7 +89,10 @@ vec4 gradientEval(in float prog) { #region
 				else if(gradient_blend == 1)
 					col = gradient_color[i - 1];
 				else if(gradient_blend == 2)
-					col = vec4(hsvMix(gradient_color[i - 1].rgb, gradient_color[i].rgb, t), 1.);
+					col = vec4(
+						hsvMix(gradient_color[i - 1].rgb, gradient_color[i].rgb, t), 
+						mix(gradient_color[i - 1].a, gradient_color[i].a, t)
+					);
 			}
 			break;
 		}
@@ -164,7 +167,7 @@ void main() { #region
 	}
 	
 	if(mode == 0) {
-		colr = vec4(gradientEval(random(sqSt)).rgb, 1.);
+		colr = gradientEval(random(sqSt));
 	} else if(mode == 2) {
 		vec2 uv = fract(_pos * sca);
 		colr = texture2D( gm_BaseTexture, uv );

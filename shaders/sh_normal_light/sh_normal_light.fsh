@@ -15,7 +15,7 @@ uniform float normalHeight;
 uniform vec3  ambiance;
 uniform int	  lightType;
 uniform vec4  lightPosition;
-uniform vec3  lightColor;
+uniform vec4  lightColor;
 uniform float lightIntensity;
 
 void main() {
@@ -39,7 +39,7 @@ void main() {
 	}
 	
 	float d = max(dot(normal, lightDir), 0.0);
-	vec3 diffuse = d * lightColor * base_color.rgb * attenuation;
+	vec3 diffuse = d * lightColor.rgb * lightColor.a * base_color.rgb * attenuation;
 	result += diffuse;
 	result.r = min(result.r, base_color.r);
 	result.g = min(result.g, base_color.g);

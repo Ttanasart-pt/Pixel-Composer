@@ -42,7 +42,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	input_display_list = [
 		["Surface",	false],	0, 1, 12, 
 		["Stack",	false], 2, 3, 8, 4, 5, 
-		["Render",  false], 6, 7, 9, 10, 11, 
+		["Render",  false], 6, 7, 9, 10, 
 	];
 	
 	attribute_surface_depth();
@@ -206,7 +206,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _hig = _data[ 9];
 		var _hiC = _data[10];
-		var _hiA = _data[11];
+		//var _hiA = _data[11];
 		var _arr = _data[12];
 		
 		_pos     = [ _pos[0], _pos[1] ];
@@ -238,10 +238,10 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 						shader_set_f("dimension", _ww, _hh);
 						shader_set_f("shift", _shf[0] / _ww, _shf[1] / _hh);
 						shader_set_f("angle", degtorad(_rot));
-						draw_surface_ext_safe(_in, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _hiC, _hiA);
+						draw_surface_ext_safe(_in, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _hiC, _color_get_alpha(_hiC));
 						shader_reset();
 					} else
-						draw_surface_ext_safe(_in, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _col, aa);
+						draw_surface_ext_safe(_in, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _col, _color_get_alpha(_col) * aa);
 					_pos[0] -= _shf[0];
 					_pos[1] -= _shf[1];
 						
@@ -259,7 +259,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 					var _hh = surface_get_height_safe(_surf);
 					var _po = point_rotate(0, 0, _ww / 2, _hh / 2, _rot);
 					
-					draw_surface_ext_safe(_surf, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _col, 1);
+					draw_surface_ext_safe(_surf, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _col, _color_get_alpha(_col));
 					_pos[0] += _shf[0];
 					_pos[1] += _shf[1];
 				}

@@ -1,3 +1,7 @@
+function cola(color, alpha = 1) { INLINE return int64((color & 0xFFFFFF) + (round(alpha * 255) << 24)); }
+function _cola(color, alpha)    { INLINE return int64((color & 0xFFFFFF) + (alpha << 24)); }
+function colda(color)           { INLINE return real(color & 0xFFFFFF); }
+
 function colorFromRGBArray(arr) { #region
 	var r = round(real(arr[0]) * 255);
 	var g = round(real(arr[1]) * 255);
@@ -5,14 +9,15 @@ function colorFromRGBArray(arr) { #region
 	return make_color_rgb(r, g, b);
 } #endregion
 
-function color_get_alpha(color) { #region
-	INLINE
-	return (color & (0xFF << 24)) >> 24;
-} #endregion
+function color_get_alpha(color)  { INLINE return (color & (0xFF << 24)) >> 24; }
+function _color_get_alpha(color) { INLINE return is_real(color)? 1 : color_get_alpha(color) / 255; }
+function _color_get_red(color)   { INLINE return color_get_red(color)   / 255; }
+function _color_get_green(color) { INLINE return color_get_green(color) / 255; }
+function _color_get_blue(color)  { INLINE return color_get_blue(color)  / 255; }
 
 function colorArrayFromReal(clr) { #region
 	INLINE
-	return [color_get_red(clr) / 255, color_get_green(clr) / 255, color_get_blue(clr) / 255 ];	
+	return [ _color_get_red(clr), _color_get_green(clr), _color_get_blue(clr) ];	
 } #endregion
 
 function colorBrightness(clr, normalize = true) { #region
@@ -28,15 +33,18 @@ function colorMultiply(c1, c2) { #region
 	if(c1 == c_white) return c2;
 	if(c2 == c_white) return c1;
 	
-	var r1 = color_get_red(c1);
-	var g1 = color_get_green(c1);
-	var b1 = color_get_blue(c1);
+	var r1 = _color_get_red(c1);
+	var g1 = _color_get_green(c1);
+	var b1 = _color_get_blue(c1);
+	var a1 = _color_get_alpha(c1);
 	
-	var r2 = color_get_red(c2);
-	var g2 = color_get_green(c2);
-	var b2 = color_get_blue(c2);
+	var r2 = _color_get_red(c2);
+	var g2 = _color_get_green(c2);
+	var b2 = _color_get_blue(c2);
+	var a2 = _color_get_alpha(c2);
 	
-	return make_color_rgb((r1 * r2) / 255, (g1 * g2) / 255, (b1 * b2) / 255);
+	if(is_real(c1)) return make_color_rgb((r1 * r2) * 255, (g1 * g2) * 255, (b1 * b2) * 255);
+	return make_color_rgba((r1 * r2) * 255, (g1 * g2) * 255, (b1 * b2) * 255, (a1 * a2) * 255);
 } #endregion
 
 function colorAdd(c1, c2) { #region
@@ -87,6 +95,40 @@ function color_get_brightness(col) { #region
 function color_rgb(col) { #region
 	INLINE
 	return [ color_get_red(col) / 255, color_get_green(col) / 255, color_get_blue(col) / 255 ];
+} #endregion
+
+function make_color_rgba(r, g, b, a) { INLINE return int64(round(r) + (round(g) << 8) + (round(b) << 16) + (round(a) << 24)); }
+function make_color_hsva(h, s, v, a) { INLINE return _cola(make_color_hsv(h, s, v), a); }
+
+#macro merge_color merge_color_ext
+#macro __merge_color merge_color
+
+function merge_color_ext(c0, c1, t) { #region
+	INLINE
+	if(is_real(c0)) return __merge_color(c0, c1, t);
+	
+	return make_color_rgba(
+		clamp(round(lerp(color_get_red(c0),   color_get_red(c1),   t)), 0, 255),
+		clamp(round(lerp(color_get_green(c0), color_get_green(c1), t)), 0, 255),
+		clamp(round(lerp(color_get_blue(c0),  color_get_blue(c1),  t)), 0, 255),
+		clamp(round(lerp(color_get_alpha(c0), color_get_alpha(c1), t)), 0, 255),
+	);
+} #endregion
+
+function merge_color_hsv(c0, c1, t) { #region
+	INLINE
+	if(is_real(c0)) return make_color_hsv(
+		clamp(round(lerp(color_get_hue(c0),        color_get_hue(c1),        t)), 0, 255),
+		clamp(round(lerp(color_get_saturation(c0), color_get_saturation(c1), t)), 0, 255),
+		clamp(round(lerp(color_get_value(c0),      color_get_value(c1),      t)), 0, 255),
+	);
+	
+	return make_color_hsva(
+		clamp(round(lerp(color_get_hue(c0),        color_get_hue(c1),        t)), 0, 255),
+		clamp(round(lerp(color_get_saturation(c0), color_get_saturation(c1), t)), 0, 255),
+		clamp(round(lerp(color_get_value(c0),      color_get_value(c1),      t)), 0, 255),
+		clamp(round(lerp(color_get_alpha(c0),      color_get_alpha(c1),      t)), 0, 255),
+	);
 } #endregion
 
 #region sorting functions

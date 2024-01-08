@@ -28,6 +28,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	handle_w = ui(20);
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onApply);
+	font     = noone;
 	
 	static modifyValue = function(value) { #region
 		value = clamp(value, curr_minn, curr_maxx);
@@ -39,7 +40,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	} #endregion
 	
 	static setInteract = function(interactable = noone) { #region
-		self.interactable = interactable;
+		self.interactable     = interactable;
 		tb_value.interactable = interactable;
 	} #endregion
 	
@@ -89,6 +90,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		if(tb_w > 0) {
 			sw = _w - (tb_w + ui(16));
 			
+			tb_value.font = font;
 			tb_value.setFocusHover(active, hover);
 			tb_value.draw(_x + sw + ui(16), _y, tb_w, _h, current_value, _m);
 			tb_value.setRange(curr_minn, curr_maxx);
@@ -106,7 +108,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		
 		var _pg = clamp((current_value - curr_minn) / (curr_maxx - curr_minn), 0, 1) * sw;
 		var _kx = _x + _pg;
-		draw_sprite_stretched_ext(spr, 1, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
+		draw_sprite_stretched_ext(spr, 1, _kx - handle_w / 2, _y, handle_w, _h, blend, interactable * 0.75 + 0.25);
 		
 		if(dragging) {
 			draw_sprite_stretched_ext(spr, 3, _kx - handle_w / 2, _y, handle_w, _h, COLORS._main_accent, 1);

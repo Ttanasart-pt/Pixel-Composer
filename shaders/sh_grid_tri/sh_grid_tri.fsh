@@ -154,7 +154,7 @@ void main() { #region
 	
 	if(mode == 0) {
 		vec2 uv = fract(tri.xy / sca);
-		colr = vec4(gradientEval(random(uv)).rgb, 1.); 
+		colr = gradientEval(random(uv));
 	} else if(mode == 2) {
 		vec2 uv = fract((_pos * vec2(1., c30) - tri.xy) + vec2(0.5, 0.));
 		colr = texture2D( gm_BaseTexture, uv );

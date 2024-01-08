@@ -144,7 +144,7 @@ void main() { #region
 		if(blend == 0)	gl_FragColor = _s > rat? color0 : color1;
 		else			gl_FragColor = vec4(vec3(sin(_s * 2. * PI) * 0.5 + 0.5), 1.);
 	} else {
-		if(_s > rat)	gl_FragColor = vec4(gradientEval(random(vec2(slot))).rgb, 1.);
-		else			gl_FragColor = vec4(gradientEval(random(vec2(slot + 1.))).rgb, 1.);
+		if(_s > rat)	gl_FragColor = gradientEval(random(vec2(slot)));
+		else			gl_FragColor = gradientEval(random(vec2(slot + 1.)));
 	}
 } #endregion

@@ -39,7 +39,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 13] = nodeValue("Path shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 14] = nodeValue("Color over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
+	inputs[| 14] = nodeValue("Color over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) );
 		
 	inputs[| 15] = nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
@@ -74,11 +74,13 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 26] = nodeValue("Stack", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Place each copy next to each other, taking surface dimension into account.")
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "X", "Y" ]);
 	
-	inputs[| 27] = nodeValue("Animator blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 27] = nodeValue("Animator blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, cola(c_white));
 	
 	inputs[| 28] = nodeValue("Animator alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
-		
+	
+	inputs[| 29] = nodeValue("Animator", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
@@ -86,8 +88,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Pattern",		false],	3, 9, 2, 18, 7, 8, 
 		["Path",		 true],	11, 12, 13, 
 		["Transform",	false],	4, 26, 19, 5, 6, 10, 
-		["Render",		false],	14, 15,
-		["Animator",	 true],	20, 21, 25, 22, 23, 24, 27, 28, 
+		["Render",		false],	14, 
+		["Animator",	 true, 29],	20, 21, 25, 22, 23, 24, 27, 
 	];
 	
 	attribute_surface_depth();
@@ -144,13 +146,15 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _prsh = getInputData(13);
 		
 		var _grad = getInputData(14);
-		var _alph = getInputData(15);
+		//var _alph = getInputData(15);
 		
 		var _arr = getInputData(16);
 		var _sed = getInputData(17);
 		
 		var _col = getInputData(18);
 		var _cls = getInputData(19);
+		
+		var _an_use = getInputData(29);
 		
 		var _an_mid = getInputData(20);
 		var _an_ran = getInputData(21);
@@ -160,7 +164,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _an_sca = getInputData(24);
 		
 		var _an_bld = getInputData(27);
-		var _an_alp = getInputData(28);
+		var _an_alp = _color_get_alpha(_an_bld);
 		
 		var _surf, runx, runy, posx, posy, scax, scay, rot;
 				   
@@ -206,7 +210,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				var _an_dist = abs(i - _an_mid * (_amo - 1));
 				var _inf = 0;
-				if(_an_dist < _an_ran * _amo) {
+				if(_an_use && _an_dist < _an_ran * _amo) {
 					_inf = eval_curve_x(_an_fal, _an_dist / (_an_ran * _amo));
 					posx += _an_pos[0] * _inf;
 					posy += _an_pos[1] * _inf;
@@ -238,10 +242,13 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				var pos = point_rotate(-sw / 2, -sh / 2, 0, 0, rot);
 				var cc  = _grad.eval(i / (_amo - 1));
-				var aa  = eval_curve_x(_alph, i / (_amo - 1));
+				var aa  = _color_get_alpha(cc);
 				
-				cc = merge_color(cc, colorMultiply(cc, _an_bld), _inf);
-				aa += _an_alp * _inf;
+				cc = colda(cc);
+				if(_an_use) {
+					cc = merge_color(cc, colorMultiply(cc, _an_bld), _inf);
+					aa += _an_alp * _inf;
+				}
 				
 				draw_surface_ext_safe(_surf, posx + pos[0], posy + pos[1], scax, scay, rot, cc, aa);
 				

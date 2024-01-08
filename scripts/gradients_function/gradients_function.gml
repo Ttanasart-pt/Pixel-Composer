@@ -24,7 +24,8 @@ function gradientObject(color = c_black) constructor { #region
 		var g = new gradientObject();
 		for( var i = 0, n = array_length(keys); i < n; i++ )
 			g.keys[i] = keys[i].clone();
-		g.type = type;
+		
+		g.type      = type;
 		
 		return g;
 	} #endregion
@@ -56,7 +57,7 @@ function gradientObject(color = c_black) constructor { #region
 		var _len = array_length(keys);
 		if(_len == 0) return c_black;
 		if(_len == 1) return keys[0].value;
-	
+		
 		if(position <= keys[0].time)        return keys[0].value;
 		if(position >= keys[_len - 1].time) return keys[_len - 1].value;
 		
@@ -67,11 +68,12 @@ function gradientObject(color = c_black) constructor { #region
 			if(_key.time < position) continue;
 			if(_key.time == position) return keys[i].value;
 			
-			if(type == GRADIENT_INTER.smooth) {
-				var rat = (position - _pkey.time) / (_key.time - _pkey.time);
-				return merge_color(_pkey.value, _key.value, rat);
-			} else if(type == GRADIENT_INTER.none) {
-				return _pkey.value;
+			var rat = (position - _pkey.time) / (_key.time - _pkey.time);
+			
+			switch(type) {
+				case GRADIENT_INTER.smooth : return merge_color(_pkey.value, _key.value, rat);
+				case GRADIENT_INTER.hue    : return merge_color_hsv(_pkey.value, _key.value, rat);
+				case GRADIENT_INTER.none   : return _pkey.value;
 			}
 			
 			_pkey = _key;
@@ -90,40 +92,59 @@ function gradientObject(color = c_black) constructor { #region
 		var _grad_time  = [];
 		
 		var len = min(128, array_length(keys));
+		var aa  = false;
 		
 		for(var i = 0; i < len; i++) {
-			if(keys[i].value == undefined) return;
-		
-			_grad_color[i * 4 + 0] = color_get_red(keys[i].value)   / 255;
-			_grad_color[i * 4 + 1] = color_get_green(keys[i].value) / 255;
-			_grad_color[i * 4 + 2] = color_get_blue(keys[i].value)  / 255;
-			_grad_color[i * 4 + 3] = 1;
+			var _val = keys[i].value;
+			if(_val == undefined) return;
+			
+			_grad_color[i * 4 + 0] = _color_get_red(_val);
+			_grad_color[i * 4 + 1] = _color_get_green(_val);
+			_grad_color[i * 4 + 2] = _color_get_blue(_val);
+			_grad_color[i * 4 + 3] = _color_get_alpha(_val);
 			_grad_time[i] = keys[i].time;
+			
+			if(_grad_color[i * 4 + 3] != 1) aa = true;
 		}
 		
 		surf = surface_verify(surf, _w, _h);
 		
 		surface_set_target(surf);
 			DRAW_CLEAR
+			var _gh = aa? _h - ui(8) : _h;
+			draw_sprite_stretched_ext(THEME.gradient_mask, 0, 0, 0, _w, _gh, c_white, _a)
 			
-			gpu_set_colorwriteenable(0, 0, 0, 1);
-				draw_sprite_stretched_ext(THEME.gradient_mask, 0, 0, 0, _w, _h, c_white, _a)
-			gpu_set_colorwriteenable(1, 1, 1, 0);
-			
-			if(len == 0) {
-				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _w, _h, c_white, 1);
-			} else {
+			if(len) {
+				BLEND_MULTIPLY
+				
 				shader_set(sh_gradient_display);
 				shader_set_uniform_i(uniform_grad_blend, type);
 				shader_set_uniform_f_array_safe(uniform_grad, _grad_color, GRADIENT_LIMIT * 4);
 				shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
 				shader_set_uniform_i(uniform_grad_key, len);
-			
-				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _w, _h, c_white, 1);
+				
+				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _w, _gh, c_white, 1);
 				shader_reset();
+				
+				BLEND_NORMAL
 			}
 			
-			gpu_set_colorwriteenable(1, 1, 1, 1);
+			if(aa) {
+				draw_sprite_stretched_ext(THEME.gradient_mask, 0, 0, _h - ui(6), _w, ui(6), c_white, _a)
+				
+				BLEND_MULTIPLY
+				
+				shader_set(sh_gradient_display_alpha);
+				shader_set_uniform_i(uniform_grad_blend, type);
+				shader_set_uniform_f_array_safe(uniform_grad, _grad_color, GRADIENT_LIMIT * 4);
+				shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
+				shader_set_uniform_i(uniform_grad_key, len);
+				
+				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, _h - ui(6), _w, ui(6), c_white, 1);
+				shader_reset();
+				
+				BLEND_NORMAL
+			}
 		surface_reset_target();
 		
 		draw_surface(surf, _x, _y);
@@ -133,12 +154,13 @@ function gradientObject(color = c_black) constructor { #region
 		var _grad_color = [], _grad_time = []; 
 		
 		for(var i = 0; i < array_length(keys); i++) {
-			if(is_undefined(keys[i].value)) continue;
+			var _val = keys[i].value;
+			if(is_undefined(_val)) continue;
 			
-			_grad_color[i * 4 + 0] = color_get_red(keys[i].value) / 255;
-			_grad_color[i * 4 + 1] = color_get_green(keys[i].value) / 255;
-			_grad_color[i * 4 + 2] = color_get_blue(keys[i].value) / 255;
-			_grad_color[i * 4 + 3] = 1;
+			_grad_color[i * 4 + 0] = _color_get_red(_val);
+			_grad_color[i * 4 + 1] = _color_get_green(_val);
+			_grad_color[i * 4 + 2] = _color_get_blue(_val);
+			_grad_color[i * 4 + 3] = _color_get_alpha(_val);
 			_grad_time[i] = keys[i].time;
 		}
 	

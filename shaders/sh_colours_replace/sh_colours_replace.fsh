@@ -27,5 +27,5 @@ void main() {
 		}
 	}
 	
-    gl_FragColor = vec4(colorTo[index].rgb, p.a);
+    gl_FragColor = vec4(colorTo[index].rgb, p.a * colorTo[index].a);
 }

@@ -61,7 +61,9 @@ void main() {
 	result.a    =  wgh;
 	
 	gl_FragColor = result;
-	if(overrideColor == 1) 
+	if(overrideColor == 1) {
 		gl_FragColor.rgb = overColor.rgb;
+		gl_FragColor.a  *= overColor.a;
+	}
 }
 

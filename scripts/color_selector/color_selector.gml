@@ -3,9 +3,9 @@ function colorSelector(onApply = noone) constructor {
 	
 	current_color = c_white;
 	
-	hue           = 1;
-	sat           = 0;
-	val           = 0;
+	hue = 1;
+	sat = 0;
+	val = 0;
 	
 	area_dragging = false;
 	side_dragging = false;
@@ -26,53 +26,76 @@ function colorSelector(onApply = noone) constructor {
 		if(!interactable) return;
 		hue = clamp(_val, 0, 255);
 		setHSV();
-	})
+	});
+	
 	tb_sat = new slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		sat = clamp(_val, 0, 255);
 		setHSV();
-	})
+	});
+	
 	tb_val= new slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		val = clamp(_val, 0, 255);
 		setHSV();
-	})
-	
-	tb_hue.hdw = ui(16);
-	tb_sat.hdw = ui(16);
-	tb_val.hdw = ui(16);
+	});
 	
 	tb_red = new slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		var r = clamp(_val, 0, 255);
 		var g = color_get_green(current_color);
 		var b = color_get_blue(current_color);
+		var a = color_get_alpha(current_color);
 		
-		current_color = make_color_rgb(r, g, b);
+		current_color = make_color_rgba(r, g, b, a);
 		resetHSV();
-	})
+	});
+	
 	tb_green = new slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		var r = color_get_red(current_color);
 		var g = clamp(_val, 0, 255);
 		var b = color_get_blue(current_color);
+		var a = color_get_alpha(current_color);
 		
-		current_color = make_color_rgb(r, g, b);
+		current_color = make_color_rgba(r, g, b, a);
 		resetHSV();
-	})
+	});
+	
 	tb_blue = new slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		var r = color_get_red(current_color);
 		var g = color_get_green(current_color);
 		var b = clamp(_val, 0, 255);
+		var a = color_get_alpha(current_color);
 		
-		current_color = make_color_rgb(r, g, b);
+		current_color = make_color_rgba(r, g, b, a);
 		resetHSV();
-	})
+	});
 	
-	tb_red.hdw = ui(16);
+	tb_alpha = new slider(0, 255, 1, function(_val) {
+		if(!interactable) return;
+		var alp = clamp(_val, 0, 255);
+		
+		current_color = _cola(current_color, alp);
+		resetHSV();
+	});
+	
+	tb_hue.hdw   = ui(16);
+	tb_sat.hdw   = ui(16);
+	tb_val.hdw   = ui(16);
+	tb_red.hdw   = ui(16);
 	tb_green.hdw = ui(16);
-	tb_blue.hdw = ui(16);
+	tb_blue.hdw  = ui(16);
+	tb_alpha.hdw = ui(16);
+	
+	tb_hue.font   = f_p1;
+	tb_sat.font   = f_p1;
+	tb_val.font   = f_p1;
+	tb_red.font   = f_p1;
+	tb_green.font = f_p1;
+	tb_blue.font  = f_p1;
+	tb_alpha.font = f_p1;
 	
 	tb_hex = new textBox(TEXTBOX_INPUT.text, function(str) {
 		if(!interactable) return;
@@ -82,29 +105,34 @@ function colorSelector(onApply = noone) constructor {
 		var _r = string_hexadecimal(string_copy(str, 1, 2));
 		var _g = string_hexadecimal(string_copy(str, 3, 2));
 		var _b = string_hexadecimal(string_copy(str, 5, 2));
+		var _a = string_length(str) > 6? string_hexadecimal(string_copy(str, 7, 2)) : 255;
 		
-		current_color = make_color_rgb(_r, _g, _b);
+		current_color = make_color_rgba(_r, _g, _b, _a);
 		resetHSV();
-	})
+	});
 	
 	scr_disp = new buttonGroup(["Hue", "Value"], function(mode) { disp_mode = mode; } );
 	
-	function resetHSV() {
+	function resetHSV(_apply = true) {
 		hue = round(color_get_hue(current_color));
 		sat = round(color_get_saturation(current_color));
 		val = round(color_get_value(current_color));
 		
-		if(onApply != noone) onApply(current_color);
-	}
-	function setHSV() {
-		if(!interactable) return;
-		current_color = make_color_hsv(hue, sat, val);	
-		if(onApply != noone) onApply(current_color);
+		if(_apply && onApply != noone) onApply(current_color);
 	}
 	
-	function setColor(color) {
+	function setHSV(_apply = true) {
+		if(!interactable) return;
+		var alp = color_get_alpha(current_color);
+		current_color = make_color_hsva(hue, sat, val, alp);
+		
+		if(_apply && onApply != noone) onApply(current_color);
+	}
+	
+	function setColor(color, _apply = true) {
 		current_color = color;
-		resetHSV();
+		
+		resetHSV(_apply);
 	}
 	
 	function colorPicker() {
@@ -160,7 +188,7 @@ function colorSelector(onApply = noone) constructor {
 		#region side control
 			var hue_x = col_x + ui(280);
 			var hue_y = col_y;
-			
+					
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, hue_x - ui(8), hue_y - ui(8), ui(32), ui(256 + 16));
 			
 			if(disp_mode == 0) {
@@ -275,34 +303,42 @@ function colorSelector(onApply = noone) constructor {
 		#region data
 			var data_x = hue_x + ui(40);
 			var data_y = col_y + ui(40);
+			var wdw = ui(160);
+			var wdh = ui( 27);
+			var txh = wdh + ui(4);
 	
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text(data_x, data_y + ui(36 * 0 + 15), "H");
-			draw_text(data_x, data_y + ui(36 * 1 + 15), "S")
-			draw_text(data_x, data_y + ui(36 * 2 + 15), "V");
-	
+			draw_text(data_x, data_y + txh * 0 + ui(15), "H");
+			draw_text(data_x, data_y + txh * 1 + ui(15), "S")
+			draw_text(data_x, data_y + txh * 2 + ui(15), "V");
+			
 			tb_hue.setFocusHover(focus, hover);
 			tb_sat.setFocusHover(focus, hover);
 			tb_val.setFocusHover(focus, hover);
-	
-			tb_hue.draw(data_x + ui(28), data_y + ui(36 * 0), ui(160), ui(30), round(color_get_hue(current_color)),			mouse_ui);
-			tb_sat.draw(data_x + ui(28), data_y + ui(36 * 1), ui(160), ui(30), round(color_get_saturation(current_color)),	mouse_ui);
-			tb_val.draw(data_x + ui(28), data_y + ui(36 * 2), ui(160), ui(30), round(color_get_value(current_color)),		mouse_ui);
-	
-			data_y = data_y + ui(36 * 3 + 8);
-	
+			
+			tb_hue.draw(data_x + ui(28), data_y + txh * 0, wdw, wdh, round(color_get_hue(current_color)),			mouse_ui);
+			tb_sat.draw(data_x + ui(28), data_y + txh * 1, wdw, wdh, round(color_get_saturation(current_color)),	mouse_ui);
+			tb_val.draw(data_x + ui(28), data_y + txh * 2, wdw, wdh, round(color_get_value(current_color)),			mouse_ui);
+			
+			data_y = data_y + txh * 3 + ui(8);
+			
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text(data_x, data_y + ui(36 * 0 + 15), "R");
-			draw_text(data_x, data_y + ui(36 * 1 + 15), "G");
-			draw_text(data_x, data_y + ui(36 * 2 + 15), "B");
+			draw_text(data_x, data_y + txh * 0 + ui(15), "R");
+			draw_text(data_x, data_y + txh * 1 + ui(15), "G");
+			draw_text(data_x, data_y + txh * 2 + ui(15), "B");
+			draw_text(data_x, data_y + txh * 3 + ui(15), "A");
 			
-			tb_red.setFocusHover(focus, hover);
+			tb_red.setFocusHover  (focus, hover);
 			tb_green.setFocusHover(focus, hover);
-			tb_blue.setFocusHover(focus, hover);
+			tb_blue.setFocusHover (focus, hover);
+			tb_alpha.setFocusHover(focus, hover);
 			
-			tb_red.draw  (data_x + ui(28), data_y + ui(36 * 0), ui(160), ui(30), color_get_red(current_color),   mouse_ui);
-			tb_green.draw(data_x + ui(28), data_y + ui(36 * 1), ui(160), ui(30), color_get_green(current_color), mouse_ui);
-			tb_blue.draw (data_x + ui(28), data_y + ui(36 * 2), ui(160), ui(30), color_get_blue(current_color),  mouse_ui);
+			tb_red.draw  (data_x + ui(28), data_y + txh * 0, wdw, wdh, round(color_get_red(current_color)),   mouse_ui);
+			tb_green.draw(data_x + ui(28), data_y + txh * 1, wdw, wdh, round(color_get_green(current_color)), mouse_ui);
+			tb_blue.draw (data_x + ui(28), data_y + txh * 2, wdw, wdh, round(color_get_blue(current_color)),  mouse_ui);
+			tb_alpha.draw(data_x + ui(28), data_y + txh * 3, wdw, wdh, round(color_get_alpha(current_color)), mouse_ui);
+			
+			//////////////////////////////////////////////////////////////////
 			
 			tb_hex.active  = focus;  tb_hex.hover  = hover;
 			tb_hex.draw(hue_x - ui(128), col_y + ui(256 + 24), ui(108), TEXTBOX_HEIGHT, color_get_hex(current_color),  mouse_ui);
@@ -310,9 +346,10 @@ function colorSelector(onApply = noone) constructor {
 		
 		var cx = col_x + ui(16);
 		var cy = col_y + ui(296);
-	
+		var aa = _color_get_alpha(current_color);
+		
 		draw_sprite_stretched_ext(THEME.color_picker_box, 0, cx - ui(20), cy - ui(20), ui(40), ui(40), COLORS._main_icon_dark, 1);
-		draw_sprite_stretched_ext(THEME.color_picker_box, 1, cx - ui(18), cy - ui(18), ui(36), ui(36), current_color, 1);
+		draw_sprite_stretched_ext(THEME.color_picker_box, 1, cx - ui(18), cy - ui(18), ui(36), ui(36), current_color, aa);
 		
 		cx += ui(48);
 		if(buttonInstant(THEME.button_hide, cx - ui(18), cy - ui(18), ui(36), ui(36), mouse_ui, focus, hover, "", THEME.color_picker_dropper, 0, c_white) == 2)

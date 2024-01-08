@@ -1,10 +1,9 @@
 global.__FRAME_LABEL_SCALE = 1;
 
 function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Frame";
-	w = 240;
-	h = 160;
-	alpha  = 1;
+	name   = "Frame";
+	w      = 240;
+	h      = 160;
 	bg_spr = THEME.node_frame_bg;
 	  
 	size_dragging    = false;
@@ -26,7 +25,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.vector)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+	inputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, cola(c_white) )
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75 )
@@ -41,6 +40,8 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
+	input_display_list = [ 0, 1, 3, 4 ];
+	
 	static onValueUpdate = function(index = 3) { #region
 		global.__FRAME_LABEL_SCALE = getInputData(3);
 	} #endregion
@@ -51,7 +52,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		h = si[1];
 		
 		color = getInputData(1);
-		alpha = getInputData(2);
+		alpha = _color_get_alpha(color);
 		scale = getInputData(3);
 		label_color = getInputData(4);
 	} #endregion

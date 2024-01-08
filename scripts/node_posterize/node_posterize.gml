@@ -52,12 +52,12 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(_use_gra) {
 			var _colors = array_create(array_length(_gra) * 4);
 			for(var i = 0; i < array_length(_gra); i++) {
-				_colors[i * 4 + 0] = color_get_red(_gra[i]) / 255;
-				_colors[i * 4 + 1] = color_get_green(_gra[i]) / 255;
-				_colors[i * 4 + 2] = color_get_blue(_gra[i]) / 255;
-				_colors[i * 4 + 3] = 1;
+				_colors[i * 4 + 0] = _color_get_red(_gra[i]);
+				_colors[i * 4 + 1] = _color_get_green(_gra[i]);
+				_colors[i * 4 + 2] = _color_get_blue(_gra[i]);
+				_colors[i * 4 + 3] = _color_get_alpha(_gra[i]);
 			}
-		
+			
 			surface_set_shader(_outSurf, sh_posterize_palette);
 				shader_set_f("palette", _colors);
 				shader_set_i("keys", array_length(_gra));

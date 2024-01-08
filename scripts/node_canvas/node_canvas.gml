@@ -156,9 +156,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [ 
 		["Output",	false],	0, frame_renderer, 12, 13, 
-		["Brush",	false], 6, 2, 1, 11, 15, 17, 16, 
+		["Brush",	false], 6, 2, 1, 15, 17, 16, 
 		["Fill",	false], 3, 4, 
-		["Display", false], 8, 10, 14, 9, 
+		["Background", true, 10], 8, 14, 9, 
 	];
 	
 	#region ++++ data ++++
@@ -341,7 +341,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function apply_draw_surface() { #region
-		var _alp = getInputData(11);
+		var _alp = _color_get_alpha(getInputData(1));
 		
 		storeAction();
 		
@@ -526,7 +526,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function flood_fill_scanline(_x, _y, _surf, _thres, _corner = false) { #region
-		var _alp = getInputData(11);
+		var _alp = _color_get_alpha(getInputData(1));
 		
 		var colorFill = draw_get_color() + (255 << 24);
 		var colorBase = get_color_buffer(_x, _y);
@@ -617,7 +617,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function canvas_fill(_x, _y, _surf, _thres) { #region
-		var _alp = getInputData(11);
+		var _alp = _color_get_alpha(getInputData(1));
 		
 		var w = surface_get_width_safe(_surf);
 		var h = surface_get_height_safe(_surf);
@@ -975,7 +975,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _bg  = getInputData(8);
 			var _bga = getInputData(9);
 			var _bgr = getInputData(10);
-			var _alp = getInputData(11);
+			var _alp = _color_get_alpha(getInputData(1));
 			
 			var __s = surface_get_target();
 			

@@ -58,11 +58,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		var s = surface_apply_gaussian(pass1, _size, false, c_black, 1, noone);
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE
-		
-		shader_set(sh_lum2alpha);
+		surface_set_shader(_outSurf, sh_lum2alpha);
 			shader_set_color("color", cl);
 			shader_set_f("intensity", _stre);
 			draw_surface_ext_safe(s, 0, 0, 1, 1, 0, c_white, 1);

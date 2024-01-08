@@ -64,7 +64,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Output",		true],	9,  6, 10,
 		["Text",		false], 0, 13, 14, 7, 8, 
 		["Font",		false], 1,  2, 15, 3, 11, 12, 
-		["Rendering",	false], 5, 16, 17, 
+		["Rendering",	false], 5, 
+		["Background",   true, 16], 17, 
 		["Wave",	     true, 18], 22, 19, 20, 21, 
 	];
 	
@@ -75,7 +76,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	_font_current = "";
 	_size_current = 0;
 	_aa_current   = false;
-	seed          = irandom_range(10000, 99999);
+	seed          = seed_random();
 	
 	static generateFont = function(_path, _size, _aa) { #region
 		if(PROJECT.animator.is_playing) return;
@@ -97,7 +98,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static step = function() { #region
 		var _dimt = getSingleValue(9);
 		var _path = getSingleValue(13);
-		var _ubg  = getSingleValue(16);
 		
 		var _use_path = _path != noone && struct_has(_path, "getPointDistance");
 		
@@ -107,7 +107,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[|  9].setVisible(!_use_path);
 		inputs[| 14].setVisible( _use_path);
 		inputs[| 15].setVisible(_dimt == 0 && !_use_path);
-		inputs[| 17].setVisible(_ubg);
 	} #endregion
 	
 	static waveGet = function(_ind) { #region

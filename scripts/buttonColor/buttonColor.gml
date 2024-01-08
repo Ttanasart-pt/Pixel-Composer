@@ -115,10 +115,27 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
+		var _bx = _x  + ui(4);
+		var _by = _y  + ui(4);
+		var _bw = _cw - ui(8);
+		var _bh = _h  - ui(8);
+			
 		if(is_array(current_color))
-			drawPalette(current_color, _x + ui(4), _y + ui(4), _cw - ui(8), _h - ui(8));
-		else if(is_real(current_color))
-			draw_sprite_stretched_ext(THEME.palette_mask, 1, _x + ui(4), _y + ui(4), _cw - ui(8), _h - ui(8), current_color, 1);
+			drawPalette(current_color, _bx, _by, _bw, _bh);
+		else if(is_real(current_color)) 
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by, _bw, _bh, current_color, 1);
+		else if(is_int64(current_color)) {
+			var _a = _color_get_alpha(current_color);
+			
+			if(_a == 1) {
+				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by, _bw, _bh, current_color, 1);
+			} else {
+				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by, _bw, _bh - ui(8), current_color, 1);
+			
+				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by + _bh - ui(6), _bw,      ui(6), c_black, 1);
+				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by + _bh - ui(6), _bw * _a, ui(6), c_white, 1);
+			}
+		}	
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);

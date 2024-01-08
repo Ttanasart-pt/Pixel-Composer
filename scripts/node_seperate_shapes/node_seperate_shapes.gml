@@ -24,7 +24,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	input_display_list = [
 		["Shape",	false], 0, 1, 4,
-		["Render",	false], 2, 3,
+		["Override Color", true, 2], 3,
 	]
 	
 	attribute_surface_depth();

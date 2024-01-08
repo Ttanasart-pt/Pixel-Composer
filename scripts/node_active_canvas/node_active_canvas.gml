@@ -29,7 +29,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	input_display_list = [ 0,
 		[ "Brush transform",  false ], 7, 2, 3, 4,
-		[ "Brush properties", false ], 1, 5, 6, 8, 
+		[ "Brush properties", false ], 1, 5, 8, 
 	];
 	
 	brush_prev = noone;
@@ -61,7 +61,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _brot  = getInputData(3);
 		var _bsca  = getInputData(4);
 		var _bcol  = getInputData(5);
-		var _balp  = getInputData(6);
+		var _balp  = _color_get_alpha(_bcol);
 		var _bact  = getInputData(7);
 		var _bdst  = getInputData(8);
 		

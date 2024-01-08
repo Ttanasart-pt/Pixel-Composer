@@ -162,25 +162,21 @@ void main() { #region
 		} else {
 			float alpha = point.a + outline_alpha * (1. - point.a);
 			col = ((point * point.a) + (borderColor * outline_alpha * (1. - point.a))) / alpha;
-			if(is_aa == 1) 
-				col.a = alpha;
-			else 
-				col.a = 1.;
+			if(is_aa == 1) col.a = borderColor.a * alpha;
+			else           col.a = borderColor.a;
 		}
 	} else { 
 		vec4 bcol;
-		if(side == 0) 
-			bcol = point;
-		else if(side == 1)
-			bcol = closetColor;
+		     if(side == 0) bcol = point;
+		else if(side == 1) bcol = closetColor;
 				
 		float blend = bld * outline_alpha;
 		if(is_aa == 0)
 			blend = bld;
 					
 		float alpha = bcol.a + blend * (1. - bcol.a);
-		col = (borderColor * blend + bcol * bcol.a * ( 1. - blend )) / alpha;
-		col.a = alpha;
+		col   = (borderColor * blend + bcol * bcol.a * ( 1. - blend )) / alpha;
+		col.a = borderColor.a * alpha;
 	}
 	
     gl_FragColor = col;

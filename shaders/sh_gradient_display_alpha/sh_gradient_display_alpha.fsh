@@ -7,12 +7,12 @@ varying vec4 v_vColour;
 #define TAU 6.283185307179586
 #define GRADIENT_LIMIT 128
 
-uniform int gradient_blend;
-uniform vec4 gradient_color[GRADIENT_LIMIT];
+uniform int   gradient_blend;
+uniform vec4  gradient_color[GRADIENT_LIMIT];
 uniform float gradient_time[GRADIENT_LIMIT];
-uniform int gradient_keys;
+uniform int   gradient_keys;
 
-vec3 rgb2hsv(vec3 c) {
+vec3 rgb2hsv(vec3 c) { #region
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
     vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
     vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
@@ -20,21 +20,21 @@ vec3 rgb2hsv(vec3 c) {
     float d = q.x - min(q.w, q.y);
     float e = 0.0000000001;
     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
- }
+} #endregion
 
-vec3 hsv2rgb(vec3 c) {
+vec3 hsv2rgb(vec3 c) { #region
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
+} #endregion
 
-float hueDist(float a0, float a1, float t) {
+float hueDist(float a0, float a1, float t) { #region
 	float da = fract(a1 - a0);
     float ds = fract(2. * da) - da;
     return a0 + ds * t;
-}
+} #endregion
 
-vec3 hsvMix(vec3 c1, vec3 c2, float t) {
+vec3 hsvMix(vec3 c1, vec3 c2, float t) { #region
 	vec3 h1 = rgb2hsv(c1);
 	vec3 h2 = rgb2hsv(c2);
 	
@@ -44,9 +44,9 @@ vec3 hsvMix(vec3 c1, vec3 c2, float t) {
 	h.z = mix(h1.z, h2.z, t);
 	
 	return hsv2rgb(h);
-}
+} #endregion
 
-vec4 gradientEval(in float prog) {
+vec4 gradientEval(in float prog) { #region
 	vec4 col = vec4(0.);
 	
 	for(int i = 0; i < GRADIENT_LIMIT; i++) {
@@ -76,8 +76,9 @@ vec4 gradientEval(in float prog) {
 	}
 	
 	return col;
-}
+} #endregion
 
 void main() {
-	gl_FragColor = gradientEval(v_vTexcoord.x);
+	float a = gradientEval(v_vTexcoord.x).a; 
+	gl_FragColor = vec4(a, a, a, 1.);
 }

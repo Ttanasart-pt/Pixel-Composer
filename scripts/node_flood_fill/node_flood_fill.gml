@@ -15,7 +15,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 4] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 5] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black )
+	inputs[| 5] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, cola(c_black) )
 	
 	inputs[| 6] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -90,30 +90,18 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		repeat(it) {
 			ind = !ind;
 			
-			surface_set_target(temp_surface[ind]);
-			DRAW_CLEAR
-			
-			shader_set(sh_flood_fill_it);
-			shader_set_f("dimension", [ sw, sh ]);
-			shader_set_i("diagonal", _dia);
-				BLEND_OVERRIDE
+			surface_set_shader(temp_surface[ind], sh_flood_fill_it);
+				shader_set_f("dimension", [ sw, sh ]);
+				shader_set_i("diagonal", _dia);
 				draw_surface_safe(temp_surface[!ind], 0, 0);
-				BLEND_NORMAL
-			shader_reset();
-			surface_reset_target();
+			surface_reset_shader();
 		}
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		
-		shader_set(sh_flood_fill_replace);
-		shader_set_f("color", colToVec4(_col));
-		shader_set_surface("mask", temp_surface[ind]);
-			BLEND_OVERRIDE
+		surface_set_shader(_outSurf, sh_flood_fill_replace);
+			shader_set_color("color", _col);
+			shader_set_surface("mask", temp_surface[ind]);
 			draw_surface_safe(inSurf, 0, 0);
-			BLEND_NORMAL
-		shader_reset();
-		surface_reset_target();
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[1], _data[2]);

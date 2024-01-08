@@ -56,18 +56,18 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var _colorFrom = array_create(array_length(fr) * 4);
 		for(var i = 0; i < array_length(fr); i++) {
-			_colorFrom[i * 4 + 0] = color_get_red(fr[i]) / 255;
-			_colorFrom[i * 4 + 1] = color_get_green(fr[i]) / 255;
-			_colorFrom[i * 4 + 2] = color_get_blue(fr[i]) / 255;
-			_colorFrom[i * 4 + 3] = 1;
+			_colorFrom[i * 4 + 0] = _color_get_red(fr[i]);
+			_colorFrom[i * 4 + 1] = _color_get_green(fr[i]);
+			_colorFrom[i * 4 + 2] = _color_get_blue(fr[i]);
+			_colorFrom[i * 4 + 3] = _color_get_alpha(fr[i]);
 		}
 		
 		var _colorTo = array_create(array_length(to) * 4);
 		for(var i = 0; i < array_length(to); i++) {
-			_colorTo[i * 4 + 0] = color_get_red(to[i]) / 255;
-			_colorTo[i * 4 + 1] = color_get_green(to[i]) / 255;
-			_colorTo[i * 4 + 2] = color_get_blue(to[i]) / 255;
-			_colorTo[i * 4 + 3] = 1;
+			_colorTo[i * 4 + 0] = _color_get_red(to[i]);
+			_colorTo[i * 4 + 1] = _color_get_green(to[i]);
+			_colorTo[i * 4 + 2] = _color_get_blue(to[i]);
+			_colorTo[i * 4 + 3] = _color_get_alpha(to[i]);
 		}
 		
 		surface_set_shader(_outSurf, sh_palette_replace);

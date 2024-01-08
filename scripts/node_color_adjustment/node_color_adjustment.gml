@@ -240,7 +240,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				shader_set_f_map_s("val",        _val, _data[22], inputs[|  5]);
 			
 				shader_set_color("blend",   _bl);
-				shader_set_f_map_s("blendAmount", _bla, _data[23], inputs[| 7]);
+				shader_set_f_map_s("blendAmount", _bla * _color_get_alpha(_bl), _data[23], inputs[| 7]);
 				shader_set_i("blendMode",   _blm);
 				
 				shader_set_f_map_s("alpha", _alp, _data[24], inputs[| 9]);

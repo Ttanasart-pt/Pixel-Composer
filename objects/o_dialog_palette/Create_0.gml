@@ -86,7 +86,7 @@ event_inherited();
 						palette[j] = pal.palette[j];
 				}
 				
-				if(mouse_press(mb_right, interactable && sFOCUS)) {
+				if(i >= 0 && mouse_press(mb_right, interactable && sFOCUS)) {
 					hovering_name = pal.path;
 					menuCall("palette_window_preset_menu",,, [
 						menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 

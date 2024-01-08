@@ -178,9 +178,10 @@ if !ready exit;
 				
 				var tt = clamp((mouse_mx - gr_x) / gr_w, 0, 1);
 				var cc = gradient.eval(tt);
+				
 				var _newkey = new gradientKey(tt, cc);
 				gradient.add(_newkey, true);
-					
+				
 				key_selecting  = _newkey;
 				key_dragging   = _newkey;
 				key_drag_sx	  = tt;

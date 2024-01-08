@@ -67,6 +67,8 @@ void main() {
 	clr /= totalWeight;
 	
     gl_FragColor = clr;
-	if(overrideColor == 1) 
+	if(overrideColor == 1) {
 		gl_FragColor.rgb = overColor.rgb;
+		gl_FragColor.a  *= overColor.a;
+	}
 }
