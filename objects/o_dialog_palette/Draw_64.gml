@@ -52,8 +52,9 @@ if palette == 0 exit;
 				var r  = number_to_hex(color_get_red(cc));
 				var g  = number_to_hex(color_get_green(cc));
 				var b  = number_to_hex(color_get_blue(cc));
+				var a  = number_to_hex(color_get_alpha(cc));
 				
-				file_text_write_string(file, $"{r}{g}{b}\n");
+				file_text_write_string(file, $"{r}{g}{b}{a}\n");
 			}
 			file_text_close(file);
 			__initPalette();
@@ -114,15 +115,40 @@ if palette == 0 exit;
 	#endregion
 	
 	var hover = -1, hvx, hvy;
+	var _pd = ui(5);
+	
 	for(var i = 0; i < row; i++)
 	for(var j = 0; j < col; j++) {
 		var index = i * col + j;
 		if(index >= array_length(palette)) break;
+		
 		var _p  = palette[index];
+		var _pa = _color_get_alpha(_p);
 		var _kx = pl_x + j * ww;
 		var _ky = pl_y + i * (pl_h + ui(6));
 		
-		draw_sprite_stretched_ext(THEME.color_picker_sample, index == index_selecting, _kx + ui(2), _ky, ww - ui(4), pl_h, _p, 1);
+		var _px = _kx + ui(2);
+		var _py = _ky;
+		var _pw = ww - ui(4);
+		var _ph = pl_h;
+		
+		if(index == index_dragging) {
+			index_drag_x_to = _px;
+			index_drag_y_to = _py;
+			index_drag_w_to = _pw;
+			index_drag_h_to = _ph;
+			continue;
+		}
+		
+		if(_pa < 1) {
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py, _pw, _ph - ui(8), _p, 1);
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py + _ph - ui(6), _pw, ui(6), c_black, 1);
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py + _ph - ui(6), _pw * _pa, ui(6), c_white, 1);
+		} else 
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py, _pw, _ph, _p, 1);
+			
+		if(index == index_selecting)
+			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _px - _pd, _py - _pd, _pw + _pd * 2, _ph + _pd * 2, c_white, 1);
 		
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx, _ky, _kx + ww, _ky + pl_h)) {
 			hover = index;
@@ -132,26 +158,48 @@ if palette == 0 exit;
 	}
 	
 	if(index_dragging > -1) {
+		index_drag_x = index_drag_x == 0? index_drag_x_to : lerp_float(index_drag_x, index_drag_x_to, 5);
+		index_drag_y = index_drag_y == 0? index_drag_y_to : lerp_float(index_drag_y, index_drag_y_to, 5);
+		index_drag_w = index_drag_w == 0? index_drag_w_to : lerp_float(index_drag_w, index_drag_w_to, 5);
+		index_drag_h = index_drag_h == 0? index_drag_h_to : lerp_float(index_drag_h, index_drag_h_to, 5);
+		
+		_px = index_drag_x;
+		_py = index_drag_y;
+		_pw = index_drag_w;
+		_ph = index_drag_h;
+		_p  = palette[index_dragging];
+		_pa = _color_get_alpha(_p);
+		
+		if(_pa < 1) {
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py, _pw, _ph - ui(8), _p, 1);
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py + _ph - ui(6), _pw, ui(6), c_black, 1);
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py + _ph - ui(6), _pw * _pa, ui(6), c_white, 1);
+		} else 
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py, _pw, _ph, _p, 1);
+		draw_sprite_stretched_ext(THEME.palette_selecting, 0, _px - _pd, _py - _pd, _pw + _pd * 2, _ph + _pd * 2, c_white, 1);
+		
 		if(hover > -1 && hover != index_dragging) {
 			draw_set_color(COLORS.dialog_palette_divider);
-			if(hover < index_dragging)
-				draw_line_width(hvx - 1, hvy, hvx - 1, hvy + pl_h, 4);
-			else
-				draw_line_width(hvx + ww - 1, hvy, hvx + ww - 1, hvy + pl_h, 4);
+			var sx = hvx;
+			if(hover >= index_dragging) sx += ww;
 			
-			if(mouse_release(mb_left)) {
-				var tt = palette[index_dragging];
+			var tt = palette[index_dragging];
 				
-				array_delete(palette, index_dragging, 1);
-				array_insert(palette, hover, tt);
-				index_selecting = hover;
+			array_delete(palette, index_dragging, 1);
+			array_insert(palette, hover, tt);
+			index_selecting = hover;
+			index_dragging  = hover;
 				
-				onApply(palette);
-			}
+			onApply(palette);
 		}
 		
 		if(mouse_release(mb_left))
-			index_dragging = -1;	
+			index_dragging = -1;
+	} else {
+		index_drag_x = 0;
+		index_drag_y = 0;
+		index_drag_w = 0;
+		index_drag_h = 0;
 	}
 	
 	if(mouse_press(mb_left, sFOCUS) && hover > -1) {
@@ -165,7 +213,7 @@ if palette == 0 exit;
 	var by = pl_y - ui(2);
 	
 	if(array_length(palette) > 1) {
-		if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, "", THEME.minus) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, "", THEME.minus) == 2) {
 			array_delete(palette, index_selecting, 1);
 			index_selecting = clamp(index_selecting - 1, 0, array_length(palette) - 1);
 			onApply(palette);
@@ -175,14 +223,14 @@ if palette == 0 exit;
 	}
 	
 	bx -= ui(32);
-	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, "", THEME.add) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, "", THEME.add) == 2) {
 		index_selecting = array_length(palette);
 		palette[array_length(palette)] = c_black;
 		onApply(palette);
 	}
 	
 	bx = content_x + ui(18);
-	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, __txtx("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, __txtx("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
 		var path = get_open_filename("HEX palette|*.hex", "");
 		key_release();
 		

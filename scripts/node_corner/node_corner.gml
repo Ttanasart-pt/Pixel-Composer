@@ -1,12 +1,6 @@
 function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Round corner";
 	
-	uniform_er_dim   = shader_get_uniform(sh_corner_erode, "dimension");
-	uniform_er_size  = shader_get_uniform(sh_corner_erode, "size");
-	
-	uniform_dim  = shader_get_uniform(sh_corner, "dimension");
-	uniform_rad  = shader_get_uniform(sh_corner, "rad");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
@@ -43,32 +37,21 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		var temp = surface_create_valid(surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]), attrDepth());
 		
-		surface_set_target(temp);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
+		surface_set_shader(temp, sh_corner_erode);
+			shader_set_f("dimension", [surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0])]);
+			shader_set_f("size",      wd);
 			
-			shader_set(sh_corner_erode);
-			shader_set_uniform_f_array_safe(uniform_er_dim, [surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0])]);
-			shader_set_uniform_f(uniform_er_size, wd);
-			draw_surface_safe(_data[0], 0, 0);
-			
-			BLEND_NORMAL;
-			shader_reset();
-		surface_reset_target();
+			draw_surface_safe(_data[0]);
+		surface_reset_shader();
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-			
-			shader_set(sh_corner);
-			shader_set_uniform_f_array_safe(uniform_dim, [surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0])]);
-			shader_set_uniform_f(uniform_rad, wd);
+		surface_set_shader(_outSurf, sh_corner);
+			shader_set_f("dimension", [surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0])]);
+			shader_set_f("rad",       wd);
 			shader_set_surface("original", _data[0]);
-			draw_surface_safe(temp, 0, 0);
 			
-			BLEND_NORMAL;
-		shader_reset();
-		surface_reset_target();
+			draw_surface_safe(temp);
+		surface_reset_shader();
+		
 		surface_free(temp);
 		
 		__process_mask_modifier(_data);

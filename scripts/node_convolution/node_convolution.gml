@@ -1,11 +1,6 @@
 function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Convolution";
 	
-	shader = sh_convolution;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_ker = shader_get_uniform(shader, "kernel");
-	uniform_sam = shader_get_uniform(shader, "sampleMode");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Kernel", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, array_create(9))
@@ -45,19 +40,13 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _ker = _data[1];
 		var _sam = struct_try_get(attributes, "oversample");
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(shader);
-			shader_set_uniform_f(uniform_dim, surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
-			shader_set_uniform_f_array_safe(uniform_ker, _ker);
-			shader_set_uniform_i(uniform_sam, _sam);
-			draw_surface_safe(_data[0], 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_set_shader(_outSurf, sh_convolution);
+			shader_set_f("dimension",  surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
+			shader_set_f("kernel",     _ker);
+			shader_set_i("sampleMode", _sam);
+			
+			draw_surface_safe(_data[0]);
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);

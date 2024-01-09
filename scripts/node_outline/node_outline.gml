@@ -54,17 +54,16 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	input_display_list = [ 11, 
 		["Surfaces", true], 0, 9, 10, 13, 14, 
 		["Outline",	false], 1, 15, 5, 8, 17, 12, 
-		["Render",	false], 2, 3, 4, 16, 6,
+		["Render",	false], 2, 6,
+		["Blend",	 true, 3], 4, 16,
 	];
 	
 	attribute_surface_depth();
 	attribute_oversample();
 	
 	static step = function() { #region
-		var blend = getInputData(3);
 		var _side = getInputData(5);
 		
-		inputs[| 4].setVisible(blend);
 		inputs[| 12].setVisible(_side == 0);
 		
 		__step_mask_modifier();

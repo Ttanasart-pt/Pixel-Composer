@@ -54,9 +54,9 @@ function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
 		var cc = buffer_read(b, buffer_u32);
 		if(cc == 0) pos[i] = 0;
 		else {
-			var _x = color_get_red(cc) / 255;
-			var _y = color_get_green(cc) / 255;
-			var _v = color_get_blue(cc) / 255;
+			var _x = _color_get_red(cc);
+			var _y = _color_get_green(cc);
+			var _v = _color_get_blue(cc);
 			pos[i] = [_x, _y, _v];
 		}
 	}

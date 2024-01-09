@@ -173,9 +173,9 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			for( var i = 0, n = array_length(_col); i < n; i++ ) {
 				var _c = _col[i];
 				
-				var r = color_get_red(_c)   / 255;
-				var g = color_get_green(_c) / 255;
-				var b = color_get_blue(_c)  / 255;
+				var r = _color_get_red(_c);
+				var g = _color_get_green(_c);
+				var b = _color_get_blue(_c);
 				
 				_c = make_color_rgb(
 					clamp((.5 + _con * 2 * (r - .5) + _bri) * _exp, 0, 1) * 255,
@@ -183,9 +183,9 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 					clamp((.5 + _con * 2 * (b - .5) + _bri) * _exp, 0, 1) * 255,
 				);
 				
-				var h = color_get_hue(_c)        / 255;
-				var s = color_get_saturation(_c) / 255;
-				var v = color_get_value(_c)      / 255;
+				var h = _color_get_hue(_c);
+				var s = _color_get_saturation(_c);
+				var v = _color_get_value(_c);
 				
 				h = clamp(frac(h + _hue), -1, 1);
 				if(h < 0) h = 1 + h;
@@ -238,7 +238,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				shader_set_f_map_s("hue",        _hue, _data[20], inputs[|  3]);
 				shader_set_f_map_s("sat",        _sat, _data[21], inputs[|  4]);
 				shader_set_f_map_s("val",        _val, _data[22], inputs[|  5]);
-			
+				
 				shader_set_color("blend",   _bl);
 				shader_set_f_map_s("blendAmount", _bla * _color_get_alpha(_bl), _data[23], inputs[| 7]);
 				shader_set_i("blendMode",   _blm);

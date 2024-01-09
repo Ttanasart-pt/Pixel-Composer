@@ -72,7 +72,8 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	input_display_list = [
 		["Image", false],		0, 1, 8, 
-		["Animation", false],	5, 4, 6, 7, 2, 3, 
+		["Animation", false],	5, 4, 2, 3, 
+		["Custom Frame Order", false, 6], 7, 
 	];
 	
 	attribute_surface_depth();
@@ -152,7 +153,6 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var str  = getInputData(2);
 		var _cus = getInputData(6);
 		
-		inputs[| 7].setVisible( _cus);
 		inputs[| 2].setVisible(!_cus);
 		inputs[| 3].setVisible(!_cus && !str);
 		inputs[| 4].setVisible(!_cus && !str);

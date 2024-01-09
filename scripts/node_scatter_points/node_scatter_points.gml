@@ -42,7 +42,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	input_display_list = [ 
 		["Base",	false], 5, 6, 7, 
 		["Scatter",	false], 0, 1, 4, 2, 3, 
-		["3D",		 true], 9, 10, 11
+		["3D",		 true, 9], 10, 11
 	];
 	
 	outputs[| 0] = nodeValue("Points", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ ])

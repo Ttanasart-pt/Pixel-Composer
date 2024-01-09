@@ -16,17 +16,12 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	input_display_list = [
 		["Surfaces", false], 0, 1, 
-		["Fill",	 false], 3, 4, 2,
+		["Fill",	 false, 3], 4, 2,
 	];
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 		
-	static step = function() {
-		var _fill = getInputData(3);
-		
-		inputs[| 2].setVisible(_fill);
-		inputs[| 4].setVisible(_fill);
-	}
+	static step = function() {}
 		
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];

@@ -157,7 +157,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Spawn",		true],	27, 16, 44, 1, 2, 3, 4, 30, 24, 5,
 		["Movement",	true],	29, 6, 18,
 		["Physics",		true],	7, 19, 33, 34, 35, 36, 
-		["Ground",		true],	37, 38, 39, 40, 
+		["Ground",		true, 37], 38, 39, 40, 
 		["Rotation",	true],	15, 8, 9, 
 		["Scale",		true],	10, 17, 11, 
 		["Wiggles",		true],	20, 41, 42, 43, 
@@ -455,7 +455,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _scatt  = getInputData(24);
 		var _dirAng = getInputData(29);
 		var _turn   = getInputData(34);
-		var _colGnd = getInputData(37);
 		var _spwTyp = getInputData(16);
 		
 		inputs[|  6].setVisible(!_dirAng);
@@ -466,10 +465,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		inputs[| 35].setVisible(_turn[0] != 0 && _turn[1] != 0);
 		inputs[| 36].setVisible(_turn[0] != 0 && _turn[1] != 0);
-		
-		inputs[| 38].setVisible(_colGnd);
-		inputs[| 39].setVisible(_colGnd);
-		inputs[| 40].setVisible(_colGnd);
 		
 		inputs[| 22].setVisible(false);
 		inputs[| 23].setVisible(false);

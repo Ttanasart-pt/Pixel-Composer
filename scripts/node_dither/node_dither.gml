@@ -1,22 +1,23 @@
 function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	static dither2 =    [  0,  2,
-					       3,  1 ];
-	static dither4 =    [  0,  8,  2, 10,
-					      12,  4, 14,  6,
-					       3, 11,  1,  9,
-					      15,  7, 13,  5];
-	static dither8 =  [    0, 32,  8, 40,  2, 34, 10, 42, 
-						  48, 16, 56, 24, 50, 18, 58, 26,
-						  12, 44,  4, 36, 14, 46,  6, 38, 
-						  60, 28, 52, 20, 62, 30, 54, 22,
-						   3, 35, 11, 43,  1, 33,  9, 41,
-						  51, 19, 59, 27, 49, 17, 57, 25,
-						  15, 47,  7, 39, 13, 45,  5, 37,
-						  63, 31, 55, 23, 61, 29, 53, 21];
+	static dither2 = [  0,  2,
+					    3,  1 ];
+	static dither4 = [  0,  8,  2, 10,
+					   12,  4, 14,  6,
+					    3, 11,  1,  9,
+					   15,  7, 13,  5];
+	static dither8 = [  0, 32,  8, 40,  2, 34, 10, 42, 
+					   48, 16, 56, 24, 50, 18, 58, 26,
+					   12, 44,  4, 36, 14, 46,  6, 38, 
+					   60, 28, 52, 20, 62, 30, 54, 22,
+					    3, 35, 11, 43,  1, 33,  9, 41,
+					   51, 19, 59, 27, 49, 17, 57, 25,
+					   15, 47,  7, 39, 13, 45,  5, 37,
+					   63, 31, 55, 23, 61, 29, 53, 21];
 	
 	name = "Dither";
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue("Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
 		.setDisplay(VALUE_DISPLAY.palette);
 	
@@ -62,37 +63,30 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _pal = _data[1];
-		var _typ = _data[2];
-		var _map = _data[3];
-		var _con = _data[4];
+		var _pal    = _data[1];
+		var _typ    = _data[2];
+		var _map    = _data[3];
+		var _con    = _data[4];
 		var _conMap = _data[5];
+		var _mode   = _data[6];
 		
-		var _mode = _data[6];
-		
-		var _colors = array_create(array_length(_pal) * 4);
-		for(var i = 0; i < array_length(_pal); i++) {
-			_colors[i * 4 + 0] = color_get_red(_pal[i]) / 255;
-			_colors[i * 4 + 1] = color_get_green(_pal[i]) / 255;
-			_colors[i * 4 + 2] = color_get_blue(_pal[i]) / 255;
-			_colors[i * 4 + 3] = 1;
-		}
+		var _colors = paletteToArray(_pal);
 		
 		shader = _mode? sh_alpha_hash : sh_dither;
 		uniform_dither_size	= shader_get_uniform(shader, "ditherSize");
 		uniform_dither     	= shader_get_uniform(shader, "dither");
 	
-		uniform_dim		= shader_get_uniform(shader, "dimension");
-		uniform_color	= shader_get_uniform(shader, "palette");
-		uniform_key		= shader_get_uniform(shader, "keys");
+		uniform_dim		    = shader_get_uniform(shader, "dimension");
+		uniform_color	    = shader_get_uniform(shader, "palette");
+		uniform_key		    = shader_get_uniform(shader, "keys");
 	
 		uniform_constrast	= shader_get_uniform(shader, "contrast");
 		uniform_con_map_use = shader_get_uniform(shader, "useConMap");
 		uniform_con_map		= shader_get_sampler_index(shader, "conMap");
-	
-		uniform_map_use = shader_get_uniform(shader, "useMap");
-		uniform_map		= shader_get_sampler_index(shader, "map");
-		uniform_map_dim = shader_get_uniform(shader, "mapDimension");
+		
+		uniform_map_use     = shader_get_uniform(shader, "useMap");
+		uniform_map		    = shader_get_sampler_index(shader, "map");
+		uniform_map_dim     = shader_get_uniform(shader, "mapDimension");
 		
 		inputs[| 3].setVisible(_typ == 3);
 		
@@ -100,12 +94,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[| 4].setVisible(_mode == 0);
 		inputs[| 5].setVisible(_mode == 0);
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-			
-			shader_set(shader);
-			
+		surface_set_shader(_outSurf, shader);
 			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ] );
 			
 			switch(_typ) {
@@ -142,11 +131,8 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				shader_set_uniform_i(uniform_key, array_length(_pal));
 			}
 			
-			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-				
-			BLEND_NORMAL; 
-		surface_reset_target();
+			draw_surface_safe(_data[0]);
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);

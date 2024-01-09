@@ -1,16 +1,6 @@
 function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Simple blur";
 	
-	shader = sh_blur_simple;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_siz = shader_get_uniform(shader, "size");
-	uniform_sam = shader_get_uniform(shader, "sampleMode");
-	
-	uniform_umk = shader_get_uniform(shader, "useMask");
-	uniform_msk = shader_get_sampler_index(shader, "mask");
-	uniform_ovr = shader_get_uniform(shader, "overrideColor");
-	uniform_ovc = shader_get_uniform(shader, "overColor");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 1] });
@@ -63,27 +53,19 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		inputs[| 5].setVisible(_isovr);
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
+		surface_set_shader(_outSurf, sh_blur_simple);
+			shader_set_f("dimension",  surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
+			shader_set_f("size",       _size);
+			shader_set_i("sampleMode", _samp);
 			
-			shader_set(shader);
-			shader_set_uniform_f(uniform_dim, surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
-			shader_set_uniform_f(uniform_siz, _size);
-			shader_set_uniform_i(uniform_sam, _samp);
+			shader_set_i("overrideColor", _isovr);
+			shader_set_color("overColor", _overc);
 			
-			shader_set_uniform_i(uniform_ovr, _isovr);
-			shader_set_uniform_f_array_safe(uniform_ovc, colToVec4(_overc));
-		
-			shader_set_uniform_i(uniform_umk, is_surface(_mask));
-			if(is_surface(_mask)) 
-				texture_set_stage(uniform_msk, surface_get_texture(_mask));
+			shader_set_i("useMask",    is_surface(_mask));
+			shader_set_surface("mask", _mask);
 			
-			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+			draw_surface_safe(_data[0]);
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _msk, _mix);

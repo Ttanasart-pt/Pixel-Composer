@@ -32,9 +32,9 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		buffer_seek(_buff, buffer_seek_start, 0);
 		
 		var res = [];
-		var r = color_get_red(_col)   / 255;
-		var g = color_get_green(_col) / 255;
-		var b = color_get_blue(_col)  / 255;
+		var r = _color_get_red(_col);
+		var g = _color_get_green(_col);
+		var b = _color_get_blue(_col);
 		
 		for( var i = 0; i < _sh; i++ ) 
 		for( var j = 0; j < _sw; j++ ) {

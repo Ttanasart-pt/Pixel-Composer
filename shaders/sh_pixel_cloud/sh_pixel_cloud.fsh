@@ -197,8 +197,9 @@ void main() {
 	
 	if(_new_pos.x >= 0. && _new_pos.x <= 1. && _new_pos.y >= 0. && _new_pos.y <= 1.) {
 		_col = texture2D( gm_BaseTexture, _new_pos );
-		_col.rgb *= gradientEval(str + frandom(_pos, 1.235) * randomAmount).rgb;
-		_col.a *= curveEval(str + frandom(_pos, 2.984) * randomAmount);
+		vec4 cc = gradientEval(str + frandom(_pos, 1.235) * randomAmount);
+		_col.rgb *= cc.rgb;
+		_col.a   *= cc.a   * curveEval(str + frandom(_pos, 2.984) * randomAmount);
 	}
 	
     gl_FragColor = _col;

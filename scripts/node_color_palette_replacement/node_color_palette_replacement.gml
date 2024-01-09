@@ -54,21 +54,8 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var hrd = _data[6];
 		var msk = _data[7];
 		
-		var _colorFrom = array_create(array_length(fr) * 4);
-		for(var i = 0; i < array_length(fr); i++) {
-			_colorFrom[i * 4 + 0] = _color_get_red(fr[i]);
-			_colorFrom[i * 4 + 1] = _color_get_green(fr[i]);
-			_colorFrom[i * 4 + 2] = _color_get_blue(fr[i]);
-			_colorFrom[i * 4 + 3] = _color_get_alpha(fr[i]);
-		}
-		
-		var _colorTo = array_create(array_length(to) * 4);
-		for(var i = 0; i < array_length(to); i++) {
-			_colorTo[i * 4 + 0] = _color_get_red(to[i]);
-			_colorTo[i * 4 + 1] = _color_get_green(to[i]);
-			_colorTo[i * 4 + 2] = _color_get_blue(to[i]);
-			_colorTo[i * 4 + 3] = _color_get_alpha(to[i]);
-		}
+		var _colorFrom = paletteToArray(fr);
+		var _colorTo   = paletteToArray(to);
 		
 		surface_set_shader(_outSurf, sh_palette_replace);
 			shader_set_f("colorFrom",     _colorFrom);

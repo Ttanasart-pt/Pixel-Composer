@@ -96,18 +96,25 @@ function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { #region
 	
 	var ww  = _w / aa;
 	var _x0 = _x;
+	var _in;
 	
 	for(var i = 0; i < aa; i++) {
-		if(!is_real(_pal[i])) continue;
+		if(!is_numeric(_pal[i])) continue;
 		
-		var _in = 0;
+		     if(i == 0)      _in = 2;
+		else if(i == aa - 1) _in = 3;
+		else                 _in = 0;
 		
-		if(i == 0)
-			_in = 2;
-		else if(i == aa - 1) 
-			_in = 3;
+		var _ca = _color_get_alpha(_pal[i]);
 		
-		draw_sprite_stretched_ext(THEME.palette_mask, _in, floor(_x0), _y, ceil(ww), _h, _pal[i], _a);
+		if(_ca == 1) {
+			draw_sprite_stretched_ext(THEME.palette_mask, _in, floor(_x0), _y, ceil(ww), _h, _pal[i], _a);
+		} else {
+			draw_sprite_stretched_ext(THEME.palette_mask, _in, floor(_x0), _y, ceil(ww), _h - ui(8), _pal[i], _a);
+			
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, floor(_x0), _y + _h - ui(6), ceil(ww), ui(6), c_black, _a);
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, floor(_x0), _y + _h - ui(6), ceil(ww) * _ca, ui(6), c_white, _a);
+		}
 		
 		_x0 += ww;
 	}

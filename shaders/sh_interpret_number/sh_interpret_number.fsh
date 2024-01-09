@@ -89,10 +89,9 @@ void main() {
 	
 	gl_FragColor = vec4(0.);
 	
-	if(mode == 0) {
+	if(mode == 0)
 	    gl_FragColor = vec4(vec3(grey), 1.);
-	} else if(mode == 1) {
-		vec4 color = gradientEval(grey);
-		gl_FragColor = color;
-	}
+	else if(mode == 1)
+		gl_FragColor = gradientEval(grey);
+	
 }

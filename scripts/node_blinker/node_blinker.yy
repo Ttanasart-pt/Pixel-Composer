@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "generator",
-    "path": "folders/nodes/data/generator.yy",
+    "name": "regions",
+    "path": "folders/nodes/data/generator/regions.yy",
   },
 }

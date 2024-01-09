@@ -1,31 +1,6 @@
 function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Cast Shadow";
 	
-	shader = sh_shadow_cast;
-	uniform_dim   = shader_get_uniform(shader, "dimension");
-	uniform_lpos  = shader_get_uniform(shader, "lightPos");
-	uniform_prad  = shader_get_uniform(shader, "pointLightRadius");
-	uniform_lrad  = shader_get_uniform(shader, "lightRadius");
-	uniform_lden  = shader_get_uniform(shader, "lightDensity");
-	uniform_ltyp  = shader_get_uniform(shader, "lightType");
-	uniform_lamb  = shader_get_uniform(shader, "lightAmb");
-	uniform_lclr  = shader_get_uniform(shader, "lightClr");
-	uniform_lint  = shader_get_uniform(shader, "lightInt");
-	uniform_sol   = shader_get_uniform(shader, "renderSolid");
-	
-	uniform_band  = shader_get_uniform(shader, "lightBand");
-	uniform_attn  = shader_get_uniform(shader, "lightAttn");
-	
-	uniform_ao		= shader_get_uniform(shader, "ao");
-	uniform_ao_str  = shader_get_uniform(shader, "aoStr");
-	
-	uniform_bg_use = shader_get_uniform(shader, "bgUse");
-	uniform_bg_thr = shader_get_uniform(shader, "bgThres");
-	uniform_mask   = shader_get_uniform(shader, "mask");
-	
-	uniform_sld_use = shader_get_uniform(shader, "useSolid");
-	uniform_solid   = shader_get_sampler_index(shader, "solid");
-	
 	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Solid", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -91,10 +66,11 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	outputs[| 1] = nodeValue("Light mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 17, 
-		["Surfaces",		 true], 0, 1, 
-		["Light",			false], 5, 12, 8, 2, 3, 4,
-		["Shadow caster",	false], 10, 11,
-		["Render",			false], 13, 14, 7, 6, 9, 15, 16,
+		["Surfaces",		   true], 0, 1, 
+		["Light",			  false], 5, 12, 8, 2, 3, 4,
+		["BG Shadow Caster",   true, 10], 11,
+		["Render",			  false], 13, 14, 7, 6, 9, 
+		["Ambient Occlusion", false], 15, 16,
 	];
 	
 	attribute_surface_depth();
@@ -137,40 +113,32 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[| 11].setVisible(_bg_use);
 		
 		if(!is_surface(_bg)) return _outSurf;
-		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(shader);
-			shader_set_uniform_f(uniform_dim, surface_get_width_safe(_bg), surface_get_height_safe(_bg));
-			shader_set_uniform_f_array_safe(uniform_lpos, _pos);
-			shader_set_uniform_f_array_safe(uniform_lamb, colToVec4(_lamb));
-			shader_set_uniform_f_array_safe(uniform_lclr, colToVec4(_lclr));
-			shader_set_uniform_f(uniform_lrad, _rad);
-			shader_set_uniform_f(uniform_prad, _lrad);
-			shader_set_uniform_f(uniform_lden, _den);
-			shader_set_uniform_i(uniform_ltyp, _type);
-			shader_set_uniform_i(uniform_sol, _sol);
-			shader_set_uniform_f(uniform_lint, _int);
-			shader_set_uniform_f(uniform_band, _band);
-			shader_set_uniform_f(uniform_attn, _attn);
-			shader_set_uniform_f(uniform_ao, _ao);
-			shader_set_uniform_f(uniform_ao_str, _ao_str);
+	
+		surface_set_shader(_outSurf, sh_shadow_cast);
+			shader_set_f("dimension",         surface_get_width_safe(_bg), surface_get_height_safe(_bg));
+			shader_set_f("lightPos",         _pos);
+			shader_set_color("lightAmb",     _lamb);
+			shader_set_color("lightClr",     _lclr);
+			shader_set_f("lightRadius",      _rad);
+			shader_set_f("pointLightRadius", _lrad);
+			shader_set_f("lightDensity",     _den);
+			shader_set_i("lightType",        _type);
+			shader_set_i("renderSolid",      _sol);
+			shader_set_f("lightInt",         _int);
+			shader_set_f("lightBand",        _band);
+			shader_set_f("lightAttn",        _attn);
+			shader_set_f("ao",               _ao);
+			shader_set_f("aoStr",            _ao_str);
 			
-			shader_set_uniform_i(uniform_mask, _output_index);
-			shader_set_uniform_i(uniform_bg_use, _bg_use);
-			shader_set_uniform_f(uniform_bg_thr, _bg_thr);
+			shader_set_i("mask",             _output_index);
+			shader_set_i("bgUse",            _bg_use);
+			shader_set_f("bgThres",          _bg_thr);
 			
-			shader_set_uniform_i(uniform_sld_use, is_surface(_solid));
-			if(is_surface(_solid))
-				texture_set_stage(uniform_solid, surface_get_texture(_solid));
+			shader_set_i("useSolid",         is_surface(_solid));
+			shader_set_surface("solid",      _solid);
 				
-			draw_surface_safe(_bg, 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+			draw_surface_safe(_bg);
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

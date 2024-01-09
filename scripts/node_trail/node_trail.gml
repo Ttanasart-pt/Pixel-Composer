@@ -122,14 +122,14 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			shader_set_f("alphaPrev",	 a0);
 			shader_set_f("alphaCurr",	 a1);
 			
-				shader_set_i("mode", 1);
 				surface_set_target(temp_surface[0]);
-				draw_surface_safe(_currFrame);
+					shader_set_i("mode", 1);
+					draw_surface_safe(_currFrame);
 				surface_reset_target();
 			
-				shader_set_i("mode", 0);
 				surface_set_target(temp_surface[2]);
-				draw_surface_safe(_currFrame);
+					shader_set_i("mode", 0);
+					draw_surface_safe(_currFrame);
 				surface_reset_target();
 			
 			shader_reset();
@@ -138,16 +138,16 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		surface_set_target(temp_surface[1]);
 			shader_set(sh_trail_filler_pass2);
 			shader_set_dim("dimension", _surf);
-			draw_surface_safe(temp_surface[0], 0, 0);
+			draw_surface_safe(temp_surface[0]);
 			shader_reset();
 		surface_reset_target();
 		
 		surface_set_shader(_outUV);
-			draw_surface_safe(temp_surface[1], 0, 0);
+			draw_surface_safe(temp_surface[1]);
 		surface_reset_shader();
 		
 		surface_set_shader(_outSurf);
-			draw_surface_safe(temp_surface[2], 0, 0);
+			draw_surface_safe(temp_surface[2]);
 		surface_reset_shader();
 	}
 	

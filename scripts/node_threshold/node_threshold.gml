@@ -46,20 +46,13 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [ 6, 10, 
 		["Surfaces",	 true], 0, 4, 5, 11, 12, 
-		["Threshold",	false], 1, 2, 13, 3, 7, 8, 14, 9, 
+		["Brightness",	 true, 1], 2, 13, 3,
+		["Alpha",	     true, 7], 8, 14, 9, 
 	];
 	
 	attribute_surface_depth();
 	
 	static step = function() { #region
-		var _bright = getInputData(1);
-		inputs[| 2].setVisible(_bright);
-		inputs[| 3].setVisible(_bright);
-		
-		var _alpha  = getInputData(7);
-		inputs[| 8].setVisible(_alpha);
-		inputs[| 9].setVisible(_alpha);
-		
 		__step_mask_modifier();
 		
 		inputs[| 2].mappableStep();

@@ -9,15 +9,32 @@ function colorFromRGBArray(arr) { #region
 	return make_color_rgb(r, g, b);
 } #endregion
 
-function color_get_alpha(color)  { INLINE return (color & (0xFF << 24)) >> 24; }
-function _color_get_alpha(color) { INLINE return is_real(color)? 1 : color_get_alpha(color) / 255; }
+function color_get_alpha(color)  { INLINE return is_real(color)? 255 : (color & (0xFF << 24)) >> 24; }
+function _color_get_alpha(color) { INLINE return is_real(color)?   1 : color_get_alpha(color) / 255; }
+
 function _color_get_red(color)   { INLINE return color_get_red(color)   / 255; }
 function _color_get_green(color) { INLINE return color_get_green(color) / 255; }
 function _color_get_blue(color)  { INLINE return color_get_blue(color)  / 255; }
 
+function _color_get_hue(color)        { INLINE return color_get_hue(color)        / 255; }
+function _color_get_saturation(color) { INLINE return color_get_saturation(color) / 255; }
+function _color_get_value(color)      { INLINE return color_get_value(color)      / 255; }
+
 function colorArrayFromReal(clr) { #region
 	INLINE
 	return [ _color_get_red(clr), _color_get_green(clr), _color_get_blue(clr) ];	
+} #endregion
+
+function paletteToArray(_pal) { #region
+	var _colors = array_create(array_length(_pal) * 4);
+	for(var i = 0; i < array_length(_pal); i++) {
+		_colors[i * 4 + 0] = _color_get_red(_pal[i]);
+		_colors[i * 4 + 1] = _color_get_green(_pal[i]);
+		_colors[i * 4 + 2] = _color_get_blue(_pal[i]);
+		_colors[i * 4 + 3] = _color_get_alpha(_pal[i]);
+	}
+	
+	return _colors;
 } #endregion
 
 function colorBrightness(clr, normalize = true) { #region

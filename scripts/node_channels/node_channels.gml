@@ -8,9 +8,9 @@ function Node_RGB_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 	inputs[| 2] = nodeValue("Keep Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	outputs[| 0] = nodeValue("Red", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue("Red",   self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	outputs[| 1] = nodeValue("Green", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
-	outputs[| 2] = nodeValue("Blue", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 2] = nodeValue("Blue",  self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	outputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();

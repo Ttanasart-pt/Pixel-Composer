@@ -35,28 +35,28 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	function sortPalette(pal) { #region
 		array_sort(pal, function(c0, c1) {
-			var r0 = color_get_red(c0) / 255;
-			var r1 = color_get_red(c1) / 255;
-			var g0 = color_get_green(c0) / 255;
-			var g1 = color_get_green(c1) / 255;
-			var b0 = color_get_blue(c0) / 255;
-			var b1 = color_get_blue(c1) / 255;
+			var r0 = _color_get_red(c0);
+			var r1 = _color_get_red(c1);
+			var g0 = _color_get_green(c0);
+			var g1 = _color_get_green(c1);
+			var b0 = _color_get_blue(c0);
+			var b1 = _color_get_blue(c1);
 			
 			var l0 = sqrt( .241 * r0 + .691 * g0 + .068 * b0 );
 			var l1 = sqrt( .241 * r1 + .691 * g1 + .068 * b1 );
 			
 			if(abs(l0 - l1) > 0.05) return l0 > l1;
 			
-			var h0 = color_get_hue(c0) / 255;
-			var h1 = color_get_hue(c1) / 255;
+			var h0 = _color_get_hue(c0);
+			var h1 = _color_get_hue(c1);
 			
 			if(abs(h0 - h1) > 0.05) return h0 > h1;
 			
-			var s0 = color_get_saturation(c0) / 255;
-			var s1 = color_get_saturation(c1) / 255;
+			var s0 = _color_get_saturation(c0);
+			var s1 = _color_get_saturation(c1);
 			
-			var v0 = color_get_value(c0) / 255;
-			var v1 = color_get_value(c1) / 255;
+			var v0 = _color_get_value(c0);
+			var v1 = _color_get_value(c1);
 			
 			return s0 * v0 > s1 * v1;
 		})
@@ -91,9 +91,9 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			if(a == 0) continue;
 			
 			switch(_space) {
-				case 0 : col = [ color_get_red(c) / 255, color_get_green(c) / 255,      color_get_blue(c) / 255, 0 ];  break;
-				case 1 : col = [ color_get_hue(c) / 255, color_get_saturation(c) / 255, color_get_value(c) / 255, 0 ]; break;
-				case 2 : col = [ color_get_hue(c) / 255, color_get_saturation(c) / 255, color_get_value(c) / 255, 0 ]; break;
+				case 0 : col = [ _color_get_red(c), _color_get_green(c),      _color_get_blue(c),  0 ];  break;
+				case 1 : col = [ _color_get_hue(c), _color_get_saturation(c), _color_get_value(c), 0 ]; break;
+				case 2 : col = [ _color_get_hue(c), _color_get_saturation(c), _color_get_value(c), 0 ]; break;
 			}
 			
 			array_push(colors, col);

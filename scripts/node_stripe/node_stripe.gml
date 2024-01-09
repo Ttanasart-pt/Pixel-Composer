@@ -51,7 +51,8 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	input_display_list = [ 
 		["Output",	true],	0,  
 		["Pattern",	false], 1, 11, 10, 14, 2, 12, 4, 5, 13, 
-		["Render",	false], 6, 7, 8, 9, 3
+		["Render",	false], 3, 
+		["Random Colors", false, 6], 7, 8, 9, 
 	];
 	
 	attribute_surface_depth();

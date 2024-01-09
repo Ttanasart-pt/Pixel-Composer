@@ -1,18 +1,6 @@
 function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Level";
 	
-	shader = sh_level;
-	uniform_wmin = shader_get_uniform(shader, "wmin");
-	uniform_wmax = shader_get_uniform(shader, "wmax");
-	uniform_rmin = shader_get_uniform(shader, "rmin");
-	uniform_rmax = shader_get_uniform(shader, "rmax");
-	uniform_gmin = shader_get_uniform(shader, "gmin");
-	uniform_gmax = shader_get_uniform(shader, "gmax");
-	uniform_bmin = shader_get_uniform(shader, "bmin");
-	uniform_bmax = shader_get_uniform(shader, "bmax");
-	uniform_amin = shader_get_uniform(shader, "amin");
-	uniform_amax = shader_get_uniform(shader, "amax");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("White",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
@@ -117,27 +105,20 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _amin = min(_data[5][0], _data[5][1]);
 		var _amax = max(_data[5][0], _data[5][1]);
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(shader);
-			shader_set_uniform_f(uniform_wmin, _wmin);
-			shader_set_uniform_f(uniform_wmax, _wmax);
-			shader_set_uniform_f(uniform_rmin, _rmin);
-			shader_set_uniform_f(uniform_rmax, _rmax);
-			shader_set_uniform_f(uniform_gmin, _gmin);
-			shader_set_uniform_f(uniform_gmax, _gmax);
-			shader_set_uniform_f(uniform_bmin, _bmin);
-			shader_set_uniform_f(uniform_bmax, _bmax);
-			shader_set_uniform_f(uniform_amin, _amin);
-			shader_set_uniform_f(uniform_amax, _amax);
+		surface_set_shader(_outSurf, sh_level);
+			shader_set_f("wmin", _wmin);
+			shader_set_f("wmax", _wmax);
+			shader_set_f("rmin", _rmin);
+			shader_set_f("rmax", _rmax);
+			shader_set_f("gmin", _gmin);
+			shader_set_f("gmax", _gmax);
+			shader_set_f("bmin", _bmin);
+			shader_set_f("bmax", _bmax);
+			shader_set_f("amin", _amin);
+			shader_set_f("amax", _amax);
 			
-			draw_surface_safe(_data[0], 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+			draw_surface_safe(_data[0]);
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[6], _data[7]);

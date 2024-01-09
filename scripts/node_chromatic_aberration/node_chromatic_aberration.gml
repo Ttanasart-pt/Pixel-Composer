@@ -30,19 +30,19 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var pos = getInputData(1);
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
+	} #endregion
 	
 	static step = function() { #region
 		inputs[| 2].mappableStep();
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		
 		surface_set_shader(_outSurf, sh_chromatic_aberration);
 		shader_set_interpolation(_data[0]);
@@ -53,5 +53,5 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		surface_reset_shader();
 		
 		return _outSurf;
-	}
+	} #endregion
 }

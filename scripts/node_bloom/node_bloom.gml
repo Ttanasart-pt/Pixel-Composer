@@ -1,13 +1,6 @@
 function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bloom";
 	
-	shader = sh_bloom_pass;
-	uniform_size = shader_get_uniform(shader, "size");
-	uniform_tole = shader_get_uniform(shader, "tolerance");
-	
-	uniform_umsk = shader_get_uniform(shader, "useMask");
-	uniform_mask = shader_get_sampler_index(shader, "mask");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3, "Bloom blur radius.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 1] });
@@ -55,39 +48,26 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _mask = _data[4];
 		var pass1 = surface_create_valid(surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf), attrDepth());	
 		
-		surface_set_target(pass1);
-		draw_clear_alpha(c_black, 1);
-			shader_set(shader);
-				shader_set_uniform_f(uniform_size, _size);
-				shader_set_uniform_f(uniform_tole, _tole);
+		surface_set_shader(pass1, sh_bloom_pass);
+			draw_clear_alpha(c_black, 1);
+			shader_set_f("size",      _size);
+			shader_set_f("tolerance", _tole);
 				
-				shader_set_uniform_i(uniform_umsk, is_surface(_mask));
-				texture_set_stage(uniform_mask, surface_get_texture(_mask));
+			shader_set_i("useMask", is_surface(_mask));
+			shader_set_surface("mask", _mask);
 				
-				draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-		surface_reset_target();
+			draw_surface_safe(_data[0]);
+		surface_reset_shader();
 		
 		var pass1blur = surface_apply_gaussian(pass1, _size, true, c_black, 1);
 		surface_free(pass1);
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-		
-			var uniform_foreground = shader_get_sampler_index(sh_blend_add_alpha_adj, "fore");
-			var uniform_opacity    = shader_get_uniform(sh_blend_add_alpha_adj, "opacity");
+		surface_set_shader(_outSurf, sh_blend_add_alpha_adj);
+			shader_set_surface("fore", pass1blur);
+			shader_set_f("opacity",	   _stre);
 			
-			shader_set(sh_blend_add_alpha_adj);
-			texture_set_stage(uniform_foreground,	surface_get_texture(pass1blur));
-			shader_set_uniform_f(uniform_opacity,	_stre);
-			
-			draw_surface_safe(_data[0], 0, 0);
-			
-			shader_reset();
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+			draw_surface_safe(_data[0]);
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);

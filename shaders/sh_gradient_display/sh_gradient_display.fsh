@@ -79,5 +79,6 @@ vec4 gradientEval(in float prog) {
 }
 
 void main() {
-	gl_FragColor = gradientEval(v_vTexcoord.x);
+	vec4 col = gradientEval(v_vTexcoord.x);
+	gl_FragColor = vec4(col.rgb, 1.);
 }

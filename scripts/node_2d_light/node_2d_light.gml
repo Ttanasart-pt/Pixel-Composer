@@ -162,7 +162,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_uniform_f(uniform_intn, _inten * _color_get_alpha(_color));
 			shader_set_uniform_f(uniform_band, _band);
 			shader_set_uniform_f(uniform_attn, _attn);
-			shader_set_uniform_f_array_safe(uniform_colr, [ color_get_red(_color) / 255, color_get_green(_color) / 255, color_get_blue(_color) / 255 ]);
+			shader_set_uniform_f_array_safe(uniform_colr, [ _color_get_red(_color), _color_get_green(_color), _color_get_blue(_color) ]);
 			
 			switch(_shape) {
 				case LIGHT_SHAPE_2D.point :

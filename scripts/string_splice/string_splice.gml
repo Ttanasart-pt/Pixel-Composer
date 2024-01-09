@@ -1,4 +1,4 @@
-function string_splice(str, delim = " ", keep = false) {
+function string_splice(str, delim = " ", keep = false, empty = true) {
 	var st = [];
 	var ss = str;
 	var sp;
@@ -16,11 +16,11 @@ function string_splice(str, delim = " ", keep = false) {
 		}
 		
 		if(!found) { //no delim left
-			array_push(st, ss);
+			if(empty || string_length(ss)) array_push(st, ss);
 			break;
 		} else {
 			var _ss = string_copy(ss, 1, keep? sp : sp - 1);
-			array_push(st, _ss);
+			if(empty || string_length(ss)) array_push(st, _ss);
 		}
 		
 		ss = string_copy(ss, sp + 1, string_length(ss) - sp);

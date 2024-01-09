@@ -26,9 +26,9 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	input_display_list = [ 5, 
-		["Effect settings", false], 0, 2, 1, 6,
-		["Auto color",		false], 3, 4, 7,
+	input_display_list = [ 5, 0, 
+		["Palette", false, 2], 1, 3, 4, 7,
+		["Alpha",   false, 6], 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -50,13 +50,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _alp     = _data[6];
 		
 		if(_use_gra) {
-			var _colors = array_create(array_length(_gra) * 4);
-			for(var i = 0; i < array_length(_gra); i++) {
-				_colors[i * 4 + 0] = _color_get_red(_gra[i]);
-				_colors[i * 4 + 1] = _color_get_green(_gra[i]);
-				_colors[i * 4 + 2] = _color_get_blue(_gra[i]);
-				_colors[i * 4 + 3] = _color_get_alpha(_gra[i]);
-			}
+			var _colors = paletteToArray(_gra);
 			
 			surface_set_shader(_outSurf, sh_posterize_palette);
 				shader_set_f("palette", _colors);

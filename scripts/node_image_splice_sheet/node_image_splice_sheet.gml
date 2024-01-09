@@ -68,7 +68,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	input_display_list = [
 		["Sprite", false],	0, 1, 6, 
 		["Sheet",  false],	3, 10, 9, 4, 5, 
-		["Output", false],	7, 8, 12, 13, 14, 11
+		["Output", false],	7, 8, 11,
+		["Filter Empty", true, 12], 13, 14, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -278,13 +279,11 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static step = function() { #region
 		var _out  = getInputData(7);
-		var _filt = getInputData(12);
 		var _flty = getInputData(13);
 		
 		inputs[| 11].setVisible(!_out);
 		inputs[|  8].setVisible(!_out);
-		inputs[| 13].setVisible(_filt);
-		inputs[| 14].setVisible(_filt && _flty);
+		inputs[| 14].setVisible(_flty);
 	} #endregion
 	
 	static spliceSprite = function() { #region

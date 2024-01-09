@@ -305,14 +305,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_pntData          = points[pointAmo];
 							_pntData.x        = _nx;
 							_pntData.y        = _ny; 
-							_pntData.prog     = _prog_total / _pathEnd;
+							_pntData.prog     = (_prog_total - _pathStr) / (_pathEnd - _pathStr);
 							_pntData.progCrop = _prog_curr / _pathLength;
 							_pntData.weight   = wght;
 						} else {
 							_pntData = { 
 								x:        _nx, 
 								y:        _ny, 
-								prog:     _prog_total / _pathEnd, 
+								prog:     (_prog_total - _pathStr) / (_pathEnd - _pathStr), 
 								progCrop: _prog_curr / _pathLength, 
 								weight:   wght 
 							}

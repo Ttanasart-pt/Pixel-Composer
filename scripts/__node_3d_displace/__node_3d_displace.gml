@@ -148,9 +148,9 @@ function __Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					
 					if(is_surface(_dspTex)) {
 						var c = surface_getpixel(_dspTex, v.textures[_texI][0] * surface_get_width_safe(_dspTex), v.textures[_texI][1] * surface_get_height_safe(_dspTex));
-						var r = color_get_red(c) / 255;
-						var g = color_get_green(c) / 255;
-						var b = color_get_blue(c) / 255;
+						var r = _color_get_red(c);
+						var g = _color_get_green(c);
+						var b = _color_get_blue(c);
 						str   = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 					}
 					

@@ -60,7 +60,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	input_display_list = [ 
 		["Image",	  false], 0, 
 		["Output",	  false], 2, 
-		["Animation", false], 1, 3, 5, 4, 6, 7, 
+		["Animation", false], 1, 3, 4, 7, 
+		["Custom Frame Order", false, 5], 6,
 	];
 	
 	attribute_surface_depth();

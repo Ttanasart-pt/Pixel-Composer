@@ -14,6 +14,11 @@ event_inherited();
 	index_dragging  = -1;
 	interactable    = true;
 	
+	index_drag_x = 0; index_drag_x_to = 0;
+	index_drag_y = 0; index_drag_y_to = 0;
+	index_drag_w = 0; index_drag_w_to = 0;
+	index_drag_h = 0; index_drag_h_to = 0;
+	
 	setColor = function(color) {
 		if(index_selecting == -1 || palette == 0) return;
 		palette[index_selecting] = color;
@@ -84,6 +89,10 @@ event_inherited();
 					palette = array_create(array_length(pal.palette));
 					for( var j = 0; j < array_length(pal.palette); j++ )
 						palette[j] = pal.palette[j];
+					onApply(palette);
+					
+					index_selecting = 0;
+					selector.setColor(palette[index_selecting], false);
 				}
 				
 				if(i >= 0 && mouse_press(mb_right, interactable && sFOCUS)) {

@@ -309,7 +309,7 @@ function __part(_node) constructor {
 		
 		var cc = (col == -1)? c_white : col.eval(lifeRat);
 		if(blend != c_white) cc = colorMultiply(blend, cc);
-		alp_draw = alp * (alp_fade == noone? 1 : alp_fade.get(lifeRat));
+		alp_draw = alp * (alp_fade == noone? 1 : alp_fade.get(lifeRat)) * _color_get_alpha(cc);
 		
 		draw_surface_ext_safe(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
 	} #endregion

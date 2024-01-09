@@ -28,7 +28,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	input_display_list = [
 		["Background",   true], 0, 4, 3, 
-		["Camera",		false], 1, 2, 5, 6, 8, 7, 
+		["Camera",		false], 1, 2, 
+		["Depth Of Field", true, 5], 6, 8, 7, 
 		["Elements",	 true], 
 	];
 	

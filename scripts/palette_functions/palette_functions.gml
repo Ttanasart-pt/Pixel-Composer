@@ -45,22 +45,32 @@ function loadPalette(path) { #region
 	
 	while(!file_text_eof(_t)) {
 		var _w = file_text_readln(_t);
+		    _w = string_trim(_w);
+		    _w = string_replace_all(_w, "\t", " ");
 		if(_w == "") continue;
-			
+		
 		switch(ext) {
 			case ".hex" :
 				var _r = string_hexadecimal(string_copy(_w, 1, 2));
 				var _g = string_hexadecimal(string_copy(_w, 3, 2));
 				var _b = string_hexadecimal(string_copy(_w, 5, 2));
-						
-				pal[_index++] = make_color_rgb(_r, _g, _b);
+				
+				if(string_length(_w) > 6) {
+					var _a = string_hexadecimal(string_copy(_w, 7, 2));
+					pal[_index++] = make_color_rgba(_r, _g, _b, _a);
+				} else 
+					pal[_index++] = make_color_rgb(_r, _g, _b);
 				break;
 			case ".gpl" :
 			case ".pal" :
 				if(string_char_at(_w, 1) == "#") break;
-				var _c = string_splice(_w, " ");
-				if(array_length(_c) >= 3)
+				var _c = string_splice(_w, " ", false);
+				    _c = array_filter(_c, function(s) { return s != ""; });
+				
+				if(array_length(_c) == 3) 
 					pal[_index++] = make_color_rgb(toNumber(_c[0]), toNumber(_c[1]), toNumber(_c[2]));
+				else if(array_length(_c) >= 4) 
+					pal[_index++] = make_color_rgba(toNumber(_c[0]), toNumber(_c[1]), toNumber(_c[2]), toNumber(_c[3]));
 				break;
 		}
 	}
