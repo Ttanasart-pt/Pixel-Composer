@@ -2641,7 +2641,7 @@ function drawJuncConnection(from, to, params, target = to) { #region
 		
 		if(PANEL_GRAPH.pHOVER) {
 			if(feed && from.node == to.node) {
-				hover = distance_line_feedback(mx, my, jx, jy, frx, fry) < hovDist;
+				hover = distance_line_feedback(mx, my, jx, jy, frx, fry, _s) < hovDist;
 			} else {
 				switch(PREFERENCES.curve_connection_line) { 
 					case 0 : 

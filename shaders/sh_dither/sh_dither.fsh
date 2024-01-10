@@ -123,5 +123,5 @@ void main() {
 		}
 	}
 	
-	gl_FragColor.a = _col.a;
+	gl_FragColor.a *= _col.a;
 }

@@ -174,13 +174,13 @@ event_inherited();
 						var sw = sprite_get_width(spr);
 						var sh = sprite_get_height(spr);
 						
-						var s = max(gw / sw, gh / sh);
+						var s = min(gw / sw, gh / sh);
 						
 						var ox = (sprite_get_xoffset(spr) - sw / 2) * s;
 						var oy = (sprite_get_yoffset(spr) - sh / 2) * s;
 						
 						var _sx = _boxx + grid_width / 2 + ox;
-						var _sy = yy + grid_heigh / 2 + ox;
+						var _sy = yy    + grid_heigh / 2 + oy;
 						
 						var _spw = sw * s;
 						var _sph = sh * s;
@@ -198,8 +198,9 @@ event_inherited();
 							surface_reset_target();
 							
 							draw_surface(clip_surf, _sx, _sy);
-						} else 
+						} else {
 							draw_sprite_ui_uniform(spr, 0, _sx, _sy, s);
+						}
 					} #endregion
 				}
 				

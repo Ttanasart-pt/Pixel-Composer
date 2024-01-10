@@ -60,5 +60,5 @@ void main() {
 	}
 	
     gl_FragColor = palette[closet_index];
-	if(alpha == 0) gl_FragColor.a = _col.a;
+	if(alpha == 0) gl_FragColor.a *= _col.a;
 }

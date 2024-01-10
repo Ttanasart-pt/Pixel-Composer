@@ -17,11 +17,14 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 3] = nodeValue("Normalized", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 1);
 	
+	inputs[| 4] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	outputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	
-	input_display_list = [ 3, 0, 1, 2 ];
+	input_display_list = [ 3, 0, 1, 2, 4 ];
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = 0) { #region
 		if(index == 3) {
 			var _nor = getInputData(3);
 			
@@ -34,6 +37,9 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				inputs[| 2].setType(VALUE_TYPE.float);
 				inputs[| 2].setDisplay(VALUE_DISPLAY.slider);
+				
+				inputs[| 4].setType(VALUE_TYPE.float);
+				inputs[| 4].setDisplay(VALUE_DISPLAY.slider);
 			} else {
 				inputs[| 0].setType(VALUE_TYPE.integer);
 				inputs[| 0].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 1] });
@@ -43,24 +49,28 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				inputs[| 2].setType(VALUE_TYPE.integer);
 				inputs[| 2].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 1] });
+				
+				inputs[| 4].setType(VALUE_TYPE.integer);
+				inputs[| 4].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 1] });
 			}
 		}
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var nor = _data[3];
 		if(!is_real(_data[0])) return 0;
 		if(!is_real(_data[1])) return 0;
 		if(!is_real(_data[2])) return 0;
 		
-		return make_color_rgb(
+		return make_color_rgba(
 					nor? _data[0] * 255 : _data[0], 
 					nor? _data[1] * 255 : _data[1], 
-					nor? _data[2] * 255 : _data[2]
+					nor? _data[2] * 255 : _data[2],
+					nor? _data[4] * 255 : _data[4],
 				);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
@@ -71,11 +81,10 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			return;
 		}
 		
-		draw_set_color(col);
-		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 0);
-	}
+		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
+	} #endregion
 	
-	static doApplyDeserialize = function() {
+	static doApplyDeserialize = function() { #region
 		onValueUpdate(3);
-	}
+	} #endregion
 }

@@ -14,6 +14,7 @@ function steam_ugc_create_project() { #region
 	directory_create(DIRECTORY + "steamUGC");
 	
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
+	json_save_struct(DIRECTORY + "steamUGC/" + filename_name_only(file.path) + ".meta", file.meta);
 	
 	var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
 	surface_save_safe(preview_surface, DIRECTORY + "steamUGC/thumbnail.png");
@@ -39,6 +40,7 @@ function steam_ugc_update_project(update_preview = false, update_note = "Updated
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
 	if(file_exists_empty(PROJECT.thumbnail))
 		file_copy(PROJECT.thumbnail, DIRECTORY + "steamUGC/thumbnail.png");
+	json_save_struct(DIRECTORY + "steamUGC/" + filename_name_only(file.path) + ".meta", file.meta);
 	
 	STEAM_UGC_PUBLISH_ID = file.meta.file_id;
 	STEAM_UGC_UPDATE_HANDLE = steam_ugc_start_item_update(STEAM_APP_ID, STEAM_UGC_PUBLISH_ID);

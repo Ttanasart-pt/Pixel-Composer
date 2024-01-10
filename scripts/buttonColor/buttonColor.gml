@@ -150,3 +150,20 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		return h;
 	}
 }
+
+function drawColor(color, _x, _y, _w, _h) {
+	if(is_real(color)) 
+		draw_sprite_stretched_ext(THEME.palette_mask, 1, _x, _y, _w, _h, color, 1);
+	else if(is_int64(color)) {
+		var _a = _color_get_alpha(color);
+			
+		if(_a == 1) {
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _x, _y, _w, _h, color, 1);
+		} else {
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _x, _y, _w, _h - ui(8), color, 1);
+			
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _x, _y + _h - ui(6), _w,      ui(6), c_black, 1);
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _x, _y + _h - ui(6), _w * _a, ui(6), c_white, 1);
+		}
+	}	
+}

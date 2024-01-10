@@ -11,11 +11,13 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 2] = nodeValue("Sampling size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Size of square around the position to sample and average pixel color.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 3, 1] });
 	
+	inputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var _suf = current_data[0];
@@ -43,18 +45,19 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		draw_set_color(COLORS._main_accent);
 		draw_rectangle(x0, y0, x1, y1, true);
-	}
+	} #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _surf = _data[0];
-		var _pos = _data[1];
-		var _sam = _data[2];
+		var _pos  = _data[1];
+		var _sam  = _data[2];
+		var _alp  = _data[3];
 		if(!is_surface(_surf)) return c_black;
 		
 		var ww = surface_get_width_safe(_surf);
 		var hh = surface_get_height_safe(_surf);
 		
-		var r = 0, g = 0, b = 0, amo = 0;
+		var r = 0, g = 0, b = 0, a = 0, amo = 0;
 		
 		_sam -= 1;
 		for( var i = -_sam; i <= _sam; i++ ) 
@@ -66,34 +69,33 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			if(px >= ww) continue;
 			if(py >= hh) continue;
 			
-			var cc = surface_get_pixel(_surf, px, py);
+			var cc = int64(surface_get_pixel_ext(_surf, px, py));
 			
 			r += color_get_red(cc);
 			g += color_get_green(cc);
 			b += color_get_blue(cc);
+			a += color_get_alpha(cc);
 			amo++;
 		}
 		
 		r /= amo;
 		g /= amo;
 		b /= amo;
+		a /= amo;
 		
-		return make_color_rgb(r, g, b);
-	}
+		return _alp? make_color_rgba(r, g, b, a) : make_color_rgb(r, g, b);
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
-		
+		var col  = outputs[| 0].getValue();
 		if(bbox.h <= 0) return;
-		
-		var col = outputs[| 0].getValue();
 		
 		if(is_array(col)) {
 			drawPalette(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
 			return;
 		}
 		
-		draw_set_color(col);
-		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 0);
-	}
+		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
+	} #endregion
 }

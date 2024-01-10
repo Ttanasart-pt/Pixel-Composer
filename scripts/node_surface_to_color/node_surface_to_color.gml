@@ -3,7 +3,7 @@ function Node_Surface_To_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	outputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
+	outputs[| 0] = nodeValue("Colors", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -11,11 +11,11 @@ function Node_Surface_To_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var _pal  = [];
 		
 		var buff = buffer_from_surface(_surf, false);
-		var size = buffer_get_size(buff);
+		var size = buffer_get_size(buff) / 4;
 		buffer_seek(buff, buffer_seek_start, 0);
 		
 		repeat(size) {
-			var col = buffer_read(buff, buffer_u8);
+			var col = buffer_read(buff, buffer_u32);
 			array_push_unique(_pal, col);
 		}
 		

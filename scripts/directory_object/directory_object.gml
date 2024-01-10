@@ -90,7 +90,7 @@ function FileObject(_name, _path) constructor { #region
 		return spr;
 	} #endregion
 	
-	static getMetadata = function() { #region
+	static getMetadata = function(_createnew = false) { #region
 		retrive_data = true;
 		
 		if(meta != noone)		return meta;  
@@ -106,6 +106,8 @@ function FileObject(_name, _path) constructor { #region
 			
 			if(struct_has(m, "metadata")) meta.deserialize(m.metadata);
 			if(struct_has(m, "preview"))  thumbnail_data = json_try_parse(m.preview, -1);
+			
+			if(_createnew) json_save_struct(meta_path, meta);
 		}
 		
 		meta.name = name;

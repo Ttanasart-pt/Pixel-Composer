@@ -11,8 +11,18 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 3] = nodeValue("Find all", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
+	inputs[| 4] = nodeValue("Include alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	
+	inputs[| 5] = nodeValue("Alpha tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	outputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
+	
+	input_display_list = [ 0, 
+		["Search", false], 1, 2, 3, 
+		["Alpha",   true, 4], 5, 
+	]
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
@@ -23,6 +33,9 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _col  = _data[1];
 		var _tol  = _data[2];
 		var _all  = _data[3];
+		
+		var _alp  = _data[4];
+		var _alpT = _data[5];
 		
 		if(!is_surface(_surf)) return [0, 0];
 		
@@ -35,6 +48,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var r = _color_get_red(_col);
 		var g = _color_get_green(_col);
 		var b = _color_get_blue(_col);
+		var a = _color_get_alpha(_col);
 		
 		for( var i = 0; i < _sh; i++ ) 
 		for( var j = 0; j < _sw; j++ ) {
@@ -45,9 +59,12 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _b = ((_c & 0x00FF0000) >> 16) / 255;
 			var _a = ((_c & 0xFF000000) >> 24) / 255;
 			
-			if(_a == 0) continue;
+			if(!_alp && _a == 0) continue;
 			
-			if((abs(r - _r) + abs(g - _g) + abs(b - _b)) / 3 <= _tol) {
+			var colMatch = (abs(r - _r) + abs(g - _g) + abs(b - _b)) / 3 <= _tol;
+			if(!colMatch) continue;
+			
+			if(!_alp || abs(a - _a) <= _alpT) {
 				if(_all) array_push(res, [ j, i ]);
 				else     return [ j, i ];
 			}
@@ -55,35 +72,19 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		buffer_delete(_buff);
 		return _all? res : [ -1, -1 ];
-		
-		//temp_surface[0] = surface_verify(temp_surface[0], 1, 1);
-		
-		//surface_set_shader(temp_surface[0], sh_find_pixel);
-		//	shader_set_surface("texture", _surf);
-		//	shader_set_dim("dimension", _surf);
-		//	draw_sprite_ext(s_fx_pixel, 0, 0, 0, 1, 1, 0, _col, 1);
-		//surface_reset_shader();
-		
-		//var pos = surface_get_pixel(temp_surface[0], 0, 0);
-		//var _x  = round(color_get_red(pos)   / 255 * surface_get_width_safe(_surf));
-		//var _y  = round(color_get_green(pos) / 255 * surface_get_height_safe(_surf));
-		
-		//return [ _x, _y ];
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
+		var col = getInputData(1);
 		
 		if(bbox.h <= 0) return;
-		
-		var col = getInputData(1);
 		
 		if(is_array(col)) {
 			drawPalette(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
 			return;
 		}
 		
-		draw_set_color(col);
-		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 0);
+		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
 	} #endregion
 }

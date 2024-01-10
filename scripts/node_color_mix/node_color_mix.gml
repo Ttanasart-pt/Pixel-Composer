@@ -35,7 +35,6 @@ function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			return;
 		}
 		
-		draw_set_color(col);
-		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 0);
+		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
 	}
 }
