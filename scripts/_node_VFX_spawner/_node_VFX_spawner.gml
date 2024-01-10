@@ -150,12 +150,22 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger", onClick: triggerSpawn, output: true })
 		.rejectArray();
 	
+	inputs[| 45] = nodeValue("Follow Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+		.rejectArray();
+	
+	inputs[| 46] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone )
+		.rejectArray();
+	
+	inputs[| 47] = nodeValue("Path Deviation", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 )
+		.rejectArray();
+	
 	input_len = ds_list_size(inputs);
 	
 	input_display_list = [ 32,
 		["Sprite",	   false],	0, 22, 23, 26,
 		["Spawn",		true],	27, 16, 44, 1, 2, 3, 4, 30, 24, 5,
 		["Movement",	true],	29, 6, 18,
+		["Follow path", true, 45], 46, 47, 
 		["Physics",		true],	7, 19, 33, 34, 35, 36, 
 		["Ground",		true, 37], 38, 39, 40, 
 		["Rotation",	true],	15, 8, 9, 
@@ -190,6 +200,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	curve_scale = noone;
 	curve_alpha = noone;
+	curve_path_div = noone;
 	
 	for( var i = 0; i < attributes.part_amount; i++ )
 		parts[i] = new __part(self);
@@ -234,6 +245,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _ground_offset	= getInputData(38);
 		var _ground_bounce	= getInputData(39);
 		var _ground_frict   = getInputData(40);
+		
+		var _path = getInputData(46);
 		
 		if(_rotation[1] < _rotation[0]) _rotation[1] += 360;
 		
@@ -330,6 +343,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			part.setGround(_ground, _ground_offset, _ground_bounce, _ground_frict);
 			part.setTransform(_scx, _scy, curve_scale, _rot, _rot_spd, _follow);
 			part.setDraw(_color, _bld, _alp, curve_alpha);
+			part.setPath(_path, curve_path_div);
+			
 			spawn_index = safe_mod(spawn_index + 1, attributes.part_amount);
 			onSpawn(_time, part);
 			
@@ -389,9 +404,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 			var _curve_sca = getInputData(11);
 			var _curve_alp = getInputData(14);
+			var _curve_pth = getInputData(47);
 		
-			curve_scale = new curveMap(_curve_sca, TOTAL_FRAMES);
-			curve_alpha = new curveMap(_curve_alp, TOTAL_FRAMES);
+			curve_scale    = new curveMap(_curve_sca, TOTAL_FRAMES);
+			curve_alpha    = new curveMap(_curve_alp, TOTAL_FRAMES);
+			curve_path_div = new curveMap(_curve_pth, TOTAL_FRAMES);
 		#endregion
 		
 		render();
@@ -456,6 +473,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _dirAng = getInputData(29);
 		var _turn   = getInputData(34);
 		var _spwTyp = getInputData(16);
+		var _usePth = getInputData(45);
 		
 		inputs[|  6].setVisible(!_dirAng);
 		
@@ -469,6 +487,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		inputs[| 22].setVisible(false);
 		inputs[| 23].setVisible(false);
 		inputs[| 26].setVisible(false);
+		
+		inputs[| 46].setVisible(true, _usePth);
 		
 		inputs[| 1].setVisible(_spwTyp < 2);
 		if(_spwTyp == 0)		inputs[| 1].name = "Spawn delay";

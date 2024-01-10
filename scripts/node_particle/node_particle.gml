@@ -83,7 +83,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		if(CURRENT_FRAME == 0) {
 			reset();
-			reLoop();
+			if(IS_PLAYING) reLoop();
 		}
 		
 		if(IS_PLAYING) runVFX(frame);

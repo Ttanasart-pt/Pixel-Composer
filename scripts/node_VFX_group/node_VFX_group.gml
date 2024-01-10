@@ -50,6 +50,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 		var loop = getInputData(0);
 		if(!loop) return;
 		
+		if(IS_PLAYING)
 		for( var i = 0; i < TOTAL_FRAMES; i++ )
 		for( var j = 0, m = ds_list_size(topoList); j < m; j++ ) {
 			var node = topoList[| j];

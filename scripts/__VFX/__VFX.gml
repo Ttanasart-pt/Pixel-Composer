@@ -78,6 +78,11 @@ function __part(_node) constructor {
 	
 	frame = 0;
 	
+	path      = noone;
+	pathIndex = 0;
+	pathPos   = new __vec2();
+	pathDiv   = noone;
+	
 	static reset = function() { #region
 		INLINE
 		
@@ -166,6 +171,13 @@ function __part(_node) constructor {
 		alp      = _alp;
 		alp_draw = _alp;
 		alp_fade = _fade;
+	} #endregion
+	
+	static setPath = function(_path, _pathDiv) { #region
+		INLINE
+		
+		path    = _path;
+		pathDiv = _pathDiv;
 	} #endregion
 	
 	static kill = function(callDestroy = true) { #region
@@ -293,6 +305,14 @@ function __part(_node) constructor {
 		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
 		_xx = drawx + _pp[0];
 		_yy = drawy + _pp[1];
+		
+		if(path != noone) {
+			var _div = pathDiv.get(lifeRat);
+			
+			pathPos = path.getPointRatio(lifeRat, pathIndex, pathPos);
+			_xx = _xx * _div + pathPos.x;
+			_yy = _yy * _div + pathPos.y;
+		}
 		
 		if(exact) {
 			_xx = round(_xx);

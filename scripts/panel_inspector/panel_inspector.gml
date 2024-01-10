@@ -501,7 +501,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						var togl = array_safe_get(jun_disp, 2, noone);
 						if(togl != noone) var toging = _inspecting.getInputData(togl);
 						
-						var lbx = (togl != noone) * ui(36);
+						var lbx = (togl != noone) * ui(40);
 						var lbw = con_w - lbx;
 						var ltx = lbx + ui(32);
 						
