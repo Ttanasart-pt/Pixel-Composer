@@ -59,6 +59,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		mouse_grid_x = 0;
 		mouse_grid_y = 0;
 		mouse_on_graph = false;
+		
+		node_bg_hovering = false;
 	#endregion
 	
 	#region ---- nodes ----
@@ -717,6 +719,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		draw_set_alpha(1);
 	} #endregion
 	
+	function drawBasePreview() { #region
+		var gr_x = graph_x * graph_s;
+		var gr_y = graph_y * graph_s;
+		var _hov = false;
+		
+		for(var i = 0; i < ds_list_size(nodes_list); i++) {
+			var h = nodes_list[| i].drawPreviewBackground(gr_x, gr_y, mx, my, graph_s);
+			_hov |= h;
+		}
+		
+		return _hov;
+	} #endregion
+	
 	function drawNodes() { #region
 		if(selection_block-- > 0) return;
 		
@@ -1192,7 +1207,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					nodes_junction_d = noone;
 			}
 			
-			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !graph_dragging_key && !graph_zooming_key) {
+			if(mouse_on_graph && !node_bg_hovering && mouse_press(mb_left, pFOCUS) && !graph_dragging_key && !graph_zooming_key) {
 				if(junction_hovering && junction_hovering.draw_line_shift_hover) {
 					nodes_select_mx		= mx;
 					nodes_select_my		= my;
@@ -1655,6 +1670,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		bg_color = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.getColor(), 0.05);
 		draw_clear(bg_color);
+		node_bg_hovering = drawBasePreview();
 		drawGrid();
 		
 		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);

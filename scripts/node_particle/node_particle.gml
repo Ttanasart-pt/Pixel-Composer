@@ -17,12 +17,15 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		.rejectArray()
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Alpha", "Additive" ]);
 	
+	inputs[| input_len + 3] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
+		.rejectArray();
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	array_insert(input_display_list, 0, ["Output", true], input_len + 0);
+	array_insert(input_display_list, 0, ["Output", true], input_len + 3, input_len + 0);
 	array_push(input_display_list, input_len + 1, input_len + 2);
 	
 	def_surface   = -1;
@@ -62,7 +65,11 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		var _inSurf   = getInputData(0);
 		var _arr_type = getInputData(22);
 		var _dim	  = getInputData(input_len + 0);
+		var _bg 	  = getInputData(input_len + 3);
+		
 		var _outSurf  = outputs[| 0].getValue();
+		
+		if(is_surface(_bg)) _dim = surface_get_dimension(_bg)
 		
 		if(is_array(_inSurf) && _arr_type == 3) {
 			var _len = array_length(_inSurf);
@@ -90,20 +97,26 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	} #endregion
 	
 	function render(_time = CURRENT_FRAME) { #region
-		var _dim		= inputs[| input_len + 0].getValue(_time);
-		var _exact 		= inputs[| input_len + 1].getValue(_time);
-		var _blend 		= inputs[| input_len + 2].getValue(_time);
-		var _outSurf	= outputs[| 0].getValue();
+		var _dim   = inputs[| input_len + 0].getValue(_time);
+		var _exact = inputs[| input_len + 1].getValue(_time);
+		var _blend = inputs[| input_len + 2].getValue(_time);
+		var _bg    = inputs[| input_len + 3].getValue(_time);
+		
+		var _outSurf = outputs[| 0].getValue();
+		
+		if(is_surface(_bg)) _dim = surface_get_dimension(_bg)
 		
 		if(render_amount == 0) {
 			surface_set_shader(_outSurf);
+			
+			if(is_surface(_bg))  draw_surface(_bg, 0, 0);
 			
 			switch(_blend) {
 				case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
 				case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;
 				case PARTICLE_BLEND_MODE.additive: BLEND_ADD;    break;
 			}
-		
+			
 			shader_set_interpolation(_outSurf);
 				for(var i = 0; i < attributes.part_amount; i++)
 					if(parts[i].active) parts[i].draw(_exact, _dim[0], _dim[1]);
@@ -112,6 +125,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			for( var o = 0, n = array_length(_outSurf); o < n; o++ ) {
 				surface_set_shader(_outSurf[o]);
 				
+				if(is_surface(_bg))  draw_surface(_bg, 0, 0);
+			
 				switch(_blend) {
 					case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
 					case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;

@@ -2,7 +2,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "MK Brownian";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
@@ -31,9 +31,13 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	inputs[| 11] = nodeValue("Turn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 12] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
+		.setDisplay(VALUE_DISPLAY.vector);
+		
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 8, 
+	input_display_list = [ new Inspector_Sprite(s_MKFX), 8, 
+		["Dimension", false], 0, 12, 
 		["Particles", false], 1, 
 		["Spawn",     false], 3, 2, 
 		["Movement",  false], 5, 4, 9, 
@@ -86,17 +90,19 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _dirs = getInputData(9);
 		var _dira = getInputData(10);
 		var _turn = getInputData(11);
+		var _dim  = getInputData(12);
 		
 		var _sed = _seed;
 		
-		if(!is_surface(_surf)) return;
+		if(is_surface(_surf)) _dim = surface_get_dimension(_surf)
 		
 		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		outputs[| 0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
+			
 			BLEND_OVERRIDE
 				draw_surface_safe(_surf);
 			BLEND_ALPHA_MULP

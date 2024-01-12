@@ -1347,6 +1347,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static onDrawHover = function(_x, _y, _mx, _my, _s) {}
 	
+	static drawPreviewBackground = function(_x, _y, _mx, _my, _s) { return false; }
+	
 	static drawBadge = function(_x, _y, _s) { #region
 		if(!active) return;
 		var xx = x * _s + _x + w * _s;

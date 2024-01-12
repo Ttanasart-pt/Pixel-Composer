@@ -457,6 +457,7 @@ function __initNodes() {
 		addNodeObject(input, "Websocket Receiver",	s_node_websocket_receive,	"Node_Websocket_Receiver",	[1, Node_Websocket_Receiver],, "Create websocket server to receive data from the network.").setVersion(1145);
 		addNodeObject(input, "Websocket Sender",	s_node_websocket_send,		"Node_Websocket_Sender",	[1, Node_Websocket_Sender],, "Create websocket server to send data to the network.").setVersion(1145);
 		addNodeObject(input, "Spout Sender",		s_node_spout,				"Node_Spout_Send",			[1, Node_Spout_Send],, "Send surface through Spout.").setVersion(11600);
+		addNodeObject(input, "MIDI In",				s_node_midi,				"Node_MIDI_In",				[1, Node_MIDI_In],, "Receive MIDI message.").setVersion(11630);
 	#endregion
 	
 	var transform = ds_list_create(); #region
@@ -673,6 +674,7 @@ function __initNodes() {
 		addNodeObject(generator, "MK Tile",				s_node_mk_tile,				"Node_MK_Tile",				[1, Node_MK_Tile]).setVersion(11600);
 		addNodeObject(generator, "MK Flag",				s_node_mk_flag,				"Node_MK_Flag",				[1, Node_MK_Flag]).setVersion(11600);
 		addNodeObject(generator, "MK Brownian",			s_node_mk_brownian,			"Node_MK_Brownian",			[1, Node_MK_Brownian]).setVersion(11630);
+		addNodeObject(generator, "MK Fall",				s_node_mk_fall,				"Node_MK_Fall",				[1, Node_MK_Fall], ["Leaf"]).setVersion(11630);
 		//addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle]).patreonExtra();
 	#endregion
 	
@@ -895,8 +897,9 @@ function __initNodes() {
 		addNodeObject(node, "Cache Array",	s_node_cache_array,	"Node_Cache_Array",	[1, Node_Cache_Array],, "Store current animation as array.  Cache persisted between save.").setVersion(1130);
 		
 		ds_list_add(node, "Debug");
-		addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
-		addNodeObject(node, "Widget Test",	s_node_print,		"Node_Widget_Test",	[1, Node_Widget_Test]);
+		addNodeObject(node, "Print",			s_node_print,		"Node_Print",			[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
+		addNodeObject(node, "Widget Test",		s_node_print,		"Node_Widget_Test",		[1, Node_Widget_Test]);
+		addNodeObject(node, "Graph Preview",	s_node_image,		"Node_Graph_Preview",	[1, Node_Graph_Preview]);
 		//addNodeObject(node, "Module Test",	s_node_print,		"Node_Module_Test",	[1, Node_Module_Test]);
 		
 		ds_list_add(node, "System");
