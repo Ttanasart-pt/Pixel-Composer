@@ -23,6 +23,8 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+		
+	outputs[| 1] = nodeValue("Light only", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 6, 
 		["Surfaces",	false], 0, 1, 
@@ -31,7 +33,11 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	temp_surface = [ surface_create( 1, 1 ), surface_create( 1, 1 ), surface_create( 1, 1 ) ];
 	
+	light_only = [];
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		if(_output_index == 1) return light_only[_array_index];
+		
 		var _surf = _data[0];
 		var _mask = _data[1];
 		var _seed = _data[2];
@@ -47,6 +53,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
 			temp_surface[i] = surface_verify(temp_surface[i], _sw, _sh);
+		light_only[_array_index] = surface_verify(array_safe_get(light_only, _array_index), _sw, _sh);
 		
 		surface_set_shader(temp_surface[0], sh_blink_extract);
 			shader_set_palette(_trgC, "colorTarget", "colorTargetAmount");
@@ -78,6 +85,13 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			
 			draw_surface_safe(temp_surface[ind]);
 		surface_reset_shader();
+		
+		surface_set_target(light_only[_array_index]);
+			DRAW_CLEAR
+			BLEND_OVERRIDE
+				draw_surface(temp_surface[2], 0, 0);
+			BLEND_NORMAL
+		surface_reset_target();
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR

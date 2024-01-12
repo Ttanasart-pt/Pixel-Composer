@@ -674,7 +674,7 @@ function __initNodes() {
 		addNodeObject(generator, "MK Tile",				s_node_mk_tile,				"Node_MK_Tile",				[1, Node_MK_Tile]).setVersion(11600);
 		addNodeObject(generator, "MK Flag",				s_node_mk_flag,				"Node_MK_Flag",				[1, Node_MK_Flag]).setVersion(11600);
 		addNodeObject(generator, "MK Brownian",			s_node_mk_brownian,			"Node_MK_Brownian",			[1, Node_MK_Brownian]).setVersion(11630);
-		addNodeObject(generator, "MK Fall",				s_node_mk_fall,				"Node_MK_Fall",				[1, Node_MK_Fall], ["Leaf"]).setVersion(11630);
+		addNodeObject(generator, "MK Fall",				s_node_mk_fall,				"Node_MK_Fall",				[1, Node_MK_Fall], ["Leaf", "Leaves"]).setVersion(11630);
 		addNodeObject(generator, "MK Blinker",			s_node_mk_blinker,			"Node_MK_Blinker",			[1, Node_MK_Blinker]).setVersion(11630);
 		//addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle]).patreonExtra();
 	#endregion

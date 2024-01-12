@@ -46,15 +46,27 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	inputs[| 16] = nodeValue("Ground levels", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ DEF_SURF_H / 2, DEF_SURF_H ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
+	inputs[| 17] = nodeValue("Y Momentum", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+		
+	inputs[| 18] = nodeValue("Twist", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+		
+	inputs[| 19] = nodeValue("Twist Rate", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+		.setDisplay(VALUE_DISPLAY.slider);
+		
+	inputs[| 20] = nodeValue("Twist Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 10 ])
+		.setDisplay(VALUE_DISPLAY.range);
+	
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 2, 
 		["Dimension", false], 0, 1, 
 		["Spawn",     false], 3, 4, 
 		["Physics",   false], 10, 5, 12,  
-		["Swing",     false], 8, 6, 7, 11, 
+		["Swing",     false], 8, 6, 7, 11, 17, 
 		["Render",    false], 9, 13, 14, 
 		["Ground",     true, 15], 16, 
+		["Twist",      true, 18], 19, 20, 
 	];
 	
 	_gravity = 0;
@@ -62,8 +74,12 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	_xswing  = [ 0, 0 ];
 	_xswinn  = [ 0, 0 ];
 	_yswing  = [ 0, 0 ];
+	_yswinn  = [ 0, 0 ];
 	_fswing  = [ 0, 0 ];
 	_wind    = [ 0, 0 ];
+	_twist   = false;
+	_twistr  = 0.01;
+	_twists  = [ 0, 0 ];
 	_ground  = noone;
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -91,8 +107,14 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _sx = random_range(_xswing[0], _xswing[1]);
 		var _nx = random_range(_xswinn[0], _xswinn[1]);
 		var _sy = random_range(_yswing[0], _yswing[1]);
+		var _ny = random_range(_yswinn[0], _yswinn[1]);
 		var _sw = random_range(_fswing[0], _fswing[1]);
 		var _sp = random_range(_speed [0], _speed [1]);
+		
+		var _curving = 0;
+		var _cvds = 0;
+		var _cvdr = 0;
+		var _cvrr = 0;
 		
 		var _gr = _ground == noone? 999999 : random_range(_ground[0], _ground[1]);
 		
@@ -106,8 +128,29 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		for(var i = -2; i < t; i++) {
 			var _i = i / TOTAL_FRAMES * pi * 4;
 			
-			_vx  = sin(_sw * _sp * _i) * _sg * _sx * (1 + i / TOTAL_FRAMES * _nx);
-			_vy += sin(_sw / _sp * _i * 2)   * _sy;
+			if(_curving != 0) {
+				_cvdr += _curving;
+				
+				_vx = lengthdir_x(_cvrr, _cvdr);
+				_vy = lengthdir_y(_cvrr, _cvdr);
+				
+				_cvrr    *= 0.95;
+				_curving = clamp(_curving * 1.05, -10, 10);
+				
+				if(abs(_cvdr - _cvds) > 300) _curving = 0;
+			} else {
+				_vx  = sin(_sw * _sp * _i) * _sg * _sx * (1 + i / TOTAL_FRAMES * _nx);
+				_vy += sin(_sw / _sp * _i * 2)   * _sy * (1 + i / TOTAL_FRAMES * _ny);
+				
+				if(_twist && random(1) < _twistr) {
+					_curving = random_range(_twists[0], _twists[1]) * sign(_vx);
+					_cvds    = point_direction(0, 0, _vx, _vy);
+					_cvdr    = _cvds;
+					_cvrr    = point_distance(0, 0, _vx, _vy) * 2;
+					
+					if(abs(_curving) <= 1) _curving = 0;
+				}
+			}
 			
 			if(_frc >= 0.2) {
 				_p0[0] = _p1[0];
@@ -145,6 +188,12 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _colr = getInputData(13);
 		var _alph = getInputData(14);
 		_ground   = getInputData(15)? getInputData(16) : noone;
+		_yswinn   = getInputData(17);
+		_twist    = getInputData(18);
+		_twistr   = getInputData(19);
+		_twists   = getInputData(20);
+		
+		_twistr = _twistr * _twistr * _twistr;
 		
 		var _sed = _seed;
 		
