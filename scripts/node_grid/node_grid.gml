@@ -52,10 +52,18 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 17] = nodeValue("Truchet", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 18] = nodeValue("Truchet seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random());
+	
+	inputs[| 19] = nodeValue("Truchet threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+		.setDisplay(VALUE_DISPLAY.slider)
+		
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 4, 15, 2, 13, 3, 14, 9, 8, 16,
 		["Render",	false], 10, 11, 5, 6, 7, 12, 
+		["Truchet",  true, 17], 18, 19, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -96,10 +104,13 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f_map("angle",	_data[ 4], _data[15], inputs[| 4]);
 			shader_set_f_map("shift",	_data[ 8], _data[16], inputs[| 8]);
 			
-			shader_set_i("mode",		_mode);
-			shader_set_f("seed", 		_data[11]);
-			shader_set_i("shiftAxis",	_data[ 9]);
-			shader_set_i("aa",			_data[12]);
+			shader_set_i("mode",		   _mode);
+			shader_set_f("seed", 		   _data[11]);
+			shader_set_i("shiftAxis",	   _data[ 9]);
+			shader_set_i("aa",			   _data[12]);
+			shader_set_i("textureTruchet", _data[17]);
+			shader_set_f("truchetSeed",    _data[18]);
+			shader_set_f("truchetThres",   _data[19]);
 			shader_set_color("gapCol",  _col_gap);
 			
 			_gra.shader_submit();

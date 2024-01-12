@@ -43,10 +43,18 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 14] = nodeValue("Truchet", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 15] = nodeValue("Truchet seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random());
+	
+	inputs[| 16] = nodeValue("Truchet threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+		.setDisplay(VALUE_DISPLAY.slider)
+		
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 3, 12, 2, 11, 4, 13,
 		["Render",	false], 7, 8, 5, 6, 9, 10, 
+		["Truchet",  true, 14], 15, 16, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -90,6 +98,10 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_i("mode",  _mode);
 			shader_set_i("aa",    _data[10]);
 			shader_set_color("gapCol",_col_gap);
+			
+			shader_set_i("textureTruchet", _data[14]);
+			shader_set_f("truchetSeed",    _data[15]);
+			shader_set_f("truchetThres",   _data[16]);
 			
 			_gra.shader_submit();
 			

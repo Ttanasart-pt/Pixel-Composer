@@ -14,6 +14,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	
 	activate_on_press = false;
 	clicked = false;
+	pressed = false;
 	
 	toggled = false;
 	
@@ -71,10 +72,13 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched_ext(spr, toggled? 2 : 1, _x, _y, _w, _h, b, 1);
-			if(!activate_on_press && mouse_release(mb_left, active))
+			if(!activate_on_press && pressed && mouse_release(mb_left, active))
 				trigger();
-			if(activate_on_press && mouse_press(mb_left, active))
-				trigger();
+				
+			if(mouse_press(mb_left, active)) {
+				pressed = true;
+				if(activate_on_press) trigger();
+			}
 				
 			if(mouse_click(mb_left, active)) {
 				draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, b, 1);
@@ -102,6 +106,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		if(WIDGET_CURRENT == self) draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);
 		
 		resetFocus();
+		
+		if(mouse_release(mb_left)) pressed = false;
 		
 		return _h;
 	} #endregion

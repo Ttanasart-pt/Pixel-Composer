@@ -36,6 +36,10 @@ uniform vec4  gradient_color[GRADIENT_LIMIT];
 uniform float gradient_time[GRADIENT_LIMIT];
 uniform int   gradient_keys;
 
+uniform int   textureTruchet;
+uniform float truchetSeed;
+uniform float truchetThres;
+
 float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 
 vec3 rgb2hsv(vec3 c) { #region
@@ -170,6 +174,15 @@ void main() { #region
 		colr = gradientEval(random(sqSt));
 	} else if(mode == 2) {
 		vec2 uv = fract(_pos * sca);
+		
+		if(textureTruchet == 1) {
+			float rx = random(floor(_pos * sca) + truchetSeed / 100.);
+			float ry = random(floor(_pos * sca) + truchetSeed / 100. + vec2(0.4864, 0.6879));
+			
+			if(rx > truchetThres) uv.x = 1. - uv.x;
+			if(ry > truchetThres) uv.y = 1. - uv.y;
+		}
+		
 		colr = texture2D( gm_BaseTexture, uv );
 	} else if(mode == 3) {
 		vec2 uv = fract(sqSt);

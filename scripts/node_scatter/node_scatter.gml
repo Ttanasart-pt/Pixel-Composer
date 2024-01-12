@@ -72,6 +72,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 22] = nodeValue("Scatter Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	
+	inputs[| 23] = nodeValue("Sort Y", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
@@ -83,7 +85,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Scatter",		false], 5, 6, 13, 14, 17, 9, 2,
 		["Path",		false], 19, 20, 21, 22, 
 		["Transform",	false], 3, 8, 7, 4,
-		["Render",		false], 18, 11, 12, 16, 
+		["Render",		false], 18, 11, 12, 16, 23, 
 	];
 	
 	attribute_surface_depth();
@@ -156,6 +158,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var pathRot = _data[20];
 		var pathShf = _data[21];
 		var pathDis = _data[22];
+		var sortY   = _data[23];
 		
 		var _in_w, _in_h;
 		
@@ -198,6 +201,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					BLEND_ADD;
 					break;
 			}
+			
+			var positions = array_create(_amount);
+			var posIndex  = 0;
 			
 			for(var i = 0; i < _amount; i++) {
 				var sp = noone, _x = 0, _y = 0;
@@ -289,11 +295,27 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_sct[_sct_len] = _atl;
 				_sct_len++;
 				
+				if(_dist == NODE_SCATTER_DIST.path)
+					path_line_index = floor(i / _pre_amount);
+			}
+			
+			if(sortY) array_sort(_sct, function(a1, a2) { return a1.y - a2.y; });
+			
+			for( var i = 0; i < _sct_len; i++ ) {
+				var _atl = _sct[i];
+				
+				surf = _atl.getSurface();
+				_x   = _atl.x;
+				_y	 = _atl.y;
+				_scx = _atl.sx;
+				_scy = _atl.sy;
+				_r	 = _atl.rotation;
+				clr	 = _atl.blend;
+				alp	 = _atl.alpha;
+				
 				draw_surface_ext_safe(surf, _x, _y, _scx, _scy, _r, clr, alp);
 				
-				if(_dist == NODE_SCATTER_DIST.path) {
-					path_line_index = floor(i / _pre_amount);
-				} else if(_dist == NODE_SCATTER_DIST.tile) {
+				if(_dist == NODE_SCATTER_DIST.tile) {
 					var _sw = surface_get_width_safe(surf)  * _scx;
 					var _sh = surface_get_height_safe(surf) * _scy;
 					
@@ -306,6 +328,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					if(_x > _dim[0] - _sw || _y > _dim[1] - _sh)	draw_surface_ext_safe(surf, _x - _dim[0], _y - _dim[1], _scx, _scy, _r, clr, alp);
 				}
 			}
+			
 			BLEND_NORMAL;
 		surface_reset_target(); 
 		

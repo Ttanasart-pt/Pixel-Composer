@@ -59,11 +59,16 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 11;
 	
+	inputs[| 12] = nodeValue("Echo", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 13] = nodeValue("Echo amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
+	
 	input_display_list = [ 11, 0, 
-		["Output",		true],	9, 1, 7,
+		["Output",		 true],	9, 1, 7,
 		["Position",	false], 2, 10, 
 		["Rotation",	false], 3, 5, 8, 
-		["Scale",		false], 6
+		["Scale",		false], 6, 
+		["Echo",		 true, 12], 13, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -73,6 +78,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	vel = 0;
 	prev_pos = [ 0, 0 ];
+	prev_data = noone;
 	
 	static getDimension = function(arr = 0) { #region
 		var _surf		= getSingleValue(0, arr);
@@ -186,6 +192,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var sca       = _data[6];
 		var mode      = _data[7];
 		
+		var echo      = _data[12];
+		var echo_amo  = _data[13];
+		
 		var cDep = attrDepth();
 		
 		var ww  = surface_get_width_safe(ins);
@@ -254,11 +263,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					var draw_x, draw_y;
 					draw_x = _px + pos[0];
 					draw_y = _py + pos[1];
-				
+					
 					if(pos_exact) {
 						draw_x = round(draw_x);
 						draw_y = round(draw_y);
 					}
+					
 					draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], c_white, 1);
 				}
 				
@@ -285,7 +295,31 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			surface_set_shader(_outSurf);
 			shader_set_interpolation(ins);
-			draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, 1);
+			
+			if(echo && CURRENT_FRAME && prev_data != noone) {
+				var _pre = prev_data[_array_index];
+				
+				for( var i = 0; i <= echo_amo; i++ ) {
+					var rat = i / echo_amo;
+					var _px = lerp(_pre[0][0], pos[0], rat);
+					var _py = lerp(_pre[0][1], pos[1], rat);
+					var _rt = lerp(_pre[1],    rot,    rat);
+					var _sx = lerp(_pre[2][0], sca[0], rat);
+					var _sy = lerp(_pre[2][1], sca[1], rat);
+					
+					var _ps = point_rotate(_px, _py, _px + anc[0], _py + anc[1], rot);
+					var _dx = _ps[0];
+					var _dy = _ps[1];
+					
+					if(pos_exact) {
+						_dx = round(_dx);
+						_dy = round(_dy);
+					}
+					
+					draw_surface_ext_safe(ins, _dx, _dy, _sx, _sy, _rt);
+				}
+			} else 
+				draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot);
 			
 			if(mode == 2) {
 				draw_surface_ext_safe(ins, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, 1);
@@ -302,6 +336,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_reset_shader();
 		#endregion
 		}
+		
+		prev_data[_array_index] = [
+			[ pos[0], pos[1] ],
+			rot,
+			[ sca[0], sca[1] ],
+		];
 		
 		return _outSurf;
 	} #endregion
