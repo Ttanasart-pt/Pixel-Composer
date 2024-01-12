@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_blinker",
+  "name": "node_mk_blinker",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "regions",
-    "path": "folders/nodes/data/generator/regions.yy",
+    "name": "MK effects",
+    "path": "folders/nodes/data/MK effects.yy",
   },
 }

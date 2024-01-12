@@ -99,8 +99,9 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _vx = 0;
 		var _vy = 1;
 		
-		var _p0;
-		var _p1 = [ _px, _py ];
+		var _p0  = [ 0, 0 ];
+		var _p1  = [ _px, _py ];
+		var _frc = 1;
 		
 		for(var i = -2; i < t; i++) {
 			var _i = i / TOTAL_FRAMES * pi * 4;
@@ -108,15 +109,18 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			_vx  = sin(_sw * _sp * _i) * _sg * _sx * (1 + i / TOTAL_FRAMES * _nx);
 			_vy += sin(_sw / _sp * _i * 2)   * _sy;
 			
-			if(_py <= _gr || i < 0) {
-				_p0 = [ _p1[0], _p1[1] ];
-				_p1 = [ _px, _py ];
+			if(_frc >= 0.2) {
+				_p0[0] = _p1[0];
+				_p1[0] = _px;
+				_px += (_vx + _wind[0]) * _sp * _frc;
 			}
 			
-			if(_py <= _gr) {
-				_px += (_vx + _wind[0]) * _sp;
-				_py += (_vy + _wind[1]) * _sp;
-			}
+			_p0[1] = _p1[1];
+			_p1[1] = _py;
+			_py += (_vy + _wind[1]) * _sp * _frc;
+			
+			if(_py > _gr) 
+				_frc *= 0.5;
 			
 			_vy += _gravity * _sp;
 		}
@@ -155,8 +159,9 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			
 			BLEND_OVERRIDE
 				draw_surface_safe(_surf);
-			BLEND_ALPHA_MULP
-			
+			BLEND_NORMAL
+				
+				shader_set(sh_draw_divide);
 				for( var i = 0; i < _amou; i++ ) {
 					_sed += 100;
 					
@@ -198,6 +203,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					
 					draw_set_alpha(1);
 				}
+				shader_reset();
 			BLEND_NORMAL
 		surface_reset_target();
 	} #endregion

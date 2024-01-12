@@ -1,13 +1,13 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform int useMask;
+uniform float tolerance;
+uniform int   useMask;
 uniform sampler2D mask;
 
-uniform vec4 colorTarget[32];
+#define PALETTE_LIMIT 128
+
+uniform vec4 colorTarget[PALETTE_LIMIT];
 uniform int colorTargetAmount;
 
 void main() {
@@ -26,7 +26,7 @@ void main() {
 		minDist = min(minDist, dist);
 	}
 	
-	if(minDist > 0.001) return;
+	if(minDist > tolerance) return;
 	
-	gl_FragColor = vec4(1.);
+	gl_FragColor = vec4(v_vTexcoord, 1., 1.);
 }
