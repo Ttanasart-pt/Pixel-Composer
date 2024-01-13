@@ -56,6 +56,12 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 	inputs[| 20] = nodeValue("Twist Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 10 ])
 		.setDisplay(VALUE_DISPLAY.range);
+		
+	inputs[| 21] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	
+	inputs[| 22] = nodeValue("Render Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Leaf", "Circle" ]);
 	
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -64,7 +70,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		["Spawn",     false], 3, 4, 
 		["Physics",   false], 10, 5, 12,  
 		["Swing",     false], 8, 6, 7, 11, 17, 
-		["Render",    false], 9, 13, 14, 
+		["Render",    false], 22, 9, 21, 13, 14, 
 		["Ground",     true, 15], 16, 
 		["Twist",      true, 18], 19, 20, 
 	];
@@ -81,8 +87,9 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	_twistr  = 0.01;
 	_twists  = [ 0, 0 ];
 	_ground  = noone;
+	_scale   = [ 0, 0 ];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		if(getInputData(15)) {
@@ -94,13 +101,21 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			draw_line(0, _y0, 999999, _y0);
 			draw_line(0, _y1, 999999, _y1);
 		}
-	}
+	} #endregion
 	
 	static getPosition = function(ind, t, _area) { #region
 		random_set_seed(ind);
 		
-		var _px = irandom_range(_area[0] - _area[2], _area[0] + _area[2]);
-		var _py = irandom_range(_area[1] - _area[3], _area[1] + _area[3]);
+		var _px = _area[0], _py = _area[1];
+		
+		if(_area[4] == 0) {
+			_px = irandom_range(_area[0] - _area[2], _area[0] + _area[2]);
+			_py = irandom_range(_area[1] - _area[3], _area[1] + _area[3]);
+		} else if(_area[4] == 1) {
+			var _dir = random(360);
+			_px = _area[0] + lengthdir_x(_area[2], _dir);
+			_py = _area[1] + lengthdir_y(_area[3], _dir);
+		}
 		
 		var _sg = choose(1, -1);
 		
@@ -124,9 +139,10 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _p0  = [ 0, 0 ];
 		var _p1  = [ _px, _py ];
 		var _frc = 1;
+		var life = 0;
 		
 		for(var i = -2; i < t; i++) {
-			var _i = i / TOTAL_FRAMES * pi * 4;
+			var _i = life / TOTAL_FRAMES * pi * 4;
 			
 			if(_curving != 0) {
 				_cvdr += _curving;
@@ -134,13 +150,13 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				_vx = lengthdir_x(_cvrr, _cvdr);
 				_vy = lengthdir_y(_cvrr, _cvdr);
 				
-				_cvrr    *= 0.95;
+				_cvrr    *= 0.975;
 				_curving = clamp(_curving * 1.05, -10, 10);
 				
 				if(abs(_cvdr - _cvds) > 300) _curving = 0;
 			} else {
-				_vx  = sin(_sw * _sp * _i) * _sg * _sx * (1 + i / TOTAL_FRAMES * _nx);
-				_vy += sin(_sw / _sp * _i * 2)   * _sy * (1 + i / TOTAL_FRAMES * _ny);
+				_vx  = sin(_sw * _sp * _i) * _sg * _sx * (1 + life / TOTAL_FRAMES * _nx);
+				_vy += sin(_sw / _sp * _i * 2)   * _sy * (1 + life / TOTAL_FRAMES * _ny);
 				
 				if(_twist && random(1) < _twistr) {
 					_curving = random_range(_twists[0], _twists[1]) * sign(_vx);
@@ -150,6 +166,8 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					
 					if(abs(_curving) <= 1) _curving = 0;
 				}
+				
+				life++;
 			}
 			
 			if(_frc >= 0.2) {
@@ -169,6 +187,12 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 		
 		return [ _p0, _p1, [ _px, _py ] ];
+	} #endregion
+	
+	static step = function() { #region
+		var _typ = getInputData(22);
+		
+		inputs[| 9].setVisible(_typ == 0);
 	} #endregion
 	
 	static update = function() { #region
@@ -192,6 +216,8 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		_twist    = getInputData(18);
 		_twistr   = getInputData(19);
 		_twists   = getInputData(20);
+		_scale    = getInputData(21);
+		var _rtyp = getInputData(22);
 		
 		_twistr = _twistr * _twistr * _twistr;
 		
@@ -226,14 +252,18 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					var _dr0 = point_direction(_p1[0], _p1[1], _p0[0], _p0[1]);
 					var _dr2 = point_direction(_p1[0], _p1[1], _p2[0], _p2[1]);
 					
-					var _p11 = [ _p1[0] + lengthdir_x(_size[1], _dr0 + 90), 
-					             _p1[1] + lengthdir_y(_size[1], _dr0 + 90) ];
-					var _p12 = [ _p1[0] + lengthdir_x(_size[1], _dr0 - 90), 
-					             _p1[1] + lengthdir_y(_size[1], _dr0 - 90) ];
-					var _p00 = [ _p1[0] + lengthdir_x(_size[0], _dr0), 
-					             _p1[1] + lengthdir_y(_size[0], _dr0) ];
-					var _p22 = [ _p1[0] + lengthdir_x(_size[0], _dr2), 
-					             _p1[1] + lengthdir_y(_size[0], _dr2) ];
+					var _sc = random_range_seed(_scale[0], _scale[1], _sed + 20);
+					var _sx = _size[0] * _sc;
+					var _sy = _size[1] * _sc;
+					
+					var _p11 = [ _p1[0] + lengthdir_x(_sy, _dr0 + 90), 
+					             _p1[1] + lengthdir_y(_sy, _dr0 + 90) ];
+					var _p12 = [ _p1[0] + lengthdir_x(_sy, _dr0 - 90), 
+					             _p1[1] + lengthdir_y(_sy, _dr0 - 90) ];
+					var _p00 = [ _p1[0] + lengthdir_x(_sx, _dr0), 
+					             _p1[1] + lengthdir_y(_sx, _dr0) ];
+					var _p22 = [ _p1[0] + lengthdir_x(_sx, _dr2), 
+					             _p1[1] + lengthdir_y(_sx, _dr2) ];
 					
 					var _cc = _colr.eval(_ind);
 					var _aa = eval_curve_x(_alph, _lif / TOTAL_FRAMES);
@@ -241,14 +271,18 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					draw_set_color(_cc);
 					draw_set_alpha(_aa);
 					
-					draw_primitive_begin(pr_trianglestrip);
+					if(_rtyp == 0) {
+						draw_primitive_begin(pr_trianglestrip);
 					
-						draw_vertex(_p00[0], _p00[1]);
-						draw_vertex(_p11[0], _p11[1]);
-						draw_vertex(_p12[0], _p12[1]);
-						draw_vertex(_p22[0], _p22[1]);
+							draw_vertex(_p00[0], _p00[1]);
+							draw_vertex(_p11[0], _p11[1]);
+							draw_vertex(_p12[0], _p12[1]);
+							draw_vertex(_p22[0], _p22[1]);
 						
-					draw_primitive_end();
+						draw_primitive_end();
+					} else if(_rtyp == 1) {
+						draw_circle_prec(_p0[0], _p0[1], _sc, false, 16);
+					}
 					
 					draw_set_alpha(1);
 				}

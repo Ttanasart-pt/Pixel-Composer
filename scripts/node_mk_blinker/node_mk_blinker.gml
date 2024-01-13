@@ -21,19 +21,30 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	inputs[| 7] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1 )
 		.setDisplay(VALUE_DISPLAY.slider);
+	
+	inputs[| 8] = nodeValue("Glow", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 9] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )
+		.setDisplay(VALUE_DISPLAY.slider, { range : [ 1, 8, 1 ] });
+	
+	inputs[| 10] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	outputs[| 1] = nodeValue("Light only", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 6, 
-		["Surfaces",	false], 0, 1, 
-		["Blink",		false], 2, 3, 4, 5, 7, 
+		["Surfaces", false], 0, 1, 
+		["Blink",	 false], 2, 3, 4, 5, 7, 
+		["Glow",	  true, 8], 9, 10, 
 	]
 	
 	temp_surface = [ surface_create( 1, 1 ), surface_create( 1, 1 ), surface_create( 1, 1 ) ];
 	
 	light_only = [];
+	
+	surface_blur_init();
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		if(_output_index == 1) return light_only[_array_index];
@@ -45,6 +56,9 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _trgC = _data[4];
 		var _ligC = _data[5];
 		var _tolr = _data[7];
+		var _glow  = _data[8];
+		var _glsz = _data[9];
+		var _glop = _data[10];
 		
 		if(!is_surface(_surf)) return _outSurf;
 		
@@ -93,14 +107,22 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			BLEND_NORMAL
 		surface_reset_target();
 		
+		if(_glow) var lightBlur = surface_apply_gaussian(light_only[_array_index], _glsz, true, c_black, 1);
+		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
+			
 			BLEND_OVERRIDE
-				
 				draw_surface(_surf, 0, 0);
+			
+			if(_glow) {
+				BLEND_ADD
+					draw_surface_ext(lightBlur, 0, 0, 1, 1, 0, c_white, _glop);
+			}
+			
 			BLEND_ALPHA_MULP
-				
 				draw_surface(temp_surface[2], 0, 0);
+				
 			BLEND_NORMAL
 		surface_reset_target();
 		

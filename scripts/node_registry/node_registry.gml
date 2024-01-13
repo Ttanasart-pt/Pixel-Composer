@@ -1058,6 +1058,8 @@ function __initNodes() {
 		addNodeObject(hid, "Sort Input",		s_node_sort_array,		"Node_Iterator_Sort_Inline_Input",		[1, Node_Iterator_Sort_Inline_Input]).hideRecent();
 		addNodeObject(hid, "Sort Output",		s_node_sort_array,		"Node_Iterator_Sort_Inline_Output",		[1, Node_Iterator_Sort_Inline_Output]).hideRecent();
 		
+		addNodeObject(hid, "MK Lens Flare",		s_node_mk_blinker,			"Node_MK_Flare",			[1, Node_MK_Flare]).setVersion(11630);
+		
 		ds_list_add(hid, "DynaSurf");
 		addNodeObject(hid, "Input",		s_node_pixel_builder,	"Node_DynaSurf_In",			[1, Node_DynaSurf_In]).hideRecent();
 		addNodeObject(hid, "Output",	s_node_pixel_builder,	"Node_DynaSurf_Out",		[1, Node_DynaSurf_Out]).hideRecent();
