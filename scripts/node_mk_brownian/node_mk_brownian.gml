@@ -34,6 +34,9 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 12] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 		
+	inputs[| 13] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+		
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 8, 
@@ -42,7 +45,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Spawn",     false], 3, 2, 
 		["Movement",  false], 5, 4, 9, 
 		["Smooth turn",   true, 11], 10, 
-		["Render",    false], 6, 7, 
+		["Render",    false], 13, 6, 7, 
 	];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -91,6 +94,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _dira = getInputData(10);
 		var _turn = getInputData(11);
 		var _dim  = getInputData(12);
+		var _size = getInputData(13);
 		
 		var _sed = _seed;
 		
@@ -107,6 +111,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				draw_surface_safe(_surf);
 			BLEND_ALPHA_MULP
 			
+			shader_set(sh_draw_divide);
 				for( var i = 0; i < _amou; i++ ) {
 					_sed += 100;
 					
@@ -117,18 +122,45 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					var _cc  = _colr.eval(_lifs / TOTAL_FRAMES);
 					var _aa  = eval_curve_x(_alph, _lif / TOTAL_FRAMES);
 					
+					random_set_seed(_sed + 50);
+					var _ss  = random_range(_size[0], _size[1]);
+					
 					if(_sprt == noone) {
 						draw_set_color(_cc);
 						draw_set_alpha(_aa);
-						draw_point(_pos[0], _pos[1]);
+						
+						switch(round(_ss)) {
+							case 0 : 
+							case 1 : 
+								draw_point(_pos[0], _pos[1]);
+								break;
+							case 2 : 
+								draw_point(_pos[0], _pos[1]);
+								draw_point(_pos[0] + 1, _pos[1]);
+								draw_point(_pos[0], _pos[1] + 1);
+								draw_point(_pos[0] + 1, _pos[1] + 1);
+								break;
+							case 3 : 
+								draw_point(_pos[0] - 1, _pos[1]);
+								draw_point(_pos[0] + 1, _pos[1]);
+								draw_point(_pos[0], _pos[1] + 1);
+								draw_point(_pos[0], _pos[1] - 1);
+								break;
+							default : 
+								draw_circle(round(_pos[0]), round(_pos[1]), round(_ss) - 2, false);
+								break;
+						}
+						
 						draw_set_alpha(1);
 					} else {
 						var _p = _sprt;
 						if(is_array(_p)) _p = array_safe_get(_p, irandom(array_length(_p) - 1));
 						
-						draw_surface_ext_safe(_p, _pos[0], _pos[1], 1, 1, 0, _cc, _aa);
+						draw_surface_ext_safe(_p, _pos[0], _pos[1], _ss, _ss, 0, _cc, _aa);
 					}
 				}
+			shader_reset();
+			
 			BLEND_NORMAL
 		surface_reset_target();
 	} #endregion

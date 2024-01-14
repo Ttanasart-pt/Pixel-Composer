@@ -676,6 +676,7 @@ function __initNodes() {
 		addNodeObject(generator, "MK Brownian",			s_node_mk_brownian,			"Node_MK_Brownian",			[1, Node_MK_Brownian]).setVersion(11630);
 		addNodeObject(generator, "MK Fall",				s_node_mk_fall,				"Node_MK_Fall",				[1, Node_MK_Fall], ["Leaf", "Leaves"]).setVersion(11630);
 		addNodeObject(generator, "MK Blinker",			s_node_mk_blinker,			"Node_MK_Blinker",			[1, Node_MK_Blinker]).setVersion(11630);
+		addNodeObject(generator, "MK Lens Flare",		s_node_mk_flare,			"Node_MK_Flare",			[1, Node_MK_Flare]).setVersion(11630);
 		//addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle]).patreonExtra();
 	#endregion
 	
@@ -1057,8 +1058,6 @@ function __initNodes() {
 		addNodeObject(hid, "Sort Array",		s_node_sort_array,		"Node_Iterate_Sort",					[1, Node_Iterate_Sort],, "Sort array using node graph.").hideRecent();
 		addNodeObject(hid, "Sort Input",		s_node_sort_array,		"Node_Iterator_Sort_Inline_Input",		[1, Node_Iterator_Sort_Inline_Input]).hideRecent();
 		addNodeObject(hid, "Sort Output",		s_node_sort_array,		"Node_Iterator_Sort_Inline_Output",		[1, Node_Iterator_Sort_Inline_Output]).hideRecent();
-		
-		addNodeObject(hid, "MK Lens Flare",		s_node_mk_blinker,			"Node_MK_Flare",			[1, Node_MK_Flare]).setVersion(11630);
 		
 		ds_list_add(hid, "DynaSurf");
 		addNodeObject(hid, "Input",		s_node_pixel_builder,	"Node_DynaSurf_In",			[1, Node_DynaSurf_In]).hideRecent();

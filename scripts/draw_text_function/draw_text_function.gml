@@ -79,7 +79,7 @@ function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false)
 	return h;
 } #endregion
 
-function draw_text_bbox(bbox, text) { #region
+function draw_text_bbox(bbox, text, scale = 1) { #region
 	INLINE
 	var ss = min(bbox.w / string_width(text), bbox.h / string_height(text));
 	    ss = max(0.5, ss);
@@ -87,7 +87,7 @@ function draw_text_bbox(bbox, text) { #region
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_center);
 	
-	draw_text_cut(bbox.xc, bbox.yc, text, bbox.w, ss);
+	draw_text_cut(bbox.xc, bbox.yc, text, bbox.w, ss * scale);
 } #endregion
 
 function draw_text_cut(x, y, str, w, scale = 1) { #region

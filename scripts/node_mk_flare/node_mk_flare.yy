@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "MK effects",
-    "path": "folders/nodes/data/MK effects.yy",
+    "name": "mk flare",
+    "path": "folders/nodes/data/MK effects/mk flare.yy",
   },
 }

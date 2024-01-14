@@ -289,9 +289,7 @@ function __part(_node) constructor {
 		} else if(arr_type == 3) ss = array_safe_get(ss, _index);
 		
 		var surface = is_instanceof(ss, SurfaceAtlas)? ss.getSurface() : node.surface_cache[$ ss];
-		
-		if(!is_surface(surface))
-			return;
+		var _useS   = is_surface(surface);
 		
 		var lifeRat = 1 - life / life_total;
 		var scCurve = sct == noone? 1 : sct.get(lifeRat);
@@ -299,8 +297,8 @@ function __part(_node) constructor {
 		scy   = drawsy * scCurve;
 		
 		var _xx, _yy;
-		var s_w = surface_get_width_safe(surface) * scx;
-		var s_h = surface_get_height_safe(surface) * scy;
+		var s_w = (_useS? surface_get_width(surface)  : 1) * scx;
+		var s_h = (_useS? surface_get_height(surface) : 1) * scy;
 		
 		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
 		_xx = drawx + _pp[0];
@@ -324,14 +322,50 @@ function __part(_node) constructor {
 		var x1 = _xx + s_w * 1.5;
 		var y1 = _yy + s_h * 1.5;
 		
-		if(x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0)
+		if(_useS && (x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0))
 			return;
 		
 		var cc = (col == -1)? c_white : col.eval(lifeRat);
 		if(blend != c_white) cc = colorMultiply(blend, cc);
 		alp_draw = alp * (alp_fade == noone? 1 : alp_fade.get(lifeRat)) * _color_get_alpha(cc);
 		
-		draw_surface_ext_safe(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
+		if(_useS) draw_surface_ext(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
+		else {
+			if(round(ss) == 0) return;
+			
+			var _s = shader_current();
+			shader_reset();
+			
+			var ss = round(min(scx, scy));
+			draw_set_color(cc);
+			draw_set_alpha(alp_draw);
+			
+			switch(round(ss)) {
+				case 0 : 
+				case 1 : 
+					draw_point(_xx, _yy);
+					break;
+				case 2 : 
+					draw_point(_xx + 0, _yy + 0);
+					draw_point(_xx + 1, _yy + 0);
+					draw_point(_xx + 0, _yy + 1);
+					draw_point(_xx + 1, _yy + 1);
+					break;
+				case 3 : 
+					draw_point(_xx - 1, _yy);
+					draw_point(_xx + 1, _yy);
+					draw_point(_xx, _yy + 1);
+					draw_point(_xx, _yy - 1);
+					break;
+				default : 
+					draw_circle(round(_xx), round(_yy), round(ss) - 2, false);
+					break;
+			}
+			
+			draw_set_alpha(1);
+			
+			shader_set(_s);
+		}
 	} #endregion
 	
 	static getPivot = function() { #region

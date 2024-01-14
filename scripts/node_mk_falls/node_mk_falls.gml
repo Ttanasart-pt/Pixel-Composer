@@ -234,7 +234,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			
 			BLEND_OVERRIDE
 				draw_surface_safe(_surf);
-			BLEND_NORMAL
+			BLEND_ALPHA_MULP
 				
 				shader_set(sh_draw_divide);
 				for( var i = 0; i < _amou; i++ ) {
@@ -287,6 +287,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					draw_set_alpha(1);
 				}
 				shader_reset();
+				
 			BLEND_NORMAL
 		surface_reset_target();
 	} #endregion

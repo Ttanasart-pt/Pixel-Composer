@@ -118,8 +118,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			}
 			
 			shader_set_interpolation(_outSurf);
-				for(var i = 0; i < attributes.part_amount; i++)
+				for(var i = 0; i < attributes.part_amount; i++) {
 					if(parts[i].active) parts[i].draw(_exact, _dim[0], _dim[1]);
+					//if(shader_current() != sh_sample) __shader_set = false;
+				}
 			surface_reset_shader();	
 		} else if(is_array(_outSurf)) {
 			for( var o = 0, n = array_length(_outSurf); o < n; o++ ) {
@@ -134,8 +136,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 				}
 		
 				shader_set_interpolation(_outSurf[o]);
-					for(var i = 0; i < attributes.part_amount; i++)
+					for(var i = 0; i < attributes.part_amount; i++) {
 						if(parts[i].active) parts[i].draw(_exact, _dim[0], _dim[1], o);
+						//if(shader_current() != sh_sample) __shader_set = false;
+					}
 				surface_reset_shader();
 			}
 		}

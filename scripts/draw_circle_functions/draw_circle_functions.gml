@@ -3,6 +3,19 @@ function draw_circle_prec(x, y, r, border, precision = 32) { #region
 	draw_circle(x, y, r, border);
 } #endregion
 
+function draw_polygon(x, y, r, sides, a = 0) { #region
+	draw_primitive_begin(pr_trianglelist);
+		for( var i = 0; i < sides; i++ ) {
+			var a0 = (i + 0) / sides * 360 + a;
+			var a1 = (i + 1) / sides * 360 + a;
+			
+			draw_vertex(x, y);
+			draw_vertex(x + lengthdir_x(r, a0), y + lengthdir_y(r, a0));
+			draw_vertex(x + lengthdir_x(r, a1), y + lengthdir_y(r, a1));
+		}
+	draw_primitive_end();
+} #endregion
+
 function draw_circle_border(xx, yy, r, w) { #region
 	var step = 32;
 	var angle_step = 360 / step;
