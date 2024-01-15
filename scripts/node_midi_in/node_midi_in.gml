@@ -65,14 +65,19 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		var _wx = TEXTBOX_HEIGHT + ui(16);
 		var _wy = by + bh + ui(8);
-		var _ww = _w - _wx;
 		var _wh = TEXTBOX_HEIGHT;
+		var _ww = _w - _wx - _wh - ui(8);
 		
-		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i++ ) {
-			var jun   = inputs[| i];
+		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i += data_length ) {
+			var jun   = inputs[| i + 0];
+			var nor   = inputs[| i + 1];
+			
 			var _name = jun.getName();
 			var wid   = jun.editWidget;
-			var _show = jun.showValue();
+			var shw   = jun.showValue();
+			
+			var nwid  = nor.editWidget;
+			var nshw  = nor.showValue();
 			
 			var bs = TEXTBOX_HEIGHT;
 			var bx = _x;
@@ -82,10 +87,15 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			var cc = index_watching == i? COLORS._main_value_negative : COLORS._main_icon;
 			draw_sprite_ext(THEME.circle_16, 0, bx + bs / 2, by + bs / 2, 1, 1, 0, cc, 1);
 			
-			var param = new widgetParam(_wx, _wy, _ww, _wh, _show, jun.display_data, _m);
-			wid.setFocusHover(_focus, _hover);
+			wid .setFocusHover(_focus, _hover);
+			nwid.setFocusHover(_focus, _hover);
 			
+			var param = new widgetParam(_wx, _wy, _ww, _wh, shw, jun.display_data, _m);
 			var hh = wid.drawParam(param) + ui(8);
+			
+			param   = new widgetParam(_wx + _ww + ui(8), _wy, _wh, _wh, nshw, nor.display_data, _m);
+			param.s = _wh;
+			nwid.drawParam(param);
 			
 			if(index_watching == i) {
 				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_value_negative);
@@ -103,16 +113,17 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		["Watchers", false], watcher_controllers, 
 	];
 	
-	setIsDynamicInput(1);
+	setIsDynamicInput(2);
 	
 	static createNewInput = function() { #region
 		index_watching = ds_list_size(inputs);
 		
 		var _inp = nodeValue("Index", self, JUNCTION_CONNECT.input,  VALUE_TYPE.integer, -1 );
-		ds_list_add(inputs,  _inp);
-		ds_list_add(outputs, nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, -1 ));
-		
 		_inp.editWidget.slidable = false;
+		ds_list_add(inputs,  _inp);
+		ds_list_add(inputs,  nodeValue("Normalize", self, JUNCTION_CONNECT.input,  VALUE_TYPE.boolean, false ));
+		
+		ds_list_add(outputs, nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1 ));
 	} #endregion
 	
 	index_watching = noone;
@@ -167,10 +178,17 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		outputs[| 1].setValue(notesPressing);
 		outputs[| 2].setValue(values);
 		
-		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i++ ) {
-			var _ikey = inputs[| i].getValue();
-			outputs[| i + 2].setName($"{_ikey} Value");
-			outputs[| i + 2].setValue(struct_try_get(values, _ikey, 0));
+		var _ind = 1;
+		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i += data_length ) {
+			var _ikey = inputs[| i + 0].getValue();
+			var _inor = inputs[| i + 1].getValue();
+			
+			var _val = struct_try_get(values, _ikey, 0);
+			if(_inor) _val /= 127;
+			
+			outputs[| 2 + _ind].setName($"{_ikey} Value");
+			outputs[| 2 + _ind].setValue(_val);
+			_ind++;
 		}
 		
 	} #endregion

@@ -519,6 +519,7 @@
     {"name":"globals","order":2,"path":"scripts/globals/globals.yy",},
     {"name":"s_node_noise_perlin","order":11,"path":"sprites/s_node_noise_perlin/s_node_noise_perlin.yy",},
     {"name":"sh_d3d_default","order":11,"path":"shaders/sh_d3d_default/sh_d3d_default.yy",},
+    {"name":"node_stagger","order":4,"path":"scripts/node_stagger/node_stagger.yy",},
     {"name":"s_node_gabor","order":32,"path":"sprites/s_node_gabor/s_node_gabor.yy",},
     {"name":"s_node_dithering","order":21,"path":"sprites/s_node_dithering/s_node_dithering.yy",},
     {"name":"node_3d_mesh_extrude","order":8,"path":"scripts/node_3d_mesh_extrude/node_3d_mesh_extrude.yy",},

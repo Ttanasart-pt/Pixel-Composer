@@ -331,12 +331,12 @@ function __part(_node) constructor {
 		
 		if(_useS) draw_surface_ext(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
 		else {
+			var ss = round(min(scx, scy));
 			if(round(ss) == 0) return;
 			
 			var _s = shader_current();
 			shader_reset();
 			
-			var ss = round(min(scx, scy));
 			draw_set_color(cc);
 			draw_set_alpha(alp_draw);
 			

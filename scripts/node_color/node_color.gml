@@ -21,6 +21,6 @@ function Node_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			return;
 		}
 		
-		draw_sprite_stretched_ext(THEME.palette_mask, 1, bbox.x0, bbox.y0, bbox.w, bbox.h, col, 1);
+		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
 	}
 }

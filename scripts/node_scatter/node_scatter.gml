@@ -299,6 +299,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					path_line_index = floor(i / _pre_amount);
 			}
 			
+			array_resize(_sct, _sct_len);
 			if(sortY) array_sort(_sct, function(a1, a2) { return a1.y - a2.y; });
 			
 			for( var i = 0; i < _sct_len; i++ ) {
@@ -332,7 +333,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			BLEND_NORMAL;
 		surface_reset_target(); 
 		
-		array_resize(_sct, _sct_len);
 		scatter_data = _sct;
 		
 		return _outSurf;

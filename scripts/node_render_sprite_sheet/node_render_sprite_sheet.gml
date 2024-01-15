@@ -43,15 +43,21 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	inputs[| 8] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ], "Starting/ending frames, set end to 0 to default to last frame.")
 		.setDisplay(VALUE_DISPLAY.vector)
 		
+	inputs[| 9] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 10] = nodeValue("Overlappable", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	outputs[| 1] = nodeValue("Atlas Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
 	input_display_list = [
-		["Surfaces", false], 0, 1, 2,
-		["Sprite",	 false], 3, 8, 
-		["Packing",	 false], 4, 5, 6, 7, 
+		["Surfaces",  false], 0, 1, 2,
+		["Sprite",	  false], 3, 8, 
+		["Packing",	  false], 4, 5, 6, 9, 7, 
+		["Rendering", false], 10, 
 	]
 	
 	attribute_surface_depth();
@@ -83,6 +89,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		inputs[| 2].setVisible(grup == SPRITE_ANIM_GROUP.animation);
 		inputs[| 4].setVisible(pack == SPRITE_STACK.grid);
 		inputs[| 5].setVisible(pack != SPRITE_STACK.grid);
+		inputs[| 6].setVisible(pack != SPRITE_STACK.grid);
+		inputs[| 9].setVisible(pack == SPRITE_STACK.grid);
 		
 		update_on_frame = grup == 0;
 	} #endregion
@@ -115,6 +123,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var spac = getInputData(6);
 		var padd = getInputData(7);
 		var rang = getInputData(8);
+		var spc2 = getInputData(9);
+		var ovlp = getInputData(10);
 		
 		var cDep = attrDepth();
 		
@@ -175,13 +185,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 							if(index >= _ed) break;
 						
 							row_w += surface_get_width_safe(inpt[index]);
-							if(j) row_w += spac;
+							if(j) row_w += spc2[0];
 							row_h  = max(row_h, surface_get_height_safe(inpt[index]));
 						}
 							
 						ww  = max(ww, row_w);
 						hh += row_h							
-						if(i) hh += spac;
+						if(i) hh += spc2[1];
 					}
 					break;
 			} 
@@ -195,7 +205,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			surface_set_target(_surf);
 			DRAW_CLEAR
 				
-			BLEND_OVERRIDE;
+			if(ovlp) BLEND_ALPHA_MULP
+			else     BLEND_OVERRIDE
+			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
 					var px = padd[2];
@@ -262,10 +274,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 							array_push(_atl, new SurfaceAtlas(inpt[index], px, py));
 							draw_surface_safe(inpt[index], px, py);
 								
-							px += _w + spac;
+							px += _w + spc2[0];
 							row_h = max(row_h, _h);
 						}
-						py += row_h + spac;
+						py += row_h + spc2[1];
 					}
 					break;
 				}
@@ -286,6 +298,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var spac = getInputData(6);
 		var padd = getInputData(7);
 		var rang = getInputData(8);
+		var spc2 = getInputData(9);
+		var ovlp = getInputData(10);
 		
 		var _atl = outputs[| 1].getValue();
 		var cDep = attrDepth();
@@ -337,8 +351,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					var col = getInputData(4);
 					var row = ceil(amo / col);
 						
-					ww = sw * col + spac * (col - 1);
-					hh = sh * row + spac * (row - 1);
+					ww = sw * col + spc2[0] * (col - 1);
+					hh = sh * row + spc2[1] * (row - 1);
 					break;
 			}
 				
@@ -369,6 +383,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var spac = getInputData(6);
 		var padd = getInputData(7);
 		var rang = getInputData(8);
+		var spc2 = getInputData(9);
+		var ovlp = getInputData(10);
 		
 		var _atl = outputs[| 1].getValue();
 		var cDep = attrDepth();
@@ -447,7 +463,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _sy = 0;
 			
 			surface_set_target(oo);
-			BLEND_OVERRIDE
+			if(ovlp) BLEND_ALPHA_MULP
+			else     BLEND_OVERRIDE
 			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
@@ -477,8 +494,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					var _row = floor(_frame / col);
 					var _col = safe_mod(_frame, col);
 					
-					_sx = px + _col * _w + max(0, _col) * spac;
-					_sy = py + _row * _h + max(0, _row) * spac;
+					_sx = px + _col * _w + max(0, _col) * spc2[0];
+					_sy = py + _row * _h + max(0, _row) * spc2[1];
 					break;
 			}
 			

@@ -8,7 +8,7 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-3, 3, 0.01] })
+		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(11);
 	
 	inputs[| 3] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)

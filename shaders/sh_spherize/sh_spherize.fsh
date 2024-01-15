@@ -97,7 +97,7 @@ void main() {
 	vec2  uv   = (v_vTexcoord - cen);
 	float d    = 1. - dot(uv, uv) / rad;
 	float dist = sqrt(abs(d));
-	vec4  c    = sampleTexture(cen + uv / dist);
+	vec4  c    = sampleTexture(mix(uv, cen + uv / dist, str));
 	
 	if(d > trim) gl_FragColor = c;
 }

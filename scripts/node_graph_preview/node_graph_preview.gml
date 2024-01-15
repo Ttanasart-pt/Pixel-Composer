@@ -23,7 +23,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 	input_display_list = [ 0,
 		["Display", false], 1, 2, 4, 3, 
-	]
+	];
 	
 	surf  = noone;
 	stick = true;
