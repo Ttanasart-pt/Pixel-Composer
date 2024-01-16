@@ -3,6 +3,12 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
 	self.draw = drawFn;
 	
 	if(registerFn != noone) register = registerFn;
+	else {
+		register = function(parent = noone) { 
+			if(!interactable) return;
+			self.parent = parent;
+		}
+	}
 }
 
 function Inspector_Sprite(spr) constructor { self.spr = spr; }

@@ -155,8 +155,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}); #endregion
 	
 	input_display_list = [ 
-		["Output",	false],	0, frame_renderer, 12, 13, 
-		["Brush",	false], 6, 15, 17, 16, 
+		["Output",	  false], 0, frame_renderer, 12, 13, 
+		["Brush",	   true], 6, 15, 17, 16, 
 		["Background", true, 10], 8, 14, 9, 
 	];
 	

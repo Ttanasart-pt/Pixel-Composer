@@ -230,7 +230,7 @@ function addNodePBCatagory(name, list, filter = []) { #region
 function addNodePCXCatagory(name, list, filter = []) { #region
 	ds_list_add(NODE_PCX_CATEGORY, { name: name, list: list, filter: filter });
 } #endregion
-	
+
 function __initNodes() {
 	global.__currPage = "";
 	

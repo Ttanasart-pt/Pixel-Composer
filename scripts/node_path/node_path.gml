@@ -149,24 +149,14 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					my = transform_sy + lengthdir_y(diss, ang);
 				}
 				
-				//var _tsx = transform_sx; 
-				//var _tsy = transform_sy;
-				//draw_set_color(COLORS._main_accent);
-				//draw_line(_tsx, _tsy, _tsx + lengthdir_x(1000,   0), _tsy + lengthdir_y(1000,   0));
-				//draw_line(_tsx, _tsy, _tsx + lengthdir_x(1000,  90), _tsy + lengthdir_y(1000,  90));
-				//draw_line(_tsx, _tsy, _tsx + lengthdir_x(1000, 180), _tsy + lengthdir_y(1000, 180));
-				//draw_line(_tsx, _tsy, _tsx + lengthdir_x(1000, 270), _tsy + lengthdir_y(1000, 270));
-				
 				var dx = mx - transform_mx;
 				var dy = my - transform_my;
 				
 				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-					var _p = getInputData(i);
-					var p = [
-						_p[0] + dx / _s,
-						_p[1] + dy / _s	
-					];
-					
+					var  p = array_clone(getInputData(i));
+					p[0] += dx / _s;
+					p[1] += dy / _s;
+						
 					if(inputs[| i].setValue(p))
 						_edited = true;
 				}

@@ -307,7 +307,7 @@ function __part(_node) constructor {
 		if(path != noone) {
 			var _div = pathDiv.get(lifeRat);
 			
-			pathPos = path.getPointRatio(lifeRat, pathIndex, pathPos);
+			pathPos = path.getPointRatio(clamp(lifeRat, 0, 0.99), pathIndex, pathPos);
 			_xx = _xx * _div + pathPos.x;
 			_yy = _yy * _div + pathPos.y;
 		}
@@ -358,7 +358,7 @@ function __part(_node) constructor {
 					draw_point(_xx, _yy - 1);
 					break;
 				default : 
-					draw_circle(round(_xx), round(_yy), round(ss) - 2, false);
+					draw_circle(_xx, _yy, (exact? round(ss) : ss) - 2, false);
 					break;
 			}
 			

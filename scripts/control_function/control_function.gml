@@ -69,7 +69,14 @@
 	function widget_next() {
 		INLINE
 		
-		if(array_length(WIDGET_ACTIVE) == 0) return;
+		if(array_length(WIDGET_ACTIVE) == 0) {
+			if(WIDGET_CURRENT != noone) {
+				WIDGET_CURRENT.deactivate();
+				WIDGET_CURRENT = noone;
+			}
+			return;
+		}
+		
 		if(WIDGET_CURRENT == noone) {
 			widget_start()
 			return;
@@ -88,7 +95,14 @@
 	}
 	
 	function widget_previous() {
-		if(array_length(WIDGET_ACTIVE) == 0) return;
+		if(array_length(WIDGET_ACTIVE) == 0) {
+			if(WIDGET_CURRENT != noone) {
+				WIDGET_CURRENT.deactivate();
+				WIDGET_CURRENT = noone;
+			}
+			return;
+		}
+		
 		if(WIDGET_CURRENT == noone) {
 			widget_start()
 			return;
@@ -119,9 +133,7 @@
 	
 	function widget_clear() {
 		if(WIDGET_CURRENT == noone) return;
-		if(array_length(WIDGET_ACTIVE) == 0) return;
 		
-		var ind = array_find(WIDGET_ACTIVE, WIDGET_CURRENT);
 		WIDGET_CURRENT.deactivate();
 		WIDGET_CURRENT = noone;
 	}
