@@ -12,6 +12,3 @@ var _dirr = point_direction(drag_cx, drag_cy, drag_sx, drag_sy);
 delta     = angle_difference(_dirr, drag_sa);
 delta_acc += delta;
 drag_sa   = _dirr;
-
-FOCUS = noone;
-HOVER = noone;

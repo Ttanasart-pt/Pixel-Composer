@@ -499,6 +499,7 @@
     {"id":{"name":"s_node_rigidSim_object_spawner","path":"sprites/s_node_rigidSim_object_spawner/s_node_rigidSim_object_spawner.yy",},},
     {"id":{"name":"node_pb_draw_roundrectangle","path":"scripts/node_pb_draw_roundrectangle/node_pb_draw_roundrectangle.yy",},},
     {"id":{"name":"draw_text_function","path":"scripts/draw_text_function/draw_text_function.yy",},},
+    {"id":{"name":"o_dialog_color_picker","path":"objects/o_dialog_color_picker/o_dialog_color_picker.yy",},},
     {"id":{"name":"o_dialog_file_name_collection","path":"objects/o_dialog_file_name_collection/o_dialog_file_name_collection.yy",},},
     {"id":{"name":"__node_3d_prim_cone","path":"scripts/__node_3d_prim_cone/__node_3d_prim_cone.yy",},},
     {"id":{"name":"node_line","path":"scripts/node_line/node_line.yy",},},

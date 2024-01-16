@@ -115,14 +115,16 @@ function rotatorRange(_onModify) : widget() constructor {
 				}
 			}
 			
-			if(mouse_press(mb_right)) {
+			MOUSE_BLOCK = true;
+			
+			if(mouse_check_button_pressed(mb_right)) {
 				for( var i = 0; i < 2; i++ ) onModify(i, drag_dat[i]);
 						
 				instance_destroy(rotator_Rotator);
 				dragging       = noone;
 				dragging_index = -1;
 				UNDO_HOLDING   = false;	
-			
+				
 			} else if(mouse_release(mb_left)) {
 				instance_destroy(rotator_Rotator);
 				dragging       = noone;

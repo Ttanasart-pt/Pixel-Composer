@@ -154,7 +154,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 						}
 					}
 					
-					if(mouse_press(mb_right)) {
+					MOUSE_BLOCK = true;
+					
+					if(mouse_check_button_pressed(mb_right)) {
 						for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
 						
 						instance_destroy(rotator_Rotator);
@@ -245,7 +247,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 						if(onModify(2, val)) UNDO_HOLDING = true;
 					}
 					
-					if(mouse_press(mb_right)) {
+					MOUSE_BLOCK = true;
+					
+					if(mouse_check_button_pressed(mb_right)) {
 						for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
 						
 						instance_destroy(rotator_Rotator);
@@ -328,7 +332,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 						
 					if(onModify(ind, val)) UNDO_HOLDING = true;
 					
-					if(mouse_press(mb_right)) {
+					MOUSE_BLOCK = true;
+					
+					if(mouse_check_button_pressed(mb_right)) {
 						for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
 						
 						instance_destroy(rotator_Rotator);
@@ -418,7 +424,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 						
 					if(onModify(ind, val)) UNDO_HOLDING = true;
 					
-					if(mouse_press(mb_right)) {
+					MOUSE_BLOCK = true;
+					
+					if(mouse_check_button_pressed(mb_right)) {
 						for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
 						
 						instance_destroy(rotator_Rotator);

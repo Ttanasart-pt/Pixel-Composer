@@ -19,7 +19,9 @@ if(slide_da == -1) {
 
 tb_de = 1;
 
-if(mouse_press(mb_right)) {
+MOUSE_BLOCK = true;
+
+if(mouse_check_button_pressed(mb_right)) {
 	tb._input_text = string_real(tb.slide_sv);
 	tb.apply();
 	tb.sliding = false;
@@ -42,7 +44,8 @@ if(!MOUSE_WRAPPING) {
 	
 	var spd = (slide_da? _ady : _adx) * _s;
 	    val = value_snap(tb.slide_sv + spd, _s);
-	if(tb.slide_int) val = round(val);
+	if(tb.slide_int)			val = round(val);
+	if(tb.slide_range != noone) val = clamp(val, tb.slide_range[0], tb.slide_range[1]);
 	
 	var _stp_sz = 50 * _s;
 	var _stp_fl = round(val / _stp_sz) * _stp_sz;
@@ -62,10 +65,12 @@ if(!MOUSE_WRAPPING) {
 		val = _snp_v;
 	
 	if(slide_da) {
+		var _val_y = slide_dy - (val - tb.slide_sv); 
+		
 		var _sdw = _tw;
 		var _sdh = 256;
 		var _sdx = slide_dx - _sdw / 2;
-		var _sdy = mouse_my - _sdh / 2;
+		var _sdy = _val_y   - _sdh / 2;
 		
 		draw_sprite_stretched_ext(THEME.textbox_number_slider, 0, _sdx, _sdy, _sdw, _sdh, COLORS.panel_inspector_group_bg, 1);
 		
@@ -79,11 +84,13 @@ if(!MOUSE_WRAPPING) {
 		
 		draw_set_color(val == tb.slide_sv? COLORS._main_accent : COLORS._main_text);
 		draw_set_alpha(1);
-		draw_text(slide_dx, slide_dy - (val - tb.slide_sv) / _s, val);
+		draw_text(slide_dx, _val_y, val);
 	} else {
+		var _val_x = slide_dx + (val - tb.slide_sv) / _s;
+		
 		var _sdw = 240;
 		var _sdh = 48;
-		var _sdx = mouse_mx - _sdw / 2;
+		var _sdx = _val_x - _sdw / 2;
 		var _sdy = slide_dy - _sdh / 2;
 		
 		draw_sprite_stretched_ext(THEME.textbox_number_slider, 0, _sdx, _sdy, _sdw, _sdh, COLORS.panel_inspector_group_bg, 1);
@@ -98,7 +105,7 @@ if(!MOUSE_WRAPPING) {
 		
 		draw_set_color(val == tb.slide_sv? COLORS._main_accent : COLORS._main_text);
 		draw_set_alpha(1);
-		draw_text(slide_dx + (val - tb.slide_sv) / _s, slide_dy, val);
+		draw_text(_val_x, slide_dy, val);
 	}
 					
 	tb._input_text = string_real(val);

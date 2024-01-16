@@ -85,11 +85,14 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 			if(onModify(dragging_index, val))
 				UNDO_HOLDING = true;
 			
-			if(mouse_press(mb_right)) {
+			MOUSE_BLOCK = true;
+			
+			if(mouse_check_button_pressed(mb_right)) {
 				onModify(dragging_index, drag_sv);
 				instance_destroy(dragging);
-				dragging = noone;
+				dragging     = noone;
 				UNDO_HOLDING = false;
+				
 			} else if(mouse_release(mb_left)) {
 				instance_destroy(dragging);
 				dragging = noone;

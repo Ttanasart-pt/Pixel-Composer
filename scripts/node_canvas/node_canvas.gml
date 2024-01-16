@@ -224,12 +224,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_settings          = [ [ "Channel", tool_channel_edit, "channel", tool_attribute ] ];
 		
 		tool_attribute.size = 1;
-		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.size = round(val); }).setSlidable(0.1, true);
+		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.size = max(1, round(val)); }).setSlidable(0.1, true, [ 1, 999999 ]);
 		tool_size_edit.font = f_p3;
 		tool_size           = [ "Size", tool_size_edit, "size", tool_attribute ];
 		
 		tool_attribute.thres = 0;
-		tool_thrs_edit       = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.thres = clamp(val, 0, 1); }).setSlidable(0.01);
+		tool_thrs_edit       = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.thres = clamp(val, 0, 1); }).setSlidable(0.01, false, [ 0, 1 ]);
 		tool_thrs_edit.font  = f_p3;
 		tool_thrs            = [ "Threshold", tool_thrs_edit, "thres", tool_attribute ];
 		
@@ -292,6 +292,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		yy += _cw + ui(8);
 		hh += _cw + ui(8);
 		
+		var _sel = noone;
+		
 		for( var i = 0, n = array_length(DEF_PALETTE); i < n; i++ ) {
 			var _c = DEF_PALETTE[i];
 			
@@ -301,6 +303,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			draw_sprite_stretched_ext(THEME.palette_mask, ii, _cx, yy, _cw, _ch, _c, 1);
 			
+			if(_c == tool_attribute.color) 
+				_sel = [ _cx, yy ];
+					
 			if(hover && point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch)) {
 				if(mouse_click(mb_left, focus))
 					tool_attribute.color = _c;
@@ -309,6 +314,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			yy += _ch;
 			hh += _ch;
 		}
+		
+		if(_sel != noone) 
+			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _sel[0] - _pd, _sel[1] - _pd, _cw + _pd * 2, _ch + _pd * 2, c_white, 1);
 		
 		return hh + ui(4);
 	} #endregion
@@ -701,7 +709,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(instance_exists(o_dialog_color_selector)) return;
+		if(instance_exists(o_dialog_color_picker)) return;
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
@@ -734,7 +742,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		brush_rand_dir = _brushRotR;
-		if(key_mod_press(ALT)) return;
+		
+		#region color selector
+			if(active && key_mod_press(ALT)) {
+				var dialog = instance_create(0, 0, o_dialog_color_picker);
+				dialog.onApply = setToolColor;
+				dialog.def_c   = _col;
+			}
+		#endregion
 		
 		var _canvas_surface = getCanvasSurface();
 		
@@ -1083,7 +1098,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 			surface_reset_shader();
 			
-			if(active && isUsingTool()) { 
+			if((active || mouse_holding) && isUsingTool()) { 
 				if(isUsingTool("Selection")) {
 					if(is_selected) {
 						var pos_x = _x + selection_position[0] * _s;

@@ -19,6 +19,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	slide_int   = false;
 	slide_sv    = 0;
 	slide_speed = 1 / 10;
+	slide_range = noone;
 	
 	starting_char = 1;
 	
@@ -58,10 +59,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		onModify(value);
 	} #endregion
 	
-	static setSlidable = function(slideStep = slide_speed, _slide_int = false) { #region
+	static setSlidable = function(slideStep = slide_speed, _slide_int = false, _slide_range = noone) { #region
 		slidable    = true;
 		slide_speed = slideStep;
 		slide_int   = _slide_int;
+		slide_range = _slide_range;
 		
 		return self;
 	} #endregion
