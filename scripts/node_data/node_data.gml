@@ -1741,6 +1741,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		isTool = true;
 	} #endregion
 	
+	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) { return 0; }
+	
 	static serialize = function(scale = false, preset = false) { #region
 		if(!active) return;
 		

@@ -1,7 +1,11 @@
 {
     "h1": {
-        "path": "./NotoSans-Medium.ttf",
+        "path": "./NotoSans-Bold.ttf",
         "size": 48
+    },
+    "h2": {
+        "path": "./NotoSans-Bold.ttf",
+        "size": 32
     },
     "h3": {
         "path": "./NotoSans-Bold.ttf",
@@ -33,6 +37,16 @@
     },
     "code": {
         "path": "./FiraCode-Medium.ttf",
-        "size": 12
+        "size": 10
+    },
+    "sdf": {
+        "path": "./NotoSans-Bold.ttf",
+        "size": 32,
+        "sdf": true
+    },
+    "sdf_medium": {
+        "path": "./NotoSans-Medium.ttf",
+        "size": 22,
+        "sdf": true
     }
 }

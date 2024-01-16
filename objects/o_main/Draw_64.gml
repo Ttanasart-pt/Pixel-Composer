@@ -13,11 +13,11 @@ draw_clear(COLORS.bg);
 
 #region widget scroll
 	if(!WIDGET_TAB_BLOCK) {
-		if(keyboard_check_pressed(vk_tab) && key_mod_press(SHIFT))
-			widget_previous();
-		else if(keyboard_check_pressed(vk_tab))
-			widget_next();
-	
+		if(keyboard_check_pressed(vk_tab) && key_mod_press(SHIFT)) {
+			if(key_mod_press(SHIFT)) widget_previous();
+			else                     widget_next();
+		}
+		
 		if(keyboard_check_pressed(vk_enter))
 			widget_trigger();
 		

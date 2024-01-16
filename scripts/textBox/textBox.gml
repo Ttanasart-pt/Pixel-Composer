@@ -14,9 +14,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	no_empty    = true;
 	auto_update = false;
 	
-	slidable = false;
-	sliding  = false;
-	slide_sv = 0;
+	slidable    = false;
+	sliding     = false;
+	slide_int   = false;
+	slide_sv    = 0;
 	slide_speed = 1 / 10;
 	
 	starting_char = 1;
@@ -57,9 +58,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		onModify(value);
 	} #endregion
 	
-	static setSlidable = function(slideStep = slide_speed) { #region
+	static setSlidable = function(slideStep = slide_speed, _slide_int = false) { #region
 		slidable    = true;
 		slide_speed = slideStep;
+		slide_int   = _slide_int;
 		
 		return self;
 	} #endregion
@@ -522,7 +524,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
 			
 			if(slidable) {
-				if(_w > ui(64))
+				if(_w > ui(64) && _h >= TEXTBOX_HEIGHT)
 					draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + _h / 2, 1, COLORS._main_icon, 0.5);
 				
 				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left, active)) {
@@ -546,7 +548,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			var dx = _m[0] - slide_mx;
 			var dy = _m[1] - slide_my;
 			
-			if(sliding == 1 && (abs(dx) > 16 || abs(dy) > 16)) {
+			if(sliding == 1 && (abs(dx) > 8 || abs(dy) > 8)) {
 				sliding  = 2;
 				slide_sv = toNumber(_input_text);
 				textBox_slider.activate()
@@ -554,7 +556,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			if(sliding == 2) {
 				textBox_slider.tb = self;
-				
 				if(mouse_release(mb_left)) deactivate();
 			}
 			

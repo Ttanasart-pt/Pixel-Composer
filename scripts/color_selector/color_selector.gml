@@ -118,7 +118,7 @@ function colorSelector(onApply = noone) constructor {
 		sat = round(color_get_saturation(current_color));
 		val = round(color_get_value(current_color));
 		
-		if(_apply && onApply != noone) onApply(current_color);
+		if(_apply && onApply != noone) onApply(int64(current_color));
 	}
 	
 	function setHSV(_apply = true) {
@@ -126,7 +126,7 @@ function colorSelector(onApply = noone) constructor {
 		var alp = color_get_alpha(current_color);
 		current_color = make_color_hsva(hue, sat, val, alp);
 		
-		if(_apply && onApply != noone) onApply(current_color);
+		if(_apply && onApply != noone) onApply(int64(current_color));
 	}
 	
 	function setColor(color, _apply = true) {
@@ -137,7 +137,7 @@ function colorSelector(onApply = noone) constructor {
 	
 	function colorPicker() {
 		if(!dropper_active) return;
-		dropper_color = draw_getpixel(mouse_mx, mouse_my);
+		dropper_color = int64(cola(draw_getpixel(mouse_mx, mouse_my)));
 	}
 	
 	static drawDropper = function(instance) {

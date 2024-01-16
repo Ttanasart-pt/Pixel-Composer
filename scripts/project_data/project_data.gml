@@ -57,7 +57,7 @@
 		
 		attributes = { #region
 			surface_dimension: [ 32, 32 ],
-			palette: [ c_black, c_white ]
+			palette: [ cola(c_black), cola(c_white) ]
 		} #endregion
 		
 		attributeEditor = [ #region

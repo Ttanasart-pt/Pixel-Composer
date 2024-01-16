@@ -73,12 +73,15 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			
 			draw_sprite(spr_knob, 1, px, py);
 			
-			if(val != drag_sv) {
-				if(onModify(val))
-					UNDO_HOLDING = true;
-			}
+			if(onModify(val))
+				UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_press(mb_right)) {
+				onModify(drag_sv);
+				instance_destroy(dragging);
+				dragging = noone;
+				UNDO_HOLDING = false;	
+			} else if(mouse_release(mb_left)) {
 				instance_destroy(dragging);
 				dragging = noone;
 				UNDO_HOLDING = false;

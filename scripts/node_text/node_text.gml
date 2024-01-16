@@ -80,7 +80,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static generateFont = function(_path, _size, _aa) { #region
 		if(PROJECT.animator.is_playing) return;
-		if(_path == _font_current && _size == _size_current && _aa == _aa_current) return;
+		if( font_exists(font)      && 
+			_path == _font_current && 
+			_size == _size_current && 
+			_aa   == _aa_current) return;
 		 
 		_font_current    = _path;
 		_size_current    = _size;
@@ -92,7 +95,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			font_delete(font);
 			
 		font_add_enable_aa(_aa);
-		font = _font_add(_path, _size);
+		font = _font_add(_path, _size,, true);
 	} #endregion
 	
 	static step = function() { #region

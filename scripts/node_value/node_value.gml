@@ -569,6 +569,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- animation ----
+		if(_type == VALUE_TYPE.color) {
+			if(is_array(_value)) {
+				for( var i = 0, n = array_length(_value); i < n; i++ ) 
+					_value[i] = int64(cola(_value[i]));
+			} else 
+				_value = int64(cola(_value));
+		}
+		
 		key_inter   = CURVE_TYPE.linear;
 		
 		is_anim		= false;
@@ -577,6 +585,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		sepable		= is_array(_value) && array_length(_value) > 1;
 		animator	= new valueAnimator(_value, self, false);
 		animators	= [];
+		
 		if(is_array(_value))
 		for( var i = 0, n = array_length(_value); i < n; i++ ) {
 			animators[i] = new valueAnimator(_value[i], self, true);

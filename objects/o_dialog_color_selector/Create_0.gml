@@ -98,7 +98,23 @@ event_inherited();
 					preset_selecting = i;
 					click_block = true;
 				}
-			}	
+			}
+			
+			if(isHover) {
+				if(i >= 0 && mouse_press(mb_right, interactable && sFOCUS)) {
+					hovering = pal;
+					
+					menuCall("palette_window_preset_menu",,, [
+						menuItem(__txtx("palette_editor_set_default", "Set as default"), function() { 
+							DEF_PALETTE = array_clone(hovering.palette);
+						}),
+						menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
+							file_delete(hovering.path); 
+							__initPalette();
+						}),
+					]);
+				}
+			}
 			
 			yy += _height + ui(4);
 			hh += _height + ui(4);

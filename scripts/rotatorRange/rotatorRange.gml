@@ -4,6 +4,7 @@ function rotatorRange(_onModify) : widget() constructor {
 	dragging_index = -1;
 	dragging = noone;
 	drag_sv  = 0;
+	drag_dat = [ 0, 0 ];
 	
 	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, val); } ).setSlidable();
 	
@@ -114,11 +115,19 @@ function rotatorRange(_onModify) : widget() constructor {
 				}
 			}
 			
-			if(mouse_release(mb_left)) {
-				instance_destroy(dragging);
-				dragging = noone;
+			if(mouse_press(mb_right)) {
+				for( var i = 0; i < 2; i++ ) onModify(i, drag_dat[i]);
+						
+				instance_destroy(rotator_Rotator);
+				dragging       = noone;
 				dragging_index = -1;
-				UNDO_HOLDING = false;
+				UNDO_HOLDING   = false;	
+			
+			} else if(mouse_release(mb_left)) {
+				instance_destroy(rotator_Rotator);
+				dragging       = noone;
+				dragging_index = -1;
+				UNDO_HOLDING   = false;
 			}
 		#endregion
 		} else if(hover) { #region
@@ -129,6 +138,7 @@ function rotatorRange(_onModify) : widget() constructor {
 					if(mouse_press(mb_left, active)) {
 						dragging_index = i;
 						drag_sv  = _data[i];
+						drag_dat = [ _data[0], _data[1] ];
 						dragging = instance_create(0, 0, rotator_Rotator).init(_m, _x, knob_y);
 					}
 				}
@@ -136,6 +146,7 @@ function rotatorRange(_onModify) : widget() constructor {
 			if(dragging_index == -1 && hover_arc && mouse_press(mb_left, active)) {
 				dragging_index = 2;
 				drag_sv  = [ _data[0], _data[1] ];
+				drag_dat = [ _data[0], _data[1] ];
 				dragging = instance_create(0, 0, rotator_Rotator).init(_m, _x, knob_y);
 			}
 		} #endregion

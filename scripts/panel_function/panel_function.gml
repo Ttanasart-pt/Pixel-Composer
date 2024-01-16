@@ -1,10 +1,11 @@
 #region data
 	globalvar PANEL_MAIN, PANEL_MENU, PANEL_PREVIEW, PANEL_INSPECTOR, PANEL_GRAPH, PANEL_ANIMATION, PANEL_COLLECTION;
-	globalvar FULL_SCREEN_PANEL, FULL_SCREEN_CONTENT;
+	globalvar FULL_SCREEN_PANEL, FULL_SCREEN_CONTENT, FULL_SCREEN_PARENT;
 	
 	PANEL_MAIN = 0;
 	FULL_SCREEN_PANEL   = noone;
 	FULL_SCREEN_CONTENT = noone;
+	FULL_SCREEN_PARENT  = noone;
 #endregion
 
 #region panel class
@@ -356,32 +357,34 @@
 
 #region fullscreen
 	function set_focus_fullscreen() {
-		if(FULL_SCREEN_PANEL != noone) {
+		if(FULL_SCREEN_PANEL == noone) {
+			var panel = PREFERENCES.expand_hover? HOVER : FOCUS;
+		
+			if(panel == noone)                   return;
+			if(!is_struct(panel))                return;
+			if(instanceof(panel) != "Panel")     return;
+			if(array_length(panel.content) == 0) return;
+		
+			var content = panel.getContent();
+			if(!content.expandable)   return;
+		
+			PANEL_MAIN.childs[| 1].setContent(content);
+			
+			FULL_SCREEN_PARENT  = PANEL_MAIN.childs[| 1];
+			FULL_SCREEN_PANEL   = panel;
+			FULL_SCREEN_CONTENT = content;
+		
+			content.onFullScreen();
+		} else {
 			PANEL_MAIN.childs[| 1].content = [];
 			PANEL_MAIN.refreshSize();
 			
 			FULL_SCREEN_CONTENT.onFullScreen();
 			
+			FULL_SCREEN_PARENT  = noone;
 			FULL_SCREEN_PANEL   = noone;
 			FULL_SCREEN_CONTENT = noone;
-			return;
 		}
-		
-		var panel = PREFERENCES.expand_hover? HOVER : FOCUS;
-		
-		if(panel == noone)                   return;
-		if(!is_struct(panel))                return;
-		if(instanceof(panel) != "Panel")     return;
-		if(array_length(panel.content) == 0) return;
-		
-		var content = panel.getContent();
-		if(!content.expandable)   return;
-		
-		PANEL_MAIN.childs[| 1].setContent(content);
-		FULL_SCREEN_PANEL   = panel;
-		FULL_SCREEN_CONTENT = content;
-		
-		content.onFullScreen();
 	}
 #endregion
 

@@ -27,13 +27,15 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 		return _nme;
 	}
 	
+	static setSetting = function(sets) { array_push(settings, sets); return self; }
+	
 	static addSetting = function(name, type, onEdit, keyAttr, val) {
 		var w;
 		
 		switch(type) {
 			case VALUE_TYPE.float : 
 				w = new textBox(TEXTBOX_INPUT.number, onEdit);
-				w.font = f_p2;
+				w.font = f_p3;
 				break;
 			case VALUE_TYPE.boolean : 
 				w = new checkBox(onEdit);

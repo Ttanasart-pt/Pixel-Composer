@@ -297,6 +297,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 	
 	function stepBegin() { #region
 		var con = getContent();
+		if(FULL_SCREEN_CONTENT != noone && con == FULL_SCREEN_CONTENT && self != FULL_SCREEN_PARENT) return;
+		
 		for( var i = 0, n = array_length(content); i < n; i++ ) 
 			content[i].panelStepBegin(self);
 		
@@ -632,12 +634,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 	
 	function drawPanel() { #region
 		if(w <= ui(16)) return;
+		
 		var tab = array_length(content) > 1;
 		tx = x; ty = y + tab * ui(tab_height);
 		tw = w; th = h - tab * ui(tab_height);
 		if(th < ui(16)) return;
 		
 		var con = getContent();
+		if(FULL_SCREEN_CONTENT != noone && con == FULL_SCREEN_CONTENT && self != FULL_SCREEN_PARENT) return;
+		
 		if(tab) drawTab();
 		
 		var p = ui(6);

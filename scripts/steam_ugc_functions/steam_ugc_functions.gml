@@ -61,6 +61,7 @@ function __loadSteamUGCCollection(file_id, f, path) {
 	var name = string_replace(filename_name(f), ".pxcc", "");
 	var file = new FileObject(name, path + "/" + f);
 	var icon_path = string_replace(path + "/" + f, ".pxcc", ".png");
+	
 	if(file_exists_empty(icon_path)) {
 		var _temp = sprite_add(icon_path, 0, false, false, 0, 0);
 		var ww = sprite_get_width(_temp);

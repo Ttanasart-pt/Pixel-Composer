@@ -1790,12 +1790,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(array_empty(nodes_selecting)) return;
 			clipboard_set_text("");
 		
-			var _map  = {};
-			var _node = [];
+			var _map   = {};
+			_map.nodes = [];
 			for(var i = 0; i < array_length(nodes_selecting); i++)
-				SAVE_NODE(_node, nodes_selecting[i],,,, getCurrentContext());
-			_map.nodes = _node;
-		
+				SAVE_NODE(_map.nodes, nodes_selecting[i],,,, getCurrentContext());
+			
 			clipboard_set_text(json_stringify_minify(_map));
 		} #endregion
 	

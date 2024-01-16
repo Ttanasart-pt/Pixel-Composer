@@ -156,8 +156,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [ 
 		["Output",	false],	0, frame_renderer, 12, 13, 
-		["Brush",	false], 6, 2, 1, 15, 17, 16, 
-		["Fill",	false], 3, 4, 
+		["Brush",	false], 6, 15, 17, 16, 
 		["Background", true, 10], 8, 14, 9, 
 	];
 	
@@ -218,23 +217,101 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		brush_seed      = irandom_range(100000, 999999);
 		brush_next_dist = 0;
 	
-		tool_channel_edit = new checkBoxGroup(THEME.tools_canvas_channel, function(ind, val) { tool_attribute.channel[ind] = val; });
+		tool_attribute.color   = cola(c_white);
+		
 		tool_attribute.channel = [ true, true, true, true ];
-		tool_settings = [
-			[ "Channel", tool_channel_edit, "channel", tool_attribute ],
-		];
-	
+		tool_channel_edit      = new checkBoxGroup(THEME.tools_canvas_channel, function(ind, val) { tool_attribute.channel[ind] = val; });
+		tool_settings          = [ [ "Channel", tool_channel_edit, "channel", tool_attribute ] ];
+		
+		tool_attribute.size = 1;
+		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.size = round(val); }).setSlidable(0.1, true);
+		tool_size_edit.font = f_p3;
+		tool_size           = [ "Size", tool_size_edit, "size", tool_attribute ];
+		
+		tool_attribute.thres = 0;
+		tool_thrs_edit       = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.thres = clamp(val, 0, 1); }).setSlidable(0.01);
+		tool_thrs_edit.font  = f_p3;
+		tool_thrs            = [ "Threshold", tool_thrs_edit, "thres", tool_attribute ];
+		
+		tool_attribute.fill8 = false;
+		tool_fil8_edit       = new checkBox(function() { tool_attribute.fill8 = !tool_attribute.fill8; });
+		tool_fil8            = [ "Diagonal", tool_fil8_edit, "fill8", tool_attribute ];
+		
 		tools = [
 			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle ]),
-			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil),
-			new NodeTool( "Eraser",		  THEME.canvas_tools_eraser),
-			new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect, THEME.canvas_tools_rect_fill ]),
-			new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ]),
-			new NodeTool( "Fill",		  THEME.canvas_tools_bucket),
+			
+			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
+					.setSetting(tool_size),
+					
+			new NodeTool( "Eraser",		  THEME.canvas_tools_eraser)
+					.setSetting(tool_size),
+					
+			new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect,  THEME.canvas_tools_rect_fill  ])
+					.setSetting(tool_size),
+					
+			new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ])
+					.setSetting(tool_size),
+					
+			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
+					.setSetting(tool_thrs)
+					.setSetting(tool_fil8),
 		];
 		
 		draw_stack  = ds_list_create();
 	#endregion
+	
+	function setToolColor(color) { tool_attribute.color = color; }
+	
+	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) { #region
+		var _sx0 = xx - tool_size / 2;
+		var _sx1 = xx + tool_size / 2;
+		var hh   = ui(8);
+		
+		yy += ui(4);
+		draw_set_color(COLORS._main_icon_dark);
+		draw_line_round(_sx0 + ui(8), yy, _sx1 - ui(8), yy, 2);
+		yy += ui(4);
+		
+		var _cx = _sx0 + ui(8);
+		var _cw = tool_size - ui(16);
+		var _ch = ui(12);
+		var _pd = ui(5);
+		
+		yy += ui(8);
+		hh += ui(8);
+		drawColor(tool_attribute.color, _cx, yy, _cw, _cw);
+		draw_sprite_stretched_ext(THEME.palette_selecting, 0, _cx - _pd, yy - _pd, _cw + _pd * 2, _cw + _pd * 2, c_white, 1);
+		
+		if(point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch) && mouse_press(mb_left, focus)) {
+			var dialog = dialogCall(o_dialog_color_selector);
+			dialog.selector.onApply = setToolColor;
+			dialog.onApply = setToolColor;
+			dialog.setDefault(tool_attribute.color);
+		}
+		
+		yy += _cw + ui(8);
+		hh += _cw + ui(8);
+		
+		for( var i = 0, n = array_length(DEF_PALETTE); i < n; i++ ) {
+			var _c = DEF_PALETTE[i];
+			
+			var ii = 0;
+			if(i == 0)     ii = 4;
+			if(i == n - 1) ii = 5;
+			
+			draw_sprite_stretched_ext(THEME.palette_mask, ii, _cx, yy, _cw, _ch, _c, 1);
+			
+			if(hover && point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch)) {
+				if(mouse_click(mb_left, focus))
+					tool_attribute.color = _c;
+			}
+			
+			yy += _ch;
+			hh += _ch;
+		}
+		
+		return hh + ui(4);
+	} #endregion
 	
 	function removeFrame(index = 0) { #region
 		if(attributes.frames <= 1) return;
@@ -341,7 +418,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function apply_draw_surface() { #region
-		var _alp = _color_get_alpha(getInputData(1));
+		var _alp = _color_get_alpha(tool_attribute.color);
 		
 		storeAction();
 		
@@ -526,12 +603,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function flood_fill_scanline(_x, _y, _surf, _thres, _corner = false) { #region
-		var _alp = _color_get_alpha(getInputData(1));
-		
 		var colorFill = draw_get_color() + (255 << 24);
 		var colorBase = get_color_buffer(_x, _y);
 		
-		if(colorFill == colorBase) return;
+		if(colorFill == colorBase) return; //Clicking on the same color as the fill color
+		
+		var _alp = _color_get_alpha(tool_attribute.color);
+		draw_set_alpha(_alp);
 		
 		var x1, y1, x_start;
 		var spanAbove, spanBelow;
@@ -546,78 +624,59 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			y1 = pos[1];
 			
 			var colorCurr = get_color_buffer(x1, y1);
-			//print("Searching " + string(x1) + ", " + string(y1) + ": " + string(colorCurr));
+			//print($"Searching {x1}, {y1}: {colorCurr}");
 			
-			if(colorCurr == colorFill) continue;		//Color in queue already filled
+			if(colorCurr == colorFill) continue; //Color in queue is already filled
 			
-			while(x1 >= 0 && ff_fillable(colorBase, colorFill, x1, y1, thr))			//Shift left
+			while(x1 > 0 && ff_fillable(colorBase, colorFill, x1 - 1, y1, thr)) //Move to the leftmost connected pixel in the same row.
 				x1--;
-			
-			x1++;
 			x_start = x1;
 			
 			spanAbove = false;
 			spanBelow = false;
 			
 			while(x1 < surface_w && ff_fillable(colorBase, colorFill, x1, y1, thr)) {
-				draw_set_alpha(_alp);
 				draw_point(x1, y1);
-				draw_set_alpha(1);
 				
 				var _cbuffer = canvas_buffer[preview_index];
 				buffer_seek(_cbuffer, buffer_seek_start, (surface_w * y1 + x1) * 4);
 				buffer_write(_cbuffer, buffer_u32, colorFill);
 			    
-				//print("> Filling " + string(x1) + ", " + string(y1) + ": " + string(get_color_buffer(x1, y1)));
+				//print($"> Filling {x1}, {y1}: {get_color_buffer(x1, y1)}");
 				
 				if(y1 > 0) {
-					if(x1 == x_start && x1 > 0 && _corner) {
-						if(!spanAbove && ff_fillable(colorBase, colorFill, x1 - 1, y1 - 1, thr)) {
-							ds_queue_enqueue(queue, [x1 - 1, y1 - 1]);
-						    spanAbove = true;
-					    }
-					}
+					if(_corner && x1 > 0 && ff_fillable(colorBase, colorFill, x1 - 1, y1 - 1, thr))		//Check top left pixel
+						ds_queue_enqueue(queue, [x1 - 1, y1 - 1]);
 					
-					if(ff_fillable(colorBase, colorFill, x1, y1 - 1, thr)) {
+					if(ff_fillable(colorBase, colorFill, x1, y1 - 1, thr))								//Check top pixel
 						ds_queue_enqueue(queue, [x1, y1 - 1]);
-				    }
 				}
 				
 				if(y1 < surface_h - 1) {
-					if(x1 == x_start && x1 > 0 && _corner) {
-						if(!spanBelow && ff_fillable(colorBase, colorFill, x1 - 1, y1 + 1, thr)) {
-							ds_queue_enqueue(queue, [x1 - 1, y1 + 1]);
-						    spanBelow = true;
-					    }
-					}
+					if(_corner && x1 > 0 && ff_fillable(colorBase, colorFill, x1 - 1, y1 + 1, thr))		//Check bottom left pixel
+						ds_queue_enqueue(queue, [x1 - 1, y1 + 1]);
 					
-					if(ff_fillable(colorBase, colorFill, x1, y1 + 1, thr)) {
+					if(ff_fillable(colorBase, colorFill, x1, y1 + 1, thr))								//Check bottom pixel
 					    ds_queue_enqueue(queue, [x1, y1 + 1]);
-				    }
 				}
+				
+				if(_corner && x1 < surface_w - 1) {
+					if(y1 > 0 && ff_fillable(colorBase, colorFill, x1 + 1, y1 - 1, thr))				//Check top right pixel
+						ds_queue_enqueue(queue, [x1 + 1, y1 - 1]);
+					
+					if(y1 < surface_h - 1 && ff_fillable(colorBase, colorFill, x1 + 1, y1 + 1, thr))	//Check bottom right pixel
+						ds_queue_enqueue(queue, [x1 + 1, y1 + 1]);
+				}
+				
 			    x1++;
 			}
-			
-			if(x1 < surface_w - 1 && _corner) {
-				if(y1 > 0) {
-					if(!spanAbove && ff_fillable(colorBase, colorFill, x1 + 1, y1 - 1, thr)) {
-						ds_queue_enqueue(queue, [x1 + 1, y1 - 1]);
-						spanAbove = true;
-					}
-				}
-				
-				if(y1 < surface_h - 1) {
-					if(!spanBelow && ff_fillable(colorBase, colorFill, x1 + 1, y1 + 1, thr)) {
-						ds_queue_enqueue(queue, [x1 + 1, y1 + 1]);
-						spanBelow = true;
-					}
-				}
-			}
-		}	
+		}
+		
+		draw_set_alpha(1);
 	} #endregion
 	
 	function canvas_fill(_x, _y, _surf, _thres) { #region
-		var _alp = _color_get_alpha(getInputData(1));
+		var _alp = _color_get_alpha(tool_attribute.color);
 		
 		var w = surface_get_width_safe(_surf);
 		var h = surface_get_height_safe(_surf);
@@ -648,10 +707,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
 		var _dim		= attributes.dimension;
-		var _col		= getInputData(1);
-		var _siz		= getInputData(2);
-		var _thr		= getInputData(3);
-		var _fill_type	= getInputData(4);
+		var _col		= tool_attribute.color;
+		var _siz		= tool_attribute.size;
+		var _thr		= tool_attribute.thres;
+		var _fill_type	= tool_attribute.fill8;
+		
 		var _prev		= getInputData(5);
 		var _brushSurf	= getInputData(6);
 		var _brushDist	= getInputData(15);
@@ -975,7 +1035,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _bg  = getInputData(8);
 			var _bga = getInputData(9);
 			var _bgr = getInputData(10);
-			var _alp = _color_get_alpha(getInputData(1));
+			var _alp = _color_get_alpha(_col);
 			
 			var __s = surface_get_target();
 			
@@ -1023,7 +1083,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 			surface_reset_shader();
 			
-			if(isUsingTool()) { 
+			if(active && isUsingTool()) { 
 				if(isUsingTool("Selection")) {
 					if(is_selected) {
 						var pos_x = _x + selection_position[0] * _s;
@@ -1063,6 +1123,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_rectangle(_x0, _y0, _x1 - 1, _y1 - 1, true);
 		
 		previewing = 1;
+		draw_set_alpha(1);
 	} #endregion
 	
 	static step = function() { #region

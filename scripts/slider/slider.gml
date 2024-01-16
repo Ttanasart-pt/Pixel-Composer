@@ -25,6 +25,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	spr		 = THEME.slider;
 	blend    = c_white;
 	dragging = noone;
+	drag_sv  = 0;
 	handle_w = ui(20);
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onApply);
@@ -124,7 +125,12 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			if(update_stat == SLIDER_UPDATE.realtime && onModify != noone && onModify(val)) 
 				UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_press(mb_right)) {
+				onModify(drag_sv);
+				instance_destroy(dragging);
+				dragging = noone;
+				UNDO_HOLDING = false;
+			} else if(mouse_release(mb_left)) {
 				if(update_stat == SLIDER_UPDATE.release && onModify != noone) 
 					onModify(val);
 				
@@ -142,6 +148,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 					dragging.drag_sx   = _m[0];
 					dragging.drag_msx  = _x;
 					dragging.drag_sw   = sw;
+					
+					drag_sv = current_value;
 				}
 				
 				var amo = slide_speed;

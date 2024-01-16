@@ -321,21 +321,9 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					var _p1  = _pos[1];
 					var _p2  = _pos[2];
 					
-					var _dr0 = point_direction(_p1[0], _p1[1], _p0[0], _p0[1]);
-					var _dr2 = point_direction(_p1[0], _p1[1], _p2[0], _p2[1]);
-					
 					var _sc = random_range_seed(_scale[0], _scale[1], _sed + 20);
 					var _sx = _size[0] * _sc;
 					var _sy = _size[1] * _sc;
-					
-					var _p11 = [ _p1[0] + lengthdir_x(_sy, _dr0 + 90), 
-					             _p1[1] + lengthdir_y(_sy, _dr0 + 90) ];
-					var _p12 = [ _p1[0] + lengthdir_x(_sy, _dr0 - 90), 
-					             _p1[1] + lengthdir_y(_sy, _dr0 - 90) ];
-					var _p00 = [ _p1[0] + lengthdir_x(_sx, _dr0), 
-					             _p1[1] + lengthdir_y(_sx, _dr0) ];
-					var _p22 = [ _p1[0] + lengthdir_x(_sx, _dr2), 
-					             _p1[1] + lengthdir_y(_sx, _dr2) ];
 					
 					var _cc = _colr.eval(_ind);
 					var _aa = eval_curve_x(_alph, _lif / TOTAL_FRAMES);
@@ -344,13 +332,23 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					draw_set_alpha(_aa);
 					
 					if(_rtyp == 0) {
-						draw_primitive_begin(pr_trianglestrip);
+						var _dr0 = point_direction(_p1[0], _p1[1], _p0[0], _p0[1]);
+						var _dr2 = point_direction(_p1[0], _p1[1], _p2[0], _p2[1]);
 					
+						var _p11 = [ _p1[0] + lengthdir_x(_sy, _dr0 + 90), 
+						             _p1[1] + lengthdir_y(_sy, _dr0 + 90) ];
+						var _p12 = [ _p1[0] + lengthdir_x(_sy, _dr0 - 90), 
+						             _p1[1] + lengthdir_y(_sy, _dr0 - 90) ];
+						var _p00 = [ _p1[0] + lengthdir_x(_sx, _dr0), 
+						             _p1[1] + lengthdir_y(_sx, _dr0) ];
+						var _p22 = [ _p1[0] + lengthdir_x(_sx, _dr2), 
+						             _p1[1] + lengthdir_y(_sx, _dr2) ];
+						
+						draw_primitive_begin(pr_trianglestrip);
 							draw_vertex(_p00[0], _p00[1]);
 							draw_vertex(_p11[0], _p11[1]);
 							draw_vertex(_p12[0], _p12[1]);
 							draw_vertex(_p22[0], _p22[1]);
-						
 						draw_primitive_end();
 					} else if(_rtyp == 1) {
 						draw_circle_prec(_p0[0], _p0[1], _sc, false, 16);

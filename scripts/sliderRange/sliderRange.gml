@@ -7,6 +7,7 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	onModify = _onModify;
 	
 	dragging = noone;
+	drag_sv  = 0;
 	
 	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, clamp(val, minn, maxx)); });
 	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, clamp(val, minn, maxx)); });
@@ -84,7 +85,12 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 			if(onModify(dragging_index, val))
 				UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_press(mb_right)) {
+				onModify(dragging_index, drag_sv);
+				instance_destroy(dragging);
+				dragging = noone;
+				UNDO_HOLDING = false;
+			} else if(mouse_release(mb_left)) {
 				instance_destroy(dragging);
 				dragging = noone;
 				UNDO_HOLDING = false;
@@ -108,6 +114,8 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 				dragging.drag_sx   = _m[0];
 				dragging.drag_msx  = _x0;
 				dragging.drag_sw   = sw;
+				
+				drag_sv = _data[_hover];
 			}
 		}
 		

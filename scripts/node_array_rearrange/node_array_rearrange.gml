@@ -1,0 +1,143 @@
+function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+	name = "Array Rearrange";
+	
+	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+		.setArrayDepth(1)
+		.setVisible(true, true);
+	
+	inputs[| 1] = nodeValue("Orders", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
+		.setArrayDepth(1);
+	
+	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0)
+		.setArrayDepth(1);
+	
+	type = VALUE_TYPE.any;
+	ordering = noone;
+	order_i  = noone;
+	order_y  = 0;
+	
+	rearranger = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+		var _arr = inputs[| 0].getValue();
+		var _ord = inputs[| 1].getValue();
+		
+		var amo  = array_length(_arr);
+		var _fx  = _x;
+		var _fy  = _y + ui(8);
+		var _fh  = inputs[| 0].type == VALUE_TYPE.surface? ui(48) : ui(32);
+		var _fsh = _fh - ui(8);
+		var _h   = amo * (_fh + ui(4));
+		
+		var _hov = 0;
+		
+		for( var i = 0; i < amo; i++ ) {
+			var _ind = _ord[i];
+			var _val = _arr[_ind];
+			
+			_fx = _x;
+			if(order_i == _ind) _fx += ui(16) * order_y;
+			
+			var _ffx = _fx + ui(32 + 4);
+			var _ffy = _fy + ui(4);
+			
+			draw_sprite_stretched_ext(THEME.timeline_node, 0, _fx, _fy, _w, _fh, CDEF.main_dkblack, 1);
+			var hv = ordering == noone && _hover && point_in_rectangle(_m[0], _m[1], _fx, _fy, _fx + ui(32), _fy + _fh);
+			var cc = hv? COLORS._main_icon : COLORS.node_composite_bg;
+			draw_sprite_ext(THEME.hamburger_s, 0, _fx + ui(16), _fy + _fh / 2, 1, 1, 0, cc, 1);
+			
+			if(_m[1] > _ffy) _hov = i;
+			
+			switch(inputs[| 0].type) {
+				case VALUE_TYPE.surface :
+					var _sw = surface_get_width_safe(_val);
+					var _sh = surface_get_height_safe(_val);
+					
+					var _ss = min( _fsh / _sw, _fsh / _sh );
+					    _sw *= _ss;
+					    _sh *= _ss;
+					
+					var _sx = _ffx + _fsh / 2 - _sw / 2;
+					var _sy = _ffy + _fsh / 2 - _sh / 2;
+					
+					draw_sprite_stretched_ext(THEME.timeline_node, 0, _ffx, _ffy, _fsh, _fsh, merge_color(COLORS._main_icon_dark, COLORS.node_composite_bg, 0.25), 1);
+					draw_surface_ext_safe(_val, _sx, _sy, _ss, _ss);
+					draw_set_color(COLORS.node_composite_bg);
+					break;
+					
+				default :
+					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+					draw_text(_ffx, _ffy + _fsh / 2, string(_val));
+					break;
+			}
+			
+			if(hv && mouse_press(mb_left, _focus)) {
+				ordering = _ind;
+				order_i  = _ind;
+			}
+			
+			_fy += _fh + ui(4);
+		}
+		
+		if(ordering != noone) {
+			order_y = lerp_float(order_y, 1, 5);
+			
+			array_remove(_ord, ordering);
+			array_insert(_ord, _hov, ordering);
+			inputs[| 1].setValue(_ord);
+			
+			if(mouse_release(mb_left)) 
+				ordering = noone;
+		} else 
+			order_y = lerp_float(order_y, 0, 5);
+		
+		return _h;
+	}); #endregion
+	
+	input_display_list = [ 0, ["Rearranger", false], rearranger ];
+	
+	static onValueFromUpdate = function(index = 0) {
+		if(LOADING || APPENDING) return;
+		
+		var _arr = inputs[| 0].getValue();
+		var _val = array_create(array_length(_arr));
+		for( var i = 0, n = array_length(_arr); i < n; i++ ) 
+			_val[i] = i;
+		inputs[| 1].setValue(_val);
+	}
+	
+	static step = function() {
+		var _typ = VALUE_TYPE.any;
+		if(inputs[| 0].value_from != noone) _typ = inputs[| 0].value_from.type;
+		
+		inputs[| 0].setType(_typ);
+		outputs[| 0].setType(_typ);
+		
+		if(type != _typ) {
+			if(_typ == VALUE_TYPE.surface) {
+				w = 128;
+				h = 128;
+				min_h = h;
+			} else {
+				w = 96;
+				h = 32 + 24;
+				min_h = h;
+			}
+			type = _typ;
+			will_setHeight = true;
+		}
+	}
+	
+	static update = function(frame = CURRENT_FRAME) {
+		var _arr = getInputData(0);
+		var _ord = getInputData(1);
+		
+		if(!is_array(_arr)) return;
+		var res = [];
+		
+		for( var i = 0; i < array_length(_arr); i++ ) {
+			var _ind = array_safe_get(_ord, i, i);
+			res[i]   = array_safe_get(_arr, _ind);
+		}
+		
+		outputs[| 0].setValue(res);
+	}
+}

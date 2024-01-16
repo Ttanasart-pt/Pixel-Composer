@@ -96,13 +96,14 @@ event_inherited();
 				}
 				
 				if(i >= 0 && mouse_press(mb_right, interactable && sFOCUS)) {
-					hovering_name = pal.path;
+					hovering = pal;
+					
 					menuCall("palette_window_preset_menu",,, [
 						menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
-							file_delete(hovering_name); 
+							file_delete(hovering.path); 
 							__initPalette();
-						})
-					])
+						}),
+					]);
 				}
 			}
 			

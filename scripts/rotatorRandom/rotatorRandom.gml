@@ -4,6 +4,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 	dragging = false;
 	dragging_index = -1;
 	drag_sv  = 0;
+	drag_dat = [ 0, 0, 0, 0, 0 ];
 	
 	mode = 0;
 	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable(true, 1);
@@ -153,8 +154,16 @@ function rotatorRandom(_onModify) : widget() constructor {
 						}
 					}
 					
-					if(mouse_release(mb_left)) {
-						instance_destroy(dragging);
+					if(mouse_press(mb_right)) {
+						for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
+						
+						instance_destroy(rotator_Rotator);
+						dragging       = noone;
+						dragging_index = -1;
+						UNDO_HOLDING   = false;	
+						
+					} else if(mouse_release(mb_left)) {
+						instance_destroy(rotator_Rotator);
 						dragging       = noone;
 						dragging_index = -1;
 						UNDO_HOLDING   = false;
@@ -170,6 +179,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 								dragging_index = i;
 								
 								drag_sv  = _data[1 + i];
+								drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 								dragging = instance_create(0, 0, rotator_Rotator).init(_m, knx, kny);
 							}
 						}
@@ -179,6 +189,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 						dragging_index = 2;
 						
 						drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
+						drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 						dragging = instance_create(0, 0, rotator_Rotator).init(_m, knx, kny);
 					}
 					#endregion
@@ -234,11 +245,19 @@ function rotatorRandom(_onModify) : widget() constructor {
 						if(onModify(2, val)) UNDO_HOLDING = true;
 					}
 					
-					if(mouse_release(mb_left)) {
-						instance_destroy(dragging);
-						dragging = noone;
+					if(mouse_press(mb_right)) {
+						for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
+						
+						instance_destroy(rotator_Rotator);
+						dragging       = noone;
 						dragging_index = -1;
-						UNDO_HOLDING = false;
+						UNDO_HOLDING   = false;	
+						
+					} else if(mouse_release(mb_left)) {
+						instance_destroy(rotator_Rotator);
+						dragging       = noone;
+						dragging_index = -1;
+						UNDO_HOLDING   = false;
 					}
 					#endregion
 				} else if(hover) { #region
@@ -249,6 +268,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							if(mouse_press(mb_left, active)) {
 								dragging_index = i;
 								drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
+								drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 								dragging = instance_create(0, 0, rotator_Rotator).init(_m, knx, kny);
 							}
 						}
@@ -308,11 +328,19 @@ function rotatorRandom(_onModify) : widget() constructor {
 						
 					if(onModify(ind, val)) UNDO_HOLDING = true;
 					
-					if(mouse_release(mb_left)) {
-						instance_destroy(dragging);
-						dragging = noone;
+					if(mouse_press(mb_right)) {
+						for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
+						
+						instance_destroy(rotator_Rotator);
+						dragging       = noone;
 						dragging_index = -1;
-						UNDO_HOLDING = false;
+						UNDO_HOLDING   = false;	
+						
+					} else if(mouse_release(mb_left)) {
+						instance_destroy(rotator_Rotator);
+						dragging       = noone;
+						dragging_index = -1;
+						UNDO_HOLDING   = false;
 					}
 					#endregion
 				} else if(hover) { #region
@@ -323,6 +351,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							if(mouse_press(mb_left, active)) {
 								dragging_index = i;
 								drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
+								drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 								dragging = instance_create(0, 0, rotator_Rotator).init(_m, knx, kny);
 							}
 						}
@@ -389,11 +418,19 @@ function rotatorRandom(_onModify) : widget() constructor {
 						
 					if(onModify(ind, val)) UNDO_HOLDING = true;
 					
-					if(mouse_release(mb_left)) {
-						instance_destroy(dragging);
-						dragging = noone;
+					if(mouse_press(mb_right)) {
+						for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
+						
+						instance_destroy(rotator_Rotator);
+						dragging       = noone;
 						dragging_index = -1;
-						UNDO_HOLDING = false;
+						UNDO_HOLDING   = false;	
+						
+					} else if(mouse_release(mb_left)) {
+						instance_destroy(rotator_Rotator);
+						dragging       = noone;
+						dragging_index = -1;
+						UNDO_HOLDING   = false;
 					}
 					#endregion
 				} else if(hover) { #region
@@ -404,6 +441,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							if(mouse_press(mb_left, active)) {
 								dragging_index = i;
 								drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
+								drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 								dragging = instance_create(0, 0, rotator_Rotator).init(_m, knx, kny);
 							}
 						}

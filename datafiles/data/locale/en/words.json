@@ -343,5 +343,9 @@
     "supporter": "Supporter",
     "supporter_exclusive": "Supporter exclusive",
 
+    "external": "External",
+    "mk_effects": "MK Effects",
+    "flip_fluid": "FLIP Fluid",
+
     "" : ""
 }

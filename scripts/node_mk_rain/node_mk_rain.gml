@@ -20,7 +20,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 6] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 		
-	inputs[| 7] = nodeValue("Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 1, 2 ])
+	inputs[| 7] = nodeValue("Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 2 ])
 		.setDisplay(VALUE_DISPLAY.vector_range);
 	
 	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100_000, 999_999));
@@ -38,7 +38,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 8, 
 		["Shape",	false], 9, 3, 4, 10, 11, 
-		["Effect",	false], 2, 1, 7, 12, 
+		["Effect",	false], 2, 1, 7, 
 		["Render",	false], 5, 6, 
 	];
 	
@@ -102,8 +102,13 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			repeat(_dens) {
 				random_set_seed(_seed); _seed += 100;
 				
-				var _rrad   = _rad * (1 + random_range(_trex[0], _trex[1]));
-				var _r_shf = random_range( -_rad,  _rad);
+				var _velRaw = max(1, random_range(_velo[0], _velo[1]));
+				var _vel    = _velRaw < 1? _velRaw : floor(_velRaw);
+				var _vex    = _velRaw < 1?       0 : frac(_velRaw);
+				var _ramo   = _vel == 0? 1 : max(1, 1 / _vel);
+				
+				var _rrad   = _rad * (1 + _vex);
+				var _r_shf  = random_range( -_rad,  _rad);
 				var _y_shf  = random(1);
 				
 				var _drpW, _drpH, _drpS;
@@ -129,34 +134,35 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var _radHx = _radH * _tr_span_x;
 				var _radHy = _radH * _tr_span_y;
 				
-				var _vel = max(1, irandom_range(_velo[0], _velo[1]));
 				var _prg = _y_shf + _vel * prg;
 				    _prg = frac(_prg) - 0.5;
-				
-				var _drpX = _rmx - _prg * _radHx * 2;
-				var _drpY = _rmy - _prg * _radHy * 2;
 				
 				if(!_1c) draw_set_color(_colr.eval(random(1)));
 				draw_set_alpha(random_range(_alph[0], _alph[1]));
 				
-				switch(_shap) {
-					case 0 : 
-						var _tr_span_w = _tr_span_x * _drpH;
-						var _tr_span_h = _tr_span_y * _drpH;
+				for( var j = 0; j < _ramo; j++ ) {
+					var _drpX = _rmx - (_prg + j / _ramo) * _radHx * 2;
+					var _drpY = _rmy - (_prg + j / _ramo) * _radHy * 2;
+				
+					switch(_shap) {
+						case 0 : 
+							var _tr_span_w = _tr_span_x * _drpH;
+							var _tr_span_h = _tr_span_y * _drpH;
 						
-						draw_line_width(
-							_drpX - _tr_span_w, _drpY - _tr_span_h,
-							_drpX + _tr_span_w, _drpY + _tr_span_h,
-							_drpW
-						);
-						break;
-					case 1 :
-						//draw_circle(round(_drpX), round(_drpY), _drpW, false);
-						draw_circle(_drpX, _drpY, _drpW, false);
-						break;
-					case 2 :
-						draw_surface_ext(_text, _drpX, _drpY, 1, 1, 0, draw_get_color(), draw_get_alpha());
-						break;
+							draw_line_width(
+								_drpX - _tr_span_w, _drpY - _tr_span_h,
+								_drpX + _tr_span_w, _drpY + _tr_span_h,
+								_drpW
+							);
+							break;
+						case 1 :
+							//draw_circle(round(_drpX), round(_drpY), _drpW, false);
+							draw_circle(_drpX, _drpY, _drpW, false);
+							break;
+						case 2 :
+							draw_surface_ext(_text, _drpX, _drpY, 1, 1, 0, draw_get_color(), draw_get_alpha());
+							break;
+					}
 				}
 			}
 			

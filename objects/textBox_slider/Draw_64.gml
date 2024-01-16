@@ -5,7 +5,7 @@ if(slide_da == -1) {
 	var _dist = point_distance(slide_dx, slide_dy, mouse_mx, mouse_my);
 	var _dirr = point_direction(slide_dx, slide_dy, mouse_mx, mouse_my);
 	
-	if(_dist > 16) {
+	if(_dist > 8) {
 		     if(_dirr <  45) slide_da = 0;
 		else if(_dirr < 135) slide_da = 1;
 		else if(_dirr < 225) slide_da = 0;
@@ -13,6 +13,19 @@ if(slide_da == -1) {
 		else                 slide_da = 0;
 	}
 	
+	tb = noone;
+	exit;
+}
+
+tb_de = 1;
+
+if(mouse_press(mb_right)) {
+	tb._input_text = string_real(tb.slide_sv);
+	tb.apply();
+	tb.sliding = false;
+	tb.deactivate();
+	
+	UNDO_HOLDING = false;
 	tb = noone;
 	exit;
 }
@@ -29,6 +42,7 @@ if(!MOUSE_WRAPPING) {
 	
 	var spd = (slide_da? _ady : _adx) * _s;
 	    val = value_snap(tb.slide_sv + spd, _s);
+	if(tb.slide_int) val = round(val);
 	
 	var _stp_sz = 50 * _s;
 	var _stp_fl = round(val / _stp_sz) * _stp_sz;

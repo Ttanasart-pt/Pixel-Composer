@@ -8,15 +8,15 @@ function gradientKey(time, value) constructor { #region
 	self.time  = time;
 	self.value = value;
 	
-	static clone = function() { return new gradientKey(time, value); }
+	static clone     = function() { return new gradientKey(time, value); }
 	static serialize = function() { return { time, value }; }
 } #endregion
 
 function gradientObject(color = c_black) constructor { #region
 	static GRADIENT_LIMIT = 128;
 	
-	if(is_array(color)) keys = [ new gradientKey(0, color[0]), new gradientKey(1, color[1]) ];
-	else				keys = [ new gradientKey(0, color) ];
+	if(is_array(color)) keys = [ new gradientKey(0, cola(color[0])), new gradientKey(1, cola(color[1])) ];
+	else				keys = [ new gradientKey(0, cola(color)) ];
 	type = GRADIENT_INTER.smooth;
 	surf = noone;
 	
@@ -234,12 +234,13 @@ function gradientObject(color = c_black) constructor { #region
 			
 			return self;
 		}
-			
+		
 		type = struct_try_get(s, "type");
 		keys = array_create(array_length(s.keys));
 		for( var i = 0, n = array_length(s.keys); i < n; i++ ) {
 			var _time  = real(s.keys[i].time);
 			var _value = real(s.keys[i].value);
+			    _value = PROJECT.version < 11640 && !is_int64(_value)? cola(_value) : int64(_value);
 			
 			keys[i] = new gradientKey(_time, _value); 
 		}

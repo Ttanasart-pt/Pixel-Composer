@@ -6,9 +6,11 @@ function curveBox(_onModify) : widget() constructor {
 	node_drag_typ = -1;
 	zoom_level    = 1;
 	zoom_level_to = 1;
-	zoom_min = 1;
-	zoom_max = 3;
-	zooming = false;
+	zoom_min      = 1;
+	zoom_max      = 3;
+	zooming       = false;
+	
+	show_coord = false;
 	
 	miny = 0;
 	maxy = 1;
@@ -61,6 +63,8 @@ function curveBox(_onModify) : widget() constructor {
 		curve_surface = surface_verify(curve_surface, cw, _h);
 		
 		if(node_dragging != -1) { #region editing
+			show_coord = true;
+			
 			if(node_drag_typ == 0) { 
 				var node_point = (node_dragging - 2) / 6;
 				if(node_point > 0 && node_point < points - 1) {
@@ -299,6 +303,8 @@ function curveBox(_onModify) : widget() constructor {
 		#endregion
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + cw, _y + _h)) { #region
+			show_coord = true;
+			
 			if(mouse_press(mb_left, active)) {
 				if(node_hovering == -1) {
 					var _ind = point_insert * 6;
@@ -331,14 +337,21 @@ function curveBox(_onModify) : widget() constructor {
 			
 			if(node_hovering == -1 && mouse_press(mb_right, active)) {
 				menuCall("widget_curve", rx + _m[0], ry + _m[1], [
+					menuItemGroup(__txt("Presets"), [ 
+						[ [THEME.curve_presets, 0], function() { onModify(CURVE_DEF_00); } ],
+						[ [THEME.curve_presets, 1], function() { onModify(CURVE_DEF_11); } ],
+						[ [THEME.curve_presets, 2], function() { onModify(CURVE_DEF_01); } ],
+						[ [THEME.curve_presets, 3], function() { onModify(CURVE_DEF_10); } ],
+					]),
+					-1,
 					menuItem(grid_show? __txt("Hide grid") : __txt("Show grid"), function() { grid_show = !grid_show; }),
 					menuItem(__txt("Snap to grid"), function() { grid_snap = !grid_snap; },,, function() { return grid_snap } ),
-					menuItemGroup("Grid size", [
+					menuItemGroup(__txt("Grid size"), [
 						[ "1%",  function() { grid_step = 0.01; } ],
 						[ "5%",  function() { grid_step = 0.05; } ],
 						[ "10%", function() { grid_step = 0.10; } ],
 						[ "25%", function() { grid_step = 0.25; } ],
-					])
+					]),
 				]);
 			}
 		} #endregion
@@ -347,16 +360,18 @@ function curveBox(_onModify) : widget() constructor {
 		draw_set_color(COLORS.widget_curve_outline);
 		draw_rectangle(_x, _y, _x + cw, _y + _h, true);
 		
-		var tx = _x + cw - ui(6);
-		var ty = _y + _h - ui(6);
+		if(show_coord) {
+			var tx = _x + cw - ui(6);
+			var ty = _y + _h - ui(6);
 			
-		draw_set_text(f_p2, fa_right, fa_bottom, display_sel? COLORS._main_text: COLORS._main_text_sub);
-		draw_text_add(tx, ty, $"{display_sel == 2? "dy" : "y"}: {string_format(display_pos_y * 100, -1, 2)}%");
+			draw_set_text(f_p2, fa_right, fa_bottom, display_sel? COLORS._main_text: COLORS._main_text_sub);
+			draw_text_add(tx, ty, $"{display_sel == 2? "dy" : "y"}: {string_format(display_pos_y * 100, -1, 2)}%");
 			
-		ty -= line_get_height();
-		draw_text_add(tx, ty, $"{display_sel == 2? "dx" : "x"}: {string_format(display_pos_x * 100, -1, 2)}%");
-			
-			
+			ty -= line_get_height();
+			draw_text_add(tx, ty, $"{display_sel == 2? "dx" : "x"}: {string_format(display_pos_x * 100, -1, 2)}%");
+		}
+		
+		show_coord = false;
 		resetFocus();
 		
 		return h;

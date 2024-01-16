@@ -671,6 +671,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			} else if(prop.type == VALUE_TYPE.gradient) {
 				var grad = new gradientObject();
 				_val = grad.deserialize(value);
+			} else if(prop.type == VALUE_TYPE.color) {
+				if(is_array(_val)) {
+					for( var i = 0, n = array_length(_val); i < n; i++ )
+						_val[i] = PROJECT.version < 11640 && !is_int64(_val[i])? cola(_val[i]) : int64(_val[i]);
+				} else 
+					_val = PROJECT.version < 11640 && !is_int64(_val)? cola(_val) : int64(_val);
 			} else if(!sep_axis && typeArray(prop.display_type)) {
 				_val = [];
 				
@@ -681,7 +687,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					for(var j = 0; j < array_length(base); j++)
 						_val[j] = processValue(value);
 				}
-			} 
+			}
 			
 			//print($"Deserialize {prop.node.name}:{prop.name} = {_val} ");
 			var vk = new valueKey(_time, _val, self, ease_in, ease_out);

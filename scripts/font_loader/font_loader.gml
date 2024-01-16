@@ -1,23 +1,25 @@
-globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, GLYPH_MAP;
+globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, FONT_CUST_CACHE, GLYPH_MAP;
 globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code, f_sdf, f_sdf_medium;
 
-FONT_DEF      = true;
-FONT_CACHE    = {};
-FONT_ISLOADED = false;
-GLYPH_MAP     = {};
+FONT_DEF        = true;
+FONT_CACHE      = {};
+FONT_CUST_CACHE = {};
+FONT_ISLOADED   = false;
+GLYPH_MAP       = {};
 
-function _font_add(path, size, sdf = false) { #region
+function _font_add(path, size, sdf = false, custom = false) { #region
+	var _cache = custom? FONT_CUST_CACHE : FONT_CACHE;
 	var font_cache_dir = DIRECTORY + "font_cache";
 	directory_verify(font_cache_dir);
 	
 	var _key = $"{filename_name_only(path)}_{size}_{sdf}";
-	if(struct_has(FONT_CACHE, _key) && font_exists(FONT_CACHE[$ _key]))
-		return FONT_CACHE[$ _key];
+	if(struct_has(_cache, _key) && font_exists(_cache[$ _key]))
+		return _cache[$ _key];
 	
 	var _t = current_time;
 	var _f = font_add(path, size, false, false, 0, 0);
 	if(sdf) font_enable_sdf(_f, true);
-	FONT_CACHE[$ _key] = _f;
+	_cache[$ _key] = _f;
 	
 	_font_extend_locale(_f, _f);
 	

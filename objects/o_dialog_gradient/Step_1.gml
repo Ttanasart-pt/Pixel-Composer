@@ -10,7 +10,7 @@ if !ready exit;
 	}
 	doDrag();
 	
-	if(sFOCUS) {
+	if(sFOCUS && WIDGET_CURRENT == noone) {
 		if(keyboard_check_pressed(vk_enter)) {
 			onApply(gradient);
 			instance_destroy();

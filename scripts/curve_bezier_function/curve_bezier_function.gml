@@ -1,5 +1,7 @@
 //curve format [-cx0, -cy0, x0, y0, +cx0, +cy0, -cx1, -cy1, x1, y1, +cx1, +cy1]
-//segment format [y0, +cx0, +cy0, -cx1, -cy1, y1];
+//segment format [y0, +cx0, +cy0, -cx1, -cy1, y1]
+
+#macro CURVE_DEF_00 [0, 0, 0, 0, 1/3,    0, /**/ -1/3,    0, 1, 0, 0, 0]
 #macro CURVE_DEF_01 [0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0]
 #macro CURVE_DEF_10 [0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
 #macro CURVE_DEF_11 [0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]

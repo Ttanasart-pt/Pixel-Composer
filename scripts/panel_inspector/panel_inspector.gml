@@ -633,12 +633,6 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			if(jun.connect_type == JUNCTION_CONNECT.input && jun.type == VALUE_TYPE.color && jun.display_type == VALUE_DISPLAY._default) { #region color picker
 				pickers[color_picker_index] = jun;
-				if(color_picker_index == picker_index) {
-					if(color_picking && WIDGET_CURRENT == noone && !instance_exists(_p_dialog))
-						jun.editWidget.onColorPick();
-					color_picker_selecting = jun;
-				}
-				
 				color_picker_index++;
 			} #endregion
 			
@@ -702,19 +696,21 @@ function Panel_Inspector() : PanelContent() constructor {
 		}
 		
 		#region color picker
-			if(color_picker_selecting == noone)
-				picker_selecting = 0;
-		
+			//if(color_picker_selecting == noone)
+			//	picker_selecting = 0;
+			
 			if(key_mod_press(ALT) && color_picker_index) {
-				var _p = picker_index;
+				pickers[picker_index].editWidget.onColorPick();
+				
+				//var _p = picker_index;
 			
-				if(mouse_wheel_down()) picker_index = safe_mod(picker_index + 1 + color_picker_index, color_picker_index);
-				if(mouse_wheel_up())   picker_index = safe_mod(picker_index - 1 + color_picker_index, color_picker_index);
+				//if(mouse_wheel_down()) picker_index = safe_mod(picker_index + 1 + color_picker_index, color_picker_index);
+				//if(mouse_wheel_up())   picker_index = safe_mod(picker_index - 1 + color_picker_index, color_picker_index);
 			
-				if(_p != picker_index) {
-					instance_destroy(o_dialog_color_selector);
-					pickers[picker_index].editWidget.onColorPick();
-				}
+				//if(_p != picker_index) {
+				//	instance_destroy(o_dialog_color_selector);
+				//	pickers[picker_index].editWidget.onColorPick();
+				//}
 			}
 			
 			if(MESSAGE != noone && MESSAGE.type == "Color") {
