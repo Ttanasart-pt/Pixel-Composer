@@ -26,7 +26,12 @@ event_inherited();
 		[ "BBMOD", "BlueBurn" ],
 		
 		[ "Additional help", "ChatGPT by OpenAI" ],
-	]
+	];
+	
+	patreons = "";
+	
+	if(os_is_network_connected())
+		patron_list_id = http_get("https://gist.githubusercontent.com/Ttanasart-pt/573ab1dea80606616cac5ba497e528fd/raw/6bd76af8751416cd08f9c268cd6b7fb0c06611a1/patreon");
 	
 	sc_thank = new scrollPane(dialog_w - ui(64), thank_h, function(_y, _m) {
 		var cx = sc_thank.surface_w / 2;
@@ -35,27 +40,37 @@ event_inherited();
 		draw_clear_alpha(COLORS.dialog_about_bg, 0);
 		
 		BLEND_OVERRIDE
-		draw_set_font(f_p2);
-		draw_set_color(COLORS._main_text_sub);
+		draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
 		draw_text(cx, yy, "Special Thanks");
 		
 		for( var i = 0, n = array_length(credits); i < n; i++ ) {
 			yy += line_get_height(, 8); 
-			draw_set_font(f_p2);
-			draw_set_color(COLORS._main_text_sub);
+			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
 			draw_text(cx, yy, credits[i][0]);
 			
 			yy += string_height(credits[i][0]); 
-			draw_set_font(f_p0b);
-			draw_set_color(COLORS._main_text);
+			draw_set_text(f_p0b, fa_center, fa_top, COLORS._main_text);
 			draw_text(cx, yy, credits[i][1]);
 			
 			yy += ui(8);
 		}
 		
-		draw_set_font(f_p0);
-		draw_set_color(COLORS._main_text_sub);
 		yy += ui(40); 
+		
+		if(patreons != "") {
+			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
+			draw_text(cx, yy, "Patreon Suporters");
+			yy += line_get_height();
+			
+			draw_set_text(f_p0b, fa_center, fa_top, COLORS._main_text);
+			draw_text_ext(cx, yy, patreons, -1, sc_thank.surface_w);
+			yy += string_height_ext(patreons, -1, sc_thank.surface_w);
+			
+			yy += ui(8);
+		}
+		
+		yy += ui(40); 
+		draw_set_text(f_p0b, fa_center, fa_top, COLORS._main_text_sub);
 		draw_text_line(cx, yy, "Made with GameMaker Studio 2, Adobe Illustrator, Aseprite", -1, sc_thank.w - ui(16));
 		yy += ui(32);
 		BLEND_NORMAL

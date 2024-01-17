@@ -54,7 +54,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 15] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, @"What to do when input array of surface.
 - Spread: Create Array of output each scattering single surface.
 - Mixed: Create single output scattering multiple images.")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output",  "Mixed" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output", "Index", "Random", "Data", "Texture" ]);
 		
 	inputs[| 16] = nodeValue("Multiply alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		
@@ -74,14 +74,19 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 22] = nodeValue("Scatter Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
 	inputs[| 23] = nodeValue("Sort Y", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
-		
+	
+	inputs[| 24] = nodeValue("Array indices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
+		.setArrayDepth(1);
+	
+	inputs[| 25] = nodeValue("Array texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
 		.rejectArrayProcess();
 	
 	input_display_list = [ 
-		["Surfaces", 	 true], 0, 1, 15, 10, 
+		["Surfaces", 	 true], 0, 1, 15, 10, 24, 25, 
 		["Scatter",		false], 5, 6, 13, 14, 17, 9, 2,
 		["Path",		false], 19, 20, 21, 22, 
 		["Transform",	false], 3, 8, 7, 4,
@@ -93,8 +98,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	scatter_data = [];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(process_amount > 1) return;
-		
 		var _distType	= current_data[6];
 		if(_distType < 3)
 			inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -112,7 +115,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static step = function() { #region
 		var _dis = getInputData(6);
 		var _arr = getInputData(15);
-		inputs[| 0].array_depth = _arr;
+		inputs[| 0].array_depth = bool(_arr);
 		
 		inputs[| 13].setVisible(_dis == 2, _dis == 2);
 		inputs[| 14].setVisible(_dis == 3, _dis == 3);
@@ -122,6 +125,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 20].setVisible(_dis == 4);
 		inputs[| 21].setVisible(_dis == 4);
 		inputs[| 22].setVisible(_dis == 4);
+		inputs[| 24].setVisible(_arr == 3, _arr == 3);
+		inputs[| 25].setVisible(_arr == 4, _arr == 4);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -147,9 +152,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _unis	= _data[8];
 		
 		var seed	= _data[10];
-		
 		var color	= _data[11];
 		var alpha	= _data[12];
+		var _arr    = _data[15];
 		var mulpA	= _data[16];
 		var useV	= _data[17];
 		var blend   = _data[18];
@@ -159,6 +164,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var pathShf = _data[21];
 		var pathDis = _data[22];
 		var sortY   = _data[23];
+		var arrId   = _data[24];
+		var arrTex  = _data[25], useArrTex = is_surface(arrTex);
 		
 		var _in_w, _in_h;
 		
@@ -206,6 +213,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var posIndex  = 0;
 			
 			for(var i = 0; i < _amount; i++) {
+				if(is_array(_inSurf) && array_length(_inSurf) == 0) break;
+				
 				var sp = noone, _x = 0, _y = 0;
 				var _v = noone;
 				
@@ -234,8 +243,22 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_x = pp.x + random_range_seed(-pathDis, pathDis, _sed); _sed++;
 					_y = pp.y + random_range_seed(-pathDis, pathDis, _sed); _sed++;
 				} else if(_dist == NODE_SCATTER_DIST.tile) {
-					_x = random_range_seed(0, _dim[0], _sed); _sed++;
-					_y = random_range_seed(0, _dim[1], _sed); _sed++;
+					if(_scat == 0) {
+						var _col = ceil(sqrt(_amount));
+						var _row = ceil(_amount / _col);
+				
+						var _iwid = _dim[0] / _col;
+						var _ihig = _dim[1] / _row;
+						
+						var _irow = floor(i / _col);
+						var _icol = safe_mod(i, _col);
+						
+						_x = _icol * _iwid;
+						_y = _irow * _ihig;
+					} else if(_scat == 1) {
+						_x = random_range_seed(0, _dim[0], _sed); _sed++;
+						_y = random_range_seed(0, _dim[1], _sed); _sed++;
+					}
 				}
 				
 				var posS = _dist < 4? seed + _y * _dim[0] + _x : seed + i * 100;
@@ -263,22 +286,24 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				var surf = _inSurf;
 				var ind  = 0;
+				
 				if(is_array(_inSurf)) {
-					if(array_length(_inSurf) == 0) break;
+					switch(_arr) { 
+						case 1 : ind  = safe_mod(i, array_length(_inSurf));						break;
+						case 2 : ind  = irandom_seed(array_length(_inSurf) - 1, posS); posS++;	break;
+						case 3 : ind  = array_safe_get(arrId, i, 0);							break;
+						case 4 : if(useArrTex) ind = color_get_brightness(surface_get_pixel(arrTex, _x, _y)) * (array_length(_inSurf) - 1); break;
+					}
 					
-					ind  = irandom_seed(array_length(_inSurf) - 1, posS);
-					surf = _inSurf[ind]; 
-					posS++;
+					surf = array_safe_get(_inSurf, ind, 0); 
 				}
 				
 				var sw = surface_get_width_safe(surf);
 				var sh = surface_get_height_safe(surf);
-			
-				if(_dist != NODE_SCATTER_DIST.area || _scat != AREA_SCATTER.uniform) {
-					var p = point_rotate(-sw / 2 * _scx, -sh * _scy / 2, 0, 0, _r);
-					_x += p[0];
-					_y += p[1];
-				}
+				
+				var _p = point_rotate(_x - sw / 2 * _scx, _y - sh * _scy / 2, _x, _y, _r);
+				_x = _p[0];
+				_y = _p[1];
 				
 				var grSamp = random_seed(1, posS); posS++;
 				if(vCol && _v != noone)

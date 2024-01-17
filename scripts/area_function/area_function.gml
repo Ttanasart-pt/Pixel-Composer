@@ -27,22 +27,47 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 	switch(distrib) {
 		case AREA_DISTRIBUTION.area : 
 			if(scatter == AREA_SCATTER.uniform) {
-				var _col = ceil(sqrt(total));
-				var _row = ceil(total / _col);
+				if(_area_t == AREA_SHAPE.rectangle) {
+					var _col = ceil(sqrt(total));
+					var _row = ceil(total / _col);
 				
-				var _iwid = _area_w * 2 / _col;
-				var _ihig = _area_h * 2 / _row;
+					var _iwid = _area_w * 2 / _col;
+					var _ihig = _area_h * 2 / _row;
 	
-				var _irow = floor(index / _col);
-				var _icol = safe_mod(index, _col);
+					var _irow = floor(index / _col);
+					var _icol = safe_mod(index, _col);
 						
-				xx = _area_x - _area_w + _icol * _iwid;
-				yy = _area_y - _area_h + _irow * _ihig;
+					xx = _area_x - _area_w + (_icol + 0.5) * _iwid;
+					yy = _area_y - _area_h + (_irow + 0.5) * _ihig;
+				} else {
+					if(index == 0) {
+						xx = _area_x;
+						yy = _area_y;
+						break;
+					}
+					
+					var _r = _area_w;
+					var _a = _area_w / _area_h;
+					
+					var _tm = floor(total / (2 * pi));
+					var _tn = ceil(sqrt(2 * _tm + 1 / 2) - 1 / 2);
+					var _s  = _r / _tn;
+					
+					var _m = floor(index / (2 * pi));
+					var _n = floor(sqrt(2 * _m + 1 / 2) - 1 / 2);
+					
+					var _sr = (_n + 1) * _s;
+					var _tt = floor((_n * (_n + 1)) / 2 * pi * 2);
+					var _sa = (index - _tt) / (min(total - _tt, floor((_n + 1) * 2 * pi)) - 1) * 360;
+					
+					xx = _area_x + lengthdir_x(_sr, _sa);
+					yy = _area_y + lengthdir_y(_sr, _sa) / _a;
+				}
 			} else if(scatter == AREA_SCATTER.random) {
 				if(_area_t == AREA_SHAPE.rectangle) {
 					xx = _area_x + random_range_seed(-_area_w, _area_w, _sed); _sed++;
 					yy = _area_y + random_range_seed(-_area_h, _area_h, _sed); _sed++;
-				} else {
+				} else if(_area_t == AREA_SHAPE.elipse) {
 					var rr = random_seed(360, _sed); _sed++;
 					xx = _area_x + lengthdir_x(1, rr) * random_seed(_area_w, _sed); _sed++;
 					yy = _area_y + lengthdir_y(1, rr) * random_seed(_area_h, _sed); _sed++;
@@ -53,22 +78,35 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 		case AREA_DISTRIBUTION.border :
 			if(scatter == AREA_SCATTER.uniform) {
 				if(_area_t == AREA_SHAPE.rectangle) {
-					var perimeter = _area_w * 2 + _area_h * 2;
-					var i = perimeter * index / total;
-					if(i < _area_w) {
-						xx = _area_x + random_range_seed(-_area_w, _area_w, _sed); _sed++;
+					var perimeter = _area_w * 4 + _area_h * 4;
+					var d = perimeter / total;
+					var l = perimeter * index / total;
+					
+					if(l <= _area_w * 2) {
+						xx = _area_x - _area_w + l;
 						yy = _area_y - _area_h;
-					} else if(i < _area_w + _area_h) {
-						xx = _area_x - _area_w;
-						yy = _area_y + random_range_seed(-_area_h, _area_h, _sed); _sed++;
-					} else if(i < _area_w * 2 + _area_h) {
-						xx = _area_x + random_range_seed(-_area_w, _area_w, _sed); _sed++;
-						yy = _area_y + _area_h;	
-					} else {
+						break;
+					} l -= _area_w * 2;
+					
+					if(l <= _area_h * 2) {
 						xx = _area_x + _area_w;
-						yy = _area_y + random_range_seed(-_area_h, _area_h, _sed); _sed++;
-					}
-				} else {
+						yy = _area_y - _area_h + l;
+						break;
+					} l -= _area_h * 2;
+					
+					if(l <= _area_w * 2) {
+						xx = _area_x + _area_w - l;
+						yy = _area_y + _area_h;
+						break;
+					} l -= _area_w * 2;
+					
+					if(l <= _area_h * 2) {
+						xx = _area_x - _area_w;
+						yy = _area_y + _area_h - l;
+						break;
+					} l -= _area_h * 2;
+					
+				} else if(_area_t == AREA_SHAPE.elipse) {
 					var rr = 360 * index / total;
 					xx = _area_x + lengthdir_x(_area_w, rr);
 					yy = _area_y + lengthdir_y(_area_h, rr);
@@ -90,7 +128,7 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 						xx = _area_x + _area_w;
 						yy = _area_y + random_range_seed(-_area_h, _area_h, _sed); _sed++;
 					}
-				} else {
+				} else if(_area_t == AREA_SHAPE.elipse) {
 					var rr = random_seed(360, _sed); _sed++;
 					xx = _area_x + lengthdir_x(_area_w, rr);
 					yy = _area_y + lengthdir_y(_area_h, rr);

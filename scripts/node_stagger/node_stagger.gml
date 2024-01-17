@@ -3,16 +3,19 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 1] = nodeValue("Base Delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 1] = nodeValue("Delay Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
-	inputs[| 2] = nodeValue("Delay Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 2] = nodeValue("Delay Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
-	inputs[| 3] = nodeValue("Delay Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 3] = nodeValue("Stagger Curve", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
+	
+	inputs[| 4] = nodeValue("Overflow", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Hide", "Clamp" ]);
 	
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 
-		["Delay",  false], 2, 3,
+		["Stagger",  false], 3, 1, 2, 4, 
 	];
 	
 	surf_indexes = [];
@@ -25,15 +28,22 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var _surf = _data[0];
-		var _base = _data[1];
-		var _step = _data[2];
-		var _amnt = _data[3];
+		var _step = _data[1];
+		var _amnt = _data[2];
+		var _curv = _data[3];
+		var _ovfl = _data[4];
 		
 		var _time = CURRENT_FRAME;
 		if(_time == -1) return _output;
 		
-		var _frtm = _time - floor(_array_index / _step) * _amnt;
-		
+		var _aind = _array_index;
+		var _stps = floor(process_amount / _step);
+		var _frtm = _time - eval_curve_x(_curv, floor(_aind / _step) / _stps) * _amnt * _stps;
+		    _frtm = round(_frtm);
+			
+		if(_ovfl == 1)
+			_frtm = clamp(_frtm, 0, TOTAL_FRAMES - 1);
+			
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);
 		
@@ -47,7 +57,7 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		surface_set_target(_output);
 			DRAW_CLEAR
 			
-			if(_frtm >= 0) {
+			if(0 <= _frtm && _frtm < TOTAL_FRAMES) {
 				draw_surface_safe(surf_indexes[_array_index][_frtm]);
 				
 				surface_free(surf_indexes[_array_index][_frtm]);
