@@ -12,6 +12,7 @@
 	#macro LAST_FRAME    (CURRENT_FRAME == TOTAL_FRAMES - 1)
 	#macro TOTAL_FRAMES  PROJECT.animator.frames_total
 	#macro RENDERING     PROJECT.animator.rendering
+	#macro FRAME_RANGE   PROJECT.animator.frame_range
 	#macro IS_RENDERING  array_length(PROJECT.animator.rendering)
 #endregion
 
@@ -21,10 +22,13 @@
 		current_frame	= 0;
 		real_frame		= 0;
 		time_since_last_frame = 0;
+		
 		framerate		= 30;
 		is_playing		= false;
 		frame_progress	= false;
 		render_stop     = false;
+		
+		frame_range		= noone;
 		
 		__debug_animator_counter = 0;
 		

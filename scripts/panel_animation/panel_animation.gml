@@ -504,7 +504,7 @@ function Panel_Animation() : PanelContent() constructor {
 		getTimelineContentFolder(PROJECT.timelines);
 	} #endregion
 	
-	function drawTimeline() { #region //draw summary
+	function drawTimeline() { #region // Draw summary
 		var bar_x = tool_width + ui(16);
 		var bar_y = h - timeline_h - ui(10);
 		var bar_w = timeline_w;
@@ -520,14 +520,18 @@ function Panel_Animation() : PanelContent() constructor {
 			
 		#region bg
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, bar_w, bar_h);
-			var __w = timeline_shift + TOTAL_FRAMES * ui(timeline_scale) + PANEL_PAD;
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, min(__w, timeline_w) - 1, bar_h, COLORS.panel_animation_timeline_blend, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, bar_w, bar_h, COLORS.panel_animation_timeline_blend, 1);
 			
 			if(inspecting)
 				inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
 			
-			for(var i = timeline_separate; i <= TOTAL_FRAMES; i += timeline_separate) {
+			var _fr = ceil(bar_w / ui(timeline_scale) / timeline_separate) * timeline_separate;
+			
+			for(var i = timeline_separate; i <= _fr; i += timeline_separate) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
+				
+				if(i > TOTAL_FRAMES) draw_set_alpha(0.5);
+				
 				draw_set_color(COLORS.panel_animation_frame_divider);
 				draw_line(bar_line_x, ui(12), bar_line_x, bar_h - PANEL_PAD);
 					
@@ -535,6 +539,14 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_text_add(bar_line_x, ui(16), string(i));
 			}
 				
+			draw_set_alpha(1);
+			
+			var bar_line_x = TOTAL_FRAMES * ui(timeline_scale) + timeline_shift;
+			draw_set_color(COLORS.panel_animation_end_line);
+			draw_set_alpha(0.5);
+			draw_line_width(bar_line_x, 0, bar_line_x, bar_h - PANEL_PAD, 2);
+			draw_set_alpha(1.0);
+			
 			var bar_line_x = (CURRENT_FRAME + 1) * ui(timeline_scale) + timeline_shift;
 			var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
 			draw_set_color(cc);
@@ -562,7 +574,8 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 			
 		#region summary \\\ Set X for all keyframes
-			var index = 0, key_y = timeline_h / 2;
+			var index = 0;
+			var key_y = ui(12) + (timeline_h - ui(12)) / 2;
 				
 			for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
 				var _cont  = timeline_contents[i];
@@ -609,7 +622,16 @@ function Panel_Animation() : PanelContent() constructor {
 				if(mouse_release(mb_middle))
 					timeline_dragging = false;
 			}
-			
+		#endregion
+		
+		gpu_set_blendmode(bm_subtract);
+		draw_surface_safe(timeline_mask, 0, 0);
+		gpu_set_blendmode(bm_normal);
+		surface_reset_target();
+		
+		draw_surface_safe(timeline_surface, bar_x, bar_y);
+		
+		#region mouse interact
 			if(pHOVER && point_in_rectangle(mx, my, bar_x, 16, bar_x + bar_w, bar_y - 8)) {
 				var sca = timeline_scale;
 				
@@ -627,8 +649,7 @@ function Panel_Animation() : PanelContent() constructor {
 					var mfb = (mx - bar_x - timeline_shift) / ui(timeline_scale);
 					var mfa = (mx - bar_x - timeline_shift) / ui(sca);
 					
-					timeline_shift_to = clamp(timeline_shift_to - (mfa - mfb) * timeline_scale, 
-						-max(bar_total_w - bar_w + 32, 0), 0);
+					timeline_shift_to = clamp(timeline_shift_to - (mfa - mfb) * timeline_scale, -max(bar_total_w - bar_w + 32, 0), 0);
 					timeline_shift = timeline_shift_to;
 				}
 						
@@ -641,8 +662,8 @@ function Panel_Animation() : PanelContent() constructor {
 					timeline_drag_my = my;
 				}
 			}
-					
-			if(pHOVER && point_in_rectangle(mx, my, bar_x, bar_y, bar_x + min(timeline_w, timeline_shift + bar_total_w), bar_y + bar_h)) { //preview
+			
+			if(pHOVER && point_in_rectangle(mx, my, bar_x, bar_y, bar_x + bar_w, bar_y + bar_h)) { //preview
 				if(mouse_wheel_down()) timeline_shift_to = clamp(timeline_shift_to - 64 * SCROLL_SPEED, -max(bar_total_w - bar_w + 32, 0), 0);
 				if(mouse_wheel_up())   timeline_shift_to = clamp(timeline_shift_to + 64 * SCROLL_SPEED, -max(bar_total_w - bar_w + 32, 0), 0);
 						
@@ -651,9 +672,19 @@ function Panel_Animation() : PanelContent() constructor {
 					timeline_scub_st  = CURRENT_FRAME;
 					_scrub_frame = timeline_scub_st;
 				}
+						
+				if(mouse_press(mb_right, pFOCUS)) {
+					__selecting_frame = (mx - bar_x - timeline_shift) / ui(timeline_scale) - 1;
+					
+					menuCall("animation_summary_menu",,, [
+						menuItem(__txtx("panel_animation_range_start", "Set start"),	function() { if(FRAME_RANGE == noone) FRAME_RANGE = [ __selecting_frame, TOTAL_FRAMES ]; else FRAME_RANGE[0] = __selecting_frame; }),
+						menuItem(__txtx("panel_animation_range_end",   "Set end"),		function() { if(FRAME_RANGE == noone) FRAME_RANGE = [ 0, __selecting_frame ];            else FRAME_RANGE[1] = __selecting_frame; }),
+						menuItem(__txtx("panel_animation_range_reset", "Reset range"),	function() { FRAME_RANGE = noone; }),
+					]);
+				}
 			}
 					
-			if(pHOVER && point_in_rectangle(mx, my, bar_x, 8, bar_x + min(timeline_w, timeline_shift + bar_total_w), 8 + 16)) { //top bar
+			if(pHOVER && point_in_rectangle(mx, my, bar_x, 8, bar_x + bar_w, 8 + 16)) { //top bar
 				if(mouse_press(mb_left, pFOCUS) && timeline_draggable) {
 					timeline_scubbing = true;
 					timeline_scub_st  = CURRENT_FRAME;
@@ -663,13 +694,6 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			timeline_draggable	= true;
 		#endregion
-			
-		gpu_set_blendmode(bm_subtract);
-		draw_surface_safe(timeline_mask, 0, 0);
-		gpu_set_blendmode(bm_normal);
-		surface_reset_target();
-		
-		draw_surface_safe(timeline_surface, bar_x, bar_y);
 	} #endregion
 	
 	function drawDopesheetGraphLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) { #region
@@ -1394,7 +1418,7 @@ function Panel_Animation() : PanelContent() constructor {
 			var bar_show_w = timeline_shift + bar_total_w;
 			
 			var _bg_w = min(bar_total_w + PANEL_PAD, bar_w);
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, _bg_w - 1, dope_sheet_h, COLORS.panel_animation_timeline_blend, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, bar_w, dope_sheet_h, COLORS.panel_animation_timeline_blend, 1);
 			
 			dope_sheet_y_max = 0;
 			var key_y = ui(22) + dope_sheet_y;
@@ -1467,88 +1491,22 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			dope_sheet_y_max = max(0, dope_sheet_y_max - dope_sheet_h + ui(48));
 			
-			for(var i = timeline_sep_line; i <= TOTAL_FRAMES; i += timeline_sep_line) {
+			var _fr = ceil(bar_w / ui(timeline_scale) / timeline_separate) * timeline_separate;
+			
+			for(var i = timeline_sep_line; i <= _fr; i += timeline_sep_line) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
 				
 				draw_set_color(COLORS.panel_animation_frame_divider);
-				draw_set_alpha(i % timeline_separate == 0? 1 : 0.1);
+				draw_set_alpha((i % timeline_separate == 0? 1 : 0.1) * ((i <= TOTAL_FRAMES) * 0.5 + 0.5));
 				draw_line(bar_line_x, ui(16), bar_line_x, dope_sheet_h - PANEL_PAD);
 			}
 			draw_set_alpha(1);
-		#endregion
-		
-		#region stretch
-			var stx = timeline_shift + bar_total_w + ui(16);
-			var sty = ui(10);
 			
-			if(timeline_stretch == 1) {
-				var len = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 2;
-				len = max(1, len);
-				TOOLTIP = __txtx("panel_animation_length", "Animation length") + " " + string(len);
-				TOTAL_FRAMES = len;
-				
-				if(mouse_release(mb_left))
-					timeline_stretch = 0;
-					
-				draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_accent, 1);
-			} else if(timeline_stretch == 2) {
-				var len = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 2;
-				len = max(1, len);
-				TOOLTIP = __txtx("panel_animation_length", "Animation length") + " " + string(len);
-				var _len = TOTAL_FRAMES;
-				TOTAL_FRAMES = len;
-				
-				if(_len != len) {
-					var key = ds_map_find_first(PROJECT.nodeMap);
-					repeat(ds_map_size(PROJECT.nodeMap)) {
-						var _node = PROJECT.nodeMap[? key];
-						key = ds_map_find_next(PROJECT.nodeMap, key);
-						if(!_node || !_node.active) continue;
-						
-						for(var i = 0; i < ds_list_size(_node.inputs); i++) {
-							var in = _node.inputs[| i];
-							if(!in.is_anim) continue;
-							
-							for(var j = 0; j < ds_list_size(in.animator.values); j++) {
-								var t = in.animator.values[| j];
-								t.time = t.ratio * (len - 1);
-							}
-							
-							for( var k = 0; k < array_length(in.animators); k++ )
-							for(var j = 0; j < ds_list_size(in.animators[k].values); j++) {
-								var t = in.animators[k].values[| j];
-								t.time = t.ratio * (len - 1);
-							}
-						}
-					}
-				}
-				
-				if(mouse_release(mb_left))
-					timeline_stretch = 0;
-					
-				draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS._main_accent, 1);
-			} else {
-				if(pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
-					if(key_mod_press(CTRL)) {
-						draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
-						TOOLTIP = __txtx("panel_animation_stretch", "Stretch animation");
-						if(mouse_press(mb_left, pFOCUS)) {
-							timeline_stretch = 2;
-							timeline_stretch_mx = msx;
-							timeline_stretch_sx = TOTAL_FRAMES;
-						}
-					} else {
-						draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
-						TOOLTIP = __txtx("panel_animation_adjust_length", "Adjust animation length");
-						if(mouse_press(mb_left, pFOCUS)) {
-							timeline_stretch = 1;
-							timeline_stretch_mx = msx;
-							timeline_stretch_sx = TOTAL_FRAMES;
-						}
-					}
-				} else
-					draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_icon, 0.5);
-			}
+			var bar_line_x = TOTAL_FRAMES * ui(timeline_scale) + timeline_shift;
+			draw_set_color(COLORS.panel_animation_end_line);
+			draw_set_alpha(0.5);
+			draw_line_width(bar_line_x, ui(16), bar_line_x, dope_sheet_h - PANEL_PAD, 2);
+			draw_set_alpha(1);
 		#endregion
 		
 		draw_set_text(f_p2, fa_left, fa_top);
@@ -1723,7 +1681,7 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 		#endregion
 		
-		if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dope_sheet_w, dope_sheet_h)) { #region selectrion & stagger
+		if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dope_sheet_w, dope_sheet_h)) { #region selection & stagger
 			if(mouse_press(mb_right, pFOCUS) && key_hover == noone)
 				keyframe_selecting = [];
 				
@@ -1773,21 +1731,30 @@ function Panel_Animation() : PanelContent() constructor {
 		} #endregion
 				
 		#region overlay 
-			var ww = min(bar_show_w, bar_w - PANEL_PAD);
 			var hh = ui(20);
 			
 			draw_set_color(COLORS.panel_animation_timeline_top);
-			draw_rectangle(0, 0, ww, hh, false);
+			draw_rectangle(0, 0, bar_w, hh, false);
 			
-			for(var i = timeline_separate; i <= TOTAL_FRAMES; i += timeline_separate) {
+			var _fr = ceil(bar_w / ui(timeline_scale) / timeline_separate) * timeline_separate;
+			
+			for(var i = timeline_separate; i <= _fr; i += timeline_separate) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
 				
+				if(i > TOTAL_FRAMES) draw_set_alpha(0.5);
+				
 				draw_set_color(COLORS.panel_animation_frame_divider);
-				draw_line(bar_line_x, 0, bar_line_x, ui(20));
+				draw_line(bar_line_x, 0, bar_line_x, hh);
 				
 				draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
 				draw_text_add(bar_line_x - ui(2), PANEL_PAD, i);
 			}
+			
+			draw_set_alpha(1);
+			
+			var bar_line_x = TOTAL_FRAMES * ui(timeline_scale) + timeline_shift;
+			draw_set_color(COLORS.panel_animation_end_line);
+			draw_line_width(bar_line_x, 0, bar_line_x, ui(20), 2);
 			
 			if(PROJECT.onion_skin.enabled) { //ONION SKIN
 				var rang = PROJECT.onion_skin.range;
@@ -1860,6 +1827,80 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_on_accent);
 			draw_text_add(bar_line_x - ui(2), PANEL_PAD, cf);
+		#endregion
+		
+		#region stretch
+			var stx = timeline_shift + bar_total_w + ui(16);
+			var sty = ui(10);
+			
+			if(timeline_stretch == 1) {
+				var len = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 2;
+				len = max(1, len);
+				TOOLTIP = __txtx("panel_animation_length", "Animation length") + " " + string(len);
+				TOTAL_FRAMES = len;
+				
+				if(mouse_release(mb_left))
+					timeline_stretch = 0;
+					
+				draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS.panel_animation_end_line, 1);
+			} else if(timeline_stretch == 2) {
+				var len = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 2;
+				len = max(1, len);
+				TOOLTIP = __txtx("panel_animation_length", "Animation length") + " " + string(len);
+				var _len = TOTAL_FRAMES;
+				TOTAL_FRAMES = len;
+				
+				if(_len != len) {
+					var key = ds_map_find_first(PROJECT.nodeMap);
+					repeat(ds_map_size(PROJECT.nodeMap)) {
+						var _node = PROJECT.nodeMap[? key];
+						key = ds_map_find_next(PROJECT.nodeMap, key);
+						if(!_node || !_node.active) continue;
+						
+						for(var i = 0; i < ds_list_size(_node.inputs); i++) {
+							var in = _node.inputs[| i];
+							if(!in.is_anim) continue;
+							
+							for(var j = 0; j < ds_list_size(in.animator.values); j++) {
+								var t = in.animator.values[| j];
+								t.time = t.ratio * (len - 1);
+							}
+							
+							for( var k = 0; k < array_length(in.animators); k++ )
+							for(var j = 0; j < ds_list_size(in.animators[k].values); j++) {
+								var t = in.animators[k].values[| j];
+								t.time = t.ratio * (len - 1);
+							}
+						}
+					}
+				}
+				
+				if(mouse_release(mb_left))
+					timeline_stretch = 0;
+					
+				draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS.panel_animation_end_line, 1);
+			} else {
+				if(pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
+					if(key_mod_press(CTRL)) {
+						draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
+						TOOLTIP = __txtx("panel_animation_stretch", "Stretch animation");
+						if(mouse_press(mb_left, pFOCUS)) {
+							timeline_stretch = 2;
+							timeline_stretch_mx = msx;
+							timeline_stretch_sx = TOTAL_FRAMES;
+						}
+					} else {
+						draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
+						TOOLTIP = __txtx("panel_animation_adjust_length", "Adjust animation length");
+						if(mouse_press(mb_left, pFOCUS)) {
+							timeline_stretch = 1;
+							timeline_stretch_mx = msx;
+							timeline_stretch_sx = TOTAL_FRAMES;
+						}
+					}
+				} else
+					draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_icon, 0.5);
+			}
 		#endregion
 		
 		gpu_set_blendmode(bm_subtract);
@@ -2007,7 +2048,7 @@ function Panel_Animation() : PanelContent() constructor {
 			PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;
 	} #endregion
 	
-	function drawContent(panel) { #region
+	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		if(!PROJECT.active) return;
 		

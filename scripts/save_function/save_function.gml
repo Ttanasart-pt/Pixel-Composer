@@ -30,6 +30,7 @@ function save_serialize(project = PROJECT, _outMap = false) { #region
 	var _anim_map = {};
 	_anim_map.frames_total = project.animator.frames_total;
 	_anim_map.framerate    = project.animator.framerate;
+	_anim_map.frame_range  = project.animator.frame_range;
 	_map.animator		   = _anim_map;
 	
 	_map.metadata    = PROJECT.meta.serialize();

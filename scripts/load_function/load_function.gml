@@ -113,8 +113,9 @@ function __LOAD_PATH(path, readonly = false, override = false) { #region
 	try {
 		if(struct_has(_load_content, "animator")) {
 			var _anim_map = _load_content.animator;
-			TOTAL_FRAMES	= _anim_map.frames_total;
-			PROJECT.animator.framerate		= _anim_map.framerate;
+			PROJECT.animator.frames_total	= struct_try_get(_anim_map, "frames_total",   30);
+			PROJECT.animator.framerate		= struct_try_get(_anim_map, "framerate",      30);
+			PROJECT.animator.frame_range	= struct_try_get(_anim_map, "frame_range", noone);
 		}
 	} catch(e) {
 		log_warning("LOAD, animator", exception_print(e));
