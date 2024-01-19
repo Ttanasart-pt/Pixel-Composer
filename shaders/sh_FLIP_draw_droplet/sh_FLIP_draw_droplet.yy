@@ -4,7 +4,7 @@
   "name": "sh_FLIP_draw_droplet",
   "parent": {
     "name": "FLIP",
-    "path": "folders/shader/FLIP.yy",
+    "path": "folders/shader/simulation/FLIP.yy",
   },
   "type": 1,
 }

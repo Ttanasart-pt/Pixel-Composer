@@ -109,9 +109,16 @@ float sdVesica(vec2 p, float r, float d) { #region
                                : length(p-vec2(-d,0.0))-r;
 } #endregion
 
-float sdCrescent(vec2 p, float s, float c) { #region
+float sdCrescent(vec2 p, float s, float c, float a) { #region
 	float o = length(p) - 1.;
-	float i = length(p - vec2(1. - s * c, 0.)) / s - 1.;
+	float i = length(p - vec2(cos(a) * (1. - s * c), sin(a) * (1. - s * c))) / s - 1.;
+	
+	return max(o, -i);
+} #endregion
+
+float sdDonut(vec2 p, float s) { #region
+	float o = length(p) - 1.;
+	float i = length(p) / s - 1.;
 	
 	return max(o, -i);
 } #endregion
@@ -135,19 +142,13 @@ void main() {
 	} else if(shape == 3) {
 	    d = sdStar( coord, 0.9 - corner, sides, 2. + inner * (float(sides) - 2.), angle );
 		d -= corner;
-	} else if(shape == 4) {
-	    d = sdArc( coord, vec2(sin(angle), cos(angle)), angle_range, 0.9 - inner, inner );
-	} else if(shape == 5) {
-	    d = sdTearDrop( coord + vec2(0., 0.5), stRad, edRad, 1. );
-	} else if(shape == 6) {
-	    d = sdCross( coord, vec2(1. + corner, outer), corner );
-	} else if(shape == 7) {
-	    d = sdVesica( coord, inner, outer );
-	} else if(shape == 8) {
-	    d = sdCrescent( coord, inner, outer );
-	}
+	} else if(shape == 4) d = sdArc( coord, vec2(sin(angle), cos(angle)), angle_range, 0.9 - inner, inner );
+	else if(shape == 5)   d = sdTearDrop( coord + vec2(0., 0.5), stRad, edRad, 1. );
+	else if(shape == 6)   d = sdCross( coord, vec2(1. + corner, outer), corner );
+	else if(shape == 7)   d = sdVesica( coord, inner, outer );
+	else if(shape == 8)   d = sdCrescent( coord, inner, outer, angle );
+	else if(shape == 9)   d = sdDonut( coord, inner );
 	
-	//d = d;
 	if(drawDF == 1)
 		color = -d;
 	else if(aa == 0)

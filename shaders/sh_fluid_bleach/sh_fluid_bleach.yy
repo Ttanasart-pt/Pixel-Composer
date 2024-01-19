@@ -4,7 +4,7 @@
   "name": "sh_fluid_bleach",
   "parent": {
     "name": "fluid",
-    "path": "folders/shader/fluid.yy",
+    "path": "folders/shader/simulation/fluid.yy",
   },
   "type": 1,
 }

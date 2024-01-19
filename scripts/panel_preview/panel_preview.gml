@@ -1088,7 +1088,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		var overlayHover =  tool_hovering == noone && !overlay_hovering;
 			overlayHover &= active && isHover;
-			overlayHover &= point_in_rectangle(mx, my, toolbar_width, toolbar_height, w, h - toolbar_height);
+			overlayHover &= point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
 			overlayHover &= !key_mod_press(CTRL);
 		var params = { w, h, toolbar_height };
 		
