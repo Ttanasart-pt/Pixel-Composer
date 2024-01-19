@@ -60,6 +60,16 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 22] = nodeValue("Wave shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 3, 0.01 ] });
 	
+	inputs[| 23] = nodeValue("Typewriter", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 24] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
+		.setDisplay(VALUE_DISPLAY.slider_range);
+	
+	inputs[| 25] = nodeValue("Trim type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Character", "Word", "Line" ]);
+	
+	inputs[| 26] = nodeValue("Use full text size", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+		
 	input_display_list = [
 		["Output",		true],	9,  6, 10,
 		["Text",		false], 0, 13, 14, 7, 8, 
@@ -67,6 +77,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Rendering",	false], 5, 
 		["Background",   true, 16], 17, 
 		["Wave",	     true, 18], 22, 19, 20, 21, 
+		["Trim",		 true, 23], 25, 24, 26, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -132,8 +143,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return random_range_seed(-1, 1, _x + seed) * __wave_ampli;
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var str   = _data[0];
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var str   = _data[0], strRaw = str;
 		var _font = _data[1];
 		var _size = _data[2];
 		var _aa   = _data[3];
@@ -157,11 +168,49 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _waveP = _data[21];
 		var _waveH = _data[22];
 		
+		var _type  = _data[23];
+		var _typeR = _data[24];
+		var _typeC = _data[25];
+		var _typeF = _data[26];
+		
 		generateFont(_font, _size, _aa);
 		draw_set_font(font);
 		
+		#region typewritter
+			if(_type) {
+				var _typAmo = 0;
+				var _typSpa = [];
+				
+				switch(_typeC) {
+					case 0 : _typAmo = string_length(str); 
+							 break;
+							 
+					case 1 : _typSpa = string_splice(str, [" ", "\n"], true);
+							 _typAmo = array_length(_typSpa); 
+							 break;
+							 
+					case 2 : _typSpa = string_splice(str, "\n", true);
+					         _typAmo = array_length(_typSpa); 
+							 break;
+				}
+				
+				var _typS = round(_typeR[0] * _typAmo);
+				var _typE = round(_typeR[1] * _typAmo);
+				var _typStr = "";
+				
+				switch(_typeC) {
+					case 0 : _typStr = string_copy(          str, _typS, _typE - _typS); break;
+					case 1 : _typStr = string_concat_ext(_typSpa, _typS, _typE - _typS); break;
+					case 2 : _typStr = string_concat_ext(_typSpa, _typS, _typE - _typS); break;
+				}
+				
+				str = _typStr;
+				if(_typeF == false) strRaw = str;
+			}
+		#endregion
+		
 		#region cut string
-			var _str_lines   = string_splice(str, "\n");
+			var _str_lines = string_splice(str, "\n");
 			_line_widths = [];
 		
 			__temp_len  = string_length(str);
@@ -171,13 +220,13 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			__temp_trck = _trck;
 			__temp_line = _line;
 			
-			string_foreach(str, function(_chr, _ind) {
+			string_foreach(strRaw, function(_chr, _ind) {
 				if(_chr == "\n") {
 					var _lw = max(0, __temp_lw - __temp_trck);
 					array_push(_line_widths, _lw);
-					__temp_ww = max(__temp_ww, _lw);
+					__temp_ww  = max(__temp_ww, _lw);
 					__temp_hh += string_height(_chr) + __temp_line;
-					__temp_lw = 0;
+					__temp_lw  = 0;
 				} else
 					__temp_lw += string_width(_chr) + __temp_trck;
 			});
@@ -241,7 +290,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				BLEND_ALPHA_MULP
 			}
 			
-			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
+			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) { #region draw
 				var _str_line   = _str_lines[i];
 				var _line_width = _line_widths[i];
 				
@@ -320,9 +369,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 					ty += (line_get_height() + _line) * _ss;
 				}
-			}
+			} #endregion
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 }

@@ -165,7 +165,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			array_push(argument_val, getInputData(i + 2));
 		}
 		
-		//if(CURRENT_FRAME == 0) { //rerfesh state on the first frame
+		//if(IS_FIRST_FRAME) { //rerfesh state on the first frame
 		//	lua_state_destroy(lua_state);
 		//	lua_state = lua_create();
 		//	addCode();

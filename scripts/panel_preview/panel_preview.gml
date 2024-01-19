@@ -963,7 +963,7 @@ function Panel_Preview() : PanelContent() constructor {
 			right_menu_y += string_height("l");
 		
 			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
-			draw_text(w - ui(8), right_menu_y, $"{__txt("Frame")} {CURRENT_FRAME}/{TOTAL_FRAMES}");
+			draw_text(w - ui(8), right_menu_y, $"{__txt("Frame")} {CURRENT_FRAME + 1}/{TOTAL_FRAMES}");
 		
 			right_menu_y += string_height("l");
 			draw_text(w - ui(8), right_menu_y, $"x{canvas_s}");

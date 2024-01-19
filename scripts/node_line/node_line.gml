@@ -167,7 +167,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _clamp  = _data[26];
 		#endregion
 		
-		if(CURRENT_FRAME == 0 || inputs[| 11].is_anim)
+		if(IS_FIRST_FRAME || inputs[| 11].is_anim)
 			ds_map_clear(widthMap);
 		
 		var __debug_timer = get_timer();

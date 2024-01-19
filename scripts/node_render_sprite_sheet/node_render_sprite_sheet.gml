@@ -41,12 +41,14 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.padding)
 	
 	inputs[| 8] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ], "Starting/ending frames, set end to 0 to default to last frame.")
-		.setDisplay(VALUE_DISPLAY.vector)
+		.setDisplay(VALUE_DISPLAY.slider_range)
 		
 	inputs[| 9] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 10] = nodeValue("Overlappable", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 10] = nodeValue("Overlappable", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 11] = nodeValue("Custom Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
@@ -55,9 +57,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	input_display_list = [
 		["Surfaces",  false], 0, 1, 2,
-		["Sprite",	  false], 3, 8, 
+		["Sprite",	  false], 3, 
 		["Packing",	  false], 4, 5, 6, 9, 7, 
 		["Rendering", false], 10, 
+		["Custom Range", true, 11], 8, 
 	]
 	
 	attribute_surface_depth();
@@ -76,12 +79,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		}
 		
 		PROJECT.animator.render();
-		array_push(RENDERING, node_id);
 	} #endregion
 	
 	static step = function() { #region
 		var grup = getInputData(1);
 		var pack = getInputData(3);
+		var user = getInputData(11);
 		
 		if(pack == 0)	inputs[| 5].editWidget.data = [ "Top", "Center", "Bottom" ];
 		else			inputs[| 5].editWidget.data = [ "Left", "Center", "Right" ];
@@ -91,6 +94,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		inputs[| 5].setVisible(pack != SPRITE_STACK.grid);
 		inputs[| 6].setVisible(pack != SPRITE_STACK.grid);
 		inputs[| 9].setVisible(pack == SPRITE_STACK.grid);
+		
+		inputs[| 8].editWidget.minn = FIRST_FRAME + 1;
+		inputs[| 8].editWidget.maxx = LAST_FRAME + 1;
+		if(!user) inputs[| 8].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
 		
 		update_on_frame = grup == 0;
 	} #endregion
@@ -300,6 +307,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var rang = getInputData(8);
 		var spc2 = getInputData(9);
 		var ovlp = getInputData(10);
+		var user = getInputData(11);
 		
 		var _atl = outputs[| 1].getValue();
 		var cDep = attrDepth();
@@ -311,14 +319,16 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(!arr) inpt = [ inpt ];
 		
 		#region frame
-			var _st, _ed;
+			var _st = FIRST_FRAME;
+			var _ed = LAST_FRAME  + 1;
 			
-			if(rang[0] < 0)  _st = TOTAL_FRAMES + rang[0];
-			else             _st = rang[0];
+			if(user) {
+				if(rang[0] < 0)  _st = LAST_FRAME + rang[0] - 1;
+				else             _st = rang[0] - 1;
 			
-			     if(rang[1] == 0) _ed = TOTAL_FRAMES;
-			else if(rang[1] < 0)  _ed = TOTAL_FRAMES + rang[1];
-			else                  _ed = rang[1];
+				if(rang[1] < 0)  _ed = LAST_FRAME + rang[1];
+				else             _ed = rang[1];
+			}
 			
 			if(_ed <= _st) return;
 			var amo = floor((_ed - _st) / skip);
@@ -348,11 +358,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					hh = sh * amo + spac * (amo - 1);
 					break;
 				case SPRITE_STACK.grid :
-					var col = getInputData(4);
-					var row = ceil(amo / col);
+					var row = ceil(amo / grid);
 						
-					ww = sw * col + spc2[0] * (col - 1);
-					hh = sh * row + spc2[1] * (row - 1);
+					ww = sw * grid + spc2[0] * (grid - 1);
+					hh = sh * row  + spc2[1] * (row - 1);
 					break;
 			}
 				
@@ -385,6 +394,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var rang = getInputData(8);
 		var spc2 = getInputData(9);
 		var ovlp = getInputData(10);
+		var user = getInputData(11);
 		
 		var _atl = outputs[| 1].getValue();
 		var cDep = attrDepth();
@@ -396,14 +406,16 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(!arr) inpt = [ inpt ];
 		
 		#region frame
-			var _st, _ed;
+			var _st = FIRST_FRAME;
+			var _ed = LAST_FRAME  + 1;
 			
-			if(rang[0] < 0)  _st = TOTAL_FRAMES + rang[0];
-			else             _st = rang[0];
+			if(user) {
+				if(rang[0] < 0)  _st = LAST_FRAME + rang[0] - 1;
+				else             _st = rang[0] - 1;
 			
-			     if(rang[1] == 0) _ed = TOTAL_FRAMES;
-			else if(rang[1] < 0)  _ed = TOTAL_FRAMES + rang[1];
-			else                  _ed = rang[1];
+				if(rang[1] < 0)  _ed = LAST_FRAME + rang[1] + 1;
+				else             _ed = rang[1] + 1;
+			}
 			
 			if(_ed <= _st) return;
 			var amo = floor((_ed - _st) / skip);

@@ -73,7 +73,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	} #endregion
 	
 	static update = function() { #region
-		if(CURRENT_FRAME == 0) 
+		if(IS_FIRST_FRAME) 
 			NodeListSort(topoList, nodes);
 		
 		allCached = true;
@@ -82,7 +82,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 			if(!node.recoverCache()) allCached = false;
 		}
 		
-		if(!allCached && CURRENT_FRAME == 0)
+		if(!allCached && IS_FIRST_FRAME)
 			reset();
 			
 		if(allCached) {

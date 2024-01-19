@@ -118,7 +118,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _itrP = attributes.iteration_pressure;
 		var _itrR = attributes.iteration_particle;
 		
-		if(frame == 0) {
+		if(IS_FIRST_FRAME) {
 			var width        = _dim[0] + _siz * 2;
 			var height       = _dim[1] + _siz * 2;
 			var particleSize = _siz;

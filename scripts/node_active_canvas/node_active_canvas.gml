@@ -71,18 +71,18 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		outputs[| 0].setValue(_surf);
 		
 		surface_set_target(_surf);
-			if(CURRENT_FRAME == 0) DRAW_CLEAR
+			if(IS_FIRST_FRAME) DRAW_CLEAR
 			
 			if(_bact) {
 				if(!is_surface(_bsurf)) {
-					if(CURRENT_FRAME == 0 || brush_prev == noone)
+					if(IS_FIRST_FRAME || brush_prev == noone)
 						draw_point_color(_bpos[0] - 1, _bpos[1] - 1, _bcol);
 					else
 						draw_line_color(brush_prev[2][0] - 1, brush_prev[2][1] - 1, _bpos[0] - 1, _bpos[1] - 1, brush_prev[5], _bcol);
 				} else {
 					BLEND_ALPHA
 					
-					if(CURRENT_FRAME == 0 || brush_prev == noone) {
+					if(IS_FIRST_FRAME || brush_prev == noone) {
 						brush_draw_surface(_bsurf, _bpos[0], _bpos[1], _bsca[0], _bsca[1], _brot, _bcol, _balp);
 					} else {
 						var _x0 = brush_prev[2][0];

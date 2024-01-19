@@ -488,9 +488,10 @@ function __initNodes() {
 	var filter = ds_list_create(); #region
 	addNodeCatagory("Filter", filter);
 		ds_list_add(filter, "Combines");
-		addNodeObject(filter, "Blend",				s_node_blend,			"Node_Blend",			[0, Node_create_Blend], ["normal", "add", "subtract", "multiply", "screen", "maxx", "minn"], "Blend 2 images using different blendmodes.");
-		addNodeObject(filter, "RGBA Combine",		s_node_RGB_combine,		"Node_Combine_RGB",		[1, Node_Combine_RGB],, "Combine 4 image in to one. Each image use to control RGBA channel.").setVersion(1070);
-		addNodeObject(filter, "HSV Combine",		s_node_HSV_combine,		"Node_Combine_HSV",		[1, Node_Combine_HSV],, "Combine 4 image in to one. Each image use to control HSVA channel.").setVersion(1070);
+		addNodeObject(filter, "Blend",				s_node_blend,			 "Node_Blend",			  [0, Node_create_Blend], ["normal", "add", "subtract", "multiply", "screen", "maxx", "minn"], "Blend 2 images using different blendmodes.");
+		addNodeObject(filter, "RGBA Combine",		s_node_RGB_combine,		 "Node_Combine_RGB",	  [1, Node_Combine_RGB],, "Combine 4 image in to one. Each image use to control RGBA channel.").setVersion(1070);
+		addNodeObject(filter, "HSV Combine",		s_node_HSV_combine,		 "Node_Combine_HSV",	  [1, Node_Combine_HSV],, "Combine 4 image in to one. Each image use to control HSVA channel.").setVersion(1070);
+		addNodeObject(filter, "Override Channel",	s_node_ovreride_channel, "Node_Override_Channel", [1, Node_Override_Channel],, "Replace RGBA value of one surface with anothers.").setVersion(11640);
 			
 		ds_list_add(filter, "Blurs");
 		addNodeObject(filter, "Blur",				s_node_blur,			"Node_Blur",			[1, Node_Blur], ["gaussian blur"], "Blur image smoothly.");

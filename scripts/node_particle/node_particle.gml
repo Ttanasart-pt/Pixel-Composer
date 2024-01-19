@@ -46,7 +46,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		}
 		
 		if(PROJECT.animator.is_playing)
-			PROJECT.animator.setFrame(-1);
+			PROJECT.animator.firstFrame();
 	} #endregion
 	
 	static reLoop = function() { #region
@@ -88,7 +88,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		outputs[| 0].setValue(_outSurf);
 		
-		if(CURRENT_FRAME == 0) {
+		if(IS_FIRST_FRAME) {
 			reset();
 			if(IS_PLAYING) reLoop();
 		}

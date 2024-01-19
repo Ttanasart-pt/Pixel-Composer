@@ -68,7 +68,7 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		var vMac	= inputs[| 10].getValue(frame);
 		var wrap	= inputs[| 11].getValue(frame);
 		
-		if(CURRENT_FRAME == 0 || !is_surface(domain.sf_world)) {
+		if(IS_FIRST_FRAME || !is_surface(domain.sf_world)) {
 			fd_rectangle_clear(domain);
 			fd_rectangle_destroy(domain);
 			domain = fd_rectangle_create(_dim[0], _dim[1]);

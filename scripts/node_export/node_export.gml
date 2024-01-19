@@ -117,6 +117,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 14] = nodeValue("Frame step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
+	inputs[| 15] = nodeValue("Custom Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+		.rejectArray();
+		
 	outputs[| 0] = nodeValue("Loop exit", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	outputs[| 1] = nodeValue("Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
@@ -202,8 +205,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [
 		["Export",		false], 0, 1, 2, export_template, 
-		["Format ",		false], 3, 9, 6, 7, 10, 13, 
-		["Animation",	false], 12, 8, 5, 11, 14, 
+		["Format",		false], 3, 9, 6, 7, 10, 13, 
+		["Custom Range", true, 15], 12, 
+		["Animation",	false], 8, 5, 11, 14, 
 	];
 	
 	render_process_id = 0;
@@ -328,8 +332,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		render_process_id = shell_execute_async(webp, cmd, self); 
 		render_type       = "webp";
 		render_target     = target_path;
-		
-		if(render_process_id != 0) array_push(RENDERING, node_id);
 	} #endregion
 	
 	static renderGif = function(temp_path, target_path) { #region
@@ -352,8 +354,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		render_process_id = shell_execute_async(converter, shell_cmd, self);
 		render_type       = "gif";
 		render_target     = target_path;
-		
-		if(render_process_id != 0) array_push(RENDERING, node_id);
 	} #endregion
 	 
 	static renderMp4 = function(temp_path, target_path) { #region
@@ -371,8 +371,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
 		render_type       = "mp4";
 		render_target     = target_path;
-		
-		if(render_process_id != 0) array_push(RENDERING, node_id);
 	} #endregion
 	 
 	static renderApng = function(temp_path, target_path) { #region
@@ -389,8 +387,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
 		render_type       = "apng";
 		render_target     = target_path;
-		
-		if(render_process_id != 0) array_push(RENDERING, node_id);
 	} #endregion
 	
 	static pathString = function(path, index = 0, _array = false) { #region
@@ -420,12 +416,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 							var float_str = string_digits(str);
 							if(float_str != "") {
 								var float_val = string_digits(float_str);
-								var str_val = max(float_val - string_length(string(CURRENT_FRAME + strt)), 0);
+								var str_val = max(float_val - string_length(string(CURRENT_FRAME + 1 + strt)), 0);
 								repeat(str_val)
 									_txt += "0";
 							}
 							
-							_txt += string(CURRENT_FRAME + strt);
+							_txt += string(CURRENT_FRAME + 1 + strt);
 							if(_array)	array_push(s, [ "f", _txt ]);
 							else		s += _txt;
 							res = true;
@@ -561,14 +557,15 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var form = getInputData( 3);
 		var rang = getInputData(12);
 		var stps = getInputData(14);
+		var user = getInputData(15);
 		
-		if(form >= 1) {
+		if(form >= 1 && user) {
 			var rng_s  = rang[0];
-			var rng_e  = rang[1] == -1? TOTAL_FRAMES : rang[1];
+			var rng_e  = rang[1];
 			var rng_st = stps >= 1? (CURRENT_FRAME - rng_s) % stps : 0;
 			
-			if(CURRENT_FRAME < rng_s) return;
-			if(CURRENT_FRAME > rng_e) return;
+			if(CURRENT_FRAME < rng_s - 1) return;
+			if(CURRENT_FRAME > rng_e - 1) return;
 			if(rng_st != 0) return;
 		}
 		
@@ -714,10 +711,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		update_on_frame = true;
 		playing			= true;
 		played			= 0;
-		PROJECT.animator.real_frame = -1;
-		CURRENT_FRAME	= -1;
-		IS_PLAYING		= true;
-		array_push(RENDERING, node_id);
+		
+		PROJECT.animator.render();
 		
 		if(directory_exists(directory))
 			directory_destroy(directory);
@@ -743,10 +738,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var anim = getInputData(3); // single, sequence, animation
 		var extn = getInputData(9);
+		var user = getInputData(15);
 		
 		inputs[| 11].setVisible(anim == 1);
-		inputs[| 12].setVisible(anim >  0);
-		inputs[| 12].editWidget.maxx = TOTAL_FRAMES;
+		
+		inputs[| 12].editWidget.minn = FIRST_FRAME + 1;
+		inputs[| 12].editWidget.maxx = LAST_FRAME + 1;
+		if(!user) inputs[| 12].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
 		
 		inputs[| 14].setVisible(anim >  0);
 		
@@ -827,10 +825,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		export();
 		
-		if(LAST_FRAME) {
-			if(anim == NODE_EXPORT_FORMAT.animation)
-				renderCompleted();
-		}
+		if(IS_LAST_FRAME && anim == NODE_EXPORT_FORMAT.animation)
+			renderCompleted();
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

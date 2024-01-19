@@ -76,8 +76,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			return;
 		}
 		
-		if(frame == 0 || !IS_PLAYING)
-			NodeListSort(topoList, nodes);
+		if(IS_FIRST_FRAME) NodeListSort(topoList, nodes);
 		
 		sortArray();
 	} #endregion

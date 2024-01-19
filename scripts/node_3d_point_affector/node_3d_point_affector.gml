@@ -68,7 +68,7 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 				plane_normal = _prot.Rotate(new BBMOD_Vec3(0, 0, 1)).ToArray();
 			}
 			
-			if(CURRENT_FRAME == 0)
+			if(IS_FIRST_FRAME)
 				curve_falloff = new curveMap(_fcrv, 100);
 		}
 		

@@ -49,7 +49,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		if(frame == 0 || !IS_PLAYING) {
+		if(IS_FIRST_FRAME) {
 			NodeListSort(topoList, nodes);
 			
 			inputNodes     = [ noone, noone ];

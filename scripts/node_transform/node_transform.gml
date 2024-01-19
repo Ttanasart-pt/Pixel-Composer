@@ -164,7 +164,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(!PROJECT.animator.frame_progress) return;
 		
-		if(CURRENT_FRAME == 0) {
+		if(IS_FIRST_FRAME) {
 			vel = 0;
 			prev_pos[0] = pos[0];
 			prev_pos[1] = pos[1];

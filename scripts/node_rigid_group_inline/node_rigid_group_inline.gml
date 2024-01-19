@@ -3,7 +3,8 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
 	
-	manual_ungroupable	 = false;
+	is_simulation      = true;
+	manual_ungroupable = false;
 	
 	if(!LOADING && !APPENDING && !CLONING) {
 		var _object = nodeBuild("Node_Rigid_Object", x,       y);

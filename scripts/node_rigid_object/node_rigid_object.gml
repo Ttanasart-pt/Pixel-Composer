@@ -667,7 +667,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		if(frame == 0) reset();
+		if(IS_FIRST_FRAME) reset();
 	} #endregion
 	
 	static step = function() { #region

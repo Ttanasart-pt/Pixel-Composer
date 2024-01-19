@@ -85,13 +85,14 @@ _HOVERING_ELEMENT = noone;
 		UPDATE_RENDER_ORDER = false;
 		
 		if(PROJECT.active) {
+			PROJECT.animator.is_simulating = false;
 			array_foreach(PROJECT.nodeArray, function(_node) { if(!_node.active) return; _node.stepBegin(); });
 			
 			if(IS_PLAYING || IS_RENDERING) {
 				if(PROJECT.animator.frame_progress) {
 					__addon_preAnim();
 					
-					if(CURRENT_FRAME == 0)
+					if(IS_FIRST_FRAME)
 						ResetAllNodesRender();
 					Render(true);
 					
@@ -107,7 +108,6 @@ _HOVERING_ELEMENT = noone;
 		}
 	}
 	
-	if(LAST_FRAME) RENDERING = [];
 	UPDATE = RENDER_TYPE.none;
 #endregion
 

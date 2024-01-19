@@ -210,6 +210,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		topoSorted		 = false;
 		temp_surface     = [];
 		force_requeue    = false;
+		is_simulation    = false;
 		
 		in_VFX = false;
 		
@@ -507,6 +508,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			setHeight();
 			will_setHeight = false;
 		}
+		
+		if(is_simulation) PROJECT.animator.is_simulating = true;
 	} #endregion
 	
 	static doStepBegin = function() {}

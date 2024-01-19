@@ -16,7 +16,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _gr
 	seed = irandom_range(100000, 999999);
 	
 	static processData_prebatch  = function() {
-		if(CURRENT_FRAME == 0) {
+		if(IS_FIRST_FRAME) {
 			var _sed = seed;
 			
 			for( var i = 0; i < part_pool_size; i++ ) 

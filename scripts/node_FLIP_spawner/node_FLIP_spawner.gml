@@ -103,7 +103,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _dirr  = getInputData(10);
 		var _ivel  = getInputData(11);
 		
-		if(frame == 0) spawn_amo = 0;
+		if(IS_FIRST_FRAME) spawn_amo = 0;
 		
 		_amo = min(_amo, domain.maxParticles - domain.numParticles);
 		spawn_amo += _amo;

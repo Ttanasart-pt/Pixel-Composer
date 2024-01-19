@@ -79,14 +79,14 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _dir = point_direction(_p1x, _p1y, _p2x, _p2y);
 		var _cur;
 		
-		if(prev_points == noone || CURRENT_FRAME == 0) prev_points = [];
+		if(prev_points == noone || IS_FIRST_FRAME) prev_points = [];
 		if(!is_array(array_safe_get(prev_points, _array_index)))
 			prev_points[_array_index] = [];
 		
 		if(_fixl) { #region
 			var _prevArr = prev_points[_array_index];
 			
-			if(CURRENT_FRAME == 0)
+			if(IS_FIRST_FRAME)
 				fixed_length = point_distance(_pnt1[0], _pnt1[1], _pnt2[0], _pnt2[1]);
 			else if(!array_empty(_prevArr)){
 				var _prev = _prevArr[array_length(_prevArr) - 1];

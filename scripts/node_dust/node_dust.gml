@@ -100,7 +100,7 @@ function Node_Dust(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		outputs[| 0].setValue(_outSurf);
 		
-		if(CURRENT_FRAME == 0) {
+		if(IS_FIRST_FRAME) {
 			dusts = [ new __Dust( 0, _dim[1] / 2 ) ];
 		} else {
 			for( var i = 0, n = array_length(dusts); i < n; i++ ) 

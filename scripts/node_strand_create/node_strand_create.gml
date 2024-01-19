@@ -538,7 +538,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		strandUpdate(CURRENT_FRAME == 0);
+		strandUpdate(IS_FIRST_FRAME);
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

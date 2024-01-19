@@ -102,7 +102,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		obstracle.y       = _posit[1];
 		obstracle.texture = _tex;
 		
-		if(frame == 0) {
+		if(IS_FIRST_FRAME) {
 			index = FLIP_createObstracle(domain.domain);
 			array_push(domain.obstracles, obstracle);
 		}

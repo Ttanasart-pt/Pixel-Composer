@@ -206,7 +206,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	} #endregion
 	
 	static processData_prebatch  = function() { #region
-		if(CURRENT_FRAME == 0) setGeometry();
+		if(IS_FIRST_FRAME) setGeometry();
 		stepFlag();
 	} #endregion
 	

@@ -78,15 +78,21 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 24] = nodeValue("Array indices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
 		.setArrayDepth(1);
 	
-	inputs[| 25] = nodeValue("Array texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 25] = nodeValue("Array texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
+	inputs[| 26] = nodeValue("Animated array", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	
+	inputs[| 27] = nodeValue("Animated array end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Loop", "Ping Pong" ]);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
 		.rejectArrayProcess();
 	
 	input_display_list = [ 
-		["Surfaces", 	 true], 0, 1, 15, 10, 24, 25, 
+		["Surfaces", 	 true], 0, 1, 15, 10, 24, 25, 26, 27, 
 		["Scatter",		false], 5, 6, 13, 14, 17, 9, 2,
 		["Path",		false], 19, 20, 21, 22, 
 		["Transform",	false], 3, 8, 7, 4,
@@ -115,6 +121,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static step = function() { #region
 		var _dis = getInputData(6);
 		var _arr = getInputData(15);
+		var _amn = getInputData(26);
 		inputs[| 0].array_depth = bool(_arr);
 		
 		inputs[| 13].setVisible(_dis == 2, _dis == 2);
@@ -127,6 +134,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 22].setVisible(_dis == 4);
 		inputs[| 24].setVisible(_arr == 3, _arr == 3);
 		inputs[| 25].setVisible(_arr == 4, _arr == 4);
+		inputs[| 26].setVisible(_arr);
+		inputs[| 27].setVisible(_arr);
+		
+		update_on_frame = _arr && (_amn[0] != 0 || _amn[1] != 0);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -166,6 +177,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var sortY   = _data[23];
 		var arrId   = _data[24];
 		var arrTex  = _data[25], useArrTex = is_surface(arrTex);
+		var arrAnim = _data[26];
+		var arrAnimEnd = _data[27];
 		
 		var _in_w, _in_h;
 		
@@ -193,9 +206,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var path_line_index = 0;
 		}
 		
-		var _sed = seed;
-		var _sct = array_create(_amount);
+		var _sed     = seed;
+		var _sct     = array_create(_amount);
 		var _sct_len = 0;
+		var _arrLen  = array_safe_length(_inSurf);
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -213,7 +227,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var posIndex  = 0;
 			
 			for(var i = 0; i < _amount; i++) {
-				if(is_array(_inSurf) && array_length(_inSurf) == 0) break;
+				if(is_array(_inSurf) && _arrLen == 0) break;
 				
 				var sp = noone, _x = 0, _y = 0;
 				var _v = noone;
@@ -289,10 +303,27 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				if(is_array(_inSurf)) {
 					switch(_arr) { 
-						case 1 : ind  = safe_mod(i, array_length(_inSurf));						break;
-						case 2 : ind  = irandom_seed(array_length(_inSurf) - 1, posS); posS++;	break;
+						case 1 : ind  = safe_mod(i, _arrLen);						break;
+						case 2 : ind  = irandom_seed(_arrLen - 1, posS); posS++;	break;
 						case 3 : ind  = array_safe_get(arrId, i, 0);							break;
-						case 4 : if(useArrTex) ind = color_get_brightness(surface_get_pixel(arrTex, _x, _y)) * (array_length(_inSurf) - 1); break;
+						case 4 : if(useArrTex) ind = color_get_brightness(surface_get_pixel(arrTex, _x, _y)) * (_arrLen - 1); break;
+					}
+					
+					if(arrAnim[0] != 0 || arrAnim[1] != 0) {
+						var _arrAnim_spd = random_range_seed(arrAnim[0], arrAnim[1], posS); posS++;
+						var _arrAnim_shf = random_seed(_arrLen, posS); posS++;
+						var _animInd     = ind + _arrAnim_shf + CURRENT_FRAME * _arrAnim_spd;
+						
+						switch(arrAnimEnd) {
+							case 0 : 
+								ind = safe_mod(_animInd, _arrLen); 
+								break;
+								
+							case 1 :
+								var pp = safe_mod(_animInd, _arrLen * 2 - 1);
+								ind = pp < _arrLen? pp : _arrLen * 2 - pp;
+								break;
+						}
 					}
 					
 					surf = array_safe_get(_inSurf, ind, 0); 

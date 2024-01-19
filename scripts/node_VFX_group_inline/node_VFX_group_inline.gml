@@ -9,6 +9,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	inputs[| 0] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
 		.rejectArray();
 	
+	is_simulation      = true;
 	update_on_frame    = true;
 	managedRenderOrder = true;
 	
@@ -68,7 +69,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	} #endregion
 	
 	static update = function() { #region
-		if(CURRENT_FRAME == 0) {
+		if(IS_FIRST_FRAME) {
 			NodeListSort(topoList, nodes);
 			reset();
 		}
