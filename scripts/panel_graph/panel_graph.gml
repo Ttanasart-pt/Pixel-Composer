@@ -298,27 +298,29 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(!_node) return;
 		
 			var _outp = -1;
-			var surf = -1;
+			var surf  = -1;
 		
 			for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
-				if(_node.outputs[| i].type == VALUE_TYPE.surface) {
-					_outp = _node.outputs[| i];
-					var _val = _node.outputs[| i].getValue();
-					if(is_array(_val))
-						surf  = _val[_node.preview_index];
-					else
-						surf  = _val;
-					break;
-				}
+				if(_node.outputs[| i].type != VALUE_TYPE.surface) continue;
+				
+				_outp = _node.outputs[| i];
+				surf  = _outp.getValue();
+				break;
 			}
 		
 			if(_outp == -1) return;
-		
+			if(!is_array(surf)) surf = [ surf ];
+			
 			var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y);
-		
-			_canvas.inputs[| 0].setValue([surface_get_width_safe(surf), surface_get_height_safe(surf)]);
-			_canvas.canvas_surface = surface_clone(surf);
-			_canvas.apply_surface();
+			var _dim    = surface_get_dimension(surf[0]);
+			
+			_canvas.attributes.dimension = _dim;
+			_canvas.attributes.frames    = array_length(surf);
+			_canvas.canvas_surface       = surface_array_clone(surf);
+			_canvas.inputs[| 0].setValue(_dim);
+			
+			_canvas.apply_surfaces();
+			
 		} #endregion
 	
 		function setTriggerPreview() { #region
@@ -376,7 +378,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var pan = panelAdd("Panel_Inspector", true);
 			pan.destroy_on_click_out = false;
 			pan.content.setInspecting(node_hover);
-			pan.content.locked     = true;
+			pan.content.locked = true;
 		});
 		menu_send_export	= menuItem(__txtx("panel_graph_send_to_export", "Send to export"),		function() { setCurrentExport(node_hover); },	noone, ["Graph", "Export"]);
 		menu_toggle_preview = menuItem(__txtx("panel_graph_toggle_preview", "Toggle node preview"), function() { setTriggerPreview(); },			noone, ["Graph", "Toggle preview"]);

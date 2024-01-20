@@ -223,6 +223,17 @@ function surface_verify(surf, w, h, format = surface_rgba8unorm) { #region
 	return surface_size_to(surf, w, h, format, true);
 } #endregion
 
+function surface_valid(surf, w, h, format = surface_rgba8unorm) { #region
+	INLINE
+	
+	if(!is_surface(surf)) return false;
+	var _sw = surface_get_width(surf);
+	var _sh = surface_get_height(surf);
+	var _f  = surface_get_format(surf);
+	
+	return _sw == w && _sh == h && _f == format;
+} #endregion
+
 //get
 function surface_get_pixel(surface, _x, _y) { #region
 	INLINE
@@ -293,7 +304,9 @@ function surface_create_from_buffer(w, h, buff, format = surface_rgba8unorm) { #
 
 function surface_from_buffer(buff) { #region
 	static header_length = 24;
-	if(!buffer_exists(buff)) return noone;
+	
+	if(!buffer_exists(buff))					return noone;
+	if(buffer_get_size(buff) < header_length)	return noone;
 	
 	buffer_seek(buff, buffer_seek_start, 0);
 	var text = "";
@@ -303,7 +316,6 @@ function surface_from_buffer(buff) { #region
 	var w = buffer_read(buff, buffer_u16);
 	var h = buffer_read(buff, buffer_u16);
 	var format = buffer_read(buff, buffer_u8);
-	//print($"Creating surface from buffer {buff}: size {buffer_get_size(buff) - 4}: w = {w}, h = {h}");
 	if(w < 1 || h < 1) return noone;
 	
 	var s = surface_create(w, h, format);

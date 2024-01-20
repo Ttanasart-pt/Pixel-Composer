@@ -1,4 +1,5 @@
 #macro struct_has variable_struct_exists
+#macro struct_key variable_struct_get_names
 
 function struct_override(original, override) {
 	var args = variable_struct_get_names(override);

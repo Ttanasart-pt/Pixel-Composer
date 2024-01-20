@@ -12,7 +12,7 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 3] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 3;
-		
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Mirror mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -24,7 +24,7 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _pos   = getInputData(1);
 		var _ang   = getInputData(2);
 		var _posx = _pos[0] * _s + _x;
@@ -40,32 +40,23 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		inputs[| 2].drawOverlay(active, _posx, _posy, _s, _mx, _my, _snx, _sny);
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _dim = [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ];
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+		var _suf = _data[0];
 		var _pos = _data[1];
 		var _ang = _data[2];
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
+		var _dim = surface_get_dimension(_suf);
+		
+		surface_set_shader(_outSurf, _output_index? sh_mirror_mask : sh_mirror);
+			shader_set_f("dimension", _dim);
+			shader_set_f("position",  _pos);
+			shader_set_f("angle",     degtorad(_ang));
 			
-			shader = _output_index? sh_mirror_mask : sh_mirror;
-			uniform_dim = shader_get_uniform(shader, "dimension");
-			uniform_pos = shader_get_uniform(shader, "position");
-			uniform_ang = shader_get_uniform(shader, "angle");
-	
-			shader_set(shader);
-			shader_set_uniform_f_array_safe(uniform_dim, _dim);
-			shader_set_uniform_f_array_safe(uniform_pos, _pos);
-			shader_set_uniform_f(uniform_ang, degtorad(_ang));
-			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+			draw_surface_safe(_suf);
+		surface_reset_shader();
 		
 		return _outSurf;
-	}
+	} #endregion
 }

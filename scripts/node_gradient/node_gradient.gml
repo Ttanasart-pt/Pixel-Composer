@@ -44,21 +44,29 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 14] = nodeValue("Uniform ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",		true],	0, 8, 
 		["Gradient",	false], 1, 5, 12, 9, 13, 7,
-		["Shape",		false], 2, 3, 10, 4, 11, 6,
+		["Shape",		false], 2, 3, 10, 4, 11, 6, 14, 
 	];
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
+	} #endregion
 	
 	static step = function() { #region
+		var _typ = getInputData(2);
+		
+		inputs[|  3].setVisible(_typ != 1);
+		inputs[|  4].setVisible(_typ == 1);
+		inputs[| 14].setVisible(_typ == 1);
+		
 		inputs[| 3].mappableStep();
 		inputs[| 4].mappableStep();
 		inputs[| 5].mappableStep();
@@ -72,23 +80,19 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _cnt = _data[6];
 		var _lop = _data[7];
 		var _msk = _data[8];
+		var _uni = _data[14];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		
-		if(_typ == 0 || _typ == 2) {
-			inputs[| 3].setVisible(true);
-			inputs[| 4].setVisible(false);
-		} else if(_typ == 1) {
-			inputs[| 3].setVisible(false);
-			inputs[| 4].setVisible(true);
-		}
 		
 		surface_set_shader(_outSurf, sh_gradient);
 			_gra.shader_submit();
 			
+			shader_set_f("dimension",  _dim);
+			
 			shader_set_i("gradient_loop",  _lop);
 			shader_set_f("center", _cnt[0] / _dim[0], _cnt[1] / _dim[1]);
 			shader_set_i("type",   _typ);
+			shader_set_i("uniAsp", _uni);
 			
 			shader_set_f_map("angle",  _data[3], _data[10], inputs[| 3]);
 			shader_set_f_map("radius", _data[4], _data[11], inputs[| 4]);

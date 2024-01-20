@@ -30,11 +30,21 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	input_display_list = [ 0, 6, 
 		["Diffuse",		false], 1, 
 		["Flow",		false], 2, 9, 3, 4, 
-		["Forces",		false], 7, 8, 
+		["Forces",		false], 8, 
 		["Rendering",	false], 5, 
 	]
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
+	
+	bufferStore.velocity = buffer_create(1, buffer_grow, 4);
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var _surf = getInputData(0);
+		var _sw   = surface_get_width_safe(_surf);
+		var _sh   = surface_get_height_safe(_surf);
+		
+		if(!surface_valid(temp_surface[2], _sw, _sh)) return;
+	} #endregion
 	
 	static update = function() {
 		var _surf = getInputData(0);
@@ -44,7 +54,6 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _flow = getInputData(4);
 		var _thre = getInputData(5);
 		var _seed = getInputData(6);
-		var _forc = getInputData(7);
 		var _fstr = getInputData(8);
 		var _detl = getInputData(9);
 		if(!is_surface(_surf)) return;
@@ -64,6 +73,22 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
+		#region velocity
+			temp_surface[2] = surface_from_buffer(bufferStore.velocity);
+			
+			if(!surface_valid(temp_surface[2], _sw, _sh, surface_rgba16float)) {
+				surface_free(temp_surface[2]);
+				temp_surface[2] = surface_create(_sw, _sh, surface_rgba16float);
+				surface_clear(temp_surface[2]);
+			
+				bufferStore.velocity = buffer_from_surface(temp_surface[2]);
+			}
+			
+			surface_set_shader(temp_surface[2], sh_vector_diverge,, BLEND.add);
+				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _sw, _sh);
+			surface_reset_shader();
+		#endregion
+		
 		surface_set_shader(temp_surface[1], sh_diffuse_flow);
 			shader_set_f("dimension", _sw, _sh);
 			shader_set_f("scale",     _scal);
@@ -71,9 +96,9 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			shader_set_f("flowRate",  _flow);
 			shader_set_f("seed",      _seed + CURRENT_FRAME / _rand);
 			
-			shader_set_i("useExternal",         is_surface(_forc));
+			shader_set_i("useExternal",         is_surface(temp_surface[2]));
 			shader_set_f("externalStrength",    _fstr);
-			shader_set_surface("externalForce", _forc);
+			shader_set_surface("externalForce", temp_surface[2]);
 			
 			draw_surface_safe(temp_surface[0]);
 		surface_reset_shader();

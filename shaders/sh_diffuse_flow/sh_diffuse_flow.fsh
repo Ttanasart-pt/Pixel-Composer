@@ -127,7 +127,7 @@ void main() {
 	vec2 flow = vec2(x1 - x0, y1 - y0);
 	if(useExternal == 1) {
 		vec4 _forc = texture2D( externalForce, v_vTexcoord );
-		flow -= (_forc.xy - 0.5) * 2. * externalStrength;
+		flow -= _forc.xy * externalStrength;
 	}
 	
     gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord - flow * flowRate );

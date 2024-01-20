@@ -5,12 +5,12 @@ varying vec4 v_vColour;
 #define pi1 3.14159
 #define pi2 1.57079
 
-uniform vec2 dimension;
-uniform vec2 position;
+uniform vec2  dimension;
+uniform vec2  position;
 uniform float angle;
 
 void main() {
-	vec2 pos = v_vTexcoord;
+	vec2 pos       = v_vTexcoord;
 	vec2 pixel_pos = v_vTexcoord * dimension;
 	float _angle;
 	

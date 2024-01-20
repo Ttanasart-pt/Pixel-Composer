@@ -7,6 +7,7 @@ varying vec4 v_vColour;
 #define TAU 6.283185307179586
 
 uniform vec2 center;
+uniform vec2 dimension;
 
 uniform vec2      angle;
 uniform int       angleUseSurf;
@@ -26,6 +27,7 @@ uniform sampler2D scaleSurf;
 
 uniform int type;
 uniform int gradient_loop;
+uniform int uniAsp;
 
 float sca;
 
@@ -142,12 +144,18 @@ void main() {
 	float prog = 0.;
 	if(type == 0) {
 		prog = .5 + (v_vTexcoord.x - center.x) * cos(ang) - (v_vTexcoord.y - center.y) * sin(ang);
+		
 	} else if(type == 1) {
-		prog = distance(v_vTexcoord, center) / rad;
+		vec2 asp = dimension / dimension.y;
+		
+		if(uniAsp == 0) prog = distance(v_vTexcoord, center) / rad;
+		else            prog = distance(v_vTexcoord * asp, center * asp) / rad;
+		
 	} else if(type == 2) {
 		vec2  _p = v_vTexcoord - center;
 		float _a = atan(_p.y, _p.x) + ang;
 		prog = (_a - floor(_a / TAU) * TAU) / TAU;
+		
 	}
 	
 	prog += shf;

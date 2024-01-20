@@ -168,6 +168,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			["Auto update", function() { return attributes.update_graph; }, new checkBox(function() { attributes.update_graph = !attributes.update_graph; }) ],
 			["Update trigger", function() { return attributes.show_update_trigger; }, new checkBox(function() { attributes.show_update_trigger = !attributes.show_update_trigger; }) ],
 		];
+		
+		bufferStore = {};
 	#endregion
 	
 	#region ---- preview ----
@@ -1746,7 +1748,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) { return 0; }
 	
-	static serialize = function(scale = false, preset = false) { #region
+	static serialize = function(scale = false, preset = false) { #region							>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SERIALIZE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		if(!active) return;
 		
 		var _map = {};
@@ -1791,6 +1793,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		_map.inspectInputs = _trigger;
 		_map.renamed       = renamed;
 		
+		_map.buffer = {};
+		var _bufferKey = struct_key(bufferStore);
+		for( var i = 0, n = array_length(_bufferKey); i < n; i++ ) {
+			var _key = _bufferKey[i];
+			_map.buffer[$ _key] = buffer_serialize(bufferStore[$ _key]);
+		}
+		
 		doSerialize(_map);
 		processSerialize(_map);
 		return _map;
@@ -1802,7 +1811,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	load_scale = false;
 	load_map = -1;
-	static deserialize = function(_map, scale = false, preset = false) { #region
+	static deserialize = function(_map, scale = false, preset = false) { #region					>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DESERIALIZE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		load_map   = _map;
 		load_scale = scale;
 		renamed    = struct_try_get(load_map, "renamed", false);
@@ -1833,6 +1842,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		if(struct_has(load_map, "attri"))
 			attributeDeserialize(load_map.attri);
+		
+		if(struct_has(load_map, "buffer")) {
+			var _bufferKey = struct_key(bufferStore);
+			for( var i = 0, n = array_length(_bufferKey); i < n; i++ ) {
+				var _key = _bufferKey[i];
+				if(!struct_has(bufferStore, _key)) continue;
+				
+				bufferStore[$ _key] = buffer_deserialize(load_map.buffer[$ _key]);
+			}
+		}
 		
 		if(is_dynamic_input) {
 			inputBalance();

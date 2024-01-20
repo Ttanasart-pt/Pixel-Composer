@@ -395,7 +395,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(!is_surface(_canvas_surface)) {
 			setCanvasSurface(surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer[index]));
 		} else if(surface_get_width_safe(_canvas_surface) != _dim[0] || surface_get_height_safe(_canvas_surface) != _dim[1]) {
-			buffer_delete(canvas_buffer[index]);
+			var _cbuff = array_safe_get(canvas_buffer, index);
+			if(buffer_exists(_cbuff)) buffer_delete(_cbuff);
+			
 			canvas_buffer[index] = buffer_create(_dim[0] * _dim[1] * 4, buffer_fixed, 4);
 			setCanvasSurface(surface_size_to(_canvas_surface, _dim[0], _dim[1]), index);
 		}
@@ -478,14 +480,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function draw_line_size(_x0, _y0, _x1, _y1, _draw = false) { #region 
-		if(_x1 > _x0) _x0--;
-		if(_y1 > _y0) _y0--;
-		if(_y1 < _y0) _y1--;
-		if(_x1 < _x0) _x1--;
 		
-		if(brush_size == 1 && brush_surface == noone) 
+		if(brush_size == 1 && brush_surface == noone) {
+			if(_x1 > _x0) _x0--;
+			if(_y1 > _y0) _y0--;
+			if(_y1 < _y0) _y1--;
+			if(_x1 < _x0) _x1--;
+		
 			draw_line(_x0, _y0, _x1, _y1);
-		else {
+		} else {
 			var diss  = point_distance(_x0, _y0, _x1, _y1);
 			var dirr  = point_direction(_x0, _y0, _x1, _y1);
 			var st_x  = lengthdir_x(1, dirr);
@@ -498,9 +501,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				while(_i < diss) {
 					var _px = _x0 + st_x * _i;
 					var _py = _y0 + st_y * _i;
-				
+					
 					draw_point_size(_px, _py, _draw);
-				
+					
 					brush_next_dist = random_range(brush_dist_min, brush_dist_max);
 					_i   += brush_next_dist;
 					_dst -= brush_next_dist;
@@ -955,7 +958,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(brush_sizing) {
 				var s = brush_sizing_s + (_mx - brush_sizing_mx) / 16;
 				    s = max(1, s);
-				inputs[| 2].setValue(s);
+				tool_attribute.size = s;
 				
 				if(mouse_release(mb_right)) 
 					brush_sizing = false;
