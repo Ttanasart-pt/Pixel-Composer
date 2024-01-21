@@ -1,31 +1,21 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform float wmin;
-uniform float wmax;
-uniform float rmin;
-uniform float rmax;
-uniform float gmin;
-uniform float gmax;
-uniform float bmin;
-uniform float bmax;
-uniform float amin;
-uniform float amax;
+uniform vec2 lw;
+uniform vec2 lr;
+uniform vec2 lg;
+uniform vec2 lb;
+uniform vec2 la;
 
 void main() {
 	vec4 col  = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
 	
-	col.r = (col.r - rmin) / (rmax - rmin);
-	col.g = (col.g - gmin) / (gmax - gmin);
-	col.b = (col.b - bmin) / (bmax - bmin);
-	col.a = (col.a - amin) / (amax - amin);
+	col.r = (col.r - lr.x) / (lr.y - lr.x);
+	col.g = (col.g - lg.x) / (lg.y - lg.x);
+	col.b = (col.b - lb.x) / (lb.y - lb.x);
+	col.a = (col.a - la.x) / (la.y - la.x);
 	
-	col.r = (col.r - wmin) / (wmax - wmin);
-	col.g = (col.g - wmin) / (wmax - wmin);
-	col.b = (col.b - wmin) / (wmax - wmin);
+	col.rgb = (col.rgb - lw.x) / (lw.y - lw.x);
 	
     gl_FragColor = col;
 }

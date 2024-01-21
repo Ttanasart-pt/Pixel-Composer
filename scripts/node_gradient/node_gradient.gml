@@ -65,7 +65,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		inputs[|  3].setVisible(_typ != 1);
 		inputs[|  4].setVisible(_typ == 1);
-		inputs[| 14].setVisible(_typ == 1);
+		inputs[| 14].setVisible(_typ);
 		
 		inputs[| 3].mappableStep();
 		inputs[| 4].mappableStep();

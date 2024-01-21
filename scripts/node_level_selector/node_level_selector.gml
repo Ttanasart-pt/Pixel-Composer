@@ -32,6 +32,8 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 11] = nodeValue("Keep Original", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
@@ -79,6 +81,7 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		level_renderer,
 		["Surfaces", true],	0, 3, 4, 7, 8, 
 		["Level",	false],	1, 9, 2, 10, 
+		["Output",	false],	11, 
 	];
 	histogramInit();
 	
@@ -107,6 +110,7 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		surface_set_shader(_outSurf, sh_level_selector);
 			shader_set_f_map("middle", _data[1], _data[ 9], inputs[| 1]);
 			shader_set_f_map("range" , _data[2], _data[10], inputs[| 2]);
+			shader_set_i("keep", _data[11]);
 			
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();

@@ -1555,6 +1555,7 @@
     {"id":{"name":"string_hexadecimal","path":"scripts/string_hexadecimal/string_hexadecimal.yy",},},
     {"id":{"name":"s_node_camera","path":"sprites/s_node_camera/s_node_camera.yy",},},
     {"id":{"name":"node_random_tile","path":"scripts/node_random_tile/node_random_tile.yy",},},
+    {"id":{"name":"line_intersect","path":"scripts/line_intersect/line_intersect.yy",},},
     {"id":{"name":"sh_find_boundary","path":"shaders/sh_find_boundary/sh_find_boundary.yy",},},
     {"id":{"name":"Obj_FirebaseFirestore_Document_Set","path":"objects/Obj_FirebaseFirestore_Document_Set/Obj_FirebaseFirestore_Document_Set.yy",},},
     {"id":{"name":"_node_strand_affector","path":"scripts/_node_strand_affector/_node_strand_affector.yy",},},

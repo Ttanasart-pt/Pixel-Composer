@@ -68,6 +68,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static onInspector1Update = function(updateAll = true) { initSurface(true); PROJECT.animator.render(); }
 	
 	static step = function() { #region
+		var inpt = getInputData(0);
 		var grup = getInputData(1);
 		var pack = getInputData(3);
 		var user = getInputData(11);
@@ -81,9 +82,15 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		inputs[| 6].setVisible(pack != SPRITE_STACK.grid);
 		inputs[| 9].setVisible(pack == SPRITE_STACK.grid);
 		
-		inputs[| 8].editWidget.minn = FIRST_FRAME + 1;
-		inputs[| 8].editWidget.maxx = LAST_FRAME + 1;
-		if(!user) inputs[| 8].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
+		if(grup == SPRITE_ANIM_GROUP.animation) {
+			inputs[| 8].editWidget.minn = FIRST_FRAME + 1;
+			inputs[| 8].editWidget.maxx = LAST_FRAME + 1;
+			if(!user) inputs[| 8].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
+		} else {
+			inputs[| 8].editWidget.minn = 0;
+			inputs[| 8].editWidget.maxx = array_length(inpt) - 1;
+			if(!user) inputs[| 8].setValueDirect([ 0, array_length(inpt) - 1], noone, false, 0, false);
+		}
 		
 		update_on_frame = grup == 0;
 	} #endregion
@@ -129,7 +136,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		#region frame
 			var _st, _ed;
-			var _ln = array_length(inpt);
+			var _ln = array_length(inpt) - 1;
 			
 			if(rang[0] < 0)  _st = _ln + rang[0];
 			else             _st = rang[0];
@@ -175,7 +182,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 							
 						for(var j = 0; j < col; j++) {
 							var index = _st + i * col + j;
-							if(index >= _ed) break;
+							if(index > _ed) break;
 						
 							row_w += surface_get_width_safe(inpt[index]);
 							if(j) row_w += spc2[0];
@@ -258,11 +265,11 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 								
 						for(var j = 0; j < col; j++) {
 							var index = _st + i * col + j;
-							if(index >= _ed) break;
+							if(index > _ed) break;
 								
 							var _w = surface_get_width_safe(inpt[index]);
 							var _h = surface_get_height_safe(inpt[index]);
-						
+							
 							array_push(_atl, new SurfaceAtlas(inpt[index], px, py));
 							draw_surface_safe(inpt[index], px, py);
 								

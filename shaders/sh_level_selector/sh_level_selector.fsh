@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -11,6 +8,8 @@ uniform sampler2D middleSurf;
 uniform vec2      range;
 uniform int       rangeUseSurf;
 uniform sampler2D rangeSurf;
+
+uniform int keep;
 
 void main() {
 	float mid = middle.x;
@@ -29,7 +28,9 @@ void main() {
 	float bright = dot(col.rgb, vec3(0.2126, 0.7152, 0.0722));
 	
 	if(bright > mid + rng || bright < mid - rng)
-		gl_FragColor = vec4(0., 0., 0., col.a);
-	else
-		gl_FragColor = vec4(1., 1., 1., col.a);
+		gl_FragColor = vec4(vec3(0.), col.a);
+	else if(keep == 0)
+		gl_FragColor = vec4(vec3(1.), col.a);
+	else 
+		gl_FragColor = vec4(vec3(bright), col.a);
 }

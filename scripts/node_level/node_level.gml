@@ -94,28 +94,18 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
-		var _wmin = min(_data[1][0], _data[1][1]);
-		var _wmax = max(_data[1][0], _data[1][1]);
-		var _rmin = min(_data[2][0], _data[2][1]);
-		var _rmax = max(_data[2][0], _data[2][1]);
-		var _gmin = min(_data[3][0], _data[3][1]);
-		var _gmax = max(_data[3][0], _data[3][1]);
-		var _bmin = min(_data[4][0], _data[4][1]);
-		var _bmax = max(_data[4][0], _data[4][1]);
-		var _amin = min(_data[5][0], _data[5][1]);
-		var _amax = max(_data[5][0], _data[5][1]);
+		var _w = _data[1];
+		var _r = _data[2];
+		var _g = _data[3];
+		var _b = _data[4];
+		var _a = _data[5];
 		
 		surface_set_shader(_outSurf, sh_level);
-			shader_set_f("wmin", _wmin);
-			shader_set_f("wmax", _wmax);
-			shader_set_f("rmin", _rmin);
-			shader_set_f("rmax", _rmax);
-			shader_set_f("gmin", _gmin);
-			shader_set_f("gmax", _gmax);
-			shader_set_f("bmin", _bmin);
-			shader_set_f("bmax", _bmax);
-			shader_set_f("amin", _amin);
-			shader_set_f("amax", _amax);
+			shader_set_f("lw", _w);
+			shader_set_f("lr", _r);
+			shader_set_f("lg", _g);
+			shader_set_f("lb", _b);
+			shader_set_f("la", _a);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

@@ -352,10 +352,11 @@ function __part(_node) constructor {
 					draw_point(_xx + 1, _yy + 1);
 					break;
 				case 3 : 
+					draw_point(_xx,     _yy);
 					draw_point(_xx - 1, _yy);
 					draw_point(_xx + 1, _yy);
-					draw_point(_xx, _yy + 1);
-					draw_point(_xx, _yy - 1);
+					draw_point(_xx,     _yy + 1);
+					draw_point(_xx,     _yy - 1);
 					break;
 				default : 
 					draw_circle(_xx, _yy, (exact? round(ss) : ss) - 2, false);

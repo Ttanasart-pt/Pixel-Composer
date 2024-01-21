@@ -65,7 +65,7 @@ if(!MOUSE_WRAPPING) {
 		val = _snp_v;
 	
 	if(slide_da) {
-		var _val_y = slide_dy - (val - tb.slide_sv); 
+		var _val_y = slide_dy - (val - tb.slide_sv) / _s;
 		
 		var _sdw = _tw;
 		var _sdh = 256;
@@ -90,7 +90,7 @@ if(!MOUSE_WRAPPING) {
 		
 		var _sdw = 240;
 		var _sdh = 48;
-		var _sdx = _val_x - _sdw / 2;
+		var _sdx = _val_x   - _sdw / 2;
 		var _sdy = slide_dy - _sdh / 2;
 		
 		draw_sprite_stretched_ext(THEME.textbox_number_slider, 0, _sdx, _sdy, _sdw, _sdh, COLORS.panel_inspector_group_bg, 1);

@@ -55,6 +55,10 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _a = inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
 		var _a = inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
+		
+		draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
+		draw_text(_p1x + ui(4), _p1y - ui(4), "1");
+		draw_text(_p2x + ui(4), _p2y - ui(4), "2");
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -117,14 +121,14 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			}
 		} #endregion
 		
+		_cur = [[ _p1x, _p1y ], [ _p2x, _p2y ], [ _p1x, _p1y ], [ _p2x, _p2y ]];
 		if(_thck) {
 			_cur = [
 				[ _p1x - lengthdir_x(_thck / 2, _dir), _p1y - lengthdir_y(_thck / 2, _dir) ], 
 				[ _p2x + lengthdir_x(_thck / 2, _dir), _p2y + lengthdir_y(_thck / 2, _dir) ],
 				[ _p1x, _p1y ], [ _p2x, _p2y ]
 			];
-		} else
-			_cur = [[ _p1x, _p1y ], [ _p2x, _p2y ], [ _p1x, _p1y ], [ _p2x, _p2y ]];
+		}
 		
 		for( var i = 0; i < array_length(temp_surface); i++ )
 			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
@@ -133,50 +137,107 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			DRAW_CLEAR
 			
 			draw_set_color(_colr.eval(1));
-			if(_trac > 0 && CURRENT_FRAME > 0 && prev_points != noone) { #region
+			if(_trac > 0 && CURRENT_FRAME > 0 && prev_points != noone) { #region Trace
 				var _prevArr = prev_points[_array_index];
 				var _inds    = max(0, array_length(_prevArr) - _trac);
 				var useTex   = is_surface(_trcTex);
 				
-				if(useTex)
-					draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_trcTex));
-				else 
-					draw_primitive_begin(pr_trianglelist);
+				if(useTex) draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_trcTex));
+				else       draw_primitive_begin(pr_trianglelist);
 				
 				for( var i = _inds, n = array_length(_prevArr); i < n; i++ ) {
 					var _prev = _prevArr[i];
 					var _curr = i + 1 == n? _cur : _prevArr[i + 1];
 					
-					var _pr1x = _prev[0][0];
-					var _pr1y = _prev[0][1];
-					var _pr2x = _prev[1][0];
-					var _pr2y = _prev[1][1];
+					var _pr1x = ceil(_prev[0][0]);
+					var _pr1y = ceil(_prev[0][1]);
+					var _pr2x = ceil(_prev[1][0]);
+					var _pr2y = ceil(_prev[1][1]);
 					
-					var _pp1x = _curr[0][0];
-					var _pp1y = _curr[0][1];
-					var _pp2x = _curr[1][0];
-					var _pp2y = _curr[1][1];
+					var _pp1x = ceil(_curr[0][0]);
+					var _pp1y = ceil(_curr[0][1]);
+					var _pp2x = ceil(_curr[1][0]);
+					var _pp2y = ceil(_curr[1][1]);
 					
-					if(useTex) {
-						var _v0 = (i - _inds + 0) / (n - _inds);
-						var _v1 = (i - _inds + 1) / (n - _inds);
+					var _inx = false;// line_intersect(_pr1x, _pr1y, _pr2x, _pr2y, _pp1x, _pp1y, _pp2x, _pp2y);
+					
+					if(_inx == false) {
+						if(useTex) {
+							var _v0 = (i - _inds + 0) / (n - _inds);
+							var _v1 = (i - _inds + 1) / (n - _inds);
 						
-						draw_vertex_texture(ceil(_pr1x), ceil(_pr1y), 0, _v0);
-						draw_vertex_texture(ceil(_pr2x), ceil(_pr2y), 1, _v0);
-						draw_vertex_texture(ceil(_pp1x), ceil(_pp1y), 0, _v1);
+							draw_vertex_texture(_pr1x, _pr1y, 0, _v0);
+							draw_vertex_texture(_pr2x, _pr2y, 1, _v0);
+							draw_vertex_texture(_pp1x, _pp1y, 0, _v1);
 											
-						draw_vertex_texture(ceil(_pr2x), ceil(_pr2y), 1, _v0);
-						draw_vertex_texture(ceil(_pp1x), ceil(_pp1y), 0, _v1);
-						draw_vertex_texture(ceil(_pp2x), ceil(_pp2y), 1, _v1);
-					} else {
-						draw_vertex(ceil(_pr1x), ceil(_pr1y));
-						draw_vertex(ceil(_pr2x), ceil(_pr2y));
-						draw_vertex(ceil(_pp1x), ceil(_pp1y));
+							draw_vertex_texture(_pr2x, _pr2y, 1, _v0);
+							draw_vertex_texture(_pp1x, _pp1y, 0, _v1);
+							draw_vertex_texture(_pp2x, _pp2y, 1, _v1);
+						} else {
+							draw_vertex(_pr1x, _pr1y);
+							draw_vertex(_pr2x, _pr2y);
+							draw_vertex(_pp1x, _pp1y);
+										
+							draw_vertex(_pr2x, _pr2y);
+							draw_vertex(_pp1x, _pp1y);
+							draw_vertex(_pp2x, _pp2y);
+						}
+					} else { #region circular // disabled
+						var _side = point_distance(_inx[0], _inx[1], _pr1x, _pr1y) < point_distance(_inx[0], _inx[1], _pr2x, _pr2y);
+						var _stp  = 8;
 						
-						draw_vertex(ceil(_pr2x), ceil(_pr2y));
-						draw_vertex(ceil(_pp1x), ceil(_pp1y));
-						draw_vertex(ceil(_pp2x), ceil(_pp2y));
-					}
+						if(_side == 1) {
+							var _d0 = point_distance( _pr1x, _pr1y, _pr2x, _pr2y);
+							var _d1 = point_distance( _pp1x, _pp1y, _pp2x, _pp2y);
+							var _a0 = point_direction(_pr1x, _pr1y, _pr2x, _pr2y);
+							var _a1 = point_direction(_pp1x, _pp1y, _pp2x, _pp2y);
+							var _i0 = point_distance(_inx[0], _inx[1], _pr1x, _pr1y);
+							var _i1 = point_distance(_inx[0], _inx[1], _pp1x, _pp1y);
+							
+						} else {
+							var _d0 = point_distance( _pr2x, _pr2y, _pr1x, _pr1y);
+							var _d1 = point_distance( _pp2x, _pp2y, _pp1x, _pp1y);
+							var _a0 = point_direction(_pr2x, _pr2y, _pr1x, _pr1y);
+							var _a1 = point_direction(_pp2x, _pp2y, _pp1x, _pp1y);
+							var _i0 = point_distance(_inx[0], _inx[1], _pr2x, _pr2y);
+							var _i1 = point_distance(_inx[0], _inx[1], _pp2x, _pp2y);
+						}
+						
+						var _od, _oa, _oi;
+						var _nd, _na, _ni;
+						var __r1x, __r1y, __r2x, __r2y;
+						var __p1x, __p1y, __p2x, __p2y;
+						
+						for( var j = 0; j <= _stp; j++ ) {
+							_nd = lerp(_d0, _d1, j / _stp);
+							_na = lerp_float_angle(_a0, _a1, j / _stp);
+							_ni = lerp(_i0, _i1, j / _stp);
+							
+							if(j) {
+								__r1x = _inx[0] + lengthdir_x(_oi, _oa);
+								__r1y = _inx[1] + lengthdir_y(_oi, _oa);
+								__r2x = _inx[0] + lengthdir_x(_oi + _od, _oa);
+								__r2y = _inx[1] + lengthdir_y(_oi + _od, _oa);
+								
+								__p1x = _inx[0] + lengthdir_x(_ni, _na);
+								__p1y = _inx[1] + lengthdir_y(_ni, _na);
+								__p2x = _inx[0] + lengthdir_x(_ni + _nd, _na);
+								__p2y = _inx[1] + lengthdir_y(_ni + _nd, _na);
+								
+								draw_vertex(ceil(__r1x), ceil(__r1y));
+								draw_vertex(ceil(__r2x), ceil(__r2y));
+								draw_vertex(ceil(__p1x), ceil(__p1y));
+						
+								draw_vertex(ceil(__r2x), ceil(__r2y));
+								draw_vertex(ceil(__p1x), ceil(__p1y));
+								draw_vertex(ceil(__p2x), ceil(__p2y));
+							}
+							
+							_od = _nd;
+							_oa = _na;
+							_oi = _ni;
+						}
+					} #endregion
 				}
 				
 				draw_primitive_end();
@@ -202,7 +263,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			temp_surface[2] = surface_apply_gaussian(temp_surface[1], _grad, false, 0, 1);
 		} #endregion
 		
-		surface_set_target(_outSurf);
+		surface_set_target(_outSurf); #region
 			DRAW_CLEAR
 			
 			if(_gint > 0) {
@@ -218,7 +279,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			draw_surface(temp_surface[0], 0, 0);
 			
 			BLEND_NORMAL
-		surface_reset_target();
+		surface_reset_target(); #endregion
 		
 		array_push(prev_points[_array_index], _cur);
 		

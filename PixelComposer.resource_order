@@ -1234,6 +1234,7 @@
     {"name":"string_hexadecimal","order":1,"path":"scripts/string_hexadecimal/string_hexadecimal.yy",},
     {"name":"s_node_camera","order":3,"path":"sprites/s_node_camera/s_node_camera.yy",},
     {"name":"node_random_tile","order":8,"path":"scripts/node_random_tile/node_random_tile.yy",},
+    {"name":"line_intersect","order":11,"path":"scripts/line_intersect/line_intersect.yy",},
     {"name":"Obj_FirebaseFirestore_Document_Set","order":6,"path":"objects/Obj_FirebaseFirestore_Document_Set/Obj_FirebaseFirestore_Document_Set.yy",},
     {"name":"_node_strand_affector","order":10,"path":"scripts/_node_strand_affector/_node_strand_affector.yy",},
     {"name":"Steamworks","order":2,"path":"extensions/Steamworks/Steamworks.yy",},

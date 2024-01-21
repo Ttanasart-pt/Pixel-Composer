@@ -135,16 +135,17 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 								draw_point(_pos[0], _pos[1]);
 								break;
 							case 2 : 
-								draw_point(_pos[0], _pos[1]);
+								draw_point(_pos[0],     _pos[1]);
 								draw_point(_pos[0] + 1, _pos[1]);
-								draw_point(_pos[0], _pos[1] + 1);
+								draw_point(_pos[0],     _pos[1] + 1);
 								draw_point(_pos[0] + 1, _pos[1] + 1);
 								break;
 							case 3 : 
+								draw_point(_pos[0],     _pos[1]);
 								draw_point(_pos[0] - 1, _pos[1]);
 								draw_point(_pos[0] + 1, _pos[1]);
-								draw_point(_pos[0], _pos[1] + 1);
-								draw_point(_pos[0], _pos[1] - 1);
+								draw_point(_pos[0],     _pos[1] + 1);
+								draw_point(_pos[0],     _pos[1] - 1);
 								break;
 							default : 
 								draw_circle(round(_pos[0]), round(_pos[1]), round(_ss) - 2, false);
