@@ -12,6 +12,10 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 2] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.rejectArray();
 	
+	inputs[| 3] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.padding)
+		.rejectArray();
+		
 	setIsDynamicInput(1);
 	
 	static createNewInput = function() { #region
@@ -65,6 +69,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _axis = getInputData(0);
 		var _alig = getInputData(1);
 		var _spac = getInputData(2);
+		var _padd = getInputData(3);
 		
 		var ww = 0;
 		var hh = 0;
@@ -79,11 +84,11 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var sh = surface_get_height_safe(_surf[j]);
 				
 				if(_axis == 0) {
-					ww += sw + (i > input_fix_len && j == array_length(_surf) - 1) * _spac;
-					hh = max(hh, sh);
+					ww += sw + _spac;
+					hh = max(hh, sh + _spac);
 				} else if(_axis == 1) {
-					ww = max(ww, sw);
-					hh += sh + (i > input_fix_len && j == array_length(_surf) - 1) * _spac;
+					ww = max(ww, sw + _spac);
+					hh += sh + _spac;
 				} else if(_axis == 2) {
 					ww = max(ww, sw);
 					hh = max(hh, sh);
@@ -91,14 +96,20 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
+		ww -= _spac;
+		hh -= _spac;
+		
+		var ow = ww + _padd[PADDING.left] + _padd[PADDING.right]; 
+		var oh = hh + _padd[PADDING.top] + _padd[PADDING.bottom]; 
+		
 		var _outSurf = outputs[| 0].getValue();
-		_outSurf     = surface_verify(_outSurf,        ww, hh, attrDepth());
+		_outSurf     = surface_verify(_outSurf, ow, oh, attrDepth());
 		
-		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, attrDepth());
-		temp_surface[1] = surface_verify(temp_surface[1], ww, hh, attrDepth());
+		temp_surface[0] = surface_verify(temp_surface[0], ow, oh, attrDepth());
+		temp_surface[1] = surface_verify(temp_surface[1], ow, oh, attrDepth());
 		
-		surface_set_target(temp_surface[0]); DRAW_CLEAR surface_reset_target();
-		surface_set_target(temp_surface[1]); DRAW_CLEAR surface_reset_target();
+		surface_clear(temp_surface[0]);
+		surface_clear(temp_surface[1]);
 		
 		var atlas = [];
 		var ppind = 0;
@@ -134,11 +145,11 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				surface_set_shader(temp_surface[!ppind], sh_draw_surface);
 					DRAW_CLEAR
 					BLEND_OVERRIDE
-					shader_set_f("dimension", ww, hh);
+					shader_set_f("dimension", ow, oh);
 					
 					shader_set_surface("fore", _surf[j]);
 					shader_set_f("fdimension", sw, sh);
-					shader_set_f("position", sx, sy);
+					shader_set_f("position",   sx + _padd[PADDING.left], sy + _padd[PADDING.top]);
 					
 					draw_surface(temp_surface[ppind], 0, 0);
 					
@@ -147,10 +158,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 				ppind = !ppind;
 					
-				if(_axis == 0)
-					sx += sw + _spac;
-				else if(_axis == 1)
-					sy += sh + _spac;
+				if(_axis == 0)      sx += sw + _spac;
+				else if(_axis == 1) sy += sh + _spac;
 			}
 		}
 		

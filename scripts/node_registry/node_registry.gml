@@ -687,7 +687,8 @@ function __initNodes() {
 		ds_list_add(compose, "Composes");
 		addNodeObject(compose, "Blend",					s_node_blend,			"Node_Blend",				[1, Node_Blend],, "Combine 2 images using different blend modes.");
 		addNodeObject(compose, "Composite",				s_node_compose,			"Node_Composite",			[1, Node_Composite],, "Combine multiple images with custom transformation.");
-		addNodeObject(compose, "Stack",					s_node_draw_stack,		"Node_Stack",				[1, Node_Stack],, "Place image next to each other linearly, or on top of each other.").setVersion(1070);
+		addNodeObject(compose, "Stack",					s_node_image_stack,		"Node_Stack",				[1, Node_Stack],, "Place image next to each other linearly, or on top of each other.").setVersion(1070);
+		addNodeObject(compose, "Image Grid",			s_node_image_grid,		"Node_Image_Grid",			[1, Node_Image_Grid],, "Place image next to each other in grid pattern.").setVersion(11640);
 		addNodeObject(compose, "Camera",				s_node_camera,			"Node_Camera",				[1, Node_Camera],, "Create camera that crop image to fix dimension with control of position, zoom. Also can be use to create parallax effect.");
 		addNodeObject(compose, "Render Spritesheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	[1, Node_Render_Sprite_Sheet],, "Create spritesheet from image array or animation.");
 		addNodeObject(compose, "Pack Sprites",			s_node_pack_sprite,		"Node_Pack_Sprites",		[1, Node_Pack_Sprites],, "Combine array of images with different dimension using different algorithms.").setVersion(1140);

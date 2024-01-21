@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_stack",
+  "name": "node_image_grid",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

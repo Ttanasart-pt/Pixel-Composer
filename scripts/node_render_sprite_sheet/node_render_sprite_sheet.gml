@@ -59,27 +59,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		["Surfaces",  false], 0, 1, 2,
 		["Sprite",	  false], 3, 
 		["Packing",	  false], 4, 5, 6, 9, 7, 
-		["Rendering", false], 10, 
+		//["Rendering", false], 10, 
 		["Custom Range", true, 11], 8, 
 	]
 	
 	attribute_surface_depth();
 
-	static onInspector1Update = function(updateAll = true) { #region
-		var key = ds_map_find_first(PROJECT.nodeMap);
-		
-		repeat(ds_map_size(PROJECT.nodeMap)) {
-			var node = PROJECT.nodeMap[? key];
-			key = ds_map_find_next(PROJECT.nodeMap, key);
-			
-			if(!node.active) continue;
-			if(instanceof(node) != "Node_Render_Sprite_Sheet") continue;
-			
-			initSurface();
-		}
-		
-		PROJECT.animator.render();
-	} #endregion
+	static onInspector1Update = function(updateAll = true) { initSurface(true); PROJECT.animator.render(); }
 	
 	static step = function() { #region
 		var grup = getInputData(1);
@@ -103,21 +89,21 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
+		if(IS_FIRST_FRAME) initSurface();
+		
 		var grup = getInputData(1);
 		
-		if(grup == SPRITE_ANIM_GROUP.animation) 
-			animationRender();
-		else 
-			arrayRender();
+		if(grup == SPRITE_ANIM_GROUP.animation) animationRender();
+		else									arrayRender();
 	} #endregion
 	
-	static initSurface = function() { #region
+	static initSurface = function(clear = false) { #region
 		for(var i = 0; i < TOTAL_FRAMES; i++) anim_drawn[i] = false;
 		
 		var grup = getInputData(1);
 		
 		if(grup == SPRITE_ANIM_GROUP.animation) 
-			animationInit();
+			animationInit(clear);
 		else 
 			arrayRender();
 	} #endregion
@@ -131,7 +117,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var padd = getInputData(7);
 		var rang = getInputData(8);
 		var spc2 = getInputData(9);
-		var ovlp = getInputData(10);
+		//var ovlp = getInputData(10);
 		
 		var cDep = attrDepth();
 		
@@ -212,8 +198,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			surface_set_target(_surf);
 			DRAW_CLEAR
 				
-			if(ovlp) BLEND_ALPHA_MULP
-			else     BLEND_OVERRIDE
+			BLEND_OVERRIDE
 			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
@@ -296,7 +281,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		outputs[| 1].setValue(_atl);
 	} #endregion
 	
-	static animationInit = function() { #region
+	static animationInit = function(clear = false) { #region
 		var inpt = getInputData(0);
 		var skip = getInputData(2);
 		var pack = getInputData(3);
@@ -306,9 +291,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var padd = getInputData(7);
 		var rang = getInputData(8);
 		var spc2 = getInputData(9);
-		var ovlp = getInputData(10);
+		//var ovlp = getInputData(10);
 		var user = getInputData(11);
 		
+		var _out = outputs[| 0].getValue();
 		var _atl = outputs[| 1].getValue();
 		var cDep = attrDepth();
 		
@@ -317,6 +303,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var arr = is_array(inpt);
 		if(arr && array_length(inpt) == 0) return;
 		if(!arr) inpt = [ inpt ];
+		
+		if(!is_array(_out)) _out = [ _out ];
 		
 		#region frame
 			var _st = FIRST_FRAME;
@@ -335,7 +323,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		#endregion
 		
 		var skip  = getInputData(2);
-		var _surf = [];
 		
 		var ww = 1, hh = 1;
 				
@@ -368,22 +355,19 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			ww += padd[0] + padd[2];
 			hh += padd[1] + padd[3];
 				
-			_surf[i] = surface_create_valid(ww, hh, cDep);
-			surface_set_target(_surf[i]);
-				DRAW_CLEAR
-			surface_reset_target();
+			_out[i] = surface_verify(array_safe_get(_out, i), ww, hh, cDep);
+			
+			if(clear) surface_clear(_out[i]);
 		}
 			
-		if(!arr) _surf = array_safe_get(_surf, 0);
-		outputs[| 0].setValue(_surf);
+		if(!arr) _out = array_safe_get(_out, 0);
+		outputs[| 0].setValue(_out);
 		outputs[| 1].setValue(_atl);
 				
 		printIf(log, $"Surface generated [{ww}, {hh}]");
 	} #endregion
 	
 	static animationRender = function() { #region
-		if(!IS_RENDERING) return;
-		
 		var inpt = getInputData(0);
 		var skip = getInputData(2);
 		var pack = getInputData(3);
@@ -393,7 +377,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var padd = getInputData(7);
 		var rang = getInputData(8);
 		var spc2 = getInputData(9);
-		var ovlp = getInputData(10);
+		//var ovlp = getInputData(10);
 		var user = getInputData(11);
 		
 		var _atl = outputs[| 1].getValue();
@@ -475,8 +459,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _sy = 0;
 			
 			surface_set_target(oo);
-			if(ovlp) BLEND_ALPHA_MULP
-			else     BLEND_OVERRIDE
+			BLEND_OVERRIDE
 			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
