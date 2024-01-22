@@ -4,7 +4,8 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ c_black, c_white ]) );
+	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ c_black, c_white ]) )
+		.setMappable(15);
 	
 	inputs[| 2] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Linear", "Circular", "Radial" ]);
@@ -24,7 +25,8 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 7] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 7] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "Loop", "Pingpong" ]);
 	
 	inputs[| 8] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
@@ -46,18 +48,27 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 14] = nodeValue("Uniform ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 15] = nodeValueMap("Gradient map", self);
+	
+	inputs[| 16] = nodeValueGradientRange("Gradient map range", self, inputs[| 1]);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",		true],	0, 8, 
-		["Gradient",	false], 1, 5, 12, 9, 13, 7,
+		["Gradient",	false], 1, 15, 5, 12, 9, 13, 7, 
 		["Shape",		false], 2, 3, 10, 4, 11, 6, 14, 
 	];
 	
 	attribute_surface_depth();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var a = inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
+		var a = inputs[| 16].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
 	} #endregion
 	
 	static step = function() { #region
@@ -67,6 +78,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		inputs[|  4].setVisible(_typ == 1);
 		inputs[| 14].setVisible(_typ);
 		
+		inputs[| 1].mappableStep();
 		inputs[| 3].mappableStep();
 		inputs[| 4].mappableStep();
 		inputs[| 5].mappableStep();
@@ -75,7 +87,6 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
-		var _gra = _data[1];
 		var _typ = _data[2];
 		var _cnt = _data[6];
 		var _lop = _data[7];
@@ -85,7 +96,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_gradient);
-			_gra.shader_submit();
+			shader_set_gradient(_data[1], _data[15], _data[16], inputs[| 1]);
 			
 			shader_set_f("dimension",  _dim);
 			

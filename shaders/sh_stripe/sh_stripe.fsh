@@ -35,6 +35,9 @@ uniform int   gradient_blend;
 uniform vec4  gradient_color[GRADIENT_LIMIT];
 uniform float gradient_time[GRADIENT_LIMIT];
 uniform int   gradient_keys;
+uniform int       gradient_use_map;
+uniform vec4      gradient_map_range;
+uniform sampler2D gradient_map;
 
 vec3 rgb2hsv(vec3 c) { #region
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -71,6 +74,11 @@ vec3 hsvMix(vec3 c1, vec3 c2, float t) { #region
 } #endregion
 
 vec4 gradientEval(in float prog) { #region
+	if(gradient_use_map == 1) {
+		vec2 samplePos = mix(gradient_map_range.xy, gradient_map_range.zw, prog);
+		return texture2D( gradient_map, samplePos );
+	}
+	
 	vec4 col = vec4(0.);
 	
 	for(int i = 0; i < GRADIENT_LIMIT; i++) {

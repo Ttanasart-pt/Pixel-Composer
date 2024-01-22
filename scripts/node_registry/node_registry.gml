@@ -790,7 +790,8 @@ function __initNodes() {
 		addNodeObject(values, "Path Builder",	s_node_path_builder,	"Node_Path_Builder",	[1, Node_Path_Builder],, "Create path from array of vec2 points.").setVersion(1137);
 		addNodeObject(values, "L system",		s_node_path_l_system,	"Node_Path_L_System",	[1, Node_Path_L_System]).setVersion(1137);
 		addNodeObject(values, "Path plot",		s_node_path_plot,		"Node_Path_Plot",		[1, Node_Path_Plot]).setVersion(1138);
-			
+		addNodeObject(values, "Path from Mask",	s_node_path_from_mask,	"Node_Path_From_Mask",	[1, Node_Path_From_Mask]).setVersion(11640);
+		
 		ds_list_add(values, "Boolean");
 		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",		[1, Node_Boolean]);
 		addNodeObject(values, "Compare",		s_node_compare,		"Node_Compare",		[0, Node_create_Compare], ["equal", "greater", "lesser"]);

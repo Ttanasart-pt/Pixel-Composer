@@ -88,6 +88,7 @@ enum VALUE_DISPLAY {
 	corner,
 	toggle,
 	matrix,
+	gradient_range,
 	
 	//Curve
 	curve,
@@ -365,6 +366,7 @@ function typeArray(_type) { #region
 		case VALUE_DISPLAY.rotation_range :
 		case VALUE_DISPLAY.rotation_random :
 		case VALUE_DISPLAY.slider_range :
+		case VALUE_DISPLAY.gradient_range :
 		
 		case VALUE_DISPLAY.vector :
 		case VALUE_DISPLAY.padding :
@@ -508,7 +510,8 @@ function nodeValueUnit(_nodeValue) constructor { #region
 } #endregion
 
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
-function nodeValueMap(_name, _node) { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false, false); }
+function nodeValueMap(_name, _node, _junc = noone)						 { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false, false).setMapped(_junc); }
+function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ]).setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
 	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "area_type", "unit", "atlas_crop" ];
@@ -1297,17 +1300,30 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				.setIcon( THEME.value_use_surface, [ function() { return attributes.mapped; } ], COLORS._main_icon )
 				.setTooltip("Toggle map");
 		
-		mapWidget = new vectorBox(2, function(index, val) { return setValueDirect(val, index); });
-		mapWidget.side_button = mapButton;
-		mapWidget.setMinMax();
+		switch(type) {
+			case VALUE_TYPE.gradient :
+				mapWidget = noone;
+				break;
+				
+			default : 
+				mapWidget = new vectorBox(2, function(index, val) { return setValueDirect(val, index); });
+				mapWidget.side_button = mapButton;
+				mapWidget.setMinMax();
+				break;
+		}
 		
 		editWidget.side_button = mapButton;
 		
 		return self;
 	} #endregion
 	
+	static setMapped = function(junc) { #region
+		mappedJunc = junc;
+		return self;
+	} #endregion
+	
 	static mappableStep = function() { #region
-		editWidget = attributes.mapped? mapWidget : editWidgetRaw;
+		editWidget = mapWidget && attributes.mapped? mapWidget : editWidgetRaw;
 		setArrayDepth(attributes.mapped);
 		
 		var inp = node.inputs[| attributes.map_index];
@@ -2176,6 +2192,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _spr = argument_count > 8? argument[8] : THEME.anchor_selector;
 				var _sca = argument_count > 9? argument[9] : 1;
 				return preview_overlay_vector(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
+				
+			case VALUE_DISPLAY.gradient_range :
+				var _dim = argument[8];
+				
+				if(mappedJunc.attributes.mapped)
+					return preview_overlay_gradient_range(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _dim);
+				break;
 						
 			case VALUE_DISPLAY.area :
 				var _flag = argument_count > 8? argument[8] : 0b0011;

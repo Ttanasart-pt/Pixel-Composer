@@ -280,6 +280,33 @@ function loadGradient(path) { #region
 	return grad;
 } #endregion
 	
+function shader_set_gradient(gradient, surface, range, junc) { #region
+	var use_map = junc.attributes.mapped && is_surface(surface);
+	
+	shader_set_i("gradient_use_map",           use_map);
+	shader_set_f("gradient_map_range",         range);
+	var t = shader_set_surface("gradient_map", surface);
+	gpu_set_tex_filter_ext(t, true);
+	
+	gradient.shader_submit();
+} #endregion
+	
+function evaluate_gradient_map(_x, gradient, surface, range, junc) { #region
+	var use_map = junc.attributes.mapped && is_surface(surface);
+	
+	if(use_map) {
+		var _sw = surface_get_width(surface);
+		var _sh = surface_get_width(surface);
+		
+		var _sx = lerp(range[0], range[2], _x) * _sw;
+		var _sy = lerp(range[1], range[3], _x) * _sh;
+		
+		return surface_getpixel_ext(surface, _sx, _sy);
+	}
+	
+	return gradient.eval(_x);
+} #endregion
+	
 globalvar GRADIENTS;
 GRADIENTS = [];
 

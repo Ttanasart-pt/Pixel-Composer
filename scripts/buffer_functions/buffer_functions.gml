@@ -76,3 +76,16 @@ function buffer_deserialize(buffer, compress = true) { #region
 	return buffer_decompress(buff);
 } #endregion
 	
+function buffer_getPixel(buffer, _w, _h, _x, _y) { #region
+	if(_x < 0 || _y < 0 || _x >= _w || _y >= _h) return 0;
+	
+	buffer_seek(buffer, buffer_seek_start, (_w * _y + _x) * 4);
+	return buffer_read(buffer, buffer_u32);
+} #endregion
+	
+function buffer_setPixel(buffer, _w, _h, _x, _y, _c) { #region
+	if(_x < 0 || _y < 0 || _x >= _w || _y >= _h) return 0;
+	
+	buffer_seek(buffer, buffer_seek_start, (_w * _y + _x) * 4);
+	buffer_write(buffer, buffer_u32, _c);
+} #endregion

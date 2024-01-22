@@ -4,7 +4,7 @@
   "name": "sh_blur_directional",
   "parent": {
     "name": "blur",
-    "path": "folders/shader/blur.yy",
+    "path": "folders/shader/filter/blur.yy",
   },
   "type": 1,
 }

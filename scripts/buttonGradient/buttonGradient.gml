@@ -1,8 +1,9 @@
 function buttonGradient(_onApply, dialog = noone) : widget() constructor {
-	onApply = _onApply;
+	onApply      = _onApply;
 	parentDialog = dialog;
 	
 	current_gradient = noone;
+	side_button      = noone;
 	
 	function apply(value) {
 		if(!interactable) return;
@@ -27,6 +28,12 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		x = _x;
 		y = _y;
 		w = _w;
+		
+		if(side_button && instanceof(side_button) == "buttonClass") {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
+			_w -= ui(40);
+		}
 		
 		var _gw = _w - ui(8);
 		var _gh = _h - ui(8);

@@ -4,7 +4,7 @@
   "name": "sh_morph_surface",
   "parent": {
     "name": "morph",
-    "path": "folders/shader/morph.yy",
+    "path": "folders/shader/filter/morph.yy",
   },
   "type": 1,
 }

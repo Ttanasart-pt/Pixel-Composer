@@ -69,9 +69,10 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _sca = _data[3];
 		var _slp = _data[4];
 		var _sam = struct_try_get(attributes, "oversample");
+		var _dim = surface_get_dimension(_data[0]);
 		
-		surface_set_shader(_outSurf, sh_bevel);
-			shader_set_f("dimension", surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
+		surface_set_shader(_outSurf, max(_dim[0], _dim[1]) < 256? sh_bevel : sh_bevel_highp);
+			shader_set_f("dimension",  _dim);
 			shader_set_f_map("height", _hei, _data[11], inputs[| 1]);
 			shader_set_f("shift",      _shf);
 			shader_set_f("scale",      _sca);

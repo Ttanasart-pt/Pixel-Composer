@@ -12,20 +12,34 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	inputs[| 2] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 3] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
+	inputs[| 3] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) )
+		.setMappable(4);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 4] = nodeValueMap("Gradient map", self);
+	
+	inputs[| 5] = nodeValueGradientRange("Gradient map range", self, inputs[| 3]);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
-		["Interpret",	false], 1, 2, 3, 
+		["Interpret",	false], 1, 2, 3, 4, 
 	];
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var a = inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getDimension()); active &= !a;
+	}
 	
 	static step = function() {
 		var _mode = getInputData(1);
 		
 		inputs[| 3].setVisible(_mode == 1);
+		inputs[| 3].mappableStep();
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -34,7 +48,6 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var _val = _data[0];
 		var _mod = _data[1];
 		var _ran = _data[2];
-		var _grd = _data[3];
 		
 		if(is_array(_val) && array_empty(_val)) return _outSurf;
 		if(!is_array(_val)) _val = [ _val ];
@@ -47,7 +60,8 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		surface_set_shader(_outSurf, sh_interpret_number);
 			shader_set_i("mode", _mod);
 			shader_set_f("range", _ran);
-			_grd.shader_submit();
+			
+			shader_set_gradient(_data[3], _data[4], _data[5], inputs[| 3]);
 			
 			for(var i = 0; i < _amo; i += BATCH_SIZE) {
 				var _arr = [];

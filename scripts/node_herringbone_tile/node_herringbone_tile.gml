@@ -20,7 +20,8 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.01] })
 		.setMappable(13);
 	
-	inputs[| 5] = nodeValue("Tile color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
+	inputs[| 5] = nodeValue("Tile color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) )
+		.setMappable(18);
 	
 	inputs[| 6] = nodeValue("Gap color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
@@ -52,10 +53,18 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		
 	inputs[| 17] = nodeValue("Tile length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2);
 		
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 18] = nodeValueMap("Gradient map", self);
+	
+	inputs[| 19] = nodeValueGradientRange("Gradient map range", self, inputs[| 5]);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 3, 12, 2, 11, 17, 4, 13,
-		["Render",	false], 7, 8, 5, 6, 9, 10, 
+		["Render",	false], 7, 8, 5, 18, 6, 9, 10, 
 		["Truchet",  true, 14], 15, 16, 
 	];
 	
@@ -71,6 +80,7 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		inputs[| 2].mappableStep();
 		inputs[| 3].mappableStep();
 		inputs[| 4].mappableStep();
+		inputs[| 5].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -80,7 +90,6 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var _mode = _data[7];
 		
 		var _col_gap = _data[6];
-		var _gra	 = _data[5];
 		
 		inputs[| 5].setVisible(_mode == 0);
 		inputs[| 6].setVisible(_mode != 1);
@@ -106,7 +115,7 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			shader_set_f("truchetSeed",    _data[15]);
 			shader_set_f("truchetThres",   _data[16]);
 			
-			_gra.shader_submit();
+			shader_set_gradient(_data[5], _data[18], _data[19], inputs[| 5]);
 			
 			if(is_surface(_sam)) draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);
 			else                 draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);

@@ -24,7 +24,8 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	inputs[| 6] = nodeValue("Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 7] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
+	inputs[| 7] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) )
+		.setMappable(15);
 	
 	inputs[| 8] = nodeValue("Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
@@ -44,6 +45,10 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 14] = nodeValueMap("Ratio map", self);
 	
+	inputs[| 15] = nodeValueMap("Gradient map", self);
+	
+	inputs[| 16] = nodeValueGradientRange("Gradient map range", self, inputs[| 7]);
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -52,7 +57,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Output",	true],	0,  
 		["Pattern",	false], 1, 11, 10, 14, 2, 12, 4, 5, 13, 
 		["Render",	false], 3, 
-		["Random Colors", false, 6], 7, 8, 9, 
+		["Random Colors", false, 6], 7, 15, 8, 9, 
 	];
 	
 	attribute_surface_depth();
@@ -62,14 +67,16 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+		var a = inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
+		var a = inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny); active &= !a;
+		var a = inputs[| 16].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
 	} #endregion
 	
 	static step = function() { #region
 		inputs[|  1].mappableStep();
 		inputs[|  2].mappableStep();
 		inputs[|  5].mappableStep();
+		inputs[|  7].mappableStep();
 		inputs[| 10].mappableStep();
 	} #endregion
 	
@@ -84,8 +91,6 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[| 7].setVisible(_grad_use);
 		inputs[| 8].setVisible(!_grad_use);
 		inputs[| 9].setVisible(!_grad_use);
-		
-		var _gra = _data[7];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
@@ -103,7 +108,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_color("color1", _clr1);
 			
 			shader_set_i("gradient_use",	_grad_use);
-			_gra.shader_submit();
+			shader_set_gradient(_data[7], _data[15], _data[16], inputs[| 7]);
 			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();

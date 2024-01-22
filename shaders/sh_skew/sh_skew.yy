@@ -4,7 +4,7 @@
   "name": "sh_skew",
   "parent": {
     "name": "warp",
-    "path": "folders/shader/warp.yy",
+    "path": "folders/shader/filter/warp.yy",
   },
   "type": 1,
 }

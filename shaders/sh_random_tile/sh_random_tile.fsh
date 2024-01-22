@@ -27,6 +27,9 @@ uniform int   gradient_blend;
 uniform vec4  gradient_color[GRADIENT_LIMIT];
 uniform float gradient_time[GRADIENT_LIMIT];
 uniform int   gradient_keys;
+uniform int       gradient_use_map;
+uniform vec4      gradient_map_range;
+uniform sampler2D gradient_map;
 
 uniform int   textureTruchet;
 uniform float truchetSeed;
@@ -72,6 +75,11 @@ vec3 hsvMix(vec3 c1, vec3 c2, float t) { #region
 } #endregion
 
 vec4 gradientEval(in float prog) { #region
+	if(gradient_use_map == 1) {
+		vec2 samplePos = mix(gradient_map_range.xy, gradient_map_range.zw, prog);
+		return texture2D( gradient_map, samplePos );
+	}
+	
 	vec4 col = vec4(0.);
 	
 	for(int i = 0; i < GRADIENT_LIMIT; i++) {
@@ -139,7 +147,7 @@ vec4 RandomCoords(vec2 uv) { #region
     vec2  b = (.5 - abs(puv - .5)) * s;
     float d = min(b.x, b.y);
 	
-	return vec4(0., d, puv);
+	return vec4(random(id), d, puv);
 } #endregion
 
 void main() { #region
@@ -178,8 +186,7 @@ void main() { #region
 	}
 	
 	if(mode == 0) {
-		vec2 uv = abs(hc.zw) / sca;
-		colr = gradientEval(random(uv));
+		colr = gradientEval(hc.x);
 	} else if(mode == 2) {
 		vec2 uv = hc.zw;
 		

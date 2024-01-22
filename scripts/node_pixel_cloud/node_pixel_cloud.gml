@@ -10,7 +10,8 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 3] = nodeValue("Strength map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 4] = nodeValue("Color over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
+	inputs[| 4] = nodeValue("Color over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) )
+		.setMappable(9);
 	
 	inputs[| 5] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
@@ -22,10 +23,18 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 8] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 8;
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 9] = nodeValueMap("Gradient map", self);
+	
+	inputs[| 10] = nodeValueGradientRange("Gradient map range", self, inputs[| 4]);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	input_display_list = [ 8, 
 		["Input",		true],	0, 1,
 		["Movement",   false],	5, 2, 3, 
-		["Color",		true],	4, 6, 7
+		["Color",		true],	4, 9, 6, 7
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -33,7 +42,7 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_surface_depth();
 	
 	static step = function() {
-		
+		inputs[| 4].mappableStep();
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -46,7 +55,7 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i("useMap", is_surface(_data[3]));
 			shader_set_surface("strengthMap", _data[3]);
 			
-			_data[4].shader_submit();
+			shader_set_gradient(_data[4], _data[9], _data[10], inputs[| 4]);
 			
 			shader_set_f("alpha_curve" , _data[6]);
 			shader_set_i("curve_amount", array_length(_data[6]));

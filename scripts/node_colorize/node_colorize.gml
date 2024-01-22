@@ -3,7 +3,8 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ c_black, c_white ]) );
+	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ c_black, c_white ]) )
+		.setMappable(11);
 		
 	inputs[| 2] = nodeValue("Gradient shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, .01 ] })
@@ -28,28 +29,35 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 10] = nodeValueMap("Gradient shift map", self);
 	
+	inputs[| 11] = nodeValueMap("Gradient map", self);
+	
+	inputs[| 12] = nodeValueGradientRange("Gradient map range", self, inputs[| 1]);
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	input_display_list = [ 5, 7, 
 		["Surfaces",	 true], 0, 3, 4, 8, 9, 
-		["Colorize",	false], 1, 2, 10, 6, 
-	]
+		["Colorize",	false], 1, 11, 2, 10, 6, 
+	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		inputs[| 12].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, surface_get_dimension(getSingleValue(0)));
+	} #endregion
+	
 	static step = function() { #region
 		__step_mask_modifier();
 		
+		inputs[| 1].mappableStep();
 		inputs[| 2].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _gra		= _data[1];
-		
 		surface_set_shader(_outSurf, sh_colorize);
-			_gra.shader_submit();
+			shader_set_gradient(_data[1], _data[11], _data[12], inputs[| 1]);
 			
 			shader_set_f_map("gradient_shift", _data[2], _data[10], inputs[| 2]);
 			shader_set_i("multiply_alpha",     _data[6]);

@@ -4,7 +4,7 @@
   "name": "sh_channel_V",
   "parent": {
     "name": "channels",
-    "path": "folders/shader/channels.yy",
+    "path": "folders/shader/filter/channels.yy",
   },
   "type": 1,
 }

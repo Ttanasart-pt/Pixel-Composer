@@ -29,8 +29,6 @@ uniform int type;
 uniform int gradient_loop;
 uniform int uniAsp;
 
-float sca;
-
 #region ////////////////////////////////////////// GRADIENT BEGIN //////////////////////////////////////////
 
 #define GRADIENT_LIMIT 128
@@ -38,6 +36,9 @@ uniform int   gradient_blend;
 uniform vec4  gradient_color[GRADIENT_LIMIT];
 uniform float gradient_time[GRADIENT_LIMIT];
 uniform int   gradient_keys;
+uniform int       gradient_use_map;
+uniform vec4      gradient_map_range;
+uniform sampler2D gradient_map;
 
 vec3 rgb2hsv(vec3 c) {
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -74,6 +75,11 @@ vec3 hsvMix(vec3 c1, vec3 c2, float t) {
 }
 
 vec4 gradientEval(in float prog) {
+	if(gradient_use_map == 1) {
+		vec2 samplePos = mix(gradient_map_range.xy, gradient_map_range.zw, prog);
+		return texture2D( gradient_map, samplePos );
+	}
+	
 	vec4 col     = vec4(0.);
 	float _ptime = 0.;
 	
@@ -84,7 +90,6 @@ vec4 gradientEval(in float prog) {
 		}
 		
 		float _time = gradient_time[i];
-		_time = 0.5 + (_time - 0.5) * sca;
 		
 		if(_time == prog) {
 			col = gradient_color[i];
@@ -134,7 +139,7 @@ void main() {
 			shf = mix(shift.x, shift.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
 		
-		sca = scale.x;
+		float sca = scale.x;
 		if(scaleUseSurf == 1) {
 			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
 			sca = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
@@ -160,12 +165,13 @@ void main() {
 		
 	}
 	
-	prog += shf;
+	prog = (prog + shf - 0.5) * sca + 0.5;
 	
-	if(gradient_loop == 1) { 
-		prog = abs(prog);
-		if(prog > 1.)
-			prog = prog == floor(prog)? 1. : fract(prog);
+	if(gradient_loop == 1) {
+		prog = fract(prog < 0.? 1. - abs(prog) : prog);
+	} else if(gradient_loop == 2) {
+		prog = mod(abs(prog), 2.);
+		if(prog >= 1.) prog = 2. - prog;
 	}
 	
 	vec4 col = gradientEval(prog);

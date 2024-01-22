@@ -146,7 +146,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _prsh = getInputData(13);
 		
 		var _grad = getInputData(14);
-		//var _alph = getInputData(15);
 		
 		var _arr = getInputData(16);
 		var _sed = getInputData(17);

@@ -27,6 +27,9 @@ uniform int   gradient_blend;
 uniform vec4  gradient_color[GRADIENT_LIMIT];
 uniform float gradient_time[GRADIENT_LIMIT];
 uniform int   gradient_keys;
+uniform int       gradient_use_map;
+uniform vec4      gradient_map_range;
+uniform sampler2D gradient_map;
 
 uniform int   textureTruchet;
 uniform float truchetSeed;
@@ -74,6 +77,11 @@ vec3 hsvMix(vec3 c1, vec3 c2, float t) { #region
 } #endregion
 
 vec4 gradientEval(in float prog) { #region
+	if(gradient_use_map == 1) {
+		vec2 samplePos = mix(gradient_map_range.xy, gradient_map_range.zw, prog);
+		return texture2D( gradient_map, samplePos );
+	}
+	
 	vec4 col = vec4(0.);
 	
 	for(int i = 0; i < GRADIENT_LIMIT; i++) {
@@ -119,17 +127,18 @@ vec4 HerringboneCoords(vec2 uv) { #region
 	
     uv.x /= tileLength;
     uv.x -= floor(uv.y) / tileLength;
+	vec2 id = floor(uv);
     uv = fract(uv);
-    
-	vec2 _uv = uv;
+	
+	vec2   _uv = uv;
     float maxH = 1.;
-    uv   = abs(uv -.5) * 2.;
+    uv   = abs(uv - .5) * 2.;
 	uv.x = uv.x * tileLength - tileLength + 1.;
     
     float h = 1. - max(uv.x, uv.y);
     h = min(h, maxH);
 	
-	return vec4(0., h / maxH, _uv);
+	return vec4(random(id), h / maxH, _uv);
 } #endregion
 
 void main() { #region
@@ -168,8 +177,7 @@ void main() { #region
 	}
 	
 	if(mode == 0) {
-		vec2 uv = abs(hc.zw) / sca;
-		colr = gradientEval(random(uv));
+		colr = gradientEval(hc.x);
 	} else if(mode == 2) {
 		vec2 uv = hc.zw;
 		
