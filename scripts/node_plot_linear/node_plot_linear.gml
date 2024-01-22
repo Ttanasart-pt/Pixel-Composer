@@ -34,7 +34,8 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 12] = nodeValue("Value Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 13] = nodeValue("Color Over Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
+	inputs[| 13] = nodeValue("Color Over Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white))
+		.setMappable(27);
 	
 	inputs[| 14] = nodeValue("Trim mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Range", "Window" ]);
@@ -59,19 +60,32 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 23] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 24] = nodeValue("Color Over Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
+	inputs[| 24] = nodeValue("Color Over Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white))
+		.setMappable(29);
 		
 	inputs[| 25] = nodeValue("Value range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 26] = nodeValue("Absolute", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 27] = nodeValueMap("Sample Gradient map", self);
+	
+	inputs[| 28] = nodeValueGradientRange("Sample Gradient map range", self, inputs[| 13]);
+	
+	inputs[| 29] = nodeValueMap("Value Gradient map", self);
+	
+	inputs[| 30] = nodeValueGradientRange("Value Gradient map range", self, inputs[| 24]);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 
 		["Data", 	 true], 1, 12, 21, 14, 2, 3, 15, 16, 
 		["Plot",	false], 11, 4, 10, 20, 5, 22, 23, 
-		["Render",	false], 6, 13, 24, 25, 26, 7, 17, 18, 19, 
+		["Render",	false], 6, 13, 27, 24, 29, 25, 26, 7, 17, 18, 19, 
 		["Background",	true, 8], 9, 
 	];
 	
@@ -97,13 +111,21 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		inputs[|  4].setVisible(!_use_path);
 		inputs[| 10].setVisible(!_use_path);
+		
+		inputs[| 13].mappableStep();
+		inputs[| 24].mappableStep();
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _use_path = getSingleValue(20) != noone;
 		
-		if(!_use_path)
-			inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(!_use_path) {
+			var a = inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			active &= !a;
+		}
+		
+		var a = inputs[| 28].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
+		var a = inputs[| 30].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -134,11 +156,15 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _loop = _data[22];
 		var _smt  = _data[23];
 		
-		var _lcl = _data[ 6];
-		var _cls = _data[13];
-		var _clv = _data[24];
-		var _clv_r = _data[25];
-		var _clv_a = _data[26];
+		var _lcl     = _data[ 6];
+		var _cls     = _data[13];
+		var _cls_map = _data[27];
+		var _cls_rng = _data[28];
+		var _clv     = _data[24];
+		var _clv_map = _data[29];
+		var _clv_rng = _data[30];
+		var _clv_r   = _data[25];
+		var _clv_a   = _data[26];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -199,11 +225,11 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				_ang_nor = _ang + 90;
 				_val	 = _smp_data[i] + _off;
-				_col_sam = _cls.eval(i / amo);
+				_col_sam = evaluate_gradient_map(i / amo, _cls, _cls_map, _cls_rng, inputs[| 13]);
 				
 				var _val_p = _clv_a? abs(_val) : _val;
 				var _val_prog = (_val_p - _clv_r[0]) / (_clv_r[1] - _clv_r[0]);
-				_col_val = _clv.eval(_val_prog);
+				_col_val = evaluate_gradient_map(_val_prog, _clv, _clv_map, _clv_rng, inputs[| 24]);
 				
 				var _c1 = colorMultiply(_lcl, _col_sam);
 				var _c2 = _col_val;

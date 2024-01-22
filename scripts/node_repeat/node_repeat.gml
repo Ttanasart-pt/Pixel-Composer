@@ -39,7 +39,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 13] = nodeValue("Path shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 14] = nodeValue("Color over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) );
+	inputs[| 14] = nodeValue("Color over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
+		.setMappable(30);
 		
 	inputs[| 15] = nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
@@ -81,6 +82,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 29] = nodeValue("Animator", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 30] = nodeValueMap("Gradient map", self);
+	
+	inputs[| 31] = nodeValueGradientRange("Gradient map range", self, inputs[| 14]);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
@@ -88,7 +97,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Pattern",		false],	3, 9, 2, 18, 7, 8, 
 		["Path",		 true],	11, 12, 13, 
 		["Transform",	false],	4, 26, 19, 5, 6, 10, 
-		["Render",		false],	14, 
+		["Render",		false],	14, 30,
 		["Animator",	 true, 29],	20, 21, 25, 22, 23, 24, 27, 
 	];
 	
@@ -107,8 +116,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(inputs[| 9].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor))
-			active = false;
+		var a = inputs[| 9].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor); active &= !a;
 		
 		var _pat  = getInputData(3);
 		var _spos = getInputData(9);
@@ -117,13 +125,21 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var py = _y + _spos[1] * _s;
 		
 		if(_pat == 0 || _pat == 1) {
-			if(inputs[| 4].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny))
-				active = false;
+			var a = inputs[| 4].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+			active &= !a;
+			
 		} else if(_pat == 2) {
-			if(inputs[| 8].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny))
-				active = false;
+			var a = inputs[| 8].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+			active &= !a;
+			
 		}
+		
+		var a = inputs[| 31].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getInputData(1)); active &= !a;
 	}
+	
+	static step = function() { #region
+		inputs[| 14].mappableStep();
+	} #endregion
 	
 	function doRepeat(_outSurf, _inSurf) {
 		var _dim    = getInputData( 1);
@@ -145,7 +161,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _prng = getInputData(12);
 		var _prsh = getInputData(13);
 		
-		var _grad = getInputData(14);
+		var _grad       = getInputData(14);
+		var _grad_map   = getInputData(30);
+		var _grad_range = getInputData(31);
 		
 		var _arr = getInputData(16);
 		var _sed = getInputData(17);
@@ -240,7 +258,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				var pos = point_rotate(-sw / 2, -sh / 2, 0, 0, rot);
-				var cc  = _grad.eval(i / (_amo - 1));
+				var cc  = evaluate_gradient_map(i / (_amo - 1), _grad, _grad_map, _grad_range, inputs[| 14]);
 				var aa  = _color_get_alpha(cc);
 				
 				cc = colda(cc);

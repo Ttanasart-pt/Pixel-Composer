@@ -40,7 +40,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 10] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(9999999));
 	
-	inputs[| 11] = nodeValue("Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
+	inputs[| 11] = nodeValue("Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) )
+		.setMappable(28);
 	
 	inputs[| 12] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);
@@ -86,6 +87,14 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 27] = nodeValue("Animated array end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Loop", "Ping Pong" ]);
 		
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 28] = nodeValueMap("Gradient map", self);
+	
+	inputs[| 29] = nodeValueGradientRange("Gradient map range", self, inputs[| 11]);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
@@ -96,7 +105,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Scatter",		false], 5, 6, 13, 14, 17, 9, 2,
 		["Path",		false], 19, 20, 21, 22, 
 		["Transform",	false], 3, 8, 7, 4,
-		["Render",		false], 18, 11, 12, 16, 23, 
+		["Render",		false], 18, 11, 28, 12, 16, 23, 
 	];
 	
 	attribute_surface_depth();
@@ -104,9 +113,14 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	scatter_data = [];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _distType	= current_data[6];
-		if(_distType < 3)
-			inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var _distType = current_data[6];
+		
+		if(_distType < 3) {
+			var a = inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			active &= !a;
+		}
+			
+		var a = inputs[| 29].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(1)); active &= !a;
 	} #endregion
 	
 	static onValueUpdate = function(index) { #region
@@ -138,6 +152,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 27].setVisible(_arr);
 		
 		update_on_frame = _arr && (_amn[0] != 0 || _amn[1] != 0);
+		
+		inputs[| 11].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -164,6 +180,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var seed	= _data[10];
 		var color	= _data[11];
+		var clr_map = _data[28];
+		var clr_rng = _data[29];
+		
 		var alpha	= _data[12];
 		var _arr    = _data[15];
 		var mulpA	= _data[16];
@@ -340,7 +359,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(vCol && _v != noone)
 					grSamp *= _v;
 				
-				var clr = color.eval(grSamp); 
+				var clr = evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[| 11]); 
 				var alp = random_range_seed(alpha[0], alpha[1], posS); posS++;
 				
 				var _atl = array_safe_get(scatter_data, _sct_len);
