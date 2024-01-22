@@ -27,13 +27,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 3] = nodeValue("Round anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.rejectArray();
 		
-	input_display_list = [
-		["Path",	false], 0, 2, 1, 3, 
-		["Anchors",	false], 
-	];
-	
-	setIsDynamicInput(1);
-	
 	outputs[| 0] = nodeValue("Position out", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
@@ -42,6 +35,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	outputs[| 2] = nodeValue("Anchors", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
 		.setVisible(false)
 		.setArrayDepth(1);
+	
+	input_display_list = [
+		["Path",	false], 0, 2, 1, 3, 
+		["Anchors",	false], 
+	];
+	
+	setIsDynamicInput(1);
 	
 	tool_pathDrawer = new NodeTool( "Draw path", THEME.path_tools_draw )	
 		.addSetting("Smoothness", VALUE_TYPE.float,   function(val) { tool_pathDrawer.attribute.thres = val; }, "thres", 4)
@@ -635,7 +635,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				}
 			
 				draw_sprite_colored(THEME.anchor_selector, 0, xx, yy);
-			
+				draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
+				draw_text(xx + ui(4), yy - ui(4), i + 1);
+	
 				if(drag_point == i) {
 					draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
 				} else if(point_in_circle(_mx, _my, xx, yy, 8)) {

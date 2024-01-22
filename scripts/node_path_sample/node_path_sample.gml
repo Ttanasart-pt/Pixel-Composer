@@ -1,7 +1,6 @@
 function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name		= "Sample Path";
-	
-	w = 96;
+	name = "Sample Path";
+	w    = 96;
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);
@@ -16,7 +15,24 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	outputs[| 1] = nodeValue("Direction", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var _path = getInputData(0);
+		if(_path) _path.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		var _pnt = outputs[| 0].getValue();
+		if(process_amount == 1) _pnt = [ _pnt ];
+		
+		draw_set_color(COLORS._main_accent);
+		for( var i = 0, n = array_length(_pnt); i < n; i++ ) {
+			var _p  = _pnt[i];
+			var _px = _x + _p[0] * _s;
+			var _py = _y + _p[1] * _s;
+			
+			draw_circle(_px, _py, 4, false);
+		}
+	} #endregion
+	
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _path = _data[0];
 		var _rat  = _data[1];
 		var _mod  = _data[2];
@@ -54,10 +70,10 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var dir = inv? p1.directionTo(p0) : p0.directionTo(p1);
 			return dir;
 		} 
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(THEME.node_draw_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }

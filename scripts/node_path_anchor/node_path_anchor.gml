@@ -13,7 +13,7 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 2] = nodeValue("Control point 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 3] = nodeValue("Mirror control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 3] = nodeValue("Mirror control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	
 	outputs[| 0] = nodeValue("Anchor", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

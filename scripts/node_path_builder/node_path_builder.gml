@@ -1,7 +1,7 @@
 function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Path Builder";
+	name = "Path Builder";
+	w    = 96;
 	
-	w = 96;
 	length    = [];
 	lengthAcc = [];
 	

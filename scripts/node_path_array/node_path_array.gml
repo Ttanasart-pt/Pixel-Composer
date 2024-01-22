@@ -137,8 +137,4 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static update = function(frame = CURRENT_FRAME) { #region
 		outputs[| 0].setValue(self);
 	} #endregion
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
-		
-	} #endregion
 }

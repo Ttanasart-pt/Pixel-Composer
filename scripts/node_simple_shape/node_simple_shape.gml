@@ -59,11 +59,14 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	inputs[| 18] = nodeValue("Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 19] = nodeValue("Shape Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",     false], 0, 6, 
-		["Transform",  false], 15, 3, 16, 17, 
+		["Transform",  false], 15, 3, 16, 17, 19, 
 		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 
 		["Render",	    true], 10, 12, 18,
 		["Background",	true, 1], 11, 
@@ -105,6 +108,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		var _posTyp	= _data[15];
 		var _tile   = _data[18];
+		var _rotat  = _data[19];
 		
 		var _center = [ 0, 0 ];
 		var _scale  = [ 0, 0 ];
@@ -275,7 +279,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					break;
 				case NODE_SHAPE_TYPE.crescent :
 					inputs[|  5].setVisible(true);
-					inputs[| 7].setVisible(true);
+					inputs[|  7].setVisible(true);
 					inputs[| 13].setVisible(true);
 					
 					inputs[|  5].name = "Shift";
@@ -304,6 +308,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			shader_set_f("center",    _center);
 			shader_set_f("scale",     _scale );
+			shader_set_f("rotation",  degtorad(_rotat));
 			
 			draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], _color, _color_get_alpha(_color));
 		surface_reset_shader();

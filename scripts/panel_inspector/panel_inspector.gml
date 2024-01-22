@@ -702,21 +702,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		}
 		
 		#region color picker
-			//if(color_picker_selecting == noone)
-			//	picker_selecting = 0;
-			
-			if(key_mod_press(ALT) && color_picker_index) {
+			if(key_mod_press(ALT) && color_picker_index && textBox_slider.tb == noone) {
 				pickers[picker_index].editWidget.onColorPick();
-				
-				//var _p = picker_index;
-			
-				//if(mouse_wheel_down()) picker_index = safe_mod(picker_index + 1 + color_picker_index, color_picker_index);
-				//if(mouse_wheel_up())   picker_index = safe_mod(picker_index - 1 + color_picker_index, color_picker_index);
-			
-				//if(_p != picker_index) {
-				//	instance_destroy(o_dialog_color_selector);
-				//	pickers[picker_index].editWidget.onColorPick();
-				//}
 			}
 			
 			if(MESSAGE != noone && MESSAGE.type == "Color") {

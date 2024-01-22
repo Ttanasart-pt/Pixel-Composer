@@ -1,7 +1,6 @@
 function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Blend Path";
-	
-	w = 96;
+	name   = "Blend Path";
+	w      = 96;
 	length = 0;
 	
 	inputs[| 0] = nodeValue("Path 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
@@ -18,12 +17,41 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
-	static getLineCount = function() { 
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var _p0 = getInputData(0);
+		var _p1 = getInputData(1);
+		
+		if(_p0) _p0.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(_p1) _p1.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		draw_set_color(COLORS._main_icon);
+		
+		var _amo = getLineCount();
+		for( var i = 0; i < _amo; i++ ) {
+			var _len = getLength(_amo);
+			var _stp = 1 / clamp(_len * _s, 1, 64);
+			var ox, oy, nx, ny;
+			var _p = new __vec2();
+			
+			for( var j = 0; j < 1; j += _stp ) {
+				_p = getPointRatio(j, i, _p);
+				nx = _x + _p.x * _s;
+				ny = _y + _p.y * _s;
+				
+				if(j > 0) draw_line_width(ox, oy, nx, ny, 3);
+
+				ox = nx;
+				oy = ny;
+			}
+		}
+	} #endregion
+	
+	static getLineCount = function() { #region
 		var _path = getInputData(0);
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-	}
+	} #endregion
 	
-	static getSegmentCount = function(ind = 0) { 
+	static getSegmentCount = function(ind = 0) { #region
 		var _path1 = getInputData(0);
 		var _path2 = getInputData(1);
 		var _lerp  = getInputData(2);
@@ -36,9 +64,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(!p1 &&  p2) return _path2.getSegmentCount(ind);
 		
 		return max(_path1.getSegmentCount(ind), _path2.getSegmentCount(ind));
-	}
+	} #endregion
 	
-	static getLength = function(ind = 0) { 
+	static getLength = function(ind = 0) { #region
 		var _path1 = getInputData(0);
 		var _path2 = getInputData(1);
 		var _lerp  = getInputData(2);
@@ -54,9 +82,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _p2 = _path2.getLength(ind);
 		
 		return lerp(_p1, _p2, _lerp);
-	}
+	} #endregion
 	
-	static getAccuLength = function(ind = 0) { 
+	static getAccuLength = function(ind = 0) { #region
 		var _path1 = getInputData(0);
 		var _path2 = getInputData(1);
 		var _lerp  = getInputData(2);
@@ -82,9 +110,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		return res;
-	}
+	} #endregion
 	
-	static getPointRatio = function(_rat, ind = 0, out = undefined) {
+	static getPointRatio = function(_rat, ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
 		var _path1 = getInputData(0);
@@ -105,11 +133,11 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		out.y = lerp(_p1.y, _p2.y, _lerp);
 		
 		return out;
-	}
+	} #endregion
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(ind), ind, out); }
 	
-	static getBoundary = function(ind = 0) {
+	static getBoundary = function(ind = 0) { #region
 		var _path1 = getInputData(0);
 		var _path2 = getInputData(1);
 		var _lerp  = getInputData(2);
@@ -125,14 +153,14 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _p2 = _path2.getBoundary(ind);
 		
 		return _p1.lerpTo(_p2, _lerp);
-	}
+	} #endregion
 	
-	static update = function() { 
+	static update = function() { #region
 		outputs[| 0].setValue(self);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_path_blend, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }

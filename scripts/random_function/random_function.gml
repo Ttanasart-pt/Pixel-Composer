@@ -121,23 +121,26 @@ function wiggleMap(_seed, _freq, _length) constructor { #region
 	len  = _length;
 	amp  = 1;
 	map  = array_create(_length);
+	shf  = 0;
 	
 	static generate = function() {
 		INLINE
 		
-		for(var i = 0; i < len; i++) map[i] = wiggle(-1, 1, freq, i, seed);
+		for(var i = 0; i < len; i++) map[i] = wiggle(-1, 1, freq, i + shf, seed);
 	}
 	
-	static check = function(_amp, _freq, _seed) {
+	static check = function(_amp, _freq, _seed, _shf = 0) {
 		INLINE
 		
 		amp = _amp;
-		if(seed == _seed && freq == _freq) return;
+		if(seed == _seed && freq == _freq && shf == _shf) return;
 		
-		//print($"Check {seed}:{_seed}, {freq}:{_freq} ({irandom(999999)})");
 		seed = _seed;
 		freq = _freq;
+		shf  = _shf;
 		generate();
+		
+		return self;
 	}
 	
 	static get = function(i) { 

@@ -10,6 +10,7 @@ uniform int sides;
 uniform int drawDF;
 uniform int tile;
 
+uniform float rotation;
 uniform float angle;
 uniform float inner;
 uniform float outer;
@@ -125,14 +126,14 @@ float sdDonut(vec2 p, float s) { #region
 
 void main() {
 	float color = 0.;
-	vec2  coord = (v_vTexcoord - center) / scale;
+	vec2  coord = (v_vTexcoord - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) / scale;
 	vec2  ratio = dimension / dimension.y;
 	float d;
 	
 	if(tile == 1) coord = mod(coord + 1., 2.) - 1.;
 	
 	if(shape == 0) {
-		d = sdBox( (v_vTexcoord - center) * ratio, (scale * ratio - corner));
+		d = sdBox( (v_vTexcoord - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) * ratio, (scale * ratio - corner));
 		d -= corner;
 	} else if(shape == 1) {
 		d = length(coord) - 1.;
