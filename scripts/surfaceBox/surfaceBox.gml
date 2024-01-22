@@ -47,13 +47,9 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 		if(is_array(_surf_single) && !array_empty(_surf_single))
 			_surf_single = _surf_single[0];
 			
-		if(is_instanceof(_surf_single, dynaSurf)) {
-			_type = VALUE_TYPE.dynaSurface;
-		} else if(is_instanceof(_surf_single, SurfaceAtlas)) {
-			_type = VALUE_TYPE.atlas;
-		} else if(is_instanceof(_surf_single, __d3dMaterial)) {
-			_type = VALUE_TYPE.d3Material;
-		}
+		     if(is_instanceof(_surf_single, dynaSurf))		_type = VALUE_TYPE.dynaSurface;
+		else if(is_instanceof(_surf_single, SurfaceAtlas))	_type = VALUE_TYPE.atlas;
+		else if(is_instanceof(_surf_single, __d3dMaterial))	_type = VALUE_TYPE.d3Material;
 		
 		if(!open) {
 			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
@@ -79,11 +75,15 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 			var sy0 = _y + _h / 2 - sh / 2;
 			var sy1 = sy0 + sh;
 			
-			draw_set_color(COLORS.widget_surface_frame);
-			draw_rectangle(sx0, sy0, sx1, sy1, true);
+			var _arrLen = 0;
+			var _arrInd = 0;
 			
-			if(is_array(_surface) && array_length(_surface))
-				_surface = _surface[safe_mod(round(current_time / 250), array_length(_surface))];
+			if(is_array(_surface) && array_length(_surface)) {
+				_arrLen  = array_length(_surface);
+				_arrInd  = safe_mod(round(current_time / 250), array_length(_surface));
+				_surface = _surface[_arrInd];
+			}
+			
 			if(is_instanceof(_surface, __d3dMaterial))
 				_surface = _surface.surface;
 			
@@ -95,7 +95,28 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 				var _sy = sy0 + sh / 2 - ss * sfh / 2;
 				
 				draw_surface_ext_safe(_surface, _sx, _sy, ss, ss, 0, c_white, 1);
+				
+				if(_arrLen) {
+					var bxw = sx1 - sx0;
+				
+					draw_sprite_stretched_ext(THEME.palette_mask, 1, sx0, sy1 - 3, bxw,                           4, COLORS.panel_bg_clear_inner, 1);
+					draw_sprite_stretched_ext(THEME.palette_mask, 1, sx0, sy1 - 3, bxw * (_arrInd + 1) / _arrLen, 4, COLORS._main_accent, 1);
+				}
+			
+				var _txt = $"[{max(1, _arrLen)}] {sfw}x{sfh}";
+				
+				draw_set_text(_f_p4, fa_right, fa_bottom, COLORS._main_text_inner);
+				var _tw = string_width(_txt) + ui(6);
+				var _th = 14;
+				var _nx = sx1 - _tw;
+				var _ny = sy1 - _th;
+						
+				draw_sprite_stretched_ext(THEME.timeline_node, 0, _nx, _ny, _tw, _th, COLORS.panel_bg_clear_inner, 0.85);
+				draw_text_add(sx1 - ui(3), sy1 + ui(1), _txt);
 			}
+			
+			draw_set_color(COLORS.widget_surface_frame);
+			draw_rectangle(sx0, sy0, sx1 - 1, sy1 - 1, true);
 			
 			if(_type == VALUE_TYPE.surface)
 				draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - ui(20), _y + _h / 2, 1, COLORS._main_icon);

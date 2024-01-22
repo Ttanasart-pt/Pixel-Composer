@@ -19,30 +19,39 @@ if(winMan_isMinimized()) exit;
 			case VALUE_TYPE.path :
 				draw_tooltip_text(string_real(content));
 				break;
+				
 			case VALUE_TYPE.boolean :
 				draw_tooltip_text(printBool(content));
 				break;
+				
 			case VALUE_TYPE.curve :
 				draw_tooltip_text("[" + __txt("Curve Object") + "]");
 				break;
+				
 			case VALUE_TYPE.color :
 				draw_tooltip_color(content);
 				break;
+				
 			case VALUE_TYPE.gradient :
 				draw_tooltip_gradient(content);
 				break;
+				
 			case VALUE_TYPE.d3object :
 				draw_tooltip_text("[" + __txt("3D Object") + "]");
 				break;
+				
 			case VALUE_TYPE.object :
 				draw_tooltip_text("[" + __txt("Object") + "]");
 				break;
+				
 			case VALUE_TYPE.surface :
 				draw_tooltip_surface(content);
 				break;
+				
 			case VALUE_TYPE.rigid :
 				draw_tooltip_text("[" + __txt("Rigidbody Object") + " (id: " + string(content[$ "object"]) + ")]");
 				break;
+				
 			case VALUE_TYPE.particle :
 				var txt = "[" + 
 					__txt("Particle Object") + 
@@ -50,32 +59,43 @@ if(winMan_isMinimized()) exit;
 					"]";
 				draw_tooltip_text(txt);
 				break;
+				
 			case VALUE_TYPE.pathnode :
 				draw_tooltip_text("[" + __txt("Path Object") + "]");
 				break;
+				
 			case VALUE_TYPE.sdomain :
 				draw_tooltip_text("[" + __txt("Domain") + " (id: " + string(content) + ")]");
 				break;
+				
 			case VALUE_TYPE.strands :
 				var txt = __txt("Strands Object");
 				if(is_struct(content))
 					txt += " (strands: " + string(array_length(content.hairs)) + ")";
 				draw_tooltip_text("[" + txt + "]");
 				break;
+				
 			case VALUE_TYPE.mesh :
 				var txt = __txt("Mesh Object");
 				if(is_struct(content))
 					txt += " (triangles: " + string(array_length(content.triangles)) + ")";
 				draw_tooltip_text("[" + txt + "]");
 				break;
+				
 			case VALUE_TYPE.d3vertex :
 				var txt = __txt("3D Vertex");
 				txt += " (groups: " + string(array_length(content)) + ")";
 				draw_tooltip_text("[" + txt + "]");
 				break;
+				
 			case VALUE_TYPE.buffer :
 				draw_tooltip_buffer(content);
 				break;
+				
+			case "sprite" :
+				draw_tooltip_sprite(content);
+				break;
+				
 			default :
 				var tt = "";
 				if(is_struct(content)) tt = $"[{instanceof(content)}] {content}";

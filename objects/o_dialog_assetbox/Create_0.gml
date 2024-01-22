@@ -96,19 +96,11 @@ event_inherited();
 				var index = i * col + j;
 				if(index < amo) {
 					var content = contents[| index];
-					var xx   = grid_space + (grid_size + grid_space) * j;
+					var xx = grid_space + (grid_size + grid_space) * j;
 					
 					BLEND_OVERRIDE;
 					draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
 					BLEND_NORMAL;
-						
-					if(sHOVER && contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
-						draw_sprite_stretched_ext(THEME.node_active, 0, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-						if(mouse_press(mb_left, sFOCUS)) {
-							target.onModify(content.path);
-							instance_destroy();
-						}
-					}
 					
 					var spr = content.getSpr();
 					if(sprite_exists(spr)) {
@@ -117,14 +109,36 @@ event_inherited();
 						var ss = img_size / max(sw, sh);
 						var sx = xx + (grid_size - sw * ss) / 2;
 						var sy = yy + (grid_size - sh * ss) / 2;
+						var sn = sprite_get_number(spr);
 						
 						draw_sprite_ext(spr, frame, sx, sy, ss, ss, 0, c_white, 1);
 						
-						draw_set_text(f_p3, fa_right, fa_bottom, COLORS._main_accent);
-						draw_text(xx + grid_size - ui(1), yy + grid_size - ui(0), string(sw) + "x" + string(sh));
+						var _txt = $"{sw}x{sh}";
+						if(sn) _txt = $"[{sn}] " + _txt;
+						
+						draw_set_text(_f_p4, fa_right, fa_bottom, COLORS._main_text_inner);
+						var _tw = string_width(_txt) + ui(6);
+						var _th = 14;
+						var _nx = xx + grid_size - 1 - _tw;
+						var _ny = yy + grid_size - _th;
+						
+						draw_sprite_stretched_ext(THEME.timeline_node, 0, _nx, _ny, _tw, _th - 1, COLORS.panel_bg_clear_inner, 0.85);
+						draw_text_add(xx + grid_size - ui(3), yy + grid_size + ui(1), _txt);
 					}
+						
+					if(sHOVER && contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
+						TOOLTIP = [ spr, "sprite" ];
+						
+						draw_sprite_stretched_ext(THEME.node_active, 0, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+						if(mouse_press(mb_left, sFOCUS)) {
+							target.onModify(content.path);
+							instance_destroy();
+						}
+					}
+					
 				}
 			}
+			
 			var hght = grid_size + grid_space;
 			hh += hght;
 			yy += hght;

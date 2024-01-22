@@ -44,7 +44,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Particles", false], 1, 
 		["Spawn",     false], 3, 2, 
 		["Movement",  false], 5, 4, 9, 
-		["Smooth turn",   true, 11], 10, 
+		["Smooth turn", true, 11], 10, 
 		["Render",    false], 13, 6, 7, 
 	];
 	
@@ -129,28 +129,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						draw_set_color(_cc);
 						draw_set_alpha(_aa);
 						
-						switch(round(_ss)) {
-							case 0 : 
-							case 1 : 
-								draw_point(_pos[0], _pos[1]);
-								break;
-							case 2 : 
-								draw_point(_pos[0],     _pos[1]);
-								draw_point(_pos[0] + 1, _pos[1]);
-								draw_point(_pos[0],     _pos[1] + 1);
-								draw_point(_pos[0] + 1, _pos[1] + 1);
-								break;
-							case 3 : 
-								draw_point(_pos[0],     _pos[1]);
-								draw_point(_pos[0] - 1, _pos[1]);
-								draw_point(_pos[0] + 1, _pos[1]);
-								draw_point(_pos[0],     _pos[1] + 1);
-								draw_point(_pos[0],     _pos[1] - 1);
-								break;
-							default : 
-								draw_circle(round(_pos[0]), round(_pos[1]), round(_ss) - 2, false);
-								break;
-						}
+						dynaSurf_circle_fill(_pos[0], _pos[1], round(_ss));
 						
 						draw_set_alpha(1);
 					} else {

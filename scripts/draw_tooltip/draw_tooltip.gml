@@ -153,6 +153,31 @@ function draw_tooltip_surface(surf) {
 	draw_surface_ext_safe(surf, mx + ui(8), my + ui(8), ss, ss);
 }
 
+function draw_tooltip_sprite(spr) {
+	if(!sprite_exists(spr)) return;
+	
+	var sw = sprite_get_width(spr);
+	var sh = sprite_get_height(spr);
+	var sn = sprite_get_number(spr);
+	
+	var ss = max(1, min(ui(64) / sw, ui(64) / sh));
+	
+	var ww = sw * ss * sn + 2 * (sn - 1);
+	var hh = sh * ss;
+	
+	var mx = min(mouse_mx + ui(16), WIN_W - (ww + ui(16)));
+	var my = min(mouse_my + ui(16), WIN_H - (hh + ui(16)));
+		
+	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + ui(16), hh + ui(16));
+	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + ui(16), hh + ui(16));
+	
+	var sx = mx + ui(8);
+	var sy = my + ui(8);
+	
+	for( var i = 0; i < sn; i++ )
+		draw_sprite_ext(spr, i, sx + i * (sw * ss + 2), sy, ss, ss, 0, c_white, 1);
+}
+
 function draw_tooltip_atlas(atlas) {
 	if(!is_array(atlas)) atlas = [ atlas ];
 	

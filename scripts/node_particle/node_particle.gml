@@ -5,8 +5,6 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	onSurfaceSize = function() { return getInputData(input_len, DEF_SURF); };
 	inputs[| 3].setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
-	inputs[| 22].setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation", "Array" ]);
-		
 	inputs[| input_len + 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 		
@@ -63,7 +61,6 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	static onUpdate = function(frame = CURRENT_FRAME) { #region
 		var _inSurf   = getInputData(0);
-		var _arr_type = getInputData(22);
 		var _dim	  = getInputData(input_len + 0);
 		var _bg 	  = getInputData(input_len + 3);
 		
@@ -71,20 +68,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg)
 		
-		if(is_array(_inSurf) && _arr_type == 3) {
-			var _len = array_length(_inSurf);
-			if(!is_array(_outSurf)) 
-				_outSurf = array_create(_len);
-			else if(array_length(_outSurf) != _len) 
-				array_resize(_outSurf, _len);
-				
-			for( var i = 0; i < _len; i++ )
-				_outSurf[i] = surface_verify(_outSurf[i], _dim[0], _dim[1], attrDepth());
-			render_amount = _len;
-		} else {
-			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-			render_amount = 0;		
-		}
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		render_amount = 0;		
 		
 		outputs[| 0].setValue(_outSurf);
 		
@@ -106,9 +91,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg)
 		
-		if(render_amount == 0) {
-			surface_set_shader(_outSurf);
-			
+		surface_set_shader(_outSurf);
 			if(is_surface(_bg))  draw_surface(_bg, 0, 0);
 			
 			switch(_blend) {
@@ -118,33 +101,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			}
 			
 			shader_set_interpolation(_outSurf);
-				for(var i = 0; i < attributes.part_amount; i++) {
-					if(parts[i].active) parts[i].draw(_exact, _dim[0], _dim[1]);
-					//if(shader_current() != sh_sample) __shader_set = false;
-				}
-			surface_reset_shader();	
-		} else if(is_array(_outSurf)) {
-			for( var o = 0, n = array_length(_outSurf); o < n; o++ ) {
-				surface_set_shader(_outSurf[o]);
-				
-				if(is_surface(_bg))  draw_surface(_bg, 0, 0);
-			
-				switch(_blend) {
-					case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
-					case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;
-					case PARTICLE_BLEND_MODE.additive: BLEND_ADD;    break;
-				}
-		
-				shader_set_interpolation(_outSurf[o]);
-					for(var i = 0; i < attributes.part_amount; i++) {
-						if(parts[i].active) parts[i].draw(_exact, _dim[0], _dim[1], o);
-						//if(shader_current() != sh_sample) __shader_set = false;
-					}
-				surface_reset_shader();
+			for(var i = 0; i < attributes.part_amount; i++) {
+				if(parts[i].active) parts[i].draw(_exact, _dim[0], _dim[1]);
 			}
-		}
-		
-		BLEND_NORMAL
+		surface_reset_shader();	
 		
 		if(PROJECT.animator.is_playing)
 			cacheCurrentFrame(_outSurf);

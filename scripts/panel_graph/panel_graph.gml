@@ -1333,7 +1333,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					menuCall(,,, menu);
 				}
 			}
-		} else if(!value_dragging && value_focus && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
+		} else if(value_focus && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
 			value_dragging  = value_focus;
 			value_draggings = [];
 			
@@ -1392,6 +1392,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			for(var i = 0; i < ds_list_size(nodes_list); i++)
 				nodes_list[| i].drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
 		#endregion
+		
 	} #endregion
 	
 	function callAddDialog(ctx = getCurrentContext()) { #region

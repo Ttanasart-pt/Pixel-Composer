@@ -261,10 +261,15 @@ function __part(_node) constructor {
 		drawsy  += wig_scy.get(seed + life);
 	} #endregion
 	
-	static draw = function(exact, surf_w, surf_h, _index = 0) { #region
+	static draw = function(exact, surf_w, surf_h) { #region
 		INLINE
 		
 		var ss = surf;
+		
+		var lifeRat = 1 - life / life_total;
+		var scCurve = sct == noone? 1 : sct.get(lifeRat);
+		scx = drawsx * scCurve;
+		scy = drawsy * scCurve;
 		
 		if(arr_type == 2 && surf != noone && is_array(surf)) {
 			var ind = abs(round((life_total - life) * anim_speed));
@@ -282,19 +287,23 @@ function __part(_node) constructor {
 					if(ind >= len) {
 						kill();
 						return;
-					} else 
-						ss = surf[ind];
+					}
+					
+					ss = surf[ind];
 					break;
 			}
-		} else if(arr_type == 3) ss = array_safe_get(ss, _index);
+		} else if(arr_type == 3) {
+			var _sca = round(min(scx, scy));
+			ss = array_safe_get(surf, clamp(_sca, 0, array_length(surf) - 1));
+		}
 		
 		var surface = is_instanceof(ss, SurfaceAtlas)? ss.getSurface() : node.surface_cache[$ ss];
 		var _useS   = is_surface(surface);
 		
-		var lifeRat = 1 - life / life_total;
-		var scCurve = sct == noone? 1 : sct.get(lifeRat);
-		scx   = drawsx * scCurve;
-		scy   = drawsy * scCurve;
+		if(arr_type == 3) {
+			scx = 1;
+			scy = 1;
+		}
 		
 		var _xx, _yy;
 		var s_w = (_useS? surface_get_width(surface)  : 1) * scx;
@@ -340,28 +349,7 @@ function __part(_node) constructor {
 			draw_set_color(cc);
 			draw_set_alpha(alp_draw);
 			
-			switch(round(ss)) {
-				case 0 : 
-				case 1 : 
-					draw_point(_xx, _yy);
-					break;
-				case 2 : 
-					draw_point(_xx + 0, _yy + 0);
-					draw_point(_xx + 1, _yy + 0);
-					draw_point(_xx + 0, _yy + 1);
-					draw_point(_xx + 1, _yy + 1);
-					break;
-				case 3 : 
-					draw_point(_xx,     _yy);
-					draw_point(_xx - 1, _yy);
-					draw_point(_xx + 1, _yy);
-					draw_point(_xx,     _yy + 1);
-					draw_point(_xx,     _yy - 1);
-					break;
-				default : 
-					draw_circle(_xx, _yy, (exact? round(ss) : ss) - 2, false);
-					break;
-			}
+			dynaSurf_circle_fill(_xx, _yy, exact? round(ss) : ss);
 			
 			draw_set_alpha(1);
 			
