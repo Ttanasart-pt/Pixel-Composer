@@ -12,7 +12,7 @@ uniform vec2  dimension;
 uniform sampler2D normalMap;
 uniform float normalHeight;
 
-uniform vec3  ambiance;
+uniform vec4  ambiance;
 uniform int	  lightType;
 uniform vec4  lightPosition;
 uniform vec4  lightColor;
@@ -23,7 +23,7 @@ void main() {
 	vec3 normal		= normalize(texture2D( normalMap, v_vTexcoord ).rgb * -2.0 + 1.0) * normalHeight;
 	float aspect	= dimension.x / dimension.y;
 	
-	vec3 result		= ambiance * base_color.rgb;
+	vec3 result		= ambiance.rgb * base_color.rgb;
 	
 	vec3 lightPos = vec3(lightPosition.x / dimension.x, lightPosition.y / dimension.y, lightPosition.z);
 	float attenuation = lightIntensity;

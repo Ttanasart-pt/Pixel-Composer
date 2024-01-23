@@ -1,5 +1,6 @@
 function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Lua Compute";
+	update_on_frame = true;
 	
 	inputs[| 0]  = nodeValue("Function name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "render" + string(irandom_range(100000, 999999)));
 	
@@ -34,9 +35,6 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	lua_state = lua_create();
 	
-	error_notification = noone;
-	compiled = false;
-	
 	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);
 		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
@@ -50,35 +48,8 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[| index + 2].editWidget.interactable = false;
 	} if(!LOADING && !APPENDING) createNewInput(); #endregion
 	
-	static stepBegin = function() { #region
-		if(PROJECT.animator.frame_progress)
-			setRenderStatus(false);
-		
-		setHeight();
-		doStepBegin();
-		
-		value_validation[VALIDATION.error] = !compiled;
-		if(!compiled && error_notification == noone) {
-			error_notification = noti_error("Lua node [" + string(name) + "] not compiled.");
-			error_notification.onClick = function() { PANEL_GRAPH.focusNode(self); };
-		}
-				
-		if(compiled && error_notification != noone) {
-			noti_remove(error_notification);
-			error_notification = noone;
-		}
-		
-		var _type = getInputData(1);
-		switch(_type) {
-			case 0 : outputs[| 1].setType(VALUE_TYPE.float);  break;
-			case 1 : outputs[| 1].setType(VALUE_TYPE.text);   break;
-			case 2 : outputs[| 1].setType(VALUE_TYPE.struct); break;
-		}
-	} #endregion
-	
 	static getState = function() { #region
-		if(inputs[| 3].isLeaf())
-			return lua_state;
+		if(inputs[| 3].isLeaf()) return lua_state;
 		return inputs[| 3].value_from.node.getState();
 	} #endregion
 	
@@ -126,29 +97,20 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		createNewInput();
 	} #endregion
 	
-	static onValueFromUpdate = function(index) { #region
-		if(index == 0 || index == 2) compiled = false;
-	} #endregion
-	
 	static onValueUpdate = function(index = 0) { #region
-		if(index == 0 || index == 2) compiled = false;
-		
-		if(index == 3) {
-			for( var i = 0; i < array_length(outputs[| 0].value_to); i++ ) {
-				var _j = outputs[| 0].value_to[i];
-				if(_j.value_from != outputs[| 0]) continue;
-				_j.node.compiled = false;
-			}
-			compiled = false;
-		}
-		
 		if(LOADING || APPENDING) return;
 		
-		compiled = false;
-		refreshDynamicInput();
+		if((index - input_fix_len) % data_length == 0) refreshDynamicInput();
 	} #endregion
 	
 	static step = function() { #region
+		var _type = getInputData(1);
+		switch(_type) {
+			case 0 : outputs[| 1].setType(VALUE_TYPE.float);  break;
+			case 1 : outputs[| 1].setType(VALUE_TYPE.text);   break;
+			case 2 : outputs[| 1].setType(VALUE_TYPE.struct); break;
+		}
+		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
 			var name = getInputData(i + 0);
 			inputs[| i + 2].name = name;
@@ -156,27 +118,21 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		if(!compiled) return;
-		//if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
-		
 		var _func = getInputData(0);
 		var _dimm = getInputData(1);
 		var _exec = getInputData(4);
-		
-		if(!_exec) return;
+		update_on_frame = _exec;
 		
 		argument_val = [];
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length )
 			array_push(argument_val,  getInputData(i + 2));
 		
 		lua_projectData(getState());
+		addCode();
 		
 		var res = 0;
-		try	{
-			res = lua_call_w(getState(), _func, argument_val); 
-		} catch(e) {
-			noti_warning(exception_print(e),, self);
-		}
+		try	     { res = lua_call_w(getState(), _func, argument_val); } 
+		catch(e) { noti_warning(exception_print(e),, self);           }
 		
 		outputs[| 1].setValue(res);
 	} #endregion
@@ -190,42 +146,15 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			array_push(argument_name, getInputData(i + 0));
 		}
 		
-		var lua_code = "function " + _func + "(";
+		var lua_code = $"function {_func}(";
 		for( var i = 0, n = array_length(argument_name); i < n; i++ ) {
 			if(i) lua_code += ", "
 			lua_code += argument_name[i];
 		}
-		lua_code += ")\n";
-		lua_code += _code;
-		lua_code += "\nend";
+		
+		lua_code += $")\n{_code}\nend";
 		
 		lua_add_code(getState(), lua_code);
-	} #endregion
-	
-	insp1UpdateTooltip  = __txt("Compile");
-	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function() { #region
-		var thrd = inputs[| 3].value_from;
-		if(thrd == noone) {
-			doCompile();
-			return;
-		}
-		
-		thrd.node.onInspector1Update();
-	} #endregion
-	
-	static doCompile = function() { #region
-		compiled = true;
-		addCode();
-		
-		for( var i = 0; i < array_length(outputs[| 0].value_to); i++ ) {
-			var _j = outputs[| 0].value_to[i];
-			if(_j.value_from != outputs[| 0]) continue;
-			_j.node.doCompile();
-		}
-		
-		doUpdate();
 	} #endregion
 	
 	static doApplyDeserialize = function() { #region

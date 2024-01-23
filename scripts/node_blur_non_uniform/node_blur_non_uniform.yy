@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_blur_simple",
+  "name": "node_blur_non_uniform",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

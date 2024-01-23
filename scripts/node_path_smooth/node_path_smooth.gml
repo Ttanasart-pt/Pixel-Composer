@@ -104,14 +104,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					var a = inputs[| i].drawOverlay(_act, _x, _y, _s, _mx, _my, _snx, _sny);
 					_act &= !a;
 					if(a) _anchor_hover = i;
-					
-					//var a = anchors[ i - input_fix_len];
-					//var c = controls[i - input_fix_len];
-					//draw_set_color(c_red);
-					//draw_circle(_x + (a[0] + c[0]) * _s, _y + (a[1] + c[1]) * _s, 4, false);
-					
-					//draw_set_color(c_blue);
-					//draw_circle(_x + (a[0] + c[2]) * _s, _y + (a[1] + c[3]) * _s, 4, false);
 				}
 			#endregion
 		}
@@ -158,8 +150,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var con = loop? ansize : ansize - 1;
 		
 		for(var i = 0; i < con; i++) {
-			var _a0 = anchors[(i + 0) % ansize];
-			var _a1 = anchors[(i + 1) % ansize];
+			var _a0 = anchors[ (i + 0) % ansize];
+			var _a1 = anchors[ (i + 1) % ansize];
 			var _c0 = controls[(i + 0) % ansize];
 			var _c1 = controls[(i + 1) % ansize];
 			
@@ -213,11 +205,11 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var ansize = ds_list_size(inputs) - input_fix_len;
 		if(ansize == 0) return out;
 		
-		var _a0, _a1;
-		
 		for(var i = 0; i < ansize; i++) {
-			_a0 = anchors[(i + 0) % ansize];
-			_a1 = anchors[(i + 1) % ansize];
+			var _a0 = anchors[ (i + 0) % ansize];
+			var _a1 = anchors[ (i + 1) % ansize];
+			var _c0 = controls[(i + 0) % ansize];
+			var _c1 = controls[(i + 1) % ansize];
 			
 			if(_dist > lengths[i]) {
 				_dist -= lengths[i];
@@ -225,7 +217,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			}
 			
 			var _t = _dist / lengths[i];
-			//var _p = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+			var _p = eval_bezier(_t, _a0[0],  _a0[1], _a1[0],  _a1[1], 
+				 					 _a0[0] + _c0[2], _a0[1] + _c0[3], 
+				 					 _a1[0] + _c1[0], _a1[1] + _c1[1]);
 			out.x  = _p[0];
 			out.y  = _p[1];
 			
