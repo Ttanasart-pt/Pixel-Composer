@@ -8,8 +8,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	hide   = false;
 	font   = noone;
 	color  = COLORS._main_text;
-	boxColor = c_white;
-	format = TEXT_AREA_FORMAT._default;
+	boxColor  = c_white;
+	format    = TEXT_AREA_FORMAT._default;
+	precision = 5;
 	
 	no_empty    = true;
 	auto_update = false;
@@ -20,6 +21,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	slide_sv    = 0;
 	slide_speed = 1 / 10;
 	slide_range = noone;
+	
+	label = "";
 	
 	starting_char = 1;
 	
@@ -78,6 +81,16 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static setFont = function(font) { #region
 		self.font = font;
+		return self;
+	} #endregion
+	
+	static setLabel = function(label) { #region
+		self.label = label;
+		return self;
+	} #endregion
+	
+	static setPrecision = function(precision) { #region
+		self.precision = precision;
 		return self;
 	} #endregion
 	
@@ -495,7 +508,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			var _display_text = _raw_text;
 			if(input == TEXTBOX_INPUT.number) {
 				var dig = floor(_w / string_width("0")) - 3;
-				_display_text = string_real(_display_text, dig);
+				_display_text = string_real(_display_text, dig, precision);
 			}
 			var tw = string_width(_display_text);
 			var th = string_height(_display_text);
@@ -526,7 +539,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
 			
 			if(slidable) {
-				if(_w > ui(64) && _h >= TEXTBOX_HEIGHT)
+				if(_w > ui(64) && _h >= TEXTBOX_HEIGHT && label == "")
 					draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + _h / 2, 1, COLORS._main_icon, 0.5);
 				
 				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left, active)) {
@@ -544,6 +557,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			BLEND_ALPHA
 			draw_surface(text_surface, tb_surf_x, tb_surf_y);
 			BLEND_NORMAL
+			
+			if(label != "") {
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_icon);
+				draw_set_alpha(0.5);
+				draw_text_add(_x + ui(8), _y + _h / 2, label);
+				draw_set_alpha(1);
+			}
 		} #endregion
 		
 		if(sliding > 0) { #region

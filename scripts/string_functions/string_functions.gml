@@ -31,7 +31,7 @@ function string_partial_match(str, key) { #region
 	return -9999;
 } #endregion
 
-function string_real(val, digMax = 999) { #region
+function string_real(val, digMax = 999, decMin = 5) { #region
 	if(is_string(val)) return val;
 	if(is_struct(val)) return string(val);
 	
@@ -45,7 +45,7 @@ function string_real(val, digMax = 999) { #region
 	if(val == 0) return "0";
 	
 	var pres, p = 1;
-	var presMax = min(5, digMax - ceil(log10(ceil(abs(val)))));
+	var presMax = min(decMin, digMax - ceil(log10(ceil(abs(val)))));
 	for( pres = 0; pres < presMax; pres++ ) {
 		if(frac(val * p) == 0)
 			break;

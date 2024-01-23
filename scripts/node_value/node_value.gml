@@ -88,6 +88,7 @@ enum VALUE_DISPLAY {
 	corner,
 	toggle,
 	matrix,
+	path_anchor,
 	gradient_range,
 	
 	//Curve
@@ -366,6 +367,7 @@ function typeArray(_type) { #region
 		case VALUE_DISPLAY.rotation_range :
 		case VALUE_DISPLAY.rotation_random :
 		case VALUE_DISPLAY.slider_range :
+		case VALUE_DISPLAY.path_anchor :
 		case VALUE_DISPLAY.gradient_range :
 		
 		case VALUE_DISPLAY.vector :
@@ -1118,6 +1120,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						extract_node = "Node_Vector4";
 						display_data.angle_display = QUARTERNION_DISPLAY.quarterion;
+						break; #endregion
+					case VALUE_DISPLAY.path_anchor :	#region
+						editWidget = new pathAnchorBox(function(index, val) { 
+							return setValueDirect(val, index);
+						});
+						
+						extract_node = "Node_Path_Anchor";
 						break; #endregion
 						
 				}

@@ -18,8 +18,6 @@ function Path() constructor {
 		var pix = frac(_rat) * lengthTotal;
 		return getPointDistance(pix, _ind, out);
 	}
-	
-	static getPointSegment  = function(_seg, _ind = 0, out = undefined) { return new __vec2(0, 0); }
 }
 
 function PathSegment() : Path() constructor {
@@ -77,18 +75,10 @@ function PathSegment() : Path() constructor {
 		return new __vec2(0, 0);
 	}
 	
-	static getPointSegment = function(_seg) {
-		var fr = (floor(_seg)) % getSegmentCount();
-		var to = (fr + 1) % getSegmentCount();
-		var st = frac(_seg);
-		
-		return segments[fr].lerpTo(segments[to], st);
-	}
-	
 	static getPointRatio = function(_rat) {
-		return getPointSegment(frac(_rat) * lengthTotal);
+		return getPointDistance(frac(_rat) * lengthTotal);
 	}
-	
+		
 	static getTangentRatio = function(_rat) {
 		_rat = frac(_rat);
 		var l = _rat * lengthTotal;

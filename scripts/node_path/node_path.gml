@@ -58,15 +58,18 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	#region ---- path ----
 		anchors		= [];
+		segments    = [];
 		lengths		= [];
 		lengthAccs	= [];
-		boundary    = [];
 		lengthTotal	= 0;
+		boundary    = new BoundingBox();
 	
 		cached_pos = ds_map_create();
 	#endregion
 	
 	#region ---- editor ----
+		line_hover = -1;
+	
 		drag_point    = -1;
 		drag_points   = [];
 		drag_type     = 0;
@@ -91,15 +94,17 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			["Anchors",	false], 
 		];
 		
-		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i++ ) 
+		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i++ ) {
 			array_push(input_display_list, i);
+			inputs[| i].name = $"Anchor {i - input_fix_len}";
+		}
 	} #endregion
 	
 	static createNewInput = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) { #region
 		var index = ds_list_size(inputs);
 		
 		inputs[| index] = nodeValue("Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, _dxx, _dxy, _dyx, _dyy, false ])
-			.setDisplay(VALUE_DISPLAY.vector);
+			.setDisplay(VALUE_DISPLAY.path_anchor);
 		
 		recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[| index], index, "add path anchor point" ]);
 		resetDisplayList();
@@ -545,116 +550,88 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		#region check line hover
-			var line_hover = -1;
-			var points = [];
-			var _a0, _a1;
+		var _line_hover  = -1;
+		var anchor_hover = -1;
+		var hover_type   = 0;
 		
-			var minx =  99999, miny =  99999;
-			var maxx = -99999, maxy = -99999;
+		var points = [];
+		var _a0, _a1;
 		
-			for(var i = loop? 0 : 1; i < ansize; i++) {
-				if(i) {
-					_a0 = getInputData(input_fix_len + i - 1);
-					_a1 = getInputData(input_fix_len + i);
-				} else {
-					_a0 = getInputData(input_fix_len + ansize - 1);
-					_a1 = getInputData(input_fix_len + 0);
-				}
-					
-				var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0, pnt = [];
-				for(var j = 0; j < sample; j++) {
-					if(array_length(_a0) < 6) continue;
-			
-					p = eval_bezier(j / (sample - 1), _a0[_ANCHOR.x], _a0[_ANCHOR.y], 
-													  _a1[_ANCHOR.x], _a1[_ANCHOR.y], 
-													  _a0[_ANCHOR.x] + _a0[_ANCHOR.c2x], _a0[_ANCHOR.y] + _a0[_ANCHOR.c2y], 
-													  _a1[_ANCHOR.x] + _a1[_ANCHOR.c1x], _a1[_ANCHOR.y] + _a1[_ANCHOR.c1y]);
-					_nx = _x + p[0] * _s;
-					_ny = _y + p[1] * _s;
-					
-					minx = min(minx, _nx); miny = min(miny, _ny);
-					maxx = max(maxx, _nx); maxy = max(maxy, _ny);
-					
-					array_push(pnt, [ _nx, _ny ]);
+		var minx =  99999, miny =  99999;
+		var maxx = -99999, maxy = -99999;
 				
-					if(j && (key_mod_press(CTRL) || isUsingTool(1)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
-						line_hover = i;
-				
-					_ox = _nx;
-					_oy = _ny;
-				}
-			
-				array_push(points, pnt);
-			}
-		#endregion
-		#region draw path
+		if(!array_empty(anchors)) {
 			draw_set_color(isUsingTool(0)? c_white : COLORS._main_accent);
-			var ind = 0;
-			for(var i = loop? 0 : 1; i < ansize; i++) {
-				for(var j = 0; j < sample; j++) {
-					_nx = points[ind][j][_ANCHOR.x];
-					_ny = points[ind][j][_ANCHOR.y];
-				
-					if(j) draw_line_width(_ox, _oy, _nx, _ny, 1 + 2 * (line_hover == i));
+			for( var i = 0, n = array_length(segments); i < n; i++ ) { #region draw path
+				var _seg = segments[i];
+				var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
+					
+				for( var j = 0, m = array_length(_seg); j < m; j++ ) {
+					_nx = _x + _seg[j][0] * _s;
+					_ny = _y + _seg[j][1] * _s;
+						
+					if(j) {
+						if((key_mod_press(CTRL) || isUsingTool(1)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
+							_line_hover = i;
+						draw_line_width(_ox, _oy, _nx, _ny, 1 + 2 * (line_hover == i));
+					}
 				
 					_ox = _nx;
 					_oy = _ny;
 				}
+			} #endregion
 			
-				ind++;
-			}
+			#region draw anchor
+				if(!isUsingTool(0))
+				for(var i = 0; i < ansize; i++) {
+					var _a   = anchors[i];
+					var xx   = _x + _a[0] * _s;
+					var yy   = _y + _a[1] * _s;
+					var cont = false;
+					var _ax0 = 0, _ay0 = 0;
+					var _ax1 = 0, _ay1 = 0;
 			
-			var anchor_hover = -1;
-			var hover_type = 0;
-		
-			if(!isUsingTool(0))
-			for(var i = 0; i < ansize; i++) {
-				var _a = getInputData(input_fix_len + i);
-				var xx = _x + _a[0] * _s;
-				var yy = _y + _a[1] * _s;
-				var cont = false;
-				var _ax0 = 0, _ay0 = 0;
-				var _ax1 = 0, _ay1 = 0;
+					if(array_length(_a) < 6) continue;
 			
-				if(array_length(_a) < 6) continue;
+					if(_a[2] != 0 || _a[3] != 0 || _a[4] != 0 || _a[5] != 0) {
+						_ax0 = _x + (_a[0] + _a[2]) * _s;
+						_ay0 = _y + (_a[1] + _a[3]) * _s;
+						_ax1 = _x + (_a[0] + _a[4]) * _s;
+						_ay1 = _y + (_a[1] + _a[5]) * _s;
+						cont = true;
 			
-				if(_a[2] != 0 || _a[3] != 0 || _a[4] != 0 || _a[5] != 0) {
-					_ax0 = _x + (_a[0] + _a[2]) * _s;
-					_ay0 = _y + (_a[1] + _a[3]) * _s;
-					_ax1 = _x + (_a[0] + _a[4]) * _s;
-					_ay1 = _y + (_a[1] + _a[5]) * _s;
-					cont = true;
-			
-					draw_set_color(COLORS.node_path_overlay_control_line);
-					draw_line(_ax0, _ay0, xx, yy);
-					draw_line(_ax1, _ay1, xx, yy);
+						draw_set_color(COLORS.node_path_overlay_control_line);
+						draw_line(_ax0, _ay0, xx, yy);
+						draw_line(_ax1, _ay1, xx, yy);
 				
-					draw_sprite_colored(THEME.anchor_selector, 2, _ax0, _ay0);
-					draw_sprite_colored(THEME.anchor_selector, 2, _ax1, _ay1);
-				}
+						draw_sprite_colored(THEME.anchor_selector, 2, _ax0, _ay0);
+						draw_sprite_colored(THEME.anchor_selector, 2, _ax1, _ay1);
+					}
 			
-				draw_sprite_colored(THEME.anchor_selector, 0, xx, yy);
-				draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
-				draw_text(xx + ui(4), yy - ui(4), i + 1);
+					draw_sprite_colored(THEME.anchor_selector, 0, xx, yy);
+					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
+					draw_text(xx + ui(4), yy - ui(4), inputs[| input_fix_len + i].name);
 	
-				if(drag_point == i) {
-					draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
-				} else if(point_in_circle(_mx, _my, xx, yy, 8)) {
-					draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
-					anchor_hover = i;
-					hover_type   = 0;
-				} else if(cont && point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
-					draw_sprite_colored(THEME.anchor_selector, 0, _ax0, _ay0);
-					anchor_hover = i;
-					hover_type   = 1;
-				} else if(cont && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
-					draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1);
-					anchor_hover =  i;
-					hover_type   = -1;
+					if(drag_point == i) {
+						draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
+					} else if(point_in_circle(_mx, _my, xx, yy, 8)) {
+						draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
+						anchor_hover = i;
+						hover_type   = 0;
+					} else if(cont && point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
+						draw_sprite_colored(THEME.anchor_selector, 0, _ax0, _ay0);
+						anchor_hover = i;
+						hover_type   = 1;
+					} else if(cont && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
+						draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1);
+						anchor_hover =  i;
+						hover_type   = -1;
+					}
 				}
-			}
-		#endregion
+			#endregion
+		}
+		
+		line_hover = _line_hover;
 		
 		if(isUsingTool(0)) {								#region transform tools
 			var hov = 0;
@@ -790,12 +767,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var anc = createNewInput(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
 				UNDO_HOLDING = true;
 				
-				if(line_hover == -1) {
+				if(_line_hover == -1) {
 					drag_point = ds_list_size(inputs) - input_fix_len - 1;
 				} else {
 					ds_list_remove(inputs, anc);
-					ds_list_insert(inputs, input_fix_len + line_hover, anc);
-					drag_point = line_hover;	
+					ds_list_insert(inputs, input_fix_len + _line_hover + 1, anc);
+					drag_point = _line_hover + 1;
 				}
 				
 				drag_type     = -1;
@@ -812,46 +789,32 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static updateLength = function() { #region
 		boundary    = new BoundingBox();
+		segments    = [];
+		lengths     = [];
+		lengthAccs  = [];
 		lengthTotal = 0;
+		
 		var loop    = getInputData(1);
-		var rond    = getInputData(3);
-		if(!is_real(rond)) rond = false;
+		var sample  = PREFERENCES.path_resolution;
 		var ansize  = ds_list_size(inputs) - input_fix_len;
-		if(ansize < 2) {
-			lengths = [];
-			anchors = [];
-			return;
-		}
-		var sample = PREFERENCES.path_resolution;
+		if(ansize < 2) return;
 		
 		var con = loop? ansize : ansize - 1;
-		lengths	   = [];
-		lengthAccs = [];
-		anchors    = array_create(ansize);
 		
 		for(var i = 0; i < con; i++) {
-			var index_0 = input_fix_len + i;
-			var index_1 = input_fix_len + i + 1;
-			if(index_1 >= ds_list_size(inputs)) index_1 = input_fix_len;
-			
-			var _a0 = array_clone(getInputData(index_0));
-			var _a1 = array_clone(getInputData(index_1));
-			
-			if(rond) {
-				_a0[0] = round(_a0[0]);	
-				_a0[1] = round(_a0[1]);
-				_a1[0] = round(_a1[0]);	
-				_a1[1] = round(_a1[1]);
-			}
-			
-			anchors[i + 0] = array_clone(_a0);
-			anchors[i + 1] = array_clone(_a1);
+			var _a0 = anchors[(i + 0) % ansize];
+			var _a1 = anchors[(i + 1) % ansize];
 			
 			var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
+			var sg = array_create(sample);
+			
 			for(var j = 0; j < sample; j++) {
-				p = eval_bezier(j / sample, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-				_nx = p[0];
-				_ny = p[1];
+				p = eval_bezier(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], 
+				                            _a0[0] + _a0[4], _a0[1] + _a0[5], 
+											_a1[0] + _a1[2], _a1[1] + _a1[3]);
+				sg[j] = p;
+				_nx   = p[0];
+				_ny   = p[1];
 				
 				boundary.addPoint(_nx, _ny);
 				if(j) l += point_distance(_nx, _ny, _ox, _oy);	
@@ -860,6 +823,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				_oy = _ny;
 			}
 			
+			segments[i]   = sg;
 			lengths[i]    = l;
 			lengthTotal  += l;
 			lengthAccs[i] = lengthTotal;
@@ -875,6 +839,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		if(array_empty(lengths)) return out;
 		
 		var _cKey = _dist;
 		if(ds_map_exists(cached_pos, _cKey)) {
@@ -884,33 +849,17 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			return out;
 		}
 		
-		var loop   = getInputData(1);
-		var rond   = getInputData(3);
-		if(!is_real(rond)) rond = false;
-		
+		var loop = getInputData(1);
 		if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
-		var _oDist = _dist;
 		
-		var ansize = array_length(lengths);
-		var amo    = ds_list_size(inputs) - input_fix_len;
-		
+		var ansize = ds_list_size(inputs) - input_fix_len;
 		if(ansize == 0) return out;
 		
 		var _a0, _a1;
 		
 		for(var i = 0; i < ansize; i++) {
-			_a0 = array_clone(anchors[safe_mod(i + 0, amo)]);
-			_a1 = array_clone(anchors[safe_mod(i + 1, amo)]);
-			
-			if(!is_array(_a0) || !is_array(_a1))
-				return out;
-			
-			if(rond) {
-				_a0[0] = round(_a0[0]);	
-				_a0[1] = round(_a0[1]);
-				_a1[0] = round(_a1[0]);	
-				_a1[1] = round(_a1[1]);
-			} 
+			_a0 = anchors[(i + 0) % ansize];
+			_a1 = anchors[(i + 1) % ansize];
 			
 			if(_dist > lengths[i]) {
 				_dist -= lengths[i];
@@ -919,8 +868,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var _t = _dist / lengths[i];
 			var _p = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-			out.x = _p[0];
-			out.y = _p[1];
+			out.x  = _p[0];
+			out.y  = _p[1];
 			
 			cached_pos[? _cKey] = out.clone();
 			return out;
@@ -935,69 +884,50 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
 	
 	static getPointSegment = function(_rat) { #region
+		if(array_empty(lengths)) return new __vec2();
+		
 		var loop   = getInputData(1);
-		var rond   = getInputData(3);
-		if(!is_real(rond)) rond = false;
+		var ansize = ds_list_size(inputs) - input_fix_len;
 		
-		var ansize = array_length(lengths);
-		var amo    = ds_list_size(inputs) - input_fix_len;
-		
-		if(amo < 1) return new __vec2(0, 0);
-		if(_rat < 0) {
-			var _p0 = getInputData(input_fix_len);
-			if(rond)
-				return new __vec2(round(_p0[0]), round(_p0[1]));
-			return new __vec2(_p0[0], _p0[1]);
-		}
+		if(_rat < 0) return new __vec2(anchors[0][0], anchors[0][1]);
 		
 		_rat = safe_mod(_rat, ansize);
-		var _i0 = clamp(floor(_rat), 0, amo - 1);
+		var _i0 = clamp(floor(_rat), 0, ansize - 1);
+		var _i1 = (_i0 + 1) % ansize;
 		var _t  = frac(_rat);
-		var _i1 = _i0 + 1;
 		
-		if(_i1 >= amo) {
-			if(!loop) {
-				var _p1 = getInputData(ds_list_size(inputs) - 1)
-				if(rond)
-					return new __vec2(round(_p1[0]), round(_p1[1]));
-				return new __vec2(_p1[0], _p1[1]);
-			}
-			
-			_i1 = 0; 
-		}
+		if(_i1 >= ansize && !loop) return new __vec2(anchors[ansize - 1][0], anchors[ansize - 1][1]);
 		
-		var _a0 = array_clone(getInputData(input_fix_len + _i0));
-		var _a1 = array_clone(getInputData(input_fix_len + _i1));
+		var _a0 = anchors[_i0];
+		var _a1 = anchors[_i1];
+		var p   = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 		
-		if(rond) {
-			_a0[0] = round(_a0[0]);	_a0[1] = round(_a0[1]);
-			_a1[0] = round(_a1[0]);	_a1[1] = round(_a1[1]);
-		}
-		
-		var p = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 		return new __vec2(p[0], p[1]);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		ds_map_clear(cached_pos);
-		updateLength();
 		
 		var _rat = getInputData(0);
 		var _typ = getInputData(2);
 		var _rnd = getInputData(3);
 		
-		var anchors = [];
+		var _a = [];
 		for(var i = input_fix_len; i < ds_list_size(inputs); i++) {
 			var _anc = array_clone(getInputData(i));
 			
 			if(_rnd) {
 				_anc[0] = round(_anc[0]);
-				_anc[1] = round(_anc[2]);
+				_anc[1] = round(_anc[1]);
 			}
 			
-			array_push(anchors, _anc);
+			array_push(_a, _anc);
 		}
-		outputs[| 2].setValue(anchors);
+		
+		anchors = _a;
+		outputs[| 2].setValue(_a);
+		
+		updateLength();
 		
 		if(is_array(_rat)) {
 			var _out = array_create(array_length(_rat));
