@@ -52,6 +52,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	p  = new __vec2();
 	p1 = new __vec2();
 	
+	cached_pos = ds_map_create();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _path = getInputData(0);
 		if(_path) _path.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -115,6 +117,14 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getPointRatio = function(_rat, ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
+		var _cKey = $"{_rat},{ind}";
+		if(ds_map_exists(cached_pos, _cKey)) {
+			var _p = cached_pos[? _cKey];
+			out.x = _p.x;
+			out.y = _p.y;
+			return out;
+		}
+		
 		var _path = path;
 		var _fre  = fre ; 
 		var _amp  = amp ;
@@ -161,6 +171,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		out.x = p.x + lengthdir_x(_amp * prg, dir);
 		out.y = p.y + lengthdir_y(_amp * prg, dir);
 		
+		cached_pos[? _cKey] = out.clone();
+		
 		return out;
 	} #endregion
 	
@@ -171,6 +183,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static update = function() { #region
+		ds_map_clear(cached_pos);
 		path = getInputData(0);
 		fre  = getInputData(1); 
 		amp  = getInputData(2);

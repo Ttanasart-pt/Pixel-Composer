@@ -106,6 +106,9 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 		}
 	}
 	
+	draw_set_text(_f_p2b, fa_center, fa_center, COLORS._main_accent);
+	draw_text((x0 + x1) / 2, (y0 + y1) / 2, name);
+	
 	return hover;
 } #endregion
 
@@ -226,6 +229,9 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 		}
 	}
 	
+	draw_set_text(_f_p2b, fa_center, fa_center, COLORS._main_accent);
+	draw_text((x0 + x1) / 2, (y0 + y1) / 2, name);
+	
 	return hover;
 } #endregion
 
@@ -329,6 +335,9 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 		}
 	}
 	
+	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
+	draw_text(_ax, _ay - 4, name);
+	
 	return hover;
 } #endregion
 
@@ -338,12 +347,12 @@ function preview_overlay_area(interact, active, _x, _y, _s, _mx, _my, _snx, _sny
 	if(is_array(_val[0])) return hover;
 	
 	var mode = editWidget.mode;
-	if(mode == AREA_MODE.area)
-		hover =  preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
-	else if(mode == AREA_MODE.padding) 
-		hover = preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data)
-	else if(mode == AREA_MODE.two_point) 
-		hover = preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
+	
+	switch(mode) {
+		case AREA_MODE.area :	   return preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
+		case AREA_MODE.padding :   return preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data);
+		case AREA_MODE.two_point : return preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
+	}
 	
 	return hover;
 }

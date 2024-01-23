@@ -1,8 +1,7 @@
 function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Plot Path";
-	
+	name   = "Plot Path";
 	length = 0;
-	w = 96;
+	w      = 96;
 	
 	inputs[| 0] = nodeValue("Output scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -37,7 +36,8 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		[ "Equation",  false ], 1, 2, 3, 4, 6, 
 	]
 	
-	boundary = new BoundingBox( 0, 0, 1, 1 );
+	boundary   = new BoundingBox( 0, 0, 1, 1 );
+	cached_pos = ds_map_create();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);

@@ -477,7 +477,7 @@ function Panel_Animation() : PanelContent() constructor {
 				
 				for( var j = 0, m = ds_list_size(_node.inputs); j < m; j++ ) {
 					var prop = _node.inputs[| j];
-					if(!prop.is_anim || prop.value_from != noone) continue;
+					if(!prop.isTimelineVisible()) continue;
 					
 					var anim = prop.sep_axis? prop.animators : [ prop.animator ];
 					if(prop.sep_axis) array_append(_anim, prop.animators);

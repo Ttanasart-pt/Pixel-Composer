@@ -120,7 +120,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawPreview = function(_x, _y, _s) { #region
 		
 	} #endregion
-	
+ 
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var sample = PREFERENCES.path_resolution;
 		var loop   = getInputData(1);
@@ -874,10 +874,15 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static getAccuLength	= function() { return lengthAccs; }
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) { #region
-		if(ds_map_exists(cached_pos, _dist))
-			return cached_pos[? _dist].clone();
-		
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
+		var _cKey = _dist;
+		if(ds_map_exists(cached_pos, _cKey)) {
+			var _p = cached_pos[? _cKey];
+			out.x = _p.x;
+			out.y = _p.y;
+			return out;
+		}
 		
 		var loop   = getInputData(1);
 		var rond   = getInputData(3);
@@ -913,11 +918,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 			var _t = _dist / lengths[i];
-			var _p     = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+			var _p = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 			out.x = _p[0];
 			out.y = _p[1];
 			
-			cached_pos[? _oDist] = out.clone();
+			cached_pos[? _cKey] = out.clone();
 			return out;
 		}
 		

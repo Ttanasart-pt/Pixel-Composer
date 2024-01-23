@@ -1,14 +1,12 @@
-function L_Turtle(x = 0, y = 0, ang = 90, w = 1, color = c_white) constructor {
+function L_Turtle(x = 0, y = 0, ang = 90, w = 1, color = c_white) constructor { #region
 	self.x   = x;
 	self.y   = y;
 	self.ang = ang;
 	self.w   = w;
 	self.color = color;
 	
-	static clone = function() {
-		return new L_Turtle(x, y, ang, w, color);
-	}
-}
+	static clone = function() { return new L_Turtle(x, y, ang, w, color); }
+} #endregion
 
 function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "L System";

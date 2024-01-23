@@ -1,9 +1,9 @@
 function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Array";
-	
-	w = 96;
+	w    = 96;
 	
 	setIsDynamicInput(1);
+	cached_pos = ds_map_create();
 	
 	outputs[| 0] = nodeValue("Path array", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
@@ -135,6 +135,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
+		ds_map_clear(cached_pos);
 		outputs[| 0].setValue(self);
 	} #endregion
 }

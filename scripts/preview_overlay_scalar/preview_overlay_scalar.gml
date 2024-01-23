@@ -39,5 +39,8 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 						
 	draw_sprite_colored(_spr, index, _ax, _ay);
 	
+	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
+	draw_text(_ax, _ay - 4, name);
+	
 	return hover;
 }

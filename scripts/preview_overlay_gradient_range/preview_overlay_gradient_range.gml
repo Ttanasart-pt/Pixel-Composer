@@ -17,19 +17,41 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	var _ax1 = __x1 * _s + _x;
 	var _ay1 = __y1 * _s + _y;
 	
-	draw_set_color(COLORS._main_accent);
-	draw_line(_ax0, _ay0, _ax1, _ay1);
+	var cc = COLORS.labels[2];
+	
+	draw_set_text(f_p1, fa_left, fa_bottom, cc);
+	draw_text(_ax0 + ui(4), _ay0 - ui(4), "1");
+	draw_text(_ax1 + ui(4), _ay1 - ui(4), "2");
+	
+	var tx0, ty0, tx1, ty1;
+	
+	if(_ax0 > _ax1) {
+		tx0 = _ax1; tx1 = _ax0;
+		ty0 = _ay1; ty1 = _ay0;
+	} else {
+		tx0 = _ax0; tx1 = _ax1;
+		ty0 = _ay0; ty1 = _ay1;
+	}
+	
+	var dir = point_direction(tx0, ty0, tx1, ty1);
+	var dis = point_distance( tx0, ty0, tx1, ty1);
+	
+	draw_set_text(_f_p2b, fa_center, fa_center, cc);
+	var txt = string_cut(mappedJunc.name, dis - 16);
+	draw_text_transformed((tx0 + tx1) / 2, (ty0 + ty1) / 2, txt, 1, 1, dir);
+	
+	var _tw = string_width(txt) + 16;
+	
+	draw_set_color(cc);
+	draw_line_round(tx0, ty0, tx0 + lengthdir_x(dis / 2 - _tw / 2, dir), ty0 + lengthdir_y(dis / 2 - _tw / 2, dir), 2);
+	draw_line_round(tx1, ty1, tx1 - lengthdir_x(dis / 2 - _tw / 2, dir), ty1 - lengthdir_y(dis / 2 - _tw / 2, dir), 2);
 	
 	var d0 = false;
 	var d1 = false;
 	
-	draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
-	draw_text(_ax0 + ui(4), _ay0 - ui(4), "1");
-	draw_text(_ax1 + ui(4), _ay1 - ui(4), "2");
-		
 	if(drag_type) {
-		if(drag_type == 1) { draw_sprite_colored(THEME.anchor_selector, 1, _ax0, _ay0); d0 = true; }
-		if(drag_type == 2) { draw_sprite_colored(THEME.anchor_selector, 1, _ax1, _ay1); d1 = true; }
+		if(drag_type == 1) { draw_sprite_colored(THEME.anchor_selector, 1, _ax0, _ay0, 1, 0, cc); d0 = true; }
+		if(drag_type == 2) { draw_sprite_colored(THEME.anchor_selector, 1, _ax1, _ay1, 1, 0, cc); d1 = true; }
 		
 		var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
 		var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
@@ -55,7 +77,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 			d0 = true;
 			hover = 1;
 			
-			draw_sprite_colored(THEME.anchor_selector, 1, _ax0, _ay0);
+			draw_sprite_colored(THEME.anchor_selector, 1, _ax0, _ay0, 1, 0, cc);
 			
 			if(mouse_press(mb_left, active)) {
 				drag_type = hover;
@@ -68,7 +90,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 			d1 = true;
 			hover = 2;
 			
-			draw_sprite_colored(THEME.anchor_selector, 1, _ax1, _ay1);
+			draw_sprite_colored(THEME.anchor_selector, 1, _ax1, _ay1, 1, 0, cc);
 			
 			if(mouse_press(mb_left, active)) {
 				drag_type = hover;
@@ -80,8 +102,8 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 		}
 	} 
 
-	if(d0 == false) draw_sprite_colored(THEME.anchor_selector, 0, _ax0, _ay0);
-	if(d1 == false) draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1);
+	if(d0 == false) draw_sprite_colored(THEME.anchor_selector, 0, _ax0, _ay0, 1, 0, cc);
+	if(d1 == false) draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1, 1, 0, cc);
 		
 	return hover;
 }

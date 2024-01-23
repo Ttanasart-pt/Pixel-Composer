@@ -1,7 +1,6 @@
 function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Transform Path";
-	
-	w = 96;
+	name = "Transform Path";
+	w    = 96;
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);
@@ -20,7 +19,9 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	cached_pos = ds_map_create();
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var pos = getInputData(4);
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
@@ -28,29 +29,29 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		active &= !inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		active &= !inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
 		active &= !inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor );
-	}
+	} #endregion
 	
-	static getLineCount = function() { 
+	static getLineCount = function() { #region
 		var _path = getInputData(0);
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-	}
+	} #endregion
 	
-	static getSegmentCount = function(ind = 0) { 
+	static getSegmentCount = function(ind = 0) { #region
 		var _path = getInputData(0);
 		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
-	}
+	} #endregion
 	
-	static getLength = function(ind = 0) { 
+	static getLength = function(ind = 0) { #region
 		var _path = getInputData(0);
 		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
-	}
+	} #endregion
 	
-	static getAccuLength = function(ind = 0) { 
+	static getAccuLength = function(ind = 0) { #region
 		var _path = getInputData(0);
 		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
-	}
+	} #endregion
 		
-	static getBoundary = function(ind = 0) { 
+	static getBoundary = function(ind = 0) { #region
 		var _path = getInputData(0);
 		if(!struct_has(_path, "getBoundary"))
 			return new BoundingBox( 0, 0, 1, 1 );
@@ -80,10 +81,18 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _maxy = max(b.miny, b.maxy);
 		
 		return new BoundingBox(_minx, _miny, _maxx, _maxy);
-	}
+	} #endregion
 	
-	static getPointRatio = function(_rat, ind = 0, out = undefined) {
+	static getPointRatio = function(_rat, ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
+		var _cKey = $"{_rat},{ind}";
+		if(ds_map_exists(cached_pos, _cKey)) {
+			var _p = cached_pos[? _cKey];
+			out.x = _p.x;
+			out.y = _p.y;
+			return out;
+		}
 		
 		var _path = getInputData(0);
 		var _pos  = getInputData(1);
@@ -109,12 +118,14 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		out.x = _pp[0] + _pos[0];
 		out.y = _pp[1] + _pos[1];
 		
+		cached_pos[? _cKey] = out.clone();
+		
 		return out;
-	}
+	} #endregion
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
-	static getBoundary = function(ind = 0) {
+	static getBoundary = function(ind = 0) { #region
 		var _path = getInputData(0);
 		var _pos  = getInputData(1);
 		var _rot  = getInputData(2);
@@ -131,14 +142,15 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		_b[1] = cy + (_b[1] - cy) * _sca[1];
 		_b[2] = cx + (_b[2] - cx) * _sca[0];
 		_b[3] = cy + (_b[3] - cy) * _sca[1];
-	}
+	} #endregion
 	
-	static update = function() { 
+	static update = function() { #region
+		ds_map_clear(cached_pos);
 		outputs[| 0].setValue(self);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_path_transform, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }

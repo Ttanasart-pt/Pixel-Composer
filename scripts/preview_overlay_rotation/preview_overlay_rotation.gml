@@ -5,7 +5,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	
 	var _ax = _x + lengthdir_x(_rad, _val);
 	var _ay = _y + lengthdir_y(_rad, _val);
-	draw_sprite_colored(THEME.anchor_rotate, 0, _ax, _ay, 1, _val - 90);
+	var _id = 0;
 						
 	if(drag_type) {
 		draw_set_color(COLORS._main_accent);
@@ -13,7 +13,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		draw_circle_prec(_x, _y, _rad, true);
 		draw_set_alpha(1);
 							
-		draw_sprite_colored(THEME.anchor_rotate, 1, _ax, _ay, 1, _val - 90);
+		_id = 1;
 		var angle = point_direction(_x, _y, _mx, _my);
 		if(key_mod_press(CTRL))
 			angle = round(angle / 15) * 15;
@@ -33,8 +33,8 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		draw_circle_prec(_x, _y, _rad, true);
 		draw_set_alpha(1);
 		hover = 1;
-							
-		draw_sprite_colored(THEME.anchor_rotate, 1, _ax, _ay, 1, _val - 90);
+		
+		_id = 1;
 		if(mouse_press(mb_left, active)) {
 			drag_type = 1;
 			drag_mx   = _mx;
@@ -43,6 +43,10 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 			drag_sy   = _ay;
 		}
 	} 
+	
+	draw_sprite_colored(THEME.anchor_rotate, _id, _ax, _ay, 1, _val - 90);
+	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
+	draw_text(_ax, _ay - 4, name);
 	
 	return hover;
 }

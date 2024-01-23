@@ -13,6 +13,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
+	cached_pos = ds_map_create();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		draw_set_color(COLORS._main_accent);
 		
@@ -40,6 +42,14 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
+		var _cKey = $"{_rat},{_ind}";
+		if(ds_map_exists(cached_pos, _cKey)) {
+			var _p = cached_pos[? _cKey];
+			out.x = _p.x;
+			out.y = _p.y;
+			return out;
+		}
+		
 		var _p0, _p1;
 		var _x, _y;
 		
@@ -53,6 +63,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 		out.x = lerp(_p0[0], _p1[0], frac(_st));
 		out.y = lerp(_p0[1], _p1[1], frac(_st));
+		
+		cached_pos[? _cKey] = out.clone();
 		
 		return out;
 	} #endregion
@@ -72,6 +84,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static update = function() { #region
+		ds_map_clear(cached_pos);
 		var _lines = getInputData(0);
 		if(array_empty(_lines)) return;
 		

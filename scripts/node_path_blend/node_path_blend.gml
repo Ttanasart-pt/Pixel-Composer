@@ -17,6 +17,8 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
+	cached_pos = ds_map_create();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _p0 = getInputData(0);
 		var _p1 = getInputData(1);
@@ -115,6 +117,14 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getPointRatio = function(_rat, ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
+		var _cKey = $"{_rat},{ind}";
+		if(ds_map_exists(cached_pos, _cKey)) {
+			var _p = cached_pos[? _cKey];
+			out.x = _p.x;
+			out.y = _p.y;
+			return out;
+		}
+		
 		var _path1 = getInputData(0);
 		var _path2 = getInputData(1);
 		var _lerp  = getInputData(2);
@@ -131,6 +141,8 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		out.x = lerp(_p1.x, _p2.x, _lerp);
 		out.y = lerp(_p1.y, _p2.y, _lerp);
+		
+		cached_pos[? _cKey] = out.clone();
 		
 		return out;
 	} #endregion
@@ -156,6 +168,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static update = function() { #region
+		ds_map_clear(cached_pos);
 		outputs[| 0].setValue(self);
 	} #endregion
 	

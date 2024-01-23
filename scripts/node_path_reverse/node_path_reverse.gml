@@ -7,6 +7,8 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
+	cached_pos = ds_map_create();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _path = getInputData(0);
 		if(_path) _path.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -49,6 +51,7 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
 	static update = function() { #region
+		ds_map_clear(cached_pos);
 		outputs[| 0].setValue(self);
 	} #endregion
 	

@@ -1,7 +1,6 @@
 function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Remap Path";
-	
-	w = 96;
+	name = "Remap Path";
+	w    = 96;
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);
@@ -11,6 +10,8 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 1].editWidget.adjust_shape = false;
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	
+	cached_pos = ds_map_create();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);

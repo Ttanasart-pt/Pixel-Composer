@@ -15,6 +15,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	lengthAccs  = [];
 	boundary    = new BoundingBox();
 	loop		= true;
+	cached_pos  = ds_map_create();
 	
 	static getBoundary		= function() { return boundary; }
 	static getAccuLength	= function() { return lengthAccs; }
@@ -24,6 +25,14 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static getPointDistance = function(_seg, _ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		
+		var _cKey = $"{_seg},{_ind}";
+		if(ds_map_exists(cached_pos, _cKey)) {
+			var _p = cached_pos[? _cKey];
+			out.x = _p.x;
+			out.y = _p.y;
+			return out;
+		}
 		
 		var _aid = 0;
 		var _dst = _seg;
@@ -45,6 +54,8 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		out.x = lerp(anchors[i][0], anchors[i + 1][0], _dst / lengths[_aid]);
 		out.y = lerp(anchors[i][1], anchors[i + 1][1], _dst / lengths[_aid]);
+		
+		cached_pos[? _cKey] = out.clone();
 		
 		return out;
 	} #endregion
@@ -77,6 +88,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
+		ds_map_clear(cached_pos);
 		var _surf = getInputData(0);
 		var _smt  = getInputData(1);
 		

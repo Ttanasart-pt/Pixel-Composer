@@ -9,11 +9,11 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 						
 	var _ax = __ax * _s + _x;
 	var _ay = __ay * _s + _y;
-						
-	draw_sprite_colored(_spr, 0, _ax, _ay);
+	var _id = 0;
 						
 	if(drag_type) {
-		draw_sprite_colored(_spr, 1, _ax, _ay);
+		_id = 1;
+		
 		var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
 		var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
 		if(key_mod_press(CTRL)) {
@@ -34,8 +34,8 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	}
 						
 	if(interact && active && point_in_circle(_mx, _my, _ax, _ay, 8)) {
-		hover = 1;
-		draw_sprite_colored(_spr, 1, _ax, _ay);
+		_id = 1;
+		
 		if(mouse_press(mb_left, active)) {
 			drag_type = 1;
 			drag_mx   = _mx;
@@ -44,6 +44,10 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			drag_sy   = _ay;
 		}
 	} 
+	
+	draw_sprite_colored(_spr, _id, _ax, _ay);
+	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
+	draw_text(_ax, _ay - 4, name);
 	
 	return hover;
 }

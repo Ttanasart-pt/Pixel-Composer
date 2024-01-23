@@ -10,6 +10,8 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
+	cached_pos = ds_map_create();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _path = getInputData(0);
 		if(_path) _path.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -71,6 +73,7 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return out;
 		
 		_rat = _rng[0] + _rat * (_rng[1] - _rng[0]);
+		
 		return _path.getPointRatio(_rat, ind, out);
 	} #endregion
 	
@@ -82,10 +85,11 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 		
 	static update = function() { #region
+		ds_map_clear(cached_pos);
 		outputs[| 0].setValue(self);
 	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_path_trim, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	} #endregion

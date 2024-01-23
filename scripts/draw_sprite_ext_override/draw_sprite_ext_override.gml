@@ -72,10 +72,10 @@ function draw_sprite_ui_uniform(spr, ind, _x, _y, scale = 1, color = c_white, al
 	draw_sprite_ui(spr, ind, _x, _y, scale, scale, rot, color, alpha);
 } #endregion
 
-function draw_sprite_colored(spr, ind, _x, _y, scale = 1, rot = 0) { #region
+function draw_sprite_colored(spr, ind, _x, _y, scale = 1, rot = 0, color = COLORS._main_accent) { #region
 	INLINE
 	var num = sprite_get_number(spr);
 	
 	draw_sprite_ui(spr, ind, _x, _y, scale, scale, rot, c_white);
-	if(num % 2 == 0) draw_sprite_ui(spr, num / 2 + ind, _x, _y, scale, scale, rot, COLORS._main_accent);
+	if(num % 2 == 0) draw_sprite_ui(spr, num / 2 + ind, _x, _y, scale, scale, rot, color);
 } #endregion

@@ -1283,8 +1283,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} resetDisplay(); #endregion
 	
 	static setMappable = function(index) { #region
-		attributes.mapped    = false;
-		attributes.map_index = index;
+		attributes.mapped     = false;
+		attributes.map_index  = index;
 		
 		editWidgetRaw = editWidget;
 		
@@ -1319,6 +1319,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setMapped = function(junc) { #region
 		mappedJunc = junc;
+		isTimelineVisible = function() { INLINE return is_anim && value_from == noone && mappedJunc.attributes.mapped; }
 		return self;
 	} #endregion
 	
@@ -1785,8 +1786,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		}
 		
+		if(type == VALUE_TYPE.gradient && struct_has(attributes, "map_index")) 
+			node.inputs[| attributes.map_index + 1].setAnim(anim);
+		
 		node.refreshTimeline();
 	} #endregion
+		
+	static isTimelineVisible = function() { INLINE return is_anim && value_from == noone; }
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
 		INLINE
