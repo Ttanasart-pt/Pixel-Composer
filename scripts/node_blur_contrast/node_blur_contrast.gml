@@ -47,23 +47,12 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var ww = surface_get_width_safe(_surf);
 		var hh = surface_get_height_safe(_surf);
 		
-		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, attrDepth());
-		
-		surface_set_shader(temp_surface[0], sh_blur_box_contrast);
-			shader_set_surface("baseSurface", _surf);
+		surface_set_shader(_outSurf, sh_blur_box_contrast);
 			shader_set_f("dimension", [ ww, hh ]);
-			shader_set_f("size", _size);
-			shader_set_f("treshold", _tres);
-			shader_set_i("direction", 0);
+			shader_set_f("size",      _size);
+			shader_set_f("treshold",  _tres);
 			
 			draw_surface_safe(_surf, 0, 0);
-		surface_reset_shader();
-		
-		surface_set_shader(_outSurf, sh_blur_box_contrast);
-			shader_set(sh_blur_box_contrast);
-			shader_set_i("direction", 1);
-			
-			draw_surface_safe(temp_surface[0], 0, 0);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);

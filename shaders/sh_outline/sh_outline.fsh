@@ -1,8 +1,7 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
+
+#define TAU 6.283185307179586
 
 uniform vec2  dimension;
 
@@ -26,8 +25,6 @@ uniform sampler2D blend_alphaSurf;
 
 uniform int sampleMode;
 uniform int outline_only;
-
-#define TAU 6.283185307179586
 
 vec2 round(in vec2 v) { #region
 	v.x = fract(v.x) > 0.5? ceil(v.x) : floor(v.x);	
