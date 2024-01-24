@@ -78,6 +78,8 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		inputs[| 7].setVisible(_fix);
 		var pos = [];
 		
+		random_set_seed(_seed);
+		
 		if(_fix) {
 			var ref = getInputData(8);
 			ref = surface_verify(ref, _fixRef[0], _fixRef[1]);
@@ -90,11 +92,11 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			pos = [];
 			for( var i = 0; i < _amo; i++ ) {
 				if(_fix) {
-					var p = area_get_random_point([_fixRef[0], _fixRef[1], _fixRef[0], _fixRef[1]], _dist, _scat, i, _amo, _seed++);
+					var p = area_get_random_point([_fixRef[0], _fixRef[1], _fixRef[0], _fixRef[1]], _dist, _scat, i, _amo);
 					if(point_in_rectangle(p[0], p[1], aBox[0], aBox[1], aBox[2], aBox[3]))
 						array_push(pos, p);
 				} else
-					pos[i] = area_get_random_point(_area, _dist, _scat, i, _amo, _seed++);
+					pos[i] = area_get_random_point(_area, _dist, _scat, i, _amo);
 			}
 		} else {
 			pos = [];

@@ -78,11 +78,13 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		var _are = getInputData(1);
 		var _amo = getInputData(4);
 		
+		random_set_seed(seed);
+		
 		repeat(_amo) {
-			var pos = area_get_random_point(_are,,,,, seed); seed += 10;
+			var pos = area_get_random_point(_are);
 			var _o = _obj;
 			if(is_array(_o))
-				_o = _o[irandom_range_seed(0, array_length(_o) - 1, seed++)];
+				_o = _o[irandom_range(0, array_length(_o) - 1)];
 				
 			array_push(object, _o.spawn(pos, spawn_index++));
 		}

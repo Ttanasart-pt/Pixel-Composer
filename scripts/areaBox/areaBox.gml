@@ -13,7 +13,8 @@ enum AREA_INDEX {
 	center_x,
 	center_y,
 	half_w,
-	half_h
+	half_h,
+	shape
 }
 
 function areaBox(_onModify, _unit = noone) : widget() constructor {

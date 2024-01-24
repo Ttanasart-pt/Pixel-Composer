@@ -34,6 +34,7 @@ uniform sampler2D gradient_map;
 uniform int   textureTruchet;
 uniform float truchetSeed;
 uniform float truchetThres;
+uniform vec2  truchetAngle;
 
 uniform float tileLength;
 
@@ -187,6 +188,9 @@ void main() { #region
 			
 			if(rx > truchetThres) uv.x = 1. - uv.x;
 			if(ry > truchetThres) uv.y = 1. - uv.y;
+			
+			float ang = radians(truchetAngle.x + (truchetAngle.y - truchetAngle.x) * random(floor(hc.zw / sca) + truchetSeed / 100. + vec2(0.9843, 0.1636)));
+			uv = 0.5 + mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * (uv - 0.5);
 		}
 		
 		colr = texture2D( gm_BaseTexture, uv );

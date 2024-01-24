@@ -17,8 +17,12 @@ function gradientObject(color = c_black) constructor { #region
 	
 	if(is_array(color)) keys = [ new gradientKey(0, cola(color[0])), new gradientKey(1, cola(color[1])) ];
 	else				keys = [ new gradientKey(0, cola(color)) ];
-	type = GRADIENT_INTER.smooth;
-	surf = noone;
+	type  = GRADIENT_INTER.smooth;
+	surf  = noone;
+	
+	cacheRes  = 128;
+	caches    = array_create(cacheRes);
+	keyLength = 0;
 	
 	static clone = function() { #region
 		var g = new gradientObject();
@@ -80,6 +84,16 @@ function gradientObject(color = c_black) constructor { #region
 		}
 	
 		return keys[array_length(keys) - 1].value; //after last color
+	} #endregion
+	
+	static evalFast = function(position) { #region
+		INLINE
+		
+		if(position <= keys[0].time)             return keys[0].value;
+		if(position >= keys[keyLength - 1].time) return keys[keyLength - 1].value;
+		
+		var _ind = round(position * cacheRes);
+		return caches[_ind];
 	} #endregion
 	
 	static draw = function(_x, _y, _w, _h, _a = 1) { #region
@@ -148,6 +162,15 @@ function gradientObject(color = c_black) constructor { #region
 		surface_reset_target();
 		
 		draw_surface(surf, _x, _y);
+	} #endregion
+	
+	static cache = function(res = 128) { #region
+		cacheRes  = res;
+		caches    = array_verify(caches, cacheRes + 1);
+		keyLength = array_length(keys);
+		
+		for( var i = 0; i <= cacheRes; i++ )
+			caches[i] = eval(i / cacheRes);
 	} #endregion
 	
 	static toArray = function() { #region
@@ -291,20 +314,18 @@ function shader_set_gradient(gradient, surface, range, junc) { #region
 	gradient.shader_submit();
 } #endregion
 	
-function evaluate_gradient_map(_x, gradient, surface, range, junc) { #region
-	var use_map = junc.attributes.mapped && is_surface(surface);
+function evaluate_gradient_map(_x, gradient, surface, range, junc, fast = false) { #region
+	var use_map = junc.attributes.mapped;
 	
-	if(use_map) {
-		var _sw = surface_get_width(surface);
-		var _sh = surface_get_width(surface);
-		
-		var _sx = lerp(range[0], range[2], _x) * _sw;
-		var _sy = lerp(range[1], range[3], _x) * _sh;
-		
-		return surface_getpixel_ext(surface, _sx, _sy);
-	}
+	if(!use_map) return fast? gradient.evalFast(_x) : gradient.eval(_x);
 	
-	return gradient.eval(_x);
+	var _sw = surface_get_width(surface);
+	var _sh = surface_get_height(surface);
+		
+	var _sx = lerp(range[0], range[2], _x) * _sw;
+	var _sy = lerp(range[1], range[3], _x) * _sh;
+		
+	return surface_getpixel_ext(surface, _sx, _sy);
 } #endregion
 	
 globalvar GRADIENTS;

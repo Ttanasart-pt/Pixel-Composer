@@ -1,34 +1,73 @@
-function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1) constructor {
-	self.surface  = new Surface(surface);
-	self.x = _x;
-	self.y = _y;
+function SurfaceAtlasFast(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1) constructor {
+	self.surface  = surface;
+	self.x        = _x;
+	self.y        = _y;
 	self.rotation = rot;
-	self.sx = sx;
-	self.sy = sy;
-	self.blend = blend;
-	self.alpha = alpha;
+	self.sx       = sx;
+	self.sy       = sy;
+	self.blend    = blend;
+	self.alpha    = alpha;
 	
-	w = surface_get_width_safe(surface);
-	h = surface_get_height_safe(surface);
+	w = 1;
+	h = 1;
+	
+	static set = function(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1, setDim = true) {
+		INLINE
+		
+		self.surface  = surface;
+		self.x        = _x;
+		self.y        = _y;
+		self.rotation = rot;
+		self.sx       = sx;
+		self.sy       = sy;
+		self.blend    = blend;
+		self.alpha    = alpha;
+		
+		return self;
+	}
+}
+
+function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1, setDim = true) constructor {
+	self.surface  = new Surface(surface);
+	self.x        = _x;
+	self.y        = _y;
+	self.rotation = rot;
+	self.sx       = sx;
+	self.sy       = sy;
+	self.blend    = blend;
+	self.alpha    = alpha;
+	
+	w = 1;
+	h = 1;
+		
+	if(setDim) {
+		w = surface_get_width_safe(surface);
+		h = surface_get_height_safe(surface);
+	}
 	
 	oriSurf = noone;
 	oriSurf_w = w;
 	oriSurf_h = h;
 	
-	static set = function(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1) {
+	static set = function(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1, setDim = true) {
 		INLINE
 		
 		self.surface  = new Surface(surface);
-		self.x = _x;
-		self.y = _y;
+		self.x        = _x;
+		self.y        = _y;
 		self.rotation = rot;
-		self.sx = sx;
-		self.sy = sy;
-		self.blend = blend;
-		self.alpha = alpha;
+		self.sx       = sx;
+		self.sy       = sy;
+		self.blend    = blend;
+		self.alpha    = alpha;
 		
-		w = surface_get_width_safe(surface);
-		h = surface_get_height_safe(surface);
+		w = 1;
+		h = 1;
+		
+		if(setDim) {
+			w = surface_get_width_safe(surface);
+			h = surface_get_height_safe(surface);
+		}
 		
 		return self;
 	}

@@ -25,8 +25,8 @@
   "nineSlice": null,
   "origin": 4,
   "parent": {
-    "name": "filter",
-    "path": "folders/nodes/icons/filter.yy",
+    "name": "blur",
+    "path": "folders/nodes/icons/filter/blur.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

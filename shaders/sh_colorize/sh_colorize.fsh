@@ -105,7 +105,5 @@ void main() { #region
 	}
 		
 	vec4 col = gradientEval(prog);
-	col.a = _col.a;
-	
     gl_FragColor = col;
 } #endregion

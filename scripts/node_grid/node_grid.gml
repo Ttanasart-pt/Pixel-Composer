@@ -57,8 +57,8 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 18] = nodeValue("Truchet seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random());
 	
-	inputs[| 19] = nodeValue("Truchet threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider)
+	inputs[| 19] = nodeValue("Flip horizontal", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	//////////////////////////////////////////////////////////////////////////////////
 	
@@ -68,11 +68,17 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 22] = nodeValue("Flip vertical", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	inputs[| 23] = nodeValue("Texture angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.rotation_range);
+		
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 4, 15, 2, 13, 3, 14, 9, 8, 16,
 		["Render",	false], 10, 11, 5, 20, 6, 7, 12, 
-		["Truchet",  true, 17], 18, 19, 
+		["Truchet",  true, 17], 18, 19, 22, 23, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -120,7 +126,10 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_i("aa",			   _data[12]);
 			shader_set_i("textureTruchet", _data[17]);
 			shader_set_f("truchetSeed",    _data[18]);
-			shader_set_f("truchetThres",   _data[19]);
+			shader_set_f("truchetThresX",  _data[19]);
+			shader_set_f("truchetThresY",  _data[22]);
+			shader_set_f("truchetAngle",   _data[23]);
+			
 			shader_set_color("gapCol",  _col_gap);
 			
 			shader_set_gradient(_data[5], _data[20], _data[21], inputs[| 5]);

@@ -34,6 +34,7 @@ uniform sampler2D gradient_map;
 uniform int   textureTruchet;
 uniform float truchetSeed;
 uniform float truchetThres;
+uniform vec2  truchetAngle;
 
 #define PI 3.14159265359
 
@@ -196,6 +197,7 @@ void main() { #region
 			if(ra > truchetThres) ang += 60.;
 			if(rb > truchetThres) ang += 60.;
 			
+			ang += truchetAngle.x + (truchetAngle.y - truchetAngle.x) * random(hc.zw + truchetSeed / 100. + vec2(0.9843, 0.1636));
 			ang = radians(ang);
 			
 			uv = 0.5 + mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * (uv - 0.5);

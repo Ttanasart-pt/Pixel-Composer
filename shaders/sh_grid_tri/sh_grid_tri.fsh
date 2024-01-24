@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -39,6 +36,7 @@ uniform sampler2D gradient_map;
 uniform int   textureTruchet;
 uniform float truchetSeed;
 uniform float truchetThres;
+uniform vec2  truchetAngle;
 
 float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 
@@ -174,8 +172,11 @@ void main() { #region
 			float rx  = random(floor(tri.xy) + truchetSeed / 100.);
 			float ry  = random(floor(tri.xy) + truchetSeed / 100. + vec2(0.4864, 0.6879));
 			float ang = 0.;
+			
 			if(rx > truchetThres) ang += 120.;
 			if(ry > truchetThres) ang += 120.;
+			
+			ang += truchetAngle.x + (truchetAngle.y - truchetAngle.x) * random(floor(tri.xy) + truchetSeed / 100. + vec2(0.9843, 0.1636));
 			ang = radians(ang);
 			
 			uv = 0.5 + mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * (uv - 0.5);

@@ -59,11 +59,14 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 19] = nodeValue("Texture angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.rotation_range);
+		
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 3, 12, 2, 11, 4, 13,
 		["Render",	false], 7, 8, 5, 17, 6, 9, 10, 
-		["Truchet",  true, 14], 15, 16, 
+		["Truchet",  true, 14], 15, 16, 19, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -112,6 +115,7 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_i("textureTruchet", _data[14]);
 			shader_set_f("truchetSeed",    _data[15]);
 			shader_set_f("truchetThres",   _data[16]);
+			shader_set_f("truchetAngle",   _data[19]);
 			
 			shader_set_gradient(_data[5], _data[17], _data[18], inputs[| 5]);
 			

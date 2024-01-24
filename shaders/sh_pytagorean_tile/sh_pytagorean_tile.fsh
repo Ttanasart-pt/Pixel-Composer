@@ -37,6 +37,7 @@ uniform sampler2D gradient_map;
 uniform int   textureTruchet;
 uniform float truchetSeed;
 uniform float truchetThres;
+uniform vec2  truchetAngle;
 
 uniform float phase;
 
@@ -219,11 +220,14 @@ void main() { #region
 		vec2 uv = hc.zw + vec2(0.5, 0.5);
 		
 		if(textureTruchet == 1) { 
-			float rx = random(hc.zw + truchetSeed / 100.);
-			float ry = random(hc.zw + truchetSeed / 100. + vec2(0.4864, 0.6879));
+			float rx = random(hc.xx + truchetSeed / 100.);
+			float ry = random(hc.xx + truchetSeed / 100. + vec2(0.4864, 0.6879));
 			
 			if(rx > truchetThres) uv.x = 1. - uv.x;
 			if(ry > truchetThres) uv.y = 1. - uv.y;
+			
+			float ang = radians(truchetAngle.x + (truchetAngle.y - truchetAngle.x) * random(hc.xx + truchetSeed / 100. + vec2(0.9843, 0.1636)));
+			uv = 0.5 + mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * (uv - 0.5);
 		}
 		
 		colr = texture2D( gm_BaseTexture, uv );

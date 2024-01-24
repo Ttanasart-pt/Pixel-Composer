@@ -258,10 +258,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		//print($"[{display_name}] Frame {_time}: Spawning {_amo} particles, seed {seed}, at {_pos}");
 		
+		random_set_seed(seed); 
+		
 		for( var i = 0; i < _amo; i++ ) {
-			seed += 100;
-			random_set_seed(seed); 
-			
 			parts_runner = clamp(parts_runner, 0, array_length(parts) - 1);
 			var part = parts[parts_runner];
 			
@@ -293,7 +292,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					yy = _spawn_area[1] + _spr.y + _spr.h / 2;
 					part.atlas = _spr;
 				} else if(_distrib < 2) {
-					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _amo, seed);
+					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _amo);
 					xx = sp[0];
 					yy = sp[1];
 				} else if(_distrib == 2) {
