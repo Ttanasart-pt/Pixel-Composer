@@ -100,7 +100,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 31] = nodeValue("Auto amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 32] = nodeValue("Alternate rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 32] = nodeValue("Twisting", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)	
+		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 33] = nodeValue("Random position", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector_range);
@@ -371,7 +372,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 								} else {
 									var _ang = _acol * 360 / uniAmo[0];
 									var _rad = uniAmo[1] == 1? 0.5 : _arow / (uniAmo[1] - 1);
-									if(uniRot) _ang += (_arow % 2) * 180 / uniAmo[0];
+									_ang += _arow * uniRot;
 									
 									_x += _axc + lengthdir_x(_rad * _aw, _ang);
 									_y += _ayc + lengthdir_y(_rad * _ah, _ang);

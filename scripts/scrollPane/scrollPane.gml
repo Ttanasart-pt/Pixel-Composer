@@ -122,11 +122,6 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h,  bg_col, 1);
 		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0,   bx0,   by0,    ww,    hh, bar_col, 1);
 		
-		//draw_set_color(c_white);
-		//draw_rectangle(scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2, 0);
-		//draw_set_color(c_red);
-		//draw_circle(mx, my, 2, false);
-		
 		if(active && point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2) || is_scrolling) {
 			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_hcol, 1);
 			if(mouse_press(mb_left, active)) {

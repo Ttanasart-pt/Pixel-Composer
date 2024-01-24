@@ -75,6 +75,9 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	inputs[| in_d3d + 21] = nodeValue("Round Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setWindows();
 	
+	inputs[| in_d3d + 22] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Normal", "Additive" ]);
+		
 	in_cam = ds_list_size(inputs);
 	
 	outputs[| 0] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
@@ -89,7 +92,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		["Output",		false], in_d3d + 2,
 		["Transform",	false], in_d3d + 9, 0, 1, in_d3d + 10, in_d3d + 11, in_d3d + 12, in_d3d + 13, in_d3d + 14, 
 		["Camera",		 true], in_d3d + 3, in_d3d + 0, in_d3d + 1, in_d3d + 8, 
-		["Render",		 true], in_d3d + 5, in_d3d + 16, in_d3d + 6, in_d3d + 7, in_d3d + 15, 
+		["Render",		 true], in_d3d + 5, in_d3d + 16, in_d3d + 6, in_d3d + 7, in_d3d + 15, in_d3d + 22, 
 		["Ambient Occlusion",	true], in_d3d + 17, in_d3d + 20, in_d3d + 18, in_d3d + 19, 
 		["Effects",		 true], in_d3d + 21,
 	];
@@ -227,6 +230,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			var _aoSr = _data[in_d3d + 20];
 		
 			var _nrmSmt = _data[in_d3d + 21];
+			var _blend  = _data[in_d3d + 22];
 		
 			var _qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
 			var _qi2  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -90);
@@ -322,11 +326,16 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			surface_set_target_ext(2, _depth );
 		
 			DRAW_CLEAR
-		
+			
 			gpu_set_zwriteenable(true);
 			gpu_set_ztestenable(true);
 			gpu_set_cullmode(_back); 
 		
+			if(_blend == 1) {
+				BLEND_ADD 
+				gpu_set_ztestenable(false);
+			}
+			
 			camera.applyCamera();
 			scene.reset();
 			scene.submitShader(_sobj);
@@ -335,6 +344,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			scene.apply(deferData);
 			scene.submit(_sobj);
 			
+			BLEND_NORMAL
 			surface_reset_target();
 			
 			camera.resetCamera();

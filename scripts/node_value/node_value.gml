@@ -1613,7 +1613,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_value[1] = _time;
 		}
 		
-		cache_value[2] = val;
+		cache_value[2] = variable_clone(val, 1);
 		cache_value[3] = applyUnit;
 		updateColor(val);
 		
