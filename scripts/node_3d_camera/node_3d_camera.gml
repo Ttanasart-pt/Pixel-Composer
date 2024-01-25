@@ -328,10 +328,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			DRAW_CLEAR
 			
 			gpu_set_zwriteenable(true);
-			gpu_set_ztestenable(true);
 			gpu_set_cullmode(_back); 
-		
-			if(_blend == 1) {
+			
+			if(_blend == 0) {
+				gpu_set_ztestenable(true);
+			} else {
 				BLEND_ADD 
 				gpu_set_ztestenable(false);
 			}

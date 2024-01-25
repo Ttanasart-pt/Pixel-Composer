@@ -338,7 +338,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		var _hi = ui(junction_draw_pad_y);
 		var _ho = ui(junction_draw_pad_y);
-		var _prev_surf = previewable && preview_draw && is_surface(getGraphPreviewSurface());
+		var _prev_surf = previewable && preview_draw && 
+			(	is_surface(getGraphPreviewSurface()) || 
+				(preview_channel >= 0 && preview_channel < ds_list_size(outputs) && outputs[| preview_channel].type == VALUE_TYPE.surface)
+			);
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
@@ -510,6 +513,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			setHeight();
 			will_setHeight = false;
 		}
+		
+		if(is_3D) USE_DEPTH = true;
 		
 		if(is_simulation) PROJECT.animator.is_simulating = true;
 	} #endregion

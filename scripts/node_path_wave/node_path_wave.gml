@@ -21,7 +21,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 6] = nodeValue("Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 7] = nodeValue("Wiggle Amplitude", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -2, 2 ])
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 8] = nodeValue("Wiggle Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8);
 	

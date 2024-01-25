@@ -252,13 +252,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _posDist = [];
 		
-		random_set_seed(seed); 
+		random_set_seed(seed); seed++;
 		var _amo = irandom_range(_spawn_amount[0], _spawn_amount[1]);
 		if(_distrib == 2) _posDist = get_points_from_dist(_dist_map, _amo, seed);
-		
-		//print($"[{display_name}] Frame {_time}: Spawning {_amo} particles, seed {seed}, at {_pos}");
-		
-		random_set_seed(seed); 
 		
 		for( var i = 0; i < _amo; i++ ) {
 			parts_runner = clamp(parts_runner, 0, array_length(parts) - 1);

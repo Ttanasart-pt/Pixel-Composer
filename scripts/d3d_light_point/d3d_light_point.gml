@@ -75,6 +75,7 @@ function __3dLightPoint() : __3dLight() constructor {
 		shader_reset();
 		surface_reset_target();
 		camera_apply(0);
+		
 		gpu_set_ztestenable(false);
 	} #endregion
 	

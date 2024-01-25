@@ -302,6 +302,10 @@
 #endregion
 
 #region 3D
+	globalvar USE_DEPTH;
+	_use_depth = noone;
+	USE_DEPTH  = false;
+	
 	set3DGlobalPreview();
 #endregion
 

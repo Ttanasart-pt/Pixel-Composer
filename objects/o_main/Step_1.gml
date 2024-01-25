@@ -201,4 +201,13 @@ _HOVERING_ELEMENT = noone;
 	MOUSE_WRAP = false;
 #endregion
 
+#region depth
+	if(_use_depth != USE_DEPTH) {
+		_use_depth = USE_DEPTH;
+		surface_depth_disable(!USE_DEPTH);
+	}
+	
+	USE_DEPTH = false;
+#endregion
+
 //if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call * 100}%)");

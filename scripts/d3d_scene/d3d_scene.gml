@@ -136,7 +136,9 @@ function __3dScene(camera, name = "New scene") constructor {
 		surface_set_target_ext(0, deferData.geometry_data[0]);
 		surface_set_target_ext(1, deferData.geometry_data[1]);
 		surface_set_target_ext(2, deferData.geometry_data[2]);
+		
 			gpu_set_zwriteenable(true);
+			
 			gpu_set_ztestenable(true);
 			gpu_set_alphatestenable(true);
 			
@@ -154,6 +156,7 @@ function __3dScene(camera, name = "New scene") constructor {
 			submit(object, sh_d3d_geometry);
 			
 			shader_reset();
+			
 			gpu_set_ztestenable(false);
 			gpu_set_alphatestenable(false);
 		surface_reset_target();

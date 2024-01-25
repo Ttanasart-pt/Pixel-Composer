@@ -61,6 +61,7 @@ function __3dLightDirectional() : __3dLight() constructor {
 		draw_clear(c_black);
 		shader_set(shadow_mapper);
 		shader_set_i("use_8bit",  OS == os_macosx);
+		
 		gpu_set_ztestenable(true);
 		
 		camera_set_view_mat(shadow_map_camera, shadow_map_view);
@@ -72,6 +73,7 @@ function __3dLightDirectional() : __3dLight() constructor {
 		shader_reset();
 		surface_reset_target();
 		camera_apply(0);
+		
 		gpu_set_ztestenable(false);
 	} #endregion
 }

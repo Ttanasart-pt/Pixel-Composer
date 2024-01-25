@@ -1,6 +1,7 @@
 function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "3D";
 	is_3D = true;
+	surface_depth_disable(false);
 	
 	mesh_prev_surface = surface_create(64, 64);
 	
@@ -60,6 +61,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 				
 				D3D_GLOBAL_PREVIEW.submitUI(_prev);
 			}
+			
 		surface_reset_target();
 		
 		D3D_GLOBAL_PREVIEW.camera.resetCamera();

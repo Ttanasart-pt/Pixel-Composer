@@ -554,6 +554,7 @@ enum CAMERA_PROJ {
 		var lightFor = [ -cos(degtorad(_ldir)), -_lhgt, -sin(degtorad(_ldir)) ];
 		
 		gpu_set_ztestenable(true);
+		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
 		
@@ -615,6 +616,7 @@ enum CAMERA_PROJ {
 		matrix_set(matrix_world, MATRIX_IDENTITY);
 		
 		gpu_set_ztestenable(false);
+		
 		var cam = camera_get_active();
 		camera_set_view_mat(cam, matrix_build_lookat(0, 0, 1, 0, 0, 0, 0, 1, 0));
 		camera_set_proj_mat(cam, matrix_build_projection_ortho(1, 1, 0.1, 256));

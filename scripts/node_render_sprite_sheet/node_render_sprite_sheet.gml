@@ -109,10 +109,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		var grup = getInputData(1);
 		
-		if(grup == SPRITE_ANIM_GROUP.animation) 
-			animationInit(clear);
-		else 
-			arrayRender();
+		if(grup == SPRITE_ANIM_GROUP.animation) animationInit(clear);
+		else									arrayRender();
 	} #endregion
 	
 	static arrayRender = function() { #region
@@ -129,7 +127,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var cDep = attrDepth();
 		
 		if(!is_array(inpt)) {
-			outputs[| 0].setValue(inpt);
+			outputs[| 0].setValue(surface_clone(inpt));
 			outputs[| 1].setValue([]);
 			return;	
 		}
@@ -465,9 +463,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _sx = 0;
 			var _sy = 0;
 			
-			surface_set_target(oo);
-			BLEND_OVERRIDE
-			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
 					px  = padd[2] + _frame * _w + max(0, _frame) * spac;
@@ -500,15 +495,17 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					_sy = py + _row * _h + max(0, _row) * spc2[1];
 					break;
 			}
-			
-			printIf(log, $"   > Drawing frame ({CURRENT_FRAME}) at {_sx}, {_sy}");
-			array_push(_atli, new SurfaceAtlas(_surfi, _sx, _sy));
-			draw_surface_safe(inpt[i], _sx, _sy);
+				
+			surface_set_shader(oo, noone, false, BLEND.over);
+				
+				printIf(log, $"   > Drawing frame ({CURRENT_FRAME}) {_surfi} at {_sx}, {_sy}");
+				
+				_atli[i] = new SurfaceAtlas(_surfi, _sx, _sy);
+				draw_surface(_surfi, _sx, _sy);
+				
+			surface_reset_shader();
 			
 			drawn = true;
-			
-			BLEND_NORMAL;
-			surface_reset_target();
 		} #endregion
 		
 		if(drawn) array_safe_set(anim_drawn, CURRENT_FRAME, true);

@@ -150,7 +150,10 @@ void main() { #region
 	
 	if(gradient_use == 0) {
 		if(blend == 0)	gl_FragColor = _s > rat? color0 : color1;
-		else			gl_FragColor = vec4(vec3(sin(_s * 2. * PI) * 0.5 + 0.5), 1.);
+		else { 
+			_s = sin(_s * 2. * PI) * 0.5 + 0.5;
+			gl_FragColor = mix(color0, color1, _s); 
+		}
 	} else {
 		if(_s > rat)	gl_FragColor = gradientEval(random(vec2(slot)));
 		else			gl_FragColor = gradientEval(random(vec2(slot + 1.)));

@@ -843,7 +843,7 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			gpu_set_ztestenable(true);
 			gpu_set_zwriteenable(false);
-				
+			
 			if(OS != os_macosx) {
 				gpu_set_cullmode(cull_noculling); 
 				
