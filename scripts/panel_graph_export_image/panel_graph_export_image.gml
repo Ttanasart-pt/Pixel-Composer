@@ -89,27 +89,19 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		#region draw conneciton
 			surface_set_target(cs);
 				DRAW_CLEAR
-				var _params = {
-					show_dimension  : true,
-					show_compute    : true,
-					avoid_label     : true,
-					preview_scale   : 100,
-					
-					x  : gr_x,
-					y  : gr_y,
-					s  : scale,
-					mx : mx,
-					my : my,
-					aa : aa,
-					active : true,
-					max_layer : 1,
-					cur_layer : 1,
-					highlight : false,
-					log: true,
-				};
+				var param = new connectionParameter();
+				
+				param.setPos(gr_x, gr_y, scale, mx, my);
+				param.setProp(1, false);
+				param.setDraw(aa, c_black);
+			
+				param.show_dimension  = true;
+				param.show_compute    = true;
+				param.avoid_label     = true;
+				param.preview_scale   = 100;
 				
 				for(var i = 0; i < ds_list_size(nodeList); i++)
-					nodeList[| i].drawConnections(_params, true);
+					nodeList[| i].drawConnections(param, true);
 			surface_reset_target();
 		
 			shader_set(sh_downsample);
@@ -127,7 +119,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 			for(var i = 0; i < ds_list_size(nodeList); i++) {
 				var _node = nodeList[| i];
 				if(instanceof(_node) == "Node_Frame") continue;
-				var val = _node.drawNode(gr_x, gr_y, mx, my, scale, _params);
+				var val = _node.drawNode(gr_x, gr_y, mx, my, scale, param);
 			}
 		#endregion
 		

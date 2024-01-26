@@ -139,9 +139,9 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		sc_settings.setFocusHover(pFOCUS, pHOVER);
 		sc_settings.draw(sx, sy, mx - sx, my - sy);
 		
-		var txt = __txt("Export") + "...";
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-		var _bw = string_width(txt) + ui(32);
+		var txt = __txt("Export") + "...";
+		var _bw = string_width(txt)  + ui(32);
 		var _bh = string_height(txt) + ui(12);
 		bx = w - padding - _bw;
 		by = h - padding - _bh;

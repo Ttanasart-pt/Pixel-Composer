@@ -633,6 +633,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_thick		  = 1;
 		draw_line_shift_hover = false;
 		draw_line_blend       = 1;
+		draw_line_feed		  = false;
 		drawLineIndex		  = 1;
 		draw_line_vb		  = noone;
 		draw_junction_index   = type;
@@ -1478,8 +1479,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		#endregion
 		
 		if(display_type == VALUE_DISPLAY.area) { #region
-			var dispType = struct_try_get(nodeFrom.display_data, "area_type");
-			var surfGet  = struct_try_get(nodeFrom.display_data, "onSurfaceSize");
+			var dispType = nodeFrom.display_data.area_type;
+			var surfGet  = nodeFrom.display_data.onSurfaceSize;
 			
 			if(!applyUnit) return value;
 			if(!is_callable(surfGet)) return value;
@@ -1511,7 +1512,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(display_type == VALUE_DISPLAY.d3quarternion) { #region
 			if(!applyUnit) return value;
-			var dispType = struct_try_get(display_data, "angle_display");
+			var dispType = display_data.angle_display;
 			
 			switch(dispType) {
 				case QUARTERNION_DISPLAY.quarterion : 
@@ -1922,21 +1923,24 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) { #region
 		is_modified = true;
 		var updated = false;
-		var _val;
+		var _val    = val;
+		var _inp    = connect_type == JUNCTION_CONNECT.input;
 		
 		if(sep_axis) {
 			if(index == noone) {
 				for( var i = 0, n = array_length(animators); i < n; i++ )
-					updated |= animators[i].setValue(val[i], connect_type == JUNCTION_CONNECT.input && record, time); 
+					updated |= animators[i].setValue(val[i], _inp && record, time); 
 			} else
-				updated = animators[index].setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
+				updated = animators[index].setValue(val, _inp && record, time); 
 		} else {
 			if(index != noone) {
-				_val = variable_clone(animator.getValue(time));
+				_val = animator.getValue(time);
+				if(_inp) _val = variable_clone(_val); 
+				
 				_val[index] = val;
-			} else
-				_val = val;
-			updated = animator.setValue(_val, connect_type == JUNCTION_CONNECT.input && record, time); 
+			}
+			
+			updated = animator.setValue(_val, _inp && record, time); 
 		}
 		
 		if(type == VALUE_TYPE.gradient)				updated = true;
@@ -1947,7 +1951,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!updated) return false;
 		
-		if(value_tag == "dimension" && struct_try_get(node.attributes, "use_project_dimension"))
+		if(value_tag == "dimension")
 			node.attributes.use_project_dimension = false;
 		
 		draw_junction_index = type;
@@ -2311,7 +2315,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static drawConnectionMouse = function(params, _mx, _my, target) { #region
 		var ss = params.s;
-		var aa = struct_try_get(params, "aa", 1);
+		var aa = params.aa; // 1
 		
 		var drawCorner = type == VALUE_TYPE.action;
 		if(target != noone)
@@ -2627,15 +2631,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		animator.cleanUp();
 		delete animator;
 	} #endregion
+		
+	static toString = function() { return (connect_type == JUNCTION_CONNECT.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"; }
 }
 
-function drawJuncConnection(from, to, params, target = to) { #region
+function drawJuncConnection(from, to, params) { #region
 	#region parameters
-		var log  = struct_try_get(params, "log", false);
-		var high = struct_try_get(params, "highlight", 0);
-		var bg   = struct_try_get(params, "bg", c_black);
-		var aa   = struct_try_get(params, "aa", 1);
-		var feed = struct_try_get(target, "draw_line_feed", false);
+		var log  = params.log;
+		var high = params.highlight;
+		var bg   = params.bg;
+		var aa   = params.aa;
 	
 		var _x	= params.x;
 		var _y	= params.y;
@@ -2657,7 +2662,7 @@ function drawJuncConnection(from, to, params, target = to) { #region
 		var fromIndex = from.drawLineIndex;
 		var toIndex   = to.drawLineIndex;
 		
-		if(struct_has(params, "minx")) {
+		if(params.minx != 0 && params.maxx != 0) {
 			var minx = params.minx;
 			var miny = params.miny;
 			var maxx = params.maxx;
@@ -2670,15 +2675,15 @@ function drawJuncConnection(from, to, params, target = to) { #region
 			if(jy > maxy && fry > maxy) return noone;
 		}
 	
-		var shx = target.draw_line_shift_x * _s;
-		var shy = target.draw_line_shift_y * _s;
+		var shx = to.draw_line_shift_x * _s;
+		var shy = to.draw_line_shift_y * _s;
 		
 		var cx  = round((frx + jx) / 2 + shx);
 		var cy  = round((fry + jy) / 2 + shy);
 			
 		var hover = false;
-		var th = max(1, PREFERENCES.connection_line_width * _s);
-		target.draw_line_shift_hover = false;
+		var th    = max(1, PREFERENCES.connection_line_width * _s);
+		to.draw_line_shift_hover = false;
 			
 		var downDirection = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
 	#endregion
@@ -2687,7 +2692,7 @@ function drawJuncConnection(from, to, params, target = to) { #region
 		var hovDist = max(th * 2, 6);
 		
 		if(PANEL_GRAPH.pHOVER) {
-			if(feed && from.node == to.node) {
+			if(from.node == to.node) {
 				hover = distance_line_feedback(mx, my, jx, jy, frx, fry, _s) < hovDist;
 			} else {
 				switch(PREFERENCES.curve_connection_line) { 
@@ -2699,21 +2704,21 @@ function drawJuncConnection(from, to, params, target = to) { #region
 						else              hover = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s) < hovDist;
 						
 						if(PANEL_GRAPH.value_focus == noone)
-							target.draw_line_shift_hover = hover;
+							to.draw_line_shift_hover = hover;
 						break;
 					case 2 : 
 						if(downDirection) hover = distance_to_elbow_corner(mx, my, frx, fry, jx, jy) < hovDist;
 						else              hover = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, fromIndex, toIndex) < hovDist;
 					
 						if(PANEL_GRAPH.value_focus == noone)
-							target.draw_line_shift_hover = hover;
+							to.draw_line_shift_hover = hover;
 						break;
 					case 3 :
 						if(downDirection) hover  = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy) < hovDist;
 						else              hover  = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, fromIndex, toIndex) < hovDist;
 					
 						if(PANEL_GRAPH.value_focus == noone)
-							target.draw_line_shift_hover = hover;
+							to.draw_line_shift_hover = hover;
 						break;
 				}
 			} 
@@ -2737,11 +2742,6 @@ function drawJuncConnection(from, to, params, target = to) { #region
 		if(to.type == VALUE_TYPE.node)
 			ty = LINE_STYLE.dashed;
 			
-		if(feed) {
-			ty = LINE_STYLE.dashed;
-			th /= 2;
-		}
-		
 		var c0, c1;
 		var _selc = to.node.branch_drawing && from.node.branch_drawing;
 	
@@ -2778,7 +2778,7 @@ function drawJuncConnection(from, to, params, target = to) { #region
 		
 		draw_set_color(c0);
 		
-		if(feed && from.node == to.node) {
+		if(from.node == to.node) {
 			draw_line_feedback(jx, jy, frx, fry, th, c1, c0, ss);
 		} else {
 			switch(PREFERENCES.curve_connection_line) { 

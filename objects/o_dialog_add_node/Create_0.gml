@@ -715,13 +715,13 @@ event_inherited();
 			for(var j = 0; j < ds_list_size(_content); j++) {
 				var _node = _content[| j];
 
-				if(is_string(_node)) continue;
-				if(ds_map_exists(search_map, _node)) continue;
-				if(struct_try_get(_node, "deprecated")) continue;
+				if(is_string(_node))					continue;
+				if(ds_map_exists(search_map, _node))	continue;
 				
 				if(is_instanceof(_node, NodeObject)) {
 					if(_node.is_patreon_extra && !IS_PATREON) continue;
 					if(is_global && !_node.show_in_global)    continue;
+					if(_node.deprecated)					  continue;
 				}
 				
 				var match = string_partial_match(string_lower(_node.getName()), search_lower);

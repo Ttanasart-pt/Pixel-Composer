@@ -21,11 +21,16 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 5;
-		
+	
+	inputs[| 6] = nodeValue("Use custom dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 7] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
+		.setDisplay(VALUE_DISPLAY.vector);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 5,
-		["Surfaces", false], 0,
+		["Surfaces", false], 0, 6, 7, 
 		["Wrap",	 false], 1, 2, 3, 4
 	]
 	
@@ -55,6 +60,13 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			attributes[? "initalset"] = true;
 		}
 	} if(!LOADING && !APPENDING) run_in(1, function() { onValueFromUpdate(0); }) #endregion
+	
+	static step = function() { #region
+		var _useDim = getInputData(6);
+		
+		inputs[| 7].setVisible(_useDim);
+		dimension_index = _useDim? 7 : 0;
+	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
@@ -86,10 +98,11 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		draw_line(br[0], br[1], tr[0], tr[1]);
 		draw_line(br[0], br[1], bl[0], bl[1]);
 		
-		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		var _hactive = active;
+		if(point_in_circle(_mx, _my, tl[0], tl[1], 12)) _hactive = false;
+		if(point_in_circle(_mx, _my, tr[0], tr[1], 12)) _hactive = false;
+		if(point_in_circle(_mx, _my, bl[0], bl[1], 12)) _hactive = false;
+		if(point_in_circle(_mx, _my, br[0], br[1], 12)) _hactive = false;
 		
 		var dx = 0;
 		var dy = 0;
@@ -157,11 +170,11 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _up3 = inputs[| 3].setValue([ _blx, _bly ]);
 			
 			if(_up4 || _up3) UNDO_HOLDING = true;
-		} else if(active) {
+		} else if(_hactive) {
 			draw_set_color(COLORS._main_accent);
 			if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], tr[0], tr[1]) < 12) {
 				draw_line_width(tl[0], tl[1], tr[0], tr[1], 3);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left)) {
 					drag_side = 0;
 					drag_mx = _mx;
 					drag_my = _my;
@@ -169,7 +182,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 			} else if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], bl[0], bl[1]) < 12) {
 				draw_line_width(tl[0], tl[1], bl[0], bl[1], 3);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left)) {
 					drag_side = 1;
 					drag_mx = _mx;
 					drag_my = _my;
@@ -177,7 +190,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 			} else if(distance_to_line_infinite(_mx, _my, br[0], br[1], tr[0], tr[1]) < 12) {
 				draw_line_width(br[0], br[1], tr[0], tr[1], 3);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left)) {
 					drag_side = 2;
 					drag_mx = _mx;
 					drag_my = _my;
@@ -185,7 +198,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 			} else if(distance_to_line_infinite(_mx, _my, br[0], br[1], bl[0], bl[1]) < 12) {
 				draw_line_width(br[0], br[1], bl[0], bl[1], 3);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left)) {
 					drag_side = 3;
 					drag_mx = _mx;
 					drag_my = _my;
@@ -194,10 +207,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			}
 		}
 		
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -206,8 +219,11 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var bl = _data[3];
 		var br = _data[4];
 		
-		var sw = surface_get_width_safe(_data[0]);
-		var sh = surface_get_height_safe(_data[0]);
+		var _useDim = _data[6];
+		var _dim    = _data[7];
+		
+		var sw = _useDim? _dim[0] : surface_get_width_safe(_data[0]);
+		var sh = _useDim? _dim[1] : surface_get_height_safe(_data[0]);
 		
 		var teq = round(tl[1]) == round(tr[1]);
 		var beq = round(bl[1]) == round(br[1]);
@@ -222,13 +238,14 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		} else {
 			surface_set_shader(_outSurf, sh_warp_4points);
 			shader_set_interpolation(_data[0]);
-				shader_set_dim("dimension", _data[0]);
+			
+				shader_set_f("dimension", surface_get_dimension(_data[0]));
 				shader_set_f("p0", br[0] / sw, br[1] / sh);
 				shader_set_f("p1", tr[0] / sw, tr[1] / sh);
 				shader_set_f("p2", tl[0] / sw, tl[1] / sh);
 				shader_set_f("p3", bl[0] / sw, bl[1] / sh);
 			
-				draw_surface_safe(_data[0], 0, 0);
+				draw_surface_stretched(_data[0], 0, 0, sw, sh);
 			surface_reset_shader();
 		}
 		

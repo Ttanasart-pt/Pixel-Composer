@@ -50,6 +50,8 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 } #endregion
 
 function __LOAD_PATH(path, readonly = false, override = false) { #region
+	//print($"========== Loading {path} =========="); var t = get_timer();
+	
 	if(DEMO) return false;
 	
 	if(!file_exists_empty(path)) {
@@ -249,6 +251,8 @@ function __LOAD_PATH(path, readonly = false, override = false) { #region
 		PROJECT.timelines.deserialize(_load_content.timelines);
 	
 	run_in(1, PANEL_GRAPH.toCenterNode);
+	
+	//print($"========== Load completed in {(get_timer() - t) / 1000} ms ==========");
 	
 	return true;
 } #endregion

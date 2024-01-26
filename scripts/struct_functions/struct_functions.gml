@@ -1,7 +1,7 @@
 #macro struct_has variable_struct_exists
 #macro struct_key variable_struct_get_names
 
-function struct_override(original, override) {
+function struct_override(original, override) { #region
 	var args = variable_struct_get_names(override);
 	
 	for( var i = 0, n = array_length(args); i < n; i++ ) {
@@ -12,9 +12,9 @@ function struct_override(original, override) {
 	}
 	
 	return original;
-}
+} #endregion
 
-function struct_append(original, append) {
+function struct_append(original, append) { #region
 	var args = variable_struct_get_names(append);
 	
 	for( var i = 0, n = array_length(args); i < n; i++ ) {
@@ -22,22 +22,22 @@ function struct_append(original, append) {
 	}
 	
 	return original;
-}
+} #endregion
 
-function struct_try_get(struct, key, def = 0) {
+function struct_try_get(struct, key, def = 0) { #region
 	INLINE
 	
 	if(struct[$ key] != undefined) return struct[$ key];
 	
 	key = string_replace_all(key, "_", " ");
 	return struct[$ key] ?? def;
-}
+} #endregion
 
-function struct_try_override(original, override, key) {
+function struct_try_override(original, override, key) { #region
 	INLINE
 	
 	if(!is_struct(original) || !is_struct(override)) return;
 	if(!struct_has(override, key)) return;
 	
 	original[$ key] = override[$ key];
-}
+} #endregion

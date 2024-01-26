@@ -926,7 +926,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onPreDraw = function(_x, _y, _s, _iny, _outy) {}
 	
 	static isHighlightingInGraph = function() { #region
-		var  high = struct_try_get(display_parameter, "highlight", 0);
+		var  high = display_parameter.highlight;
 		var _selc = active_draw_index == 0 || branch_drawing;
 		return !high || _selc;
 	} #endregion
@@ -1109,8 +1109,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var hovering = noone;
 		var drawLineIndex = 1;
 		
-		var high = struct_try_get(params, "highlight", 0);
-		var bg   = struct_try_get(params, "bg", c_black);
+		var high = params.highlight; // 0
+		var bg   = params.bg;        // 0
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun       = outputs[| i];
@@ -1400,9 +1400,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static drawActive = function(_x, _y, _s, ind = 0) { #region
 		active_draw_index = ind; 
-		
-		var high = struct_try_get(display_parameter, "highlight", 0);
-		if(high) drawBranch();
+		if(display_parameter.highlight) drawBranch();
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
@@ -1582,57 +1580,42 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	} #endregion
 	
-	static checkConnectGroup = function(_type = "group") { #region
-		var _y = y;
-		var nodes = [];
-				
+	static checkConnectGroup = function(_io) { #region
+		var _y  = y;
+		var _n  = noone;
+		
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i];
-			if(_in.isLeaf()) continue;
-			if(_in.value_from.node.group == group) continue;
-			var input_node = noone;
+			if(_in.isLeaf())						continue;
+			if(_in.value_from.node.group == group)	continue;
 			
-			switch(_type) {
-				case "group" :		input_node = new Node_Group_Input(x - w - 64, _y, group);	break;	
-				case "loop" :		input_node = new Node_Iterator_Input(x - w - 64, _y, group); break;	
-				case "feedback" :	input_node = new Node_Feedback_Input(x - w - 64, _y, group); break;	
-			}
-				
-			if(input_node == noone) continue;
+			var _ind = string(_in.value_from);
+			_io.map[$ _ind] = _in.value_from;
 			
-			array_push(nodes, input_node);
-			input_node.inputs[| 2].setValue(_in.type);
-			input_node.inParent.setFrom(_in.value_from);
-			input_node.onValueUpdate(0);
-			_in.setFrom(input_node.outputs[| 0]);
-			
-			_y += 64;
+			if(struct_has(_io.inputs, _ind))
+				array_push(_io.inputs[$ _ind ], _in);
+			else 
+				_io.inputs[$ _ind ] = [ _in ];
 		}
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _ou = outputs[| i];
+			
 			for(var j = 0; j < array_length(_ou.value_to); j++) {
 				var _to = _ou.value_to[j];
-				if(_to.value_from != _ou) continue;
-				if(!_to.node.active) continue;
+				if(_to.value_from != _ou)   continue;
+				if(!_to.node.active)        continue;
 				if(_to.node.group == group) continue;
-				var output_node = noone;
 				
-				switch(_type) {
-					case "group" :		output_node = new Node_Group_Output(x + w + 64, y, group);		break;
-					case "loop" :		output_node = new Node_Iterator_Output(x + w + 64, y, group);	break;	
-					case "feedback" :	output_node = new Node_Feedback_Output(x + w + 64, y, group);	break;	
-				}
-					
-				if(output_node == noone) continue;
+				var _ind = string(_ou);
+				_io.map[$ _ind] = _ou;
 				
-				array_push(nodes, output_node);
-				_to.setFrom(output_node.outParent);
-				output_node.inputs[| 0].setFrom(_ou);
+				if(struct_has(_io.outputs, _ind))
+					array_push(_io.outputs[$ _ind ], _to);
+				else 
+					_io.outputs[$ _ind ] = [ _to ];
 			}
 		}
-		
-		return nodes;
 	} #endregion
 	
 	static isNotUsingTool = function() { return PANEL_PREVIEW.tool_current == noone; }
@@ -2055,5 +2038,5 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return surface_get_format(_s);
 	} #endregion
 	
-	static toString = function() { return $"PixelComposerNode [{internalName}]: {node_id}"; }
+	static toString = function() { return $"Node [{internalName}]: {node_id}"; }
 }

@@ -11,7 +11,7 @@ function __initCollection() {
 		zip_unzip("data/Collections.zip", root);
 	
 	COLLECTIONS = new DirectoryObject("Collections", DIRECTORY + "Collections");
-	COLLECTIONS.open = true;
+	refreshCollections();
 }
 
 function refreshCollections() {

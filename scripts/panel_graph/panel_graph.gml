@@ -1,5 +1,50 @@
-/// @desc Panel for displaying node graph
-/// @param {Struct.Project}
+function connectionParameter() constructor { #region
+	log    = false;
+	active = true;
+	
+	x  = 0;
+	y  = 0;
+	s  = 0;
+	mx = 0;
+	my = 0;
+	aa = 0;
+	bg = 0;
+	
+	minx = 0;
+	miny = 0;
+	maxx = 0;
+	maxy = 0;
+	
+	max_layer = 0;
+	highlight = 0;
+	cur_layer = 1;
+		
+	static setPos = function(_x, _y, _s, _mx, _my) { 
+	    self.x = _x;
+	    self.y = _y;
+	    self.s = _s;
+	    self.mx = _mx;
+	    self.my = _my;
+	}
+
+	static setBoundary = function(_minx, _miny, _maxx, _maxy) { 
+	    self.minx = _minx;
+	    self.miny = _miny;
+	    self.maxx = _maxx;
+	    self.maxy = _maxy;
+	}
+
+	static setProp = function(_max_layer, _highlight) { 
+	    self.max_layer = _max_layer;
+	    self.highlight = _highlight;
+	}
+
+	static setDraw = function(_aa, _bg = c_black) { 
+	    self.aa = _aa;
+	    self.bg = _bg;
+	}
+} #endregion
+
 function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	title = __txt("Graph");
 	title_raw   = "";
@@ -23,7 +68,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			highlight     : false,
 		}
 		
-		connection_param = {};
+		connection_param = new connectionParameter();
 		
 		bg_color = c_black;
 	#endregion
@@ -245,8 +290,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	addHotkey("Graph", "Group",		"G", MOD_KEY.ctrl,					function() { PANEL_GRAPH.doGroup(); });
 	addHotkey("Graph", "Ungroup",	"G", MOD_KEY.ctrl | MOD_KEY.shift,	function() { PANEL_GRAPH.doUngroup(); });
-	
-	addHotkey("Graph", "Loop",		"L", MOD_KEY.ctrl,					function() { PANEL_GRAPH.doLoop(); });
 	
 	addHotkey("Graph", "Canvas",		"C", MOD_KEY.ctrl | MOD_KEY.shift,		function() { PANEL_GRAPH.setCurrentCanvas(); });
 	addHotkey("Graph", "Canvas blend",	"C", MOD_KEY.ctrl | MOD_KEY.alt,		function() { PANEL_GRAPH.setCurrentCanvasBlend(); });
@@ -991,28 +1034,20 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			surface_set_target(connection_surface);
 			DRAW_CLEAR
 		
-			var hov = noone;
+			var hov       = noone;
 			var hoverable = !bool(node_dragging) && pHOVER;
-		
-			connection_param.x         = gr_x;
-			connection_param.y         = gr_y;
-			connection_param.s         = graph_s;
-			connection_param.mx        = mx;
-			connection_param.my        = my;
-			connection_param.aa        = aa;
-			connection_param.bg        = bg_color;
-			connection_param.minx      = -64;
-			connection_param.miny      = -64;
-			connection_param.maxx      = w + 64;
-			connection_param.maxy      = h + 64;
-			connection_param.active    = hoverable;
-			connection_param.max_layer = ds_list_size(nodes_list);
-			connection_param.highlight = display_parameter.highlight;
+			var param     = connection_param;
+			
+			param.active    = hoverable;
+			param.setPos(gr_x, gr_y, graph_s, mx, my);
+			param.setBoundary(-64, -64, w + 64, h + 64);
+			param.setProp(ds_list_size(nodes_list), display_parameter.highlight);
+			param.setDraw(aa, bg_color);
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				connection_param.cur_layer = i + 1;
+				param.cur_layer = i + 1;
 				
-				var _hov = nodes_list[| i].drawConnections(connection_param);
+				var _hov = nodes_list[| i].drawConnections(param);
 				if(_hov != noone && is_struct(_hov)) hov = _hov;
 			}
 		
@@ -1022,7 +1057,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				var _cmt = connection_draw_target;
 		
 				if(array_empty(value_draggings))
-					value_dragging.drawConnectionMouse(connection_param, _cmx, _cmy, _cmt);
+					value_dragging.drawConnectionMouse(param, _cmx, _cmy, _cmt);
 				else {
 					var _stIndex = array_find(value_draggings, value_dragging);
 				
@@ -1030,7 +1065,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						var _dmx = _cmx;
 						var _dmy = value_draggings[i].connect_type == JUNCTION_CONNECT.output? _cmy + (i - _stIndex) * 24 * graph_s : _cmy;
 					
-						value_draggings[i].drawConnectionMouse(connection_param, _dmx, _dmy, _cmt);
+						value_draggings[i].drawConnectionMouse(param, _dmx, _dmy, _cmt);
 					}
 				}
 			}
@@ -1963,29 +1998,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(!is_instanceof(_node, Node_Collection) || !_node.ungroupable) return;
 		
 			upgroupNode(_node);
-		} #endregion
-	
-		function doLoop() { #region
-			if(array_empty(nodes_selecting)) return;
-		
-			var cx = 0;
-			var cy = 0;
-			for(var i = 0; i < array_length(nodes_selecting); i++) {
-				var _node = nodes_selecting[i];
-				cx += _node.x;
-				cy += _node.y;
-			}
-			cx = round(cx / array_length(nodes_selecting) / 32) * 32;
-			cy = round(cy / array_length(nodes_selecting) / 32) * 32;
-		
-			var _group = new Node_Iterate(cx, cy, getCurrentContext());
-			for(var i = 0; i < array_length(nodes_selecting); i++) 
-				_group.add(nodes_selecting[i]);
-			
-			for(var i = 0; i < array_length(nodes_selecting); i++)
-				nodes_selecting[i].checkConnectGroup("loop");
-			
-			nodes_selecting = [];
 		} #endregion
 	
 		function doFrame() { #region

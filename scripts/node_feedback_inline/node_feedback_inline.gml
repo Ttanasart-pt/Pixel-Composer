@@ -11,12 +11,6 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	selectable      = false;
 	update_on_frame = true;
 	
-	draw_line_feed        = true;
-	draw_line_shift_x	  = 0;
-	draw_line_shift_y	  = 0;
-	draw_line_thick		  = 1;
-	draw_line_shift_hover = false;
-		
 	attributes.junc_in  = [ "", 0 ];
 	attributes.junc_out = [ "", 0 ];
 	
@@ -70,7 +64,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		if(!junc_in || !junc_out) return;
 		if(!junc_in.node.active || !junc_out.node.active) return;
 		
-		if(drawJuncConnection(junc_out, junc_in, params, self))
+		if(drawJuncConnection(junc_out, junc_in, params))
 			return self;
 	} #endregion
 	

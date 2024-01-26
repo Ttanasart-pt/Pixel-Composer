@@ -54,8 +54,9 @@ function ResetAllNodesRender() { #region
 
 function NodeTopoSort() { #region
 	var _key = ds_map_find_first(PROJECT.nodeMap);
-	var amo = ds_map_size(PROJECT.nodeMap);
-		
+	var amo  = ds_map_size(PROJECT.nodeMap);
+	var _t   = get_timer();
+	
 	repeat(amo) {
 		var _node = PROJECT.nodeMap[? _key];
 		_node.clearTopoSorted();
@@ -65,15 +66,17 @@ function NodeTopoSort() { #region
 	ds_list_clear(PROJECT.nodeTopo);
 	__sortGraph(PROJECT.nodeTopo, PROJECT.nodes);
 	
-	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {ds_list_size(PROJECT.nodeTopo)} nodes sorted +++++++");
+	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {ds_list_size(PROJECT.nodeTopo)} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 } #endregion
 
 function __sortGraph(_list, _nodeList) { #region
-	var _root = [];
+	var _root     = [];
 	var _leftOver = [];
 	
+	//print($"Sorting...");
+	
 	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ ) {
-		var _node = _nodeList[| i];
+		var _node   = _nodeList[| i];
 		var _isRoot = true;
 		
 		if(is_instanceof(_node, Node_Collection_Inline) && !_node.is_root) {
@@ -97,13 +100,15 @@ function __sortGraph(_list, _nodeList) { #region
 		if(_isRoot) array_push(_root, _node);
 	}
 	
-	var _st = ds_queue_create();
+	//print($"    > Roots: {_root}");
+	
+	var _sortQueue = ds_queue_create();
 	
 	for( var i = 0, n = array_length(_root); i < n; i++ ) 
-		ds_queue_enqueue(_st, _root[i]);
+		ds_queue_enqueue(_sortQueue, _root[i]);
 		
-	while(!ds_queue_empty(_st)) {
-		var _node = ds_queue_dequeue(_st);
+	while(!ds_queue_empty(_sortQueue)) {
+		var _node = ds_queue_dequeue(_sortQueue);
 		if(_node.topoSorted) continue;
 		
 		var _childs = [];
@@ -118,16 +123,19 @@ function __sortGraph(_list, _nodeList) { #region
 			array_push(_childs, _in);
 		}
 		
+		//print($"        > Checking {_node.name}: {array_length(_childs)}");
+		
 		if(array_empty(_childs)) {
-			ds_list_add(_list, _node);
-			_node.topoSorted = true;
-			
 			if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
 				__sortGraph(_list, _node.nodes);
 		} else {
 			for( var i = 0, n = array_length(_childs); i < n; i++ ) 
-				ds_queue_enqueue(_st, _childs[i]);
-			ds_queue_enqueue(_st, _node);
+				ds_queue_enqueue(_sortQueue, _childs[i]);
+		}
+		
+		if(!_node.topoSorted) {
+			ds_list_add(_list, _node);
+			_node.topoSorted = true;
 		}
 	}
 	

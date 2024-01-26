@@ -4,22 +4,23 @@ enum COLLECTION_TAG {
 }
 
 function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) { #region
-	var _ctx_nodes = [];
+	#region check inline
+		var _ctx_nodes = [];
 	
-	for(var i = 0; i < array_length(nodeArray); i++) {
-		var node = nodeArray[i];
+		for(var i = 0; i < array_length(nodeArray); i++) { 
+			var node = nodeArray[i];
+			var ctx  = node.inline_context;
 		
-		if(node.inline_context != noone) {
-			array_push_unique(_ctx_nodes, node.inline_context);
+			if(ctx == noone) continue;
+			array_push_unique(_ctx_nodes, ctx);
 			
-			for( var k = 0, n = array_length(node.inline_context.members); k < n; k++ ) {
-				if(!array_exists(nodeArray, node.inline_context.members[k])) {
-					noti_warning("Grouping incomplete inline group is not allowed.");
-					return;
-				}	
+			for( var k = 0, n = array_length(ctx.members); k < n; k++ ) {
+				if(array_exists(nodeArray, ctx.members[k])) continue;
+				noti_warning("Grouping incomplete inline group is not allowed.");
+				return;
 			}
-		}
-	}
+		} 
+	#endregion
 	
 	UNDO_HOLDING = true;
 	
@@ -31,8 +32,9 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 			cx += _node.x;
 			cy += _node.y;
 		}
-		cx = round(cx / array_length(nodeArray) / 32) * 32;
-		cy = round(cy / array_length(nodeArray) / 32) * 32;
+		
+		cx = value_snap(cx / array_length(nodeArray), 32);
+		cy = value_snap(cy / array_length(nodeArray), 32);
 		
 		_group = new Node_Group(cx, cy, PANEL_GRAPH.getCurrentContext());
 	}
@@ -49,13 +51,69 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 		_content[i] = _ctx_nodes[i];
 	}
 	
-	var _io = [];
-	if(check_connect) 
-	for(var i = 0; i < array_length(nodeArray); i++)
-		array_append(_io, nodeArray[i].checkConnectGroup());
+	var _io = { inputs: {}, outputs: {}, map: {} };
+	
+	if(check_connect) { #region IO creation
+		for(var i = 0; i < array_length(nodeArray); i++)
+			nodeArray[i].checkConnectGroup(_io);
+		
+		var _in    = _io.inputs;
+		var _inKey = struct_get_names(_in);
+		var _x, _y, m;
 			
+		for( var i = 0, n = array_length(_inKey); i < n; i++ ) {
+			var _frm = _io.map[$ _inKey[i]];
+			var _tos = _in[$ _inKey[i]];
+			
+			_x = 0
+			_y = 0;
+			 m = array_length(_tos);
+			
+			for( var j = 0; j < m; j++ ) {
+				var _to = _tos[j];
+				
+				_x  = min(_x, _to.node.x);
+				_y += _to.node.y;
+			}
+			
+			_x = value_snap(_x - 64 - 128, 32);
+			_y = value_snap(_y / m, 32);
+			
+			var _n = new Node_Group_Input(_x, _y, _group);
+			_n.inputs[| 2].setValue(_frm.type);
+			_n.onValueUpdate(0);
+			_n.inParent.setFrom(_frm);
+				
+			for( var j = 0; j < m; j++ ) {
+				var _to = _tos[j];
+				_to.setFrom(_n.outputs[| 0]);
+			}
+		}
+		
+		var _ot    = _io.outputs;
+		var _otKey = struct_get_names(_ot);
+			
+		for( var i = 0, n = array_length(_otKey); i < n; i++ ) {
+			var _frm = _io.map[$ _otKey[i]];
+			var _tos = _ot[$ _otKey[i]];
+			
+			_x = value_snap(_frm.node.x + _frm.node.w + 64, 32);
+			_y = value_snap(_frm.node.y, 32);
+			 m = array_length(_tos);
+			
+			var _n = new Node_Group_Output(_x, _y, _group);
+			_n.inputs[| 0].setFrom(_frm);
+			
+			for( var j = 0; j < m; j++ ) {
+				var _to = _tos[j];
+				_to.setFrom(_n.outParent);
+			}
+		}
+		
+	} #endregion
+	
 	UNDO_HOLDING = false;	
-	if(record) recordAction(ACTION_TYPE.group, _group, { io: _io, content: _content });
+	if(record) recordAction(ACTION_TYPE.group, _group, { content: _content });
 	
 	return _group;
 } #endregion
@@ -63,13 +121,11 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 function upgroupNode(collection, record = true) { #region
 	UNDO_HOLDING = true;
 	var _content = [];
-	var _io = [];
 	var node_list = collection.getNodeList();
+	
 	while(!ds_list_empty(node_list)) {
 		var remNode = node_list[| 0];
-		if(remNode.destroy_when_upgroup)	
-			array_push(_io, remNode);
-		else 
+		if(!remNode.destroy_when_upgroup)
 			array_push(_content, remNode);
 		
 		collection.remove(remNode); 
@@ -78,7 +134,7 @@ function upgroupNode(collection, record = true) { #region
 	nodeDelete(collection);
 	UNDO_HOLDING = false;
 	
-	if(record) recordAction(ACTION_TYPE.ungroup, collection, { io: _io, content: _content });
+	if(record) recordAction(ACTION_TYPE.ungroup, collection, { content: _content });
 } #endregion
 
 function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 

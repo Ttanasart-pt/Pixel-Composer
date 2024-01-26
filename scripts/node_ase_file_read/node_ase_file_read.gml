@@ -25,7 +25,7 @@ function Node_create_ASE_File_Read_path(_x, _y, path) { #region
 
 function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "ASE File In";
-	update_on_frame = true;
+	update_on_frame = false;
 	
 	w = 128;
 	
@@ -162,10 +162,10 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	attributes.layer_visible = [];
 	
-	content = ds_map_create();
-	layers = [];
-	tags = [];
-	_tag_delay = 0;
+	content      = ds_map_create();
+	layers       = [];
+	tags         = [];
+	_tag_delay   = 0;
 	path_current = "";
 	
 	first_update = false;
@@ -279,6 +279,14 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			tags = chunk[? "Tags"];
 		}
 		
+		update_on_frame = false;
+		for( var i = 0, n = array_length(layers); i < n; i++ ) {
+			if(!struct_has(layers[i], "cel")) continue;
+			
+			var cel = layers[i].cel;
+			if(array_length(cel)) update_on_frame = true;
+		}
+		
 		return true;
 	} #endregion
 	
@@ -289,13 +297,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
-		update();
 		
-		for( var j = 0; j < array_length(outputs[| 1].value_to); j++ ) {
-			var _targNode = outputs[| 1].value_to[j].node;
-			_targNode._name = "";
-			_targNode.update();
-		}
+		triggerRender();
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
