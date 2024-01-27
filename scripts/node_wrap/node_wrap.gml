@@ -38,9 +38,9 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_interpolation();
 
 	drag_side = -1;
-	drag_mx = 0;
-	drag_my = 0;
-	drag_s = [[0, 0], [0, 0]];
+	drag_mx   = 0;
+	drag_my   = 0;
+	drag_s    = [[0, 0], [0, 0]];
 	
 	attributes[? "initalset"] = LOADING || APPENDING;
 	

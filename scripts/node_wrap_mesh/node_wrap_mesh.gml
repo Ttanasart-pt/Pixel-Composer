@@ -4,14 +4,14 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attributes.mesh_bound  = [];
 	
 	points = [];
-	data = {
+	data   = {
 		points : [],
 		tris   : [],
 		links  : []
 	}
 	
-	is_convex = true;
-	hover = -1;
+	is_convex       = true;
+	hover           = -1;
 	anchor_dragging = -1;
 	anchor_drag_sx  = -1;
 	anchor_drag_sy  = -1;
@@ -406,18 +406,18 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static regularTri = function(surf) { #region
+		if(is_array(surf)) surf = array_safe_get(surf, 0);
+		
+		if(!is_surface(surf))       return;
+		if(!inputs[| 0].value_from) return;
+		
 		var sample = getInputData(1);
 		var spring = getInputData(2);
 		var diagon = getInputData(4);
-		
-		if(!inputs[| 0].value_from) return;
-		var useArray = is_array(surf);
-		var ww = useArray? surface_get_width_safe(surf[0]) : surface_get_width_safe(surf);
-		var hh = useArray? surface_get_height_safe(surf[0]) : surface_get_height_safe(surf);
-		
 		var fullmh = getInputData(7);
-		if(is_array(fullmh)) fullmh = false;
-		fullmh |= useArray;
+		
+		var ww = surface_get_width_safe(surf);
+		var hh = surface_get_height_safe(surf);
 		
 		var gw = ww / sample;
 		var gh = hh / sample;
@@ -676,23 +676,25 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _inSurf		= _data[0];
+		var _inSurf = _data[0];
 		if(!is_surface(_inSurf)) return _outSurf;
 		
 		reset();
 		control();
 		
-		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf), attrDepth());
+		var _sw  = surface_get_width_safe(_inSurf);
+		var _sh  = surface_get_height_safe(_inSurf);
+		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
 		
 		surface_set_shader(_outSurf);
 		shader_set_interpolation(_outSurf);
 		
-		if(array_length(data.tris) == 0) {
-			draw_surface_safe(_inSurf);
-		} else {
-			for(var i = 0; i < array_length(data.tris); i++)
-				data.tris[i].drawSurface(_inSurf);
-		}
+			if(array_length(data.tris) == 0) {
+				draw_surface_safe(_inSurf);
+			} else {
+				for(var i = 0; i < array_length(data.tris); i++)
+					data.tris[i].drawSurface(_inSurf);
+			}
 		
 		surface_reset_shader();	
 		
