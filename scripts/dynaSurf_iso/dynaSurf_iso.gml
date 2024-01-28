@@ -27,7 +27,7 @@ function dynaSurf_iso() : dynaSurf() constructor {
 	
 	static drawTile = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _col = c_white, _alp = 1) {
 		var _surf = surfaces[0];
-		draw_surface_tiled_ext_safe(_surf, _x, _y, _xs, _ys, _col, _alp);
+		draw_surface_tiled_ext_safe(_surf, _x, _y, _xs, _ys, 0, _col, _alp);
 	}
 	
 	static drawPart = function(_l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {

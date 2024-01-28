@@ -7,7 +7,12 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setVisible(true, true);
 		
 	inputs[| 1] = nodeValue("Condition", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Equal", "Not equal", "Less", "Less or equal", "Greater", "Greater or equal"])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Equal",			s_node_condition_type, 0), 
+												 new scrollItem("Not equal",		s_node_condition_type, 1), 
+												 new scrollItem("Less ",			s_node_condition_type, 2), 
+												 new scrollItem("Less or equal ",	s_node_condition_type, 3), 
+												 new scrollItem("Greater ",			s_node_condition_type, 4), 
+												 new scrollItem("Greater or equal", s_node_condition_type, 5), ])
 		.rejectArray();
 		
 	inputs[| 2] = nodeValue("Compare to", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )

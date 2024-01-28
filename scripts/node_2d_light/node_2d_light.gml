@@ -17,7 +17,10 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Light shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Point", "Line", "Line asymmetric", "Spot" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Point",           s_node_2d_light_shape, 0), 
+												 new scrollItem("Line",            s_node_2d_light_shape, 1), 
+												 new scrollItem("Line asymmetric", s_node_2d_light_shape, 2), 
+												 new scrollItem("Spot",            s_node_2d_light_shape, 3), ]);
 	
 	inputs[| 2] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -30,10 +33,10 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 5] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 6] = nodeValue("Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 16, 16])
+	inputs[| 6] = nodeValue("Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 16, 16 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 7] = nodeValue("Finish", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 16])
+	inputs[| 7] = nodeValue("Finish", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 16 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 8] = nodeValue("Sweep", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 15)
@@ -46,7 +49,9 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });
 	
 	inputs[| 11] = nodeValue("Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Quadratic", "Invert quadratic", "Linear"]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Quadratic",		s_node_curve, 0),
+												 new scrollItem("Invert quadratic", s_node_curve, 1),
+												 new scrollItem("Linear",			s_node_curve, 2), ]);
 	
 	inputs[| 12] = nodeValue("Radial banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });

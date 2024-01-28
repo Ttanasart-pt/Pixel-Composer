@@ -475,15 +475,13 @@ event_inherited();
 		if(directory_exists(_path)) {
 			var _metaPath = _path + "/meta.json";
 			if(!file_exists_empty(_metaPath)) {
-				var _item = new scrollItem(f, THEME.circle);
-				    _item.spr_blend = COLORS._main_accent;
+				var _item = new scrollItem(f, THEME.circle, 0, COLORS._main_accent);
 				    _item.tooltip   = "Theme made for earlier version.";
 				array_push(themes, _item);
 			} else {
 				var _meta = json_load_struct(_metaPath);
-				var _item = new scrollItem(_meta.name, _meta.version >= VERSION? noone : THEME.circle);
+				var _item = new scrollItem(_meta.name, _meta.version >= VERSION? noone : THEME.circle, 0, COLORS._main_accent);
 				    _item.data      = f;
-					_item.spr_blend = COLORS._main_accent;
 					
 				if(_meta.version < VERSION)
 				    _item.tooltip = "Theme made for earlier version.";

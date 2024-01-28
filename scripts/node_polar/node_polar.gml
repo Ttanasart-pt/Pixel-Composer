@@ -23,7 +23,9 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(1); // inputs 7, 8, 
 	
 	inputs[| 9] = nodeValue("Radius mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Linear", "Inverse Square", "Logarithm" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Linear",         s_node_curve, 2), 
+												 new scrollItem("Inverse Square", s_node_curve, 1), 
+												 new scrollItem("Logarithm",      s_node_curve, 3), ]);
 	
 	inputs[| 10] = nodeValue("Swap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	

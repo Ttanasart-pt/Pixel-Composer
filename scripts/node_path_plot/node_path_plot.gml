@@ -7,7 +7,8 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue("Coordinate", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Cartesian", "Polar" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
+												 new scrollItem("Polar",     s_node_axis_type, 1),  ]);
 	
 	eq_type_car = [ "x function", "y function", "parametric" ];
 	eq_type_pol = [ "r function", "O function", "parametric" ];

@@ -68,7 +68,7 @@ function draw_surface_tiled_safe(surface, _x, _y) { #region
 	__channel_pos(surface);
 } #endregion
 
-function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c_white, _alpha = 1) { #region
+function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) { #region
 	INLINE
 	
 	if(is_struct(surface)) {
@@ -80,9 +80,18 @@ function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c
 	}
 	if(!surface_exists(surface)) return;
 	
-	__channel_pre(surface);
-		draw_surface_tiled_ext(surface, _x, _y, _xs, _ys, _col, _alpha);
-	__channel_pos(surface);
+	var back = surface_get_target();
+	var bdim = surface_get_dimension(back);
+	
+	shader_set(sh_draw_tile);
+		shader_set_f("backDimension", bdim);
+		shader_set_f("foreDimension", surface_get_dimension(surface));
+		shader_set_f("position"		, [ _x, _y ]);
+		shader_set_f("scale"		, [ _xs, _ys ]);
+		shader_set_f("rotation"		, _rot);
+		
+		draw_surface_stretched_ext(surface, 0, 0, bdim[0], bdim[1], _col, _alpha);
+	shader_reset();
 } #endregion
 
 function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) { #region

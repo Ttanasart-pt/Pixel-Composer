@@ -26,7 +26,9 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100_000, 999_999));
 	
 	inputs[| 9] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Rain", "Snow", "Texture" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
+												 new scrollItem("Snow",    s_node_mk_rain_type, 1),
+												 new scrollItem("Texture", s_node_mk_rain_type, 2) ]);
 	
 	inputs[| 10] = nodeValue("Snow size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 3, 4 ])
 		.setDisplay(VALUE_DISPLAY.vector_range);

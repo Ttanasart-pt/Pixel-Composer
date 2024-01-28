@@ -114,7 +114,7 @@ event_inherited();
 			     if(align == fa_center) draw_text_cut(_dw / 2, _ly + hght / 2, txt, _dw);
 			else if(align == fa_left)   draw_text_cut(ui(8) + _spr * hght, _ly + hght / 2, txt, _dw);
 			
-			if(_spr) draw_sprite_ext(_val.spr, 0, ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
+			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
 			
 			_ly += hght;
 			_h  += hght;

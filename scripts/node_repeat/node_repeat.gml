@@ -9,7 +9,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
 	
 	inputs[| 3] = nodeValue("Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Linear", "Grid", "Circular" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Linear",   s_node_repeat_axis, 0), 
+												 new scrollItem("Grid",     s_node_repeat_axis, 1), 
+												 new scrollItem("Circular", s_node_repeat_axis, 2), ]);
 	
 	inputs[| 4] = nodeValue("Repeat position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [DEF_SURF_W / 2, 0])
 		.setDisplay(VALUE_DISPLAY.vector)

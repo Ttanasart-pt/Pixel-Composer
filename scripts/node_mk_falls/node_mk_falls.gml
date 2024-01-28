@@ -61,7 +61,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
 	inputs[| 22] = nodeValue("Render Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Leaf", "Circle" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Leaf", s_node_shape_type, 7), new scrollItem("Circle", s_node_shape_type, 1) ]);
 	
 	inputs[| 23] = nodeValue("Twist Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.7)
 		.setDisplay(VALUE_DISPLAY.slider);

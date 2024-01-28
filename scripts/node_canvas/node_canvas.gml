@@ -282,12 +282,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		drawColor(tool_attribute.color, _cx, yy, _cw, _cw);
 		draw_sprite_stretched_ext(THEME.palette_selecting, 0, _cx - _pd, yy - _pd, _cw + _pd * 2, _cw + _pd * 2, c_white, 1);
 		
-		if(point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch) && mouse_press(mb_left, focus)) {
-			var dialog = dialogCall(o_dialog_color_selector);
-			dialog.selector.onApply = setToolColor;
-			dialog.onApply = setToolColor;
-			dialog.setDefault(tool_attribute.color);
-		}
+		if(point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch) && mouse_press(mb_left, focus))
+			colorSelectorCall(tool_attribute.color, setToolColor);
 		
 		yy += _cw + ui(8);
 		hh += _cw + ui(8);

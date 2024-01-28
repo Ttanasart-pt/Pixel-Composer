@@ -12,7 +12,10 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
 	inputs[| 3] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Repeat", "Repeat X", "Repeat Y" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Empty ",   s_node_camera_repeat, 0), 
+												 new scrollItem("Repeat ",  s_node_camera_repeat, 1), 
+												 new scrollItem("Repeat X", s_node_camera_repeat, 2), 
+												 new scrollItem("Repeat Y", s_node_camera_repeat, 3), ]);
 	
 	inputs[| 4] = nodeValue("Fix background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -50,7 +53,10 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			.setUnitRef(function(index) { return getDimension(index); });
 		
 		inputs[| index + 2] = nodeValue($"Oversample {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Repeat", "Repeat X", "Repeat Y" ]);
+			.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Empty ",   s_node_camera_repeat, 0), 
+													 new scrollItem("Repeat ",  s_node_camera_repeat, 1), 
+													 new scrollItem("Repeat X", s_node_camera_repeat, 2), 
+													 new scrollItem("Repeat Y", s_node_camera_repeat, 3), ]);
 		
 		array_append(input_display_list, [ index + 0, index + 1, index + 2 ]);
 	} if(!LOADING && !APPENDING) createNewInput(); #endregion

@@ -28,7 +28,9 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
 	inputs[| 10] = nodeValue("Flip limit", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "None", "90", "180" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("None", s_node_mk_grid_flip, 0), 
+												 new scrollItem("90",   s_node_mk_grid_flip, 1), 
+												 new scrollItem("180",  s_node_mk_grid_flip, 2), ]);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 3, 1, 
 		["Surface",		 true], 0, 4, 

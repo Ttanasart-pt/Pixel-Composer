@@ -506,9 +506,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			array_push(_item, [ 
 				[ THEME.timeline_color, 2 ], 
 				function(_data) { 
-					var dialog = dialogCall(o_dialog_color_selector);
-					dialog.selector.onApply = setSelectingNodeColor;
-					dialog.onApply = setSelectingNodeColor;
+					colorSelectorCall(node_hover? node_hover.attributes.color : c_white, setSelectingNodeColor);
 				}
 			]);
 	
@@ -549,9 +547,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			array_push(_item, [ 
 				[ THEME.timeline_color, 2 ], 
 				function(_data) { 
-					var dialog = dialogCall(o_dialog_color_selector);
-					dialog.selector.onApply = setSelectingJuncColor;
-					dialog.onApply = setSelectingJuncColor;
+					colorSelectorCall(__junction_hovering? __junction_hovering.color : c_white, setSelectingJuncColor);
 				}
 			]);
 	

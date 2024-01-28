@@ -305,9 +305,7 @@ function Panel_Animation() : PanelContent() constructor {
 	array_push(_item, [ 
 		[ THEME.timeline_color, 2 ], 
 		function(_data) { 
-			var dialog = dialogCall(o_dialog_color_selector);
-			dialog.selector.onApply = setSelectingItemColor;
-			dialog.onApply = setSelectingItemColor;
+			colorSelectorCall(context_selecting_item? context_selecting_item.item.getColor() : c_white, setSelectingItemColor);
 		}
 	]);
 	

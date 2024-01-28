@@ -28,7 +28,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] });
 	
 	inputs[| 5] = nodeValue("Light type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Point", "Sun"]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Point", s_node_shadow_type, 0), 
+												 new scrollItem("Sun",   s_node_shadow_type, 1) ]);
 	
 	inputs[| 6] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
 	
@@ -50,7 +51,9 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });
 	
 	inputs[| 14] = nodeValue("Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Quadratic", "Invert quadratic", "Linear"]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Quadratic",		s_node_curve, 0),
+												 new scrollItem("Invert quadratic", s_node_curve, 1),
+												 new scrollItem("Linear",			s_node_curve, 2), ]);
 	
 	inputs[| 15] = nodeValue("Ambient occlusion", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });

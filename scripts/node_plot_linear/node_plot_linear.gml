@@ -30,7 +30,8 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 11] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Bar chart", "Graph" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Bar chart", s_node_plot_linear_type, 0), 
+												 new scrollItem("Graph",	 s_node_plot_linear_type, 1), ]);
 	
 	inputs[| 12] = nodeValue("Value Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	

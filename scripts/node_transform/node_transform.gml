@@ -248,51 +248,24 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		pos = point_rotate(pos[0], pos[1], pos[0] + anc[0], pos[1] + anc[1], rot);
 		
-		if(mode == 1) { #region
-			var _w = _ww * sqrt(2);
-			var _h = _hh * sqrt(2);
-			var _px = (_w - _ww) / 2;
-			var _py = (_h - _hh) / 2;
-			var _s = surface_create_valid(_w, _h, cDep);
-			
-			surface_set_target(_s);
-				DRAW_CLEAR
-				BLEND_OVERRIDE
+		var draw_x, draw_y;
+		draw_x = pos[0];
+		draw_y = pos[1];
 				
-				if(is_surface(ins)) {
-					var draw_x, draw_y;
-					draw_x = _px + pos[0];
-					draw_y = _py + pos[1];
-					
-					if(pos_exact) {
-						draw_x = round(draw_x);
-						draw_y = round(draw_y);
-					}
-					
-					draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], c_white, 1);
-				}
-				
-				BLEND_NORMAL
-			surface_reset_target();
+		if(pos_exact) {
+			draw_x = round(draw_x);
+			draw_y = round(draw_y);
+		}
 			
-			var _cc = point_rotate(-_px, -_py, _ww / 2, _hh / 2, rot);
+		if(mode == 1) { #region // Tile
 			surface_set_shader(_outSurf);
-			shader_set_interpolation(_s);
-			draw_surface_ext_safe(_s, _cc[0], _cc[1], 1, 1, rot, c_white, 1);
-			surface_reset_shader();
+			shader_set_interpolation(ins);
 			
-			surface_free(_s);
-		#endregion
-		} else { #region
-			var draw_x, draw_y;
-			draw_x = pos[0];
-			draw_y = pos[1];
+				draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, 1);
 				
-			if(pos_exact) {
-				draw_x = round(draw_x);
-				draw_y = round(draw_y);
-			}
-			
+			surface_reset_shader();
+		#endregion
+		} else { #region // Normal or wrap
 			surface_set_shader(_outSurf);
 			shader_set_interpolation(ins);
 			

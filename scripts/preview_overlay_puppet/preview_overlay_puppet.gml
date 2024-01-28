@@ -101,6 +101,12 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			} else 
 				draw_sprite_colored(THEME.anchor_rotate, drag_type == 6, rx, ry,, dir - 45);
 			break;
+		case PUPPET_FORCE_MODE.puppet :
+			draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
+			
+			draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
+			draw_sprite_colored(THEME.anchor_selector, 2, _ax1, _ay1);
+			break;
 	}
 						
 	if(drag_type == 1) {
@@ -179,7 +185,10 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		}
 	} 
 						
-	if(interact && active && _val[PUPPET_CONTROL.mode] == PUPPET_FORCE_MODE.move && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
+	var _mode = _val[PUPPET_CONTROL.mode];
+	
+	if(interact && active && (_mode == PUPPET_FORCE_MODE.move || _mode == PUPPET_FORCE_MODE.puppet) && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
+		
 		hover = 2;
 		draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1);
 		if(mouse_press(mb_left, active)) {

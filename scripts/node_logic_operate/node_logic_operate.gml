@@ -31,8 +31,12 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	w = 96;
 	
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ 
-			/* 0 -  9*/ "And", "Or", "Not", "Nand", "Nor", "Xor" ])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("And" , s_node_logic, 0), 
+												 new scrollItem("Or"  ,	s_node_logic, 1), 
+												 new scrollItem("Not" , s_node_logic, 2), 
+												 new scrollItem("Nand", s_node_logic, 3), 
+												 new scrollItem("Nor" , s_node_logic, 4), 
+												 new scrollItem("Xor" , s_node_logic, 5), ])
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)

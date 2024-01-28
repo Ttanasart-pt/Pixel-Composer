@@ -1,17 +1,19 @@
-function scrollItem(name, spr = noone) constructor {
+function scrollItem(name, spr = noone, spr_ind = 0, spr_blend = COLORS._main_icon) constructor {
 	self.name = name;
 	self.data = name;
-	self.spr  = spr;
-	self.spr_ind   = 0;
-	self.spr_blend = c_white;
+	
+	self.spr       = spr;
+	self.spr_ind   = spr_ind;
+	self.spr_blend = spr_blend;
 	
 	tooltip = "";
 }
 
 function scrollBox(_data, _onModify, update_hover = true) : widget() constructor {
+	self.update_hover = update_hover;
+	
 	onModify  = _onModify;	
 	data_list = _data;
-	self.update_hover = update_hover;
 	data      = _data;
 	curr_text = 0;
 	
@@ -19,33 +21,33 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	arrow_spr = THEME.scroll_box_arrow;
 	arrow_ind = 0;
 	
-	open = false;
+	open    = false;
 	open_rx = 0;
 	open_ry = 0;
 	
-	align = fa_center;
+	align        = fa_center;
 	extra_button = noone;
 	
-	static trigger = function() {
+	static trigger = function() { #region
 		if(is_method(data_list)) data = data_list();
 		else					 data = data_list;
 		
 		var ind = array_find(data, curr_text);
+		open    = true;
 		
-		open = true;
 		with(dialogCall(o_dialog_scrollbox, x + open_rx, y + open_ry)) {
 			initScroll(other);
-			initVal   = ind;
-			align     = other.align;
+			initVal      = ind;
+			align        = other.align;
 			update_hover = other.update_hover;
 		}
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _val, _m = mouse_ui, _rx = 0, _ry = 0) {
+	static draw = function(_x, _y, _w, _h, _val, _m = mouse_ui, _rx = 0, _ry = 0) { #region
 		x = _x;
 		y = _y;
 		open_rx = _rx;
@@ -100,15 +102,21 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		var _arw = sprite_get_width(arrow_spr) + ui(8);
 		var _spr = is_instanceof(_selVal, scrollItem) && _selVal.spr;
 		
+		var _x0  = _x;
+		var _x1  = _x + w - _arw;
+		var _yc = _y + _h / 2;
+		
+		if(_spr) _x0 += ui(32);
+		
 		draw_set_text(font, align, fa_center, COLORS._main_text);
 		draw_set_alpha(0.5 + 0.5 * interactable);
-				 if(align == fa_center) draw_text_add(_x + (w - _arw) / 2,    _y + _h / 2, _text);
-			else if(align == fa_left)   draw_text_add(_x + ui(8) + _spr * _h, _y + _h / 2, _text);
+				 if(align == fa_center) draw_text_add((_x0 + _x1) / 2, _yc, _text);
+			else if(align == fa_left)   draw_text_add(_x0 + ui(8),     _yc, _text);
 		draw_set_alpha(1);
 		
-		if(_spr) draw_sprite_ext(_selVal.spr, 0, _x + ui(8) + _h / 2, _y + _h / 2, 1, 1, 0, _selVal.spr_blend, 1);
+		if(_spr) draw_sprite_ext(_selVal.spr, _selVal.spr_ind, _x + ui(16), _yc, 1, 1, 0, _selVal.spr_blend, 1);
 		
-		draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x + w - _arw / 2, _y + _h / 2, 1, COLORS._main_icon, 0.5 + 0.5 * interactable);
+		draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, 1, COLORS._main_icon, 0.5 + 0.5 * interactable);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	
@@ -116,5 +124,5 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
 }

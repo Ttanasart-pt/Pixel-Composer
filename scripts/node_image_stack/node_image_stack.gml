@@ -2,7 +2,9 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Stack";
 	
 	inputs[| 0] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical", "On top" ])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+												 new scrollItem("Vertical",   s_node_alignment, 1), 
+												 new scrollItem("On top",     s_node_alignment, 3), ])
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Align", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)

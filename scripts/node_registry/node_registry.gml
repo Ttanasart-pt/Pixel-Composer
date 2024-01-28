@@ -468,16 +468,16 @@ function __initNodes() {
 		addNodeObject(transform, "Scale Algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		[0, Node_create_Scale_Algo], ["scale2x", "scale3x"], "Scale image using scale2x, scale3x algorithm.");
 		addNodeObject(transform, "Flip",			s_node_flip,			"Node_Flip",			[1, Node_Flip], ["mirror"], "Flip image horizontally or vertically.");
 		addNodeObject(transform, "Offset",			s_node_offset,			"Node_Offset",			[1, Node_Offset],, "Shift image with tiling.");
-			
+		
 		ds_list_add(transform, "Warps");
 		addNodeObject(transform, "Crop",			 s_node_crop,			"Node_Crop",			 [1, Node_Crop],, "Crop out image to create smaller ones.");
 		addNodeObject(transform, "Crop Content",	 s_node_crop_content,	"Node_Crop_Content",	 [1, Node_Crop_Content],, "Crop out empty pixel pixel from the image.");
 		addNodeObject(transform, "Warp",			 s_node_warp,			"Node_Warp",			 [1, Node_Warp], ["wrap"], "Warp image by freely moving the corners.");
-		addNodeObject(transform, "Skew",			 s_node_skew,			"Node_Skew",			 [1, Node_Skew],, "Skew image horizontally, or vertically.");
+		addNodeObject(transform, "Skew",			 s_node_skew,			"Node_Skew",			 [1, Node_Skew], ["shear"], "Skew image horizontally, or vertically.");
 		addNodeObject(transform, "Mesh Warp",		 s_node_warp_mesh,		"Node_Mesh_Warp",		 [1, Node_Mesh_Warp], ["mesh wrap"], "Wrap image by converting it to mesh, and using control points.");
 		addNodeObject(transform, "Polar",			 s_node_polar,			"Node_Polar",			 [1, Node_Polar],, "Convert image to polar coordinate.");
 		addNodeObject(transform, "Area Warp",		 s_node_padding,		"Node_Wrap_Area",		 [1, Node_Wrap_Area],, "Wrap image to fit area value (x, y, w, h).");
-			
+		
 		ds_list_add(transform, "Others");
 		addNodeObject(transform, "Composite",		s_node_compose,			"Node_Composite",		[1, Node_Composite], ["merge"], "Combine multiple images with controllable position, rotation, scale.");
 		addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9 slice", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");

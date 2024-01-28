@@ -2,7 +2,8 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Image Grid";
 	
 	inputs[| 0] = nodeValue("Main Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical" ])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+												 new scrollItem("Vertical",   s_node_alignment, 1) ])
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)

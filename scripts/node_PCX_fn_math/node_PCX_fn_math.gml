@@ -2,8 +2,11 @@ function Node_PCX_fn_Math(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) con
 	name = "Math";
 	
 	inputs[| 0] = nodeValue("Operator", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Add", "Subtract", "Multiply", "Divide", "Power", "Modulo", "Absolute", -1, "Round", "Floor", "Ceil",
-												 -1, "Sin", "Cos", "Tan", "Arcsin", "Arccos", "Arctan", -1, "Min", "Max", "Clamp", -1, "Lerp" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Add",   "Subtract", "Multiply", "Divide", "Power",  "Modulo", "Absolute", -1, 
+												 "Round", "Floor",    "Ceil",      -1, 
+												 "Sin",   "Cos",      "Tan",      "Arcsin", "Arccos", "Arctan", -1, 
+												 "Min",   "Max",      "Clamp",    -1, 
+												 "Lerp" ]);
 	
 	inputs[| 1] = nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
 	

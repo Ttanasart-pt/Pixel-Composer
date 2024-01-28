@@ -29,7 +29,12 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	w = 96;
 	
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Equal", "Not equal", "Greater", "Greater or equal", "Lesser", "Lesser or equal" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Equal",			s_node_condition_type, 0), 
+												 new scrollItem("Not equal",		s_node_condition_type, 1), 
+												 new scrollItem("Greater ",			s_node_condition_type, 4), 
+												 new scrollItem("Greater or equal", s_node_condition_type, 5), 
+												 new scrollItem("Lesser",			s_node_condition_type, 2), 
+												 new scrollItem("Lesser or equal",	s_node_condition_type, 3), ]);
 	
 	inputs[| 1] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
