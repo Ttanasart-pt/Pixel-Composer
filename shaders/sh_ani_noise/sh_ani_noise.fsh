@@ -1,11 +1,9 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform float seed;
 uniform vec2  position;
+uniform int   mode;
 
 uniform vec2      noiseX;
 uniform int       noiseXUseSurf;
@@ -19,7 +17,7 @@ uniform vec2      angle;
 uniform int       angleUseSurf;
 uniform sampler2D angleSurf;
 
-float random1D (in vec2 st, float _seed) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(_seed, 32.156) * 12.588) * 43758.5453123); }
+float random1D (in vec2 st, float _seed) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(_seed + 453.456, 32.156) * 12.588) * 43758.5453123); }
 
 float random (in vec2 st) { return mix(random1D(st, floor(seed)), random1D(st, floor(seed) + 1.), fract(seed)); }
 
@@ -45,17 +43,21 @@ void main() {
 		ang = radians(ang);
 	#endregion
 	
-	vec2 pos = v_vTexcoord - position, _pos;
-	_pos.x = pos.x * cos(ang) - pos.y * sin(ang);
-	_pos.y = pos.x * sin(ang) + pos.y * cos(ang);
+	vec2 pos = (v_vTexcoord - position) * mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	
-	float yy = floor(_pos.y * nsy);
-	float xx = (_pos.x + random1D(vec2(yy), floor(seed))) * nsx;
-	float x0 = floor(xx);
-	float x1 = floor(xx) + 1.;
+	float yy = floor(pos.y * nsy);
+	float xx = (pos.x + random1D(vec2(yy), floor(seed))) * nsx;
 	
-	float noise0 = random(vec2(x0, yy));
-	float noise1 = random(vec2(x1, yy));
+	float x0   = floor(xx);
+	float x1   = floor(xx) + 1.;
+	float prog = xx - x0;
 	
-    gl_FragColor = vec4(vec3(mix(noise0, noise1, (xx - x0) / (x1 - x0))), 1.);
+	if(mode == 0) {
+		float noise0 = random(vec2(x0, yy));  // point before
+		float noise1 = random(vec2(x1, yy));  // point after
+		
+	    gl_FragColor = vec4(vec3(mix(noise0, noise1, prog)), 1.);
+	} else if(mode == 1) {
+		gl_FragColor = vec4(vec3(prog), 1.);
+	}
 }

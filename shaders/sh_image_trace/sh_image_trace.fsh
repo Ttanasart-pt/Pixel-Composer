@@ -9,8 +9,8 @@ bool sample(float x, float y) {
 	vec2 pos = v_vTexcoord + vec2(tx.x * x, tx.y * y);
 	if(pos.x < 0. || pos.y < 0. || pos.x > 1. || pos.y > 1.) return false;
 	
-	float c = texture2D( gm_BaseTexture, pos ).r;
-	return c > 0.;
+	vec4 c = texture2D( gm_BaseTexture, pos );
+	return (c.r + c.g + c.b) * c.a > 0.;
 }
 
 void main() {

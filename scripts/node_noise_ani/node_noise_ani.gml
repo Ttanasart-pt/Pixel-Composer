@@ -30,9 +30,13 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 9] = nodeValue("Render mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Blend", "Waterfall" ] )
+		
 	input_display_list = [
 		["Output",	false], 0, 
-		["Noise",	false], 2, 1, 6, 5, 7, 3, 4, 8
+		["Noise",	false], 2, 1, 6, 5, 7, 3, 4, 8, 
+		["Render",	false], 9, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -62,6 +66,8 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_f_map("noiseX",  _data[1], _data[6], inputs[| 1]);
 			shader_set_f_map("noiseY",  _data[5], _data[7], inputs[| 5]);
 			shader_set_f_map("angle",	_data[4], _data[8], inputs[| 4]);
+			
+			shader_set_i("mode",		_data[9]);
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();

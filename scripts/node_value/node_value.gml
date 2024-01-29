@@ -1017,7 +1017,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						}, unit);
 						
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
-						if(struct_has(display_data, "onSurfaceSize")) editWidget.onSurfaceSize = display_data.onSurfaceSize;
+						
+						if(struct_has(display_data, "onSurfaceSize")) 
+							editWidget.onSurfaceSize = display_data.onSurfaceSize;
+						else 
+							display_data.onSurfaceSize = noone;
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i, "");

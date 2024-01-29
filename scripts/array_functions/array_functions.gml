@@ -269,3 +269,21 @@ function array_verify(arr, length) { #region
 	array_resize(arr, length);
 	return arr;
 } #endregion
+	
+function array_insert_after(arr, before, values) { #region
+	INLINE
+	
+	var _ind = array_find(arr, before) + 1;
+	
+	for( var i = 0, n = array_length(values); i < n; i++ )
+		array_insert(arr, _ind + i, values[i]);
+} #endregion
+	
+function array_insert_before(arr, before, values) { #region
+	INLINE
+	
+	var _ind = array_find(arr, before);
+	
+	for( var i = 0, n = array_length(values); i < n; i++ )
+		array_insert(arr, _ind + i, values[i]);
+} #endregion

@@ -12,7 +12,17 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Round position to the closest integer value to avoid jittering.")
 		.rejectArray();
 	
-	input_display_list = [ 0, 1 ];
+	inputs[| 2] = nodeValue("Render Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, PARTICLE_RENDER_TYPE.surface )
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Surface", "Line" ])
+		.rejectArray();
+	
+	inputs[| 3] = nodeValue("Line life", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 )
+		.rejectArray();
+		
+	input_display_list = [ 
+		["Output",    false], 0, 
+		["Rendering", false], 1, 2, 3, 
+	];
 	
 	setIsDynamicInput(2);
 	
@@ -43,10 +53,11 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _l    = ds_list_create();
 		var _disp = [];
 		
-		for( var i = 0; i < input_fix_len ; i ++ ) {
+		for( var i = 0; i < input_display_len; i++ )
+			array_push(_disp, input_display_list[i]);
+		
+		for( var i = 0; i < input_fix_len; i++ )
 			ds_list_add(_l, inputs[| i]);
-			array_push(_disp, i);
-		}
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			if(!inputs[| i + 1].value_from) continue;
@@ -75,9 +86,12 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static step = function() { #region
-		var _dim		= getInputData(0);
-		var _outSurf	= outputs[| 0].getValue();
+		var _dim = getInputData(0);
+		var _typ = getInputData(2);
 		
+		inputs[| 3].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
+		
+		var _outSurf = outputs[| 0].getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
@@ -91,18 +105,21 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			return;
 		}
 		
-		var _dim	= inputs[| 0].getValue(_time);
-		var _exact 	= inputs[| 1].getValue(_time);
+		var _dim   = inputs[| 0].getValue(_time);
+		var _exact = inputs[| 1].getValue(_time);
+		var _type  = inputs[| 2].getValue(_time);
+		var _llife = inputs[| 3].getValue(_time);
 		
-		var _outSurf	= outputs[| 0].getValue();
-		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		var _outSurf = outputs[| 0].getValue();
+		    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
-		surface_set_shader(_outSurf);
-		shader_set_interpolation(_outSurf);
-			var surf_w = surface_get_width_safe(_outSurf);
-			var surf_h = surface_get_height_safe(_outSurf);
+		var surf_w = surface_get_width_safe(_outSurf);
+		var surf_h = surface_get_height_safe(_outSurf);
+			
+		surface_set_shader(_outSurf, _type == PARTICLE_RENDER_TYPE.surface? sh_sample : noone);
+		if(_type == PARTICLE_RENDER_TYPE.surface)
+			shader_set_interpolation(_outSurf);
 			
 			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 				var blend = inputs[| i + 0].getValue(_time);
@@ -119,9 +136,11 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				for(var j = 0; j < array_length(parts); j++)
 				for(var k = 0; k < array_length(parts[j]); k++) {
-					if(!parts[j][k].active) continue;
-					parts[j][k].draw(_exact, surf_w, surf_h);
-					//if(shader_current() != sh_sample) __shader_set = false;
+					parts[j][k].render_type = _type;
+					parts[j][k].line_draw   = _llife;
+					
+					if(parts[j][k].active || _type) 
+						parts[j][k].draw(_exact, surf_w, surf_h);
 				}
 			}
 			

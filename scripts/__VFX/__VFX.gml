@@ -10,14 +10,23 @@ enum PARTICLE_BLEND_MODE {
 	additive
 }
 
+enum PARTICLE_RENDER_TYPE {	
+	surface,
+	line,
+}
+
 function __part(_node) constructor {
 	seed    = irandom(99999);
 	node    = _node;
 	active  = false;
 	
-	surf     = noone;
-	arr_type = 0;
+	/////////////////////// Lifespans /////////////////////// 
+	life       = 0;
+	life_total = 0;
+	life_incr  = 0;
+	step_int   = 0;
 	
+	/////////////////////// Transforms /////////////////////// 
 	prevx   = 0;
 	prevy   = 0;
 	x       = 0;
@@ -29,12 +38,6 @@ function __part(_node) constructor {
 	
 	x_history = [];
 	y_history = [];
-	
-	drawx   = 0;
-	drawy   = 0;
-	drawrot = 0;
-	drawsx  = 0;
-	drawsy  = 0;
 	
 	accel   = 0;
 	spVec   = [ 0, 0 ];
@@ -48,11 +51,31 @@ function __part(_node) constructor {
 	scy   = 1;
 	sc_sx = 1;
 	sc_sy = 1;
-	sct   = CURVE_DEF_11;
+	sct   = noone;
+	
+	scx_history = [];
+	scy_history = [];
 	
 	rot		= 0;
 	follow	= false;
 	rot_s	= 0;
+	
+	path      = noone;
+	pathIndex = 0;
+	pathPos   = new __vec2();
+	pathDiv   = noone;
+	
+	/////////////////////// Render /////////////////////// 
+	render_type = PARTICLE_RENDER_TYPE.surface;
+	
+	surf     = noone;
+	arr_type = 0;
+	
+	drawx   = 0;
+	drawy   = 0;
+	drawrot = 0;
+	drawsx  = 0;
+	drawsy  = 0;
 	
 	col      = -1;
 	blend	 = c_white;
@@ -60,14 +83,15 @@ function __part(_node) constructor {
 	alp_draw = alp;
 	alp_fade = 0;
 	
-	life       = 0;
-	life_total = 0;
-	life_incr  = 0;
-	step_int   = 0;
+	blend_history = [];
+	alp_history   = [];
 	
 	anim_speed = 1;
 	anim_end   = ANIM_END_ACTION.loop;
 	
+	line_draw = 1;
+	
+	/////////////////////// Physics /////////////////////// 
 	ground			= false;
 	ground_y		= 0;
 	ground_bounce	= 0;
@@ -77,11 +101,6 @@ function __part(_node) constructor {
 	trailActive = false;
 	
 	frame = 0;
-	
-	path      = noone;
-	pathIndex = 0;
-	pathPos   = new __vec2();
-	pathDiv   = noone;
 	
 	static reset = function() { #region
 		INLINE
@@ -95,10 +114,10 @@ function __part(_node) constructor {
 	static create = function(_surf, _x, _y, _life) { #region
 		INLINE
 		
-		active	= true;
-		surf	= _surf;
-		x	= _x;
-		y	= _y;
+		active = true;
+		surf   = _surf;
+		x	   = _x;
+		y	   = _y;
 		
 		drawx = x;
 		drawy = y;
@@ -108,9 +127,13 @@ function __part(_node) constructor {
 		life_total = life;
 		if(node.onPartCreate != noone) node.onPartCreate(self);
 		
-		trailLife   = 0;
-		x_history   = array_create(life);
-		y_history   = array_create(life);
+		trailLife     = 0;
+		x_history     = array_create(life);
+		y_history     = array_create(life);
+		scx_history   = array_create(life);
+		scy_history   = array_create(life);
+		blend_history = array_create(life);
+		alp_history   = array_create(life);
 	} #endregion
 	
 	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _turn, _turnSpd) { #region
@@ -190,7 +213,6 @@ function __part(_node) constructor {
 	
 	static step = function(frame = 0) { #region
 		INLINE
-		//if(life_total > 0) print($"Step {seed}: {trailLife}");
 		trailLife++;
 		
 		if(!active) return;
@@ -264,6 +286,14 @@ function __part(_node) constructor {
 	static draw = function(exact, surf_w, surf_h) { #region
 		INLINE
 		
+		if(render_type == PARTICLE_RENDER_TYPE.line) {
+			var _trail_ed  = min(life_incr, life_total);
+			var _trail_st  = max(0, trailLife - line_draw);
+			var _trail_len = _trail_ed - _trail_st;
+				
+			if(_trail_len <= 0) return;
+		}
+		
 		var ss = surf;
 		
 		var lifeRat = 1 - life / life_total;
@@ -305,6 +335,9 @@ function __part(_node) constructor {
 			scy = 1;
 		}
 		
+		scx_history[life_incr - 1]   = scx;
+		scy_history[life_incr - 1]   = scy;
+		
 		var _xx, _yy;
 		var s_w = (_useS? surface_get_width(surface)  : 1) * scx;
 		var s_h = (_useS? surface_get_height(surface) : 1) * scy;
@@ -331,29 +364,68 @@ function __part(_node) constructor {
 		var x1 = _xx + s_w * 1.5;
 		var y1 = _yy + s_h * 1.5;
 		
-		if(_useS && (x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0))
-			return;
-		
 		var cc = (col == -1)? c_white : col.eval(lifeRat);
 		if(blend != c_white) cc = colorMultiply(blend, cc);
 		alp_draw = alp * (alp_fade == noone? 1 : alp_fade.get(lifeRat)) * _color_get_alpha(cc);
 		
-		if(_useS) draw_surface_ext(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
-		else {
-			var ss = round(min(scx, scy));
-			if(round(ss) == 0) return;
-			
-			var _s = shader_current();
-			shader_reset();
-			
-			draw_set_color(cc);
-			draw_set_alpha(alp_draw);
-			
-			dynaSurf_circle_fill(_xx, _yy, exact? round(ss) : ss);
-			
-			draw_set_alpha(1);
-			
-			shader_set(_s);
+		blend_history[life_incr - 1] = cc;
+		alp_history[life_incr - 1]   = alp_draw;
+		
+		if(_useS && (x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0))
+			return;
+		
+		switch(render_type) {
+			case PARTICLE_RENDER_TYPE.surface : 
+				if(_useS) draw_surface_ext(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
+				else {
+					var ss = round(min(scx, scy));
+					if(round(ss) == 0) return;
+					
+					var _s = shader_current();
+					shader_reset();
+						
+						draw_set_color(cc);
+						draw_set_alpha(alp_draw);
+						dynaSurf_circle_fill(_xx, _yy, exact? round(ss) : ss);
+						draw_set_alpha(1);
+					
+					shader_set(_s);
+				}
+				break;
+				
+			case PARTICLE_RENDER_TYPE.line : 
+				var  _ox,  _nx,  _oy,  _ny;
+				var _osx, _nsx, _osy, _nsy;
+				var  _oc,  _nc,  _oa,  _na;
+				
+				for( var j = 0; j < _trail_len; j++ ) {
+					var _index = _trail_st + j;
+					
+					_nx  = x_history[    _index];
+					_ny  = y_history[    _index];
+					_nsx = scx_history[  _index];
+					_nsy = scy_history[  _index];
+					_nc  = blend_history[_index];
+					_na  = alp_history[  _index];
+					
+					if(j) {
+						draw_set_color(_nc);
+						draw_set_alpha(_na);
+						if(_osx == 1 && _nsx == 1) draw_line(_ox, _oy, _nx, _ny);
+						else if(_osx == _nsx)      draw_line_width(_ox, _oy, _nx, _ny, _osx);
+						else                       draw_line_width2(_ox, _oy, _nx, _ny, _osx, _nsx, false);
+						draw_set_alpha(1);
+					}
+					
+					_ox  = _nx ;
+					_oy  = _ny ;
+					_osx = _nsx;
+					_osy = _nsy;
+					_oc  = _nc ;
+					_oa  = _na ;
+				}
+				
+				break;
 		}
 	} #endregion
 	

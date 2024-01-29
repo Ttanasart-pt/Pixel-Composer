@@ -129,6 +129,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	surface_valid_map = ds_map_create();
 	
 	scatter_data = [];
+	scatter_map  = noone;
+	scatter_mapa = 0;
+	scatter_maps = 0;
+	scatter_mapp = [];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _distType = current_data[6];
@@ -279,7 +283,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			if(_dist == NODE_SCATTER_DIST.map) {
 				if(!is_surface(_distMap))
 					return _outSurf;
-				_posDist = get_points_from_dist(_distMap, seed, _amount);
+				
+				if(scatter_map != _distMap || scatter_maps != seed || scatter_mapa != _amount)
+					scatter_mapp = get_points_from_dist(_distMap, _amount, seed);
+				
+				scatter_map  = _distMap;
+				scatter_maps = seed;
+				scatter_mapa = _amount;
+				
+				_posDist = scatter_mapp;
 			}
 			
 			if(_dist == NODE_SCATTER_DIST.area) { // Area

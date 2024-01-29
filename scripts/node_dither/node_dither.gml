@@ -60,6 +60,14 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		var _type = getInputData(2);
+		var _mode = getInputData(6);
+		
+		inputs[| 3].setVisible(_type == 3, _type == 3);
+		inputs[| 1].setVisible(_mode == 0);
+		inputs[| 4].setVisible(_mode == 0);
+		inputs[| 5].setVisible(_mode == 0);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -70,65 +78,41 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _conMap = _data[5];
 		var _mode   = _data[6];
 		
-		var _colors = paletteToArray(_pal);
-		
-		shader = _mode? sh_alpha_hash : sh_dither;
-		uniform_dither_size	= shader_get_uniform(shader, "ditherSize");
-		uniform_dither     	= shader_get_uniform(shader, "dither");
-	
-		uniform_dim		    = shader_get_uniform(shader, "dimension");
-		uniform_color	    = shader_get_uniform(shader, "palette");
-		uniform_key		    = shader_get_uniform(shader, "keys");
-	
-		uniform_constrast	= shader_get_uniform(shader, "contrast");
-		uniform_con_map_use = shader_get_uniform(shader, "useConMap");
-		uniform_con_map		= shader_get_sampler_index(shader, "conMap");
-		
-		uniform_map_use     = shader_get_uniform(shader, "useMap");
-		uniform_map		    = shader_get_sampler_index(shader, "map");
-		uniform_map_dim     = shader_get_uniform(shader, "mapDimension");
-		
-		inputs[| 3].setVisible(_typ == 3);
-		
-		inputs[| 1].setVisible(_mode == 0);
-		inputs[| 4].setVisible(_mode == 0);
-		inputs[| 5].setVisible(_mode == 0);
-		
-		surface_set_shader(_outSurf, shader);
-			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ] );
+		surface_set_shader(_outSurf, _mode? sh_alpha_hash : sh_dither);
+			shader_set_f("dimension", surface_get_dimension(_data[0]));
 			
 			switch(_typ) {
 				case 0 :
-					shader_set_uniform_i(uniform_map_use, 0);
-					shader_set_uniform_f(uniform_dither_size, 2);
-					shader_set_uniform_f_array_safe(uniform_dither, dither2);
+					shader_set_i("useMap",		0);
+					shader_set_f("ditherSize",	2);
+					shader_set_f("dither",		dither2);
 					break;
 				case 1 :
-					shader_set_uniform_i(uniform_map_use, 0);
-					shader_set_uniform_f(uniform_dither_size, 4);
-					shader_set_uniform_f_array_safe(uniform_dither, dither4);
+					shader_set_i("useMap",		0);
+					shader_set_f("ditherSize",	4);
+					shader_set_f("dither",		dither4);
 					break;
 				case 2 :
-					shader_set_uniform_i(uniform_map_use, 0);
-					shader_set_uniform_f(uniform_dither_size, 8);
-					shader_set_uniform_f_array_safe(uniform_dither, dither8);
+					shader_set_i("useMap",		0);
+					shader_set_f("ditherSize",	8);
+					shader_set_f("dither",		dither8);
 					break;
 				case 3 :
 					if(is_surface(_map)) {
-						shader_set_uniform_i(uniform_map_use, 1);
-						shader_set_uniform_f_array_safe(uniform_map_dim, [ surface_get_width_safe(_map), surface_get_height_safe(_map) ]);
-						texture_set_stage(uniform_map, surface_get_texture(_map));
+						shader_set_i("useMap",		 1);
+						shader_set_f("mapDimension", surface_get_dimension(_map));
+						shader_set_surface("map",	 _map);
 					}
 					break;
 			}
 				
 			if(_mode == 0) {
-				shader_set_uniform_i(uniform_con_map_use, _conMap == DEF_SURFACE? 0 : 1);
-				texture_set_stage(uniform_con_map, surface_get_texture(_conMap));
-				shader_set_uniform_f(uniform_constrast, _con);
-			
-				shader_set_uniform_f_array_safe(uniform_color, _colors);
-				shader_set_uniform_i(uniform_key, array_length(_pal));
+				shader_set_f("contrast",     _con);
+				shader_set_i("useConMap",    _conMap != DEF_SURFACE);
+				shader_set_surface("conMap", surface_get_texture(_conMap));
+				
+				shader_set_f("palette",		 paletteToArray(_pal));
+				shader_set_i("keys",		 array_length(_pal));
 			}
 			
 			draw_surface_safe(_data[0]);

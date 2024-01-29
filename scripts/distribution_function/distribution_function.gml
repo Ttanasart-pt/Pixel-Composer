@@ -1,4 +1,4 @@
-function get_point_from_dist(distMap, attempt = 4) {
+function get_point_from_dist(distMap, attempt = 4) { #region
 	if(!is_surface(distMap)) return noone;
 	
 	var w = surface_get_width_safe(distMap);
@@ -20,38 +20,40 @@ function get_point_from_dist(distMap, attempt = 4) {
 	}
 	
 	return res;
-}
+} #endregion
 
-function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
+function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) { #region
 	if(amount < 1) return [];
 	if(!is_surface(distMap)) return [];
 	
-	var surf = surface_create_valid(amount, 1);
+	//print($"===== Get points from dist {amount} =====");
 	
-	surface_set_target(surf);
-	DRAW_CLEAR
-	BLEND_OVERRIDE;
-		shader_set(sh_sample_points);
-		shader_set_uniform_f(shader_get_uniform(sh_sample_points, "dimension"), 
-			surface_get_width_safe(distMap) / amount, surface_get_height_safe(distMap));
-		shader_set_uniform_i(shader_get_uniform(sh_sample_points, "attempt"), attempt);
-		shader_set_uniform_f(shader_get_uniform(sh_sample_points, "seed"), seed);
+	if(!struct_has(self, "__dist_surf"))
+		__dist_surf = surface_create_valid(amount, 1);
+	else 
+		__dist_surf = surface_verify(__dist_surf, amount, 1);
+	
+	var _sw = surface_get_width_safe(distMap);
+	var _sh = surface_get_height_safe(distMap);
+	
+	surface_set_shader(__dist_surf, sh_sample_points);
+		shader_set_f("dimension", _sw / amount, _sh);
+		shader_set_i("attempt",   attempt);
+		shader_set_f("seed",      seed);
 		
-			draw_surface_stretched_safe(distMap, 0, 0, amount, 1);
-		shader_reset();
-	BLEND_NORMAL;
-	surface_reset_target();
+		draw_surface_stretched_safe(distMap, 0, 0, amount, 1);
+	surface_reset_shader();
 	
 	var b = buffer_create(amount * 4, buffer_fixed, 4);
-	buffer_get_surface(b, surf, 0);
+	buffer_get_surface(b, __dist_surf, 0);
 	buffer_seek(b, buffer_seek_start, 0);
 	
 	var pos = array_create(amount);
-	var w = surface_get_width_safe(distMap);
-	var h = surface_get_height_safe(distMap);
 	
 	for( var i = 0; i < amount; i++ ) {
+		//print($"    Reading buffer {i}");
 		var cc = buffer_read(b, buffer_u32);
+		
 		if(cc == 0) pos[i] = 0;
 		else {
 			var _x = _color_get_red(cc);
@@ -62,7 +64,6 @@ function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
 	}
 	
 	buffer_delete(b);
-	surface_free(surf);
 	
 	return pos;
-}
+} #endregion

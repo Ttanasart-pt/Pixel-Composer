@@ -86,7 +86,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		draw_padding = 4;
 		auto_height  = true;
 		
-		display_parameter = {};
+		display_parameter = new connectionParameter();
 		
 		draw_name = true;
 		draggable = true;

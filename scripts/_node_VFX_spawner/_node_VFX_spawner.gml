@@ -172,7 +172,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Scale",		true],	10, 17, 11, 
 		["Wiggles",		true],	20, 41, 42, 43, 
 		["Color",		true],	12, 28, 13, 14, 
-		["Render",		true],	21
+		["Render",		true],	21, 
 	];
 	
 	attributes.part_amount = 512;
