@@ -46,10 +46,11 @@ function Panel_Preview() : PanelContent() constructor {
 	#endregion
 	
 	#region ---- preview ----
-		preview_node	= [ noone, noone ];
-		preview_surface = [ 0, 0 ];
-		tile_surface    = surface_create(1, 1);
-	
+		preview_node	 = [ noone, noone ];
+		preview_surfaces = [ 0, 0 ];
+		preview_surface  = [ 0, 0 ];
+		tile_surface     = surface_create(1, 1);
+		
 		preview_x		= 0;
 		preview_x_to	= 0;
 		preview_x_max	= 0;
@@ -301,11 +302,11 @@ function Panel_Preview() : PanelContent() constructor {
 	function resetNodePreview() { preview_node = [ noone, noone ]; }
 	
 	function getNodePreview()			{ return preview_node[splitView? splitSelection : 0]; }
-	function getNodePreviewSurface()	{ return preview_surface[splitView? splitSelection : 0]; }
+	function getNodePreviewSurface()	{ return preview_surfaces[splitView? splitSelection : 0]; }
 	function getNodePreviewSequence()	{ return preview_sequence[splitView? splitSelection : 0]; }
 	
 	function getPreviewData() { #region
-		preview_surface  = [ noone, noone ];
+		preview_surfaces  = [ noone, noone ];
 		preview_sequence = [ noone, noone ];
 		
 		for( var i = 0; i < 2; i++ ) {
@@ -323,13 +324,13 @@ function Panel_Preview() : PanelContent() constructor {
 				preview_sequence[i] = value;
 				canvas_a = array_length(value);
 			} else {
-				preview_surface[i] = value;
+				preview_surfaces[i] = value;
 				canvas_a = 0;
 			}
 			
 			if(preview_sequence[i] != noone) {
 				if(array_length(preview_sequence[i]) == 0) return;
-				preview_surface[i] = preview_sequence[i][safe_mod(node.preview_index, array_length(preview_sequence[i]))];
+				preview_surfaces[i] = preview_sequence[i][safe_mod(node.preview_index, array_length(preview_sequence[i]))];
 			}
 		}
 		
@@ -555,7 +556,7 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function drawOnionSkin(node, psx, psy, ss) { #region
-		var _surf = preview_surface[0];
+		var _surf = preview_surfaces[0];
 		var _rang = PROJECT.onion_skin.range;
 		
 		var _alph = PROJECT.onion_skin.alpha;
@@ -599,12 +600,12 @@ function Panel_Preview() : PanelContent() constructor {
 		var ssx = 0, ssy = 0;
 		var ssw = 0, ssh = 0;
 		
-		if(is_surface(preview_surface[0])) {
+		if(is_surface(preview_surfaces[0])) {
 			psx = canvas_x + preview_node[0].preview_x * ss;
 			psy = canvas_y + preview_node[0].preview_y * ss;
 			
-			psw = surface_get_width_safe(preview_surface[0]);
-			psh = surface_get_height_safe(preview_surface[0]);
+			psw = surface_get_width_safe(preview_surfaces[0]);
+			psh = surface_get_height_safe(preview_surfaces[0]);
 			pswd = psw * ss;
 			pshd = psh * ss;
 			
@@ -612,99 +613,131 @@ function Panel_Preview() : PanelContent() constructor {
 			psy1 = psy + pshd;	
 		}
 		
-		if(is_surface(preview_surface[1])) {
+		if(is_surface(preview_surfaces[1])) {
 			var ssx = canvas_x + preview_node[1].preview_x * ss;
 			var ssy = canvas_y + preview_node[1].preview_y * ss;
 			
-			var ssw = surface_get_width_safe(preview_surface[1]);
-			var ssh = surface_get_height_safe(preview_surface[1]);
+			var ssw = surface_get_width_safe(preview_surfaces[1]);
+			var ssh = surface_get_height_safe(preview_surfaces[1]);
 		}
 		
 		var _node = getNodePreview();
 		if(_node) title = _node.renamed? _node.display_name : _node.name;
 		
-		if(splitView == 0 && tileMode == 0) {
-			var node = preview_node[0];
-			if(is_surface(preview_surface[0])) {
-				node.previewing = 1;
-				var aa = node.preview_alpha;
+		#region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Draw Surfaces <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			var _ps0 = is_surface(preview_surfaces[0]);
+			var _ps1 = is_surface(preview_surfaces[1]);
 			
-				if(PROJECT.onion_skin.enabled) drawOnionSkin(node, psx, psy, ss); 
-				else                           draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, aa); 
+			if(_ps0) {
+				var _sw = surface_get_width(preview_surfaces[0]);
+				var _sh = surface_get_height(preview_surfaces[0]);
+				
+				preview_surface[0] = surface_verify(preview_surface[0], _sw, _sh);
+				
+				surface_set_shader(preview_surface[0], PROJECT.attributes.palette_fix? sh_posterize_palette : sh_sample);
+					shader_set_f("palette", PROJECT.palettes);
+					shader_set_i("keys",    array_length(PROJECT.attributes.palette));
+					shader_set_i("alpha",   1);
+					
+					draw_surface(preview_surfaces[0], 0, 0);
+				surface_reset_shader();
 			}
-		}
-		
-		switch(splitView) { #region draw surfaces
-			case 0 :
-				if(is_surface(preview_surface[0])) {
-					preview_node[0].previewing = 1;
+				
+			if(_ps1) {
+				var _sw = surface_get_width(preview_surfaces[1]);
+				var _sh = surface_get_height(preview_surfaces[1]);
+				
+				preview_surface[1] = surface_verify(preview_surface[1], _sw, _sh);
+				
+				surface_set_shader(preview_surface[1], PROJECT.attributes.palette_fix? sh_posterize_palette : sh_sample);
+					shader_set_f("palette", PROJECT.palettes);
+					shader_set_i("keys",    array_length(PROJECT.attributes.palette));
+					shader_set_i("alpha",   1);
 					
-					switch(tileMode) {
-						case 1 : 
-							tile_surface = surface_verify(tile_surface, w, surface_get_height_safe(preview_surface[0]) * ss);
-							surface_set_target(tile_surface);
-								DRAW_CLEAR
-								draw_surface_tiled_ext_safe(preview_surface[0], psx, 0, ss, ss, 0, c_white, 1); 
-							surface_reset_target();
-							draw_surface_safe(tile_surface, 0, psy);
-							break;
-						case 2 : 
-							tile_surface = surface_verify(tile_surface, surface_get_width_safe(preview_surface[0]) * ss, h);
-							surface_set_target(tile_surface);
-								DRAW_CLEAR
-								draw_surface_tiled_ext_safe(preview_surface[0], 0, psy, ss, ss, 0, c_white, 1); 
-							surface_reset_target();
-							draw_surface_safe(tile_surface, psx, 0);
-							break;
-						case 3 : draw_surface_tiled_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
+					draw_surface(preview_surfaces[1], 0, 0);
+				surface_reset_shader();
+			}
+			
+			switch(splitView) {
+				case 0 :
+					if(_ps0) {
+						preview_node[0].previewing = 1;
+						
+						switch(tileMode) {
+							case 0 :
+								if(PROJECT.onion_skin.enabled) drawOnionSkin(node, psx, psy, ss); 
+								else                           draw_surface_ext(preview_surface[0], psx, psy, ss, ss, 0, c_white, preview_node[0].preview_alpha); 
+								break;
+								
+							case 1 : 
+								tile_surface = surface_verify(tile_surface, w, surface_get_height_safe(preview_surface[0]) * ss);
+								surface_set_target(tile_surface);
+									DRAW_CLEAR
+									draw_surface_tiled_ext_safe(preview_surface[0], psx, 0, ss, ss, 0, c_white, 1); 
+								surface_reset_target();
+								draw_surface_safe(tile_surface, 0, psy);
+								break;
+								
+							case 2 : 
+								tile_surface = surface_verify(tile_surface, surface_get_width_safe(preview_surface[0]) * ss, h);
+								surface_set_target(tile_surface);
+									DRAW_CLEAR
+									draw_surface_tiled_ext_safe(preview_surface[0], 0, psy, ss, ss, 0, c_white, 1); 
+								surface_reset_target();
+								draw_surface_safe(tile_surface, psx, 0);
+								break;
+								
+							case 3 : 
+								draw_surface_tiled_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
+						}
 					}
-				}
-				break;
-			case 1 :
-				var sp = splitPosition * w;
+					break;
+				case 1 :
+					var sp = splitPosition * w;
 				
-				if(is_surface(preview_surface[0])) {
-					preview_node[0].previewing = 2;
-					var maxX = min(sp, psx1);
-					var sW = min(psw, (maxX - psx) / ss);
+					if(_ps0) {
+						preview_node[0].previewing = 2;
+						var maxX = min(sp, psx1);
+						var sW   = min(psw, (maxX - psx) / ss);
 					
-					if(sW > 0)
-						draw_surface_part_ext_safe(preview_surface[0], 0, 0, sW, psh, psx, psy, ss, ss, 0, c_white, 1);
-				}
+						if(sW > 0)
+							draw_surface_part_ext_safe(preview_surface[0], 0, 0, sW, psh, psx, psy, ss, ss, 0, c_white, 1);
+					}
 				
-				if(is_surface(preview_surface[1])) {
-					preview_node[1].previewing = 3;
-					var minX = max(ssx, sp);
-					var sX = (minX - ssx) / ss;
-					var spx = max(sp, ssx);
+					if(_ps1) {
+						preview_node[1].previewing = 3;
+						var minX = max(ssx, sp);
+						var sX   = (minX - ssx) / ss;
+						var spx  = max(sp, ssx);
 					
-					if(sX >= 0 && sX < ssw)
-						draw_surface_part_ext_safe(preview_surface[1], sX, 0, ssw - sX, ssh, spx, ssy, ss, ss, 0, c_white, 1);
-				}
-				break;
-			case 2 :
-				var sp = splitPosition * h;
+						if(sX >= 0 && sX < ssw)
+							draw_surface_part_ext_safe(preview_surface[1], sX, 0, ssw - sX, ssh, spx, ssy, ss, ss, 0, c_white, 1);
+					}
+					break;
+				case 2 :
+					var sp = splitPosition * h;
 					
-				if(is_surface(preview_surface[0])) {
-					preview_node[0].previewing = 4;
-					var maxY = min(sp, psy1);
-					var sH = min(psh, (maxY - psy) / ss);
+					if(_ps0) {
+						preview_node[0].previewing = 4;
+						var maxY = min(sp, psy1);
+						var sH   = min(psh, (maxY - psy) / ss);
 					
-					if(sH > 0)
-						draw_surface_part_ext_safe(preview_surface[0], 0, 0, psw, sH, psx, psy, ss, ss, 0, c_white, 1);
-				}
+						if(sH > 0)
+							draw_surface_part_ext_safe(preview_surface[0], 0, 0, psw, sH, psx, psy, ss, ss, 0, c_white, 1);
+					}
 				
-				if(is_surface(preview_surface[1])) {
-					preview_node[1].previewing = 5;
-					var minY = max(ssy, sp);
-					var sY = (minY - ssy) / ss;
-					var spy = max(sp, ssy);
+					if(_ps1) {
+						preview_node[1].previewing = 5;
+						var minY = max(ssy, sp);
+						var sY   = (minY - ssy) / ss;
+						var spy  = max(sp, ssy);
 					
-					if(sY >= 0 && sY < ssh)
-						draw_surface_part_ext_safe(preview_surface[1], 0, sY, ssw, ssh - sY, ssx, spy, ss, ss, 0, c_white, 1);
-				}
-				break;
-		} #endregion
+						if(sY >= 0 && sY < ssh) 
+							draw_surface_part_ext_safe(preview_surface[1], 0, sY, ssw, ssh - sY, ssx, spy, ss, ss, 0, c_white, 1);
+					}
+					break;
+			} 
+		#endregion
 		
 		if(!instance_exists(o_dialog_menubox)) { #region color sample
 			sample_color = noone;
@@ -723,7 +756,7 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 		} #endregion
 		
-		if(is_surface(preview_surface[0])) { #region outline
+		if(is_surface(preview_surfaces[0])) { #region outline
 			if(PROJECT.previewGrid.show) {
 				var _gw = PROJECT.previewGrid.size[0] * canvas_s;
 				var _gh = PROJECT.previewGrid.size[1] * canvas_s;

@@ -19,11 +19,7 @@ vec4 less ( vec4 a, vec4 b ) {
 }
 
 vec4 sample ( vec2 position ) {
-	if(position.x < 0.) return vec4(1.);
-	if(position.y < 0.) return vec4(1.);
-	if(position.x > 1.) return vec4(1.);
-	if(position.y > 1.) return vec4(1.);
-	
+	if(position.x < 0. || position.y < 0. || position.x > 1. || position.y > 1.) return vec4(1.);
 	return texture2D( gm_BaseTexture, position );
 }
 
@@ -33,6 +29,10 @@ void main() {
 	gl_FragColor = c;
 	
 	if(c.a == 0.) return;
+	if(c.b == 1.) {
+		gl_FragColor = vec4(0.);
+		return;
+	}
 	
 	for( float i = 1.; i < ITERATION; i++ ) {
 		vec4 s = sample( v_vTexcoord + vec2(tx.x * i, 0) );

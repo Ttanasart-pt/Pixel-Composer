@@ -5,23 +5,40 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 1] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 2] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
+	inputs[| 2] = nodeValue("Fill Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	inputs[| 3] = nodeValue("Fill Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 3] = nodeValue("Fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	inputs[| 4] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(10000, 99999));
 	
+	inputs[| 5] = nodeValue("Target Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, cola(c_black, 0));
+	
+	inputs[| 6] = nodeValue("Inner only", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Only fill regions with surrounding pixels.");
+	
+	inputs[| 7] = nodeValue("Draw original", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 8] = nodeValue("Fill type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Color map" ]);
+	
+	inputs[| 9] = nodeValue("Color map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	input_display_list = [
+	input_display_list = [ 4, 
 		["Surfaces", false], 0, 1, 
-		["Fill",	 false, 3], 4, 2,
+		["Fill",	 false, 3], 5, 8, 2, 9, 6, 
+		["Render",	 false], 7, 
 	];
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = array_create(3);
 		
-	static step = function() {}
+	static step = function() {
+		var _filt = getInputData(8);
+		
+		inputs[| 2].setVisible(_filt == 0);
+		inputs[| 9].setVisible(_filt == 1, _filt == 1);
+	}
 		
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
@@ -30,47 +47,97 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _colr = _data[2];
 		var _fill = _data[3];
 		var _seed = _data[4];
+		var _targ = _data[5];
+		var _innr = _data[6];
+		var _rnbg = _data[7];
+		var _filt = _data[8];
+		var _cmap = _data[9];
 		
 		var _sw   = surface_get_width_safe(_surf);
 		var _sh   = surface_get_height_safe(_surf)
 		
-		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh); 
-		temp_surface[1] = surface_verify(temp_surface[1], _sw, _sh);
-		
-		surface_clear(temp_surface[0]);
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
+			temp_surface[i] = surface_verify(temp_surface[i], _sw, _sh); 
+			surface_clear(temp_surface[i]);
+		}
 		
 		surface_set_shader(temp_surface[1], sh_region_fill_init);
-			draw_surface_safe(_surf, 0, 0);
+			shader_set_color("targetColor", _targ);
+			
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		var base = 0;
+		var amo  = _sw;
+		
+		if(_innr) {
+			repeat( amo ) {
+				surface_set_shader(temp_surface[base], sh_region_fill_inner);
+					shader_set_f("dimension", _sw, _sh);
+				
+					draw_surface_safe(temp_surface[!base]);
+				surface_reset_shader();
+			
+				base = !base;
+			}
+		}
+		
 		var amo  = _sw + _sh;
 		
-		for( var i = 0; i < amo; i++ ) {
+		repeat( amo ) {
 			surface_set_shader(temp_surface[base], sh_region_fill_coordinate);
 				shader_set_f("dimension", _sw, _sh);
-				draw_surface_safe(temp_surface[!base], 0, 0);
 				
+				draw_surface_safe(temp_surface[!base]);
 			surface_reset_shader();
 			
 			base = !base;
 		}
+		
+		surface_set_shader(temp_surface[base], sh_region_fill_border);
+			shader_set_f("dimension", _sw, _sh);
+			shader_set_surface("original",	_surf);
+				
+			draw_surface_safe(temp_surface[!base]);
+		surface_reset_shader();
 		
 		if(_fill) {
 			var _pal = [];
 			for( var i = 0, n = array_length(_colr); i < n; i++ )
 				array_append(_pal, colToVec4(_colr[i]));
 				
-			surface_set_shader(_outSurf, sh_region_fill_color);
-				shader_set_f("colors", _pal);
-				shader_set_f("seed",   _seed);
-				shader_set_f("colorAmount", array_length(_colr));
+			surface_set_shader(_outSurf);
+				switch(_filt) {
+					case 0 : 
+						shader_set(sh_region_fill_color);
 				
-				draw_surface_safe(temp_surface[base], 0, 0);
+						shader_set_f("colors",		_pal);
+						shader_set_f("seed",		_seed);
+						shader_set_f("colorAmount", array_length(_colr));
+						
+						draw_surface_safe(temp_surface[base]);
+						break;
+						
+					case 1 :
+						shader_set(sh_region_fill_map);
+				
+						shader_set_surface("colorMap",	_cmap);
+						
+						draw_surface_safe(temp_surface[base]);
+						break;
+				}
+				
+				if(_rnbg) {
+					shader_reset();
+					shader_set(sh_sample);
+					draw_surface_safe(_surf);
+				}
 			surface_reset_shader();
 		} else {
 			surface_set_shader(_outSurf);
-				draw_surface_safe(temp_surface[base], 0, 0);
+				draw_surface_safe(temp_surface[base]);
+				if(_rnbg)
+					draw_surface_safe(_surf);
 			surface_reset_shader();
 		}
 		

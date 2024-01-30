@@ -5,12 +5,12 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	current_gradient = noone;
 	side_button      = noone;
 	
-	function apply(value) {
+	function apply(value) { #region
 		if(!interactable) return;
 		onApply(value);
-	}
+	} #endregion
 	
-	static trigger = function() {
+	static trigger = function() { #region
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
 		dialog.setDefault(current_gradient.clone());
 		dialog.onApply = apply;
@@ -18,13 +18,11 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		
 		if(parentDialog)
 			parentDialog.addChildren(dialog);
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	}
+	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
 	
-	static draw = function(_x, _y, _w, _h, _gradient, _m) {
+	static draw = function(_x, _y, _w, _h, _gradient, _m) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -91,5 +89,5 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		
 		resetFocus();
 		return h;
-	}
+	} #endregion
 }

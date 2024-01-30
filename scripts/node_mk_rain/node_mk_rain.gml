@@ -10,10 +10,10 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 2] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 5);
 	
 	inputs[| 3] = nodeValue("Raindrop width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 2 ])
-		.setDisplay(VALUE_DISPLAY.vector_range);
+		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 4] = nodeValue("Raindrop length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 5, 10 ])
-		.setDisplay(VALUE_DISPLAY.vector_range);
+		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 5] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
 	
@@ -21,7 +21,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.slider_range);
 		
 	inputs[| 7] = nodeValue("Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 2 ])
-		.setDisplay(VALUE_DISPLAY.vector_range);
+		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100_000, 999_999));
 	
@@ -31,7 +31,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 												 new scrollItem("Texture", s_node_mk_rain_type, 2) ]);
 	
 	inputs[| 10] = nodeValue("Snow size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 3, 4 ])
-		.setDisplay(VALUE_DISPLAY.vector_range);
+		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 11] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	

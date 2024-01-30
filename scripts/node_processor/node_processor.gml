@@ -134,10 +134,14 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			var data = processData(_out, _data, outIndex, 0);					// Process data
 			
-			if(manage_atlas && _atlas && is_surface(data)) {										// Convert back to atlas
-				var _atl = _pAtl.clone();
-				_atl.setSurface(data);
-				return _atl;
+			if(_output.type == VALUE_TYPE.surface) {
+				if(manage_atlas && _atlas && is_surface(data)) {				// Convert back to atlas
+					var _atl = _pAtl.clone();
+					_atl.setSurface(data);
+					return _atl;
+				}
+				
+				//data = surface_project_posterize(data);
 			}
 			
 			return data;
@@ -195,10 +199,14 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			} else {
 				_out[l] = processData(_out[l], _data, outIndex, l);					// Process data
 				
-				if(manage_atlas && _atlas && is_surface(_out[l])) {					// Convert back to atlas
-					var _atl = _pAtl.clone();
-					_atl.setSurface(_out[l]);
-					_out[l] = _atl;
+				if(_output.type == VALUE_TYPE.surface) {
+					if(manage_atlas && _atlas && is_surface(_out[l])) {				// Convert back to atlas
+						var _atl = _pAtl.clone();
+						_atl.setSurface(_out[l]);
+						_out[l] = _atl;
+					}
+					
+					//data = surface_project_posterize(data);
 				}
 			}
 		}

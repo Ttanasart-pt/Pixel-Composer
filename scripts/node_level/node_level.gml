@@ -3,19 +3,19 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue("White",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+	inputs[| 1] = nodeValue("White in", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 	
-	inputs[| 2] = nodeValue("Red",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+	inputs[| 2] = nodeValue("Red in", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 	
-	inputs[| 3] = nodeValue("Green",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+	inputs[| 3] = nodeValue("Green in", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 	
-	inputs[| 4] = nodeValue("Blue",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+	inputs[| 4] = nodeValue("Blue in", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 	
-	inputs[| 5] = nodeValue("Alpha",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+	inputs[| 5] = nodeValue("Alpha in", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 6] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -31,6 +31,21 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	__init_mask_modifier(6); // inputs 10, 11
 	
+	inputs[| 12] = nodeValue("White out", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range);
+	
+	inputs[| 13] = nodeValue("Red out", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range);
+	
+	inputs[| 14] = nodeValue("Green out", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range);
+	
+	inputs[| 15] = nodeValue("Blue out", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range);
+	
+	inputs[| 16] = nodeValue("Alpha out", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
@@ -71,8 +86,11 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	input_display_list = [ 8, 9, 
 		level_renderer,
 		["Surfaces", true],	0, 6, 7, 10, 11,
-		["Level",	false],	1,
-		["Channel",	 true],	2, 3, 4, 5
+		["Brightness",	false],	1, 12, 
+		["Red",			false],	2, 13, 
+		["Green",		false],	3, 14,  
+		["Blue",		false],	4, 15, 
+		["Alpha",		false],	5, 16, 
 	];
 	histogramInit();
 	
@@ -94,18 +112,30 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
-		var _w = _data[1];
-		var _r = _data[2];
-		var _g = _data[3];
-		var _b = _data[4];
-		var _a = _data[5];
+		var _wi = _data[1];
+		var _ri = _data[2];
+		var _gi = _data[3];
+		var _bi = _data[4];
+		var _ai = _data[5];
+		
+		var _wo = _data[12];
+		var _ro = _data[13];
+		var _go = _data[14];
+		var _bo = _data[15];
+		var _ao = _data[16];
 		
 		surface_set_shader(_outSurf, sh_level);
-			shader_set_f("lw", _w);
-			shader_set_f("lr", _r);
-			shader_set_f("lg", _g);
-			shader_set_f("lb", _b);
-			shader_set_f("la", _a);
+			shader_set_f("lwi", _wi);
+			shader_set_f("lri", _ri);
+			shader_set_f("lgi", _gi);
+			shader_set_f("lbi", _bi);
+			shader_set_f("lai", _ai);
+			
+			shader_set_f("lwo", _wo);
+			shader_set_f("lro", _ro);
+			shader_set_f("lgo", _go);
+			shader_set_f("lbo", _bo);
+			shader_set_f("lao", _ao);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

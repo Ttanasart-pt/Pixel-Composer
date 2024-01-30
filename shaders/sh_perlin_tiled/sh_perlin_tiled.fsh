@@ -25,16 +25,8 @@ vec3 hsv2rgb(vec3 c) { #region
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 } #endregion
 
-float random (in vec2 st, float _seed) { return fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + _seed)); }
-
-float randomFloat (in vec2 st, float _seed) { #region
-	float sedSt = floor(_seed);
-	float sedFr = fract(_seed);
-	
-	return mix(random(st, sedSt), random(st, sedSt + 1.), sedFr);
-} #endregion
-
-vec2 random2 (in vec2 st, float _seed) { return vec2(random(st, _seed), random(st, _seed + 1.864)); }
+float random  (in vec2 st) { return smoothstep(0., 1., abs(fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + seed)) * 2. - 1.)); }
+vec2  random2 (in vec2 st) { float a = random(st) * 6.28319; return vec2(cos(a), sin(a)); }
 
 float noise (in vec2 st, in vec2 scale) { #region
     vec2 cellMin = floor(st);
@@ -48,12 +40,33 @@ float noise (in vec2 st, in vec2 scale) { #region
 	vec2 f = fract(st);
 	vec2 u = f * f * (3.0 - 2.0 * f);
 	
-	float a = randomFloat(vec2(cellMin.x, cellMin.y), seed);
-    float b = randomFloat(vec2(cellMax.x, cellMin.y), seed);
-    float c = randomFloat(vec2(cellMin.x, cellMax.y), seed);
-    float d = randomFloat(vec2(cellMax.x, cellMax.y), seed);
+	vec2 _a = vec2(cellMin.x, cellMin.y);
+	vec2 _b = vec2(cellMax.x, cellMin.y);
+	vec2 _c = vec2(cellMin.x, cellMax.y);
+	vec2 _d = vec2(cellMax.x, cellMax.y);
 	
-    return abs(mix(mix(a, b, u.x), mix(c, d, u.x), u.y));
+	vec2 ai = f - vec2(0., 0.);
+    vec2 bi = f - vec2(1., 0.);
+    vec2 ci = f - vec2(0., 1.);
+    vec2 di = f - vec2(1., 1.);
+	
+	//float a = random(_a);
+    //float b = random(_b);
+    //float c = random(_c);
+    //float d = random(_d);
+	
+	vec2 a2 = random2(_a);
+    vec2 b2 = random2(_b);
+    vec2 c2 = random2(_c);
+    vec2 d2 = random2(_d);
+	
+	//float l1 = mix(a, b, u.x);
+	//float l2 = mix(c, d, u.x);
+	
+	float l1 = mix(dot(ai, a2), dot(bi, b2), u.x);
+	float l2 = mix(dot(ci, c2), dot(di, d2), u.x);
+	
+    return mix(l1, l2, u.y) + 0.5;
 } #endregion
 
 float perlin(in vec2 st) { #region
@@ -64,8 +77,6 @@ float perlin(in vec2 st) { #region
 	
 	for(int i = 0; i < iteration; i++) {
 		n += noise(pos, sc) * amp;
-		
-		//pos += random2(vec2(float(i), float(i)), seed + 1.57) * sc; //make the result goes random somehow
 		
 		sc  *= 2.;
 		amp *= .5;

@@ -55,15 +55,29 @@
 			on_top: true,
 		}; #endregion
 		
-		attributes = { #region
-			surface_dimension: [ 32, 32 ],
-			palette: [ cola(c_black), cola(c_white) ]
-		} #endregion
-		
-		attributeEditor = [ #region
-			[ "Default Surface",	"surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; RENDER_ALL return true; }) ],
-			[ "Palette",			"palette",			 new buttonPalette(function(pal) { attributes.palette = pal; RENDER_ALL return true; }) ],
-		]; #endregion
+		#region =================== ATTRIBUTES ===================
+			attributes = {
+				surface_dimension : [ 32, 32 ],
+				palette           : [ cola(c_black), cola(c_white) ],
+				palette_fix       : false,
+			}
+			
+			var _bpal = new buttonPalette(function(pal) { setPalette(pal); RENDER_ALL return true; });
+			
+			//_bpal.side_button = button(function() { attributes.palette_fix = !attributes.palette_fix; RENDER_ALL return true; })
+			//	.setIcon( THEME.project_fix_palette, [ function() { return attributes.palette_fix; } ], COLORS._main_icon )
+			//	.setTooltip("Fix palette");
+			
+			attributeEditor = [
+				[ "Default Surface",	"surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; RENDER_ALL return true; }) ],
+				[ "Palette",			"palette",			 _bpal ],
+			];
+			
+			static setPalette = function(pal = noone) { 
+				if(pal != noone) attributes.palette = pal; 
+				palettes = paletteToArray(attributes.palette); 
+			} setPalette();
+		#endregion
 		
 		timelines = new timelineItemGroup();
 		

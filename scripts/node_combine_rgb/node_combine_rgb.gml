@@ -8,7 +8,7 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 4] = nodeValue("Sampling type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Brightness", "Channel value"]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Channel value", "Greyscale"]);
 	
 	inputs[| 5] = nodeValue("Base value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Set value to the unconnected color channels.")
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -57,7 +57,7 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i("useB", is_surface(_b));
 			shader_set_i("useA", is_surface(_a));
 			
-			shader_set_i("mode", _data[4]);
+			shader_set_i("mode",     !_data[4]);
 			shader_set_f_map("base", _data[5], _data[6], inputs[| 5]);
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));

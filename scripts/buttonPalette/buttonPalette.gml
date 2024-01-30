@@ -1,14 +1,16 @@
 function buttonPalette(_onApply, dialog = noone) : widget() constructor {
-	onApply = _onApply;
+	onApply      = _onApply;
 	parentDialog = dialog;
-	current_palette = [];
 	
-	function apply(value) {
+	current_palette = [];
+	side_button     = noone;
+	
+	function apply(value) { #region
 		if(!interactable) return;
 		onApply(value);
-	}
+	} #endregion
 	
-	static trigger = function() {
+	static trigger = function() { #region
 		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
 		dialog.setDefault(current_palette);
 		dialog.onApply = apply;
@@ -16,17 +18,21 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		
 		if(parentDialog)
 			parentDialog.addChildren(dialog);
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	}
+	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
 	
-	static draw = function(_x, _y, _w, _h, _color, _m) {
+	static draw = function(_x, _y, _w, _h, _color, _m) { #region
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
+		
+		if(side_button && instanceof(side_button) == "buttonClass") {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
+			_w -= ui(40);
+		}
 		
 		var _pw = _w - ui(8);
 		var _ph = _h - ui(8);
@@ -83,7 +89,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
 }
 
 function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { #region

@@ -79,7 +79,7 @@ void main() { #region
 	
 	#region filter out filled ot empty pixel
 		bool isBorder = false;
-		if(side == 0)      isBorder = point.a == 1.;
+		if(side == 0)      isBorder = point.a > 0.;
 		else if(side == 1) isBorder = point.a < 1.;
 	
 		if(!isBorder) {
@@ -154,7 +154,7 @@ void main() { #region
 	if(is_blend == 0) {
 		if(side == 0) {
 			col = borderColor;
-			if(is_aa == 1) 
+			if(is_aa == 1)
 				col.a = point.a;
 		} else {
 			float alpha = point.a + outline_alpha * (1. - point.a);

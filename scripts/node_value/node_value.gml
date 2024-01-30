@@ -1137,9 +1137,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				}
 				break;
 			case VALUE_TYPE.boolean :	#region
-				editWidget = new checkBox(function() {
-					return setValueDirect(!animator.getValue()); 
-				} );
+				if(name == "Active") editWidget = new checkBoxActive(function() { return setValueDirect(!animator.getValue()); } );
+				else				 editWidget = new checkBox(function() { return setValueDirect(!animator.getValue()); } );
 				
 				key_inter    = CURVE_TYPE.cut;
 				extract_node = "Node_Boolean";

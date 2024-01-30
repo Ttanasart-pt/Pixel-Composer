@@ -134,6 +134,7 @@ function __LOAD_PATH(path, readonly = false, override = false) { #region
 	
 	if(struct_has(_load_content, "attributes"))
 		struct_override(PROJECT.attributes, _load_content.attributes);
+	PROJECT.setPalette();
 	
 	if(struct_has(_load_content, "notes")) {
 		PROJECT.notes = array_create(array_length(_load_content.notes));

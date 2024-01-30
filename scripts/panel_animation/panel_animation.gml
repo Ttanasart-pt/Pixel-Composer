@@ -709,7 +709,7 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 	} #endregion
 	
-	function drawDopesheetGraphLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) { #region
+	function __drawDopesheetGraphLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) { #region
 		var bar_total_w = TOTAL_FRAMES * timeline_scale;
 		var bar_show_w  = timeline_shift + bar_total_w;
 		var hovering	= noone;
@@ -919,7 +919,7 @@ function Panel_Animation() : PanelContent() constructor {
 		} #endregion
 	} #endregion
 	
-	function drawDopesheetGraph(prop, key_y, msx, msy) { #region
+	function _drawDopesheetGraph(prop, key_y, msx, msy) { #region
 		var bar_total_w = TOTAL_FRAMES * timeline_scale;
 		var bar_show_w  = timeline_shift + bar_total_w;
 		var _gy_top		= key_y + ui(16);
@@ -981,16 +981,20 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 			
 			for( var i = 0, n = array_length(prop.animators); i < n; i++ )
-				drawDopesheetGraphLine(prop.animators[i], key_y, msx, msy, _min, _max);
+				__drawDopesheetGraphLine(prop.animators[i], key_y, msx, msy, _min, _max);
 		} else
-			drawDopesheetGraphLine(prop.animator, key_y, msx, msy);
+			__drawDopesheetGraphLine(prop.animator, key_y, msx, msy);
 		#endregion
 	} #endregion
 	
-	function drawDopesheetAnimatorKeysBG(animator, msx, msy) { #region
+	function _drawDopesheetAnimatorKeysBG(animator, msx, msy) { #region
 		var prop_dope_y = animator.y;
 		var key_hover   = noone;
 		var key_list    = animator.values;
+		
+		//if(animator.prop.name == "Active") { #region active prop
+			
+		//} #endregion
 		
 		if((animator.prop.on_end == KEYFRAME_END.loop || animator.prop.on_end == KEYFRAME_END.ping) && ds_list_size(key_list) > 1) {
 			var keyframe_s = animator.prop.loop_range == -1? key_list[| 0].time : key_list[| ds_list_size(key_list) - 1 - animator.prop.loop_range].time;
@@ -1004,7 +1008,7 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_line_width(ks_x, prop_dope_y - 1, ke_x, prop_dope_y - 1, 4);
 			draw_set_alpha(1);
 		}
-					
+		
 		for( var k = 0; k < ds_list_size(key_list); k++ ) { //draw easing
 			var key = key_list[| k];
 			var t   = key.dopesheet_x;
@@ -1045,7 +1049,7 @@ function Panel_Animation() : PanelContent() constructor {
 		return key_hover;
 	} #endregion
 	
-	function drawDopesheetAnimatorKeys(_cont, animator, msx, msy) { #region
+	function _drawDopesheetAnimatorKeys(_cont, animator, msx, msy) { #region
 		var _node     = _cont.node;
 		var prop_y	  = animator.y;
 		var node_y	  = _cont.y + dope_sheet_node_padding;
@@ -1122,7 +1126,7 @@ function Panel_Animation() : PanelContent() constructor {
 		return key_hover;
 	} #endregion
 	
-	function drawDopesheetLabelAnimator(_item, _node, animator, msx, msy) { #region
+	function __drawDopesheetLabelAnimator(_item, _node, animator, msx, msy) { #region
 		var prop = animator.prop;
 		var aa   = _node.group == PANEL_GRAPH.getCurrentContext()? 1 : 0.9;
 		var tx   = tool_width;
@@ -1237,7 +1241,7 @@ function Panel_Animation() : PanelContent() constructor {
 		draw_set_alpha(1);
 	} #endregion
 	
-	function drawDopesheetLabelItem(_item, _x, _y, msx = -1, msy = -1, alpha = 1) { #region
+	function __drawDopesheetLabelItem(_item, _x, _y, msx = -1, msy = -1, alpha = 1) { #region
 		var _itx = _x;
 		var _ity = _y;
 		var _itw = tool_width;
@@ -1261,7 +1265,7 @@ function Panel_Animation() : PanelContent() constructor {
 		}
 	} #endregion
 	
-	function drawDopesheetLabel() { #region
+	function _drawDopesheetLabel() { #region
 		surface_set_target(dope_sheet_name_surface);	
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var msx = mx - ui(8);
@@ -1330,11 +1334,11 @@ function Panel_Animation() : PanelContent() constructor {
 					continue;
 				}
 				
-				drawDopesheetLabelItem(_cont, 0, _cont.y + dope_sheet_node_padding, msx, msy);
+				__drawDopesheetLabelItem(_cont, 0, _cont.y + dope_sheet_node_padding, msx, msy);
 				
 				if(_cont.type == "node" && _cont.item.show)
 				for( var j = 0; j < array_length(_cont.animators); j++ )
-					drawDopesheetLabelAnimator(_cont, _cont.node, _cont.animators[j], msx, msy);
+					__drawDopesheetLabelAnimator(_cont, _cont.node, _cont.animators[j], msx, msy);
 			} //end node loop
 			
 			if(_itx != -1) {
@@ -1658,14 +1662,14 @@ function Panel_Animation() : PanelContent() constructor {
 					var _prop = prop.prop;
 					
 					for( var k = 0; k < array_length(prop.animators); k++ ) {
-						var key = drawDopesheetAnimatorKeysBG(prop.animators[k], msx, msy);
+						var key = _drawDopesheetAnimatorKeysBG(prop.animators[k], msx, msy);
 						_dy = prop.animators[k].y;
 						if(key != noone)
 							key_hover = key;
 					}
 					
 					if(isGraphable(_prop) && _prop.show_graph)
-						drawDopesheetGraph(_prop, _dy, msx, msy);
+						_drawDopesheetGraph(_prop, _dy, msx, msy);
 				}
 			}
 		#endregion
@@ -1688,7 +1692,7 @@ function Panel_Animation() : PanelContent() constructor {
 				for( var j = 0, m = array_length(_cont.animators); j < m; j++ ) {
 					var _anim = _cont.animators[j];
 					
-					var key = drawDopesheetAnimatorKeys(_cont, _anim, msx, msy);
+					var key = _drawDopesheetAnimatorKeys(_cont, _anim, msx, msy);
 					if(key != noone) key_hover = key;
 				}
 			}
@@ -1921,7 +1925,7 @@ function Panel_Animation() : PanelContent() constructor {
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
 		
-		drawDopesheetLabel();
+		_drawDopesheetLabel();
 		
 		if(mouse_press(mb_right, pFOCUS)) { #region context menu
 			if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + dope_sheet_w, ui(8) + dope_sheet_h)) {
@@ -1945,7 +1949,7 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		draw_sprite_stretched(THEME.ui_panel_bg_cover, 1, bar_x, ui(8), bar_w, dope_sheet_h);
 		
-		if(item_dragging != noone) drawDopesheetLabelItem(item_dragging, mx - item_dragging_dx, my - item_dragging_dy,,, 0.5);
+		if(item_dragging != noone) __drawDopesheetLabelItem(item_dragging, mx - item_dragging_dx, my - item_dragging_dy,,, 0.5);
 	} #endregion
 	
 	function drawAnimationControl() { #region
