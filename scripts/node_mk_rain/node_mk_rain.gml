@@ -9,7 +9,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 2] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 5);
 	
-	inputs[| 3] = nodeValue("Raindrop width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 2 ])
+	inputs[| 3] = nodeValue("Raindrop width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 4] = nodeValue("Raindrop length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 5, 10 ])
@@ -47,11 +47,13 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	inputs[| 16] = nodeValue("Alpha over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 		
+	inputs[| 17] = nodeValue("Fade alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 8, 
 		["Shape",		false], 9, 3, 4, 10, 11, 
 		["Lifespan",	false, 14], 15, 13, 16, 
 		["Effect",		false], 2, 1, 7, 
-		["Render",		false], 5, 6, 
+		["Render",		false], 5, 6, 17, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -63,6 +65,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[|  4].setVisible(_shap == 0);
 		inputs[| 10].setVisible(_shap == 1);
 		inputs[| 11].setVisible(_shap == 2);
+		inputs[| 17].setVisible(_shap == 0);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -84,6 +87,8 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _liml = _data[14];
 		var _life = _data[15];
 		var _alif = _data[16];
+		
+		var _afad = _data[17];
 		
 		if(!is_surface(_surf)) return _outSurf;
 		if(_shap == 2 && !is_surface(_text)) return _outSurf;
@@ -113,9 +118,11 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			DRAW_CLEAR
 			
 			draw_surface(_surf, 0, 0);
+			var _lcc = _cc;
 			
-			if(_1c) draw_set_color(_cc);
-			BLEND_ALPHA_MULP
+			if(_afad) BLEND_ADD
+			else      BLEND_ALPHA_MULP
+			
 			repeat(_dens) {
 				random_set_seed(_seed); _seed += 100;
 				
@@ -155,7 +162,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var _prg = _y_shf + _vel * prg;
 				    _prg = frac(_prg) - 0.5;    // -0.5 - 0.5
 				
-				if(!_1c) draw_set_color(_colr.eval(random(1)));
+				if(!_1c) _lcc = _colr.eval(random(1));
 				var _aa = random_range(_alph[0], _alph[1]);
 				
 				var _clife = clamp((_prg + 0.5) / random_range(_life[0], _life[1]), 0, 1);
@@ -167,6 +174,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_aaL   = eval_curve_x(_alif, _clife);
 				}
 				
+				draw_set_color(_lcc);
 				draw_set_alpha(_aa * _aaL);
 				
 				var _drpX = _rmx - _prg * _radHx * 2;
@@ -183,8 +191,13 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						var _y0 = _drpY - _tr_span_h;
 						var _y1 = _y0   + _tr_span_h * 2 * _scaL;
 						
-						if(_drpW == 1) draw_line(       _x0, _y0, _x1, _y1 );
-						else		   draw_line_width( _x0, _y0, _x1, _y1, _drpW );
+						if(_afad) {
+							if(_drpW == 1) draw_line_color(       _x0, _y0, _x1, _y1, _lcc, c_black );
+							else		   draw_line_width_color( _x0, _y0, _x1, _y1, _drpW, _lcc, c_black );
+						} else {
+							if(_drpW == 1) draw_line(       _x0, _y0, _x1, _y1 );
+							else		   draw_line_width( _x0, _y0, _x1, _y1, _drpW );
+						}
 						break;
 					case 1 :
 						draw_circle(_drpX, _drpY, _drpW * _scaL, false);

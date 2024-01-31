@@ -639,6 +639,7 @@ function __initNodes() {
 		addNodeObject(generator, "Shard Noise",			s_node_shard,				"Node_Shard_Noise",			[1, Node_Shard_Noise]).patreonExtra();
 		addNodeObject(generator, "Wavelet Noise",		s_node_wavelet,				"Node_Wavelet_Noise",		[1, Node_Wavelet_Noise]).patreonExtra();
 		addNodeObject(generator, "Caustic",				s_node_caustic,				"Node_Caustic",				[1, Node_Caustic]).patreonExtra();
+		addNodeObject(generator, "Fold Noise",			s_node_fold_noise,			"Node_Fold_Noise",			[1, Node_Fold_Noise]);
 		
 		ds_list_add(generator, "Patterns");
 		addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe],, "Generate stripe pattern.");
