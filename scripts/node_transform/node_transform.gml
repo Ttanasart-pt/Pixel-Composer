@@ -63,11 +63,15 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 13] = nodeValue("Echo amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
 	
+	inputs[| 14] = nodeValue("Opacity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider);
+		
 	input_display_list = [ 11, 0, 
 		["Output",		 true],	9, 1, 7,
 		["Position",	false], 2, 10, 
 		["Rotation",	false], 3, 5, 8, 
 		["Scale",		false], 6, 
+		["Render",		false], 14, 
 		["Echo",		 true, 12], 13, 
 	];
 	
@@ -76,8 +80,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	vel = 0;
-	prev_pos = [ 0, 0 ];
+	vel       = 0;
+	prev_pos  = [ 0, 0 ];
 	prev_data = noone;
 	
 	static getDimension = function(arr = 0) { #region
@@ -194,6 +198,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var echo      = _data[12];
 		var echo_amo  = _data[13];
+		var alp       = _data[14];
 		
 		var cDep = attrDepth();
 		
@@ -261,7 +266,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_set_shader(_outSurf);
 			shader_set_interpolation(ins);
 			
-				draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, 1);
+				draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 				
 			surface_reset_shader();
 		#endregion
@@ -289,22 +294,22 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						_dy = round(_dy);
 					}
 					
-					draw_surface_ext_safe(ins, _dx, _dy, _sx, _sy, _rt);
+					draw_surface_ext_safe(ins, _dx, _dy, _sx, _sy, _rt, c_white, alp);
 				}
 			} else 
-				draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot);
+				draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 			
 			if(mode == 2) {
-				draw_surface_ext_safe(ins, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, 1);
-				draw_surface_ext_safe(ins, draw_x,       draw_y - _hh, sca[0], sca[1], rot, c_white, 1);
-				draw_surface_ext_safe(ins, draw_x + _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, 1);
+				draw_surface_ext_safe(ins, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(ins, draw_x,       draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(ins, draw_x + _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
 				
-				draw_surface_ext_safe(ins, draw_x - _ww, draw_y, sca[0], sca[1], rot, c_white, 1);
-				draw_surface_ext_safe(ins, draw_x + _ww, draw_y, sca[0], sca[1], rot, c_white, 1);
+				draw_surface_ext_safe(ins, draw_x - _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(ins, draw_x + _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
 				
-				draw_surface_ext_safe(ins, draw_x - _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, 1);
-				draw_surface_ext_safe(ins, draw_x,       draw_y + _hh, sca[0], sca[1], rot, c_white, 1);
-				draw_surface_ext_safe(ins, draw_x + _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, 1);
+				draw_surface_ext_safe(ins, draw_x - _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(ins, draw_x,       draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(ins, draw_x + _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
 			}
 			surface_reset_shader();
 		#endregion

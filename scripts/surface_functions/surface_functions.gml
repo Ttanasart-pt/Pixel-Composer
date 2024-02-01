@@ -207,10 +207,10 @@
 	function surface_get_pixel_ext(surface, _x, _y) { #region
 		INLINE
 	
-		if(!is_surface(surface)) return;
+		if(!is_surface(surface)) return 0;
 		var px = surface_getpixel_ext(surface, _x, _y);
 	
-		if(is_numeric(px)) return px;
+		if(is_numeric(px)) return int64(px);
 		return round(px[0] * (255 * power(256, 0))) + round(px[1] * (255 * power(256, 1))) + round(px[2] * (255 * power(256, 2))) + round(px[3] * (255 * power(256, 3)));
 	} #endregion
 

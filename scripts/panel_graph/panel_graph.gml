@@ -603,6 +603,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var _l = ds_list_create_from_array(nodes_selecting);
 		toCenterNode(array_empty(nodes_selecting)? nodes_list : _l);
 		ds_list_destroy(_l);
+		
+		graph_s_to = 1;
 	} #endregion
 	
 	function dragGraph() { #region

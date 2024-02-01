@@ -23,9 +23,11 @@ function Panel_Inspector() : PanelContent() constructor {
 		h = ui(640);
 		min_w = ui(160);
 	
-		locked		= false;
-		inspecting	= noone;
-		top_bar_h	= ui(100);
+		locked		 = false;
+		inspecting	 = noone;
+		inspectings  = [];
+		inspectGroup = false;
+		top_bar_h	 = ui(100);
 		
 		static initSize = function() {
 			content_w = w - ui(32);
@@ -397,7 +399,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	} #endregion
 	
 	static drawNodeProperties = function(_y, _m, _inspecting = inspecting) { #region
-		var con_w = contentPane.surface_w - ui(4); 
+		var con_w  = contentPane.surface_w - ui(4); 
 		var _hover = pHOVER && contentPane.hover;
 		
 		_inspecting.inspecting = true;
@@ -405,23 +407,20 @@ function Panel_Inspector() : PanelContent() constructor {
 		var jun		= noone;
 		var amoIn	= _inspecting.input_display_list == -1? ds_list_size(_inspecting.inputs) : array_length(_inspecting.input_display_list);
 		var amoOut	= ds_list_size(_inspecting.outputs);
-		var amo		= amoIn + 1 + amoOut;
-		var hh		= ui(40);
+		var amo		= inspectGroup == 0? amoIn + 1 + amoOut : amoIn;
+		var hh		= 0;
 		
 		//tb_prop_filter.register(contentPane);
 		//tb_prop_filter.setFocusHover(pHOVER, pFOCUS);
 		//tb_prop_filter.draw(ui(32), _y + ui(4), con_w - ui(64), ui(28), filter_text, _m);
 		//draw_sprite_ui(THEME.search, 0, ui(32 + 16), _y + ui(4 + 14), 1, 1, 0, COLORS._main_icon, 1);
 		
-		prop_page_button.setFocusHover(pFOCUS, pHOVER);
-		prop_page_button.draw(ui(32), _y + ui(4), contentPane.w - ui(76), ui(28), prop_page, _m, x + contentPane.x, y + contentPane.y);
-		
 		var xc = con_w / 2;
 		
 		if(prop_page == 1) { #region attribute/settings editor
 			hh += ui(8);
 			var hg  = ui(32);
-			var yy  = hh;
+			var yy  = _y + hh;
 			var wx1 = con_w - ui(8);
 			var ww  = max(ui(180), con_w / 3);
 			var wx0 = wx1 - ww;
@@ -579,7 +578,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			} else if(i == amoIn) { #region output label
 				hh += ui(8 + 32 + 8);
 				
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.85);
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.8);
 				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
 				draw_text_add(xc, yy + ui(8 + 16), __txt("Outputs"));
 				continue;
@@ -745,7 +744,38 @@ function Panel_Inspector() : PanelContent() constructor {
 			prop_selecting = noone;
 		
 		if(inspecting == noone) return drawMeta(_y, _m);
-		return drawNodeProperties(_y, _m);
+		
+		prop_page_button.setFocusHover(pFOCUS, pHOVER);
+		prop_page_button.draw(ui(32), _y + ui(4), contentPane.w - ui(76), ui(28), prop_page, _m, x + contentPane.x, y + contentPane.y);
+		
+		var _hh = ui(40);
+		_y += _hh;
+		
+		if(inspectGroup >= 0) return drawNodeProperties(_y, _m, inspecting);
+		
+		for( var i = 0, n = min(10, array_length(inspectings)); i < n; i++ ) {
+			if(i) {
+				_y  += ui(8);
+				_hh += ui(8);
+			}
+			
+			if(n > 1) {
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, _y, con_w, ui(32), COLORS.panel_inspector_output_label, 0.9);
+				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
+				
+				var _tx = inspectings[i].getFullName();
+				draw_text_add(con_w / 2, _y + ui(16), _tx);
+				
+				_y  += ui(32 + 8);
+				_hh += ui(32 + 8);
+			}
+			
+			var _h = drawNodeProperties(_y, _m, inspectings[i]);
+			_y  += _h;
+			_hh += _h;
+		}
+		
+		return _hh;
 	}); #endregion
 	
 	function propSelectCopy() { #region
@@ -760,33 +790,43 @@ function Panel_Inspector() : PanelContent() constructor {
 	} #endregion
 	
 	function drawInspectingNode() { #region
-		tb_node_name.font = f_h5;
-		tb_node_name.hide = true;
-		tb_node_name.setFocusHover(pFOCUS, pHOVER);
+		tb_node_name.font   = f_h5;
+		tb_node_name.hide   = true;
 		tb_node_name.align  = fa_center;
 		tb_node_name.format = TEXT_AREA_FORMAT.node_title;
+		tb_node_name.setFocusHover(pFOCUS, pHOVER);
+		
 		var txt = inspecting.renamed? inspecting.display_name : inspecting.name;
+		     if(inspectGroup == 1)  txt = $"[{array_length(PANEL_GRAPH.nodes_selecting)}] {txt}"; 
+		else if(inspectGroup == -1) txt = $"[{array_length(PANEL_GRAPH.nodes_selecting)}] Multiple nodes"; 
+		
 		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), txt, [mx, my]);
 		
-		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-		draw_text_add(w / 2 + ui(8), ui(56), inspecting.name);
+		if(inspectGroup >= 0) {
+			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
+			draw_text_add(w / 2 + ui(8), ui(56), inspecting.name);
 		
-		draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
-		draw_set_alpha(0.65);
-		draw_text_add(w / 2, ui(76), inspecting.internalName);
-		draw_set_alpha(1);
-		
-		draw_set_font(f_p1);
-		var lx = w / 2 - string_width(inspecting.name) / 2 - ui(10);
-		var ly = ui(56 - 8);
-		if(buttonInstant(THEME.button_hide, lx, ly, ui(16), ui(16), [mx, my], pFOCUS, pHOVER, __txt("Lock"), THEME.lock, !locked, locked? COLORS._main_icon_light : COLORS._main_icon,, 0.5) == 2)
-			locked = !locked;
+			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+			draw_set_alpha(0.65);
+			draw_text_add(w / 2, ui(76), inspecting.internalName);
+			draw_set_alpha(1);
+		}
 		
 		var bx = ui(8);
 		var by = ui(12);
 			
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Presets"), THEME.preset, 1) == 2)
-			dialogCall(o_dialog_preset, x + bx, y + by + ui(36), { "node": inspecting });
+		if(inspectGroup == 0) {
+			draw_set_font(f_p1);
+			var lx = w / 2 - string_width(inspecting.name) / 2 - ui(10);
+			var ly = ui(56 - 8);
+			if(buttonInstant(THEME.button_hide, lx, ly, ui(16), ui(16), [mx, my], pFOCUS, pHOVER, __txt("Lock"), THEME.lock, !locked, locked? COLORS._main_icon_light : COLORS._main_icon,, 0.5) == 2)
+				locked = !locked;
+		
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Presets"), THEME.preset, 1) == 2)
+				dialogCall(o_dialog_preset, x + bx, y + by + ui(36), { "node": inspecting });
+		} else {
+			draw_sprite_ui_uniform(THEME.preset, 1, bx + ui(32) / 2, by + ui(32) / 2, 1, COLORS._main_icon_dark);
+		}
 		
 		by += ui(36);
 		view_mode_tooltip.index = lineBreak;
@@ -795,6 +835,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			PREFERENCES.inspector_view_default = lineBreak;
 		}
 		
+		//////////////////////////////////////////////////////////////////// INSPECTOR ACTIONS ////////////////////////////////////////////////////////////////////
+		
 		var bx = w - ui(44);
 		var by = ui(12);
 		
@@ -802,9 +844,15 @@ function Panel_Inspector() : PanelContent() constructor {
 			var icon = inspecting.insp1UpdateIcon;
 			var ac = inspecting.insp1UpdateActive;
 			var cc = ac? icon[2] : COLORS._main_icon_dark;
+			var tt = inspecting.insp1UpdateTooltip;
+			if(inspectGroup) tt += " [All]";
 			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS && ac, pHOVER && ac, inspecting.insp1UpdateTooltip, icon[0], icon[1], cc) == 2)
-				inspecting.inspector1Update();
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS && ac, pHOVER && ac, tt, icon[0], icon[1], cc) == 2) {
+				if(inspectGroup == 1) {
+					for( var i = 0, n = array_length(inspectings); i < n; i++ ) inspectings[i].inspector1Update();
+				} else 
+					inspecting.inspector1Update();
+			}
 		} else 
 			draw_sprite_ui(THEME.sequence_control, 1, bx + ui(16), by + ui(16),,,, COLORS._main_icon_dark);
 		
@@ -813,9 +861,15 @@ function Panel_Inspector() : PanelContent() constructor {
 			var icon = inspecting.insp2UpdateIcon;
 			var ac = inspecting.insp2UpdateActive;
 			var cc = ac? icon[2] : COLORS._main_icon_dark;
+			var tt = inspecting.insp2UpdateTooltip;
+			if(inspectGroup) tt += " [All]";
 			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS && ac, pHOVER && ac, inspecting.insp2UpdateTooltip, icon[0], icon[1], cc) = 2)
-				inspecting.inspector2Update();
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS && ac, pHOVER && ac, tt, icon[0], icon[1], cc) = 2) {
+				if(inspectGroup) {
+					for( var i = 0, n = array_length(inspectings); i < n; i++ ) inspectings[i].inspector2Update();
+				} else 
+					inspecting.inspector2Update();
+			}
 		}
 	} #endregion
 	
@@ -828,6 +882,15 @@ function Panel_Inspector() : PanelContent() constructor {
 			inspecting = noone;
 		
 		if(inspecting) {
+			var _ins     = instanceof(inspecting);
+			var _nodes   = PANEL_GRAPH.nodes_selecting;
+			
+			inspectGroup = array_length(_nodes) > 1;
+			inspectings  = array_empty(_nodes)? [ inspecting ] : _nodes;
+			
+			for( var i = 0, n = array_length(_nodes); i < n; i++ )
+				if(instanceof(_nodes[i]) != _ins) { inspectGroup = -1; break; }
+			
 			title = inspecting.renamed? inspecting.display_name : inspecting.name;
 			inspecting.inspectorStep();
 			drawInspectingNode();

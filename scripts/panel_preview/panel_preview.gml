@@ -443,8 +443,18 @@ function Panel_Preview() : PanelContent() constructor {
 				var dx = mx - d3_camPan_mx;
 				var dy = my - d3_camPan_my;
 				
-				d3_view_camera.focus_angle_x += dx * 0.2 * d3_pan_speed;
-				d3_view_camera.focus_angle_y += dy * 0.1 * d3_pan_speed;
+				var px = d3_view_camera.focus_angle_x;
+				var py = d3_view_camera.focus_angle_y;
+				var ax = px + dx * 0.2 * d3_pan_speed;
+				var ay = py + dy * 0.1 * d3_pan_speed;
+				
+				//if(py < 90 && ay >= 90) ax -= 180;
+				//if(py > 90 && ay <= 90) ax += 180;
+				
+				//print($"{ax},\t{ay}");
+				
+				d3_view_camera.focus_angle_x = ax;
+				d3_view_camera.focus_angle_y = ay;
 			}
 			
 			d3_camPan_mx = mx;
@@ -751,8 +761,9 @@ function Panel_Preview() : PanelContent() constructor {
 				sample_x = floor((mx - canvas_x) / canvas_s);
 				sample_y = floor((my - canvas_y) / canvas_s);
 				var surf = getNodePreviewSurface();
-				if(is_surface(surf))
-					sample_color = surface_get_pixel_ext(surf, sample_x, sample_y);
+				sample_color = surface_get_pixel_ext(surf, sample_x, sample_y);
+				
+				//print($"{dec_to_hex(sample_color)}: {color_get_alpha(int64(sample_color))}");
 			}
 		} #endregion
 		
@@ -1328,6 +1339,7 @@ function Panel_Preview() : PanelContent() constructor {
 			if(sample_color != noone) {
 				draw_set_color(sample_color);
 				draw_rectangle(cx, cy, cx + cw, cy + ch, false);
+				draw_set_alpha(1);
 			}
 		
 			draw_set_color(COLORS.panel_toolbar_outline);
