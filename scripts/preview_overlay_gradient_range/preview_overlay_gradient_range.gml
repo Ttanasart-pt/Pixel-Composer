@@ -64,7 +64,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 		_val[(drag_type - 1) * 2 + 0] = _nx / _sw;
 		_val[(drag_type - 1) * 2 + 1] = _ny / _sh;
 			
-		if(setValue( _val )) 
+		if(setValueInspector( _val )) 
 			UNDO_HOLDING = true;
 		
 		if(mouse_release(mb_left)) {

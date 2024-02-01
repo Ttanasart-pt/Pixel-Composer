@@ -18,7 +18,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		if(key_mod_press(CTRL))
 			angle = round(angle / 15) * 15;
 								
-		if(setValue( angle ))
+		if(setValueInspector( angle ))
 			UNDO_HOLDING = true;
 							
 		if(mouse_release(mb_left)) {

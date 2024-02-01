@@ -164,7 +164,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	}
 	
 	if(drag_type > 0) {
-		if(setValue( _val ))
+		if(setValueInspector( _val ))
 			UNDO_HOLDING = true;
 			
 		if(mouse_release(mb_left)) {

@@ -16,7 +16,7 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		if(key_mod_press(CTRL))
 			dist = round(dist);
 							
-		if(setValue( dist ))
+		if(setValueInspector( dist ))
 			UNDO_HOLDING = true;
 							
 		if(mouse_release(mb_left)) {

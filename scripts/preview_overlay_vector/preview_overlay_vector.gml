@@ -24,7 +24,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			_val[1] = _ny;
 		}
 							
-		if(setValue( _val )) 
+		if(setValueInspector( _val )) 
 			UNDO_HOLDING = true;
 							
 		if(mouse_release(mb_left)) {

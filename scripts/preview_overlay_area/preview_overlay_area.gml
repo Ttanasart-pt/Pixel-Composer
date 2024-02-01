@@ -60,7 +60,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	
 	if(drag_type) {
 		var _val = [ _r, _t, _l, _b, __at ];
-		if(setValue(_val)) UNDO_HOLDING = true;
+		if(setValueInspector(_val)) UNDO_HOLDING = true;
 		
 		if(mouse_release(mb_left)) {
 			drag_type = 0;
@@ -159,7 +159,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 		_val = [_xx, _yy, _x1, _y1, __at];
 		
-		if(setValue(_val))
+		if(setValueInspector(_val))
 			UNDO_HOLDING = true;
 							
 		if(mouse_release(mb_left)) {
@@ -171,7 +171,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 		_val = [_x0, _y0, _xx, _yy, __at];
 		
-		if(setValue(_val))
+		if(setValueInspector(_val))
 			UNDO_HOLDING = true;
 							
 		if(mouse_release(mb_left)) {
@@ -185,7 +185,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 		var __y1 = value_snap(_y1 + (__y0 - _y0), _sny);
 		_val = [__x0, __y0, __x1, __y1, __at];
 		
-		if(setValue(_val))
+		if(setValueInspector(_val))
 			UNDO_HOLDING = true;
 							
 		if(mouse_release(mb_left)) {
@@ -284,7 +284,7 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 			_val[1] = _yy;
 		}
 							
-		if(setValue(_val))
+		if(setValueInspector(_val))
 			UNDO_HOLDING = true;
 							
 		if(mouse_release(mb_left)) {
@@ -308,7 +308,7 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 			_val[3] = max(_dx, _dy);
 		}
 							
-		if(setValue(_val))
+		if(setValueInspector(_val))
 			UNDO_HOLDING = true;
 			
 		if(mouse_release(mb_left)) {
