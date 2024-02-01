@@ -129,6 +129,14 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	attribute_surface_depth();
 	
+	attributes.auto_refresh = true;
+		
+	array_push(attributeEditors, ["Auto refresh", function() { return attributes.auto_refresh; }, 
+		new checkBox(function() { 
+			attributes.auto_refresh = !attributes.auto_refresh;
+			triggerRender();
+		})]);
+			
 	static refreshPalette = function() { #region
 		var _surf = inputs[| 0].getValue();
 		
@@ -174,7 +182,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	static onValueFromUpdate = function(index) { #region
 		if(LOADING || APPENDING || CLONING) return;
 		
-		if(index == 0) refreshPalette();
+		if(index == 0 && attributes.auto_refresh) refreshPalette();
 	} #endregion
 	
 	static step = function() { #region

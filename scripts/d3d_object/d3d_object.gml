@@ -146,26 +146,28 @@ function __3dObject() constructor {
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
 				var _ind = array_safe_get(material_index, i, i);
 				var _mat = array_safe_get(materials, _ind, noone);
-					
+				var _useMat = is_instanceof(_mat, __d3dMaterial);
+				
 				shader_set_i("mat_flip", texture_flip);
-				var _tex = _mat == noone? -1 : _mat.getTexture();
+				var _tex = _useMat? _mat.getTexture() : -1;
 					
 				if(_shader == sh_d3d_default) {
-					if(!is_instanceof(_mat, __d3dMaterial)) {
+					if(_useMat) {
+						_mat.submitShader();
+					} else {
 						shader_set_f("mat_diffuse",    1);
 						shader_set_f("mat_specular",   0);
 						shader_set_f("mat_shine",      1);
 						shader_set_i("mat_metalic",    0);
 						shader_set_f("mat_reflective", 0);
-					} else 
-						_mat.submitShader();
+					}
 					
 					vertex_submit(VB[i], render_type, _tex);
 				} else if(_shader == sh_d3d_geometry) {
-					if(!is_instanceof(_mat, __d3dMaterial))
-						shader_set_i("use_normal", 0);
-					else 
+					if(_useMat)
 						_mat.submitGeometry();
+					else 
+						shader_set_i("use_normal", 0);
 					
 					vertex_submit(VB[i], render_type, _tex);
 				} else

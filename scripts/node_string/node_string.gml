@@ -1,9 +1,9 @@
 function Node_String(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Text";
-	
-	w = 96;
+	w    = 96;
 	
 	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	
 	outputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	
 	static processData = function(_output, _data, _index = 0) { 

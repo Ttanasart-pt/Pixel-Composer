@@ -63,7 +63,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale",  "Rotation", "Color" ] });
 		
 	inputs[| 18] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Add" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Add", "Max" ]);
 		
 	inputs[| 19] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone);
 		
@@ -347,9 +347,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					if(mulpA) BLEND_ALPHA_MULP;
 					else      BLEND_ALPHA;
 					break;
-				case 1 :
-					BLEND_ADD;
-					break;
+					
+				case 1 : BLEND_ADD; break;
+				case 2 : gpu_set_blendmode(bm_max); break;
 			}
 			
 			var positions = array_create(_amount);

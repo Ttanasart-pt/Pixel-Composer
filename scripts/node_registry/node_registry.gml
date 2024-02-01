@@ -502,6 +502,7 @@ function __initNodes() {
 		addNodeObject(filter, "Radial Blur",		s_node_radial,			"Node_Blur_Radial",		[1, Node_Blur_Radial],, "Blur image by rotating aroung a mid point.").setVersion(1110);
 		addNodeObject(filter, "Lens Blur",			s_node_bokeh,			"Node_Blur_Bokeh",		[1, Node_Blur_Bokeh], ["bokeh"], "Create bokeh effect. Blur lighter color in a lens-like manner.").setVersion(1110);
 		addNodeObject(filter, "Contrast Blur",		s_node_blur_contrast,	"Node_Blur_Contrast",	[1, Node_Blur_Contrast],, "Blur only pixel of a similiar color.");
+		addNodeObject(filter, "Shape Blur",			s_node_shape_blur,		"Node_Blur_Shape",		[1, Node_Blur_Shape]).setVersion(11650);
 		addNodeObject(filter, "Average",			s_node_average,			"Node_Average",			[1, Node_Average],, "Average color of every pixels in the image.").setVersion(1110);
 		
 		ds_list_add(filter, "Warps");
@@ -919,6 +920,9 @@ function __initNodes() {
 		addNodeObject(node, "Widget Test",		s_node_print,		"Node_Widget_Test",		[1, Node_Widget_Test]);
 		addNodeObject(node, "Graph Preview",	s_node_image,		"Node_Graph_Preview",	[1, Node_Graph_Preview]);
 		//addNodeObject(node, "Module Test",	s_node_print,		"Node_Module_Test",	[1, Node_Module_Test]);
+		
+		ds_list_add(node, "Project");
+		addNodeObject(node, "Project Data",		s_node_project_data,		"Node_Project_Data",		[1, Node_Project_Data]).setVersion(11650);
 		
 		ds_list_add(node, "System");
 		addNodeObject(node, "Execute Shell",	s_node_shell_excecute,		"Node_Shell",				[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
