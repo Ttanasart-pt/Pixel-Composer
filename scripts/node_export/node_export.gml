@@ -347,7 +347,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var loop_str   = loop? 0 : 1;
 		var use_gifski = false;
 		
-		var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose previous -loop {loop_str}";
+		var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose 2 -loop {loop_str}";
 		if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
 				 shell_cmd += $" {string_quote(temp_path)} {string_quote(target_path)}";
 			

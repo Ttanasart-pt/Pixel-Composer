@@ -1,4 +1,4 @@
-function _find_polygon_edges(triangles) {
+function _find_polygon_edges(triangles) { #region
     var polygon = [];
 	
     for (var i = 0; i < array_length(triangles); i++) {
@@ -24,9 +24,9 @@ function _find_polygon_edges(triangles) {
     }
 
     return polygon;
-}
+} #endregion
 
-function _shares_vertex(triangle1, triangle2) {
+function _shares_vertex(triangle1, triangle2) { #region
     for (var i = 0; i < 3; i++)
     for (var j = 0; j < 3; j++) {
         if (triangle1[i].equal(triangle2[j])) 
@@ -34,9 +34,9 @@ function _shares_vertex(triangle1, triangle2) {
     }
 	
     return false;
-}
+} #endregion
 
-function _shares_edge(triangle, edge_start, edge_end) {
+function _shares_edge(triangle, edge_start, edge_end) { #region
     var count = 0;
 
     for (var i = 0; i < 3; i++) {
@@ -45,9 +45,9 @@ function _shares_edge(triangle, edge_start, edge_end) {
     }
 
     return count == 2;
-}
+} #endregion
 
-function _create_super_triangle(points) {
+function _create_super_triangle(points) { #region
     var min_x = points[0].x, max_x = min_x, min_y = points[0].y, max_y = min_y;
 
     for (var i = 1; i < array_length(points); i++) {
@@ -67,20 +67,20 @@ function _create_super_triangle(points) {
         new __vec2(center_x, center_y + 2 * d_max),
         new __vec2(center_x + 2 * d_max, center_y - d_max)
     ];
-}
+} #endregion
 
-function _triangle_is_ccw(triangle) {
+function _triangle_is_ccw(triangle) { #region
 	var a = triangle[0], b = triangle[1], c = triangle[2];
     return ((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y)) > 0;
-}
+} #endregion
 
-function _triangle_is_equal(tri0, tri1) {
+function _triangle_is_equal(tri0, tri1) { #region
 	return (tri0[0] == tri1[0] || tri0[0] == tri1[1] || tri0[0] == tri1[2]) && 
 		   (tri0[1] == tri1[0] || tri0[1] == tri1[1] || tri0[1] == tri1[2]) && 
 		   (tri0[2] == tri1[0] || tri0[2] == tri1[1] || tri0[2] == tri1[2]);
-}
+} #endregion
 
-function _point_in_circumcircle(point, triangle) {
+function _point_in_circumcircle(point, triangle) { #region
     var a = triangle[0], b = triangle[1], c = triangle[2];
 	if(!_triangle_is_ccw(triangle)) {
 		b = triangle[2];
@@ -97,11 +97,11 @@ function _point_in_circumcircle(point, triangle) {
             + (cx * cx + cy * cy) * (ax * by - bx * ay);
 
     return det > 0;
-}
+} #endregion
 
-function array_remove_triangles(arr, target) {
+function array_remove_triangles(arr, target) { #region
     for (var i = array_length(arr) - 1; i >= 0; i--) {
         if (_triangle_is_equal(arr[i], target)) 
             array_delete(arr, i, 1);
     }
-}
+} #endregion

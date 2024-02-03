@@ -10,13 +10,14 @@ uniform float seed;
 uniform float slope;
 uniform int   axis;
 uniform int   mode;
+uniform vec2  alpha;
 
 uniform vec2  curve;
 uniform float curveDetail;
 uniform float curveShift;
 uniform float thickness;
 
-float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + seed)); }
+float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + seed / 100.)); }
 
 void main() {
 	vec2 tx  = 1. / u_resolution;
@@ -36,7 +37,7 @@ void main() {
 		float _y = random(vec2(1., float(i)));
 		
 		float _s = random(vec2(2., float(i))) - 0.5;
-    	float _a = random(vec2(float(i), 2.));
+    	float _a = mix(alpha.x, alpha.y, random(vec2(float(i), 2.)));
 		
 		float _c = mix(curve.x, curve.y, random(vec2(float(i), 3.)));
 		

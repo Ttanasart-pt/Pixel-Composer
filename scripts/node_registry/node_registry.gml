@@ -470,13 +470,14 @@ function __initNodes() {
 		addNodeObject(transform, "Offset",			s_node_offset,			"Node_Offset",			[1, Node_Offset],, "Shift image with tiling.");
 		
 		ds_list_add(transform, "Warps");
-		addNodeObject(transform, "Crop",			 s_node_crop,			"Node_Crop",			 [1, Node_Crop],, "Crop out image to create smaller ones.");
-		addNodeObject(transform, "Crop Content",	 s_node_crop_content,	"Node_Crop_Content",	 [1, Node_Crop_Content],, "Crop out empty pixel pixel from the image.");
-		addNodeObject(transform, "Warp",			 s_node_warp,			"Node_Warp",			 [1, Node_Warp], ["wrap"], "Warp image by freely moving the corners.");
-		addNodeObject(transform, "Skew",			 s_node_skew,			"Node_Skew",			 [1, Node_Skew], ["shear"], "Skew image horizontally, or vertically.");
-		addNodeObject(transform, "Mesh Warp",		 s_node_warp_mesh,		"Node_Mesh_Warp",		 [1, Node_Mesh_Warp], ["mesh wrap"], "Wrap image by converting it to mesh, and using control points.");
-		addNodeObject(transform, "Polar",			 s_node_polar,			"Node_Polar",			 [1, Node_Polar],, "Convert image to polar coordinate.");
-		addNodeObject(transform, "Area Warp",		 s_node_padding,		"Node_Wrap_Area",		 [1, Node_Wrap_Area],, "Wrap image to fit area value (x, y, w, h).");
+		addNodeObject(transform, "Crop",			s_node_crop,			"Node_Crop",			[1, Node_Crop],, "Crop out image to create smaller ones.");
+		addNodeObject(transform, "Crop Content",	s_node_crop_content,	"Node_Crop_Content",	[1, Node_Crop_Content],, "Crop out empty pixel pixel from the image.");
+		addNodeObject(transform, "Bend",			s_node_bend,			"Node_Bend",			[1, Node_Bend], ["wrap"], "Warp image by freely moving the corners.");
+		addNodeObject(transform, "Warp",			s_node_warp,			"Node_Warp",			[1, Node_Warp], ["warp corner"], "Warp image by freely moving the corners.");
+		addNodeObject(transform, "Skew",			s_node_skew,			"Node_Skew",			[1, Node_Skew], ["shear"], "Skew image horizontally, or vertically.");
+		addNodeObject(transform, "Mesh Warp",		s_node_warp_mesh,		"Node_Mesh_Warp",		[1, Node_Mesh_Warp], ["mesh wrap"], "Wrap image by converting it to mesh, and using control points.");
+		addNodeObject(transform, "Polar",			s_node_polar,			"Node_Polar",			[1, Node_Polar],, "Convert image to polar coordinate.");
+		addNodeObject(transform, "Area Warp",		s_node_padding,			"Node_Wrap_Area",		[1, Node_Wrap_Area],, "Wrap image to fit area value (x, y, w, h).");
 		
 		ds_list_add(transform, "Others");
 		addNodeObject(transform, "Composite",		s_node_compose,			"Node_Composite",		[1, Node_Composite], ["merge"], "Combine multiple images with controllable position, rotation, scale.");
@@ -643,6 +644,7 @@ function __initNodes() {
 		addNodeObject(generator, "Caustic",				s_node_caustic,				"Node_Caustic",				[1, Node_Caustic]).patreonExtra();
 		addNodeObject(generator, "Fold Noise",			s_node_fold_noise,			"Node_Fold_Noise",			[1, Node_Fold_Noise]).setVersion(11650);
 		addNodeObject(generator, "Strand Noise",		s_node_strand_noise,		"Node_Noise_Strand",		[1, Node_Noise_Strand]).setVersion(11650);
+		addNodeObject(generator, "Bubble Noise",		s_node_bubble_noise,		"Node_Noise_Bubble",		[1, Node_Noise_Bubble]).patreonExtra();
 		
 		ds_list_add(generator, "Patterns");
 		addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe],, "Generate stripe pattern.");

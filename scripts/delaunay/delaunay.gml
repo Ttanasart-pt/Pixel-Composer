@@ -1,4 +1,4 @@
-function delaunay_triangulation(points) {
+function delaunay_triangulation(points) { #region
 	if(array_length(points) < 3) return [];
 	
     var super_triangle = _create_super_triangle(points);
@@ -6,7 +6,6 @@ function delaunay_triangulation(points) {
     array_push(triangles, super_triangle);
 
     for (var i = 0; i < array_length(points); i++) {
-		//show_debug_message("=====")
         var _point = points[i];
         var bad_triangles = [];
 
@@ -16,24 +15,15 @@ function delaunay_triangulation(points) {
                 array_push(bad_triangles, _triangle);
         }
 		
-		//show_debug_message("Bad triangles: " + string(bad_triangles));
-		
         var polygon = _find_polygon_edges(bad_triangles);
-		
-		//show_debug_message("Polygon hole: " + string(polygon));
-		//show_debug_message("Triangle before remove: " + string(array_length(triangles)));
 		
         for (var j = 0; j < array_length(bad_triangles); j++)
             array_remove_triangles(triangles, bad_triangles[j]);
-
-		//show_debug_message("Triangle after remove: " + string(array_length(triangles)));
 		
         for (var j = 0; j < array_length(polygon); j += 2) {
             var new_triangle = [_point, polygon[j], polygon[j + 1]];
             array_push(triangles, new_triangle);
         }
-		
-		//show_debug_message("Triangle after patch hole: " + string(array_length(triangles)));
     }
 
     for (var i = array_length(triangles) - 1; i >= 0; i--) {
@@ -43,4 +33,4 @@ function delaunay_triangulation(points) {
     }
 	
     return triangles;
-}
+} #endregion

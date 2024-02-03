@@ -22,7 +22,7 @@ function FileObject(_name, _path) constructor { #region
 		case ".gif" :	
 			type = FILE_TYPE.assets;
 			break;
-		case ".pxc" :	
+		case ".pxc" : 
 			type = FILE_TYPE.project;
 			break;
 	} #endregion
@@ -42,13 +42,15 @@ function FileObject(_name, _path) constructor { #region
 	} #endregion
 	
 	static getThumbnail = function() { #region
-		if(size > 100000) return noone;
-		if(!retrive_data) getMetadata();
+		if(thumbnail != noone && is_surface(thumbnail)) return thumbnail;	// Thumbnail loaded
 		
-		if(thumbnail_data == -1) return noone;
-		if(thumbnail != noone && is_surface(thumbnail)) return thumbnail;
+		if(size > 100000) return noone;										// File too large
+		if(!retrive_data) getMetadata();									// Metadata not loaded
+		
+		if(thumbnail_data == -1) return noone;								// Metadata does not contains thumbnail
 		
 		thumbnail = surface_decode(thumbnail_data);
+		return thumbnail;
 	} #endregion
 	
 	static getSpr = function() { #region
@@ -63,7 +65,7 @@ function FileObject(_name, _path) constructor { #region
 					if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 				};
 			} else {
-				spr = sprite_add(self.path, 0, false, false, 0, 0);
+				spr = sprite_add(self.path, 0, 0, 0, 0, 0);
 				if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 			}
 			return spr;
@@ -72,7 +74,7 @@ function FileObject(_name, _path) constructor { #region
 		var path = array_safe_get(spr_path, 0);
 		var amo  = array_safe_get(spr_path, 1);
 		
-		if(path == 0) return -1;
+		if(!file_exists_empty(path)) return -1;
 		
 		if(loadThumbnailAsync) {
 			sprFetchID = sprite_add_ext(path, amo, 0, 0, true);
@@ -82,7 +84,7 @@ function FileObject(_name, _path) constructor { #region
 					sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 			}
 		} else {
-			spr = sprite_add(path, amo, false, false, 0, 0);
+			spr = sprite_add(path, amo, 0, 0, 0, 0);
 			if(spr && array_safe_get(spr_path, 2))
 				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 		}
@@ -93,9 +95,9 @@ function FileObject(_name, _path) constructor { #region
 	static getMetadata = function(_createnew = false) { #region
 		retrive_data = true;
 		
-		if(meta != noone)		return meta;  
-		if(meta == undefined)	return noone; 
-		if(!file_exists_empty(path))	return noone;
+		if(meta != noone)			 return meta;  
+		if(meta == undefined)		 return noone; 
+		if(!file_exists_empty(path)) return noone;
 		
 		meta = new MetaDataManager();
 		
@@ -126,19 +128,20 @@ function DirectoryObject(name, path) constructor { #region
 	self.name = name;
 	self.path = path;
 	
-	subDir  = ds_list_create();
-	content = ds_list_create();
-	open    = false;
+	subDir    = ds_list_create();
+	content   = ds_list_create();
+	open      = false;
 	triggered = false;
-	scanned = false;
+	scanned   = false;
 	
 	static destroy = function() { ds_list_destroy(subDir); }
 	static getName = function() { return name; }
 	
 	static scan = function(file_type) { #region
 		scanned = true;
+		
 		var _temp_name = [];
-		var _file = file_find_first(path + "/*", fa_directory);
+		var _file      = file_find_first(path + "/*", fa_directory);
 		while(_file != "") {
 			array_push(_temp_name, _file);
 			_file = file_find_next();
@@ -155,9 +158,10 @@ function DirectoryObject(name, path) constructor { #region
 			
 			if(directory_exists(_path)) {
 				var _fol_path = _path;
-				var fol = new DirectoryObject(file, _fol_path);
+				var fol       = new DirectoryObject(file, _fol_path);
 				fol.scan(file_type);
 				ds_list_add(subDir, fol);
+				
 			} else if(array_exists(file_type, filename_ext(file))) {
 				var f = new FileObject(string_replace(file, filename_ext(file), ""), _path);
 				ds_list_add(content, f);
@@ -169,17 +173,18 @@ function DirectoryObject(name, path) constructor { #region
 					if(p) {
 						var _amo = string_copy(icon_path, p, string_length(icon_path) - p + 1);
 							_amo = string_digits(_amo);
-						amo = toNumber(_amo);
+						     amo = toNumber(_amo);
 					}
 					f.spr_path = [icon_path, amo, false];
+					
 				} else {
 					var icon_path = path + "/" + filename_change_ext(file, ".png");
 					if(!file_exists_empty(icon_path)) continue;
 					
 					var _temp = sprite_add(icon_path, 0, false, false, 0, 0);
-					var ww = sprite_get_width(_temp);
-					var hh = sprite_get_height(_temp);
-					var amo = safe_mod(ww, hh) == 0? ww / hh : 1;
+					var ww    = sprite_get_width(_temp);
+					var hh    = sprite_get_height(_temp);
+					var amo   = safe_mod(ww, hh) == 0? ww / hh : 1;
 					sprite_delete(_temp);
 					
 					f.spr_path = [icon_path, amo, true];

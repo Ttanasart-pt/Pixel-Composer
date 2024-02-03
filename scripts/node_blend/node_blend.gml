@@ -196,7 +196,11 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _backDraw   = temp_surface[0];
 		var _foreDraw   = temp_surface[1];
 		
-		if(_fill == 0 || _atlas) { #region surface position
+		surface_set_shader(_backDraw, noone,, BLEND.over);
+			draw_surface_safe(_back);
+		surface_reset_shader();
+		
+		if(_fill == 0 || _atlas) {
 			if(_atlas) {
 				if(_outp == 0) {
 					surface_set_shader(_foreDraw, noone,, BLEND.over);
@@ -229,7 +233,15 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				
 				_backDraw = _back;
 			}
-		} #endregion
+		} else if(_fill == 1) {
+			surface_set_shader(_foreDraw, noone,, BLEND.over);
+				draw_surface_stretched(_fore, 0, 0, ww, hh);
+			surface_reset_shader();
+		} else if(_fill == 2) {
+			surface_set_shader(_foreDraw, noone,, BLEND.over);
+				draw_surface_tiled(_fore, 0, 0);
+			surface_reset_shader();
+		}
 		
 		var _osurf  = is_instanceof(_outSurf, SurfaceAtlas)? _outSurf.surface.surface : _outSurf;
 		var _output = surface_verify(_osurf, ww, hh, cDep);
@@ -238,7 +250,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		surface_set_shader(_output, noone);
 			if(is_surface(_fore)) {
-				draw_surface_blend(_backDraw, _foreDraw, _type, _opacity, _pre_alp, _mask, _fill == 2);
+				draw_surface_blend(_backDraw, _foreDraw, _type, _opacity, _pre_alp, _mask);
 			} else { 
 				BLEND_OVERRIDE
 				draw_surface(_backDraw, 0, 0);

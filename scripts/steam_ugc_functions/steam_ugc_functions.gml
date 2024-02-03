@@ -1,4 +1,4 @@
-function __initSteamUGC() {
+function __initSteamUGC() { #region
 	globalvar STEAM_SUBS, STEAM_COLLECTION, STEAM_PROJECTS;
 	STEAM_SUBS		 = ds_list_create();
 	STEAM_COLLECTION = ds_list_create();
@@ -8,10 +8,10 @@ function __initSteamUGC() {
 	if(!STEAM_ENABLED) return;
 	
 	directory_verify(DIRECTORY + "steamUGC");
-	steamUCGload();
-}
+	try { steamUCGload(); } catch(e) { log_message("SESSION", $"> init SteamUGC      | error {e}"); }
+} #endregion
 
-function steamUCGload() {
+function steamUCGload() { #region
 	ds_list_clear(STEAM_SUBS);
 	ds_list_clear(STEAM_COLLECTION);
 	ds_list_clear(STEAM_PROJECTS);
@@ -37,37 +37,39 @@ function steamUCGload() {
 		
 		ds_map_destroy(item_map);
 	}
-}
+} #endregion
 
-function __loadSteamUGC(file_id, item_map) {
+function __loadSteamUGC(file_id, item_map) { #region
 	var _path = item_map[? "folder"];
 	
-	var f = file_find_first(_path + "/*.pxcc", 0);
-	file_find_close();
+	var f = file_find_first(_path + "/*.pxcc", 0); file_find_close();
 	if(f != "") {
 		__loadSteamUGCCollection(file_id, f, _path);
 		return;
 	}
 	
-	var p = file_find_first(_path + "/*.pxc", 0);
-	file_find_close();
+	var p = file_find_first(_path + "/*.pxc", 0); file_find_close();
 	if(p != "") {
 		__loadSteamUGCProject(file_id, p, _path);
 		return;
 	}
-}
+} #endregion
 
-function __loadSteamUGCCollection(file_id, f, path) { 
-	var name = string_replace(filename_name(f), ".pxcc", "");
-	var file = new FileObject(name, path + "/" + f);
-	var icon_path = string_replace(path + "/" + f, ".pxcc", ".png");
+function __loadSteamUGCCollection(file_id, f, path) { #region
+	if(filename_ext(f) != ".pxcc") return;
+	
+	var fullPath  = $"{path}/{f}";
+	var name      = filename_name_only(f);
+	var file      = new FileObject(name, fullPath);
+	var icon_path = string_replace(fullPath, ".pxcc", ".png");
 	
 	if(file_exists_empty(icon_path)) {
 		var _temp = sprite_add(icon_path, 0, false, false, 0, 0);
-		var ww = sprite_get_width(_temp);
-		var hh = sprite_get_height(_temp);
-		var amo = safe_mod(ww, hh) == 0? ww / hh : 1;
+		var ww    = sprite_get_width(_temp);
+		var hh    = sprite_get_height(_temp);
+		var amo   = safe_mod(ww, hh) == 0? ww / hh : 1;
 		sprite_delete(_temp);
+		
 		file.spr_path = [ icon_path, amo, false ];
 	}
 	
@@ -76,17 +78,29 @@ function __loadSteamUGCCollection(file_id, f, path) {
 	var meta = file.getMetadata(true);
 	meta.steam   = FILE_STEAM_TYPE.steamOpen;
 	meta.file_id = file_id;
-}
+} #endregion
 
-function __loadSteamUGCProject(file_id, f, path) { 
-	var name = string_replace(filename_name(f), ".pxc", "");
-	var file = new FileObject(name, path + "/" + f);
+function __loadSteamUGCProject(file_id, f, path) { #region
+	if(filename_ext(f) != ".pxc") return;
+	
+	var fullPath  = $"{path}/{f}";
+	var name      = filename_name_only(f);
+	var file      = new FileObject(name, fullPath);
 	var icon_path = path + "/thumbnail.png";
-	file.spr_path = [ icon_path, 1, false ];
+	
+	if(file_exists_empty(icon_path)) {
+		var _temp = sprite_add(icon_path, 0, false, false, 0, 0);
+		var ww    = sprite_get_width(_temp);
+		var hh    = sprite_get_height(_temp);
+		var amo   = safe_mod(ww, hh) == 0? ww / hh : 1;
+		sprite_delete(_temp);
+		
+		file.spr_path = [ icon_path, amo, false ];
+	}
 	
 	ds_list_add(STEAM_PROJECTS, file);
 	
-	var meta = file.getMetadata(true);
+	var meta     = file.getMetadata(true);
 	meta.steam   = FILE_STEAM_TYPE.steamOpen;
 	meta.file_id = file_id;
-}
+} #endregion

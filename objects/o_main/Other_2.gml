@@ -73,6 +73,7 @@
     __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer();
     loadFonts();                  log_message("SESSION", $"> init Font          | complete in {get_timer() - t}");    t = get_timer();
     __initProject();              log_message("SESSION", $"> init Project       | complete in {get_timer() - t}");    t = get_timer();
+	
     __initAction();               log_message("SESSION", $"> init Action        | complete in {get_timer() - t}");    t = get_timer();
     __initSurfaceFormat();        log_message("SESSION", $"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
     __initCollection();           log_message("SESSION", $"> init Collection    | complete in {get_timer() - t}");    t = get_timer();

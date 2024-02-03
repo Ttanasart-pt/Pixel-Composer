@@ -8,7 +8,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	function _Point(node, index, _x, _y) constructor { #region
 		self.index = index;
-		self.node = node;
+		self.node  = node;
 		x  = _x;
 		y  = _y;
 		xp = x;
@@ -211,7 +211,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 3] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { Mesh_setTriangle(); doUpdate(); } });
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { Mesh_setTriangle(); } });
 	
 	inputs[| 4] = nodeValue("Diagonal Link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Include diagonal link to prevent drastic grid deformation.");
 	
@@ -229,16 +229,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999));
 	
-	control_index = ds_list_size(inputs);
-	
-	function createControl() {
-		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue("Control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ])
-			.setDisplay(VALUE_DISPLAY.puppet_control)
-		
-		array_push(input_display_list, index);
-		return inputs[| index];
-	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -249,6 +240,17 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Link",			false],	4, 6,
 		["Control points",	false], 
 	];
+	
+	control_index = ds_list_size(inputs);
+	
+	function createControl() { #region
+		var index = ds_list_size(inputs);
+		inputs[| index] = nodeValue("Control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ])
+			.setDisplay(VALUE_DISPLAY.puppet_control)
+		
+		array_push(input_display_list, index);
+		return inputs[| index];
+	} #endregion
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -275,13 +277,14 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		tools_mesh = [
 			tools_edit[0],
 			tools_edit[1],
-			new NodeTool( "Mesh edit",		THEME.mesh_tool_edit ),
-			new NodeTool( "Anchor remove",  THEME.mesh_tool_delete ),
+			new NodeTool( "Mesh edit",			THEME.mesh_tool_edit ),
+			new NodeTool( "Mesh anchor remove", THEME.mesh_tool_delete ),
 		];
 	#endregion
 	
-	insp1UpdateTooltip   = "Generate";
-	insp1UpdateIcon      = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	insp1UpdateTooltip = "Generate";
+	insp1UpdateIcon    = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	will_triangluate   = false;
 	
 	static onInspector1Update = function() { #region
 		Mesh_setTriangle();
@@ -298,7 +301,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var my = (_my - _y) / _s;
 		
 		var _type = getInputData(8);
-		if(_type == 1 && (isUsingTool("Mesh edit") || isUsingTool("Anchor remove"))) {
+		if(_type == 1 && (isUsingTool("Mesh edit") || isUsingTool("Mesh anchor remove"))) {
 			var mesh = attributes.mesh_bound;
 			var len  = array_length(mesh);
 			var _hover = -0.5, _side = 0;
@@ -341,7 +344,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 				draw_circle_prec(_dx, _dy, hover == i? 6 : 4, false);
 			
-				if((isUsingTool("Mesh edit") || isUsingTool("Anchor remove")) && point_distance(_dx, _dy, _mx, _my) < 6)
+				if((isUsingTool("Mesh edit") || isUsingTool("Mesh anchor remove")) && point_distance(_dx, _dy, _mx, _my) < 6)
 					_hover = i;
 			}
 		
@@ -370,7 +373,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						anchor_drag_sy  = mesh[hover][1];
 						anchor_drag_mx  = _mx;
 						anchor_drag_my  = _my;
-					} else if(isUsingTool("Anchor remove")) {
+					} else if(isUsingTool("Mesh anchor remove")) {
 						if(array_length(mesh) > 3) {
 							array_delete(mesh, hover, 1);
 							Mesh_setTriangle();
@@ -464,6 +467,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		for(var i = 0; i < array_length(data.tris); i++)
 			data.tris[i].reset(data);
 	} #endregion
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	static Mesh_regularTri = function(surf) { #region
 		if(is_array(surf)) surf = array_safe_get(surf, 0);
@@ -568,9 +573,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var seed   = getInputData(9);
 		
 		if(!inputs[| 0].value_from) return;
-		var useArray = is_array(surf);
-		var ww = useArray? surface_get_width_safe(surf[0]) : surface_get_width_safe(surf);
-		var hh = useArray? surface_get_height_safe(surf[0]) : surface_get_height_safe(surf);
+		if(is_array(surf)) surf = surf[0];
+		
+		var ww = surface_get_width_safe(surf);
+		var hh = surface_get_height_safe(surf);
 		
 		var _m = attributes.mesh_bound;
 		if(array_length(_m) < 3) return;
@@ -646,6 +652,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		for(var i = 0; i < array_length(data.tris); i++)
 			data.tris[i].initSurface(is_array(_inSurf)? _inSurf[0] : _inSurf);
+		
+		triggerRender();
 	} #endregion
 	
 	static Control_affectPoint = function(c, p) { #region
@@ -730,6 +738,11 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+		if(will_triangluate) {
+			Mesh_setTriangle();
+			will_triangluate = false;
+		}
+		
 		var _inSurf = _data[0];
 		if(!is_surface(_inSurf)) return _outSurf;
 		
@@ -783,7 +796,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(p == 0) continue;
 			if(p.pin) array_push(pinList, p.index);
 		}
-			
+		
 		att.pin = pinList;
 		att.mesh_bound = attributes.mesh_bound;
 		
@@ -797,7 +810,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static postLoad = function() { #region
-		Mesh_setTriangle();
+		will_triangluate = true;
 		
 		if(loadPin == noone) return;
 		

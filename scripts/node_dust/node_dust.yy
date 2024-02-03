@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "generator",
-    "path": "folders/nodes/data/generator.yy",
+    "name": "drawer",
+    "path": "folders/nodes/data/generator/drawer.yy",
   },
 }
