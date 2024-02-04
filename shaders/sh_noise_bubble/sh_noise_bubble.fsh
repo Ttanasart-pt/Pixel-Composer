@@ -9,6 +9,7 @@ uniform float seed;
 uniform vec2  scale;
 uniform vec2  alpha;
 uniform int   mode;
+uniform int   render;
 
 uniform float thickness;
 
@@ -34,15 +35,13 @@ void main() {
     	float _a = mix(alpha.x, alpha.y, random(vec2(float(i), 2.)));
 		
 		float dst = 1. - distance(pos, vec2(_x, _y));
+		float st;
 		
-		if(mode == 0) {
-			float st = smoothstep(1. - max(_t, thickness), 1., 1. - abs(dst - (1. - _s))) * _a;
-			w = max(w, st);
-			
-		} else if(mode == 1) {
-			float st = smoothstep(1. - max(_t, thickness), 1., 1. - max(0., dst - (1. - _s))) * _a;
-			w = max(w, st);
-		}
+		     if(mode == 0) st = smoothstep(1. - max(_t, thickness), 1., 1. - abs(dst - (1. - _s))) * _a;
+		else if(mode == 1) st = smoothstep(1. - _s - thickness, 1. - _s + thickness, max(0., dst)) * _a;
+		
+		     if(render == 0) w  = max(w, st);
+		else if(render == 1) w += st;
     }
     
     gl_FragColor = vec4(vec3(w), 1.);

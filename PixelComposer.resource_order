@@ -883,6 +883,7 @@
     {"name":"node_iterator_length","order":4,"path":"scripts/node_iterator_length/node_iterator_length.yy",},
     {"name":"node_VFX_effect_attract","order":2,"path":"scripts/node_VFX_effect_attract/node_VFX_effect_attract.yy",},
     {"name":"sh_d3d_ssao_blur","order":1,"path":"shaders/sh_d3d_ssao_blur/sh_d3d_ssao_blur.yy",},
+    {"name":"function_register","order":2,"path":"scripts/function_register/function_register.yy",},
     {"name":"panel_addon","order":5,"path":"scripts/panel_addon/panel_addon.yy",},
     {"name":"s_node_text_splice","order":6,"path":"sprites/s_node_text_splice/s_node_text_splice.yy",},
     {"name":"__node_3d_transform","order":7,"path":"scripts/__node_3d_transform/__node_3d_transform.yy",},

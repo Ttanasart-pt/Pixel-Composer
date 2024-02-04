@@ -224,7 +224,7 @@ function Panel_Menu() : PanelContent() constructor {
 	
 	if(TESTING) { #region
 		array_push(menus, [ __txt("Dev"), [
-			menuItem(__txtx("panel_debug_console", "Debug console"), function() { 
+			menuItem(__txtx("panel_debug_console", "Console"), function() { 
 				panelAdd("Panel_Console", true)
 			}),
 			menuItem(__txtx("panel_debug_overlay", "Debug overlay"), function() { 

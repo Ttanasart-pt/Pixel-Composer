@@ -18,7 +18,7 @@ function TEST_PATH(path) { #region
 	PROJECT = new Project();
 	PANEL_GRAPH.setProject(PROJECT);
 	
-	__LOAD_PATH(path);
+	LOAD_AT(path);
 } #endregion
 
 function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
@@ -40,7 +40,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 		array_push(PROJECTS, PROJECT);
 	}
 	
-	var res = __LOAD_PATH(path, readonly);
+	var res = LOAD_AT(path, readonly);
 	if(!res) return false;
 	
 	PROJECT.safeMode = safe_mode;
@@ -49,7 +49,9 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 	return PROJECT;
 } #endregion
 
-function __LOAD_PATH(path, readonly = false, override = false) { #region
+function LOAD_AT(path, readonly = false, override = false) { #region
+	CALL("LOAD_AT");
+	
 	//print($"========== Loading {path} =========="); var t = get_timer();
 	
 	if(DEMO) return false;
@@ -90,7 +92,7 @@ function __LOAD_PATH(path, readonly = false, override = false) { #region
 	if(struct_has(_load_content, "version")) {
 		var _v = _load_content.version;
 		PROJECT.version = _v;
-		if(floor(_v) != floor(SAVE_VERSION)) {
+		if(PREFERENCES.notify_load_version && floor(_v) != floor(SAVE_VERSION)) {
 			var warn = $"File version mismatch : loading file version {_v} to Pixel Composer {SAVE_VERSION}";
 			log_warning("LOAD", warn);
 		}

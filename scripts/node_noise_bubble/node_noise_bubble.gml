@@ -9,7 +9,7 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(4));
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
-	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.9, 0.95 ] )
+	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.8 ] )
 		.setDisplay(VALUE_DISPLAY.slider_range);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
@@ -25,9 +25,13 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		.setDisplay(VALUE_DISPLAY.slider_range);
 		addShaderProp(SHADER_UNIFORM.float, "alpha");
 		
+	inputs[| 7] = nodeValue("Blending", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )	
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Max", "Add" ] );
+		addShaderProp(SHADER_UNIFORM.integer, "render");
+		
 	input_display_list = [ 2, 
 		["Output", 	 true],	0, 
 		["Noise",	false],	1, 3, 
-		["Render",	false], 5, 4, 6, 
+		["Render",	false], 5, 4, 6, 7, 
 	];
 }

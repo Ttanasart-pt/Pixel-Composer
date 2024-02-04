@@ -15,8 +15,11 @@
 
 #region main
 	globalvar OS, DEBUG, THEME, COLOR_KEYS;
-	OS = os_type;
-	//OS = os_macosx;
+	globalvar CMD, CMDIN;
+	
+	OS    = os_type;
+	CMD   = [];
+	CMDIN = [];
 	
 	DEBUG = false;
 	THEME = new Theme();
@@ -25,10 +28,10 @@
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION;
 
 	LATEST_VERSION	= 11600;
-	VERSION			= 11642;
-	SAVE_VERSION	= 11642;
-	VERSION_STRING  = "1.16.4.2";
-	BUILD_NUMBER	= 11640;
+	VERSION			= 11650;
+	SAVE_VERSION	= 11650;
+	VERSION_STRING  = "1.16.5.0";
+	BUILD_NUMBER	= 11650;
 	
 	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();
@@ -129,13 +132,13 @@
 	#macro PANEL_PAD THEME_VALUE.panel_padding
 	
 	function print(str) {
-		//show_debug_message(string(str));
+		INLINE
 		noti_status(string(str));
 	}
 	
 	function printIf(cond, log) {
-		if(!cond) return;
-		show_debug_message(log);
+		INLINE
+		if(cond) print(log);
 	}
 #endregion
 

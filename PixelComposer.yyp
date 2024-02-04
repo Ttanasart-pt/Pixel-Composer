@@ -1160,6 +1160,7 @@
     {"id":{"name":"node_VFX_effect_attract","path":"scripts/node_VFX_effect_attract/node_VFX_effect_attract.yy",},},
     {"id":{"name":"node_fluid_repulse","path":"scripts/node_fluid_repulse/node_fluid_repulse.yy",},},
     {"id":{"name":"sh_d3d_ssao_blur","path":"shaders/sh_d3d_ssao_blur/sh_d3d_ssao_blur.yy",},},
+    {"id":{"name":"function_register","path":"scripts/function_register/function_register.yy",},},
     {"id":{"name":"panel_addon","path":"scripts/panel_addon/panel_addon.yy",},},
     {"id":{"name":"s_node_text_splice","path":"sprites/s_node_text_splice/s_node_text_splice.yy",},},
     {"id":{"name":"__node_3d_transform","path":"scripts/__node_3d_transform/__node_3d_transform.yy",},},

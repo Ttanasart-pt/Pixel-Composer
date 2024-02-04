@@ -1,4 +1,6 @@
 function closeProject(project) {
+	CALL("CLOSE");
+	
 	project.active = false;
 	array_remove(PROJECTS, project);
 	if(array_length(PROJECTS) == 0) {
@@ -10,7 +12,7 @@ function closeProject(project) {
 	
 	for( var i = array_length(panels) - 1; i >= 0; i-- ) {
 		var panel = panels[i];
-		//print($" Check {panel.project.path}");
+		
 		if(panel.project != project) 
 			continue;
 		

@@ -17,7 +17,9 @@
 												
 	PREFERENCES.show_splash						= true;
 	PREFERENCES.splash_expand_recent			= false;
+	
 	PREFERENCES.notification_time				= 180;
+	PREFERENCES.notify_load_version				= true;
 												
 	PREFERENCES.display_scaling					= 1;
 	PREFERENCES.window_width					= 1600;

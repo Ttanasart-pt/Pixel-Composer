@@ -2,8 +2,8 @@
 	globalvar STATUSES, WARNING, ERRORS;
 	
 	STATUSES = ds_list_create();
-	WARNING = ds_list_create();
-	ERRORS = ds_list_create();
+	WARNING  = ds_list_create();
+	ERRORS   = ds_list_create();
 #endregion
 
 #region classes
@@ -14,29 +14,32 @@
 	}
 	
 	function notification(type, str, icon = noone, color = c_ui_blue_dkgrey, life = -1) constructor {
-		self.type  = type;
-		self.txt   = str;
-		self.icon  = icon;
-		self.color = color;
+		self.type   = type;
+		self.txt    = str;
+		self.txtclr = COLORS._main_text_sub;
+		self.icon   = icon;
+		self.color  = color;
 		
 		self.life_max = life;
 		self.life     = life;
 		
-		self.onClick = noone;
-		self.tooltip = "";
+		self.onClick  = noone;
+		self.tooltip  = "";
 		self.icon_end = noone;
 		
 		self.amount = 1;
 		
-		self.time = string_lead_zero(current_hour, 2) + ":" + string_lead_zero(current_minute, 2) + "." + string_lead_zero(current_second, 2);
+		self.time = $"{string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}.{string_lead_zero(current_second, 2)}";
 		
 		static setOnClick = function(onClick, tooltip = "", icon_end = noone) {
-			self.onClick = method(self, onClick);
-			self.tooltip = tooltip;
+			self.onClick  = method(self, onClick);
+			self.tooltip  = tooltip;
 			self.icon_end = icon_end;
 			
 			return self;
 		}
+		
+		array_push(CMD, self);
 	}
 	
 	function noti_status(str, icon = noone, flash = false, ref = noone) {
@@ -87,6 +90,8 @@
 		
 		show_debug_message("WARNING: " + str);
 		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, PREFERENCES.notification_time);
+		noti.txtclr = c_ui_orange;
+		
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
 		
@@ -107,6 +112,8 @@
 		if(PANEL_MAIN == 0) print(str);
 		
 		var noti = new notification(NOTI_TYPE.error, str, icon, c_ui_red);
+		noti.txtclr = c_ui_red;
+		
 		ds_list_add(STATUSES, noti);
 		ds_list_add(ERRORS, noti);
 		

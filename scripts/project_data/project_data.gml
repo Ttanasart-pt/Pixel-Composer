@@ -97,6 +97,8 @@
 			
 			gc_collect();
 		} #endregion
+			
+		static toString = function() { return $"ProjectObject [{path}]"; }
 	}
 	
 	function __initProject() {

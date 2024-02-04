@@ -2,6 +2,8 @@ globalvar SAVING;
 SAVING = false;
 
 function NEW() { #region
+	CALL("NEW");
+	
 	PROJECT = new Project();
 	array_push(PROJECTS, PROJECT);
 	
@@ -11,7 +13,7 @@ function NEW() { #region
 } #endregion
 
 function save_serialize(project = PROJECT, _outMap = false) { #region
-	var _map  = {};
+	var _map = {};
 	_map.version = SAVE_VERSION;
 	
 	var _node_list = [];
@@ -84,6 +86,7 @@ function SAVE_ALL() { #region
 function SAVE(project = PROJECT) { #region
 	if(DEMO) return false;
 	
+	print("SAVE");
 	if(project.path == "" || project.readonly)
 		return SAVE_AS(project);
 	return SAVE_AT(project, project.path);
@@ -108,6 +111,8 @@ function SAVE_AS(project = PROJECT) { #region
 } #endregion
 
 function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
+	CALL("SAVE_AT");
+	
 	if(DEMO) return false;
 	
 	SAVING = true;
