@@ -13,24 +13,23 @@
 #region window
 	window_set_min_width(960);
 	window_set_min_height(600);
-	
+	draw_set_circle_precision(64);
 	winManInit();
 	
-	depth = 0;
-	win_wp = WIN_W;
-	win_hp = WIN_H;
-	win_resize = false;
+	depth       = 0;
+	win_wp      = WIN_W;
+	win_hp      = WIN_H;
+	win_resize  = false;
 	
 	room_width  = WIN_W;
 	room_height = WIN_H;
 	
-	draw_set_circle_precision(64);
 	DIALOG_DEPTH_HOVER = 0;
-	UPDATE   = RENDER_TYPE.none;
-	CURSOR   = cr_default;
-	TOOLTIP  = "";
-	DRAGGING = noone;
-	KEYBOARD_STRING = "";
+	UPDATE             = RENDER_TYPE.none;
+	CURSOR             = cr_default;
+	TOOLTIP            = "";
+	DRAGGING           = noone;
+	KEYBOARD_STRING    = "";
 	
 	RENDER_QUEUE = new Queue();
 	RENDER_ORDER = [];
@@ -38,7 +37,7 @@
 	globalvar AUTO_SAVE_TIMER;
 	AUTO_SAVE_TIMER = 0;
 	
-	_cursor	= CURSOR;
+	_cursor	 = CURSOR;
 	dc_check = 0;
 	kb_time  = 0;
 	kb_hold  = false;
@@ -46,36 +45,31 @@
 	
 	panelInit();
 	
-	addHotkey("", "New file", "N",	MOD_KEY.ctrl, NEW);
+	addHotkey("", "New file", "N",				MOD_KEY.ctrl, NEW);
 	if(!DEMO) {
-		addHotkey("", "Save", "S",		MOD_KEY.ctrl, SAVE );
-		addHotkey("", "Save as", "S",	MOD_KEY.ctrl | MOD_KEY.shift, SAVE_AS );
-		addHotkey("", "Save all", "S",	MOD_KEY.ctrl | MOD_KEY.alt, SAVE_ALL );
-		addHotkey("", "Open", "O",		MOD_KEY.ctrl, function() { LOAD(); });
+		addHotkey("", "Save", "S",				MOD_KEY.ctrl,					SAVE);
+		addHotkey("", "Save as", "S",			MOD_KEY.ctrl | MOD_KEY.shift,	SAVE_AS);
+		addHotkey("", "Save all", "S",			MOD_KEY.ctrl | MOD_KEY.alt,		SAVE_ALL);
+		addHotkey("", "Open", "O",				MOD_KEY.ctrl,					LOAD);
 	}
 	
-	addHotkey("", "Undo", "Z",		MOD_KEY.ctrl, function() { UNDO(); });
-	addHotkey("", "Redo", "Z",		MOD_KEY.ctrl | MOD_KEY.shift, function() { REDO(); });
+	addHotkey("", "Undo", "Z",					MOD_KEY.ctrl,					UNDO);
+	addHotkey("", "Redo", "Z",					MOD_KEY.ctrl | MOD_KEY.shift,	REDO);
 	
-	addHotkey("", "Full panel",   "`",			MOD_KEY.none, set_focus_fullscreen);
-	addHotkey("", "Reset layout", vk_f10,		MOD_KEY.ctrl, function() { resetPanel(); });
+	addHotkey("", "Full panel",   "`",			MOD_KEY.none,					set_focus_fullscreen);
+	addHotkey("", "Reset layout", vk_f10,		MOD_KEY.ctrl,					resetPanel);
 	
-	addHotkey("", "Open notification", vk_f12,	MOD_KEY.none, function() { dialogPanelCall(new Panel_Notification()); });
+	addHotkey("", "Open notification", vk_f12,	MOD_KEY.none,					function() { dialogPanelCall(new Panel_Notification()); });
 	
-	addHotkey("", "Fullscreen", vk_f11,	MOD_KEY.none, function() { winMan_setFullscreen(!window_is_fullscreen); });
+	addHotkey("", "Fullscreen", vk_f11,			MOD_KEY.none,					global_fullscreen);
+	addHotkey("", "Render all", vk_f5,			MOD_KEY.none,					global_render_all);
 	
-	addHotkey("", "Render all", vk_f5,		MOD_KEY.none, function() { RENDER_ALL_REORDER });
-	
-	addHotkey("", "Close file", "Q",		MOD_KEY.ctrl, function() { PANEL_GRAPH.close(); });
-	addHotkey("", "Close program", vk_f4,	MOD_KEY.alt, window_close);
-	
-	addHotkey("", "Reload theme", vk_f10,	MOD_KEY.ctrl | MOD_KEY.shift, function() { 
-		loadGraphic(PREFERENCES.theme); 
-		resetPanel();
-	} );
+	addHotkey("", "Close file", "Q",			MOD_KEY.ctrl,					global_project_close);
+	addHotkey("", "Close program", vk_f4,		MOD_KEY.alt,					window_close);
+	addHotkey("", "Reload theme", vk_f10,		MOD_KEY.ctrl | MOD_KEY.shift,	global_theme_reload);
 	
 	globalvar HOTKEY_MOD, HOTKEY_BLOCK;
-	HOTKEY_MOD = 0;
+	HOTKEY_MOD   = 0;
 	HOTKEY_BLOCK = false;
 #endregion
 

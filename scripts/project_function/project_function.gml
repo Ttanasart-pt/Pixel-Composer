@@ -1,5 +1,5 @@
 function closeProject(project) {
-	CALL("CLOSE");
+	CALL("close");
 	
 	project.active = false;
 	array_remove(PROJECTS, project);

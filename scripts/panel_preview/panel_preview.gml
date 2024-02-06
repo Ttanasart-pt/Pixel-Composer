@@ -1,3 +1,25 @@
+#region funtion calls
+	function __fnInit_Preview() {
+		__registerFunction("preview_focus_content",				panel_preview_focus_content);
+		__registerFunction("preview_save_current_frame",		panel_preview_save_current_frame);
+		__registerFunction("preview_save_all_current_frame",	panel_preview_save_all_current_frame);
+		__registerFunction("preview_preview_window",			panel_preview_preview_window);
+		__registerFunction("preview_toggle_grid",				panel_preview_toggle_grid);
+		
+		__registerFunction("preview_pan",	panel_preview_pan);
+		__registerFunction("preview_zoom",	panel_preview_zoom);
+	}
+	
+	function panel_preview_focus_content()				{ CALL("preview_focus_content");			PANEL_PREVIEW.fullView();												}
+	function panel_preview_save_current_frame()			{ CALL("preview_save_current_frame");		PANEL_PREVIEW.saveCurrentFrame();										}
+	function panel_preview_save_all_current_frame()		{ CALL("preview_save_all_current_frame");	PANEL_PREVIEW.saveAllCurrentFrames();									}
+	function panel_preview_preview_window()				{ CALL("preview_preview_window");			PANEL_PREVIEW.create_preview_window(PANEL_PREVIEW.getNodePreview());	}
+	function panel_preview_toggle_grid()				{ CALL("preview_toggle_grid");				PROJECT.previewGrid.show = !PROJECT.previewGrid.show;					}
+	
+	function panel_preview_pan()						{ CALL("preview_pan");						PANEL_PREVIEW.canvas_dragging_key = true; }
+	function panel_preview_zoom()						{ CALL("preview_zoom");						PANEL_PREVIEW.canvas_zooming_key  = true; }
+#endregion
+
 function Panel_Preview() : PanelContent() constructor {
 	title = __txt("Preview");
 	context_str = "Preview";
@@ -274,14 +296,14 @@ function Panel_Preview() : PanelContent() constructor {
 	#endregion
 	
 	#region ++++ hotkey ++++
-	addHotkey("Preview", "Focus content",			"F", MOD_KEY.none,	function() { PANEL_PREVIEW.fullView(); });
-	addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	function() { PANEL_PREVIEW.saveCurrentFrame(); });
-	addHotkey("Preview", "Save all current frame",	-1, MOD_KEY.none,	function() { PANEL_PREVIEW.saveAllCurrentFrames(); });
-	addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	function() { create_preview_window(PANEL_PREVIEW.getNodePreview()); });
-	addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	function() { PROJECT.previewGrid.show = !PROJECT.previewGrid.show; });
+		addHotkey("Preview", "Focus content",			"F", MOD_KEY.none,	panel_preview_focus_content);
+		addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	panel_preview_save_current_frame);
+		addHotkey("Preview", "Save all current frame",	-1, MOD_KEY.none,	panel_preview_save_all_current_frame);
+		addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	panel_preview_preview_window);
+		addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	panel_preview_toggle_grid);
 	
-	addHotkey("Preview", "Pan",		"", MOD_KEY.ctrl,				function() { PANEL_PREVIEW.canvas_dragging_key = true; });
-	addHotkey("Preview", "Zoom",	"", MOD_KEY.alt | MOD_KEY.ctrl,	function() { PANEL_PREVIEW.canvas_zooming_key  = true; });
+		addHotkey("Preview", "Pan",		"", MOD_KEY.ctrl,					panel_preview_pan);
+		addHotkey("Preview", "Zoom",	"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_preview_zoom);
 	#endregion
 	
 	function setNodePreview(node) { #region

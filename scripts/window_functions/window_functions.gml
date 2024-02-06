@@ -5,6 +5,8 @@ function close_program() {
 }
 
 function window_close() {
+	CALL("exit");
+	
 	var noSave = true;
 	
 	for( var i = 0, n = array_length(PROJECTS); i < n; i++ ) {

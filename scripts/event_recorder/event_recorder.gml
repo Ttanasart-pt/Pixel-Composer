@@ -281,7 +281,7 @@ function mergeAction(act) { #region
 } #endregion
 
 function UNDO() { #region
-	CALL("UNDO");
+	CALL("undo");
 	
 	if(ds_stack_empty(UNDO_STACK))				return;
 	if(instance_exists(_p_dialog_undo_block))	return;
@@ -298,7 +298,7 @@ function UNDO() { #region
 } #endregion
 
 function REDO() { #region
-	CALL("REDO");
+	CALL("redo");
 	
 	if(ds_stack_empty(REDO_STACK))				return;
 	if(instance_exists(_p_dialog_undo_block))	return;

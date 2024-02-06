@@ -1,3 +1,33 @@
+#region funtion calls
+	function __fnInit_Animation() {
+		__registerFunction("animation_play_pause",		panel_animation_play_pause);
+		__registerFunction("animation_resume",			panel_animation_resume);
+		
+		__registerFunction("animation_first_frame",		panel_animation_first_frame);
+		__registerFunction("animation_last_frame",		panel_animation_last_frame);
+		__registerFunction("animation_next_frame",		panel_animation_next_frame);
+		__registerFunction("animation_prev_frame",		panel_animation_prev_frame);
+		
+		__registerFunction("animation_delete_key",		panel_animation_delete_key);
+		__registerFunction("animation_duplicate",		panel_animation_duplicate);
+		__registerFunction("animation_copy",			panel_animation_copy);
+		__registerFunction("animation_paste",			panel_animation_paste);
+	}
+	
+	function panel_animation_play_pause()	{ CALL("animation_play_pause");	if(IS_RENDERING) return; if(IS_PLAYING) PROJECT.animator.pause() else PROJECT.animator.play();					  }
+	function panel_animation_resume()		{ CALL("animation_resume");		if(IS_RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); }
+	
+	function panel_animation_first_frame()	{ CALL("animation_first_frame");	if(IS_RENDERING) return; PROJECT.animator.firstFrame(); }
+	function panel_animation_last_frame()	{ CALL("animation_last_frame");		if(IS_RENDERING) return; PROJECT.animator.lastFrame();  }
+	function panel_animation_next_frame()	{ CALL("animation_next_frame");		if(IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, TOTAL_FRAMES - 1)); }
+	function panel_animation_prev_frame()	{ CALL("animation_prev_frame");		if(IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0));                }
+	
+	function panel_animation_delete_key()	{ CALL("animation_delete_key");	PANEL_ANIMATION.deleteKeys();   }
+	function panel_animation_duplicate()	{ CALL("animation_duplicate");	PANEL_ANIMATION.doDuplicate();  }
+	function panel_animation_copy()			{ CALL("animation_copy");		PANEL_ANIMATION.doCopy();       }
+	function panel_animation_paste()		{ CALL("animation_paste");		PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing); }
+#endregion
+
 enum KEYFRAME_DRAG_TYPE {
 	move,
 	ease_in,
@@ -172,18 +202,18 @@ function Panel_Animation() : PanelContent() constructor {
 	#endregion
 	
 	#region ++++ hotkeys ++++
-	addHotkey("", "Play/Pause",		vk_space, MOD_KEY.none,	function() { if(IS_RENDERING) return; if(IS_PLAYING) PROJECT.animator.pause() else PROJECT.animator.play(); });
-	addHotkey("", "Resume/Pause",	vk_space, MOD_KEY.shift,function() { if(IS_RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); });
+		addHotkey("",			"Play/Pause",		vk_space,	MOD_KEY.none,	panel_animation_play_pause);
+		addHotkey("",			"Resume/Pause",		vk_space,	MOD_KEY.shift,	panel_animation_resume);
+								
+		addHotkey("",			"First frame",		vk_home,	MOD_KEY.none,	panel_animation_first_frame);
+		addHotkey("",			"Last frame",		vk_end,		MOD_KEY.none,	panel_animation_last_frame);
+		addHotkey("",			"Next frame",		vk_right,	MOD_KEY.none,	panel_animation_next_frame);
+		addHotkey("",			"Previous frame",	vk_left,	MOD_KEY.none,	panel_animation_prev_frame);
 	
-	addHotkey("", "First frame",	vk_home,  MOD_KEY.none,	function() { if(IS_RENDERING) return; PROJECT.animator.firstFrame(); });
-	addHotkey("", "Last frame",		vk_end,   MOD_KEY.none,	function() { if(IS_RENDERING) return; PROJECT.animator.lastFrame();  });
-	addHotkey("", "Next frame",		vk_right, MOD_KEY.none,	function() { if(IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, TOTAL_FRAMES - 1)); });
-	addHotkey("", "Previous frame",	vk_left, MOD_KEY.none,	function() { if(IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0)); });
-	
-	addHotkey("Animation", "Delete keys",	vk_delete,	MOD_KEY.none, function() { PANEL_ANIMATION.deleteKeys(); });
-	addHotkey("Animation", "Duplicate",		"D",		MOD_KEY.ctrl, function() { PANEL_ANIMATION.doDuplicate(); });
-	addHotkey("Animation", "Copy",			"C",		MOD_KEY.ctrl, function() { PANEL_ANIMATION.doCopy(); });
-	addHotkey("Animation", "Paste",			"V",		MOD_KEY.ctrl, function() { PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing); });
+		addHotkey("Animation", "Delete keys",		vk_delete,	MOD_KEY.none,	panel_animation_delete_key);
+		addHotkey("Animation", "Duplicate",			"D",		MOD_KEY.ctrl,	panel_animation_duplicate);
+		addHotkey("Animation", "Copy",				"C",		MOD_KEY.ctrl,	panel_animation_copy);
+		addHotkey("Animation", "Paste",				"V",		MOD_KEY.ctrl,	panel_animation_paste);
 	#endregion
 	
 	#region ++++ context menu ++++

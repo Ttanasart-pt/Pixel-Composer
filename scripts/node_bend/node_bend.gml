@@ -33,13 +33,13 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		draw_set_color(COLORS._main_accent);
 		
-		for( var i = 0, n = array_length(mesh); i < n; i++ ) {
-			var _t = mesh[i];
+		//for( var i = 0, n = array_length(mesh); i < n; i++ ) {
+		//	var _t = mesh[i];
 				
-			draw_line(_x + _t[0][0] * _s, _y + _t[0][1] * _s, _x + _t[1][0] * _s, _y + _t[1][1] * _s);
-			draw_line(_x + _t[1][0] * _s, _y + _t[1][1] * _s, _x + _t[2][0] * _s, _y + _t[2][1] * _s);
-			draw_line(_x + _t[2][0] * _s, _y + _t[2][1] * _s, _x + _t[0][0] * _s, _y + _t[0][1] * _s);
-		}
+		//	draw_line(_x + _t[0][0] * _s, _y + _t[0][1] * _s, _x + _t[1][0] * _s, _y + _t[1][1] * _s);
+		//	draw_line(_x + _t[1][0] * _s, _y + _t[1][1] * _s, _x + _t[2][0] * _s, _y + _t[2][1] * _s);
+		//	draw_line(_x + _t[2][0] * _s, _y + _t[2][1] * _s, _x + _t[0][0] * _s, _y + _t[0][1] * _s);
+		//}
 	} #endregion
 	
 	static step = function() { #region
@@ -58,8 +58,32 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);
 		
-		var _gw  = min(16, floor(_sw / 4));
-		var _gh  = min(16, floor(_sh / 4));
+		var _gw = min(32, floor(_sw / 2));
+		var _gh = min(32, floor(_sh / 2));
+		
+		switch(_typ) { #region
+			case 0 :
+				if(_axs == 0) {
+					_gw = min(64, floor(_sw / 2));
+					_gh = min(16, floor(_sh / 2));
+				} else {
+					_gw = min(16, floor(_sw / 2));
+					_gh = min(64, floor(_sh / 2));
+				}
+				break;
+				
+			case 1 :
+				if(_axs == 0) {
+					_gw = min(64, floor(_sw / 2));
+					_gh = min(16, floor(_sh / 2));
+				} else {
+					_gw = min(16, floor(_sw / 2));
+					_gh = min(64, floor(_sh / 2));
+				}
+				break;
+				
+		} #endregion
+		
 		var _dw  = _sw / _gw;
 		var _dh  = _sh / _gh;
 		

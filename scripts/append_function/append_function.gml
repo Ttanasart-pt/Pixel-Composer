@@ -1,5 +1,5 @@
 function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) { #region
-	CALL("APPEND");
+	CALL("append");
 	
 	if(_path == "") return noone;
 	var _map = json_load_struct(_path);

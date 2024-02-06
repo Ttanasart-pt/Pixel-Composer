@@ -847,29 +847,28 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 } #endregion
 
 function PanelContent() constructor { #region
-	title	= "";
-	icon	= noone;
+	title		= "";
+	icon		= noone;
 	context_str = "";
 	draggable   = true;
 	expandable  = true;
 	resizable   = true;
 	
-	auto_pin = false;
-	panel = noone;
+	auto_pin	= false;
+	panel		= noone;
+	
 	mx = 0;
 	my = 0;
-	
-	x = 0;
-	y = 0;
-	w = 640;
-	h = 480;
+	x  = 0;
+	y  = 0;
+	w  = 640;
+	h  = 480;
 	padding		 = ui(16);
 	title_height = ui(28);
 	
-	tab_x = 0;
-	
-	min_w = ui(40);
-	min_h = ui(40);
+	tab_x  = 0;
+	min_w  = ui(40);
+	min_h  = ui(40);
 	
 	pFOCUS = false;
 	pHOVER = false;
@@ -922,7 +921,7 @@ function PanelContent() constructor { #region
 	static draw = function(panel) { #region
 		self.panel = panel;
 		if(o_main.panel_dragging == noone) {
-			pFOCUS = FOCUS == panel && panel.mouse_active;
+			pFOCUS = FOCUS == panel/* && panel.mouse_active*/;
 			pHOVER = HOVER == panel && panel.mouse_active;
 		}
 		

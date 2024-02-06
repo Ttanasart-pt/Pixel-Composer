@@ -165,6 +165,22 @@
 	DEF_SURFACE_RESET();
 #endregion
 
+#region functions
+	function __fnInit_Global() {
+		__registerFunction("fullscreen",	global_fullscreen);
+		__registerFunction("render_all",	global_render_all);
+		__registerFunction("project_close",	global_project_close);
+		
+		__registerFunction("theme_reload",	global_theme_reload);
+	}
+	
+	function global_fullscreen()	{ CALL("fullscreen");		winMan_setFullscreen(!window_is_fullscreen);	}
+	function global_render_all()	{ CALL("render_all");		RENDER_ALL_REORDER								}
+	function global_project_close()	{ CALL("project_close");	PANEL_GRAPH.close();							}
+	
+	function global_theme_reload()	{ CALL("theme_reload");		loadGraphic(PREFERENCES.theme); resetPanel();	}
+#endregion
+
 #region debug
 	global.FLAG = {};
 #endregion

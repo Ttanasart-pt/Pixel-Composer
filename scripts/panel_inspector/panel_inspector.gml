@@ -1,4 +1,20 @@
-function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor {
+#region funtion calls
+	function __fnInit_Inspector() {
+		__registerFunction("inspector_copy_prop",				panel_inspector_copy_prop);
+		__registerFunction("inspector_paste_prop",				panel_inspector_paste_prop);
+		__registerFunction("inspector_toggle_animation",		panel_inspector_toggle_animation);
+		
+		__registerFunction("inspector_color_pick",				panel_inspector_color_pick);
+	}
+	
+	function panel_inspector_copy_prop()				{ CALL("inspector_copy_prop");			PANEL_INSPECTOR.propSelectCopy();		}
+	function panel_inspector_paste_prop()				{ CALL("inspector_paste_prop");			PANEL_INSPECTOR.propSelectPaste();		}
+	function panel_inspector_toggle_animation()			{ CALL("inspector_toggle_animation");	PANEL_INSPECTOR.anim_toggling = true;	}
+	
+	function panel_inspector_color_pick()				{ CALL("inspector_color_pick");			if(!PREFERENCES.alt_picker) return; PANEL_INSPECTOR.color_picking = true;	}
+#endregion
+
+function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor { #region
 	h = 64;
 	self.draw = drawFn;
 	
@@ -9,7 +25,7 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
 			self.parent = parent;
 		}
 	}
-}
+} #endregion
 
 function Inspector_Sprite(spr) constructor { self.spr = spr; }
 
@@ -102,14 +118,11 @@ function Panel_Inspector() : PanelContent() constructor {
 	#endregion
 	
 	#region ++++ hotkeys ++++
-		addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	function() { PANEL_INSPECTOR.propSelectCopy(); });
-		addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	function() { PANEL_INSPECTOR.propSelectPaste(); });
-		addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	function() { PANEL_INSPECTOR.anim_toggling = true; });
-	
-		addHotkey("", "Color picker",		"",   MOD_KEY.alt,		function() { 
-																		if(!PREFERENCES.alt_picker) return; 
-																		PANEL_INSPECTOR.color_picking = true; 
-																	});
+		addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	panel_inspector_copy_prop);
+		addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	panel_inspector_paste_prop);
+		addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	panel_inspector_toggle_animation);
+		
+		addHotkey("", "Color picker",				"",	   MOD_KEY.alt,		panel_inspector_color_pick);
 	#endregion
 	
 	#region ++++ menus ++++

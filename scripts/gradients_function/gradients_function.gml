@@ -65,22 +65,20 @@ function gradientObject(color = c_black) constructor { #region
 		if(position <= keys[0].time)        return keys[0].value;
 		if(position >= keys[_len - 1].time) return keys[_len - 1].value;
 		
-		var _pkey = keys[0];
-		
 		for(var i = 1; i < _len; i++) {
-			var _key = keys[i];
-			if(_key.time < position) continue;
-			if(_key.time == position) return keys[i].value;
+			var _pkey = keys[i - 1];
+			var _key  = keys[i];
+			
+			if(_key.time <  position) continue;
+			if(_key.time == position) return _key.value;
 			
 			var rat = (position - _pkey.time) / (_key.time - _pkey.time);
 			
 			switch(type) {
-				case GRADIENT_INTER.smooth : return merge_color(_pkey.value, _key.value, rat);
+				case GRADIENT_INTER.smooth : return merge_color    (_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.hue    : return merge_color_hsv(_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.none   : return _pkey.value;
 			}
-			
-			_pkey = _key;
 		}
 	
 		return keys[array_length(keys) - 1].value; //after last color

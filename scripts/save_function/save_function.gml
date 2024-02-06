@@ -2,7 +2,7 @@ globalvar SAVING;
 SAVING = false;
 
 function NEW() { #region
-	CALL("NEW");
+	CALL("new");
 	
 	PROJECT = new Project();
 	array_push(PROJECTS, PROJECT);
@@ -111,7 +111,7 @@ function SAVE_AS(project = PROJECT) { #region
 } #endregion
 
 function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
-	CALL("SAVE_AT");
+	CALL("save");
 	
 	if(DEMO) return false;
 	

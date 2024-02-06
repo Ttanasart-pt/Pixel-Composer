@@ -1,3 +1,85 @@
+#region funtion calls
+	function __fnInit_Graph() {
+		__registerFunction("graph_add_node",			panel_graph_add_node);
+		__registerFunction("graph_focus_content",		panel_graph_focus_content);
+		__registerFunction("graph_preview_focus",		panel_graph_preview_focus);
+		__registerFunction("graph_preview_window",		panel_graph_preview_window);
+		
+		__registerFunction("graph_import_image",		panel_graph_import_image);
+		__registerFunction("graph_import_image_array",	panel_graph_import_image_array);
+		__registerFunction("graph_add_number",			panel_graph_add_number);
+		__registerFunction("graph_add_vec2",			panel_graph_add_vec2);
+		__registerFunction("graph_add_vec3",			panel_graph_add_vec3);
+		__registerFunction("graph_add_vec4",			panel_graph_add_vec4);
+		__registerFunction("graph_add_transform",		panel_graph_add_transform);
+		
+		__registerFunction("graph_select_all",			panel_graph_select_all);
+		__registerFunction("graph_toggle_grid",			panel_graph_toggle_grid);
+		__registerFunction("graph_toggle_preview",		panel_graph_toggle_preview);
+		__registerFunction("graph_toggle_render",		panel_graph_toggle_render);
+		
+		__registerFunction("graph_export",				panel_graph_export);
+		
+		__registerFunction("graph_blend",				panel_graph_blend);
+		__registerFunction("graph_compose",				panel_graph_compose);
+		__registerFunction("graph_array",				panel_graph_array);
+		__registerFunction("graph_group",				panel_graph_group);
+		__registerFunction("graph_ungroup",				panel_graph_ungroup);
+														
+		__registerFunction("graph_canvas",				panel_graph_canvas);
+		__registerFunction("graph_canvas_blend",		panel_graph_canvas_blend);
+														
+		__registerFunction("graph_frame",				panel_graph_frame);
+		__registerFunction("graph_delete_break",		panel_graph_delete_break);
+		__registerFunction("graph_delete_merge",		panel_graph_delete_merge);
+		__registerFunction("graph_duplicate",			panel_graph_duplicate);
+		__registerFunction("graph_copy",				panel_graph_copy);
+		__registerFunction("graph_paste",				panel_graph_paste);
+														
+		__registerFunction("graph_pan",					panel_graph_pan);
+		__registerFunction("graph_zoom",				panel_graph_zoom);
+	}
+	
+	function panel_graph_add_node()				{ CALL("graph_add_node");			PANEL_GRAPH.callAddDialog();	 }
+	function panel_graph_focus_content()		{ CALL("graph_focus_content");		PANEL_GRAPH.fullView();			 }
+	function panel_graph_preview_focus()		{ CALL("graph_preview_focus");		PANEL_GRAPH.setCurrentPreview(); }
+	function panel_graph_preview_window()		{ CALL("graph_preview_window");		PANEL_GRAPH.create_preview_window(PANEL_GRAPH.getFocusingNode()); }
+	
+	function panel_graph_import_image()			{ CALL("graph_import_image");		nodeBuild("Node_Image",				PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
+	function panel_graph_import_image_array()	{ CALL("graph_import_image_array");	nodeBuild("Node_Image_Sequence",	PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
+	function panel_graph_add_number()			{ CALL("graph_add_number");			nodeBuild("Node_Number",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
+	function panel_graph_add_vec2()				{ CALL("graph_add_vec2");			nodeBuild("Node_Vector2",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
+	function panel_graph_add_vec3()				{ CALL("graph_add_vec3");			nodeBuild("Node_Vector3",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
+	function panel_graph_add_vec4()				{ CALL("graph_add_vec4");			nodeBuild("Node_Vector4",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
+	function panel_graph_add_transform()		{ CALL("graph_add_transform");		PANEL_GRAPH.doTransform();	 }
+	
+	function panel_graph_select_all()			{ CALL("graph_select_all");			PANEL_GRAPH.nodes_selecting = ds_list_to_array(PANEL_GRAPH.nodes_list);	 }
+	function panel_graph_toggle_grid()			{ CALL("graph_toggle_grid");		PANEL_GRAPH.display_parameter.show_grid = !PANEL_GRAPH.display_parameter.show_grid;	 }
+	function panel_graph_toggle_preview()		{ CALL("graph_toggle_preview");		PANEL_GRAPH.setTriggerPreview();		}
+	function panel_graph_toggle_render()		{ CALL("graph_toggle_render");		PANEL_GRAPH.setTriggerRender();			}
+																															
+	function panel_graph_export()				{ CALL("graph_export");				PANEL_GRAPH.setCurrentExport();			}
+	
+	function panel_graph_blend()				{ CALL("graph_blend");				PANEL_GRAPH.doBlend();					}
+	function panel_graph_compose()				{ CALL("graph_compose");			PANEL_GRAPH.doCompose();				}
+	function panel_graph_array()				{ CALL("graph_array");				PANEL_GRAPH.doArray();					}
+	function panel_graph_group()				{ CALL("graph_group");				PANEL_GRAPH.doGroup();					}
+	function panel_graph_ungroup()				{ CALL("graph_ungroup");			PANEL_GRAPH.doUngroup();				}
+																															
+	function panel_graph_canvas()				{ CALL("graph_canvas");				PANEL_GRAPH.setCurrentCanvas();			}
+	function panel_graph_canvas_blend()			{ CALL("graph_canvas_blend");		PANEL_GRAPH.setCurrentCanvasBlend();	}
+																															
+	function panel_graph_frame()				{ CALL("graph_frame");				PANEL_GRAPH.doFrame();					}
+	function panel_graph_delete_break()			{ CALL("graph_delete_break");		PANEL_GRAPH.doDelete(false);			}
+	function panel_graph_delete_merge()			{ CALL("graph_delete_merge");		PANEL_GRAPH.doDelete(true);				}
+	function panel_graph_duplicate()			{ CALL("graph_duplicate");			PANEL_GRAPH.doDuplicate();				}
+	function panel_graph_copy()					{ CALL("graph_copy");				PANEL_GRAPH.doCopy();					}
+	function panel_graph_paste()				{ CALL("graph_paste");				PANEL_GRAPH.doPaste();					}
+																															
+	function panel_graph_pan()					{ CALL("graph_pan");				PANEL_GRAPH.graph_dragging_key = true;	}
+	function panel_graph_zoom()					{ CALL("graph_zoom");				PANEL_GRAPH.graph_zooming_key = true;	}
+#endregion
+
 function connectionParameter() constructor { #region
 	log    = false;
 	active = true;
@@ -263,48 +345,46 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	]; #endregion
 	
 	#region ++++ hotkeys ++++
-	addHotkey("Graph", "Add node",			    "A", MOD_KEY.none,	function() { PANEL_GRAPH.callAddDialog(); });
-	addHotkey("Graph", "Focus content",			"F", MOD_KEY.none,	function() { PANEL_GRAPH.fullView(); });
-	addHotkey("Graph", "Preview focusing node",	"P", MOD_KEY.none,	function() { PANEL_GRAPH.setCurrentPreview(); });
-	addHotkey("Graph", "Preview window",		"P", MOD_KEY.ctrl,	function() { create_preview_window(PANEL_GRAPH.getFocusingNode()); });
-	addHotkey("Graph", "Import image",			"I", MOD_KEY.none,	function() { nodeBuild("Node_Image",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
-	addHotkey("Graph", "Import image array",	"I", MOD_KEY.shift,	function() { nodeBuild("Node_Image_Sequence",	PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
-	addHotkey("Graph", "Add number",			"1", MOD_KEY.none,	function() { nodeBuild("Node_Number",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
-	addHotkey("Graph", "Add vector2",			"2", MOD_KEY.none,	function() { nodeBuild("Node_Vector2",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
-	addHotkey("Graph", "Add vector3",			"3", MOD_KEY.none,	function() { nodeBuild("Node_Vector3",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
-	addHotkey("Graph", "Add vector4",			"4", MOD_KEY.none,	function() { nodeBuild("Node_Vector4",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
+		addHotkey("Graph", "Add node",			    "A", MOD_KEY.none,					panel_graph_add_node);
+		addHotkey("Graph", "Focus content",			"F", MOD_KEY.none,					panel_graph_focus_content);
+		addHotkey("Graph", "Preview focusing node",	"P", MOD_KEY.none,					panel_graph_preview_focus);
+		addHotkey("Graph", "Preview window",		"P", MOD_KEY.ctrl,					panel_graph_preview_window);
+																						
+		addHotkey("Graph", "Import image",			"I", MOD_KEY.none,					panel_graph_import_image);
+		addHotkey("Graph", "Import image array",	"I", MOD_KEY.shift,					panel_graph_import_image_array);
+		addHotkey("Graph", "Add number",			"1", MOD_KEY.none,					panel_graph_add_number);
+		addHotkey("Graph", "Add vector2",			"2", MOD_KEY.none,					panel_graph_add_vec2);
+		addHotkey("Graph", "Add vector3",			"3", MOD_KEY.none,					panel_graph_add_vec3);
+		addHotkey("Graph", "Add vector4",			"4", MOD_KEY.none,					panel_graph_add_vec4);
+		addHotkey("Graph", "Transform node",		"T", MOD_KEY.ctrl,					panel_graph_add_transform);
+																						
+		addHotkey("Graph", "Select all",			"A", MOD_KEY.ctrl,					panel_graph_select_all);
+		addHotkey("Graph", "Toggle grid",			"G", MOD_KEY.none,					panel_graph_toggle_grid);
+		addHotkey("Graph", "Toggle preview",		"H", MOD_KEY.none,					panel_graph_toggle_preview);
+		addHotkey("Graph", "Toggle render",			"R", MOD_KEY.none,					panel_graph_toggle_render);
+																						
+		if(!DEMO) addHotkey("Graph", "Export",		"E", MOD_KEY.ctrl,					panel_graph_export);
 	
-	addHotkey("Graph", "Transform node",		"T", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doTransform(); });
+		addHotkey("Graph", "Blend",					"B", MOD_KEY.ctrl,					panel_graph_blend);
+		addHotkey("Graph", "Compose",				"B", MOD_KEY.ctrl | MOD_KEY.shift,	panel_graph_compose);
+		addHotkey("Graph", "Array",					"A", MOD_KEY.ctrl | MOD_KEY.shift,	panel_graph_array);
+		addHotkey("Graph", "Group",					"G", MOD_KEY.ctrl,					panel_graph_group);
+		addHotkey("Graph", "Ungroup",				"G", MOD_KEY.ctrl | MOD_KEY.shift,	panel_graph_ungroup);
+													
+		addHotkey("Graph", "Canvas",				"C", MOD_KEY.ctrl | MOD_KEY.shift,	panel_graph_canvas);
+		addHotkey("Graph", "Canvas blend",			"C", MOD_KEY.ctrl | MOD_KEY.alt,	panel_graph_canvas_blend);
+													
+		addHotkey("Graph", "Frame",					"F", MOD_KEY.ctrl,					panel_graph_frame);
 	
-	addHotkey("Graph", "Select all",	 "A", MOD_KEY.ctrl,	function() { nodes_selecting = ds_list_to_array(nodes_list); });
-	addHotkey("Graph", "Toggle grid",	 "G", MOD_KEY.none,	function() { display_parameter.show_grid = !display_parameter.show_grid; });
-	addHotkey("Graph", "Toggle preview", "H", MOD_KEY.none,	function() { PANEL_GRAPH.setTriggerPreview(); });
-	addHotkey("Graph", "Toggle render",  "R", MOD_KEY.none,	function() { PANEL_GRAPH.setTriggerRender(); });
+		addHotkey("Graph", "Delete (break)",		vk_delete, MOD_KEY.shift,			panel_graph_delete_break);
+		addHotkey("Graph", "Delete (merge)",		vk_delete, MOD_KEY.none,			panel_graph_delete_merge);
 	
-	if(!DEMO)
-		addHotkey("Graph", "Export",	"E", MOD_KEY.ctrl,	function() { PANEL_GRAPH.setCurrentExport(); });
-	
-	addHotkey("Graph", "Blend",		"B", MOD_KEY.ctrl,					function() { PANEL_GRAPH.doBlend(); });
-	addHotkey("Graph", "Compose",	"B", MOD_KEY.ctrl | MOD_KEY.shift,	function() { PANEL_GRAPH.doCompose(); });
-	addHotkey("Graph", "Array",		"A", MOD_KEY.ctrl | MOD_KEY.shift,	function() { PANEL_GRAPH.doArray(); });
-	
-	addHotkey("Graph", "Group",		"G", MOD_KEY.ctrl,					function() { PANEL_GRAPH.doGroup(); });
-	addHotkey("Graph", "Ungroup",	"G", MOD_KEY.ctrl | MOD_KEY.shift,	function() { PANEL_GRAPH.doUngroup(); });
-	
-	addHotkey("Graph", "Canvas",		"C", MOD_KEY.ctrl | MOD_KEY.shift,		function() { PANEL_GRAPH.setCurrentCanvas(); });
-	addHotkey("Graph", "Canvas blend",	"C", MOD_KEY.ctrl | MOD_KEY.alt,		function() { PANEL_GRAPH.setCurrentCanvasBlend(); });
-	
-	addHotkey("Graph", "Frame",		"F", MOD_KEY.ctrl,					function() { PANEL_GRAPH.doFrame(); });
-	
-	addHotkey("Graph", "Delete (break)",	vk_delete, MOD_KEY.shift,	function() { PANEL_GRAPH.doDelete(false); });
-	addHotkey("Graph", "Delete (merge)",	vk_delete, MOD_KEY.none,	function() { PANEL_GRAPH.doDelete(true); });
-	
-	addHotkey("Graph", "Duplicate",	"D", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doDuplicate(); });
-	addHotkey("Graph", "Copy",		"C", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doCopy(); });
-	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doPaste(); });
-	
-	addHotkey("Graph", "Pan",		"", MOD_KEY.ctrl,				function() { PANEL_GRAPH.graph_dragging_key = true; });
-	addHotkey("Graph", "Zoom",		"", MOD_KEY.alt | MOD_KEY.ctrl,	function() { PANEL_GRAPH.graph_zooming_key = true; });
+		addHotkey("Graph", "Duplicate",				"D", MOD_KEY.ctrl,					panel_graph_duplicate);
+		addHotkey("Graph", "Copy",					"C", MOD_KEY.ctrl,					panel_graph_copy);
+		addHotkey("Graph", "Paste",					"V", MOD_KEY.ctrl,					panel_graph_paste);
+													
+		addHotkey("Graph", "Pan",					"", MOD_KEY.ctrl,					panel_graph_pan);
+		addHotkey("Graph", "Zoom",					"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_graph_zoom);
 	#endregion
 	
 	#region ++++ node setters ++++

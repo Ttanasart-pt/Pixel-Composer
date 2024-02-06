@@ -14,14 +14,21 @@
 		globalvar FUNCTIONS;
 		FUNCTIONS = {};
 		
-		__registerFunction("NEW",		NEW,			[]);
-		__registerFunction("SAVE_AT",	SAVE_AT,		[ ARG("project", function() { return PROJECT; }, true), ARG("path", ""), ARG("log", "save at ") ]);
-		__registerFunction("LOAD_AT",	LOAD_AT,		[ ARG("path", ""), ARG("readonly", false), ARG("override", false) ]);
-		__registerFunction("CLOSE",		closeProject,	[ ARG("project", function() { return PROJECT; }, true) ]);
-		__registerFunction("APPEND",	APPEND,			[ ARG("path", ""), ARG("context", function() { return PANEL_GRAPH.getCurrentContext(); }, true) ]);
+		__registerFunction("new",		NEW);
+		__registerFunction("save",		SAVE_AT,		[ ARG("project", function() { return PROJECT; }, true), ARG("path", ""), ARG("log", "save at ") ]);
+		__registerFunction("load",		LOAD_AT,		[ ARG("path", ""), ARG("readonly", false), ARG("override", false) ]);
+		__registerFunction("close",		closeProject,	[ ARG("project", function() { return PROJECT; }, true) ]);
+		__registerFunction("append",	APPEND,			[ ARG("path", ""), ARG("context", function() { return PANEL_GRAPH.getCurrentContext(); }, true) ]);
 		
-		__registerFunction("UNDO",		UNDO,			[]);
-		__registerFunction("REDO",		REDO,			[]);
+		__registerFunction("undo",		UNDO);
+		__registerFunction("redo",		REDO);
+		__registerFunction("exit",		window_close);
+		
+		__fnInit_Global();
+		__fnInit_Preview();
+		__fnInit_Inspector();
+		__fnInit_Animation();
+		__fnInit_Graph();
 	}
 #endregion
 

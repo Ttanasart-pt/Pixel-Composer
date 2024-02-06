@@ -50,7 +50,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 } #endregion
 
 function LOAD_AT(path, readonly = false, override = false) { #region
-	CALL("LOAD_AT");
+	CALL("load");
 	
 	//print($"========== Loading {path} =========="); var t = get_timer();
 	
