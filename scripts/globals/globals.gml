@@ -13,7 +13,7 @@
 	randomize();
 #endregion
 
-#region main
+#region ======================================================================= MAIN =======================================================================
 	globalvar OS, DEBUG, THEME, COLOR_KEYS;
 	globalvar CMD, CMDIN;
 	
