@@ -1,18 +1,18 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform sampler2D map;
+uniform sampler2D map2;
+
 uniform vec2  dimension;
 uniform vec2  map_dimension;
 uniform vec2  displace;
 uniform float middle;
 uniform int   iterate;
-uniform int   use_rg;
+uniform int   mode;
 uniform int   sampleMode;
 uniform int   blendMode;
+uniform int   sepAxis;
 
 uniform vec2      strength;
 uniform int       strengthUseSurf;
@@ -87,14 +87,31 @@ vec2 shiftMap(in vec2 pos, in float str) { #region
 	vec2  sam_pos;
 	vec2  raw_displace = displace / dimension;
 	float _str;
+	vec2  _disp;
 	
-	if(use_rg == 1) {
-		vec2 _disp = vec2(disP.r - middle, disP.g - middle) * vec2((disP.r + disP.g + disP.b) / 3. - middle) * str;
+	if(mode == 1) {
+		if(sepAxis == 0)
+			_disp = vec2(disP.r - middle, disP.g - middle) * vec2((disP.r + disP.g + disP.b) / 3. - middle) * str;
+		else if(sepAxis == 1) {
+			vec4  disP2 = texture2Dintp( map2, pos );
+			
+			_disp.x = (bright(disP)  - middle) * str;
+			_disp.y = (bright(disP2) - middle) * str;
+		}
 		
 		sam_pos = pos + _disp;
-	} else if(use_rg == 2) {
-		float _ang = disP.r * PI * 2.;
-		_str = (disP.g - middle) * str;
+	} else if(mode == 2) {
+		float _ang;
+		
+		if(sepAxis == 0) {
+			_ang = disP.r * PI * 2.;
+			_str = (disP.g - middle) * str;
+		} else if(sepAxis == 1) {
+			vec4  disP2 = texture2Dintp( map2, pos );
+			
+			_ang = bright(disP) * PI * 2.;
+			_str = (bright(disP2) - middle) * str;
+		}
 		
 		sam_pos = pos + _str * vec2(cos(_ang), sin(_ang));
 	} else {

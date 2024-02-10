@@ -16,25 +16,17 @@ function __rot3(_x = 0, _y = 0, _z = 0) constructor {
 		var _y = degtorad( y);
 		var _z = degtorad(-z);
 		
-		var rotationMatrix = new __mat3();
-
         var cosX = cos(_x);
         var sinX = sin(_x);
         var cosY = cos(_y);
         var sinY = sin(_y);
         var cosZ = cos(_z);
         var sinZ = sin(_z);
-
-        rotationMatrix.raw[0][0] = cosY * cosZ;
-        rotationMatrix.raw[0][1] = -cosX * sinZ + sinX * sinY * cosZ;
-        rotationMatrix.raw[0][2] = sinX * sinZ + cosX * sinY * cosZ;
-        rotationMatrix.raw[1][0] = cosY * sinZ;
-        rotationMatrix.raw[1][1] = cosX * cosZ + sinX * sinY * sinZ;
-        rotationMatrix.raw[1][2] = -sinX * cosZ + cosX * sinY * sinZ;
-        rotationMatrix.raw[2][0] = -sinY;
-        rotationMatrix.raw[2][1] = sinX * cosY;
-        rotationMatrix.raw[2][2] = cosX * cosY;
-
+		
+		var rotationMatrix = new __mat3([ cosY * cosZ,		 -cosX * sinZ + sinX * sinY * cosZ,		 sinX * sinZ + cosX * sinY * cosZ, 
+										  cosY * sinZ,		  cosX * cosZ + sinX * sinY * sinZ,		-sinX * cosZ + cosX * sinY * sinZ,
+										  -sinY,			  sinX * cosY,							cosX * cosY ]);
+		
         var initialVector = new __vec3(1, 0, 0);
         var rotatedVector = rotationMatrix.multiplyVector(initialVector);
 		rotatedVector.z *= -1;

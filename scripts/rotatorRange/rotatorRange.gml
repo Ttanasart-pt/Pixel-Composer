@@ -6,6 +6,8 @@ function rotatorRange(_onModify) : widget() constructor {
 	drag_sv  = 0;
 	drag_dat = [ 0, 0 ];
 	
+	knob_hovering = noone;
+	
 	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, val); } ).setSlidable();
 	
 	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable();
@@ -31,6 +33,7 @@ function rotatorRange(_onModify) : widget() constructor {
 		w = _w;
 		h = ui(64);
 		
+		knob_hovering = dragging_index;
 		_x += _w / 2;
 		
 		if(!is_real(_data[0])) return;
@@ -72,9 +75,6 @@ function rotatorRange(_onModify) : widget() constructor {
 			draw_set_color(hover_arc? COLORS.widget_rotator_range_hover : COLORS.widget_rotator_range);
 			draw_arc_forward(_x, knob_y, _r, 3, _data[0], _data[1]);
 		#endregion
-		
-		for(var i = 0; i < 2; i++)
-			draw_sprite(THEME.rotator_knob, 0, px[i], py[i]);
 			
 		if(dragging_index > -1) { #region
 			var val = point_direction(_x, knob_y, _m[0], _m[1]);
@@ -99,8 +99,6 @@ function rotatorRange(_onModify) : widget() constructor {
 				var _o   = _data[dragging_index];
 				real_val = round(dragging.delta_acc + drag_sv);
 				val = key_mod_press(CTRL)? round(real_val / 15) * 15 : real_val;
-				
-				draw_sprite(THEME.rotator_knob, 1, px[dragging_index], py[dragging_index]);
 				
 				if(_data[dragging_index] != val) {
 					var modi = false;
@@ -132,10 +130,11 @@ function rotatorRange(_onModify) : widget() constructor {
 				UNDO_HOLDING   = false;
 			}
 		#endregion
+		
 		} else if(hover) { #region
 			for(var i = 0; i < 2; i++) {
 				if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(20))) {
-					draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
+					knob_hovering = i;
 						
 					if(mouse_press(mb_left, active)) {
 						dragging_index = i;
@@ -153,6 +152,9 @@ function rotatorRange(_onModify) : widget() constructor {
 			}
 		} #endregion
 		
+		for(var i = 0; i < 2; i++)
+			draw_sprite(THEME.rotator_knob, knob_hovering == i, px[i], py[i]);
+			
 		resetFocus();
 		
 		return h;

@@ -1,10 +1,12 @@
 function rotatorRandom(_onModify) : widget() constructor {
 	onModify = _onModify;
 	
-	dragging = false;
 	dragging_index = -1;
+	dragging = false;
 	drag_sv  = 0;
 	drag_dat = [ 0, 0, 0, 0, 0 ];
+	
+	knob_hovering = noone;
 	
 	mode = 0;
 	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable(true, 1);
@@ -45,6 +47,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 		y = _y;
 		w = _w;
 		h = ui(80);
+		
+		var _kHover = dragging_index;
 		
 		_x += _w / 2;
 		
@@ -111,7 +115,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 					draw_arc_width(knx, kny, _r, 3, _a0, _a1);
 					
 					for(var i = 0; i < 2; i++)
-						draw_sprite(THEME.rotator_knob, 0, px[i], py[i]);
+						draw_sprite(THEME.rotator_knob, i == knob_hovering, px[i], py[i]);
 				#endregion
 				
 				if(dragging_index > -1) { #region
@@ -138,8 +142,6 @@ function rotatorRandom(_onModify) : widget() constructor {
 						var _o       = _data[dragging_index];
 						var curr_val = round(dragging.delta_acc + drag_sv);
 						val          = key_mod_press(CTRL)? round(curr_val / 15) * 15 : curr_val;
-						
-						draw_sprite(THEME.rotator_knob, 1, px[dragging_index], py[dragging_index]);
 						
 						if(_data[dragging_index] != val) {
 							var modi = false;
@@ -175,7 +177,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 					
 					for(var i = 0; i < 2; i++) {
 						if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(20))) {
-							draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
+							_kHover = i;
 						
 							if(mouse_press(mb_left, active)) {
 								dragging_index = i;
@@ -221,7 +223,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 					draw_arc_width(knx, kny, _r, 3, _a0, _a1);
 					
 					for( var i = 0; i < 3; i++ ) 
-						draw_sprite(THEME.rotator_knob, 0, px[i], py[i]);
+						draw_sprite(THEME.rotator_knob, i == knob_hovering, px[i], py[i]);
 				#endregion
 				
 				if(dragging_index > -1) { #region
@@ -235,14 +237,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 						real_val[1] = round(dragging.delta_acc + drag_sv[1]);
 						val = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
 						
-						draw_sprite(THEME.rotator_knob, 1, px[2], py[2]);
-						
 						if(onModify(1, val)) UNDO_HOLDING = true;
 					} else {
 						real_val[2] = round(drag_sv[2] + (dragging.delta_acc * (dragging_index? 1 : -1)));
 						val = key_mod_press(CTRL)? round(real_val[2] / 15) * 15 : real_val[2];
-						
-						draw_sprite(THEME.rotator_knob, 1, px[dragging_index], py[dragging_index]);
 						
 						if(onModify(2, val)) UNDO_HOLDING = true;
 					}
@@ -267,7 +265,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				} else if(hover) { #region
 					for(var i = 0; i < 3; i++) {
 						if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(20))) {
-							draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
+							_kHover = i;
 						
 							if(mouse_press(mb_left, active)) {
 								dragging_index = i;
@@ -314,7 +312,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 					draw_arc_width(knx, kny, _r, 3, _a2, _a3);
 					
 					for( var i = 0; i < 4; i++ ) 
-						draw_sprite(THEME.rotator_knob, 0, px[i], py[i]);
+						draw_sprite(THEME.rotator_knob, i == knob_hovering, px[i], py[i]);
 				#endregion
 				
 				if(dragging_index > -1) { #region
@@ -327,8 +325,6 @@ function rotatorRandom(_onModify) : widget() constructor {
 					
 					real_val[ind] = round(drag_sv[ind] + (dragging.delta_acc * (ind? 1 : -1)));
 					val = key_mod_press(CTRL)? round(real_val[ind] / 15) * 15 : real_val[ind];
-						
-					draw_sprite(THEME.rotator_knob, 1, px[dragging_index], py[dragging_index]);
 						
 					if(onModify(ind, val)) UNDO_HOLDING = true;
 					
@@ -352,7 +348,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				} else if(hover) { #region
 					for(var i = 0; i < 4; i++) {
 						if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(20))) {
-							draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
+							_kHover = i;
 						
 							if(mouse_press(mb_left, active)) {
 								dragging_index = i;
@@ -405,8 +401,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 					draw_arc_width(knx, kny, _r, 3, _a2, _a3);
 					draw_arc_width(knx, kny, _r, 3, _a4, _a5);
 					
-					draw_sprite(THEME.rotator_knob, 0, px[0], py[0]);
-					draw_sprite(THEME.rotator_knob, 0, px[1], py[1]);
+					for( var i = 0; i < 2; i++ )
+						draw_sprite(THEME.rotator_knob, i == knob_hovering, px[i], py[i]);
 				#endregion
 				
 				if(dragging_index > -1) { #region
@@ -419,8 +415,6 @@ function rotatorRandom(_onModify) : widget() constructor {
 					
 					real_val[ind] = round(drag_sv[ind] + (dragging.delta_acc * (ind? 1 : -1)));
 					val = key_mod_press(CTRL)? round(real_val[ind] / 15) * 15 : real_val[ind];
-						
-					draw_sprite(THEME.rotator_knob, 1, px[dragging_index], py[dragging_index]);
 						
 					if(onModify(ind, val)) UNDO_HOLDING = true;
 					
@@ -444,7 +438,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				} else if(hover) { #region
 					for(var i = 0; i < 2; i++) {
 						if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(20))) {
-							draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
+							_kHover = i;
 							
 							if(mouse_press(mb_left, active)) {
 								dragging_index = i;
@@ -459,6 +453,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				break;
 		}
 		
+		knob_hovering = _kHover;
 		resetFocus();
 		
 		return h;

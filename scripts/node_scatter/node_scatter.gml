@@ -478,7 +478,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						case 1 : ind  = safe_mod(i, _arrLen);		 break;
 						case 2 : ind  = irandom(_arrLen - 1);		 break;
 						case 3 : ind  = array_safe_get(arrId, i, 0); break;
-						case 4 : if(useArrTex) ind = color_get_brightness(surface_get_pixel(arrTex, _x, _y)) * (_arrLen - 1); break;
+						case 4 : if(useArrTex) ind = colorBrightness(surface_get_pixel(arrTex, _x, _y)) * (_arrLen - 1); break;
 					}
 					
 					if(arrAnim[0] != 0 || arrAnim[1] != 0) {

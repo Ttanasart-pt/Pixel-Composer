@@ -1,9 +1,9 @@
-function __mat3() constructor {
-    raw = [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+function __mat3(raw = [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ]) constructor {
+    self.raw = raw;
     
     static det = function() {
-        return raw[0]*raw[4]*raw[8] + raw[1]*raw[5]*raw[6] + raw[2]*raw[3]*raw[7]
-             - raw[2]*raw[4]*raw[6] - raw[0]*raw[5]*raw[7] - raw[1]*raw[3]*raw[8];
+        return raw[0] * raw[4] * raw[8] + raw[1] * raw[5] * raw[6] + raw[2] * raw[3] * raw[7]
+             - raw[2] * raw[4] * raw[6] - raw[0] * raw[5] * raw[7] - raw[1] * raw[3] * raw[8];
     };
     
     static multiplyMatrix = function(matrix) {
