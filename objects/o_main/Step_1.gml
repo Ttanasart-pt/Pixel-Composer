@@ -74,7 +74,7 @@ _HOVERING_ELEMENT = noone;
 #region animation & render
 	DEF_SURFACE_RESET();
 	
-	if(!PROJECT.safeMode&& UPDATE_RENDER_ORDER) {
+	if(!PROJECT.safeMode && UPDATE_RENDER_ORDER) {
 		ResetAllNodesRender();
 		NodeTopoSort();
 	}
@@ -100,10 +100,18 @@ _HOVERING_ELEMENT = noone;
 				}
 				PROJECT.animator.frame_progress = false;
 			} else {
-				if(UPDATE & RENDER_TYPE.full)
-					Render();
-				else if(UPDATE & RENDER_TYPE.partial)
+				if(UPDATE & RENDER_TYPE.full) {
+					if(PROGRAM_ARGUMENTS.run) {
+						exportAll();
+						PROGRAM_ARGUMENTS.run = false;
+						
+						if(!IS_RENDERING && !struct_try_get(PROGRAM_ARGUMENTS, "persist", true)) game_end();
+					} else 
+						Render();
+					
+				} else if(UPDATE & RENDER_TYPE.partial)
 					Render(true);
+					
 			}
 		}
 	}

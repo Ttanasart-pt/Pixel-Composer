@@ -99,6 +99,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static update = function(frame = CURRENT_FRAME) { #region
 		var path = getInputData(0);
 		var pad  = getInputData(1);
+		
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);
 		
@@ -107,13 +108,15 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ww = sprite_get_width(spr)  + pad[0] + pad[2];
 		var hh = sprite_get_height(spr) + pad[1] + pad[3];
 		
-		var _outsurf  = outputs[| 0].getValue();
+		var _outsurf = outputs[| 0].getValue();
 		_outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
 		outputs[| 0].setValue(_outsurf);
 		
 		surface_set_shader(_outsurf, noone);
 			draw_sprite(spr, 0, pad[2], pad[1]);
 		surface_reset_shader();
+		
+		//print($"Image: {spr} | {_outsurf} | {surface_exists(_outsurf)}");
 		
 		if(!first_update) return;
 		first_update = false;

@@ -57,7 +57,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	if(DEMO) return false;
 	
 	if(!file_exists_empty(path)) {
-		log_warning("LOAD", "File not found");
+		log_warning("LOAD", $"File not found: {path}");
 		return false;
 	}
 	

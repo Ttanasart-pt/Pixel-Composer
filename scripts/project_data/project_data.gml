@@ -1,5 +1,6 @@
 #region global
 	globalvar PROJECTS, PROJECT;
+	PROJECT = noone;
 #endregion
 
 #region project

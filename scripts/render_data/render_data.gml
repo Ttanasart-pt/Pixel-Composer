@@ -64,12 +64,44 @@ function NodeTopoSort() { #region
 	}
 	
 	ds_list_clear(PROJECT.nodeTopo);
-	__sortGraph(PROJECT.nodeTopo, PROJECT.nodes);
+	topoSort(PROJECT.nodeTopo, PROJECT.nodes);
 	
 	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {ds_list_size(PROJECT.nodeTopo)} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 } #endregion
 
-function __sortGraph(_list, _nodeList) { #region
+function __sortNode(_list, _node) { #region
+	if(_node.topoSorted) return;
+		
+	var _childs = [];
+	var _prev   = _node.getPreviousNodes();
+		
+	for( var i = 0, n = array_length(_prev); i < n; i++ ) {
+		var _in = _prev[i];
+		if(_in.topoSorted) continue;
+			
+		array_push(_childs, _in);
+	}
+		
+	//print($"        > Checking {_node.name}: {array_length(_childs)}");
+		
+	if(array_empty(_childs)) {
+		if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
+			topoSort(_list, _node.nodes);
+		
+	} else {
+		for( var i = 0, n = array_length(_childs); i < n; i++ ) 
+			__sortNode(_list, _childs[i]);
+	}
+	
+	if(!_node.topoSorted) {
+		ds_list_add(_list, _node);
+		_node.topoSorted = true;
+			
+		//print($"        > Adding > {_node.name}");
+	}
+} #endregion
+
+function topoSort(_list, _nodeList) { #region
 	var _root     = [];
 	var _leftOver = [];
 	
@@ -102,42 +134,8 @@ function __sortGraph(_list, _nodeList) { #region
 	
 	//print($"    > Roots: {_root}");
 	
-	var _sortQueue = ds_queue_create();
-	
 	for( var i = 0, n = array_length(_root); i < n; i++ ) 
-		ds_queue_enqueue(_sortQueue, _root[i]);
-		
-	while(!ds_queue_empty(_sortQueue)) {
-		var _node = ds_queue_dequeue(_sortQueue);
-		if(_node.topoSorted) continue;
-		
-		var _childs = [];
-		var _prev   = _node.getPreviousNodes();
-		
-		for( var i = 0, n = array_length(_prev); i < n; i++ ) {
-			var _in = _prev[i];
-			
-			if(!ds_list_exist(_nodeList, _in)) continue;
-			if(_in.topoSorted)				   continue;
-			
-			array_push(_childs, _in);
-		}
-		
-		//print($"        > Checking {_node.name}: {array_length(_childs)}");
-		
-		if(array_empty(_childs)) {
-			if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
-				__sortGraph(_list, _node.nodes);
-		} else {
-			for( var i = 0, n = array_length(_childs); i < n; i++ ) 
-				ds_queue_enqueue(_sortQueue, _childs[i]);
-		}
-		
-		if(!_node.topoSorted) {
-			ds_list_add(_list, _node);
-			_node.topoSorted = true;
-		}
-	}
+		__sortNode(_list, _root[i]);
 	
 	for( var i = 0, n = array_length(_leftOver); i < n; i++ ) {
 		if(!_leftOver[i].topoSorted)

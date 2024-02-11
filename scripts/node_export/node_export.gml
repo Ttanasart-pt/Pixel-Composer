@@ -22,15 +22,13 @@ MPEG-4 (.mp4)|*.mp4",
 function exportAll() {
 	if(IS_RENDERING) return;
 	
-	Render();
-	
 	var key = ds_map_find_first(PROJECT.nodeMap);
 	repeat(ds_map_size(PROJECT.nodeMap)) {
 		var node = PROJECT.nodeMap[? key];
 		key = ds_map_find_next(PROJECT.nodeMap, key);
 			
 		if(!node.active) continue;
-		if(instanceof(node) != "Node_Export") continue;
+		if(!is_instanceof(node, Node_Export)) continue;
 					
 		node.doInspectorAction();
 	}
@@ -493,6 +491,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static save_surface = function(_surf, _path) { #region
 		var form = getInputData(3);
+		//print($">>>>>>>>>>>>>>>>>>>> save surface {_surf} - {_path} <<<<<<<<<<<<<<<<<<<<");
 		
 		if(form == NODE_EXPORT_FORMAT.animation) {
 			surface_save_safe(_surf, _path);
@@ -694,7 +693,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static doInspectorAction = function() { #region
-		if(LOADING || APPENDING) return;
+		if(!PROGRAM_ARGUMENTS.run && (LOADING || APPENDING)) return;
 		
 		var path = getInputData(1);
 		if(path == "") return;

@@ -316,7 +316,16 @@
 	alarm[1] = 2;
 	
 	globalvar PROGRAM_ARGUMENTS;
-	PROGRAM_ARGUMENTS = {};
+	PROGRAM_ARGUMENTS = { 
+		run :     false,
+	};
+	
+	//PROGRAM_ARGUMENTS = {
+	//	path:     "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/outline.pxc",
+	//	image:    "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/05.png",
+	//	run :     true,
+	//	persist : false, 
+	//};
 	
 	var paramCount = parameter_count();
 	var paramType  = "path";
@@ -332,10 +341,8 @@
 						run_in(1, function() { dialogCall(o_dialog_crashed); });
 					break;
 				
-				case "--h" : 
-					draw_enable_drawevent(false);
-					run_in(3, Terminal_Trigger);
-					break;
+				case "--h" : PROGRAM_ARGUMENTS.run     = true; break;
+				case "--p" : PROGRAM_ARGUMENTS.persist = true; break;
 			}
 			
 		} else if(string_starts_with(param, "-")) {
@@ -347,7 +354,7 @@
 			    path = string_replace_all(path, "\"", "");
 					
 			if(file_exists_empty(path) && filename_ext(path) == ".pxc")
-				PROGRAM_ARGUMENTS[$ string_trim(paramType, ["-"])] = path;
+				PROGRAM_ARGUMENTS.path = path;
 				
 		} else {
 			PROGRAM_ARGUMENTS[$ paramType] = param;
@@ -357,9 +364,12 @@
 	if(struct_exists(PROGRAM_ARGUMENTS, "path")) {
 		var path = PROGRAM_ARGUMENTS.path;
 		
-		if(PROJECT.path != path) {
+		if(PROJECT == noone || PROJECT.path != path) {
 			file_open_parameter = path;
 			run_in(1, function() { load_file_path(file_open_parameter); });
 		}
 	}
+	
+	if(PROGRAM_ARGUMENTS.run)
+		draw_enable_drawevent(false);
 #endregion

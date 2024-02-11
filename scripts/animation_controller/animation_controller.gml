@@ -166,6 +166,8 @@
 						is_playing   = false;
 						is_rendering = false;
 						time_since_last_frame = 0;
+						
+						if(struct_try_get(PROGRAM_ARGUMENTS, "persist", true)) game_end();
 					} 
 				}
 			

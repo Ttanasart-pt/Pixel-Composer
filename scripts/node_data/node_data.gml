@@ -476,19 +476,19 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	#region ++++ inspector update ++++
-	static inspector1Update = function() {
-		if(error_update_enabled && error_noti_update != noone)
-			noti_remove(error_noti_update);
-		error_noti_update = noone;
+		static inspector1Update = function() {
+			if(error_update_enabled && error_noti_update != noone)
+				noti_remove(error_noti_update);
+			error_noti_update = noone;
 		
-		onInspector1Update();
-	}
-	static onInspector1Update = noone;
-	static hasInspector1Update = function() { return onInspector1Update != noone; }
+			onInspector1Update();
+		}
+		static onInspector1Update = noone;
+		static hasInspector1Update = function() { return onInspector1Update != noone; }
 	
-	static inspector2Update = function() { onInspector2Update(); }
-	static onInspector2Update = noone;
-	static hasInspector2Update = function() { return onInspector2Update != noone; }
+		static inspector2Update = function() { onInspector2Update(); }
+		static onInspector2Update = noone;
+		static hasInspector2Update = function() { return onInspector2Update != noone; }
 	#endregion
 	
 	static stepBegin = function() { #region
@@ -708,6 +708,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				var _to = _outp.value_to[j];
 				if(!_to.node.active || _to.value_from != _outp) continue; 
 				
+				//LOG_IF(global.FLAG.render == 1, $"|| Forwarding dynamic to {_to.node.name} ||");
 				_to.node.passiveDynamic = true;
 				_to.node.rendered = false;
 			}
