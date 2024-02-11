@@ -110,25 +110,6 @@
 	directory_set_current_working(DIRECTORY);
 #endregion
 
-#region parameter
-	alarm[1] = 2;
-	
-	if(parameter_count() > 1) {
-		var path = parameter_string(1);
-		if(path == "--crashed") {
-			if(PREFERENCES.show_crash_dialog) dialogCall(o_dialog_crashed);
-		} else {
-			path = string_replace_all(path, "\n", "");
-			path = string_replace_all(path, "\"", "");
-		
-			if(file_exists_empty(path) && filename_ext(path) == ".pxc") {
-				file_open_parameter = path;
-				alarm[2] = 3;
-			}
-		}
-	}
-#endregion
-
 #region lua
 	//lua_error_handler = _lua_error;
 #endregion

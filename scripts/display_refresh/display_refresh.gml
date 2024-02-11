@@ -16,6 +16,6 @@ function display_refresh() {
 	PANEL_GRAPH.fullView();
 	PANEL_PREVIEW.fullView();
 		
-	o_main.alarm[0] = 10;
+	run_in(10, Render);
 	PREF_SAVE();
 }

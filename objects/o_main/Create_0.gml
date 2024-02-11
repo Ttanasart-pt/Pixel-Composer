@@ -311,3 +311,55 @@
 	//instance_create_depth(0, 0, -32000, FLIP_Domain);
 	//instance_create_depth(0, 0, -32000, FLIP_Domain);
 #endregion
+
+#region arguments
+	alarm[1] = 2;
+	
+	globalvar PROGRAM_ARGUMENTS;
+	PROGRAM_ARGUMENTS = {};
+	
+	var paramCount = parameter_count();
+	var paramType  = "path";
+	
+	for( var i = 0; i < paramCount; i++ ) {
+		var param = parameter_string(i);
+		print($"    >>> params {i}: {param}");
+		
+		if(string_starts_with(param, "--")) {
+			switch(param) {
+				case "--crashed" : 
+					if(PREFERENCES.show_crash_dialog) 
+						run_in(1, function() { dialogCall(o_dialog_crashed); });
+					break;
+				
+				case "--h" : 
+					draw_enable_drawevent(false);
+					run_in(3, Terminal_Trigger);
+					break;
+			}
+			
+		} else if(string_starts_with(param, "-")) {
+			paramType = string_trim(param, ["-"]);
+			
+		} else if(paramType == "path") {
+			var path = param;
+			    path = string_replace_all(path, "\n", "");
+			    path = string_replace_all(path, "\"", "");
+					
+			if(file_exists_empty(path) && filename_ext(path) == ".pxc")
+				PROGRAM_ARGUMENTS[$ string_trim(paramType, ["-"])] = path;
+				
+		} else {
+			PROGRAM_ARGUMENTS[$ paramType] = param;
+		}
+	}
+	
+	if(struct_exists(PROGRAM_ARGUMENTS, "path")) {
+		var path = PROGRAM_ARGUMENTS.path;
+		
+		if(PROJECT.path != path) {
+			file_open_parameter = path;
+			run_in(1, function() { load_file_path(file_open_parameter); });
+		}
+	}
+#endregion

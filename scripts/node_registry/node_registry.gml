@@ -558,6 +558,7 @@ function __initNodes() {
 		addNodeObject(filter, "Curve",				s_node_curve_edit,		"Node_Curve",			[1, Node_Curve],, "Adjust brightness of an image using curves.").setVersion(1120);
 		addNodeObject(filter, "Threshold",			s_node_threshold,		"Node_Threshold",		[1, Node_Threshold],, "Set a threshold where pixel darker will becomes black, and brighter to white. Also works with alpha.").setVersion(1080);
 		addNodeObject(filter, "Alpha Cutoff",		s_node_alpha_cut,		"Node_Alpha_Cutoff",	[1, Node_Alpha_Cutoff], ["remove alpha"], "Remove pixel with low alpha value.");
+		addNodeObject(filter, "Gamma Map",			s_node_gamma_map,		"Node_Gamma_Map",		[1, Node_Gamma_Map]).setVersion(11660);
 		
 		ds_list_add(filter, "Conversions");
 		addNodeObject(filter, "RGBA Extract",		s_node_RGB,				"Node_RGB_Channel",		[1, Node_RGB_Channel], ["channel extract"], "Extract RGBA channel on an image, each channel becomes its own image.");
@@ -657,7 +658,7 @@ function __initNodes() {
 		addNodeObject(generator, "Pytagorean Tile",		s_node_pytagorean_tile,		"Node_Pytagorean_Tile",		[1, Node_Pytagorean_Tile],, "Generate Pytagorean tile pattern.").patreonExtra();
 		addNodeObject(generator, "Herringbone Tile",	s_node_herringbone_tile,	"Node_Herringbone_Tile",	[1, Node_Herringbone_Tile],, "Generate Herringbone tile pattern.").patreonExtra();
 		addNodeObject(generator, "Random Tile",			s_node_random_tile,			"Node_Random_Tile",			[1, Node_Random_Tile],, "Generate Random tile pattern.").patreonExtra();
-		addNodeObject(generator, "Quasicrystal",		s_node_random_tile,			"Node_Quasicrystal",		[1, Node_Quasicrystal]).setVersion(11660);
+		addNodeObject(generator, "Quasicrystal",		s_node_quasicircle,			"Node_Quasicrystal",		[1, Node_Quasicrystal]).setVersion(11660);
 			
 		ds_list_add(generator, "Populate");
 		addNodeObject(generator, "Repeat",				s_node_repeat,				"Node_Repeat",				[1, Node_Repeat],, "Repeat image multiple times linearly, or in grid pattern.").setVersion(1100);
@@ -929,6 +930,8 @@ function __initNodes() {
 		addNodeObject(node, "Project Data",		s_node_project_data,		"Node_Project_Data",		[1, Node_Project_Data]).setVersion(11650);
 		
 		ds_list_add(node, "System");
+		addNodeObject(node, "Argument",			s_node_argument,			"Node_Argument",			[1, Node_Argument]).setVersion(11660);
+		addNodeObject(node, "Terminal trigger",	s_node_terminal_trigger,	"Node_Terminal_Trigger",	[1, Node_Terminal_Trigger]).setVersion(11660);
 		addNodeObject(node, "Execute Shell",	s_node_shell_excecute,		"Node_Shell",				[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
 		addNodeObject(node, "Monitor Capture",	s_node_monitor_capture,		"Node_Monitor_Capture",		[1, Node_Monitor_Capture]);
 		addNodeObject(node, "GUI In",			s_node_gui_in,				"Node_Application_In",		[1, Node_Application_In]);
