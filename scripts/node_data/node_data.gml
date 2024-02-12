@@ -13,7 +13,7 @@ enum DYNA_INPUT_COND {
 	zero       = 1 << 1,
 }
 
-function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x, _y) constructor {
+function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#region ---- main & active ----
 		active       = true;
 		renderActive = true;
@@ -23,7 +23,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		manual_deletable	 = true;
 		manual_ungroupable	 = true;
 		destroy_when_upgroup = false;
-		ds_list_add(PANEL_GRAPH.getNodeList(_group), self);
+		
+		var l = _group == noone? PROJECT.nodes : _group.getNodeList();
+		ds_list_add(l, self);
 		
 		active_index = -1;
 		active_range = [ 0, TOTAL_FRAMES - 1 ];
@@ -1956,7 +1958,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static doApplyDeserialize = function() {}
 	
-	static loadGroup = function(context = PANEL_GRAPH.getCurrentContext()) { #region
+	static loadGroup = function(context = noone) { #region
 		if(_group == noone) {
 			if(context != noone) context.add(self);
 		} else {

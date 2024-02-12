@@ -68,44 +68,46 @@
 	var t0 = get_timer();
 	var t  = get_timer();
 	
-    __initPatreon();              log_message("SESSION", $"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
-    __initTheme();                log_message("SESSION", $"> init Theme         | complete in {get_timer() - t}");    t = get_timer();
-    __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer();
-    loadFonts();                  log_message("SESSION", $"> init Font          | complete in {get_timer() - t}");    t = get_timer();
-    __initProject();              log_message("SESSION", $"> init Project       | complete in {get_timer() - t}");    t = get_timer();
+				  __initPatreon();              log_message("SESSION", $"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { __initTheme();                log_message("SESSION", $"> init Theme         | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { loadFonts();                  log_message("SESSION", $"> init Font          | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initProject();              log_message("SESSION", $"> init Project       | complete in {get_timer() - t}");    t = get_timer();
 	
-    __initAction();               log_message("SESSION", $"> init Action        | complete in {get_timer() - t}");    t = get_timer();
-    __initSurfaceFormat();        log_message("SESSION", $"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
-    __initCollection();           log_message("SESSION", $"> init Collection    | complete in {get_timer() - t}");    t = get_timer();
-    __initAssets();               log_message("SESSION", $"> init Assets        | complete in {get_timer() - t}");    t = get_timer();
-    __initPresets();              log_message("SESSION", $"> init Presets       | complete in {get_timer() - t}");    t = get_timer();
-    __initFontFolder();           log_message("SESSION", $"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer();
-    __initLua();                  log_message("SESSION", $"> init Lua           | complete in {get_timer() - t}");    t = get_timer();
-    __initNodeData();             log_message("SESSION", $"> init NodeData      | complete in {get_timer() - t}");    t = get_timer();
-    __initNodes();                log_message("SESSION", $"> init Nodes         | complete in {get_timer() - t}");    t = get_timer();
-    __initSteamUGC();             log_message("SESSION", $"> init SteamUGC      | complete in {get_timer() - t}");    t = get_timer();
-    __initAddon();                log_message("SESSION", $"> init Addon         | complete in {get_timer() - t}");    t = get_timer();
-    __initPalette();              log_message("SESSION", $"> init Palette       | complete in {get_timer() - t}");    t = get_timer();
-    __initGradient();             log_message("SESSION", $"> init Gradient      | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initAction();               log_message("SESSION", $"> init Action        | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initSurfaceFormat();        log_message("SESSION", $"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { __initCollection();           log_message("SESSION", $"> init Collection    | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initAssets();               log_message("SESSION", $"> init Assets        | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initPresets();              log_message("SESSION", $"> init Presets       | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initFontFolder();           log_message("SESSION", $"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer();
+				  __initLua();                  log_message("SESSION", $"> init Lua           | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initNodeData();             log_message("SESSION", $"> init NodeData      | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initNodes();                log_message("SESSION", $"> init Nodes         | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { __initSteamUGC();             log_message("SESSION", $"> init SteamUGC      | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initAddon();                log_message("SESSION", $"> init Addon         | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initPalette();              log_message("SESSION", $"> init Palette       | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initGradient();             log_message("SESSION", $"> init Gradient      | complete in {get_timer() - t}");    t = get_timer(); }
     
-    loadAddon();                  log_message("SESSION", $"> init Addons        | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { loadAddon();                  log_message("SESSION", $"> init Addons        | complete in {get_timer() - t}");    t = get_timer(); }
     
-    LOAD_SAMPLE();                log_message("SESSION", $"> init sample        | complete in {get_timer() - t}");    t = get_timer();
-    INIT_FOLDERS();               log_message("SESSION", $"> init folders       | complete in {get_timer() - t}");    t = get_timer();
-    RECENT_LOAD();                log_message("SESSION", $"> init recents       | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { LOAD_SAMPLE();                log_message("SESSION", $"> init sample        | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { INIT_FOLDERS();               log_message("SESSION", $"> init folders       | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { RECENT_LOAD();                log_message("SESSION", $"> init recents       | complete in {get_timer() - t}");    t = get_timer(); }
     
 	log_message("SESSION", $">> Initialization complete in {get_timer() - t0}");
 	
-	__initPanel();
+	if(!IS_CMD) { 
+		__initPanel();
 	
-	if(file_exists_empty("icon.png"))
-		file_copy("icon.png", DIRECTORY + "icon.png");
+		if(file_exists_empty("icon.png"))
+			file_copy("icon.png", DIRECTORY + "icon.png");
 	
-	var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
-	shell_execute_async("assoc", cmd);
+		var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
+		shell_execute_async("assoc", cmd);
 	
-	var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
-	shell_execute_async("assoc", cmd);
+		var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
+		shell_execute_async("assoc", cmd);
+	}
 	
 	directory_set_current_working(DIRECTORY);
 #endregion

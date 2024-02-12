@@ -160,6 +160,7 @@
 
 #region save load
 	function PREF_SAVE() { #region
+		if(IS_CMD) return;
 		var map = {};
 		
 		var save_l = [];

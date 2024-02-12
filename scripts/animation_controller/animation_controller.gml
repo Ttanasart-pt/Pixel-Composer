@@ -167,7 +167,7 @@
 						is_rendering = false;
 						time_since_last_frame = 0;
 						
-						if(struct_try_get(PROGRAM_ARGUMENTS, "persist", true)) game_end();
+						if(PROGRAM_ARGUMENTS._cmd && !PROGRAM_ARGUMENTS._persist) game_end();
 					} 
 				}
 			

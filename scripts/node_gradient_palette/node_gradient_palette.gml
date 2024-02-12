@@ -13,7 +13,7 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	inputs[| 2].array_depth = 1;
 	
 	inputs[| 3] = nodeValue("Blending", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Hard", "RGB", "HSV", "OKLAB" ]);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Hard", "RGB", "HSV", "OKLAB", "sRGB" ]);
 	
 	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.gradient, new gradientObject(c_white) )
 	
@@ -46,6 +46,7 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			case 1 : grad.type = GRADIENT_INTER.smooth; break;
 			case 2 : grad.type = GRADIENT_INTER.hue;	break;
 			case 3 : grad.type = GRADIENT_INTER.oklab;	break;
+			case 4 : grad.type = GRADIENT_INTER.srgb;	break;
 		}
 		
 		return grad;

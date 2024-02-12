@@ -46,6 +46,16 @@ float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.5406
 	uniform vec4      gradient_map_range;
 	uniform sampler2D gradient_map;
 
+	vec3 linearToGamma(vec3 c) { return pow(c, vec3(     2.2)); }
+	vec3 gammaToLinear(vec3 c) { return pow(c, vec3(1. / 2.2)); }
+	
+	vec3 rgbMix(vec3 c1, vec3 c2, float t) { #region
+		vec3 k1 = linearToGamma(c1);
+		vec3 k2 = linearToGamma(c2);
+		
+		return gammaToLinear(mix(k1, k2, t));
+	} #endregion 
+	
 	vec3 rgb2oklab(vec3 c) { #region
 		const mat3 kCONEtoLMS = mat3(                
 	         0.4121656120,  0.2118591070,  0.0883097947,
@@ -127,17 +137,25 @@ float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.5406
 				if(i == 0) 
 					col = gradient_color[i];
 				else {
-					float t = (prog - gradient_time[i - 1]) / (gradient_time[i] - gradient_time[i - 1]);
-					float a = mix(gradient_color[i - 1].a, gradient_color[i].a, t);
+					float t  = (prog - gradient_time[i - 1]) / (gradient_time[i] - gradient_time[i - 1]);
+					vec3  c0 = gradient_color[i - 1].rgb;
+					vec3  c1 = gradient_color[i].rgb;
+					float a  = mix(gradient_color[i - 1].a, gradient_color[i].a, t);
 					
 					if(gradient_blend == 0)
-						col = mix(gradient_color[i - 1], gradient_color[i], t);
+						col = vec4(mix(c0, c1, t), a);
+						
 					else if(gradient_blend == 1)
 						col = gradient_color[i - 1];
+						
 					else if(gradient_blend == 2)
-						col = vec4(hsvMix(gradient_color[i - 1].rgb, gradient_color[i].rgb, t), a);
+						col = vec4(hsvMix(c0, c1, t), a);
+						
 					else if(gradient_blend == 3)
-						col = vec4(oklabMax(gradient_color[i - 1].rgb, gradient_color[i].rgb, t), a);
+						col = vec4(oklabMax(c0, c1, t), a);
+					
+					else if(gradient_blend == 4)
+						col = vec4(rgbMix(c0, c1, t), a);
 				}
 				break;
 			}

@@ -1,11 +1,27 @@
 globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, FONT_CUST_CACHE, GLYPH_MAP;
 globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code, f_sdf, f_sdf_medium;
 
-FONT_DEF        = true;
-FONT_CACHE      = {};
-FONT_CUST_CACHE = {};
-FONT_ISLOADED   = false;
-GLYPH_MAP       = {};
+#region default
+	FONT_DEF        = true;
+	FONT_CACHE      = {};
+	FONT_CUST_CACHE = {};
+	FONT_ISLOADED   = false;
+	GLYPH_MAP       = {};
+	
+	f_h1   = _f_h1;
+	f_h2   = _f_h2;
+	f_h3   = _f_h3;
+	f_h5   = _f_h5;
+	f_p0   = _f_p0;
+	f_p0b  = _f_p0b;
+	f_p1   = _f_p1;
+	f_p2   = _f_p2;
+	f_p3   = _f_p3;
+	f_code = _f_code;
+	f_sdf  = _f_sdf;
+	f_sdf_medium  = _f_sdf_medium;
+	FONT_ISLOADED = false;
+#endregion
 
 function _font_add(path, size, sdf = false, custom = false) { #region
 	var _cache = custom? FONT_CUST_CACHE : FONT_CACHE;

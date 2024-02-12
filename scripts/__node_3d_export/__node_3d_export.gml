@@ -82,10 +82,12 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		file_text_close(fObj);
 		file_text_close(fMtl);
-		
-		var noti = log_message("EXPORT", "Export obj as " + oPath, THEME.noti_icon_tick, COLORS._main_value_positive, false);
-		noti.path = filename_dir(oPath);
-		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+
+		if(!IS_CMD) {
+			var noti = log_message("EXPORT", "Export obj as " + oPath, THEME.noti_icon_tick, COLORS._main_value_positive, false);
+			noti.path = filename_dir(oPath);
+			noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+		}
 	}
 	
 	static update = function() {

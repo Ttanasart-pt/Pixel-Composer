@@ -101,11 +101,11 @@ _HOVERING_ELEMENT = noone;
 				PROJECT.animator.frame_progress = false;
 			} else {
 				if(UPDATE & RENDER_TYPE.full) {
-					if(PROGRAM_ARGUMENTS.run) {
+					if(PROGRAM_ARGUMENTS._run) {
 						exportAll();
-						PROGRAM_ARGUMENTS.run = false;
+						PROGRAM_ARGUMENTS._run = false;
 						
-						if(!IS_RENDERING && !struct_try_get(PROGRAM_ARGUMENTS, "persist", true)) game_end();
+						if(!IS_RENDERING && !PROGRAM_ARGUMENTS._persist) game_end();
 					} else 
 						Render();
 					

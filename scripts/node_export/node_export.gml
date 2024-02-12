@@ -586,8 +586,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				p = save_surface(_surf, p);
 			}
 			
-			if(form != NODE_EXPORT_FORMAT.animation) {
-				var noti  = log_message("EXPORT", "Export " + string(array_length(surf)) + " images complete.", THEME.noti_icon_tick, COLORS._main_value_positive, false);
+			if(form != NODE_EXPORT_FORMAT.animation && !IS_CMD) {
+				var noti  = log_message("EXPORT", $"Export {array_length(surf)} images complete.", THEME.noti_icon_tick, COLORS._main_value_positive, false);
 				noti.path = filename_dir(p);
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 				
@@ -604,8 +604,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			p = save_surface(surf, p);
 				
-			if(form != NODE_EXPORT_FORMAT.animation) {
-				var noti  = log_message("EXPORT", "Export image as " + p, THEME.noti_icon_tick, COLORS._main_value_positive, false);
+			if(form != NODE_EXPORT_FORMAT.animation && !IS_CMD) {
+				var noti  = log_message("EXPORT", $"Export image as {p}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
 				noti.path = filename_dir(p);
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 					
@@ -693,7 +693,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static doInspectorAction = function() { #region
-		if(!PROGRAM_ARGUMENTS.run && (LOADING || APPENDING)) return;
+		if(!PROGRAM_ARGUMENTS._cmd && (LOADING || APPENDING)) return;
 		
 		var path = getInputData(1);
 		if(path == "") return;
@@ -799,10 +799,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var res = ProcIdExists(render_process_id);
 			
 			if(res == 0 || OS == os_macosx) {
-				var noti  = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
-				noti.path = filename_dir(render_target);
-				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
-				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+				if(!IS_CMD) {
+					var noti  = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
+					noti.path = filename_dir(render_target);
+					noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+					PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+				}
+				
 				render_process_id = 0;
 			}
 		}

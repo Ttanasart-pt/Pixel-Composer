@@ -1,11 +1,11 @@
 function timelineItem() constructor { 
-	show = true;
+	show   = true;
 	active = true;
 	
-	color = -1;
+	color     = -1;
 	color_cur = CDEF.main_grey;
 	color_dsp = -1;
-	parent = noone;
+	parent    = noone;
 	
 	static setColor = function(color) { self.color = color; }
 	static getColor = function()      { return color; }

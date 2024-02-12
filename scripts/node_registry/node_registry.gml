@@ -2,8 +2,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	name = _name;
 	spr  = _spr;
 	node = _node;
+	icon = noone;
+	
 	createNode = _create;
 	self.tags  = tags;
+	new_node   = false;
 	
 	tooltip    	= "";
 	tooltip_spr = noone;
@@ -14,12 +17,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	
 	is_patreon_extra = false;
 	
-	var pth = DIRECTORY + "Nodes/tooltip/" + node + ".png";
-	if(file_exists_empty(pth))
-		tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
-	new_node = false;
+	if(!IS_CMD) {
+		var pth = DIRECTORY + "Nodes/tooltip/" + node + ".png";
+		if(file_exists_empty(pth)) tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
+	}
 	
-	if(struct_has(global.NODE_GUIDE, node)) { #region
+	if(!IS_CMD && struct_has(global.NODE_GUIDE, node)) { #region
 		var _n = global.NODE_GUIDEarn[$ node];
 		name   = _n.name;
 		if(_n.tooltip != "")
@@ -38,6 +41,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			ds_list_add(NEW_NODES, self);
 		}
+		return self;
+	} #endregion
+	
+	static setIcon = function(icon) { #region
+		INLINE 
+		self.icon = icon;
 		return self;
 	} #endregion
 	
@@ -105,11 +114,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		
 		var fav = array_exists(global.FAV_NODES, node);
 		if(fav) draw_sprite_ui_uniform(THEME.star, 0, _x + grid_size - ui(10), _y + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
-					
+			
+		var spr_x = _x + grid_size - 4;
+		var spr_y = _y + 4;
+				
 		if(IS_PATREON && is_patreon_extra) {
-			var spr_x = _x + grid_size - 4;
-			var spr_y = _y + 4;
-						
 			BLEND_SUBTRACT
 			gpu_set_colorwriteenable(0, 0, 0, 1);
 			draw_sprite_ext(s_patreon_supporter, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
@@ -120,6 +129,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			if(point_in_circle(_mx, _my, spr_x, spr_y, 10)) TOOLTIP = __txt("Supporter exclusive");
 		}
+		
+		if(icon) draw_sprite_ext(icon, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
 	} #endregion
 	
 	static drawList = function(_x, _y, _mx, _my, list_height) { #region
@@ -234,13 +245,15 @@ function addNodePCXCatagory(name, list, filter = []) { #region
 function __initNodes() {
 	global.__currPage = "";
 	
-	var favPath = DIRECTORY + "Nodes/fav.json";
-	global.FAV_NODES = file_exists_empty(favPath)? json_load_struct(favPath) : [];
-	if(!is_array(global.FAV_NODES)) global.FAV_NODES = [];
+	if(!IS_CMD) {
+		var favPath = DIRECTORY + "Nodes/fav.json";
+		global.FAV_NODES = file_exists_empty(favPath)? json_load_struct(favPath) : [];
+		if(!is_array(global.FAV_NODES)) global.FAV_NODES = [];
 	
-	var recPath = DIRECTORY + "Nodes/recent.json";
-	global.RECENT_NODES = file_exists_empty(recPath)? json_load_struct(recPath) : [];
-	if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
+		var recPath = DIRECTORY + "Nodes/recent.json";
+		global.RECENT_NODES = file_exists_empty(recPath)? json_load_struct(recPath) : [];
+		if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
+	}
 	
 	NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
 	ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
@@ -488,6 +501,8 @@ function __initNodes() {
 	
 	var filter = ds_list_create(); #region
 	addNodeCatagory("Filter", filter);
+		addNodeObject(filter, "Lovify",				s_node_lovify,			 "Node_Lovify",			  [1, Node_Lovify]).setIcon(s_lovify_icon);
+		
 		ds_list_add(filter, "Combines");
 		addNodeObject(filter, "Blend",				s_node_blend,			 "Node_Blend",			  [0, Node_create_Blend], ["normal", "add", "subtract", "multiply", "screen", "maxx", "minn"], "Blend 2 images using different blendmodes.");
 		addNodeObject(filter, "RGBA Combine",		s_node_RGB_combine,		 "Node_Combine_RGB",	  [1, Node_Combine_RGB],, "Combine 4 image in to one. Each image use to control RGBA channel.").setVersion(1070);

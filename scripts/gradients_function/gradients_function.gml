@@ -2,7 +2,8 @@ enum GRADIENT_INTER {
 	smooth,
 	none,
 	hue,
-	oklab
+	oklab,
+	srgb
 }
 
 function gradientKey(time, value) constructor { #region
@@ -79,6 +80,7 @@ function gradientObject(color = c_black) constructor { #region
 				case GRADIENT_INTER.smooth : return merge_color      (_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.hue    : return merge_color_hsv  (_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.oklab  : return merge_color_oklab(_pkey.value, _key.value, rat);
+				case GRADIENT_INTER.srgb   : return merge_color_srgb (_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.none   : return _pkey.value;
 			}
 		}

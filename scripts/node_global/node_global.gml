@@ -192,9 +192,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	input_display_list = -1;
 	anim_priority = -999;
 	
-	static valueUpdate = function(index) {
-		RENDER_ALL
-	}
+	static valueUpdate = function(index) { RENDER_ALL }
 	
 	static createValue = function() { #region
 		var _in    = nodeValue("NewValue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
@@ -262,13 +260,14 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		var _inputs = _map.inputs;
 		
 		for(var i = 0; i < array_length(_inputs); i++) {
-			var _des = _inputs[i];
-			var _in  = createValue();
+			var _des  = _inputs[i];
+			var _in   = createValue();
+			var _name = struct_try_get(_des, "global_name", "");
 			
 			_in.editor.type_index = struct_try_get(_des, "global_type", 0);
 			_in.editor.disp_index = struct_try_get(_des, "global_disp", 0);
 			_in.editor.disp_index = struct_try_get(_des, "global_disp", 0);
-			_in.editor.value_name = struct_try_get(_des, "global_name", "");
+			_in.editor.value_name = _name;
 			
 			_in.editor.slider_range = _des.global_s_range;
 			_in.editor.slider_step  = struct_try_get(_des, "global_s_step",  0.01);
@@ -276,6 +275,8 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 			_in.editor.refreshInput();
 			
 			_in.applyDeserialize(_des);
+			
+			if(struct_has(PROGRAM_ARGUMENTS, _name)) _in.setValue(PROGRAM_ARGUMENTS[$ _name]);
 		}
 		
 		if(struct_has(_map, "attr")) struct_override(attributes, _map.attr); 

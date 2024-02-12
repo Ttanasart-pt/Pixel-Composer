@@ -140,7 +140,7 @@
 #endregion
 
 #region node function
-	function nodeLoad(_data, scale = false, _group = PANEL_GRAPH.getCurrentContext()) {
+	function nodeLoad(_data, scale = false, _group = noone) {
 		if(!is_struct(_data)) return;
 		
 		var _x    = _data.x;

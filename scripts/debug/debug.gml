@@ -26,6 +26,8 @@ function __log(title, str, fname = "log/log.txt") { #region
 
 function log_message(title, str, icon = noone, flash = false, write = true) { #region
 	if(TEST_ERROR) return;
+	if(IS_CMD)     return;
+	
 	if(write) __log("[MESSAGE] ", string(title) + ": " + string(str));
 	
 	return noti_status(string(title) + ": " + string(str), icon, flash);
@@ -33,6 +35,8 @@ function log_message(title, str, icon = noone, flash = false, write = true) { #r
 
 function log_warning(title, str, ref = noone) { #region
 	if(TEST_ERROR) return;
+	if(IS_CMD)     return;
+	
 	__log("[WARNING] ", string(title) + ": " + string(str));
 	
 	return noti_warning(string(title) + ": " + string(str),, ref);
@@ -40,6 +44,8 @@ function log_warning(title, str, ref = noone) { #region
 
 function log_crash(str) { #region
 	if(TEST_ERROR) return;
+	if(IS_CMD)     return;
+	
 	__log("[ERROR] ", string(str));
 	
 	return noti_error(string(str));

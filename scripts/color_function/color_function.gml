@@ -35,6 +35,15 @@
 		return make_color_rgba(rg.x, rg.y, rg.z, a);
 	} #endregion
 	
+	function make_color_srgba(r, g, b, a) { #region
+		INLINE 
+		r = power(r, 1 / 2.2) * 255;
+		g = power(g, 1 / 2.2) * 255;
+		b = power(b, 1 / 2.2) * 255;
+		
+		return int64(round(r) + (round(g) << 8) + (round(b) << 16) + (round(a) << 24)); 
+	} #endregion
+	
 	function colorFromRGBArray(arr) { #region
 		var r = round(real(arr[0]) * 255);
 		var g = round(real(arr[1]) * 255);
@@ -64,6 +73,11 @@
 	function color_rgb(col) { #region
 		INLINE
 		return [ color_get_red(col) / 255, color_get_green(col) / 255, color_get_blue(col) / 255 ];
+	} #endregion
+	
+	function color_srgb(col) { #region
+		INLINE
+		return [ power(color_get_red(col) / 255, 2.2), power(color_get_green(col) / 255, 2.2), power(color_get_blue(col) / 255, 2.2) ];
 	} #endregion
 	
 	function color_hsv(col) { #region
@@ -211,6 +225,23 @@ function color_diff(c1, c2, fast = false, alpha = false) { #region
 		var a = is_real(c0)? 255 : clamp(round(lerp(color_get_alpha(c0), color_get_alpha(c1), t)), 0, 255);
 		
 		return make_color_oklab(ok, a);
+	} #endregion 
+	
+	function merge_color_srgb(c0, c1, t) { #region
+		INLINE
+		
+		var sr0 = color_srgb(c0);
+		var sr1 = color_srgb(c1);
+		
+		var sr = [
+			lerp(sr0[0], sr1[0], t),
+			lerp(sr0[1], sr1[1], t),
+			lerp(sr0[2], sr1[2], t),
+		];
+		
+		var a = is_real(c0)? 255 : clamp(round(lerp(color_get_alpha(c0), color_get_alpha(c1), t)), 0, 255);
+		
+		return make_color_srgba(sr, a);
 	} #endregion 
 #endregion
 

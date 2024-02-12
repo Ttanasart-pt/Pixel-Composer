@@ -27,16 +27,19 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 	
 	var _PROJECT = PROJECT;
 	PROJECT = new Project();
-	if(PANEL_GRAPH.project.path == "" && !PANEL_GRAPH.project.modified) {
-		var ind = array_find(PROJECTS, PANEL_GRAPH.project);
+	
+	if(_PROJECT.path == "" && !_PROJECT.modified) {
+		var ind = array_find(PROJECTS, _PROJECT);
 		if(ind == -1) ind = 0;
 		PROJECTS[ind] = PROJECT;
 		
-		PANEL_GRAPH.setProject(PROJECT);
+		if(!IS_CMD) PANEL_GRAPH.setProject(PROJECT);
 	} else {
-		var graph = new Panel_Graph(PROJECT);
-		PANEL_GRAPH.panel.setContent(graph, true);
-		PANEL_GRAPH = graph;
+		if(!IS_CMD) {
+			var graph = new Panel_Graph(PROJECT);
+			PANEL_GRAPH.panel.setContent(graph, true);
+			PANEL_GRAPH = graph;
+		}
 		array_push(PROJECTS, PROJECT);
 	}
 	
@@ -44,7 +47,8 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 	if(!res) return false;
 	
 	PROJECT.safeMode = safe_mode;
-	setFocus(PANEL_GRAPH.panel);
+	if(!IS_CMD) 
+		setFocus(PANEL_GRAPH.panel);
 	
 	return PROJECT;
 } #endregion
@@ -246,14 +250,14 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	PROJECT.modified = false;
 	
 	log_message("FILE", "load " + path, THEME.noti_icon_file_load);
-	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_load);
+	if(!IS_CMD) PANEL_MENU.setNotiIcon(THEME.noti_icon_file_load);
 	
 	refreshNodeMap();
 	
 	if(struct_has(_load_content, "timelines") && !array_empty(_load_content.timelines.contents))
 		PROJECT.timelines.deserialize(_load_content.timelines);
 	
-	run_in(1, PANEL_GRAPH.toCenterNode);
+	if(!IS_CMD) run_in(1, PANEL_GRAPH.toCenterNode);
 	
 	//print($"========== Load completed in {(get_timer() - t) / 1000} ms ==========");
 	

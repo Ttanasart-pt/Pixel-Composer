@@ -149,7 +149,7 @@
 			with(dialogCall(o_dialog_add_multiple_images, WIN_W / 2, WIN_H / 2))
 				setPath(path);
 		} else {
-			PANEL_GRAPH.onStepBegin();
+			if(!IS_CMD) PANEL_GRAPH.onStepBegin();
 			
 			var node = noone;
 			for( var i = 0, n = array_length(path); i < n; i++ ) {
@@ -192,10 +192,10 @@
 						break;
 				}
 				
-				PANEL_GRAPH.mouse_grid_y += 160;
+				if(!IS_CMD)PANEL_GRAPH.mouse_grid_y += 160;
 			}
 			
-			if(node)
+			if(node && !IS_CMD)
 				PANEL_GRAPH.toCenterNode();
 		}
 	}
@@ -313,22 +313,21 @@
 #endregion
 
 #region arguments
+	#macro IS_CMD PROGRAM_ARGUMENTS._cmd
+	
 	alarm[1] = 2;
 	
 	globalvar PROGRAM_ARGUMENTS;
 	PROGRAM_ARGUMENTS = { 
-		run :     false,
+		_cmd :     false,
+		_run :     false,
+		_persist : false,
 	};
 	
-	//PROGRAM_ARGUMENTS = {
-	//	path:     "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/outline.pxc",
-	//	image:    "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/05.png",
-	//	run :     true,
-	//	persist : false, 
-	//};
+	//.\PixelComposer.exe "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/outline.pxc" --h -image "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/05.png"
 	
 	var paramCount = parameter_count();
-	var paramType  = "path";
+	var paramType  = "_path";
 	
 	for( var i = 0; i < paramCount; i++ ) {
 		var param = parameter_string(i);
@@ -341,28 +340,33 @@
 						run_in(1, function() { dialogCall(o_dialog_crashed); });
 					break;
 				
-				case "--h" : PROGRAM_ARGUMENTS.run     = true; break;
-				case "--p" : PROGRAM_ARGUMENTS.persist = true; break;
+				case "--h" : 
+					debug_event("OutputDebugOn");
+					PROGRAM_ARGUMENTS._cmd = true; 
+					PROGRAM_ARGUMENTS._run = true; 
+					break;
+					
+				case "--p" : PROGRAM_ARGUMENTS._persist = true; break;
 			}
 			
 		} else if(string_starts_with(param, "-")) {
 			paramType = string_trim(param, ["-"]);
 			
-		} else if(paramType == "path") {
+		} else if(paramType == "_path") {
 			var path = param;
 			    path = string_replace_all(path, "\n", "");
 			    path = string_replace_all(path, "\"", "");
 					
 			if(file_exists_empty(path) && filename_ext(path) == ".pxc")
-				PROGRAM_ARGUMENTS.path = path;
+				PROGRAM_ARGUMENTS._path = path;
 				
 		} else {
 			PROGRAM_ARGUMENTS[$ paramType] = param;
 		}
 	}
 	
-	if(struct_exists(PROGRAM_ARGUMENTS, "path")) {
-		var path = PROGRAM_ARGUMENTS.path;
+	if(struct_exists(PROGRAM_ARGUMENTS, "_path")) {
+		var path = PROGRAM_ARGUMENTS._path;
 		
 		if(PROJECT == noone || PROJECT.path != path) {
 			file_open_parameter = path;
@@ -370,6 +374,6 @@
 		}
 	}
 	
-	if(PROGRAM_ARGUMENTS.run)
+	if(PROGRAM_ARGUMENTS._cmd)
 		draw_enable_drawevent(false);
 #endregion
