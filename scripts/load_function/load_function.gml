@@ -259,7 +259,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	
 	if(!IS_CMD) run_in(1, PANEL_GRAPH.toCenterNode);
 	
-	//print($"========== Load completed in {(get_timer() - t) / 1000} ms ==========");
+	//print($"========== Load {ds_map_size(PROJECT.nodeMap)} nodes completed in {(get_timer() - t) / 1000} ms ==========");
 	
 	return true;
 } #endregion

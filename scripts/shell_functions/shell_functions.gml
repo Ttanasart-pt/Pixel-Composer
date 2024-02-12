@@ -27,6 +27,8 @@ function shell_execute(path, command, ref = noone) { #region
 function shell_execute_async(path, command, ref = noone) { #region
 	INLINE
 	
+	if(IS_CMD) return shell_execute(path, command, ref);
+	
 	if(OS == os_macosx) {
 		path    = string_replace_all(path,    "\\", "/");
 		command = string_replace_all(command, "\\", "/");

@@ -23,13 +23,14 @@ function exportAll() {
 	if(IS_RENDERING) return;
 	
 	var key = ds_map_find_first(PROJECT.nodeMap);
+	
 	repeat(ds_map_size(PROJECT.nodeMap)) {
-		var node = PROJECT.nodeMap[? key];
+		var node = PROJECT.nodeMap[? key];		
 		key = ds_map_find_next(PROJECT.nodeMap, key);
 			
 		if(!node.active) continue;
 		if(!is_instanceof(node, Node_Export)) continue;
-					
+		
 		node.doInspectorAction();
 	}
 } #endregion
@@ -550,6 +551,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static export = function() { #region
+		//print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} <<<<<<<<<<<<<<<<<<<<");
+		
 		var surf = getInputData( 0);
 		var path = getInputData( 1);
 		var suff = getInputData( 2);
@@ -713,6 +716,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		PROJECT.animator.render();
 		
+		if(IS_CMD) array_push(PROGRAM_ARGUMENTS._exporting, node_id);
+		
 		if(directory_exists(directory))
 			directory_destroy(directory);
 		directory_create(directory);
@@ -807,6 +812,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				render_process_id = 0;
+				
+				if(IS_CMD) array_remove(PROGRAM_ARGUMENTS._exporting, node_id);
 			}
 		}
 	} #endregion

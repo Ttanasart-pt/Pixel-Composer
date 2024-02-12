@@ -88,26 +88,29 @@ _HOVERING_ELEMENT = noone;
 			PROJECT.animator.is_simulating = false;
 			array_foreach(PROJECT.nodeArray, function(_node) { if(!_node.active) return; _node.stepBegin(); });
 			
-			if(IS_PLAYING || IS_RENDERING) {
+			if(PROGRAM_ARGUMENTS._run) {
+				if(PROJECT != noone && PROJECT.path != "") {
+					exportAll();
+					PROGRAM_ARGUMENTS._run = false;
+				}
+						
+			} else if(IS_PLAYING || IS_RENDERING) {
 				if(PROJECT.animator.frame_progress) {
 					__addon_preAnim();
 					
 					if(IS_FIRST_FRAME)
 						ResetAllNodesRender();
-					Render(true);
+						
+					if(IS_CMD) Render(false);
+					else       Render(true);
 					
 					__addon_postAnim();
 				}
 				PROJECT.animator.frame_progress = false;
+				
 			} else {
 				if(UPDATE & RENDER_TYPE.full) {
-					if(PROGRAM_ARGUMENTS._run) {
-						exportAll();
-						PROGRAM_ARGUMENTS._run = false;
-						
-						if(!IS_RENDERING && !PROGRAM_ARGUMENTS._persist) game_end();
-					} else 
-						Render();
+					Render();
 					
 				} else if(UPDATE & RENDER_TYPE.partial)
 					Render(true);
@@ -115,6 +118,9 @@ _HOVERING_ELEMENT = noone;
 			}
 		}
 	}
+	
+	if(IS_CMD && PROGRAM_ARGUMENTS._run == false && array_empty(PROGRAM_ARGUMENTS._exporting) && !PROGRAM_ARGUMENTS._persist) 
+		game_end();
 	
 	UPDATE = RENDER_TYPE.none;
 #endregion

@@ -319,19 +319,24 @@
 	
 	globalvar PROGRAM_ARGUMENTS;
 	PROGRAM_ARGUMENTS = { 
-		_cmd :     false,
-		_run :     false,
-		_persist : false,
+		_cmd :       false,
+		_run :       false,
+		_exporting : [],
+		_persist :   false,
 	};
 	
 	//.\PixelComposer.exe "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/outline.pxc" --h -image "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/05.png"
+	PROGRAM_ARGUMENTS._path = "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/moveup.pxc";
+	PROGRAM_ARGUMENTS.image = "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/05.png";
+	PROGRAM_ARGUMENTS._cmd  = true;
+	PROGRAM_ARGUMENTS._run  = true; 
 	
 	var paramCount = parameter_count();
 	var paramType  = "_path";
 	
 	for( var i = 0; i < paramCount; i++ ) {
 		var param = parameter_string(i);
-		print($"    >>> params {i}: {param}");
+		//print($"    >>> params {i}: {param}");
 		
 		if(string_starts_with(param, "--")) {
 			switch(param) {
@@ -341,7 +346,6 @@
 					break;
 				
 				case "--h" : 
-					debug_event("OutputDebugOn");
 					PROGRAM_ARGUMENTS._cmd = true; 
 					PROGRAM_ARGUMENTS._run = true; 
 					break;
@@ -365,11 +369,12 @@
 		}
 	}
 	
-	if(struct_exists(PROGRAM_ARGUMENTS, "_path")) {
+	if(struct_has(PROGRAM_ARGUMENTS, "_path")) {
 		var path = PROGRAM_ARGUMENTS._path;
 		
 		if(PROJECT == noone || PROJECT.path != path) {
 			file_open_parameter = path;
+			
 			run_in(1, function() { load_file_path(file_open_parameter); });
 		}
 	}

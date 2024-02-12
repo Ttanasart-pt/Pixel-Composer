@@ -26,16 +26,16 @@ function __log(title, str, fname = "log/log.txt") { #region
 
 function log_message(title, str, icon = noone, flash = false, write = true) { #region
 	if(TEST_ERROR) return;
-	if(IS_CMD)     return;
+	if(IS_CMD)     { show_debug_message($"{title}: {str}"); return; }
 	
-	if(write) __log("[MESSAGE] ", string(title) + ": " + string(str));
+	if(write) __log("[MESSAGE] ", $"{title}: {str}");
 	
-	return noti_status(string(title) + ": " + string(str), icon, flash);
+	return noti_status($"{title}: {str}", icon, flash);
 } #endregion
 
 function log_warning(title, str, ref = noone) { #region
 	if(TEST_ERROR) return;
-	if(IS_CMD)     return;
+	if(IS_CMD)     { show_debug_message($"{title}: {str}"); return; }
 	
 	__log("[WARNING] ", string(title) + ": " + string(str));
 	
@@ -44,7 +44,7 @@ function log_warning(title, str, ref = noone) { #region
 
 function log_crash(str) { #region
 	if(TEST_ERROR) return;
-	if(IS_CMD)     return;
+	if(IS_CMD)     { show_debug_message($"{title}: {str}"); return; }
 	
 	__log("[ERROR] ", string(str));
 	

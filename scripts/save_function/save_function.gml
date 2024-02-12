@@ -86,7 +86,6 @@ function SAVE_ALL() { #region
 function SAVE(project = PROJECT) { #region
 	if(DEMO) return false;
 	
-	print("SAVE");
 	if(project.path == "" || project.readonly)
 		return SAVE_AS(project);
 	return SAVE_AT(project, project.path);

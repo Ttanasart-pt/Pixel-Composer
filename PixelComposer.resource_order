@@ -134,6 +134,8 @@
     {"name":"for sort","order":11,"path":"folders/nodes/data/iterate/for sort.yy",},
     {"name":"lua","order":12,"path":"folders/nodes/data/lua.yy",},
     {"name":"misc","order":10,"path":"folders/nodes/data/misc.yy",},
+    {"name":"lovify","order":26,"path":"folders/nodes/data/misc/lovify.yy",},
+    {"name":"spr","order":6,"path":"folders/nodes/data/misc/lovify/spr.yy",},
     {"name":"MK effects","order":24,"path":"folders/nodes/data/MK effects.yy",},
     {"name":"mk flare","order":13,"path":"folders/nodes/data/MK effects/mk flare.yy",},
     {"name":"src","order":1,"path":"folders/nodes/data/MK effects/mk flare/src.yy",},
@@ -268,8 +270,6 @@
     {"name":"button","order":34,"path":"folders/widgets/button.yy",},
     {"name":"rotator","order":35,"path":"folders/widgets/rotator.yy",},
     {"name":"text","order":36,"path":"folders/widgets/text.yy",},
-    {"name":"lovify","order":26,"path":"folders/nodes/data/misc/lovify.yy",},
-    {"name":"spr","order":6,"path":"folders/nodes/data/misc/lovify/spr.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":13,"path":"sprites/s_node_corner/s_node_corner.yy",},

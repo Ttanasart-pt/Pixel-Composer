@@ -153,7 +153,10 @@
 			time_since_last_frame += delta_time / 1_000_000;
 			var tslf = time_since_last_frame;
 				
-			if(time_since_last_frame >= _frTime) {
+			if(0 && IS_CMD) {
+				setFrame(real_frame + 1);
+				
+			} else if(time_since_last_frame >= _frTime) {
 				var dt = time_since_last_frame - _frTime;
 				setFrame(real_frame + 1);
 				time_since_last_frame = dt;
@@ -166,8 +169,6 @@
 						is_playing   = false;
 						is_rendering = false;
 						time_since_last_frame = 0;
-						
-						if(PROGRAM_ARGUMENTS._cmd && !PROGRAM_ARGUMENTS._persist) game_end();
 					} 
 				}
 			

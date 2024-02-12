@@ -263,7 +263,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static createNewInput = noone;
 	
 	static initTooltip = function() { #region
-		var type_self/*:string*/ = instanceof(self);
+		if(IS_CMD) return;
+		
+		var type_self = instanceof(self);
 		if(!struct_has(global.NODE_GUIDE, type_self)) return;
 		
 		var _n = global.NODE_GUIDE[$ type_self];

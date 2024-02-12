@@ -1,14 +1,15 @@
-function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #region
+function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constructor { #region
 	name = _name;
 	spr  = _spr;
 	node = _node;
 	icon = noone;
 	
 	createNode = _create;
-	self.tags  = tags;
-	new_node   = false;
 	
-	tooltip    	= "";
+	self.tags    = tags;
+	self.tooltip = tooltip;
+	
+	new_node    = false;
 	tooltip_spr = noone;
 	deprecated  = false;
 	
@@ -17,20 +18,22 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	
 	is_patreon_extra = false;
 	
-	if(!IS_CMD) {
+	if(!IS_CMD) { #region
 		var pth = DIRECTORY + "Nodes/tooltip/" + node + ".png";
 		if(file_exists_empty(pth)) tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
-	}
-	
-	if(!IS_CMD && struct_has(global.NODE_GUIDE, node)) { #region
-		var _n = global.NODE_GUIDEarn[$ node];
-		name   = _n.name;
-		if(_n.tooltip != "")
-			tooltip = _n.tooltip;
+		
+		if(struct_has(global.NODE_GUIDE, node)) {
+			var _n = global.NODE_GUIDEarn[$ node];
+			name   = _n.name;
+			if(_n.tooltip != "")
+				tooltip = _n.tooltip;
+		}
 	} #endregion
 	
 	static setVersion = function(version) { #region
 		INLINE 
+		if(!IS_CMD) return self;
+		
 		new_node = version >= LATEST_VERSION;
 		
 		if(new_node) {
@@ -46,30 +49,40 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	
 	static setIcon = function(icon) { #region
 		INLINE 
+		if(!IS_CMD) return self;
+		
 		self.icon = icon;
 		return self;
 	} #endregion
 	
 	static isDeprecated = function() { #region
 		INLINE 
+		if(!IS_CMD) return self;
+		
 		deprecated = true;
 		return self;
 	} #endregion
 	
 	static hideRecent = function() { #region
 		INLINE 
+		if(!IS_CMD) return self;
+		
 		show_in_recent = false;
 		return self;
 	} #endregion
 	
 	static hideGlobal = function() { #region
 		INLINE 
+		if(!IS_CMD) return self;
+		
 		show_in_global = false;
 		return self;
 	} #endregion
 	
 	static patreonExtra = function() { #region
 		INLINE 
+		if(!IS_CMD) return self;
+		
 		is_patreon_extra = true;
 		
 		ds_list_add(SUPPORTER_NODES, self);
@@ -185,13 +198,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 } #endregion
 
 #region globalvar
-	globalvar ALL_NODES, ALL_NODE_LIST, NODE_CATEGORY, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
+	globalvar ALL_NODES, NODE_CATEGORY, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
 	globalvar SUPPORTER_NODES, NEW_NODES;
 	
 	globalvar NODE_PAGE_DEFAULT;
 	
 	ALL_NODES		  = ds_map_create();
-	ALL_NODE_LIST	  = ds_list_create();
 	NODE_CATEGORY	  = ds_list_create();
 	NODE_PB_CATEGORY  = ds_list_create();
 	NODE_PCX_CATEGORY = ds_list_create();
@@ -213,18 +225,15 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) { #r
 } #endregion
 	
 function addNodeObject(_list, _name, _spr, _node, _fun, _tag = [], tooltip = "") { #region
-	var _n;
-		
-	if(ds_map_exists(ALL_NODES, _node))
-		_n = ALL_NODES[? _node];
-	else { 
-		_n = new NodeObject(_name, _spr, _node, _fun, _tag);
-		if(!ds_map_exists(ALL_NODES, _node))
-			ds_list_add(ALL_NODE_LIST, _n);
-		ALL_NODES[? _node] = _n;
+	if(ds_map_exists(ALL_NODES, _node)) {
+		var _n = ALL_NODES[? _node];
+		ds_list_add(_list, _n);
+		return _n;
 	}
 		
-	if(tooltip != "") _n.tooltip = tooltip;
+	var _n = new NodeObject(_name, _spr, _node, _fun, tooltip, _tag);
+	ALL_NODES[? _node] = _n;
+	
 	ds_list_add(_list, _n);
 	return _n;
 } #endregion
@@ -439,7 +448,7 @@ function __initNodes() {
 		addNodeObject(strandSim, "Strand Collision",	 s_node_strandSim_collide,	"Node_Strand_Collision",	 [1, Node_Strand_Collision],, "Create solid object for strands to collides to.").hideRecent().setVersion(1140);
 	#endregion
 	
-	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+	////\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 	
 	var input = ds_list_create(); #region
 	addNodeCatagory("IO", input);
@@ -496,7 +505,7 @@ function __initNodes() {
 		addNodeObject(transform, "Composite",		s_node_compose,			"Node_Composite",		[1, Node_Composite], ["merge"], "Combine multiple images with controllable position, rotation, scale.");
 		addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9 slice", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");
 		addNodeObject(transform, "Padding",			s_node_padding,			"Node_Padding",			[1, Node_Padding],, "Make image bigger by adding space in 4 directions.");
-		//addNodeObject(transform, "Tile Random",		s_node_padding,			"Node_Tile_Random",		[1, Node_Tile_Random]);
+		addNodeObject(transform, "Tile Random",		s_node_padding,			"Node_Tile_Random",		[1, Node_Tile_Random]);
 	#endregion
 	
 	var filter = ds_list_create(); #region

@@ -162,6 +162,8 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for","folderPath":"folders/nodes/data/iterate/for.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"lua","folderPath":"folders/nodes/data/lua.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"misc","folderPath":"folders/nodes/data/misc.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"lovify","folderPath":"folders/nodes/data/misc/lovify.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"spr","folderPath":"folders/nodes/data/misc/lovify/spr.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"MK effects","folderPath":"folders/nodes/data/MK effects.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"mk flare","folderPath":"folders/nodes/data/MK effects/mk flare.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"src","folderPath":"folders/nodes/data/MK effects/mk flare/src.yy",},
@@ -304,8 +306,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"button","folderPath":"folders/widgets/button.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"rotator","folderPath":"folders/widgets/rotator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/widgets/text.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"lovify","folderPath":"folders/nodes/data/misc/lovify.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"spr","folderPath":"folders/nodes/data/misc/lovify/spr.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},

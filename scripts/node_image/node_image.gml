@@ -116,8 +116,6 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_sprite(spr, 0, pad[2], pad[1]);
 		surface_reset_shader();
 		
-		//print($"Image: {spr} | {_outsurf} | {surface_exists(_outsurf)}");
-		
 		if(!first_update) return;
 		first_update = false;
 		
