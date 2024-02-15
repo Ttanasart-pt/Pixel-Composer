@@ -66,13 +66,16 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 19] = nodeValue("Shape Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
+	inputs[| 20] = nodeValue("Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
+		.setDisplay(VALUE_DISPLAY.slider_range);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",     false], 0, 6, 
 		["Transform",  false], 15, 3, 16, 17, 19, 
 		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 
-		["Render",	    true], 10, 12, 18,
+		["Render",	    true], 10, 12, 20, 18,
 		["Background",	true, 1], 11, 
 	];
 	
@@ -113,6 +116,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _posTyp	= _data[15];
 		var _tile   = _data[18];
 		var _rotat  = _data[19];
+		var _level  = _data[20];
 		
 		var _center = [ 0, 0 ];
 		var _scale  = [ 0, 0 ];
@@ -307,6 +311,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_f("bgColor",   _bgcol);
 			shader_set_i("aa",        _aa);
 			shader_set_i("drawDF",    _df);
+			shader_set_f("dfLevel",    _level);
 			shader_set_i("tile",      _tile);
 			shader_set_f("corner",    _corner);
 			

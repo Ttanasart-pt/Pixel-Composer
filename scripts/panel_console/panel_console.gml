@@ -22,51 +22,6 @@ function Panel_Console() : PanelContent() constructor {
 	scroll_y  = 0;
 	prevFocus = false;
 	
-	static submit_command = function() { #region
-		if(command == "") return;
-		array_push(CMD, cmdLineIn(command));
-		array_push(CMDIN, command);
-		
-		var cmd = string_splice(command, " ", false, false);
-		
-		switch(cmd[0]) {
-			case "flag": 
-				if(array_length(cmd) < 2) {
-					array_push(CMD, cmdLine($"Error: \"{cmd[0]}\" not enough argument.", COLORS._main_value_negative) );
-					break;
-				}
-				var flg = cmd[1];
-				global.FLAG[$ flg] = !global.FLAG[$ flg];
-				
-				array_push(CMD, cmdLine($"Toggled debug flag: {flg} = {global.FLAG[$ flg]? "True" : "False"}", COLORS._main_value_positive) );
-				break;
-			default: 
-				if(struct_has(FUNCTIONS, cmd[0])) {
-					var _f    = FUNCTIONS[$ cmd[0]];
-					var _vars = string_splice(array_safe_get(cmd, 1, ""), ",");
-					var _args = [];
-					
-					for( var i = 0, n = array_length(_f.args); i < n; i++ ) {
-						var _arg = _f.args[i];
-						var _def = _arg.fn? _arg.def() : _arg.def;
-						
-						if(i < array_length(_vars) && _vars[i] != "") {
-							if(is_real(_def)) _args[i] = toNumber(_vars[i]);
-							else              _args[i] = _vars[i];
-						} else 
-							_args[i] = _def;
-					}
-					
-					callFunction(cmd[0], _args);
-				} else 
-					array_push(CMD, cmdLine($"Error: \"{cmd[0]}\" command not found.", COLORS._main_value_negative) );
-				break;
-		}
-		
-		command = "";
-		keyboard_string = "";
-	} #endregion
-	
 	function drawHistory(_y) { #region
 		var _x = ui(32 + 8);
 		var _w = w - ui(16 + 32);
@@ -149,7 +104,11 @@ function Panel_Console() : PanelContent() constructor {
 		
 		if(pFOCUS) {
 			if(keyboard_check_pressed(vk_enter)) { 
-				submit_command();
+				cmd_submit(command);
+				
+				command = "";
+				keyboard_string = "";
+				
 			} else if(keyboard_check_pressed(vk_up)) {
 				cmd_index = max(0, cmd_index - 1); 
 			

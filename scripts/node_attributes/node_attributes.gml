@@ -9,7 +9,8 @@
 	global.SURFACE_OVERSAMPLE = [
 		"Empty", 
 		"Clamp", 
-		"Repeat"
+		"Repeat",
+		"Black"
 	];
 	
 	function __initSurfaceFormat() {

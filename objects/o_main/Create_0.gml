@@ -215,7 +215,6 @@
 #endregion
 
 #region parameter
-	file_open_parameter = "";
 	minimized = false;
 	_modified = false;
 #endregion
@@ -312,73 +311,111 @@
 	//instance_create_depth(0, 0, -32000, FLIP_Domain);
 #endregion
 
+#region server
+	globalvar TCP_SERVER, TCP_PORT, TCP_CLIENTS;
+	TCP_SERVER  = false;
+	TCP_PORT    = noone;
+	TCP_CLIENTS = [];
+	
+#endregion
+
 #region arguments
 	#macro IS_CMD PROGRAM_ARGUMENTS._cmd
 	
 	alarm[1] = 2;
 	
-	globalvar PROGRAM_ARGUMENTS;
+	globalvar PROGRAM_ARGUMENTS, CLI_EXPORT_AMOUNT;
+	
 	PROGRAM_ARGUMENTS = { 
+		_path :      "",
 		_cmd :       false,
 		_run :       false,
+		_rendering : false,
 		_exporting : [],
 		_persist :   false,
+		_trusted:    false,
+		_lua:        true,
 	};
 	
-	//.\PixelComposer.exe "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/outline.pxc" --h -image "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/05.png"
-	PROGRAM_ARGUMENTS._path = "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/moveup.pxc";
-	PROGRAM_ARGUMENTS.image = "D:/Project/MakhamDev/LTS-PixelComposer/TEST/terminal/05.png";
-	PROGRAM_ARGUMENTS._cmd  = true;
-	PROGRAM_ARGUMENTS._run  = true; 
+	CLI_EXPORT_AMOUNT = 0;
 	
 	var paramCount = parameter_count();
 	var paramType  = "_path";
+	var useTCP     = false;
 	
 	for( var i = 0; i < paramCount; i++ ) {
 		var param = parameter_string(i);
 		//print($"    >>> params {i}: {param}");
 		
-		if(string_starts_with(param, "--")) {
+		if(string_starts_with(param, "-")) {
 			switch(param) {
+				case "-c" : 
 				case "--crashed" : 
 					if(PREFERENCES.show_crash_dialog) 
 						run_in(1, function() { dialogCall(o_dialog_crashed); });
 					break;
 				
-				case "--h" : 
+				case "-h" : 
+				case "--headless" : 
 					PROGRAM_ARGUMENTS._cmd = true; 
-					PROGRAM_ARGUMENTS._run = true; 
 					break;
 					
-				case "--p" : PROGRAM_ARGUMENTS._persist = true; break;
+				case "-p" : 
+				case "--persist" : 
+					PROGRAM_ARGUMENTS._persist = true; 
+					break;
+					
+				case "-t" : 
+				case "--trusted" : 
+					PROGRAM_ARGUMENTS._trusted = true; 
+					break;
+					
+				case "-s" : 
+				case "--server" : 
+					PROGRAM_ARGUMENTS._persist = true; 
+					useTCP = true;
+					break;
+					
+				case "-sl" : 
+				case "--skiplua" : 
+					PROGRAM_ARGUMENTS._lua = false; 
+					break;
+					
+				default :
+					paramType = string_trim(param, ["-"]);
+					break;
 			}
-			
-		} else if(string_starts_with(param, "-")) {
-			paramType = string_trim(param, ["-"]);
 			
 		} else if(paramType == "_path") {
 			var path = param;
 			    path = string_replace_all(path, "\n", "");
 			    path = string_replace_all(path, "\"", "");
-					
+				
 			if(file_exists_empty(path) && filename_ext(path) == ".pxc")
 				PROGRAM_ARGUMENTS._path = path;
 				
-		} else {
-			PROGRAM_ARGUMENTS[$ paramType] = param;
-		}
+		} else
+			PROGRAM_ARGUMENTS[$ paramType] = cmd_path(param);
 	}
 	
-	if(struct_has(PROGRAM_ARGUMENTS, "_path")) {
-		var path = PROGRAM_ARGUMENTS._path;
-		
-		if(PROJECT == noone || PROJECT.path != path) {
-			file_open_parameter = path;
-			
-			run_in(1, function() { load_file_path(file_open_parameter); });
-		}
-	}
-	
-	if(PROGRAM_ARGUMENTS._cmd)
+	if(IS_CMD) {
 		draw_enable_drawevent(false);
+		log_console($"Running PixelComposer {VERSION_STRING}");
+		
+		PROGRAM_ARGUMENTS._run = true; 
+		PROGRAM_ARGUMENTS._rendering = true; 
+	}
+	
+	if(file_exists_empty(PROGRAM_ARGUMENTS._path)) {
+		run_in(1, function() { load_file_path(PROGRAM_ARGUMENTS._path); });
+		
+	} else if(IS_CMD)
+		game_end();
+	
+	if(useTCP && struct_has(PROGRAM_ARGUMENTS, "port")) {
+		TCP_PORT   = PROGRAM_ARGUMENTS.port;
+		TCP_SERVER = network_create_server_raw(network_socket_tcp, TCP_PORT, 32);
+		
+		log_console($"Open port: {TCP_PORT}");
+	}
 #endregion

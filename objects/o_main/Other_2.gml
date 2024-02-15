@@ -65,22 +65,23 @@
 	log_message("DIRECTORY", DIRECTORY);
 	
 	PREF_APPLY();
-	var t0 = get_timer();
-	var t  = get_timer();
+	var t0   = get_timer();
+	var t    = get_timer();
+	var _lua = PROGRAM_ARGUMENTS._lua;
 	
 				  __initPatreon();              log_message("SESSION", $"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
     if(!IS_CMD) { __initTheme();                log_message("SESSION", $"> init Theme         | complete in {get_timer() - t}");    t = get_timer(); }
     if(!IS_CMD) { __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
     if(!IS_CMD) { loadFonts();                  log_message("SESSION", $"> init Font          | complete in {get_timer() - t}");    t = get_timer(); }
-				  __initProject();              log_message("SESSION", $"> init Project       | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initProject();              log_message("SESSION", $"> init Project       | complete in {get_timer() - t}");    t = get_timer(); }
 	
 	if(!IS_CMD) { __initAction();               log_message("SESSION", $"> init Action        | complete in {get_timer() - t}");    t = get_timer(); }
 				  __initSurfaceFormat();        log_message("SESSION", $"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
     if(!IS_CMD) { __initCollection();           log_message("SESSION", $"> init Collection    | complete in {get_timer() - t}");    t = get_timer(); }
     if(!IS_CMD) { __initAssets();               log_message("SESSION", $"> init Assets        | complete in {get_timer() - t}");    t = get_timer(); }
     if(!IS_CMD) { __initPresets();              log_message("SESSION", $"> init Presets       | complete in {get_timer() - t}");    t = get_timer(); }
-				  __initFontFolder();           log_message("SESSION", $"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer();
-				  __initLua();                  log_message("SESSION", $"> init Lua           | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initFontFolder();           log_message("SESSION", $"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer(); }
+	if(_lua)    { __initLua();                  log_message("SESSION", $"> init Lua           | complete in {get_timer() - t}");    t = get_timer(); }
 	if(!IS_CMD) { __initNodeData();             log_message("SESSION", $"> init NodeData      | complete in {get_timer() - t}");    t = get_timer(); }
 				  __initNodes();                log_message("SESSION", $"> init Nodes         | complete in {get_timer() - t}");    t = get_timer();
     if(!IS_CMD) { __initSteamUGC();             log_message("SESSION", $"> init SteamUGC      | complete in {get_timer() - t}");    t = get_timer(); }

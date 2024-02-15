@@ -28,10 +28,13 @@ vec4 sampleTexture(sampler2D samp, vec2 pos) {
 	
 	if(sampleMode == 0) 
 		return vec4(0.);
+		
 	else if(sampleMode == 1) 
 		return texture2D(samp, fract(pos));
+		
 	else if(sampleMode == 2) 
 		return texture2D(samp, vec2(fract(pos.x), pos.y));
+		
 	else if(sampleMode == 3) 
 		return texture2D(samp, vec2(pos.x, fract(pos.y)));
 	

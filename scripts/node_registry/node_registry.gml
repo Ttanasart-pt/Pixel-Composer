@@ -32,7 +32,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	static setVersion = function(version) { #region
 		INLINE 
-		if(!IS_CMD) return self;
+		if(IS_CMD) return self;
 		
 		new_node = version >= LATEST_VERSION;
 		
@@ -49,7 +49,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	static setIcon = function(icon) { #region
 		INLINE 
-		if(!IS_CMD) return self;
+		if(IS_CMD) return self;
 		
 		self.icon = icon;
 		return self;
@@ -57,7 +57,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	static isDeprecated = function() { #region
 		INLINE 
-		if(!IS_CMD) return self;
+		if(IS_CMD) return self;
 		
 		deprecated = true;
 		return self;
@@ -65,7 +65,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	static hideRecent = function() { #region
 		INLINE 
-		if(!IS_CMD) return self;
+		if(IS_CMD) return self;
 		
 		show_in_recent = false;
 		return self;
@@ -73,7 +73,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	static hideGlobal = function() { #region
 		INLINE 
-		if(!IS_CMD) return self;
+		if(IS_CMD) return self;
 		
 		show_in_global = false;
 		return self;
@@ -81,7 +81,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	static patreonExtra = function() { #region
 		INLINE 
-		if(!IS_CMD) return self;
+		if(IS_CMD) return self;
 		
 		is_patreon_extra = true;
 		
@@ -510,7 +510,8 @@ function __initNodes() {
 	
 	var filter = ds_list_create(); #region
 	addNodeCatagory("Filter", filter);
-		addNodeObject(filter, "Lovify",				s_node_lovify,			 "Node_Lovify",			  [1, Node_Lovify]).setIcon(s_lovify_icon);
+		//ds_list_add(filter, "Seasonal");
+		//addNodeObject(filter, "Lovify",				s_node_lovify,			 "Node_Lovify",			  [1, Node_Lovify],, "Add love to your image.").setIcon(s_lovify_icon);
 		
 		ds_list_add(filter, "Combines");
 		addNodeObject(filter, "Blend",				s_node_blend,			 "Node_Blend",			  [0, Node_create_Blend], ["normal", "add", "subtract", "multiply", "screen", "maxx", "minn"], "Blend 2 images using different blendmodes.");
@@ -538,6 +539,7 @@ function __initNodes() {
 		addNodeObject(filter, "Displace",			s_node_displace,		"Node_Displace",		[1, Node_Displace], ["distort"], "Distort image using another image as a map.");
 		addNodeObject(filter, "Texture Remap",		s_node_texture_map,		"Node_Texture_Remap",	[1, Node_Texture_Remap],, "Remap image using texture map. Where red channel control x position and green channel control y position.");
 		addNodeObject(filter, "Time Remap",			s_node_time_map,		"Node_Time_Remap",		[1, Node_Time_Remap],, "Remap image using texture as time map. Where brighter pixel means using pixel from an older frame.");
+		addNodeObject(filter, "Shape Map",			s_node_shape_map,		"Node_Shape_Map",		[1, Node_Shape_Map]).setVersion(11660);
 		addNodeObject(filter, "Morph Surface",		s_node_morph_surface,	"Node_Morph_Surface",	[1, Node_Morph_Surface],, "Morph pixel between two surfaces.").setVersion(1141);
 		
 		ds_list_add(filter, "Effects");
@@ -655,7 +657,8 @@ function __initNodes() {
 		addNodeObject(generator, "Random Shape",		s_node_random_shape,		"Node_Random_Shape",		[1, Node_Random_Shape],, "Generate random shape, use for testing purposes.").setVersion(1147);
 		addNodeObject(generator, "Pixel Builder",		s_node_pixel_builder,		"Node_Pixel_Builder",		[1, Node_Pixel_Builder]).setVersion(11540);
 		addNodeObject(generator, "Bar / Graph",			s_node_bar_graph,			"Node_Plot_Linear",			[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
-			
+		addNodeObject(generator, "Profile",				s_node_profile,				"Node_Path_Profile",		[1, Node_Path_Profile]).setVersion(11660);
+		
 		ds_list_add(generator, "Noises");
 		addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise],, "Generate white noise.");
 		addNodeObject(generator, "Perlin Noise",		s_node_noise_perlin,		"Node_Perlin",				[1, Node_Perlin],, "Generate perlin noise.");

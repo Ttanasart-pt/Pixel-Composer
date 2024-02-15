@@ -41,17 +41,13 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 12] = nodeValue("Anti aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	//////////////////////////////////////////////////////////////////////////////////
+		inputs[| 13] = nodeValueMap("Scale map", self);
 	
-	inputs[| 13] = nodeValueMap("Scale map", self);
+		inputs[| 14] = nodeValueMap("Gap map", self);
 	
-	inputs[| 14] = nodeValueMap("Gap map", self);
+		inputs[| 15] = nodeValueMap("Angle map", self);
 	
-	inputs[| 15] = nodeValueMap("Angle map", self);
-	
-	inputs[| 16] = nodeValueMap("Shift map", self);
-	
-	//////////////////////////////////////////////////////////////////////////////////
+		inputs[| 16] = nodeValueMap("Shift map", self);
 	
 	inputs[| 17] = nodeValue("Truchet", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -59,14 +55,10 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 19] = nodeValue("Flip horizontal", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
-		
-	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 20] = nodeValueMap("Gradient map", self);
+		inputs[| 20] = nodeValueMap("Gradient map", self);
 	
-	inputs[| 21] = nodeValueGradientRange("Gradient map range", self, inputs[| 5]);
-	
-	//////////////////////////////////////////////////////////////////////////////////
+		inputs[| 21] = nodeValueGradientRange("Gradient map range", self, inputs[| 5]);
 	
 	inputs[| 22] = nodeValue("Flip vertical", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);

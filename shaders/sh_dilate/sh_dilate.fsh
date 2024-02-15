@@ -70,11 +70,16 @@ vec4 sampleTexture(vec2 pos) { #region
 	
 	if(sampleMode == 0) 
 		return vec4(0.);
-	if(sampleMode == 1) 
+		
+	else if(sampleMode == 1) 
 		return texture2Dintp(gm_BaseTexture, clamp(pos, 0., 1.));
-	if(sampleMode == 2) 
+		
+	else if(sampleMode == 2) 
 		return texture2Dintp(gm_BaseTexture, fract(pos));
 	
+	else if(sampleMode == 3) 
+		return vec4(vec3(0.), 1.);
+		
 	return vec4(0.);
 } #endregion
 

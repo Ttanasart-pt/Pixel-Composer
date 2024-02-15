@@ -28,12 +28,16 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 	var _PROJECT = PROJECT;
 	PROJECT = new Project();
 	
-	if(_PROJECT.path == "" && !_PROJECT.modified) {
+	if(_PROJECT == noone) {
+		PROJECTS = [ PROJECT ];
+		
+	} else if(_PROJECT.path == "" && !_PROJECT.modified) {
 		var ind = array_find(PROJECTS, _PROJECT);
 		if(ind == -1) ind = 0;
 		PROJECTS[ind] = PROJECT;
 		
 		if(!IS_CMD) PANEL_GRAPH.setProject(PROJECT);
+		
 	} else {
 		if(!IS_CMD) {
 			var graph = new Panel_Graph(PROJECT);
@@ -250,6 +254,8 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	PROJECT.modified = false;
 	
 	log_message("FILE", "load " + path, THEME.noti_icon_file_load);
+	log_console("Loaded project: " + path);
+	
 	if(!IS_CMD) PANEL_MENU.setNotiIcon(THEME.noti_icon_file_load);
 	
 	refreshNodeMap();

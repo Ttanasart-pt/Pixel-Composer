@@ -109,18 +109,25 @@ _HOVERING_ELEMENT = noone;
 				PROJECT.animator.frame_progress = false;
 				
 			} else {
-				if(UPDATE & RENDER_TYPE.full) {
+				if(UPDATE & RENDER_TYPE.full)
 					Render();
 					
-				} else if(UPDATE & RENDER_TYPE.partial)
+				else if(UPDATE & RENDER_TYPE.partial)
 					Render(true);
 					
 			}
 		}
 	}
 	
-	if(IS_CMD && PROGRAM_ARGUMENTS._run == false && array_empty(PROGRAM_ARGUMENTS._exporting) && !PROGRAM_ARGUMENTS._persist) 
-		game_end();
+	if(PROGRAM_ARGUMENTS._rendering && PROGRAM_ARGUMENTS._run == false && array_empty(PROGRAM_ARGUMENTS._exporting)) {
+		log_console($"Export {CLI_EXPORT_AMOUNT} {CLI_EXPORT_AMOUNT > 1? "files" : "file"} completed");
+		
+		if(PROGRAM_ARGUMENTS._persist) {
+			PROGRAM_ARGUMENTS._rendering = false;
+			cli_wait();
+		} else
+			game_end();
+	}
 	
 	UPDATE = RENDER_TYPE.none;
 #endregion
@@ -222,6 +229,16 @@ _HOVERING_ELEMENT = noone;
 	}
 	
 	USE_DEPTH = false;
+#endregion
+
+#region cmd
+	var _resPath = program_directory + "in";
+	
+	if(file_exists(_resPath)) {
+		var cmd = file_read_all(_resPath);
+		cmd_submit(cmd);
+		file_delete(_resPath);
+	}
 #endregion
 
 //if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call * 100}%)");

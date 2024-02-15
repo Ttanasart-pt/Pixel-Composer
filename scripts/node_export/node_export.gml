@@ -584,6 +584,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						p = pathString(array_safe_get(path, i), i);
 					else
 						p = pathString(path, i);
+					CLI_EXPORT_AMOUNT++;
 				}
 					
 				p = save_surface(_surf, p);
@@ -600,13 +601,15 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var p = path;
 			if(is_array(path)) p = path[0];
 				
-			if(form == NODE_EXPORT_FORMAT.animation)
+			if(form == NODE_EXPORT_FORMAT.animation) {
 				p = $"{directory}/{string_lead_zero(CURRENT_FRAME, 5)}.png";
-			else
+			} else {
 				p = pathString(p);
+				CLI_EXPORT_AMOUNT++;
+			}
 			
 			p = save_surface(surf, p);
-				
+			
 			if(form != NODE_EXPORT_FORMAT.animation && !IS_CMD) {
 				var noti  = log_message("EXPORT", $"Export image as {p}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
 				noti.path = filename_dir(p);
@@ -675,6 +678,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		updatedOutTrigger.setValue(true);
+		CLI_EXPORT_AMOUNT++;
 	} #endregion
 	
 	insp1UpdateTooltip   = "Export";
@@ -696,7 +700,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static doInspectorAction = function() { #region
-		if(!PROGRAM_ARGUMENTS._cmd && (LOADING || APPENDING)) return;
+		if(!IS_CMD && (LOADING || APPENDING)) return;
 		
 		var path = getInputData(1);
 		if(path == "") return;

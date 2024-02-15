@@ -12,11 +12,9 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	insp1UpdateTooltip   = "Run";
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
-	trusted = false;
+	trusted = PROGRAM_ARGUMENTS._trusted;
 	
-	static onValueUpdate = function() {
-		trusted = false;
-	}
+	static onValueUpdate = function() { trusted = false; }
 	
 	static onInspector1Update = function() { update(); }
 	

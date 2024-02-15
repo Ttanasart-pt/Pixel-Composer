@@ -7,8 +7,10 @@ uniform int shape;
 uniform int bg;
 uniform int aa;
 uniform int sides;
-uniform int drawDF;
 uniform int tile;
+
+uniform int  drawDF;
+uniform vec2 dfLevel;
 
 uniform float rotation;
 uniform float angle;
@@ -150,9 +152,10 @@ void main() {
 	else if(shape == 8)   d = sdCrescent( coord, inner, outer, angle );
 	else if(shape == 9)   d = sdDonut( coord, inner );
 	
-	if(drawDF == 1)
+	if(drawDF == 1) {
 		color = -d;
-	else if(aa == 0)
+		color = (color - dfLevel.x) / (dfLevel.y - dfLevel.x);
+	} else if(aa == 0)
 		color = step(d, 0.0);
 	else
 		color = smoothstep(0.02, -0.02, d);

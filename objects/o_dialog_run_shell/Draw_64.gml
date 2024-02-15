@@ -16,13 +16,13 @@ if !ready exit;
 #endregion
 
 #region text
-	var py  = dialog_y + ui(16);
+	var py  = dialog_y + ui(20);
 	var txt = __txt($"Running shell script");
 	draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(24), py, txt);
 	py += line_get_height(, 8);
 	
-	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_sub);
 	draw_text_ext(dialog_x + ui(24), py, ctxt[0], -1, dialog_w - ui(48));
 	py += string_height_ext(ctxt[0], -1, dialog_w - ui(48)) + ui(16);
 	
@@ -33,7 +33,7 @@ if !ready exit;
 	draw_text_ext(dialog_x + ui(32), py, ctxt[1], -1, dialog_w - ui(64));
 	py += _hh + ui(16);
 	
-	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_sub);
 	draw_text_ext(dialog_x + ui(24), py, ctxt[2], -1, dialog_w - ui(48));
 	py += string_height_ext(ctxt[2], -1, dialog_w - ui(48));
 	

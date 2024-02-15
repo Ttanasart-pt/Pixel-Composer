@@ -13,9 +13,9 @@ uniform sampler2D blendSurf;
 
 #region /////////////// SAMPLING ///////////////
 
-const float PI = 3.14159265358979323846;
-uniform int interpolation;
-uniform vec2 sampleDimension;
+const   float PI = 3.14159265358979323846;
+uniform int   interpolation;
+uniform vec2  sampleDimension;
 
 const int RSIN_RADIUS = 1;
 

@@ -28,7 +28,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 5] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
-	inputs[| 6] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 6] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]);
 	
 	inputs[| 7] = nodeValue("Point at center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Rotate each copy to face the spawn center.");
@@ -100,12 +100,18 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 31] = nodeValue("Auto amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 32] = nodeValue("Twisting", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)	
+	inputs[| 32] = nodeValue("Rotate per radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)	
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 33] = nodeValue("Random position", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector_range);
 	
+	inputs[| 34] = nodeValue("Scale per radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])	
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 35] = nodeValue("Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 360 ])	
+		.setDisplay(VALUE_DISPLAY.rotation_range);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
@@ -114,11 +120,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	input_display_list = [ 
 		["Surfaces", 	 true], 0, 1, 15, 10, 24, 25, 26, 27, 
-		["Scatter",		false], 6, 5, 13, 14, 17, 9, 31, 2, 30, 
+		["Scatter",		false], 6, 5, 13, 14, 17, 9, 31, 2, 30, 35, 
 		["Path",		false], 19, 20, 21, 22, 
 		["Position",	false], 33, 
 		["Rotation",	false], 7, 4, 32, 
-		["Scale",	    false], 3, 8,
+		["Scale",	    false], 3, 8, 34, 
 		["Render",		false], 18, 11, 28, 12, 16, 23, 
 	];
 	
@@ -183,6 +189,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 30].setVisible(false);
 		inputs[| 31].setVisible(false);
 		inputs[| 32].setVisible(false);
+		inputs[| 34].setVisible(false);
+		inputs[| 35].setVisible(false);
 		
 		if(_dis == 0 && _sct == 0) {
 			if(_are[AREA_INDEX.shape] == AREA_SHAPE.elipse) {
@@ -192,6 +200,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				inputs[| 30].setVisible(!_aut);
 				inputs[| 31].setVisible( true);
 				inputs[| 32].setVisible(!_aut);
+				inputs[| 34].setVisible(!_aut);
+				inputs[| 35].setVisible(!_aut);
+				
 			} else {
 				inputs[|  2].setVisible(false);
 				inputs[| 30].setVisible( true);
@@ -251,6 +262,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var uniAut  = _data[31];
 		var uniRot  = _data[32];
 		var posWig  = _data[33];
+		var uniSca  = _data[34];
+		var cirRng  = _data[35];
 		
 		var _in_w, _in_h;
 		
@@ -359,6 +372,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var sp = noone, _x = 0, _y = 0;
 				var _v = noone;
 				
+				var _scx = _scaUniX? _scale[0] : random_range(_scale[0], _scale[1]);
+				var _scy = _scaUniY? _scale[2] : random_range(_scale[2], _scale[3]); 
+				
 				switch(_dist) { #region position
 					case NODE_SCATTER_DIST.area : 
 						if(_scat == 0) {
@@ -382,12 +398,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 									_x = sp[0];
 									_y = sp[1];
 								} else {
-									var _ang = _acol * 360 / uniAmo[0];
+									var _ang = cirRng[0] + _acol * (cirRng[1] - cirRng[0]) / uniAmo[0];
 									var _rad = uniAmo[1] == 1? 0.5 : _arow / (uniAmo[1] - 1);
 									_ang += _arow * uniRot;
 									
 									_x += _axc + lengthdir_x(_rad * _aw, _ang);
 									_y += _ayc + lengthdir_y(_rad * _ah, _ang);
+									
+									_scx += _arow * uniSca[0];
+									_scy += _arow * uniSca[1];
 								}
 							}
 						} else {
@@ -448,9 +467,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(_wigX) _x += random_range(posWig[0], posWig[1]);
 				if(_wigY) _y += random_range(posWig[2], posWig[3]);
 				
-				var _scx = _scaUniX? _scale[0] : random_range(_scale[0], _scale[1]);
-				var _scy = _scaUniY? _scale[2] : random_range(_scale[2], _scale[3]); 
-				if(_unis) _scy = _scx;
+				if(_unis) {
+					_scy = max(_scx, _scy);
+					_scx = _scy;
+				}
 				
 				if(vSca && _v != noone) {
 					_scx *= _v;
@@ -508,8 +528,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var sh  = dim[1];
 				
 				if(_r == 0) {
-					_x -= sw / 2;
-					_y -= sh / 2;
+					_x -= sw * _scx / 2;
+					_y -= sh * _scy / 2;
 				} else {
 					_p = point_rotate(_x - sw / 2 * _scx, _y - sh * _scy / 2, _x, _y, _r, _p);
 					_x = _p[0];

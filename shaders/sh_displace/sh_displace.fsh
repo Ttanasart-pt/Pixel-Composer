@@ -72,24 +72,35 @@ float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * 
 	
 		if(sampleMode == 0) 
 			return vec4(0.);
-		if(sampleMode == 1) 
+			
+		else if(sampleMode == 1) 
 			return texture2Dintp(gm_BaseTexture, clamp(pos, 0., 1.));
-		if(sampleMode == 2) 
+			
+		else if(sampleMode == 2) 
 			return texture2Dintp(gm_BaseTexture, fract(pos));
-	
+		
+		else if(sampleMode == 3) 
+			return vec4(vec3(0.), 1.);
+		
 		return vec4(0.);
 	}
 
 #endregion /////////////// SAMPLING ///////////////
 
 vec2 shiftMap(in vec2 pos, in float str) { #region
+	vec2  tx   = 1. / dimension;
 	vec4  disP = texture2Dintp( map, pos );
+	vec2  raw_displace = displace * tx;
+	
 	vec2  sam_pos;
-	vec2  raw_displace = displace / dimension;
 	float _str;
 	vec2  _disp;
 	
-	if(mode == 1) {
+	if(mode == 0) {
+		_str = (bright(disP) - middle) * str;
+		sam_pos = pos + _str * raw_displace;
+		
+	} else if(mode == 1) {
 		if(sepAxis == 0)
 			_disp = vec2(disP.r - middle, disP.g - middle) * vec2((disP.r + disP.g + disP.b) / 3. - middle) * str;
 		else if(sepAxis == 1) {
@@ -100,6 +111,7 @@ vec2 shiftMap(in vec2 pos, in float str) { #region
 		}
 		
 		sam_pos = pos + _disp;
+		
 	} else if(mode == 2) {
 		float _ang;
 		
@@ -114,10 +126,15 @@ vec2 shiftMap(in vec2 pos, in float str) { #region
 		}
 		
 		sam_pos = pos + _str * vec2(cos(_ang), sin(_ang));
-	} else {
-		_str = (bright(disP) - middle) * str;
 		
-		sam_pos = pos + _str * raw_displace;
+	} else if(mode == 3) {
+		vec4  d0 = texture2Dintp( map, pos + vec2( tx.x, 0.) ); float h0 = (d0.r + d0.g + d0.b) / 3.;
+		vec4  d1 = texture2Dintp( map, pos - vec2( 0., tx.y) ); float h1 = (d1.r + d1.g + d1.b) / 3.;
+		vec4  d2 = texture2Dintp( map, pos - vec2( tx.x, 0.) ); float h2 = (d2.r + d2.g + d2.b) / 3.;
+		vec4  d3 = texture2Dintp( map, pos + vec2( 0., tx.y) ); float h3 = (d3.r + d3.g + d3.b) / 3.;
+		
+		vec2 grad = vec2( h0 - h2, h3 - h1 ) - middle;
+		sam_pos = pos + grad * str;
 	}
 	
 	return sam_pos;
@@ -154,7 +171,7 @@ void main() { #region
 		for(float i = 0.; i < stMax; i++) {
 			if(i >= stren) break;
 			
-			samPos = shiftMap(samPos, 1.);
+			samPos = shiftMap(samPos, min(1., stren - i));
 			ncol   = blend(ccol, sampleTexture( samPos ));
 		}
 	} else {

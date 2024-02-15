@@ -29,7 +29,7 @@ event_inherited();
 		draw_set_font(f_p0);
 			_hh += string_height_ext(ctxt[2], -1, dialog_w - ui(48));
 		
-		dialog_h = _hh + ui(120);
+		dialog_h = _hh + ui(124);
 		dialog_y = WIN_H / 2 - dialog_h / 2;
 	}
 #endregion

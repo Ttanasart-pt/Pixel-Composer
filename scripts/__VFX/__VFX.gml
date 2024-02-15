@@ -339,8 +339,8 @@ function __part(_node) constructor {
 		scy_history[life_incr - 1]   = scy;
 		
 		var _xx, _yy;
-		var s_w = (_useS? surface_get_width(surface)  : 1) * scx;
-		var s_h = (_useS? surface_get_height(surface) : 1) * scy;
+		var s_w = (_useS? surface_get_width_safe(surface)  : 1) * scx;
+		var s_h = (_useS? surface_get_height_safe(surface) : 1) * scy;
 		
 		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
 		_xx = drawx + _pp[0];
@@ -376,7 +376,7 @@ function __part(_node) constructor {
 		
 		switch(render_type) {
 			case PARTICLE_RENDER_TYPE.surface : 
-				if(_useS) draw_surface_ext(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
+				if(_useS) draw_surface_ext_safe(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
 				else {
 					var ss = round(min(scx, scy));
 					if(round(ss) == 0) return;

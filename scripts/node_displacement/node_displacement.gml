@@ -19,7 +19,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
     - Linear: Displace along a line.
     - Vector: Use red as X displacement, green as Y displacement.
     - Angle: Use red as angle, green as distance.")
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Linear", "Vector", "Angle" ]);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Linear", "Vector", "Angle", "Gradient" ]);
 	
 	inputs[| 6] = nodeValue("Iterate",  self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, @"If not set, then strength value is multiplied directly to the displacement.
 If set, then strength value control how many times the effect applies on itself.");
@@ -74,9 +74,11 @@ If set, then strength value control how many times the effect applies on itself.
 		var _mode = getInputData(5);
 		var _sep  = getInputData(16);
 		
+		var _dsp2 = (_mode == 1 || _mode == 2) && _sep;
+		
 		inputs[|  2].setVisible(_mode == 0);
-		inputs[| 16].setVisible(_mode);
-		inputs[| 17].setVisible(_mode && _sep);
+		inputs[| 16].setVisible(_mode == 1 || _mode == 2);
+		inputs[| 17].setVisible(_dsp2, _dsp2);
 		
 		if(_mode == 1 && _sep) {
 			inputs[|  1].setName("Displace X");

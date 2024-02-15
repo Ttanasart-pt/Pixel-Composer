@@ -24,6 +24,19 @@ function __log(title, str, fname = "log/log.txt") { #region
 	file_text_close(f);
 } #endregion
 
+function log_console(str, wait = false) { #region
+	INLINE
+	show_debug_message($"CLI: {str}"); 
+	if(wait) cli_wait();
+	return;
+} #endregion
+
+function cli_wait() { #region
+	INLINE
+	show_debug_message("WAIT"); 
+	return;
+} #endregion
+
 function log_message(title, str, icon = noone, flash = false, write = true) { #region
 	if(TEST_ERROR) return;
 	if(IS_CMD)     { show_debug_message($"{title}: {str}"); return; }
@@ -82,27 +95,30 @@ function setException() { #region
 	if(OS == os_macosx) return noone;
 	
 	exception_unhandled_handler(function(ex) {
-		var path = string(DIRECTORY) + "prev_crash.pxc";
-		if(!SAVING && !TESTING) SAVE_AT(PROJECT, path);
-	
-		var tt = "\n-------------------------- OH NO --------------------------\n\n";
+		var path = $"{DIRECTORY}prev_crash.pxc";
+		if(!SAVING && !TESTING && !IS_CMD) SAVE_AT(PROJECT, path);
+		
+		var tt = "";
+		tt += "\n-------------------------- OH NO --------------------------\n\n";
 		tt += "\n" + ex.longMessage;
 		tt += "\n" + ex.script;
 		tt += "\n-------------------------- STACK TRACE --------------------------\n\n";
-		for( var i = 0, n = array_length(ex.stacktrace); i < n; i++ ) {
+		for( var i = 0, n = array_length(ex.stacktrace); i < n; i++ )
 			tt += ex.stacktrace[i] + "\n";
-		}
 		tt += "\n---------------------------- :( ----------------------------\n";
 		
 		var path = $"{env_user()}crash_log.txt";
 		
 		file_text_write_all(path, tt);
 		clipboard_set_text(tt);
-		show_debug_message(tt);
+		
+		if(IS_CMD) {
+			show_debug_message($"[ERROR BEGIN]\n{tt}\n[ERROR END]");
+			return 0;
+		} else 
+			show_debug_message(tt);
 		
 		var rep = $"{APP_LOCATION}report\\PXC crash reporter.exe";
-		//if(OS == os_macosx) rep = $"{program_directory}PXC_crash_reporter.app";
-		
 		var pid = shell_execute(rep, DIRECTORY);
 		print($"{rep} [{file_exists(rep)}]: {pid}");
 		
