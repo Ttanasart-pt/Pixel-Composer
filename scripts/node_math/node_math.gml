@@ -20,34 +20,38 @@ enum MATH_OPERATOR {
 	abs
 }
 
-function Node_create_Math(_x, _y, _group = noone, _param = {}) {
-	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Math(_x, _y, _group);
+#region create
+	global.node_math_keys = [ "add", "subtract", "multiply", "divide", "power", "root", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan", "lerp", "abs" ];
 	
-	switch(query) { #region
-		case "add" :		node.inputs[| 0].setValue(MATH_OPERATOR.add); break;
-		case "subtract" :	node.inputs[| 0].setValue(MATH_OPERATOR.subtract); break;
-		case "multiply" :	node.inputs[| 0].setValue(MATH_OPERATOR.multiply); break;
-		case "divide" :		node.inputs[| 0].setValue(MATH_OPERATOR.divide); break;
-		case "power" :		node.inputs[| 0].setValue(MATH_OPERATOR.power); break;
-		case "root" :		node.inputs[| 0].setValue(MATH_OPERATOR.root); break;
-		
-		case "sin" :		node.inputs[| 0].setValue(MATH_OPERATOR.sin); break;
-		case "cos" :		node.inputs[| 0].setValue(MATH_OPERATOR.cos); break;
-		case "tan" :		node.inputs[| 0].setValue(MATH_OPERATOR.tan); break;
-		
-		case "modulo" :		node.inputs[| 0].setValue(MATH_OPERATOR.modulo); break;
-		
-		case "floor" :		node.inputs[| 0].setValue(MATH_OPERATOR.floor); break;
-		case "ceiling" :	node.inputs[| 0].setValue(MATH_OPERATOR.ceiling); break;
-		case "round" :		node.inputs[| 0].setValue(MATH_OPERATOR.round); break;
-		
-		case "lerp" :		node.inputs[| 0].setValue(MATH_OPERATOR.lerp); break;
-		case "abs" :		node.inputs[| 0].setValue(MATH_OPERATOR.abs); break;
-	} #endregion
+	function Node_create_Math(_x, _y, _group = noone, _param = {}) {
+		var query = struct_try_get(_param, "query", "");
+		var node  = new Node_Math(_x, _y, _group);
 	
-	return node;
-}
+		switch(query) { #region
+			case "add" :		node.inputs[| 0].setValue(MATH_OPERATOR.add); break;
+			case "subtract" :	node.inputs[| 0].setValue(MATH_OPERATOR.subtract); break;
+			case "multiply" :	node.inputs[| 0].setValue(MATH_OPERATOR.multiply); break;
+			case "divide" :		node.inputs[| 0].setValue(MATH_OPERATOR.divide); break;
+			case "power" :		node.inputs[| 0].setValue(MATH_OPERATOR.power); break;
+			case "root" :		node.inputs[| 0].setValue(MATH_OPERATOR.root); break;
+		
+			case "sin" :		node.inputs[| 0].setValue(MATH_OPERATOR.sin); break;
+			case "cos" :		node.inputs[| 0].setValue(MATH_OPERATOR.cos); break;
+			case "tan" :		node.inputs[| 0].setValue(MATH_OPERATOR.tan); break;
+		
+			case "modulo" :		node.inputs[| 0].setValue(MATH_OPERATOR.modulo); break;
+		
+			case "floor" :		node.inputs[| 0].setValue(MATH_OPERATOR.floor); break;
+			case "ceiling" :	node.inputs[| 0].setValue(MATH_OPERATOR.ceiling); break;
+			case "round" :		node.inputs[| 0].setValue(MATH_OPERATOR.round); break;
+		
+			case "lerp" :		node.inputs[| 0].setValue(MATH_OPERATOR.lerp); break;
+			case "abs" :		node.inputs[| 0].setValue(MATH_OPERATOR.abs); break;
+		} #endregion
+	
+		return node;
+	}
+#endregion
 
 function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Math";

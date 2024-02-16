@@ -780,6 +780,7 @@ event_inherited();
 		} #endregion
 		
 		if(PREFERENCES.dialog_add_node_view == 0) { #region grid
+			
 			var col = floor(search_pane.surface_w / (grid_width + grid_space));
 			var yy = _y + grid_space;
 			var index = 0;
@@ -789,11 +790,15 @@ event_inherited();
 			hh += (grid_space + grid_size) * 2;
 			
 			for(var i = 0; i < amo; i++) {
-				var s_res = search_list[| i];
-				var _node = noone, _param = {};
+				var s_res  = search_list[| i];
+				var _node  = noone;
+				var _param = {};
+				var _query = "";
+				
 				if(is_array(s_res)) {
-					_node = s_res[0];
+					_node        = s_res[0];
 					_param.query = s_res[1];
+					_query       = s_res[1];
 				} else
 					_node = s_res;
 			
@@ -836,7 +841,7 @@ event_inherited();
 				}
 				
 				if(is_instanceof(_node, NodeObject)) {
-					_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size);
+					_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size, _param);
 				} else {
 					if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 					if(sprite_exists(_node.spr)) {
@@ -859,13 +864,31 @@ event_inherited();
 					if(is_instanceof(_node, NodeAction))
 						draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
 				}
-					
+				
 				var _name = _node.getName();
+				var _showQuery = _query != "" && is_instanceof(_node, NodeObject) && _node.createNode[0] == 0;
 				
-				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _name, -1, grid_width);
+				draw_set_font(_showQuery? f_p3 : f_p2);
+				var _nmh  = string_height_ext(_name, -1, grid_width);
 				
-				name_height = max(name_height, string_height_ext(_name, -1, grid_width) + ui(8));
+				if(_showQuery) {
+					_query = string_title(_query);
+					var _nmy = yy + grid_size + 4;
+					
+					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_sub);
+					draw_text_ext_add(_boxx + grid_size / 2, _nmy, _name, -1, grid_width); 
+					_nmy += _nmh - ui(2);
+					
+					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
+					draw_text_ext_add(_boxx + grid_size / 2, _nmy, _query, -1, grid_width); 
+					_nmy += string_height_ext(_query, -1, grid_width);
+					
+				} else {
+					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
+					draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _name, -1, grid_width);
+				}
+				
+				name_height = max(name_height, _nmh + ui(8));
 				
 				if(node_focusing == i)
 					search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
@@ -880,17 +903,22 @@ event_inherited();
 			}
 		#endregion
 		} else if(PREFERENCES.dialog_add_node_view == 1) { #region list
+			
 			var list_width  = search_pane.surface_w;
 			var list_height = ui(28);
 			var yy = _y + list_height / 2;
 			hh += list_height;
 		
 			for(var i = 0; i < amo; i++) {
-				var s_res = search_list[| i];
-				var _node = noone, _param = {};
+				var s_res  = search_list[| i];
+				var _node  = noone;
+				var _param = {};
+				var _query = "";
+				
 				if(is_array(s_res)) {
-					_node = s_res[0];
+					_node        = s_res[0];
 					_param.query = s_res[1];
+					_query       = s_res[1];
 				} else
 					_node = s_res;
 				
@@ -921,7 +949,7 @@ event_inherited();
 				}
 				
 				if(is_instanceof(_node, NodeObject)) {
-					_node.drawList(0, yy, _m[0], _m[1], list_height);
+					_node.drawList(0, yy, _m[0], _m[1], list_height, _param);
 				} else {
 					if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 					if(sprite_exists(_node.spr)) {
@@ -943,7 +971,7 @@ event_inherited();
 						if(is_instanceof(_node, NodeAction))
 							draw_sprite_ui_uniform(THEME.play_action, 0, _sx + list_height / 2 - 8, _sy + list_height / 2 - 8, 0.5, COLORS.add_node_blend_action);
 					}
-				
+					
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 					draw_text_add(list_height + ui(40), yy + list_height / 2, _node.getName());
 				}

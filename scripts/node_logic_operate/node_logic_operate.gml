@@ -8,21 +8,23 @@ enum LOGIC_OPERATOR {
 	lxor
 }
 
-function Node_create_Logic(_x, _y, _group = noone, _param = {}) {
-	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Logic(_x, _y, _group);
+#region create
+	global.node_logic_keys = [ "and", "or", "not", "nand", "nor" , "xor" ];
 	
-	switch(query) {
-		case "and" :	node.inputs[| 0].setValue(LOGIC_OPERATOR.land); break;
-		case "or" :		node.inputs[| 0].setValue(LOGIC_OPERATOR.lor); break;
-		case "not" :	node.inputs[| 0].setValue(LOGIC_OPERATOR.lnot); break;
-		case "nand" :	node.inputs[| 0].setValue(LOGIC_OPERATOR.lnand); break;
-		case "nor" :	node.inputs[| 0].setValue(LOGIC_OPERATOR.lnor); break;
-		case "xor" :	node.inputs[| 0].setValue(LOGIC_OPERATOR.lxor); break;
+	function Node_create_Logic(_x, _y, _group = noone, _param = {}) {
+		var query = struct_try_get(_param, "query", "");
+		var node  = new Node_Logic(_x, _y, _group);
+		var ind   = -1;
+		
+		switch(query) {
+			default : ind = array_find(global.node_logic_keys, query);
+		}
+		
+		if(ind >= 0) node.inputs[| 0].setValue(ind);
+		
+		return node;
 	}
-	
-	return node;
-}
+#endregion
 
 function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Logic Opr";

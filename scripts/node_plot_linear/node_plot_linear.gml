@@ -1,3 +1,21 @@
+#region create
+	global.node_plot_linear_keys = [ "plot", "bar chart", "graph", "waveform" ];
+	
+	function Node_create_Plot_Linear(_x, _y, _group = noone, _param = {}) {
+		var node  = new Node_Plot_Linear(_x, _y, _group);
+		var query = struct_try_get(_param, "query", "");
+		
+		switch(query) {
+			case "waveform" : 
+			case "graph" : 
+				node.inputs[| 11].setValue(1); 
+				break;
+		}
+		
+		return node;
+	}
+#endregion
+
 function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bar / Graph";
 	

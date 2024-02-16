@@ -6,21 +6,24 @@ enum STAT_OPERATOR {
 	_min
 }
 
-function Node_create_Statistic(_x, _y, _group = noone, _param = {}) {
-	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Statistic(_x, _y, _group);
+#region create 
+	global.node_statistic_keys = [ "sum", "mean", "median", "min", "max" ];
+	array_append(global.node_statistic_keys, [ "average" ]);
 	
-	switch(query) {
-		case "sum" :		node.inputs[| 0].setValue(STAT_OPERATOR._sum); break;	
-		case "mean" :	
-		case "average" :	node.inputs[| 0].setValue(STAT_OPERATOR._average); break;	
-		case "median" :		node.inputs[| 0].setValue(STAT_OPERATOR._median); break;	
-		case "min" :		node.inputs[| 0].setValue(STAT_OPERATOR._min); break;	
-		case "max" :		node.inputs[| 0].setValue(STAT_OPERATOR._max); break;	
+	function Node_create_Statistic(_x, _y, _group = noone, _param = {}) {
+		var query = struct_try_get(_param, "query", "");
+		var node  = new Node_Statistic(_x, _y, _group);
+		var ind   = -1;
+		
+		switch(query) {
+			default : ind = array_find(global.node_statistic_keys, query);
+		}
+		
+		if(ind >= 0) node.inputs[| 0].setValue(ind);
+	
+		return node;
 	}
-	
-	return node;
-}
+#endregion
 
 function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Statistic";
@@ -28,8 +31,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	w = 96;
 	
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ 
-			"Sum", "Mean", "Median", "Max", "Min"])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Sum", "Mean", "Median", "Max", "Min" ])
 		.rejectArray();
 	
 	setIsDynamicInput(1);

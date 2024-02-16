@@ -9,18 +9,23 @@ enum COMPARE_OPERATOR {
 	lesserEqual,
 }
 
-function Node_create_Compare(_x, _y, _group = noone, _param = {}) {
-	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Compare(_x, _y, _group);
-	
-	switch(query) {
-		case "equal" :		node.inputs[| 0].setValue(COMPARE_OPERATOR.equal); break;
-		case "greater" :	node.inputs[| 0].setValue(COMPARE_OPERATOR.greater); break;
-		case "lesser" :		node.inputs[| 0].setValue(COMPARE_OPERATOR.lesser); break;
+#region create
+	global.node_compare_keys = ["equal", "not equal", "greater", "greater equal", "lesser", "lesser equal"];
+
+	function Node_create_Compare(_x, _y, _group = noone, _param = {}) {
+		var query = struct_try_get(_param, "query", "");
+		var node  = new Node_Compare(_x, _y, _group);
+		var ind   = -1;
+		
+		switch(query) {
+			default : ind = array_find(global.node_compare_keys, query);
+		}
+		
+		if(ind >= 0) node.inputs[| 0].setValue(ind);
+		
+		return node;
 	}
-	
-	return node;
-}
+#endregion
 
 function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Compare";

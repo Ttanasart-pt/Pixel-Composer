@@ -1,5 +1,32 @@
 enum NODE_SHAPE_TYPE { rectangle, elipse, regular, star, arc, teardrop, cross, leaf, crescent, donut }
 
+#region create
+	global.node_shape_keys = [ "rectangle", "ellipse", "regular polygon", "star", "arc", "teardrop", "cross", "leaf", "crescent", "donut" ];
+	array_append(global.node_shape_keys, [ "square", "circle", "triangle", "pentagon", "hexagon", "ring" ]);
+	
+	function Node_create_Shape(_x, _y, _group = noone, _param = {}) { #region
+		var query = struct_try_get(_param, "query", "");
+		var node  = new Node_Shape(_x, _y, _group);
+		var ind   = -1;
+		
+		switch(query) {
+			case "square" :   ind = 0; break;
+			case "circle" :   ind = 1; break;
+			case "triangle" : ind = 2; node.inputs[| 4].setValue(3); break;
+			case "pentagon" : ind = 2; node.inputs[| 4].setValue(5); break;
+			case "hexagon" :  ind = 2; node.inputs[| 4].setValue(6); break;
+			case "ring" :     ind = 9; break;
+			
+			default :       ind = array_find(global.node_shape_keys, query);
+		}
+		
+		if(ind >= 0) node.inputs[| 2].setValue(ind);
+		
+		return node;
+	}
+	
+#endregion
+
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shape";
 	

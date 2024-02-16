@@ -66,6 +66,8 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 23] = nodeValue("Texture angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 		
+	//inputs[| 24] = nodeValue("Random Rotate", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 4, 15, 2, 13, 3, 14, 9, 8, 16,

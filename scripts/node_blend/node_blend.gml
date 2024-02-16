@@ -1,7 +1,24 @@
-function Node_create_Blend(_x, _y, _group = noone, _param = {}) { #region
-	var node = new Node_Blend(_x, _y, _group);
-	return node;
-} #endregion
+#region create
+	global.node_blend_keys = [ 
+		"normal",  "add",     "subtract",   "multiply",   "screen", 
+		"overlay", "hue",     "saturation", "luminosity", "maximum", 
+		"minimum", "replace", "difference" 
+	];
+	
+	function Node_create_Blend(_x, _y, _group = noone, _param = {}) {
+		var node  = new Node_Blend(_x, _y, _group);
+		var query = struct_try_get(_param, "query", "");
+		var ind   = -1;
+		
+		switch(query) {
+			default : ind = array_find(global.node_blend_keys, query);
+		}
+		
+		if(ind >= 0) node.inputs[| 2].setValue(ind);
+		
+		return node;
+	}
+#endregion
 
 function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend";
