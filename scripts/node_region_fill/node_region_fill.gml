@@ -98,13 +98,13 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					draw_surface_safe(temp_surface[1]);
 				surface_reset_shader();
 			}
-		
-			surface_set_shader(temp_surface[base], sh_region_fill_coordinate_init);
-				draw_surface_safe(temp_surface[2]);
-			surface_reset_shader();
 		#endregion
 		
 		#region coordinate
+			surface_set_shader(temp_surface[base], sh_region_fill_coordinate_init);
+				draw_surface_safe(temp_surface[2]);
+			surface_reset_shader();
+			
 			base = !base;
 			var amo = _sw + _sh;
 		
@@ -120,7 +120,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			}
 		
 			surface_set_shader(temp_surface[base], sh_region_fill_border);
-				shader_set_f("dimension", _sw, _sh);
+				shader_set_f("dimension",       _sw, _sh);
 				shader_set_surface("original",	_surf);
 			
 				draw_surface_safe(temp_surface[!base]);

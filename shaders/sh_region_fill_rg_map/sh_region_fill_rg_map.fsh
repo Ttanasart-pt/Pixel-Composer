@@ -13,5 +13,4 @@ void main() {
 	
 	vec2 t = (v_vTexcoord - c.xy) / (c.zw - c.xy);
 	gl_FragColor = texture2D( textureMap, t );
-	gl_FragColor = vec4( t, 0., 1. );
 }

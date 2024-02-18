@@ -715,7 +715,7 @@ function __initNodes() {
 		addNodeObject(generator, "StrandSim",			s_node_strandSim,			"Node_Strand_Group_Inline",	[1, Node_Strand_Group_Inline], ["hair"],	"Create group for hair simulation.").setVersion(1140);
 		addNodeObject(generator, "Diffuse",				s_node_diffuse,				"Node_Diffuse",				[1, Node_Diffuse],,							"Simulate diffusion like simulation.").setVersion(11640);
 		addNodeObject(generator, "Reaction Diffusion",	s_node_reaction_diffusion,	"Node_RD",					[1, Node_RD],,								"Simulate reaction diffusion effect.").setVersion(11630);
-			
+		
 		ds_list_add(generator, "Region");
 		addNodeObject(generator, "Separate Shape",		s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape],,	"Separate disconnected pixel each into an image in an image array.");
 		addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill],,		"Fill connected pixel with colors.").setVersion(1147);		

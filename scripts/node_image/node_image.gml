@@ -117,7 +117,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(array_empty(spr)) return;
 		
-		var _arr     = is_array(spr);
+		var _arr     = is_array(spr) && array_length(spr) > 1;
 		var _outsurf = outputs[| 0].getValue();
 		
 		if(!is_array(_outsurf)) _outsurf = [ _outsurf ];

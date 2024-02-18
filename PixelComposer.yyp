@@ -417,7 +417,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"mf.dll","CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"mfcore.dll","CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"mfplat.dll","CopyToMask":-1,"filePath":"datafiles",},
-    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"pxc","CopyToMask":-1,"filePath":"datafiles",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"pxc.exe","CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"README.txt","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"data.win","CopyToMask":-1,"filePath":"datafiles/report",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report",},

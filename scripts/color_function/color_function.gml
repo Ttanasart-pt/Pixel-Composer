@@ -28,9 +28,9 @@
 		    k.z = power(k.z, 3);
 			
 		var rg   = global.CVTMAT_OKLAB_RGB.multiplyVector(k);
-			rg.x = power(rg.x, 1 / 2.2);
-		    rg.y = power(rg.y, 1 / 2.2);
-		    rg.z = power(rg.z, 1 / 2.2);
+			rg.x = power(rg.x, 1 / 2.2) * 255;
+		    rg.y = power(rg.y, 1 / 2.2) * 255;
+		    rg.z = power(rg.z, 1 / 2.2) * 255;
 			
 		return make_color_rgba(rg.x, rg.y, rg.z, a);
 	} #endregion

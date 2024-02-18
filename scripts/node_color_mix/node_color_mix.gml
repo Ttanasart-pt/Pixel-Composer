@@ -17,15 +17,18 @@ function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	input_display_list = [ 3, 0, 1, 2 ];
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+		var c = c_black;
+		
 		switch(_data[3]) {
-			case 0 : return merge_color_ext(_data[0], _data[1], _data[2]);
-			case 1 : return merge_color_hsv(_data[0], _data[1], _data[2]);
-			case 2 : return merge_color_oklab(_data[0], _data[1], _data[2]);
+			case 0 : c = merge_color_ext(  _data[0], _data[1], _data[2]); break;
+			case 1 : c = merge_color_hsv(  _data[0], _data[1], _data[2]); break;
+			case 2 : c = merge_color_oklab(_data[0], _data[1], _data[2]); break;
 		}
 		
+		return c;
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
@@ -37,5 +40,5 @@ function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
-	}
+	} #endregion
 }
