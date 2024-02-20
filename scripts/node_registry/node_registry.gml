@@ -282,6 +282,8 @@ function __initNodes() {
 	NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
 	ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
 	
+	// NODE LIST
+	
 	var fav = ds_list_create();
 	addNodeCatagory("Favourites", fav);
 	
@@ -662,7 +664,7 @@ function __initNodes() {
 		addNodeObject(generator, "Solid",				s_node_solid,				"Node_Solid",				[1, Node_Solid],,			"Create image of a single color.");
 		addNodeObject(generator, "Draw Gradient",		s_node_gradient,			"Node_Gradient",			[1, Node_Gradient],,		"Create image from gradient.");
 		addNodeObject(generator, "4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points],, "Create image from 4 color points.");
-			
+		
 		ds_list_add(generator, "Drawer");
 		addNodeObject(generator, "Line",				s_node_line,				"Node_Line",				[1, Node_Line],,										"Draw line on an image. Connect path data to it to draw line from path.");
 		addNodeObject(generator, "Draw Text",			s_node_text_render,			"Node_Text",				[1, Node_Text],,										"Draw text on an image.");
@@ -1134,4 +1136,6 @@ function __initNodes() {
 		addNodeObject(hid, "getWidth",	s_node_pixel_builder,	"Node_DynaSurf_Out_Width",	[1, Node_DynaSurf_Out_Width]).hideRecent();
 		addNodeObject(hid, "getHeight",	s_node_pixel_builder,	"Node_DynaSurf_Out_Height",	[1, Node_DynaSurf_Out_Height]).hideRecent();
 	#endregion
+	
+	// NODE LIST
 }
