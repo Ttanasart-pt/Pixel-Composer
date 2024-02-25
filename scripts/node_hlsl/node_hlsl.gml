@@ -5,24 +5,26 @@
 	vertex_format_add_texcoord();
 	global.HLSL_VB_FORMAT = vertex_format_end();
 
-	global.HLSL_VB = vertex_create_buffer();
-	vertex_begin(global.HLSL_VB, global.HLSL_VB_FORMAT);
-	vertex_position(global.HLSL_VB, 0, 0);
-	vertex_color(global.HLSL_VB, c_white, 1);
-	vertex_texcoord(global.HLSL_VB, 0, 0);
+	global.HLSL_VB_PLANE = vertex_create_buffer();
+	vertex_begin(global.HLSL_VB_PLANE, global.HLSL_VB_FORMAT);
 	
-	vertex_position(global.HLSL_VB, 0, 1);
-	vertex_color(global.HLSL_VB, c_white, 1);
-	vertex_texcoord(global.HLSL_VB, 0, 1);
+		vertex_position(global.HLSL_VB_PLANE, 0, 0);
+		vertex_color(   global.HLSL_VB_PLANE, c_white, 1);
+		vertex_texcoord(global.HLSL_VB_PLANE, 0, 0);
 	
-	vertex_position(global.HLSL_VB, 1, 0);
-	vertex_color(global.HLSL_VB, c_white, 1);
-	vertex_texcoord(global.HLSL_VB, 1, 0);
+		vertex_position(global.HLSL_VB_PLANE, 0, 1);
+		vertex_color(   global.HLSL_VB_PLANE, c_white, 1);
+		vertex_texcoord(global.HLSL_VB_PLANE, 0, 1);
+		
+		vertex_position(global.HLSL_VB_PLANE, 1, 0);
+		vertex_color(   global.HLSL_VB_PLANE, c_white, 1);
+		vertex_texcoord(global.HLSL_VB_PLANE, 1, 0);
 	
-	vertex_position(global.HLSL_VB, 1, 1);
-	vertex_color(global.HLSL_VB, c_white, 1);
-	vertex_texcoord(global.HLSL_VB, 1, 1);
-	vertex_end(global.HLSL_VB);
+		vertex_position(global.HLSL_VB_PLANE, 1, 1);
+		vertex_color(   global.HLSL_VB_PLANE, c_white, 1);
+		vertex_texcoord(global.HLSL_VB_PLANE, 1, 1);
+	
+	vertex_end(global.HLSL_VB_PLANE);
 #endregion
 
 function Node_HLSL(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -232,19 +234,19 @@ struct PixelShaderOutput {
 			var _arg_type = getInputData(i + 1);
 			
 			switch(_arg_type) {
-				case 0 : fs_param += $"float  {_arg_name};\n";   break;	//u_float
-				case 1 : fs_param += $"int    {_arg_name};\n";   break;	//u_int
-				case 2 : fs_param += $"float2 {_arg_name};\n";   break;	//u_vec2
-				case 3 : fs_param += $"float3 {_arg_name};\n";   break;	//u_vec3
-				case 4 : fs_param += $"float4 {_arg_name};\n";   break;	//u_vec4
-				case 5 : fs_param += $"float3x3 {_arg_name};\n"; break;	//u_mat3
-				case 6 : fs_param += $"float4x4 {_arg_name};\n"; break;	//u_mat4
-				case 7 : //u_sampler2D
+				case 0 : fs_param += $"float  {_arg_name};\n";   break;							//u_float
+				case 1 : fs_param += $"int    {_arg_name};\n";   break;							//u_int
+				case 2 : fs_param += $"float2 {_arg_name};\n";   break;							//u_vec2
+				case 3 : fs_param += $"float3 {_arg_name};\n";   break;							//u_vec3
+				case 4 : fs_param += $"float4 {_arg_name};\n";   break;							//u_vec4
+				case 5 : fs_param += $"float3x3 {_arg_name};\n"; break;							//u_mat3
+				case 6 : fs_param += $"float4x4 {_arg_name};\n"; break;							//u_mat4
+				case 7 :																		//u_sampler2D
 					fs_sample += $"Texture2D {_arg_name}Object : register(t{sampler_slot});\n";
 					fs_sample += $"SamplerState {_arg_name} : register(s{sampler_slot});\n";
 					sampler_slot++;
 					break;
-				case 8 : fs_param += $"float4 {_arg_name};\n";   break;	//u_vec4
+				case 8 : fs_param += $"float4 {_arg_name};\n";   break;							//u_vec4
 			}
 		}
 		
@@ -286,85 +288,88 @@ struct PixelShaderOutput {
 		if(!d3d11_shader_exists(shader.fs)) return noone;
 		
 		_output = surface_verify(_output, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
-		
+			
 		surface_set_target(_output);
-		DRAW_CLEAR
-		
-		d3d11_shader_override_vs(shader.vs);
-		d3d11_shader_override_ps(shader.fs);
-		
-		var uTypes = array_create(8, 0);
-		var sampler_slot = 1;
-		
-		d3d11_cbuffer_begin();
-		var _buffer = buffer_create(1, buffer_grow, 1);
-		var _cbSize = 0;
-		
-		for( var i = input_fix_len, n = array_length(_data); i < n; i += data_length ) {
-			var _arg_name = _data[i + 0];
-			var _arg_type = _data[i + 1];
-			var _arg_valu = _data[i + 2];
+			DRAW_CLEAR
 			
-			if(_arg_name == "") continue;
+			// ############################ SET SHADER ############################
+			d3d11_shader_override_vs(shader.vs);
+			d3d11_shader_override_ps(shader.fs);
 			
-			var _uni = shader_get_uniform(shader.fs, _arg_name);
+			#region uniforms 
+				var uTypes = array_create(8, 0);
+				var sampler_slot = 1;
+		
+				d3d11_cbuffer_begin();
+				var _buffer = buffer_create(1, buffer_grow, 1);
+				var _cbSize = 0;
+		
+				for( var i = input_fix_len, n = array_length(_data); i < n; i += data_length ) {
+					var _arg_name = _data[i + 0];
+					var _arg_type = _data[i + 1];
+					var _arg_valu = _data[i + 2];
 			
-			switch(_arg_type) {
-				case 1 : 
-					d3d11_cbuffer_add_int(1); 
-					_cbSize++;
+					if(_arg_name == "") continue;
+			
+					var _uni = shader_get_uniform(shader.fs, _arg_name);
+			
+					switch(_arg_type) {
+						case 1 : 
+							d3d11_cbuffer_add_int(1); 
+							_cbSize++;
 					
-					buffer_write(_buffer, buffer_s32, _arg_valu);
-					break;
-				case 0 : 
-					d3d11_cbuffer_add_float(1); 
-					_cbSize++;
+							buffer_write(_buffer, buffer_s32, _arg_valu);
+							break;
+						case 0 : 
+							d3d11_cbuffer_add_float(1); 
+							_cbSize++;
 					
-					buffer_write(_buffer, buffer_f32, _arg_valu);
-					break;
-				case 2 : 
-				case 3 : 
-				case 4 : 
-				case 5 : 
-				case 6 : 
-					if(is_array(_arg_valu)) {
-						d3d11_cbuffer_add_float(array_length(_arg_valu)); 
-						_cbSize += array_length(_arg_valu);
+							buffer_write(_buffer, buffer_f32, _arg_valu);
+							break;
+						case 2 : 
+						case 3 : 
+						case 4 : 
+						case 5 : 
+						case 6 : 
+							if(is_array(_arg_valu)) {
+								d3d11_cbuffer_add_float(array_length(_arg_valu)); 
+								_cbSize += array_length(_arg_valu);
 						
-						for( var j = 0, m = array_length(_arg_valu); j < m; j++ ) 
-							buffer_write(_buffer, buffer_f32, _arg_valu[j]);
-					}
-					break;
-				case 8 : 
-					var _clr = colToVec4(_arg_valu);
-					d3d11_cbuffer_add_float(4);
-					_cbSize += 4;
+								for( var j = 0, m = array_length(_arg_valu); j < m; j++ ) 
+									buffer_write(_buffer, buffer_f32, _arg_valu[j]);
+							}
+							break;
+						case 8 : 
+							var _clr = colToVec4(_arg_valu);
+							d3d11_cbuffer_add_float(4);
+							_cbSize += 4;
 					
-					for( var j = 0, m = 4; j < m; j++ ) 
-						buffer_write(_buffer, buffer_f32, _clr[i]);
-					break;
-				case 7 : 
-					if(is_surface(_arg_valu))
-						d3d11_texture_set_stage_ps(sampler_slot, surface_get_texture(_arg_valu));
-					sampler_slot++;
-					break;
-			}
-		}
+							for( var j = 0, m = 4; j < m; j++ ) 
+								buffer_write(_buffer, buffer_f32, _clr[i]);
+							break;
+						case 7 : 
+							if(is_surface(_arg_valu))
+								d3d11_texture_set_stage_ps(sampler_slot, surface_get_texture(_arg_valu));
+							sampler_slot++;
+							break;
+					}
+				}
 		
-		d3d11_cbuffer_add_float(4 - _cbSize % 4);
-		var cbuff = d3d11_cbuffer_end();
-		d3d11_cbuffer_update(cbuff, _buffer);
-		buffer_delete(_buffer);
-		
-		d3d11_shader_set_cbuffer_ps(10, cbuff);
+				d3d11_cbuffer_add_float(4 - _cbSize % 4);
+				var cbuff = d3d11_cbuffer_end();
+				d3d11_cbuffer_update(cbuff, _buffer);
+				buffer_delete(_buffer);
+				
+				d3d11_shader_set_cbuffer_ps(10, cbuff);
+			#endregion
 
-		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, 
-			surface_get_width_safe(_surf), surface_get_height_safe(_surf), 1));
-		vertex_submit(global.HLSL_VB, pr_trianglestrip, surface_get_texture(_surf));
-		matrix_set(matrix_world, matrix_build_identity());
+			matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, surface_get_width_safe(_surf), surface_get_height_safe(_surf), 1));
+			vertex_submit(global.HLSL_VB_PLANE, pr_trianglestrip, surface_get_texture(_surf));
+			matrix_set(matrix_world, matrix_build_identity());
 		
-		d3d11_shader_override_vs(-1);
-		d3d11_shader_override_ps(-1);
+			d3d11_shader_override_vs(-1);
+			d3d11_shader_override_ps(-1);
+		
 		surface_reset_target();
 		
 		return _output;

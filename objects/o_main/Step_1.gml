@@ -31,6 +31,11 @@ _HOVERING_ELEMENT = noone;
 	}
 	
 	CURSOR = cr_default;
+	
+	if(!is_surface(watcher_surface)) {
+		RENDER_ALL
+		watcher_surface = surface_create(1, 1);
+	}
 #endregion
 
 #region focus

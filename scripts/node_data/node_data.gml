@@ -1466,6 +1466,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(active) return;
 		enable();
 		ds_list_add(group == noone? PROJECT.nodes : group.getNodeList(), self);
+		
+		RENDER_ALL_REORDER
 	} #endregion
 	
 	static onValidate = function() { #region

@@ -562,6 +562,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 		if(!array_empty(anchors)) {
 			draw_set_color(isUsingTool(0)? c_white : COLORS._main_accent);
+			
 			for( var i = 0, n = array_length(segments); i < n; i++ ) { #region draw path
 				var _seg = segments[i];
 				var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
@@ -570,6 +571,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					_nx = _x + _seg[j][0] * _s;
 					_ny = _y + _seg[j][1] * _s;
 						
+					minx = min(minx, _nx); maxx = max(maxx, _nx);
+					miny = min(miny, _ny); maxy = max(maxy, _ny);
+					
 					if(j) {
 						if((key_mod_press(CTRL) || isUsingTool(1)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
 							_line_hover = i;
@@ -808,7 +812,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 			var sg = array_create(sample);
 			
-			for(var j = 0; j < sample; j++) {
+			for(var j = 0; j <= sample; j++) {
 				p = eval_bezier(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], 
 				                            _a0[0] + _a0[4], _a0[1] + _a0[5], 
 											_a1[0] + _a1[2], _a1[1] + _a1[3]);

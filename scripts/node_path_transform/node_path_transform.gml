@@ -22,6 +22,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	cached_pos = ds_map_create();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var pth = getInputData(0);
 		var pos = getInputData(4);
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;

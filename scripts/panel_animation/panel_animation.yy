@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "_others",
-    "path": "folders/panels/_others.yy",
+    "name": "animation",
+    "path": "folders/panels/animation.yy",
   },
 }

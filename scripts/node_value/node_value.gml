@@ -187,7 +187,7 @@ function value_color(i) { #region
 		#4da6ff, //flipfluid
 	];
 	
-	if(i == 99) return $5dde8f;
+	if(i == 99) return #8fde5d;
 	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
 } #endregion
 

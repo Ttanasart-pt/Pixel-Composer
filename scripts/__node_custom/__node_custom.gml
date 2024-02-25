@@ -153,7 +153,7 @@ function Node_Custom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 
 		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, 
 			surface_get_width_safe(_surf), surface_get_height_safe(_surf), 1));
-		vertex_submit(global.HLSL_VB, pr_trianglestrip, surface_get_texture(_surf));
+		vertex_submit(global.HLSL_VB_PLANE, pr_trianglestrip, surface_get_texture(_surf));
 		matrix_set(matrix_world, matrix_build_identity());
 		
 		d3d11_shader_override_vs(-1);

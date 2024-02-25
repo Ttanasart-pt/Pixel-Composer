@@ -43,6 +43,8 @@
 	kb_hold  = false;
 	kb_hkey  = 0;
 	
+	watcher_surface = surface_create(1, 1);
+	
 	panelInit();
 	
 	addHotkey("", "New file", "N",				MOD_KEY.ctrl, NEW);

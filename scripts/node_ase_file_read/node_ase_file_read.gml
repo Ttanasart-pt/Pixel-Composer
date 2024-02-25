@@ -280,10 +280,11 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		update_on_frame = false;
+		
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
-			if(!struct_has(layers[i], "cel")) continue;
+			if(!struct_has(layers[i], "cels")) continue;
 			
-			var cel = layers[i].cel;
+			var cel = layers[i].cels;
 			if(array_length(cel)) update_on_frame = true;
 		}
 		
@@ -302,8 +303,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		var path = getInputData(0);
+		var path        = getInputData(0);
 		var current_tag = getInputData(2);
+		
 		if(path_current != path) updatePaths(path);
 		if(ds_map_empty(content)) return;
 		
@@ -327,28 +329,27 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var hh = content[? "Height"];
 		
 		var surf = outputs[| 0].getValue();
-		surf = surface_verify(surf, ww, hh);
+		    surf = surface_verify(surf, ww, hh);
 		outputs[| 0].setValue(surf);
 		
 		surface_set_target(surf);
-		DRAW_CLEAR
+			DRAW_CLEAR
 		
-		for( var i = 0, n = array_length(layers); i < n; i++ ) {
-			layers[i].tag = tag;
-			var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay);
-			if(!cel) continue;
-			if(!array_safe_get(vis, i, true)) continue;
+			for( var i = 0, n = array_length(layers); i < n; i++ ) {
+				layers[i].tag = tag;
+				var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay);
+				if(!cel) continue;
+				if(!array_safe_get(vis, i, true)) continue;
 			
-			var _inSurf = cel.getSurface();
-			if(!is_surface(_inSurf)) 
-				continue;
+				var _inSurf = cel.getSurface();
+				if(!is_surface(_inSurf)) 
+					continue;
 			
-			var xx = cel.data[? "X"];
-			var yy = cel.data[? "Y"];
+				var xx = cel.data[? "X"];
+				var yy = cel.data[? "Y"];
 			
-			draw_surface_safe(_inSurf, xx, yy);
-		}
-		
+				draw_surface_safe(_inSurf, xx, yy);
+			}
 		surface_reset_target();
 	} #endregion
 	

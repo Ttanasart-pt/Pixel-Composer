@@ -35,11 +35,11 @@
 		return make_color_rgba(rg.x, rg.y, rg.z, a);
 	} #endregion
 	
-	function make_color_srgba(r, g, b, a) { #region
+	function make_color_srgba(rgb, a) { #region
 		INLINE 
-		r = power(r, 1 / 2.2) * 255;
-		g = power(g, 1 / 2.2) * 255;
-		b = power(b, 1 / 2.2) * 255;
+		var r = power(rgb[0], 1 / 2.2) * 255;
+		var g = power(rgb[1], 1 / 2.2) * 255;
+		var b = power(rgb[2], 1 / 2.2) * 255;
 		
 		return int64(round(r) + (round(g) << 8) + (round(b) << 16) + (round(a) << 24)); 
 	} #endregion

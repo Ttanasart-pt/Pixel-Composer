@@ -347,17 +347,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			array_resize(canvas_buffer, fr);
 	} #endregion
 	
-	function getCanvasSurface(index = preview_index) { #region
-		INLINE
-		
-		return array_safe_get(canvas_surface, index);
-	} #endregion
+	function getCanvasSurface(index = preview_index) { INLINE return array_safe_get(canvas_surface, index); }
 	
-	function setCanvasSurface(surface, index = preview_index) { #region
-		INLINE
-		
-		canvas_surface[index] = surface;
-	} #endregion
+	function setCanvasSurface(surface, index = preview_index) { INLINE canvas_surface[index] = surface; }
 	
 	function storeAction() { #region
 		var action = recordAction(ACTION_TYPE.custom, function(data) { 
@@ -387,10 +379,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var cDep = attrDepth();
 		
 		var _canvas_surface = getCanvasSurface(index);
+		print($"Applying surface {index} - {_canvas_surface} [{is_surface(_canvas_surface)}]");
 		
-		if(!is_surface(_canvas_surface)) {
-			setCanvasSurface(surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer[index]));
-		} else if(surface_get_width_safe(_canvas_surface) != _dim[0] || surface_get_height_safe(_canvas_surface) != _dim[1]) {
+		if(!is_surface(_canvas_surface)) { // recover surface
+			//print($"recovering surface from buffer {random(1)}");
+			
+			setCanvasSurface(surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer[index]), index);
+		} else if(surface_get_width_safe(_canvas_surface) != _dim[0] || surface_get_height_safe(_canvas_surface) != _dim[1]) { // resize surface
 			var _cbuff = array_safe_get(canvas_buffer, index);
 			if(buffer_exists(_cbuff)) buffer_delete(_cbuff);
 			
@@ -752,10 +747,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _canvas_surface = getCanvasSurface();
 		
-		if(!surface_exists(_canvas_surface)) {
-			surface_store_buffer();
-			_canvas_surface = getCanvasSurface();
-		}
+		if(!surface_exists(_canvas_surface)) return;
 		
 		var _surf_w		= surface_get_width_safe(_canvas_surface);
 		var _surf_h		= surface_get_height_safe(_canvas_surface);
@@ -911,7 +903,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_reset_shader();
 				
 				mouse_holding = true;
-				if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) { ///////////////// LINE
+				if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) { ///////////////// shift line
 					surface_set_shader(drawing_surface, noone, true, BLEND.alpha);
 						brush_next_dist = 0;
 						draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
@@ -925,7 +917,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				mouse_pre_draw_y = mouse_cur_y;	
 			}
 			
-			if(mouse_holding && mouse_click(mb_left, active)) {
+			if(mouse_holding) {
 				var _move = mouse_pre_draw_x != mouse_cur_x || mouse_pre_draw_y != mouse_cur_y;
 				var _1stp = brush_dist_min == brush_dist_max && brush_dist_min == 1;
 				
@@ -938,12 +930,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				mouse_pre_draw_x = mouse_cur_x;
 				mouse_pre_draw_y = mouse_cur_y;	
-			}
-			
-			if(mouse_holding && mouse_release(mb_left)) {
-				mouse_holding   = false;
 				
-				apply_draw_surface();
+				if(mouse_release(mb_left)) {
+					mouse_holding   = false;
+					apply_draw_surface();
+				}
 			}
 			
 			BLEND_NORMAL;

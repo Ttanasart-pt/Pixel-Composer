@@ -417,7 +417,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				if(cursor_select != -1) {
 					var minc = min(cursor, cursor_select);
 					var maxc = max(cursor, cursor_select);
-					clipboard_set_text(string_copy(_input_text, minc, maxc - minc));
+					clipboard_set_text(string_copy(_input_text, minc + 1, maxc - minc));
 				}
 			} else {
 				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V")))

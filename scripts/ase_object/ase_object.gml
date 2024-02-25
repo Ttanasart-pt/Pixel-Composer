@@ -65,9 +65,7 @@ function ase_layer(name) constructor {
 	cels	= [];
 	tag		= noone;
 	
-	static setFrameCel = function(index, cel) {
-		cels[index] = cel;
-	}
+	static setFrameCel = function(index, cel) { INLINE cels[index] = cel; }
 	
 	static getCel = function(index = CURRENT_FRAME) {
 		var ind;

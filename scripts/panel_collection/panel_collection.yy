@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "_others",
-    "path": "folders/panels/_others.yy",
+    "name": "collection",
+    "path": "folders/panels/collection.yy",
   },
 }
