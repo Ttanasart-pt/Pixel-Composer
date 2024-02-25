@@ -96,14 +96,6 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		}
 	} #endregion
 	
-	static step = function() { #region
-		var _dim = getInputData(0);
-		var _outSurf = outParent.getValue();
-		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		outParent.setValue(_outSurf);
-	} #endregion
-	
 	static update = function(frame = CURRENT_FRAME) { #region
 		if(!is_instanceof(outParent, NodeValue)) return noone;
 		

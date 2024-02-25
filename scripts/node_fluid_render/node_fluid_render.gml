@@ -34,15 +34,6 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static step = function() {
-		var _dim = getInputData(1);
-		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
-			_outSurf = surface_create_valid(_dim[0], _dim[1], attrDepth());
-			outputs[| 0].setValue(_outSurf);
-		}
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
 		if(recoverCache() || !PROJECT.animator.is_playing)
 			return;

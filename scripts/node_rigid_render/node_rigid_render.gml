@@ -9,8 +9,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	update_on_frame = true;
 	
 	inputs[| 0] = nodeValue("Render dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector)
-		.rejectArray();
+		.setDisplay(VALUE_DISPLAY.vector);
 		
 	inputs[| 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
@@ -76,14 +75,6 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
 			active &= !_hov;
 		}
-	} #endregion
-	
-	static step = function() { #region
-		var _dim = getInputData(0);
-		var _outSurf = outputs[| 0].getValue();
-		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		outputs[| 0].setValue(_outSurf);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region

@@ -31,6 +31,8 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	]
 	
 	static step = function() {
+		if(array_empty(current_data)) return;
+		
 		var _type = current_data[3];
 		
 		inputs[| 2].setVisible(_type == 0);

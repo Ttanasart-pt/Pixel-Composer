@@ -77,7 +77,7 @@ function __sortNode(_list, _node) { #region
 		
 	for( var i = 0, n = array_length(_prev); i < n; i++ ) {
 		var _in = _prev[i];
-		if(_in.topoSorted) continue;
+		if(_in == noone || _in.topoSorted) continue;
 			
 		array_push(_childs, _in);
 	}

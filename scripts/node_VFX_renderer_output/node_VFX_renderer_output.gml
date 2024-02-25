@@ -106,6 +106,8 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	} #endregion
 	
 	static step = function() { #region
+		if(outParent == undefined) return;
+		
 		var _dim = getInputData(0);
 		var _typ = getInputData(2);
 		

@@ -6,7 +6,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
+	inputs[| 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	inputs[| 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Round position to the closest integer value to avoid jittering.")
@@ -91,9 +91,9 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		inputs[| 3].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
 		
-		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		outputs[| 0].setValue(_outSurf);
+		//var _outSurf = outputs[| 0].getValue();
+		//    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		//outputs[| 0].setValue(_outSurf);
 		
 		if(previewing && is_instanceof(group, Node_VFX_Group)) 
 			group.preview_node = self;

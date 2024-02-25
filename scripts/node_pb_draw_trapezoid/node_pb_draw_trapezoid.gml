@@ -25,6 +25,8 @@ function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _
 	];
 	
 	static step = function() {
+		if(array_empty(current_data)) return;
+		
 		var _type = current_data[4];
 		
 		inputs[| 5].setVisible(_type == 0);

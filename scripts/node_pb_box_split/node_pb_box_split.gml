@@ -26,6 +26,8 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	]
 	
 	static step = function() {
+		if(array_empty(current_data)) return noone;
+		
 		var _typ = current_data[2];
 		var _axs = current_data[5];
 		

@@ -18,6 +18,7 @@ function Node_Iterator_Filter_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 	} #endregion
 	
 	static step = function() { #region
+		if(group == noone) return noone;
 		if(!variable_struct_exists(group, "iterated")) return;
 		
 		if(outputs[| 0].setType(group.inputs[| 0].type))
@@ -25,6 +26,8 @@ function Node_Iterator_Filter_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 	} #endregion
 	
 	static getPreviewValues = function() { #region
+		if(group == noone) return noone;
+		
 		switch(group.inputs[| 0].type) {
 			case VALUE_TYPE.surface :
 			case VALUE_TYPE.dynaSurface :
@@ -37,6 +40,8 @@ function Node_Iterator_Filter_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 	} #endregion
 	
 	static getGraphPreviewSurface = function() { #region
+		if(group == noone) return noone;
+		
 		switch(group.inputs[| 0].type) {
 			case VALUE_TYPE.surface :
 			case VALUE_TYPE.dynaSurface :

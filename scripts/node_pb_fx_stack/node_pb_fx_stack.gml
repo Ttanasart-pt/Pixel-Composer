@@ -19,6 +19,8 @@ function Node_PB_Fx_Stack(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 	];
 	
 	static step = function() {
+		if(array_empty(current_data)) return;
+		
 		var _high = current_data[4];
 		
 		inputs[| 5].setVisible(_high);

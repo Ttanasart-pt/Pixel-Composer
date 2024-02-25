@@ -127,6 +127,8 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static drawNode = function(_x, _y, _mx, _my, _s) { #region
+		if(spr == noone) return noone;
+		
 		x = smooth? lerp_float(x, pos_x, 4) : pos_x;
 		y = smooth? lerp_float(y, pos_y, 4) : pos_y;
 		
