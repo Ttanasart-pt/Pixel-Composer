@@ -217,6 +217,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		brush_seed      = irandom_range(100000, 999999);
 		brush_next_dist = 0;
 	
+		draw_stack  = ds_list_create();
+	#endregion
+	
+	#region ++++ tools ++++
 		tool_attribute.color   = cola(c_white);
 		
 		tool_attribute.channel = [ true, true, true, true ];
@@ -224,13 +228,17 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_settings          = [ [ "Channel", tool_channel_edit, "channel", tool_attribute ] ];
 		
 		tool_attribute.size = 1;
-		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.size = max(1, round(val)); }).setSlidable(0.1, true, [ 1, 999999 ]);
-		tool_size_edit.font = f_p3;
+		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.size = max(1, round(val)); }).setSlidable(0.1, true, [ 1, 999999 ])
+									.setFont(f_p3)
+									.setSideButton(button(function() { dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) })
+										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon));
 		tool_size           = [ "Size", tool_size_edit, "size", tool_attribute ];
 		
+		tool_attribute.pressure      = false;
+		tool_attribute.pressure_size = [ 1, 1 ];
+		
 		tool_attribute.thres = 0;
-		tool_thrs_edit       = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.thres = clamp(val, 0, 1); }).setSlidable(0.01, false, [ 0, 1 ]);
-		tool_thrs_edit.font  = f_p3;
+		tool_thrs_edit       = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.thres = clamp(val, 0, 1); }).setSlidable(0.01, false, [ 0, 1 ]).setFont(f_p3);
 		tool_thrs            = [ "Threshold", tool_thrs_edit, "thres", tool_attribute ];
 		
 		tool_attribute.fill8 = false;
@@ -256,8 +264,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					.setSetting(tool_thrs)
 					.setSetting(tool_fil8),
 		];
-		
-		draw_stack  = ds_list_create();
 	#endregion
 	
 	function setToolColor(color) { tool_attribute.color = color; }
@@ -379,7 +385,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var cDep = attrDepth();
 		
 		var _canvas_surface = getCanvasSurface(index);
-		print($"Applying surface {index} - {_canvas_surface} [{is_surface(_canvas_surface)}]");
+		//print($"Applying surface {index} - {_canvas_surface} [{is_surface(_canvas_surface)}]");
 		
 		if(!is_surface(_canvas_surface)) { // recover surface
 			//print($"recovering surface from buffer {random(1)}");
@@ -720,7 +726,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _brushRotD	= getInputData(16);
 		var _brushRotR  = getInputData(17);
 		
-		brush_size     = _siz;
+		if(PEN_USE && tool_attribute.pressure)
+			brush_size = round(lerp(tool_attribute.pressure_size[0], tool_attribute.pressure_size[1], power(PEN_PRESSURE / 1024, 2)));
+		else
+			brush_size = _siz;
+		
 		brush_dist_min = max(1, _brushDist[0]);
 		brush_dist_max = max(1, _brushDist[1]);
 		brush_surface  = is_surface(_brushSurf)? _brushSurf : noone;

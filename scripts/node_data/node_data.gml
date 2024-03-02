@@ -108,8 +108,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- junctions ----
-		inputs  = ds_list_create();
-		outputs = ds_list_create();
+		inputs    = ds_list_create();
+		outputs   = ds_list_create();
 		inputMap  = ds_map_create();
 		outputMap = ds_map_create();
 		input_value_map = {};

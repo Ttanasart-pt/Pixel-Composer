@@ -22,7 +22,7 @@ _HOVERING_ELEMENT = noone;
 	}
 #endregion
 
-#region window
+#region window & mouse
 	//if(keyboard_check_pressed(vk_f12)) DEBUG = !DEBUG;
 	
 	if(_cursor != CURSOR) {
@@ -36,6 +36,16 @@ _HOVERING_ELEMENT = noone;
 		RENDER_ALL
 		watcher_surface = surface_create(1, 1);
 	}
+	
+	PEN_USE = false;
+	PEN_RELEASED      = false;
+	PEN_RIGHT_PRESS   = false;
+	PEN_RIGHT_RELEASE = false;
+	
+	if(!IS_CMD) tabletstuff_perform_event(id, ev_other, ev_user10);
+	
+	//print($"{PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
+	//print($"{mouse_x}, {mouse_y}");
 #endregion
 
 #region focus

@@ -160,13 +160,18 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Tags",	false], 2, tag_renderer,
 	];
 	
+	attributes.file_checker  = true;
 	attributes.layer_visible = [];
+	
+	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
+		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	content      = ds_map_create();
 	layers       = [];
 	tags         = [];
 	_tag_delay   = 0;
 	path_current = "";
+	edit_time    = 0;
 	
 	first_update = false;
 	
@@ -214,6 +219,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	function updatePaths(path) { #region
 		path_current = path;
+		edit_time    = file_get_modify_s(path_current);
 		
 		path = try_get_path(path);
 		if(path == -1) return false;
@@ -301,6 +307,18 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		triggerRender();
 	} #endregion
+	
+	static step = function() {	
+		if(attributes.file_checker && path_current != "") {
+			var _ms = file_get_modify_s(path_current);
+			
+			if(_ms > edit_time) {
+				edit_time = _ms;
+				updatePaths(path_current);
+				update();
+			}
+		}
+	}
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var path        = getInputData(0);

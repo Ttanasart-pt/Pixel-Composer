@@ -384,7 +384,8 @@ function __initNodes() {
 		addNodeObject(vfx, "Oscillate",		s_node_vfx_osc,		"Node_VFX_Oscillate",	[1, Node_VFX_Oscillate],, "Swing particle around its original trajectory.").hideRecent().setVersion(11560);
 			
 		ds_list_add(vfx, "Effects");
-		addNodeObject(vfx, "VFX Trail",		s_node_vfx_trail,	"Node_VFX_Trail",		[1, Node_VFX_Trail],, "Generate path from particle movement.").hideRecent().setVersion(11560);
+		addNodeObject(vfx, "VFX Trail",		  s_node_vfx_trail,			"Node_VFX_Trail",		[1, Node_VFX_Trail],, "Generate path from particle movement.").hideRecent().setVersion(11560);
+		addNodeObject(vfx, "VFX Triangulate", s_node_vfx_triangulate,	"Node_VFX_Triangulate",	[1, Node_VFX_Triangulate],, "Render line between particles.").hideRecent().setVersion(11670);
 			
 		ds_list_add(vfx, "Instance control");
 		addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable],, "Extract variable from particle objects.").hideRecent().setVersion(1120);

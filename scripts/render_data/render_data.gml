@@ -148,7 +148,7 @@ function NodeListSort(_list, _nodeList) { #region
 		_nodeList[| i].topoSorted = false;
 	
 	ds_list_clear(_list);
-	__sortGraph(_list, _nodeList);
+	topoSort(_list, _nodeList);
 } #endregion
 
 function __nodeIsRenderLeaf(_node) { #region

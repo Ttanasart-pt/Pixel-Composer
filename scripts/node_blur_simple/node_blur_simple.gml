@@ -27,9 +27,19 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	__init_mask_modifier(6); // inputs 10, 11, 
 	
+	inputs[| 12] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ c_black, c_white ]) )
+		.setMappable(13);
+	
+	inputs[| 13] = nodeValueMap("Gradient map", self);
+	
+	inputs[| 14] = nodeValueGradientRange("Gradient map range", self, inputs[| 1]);
+	
+	inputs[| 15] = nodeValue("Use Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [ 8, 9, 
 		["Surfaces", true],	0, 6, 7, 10, 11, 
 		["Blur",	false],	1, 3, 4, 5, 
+		["Effects",	false, 15],	12, 13, 14, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -39,6 +49,8 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		inputs[| 12].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
@@ -50,10 +62,14 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _overc  = _data[5];
 		var _msk    = _data[6];
 		var _mix    = _data[7];
+		var _useGrd = _data[15];
 		
 		inputs[| 5].setVisible(_isovr);
 		
 		surface_set_shader(_outSurf, sh_blur_simple);
+			shader_set_i("useGradient", _useGrd);
+			shader_set_gradient(_data[12], _data[13], _data[14], inputs[| 12]);
+		
 			shader_set_f("dimension",  surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
 			shader_set_f("size",       _size);
 			shader_set_i("sampleMode", _samp);

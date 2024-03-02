@@ -26,16 +26,16 @@
 	
 	var win_y = WIN_H;
 	
-	#region graph
+	#region mouse graph
 		if(show_graph) {
-			win_y -= 64;
+			win_y -= 128;
 			
 			draw_set_color(c_black);
 			draw_set_alpha(0.5);
 			draw_rectangle(0, win_y, WIN_W, WIN_H, false);
 			draw_set_alpha(1);
 			
-			draw_set_color(c_white);
+			draw_set_color(c_green);
 			var mlx = WIN_W - array_length(mouse_left);
 			var ox, oy, nx, ny;
 			
@@ -49,17 +49,48 @@
 				ox = nx;
 				oy = ny;
 			}
+			
+			draw_set_color(c_red);
+			var mlx = WIN_W - array_length(mouse_right);
+			var ox, oy, nx, ny;
+			
+			for( var i = 0, n = array_length(mouse_right); i < n; i++ ) {
+				nx = mlx + i;
+				ny = WIN_H - 64 - 4 - mouse_right[i] * 24;
+				
+				if(i)
+					draw_line(ox, oy, nx, ny);
+				
+				ox = nx;
+				oy = ny;
+			}
+			
+			for( var i = 1, n = array_length(mouse_pos); i < n; i++ )
+				draw_line(mouse_pos[i - 1][0], mouse_pos[i - 1][1], mouse_pos[i][0], mouse_pos[i][1]);
+			
+			var mp = 0;
+			if(DOUBLE_CLICK)				 mp = 2;
+			else if(mouse_lpress(mb_left))	 mp = 1.3;
+			else if(mouse_lrelease(mb_left)) mp = 1.3;
+			else if(mouse_lclick(mb_left))	 mp = 1;
+		
+			array_push(mouse_left, mp);
+			if(array_length(mouse_left) > WIN_W)
+				array_delete(mouse_left, 0, 1);
+		
+			var mp = 0;
+			     if(mouse_rpress(mb_right))	  mp = 1.3;
+			else if(mouse_rrelease(mb_right)) mp = 1.3;
+			else if(mouse_rclick(mb_right))	  mp = 1;
+		
+			array_push(mouse_right, mp);
+			if(array_length(mouse_right) > WIN_W)
+				array_delete(mouse_right, 0, 1);
+			
+			array_push(mouse_pos, [ mouse_mx, mouse_my ])
+			if(array_length(mouse_pos) > 1000)
+				array_delete(mouse_pos, 0, 1);
 		}
-		
-		var mp = 0;
-		if(DOUBLE_CLICK)				mp = 2;
-		else if(mouse_press(mb_left))	mp = 1.2;
-		else if(mouse_release(mb_left))	mp = 1.2;
-		else if(mouse_click(mb_left))	mp = 1;
-		
-		array_push(mouse_left, mp);
-		if(array_length(mouse_left) > WIN_W)
-			array_delete(mouse_left, 0, 1);
 	#endregion
 	
 	#region mouse
@@ -95,7 +126,7 @@
 			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
 	#endregion
 	
-	if(alpha > 0) {
+	if(alpha > 0) { #region
 		draw_set_text(_f_h5, fa_right, fa_bottom, COLORS._main_icon_dark);
 		var pd = ui(4);
 		var ww = string_width(disp_text)  + pd * 3;
@@ -110,5 +141,5 @@
 		draw_set_alpha(alpha);
 		draw_text(x1 - pd * 1.5, y1 - pd, disp_text);
 		draw_set_alpha(1);
-	}
+	} #endregion
 #endregion

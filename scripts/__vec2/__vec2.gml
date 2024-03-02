@@ -23,6 +23,12 @@ function __vec2(_x = 0, _y = _x) constructor {
 		return self;
 	} set(_x, _y); #endregion
 	
+	ref = noone;
+	static setRef = function(ref = noone) { #region
+		self.ref = ref;
+		return self;
+	} #endregion 
+	
 	static setIndex = function(index, value) { #region
 		INLINE
 		switch(index) {

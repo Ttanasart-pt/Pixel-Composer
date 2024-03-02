@@ -36,6 +36,13 @@ function vertex_add_2pc(buffer, _x, _y, color, alpha = 1) {
 	vertex_color(buffer, color, alpha);
 }
 
+function vertex_add_2pct(buffer, _x, _y, _u, _v, color, alpha = 1) {
+	INLINE
+	vertex_position(buffer, _x, _y);
+	vertex_color(buffer, color, alpha);
+	vertex_texcoord(buffer, _u, _v);
+}
+
 function vertex_add_v(buffer, vertex) {
 	INLINE
 	vertex_position_3d(buffer, vertex.x, vertex.y, vertex.z);

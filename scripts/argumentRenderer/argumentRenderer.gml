@@ -22,11 +22,11 @@ function argumentRenderer(_typeArray = []) {
 			
 			_h += _th + ui(8);
 			
-			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_add(tx + ui(8), ty + _th + ui(8 + 6), __txt("Value"));
-			
 			var _jValue = inputs[| i + 2];
 			if(argument_renderer.showValue && _jValue.editWidget != noone) {
+				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
+				draw_text_add(tx + ui(8), ty + _th + ui(8 + 6), __txt("Value"));
+				
 				var params = new widgetParam(tx + ui(64), ty + _th + ui(10), _w - ui(64), TEXTBOX_HEIGHT, _jValue.showValue(), {}, _m, argument_renderer.rx, argument_renderer.ry);
 				
 				_jValue.editWidget.setFocusHover(_focus, _hover);

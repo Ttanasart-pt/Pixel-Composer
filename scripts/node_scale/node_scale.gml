@@ -30,12 +30,12 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static step = function() {
+	static step = function() { #region
 		var _surf = getSingleValue(0);
 		
 		var _atlas = is_instanceof(_surf, SurfaceAtlas);
 		inputs[| 5].setVisible(_atlas);
-	}
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var scale = _data[1];

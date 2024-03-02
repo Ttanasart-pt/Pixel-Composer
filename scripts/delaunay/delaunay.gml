@@ -21,7 +21,7 @@ function delaunay_triangulation(points) { #region
             array_remove_triangles(triangles, bad_triangles[j]);
 		
         for (var j = 0; j < array_length(polygon); j += 2) {
-            var new_triangle = [_point, polygon[j], polygon[j + 1]];
+            var new_triangle = [ _point, polygon[j], polygon[j + 1] ];
             array_push(triangles, new_triangle);
         }
     }

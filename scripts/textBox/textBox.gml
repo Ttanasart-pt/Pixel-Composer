@@ -113,6 +113,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		KEYBOARD_STRING = "";
 		keyboard_lastkey = -1;
+		
+		if(PEN_USE) keyboard_virtual_show(input == TEXTBOX_INPUT.number? kbv_type_numbers : kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, true);
 	} #endregion
 	
 	static deactivate = function() { #region
@@ -121,6 +123,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		apply();
 		WIDGET_CURRENT = noone;
 		UNDO_HOLDING = false;
+		
+		if(PEN_USE) keyboard_virtual_hide();
 	} #endregion
 	
 	static onKey = function(key) { #region
@@ -372,9 +376,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 		
 		if(side_button && instanceof(side_button) == "buttonClass") {
+			var bs = min(h, ui(32));
+			
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
-			_w -= ui(40);
+			side_button.draw(_x + _w - bs, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide);
+			_w -= bs + ui(8);
 		}
 		
 		draw_set_font(font == noone? f_p0 : font);

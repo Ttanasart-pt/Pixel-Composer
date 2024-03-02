@@ -146,6 +146,7 @@
 					ds_stack_push(call_st, con_if.if_true);
 					ds_stack_push(blok_st, con_if);
 					continue;
+					
 				case "elseif":
 					var con_if = ds_stack_pop(blok_st);
 					var con_elif = new __funcIf();
@@ -155,12 +156,15 @@
 					ds_stack_push(call_st, con_elif.if_true);
 					ds_stack_push(blok_st, con_elif);
 					continue;
+					
 				case "else":
 					var con_if = ds_stack_pop(blok_st);
 					
 					ds_stack_push(call_st, con_if.if_false);
 					continue;
+					
 				case "for":
+				
 					var con_for = new __funcFor();
 					var cond    = string_splice(_cond, ":");
 					if(array_length(cond) == 2) {
@@ -323,8 +327,8 @@
 					vsl = string_trim(vsl);
 					
 					switch(vsl) {
-						case "e" : ds_stack_push(vl, 2.71828);	break;
-						case "pi": ds_stack_push(vl, pi);		break;
+						case "e" : ds_stack_push(vl, 2.7182818284);	break;
+						case "pi": ds_stack_push(vl, pi);			break;
 						default  : ds_stack_push(vl, isNumber(vsl)? toNumber(vsl) : vsl); break;
 					}
 					

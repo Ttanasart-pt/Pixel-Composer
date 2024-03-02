@@ -260,6 +260,12 @@ function Panel_Menu() : PanelContent() constructor {
 				__test_generate_theme();
 			}),
 			-1,
+			menuItem(__txtx("panel_menu_test_warning", "Display Warning"), function() { 
+				noti_warning("Error message")
+			}),
+			menuItem(__txtx("panel_menu_test_error", "Display Error"), function() { 
+				noti_error("Error message")
+			}),
 			menuItem(__txtx("panel_menu_test_crash", "Force crash"), function() { 
 				print(1 + "a");
 			}),

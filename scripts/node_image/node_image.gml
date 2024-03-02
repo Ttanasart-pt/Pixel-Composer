@@ -41,6 +41,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	path_current = [];
 	
 	first_update = false;
+	edit_time    = [];
 	
 	on_drop_file = function(path) { #region
 		inputs[| 0].setValue(path);
@@ -67,7 +68,6 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case ".jpeg":
 			case ".gif":
 				setDisplayName(_name);
-				
 				spr = sprite_add(path, 1, false, false, 0, 0);
 				
 				if(spr == -1) {
@@ -75,6 +75,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					break;
 				}
 				
+				edit_time = file_get_modify_s(path);
 				return spr;
 		}
 		
@@ -114,6 +115,20 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		outputs[| 1].setValue(path);
 		if(path_current != path)
 			updatePaths(path);
+		else {
+			//if(!is_array(path)) path = [ path ];
+			//var _upd = false;
+			
+			//for( var i = 0, n = array_length(path); i < n; i++ ) {
+			//	var _et = array_safe_get(edit_time, i);
+			//	var _ms = file_get_modify_s(path[i]);
+				
+			//	if(_ms > edit_time[i]) _upd = true;
+			//	edit_time[i] = _ms;
+			//}
+			
+			//if(_upd) updatePaths(path);
+		}
 		
 		if(array_empty(spr)) return;
 		

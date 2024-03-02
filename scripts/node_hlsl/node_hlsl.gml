@@ -7,23 +7,12 @@
 
 	global.HLSL_VB_PLANE = vertex_create_buffer();
 	vertex_begin(global.HLSL_VB_PLANE, global.HLSL_VB_FORMAT);
-	
-		vertex_position(global.HLSL_VB_PLANE, 0, 0);
-		vertex_color(   global.HLSL_VB_PLANE, c_white, 1);
-		vertex_texcoord(global.HLSL_VB_PLANE, 0, 0);
-	
-		vertex_position(global.HLSL_VB_PLANE, 0, 1);
-		vertex_color(   global.HLSL_VB_PLANE, c_white, 1);
-		vertex_texcoord(global.HLSL_VB_PLANE, 0, 1);
 		
-		vertex_position(global.HLSL_VB_PLANE, 1, 0);
-		vertex_color(   global.HLSL_VB_PLANE, c_white, 1);
-		vertex_texcoord(global.HLSL_VB_PLANE, 1, 0);
-	
-		vertex_position(global.HLSL_VB_PLANE, 1, 1);
-		vertex_color(   global.HLSL_VB_PLANE, c_white, 1);
-		vertex_texcoord(global.HLSL_VB_PLANE, 1, 1);
-	
+		vertex_add_2pct(global.HLSL_VB_PLANE, 0, 0, 0, 1, c_white);
+		vertex_add_2pct(global.HLSL_VB_PLANE, 0, 1, 0, 0, c_white);
+		vertex_add_2pct(global.HLSL_VB_PLANE, 1, 0, 1, 1, c_white);
+		vertex_add_2pct(global.HLSL_VB_PLANE, 1, 1, 1, 0, c_white);
+		
 	vertex_end(global.HLSL_VB_PLANE);
 #endregion
 

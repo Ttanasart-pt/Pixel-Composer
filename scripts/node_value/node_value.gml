@@ -335,6 +335,7 @@ function value_type_from_string(str) { #region
 		case "strands"	: return VALUE_TYPE.strands;
 		case "mesh"		: return VALUE_TYPE.mesh;
 		case "trigger"	: return VALUE_TYPE.trigger;
+		case "atlas"	: return VALUE_TYPE.atlas;
 		
 		case "d3vertex" : return VALUE_TYPE.d3vertex;
 		case "gradient" : return VALUE_TYPE.gradient;
@@ -343,16 +344,18 @@ function value_type_from_string(str) { #region
 		
 		case "pbBox"	: return VALUE_TYPE.pbBox;
 		
-		case "d3Mesh"	: return VALUE_TYPE.d3Mesh;
-		case "d3Light"	: return VALUE_TYPE.d3Light;
-		case "d3Camera" : return VALUE_TYPE.d3Camera;
-		case "d3Scene"	: return VALUE_TYPE.d3Scene;
-		case "d3Material"	: return VALUE_TYPE.d3Material;
+		case "d3Mesh"	:   return VALUE_TYPE.d3Mesh;
+		case "d3Light"	:   return VALUE_TYPE.d3Light;
+		case "d3Camera" :   return VALUE_TYPE.d3Camera;
+		case "d3Scene"	:   return VALUE_TYPE.d3Scene;
+		case "d3Material" : return VALUE_TYPE.d3Material;
 		
-		case "dynaSurface"	: return VALUE_TYPE.dynaSurface;
-		case "PCXnode"	: return VALUE_TYPE.PCXnode;
+		case "dynaSurface" : return VALUE_TYPE.dynaSurface;
+		case "PCXnode"	   : return VALUE_TYPE.PCXnode;
 		
 		case "audioBit"	: return VALUE_TYPE.audioBit;
+		
+		case "fDomain"	: return VALUE_TYPE.fdomain;
 		
 		case "action"	: return VALUE_TYPE.action;
 	}
@@ -751,6 +754,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static resetValue = function() { #region
 		unit.mode = def_unit;
 		setValue(unit.apply(def_val)); 
+		attributes.mapped = false;
+		
 		is_modified = false; 
 	} #endregion
 	
@@ -1922,6 +1927,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setValueInspector = function(val = 0, index = noone) { #region
 		INLINE
 		var res = false;
+		val = unit.invApply(val);
 		
 		if(PANEL_INSPECTOR && PANEL_INSPECTOR.inspectGroup == 1) {
 			var ind = self.index;

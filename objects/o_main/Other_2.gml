@@ -88,6 +88,7 @@
     if(!IS_CMD) { __initAddon();                log_message("SESSION", $"> init Addon         | complete in {get_timer() - t}");    t = get_timer(); }
     if(!IS_CMD) { __initPalette();              log_message("SESSION", $"> init Palette       | complete in {get_timer() - t}");    t = get_timer(); }
     if(!IS_CMD) { __initGradient();             log_message("SESSION", $"> init Gradient      | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initPen();					log_message("SESSION", $"> init Pen           | complete in {get_timer() - t}");    t = get_timer(); }
     
     if(!IS_CMD) { loadAddon();                  log_message("SESSION", $"> init Addons        | complete in {get_timer() - t}");    t = get_timer(); }
     

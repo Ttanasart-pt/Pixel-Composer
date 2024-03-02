@@ -28,14 +28,6 @@ function __gaussian_get_kernel(size) {
 }
 
 function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampleMode = 0, overColor = noone) {
-	static uni_bor = shader_get_uniform(sh_blur_gaussian, "sampleMode");
-	static uni_dim = shader_get_uniform(sh_blur_gaussian, "dimension");
-	static uni_hor = shader_get_uniform(sh_blur_gaussian, "horizontal");
-	static uni_wei = shader_get_uniform(sh_blur_gaussian, "weight");
-	static uni_sze = shader_get_uniform(sh_blur_gaussian, "size");
-	static uni_ovr = shader_get_uniform(sh_blur_gaussian, "overrideColor");
-	static uni_ovc = shader_get_uniform(sh_blur_gaussian, "overColor");
-	
 	var format = surface_get_format(surface);
 	var _sw    = surface_get_width_safe(surface);
 	var _sh    = surface_get_height_safe(surface);
@@ -52,15 +44,15 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		draw_clear_alpha(bg_c, bg);
 		
 		shader_set(sh_blur_gaussian);
-		shader_set_uniform_f_array_safe(uni_dim, [ _sw, _sh ]);
-		shader_set_uniform_f_array_safe(uni_wei, gau_array);
+		shader_set_f("dimension", [ _sw, _sh ]);
+		shader_set_f("weight",    gau_array);
 		
-		shader_set_uniform_i(uni_bor, sampleMode);
-		shader_set_uniform_i(uni_sze, size);
-		shader_set_uniform_i(uni_hor, 1);
+		shader_set_i("sampleMode", sampleMode);
+		shader_set_i("size",       size);
+		shader_set_i("horizontal", 1);
 		
-		shader_set_uniform_i(uni_ovr, overColor != noone);
-		shader_set_uniform_f_array_safe(uni_ovc, colToVec4(overColor));
+		shader_set_i("overrideColor", overColor != noone);
+		shader_set_f("overColor",     colToVec4(overColor));
 		
 		draw_surface_safe(surface, 0, 0);
 		shader_reset();
@@ -70,7 +62,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		draw_clear_alpha(bg_c, bg);
 		
 		shader_set(sh_blur_gaussian);
-		shader_set_uniform_i(uni_hor, 0);
+		shader_set_i("horizontal", 0);
 		
 		draw_surface_safe(__blur_hori, 0, 0);
 		shader_reset();

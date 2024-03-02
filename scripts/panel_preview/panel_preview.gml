@@ -1334,7 +1334,11 @@ function Panel_Preview() : PanelContent() constructor {
 				wdg.setFocusHover(pFOCUS, pHOVER);
 				
 				switch(instanceof(wdg)) {
-					case "textBox" :       tolw = ui(40);           break;
+					case "textBox" :       
+						tolw = ui(40);
+						if(wdg.side_button != noone) tolw += tolh + ui(8);
+						break;
+						
 					case "checkBoxGroup" : tolw = tolh * wdg.size;	break;
 					case "checkBox" :	   tolw = tolh;				break;
 					case "scrollBox" :     tolw = ui(96);			break;

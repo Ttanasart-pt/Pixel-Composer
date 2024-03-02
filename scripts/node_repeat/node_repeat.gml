@@ -13,7 +13,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 												 new scrollItem("Grid",     s_node_repeat_axis, 1), 
 												 new scrollItem("Circular", s_node_repeat_axis, 2), ]);
 	
-	inputs[| 4] = nodeValue("Repeat position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [DEF_SURF_W / 2, 0])
+	inputs[| 4] = nodeValue("Shift position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [DEF_SURF_W / 2, 0])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function() { return getDimension(); });
 	
@@ -98,14 +98,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Surfaces",	 true],	0, 1, 16, 17,
 		["Pattern",		false],	3, 9, 2, 18, 7, 8, 
 		["Path",		 true],	11, 12, 13, 
-		["Transform",	false],	4, 26, 19, 5, 6, 10, 
+		["Position",	false],	4, 26, 19, 
+		["Rotation",	false],	5, 
+		["Scale",		false],	6, 10, 
 		["Render",		false],	14, 30,
 		["Animator",	 true, 29],	20, 21, 25, 22, 23, 24, 27, 
 	];
 	
 	attribute_surface_depth();
 	
-	static getDimension = function() {
+	static getDimension = function() { #region
 		var _surf = getInputData(0);
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return [1, 1];
@@ -115,9 +117,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 		if(!is_surface(_surf)) return [1, 1];
 		return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
-	}
+	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var a = inputs[| 9].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor); active &= !a;
 		
 		var _pat  = getInputData(3);
@@ -137,13 +139,13 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		var a = inputs[| 31].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getInputData(1)); active &= !a;
-	}
+	} #endregion
 	
 	static step = function() { #region
 		inputs[| 14].mappableStep();
 	} #endregion
 	
-	function doRepeat(_outSurf, _inSurf) {
+	function doRepeat(_outSurf, _inSurf) { #region
 		var _dim    = getInputData( 1);
 		var _amo    = getInputData( 2);
 		var _pat    = getInputData( 3);
@@ -275,9 +277,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(_rsta == 2)	runy += _sh / 2;
 			}
 		surface_reset_target();
-	}
+	} #endregion
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { #region
 		var _inSurf = getInputData(0);
 		if(is_array(_inSurf) && array_length(_inSurf) == 0) return;
 		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
@@ -316,5 +318,5 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		outputs[| 0].setValue(_outSurf);
-	}
+	} #endregion
 }

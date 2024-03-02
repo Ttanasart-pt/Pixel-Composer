@@ -77,11 +77,12 @@ function __part(_node) constructor {
 	drawsx  = 0;
 	drawsy  = 0;
 	
-	col      = -1;
-	blend	 = c_white;
-	alp      = 1;
-	alp_draw = alp;
-	alp_fade = 0;
+	col       = -1;
+	blend	  = c_white;
+	alp       = 1;
+	alp_draw  = alp;
+	alp_fade  = 0;
+	currColor = c_white;
 	
 	blend_history = [];
 	alp_history   = [];
@@ -370,6 +371,8 @@ function __part(_node) constructor {
 		
 		blend_history[life_incr - 1] = cc;
 		alp_history[life_incr - 1]   = alp_draw;
+		
+		currColor = cola(cc, alp_draw);
 		
 		if(_useS && (x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0))
 			return;

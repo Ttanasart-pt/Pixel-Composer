@@ -5,6 +5,8 @@ function drawWidgetInit() {
 	
 	min_w = ui(160);
 	lineBreak = PREFERENCES.inspector_view_default;
+	
+	tooltip_loop_type = new tooltipSelector(__txtx("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
 }
 
 function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0) { 
@@ -211,7 +213,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
 					
 			bx -= ui(26 + 12);
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_animation_looping_mode", "Looping mode") + " " + global.junctionEndName[jun.on_end], THEME.prop_on_end, jun.on_end) == 2)
+			tooltip_loop_type.index = jun.on_end;
+			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, tooltip_loop_type, THEME.prop_on_end, jun.on_end) == 2)
 				jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(THEME.prop_on_end));
 		}
 	#endregion

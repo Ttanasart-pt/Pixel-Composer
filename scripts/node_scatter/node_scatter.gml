@@ -103,7 +103,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 32] = nodeValue("Rotate per radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)	
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 33] = nodeValue("Random position", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
+	inputs[| 33] = nodeValue("Random position", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector_range);
 	
 	inputs[| 34] = nodeValue("Scale per radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])	
@@ -111,6 +111,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 35] = nodeValue("Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 360 ])	
 		.setDisplay(VALUE_DISPLAY.rotation_range);
+	
+	inputs[| 36] = nodeValue("Shift position", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
@@ -118,11 +121,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setVisible(false)
 		.rejectArrayProcess();
 	
-	input_display_list = [ 
-		["Surfaces", 	 true], 0, 1, 15, 10, 24, 25, 26, 27, 
+	input_display_list = [ 10, 
+		["Surfaces", 	 true], 0, 1, 15, 24, 25, 26, 27, 
 		["Scatter",		false], 6, 5, 13, 14, 17, 9, 31, 2, 30, 35, 
 		["Path",		false], 19, 20, 21, 22, 
-		["Position",	false], 33, 
+		["Position",	false], 33, 36, 
 		["Rotation",	false], 7, 4, 32, 
 		["Scale",	    false], 3, 8, 34, 
 		["Render",		false], 18, 11, 28, 12, 16, 23, 
@@ -264,6 +267,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var posWig  = _data[33];
 		var uniSca  = _data[34];
 		var cirRng  = _data[35];
+		var posShf  = _data[36];
 		
 		var _in_w, _in_h;
 		
@@ -466,6 +470,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				if(_wigX) _x += random_range(posWig[0], posWig[1]);
 				if(_wigY) _y += random_range(posWig[2], posWig[3]);
+				
+				_x += posShf[0] * i;
+				_y += posShf[1] * i;
 				
 				if(_unis) {
 					_scy = max(_scx, _scy);

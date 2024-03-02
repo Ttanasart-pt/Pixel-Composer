@@ -30,5 +30,8 @@ event_inherited();
 		[vk_right, "Right"],
 	];
 	
-	mouse_left = [];
+	mouse_left  = [];
+	mouse_right = [];
+	
+	mouse_pos = [];
 #endregion

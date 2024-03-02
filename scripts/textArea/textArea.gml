@@ -102,6 +102,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					
 		cut_line();
 		undo_delay = 10;
+		
+		if(PEN_USE) keyboard_virtual_show(kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, true);
 	} #endregion
 	
 	static deactivate = function() { #region 
@@ -110,6 +112,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		apply();
 		WIDGET_CURRENT = noone;
 		UNDO_HOLDING = false;
+		
+		if(PEN_USE) keyboard_virtual_hide();
 	} #endregion
 	
 	static isCodeFormat = function() { INLINE return format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL; }
@@ -756,9 +760,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		w  = _w;
 		
 		if(side_button && instanceof(side_button) == "buttonClass") {
+			var bs = min(h, ui(32));
+			
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
-			_w -= ui(40);
+			side_button.draw(_x + _w - bs, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide);
+			_w -= bs + ui(8);
 		}
 		
 		var tx = ui(8);
