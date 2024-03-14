@@ -2,7 +2,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name = "Spawner";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0 );
+	inputs[| 0] = nodeValue("Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
 	inputs[| 1] = nodeValue("Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4, "Frames delay between each particle spawn." )
 		.rejectArray();
@@ -96,7 +96,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 29] = nodeValue("Directed from center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make particle move away from the spawn center.")
 		.rejectArray();
 	
-	inputs[| 30] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+	inputs[| 30] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.rejectArray()
 	
 	inputs[| 31] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface,  [] )
@@ -501,12 +501,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		onStep();
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _spr  = getInputData(0);
 		if(is_array(_spr)) _spr = _spr[0];
 		var _flag = is_instanceof(_spr, SurfaceAtlas)? 0b0001 : 0b0011;
 		
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
+		inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
 		if(onDrawOverlay != -1)
 			onDrawOverlay(active, _x, _y, _s, _mx, _my);
 	} #endregion

@@ -3,7 +3,7 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	use_cache   = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [-1, 1])
 		.setDisplay(VALUE_DISPLAY.slider_range, { range: [ -16, 16, 1 ] });
@@ -19,7 +19,7 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	inputs[| 6] = nodeValue("On top", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Render current frame on top of all frames.")
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, 0);
+	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surface", false], 0, 1, 5,  

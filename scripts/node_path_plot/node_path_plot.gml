@@ -40,8 +40,8 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	boundary   = new BoundingBox( 0, 0, 1, 1 );
 	cached_pos = ds_map_create();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static getLineCount		= function() { return 1; }

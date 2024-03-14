@@ -2,7 +2,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Crop";
 	preview_alpha = 0.5;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Crop", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.padding)
@@ -28,7 +28,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
 		var _inSurf	= getSingleValue(0);
 		var _spRaw 	= getSingleValue(1);
 		var _splice;

@@ -12,7 +12,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	length   = 0;
 	lengths  = [];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var mesh = getInputData(0);
 		if(mesh == noone) return;
 		

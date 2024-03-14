@@ -50,7 +50,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	obstracle = new FLIP_Obstracle();
 	index     = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		var _shp   = getInputData(3);
@@ -75,7 +75,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		     if(_shp == 0) draw_circle(_px, _py, _r, true);
 		else if(_shp == 1) draw_rectangle(_px - _w, _py - _h, _px + _w, _py + _h, true);
 		
-		if(inputs[| 1].drawOverlay(active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
 		
 	} #endregion
 	

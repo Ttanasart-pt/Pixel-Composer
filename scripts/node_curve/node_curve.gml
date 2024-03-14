@@ -1,7 +1,7 @@
 function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Curve";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
 	
@@ -11,7 +11,7 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 4] = nodeValue("Blue", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
 	
-	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 6] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

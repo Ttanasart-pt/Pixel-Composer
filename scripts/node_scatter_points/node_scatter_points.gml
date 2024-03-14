@@ -19,7 +19,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 3] = nodeValue("Point amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2, "Amount of particle spawn in that frame.")
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+	inputs[| 4] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.rejectArray();
 	
 	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(99999))
@@ -30,7 +30,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 7] = nodeValue("Reference dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 8] = nodeValue("Reference value", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 8] = nodeValue("Reference value", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 9] = nodeValue("Output 3D", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -55,8 +55,8 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		inputs[| 4].setVisible(_dist == 2, _dist == 2);
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		inputs[| 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static getPreviewValues = function() { return inputs[| 8].getValue(); }

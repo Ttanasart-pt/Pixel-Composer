@@ -20,15 +20,15 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	outputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.output, VALUE_TYPE.mesh, noone);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = getInputData(1);
 		
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		active &= !inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		active &= !inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
-		active &= !inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor );
+		active &= !inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		active &= !inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		active &= !inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor );
 		
 		var mesh = outputs[| 0].getValue();
 		if(mesh == noone) return;

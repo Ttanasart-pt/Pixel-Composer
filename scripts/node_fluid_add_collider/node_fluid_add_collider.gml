@@ -20,7 +20,7 @@ function Node_Fluid_Add_Collider(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdomain, noone);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _mat = getInputData(1);
 		var _area = getInputData(2);
 		
@@ -33,7 +33,7 @@ function Node_Fluid_Add_Collider(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 			draw_surface_stretched_ext(_mat, x0, y0, x1 - x0, y1 - y0, c_white, 0.5);
 		}
 		
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

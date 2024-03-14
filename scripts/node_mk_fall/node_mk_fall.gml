@@ -95,7 +95,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	traj = [];
 	traj_index = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		draw_set_color(COLORS._main_accent);
 		
 		for( var i = 0, n = array_length(traj); i < n; i++ ) {
@@ -116,7 +116,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			}
 		}
 		
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		if(getInputData(15)) {
 			var _gr = getInputData(16);

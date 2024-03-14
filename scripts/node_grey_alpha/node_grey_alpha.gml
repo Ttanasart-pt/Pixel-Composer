@@ -1,7 +1,7 @@
 function Node_Grey_Alpha(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grey to Alpha";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Replace color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Replace output with solid color.");
 	

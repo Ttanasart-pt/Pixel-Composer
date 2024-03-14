@@ -19,12 +19,12 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	cached_pos = ds_map_create();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _p0 = getInputData(0);
 		var _p1 = getInputData(1);
 		
-		if(_p0) _p0.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		if(_p1) _p1.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(_p0) _p0.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(_p1) _p1.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_icon);
 		

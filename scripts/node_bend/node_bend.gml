@@ -1,7 +1,7 @@
 function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bend";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 1;
@@ -30,7 +30,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		draw_set_color(COLORS._main_accent);
 		
 		//for( var i = 0, n = array_length(mesh); i < n; i++ ) {

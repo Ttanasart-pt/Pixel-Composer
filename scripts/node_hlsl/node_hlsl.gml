@@ -261,8 +261,7 @@ struct PixelShaderOutput {
 	} if(!LOADING && !APPENDING) refreshShader(); #endregion
 	
 	static onValueUpdate = function(index) { #region
-		var _refresh = index == 0 || index == 1 ||
-				(index >= input_fix_len && (index - input_fix_len) % data_length != 2);
+		var _refresh = index == 0 || index == 1 || (index >= input_fix_len && (index - input_fix_len) % data_length != 2);
 		
 		if(_refresh) {
 			refreshShader();

@@ -2,7 +2,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Camera";
 	preview_alpha = 0.5;
 	
-	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	onSurfaceSize = function() { return surface_get_dimension(getInputData(0)); };
 	inputs[| 1] = nodeValue("Focus area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 16, 16, AREA_SHAPE.rectangle ])
@@ -46,7 +46,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		inputs[| index + 0] = nodeValue($"Element {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+		inputs[| index + 0] = nodeValue($"Element {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 		
 		inputs[| index + 1] = nodeValue($"Parallax {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
 			.setDisplay(VALUE_DISPLAY.vector)
@@ -103,7 +103,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(array_length(current_data) == 0) return;
 		
 		var _out = outputs[| 0].getValue();
@@ -114,7 +114,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _cam_y = _y + (_area[1] - _area[3] * _zoom) * _s;
 		
 		draw_surface_ext_safe(_out, _cam_x, _cam_y, _s * _zoom, _s * _zoom);
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_accent);
 		var x0 = _cam_x;

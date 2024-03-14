@@ -1,7 +1,7 @@
 function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shadow";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	inputs[| 1] = nodeValue("Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
 	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .5)
@@ -17,7 +17,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 5] = nodeValue("Blur", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] });
 	
-	inputs[| 6] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 6] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 7] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -37,7 +37,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	surface_blur_init();
 	attribute_surface_depth();
 		
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[| 0].getValue();
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
@@ -47,7 +47,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var ww = surface_get_width_safe(_surf) * _s;
 		var hh = surface_get_height_safe(_surf) * _s;
 		
-		inputs[| 3].drawOverlay(active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny);
+		inputs[| 3].drawOverlay(hover, active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static step = function() { #region

@@ -2,7 +2,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	name	  = "Cache Array";
 	use_cache = CACHE_USE.manual;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Start frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1, "Frame index to start caching, set to -1 to start at the first frame.");
 	

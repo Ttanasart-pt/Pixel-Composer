@@ -1,7 +1,7 @@
 function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Chromatic Aberration";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -30,12 +30,12 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var pos = getInputData(1);
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static step = function() { #region

@@ -4,7 +4,7 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	manage_atlas = false;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY._default, { slide_speed: 0.01 });

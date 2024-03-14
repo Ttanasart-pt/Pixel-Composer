@@ -65,7 +65,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Shape",		false], 1, 2, 3, 4, 5, 
 	];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _typ = getInputData(1);
 		var _pos = getInputData(2);
 		var _ran = getInputData(3);
@@ -142,9 +142,9 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			draw_line_dashed(px0, py0, px1, py1);
 		}
 		
-		active &= inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		active &= inputs[| 4].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
-		active &= inputs[| 3].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
+		active &= inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		active &= inputs[| 4].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		active &= inputs[| 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

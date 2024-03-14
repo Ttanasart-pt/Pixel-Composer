@@ -29,8 +29,8 @@ function Node_Fluid_Turbulence(_x, _y, _group = noone) : Node_Fluid(_x, _y, _gro
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdomain, noone);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

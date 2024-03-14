@@ -163,10 +163,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		} else 
 			drawOverlayPreviewSingle(0, _x, _y, _s, _pr_x, _pr_y, _tex);
 			
-		return inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		return inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
 		if(inline_context != noone) gr = inline_context;
 		

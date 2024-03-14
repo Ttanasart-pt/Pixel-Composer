@@ -78,7 +78,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	function updatePaths(path) { #region
-		path = try_get_path(path);
+		path = path_get(path);
 		if(path == -1) return false;
 		
 		var ext = string_lower(filename_ext(path));

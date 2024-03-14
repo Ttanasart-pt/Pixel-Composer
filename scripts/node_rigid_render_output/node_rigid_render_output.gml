@@ -81,7 +81,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		refreshDynamicInput();
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
 		if(inline_context != noone) gr = inline_context;
 					

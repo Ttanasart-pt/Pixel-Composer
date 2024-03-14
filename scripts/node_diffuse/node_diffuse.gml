@@ -38,7 +38,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	bufferStore.velocity = buffer_create(1, buffer_grow, 4);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _surf = getInputData(0);
 		var _sw   = surface_get_width_safe(_surf);
 		var _sh   = surface_get_height_safe(_surf);

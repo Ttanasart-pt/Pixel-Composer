@@ -2,7 +2,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Palette Extract";
 	w    = 96;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Max colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5, "Amount of color in a palette.")
 		.rejectArray();

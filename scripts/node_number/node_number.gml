@@ -40,11 +40,11 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	outputs[| 0] = nodeValue("Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var __ax = getInputData(0);
 		if(is_array(__ax)) return;
 		
-		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static step = function() { #region

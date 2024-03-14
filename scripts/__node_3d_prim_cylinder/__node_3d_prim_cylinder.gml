@@ -19,9 +19,9 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 6] = nodeValue("Textures top",	self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 7] = nodeValue("Textures bottom", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 8] = nodeValue("Textures side",	self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 6] = nodeValue("Textures top",	self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 7] = nodeValue("Textures bottom", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 8] = nodeValue("Textures side",	self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 9] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -137,7 +137,7 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	generate_vb();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	

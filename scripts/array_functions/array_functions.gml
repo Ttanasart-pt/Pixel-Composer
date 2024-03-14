@@ -287,3 +287,13 @@ function array_insert_before(arr, before, values) { #region
 	for( var i = 0, n = array_length(values); i < n; i++ )
 		array_insert(arr, _ind + i, values[i]);
 } #endregion
+
+#macro array_equals array_equals_overwrite
+#macro __array_equals array_equals
+
+function array_equals_overwrite(arr1, arr2) { #region 
+	if(!is_array(arr1) &&  is_array(arr2)) return false;
+	if( is_array(arr1) && !is_array(arr2)) return false;
+	if(!is_array(arr1) && !is_array(arr2)) return arr1 == arr2;
+	return __array_equals(arr1, arr2)
+} #endregion

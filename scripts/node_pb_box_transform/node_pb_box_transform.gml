@@ -14,7 +14,7 @@ function Node_PB_Box_Transform(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _gr
 	]
 		
 	static drawOverlayPB = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

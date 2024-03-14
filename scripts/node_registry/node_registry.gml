@@ -253,9 +253,9 @@ function addNodeObject(_list, _name, _spr, _node, _fun, _tag = [], tooltip = "")
 	return _n;
 } #endregion
 	
-function addNodeCatagory(name, list, filter = []) { #region
+function addNodeCatagory(name, list, filter = [], color = noone) { #region
 	global.__currPage = name;
-	ds_list_add(NODE_CATEGORY, { name: name, list: list, filter: filter });
+	ds_list_add(NODE_CATEGORY, { name, list, filter, color });
 } #endregion
 	
 function addNodePBCatagory(name, list, filter = []) { #region
@@ -492,6 +492,8 @@ function __initNodes() {
 		addNodeObject(input, "ASE Layer",			s_node_ase_layer,		"Node_ASE_layer",			[1, Node_ASE_layer],, "Load Aseprite project file").setVersion(1100);
 		addNodeObject(input, "WAV File In",			s_node_wav_file_read,	"Node_WAV_File_Read",		[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
 		addNodeObject(input, "WAV File Out",		s_node_wav_file_write,	"Node_WAV_File_Write",		[1, Node_WAV_File_Write],, "Save wav audio file.").setVersion(1145);
+		addNodeObject(input, "Byte File In",		s_node_byte_file_read,	"Node_Byte_File_Read",		[1, Node_Byte_File_Read],,  "Load any file to buffer.").setVersion(11670);
+		addNodeObject(input, "Byte File Out",		s_node_byte_file_write,	"Node_Byte_File_Write",		[1, Node_Byte_File_Write],, "Save buffer content to a file.").setVersion(11670);
 			
 		ds_list_add(input, "External");
 		addNodeObject(input, "Websocket Receiver",	s_node_websocket_receive,	"Node_Websocket_Receiver",	[1, Node_Websocket_Receiver],, "Create websocket server to receive data from the network.").setVersion(1145);

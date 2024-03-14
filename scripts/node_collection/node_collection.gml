@@ -262,7 +262,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		h = max(min_h, preH, _hi, _ho);
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(!draw_input_overlay) return;
 		
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
@@ -270,7 +270,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _show = _in.from.getInputData(6);
 			
 			if(!_show) continue;
-			var _hov = _in.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var _hov = _in.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			if(_hov != undefined) active &= !_hov;
 		}
 	} #endregion

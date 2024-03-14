@@ -12,7 +12,7 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		.setVisible(true, true);
 	inputs[| 2].array_depth = 1;
 	
-	inputs[| 3] = nodeValue("Blending", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 3] = nodeValue("Color Space", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Hard", "RGB", "HSV", "OKLAB", "sRGB" ]);
 	
 	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.gradient, new gradientObject(c_white) )

@@ -14,7 +14,7 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	outputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.output, VALUE_TYPE.strands, noone);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _msh = getInputData(1);
 		if(_msh == noone) return;
 		

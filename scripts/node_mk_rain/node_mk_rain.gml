@@ -2,7 +2,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Rain";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 45)
 		.setDisplay(VALUE_DISPLAY.rotation);

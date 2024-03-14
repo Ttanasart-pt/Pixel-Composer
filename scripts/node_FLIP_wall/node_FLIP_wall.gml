@@ -22,8 +22,8 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	obstracle = new FLIP_Obstracle();
 	index     = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(inputs[| 1].drawOverlay(active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		if(inputs[| 1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region

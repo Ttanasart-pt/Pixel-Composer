@@ -1,7 +1,7 @@
 function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Warp";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Top left", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -70,7 +70,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		dimension_index = _useDim? 7 : 0;
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _surf = outputs[| 0].getValue();
@@ -234,10 +234,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 			}
 		
-			if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-			if(inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-			if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-			if(inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+			if(inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+			if(inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+			if(inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+			if(inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 		#endregion
 	} #endregion
 	

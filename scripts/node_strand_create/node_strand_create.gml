@@ -119,7 +119,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		tool_grabbing = [];
 	#endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _typ = getInputData(0);
 		var _pre = getInputData(16);
 		if(!attributes.use_groom) 
@@ -129,7 +129,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(_typ == 0) {
 			if(tool_dragging == noone)
-				inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+				inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		} else if(_typ == 1) {
 			var _pth = getInputData(5);
 			var _sid = getInputData(7);

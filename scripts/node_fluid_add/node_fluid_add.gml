@@ -40,7 +40,7 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 	
 	temp_surface = [ surface_create(1, 1) ];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _mat = getInputData(1);
 		var _pos = getInputData(2);
 		
@@ -53,7 +53,7 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 			draw_surface_ext_safe(_mat, mx, my, _s, _s, 0, c_white, 0.5);
 		}
 		
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) {

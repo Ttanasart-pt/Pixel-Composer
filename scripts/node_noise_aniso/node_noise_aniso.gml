@@ -43,8 +43,8 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static step = function() { #region

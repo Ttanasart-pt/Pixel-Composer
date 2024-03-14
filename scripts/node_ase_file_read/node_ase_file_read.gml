@@ -1,7 +1,7 @@
 function Node_create_ASE_File_Read(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_open_filename("aseprite|*.ase", "");
+		path = get_open_filename("Aseprite file (*.aseprite, *.ase)|*.aseprite;*.ase", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -160,9 +160,10 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Tags",	false], 2, tag_renderer,
 	];
 	
-	attributes.file_checker  = true;
 	attributes.layer_visible = [];
 	
+	edit_time = 0;
+	attributes.file_checker = true;
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
@@ -171,7 +172,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	tags         = [];
 	_tag_delay   = 0;
 	path_current = "";
-	edit_time    = 0;
 	
 	first_update = false;
 	
@@ -217,12 +217,11 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	} #endregion
 	
-	function updatePaths(path) { #region
-		path_current = path;
-		edit_time    = file_get_modify_s(path_current);
-		
-		path = try_get_path(path);
+	function updatePaths(path = path_current) { #region
 		if(path == -1) return false;
+		
+		path_current = path;
+		edit_time    = max(edit_time, file_get_modify_s(path_current));
 		
 		var ext = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
@@ -301,27 +300,21 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
-		var path = getInputData(0);
-		if(path == "") return;
-		updatePaths(path);
-		
+		updatePaths(path_get(getInputData(0)));
 		triggerRender();
 	} #endregion
 	
-	static step = function() {	
+	static step = function() { #region
 		if(attributes.file_checker && path_current != "") {
-			var _ms = file_get_modify_s(path_current);
-			
-			if(_ms > edit_time) {
-				edit_time = _ms;
-				updatePaths(path_current);
-				update();
+			if(file_get_modify_s(path_current) > edit_time) {
+				updatePaths();
+				triggerRender();
 			}
 		}
-	}
+	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		var path        = getInputData(0);
+		var path        = path_get(getInputData(0));
 		var current_tag = getInputData(2);
 		
 		if(path_current != path) updatePaths(path);

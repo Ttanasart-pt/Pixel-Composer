@@ -328,9 +328,9 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	dir = 0;
 	dis = 0;
 		
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static getDimension = function(arr = 0) { #region

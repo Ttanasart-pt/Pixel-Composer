@@ -19,7 +19,7 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		draw_set_color(COLORS._main_accent);
 		
 		for( var i = 0, n = array_length(lines); i < n; i++ ) {

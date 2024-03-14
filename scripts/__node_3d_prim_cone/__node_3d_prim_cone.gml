@@ -44,9 +44,9 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 14] = nodeValue("Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
 	
-	inputs[| 15] = nodeValue("Textures base",	self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 15] = nodeValue("Textures base",	self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 16] = nodeValue("Textures side", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 16] = nodeValue("Textures side", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 17] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
@@ -124,7 +124,7 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	generate_vb();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	

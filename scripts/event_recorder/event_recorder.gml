@@ -59,6 +59,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				break;
 			case ACTION_TYPE.list_insert :
 				if(!ds_exists(obj, ds_type_list)) return;
+				
 				ds_list_delete(obj, data[1]);
 				break;
 			case ACTION_TYPE.list_modify :

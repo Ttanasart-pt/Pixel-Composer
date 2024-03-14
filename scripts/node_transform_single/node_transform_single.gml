@@ -1,7 +1,7 @@
 function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Transform single";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Position x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	inputs[| 2] = nodeValue("Position y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
@@ -47,7 +47,7 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	overlay_drag_ma  = 0;
 	overlay_drag_sa  = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < ds_list_size(inputs)) return;
 		
 		var _surf = outputs[| 0].getValue();

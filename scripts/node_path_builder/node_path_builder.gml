@@ -15,7 +15,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	cached_pos = ds_map_create();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		draw_set_color(COLORS._main_accent);
 		
 		for( var i = 0, n = array_length(lines); i < n; i++ ) {

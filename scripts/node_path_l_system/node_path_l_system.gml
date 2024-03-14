@@ -143,8 +143,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		refreshDynamicInput();
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_accent);
 		for( var i = 0, n = array_length(lines); i < n; i++ ) {

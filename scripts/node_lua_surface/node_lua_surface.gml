@@ -181,7 +181,5 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static onDestroy = function() { #region
 		lua_state_destroy(lua_state);
-		if(error_notification != noone)
-			noti_remove(error_notification);
 	} #endregion
 }

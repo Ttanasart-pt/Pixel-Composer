@@ -65,7 +65,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return getPointDistance(pix, _ind, out);
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		
 		draw_set_color(COLORS._main_accent);
 		var ox, oy, nx, ny, sx, sy;

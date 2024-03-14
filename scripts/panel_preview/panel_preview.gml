@@ -1177,13 +1177,13 @@ function Panel_Preview() : PanelContent() constructor {
 				_sny = PROJECT.previewGrid.size[1];
 			}
 			
-			_node.drawOverlay(overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
+			_node.drawOverlay(isHover, overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
 		}
 		
 		#region node overlay
 			overlay_hovering = false;
 		
-			if(_node.drawPreviewToolOverlay(pHOVER && pFOCUS, _mx, _my, { x, y, w, h, toolbar_height, 
+			if(_node.drawPreviewToolOverlay(pHOVER, pFOCUS, _mx, _my, { x, y, w, h, toolbar_height, 
 				x0: _node.tools == -1? 0 : ui(40),
 				x1: w,
 				y0: toolbar_height - ui(8), 

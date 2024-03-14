@@ -1,7 +1,7 @@
 function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Perspective Warp";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 1;
@@ -54,7 +54,7 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	drag_my = 0;
 	drag_s = [[0, 0], [0, 0]];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < ds_list_size(inputs)) return;
 		
 		var _surf = outputs[| 0].getValue();
@@ -96,10 +96,10 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		draw_line(br[0], br[1], tr[0], tr[1]);
 		draw_line(br[0], br[1], bl[0], bl[1]);
 		
-		if(inputs[| tool * 4 + 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| tool * 4 + 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| tool * 4 + 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| tool * 4 + 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| tool * 4 + 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| tool * 4 + 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| tool * 4 + 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| tool * 4 + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 		
 		var dx = 0;
 		var dy = 0;
@@ -186,10 +186,10 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			}
 		}
 		
-		inputs[| tool * 4 + 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| tool * 4 + 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| tool * 4 + 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| tool * 4 + 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| tool * 4 + 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| tool * 4 + 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| tool * 4 + 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| tool * 4 + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

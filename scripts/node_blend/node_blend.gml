@@ -8,12 +8,8 @@
 	function Node_create_Blend(_x, _y, _group = noone, _param = {}) {
 		var node  = new Node_Blend(_x, _y, _group);
 		var query = struct_try_get(_param, "query", "");
-		var ind   = -1;
 		
-		switch(query) {
-			default : ind = array_find(global.node_blend_keys, query);
-		}
-		
+		var ind   = array_find(global.node_blend_keys, query);
 		if(ind >= 0) node.inputs[| 2].setValue(ind);
 		
 		return node;
@@ -34,7 +30,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 3] = nodeValue("Opacity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 5] = nodeValue("Fill mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "None", "Stretch", "Tile" ]);
@@ -84,7 +80,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	drag_mx  = 0;
 	drag_my  = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _surf = outputs[| 0].getValue();
 		if(is_array(_surf)) _surf = array_safe_get(_surf, preview_index);
 		if(is_struct(_surf)) return;

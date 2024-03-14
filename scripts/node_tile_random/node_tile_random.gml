@@ -2,7 +2,7 @@ function Node_Tile_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Tile Random";
 	dimension_index = -1;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);

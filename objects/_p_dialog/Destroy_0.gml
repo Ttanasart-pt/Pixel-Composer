@@ -7,4 +7,5 @@ ds_list_remove(DIALOGS, self);
 
 if(parent) array_remove(parent.children, id);
 
-MOUSE_BLOCK = true;
+if(!passthrough)
+	MOUSE_BLOCK = true;

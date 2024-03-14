@@ -122,30 +122,17 @@ event_inherited();
 		return false;
 	} #endregion
 	
-	#region ---- set page ----
-		function setPage(pageIndex) {
-			ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);
-			node_list		= pageIndex < 0? noone : category[| ADD_NODE_PAGE].list;
-		}
-		
-		ADD_NODE_PAGE = 0;
-		setPage(NODE_PAGE_DEFAULT);
-	#endregion
-	
 	function buildNode(_node, _param = {}) { #region
-		if(!_node) {
-			instance_destroy();
-			instance_destroy(o_dialog_menubox);
-			return;
-		}
+		instance_destroy();
+		instance_destroy(o_dialog_menubox);
+		
+		if(!_node) return;
 		
 		if(is_instanceof(_node, AddNodeItem)) {
 			_node.onClick({
 				node_called,
 				junction_hovering
 			});
-			instance_destroy(o_dialog_menubox);
-			instance_destroy();
 			return;
 		}
 		
@@ -154,11 +141,7 @@ event_inherited();
 		
 		if(is_instanceof(_node, NodeObject)) {
 			_new_node = _node.build(node_target_x, node_target_y,, _param);
-			if(!_new_node) {
-				instance_destroy();
-				instance_destroy(o_dialog_menubox);
-				return;
-			}
+			if(!_new_node) return;
 			
 			if(category == NODE_CATEGORY && _node.show_in_recent) {
 				array_remove(global.RECENT_NODES, _node.node);
@@ -258,9 +241,6 @@ event_inherited();
 				}
 			}
 		}
-		
-		instance_destroy();
-		instance_destroy(o_dialog_menubox);
 	} #endregion
 	
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) { #region
@@ -273,13 +253,12 @@ event_inherited();
 		
 		for(var i = start; i < ds_list_size(category); i++) {
 			var name  = "";
-			var color = noone;
 			
 			     if(i == -2) name = "All";
 			else if(i == -1) name = "New";
 			else {
 				var cat = category[| i];
-				name = cat.name;
+				name    = cat.name;
 				
 				if(array_length(cat.filter)) {
 					if(!array_exists(cat.filter, instanceof(context))) {
@@ -287,7 +266,6 @@ event_inherited();
 							setPage(NODE_PAGE_DEFAULT);
 						continue;
 					}
-					color = context.color;
 					draw_set_color(COLORS._main_text_accent);
 				}
 			}
@@ -662,6 +640,22 @@ event_inherited();
 	}); #endregion
 	
 	content_pane.always_scroll = true;
+	
+	#region ---- set page ----
+		function setPage(pageIndex) {
+			ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);
+			node_list		= pageIndex < 0? noone : category[| ADD_NODE_PAGE].list;
+		}
+		
+		if(PREFERENCES.add_node_remember) {
+			content_pane.scroll_y_raw = ADD_NODE_SCROLL;
+			content_pane.scroll_y_to  = ADD_NODE_SCROLL;
+		} else 
+			ADD_NODE_PAGE = 0;
+			
+		setPage(ADD_NODE_PAGE);
+	#endregion
+	
 #endregion
 
 #region resize

@@ -26,25 +26,25 @@ function sprite_pack_best_fit(rectangles) {
 
         var bestSpace = noone;
         var bestArea = new Rectangle(0, 0, 0, 0);
-        for (var xx = area.x; xx <= area.x + area.w; xx += grW) {
-            for (var yy = area.y; yy <= area.y + area.h; yy += grH) {
-                var space = new Rectangle(xx, yy, rect.w, rect.h);
-                if (space.x + space.w > area.x + area.w || space.y + space.h > area.y + area.h)
-                    continue;
+		
+        for (var xx = area.x; xx <= area.x + area.w; xx += grW)
+        for (var yy = area.y; yy <= area.y + area.h; yy += grH) {
+            var space = new Rectangle(xx, yy, rect.w, rect.h);
+            if (space.x + space.w > area.x + area.w || space.y + space.h > area.y + area.h)
+                continue;
 				
-                var overlaps = false;
-                for (var j = 0; j < i; j++) {
-                    var otherRect = rectangles[j];
-                    if (rectangleOverlap(space, otherRect)) {
-                        overlaps = true;
-                        break;
-                    }
+            var overlaps = false;
+            for (var j = 0; j < i; j++) {
+                var otherRect = rectangles[j];
+                if (rectangleOverlap(space, otherRect)) {
+                    overlaps = true;
+                    break;
                 }
+            }
 				
-                if (!overlaps && (bestSpace == noone || space.w * space.h < bestSpace.w * bestSpace.h)) {
-                    bestSpace = space;
-                    bestArea = new Rectangle(area.x, area.y, area.w, area.h);
-                }
+            if (!overlaps && (bestSpace == noone || space.w * space.h < bestSpace.w * bestSpace.h)) {
+                bestSpace = space;
+                bestArea = new Rectangle(area.x, area.y, area.w, area.h);
             }
         }
 

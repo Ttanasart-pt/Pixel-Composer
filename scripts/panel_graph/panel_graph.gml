@@ -1079,12 +1079,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								}, THEME.cross));
 							}
 						}
-							
-						var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
-						callAddDialog(ctx);
 						
-						menuCall("graph_node_selected_menu", o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
-						setFocus(o_dialog_add_node.id, "Dialog");
+						var ctx     = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+						var _diaAdd = callAddDialog(ctx);
+						
+						var _dia = menuCall("graph_node_selected_menu", o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
+						_dia.passthrough = true;
+						setFocus(_diaAdd, "Dialog");
 					}
 				} #endregion
 					
@@ -1377,7 +1378,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(mouse_release(mb_left)) {																				// CONNECT junction
 				var _connect = [ 0, noone, noone ];
 				
-				if(target != noone) {
+				if(PANEL_INSPECTOR && PANEL_INSPECTOR.attribute_hovering != noone) {
+					PANEL_INSPECTOR.attribute_hovering(value_dragging);
+				} else if(target != noone) {
 					var _addInput = false;
 					if(target.isLeaf() && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input)
 						_addInput = true;
@@ -1412,7 +1415,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					}
 				}
 				
-				value_dragging = noone;
+				value_dragging        = noone;
 				connection_draw_mouse = noone;
 				
 				if(_connect[0] == -9) {
@@ -1509,8 +1512,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	function callAddDialog(ctx = getCurrentContext()) { #region
+		var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
 		
-		with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {	
+		with(_dia) {	
 			node_target_x     = other.mouse_grid_x;
 			node_target_y     = other.mouse_grid_y;
 			junction_hovering = other.junction_hovering;
@@ -1518,6 +1522,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			resetPosition();
 			alarm[0] = 1;
 		}
+		
+		return _dia;
 	} #endregion
 	
 	function drawContext() { #region

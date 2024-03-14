@@ -78,7 +78,12 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	attribute_surface_depth();
 	
-	path_loaded = [];
+	path_current = [];
+	edit_time    = 0;
+	
+	attributes.file_checker = true;
+	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
+		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	on_drop_file = function(path) { #region
 		if(directory_exists(path)) {
@@ -100,7 +105,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return false;
 	} #endregion
 	
-	function updatePaths(paths) { #region
+	function updatePaths(paths = path_current) { #region
 		if(!is_array(paths) && ds_exists(paths, ds_type_list))
 			paths = ds_list_to_array(paths);
 		
@@ -108,17 +113,18 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(spr[i] && sprite_exists(spr[i]))
 				sprite_delete(spr[i]);
 		}
-		spr = [];
 		
-		path_loaded = array_create(array_length(paths));
+		spr = [];
+		path_current = [];
 		
 		for( var i = 0, n = array_length(paths); i < n; i++ )  {
-			path_loaded[i] = paths[i];
-			var path = try_get_path(paths[i]);
-			if(path == -1) continue;
-			setDisplayName(filename_name_only(path));
+			var _path = path_get(paths[i]);
+			if(_path == -1) continue;
 			
-			var ext = string_lower(filename_ext(path));
+			array_push(path_current, _path);
+			setDisplayName(filename_name_only(_path));
+			
+			var ext = string_lower(filename_ext(_path));
 			
 			switch(ext) {
 				case ".png"	 :
@@ -131,6 +137,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						return false;
 					}
 					
+					edit_time = max(edit_time, file_get_modify_s(_path));
 					array_push(spr, _spr);
 					break;
 			}
@@ -143,10 +150,8 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
-		var path = getInputData(0);
-		if(path == "") return;
-		updatePaths(path);
-		update();
+		updatePaths(path_get(getInputData(0)));
+		triggerRender();
 	} #endregion
 	
 	static step = function() { #region
@@ -156,13 +161,22 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		inputs[| 2].setVisible(!_cus);
 		inputs[| 3].setVisible(!_cus && !str);
 		inputs[| 4].setVisible(!_cus && !str);
+		
+		if(attributes.file_checker)
+		for( var i = 0, n = array_length(path_current); i < n; i++ ) {
+			if(file_get_modify_s(path_current[i]) > edit_time) {
+				updatePaths();
+				triggerRender();
+				break;
+			}
+		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		var path = getInputData(0);
-		if(path == "") return;
-		if(is_array(path) && !array_equals(path, path_loaded)) 
+		var path = path_get(getInputData(0));
+		if(!array_equals(path_current, path)) 
 			updatePaths(path);
+			
 		if(array_length(spr) == 0) return;
 		
 		var _pad = getInputData(1);

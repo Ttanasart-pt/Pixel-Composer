@@ -1,7 +1,7 @@
 function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Level";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("White in", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
 		.setDisplay(VALUE_DISPLAY.slider_range);
@@ -18,7 +18,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 5] = nodeValue("Alpha in", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 	
-	inputs[| 6] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 6] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 7] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

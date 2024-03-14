@@ -64,7 +64,7 @@ function NodeTopoSort() { #region
 	}
 	
 	ds_list_clear(PROJECT.nodeTopo);
-	topoSort(PROJECT.nodeTopo, PROJECT.nodes);
+	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
 	
 	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {ds_list_size(PROJECT.nodeTopo)} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 } #endregion
@@ -86,7 +86,7 @@ function __sortNode(_list, _node) { #region
 		
 	if(array_empty(_childs)) {
 		if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
-			topoSort(_list, _node.nodes);
+			__topoSort(_list, _node.nodes);
 		
 	} else {
 		for( var i = 0, n = array_length(_childs); i < n; i++ ) 
@@ -101,11 +101,9 @@ function __sortNode(_list, _node) { #region
 	}
 } #endregion
 
-function topoSort(_list, _nodeList) { #region
+function __topoSort(_list, _nodeList) { #region
 	var _root     = [];
 	var _leftOver = [];
-	
-	//print($"Sorting...");
 	
 	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ ) {
 		var _node   = _nodeList[| i];
@@ -132,8 +130,6 @@ function topoSort(_list, _nodeList) { #region
 		if(_isRoot) array_push(_root, _node);
 	}
 	
-	//print($"    > Roots: {_root}");
-	
 	for( var i = 0, n = array_length(_root); i < n; i++ ) 
 		__sortNode(_list, _root[i]);
 	
@@ -148,7 +144,7 @@ function NodeListSort(_list, _nodeList) { #region
 		_nodeList[| i].topoSorted = false;
 	
 	ds_list_clear(_list);
-	topoSort(_list, _nodeList);
+	__topoSort(_list, _nodeList);
 } #endregion
 
 function __nodeIsRenderLeaf(_node) { #region

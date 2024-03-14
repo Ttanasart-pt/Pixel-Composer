@@ -1,7 +1,7 @@
 function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Outline";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Width",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setMappable(15);
@@ -25,7 +25,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 8] = nodeValue("Start",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Shift outline inside, outside the shape.")
 		.setMappable(17);
 	
-	inputs[| 9] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 9] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 10] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

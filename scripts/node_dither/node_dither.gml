@@ -16,7 +16,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	name = "Dither";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
 		.setDisplay(VALUE_DISPLAY.palette);
@@ -24,18 +24,18 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 2] = nodeValue("Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "Custom" ]);
 	
-	inputs[| 3] = nodeValue("Dither map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+	inputs[| 3] = nodeValue("Dither map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.setVisible(false);
 	
 	inputs[| 4] = nodeValue("Contrast", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 5, 0.1] });
 	
-	inputs[| 5] = nodeValue("Contrast map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 5] = nodeValue("Contrast map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 6] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Color", "Alpha" ]);
 	
-	inputs[| 7] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 7] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 8] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -105,11 +105,11 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					}
 					break;
 			}
-				
+			
 			if(_mode == 0) {
 				shader_set_f("contrast",     _con);
-				shader_set_i("useConMap",    _conMap != DEF_SURFACE);
-				shader_set_surface("conMap", surface_get_texture(_conMap));
+				shader_set_i("useConMap",    is_surface(_conMap));
+				shader_set_surface("conMap", _conMap);
 				
 				shader_set_f("palette",		 paletteToArray(_pal));
 				shader_set_i("keys",		 array_length(_pal));

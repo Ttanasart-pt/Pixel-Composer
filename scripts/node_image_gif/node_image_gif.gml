@@ -72,7 +72,12 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	spr_builder	 = noone; 
 	surfaces	 = [];
 	
-	on_drop_file = function(path) {
+	edit_time = 0;
+	attributes.file_checker = true;
+	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
+		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
+	
+	on_drop_file = function(path) { #region
 		inputs[| 0].setValue(path);
 		
 		if(updatePaths(path)) {
@@ -81,20 +86,16 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		return false;
-	}
+	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
-		var path = getInputData(0);
-		if(path == "") return;
-		updatePaths(path);
-		update();
+		updatePaths(path_get(getInputData(0)));
 	} #endregion
 	
-	function updatePaths(path) { #region
-		path = try_get_path(path);
+	function updatePaths(path = path_current) { #region
 		if(path == -1) return false;
 		
 		var ext   = string_lower(filename_ext(path));
@@ -115,8 +116,9 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 		if(path_current == "") 
 			first_update = true;
-		path_current	= path;
-				
+		path_current = path;
+		edit_time    = max(edit_time, file_get_modify_s(path_current));	
+		
 		return true;
 	} #endregion
 	
@@ -133,19 +135,27 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(loading == 2 && spr_builder != noone && spr_builder.building()) {
 			surfaces = [];
 			spr = spr_builder._spr;
-			print($"{spr}: {sprite_get_width(spr)}, {sprite_get_height(spr)}");
+			//print($"{spr}: {sprite_get_width(spr)}, {sprite_get_height(spr)}");
 			
 			triggerRender();
 			loading = 0;
 			
 			gc_collect();
 		}
+		
+		if(attributes.file_checker && path_current != "") {
+			if(file_get_modify_s(path_current) > edit_time) {
+				updatePaths();
+				triggerRender();
+			}
+			
+		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		var path = getInputData(0);
-		if(path == "") return;
+		var path = path_get(getInputData(0));
 		if(path_current != path) updatePaths(path);
+		
 		if(!spr || !sprite_exists(spr)) return;
 		
 		var ww = sprite_get_width(spr);

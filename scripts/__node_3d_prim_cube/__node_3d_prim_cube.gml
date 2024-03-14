@@ -19,12 +19,12 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 5] = nodeValue("Textures per face", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[|  6] = nodeValue("Textures 0", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0).setVisible(false);
-	inputs[|  7] = nodeValue("Textures 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0).setVisible(false);
-	inputs[|  8] = nodeValue("Textures 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0).setVisible(false);
-	inputs[|  9] = nodeValue("Textures 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0).setVisible(false);
-	inputs[| 10] = nodeValue("Textures 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0).setVisible(false);
-	inputs[| 11] = nodeValue("Textures 5", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0).setVisible(false);
+	inputs[|  6] = nodeValue("Textures 0", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
+	inputs[|  7] = nodeValue("Textures 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
+	inputs[|  8] = nodeValue("Textures 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
+	inputs[|  9] = nodeValue("Textures 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
+	inputs[| 10] = nodeValue("Textures 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
+	inputs[| 11] = nodeValue("Textures 5", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
 	
 	inputs[| 12] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -82,7 +82,7 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	_3d_node_init(1, /*Transform*/ 2, 4, 19, 18, 12);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny, _panel) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _panel) {
 		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	

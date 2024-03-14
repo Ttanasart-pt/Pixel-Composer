@@ -96,6 +96,8 @@
 	
 	PREFERENCES.caret_blink						= 0.75;
 	
+	PREFERENCES.add_node_remember				= true;
+	
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
 #endregion
 

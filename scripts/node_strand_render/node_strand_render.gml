@@ -40,7 +40,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _str = getInputData(1);
 		if(_str == noone) return;
 		if(!is_array(_str)) _str = [ _str ];

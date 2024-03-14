@@ -1,7 +1,7 @@
 function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Plane";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -117,8 +117,8 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		vertexObjects[0] = pln;
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) 
 			active = false;
 		var _out = outputs[| 0].getValue();
 		if(!is_surface(_out) || !surface_exists(_out)) return;

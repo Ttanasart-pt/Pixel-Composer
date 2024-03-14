@@ -17,7 +17,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	inputs[| 3] = nodeValue("Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
 	
-	inputs[| 4] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 4] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(10000, 99999));
 	
@@ -34,7 +34,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _str = getInputData(1);
 		if(instanceof(_str) != "StrandMesh") return;
 		

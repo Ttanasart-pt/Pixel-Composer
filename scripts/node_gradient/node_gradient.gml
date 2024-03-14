@@ -68,9 +68,9 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var a = inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
-		var a = inputs[| 16].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var a = inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
+		var a = inputs[| 16].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
 	} #endregion
 	
 	static step = function() { #region

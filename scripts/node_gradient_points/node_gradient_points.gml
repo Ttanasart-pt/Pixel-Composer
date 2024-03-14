@@ -54,11 +54,11 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		if(inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 	} #endregion
 	
 	static step = function() { #region

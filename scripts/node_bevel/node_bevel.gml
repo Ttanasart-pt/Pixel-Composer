@@ -1,7 +1,7 @@
 function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bevel";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
 		.setMappable(11);
@@ -17,7 +17,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 												 new scrollItem("Smooth",   s_node_curve, 4), 
 												 new scrollItem("Circular", s_node_curve, 5), ]);
 	
-	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 6] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -47,7 +47,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _surf = current_data[0];
@@ -56,7 +56,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _pw = surface_get_width_safe(_surf) * _s / 2;
 		var _ph = surface_get_height_safe(_surf) * _s / 2;
 		
-		inputs[| 2].drawOverlay(active, _x + _pw, _y + _ph, _s, _mx, _my, _snx, _sny);
+		inputs[| 2].drawOverlay(hover, active, _x + _pw, _y + _ph, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static step = function() { #region

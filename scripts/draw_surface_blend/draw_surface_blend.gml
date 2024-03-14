@@ -49,11 +49,11 @@ function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_a
 	shader_reset();
 }
 
-function draw_surface_blend_ext(bg, fg, _x, _y, _sx = 1, _sy = 1, _rot = 0, _col = c_white, _alpha = 1, _blend = 0) {
+function draw_surface_blend_ext(bg, fg, _x, _y, _sx = 1, _sy = 1, _rot = 0, _col = c_white, _alpha = 1, _blend = 0, _pre_alp = false) {
 	surface_set_shader(blend_temp_surface);
 		shader_set_interpolation(fg);
 		draw_surface_ext_safe(fg, _x, _y, _sx, _sy, _rot, _col, 1);
 	surface_reset_shader();
 	
-	draw_surface_blend(bg, blend_temp_surface, _blend, _alpha, false);
+	draw_surface_blend(bg, blend_temp_surface, _blend, _alpha, _pre_alp);
 }

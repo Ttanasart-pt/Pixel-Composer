@@ -13,8 +13,8 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	cached_pos = ds_map_create();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static getLineCount = function() { 

@@ -13,9 +13,9 @@
 		version   = SAVE_VERSION; /// @is {number}						
 		seed      = irandom_range(100000, 999999); /// @is {number}		
 		
-		modified = false; /// @is {bool}
-		readonly = false; /// @is {bool} 
-		safeMode = false;
+		modified  = false; /// @is {bool}
+		readonly  = false; /// @is {bool} 
+		safeMode  = false;
 		
 		nodes	    = ds_list_create();
 		nodeArray   = [];
@@ -63,15 +63,48 @@
 				palette_fix       : false,
 			}
 			
-			var _bpal = new buttonPalette(function(pal) { setPalette(pal); RENDER_ALL return true; });
-			
-			//_bpal.side_button = button(function() { attributes.palette_fix = !attributes.palette_fix; RENDER_ALL return true; })
-			//	.setIcon( THEME.project_fix_palette, [ function() { return attributes.palette_fix; } ], COLORS._main_icon )
-			//	.setTooltip("Fix palette");
-			
 			attributeEditor = [
-				[ "Default Surface",	"surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; RENDER_ALL return true; }) ],
-				[ "Palette",			"palette",			 _bpal ],
+				[ "Default Surface",	"surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; RENDER_ALL return true; }), 
+					function(junc) {
+						if(!is_struct(junc)) return;
+						if(!is_instanceof(junc, NodeValue)) return;
+						
+						var attr = attributes.surface_dimension;
+						var _val = junc.getValue();
+						var _res = [ attr[0], attr[1] ];
+						
+						switch(junc.type) {
+							case VALUE_TYPE.float : 
+							case VALUE_TYPE.integer : 
+								if(is_real(_val)) 
+									_res = [ _val, _val ];
+								else if(is_array(_val) && array_length(_val) >= 2) {
+									_res[0] = is_real(_val[0])? _val[0] : 1;
+									_res[1] = is_real(_val[1])? _val[1] : 1;
+								}
+								break;
+								
+							case VALUE_TYPE.surface : 
+								if(is_array(_val)) _val = array_safe_get(_val, 0);
+								if(is_surface(_val)) 
+									_res = surface_get_dimension(_val);
+								break;
+						}
+						
+						attr[0]  = _res[0];
+						attr[1]  = _res[1];
+					} ],
+					
+				[ "Palette",			"palette",			 new buttonPalette(function(pal) { setPalette(pal); RENDER_ALL return true; }), 
+					function(junc) {
+						if(!is_struct(junc)) return;
+						if(!is_instanceof(junc, NodeValue)) return;
+						if(junc.type != VALUE_TYPE.color) return;
+						if(junc.display_type != VALUE_DISPLAY.palette) return;
+						
+						setPalette(junc.getValue());
+					} 
+				],
 			];
 			
 			static setPalette = function(pal = noone) { 

@@ -16,9 +16,9 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _a = inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
-		var _a = inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var _a = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
+		var _a = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

@@ -1017,14 +1017,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
 		if(!active) return;
 		var hover = noone;
-		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
-		var jun;
+		var amo   = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		gpu_set_texfilter(true);
 		
 		for(var i = 0; i < amo; i++) {
 			var ind = getInputJunctionIndex(i);
 			if(ind == noone) continue;
-			jun = ds_list_get(inputs, ind, noone);
+			
+			var jun = ds_list_get(inputs, ind, noone);
 			if(jun == noone || is_undefined(jun)) continue;
 			
 			if(jun.drawJunction(_s, _mx, _my))
@@ -1032,17 +1032,21 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
-			jun = outputs[| i];
+			var jun = outputs[| i];
 			
 			if(jun.drawJunction(_s, _mx, _my))
 				hover = jun;
 		}
 		
-		if(hasInspector1Update() && inspectInput1.drawJunction(_s, _mx, _my))
-			hover = inspectInput1;
+		if(hasInspector1Update()) {
+			if(inspectInput1.drawJunction(_s, _mx, _my))
+				hover = inspectInput1;
+		}
 			
-		if(hasInspector2Update() && inspectInput2.drawJunction(_s, _mx, _my))
-			hover = inspectInput2;
+		if(hasInspector2Update()) {
+			if(inspectInput2.drawJunction(_s, _mx, _my))
+				hover = inspectInput2;
+		}
 		
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.drawJunction(_s, _mx, _my))  hover = updatedInTrigger;
@@ -1408,9 +1412,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(display_parameter.highlight) drawBranch();
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
-	static drawPreviewToolOverlay = function(active, _mx, _my, _panel) { return false; }
+	static drawPreviewToolOverlay = function(hover, active, _mx, _my, _panel) { return false; }
 	
 	static drawAnimationTimeline = function(_w, _h, _s) {}
 	

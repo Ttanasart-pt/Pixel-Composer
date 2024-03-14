@@ -1,9 +1,9 @@
 function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Cast Shadow";
 	
-	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 1] = nodeValue("Solid", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 1] = nodeValue("Solid", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 2] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -78,8 +78,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		if(array_length(current_data) != ds_list_size(inputs)) return;
 		
 		var _type = current_data[5];
@@ -88,7 +88,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var px = _x + pos[0] * _s;
 			var py = _y + pos[1] * _s;
 			
-			inputs[| 8].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 1 / 4, THEME.anchor_scale_hori);
+			inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1 / 4, THEME.anchor_scale_hori);
 		}
 	}
 	

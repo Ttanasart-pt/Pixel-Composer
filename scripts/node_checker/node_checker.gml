@@ -38,13 +38,13 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = getInputData(3);
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+		inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static step = function() { #region

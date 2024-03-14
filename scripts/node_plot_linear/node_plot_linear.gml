@@ -59,15 +59,15 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 14] = nodeValue("Trim mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Range", "Window" ]);
 	
-	inputs[| 15] = nodeValue("Window Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8)
+	inputs[| 15] = nodeValue("Window Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
 	
-	inputs[| 16] = nodeValue("Window Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 16] = nodeValue("Window Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 17] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 17] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 18] = nodeValue("Bar Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4)
+	inputs[| 18] = nodeValue("Bar Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
 	
-	inputs[| 19] = nodeValue("Rounded Bar", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 19] = nodeValue("Rounded Bar", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 20] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);
@@ -135,16 +135,16 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[| 24].mappableStep();
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _use_path = getSingleValue(20) != noone;
 		
 		if(!_use_path) {
-			var a = inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var a = inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			active &= !a;
 		}
 		
-		var a = inputs[| 28].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
-		var a = inputs[| 30].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
+		var a = inputs[| 28].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
+		var a = inputs[| 30].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

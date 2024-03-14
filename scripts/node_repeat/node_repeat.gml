@@ -119,8 +119,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var a = inputs[| 9].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor); active &= !a;
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var a = inputs[| 9].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor); active &= !a;
 		
 		var _pat  = getInputData(3);
 		var _spos = getInputData(9);
@@ -129,16 +129,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var py = _y + _spos[1] * _s;
 		
 		if(_pat == 0 || _pat == 1) {
-			var a = inputs[| 4].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+			var a = inputs[| 4].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 			active &= !a;
 			
 		} else if(_pat == 2) {
-			var a = inputs[| 8].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+			var a = inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 			active &= !a;
 			
 		}
 		
-		var a = inputs[| 31].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getInputData(1)); active &= !a;
+		var a = inputs[| 31].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getInputData(1)); active &= !a;
 	} #endregion
 	
 	static step = function() { #region

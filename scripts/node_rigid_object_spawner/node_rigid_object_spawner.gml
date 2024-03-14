@@ -49,7 +49,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 			attributes.show_objects = !attributes.show_objects;
 		})]);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(attributes.show_objects) 
 		for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
 			var _node = group.nodes[| i];
@@ -58,7 +58,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 			active &= !_hov;
 		}
 		
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static reset = function() {

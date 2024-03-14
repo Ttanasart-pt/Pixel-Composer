@@ -31,8 +31,8 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var a = inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getDimension()); active &= !a;
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var a = inputs[| 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getDimension()); active &= !a;
 	}
 	
 	static step = function() {

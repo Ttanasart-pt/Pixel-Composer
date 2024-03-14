@@ -66,7 +66,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		return inputs[| index];
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var sample = PREFERENCES.path_resolution;
 		var ansize = ds_list_size(inputs) - input_fix_len;
 		var loop   = getInputData(0);
@@ -101,7 +101,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				var _act = active && !isUsingTool(0);
 				
 				for(var i = input_fix_len; i < ds_list_size(inputs); i++) {
-					var a = inputs[| i].drawOverlay(_act, _x, _y, _s, _mx, _my, _snx, _sny);
+					var a = inputs[| i].drawOverlay(hover, _act, _x, _y, _s, _mx, _my, _snx, _sny);
 					_act &= !a;
 					if(a) _anchor_hover = i;
 				}

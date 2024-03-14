@@ -1384,6 +1384,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	} #endregion
 	
+	static setUseExpression = function(useExp) { #region
+		INLINE
+		if(expUse == useExp) return;
+		expUse = useExp;
+		node.triggerRender();
+	} #endregion
+	
 	static setExpression = function(_expression) { #region
 		expUse = true;
 		expression = _expression;
@@ -1413,7 +1420,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							break;
 						}
 						
-						if(try_get_path(path) == -1) {
+						if(path_get(path) == -1) {
 							value_validation = VALIDATION.error;	
 							str = $"File not exist: {path}";
 						}
@@ -1422,7 +1429,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var paths = animator.getValue();
 						if(is_array(paths)) {
 							for( var i = 0, n = array_length(paths); i < n; i++ ) {
-								if(try_get_path(paths[i]) != -1) continue;
+								if(path_get(paths[i]) != -1) continue;
 								value_validation = VALIDATION.error;	
 								str = "File not exist: " + string(paths[i]);
 							} 
@@ -2216,36 +2223,38 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			_v[| i].value = unit.convertUnit(_v[| i].value, mode);
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(type != VALUE_TYPE.integer && type != VALUE_TYPE.float) return -1;
 		if(value_from != noone) return -1;
 		if(expUse) return -1;
 		
+		var arc = 9;
+		
 		switch(display_type) {
 			case VALUE_DISPLAY._default :
-				var _angle = argument_count >  8? argument[ 8] : 0;
-				var _scale = argument_count >  9? argument[ 9] : 1;
-				var _spr   = argument_count > 10? argument[10] : THEME.anchor_selector;
+				var _angle = argument_count > arc + 0? argument[arc + 0] : 0;
+				var _scale = argument_count > arc + 1? argument[arc + 1] : 1;
+				var _spr   = argument_count > arc + 2? argument[arc + 2] : THEME.anchor_selector;
 				return preview_overlay_scalar(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
 						
 			case VALUE_DISPLAY.rotation :
-				var _rad = argument_count >  8? argument[ 8] : 64;
+				var _rad = argument_count >  arc + 0? argument[ arc + 0] : 64;
 				return preview_overlay_rotation(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
 						
 			case VALUE_DISPLAY.vector :
-				var _spr = argument_count > 8? argument[8] : THEME.anchor_selector;
-				var _sca = argument_count > 9? argument[9] : 1;
+				var _spr = argument_count > arc + 0? argument[arc + 0] : THEME.anchor_selector;
+				var _sca = argument_count > arc + 1? argument[arc + 1] : 1;
 				return preview_overlay_vector(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
 				
 			case VALUE_DISPLAY.gradient_range :
-				var _dim = argument[8];
+				var _dim = argument[arc];
 				
 				if(mappedJunc.attributes.mapped)
 					return preview_overlay_gradient_range(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _dim);
 				break;
 						
 			case VALUE_DISPLAY.area :
-				var _flag = argument_count > 8? argument[8] : 0b0011;
+				var _flag = argument_count > arc + 0? argument[arc + 0] : 0b0011;
 				return preview_overlay_area(isLeaf(), active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, struct_try_get(display_data, "onSurfaceSize"));
 						
 			case VALUE_DISPLAY.puppet_control :
@@ -2406,6 +2415,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(value_from) return true;
 		if(!visible)   return false;
+		
+		if(index == -1) return true;
 		
 		if(is_array(node.input_display_list))
 			return array_exists(node.input_display_list, index);
@@ -2653,8 +2664,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static cleanUp = function() { #region
-		animator.cleanUp();
-		delete animator;
+		
 	} #endregion
 		
 	static toString = function() { return (connect_type == JUNCTION_CONNECT.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"; }

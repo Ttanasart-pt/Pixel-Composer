@@ -98,7 +98,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _dim = getInputData(0);
-		var _siz = getInputData(1);
+		var _siz = getInputData(1); _siz = max(_siz, 1);
 		var _den = getInputData(2);
 		
 		var _flp = getInputData(3);

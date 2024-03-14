@@ -1,7 +1,7 @@
 function Node_BW(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "BW";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01] })
@@ -11,7 +11,7 @@ function Node_BW(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 4, 0.01] })
 		.setMappable(10);
 	
-	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 4] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

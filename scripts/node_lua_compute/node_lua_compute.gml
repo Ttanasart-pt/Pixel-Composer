@@ -17,7 +17,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	outputs[| 0] = nodeValue("Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
 	
-	outputs[| 1] = nodeValue("Return value", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, 0);
+	outputs[| 1] = nodeValue("Return value", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	argumentRenderer(global.lua_arguments);
 	
@@ -181,7 +181,5 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static onDestroy = function() { #region
 		lua_state_destroy(lua_state);
-		if(error_notification != noone)
-			noti_remove(error_notification);
 	} #endregion
 }

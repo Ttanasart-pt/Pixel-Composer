@@ -7,7 +7,7 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	uniform_tre = shader_get_uniform(shader, "threshold");
 	uniform_dir = shader_get_uniform(shader, "direction");
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
 	
@@ -17,7 +17,7 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 3] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation, { step: 90 });
 	
-	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 5] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

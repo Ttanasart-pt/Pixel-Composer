@@ -708,7 +708,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_alpha(1);
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(instance_exists(o_dialog_color_picker)) return;
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);

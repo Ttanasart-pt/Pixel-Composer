@@ -19,13 +19,13 @@ function Node_Transform_Array(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	outputs[| 0] = nodeValue("Transform", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = getInputData(0);
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
-		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 1].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+		inputs[| 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 1].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  

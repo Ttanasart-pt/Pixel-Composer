@@ -15,9 +15,9 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	outputs[| 1] = nodeValue("Direction", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _path = getInputData(0);
-		if(_path) _path.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(_path) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var _pnt = outputs[| 0].getValue();
 		if(process_amount == 1) _pnt = [ _pnt ];

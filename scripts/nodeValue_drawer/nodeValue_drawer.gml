@@ -234,7 +234,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			bx -= ui(28);
 			var ic_b = jun.expUse? c_white : COLORS._main_icon;
 			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_use_expression", "Use expression"), THEME.node_use_expression, jun.expUse, ic_b) == 2) {
-				jun.expUse = !jun.expUse;
+				jun.setUseExpression(!jun.expUse);
+				
 				if(!jun.expUse) WIDGET_CURRENT = noone;
 			}
 				

@@ -387,7 +387,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		inputs[| index + 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+		inputs[| index + 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 		inputs[| index + 0].surface_index = index;
 		inputs[| index + 0].hover_effect  = 0;
 		inputs[| index + 0].display_data.bone_id = "";
@@ -490,7 +490,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		ds_stack_destroy(_bst);
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var dim   = getInputData(0);
 		var _bind = getInputData(2);
 		
@@ -500,8 +500,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(bone == noone) return;
 		
 		bone.draw(attributes, false, _x + _dpos[0] * _s, _y + _dpos[1] * _s, _s * _dsca, _mx, _my, anchor_selecting);
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		//inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		//inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;

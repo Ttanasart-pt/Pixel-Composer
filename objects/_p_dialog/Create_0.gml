@@ -39,6 +39,8 @@
 	dialog_drag_mx  = 0;
 	dialog_drag_my  = 0;
 	
+	passthrough = false;
+	
 	function doDrag() {
 		if(!active) return;
 		
@@ -128,14 +130,22 @@
 #endregion
 
 #region focus
+	function point_in(mx, my) {
+		INLINE
+		
+		var _r = dialog_resizable * 6;
+		var x0 = dialog_x            - _r;
+		var x1 = dialog_x + dialog_w + _r;
+		var y0 = dialog_y            - _r;
+		var y1 = dialog_y + dialog_h + _r;
+		
+		return point_in_rectangle(mx, my, x0, y0, x1, y1);
+	}
+	
 	function checkFocus() {
 		if(!active) return;
-		var x0 = dialog_x - dialog_resizable * 6;
-		var x1 = dialog_x + dialog_w + dialog_resizable * 6;
-		var y0 = dialog_y - dialog_resizable * 6;
-		var y1 = dialog_y + dialog_h + dialog_resizable * 6;
-	
-		if(point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1)) {	
+		
+		if(point_in(mouse_mx, mouse_my)) {
 			if(depth < DIALOG_DEPTH_HOVER) {
 				DIALOG_DEPTH_HOVER = depth;
 				HOVER = self.id;
@@ -169,42 +179,35 @@
 		dialog_x = round(clamp(dialog_x, 2, WIN_SW - dialog_w - 2));
 		dialog_y = round(clamp(dialog_y, 2, WIN_SH - dialog_h - 2));
 	}
-
+	
+	function isTop() {
+		with(_p_dialog) if(depth < other.depth) return false;
+		return true;
+	}
+	
 	function checkMouse() {
-		if(!active) return;
-		if(!DIALOG_CLICK) {
-			//printIf(mouse_press(mb_any), $"Check {object_get_name(object_index)} : Click"); 
-			return;
-		}
+		if(!active)               return;
+		if(!destroy_on_click_out) return;
+		if(!DIALOG_CLICK)         return;
 		
-		with(_p_dialog) if(depth < other.depth) {
-			//printIf(mouse_press(mb_any), $"Check {object_get_name(object_index)} : Top"); 
-			return;
-		}
-		
-		for( var i = 0, n = array_length(children); i < n; i++ )
-			if(instance_exists(children[i])) { 
-				//printIf(mouse_press(mb_any), $"Check {object_get_name(object_index)} : Children"); 
-				return; 
+		if(mouse_press(mb_any)) {
+			if(!checkClosable())      return;
+			if(!isTop())              return;
+			
+			for( var i = 0, n = array_length(children); i < n; i++ )
+				if(instance_exists(children[i])) return; 
+			
+			if(!point_in(mouse_mx, mouse_my)) {
+				instance_destroy(self);
+				onDestroy();
+				DIALOG_CLICK = false;
 			}
-		
-		var x0 = dialog_x - dialog_resizable * 6;
-		var x1 = dialog_x + dialog_w + dialog_resizable * 6;
-		var y0 = dialog_y - dialog_resizable * 6;
-		var y1 = dialog_y + dialog_h + dialog_resizable * 6;
-		
-		if(destroy_on_click_out && mouse_press(mb_any) && !point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1) 
-			&& checkClosable()) {
-				
-			instance_destroy(self);
-			onDestroy();
-			DIALOG_CLICK = false;
 		}
 	}
 	
 	function checkClosable() { return true; }
 		
-	function onDestroy() {}
+	function onDestroy() { }
 #endregion
 
 #region children

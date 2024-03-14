@@ -26,10 +26,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	setIsDynamicInput(4);
-	
 	attributes.layer_visible    = [];
 	attributes.layer_selectable = [];
+	properties_expand = [];
 	
 	hold_visibility = true;
 	hold_select		= true;
@@ -39,18 +38,24 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
 		if(array_length(current_data) != ds_list_size(inputs)) return 0;
 		
-		var lh = 32;
-		var _h = 8 + max(1, amo) * (lh + 4) + 8;
+		var lh = 28;
+		var eh = 36;
+		
+		properties_expand = array_verify(properties_expand, amo);
+		var _h = 4;
+		for(var i = 0; i < amo; i++) 
+			_h += lh + 4 + properties_expand[i] * eh;
 		layer_renderer.h = _h;
+		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		
 		var _vis = attributes.layer_visible;
 		var _sel = attributes.layer_selectable;
-		var ly   = _y + 8;
-		var ssh  = lh - 6;
+		var ly   = _y + 4;
+		var ssh  = lh - 4;
 		var hoverIndex = noone;
-		draw_set_color(COLORS.node_composite_separator);
-		draw_line(_x + 16, ly, _x + _w - 16, ly);
+		
+		var _cy = ly;
 		
 		layer_remove = -1;
 		for(var i = 0; i < amo; i++) {
@@ -60,7 +65,41 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _pos  = current_data[index + 1];
 			
 			var _bx = _x + _w - 24;
-			var _cy = ly + i * (lh + 4);
+			var aa  = (ind != layer_dragging || layer_dragging == noone)? 1 : 0.5;
+			var vis = _vis[ind];
+			var sel = _sel[ind];
+			
+			var _exp = properties_expand[i];
+			var _lh  = lh + 4 + _exp * eh;
+			
+			if(_exp) { #region extended
+				var _px = _x + 4;
+				var _py = _cy + lh + 4;
+				var _pw = _w - 8;
+				var _ph = eh - 4;
+				
+				var _pww = (_pw - 8) / 2 - 8;
+				var _pwh = _ph - 8;
+				
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _px, _py, _pw, _ph, COLORS.node_composite_bg_blend, 1);
+				
+				var jun = inputs[| index + 4];
+				var bl_wid = jun.editWidget;
+				
+				var _param = new widgetParam(_px + 4, _py + 4, _pww, _pwh, jun.showValue(), jun.display_data, _m, layer_renderer.rx, layer_renderer.ry);
+				bl_wid.setFocusHover(_focus, _hover);
+				
+				bl_wid.font = f_p2;
+				bl_wid.drawParam(_param);
+				bl_wid.font = f_p0;
+				
+				var jun = inputs[| index + 5];
+				var bl_wid = jun.editWidget;
+				
+				var _param = new widgetParam(_px + 4 + _pww + 8, _py + 4, _pww, _pwh, jun.showValue(), jun.display_data, _m, layer_renderer.rx, layer_renderer.ry);
+				bl_wid.setFocusHover(_focus, _hover);
+				bl_wid.drawParam(_param);
+			} #endregion
 			
 			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
@@ -72,15 +111,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(!is_surface(_surf)) continue;
 			
-			var aa = (ind != layer_dragging || layer_dragging == noone)? 1 : 0.5;
-			var vis = _vis[ind];
-			var sel = _sel[ind];
-			var hover = point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh);
-			
-			draw_set_color(COLORS.node_composite_separator);
-			draw_line(_x + 16, _cy + lh + 2, _x + _w - 16, _cy + lh + 2);
-			
-			var _bx = _x + 24 * 2 + 8;
+			var _bx = _x + 16 + 24;
 			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 12)) {
 				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
 				
@@ -94,7 +125,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			} else 
 				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
 			
-			_bx += 24 + 8;
+			_bx += 12 + 1 + 12;
 			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 12)) {
 				draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, c_white);
 				
@@ -106,21 +137,21 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			} else 
 				draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
 			
-			draw_set_color(COLORS.node_composite_bg);
-			var _sx0 = _bx + 24;
+			var hover = point_in_rectangle(_m[0], _m[1], _bx + 12 + 6, _cy, _x + _w - 48, _cy + lh - 1);
+			
+			var _sx0 = _bx + 12 + 6;
 			var _sx1 = _sx0 + ssh;
 			var _sy0 = _cy + 3;
 			var _sy1 = _sy0 + ssh;
-			draw_rectangle(_sx0, _sy0, _sx1, _sy1, true);
 			
 			var _ssw = surface_get_width_safe(_surf);
 			var _ssh = surface_get_height_safe(_surf);
 			var _sss = min(ssh / _ssw, ssh / _ssh);
 			draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
 			
-			draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text : COLORS._main_text);
+			draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text_accent : COLORS._main_text);
 			draw_set_alpha(aa);
-			draw_text(_sx1 + 12, _cy + lh / 2, inputs[| index].name);
+			draw_text(_sx1 + 12, _cy + lh / 2 + 2, inputs[| index].name);
 			draw_set_alpha(1);
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
@@ -134,16 +165,23 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 			}
 			
-			if(layer_dragging == noone || layer_dragging == ind) {
-				var _bx = _x + 24;
-				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
-					draw_sprite_ui_uniform(THEME.hamburger_s, 3, _bx, _cy + lh / 2, 1, c_white);
+			var _bx = _x + 8 + 8;
+			var cc  = COLORS._main_icon;
+			if(point_in_rectangle(_m[0], _m[1], _bx - 8, _cy + 4, _bx + 8, _cy + lh - 4)) {
+				cc = c_white;
 				
-					if(mouse_press(mb_left, _focus))
-						layer_dragging = ind;
-				} else 
-					draw_sprite_ui_uniform(THEME.hamburger_s, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
+				if(mouse_press(mb_left, _focus))
+					properties_expand[i] = !properties_expand[i];
 			}
+			
+			draw_sprite_ui_uniform(THEME.arrow, _exp? 3 : 0, _bx, _cy + lh / 2 + _exp * 2, 1, cc);
+			
+			if(hover && layer_dragging == noone || layer_dragging == ind) {
+				if(mouse_press(mb_left, _focus))
+					layer_dragging = ind;
+			}
+			
+			_cy += _lh;
 		}
 		
 		if(layer_dragging != noone && mouse_release(mb_left)) {
@@ -184,10 +222,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Layers",	false],	layer_renderer,
 		["Surfaces", true],	
 	];
+	
 	input_display_list_len = array_length(input_display_list);
+	setIsDynamicInput(6);
 	
 	function deleteLayer(index) { #region
 		var idx = input_fix_len + index * data_length;
+		
 		for( var i = 0; i < data_length; i++ ) {
 			ds_list_delete(inputs, idx);
 			array_remove(input_display_list, idx + i);
@@ -207,36 +248,37 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		inputs[| index + 0] = nodeValue(_s? ("Surface " + string(_s)) : "Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-		inputs[| index + 0].surface_index = index;
+		inputs[| index + 0] = nodeValue(_s? ($"Surface {_s}") : "Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 		inputs[| index + 0].hover_effect  = 0;
 		
-		inputs[| index + 1] = nodeValue("Position " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
+		inputs[| index + 1] = nodeValue($"Position {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 			.setDisplay(VALUE_DISPLAY.vector)
 			.setUnitRef(function(index) { return [ overlay_w, overlay_h ]; });
-		inputs[| index + 1].surface_index = index;
 		
-		inputs[| index + 2] = nodeValue("Rotation " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		inputs[| index + 2] = nodeValue($"Rotation {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setDisplay(VALUE_DISPLAY.rotation);
-		inputs[| index + 2].surface_index = index;
 		
-		inputs[| index + 3] = nodeValue("Scale " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
+		inputs[| index + 3] = nodeValue($"Scale {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 			.setDisplay(VALUE_DISPLAY.vector);
-		inputs[| index + 3].surface_index = index;
 		
-		array_push(input_display_list, index + 0);
-		array_push(input_display_list, index + 1);
-		array_push(input_display_list, index + 2);
-		array_push(input_display_list, index + 3);
+		inputs[| index + 4] = nodeValue($"Blend {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+			.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES );
+		
+		inputs[| index + 5] = nodeValue($"Opacity {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+			.setDisplay(VALUE_DISPLAY.slider);
+		
+		for( var i = 0; i < data_length; i++ ) {
+			array_push(input_display_list, index + i);
+			inputs[| index + i].surface_index = index;
+		}
 		
 		while(_s >= array_length(attributes.layer_visible))
 			array_push(attributes.layer_visible, true);
+			
 		while(_s >= array_length(attributes.layer_selectable))
 			array_push(attributes.layer_selectable, true);
-	} #endregion
-	if(!LOADING && !APPENDING) createNewInput();
-	
-	//function getInput() { return inputs[| ds_list_size(inputs) - data_length]; }
+			
+	} if(!LOADING && !APPENDING) createNewInput(); #endregion
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -248,11 +290,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	surf_dragging  = -1;
 	input_dragging = -1;
-	drag_type   = 0;
-	dragging_sx = 0;
-	dragging_sy = 0;
-	dragging_mx = 0;
-	dragging_my = 0;
+	drag_type      = 0;
+	dragging_sx    = 0;
+	dragging_sy    = 0;
+	dragging_mx    = 0;
+	dragging_my    = 0;
 	
 	rot_anc_x = 0;
 	rot_anc_y = 0;
@@ -264,11 +306,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	surface_selecting = noone;
 	
-	static getInputAmount = function() { #region
-		return input_fix_len + (ds_list_size(inputs) - input_fix_len) / data_length;
-	} #endregion
+	static getInputAmount = function() { INLINE return input_fix_len + (ds_list_size(inputs) - input_fix_len) / data_length; }
 	
 	static getInputIndex = function(index) { #region
+		INLINE 
+		
 		if(index < input_fix_len) return index;
 		return input_fix_len + (index - input_fix_len) * data_length;
 	} #endregion
@@ -458,7 +500,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			createNewInput();
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var pad = getInputData(0);
 		var ww  = overlay_w;
 		var hh  = overlay_h;
@@ -740,56 +782,64 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(_output_index == 1) return atlas_data;
 		if(_output_index == 0 && _array_index == 0) atlas_data = [];
 		
-		if(array_length(_data) < 4) return _outSurf;
+		if(array_length(_data) <= input_fix_len) return _outSurf;
 		var _pad	  = _data[0];
 		var _dim_type = _data[1];
 		var _dim	  = _data[2];
 		var base	  = _data[3];
 		var cDep	  = attrDepth();
-		var ww = 0, hh = 0;
 		
-		switch(_dim_type) {
-			case COMPOSE_OUTPUT_SCALING.first :
-				ww = surface_get_width_safe(base);
-				hh = surface_get_height_safe(base);
-				break;
-			case COMPOSE_OUTPUT_SCALING.largest :
-				for(var i = input_fix_len; i < array_length(_data) - data_length; i += data_length) {
-					var _s = _data[i];
-					ww = max(ww, surface_get_width_safe(_s));
-					hh = max(hh, surface_get_height_safe(_s));
-				}
-				break;
-			case COMPOSE_OUTPUT_SCALING.constant :	
-				ww = _dim[0];
-				hh = _dim[1];
-				break;
-		}
-		ww += _pad[0] + _pad[2];
-		hh += _pad[1] + _pad[3];
+		#region dimension 
+			var ww = 0, hh = 0;
 		
-		overlay_w = ww;
-		overlay_h = hh;
+			switch(_dim_type) {
+				case COMPOSE_OUTPUT_SCALING.first :
+					ww = surface_get_width_safe(base);
+					hh = surface_get_height_safe(base);
+					break;
+				case COMPOSE_OUTPUT_SCALING.largest :
+					for(var i = input_fix_len; i < array_length(_data) - data_length; i += data_length) {
+						var _s = _data[i];
+						ww = max(ww, surface_get_width_safe(_s));
+						hh = max(hh, surface_get_height_safe(_s));
+					}
+					break;
+				case COMPOSE_OUTPUT_SCALING.constant :	
+					ww = _dim[0];
+					hh = _dim[1];
+					break;
+			}
+			ww += _pad[0] + _pad[2];
+			hh += _pad[1] + _pad[3];
+		
+			overlay_w = ww;
+			overlay_h = hh;
+		#endregion
 		
 		for(var i = 0; i < 3; i++) {
 			temp_surface[i] = surface_verify(temp_surface[i], ww, hh, cDep);
 			surface_clear(temp_surface[i]);
 		}
 		
-		var res_index = 0, bg = 0;
-		var imageAmo = (ds_list_size(inputs) - input_fix_len) / data_length;
-		var _vis = attributes.layer_visible;
-		var _bg  = 0;
+		var res_index = 0;
+		var imageAmo  = (ds_list_size(inputs) - input_fix_len) / data_length;
+		var _vis      = attributes.layer_visible;
+		var bg        = 0;
+		var _bg       = 0;
+		
+		blend_temp_surface = temp_surface[2];
 		
 		for(var i = 0; i < imageAmo; i++) {
 			var vis  = _vis[i];
 			if(!vis) continue;
 			
-			var startDataIndex = input_fix_len + i * data_length;
-			var _s   = _data[startDataIndex + 0];
-			var _pos = _data[startDataIndex + 1];
-			var _rot = _data[startDataIndex + 2];
-			var _sca = _data[startDataIndex + 3];
+			var _ind = input_fix_len + i * data_length;
+			var _s   = _data[_ind + 0];
+			var _pos = _data[_ind + 1];
+			var _rot = _data[_ind + 2];
+			var _sca = _data[_ind + 3];
+			var _bld = _data[_ind + 4];
+			var _alp = _data[_ind + 5];
 			
 			if(!_s || is_array(_s)) continue;
 			
@@ -806,8 +856,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			array_push(atlas_data, new SurfaceAtlas(_s, _d0[0], _d0[1], _rot, _sca[0], _sca[1]));
 			
 			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
-				blend_temp_surface = temp_surface[2];
-				draw_surface_blend_ext(temp_surface[!_bg], _s, _d0[0], _d0[1], _sca[0], _sca[1], _rot);
+				draw_surface_blend_ext(temp_surface[!_bg], _s, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, _alp, _bld, true);
 			surface_reset_shader();
 			
 			_bg = !_bg;

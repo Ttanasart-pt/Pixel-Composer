@@ -202,7 +202,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 2, 32, 1 ] });
@@ -296,7 +296,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			Mesh_setTriangle();
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
@@ -399,7 +399,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _hover = -1;
 		for(var i = control_index; i < ds_list_size(inputs); i++) {
-			if(inputs[| i].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny))
+			if(inputs[| i].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny))
 				_hover = i;
 		}
 		

@@ -46,7 +46,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 12] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 		
-	inputs[| 13] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 13] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 14] = nodeValue("Distribution data", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -114,7 +114,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 36] = nodeValue("Shift position", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
-		
+	
+	inputs[| 37] = nodeValue("Exact", self,  JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
@@ -125,7 +127,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Surfaces", 	 true], 0, 1, 15, 24, 25, 26, 27, 
 		["Scatter",		false], 6, 5, 13, 14, 17, 9, 31, 2, 30, 35, 
 		["Path",		false], 19, 20, 21, 22, 
-		["Position",	false], 33, 36, 
+		["Position",	false], 33, 36, 37, 
 		["Rotation",	false], 7, 4, 32, 
 		["Scale",	    false], 3, 8, 34, 
 		["Render",		false], 18, 11, 28, 12, 16, 23, 
@@ -143,15 +145,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	scatter_maps = 0;
 	scatter_mapp = [];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _distType = current_data[6];
 		
 		if(_distType < 3) {
-			var a = inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var a = inputs[| 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			active &= !a;
 		}
 			
-		var a = inputs[| 29].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(1)); active &= !a;
+		var a = inputs[| 29].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(1)); active &= !a;
 	} #endregion
 	
 	static onValueUpdate = function(index) { #region
@@ -268,6 +270,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var uniSca  = _data[34];
 		var cirRng  = _data[35];
 		var posShf  = _data[36];
+		var posExt  = _data[37];
 		
 		var _in_w, _in_h;
 		
@@ -550,6 +553,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var clr  = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[| 11], true); 
 				var alp  = _alpUni? alpha[0] : random_range(alpha[0], alpha[1]);
 				var _atl = _sct_len >= _datLen? noone : scatter_data[_sct_len];
+				
+				if(posExt) {
+					_x = round(_x);
+					_y = round(_y);
+				}
 				
 				if(_useAtl) {
 					if(!is_instanceof(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);

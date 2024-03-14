@@ -60,7 +60,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			attributes.display_scale = val;
 		})]);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(attributes.show_objects) 
 		for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
 			var _node = group.nodes[| i];
@@ -85,8 +85,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_line_width2(px, py, fx, fy, 8, 2);
 			draw_set_alpha(1);
 			
-			inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-			inputs[| 5].drawOverlay(active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, THEME.anchor, 10);
+			inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			inputs[| 5].drawOverlay(hover, active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, THEME.anchor, 10);
 		} else if(_typ == 3) {
 			var _rad = getInputData(8);
 			
@@ -95,10 +95,10 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_circle_prec(px, py, _rad * _s, 1);
 			draw_set_alpha(1);
 			
-			inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-			inputs[| 8].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
+			inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
 		} else 
-			inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static step = function() {

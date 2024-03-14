@@ -22,7 +22,7 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		new NodeTool( "Adjust control point", THEME.path_tools_anchor ),
 	];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pos = getInputData(0);
 		var _cn1 = getInputData(1);
 		var _cn2 = getInputData(2);
@@ -40,11 +40,11 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		draw_line(px, py, c1x, c1y);
 		draw_line(px, py, c2x, c2y);
 		
-		active &= !inputs[| 0].drawOverlay(!isUsingTool(0) && active, _x, _y, _s, _mx, _my, _snx, _sny);
-		active &= !inputs[| 1].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+		active &= !inputs[| 0].drawOverlay(hover, !isUsingTool(0) && active, _x, _y, _s, _mx, _my, _snx, _sny);
+		active &= !inputs[| 1].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 		
 		if(!_mir)
-			active &= !inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+			active &= !inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 		else
 			draw_circle_prec(c2x, c2y, 4, false);
 	}

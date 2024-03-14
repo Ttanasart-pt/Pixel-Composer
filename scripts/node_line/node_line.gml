@@ -86,7 +86,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		draw_set_color(COLORS._main_accent);
 		for( var i = 0, n = array_length(lines); i < n; i++ ) {
 			var points = lines[i];

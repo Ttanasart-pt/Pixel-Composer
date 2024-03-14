@@ -41,7 +41,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	surface_blur_init();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _p1 = getSingleValue(1);
 		var _p2 = getSingleValue(2);
 		
@@ -53,8 +53,8 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		draw_set_color(COLORS._main_accent);
 		draw_line(_p1x, _p1y, _p2x, _p2y);
 		
-		var _a = inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
-		var _a = inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
+		var _a = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
+		var _a = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
 		
 		draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
 		draw_text(_p1x + ui(4), _p1y - ui(4), "1");

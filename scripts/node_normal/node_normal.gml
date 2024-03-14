@@ -5,7 +5,7 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	uniform_hei = shader_get_uniform(sh_normal, "height");
 	uniform_smt = shader_get_uniform(sh_normal, "smooth");
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	

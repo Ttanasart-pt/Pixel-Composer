@@ -87,16 +87,5 @@ if !ready exit;
 	}
 	
 	node_tooltip = noone;
+	ADD_NODE_SCROLL = content_pane.scroll_y_to;
 #endregion
-
-//#region dec
-//	if(node_called) {
-//		var jx = 0;
-//		var jy = dialog_y + ui(26);
-		
-//		if(node_called.connect_type == JUNCTION_CONNECT.input) 
-//			jx = dialog_x;
-//		else 
-//			jx = dialog_x + dialog_w;
-//	}
-//#endregion

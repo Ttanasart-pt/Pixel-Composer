@@ -4,7 +4,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 0] = nodeValue("Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false })
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false });
 	
 	inputs[| 2] = nodeValue("Max width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 128);
 	
@@ -18,7 +18,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	input_display_list = [ 0, 4, 1, 2, 3 ];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var rect = outputs[| 1].getValue();
 		var spac = getInputData(4);
 		

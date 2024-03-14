@@ -125,12 +125,12 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return 0;
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _path = getInputData(i);
 			if(!struct_has(_path, "drawOverlay")) continue;
 			
-			_path.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
 	} #endregion
 	

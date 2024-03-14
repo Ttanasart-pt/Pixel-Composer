@@ -100,14 +100,16 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 	} #endregion
 	
-	static createNewInput = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) { #region
+	static createNewInput = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) { #region
 		var index = ds_list_size(inputs);
 		
 		inputs[| index] = nodeValue("Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, _dxx, _dxy, _dyx, _dyy, false ])
 			.setDisplay(VALUE_DISPLAY.path_anchor);
 		
-		recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[| index], index, "add path anchor point" ]);
-		resetDisplayList();
+		if(rec) {
+			recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[| index], index, $"add path anchor point {index}" ]);
+			resetDisplayList();
+		}
 		
 		return inputs[| index];
 	} #endregion
@@ -126,7 +128,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 	} #endregion
  
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var sample = PREFERENCES.path_resolution;
 		var loop   = getInputData(1);
 		var ansize = ds_list_size(inputs) - input_fix_len;
@@ -732,9 +734,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
 				
 				if(mouse_press(mb_left, active)) {
-					recordAction(ACTION_TYPE.list_delete, inputs, [ inputs[| input_fix_len + anchor_hover], input_fix_len + anchor_hover, "remove path anchor point" ]);
-		
-					ds_list_delete(inputs, input_fix_len + anchor_hover);
+					var _indx = input_fix_len + anchor_hover;
+					recordAction(ACTION_TYPE.list_delete, inputs, [ inputs[| _indx], _indx, "remove path anchor point" ]);
+					
+					ds_list_delete(inputs, _indx);
 					resetDisplayList();
 					doUpdate();
 				}
@@ -768,8 +771,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
-				var anc = createNewInput(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
-				UNDO_HOLDING = true;
+				var ind = ds_list_size(inputs);
+				var anc = createNewInput(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny), 0, 0, 0, 0, false);
 				
 				if(_line_hover == -1) {
 					drag_point = ds_list_size(inputs) - input_fix_len - 1;
@@ -777,7 +780,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					ds_list_remove(inputs, anc);
 					ds_list_insert(inputs, input_fix_len + _line_hover + 1, anc);
 					drag_point = _line_hover + 1;
+					ind = input_fix_len + _line_hover + 1;
 				}
+				
+				recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[| ind], ind, $"add path anchor point {ind}" ]);
+				resetDisplayList();
+				UNDO_HOLDING = true;
 				
 				drag_type     = -1;
 				drag_point_mx = _mx;

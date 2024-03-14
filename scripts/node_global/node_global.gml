@@ -1,4 +1,4 @@
-function variable_editor(nodeVal) constructor { #region
+function variable_editor(nodeVal) constructor {
 	value = nodeVal;
 	
 	val_type      = [ VALUE_TYPE.integer, VALUE_TYPE.float, VALUE_TYPE.boolean, VALUE_TYPE.color, VALUE_TYPE.gradient, VALUE_TYPE.path, VALUE_TYPE.curve, VALUE_TYPE.text ];
@@ -61,19 +61,17 @@ function variable_editor(nodeVal) constructor { #region
 	slider_range = [ 0, 1 ];
 	slider_step  = 0.01;
 	
-	static refreshInput = function() {
+	static refreshInput = function() { #region
 		value.setType(val_type[type_index]);
 		value.name = value_name;
 		
 		if(_type_index != type_index || _disp_index != disp_index) {
-			_type_index = type_index;
-			_disp_index = disp_index;
-			
 			switch(value.type) {
 				case VALUE_TYPE.integer :
 				case VALUE_TYPE.float :
 					switch(sc_disp.data_list[disp_index]) {
 						case "Vector2" :	
+						case "Range" :
 						case "Vector range" :	
 						case "Slider range" :	
 						case "Rotation range" :	
@@ -121,6 +119,9 @@ function variable_editor(nodeVal) constructor { #region
 			}
 		}
 		
+		_type_index = type_index;
+		_disp_index = disp_index;
+		
 		switch(sc_disp.data_list[disp_index]) {
 			case "Default" :		value.setDisplay(VALUE_DISPLAY._default);		break;
 			case "Range" :			value.setDisplay(VALUE_DISPLAY.range);			break;
@@ -145,9 +146,9 @@ function variable_editor(nodeVal) constructor { #region
 			case "Export" :		value.setDisplay(VALUE_DISPLAY.path_save, { filter: "" });	break;
 			case "Font" :		value.setDisplay(VALUE_DISPLAY.path_font);					break;
 		}
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _m, _focus, _hover) {
+	static draw = function(_x, _y, _w, _m, _focus, _hover) { #region
 		var _h = 0;
 		
 		switch(sc_disp.data_list[disp_index]) {
@@ -176,8 +177,8 @@ function variable_editor(nodeVal) constructor { #region
 		}
 		
 		return _h;
-	}
-} #endregion
+	} #endregion
+}
 
 function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	name = "GLOBAL";

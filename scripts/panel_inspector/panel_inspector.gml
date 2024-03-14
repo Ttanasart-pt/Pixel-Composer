@@ -221,7 +221,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	} #endregion
 	
 	static drawMeta = function(_y, _m) { #region
-		var con_w = contentPane.surface_w - ui(4);
+		var con_w  = contentPane.surface_w - ui(4);
 		var _hover = pHOVER && contentPane.hover;
 		
 		var context = PANEL_GRAPH.getCurrentContext();
@@ -234,6 +234,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		var rx = x + ui(16);
 		var ry = y + top_bar_h;
+		
+		attribute_hovering = noone;
 		
 		for( var i = 0, n = array_length(meta_display); i < n; i++ ) {
 			if(i == 3) {
@@ -280,7 +282,11 @@ function Panel_Inspector() : PanelContent() constructor {
 						var title = _edt[j][0];
 						var param = _edt[j][1];
 						var editW = _edt[j][2];
+						var drpFn = _edt[j][3];
 					
+						var widx = ui(8);
+						var widy = yy;
+						
 						draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
 						draw_text_add(ui(16), yy, __txt(title));
 						yy += line_get_height() + ui(6);
@@ -288,12 +294,22 @@ function Panel_Inspector() : PanelContent() constructor {
 					
 						editW.setFocusHover(pFOCUS, _hover);
 						if(pFOCUS) editW.register(contentPane);
-					
+						
 						var wh = 0;
-						var _data = PROJECT.attributes[$ param];
-					
-						wh = editW.drawParam(new widgetParam(ui(16), yy, w - ui(16 + 48), TEXTBOX_HEIGHT, _data, {}, _m, rx, ry));
-					
+						var _data  = PROJECT.attributes[$ param];
+						var _param = new widgetParam(ui(16), yy, w - ui(16 + 48), TEXTBOX_HEIGHT, _data, {}, _m, rx, ry);
+						
+						wh = editW.drawParam(_param);
+						
+						var jun  = PANEL_GRAPH.value_dragging;
+						var widw = con_w - ui(16);
+						var widh = line_get_height() + ui(6) + wh + ui(4);
+						
+						if(jun != noone && _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
+							draw_sprite_stretched_ext(THEME.ui_panel_active, 0, widx, widy, widw, widh, COLORS._main_value_positive, 1);
+							attribute_hovering = drpFn;
+						}
+						
 						yy += wh + ui(8);
 						hh += wh + ui(8);
 					}

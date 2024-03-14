@@ -349,6 +349,12 @@ event_inherited();
 	ds_list_add(pref_appr, __txt("Graph"));
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_add_node_remember", "Remember add node position"),
+		"add_node_remember",
+		new checkBox(function() { PREFERENCES.add_node_remember = !PREFERENCES.add_node_remember; })
+	));
+	
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_connection_type", "Connection type"),
 		"curve_connection_line",
 		new buttonGroup([ THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection ], 

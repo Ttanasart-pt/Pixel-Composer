@@ -41,8 +41,13 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	outputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
-	content = "";
+	content      = "";
 	path_current = "";
+	
+	edit_time = 0;
+	attributes.file_checker = true;
+	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
+		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	first_update = false;
 	
@@ -55,8 +60,8 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return false;
 	} #endregion
 	
-	function updatePaths(path) { #region
-		path = try_get_path(path);
+	function updatePaths(path = path_current) { #region
+		path = path_get(path);
 		if(path == -1) return false;
 		
 		var ext = string_lower(filename_ext(path));
@@ -84,8 +89,10 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(path_current == "") 
 			first_update = true;
+			
 		path_current = path;
-				
+		edit_time    = max(edit_time, file_get_modify_s(path_current));	
+		
 		return true;
 	} #endregion
 	
@@ -93,15 +100,21 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
-		var path = getInputData(0);
-		if(path == "") return;
-		updatePaths(path);
-		update();
+		updatePaths(path_get(getInputData(0)));
+		triggerRender();
+	} #endregion
+	
+	static step = function() { #region
+		if(attributes.file_checker && path_current != "") {
+			if(file_get_modify_s(path_current) > edit_time) {
+				updatePaths();
+				triggerRender();
+			}
+		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		var path = getInputData(0);
-		if(path == "") return;
+		var path = path_get(getInputData(0));
 		if(path_current != path) updatePaths(path);
 		
 		outputs[| 0].setValue(content);

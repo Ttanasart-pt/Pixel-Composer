@@ -1,7 +1,7 @@
 function Node_HSV_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "HSV Extract";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	outputs[| 0] = nodeValue("Hue",        self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	outputs[| 1] = nodeValue("Saturation", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

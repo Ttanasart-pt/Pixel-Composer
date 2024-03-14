@@ -64,7 +64,7 @@ function __Node_3D_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	_3d_node_init(1, /*Transform*/ 4, 5, 1, 2, 3);	
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	

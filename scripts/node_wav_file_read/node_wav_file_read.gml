@@ -35,7 +35,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "audio|*.wav" })
 		.rejectArray();
 	
-	inputs[| 1]  = nodeValue("Sync lenght", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1]  = nodeValue("Sync length", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", onClick: function() { 
 			if(content == noone) return;
 			var frm = max(1, ceil(content.duration * PROJECT.animator.framerate));
@@ -59,8 +59,13 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	outputs[| 4] = nodeValue("Duration (s)", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0)
 		.setVisible(false);
 	
-	content = noone;
+	content      = noone;
 	path_current = "";
+	edit_time    = 0;
+	
+	attributes.file_checker = true;
+	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
+		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	first_update = false;
 	
@@ -100,12 +105,12 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	function updatePaths(path) { #region
-		path = try_get_path(path);
 		if(path == -1) return false;
 		
 		if(path_current == "") 
 			first_update = true;
 		path_current = path;
+		edit_time    = max(edit_time, file_get_modify_s(path_current));
 		
 		var ext = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
@@ -191,12 +196,18 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(!audio_is_playing(preview_audio))
 				preview_id = audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur);
 		}
+			   
+		if(attributes.file_checker && path_current != "") {
+			if(file_get_modify_s(path_current) > edit_time) {
+				updatePaths();
+				triggerRender();
+			}
+		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		var path = getInputData(0);
+		var path = path_get(getInputData(0));
 		var mono = getInputData(2);
-		if(path == "") return;
 		
 		if(path_current != path) updatePaths(path);
 		if(!is_instanceof(content, audioObject)) return;

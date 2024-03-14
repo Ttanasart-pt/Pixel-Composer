@@ -8,10 +8,10 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	uniform_min = shader_get_uniform(shader, "vMin");
 	uniform_max = shader_get_uniform(shader, "vMax");
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+	inputs[| 1] = nodeValue("Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Max life",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)

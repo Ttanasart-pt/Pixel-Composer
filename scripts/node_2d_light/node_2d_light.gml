@@ -14,7 +14,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	uniform_band = shader_get_uniform(shader, "band");
 	uniform_attn = shader_get_uniform(shader, "atten");
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Light shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Point",           s_node_2d_light_shape, 0), 
@@ -76,7 +76,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _shape = getInputData(1);
 		
 		switch(_shape) {
@@ -85,14 +85,14 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var px = _x + pos[0] * _s;
 				var py = _y + pos[1] * _s;
 		
-				inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-				inputs[| 3].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+				inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				inputs[| 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 				break;
 			case LIGHT_SHAPE_2D.line :
 			case LIGHT_SHAPE_2D.line_asym :
 			case LIGHT_SHAPE_2D.spot :
-				inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-				inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+				inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				break;
 		}
 	}

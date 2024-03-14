@@ -22,7 +22,7 @@ function Node_Noise_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 4] = nodeValue("Texture sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 4] = nodeValue("Texture sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 		
 	inputs[| 5] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
@@ -38,8 +38,8 @@ function Node_Noise_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

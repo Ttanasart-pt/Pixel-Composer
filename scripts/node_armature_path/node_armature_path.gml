@@ -30,7 +30,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		})]);
 	#endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _b	  = getInputData(0);
 		
 		if(_b == noone) return;

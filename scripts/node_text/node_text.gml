@@ -69,10 +69,12 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Character", "Word", "Line" ]);
 	
 	inputs[| 26] = nodeValue("Use full text size", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	
+	inputs[| 27] = nodeValue("Max line width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 );
 		
 	input_display_list = [
 		["Output",		true],	9,  6, 10,
-		["Text",		false], 0, 13, 14, 7, 8, 
+		["Text",		false], 0, 13, 14, 7, 8, 27, 
 		["Font",		false], 1,  2, 15, 3, 11, 12, 
 		["Rendering",	false], 5, 
 		["Background",   true, 16], 17, 
@@ -173,6 +175,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _typeC = _data[25];
 		var _typeF = _data[26];
 		
+		var _lineW = _data[27];
+		
 		generateFont(_font, _size, _aa);
 		draw_set_font(font);
 		
@@ -210,37 +214,63 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#endregion
 		
 		#region cut string
-			var _str_lines = string_splice(str, "\n");
-			_line_widths = [];
-		
-			__temp_len  = string_length(str);
-			__temp_lw   = 0;
-			__temp_ww   = 0;
-			__temp_hh   = line_get_height();
-			__temp_trck = _trck;
-			__temp_line = _line;
+			var _cut_lines = string_splice(str, "\n");
 			
-			string_foreach(strRaw, function(_chr, _ind) {
-				if(_chr == "\n") {
-					var _lw = max(0, __temp_lw - __temp_trck);
-					array_push(_line_widths, _lw);
-					__temp_ww  = max(__temp_ww, _lw);
-					__temp_hh += string_height(_chr) + __temp_line;
-					__temp_lw  = 0;
-				} else
-					__temp_lw += string_width(_chr) + __temp_trck;
-			});
+			var _str_lines   = [];
+			var _line_widths = [];
+			var _ind = 0;
+			
+			for( var i = 0, n = array_length(_cut_lines); i < n; i++ ) {
+				var _str_line = _cut_lines[i];
+				
+				if(_lineW == 0) {
+					_str_lines[_ind]   = _str_line;
+					_line_widths[_ind] = string_width(_str_line) + _trck * (string_length(_str_line) - 1);
+					_ind++;
+				} else {
+					var _lw  = 0;
+					var _lne = "";
+					
+					for( var j = 1; j <= string_length(_str_line); j++ ) {
+						var _chr = string_char_at(_str_line, j);
+						var _chw = string_width(_chr) + _trck;
+						
+						if(_lw + _chw >= _lineW) {
+							_str_lines[_ind]   = _lne;
+							_line_widths[_ind] = _lw - _trck;
+							_ind++;
+							
+							_lne = "";
+							_lw = 0;
+						}
+						
+						_lne += _chr;
+						_lw  += _chw;
+					}
+					
+					if(_lne != "") {
+						_str_lines[_ind]   = _lne;
+						_line_widths[_ind] = _lw - _trck;
+						_ind++;
+					}
+				}
+			}
+			
+			var _max_ww = 0;
+			var _max_hh = 0;
+			
+			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
+				_max_ww  = max(_max_ww, _line_widths[i]);
+				_max_hh += string_height(_str_lines[i]);
+			}
 		#endregion
 		
 		#region dimension
 			var ww = 0, _sw = 0;
 			var hh = 0, _sh = 0;
 		
-			var _lw = max(0, __temp_lw - __temp_trck);
-			array_push(_line_widths, _lw);
-			__temp_ww = max(__temp_ww, _lw);
-			ww = __temp_ww;
-			hh = __temp_hh;
+			ww = _max_ww;
+			hh = _max_hh;
 		
 			var _use_path = _path != noone && struct_has(_path, "getPointDistance");
 			var _ss = 1;

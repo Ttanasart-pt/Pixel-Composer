@@ -1,9 +1,9 @@
 function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normal Light";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 1] = nodeValue("Normal map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 1] = nodeValue("Normal map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 2] = nodeValue("Normal intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
@@ -34,13 +34,13 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = getInputData(4);
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 5].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+		inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 5].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

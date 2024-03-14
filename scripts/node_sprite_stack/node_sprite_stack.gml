@@ -55,17 +55,17 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	preview_custom_x_to  = 0;
 	preview_custom_x_max = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var pos = getInputData(4);
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		inputs[| 3].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, THEME.anchor);
-		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 5].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+		var a = inputs[| 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, THEME.anchor); active &= a;
+		var a = inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);				active &= a;
+		var a = inputs[| 5].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);				active &= a;
 	} #endregion
 	
-	static drawPreviewToolOverlay = function(active, _mx, _my, _panel) { #region
+	static drawPreviewToolOverlay = function(hover, active, _mx, _my, _panel) { #region
 		var _surf = getInputData(0);
 		if(!is_array(_surf)) return false;
 		
@@ -85,18 +85,21 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			var _sw = surface_get_width_safe(_s);
 			var _sh = surface_get_height_safe(_s);
-			var _ss = prev_size / min(_sw, _sh);
+			var _ss = prev_size / max(_sw, _sh);
 			var _sx = sx + (prev_size / 2 - _sw * _ss / 2);
 			var _sy = sy + (prev_size / 2 - _sh * _ss / 2);
 			
 			draw_surface_ext_safe(_s, _sx, _sy, _ss, _ss);
-			draw_set_color(COLORS.panel_preview_surface_outline);
-			draw_rectangle(_sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss, true);
 			
-			if(point_in_rectangle(_mx, _my, _sx - ui(4), _sy, _sx + _sw * _ss + ui(4), _sy + _sh * _ss)) {
+			if(hover && point_in_rectangle(_mx, _my, _sx - ui(4), _sy, _sx + _sw * _ss + ui(4), _sy + _sh * _ss)) {
 				hov = true;
 				preview_custom_index = i;
-			}
+				
+				draw_set_color(COLORS._main_accent);
+			} else 
+				draw_set_color(COLORS.panel_preview_surface_outline);
+			
+			draw_rectangle(_sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss, true);
 			
 			sx += prev_size + ui(8);
 			preview_custom_x_max += prev_size + ui(8);
@@ -206,7 +209,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _hig = _data[ 9];
 		var _hiC = _data[10];
-		//var _hiA = _data[11];
+		var _hiA = _data[11];
 		var _arr = _data[12];
 		
 		_pos     = [ _pos[0], _pos[1] ];

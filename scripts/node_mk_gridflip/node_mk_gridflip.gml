@@ -1,7 +1,7 @@
 function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK GridFlip";
 	
-	inputs[| 0] = nodeValue("Surface front", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface front", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -11,7 +11,7 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 	inputs[| 3] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999));
 	
-	inputs[| 4] = nodeValue("Surface back", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 4] = nodeValue("Surface back", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 5] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
@@ -44,7 +44,7 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	dimension_index = 1;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 	}
 	

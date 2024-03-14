@@ -17,7 +17,7 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Area", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(process_amount > 1) return;
 		
 		var _pos	= getInputData(0);
@@ -38,8 +38,8 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				break;
 		}
 		
-		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 1].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+		inputs[| 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 1].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  

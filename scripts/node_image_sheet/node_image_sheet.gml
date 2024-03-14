@@ -1,7 +1,7 @@
 function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Splice Spritesheet";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1]  = nodeValue("Sprite size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 32 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -128,7 +128,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		else		  return [ _y, _x ];
 	} #endregion 
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _inSurf  = getInputData(0);
 		if(!is_surface(_inSurf)) return;
 		

@@ -14,7 +14,7 @@ function Node_Text_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static writeFile = function() {
 		var path = getInputData(0);
 		if(path == "") return;
-		if(filename_ext(path) != ".txt")
+		if(filename_ext(path) == "")
 			path += ".txt";
 			
 		var cont = getInputData(1);

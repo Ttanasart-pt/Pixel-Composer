@@ -1,7 +1,7 @@
 function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Nine Slice";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -33,7 +33,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[| 1].setValue( [ surface_get_width_safe(s), surface_get_height_safe(s) ] );
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < 1) return;
 		
 		var _dim		= current_data[1];
@@ -75,7 +75,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 		}
 		
-		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) 
+		if(inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) 
 			return;
 		
 		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {

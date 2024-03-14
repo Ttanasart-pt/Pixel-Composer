@@ -26,7 +26,7 @@ function Node_Fluid_Repulse(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdomain, noone);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pos = getInputData(1);
 		var _rad = getInputData(2);
 		var px = _x + _pos[0] * _s;
@@ -35,8 +35,8 @@ function Node_Fluid_Repulse(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group)
 		draw_set_color(COLORS._main_accent);
 		draw_circle_prec(px, py, _rad * _s, true);
 		
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

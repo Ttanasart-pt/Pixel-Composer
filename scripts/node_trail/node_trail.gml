@@ -3,7 +3,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	use_cache   = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	inputs[| 0] = nodeValue("Surface in",		self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in",		self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Max life",			self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
 	

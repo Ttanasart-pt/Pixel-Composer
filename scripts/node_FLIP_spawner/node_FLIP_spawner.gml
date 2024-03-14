@@ -49,7 +49,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	spawn_amo     = 0;
 	prev_position = [ 0, 0 ];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _shp   = getInputData(1);
 		var _posit = getInputData(2);
 		
@@ -71,7 +71,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_surface_ext(_surf, _px - _sw * _s / 2, _py - _sh * _s / 2, _s, _s, 0, c_white, 0.5);
 		}
 		
-		if(inputs[| 2].drawOverlay(active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 2].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
 		
 	} #endregion
 	

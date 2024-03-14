@@ -16,7 +16,7 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 4] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 		
-	inputs[| 5] = nodeValue("Texture sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 5] = nodeValue("Texture sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 6] = nodeValue("Shift axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, ["x", "y"]);
@@ -43,8 +43,8 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

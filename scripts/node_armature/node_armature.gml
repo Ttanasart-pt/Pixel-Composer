@@ -188,7 +188,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	moving = false;
 	scaling = false;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		

@@ -37,11 +37,14 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	attribute_surface_depth();
 	
-	spr = [];
-	path_current = [];
-	
 	first_update = false;
-	edit_time    = [];
+	spr          = [];
+	path_current = [];
+	edit_time    = 0;
+	
+	attributes.file_checker = true;
+	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
+		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	on_drop_file = function(path) { #region
 		inputs[| 0].setValue(path);
@@ -55,10 +58,8 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
 	
 	function createSprite(path) { #region
-		path = try_get_path(path);
 		if(path == -1) return noone;
 		
-		var spr;
 		var ext   = string_lower(filename_ext(path));
 		var _name = filename_name_only(path);
 		
@@ -68,31 +69,32 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case ".jpeg":
 			case ".gif":
 				setDisplayName(_name);
-				spr = sprite_add(path, 1, false, false, 0, 0);
+				var spr = sprite_add(path, 1, false, false, 0, 0);
 				
 				if(spr == -1) {
 					noti_warning($"Image node: File not a valid image.");
 					break;
 				}
 				
-				edit_time = file_get_modify_s(path);
+				edit_time = max(edit_time, file_get_modify_s(path));
 				return spr;
 		}
 		
 		return noone;
 	} #endregion
 	
-	function updatePaths(path, index = 0) { #region
+	function updatePaths(path = path_current) { #region
 		if(array_empty(path_current)) first_update = true;
-		path_current = path;
 		
 		for( var i = 0, n = array_length(spr); i < n; i++ )
 			sprite_delete(spr[i]);
-			
+		spr = [];
+		
 		if(!is_array(path)) path = [ path ];
 		
-		spr = [];
 		for( var i = 0, n = array_length(path); i < n; i++ ) {
+			path_current[i] = path_get(path[i]);
+			
 			var s = createSprite(path[i]);
 			if(s) array_push(spr, s);
 		}
@@ -102,37 +104,32 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
-		var path = getInputData(0);
-		if(path == "") return;
-		
-		update();
+		updatePaths(path_get(getInputData(0)));
+		triggerRender();
+	} #endregion
+	
+	static step = function() { #region
+		if(attributes.file_checker)
+		for( var i = 0, n = array_length(path_current); i < n; i++ ) {
+			if(file_get_modify_s(path_current[i]) > edit_time) {
+				updatePaths();
+				triggerRender();
+				break;
+			}
+		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		var path = getInputData(0);
+		var path = path_get(getInputData(0));
 		var pad  = getInputData(1);
 		
 		outputs[| 1].setValue(path);
-		if(path_current != path)
+		if(!array_equals(path_current, path))
 			updatePaths(path);
-		else {
-			//if(!is_array(path)) path = [ path ];
-			//var _upd = false;
-			
-			//for( var i = 0, n = array_length(path); i < n; i++ ) {
-			//	var _et = array_safe_get(edit_time, i);
-			//	var _ms = file_get_modify_s(path[i]);
-				
-			//	if(_ms > edit_time[i]) _upd = true;
-			//	edit_time[i] = _ms;
-			//}
-			
-			//if(_upd) updatePaths(path);
-		}
 		
 		if(array_empty(spr)) return;
 		
-		var _arr     = is_array(spr) && array_length(spr) > 1;
+		var _arr     = array_length(spr) > 1;
 		var _outsurf = outputs[| 0].getValue();
 		
 		if(!is_array(_outsurf)) _outsurf = [ _outsurf ];

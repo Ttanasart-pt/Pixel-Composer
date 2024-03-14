@@ -181,8 +181,8 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _a = inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var _a = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
 		
 		//for( var i = 0, n = array_length(links); i < n; i++ ) {
 		//	var _l = links[i];

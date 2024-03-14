@@ -145,9 +145,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[| 2].setValue(ind);
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(inParent.isArray()) return;
-		return inParent.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		return inParent.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static onValueUpdate = function(index = 0) { #region

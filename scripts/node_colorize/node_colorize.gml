@@ -1,7 +1,7 @@
 function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Colorize";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ c_black, c_white ]) )
 		.setMappable(11);
@@ -10,7 +10,7 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, .01 ] })
 		.setMappable(10);
 	
-	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 4] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -44,8 +44,8 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		inputs[| 12].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, surface_get_dimension(getSingleValue(0)));
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		inputs[| 12].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, surface_get_dimension(getSingleValue(0)));
 	} #endregion
 	
 	static step = function() { #region

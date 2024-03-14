@@ -31,7 +31,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone );
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		var _velo  = getInputData(3);
@@ -57,8 +57,8 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		draw_line_width2(_px, _py, _vx, _vy, 6, 2);
 		draw_set_alpha(1);
 		
-		if(inputs[| 1].drawOverlay(active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 3].drawOverlay(active, _px, _py, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 3].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny)) active = false;
 		
 	} #endregion
 	

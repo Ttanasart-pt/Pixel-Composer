@@ -170,7 +170,7 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	}
 	do_reset_material = false;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	

@@ -110,21 +110,21 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _path	= getInputData(14);
 		if(_path != noone && struct_has(_path, "getPointRatio")) return;
 		
 		var _type = getInputData(15);
 		
 		if(_type == 0) {
-			inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		} else if(_type == 1) {
 			var _pos = getInputData(16);
 			var _px  = _x + _pos[0] * _s;
 			var _py  = _y + _pos[1] * _s;
 			
-			inputs[| 16].drawOverlay(active,  _x,  _y, _s, _mx, _my, _snx, _sny);
-			inputs[| 17].drawOverlay(active, _px, _py, _s, _mx, _my, _snx, _sny);
+			inputs[| 16].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny);
+			inputs[| 17].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
 		}
 	} #endregion
 	

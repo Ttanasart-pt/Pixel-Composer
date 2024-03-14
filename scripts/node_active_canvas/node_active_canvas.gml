@@ -37,8 +37,8 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	temp_surface = [ surface_create(1, 1) ];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static step = function() { #region
