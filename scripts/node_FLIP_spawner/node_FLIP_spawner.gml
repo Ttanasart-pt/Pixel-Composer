@@ -48,6 +48,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	spawn_amo     = 0;
 	prev_position = [ 0, 0 ];
+	toReset       = true;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _shp   = getInputData(1);
@@ -103,7 +104,8 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _dirr  = getInputData(10);
 		var _ivel  = getInputData(11);
 		
-		if(IS_FIRST_FRAME) spawn_amo = 0;
+		if(IS_FIRST_FRAME || toReset) spawn_amo = 0;
+		toReset = false;
 		
 		_amo = min(_amo, domain.maxParticles - domain.numParticles);
 		spawn_amo += _amo;

@@ -1,18 +1,16 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform float size;
-
-uniform vec2      strength;
-uniform int       strengthUseSurf;
-uniform sampler2D strengthSurf;
+uniform int scale;
 
 uniform vec2      direction;
 uniform int       directionUseSurf;
 uniform sampler2D directionSurf;
+
+uniform vec2      strength;
+uniform int       strengthUseSurf;
+uniform sampler2D strengthSurf;
 
 uniform int	  sampleMode;
 
@@ -36,17 +34,31 @@ vec4 sampleTexture(vec2 pos) { #region
 } #endregion
 
 vec4 dirBlur(vec2 angle) { #region
-    vec4 acc    = vec4(0.);
-    float delta = 1. / size;
+    vec4 acc     = vec4(0.);
+    float delta  = 1. / size;
 	float weight = 0.;
     
-    for(float i = -1.0; i <= 1.0; i += delta) {
-		vec4 col = sampleTexture( v_vTexcoord - angle * i);
-        acc    += col;
-		weight += col.a;
-    }
-	acc.rgb /= weight;
-	acc.a   /= size * 2.;
+	if(scale == 0) {
+	    for(float i = -1.0; i <= 1.0; i += delta) {
+			vec4 col  = sampleTexture( v_vTexcoord - angle * i);
+	        acc      += col;
+			weight   += col.a;
+	    }
+		
+		acc.rgb /= weight;
+		acc.a   /= size * 2.;
+	} else {
+		for(float i = 0.; i <= 1.0; i += delta) {
+			vec4 col  = sampleTexture( v_vTexcoord - angle * i);
+	        acc      += col  ;
+			weight   += col.a;
+	    }
+		
+		acc.rgb /= weight;
+		acc.a   /= size - 1.;
+		
+		acc += sampleTexture( v_vTexcoord );
+	}
 	
     return acc;
 } #endregion

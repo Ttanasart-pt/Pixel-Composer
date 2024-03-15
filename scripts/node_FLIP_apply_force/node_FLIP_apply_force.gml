@@ -49,6 +49,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	obstracle = new FLIP_Obstracle();
 	index     = 0;
+	toReset   = true;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _posit = getInputData(1);
@@ -102,17 +103,19 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		obstracle.y       = _posit[1];
 		obstracle.texture = _tex;
 		
-		if(IS_FIRST_FRAME) {
+		if(IS_FIRST_FRAME || toReset) {
 			index = FLIP_createObstracle(domain.domain);
 			array_push(domain.obstracles, obstracle);
 		}
+		
+		toReset = false;
 		
 		     if(_shp == 0) FLIP_setObstracle_circle(domain.domain, index, _posit[0], _posit[1], _rad);
 		else if(_shp == 1) FLIP_setObstracle_rectangle(domain.domain, index, _posit[0], _posit[1], _siz[0], _siz[1]);
 	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_fluidSim_add_collider, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+		draw_sprite_bbox(s_node_fluidSim_add_collider, 0, bbox);
+	} #endregion
 }

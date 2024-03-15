@@ -20,8 +20,9 @@ function addonPanel(_addon, pane) : PanelContent() constructor {
 	
 	function drawGUI() {
 		if(drawUIFn == "") return;
-		if(!_addon.ready) return;
-		lua_add_code(_addon.thread, "panelID = '" + string(ID) + "'");
+		if(!_addon.ready)  return;
+		
+		lua_add_code(_addon.thread, $"panelID = '{ID}'");
 		var runResult = lua_call(_addon.thread, drawUIFn);
 	}
 	
@@ -30,9 +31,10 @@ function addonPanel(_addon, pane) : PanelContent() constructor {
 	}
 	
 	function drawContent(panel) {
-		if(drawFn == "") return;
+		if(drawFn == "")  return;
 		if(!_addon.ready) return;
-		lua_add_code(_addon.thread, "panelID = '" + string(ID) + "'");
+		
+		lua_add_code(_addon.thread, $"panelID = '{ID}'");
 		__addon_lua_panel_variable(_addon.thread, self);
 		var runResult = lua_call(_addon.thread, drawFn);
 	}
@@ -40,6 +42,7 @@ function addonPanel(_addon, pane) : PanelContent() constructor {
 	static onClose = function() {
 		if(closeFn == "") return;
 		if(!_addon.ready) return;
+		
 		var runResult = lua_call(_addon.thread, closeFn);
 	}
 }

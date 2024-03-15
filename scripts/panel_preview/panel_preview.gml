@@ -1304,7 +1304,7 @@ function Panel_Preview() : PanelContent() constructor {
 		//draw_sprite_stretched_ext(THEME.toolbar_shadow, 0, 0, ty - 12 + 4, w, 12, c_white, 0.5);
 		
 		var aa = d3_active? 0.8 : 1;
-		draw_sprite_stretched_ext(THEME.toolbar, 1, 0, 0, w, topbar_height, c_white, aa);
+		draw_sprite_stretched_ext(THEME.toolbar, 1, 0,  0, w, topbar_height, c_white, aa);
 		draw_sprite_stretched_ext(THEME.toolbar, 0, 0, ty, w, toolbar_height, c_white, aa);
 		
 		if(!_node) return;
@@ -1487,7 +1487,7 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
-		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
+		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
 			
 		var _prev_node   = getNodePreview();
 		

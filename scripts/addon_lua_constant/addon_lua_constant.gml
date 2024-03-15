@@ -134,10 +134,11 @@ function __addon_lua_setup_constants(lua, context) {
 	lua_add_code(lua, "Panel = {};");
 	lua_add_code(lua, "Animator = {};");
 	
-	lua_add_code(lua, $"s_ui_panel_active = {THEME.ui_panel_active}");
-	lua_add_code(lua, $"s_ui_panel_bg = {THEME.ui_panel_bg}");
-	lua_add_code(lua, $"s_ui_scrollbar = {THEME.ui_scrollbar}");
-	
+	var _sprs = variable_struct_get_names(THEME);
+	for( var i = 0, n = array_length(_sprs); i < n; i++ ) {
+		var txt = $"s_{_sprs[i]} = {real(THEME[$ _sprs[i]])}";
+		lua_add_code(lua, txt);
+	}
 }
 	
 function __addon_lua_panel_variable(lua, panel) {

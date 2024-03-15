@@ -94,7 +94,8 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			})]);
 	#endregion
 	
-	domain = instance_create(0, 0, FLIP_Domain);
+	domain  = instance_create(0, 0, FLIP_Domain);
+	toReset = true;
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _dim = getInputData(0);
@@ -118,7 +119,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _itrP = attributes.iteration_pressure;
 		var _itrR = attributes.iteration_particle;
 		
-		if(IS_FIRST_FRAME) {
+		if(IS_FIRST_FRAME || toReset) {
 			var width        = _dim[0] + _siz * 2;
 			var height       = _dim[1] + _siz * 2;
 			var particleSize = _siz;
@@ -127,6 +128,8 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			domain.init(width, height, particleSize, density, maxParticles);
 		}
+		
+		toReset = false;
 		
 		domain.velocityDamping  = _dmp;
 		domain.dt               = _dt;
@@ -150,9 +153,8 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		outputs[| 0].setValue(domain);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
-		
-		draw_sprite_fit(s_node_fluidSim_domain, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+		draw_sprite_bbox(s_node_fluidSim_domain, 0, bbox);
+	} #endregion
 }

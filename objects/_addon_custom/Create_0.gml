@@ -65,16 +65,23 @@ event_inherited();
 	}
 	
 	function animationPreStep() {
+		INLINE
 		if(!ready) return;
+		
 		var runResult = lua_call(thread, "animationPreStep");
 	}
 	
 	function animationPostStep() {
+		INLINE
 		if(!ready) return;
+		
 		var runResult = lua_call(thread, "animationPostStep");
 	}
 	
 	function callFunctions(fn) {
+		INLINE
+		if(!ready) return;
+		
 		lua_call(thread, fn);
 	}
 #endregion
