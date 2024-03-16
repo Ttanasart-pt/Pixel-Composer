@@ -11,8 +11,9 @@ function __gaussian_get_kernel(size) {
 	if(struct_has(GAUSSIAN_COEFF, size)) return GAUSSIAN_COEFF[$ size];
 	
 	var gau_array = array_create(size);
-	var we = 0;
-	var b  = 0.3 * ((size - 1) * 0.5 - 1) + 0.8;
+	var we        = 0;
+	var b         = 0.3 * ((size - 1) * 0.5 - 1) + 0.8;
+	
 	for(var i = 0; i < size; i++) {
 		var _x = i * .5;
 		
