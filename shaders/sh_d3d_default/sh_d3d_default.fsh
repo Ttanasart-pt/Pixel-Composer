@@ -320,5 +320,5 @@ void main() {
 	
 	gl_FragData[0] = final_color;
 	gl_FragData[1] = vec4(0.5 + normal * 0.5, final_color.a);
-	gl_FragData[2] = vec4(vec3(v_cameraDistance), final_color.a);
+	gl_FragData[2] = vec4(vec3(1. - abs(v_cameraDistance)), final_color.a);
 }

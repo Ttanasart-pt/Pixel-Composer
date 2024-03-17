@@ -35,7 +35,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 11] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "Alpha" ]);
 	
-	inputs[| 12] = nodeValue("Modulate strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 12] = nodeValue("Modulate strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 13] = nodeValue("Spread", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range : [ 0, 30, 1 ] });

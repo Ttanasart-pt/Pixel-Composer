@@ -13,8 +13,8 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
 	
 	inputs[| 4] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Square",  s_node_shape, 0), 
-												 new scrollItem("Circle",  s_node_shape, 1), 
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Square",  s_node_shape_type, 0), 
+												 new scrollItem("Circle",  s_node_shape_type, 1), 
 												 new scrollItem("Diamond", s_node_shape_misc, 0) ]);
 		
 	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
@@ -51,13 +51,14 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _sam = struct_try_get(attributes, "oversample");
 		
 		surface_set_shader(_outSurf, sh_local_analyze);
-			shader_set_f("dimension" , surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
+			shader_set_f("dimension" , surface_get_dimension(_data[0]));
 			shader_set_i("algorithm" , _alg);
 			shader_set_f("size"      , _siz);
 			shader_set_i("shape"     , _shp);
 			shader_set_i("sampleMode", _sam);
-			draw_surface_safe(_data[0], 0, 0);
-		surface_reset_target();
+			
+			draw_surface_safe(_data[0]);
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);

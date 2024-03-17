@@ -27,7 +27,7 @@ function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [ 1, 
 		["Surfaces",  true], 0,
-		["Shape",    false], 2, 4, 5, 6, 7, 
+		["Shape",    false], 2, 5, 6, 7, 
 		["Mapping",  false], 3, 
 	];
 	

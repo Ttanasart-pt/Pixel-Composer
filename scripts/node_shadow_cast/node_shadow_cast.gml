@@ -70,8 +70,9 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	input_display_list = [ 17, 
 		["Surfaces",		   true], 0, 1, 
-		["Light",			  false], 5, 12, 8, 2, 3, 4,
 		["BG Shadow Caster",   true, 10], 11,
+		["Light",			  false], 5, 12, 8, 2,
+		["Soft Light",		  false], 4, 3, 
 		["Render",			  false], 13, 14, 7, 6, 9, 
 		["Ambient Occlusion", false], 15, 16,
 	];
@@ -113,7 +114,6 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _bg_thr = _data[11];
 		
 		inputs[| 8].setVisible(_type == 0);
-		inputs[| 11].setVisible(_bg_use);
 		
 		if(!is_surface(_bg)) return _outSurf;
 	

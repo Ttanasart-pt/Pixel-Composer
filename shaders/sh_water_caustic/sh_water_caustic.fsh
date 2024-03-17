@@ -6,6 +6,7 @@ varying vec4 v_vColour;
 uniform float seed;
 uniform float progress;
 uniform float detail;
+
 uniform vec2  u_resolution;
 uniform vec2  position;
 uniform vec2  scale;

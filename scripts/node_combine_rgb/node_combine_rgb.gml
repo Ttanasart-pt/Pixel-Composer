@@ -20,24 +20,40 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 7] = nodeValue("Array Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 8] = nodeValue("RGBA Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, [])
+		.setArrayDepth(1);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Sampling",	false], 4, 5, 6, 
-		["Surfaces",	 true], 0, 1, 2, 3,
+		["Surfaces",	 true], 7, 0, 1, 2, 3, 8, 
 	]
 	
 	attribute_surface_depth();
 	
 	static step = function() { #region
 		inputs[| 5].mappableStep();
+		
+		var _arr = getInputData(7);
+		
+		inputs[| 0].setVisible(!_arr, !_arr);
+		inputs[| 1].setVisible(!_arr, !_arr);
+		inputs[| 2].setVisible(!_arr, !_arr);
+		inputs[| 3].setVisible(!_arr, !_arr);
+		
+		inputs[| 8].setVisible(_arr, _arr);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _r    = _data[0];
-		var _g    = _data[1];
-		var _b    = _data[2];
-		var _a    = _data[3];
+		var _arr  = _data[7];
+		
+		var _r    = _arr? array_safe_get(_data[8], 0) : _data[0];
+		var _g    = _arr? array_safe_get(_data[8], 1) : _data[1];
+		var _b    = _arr? array_safe_get(_data[8], 2) : _data[2];
+		var _a    = _arr? array_safe_get(_data[8], 3) : _data[3];
 		
 		var _baseS = _r;
 		if(!is_surface(_baseS)) _baseS = _g;
@@ -47,11 +63,12 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_baseS), surface_get_height_safe(_baseS));
 		
 		surface_set_shader(_outSurf, sh_combine_rgb);
+			
 			shader_set_surface("samplerR", _r);
 			shader_set_surface("samplerG", _g);
 			shader_set_surface("samplerB", _b);
 			shader_set_surface("samplerA", _a);
-			
+				
 			shader_set_i("useR", is_surface(_r));
 			shader_set_i("useG", is_surface(_g));
 			shader_set_i("useB", is_surface(_b));

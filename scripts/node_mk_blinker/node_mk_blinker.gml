@@ -5,7 +5,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 1] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random())
+	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random());
 	
 	inputs[| 3] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -41,8 +41,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	]
 	
 	temp_surface = [ surface_create( 1, 1 ), surface_create( 1, 1 ), surface_create( 1, 1 ) ];
-	
-	light_only = [];
+	light_only   = [];
 	
 	surface_blur_init();
 	

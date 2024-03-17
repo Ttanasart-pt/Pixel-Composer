@@ -26,6 +26,7 @@ void main() {
 	vec3 worldNormal = normalize(gm_Matrices[MATRIX_WORLD] * vec4(in_Normal, 0.)).xyz;
 	v_vNormal = worldNormal;
 	
-	float ndcDepth   = (gl_Position.z - planeNear - planeFar) / (planeFar - planeNear);
+	float depthRange = abs(planeFar - planeNear);
+	float ndcDepth   = (gl_Position.z - planeNear) / depthRange;
 	v_cameraDistance = ndcDepth * 0.5 + 0.5;
 }
