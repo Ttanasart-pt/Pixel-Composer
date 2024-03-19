@@ -552,8 +552,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			else if(_connect == JUNCTION_CONNECT.output) node.outputMap[? internalName] = self;
 		}
 		
-		tooltip    = _tooltip;
-		editWidget = noone;
+		tooltip        = _tooltip;
+		editWidget     = noone;
+		editWidgetRaw  = noone;
+		mapWidget      = noone;
 		active_tooltip = "";
 		
 		tags = VALUE_TAG.none;
@@ -1287,6 +1289,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break; #endregion
 		}
 		
+		editWidgetRaw = editWidget;
+		
 		for( var i = 0, n = ds_list_size(animator.values); i < n; i++ ) {
 			animator.values[| i].ease_in_type   = key_inter;
 			animator.values[| i].ease_out_type  = key_inter;
@@ -1299,8 +1303,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setMappable = function(index) { #region
 		attributes.mapped     = false;
 		attributes.map_index  = index;
-		
-		editWidgetRaw = editWidget;
 		
 		mapButton = button(function() { 
 						attributes.mapped = !attributes.mapped;
@@ -2615,7 +2617,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static attributeApply = function() { #region
-		if(struct_has(attributes, "mapped")) mappableStep();
+		if(struct_has(attributes, "mapped") && attributes.mapped) 
+			mappableStep();
 	} #endregion
 	
 	static connect = function(log = false) { #region

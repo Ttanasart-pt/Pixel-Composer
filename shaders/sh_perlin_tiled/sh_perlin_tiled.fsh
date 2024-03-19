@@ -50,18 +50,10 @@ float noise (in vec2 st, in vec2 scale) { #region
     vec2 ci = f - vec2(0., 1.);
     vec2 di = f - vec2(1., 1.);
 	
-	//float a = random(_a);
-    //float b = random(_b);
-    //float c = random(_c);
-    //float d = random(_d);
-	
 	vec2 a2 = random2(_a);
     vec2 b2 = random2(_b);
     vec2 c2 = random2(_c);
     vec2 d2 = random2(_d);
-	
-	//float l1 = mix(a, b, u.x);
-	//float l2 = mix(c, d, u.x);
 	
 	float l1 = mix(dot(ai, a2), dot(bi, b2), u.x);
 	float l2 = mix(dot(ci, c2), dot(di, d2), u.x);
@@ -72,7 +64,7 @@ float noise (in vec2 st, in vec2 scale) { #region
 float perlin(in vec2 st) { #region
 	float amp = pow(2., float(iteration) - 1.)  / (pow(2., float(iteration)) - 1.);
     float n   = 0.;
-	vec2 pos  = st;
+	vec2  pos = st;
 	vec2  sc  = sca;
 	
 	for(int i = 0; i < iteration; i++) {

@@ -249,7 +249,7 @@
 
 	function surface_from_buffer(buff) { #region
 		static header_length = 24;
-	
+		
 		if(!buffer_exists(buff))					return noone;
 		if(buffer_get_size(buff) < header_length)	return noone;
 	

@@ -412,25 +412,25 @@ function __initNodes() {
 	#endregion
 	
 	var smokeSim = ds_list_create(); #region
-	addNodeCatagory("SmokeSim", smokeSim, ["Node_Fluid_Group", "Node_Fluid_Group_Inline"]);
+	addNodeCatagory("SmokeSim", smokeSim, ["Node_Smoke_Group", "Node_Smoke_Group_Inline"]);
 		ds_list_add(smokeSim, "Group");
 		addNodeObject(smokeSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent().hideGlobal();
 		addNodeObject(smokeSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent().hideGlobal();
-		addNodeObject(smokeSim, "Render Domain",	s_node_smokeSim_render_output,	"Node_Fluid_Render_Output",	[1, Node_Fluid_Render_Output]).hideRecent().setVersion(11540).hideGlobal();
+		addNodeObject(smokeSim, "Render Domain",	s_node_smokeSim_render_output,	"Node_Smoke_Render_Output",	[1, Node_Smoke_Render_Output]).hideRecent().setVersion(11540).hideGlobal();
 		
 		ds_list_add(smokeSim, "Domain");
-		addNodeObject(smokeSim, "Domain",			s_node_smokeSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).hideRecent().setVersion(1120);
-		addNodeObject(smokeSim, "Update Domain",	s_node_smokeSim_update,			"Node_Fluid_Update",		[1, Node_Fluid_Update],, "Run smoke by one step.").hideRecent().setVersion(1120);
-		addNodeObject(smokeSim, "Render Domain",	s_node_smokeSim_render,			"Node_Fluid_Render",		[1, Node_Fluid_Render],, "Render smoke to surface. This node also have update function build in.").hideRecent().setVersion(1120);
-		addNodeObject(smokeSim, "Queue Domain",		s_node_smokeSim_domain_queue,	"Node_Fluid_Domain_Queue",	[1, Node_Fluid_Domain_Queue],, "Sync multiple domains to be render at the same time.").hideRecent().setVersion(1120);
+		addNodeObject(smokeSim, "Domain",			s_node_smokeSim_domain,			"Node_Smoke_Domain",		[1, Node_Smoke_Domain]).hideRecent().setVersion(1120);
+		addNodeObject(smokeSim, "Update Domain",	s_node_smokeSim_update,			"Node_Smoke_Update",		[1, Node_Smoke_Update],, "Run smoke by one step.").hideRecent().setVersion(1120);
+		addNodeObject(smokeSim, "Render Domain",	s_node_smokeSim_render,			"Node_Smoke_Render",		[1, Node_Smoke_Render],, "Render smoke to surface. This node also have update function build in.").hideRecent().setVersion(1120);
+		addNodeObject(smokeSim, "Queue Domain",		s_node_smokeSim_domain_queue,	"Node_Smoke_Domain_Queue",	[1, Node_Smoke_Domain_Queue],, "Sync multiple domains to be render at the same time.").hideRecent().setVersion(1120);
 			
 		ds_list_add(smokeSim, "Smoke");
-		addNodeObject(smokeSim, "Add Emitter",		s_node_smokeSim_emitter,		"Node_Fluid_Add",				[1, Node_Fluid_Add],, "Add smoke emitter.").hideRecent().setVersion(1120);
-		addNodeObject(smokeSim, "Apply Velocity",	s_node_smokeSim_apply_velocity,	"Node_Fluid_Apply_Velocity",	[1, Node_Fluid_Apply_Velocity],, "Apply velocity to smoke.").hideRecent().setVersion(1120);
-		addNodeObject(smokeSim, "Add Collider",		s_node_smokeSim_add_collider,	"Node_Fluid_Add_Collider",		[1, Node_Fluid_Add_Collider],, "Add solid object that smoke can collides to.").hideRecent().setVersion(1120);
-		addNodeObject(smokeSim, "Vortex",			s_node_smokeSim_vortex,			"Node_Fluid_Vortex",			[1, Node_Fluid_Vortex],, "Apply rotational force around a point.").hideRecent().setVersion(1120);
-		addNodeObject(smokeSim, "Repulse",			s_node_smokeSim_repulse,		"Node_Fluid_Repulse",			[1, Node_Fluid_Repulse],, "Spread smoke away from a point.").hideRecent().setVersion(1120);
-		addNodeObject(smokeSim, "Turbulence",		s_node_smokeSim_turbulence,		"Node_Fluid_Turbulence",		[1, Node_Fluid_Turbulence],, "Apply random velocity map to the smoke.").hideRecent().setVersion(1120);
+		addNodeObject(smokeSim, "Add Emitter",		s_node_smokeSim_emitter,		"Node_Smoke_Add",				[1, Node_Smoke_Add],, "Add smoke emitter.").hideRecent().setVersion(1120);
+		addNodeObject(smokeSim, "Apply Velocity",	s_node_smokeSim_apply_velocity,	"Node_Smoke_Apply_Velocity",	[1, Node_Smoke_Apply_Velocity],, "Apply velocity to smoke.").hideRecent().setVersion(1120);
+		addNodeObject(smokeSim, "Add Collider",		s_node_smokeSim_add_collider,	"Node_Smoke_Add_Collider",		[1, Node_Smoke_Add_Collider],, "Add solid object that smoke can collides to.").hideRecent().setVersion(1120);
+		addNodeObject(smokeSim, "Vortex",			s_node_smokeSim_vortex,			"Node_Smoke_Vortex",			[1, Node_Smoke_Vortex],, "Apply rotational force around a point.").hideRecent().setVersion(1120);
+		addNodeObject(smokeSim, "Repulse",			s_node_smokeSim_repulse,		"Node_Smoke_Repulse",			[1, Node_Smoke_Repulse],, "Spread smoke away from a point.").hideRecent().setVersion(1120);
+		addNodeObject(smokeSim, "Turbulence",		s_node_smokeSim_turbulence,		"Node_Smoke_Turbulence",		[1, Node_Smoke_Turbulence],, "Apply random velocity map to the smoke.").hideRecent().setVersion(1120);
 	#endregion
 	
 	var flipSim = ds_list_create(); #region
@@ -718,7 +718,7 @@ function __initNodes() {
 		addNodeObject(generator, "VFX",					s_node_vfx,					"Node_VFX_Group_Inline",	[1, Node_VFX_Group_Inline],,				"Create VFX group, which generate particles that can be manipulated using different force nodes.");
 		addNodeObject(generator, "RigidSim",			s_node_rigidSim,			"Node_Rigid_Group_Inline",	[1, Node_Rigid_Group_Inline],,				"Create group for rigidbody simulation.").setVersion(1110);
 		addNodeObject(generator, "FLIP Fluid",			s_node_fluidSim_group,		"Node_FLIP_Group_Inline",	[1, Node_FLIP_Group_Inline],,				"Create group for fluid simulation.").setVersion(11620);
-		addNodeObject(generator, "SmokeSim",			s_node_smokeSim_group,		"Node_Fluid_Group_Inline",	[1, Node_Fluid_Group_Inline],,				"Create group for smoke simulation.").setVersion(1120);
+		addNodeObject(generator, "SmokeSim",			s_node_smokeSim_group,		"Node_Smoke_Group_Inline",	[1, Node_Smoke_Group_Inline],,				"Create group for smoke simulation.").setVersion(1120);
 		addNodeObject(generator, "StrandSim",			s_node_strandSim,			"Node_Strand_Group_Inline",	[1, Node_Strand_Group_Inline], ["hair"],	"Create group for hair simulation.").setVersion(1140);
 		addNodeObject(generator, "Diffuse",				s_node_diffuse,				"Node_Diffuse",				[1, Node_Diffuse],,							"Simulate diffusion like simulation.").setVersion(11640);
 		addNodeObject(generator, "Reaction Diffusion",	s_node_reaction_diffusion,	"Node_RD",					[1, Node_RD],,								"Simulate reaction diffusion effect.").setVersion(11630);
@@ -1119,7 +1119,7 @@ function __initNodes() {
 		addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147).hideRecent();
 		addNodeObject(hid, "RigidSim",			s_node_rigidSim,		"Node_Rigid_Group",				[1, Node_Rigid_Group],, "Create group for rigidbody simulation.").setVersion(1110).hideRecent();
 		addNodeObject(hid, "RigidSim Global",	s_node_rigidSim_global,	"Node_Rigid_Global",			[1, Node_Rigid_Global]).setVersion(1110).hideRecent();
-		addNodeObject(hid, "SmokeSim",			s_node_smokeSim_group,	"Node_Fluid_Group",				[1, Node_Fluid_Group],, "Create group for fluid simulation.").setVersion(1120).hideRecent();
+		addNodeObject(hid, "SmokeSim",			s_node_smokeSim_group,	"Node_Smoke_Group",				[1, Node_Smoke_Group],, "Create group for fluid simulation.").setVersion(1120).hideRecent();
 		addNodeObject(hid, "StrandSim",			s_node_strandSim,		"Node_Strand_Group",			[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140).hideRecent();
 		addNodeObject(hid, "Feedback",			s_node_feedback,		"Node_Feedback_Inline",			[1, Node_Feedback_Inline]).hideRecent();
 		addNodeObject(hid, "Loop",				s_node_loop,			"Node_Iterate_Inline",			[1, Node_Iterate_Inline]).hideRecent();

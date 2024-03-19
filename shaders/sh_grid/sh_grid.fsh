@@ -206,14 +206,14 @@ void main() { #region
 	if(shiftAxis == 0) {
 		shf /= sca.x;
 		
-		float cellY = floor(_pos.y * sca.y);
+		float cellY  = floor(_pos.y * sca.y);
 		float shiftX = mod(cellY, 2.) * shf;
 		
 		_pos.x += shiftX;
 	} else {
 		shf /= sca.y;
 		
-		float cellX = floor(_pos.x * sca.x);
+		float cellX  = floor(_pos.x * sca.x);
 		float shiftY = mod(cellX, 2.) * shf;
 	
 		_pos.y += shiftY;

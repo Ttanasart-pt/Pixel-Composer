@@ -4,7 +4,6 @@ varying vec4 v_vColour;
 uniform vec2  u_resolution;
 uniform vec2  position;
 uniform float scale;
-uniform float bright;
 uniform int   iteration;
 
 ///////////////////// PERLIN START /////////////////////
@@ -20,15 +19,15 @@ float noise (in vec2 st) {
     vec2 f = fract(st);
     vec2 u = f * f * (3.0 - 2.0 * f);
 
-	float lerp1 = mix(dot(f + vec2(0.0, 0.0), random2(i + vec2(0.0, 0.0))), dot(f + vec2(1.0, 0.0), random2(i + vec2(1.0, 0.0))), u.x);
-    float lerp2 = mix(dot(f + vec2(0.0, 1.0), random2(i + vec2(0.0, 1.0))), dot(f + vec2(1.0, 1.0), random2(i + vec2(1.0, 1.0))), u.x);
+	float lerp1 = mix(dot(f - vec2(0.0, 0.0), random2(i + vec2(0.0, 0.0))), dot(f - vec2(1.0, 0.0), random2(i + vec2(1.0, 0.0))), u.x);
+    float lerp2 = mix(dot(f - vec2(0.0, 1.0), random2(i + vec2(0.0, 1.0))), dot(f - vec2(1.0, 1.0), random2(i + vec2(1.0, 1.0))), u.x);
     
     return mix(lerp1, lerp2, u.y);
 }
 
 float perlin ( vec2 pos, int iteration ) {
-	float amp = pow(2., float(iteration) - 1.)  / (pow(2., float(iteration)) - 1.);
-    float n = 0.;
+	float amp = pow(2., float(iteration) - 1.) / (pow(2., float(iteration)) - 1.);
+    float n   = 0.;
 	
 	for(int i = 0; i < iteration; i++) {
 		n += noise(pos) * amp;

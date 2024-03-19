@@ -6,9 +6,9 @@ uniform sampler2D samS;
 uniform sampler2D samV;
 uniform sampler2D samA;
 
-uniform int useR;
-uniform int useG;
-uniform int useB;
+uniform int useH;
+uniform int useS;
+uniform int useV;
 uniform int useA;
 
 vec3 hsv2rgb(vec3 c) {

@@ -55,12 +55,13 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _b    = _arr? array_safe_get(_data[8], 2) : _data[2];
 		var _a    = _arr? array_safe_get(_data[8], 3) : _data[3];
 		
-		var _baseS = _r;
-		if(!is_surface(_baseS)) _baseS = _g;
-		if(!is_surface(_baseS)) _baseS = _b;
+		var _baseS = is_surface(_r)? _r : (is_surface(_g)? _g : _b);
 		if(!is_surface(_baseS)) return _outSurf;
 		
-		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_baseS), surface_get_height_safe(_baseS));
+		var _ww = surface_get_width_safe(_baseS);
+		var _hh = surface_get_height_safe(_baseS);
+		
+		_outSurf = surface_verify(_outSurf, _ww, _hh);
 		
 		surface_set_shader(_outSurf, sh_combine_rgb);
 			
@@ -77,7 +78,8 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i("mode",     !_data[4]);
 			shader_set_f_map("base", _data[5], _data[6], inputs[| 5]);
 			
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _ww, _hh);
+			
 		surface_reset_shader();
 		
 		return _outSurf;

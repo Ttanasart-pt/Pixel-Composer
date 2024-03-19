@@ -38,6 +38,14 @@ function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _v = _arr? array_safe_get(_data[5], 2) : _data[2];
 		var _a = _arr? array_safe_get(_data[5], 3) : _data[3];
 		
+		var _baseS = is_surface(_h)? _h : (is_surface(_s)? _s : _v);
+		if(!is_surface(_baseS)) return _outSurf;
+		
+		var _ww = surface_get_width_safe(_baseS);
+		var _hh = surface_get_height_safe(_baseS);
+		
+		_outSurf = surface_verify(_outSurf, _ww, _hh);
+		
 		surface_set_shader(_outSurf, sh_combine_hsv);
 			shader_set_surface("samH", _h);
 			shader_set_surface("samS", _s);
@@ -49,7 +57,7 @@ function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i("useV", is_surface(_v));
 			shader_set_i("useA", is_surface(_a));
 			
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width_safe(_outSurf), surface_get_width_safe(_outSurf));
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _ww, _hh);
 		surface_reset_shader();
 		
 		return _outSurf;
