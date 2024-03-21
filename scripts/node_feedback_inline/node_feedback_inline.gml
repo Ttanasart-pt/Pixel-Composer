@@ -60,12 +60,16 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	} #endregion
 	
 	static drawConnections = function(params = {}) { #region
-		if(!active) return;
-		if(!junc_in || !junc_out) return;
-		if(!junc_in.node.active || !junc_out.node.active) return;
+		if(!active) return noone;
+		if(!junc_in || !junc_out) return noone;
+		if(!junc_in.node.active || !junc_out.node.active) return noone;
 		
-		if(drawJuncConnection(junc_out, junc_in, params))
-			return self;
+		params.dashed = true;
+		var sel = drawJuncConnection(junc_out, junc_in, params);
+		params.dashed = false;
+		
+		if(sel) return self;
+		return noone;
 	} #endregion
 	
 	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) {}

@@ -11,7 +11,8 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 1] = nodeValue("Merge threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 2] = nodeValue("Vaporize", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 2] = nodeValue("Lifespan", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
 	inputs[| 3] = nodeValue("Particle expansion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 10);
 	
@@ -30,8 +31,10 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 9] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
+	inputs[| 10] = nodeValue("Segments", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	
 	input_display_list = [ 0, 5, 
-		["Rendering", false], 6, 3, 4, 9, 
+		["Rendering", false], 6, 10, 3, 4, 9, 
 		["Effect",    false], 2, 
 		["Post Processing", false], 8, 7, 1, 
 	];
@@ -50,13 +53,32 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			triggerRender();
 		})]);
 			
+			
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var domain = getInputData(0);
+		if(!instance_exists(domain)) return;
+		if(domain.domain == noone)   return;
+		
+		var _m = min(array_length(domain.particlePos) / 2 - 1, domain.numParticles);
+		
+		draw_set_color(COLORS._main_accent);
+		
+		for( var i = 0; i < _m; i++ ) {
+			var _px = domain.particlePos[i * 2 + 0];
+			var _py = domain.particlePos[i * 2 + 1];
+			
+			draw_circle(_x + _px * _s, _y + _py * _s, 1, false);
+		}
+	} #endregion
+	
 	static step = function() {
 		var _typ = getInputData(6);
 		var _thr = getInputData(7);
 		
-		inputs[| 1].setVisible(_typ == 0 && _thr);
-		inputs[| 3].setVisible(_typ == 0);
-		inputs[| 5].setVisible(_typ == 0, _typ == 0);
+		inputs[|  1].setVisible(_typ == 0 && _thr);
+		inputs[|  3].setVisible(_typ == 0);
+		inputs[|  5].setVisible(_typ == 0, _typ == 0);
+		inputs[| 10].setVisible(_typ == 1);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -75,8 +97,10 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _thr = getInputData(7);
 		var _add = getInputData(8);
 		var _alp = getInputData(9);
+		var _seg = getInputData(10);
 		
 		var _outSurf = outputs[| 0].getValue();
+		var _maxpart = domain.maxParticles;
 		var _padd    = domain.particleSize;
 		var _ww = domain.width  - _padd * 2;
 		var _hh = domain.height - _padd * 2;
@@ -86,7 +110,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		outputs[| 0].setValue(_outSurf);		
 		
-		var _x, _y, _px, _py, _r, _l, _a;
+		var _x, _y, _px, _py, _r, _l, _a, _v;
 		var _rad = domain.particleRadius * _exp;
 		var _mx  = min(array_length(domain.particlePos) / 2 - 1, domain.numParticles);
 		
@@ -120,9 +144,10 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					_y -= _padd;
 					_r  = 1;
 					_a  = random_range(_alp[0], _alp[1]);
-				
-					if(_vap) {
-						_r = (_vap - _l) / _vap;
+					_v  = irandom_range(_vap[0], _vap[1]);
+					
+					if(_v) {
+						_r = (_v - _l) / _v;
 						if(_r * _rad < 0.5) continue;
 					}
 					
@@ -136,32 +161,42 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					}
 				}
 			} else if(_typ == 1) {
+				var _segg = min(_seg, CURRENT_FRAME);
+				
+				var _ox, _oy, _nx, _ny;
+				draw_set_color(c_white);
+				
 				for( var i = 0; i < _mx; i++ ) {
-					_x  = domain.particlePos[i * 2 + 0];
-					_y  = domain.particlePos[i * 2 + 1];
-					_px = domain.particleHist[i * 2 + 0];
-					_py = domain.particleHist[i * 2 + 1];
+					_l = domain.particleLife[i];
+					_v = irandom_range(_vap[0], _vap[1]);
 					
-					_l  = domain.particleLife[i];
+					var fstFr = max(0, CURRENT_FRAME - _segg);
+					var lstFr = _v? min(CURRENT_FRAME, CURRENT_FRAME - _l + _v)  : CURRENT_FRAME;
 					
-					if(_x == 0  && _y == 0)  continue;
-					if(_px == 0 && _py == 0) continue;
+					if(lstFr <= fstFr) continue;
 					
-					if(_vap) {
-						if(_l >= _vap) continue;
-						_r = (_vap - _l) / _vap;
+					_ox = lstFr == CURRENT_FRAME? domain.particlePos[i * 2 + 0] : domain.particleHist[(lstFr + 1) * _maxpart * 2 + i * 2 + 0];
+					_oy = lstFr == CURRENT_FRAME? domain.particlePos[i * 2 + 1] : domain.particleHist[(lstFr + 1) * _maxpart * 2 + i * 2 + 1];
+					
+					if(_ox == 0 && _oy == 0) continue;
+					
+					_ox -= _padd;
+					_oy -= _padd;
+					
+					for( var j = lstFr; j > fstFr; j-- ) {
+						_nx = domain.particleHist[j * _maxpart * 2 + i * 2 + 0];
+						_ny = domain.particleHist[j * _maxpart * 2 + i * 2 + 1];
 						
-						_px = _x + (_px - _x) * _r;
-						_py = _y + (_py - _y) * _r;
+						if(_nx == 0 && _ny == 0) continue;
+						
+						_nx -= _padd;
+						_ny -= _padd;
+						
+						draw_line(_ox, _oy, _nx, _ny);
+						
+						_ox = _nx;
+						_oy = _ny;
 					}
-					
-					_x  -= _padd;
-					_y  -= _padd;
-					_px -= _padd;
-					_py -= _padd;
-					
-					draw_set_color(c_white);
-					draw_line(_px, _py, _x, _y);
 				}
 			}
 			

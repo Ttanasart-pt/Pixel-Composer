@@ -6,7 +6,7 @@ function draw_line_feedback(x0, y0, x1, y1, th, c1, c0, _s) { #region
 	
 	var cr = 12 / 2 * _s;
 	var cx = max(x0, x1);
-	var cy = y0 - cr;
+	var cy = (cx == x0? y0 : y1) - cr;
 	var ox, oy, nx, ny;
 	
 	draw_set_color(c0);
@@ -24,7 +24,7 @@ function draw_line_feedback(x0, y0, x1, y1, th, c1, c0, _s) { #region
 	}
 	
 	var cx = min(x0, x1);
-	var cy = y1 - cr;
+	var cy = (cx == x0? y0 : y1) - cr;
 	
 	draw_set_color(c1);
 	

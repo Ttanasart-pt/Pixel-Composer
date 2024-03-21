@@ -2777,7 +2777,7 @@ function drawJuncConnection(from, to, params) { #region
 		var corner = PREFERENCES.connection_line_corner * _s;
 		
 		var ty = LINE_STYLE.solid;
-		if(to.type == VALUE_TYPE.node)
+		if(to.type == VALUE_TYPE.node || struct_try_get(params, "dashed"))
 			ty = LINE_STYLE.dashed;
 			
 		var c0, c1;

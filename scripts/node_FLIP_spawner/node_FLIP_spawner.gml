@@ -10,37 +10,40 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Spawn shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+	inputs[| 1] = nodeValue("Spawn Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Circle", "Surface" ]);
 	
-	inputs[| 2] = nodeValue("Spawn position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue("Spawn Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(); });
 	
-	inputs[| 3] = nodeValue("Spawn type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+	inputs[| 3] = nodeValue("Spawn Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Splash" ]);
 	
-	inputs[| 4] = nodeValue("Spawn frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 );
+	inputs[| 4] = nodeValue("Spawn Frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 );
 	
-	inputs[| 5] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8 );
+	inputs[| 5] = nodeValue("Spawn Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8 );
 	
-	inputs[| 6] = nodeValue("Spawn velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
+	inputs[| 6] = nodeValue("Spawn Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 7] = nodeValue("Spawn surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 7] = nodeValue("Spawn Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
-	inputs[| 8] = nodeValue("Spawn radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2 )	
+	inputs[| 8] = nodeValue("Spawn Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2 )	
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	inputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999) );
 	
-	inputs[| 10] = nodeValue("Spawn direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 45, 135, 0, 0 ] )
+	inputs[| 10] = nodeValue("Spawn Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 45, 135, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_random);
 		
-	inputs[| 11] = nodeValue("Inherit velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )	
+	inputs[| 11] = nodeValue("Inherit Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )	
 		.setDisplay(VALUE_DISPLAY.slider);
 		
+	inputs[| 12] = nodeValue("Spawn Duration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
+		
 	input_display_list = [ 0, 9, 
-		["Spawner",	false], 1, 7, 8, 2, 3, 4, 5, 
+		["Spawner",	false], 1, 7, 8, 2, 3, 4, 12, 5, 
 		["Physics", false], 10, 6, 11, 
 	]
 	
@@ -76,11 +79,19 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	} #endregion
 	
+	static getDimension = function() { 
+		var domain = getInputData(0);
+		if(!instance_exists(domain)) return [ 1, 1 ];
+		
+		return [ domain.width, domain.height ];
+	}
+	
 	static step = function() { #region
 		var _shp = getInputData(1);
 		var _typ = getInputData(3);
 		
-		inputs[| 4].setVisible(_typ == 1);
+		inputs[|  4].setVisible(_typ == 1);
+		inputs[| 12].setVisible(_typ == 1);
 		inputs[| 7].setVisible(_shp == 1, _shp == 1);
 		inputs[| 8].setVisible(_shp == 0);
 	} #endregion
@@ -103,6 +114,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _vel   = getInputData( 6);
 		var _dirr  = getInputData(10);
 		var _ivel  = getInputData(11);
+		var _sdur  = getInputData(12);
 		
 		if(IS_FIRST_FRAME || toReset) spawn_amo = 0;
 		toReset = false;
@@ -110,8 +122,8 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		_amo = min(_amo, domain.maxParticles - domain.numParticles);
 		spawn_amo += _amo;
 		
-		if(spawn_amo < 1)                     return;
-		if(_type == 1 && frame != _fra)       return;
+		if(spawn_amo < 1) return;
+		if(_type == 1 && (frame < _fra || frame >= _fra + _sdur)) return;
 		if(_shape == 1 && !is_surface(_surf)) return;
 		
 		var _samo  = floor(spawn_amo);

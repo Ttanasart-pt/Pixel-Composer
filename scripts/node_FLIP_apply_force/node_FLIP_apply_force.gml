@@ -15,7 +15,7 @@ function FLIP_Obstracle() constructor {
 }
 
 function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Apply Force";
+	name  = "Add Collider";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	w     = 96;
@@ -27,7 +27,8 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(); });
 	
 	inputs[| 2] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )	
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
@@ -50,6 +51,13 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	obstracle = new FLIP_Obstracle();
 	index     = 0;
 	toReset   = true;
+	
+	static getDimension = function() { 
+		var domain = getInputData(0);
+		if(!instance_exists(domain)) return [ 1, 1 ];
+		
+		return [ domain.width, domain.height ];
+	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _posit = getInputData(1);

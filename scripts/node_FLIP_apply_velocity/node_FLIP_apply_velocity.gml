@@ -11,7 +11,8 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(); });
 	
 	inputs[| 2] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )	
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
@@ -30,6 +31,13 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	]
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone );
+	
+	static getDimension = function() { 
+		var domain = getInputData(0);
+		if(!instance_exists(domain)) return [ 1, 1 ];
+		
+		return [ domain.width, domain.height ];
+	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _posit = getInputData(1);
@@ -57,8 +65,8 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		draw_line_width2(_px, _py, _vx, _vy, 6, 2);
 		draw_set_alpha(1);
 		
-		if(inputs[| 1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 3].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) { hover = false; active = false; }
+		//if(inputs[| 3].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny)) { hover = false; active = false; }
 		
 	} #endregion
 	

@@ -30,7 +30,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 8] = nodeValue("Time Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05);
 	
 	inputs[| 9] = nodeValue("Wall type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "None", "Surround", "Ground only" ]);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "Surround", "Ground only" ]);
 	
 	inputs[| 10] = nodeValue("Viscosity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
@@ -42,9 +42,9 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 		
 	input_display_list = [
-		["Domain",	false], 0, 1, 2, 9, 12, 
-		["Solver",  false], 3, 8, 
-		["Physics", false], 6, 7, 10, 11, 
+		["Domain",	false], 0, 1, 9, 12, 
+		["Solver",   true], 3, 8, 
+		["Physics", false], 7, 10, 11, 
 	]
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
@@ -97,6 +97,12 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	domain  = instance_create(0, 0, FLIP_Domain);
 	toReset = true;
 	
+	static step = function() {
+		var _col = getInputData(9);
+		
+		inputs[| 12].setVisible(_col);
+	}
+	
 	static update = function(frame = CURRENT_FRAME) {
 		var _dim = getInputData(0);
 		var _siz = getInputData(1); _siz = max(_siz, 1);
@@ -142,7 +148,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		domain.flipRatio        = _flp;
 		domain.overRelaxation   = _ovr;
 		domain.viscosity        = _vis;
-		domain.friction         = _fric;
+		domain.friction         = power(1 - _fric, 0.025);
 		
 		domain.wallCollide      = _col;
 		domain.wallElasticity   = _ela;

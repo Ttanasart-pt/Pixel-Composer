@@ -12,11 +12,11 @@ if(winMan_isMinimized()) exit;
 		if(is_method(content)) content = content();
 			
 		switch(type) {
-			case VALUE_TYPE.float :
-			case VALUE_TYPE.integer :
-			case VALUE_TYPE.text :
-			case VALUE_TYPE.struct :
-			case VALUE_TYPE.path :
+			case VALUE_TYPE.float   :
+			case VALUE_TYPE.integer : 
+			case VALUE_TYPE.text    :
+			case VALUE_TYPE.struct  :
+			case VALUE_TYPE.path    :
 				draw_tooltip_text(string_real(content));
 				break;
 				
@@ -28,7 +28,7 @@ if(winMan_isMinimized()) exit;
 				draw_tooltip_text("[" + __txt("Curve Object") + "]");
 				break;
 				
-			case VALUE_TYPE.color :
+			case VALUE_TYPE.color : 
 				draw_tooltip_color(content);
 				break;
 				

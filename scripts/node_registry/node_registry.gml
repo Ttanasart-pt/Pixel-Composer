@@ -442,8 +442,9 @@ function __initNodes() {
 		
 		ds_list_add(flipSim, "Fluid");
 		addNodeObject(flipSim, "Spawner",			s_node_fluidSim_add_fluid,			"Node_FLIP_Spawner",		[1, Node_FLIP_Spawner]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Destroy",			s_node_fluidSim_destroy_fluid,		"Node_FLIP_Destroy",		[1, Node_FLIP_Destroy]).hideRecent().setVersion(11680);
 		addNodeObject(flipSim, "Apply Velocity",	s_node_fluidSim_apply_velocity,		"Node_FLIP_Apply_Velocity",	[1, Node_FLIP_Apply_Velocity]).hideRecent().setVersion(11620);
-		addNodeObject(flipSim, "Apply Force",		s_node_fluidSim_force,				"Node_FLIP_Apply_Force",	[1, Node_FLIP_Apply_Force]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Add Collider",		s_node_fluidSim_force,				"Node_FLIP_Apply_Force",	[1, Node_FLIP_Apply_Force]).hideRecent().setVersion(11620);
 	#endregion
 	
 	var strandSim = ds_list_create(); #region
