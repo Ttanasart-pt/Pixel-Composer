@@ -34,7 +34,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(10000, 99999))
 	
-	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, self);
+	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, object);
 	
 	input_display_list = [ 0, 7, 
 		["Spawn",	false],	6, 1, 2, 3, 5, 4,
@@ -54,11 +54,11 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
 			var _node = group.nodes[| i];
 			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
-			var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var _hov = _node.drawOverlayPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			active &= !_hov;
 		}
 		
-		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		return inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static reset = function() {
@@ -109,6 +109,8 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 			spawn(_sed);
 		else if(_typ == 1 && CURRENT_FRAME == _frm) 
 			spawn(_sed);
+			
+		outputs[| 0].setValue(object);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

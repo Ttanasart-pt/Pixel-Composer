@@ -116,27 +116,21 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		} else {
 			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 				var objNode = getInputData(i);
-				if(!is_array(objNode)) objNode = [ objNode ];
+				if(!is_array(objNode)) continue;
 				
 				for( var j = 0; j < array_length(objNode); j++ ) {
-					if(!variable_struct_exists(objNode[j], "object")) continue;
-					var obj = objNode[j].object;
+					var _o = objNode[j];
 					
-					if(!is_array(obj)) obj = [ obj ];
-					
-					for( var k = 0; k < array_length(obj); k++ ) {
-						var _o = obj[k]; 
-						if(_o == noone || !instance_exists(_o)) continue;
-						if(is_undefined(_o.phy_active)) continue;
+					if(_o == noone || !instance_exists(_o)) continue;
+					if(is_undefined(_o.phy_active)) continue;
 						
-						var ixs = max(0, _o.xscale);
-						var iys = max(0, _o.yscale);
+					var ixs = max(0, _o.xscale);
+					var iys = max(0, _o.yscale);
 						
-						var xx = _rnd? round(_o.phy_position_x) : _o.phy_position_x;
-						var yy = _rnd? round(_o.phy_position_y) : _o.phy_position_y;
+					var xx = _rnd? round(_o.phy_position_x) : _o.phy_position_x;
+					var yy = _rnd? round(_o.phy_position_y) : _o.phy_position_y;
 						
-						draw_surface_ext_safe(_o.surface, xx, yy, ixs, iys, _o.image_angle, _o.image_blend, _o.image_alpha);
-					}
+					draw_surface_ext_safe(_o.surface, xx, yy, ixs, iys, _o.image_angle, _o.image_blend, _o.image_alpha);
 				}
 			}
 		}

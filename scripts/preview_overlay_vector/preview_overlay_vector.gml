@@ -34,7 +34,8 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	}
 						
 	if(interact && active && point_in_circle(_mx, _my, _ax, _ay, 8)) {
-		_id = 1;
+		hover = 1;
+		_id   = 1;
 		
 		if(mouse_press(mb_left, active)) {
 			drag_type = 1;

@@ -1,3 +1,9 @@
+enum RIGID_SHAPE { 
+	box,
+	circle,
+	mesh
+}
+
 function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Object";
 	color = COLORS.node_blend_simulation;
@@ -58,10 +64,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray()
 		.setAnimable(false);
 		
-	inputs[| 12] = nodeValue("Collision group", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 12] = nodeValue("Collision group", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.rejectArray()
 		
-	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, self);
+	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, object);
 	
 	input_display_list = [ 8, 12, 
 		["Texture",		false],	6, 
@@ -150,7 +156,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_surface_ext_safe(_tex, _pr_x, _pr_y, _s, _s, 0, c_white, 0.5);
 	} #endregion
 	
-	static drawOverlayPreview = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlayPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _pos = getInputData(7);	
 		var _tex = getInputData(6);
 		
@@ -578,10 +584,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(object == noone) {
 			object = instance_create_depth(ox - sw / 2, oy - sh / 2, 0, oRigidbody);
 			object.surface = _tex;
+			
 		} else if(instance_exists(object)) {
 			for( var i = 0, n = array_length(object.fixture); i < n; i++ )
 				physics_remove_fixture(object, object.fixture[i]);
 			object.fixture = [];
+			
 		} else 
 			return noone;
 		
@@ -591,6 +599,11 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			physics_fixture_set_box_shape(fixture, ww / 2, hh / 2);
 			
 			fixtureCreate(fixture, object, ww / 2, hh / 2);
+			
+			object.type   = RIGID_SHAPE.box;
+			object.width  = ww;
+			object.height = hh;
+			
 		} else if(_shp == 1) {
 			var fixture = physics_fixture_create();
 			var rr = min(ww, hh) / 2;
@@ -598,6 +611,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			physics_fixture_set_circle_shape(fixture, rr);
 			
 			fixtureCreate(fixture, object, rr, rr);
+			
+			object.type   = RIGID_SHAPE.circle;
+			object.radius = rr;
+			
 		} else if(_shp == 2) {
 			var meshes = attributes.mesh;
 			if(array_safe_get(meshes, index, noone) == noone)
@@ -661,6 +678,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					fixtureCreate(fixture, object, -1, -1);
 				}
 			}
+			
+			object.type   = RIGID_SHAPE.mesh;
 		}
 		
 		return object;
@@ -668,6 +687,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		if(IS_FIRST_FRAME) reset();
+		
+		outputs[| 0].setValue(object);
 	} #endregion
 	
 	static step = function() { #region

@@ -45,10 +45,8 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setVisible(false);
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var objNode = getInputData(0);
-		outputs[| 0].setValue(objNode);
-		if(!variable_struct_exists(objNode, "object")) return;
-		var objs = objNode.object;
+		var objs = getInputData(0);
+		outputs[| 0].setValue(objs);
 		
 		var _get = [];
 		var _val = [];

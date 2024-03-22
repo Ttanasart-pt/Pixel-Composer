@@ -1854,6 +1854,7 @@
     {"id":{"name":"s_node_sampler","path":"sprites/s_node_sampler/s_node_sampler.yy",},},
     {"id":{"name":"__background_get_element","path":"scripts/__background_get_element/__background_get_element.yy",},},
     {"id":{"name":"node_anim_curve","path":"scripts/node_anim_curve/node_anim_curve.yy",},},
+    {"id":{"name":"node_FLIP_add_rigidbody","path":"scripts/node_FLIP_add_rigidbody/node_FLIP_add_rigidbody.yy",},},
     {"id":{"name":"node_FFT","path":"scripts/node_FFT/node_FFT.yy",},},
     {"id":{"name":"s_node_random_shape","path":"sprites/s_node_random_shape/s_node_random_shape.yy",},},
     {"id":{"name":"s_node_path_bridge","path":"sprites/s_node_path_bridge/s_node_path_bridge.yy",},},

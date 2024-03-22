@@ -61,14 +61,6 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		})]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(attributes.show_objects) 
-		for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
-			var _node = group.nodes[| i];
-			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
-			var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
-			active &= !_hov;
-		}
-		
 		var _typ = getInputData(1);
 		var _pos = getInputData(2);
 		var px = _x + _pos[0] * _s;
@@ -131,39 +123,42 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		if((_typ > 0) && CURRENT_FRAME != _frm)
 			return;
 		
-		if(!is_array(_obj)) _obj = [ _obj ];
+		if(!is_array(_obj)) return;
 			
 		for( var i = 0, n = array_length(_obj); i < n; i++ ) {
-			var _o = _obj[i].object;
-			if(!is_array(_o)) _o = [ _o ];
+			var obj = _obj[i];
 			
-			for( var j = 0; j < array_length(_o); j++ ) {
-				var obj = _o[j];
-				if(obj == noone || !instance_exists(obj)) continue;
-				if(is_undefined(obj.phy_active)) continue;
+			if(obj == noone || !instance_exists(obj)) continue;
+			if(is_undefined(obj.phy_active)) continue;
 				
-				with(obj) {
-					if(_typ == 0 && _sco == 0)
-						physics_apply_force(_pos[0], _pos[1], _for[0], _for[1]);
-					else if(_typ == 0 && _sco == 1)
-						physics_apply_local_force(_pos[0], _pos[1], _for[0], _for[1]);
-					else if(_typ == 1 && _sco == 0)
-						physics_apply_impulse(_pos[0], _pos[1], _for[0], _for[1]);
-					else if(_typ == 1 && _sco == 1)
-						physics_apply_local_impulse(_pos[0], _pos[1], _for[0], _for[1]);
-					else if(_typ == 2)
+			with(obj) {
+				switch(_typ) {
+					case 0 : 
+						if(_sco == 0) physics_apply_force(_pos[0], _pos[1], _for[0], _for[1]);
+						else          physics_apply_local_force(_pos[0], _pos[1], _for[0], _for[1]);
+						break;
+						
+					case 1 : 
+						if(_sco == 0) physics_apply_impulse(_pos[0], _pos[1], _for[0], _for[1]);
+						else          physics_apply_local_impulse(_pos[0], _pos[1], _for[0], _for[1]);
+						break;
+						
+					case 2 :
 						physics_apply_torque(_tor);
-					else if(_typ == 3) {
-						var dir = point_direction(_pos[0], _pos[1], phy_com_x, phy_com_y);
+						break;
+						
+					case 3 : 
 						var dis = point_distance(_pos[0], _pos[1], phy_com_x, phy_com_y);
 						
 						if(dis < _rad) {
+							var dir = point_direction(_pos[0], _pos[1], phy_com_x, phy_com_y);
+							
 							var str = _str * sqr(1 - dis / _rad);
 							var fx = lengthdir_x(str, dir);
 							var fy = lengthdir_y(str, dir);
 							physics_apply_impulse(_pos[0], _pos[1], fx, fy);
 						}
-					}
+						break;
 				}
 			}
 		}

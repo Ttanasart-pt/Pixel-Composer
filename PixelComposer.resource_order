@@ -1501,6 +1501,7 @@
     {"name":"node_pb_draw_semi_ellipse","order":6,"path":"scripts/node_pb_draw_semi_ellipse/node_pb_draw_semi_ellipse.yy",},
     {"name":"s_node_sampler","order":11,"path":"sprites/s_node_sampler/s_node_sampler.yy",},
     {"name":"__background_get_element","order":1,"path":"scripts/__background_get_element/__background_get_element.yy",},
+    {"name":"node_FLIP_add_rigidbody","order":15,"path":"scripts/node_FLIP_add_rigidbody/node_FLIP_add_rigidbody.yy",},
     {"name":"node_FFT","order":12,"path":"scripts/node_FFT/node_FFT.yy",},
     {"name":"s_node_random_shape","order":28,"path":"sprites/s_node_random_shape/s_node_random_shape.yy",},
     {"name":"s_node_path_bridge","order":16,"path":"sprites/s_node_path_bridge/s_node_path_bridge.yy",},

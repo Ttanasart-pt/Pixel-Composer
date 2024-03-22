@@ -395,10 +395,11 @@ function __initNodes() {
 	var rigidSim = ds_list_create(); #region
 	addNodeCatagory("RigidSim", rigidSim, ["Node_Rigid_Group", "Node_Rigid_Group_Inline"]);
 		ds_list_add(rigidSim, "Group");
-		addNodeObject(rigidSim, "Input",	s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent().hideGlobal();
-		addNodeObject(rigidSim, "Output",	s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent().hideGlobal();
-		addNodeObject(rigidSim, "Render",	s_node_rigidSim_render_output,	"Node_Rigid_Render_Output",	[1, Node_Rigid_Render_Output]).hideRecent().hideGlobal();
-			
+		addNodeObject(rigidSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent().hideGlobal();
+		addNodeObject(rigidSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent().hideGlobal();
+		addNodeObject(rigidSim, "Render",			s_node_rigidSim_render_output,	"Node_Rigid_Render_Output",	[1, Node_Rigid_Render_Output]).hideRecent().hideGlobal();
+		addNodeObject(rigidSim, "RigidSim Global",	s_node_rigidSim_global,			"Node_Rigid_Global",		[1, Node_Rigid_Global]).setVersion(1110).hideRecent();
+		
 		ds_list_add(rigidSim, "RigidSim");
 		addNodeObject(rigidSim, "Object",			s_node_rigidSim_object,				"Node_Rigid_Object",			[1, Node_Rigid_Object],, "Spawn a rigidbody object.").hideRecent().setVersion(1110);
 		addNodeObject(rigidSim, "Object Spawner",	s_node_rigidSim_object_spawner,		"Node_Rigid_Object_Spawner",	[1, Node_Rigid_Object_Spawner],, "Spawn multiple rigidbody objects.").hideRecent().setVersion(1110);
@@ -447,6 +448,7 @@ function __initNodes() {
 		ds_list_add(flipSim, "Affectors");
 		addNodeObject(flipSim, "Apply Velocity",	s_node_fluidSim_apply_velocity,	"Node_FLIP_Apply_Velocity",	[1, Node_FLIP_Apply_Velocity]).hideRecent().setVersion(11620);
 		addNodeObject(flipSim, "Add Collider",		s_node_fluidSim_force,			"Node_FLIP_Apply_Force",	[1, Node_FLIP_Apply_Force]).hideRecent().setVersion(11620);
+		//addNodeObject(flipSim, "Add Rigidbody",		s_node_fluidSim_force,			"Node_FLIP_Add_Rigidbody",	[1, Node_FLIP_Add_Rigidbody]).hideRecent().setVersion(11680);
 		addNodeObject(flipSim, "Repel",				s_node_fluidSim_repulse,		"Node_FLIP_Repel",			[1, Node_FLIP_Repel]).hideRecent().setVersion(11680);
 		addNodeObject(flipSim, "Vortex",			s_node_fluidSim_vortex,			"Node_FLIP_Vortex",			[1, Node_FLIP_Vortex]).hideRecent().setVersion(11680);
 		
@@ -1126,7 +1128,6 @@ function __initNodes() {
 		addNodeObject(hid, "Sort Output",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Output",	[1, Node_Iterator_Sort_Output]).hideRecent();
 		addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147).hideRecent();
 		addNodeObject(hid, "RigidSim",			s_node_rigidSim,		"Node_Rigid_Group",				[1, Node_Rigid_Group],, "Create group for rigidbody simulation.").setVersion(1110).hideRecent();
-		addNodeObject(hid, "RigidSim Global",	s_node_rigidSim_global,	"Node_Rigid_Global",			[1, Node_Rigid_Global]).setVersion(1110).hideRecent();
 		addNodeObject(hid, "SmokeSim",			s_node_smokeSim_group,	"Node_Smoke_Group",				[1, Node_Smoke_Group],, "Create group for fluid simulation.").setVersion(1120).hideRecent();
 		addNodeObject(hid, "StrandSim",			s_node_strandSim,		"Node_Strand_Group",			[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140).hideRecent();
 		addNodeObject(hid, "Feedback",			s_node_feedback,		"Node_Feedback_Inline",			[1, Node_Feedback_Inline]).hideRecent();

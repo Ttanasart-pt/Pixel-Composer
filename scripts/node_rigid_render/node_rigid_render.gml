@@ -29,6 +29,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	insp2UpdateTooltip = "Clear cache";
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
 	
+	preview_surface = noone;
+	
 	static onInspector2Update = function() { clearCache(); }
 	
 	static createNewInput = function() { #region
@@ -72,16 +74,18 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for( var i = 0, n = ds_list_size(gr.nodes); i < n; i++ ) {
 			var _node = gr.nodes[| i];
 			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
-			var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var _hov = _node.drawOverlayPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			active &= !_hov;
 		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		if(recoverCache() || !PROJECT.animator.is_playing)
-			return;
-			
 		var _dim = getInputData(0);
+		preview_surface = surface_verify(preview_surface, _dim[0], _dim[1], attrDepth());
+		
+		if(!(TESTING && keyboard_check(ord("D"))) && (recoverCache() || !PROJECT.animator.is_playing))
+			return;
+		
 		var _rnd = getInputData(1);
 		var _outSurf = outputs[| 0].getValue();
 		
@@ -98,28 +102,21 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		} else {
 			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 				var objNode = getInputData(i);
-				if(!is_array(objNode)) objNode = [ objNode ];
+				if(!is_array(objNode)) continue;
 				
 				for( var j = 0; j < array_length(objNode); j++ ) {
-					if(!variable_struct_exists(objNode[j], "object")) continue;
-					var obj = objNode[j].object;
-					
-					if(!is_array(obj)) obj = [ obj ];
-					
-					for( var k = 0; k < array_length(obj); k++ ) {
-						var _o = obj[k]; 
+					var _o = objNode[j];
 						
-						if(_o == noone || !instance_exists(_o)) continue;
-						if(is_undefined(_o.phy_active)) continue;
+					if(_o == noone || !instance_exists(_o)) continue;
+					if(is_undefined(_o.phy_active)) continue;
 						
-						var ixs = max(0, _o.xscale);
-						var iys = max(0, _o.yscale);
+					var ixs = max(0, _o.xscale);
+					var iys = max(0, _o.yscale);
 						
-						var xx = _rnd? round(_o.phy_position_x) : _o.phy_position_x;
-						var yy = _rnd? round(_o.phy_position_y) : _o.phy_position_y;
+					var xx = _rnd? round(_o.phy_position_x) : _o.phy_position_x;
+					var yy = _rnd? round(_o.phy_position_y) : _o.phy_position_y;
 						
-						draw_surface_ext_safe(_o.surface, xx, yy, ixs, iys, _o.image_angle, _o.image_blend, _o.image_alpha);
-					}
+					draw_surface_ext_safe(_o.surface, xx, yy, ixs, iys, _o.image_angle, _o.image_blend, _o.image_alpha);
 				}
 			}
 		}
@@ -129,5 +126,11 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		surface_reset_target();
 		cacheCurrentFrame(_outSurf);
+	} #endregion
+	
+	static getPreviewValues = function() { #region
+		var _surf = outputs[| 0].getValue();
+		if(is_surface(_surf)) return _surf;
+		return preview_surface;
 	} #endregion
 }
