@@ -90,9 +90,9 @@ function gradientObject(color = c_black) constructor { #region
 	
 	static evalFast = function(position) { #region
 		INLINE
-		
-		if(position <= keys[0].time)             return keys[0].value;
-		if(position >= keys[keyLength - 1].time) return keys[keyLength - 1].value;
+		var _len = array_length(keys);
+		if(position <= keys[0].time)        return keys[0].value;
+		if(position >= keys[_len - 1].time) return keys[_len - 1].value;
 		
 		var _ind = round(position * cacheRes);
 		return caches[_ind];

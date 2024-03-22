@@ -15,7 +15,20 @@ enum PARTICLE_RENDER_TYPE {
 	line,
 }
 
-function __part(_node) constructor {
+function __particleObject() constructor {
+	active  = false;
+	x       = 0;
+	y       = 0;
+	
+	static kill = function() {}
+	
+	static step = function() {}
+	
+	static draw = function() {}
+	
+}
+
+function __part(_node) : __particleObject() constructor {
 	seed    = irandom(99999);
 	node    = _node;
 	active  = false;

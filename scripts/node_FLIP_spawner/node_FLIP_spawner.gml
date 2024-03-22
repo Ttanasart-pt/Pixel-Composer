@@ -11,7 +11,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Spawn Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Circle", "Surface" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Circle", s_node_shape_type, 1), new scrollItem("Rectangle", s_node_shape_type, 0), "Surface" ]);
 	
 	inputs[| 2] = nodeValue("Spawn Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -41,9 +41,12 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	inputs[| 12] = nodeValue("Spawn Duration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
-		
+	
+	inputs[| 13] = nodeValue("Spawn Szie", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 2 ] )
+		.setDisplay(VALUE_DISPLAY.vector);
+	
 	input_display_list = [ 0, 9, 
-		["Spawner",	false], 1, 7, 8, 2, 3, 4, 12, 5, 
+		["Spawner",	false], 1, 7, 8, 13, 2, 3, 4, 12, 5, 
 		["Physics", false], 10, 6, 11, 
 	]
 	
@@ -65,7 +68,14 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			draw_set_color(COLORS._main_accent);
 			draw_circle(_px, _py, _rad * _s, true);
+			
 		} else if(_shp == 1) {
+			var _siz   = getInputData(13);
+			
+			draw_set_color(COLORS._main_accent);
+			draw_rectangle(_px - _siz[0] * _s, _py - _siz[1] * _s, _px + _siz[0] * _s, _py + _siz[1] * _s, true);
+			
+		} else if(_shp == 2) {
 			var _surf  = getInputData(7);
 			if(!is_surface(_surf)) return;
 			
@@ -92,8 +102,10 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		inputs[|  4].setVisible(_typ == 1);
 		inputs[| 12].setVisible(_typ == 1);
-		inputs[| 7].setVisible(_shp == 1, _shp == 1);
-		inputs[| 8].setVisible(_shp == 0);
+		
+		inputs[|  7].setVisible(_shp == 2, _shp == 2);
+		inputs[|  8].setVisible(_shp == 0);
+		inputs[| 13].setVisible(_shp == 1);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
@@ -115,6 +127,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _dirr  = getInputData(10);
 		var _ivel  = getInputData(11);
 		var _sdur  = getInputData(12);
+		var _siz   = getInputData(13);
 		
 		if(IS_FIRST_FRAME || toReset) spawn_amo = 0;
 		toReset = false;
@@ -123,15 +136,15 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		spawn_amo += _amo;
 		
 		if(spawn_amo < 1) return;
-		if(_type == 1 && (frame < _fra || frame >= _fra + _sdur)) return;
-		if(_shape == 1 && !is_surface(_surf)) return;
+		if(_type == 1  && (frame < _fra || frame >= _fra + _sdur)) return;
+		if(_shape == 2 && !is_surface(_surf)) return;
 		
 		var _samo  = floor(spawn_amo);
 		spawn_amo -= _samo;
 		
 		var _points = [];
 		
-		if(_shape == 1) {
+		if(_shape == 2) {
 			var _sw = surface_get_width(_surf);
 			var _sh = surface_get_height(_surf);
 			
@@ -163,7 +176,12 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				_x = _posit[0] + lengthdir_x(_dis, _dir);
 				_y = _posit[1] + lengthdir_y(_dis, _dir);
+				
 			} else if(_shape == 1) {
+				_x = _posit[0] + random_range(-_siz[0], _siz[0]);
+				_y = _posit[1] + random_range(-_siz[1], _siz[1]);
+				
+			} else if(_shape == 2) {
 				_x = _posit[0] - _sw / 2 + _points[ind][0] * _sw;
 				_y = _posit[1] - _sh / 2 + _points[ind][1] * _sh;
 			}
@@ -196,4 +214,6 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_fluidSim_add_fluid, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	} #endregion
+	
+	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }
 }

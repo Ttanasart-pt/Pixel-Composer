@@ -6,7 +6,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	min_h = 96;
 	
 	manual_ungroupable = false;
-	update_on_frame = true;
+	update_on_frame    = true;
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -29,8 +29,8 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 8] = nodeValue("Time Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05);
 	
-	inputs[| 9] = nodeValue("Wall type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "Surround", "Ground only" ]);
+	inputs[| 9] = nodeValue("Wall", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data:  [ "T", "B", "L", "R" ] });
 	
 	inputs[| 10] = nodeValue("Viscosity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
@@ -40,11 +40,14 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	inputs[| 12] = nodeValue("Wall Elasticity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
-		
+	
+	inputs[| 13] = nodeValue("Gravity Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 270)
+		.setDisplay(VALUE_DISPLAY.rotation);
+	
 	input_display_list = [
 		["Domain",	false], 0, 1, 9, 12, 
 		["Solver",   true], 3, 8, 
-		["Physics", false], 7, 10, 11, 
+		["Physics", false], 7, 13, 10, 11, 
 	]
 	
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
@@ -118,6 +121,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _vis  = getInputData(10);
 		var _fric = getInputData(11);
 		var _ela  = getInputData(12);
+		var _gdir = getInputData(13);
 		
 		var _ovr  = attributes.overrelax;
 		
@@ -125,9 +129,10 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _itrP = attributes.iteration_pressure;
 		var _itrR = attributes.iteration_particle;
 		
+		var width        = _dim[0] + _siz * 2;
+		var height       = _dim[1] + _siz * 2;
+			
 		if(IS_FIRST_FRAME || toReset) {
-			var width        = _dim[0] + _siz * 2;
-			var height       = _dim[1] + _siz * 2;
 			var particleSize = _siz;
 			var density      = _den;
 			var maxParticles = attributes.max_particles;
@@ -145,6 +150,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		domain.numParticleIters = _itrR;
 			
 		domain.g                = _grv;
+		domain.gDirection       = _gdir;
 		domain.flipRatio        = _flp;
 		domain.overRelaxation   = _ovr;
 		domain.viscosity        = _vis;
@@ -163,4 +169,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_bbox(s_node_fluidSim_domain, 0, bbox);
 	} #endregion
+		
+	static getPreviewValues = function() { return domain.domain_preview; }
+	
 }

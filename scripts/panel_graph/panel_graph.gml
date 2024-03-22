@@ -975,6 +975,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									nodes_selecting = [ node_hovering ];
 							}
 							
+							if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
 							array_foreach(nodes_selecting, function(node) { bringNodeToFront(node); });
 						}
 					}
@@ -1834,7 +1835,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		}
 	} #endregion
 	
-	#region ++++ node manipulation ++++
+	#region                                                 ++++++++++++++++ node manipulation ++++++++++++++++
 		function doTransform() { #region
 			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
 				var node = nodes_selecting[i];
@@ -1860,12 +1861,22 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			APPENDING = true;
 			CLONING	  = true;
 			var _app  = __APPEND_MAP(_map);
+			recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(_app));
+			
 			APPENDING = false;
 			CLONING	  = false;
-		
+			
 			if(ds_list_size(_app) == 0) {
 				ds_list_destroy(_app);
 				return;
+			}
+			
+			for(var i = 0; i < array_length(nodes_selecting); i++) {
+				var _orignal = nodes_selecting[i];
+				var _cloned  = ds_map_try_get(APPEND_MAP, _orignal.node_id, "");
+				
+				if(_orignal.inline_context != noone && _cloned != "") 
+					_orignal.inline_context.addNode(PROJECT.nodeMap[? _cloned]);
 			}
 			
 			var x0 = 99999999;

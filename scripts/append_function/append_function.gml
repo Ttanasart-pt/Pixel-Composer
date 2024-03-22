@@ -34,7 +34,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) { #region
 	var appended_list = ds_list_create();
 	var node_create   = ds_list_create();
 	
-	APPENDING	 = true;
+	APPENDING = true;
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	ds_map_clear(APPEND_MAP);

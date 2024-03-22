@@ -10,6 +10,6 @@ void main() {
 	vec4 fluid = texture2D( gm_BaseTexture, v_vTexcoord );
     gl_FragColor = vec4(0.);
 	
-	if(fluid.r * fluid.a > threshold)	
-		gl_FragColor = vec4(1.);
+	if(fluid.a > threshold)	
+		gl_FragColor = vec4(fluid.rgb, 1.);
 }

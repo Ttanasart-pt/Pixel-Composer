@@ -57,7 +57,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _h = _siz[1] * _s;
 		
 		draw_set_color(COLORS._main_accent);
-		     if(_shp == 0) draw_circle(_px, _py, _r, true);
+		     if(_shp == 0) draw_circle_prec(_px, _py, _r, true, 32);
 		else if(_shp == 1) draw_rectangle(_px - _w, _py - _h, _px + _w, _py + _h, true);
 		
 		draw_set_color(COLORS._main_accent);
@@ -97,4 +97,6 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_fluidSim_apply_velocity, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
+	
+	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }
 }

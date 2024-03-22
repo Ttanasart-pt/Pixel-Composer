@@ -80,6 +80,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			draw_surface_ext(_tex, _px - _sw / 2, _py - _sh / 2, _s, _s, 0, c_white, 1);
 		}
 		
+		draw_set_circle_precision(32);
 		draw_set_color(COLORS._main_accent);
 		     if(_shp == 0) draw_circle(_px, _py, _r, true);
 		else if(_shp == 1) draw_rectangle(_px - _w, _py - _h, _px + _w, _py + _h, true);
@@ -126,4 +127,6 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_bbox(s_node_fluidSim_add_collider, 0, bbox);
 	} #endregion
+	
+	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }
 }

@@ -16,12 +16,33 @@ function draw_polygon(x, y, r, sides, a = 0) { #region
 	draw_primitive_end();
 } #endregion
 
-function draw_circle_border(xx, yy, r, w) { #region
-	var step = 32;
-	var angle_step = 360 / step;
+function draw_circle_color_alpha(_x, _y, _r, colI, colO, alpI, alpO) { #region
+	var _step = 32;
+	var angle_step = 360 / _step;
 	
 	draw_primitive_begin(pr_trianglestrip);
-	for(var i = 0; i <= step; i++){
+	for(var i = 0; i <= _step; i++) {
+		var a0 = i * angle_step;
+		var a1 = i * angle_step + angle_step;
+		
+		var p0x = _x + lengthdir_x(_r, a0);
+		var p0y = _y + lengthdir_y(_r, a0);
+		var p1x = _x + lengthdir_x(_r, a1);
+		var p1y = _y + lengthdir_y(_r, a1);
+		
+		draw_vertex_color(_x, _y, colI, alpI);
+		draw_vertex_color(p0x, p0y, colO, alpO);
+		draw_vertex_color(p1x, p1y, colO, alpO);
+	}
+	draw_primitive_end();
+} #endregion
+
+function draw_circle_border(xx, yy, r, w) { #region
+	var _step = 32;
+	var angle_step = 360 / _step;
+	
+	draw_primitive_begin(pr_trianglestrip);
+	for(var i = 0; i <= _step; i++){
 		var p0x = xx + lengthdir_x(r - w / 2, i * angle_step);
 		var p0y = yy + lengthdir_y(r - w / 2, i * angle_step);
 		var p1x = xx + lengthdir_x(r + w / 2, i * angle_step);

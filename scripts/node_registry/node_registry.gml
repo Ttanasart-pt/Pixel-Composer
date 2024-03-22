@@ -441,10 +441,17 @@ function __initNodes() {
 		addNodeObject(flipSim, "Update",			s_node_fluidSim_update,			"Node_FLIP_Update",		[1, Node_FLIP_Update]).hideRecent().setVersion(11620);
 		
 		ds_list_add(flipSim, "Fluid");
-		addNodeObject(flipSim, "Spawner",			s_node_fluidSim_add_fluid,			"Node_FLIP_Spawner",		[1, Node_FLIP_Spawner]).hideRecent().setVersion(11620);
-		addNodeObject(flipSim, "Destroy",			s_node_fluidSim_destroy_fluid,		"Node_FLIP_Destroy",		[1, Node_FLIP_Destroy]).hideRecent().setVersion(11680);
-		addNodeObject(flipSim, "Apply Velocity",	s_node_fluidSim_apply_velocity,		"Node_FLIP_Apply_Velocity",	[1, Node_FLIP_Apply_Velocity]).hideRecent().setVersion(11620);
-		addNodeObject(flipSim, "Add Collider",		s_node_fluidSim_force,				"Node_FLIP_Apply_Force",	[1, Node_FLIP_Apply_Force]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Spawner",			s_node_fluidSim_add_fluid,		"Node_FLIP_Spawner",		[1, Node_FLIP_Spawner]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Destroy",			s_node_fluidSim_destroy_fluid,	"Node_FLIP_Destroy",		[1, Node_FLIP_Destroy]).hideRecent().setVersion(11680);
+		
+		ds_list_add(flipSim, "Affectors");
+		addNodeObject(flipSim, "Apply Velocity",	s_node_fluidSim_apply_velocity,	"Node_FLIP_Apply_Velocity",	[1, Node_FLIP_Apply_Velocity]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Add Collider",		s_node_fluidSim_force,			"Node_FLIP_Apply_Force",	[1, Node_FLIP_Apply_Force]).hideRecent().setVersion(11620);
+		addNodeObject(flipSim, "Repel",				s_node_fluidSim_repulse,		"Node_FLIP_Repel",			[1, Node_FLIP_Repel]).hideRecent().setVersion(11680);
+		addNodeObject(flipSim, "Vortex",			s_node_fluidSim_vortex,			"Node_FLIP_Vortex",			[1, Node_FLIP_Vortex]).hideRecent().setVersion(11680);
+		
+		ds_list_add(flipSim, "Misc");
+		addNodeObject(flipSim, "FLIP to VFX",		s_node_fluidSim_to_VFX,			"Node_FLIP_to_VFX",			[1, Node_FLIP_to_VFX]).hideRecent().setVersion(11680);
 	#endregion
 	
 	var strandSim = ds_list_create(); #region

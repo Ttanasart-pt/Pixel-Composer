@@ -1927,7 +1927,7 @@ function Panel_Animation() : PanelContent() constructor {
 					
 				draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS.panel_animation_end_line, 1);
 			} else {
-				if(pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
+				if(!IS_PLAYING && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
 					if(key_mod_press(CTRL)) {
 						draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
 						TOOLTIP = __txtx("panel_animation_stretch", "Stretch animation");

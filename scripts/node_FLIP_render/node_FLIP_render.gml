@@ -14,7 +14,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 2] = nodeValue("Lifespan", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
-	inputs[| 3] = nodeValue("Particle expansion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 10);
+	inputs[| 3] = nodeValue("Particle expansion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 20);
 	
 	inputs[| 4] = nodeValue("Draw obstracles", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
@@ -33,9 +33,14 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 10] = nodeValue("Segments", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
+	inputs[| 11] = nodeValue("Color Over Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
+	
+	inputs[| 12] = nodeValue("Velocity Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 10 ])
+		.setDisplay(VALUE_DISPLAY.range);
+	
 	input_display_list = [ 0, 5, 
 		["Rendering", false], 6, 10, 3, 4, 9, 
-		["Effect",    false], 2, 
+		["Effect",    false], 11, 12, 2, 
 		["Post Processing", false], 8, 7, 1, 
 	];
 	
@@ -52,22 +57,29 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			attributes.update = !attributes.update;
 			triggerRender();
 		})]);
-			
-			
+	
+	attributes.debugDraw = false;
+	array_push(attributeEditors, ["Draw Fluid Particles", function() { return attributes.debugDraw; }, 
+		new checkBox(function() { 
+			attributes.debugDraw = !attributes.debugDraw;
+		})]);
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		if(domain.domain == noone)   return;
 		
-		var _m = min(array_length(domain.particlePos) / 2 - 1, domain.numParticles);
+		if(attributes.debugDraw) {
+			var _m = min(array_length(domain.particlePos) / 2 - 1, domain.numParticles);
 		
-		draw_set_color(COLORS._main_accent);
-		
-		for( var i = 0; i < _m; i++ ) {
-			var _px = domain.particlePos[i * 2 + 0];
-			var _py = domain.particlePos[i * 2 + 1];
+			draw_set_color(COLORS._main_accent);
 			
-			draw_circle(_x + _px * _s, _y + _py * _s, 1, false);
+			for( var i = 0; i < _m; i++ ) {
+				var _px = domain.particlePos[i * 2 + 0] - 1;
+				var _py = domain.particlePos[i * 2 + 1] - 1;
+			
+				draw_circle(_x + _px * _s, _y + _py * _s, 1, false);
+			}
 		}
 	} #endregion
 	
@@ -98,6 +110,8 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _add = getInputData(8);
 		var _alp = getInputData(9);
 		var _seg = getInputData(10);
+		var _cvl = getInputData(11);
+		var _vlr = getInputData(12);
 		
 		var _outSurf = outputs[| 0].getValue();
 		var _maxpart = domain.maxParticles;
@@ -110,7 +124,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		outputs[| 0].setValue(_outSurf);		
 		
-		var _x, _y, _px, _py, _r, _l, _a, _v;
+		var _x, _y, _px, _py, _r, _l, _a, _v, _sx, _sy;
 		var _rad = domain.particleRadius * _exp;
 		var _mx  = min(array_length(domain.particlePos) / 2 - 1, domain.numParticles);
 		
@@ -126,6 +140,10 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			_sprh = 0.5 * surface_get_height_safe(_spr[0]);
 		}
 		
+		var _useMapRange = array_length(_cvl.keys) > 1;
+		var _vMapRange   = _vlr[1] - _vlr[0];
+		var _cc = _cvl.keys[0].value;
+		
 		random_set_seed(seed);
 		
 		surface_set_shader(temp_surface[0], _useSpr? noone : sh_FLIP_draw_droplet);
@@ -134,12 +152,14 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			if(_typ == 0) {
 				for( var i = 0; i < _mx; i++ ) {
-					_x = domain.particlePos[i * 2 + 0];
-					_y = domain.particlePos[i * 2 + 1];
-					_l = domain.particleLife[i];
+					_x  = domain.particlePos[i * 2 + 0];
+					_y  = domain.particlePos[i * 2 + 1];
+					_sx = domain.particleVel[i * 2 + 0];
+					_sy = domain.particleVel[i * 2 + 1];
+					_l  = domain.particleLife[i];
 				
 					if(_x == 0 && _y == 0) continue;
-				
+					
 					_x -= _padd;
 					_y -= _padd;
 					_r  = 1;
@@ -151,20 +171,24 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						if(_r * _rad < 0.5) continue;
 					}
 					
+					if(_useMapRange) {
+						var _vel  = sqrt(_sx * _sx + _sy * _sy);
+						var _vmap = (_vel - _vlr[0]) / _vMapRange;
+						    _vmap = power(clamp(_vmap, 0, 1), 5);
+						_cc   = _cvl.eval(_vmap);
+					}
+					
 					if(_useSpr) {
-						if(is_array(_spr)) draw_surface_ext(_spr[i % array_length(_spr)], _x - _sprw * _r, _y - _sprh * _r, _r, _r, 0, c_white, _a * _r);
-						else               draw_surface_ext(_spr, _x - _sprw * _r, _y - _sprh * _r, _r, _r, 0, c_white, _a * _r);
+						if(is_array(_spr)) draw_surface_ext(_spr[i % array_length(_spr)], _x - _sprw * _r, _y - _sprh * _r, _r, _r, 0, _cc, _a * _r);
+						else               draw_surface_ext(_spr, _x - _sprw * _r, _y - _sprh * _r, _r, _r, 0, _cc, _a * _r);
 					} else {
-						draw_set_alpha(_a * _r);
-						draw_circle_color(_x, _y, _rad, c_white, c_black, false);
-						draw_set_alpha(1);
+						draw_circle_color_alpha(_x, _y, _rad, _cc, _cc, _a * _r, 0);
 					}
 				}
 			} else if(_typ == 1) {
 				var _segg = min(_seg, CURRENT_FRAME);
 				
 				var _ox, _oy, _nx, _ny;
-				draw_set_color(c_white);
 				
 				for( var i = 0; i < _mx; i++ ) {
 					_l = domain.particleLife[i];
@@ -189,9 +213,19 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						
 						if(_nx == 0 && _ny == 0) continue;
 						
+						if(_useMapRange) {
+							var _dx = _ox - _nx;
+							var _dy = _oy - _ny;
+							var _vel  = sqrt(_dx * _dx + _dy * _dy);
+							var _vmap = (_vel - _vlr[0]) / _vMapRange;
+							    _vmap = power(clamp(_vmap, 0, 1), 5);
+							_cc   = _cvl.eval(_vmap);
+						}
+						
 						_nx -= _padd;
 						_ny -= _padd;
 						
+						draw_set_color(_cc);
 						draw_line(_ox, _oy, _nx, _ny);
 						
 						_ox = _nx;
