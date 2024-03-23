@@ -279,22 +279,18 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				for( var i = 0; i <= echo_amo; i++ ) {
 					var rat = i / echo_amo;
-					var _px = lerp(_pre[0][0], pos[0], rat);
-					var _py = lerp(_pre[0][1], pos[1], rat);
+					var _px = lerp(_pre[0][0], draw_x, rat);
+					var _py = lerp(_pre[0][1], draw_y, rat);
 					var _rt = lerp(_pre[1],    rot,    rat);
 					var _sx = lerp(_pre[2][0], sca[0], rat);
 					var _sy = lerp(_pre[2][1], sca[1], rat);
 					
-					var _ps = point_rotate(_px, _py, _px + anc[0], _py + anc[1], rot);
-					var _dx = _ps[0];
-					var _dy = _ps[1];
-					
 					if(pos_exact) {
-						_dx = round(_dx);
-						_dy = round(_dy);
+						_px = round(_px);
+						_py = round(_py);
 					}
 					
-					draw_surface_ext_safe(ins, _dx, _dy, _sx, _sy, _rt, c_white, alp);
+					draw_surface_ext_safe(ins, _px, _py, _sx, _sy, _rt, c_white, alp);
 				}
 			} else 
 				draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
@@ -316,7 +312,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		prev_data[_array_index] = [
-			[ pos[0], pos[1] ],
+			[ draw_x, draw_y ],
 			rot,
 			[ sca[0], sca[1] ],
 		];

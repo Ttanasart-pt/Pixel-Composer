@@ -70,9 +70,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, object);
 	
 	input_display_list = [ 8, 12, 
-		["Texture",		false],	6, 
-		["Physical",	false],	0, 1, 2, 3, 4, 
-		["Shape",		false],	7, 5, 9, 10, 11, 
+		["Texture",	false],	6, 
+		["Physics",	false],	0, 1, 2, 3, 4, 
+		["Shape",	false],	7, 5, 9, 10, 11, 
 	];
 	
 	static newMesh = function(index) {
@@ -288,6 +288,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				anchor_drag_my  = _my;
 			}
 		}
+		
+		var a = inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
 		
 		return active;
 	} #endregion

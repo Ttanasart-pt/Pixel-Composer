@@ -29,14 +29,14 @@ function line_get_width(txt, font = noone, offset = 0) {
 		return round(val * UI_SCALE); 
 	}
 	
-	function resetScale(scale) {
+	function resetScale(scale, willResize = false) {
 		if(scale == PREFERENCES.display_scaling) return;
 		
 		PREFERENCES.display_scaling = scale;
 		resetPanel();
 		loadFonts();
 			
-		time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, onResize));
+		if(willResize) time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, onResize));
 		PREF_SAVE();
 	}
 #endregion

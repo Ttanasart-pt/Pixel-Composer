@@ -5,7 +5,7 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 uniform vec2  position;
-uniform float time;
+uniform float seed;
 uniform float contrast;
 uniform float middle;
 
@@ -58,7 +58,7 @@ void main() {
 	#endregion
 	
     vec2 p  = ((v_vTexcoord - position / dimension) * sca * 2.0 - 1.0);
-    float n = voronoi3d(vec3(p, time), sca);
+    float n = voronoi3d(vec3(p, seed), sca);
 	      n = middle + (n - middle) * contrast;
 	
     gl_FragColor = vec4(vec3(n), 1.);

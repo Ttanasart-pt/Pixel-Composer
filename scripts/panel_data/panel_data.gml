@@ -128,7 +128,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 			return res;
 		}
 		
-		var ind  = hori? childs[| 1].w > childs[| 0].w : childs[| 1].h > childs[| 0].h;
+		var _c0 = ds_list_get(childs, 0, noone);
+		var _c1 = ds_list_get(childs, 1, noone);
+		
+		if(_c0 == noone || _c1 == noone) return false;
+		
+		var ind  = hori? _c1.w > _c0.w : _c1.h > _c0.h;
 		return childs[| ind].resizable(dw, dh, oppose);
 	} #endregion
 	

@@ -6,6 +6,9 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	is_simulation      = true;
 	manual_ungroupable = false;
 	
+	inputs[| 0] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 10 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
 	if(!LOADING && !APPENDING && !CLONING) {
 		var _object = nodeBuild("Node_Rigid_Object", x,       y);
 		var _output = nodeBuild("Node_Rigid_Render", x + 160, y);
@@ -14,5 +17,11 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		
 		addNode(_object);
 		addNode(_output);
+	}
+	
+	static update = function(frame = CURRENT_FRAME) {
+		var _gra = getInputData(0);
+		
+		physics_world_gravity(_gra[0], _gra[1]);
 	}
 }

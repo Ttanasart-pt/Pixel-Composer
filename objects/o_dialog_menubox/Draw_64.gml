@@ -46,7 +46,7 @@ if(!ready) exit;
 				draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc, 0.8);
 			
 			if(instanceof(_menuItem) == "MenuItem" && _menuItem.active && sFOCUS && 
-				(mouse_release(mb_left) || keyboard_check_released(vk_enter))) {
+				((!mouse_inside && mouse_release(mb_left)) || keyboard_check_released(vk_enter))) {
 					
 				var _dat = {
 					_x: dialog_x,
@@ -173,6 +173,8 @@ if(!ready) exit;
 	}
 	
 	draw_sprite_stretched(THEME.menu_bg, 1, dialog_x, dialog_y, dialog_w, dialog_h);
+	
+	if(mouse_inside && mouse_release(mb_left)) mouse_inside = false;
 #endregion
 
 #region debug

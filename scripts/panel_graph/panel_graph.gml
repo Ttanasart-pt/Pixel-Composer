@@ -911,7 +911,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#endregion
 		printIf(log, $"Hover time: {get_timer() - t}"); t = get_timer();
 		
-		#region interaction
+		#region ++++++++++++ interaction ++++++++++++
 			if(mouse_on_graph && pHOVER) {
 				#region select
 					if(NODE_DROPPER_TARGET != noone && node_hovering) {
@@ -946,7 +946,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								if(!key_mod_press(CTRL))
 								for(var i = 0; i < ds_list_size(nodes_list); i++) { //select content
 									var _node = nodes_list[| i];
-									if(is_instanceof(_node, Node_Frame)) continue;
+									if(_node == node_hovering) continue;
+									
 									if(!_node.selectable) continue;
 									
 									var _x = (_node.x + graph_x) * graph_s;
@@ -955,7 +956,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									var _h = _node.h * graph_s;
 									
 									if(_w && _h && rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
-										array_push(nodes_selecting, _node);	
+										array_push_unique(nodes_selecting, _node);	
 								}
 							} else if(DOUBLE_CLICK) {
 								PANEL_PREVIEW.setNodePreview(node_hovering);

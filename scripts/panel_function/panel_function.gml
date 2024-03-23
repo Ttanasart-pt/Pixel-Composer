@@ -99,6 +99,24 @@
 		loadPanelStruct(panel, CURRENT_PANEL.panel);
 	} #endregion
 	
+	function checkPanelValid() { #region
+		var val = true;
+		if(!is_instanceof(PANEL_GRAPH.panel, Panel))     val = false;
+		if(!is_instanceof(PANEL_PREVIEW.panel, Panel))   val = false;
+		if(!is_instanceof(PANEL_INSPECTOR.panel, Panel)) val = false;
+		
+		if(!val) {
+			noti_warning("Invalid Panel Layout, layout and UI scale will be reset to the default value.\n\nRestart recommended.");
+			
+			PREFERENCES.panel_layout_file = "Vertical";
+			PREFERENCES._display_scaling  = 1;
+			PREFERENCES.display_scaling   = 0;
+			resetScale(1);
+		}
+		
+		return val;
+	} #endregion
+	
 	function panelAdd(panel, create = false) { #region
 		var pan = getPanelFromName(panel, create);
 		if(pan == noone) return noone;
@@ -121,6 +139,8 @@
 		panelObjectInit();
 		loadPanelStruct(PANEL_MAIN, CURRENT_PANEL.panel);
 		PANEL_MAIN.refresh();
+		
+		checkPanelValid();
 	} #endregion
 	
 	function __initPanel() { #region
@@ -131,6 +151,8 @@
 		
 		setPanel();
 		panelDisplayInit();
+		
+		checkPanelValid();
 	} #endregion
 	
 	function setPanel() { #region

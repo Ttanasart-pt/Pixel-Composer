@@ -14,6 +14,20 @@ if !ready exit;
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, destroy_on_click_out? __txt("Pin") : __txt("Unpin"), 
 		THEME.pin, !destroy_on_click_out, destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light) == 2)
 			destroy_on_click_out = !destroy_on_click_out;
+			
+	if(should_restart) {
+		var _txt = "Restart recommended";
+		var _rx = dialog_x + ui(168);
+		var _ry = dialog_y + ui(20);
+		
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_accent);
+		
+		var _rw = string_width(_txt);
+		var _rh = string_height(_txt);
+		
+		draw_sprite_stretched_ext(THEME.group_label, 0, _rx - ui(8), _ry - ui(4), _rw + ui(16), _rh + ui(8), COLORS._main_accent, 1);
+		draw_text(_rx, _ry, _txt);
+	}
 #endregion
 
 #region page

@@ -4,19 +4,20 @@ event_inherited();
 #region data
 	menu_id = "";
 	
-	draggable = false;
 	destroy_on_click_out = false;
-	selecting = -1;
+	draggable    = false;
+	mouse_inside = false;
+	selecting    = -1;
 	
 	alarm[0] = -1;
-	menu = 1;
-	hght = ui(36);
+	menu     = 1;
+	hght     = ui(36);
 	children = ds_list_create();
 	ds_list_add(children, self);
 	
-	tooltips = [];
+	tooltips  = [];
 	show_icon = false;
-	context = noone;
+	context   = noone;
 	
 	function setMenu(_menu, align = fa_left) {
 		menu = _menu;
@@ -81,6 +82,7 @@ event_inherited();
 			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 2)); break;
 		}
 		
+		mouse_inside = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
 		ready = true;
 	}
 #endregion

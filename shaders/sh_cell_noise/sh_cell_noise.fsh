@@ -7,7 +7,7 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform vec2  position;
 uniform int   pattern;
-uniform float time;
+uniform float seed;
 
 uniform vec2      scale;
 uniform int       scaleUseSurf;
@@ -50,7 +50,7 @@ void main() {
 	        for (int x = -1; x <= 1; x++) {
 	            vec2 neighbor = vec2(float(x),float(y));
 	            vec2 point = random2(mod(i_st + neighbor, scaMax));
-				point = 0.5 + 0.5 * sin(time + 6.2831 * point);
+				point = 0.5 + 0.5 * sin(seed + 6.2831 * point);
 			
 	            vec2 _diff = neighbor + point - f_st;
 	            float dist = length(_diff);
@@ -61,7 +61,7 @@ void main() {
 		for (int j = 0; j <= int(sca / 2.); j++) {
 			int _amo = int(sca) + int(float(j) * radiusShatter);
 			for (int i = 0; i <= _amo; i++) {
-				float ang = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + time;
+				float ang = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + seed;
 				float rad = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1;
 				vec2 point = vec2(cos(ang) * rad, sin(ang) * rad) + pos;
 				

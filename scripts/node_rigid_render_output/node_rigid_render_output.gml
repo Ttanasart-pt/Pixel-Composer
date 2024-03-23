@@ -2,7 +2,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	name  = "Render";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	use_cache = CACHE_USE.auto;
+	//use_cache = CACHE_USE.auto;
 	
 	manual_ungroupable	 = false;
 	

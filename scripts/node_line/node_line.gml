@@ -388,8 +388,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		#region draw
 		
-		//print($"==== Drawing frame {CURRENT_FRAME} ====")
-		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(0, 1);
 			else	DRAW_CLEAR
@@ -408,6 +406,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			for( var i = 0, n = array_length(lines); i < n; i++ ) {
 				var points = lines[i];
 				if(array_length(points) < 2) continue;
+				
+				var _caps = [];
 				
 				if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
 				else        draw_primitive_begin(pr_trianglestrip);
@@ -438,19 +438,15 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(_cap) { #region
 						if(j == 1) {
-							draw_set_color(_oc);
-							
 							_d = _dir + 180;
-							draw_circle_angle(_ox, _oy, _ow / 2, _d - 90, _d, _capP);
-							draw_circle_angle(_ox, _oy, _ow / 2, _d, _d + 90, _capP);
+							_caps[0] = [ _oc, _ox, _oy, _ow / 2, _d - 90, _d ];
+							_caps[1] = [ _oc, _ox, _oy, _ow / 2, _d, _d + 90 ];
 						}
 						
 						if(j == array_length(points) - 1) {
-							draw_set_color(_nc);
-							
 							_d = _dir;
-							draw_circle_angle(_nx, _ny, _nw / 2, _d - 90, _d, _capP);
-							draw_circle_angle(_nx, _ny, _nw / 2, _d, _d + 90, _capP);
+							_caps[2] = [ _nc, _nx, _ny, _nw / 2, _d - 90, _d ];
+							_caps[3] = [ _nc, _nx, _ny, _nw / 2, _d, _d + 90 ];
 						}
 					} #endregion
 					
@@ -516,6 +512,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 				
 				draw_primitive_end();
+				
+				for( var j = 0, m = array_length(_caps); j < m; j++ ) {
+					var _cps = _caps[j];
+					draw_set_color(_cps[0]);
+					draw_circle_angle(_cps[1], _cps[2], _cps[3], _cps[4], _cps[5], _capP);
+				}
 			}
 			
 			if(_useTex) shader_reset();

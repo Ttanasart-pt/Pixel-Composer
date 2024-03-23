@@ -87,7 +87,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_shader(_outSurf, shader);
 			shader_set_f("dimension",		_dim);
-			shader_set_f("time",			_tim);
+			shader_set_f("seed",			_tim);
 			shader_set_f("position",		_pos);
 			shader_set_f_map("scale",		_data[2], _data[11], inputs[| 2]);
 			shader_set_f("contrast",		_con);

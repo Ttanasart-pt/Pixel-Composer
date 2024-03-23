@@ -68,6 +68,7 @@ function Panel_Preview() : PanelContent() constructor {
 	#endregion
 	
 	#region ---- preview ----
+		locked           = false;
 		preview_node	 = [ noone, noone ];
 		preview_surfaces = [ 0, 0 ];
 		preview_surface  = [ 0, 0 ];
@@ -282,14 +283,22 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	actions = [
 		[ 
+			THEME.lock,
+			__txtx("panel_preview_lock_preview", "Lock previewing node"), 
+			function() { locked = !locked; },
+			function() { return !locked; },
+		],
+		[ 
 			THEME.icon_preview_export,
 			__txtx("panel_preview_export_canvas", "Export canvas"), 
-			function() { saveCurrentFrame(); }
+			function() { saveCurrentFrame(); },
+			function() { return 0; },
 		],
 		[ 
 			THEME.icon_center_canvas,
 			__txtx("panel_preview_center_canvas", "Center canvas"), 
-			function() { fullView(); }
+			function() { fullView(); },
+			function() { return 0; },
 		],
 		
 	]
@@ -307,6 +316,8 @@ function Panel_Preview() : PanelContent() constructor {
 	#endregion
 	
 	function setNodePreview(node) { #region
+		if(locked) return;
+		
 		if(resetViewOnDoubleClick)
 			do_fullView = true;
 		
@@ -317,11 +328,16 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function removeNodePreview(node) { #region
+		if(locked) return;
+		
 		if(preview_node[0] == node) preview_node[0] = noone;
 		if(preview_node[1] == node) preview_node[1] = noone;
 	} #endregion
 	
-	function resetNodePreview() { preview_node = [ noone, noone ]; }
+	function resetNodePreview() { #region
+		preview_node = [ noone, noone ]; 
+		locked = false;
+	} #endregion
 	
 	function getNodePreview()			{ return preview_node[splitView? splitSelection : 0]; }
 	function getNodePreviewSurface()	{ return preview_surfaces[splitView? splitSelection : 0]; }
@@ -1407,11 +1423,12 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		tbx = w - toolbar_height / 2;
 		for( var i = 0, n = array_length(actions); i < n; i++ ) {
-			var tb = actions[i];
-			var tbSpr = tb[0];
+			var tb        = actions[i];
+			var tbSpr     = tb[0];
 			var tbTooltip = tb[1];
+			var tbIndex   = tb[3]();
 			
-			var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, 0);
+			var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, tbIndex);
 			if(b == 2) tb[2]();
 			
 			tbx -= ui(32);

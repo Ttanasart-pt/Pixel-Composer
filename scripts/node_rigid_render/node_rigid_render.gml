@@ -5,7 +5,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	manual_ungroupable	 = false;
 	
-	use_cache = CACHE_USE.auto;
+	//use_cache = CACHE_USE.auto;
 	update_on_frame = true;
 	
 	inputs[| 0] = nodeValue("Render dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF)
@@ -83,8 +83,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _dim = getInputData(0);
 		preview_surface = surface_verify(preview_surface, _dim[0], _dim[1], attrDepth());
 		
-		if(!(TESTING && keyboard_check(ord("D"))) && (recoverCache() || !PROJECT.animator.is_playing))
-			return;
+		//if(!(TESTING && keyboard_check(ord("D"))) )
+		//	return;
 		
 		var _rnd = getInputData(1);
 		var _outSurf = outputs[| 0].getValue();

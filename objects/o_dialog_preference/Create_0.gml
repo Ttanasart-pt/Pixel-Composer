@@ -8,6 +8,8 @@ event_inherited();
 	page_width = 160;
 	destroy_on_click_out = true;
 	destroy_on_escape    = false;
+	
+	should_restart = false;
 #endregion
 
 #region resize
@@ -277,12 +279,19 @@ event_inherited();
 		__txtx("pref_gui_scaling", "GUI scaling*"),
 		new slider(0.5, 2, 0.01, function(val) { 
 			PREFERENCES._display_scaling = val;
+			should_restart = true;
 		}, function() { 
 			PREFERENCES._display_scaling = clamp(PREFERENCES._display_scaling, 0.5, 2);
-			resetScale(PREFERENCES._display_scaling);
+			resetScale(PREFERENCES._display_scaling, true);
+			should_restart = true;
 		}),
+		
 		function() { return PREFERENCES._display_scaling; },
-		function(val) { PREFERENCES.display_scaling = val; PREFERENCES._display_scaling = val; },
+		function(val) { 
+			PREFERENCES._display_scaling = val;
+			resetScale(PREFERENCES._display_scaling, true);
+			should_restart = true;
+		},
 		1,
 	));
 	
