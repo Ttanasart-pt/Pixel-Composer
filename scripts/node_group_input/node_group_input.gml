@@ -217,7 +217,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 			case "Area" :
 				if(!is_array(_val) || array_length(_val) != 5)
-					inParent.animator = new valueAnimator([0, 0, 0, 0, 5], inParent);
+					inParent.animator = new valueAnimator(DEF_AREA, inParent);
 				inParent.setDisplay(VALUE_DISPLAY.area);
 				break;
 				

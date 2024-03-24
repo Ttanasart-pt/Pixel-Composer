@@ -5,7 +5,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [16, 16, 16, 16])
+	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_AREA)
 		.setDisplay(VALUE_DISPLAY.area);
 	inputs[| 1].editWidget.adjust_shape = false;
 	

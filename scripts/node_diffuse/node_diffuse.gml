@@ -20,21 +20,33 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	inputs[| 7] = nodeValue("External", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
-	inputs[| 8] = nodeValue("External strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.3)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01] });
+	inputs[| 8] = nodeValue("External Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.25, 0.25, 0.01] });
 	
 	inputs[| 9] = nodeValue("Detail", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	
+	inputs[| 10] = nodeValue("External Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Point", "Vector" ]);
+		
+	inputs[| 11] = nodeValue("External Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 6, 
 		["Diffuse",		false], 1, 
 		["Flow",		false], 2, 9, 3, 4, 
-		["Forces",		false], 8, 
+		["Forces",		false], 10, 8, 11, 
 		["Rendering",	false], 5, 
 	]
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	
+	static step = function() {
+		var _ftyp = getInputData(10);
+		
+		inputs[| 11].setVisible(_ftyp == 1);
+	}
 	
 	static update = function() {
 		var _surf = getInputData(0);
@@ -46,6 +58,8 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _seed = getInputData(6);
 		var _fstr = getInputData(8);
 		var _detl = getInputData(9);
+		var _ftyp = getInputData(10);
+		var _fdir = getInputData(11);
 		
 		if(!is_surface(_surf)) return;
 		
@@ -71,7 +85,9 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			shader_set_i("iteration", _detl);
 			shader_set_f("flowRate",  _flow);
 			shader_set_f("seed",      _seed + CURRENT_FRAME * _rand / 100);
-			shader_set_f("externalForce",  _fstr);
+			shader_set_i("externalForceType", _ftyp);
+			shader_set_f("externalForce",     _fstr);
+			shader_set_f("externalForceDir",  degtorad(_fdir));
 			
 			draw_surface_safe(temp_surface[0]);
 		surface_reset_shader();

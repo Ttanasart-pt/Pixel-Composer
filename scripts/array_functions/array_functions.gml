@@ -51,7 +51,8 @@ function array_resize_fill(arr, size, fill = 0) { #region
 
 enum ARRAY_OVERFLOW {
 	_default,
-	loop
+	loop,
+	pingpong
 }
 
 function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) { #region
@@ -59,15 +60,26 @@ function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default)
 	if(!is_array(arr))  return def;
 	if(is_array(index)) return def;
 	
+	var len = array_length(arr);
+	if(len == 0) return def;
+	
 	if(overflow == ARRAY_OVERFLOW.loop) {
-		var len = array_length(arr);
 		if(index < 0)
 			index = len - safe_mod(abs(index), len);
-		index = safe_mod(index, len);
+		index = index % len;
+		
+	} else if(overflow == ARRAY_OVERFLOW.pingpong) {
+		if(index < 0) index = len - safe_mod(abs(index), len);
+		
+		var _plen = len * 2 - 1;
+		index = index % _plen;
+		
+		if(index >= len)
+			index = _plen - index;
 	}
 	
 	if(index < 0) return def;
-	if(index >= array_length(arr)) return def;
+	if(index >= len) return def;
 	return arr[index] == undefined? def : arr[index];
 } #endregion
 

@@ -4,7 +4,7 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 
 	onSurfaceSize = function() { return surface_get_dimension(getInputData(0)); };
-	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
+	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA )
 		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 2] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);

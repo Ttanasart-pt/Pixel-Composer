@@ -10,7 +10,7 @@ function Node_Smoke_Add_Collider(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	
 	inputs[| 1] = nodeValue("Collider", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 2] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
+	inputs[| 2] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA )
 		.setDisplay(VALUE_DISPLAY.area);
 	
 	input_display_list = [ 

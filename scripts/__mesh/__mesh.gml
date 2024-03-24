@@ -1,7 +1,8 @@
 function Mesh() constructor {
-	triangles	= [];
+	triangles = [];
+	center    = [ 0, 0 ];
 	
-	static getRandomPoint = function(seed) {
+	static getRandomPoint = function(seed) { #region
 		random_set_seed(seed);
 		if(array_length(triangles) == 0) return [ 0, 0 ];
 		
@@ -17,9 +18,9 @@ function Mesh() constructor {
 		var _y = (1 - sqrt(a1)) * p0.y + (sqrt(a1) * (1 - a2)) * p1.y + (sqrt(a1) * a2) * p2.y;
 		
 		return new __vec2( _x, _y );
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _s) {
+	static draw = function(_x, _y, _s) { #region
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			var t = triangles[i];
 			
@@ -27,9 +28,9 @@ function Mesh() constructor {
 			draw_line(_x + t[1].x * _s, _y + t[1].y * _s, _x + t[2].x * _s, _y + t[2].y * _s);
 			draw_line(_x + t[0].x * _s, _y + t[0].y * _s, _x + t[2].x * _s, _y + t[2].y * _s);
 		}
-	}
+	} #endregion
 	
-	static pointIn = function(_x, _y) {
+	static pointIn = function(_x, _y) { #region
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			var t = triangles[i];
 			
@@ -38,9 +39,9 @@ function Mesh() constructor {
 		}
 		
 		return false;
-	}
+	} #endregion
 	
-	static mergePath = function() {
+	static mergePath = function() { #region
 		if(array_length(triangles) == 0) return [];
 		
 		var segments	= [];
@@ -95,9 +96,9 @@ function Mesh() constructor {
 		
 		ds_map_destroy(pointsPairs);
 		return path;
-	}
+	} #endregion
 	
-	static clone = function() {
+	static clone = function() { #region
 		var msh = new Mesh();
 		
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
@@ -108,8 +109,30 @@ function Mesh() constructor {
 			];
 		}
 		
+		msh.center = [ center[0], center[1] ];
+		
 		return msh;
-	}
+	} #endregion
+	
+	static calcCoM = function() { #region
+		var _ax = 0, _ay = 0;
+		var _p  = 0;
+		
+		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
+			var _tr = triangles[i];
+			
+			for( var j = 0; j < 3; j++ ) {
+				_ax += _tr[j].x; 
+				_ay += _tr[j].y;
+				_p++;
+			}
+		}
+		
+		center = [ 0, 0 ];
+		if(_p == 0) return;
+		
+		center = [ _ax / _p, _ay / _p ];
+	} #endregion
 	
 	static serialize   = function()  { return ""; }
 	static deserialize = function(s) { return self; }

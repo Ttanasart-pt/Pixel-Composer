@@ -1,7 +1,6 @@
 function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Mesh Transform";
-	
-	w = 96;
+	name = "Mesh Transform";
+	w    = 96;
 	
 	inputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
 		.setVisible(true, true);
@@ -21,20 +20,24 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.output, VALUE_TYPE.mesh, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var imesh = getInputData(0);
+		var omesh = outputs[| 0].getValue();
+		if(imesh == noone) return;
+		
+		var _cm = imesh.center;
 		var pos = getInputData(1);
 		
-		var px = _x + pos[0] * _s;
-		var py = _y + pos[1] * _s;
+		var ax = _x + _cm[0] * _s;
+		var ay = _y + _cm[1] * _s;
 		
-		active &= !inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var px = ax + pos[0] * _s;
+		var py = ay + pos[1] * _s;
+		
+		active &= !inputs[| 1].drawOverlay(hover, active, ax, ay, _s, _mx, _my, _snx, _sny);
 		active &= !inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
-		active &= !inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor );
-		
-		var mesh = outputs[| 0].getValue();
-		if(mesh == noone) return;
 		
 		draw_set_color(COLORS._main_accent);
-		mesh.draw(_x, _y, _s);
+		omesh.draw(_x, _y, _s);
 	}
 	
 	function pointTransform(p, _pos, _rot, _sca, _anc) {
@@ -56,6 +59,9 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		if(_msh == noone) return;
 		var mesh = _msh.clone();
+		var _cm  = _msh.center;
+		
+		_anc = [ _cm[0] + _anc[0], _cm[1] + _anc[1] ];
 		
 		for( var i = 0, n = array_length(mesh.triangles); i < n; i++ ) {
 			var t = mesh.triangles[i];
@@ -64,6 +70,8 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			pointTransform(t[1], _pos, _rot, _sca, _anc);
 			pointTransform(t[2], _pos, _rot, _sca, _anc);
 		}
+		
+		mesh.calcCoM();
 		
 		outputs[| 0].setValue(mesh);
 	}

@@ -27,8 +27,9 @@ if(tb.slide_range != noone)
 	cur_val = clamp(cur_val, tb.curr_range[0], tb.curr_range[1]);
 
 var _val = value_snap(cur_val, _s);
-if(tb.slide_int)
-	_val = round(_val);
+if(tb.slide_int) _val = round(_val);
+
+if(abs(_val) < _s * 4) _val = 0;
 
 tb._input_text = string_real(_val);
 if(tb.apply()) UNDO_HOLDING = true;

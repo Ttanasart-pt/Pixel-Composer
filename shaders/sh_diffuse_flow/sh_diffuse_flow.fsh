@@ -7,9 +7,11 @@ uniform float scale;
 uniform int   iteration;
 uniform float flowRate;
 
+uniform int   externalForceType;
 uniform float externalForce;
+uniform float externalForceDir;
 
-///////////////////// PERLIN START /////////////////////
+#region ///////////////////// PERLIN START /////////////////////
 
 float random  (in vec2 st) { return smoothstep(0., 1., abs(fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + seed)) * 2. - 1.)); }
 vec2  random2 (in vec2 st) { float a = random(st) * 6.28319; return vec2(cos(a), sin(a)); }
@@ -57,7 +59,7 @@ float perlin ( vec2 st ) {
 	return n;
 }
 
-///////////////////// PERLIN END /////////////////////
+#endregion ///////////////////// PERLIN END /////////////////////
 
 void main() {
 	vec2  tx   = 1. / dimension;
@@ -67,7 +69,12 @@ void main() {
 	float y0 = perlin((v_vTexcoord + vec2(0., -tx.y)) * scale);
 	float y1 = perlin((v_vTexcoord + vec2(0.,  tx.y)) * scale);
 	
-	vec2 flow = vec2(x1 - x0, y1 - y0) + externalForce * (v_vTexcoord - 0.5);
+	vec2 flow = vec2(x1 - x0, y1 - y0);
+	
+	if(externalForceType == 0) 
+		flow += externalForce * (v_vTexcoord - 0.5);
+	if(externalForceType == 1) 
+		flow += externalForce * vec2(cos(externalForceDir), sin(externalForceDir));
 	
     gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord - flow * flowRate );
 }

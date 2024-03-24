@@ -519,7 +519,7 @@ function nodeValueMap(_name, _node, _junc = noone)						 { return new NodeValue(
 function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ]).setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
-	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "area_type", "unit", "atlas_crop" ];
+	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "unit", "atlas_crop" ];
 	
 	#region ---- main ----
 		active  = true;
@@ -1028,7 +1028,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i, "");
 						
-						display_data.area_type = AREA_MODE.area;
 						extract_node = "Node_Area";
 						break; #endregion
 					case VALUE_DISPLAY.padding :		#region
@@ -1487,8 +1486,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		#endregion
 		
 		if(display_type == VALUE_DISPLAY.area) { #region
-			var dispType = nodeFrom.display_data.area_type;
-			var surfGet  = nodeFrom.display_data.onSurfaceSize;
+			var surfGet  = struct_try_get(nodeFrom.display_data, "onSurfaceSize", -1);
 			
 			if(!applyUnit) return value;
 			if(!is_callable(surfGet)) return value;
@@ -1497,6 +1495,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(!is_array(surf)) return value;
 			var ww = surf[0];
 			var hh = surf[1];
+			
+			var dispType = array_safe_get(value, 5, AREA_MODE.area);
 			
 			switch(dispType) {
 				case AREA_MODE.area : 

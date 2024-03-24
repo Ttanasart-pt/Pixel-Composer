@@ -6,7 +6,7 @@
 		triangles,
 	}
 	
-	function SHAPE_rectangle(_sca) {
+	function SHAPE_rectangle(_sca) { #region
 		var triangles = [
 							[ new __vec2(-_sca[0], -_sca[1]), new __vec2( _sca[0], -_sca[1]), new __vec2(-_sca[0],  _sca[1]) ],
 							[ new __vec2( _sca[0], -_sca[1]), new __vec2(-_sca[0],  _sca[1]), new __vec2( _sca[0],  _sca[1]) ],
@@ -16,12 +16,12 @@
 						new __vec2(-_sca[0], -_sca[1]) ];
 		
 		return [
-			[{ type: SHAPE_TYPE.triangles, triangles: triangles }],
+			[ { type: SHAPE_TYPE.triangles, triangles: triangles } ],
 			segment
 		];
-	}
+	} #endregion
 	
-	function SHAPE_circle(_sca, data = {}) {
+	function SHAPE_circle(_sca, data = {}) { #region
 		var prec	  = max(3, data.side);
 		var triangles = [];
 		var ang		  = 360 / prec;
@@ -43,9 +43,9 @@
 			[{ type: SHAPE_TYPE.triangles, triangles: triangles }],
 			segment
 		];
-	}
+	} #endregion
 	
-	function SHAPE_star(_sca, data = {}) {
+	function SHAPE_star(_sca, data = {}) { #region
 		var prec  = max(3, data.side);
 		var inner = data.inner;
 		var triangles = [];
@@ -74,9 +74,9 @@
 			[{ type: SHAPE_TYPE.triangles, triangles: triangles }],
 			segment
 		];
-	}
+	} #endregion
 	
-	function SHAPE_capsule(_sca, data = {}) {
+	function SHAPE_capsule(_sca, data = {}) { #region
 		var rad		= data.radius;
 		var prec    = max(2, data.side);
 		var hh		= _sca[1] * rad;
@@ -143,9 +143,9 @@
 			shapes,
 			segment
 		];
-	}
+	} #endregion
 	
-	function SHAPE_ring(_sca, data = {}) {
+	function SHAPE_ring(_sca, data = {}) { #region
 		var prec  = max(3, data.side);
 		var inner = data.inner;
 		var triangles = [];
@@ -176,9 +176,9 @@
 			[{ type: SHAPE_TYPE.triangles, triangles: triangles }],
 			segment
 		];
-	}
+	} #endregion
 	
-	function SHAPE_gear(_sca, data = {}) {
+	function SHAPE_gear(_sca, data = {}) { #region
 		var teeth  = max(3, data.teeth);
 		var teethH = data.teethH;
 		var teethT = data.teethT;
@@ -229,9 +229,9 @@
 			[{ type: SHAPE_TYPE.triangles, triangles: triangles }],
 			segment
 		];
-	}
+	} #endregion
 	
-	function SHAPE_cross(_sca, data = {}) {
+	function SHAPE_cross(_sca, data = {}) { #region
 		var inner = data.inner;
 		var triangles = [];
 		var segment   = [];
@@ -271,9 +271,9 @@
 			[{ type: SHAPE_TYPE.triangles, triangles: triangles }],
 			segment
 		];
-	}
+	} #endregion
 	
-	function SHAPE_arc(_sca, data = {}) {
+	function SHAPE_arc(_sca, data = {}) { #region
 		var prec   = max(3, data.side);
 		var inner  = data.inner;
 		var radRan = data.radRan;
@@ -364,6 +364,6 @@
 			[{ type: SHAPE_TYPE.triangles, triangles: triangles }],
 			segment
 		];
-	}
+	} #endregion
 	
 #endregion

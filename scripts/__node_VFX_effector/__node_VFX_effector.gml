@@ -25,7 +25,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
+	inputs[| 1] = nodeValue("Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA)
 		.setDisplay(VALUE_DISPLAY.area)
 		.rejectArray();
 	

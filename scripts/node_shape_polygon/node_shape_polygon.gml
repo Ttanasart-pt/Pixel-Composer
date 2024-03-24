@@ -2,7 +2,9 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Polygon Shape";
 	
 	shapesArray = [ "Rectangle", "Ellipse", "Star", "Capsule", "Ring", "Arc", "Gear", "Cross" ];
-	
+	for( var i = 0, n = array_length(shapesArray); i < n; i++ ) 
+		shapesArray[i] = new scrollItem(shapesArray[i], s_node_shape_poly_type, i);
+		
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -22,7 +24,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 6] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 7] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0.5, 0.5 ])
+	inputs[| 7] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
@@ -77,6 +79,9 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		draw_set_color(c_grey);
 		mesh.draw(_x, _y, _s);
 		node_draw_transform_box(active, _x, _y, _s, _mx, _my, _snx, _sny, 5, 6, 7, true);
+		
+		draw_set_color(COLORS._main_accent);
+		path.draw(_x, _y, _s);
 	}
 	
 	static vertex_transform = function(_p, _pos, _rot) {
@@ -141,6 +146,8 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			draw_set_color(_shc);
 			draw_primitive_begin(pr_trianglelist);
 			
+			outputs[| 2].setVisible(_mesh == noone);
+			
 			if(_mesh != noone) {
 				for( var j = 0; j < array_length(_mesh.triangles); j++ ) {
 					var tri = _mesh.triangles[j];
@@ -153,13 +160,11 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					draw_vertex(p2.x, p2.y);
 				}
 				
-				outputs[| 2].setVisible(false, false);
 			} else {
-				outputs[| 2].setVisible(true, true);
 				
 				var shapeData = [];
 			
-				switch(array_safe_get(shapesArray, _shp)) {
+				switch(array_safe_get(shapesArray, _shp).name) {
 					case "Rectangle" : shapeData = SHAPE_rectangle(_sca);		break;
 					case "Ellipse"	 : shapeData = SHAPE_circle(_sca, data);	break;
 					case "Star"		 : shapeData = SHAPE_star(_sca, data);		break;
@@ -168,6 +173,12 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					case "Arc"		 : shapeData = SHAPE_arc(_sca, data);		break;
 					case "Gear"		 : shapeData = SHAPE_gear(_sca, data);		break;
 					case "Cross"	 : shapeData = SHAPE_cross(_sca, data);		break;
+					default: 
+						draw_primitive_end();
+						draw_set_alpha(1);
+			
+						surface_reset_target();
+						return _outSurf;
 				}
 				
 				var points  = shapeData[0];
@@ -185,6 +196,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				for( var i = 0, n = array_length(points); i < n; i++ ) {
 					if(points[i].type == SHAPE_TYPE.points)
 						shapes[i] = polygon_triangulate(points[i].points);
+						
 					else if(points[i].type == SHAPE_TYPE.triangles)
 						shapes[i] = points[i].triangles;
 				}
@@ -203,6 +215,8 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						array_push(mesh.triangles, tri);
 					}
 				}
+				
+				mesh.calcCoM();
 			}
 			draw_primitive_end();
 			draw_set_alpha(1);

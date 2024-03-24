@@ -9,7 +9,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random());
 	
-	inputs[| 3] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, AREA_DEF)
+	inputs[| 3] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA)
 		.setDisplay(VALUE_DISPLAY.area);
 	
 	inputs[| 4] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 10);

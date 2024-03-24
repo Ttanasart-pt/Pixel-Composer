@@ -25,7 +25,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.rotation_random);
 	
 	onSurfaceSize = function() { return getInputData(1, DEF_SURF); };
-	inputs[| 5] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ])
+	inputs[| 5] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_AREA)
 		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 6] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5)

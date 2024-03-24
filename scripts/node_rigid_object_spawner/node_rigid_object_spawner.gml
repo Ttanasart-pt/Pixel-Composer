@@ -12,7 +12,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Spawn area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, AREA_DEF)
+	inputs[| 1] = nodeValue("Spawn area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA)
 		.setDisplay(VALUE_DISPLAY.area)
 		.rejectArray();
 	

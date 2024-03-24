@@ -1,5 +1,3 @@
-#macro AREA_DEF [ 16, 16, 4, 4, AREA_SHAPE.rectangle ]
-
 enum AREA_DISTRIBUTION {
 	area,
 	border

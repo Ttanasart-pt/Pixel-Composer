@@ -250,6 +250,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _segLength    = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
 				var _segLengthAmo = array_length(_segLength);
 				var _segIndex     = 0;
+				var _segIndexPrev = 0;
 				
 				if(_segLengthAmo)
 				while(_prog_curr > _segLength[_segIndex]) {
@@ -260,9 +261,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 				}
 				
-				//print($"===== {_prog_curr}/{_segLength} : {_segIndex} =====");
+				//print($"===== {_prog_curr} / {_segLength} : {_segIndex} - {_pathLength} =====");
+				
 				while(_total >= 0) {
 					wght = 1;
+					_segIndexPrev = _segIndex;
 					
 					if(_useDistance) {
 						var segmentLength = array_safe_get(_segLength, _segIndex, _pathLength);
@@ -273,10 +276,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						//print($"{segmentLength}/{_pathLength} = {_prog_next}");
 						if(_prog_next == segmentLength) _segIndex++;
 						
-						var _pp = _clamp? clamp(_pathPng, 0, _pathLength) : _pathPng
+						var _pp = _clamp? clamp(_pathPng, 0, _pathLength) : _pathPng;
 						//print($"_pp = {_pp}");
 						
 						p = _pat.getPointDistance(_pp, i, p);
+						
 						if(struct_has(_pat, "getWeightDistance"))
 							wght = _pat.getWeightDistance(_pp, i);
 					} else {
@@ -322,7 +326,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						pointAmo++;
 					}
 					
-					if(_prog_next == _prog_curr) break;
+					if(_prog_next == _prog_curr && _segIndexPrev == _segIndex) break;
 					else if(_prog_next > _prog_curr) {
 						_prog_total += _prog_next - _prog_curr;
 						_total      -= _prog_next - _prog_curr;
@@ -333,7 +337,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_ox		   = _nx;
 					_oy		   = _ny;
 						
-					if(_total_prev == _total && ++_freeze > 16) break;
+					if(_total_prev == _total && _segIndexPrev == _segIndex && ++_freeze > 16) { print("Terminate line not moving"); break; }
 					_total_prev = _total;
 				}
 				

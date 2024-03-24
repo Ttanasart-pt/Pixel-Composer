@@ -17,6 +17,8 @@ enum AREA_INDEX {
 	shape
 }
 
+#macro DEF_AREA [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle, AREA_MODE.area ]
+
 function areaBox(_onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
 	unit	 = _unit;
@@ -125,7 +127,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		y = _y;
 		w = 0;
 		h = ui(204);
-		mode = _display_data.area_type;
+		mode = array_safe_get(_data, 5);
 		
 		var _bx   = _x - ui(48);
 		var _by   = _y + ui(64 - 48);
@@ -219,7 +221,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						break;
 				}
 				
-				_display_data.area_type = (mode + 1) % 3;
+				onModify(5, (mode + 1) % 3);
 			} #endregion
 		} 
 		

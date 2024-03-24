@@ -10,7 +10,7 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
+	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA )
 		.setDisplay(VALUE_DISPLAY.area);
 	
 	input_display_list = [ 0, 

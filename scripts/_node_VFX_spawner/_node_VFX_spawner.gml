@@ -10,7 +10,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 2] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 2, 2 ], "Amount of particle spawn in that frame." )
 		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
-	inputs[| 3] = nodeValue("Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ] )
+	inputs[| 3] = nodeValue("Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA )
 		.setDisplay(VALUE_DISPLAY.area);
 	
 	inputs[| 4] = nodeValue("Spawn distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )

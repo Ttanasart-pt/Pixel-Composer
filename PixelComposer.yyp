@@ -981,6 +981,7 @@
     {"id":{"name":"sh_blur_zoom","path":"shaders/sh_blur_zoom/sh_blur_zoom.yy",},},
     {"id":{"name":"node_isosurf","path":"scripts/node_isosurf/node_isosurf.yy",},},
     {"id":{"name":"__add_node_item","path":"scripts/__add_node_item/__add_node_item.yy",},},
+    {"id":{"name":"s_node_shape_poly_type","path":"sprites/s_node_shape_poly_type/s_node_shape_poly_type.yy",},},
     {"id":{"name":"node_VFX_renderer","path":"scripts/node_VFX_renderer/node_VFX_renderer.yy",},},
     {"id":{"name":"s_node_pb_fx_stack","path":"sprites/s_node_pb_fx_stack/s_node_pb_fx_stack.yy",},},
     {"id":{"name":"fd_draw_sprite_to_collision_mask_surface","path":"scripts/fd_draw_sprite_to_collision_mask_surface/fd_draw_sprite_to_collision_mask_surface.yy",},},
