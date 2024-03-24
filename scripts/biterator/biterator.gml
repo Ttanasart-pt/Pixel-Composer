@@ -9,14 +9,14 @@ function Biterator(node) : VCT(node) constructor {
 	dimension = VCT_var(VALUE_TYPE.integer, 0);
 	shape	  = VCT_var(VALUE_TYPE.integer, 0);
 	
-	shape_par[0] = VCT_var(VALUE_TYPE.integer, 0).setDisplay(VALUE_DISPLAY.slider, { range: [- 8,  8, 1] });
-	shape_par[1] = VCT_var(VALUE_TYPE.integer, 0).setDisplay(VALUE_DISPLAY.slider, { range: [- 8,  8, 1] });
-	shape_par[2] = VCT_var(VALUE_TYPE.integer, 2).setDisplay(VALUE_DISPLAY.slider, { range: [  0,  4, 1] });
-	shape_par[3] = VCT_var(VALUE_TYPE.integer, 2).setDisplay(VALUE_DISPLAY.slider, { range: [  0,  4, 1] });
-	shape_par[4] = VCT_var(VALUE_TYPE.integer, 0).setDisplay(VALUE_DISPLAY.slider, { range: [ -4,  4, 1] });
-	shape_par[5] = VCT_var(VALUE_TYPE.integer, 0).setDisplay(VALUE_DISPLAY.slider, { range: [ -4,  4, 1] });
+	shape_par[0] = VCT_var(VALUE_TYPE.integer, 0).setDisplay(VALUE_DISPLAY.slider, { range: [- 8,  8, 0.1] });
+	shape_par[1] = VCT_var(VALUE_TYPE.integer, 0).setDisplay(VALUE_DISPLAY.slider, { range: [- 8,  8, 0.1] });
+	shape_par[2] = VCT_var(VALUE_TYPE.integer, 2).setDisplay(VALUE_DISPLAY.slider, { range: [  0,  4, 0.1] });
+	shape_par[3] = VCT_var(VALUE_TYPE.integer, 2).setDisplay(VALUE_DISPLAY.slider, { range: [  0,  4, 0.1] });
+	shape_par[4] = VCT_var(VALUE_TYPE.integer, 0).setDisplay(VALUE_DISPLAY.slider, { range: [ -4,  4, 0.1] });
+	shape_par[5] = VCT_var(VALUE_TYPE.integer, 0).setDisplay(VALUE_DISPLAY.slider, { range: [ -4,  4, 0.1] });
 	
-	shape_par[5] = VCT_var(VALUE_TYPE.integer, 0).setDisplay(VALUE_DISPLAY.slider, { range: [ -4,  4, 1] });
+	shape_par[5] = VCT_var(VALUE_TYPE.integer, 0).setDisplay(VALUE_DISPLAY.slider, { range: [ -4,  4, 0.1] });
 	
 	for( var i = 0; i < 3; i++ )
 		color[i] = VCT_var(VALUE_TYPE.color, c_white);

@@ -28,9 +28,17 @@ _HOVERING_ELEMENT = noone;
 	if(_cursor != CURSOR) {
 		window_set_cursor(CURSOR);
 		_cursor = CURSOR;
+	} 
+	CURSOR = cr_default;
+	
+	
+	if(_cursor_lock != CURSOR_LOCK) {
+		window_mouse_set_locked(CURSOR_LOCK);
+		if(!CURSOR_LOCK) window_mouse_set(CURSOR_LOCK_X, CURSOR_LOCK_Y);
 	}
 	
-	CURSOR = cr_default;
+	_cursor_lock = CURSOR_LOCK;
+	CURSOR_LOCK  = false;
 	
 	if(!is_surface(watcher_surface)) {
 		RENDER_ALL

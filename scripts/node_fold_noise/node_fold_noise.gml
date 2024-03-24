@@ -12,7 +12,7 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 		
 	inputs[| 3] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 6, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 6, 0.1] });
 		addShaderProp(SHADER_UNIFORM.integer, "iteration");
 		
 	inputs[| 4] = nodeValue("Stretch", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2);

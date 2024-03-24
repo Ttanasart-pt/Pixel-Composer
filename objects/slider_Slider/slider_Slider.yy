@@ -9,8 +9,8 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "widgets",
-    "path": "folders/widgets.yy",
+    "name": "sliders",
+    "path": "folders/widgets/sliders.yy",
   },
   "parentObjectId": null,
   "persistent": false,

@@ -10,7 +10,7 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 	
 	inputs[| in_cam + 1] = nodeValue("L1 V angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
 		.setName("Vertical angle")
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
 	inputs[| in_cam + 2] = nodeValue("L1 Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
 		.setName("Color")
@@ -25,7 +25,7 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 	
 	inputs[| in_cam + 5] = nodeValue("L2 V angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
 		.setName("Vertical angle")
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
 	inputs[| in_cam + 6] = nodeValue("L2 Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
 		.setName("Color")

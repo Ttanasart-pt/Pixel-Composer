@@ -40,13 +40,13 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 8] = nodeValue("Sweep", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 15)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
 	
 	inputs[| 9] = nodeValue("Sweep end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
 	
 	inputs[| 10] = nodeValue("Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
 	inputs[| 11] = nodeValue("Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Quadratic",		s_node_curve, 0),
@@ -54,7 +54,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 												 new scrollItem("Linear",			s_node_curve, 2), ]);
 	
 	inputs[| 12] = nodeValue("Radial banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
 	inputs[| 13] = nodeValue("Radial start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);

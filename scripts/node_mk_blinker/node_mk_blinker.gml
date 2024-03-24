@@ -25,7 +25,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 8] = nodeValue("Glow", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 9] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )
-		.setDisplay(VALUE_DISPLAY.slider, { range : [ 1, 8, 1 ] });
+		.setDisplay(VALUE_DISPLAY.slider, { range : [ 1, 8, 0.1 ] });
 	
 	inputs[| 10] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);

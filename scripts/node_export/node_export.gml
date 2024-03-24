@@ -102,13 +102,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.rejectArray();
 	
 	inputs[| 10] = nodeValue("Quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 23)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 100, 1 ] })
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 100, 0.1 ] })
 		.rejectArray();
 	
 	inputs[| 11] = nodeValue("Sequence begin", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
 	inputs[| 12] = nodeValue("Frame range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, -1])
-		.setDisplay(VALUE_DISPLAY.slider_range, { range: [0, TOTAL_FRAMES, 1] });
+		.setDisplay(VALUE_DISPLAY.slider_range, { range: [0, TOTAL_FRAMES, 0.1] });
 	
 	png_format   = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
 	inputs[| 13] = nodeValue("Subformat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)

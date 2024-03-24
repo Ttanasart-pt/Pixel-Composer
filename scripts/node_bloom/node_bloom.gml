@@ -3,7 +3,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	inputs[| 1] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3, "Bloom blur radius.")
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
 	inputs[| 2] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5, "How bright a pixel should be to start blooming.")
 		.setDisplay(VALUE_DISPLAY.slider);

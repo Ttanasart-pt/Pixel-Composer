@@ -27,7 +27,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[| 8] = nodeValue("Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 64, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 64, 0.1] });
 	
 	inputs[| 9] = nodeValue("Inner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -36,7 +36,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 11] = nodeValue("Teeth", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 6)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [3, 16, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [3, 16, 0.1] });
 	
 	inputs[| 12] = nodeValue("Teeth height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);

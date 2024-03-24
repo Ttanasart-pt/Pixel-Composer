@@ -1,10 +1,15 @@
+enum INSP_VIEW_MODE {
+	compact,
+	spacious
+}
+
 function drawWidgetInit() {
 	anim_toggling = false;
 	anim_hold     = noone;
 	visi_hold     = noone;
 	
 	min_w = ui(160);
-	lineBreak = PREFERENCES.inspector_view_default;
+	viewMode = PREFERENCES.inspector_view_default;
 	
 	tooltip_loop_type = new tooltipSelector(__txtx("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
 }
@@ -12,9 +17,9 @@ function drawWidgetInit() {
 function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0) { 
 	var con_w = ww - ui(4);
 	var xc	  = xx + ww / 2;
-	var _font = lineBreak? f_p0 : f_p1;
+	var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
 	
-	var breakLine = lineBreak || jun.expUse;
+	var breakLine = viewMode || jun.expUse;
 	var lb_h = line_get_height(_font) + ui(8);
 	var lb_y = yy + lb_h / 2;
 	
@@ -130,7 +135,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		return [ 0, true ];
 	} #endregion
 	
-	draw_text_add(lb_x, lb_y, _name);
+	draw_text_over(lb_x, lb_y, _name);
 			
 	#region tooltip
 		if(jun.tooltip != "") {

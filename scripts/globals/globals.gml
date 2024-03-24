@@ -41,7 +41,8 @@
 	HOTKEY_CONTEXT	= ds_list_create();
 	HOTKEY_CONTEXT[| 0] = "";
 	
-	globalvar CURSOR, TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
+	globalvar CURSOR, CURSOR_LOCK, CURSOR_LOCK_X, CURSOR_LOCK_Y;
+	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
 #endregion
 
 #region inputs

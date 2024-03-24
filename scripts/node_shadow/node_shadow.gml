@@ -12,10 +12,10 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 4] = nodeValue("Grow", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
 	inputs[| 5] = nodeValue("Blur", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	inputs[| 6] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	

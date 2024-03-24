@@ -4,7 +4,7 @@ enum TEXTBOX_INPUT {
 }
 
 function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
-	align  = _input == TEXTBOX_INPUT.number? fa_right : fa_left;
+	align  = _input == TEXTBOX_INPUT.number? fa_center : fa_left;
 	hide   = false;
 	font   = noone;
 	color  = COLORS._main_text;
@@ -18,9 +18,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	slidable    = false;
 	sliding     = false;
 	slide_int   = false;
-	slide_sv    = 0;
 	slide_speed = 1 / 10;
 	slide_range = noone;
+	curr_range  = [ 0, 1 ];
 	
 	label = "";
 	
@@ -402,7 +402,25 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		text_surface = surface_verify(text_surface, _w - ui(16), _h);
 		
-		if(!hide) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+		if(!hide) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+		
+			if(slide_range != noone) {
+				var _minn = slide_range[0];
+				var _maxx = slide_range[1];
+				var _rang = abs(_maxx - _minn);
+				var _currVal = toNumber(_current_text);
+			
+				if(sliding != 2) {
+					curr_range[0] = (_currVal >= _minn)? _minn : _minn - ceil(abs(_currVal - _minn) / _rang) * _rang; 
+					curr_range[1] = (_currVal <= _maxx)? _maxx : _maxx + ceil(abs(_currVal - _maxx) / _rang) * _rang;
+				}
+			
+				var lw = _w * (_currVal - curr_range[0]) / (curr_range[1] - curr_range[0]);
+				draw_sprite_stretched_ext(THEME.textbox, 4, _x, _y, lw, _h, boxColor, 1);
+			}
+		}
+		
 		disp_x = lerp_float(disp_x, disp_x_to, 5);
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
@@ -545,12 +563,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
 			
 			if(slidable) {
-				if(_w > ui(64) && _h >= TEXTBOX_HEIGHT && label == "")
-					draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + _h / 2, 1, COLORS._main_icon, 0.5);
+				//if(_w > ui(64) && _h >= TEXTBOX_HEIGHT && label == "")
+				//	draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + _h / 2, 1, COLORS._main_icon, 0.5);
 				
 				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left, active)) {
 					sliding  = 1;
-						
+					
 					slide_mx = _m[0];
 					slide_my = _m[1];
 				} 
@@ -573,18 +591,17 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		} #endregion
 		
 		if(sliding > 0) { #region
-			var dx = _m[0] - slide_mx;
-			var dy = _m[1] - slide_my;
 			
-			if(sliding == 1 && (abs(dx) > 8 || abs(dy) > 8)) {
+			if(sliding == 1 && window_mouse_get_delta_x() != 0) {
+				deactivate();
+				textBox_slider.activate(toNumber(_input_text));
 				sliding  = 2;
-				slide_sv = toNumber(_input_text);
-				textBox_slider.activate()
 			}
 			
 			if(sliding == 2) {
 				textBox_slider.tb = self;
-				if(mouse_release(mb_left)) deactivate();
+				if(mouse_release(mb_left))
+					deactivate();
 			}
 			
 			if(mouse_release(mb_left)) {

@@ -529,7 +529,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						
 						var txt  = __txt(jun_disp[0]);
 						var coll = jun_disp[1] && filter_text == "";
-						var lbh  = lineBreak? ui(32) : ui(26);
+						var lbh  = viewMode? ui(32) : ui(26);
 						var togl = array_safe_get(jun_disp, 2, noone);
 						if(togl != noone) var toging = _inspecting.getInputData(togl);
 						
@@ -570,11 +570,11 @@ function Panel_Inspector() : PanelContent() constructor {
 						}
 						
 						draw_set_alpha(aa);
-						draw_set_text(lineBreak? f_p0 : f_p1, fa_left, fa_center, COLORS._main_text);
+						draw_set_text(viewMode? f_p0 : f_p1, fa_left, fa_center, COLORS._main_text);
 						draw_text_add(ltx, yy + lbh / 2, txt);
 						draw_set_alpha(1);
 						
-						hh += lbh + ui(lineBreak? 8 : 6) + pad;
+						hh += lbh + ui(viewMode? 8 : 6) + pad;
 						
 						if(coll) { // skip 
 							_colsp   = true;
@@ -628,7 +628,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 			
 			#region ++++ draw widget ++++
-				var _font = lineBreak? f_p0 : f_p1;
+				var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
 				
 				var lb_h = line_get_height(_font) + ui(8);
 				var lb_w = line_get_width(jun.getName(), _font) + ui(16);
@@ -646,7 +646,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				hh += lb_h + widH + padd;
 			
 				var _selY1 = yy + lb_h + widH + ui(2);
-				var _selH  = _selY1 - _selY + (lineBreak * ui(4));
+				var _selH  = _selY1 - _selY + (viewMode * ui(4));
 				
 				if(jun == prop_highlight && prop_highlight_time) {
 					if(prop_highlight_time == 60)
@@ -858,10 +858,10 @@ function Panel_Inspector() : PanelContent() constructor {
 		}
 		
 		by += ui(36);
-		view_mode_tooltip.index = lineBreak;
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, view_mode_tooltip, THEME.inspector_view, lineBreak) == 2) {
-			lineBreak = !lineBreak;
-			PREFERENCES.inspector_view_default = lineBreak;
+		view_mode_tooltip.index = viewMode;
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, view_mode_tooltip, THEME.inspector_view, viewMode) == 2) {
+			viewMode = !viewMode;
+			PREFERENCES.inspector_view_default = viewMode;
 		}
 		
 		//////////////////////////////////////////////////////////////////// INSPECTOR ACTIONS ////////////////////////////////////////////////////////////////////

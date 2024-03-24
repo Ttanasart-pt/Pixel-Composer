@@ -42,16 +42,16 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				inputs[| 4].setDisplay(VALUE_DISPLAY.slider);
 			} else {
 				inputs[| 0].setType(VALUE_TYPE.integer);
-				inputs[| 0].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 1] });
+				inputs[| 0].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
 				
 				inputs[| 1].setType(VALUE_TYPE.integer);
-				inputs[| 1].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 1] });
+				inputs[| 1].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
 				
 				inputs[| 2].setType(VALUE_TYPE.integer);
-				inputs[| 2].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 1] });
+				inputs[| 2].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
 				
 				inputs[| 4].setType(VALUE_TYPE.integer);
-				inputs[| 4].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 1] });
+				inputs[| 4].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
 			}
 		}
 	} #endregion

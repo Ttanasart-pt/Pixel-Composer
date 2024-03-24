@@ -1,19 +1,16 @@
-function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
-	minn = _min;
-	maxx = _max;
-	stepSize = _step;
+function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
+	slide_range = _range;
+	curr_range  = [ _range[0], _range[1] ];
+	stepSize    = _step;
+	isInt       = _int;
 	
-	spr = THEME.slider;
 	onModify = _onModify;
 	
-	dragging = noone;
-	drag_sv  = 0;
+	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, clamp(val, curr_range[0], curr_range[1])); }).setSlidable(_step, _int, _range);
+	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, clamp(val, curr_range[0], curr_range[1])); }).setSlidable(_step, _int, _range);
 	
-	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, clamp(val, minn, maxx)); });
-	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, clamp(val, minn, maxx)); });
-	
-	tb_value_min.slidable = true;
-	tb_value_max.slidable = true;
+	tb_value_min.hide = true;
+	tb_value_max.hide = true;
 	
 	static setSlideSpeed = function(speed) { #region
 		tb_value_min.setSlidable(speed);
@@ -43,87 +40,37 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 		if(!is_real(_data[0])) return h;
 		if(!is_real(_data[1])) return h;
 		
-		var tb_w = ui(64);
-		var sw = _w - (tb_w + ui(16)) * 2;
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
+		
+		var _minn = slide_range[0];
+		var _maxx = slide_range[1];
+		var _rang = abs(_maxx - _minn);
+		var _currMin = min(_data[0], _data[1]);
+		var _currMax = max(_data[0], _data[1]);
+			
+		if(tb_value_min.sliding != 2 && tb_value_max.sliding != 2) {
+			curr_range[0] = (_currMin >= _minn)? _minn : _minn - ceil(abs(_currMin - _minn) / _rang) * _rang; 
+			curr_range[1] = (_currMax <= _maxx)? _maxx : _maxx + ceil(abs(_currMax - _maxx) / _rang) * _rang;
+		}
+			
+		var lx = _w * (_currMin - curr_range[0]) / (curr_range[1] - curr_range[0]);
+		var lw = _w * ((_currMax - _currMin) - curr_range[0]) / (curr_range[1] - curr_range[0]);
+		
+		draw_sprite_stretched_ext(THEME.textbox, 4, _x + lx, _y, lw, _h, c_white, 1);
+		
+		var tb_w = _w / 2;
+		
+		if(tb_value_min.selecting || tb_value_max.selecting) {
+			draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, c_white, 1);	
+		} else {
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		}
 		
 		tb_value_min.setFocusHover(active, hover);
-		tb_value_min.draw(_x, _y, tb_w, TEXTBOX_HEIGHT, _data[0], _m);
+		tb_value_min.draw(_x, _y, tb_w, _h, _data[0], _m);
 		
 		tb_value_max.setFocusHover(active, hover);
-		tb_value_max.draw(_x + _w - tb_w, _y, tb_w, TEXTBOX_HEIGHT, _data[1], _m);
-		
-		var _x0 = _x + tb_w + ui(16);
-		draw_sprite_stretched(spr, 0, _x0, _y + _h / 2 - ui(4), sw, ui(8));	
-		
-		if(stepSize >= 1 && sw / ((maxx - minn) / stepSize) > ui(16)) {
-			for( var i = minn; i <= maxx; i += stepSize ) {
-				var _v  = round(i / stepSize) * stepSize;
-				var _cx = _x0 + clamp((_v - minn) / (maxx - minn), 0, 1) * sw;
-				
-				draw_sprite_stretched_ext(spr, 4, _cx - ui(4), _y + _h / 2 - ui(4), ui(8), ui(8), COLORS.widget_slider_step, 1);	
-			}
-		}
-		
-		var _slider_x0 = _x0 + clamp((_data[0] - minn) / (maxx - minn), 0, 1) * sw;
-		var _slider_x1 = _x0 + clamp((_data[1] - minn) / (maxx - minn), 0, 1) * sw;
-		
-		draw_sprite_stretched_ext(spr, 4, min(_slider_x0, _slider_x1), _y + _h / 2 - ui(4), abs(_slider_x1 - _slider_x0), ui(8), COLORS._main_accent, 1);	
-		draw_sprite_stretched(spr, 1, _slider_x0 - ui(10), _y, ui(20), _h);
-		draw_sprite_stretched(spr, 1, _slider_x1 - ui(10), _y, ui(20), _h);
-		
-		if(dragging) {
-			if(dragging_index == 0)
-				draw_sprite_stretched_ext(spr, 3, _slider_x0 - ui(10), _y, ui(20), _h, COLORS._main_accent, 1);
-			else if(dragging_index == 1)
-				draw_sprite_stretched_ext(spr, 3, _slider_x1 - ui(10), _y, ui(20), _h, COLORS._main_accent, 1);
-			
-			var val = (dragging.drag_sx - dragging.drag_msx) / dragging.drag_sw * (maxx - minn) + minn;
-			val = round(val / stepSize) * stepSize;
-			val = clamp(val, minn, maxx);
-			if(key_mod_press(CTRL))
-				val = round(val);
-			
-			if(onModify(dragging_index, val))
-				UNDO_HOLDING = true;
-			
-			MOUSE_BLOCK = true;
-			
-			if(mouse_check_button_pressed(mb_right)) {
-				onModify(dragging_index, drag_sv);
-				instance_destroy(dragging);
-				dragging     = noone;
-				UNDO_HOLDING = false;
-				
-			} else if(mouse_release(mb_left)) {
-				instance_destroy(dragging);
-				dragging = noone;
-				UNDO_HOLDING = false;
-			}
-		} else if(hover) {
-			var _hover = -1;
-			
-			if(point_in_rectangle(_m[0], _m[1], _slider_x0 - ui(10), _y, _slider_x0 + ui(10), _y + _h)) {
-				draw_sprite_stretched(spr, 2, _slider_x0 - ui(10), _y, ui(20), _h);
-				_hover = 0;
-			}
-			
-			if(point_in_rectangle(_m[0], _m[1], _slider_x1 - ui(10), _y, _slider_x1 + ui(10), _y + _h)) {
-				draw_sprite_stretched(spr, 2, _slider_x1 - ui(10), _y, ui(20), _h);
-				_hover = 1;
-			}
-			
-			if(_hover > -1 && mouse_press(mb_left, active)) {
-				dragging           = instance_create(0, 0, slider_Slider);
-				dragging_index     = _hover;
-				dragging.drag_sx   = _m[0];
-				dragging.drag_msx  = _x0;
-				dragging.drag_sw   = sw;
-				
-				drag_sv = _data[_hover];
-			}
-		}
-		
-		resetFocus();
+		tb_value_max.draw(_x + tb_w, _y, tb_w, _h, _data[1], _m);
 		
 		return h;
 	} #endregion

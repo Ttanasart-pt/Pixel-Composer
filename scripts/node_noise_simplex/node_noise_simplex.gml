@@ -12,7 +12,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setMappable(8);
 	
 	inputs[| 3] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] })
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(9);
 	
 	inputs[| 4] = nodeValue("Color mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)

@@ -880,9 +880,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				switch(display_type) { 
 					case VALUE_DISPLAY._default :		#region
-						editWidget = new textBox(_txt, function(val) { 
-							return setValueInspector(val);
-						} );
+						editWidget = new textBox(_txt, function(val) { return setValueInspector(val); } );
 						editWidget.slidable = true;
 						if(type == VALUE_TYPE.integer) editWidget.setSlidable();
 						
@@ -995,10 +993,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.slider :			#region
 						var _range = struct_try_get(display_data, "range", [ 0, 1, 0.01 ]);
 						
-						editWidget = new slider(_range[0], _range[1], _range[2], function(val) { 
-							return setValueInspector(toNumber(val));
-						} );
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
+						editWidget = new textBox(TEXTBOX_INPUT.number, function(val) { return setValueInspector(toNumber(val)); } )
+										.setSlidable(_range[2], type == VALUE_TYPE.integer, [ _range[0], _range[1] ]);
 						
 						if(struct_has(display_data, "update_stat"))
 							editWidget.update_stat = display_data.update_stat;
@@ -1008,10 +1004,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.slider_range :	#region
 						var _range = struct_try_get(display_data, "range", [ 0, 1, 0.01 ]);
 						
-						editWidget = new sliderRange(_range[0], _range[1], _range[2], function(index, val) {
-							return setValueInspector(val, index);
-						} );
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
+						editWidget = new sliderRange(_range[2], type == VALUE_TYPE.integer, [ _range[0], _range[1] ], 
+							function(index, val) { return setValueInspector(val, index); } );
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);

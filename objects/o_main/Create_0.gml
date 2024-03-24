@@ -27,6 +27,9 @@
 	DIALOG_DEPTH_HOVER = 0;
 	UPDATE             = RENDER_TYPE.none;
 	CURSOR             = cr_default;
+	CURSOR_LOCK		   = false;
+	CURSOR_LOCK_X	   = 0;
+	CURSOR_LOCK_Y	   = 0;
 	TOOLTIP            = "";
 	DRAGGING           = noone;
 	KEYBOARD_STRING    = "";
@@ -42,6 +45,8 @@
 	kb_time  = 0;
 	kb_hold  = false;
 	kb_hkey  = 0;
+	
+	_cursor_lock = false;
 	
 	watcher_surface = surface_create(1, 1);
 	

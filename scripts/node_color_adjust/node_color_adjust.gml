@@ -58,7 +58,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 16] = nodeValue("Invert mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 17] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	////////////////////////////////////////////////////////////////////////////////////////
 	

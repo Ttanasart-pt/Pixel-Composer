@@ -56,7 +56,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 12] = nodeValue("Invert mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 13] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	inputs[| 14] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector);

@@ -59,7 +59,7 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		.rejectArray();
 		
 	inputs[| 16] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] })
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 0.1 ] })
 		.rejectArray();
 	
 	inputs[| 17] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)

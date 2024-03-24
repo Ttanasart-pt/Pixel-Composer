@@ -7,7 +7,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[|  1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	inputs[|  2] = nodeValue("Brush size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
 	inputs[|  3] = nodeValue("Fill threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);

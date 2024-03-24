@@ -273,7 +273,7 @@ function __initNodes() {
 		var favPath = DIRECTORY + "Nodes/fav.json";
 		global.FAV_NODES = file_exists_empty(favPath)? json_load_struct(favPath) : [];
 		if(!is_array(global.FAV_NODES)) global.FAV_NODES = [];
-	
+		
 		var recPath = DIRECTORY + "Nodes/recent.json";
 		global.RECENT_NODES = file_exists_empty(recPath)? json_load_struct(recPath) : [];
 		if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];

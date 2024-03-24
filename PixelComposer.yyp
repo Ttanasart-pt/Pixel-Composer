@@ -308,6 +308,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"button","folderPath":"folders/widgets/button.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"rotator","folderPath":"folders/widgets/rotator.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"sliders","folderPath":"folders/widgets/sliders.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"text","folderPath":"folders/widgets/text.yy",},
   ],
   "IncludedFiles": [
@@ -821,6 +822,7 @@
     {"id":{"name":"node_FLIP_destroy","path":"scripts/node_FLIP_destroy/node_FLIP_destroy.yy",},},
     {"id":{"name":"libborderless","path":"extensions/libborderless/libborderless.yy",},},
     {"id":{"name":"node_dynasurf_in","path":"scripts/node_dynasurf_in/node_dynasurf_in.yy",},},
+    {"id":{"name":"__sliderRange","path":"scripts/__sliderRange/__sliderRange.yy",},},
     {"id":{"name":"s_node_vfx_attract","path":"sprites/s_node_vfx_attract/s_node_vfx_attract.yy",},},
     {"id":{"name":"s_node_pixel_cloud","path":"sprites/s_node_pixel_cloud/s_node_pixel_cloud.yy",},},
     {"id":{"name":"node_grid_noise","path":"scripts/node_grid_noise/node_grid_noise.yy",},},

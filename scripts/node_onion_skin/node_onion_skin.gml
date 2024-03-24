@@ -6,7 +6,7 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [-1, 1])
-		.setDisplay(VALUE_DISPLAY.slider_range, { range: [ -16, 16, 1 ] });
+		.setDisplay(VALUE_DISPLAY.slider_range, { range: [ -16, 16, 0.1 ] });
 	
 	inputs[| 2] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);

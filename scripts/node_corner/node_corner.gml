@@ -4,7 +4,7 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
 	
 	inputs[| 2] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	

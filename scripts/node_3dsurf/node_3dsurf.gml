@@ -10,7 +10,7 @@ function Node_3DSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 2] = nodeValue("Vertical Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 1] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
 	inputs[| 3] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
 	
