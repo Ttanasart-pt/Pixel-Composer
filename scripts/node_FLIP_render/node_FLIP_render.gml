@@ -29,7 +29,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 8] = nodeValue("Additive", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	inputs[| 9] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.range);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 10] = nodeValue("Segments", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	

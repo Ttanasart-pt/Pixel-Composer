@@ -20,7 +20,7 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	inputs[| 6] = nodeValue("Color 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	
 	inputs[| 7] = nodeValue("Center 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector)
+		.setDisplay(VALUE_DISPLAY.vector, { useGlobal : false })
 		.setUnitRef(function(index) { return getDimension(index); });
 	inputs[| 8] = nodeValue("Color 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	

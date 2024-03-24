@@ -126,26 +126,36 @@ function Panel_Inspector() : PanelContent() constructor {
 	#endregion
 	
 	#region ++++ menus ++++
+		static nodeExpandAll = function(node) {
+			if(node.input_display_list == -1) return;
+			
+			var dlist = node.input_display_list;
+			for( var i = 0, n = array_length(dlist); i < n; i++ ) {
+				if(!is_array(dlist[i])) continue;
+				dlist[i][@ 1] = false;
+			}
+		}
+		
+		static nodeCollapseAll = function(node) {
+			if(node.input_display_list == -1) return;
+			
+			var dlist = node.input_display_list;
+			for( var i = 0, n = array_length(dlist); i < n; i++ ) {
+				if(!is_array(dlist[i])) continue;
+				dlist[i][@ 1] = true;
+			}
+		}
+		
 		group_menu = [
 			menuItem(__txt("Expand all"), function() {
-				if(inspecting == noone) return;
-				if(inspecting.input_display_list == -1) return;
-			
-				var dlist = inspecting.input_display_list;
-				for( var i = 0, n = array_length(dlist); i < n; i++ ) {
-					if(!is_array(dlist[i])) continue;
-					dlist[i][@ 1] = false;
-				}
+				if(inspecting != noone) nodeExpandAll(inspecting);
+				for( var i = 0, n = array_length(inspectings); i < n; i++ ) 
+					nodeExpandAll(inspectings[i]);
 			}),
 			menuItem(__txt("Collapse all"), function() {
-				if(inspecting == noone) return;
-				if(inspecting.input_display_list == -1) return;
-			
-				var dlist = inspecting.input_display_list;
-				for( var i = 0, n = array_length(dlist); i < n; i++ ) {
-					if(!is_array(dlist[i])) continue;
-					dlist[i][@ 1] = true;
-				}
+				if(inspecting != noone) nodeCollapseAll(inspecting);
+				for( var i = 0, n = array_length(inspectings); i < n; i++ ) 
+					nodeCollapseAll(inspectings[i]);
 			}),
 		]
 		

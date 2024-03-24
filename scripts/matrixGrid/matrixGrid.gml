@@ -86,7 +86,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		w = _w;
 		
 		var hh = TEXTBOX_HEIGHT;
-		h = hh * size - ui(8);
+		h = hh * size;
 		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.setFocusHover(active, hover);			

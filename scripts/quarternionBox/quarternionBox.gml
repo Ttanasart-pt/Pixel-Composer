@@ -65,7 +65,7 @@ function quarternionBox(_onModify) : widget() constructor {
 		
 		current_value = _data;
 		
-		var bs = ui(32);
+		var bs = min(_h, ui(32));
 		var bx = _x + _w - bs;
 		var by = _y + _h / 2 - bs / 2;
 		var _disp = struct_try_get(_display_data, "angle_display");
@@ -97,7 +97,7 @@ function quarternionBox(_onModify) : widget() constructor {
 			
 			tb[i].hide = true;
 			tb[i].setFocusHover(clickable && active, hover);
-			tb[i].draw(bx + ui(24), _y, disp_w - ui(24), _h, _a, _m);
+			tb[i].draw(bx, _y, disp_w, _h, _a, _m);
 			
 			bx += disp_w;
 		}

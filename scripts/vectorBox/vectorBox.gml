@@ -109,26 +109,26 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		current_value = _data;
 		
+		var _bs = min(_h, ui(32));
+		
 		if(side_button) {
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
-			_w -= ui(40);
+			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			_w -= _bs + ui(4);
 		}
 		
 		if(unit != noone && unit.reference != noone) {
-			_w += ui(4);
-			
 			unit.triggerButton.setFocusHover(iactive, ihover);
-			unit.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m);
-			_w -= ui(40);
+			unit.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m);
+			_w -= _bs + ui(4);
 		}
 		
 		if(linkable) {
 			var _icon_blend = linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
 			var bx = _x;
-			var by = _y + _h / 2 - ui(24 / 2);
+			var by = _y + _h / 2 - _bs / 2;
 			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
 				linked = !linked;
 				_display_data.linked =  linked;
 				
@@ -138,8 +138,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				}
 			}
 			
-			_x += ui(28);
-			_w -= ui(28);
+			_x += _bs + ui(4);
+			_w -= _bs + ui(4);
 		}
 		
 		var sz = min(size, array_length(_data));

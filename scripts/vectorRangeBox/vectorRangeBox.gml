@@ -4,6 +4,8 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	unit	 = _unit;
 	linked   = false;
 	
+	disp_h = 0;
+	
 	tooltip	= new tooltipSelector("Value Type", [
 		__txtx("widget_range_random",   "Random Range"),
 		__txtx("widget_range_constant", "Constant"),
@@ -63,14 +65,17 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		w = _w;
 		
 		if(struct_has(_display_data, "linked")) linked = _display_data.linked;
-		h = linked? _h : _h * 2 + ui(4);
+		var _hh = linked? _h : _h * 2 + ui(4);
+		h = h == 0? _hh : lerp_float(h, _hh, 5);
 		tooltip.index = linked;
 		
 		var _icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		
-		var bx = _x;
-		var by = _y + _h / 2 - ui(24 / 2);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+		var _bs = min(_h, ui(32));
+		var bx  = _x;
+		var by  = _y + _h / 2 - _bs / 2;
+		
+		if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
 			linked = !linked;
 			_display_data.linked = linked;
 			
@@ -82,8 +87,8 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			}
 		}
 		
-		_x += ui(28);
-		_w -= ui(28);
+		_x += _bs + ui(4);
+		_w -= _bs + ui(4);
 		
 		var ww = _w / 2;
 		

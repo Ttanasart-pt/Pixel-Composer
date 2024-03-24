@@ -2,6 +2,8 @@ function rangeBox(_type, _onModify) : widget() constructor {
 	onModify = _onModify;
 	linked   = false;
 	
+	disp_w = 0;
+	
 	tooltip	= new tooltipSelector("Value Type", [
 		__txtx("widget_range_random",   "Random Range"),
 		__txtx("widget_range_constant", "Constant"),
@@ -28,6 +30,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 	for(var i = 0; i < 2; i++) {
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
+		tb[i].hide     = true;
 	}
 	
 	static setSlideSpeed = function(speed) {
@@ -62,9 +65,11 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		tooltip.index = linked;
 		
 		var _icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-		var bx = _x;
-		var by = _y + _h / 2 - ui(24 / 2);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+		var _bs = min(_h, ui(32));
+		var bx  = _x;
+		var by  = _y + _h / 2 - _bs / 2;
+		
+		if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
 			linked = !linked;
 			_display_data.linked = linked;
 			
@@ -74,26 +79,25 @@ function rangeBox(_type, _onModify) : widget() constructor {
 			}
 		}
 		
-		_x += ui(28);
-		_w -= ui(28);
+		_x += _bs + ui(4);
+		_w -= _bs + ui(4);
 		
-		tb[0].hide = !linked;
-		tb[1].hide = !linked;
+		var ww = linked? _w : _w / 2;
+		disp_w = disp_w == 0? ww : lerp_float(disp_w, ww, 5);
 		
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+			
 		if(linked) {
 			tb[0].setFocusHover(active, hover);
-			tb[0].draw(_x + ui(8), _y, _w - ui(8), _h, _data[0], _m);
+			tb[0].draw(_x, _y, disp_w, _h, _data[0], _m);
 			
 		} else if(is_array(_data) && array_length(_data) >= 2) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
-			
-			var ww  = _w / 2;
 			for(var i = 0; i < 2; i++) {
 				tb[i].setFocusHover(active, hover);
 				
-				var bx  = _x + ww * i;
-				tb[i].draw(bx, _y, ww, _h, _data[i], _m);
+				var bx  = _x + disp_w * i;
+				tb[i].draw(bx, _y, disp_w, _h, _data[i], _m);
 			}
 		}
 		

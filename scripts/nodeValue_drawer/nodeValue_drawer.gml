@@ -35,6 +35,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		case "rotator" : 
 		case "rotatorRandom" : 
 		case "rotatorRange" : 
+		case "transformBox" : 
 			breakLine = true;
 	} #endregion
 	

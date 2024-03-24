@@ -18,19 +18,16 @@ function controlPointBox(_onModify) : widget() constructor {
 	onModify = _onModify;
 	onSurfaceSize = -1;
 	
-	tbCx = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.cx,     toNumber(val)); });
-	tbCy = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.cy,     toNumber(val)); });
-	tbFx = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.fx,     toNumber(val)); });
-	tbFy = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.fy,     toNumber(val)); });
-	tbW  = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.width,  max(0, toNumber(val))); });
-	tbH  = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.height, max(0, toNumber(val))); });
+	tbCx = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.cx,     toNumber(val)); });			tbCx.hide = true; tbCx.slidable = true;
+	tbCy = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.cy,     toNumber(val)); });			tbCy.hide = true; tbCy.slidable = true;
+	tbFx = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.fx,     toNumber(val)); });			tbFx.hide = true; tbFx.slidable = true;
+	tbFy = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.fy,     toNumber(val)); });			tbFy.hide = true; tbFy.slidable = true;
+	tbW  = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.width,  max(0, toNumber(val))); });	tbW.hide  = true; tbW.slidable  = true;
+	tbH  = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.height, max(0, toNumber(val))); });	tbH.hide  = true; tbH.slidable  = true;
 	rot  = new rotator(function(val) { return onModify(PUPPET_CONTROL.fy, toNumber(val)); });
-	tbFx.slidable = true;
-	tbFy.slidable = true;
-	tbW.slidable = true;
-	tbH.slidable = true;
 	
-	sW   = new slider(0, 32, 0.1, function(val) { onModify(PUPPET_CONTROL.width,  toNumber(val)); });
+	sW   = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(PUPPET_CONTROL.width,  toNumber(val)); })
+			.setSlidable(0.01, false, [ 1, 32 ]);
 	
 	sMode = [
 		__txtx("widget_control_point_move",   "Move"), 
@@ -42,7 +39,7 @@ function controlPointBox(_onModify) : widget() constructor {
 		function(val) { onModify(PUPPET_CONTROL.mode, toNumber(val)); }
 	);
 	
-	widgets = [ scMode, tbCx, tbCy, tbFx, tbFy, tbW, tbH, rot ];
+	widgets = [ scMode, tbCx, tbCy, tbFx, tbFy, tbW, tbH, rot, sW ];
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
@@ -82,43 +79,65 @@ function controlPointBox(_onModify) : widget() constructor {
 		scMode.draw(_x, yy, _w, TEXTBOX_HEIGHT, sMode[_mode], _m, _rx, _ry);
 		yy += TEXTBOX_HEIGHT + ui(8);
 		
-		var lw = ui(80);
-		var w  = _w / 2 - lw;
+		var _ww = _w / 2;
+		var _wh = TEXTBOX_HEIGHT;
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		draw_text(_x,					yy + ui(17), "cx");
-		draw_text(_x + _w / 2 + ui(10), yy + ui(17), "cy");
-		tbCx.draw(_x + lw,				yy, w, TEXTBOX_HEIGHT, _cx, _m);
-		tbCy.draw(_x + _w / 2 + lw,		yy, w, TEXTBOX_HEIGHT, _cy, _m);
-		yy += TEXTBOX_HEIGHT + ui(8);
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, c_white, 0.5 + 0.5 * interactable);	
+		
+		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+		draw_set_alpha(0.5);
+		draw_text(_x       + ui(8),	yy + _wh / 2, "cx");
+		draw_text(_x + _ww + ui(8), yy + _wh / 2, "cy");
+		draw_set_alpha(1);
+		
+		tbCx.draw(_x,	    yy, _ww, _wh, _cx, _m);
+		tbCy.draw(_x + _ww, yy, _ww, _wh, _cy, _m);
+		yy += _wh + ui(8);
 		
 		switch(_mode) {
 			case PUPPET_FORCE_MODE.move: 
 			case PUPPET_FORCE_MODE.puppet: 
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-				draw_text(_x,					yy + ui(17), "fx");
-				draw_text(_x + _w / 2 + ui(10), yy + ui(17), "fy");
-				tbFx.draw(_x + lw,				yy, w, TEXTBOX_HEIGHT, _fx, _m);
-				tbFy.draw(_x + _w / 2 + lw,		yy, w, TEXTBOX_HEIGHT, _fy, _m);
-				yy += TEXTBOX_HEIGHT + ui(8);
+			
+				draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, c_white, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, c_white, 0.5 + 0.5 * interactable);	
+		
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+				draw_set_alpha(0.5);
+				draw_text(_x       + ui(8),	yy + _wh / 2, "fx");
+				draw_text(_x + _ww + ui(8), yy + _wh / 2, "fy");
+				draw_set_alpha(1);
+				
+				tbFx.draw(_x,		yy, _ww, _wh, _fx, _m);
+				tbFy.draw(_x + _ww,	yy, _ww, _wh, _fy, _m);
+				yy += _wh + ui(8);
 				
 				if(_mode == PUPPET_FORCE_MODE.move) {
+					sW.draw(_x, yy, _w, _wh, _wid, _m);
+					
 					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-					draw_text(_x, yy + ui(17), __txt("radius"));
-					sW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _wid, _m);
-					yy += TEXTBOX_HEIGHT + ui(8);
+					draw_set_alpha(0.5);
+					draw_text(_x + ui(8), yy + _wh / 2, __txt("radius"));
+					draw_set_alpha(1);
+					
+					yy += _wh + ui(8);
 				}
 				break;
-			case PUPPET_FORCE_MODE.wind: 
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-				draw_text(_x, yy + ui(17), __txt("strength"));
-				tbFx.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _fx, _m);
-				yy += TEXTBOX_HEIGHT + ui(8);
 				
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-				draw_text(_x, yy + ui(17), __txt("width"));
-				tbW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _wid, _m);
-				yy += TEXTBOX_HEIGHT + ui(8);
+			case PUPPET_FORCE_MODE.wind: 
+			
+				draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, c_white, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, c_white, 0.5 + 0.5 * interactable);	
+		
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+				draw_set_alpha(0.5);
+				draw_text(_x       + ui(8), yy + _wh / 2, __txt("strength"));
+				draw_text(_x + _ww + ui(8), yy + _wh / 2, __txt("width"));
+				draw_set_alpha(1);
+				
+				tbFx.draw(_x,       yy, _ww, _wh, _fx, _m);
+				tbW.draw( _x + _ww, yy, _ww, _wh, _wid, _m);
+				yy += _wh + ui(8);
 				
 				var _rh = rot.draw(_x, yy, _w, _fy, _m);
 				yy += _rh + ui(8);

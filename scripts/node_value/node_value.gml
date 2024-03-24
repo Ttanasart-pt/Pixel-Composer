@@ -922,9 +922,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 							
 							if(len == 2) {
+								var _dim = struct_try_get(display_data, "useGlobal", true);
 								extract_node = [ "Node_Vector2", "Node_Path" ];
 								
-								if(def_val == DEF_SURF) {
+								if(_dim && def_val == DEF_SURF) {
 									value_tag = "dimension";
 									node.attributes.use_project_dimension = true;
 									editWidget.side_button = button(function() {

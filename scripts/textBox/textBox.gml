@@ -380,7 +380,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			side_button.setFocusHover(active, hover);
 			side_button.draw(_x + _w - bs, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide);
-			_w -= bs + ui(8);
+			_w -= bs + ui(4);
 		}
 		
 		draw_set_font(font == noone? f_p0 : font);
@@ -434,10 +434,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			#region multiplier
 				if(_w > ui(80) && input == TEXTBOX_INPUT.number) {
-					draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
 					draw_set_alpha(0.5);
 				
-					if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + _h)) {
+					if(hover && point_in_rectangle(_m[0], _m[1], _x + _w - ui(32), _y, _x + _w, _y + _h)) {
 						draw_set_alpha(1);
 					
 						if(mouse_press(mb_left, active)) {
@@ -446,11 +445,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 							apply();
 						}
 					}
-				
-					if(key_mod_press(ALT))
-						draw_text_add(_x + ui(8), _y + _h / 2, "/2");
-					else
-						draw_text_add(_x + ui(8), _y + _h / 2, "x2");
+					
+					draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
+					if(key_mod_press(ALT)) draw_text_add(_x + _w - ui(16), _y + _h / 2, "/2");
+					else                   draw_text_add(_x + _w - ui(16), _y + _h / 2, "x2");
 					draw_set_alpha(1);
 				}
 			#endregion
@@ -544,10 +542,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 			
 			if(hover && hoverRect) {
-				if(hide)
-					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5);	
-				else
-					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
+				draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5 + (0.5 * interactable));	
+					
 				if(mouse_press(mb_left, active))
 					activate();
 				
