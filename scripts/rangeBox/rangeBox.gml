@@ -39,7 +39,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		self.interactable = interactable;
 		
 		tb[0].interactable = interactable;
-		if(!linked)
+		if(!linked) 
 			tb[1].interactable = interactable;
 	}
 	
@@ -63,8 +63,8 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		
 		var _icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		var bx = _x;
-		var by = _y + _h / 2 - ui(32 / 2);
-		if(buttonInstant(THEME.button_hide, bx + ui(4), by + ui(4), ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+		var by = _y + _h / 2 - ui(24 / 2);
+		if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
 			linked = !linked;
 			_display_data.linked = linked;
 			
@@ -77,21 +77,23 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		_x += ui(28);
 		_w -= ui(28);
 		
+		tb[0].hide = !linked;
+		tb[1].hide = !linked;
+		
 		if(linked) {
 			tb[0].setFocusHover(active, hover);
 			tb[0].draw(_x + ui(8), _y, _w - ui(8), _h, _data[0], _m);
-		} else {
-			if(is_array(_data) && array_length(_data) >= 2) {
-				var ww  = _w / 2;
-				for(var i = 0; i < 2; i++) {
-					tb[i].setFocusHover(active, hover);
+			
+		} else if(is_array(_data) && array_length(_data) >= 2) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+			
+			var ww  = _w / 2;
+			for(var i = 0; i < 2; i++) {
+				tb[i].setFocusHover(active, hover);
 				
-					var bx  = _x + ww * i;
-					tb[i].draw(bx + ui(44), _y, ww - ui(44), _h, _data[i], _m);
-				
-					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-					draw_text(bx + ui(8), _y + _h / 2, label[i]);
-				}
+				var bx  = _x + ww * i;
+				tb[i].draw(bx, _y, ww, _h, _data[i], _m);
 			}
 		}
 		

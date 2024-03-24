@@ -237,29 +237,43 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		for(var i = 0; i < 4; i++) {
 			tb[i].setFocusHover(active, hover);
 			tb[i].align  = fa_center;
+			tb[i].hide   = mode == AREA_MODE.area || mode == AREA_MODE.two_point;
 		}
 		
 		current_data = _data;
 		
 		if(mode == AREA_MODE.area) { #region
-			var tb_x0 = _x + ui(6) - ui(64) - ui(48);
-			var tb_x1 = _x + ui(6) + ui(64) - ui(48);
+			var tb_w = ui(96);
+			var tb_h = TEXTBOX_HEIGHT;
+			
+			var tb_x0 = _x - tb_w;
+			var tb_x1 = _x;
 			var tb_y0 = _y - ui(28);
 			var tb_y1 = _y + ui(64 + 48 + 8);
-		
-			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
 			
-			draw_text(tb_x0 - ui(4), tb_y0 + TEXTBOX_HEIGHT / 2, "x");
-			draw_text(tb_x1 - ui(4), tb_y0 + TEXTBOX_HEIGHT / 2, "y");
+			draw_sprite_stretched_ext(THEME.textbox, 3, tb_x0, tb_y0, tb_w * 2, tb_h, c_white, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, tb_x0, tb_y0, tb_w * 2, tb_h, c_white, 0.5 + 0.5 * interactable);	
+			
+			draw_sprite_stretched_ext(THEME.textbox, 3, tb_x0, tb_y1, tb_w * 2, tb_h, c_white, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, tb_x0, tb_y1, tb_w * 2, tb_h, c_white, 0.5 + 0.5 * interactable);	
+			
+			
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+			draw_set_alpha(0.5);
+			
+			draw_text(tb_x0 + ui(8), tb_y0 + tb_h / 2, "x");
+			draw_text(tb_x1 + ui(8), tb_y0 + tb_h / 2, "y");
+			
+			draw_text(tb_x0 + ui(8), tb_y1 + tb_h / 2, "w");
+			draw_text(tb_x1 + ui(8), tb_y1 + tb_h / 2, "h");
+			
+			draw_set_alpha(1);
+			
+			tb[0].draw(tb_x0, tb_y0, tb_w, tb_h, array_safe_get(_data, 0), _m);
+			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get(_data, 1), _m);
 		
-			draw_text(tb_x0 - ui(4), tb_y1 + TEXTBOX_HEIGHT / 2, "w");
-			draw_text(tb_x1 - ui(4), tb_y1 + TEXTBOX_HEIGHT / 2, "h");
-		
-			tb[0].draw(tb_x0, tb_y0, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 0), _m);
-			tb[1].draw(tb_x1, tb_y0, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 1), _m);
-		
-			tb[2].draw(tb_x0, tb_y1, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 2), _m);
-			tb[3].draw(tb_x1, tb_y1, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 3), _m);
+			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get(_data, 2), _m);
+			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get(_data, 3), _m);
 		#endregion
 		} else if(mode == AREA_MODE.padding) { #region
 			var tb_rx = _x + ui(56);
@@ -281,24 +295,37 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tb[3].draw(tb_bx, tb_by, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 3), _m);
 		#endregion
 		} else if(mode == AREA_MODE.two_point) { #region
-			var tb_x0 = _x + ui(6) - ui(64) - ui(48);
-			var tb_x1 = _x + ui(6) + ui(64) - ui(48);
+			var tb_w = ui(96);
+			var tb_h = TEXTBOX_HEIGHT;
+			
+			var tb_x0 = _x - tb_w;
+			var tb_x1 = _x;
 			var tb_y0 = _y - ui(28);
 			var tb_y1 = _y + ui(64 + 48 + 8);
-		
-			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
 			
-			draw_text(tb_x0 - ui(4), tb_y0 + TEXTBOX_HEIGHT / 2, "x0");
-			draw_text(tb_x1 - ui(4), tb_y0 + TEXTBOX_HEIGHT / 2, "y0");
-		
-			draw_text(tb_x0 - ui(4), tb_y1 + TEXTBOX_HEIGHT / 2, "x1");
-			draw_text(tb_x1 - ui(4), tb_y1 + TEXTBOX_HEIGHT / 2, "y1");
+			draw_sprite_stretched_ext(THEME.textbox, 3, tb_x0, tb_y0, tb_w * 2, tb_h, c_white, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, tb_x0, tb_y0, tb_w * 2, tb_h, c_white, 0.5 + 0.5 * interactable);	
 			
-			tb[0].draw(tb_x0, tb_y0, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 0), _m);
-			tb[1].draw(tb_x1, tb_y0, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 1), _m);
-															 
-			tb[2].draw(tb_x0, tb_y1, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 2), _m);
-			tb[3].draw(tb_x1, tb_y1, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 3), _m);
+			draw_sprite_stretched_ext(THEME.textbox, 3, tb_x0, tb_y1, tb_w * 2, tb_h, c_white, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, tb_x0, tb_y1, tb_w * 2, tb_h, c_white, 0.5 + 0.5 * interactable);	
+			
+			
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+			draw_set_alpha(0.5);
+			
+			draw_text(tb_x0 + ui(8), tb_y0 + tb_h / 2, "x0");
+			draw_text(tb_x1 + ui(8), tb_y0 + tb_h / 2, "y0");
+			
+			draw_text(tb_x0 + ui(8), tb_y1 + tb_h / 2, "x1");
+			draw_text(tb_x1 + ui(8), tb_y1 + tb_h / 2, "y1");
+			
+			draw_set_alpha(1);
+			
+			tb[0].draw(tb_x0, tb_y0, tb_w, tb_h, array_safe_get(_data, 0), _m);
+			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get(_data, 1), _m);
+		
+			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get(_data, 2), _m);
+			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get(_data, 3), _m);
 		#endregion
 		}
 			

@@ -21,12 +21,14 @@ event_inherited();
 #endregion
 
 #region content
-	menuOn = -1;
+	menuOn   = -1;
 	dragging = -1;
 	drag_spr = -1;
 	
 	sp_content = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding), function(_y, _m) {
 		if(!target) return 0;
+		if(!struct_has(target, "spr")) return 0;
+		
 		draw_clear_alpha(COLORS.dialog_array_edit_bg, 0);
 		
 		var _h = ui(8);

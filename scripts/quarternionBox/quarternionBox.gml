@@ -84,14 +84,20 @@ function quarternionBox(_onModify) : widget() constructor {
 		
 		var _dispDat = _data;
 		
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		
 		for(var i = 0; i < size; i++) {
 			var _a = _dispDat[i];
 			
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+			draw_set_alpha(0.5);
+			draw_text(bx + ui(8), _y + _h / 2, axis[i]);
+			draw_set_alpha(1);
+			
+			tb[i].hide = true;
 			tb[i].setFocusHover(clickable && active, hover);
 			tb[i].draw(bx + ui(24), _y, disp_w - ui(24), _h, _a, _m);
-			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
-			draw_text(bx + ui(8), _y + _h / 2, axis[i]);
 			
 			bx += disp_w;
 		}

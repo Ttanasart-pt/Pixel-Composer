@@ -32,6 +32,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		case "areaBox" : 
 		case "controlPointBox" : 
 		case "cornerBox" : 
+		case "rotator" : 
 		case "rotatorRandom" : 
 		case "rotatorRange" : 
 			breakLine = true;
@@ -312,12 +313,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			case VALUE_TYPE.integer :
 			case VALUE_TYPE.float :
 				switch(jun.display_type) {
-					case VALUE_DISPLAY.padding : param.h = ui(192); break;
-					case VALUE_DISPLAY.corner :  param.h = ui(192); break;
-					case VALUE_DISPLAY.area :	 param.h = ui(204); break;
-					case VALUE_DISPLAY.rotation :
-						param.halign = breakLine? fa_center : fa_left;
-						break;
+					case VALUE_DISPLAY.padding :  param.h = ui(192); break;
+					case VALUE_DISPLAY.corner :   param.h = ui(192); break;
+					case VALUE_DISPLAY.area :	  param.h = ui(204); break;
+					case VALUE_DISPLAY.rotation : param.halign = fa_center; break;
 				}
 				break;
 				

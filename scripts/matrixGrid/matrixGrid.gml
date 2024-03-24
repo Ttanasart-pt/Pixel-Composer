@@ -85,7 +85,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		y = _y;
 		w = _w;
 		
-		var hh = TEXTBOX_HEIGHT + ui(8);
+		var hh = TEXTBOX_HEIGHT;
 		h = hh * size - ui(8);
 		
 		if(extras && instanceof(extras) == "buttonClass") {
@@ -110,24 +110,28 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		var th = hh * size - ui(8);
 		
 		var bx = _x;
-		var by = _y + th / 2 - ui(32 / 2);
-		b_link.draw(bx + ui(4), by + ui(4), ui(24), ui(24), _m, THEME.button_hide);
+		var by = _y + th / 2 - ui(24 / 2);
+		b_link.draw(bx, by, ui(24), ui(24), _m, THEME.button_hide);
 		
 		_x += ui(28);
 		_w -= ui(28);
 		
 		var ww = _w / size;
 		
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, ww * size, hh * size, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, ww * size, hh * size, c_white, 0.5 + 0.5 * interactable);	
+		
 		for(var i = 0; i < size; i++)
 		for(var j = 0; j < size; j++) {
 			var ind = i * size + j;
 			tb[ind].setFocusHover(active, hover);
+			tb[ind].hide = true;
 			
 			var bx  = _x + ww * j;
 			var by  = _y + hh * i;
 			var _dat = array_safe_get(_data, ind);
 			
-			tb[ind].draw(bx + ui(8), by, ww - ui(8), TEXTBOX_HEIGHT, _dat, _m);
+			tb[ind].draw(bx, by, ww, hh, _dat, _m);
 		}
 		
 		resetFocus();
