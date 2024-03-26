@@ -29,6 +29,10 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
+		font = params.font;
+		tb_value_min.font = params.font;
+		tb_value_max.font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	} #endregion
 	

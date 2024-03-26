@@ -77,6 +77,10 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 	}
 	
 	static drawParam = function(params) {
+		font = params.font;
+		for(var i = 0; i < inputs; i++)
+			tb[i].font = params.font;
+	
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	
@@ -84,9 +88,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		x = _x;
 		y = _y;
 		w = _w;
-		
-		var hh = TEXTBOX_HEIGHT;
-		h = hh * size;
+		h = _h * size;
 		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.setFocusHover(active, hover);			
@@ -107,7 +109,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
 		
-		var th = hh * size - ui(8);
+		var th = _h * size - ui(8);
 		
 		var bx = _x;
 		var by = _y + th / 2 - ui(24 / 2);
@@ -118,8 +120,8 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		
 		var ww = _w / size;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, ww * size, hh * size, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, ww * size, hh * size, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, ww * size, _h * size, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, ww * size, _h * size, c_white, 0.5 + 0.5 * interactable);	
 		
 		for(var i = 0; i < size; i++)
 		for(var j = 0; j < size; j++) {
@@ -128,10 +130,10 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 			tb[ind].hide = true;
 			
 			var bx  = _x + ww * j;
-			var by  = _y + hh * i;
+			var by  = _y + _h * i;
 			var _dat = array_safe_get(_data, ind);
 			
-			tb[ind].draw(bx, by, ww, hh, _dat, _m);
+			tb[ind].draw(bx, by, ww, _h, _dat, _m);
 		}
 		
 		resetFocus();

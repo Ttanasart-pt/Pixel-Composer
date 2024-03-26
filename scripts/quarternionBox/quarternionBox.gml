@@ -30,6 +30,7 @@ function quarternionBox(_onModify) : widget() constructor {
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
 		tb[i].slidable = true;
+		tb[i].label    = axis[i];
 	}
 	
 	static setSlideSpeed = function(speed) {
@@ -50,6 +51,9 @@ function quarternionBox(_onModify) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
+		font = params.font;
+		for(var i = 0; i < 4; i++) tb[i].font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	}
 	
@@ -89,11 +93,6 @@ function quarternionBox(_onModify) : widget() constructor {
 		
 		for(var i = 0; i < size; i++) {
 			var _a = _dispDat[i];
-			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-			draw_set_alpha(0.5);
-			draw_text(bx + ui(8), _y + _h / 2, axis[i]);
-			draw_set_alpha(1);
 			
 			tb[i].hide = true;
 			tb[i].setFocusHover(clickable && active, hover);

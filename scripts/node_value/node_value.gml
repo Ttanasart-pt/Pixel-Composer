@@ -555,6 +555,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		tooltip        = _tooltip;
 		editWidget     = noone;
 		editWidgetRaw  = noone;
+		graphWidget    = noone;
 		mapWidget      = noone;
 		active_tooltip = "";
 		
@@ -1100,9 +1101,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "";
 						break; #endregion
 					case VALUE_DISPLAY.transform :		#region
-						editWidget = new transformBox(function(index, val) {
-							return setValueInspector(_val, index);
-						});
+						editWidget = new transformBox(function(index, val) { return setValueInspector(val, index); });
 						
 						extract_node = "Node_Transform_Array";
 						break; #endregion
@@ -1284,6 +1283,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		editWidgetRaw = editWidget;
+		//graphWidget   = variable_clone(editWidget);
 		
 		for( var i = 0, n = ds_list_size(animator.values); i < n; i++ ) {
 			animator.values[| i].ease_in_type   = key_inter;

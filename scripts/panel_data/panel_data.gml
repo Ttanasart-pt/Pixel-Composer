@@ -927,7 +927,7 @@ function PanelContent() constructor { #region
 		self.panel = panel;
 		if(o_main.panel_dragging == noone) {
 			pFOCUS = FOCUS == panel/* && panel.mouse_active*/;
-			pHOVER = HOVER == panel && panel.mouse_active;
+			pHOVER = !CURSOR_IS_LOCK && HOVER == panel && panel.mouse_active;
 		}
 		
 		drawContent(panel);

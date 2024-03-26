@@ -19,8 +19,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var xc	  = xx + ww / 2;
 	var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
 	
-	var breakLine = viewMode || jun.expUse;
-	var lb_h = line_get_height(_font) + ui(8);
+	var breakLine = viewMode == INSP_VIEW_MODE.spacious || jun.expUse;
+	var lb_h = line_get_height(_font) + ui(6);
 	var lb_y = yy + lb_h / 2;
 	
 	var _name = jun.getName();
@@ -28,13 +28,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	switch(instanceof(wid)) { #region
 		case "textArea" : 
-		case "paddingBox" : 
-		case "areaBox" : 
 		case "controlPointBox" : 
-		case "cornerBox" : 
-		case "rotator" : 
-		case "rotatorRandom" : 
-		case "rotatorRange" : 
 		case "transformBox" : 
 			breakLine = true;
 	} #endregion
@@ -309,18 +303,19 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		var _show = jun.showValue();
 		var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _show, jun.display_data, _m, rx, ry);
+		    param.font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
 		
 		switch(jun.type) {
-			case VALUE_TYPE.integer :
-			case VALUE_TYPE.float :
+			case VALUE_TYPE.float : 
+			case VALUE_TYPE.integer : 
 				switch(jun.display_type) {
-					case VALUE_DISPLAY.padding :  param.h = ui(192); break;
-					case VALUE_DISPLAY.corner :   param.h = ui(192); break;
-					case VALUE_DISPLAY.area :	  param.h = ui(204); break;
-					case VALUE_DISPLAY.rotation : param.halign = fa_center; break;
+					case VALUE_DISPLAY.puppet_control : 
+					case VALUE_DISPLAY.transform : 
+						param.h = viewMode == INSP_VIEW_MODE.spacious? param.h : lb_h;
+						break;
 				}
 				break;
-				
+			
 			case VALUE_TYPE.boolean : 
 				if(is_instanceof(wid, checkBoxActive)) break;
 				param.halign = breakLine? fa_left : fa_center;

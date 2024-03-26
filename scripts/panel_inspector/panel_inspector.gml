@@ -646,12 +646,13 @@ function Panel_Inspector() : PanelContent() constructor {
 				var padd = ui(8);
 			
 				var _selY = yy;
-				var lbHov = point_in_rectangle(_m[0], _m[1], lb_x, _selY, lb_x + lb_w, _selY + lb_h);
-				if(lbHov) draw_sprite_stretched_ext(THEME.group_label, 0, lb_x, _selY + ui(2), lb_w, lb_h - ui(4), COLORS._main_icon_dark, 0.85);
 				
 				var widg    = drawWidget(ui(16), yy, contentPane.surface_w - ui(24), _m, jun, false, pHOVER && contentPane.hover, pFOCUS, contentPane, ui(16) + x, top_bar_h + y);
 				var widH    = widg[0];
 				var mbRight = widg[1];
+				
+				var lbHov = point_in_rectangle(_m[0], _m[1], lb_x, _selY + ui(2), lb_x + lb_w, _selY + lb_h - ui(4));
+				if(lbHov) draw_sprite_stretched_ext(THEME.button_hide, 1, lb_x, _selY + ui(2), lb_w, lb_h - ui(6), COLORS._main_icon, 1);
 				
 				hh += lb_h + widH + padd;
 			

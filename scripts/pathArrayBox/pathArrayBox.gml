@@ -18,6 +18,8 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
+		font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	
@@ -51,15 +53,17 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		}
 		
 		var aa = interactable * 0.25 + 0.75;
+		
 		if(!is_array(_files)) _files = [ _files ];
 		var len = array_length(_files);
-		var txt = "(" + string(len) + ") " + "[";
-		for( var i = 0, n = array_length(_files); i < n; i++ )
+		
+		var txt = $"({len}) [";
+		for( var i = 0; i < len; i++ )
 			txt += (i? ", " : "") + filename_name_only(_files[i]);
 		txt += "]";
 		
 		draw_set_alpha(aa);
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+		draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 		draw_text_cut(_x + ui(8), _y + _h / 2, txt, _w - ui(16));
 		draw_set_alpha(1);
 		

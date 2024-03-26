@@ -228,7 +228,8 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		#region surface adjust
 			_m = mask_modify(_m, _mskInv, _mskFea);
-			surface_set_shader(_baseSurf, sh_color_adjust);
+			
+			surface_set_shader(_baseSurf, sh_color_adjust, true, BLEND.over);
 				shader_set_surface("param0", temp_surface[0]);
 				shader_set_surface("param1", temp_surface[1]);
 				
@@ -246,10 +247,6 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				shader_set_f_map_s("alpha", _alp, _data[24], inputs[| 9]);
 				shader_set_i("use_mask", is_surface(_m));
 				shader_set_surface("mask", _m);
-				
-				gpu_set_colorwriteenable(1, 1, 1, 0);
-				draw_surface_safe(_surf, 0, 0);				//replace clear color with surface color
-				gpu_set_colorwriteenable(1, 1, 1, 1);
 			
 				draw_surface_ext_safe(_surf, 0, 0, 1, 1, 0, c_white, 1);
 			surface_reset_shader();

@@ -50,6 +50,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	} #endregion
 	
 	static drawParam = function(params) { #region
+		font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	} #endregion
 	

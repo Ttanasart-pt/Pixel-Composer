@@ -20,9 +20,13 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	onModifySingle[2] = function(val) { onModifyIndex(2, val); }
 	onModifySingle[3] = function(val) { onModifyIndex(3, val); }
 	
+	labels = [ "r", "t", "l", "b" ];
+	
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
+		tb[i].label    = labels[i];
 		tb[i].slidable = true;
+		tb[i].hide     = true;
 	}
 	
 	static setSlideSpeed = function(speed) {
@@ -47,38 +51,61 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		tb[3].register(parent);
 	}
 	
-	static drawParam = function(params) {
-		return draw(params.x + params.w / 2, params.y + ui(32), params.data, params.m);
+	static drawParam = function(params) { 
+		font = params.font;
+		for(var i = 0; i < 4; i++) tb[i].font = params.font;
+		
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m); 
 	}
 	
-	static draw = function(_x, _y, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _m) {
 		x = _x;
 		y = _y;
-		w = 0;
-		h = ui(192);
+		w = _w;
+		h = _h + ui(4) + _h;
 		
-		var yy = _y + ui(64);
-		draw_sprite_ui_uniform(THEME.inspector_corner, 0, _x, yy);
-		
-		for(var i = 0; i < 4; i++) {
-			tb[i].setFocusHover(active, hover);
-			tb[i].align  = fa_center;
-		}
-		
-		tb[0].draw(_x - ui(120), yy + ui(-48 - 34), ui(64), TEXTBOX_HEIGHT, _data[0], _m);
-		tb[1].draw(_x + ui(56),  yy + ui(-48 - 34), ui(64), TEXTBOX_HEIGHT, _data[1], _m);
-		tb[2].draw(_x - ui(120), yy + ui( 48),      ui(64), TEXTBOX_HEIGHT, _data[2], _m);
-		tb[3].draw(_x + ui(56),  yy + ui( 48),      ui(64), TEXTBOX_HEIGHT, _data[3], _m);
+		for(var i = 0; i < 4; i++) tb[i].setFocusHover(active, hover);
 		
 		b_link.setFocusHover(active, hover);
 		b_link.icon_index = linked;
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
 		
-		var bx = _x - ui(12);
-		var by = yy - ui(12);
-		b_link.draw(bx, by, ui(24), ui(24), _m, THEME.button_hide);
+		var _bs = min(_h, ui(32));
+		var _bx = _x;
+		var _by = _y + _h / 2 - _bs / 2;
+		b_link.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide);
 		
+		_w -= _bs + ui(4);
+		_x += _bs + ui(4);
+		
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y + _h + ui(4), _w, _h, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y + _h + ui(4), _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		
+		var tb_w = _w / 2;
+		var tb_h = _h;
+		
+		var tb_lx = _x;
+		var tb_ly = _y;
+			
+		var tb_rx = _x + tb_w;
+		var tb_ry = _y;
+			
+		var tb_tx = _x;
+		var tb_ty = _y + _h + ui(4);
+			
+		var tb_bx = _x + tb_w;
+		var tb_by = _y + _h + ui(4);
+			
+		tb[2].draw(tb_lx, tb_ly, tb_w, tb_h, array_safe_get(_data, 2), _m);
+		tb[0].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get(_data, 0), _m);
+			
+		tb[1].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get(_data, 1), _m);
+		tb[3].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get(_data, 3), _m);
+			
 		resetFocus();
 		
 		return h;

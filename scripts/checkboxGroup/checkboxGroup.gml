@@ -10,6 +10,8 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
+		font = params.font;
+		
 		return draw(params.x, params.y, params.data, params.m, params.s);
 	}
 	

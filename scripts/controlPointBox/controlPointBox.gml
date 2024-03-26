@@ -29,6 +29,9 @@ function controlPointBox(_onModify) : widget() constructor {
 	sW   = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(PUPPET_CONTROL.width,  toNumber(val)); })
 			.setSlidable(0.01, false, [ 1, 32 ]);
 	
+	tbCx.label = "cx";
+	tbCy.label = "cy";
+		
 	sMode = [
 		__txtx("widget_control_point_move",   "Move"), 
 		__txtx("widget_control_point_wind",   "Wind"), 
@@ -53,11 +56,22 @@ function controlPointBox(_onModify) : widget() constructor {
 			widgets[i].register(parent); 
 	}
 	
-	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.data, params.m, params.rx, params.ry);
-	}
+	static drawParam = function(params) { #region
+		font      = params.font;
+		tbCx.font = params.font;
+		tbCy.font = params.font;
+		tbFx.font = params.font;
+		tbFy.font = params.font;
+		tbW.font  = params.font;
+		tbH.font  = params.font;
+		rot.font  = params.font;
+		sW.font   = params.font;
+		scMode.font = params.font;
+		
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry); 
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _data, _m, _rx, _ry) {
+	static draw = function(_x, _y, _w, _h, _data, _m, _rx, _ry) {
 		x = _x;
 		y = _y;
 		
@@ -76,24 +90,18 @@ function controlPointBox(_onModify) : widget() constructor {
 		
 		var yy = _y;
 		
-		scMode.draw(_x, yy, _w, TEXTBOX_HEIGHT, sMode[_mode], _m, _rx, _ry);
-		yy += TEXTBOX_HEIGHT + ui(8);
+		scMode.draw(_x, yy, _w, _h, sMode[_mode], _m, _rx, _ry);
+		yy += _h + ui(4);
 		
 		var _ww = _w / 2;
-		var _wh = TEXTBOX_HEIGHT;
+		var _wh = _h;
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, c_white, 1);
 		draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, c_white, 0.5 + 0.5 * interactable);	
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-		draw_set_alpha(0.5);
-		draw_text(_x       + ui(8),	yy + _wh / 2, "cx");
-		draw_text(_x + _ww + ui(8), yy + _wh / 2, "cy");
-		draw_set_alpha(1);
-		
 		tbCx.draw(_x,	    yy, _ww, _wh, _cx, _m);
 		tbCy.draw(_x + _ww, yy, _ww, _wh, _cy, _m);
-		yy += _wh + ui(8);
+		yy += _wh + ui(4);
 		
 		switch(_mode) {
 			case PUPPET_FORCE_MODE.move: 
@@ -102,25 +110,18 @@ function controlPointBox(_onModify) : widget() constructor {
 				draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, c_white, 1);
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, c_white, 0.5 + 0.5 * interactable);	
 		
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-				draw_set_alpha(0.5);
-				draw_text(_x       + ui(8),	yy + _wh / 2, "fx");
-				draw_text(_x + _ww + ui(8), yy + _wh / 2, "fy");
-				draw_set_alpha(1);
+				tbFx.label = "fx";
+				tbFy.label = "fy";
 				
 				tbFx.draw(_x,		yy, _ww, _wh, _fx, _m);
 				tbFy.draw(_x + _ww,	yy, _ww, _wh, _fy, _m);
-				yy += _wh + ui(8);
+				yy += _wh + ui(4);
 				
 				if(_mode == PUPPET_FORCE_MODE.move) {
+					sW.label = __txt("radius");
 					sW.draw(_x, yy, _w, _wh, _wid, _m);
 					
-					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-					draw_set_alpha(0.5);
-					draw_text(_x + ui(8), yy + _wh / 2, __txt("radius"));
-					draw_set_alpha(1);
-					
-					yy += _wh + ui(8);
+					yy += _wh + ui(4);
 				}
 				break;
 				
@@ -129,18 +130,15 @@ function controlPointBox(_onModify) : widget() constructor {
 				draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, c_white, 1);
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, c_white, 0.5 + 0.5 * interactable);	
 		
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-				draw_set_alpha(0.5);
-				draw_text(_x       + ui(8), yy + _wh / 2, __txt("strength"));
-				draw_text(_x + _ww + ui(8), yy + _wh / 2, __txt("width"));
-				draw_set_alpha(1);
+				tbFx.label = __txt("strength");
+				tbW.label  = __txt("width");
 				
 				tbFx.draw(_x,       yy, _ww, _wh, _fx, _m);
 				tbW.draw( _x + _ww, yy, _ww, _wh, _wid, _m);
-				yy += _wh + ui(8);
+				yy += _wh + ui(4);
 				
-				var _rh = rot.draw(_x, yy, _w, _fy, _m);
-				yy += _rh + ui(8);
+				var _rh = rot.draw(_x, yy, _w, _wh, _fy, _m);
+				yy += _rh + ui(4);
 				break;
 		}
 		

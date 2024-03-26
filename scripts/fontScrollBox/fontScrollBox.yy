@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "text",
-    "path": "folders/widgets/text.yy",
+    "name": "widgets",
+    "path": "folders/widgets.yy",
   },
 }

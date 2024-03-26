@@ -57,6 +57,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
+		font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.m);
 	} #endregion
 	
@@ -98,8 +100,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		if(text != "") {
 			draw_set_alpha(aa);
-			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
-			draw_text(_x + _w / 2, _y + _h / 2, text);
+			draw_set_text(font, fa_center, fa_center, COLORS._main_text);
+			draw_text_add(_x + _w / 2, _y + _h / 2, text);
 			draw_set_alpha(1);
 		}
 		

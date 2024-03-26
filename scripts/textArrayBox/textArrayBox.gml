@@ -9,6 +9,8 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 	open = false;
 	
 	static drawParam = function(params) {
+		font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.m, params.rx, params.ry);
 	}
 	
@@ -21,10 +23,10 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 		
 		var tx = _x + ui(4);
 		var ty = _y + ui(4);
-		var hh = line_get_height(f_p0, ui(4));
+		var hh = line_get_height(font, ui(4));
 		var th = hh + ui(8);
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+		draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 		for( var i = 0, n = array_length(arraySet); i < n; i++ ) {
 			var ww = string_width(arraySet[i]) + ui(16);
 			if(tx + ww + ui(2) > _x + _w - ui(8)) {
@@ -56,9 +58,9 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 		
 		var tx = _x + ui(4);
 		var ty = _y + ui(4);
-		var hh = line_get_height(f_p0, ui(4));
+		var hh = line_get_height(font, ui(4));
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+		draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 		for( var i = 0, n = array_length(arraySet); i < n; i++ ) {
 			var ww = string_width(arraySet[i]) + ui(16);
 			if(tx + ww + ui(2) > _x + _w - ui(8)) {

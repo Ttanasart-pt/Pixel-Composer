@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "network",
-    "path": "folders/nodes/data/IO/network.yy",
+    "path": "folders/nodes/data/io/network.yy",
   },
 }

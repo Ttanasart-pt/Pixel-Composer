@@ -17,7 +17,6 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	data      = _data;
 	curr_text = 0;
 	
-	font      = f_p0;
 	arrow_spr = THEME.scroll_box_arrow;
 	arrow_ind = 0;
 	
@@ -44,6 +43,8 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	} #endregion
 	
 	static drawParam = function(params) { #region
+		font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
 	} #endregion
 	

@@ -1,4 +1,5 @@
 #region mouse global
+	globalvar CURSOR, CURSOR_LOCK, CURSOR_IS_LOCK, CURSOR_LOCK_X, CURSOR_LOCK_Y;
 	globalvar MOUSE_WRAP, MOUSE_WRAPPING, MOUSE_BLOCK, _MOUSE_BLOCK;
 	
 	MOUSE_WRAP     = false;
@@ -95,4 +96,14 @@ function mouse_rrelease(focus = true) { #region
 	if(PEN_RIGHT_RELEASE) return true;
 	
 	return mouse_check_button_released(mb_right);
+} #endregion
+	
+function mouse_lock(mx = CURSOR_LOCK_X, my = CURSOR_LOCK_Y) { #region
+	INLINE 
+	
+	CURSOR_LOCK   = true;
+	CURSOR_LOCK_X = mx;
+	CURSOR_LOCK_Y = my;
+	
+	window_mouse_set(CURSOR_LOCK_X, CURSOR_LOCK_Y);
 } #endregion

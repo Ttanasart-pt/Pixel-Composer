@@ -12,11 +12,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	format    = TEXT_AREA_FORMAT._default;
 	precision = 5;
 	
+	suffix = "";
+	
 	no_empty    = true;
 	auto_update = false;
 	
 	slidable    = false;
 	sliding     = false;
+	slide_delta = 0;
 	slide_int   = false;
 	slide_speed = 1 / 10;
 	slide_range = noone;
@@ -314,8 +317,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		draw_set_alpha(0.5 + 0.5 * interactable);
 		_y += ui(1);
 		
-		draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, color);
-		draw_text_add(_x + disp_x, _y, _text);
+		var cc = color;
+		if(sliding == 2)
+			cc = COLORS._main_accent
+		
+		draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, cc);
+		draw_text_add(_x + disp_x, _y, _text + suffix);
 		draw_set_alpha(1);
 		
 		var _xx = _x + disp_x;
@@ -354,6 +361,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
+		font = params.font;
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.halign, params.valign);
 	} #endregion
 	
@@ -404,7 +412,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(!hide) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
-		
+			
 			if(slide_range != noone) {
 				var _minn = slide_range[0];
 				var _maxx = slide_range[1];
@@ -421,6 +429,22 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		}
 		
+		if(sliding == 2) {
+			var _ax0 = _x + ui(10);
+			var _ax1 = _x + _w - ui(10);
+			var _ay  = _y + _h / 2;
+			
+			draw_sprite_ui_uniform(THEME.arrow, 2, _ax0, _ay, 1, COLORS._main_accent, 1);
+			draw_sprite_ui_uniform(THEME.arrow, 0, _ax1, _ay, 1, COLORS._main_accent, 1);
+			
+		} else if(label != "") {
+			draw_set_valign(fa_center)
+			draw_set_color(COLORS._main_text_sub);
+			draw_set_alpha(0.5);
+			draw_text_add(_x + ui(8), _y + _h / 2, label);
+			draw_set_alpha(1);
+		}
+			
 		disp_x = lerp_float(disp_x, disp_x_to, 5);
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
@@ -558,17 +582,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			} else if(!hide)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
 			
-			if(slidable) {
-				//if(_w > ui(64) && _h >= TEXTBOX_HEIGHT && label == "")
-				//	draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + _h / 2, 1, COLORS._main_icon, 0.5);
-				
-				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left, active)) {
-					sliding  = 1;
+			if(slidable && hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left, active)) {
+				sliding  = 1;
+				slide_delta = 0;
 					
-					slide_mx = _m[0];
-					slide_my = _m[1];
-				} 
-			}
+				slide_mx = _m[0];
+				slide_my = _m[1];
+			} 
 			
 			surface_set_shader(text_surface, noone, true, BLEND.add);
 				display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4));
@@ -577,18 +597,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			BLEND_ALPHA
 			draw_surface(text_surface, tb_surf_x, tb_surf_y);
 			BLEND_NORMAL
-			
-			if(label != "") {
-				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_icon);
-				draw_set_alpha(0.5);
-				draw_text_add(_x + ui(8), _y + _h / 2, label);
-				draw_set_alpha(1);
-			}
 		} #endregion
 		
 		if(sliding > 0) { #region
+			slide_delta += window_mouse_get_delta_x();
+			slide_delta += window_mouse_get_delta_y();
 			
-			if(sliding == 1 && window_mouse_get_delta_x() != 0) {
+			if(sliding == 1 && abs(slide_delta) > 8) {
 				deactivate();
 				textBox_slider.activate(toNumber(_input_text));
 				sliding  = 2;

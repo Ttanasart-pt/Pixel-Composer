@@ -41,7 +41,6 @@
 	HOTKEY_CONTEXT	= ds_list_create();
 	HOTKEY_CONTEXT[| 0] = "";
 	
-	globalvar CURSOR, CURSOR_LOCK, CURSOR_LOCK_X, CURSOR_LOCK_Y;
 	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
 #endregion
 
@@ -88,7 +87,7 @@
 	#macro mouse_ui [device_mouse_x_to_gui(0), device_mouse_y_to_gui(0)]
 	
 	#macro sFOCUS FOCUS == self.id
-	#macro sHOVER HOVER == self.id
+	#macro sHOVER (!CURSOR_IS_LOCK && HOVER == self.id)
 	
 	#macro DELTA_TIME delta_time / 1_000_000
 	

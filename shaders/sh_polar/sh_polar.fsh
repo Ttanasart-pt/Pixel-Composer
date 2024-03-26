@@ -6,6 +6,7 @@ varying vec4  v_vColour;
 uniform int   invert;
 uniform int   distMode;
 uniform int   swap;
+uniform vec2  tile;
 
 uniform vec2      blend;
 uniform int       blendUseSurf;
@@ -62,6 +63,7 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 void main() {
 	vec2 center = vec2(0.5, 0.5);
 	vec2 coord;
+	vec2 _tile = swap == 1? tile.yx : tile;
 	
 	float bld = blend.x;
 	if(blendUseSurf == 1) {
@@ -77,7 +79,7 @@ void main() {
 		vec2  cenPos = v_vTexcoord - center;
 		float angle	 = (atan(cenPos.y, cenPos.x) / PI + 1.) / 2.;
 		
-		coord = fract(vec2(dist, angle));
+		coord = fract(vec2(dist, angle) * _tile);
 	} else if(invert == 1) {
 		float dist = v_vTexcoord.x * 0.5;
 		if(distMode == 1)      dist = sqrt(dist);
@@ -85,9 +87,10 @@ void main() {
 		
 		float ang  = v_vTexcoord.y * PI * 2.;
 		
-		coord = fract(center + vec2(cos(ang), sin(ang)) * dist);
+		coord = fract(center + vec2(cos(ang), sin(ang)) * dist * _tile);
 	}
 	
 	if(swap == 1) coord.xy = coord.yx;
+	
 	gl_FragColor = texture2Dintp( gm_BaseTexture, mix(v_vTexcoord, coord, bld) );
 }

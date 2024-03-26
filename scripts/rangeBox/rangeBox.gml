@@ -53,6 +53,9 @@ function rangeBox(_type, _onModify) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
+		font = params.font;
+		for(var i = 0; i < 2; i++) tb[i].font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	}
 	

@@ -477,7 +477,7 @@ function __initNodes() {
 		addNodeObject(strandSim, "Strand Collision",	 s_node_strandSim_collide,	"Node_Strand_Collision",	 [1, Node_Strand_Collision],, "Create solid object for strands to collides to.").hideRecent().setVersion(1140);
 	#endregion
 	
-	////\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 	
 	var input = ds_list_create(); #region
 	addNodeCatagory("IO", input);

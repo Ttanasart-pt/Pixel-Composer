@@ -30,6 +30,8 @@ enum NODE_SHAPE_TYPE { rectangle, elipse, regular, star, arc, teardrop, cross, l
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shape";
 	
+	onSurfaceSize = function() { return getInputData(0, DEF_SURF); };
+	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -42,8 +44,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 2] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, _types);
 	
-	onSurfaceSize = function() { return getInputData(0, DEF_SURF); };
 	inputs[| 3] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA)
+		.setUnitRef(onSurfaceSize)
 		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 4] = nodeValue("Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
@@ -82,11 +84,11 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	inputs[| 16] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getInputData(0, DEF_SURF); });
+		.setUnitRef(onSurfaceSize);
 		
 	inputs[| 17] = nodeValue("Half Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getInputData(0, DEF_SURF); });
+		.setUnitRef(onSurfaceSize);
 		
 	inputs[| 18] = nodeValue("Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	

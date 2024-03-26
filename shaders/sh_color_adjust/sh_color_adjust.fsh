@@ -12,16 +12,22 @@ uniform sampler2D param1;
 
 uniform vec2 brightness;
 uniform int  brightnessUseSurf;
+
 uniform vec2 contrast;
 uniform int  contrastUseSurf;
+
 uniform vec2 exposure;
 uniform int  exposureUseSurf;
+
 uniform vec2 hue;
 uniform int  hueUseSurf;
+
 uniform vec2 sat;
 uniform int  satUseSurf;
+
 uniform vec2 val;
 uniform int  valUseSurf;
+
 uniform vec2 alpha;
 uniform int  alphaUseSurf;
 

@@ -15,8 +15,10 @@ if(mouse_check_button_pressed(mb_right)) {
 	exit;
 }
 
-var _s  = tb.slide_speed;
-var _dx = window_mouse_get_delta_x();
+var _s   = tb.slide_speed;
+var _mdx = window_mouse_get_delta_x();
+var _mdy = window_mouse_get_delta_y();
+var _dx  = abs(_mdx) > abs(_mdy)? _mdx : -_mdy;
 
 if(key_mod_press(CTRL)) _s *= 10;
 if(key_mod_press(ALT))  _s /= 10;
@@ -35,4 +37,3 @@ tb._input_text = string_real(_val);
 if(tb.apply()) UNDO_HOLDING = true;
 
 tb = noone;
-CURSOR = cr_none;

@@ -28,6 +28,7 @@
 	UPDATE             = RENDER_TYPE.none;
 	CURSOR             = cr_default;
 	CURSOR_LOCK		   = false;
+	CURSOR_IS_LOCK	   = false;
 	CURSOR_LOCK_X	   = 0;
 	CURSOR_LOCK_Y	   = 0;
 	TOOLTIP            = "";

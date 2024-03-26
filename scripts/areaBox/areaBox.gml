@@ -36,56 +36,64 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	
 	onModifySingle[0] = function(val) { #region
 		var v = toNumber(val);
+		var m = onModify(0, v);
 		
-		if(mode == AREA_MODE.area) {
-			return onModify(0, v); 
-		} else if(mode == AREA_MODE.padding) {
-			if(link_value)	return onModify(0, v) || onModify(1, v) || onModify(2, v) || onModify(3, v);
-			else			return onModify(0, v); 
-		} else if(mode == AREA_MODE.two_point) {
-			return onModify(0, v);
-		}
+		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
+			return m;
+		
+		m |= onModify(1, v);
+		m |= onModify(2, v);
+		m |= onModify(3, v);
+		
+		return m;
 	} #endregion
+	
 	onModifySingle[1] = function(val) { #region
 		var v = toNumber(val);
+		var m = onModify(1, v);
 		
-		if(mode == AREA_MODE.area) {
-			return onModify(1, v); 
-		} else if(mode == AREA_MODE.padding) {
-			if(link_value)	return onModify(0, v) || onModify(1, v) || onModify(2, v) || onModify(3, v);
-			else			return onModify(1, v); 
-		} else if(mode == AREA_MODE.two_point) {
-			return onModify(1, v);
-		}
+		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
+			return m;
+		
+		m |= onModify(0, v);
+		m |= onModify(2, v);
+		m |= onModify(3, v);
+		
+		return m;
 	} #endregion
+	
 	onModifySingle[2] = function(val) { #region
 		var v = toNumber(val);
+		var m = onModify(2, v);
 		
-		if(mode == AREA_MODE.area) {
-			return onModify(2, v); 
-		} else if(mode == AREA_MODE.padding) {
-			if(link_value)	return onModify(0, v) || onModify(1, v) || onModify(2, v) || onModify(3, v);
-			else			return onModify(2, v); 
-		} else if(mode == AREA_MODE.two_point) {
-			return onModify(2, v);
-		}
+		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
+			return m;
+		
+		m |= onModify(0, v);
+		m |= onModify(1, v);
+		m |= onModify(3, v);
+		
+		return m;
 	} #endregion
+	
 	onModifySingle[3] = function(val) { #region
 		var v = toNumber(val);
+		var m = onModify(3, v);
 		
-		if(mode == AREA_MODE.area) {
-			return onModify(3, v); 
-		} else if(mode == AREA_MODE.padding) {
-			if(link_value)	return onModify(0, v) || onModify(1, v) || onModify(2, v) || onModify(3, v);
-			else			return onModify(3, v); 
-		} else if(mode == AREA_MODE.two_point) {
-			return onModify(3, v);
-		}
+		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
+			return m;
+		
+		m |= onModify(0, v);
+		m |= onModify(1, v);
+		m |= onModify(2, v);
+		
+		return m;
 	} #endregion
 	
 	for(var i = 0; i < 4; i++) { #region
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
 		tb[i].slidable = true;
+		tb[i].hide     = true;
 	} #endregion
 	
 	static setSlideSpeed = function(speed) { #region
@@ -119,68 +127,40 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		return draw(params.x + params.w / 2, params.y + ui(40), params.data, params.display_data, params.m);
+		font = params.font;
+		for(var i = 0; i < 4; i++) tb[i].font = params.font;
+		
+		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	} #endregion
 	
-	static draw = function(_x, _y, _data, _display_data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) {
 		x = _x;
 		y = _y;
-		w = 0;
-		h = ui(204);
+		w = _w;
+		h = _h * 2 + ui(4);
 		mode = array_safe_get(_data, 5);
 		
-		var _bx   = _x - ui(48);
-		var _by   = _y + ui(64 - 48);
-		var _bs   = ui(96);
+		var _bs = min(_h, ui(32));
+		var _bx   = _x;
+		var _by   = _y + _h / 2 - _bs / 2;
 		var _bact = adjust_shape && active;
 		var _bhov = adjust_shape && hover;
 		var _bind = array_safe_get(_data, 4);
 		
-		if(!is_array(_bind))
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, _bact, _bhov,, THEME.inspector_area, _bind, c_white) == 2) {
+		if(!is_array(_bind) && buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, _bact, _bhov,, THEME.inspector_area, _bind) == 2) {
 			var val = (array_safe_get(_data, 4) + 1) % 2;
 			onModify(4, val);
 		}
 		
+		var _tx =_x + _bs + ui(4);
+		    
 		if(onSurfaceSize != -1) {
-			var _bx   = _x - ui(76);
-			var _by   = _y + ui(28 - 12);
-			var _bs   = ui(24);
-			var _btxt = __txtx("widget_area_fill_surface", "Full surface");
-			
-			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, _btxt, THEME.fill, 0, c_white) == 2) { #region
-				switch(mode) {
-					case AREA_MODE.area :
-						var ss = onSurfaceSize();
-						onModify(0, ss[0] / 2);
-						onModify(1, ss[1] / 2);
-						onModify(2, ss[0] / 2);
-						onModify(3, ss[1] / 2);
-						break;
-					case AREA_MODE.padding :   
-						var ss = onSurfaceSize();
-						onModify(0, 0);
-						onModify(1, 0);
-						onModify(2, 0);
-						onModify(3, 0);
-						break;
-					case AREA_MODE.two_point : 
-						var ss = onSurfaceSize();
-						onModify(0, 0);
-						onModify(1, 0);
-						onModify(2, ss[0]);
-						onModify(3, ss[1]);
-						break;
-				}
-			} #endregion
-			
 			tooltip.index = mode;
 			
-			var _bx = _x + ui(76 - 24);
-			var _by = _y + ui(28 - 12);
-			var _bs = ui(24);
+			var _bx   = _x + _w - _bs;
+			var _by   = _y + _h / 2 - _bs / 2;
 			
-			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, tooltip, THEME.inspector_area_type, mode, c_white) == 2) { #region
+			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, tooltip, THEME.inspector_area_type, mode) == 2) { #region
 				switch(mode) {
 					case AREA_MODE.area : //area to padding
 						var cx = array_safe_get(_data, 0);
@@ -223,53 +203,78 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				
 				onModify(5, (mode + 1) % 3);
 			} #endregion
+			
+			var _bx   = _x + _w - _bs;
+			var _by   = _y + _h + ui(4) + _h / 2 - _bs / 2;
+			var _btxt = __txtx("widget_area_fill_surface", "Full surface");
+			
+			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, _btxt, THEME.fill, 0) == 2) { #region
+				switch(mode) {
+					case AREA_MODE.area :
+						var ss = onSurfaceSize();
+						onModify(0, ss[0] / 2);
+						onModify(1, ss[1] / 2);
+						onModify(2, ss[0] / 2);
+						onModify(3, ss[1] / 2);
+						break;
+					case AREA_MODE.padding :   
+						var ss = onSurfaceSize();
+						onModify(0, 0);
+						onModify(1, 0);
+						onModify(2, 0);
+						onModify(3, 0);
+						break;
+					case AREA_MODE.two_point : 
+						var ss = onSurfaceSize();
+						onModify(0, 0);
+						onModify(1, 0);
+						onModify(2, ss[0]);
+						onModify(3, ss[1]);
+						break;
+				}
+			} #endregion
+			
+			_w -= _bs + ui(4);
 		} 
+		
+		_w -= _bs + ui(4);
 		
 		if(mode == AREA_MODE.padding) { #region
 			var cc    = link_value? COLORS._main_accent : COLORS._main_icon;
-			var _bx   = _x - ui(76);
-			var _by   = _y + ui(88);
-			var _bs   = ui(24);
+			var _bx   = _x;
+			var _by   = _y + _h + ui(4) + _h / 2 - _bs / 2;
 			var _btxt = __txt("Link values");
 			
 			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, _btxt, THEME.value_link, link_value, cc) == 2)
 				link_value = !link_value;
 		} #endregion
 		
-		for(var i = 0; i < 4; i++) {
+		draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _w, _h, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		
+		draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y + _h + ui(4), _w, _h, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y + _h + ui(4), _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		
+		for(var i = 0; i < 4; i++)
 			tb[i].setFocusHover(active, hover);
-			tb[i].align  = fa_center;
-			tb[i].hide   = mode == AREA_MODE.area || mode == AREA_MODE.two_point;
-		}
 		
 		current_data = _data;
 		
+		var tb_w = _w / 2;
+		var tb_h = _h;
+			
 		if(mode == AREA_MODE.area) { #region
-			var tb_w = ui(96);
-			var tb_h = TEXTBOX_HEIGHT;
+			var tb_x0 = _tx;
+			var tb_y0 = _y;
 			
-			var tb_x0 = _x - tb_w;
-			var tb_x1 = _x;
-			var tb_y0 = _y - ui(28);
-			var tb_y1 = _y + ui(64 + 48 + 8);
+			var tb_x1 = _tx + tb_w;
+			var tb_y1 = _y + _h + ui(4);
 			
-			draw_sprite_stretched_ext(THEME.textbox, 3, tb_x0, tb_y0, tb_w * 2, tb_h, c_white, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, tb_x0, tb_y0, tb_w * 2, tb_h, c_white, 0.5 + 0.5 * interactable);	
-			
-			draw_sprite_stretched_ext(THEME.textbox, 3, tb_x0, tb_y1, tb_w * 2, tb_h, c_white, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, tb_x0, tb_y1, tb_w * 2, tb_h, c_white, 0.5 + 0.5 * interactable);	
-			
-			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-			draw_set_alpha(0.5);
-			
-			draw_text(tb_x0 + ui(8), tb_y0 + tb_h / 2, "x");
-			draw_text(tb_x1 + ui(8), tb_y0 + tb_h / 2, "y");
-			
-			draw_text(tb_x0 + ui(8), tb_y1 + tb_h / 2, "w");
-			draw_text(tb_x1 + ui(8), tb_y1 + tb_h / 2, "h");
-			
-			draw_set_alpha(1);
+			tb[0].label = "x";
+			tb[1].label = "y";
+						  
+			tb[2].label = "w";
+			tb[3].label = "h";
 			
 			tb[0].draw(tb_x0, tb_y0, tb_w, tb_h, array_safe_get(_data, 0), _m);
 			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get(_data, 1), _m);
@@ -277,51 +282,45 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get(_data, 2), _m);
 			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get(_data, 3), _m);
 		#endregion
+		
 		} else if(mode == AREA_MODE.padding) { #region
-			var tb_rx = _x + ui(56);
-			var tb_ry = _y + ui(48);
+			var tb_lx = _tx;
+			var tb_ly = _y;
 			
-			var tb_tx = _x - ui(48);
-			var tb_ty = _y - ui(28);
+			var tb_rx = _tx + tb_w;
+			var tb_ry = _y;
 			
-			var tb_lx = _x - ui(56 + 96);
-			var tb_ly = _y + ui(48);
+			var tb_tx = _tx;
+			var tb_ty = _y + _h + ui(4);
 			
-			var tb_bx = _x - ui(48);
-			var tb_by = _y + ui(64 + 48 + 8);
+			var tb_bx = _tx + tb_w;
+			var tb_by = _y + _h + ui(4);
 			
-			tb[0].draw(tb_rx, tb_ry, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 0), _m);
-			tb[1].draw(tb_tx, tb_ty, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 1), _m);
-															 
-			tb[2].draw(tb_lx, tb_ly, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 2), _m);
-			tb[3].draw(tb_bx, tb_by, ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 3), _m);
+			tb[2].label = "l";
+			tb[0].label = "r";
+						   
+			tb[1].label = "t";
+			tb[3].label = "b";
+			
+			tb[2].draw(tb_lx, tb_ly, tb_w, tb_h, array_safe_get(_data, 2), _m);
+			tb[0].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get(_data, 0), _m);
+			
+			tb[1].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get(_data, 1), _m);
+			tb[3].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get(_data, 3), _m);
 		#endregion
+		
 		} else if(mode == AREA_MODE.two_point) { #region
-			var tb_w = ui(96);
-			var tb_h = TEXTBOX_HEIGHT;
+			var tb_x0 = _tx;
+			var tb_y0 = _y;
 			
-			var tb_x0 = _x - tb_w;
-			var tb_x1 = _x;
-			var tb_y0 = _y - ui(28);
-			var tb_y1 = _y + ui(64 + 48 + 8);
+			var tb_x1 = _tx + tb_w;
+			var tb_y1 = _y + _h + ui(4);
 			
-			draw_sprite_stretched_ext(THEME.textbox, 3, tb_x0, tb_y0, tb_w * 2, tb_h, c_white, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, tb_x0, tb_y0, tb_w * 2, tb_h, c_white, 0.5 + 0.5 * interactable);	
-			
-			draw_sprite_stretched_ext(THEME.textbox, 3, tb_x0, tb_y1, tb_w * 2, tb_h, c_white, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, tb_x0, tb_y1, tb_w * 2, tb_h, c_white, 0.5 + 0.5 * interactable);	
-			
-			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-			draw_set_alpha(0.5);
-			
-			draw_text(tb_x0 + ui(8), tb_y0 + tb_h / 2, "x0");
-			draw_text(tb_x1 + ui(8), tb_y0 + tb_h / 2, "y0");
-			
-			draw_text(tb_x0 + ui(8), tb_y1 + tb_h / 2, "x1");
-			draw_text(tb_x1 + ui(8), tb_y1 + tb_h / 2, "y1");
-			
-			draw_set_alpha(1);
+			tb[0].label = "x0";
+			tb[1].label = "y0";
+						   
+			tb[2].label = "x1";
+			tb[3].label = "y1";
 			
 			tb[0].draw(tb_x0, tb_y0, tb_w, tb_h, array_safe_get(_data, 0), _m);
 			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get(_data, 1), _m);
@@ -331,10 +330,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		#endregion
 		}
 			
-		if(unit != noone && unit.reference != noone) {
-			unit.triggerButton.setFocusHover(active, hover);
-			unit.draw(_x + ui(56 + 48 + 8), _y - ui(28), ui(32), ui(32), _m);
-		}
+		//if(unit != noone && unit.reference != noone) {
+		//	unit.triggerButton.setFocusHover(active, hover);
+		//	unit.draw(_x + ui(56 + 48 + 8), _y - ui(28), ui(32), ui(32), _m);
+		//}
 		
 		resetFocus();
 		

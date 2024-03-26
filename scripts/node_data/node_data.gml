@@ -1335,11 +1335,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(previewable) {
 			if(preview_draw) drawPreview(xx, yy, _s);
-			try {
-				onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.getFocusingNode() == self);
-			} catch(e) {
-				log_warning("NODE onDRAW", exception_print(e));
-			}
+			
+			try { onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.getFocusingNode() == self); }
+			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
+			
 		} else {
 			var bbox = drawGetBbox(xx, yy, _s);
 			draw_sprite_ext(THEME.preview_hide, 0, bbox.xc, bbox.yc, _s, _s, 0, c_white, 0.25);

@@ -33,7 +33,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	for(var i = 0; i < size; i++) { #region
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
-		tb[i].hide = true;
+		tb[i].hide     = true;
 	} #endregion
 	
 	static setSlideSpeed = function(speed) { #region
@@ -56,6 +56,9 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	} #endregion
 	
 	static drawParam = function(params) { #region
+		font = params.font;
+		for(var i = 0; i < size; i++) tb[i].font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	} #endregion
 	
@@ -100,11 +103,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 				var bx = _x + ww * i;
 				var by = _y;
 				
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-				draw_set_alpha(0.5);
-				draw_text_add(bx + ui(8), by + _h / 2, axis[i]);
-				draw_set_alpha(1);
-				
+				tb[i * 2].label = axis[i];
 				tb[i * 2].setFocusHover(active, hover);
 				tb[i * 2].draw(bx, by, ww, _h, _data[i * 2], _m);
 			}
@@ -115,14 +114,10 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 				draw_sprite_stretched_ext(THEME.textbox, 3, _x, by, _w, _h, c_white, 1);
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, by, _w, _h, c_white, 0.5 + 0.5 * interactable);	
 			
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-				draw_set_alpha(0.5);
-				draw_text_add(_x + ui(8), by + _h / 2, axis[j]);
-				draw_set_alpha(1);
-				
 				for( var i = 0; i < 2; i++ ) {
 					var bx = _x + ww * i;
-				
+					
+					if(i == 0) tb[j * 2 + i].label = axis[j];
 					tb[j * 2 + i].setFocusHover(active, hover);
 					tb[j * 2 + i].draw(bx, by, ww, _h, _data[j * 2 + i], _m);
 				}

@@ -737,6 +737,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	static drawParam = function(params) { #region
 		rx = params.rx;
 		ry = params.ry;
+		font = params.font;
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	} #endregion

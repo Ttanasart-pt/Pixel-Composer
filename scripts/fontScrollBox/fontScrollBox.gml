@@ -25,6 +25,8 @@ function fontScrollBox(_onModify) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
+		font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
 	}
 	
@@ -68,7 +70,7 @@ function fontScrollBox(_onModify) : widget() constructor {
 		_txt  = $"[{_txt}]";
 		_text = is_array(_text)? _txt : filename_name_only(_text);
 		
-		draw_set_text(f_p0, align, fa_center, COLORS._main_text);
+		draw_set_text(font, align, fa_center, COLORS._main_text);
 		draw_set_alpha(0.5 + 0.5 * interactable);
 		if(align == fa_center)
 			draw_text(_x + w / 2, _y + _h / 2 - ui(2), _text);

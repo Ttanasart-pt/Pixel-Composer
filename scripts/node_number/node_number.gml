@@ -114,11 +114,11 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var cmp  = getInputData(5);
 		var _col = getColor();
 		
-		if(inputs[| 0].value_from != noone || disp == 0) { #region
+		if(disp == 0 || inputs[| 0].value_from != noone || bbox.h < line_get_height(f_p2)) {
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 			draw_text_bbox(bbox, string(val));
 			return;
-		} #endregion
+		}
 		
 		switch(disp) {
 			case 1 : #region

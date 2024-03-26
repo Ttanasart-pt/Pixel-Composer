@@ -1,10 +1,10 @@
 function buttonGroup(_data, _onClick) : widget() constructor {
 	data    = _data;
 	onClick = _onClick;
+	
 	display_button = false;
-	buttonSpr = [ THEME.button_left, THEME.button_middle, THEME.button_right ];
-	font	= f_p0;
-	fColor  = COLORS._main_text;
+	buttonSpr      = [ THEME.button_left, THEME.button_middle, THEME.button_right ];
+	fColor         = COLORS._main_text;
 	
 	current_selecting = 0;
 	
@@ -41,6 +41,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
+		font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
 	}
 	
@@ -57,7 +59,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		var ww  = _w / amo;
 		
 		var total_width = 0;
-		draw_set_font(f_p0);
+		draw_set_font(font);
 		for(var i = 0; i < amo; i++) {
 			if(is_string(data[i]))
 				total_width += string_width(data[i]) + ui(32);

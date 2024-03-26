@@ -49,26 +49,27 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
 		tb[i].slidable = true;
+		tb[i].label    = axis[i];
 	}
 	
-	static setMinMax = function() {
+	static setMinMax = function() { #region
 		linkable = false;
 		axis     = [ "min", "max" ];
 		return self;
-	}
+	} #endregion
 	
-	static setLinkInactiveColor = function(color) {
+	static setLinkInactiveColor = function(color) { #region
 		link_inactive_color = color;
 		return self;
-	}
+	} #endregion
 	
-	static setSlideSpeed = function(speed) {
+	static setSlideSpeed = function(speed) { #region
 		for(var i = 0; i < size; i++)
 			tb[i].setSlidable(speed);
 		return self;
-	}
+	} #endregion
 	
-	static setInteract = function(interactable) { 
+	static setInteract = function(interactable) { #region
 		self.interactable = interactable;
 		
 		if(side_button != noone) 
@@ -76,9 +77,9 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			
 		for( var i = 0; i < size; i++ ) 
 			tb[i].interactable = interactable;
-	}
+	} #endregion
 	
-	static register = function(parent = noone) {
+	static register = function(parent = noone) { #region
 		for( var i = 0; i < size; i++ ) 
 			tb[i].register(parent);
 		
@@ -87,11 +88,14 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
+		font = params.font;
+		for(var i = 0; i < 4; i++) tb[i].font = params.font;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
-	}
+	} #endregion
 	
 	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) {
 		x = _x;
@@ -149,15 +153,9 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
 			
 		for(var i = 0; i < sz; i++) {
-			draw_set_font(f_p0);
 			
 			var bx = per_line? _x : _x + ww * i;
 			var by = per_line? _y + (_h + ui(8)) * i : _y;
-			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-			draw_set_alpha(0.5);
-			draw_text_add(bx + ui(8), by + _h / 2, axis[i]);
-			draw_set_alpha(1);
 			
 			tb[i].setFocusHover(active, hover);
 			tb[i].hide = true;

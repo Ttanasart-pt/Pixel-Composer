@@ -9,6 +9,8 @@ function widget() constructor {
 	lua_thread = noone;
 	lua_thread_key = "";
 	
+	font = f_p0;
+	
 	x = 0; 
 	y = 0;
 	w = 0; 
@@ -91,4 +93,6 @@ function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, 
 	self.valign		= fa_top;
 	
 	self.display_data = display_data;
+	
+	self.font       = f_p0;
 }
