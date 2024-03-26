@@ -130,7 +130,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _path = getInputData(i);
 			if(!struct_has(_path, "drawOverlay")) continue;
 			
-			_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
 	} #endregion
 	
