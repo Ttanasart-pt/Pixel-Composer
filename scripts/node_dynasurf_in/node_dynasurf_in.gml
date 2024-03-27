@@ -8,8 +8,6 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inParent = undefined;
 	
-	attributes.input_priority = group == noone? 0 : group.getInputFreeOrder();
-	
 	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone);
 	
 	static createInput = function() { #region
@@ -54,8 +52,6 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static doApplyDeserialize = function() { #region
 		if(group == noone) return;
-		
-		if(CLONING) attributes.input_priority = group.getInputFreeOrder();
 		group.sortIO();
 	} #endregion
 	

@@ -52,12 +52,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		tb[i].label    = axis[i];
 	}
 	
-	static setMinMax = function() { #region
-		linkable = false;
-		axis     = [ "min", "max" ];
-		return self;
-	} #endregion
-	
 	static setLinkInactiveColor = function(color) { #region
 		link_inactive_color = color;
 		return self;
@@ -91,8 +85,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		font = params.font;
-		for(var i = 0; i < 4; i++) tb[i].font = params.font;
+		setParam(params);
+		for(var i = 0; i < 4; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	} #endregion

@@ -134,7 +134,7 @@ event_inherited();
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_double_click_delay", "Double click delay"),
 		"double_click_delay",
-		new slider(0, 1, 0.01, function(val) { 
+		slider(0, 1, 0.01, function(val) { 
 			PREFERENCES.double_click_delay = val; 
 			PREF_SAVE();
 		})
@@ -152,7 +152,7 @@ event_inherited();
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_keyboard_hold_start", "Keyboard hold start"),
 		"keyboard_repeat_start",
-		new slider(0, 1, 0.01, function(val) { 
+		slider(0, 1, 0.01, function(val) { 
 			PREFERENCES.keyboard_repeat_start = val; 
 			PREF_SAVE();
 		})
@@ -161,7 +161,7 @@ event_inherited();
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_keyboard_repeat_delay", "Keyboard repeat delay"),
 		"keyboard_repeat_speed",
-		new slider(0, 1, 0.01, function(val) { 
+		slider(0, 1, 0.01, function(val) { 
 			PREFERENCES.keyboard_repeat_speed = val; 
 			PREF_SAVE();
 		})
@@ -277,7 +277,7 @@ event_inherited();
 	PREFERENCES._display_scaling = PREFERENCES.display_scaling;
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(
 		__txtx("pref_gui_scaling", "GUI scaling*"),
-		new slider(0.5, 2, 0.01, function(val) { 
+		slider(0.5, 2, 0.01, function(val) { 
 			PREFERENCES._display_scaling = val;
 			should_restart = true;
 		}, function() { 
@@ -479,6 +479,27 @@ event_inherited();
 			PREF_SAVE();
 		})
 	));
+	
+	if(IS_PATREON) {
+		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_widget_textbox_shake", "Textbox shake"),
+			"textbox_shake",
+			new textBox(TEXTBOX_INPUT.number, function(str) { 
+				PREFERENCES.textbox_shake = real(str);
+				PREF_SAVE();
+			})
+		).patreon());
+		
+		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_widget_textbox_particles", "Textbox particles"),
+			"textbox_particle",
+			new textBox(TEXTBOX_INPUT.number, function(str) { 
+				PREFERENCES.textbox_particle = round(real(str));
+				PREF_SAVE();
+			})
+		).patreon());
+		
+	}
 	
 #endregion
 
@@ -957,6 +978,20 @@ event_inherited();
 				
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(24), yy + th / 2, name);
+			
+			if(_pref.is_patreon) {
+				var spr_x = ui(20);
+				var spr_y = yy + ui(4);
+				
+				BLEND_SUBTRACT
+				gpu_set_colorwriteenable(0, 0, 0, 1);
+				draw_sprite_ext(s_patreon_supporter, 0, spr_x, spr_y, -1, 1, 0, c_white, 1);
+				gpu_set_colorwriteenable(1, 1, 1, 1);
+				BLEND_NORMAL
+			
+				draw_sprite_ext(s_patreon_supporter, 1, spr_x, spr_y, -1, 1, 0, COLORS._main_accent, 1);
+			}
+			
 			_pref.editWidget.setFocusHover(sFOCUS, sHOVER && sp_pref.hover); 
 			
 			var widget_w = ui(260);

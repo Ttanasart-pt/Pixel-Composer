@@ -43,7 +43,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		font = params.font;
+		setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
 	} #endregion

@@ -98,6 +98,9 @@
 	
 	PREFERENCES.add_node_remember				= true;
 	
+	PREFERENCES.textbox_shake					= 0;
+	PREFERENCES.textbox_particle				= 0;
+	
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
 #endregion
 

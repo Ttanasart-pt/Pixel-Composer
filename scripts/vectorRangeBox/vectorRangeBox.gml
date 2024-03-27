@@ -56,8 +56,8 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		font = params.font;
-		for(var i = 0; i < size; i++) tb[i].font = params.font;
+		setParam(params);
+		for(var i = 0; i < size; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	} #endregion

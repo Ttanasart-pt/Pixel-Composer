@@ -1659,7 +1659,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _node = nodeBuild(_type, x, y, target);
 		CLONING = false;
 		
-		PROJECT.version = SAVE_VERSION;
+		LOADING_VERSION = SAVE_VERSION;
 		
 		if(!_node) return;
 		

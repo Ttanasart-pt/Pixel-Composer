@@ -12,8 +12,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	spr_bg   = THEME.rotator_bg;
 	spr_knob = THEME.rotator_knob;
 	
-	tb_value = new textBox(TEXTBOX_INPUT.number, onModify).setSlidable(0.1, true);
-	tb_value.hide   = true;
+	tb_value = new textBox(TEXTBOX_INPUT.number, onModify).setSlidable([ 0.1, 15 ], true);
+	tb_value.hide = true;
 	
 	halign = fa_center;
 	
@@ -27,8 +27,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		font = params.font;
-		tb_value.font = params.font;
+		setParam(params);
+		tb_value.setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	} #endregion

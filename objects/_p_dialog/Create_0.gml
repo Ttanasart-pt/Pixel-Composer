@@ -157,12 +157,15 @@
 		if(!active) return;
 		if(HOVER != self.id) return;
 		
-		if(mouse_press(mb_any)) {
+		if(mouse_press(mb_any) && FOCUS != self.id) {
 			setFocus(self.id, "Dialog");
-			with(_p_dialog)
-				other.depth = min(other.depth, depth - 1);
+			
+			with(_p_dialog) other.depth = min(other.depth, depth - 1);
 		}
 	}
+	
+	function onFocusBegin() {}
+	function onFocusEnd() {}
 	
 	function resetPosition() {
 		if(!active) return;
@@ -187,16 +190,15 @@
 	
 	function checkMouse() {
 		if(!active)               return;
-		if(!destroy_on_click_out) return;
 		if(!DIALOG_CLICK)         return;
 		
 		if(mouse_press(mb_any)) {
-			if(!checkClosable())      return;
 			if(!isTop())              return;
 			
 			for( var i = 0, n = array_length(children); i < n; i++ )
 				if(instance_exists(children[i])) return; 
 			
+			if(checkClosable() && destroy_on_click_out)
 			if(!point_in(mouse_mx, mouse_my)) {
 				instance_destroy(self);
 				onDestroy();

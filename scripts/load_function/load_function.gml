@@ -99,7 +99,10 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	
 	if(struct_has(_load_content, "version")) {
 		var _v = _load_content.version;
+		
 		PROJECT.version = _v;
+		LOADING_VERSION = _v;
+		
 		if(PREFERENCES.notify_load_version && floor(_v) != floor(SAVE_VERSION)) {
 			var warn = $"File version mismatch : loading file version {_v} to Pixel Composer {SAVE_VERSION}";
 			log_warning("LOAD", warn);

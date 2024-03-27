@@ -18,7 +18,7 @@ function Panel_Collections_Setting() : Panel_Linear_Setting() constructor {
 			new __Panel_Linear_Setting_Item_Preference(
 				__txtx("coll_thumbnail_scale", "Thumbnail scale"),
 				"collection_scale",
-				new slider(0, 1, 0.01, function(val) { PREFERENCES.collection_scale = clamp(val, 0.1, 1); PREF_SAVE(); }),
+				slider(0, 1, 0.01, function(val) { PREFERENCES.collection_scale = clamp(val, 0.1, 1); PREF_SAVE(); }),
 			),
 		];
 		

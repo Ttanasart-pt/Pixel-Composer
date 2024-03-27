@@ -1315,7 +1315,7 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 	} #endregion
 	
-	function drawToolBar(_node) { #region
+	function drawToolBar(_tool) { #region
 		var ty = h - toolbar_height;
 		//draw_sprite_stretched_ext(THEME.toolbar_shadow, 0, 0, ty - 12 + 4, w, 12, c_white, 0.5);
 		
@@ -1323,10 +1323,8 @@ function Panel_Preview() : PanelContent() constructor {
 		draw_sprite_stretched_ext(THEME.toolbar, 1, 0,  0, w, topbar_height, c_white, aa);
 		draw_sprite_stretched_ext(THEME.toolbar, 0, 0, ty, w, toolbar_height, c_white, aa);
 		
-		if(!_node) return;
-		
-		if(tool_current != noone) { #region tool settings
-			var settings = array_merge(_node.getToolSettings(), tool_current.settings);
+		if(_tool && tool_current != noone) { #region tool settings
+			var settings = array_merge(_tool.getToolSettings(), tool_current.settings);
 			
 			tool_x = lerp_float(tool_x, tool_x_to, 5);
 			var tolx  = tool_x + ui(16);
@@ -1376,8 +1374,8 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 		#endregion
 		} else { #region color sampler
-			var cx = ui(10);
-			var cy = ui(10);
+			var cx = ui(8);
+			var cy = ui(8);
 			var cw = ui(32);
 			var ch = topbar_height - ui(16);
 			

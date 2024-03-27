@@ -102,6 +102,10 @@ function draw_text_int(x, y, str) { #region
 	draw_text(round(x), round(y), str);
 } #endregion
 
+function draw_text_highlight() { #region
+	
+} #endregion
+
 function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation, forceCut = false) { #region
 	INLINE
 	_x = round(_x);

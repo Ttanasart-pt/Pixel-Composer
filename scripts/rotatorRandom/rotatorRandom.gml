@@ -9,10 +9,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 	knob_hovering = noone;
 	
 	mode = 0;
-	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable(0.1, true); tb_min_0.hide = true;
-	tb_max_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(2, val); } ).setSlidable(0.1, true); tb_max_0.hide = true;
-	tb_min_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(3, val); } ).setSlidable(0.1, true); tb_min_1.hide = true;
-	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(4, val); } ).setSlidable(0.1, true); tb_max_1.hide = true;
+	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable([ 0.1, 15 ], true); tb_min_0.hide = true;
+	tb_max_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(2, val); } ).setSlidable([ 0.1, 15 ], true); tb_max_0.hide = true;
+	tb_min_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(3, val); } ).setSlidable([ 0.1, 15 ], true); tb_min_1.hide = true;
+	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(4, val); } ).setSlidable([ 0.1, 15 ], true); tb_max_1.hide = true;
 	
 	tooltip    = new tooltipSelector("Mode", [
 		__txtx("widget_rotator_random_range",        "Range"), 
@@ -39,11 +39,11 @@ function rotatorRandom(_onModify) : widget() constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		font = params.font;
-		tb_min_0.font = params.font;
-		tb_max_0.font = params.font;
-		tb_min_1.font = params.font;
-		tb_max_1.font = params.font;
+		setParam(params);
+		tb_min_0.setParam(params);
+		tb_max_0.setParam(params);
+		tb_min_1.setParam(params);
+		tb_max_1.setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	} #endregion

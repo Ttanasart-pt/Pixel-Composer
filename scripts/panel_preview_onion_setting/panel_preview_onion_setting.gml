@@ -42,7 +42,7 @@ function Panel_Preview_Onion_Setting() : Panel_Linear_Setting() constructor {
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("Opacity"),
-				new slider(0, 1, .05, function(str) { PROJECT.onion_skin.alpha = clamp(real(str), 0, 1); }),
+				slider(0, 1, .05, function(str) { PROJECT.onion_skin.alpha = clamp(real(str), 0, 1); }),
 				function() { return PROJECT.onion_skin.alpha; },
 				function(val) { PROJECT.onion_skin.alpha = val; },
 				0.5

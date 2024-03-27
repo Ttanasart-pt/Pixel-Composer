@@ -829,6 +829,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		}
 	} #endregion
 	
+	function onFocusBegin() { INLINE if(FOCUS.getContent()) FOCUS.getContent().onFocusBegin(); }
+	function onFocusEnd()   { INLINE if(FOCUS.getContent()) FOCUS.getContent().onFocusEnd();   }
+	
 	function remove(con = getContent()) { #region
 		var curr = getContent();
 		
@@ -947,13 +950,16 @@ function PanelContent() constructor { #region
 } #endregion
 
 function setFocus(target, fstring = noone) { #region
-	if(FOCUS != noone && is_struct(FOCUS) && FOCUS.getContent())
-		FOCUS.getContent().onFocusEnd();
+	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusEnd")) || 
+		(is_struct(FOCUS) && struct_has(FOCUS, "onFocusEnd"))) 
+		FOCUS.onFocusEnd();
 	
 	FOCUS = target;
 	if(fstring != noone) 
 		FOCUS_STR = fstring;
 	
-	if(FOCUS != noone && is_struct(FOCUS) && FOCUS.getContent())	
-		FOCUS.getContent().onFocusBegin();
+	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusBegin")) || 
+		(is_struct(FOCUS) && struct_has(FOCUS, "onFocusBegin"))) 
+		FOCUS.onFocusBegin();
+		
 } #endregion

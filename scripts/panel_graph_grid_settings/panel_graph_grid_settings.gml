@@ -27,7 +27,7 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 			),
 			new __Panel_Linear_Setting_Item(
 				__txtx("project_graphGrid_opacity", "Grid opacity"),
-				new slider(0, 1, .05, function(str) {
+				slider(0, 1, .05, function(str) {
 					if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
 					PANEL_GRAPH.project.graphGrid.opacity = clamp(real(str), 0, 1);	
 				}),

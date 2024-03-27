@@ -15,8 +15,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	auto_update = false;
 	
-	_input_text_line = [];
+	_input_text_line       = [];
 	_input_text_line_index = [];
+	
 	_current_text	= "";
 	_input_text		= "";
 	_prev_text		= "";
@@ -565,7 +566,14 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(auto_update && (keyboard_check_pressed(vk_anykey) || modified))
 			apply();
 			
-		if(modified) typing = 100;
+		if(modified) {
+			typing = 100;
+			
+			if(IS_PATREON) {
+				shake_amount = PREFERENCES.textbox_shake;
+				repeat(PREFERENCES.textbox_particle) spawn_particle(rx + cursor_pos_x, ry + cursor_pos_y + random(16), 8);
+			}
+		}
 		
 		if(keyboard_check_pressed(vk_left))	 onKey(vk_left);
 		if(keyboard_check_pressed(vk_right)) onKey(vk_right);
@@ -638,8 +646,15 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			cut_line();
 		}
 		
+		__code_draw_comment = false;
+		
 		for( var i = 0, n = array_length(_input_text_line); i < n; i++ ) {
 			_str = _input_text_line[i];
+			
+			if(_input_text_line_index[i] != "") {
+				draw_set_color(color);
+				__code_draw_comment = false;
+			}
 			
 			switch(format) {
 				case TEXT_AREA_FORMAT._default : 
@@ -735,9 +750,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		rx = params.rx;
-		ry = params.ry;
-		font = params.font;
+		setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	} #endregion

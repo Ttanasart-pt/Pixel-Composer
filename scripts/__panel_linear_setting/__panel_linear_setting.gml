@@ -5,6 +5,10 @@ function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, get
 	
 	self.onEdit     = onEdit;
 	self.getDefault = getDefault;
+	
+	self.is_patreon = false;
+	
+	static patreon = function() { is_patreon = true; return self; }
 } #endregion
 
 function __Panel_Linear_Setting_Item_Preference(name, key, editWidget, _data = noone) : __Panel_Linear_Setting_Item(name, editWidget, _data) constructor { #region

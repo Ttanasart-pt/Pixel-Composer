@@ -623,7 +623,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static deserialize = function(_data, scale = false) { #region
 		ds_list_clear(values);
 		
-		if(prop.type == VALUE_TYPE.gradient && PROJECT.version < 1340 && !CLONING) { //backward compat: Gradient
+		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
 			var _val = [];
 			var value = _data[0][1];
 			
@@ -665,18 +665,22 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 			if(prop.type == VALUE_TYPE.struct)
 				_val = json_try_parse(value);
+			
 			else if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
 				for(var j = 0; j < array_length(value); j++)
 					_val[j] = value[j];
+			
 			} else if(prop.type == VALUE_TYPE.gradient) {
 				var grad = new gradientObject();
 				_val = grad.deserialize(value);
+			
 			} else if(prop.type == VALUE_TYPE.color) {
 				if(is_array(_val)) {
 					for( var i = 0, n = array_length(_val); i < n; i++ )
-						_val[i] = PROJECT.version < 11640 && !is_int64(_val[i])? cola(_val[i]) : int64(_val[i]);
+						_val[i] = LOADING_VERSION < 11640 && !is_int64(_val[i])? cola(_val[i]) : int64(_val[i]);
 				} else 
-					_val = PROJECT.version < 11640 && !is_int64(_val)? cola(_val) : int64(_val);
+					_val = LOADING_VERSION < 11640 && !is_int64(_val)? cola(_val) : int64(_val);
+			
 			} else if(!sep_axis && typeArray(prop.display_type)) {
 				_val = [];
 				

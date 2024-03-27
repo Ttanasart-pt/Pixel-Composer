@@ -18,7 +18,7 @@ event_inherited();
 	
 	destroy_on_click_out = true;
 	
-	sl_position = new slider(0, 100, 0.1, function(val) { 
+	sl_position = slider(0, 100, 0.1, function(val) { 
 		if(!interactable) return;
 		if(key_selecting == noone) return;
 		setKeyPosition(key_selecting, val / 100);

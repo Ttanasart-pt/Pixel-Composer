@@ -4,6 +4,8 @@ enum TEXTBOX_INPUT {
 }
 
 function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
+	onRelease = noone;
+	
 	align  = _input == TEXTBOX_INPUT.number? fa_center : fa_left;
 	hide   = false;
 	font   = noone;
@@ -22,6 +24,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	slide_delta = 0;
 	slide_int   = false;
 	slide_speed = 1 / 10;
+	slide_snap  = 0;
 	slide_range = noone;
 	curr_range  = [ 0, 1 ];
 	
@@ -37,6 +40,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	cursor			= 0;
 	cursor_pos		= 0;
+	cursor_pos_y	= 0;
 	cursor_pos_to	= 0;
 	cursor_select	= -1;
 	
@@ -57,6 +61,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	text_surface = surface_create(1, 1);
 	
+	shake_amount = 0;
+	
+	static setOnRelease = function(release) { onRelease = release; return self; }
+	
 	static modifyValue = function(value) { #region
 		if(input == TEXTBOX_INPUT.number) {
 			if(use_range) value = clamp(value, range_min, range_max);
@@ -67,7 +75,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static setSlidable = function(slideStep = slide_speed, _slide_int = false, _slide_range = noone) { #region
 		slidable    = true;
-		slide_speed = slideStep;
+		slide_speed = is_array(slideStep)? slideStep[0] : slideStep;
+		slide_snap  = is_array(slideStep)? slideStep[1] : 0;
 		slide_int   = _slide_int;
 		slide_range = _slide_range;
 		
@@ -152,7 +161,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 	} #endregion
 	
-	static apply = function() { #region
+	static apply = function(fn = onModify) { #region
 		var _input_text_current = _input_text;
 		disp_x_to = 0;
 		
@@ -163,8 +172,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			_input_text_current = _last_text;
 		current_value = _input_text_current;
 		
-		if(is_callable(onModify))
-			return onModify(_input_text_current);
+		if(is_callable(fn)) {
+			var _modi = fn(_input_text_current);
+			if(_modi && IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
+			return _modi;
+		}
+		
+		if(IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
 		return false;
 	} #endregion
 	
@@ -288,7 +302,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(KEYBOARD_PRESSED == vk_down || keyboard_check_pressed(vk_down)) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
 		}
 		
-		if(edited) typing = 100;
+		if(edited) {
+			typing = 100;
+			
+			if(IS_PATREON) {
+				shake_amount = PREFERENCES.textbox_shake;
+				repeat(PREFERENCES.textbox_particle) spawn_particle(rx + cursor_pos, ry + cursor_pos_y + random(16), 8);
+			}
+		}
 		
 		if(keyboard_check_pressed(vk_home)) {
 			if(key_mod_press(SHIFT)) {
@@ -318,15 +339,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		_y += ui(1);
 		
 		var cc = color;
-		if(sliding == 2)
-			cc = COLORS._main_accent
+		if(sliding == 2) cc = COLORS._main_accent
 		
 		draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, cc);
 		draw_text_add(_x + disp_x, _y, _text + suffix);
 		draw_set_alpha(1);
 		
-		var _xx = _x + disp_x;
-		var _mm = _m;
+		var _xx    = _x + disp_x;
+		var _mm    = _m;
 		var target = -999;
 		
 		if(!sliding && _mm >= 0) {
@@ -361,7 +381,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		font = params.font;
+		setParam(params);
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.halign, params.valign);
 	} #endregion
 	
@@ -370,6 +391,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		y = _y;
 		w = _w;
 		h = _h;
+		
+		_x += irandom_range(-shake_amount, shake_amount); 
+		_y += irandom_range(-shake_amount, shake_amount); 
+		if(shake_amount) shake_amount--;
 		
 		switch(halign) {
 			case fa_left:   _x = _x;			break;	
@@ -467,6 +492,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 							if(key_mod_press(ALT))	_input_text	= string_real(toNumber(_input_text) / 2);
 							else					_input_text	= string_real(toNumber(_input_text) * 2);
 							apply();
+							
+							if(IS_PATREON) shake_amount = PREFERENCES.textbox_shake;
 						}
 					}
 					
@@ -511,7 +538,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				if(cursor_pos_to > _x + _w - ui(16))  
 					disp_x_to -= _w - ui(16);
 				
-				cursor_pos = cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 2);
+				cursor_pos_y = c_y0;
+				cursor_pos   = cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 2);
 				
 				if(cursor_select > -1) { //draw highlight
 					draw_set_color(COLORS.widget_text_highlight);
@@ -611,8 +639,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			if(sliding == 2) {
 				textBox_slider.tb = self;
-				if(mouse_release(mb_left))
+				if(mouse_release(mb_left)) {
 					deactivate();
+					if(onRelease != noone) apply(onRelease);
+				}
 			}
 			
 			if(mouse_release(mb_left)) {

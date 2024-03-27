@@ -22,25 +22,25 @@ function colorSelector(onApply = noone) constructor {
 	
 	color_surface = surface_create_valid(ui(256), ui(256));
 	
-	tb_hue = new slider(0, 255, 1, function(_val) {
+	tb_hue = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		hue = clamp(_val, 0, 255);
 		setHSV();
 	});
 	
-	tb_sat = new slider(0, 255, 1, function(_val) {
+	tb_sat = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		sat = clamp(_val, 0, 255);
 		setHSV();
 	});
 	
-	tb_val= new slider(0, 255, 1, function(_val) {
+	tb_val= slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		val = clamp(_val, 0, 255);
 		setHSV();
 	});
 	
-	tb_red = new slider(0, 255, 1, function(_val) {
+	tb_red = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		var r = clamp(_val, 0, 255);
 		var g = color_get_green(current_color);
@@ -51,7 +51,7 @@ function colorSelector(onApply = noone) constructor {
 		resetHSV();
 	});
 	
-	tb_green = new slider(0, 255, 1, function(_val) {
+	tb_green = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		var r = color_get_red(current_color);
 		var g = clamp(_val, 0, 255);
@@ -62,7 +62,7 @@ function colorSelector(onApply = noone) constructor {
 		resetHSV();
 	});
 	
-	tb_blue = new slider(0, 255, 1, function(_val) {
+	tb_blue = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		var r = color_get_red(current_color);
 		var g = color_get_green(current_color);
@@ -73,7 +73,7 @@ function colorSelector(onApply = noone) constructor {
 		resetHSV();
 	});
 	
-	tb_alpha = new slider(0, 255, 1, function(_val) {
+	tb_alpha = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		var alp = clamp(_val, 0, 255);
 		

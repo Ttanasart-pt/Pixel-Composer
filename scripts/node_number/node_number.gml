@@ -7,7 +7,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	draw_padding	= 4;
 	display_output	= 0;
 	
-	wd_slider = new slider(0, 1, 0.01, function(val) { inputs[| 0].setValue(val); } );
+	wd_slider = slider(0, 1, 0.01, function(val) { inputs[| 0].setValue(val); } );
 	wd_slider.spr   = THEME.node_slider;
 	
 	slider_value    = -1;

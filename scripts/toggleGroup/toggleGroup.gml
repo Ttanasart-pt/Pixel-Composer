@@ -23,9 +23,9 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
-		font = params.font;
+		setParam(params);
 		for(var i = 0; i < array_length(data); i++) 
-			buttons[i].font = params.font;
+			buttons[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
 	}

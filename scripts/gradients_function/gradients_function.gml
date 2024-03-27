@@ -248,11 +248,7 @@ function gradientObject(color = c_black) constructor { #region
 	static deserialize = function(str) { #region
 		var s;
 		
-		if(is_string(str))
-			s = json_try_parse(str);
-		else if(is_struct(str))
-			s = str;
-		else if(is_array(str)) {			
+		if(is_array(str)) {			
 			keys = [];
 			for( var i = 0, n = array_length(str); i < n; i++ )
 				keys[i] = new gradientKey(str[i].time, str[i].value); 
@@ -260,12 +256,17 @@ function gradientObject(color = c_black) constructor { #region
 			return self;
 		}
 		
+		if(is_string(str))		s = json_try_parse(str);
+		else if(is_struct(str))	s = str;
+		else					return self;
+		
 		type = struct_try_get(s, "type");
 		keys = array_create(array_length(s.keys));
+		
 		for( var i = 0, n = array_length(s.keys); i < n; i++ ) {
 			var _time  = real(s.keys[i].time);
 			var _value = real(s.keys[i].value);
-			    _value = PROJECT.version < 11640 && !is_int64(_value)? cola(_value) : int64(_value);
+			    _value = LOADING_VERSION < 11640 && !is_int64(_value)? cola(_value) : int64(_value);
 			
 			keys[i] = new gradientKey(_time, _value); 
 		}

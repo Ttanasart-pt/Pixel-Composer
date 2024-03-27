@@ -8,8 +8,8 @@ function rotatorRange(_onModify) : widget() constructor {
 	
 	knob_hovering = noone;
 	
-	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, val); } ).setSlidable(0.1, true); tb_min.hide = true;
-	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable(0.1, true); tb_max.hide = true;
+	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, val); } ).setSlidable([ 0.1, 15 ], true); tb_min.hide = true;
+	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable([ 0.1, 15 ], true); tb_max.hide = true;
 	
 	static setInteract = function(interactable = noone) { #region
 		self.interactable = interactable;
@@ -23,9 +23,9 @@ function rotatorRange(_onModify) : widget() constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		font = params.font;
-		tb_min.font = params.font;
-		tb_max.font = params.font;
+		setParam(params);
+		tb_min.setParam(params);
+		tb_max.setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	} #endregion

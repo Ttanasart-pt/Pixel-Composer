@@ -7,7 +7,7 @@ if !ready exit;
 		DIALOG_DRAW_FOCUS
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txtx("dialog_group_order_title", "Input order"));
+	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txtx("dialog_group_output_order_title", "Output order"));
 #endregion
 
 #region preset

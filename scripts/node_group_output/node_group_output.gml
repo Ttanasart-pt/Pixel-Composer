@@ -6,9 +6,6 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	destroy_when_upgroup = true;
 	
-	attributes.input_priority = 0;
-	if(!CLONING && !LOADING && !APPENDING && group != noone) attributes.input_priority = group.getOutputFreeOrder();
-	
 	w = 96;
 	h = 32 + 24;
 	min_h = h;
@@ -110,13 +107,11 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(group == noone) return;
 		
 		createOutput(false);
-		
-		if(PROJECT.version < 11520) attributes.input_priority = getInputData(1);
 		group.sortIO();
 	} #endregion
 	
 	static doApplyDeserialize = function() { #region
-		if(CLONING) attributes.input_priority = group.getOutputFreeOrder();
+		
 	} #endregion
 	
 	static onDestroy = function() { #region

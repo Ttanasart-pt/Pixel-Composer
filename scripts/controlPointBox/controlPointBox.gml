@@ -57,16 +57,16 @@ function controlPointBox(_onModify) : widget() constructor {
 	}
 	
 	static drawParam = function(params) { #region
-		font      = params.font;
-		tbCx.font = params.font;
-		tbCy.font = params.font;
-		tbFx.font = params.font;
-		tbFy.font = params.font;
-		tbW.font  = params.font;
-		tbH.font  = params.font;
-		rot.font  = params.font;
-		sW.font   = params.font;
-		scMode.font = params.font;
+		setParam(params);
+		tbCx.setParam(params);
+		tbCy.setParam(params);
+		tbFx.setParam(params);
+		tbFy.setParam(params);
+		tbW.setParam(params);
+		tbH.setParam(params);
+		rot.setParam(params);
+		sW.setParam(params);setParam(params);
+		scMode.setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry); 
 	} #endregion

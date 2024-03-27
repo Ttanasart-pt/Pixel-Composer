@@ -36,7 +36,7 @@ function Panel_Graph_View_Setting(display) : Panel_Linear_Setting() constructor 
 			),
 			new __Panel_Linear_Setting_Item(
 				__txtx("graph_visibility_preview_scale", "Preview Scale"),
-				new slider(50, 100, 1, function(val) { display_parameter.preview_scale = val; }),
+				slider(50, 100, 1, function(val) { display_parameter.preview_scale = val; }),
 				function() { return display_parameter.preview_scale },
 				function(val) { display_parameter.preview_scale = val; },
 				100,

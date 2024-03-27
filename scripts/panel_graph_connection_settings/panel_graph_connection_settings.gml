@@ -34,7 +34,7 @@ function Panel_Graph_Connection_Setting() : Panel_Linear_Setting() constructor {
 			new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_connection_highlight_fade", "Fade connection"),
 				"connection_line_highlight_fade",
-				new slider(0, 1, 0.05, function(val) { PREFERENCES.connection_line_highlight_fade = val; }),
+				slider(0, 1, 0.05, function(val) { PREFERENCES.connection_line_highlight_fade = val; }),
 			),
 			new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_connection_highlight_all", "Highlight all"),

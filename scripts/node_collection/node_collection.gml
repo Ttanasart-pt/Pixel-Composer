@@ -158,7 +158,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	metadata = new MetaDataManager();
 	
-	attributes.separator = [];
+	attributes.input_display_list  = [];
+	attributes.output_display_list = [];
 	attributes.w = 128;
 	attributes.h = 128;
 	
@@ -189,17 +190,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	tool_node = noone;
 	draw_input_overlay = true;
 	
-	array_push(attributeEditors, ["Edit Input Display", function() { return attributes.separator; },
-		button(function() {
-			var dia = dialogCall(o_dialog_group_input_order);
-			dia.setNode(self);
-		}) ]);
+	array_push(attributeEditors, ["Edit Input Display", function() { return 0; },
+		button(function() { dialogCall(o_dialog_group_input_order).setNode(self, JUNCTION_CONNECT.input); }) ]);
 	
-	array_push(attributeEditors, ["Edit Output Display", function() { return attributes.separator; },
-		button(function() {
-			var dia = dialogCall(o_dialog_group_output_order);
-			dia.setNode(self);
-		}) ]);
+	array_push(attributeEditors, ["Edit Output Display", function() { return 0; },
+		button(function() { dialogCall(o_dialog_group_input_order).setNode(self, JUNCTION_CONNECT.output); }) ]);
 	
 	insp1UpdateTooltip   = __txtx("panel_inspector_execute", "Execute node contents");
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
@@ -456,92 +451,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_dummy = false;
 	} #endregion
 	
-	static getListFreeOrder = function(list) { #region
-		var _or  = 0;
-		var _ors = [];
-		
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var _n = nodes[| i];
-			if(!struct_has(_n.attributes, "input_priority")) continue;
-			
-			array_push(_ors, _n.attributes.input_priority);
-		}
-		
-		array_sort(_ors, true);
-		for( var i = 0, n = array_length(_ors); i < n; i++ )
-			if(_or == _ors[i]) _or++;
-		return _or;
-	} #endregion
-	
-	static getInputFreeOrder  = function() { return getListFreeOrder(inputs); }
-	static getOutputFreeOrder = function() { return getListFreeOrder(outputs); }
-	
 	static sortIO = function() { #region
-		var sep  = attributes.separator;		
-		var siz  = ds_list_size(inputs);
-		var ar   = ds_priority_create();
-		var _ors = {};
-		var _dup = false;
+		for( var i = 0; i < ds_list_size(inputs); i++ ) 
+			array_push_unique(attributes.input_display_list, i);
+		input_display_list = attributes.input_display_list;
 		
-		array_sort(sep, function(a0, a1) { return a0[0] - a1[0]; });
-		
-		for( var i = custom_input_index; i < siz; i++ ) {
-			var _in = inputs[| i];
-			var _or = _in.from.attributes.input_priority;
-			if(struct_has(_ors, _or)) _dup = true;
-			_ors[$ _or] = 1;
-			
-			ds_priority_add(ar, _in, _or);
-		}
-		
-		for( var i = siz - 1; i >= custom_input_index; i-- )
-			ds_list_delete(inputs, i);
-		
-		if(array_empty(input_display_list_def)) {
-			input_display_list = [];
-			for( var i = 0; i < custom_input_index; i++ ) 
-				array_push(input_display_list, i);
-		} else {
-			input_display_list = array_clone(input_display_list_def);
-		}
-		
-		for( var i = custom_input_index; i < siz; i++ ) {
-			var _jin = ds_priority_delete_min(ar);
-			_jin.index = i;
-			ds_list_add(inputs, _jin);
-			array_push(input_display_list, i);
-		}
-		
-		for( var i = array_length(sep) - 1; i >= 0; i-- )
-			array_insert(input_display_list, array_length(input_display_list_def) + sep[i][0], [ sep[i][1], false, i ]);
-		
-		ds_priority_destroy(ar);
-		
-		output_display_list = [];
-		var siz  = ds_list_size(outputs);
-		var ar   = ds_priority_create();
-		var _dup = false;
-		
-		for( var i = custom_output_index; i < siz; i++ ) {
-			var _out = outputs[| i];
-			var _or = _out.from.attributes.input_priority;
-			
-			ds_priority_add(ar, _out, _or);
-		}
-		
-		for( var i = siz - 1; i >= custom_output_index; i-- )
-			ds_list_delete(outputs, i);
-		
-		for( var i = 0; i < siz; i++ ) 
-			array_push(output_display_list, i);
-			
-		for( var i = custom_output_index; i < siz; i++ ) {
-			var _jout = ds_priority_delete_min(ar);
-			_jout.index = i;
-			ds_list_add(outputs, _jout);
-		}
-		
-		ds_priority_destroy(ar);
+		for( var i = 0; i < ds_list_size(outputs); i++ ) 
+			array_push_unique(attributes.output_display_list, i);
+		output_display_list = attributes.output_display_list;
 		
 		setHeight();
 	} #endregion
@@ -666,18 +583,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		sortIO();
 		applyDeserialize();
-	} #endregion
-	
-	static attributeSerialize = function() { #region
-		var att = variable_clone(attributes);
-		att.separator = json_stringify(attributes.separator);
-		return att;
-	} #endregion
-	
-	static attributeDeserialize = function(attr) { #region
-		struct_override(attributes, attr);
-		if(struct_has(attr, "separator"))
-			attributes.separator = json_parse(attr.separator);
 	} #endregion
 	
 }

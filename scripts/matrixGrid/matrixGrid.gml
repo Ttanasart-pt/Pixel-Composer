@@ -77,9 +77,9 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 	}
 	
 	static drawParam = function(params) {
-		font = params.font;
+		setParam(params);
 		for(var i = 0; i < inputs; i++)
-			tb[i].font = params.font;
+			tb[i].setParam(params);
 	
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}

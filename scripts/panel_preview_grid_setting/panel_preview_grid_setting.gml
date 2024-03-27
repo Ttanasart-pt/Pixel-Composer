@@ -33,7 +33,7 @@ function Panel_Preview_Grid_Setting() : Panel_Linear_Setting() constructor {
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("Grid opacity"),
-				new slider(0, 1, .05, function(str) { PROJECT.previewGrid.opacity = clamp(real(str), 0, 1);	}),
+				slider(0, 1, .05, function(str) { PROJECT.previewGrid.opacity = clamp(real(str), 0, 1);	}),
 				function() { return PROJECT.previewGrid.opacity; },
 				function(val) { PROJECT.previewGrid.opacity = val; },
 				0.5,

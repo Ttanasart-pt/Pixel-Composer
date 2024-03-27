@@ -57,7 +57,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		font = params.font;
+		setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.m);
 	} #endregion

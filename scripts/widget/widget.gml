@@ -5,6 +5,7 @@ function widget() constructor {
 	ihover  = false;
 	parent  = noone;
 	interactable = true;
+	side_button  = noone;
 	
 	lua_thread = noone;
 	lua_thread_key = "";
@@ -35,6 +36,12 @@ function widget() constructor {
 		array_push(WIDGET_ACTIVE, self); 
 		self.parent = parent;
 	}
+	
+	static setParam = function(params) { #region
+		font = params.font;
+		rx   = params.rx;
+		ry   = params.ry;
+	} #endregion
 	
 	static trigger = function() { }
 	

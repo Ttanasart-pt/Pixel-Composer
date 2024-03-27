@@ -892,9 +892,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_Number";
 						break; #endregion
 					case VALUE_DISPLAY.range :			#region
-						editWidget = new rangeBox(_txt, function(index, val) { 
-							return setValueInspector(val, index);
-						} );
+						editWidget = new rangeBox(_txt, function(index, val) { return setValueInspector(val, index); } );
 						
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
@@ -1316,9 +1314,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 				
 			default : 
-				mapWidget = new vectorBox(2, function(index, val) { return setValueDirect(val, index); });
+				mapWidget = new rangeBox(TEXTBOX_INPUT.number, function(index, val) { return setValueDirect(val, index); });
 				mapWidget.side_button = mapButton;
-				mapWidget.setMinMax();
 				break;
 		}
 		

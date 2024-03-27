@@ -75,4 +75,7 @@ event_inherited();
 	function remove() { #region
 		instance_destroy();
 	} #endregion
+		
+	function onFocusBegin() { if(content) content.onFocusBegin(); }
+	function onFocusEnd()   { if(content) content.onFocusEnd();   }
 #endregion

@@ -21,7 +21,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		return onModify(index, toNumber(val)); 
 	}
 	
-	label = [ "min", "max" ];
+	labels = [ "min", "max" ];
 	onModifySingle[0] = function(val) { return onModifyIndex(0, toNumber(val)); }
 	onModifySingle[1] = function(val) { return onModifyIndex(1, toNumber(val)); }
 	
@@ -31,6 +31,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
 		tb[i].hide     = true;
+		tb[i].label    = labels[i];
 	}
 	
 	static setSlideSpeed = function(speed) {
@@ -53,8 +54,8 @@ function rangeBox(_type, _onModify) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
-		font = params.font;
-		for(var i = 0; i < 2; i++) tb[i].font = params.font;
+		setParam(params);
+		for(var i = 0; i < 2; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	}
@@ -69,6 +70,13 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		
 		var _icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		var _bs = min(_h, ui(32));
+		
+		if(side_button) {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			_w -= _bs + ui(4);
+		}
+		
 		var bx  = _x;
 		var by  = _y + _h / 2 - _bs / 2;
 		

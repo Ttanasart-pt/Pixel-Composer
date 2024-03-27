@@ -9,7 +9,7 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 	open = false;
 	
 	static drawParam = function(params) {
-		font = params.font;
+		setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.m, params.rx, params.ry);
 	}

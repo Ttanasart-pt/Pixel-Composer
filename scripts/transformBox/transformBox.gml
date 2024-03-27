@@ -42,9 +42,9 @@ function transformBox(_onModify) : widget() constructor {
 	}
 	
 	static drawParam = function(params) { 
-		font = params.font;
-		rot.font = params.font;
-		for(var i = 0; i < 5; i++) tb[i].font = params.font;
+		setParam(params);
+		rot.setParam(params);
+		for(var i = 0; i < 5; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m); 
 	}

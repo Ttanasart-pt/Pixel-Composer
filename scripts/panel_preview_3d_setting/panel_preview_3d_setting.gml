@@ -22,7 +22,7 @@ function Panel_Preview_3D_Setting(panel) : Panel_Linear_Setting() constructor {
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("Light Intensity"),
-				new slider(0, 1, 0.01, function(val) { 
+				slider(0, 1, 0.01, function(val) { 
 					preview_panel.d3_scene_light0.intensity = val; 
 					preview_panel.d3_scene_light1.intensity = val; 
 				}),
