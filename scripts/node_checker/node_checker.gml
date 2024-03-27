@@ -28,12 +28,15 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 8] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Solid", "Smooth", "AA" ]);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",	true],	0,  
 		["Pattern",	false], 1, 6, 2, 7, 3,
-		["Render",	false], 4, 5,
+		["Render",	false], 8, 4, 5,
 	];
 	
 	attribute_surface_depth();
@@ -65,6 +68,7 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_f_map("angle",  _data[2], _data[7], inputs[| 2]);
 			shader_set_color("col1",   _data[4]);
 			shader_set_color("col2",   _data[5]);
+			shader_set_i("blend",	   _data[8]);
 			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();

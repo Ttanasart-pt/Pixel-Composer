@@ -12,7 +12,8 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.rotation)
 		.setMappable(12);
 	
-	inputs[| 3] = nodeValue("Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0, "Smoothly blend between each stripe.");
+	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Solid", "Smooth", "AA" ]);
 	
 	inputs[| 4] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -97,7 +98,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_set_shader(_outSurf, sh_stripe);
 			shader_set_f("dimension",	 _dim[0], _dim[1]);
 			shader_set_f("position",	 _pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_f("blend",		 _bnd);
+			shader_set_i("blend",		 _bnd);
 			
 			shader_set_f_map("amount",		 _data[ 1], _data[11], inputs[|  1]);
 			shader_set_f_map("angle",		 _data[ 2], _data[12], inputs[|  2]);

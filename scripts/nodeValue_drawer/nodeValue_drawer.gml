@@ -318,12 +318,13 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 			case VALUE_TYPE.boolean : 
 				if(is_instanceof(wid, checkBoxActive)) break;
+				
 				param.halign = breakLine? fa_left : fa_center;
-				param.s      = breakLine? ui(24)  : editBoxH;
+				param.s      = editBoxH;
 				
 				if(!breakLine) {
-					param.w = ui(128);
-					param.x = param.x + editBoxW - param.w;
+					param.w = ww - min(ui(80) + ww * 0.2, ui(200));
+					param.x = editBoxX + editBoxW - param.w;
 				}
 				break;
 				

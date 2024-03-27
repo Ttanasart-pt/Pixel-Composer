@@ -203,10 +203,16 @@ void main() { #region
 	float _s      = (prog - ground) / (ceiling - ground);
 	
 	if(gradient_use == 0) {
-		if(blend == 0)	gl_FragColor = _s > rat? color0 : color1;
-		else { 
+		if(blend == 0) gl_FragColor = _s > rat? color0 : color1;
+		else if(blend == 1) { 
 			_s = sin(_s * 2. * PI) * 0.5 + 0.5;
-			gl_FragColor = mix(color0, color1, _s); 
+			gl_FragColor = mix(color0, color1, _s);
+			
+		} else if(blend == 2) { 
+			float px = 3. / max(dimension.x, dimension.y);
+			_s = smoothstep(-px, px, sin(_s * 2. * PI));
+			
+			gl_FragColor = mix(color0, color1, _s);
 		}
 	} else {
 		if(_s > rat)	gl_FragColor = gradientEval(random(vec2(slot)));

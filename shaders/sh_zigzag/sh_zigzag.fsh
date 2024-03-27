@@ -1,27 +1,42 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform vec2 dimension;
 uniform vec2 position;
-uniform int blend;
+uniform int  blend;
+uniform float rotation;
 
 uniform vec2      amount;
 uniform int       amountUseSurf;
 uniform sampler2D amountSurf;
 
+uniform vec2      angle;
+uniform int       angleUseSurf;
+uniform sampler2D angleSurf;
+
 uniform vec4 col1, col2;
 
 void main() {
-	float amo = amount.x;
-	if(amountUseSurf == 1) {
-		vec4 _vMap = texture2D( amountSurf, v_vTexcoord );
-		amo = mix(amount.x, amount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	}
+	#region params
+		float amo = amount.x;
+		if(amountUseSurf == 1) {
+			vec4 _vMap = texture2D( amountSurf, v_vTexcoord );
+			amo = mix(amount.x, amount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
 		
-	vec2 pos = v_vTexcoord - position;
-	float _cell  = 1. / (amo * 2.);
+		float ang = angle.x;
+		if(angleUseSurf == 1) {
+			vec4 _vMap = texture2D( angleSurf, v_vTexcoord );
+			ang = mix(angle.x, angle.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		ang = radians(ang);
+	#endregion
+	
+		
+	vec2 pos     = v_vTexcoord - position;
+	float _cell  = 1. / (amo * 2.); 
+	pos.y -= _cell / 2.;
+	pos   *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	
     float _xind  = floor(pos.x / _cell);
     float _yind  = floor(pos.y / _cell);
@@ -35,16 +50,21 @@ void main() {
 	if(mod(_xind, 2.) == 1.)
 		_x = 1. - _xcell;
 	
+	float _h = _x > _y? _y + (1. - _x) : _y - _x;
+	      
+	float _ychi = _x > _y ? _yind + 1. : _yind;
+	if(mod(_ychi, 2.) == 1.) _h = 1. - _h;
+	
 	if(blend == 0) {
-		if(mod(_yind, 2.) == 1.) {
-			if(_x > _y)	gl_FragColor = col1;
-			else		gl_FragColor = col2;
-		} else {
-			if(_x > _y) gl_FragColor = col2;
-			else		gl_FragColor = col1;
-		}
-	} else {
-		if(_x > _y) gl_FragColor = mix(col1, col2, _y + (1. - _x));
-		else		gl_FragColor = mix(col1, col2, _y - _x);
+		gl_FragColor = _h < 0.5? col1 : col2;
+		
+	} else if(blend == 1) {
+		gl_FragColor = mix(col1, col2, _h);
+		
+	} else if(blend == 2) { 
+		float px = 1. / max(dimension.x, dimension.y);
+		_h = smoothstep(0.5 - px, 0.5 + px, _h);
+			
+		gl_FragColor = mix(col1, col2, _h);
 	}
 }

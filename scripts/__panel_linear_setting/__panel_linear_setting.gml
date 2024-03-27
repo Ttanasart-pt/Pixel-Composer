@@ -86,7 +86,9 @@ function Panel_Linear_Setting() : PanelContent() constructor { #region
 				
 				_widg.setFocusHover(pFOCUS, pHOVER);
 				_widg.register();
-			
+				
+				//if(i % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), yy - th / 2, w - ui(8), th, COLORS.panel_prop_bg, 0.25);
+				
 				if(pHOVER && point_in_rectangle(mx, my, 0, yy - th / 2, w, yy + th / 2)) {
 					bg_y_to = yy - th / 2;
 					_hov    = true;

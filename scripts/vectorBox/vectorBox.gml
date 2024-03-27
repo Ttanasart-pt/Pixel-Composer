@@ -49,7 +49,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
 		tb[i].slidable = true;
-		tb[i].label    = axis[i];
 	}
 	
 	static setLinkInactiveColor = function(color) { #region
@@ -95,7 +94,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		x = _x;
 		y = _y;
 		w = _w;
-		h = per_line? (_h + ui(8)) * size - ui(8) : _h;
+		h = per_line? (_h + ui(4)) * size - ui(4) : _h;
 		
 		if(struct_has(_display_data, "linked"))	     linked	     = _display_data.linked;
 		if(struct_has(_display_data, "side_button")) side_button = _display_data.side_button;
@@ -143,16 +142,19 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		var sz = min(size, array_length(_data));
 		var ww = per_line? _w : _w / sz;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		if(!per_line) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		}
 			
 		for(var i = 0; i < sz; i++) {
 			
 			var bx = per_line? _x : _x + ww * i;
-			var by = per_line? _y + (_h + ui(8)) * i : _y;
+			var by = per_line? _y + (_h + ui(4)) * i : _y;
 			
 			tb[i].setFocusHover(active, hover);
-			tb[i].hide = true;
+			tb[i].hide  = !per_line;
+			tb[i].label = axis[i];
 			tb[i].draw(bx, by, ww, _h, _data[i], _m);
 		}
 		

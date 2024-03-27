@@ -908,9 +908,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var len = array_length(val);
 						
 						if(len <= 4) {
-							editWidget = new vectorBox(len, function(index, val) { 
-								return setValueInspector(val, index);
-							}, unit );
+							editWidget = new vectorBox(len, function(index, val) { return setValueInspector(val, index); }, unit );
 							
 							if(struct_has(display_data, "label"))		 editWidget.axis	    = display_data.label;
 							if(struct_has(display_data, "linkable"))	 editWidget.linkable    = display_data.linkable;

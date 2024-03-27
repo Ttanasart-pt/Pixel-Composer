@@ -97,7 +97,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 			
 				param.show_dimension  = true;
 				param.show_compute    = true;
-				param.avoid_label     = true;
+				param.avoid_label     = false;
 				param.preview_scale   = 100;
 				
 				for(var i = 0; i < ds_list_size(nodeList); i++)
