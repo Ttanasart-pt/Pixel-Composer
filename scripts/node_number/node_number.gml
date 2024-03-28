@@ -1,10 +1,8 @@
-function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
+function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Number";
 	color = COLORS.node_blend_number;
 	
-	w				= 96;
-	min_h			= 32 + 24 * 1;
-	draw_padding	= 4;
+	setDimension(96, 32 + 24 * 1);
 	display_output	= 0;
 	
 	wd_slider = slider(0, 1, 0.01, function(val) { inputs[| 0].setValue(val); } );
@@ -51,10 +49,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var int  = getInputData(1);
 		var disp = getInputData(2);
 		
-		var _h = min_h;
-		
-		w	  = 96;	
-		min_h = 56; 
+		if(!show_parameter) setDimension(96, 56, false);
 		
 		switch(disp) {
 			case 0 : 
@@ -63,26 +58,20 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				inputs[| 5].setVisible(false);
 				break;
 			case 1 : 
-				if(inputs[| 0].isLeaf()) {
-					w	  = 160;
-					min_h = 96;
-				}
+				if(inputs[| 0].isLeaf() && !show_parameter) setDimension(160, 96, false);
+				
 				inputs[| 3].setVisible(true);
 				inputs[| 4].setVisible(true);
 				inputs[| 5].setVisible(true);
 				break;
 			case 2 : 
-				if(inputs[| 0].isLeaf()) {
-					w	  = 128;
-					min_h = 128;		 
-				}
+				if(inputs[| 0].isLeaf() && !show_parameter) setDimension(128, 128, false);
+					
 				inputs[| 3].setVisible(false);
 				inputs[| 4].setVisible(false);
 				inputs[| 5].setVisible(false);
 				break;
 		}
-		
-		if(_h != min_h) setHeight();
 		
 		for( var i = 0; i < 1; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
@@ -121,6 +110,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		}
 		
 		switch(disp) {
+			
 			case 1 : #region
 				draw_set_text(f_sdf, fa_center, fa_center, _col);
 				draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, _int? round(val) : val, _s * 0.5, _s * 0.5, 0);
@@ -172,7 +162,6 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				} else 
 					slider_m = lerp_float(slider_m, 0, 5);
 				
-				draggable = true;
 				if(_hover && point_in_rectangle(_mx, _my, sl_x0, sl_y0, sl_x1, sl_y1)) {
 					if(mouse_press(mb_left, _focus) && is_real(val)) {
 						slider_dragging = true;
@@ -222,7 +211,6 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				} else 
 					rotator_m = lerp_float(rotator_m, 0, 5);
 				
-				draggable = true;
 				if(_hover && point_in_circle(_mx, _my, bbox.xc, bbox.yc, _ss / 2)) {
 					if(mouse_press(mb_left, _focus) && is_real(val)) {
 						rotator_dragging = true;
@@ -238,4 +226,5 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				break; #endregion
 		}
 	} #endregion
-} #endregion
+
+}

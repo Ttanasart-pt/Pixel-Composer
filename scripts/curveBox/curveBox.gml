@@ -44,6 +44,7 @@ function curveBox(_onModify) : widget() constructor {
 		h = _h;
 		
 		var cw = _w - ui(32);
+		hovering = false;
 		
 		if(!is_array(_data) || array_length(_data) == 0) return 0;
 		if(is_array(_data[0])) return 0;
@@ -304,6 +305,7 @@ function curveBox(_onModify) : widget() constructor {
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + cw, _y + _h)) { #region
 			show_coord = true;
+			hovering   = true;
 			
 			if(mouse_press(mb_left, active)) {
 				if(node_hovering == -1) {

@@ -4,10 +4,7 @@ MIDI_INPORT = noone;
 function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "MIDI In";
 	update_on_frame = true;
-	
-	w     = 128;
-	min_h = 128;
-	
+		
 	rtmidi_init();
 	rtmidi_ignore_messages(true, true, true);
 	

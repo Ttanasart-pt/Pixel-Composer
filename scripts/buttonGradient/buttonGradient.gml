@@ -27,10 +27,13 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		y = _y;
 		w = _w;
 		
-		if(side_button && instanceof(side_button) == "buttonClass") {
+		var _bs = min(_h, ui(32));
+		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
+		
+		if(_w - _bs > ui(100) && side_button && instanceof(side_button) == "buttonClass") {
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
-			_w -= ui(40);
+			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			_w -= _bs + ui(8);
 		}
 		
 		var _gw = _w - ui(8);

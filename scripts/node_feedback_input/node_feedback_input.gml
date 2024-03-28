@@ -2,10 +2,7 @@ function Node_Feedback_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	name        = "Feedback Input";
 	color       = COLORS.node_blend_feedback;
 	is_group_io = true;
-	
-	w = 96;
-	h = 32 + 24 * 2;
-	min_h = h;
+	setDimension(96, 32 + 24 * 2);
 	
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
 	outputs[| 0].getValueRecursive = function(_time) {

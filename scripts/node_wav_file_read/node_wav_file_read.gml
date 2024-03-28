@@ -27,10 +27,6 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "WAV File In";
 	color = COLORS.node_blend_input;
 	
-	w = 128;
-	h = 128;
-	min_h = h;
-	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "audio|*.wav" })
 		.rejectArray();

@@ -1,10 +1,6 @@
 function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Websocket Sender";
 	
-	w = 128;
-	h = 128;
-	min_h = h;
-	
 	inputs[| 0] = nodeValue("Port", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 22800);
 	
 	inputs[| 1] = nodeValue("Data type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)

@@ -1,9 +1,7 @@
 function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Boolean Trigger";
 	update_on_frame = true;
-	
-	w = 96;
-	min_h = 32 + 24 * 1;
+	setDimension(96, 32 + 24 * 1);
 	
 	inputs[| 0] = nodeValue("Boolean", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	

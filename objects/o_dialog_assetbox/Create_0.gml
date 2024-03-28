@@ -11,7 +11,7 @@ event_inherited();
 	dialog_h = ui(360);
 	title_height = 48;
 	
-	anchor = ANCHOR.top | ANCHOR.right;
+	anchor = ANCHOR.top | ANCHOR.left;
 	
 	dialog_resizable = true;
 	dialog_w_min = ui(200);

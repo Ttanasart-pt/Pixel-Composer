@@ -116,15 +116,11 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		outputs[| 0].setType(_typ);
 		
 		if(type != _typ) {
-			if(_typ == VALUE_TYPE.surface) {
-				w = 128;
-				h = 128;
-				min_h = h;
-			} else {
-				w = 96;
-				h = 32 + 24;
-				min_h = h;
-			}
+			if(_typ == VALUE_TYPE.surface)
+				setDimension(128, 128);
+			else
+				setDimension(96, 32 + 24);
+			
 			type = _typ;
 			will_setHeight = true;
 		}

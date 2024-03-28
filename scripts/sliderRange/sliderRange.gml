@@ -28,6 +28,8 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 		tb_value_max.register(parent);
 	} #endregion
 	
+	static isHovering = function() { return tb_value_min.hovering || tb_value_max.hovering; }
+	
 	static drawParam = function(params) { #region
 		setParam(params);
 		tb_value_min.setParam(params);

@@ -54,6 +54,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		current_selecting = _selecting;
 		while(is_array(current_selecting))
 			current_selecting = array_safe_get(current_selecting, 0);
+		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
 		var amo = array_length(data);
 		var ww  = _w / amo;

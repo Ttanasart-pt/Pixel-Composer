@@ -1,9 +1,6 @@
 function Node_Animation_Control(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Animation Control";
-	
-	w = 96;
-	h = 96;
-	min_h = h;
+	name = "Animation Control";
+	setDimension(96, 96);
 	
 	inputs[| 0] = nodeValue("Toggle Play / Pause", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0);
 	

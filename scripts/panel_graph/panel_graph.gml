@@ -56,6 +56,7 @@
 	function panel_graph_select_all()			{ CALL("graph_select_all");			PANEL_GRAPH.nodes_selecting = ds_list_to_array(PANEL_GRAPH.nodes_list);	 }
 	function panel_graph_toggle_grid()			{ CALL("graph_toggle_grid");		PANEL_GRAPH.display_parameter.show_grid = !PANEL_GRAPH.display_parameter.show_grid;	 }
 	function panel_graph_toggle_preview()		{ CALL("graph_toggle_preview");		PANEL_GRAPH.setTriggerPreview();		}
+	function panel_graph_toggle_parameter()		{ CALL("graph_toggle_parameter");	PANEL_GRAPH.setTriggerParameter();		}
 	function panel_graph_toggle_render()		{ CALL("graph_toggle_render");		PANEL_GRAPH.setTriggerRender();			}
 																															
 	function panel_graph_export()				{ CALL("graph_export");				PANEL_GRAPH.setCurrentExport();			}
@@ -145,7 +146,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			show_dimension  : true,
 			show_compute    : true,
 		
-			avoid_label   : false,
+			avoid_label   : true,
 			preview_scale : 100,
 			highlight     : false,
 		}
@@ -362,6 +363,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		addHotkey("Graph", "Toggle grid",			"G", MOD_KEY.none,					panel_graph_toggle_grid);
 		addHotkey("Graph", "Toggle preview",		"H", MOD_KEY.none,					panel_graph_toggle_preview);
 		addHotkey("Graph", "Toggle render",			"R", MOD_KEY.none,					panel_graph_toggle_render);
+		addHotkey("Graph", "Toggle parameters",		"M", MOD_KEY.none,					panel_graph_toggle_parameter);
 																						
 		if(!DEMO) addHotkey("Graph", "Export",		"E", MOD_KEY.ctrl,					panel_graph_export);
 	
@@ -451,6 +453,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			array_foreach(nodes_selecting, function(node, index) {
 				if(index == 0) __temp_show = !node.previewable;
 				node.previewable = __temp_show;
+				node.setHeight();
+			});
+		} #endregion
+	
+		function setTriggerParameter() { #region
+			__temp_show = false;
+			array_foreach(nodes_selecting, function(node, index) {
+				if(index == 0) __temp_show = !node.show_parameter;
+				node.show_parameter = __temp_show;
 				node.setHeight();
 			});
 		} #endregion

@@ -22,6 +22,8 @@ function rotatorRange(_onModify) : widget() constructor {
 		tb_max.register(parent);
 	} #endregion
 	
+	static isHovering = function() { return dragging || tb_min.hovering || tb_max.hovering; }
+	
 	static drawParam = function(params) { #region
 		setParam(params);
 		tb_min.setParam(params);

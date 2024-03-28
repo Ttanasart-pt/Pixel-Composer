@@ -1,10 +1,8 @@
 function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
-	name = "Vector2";
+	name  = "Vector2";
 	color = COLORS.node_blend_number;
 	
-	w = 96;
-	min_h = 32 + 24 * 2;
-	draw_padding = 4;
+	setDimension(96, 32 + 24 * 2);
 	
 	inputs[| 0] = nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
@@ -116,16 +114,10 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 		
-		var _h = min_h;
-		w	  = 96;	
-		min_h = 80; 
+		setDimension(96, 80, false);
 				
-		if(disp == 1 && inputs[| 0].isLeaf() && inputs[| 1].isLeaf()) {
-			w	  = 160;
-			min_h = 160;
-		}
-		
-		if(min_h != _h) setHeight();
+		if(disp == 1 && inputs[| 0].isLeaf() && inputs[| 1].isLeaf())
+			setDimension(160, 160, false);
 	} #endregion
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region

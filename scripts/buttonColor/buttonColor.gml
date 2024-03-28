@@ -67,11 +67,12 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		w = _w;
 		h = _h;
 		current_color = _color;
+		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
 		var _cw = _w;
 		var _bs = min(_h, ui(32));
 		
-		if(interactable) {
+		if(_w - _bs > ui(64) && interactable) {
 			var bx = _x + _cw - ui(32);
 			_cw -= ui(32);
 			
@@ -103,6 +104,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		var click = false;
 		if(ihover && hoverRect) {
 			draw_sprite_stretched(THEME.button, 1, _x, _y, _cw, _h);	
+			
 			if(mouse_press(mb_left, iactive)) {
 				trigger();
 				click = true;

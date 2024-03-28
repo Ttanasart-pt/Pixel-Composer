@@ -14,6 +14,7 @@ function buttonAnchor(_onClick) : widget() constructor {
 		
 		var cx = x + w / 2;
 		var cy = y + h / 2;
+		hovering = false;
 		
 		for( var i = -1; i <= 1; i++ ) 
 		for( var j = -1; j <= 1; j++ ) {
@@ -27,7 +28,11 @@ function buttonAnchor(_onClick) : widget() constructor {
 			
 			draw_sprite_ext(THEME.prop_anchor, _in == index, _bx, _by, 1, 1, 0, cc, aa);
 			
-			if(hov && mouse_click(mb_left, active)) onClick(_in);
+			if(hov) {
+				hovering = true;
+				if(mouse_click(mb_left, active))
+					onClick(_in);
+			}
 		}
 		
 		resetFocus();

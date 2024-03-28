@@ -8,8 +8,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Object";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	w     = 96;
-	min_h = 96;
+	setDimension(96, 96);
 	
 	manual_ungroupable	 = false;
 	

@@ -1,8 +1,7 @@
 function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name			= "Wiggler";
 	update_on_frame = true;
-	
-	w = 96;
+	setDimension(96, 96);
 	
 	inputs[| 0] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -53,22 +52,15 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		if(!is_array(ran)) return;
 		
-		var _h = min_h;
-		
 		switch(disp) {
 			case 0 :
-				w  = 96;
-				_h = 0;
-				
 				draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 				var str	= getWiggle(ran[0], ran[1], TOTAL_FRAMES / fre, time, sed, 0, TOTAL_FRAMES);
 				var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20 * draw_name);
 				draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
 				break;
-			case 1 :
-				w  = 128;
-				_h = 96;
 				
+			case 1 :
 				var _min = ran[0];
 				var _max = ran[1];
 				var val  = (_min + _max) / 2;
@@ -105,11 +97,6 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				draw_set_color(COLORS.node_wiggler_frame);
 				draw_rectangle(x0, y0, x1, y1, true);
 				break;
-		}
-		
-		if(min_h != _h) {
-			min_h = _h;
-			will_setHeight = true;
 		}
 	} #endregion
 	

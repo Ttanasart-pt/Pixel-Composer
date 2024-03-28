@@ -5,10 +5,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	is_group_io  = true;
 	
 	destroy_when_upgroup = true;
-	
-	w = 96;
-	h = 32 + 24;
-	min_h = h;
+	setDimension(96, 32 + 24);
 	
 	inputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
 		.uncache()

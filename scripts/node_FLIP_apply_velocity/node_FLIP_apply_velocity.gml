@@ -2,8 +2,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name  = "Apply Velocity";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
-	w     = 96;
-	min_h = 96;
+	setDimension(96, 96);
 	
 	manual_ungroupable = false;
 	

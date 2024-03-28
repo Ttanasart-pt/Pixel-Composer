@@ -1,6 +1,5 @@
 function Node_3D_Mesh(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name  = "3D Mesh";
-	min_h = 128;
 	
 	in_mesh = ds_list_size(inputs);
 	

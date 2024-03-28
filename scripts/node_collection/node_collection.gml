@@ -144,10 +144,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	combine_render_time = true;
 	previewable         = true;
 	
-	w = 128;
-	h = 128;
-	min_h = 128;
-	
 	reset_all_child = false;
 	isInstancer		= false;
 	instanceBase	= noone;

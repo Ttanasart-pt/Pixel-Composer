@@ -1,9 +1,6 @@
 function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Array Insert";
-	
-	w = 96;
-	h = 32 + 24;
-	min_h = h;
+	name = "Array Insert";
+	setDimension(96, 32 + 24);
 	
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);

@@ -4,11 +4,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	icon  = THEME.vfx;
 	use_cache = CACHE_USE.auto;
 	
-	manual_ungroupable	 = false;
-	
-	w = 128;
-	h = 128;
-	min_h = h;
+	manual_ungroupable = false;
 	previewable = true;
 	
 	inputs[| 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)

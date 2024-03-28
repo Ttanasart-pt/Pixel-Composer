@@ -2,7 +2,6 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	name  = "Domain";
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
-	min_h = 128;
 	
 	manual_ungroupable	 = false;
 	

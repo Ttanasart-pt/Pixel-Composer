@@ -6,10 +6,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	destroy_when_upgroup = true;
 	inParent = undefined;
-	
-	w = 96;
-	h = 32 + 24;
-	min_h = h;
+	setDimension(96, 32 + 24);
 	
 	#region data
 	data_type_list = [	"Integer",		"Float",	"Boolean",	"Color",	"Surface", 

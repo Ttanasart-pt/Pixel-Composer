@@ -2,8 +2,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name  = "Apply Force";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	w     = 96;
-	min_h = 96;
+	setDimension(96, 96);
 	
 	manual_ungroupable	 = false;
 	

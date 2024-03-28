@@ -1,9 +1,8 @@
 function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
 	name  = "Vector Split";
 	color = COLORS.node_blend_number;
+	setDimension(96, 32);
 	
-	w = 96;
-	min_h = 32;
 	draw_padding = 4;
 	
 	inputs[| 0] = nodeValue("Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ])

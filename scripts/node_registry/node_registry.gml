@@ -597,6 +597,7 @@ function __initNodes() {
 		addNodeObject(filter, "Vignette",			s_node_vignette,		"Node_Vignette",		[1, Node_Vignette],, "Apply vignette effect to the border.").setVersion(11630);
 		addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA],, "Apply fast approximate anti-aliasing to the image.");
 		addNodeObject(filter, "Kuwahara",			s_node_kuwahara,		"Node_Kuwahara",		[1, Node_Kuwahara]).setVersion(11660);
+		//addNodeObject(filter, "Rim",				s_node_kuwahara,		"Node_Rim",				[1, Node_Rim]).setVersion(11690);
 		//addNodeObject(filter, "Blend Edge",			s_node_FXAA,			"Node_Blend_Edge",		[1, Node_Blend_Edge]).setVersion(11640);
 		
 		ds_list_add(filter, "Colors");

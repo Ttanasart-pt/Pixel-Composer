@@ -1,8 +1,6 @@
 function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Widget Test";
-	
-	w = 96;
-	min_h = 32 + 24 * 1;
+	name = "Widget Test";
+	setDimension(96, 32 + 24 * 1);
 	draw_padding = 8;
 	
 	inputs[|  0] = nodeValue("textBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)                                      .setDisplay(VALUE_DISPLAY._default)

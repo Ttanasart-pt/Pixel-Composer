@@ -38,6 +38,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 		if(mode == 2)				tb_max_1.register(parent);
 	} #endregion
 	
+	static isHovering = function() { return dragging || tb_min_0.hovering || tb_max_0.hovering || tb_min_1.hovering || tb_max_1.hovering; }
+	
 	static drawParam = function(params) { #region
 		setParam(params);
 		tb_min_0.setParam(params);

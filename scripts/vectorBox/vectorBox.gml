@@ -65,7 +65,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	static setInteract = function(interactable) { #region
 		self.interactable = interactable;
 		
-		if(side_button != noone) 
+		if(side_button) 
 			side_button.interactable = interactable;
 			
 		for( var i = 0; i < size; i++ ) 
@@ -82,6 +82,11 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);
 	} #endregion
+	
+	static isHovering = function() { 
+		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
+		return false;
+	}
 	
 	static drawParam = function(params) { #region
 		setParam(params);
@@ -108,7 +113,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		var _bs = min(_h, ui(32));
 		
-		if(side_button) {
+		if(_w - _bs > ui(100) && side_button) {
 			side_button.setFocusHover(active, hover);
 			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
 			_w -= _bs + ui(4);

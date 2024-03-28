@@ -2,11 +2,7 @@ function Node_PB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	name = "PB Element";
 	icon = THEME.pixel_builder;
 	fullUpdate = true;
-	
-	w = 128;
-	h = 128;
-	min_h = h;
-	
+		
 	static getNextNodesRaw = getNextNodes;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

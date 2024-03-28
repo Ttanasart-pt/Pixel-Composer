@@ -3,12 +3,10 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	node_draw_icon = s_node_vfx_variable;
+	setDimension(96, 80);
 	
 	manual_ungroupable	 = false;
 	
-	w = 96;
-	h = 80;
-	min_h = h;
 	
 	inputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
 		.setVisible(true, true);

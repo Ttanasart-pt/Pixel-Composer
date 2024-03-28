@@ -2,6 +2,7 @@ enum SHADER_UNIFORM {
 	integer,
 	float,
 	color,
+	texture,
 }
 
 function addShaderProp(_type = undefined, _key = undefined) {
@@ -33,13 +34,14 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					else 
 						shader_set_f(_dat.key, _data[i]);     
 					break;
+					
 				case SHADER_UNIFORM.color   : shader_set_color(_dat.key, _data[i]); break;
+				
+				case SHADER_UNIFORM.texture : shader_set_surface(_dat.key, _data[i]); break;
 			}
 			
 		}
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		return _outSurf;
-	} #endregion
+	static processData = function(_outSurf, _data, _output_index, _array_index) { return _outSurf; }
 }

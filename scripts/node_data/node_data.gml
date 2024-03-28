@@ -80,8 +80,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 		w = 128;
 		h = 128;
-		min_w = 0;
-		min_h = 0;
+		min_w = w;
+		min_h = h;
 		will_setHeight = false;
 		
 		selectable   = true;
@@ -103,6 +103,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_droppable = false;
 		
 		junction_draw_pad_y = 32;
+		junction_draw_hei_y = 24;
 		
 		branch_drawing = false;
 	#endregion
@@ -175,6 +176,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- preview ----
+		show_parameter = false;
+		
 		show_input_name  = false;
 		show_output_name = false;
 	
@@ -337,11 +340,28 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		outputs_index  = array_create_ext(outputs_amount, function(index) { return getOutputJunctionIndex(index); });
 	} #endregion
 	
-	static setHeight = function() { #region
-		if(!auto_height) return;
+	static setDimension = function(_w = 128, _h = 128, _apply = true) { #region
+		INLINE
 		
-		var _hi = ui(junction_draw_pad_y);
-		var _ho = ui(junction_draw_pad_y);
+		min_w = _w; 
+		min_h = _h; 
+		
+		if(_apply) {
+			w = _w;
+			h = _h;
+		}
+	} #endregion
+	
+	static setHeight = function() { #region
+		w = show_parameter? 192 : min_w;
+		
+		if(!auto_height) return;
+		junction_draw_hei_y = show_parameter? 32 : 24;
+		junction_draw_pad_y = show_parameter? min_h : 32;
+		
+		var _hi = junction_draw_pad_y + show_parameter * 4;
+		var _ho = junction_draw_pad_y + show_parameter * 4;
+		
 		var _prev_surf = previewable && preview_draw && 
 			(	is_surface(getGraphPreviewSurface()) || 
 				(preview_channel >= 0 && preview_channel < ds_list_size(outputs) && outputs[| preview_channel].type == VALUE_TYPE.surface)
@@ -349,15 +369,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
-			if(is_instanceof(_inp, NodeValue) && _inp.isVisible()) _hi += 24;
-			if(is_instanceof(_inp, NodeModule)) {
-				for( var j = 0, m = ds_list_size(_inp.inputs); j < m; j++ ) 
-					if(_inp.inputs[| j].isVisible()) _hi += 24;
-			}
+			if(is_instanceof(_inp, NodeValue) && _inp.isVisible()) 
+				_hi += show_parameter && _inp.graphWidgetH? _inp.graphWidgetH + 4 : junction_draw_hei_y;
 		}
 		
 		for( var i = 0; i < ds_list_size(outputs); i++ )
-			if(outputs[| i].isVisible()) _ho += 24;
+			if(outputs[| i].isVisible()) _ho += junction_draw_hei_y;
 		
 		h = max(min_h, _prev_surf * 128, _hi, _ho, attributes.node_height);
 	} run_in(1, function() { setHeight(); }); #endregion
@@ -903,7 +920,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			out_cache_len = ds_list_size(outputs);
 		}
 			
-		var _iny = yy + ui(junction_draw_pad_y) * _s;
+		var _iny = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * show_parameter) * _s;
 		
 		for(var i = 0; i < inputs_amount; i++) {
 			var idx = inputs_index[i];
@@ -911,18 +928,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			jun.x = xx;
 			jun.y = _iny;
-			_iny += 24 * _s * jun.isVisible();
+			_iny += junction_draw_hei_y * _s * jun.isVisible();
 		}
 		
 		xx = xx + w * _s;
-		var _outy = yy + ui(junction_draw_pad_y) * _s;
+		var _outy = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * show_parameter) * _s;
+		
 		for(var i = 0; i < outputs_amount; i++) {
 			var idx = outputs_index[i];
 			jun = outputs[| idx];
 			
 			jun.x = xx;
 			jun.y = _outy;
-			_outy += 24 * _s * jun.isVisible();
+			_outy += junction_draw_hei_y * _s * jun.isVisible();
 		}
 		
 		onPreDraw(_x, _y, _s, _iny, _outy);
@@ -956,16 +974,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var pad_label = draw_name && display_parameter.avoid_label;
 		
 		var _w = w;
-		var _h = h;
+		var _h = show_parameter? min_h : h;
 		
-		_w *= display_parameter.preview_scale / 100 * _s;
-		_h *= display_parameter.preview_scale / 100 * _s;
+		_w *= _s;
+		_h *= _s;
 		
 		_w -= draw_padding * 2;
 		_h -= draw_padding * 2 + 20 * pad_label;
 		
 		var _xc = xx +  w * _s / 2;
-		var _yc = yy + (h * _s + 20 * pad_label) / 2;
+		var _yc = yy + _h / 2 + pad_label * 20 + draw_padding;
+		
+		_w *= display_parameter.preview_scale / 100;
+		_h *= display_parameter.preview_scale / 100;
 		
 		var x0 = _xc - _w / 2;
 		var x1 = _xc + _w / 2;
@@ -1012,6 +1033,66 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_text_cut(round(xx + ui(8)), round(yy + ui(10)), _name, w * _s - ui(8), ts);
 			
 		draw_set_alpha(1);
+	} #endregion
+	
+	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus) { #region
+		if(!active) return;
+		var hover = noone;
+		var amo   = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+		
+		var wh = 28 * _s;
+		var ww = w * _s * 0.5;
+		var wx = _x + w * _s - ww - 8;
+		var lx = _x + 12 * _s;
+		
+		var _m = [ _mx, _my ];
+		var rx = PANEL_GRAPH.x;
+		var ry = PANEL_GRAPH.y;
+		
+		var jy = 0;
+		var y1 = _y + h * _s;
+		var ay = 0;
+		
+		if(wh > line_get_height(f_p2))
+		for(var i = 0; i < amo; i++) {
+			var ind = getInputJunctionIndex(i);
+			if(ind == noone) continue;
+			
+			var jun = ds_list_get(inputs, ind, noone);
+			if(jun == noone || is_undefined(jun)) continue;
+			if(!jun.isVisible()) continue;
+			
+			if(jy == 0) jy = jun.y - wh / 2;
+			
+			var _param = new widgetParam(wx, jy, ww, wh, jun.showValue(),, _m, rx, ry);
+			    _param.s    = wh;
+			    _param.font = f_p2;
+			
+			jun.y = jy + wh / 2;
+				
+			if(is_instanceof(jun, checkBox))
+				_param.halign = fa_center;
+				
+			draw_set_text(f_sdf, fa_left, fa_center, jun.color_display);
+			draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
+			
+			var wd = jun.graphWidget;
+			if(wd == noone) {
+				jy += wh + 4 * _s;
+				continue;
+			}
+			
+			wd.setFocusHover(_focus, _hover);
+			var _h = wd.drawParam(_param);
+			
+			jun.graphWidgetH = _h / _s;
+			jy += _h + 4 * _s;
+				
+			if(wd.isHovering()) draggable = false;
+		}
+		
+		ay = jy + 2 * _s;
+		h += max(0, (ay - y1) / _s);
 	} #endregion
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
@@ -1165,11 +1246,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			} else {
 				jun.draw_blend_color = bg;
 				jun.draw_blend       = -1;
-			}
-			
-			if(is_instanceof(jun, NodeModule)) {
-				jun.drawConnections(params, _inputs);
-				continue;
 			}
 			
 			if(jun.isLeaf()) continue;
@@ -1333,16 +1409,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		drawNodeBase(xx, yy, _s);
 		drawDimension(xx, yy, _s);
 		
+		draggable = true;
+		
 		if(previewable) {
 			if(preview_draw) drawPreview(xx, yy, _s);
 			
-			try { onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.getFocusingNode() == self); }
+			try { 
+				var _hover = PANEL_GRAPH.node_hovering == self;
+				var _focus = PANEL_GRAPH.getFocusingNode() == self;
+				
+				onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); 
+			}
 			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
-			
-		} else {
-			var bbox = drawGetBbox(xx, yy, _s);
-			draw_sprite_ext(THEME.preview_hide, 0, bbox.xc, bbox.yc, _s, _s, 0, c_white, 0.25);
-		}
+		} 
+		
+		if(show_parameter)
+			drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus);
 		
 		drawNodeName(xx, yy, _s);
 		
@@ -1762,7 +1844,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_map.type    = instanceof(self);
 			_map.group   = group == noone? group : group.node_id;
 			_map.tool    = isTool;
-			_map.previewable = previewable;
+			
+			_map.previewable    = previewable;
+			_map.show_parameter = show_parameter;
 		}
 		
 		_map.attri = attributeSerialize();
@@ -1833,9 +1917,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			x = struct_try_get(load_map, "x");
 			y = struct_try_get(load_map, "y");
-			renderActive = struct_try_get(load_map, "render", true);
-			previewable  = struct_try_get(load_map, "previewable", previewable);
-			isTool       = struct_try_get(load_map, "tool");
+			renderActive   = struct_try_get(load_map, "render", true);
+			previewable    = struct_try_get(load_map, "previewable", previewable);
+			isTool         = struct_try_get(load_map, "tool");
+			show_parameter = struct_try_get(load_map, "show_parameter");
 		}
 		
 		if(struct_has(load_map, "attri"))

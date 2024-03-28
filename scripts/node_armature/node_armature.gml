@@ -1,9 +1,6 @@
 function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Create";
-	
-	w = 96;
-	h = 72;
-	min_h = h;
+	setDimension(96, 72);
 	
 	//inputs[| 0] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	

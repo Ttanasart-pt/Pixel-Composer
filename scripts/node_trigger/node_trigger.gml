@@ -1,9 +1,7 @@
 function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Trigger";
 	update_on_frame = true;
-	
-	w = 96;
-	min_h = 32 + 24 * 1;
+	setDimension(96, 32 + 24 * 1);
 	
 	inputs[| 0] = nodeValue("Trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false)
 		.setVisible(false, false);

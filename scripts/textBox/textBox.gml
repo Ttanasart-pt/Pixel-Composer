@@ -392,6 +392,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		w = _w;
 		h = _h;
 		
+		hovering = false;
 		_x += irandom_range(-shake_amount, shake_amount); 
 		_y += irandom_range(-shake_amount, shake_amount); 
 		if(shake_amount) shake_amount--;
@@ -408,12 +409,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			case fa_bottom: _y = _y - _h;		break;	
 		}
 		
-		if(side_button && instanceof(side_button) == "buttonClass") {
-			var bs = min(h, ui(32));
-			
+		var _bs = min(h, ui(32));
+		
+		if(_w - _bs > ui(100) && side_button && instanceof(side_button) == "buttonClass") {
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - bs, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide);
-			_w -= bs + ui(4);
+			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			_w -= _bs + ui(4);
 		}
 		
 		draw_set_font(font == noone? f_p0 : font);
@@ -594,6 +595,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 			
 			if(hover && hoverRect) {
+				hovering = true;
 				draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5 + (0.5 * interactable));	
 					
 				if(mouse_press(mb_left, active))

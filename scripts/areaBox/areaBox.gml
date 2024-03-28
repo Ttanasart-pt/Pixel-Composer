@@ -126,6 +126,11 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			unit.triggerButton.register(parent);
 	} #endregion
 	
+	static isHovering = function() { 
+		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
+		return false;
+	}
+	
 	static drawParam = function(params) { #region
 		setParam(params);
 		for(var i = 0; i < 4; i++) tb[i].setParam(params);
@@ -146,15 +151,8 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		var _bact = adjust_shape && active;
 		var _bhov = adjust_shape && hover;
 		var _bind = array_safe_get(_data, 4);
-		
-		if(!is_array(_bind) && buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, _bact, _bhov,, THEME.inspector_area, _bind) == 2) {
-			var val = (array_safe_get(_data, 4) + 1) % 2;
-			onModify(4, val);
-		}
-		
-		var _tx =_x + _bs + ui(4);
-		    
-		if(onSurfaceSize != -1) {
+		  
+		if(_w - _bs > ui(100) && onSurfaceSize != -1) {
 			tooltip.index = mode;
 			
 			var _bx   = _x + _w - _bs;
@@ -237,23 +235,33 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			_w -= _bs + ui(4);
 		} 
 		
-		_w -= _bs + ui(4);
-		
-		if(mode == AREA_MODE.padding) { #region
-			var cc    = link_value? COLORS._main_accent : COLORS._main_icon;
-			var _bx   = _x;
-			var _by   = _y + _h + ui(4) + _h / 2 - _bs / 2;
-			var _btxt = __txt("Link values");
+		if(_w - _bs > ui(100)) { #region
 			
-			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, _btxt, THEME.value_link, link_value, cc) == 2)
-				link_value = !link_value;
+			if(!is_array(_bind) && buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, _bact, _bhov,, THEME.inspector_area, _bind) == 2) {
+				var val = (array_safe_get(_data, 4) + 1) % 2;
+				onModify(4, val);
+			}
+		  
+			if(mode == AREA_MODE.padding) {
+				var cc    = link_value? COLORS._main_accent : COLORS._main_icon;
+				var _bx   = _x;
+				var _by   = _y + _h + ui(4) + _h / 2 - _bs / 2;
+				var _btxt = __txt("Link values");
+			
+				if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, _btxt, THEME.value_link, link_value, cc) == 2)
+					link_value = !link_value;
+			}
+			
+			_w -= _bs + ui(4);
+			_x +=_bs + ui(4);
+			
 		} #endregion
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y + _h + ui(4), _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y + _h + ui(4), _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y + _h + ui(4), _w, _h, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y + _h + ui(4), _w, _h, c_white, 0.5 + 0.5 * interactable);	
 		
 		for(var i = 0; i < 4; i++)
 			tb[i].setFocusHover(active, hover);
@@ -264,10 +272,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		var tb_h = _h;
 			
 		if(mode == AREA_MODE.area) { #region
-			var tb_x0 = _tx;
+			var tb_x0 = _x;
 			var tb_y0 = _y;
 			
-			var tb_x1 = _tx + tb_w;
+			var tb_x1 = _x + tb_w;
 			var tb_y1 = _y + _h + ui(4);
 			
 			tb[0].label = "x";
@@ -284,16 +292,16 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		#endregion
 		
 		} else if(mode == AREA_MODE.padding) { #region
-			var tb_lx = _tx;
+			var tb_lx = _x;
 			var tb_ly = _y;
 			
-			var tb_rx = _tx + tb_w;
+			var tb_rx = _x + tb_w;
 			var tb_ry = _y;
 			
-			var tb_tx = _tx;
+			var tb_tx = _x;
 			var tb_ty = _y + _h + ui(4);
 			
-			var tb_bx = _tx + tb_w;
+			var tb_bx = _x + tb_w;
 			var tb_by = _y + _h + ui(4);
 			
 			tb[2].label = "l";
@@ -310,10 +318,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		#endregion
 		
 		} else if(mode == AREA_MODE.two_point) { #region
-			var tb_x0 = _tx;
+			var tb_x0 = _x;
 			var tb_y0 = _y;
 			
-			var tb_x1 = _tx + tb_w;
+			var tb_x1 = _x + tb_w;
 			var tb_y1 = _y + _h + ui(4);
 			
 			tb[0].label = "x0";

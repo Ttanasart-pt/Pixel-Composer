@@ -1,7 +1,6 @@
 function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Palette Replace";
-	
-	w = 96;
+	setDimension(96);
 	
 	inputs[| 0] = nodeValue("Palette in", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
 		.setDisplay(VALUE_DISPLAY.palette)

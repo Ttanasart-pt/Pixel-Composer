@@ -1,9 +1,7 @@
 function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "WAV File Out";
 	color = COLORS.node_blend_input;
-	
-	h = 72;
-	min_h = h;
+	setDimension(, 72);
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "audio file|*.wav" })

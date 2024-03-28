@@ -1,9 +1,6 @@
 function Node_Struct_JSON_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "JSON Parse";
-	
-	w = 96;
-	h = 32 + 24;
-	min_h = h;
+	name = "JSON Parse";
+	setDimension(96, 32 + 24);
 	
 	inputs[| 0] = nodeValue("JSON string", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, 0)
 		.setVisible(true, true);

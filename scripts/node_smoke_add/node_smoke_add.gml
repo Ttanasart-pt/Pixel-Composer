@@ -2,8 +2,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	name  = "Add Emitter";
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
-	w     = 96;
-	min_h = 96;
+	setDimension(96, 96);
 	
 	manual_ungroupable	 = false;
 	

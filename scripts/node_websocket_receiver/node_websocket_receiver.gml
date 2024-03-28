@@ -1,10 +1,6 @@
 function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Websocket Receiver";
-	
-	w = 128;
-	h = 128;
-	min_h = h;
-	
+		
 	inputs[| 0] = nodeValue("Port", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 22400);
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);

@@ -6,9 +6,6 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	manual_ungroupable	 = false;
 	
-	w = 128;
-	h = 128;
-	min_h = h;
 	previewable = true;
 	
 	inputs[| 0] = nodeValue("Render dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF)

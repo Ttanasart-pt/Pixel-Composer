@@ -1,11 +1,14 @@
 function widget() constructor {
 	active  = false;
 	hover   = false;
+	hovering= false;
 	iactive = false;
 	ihover  = false;
 	parent  = noone;
 	interactable = true;
 	side_button  = noone;
+	
+	hide = false;
 	
 	lua_thread = noone;
 	lua_thread_key = "";
@@ -53,6 +56,8 @@ function widget() constructor {
 		else if(y + ui(16) > parent.surface_h)
 			parent.scroll_y_to -= abs(parent.surface_h - y) + h + ui(16);
 	}
+	
+	static isHovering = function() { return hovering; }
 	
 	static activate = function() { 
 		if(!interactable) return;

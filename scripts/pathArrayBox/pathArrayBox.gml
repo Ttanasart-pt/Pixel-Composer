@@ -29,6 +29,8 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		w = _w;
 		h = _h;
 		
+		hovering = false;
+		
 		var _bs = min(_h, ui(32));
 		openPath.setFocusHover(active, hover);
 		openPath.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
@@ -38,6 +40,7 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+			hovering = true;
 			draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);
 			
 			if(mouse_press(mb_left, active)) {

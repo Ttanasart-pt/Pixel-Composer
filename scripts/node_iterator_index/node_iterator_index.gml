@@ -4,8 +4,7 @@ function Node_Iterator_Index(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	destroy_when_upgroup = true;
 	manual_ungroupable	 = false;
 	
-	w     = 96;
-	min_h = 80;
+	setDimension(96, 80);
 	
 	outputs[| 0] = nodeValue("Loop index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	

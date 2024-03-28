@@ -56,6 +56,11 @@ function controlPointBox(_onModify) : widget() constructor {
 			widgets[i].register(parent); 
 	}
 	
+	static isHovering = function() { 
+		for( var i = 0, n = array_length(widgets); i < n; i++ ) if(widgets[i].isHovering()) return true;
+		return false;
+	}
+	
 	static drawParam = function(params) { #region
 		setParam(params);
 		tbCx.setParam(params);

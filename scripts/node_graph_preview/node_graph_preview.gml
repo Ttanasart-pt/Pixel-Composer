@@ -2,8 +2,6 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Graph Preview";
 	preview_draw = true;
 	
-	min_h = 128;
-	
 	inputs[| 0]  = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.rejectArray();
 	

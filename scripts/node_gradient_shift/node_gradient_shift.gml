@@ -1,6 +1,6 @@
 function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Gradient Shift";
-	w    = 96;
+	setDimension(96);
 	
 	inputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) )
 		.setVisible(true, true);

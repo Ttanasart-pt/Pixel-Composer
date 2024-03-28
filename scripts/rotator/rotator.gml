@@ -26,6 +26,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		tb_value.register(parent);
 	} #endregion
 	
+	static isHovering = function() { return dragging || tb_value.hovering; }
+	
 	static drawParam = function(params) { #region
 		setParam(params);
 		tb_value.setParam(params);
@@ -43,7 +45,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		 
 		var _bs = min(_h, ui(32));
 		
-		if(side_button) {
+		if(_w - _bs > ui(100) && side_button) {
 			side_button.setFocusHover(active, hover);
 			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
 			_w -= _bs + ui(4);

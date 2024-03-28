@@ -1,9 +1,6 @@
 function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Array Convolute";
-	
-	w = 96;
-	h = 32 + 24;
-	min_h = h;
+	name = "Array Convolute";
+	setDimension(96, 32 + 24);
 	
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setArrayDepth(1)

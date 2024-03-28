@@ -1,10 +1,7 @@
 function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
 	name  = "Vector3";
 	color = COLORS.node_blend_number;
-	
-	w = 96;
-	min_h = 32 + 24 * 3;
-	draw_padding = 4;
+	setDimension(96, 32 + 24 * 3);
 	
 	inputs[| 0] = nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);

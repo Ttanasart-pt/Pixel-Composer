@@ -55,6 +55,11 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			tb[i].register(parent);
 	} #endregion
 	
+	static isHovering = function() { 
+		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
+		return false;
+	}
+	
 	static drawParam = function(params) { #region
 		setParam(params);
 		for(var i = 0; i < size; i++) tb[i].setParam(params);

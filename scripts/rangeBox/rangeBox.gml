@@ -53,6 +53,11 @@ function rangeBox(_type, _onModify) : widget() constructor {
 			tb[1].register(parent);
 	}
 	
+	static isHovering = function() { 
+		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
+		return false;
+	}
+	
 	static drawParam = function(params) {
 		setParam(params);
 		for(var i = 0; i < 2; i++) tb[i].setParam(params);
@@ -71,7 +76,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		var _icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		var _bs = min(_h, ui(32));
 		
-		if(side_button) {
+		if(_w - _bs > ui(100) && side_button) {
 			side_button.setFocusHover(active, hover);
 			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
 			_w -= _bs + ui(4);

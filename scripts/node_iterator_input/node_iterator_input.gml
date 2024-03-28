@@ -5,10 +5,7 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	local_output = noone;
 	
 	manual_ungroupable	 = false;
-	
-	w = 96;
-	h = 32 + 24 * 2;
-	min_h = h;
+	setDimension(96, 32 + 24 * 2);
 	
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
 	

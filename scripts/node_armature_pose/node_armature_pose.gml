@@ -1,9 +1,6 @@
 function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Pose";
-	
-	w = 96;
-	h = 72;
-	min_h = h;
+	setDimension(96, 72);
 	
 	inputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.input, VALUE_TYPE.armature, noone)
 		.setVisible(true, true);

@@ -22,6 +22,11 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 		self.parent = parent;
 	}
 	
+	static isHovering = function() { 
+		for( var i = 0, n = array_length(buttons); i < n; i++ ) if(buttons[i].isHovering()) return true;
+		return false;
+	}
+	
 	static drawParam = function(params) {
 		setParam(params);
 		for(var i = 0; i < array_length(data); i++) 
@@ -51,6 +56,7 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 			
 			buttons[i].toggled = tog;
 			buttons[i].draw(bx, _y, ww, _h, _m, spr);
+			
 			if(buttons[i].clicked) {
 				value ^= (1 << i);
 				onClick(value);

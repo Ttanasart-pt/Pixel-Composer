@@ -763,6 +763,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		w = _w;
 		h = _h;
 		
+		hovering = false;
+		
 		autocomplete_delay += delta_time / 1000;
 		_stretch_width      = _w < 0;
 		_text               = string_real(_text);
@@ -772,13 +774,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(_stretch_width) _w = string_width(self == WIDGET_CURRENT? _input_text : _text) + ui(16);
 		
 		w  = _w;
+		var _bs = min(h, ui(32));
 		
-		if(side_button && instanceof(side_button) == "buttonClass") {
-			var bs = min(h, ui(32));
-			
+		if(_w - _bs > ui(100) && side_button && instanceof(side_button) == "buttonClass") {
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - bs, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide);
-			_w -= bs + ui(8);
+			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			_w -= _bs + ui(8);
 		}
 		
 		var tx = ui(8);
@@ -963,6 +964,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			BLEND_NORMAL
 			
 			if(hover && hoverRect) {
+				hovering = true;
+				
 				if(hide)
 					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, boxColor, 0.5);	
 				else

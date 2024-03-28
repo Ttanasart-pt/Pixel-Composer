@@ -16,7 +16,7 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 	
 	static trigger = function() {
 		open = true;
-		with(dialogCall(o_dialog_assetbox, x + w + open_rx, y + open_ry)) {
+		with(dialogCall(o_dialog_assetbox, x + open_rx, y + open_ry)) {
 			target = other;
 			gotoDir(other.def_path);
 		}

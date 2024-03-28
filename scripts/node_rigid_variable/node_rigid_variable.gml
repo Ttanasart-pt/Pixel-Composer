@@ -6,9 +6,7 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	manual_ungroupable	 = false;
 	
-	w = 96;
-	h = 80;
-	min_h = h;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
 		.setVisible(true, true);

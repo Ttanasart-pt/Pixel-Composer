@@ -1,9 +1,5 @@
 function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Audio Window";
-	
-	w = 128;
-	h = 128;
-	min_h = h;
+	name = "Audio Window";
 	
 	inputs[| 0] = nodeValue("Audio data", self, JUNCTION_CONNECT.input, VALUE_TYPE.audioBit, noone)
 		.setVisible(true, true);

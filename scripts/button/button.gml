@@ -68,12 +68,14 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		w = _w;
 		h = _h;
 		
-		clicked = false;
+		clicked  = false;
+		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
 		var b = colorMultiply(self.blend, blend);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched_ext(spr, toggled? 2 : 1, _x, _y, _w, _h, b, 1);
+			
 			if(!activate_on_press && pressed && mouse_release(mb_left, active))
 				trigger();
 				
