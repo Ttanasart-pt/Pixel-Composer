@@ -6,7 +6,8 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	var index = 0;
 	var __ax = lengthdir_x(_val * _scale, _angle);
 	var __ay = lengthdir_y(_val * _scale, _angle);
-						
+	var _r   = 10;
+	
 	var _ax = _x + __ax * _s;
 	var _ay = _y + __ay * _s;
 						
@@ -25,9 +26,10 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		}
 	}
 						
-	if(interact && active && point_in_circle(_mx, _my, _ax, _ay, 8)) {
+	if(interact && point_in_circle(_mx, _my, _ax, _ay, _r)) {
 		hover = 1;
 		index = 1;
+		
 		if(mouse_press(mb_left, active)) {
 			drag_type = 1;
 			drag_mx   = _mx;
@@ -36,11 +38,13 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			drag_sy   = _ay;
 		}
 	} 
-						
-	draw_sprite_colored(_spr, index, _ax, _ay);
-	
+		
+	if(!struct_has(self, "__overlay_hover")) __overlay_hover = 0;
+	__overlay_hover = lerp_float(__overlay_hover, index, 4);
+	draw_anchor(__overlay_hover, _ax, _ay, _r);
+		
 	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-	draw_text(_ax, _ay - 4, name);
+	draw_text_add(round(_ax), round(_ay - 4), name);
 	
 	return hover;
 }

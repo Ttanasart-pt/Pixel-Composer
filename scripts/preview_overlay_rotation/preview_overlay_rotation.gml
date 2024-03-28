@@ -3,17 +3,14 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	var hover = -1;
 	if(is_array(_val)) return hover;
 	
-	var _ax = _x + lengthdir_x(_rad, _val);
-	var _ay = _y + lengthdir_y(_rad, _val);
-	var _id = 0;
+	var _ax   = _x + lengthdir_x(_rad, _val);
+	var _ay   = _y + lengthdir_y(_rad, _val);
+	var index = 0;
+	var _r    = 10;
 						
 	if(drag_type) {
-		draw_set_color(COLORS._main_accent);
-		draw_set_alpha(0.5);
-		draw_circle_prec(_x, _y, _rad, true);
-		draw_set_alpha(1);
-							
-		_id = 1;
+		index = 1;
+		
 		var angle = point_direction(_x, _y, _mx, _my);
 		if(key_mod_press(CTRL))
 			angle = round(angle / 15) * 15;
@@ -27,14 +24,10 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		}
 	}
 						
-	if(interact && active && point_in_circle(_mx, _my, _ax, _ay, 8)) {
-		draw_set_color(COLORS._main_accent);
-		draw_set_alpha(0.5);
-		draw_circle_prec(_x, _y, _rad, true);
-		draw_set_alpha(1);
+	if(interact && point_in_circle(_mx, _my, _ax, _ay, _r)) {
 		hover = 1;
+		index = 1;
 		
-		_id = 1;
 		if(mouse_press(mb_left, active)) {
 			drag_type = 1;
 			drag_mx   = _mx;
@@ -44,9 +37,30 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		}
 	} 
 	
-	draw_sprite_colored(THEME.anchor_rotate, _id, _ax, _ay, 1, _val - 90);
+	if(index) {
+		draw_set_color(COLORS._main_accent);
+		draw_set_alpha(0.5);
+		draw_circle_prec(_x, _y, _rad, true);
+		draw_set_alpha(1);
+	}
+	
+	if(!struct_has(self, "__overlay_hover")) __overlay_hover = 0;
+	__overlay_hover = lerp_float(__overlay_hover, index, 4);
+	
+	shader_set(sh_node_widget_rotator);
+		shader_set_color("color", COLORS._main_accent);
+		shader_set_f("index",     __overlay_hover);
+		shader_set_f("angle",     degtorad(_val + 90));
+		
+		var _arx = _x + lengthdir_x(_rad - 4, _val);
+		var _ary = _y + lengthdir_y(_rad - 4, _val);
+		draw_sprite_stretched(s_fx_pixel, 0, _arx - _r * 2, _ary - _r * 2, _r * 4, _r * 4);
+	shader_reset();
+	
+	//draw_sprite_colored(THEME.anchor_rotate, index, _ax, _ay, 1, _val - 90);
+	
 	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-	draw_text(_ax, _ay - 4, name);
+	draw_text_add(round(_ax), round(_ay - 4), name);
 	
 	return hover;
 }

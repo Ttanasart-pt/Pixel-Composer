@@ -6,13 +6,14 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	
 	var __ax = _val[0];
 	var __ay = _val[1];
+	var _r   = 10;
 						
-	var _ax = __ax * _s + _x;
-	var _ay = __ay * _s + _y;
-	var _id = 0;
+	var _ax    = __ax * _s + _x;
+	var _ay    = __ay * _s + _y;
+	var _index = 0;
 						
 	if(drag_type) {
-		_id = 1;
+		_index = 1;
 		
 		var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
 		var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
@@ -33,9 +34,9 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		}
 	}
 						
-	if(interact && active && point_in_circle(_mx, _my, _ax, _ay, 8)) {
-		hover = 1;
-		_id   = 1;
+	if(interact && point_in_circle(_mx, _my, _ax, _ay, _r)) {
+		hover  = 1;
+		_index = 1;
 		
 		if(mouse_press(mb_left, active)) {
 			drag_type = 1;
@@ -45,10 +46,13 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			drag_sy   = _ay;
 		}
 	} 
+		
+	if(!struct_has(self, "__overlay_hover")) __overlay_hover = 0;
+	__overlay_hover = lerp_float(__overlay_hover, _index, 4);
+	draw_anchor(__overlay_hover, _ax, _ay, _r);
 	
-	draw_sprite_colored(_spr, _id, _ax, _ay);
 	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-	draw_text(_ax, _ay - 4, name);
+	draw_text_add(round(_ax), round(_ay - 4), name);
 	
 	return hover;
 }

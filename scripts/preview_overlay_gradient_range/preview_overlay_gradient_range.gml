@@ -18,10 +18,11 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	var _ay1 = __y1 * _s + _y;
 	
 	var cc = COLORS.labels[2];
+	var _r = 10;
 	
 	draw_set_text(f_p1, fa_left, fa_bottom, cc);
-	draw_text(_ax0 + ui(4), _ay0 - ui(4), "1");
-	draw_text(_ax1 + ui(4), _ay1 - ui(4), "2");
+	draw_text_add(_ax0 + ui(4), _ay0 - ui(4), "1");
+	draw_text_add(_ax1 + ui(4), _ay1 - ui(4), "2");
 	
 	var tx0, ty0, tx1, ty1;
 	
@@ -50,8 +51,8 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	var d1 = false;
 	
 	if(drag_type) {
-		if(drag_type == 1) { draw_sprite_colored(THEME.anchor_selector, 1, _ax0, _ay0, 1, 0, cc); d0 = true; }
-		if(drag_type == 2) { draw_sprite_colored(THEME.anchor_selector, 1, _ax1, _ay1, 1, 0, cc); d1 = true; }
+		if(drag_type == 1) { d0 = true; }
+		if(drag_type == 2) { d1 = true; }
 		
 		var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
 		var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
@@ -77,8 +78,6 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 			d0 = true;
 			hover = 1;
 			
-			draw_sprite_colored(THEME.anchor_selector, 1, _ax0, _ay0, 1, 0, cc);
-			
 			if(mouse_press(mb_left, active)) {
 				drag_type = hover;
 				drag_mx   = _mx;
@@ -90,8 +89,6 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 			d1 = true;
 			hover = 2;
 			
-			draw_sprite_colored(THEME.anchor_selector, 1, _ax1, _ay1, 1, 0, cc);
-			
 			if(mouse_press(mb_left, active)) {
 				drag_type = hover;
 				drag_mx   = _mx;
@@ -101,9 +98,13 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 			}
 		}
 	} 
-
-	if(d0 == false) draw_sprite_colored(THEME.anchor_selector, 0, _ax0, _ay0, 1, 0, cc);
-	if(d1 == false) draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1, 1, 0, cc);
-		
+	
+	if(!struct_has(self, "__overlay_hover")) __overlay_hover = [ 0, 0 ];
+	__overlay_hover[0] = lerp_float(__overlay_hover[0], d0, 4);
+	__overlay_hover[1] = lerp_float(__overlay_hover[1], d1, 4);
+	
+	draw_anchor(__overlay_hover[0], _ax0, _ay0, _r);
+	draw_anchor(__overlay_hover[0], _ax1, _ay1, _r);
+	
 	return hover;
 }

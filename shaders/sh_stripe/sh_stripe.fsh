@@ -2,10 +2,12 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 #define PI 3.14159265359
+#define PALETTE_LIMIT 128
 
 uniform vec2  dimension;
 uniform vec2  position;
 uniform int   blend;
+uniform float progress;
 
 uniform vec2      amount;
 uniform int       amountUseSurf;
@@ -23,9 +25,12 @@ uniform vec2      ratio;
 uniform int       ratioUseSurf;
 uniform sampler2D ratioSurf;
 
+uniform int   coloring;
 uniform vec4  color0;
 uniform vec4  color1;
-uniform int   gradient_use;
+
+uniform vec4  palette[PALETTE_LIMIT];
+uniform int   paletteAmount;
 
 #region //////////////////////////////////// GRADIENT ////////////////////////////////////
 	#define GRADIENT_LIMIT 128
@@ -200,10 +205,11 @@ void main() { #region
 	float slot    = floor(prog / _a);
 	float ground  = (slot + (random(vec2(slot + 0.)) * 2. - 1.) * rnd * 0.5 + 0.) * _a;
 	float ceiling = (slot + (random(vec2(slot + 1.)) * 2. - 1.) * rnd * 0.5 + 1.) * _a;
-	float _s      = (prog - ground) / (ceiling - ground);
+	float _s      = fract((prog - ground) / (ceiling - ground) + progress);
 	
-	if(gradient_use == 0) {
+	if(coloring == 0) {
 		if(blend == 0) gl_FragColor = _s > rat? color0 : color1;
+		
 		else if(blend == 1) { 
 			_s = sin(_s * 2. * PI) * 0.5 + 0.5;
 			gl_FragColor = mix(color0, color1, _s);
@@ -214,8 +220,22 @@ void main() { #region
 			
 			gl_FragColor = mix(color0, color1, _s);
 		}
-	} else {
-		if(_s > rat)	gl_FragColor = gradientEval(random(vec2(slot)));
-		else			gl_FragColor = gradientEval(random(vec2(slot + 1.)));
+		
+	} else if(coloring == 1) {
+		int ind = int(mod(_s > rat? slot : slot + 1., float(paletteAmount)));
+		
+		if(blend == 0 || blend == 2)
+			gl_FragColor = palette[ind];
+		
+		else if(blend == 1) { 
+			vec4  c0  = _s > rat? palette[ind] : palette[int(mod(float(ind - 1 + paletteAmount), float(paletteAmount)))];
+			vec4  c1  = _s > rat? palette[int(mod(float(ind + 1), float(paletteAmount)))] : palette[ind];
+			
+			gl_FragColor = mix(c0, c1, _s > rat? _s - rat : _s + (1. - rat));
+			
+		}
+		
+	} else if(coloring == 2) {
+		gl_FragColor = gradientEval(random(vec2(_s > rat? slot : slot + 1.)));
 	}
 } #endregion

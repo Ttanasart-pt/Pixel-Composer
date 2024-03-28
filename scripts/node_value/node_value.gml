@@ -1502,14 +1502,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					var cy = (value[1] + hh - value[3]) / 2;
 					var sw = abs((ww - value[0]) - value[2]) / 2;
 					var sh = abs(value[1] - (hh - value[3])) / 2;
-					return [cx, cy, sw, sh, value[4]];
+					
+					return [cx, cy, sw, sh, value[4], value[5]];
 					
 				case AREA_MODE.two_point : 
 					var cx = (value[0] + value[2]) / 2
 					var cy = (value[1] + value[3]) / 2;
 					var sw = abs(value[0] - value[2]) / 2;
 					var sh = abs(value[1] - value[3]) / 2;
-					return [cx, cy, sw, sh, value[4]];
+					
+					return [cx, cy, sw, sh, value[4], value[5]];
 			}
 		} #endregion
 		

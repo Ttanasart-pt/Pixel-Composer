@@ -16,6 +16,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	var _ay1 = (__ay + __ay1) * _s + _y;
 						
 	draw_set_color(COLORS._main_accent);
+	
 	switch(_val[PUPPET_CONTROL.mode]) {
 		case PUPPET_FORCE_MODE.move :
 			draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
@@ -35,6 +36,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			} else 
 				draw_sprite_colored(THEME.anchor_scale_hori, drag_type == 3, _ax + __wd * _s, _ay);
 			break;
+			
 		case PUPPET_FORCE_MODE.wind :
 			var dir  = _val[PUPPET_CONTROL.fy];
 			var str  = _val[PUPPET_CONTROL.fx] * _s;

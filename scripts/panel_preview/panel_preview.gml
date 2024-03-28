@@ -1088,45 +1088,49 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		#region surface array
 			preview_x_max = 0;
-			var _xx = tool_side_drawing * ui(40);
-			var xx  = _xx + preview_x + ui(8);
-			var yy  = h - toolbar_height - prev_size - ui(8);
-			if(my > yy - 8) mouse_on_preview = 0;
-			var hoverable = pHOVER && point_in_rectangle(mx, my, _xx, ui(32), w, h - toolbar_height);
-		
-			for(var i = 0; i < array_length(pseq); i++) {
-				var prev   = pseq[i];
-				if(is_instanceof(prev, __d3dMaterial))
-					prev = prev.surface;
-				if(!is_surface(prev)) continue;
-				
-				var prev_w = surface_get_width_safe(prev);
-				var prev_h = surface_get_height_safe(prev);
-				var ss     = prev_size / max(prev_w, prev_h);
-				var prev_sw = prev_w * ss;
 			
-				draw_set_color(COLORS.panel_preview_surface_outline);
-				draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
+			if(array_length(pseq) > 1) {
+				var _xx = tool_side_drawing * ui(40);
+				var xx  = _xx + preview_x + ui(8);
+				var yy  = h - toolbar_height - prev_size - ui(8);
+			
+				if(my > yy - 8) mouse_on_preview = 0;
+				var hoverable = pHOVER && point_in_rectangle(mx, my, _xx, ui(32), w, h - toolbar_height);
+			
+				for(var i = 0; i < array_length(pseq); i++) {
+					var prev   = pseq[i];
+					if(is_instanceof(prev, __d3dMaterial))
+						prev = prev.surface;
+					if(!is_surface(prev)) continue;
 				
-				if(hoverable && point_in_rectangle(mx, my, xx, yy, xx + prev_sw, yy + prev_h * ss)) {
-					if(mouse_press(mb_left, pFOCUS)) {
-						_node.preview_index = i;
-						_node.onValueUpdate(0);
-						if(resetViewOnDoubleClick)
-							do_fullView = true;
+					var prev_w = surface_get_width_safe(prev);
+					var prev_h = surface_get_height_safe(prev);
+					var ss     = prev_size / max(prev_w, prev_h);
+					var prev_sw = prev_w * ss;
+			
+					draw_set_color(COLORS.panel_preview_surface_outline);
+					draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
+				
+					if(hoverable && point_in_rectangle(mx, my, xx, yy, xx + prev_sw, yy + prev_h * ss)) {
+						if(mouse_press(mb_left, pFOCUS)) {
+							_node.preview_index = i;
+							_node.onValueUpdate(0);
+							if(resetViewOnDoubleClick)
+								do_fullView = true;
+						}
+						draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 1);
+					} else {
+						draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 0.5);	
 					}
-					draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 1);
-				} else {
-					draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 0.5);	
-				}
 				
-				if(i == _node.preview_index) {
-					draw_set_color(COLORS._main_accent);
-					draw_rectangle(xx, yy, xx + prev_sw, yy + prev_h * ss, true);
-				}
+					if(i == _node.preview_index) {
+						draw_set_color(COLORS._main_accent);
+						draw_rectangle(xx, yy, xx + prev_sw, yy + prev_h * ss, true);
+					}
 			
-				xx += prev_sw + ui(8);
-				preview_x_max += prev_sw + ui(8);
+					xx += prev_sw + ui(8);
+					preview_x_max += prev_sw + ui(8);
+				}
 			}
 		#endregion
 		

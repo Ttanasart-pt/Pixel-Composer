@@ -329,7 +329,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get(_data, 3), _m);
 		#endregion
 		}
-			
+		
 		//if(unit != noone && unit.reference != noone) {
 		//	unit.triggerButton.setFocusHover(active, hover);
 		//	unit.draw(_x + ui(56 + 48 + 8), _y - ui(28), ui(32), ui(32), _m);
