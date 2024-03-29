@@ -71,18 +71,21 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		
 		for(var i = 0; i < 4; i++) tb[i].setFocusHover(active, hover);
 		
-		b_link.setFocusHover(active, hover);
-		b_link.icon_index = linked;
-		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
-		
 		var _bs = min(_h, ui(32));
-		var _bx = _x;
-		var _by = _y + _h / 2 - _bs / 2;
-		b_link.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide);
 		
-		_w -= _bs + ui(4);
-		_x += _bs + ui(4);
+		if((_w - _bs) / 2 > ui(64)) {
+			b_link.setFocusHover(active, hover);
+			b_link.icon_index = linked;
+			b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
+			b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
+		
+			var _bx = _x;
+			var _by = _y + _h / 2 - _bs / 2;
+			b_link.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide);
+		
+			_w -= _bs + ui(4);
+			_x += _bs + ui(4);
+		}
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
 		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	

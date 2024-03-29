@@ -111,40 +111,42 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		current_value = _data;
 		
+		var sz  = min(size, array_length(_data));
 		var _bs = min(_h, ui(32));
 		
-		if(_w - _bs > ui(100) && side_button) {
-			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
-			_w -= _bs + ui(4);
-		}
-		
-		if(unit != noone && unit.reference != noone) {
-			unit.triggerButton.setFocusHover(iactive, ihover);
-			unit.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m);
-			_w -= _bs + ui(4);
-		}
-		
-		if(linkable) {
-			var _icon_blend = linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
-			var bx = _x;
-			var by = _y + _h / 2 - _bs / 2;
-			
-			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
-				linked = !linked;
-				_display_data.linked =  linked;
-				
-				if(linked) {
-					onModify(0, _data[0]);
-					onModify(1, _data[0]);
-				}
+		if((_w - _bs) / sz > ui(48)) {
+			if(side_button) {
+				side_button.setFocusHover(active, hover);
+				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+				_w -= _bs + ui(4);
 			}
 			
-			_x += _bs + ui(4);
-			_w -= _bs + ui(4);
+			if(unit != noone && unit.reference != noone) {
+				unit.triggerButton.setFocusHover(iactive, ihover);
+				unit.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m);
+				_w -= _bs + ui(4);
+			}
+			
+			if(linkable) {
+				var _icon_blend = linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
+				var bx = _x;
+				var by = _y + _h / 2 - _bs / 2;
+			
+				if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+					linked = !linked;
+					_display_data.linked =  linked;
+				
+					if(linked) {
+						onModify(0, _data[0]);
+						onModify(1, _data[0]);
+					}
+				}
+			
+				_x += _bs + ui(4);
+				_w -= _bs + ui(4);
+			}
 		}
 		
-		var sz = min(size, array_length(_data));
 		var ww = per_line? _w : _w / sz;
 		
 		if(!per_line) {

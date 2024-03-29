@@ -42,81 +42,85 @@ function rotatorRange(_onModify) : widget() constructor {
 		if(!is_real(_data[1])) return;
 		
 		var _r  = _h;
-		var _tx = _x + _r + ui(4);
-		var _tw = _w - _r - ui(4);
+		var _drawRot = _w - _r > ui(64);
+		var _tx = _drawRot? _x + _r + ui(4) : _x;
+		var _tw = _drawRot? _w - _r - ui(4) : _w;
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, c_white, 1);
 		draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, c_white, 0.5 + 0.5 * interactable);	
 		
-		var _tw = (_w - _r - ui(4)) / 2;
+		_tw /= 2;
 		
 		tb_min.setFocusHover(active, hover);
-		tb_min.draw(_x + _r + ui(4), _y, _tw, _h, _data[0], _m);
+		tb_min.draw(_tx, _y, _tw, _h, _data[0], _m);
 		
 		tb_max.setFocusHover(active, hover);
-		tb_max.draw(_x + _r + ui(4) + _tw, _y, _tw, _h, _data[1], _m);
+		tb_max.draw(_tx + _tw, _y, _tw, _h, _data[1], _m);
 		
-		var _kx = _x + _r / 2;
-		var _ky = _y + _r / 2;
-		var _kr = (_r - ui(12)) / 2;
-		var _kc = COLORS._main_icon;
+		if(_drawRot) {
+			var _kx = _x + _r / 2;
+			var _ky = _y + _r / 2;
+			var _kr = (_r - ui(12)) / 2;
+			var _kc = COLORS._main_icon;
 		
-		if(dragging_index) {
-			_kc = COLORS._main_icon_light;
+			if(dragging_index) {
+				_kc = COLORS._main_icon_light;
 			
-			var val = point_direction(_kx, _ky, _m[0], _m[1]);
-			if(key_mod_press(CTRL)) val = round(val / 15) * 15;
+				var val = point_direction(_kx, _ky, _m[0], _m[1]);
+				if(key_mod_press(CTRL)) val = round(val / 15) * 15;
 			
-			var val, real_val;
-			var modi = false;
+				var val, real_val;
+				var modi = false;
 				
-			real_val[0]   = round(dragging.delta_acc + drag_sv[0]);
-			real_val[1]   = round(dragging.delta_acc + drag_sv[1]);
+				real_val[0]   = round(dragging.delta_acc + drag_sv[0]);
+				real_val[1]   = round(dragging.delta_acc + drag_sv[1]);
 				
-			val   = key_mod_press(CTRL)? round(real_val[0] / 15) * 15 : real_val[0];
-			modi |= onModify(0, val);
+				val   = key_mod_press(CTRL)? round(real_val[0] / 15) * 15 : real_val[0];
+				modi |= onModify(0, val);
 				
-			val   = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
-			modi |= onModify(1, val);
+				val   = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
+				modi |= onModify(1, val);
 				
-			if(modi) UNDO_HOLDING = true;
-			MOUSE_BLOCK = true;
+				if(modi) UNDO_HOLDING = true;
+				MOUSE_BLOCK = true;
 			
-			if(mouse_check_button_pressed(mb_right)) {
-				for( var i = 0; i < 2; i++ ) onModify(i, drag_dat[i]);
+				if(mouse_check_button_pressed(mb_right)) {
+					for( var i = 0; i < 2; i++ ) onModify(i, drag_dat[i]);
 						
-				instance_destroy(rotator_Rotator);
-				dragging       = noone;
-				dragging_index = -1;
-				UNDO_HOLDING   = false;	
+					instance_destroy(rotator_Rotator);
+					dragging       = noone;
+					dragging_index = -1;
+					UNDO_HOLDING   = false;	
 				
-			} else if(mouse_release(mb_left)) {
-				instance_destroy(rotator_Rotator);
-				dragging       = noone;
-				dragging_index = -1;
-				UNDO_HOLDING   = false;
+				} else if(mouse_release(mb_left)) {
+					instance_destroy(rotator_Rotator);
+					dragging       = noone;
+					dragging_index = -1;
+					UNDO_HOLDING   = false;
+				}
+		
+			} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r)) {
+				_kc = COLORS._main_icon_light;
+			
+				if(mouse_press(mb_left, active)) {
+					dragging_index = 1;
+					drag_sv  = [ _data[0], _data[1] ];
+					drag_dat = [ _data[0], _data[1] ];
+					dragging = instance_create(0, 0, rotator_Rotator).init(_m, _kx, _ky);
+				}
 			}
 		
-		} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r)) {
-			_kc = COLORS._main_icon_light;
+			draw_set_color(CDEF.main_dkgrey);
+			draw_circle_angle(_kx, _ky, _kr, _data[0], _data[1], 32);
+		
+			shader_set(sh_widget_rotator_range);
+				shader_set_f("side",     _r);
+				shader_set_color("color",   _kc);
+				shader_set_f("angle",     degtorad(_data[0]), degtorad(_data[1]));
 			
-			if(mouse_press(mb_left, active)) {
-				dragging_index = 1;
-				drag_sv  = [ _data[0], _data[1] ];
-				drag_dat = [ _data[0], _data[1] ];
-				dragging = instance_create(0, 0, rotator_Rotator).init(_m, _kx, _ky);
-			}
+				draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _r, _r);
+			shader_reset();
 		}
-		
-		draw_set_color(CDEF.main_dkgrey);
-		draw_circle_angle(_kx, _ky, _kr, _data[0], _data[1], 32);
-		
-		shader_set(sh_widget_rotator_range);
-			shader_set_color("color",   _kc);
-			shader_set_f("angle",     degtorad(_data[0]), degtorad(_data[1]));
-			
-			draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _r, _r);
-		shader_reset();
 		
 		resetFocus();
 		

@@ -557,6 +557,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidgetRaw  = noone;
 		graphWidget    = noone;
 		graphWidgetH   = 0;
+		graphWidgetP   = new widgetParam(0, 0, 0, 0, 0);
 		mapWidget      = noone;
 		active_tooltip = "";
 		
@@ -671,6 +672,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#region ---- inspector ----
 		visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || _type == VALUE_TYPE.PCXnode;
 		show_in_inspector = true;
+		visible_in_list   = true;
 	
 		display_type = VALUE_DISPLAY._default;
 		if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
@@ -2260,8 +2262,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static drawJunction = function(_s, _mx, _my, sca = 1) { #region
-		if(!isVisible()) return false;
-		
 		var ss       = max(0.25, _s / 2);
 		var hov      = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
 		var is_hover = hov && point_in_circle(_mx, _my, x, y, 10 * _s * sca);
@@ -2293,8 +2293,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static drawNameBG = function(_s) { #region
-		if(!isVisible()) return false;
-		
 		draw_set_text(f_p1, fa_left, fa_center);
 		
 		var tw = string_width(name) + 32;
@@ -2313,8 +2311,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static drawName = function(_s, _mx, _my) { #region
-		if(!isVisible()) return false;
-		
 		var _hover = PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, x, y, 10 * _s);
 		var _draw_cc = _hover? COLORS._main_text : COLORS._main_text_sub;
 		draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
@@ -2413,9 +2409,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(index == -1) return true;
 		
-		if(is_array(node.input_display_list))
-			return array_exists(node.input_display_list, index);
-		return true;
+		return visible_in_list;
 	} #endregion
 	
 	static extractNode = function(_type = extract_node) { #region

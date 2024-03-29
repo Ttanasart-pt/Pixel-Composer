@@ -76,27 +76,29 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		var _icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		var _bs = min(_h, ui(32));
 		
-		if(_w - _bs > ui(100) && side_button) {
-			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+		if((_w - _bs) / 2 > ui(64)) {
+			if(side_button) {
+				side_button.setFocusHover(active, hover);
+				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+				_w -= _bs + ui(4);
+			}
+			
+			var bx  = _x;
+			var by  = _y + _h / 2 - _bs / 2;
+		
+			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+				linked = !linked;
+				_display_data.linked = linked;
+			
+				if(linked) {
+					onModify(0, _data[0]);
+					onModify(1, _data[0]);
+				}
+			}
+		
+			_x += _bs + ui(4);
 			_w -= _bs + ui(4);
 		}
-		
-		var bx  = _x;
-		var by  = _y + _h / 2 - _bs / 2;
-		
-		if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
-			linked = !linked;
-			_display_data.linked = linked;
-			
-			if(linked) {
-				onModify(0, _data[0]);
-				onModify(1, _data[0]);
-			}
-		}
-		
-		_x += _bs + ui(4);
-		_w -= _bs + ui(4);
 		
 		var ww = linked? _w : _w / 2;
 		disp_w = disp_w == 0? ww : lerp_float(disp_w, ww, 5);

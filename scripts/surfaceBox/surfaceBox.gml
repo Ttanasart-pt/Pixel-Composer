@@ -119,7 +119,7 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 			draw_rectangle(sx0, sy0, sx1 - 1, sy1 - 1, true);
 			
 			if(_type == VALUE_TYPE.surface)
-				draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - ui(20), _y + _h / 2, 1, COLORS._main_icon);
+				draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - min(_h / 2, ui(20)), _y + _h / 2, min(1, _h / 64), COLORS._main_icon, 0.5 + 0.5 * interactable);
 		}
 		
 		if(WIDGET_CURRENT == self)

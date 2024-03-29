@@ -43,7 +43,7 @@ function transformBox(_onModify) : widget() constructor {
 	
 	static isHovering = function() { 
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
-		return false;
+		return hovering;
 	}
 	
 	static drawParam = function(params) { 
@@ -64,19 +64,23 @@ function transformBox(_onModify) : widget() constructor {
 		if(array_empty(_data)) return 0;
 		if(is_array(_data[0])) return 0;
 		
+		hovering = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
+		
 		rot.setFocusHover(active, hover);
 		for(var i = 0; i < array_length(_data); i++) {
 			tb[i].setFocusHover(active, hover);
 			tb[i].hide = true;
 		}
 		
+		var _lab = _w > ui(160);
+		
 		draw_set_text(font, fa_left, fa_center, CDEF.main_dkgrey);
 		
-		var lbw = string_width(__txt("Position")) + ui(8);
+		var lbw = _lab? string_width(__txt("Position")) + ui(8) : 0;
 		var tbw = (_w - lbw) / 2;
 		var tbh = _h;
 		
-		draw_text_add(_x, _y + tbh / 2, __txt("Position"));
+		if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Position"));
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x + lbw, _y, _w - lbw, tbh, c_white, 1);
 		draw_sprite_stretched_ext(THEME.textbox, 0, _x + lbw, _y, _w - lbw, tbh, c_white, 0.5 + 0.5 * interactable);	
@@ -91,7 +95,7 @@ function transformBox(_onModify) : widget() constructor {
 		_y += tbh + ui(4);
 		
 		draw_set_text(font, fa_left, fa_center, CDEF.main_dkgrey);
-		draw_text_add(_x, _y + tbh / 2, __txt("Scale"));
+		if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Scale"));
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x + lbw, _y, _w - lbw, tbh, c_white, 1);
 		draw_sprite_stretched_ext(THEME.textbox, 0, _x + lbw, _y, _w - lbw, tbh, c_white, 0.5 + 0.5 * interactable);	

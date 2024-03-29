@@ -47,6 +47,9 @@
 	kb_hold  = false;
 	kb_hkey  = 0;
 	
+	fpss = array_create(10);
+	fpsr = 0;
+	
 	_cursor_lock = false;
 	
 	watcher_surface = surface_create(1, 1);

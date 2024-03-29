@@ -82,22 +82,25 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		
 		for(var i = 0; i < 4; i++) tb[i].setFocusHover(active, hover);
 		
-		b_link.setFocusHover(active, hover);
-		b_link.icon_index = linked;
-		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
-		
 		var _bs = min(_h, ui(32));
-		var _bx = _x;
-		var _by = _y + _h / 2 - _bs / 2;
-		b_link.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide);
 		
-		_w -= _bs + ui(4);
-		_x += _bs + ui(4);
+		if((_w - _bs) / 2 > ui(64)) {
+			b_link.setFocusHover(active, hover);
+			b_link.icon_index = linked;
+			b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
+			b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
 		
-		if(unit != noone && unit.reference != noone) {
-			unit.triggerButton.setFocusHover(iactive, ihover);			
-			unit.draw(_bx, _by + ui(4) + _h, _bs, _bs, _m);
+			var _bx = _x;
+			var _by = _y + _h / 2 - _bs / 2;
+			b_link.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide);
+		
+			_w -= _bs + ui(4);
+			_x += _bs + ui(4);
+			
+			if(unit != noone && unit.reference != noone) {
+				unit.triggerButton.setFocusHover(iactive, ihover);			
+				unit.draw(_bx, _by + ui(4) + _h, _bs, _bs, _m);
+			}
 		}
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);

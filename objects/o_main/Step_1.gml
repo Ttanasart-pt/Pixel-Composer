@@ -22,6 +22,19 @@ _HOVERING_ELEMENT = noone;
 	}
 #endregion
 
+#region fpss
+	if(fpsr++ % 5 == 0) {
+		var ff = 0;
+		for( var i = 1; i < 10; i++ ) {
+			fpss[i] = fpss[i - 1]
+			ff += fpss[i];
+		}
+		fpss[0] = fps_real;
+		ff     += fps_real;
+		FPS_REAL = round(ff / 10);
+	}
+#endregion
+
 #region window & mouse
 	//if(keyboard_check_pressed(vk_f12)) DEBUG = !DEBUG;
 	

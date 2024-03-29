@@ -100,7 +100,8 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
-		var _arw = sprite_get_width(arrow_spr) + ui(8);
+		var _ars = min(1, _h / 64);
+		var _arw = sprite_get_width(arrow_spr) * _ars + ui(8);
 		var _spr = is_instanceof(_selVal, scrollItem) && _selVal.spr;
 		
 		var _x0  = _x;
@@ -117,7 +118,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		
 		if(_spr) draw_sprite_ext(_selVal.spr, _selVal.spr_ind, _x + ui(16), _yc, 1, 1, 0, _selVal.spr_blend, 1);
 		
-		draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, 1, COLORS._main_icon, 0.5 + 0.5 * interactable);
+		draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	

@@ -3,6 +3,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform float side;
 uniform vec4  color;
 uniform vec2  angle;
 
@@ -23,9 +24,9 @@ void main() {
 	bool  inside = dist < 0.;
 	
 	dist = abs(dist);
-	alp = max(alp, smoothstep(0.1, 0., dist));
-	alp = max(alp, smoothstep(0.1, 0., line_segment(angle[0])));
-	alp = max(alp, smoothstep(0.1, 0., line_segment(angle[1])));
+	alp = max(alp, smoothstep(2. / side, 0.8 / side, dist));
+	alp = max(alp, smoothstep(2. / side, 0.8 / side, line_segment(angle[0])));
+	alp = max(alp, smoothstep(2. / side, 0.8 / side, line_segment(angle[1])));
 	
 	gl_FragColor = vec4(color.rgb, alp);
 }

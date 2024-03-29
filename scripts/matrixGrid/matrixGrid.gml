@@ -95,33 +95,36 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		w = _w;
 		h = _h * size;
 		
-		if(extras && instanceof(extras) == "buttonClass") {
-			extras.setFocusHover(active, hover);			
-			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
-			_w -= ui(40);
-		}
+		var _bs = min(_h, ui(32));
+		if((_w - _bs) / size > ui(64)) {
+			if(extras && instanceof(extras) == "buttonClass") {
+				extras.setFocusHover(active, hover);			
+				extras.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+				_w -= _bs + ui(8);
+			}
 		
-		if(unit != noone && unit.reference != noone) {
-			_w += ui(4);
+			if(unit != noone && unit.reference != noone) {
+				_w += ui(4);
 			
-			unit.triggerButton.setFocusHover(iactive, ihover);
-			unit.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m);
-			_w -= ui(40);
+				unit.triggerButton.setFocusHover(iactive, ihover);
+				unit.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m);
+				_w -= _bs + ui(8);
+			}
+		
+			b_link.setFocusHover(active, hover);
+			b_link.icon_index = linked;
+			b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
+			b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
+				
+			var th = _h * size - ui(8);
+			var bx = _x;
+			var by = _y + th / 2 - _bs / 2;
+			b_link.draw(bx, by, _bs, _bs, _m, THEME.button_hide);
+			
+			_x += _bs + ui(4);
+			_w -= _bs + ui(4);
+		
 		}
-		
-		b_link.setFocusHover(active, hover);
-		b_link.icon_index = linked;
-		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
-		
-		var th = _h * size - ui(8);
-		
-		var bx = _x;
-		var by = _y + th / 2 - ui(24 / 2);
-		b_link.draw(bx, by, ui(24), ui(24), _m, THEME.button_hide);
-		
-		_x += ui(28);
-		_w -= ui(28);
 		
 		var ww = _w / size;
 		

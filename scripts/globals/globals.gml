@@ -17,10 +17,12 @@
 #region ======================================================================= MAIN =======================================================================
 	globalvar OS, DEBUG, THEME, COLOR_KEYS;
 	globalvar CMD, CMDIN;
+	globalvar FPS_REAL;
 	
 	OS    = os_type;
 	CMD   = [];
 	CMDIN = [];
+	FPS_REAL = 0;
 	
 	DEBUG = false;
 	THEME = new Theme();

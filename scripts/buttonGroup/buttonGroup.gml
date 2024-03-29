@@ -42,6 +42,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	
 	static drawParam = function(params) {
 		setParam(params);
+		sb_small.setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
 	}

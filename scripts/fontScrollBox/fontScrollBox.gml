@@ -77,8 +77,8 @@ function fontScrollBox(_onModify) : widget() constructor {
 		else if(align == fa_left)
 			draw_text(_x + ui(8), _y + _h / 2 - ui(2), _text);
 		draw_set_alpha(1);
-		
-		draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + w - 20, _y + _h / 2, 1, COLORS._main_icon, 0.5 + 0.5 * interactable);
+
+		draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - min(_h / 2, ui(20)), _y + _h / 2, min(1, _h / 64), COLORS._main_icon, 0.5 + 0.5 * interactable);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	

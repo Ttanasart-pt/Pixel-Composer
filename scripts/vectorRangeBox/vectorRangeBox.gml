@@ -80,23 +80,25 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		var _icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		
 		var _bs = min(_h, ui(32));
-		var bx  = _x;
-		var by  = _y + _h / 2 - _bs / 2;
+		if((_w - _bs) / 2 > ui(64)) {
+			var bx  = _x;
+			var by  = _y + _h / 2 - _bs / 2;
 		
-		if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
-			linked = !linked;
-			_display_data.linked = linked;
+			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+				linked = !linked;
+				_display_data.linked = linked;
 			
-			if(linked) {
-				for(var i = 0; i < size; i += 2) {
-					onModify(i + 0, _data[i]);
-					onModify(i + 1, _data[i]);
+				if(linked) {
+					for(var i = 0; i < size; i += 2) {
+						onModify(i + 0, _data[i]);
+						onModify(i + 1, _data[i]);
+					}
 				}
 			}
-		}
 		
-		_x += _bs + ui(4);
-		_w -= _bs + ui(4);
+			_x += _bs + ui(4);
+			_w -= _bs + ui(4);
+		}
 		
 		var ww = _w / 2;
 		

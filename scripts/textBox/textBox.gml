@@ -429,8 +429,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		var tx = _x;
 		switch(align) {
-			case fa_left   : tx = _x + ui(8); break;
-			case fa_center : tx = _x + _w / 2; break;
+			case fa_left   : tx = _x + ui(8);      break;
+			case fa_center : tx = _x + _w / 2;     break;
 			case fa_right  : tx = _x + _w - ui(8); break;
 		}
 		
@@ -440,9 +440,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
 			
 			if(slide_range != noone) {
-				var _minn = slide_range[0];
-				var _maxx = slide_range[1];
-				var _rang = abs(_maxx - _minn);
+				var _minn    = slide_range[0];
+				var _maxx    = slide_range[1];
+				var _rang    = abs(_maxx - _minn);
 				var _currVal = toNumber(_current_text);
 			
 				if(sliding != 2) {
@@ -455,20 +455,22 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		}
 		
-		if(sliding == 2) {
-			var _ax0 = _x + ui(10);
-			var _ax1 = _x + _w - ui(10);
-			var _ay  = _y + _h / 2;
+		if(_w > ui(48)) {
+			if(sliding == 2) {
+				var _ax0 = _x + ui(10);
+				var _ax1 = _x + _w - ui(10);
+				var _ay  = _y + _h / 2;
 			
-			draw_sprite_ui_uniform(THEME.arrow, 2, _ax0, _ay, 1, COLORS._main_accent, 1);
-			draw_sprite_ui_uniform(THEME.arrow, 0, _ax1, _ay, 1, COLORS._main_accent, 1);
+				draw_sprite_ui_uniform(THEME.arrow, 2, _ax0, _ay, 1, COLORS._main_accent, 1);
+				draw_sprite_ui_uniform(THEME.arrow, 0, _ax1, _ay, 1, COLORS._main_accent, 1);
 			
-		} else if(label != "") {
-			draw_set_valign(fa_center)
-			draw_set_color(COLORS._main_text_sub);
-			draw_set_alpha(0.5);
-			draw_text_add(_x + ui(8), _y + _h / 2, label);
-			draw_set_alpha(1);
+			} else if(label != "") {
+				draw_set_valign(fa_center)
+				draw_set_color(COLORS._main_text_sub);
+				draw_set_alpha(0.5);
+				draw_text_add(_x + ui(8), _y + _h / 2, label);
+				draw_set_alpha(1);
+			}
 		}
 			
 		disp_x = lerp_float(disp_x, disp_x_to, 5);

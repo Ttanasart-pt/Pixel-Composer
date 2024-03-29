@@ -93,6 +93,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_name = true;
 		draggable = true;
 		
+		draw_boundary     = [ 0, 0, 0, 0 ];
 		draw_graph_culled = false;
 		
 		badgePreview = 0;
@@ -155,8 +156,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		input_hash_raw	  = "";
 		
 		inputs_amount  = 0;
-		in_cache_len   = 0;
 		inputs_index   = [];
+		in_cache_len   = 0;
+		
 		outputs_amount = 0;
 		outputs_index  = [];
 		out_cache_len  = 0;
@@ -308,12 +310,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		run_in(1, method(self, resetDefault));
 	
 	static getInputJunctionIndex = function(index) { #region
+		INLINE 
+		
 		if(input_display_list == -1 || !use_display_list)
 			return index;
 		
 		var jun_list_arr = input_display_list[index];
-		if(is_array(jun_list_arr)) return noone;
+		if(is_array(jun_list_arr))  return noone;
 		if(is_struct(jun_list_arr)) return noone;
+		
 		return jun_list_arr;
 	} #endregion
 	
@@ -324,6 +329,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} #endregion
 	
 	static updateIO = function() { #region
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
+			inputs[| i].visible_in_list = false;
+		
 		inputs_amount = (input_display_list == -1 || !use_display_list)? ds_list_size(inputs) : array_length(input_display_list);
 		inputs_index  = array_create(inputs_amount);
 		var _i = 0;
@@ -332,6 +340,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_input == noone) continue;
 			
 			inputs_index[_i++] = _input;
+			inputs[| _input].visible_in_list = true;
 		}
 		inputs_amount = _i;
 		array_resize(inputs_index, inputs_amount);
@@ -885,13 +894,36 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var x1 = (x + w) * _s + _x;
 		var y1 = (y + h) * _s + _y;
 		
+		draw_boundary[0] = minx;
+		draw_boundary[1] = miny;
+		draw_boundary[2] = maxx;
+		draw_boundary[3] = maxy;
+		
 		draw_graph_culled = !rectangle_in_rectangle(minx, miny, maxx, maxy, x0, y0, x1, y1);
+	} #endregion
+	
+	static getJunctionList = function() { #region
+		var amo   = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+		inputDisplayList = [];
+		
+		for(var i = 0; i < amo; i++) {
+			var ind = getInputJunctionIndex(i);
+			if(ind == noone) continue;
+			
+			var jun = ds_list_get(inputs, ind, noone);
+			if(jun == noone || is_undefined(jun)) continue;
+			if(!jun.isVisible()) continue;
+			
+			array_push(inputDisplayList, jun);
+		}
 	} #endregion
 	
 	static preDraw = function(_x, _y, _s) { #region
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		var jun;
+		
+		getJunctionList();
 		
 		var inspCount = hasInspector1Update() + hasInspector2Update();
 		var ind = 1;
@@ -913,10 +945,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		updatedOutTrigger.x = xx + w * _s;
 		updatedOutTrigger.y = yy + 10;
 		
-		if(in_cache_len != ds_list_size(inputs) || out_cache_len != ds_list_size(outputs)) {
+		if(in_cache_len != array_length(inputDisplayList) || out_cache_len != ds_list_size(outputs)) {
 			updateIO();
 			
-			in_cache_len  = ds_list_size(inputs);
+			in_cache_len  = array_length(inputDisplayList);
 			out_cache_len = ds_list_size(outputs);
 		}
 			
@@ -1038,7 +1070,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus) { #region
 		if(!active) return;
 		var hover = noone;
-		var amo   = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		
 		var wh = 28 * _s;
 		var ww = w * _s * 0.5;
@@ -1053,60 +1084,69 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var y1 = _y + h * _s;
 		var ay = 0;
 		
-		if(wh > line_get_height(f_p2))
-		for(var i = 0; i < amo; i++) {
-			var ind = getInputJunctionIndex(i);
-			if(ind == noone) continue;
-			
-			var jun = ds_list_get(inputs, ind, noone);
-			if(jun == noone || is_undefined(jun)) continue;
-			if(!jun.isVisible()) continue;
-			
-			if(jy == 0) jy = jun.y - wh / 2;
-			
-			var _param = new widgetParam(wx, jy, ww, wh, jun.showValue(),, _m, rx, ry);
-			    _param.s    = wh;
-			    _param.font = f_p2;
-			
-			jun.y = jy + wh / 2;
-				
-			if(is_instanceof(jun, checkBox))
-				_param.halign = fa_center;
-				
-			draw_set_text(f_sdf, fa_left, fa_center, jun.color_display);
-			draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
-			
-			var wd = jun.graphWidget;
-			if(wd == noone) {
-				jy += wh + 4 * _s;
-				continue;
-			}
-			
-			wd.setFocusHover(_focus, _hover);
-			var _h = wd.drawParam(_param);
-			
-			jun.graphWidgetH = _h / _s;
-			jy += _h + 4 * _s;
-				
-			if(wd.isHovering()) draggable = false;
-		}
+		var boundH = _x > draw_boundary[0] - w * _s && _x < draw_boundary[2];
+		var boundV = 1;//_y > draw_boundary[1] - h * _s && _y < draw_boundary[3];
 		
-		ay = jy + 2 * _s;
-		h += max(0, (ay - y1) / _s);
+		if(wh > line_get_height(f_p2)) {
+			for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
+				var jun = inputDisplayList[i];
+			
+				if(jy == 0) jy = jun.y - wh / 2;
+			
+				var _param = jun.graphWidgetP;
+			
+				_param.x    = wx;
+				_param.y    = jy;
+				_param.w    = ww;
+				_param.h    = wh;
+				_param.data = jun.showValue();
+				_param.m	= _m;
+				_param.rx	= rx;
+				_param.ry	= ry;
+				_param.s    = wh;
+				_param.font = f_p2;
+			
+				jun.y = jy + wh / 2;
+				
+				if(is_instanceof(jun, checkBox))
+					_param.halign = fa_center;
+			
+				//boundV = jy + max(wh, jun.graphWidgetH) > draw_boundary[1] && jy < draw_boundary[3];
+			
+				if((boundH && boundV) || jun.graphWidgetH == 0) {
+					draw_set_text(f_sdf, fa_left, fa_center, jun.color_display);
+					draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
+			
+					var wd = jun.graphWidget;
+			
+					if(wd == noone) {
+						jy += wh + 4 * _s;
+						continue;
+					}
+			
+					wd.setFocusHover(_focus, _hover);
+					var _h = wd.drawParam(_param);
+			
+					jun.graphWidgetH = _h / _s;
+				
+					if(wd.isHovering()) draggable = false;
+				}
+			
+				jy += (jun.graphWidgetH + 4) * _s;
+			}
+		
+			ay = jy + 2 * _s;
+			h += (ay - y1) / _s;
+		}
 	} #endregion
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
 		if(!active) return;
 		var hover = noone;
-		var amo   = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		gpu_set_texfilter(true);
 		
-		for(var i = 0; i < amo; i++) {
-			var ind = getInputJunctionIndex(i);
-			if(ind == noone) continue;
-			
-			var jun = ds_list_get(inputs, ind, noone);
-			if(jun == noone || is_undefined(jun)) continue;
+		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
+			var jun = inputDisplayList[i];
 			
 			if(jun.drawJunction(_s, _mx, _my))
 				hover = jun;
@@ -1157,20 +1197,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		show_output_name = _hov && point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
 		
 		if(show_input_name) {
-			for(var i = 0; i < amo; i++) {
-				var ind = getInputJunctionIndex(i);
-				if(ind == noone) continue;
-				if(!inputs[| ind]) continue;
-				
-				inputs[| ind].drawNameBG(_s);
+			for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
+				var jun = inputDisplayList[i];
+				jun.drawNameBG(_s);
 			}
 			
-			for(var i = 0; i < amo; i++) {
-				var ind = getInputJunctionIndex(i);
-				if(ind == noone) continue;
-				if(!inputs[| ind]) continue;
-				
-				inputs[| ind].drawName(_s, _mx, _my);
+			for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
+				var jun = inputDisplayList[i];
+				jun.drawName(_s, _mx, _my);
 			}
 		}
 		
