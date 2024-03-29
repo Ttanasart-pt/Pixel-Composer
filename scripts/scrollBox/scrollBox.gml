@@ -111,10 +111,12 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		if(_spr) _x0 += ui(32);
 		
 		draw_set_text(font, align, fa_center, COLORS._main_text);
-		draw_set_alpha(0.5 + 0.5 * interactable);
-				 if(align == fa_center) draw_text_add((_x0 + _x1) / 2, _yc, _text);
-			else if(align == fa_left)   draw_text_add(_x0 + ui(8),     _yc, _text);
-		draw_set_alpha(1);
+		if(_h >= line_get_height()) {
+			draw_set_alpha(0.5 + 0.5 * interactable);
+					 if(align == fa_center) draw_text_add((_x0 + _x1) / 2, _yc, _text);
+				else if(align == fa_left)   draw_text_add(_x0 + ui(8),     _yc, _text);
+			draw_set_alpha(1);
+		}
 		
 		if(_spr) draw_sprite_ext(_selVal.spr, _selVal.spr_ind, _x + ui(16), _yc, 1, 1, 0, _selVal.spr_blend, 1);
 		

@@ -43,7 +43,8 @@ function curveBox(_onModify) : widget() constructor {
 		w = _w; 
 		h = _h;
 		
-		var cw = _w - ui(32);
+		var drawScale = _w - ui(32) > ui(100);
+		var cw = drawScale? _w - ui(32) : _w;
 		hovering = false;
 		
 		if(!is_array(_data) || array_length(_data) == 0) return 0;
@@ -264,43 +265,45 @@ function curveBox(_onModify) : widget() constructor {
 		#endregion
 		
 		#region ==== buttons ====
-			var bs  = ui(20);
+			if(drawScale) {
+				var bs  = ui(20);
 			
-			var bxF = _x + cw + ui(8);
-			var bx  = bxF + ui(0);
+				var bxF = _x + cw + ui(8);
+				var bx  = bxF + ui(0);
 			
-			var by0 = _y;
-			var by1 = _y + _h - bs + ui(2);
+				var by0 = _y;
+				var by1 = _y + _h - bs + ui(2);
 			
-			var byF = _y + (bs + ui(6));
-			var byH = _h + ui(2) - (bs + ui(6)) * 2;
+				var byF = _y + (bs + ui(6));
+				var byH = _h + ui(2) - (bs + ui(6)) * 2;
 			
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, bxF, byF, bs, byH, COLORS.assetbox_current_bg, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, bxF, byF, bs, byH, COLORS.assetbox_current_bg, 1);
 			
-			var zH = ui(16);
-			var zy = byF + zH / 2 + (byH - zH) * (zoom_level_to - zoom_min) / (zoom_max - zoom_min);
+				var zH = ui(16);
+				var zy = byF + zH / 2 + (byH - zH) * (zoom_level_to - zoom_min) / (zoom_max - zoom_min);
 			
-			if(zooming) {
-				zoom_level_to = lerp(zoom_min, zoom_max, clamp((_m[1] - byF - zH / 2) / (byH - zH), 0, 1));
+				if(zooming) {
+					zoom_level_to = lerp(zoom_min, zoom_max, clamp((_m[1] - byF - zH / 2) / (byH - zH), 0, 1));
 				
-				if(mouse_release(mb_left))
-					zooming = false;
-			}
+					if(mouse_release(mb_left))
+						zooming = false;
+				}
 			
-			var cc = merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.5);
-			if(point_in_rectangle(_m[0], _m[1], bxF, byF, _x + _w, byF + byH)) {
-				cc = COLORS._main_icon;
-				if(mouse_press(mb_left, active)) 
-					zooming = true;
-			}
+				var cc = merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.5);
+				if(point_in_rectangle(_m[0], _m[1], bxF, byF, _x + _w, byF + byH)) {
+					cc = COLORS._main_icon;
+					if(mouse_press(mb_left, active)) 
+						zooming = true;
+				}
 			
-			draw_sprite_stretched_ext(THEME.timeline_dopesheet_bg, 0, bxF, zy - zH / 2, bs, zH, cc, 1);
+				draw_sprite_stretched_ext(THEME.timeline_dopesheet_bg, 0, bxF, zy - zH / 2, bs, zH, cc, 1);
 			
-			if(buttonInstant(THEME.button_hide, bx, by0, bs, bs, _m, active, hover,, THEME.add_16) == 2) 
-				zoom_level_to = clamp(zoom_level_to - 1, zoom_min, zoom_max);
+				if(buttonInstant(THEME.button_hide, bx, by0, bs, bs, _m, active, hover,, THEME.add_16) == 2) 
+					zoom_level_to = clamp(zoom_level_to - 1, zoom_min, zoom_max);
 				
-			if(buttonInstant(THEME.button_hide, bx, by1, bs, bs, _m, active, hover,, THEME.minus_16) == 2) 
-				zoom_level_to = clamp(zoom_level_to + 1, zoom_min, zoom_max);
+				if(buttonInstant(THEME.button_hide, bx, by1, bs, bs, _m, active, hover,, THEME.minus_16) == 2) 
+					zoom_level_to = clamp(zoom_level_to + 1, zoom_min, zoom_max);
+			}
 		#endregion
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + cw, _y + _h)) { #region

@@ -32,9 +32,11 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		hovering = false;
 		
 		var _bs = min(_h, ui(32));
-		openPath.setFocusHover(active, hover);
-		openPath.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
-		_w -= _bs + ui(4);
+		if(_w - _bs > ui(100)) {
+			openPath.setFocusHover(active, hover);
+			openPath.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			_w -= _bs + ui(4);
+		}
 		
 		var click = false;
 		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
@@ -65,10 +67,12 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 			txt += (i? ", " : "") + filename_name_only(_files[i]);
 		txt += "]";
 		
-		draw_set_alpha(aa);
 		draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-		draw_text_cut(_x + ui(8), _y + _h / 2, txt, _w - ui(16));
-		draw_set_alpha(1);
+		if(_h >= line_get_height()) {
+			draw_set_alpha(aa);
+			draw_text_cut(_x + ui(8), _y + _h / 2, txt, _w - ui(16));
+			draw_set_alpha(1);
+		}
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	

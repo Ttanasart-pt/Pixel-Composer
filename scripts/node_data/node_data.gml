@@ -82,6 +82,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		h = 128;
 		min_w = w;
 		min_h = h;
+		fix_h = h;
 		will_setHeight = false;
 		
 		selectable   = true;
@@ -385,7 +386,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 			if(outputs[| i].isVisible()) _ho += junction_draw_hei_y;
 		
-		h = max(min_h, _prev_surf * 128, _hi, _ho, attributes.node_height);
+		h     = max(min_h, _prev_surf * 128, _hi, _ho, attributes.node_height);
+		fix_h = h;
 	} run_in(1, function() { setHeight(); }); #endregion
 	
 	static setDisplayName = function(_name) { #region
@@ -1071,7 +1073,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return;
 		var hover = noone;
 		
-		var wh = 28 * _s;
+		var wh = junction_draw_hei_y * _s;
 		var ww = w * _s * 0.5;
 		var wx = _x + w * _s - ww - 8;
 		var lx = _x + 12 * _s;
@@ -1080,64 +1082,57 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var rx = PANEL_GRAPH.x;
 		var ry = PANEL_GRAPH.y;
 		
-		var jy = 0;
-		var y1 = _y + h * _s;
-		var ay = 0;
+		var jy = _y + junction_draw_pad_y * _s + wh / 2;
 		
 		var boundH = _x > draw_boundary[0] - w * _s && _x < draw_boundary[2];
 		var boundV = 1;//_y > draw_boundary[1] - h * _s && _y < draw_boundary[3];
+		var extY   = 0;
 		
-		if(wh > line_get_height(f_p2)) {
-			for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
-				var jun = inputDisplayList[i];
+		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
+			var jun = inputDisplayList[i];
+			draw_set_text(f_sdf, fa_left, fa_center, jun.color_display);
 			
-				if(jy == 0) jy = jun.y - wh / 2;
+			var _param = jun.graphWidgetP;
 			
-				var _param = jun.graphWidgetP;
-			
-				_param.x    = wx;
-				_param.y    = jy;
-				_param.w    = ww;
-				_param.h    = wh;
-				_param.data = jun.showValue();
-				_param.m	= _m;
-				_param.rx	= rx;
-				_param.ry	= ry;
-				_param.s    = wh;
-				_param.font = f_p2;
-			
-				jun.y = jy + wh / 2;
+			_param.w    = ww;
+			_param.h    = wh - 4 * _s;
+			_param.x    = wx;
+			_param.y    = jy - _param.h / 2;
 				
-				if(is_instanceof(jun, checkBox))
-					_param.halign = fa_center;
+			_param.data = jun.showValue();
+			_param.m	= _m;
+			_param.rx	= rx;
+			_param.ry	= ry;
+			_param.s    = wh;
+			_param.font = f_p2;
 			
-				//boundV = jy + max(wh, jun.graphWidgetH) > draw_boundary[1] && jy < draw_boundary[3];
-			
-				if((boundH && boundV) || jun.graphWidgetH == 0) {
-					draw_set_text(f_sdf, fa_left, fa_center, jun.color_display);
-					draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
-			
-					var wd = jun.graphWidget;
-			
-					if(wd == noone) {
-						jy += wh + 4 * _s;
-						continue;
-					}
-			
-					wd.setFocusHover(_focus, _hover);
-					var _h = wd.drawParam(_param);
-			
-					jun.graphWidgetH = _h / _s;
+			jun.y = jy;
 				
-					if(wd.isHovering()) draggable = false;
-				}
+			if(is_instanceof(jun, checkBox))
+				_param.halign = fa_center;
 			
-				jy += (jun.graphWidgetH + 4) * _s;
+			draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
+				
+			var wd = jun.graphWidget;
+			
+			if(wd == noone) {
+				jy += wh;
+				continue;
 			}
-		
-			ay = jy + 2 * _s;
-			h += (ay - y1) / _s;
+				
+			wd.setInteract(wh > line_get_height(f_p2));
+			wd.setFocusHover(_focus, _hover);
+			var _h = wd.drawParam(_param);
+			jun.graphWidgetH = _h / _s;
+					
+			extY += max(0, (jun.graphWidgetH + 4) - junction_draw_hei_y);
+					
+			if(wd.isHovering()) draggable = false;
+			
+			jy += (jun.graphWidgetH + 4) * _s;
 		}
+		
+		h = fix_h + extY;
 	} #endregion
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
