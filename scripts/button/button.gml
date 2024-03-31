@@ -115,6 +115,20 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		return _h;
 	} #endregion
+		
+	static clone = function() { #region
+		var cln = new buttonClass(onClick);
+		
+		cln.icon	   = icon;
+		cln.icon_blend = icon_blend;
+		cln.icon_index = icon_index;
+		
+		cln.text	= text;
+		cln.tooltip = tooltip;
+		cln.blend   = blend;
+		
+		return cln;
+	} #endregion
 }
 
 function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1) { #region

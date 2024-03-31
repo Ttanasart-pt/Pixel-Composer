@@ -77,4 +77,10 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new toggleGroup(data, onClick);
+		
+		return cln;
+	} #endregion
 }

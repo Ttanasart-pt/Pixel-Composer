@@ -66,6 +66,7 @@ function curveBox(_onModify) : widget() constructor {
 		
 		if(node_dragging != -1) { #region editing
 			show_coord = true;
+			_data = array_clone(_data);
 			
 			if(node_drag_typ == 0) { 
 				var node_point = (node_dragging - 2) / 6;
@@ -381,4 +382,10 @@ function curveBox(_onModify) : widget() constructor {
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new curveBox(onModify);
+		
+		return cln;
+	} #endregion
 }

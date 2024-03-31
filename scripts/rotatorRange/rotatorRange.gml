@@ -126,4 +126,10 @@ function rotatorRange(_onModify) : widget() constructor {
 		
 		return h;
 	} #endregion
+		
+	static clone = function() { #region
+		var cln = new rotatorRange(onModify);
+		
+		return cln;
+	} #endregion
 }

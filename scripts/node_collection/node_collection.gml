@@ -456,7 +456,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			array_push_unique(attributes.output_display_list, i);
 		output_display_list = attributes.output_display_list;
 		
-		setHeight();
+		refreshNodeDisplay();
 	} #endregion
 	
 	static getTool = function() { #region

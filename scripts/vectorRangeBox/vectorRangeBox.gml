@@ -1,5 +1,6 @@
 function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() constructor {
 	size     = _size;
+	type     = _type;
 	onModify = _onModify;
 	unit	 = _unit;
 	linked   = false;
@@ -134,5 +135,14 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		resetFocus();
 		
 		return h;
+	} #endregion
+	
+	static clone = function() { #region
+		var cln = new vectorRangeBox(size, type, onModify, unit);
+		
+		cln.axis   = axis;
+		cln.extras = extras;
+		
+		return cln;
 	} #endregion
 }

@@ -453,7 +453,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			array_foreach(nodes_selecting, function(node, index) {
 				if(index == 0) __temp_show = !node.previewable;
 				node.previewable = __temp_show;
-				node.setHeight();
+				node.refreshNodeDisplay();
 			});
 		} #endregion
 	
@@ -462,7 +462,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			array_foreach(nodes_selecting, function(node, index) {
 				if(index == 0) __temp_show = !node.show_parameter;
 				node.show_parameter = __temp_show;
-				node.setHeight();
+				node.refreshNodeDisplay();
 			});
 		} #endregion
 	

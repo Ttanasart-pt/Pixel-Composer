@@ -1,8 +1,8 @@
 function buttonColor(_onApply, dialog = noone) : widget() constructor {
-	onApply = _onApply;
-	parentDialog = dialog;
+	onApply       = _onApply;
+	parentDialog  = dialog;
 	current_value = 0;
-	triggered = false;
+	triggered     = false;
 	
 	onColorPick = function() {
 		var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
@@ -17,7 +17,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	is_picking = false;
 	
 	current_color = c_black;
-	b_picker = button(onColorPick);
+	b_picker      = button(onColorPick);
 	b_picker.icon = THEME.color_picker_dropper;
 	
 	b_quick_pick = button(function() {
@@ -152,6 +152,11 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		resetFocus();
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new buttonColor(onApply, parentDialog);
+		return cln;
+	} #endregion
 }
 
 function drawColor(color, _x, _y, _w, _h) {

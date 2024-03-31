@@ -678,7 +678,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
 		else if(_type == VALUE_TYPE.d3vertex)	display_type = VALUE_DISPLAY.d3vertex;
 		
-		display_data		= { update: method(node, node.triggerRender) };
+		display_data		= {};
 		display_attribute	= noone;
 		
 		popup_dialog = noone;
@@ -885,8 +885,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				switch(display_type) { 
 					case VALUE_DISPLAY._default :		#region
 						editWidget = new textBox(_txt, function(val) { return setValueInspector(val); } );
-						editWidget.slidable = true;
-						if(type == VALUE_TYPE.integer) editWidget.setSlidable();
+						editWidget.setSlidable();
 						
 						if(struct_has(display_data, "slide_speed")) editWidget.setSlidable(display_data.slide_speed);
 						if(struct_has(display_data, "unit"))		editWidget.unit			= display_data.unit;
@@ -1280,7 +1279,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		editWidgetRaw = editWidget;
-		graphWidget   = variable_clone(editWidget);
+		if(editWidget) graphWidget = editWidget.clone();
 		
 		for( var i = 0, n = ds_list_size(animator.values); i < n; i++ ) {
 			animator.values[| i].ease_in_type   = key_inter;
@@ -1338,7 +1337,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(inp.visible != vis) {
 			inp.visible = vis;
-			node.setHeight();
+			node.refreshNodeDisplay();
 		}
 	} #endregion
 	
@@ -1594,12 +1593,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit &= cache_value[3] == applyUnit;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
 			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
-			//cache_hit &= !expUse;
 			
 			if(cache_hit) {
+				print($"Get cache {name} = {cache_value[2]}");
+				
 				global.cache_hit++;
 				return cache_value[2];
 			}
+	
 		}
 		
 		var val = _getValue(_time, applyUnit, arrIndex, log);
@@ -1828,21 +1829,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return is_anim;
 	} #endregion
 	
+	show_val = [];
 	static showValue = function() { #region
-		var useCache = true;
-		if(display_type == VALUE_DISPLAY.area)
-			useCache = false;
+		INLINE
 		
-		var val = getValue(CURRENT_FRAME, false, 0, useCache, true);
+		var val = animator.values[| 0].value;
 		
-		if(isArray(val)) {
-			if(array_length(val) == 0) return 0;
-			var v = val[safe_mod(node.preview_index, array_length(val))];
-			if(array_length(v) >= 100) return $"[{array_length(v)}]";
+		if(value_from != noone || is_anim || expUse) 
+			val = getValue(CURRENT_FRAME, false, 0, true, true);
+			
+		else if(sep_axis) {
+			show_val = array_verify(show_val, array_length(animators));
+			for( var i = 0, n = array_length(animators); i < n; i++ )
+				show_val[i] = animators[i].values[| 0].value;
+			val = show_val;
 		}
-		
-		if(editWidget != noone && instanceof(editWidget) == "textBox" && string_length(string(val)) > 1024)
-			val = $"[Long string ({string_length(string(val))} char)]";
 		
 		return val;
 	} #endregion
@@ -1939,8 +1940,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var r = _node.inputs[| ind].setValueDirect(val, index);
 				if(_node == node) res = r;
 			}
-		} else 
+		} else {
 			res = setValueDirect(val, index);
+			
+			//print($"Node {node} : {node.name} {node.internalName}");
+			//print($"Inspecting {PANEL_INSPECTOR.inspecting} : {PANEL_INSPECTOR.inspecting.name} {PANEL_INSPECTOR.inspecting.internalName}");
+			//print($"{node == PANEL_INSPECTOR.inspecting}");
+			//print("");
+		}
 			
 		return res;
 	} #endregion
@@ -1966,6 +1973,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 			
 			updated = animator.setValue(_val, _inp && record, time); 
+			
 		}
 		
 		if(type == VALUE_TYPE.gradient)				updated = true;
@@ -1999,7 +2007,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_instanceof(node, Node))
 			node.setInputData(self.index, animator.getValue(time));
 		
-		if(tags != VALUE_TAG.none) return true;
+		if(tags == VALUE_TAG.updateInTrigger || tags == VALUE_TAG.updateOutTrigger) return true;
 		
 		if(_update) {
 			if(!IS_PLAYING) node.triggerRender();
@@ -2258,10 +2266,24 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return -1;
 	} #endregion
 	
-	static drawJunction = function(_s, _mx, _my, sca = 1) { #region
-		var ss       = max(0.25, _s / 2);
-		var hov      = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var is_hover = hov && point_in_circle(_mx, _my, x, y, 10 * _s * sca);
+	static drawJunction_fast = function(_s, _mx, _my) { #region
+		INLINE
+		
+		var hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
+		var is_hover = hov && abs(_mx - x) + abs(_my - y) < _s;
+		
+		draw_set_color(draw_fg);
+		draw_circle(x, y, _s, false);
+			
+		return is_hover;
+	} #endregion
+	
+	static drawJunction = function(_s, _mx, _my) { #region
+		_s /= 2;
+		
+		var hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
+		var _d  = 12 * _s;
+		var is_hover = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d, y + _d);
 		
 		var _bgS = THEME.node_junctions_bg;
 		var _fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
@@ -2272,7 +2294,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(draw_blend != -1)
 				_cbg = merge_color(draw_blend_color, _cbg, draw_blend);
 		
-			draw_sprite_ext(THEME.node_junction_inspector, is_hover, x, y, ss, ss, 0, _cbg, 1);
+			__draw_sprite_ext(THEME.node_junction_inspector, is_hover, x, y, _s, _s, 0, _cbg, 1);
 		} else {
 			var _cbg = draw_bg;
 			var _cfg = draw_fg;
@@ -2282,8 +2304,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_cfg = merge_color(draw_blend_color, _cfg, draw_blend);
 			}
 		
-			draw_sprite_ext(_bgS, draw_junction_index, x, y, ss, ss, 0, _cbg, 1);
-			draw_sprite_ext(_fgS, draw_junction_index, x, y, ss, ss, 0, _cfg, 1);
+			__draw_sprite_ext(_bgS, draw_junction_index, x, y, _s, _s, 0, _cbg, 1);
+			__draw_sprite_ext(_fgS, draw_junction_index, x, y, _s, _s, 0, _cfg, 1);
 		}
 		
 		return is_hover;

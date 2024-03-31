@@ -22,7 +22,7 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inParent.from = self;
 		
 		ds_list_add(group.inputs, inParent);
-		group.setHeight();
+		group.refreshNodeDisplay();
 		group.sortIO();
 		
 		return inParent;

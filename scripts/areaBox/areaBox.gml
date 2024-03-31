@@ -139,7 +139,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -360,5 +360,11 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
+	
+	static clone = function() { #region
+		var cln = new areaBox(onModify, unit);
+		
+		return cln;
+	} #endregion
 }

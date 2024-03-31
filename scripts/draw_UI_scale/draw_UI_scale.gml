@@ -1,12 +1,18 @@
+global.LINE_HEIGHTS = {};
+
 function line_get_height(font = noone, offset = 0) {
+	INLINE
+	var _f = font != noone? font : draw_get_font();
+	if(struct_has(global.LINE_HEIGHTS, _f)) return global.LINE_HEIGHTS[$ _f] + offset * UI_SCALE;
+	
 	var ff = draw_get_font();
 	
-	if(font != noone)
-		draw_set_font(font);
-	var hh = string_height("l") + offset * UI_SCALE;
-	
+	if(font != noone) draw_set_font(font);
+		var hh = string_height("l");
+		global.LINE_HEIGHTS[$ _f] = hh;	
 	draw_set_font(ff);
-	return hh;
+	
+	return hh + offset * UI_SCALE;
 }
 
 function line_get_width(txt, font = noone, offset = 0) {

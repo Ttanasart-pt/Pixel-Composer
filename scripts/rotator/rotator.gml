@@ -124,4 +124,10 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		
 		return h;
 	} #endregion
+	
+	static clone = function() { #region
+		var cln = new rotator(onModify, valStep);
+		
+		return cln;
+	} #endregion
 }

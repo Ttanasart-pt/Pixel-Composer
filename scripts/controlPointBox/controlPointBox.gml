@@ -150,4 +150,10 @@ function controlPointBox(_onModify) : widget() constructor {
 		resetFocus();
 		return yy - _y;
 	}
+	
+	static clone = function() { #region
+		var cln = new controlPointBox(onModify);
+		
+		return cln;
+	} #endregion
 }

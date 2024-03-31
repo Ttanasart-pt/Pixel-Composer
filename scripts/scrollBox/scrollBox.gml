@@ -130,4 +130,10 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		
 		return h;
 	} #endregion
+	
+	static clone = function() { #region
+		var cln = new scrollBox(data, onModify, update_hover);
+		
+		return cln;
+	} #endregion
 }

@@ -10,8 +10,7 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 	display_data = {};
 	
 	cb_atlas_crop = new checkBox(function() { 
-		display_data.atlas_crop = !display_data.atlas_crop; 
-		display_data.update();
+		display_data.atlas_crop = !display_data.atlas_crop;
 	});
 	
 	static trigger = function() {
@@ -135,4 +134,10 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new surfaceBox(onModify, def_path);
+		
+		return cln;
+	} #endregion
 }

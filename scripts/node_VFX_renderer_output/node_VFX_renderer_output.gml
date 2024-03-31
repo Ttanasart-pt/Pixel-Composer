@@ -61,7 +61,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		outParent.from = self;
 		
 		ds_list_add(group.outputs, outParent);
-		group.setHeight();
+		group.refreshNodeDisplay();
 		group.sortIO();
 	} if(!LOADING && !APPENDING) createOutput(); #endregion
 	

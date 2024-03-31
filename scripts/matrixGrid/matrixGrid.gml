@@ -1,4 +1,5 @@
 function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() constructor {
+	type     = _type;
 	size	 = _size;
 	inputs   = size * size;
 	onModify = _onModify;
@@ -148,4 +149,10 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new matrixGrid(type, size, onModify, unit);
+		
+		return cln;
+	} #endregion
 }

@@ -120,4 +120,9 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new buttonGroup(data, onClick);
+		return cln;
+	} #endregion
 }

@@ -27,6 +27,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	slide_range = noone;
 	curr_range  = [ 0, 1 ];
 	
+	slider_def_val = 0;
+	slider_cur_val = 0;
+	
 	label = "";
 	
 	starting_char = 1;
@@ -160,7 +163,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 	} #endregion
 	
-	static apply = function(fn = onModify) { #region
+	static apply = function(release = false) { #region
 		var _input_text_current = _input_text;
 		disp_x_to = 0;
 		
@@ -171,10 +174,18 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			_input_text_current = _last_text;
 		current_value = _input_text_current;
 		
-		if(is_callable(fn)) {
-			var _modi = fn(_input_text_current);
-			if(_modi && IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
-			return _modi;
+		if(release) {
+			if(is_callable(onRelease)) {
+				var _modi = onRelease(_input_text_current);
+				if(_modi && IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
+				return _modi;
+			}
+		} else {
+			if(is_callable(onModify)) {
+				var _modi = onModify(_input_text_current);
+				if(_modi && IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
+				return _modi;
+			}
 		}
 		
 		if(IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
@@ -401,6 +412,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(shake_amount) shake_amount--;
 		}
 		
+		var drawText = selecting || _h >= line_get_height(font);
+		
 		switch(halign) {
 			case fa_left:   _x = _x;			break;	
 			case fa_center: _x = _x - _w / 2;	break;	
@@ -435,8 +448,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			case fa_right  : tx = _x + _w - ui(8); break;
 		}
 		
-		var _update = !surface_valid(text_surface, _w - ui(16), _h);
-		if(_update) text_surface = surface_verify(text_surface, _w - ui(16), _h);
+		if(drawText) {
+			var _update = !surface_valid(text_surface, _w - ui(16), _h);
+			if(_update) text_surface = surface_verify(text_surface, _w - ui(16), _h);
+		}
 		
 		if(!hide) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
@@ -485,15 +500,56 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			if(sliding == 1 && abs(slide_delta) > 8) {
 				deactivate();
-				textBox_slider.activate(toNumber(_input_text));
+				var _defval = toNumber(_current_text);
+				slider_def_val = _defval;
+				slider_cur_val = _defval;
+	
+				CURSOR_LOCK_X = mouse_mx;
+				CURSOR_LOCK_Y = mouse_my;
+		
 				sliding  = 2;
 			}
 			
 			if(sliding == 2) {
-				textBox_slider.tb = self;
+				MOUSE_BLOCK = true;
+				CURSOR_LOCK = true;
+
+				if(mouse_check_button_pressed(mb_right)) {
+					_input_text = string_real(slider_def_val);
+					sliding = 0;
+					apply();
+					deactivate();
+	
+					UNDO_HOLDING = false;
+					
+				} else {
+					var _s   = slide_speed;
+					var _mdx = window_mouse_get_delta_x();
+					var _mdy = window_mouse_get_delta_y();
+					var _dx  = abs(_mdx) > abs(_mdy)? _mdx : -_mdy;
+
+					if(key_mod_press(CTRL) && !slide_snap) _s *= 10;
+					if(key_mod_press(ALT))  _s /= 10;
+
+					slider_cur_val += _dx * _s;
+
+					if(slide_range != noone) 
+						slider_cur_val = clamp(slider_cur_val, curr_range[0], curr_range[1]);
+
+					var _val = value_snap(slider_cur_val, _s);
+
+					if(key_mod_press(CTRL) && slide_snap) _val = value_snap(slider_cur_val, slide_snap);
+					if(slide_int)  _val = round(_val);
+
+					if(abs(_val) < _s * 4) _val = 0;
+					
+					_input_text = string_real(_val);
+					if(apply()) UNDO_HOLDING = true;
+				}
+				
 				if(mouse_release(mb_left)) {
 					deactivate();
-					if(onRelease != noone) apply(onRelease);
+					if(onRelease != noone) apply(true);
 				}
 			}
 			
@@ -611,22 +667,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				deactivate();
 				
 		} else {
-			draw_set_text(font, fa_left, fa_center);
-			var _display_text = _raw_text;
-			
-			if(input == TEXTBOX_INPUT.number) {
-				var dig       = floor(_w / string_width("0")) - 3;
-				_display_text = string_real(_display_text, dig, precision);
-			}
-			
-			var tw = string_width(_display_text);
-			var th = string_height(_display_text);
-				
-			switch(align) {
-				case fa_left   :				break;
-				case fa_center : tx -= tw / 2;	break;
-				case fa_right  : tx -= tw;		break;
-			}
 			
 			if(hover && hoverRect) {
 				hovering = true;
@@ -655,15 +695,34 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			} else if(!hide)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
 			
-			if(_update || _display_text != _disp_text) {
-				surface_set_shader(text_surface, noone, true, BLEND.add);
-					display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4));
-				surface_reset_shader();
-			}
+			if(drawText) {
+				draw_set_text(font, fa_left, fa_center);
+				var _display_text = _raw_text;
 			
-			BLEND_ALPHA
-			draw_surface(text_surface, tb_surf_x, tb_surf_y);
-			BLEND_NORMAL
+				if(input == TEXTBOX_INPUT.number) {
+					var dig       = floor(_w / string_width("0")) - 3;
+					_display_text = string_real(_display_text, dig, precision);
+				}
+			
+				var tw = string_width(_display_text);
+				var th = string_height(_display_text);
+				
+				switch(align) {
+					case fa_left   :				break;
+					case fa_center : tx -= tw / 2;	break;
+					case fa_right  : tx -= tw;		break;
+				}
+				
+				if(_update || _display_text != _disp_text) {
+					surface_set_shader(text_surface, noone, true, BLEND.add);
+						display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4));
+					surface_reset_shader();
+				}
+			
+				BLEND_ALPHA
+				draw_surface(text_surface, tb_surf_x, tb_surf_y);
+				BLEND_NORMAL
+			}
 		}
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {

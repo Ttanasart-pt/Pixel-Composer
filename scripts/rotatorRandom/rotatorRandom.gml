@@ -456,4 +456,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 		
 		return h;
 	} #endregion
+		
+	static clone = function() { #region
+		var cln = new rotatorRandom(onModify);
+		
+		return cln;
+	} #endregion
 }

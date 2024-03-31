@@ -1,5 +1,6 @@
 function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
+	unit     = _unit;
 	
 	linked = false;
 	b_link = button(function() { linked = !linked; });
@@ -118,4 +119,10 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new cornerBox(onModify, unit);
+		
+		return cln;
+	} #endregion
 }

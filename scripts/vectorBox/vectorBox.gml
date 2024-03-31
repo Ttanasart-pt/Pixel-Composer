@@ -51,6 +51,13 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		tb[i].slidable = true;
 	}
 	
+	static apply = function() { #region
+		for( var i = 0; i < size; i++ ) {
+			tb[i].apply();
+			current_value[i] = toNumber(tb[i]._input_text);
+		}
+	} #endregion
+	
 	static setLinkInactiveColor = function(color) { #region
 		link_inactive_color = color;
 		return self;
@@ -83,10 +90,10 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			unit.triggerButton.register(parent);
 	} #endregion
 	
-	static isHovering = function() { 
+	static isHovering = function() { #region
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;
-	}
+	} #endregion
 	
 	static drawParam = function(params) { #region
 		setParam(params);
@@ -95,7 +102,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -168,12 +175,14 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
 	
-	static apply = function() {
-		for( var i = 0; i < size; i++ ) {
-			tb[i].apply();
-			current_value[i] = toNumber(tb[i]._input_text);
-		}
-	}
+	static clone = function() { #region
+		var cln = new vectorBox(size, onModify, unit);
+		
+		cln.linkable = linkable;
+		cln.per_line = per_line;
+		
+		return cln;
+	} #endregion
 }

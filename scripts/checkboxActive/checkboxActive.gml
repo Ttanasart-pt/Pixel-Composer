@@ -45,4 +45,10 @@ function checkBoxActive(_onClick) : widget() constructor {
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new checkBoxActive(onClick);
+		
+		return cln;
+	} #endregion
 }

@@ -1,8 +1,8 @@
 function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
-	slide_range = _range;
-	curr_range  = [ _range[0], _range[1] ];
 	stepSize    = _step;
+	slide_range = _range;
 	isInt       = _int;
+	curr_range  = [ _range[0], _range[1] ];
 	
 	onModify = _onModify;
 	
@@ -79,5 +79,11 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 		tb_value_max.draw(_x + tb_w, _y, tb_w, _h, _data[1], _m);
 		
 		return h;
+	} #endregion
+		
+	static clone = function() { #region
+		var cln = new sliderRange(stepSize, isInt, slide_range, onModify);
+		
+		return cln;
 	} #endregion
 }

@@ -87,4 +87,10 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		resetFocus();
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new pathAnchorBox(onModify);
+		
+		return cln;
+	} #endregion
 }

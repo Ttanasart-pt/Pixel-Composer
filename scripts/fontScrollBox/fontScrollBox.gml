@@ -88,4 +88,10 @@ function fontScrollBox(_onModify) : widget() constructor {
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new fontScrollBox(onModify);
+		
+		return cln;
+	} #endregion
 }

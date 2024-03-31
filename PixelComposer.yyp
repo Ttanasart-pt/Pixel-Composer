@@ -579,7 +579,6 @@
     {"id":{"name":"oRigidbody","path":"objects/oRigidbody/oRigidbody.yy",},},
     {"id":{"name":"rotator_Rotator","path":"objects/rotator_Rotator/rotator_Rotator.yy",},},
     {"id":{"name":"slider_Slider","path":"objects/slider_Slider/slider_Slider.yy",},},
-    {"id":{"name":"textBox_slider","path":"objects/textBox_slider/textBox_slider.yy",},},
     {"id":{"name":"rm_main","path":"rooms/rm_main/rm_main.yy",},},
     {"id":{"name":"__3d_particle","path":"scripts/__3d_particle/__3d_particle.yy",},},
     {"id":{"name":"__3D","path":"scripts/__3D/__3D.yy",},},

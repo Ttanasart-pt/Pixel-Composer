@@ -55,6 +55,13 @@ function quarternionBox(_onModify) : widget() constructor {
 		return false;
 	}
 	
+	static apply = function() {
+		for( var i = 0; i < size; i++ ) {
+			tb[i].apply();
+			current_value[i] = toNumber(tb[i]._input_text);
+		}
+	}
+	
 	static drawParam = function(params) {
 		setParam(params);
 		for(var i = 0; i < 4; i++) tb[i].setParam(params);
@@ -115,10 +122,9 @@ function quarternionBox(_onModify) : widget() constructor {
 		return _h;
 	}
 	
-	static apply = function() {
-		for( var i = 0; i < size; i++ ) {
-			tb[i].apply();
-			current_value[i] = toNumber(tb[i]._input_text);
-		}
-	}
+	static clone = function() { #region
+		var cln = new quarternionBox(onModify);
+		
+		return cln;
+	} #endregion
 }

@@ -93,4 +93,9 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		resetFocus();
 		return h;
 	} #endregion
+	
+	static clone = function() { #region
+		var cln = new buttonGradient(onApply, parentDialog);
+		return cln;
+	} #endregion
 }

@@ -25,13 +25,13 @@ function transformBox(_onModify) : widget() constructor {
 		tb[i].label    = labels[i];
 	}
 	
-	static setInteract = function(interactable = noone) { 
+	static setInteract = function(interactable = noone) { #region
 		self.interactable = interactable;
 		
 		for( var i = 0, n = array_length(tb); i < n; i++ ) 
 			tb[i].setInteract(interactable);
 		rot.setInteract(interactable);
-	}
+	} #endregion
 	
 	static register = function(parent = noone) {
 		tb[TRANSFORM.pos_x].register(parent);
@@ -41,20 +41,20 @@ function transformBox(_onModify) : widget() constructor {
 		tb[TRANSFORM.sca_y].register(parent);
 	}
 	
-	static isHovering = function() { 
+	static isHovering = function() { #region 
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return hovering;
-	}
+	} #endregion
 	
-	static drawParam = function(params) { 
+	static drawParam = function(params) { #region
 		setParam(params);
 		rot.setParam(params);
 		for(var i = 0; i < 5; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m); 
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _m) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -109,5 +109,11 @@ function transformBox(_onModify) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
+	
+	static clone = function() { #region
+		var cln = new transformBox(onModify);
+		
+		return cln;
+	} #endregion
 }

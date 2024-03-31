@@ -81,4 +81,10 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new pathArrayBox(target, data, onClick);
+		
+		return cln;
+	} #endregion
 }

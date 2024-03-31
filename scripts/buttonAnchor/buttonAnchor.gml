@@ -39,4 +39,12 @@ function buttonAnchor(_onClick) : widget() constructor {
 		
 		return _h;
 	}
+	
+	static clone = function() { #region
+		var cln = new buttonAnchor();
+		
+		cln.onClick = onClick;
+		
+		return cln;
+	} #endregion
 }

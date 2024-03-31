@@ -1,4 +1,5 @@
 function rangeBox(_type, _onModify) : widget() constructor {
+	type     = _type;
 	onModify = _onModify;
 	linked   = false;
 	
@@ -34,38 +35,38 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		tb[i].label    = labels[i];
 	}
 	
-	static setSlideSpeed = function(speed) {
+	static setSlideSpeed = function(speed) { #region
 		tb[0].setSlidable(speed);
 		tb[1].setSlidable(speed);
-	}
+	} #endregion
 	
-	static setInteract = function(interactable = noone) { 
+	static setInteract = function(interactable = noone) { #region
 		self.interactable = interactable;
 		
 		tb[0].interactable = interactable;
 		if(!linked) 
 			tb[1].interactable = interactable;
-	}
+	} #endregion
 	
-	static register = function(parent = noone) {
+	static register = function(parent = noone) { #region
 		tb[0].register(parent);
 		if(!linked)
 			tb[1].register(parent);
-	}
+	} #endregion
 	
-	static isHovering = function() { 
+	static isHovering = function() { #region
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		setParam(params);
 		for(var i = 0; i < 2; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -122,5 +123,11 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	}
+	} #endregion
+	
+	static clone = function() { #region
+		var cln = new rangeBox(type, onModify);
+		
+		return cln;
+	} #endregion
 }

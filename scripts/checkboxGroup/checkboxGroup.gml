@@ -70,4 +70,10 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new checkBoxGroup(sprs, onClick);
+		
+		return cln;
+	} #endregion
 }

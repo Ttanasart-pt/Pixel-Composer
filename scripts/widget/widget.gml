@@ -23,22 +23,22 @@ function widget() constructor {
 	rx = 0;
 	ry = 0;
 	
-	static setLua = function(_lua_thread, _lua_key, _lua_func) { 
+	static setLua = function(_lua_thread, _lua_key, _lua_func) { #region
 		lua_thread = _lua_thread;
 		lua_thread_key = _lua_key;
 		onModify = method(self, _lua_func);
-	}
+	} #endregion
 	
-	static setInteract = function(interactable = noone) { 
+	static setInteract = function(interactable = noone) { #region
 		self.interactable = interactable;
-	}
+	} #endregion
 	
-	static register = function(parent = noone) { 
+	static register = function(parent = noone) { #region
 		if(!interactable) return;
 		
 		array_push(WIDGET_ACTIVE, self); 
 		self.parent = parent;
-	}
+	} #endregion
 	
 	static setParam = function(params) { #region
 		font = params.font;
@@ -48,42 +48,44 @@ function widget() constructor {
 	
 	static trigger = function() { }
 	
-	static parentFocus = function() {
+	static parentFocus = function() { #region
 		if(parent == noone) return;
 		
 		if(y < 0)
 			parent.scroll_y_to += abs(y) + ui(16);
 		else if(y + ui(16) > parent.surface_h)
 			parent.scroll_y_to -= abs(parent.surface_h - y) + h + ui(16);
-	}
+	} #endregion
 	
 	static isHovering = function() { return hovering; }
 	
-	static activate = function() { 
+	static activate = function() { #region
 		if(!interactable) return;
 		
 		WIDGET_CURRENT = self;
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
-	}
+	} #endregion
 	
-	static deactivate = function() { 
+	static deactivate = function() { #region
 		if(WIDGET_CURRENT != self) return;
 		WIDGET_CURRENT = noone;
 		WIDGET_CURRENT_SCROLL = noone;
-	}
+	} #endregion
 	
-	static setFocusHover = function(active = false, hover = false) {
+	static setFocusHover = function(active = false, hover = false) { #region
 		self.active  = interactable && active;
 		self.hover   = interactable && hover;
 		self.iactive = active;
 		self.ihover  = hover;
-	}
+	} #endregion
 	
-	static resetFocus = function() {
+	static resetFocus = function() { #region
 		active = false;
 		hover  = false;
-	}
+	} #endregion
+	
+	static clone = function() { return variable_clone(self); }
 	
 	static drawParam = function(params) {}
 	static draw = function() {}

@@ -308,190 +308,190 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static getInputAmount = function() { INLINE return input_fix_len + (ds_list_size(inputs) - input_fix_len) / data_length; }
 	
-	static getInputIndex = function(index) { #region
-		INLINE 
+	//static getInputIndex = function(index) { #region
+	//	INLINE 
 		
-		if(index < input_fix_len) return index;
-		return input_fix_len + (index - input_fix_len) * data_length;
-	} #endregion
+	//	if(index < input_fix_len) return index;
+	//	return input_fix_len + (index - input_fix_len) * data_length;
+	//} #endregion
 	
-	static setHeight = function() { #region
-		var _hi = ui(32);
-		var _ho = ui(32);
+	//static setHeight = function() { #region
+	//	var _hi = ui(32);
+	//	var _ho = ui(32);
 		
-		for( var i = 0; i < getInputAmount(); i++ ) 
-			if(inputs[| getInputIndex(i)].isVisible())	
-				_hi += 24;
+	//	for( var i = 0; i < getInputAmount(); i++ ) 
+	//		if(inputs[| getInputIndex(i)].isVisible())	
+	//			_hi += 24;
 			
-		for( var i = 0; i < ds_list_size(outputs); i++ ) 
-			if(outputs[| i].isVisible()) 
-				_ho += 24;
+	//	for( var i = 0; i < ds_list_size(outputs); i++ ) 
+	//		if(outputs[| i].isVisible()) 
+	//			_ho += 24;
 		
-		h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
-	} #endregion
+	//	h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
+	//} #endregion
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
-		if(!active) return;
-		var hover = noone;
-		var amo = array_length(input_display_list);
+	//static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
+	//	if(!active) return;
+	//	var hover = noone;
+	//	var amo = array_length(input_display_list);
 		
-		var hov = PANEL_GRAPH.value_focus;
-		var ind = -1;
-		if(hov != noone && struct_has(hov, "surface_index"))
-			ind = hov.surface_index;
+	//	var hov = PANEL_GRAPH.value_focus;
+	//	var ind = -1;
+	//	if(hov != noone && struct_has(hov, "surface_index"))
+	//		ind = hov.surface_index;
 		
-		for( var i = 0; i < getInputAmount(); i++ ) {
-			var idx = getInputIndex(i);
-			if(!inputs[| idx].isVisible()) continue;
+	//	for( var i = 0; i < getInputAmount(); i++ ) {
+	//		var idx = getInputIndex(i);
+	//		if(!inputs[| idx].isVisible()) continue;
 			
-			if(inputs[| idx].drawJunction(_s, _mx, _my, 1.5))	
-				hover = inputs[| idx];
+	//		if(inputs[| idx].drawJunction(_s, _mx, _my, 1.5))	
+	//			hover = inputs[| idx];
 			
-			if(idx >= input_fix_len && inputs[| idx].hover_effect > 0) {
-				var _px0 =  999999;
-				var _py0 =  999999;
-				var _px1 = -999999;
-				var _py1 = -999999;
-				var _drw = false;
-				var _hov = inputs[| idx].hover_effect;
+	//		if(idx >= input_fix_len && inputs[| idx].hover_effect > 0) {
+	//			var _px0 =  999999;
+	//			var _py0 =  999999;
+	//			var _px1 = -999999;
+	//			var _py1 = -999999;
+	//			var _drw = false;
+	//			var _hov = inputs[| idx].hover_effect;
 				
-				for( var j = 1; j < data_length; j++ ) {
-					if(!inputs[| idx + j].isVisible()) continue;
-					_px0 = min( _px0, inputs[| idx + j].x );
-					_py0 = min( _py0, inputs[| idx + j].y );
-					_px1 = max( _px1, inputs[| idx + j].x );
-					_py1 = max( _py1, inputs[| idx + j].y );
-					_drw = true;
-				}
+	//			for( var j = 1; j < data_length; j++ ) {
+	//				if(!inputs[| idx + j].isVisible()) continue;
+	//				_px0 = min( _px0, inputs[| idx + j].x );
+	//				_py0 = min( _py0, inputs[| idx + j].y );
+	//				_px1 = max( _px1, inputs[| idx + j].x );
+	//				_py1 = max( _py1, inputs[| idx + j].y );
+	//				_drw = true;
+	//			}
 				
-				if(!_drw) continue;
+	//			if(!_drw) continue;
 				
-				//if(_hov > 0.5) {
-				//	var pilx = _px0 - 16 * _s;
-				//	var pily = _py0 - 16 * _s;
-				//	var pilw = _px1 - _px0 + 32 * _s;
-				//	var pilh = _py1 - _py0 + 32 * _s;
+	//			//if(_hov > 0.5) {
+	//			//	var pilx = _px0 - 16 * _s;
+	//			//	var pily = _py0 - 16 * _s;
+	//			//	var pilw = _px1 - _px0 + 32 * _s;
+	//			//	var pilh = _py1 - _py0 + 32 * _s;
 					
-				//	draw_sprite_stretched_ext(THEME.node_bg_pill, 0, pilx, pily, pilw, pilh, COLORS._main_icon_dark, (_hov - 0.5) * 2);
-				//}
+	//			//	draw_sprite_stretched_ext(THEME.node_bg_pill, 0, pilx, pily, pilw, pilh, COLORS._main_icon_dark, (_hov - 0.5) * 2);
+	//			//}
 				
-				for( var j = 1; j < data_length; j++ ) {
-					if(inputs[| idx + j].drawJunction(_s, _mx, _my, 1.5))	
-						hover = inputs[| idx + j];
-				}
-			}
-		}
+	//			for( var j = 1; j < data_length; j++ ) {
+	//				if(inputs[| idx + j].drawJunction(_s, _mx, _my, 1.5))	
+	//					hover = inputs[| idx + j];
+	//			}
+	//		}
+	//	}
 		
-		for(var i = 0; i < ds_list_size(outputs); i++)
-			if(outputs[| i].drawJunction(_s, _mx, _my))
-				hover = outputs[| i];
+	//	for(var i = 0; i < ds_list_size(outputs); i++)
+	//		if(outputs[| i].drawJunction(_s, _mx, _my))
+	//			hover = outputs[| i];
 		
-		return hover;
-	} #endregion
+	//	return hover;
+	//} #endregion
 	
-	static drawJunctionNames = function(_x, _y, _mx, _my, _s) { #region
-		if(!active) return;
-		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
-		var jun;
+	//static drawJunctionNames = function(_x, _y, _mx, _my, _s) { #region
+	//	if(!active) return;
+	//	var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+	//	var jun;
 		
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+	//	var xx = x * _s + _x;
+	//	var yy = y * _s + _y;
 		
-		show_input_name  = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx - 8 * _s, yy + 20 * _s, xx + 8 * _s, yy + h * _s);
-		show_output_name = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
+	//	show_input_name  = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx - 8 * _s, yy + 20 * _s, xx + 8 * _s, yy + h * _s);
+	//	show_output_name = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
 		
-		var hov = PANEL_GRAPH.value_focus;
-		var ind = -1;
-		if(hov != noone && struct_has(hov, "surface_index"))
-			ind = hov.surface_index;
+	//	var hov = PANEL_GRAPH.value_focus;
+	//	var ind = -1;
+	//	if(hov != noone && struct_has(hov, "surface_index"))
+	//		ind = hov.surface_index;
 		
-		if(ind != -1) {
-			for( var j = 1; j < data_length; j++ ) {
-				if(ind + j >= ds_list_size(inputs)) break;
-				inputs[| ind + j].drawNameBG(_s);
-			}
+	//	if(ind != -1) {
+	//		for( var j = 1; j < data_length; j++ ) {
+	//			if(ind + j >= ds_list_size(inputs)) break;
+	//			inputs[| ind + j].drawNameBG(_s);
+	//		}
 				
-			for( var j = 1; j < data_length; j++ ) {
-				if(ind + j >= ds_list_size(inputs)) break;
-				inputs[| ind + j].drawName(_s, _mx, _my);
-			}
+	//		for( var j = 1; j < data_length; j++ ) {
+	//			if(ind + j >= ds_list_size(inputs)) break;
+	//			inputs[| ind + j].drawName(_s, _mx, _my);
+	//		}
 			
-		} else if(show_input_name) {
-			for( var i = 0; i < getInputAmount(); i++ ) {
-				var idx = getInputIndex(i);
+	//	} else if(show_input_name) {
+	//		for( var i = 0; i < getInputAmount(); i++ ) {
+	//			var idx = getInputIndex(i);
 				
-				if(idx == ind) continue;
-				inputs[| idx].drawNameBG(_s);
-			}
+	//			if(idx == ind) continue;
+	//			inputs[| idx].drawNameBG(_s);
+	//		}
 				
-			for( var i = 0; i < getInputAmount(); i++ ) {
-				var idx = getInputIndex(i);
+	//		for( var i = 0; i < getInputAmount(); i++ ) {
+	//			var idx = getInputIndex(i);
 				
-				if(idx == ind) continue;
-				inputs[| idx].drawName(_s, _mx, _my);
-			}
-		}
+	//			if(idx == ind) continue;
+	//			inputs[| idx].drawName(_s, _mx, _my);
+	//		}
+	//	}
 		
-		if(show_output_name) {
-			for(var i = 0; i < ds_list_size(outputs); i++)
-				outputs[| i].drawNameBG(_s);
+	//	if(show_output_name) {
+	//		for(var i = 0; i < ds_list_size(outputs); i++)
+	//			outputs[| i].drawNameBG(_s);
 			
-			for(var i = 0; i < ds_list_size(outputs); i++)
-				outputs[| i].drawName(_s, _mx, _my);
-		}
-	} #endregion
+	//		for(var i = 0; i < ds_list_size(outputs); i++)
+	//			outputs[| i].drawName(_s, _mx, _my);
+	//	}
+	//} #endregion
 	
-	static preDraw = function(_x, _y, _s) { #region
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
-		var jun;
+	//static preDraw = function(_x, _y, _s) { #region
+	//	var xx = x * _s + _x;
+	//	var yy = y * _s + _y;
+	//	var jun;
 		
-		var inamo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
-		var _in = yy + ui(32) * _s;
+	//	var inamo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+	//	var _in = yy + ui(32) * _s;
 		
-		var hov = PANEL_GRAPH.value_focus;
-		var ind = -1;
-		if(hov != noone && struct_has(hov, "surface_index"))
-			ind = hov.surface_index;
+	//	var hov = PANEL_GRAPH.value_focus;
+	//	var ind = -1;
+	//	if(hov != noone && struct_has(hov, "surface_index"))
+	//		ind = hov.surface_index;
 		
-		for( var i = 0; i < getInputAmount(); i++ ) {
-			var idx = getInputIndex(i);
-			jun = ds_list_get(inputs, idx, noone);
-			if(jun == noone || is_undefined(jun)) continue;
-			jun.x = xx;
-			jun.y = _in;
+	//	for( var i = 0; i < getInputAmount(); i++ ) {
+	//		var idx = getInputIndex(i);
+	//		jun = ds_list_get(inputs, idx, noone);
+	//		if(jun == noone || is_undefined(jun)) continue;
+	//		jun.x = xx;
+	//		jun.y = _in;
 			
-			if(i >= input_fix_len) {
-				jun.hover_effect = lerp_float(jun.hover_effect, ind == idx, 3);
-				var sp = jun.hover_effect * 24;
-				var sx = xx - sp * _s;
-				var sy = _in;
+	//		if(i >= input_fix_len) {
+	//			jun.hover_effect = lerp_float(jun.hover_effect, ind == idx, 3);
+	//			var sp = jun.hover_effect * 24;
+	//			var sx = xx - sp * _s;
+	//			var sy = _in;
 				
-				for( var j = 1; j < data_length; j++ ) {
-					var _jun = ds_list_get(inputs, idx + j, noone);
-					_jun.x = sx;
-					_jun.y = sy;
+	//			for( var j = 1; j < data_length; j++ ) {
+	//				var _jun = ds_list_get(inputs, idx + j, noone);
+	//				_jun.x = sx;
+	//				_jun.y = sy;
 					
-					sy += sp * _s * _jun.isVisible();
-				}
-			}
+	//				sy += sp * _s * _jun.isVisible();
+	//			}
+	//		}
 			
-			_in += 24 * _s * jun.isVisible();
-		}
+	//		_in += 24 * _s * jun.isVisible();
+	//	}
 		
-		var outamo = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
+	//	var outamo = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
 		
-		xx = xx + w * _s;
-		_in = yy + ui(32) * _s;
-		for(var i = 0; i < outamo; i++) {
-			var idx = getOutputJunctionIndex(i);
-			jun = outputs[| idx];
+	//	xx = xx + w * _s;
+	//	_in = yy + ui(32) * _s;
+	//	for(var i = 0; i < outamo; i++) {
+	//		var idx = getOutputJunctionIndex(i);
+	//		jun = outputs[| idx];
 			
-			jun.x = xx;
-			jun.y = _in;
-			_in += 24 * _s * jun.isVisible();
-		}
-	} #endregion
+	//		jun.x = xx;
+	//		jun.y = _in;
+	//		_in += 24 * _s * jun.isVisible();
+	//	}
+	//} #endregion
 	
 	static onValueFromUpdate = function(index) { #region
 		if(LOADING || APPENDING) return;

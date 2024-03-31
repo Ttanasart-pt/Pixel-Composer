@@ -2,19 +2,19 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 	self.getArray = arraySet;
 	self.arraySet = noone;
 	
-	self.data  = data;
+	self.data     = data;
 	self.onModify = onModify;
 	
 	hide = false;
 	open = false;
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.m, params.rx, params.ry);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _m, _rx = 0, _ry = 0) {
+	static draw = function(_x, _y, _w, _h, _m, _rx = 0, _ry = 0) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -76,5 +76,11 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 		
 		resetFocus();
 		return th;
-	}
+	} #endregion
+	
+	static clone = function() { #region
+		var cln = new textArrayBox(getArray, data, onModify);
+		
+		return cln;
+	} #endregion
 }

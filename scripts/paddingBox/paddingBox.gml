@@ -133,4 +133,10 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		
 		return h;
 	}
+	
+	static clone = function() { #region
+		var cln = new paddingBox(onModify, unit);
+		
+		return cln;
+	} #endregion
 }

@@ -739,7 +739,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		}
 		
 		#region color picker
-			if(key_mod_press(ALT) && color_picker_index && textBox_slider.tb == noone) {
+			if(key_mod_press(ALT) && color_picker_index) {
 				pickers[picker_index].editWidget.onColorPick();
 			}
 			

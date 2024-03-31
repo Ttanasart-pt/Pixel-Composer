@@ -291,7 +291,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		ds_list_add(group.inputs, inParent);
 		outputs[| 0].setFrom(inParent, false, false);
-		group.setHeight();
+		group.refreshNodeDisplay();
 		group.sortIO();
 			
 		onValueUpdate(0);

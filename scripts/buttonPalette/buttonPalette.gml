@@ -93,6 +93,11 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		
 		return h;
 	} #endregion
+	
+	static clone = function() { #region
+		var cln = new buttonPalette(onApply, parentDialog);
+		return cln;
+	} #endregion
 }
 
 function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { #region
