@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "save_function",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "project",
-    "path": "folders/functions/project.yy",
+  "$GMScript":"",
+  "%Name":"save_function",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"save_function",
+  "parent":{
+    "name":"project",
+    "path":"folders/functions/project.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

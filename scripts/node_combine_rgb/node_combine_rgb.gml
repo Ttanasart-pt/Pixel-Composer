@@ -50,10 +50,10 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _arr  = _data[7];
 		
-		var _r    = _arr? array_safe_get(_data[8], 0) : _data[0];
-		var _g    = _arr? array_safe_get(_data[8], 1) : _data[1];
-		var _b    = _arr? array_safe_get(_data[8], 2) : _data[2];
-		var _a    = _arr? array_safe_get(_data[8], 3) : _data[3];
+		var _r    = _arr? array_safe_get_fast(_data[8], 0) : _data[0];
+		var _g    = _arr? array_safe_get_fast(_data[8], 1) : _data[1];
+		var _b    = _arr? array_safe_get_fast(_data[8], 2) : _data[2];
+		var _a    = _arr? array_safe_get_fast(_data[8], 3) : _data[3];
 		
 		var _baseS = is_surface(_r)? _r : (is_surface(_g)? _g : _b);
 		if(!is_surface(_baseS)) return _outSurf;

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "panel_data",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "_others",
-    "path": "folders/panels/_others.yy",
+  "$GMScript":"",
+  "%Name":"panel_data",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_data",
+  "parent":{
+    "name":"_others",
+    "path":"folders/panels/_others.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

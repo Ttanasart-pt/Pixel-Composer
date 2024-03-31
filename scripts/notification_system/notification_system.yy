@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "notification_system",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "components",
-    "path": "folders/main/components.yy",
+  "$GMScript":"",
+  "%Name":"notification_system",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"notification_system",
+  "parent":{
+    "name":"components",
+    "path":"folders/main/components.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

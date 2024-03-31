@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_3d_mesh_cube",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "d3d mesh",
-    "path": "folders/nodes/data/3D/d3d mesh.yy",
+  "$GMScript":"",
+  "%Name":"node_3d_mesh_cube",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_3d_mesh_cube",
+  "parent":{
+    "name":"d3d_mesh",
+    "path":"folders/nodes/data/3D/d3d_mesh.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

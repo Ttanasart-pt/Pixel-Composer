@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "delau_helper",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "delaunay",
-    "path": "folders/functions/delaunay.yy",
+  "$GMScript":"",
+  "%Name":"delau_helper",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"delau_helper",
+  "parent":{
+    "name":"delaunay",
+    "path":"folders/functions/delaunay.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

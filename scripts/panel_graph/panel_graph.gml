@@ -132,7 +132,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	title = __txt("Graph");
 	title_raw   = "";
 	context_str = "Graph";
-	icon  = THEME.panel_graph;
+	icon  = THEME.panel_graph_icon;
 	
 	static setProject = function(project) {
 		self.project = project;

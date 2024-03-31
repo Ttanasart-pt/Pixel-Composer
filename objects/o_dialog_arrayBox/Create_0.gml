@@ -47,9 +47,9 @@ event_inherited();
 			}
 			
 			var bs = ui(22);
-			draw_sprite_stretched(THEME.checkbox, ind, ui(20) - bs / 2, yc - bs / 2, bs, bs);
+			draw_sprite_stretched(THEME.checkbox_def, ind, ui(20) - bs / 2, yc - bs / 2, bs, bs);
 			if(exists)
-				draw_sprite_stretched_ext(THEME.checkbox, 2, ui(20) - bs / 2, yc - bs / 2, bs, bs, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.checkbox_def, 2, ui(20) - bs / 2, yc - bs / 2, bs, bs, COLORS._main_accent, 1);
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			draw_text_cut(ui(40), yc, arrayBox.data[i], _dw);

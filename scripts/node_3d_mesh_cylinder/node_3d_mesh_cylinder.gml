@@ -50,5 +50,5 @@ function Node_3D_Mesh_Cylinder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _g
 		return object;
 	} #endregion
 	
-	static getPreviewValues = function() { return array_safe_get(all_inputs, in_mesh + 1, noone); }
+	static getPreviewValues = function() { return array_safe_get_fast(all_inputs, in_mesh + 1, noone); }
 }

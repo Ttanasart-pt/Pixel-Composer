@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_convolution",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "effects",
-    "path": "folders/nodes/data/filter/effects.yy",
+  "$GMScript":"",
+  "%Name":"node_convolution",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_convolution",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

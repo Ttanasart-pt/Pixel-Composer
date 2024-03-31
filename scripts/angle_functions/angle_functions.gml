@@ -21,7 +21,7 @@ function angle_random_eval(range, seed = undefined) {
 		}
 	}
 	
-	return array_safe_get(range, 0);
+	return array_safe_get_fast(range, 0);
 }
 
 function angle_random_eval_fast(range) {

@@ -50,7 +50,7 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			else 
 				_frame = clamp(_frame, 0, TOTAL_FRAMES - 1);
 			
-			var s = array_safe_get(cached_output, _frame);
+			var s = array_safe_get_fast(cached_output, _frame);
 			if(!is_surface(s)) continue;
 			
 			shader_set_uniform_f(uniform_min, i * ste);	

@@ -112,7 +112,7 @@ function Panel_Console() : PanelContent() constructor {
 			} else if(keyboard_check_pressed(vk_up)) {
 				cmd_index = max(0, cmd_index - 1); 
 			
-				var his = array_safe_get(CMDIN, cmd_index, "");
+				var his = array_safe_get_fast(CMDIN, cmd_index, "");
 				command = is_instanceof(his, __cmdLine)? his.txt : his;
 				keyboard_string = command;
 			

@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_bevel",
-  "parent": {
-    "name": "2d effect",
-    "path": "folders/shader/3d/2d effect.yy",
+  "$GMShader":"",
+  "%Name":"sh_bevel",
+  "name":"sh_bevel",
+  "parent":{
+    "name":"2d effect",
+    "path":"folders/shader/3d/2d effect.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

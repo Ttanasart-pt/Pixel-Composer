@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__sliderRange",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "sliders",
-    "path": "folders/widgets/sliders.yy",
+  "$GMScript":"",
+  "%Name":"__sliderRange",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__sliderRange",
+  "parent":{
+    "name":"sliders",
+    "path":"folders/widgets/sliders.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

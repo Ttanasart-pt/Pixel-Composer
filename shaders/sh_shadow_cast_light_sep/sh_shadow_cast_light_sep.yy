@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_shadow_cast_light_sep",
-  "parent": {
-    "name": "shadow caster",
-    "path": "folders/shader/filter/shadow caster.yy",
+  "$GMShader":"",
+  "%Name":"sh_shadow_cast_light_sep",
+  "name":"sh_shadow_cast_light_sep",
+  "parent":{
+    "name":"shadow_caster",
+    "path":"folders/shader/filter/shadow_caster.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

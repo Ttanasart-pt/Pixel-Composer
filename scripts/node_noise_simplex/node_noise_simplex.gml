@@ -7,7 +7,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 2 ] )
+	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setMappable(8);
 	
@@ -35,9 +35,12 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	//////////////////////////////////////////////////////////////////////////////////
 		
+	inputs[| 10] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+		
 	input_display_list = [
 		["Output",	false], 0, 
-		["Noise",	false], 1, 2, 8, 3, 9, 
+		["Noise",	false], 1, 10, 2, 8, 3, 9, 
 		["Render",	false], 4, 5, 6, 7, 
 	];
 	
@@ -68,22 +71,29 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _clr = _data[5];
 		var _clg = _data[6];
 		var _clb = _data[7];
+		var _ang = _data[10];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_simplex);
-		shader_set_f("position",  _pos);
-		shader_set_f_map("scale",     _data[2], _data[8], inputs[| 2]);
-		shader_set_f_map("iteration", _data[3], _data[9], inputs[| 3]);
+			shader_set_f("dimension", _dim);
+			shader_set_f("position",  _pos);
+			shader_set_f("rotation",  radtodeg(_ang));
+			shader_set_f_map("scale",     _data[2], _data[8], inputs[| 2]);
+			shader_set_f_map("iteration", _data[3], _data[9], inputs[| 3]);
 			
-		shader_set_i("colored",   _col);
-		shader_set_f("colorRanR", _clr);
-		shader_set_f("colorRanG", _clg);
-		shader_set_f("colorRanB", _clb);
+			shader_set_i("colored",   _col);
+			shader_set_f("colorRanR", _clr);
+			shader_set_f("colorRanG", _clg);
+			shader_set_f("colorRanB", _clb);
 		
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
 		return _outSurf;
+	}
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 }

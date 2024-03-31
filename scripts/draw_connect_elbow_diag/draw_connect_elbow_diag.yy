@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "draw_connect_elbow_diag",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "connection",
-    "path": "folders/functions/connection.yy",
+  "$GMScript":"",
+  "%Name":"draw_connect_elbow_diag",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"draw_connect_elbow_diag",
+  "parent":{
+    "name":"connection",
+    "path":"folders/functions/connection.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

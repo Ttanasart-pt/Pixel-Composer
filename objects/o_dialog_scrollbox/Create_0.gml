@@ -29,7 +29,7 @@ event_inherited();
 	
 	function initScroll(scroll) {
 		scrollbox	= scroll;
-		dialog_w	= scroll.w;
+		dialog_w	= max(ui(200), scroll.w);
 		data		= scroll.data;
 		setSize();
 	}
@@ -111,8 +111,12 @@ event_inherited();
 			}
 				
 			draw_set_text(f_p0, align, fa_center, clickable? COLORS._main_text : COLORS._main_text_sub);
-			     if(align == fa_center) draw_text_cut(_dw / 2, _ly + hght / 2, txt, _dw);
-			else if(align == fa_left)   draw_text_cut(ui(8) + _spr * hght, _ly + hght / 2, txt, _dw);
+			if(align == fa_center) {
+				var _xc = _spr? hght + (_dw - hght) / 2 : _dw / 2;
+				draw_text_cut(_xc, _ly + hght / 2, txt, _dw);
+				
+			} else if(align == fa_left) 
+				draw_text_cut(ui(8) + _spr * hght, _ly + hght / 2, txt, _dw);
 			
 			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
 			

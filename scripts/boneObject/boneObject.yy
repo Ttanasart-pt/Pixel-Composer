@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "boneObject",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "bones",
-    "path": "folders/functions/bones.yy",
+  "$GMScript":"",
+  "%Name":"boneObject",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"boneObject",
+  "parent":{
+    "name":"bones",
+    "path":"folders/functions/bones.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

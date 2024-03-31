@@ -158,7 +158,7 @@ output.color = surfaceColor;")
 	} if(!LOADING && !APPENDING) refreshDynamicInput();
 	
 	insp1UpdateTooltip  = __txt("Compile");
-	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { refreshShader(); }
 	

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "window_functions",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "window",
-    "path": "folders/functions/window.yy",
+  "$GMScript":"",
+  "%Name":"window_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"window_functions",
+  "parent":{
+    "name":"window",
+    "path":"folders/functions/window.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

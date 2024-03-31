@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_blobify",
-  "parent": {
-    "name": "blur",
-    "path": "folders/shader/filter/blur.yy",
+  "$GMShader":"",
+  "%Name":"sh_blobify",
+  "name":"sh_blobify",
+  "parent":{
+    "name":"blur",
+    "path":"folders/shader/filter/blur.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

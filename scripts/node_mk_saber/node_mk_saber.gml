@@ -84,7 +84,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _cur;
 		
 		if(prev_points == noone || IS_FIRST_FRAME) prev_points = [];
-		if(!is_array(array_safe_get(prev_points, _array_index)))
+		if(!is_array(array_safe_get_fast(prev_points, _array_index)))
 			prev_points[_array_index] = [];
 		
 		if(_fixl) { #region

@@ -149,7 +149,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		if(is_array(_path)) {
-			_path = array_safe_get(_path, ind);
+			_path = array_safe_get_fast(_path, ind);
 			ind = 0;
 		}
 		

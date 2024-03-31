@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "random_function",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "value",
-    "path": "folders/functions/value.yy",
+  "$GMScript":"",
+  "%Name":"random_function",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"random_function",
+  "parent":{
+    "name":"value",
+    "path":"folders/functions/value.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

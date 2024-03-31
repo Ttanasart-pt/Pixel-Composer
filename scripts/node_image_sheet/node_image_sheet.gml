@@ -141,11 +141,11 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			curr_off = getInputData(4);
 		}
 		
-		var _amo = array_safe_get(curr_amo, 0) * array_safe_get(curr_amo, 1);
+		var _amo = array_safe_get_fast(curr_amo, 0) * array_safe_get_fast(curr_amo, 1);
 		
 		if(_amo < 256) {
 			for(var i = _amo - 1; i >= 0; i--) {
-				if(!array_safe_get(sprite_valid, i, false))
+				if(!array_safe_get_fast(sprite_valid, i, false))
 					continue;
 				
 				var _f = sprite_pos[i];
@@ -348,7 +348,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			sprite_pos[i] = getSpritePosition(i);
 		
 		for(var i = 0; i < _total; i++) {
-			var _s = array_safe_get(surf_array, i);
+			var _s = array_safe_get_fast(surf_array, i);
 			
 			if(!is_surface(_s)) 
 				_s = surface_create(ww, hh, cDep);
@@ -358,7 +358,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			} else if(_resizeSurf) 
 				surface_resize(_s, ww, hh);
 			
-			var _a = array_safe_get(atls_array, i, 0);
+			var _a = array_safe_get_fast(atls_array, i, 0);
 			if(_a == 0) _a = new SurfaceAtlas(_s, 0, 0);
 			else        _a.setSurface(_s);
 			
@@ -419,7 +419,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(array_length(surf_array)) {
 			var ind = safe_mod(CURRENT_FRAME * _spd, array_length(surf_array));
-			outputs[| 0].setValue(array_safe_get(surf_array, ind));
+			outputs[| 0].setValue(array_safe_get_fast(surf_array, ind));
 		}
 	} #endregion
 }

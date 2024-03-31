@@ -101,6 +101,9 @@
 	PREFERENCES.textbox_shake					= 0;
 	PREFERENCES.textbox_particle				= 0;
 	
+	PREFERENCES.node_param_show					= false;
+	PREFERENCES.node_param_width				= 192;
+	
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
 #endregion
 
@@ -255,7 +258,7 @@
 		game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
 		
 		var grav = struct_try_get(PREFERENCES, "physics_gravity", [ 0, 10 ]);
-		physics_world_gravity(array_safe_get(grav, 0, 0), array_safe_get(grav, 1, 10));
+		physics_world_gravity(array_safe_get_fast(grav, 0, 0), array_safe_get_fast(grav, 1, 10));
 	} #endregion
 	
 	function find_hotkey(_context, _name) { #region

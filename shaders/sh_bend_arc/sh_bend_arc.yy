@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_bend_arc",
-  "parent": {
-    "name": "warp",
-    "path": "folders/shader/filter/warp.yy",
+  "$GMShader":"",
+  "%Name":"sh_bend_arc",
+  "name":"sh_bend_arc",
+  "parent":{
+    "name":"warp",
+    "path":"folders/shader/filter/warp.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

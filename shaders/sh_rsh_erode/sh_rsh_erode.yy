@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_rsh_erode",
-  "parent": {
-    "name": "random shape",
-    "path": "folders/shader/generator/random shape.yy",
+  "$GMShader":"",
+  "%Name":"sh_rsh_erode",
+  "name":"sh_rsh_erode",
+  "parent":{
+    "name":"random_shape",
+    "path":"folders/nodes/data/generator/random_shape.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

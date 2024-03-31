@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "FirebaseListenerUserFunctions_Firestore",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Listeners Firestore",
-    "path": "folders/_extensions/FireBase/Firebase Firestore/Extensions/Firebase REST API Library (Don't Touch)/Listeners Firestore.yy",
+  "$GMScript":"",
+  "%Name":"FirebaseListenerUserFunctions_Firestore",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"FirebaseListenerUserFunctions_Firestore",
+  "parent":{
+    "name":"Listeners_Firestore",
+    "path":"folders/_extensions/FireBase/Extensions/Firebase_API/Listeners_Firestore.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

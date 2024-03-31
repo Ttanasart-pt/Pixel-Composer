@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "draw_surface_blend",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "surface",
-    "path": "folders/functions/surface.yy",
+  "$GMScript":"",
+  "%Name":"draw_surface_blend",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"draw_surface_blend",
+  "parent":{
+    "name":"surface",
+    "path":"folders/functions/surface.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

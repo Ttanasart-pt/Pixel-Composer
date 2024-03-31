@@ -66,7 +66,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
 			temp_surface[i] = surface_verify(temp_surface[i], _sw, _sh);
-		light_only[_array_index] = surface_verify(array_safe_get(light_only, _array_index), _sw, _sh);
+		light_only[_array_index] = surface_verify(array_safe_get_fast(light_only, _array_index), _sw, _sh);
 		
 		surface_set_shader(temp_surface[0], sh_blink_extract);
 			shader_set_palette(_trgC, "colorTarget", "colorTargetAmount");

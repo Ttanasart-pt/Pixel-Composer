@@ -4,11 +4,11 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	
 	if(!is_callable(display_data)) return hover;
 	
-	var __ax = array_safe_get(_val, 0);
-	var __ay = array_safe_get(_val, 1);
-	var __aw = array_safe_get(_val, 2);
-	var __ah = array_safe_get(_val, 3);
-	var __at = array_safe_get(_val, 4);
+	var __ax = array_safe_get_fast(_val, 0);
+	var __ay = array_safe_get_fast(_val, 1);
+	var __aw = array_safe_get_fast(_val, 2);
+	var __ah = array_safe_get_fast(_val, 3);
+	var __at = array_safe_get_fast(_val, 4);
 	
 	var _x0 = __ax - __aw;
 	var _x1 = __ax + __aw;
@@ -125,11 +125,11 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
-	var __ax = array_safe_get(_val, 0);
-	var __ay = array_safe_get(_val, 1);
-	var __aw = array_safe_get(_val, 2);
-	var __ah = array_safe_get(_val, 3);
-	var __at = array_safe_get(_val, 4);
+	var __ax = array_safe_get_fast(_val, 0);
+	var __ay = array_safe_get_fast(_val, 1);
+	var __aw = array_safe_get_fast(_val, 2);
+	var __ah = array_safe_get_fast(_val, 3);
+	var __at = array_safe_get_fast(_val, 4);
 	
 	var _x0  = __ax - __aw;
 	var _y0  = __ay - __ah;
@@ -264,11 +264,11 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
-	var __ax = array_safe_get(_val, 0);
-	var __ay = array_safe_get(_val, 1);
-	var __aw = array_safe_get(_val, 2);
-	var __ah = array_safe_get(_val, 3);
-	var __at = array_safe_get(_val, 4);
+	var __ax = array_safe_get_fast(_val, 0);
+	var __ay = array_safe_get_fast(_val, 1);
+	var __aw = array_safe_get_fast(_val, 2);
+	var __ah = array_safe_get_fast(_val, 3);
+	var __at = array_safe_get_fast(_val, 4);
 	
 	var _ax = __ax * _s + _x;
 	var _ay = __ay * _s + _y;

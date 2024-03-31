@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "migration_function",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "migration",
-    "path": "folders/functions/migration.yy",
+  "$GMScript":"",
+  "%Name":"migration_function",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"migration_function",
+  "parent":{
+    "name":"migration",
+    "path":"folders/functions/migration.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

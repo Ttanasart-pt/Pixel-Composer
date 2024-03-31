@@ -124,8 +124,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 				tb_min_0.setFocusHover(active, hover);
 				tb_max_0.setFocusHover(active, hover);
 		
-				tb_min_0.draw(_tx,        _ty, _tw, _h, array_safe_get(_data, 1), _m);
-				tb_max_0.draw(_tx + _tw,  _ty, _tw, _h, array_safe_get(_data, 2), _m);
+				tb_min_0.draw(_tx,        _ty, _tw, _h, array_safe_get_fast(_data, 1), _m);
+				tb_max_0.draw(_tx + _tw,  _ty, _tw, _h, array_safe_get_fast(_data, 2), _m);
 				
 				if(_drawRot) {
 					if(dragging_index > -1) {
@@ -195,8 +195,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 				tb_min_0.setFocusHover(active, hover);
 				tb_max_0.setFocusHover(active, hover);
 				
-				tb_min_0.draw(_tx,        _ty, _tw, _h, array_safe_get(_data, 1), _m);
-				tb_max_0.draw(_tx + _tw,  _ty, _tw, _h, array_safe_get(_data, 2), _m);
+				tb_min_0.draw(_tx,        _ty, _tw, _h, array_safe_get_fast(_data, 1), _m);
+				tb_max_0.draw(_tx + _tw,  _ty, _tw, _h, array_safe_get_fast(_data, 2), _m);
 				
 				if(_drawRot) {
 					var _a0 = _data[1] - _data[2];
@@ -271,10 +271,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 				tb_min_1.setFocusHover(active, hover);
 				tb_max_1.setFocusHover(active, hover);
 				
-				tb_min_0.draw(_tx,        _ty,              _tw, _h, array_safe_get(_data, 1), _m);
-				tb_max_0.draw(_tx + _tw,  _ty,              _tw, _h, array_safe_get(_data, 2), _m);
-				tb_min_1.draw(_tx,        _ty + _h + ui(4), _tw, _h, array_safe_get(_data, 3), _m);
-				tb_max_1.draw(_tx + _tw,  _ty + _h + ui(4), _tw, _h, array_safe_get(_data, 4), _m);
+				tb_min_0.draw(_tx,        _ty,              _tw, _h, array_safe_get_fast(_data, 1), _m);
+				tb_max_0.draw(_tx + _tw,  _ty,              _tw, _h, array_safe_get_fast(_data, 2), _m);
+				tb_min_1.draw(_tx,        _ty + _h + ui(4), _tw, _h, array_safe_get_fast(_data, 3), _m);
+				tb_max_1.draw(_tx + _tw,  _ty + _h + ui(4), _tw, _h, array_safe_get_fast(_data, 4), _m);
 				
 				if(_drawRot) {
 					if(dragging_index > -1) {
@@ -369,9 +369,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 				tb_max_0.setFocusHover(active, hover);
 				tb_min_1.setFocusHover(active, hover);
 				
-				tb_min_0.draw(_tx,        _ty,              _tw, _h, array_safe_get(_data, 1), _m);
-				tb_max_0.draw(_tx,        _ty + _h + ui(4), _tw, _h, array_safe_get(_data, 2), _m);
-				tb_min_1.draw(_tx + _tw,  _ty,	            _tw,  h, array_safe_get(_data, 3), _m);
+				tb_min_0.draw(_tx,        _ty,              _tw, _h, array_safe_get_fast(_data, 1), _m);
+				tb_max_0.draw(_tx,        _ty + _h + ui(4), _tw, _h, array_safe_get_fast(_data, 2), _m);
+				tb_min_1.draw(_tx + _tw,  _ty,	            _tw,  h, array_safe_get_fast(_data, 3), _m);
 				
 				if(_drawRot) {
 					var _a0 = _data[1] - _data[3];

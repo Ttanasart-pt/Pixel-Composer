@@ -36,8 +36,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static getLineCount		= function()      { return array_length(lines); }
 	static getSegmentCount	= function()      { return array_length(lines); }
-	static getLength		= function(index) { return array_safe_get(length, index); }
-	static getAccuLength	= function(index) { return array_safe_get(lengthAcc, index, []); }
+	static getLength		= function(index) { return array_safe_get_fast(length, index); }
+	static getAccuLength	= function(index) { return array_safe_get_fast(lengthAcc, index, []); }
 	
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
@@ -53,10 +53,10 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _p0, _p1;
 		var _x, _y;
 		
-		var line = array_safe_get(lines, _ind, []);
+		var line = array_safe_get_fast(lines, _ind, []);
 		var _st  = _rat * (array_length(line) - 1);
-		_p0 = array_safe_get(line, floor(_st) + 0);
-		_p1 = array_safe_get(line, floor(_st) + 1);
+		_p0 = array_safe_get_fast(line, floor(_st) + 0);
+		_p1 = array_safe_get_fast(line, floor(_st) + 1);
 		
 		if(!is_array(_p0)) return out;
 		if(!is_array(_p1)) return out;
@@ -106,10 +106,10 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			for( var j = 1, m = array_length(_line); j < m; j++ ) {
 				_nx = _line[j];
 				
-				var p0x = array_safe_get(_ox, 0);
-				var p0y = array_safe_get(_ox, 1);
-				var p1x = array_safe_get(_nx, 0);
-				var p1y = array_safe_get(_nx, 1);
+				var p0x = array_safe_get_fast(_ox, 0);
+				var p0y = array_safe_get_fast(_ox, 1);
+				var p1x = array_safe_get_fast(_nx, 0);
+				var p1y = array_safe_get_fast(_nx, 1);
 				
 				p0x	= is_real(p0x)? p0x : 0;
 				p0y	= is_real(p0y)? p0y : 0;

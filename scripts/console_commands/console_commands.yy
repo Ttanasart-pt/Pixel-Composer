@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "console_commands",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "functions",
-    "path": "folders/functions.yy",
+  "$GMScript":"",
+  "%Name":"console_commands",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"console_commands",
+  "parent":{
+    "name":"functions",
+    "path":"folders/functions.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

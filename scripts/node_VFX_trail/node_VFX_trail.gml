@@ -37,8 +37,8 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static getLineCount		= function()      { return array_length(lines); }
 	static getSegmentCount	= function()      { return array_length(lines); }
-	static getLength		= function(index) { return array_safe_get(length, index); }
-	static getAccuLength	= function(index) { return array_safe_get(lengthAcc, index, []); }
+	static getLength		= function(index) { return array_safe_get_fast(length, index); }
+	static getAccuLength	= function(index) { return array_safe_get_fast(lengthAcc, index, []); }
 	
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }

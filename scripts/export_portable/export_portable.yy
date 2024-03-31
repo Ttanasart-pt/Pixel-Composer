@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "export_portable",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "project",
-    "path": "folders/functions/project.yy",
+  "$GMScript":"",
+  "%Name":"export_portable",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"export_portable",
+  "parent":{
+    "name":"project",
+    "path":"folders/functions/project.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

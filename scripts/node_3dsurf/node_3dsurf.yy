@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_3dsurf",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "surface",
-    "path": "folders/nodes/data/value/surface.yy",
+  "$GMScript":"",
+  "%Name":"node_3dsurf",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_3dsurf",
+  "parent":{
+    "name":"surface",
+    "path":"folders/nodes/data/value/surface.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

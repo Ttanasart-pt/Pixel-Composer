@@ -7,10 +7,10 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	inputs[| 2] = nodeValue("Angle Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue("Angle Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 3] = nodeValue("Angle Split", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0 * 90, 1 * 90, 2 * 90, 3 * 90 ])
+	inputs[| 3] = nodeValue("Angle Split", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0 * 90, 1 * 90, 2 * 90, 3 * 90 ])
 		.setArrayDynamic()
 		.setArrayDepth(1);
 	
@@ -53,7 +53,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _knx = _kx + lengthdir_x(ui(84), _ang);
 			var _kny = _ky + lengthdir_y(ui(84), _ang);
 			
-			var _surf = array_safe_get(_surfs, i, noone);
+			var _surf = array_safe_get_fast(_surfs, i, noone);
 			if(is_surface(_surf)) {
 				var _sw = surface_get_width(_surf);
 				var _sh = surface_get_height(_surf);
@@ -112,7 +112,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _iso   = new dynaSurf_iso();
 		
 		for( var i = 0; i < _amo; i++ ) 
-			_iso.surfaces[i] = array_safe_get(_surf, i, noone);
+			_iso.surfaces[i] = array_safe_get_fast(_surf, i, noone);
 		_iso.angles      = _angle;
 		_iso.angle_shift = _ashft;
 		

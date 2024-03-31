@@ -29,7 +29,7 @@ if !ready exit;
 	var bx = dialog_x + dialog_w - ui(120);
 	dir_y += ui(48);
 	
-	if(buttonInstant(THEME.button, bx, dir_y, ui(100), ui(40), mouse_ui, sFOCUS, sHOVER) == 2) {
+	if(buttonInstant(THEME.button_def, bx, dir_y, ui(100), ui(40), mouse_ui, sFOCUS, sHOVER) == 2) {
 		if(target) {
 			var paths = paths_to_array(dir_paths, dir_recursive, dir_filter);
 			target.updatePaths(paths);

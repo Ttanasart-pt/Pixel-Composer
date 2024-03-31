@@ -58,9 +58,11 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 } #endregion
 
 function LOAD_AT(path, readonly = false, override = false) { #region
+	static log = false;
+	
 	CALL("load");
 	
-	//print($"========== Loading {path} =========="); var t = get_timer();
+	printIf(log, $"========== Loading {path} =========="); var t0 = get_timer(), t1 = get_timer();
 	
 	if(DEMO) return false;
 	
@@ -85,6 +87,8 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		ds_list_clear(ERRORS);
 	}
 	
+	printIf(log, $" > Check file : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	
 	var temp_path = TEMPDIR;
 	directory_verify(temp_path);
 	
@@ -95,7 +99,16 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	PROJECT.readonly = readonly;
 	SET_PATH(PROJECT, path);
 	
-	var _load_content = json_load_struct(temp_file_path);
+	printIf(log, $" > Create temp : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	
+	var _load_content;
+	
+	var f = file_text_open_read(path);
+	var s = file_text_read_all(f);
+	        file_text_close(f);
+	_load_content = json_parse(s);
+	
+	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	if(struct_has(_load_content, "version")) {
 		var _v = _load_content.version;
@@ -112,11 +125,13 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		log_warning("LOAD", warn);
 	}
 	
+	printIf(log, $" > Load meta : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	
 	var create_list = ds_list_create();
 	if(struct_has(_load_content, "nodes")) {
 		try {
 			var _node_list = _load_content.nodes;
-			for(var i = 0; i < array_length(_node_list); i++) {
+			for(var i = 0, n = array_length(_node_list); i < n; i++) {
 				var _node = nodeLoad(_node_list[i]);
 				if(_node) ds_list_add(create_list, _node);
 			}
@@ -124,6 +139,8 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 			log_warning("LOAD", exception_print(e));
 		}
 	}
+	
+	printIf(log, $" > Load nodes : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	try {
 		if(struct_has(_load_content, "animator")) {
@@ -183,6 +200,8 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		log_warning("LOAD, addon", exception_print(e));
 	}
 	
+	printIf(log, $" > Load data : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	
 	try {
@@ -193,6 +212,8 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		return false;
 	}
 	
+	printIf(log, $" > Load group : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].postDeserialize();
@@ -200,12 +221,16 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		log_warning("LOAD, deserialize", exception_print(e));
 	}
 	
+	printIf(log, $" > Deserialize: {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].applyDeserialize();
 	} catch(e) {
 		log_warning("LOAD, apply deserialize", exception_print(e));
 	}
+	
+	printIf(log, $" > Apply deserialize : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
@@ -217,6 +242,8 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	} catch(e) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
+	
+	printIf(log, $" > Connect : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
 		var pass = 0;
@@ -237,6 +264,8 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		}
 	}
 	
+	printIf(log, $" > Conflict : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].postLoad();
@@ -244,12 +273,16 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		log_warning("LOAD, connect", exception_print(e));
 	}
 	
+	printIf(log, $" > Post load : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].clearInputCache();
 	} catch(e) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
+	
+	printIf(log, $" > Clear cache : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	RENDER_ALL_REORDER
 	
@@ -263,12 +296,16 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	
 	refreshNodeMap();
 	
+	printIf(log, $" > Refresh map : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	
 	if(struct_has(_load_content, "timelines") && !array_empty(_load_content.timelines.contents))
 		PROJECT.timelines.deserialize(_load_content.timelines);
 	
+	printIf(log, $" > Timeline : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	
 	if(!IS_CMD) run_in(1, PANEL_GRAPH.toCenterNode);
 	
-	//print($"========== Load {ds_map_size(PROJECT.nodeMap)} nodes completed in {(get_timer() - t) / 1000} ms ==========");
+	printIf(log, $"========== Load {ds_map_size(PROJECT.nodeMap)} nodes completed in {(get_timer() - t0) / 1000} ms ==========");
 	
 	return true;
 } #endregion

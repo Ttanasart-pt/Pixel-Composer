@@ -3,7 +3,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	use_cache = CACHE_USE.auto;
 
 	onSurfaceSize = function() { return getInputData(input_len, DEF_SURF); };
-	inputs[| 3].setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
+	
+	inputs[| 3] = nodeValue("Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA_REF )
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
+		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| input_len + 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -34,8 +37,9 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	array_push(          input_display_list,     input_len + 1, input_len + 2);
 	array_insert_before( input_display_list, 21, [ input_len + 4, input_len + 5 ]);
 	
-	def_surface   = -1;
-	render_amount = 0;
+	def_surface    = -1;
+	curr_dimension = [ 0, 0 ];
+	render_amount  = 0;
 	
 	insp2UpdateTooltip = "Clear cache";
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
@@ -47,7 +51,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			var _dim		= getInputData(input_len + 0);
 			var _outSurf	= outputs[| 0].getValue();
 			
-			_outSurf = surface_verify(_outSurf, array_safe_get(_dim, 0, 1), array_safe_get(_dim, 1, 1), attrDepth());
+			_outSurf = surface_verify(_outSurf, array_safe_get_fast(_dim, 0, 1), array_safe_get_fast(_dim, 1, 1), attrDepth());
 			outputs[| 0].setValue(_outSurf);
 		}
 		
@@ -70,9 +74,17 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	} #endregion
 	
 	static onStep = function() { #region
+		var _dim = getInputData(input_len + 0);
 		var _typ = getInputData(input_len + 4);
 		
 		inputs[| input_len + 5].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
+		
+		if(curr_dimension[0] != _dim[0] || curr_dimension[1] != _dim[1]) {
+			clearCache();
+			
+			curr_dimension[0] = _dim[0];
+			curr_dimension[1] = _dim[1];
+		}
 	} #endregion
 	
 	static onUpdate = function(frame = CURRENT_FRAME) { #region

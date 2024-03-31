@@ -240,8 +240,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			for(var i = 0; i < _len; i++) 
 				_vec[i] = processType(
 					lerp(
-						is_array(_f)? array_safe_get(_f, i, 0) : _f, 
-						is_array(_t)? array_safe_get(_t, i, 0) : _t, 
+						is_array(_f)? array_safe_get_fast(_f, i, 0) : _f, 
+						is_array(_t)? array_safe_get_fast(_t, i, 0) : _t, 
 					_lrp)
 				);
 			return _vec;
@@ -311,7 +311,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var _keyIndex;
 		if(_time >= _len)		_keyIndex = 999_999;
 		else if(_time <= 0)		_keyIndex = -1;
-		else					_keyIndex = array_safe_get(key_map, _time);
+		else					_keyIndex = array_safe_get_fast(key_map, _time);
 		
 		if(_keyIndex == -1) { #region Before first key
 			if(prop.on_end == KEYFRAME_END.wrap) {
@@ -648,18 +648,18 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		for(var i = 0; i < array_length(_data); i++) {
 			var _keyframe = _data[i];
-			var _time = array_safe_get(_keyframe, 0);
+			var _time = array_safe_get_fast(_keyframe, 0);
 			
 			if(scale && _time <= 1)
 				_time = round(_time * (TOTAL_FRAMES - 1));
 			
-			var value		  = array_safe_get(_keyframe, 1);
-			var ease_in		  = array_safe_get(_keyframe, 2);
-			var ease_out	  = array_safe_get(_keyframe, 3);
-			var ease_in_type  = array_safe_get(_keyframe, 4);
-			var ease_out_type = array_safe_get(_keyframe, 5);
-			var ease_y_lock   = array_safe_get(_keyframe, 6, true);
-			var driver        = array_safe_get(_keyframe, 7, {});
+			var value		  = array_safe_get_fast(_keyframe, 1);
+			var ease_in		  = array_safe_get_fast(_keyframe, 2);
+			var ease_out	  = array_safe_get_fast(_keyframe, 3);
+			var ease_in_type  = array_safe_get_fast(_keyframe, 4);
+			var ease_out_type = array_safe_get_fast(_keyframe, 5);
+			var ease_y_lock   = array_safe_get_fast(_keyframe, 6, true);
+			var driver        = array_safe_get_fast(_keyframe, 7, {});
 			
 			var _val = value;
 			

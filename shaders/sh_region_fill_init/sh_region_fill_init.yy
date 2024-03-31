@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_region_fill_init",
-  "parent": {
-    "name": "region",
-    "path": "folders/shader/generator/region.yy",
+  "$GMShader":"",
+  "%Name":"sh_region_fill_init",
+  "name":"sh_region_fill_init",
+  "parent":{
+    "name":"region",
+    "path":"folders/nodes/data/generator/region.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

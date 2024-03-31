@@ -12,9 +12,9 @@ function steam_ugc_create_collection(file) { #region
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
 	file_copy(file.meta_path, DIRECTORY + "steamUGC/" + filename_name(file.meta_path));
 	
-	if(array_safe_get(file.spr_path, 0) != 0)
+	if(array_safe_get_fast(file.spr_path, 0) != 0)
 		file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
-	steam_ugc_collection_generate(array_safe_get(file.spr_path, 0));
+	steam_ugc_collection_generate(array_safe_get_fast(file.spr_path, 0));
 	
 	STEAM_UGC_ITEM_ID = steam_ugc_create_item(STEAM_APP_ID, ugc_filetype_community);
 } #endregion
@@ -32,7 +32,7 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 	
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
 	file_copy(file.meta_path, DIRECTORY + "steamUGC/" + filename_name(file.meta_path));
-	if(array_safe_get(file.spr_path, 0, 0) != 0)
+	if(array_safe_get_fast(file.spr_path, 0, 0) != 0)
 		file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
 	
 	STEAM_UGC_PUBLISH_ID = file.meta.file_id;
@@ -46,7 +46,7 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 	array_insert_unique(tgs, 0, "Collection");
 	array_push_unique(tgs, VERSION_STRING);
 	
-	steam_ugc_collection_generate(array_safe_get(file.spr_path, 0));
+	steam_ugc_collection_generate(array_safe_get_fast(file.spr_path, 0));
 	
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
 	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, DIRECTORY + "steamUGC");

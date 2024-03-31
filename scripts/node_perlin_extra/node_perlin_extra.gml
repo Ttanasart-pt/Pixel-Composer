@@ -60,11 +60,19 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 16] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+		addShaderProp(SHADER_UNIFORM.float, "rotation");
+			
 	input_display_list = [
 		["Output", 	 true],	0, 5, 
-		["Noise",	false],	10, 1, 2, 13, 3, 4, 11, 14, 12, 15,
+		["Noise",	false],	10, 1, 16, 2, 13, 3, 4, 11, 14, 12, 15,
 		["Render",	false], 6, 7, 8, 9, 
 	];
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	}
 	
 	static step = function() { #region
 		var _col = getInputData(6);

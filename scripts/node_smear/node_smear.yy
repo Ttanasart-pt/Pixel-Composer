@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_smear",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "blur",
-    "path": "folders/nodes/data/filter/blur.yy",
+  "$GMScript":"",
+  "%Name":"node_smear",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_smear",
+  "parent":{
+    "name":"blur",
+    "path":"folders/nodes/data/filter/blur.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

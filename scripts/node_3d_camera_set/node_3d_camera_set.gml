@@ -78,8 +78,8 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 	} #endregion
 	
 	static getPreviewObjects = function() { #region 
-		var _scene = array_safe_get(all_inputs, in_d3d + 4, noone);
-		if(is_array(_scene)) _scene = array_safe_get(_scene, preview_index, noone);
+		var _scene = array_safe_get_fast(all_inputs, in_d3d + 4, noone);
+		if(is_array(_scene)) _scene = array_safe_get_fast(_scene, preview_index, noone);
 		
 		return [ object, lookat, lookLine, lookRad, _scene, light_key, light_fill ];
 	} #endregion

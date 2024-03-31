@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "printer",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "debug",
-    "path": "folders/functions/debug.yy",
+  "$GMScript":"",
+  "%Name":"printer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"printer",
+  "parent":{
+    "name":"debug",
+    "path":"folders/functions/debug.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

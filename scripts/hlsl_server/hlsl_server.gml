@@ -78,7 +78,7 @@ function hlsl_document_parser(prompt, node = noone) {
 		if(_arg_type == 7) {
 			array_push(params, [ _arg_name + "Object", "Texture2D" ]);
 			array_push(params, [ _arg_name, "SamplerState" ]);
-		} else array_push(params, [ _arg_name, array_safe_get(global.HLSL_VAR, _arg_type) ]);
+		} else array_push(params, [ _arg_name, array_safe_get_fast(global.HLSL_VAR, _arg_type) ]);
 	}
 	
 	for( var i = 0, n = array_length(lines); i < n; i++ ) {

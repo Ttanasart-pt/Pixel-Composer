@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "panel_node_credit",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "what?",
-    "path": "folders/panels/what?.yy",
+  "$GMScript":"",
+  "%Name":"panel_node_credit",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_node_credit",
+  "parent":{
+    "name":"what?",
+    "path":"folders/panels/what?.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

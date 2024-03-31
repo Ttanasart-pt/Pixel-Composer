@@ -55,7 +55,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	use_normal    = false;
 	
 	insp1UpdateTooltip  = __txt("Refresh");
-	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { current_path = ""; }
 
@@ -215,7 +215,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		return _object;
 	} #endregion
 	
-	static getPreviewValues = function() { return array_safe_get(all_inputs, in_mesh + 2, noone); }
+	static getPreviewValues = function() { return array_safe_get_fast(all_inputs, in_mesh + 2, noone); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		if(!obj_reading) return;

@@ -173,7 +173,7 @@ if !ready exit;
 				steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
 		
 			bx -= ui(36);
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh) == 2)
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh_icon) == 2)
 				steamUCGload();
 			break;
 		case "Contests" : 

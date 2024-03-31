@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_iterate_sort_inline",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "for sort",
-    "path": "folders/nodes/data/iterate/for sort.yy",
+  "$GMScript":"",
+  "%Name":"node_iterate_sort_inline",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_iterate_sort_inline",
+  "parent":{
+    "name":"for_sort",
+    "path":"folders/nodes/data/iterate/for_sort.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

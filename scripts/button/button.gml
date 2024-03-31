@@ -62,7 +62,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		return draw(params.x, params.y, params.w, params.h, params.m);
 	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _m, spr = THEME.button, blend = c_white) { #region
+	static draw = function(_x, _y, _w, _h, _m, spr = THEME.button_def, blend = c_white) { #region
 		x = _x;
 		y = _y;
 		w = _w;

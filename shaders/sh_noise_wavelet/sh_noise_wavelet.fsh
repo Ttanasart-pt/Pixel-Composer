@@ -13,6 +13,7 @@ varying vec4 v_vColour;
 uniform float seed;
 uniform vec2  u_resolution;
 uniform vec2  position;
+uniform float rotation;
 
 uniform vec2      progress;
 uniform int       progressUseSurf;
@@ -65,10 +66,9 @@ void main() {
 		}
 	#endregion
 	
-	vec2 pos    = v_vTexcoord - .5;
-	     pos.x *= (u_resolution.x / u_resolution.y);
-         pos    = (pos + position) * sca / 16.;
-	
+	float ang = radians(rotation);
+    vec2  pos = (v_vTexcoord - position / u_resolution) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / 16.;
+    
     vec3 col  = vec3(0.);
 	     col += WaveletNoise(pos * 5., (2.9864 + prog), detl) * .5 + .5; 
 	

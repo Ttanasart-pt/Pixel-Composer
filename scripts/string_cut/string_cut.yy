@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "string_cut",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "string",
-    "path": "folders/functions/string.yy",
+  "$GMScript":"",
+  "%Name":"string_cut",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"string_cut",
+  "parent":{
+    "name":"string",
+    "path":"folders/functions/string.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

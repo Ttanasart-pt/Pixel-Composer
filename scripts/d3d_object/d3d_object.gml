@@ -144,8 +144,8 @@ function __3dObject() constructor {
 			gpu_set_tex_repeat(true);
 			
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
-				var _ind = array_safe_get(material_index, i, i);
-				var _mat = array_safe_get(materials, _ind, noone);
+				var _ind = array_safe_get_fast(material_index, i, i);
+				var _mat = array_safe_get_fast(materials, _ind, noone);
 				var _useMat = is_instanceof(_mat, __d3dMaterial);
 				
 				shader_set_i("mat_flip", texture_flip);

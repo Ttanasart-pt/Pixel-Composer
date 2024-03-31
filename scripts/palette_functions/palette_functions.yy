@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "palette_functions",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "color selector",
-    "path": "folders/dialog/color selector.yy",
+  "$GMScript":"",
+  "%Name":"palette_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"palette_functions",
+  "parent":{
+    "name":"color_selector",
+    "path":"folders/dialog/color_selector.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

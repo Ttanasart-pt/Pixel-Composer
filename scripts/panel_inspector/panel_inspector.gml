@@ -33,7 +33,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	#region ---- main ----
 		title = __txt("Inspector");
 		context_str = "Inspector";
-		icon  = THEME.panel_inspector;
+		icon  = THEME.panel_inspector_icon;
 	
 		w = ui(400);
 		h = ui(640);
@@ -254,8 +254,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 			
 			var _meta = meta_display[i];
-			var _txt  = array_safe_get(_meta, 0);
-			var _b	  = array_safe_get(_meta, 2, noone);
+			var _txt  = array_safe_get_fast(_meta, 0);
+			var _b	  = array_safe_get_fast(_meta, 2, noone);
 			var _x1   = con_w - (_b != noone) * ui(30);
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + ui(32))) {
@@ -540,7 +540,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						var txt  = __txt(jun_disp[0]);
 						var coll = jun_disp[1] && filter_text == "";
 						var lbh  = viewMode? ui(32) : ui(26);
-						var togl = array_safe_get(jun_disp, 2, noone);
+						var togl = array_safe_get_fast(jun_disp, 2, noone);
 						if(togl != noone) var toging = _inspecting.getInputData(togl);
 						
 						var lbx = (togl != noone) * ui(40);
@@ -744,7 +744,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 			
 			if(MESSAGE != noone && MESSAGE.type == "Color") {
-				var inp = array_safe_get(pickers, picker_index, 0);
+				var inp = array_safe_get_fast(pickers, picker_index, 0);
 				if(is_struct(inp)) {
 					inp.setValue(MESSAGE.data);
 					MESSAGE = noone;

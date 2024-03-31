@@ -479,6 +479,31 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
+		if(sliding > 0) { #region
+			slide_delta += window_mouse_get_delta_x();
+			slide_delta += window_mouse_get_delta_y();
+			
+			if(sliding == 1 && abs(slide_delta) > 8) {
+				deactivate();
+				textBox_slider.activate(toNumber(_input_text));
+				sliding  = 2;
+			}
+			
+			if(sliding == 2) {
+				textBox_slider.tb = self;
+				if(mouse_release(mb_left)) {
+					deactivate();
+					if(onRelease != noone) apply(onRelease);
+				}
+			}
+			
+			if(mouse_release(mb_left)) {
+				sliding = 0;
+				_update = true;
+				UNDO_HOLDING = false;
+			}
+		} #endregion
+		
 		if(selecting) { 
 			if(sprite_index == -1) draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, _h, COLORS._main_accent, 1);
 			else                   draw_sprite_stretched(THEME.textbox, sprite_index, _x, _y, _w, _h);
@@ -640,30 +665,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			draw_surface(text_surface, tb_surf_x, tb_surf_y);
 			BLEND_NORMAL
 		}
-		
-		if(sliding > 0) { #region
-			slide_delta += window_mouse_get_delta_x();
-			slide_delta += window_mouse_get_delta_y();
-			
-			if(sliding == 1 && abs(slide_delta) > 8) {
-				deactivate();
-				textBox_slider.activate(toNumber(_input_text));
-				sliding  = 2;
-			}
-			
-			if(sliding == 2) {
-				textBox_slider.tb = self;
-				if(mouse_release(mb_left)) {
-					deactivate();
-					if(onRelease != noone) apply(onRelease);
-				}
-			}
-			
-			if(mouse_release(mb_left)) {
-				sliding = 0;
-				UNDO_HOLDING = false;
-			}
-		} #endregion
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _w, _h, COLORS._main_value_positive, 1);

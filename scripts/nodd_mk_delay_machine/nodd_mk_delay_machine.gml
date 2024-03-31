@@ -65,13 +65,13 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			for( var i = _amo - 1; i >= 0; i-- ) {
 				var _ff = CURRENT_FRAME - i * _frm;
-				var _s  = array_safe_get(cached_output, _ff);
+				var _s  = array_safe_get_fast(cached_output, _ff);
 				if(!is_surface(_s)) continue;
 				
 				switch(_psel) {
-					case 0 : cc = array_safe_get(_pal, i, c_white, ARRAY_OVERFLOW.loop);     break;
-					case 1 : cc = array_safe_get(_pal, i, c_white, ARRAY_OVERFLOW.pingpong); break;
-					case 2 : cc = array_safe_get(_pal, irandom(_psiz), c_white);             break;
+					case 0 : cc = array_safe_get_fast(_pal, i, c_white, ARRAY_OVERFLOW.loop);     break;
+					case 1 : cc = array_safe_get_fast(_pal, i, c_white, ARRAY_OVERFLOW.pingpong); break;
+					case 2 : cc = array_safe_get_fast(_pal, irandom(_psiz), c_white);             break;
 				}
 				
 				aa = eval_curve_x(_alpC, 1 - i / _amo);

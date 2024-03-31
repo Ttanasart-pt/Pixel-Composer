@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_mk_ballGrid",
-  "parent": {
-    "name": "MK effects",
-    "path": "folders/shader/MK effects.yy",
+  "$GMShader":"",
+  "%Name":"sh_mk_ballGrid",
+  "name":"sh_mk_ballGrid",
+  "parent":{
+    "name":"MK effects",
+    "path":"folders/shader/MK effects.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

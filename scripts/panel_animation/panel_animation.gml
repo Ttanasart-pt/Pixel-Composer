@@ -38,7 +38,7 @@ enum KEYFRAME_DRAG_TYPE {
 function Panel_Animation() : PanelContent() constructor {
 	title		= __txt("Animation");
 	context_str = "Animation";
-	icon		= THEME.panel_animation;
+	icon		= THEME.panel_animation_icon;
 	
 	#region ---- dimension ----
 		timeline_h	= ui(28);
@@ -1308,7 +1308,7 @@ function Panel_Animation() : PanelContent() constructor {
 			value_focusing = noone;
 		if(mouse_press(mb_right, pFOCUS))
 			context_selecting_item = noone;
-				
+		
 		#region draw
 			hovering_folder = PROJECT.timelines;
 			hovering_order  = 0;
@@ -1323,6 +1323,9 @@ function Panel_Animation() : PanelContent() constructor {
 				
 				var _y = _cont.y;
 				var _h = _cont.h + dope_sheet_node_padding;
+				
+				if(_y + _h < 0) continue;
+				if(_y > h) break;
 				
 				if(item_dragging != noone && item_dragging.item == _cont.item) continue;
 				
@@ -1357,6 +1360,12 @@ function Panel_Animation() : PanelContent() constructor {
 				var _cont = timeline_contents[i];
 				if(!_cont.show) continue;
 				
+				var _y = _cont.y;
+				var _h = _cont.h + dope_sheet_node_padding;
+				
+				if(_y + _h < 0) continue;
+				if(_y > h) break;
+				
 				if(item_dragging != noone && item_dragging.item == _cont.item) {
 					_itx = _cont.depth * ui(20);
 					_ity = _cont.y;
@@ -1369,7 +1378,7 @@ function Panel_Animation() : PanelContent() constructor {
 				if(_cont.type == "node" && _cont.item.show)
 				for( var j = 0; j < array_length(_cont.animators); j++ )
 					__drawDopesheetLabelAnimator(_cont, _cont.node, _cont.animators[j], msx, msy);
-			} //end node loop
+			}
 			
 			if(_itx != -1) {
 				draw_set_color(COLORS._main_accent);

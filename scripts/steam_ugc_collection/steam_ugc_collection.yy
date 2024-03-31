@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "steam_ugc_collection",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "UGC",
-    "path": "folders/Steamworks/UGC.yy",
+  "$GMScript":"",
+  "%Name":"steam_ugc_collection",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"steam_ugc_collection",
+  "parent":{
+    "name":"UGC",
+    "path":"folders/Steamworks/UGC.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "dynaSurf_square_fill",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "dynaSurf",
-    "path": "folders/functions/draw/dynaSurf.yy",
+  "$GMScript":"",
+  "%Name":"dynaSurf_square_fill",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dynaSurf_square_fill",
+  "parent":{
+    "name":"dynaSurf",
+    "path":"folders/functions/draw/dynaSurf.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

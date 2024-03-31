@@ -147,7 +147,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");
-	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
 		updatePaths(path_get(getInputData(0)));
@@ -238,7 +238,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				break;
 		}
 		
-		var _spr   = array_safe_get(spr, _frame, noone);
+		var _spr   = array_safe_get_fast(spr, _frame, noone);
 		if(_spr == noone) return;
 		
 		var curr_w = sprite_get_width(spr[_frame]);

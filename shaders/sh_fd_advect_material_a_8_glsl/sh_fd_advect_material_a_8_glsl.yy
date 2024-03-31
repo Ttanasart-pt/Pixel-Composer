@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_fd_advect_material_a_8_glsl",
-  "parent": {
-    "name": "Shaders",
-    "path": "folders/functions/fluid sim/Shaders.yy",
+  "$GMShader":"",
+  "%Name":"sh_fd_advect_material_a_8_glsl",
+  "name":"sh_fd_advect_material_a_8_glsl",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/functions/fluid_sim/Shaders.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

@@ -60,7 +60,7 @@ function Panel_Palette() : PanelContent() constructor {
 					if(_index < pre_amo && _index >= 0) {
 						DRAGGING = {
 							type: "Color",
-							data: array_safe_get(preset.palette, _index)
+							data: array_safe_get_fast(preset.palette, _index)
 						}
 						MESSAGE = DRAGGING;
 					}
@@ -98,7 +98,7 @@ function Panel_Palette() : PanelContent() constructor {
 		var bx = w - ui(32 + 16);
 		var by = title_height / 2 - ui(16 + !in_dialog * 2);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Refresh"), THEME.refresh, 1, COLORS._main_icon) == 2) 
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Refresh"), THEME.refresh_icon, 1, COLORS._main_icon) == 2) 
 			__initPalette();
 		
 		bx -= ui(32)

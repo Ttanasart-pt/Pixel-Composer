@@ -26,7 +26,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	} #endregion
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
-		return array_safe_get(_data[0], _output_index);
+		return array_safe_get_fast(_data[0], _output_index);
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

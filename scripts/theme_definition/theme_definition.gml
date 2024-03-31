@@ -4,7 +4,7 @@ function Theme() constructor { #region
 	pixel_builder                    = noone;
 	control_remove                   = noone;
 	node_frame_title                 = noone;
-	panel_graph                      = noone;
+	panel_graph_icon                 = noone;
 	timeline_clock                   = noone;
 	preview_bone_IK                  = noone;
 	node_draw_path                   = noone;
@@ -49,8 +49,8 @@ function Theme() constructor { #region
 	grad_blend                       = noone;
 	mesh_tool_edit                   = noone;
 	bone                             = noone;
-	node_trigger                     = noone;
-	button                           = noone;
+	node_trigger_icon                = noone;
+	button_def                       = noone;
 	prop_anchor                      = noone;
 	chat                             = noone;
 	wiki                             = noone;
@@ -69,7 +69,7 @@ function Theme() constructor { #region
 	feedback                         = noone;
 	path_tools_draw                  = noone;
 	node_slider                      = noone;
-	checkbox                         = noone;
+	checkbox_def                     = noone;
 	menu_button                      = noone;
 	icon_save_all                    = noone;
 	icon_minimap                     = noone;
@@ -184,7 +184,7 @@ function Theme() constructor { #region
 	node_new_badge                   = noone;
 	node_deprecated_badge            = noone;
 	inspector_channel                = noone;
-	slider                           = noone;
+	slider_def                       = noone;
 	star                             = noone;
 	vct                              = noone;
 	refresh_20                       = noone;
@@ -194,7 +194,7 @@ function Theme() constructor { #region
 	cursor_select                    = noone;
 	add                              = noone;
 	hamburger_s                      = noone;
-	panel_preview                    = noone;
+	panel_preview_icon               = noone;
 	folder                           = noone;
 	anchor                           = noone;
 	icon_curve_connection            = noone;
@@ -221,7 +221,7 @@ function Theme() constructor { #region
 	icon_preview_export              = noone;
 	ui_panel_fg                      = noone;
 	ui_panel_active                  = noone;
-	node_glow                        = noone;
+	node_glow_border                 = noone;
 	preview_hide                     = noone;
 	node_state                       = noone;
 	undo                             = noone;
@@ -270,17 +270,17 @@ function Theme() constructor { #region
 	button_middle                    = noone;
 	obj_direction                    = noone;
 	tunnel                           = noone;
-	node_processor                   = noone;
+	node_processor_icon              = noone;
 	keyframe_override                = noone;
 	frame_range                      = noone;
 	unit_audio                       = noone;
 	loading                          = noone;
 	inspector_surface_halign         = noone;
 	inspector_surface_valign         = noone;
-	panel_animation                  = noone;
+	panel_animation_icon             = noone;
 	project_fix_palette              = noone;
 	palette_separator                = noone;
-	refresh                          = noone;
+	refresh_icon                     = noone;
 	file                             = noone;
 	crop_tool                        = noone;
 	icon_cmd_enter                   = noone;
@@ -307,7 +307,7 @@ function Theme() constructor { #region
 	value_link                       = noone;
 	addon_icon                       = noone;
 	timeline_graph                   = noone;
-	panel_inspector                  = noone;
+	panel_inspector_icon             = noone;
 	checkbox_on_start                = noone;
 	animate_prop_go                  = noone;
 	folder_content                   = noone;

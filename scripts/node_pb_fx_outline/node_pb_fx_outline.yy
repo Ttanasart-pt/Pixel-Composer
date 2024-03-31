@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_pb_fx_outline",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "effect",
-    "path": "folders/nodes/data/pixel builder/effect.yy",
+  "$GMScript":"",
+  "%Name":"node_pb_fx_outline",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_pb_fx_outline",
+  "parent":{
+    "name":"effect",
+    "path":"folders/nodes/data/pixel_builder/effect.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

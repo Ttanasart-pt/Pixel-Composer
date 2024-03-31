@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_interpret_number",
-  "parent": {
-    "name": "interpret",
-    "path": "folders/shader/generator/interpret.yy",
+  "$GMShader":"",
+  "%Name":"sh_interpret_number",
+  "name":"sh_interpret_number",
+  "parent":{
+    "name":"interpret",
+    "path":"folders/nodes/data/generator/interpret.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

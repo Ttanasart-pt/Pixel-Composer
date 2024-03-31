@@ -23,7 +23,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	batch_output = false;	//Run processData once with all outputs as array.
 	
-	icon    = THEME.node_processor;
+	icon    = THEME.node_processor_icon;
 	
 	array_push(attributeEditors, "Array processor");
 	array_push(attributeEditors, [ "Array process type", function() { return attributes.array_process; }, 
@@ -33,7 +33,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			triggerRender();
 		}, false) ]);
 	
-	static getInputData = function(index, def = 0) { INLINE return array_safe_get(inputs_data, index, def); }
+	static getInputData = function(index, def = 0) { INLINE return array_safe_get_fast(inputs_data, index, def); }
 	
 	static processData_prebatch  = function() {}
 	static processData_postbatch = function() {}
@@ -45,7 +45,6 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _n  = _l[| _index];
 		var _in = output? _n.getValue() : getInputData(_index);
 		
-		//if(_index == 3) print($"Getting value {name} [{_index}, {_arr}]: {_n.isArray(_in)} = {_in}");
 		if(!_n.isArray(_in)) return _in;
 		
 		var _aIndex = _arr;
@@ -58,8 +57,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			case ARRAY_PROCESS.expand_inv : _aIndex = floor(_arr / process_length[ds_list_size(_l) - 1 - _index][1]) % process_length[_index][0]; break;
 		}
 		
-		//print($"Getting value {name} [{_index}, {_arr}]: {_in}[{_aIndex}] = {array_safe_get(_in, _aIndex)}");
-		return array_safe_get(_in, _aIndex);
+		return array_safe_get_fast(_in, _aIndex);
 	} #endregion
 	
 	static getDimension = function(arr = 0) { #region
@@ -111,8 +109,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						} else 
 							return noone;
 					} else if(is_array(surf)) {
-						_sw = array_safe_get(surf, 0, 1);
-						_sh = array_safe_get(surf, 1, 1);
+						_sw = array_safe_get_fast(surf, 0, 1);
+						_sh = array_safe_get_fast(surf, 1, 1);
 					}
 					
 					if(manage_atlas && is_instanceof(_out, SurfaceAtlas)) {
@@ -225,7 +223,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(process_amount == 1) {
 			var data = processData(noone, inputs_data, 0, 0);
 			for(var i = 0; i < ds_list_size(outputs); i++) {
-				var _outp = array_safe_get(data, i, undefined);
+				var _outp = array_safe_get_fast(data, i, undefined);
 				if(_outp == undefined) continue;
 				outputs[| i].setValue(_outp);
 			}
@@ -238,7 +236,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 				var data = processData(0, _data, 0, l);
 				for(var i = 0; i < ds_list_size(outputs); i++) {
-					var _outp = array_safe_get(data, i, undefined);
+					var _outp = array_safe_get_fast(data, i, undefined);
 					_outputs[i][l] = _outp;
 				}
 			}
@@ -363,7 +361,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(CURRENT_FRAME >= array_length(cached_output)) return;
 		
 		var prev = cached_output[CURRENT_FRAME];
-		surface_array_free(array_safe_get(prev, index));
+		surface_array_free(array_safe_get_fast(prev, index));
 		cached_output[CURRENT_FRAME][index] = surface_array_clone(_frame);
 		
 		array_safe_set(cache_result, CURRENT_FRAME, true);
@@ -375,7 +373,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(frame < 0) return false;
 		if(!cacheExist(frame)) return noone;
 		
-		var surf = array_safe_get(cached_output, frame);
-		return array_safe_get(surf, index);
+		var surf = array_safe_get_fast(cached_output, frame);
+		return array_safe_get_fast(surf, index);
 	} #endregion
 }

@@ -83,9 +83,9 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			
 			//if(!_inst) _obj = _obj.clone(false, true);
 			
-			var _apos = array_safe_get(_Apos, i);
-			var _arot = array_safe_get(_Arot, i);
-			var _asca = array_safe_get(_Asca, i);
+			var _apos = array_safe_get_fast(_Apos, i);
+			var _arot = array_safe_get_fast(_Arot, i);
+			var _asca = array_safe_get_fast(_Asca, i);
 			
 			if(!is_array(_apos) || array_length(_apos) != 3) _apos = [ 0, 0, 0 ];
 			if(!is_array(_arot) || array_length(_arot) != 3) _arot = [ 0, 0, 0 ];

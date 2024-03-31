@@ -31,7 +31,7 @@ if(!ready) exit;
 		
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
 			selecting = i;
-			var tips = array_safe_get(tooltips, i, noone);
+			var tips = array_safe_get_fast(tooltips, i, noone);
 			if(tips != noone) TOOLTIP = tips;
 		}
 		
@@ -83,8 +83,8 @@ if(!ready) exit;
 				var _by	  = yy + hght + hght / 2 - ui(4);
 				var _spr  = noone, _ind = 0;
 				var _sprs = _submenu[0];
-				var _tlp  = array_safe_get(_submenu, 2, "");
-				var _dat  = array_safe_get(_submenu, 3, {});
+				var _tlp  = array_safe_get_fast(_submenu, 2, "");
+				var _dat  = array_safe_get_fast(_submenu, 3, {});
 				var _clr  = c_white;
 				var _str  = "";
 				
@@ -101,7 +101,7 @@ if(!ready) exit;
 					if(is_array(_sprs)) {
 						_spr = _sprs[0];
 						_ind = _sprs[1];
-						_clr = array_safe_get(_sprs, 2, c_white);
+						_clr = array_safe_get_fast(_sprs, 2, c_white);
 					} else _spr = _sprs;
 					
 					_sw = sprite_get_width(_spr)  + ui(8);

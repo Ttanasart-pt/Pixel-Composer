@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_average",
-  "parent": {
-    "name": "blur",
-    "path": "folders/shader/filter/blur.yy",
+  "$GMShader":"",
+  "%Name":"sh_average",
+  "name":"sh_average",
+  "parent":{
+    "name":"blur",
+    "path":"folders/shader/filter/blur.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

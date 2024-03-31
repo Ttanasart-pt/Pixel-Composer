@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_rate_remap",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "animation",
-    "path": "folders/nodes/data/animation.yy",
+  "$GMScript":"",
+  "%Name":"node_rate_remap",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_rate_remap",
+  "parent":{
+    "name":"animation",
+    "path":"folders/nodes/data/animation.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

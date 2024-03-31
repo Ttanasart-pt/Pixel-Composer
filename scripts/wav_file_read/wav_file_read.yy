@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "wav_file_read",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "audio",
-    "path": "folders/functions/audio.yy",
+  "$GMScript":"",
+  "%Name":"wav_file_read",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"wav_file_read",
+  "parent":{
+    "name":"audio",
+    "path":"folders/functions/audio.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

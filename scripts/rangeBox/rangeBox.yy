@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "rangeBox",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "text",
-    "path": "folders/widgets/text.yy",
+  "$GMScript":"",
+  "%Name":"rangeBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"rangeBox",
+  "parent":{
+    "name":"text",
+    "path":"folders/widgets/text.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

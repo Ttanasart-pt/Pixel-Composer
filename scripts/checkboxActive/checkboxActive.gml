@@ -25,7 +25,7 @@ function checkBoxActive(_onClick) : widget() constructor {
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh)) {
 			BLEND_ADD
-			draw_sprite_stretched_ext(THEME.slider, 3, bx, by, bw, bh, COLORS._main_icon_dark, 1);
+			draw_sprite_stretched_ext(THEME.slider_def, 3, bx, by, bw, bh, COLORS._main_icon_dark, 1);
 			BLEND_NORMAL
 			
 			if(mouse_press(mb_left, active))

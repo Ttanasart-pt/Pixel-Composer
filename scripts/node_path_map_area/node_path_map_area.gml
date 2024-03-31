@@ -6,7 +6,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_AREA)
-		.setDisplay(VALUE_DISPLAY.area);
+		.setDisplay(VALUE_DISPLAY.area, { useShape : false });
 	inputs[| 1].editWidget.adjust_shape = false;
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
@@ -44,7 +44,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _area = getInputData(1);
 		
 		if(is_array(_path)) {
-			_path = array_safe_get(_path, ind);
+			_path = array_safe_get_fast(_path, ind);
 			ind = 0;
 		}
 		

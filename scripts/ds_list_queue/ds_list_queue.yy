@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "ds_list_queue",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "ds",
-    "path": "folders/functions/ds.yy",
+  "$GMScript":"",
+  "%Name":"ds_list_queue",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ds_list_queue",
+  "parent":{
+    "name":"ds",
+    "path":"folders/functions/ds.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

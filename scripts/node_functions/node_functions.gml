@@ -141,6 +141,7 @@
 
 #region node function
 	function nodeLoad(_data, scale = false, _group = noone) {
+		INLINE
 		if(!is_struct(_data)) return;
 		
 		var _x    = _data.x;

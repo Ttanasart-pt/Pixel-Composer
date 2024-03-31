@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_blend_normal_dim",
-  "parent": {
-    "name": "blend",
-    "path": "folders/shader/blend.yy",
+  "$GMShader":"",
+  "%Name":"sh_blend_normal_dim",
+  "name":"sh_blend_normal_dim",
+  "parent":{
+    "name":"blend",
+    "path":"folders/shader/blend.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

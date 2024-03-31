@@ -8,6 +8,7 @@ uniform vec2  position;
 uniform float seed;
 uniform float contrast;
 uniform float middle;
+uniform float rotation;
 
 uniform vec2      scale;
 uniform int       scaleUseSurf;
@@ -54,11 +55,14 @@ void main() {
 			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
 			sca = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
-		sca;
+		
+		float ang = rotation;
 	#endregion
 	
-    vec2 p  = ((v_vTexcoord - position / dimension) * sca * 2.0 - 1.0);
-    float n = voronoi3d(vec3(p, seed), sca);
+	vec2 pos = position / dimension;
+	vec2 st  = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca * 0.75;
+	
+    float n = voronoi3d(vec3(st, seed), sca);
 	      n = middle + (n - middle) * contrast;
 	
     gl_FragColor = vec4(vec3(n), 1.);

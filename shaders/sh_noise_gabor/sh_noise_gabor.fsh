@@ -28,6 +28,7 @@ uniform sampler2D scaleSurf;
 
 uniform vec2  u_resolution;
 uniform vec2  position;
+uniform float trRotation;
 
 uniform vec2  augment;
 
@@ -95,10 +96,11 @@ void main() {
 		}
 	#endregion
 	
+	float r     = radians(trRotation);
 	vec2 pos    = v_vTexcoord;
 	     pos.x *= (u_resolution.x / u_resolution.y);
-         pos    = (pos + position) * sca;
-	
+         pos    = (pos - position / u_resolution) * mat2(cos(r), -sin(r), sin(r), cos(r)) * scale;
+    
 	vec3 f   = gabor_wave(pos);
 	vec3 col = vec3(0.5 + 0.5 * f.x);
 	

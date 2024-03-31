@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_draw_surface",
-  "parent": {
-    "name": "blend",
-    "path": "folders/shader/blend.yy",
+  "$GMShader":"",
+  "%Name":"sh_draw_surface",
+  "name":"sh_draw_surface",
+  "parent":{
+    "name":"blend",
+    "path":"folders/shader/blend.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

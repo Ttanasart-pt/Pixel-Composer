@@ -22,7 +22,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 6] = nodeValue("Scale multiply", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 7] = nodeValue("Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 360])
+	inputs[| 7] = nodeValue("Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 360])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
 	inputs[| 8] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
@@ -243,7 +243,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _surf = _inSurf;
 				
 				if(is_array(_inSurf)) 
-					_surf = array_safe_get(_inSurf, _arr? irandom(array_length(_inSurf) - 1) : safe_mod(i, array_length(_inSurf)));
+					_surf = array_safe_get_fast(_inSurf, _arr? irandom(array_length(_inSurf) - 1) : safe_mod(i, array_length(_inSurf)));
 				
 				var _sw = surface_get_width_safe(_surf);
 				var _sh = surface_get_height_safe(_surf);

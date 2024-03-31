@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "stack_functions",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "ds",
-    "path": "folders/functions/ds.yy",
+  "$GMScript":"",
+  "%Name":"stack_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"stack_functions",
+  "parent":{
+    "name":"ds",
+    "path":"folders/functions/ds.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

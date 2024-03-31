@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "buttonGradient",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "button",
-    "path": "folders/widgets/button.yy",
+  "$GMScript":"",
+  "%Name":"buttonGradient",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"buttonGradient",
+  "parent":{
+    "name":"button",
+    "path":"folders/widgets/button.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_VFX_triangulate",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "effects",
-    "path": "folders/nodes/data/simulation/VFX/effects.yy",
+  "$GMScript":"",
+  "%Name":"node_VFX_triangulate",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_VFX_triangulate",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/simulation/VFX/effects.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

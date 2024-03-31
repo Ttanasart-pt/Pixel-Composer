@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_vector_diverge",
-  "parent": {
-    "name": "vector mapper",
-    "path": "folders/shader/generator/vector mapper.yy",
+  "$GMShader":"",
+  "%Name":"sh_vector_diverge",
+  "name":"sh_vector_diverge",
+  "parent":{
+    "name":"vector_mapper",
+    "path":"folders/nodes/data/generator/vector_mapper.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

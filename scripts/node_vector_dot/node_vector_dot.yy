@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_vector_dot",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "number",
-    "path": "folders/nodes/data/value/number.yy",
+  "$GMScript":"",
+  "%Name":"node_vector_dot",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_vector_dot",
+  "parent":{
+    "name":"number",
+    "path":"folders/nodes/data/value/number.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

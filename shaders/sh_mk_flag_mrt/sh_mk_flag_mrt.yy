@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_mk_flag_mrt",
-  "parent": {
-    "name": "Flag",
-    "path": "folders/shader/MK effects/Flag.yy",
+  "$GMShader":"",
+  "%Name":"sh_mk_flag_mrt",
+  "name":"sh_mk_flag_mrt",
+  "parent":{
+    "name":"Flag",
+    "path":"folders/shader/MK effects/Flag.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

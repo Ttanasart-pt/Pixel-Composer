@@ -21,7 +21,7 @@ function Node_3DSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	];
 	
 	static getObject = function(index, class = object_class) { #region
-		var _obj = array_safe_get(cached_object, index, noone);
+		var _obj = array_safe_get_fast(cached_object, index, noone);
 		if(_obj == noone) {
 			_obj = new class();
 		} else if(!is_instanceof(_obj, class)) {

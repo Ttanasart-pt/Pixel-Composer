@@ -313,6 +313,7 @@
 	} #endregion
 
 	function surface_size_to(surface, width, height, format = noone, skipCheck = false) { #region
+		INLINE 
 		if(!skipCheck && !is_surface(surface))			return surface;
 		if(!is_numeric(width) || !is_numeric(height))	return surface;
 		if(width < 1 && height < 1)						return surface;
@@ -325,13 +326,13 @@
 		width  = surface_valid_size(width);
 		height = surface_valid_size(height);
 	
-		var ww = surface_get_width_safe(surface);
-		var hh = surface_get_height_safe(surface);
+		var ww = surface_get_width(surface);
+		var hh = surface_get_height(surface);
 	
 		if(ww == width && hh == height) return surface;
 	
 		surface_resize(surface, width, height);
-		surface_clear(surface);
+		//surface_clear(surface);
 	
 		return surface;
 	} #endregion

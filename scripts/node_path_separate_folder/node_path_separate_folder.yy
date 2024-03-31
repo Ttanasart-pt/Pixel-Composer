@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_path_separate_folder",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "text",
-    "path": "folders/nodes/data/value/text.yy",
+  "$GMScript":"",
+  "%Name":"node_path_separate_folder",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_path_separate_folder",
+  "parent":{
+    "name":"text",
+    "path":"folders/nodes/data/value/text.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

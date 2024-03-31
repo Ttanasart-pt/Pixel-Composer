@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "mask_function",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "mask",
-    "path": "folders/shader/mask.yy",
+  "$GMScript":"",
+  "%Name":"mask_function",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"mask_function",
+  "parent":{
+    "name":"mask",
+    "path":"folders/shader/mask.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -59,7 +59,7 @@ function Node_RGB_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		if(_arr) {
 			for( var i = 0; i < 4; i++ ) {
-				var _surf = array_safe_get(_outSurf, i);
+				var _surf = array_safe_get_fast(_outSurf, i);
 				    _surf = surface_verify(_surf, _ww, _hh);
 				_outSurf[i] = _surf;
 				

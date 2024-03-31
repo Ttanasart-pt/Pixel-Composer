@@ -338,7 +338,7 @@ function __part(_node) : __particleObject() constructor {
 			}
 		} else if(arr_type == 3) {
 			var _sca = round(min(scx, scy));
-			ss = array_safe_get(surf, clamp(_sca, 0, array_length(surf) - 1));
+			ss = array_safe_get_fast(surf, clamp(_sca, 0, array_length(surf) - 1));
 		}
 		
 		var surface = is_instanceof(ss, SurfaceAtlas)? ss.getSurface() : node.surface_cache[$ ss];

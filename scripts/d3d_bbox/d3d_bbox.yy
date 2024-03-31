@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "d3d_bbox",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "util",
-    "path": "folders/functions/3d/util.yy",
+  "$GMScript":"",
+  "%Name":"d3d_bbox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"d3d_bbox",
+  "parent":{
+    "name":"util",
+    "path":"folders/functions/3d/util.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

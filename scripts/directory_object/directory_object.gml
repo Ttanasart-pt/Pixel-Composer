@@ -71,8 +71,8 @@ function FileObject(_name, _path) constructor { #region
 			return spr;
 		}
 		
-		var path = array_safe_get(spr_path, 0);
-		var amo  = array_safe_get(spr_path, 1);
+		var path = array_safe_get_fast(spr_path, 0);
+		var amo  = array_safe_get_fast(spr_path, 1);
 		
 		if(!file_exists_empty(path)) return -1;
 		
@@ -80,12 +80,12 @@ function FileObject(_name, _path) constructor { #region
 			sprFetchID = sprite_add_ext(path, amo, 0, 0, true);
 			IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
 				spr = load_result[? "id"];
-				if(spr && array_safe_get(spr_path, 2))
+				if(spr && array_safe_get_fast(spr_path, 2))
 					sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 			}
 		} else {
 			spr = sprite_add(path, amo, 0, 0, 0, 0);
-			if(spr && array_safe_get(spr_path, 2))
+			if(spr && array_safe_get_fast(spr_path, 2))
 				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 		}
 		

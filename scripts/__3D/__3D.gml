@@ -577,8 +577,8 @@ enum CAMERA_PROJ {
 		shader_set_uniform_i(uniLightNrm, use_normal);
 		
 		var cam_view, cam_proj;
-		var dw = array_safe_get(_dim, 0);
-		var dh = array_safe_get(_dim, 1);
+		var dw = array_safe_get_fast(_dim, 0);
+		var dh = array_safe_get_fast(_dim, 1);
 		
 		if(_proj == CAMERA_PROJ.ortho) {
 			cam_view = matrix_build_lookat(0, 0, 128, 0, 0, 0, 0, 1, 0);

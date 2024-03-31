@@ -522,7 +522,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _sh = _bg? surface_get_height_safe(_surf) : _dim[1];
 		
 		_outSurf = surface_verify(_outSurf, _sw, _sh);
-		flares[_array_index] = surface_verify(array_safe_get(flares, _array_index), _sw, _sh);
+		flares[_array_index] = surface_verify(array_safe_get_fast(flares, _array_index), _sw, _sh);
 		
 		ox = _origin[0];
 		oy = _origin[1];

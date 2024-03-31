@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_color_select_content",
-  "parent": {
-    "name": "color selector",
-    "path": "folders/shader/color selector.yy",
+  "$GMShader":"",
+  "%Name":"sh_color_select_content",
+  "name":"sh_color_select_content",
+  "parent":{
+    "name":"color_selector",
+    "path":"folders/shader/color_selector.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

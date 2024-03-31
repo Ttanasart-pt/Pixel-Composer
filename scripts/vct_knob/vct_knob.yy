@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "vct_knob",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "widget",
-    "path": "folders/VCT/widget.yy",
+  "$GMScript":"",
+  "%Name":"vct_knob",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"vct_knob",
+  "parent":{
+    "name":"widget",
+    "path":"folders/VCT/widget.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

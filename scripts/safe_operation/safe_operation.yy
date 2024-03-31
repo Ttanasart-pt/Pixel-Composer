@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "safe_operation",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "value",
-    "path": "folders/functions/value.yy",
+  "$GMScript":"",
+  "%Name":"safe_operation",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"safe_operation",
+  "parent":{
+    "name":"value",
+    "path":"folders/functions/value.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

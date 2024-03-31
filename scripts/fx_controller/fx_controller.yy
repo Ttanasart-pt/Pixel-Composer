@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "fx_controller",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "fx",
-    "path": "folders/misc/fx.yy",
+  "$GMScript":"",
+  "%Name":"fx_controller",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"fx_controller",
+  "parent":{
+    "name":"fx",
+    "path":"folders/misc/fx.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

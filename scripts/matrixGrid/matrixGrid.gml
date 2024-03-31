@@ -139,7 +139,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 			
 			var bx  = _x + ww * j;
 			var by  = _y + _h * i;
-			var _dat = array_safe_get(_data, ind);
+			var _dat = array_safe_get_fast(_data, ind);
 			
 			tb[ind].draw(bx, by, ww, _h, _dat, _m);
 		}

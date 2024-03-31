@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "draw_sprite_ext_override",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "draw",
-    "path": "folders/functions/draw.yy",
+  "$GMScript":"",
+  "%Name":"draw_sprite_ext_override",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"draw_sprite_ext_override",
+  "parent":{
+    "name":"draw",
+    "path":"folders/functions/draw.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "text_file",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "files",
-    "path": "folders/functions/files.yy",
+  "$GMScript":"",
+  "%Name":"text_file",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"text_file",
+  "parent":{
+    "name":"files",
+    "path":"folders/functions/files.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -159,14 +159,14 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		_col = array_clone(_col);
 		
 		if(_type == 1) { #region color adjust
-			if(is_array(_bri)) _bri = array_safe_get(_bri, 0);
-			if(is_array(_con)) _con = array_safe_get(_con, 0);
-			if(is_array(_hue)) _hue = array_safe_get(_hue, 0);
-			if(is_array(_sat)) _sat = array_safe_get(_sat, 0);
-			if(is_array(_val)) _val = array_safe_get(_val, 0);
-			if(is_array(_bla)) _bla = array_safe_get(_bla, 0);
-			if(is_array(_alp)) _alp = array_safe_get(_alp, 0);
-			if(is_array(_exp)) _exp = array_safe_get(_exp, 0);
+			if(is_array(_bri)) _bri = array_safe_get_fast(_bri, 0);
+			if(is_array(_con)) _con = array_safe_get_fast(_con, 0);
+			if(is_array(_hue)) _hue = array_safe_get_fast(_hue, 0);
+			if(is_array(_sat)) _sat = array_safe_get_fast(_sat, 0);
+			if(is_array(_val)) _val = array_safe_get_fast(_val, 0);
+			if(is_array(_bla)) _bla = array_safe_get_fast(_bla, 0);
+			if(is_array(_alp)) _alp = array_safe_get_fast(_alp, 0);
+			if(is_array(_exp)) _exp = array_safe_get_fast(_exp, 0);
 			
 			if(!is_array(_col)) _col = [ _col ];
 			

@@ -33,23 +33,23 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		var _buffer = buffer_create(d3d11_cbuffer_get_size(object_data), buffer_fixed, 1);
 		
 		for(var i = 0; i < object_counts; i++) {
-			var pos = array_safe_get(positions, i, 0);
-			var rot = array_safe_get(rotations, i, 0);
-			var sca = array_safe_get(scales,    i, 0);
+			var pos = array_safe_get_fast(positions, i, 0);
+			var rot = array_safe_get_fast(rotations, i, 0);
+			var sca = array_safe_get_fast(scales,    i, 0);
 			
-			buffer_write(_buffer, buffer_f32, array_safe_get(pos, 0, 0)); 
-			buffer_write(_buffer, buffer_f32, array_safe_get(pos, 1, 0)); 
-			buffer_write(_buffer, buffer_f32, array_safe_get(pos, 2, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get_fast(pos, 0, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get_fast(pos, 1, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get_fast(pos, 2, 0)); 
 			buffer_write(_buffer, buffer_f32, 0);
 			
-			buffer_write(_buffer, buffer_f32, array_safe_get(rot, 0, 0)); 
-			buffer_write(_buffer, buffer_f32, array_safe_get(rot, 1, 0)); 
-			buffer_write(_buffer, buffer_f32, array_safe_get(rot, 2, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get_fast(rot, 0, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get_fast(rot, 1, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get_fast(rot, 2, 0)); 
 			buffer_write(_buffer, buffer_f32, 0);
 			
-			buffer_write(_buffer, buffer_f32, array_safe_get(sca, 0, 0)); 
-			buffer_write(_buffer, buffer_f32, array_safe_get(sca, 1, 0)); 
-			buffer_write(_buffer, buffer_f32, array_safe_get(sca, 2, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get_fast(sca, 0, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get_fast(sca, 1, 0)); 
+			buffer_write(_buffer, buffer_f32, array_safe_get_fast(sca, 2, 0)); 
 			buffer_write(_buffer, buffer_f32, 0);
 			
 			buffer_write(_buffer, buffer_f32, 0);
@@ -81,8 +81,8 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		
 		d3d11_shader_set_cbuffer_vs(10, object_data);
 		for( var i = 0, n = array_length(VB); i < n; i++ ) {
-			var _ind = array_safe_get(material_index, i, i);
-			var _mat = array_safe_get(materials, _ind, noone);
+			var _ind = array_safe_get_fast(material_index, i, i);
+			var _mat = array_safe_get_fast(materials, _ind, noone);
 			var _tex = is_instanceof(_mat, __d3dMaterial)? _mat.getTexture() : -1;
 					
 			vertex_submit_instanced(VB[i], render_type, _tex, object_counts);

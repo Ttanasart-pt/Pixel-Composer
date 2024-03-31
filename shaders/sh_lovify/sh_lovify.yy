@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_lovify",
-  "parent": {
-    "name": "lovify",
-    "path": "folders/nodes/data/misc/lovify.yy",
+  "$GMShader":"",
+  "%Name":"sh_lovify",
+  "name":"sh_lovify",
+  "parent":{
+    "name":"lovify",
+    "path":"folders/nodes/data/misc/lovify.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

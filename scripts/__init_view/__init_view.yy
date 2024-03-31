@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__init_view",
-  "isCompatibility": true,
-  "isDnD": false,
-  "parent": {
-    "name": "view",
-    "path": "folders/functions/fluid sim/Internal/Compatibility/view.yy",
+  "$GMScript":"",
+  "%Name":"__init_view",
+  "isCompatibility":true,
+  "isDnD":false,
+  "name":"__init_view",
+  "parent":{
+    "name":"view",
+    "path":"folders/functions/fluid_sim/Compat/view.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

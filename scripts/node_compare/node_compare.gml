@@ -86,7 +86,7 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				val[i] = _eval(mode, a[i], b);
 		} else {
 			for( var i = 0; i < max(al, bl); i++ ) 
-				val[i] = _eval(mode, array_safe_get(a, i), array_safe_get(b, i));
+				val[i] = _eval(mode, array_safe_get_fast(a, i), array_safe_get_fast(b, i));
 		}
 		
 		outputs[| 0].setValue(val);

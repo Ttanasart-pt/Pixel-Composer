@@ -33,10 +33,10 @@ function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _arr  = _data[4];
 		
-		var _h = _arr? array_safe_get(_data[5], 0) : _data[0];
-		var _s = _arr? array_safe_get(_data[5], 1) : _data[1];
-		var _v = _arr? array_safe_get(_data[5], 2) : _data[2];
-		var _a = _arr? array_safe_get(_data[5], 3) : _data[3];
+		var _h = _arr? array_safe_get_fast(_data[5], 0) : _data[0];
+		var _s = _arr? array_safe_get_fast(_data[5], 1) : _data[1];
+		var _v = _arr? array_safe_get_fast(_data[5], 2) : _data[2];
+		var _a = _arr? array_safe_get_fast(_data[5], 3) : _data[3];
 		
 		var _baseS = is_surface(_h)? _h : (is_surface(_s)? _s : _v);
 		if(!is_surface(_baseS)) return _outSurf;

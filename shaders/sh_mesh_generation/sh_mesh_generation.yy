@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_mesh_generation",
-  "parent": {
-    "name": "misc",
-    "path": "folders/shader/misc.yy",
+  "$GMShader":"",
+  "%Name":"sh_mesh_generation",
+  "name":"sh_mesh_generation",
+  "parent":{
+    "name":"misc",
+    "path":"folders/shader/misc.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

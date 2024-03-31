@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_iterate_filter",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "for filter",
-    "path": "folders/nodes/data/iterate/_legacy/for filter.yy",
+  "$GMScript":"",
+  "%Name":"node_iterate_filter",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_iterate_filter",
+  "parent":{
+    "name":"for_filter",
+    "path":"folders/nodes/data/iterate/_legacy/for_filter.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

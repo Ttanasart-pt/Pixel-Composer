@@ -38,10 +38,10 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 			var _sy = _y0 + i * (_space + _size);
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _size, _sy + _size)) {
-				draw_sprite_stretched(THEME.button, 1, _sx, _sy, _size, _size);
+				draw_sprite_stretched(THEME.button_def, 1, _sx, _sy, _size, _size);
 				
 				if(mouse_click(mb_left, _focus)) {
-					draw_sprite_stretched(THEME.button, 2, _sx, _sy, _size, _size);
+					draw_sprite_stretched(THEME.button_def, 2, _sx, _sy, _size, _size);
 					
 					if(holding_side != noone) {
 						_side[ind] = holding_side;
@@ -59,7 +59,7 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 					holding_side = _side[ind];
 				}
 			} else
-				draw_sprite_stretched(THEME.button, 0, _sx, _sy, _size, _size);
+				draw_sprite_stretched(THEME.button_def, 0, _sx, _sy, _size, _size);
 			
 			if(ind == 4) {
 				if(_side[ind]) draw_sprite_stretched_ext(THEME.color_picker_box, 1, _sx + ui(2), _sy + ui(2), _size - ui(4), _size - ui(4), COLORS._main_accent, 1);

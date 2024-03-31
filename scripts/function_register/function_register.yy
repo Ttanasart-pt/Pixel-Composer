@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "function_register",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "action",
-    "path": "folders/functions/action.yy",
+  "$GMScript":"",
+  "%Name":"function_register",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"function_register",
+  "parent":{
+    "name":"action",
+    "path":"folders/functions/action.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

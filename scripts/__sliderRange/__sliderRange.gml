@@ -3,7 +3,7 @@ function __sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	maxx = _max;
 	stepSize = _step;
 	
-	spr = THEME.slider;
+	spr = THEME.slider_def;
 	onModify = _onModify;
 	
 	dragging = noone;

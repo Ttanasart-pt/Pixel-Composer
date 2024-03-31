@@ -15,7 +15,7 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 	}
 	
 	static getName = function(index = 0) {
-		return is_array(name)? array_safe_get(name, index, "") : name;
+		return is_array(name)? array_safe_get_fast(name, index, "") : name;
 	}
 	
 	static getDisplayName = function(index = 0) {

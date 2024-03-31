@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_mk_tile18_edge_l",
-  "parent": {
-    "name": "Tile",
-    "path": "folders/shader/MK effects/Tile.yy",
+  "$GMShader":"",
+  "%Name":"sh_mk_tile18_edge_l",
+  "name":"sh_mk_tile18_edge_l",
+  "parent":{
+    "name":"Tile",
+    "path":"folders/shader/MK effects/Tile.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

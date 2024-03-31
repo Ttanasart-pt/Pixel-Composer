@@ -62,8 +62,8 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, hh - top, COLORS.node_composite_bg_blend, 1);
 		
 		for( var i = 0; i < amo; i++ ) {
-			var fr = array_safe_get(_from, i);
-			var to = array_safe_get(_to,   i);
+			var fr = array_safe_get_fast(_from, i);
+			var to = array_safe_get_fast(_to,   i);
 			
 			var _x0 = _x  + ui(8);
 			var _y0 = _yy + ui(8) + i * (ss + ui(8));

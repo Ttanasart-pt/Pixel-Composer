@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "pack_bottom_left",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "packing",
-    "path": "folders/functions/packing.yy",
+  "$GMScript":"",
+  "%Name":"pack_bottom_left",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pack_bottom_left",
+  "parent":{
+    "name":"packing",
+    "path":"folders/functions/packing.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_find_boundary",
-  "parent": {
-    "name": "find boundary",
-    "path": "folders/shader/misc/find boundary.yy",
+  "$GMShader":"",
+  "%Name":"sh_find_boundary",
+  "name":"sh_find_boundary",
+  "parent":{
+    "name":"find_boundary",
+    "path":"folders/shader/misc/find_boundary.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

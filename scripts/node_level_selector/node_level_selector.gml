@@ -49,8 +49,8 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _middle = getInputData(1);
 		var _span   = getInputData(2);
 		
-		if(is_array(_middle)) _middle = array_safe_get(_middle, 0);
-		if(is_array(_span))   _span   = array_safe_get(_span,   0);
+		if(is_array(_middle)) _middle = array_safe_get_fast(_middle, 0);
+		if(is_array(_span))   _span   = array_safe_get_fast(_span,   0);
 		
 		var _min    = _middle - _span;
 		var _max    = _middle + _span;

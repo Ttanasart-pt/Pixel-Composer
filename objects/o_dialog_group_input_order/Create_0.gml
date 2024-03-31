@@ -66,7 +66,7 @@ event_inherited();
 			if(is_array(disp)) {
 				var ed_x = hg + ui(4);
 				if(sHOVER && point_in_rectangle(_m[0], _m[1], ed_x, _y, con_w, _y + hg)) {
-					draw_sprite_stretched_ext(THEME.button, 1, ed_x, _y, con_w - ed_x, hg, COLORS._main_icon_light, 1);
+					draw_sprite_stretched_ext(THEME.button_def, 1, ed_x, _y, con_w - ed_x, hg, COLORS._main_icon_light, 1);
 					
 					if(sep_editing == -1 && mouse_press(mb_left, sFOCUS)) {
 						sep_editing = i;
@@ -74,7 +74,7 @@ event_inherited();
 						tb_edit.activate();
 					}
 				} else
-					draw_sprite_stretched_ext(THEME.button, 0, ed_x, _y, con_w - ed_x, hg, COLORS._main_icon_light, 1);
+					draw_sprite_stretched_ext(THEME.button_def, 0, ed_x, _y, con_w - ed_x, hg, COLORS._main_icon_light, 1);
 				
 				if(sep_editing == i) {
 					WIDGET_CURRENT = tb_edit;

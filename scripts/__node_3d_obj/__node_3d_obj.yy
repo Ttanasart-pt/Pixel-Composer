@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__node_3d_obj",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "__legacy",
-    "path": "folders/nodes/data/3D/__legacy.yy",
+  "$GMScript":"",
+  "%Name":"__node_3d_obj",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__node_3d_obj",
+  "parent":{
+    "name":"__legacy",
+    "path":"folders/nodes/data/3D/__legacy.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -3,6 +3,7 @@ varying vec4 v_vColour;
 
 uniform vec2  position;
 uniform vec2  u_resolution;
+uniform float rotation;
 
 uniform vec2      scale;
 uniform int       scaleUseSurf;
@@ -87,19 +88,24 @@ void main() { #region
 		}
 	#endregion
 	
+	vec2 pos  = position / u_resolution;
+	float ang = rotation;
+	vec2 st   = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
+	
 	if(colored == 0) {
-		vec2 pos = (v_vTexcoord + position) * sca;
-		gl_FragColor = vec4(vec3(perlin(pos)), 1.0);
+		gl_FragColor = vec4(vec3(perlin(st)), 1.0);
+		
 	} else if(colored == 1) {
-		float randR = colorRanR[0] + perlin((v_vTexcoord + position) * sca) * (colorRanR[1] - colorRanR[0]);
-		float randG = colorRanG[0] + perlin((v_vTexcoord + position + vec2(1.7227, 4.55529)) * sca) * (colorRanG[1] - colorRanG[0]);
-		float randB = colorRanB[0] + perlin((v_vTexcoord + position + vec2(6.9950, 6.82063)) * sca) * (colorRanB[1] - colorRanB[0]);
+		float randR = colorRanR[0] + perlin(st)                         * (colorRanR[1] - colorRanR[0]);
+		float randG = colorRanG[0] + perlin(st + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
+		float randB = colorRanB[0] + perlin(st + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(randR, randG, randB, 1.0);
+		
 	} else if(colored == 2) {
-		float randH = colorRanR[0] + perlin((v_vTexcoord + position) * sca) * (colorRanR[1] - colorRanR[0]);
-		float randS = colorRanG[0] + perlin((v_vTexcoord + position + vec2(1.7227, 4.55529)) * sca) * (colorRanG[1] - colorRanG[0]);
-		float randV = colorRanB[0] + perlin((v_vTexcoord + position + vec2(6.9950, 6.82063)) * sca) * (colorRanB[1] - colorRanB[0]);
+		float randH = colorRanR[0] + perlin(st)                         * (colorRanR[1] - colorRanR[0]);
+		float randS = colorRanG[0] + perlin(st + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
+		float randV = colorRanB[0] + perlin(st + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
 	}

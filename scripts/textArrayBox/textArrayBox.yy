@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "textArrayBox",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "text",
-    "path": "folders/widgets/text.yy",
+  "$GMScript":"",
+  "%Name":"textArrayBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"textArrayBox",
+  "parent":{
+    "name":"text",
+    "path":"folders/widgets/text.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

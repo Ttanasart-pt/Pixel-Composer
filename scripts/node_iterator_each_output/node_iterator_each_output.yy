@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_iterator_each_output",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "for each",
-    "path": "folders/nodes/data/iterate/_legacy/for each.yy",
+  "$GMScript":"",
+  "%Name":"node_iterator_each_output",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_iterator_each_output",
+  "parent":{
+    "name":"for_each",
+    "path":"folders/nodes/data/iterate/_legacy/for_each.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

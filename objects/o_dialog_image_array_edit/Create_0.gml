@@ -74,7 +74,7 @@ event_inherited();
 					}
 				}
 				
-				var spr   = array_safe_get(target.spr, index, noone);
+				var spr   = array_safe_get_fast(target.spr, index, noone);
 				if(spr == noone || !sprite_exists(spr)) 
 					spr = s_texture_default;
 				

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "rotatorRange",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "rotator",
-    "path": "folders/widgets/rotator.yy",
+  "$GMScript":"",
+  "%Name":"rotatorRange",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"rotatorRange",
+  "parent":{
+    "name":"rotator",
+    "path":"folders/widgets/rotator.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

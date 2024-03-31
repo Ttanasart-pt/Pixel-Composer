@@ -135,7 +135,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 		#region draw result
 			var _outSurf = outputs[| 0].getValue();
-			if(is_array(_outSurf)) _outSurf = array_safe_get(_outSurf, 0);
+			if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, 0);
 			if(!is_surface(_outSurf)) return;
 		
 			var _w = _panel.w;
@@ -376,18 +376,18 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
 	static getPreviewObject = function() { #region 
-		var _scene = array_safe_get(all_inputs, in_d3d + 4, noone);
+		var _scene = array_safe_get_fast(all_inputs, in_d3d + 4, noone);
 		if(is_array(_scene))
-			_scene = array_safe_get(_scene, preview_index, noone);
+			_scene = array_safe_get_fast(_scene, preview_index, noone);
 		return _scene;
 	} #endregion
 	
 	static getPreviewObjects = function() { #region 
 		var _posm = getInputData(in_d3d + 9);
 		
-		var _scene = array_safe_get(all_inputs, in_d3d + 4, noone);
+		var _scene = array_safe_get_fast(all_inputs, in_d3d + 4, noone);
 		if(is_array(_scene))
-			_scene = array_safe_get(_scene, preview_index, noone);
+			_scene = array_safe_get_fast(_scene, preview_index, noone);
 		
 		switch(_posm) {
 			case 0 : return [ object, _scene ];

@@ -61,7 +61,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Resend");
-	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
 		triggerRender();

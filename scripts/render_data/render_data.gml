@@ -9,8 +9,6 @@ enum RENDER_TYPE {
 	
 	LIVE_UPDATE            = false;
 	UPDATE_RENDER_ORDER    = false;
-	global.FLAG.render     = 0;
-	global.FLAG.renderTime = false;
 	
 	#macro RENDER_ALL_REORDER	UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
 	#macro RENDER_ALL									    UPDATE |= RENDER_TYPE.full;
@@ -23,9 +21,9 @@ function __nodeLeafList(_list) { #region
 	
 	for( var i = 0, n = ds_list_size(_list); i < n; i++ ) {
 		var _node = _list[| i];
-		if(!_node.active)         { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [inactive]");       continue; }
-		if(!_node.isLeaf(_list))  { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not leaf]");       continue; }
-		if(!_node.isRenderable()) { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not renderable]"); continue; }
+		if(!_node.active)			 { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [inactive]");       continue; }
+		if(!_node.isLeafList(_list)) { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not leaf]");       continue; }
+		if(!_node.isRenderable())    { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not renderable]"); continue; }
 		
 		array_push(nodes, _node);
 		array_push(nodeNames, _node.internalName);

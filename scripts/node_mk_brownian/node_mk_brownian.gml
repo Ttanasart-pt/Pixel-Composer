@@ -134,7 +134,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						draw_set_alpha(1);
 					} else {
 						var _p = _sprt;
-						if(is_array(_p)) _p = array_safe_get(_p, irandom(array_length(_p) - 1));
+						if(is_array(_p)) _p = array_safe_get_fast(_p, irandom(array_length(_p) - 1));
 						
 						draw_surface_ext_safe(_p, _pos[0], _pos[1], _ss, _ss, 0, _cc, _aa);
 					}

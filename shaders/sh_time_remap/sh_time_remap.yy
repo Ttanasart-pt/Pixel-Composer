@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_time_remap",
-  "parent": {
-    "name": "warp",
-    "path": "folders/shader/filter/warp.yy",
+  "$GMShader":"",
+  "%Name":"sh_time_remap",
+  "name":"sh_time_remap",
+  "parent":{
+    "name":"warp",
+    "path":"folders/shader/filter/warp.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

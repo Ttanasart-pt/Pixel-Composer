@@ -18,6 +18,7 @@ enum AREA_INDEX {
 }
 
 #macro DEF_AREA [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle, AREA_MODE.area ]
+#macro DEF_AREA_REF [ 0.5, 0.5, 0.5, 0.5, AREA_SHAPE.rectangle, AREA_MODE.area ]
 
 function areaBox(_onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
@@ -126,10 +127,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			unit.triggerButton.register(parent);
 	} #endregion
 	
-	static isHovering = function() { 
+	static isHovering = function() { #region
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;
-	}
+	} #endregion
 	
 	static drawParam = function(params) { #region
 		setParam(params);
@@ -143,28 +144,41 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		y = _y;
 		w = _w;
 		h = _h * 2 + ui(4);
-		mode = array_safe_get(_data, 5);
+		mode = array_safe_get_fast(_data, 5);
+		
+		onSurfaceSize = struct_try_get(_display_data, "onSurfaceSize", -1);
+		useShape      = struct_try_get(_display_data, "useShape", true);
 		
 		var _bs = min(_h, ui(32));
 		var _bx   = _x;
 		var _by   = _y + _h / 2 - _bs / 2;
 		var _bact = adjust_shape && active;
 		var _bhov = adjust_shape && hover;
-		var _bind = array_safe_get(_data, 4);
+		var _bind = array_safe_get_fast(_data, 4);
 		  
 		if(_w - _bs > ui(100) && onSurfaceSize != -1) {
 			tooltip.index = mode;
 			
+			if(unit != noone && unit.reference != noone) {
+				var _bx   = _x + _w - _bs;
+				var _by   = _y + h / 2 - _bs / 2;
+			
+				unit.triggerButton.setFocusHover(active, hover);
+				unit.draw(_bx, _by, _bs, _bs, _m);
+				
+				_w -= _bs + ui(4);
+			}
+		
 			var _bx   = _x + _w - _bs;
 			var _by   = _y + _h / 2 - _bs / 2;
 			
 			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, tooltip, THEME.inspector_area_type, mode) == 2) { #region
 				switch(mode) {
 					case AREA_MODE.area : //area to padding
-						var cx = array_safe_get(_data, 0);
-						var cy = array_safe_get(_data, 1);
-						var sw = array_safe_get(_data, 2);
-						var sh = array_safe_get(_data, 3);
+						var cx = array_safe_get_fast(_data, 0);
+						var cy = array_safe_get_fast(_data, 1);
+						var sw = array_safe_get_fast(_data, 2);
+						var sh = array_safe_get_fast(_data, 3);
 						var ss = onSurfaceSize();
 						
 						onModify(0, ss[0] - (cx + sw));
@@ -174,10 +188,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						break;
 						
 					case AREA_MODE.padding : //padding to two points
-						var r = array_safe_get(_data, 0);
-						var t = array_safe_get(_data, 1);
-						var l = array_safe_get(_data, 2);
-						var b = array_safe_get(_data, 3);
+						var r = array_safe_get_fast(_data, 0);
+						var t = array_safe_get_fast(_data, 1);
+						var l = array_safe_get_fast(_data, 2);
+						var b = array_safe_get_fast(_data, 3);
 						var ss = onSurfaceSize();
 						
 						onModify(0, l);
@@ -187,10 +201,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						break;
 						
 					case AREA_MODE.two_point : //twp points to area
-						var x0 = array_safe_get(_data, 0);
-						var y0 = array_safe_get(_data, 1);
-						var x1 = array_safe_get(_data, 2);
-						var y1 = array_safe_get(_data, 3);
+						var x0 = array_safe_get_fast(_data, 0);
+						var y0 = array_safe_get_fast(_data, 1);
+						var x1 = array_safe_get_fast(_data, 2);
+						var y1 = array_safe_get_fast(_data, 3);
 						
 						onModify(0, (x0 + x1) / 2);
 						onModify(1, (y0 + y1) / 2);
@@ -204,16 +218,18 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			
 			var _bx   = _x + _w - _bs;
 			var _by   = _y + _h + ui(4) + _h / 2 - _bs / 2;
-			var _btxt = __txtx("widget_area_fill_surface", "Full surface");
+			var _btxt = __txtx("widget_area_fill_surface", "Fill surface");
 			
 			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, _btxt, THEME.fill, 0) == 2) { #region
+				var cnvt = unit != noone && unit.mode == VALUE_UNIT.reference;
+				
 				switch(mode) {
 					case AREA_MODE.area :
 						var ss = onSurfaceSize();
-						onModify(0, ss[0] / 2);
-						onModify(1, ss[1] / 2);
-						onModify(2, ss[0] / 2);
-						onModify(3, ss[1] / 2);
+						onModify(0, cnvt? 0.5 : ss[0] / 2);
+						onModify(1, cnvt? 0.5 : ss[1] / 2);
+						onModify(2, cnvt? 0.5 : ss[0] / 2);
+						onModify(3, cnvt? 0.5 : ss[1] / 2);
 						break;
 					case AREA_MODE.padding :   
 						var ss = onSurfaceSize();
@@ -226,8 +242,8 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						var ss = onSurfaceSize();
 						onModify(0, 0);
 						onModify(1, 0);
-						onModify(2, ss[0]);
-						onModify(3, ss[1]);
+						onModify(2, cnvt? 1 : ss[0]);
+						onModify(3, cnvt? 1 : ss[1]);
 						break;
 				}
 			} #endregion
@@ -236,24 +252,27 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		} 
 		
 		if(_w - _bs > ui(100)) { #region
-			
-			if(!is_array(_bind) && buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, _bact, _bhov,, THEME.inspector_area, _bind) == 2) {
-				var val = (array_safe_get(_data, 4) + 1) % 2;
+			var _bx   = _x;
+			var _by   = _y + _h / 2 - _bs / 2;
+				
+			if(useShape && !is_array(_bind) && buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, _bact, _bhov,, THEME.inspector_area, _bind) == 2) {
+				var val = (array_safe_get_fast(_data, 4) + 1) % 2;
 				onModify(4, val);
 			}
 		  
 			if(mode == AREA_MODE.padding) {
 				var cc    = link_value? COLORS._main_accent : COLORS._main_icon;
-				var _bx   = _x;
-				var _by   = _y + _h + ui(4) + _h / 2 - _bs / 2;
 				var _btxt = __txt("Link values");
+				var _bby  = useShape? _by + _h + ui(4) : _y + h / 2 - _bs / 2;
 			
-				if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, _btxt, THEME.value_link, link_value, cc) == 2)
+				if(buttonInstant(THEME.button_hide, _bx, _bby, _bs, _bs, _m, active, hover, _btxt, THEME.value_link, link_value, cc) == 2)
 					link_value = !link_value;
 			}
 			
-			_w -= _bs + ui(4);
-			_x +=_bs + ui(4);
+			if(useShape || mode == AREA_MODE.padding) {
+				_w -= _bs + ui(4);
+				_x +=_bs + ui(4);
+			}
 			
 		} #endregion
 		
@@ -284,11 +303,11 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tb[2].label = "w";
 			tb[3].label = "h";
 			
-			tb[0].draw(tb_x0, tb_y0, tb_w, tb_h, array_safe_get(_data, 0), _m);
-			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get(_data, 1), _m);
+			tb[0].draw(tb_x0, tb_y0, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
+			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
 		
-			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get(_data, 2), _m);
-			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get(_data, 3), _m);
+			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
+			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
 		#endregion
 		
 		} else if(mode == AREA_MODE.padding) { #region
@@ -310,11 +329,11 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tb[1].label = "t";
 			tb[3].label = "b";
 			
-			tb[2].draw(tb_lx, tb_ly, tb_w, tb_h, array_safe_get(_data, 2), _m);
-			tb[0].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get(_data, 0), _m);
+			tb[2].draw(tb_lx, tb_ly, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
+			tb[0].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
 			
-			tb[1].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get(_data, 1), _m);
-			tb[3].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get(_data, 3), _m);
+			tb[1].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
+			tb[3].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
 		#endregion
 		
 		} else if(mode == AREA_MODE.two_point) { #region
@@ -330,18 +349,13 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tb[2].label = "x1";
 			tb[3].label = "y1";
 			
-			tb[0].draw(tb_x0, tb_y0, tb_w, tb_h, array_safe_get(_data, 0), _m);
-			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get(_data, 1), _m);
+			tb[0].draw(tb_x0, tb_y0, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
+			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
 		
-			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get(_data, 2), _m);
-			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get(_data, 3), _m);
+			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
+			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
 		#endregion
 		}
-		
-		//if(unit != noone && unit.reference != noone) {
-		//	unit.triggerButton.setFocusHover(active, hover);
-		//	unit.draw(_x + ui(56 + 48 + 8), _y - ui(28), ui(32), ui(32), _m);
-		//}
 		
 		resetFocus();
 		

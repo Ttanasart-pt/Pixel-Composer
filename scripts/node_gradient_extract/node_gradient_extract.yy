@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_gradient_extract",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "color",
-    "path": "folders/nodes/data/value/color.yy",
+  "$GMScript":"",
+  "%Name":"node_gradient_extract",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_gradient_extract",
+  "parent":{
+    "name":"color",
+    "path":"folders/nodes/data/value/color.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

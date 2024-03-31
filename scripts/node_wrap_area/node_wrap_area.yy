@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_wrap_area",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "transform",
-    "path": "folders/nodes/data/transform.yy",
+  "$GMScript":"",
+  "%Name":"node_wrap_area",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_wrap_area",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/transform.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

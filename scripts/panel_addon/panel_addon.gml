@@ -89,7 +89,7 @@ function Panel_Addon() : PanelContent() constructor {
 					else if(!_onStart)	TOOLTIP = __txtx("panel_addon_activated", "Activated");
 					else				TOOLTIP = __txtx("panel_addon_run_on_start", "Run on start");
 					
-					draw_sprite_stretched_ext(THEME.checkbox, 1, chx0, chy0, ui(28), ui(28), c_white, 1);
+					draw_sprite_stretched_ext(THEME.checkbox_def, 1, chx0, chy0, ui(28), ui(28), c_white, 1);
 					hover = false;
 					
 					if(mouse_press(mb_left, pFOCUS)) {
@@ -105,12 +105,12 @@ function Panel_Addon() : PanelContent() constructor {
 						json_save_struct(DIRECTORY + "Addons\\__init.json", ADDONS_ON_START);
 					}
 				} else
-					draw_sprite_stretched_ext(THEME.checkbox, 0, chx0, chy0, ui(28), ui(28), c_white, 1);
+					draw_sprite_stretched_ext(THEME.checkbox_def, 0, chx0, chy0, ui(28), ui(28), c_white, 1);
 				
 				if(_onStart) 
 					draw_sprite_stretched_ext(THEME.checkbox_on_start, 0, chx0, chy0, ui(28), ui(28), COLORS._main_value_positive, 1);
 				else if(_act) 
-					draw_sprite_stretched_ext(THEME.checkbox, 2, chx0, chy0, ui(28), ui(28), COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.checkbox_def, 2, chx0, chy0, ui(28), ui(28), COLORS._main_accent, 1);
 				
 				var _bx = bx - ui(4);
 				var _by = by + ui(4);

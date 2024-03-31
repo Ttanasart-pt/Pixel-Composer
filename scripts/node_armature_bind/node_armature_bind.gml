@@ -597,7 +597,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		for(var i = 0; i < amo; i++) { #region
 			var index = input_fix_len + i * data_length;
-			var _surf = array_safe_get(current_data, index);
+			var _surf = array_safe_get_fast(current_data, index);
 			if(!_surf || is_array(_surf)) continue;
 			
 			var _bone = inputs[| index].display_data.bone_id;
@@ -656,13 +656,13 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		} #endregion
 		
 		for(var i = 0; i < amo; i++) { #region
-			var vis = array_safe_get(_vis, i);
-			var sel = array_safe_get(_sel, i);
+			var vis = array_safe_get_fast(_vis, i);
+			var sel = array_safe_get_fast(_sel, i);
 			if(!vis) continue;
 			if(!sel) continue;
 			
 			var index = input_fix_len + i * data_length;
-			var _surf = array_safe_get(current_data, index);
+			var _surf = array_safe_get_fast(current_data, index);
 			if(!_surf || is_array(_surf)) continue;
 			
 			var _bone = inputs[| index].display_data.bone_id;
@@ -701,7 +701,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(mouse_press(mb_left, active))
 			surface_selecting = hovering;
 		if(surface_selecting != noone) {
-			var a = array_safe_get(anchors, surface_selecting, noone);
+			var a = array_safe_get_fast(anchors, surface_selecting, noone);
 			if(!is_struct(a)) surface_selecting = noone;
 		}
 		
@@ -806,7 +806,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _bg  = 0;
 		
 		for(var i = 0; i < imageAmo; i++) {
-			var vis  = array_safe_get(_vis, i, true);
+			var vis  = array_safe_get_fast(_vis, i, true);
 			if(!vis) continue;
 			
 			var datInd = input_fix_len + i * data_length;

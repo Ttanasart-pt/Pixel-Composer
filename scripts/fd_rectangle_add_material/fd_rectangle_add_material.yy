@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "fd_rectangle_add_material",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "API",
-    "path": "folders/functions/fluid sim/API.yy",
+  "$GMScript":"",
+  "%Name":"fd_rectangle_add_material",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"fd_rectangle_add_material",
+  "parent":{
+    "name":"API",
+    "path":"folders/functions/fluid_sim/API.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

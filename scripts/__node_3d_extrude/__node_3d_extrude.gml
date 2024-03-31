@@ -413,7 +413,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static submit_vertex = function(index = 0) {
-		var _ins  = array_safe_get(textures, index);
+		var _ins  = array_safe_get_fast(textures, index);
 		if(!is_surface(_ins)) return;
 		if(index >= array_length(vertexObjects)) return;
 		

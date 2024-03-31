@@ -517,7 +517,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				dir = irandom(360);
 			}
 			
-			if(willReset || array_safe_get(strands.hairs, i, noone) == noone) {
+			if(willReset || array_safe_get_fast(strands.hairs, i, noone) == noone) {
 				var h = new Strand(sx, sy, _seg, random_range(_len[0], _len[1]), dir, _crF, _crS);
 				h.rootStrength = random1D(h.id, _rot[0], _rot[1]);
 				strands.hairs[ind] = h;

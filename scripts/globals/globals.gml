@@ -188,4 +188,10 @@
 
 #region debug
 	global.FLAG = {};
+	
+	global.FLAG.render				= 0;
+	global.FLAG.renderTime			= false;
+	global.FLAG.keyframe_override	= true;
+	global.FLAG.wav_import			= true;
+	global.FLAG.ase_import			= false;
 #endregion

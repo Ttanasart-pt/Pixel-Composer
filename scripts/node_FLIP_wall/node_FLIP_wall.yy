@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_FLIP_wall",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "FLIP",
-    "path": "folders/nodes/data/simulation/FLIP.yy",
+  "$GMScript":"",
+  "%Name":"node_FLIP_wall",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_FLIP_wall",
+  "parent":{
+    "name":"FLIP",
+    "path":"folders/nodes/data/simulation/FLIP.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

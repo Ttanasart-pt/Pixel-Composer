@@ -38,7 +38,7 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 				}
 			}
 			
-			var cTo = fromIndex == -1? k.value : array_safe_get(pto, fromIndex, k.value, ARRAY_OVERFLOW.loop);
+			var cTo = fromIndex == -1? k.value : array_safe_get_fast(pto, fromIndex, k.value, ARRAY_OVERFLOW.loop);
 			graO.keys[i] = new gradientKey(k.time, cTo);
 		}
 		

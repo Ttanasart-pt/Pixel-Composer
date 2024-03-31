@@ -24,8 +24,6 @@ function file_read_bytes(file, amo = 1, signed = false, little_endian = true) {
 	return b;
 }
 
-global.FLAG.wav_import = true;
-
 function file_read_wav(path) {
 	wav_file_reader  = buffer_load(path);
 	wav_file_reading = true;

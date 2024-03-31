@@ -85,7 +85,7 @@
 								break;
 								
 							case VALUE_TYPE.surface : 
-								if(is_array(_val)) _val = array_safe_get(_val, 0);
+								if(is_array(_val)) _val = array_safe_get_fast(_val, 0);
 								if(is_surface(_val)) 
 									_res = surface_get_dimension(_val);
 								break;

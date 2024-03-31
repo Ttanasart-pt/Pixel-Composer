@@ -101,7 +101,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");
-	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
 		updatePaths(path_get(getInputData(0)));
@@ -142,7 +142,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var ww = sprite_get_width(_spr)  + pad[0] + pad[2];
 			var hh = sprite_get_height(_spr) + pad[1] + pad[3];
 			
-			var _surf = array_safe_get(_outsurf, i);
+			var _surf = array_safe_get_fast(_outsurf, i);
 			    _surf = surface_verify(_surf, ww, hh, attrDepth());
 			
 			surface_set_shader(_surf, noone);

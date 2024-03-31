@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "windowManager",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "WinMan",
-    "path": "folders/_extensions/WinMan.yy",
+  "$GMScript":"",
+  "%Name":"windowManager",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"windowManager",
+  "parent":{
+    "name":"WinMan",
+    "path":"folders/_extensions/WinMan.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

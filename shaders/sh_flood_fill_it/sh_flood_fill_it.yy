@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_flood_fill_it",
-  "parent": {
-    "name": "flood fill",
-    "path": "folders/shader/flood fill.yy",
+  "$GMShader":"",
+  "%Name":"sh_flood_fill_it",
+  "name":"sh_flood_fill_it",
+  "parent":{
+    "name":"flood_fill",
+    "path":"folders/shader/flood_fill.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_edge_shade_extract",
-  "parent": {
-    "name": "edge shade",
-    "path": "folders/shader/filter/edge shade.yy",
+  "$GMShader":"",
+  "%Name":"sh_edge_shade_extract",
+  "name":"sh_edge_shade_extract",
+  "parent":{
+    "name":"edge_shade",
+    "path":"folders/shader/filter/edge_shade.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

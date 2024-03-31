@@ -366,7 +366,7 @@ event_inherited();
 			if(!array_empty(sug)) {
 				ds_list_add(_list, "Related");
 				for( var i = 0, n = array_length(sug); i < n; i++ ) {
-					var k = array_safe_get(sug, i);
+					var k = array_safe_get_fast(sug, i);
 					if(k == 0) continue;
 					if(ds_map_exists(ALL_NODES, k))
 						ds_list_add(_list, ALL_NODES[? k]);

@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_mask_modify",
-  "parent": {
-    "name": "mask",
-    "path": "folders/shader/mask.yy",
+  "$GMShader":"",
+  "%Name":"sh_mask_modify",
+  "name":"sh_mask_modify",
+  "parent":{
+    "name":"mask",
+    "path":"folders/shader/mask.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

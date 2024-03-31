@@ -87,9 +87,9 @@
 		
 		var wid = noone;
 		if(ind + 1 == array_length(WIDGET_ACTIVE))
-			wid = array_safe_get(WIDGET_ACTIVE, 0);
+			wid = array_safe_get_fast(WIDGET_ACTIVE, 0);
 		else
-			wid = array_safe_get(WIDGET_ACTIVE, ind + 1);
+			wid = array_safe_get_fast(WIDGET_ACTIVE, ind + 1);
 			
 		if(wid) wid.activate();
 	}
@@ -113,9 +113,9 @@
 		
 		var wid = noone;
 		if(ind == 0)
-			wid = array_safe_get(WIDGET_ACTIVE, array_length(WIDGET_ACTIVE) - 1);
+			wid = array_safe_get_fast(WIDGET_ACTIVE, array_length(WIDGET_ACTIVE) - 1);
 		else 
-			wid = array_safe_get(WIDGET_ACTIVE, ind - 1);
+			wid = array_safe_get_fast(WIDGET_ACTIVE, ind - 1);
 			
 		if(wid) wid.activate();
 	}

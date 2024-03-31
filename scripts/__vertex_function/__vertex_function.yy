@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__vertex_function",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "3d",
-    "path": "folders/functions/3d.yy",
+  "$GMScript":"",
+  "%Name":"__vertex_function",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__vertex_function",
+  "parent":{
+    "name":"3d",
+    "path":"folders/functions/3d.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

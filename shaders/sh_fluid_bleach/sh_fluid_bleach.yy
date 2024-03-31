@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_fluid_bleach",
-  "parent": {
-    "name": "fluid",
-    "path": "folders/shader/simulation/fluid.yy",
+  "$GMShader":"",
+  "%Name":"sh_fluid_bleach",
+  "name":"sh_fluid_bleach",
+  "parent":{
+    "name":"fluid",
+    "path":"folders/nodes/data/simulation/fluid.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

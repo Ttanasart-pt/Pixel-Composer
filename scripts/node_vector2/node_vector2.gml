@@ -133,8 +133,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var vec  = getSingleValue(0,, true);
 		var bbox = drawGetBbox(xx, yy, _s);
 		
-		var v0 = array_safe_get(vec, 0);
-		var v1 = array_safe_get(vec, 1);
+		var v0 = array_safe_get_fast(vec, 0);
+		var v1 = array_safe_get_fast(vec, 1);
 		
 		if(disp == 0 || inputs[| 0].value_from != noone || inputs[| 1].value_from != noone) {
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);

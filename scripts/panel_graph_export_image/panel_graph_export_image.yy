@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "panel_graph_export_image",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "graph",
-    "path": "folders/panels/graph.yy",
+  "$GMScript":"",
+  "%Name":"panel_graph_export_image",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_graph_export_image",
+  "parent":{
+    "name":"graph",
+    "path":"folders/panels/graph.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

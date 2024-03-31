@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "mac_window_step",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "window",
-    "path": "folders/functions/window.yy",
+  "$GMScript":"",
+  "%Name":"mac_window_step",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"mac_window_step",
+  "parent":{
+    "name":"window",
+    "path":"folders/functions/window.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

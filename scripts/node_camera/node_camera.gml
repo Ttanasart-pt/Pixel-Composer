@@ -6,7 +6,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	onSurfaceSize = function() { return surface_get_dimension(getInputData(0)); };
 	inputs[| 1] = nodeValue("Focus area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_AREA)
-		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
+		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize, useShape : false });
 	
 	inputs[| 2] = nodeValue("Zoom", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });

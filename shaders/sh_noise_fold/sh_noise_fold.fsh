@@ -3,8 +3,10 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 position;
-uniform vec2 scale;
+uniform vec2  u_resolution;
+uniform vec2  position;
+uniform float rotation;
+uniform vec2  scale;
 
 uniform int   iteration;
 uniform float stretch;
@@ -13,8 +15,9 @@ uniform float amplitude;
 uniform int   mode;
 
 void main() {
-	vec2 pos = v_vTexcoord * scale + position;
-	vec4 col = vec4(0., 0., 0., 1.);
+	float ang = radians(rotation);
+    vec2 pos  = (v_vTexcoord - position / u_resolution) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale;
+	vec4 col  = vec4(0., 0., 0., 1.);
 	
     for (int i = 0; i < iteration; i++) {
     	pos += cos( pos.yx * 3. + vec2(0.0, stretch)) / 3.;

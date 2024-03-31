@@ -283,7 +283,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	#endregion
 	
 	insp1UpdateTooltip = "Generate";
-	insp1UpdateIcon    = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	insp1UpdateIcon    = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	will_triangluate   = false;
 	
 	static onInspector1Update = function() { #region
@@ -471,7 +471,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	static Mesh_regularTri = function(surf) { #region
-		if(is_array(surf)) surf = array_safe_get(surf, 0);
+		if(is_array(surf)) surf = array_safe_get_fast(surf, 0);
 		
 		if(!is_surface(surf))       return;
 		if(!inputs[| 0].value_from) return;

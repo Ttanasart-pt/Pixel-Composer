@@ -65,7 +65,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_line(_x + 16, _yy - 2, _x + _w - 16, _yy - 2);
 			}
 			
-			var vis = array_safe_get(_vis, i, true);
+			var vis = array_safe_get_fast(_vis, i, true);
 			var _bx = _x + 24;
 			if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, 12)) {
 				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, c_white);
@@ -297,7 +297,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");
-	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
 		updatePaths(path_get(getInputData(0)));
@@ -350,7 +350,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				layers[i].tag = tag;
 				var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay);
 				if(!cel) continue;
-				if(!array_safe_get(vis, i, true)) continue;
+				if(!array_safe_get_fast(vis, i, true)) continue;
 			
 				var _inSurf = cel.getSurface();
 				if(!is_surface(_inSurf)) 

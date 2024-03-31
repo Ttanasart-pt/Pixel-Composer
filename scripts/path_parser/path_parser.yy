@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "path_parser",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "importers",
-    "path": "folders/functions/importers.yy",
+  "$GMScript":"",
+  "%Name":"path_parser",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"path_parser",
+  "parent":{
+    "name":"importers",
+    "path":"folders/functions/importers.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

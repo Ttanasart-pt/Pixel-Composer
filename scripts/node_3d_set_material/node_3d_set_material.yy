@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_3d_set_material",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "d3d modifier",
-    "path": "folders/nodes/data/3D/d3d modifier.yy",
+  "$GMScript":"",
+  "%Name":"node_3d_set_material",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_3d_set_material",
+  "parent":{
+    "name":"d3d_modifier",
+    "path":"folders/nodes/data/3D/d3d_modifier.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

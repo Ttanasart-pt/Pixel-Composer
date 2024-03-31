@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_surface_to_buffer",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "buffer",
-    "path": "folders/nodes/data/value/buffer.yy",
+  "$GMScript":"",
+  "%Name":"node_surface_to_buffer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_surface_to_buffer",
+  "parent":{
+    "name":"buffer",
+    "path":"folders/nodes/data/value/buffer.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

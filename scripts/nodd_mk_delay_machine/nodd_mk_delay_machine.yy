@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "nodd_mk_delay_machine",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "MK effects",
-    "path": "folders/nodes/data/MK effects.yy",
+  "$GMScript":"",
+  "%Name":"nodd_mk_delay_machine",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"nodd_mk_delay_machine",
+  "parent":{
+    "name":"MK_effects",
+    "path":"folders/nodes/data/MK_effects.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

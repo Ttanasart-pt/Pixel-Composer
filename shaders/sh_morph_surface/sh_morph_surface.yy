@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_morph_surface",
-  "parent": {
-    "name": "morph",
-    "path": "folders/shader/filter/morph.yy",
+  "$GMShader":"",
+  "%Name":"sh_morph_surface",
+  "name":"sh_morph_surface",
+  "parent":{
+    "name":"morph",
+    "path":"folders/shader/filter/morph.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

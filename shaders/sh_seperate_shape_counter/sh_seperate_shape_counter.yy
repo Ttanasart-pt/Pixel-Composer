@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_seperate_shape_counter",
-  "parent": {
-    "name": "shape seperator",
-    "path": "folders/shader/filter/shape seperator.yy",
+  "$GMShader":"",
+  "%Name":"sh_seperate_shape_counter",
+  "name":"sh_seperate_shape_counter",
+  "parent":{
+    "name":"shape_seperator",
+    "path":"folders/shader/filter/shape_seperator.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

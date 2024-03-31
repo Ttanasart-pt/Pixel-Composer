@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_alpha_hash",
-  "parent": {
-    "name": "color",
-    "path": "folders/shader/filter/color.yy",
+  "$GMShader":"",
+  "%Name":"sh_alpha_hash",
+  "name":"sh_alpha_hash",
+  "parent":{
+    "name":"color",
+    "path":"folders/shader/filter/color.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

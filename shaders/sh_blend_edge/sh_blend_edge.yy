@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_blend_edge",
-  "parent": {
-    "name": "blend edge",
-    "path": "folders/shader/filter/blend edge.yy",
+  "$GMShader":"",
+  "%Name":"sh_blend_edge",
+  "name":"sh_blend_edge",
+  "parent":{
+    "name":"blend_edge",
+    "path":"folders/shader/filter/blend_edge.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

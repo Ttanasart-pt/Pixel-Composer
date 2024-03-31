@@ -40,8 +40,8 @@ event_inherited();
 			
 			draw_set_text(f_code, fa_left, fa_top, COLORS._main_text);
 			var _func = array_length(_f) > 2? _f[2] : _f[0];
-			var _desp = array_safe_get(_f, 3, "");
-			var _args = array_safe_get(_f, 4, []);
+			var _desp = array_safe_get_fast(_f, 3, "");
+			var _args = array_safe_get_fast(_f, 4, []);
 			var hh = line_get_height();
 			if(is_open[i]) {
 				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__vector",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "vector",
-    "path": "folders/functions/vector.yy",
+  "$GMScript":"",
+  "%Name":"__vector",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__vector",
+  "parent":{
+    "name":"vector",
+    "path":"folders/functions/vector.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

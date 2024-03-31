@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "dynaSurf_iso",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "dynamic surface",
-    "path": "folders/functions/surface/dynamic surface.yy",
+  "$GMScript":"",
+  "%Name":"dynaSurf_iso",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dynaSurf_iso",
+  "parent":{
+    "name":"dynamic_surface",
+    "path":"folders/functions/surface/dynamic_surface.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

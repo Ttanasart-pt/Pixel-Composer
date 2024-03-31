@@ -23,8 +23,8 @@ function Node_Base_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var baseFrom = array_safe_get(current_data, 1);
-		var baseTo   = array_safe_get(current_data, 2);
+		var baseFrom = array_safe_get_fast(current_data, 1);
+		var baseTo   = array_safe_get_fast(current_data, 2);
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var b1   = BBOX().fromPoints(bbox.x0, bbox.y0, bbox.xc - _s * 8, bbox.y1);

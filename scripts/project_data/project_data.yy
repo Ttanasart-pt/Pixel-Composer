@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "project_data",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "components",
-    "path": "folders/main/components.yy",
+  "$GMScript":"",
+  "%Name":"project_data",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"project_data",
+  "parent":{
+    "name":"components",
+    "path":"folders/main/components.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

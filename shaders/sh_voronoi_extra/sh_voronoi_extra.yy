@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_voronoi_extra",
-  "parent": {
-    "name": "noise",
-    "path": "folders/shader/generator/noise.yy",
+  "$GMShader":"",
+  "%Name":"sh_voronoi_extra",
+  "name":"sh_voronoi_extra",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

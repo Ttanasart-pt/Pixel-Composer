@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_grid",
-  "parent": {
-    "name": "grid",
-    "path": "folders/shader/generator/grid.yy",
+  "$GMShader":"",
+  "%Name":"sh_grid",
+  "name":"sh_grid",
+  "parent":{
+    "name":"grid",
+    "path":"folders/nodes/data/generator/grid.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

@@ -59,7 +59,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _cnt_hover = false;
 		
-		draw_sprite_stretched(THEME.button, 0, _x, _y, _w, _h);
+		draw_sprite_stretched(THEME.button_def, 0, _x, _y, _w, _h);
 		
 		if(_hover && frame_renderer.parent != noone && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			frame_renderer.parent.scroll_lock = true;
@@ -353,7 +353,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			array_resize(canvas_buffer, fr);
 	} #endregion
 	
-	function getCanvasSurface(index = preview_index) { INLINE return array_safe_get(canvas_surface, index); }
+	function getCanvasSurface(index = preview_index) { INLINE return array_safe_get_fast(canvas_surface, index); }
 	
 	function setCanvasSurface(surface, index = preview_index) { INLINE canvas_surface[index] = surface; }
 	
@@ -392,7 +392,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			setCanvasSurface(surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer[index]), index);
 		} else if(surface_get_width_safe(_canvas_surface) != _dim[0] || surface_get_height_safe(_canvas_surface) != _dim[1]) { // resize surface
-			var _cbuff = array_safe_get(canvas_buffer, index);
+			var _cbuff = array_safe_get_fast(canvas_buffer, index);
 			if(buffer_exists(_cbuff)) buffer_delete(_cbuff);
 			
 			canvas_buffer[index] = buffer_create(_dim[0] * _dim[1] * 4, buffer_fixed, 4);

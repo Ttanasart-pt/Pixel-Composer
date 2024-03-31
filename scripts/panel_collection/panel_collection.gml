@@ -219,7 +219,7 @@ function Panel_Collection() : PanelContent() constructor {
 						}
 						
 						if(_node.path == updated_path && updated_prog > 0) 
-							draw_sprite_stretched_ext(THEME.node_glow, 0, _boxx - 9, yy - 9, grid_size + 18, grid_size + 18, COLORS._main_value_positive, updated_prog);
+							draw_sprite_stretched_ext(THEME.node_glow_border, 0, _boxx - 9, yy - 9, grid_size + 18, grid_size + 18, COLORS._main_value_positive, updated_prog);
 						
 						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 						
@@ -486,7 +486,7 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			if(bx > rootx) {
 				var txt = __txt("Refresh");
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.refresh) == 2)
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.refresh_icon) == 2)
 					refreshContext();
 			}
 			bx -= ui(36);

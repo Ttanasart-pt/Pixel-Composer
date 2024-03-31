@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_3d_point_affector",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "3D",
-    "path": "folders/nodes/data/3D.yy",
+  "$GMScript":"",
+  "%Name":"node_3d_point_affector",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_3d_point_affector",
+  "parent":{
+    "name":"data",
+    "path":"folders/nodes/data.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

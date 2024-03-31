@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_csv_file_write",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "io",
-    "path": "folders/nodes/data/io.yy",
+  "$GMScript":"",
+  "%Name":"node_csv_file_write",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_csv_file_write",
+  "parent":{
+    "name":"io",
+    "path":"folders/nodes/data/io.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

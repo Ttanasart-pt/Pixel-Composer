@@ -61,7 +61,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		var _selVal = _val;
 		
 		if(is_array(_val)) return 0;
-		if(is_numeric(_val)) _selVal = array_safe_get(data, _val);
+		if(is_numeric(_val)) _selVal = array_safe_get_fast(data, _val);
 		
 		var _text = is_instanceof(_selVal, scrollItem)? _selVal.name : _selVal;
 		curr_text = _text;
@@ -100,6 +100,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
+		var _sps = min(1, _h / 24);
 		var _ars = min(1, _h / 64);
 		var _arw = sprite_get_width(arrow_spr) * _ars + ui(8);
 		var _spr = is_instanceof(_selVal, scrollItem) && _selVal.spr;
@@ -113,12 +114,12 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		draw_set_text(font, align, fa_center, COLORS._main_text);
 		if(_h >= line_get_height()) {
 			draw_set_alpha(0.5 + 0.5 * interactable);
-					 if(align == fa_center) draw_text_add((_x0 + _x1) / 2, _yc, _text);
-				else if(align == fa_left)   draw_text_add(_x0 + ui(8),     _yc, _text);
+					 if(align == fa_center) draw_text_add((_x0 + _x1) / 2, _yc, _text, _sps);
+				else if(align == fa_left)   draw_text_add(_x0 + ui(8),     _yc, _text, _sps);
 			draw_set_alpha(1);
 		}
 		
-		if(_spr) draw_sprite_ext(_selVal.spr, _selVal.spr_ind, _x + ui(16), _yc, 1, 1, 0, _selVal.spr_blend, 1);
+		if(_spr) draw_sprite_ext(_selVal.spr, _selVal.spr_ind, _x + ui(16) * _sps, _yc, _sps, _sps, 0, _selVal.spr_blend, 1);
 		
 		draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);
 		

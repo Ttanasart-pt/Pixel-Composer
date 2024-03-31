@@ -24,7 +24,7 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var ar = [];
 		
 		for( var i = st; i < en; i++ )
-			ar[i - st] = array_safe_get(pal, i);
+			ar[i - st] = array_safe_get_fast(pal, i);
 		
 		return ar;
 	} #endregion

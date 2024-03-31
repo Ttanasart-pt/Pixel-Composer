@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_mesh_to_path",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "mesh",
-    "path": "folders/nodes/data/value/mesh.yy",
+  "$GMScript":"",
+  "%Name":"node_mesh_to_path",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_mesh_to_path",
+  "parent":{
+    "name":"mesh",
+    "path":"folders/nodes/data/value/mesh.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

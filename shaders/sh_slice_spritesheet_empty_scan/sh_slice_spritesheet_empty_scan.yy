@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_slice_spritesheet_empty_scan",
-  "parent": {
-    "name": "misc",
-    "path": "folders/shader/misc.yy",
+  "$GMShader":"",
+  "%Name":"sh_slice_spritesheet_empty_scan",
+  "name":"sh_slice_spritesheet_empty_scan",
+  "parent":{
+    "name":"misc",
+    "path":"folders/shader/misc.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

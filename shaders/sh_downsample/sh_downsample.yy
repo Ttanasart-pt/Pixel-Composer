@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_downsample",
-  "parent": {
-    "name": "_helper",
-    "path": "folders/shader/_helper.yy",
+  "$GMShader":"",
+  "%Name":"sh_downsample",
+  "name":"sh_downsample",
+  "parent":{
+    "name":"_helper",
+    "path":"folders/shader/_helper.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

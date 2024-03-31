@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_color_remove",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "colors",
-    "path": "folders/nodes/data/filter/colors.yy",
+  "$GMScript":"",
+  "%Name":"node_color_remove",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_color_remove",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

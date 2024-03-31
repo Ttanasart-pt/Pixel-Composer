@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "nodeValue_drawer",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "components",
-    "path": "folders/panels/inspectors/components.yy",
+  "$GMScript":"",
+  "%Name":"nodeValue_drawer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"nodeValue_drawer",
+  "parent":{
+    "name":"components",
+    "path":"folders/panels/inspectors/components.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

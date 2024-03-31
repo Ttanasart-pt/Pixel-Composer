@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_ui_slider",
-  "parent": {
-    "name": "UI",
-    "path": "folders/shader/UI.yy",
+  "$GMShader":"",
+  "%Name":"sh_ui_slider",
+  "name":"sh_ui_slider",
+  "parent":{
+    "name":"UI",
+    "path":"folders/shader/UI.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

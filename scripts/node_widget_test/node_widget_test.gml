@@ -45,7 +45,7 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 33] = nodeValue("surfaceBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)                             .setDisplay(VALUE_DISPLAY._default)
 	
 	input_display_list = [
-		["Number",  false], 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+		["Number",  false], 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18,
 		["Boolean", false], 19,  
 		["Color",   false], 20, 21, 22,
 		["Path",    false], 23, 24, 25, 26,

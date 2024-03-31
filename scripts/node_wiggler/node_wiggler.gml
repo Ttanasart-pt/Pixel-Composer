@@ -30,7 +30,7 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var step = TOTAL_FRAMES / 64;
 		for( var i = 0; i < 64; i++ )
-			random_value[i] = getWiggle(array_safe_get(ran, 0), array_safe_get(ran, 1), TOTAL_FRAMES / fre, step * i, sed, 0, TOTAL_FRAMES);
+			random_value[i] = getWiggle(array_safe_get_fast(ran, 0), array_safe_get_fast(ran, 1), TOTAL_FRAMES / fre, step * i, sed, 0, TOTAL_FRAMES);
 	} run_in(1, function() { onValueUpdate(); }); #endregion
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
@@ -39,14 +39,14 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var sed = _data[2];
 		var time = CURRENT_FRAME;
 		
-		return getWiggle(array_safe_get(ran, 0), array_safe_get(ran, 1), TOTAL_FRAMES / fre, time, sed, 0, TOTAL_FRAMES);
+		return getWiggle(array_safe_get_fast(ran, 0), array_safe_get_fast(ran, 1), TOTAL_FRAMES / fre, time, sed, 0, TOTAL_FRAMES);
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
-		var ran  = array_safe_get(current_data, 0);
-		var fre  = array_safe_get(current_data, 1);
-		var sed  = array_safe_get(current_data, 2);
-		var disp = array_safe_get(current_data, 3);
+		var ran  = array_safe_get_fast(current_data, 0);
+		var fre  = array_safe_get_fast(current_data, 1);
+		var sed  = array_safe_get_fast(current_data, 2);
+		var disp = array_safe_get_fast(current_data, 3);
 		var time = CURRENT_FRAME;
 		var total_time = TOTAL_FRAMES;
 		

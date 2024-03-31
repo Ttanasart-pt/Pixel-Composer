@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_color_picker_side_value",
-  "parent": {
-    "name": "color picker",
-    "path": "folders/shader/color picker.yy",
+  "$GMShader":"",
+  "%Name":"sh_color_picker_side_value",
+  "name":"sh_color_picker_side_value",
+  "parent":{
+    "name":"color_picker",
+    "path":"folders/shader/color_picker.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

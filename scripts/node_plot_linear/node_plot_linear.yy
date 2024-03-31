@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_plot_linear",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "drawer",
-    "path": "folders/nodes/data/generator/drawer.yy",
+  "$GMScript":"",
+  "%Name":"node_plot_linear",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_plot_linear",
+  "parent":{
+    "name":"drawer",
+    "path":"folders/nodes/data/generator/drawer.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -150,7 +150,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _dtype	    = getInputData(0);
 		var _range	    = getInputData(1);
 		var _type		= getInputData(2);
-		var _val_type   = array_safe_get(data_type_map, _type, VALUE_TYPE.any);
+		var _val_type   = array_safe_get_fast(data_type_map, _type, VALUE_TYPE.any);
 		var _enum_label = getInputData(3);
 		var _vec_size	= getInputData(4);
 		var _step		= getInputData(7);
@@ -169,7 +169,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			attributes.inherit_type = false;
 		}
 		
-		_dtype = array_safe_get(array_safe_get(display_list, _val_type), _dtype);
+		_dtype = array_safe_get_fast(array_safe_get_fast(display_list, _val_type), _dtype);
 		
 		inParent.setType(_val_type);
 		outputs[| 0].setType(_val_type);
@@ -308,8 +308,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(is_undefined(inParent)) return;
 		
 		var _type		= getInputData(2);
-		var _val_type   = array_safe_get(data_type_map, _type, VALUE_TYPE.any);
-		var _dsList     = array_safe_get(display_list, _val_type);
+		var _val_type   = array_safe_get_fast(data_type_map, _type, VALUE_TYPE.any);
+		var _dsList     = array_safe_get_fast(display_list, _val_type);
 		if(_dsList == 0) _dsList = [ "Default" ];
 		inputs[| 0].display_data.data    = _dsList;
 		inputs[| 0].editWidget.data_list = _dsList;
@@ -331,10 +331,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _dstype = getInputData(0);
 		var _data   = getInputData(2);
-		var _dsList = array_safe_get(display_list, _data);
-		_dstype = _dsList == 0? "Default" : array_safe_get(_dsList, _dstype);
+		var _dsList = array_safe_get_fast(display_list, _data);
+		_dstype = _dsList == 0? "Default" : array_safe_get_fast(_dsList, _dstype);
 		
-		var _datype = array_safe_get(data_type_map, _data, VALUE_TYPE.any);
+		var _datype = array_safe_get_fast(data_type_map, _data, VALUE_TYPE.any);
 		
 		inputs[| 1].setVisible(false);
 		inputs[| 3].setVisible(false);

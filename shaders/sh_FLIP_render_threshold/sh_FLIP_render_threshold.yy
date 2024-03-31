@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_FLIP_render_threshold",
-  "parent": {
-    "name": "FLIP",
-    "path": "folders/shader/simulation/FLIP.yy",
+  "$GMShader":"",
+  "%Name":"sh_FLIP_render_threshold",
+  "name":"sh_FLIP_render_threshold",
+  "parent":{
+    "name":"FLIP",
+    "path":"folders/nodes/data/simulation/FLIP.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

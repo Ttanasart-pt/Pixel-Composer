@@ -8,7 +8,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Effect area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA)
-		.setDisplay(VALUE_DISPLAY.area);
+		.setDisplay(VALUE_DISPLAY.area, { useShape : false });
 	
 	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.10)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });

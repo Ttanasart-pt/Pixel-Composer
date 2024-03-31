@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_blink_extract",
-  "parent": {
-    "name": "blinker",
-    "path": "folders/shader/generator/blinker.yy",
+  "$GMShader":"",
+  "%Name":"sh_blink_extract",
+  "name":"sh_blink_extract",
+  "parent":{
+    "name":"blinker",
+    "path":"folders/nodes/data/generator/blinker.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

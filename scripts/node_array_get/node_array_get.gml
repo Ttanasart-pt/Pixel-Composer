@@ -47,7 +47,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				break;
 		}
 		
-		return array_safe_get(_arr, index);
+		return array_safe_get_fast(_arr, index);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

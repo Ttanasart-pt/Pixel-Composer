@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_cell_noise_edge",
-  "parent": {
-    "name": "cell",
-    "path": "folders/shader/generator/cell.yy",
+  "$GMShader":"",
+  "%Name":"sh_cell_noise_edge",
+  "name":"sh_cell_noise_edge",
+  "parent":{
+    "name":"cell",
+    "path":"folders/nodes/data/generator/cell.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

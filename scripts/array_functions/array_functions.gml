@@ -55,8 +55,15 @@ enum ARRAY_OVERFLOW {
 	pingpong
 }
 
+function array_safe_get_fast(arr, index, def = 0) { #region
+	INLINE
+	
+	return is_array(arr) && index >= 0 && index < array_length(arr)? arr[index] : def;
+} #endregion
+
 function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) { #region
 	INLINE
+	
 	if(!is_array(arr))  return def;
 	if(is_array(index)) return def;
 	
@@ -95,10 +102,10 @@ function array_get_decimal(arr, index, color = false) { #region
 	INLINE
 	
 	if(!is_array(arr)) return 0;
-	if(frac(index) == 0) return array_safe_get(arr, index);
+	if(frac(index) == 0) return array_safe_get_fast(arr, index);
 	
-	var v0 = array_safe_get(arr, floor(index));
-	var v1 = array_safe_get(arr, floor(index) + 1);
+	var v0 = array_safe_get_fast(arr, floor(index));
+	var v1 = array_safe_get_fast(arr, floor(index) + 1);
 	
 	return color? 
 		merge_color(v0, v1, frac(index)) : 

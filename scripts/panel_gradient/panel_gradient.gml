@@ -78,7 +78,7 @@ function Panel_Gradient() : PanelContent() constructor {
 		var bx = w - ui(32 + 16);
 		var by = title_height / 2 - ui(16 + !in_dialog * 2);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Refresh"), THEME.refresh, 1, COLORS._main_icon) == 2) 
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Refresh"), THEME.refresh_icon, 1, COLORS._main_icon) == 2) 
 			__initGradient();
 	}
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "pack_skyline",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "packing",
-    "path": "folders/functions/packing.yy",
+  "$GMScript":"",
+  "%Name":"pack_skyline",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pack_skyline",
+  "parent":{
+    "name":"packing",
+    "path":"folders/functions/packing.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

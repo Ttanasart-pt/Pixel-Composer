@@ -16,7 +16,7 @@ function Node_Rigid_Global(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static update = function(frame = CURRENT_FRAME) {
 		var _gra = getInputData(0);
 		
-		if(current_gra[0] != array_safe_get(_gra, 0) || current_gra[1] != array_safe_get(_gra, 1)) {
+		if(current_gra[0] != array_safe_get_fast(_gra, 0) || current_gra[1] != array_safe_get_fast(_gra, 1)) {
 			physics_world_gravity(_gra[0], _gra[1]);
 			
 			current_gra[0] = _gra[0];

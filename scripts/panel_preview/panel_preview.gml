@@ -23,7 +23,7 @@
 function Panel_Preview() : PanelContent() constructor {
 	title = __txt("Preview");
 	context_str = "Preview";
-	icon  = THEME.panel_preview;
+	icon  = THEME.panel_preview_icon;
 	
 	last_focus = noone;
 	
@@ -120,7 +120,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var node = getNodePreview();
 			if(node == noone) return;
 		
-			node.preview_channel = array_safe_get(sbChannelIndex, index); 
+			node.preview_channel = array_safe_get_fast(sbChannelIndex, index); 
 		}); #endregion
 		sbChannelIndex  = [];
 		sbChannel.font  = f_p1;
@@ -225,7 +225,7 @@ function Panel_Preview() : PanelContent() constructor {
 		],
 		[
 			THEME.icon_tile_view,
-			function() { var t = [3, 0, 1, 2]; return array_safe_get(t, tileMode);  },
+			function() { var t = [3, 0, 1, 2]; return array_safe_get_fast(t, tileMode);  },
 			function() { 
 				switch(tileMode) {
 					case 0 : return __txtx("panel_preview_tile_off", "Tile off");

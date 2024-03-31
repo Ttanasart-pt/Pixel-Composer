@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "string_splice",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "string",
-    "path": "folders/functions/string.yy",
+  "$GMScript":"",
+  "%Name":"string_splice",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"string_splice",
+  "parent":{
+    "name":"string",
+    "path":"folders/functions/string.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

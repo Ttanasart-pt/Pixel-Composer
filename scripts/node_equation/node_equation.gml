@@ -152,7 +152,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				params[$ _pName] = _pVal;
 		}
 		
-		var _tree = array_safe_get(ast, _array_index, noone);
+		var _tree = array_safe_get_fast(ast, _array_index, noone);
 		if(_tree == noone || _tree.fx != eq) {
 			ast[_array_index] = { fx: eq, tree: evaluateFunctionTree(eq) };
 			_tree = ast[_array_index];

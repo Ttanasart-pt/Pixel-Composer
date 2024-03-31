@@ -4,7 +4,8 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	node = _node;
 	icon = noone;
 	
-	createNode = _create;
+	createNode     = _create;
+	createUseParam = array_length(createNode) > 2;
 	
 	self.tags    = tags;
 	self.tooltip = tooltip;
@@ -93,17 +94,15 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	static getTooltip = function() { return __txt_node_tooltip(node, tooltip); }
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) { #region
-		var _node;
-		var _buildCon = createNode[0];
-		if(array_length(createNode) > 2)
-			_param = struct_append(_param, createNode[2]);
+		INLINE 
 		
+		var _buildCon = createNode[0];
+		if(createUseParam) _param = struct_append(_param, createNode[2]);
+		
+		var _node = noone;
 		if(_buildCon)	_node = new createNode[1](_x, _y, _group, _param);
 		else			_node = createNode[1](_x, _y, _group, _param);
-			
-		if(!_node) return noone;
 		
-		//if(!LOADING && !APPENDING) _node.doUpdate();
 		return _node;
 	} #endregion
 	
@@ -230,6 +229,8 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 #endregion
 	
 function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) { #region
+	INLINE
+	
 	if(!ds_map_exists(ALL_NODES, _name)) {
 		log_warning("LOAD", $"Node type {_name} not found");
 		return noone;

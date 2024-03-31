@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "hlsl_server",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "GLSL",
-    "path": "folders/functions/GLSL.yy",
+  "$GMScript":"",
+  "%Name":"hlsl_server",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"hlsl_server",
+  "parent":{
+    "name":"GLSL",
+    "path":"folders/functions/GLSL.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

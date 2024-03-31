@@ -20,7 +20,7 @@ function Node_PB_Fx(_x, _y, _group = noone) : Node_PB(_x, _y, _group) constructo
 
 #macro PB_FX_PBOX if(_output_index == 1) {																		\
 			var _surf = outputs[| 0].getValue();																\
-			if(is_array(_surf)) _surf = array_safe_get(_surf, _array_index);									\
+			if(is_array(_surf)) _surf = array_safe_get_fast(_surf, _array_index);								\
 			if(!is_surface(_surf)) return noone;																\
 																												\
 			var _pbox = new __pbBox();																			\

@@ -76,7 +76,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		for( var i = 0; i < len; i++ ) {
 			for( var j = 0; j < ds_list_size(inputs) - 1; j += data_length )
-				_out[i][j] = array_safe_get(val[j], i, 0);
+				_out[i][j] = array_safe_get_fast(val[j], i, 0);
 		}
 		
 		outputs[| 0].setValue(_out);

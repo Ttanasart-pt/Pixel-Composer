@@ -9,7 +9,7 @@ function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_a
 	if(!is_surface(background)) return;
 	
 	var sh = sh_blend_normal
-	switch(array_safe_get(BLEND_TYPES, blend)) {
+	switch(array_safe_get_fast(BLEND_TYPES, blend)) {
 		case "Normal" :		sh = sh_blend_normal		break;
 		case "Add" :		sh = sh_blend_add;			break;
 		case "Subtract" :	sh = sh_blend_subtract;		break;

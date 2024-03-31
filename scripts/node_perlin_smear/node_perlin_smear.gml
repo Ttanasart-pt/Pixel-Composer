@@ -16,9 +16,21 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 4] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
+	inputs[| 5] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	input_display_list = [
+		["Output",		false], 0, 
+		["Noise",		false], 1, 5, 2, 3, 4,
+	];
+	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
@@ -26,6 +38,7 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _sca = _data[2];
 		var _ite = _data[3];
 		var _bri = _data[4];
+		var _rot = _data[5];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -35,6 +48,8 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f("scale",		 _sca);
 			shader_set_f("bright",		 _bri);
 			shader_set_i("iteration",	 _ite);
+			shader_set_f("rotation",	 degtorad(_rot));
+			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		

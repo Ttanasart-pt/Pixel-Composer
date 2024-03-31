@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "panel_inspector",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "inspectors",
-    "path": "folders/panels/inspectors.yy",
+  "$GMScript":"",
+  "%Name":"panel_inspector",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_inspector",
+  "parent":{
+    "name":"inspectors",
+    "path":"folders/panels/inspectors.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

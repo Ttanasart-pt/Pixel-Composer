@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_pb",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "pixel builder",
-    "path": "folders/nodes/data/pixel builder.yy",
+  "$GMScript":"",
+  "%Name":"node_pb",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_pb",
+  "parent":{
+    "name":"pixel_builder",
+    "path":"folders/nodes/data/pixel_builder.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

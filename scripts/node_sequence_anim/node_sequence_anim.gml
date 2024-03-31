@@ -32,11 +32,11 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && inputs[| 2].isLeaf()) {
-			draw_sprite_stretched(THEME.button, mouse_click(mb_left, _focus)? 2 : 1, _x, _y, _w, _h);
+			draw_sprite_stretched(THEME.button_def, mouse_click(mb_left, _focus)? 2 : 1, _x, _y, _w, _h);
 			if(mouse_press(mb_left, _focus)) 
 				dialogPanelCall(new Panel_Array_Sequence(self));
 		} else
-			draw_sprite_stretched(THEME.button, 0, _x, _y, _w, _h);
+			draw_sprite_stretched(THEME.button_def, 0, _x, _y, _w, _h);
 		
 		var x0 = _x + ui(4);
 		var y0 = _y + ui(4);
@@ -54,7 +54,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			for( var i = 0, n = array_length(_ord); i < n; i++ ) {
 				var o = _ord[i];
 				if(o == noone) continue;
-				var s = array_safe_get(_seq, o);
+				var s = array_safe_get_fast(_seq, o);
 				
 				if(!is_surface(s)) continue;
 				
@@ -125,6 +125,6 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			return;
 		}
 		
-		outputs[| 0].setValue(array_safe_get(_sur, ind));
+		outputs[| 0].setValue(array_safe_get_fast(_sur, ind));
 	}
 }

@@ -109,7 +109,7 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) { #region
 		return eval_curve_segment_x([_y0, ax0, ay0, bx1, by1, _y1], (_x - _x0) / (_x1 - _x0), _tolr);
 	}
 	
-	return array_safe_get(_bz, array_length(_bz) - 3);
+	return array_safe_get_fast(_bz, array_length(_bz) - 3);
 } #endregion
 
 function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) { #region

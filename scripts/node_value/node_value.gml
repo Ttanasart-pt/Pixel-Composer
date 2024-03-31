@@ -902,7 +902,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
+							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Number";
 						break; #endregion
@@ -940,7 +940,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						}
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + string(array_safe_get(global.displaySuffix_Axis, i));
+							animators[i].suffix = " " + string(array_safe_get_fast(global.displaySuffix_Axis, i));
 						
 						break; #endregion
 					case VALUE_DISPLAY.vector_range :	#region
@@ -962,7 +962,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							extract_node = "Node_Vector4";
 							
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + string(array_safe_get(global.displaySuffix_VecRange, i));
+							animators[i].suffix = " " + string(array_safe_get_fast(global.displaySuffix_VecRange, i));
 						
 						break; #endregion
 					case VALUE_DISPLAY.rotation :		#region
@@ -980,7 +980,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						} );
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
+							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Vector2";
 						break; #endregion
@@ -1009,7 +1009,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							function(index, val) { return setValueInspector(val, index); } );
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
+							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Vector2";
 						break; #endregion
@@ -1020,13 +1020,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
-						if(struct_has(display_data, "onSurfaceSize")) 
-							editWidget.onSurfaceSize = display_data.onSurfaceSize;
-						else 
-							display_data.onSurfaceSize = noone;
+						editWidget.onSurfaceSize = struct_try_get(display_data, "onSurfaceSize", noone);
+						editWidget.showShape     = struct_try_get(display_data, "useShape", true);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i, "");
+							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Area, i, "");
 						
 						extract_node = "Node_Area";
 						break; #endregion
@@ -1039,7 +1037,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
+							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Padding, i);
 						
 						extract_node = "Node_Vector4";
 						break; #endregion
@@ -1050,7 +1048,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
+							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Padding, i);
 						
 						extract_node = "Node_Vector4";
 						break; #endregion
@@ -1301,7 +1299,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						attributes.mapped = !attributes.mapped;
 						var val = getValue();
 						if( attributes.mapped && is_numeric(val)) setValue([0, val]);
-						if(!attributes.mapped && is_array(val))   setValue(array_safe_get(val, 0));
+						if(!attributes.mapped && is_array(val))   setValue(array_safe_get_fast(val, 0));
 						setArrayDepth(attributes.mapped);
 						
 						node.triggerRender(); 
@@ -1484,38 +1482,40 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		#endregion
 		
 		if(display_type == VALUE_DISPLAY.area) { #region
-			var surfGet  = struct_try_get(nodeFrom.display_data, "onSurfaceSize", -1);
 			
-			if(!applyUnit) return value;
-			if(!is_callable(surfGet)) return value;
+			if(struct_has(nodeFrom.display_data, "onSurfaceSize")) {
+				var surf = nodeFrom.display_data.onSurfaceSize();
+				
+				var ww = surf[0];
+				var hh = surf[1];
 			
-			var surf = surfGet();
-			if(!is_array(surf)) return value;
-			var ww = surf[0];
-			var hh = surf[1];
+				var dispType = array_safe_get_fast(value, 5, AREA_MODE.area);
 			
-			var dispType = array_safe_get(value, 5, AREA_MODE.area);
-			
-			switch(dispType) {
-				case AREA_MODE.area : 
-					return value;	
+				switch(dispType) {
+					case AREA_MODE.area : 
+						break;
 					
-				case AREA_MODE.padding : 
-					var cx = (ww - value[0] + value[2]) / 2
-					var cy = (value[1] + hh - value[3]) / 2;
-					var sw = abs((ww - value[0]) - value[2]) / 2;
-					var sh = abs(value[1] - (hh - value[3])) / 2;
+					case AREA_MODE.padding : 
+						var cx = (ww - value[0] + value[2]) / 2
+						var cy = (value[1] + hh - value[3]) / 2;
+						var sw = abs((ww - value[0]) - value[2]) / 2;
+						var sh = abs(value[1] - (hh - value[3])) / 2;
 					
-					return [cx, cy, sw, sh, value[4], value[5]];
+						value = [cx, cy, sw, sh, value[4], value[5]];
+						break;
 					
-				case AREA_MODE.two_point : 
-					var cx = (value[0] + value[2]) / 2
-					var cy = (value[1] + value[3]) / 2;
-					var sw = abs(value[0] - value[2]) / 2;
-					var sh = abs(value[1] - value[3]) / 2;
+					case AREA_MODE.two_point : 
+						var cx = (value[0] + value[2]) / 2
+						var cy = (value[1] + value[3]) / 2;
+						var sw = abs(value[0] - value[2]) / 2;
+						var sh = abs(value[1] - value[3]) / 2;
 					
-					return [cx, cy, sw, sh, value[4], value[5]];
+						value = [cx, cy, sw, sh, value[4], value[5]];
+						break;
+				}
 			}
+			
+			return applyUnit? unit.apply(value, arrIndex) : value;
 		} #endregion
 		
 		if(display_type == VALUE_DISPLAY.d3quarternion) { #region
@@ -1557,11 +1557,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(typeFrom == VALUE_TYPE.text)
 				value = toNumber(value);
 			
-			//print($"{name} get value {value} ({applyUnit})");
-			//printCallStack();
-			//print("=======================");
-			
-			if(applyUnit) return unit.apply(value, arrIndex);
+			return applyUnit? unit.apply(value, arrIndex) : value;
 		} #endregion
 		
 		if(type == VALUE_TYPE.surface && connect_type == JUNCTION_CONNECT.input && !is_surface(value) && def_val == USE_DEF)
@@ -1659,7 +1655,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		else if(array_length(val) < def_length) {
 			var _val = array_create(def_length);
 			for( var i = 0; i < def_length; i++ )
-				_val[i] = array_safe_get(val, i, 0);
+				_val[i] = array_safe_get_fast(val, i, 0);
 			return _val;
 		} 
 		
@@ -1676,16 +1672,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == JUNCTION_CONNECT.output)
 			return val;
 		
-		if(expUse) {
+		if(expUse) { #region expression
 			if(is_array(val)) {
 				for( var i = 0, n = array_length(val); i < n; i++ )
 					val[i] = valueExpressionProcess(val[i]);
 			} else 
 				val = valueExpressionProcess(val);
 			return arrayBalance(val);
-		}
+		} #endregion
 		
-		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float) && accept_array) { //Dimension conversion
+		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float) && accept_array) { #region Dimension conversion
 			if(is_array(val)) {
 				var eqSize = true;
 				var sArr = [];
@@ -1708,16 +1704,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			} else if (is_surface(val)) 
 				return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
 			return [1, 1];
-		} 
+		} #endregion
 		
 		val = arrayBalance(val);
 		
-		if(isArray(val) && array_length(val) < 1024) { //Process data
+		if(isArray(val) && array_length(val) < 1024) { #region Process data
 			var _val = array_create(array_length(val));
 			for( var i = 0, n = array_length(val); i < n; i++ )
 				_val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
 			return _val;
-		}
+		} #endregion
 		
 		return valueProcess(val, nod, applyUnit, arrIndex);
 	} #endregion
@@ -1837,7 +1833,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(display_type == VALUE_DISPLAY.area)
 			useCache = false;
 		
-		var val = getValue(, false, 0, useCache, true);
+		var val = getValue(CURRENT_FRAME, false, 0, useCache, true);
 		
 		if(isArray(val)) {
 			if(array_length(val) == 0) return 0;
@@ -1924,7 +1920,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		for( var i = 0, n = array_length(animators); i < n; i++ ) {
 			ds_list_clear(animators[i].values);
-			ds_list_add(animators[i].values, new valueKey(0, array_safe_get(_val, i), animators[i]));
+			ds_list_add(animators[i].values, new valueKey(0, array_safe_get_fast(_val, i), animators[i]));
 		}
 	} #endregion
 	
@@ -2070,7 +2066,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return 1;
 	} #endregion
 	
-	static isLeaf = function(list = noone) { INLINE return (value_from == noone) || (list != noone && !ds_list_exist(list, value_from.node)); }
+	static isLeaf     = function()             { INLINE return value_from == noone; }
+	static isLeafList = function(list = noone) { INLINE return value_from == noone || !ds_list_exist(list, value_from.node); }
 	
 	static isRendered = function() { #region
 		if(type == VALUE_TYPE.node)	return true;

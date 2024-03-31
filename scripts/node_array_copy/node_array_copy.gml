@@ -30,7 +30,7 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var res = [];
 		
 		for( var i = 0; i < _siz; i++ ) 
-			res[i] = array_safe_get(_arr, _ind + i);
+			res[i] = array_safe_get_fast(_arr, _ind + i);
 		
 		outputs[| 0].setValue(res);
 	}

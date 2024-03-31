@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_pb_shade_half",
-  "parent": {
-    "name": "pixel builder",
-    "path": "folders/shader/pixel builder.yy",
+  "$GMShader":"",
+  "%Name":"sh_pb_shade_half",
+  "name":"sh_pb_shade_half",
+  "parent":{
+    "name":"pixel_builder",
+    "path":"folders/shader/pixel_builder.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

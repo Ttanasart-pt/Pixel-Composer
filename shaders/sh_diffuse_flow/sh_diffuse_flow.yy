@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_diffuse_flow",
-  "parent": {
-    "name": "diffuse",
-    "path": "folders/shader/simulation/diffuse.yy",
+  "$GMShader":"",
+  "%Name":"sh_diffuse_flow",
+  "name":"sh_diffuse_flow",
+  "parent":{
+    "name":"diffuse",
+    "path":"folders/nodes/data/simulation/diffuse.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_VFX_spawner",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "VFX",
-    "path": "folders/nodes/data/simulation/VFX.yy",
+  "$GMScript":"",
+  "%Name":"node_VFX_spawner",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_VFX_spawner",
+  "parent":{
+    "name":"VFX",
+    "path":"folders/nodes/data/simulation/VFX.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

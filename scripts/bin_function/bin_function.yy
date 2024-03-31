@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "bin_function",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "value",
-    "path": "folders/functions/value.yy",
+  "$GMScript":"",
+  "%Name":"bin_function",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"bin_function",
+  "parent":{
+    "name":"value",
+    "path":"folders/functions/value.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

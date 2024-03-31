@@ -40,7 +40,7 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		if(!is_surface(inSurf)) return _outSurf;
 		
 		if(_output_index == 1)
-			return array_safe_get(colors, _array_index);
+			return array_safe_get_fast(colors, _array_index);
 			
 		var side = max(surface_get_width_safe(inSurf), surface_get_height_safe(inSurf));
 		var lop  = ceil(log2(side));

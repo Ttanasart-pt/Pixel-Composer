@@ -7,7 +7,7 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	inputs[| 2] = nodeValue("Position y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	inputs[| 3] = nodeValue("Anchor x",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	inputs[| 4] = nodeValue("Anchor y",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 5] = nodeValue("Rotation",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 5] = nodeValue("Rotation",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	inputs[| 6] = nodeValue("Scale x",    self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	inputs[| 7] = nodeValue("Scale y",    self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	

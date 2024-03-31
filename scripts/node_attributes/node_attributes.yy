@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_attributes",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "__base__",
-    "path": "folders/nodes/data/__base__.yy",
+  "$GMScript":"",
+  "%Name":"node_attributes",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_attributes",
+  "parent":{
+    "name":"__base__",
+    "path":"folders/nodes/data/__base__.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

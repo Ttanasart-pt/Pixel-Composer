@@ -164,7 +164,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				var shapeData = [];
 			
-				switch(array_safe_get(shapesArray, _shp).name) {
+				switch(array_safe_get_fast(shapesArray, _shp).name) {
 					case "Rectangle" : shapeData = SHAPE_rectangle(_sca);		break;
 					case "Ellipse"	 : shapeData = SHAPE_circle(_sca, data);	break;
 					case "Star"		 : shapeData = SHAPE_star(_sca, data);		break;

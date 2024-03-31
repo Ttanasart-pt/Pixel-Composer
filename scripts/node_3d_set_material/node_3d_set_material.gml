@@ -34,12 +34,12 @@ function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y,
 	static getPreviewValues = function() { #region
 		var _sing = getSingleValue(in_mesh + 1);
 		
-		var res = array_safe_get(all_inputs, in_mesh + 0, noone);
+		var res = array_safe_get_fast(all_inputs, in_mesh + 0, noone);
 		if(_sing) return res; 
 		
 		var _r = array_create(array_length(res));
 		for( var i = 0, n = array_length(res); i < n; i++ ) 
-			_r[i] = array_safe_get(res[i], 0);
+			_r[i] = array_safe_get_fast(res[i], 0);
 		return _r;
 	} #endregion
 }

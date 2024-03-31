@@ -1,6 +1,4 @@
 #region global
-	global.FLAG.keyframe_override = true;
-	
 	enum ANIMATOR_END {
 		loop,
 		stop

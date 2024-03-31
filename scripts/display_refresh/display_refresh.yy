@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "display_refresh",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "functions",
-    "path": "folders/functions.yy",
+  "$GMScript":"",
+  "%Name":"display_refresh",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"display_refresh",
+  "parent":{
+    "name":"functions",
+    "path":"folders/functions.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

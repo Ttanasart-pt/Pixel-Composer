@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_brush_outline",
-  "parent": {
-    "name": "draw",
-    "path": "folders/shader/draw.yy",
+  "$GMShader":"",
+  "%Name":"sh_brush_outline",
+  "name":"sh_brush_outline",
+  "parent":{
+    "name":"draw",
+    "path":"folders/shader/draw.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

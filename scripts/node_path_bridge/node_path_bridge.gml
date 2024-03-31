@@ -73,13 +73,13 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static getLineCount = function() { return getInputData(1); }
 	
-	static getSegmentCount = function(ind = 0) { return array_safe_length(array_safe_get(anchors, ind)); } 
+	static getSegmentCount = function(ind = 0) { return array_safe_length(array_safe_get_fast(anchors, ind)); } 
 	
-	static getLength       = function(ind = 0) { return array_safe_get(lengths, ind); }
+	static getLength       = function(ind = 0) { return array_safe_get_fast(lengths, ind); }
 	
-	static getAccuLength   = function(ind = 0) { return array_safe_get(lengthAccs, ind); }
+	static getAccuLength   = function(ind = 0) { return array_safe_get_fast(lengthAccs, ind); }
 	
-	static getBoundary     = function(ind = 0) { return array_safe_get(boundary, ind); }
+	static getBoundary     = function(ind = 0) { return array_safe_get_fast(boundary, ind); }
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) { return getPointDistance(clamp(_rat, 0, 1) * getLength(ind), ind, out); }
 	

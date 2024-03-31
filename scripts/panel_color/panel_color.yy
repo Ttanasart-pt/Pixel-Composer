@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "panel_color",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "colors",
-    "path": "folders/panels/colors.yy",
+  "$GMScript":"",
+  "%Name":"panel_color",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_color",
+  "parent":{
+    "name":"colors",
+    "path":"folders/panels/colors.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

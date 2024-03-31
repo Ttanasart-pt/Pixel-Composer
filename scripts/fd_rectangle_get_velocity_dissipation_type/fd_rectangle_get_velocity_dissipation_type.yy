@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "fd_rectangle_get_velocity_dissipation_type",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Get scripts",
-    "path": "folders/functions/fluid sim/API/Get scripts.yy",
+  "$GMScript":"",
+  "%Name":"fd_rectangle_get_velocity_dissipation_type",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"fd_rectangle_get_velocity_dissipation_type",
+  "parent":{
+    "name":"Get_scripts",
+    "path":"folders/functions/fluid_sim/API/Get_scripts.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

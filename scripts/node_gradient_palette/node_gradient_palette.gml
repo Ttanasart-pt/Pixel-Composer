@@ -20,7 +20,7 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	_pal = -1;
 	
 	static step = function() { #region
-		var usePos = array_safe_get(current_data, 1);
+		var usePos = array_safe_get_fast(current_data, 1);
 		inputs[| 2].setVisible(usePos, usePos);
 	} #endregion
 	
@@ -36,7 +36,7 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		
 		for( var i = 0; i < len; i++ ) {
 			var clr = pal[i];
-			var pos = pos_use? array_safe_get(_pos, i, 0) : i / (len - 1);
+			var pos = pos_use? array_safe_get_fast(_pos, i, 0) : i / (len - 1);
 			
 			grad.keys[i] = new gradientKey(pos, clr);
 		}

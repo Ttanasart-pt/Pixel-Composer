@@ -38,7 +38,7 @@ function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 		_temp_data = _data;
 		array_foreach(_nscn.objects, function(_object, _index) {
 			
-			var _pos = array_safe_get(_temp_data[1], _index, 0);
+			var _pos = array_safe_get_fast(_temp_data[1], _index, 0);
 			if(is_array(_pos)) {
 				if(_temp_data[4] == 0) {
 					_object.transform.position.x += _pos[0];
@@ -51,7 +51,7 @@ function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 				}
 			}
 			
-			var _rot = array_safe_get(_temp_data[2], _index, 0);
+			var _rot = array_safe_get_fast(_temp_data[2], _index, 0);
 			if(is_array(_rot)) {
 				var _rotQ = new BBMOD_Quaternion().FromEuler(_rot[0], _rot[1], _rot[2]);
 				
@@ -61,7 +61,7 @@ function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 					_object.transform.rotation = _rotQ;
 			}
 			
-			var _sca = array_safe_get(_temp_data[3], _index, 0);
+			var _sca = array_safe_get_fast(_temp_data[3], _index, 0);
 			if(is_array(_sca)) {
 				if(_temp_data[6] == 0) {
 					_object.transform.scale.x += _sca[0];
@@ -84,7 +84,7 @@ function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 	
 	static getPreviewObject = function() { #region
 		var _obj = outputs[| 0].getValue();
-		if(is_array(_obj)) _obj = array_safe_get(_obj, preview_index, noone);
+		if(is_array(_obj)) _obj = array_safe_get_fast(_obj, preview_index, noone);
 		
 		return _obj;
 	} #endregion

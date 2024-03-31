@@ -46,9 +46,13 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		
 	//////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 12] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+		addShaderProp(SHADER_UNIFORM.float, "trRotation");
+			
 	input_display_list = [
 		["Output", 	 true],	0, 3, 
-		["Noise",	false],	1, 2, 8, 4, 9, 7, 11, 5, 10, 
+		["Noise",	false],	1, 12, 2, 8, 4, 9, 7, 11, 5, 10, 
 	];
 	
 	static step = function() {
@@ -56,6 +60,10 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		inputs[| 4].mappableStep();
 		inputs[| 5].mappableStep();
 		inputs[| 7].mappableStep();
+	}
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 }

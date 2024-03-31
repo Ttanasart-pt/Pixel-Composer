@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_mk_flare",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "mk flare",
-    "path": "folders/nodes/data/MK effects/mk flare.yy",
+  "$GMScript":"",
+  "%Name":"node_mk_flare",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_mk_flare",
+  "parent":{
+    "name":"MK_effects",
+    "path":"folders/nodes/data/MK_effects.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

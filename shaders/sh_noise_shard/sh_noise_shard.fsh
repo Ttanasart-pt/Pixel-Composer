@@ -22,7 +22,7 @@ uniform sampler2D scaleSurf;
 		
 uniform vec2  u_resolution;
 uniform vec2  position;
-
+uniform float rotation;
 
 #define tau 6.283185307179586
 
@@ -77,10 +77,9 @@ void main() {
 		}
 	#endregion
 	
-	vec2 pos    = v_vTexcoord;
-	     pos.x *= (u_resolution.x / u_resolution.y);
-         pos    = (pos + position) * sca / 16.;
-	
+	float ang = radians(rotation);
+    vec2  pos = (v_vTexcoord - position / u_resolution) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / 16.;
+    
 	prog      /= 100.;
     vec3 uv    = vec3( pos + prog, prog * .5 );
     

@@ -124,7 +124,7 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 					draw_clear(c_white);
 				
 				var _msk = outputs[| 0].getValue();
-				if(is_array(_msk)) _msk = array_safe_get(_msk, _array_index);
+				if(is_array(_msk)) _msk = array_safe_get_fast(_msk, _array_index);
 				
 				BLEND_SUBTRACT
 					if(is_surface(_msk.mask))

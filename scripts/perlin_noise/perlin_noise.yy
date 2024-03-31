@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "perlin_noise",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "value",
-    "path": "folders/functions/value.yy",
+  "$GMScript":"",
+  "%Name":"perlin_noise",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"perlin_noise",
+  "parent":{
+    "name":"value",
+    "path":"folders/functions/value.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

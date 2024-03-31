@@ -137,12 +137,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _tw = _w - ui(8);
 		
 		var rawpath = getInputData(1);
-		if(is_array(rawpath)) rawpath = array_safe_get(rawpath, 0, "");
+		if(is_array(rawpath)) rawpath = array_safe_get_fast(rawpath, 0, "");
 		
 		var _ext    = getInputData(9);
 		var path    = pathString(rawpath);
 		var pathA   = pathString(rawpath,, true);
-		path = string_replace(path, ".png", array_safe_get(inputs[|  9].display_data.data, _ext, ""));
+		path = string_replace(path, ".png", array_safe_get_fast(inputs[|  9].display_data.data, _ext, ""));
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 		var _th = ui(12) + string_height_ext(path, -1, _tw - ui(16), true);
@@ -482,7 +482,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		var _e   = getInputData(9);
-		var _ext = array_safe_get(inputs[| 9].display_data.data, _e, ".png");
+		var _ext = array_safe_get_fast(inputs[| 9].display_data.data, _e, ".png");
 		
 		if(_array)	array_push(s, ["ext", _ext]);
 		else		s += _ext;
@@ -502,7 +502,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var extd = getInputData( 9);
 		var qual = getInputData(10);
 		var indx = getInputData(13);
-		var ext  = array_safe_get(format_image, extd, ".png");
+		var ext  = array_safe_get_fast(format_image, extd, ".png");
 		
 		var _pathOut  = _path;
 		var _pathTemp = $"{directory}/{irandom_range(10000, 99999)}.png";
@@ -581,7 +581,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					p = $"{directory}/{i}/{string_lead_zero(CURRENT_FRAME, 5)}.png";
 				} else {
 					if(is_array(path) && array_length(path) == array_length(surf))
-						p = pathString(array_safe_get(path, i), i);
+						p = pathString(array_safe_get_fast(path, i), i);
 					else
 						p = pathString(path, i);
 					CLI_EXPORT_AMOUNT++;
@@ -632,7 +632,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(is_array(surf)) {
 			for(var i = 0; i < array_length(surf); i++) {
 				temp_path = $"{directory}/{i}/*.png";
-				if(is_array(path)) target_path = pathString(array_safe_get(path, i), i);
+				if(is_array(path)) target_path = pathString(array_safe_get_fast(path, i), i);
 				else               target_path = pathString(path, i);
 				
 				switch(format_animation[extd]) {
@@ -757,7 +757,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		inputs[| 14].setVisible(anim >  0);
 		
 		if(anim == NODE_EXPORT_FORMAT.animation) {
-			var _fmt = array_safe_get(format_animation, extn);
+			var _fmt = array_safe_get_fast(format_animation, extn);
 			
 			inputs[|  5].setVisible(_fmt == ".gif");
 			inputs[|  6].setVisible(_fmt == ".gif");
@@ -779,7 +779,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			} else 
 				inputs[| 10].setVisible(false);
 		} else {
-			var _fmt = array_safe_get(format_image, extn);
+			var _fmt = array_safe_get_fast(format_image, extn);
 			
 			inputs[|  5].setVisible(false);
 			inputs[|  6].setVisible(false);

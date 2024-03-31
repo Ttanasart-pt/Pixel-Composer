@@ -5,7 +5,8 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	w = 96;
 	
 	onSurfaceSize = function() { return getInputData(7, DEF_SURF); };
-	inputs[| 0] = nodeValue("Point area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA )
+	inputs[| 0] = nodeValue("Point area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA_REF )
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
 		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 1] = nodeValue("Point distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)

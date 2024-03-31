@@ -3,6 +3,7 @@ if(winMan_isMinimized()) exit;
 winManStep()
 
 //print("===== Step start =====");
+
 if(PROJECT.active && !PROJECT.safeMode) { #region
 	PROJECT.animator.step();
 	PROJECT.globalNode.step();

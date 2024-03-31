@@ -21,11 +21,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector_range, { linked : true });
 	
-	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0, 0 ] )
+	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_random);
 	
 	onSurfaceSize = function() { return getInputData(1, DEF_SURF); };
-	inputs[| 5] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_AREA)
+	inputs[| 5] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_AREA_REF)
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
 		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 6] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5)
@@ -430,7 +431,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						break;
 						
 					case NODE_SCATTER_DIST.map : 
-						sp = array_safe_get(_posDist, i);
+						sp = array_safe_get_fast_fast(_posDist, i);
 						if(!is_array(sp)) continue;
 				
 						_x = _area[0] + _area[2] * (sp[0] * 2 - 1.);
@@ -438,12 +439,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						break;
 						
 					case NODE_SCATTER_DIST.data : 
-						sp = array_safe_get(_distData, i);
+						sp = array_safe_get_fast(_distData, i);
 						if(!is_array(sp)) continue;
 					
-						_x = array_safe_get(sp, 0);
-						_y = array_safe_get(sp, 1);
-						_v = array_safe_get(sp, 2, noone);
+						_x = array_safe_get_fast(sp, 0);
+						_y = array_safe_get_fast(sp, 1);
+						_v = array_safe_get_fast(sp, 2, noone);
 						break;
 						
 					case NODE_SCATTER_DIST.path : 
@@ -507,7 +508,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					switch(_arr) { 
 						case 1 : ind  = safe_mod(i, _arrLen);		 break;
 						case 2 : ind  = irandom(_arrLen - 1);		 break;
-						case 3 : ind  = array_safe_get(arrId, i, 0); break;
+						case 3 : ind  = array_safe_get_fast(arrId, i, 0); break;
 						case 4 : if(useArrTex) ind = colorBrightness(surface_get_pixel(arrTex, _x, _y)) * (_arrLen - 1); break;
 					}
 					
@@ -528,7 +529,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						}
 					}
 					
-					surf = array_safe_get(_inSurf, ind, 0); 
+					surf = array_safe_get_fast(_inSurf, ind, 0); 
 				} #endregion
 				
 				if(surf == 0 || !surface_valid_map[? surf]) continue;

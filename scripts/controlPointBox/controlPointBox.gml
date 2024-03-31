@@ -80,12 +80,12 @@ function controlPointBox(_onModify) : widget() constructor {
 		x = _x;
 		y = _y;
 		
-		var _mode = array_safe_get(_data, PUPPET_CONTROL.mode);
-		var _cx   = array_safe_get(_data, PUPPET_CONTROL.cx);
-		var _cy   = array_safe_get(_data, PUPPET_CONTROL.cy);
-		var _fx   = array_safe_get(_data, PUPPET_CONTROL.fx);
-		var _fy   = array_safe_get(_data, PUPPET_CONTROL.fy);
-		var _wid  = array_safe_get(_data, PUPPET_CONTROL.width);
+		var _mode = array_safe_get_fast(_data, PUPPET_CONTROL.mode);
+		var _cx   = array_safe_get_fast(_data, PUPPET_CONTROL.cx);
+		var _cy   = array_safe_get_fast(_data, PUPPET_CONTROL.cy);
+		var _fx   = array_safe_get_fast(_data, PUPPET_CONTROL.fx);
+		var _fy   = array_safe_get_fast(_data, PUPPET_CONTROL.fy);
+		var _wid  = array_safe_get_fast(_data, PUPPET_CONTROL.width);
 		
 		if(is_array(_mode) || is_array(_cx) || is_array(_cy) || is_array(_fx) || is_array(_fy) || is_array(_wid))
 			return 0;

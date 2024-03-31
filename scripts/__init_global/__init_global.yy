@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__init_global",
-  "isCompatibility": true,
-  "isDnD": false,
-  "parent": {
-    "name": "Compatibility",
-    "path": "folders/functions/fluid sim/Internal/Compatibility.yy",
+  "$GMScript":"",
+  "%Name":"__init_global",
+  "isCompatibility":true,
+  "isDnD":false,
+  "name":"__init_global",
+  "parent":{
+    "name":"fluid_sim",
+    "path":"folders/functions/fluid_sim.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

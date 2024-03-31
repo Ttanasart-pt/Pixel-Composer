@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_pb_box_transform",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "box",
-    "path": "folders/nodes/data/pixel builder/box.yy",
+  "$GMScript":"",
+  "%Name":"node_pb_box_transform",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_pb_box_transform",
+  "parent":{
+    "name":"box",
+    "path":"folders/nodes/data/pixel_builder/box.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

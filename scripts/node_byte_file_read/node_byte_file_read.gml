@@ -34,7 +34,7 @@ function Node_Byte_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	insp1UpdateTooltip  = __txt("Refresh");
-	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
 		updatePaths(path_get(getInputData(0)));

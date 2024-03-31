@@ -72,7 +72,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _shf  = getInputData(1);
 		
 		if(is_array(_path)) {
-			_path = array_safe_get(_path, ind);
+			_path = array_safe_get_fast(_path, ind);
 			ind = 0;
 		}
 		

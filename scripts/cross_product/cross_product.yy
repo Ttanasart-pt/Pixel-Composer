@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "cross_product",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "vector",
-    "path": "folders/functions/vector.yy",
+  "$GMScript":"",
+  "%Name":"cross_product",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cross_product",
+  "parent":{
+    "name":"vector",
+    "path":"folders/functions/vector.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

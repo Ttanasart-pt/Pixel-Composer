@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_rd",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "generator",
-    "path": "folders/nodes/data/generator.yy",
+  "$GMScript":"",
+  "%Name":"node_rd",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_rd",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

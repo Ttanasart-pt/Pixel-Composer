@@ -156,9 +156,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		input_hash		  = "";
 		input_hash_raw	  = "";
 		
-		inputs_amount  = 0;
-		inputs_index   = [];
-		in_cache_len   = 0;
+		inputs_amount    = 0;
+		inputs_index     = [];
+		in_cache_len     = 0;
+		inputDisplayList = [];
 		
 		outputs_amount = 0;
 		outputs_index  = [];
@@ -166,10 +167,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region --- attributes ----
+		attributes.node_param_width = PREFERENCES.node_param_width;
 		attributes.node_width  = 0;
 		attributes.node_height = 0;
 		
 		attributeEditors = [
+			"Display",
+			["Params Width", function() { return attributes.node_param_width; }, new textBox(TEXTBOX_INPUT.number, function(val) { attributes.node_param_width = val; setHeight(); }) ],
+			
 			"Node update",
 			["Auto update", function() { return attributes.update_graph; }, new checkBox(function() { attributes.update_graph = !attributes.update_graph; }) ],
 			["Update trigger", function() { return attributes.show_update_trigger; }, new checkBox(function() { attributes.show_update_trigger = !attributes.show_update_trigger; }) ],
@@ -179,7 +184,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- preview ----
-		show_parameter = false;
+		show_parameter = PREFERENCES.node_param_show;
 		
 		show_input_name  = false;
 		show_output_name = false;
@@ -363,7 +368,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} #endregion
 	
 	static setHeight = function() { #region
-		w = show_parameter? 192 : min_w;
+		w = show_parameter? attributes.node_param_width : min_w;
 		
 		if(!auto_height) return;
 		junction_draw_hei_y = show_parameter? 32 : 24;
@@ -380,7 +385,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
 			if(is_instanceof(_inp, NodeValue) && _inp.isVisible()) 
-				_hi += show_parameter && _inp.graphWidgetH? _inp.graphWidgetH + 4 : junction_draw_hei_y;
+				_hi += junction_draw_hei_y;
 		}
 		
 		for( var i = 0; i < ds_list_size(outputs); i++ )
@@ -388,6 +393,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		h     = max(min_h, _prev_surf * 128, _hi, _ho, attributes.node_height);
 		fix_h = h;
+		
+		getJunctionList();
 	} run_in(1, function() { setHeight(); }); #endregion
 	
 	static setDisplayName = function(_name) { #region
@@ -594,7 +601,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInputData = function(index, def = 0) { #region
 		INLINE
 		
-		return array_safe_get(inputs_data, index, def);
+		return array_safe_get_fast(inputs_data, index, def);
 	} #endregion
 	
 	static setInputData = function(index, value) { #region
@@ -752,10 +759,25 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_clearCache) clearInputCache();
 	} #endregion
 	
-	static isLeaf = function(list = noone) { #region
+	static isLeaf = function() { #region
+		INLINE 
+		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 			var _inp = inputs[| i];
-			if(!_inp.isLeaf(list)) return false;
+			if(!_inp.isLeaf()) return false;
+		}
+		
+		return true;
+	} #endregion
+	
+	static isLeafList = function(list = noone) { #region
+		INLINE 
+		
+		if(list == noone) return isLeaf();
+		
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
+			var _inp = inputs[| i];
+			if(!_inp.isLeafList(list)) return false;
 		}
 		
 		return true;
@@ -918,14 +940,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			array_push(inputDisplayList, jun);
 		}
-	} #endregion
+	} run_in(1, function() { getJunctionList() }); #endregion
 	
 	static preDraw = function(_x, _y, _s) { #region
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		var jun;
 		
-		getJunctionList();
+		//getJunctionList();
 		
 		var inspCount = hasInspector1Update() + hasInspector2Update();
 		var ind = 1;
@@ -1090,7 +1112,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
+			var wd  = jun.graphWidget;
+			
+			jun.y = jy;
+			
 			draw_set_text(f_sdf, fa_left, fa_center, jun.color_display);
+			draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
+			
+			if(jun.value_from) continue;
+			
+			if(wd == noone) {
+				jy += wh;
+				continue;
+			}
 			
 			var _param = jun.graphWidgetP;
 			
@@ -1106,20 +1140,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_param.s    = wh;
 			_param.font = f_p2;
 			
-			jun.y = jy;
-				
 			if(is_instanceof(jun, checkBox))
 				_param.halign = fa_center;
 			
-			draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
-				
-			var wd = jun.graphWidget;
-			
-			if(wd == noone) {
-				jy += wh;
-				continue;
-			}
-				
 			wd.setInteract(wh > line_get_height(f_p2));
 			wd.setFocusHover(_focus, _hover);
 			var _h = wd.drawParam(_param);
@@ -1433,7 +1456,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preview_my = _my;
 		
 		if(value_validation[VALIDATION.error] || error_noti_update != noone)
-			draw_sprite_stretched_ext(THEME.node_glow, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
+			draw_sprite_stretched_ext(THEME.node_glow_border, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
 		drawDimension(xx, yy, _s);
@@ -1626,9 +1649,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(frame >= array_length(cached_output)) return false;
 		if(frame >= array_length(cache_result)) return false;
-		if(!array_safe_get(cache_result, frame, false)) return false;
+		if(!array_safe_get_fast(cache_result, frame, false)) return false;
 		
-		var s = array_safe_get(cached_output, frame);
+		var s = array_safe_get_fast(cached_output, frame);
 		return is_array(s) || surface_exists(s);
 	} #endregion
 	
@@ -1636,7 +1659,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(frame < 0) return false;
 		
 		if(!cacheExist(frame)) return noone;
-		var surf = array_safe_get(cached_output, frame);
+		var surf = array_safe_get_fast(cached_output, frame);
 		return surf;
 	} #endregion
 	
@@ -1833,7 +1856,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getPreviewBoundingBox = function() { #region
 		var _surf = getPreviewValues();
 		if(is_array(_surf)) 
-			_surf = array_safe_get(_surf, preview_index, noone);
+			_surf = array_safe_get_fast(_surf, preview_index, noone);
 		if(!is_surface(_surf)) return noone;
 		
 		return BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
@@ -2152,7 +2175,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(inputs[| 0].type == VALUE_TYPE.surface) 
 				form--;
 			if(form >= 0)
-				return array_safe_get(global.SURFACE_FORMAT, form, surface_rgba8unorm);
+				return array_safe_get_fast(global.SURFACE_FORMAT, form, surface_rgba8unorm);
 		}
 		
 		var _s = getInputData(0);

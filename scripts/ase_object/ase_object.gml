@@ -32,7 +32,7 @@ function ase_cel(_layer, _data, _file) constructor {
 			
 			repeat(size) {
 				var bin = buffer_read(data[? "Buffer"], buffer_u8);
-				var cc  = array_safe_get(palet, bin);
+				var cc  = array_safe_get_fast(palet, bin);
 				for( var i = 0; i < 4; i++ )
 					buffer_write(buff, buffer_u8, cc[i]);
 			}
@@ -77,6 +77,6 @@ function ase_layer(name) constructor {
 		} else 
 			ind = safe_mod(index, array_length(cels));
 		
-		return array_safe_get(cels, ind);
+		return array_safe_get_fast(cels, ind);
 	}
 }

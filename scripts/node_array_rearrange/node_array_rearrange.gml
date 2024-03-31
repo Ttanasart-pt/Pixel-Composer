@@ -134,8 +134,8 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var res = [];
 		
 		for( var i = 0; i < array_length(_arr); i++ ) {
-			var _ind = array_safe_get(_ord, i, i);
-			res[i]   = array_safe_get(_arr, _ind);
+			var _ind = array_safe_get_fast(_ord, i, i);
+			res[i]   = array_safe_get_fast(_arr, _ind);
 		}
 		
 		outputs[| 0].setValue(res);

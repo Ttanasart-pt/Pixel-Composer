@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "fd_GUIDE",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "fluid sim",
-    "path": "folders/functions/fluid sim.yy",
+  "$GMScript":"",
+  "%Name":"fd_GUIDE",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"fd_GUIDE",
+  "parent":{
+    "name":"fluid_sim",
+    "path":"folders/functions/fluid_sim.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

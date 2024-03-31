@@ -113,7 +113,7 @@ function Panel_Test() : PanelContent() constructor {
 			if(test_index >= array_length(test_files) - 1)
 				testing = false;
 		} else {
-			if(buttonInstant(THEME.button, 8, yy, w - 16, hh, [ mx, my ], pFOCUS, pHOVER) == 2)
+			if(buttonInstant(THEME.button_def, 8, yy, w - 16, hh, [ mx, my ], pFOCUS, pHOVER) == 2)
 				startTesting();
 			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 			draw_text(w / 2, yy + hh / 2, "Start test");

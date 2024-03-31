@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__node_PCX",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "PCX",
-    "path": "folders/nodes/data/PCX.yy",
+  "$GMScript":"",
+  "%Name":"__node_PCX",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__node_PCX",
+  "parent":{
+    "name":"PCX",
+    "path":"folders/nodes/data/PCX.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

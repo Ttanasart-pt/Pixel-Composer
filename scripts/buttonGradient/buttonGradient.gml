@@ -56,17 +56,17 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		var click = false;
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h);
 		if(ihover && hoverRect) {
-			draw_sprite_stretched(THEME.button, 1, _x, _y, _w, h);	
+			draw_sprite_stretched(THEME.button_def, 1, _x, _y, _w, h);	
 			if(mouse_press(mb_left, iactive)) {
 				trigger();
 				click = true;
 			}
 			if(mouse_click(mb_left, iactive)) {
-				draw_sprite_stretched(THEME.button, 2, _x, _y, _w, h);	
-				draw_sprite_stretched_ext(THEME.button, 3, _x, _y, _w, h, COLORS._main_accent, 1);	
+				draw_sprite_stretched(THEME.button_def, 2, _x, _y, _w, h);	
+				draw_sprite_stretched_ext(THEME.button_def, 3, _x, _y, _w, h, COLORS._main_accent, 1);	
 			}
 		} else {
-			draw_sprite_stretched(THEME.button, 0, _x, _y, _w, h);		
+			draw_sprite_stretched(THEME.button_def, 0, _x, _y, _w, h);		
 			if(mouse_press(mb_left)) deactivate();
 		}
 		

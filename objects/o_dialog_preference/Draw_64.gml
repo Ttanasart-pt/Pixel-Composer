@@ -56,18 +56,25 @@ if !ready exit;
 		current_list = pref_global;
 		sp_pref.setFocusHover(sFOCUS, sHOVER);
 		sp_pref.draw(px, py);
-	}  else if(page_current == 1) {
+		
+	} else if(page_current == 1) {
 		current_list = pref_appr;
 		sp_pref.setFocusHover(sFOCUS, sHOVER);
 		sp_pref.draw(px, py);
+		
 	} else if(page_current == 2) {
+		current_list = pref_node;
+		sp_pref.setFocusHover(sFOCUS, sHOVER);
+		sp_pref.draw(px, py);
+		
+	} else if(page_current == 3) {
 		var _w = ui(200);
 		var _h = TEXTBOX_HEIGHT;
 		
 		var _x   = dialog_x + dialog_w - ui(8);
 		var bx   = _x - ui(48);
 		var _txt = __txtx("pref_reset_color", "Reset colors");
-		var b = buttonInstant(THEME.button_hide, bx, py, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.refresh);
+		var b = buttonInstant(THEME.button_hide, bx, py, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.refresh_icon);
 		if(b == 2) {
 			var path = $"{DIRECTORY}Themes/{PREFERENCES.theme}/override.json";
 			if(file_exists_empty(path)) file_delete(path);
@@ -84,7 +91,8 @@ if !ready exit;
 		
 		sp_colors.setFocusHover(sFOCUS, sHOVER);
 		sp_colors.draw(px, py + ui(40));
-	} else if(page_current == 3) {
+		
+	} else if(page_current == 4) {
 		if(mouse_press(mb_left, sFOCUS)) 
 			hk_editing = noone;
 		

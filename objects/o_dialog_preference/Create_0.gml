@@ -30,8 +30,9 @@ event_inherited();
 	page_current = 0;
 	page[0] = __txtx("pref_pages_general", "General");
 	page[1] = __txtx("pref_pages_interface", "Interface");
-	page[2] = __txt("Theme");
-	page[3] = __txt("Hotkeys");
+	page[2] = __txt("Nodes");
+	page[3] = __txt("Theme");
+	page[4] = __txt("Hotkeys");
 	
 	section_current = "";
 	sections = array_create(array_length(page));
@@ -503,6 +504,32 @@ event_inherited();
 	
 #endregion
 
+#region node
+	pref_node = ds_list_create();
+	
+	ds_list_add(pref_node, __txt("Node"));
+	
+	ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_node_param_show", "Show paramater"),
+		"node_param_show",
+		
+		new checkBox(function() { 
+			PREFERENCES.node_param_show = !PREFERENCES.node_param_show;
+			PREF_SAVE();
+		})
+	));
+	
+	ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_node_param_width", "Default param width"),
+		"node_param_width",
+		
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			PREFERENCES.node_param_width = val;
+			PREF_SAVE();
+		})
+	));
+#endregion
+
 #region theme
 	themes = [];
 	var f = file_find_first(DIRECTORY + "Themes/*", fa_directory);
@@ -597,7 +624,7 @@ event_inherited();
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(24), yy + th / 2, keyStr);
 			
-			var b = buttonInstant(THEME.button, cx, yy + ui(2), cw, ch, _m, sFOCUS, sHOVER && sp_colors.hover);
+			var b = buttonInstant(THEME.button_def, cx, yy + ui(2), cw, ch, _m, sFOCUS, sHOVER && sp_colors.hover);
 			draw_sprite_stretched_ext(THEME.color_picker_sample, 0, cx + ui(2), yy + ui(2 + 2), cw - ui(4), ch - ui(4), val, 1);
 			
 			if(b == 2) {

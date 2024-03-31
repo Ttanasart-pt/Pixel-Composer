@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "panel_collection",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "collection",
-    "path": "folders/panels/collection.yy",
+  "$GMScript":"",
+  "%Name":"panel_collection",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_collection",
+  "parent":{
+    "name":"collection",
+    "path":"folders/panels/collection.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

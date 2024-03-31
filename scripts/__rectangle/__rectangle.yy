@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__rectangle",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "geometry",
-    "path": "folders/functions/geometry.yy",
+  "$GMScript":"",
+  "%Name":"__rectangle",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__rectangle",
+  "parent":{
+    "name":"geometry",
+    "path":"folders/functions/geometry.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

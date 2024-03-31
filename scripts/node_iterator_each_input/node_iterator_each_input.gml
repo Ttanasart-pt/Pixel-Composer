@@ -15,7 +15,7 @@ function Node_Iterator_Each_Input(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 		var ind = group.iterated;
 		var val = group.getInputData(0);
-		var ivl = array_safe_get(val, ind);
+		var ivl = array_safe_get_fast(val, ind);
 		
 		return [ ivl, group.inputs[| 0] ];
 	}

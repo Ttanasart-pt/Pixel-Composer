@@ -15,11 +15,11 @@ function area_get_bbox(area) {
 function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter = AREA_SCATTER.random, index = 0, total = 1) {
 	if(total == 0) return [0, 0];
 	
-	var _area_x = array_safe_get(area, 0);
-	var _area_y = array_safe_get(area, 1);
-	var _area_w = array_safe_get(area, 2);
-	var _area_h = array_safe_get(area, 3);
-	var _area_t = array_safe_get(area, 4);
+	var _area_x = array_safe_get_fast(area, 0);
+	var _area_y = array_safe_get_fast(area, 1);
+	var _area_w = array_safe_get_fast(area, 2);
+	var _area_h = array_safe_get_fast(area, 3);
+	var _area_t = array_safe_get_fast(area, 4);
 	var xx = 0, yy = 0;
 	
 	switch(distrib) {

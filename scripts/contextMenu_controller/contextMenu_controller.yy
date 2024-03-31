@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "contextMenu_controller",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "context menu",
-    "path": "folders/panels/context menu.yy",
+  "$GMScript":"",
+  "%Name":"contextMenu_controller",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"contextMenu_controller",
+  "parent":{
+    "name":"context_menu",
+    "path":"folders/panels/context_menu.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

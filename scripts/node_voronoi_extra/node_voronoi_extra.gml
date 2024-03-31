@@ -25,8 +25,16 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 		addShaderProp(SHADER_UNIFORM.float, "paramA");
 		
+	inputs[| 7] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+		addShaderProp(SHADER_UNIFORM.float, "rotation");
+			
 	input_display_list = [
 		["Output", 	 true],	0, 
-		["Noise",	false],	5, 1, 2, 4, 6, 
+		["Noise",	false],	5, 1, 7, 2, 4, 6, 
 	];
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	}
 }

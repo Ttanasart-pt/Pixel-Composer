@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_rd_convert",
-  "parent": {
-    "name": "reaction diffusion",
-    "path": "folders/shader/generator/reaction diffusion.yy",
+  "$GMShader":"",
+  "%Name":"sh_rd_convert",
+  "name":"sh_rd_convert",
+  "parent":{
+    "name":"reaction_diffusion",
+    "path":"folders/nodes/data/generator/reaction_diffusion.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

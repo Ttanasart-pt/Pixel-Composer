@@ -28,13 +28,13 @@ draw_set_alpha(1);
 	var by0 = by1 - bh;
 	
 	draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
+	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Ignore"));
 	if(b == 2) 
 		instance_destroy();
 	
 	bx0 -= bw + ui(12);
-	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
+	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Migrate files"));
 	if(b == 2) {
 		var oldDir  = env_user();
@@ -53,7 +53,7 @@ draw_set_alpha(1);
 	
 	bx0 = dialog_x + ui(16);
 	bw = ui(160);
-	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
+	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txtx("migrate_open_directory", "Open directory") + "...");
 	if(b == 2) {
 		if(directory_exists(DIRECTORY)) 

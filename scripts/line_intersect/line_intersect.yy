@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "line_intersect",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "vector",
-    "path": "folders/functions/vector.yy",
+  "$GMScript":"",
+  "%Name":"line_intersect",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"line_intersect",
+  "parent":{
+    "name":"vector",
+    "path":"folders/functions/vector.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

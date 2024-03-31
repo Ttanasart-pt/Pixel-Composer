@@ -66,7 +66,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		border_rb_close
 	]; #endregion
 	
-	static getContent = function() { return array_safe_get(content, content_index, noone, ARRAY_OVERFLOW._default); }
+	static getContent = function() { return array_safe_get_fast(content, content_index, noone); }
 	static hasContent = function() { return bool(array_length(content)); }
 	
 	function resetMask() { #region
@@ -628,12 +628,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 			return;
 		}
 		
-		var prec = array_safe_get(content, content_index);
+		var prec = array_safe_get_fast(content, content_index);
 		if(prec) prec.onFocusEnd();
 		
 		content_index = tabIndex;
 		
-		var prec = array_safe_get(content, content_index);
+		var prec = array_safe_get_fast(content, content_index);
 		if(prec) prec.onFocusBegin();
 	} #endregion
 	

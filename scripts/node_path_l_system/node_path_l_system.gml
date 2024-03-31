@@ -14,7 +14,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 0] = nodeValue("Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8);
 	
-	inputs[| 1] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 45)
+	inputs[| 1] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
 	inputs[| 2] = nodeValue("Starting position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ])
@@ -26,7 +26,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 5] = nodeValue("End replacement", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
 	
-	inputs[| 6] = nodeValue("Starting angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 90)
+	inputs[| 6] = nodeValue("Starting angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 90)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999));
@@ -233,7 +233,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				}
 				
 				var _chr = cache_data.rules[$ _ch];
-				_chr = array_safe_get(_chr, irandom(array_length(_chr) - 1));
+				_chr = array_safe_get_fast(_chr, irandom(array_length(_chr) - 1));
 				
 				_temp_s += _chr;
 			})

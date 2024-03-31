@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "_line_drawer",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "draw",
-    "path": "folders/functions/draw.yy",
+  "$GMScript":"",
+  "%Name":"_line_drawer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"_line_drawer",
+  "parent":{
+    "name":"draw",
+    "path":"folders/functions/draw.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

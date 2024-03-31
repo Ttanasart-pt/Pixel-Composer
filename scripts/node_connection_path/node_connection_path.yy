@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_connection_path",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "nodes",
-    "path": "folders/functions/nodes.yy",
+  "$GMScript":"",
+  "%Name":"node_connection_path",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_connection_path",
+  "parent":{
+    "name":"nodes",
+    "path":"folders/functions/nodes.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

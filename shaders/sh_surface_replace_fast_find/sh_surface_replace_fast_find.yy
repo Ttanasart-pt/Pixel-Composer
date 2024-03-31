@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_surface_replace_fast_find",
-  "parent": {
-    "name": "surface replace",
-    "path": "folders/shader/filter/surface replace.yy",
+  "$GMShader":"",
+  "%Name":"sh_surface_replace_fast_find",
+  "name":"sh_surface_replace_fast_find",
+  "parent":{
+    "name":"surface_replace",
+    "path":"folders/shader/filter/surface_replace.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

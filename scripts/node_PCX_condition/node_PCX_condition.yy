@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_PCX_condition",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "flow control",
-    "path": "folders/nodes/data/PCX/flow control.yy",
+  "$GMScript":"",
+  "%Name":"node_PCX_condition",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_PCX_condition",
+  "parent":{
+    "name":"flow_control",
+    "path":"folders/nodes/data/PCX/flow_control.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

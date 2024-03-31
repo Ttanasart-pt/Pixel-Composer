@@ -362,12 +362,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			ww += padd[0] + padd[2];
 			hh += padd[1] + padd[3];
 				
-			_out[i] = surface_verify(array_safe_get(_out, i), ww, hh, cDep);
+			_out[i] = surface_verify(array_safe_get_fast(_out, i), ww, hh, cDep);
 			
 			if(clear) surface_clear(_out[i]);
 		}
 			
-		if(!arr) _out = array_safe_get(_out, 0);
+		if(!arr) _out = array_safe_get_fast(_out, 0);
 		outputs[| 0].setValue(_out);
 		outputs[| 1].setValue(_atl);
 				
@@ -442,7 +442,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				break;
 			} 
 			
-			if(!is_array(array_safe_get(_atl, i)))
+			if(!is_array(array_safe_get_fast(_atl, i)))
 				_atl[i] = [];
 			var _atli = _atl[i];
 			

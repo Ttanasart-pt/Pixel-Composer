@@ -15,7 +15,7 @@ function dynaSurf_iso() : dynaSurf() constructor {
 			}
 		}
 		
-		return array_safe_get(surfaces, _ind);
+		return array_safe_get_fast(surfaces, _ind);
 	}
 	
 	static draw = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {

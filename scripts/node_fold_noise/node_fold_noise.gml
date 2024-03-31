@@ -26,9 +26,17 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "Map" ]);
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 				
+	inputs[| 7] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+		addShaderProp(SHADER_UNIFORM.float, "rotation");
+		
 	input_display_list = [
 		["Output", 	 true],	0, 
-		["Noise",	false],	1, 2, 3, 4, 5, 
+		["Noise",	false],	1, 7, 2, 3, 4, 5, 
 		["Render",	false],	6, 
 	];
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	}
 }

@@ -712,7 +712,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(mouse_press(mb_left, active))
 			surface_selecting = hovering;
 		if(surface_selecting != noone) {
-			var a = array_safe_get(anchors, surface_selecting, noone);
+			var a = array_safe_get_fast(anchors, surface_selecting, noone);
 			if(!is_struct(a)) surface_selecting = noone;
 		}
 		

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__node_shader",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "data",
-    "path": "folders/nodes/data.yy",
+  "$GMScript":"",
+  "%Name":"__node_shader",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__node_shader",
+  "parent":{
+    "name":"data",
+    "path":"folders/nodes/data.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

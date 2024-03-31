@@ -56,7 +56,7 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 18] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 19] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 360 ])
+	inputs[| 19] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 360 ])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
 	inputs[| 20] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "var_comparison",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "variables",
-    "path": "folders/functions/variables.yy",
+  "$GMScript":"",
+  "%Name":"var_comparison",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"var_comparison",
+  "parent":{
+    "name":"variables",
+    "path":"folders/functions/variables.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "colToVec4",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "shader",
-    "path": "folders/functions/shader.yy",
+  "$GMScript":"",
+  "%Name":"colToVec4",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"colToVec4",
+  "parent":{
+    "name":"shader",
+    "path":"folders/functions/shader.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

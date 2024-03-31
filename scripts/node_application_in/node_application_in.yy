@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_application_in",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "misc",
-    "path": "folders/nodes/data/misc.yy",
+  "$GMScript":"",
+  "%Name":"node_application_in",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_application_in",
+  "parent":{
+    "name":"misc",
+    "path":"folders/nodes/data/misc.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

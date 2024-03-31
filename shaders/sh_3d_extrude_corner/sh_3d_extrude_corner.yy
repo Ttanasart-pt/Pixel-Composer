@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_3d_extrude_corner",
-  "parent": {
-    "name": "legacy",
-    "path": "folders/shader/3d/legacy.yy",
+  "$GMShader":"",
+  "%Name":"sh_3d_extrude_corner",
+  "name":"sh_3d_extrude_corner",
+  "parent":{
+    "name":"legacy",
+    "path":"folders/shader/3d/legacy.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

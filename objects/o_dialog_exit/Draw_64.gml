@@ -40,13 +40,13 @@ if !ready exit;
 	var by0 = by1 - bh;
 	
 	draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
+	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Cancel"));
 	if(b == 2) 
 		instance_destroy();
 	
 	bx0 -= bw + ui(12);
-	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
+	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txtx("dont_save", "Don't save"));
 	if(b == 2) {
 		if(instance_number(o_dialog_exit) == 1) 
@@ -55,7 +55,7 @@ if !ready exit;
 	}
 	
 	bx0 -= bw + ui(12);
-	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
+	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Save"));
 	if(b == 2 && SAVE(project)) {
 		if(instance_number(o_dialog_exit) == 1) 

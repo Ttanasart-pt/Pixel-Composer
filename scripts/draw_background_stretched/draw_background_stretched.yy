@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "draw_background_stretched",
-  "isCompatibility": true,
-  "isDnD": false,
-  "parent": {
-    "name": "background",
-    "path": "folders/functions/fluid sim/Internal/Compatibility/background.yy",
+  "$GMScript":"",
+  "%Name":"draw_background_stretched",
+  "isCompatibility":true,
+  "isDnD":false,
+  "name":"draw_background_stretched",
+  "parent":{
+    "name":"background",
+    "path":"folders/functions/fluid_sim/Compat/background.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

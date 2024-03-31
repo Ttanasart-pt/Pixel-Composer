@@ -298,7 +298,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _exp = getInputData(10);
 		var _pix = getInputData(11);
 		
-		if(is_array(_tex)) _tex = array_safe_get(_tex, index);
+		if(is_array(_tex)) _tex = array_safe_get_fast(_tex, index);
 		
 		if(is_instanceof(_tex, SurfaceAtlas))
 			_tex = _tex.getSurface();
@@ -563,7 +563,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(is_array(_tex)) { 
 			index = safe_mod(index, array_length(_tex)); 
-			_tex = array_safe_get(_tex, index); 
+			_tex = array_safe_get_fast(_tex, index); 
 		}
 		
 		var ww = surface_get_width_safe(_tex);
@@ -618,7 +618,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 		} else if(_shp == 2) {
 			var meshes = attributes.mesh;
-			if(array_safe_get(meshes, index, noone) == noone)
+			if(array_safe_get_fast(meshes, index, noone) == noone)
 				return noone;
 				
 			var mesh = meshes[index];

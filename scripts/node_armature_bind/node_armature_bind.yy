@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_armature_bind",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "armature",
-    "path": "folders/nodes/data/compose/armature.yy",
+  "$GMScript":"",
+  "%Name":"node_armature_bind",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_armature_bind",
+  "parent":{
+    "name":"armature",
+    "path":"folders/nodes/data/compose/armature.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

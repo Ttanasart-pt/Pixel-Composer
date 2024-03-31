@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_widget_rotator",
-  "parent": {
-    "name": "rotator",
-    "path": "folders/widgets/rotator.yy",
+  "$GMShader":"",
+  "%Name":"sh_widget_rotator",
+  "name":"sh_widget_rotator",
+  "parent":{
+    "name":"rotator",
+    "path":"folders/widgets/rotator.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

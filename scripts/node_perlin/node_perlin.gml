@@ -36,15 +36,22 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 11] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+		
 	input_display_list = [
 		["Output", 	 true],	0, 5, 
-		["Noise",	false],	1, 2, 10, 3, 4, 
+		["Noise",	false],	1, 11, 2, 10, 3, 4, 
 		["Render",	false], 6, 7, 8, 9, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	}
 	
 	static step = function() {
 		var _col = getInputData(6);
@@ -71,12 +78,14 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _clr = _data[7];
 		var _clg = _data[8];
 		var _clb = _data[9];
+		var _rot = _data[11];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_perlin_tiled);
 			shader_set_f("u_resolution", _dim);
 			shader_set_f("position",     _pos);
+			shader_set_f("rotation",     degtorad(_rot));
 			shader_set_f_map("scale",    _data[2], _data[10], inputs[| 2]);
 			shader_set_f("seed",         _sed);
 			shader_set_i("tile",         _til);

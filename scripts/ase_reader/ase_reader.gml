@@ -45,8 +45,6 @@ enum _BIN_TYPE {
 //Subtract       = 17
 //Divide         = 18
 
-global.FLAG.ase_import = false;
-
 globalvar __ase_format_header;
 __ase_format_header = [
 	[_BIN_TYPE.dword,	"File size"],
@@ -316,9 +314,9 @@ function read_format_type(bin, datType, outMap) {
 }
 
 function read_format(bin, format, outMap) {
-	var datType = array_safe_get(format, 0, 0);
-	var key     = array_safe_get(format, 1, "");
-	var amount  = array_safe_get(format, 2, 1);
+	var datType = array_safe_get_fast(format, 0, 0);
+	var key     = array_safe_get_fast(format, 1, "");
+	var amount  = array_safe_get_fast(format, 2, 1);
 	if(is_string(amount))
 		amount = ds_map_exists(outMap, amount)? outMap[? amount] : 1;
 	else if(is_method(amount))

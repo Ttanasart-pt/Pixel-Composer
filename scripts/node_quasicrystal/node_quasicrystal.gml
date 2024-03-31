@@ -8,7 +8,7 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 64, 0.1] })
 		.setMappable(6);
 	
-	inputs[| 2] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation)
 		.setMappable(7);
 	
@@ -34,7 +34,7 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 9] = nodeValueMap("Phasemap", self);
 	
-	inputs[| 10] = nodeValue("Angle Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 180 ])
+	inputs[| 10] = nodeValue("Angle Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 180 ])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "VCT",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "VCT",
-    "path": "folders/VCT.yy",
+  "$GMScript":"",
+  "%Name":"VCT",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"VCT",
+  "parent":{
+    "name":"VCT",
+    "path":"folders/VCT.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

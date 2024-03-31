@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "fd_rectangle_set_collision_mask_surface",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Set scripts",
-    "path": "folders/functions/fluid sim/API/Set scripts.yy",
+  "$GMScript":"",
+  "%Name":"fd_rectangle_set_collision_mask_surface",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"fd_rectangle_set_collision_mask_surface",
+  "parent":{
+    "name":"Set_scripts",
+    "path":"folders/functions/fluid_sim/API/Set_scripts.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

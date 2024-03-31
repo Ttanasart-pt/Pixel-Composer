@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__initAddon",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "custom",
-    "path": "folders/addons/custom.yy",
+  "$GMScript":"",
+  "%Name":"__initAddon",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__initAddon",
+  "parent":{
+    "name":"custom",
+    "path":"folders/addons/custom.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

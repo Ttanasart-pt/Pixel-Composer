@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_trigger_bool",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "trigger",
-    "path": "folders/nodes/data/value/trigger.yy",
+  "$GMScript":"",
+  "%Name":"node_trigger_bool",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_trigger_bool",
+  "parent":{
+    "name":"trigger",
+    "path":"folders/nodes/data/value/trigger.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

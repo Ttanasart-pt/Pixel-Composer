@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "_node_smoke",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "smokeSim",
-    "path": "folders/nodes/data/simulation/smokeSim.yy",
+  "$GMScript":"",
+  "%Name":"_node_smoke",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"_node_smoke",
+  "parent":{
+    "name":"smokeSim",
+    "path":"folders/nodes/data/simulation/smokeSim.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

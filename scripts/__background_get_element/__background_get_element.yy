@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__background_get_element",
-  "isCompatibility": true,
-  "isDnD": false,
-  "parent": {
-    "name": "background",
-    "path": "folders/functions/fluid sim/Internal/Compatibility/background.yy",
+  "$GMScript":"",
+  "%Name":"__background_get_element",
+  "isCompatibility":true,
+  "isDnD":false,
+  "name":"__background_get_element",
+  "parent":{
+    "name":"background",
+    "path":"folders/functions/fluid_sim/Compat/background.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -67,10 +67,10 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				nPart.scy = _sca[i][1];
 			}
 			
-			if(_a_rot && _l_rot > i) nPart.rot   = array_safe_get(_rot, i);
-			if(_a_col && _l_col > i) nPart.blend = array_safe_get(_col, i);
-			if(_a_alp && _l_alp > i) nPart.alp   = array_safe_get(_alp, i);
-			if(_a_srf && _l_srf > i) nPart.surf  = array_safe_get(_srf, i);
+			if(_a_rot && _l_rot > i) nPart.rot   = array_safe_get_fast(_rot, i);
+			if(_a_col && _l_col > i) nPart.blend = array_safe_get_fast(_col, i);
+			if(_a_alp && _l_alp > i) nPart.alp   = array_safe_get_fast(_alp, i);
+			if(_a_srf && _l_srf > i) nPart.surf  = array_safe_get_fast(_srf, i);
 			
 			nParts[i] = nPart;
 		}

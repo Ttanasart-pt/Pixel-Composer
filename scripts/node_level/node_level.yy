@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_level",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "colors",
-    "path": "folders/nodes/data/filter/colors.yy",
+  "$GMScript":"",
+  "%Name":"node_level",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_level",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

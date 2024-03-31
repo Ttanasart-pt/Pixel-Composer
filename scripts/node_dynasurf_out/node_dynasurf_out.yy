@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_dynasurf_out",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "dynasurf",
-    "path": "folders/nodes/data/dynasurf.yy",
+  "$GMScript":"",
+  "%Name":"node_dynasurf_out",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_dynasurf_out",
+  "parent":{
+    "name":"dynasurf",
+    "path":"folders/nodes/data/dynasurf.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

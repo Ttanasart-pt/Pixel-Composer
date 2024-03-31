@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "Tweener",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "tween",
-    "path": "folders/functions/tween.yy",
+  "$GMScript":"",
+  "%Name":"Tweener",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Tweener",
+  "parent":{
+    "name":"tween",
+    "path":"folders/functions/tween.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

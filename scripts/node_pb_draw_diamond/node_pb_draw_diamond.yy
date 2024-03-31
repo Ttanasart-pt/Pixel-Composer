@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_pb_draw_diamond",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "draw",
-    "path": "folders/nodes/data/pixel builder/draw.yy",
+  "$GMScript":"",
+  "%Name":"node_pb_draw_diamond",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_pb_draw_diamond",
+  "parent":{
+    "name":"draw",
+    "path":"folders/nodes/data/pixel_builder/draw.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

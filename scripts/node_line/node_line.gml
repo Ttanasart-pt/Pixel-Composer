@@ -17,7 +17,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 5] = nodeValue("Random seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 6] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 6] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 7] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone, "Draw line along path.")
@@ -268,7 +268,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_segIndexPrev = _segIndex;
 					
 					if(_useDistance) {
-						var segmentLength = array_safe_get(_segLength, _segIndex, _pathLength);
+						var segmentLength = array_safe_get_fast(_segLength, _segIndex, _pathLength);
 						
 						_prog_next = min(_prog_curr + _stepLen, _pathLength, segmentLength);
 						_pathPng   = _ratInv? _pathLength - _prog_curr : _prog_curr;
@@ -418,7 +418,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				random_set_seed(_sed + i);
 				var pxs = [];
-				var dat = array_safe_get(_pathData, i, noone);
+				var dat = array_safe_get_fast(_pathData, i, noone);
 				
 				var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
 				

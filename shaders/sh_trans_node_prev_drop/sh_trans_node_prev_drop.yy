@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_trans_node_prev_drop",
-  "parent": {
-    "name": "transition",
-    "path": "folders/shader/transition.yy",
+  "$GMShader":"",
+  "%Name":"sh_trans_node_prev_drop",
+  "name":"sh_trans_node_prev_drop",
+  "parent":{
+    "name":"transition",
+    "path":"folders/shader/transition.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

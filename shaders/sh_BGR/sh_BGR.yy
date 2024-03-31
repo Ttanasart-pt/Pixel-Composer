@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "sh_BGR",
-  "parent": {
-    "name": "_helper",
-    "path": "folders/shader/_helper.yy",
+  "$GMShader":"",
+  "%Name":"sh_BGR",
+  "name":"sh_BGR",
+  "parent":{
+    "name":"_helper",
+    "path":"folders/shader/_helper.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

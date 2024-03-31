@@ -11,6 +11,8 @@ uniform float middle;
 uniform float radiusScale;
 uniform float radiusShatter;
 uniform int   pattern;
+uniform float rotation;
+uniform int   tiled;
 
 uniform vec2      scale;
 uniform int       scaleUseSurf;
@@ -31,22 +33,24 @@ void main() {
 			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
 			sca = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
+		
+		float ang = rotation;
 	#endregion
 	
 	vec2 pos = position / dimension;
-    vec2 st = v_vTexcoord * sca - pos;
+    vec2 st  = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
 	
     float md = 8.;
     vec2 mg, mr;
 
-	if(pattern == 0) {
+	if(pattern < 2) {
 		vec2 i_st = floor(st);
 	    vec2 f_st = fract(st);
 	
 	    for (int y = -1; y <= 1; y++)
 	    for (int x = -1; x <= 1; x++) {
 	        vec2 neighbor = vec2(float(x), float(y));
-	        vec2 point = random2(mod(i_st + neighbor, scaMax));
+	        vec2 point = random2(pattern == 0? mod(i_st + neighbor, scaMax) : i_st + neighbor);
 			point = 0.5 + 0.5 * sin(seed + TAU * point);
 			
 	        vec2 _diff = neighbor + point - f_st;
@@ -70,7 +74,7 @@ void main() {
 			if(dot(mr - r, mr - r) > .000001)
 				md = min( md, dot( 0.5 * (mr + r), normalize(r - mr)) );
 		}
-	} else if(pattern == 1) {
+	} else if(pattern == 2) {
 		for (int j = 0; j <= int(sca / 2.); j++) {
 			int _amo = int(sca) + int(float(j) * radiusShatter);
 			for (int i = 0; i <= _amo; i++) {

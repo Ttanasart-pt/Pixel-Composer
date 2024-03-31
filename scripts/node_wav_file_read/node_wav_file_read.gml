@@ -146,7 +146,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	#region ++++ inspector ++++
 	insp1UpdateTooltip  = __txt("Refresh");
-	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
 	insp2UpdateTooltip  = __txtx("play_with_timeline", "Play with timeline");
 	insp2UpdateIcon     = [ THEME.play_sound, 1, COLORS._main_icon_light ];

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "instance_create",
-  "isCompatibility": true,
-  "isDnD": false,
-  "parent": {
-    "name": "instance",
-    "path": "folders/functions/fluid sim/Internal/Compatibility/instance.yy",
+  "$GMScript":"",
+  "%Name":"instance_create",
+  "isCompatibility":true,
+  "isDnD":false,
+  "name":"instance_create",
+  "parent":{
+    "name":"instance",
+    "path":"folders/functions/fluid_sim/Compat/instance.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

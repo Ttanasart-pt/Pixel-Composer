@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "node_mk_gridballs",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "MK effects",
-    "path": "folders/nodes/data/MK effects.yy",
+  "$GMScript":"",
+  "%Name":"node_mk_gridballs",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_mk_gridballs",
+  "parent":{
+    "name":"MK_effects",
+    "path":"folders/nodes/data/MK_effects.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }
