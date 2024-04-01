@@ -92,6 +92,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	#region ---- main ----
 		suffix   = "";
 		values	 = ds_list_create();
+		length   = 1;
 		sep_axis = _sep_axis;
 		
 		index   = 0;
@@ -131,6 +132,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	} #endregion
 	
 	static updateKeyMap = function() { #region
+		length = ds_list_size(values);
+		
 		if(!prop.is_anim && !LOADING && !APPENDING) return;
 		
 		if(ds_list_empty(values)) {
@@ -256,8 +259,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static getName = function() { return prop.name + suffix; }
 	
 	static getValue = function(_time = CURRENT_FRAME) { #region
+		
+		///////////////////////////////////////////////////////////// TRIGGER TYPE /////////////////////////////////////////////////////////////
+		
 		if(prop.type == VALUE_TYPE.trigger) {
-			if(ds_list_size(values) == 0) 
+			if(length == 0) 
 				return false;
 			
 			if(!prop.is_anim)
@@ -274,8 +280,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return _key.time == _time? _key.value : false;
 		}
 		
-		if(ds_list_size(values) == 0) return processTypeDefault();
-		if(ds_list_size(values) == 1) {
+		///////////////////////////////////////////////////////////// OPTIMIZATION /////////////////////////////////////////////////////////////
+		
+		if(length == 0) return processTypeDefault();
+		if(length == 1) {
 			var _key = values[| 0];
 			
 			if(_key.drivers.type && _time >= _key.time)
@@ -286,14 +294,16 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
 		if(!prop.is_anim)				 return processType(values[| 0].value);
-		var _len = max(TOTAL_FRAMES, values[| ds_list_size(values) - 1].time);
+		var _len = max(TOTAL_FRAMES, values[| length - 1].time);
 		if(array_length(key_map) != _len) updateKeyMap();
 		
-		var _time_first = prop.loop_range == -1? values[| 0].time : values[| ds_list_size(values) - 1 - prop.loop_range].time;
-		var _time_last  = values[| ds_list_size(values) - 1].time;
+		var _time_first = prop.loop_range == -1? values[| 0].time : values[| length - 1 - prop.loop_range].time;
+		var _time_last  = values[| length - 1].time;
 		var _time_dura  = _time_last - _time_first;
 			
-		if(_time > _time_last) { #region //loop time
+		////////////////////////////////////////////////////////////// LOOP TIME ///////////////////////////////////////////////////////////////
+		
+		if(_time > _time_last) {
 			switch(prop.on_end) {
 				case KEYFRAME_END.loop : 
 					_time = _time_first + safe_mod(_time - _time_last, _time_dura + 1);
@@ -306,16 +316,18 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 						_time = _time_first + _time_dura * 2 - time_in_loop;
 					break;
 			}
-		} #endregion
+		}
 		
 		var _keyIndex;
 		if(_time >= _len)		_keyIndex = 999_999;
 		else if(_time <= 0)		_keyIndex = -1;
 		else					_keyIndex = array_safe_get_fast(key_map, _time);
 		
-		if(_keyIndex == -1) { #region Before first key
+		//////////////////////////////////////////////////////////// BEFORE FIRST //////////////////////////////////////////////////////////////
+		
+		if(_keyIndex == -1) {
 			if(prop.on_end == KEYFRAME_END.wrap) {
-				var from = values[| ds_list_size(values) - 1];
+				var from = values[| length - 1];
 				var to   = values[| 0];
 				
 				var fTime = from.time;
@@ -331,10 +343,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			}
 			
 			return processType(values[| 0].value); //First frame
-		} #endregion
+		}
 		
-		if(_keyIndex == 999_999) { #region After last key
-			var _lstKey = values[| ds_list_size(values) - 1];
+		///////////////////////////////////////////////////////////// AFTER LAST ///////////////////////////////////////////////////////////////
+		
+		if(_keyIndex == 999_999) {
+			var _lstKey = values[| length - 1];
 			
 			if(_lstKey.drivers.type)
 				return processType(processDriver(_time, _lstKey));
@@ -352,20 +366,21 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			}
 			
 			return processType(_lstKey.value); //Last frame
-		} #endregion
+		}
 		
-		#region In between
-			var from = values[| _keyIndex];
-			var to   = values[| _keyIndex + 1];
+		///////////////////////////////////////////////////////////// INBETWEEN ////////////////////////////////////////////////////////////////
+		
+		var from = values[| _keyIndex];
+		var to   = values[| _keyIndex + 1];
 			
-			var rat  = (_time - from.time) / (to.time - from.time);
-			var _lrp = interpolate(from, to, rat);
+		var rat  = (_time - from.time) / (to.time - from.time);
+		var _lrp = interpolate(from, to, rat);
 			
-			if(from.drivers.type)
-				return processDriver(_time, from, lerpValue(from, to, _lrp), rat);
+		if(from.drivers.type)
+			return processDriver(_time, from, lerpValue(from, to, _lrp), rat);
 			
-			return lerpValue(from, to, _lrp);
-		#endregion
+		return lerpValue(from, to, _lrp);
+		
 	} #endregion
 	
 	static processTypeDefault = function() { #region
@@ -409,7 +424,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	} #endregion
 	
 	static processType = function(_val) { #region
+		INLINE
+		
 		var _res = _val;
+		
 		if(!sep_axis && typeArray(prop.display_type) && is_array(_val)) {
 			for(var i = 0; i < array_length(_val); i++) 
 				_res[i] = processValue(_val[i]);
@@ -420,22 +438,18 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	} #endregion
 	
 	static processValue = function(_val) { #region
+		INLINE
+		
 		if(is_array(_val))     return _val;
 		if(is_struct(_val))    return _val;
-		if(is_undefined(_val)) return 0;
-		
-		if(prop.type == VALUE_TYPE.integer && prop.unit.mode == VALUE_UNIT.constant)
-			return round(_val);
+		//if(is_undefined(_val)) return 0;
 		
 		switch(prop.type) {
-			case VALUE_TYPE.integer : 
+			case VALUE_TYPE.integer : return prop.unit.mode == VALUE_UNIT.constant? round(_val) : _val;
 			case VALUE_TYPE.float   : return _val;
-			case VALUE_TYPE.text    : return string_real(_val);
-			case VALUE_TYPE.color   : return is_real(_val)? cola(_val) : _val;
-			case VALUE_TYPE.surface : 
-				if(is_string(_val))
-					return get_asset(_val);
-				return _val;
+			case VALUE_TYPE.text    : return is_string(_val)? _val : string_real(_val);
+			case VALUE_TYPE.color   : return is_real(_val)?   cola(_val)      : _val;
+			case VALUE_TYPE.surface : return is_string(_val)? get_asset(_val) : _val;
 		}
 		
 		return _val;
@@ -501,6 +515,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	} #endregion
 	
 	static setValue = function(_val = 0, _record = true, _time = CURRENT_FRAME, ease_in = 0, ease_out = 0) { #region
+		
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(!prop.is_anim) {
 				values[| 0] = new valueKey(0, _val, self);

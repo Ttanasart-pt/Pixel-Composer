@@ -186,9 +186,11 @@ function value_color(i) { #region
 		#8fde5d, //audiobit
 		#4da6ff, //flipfluid
 	];
+	static JUNCTION_COLORS_LENGTH = array_length(JUNCTION_COLORS);
 	
 	if(i == 99) return #8fde5d;
-	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
+	
+	return JUNCTION_COLORS[i];
 } #endregion
 
 function value_color_bg(i) { #region
@@ -1581,6 +1583,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static resetCache = function() { cache_value[0] = false; }
 	
+	static getStaticValue = function() { INLINE return ds_list_empty(animator.values)? 0 : animator.values[| 0].value; } 
+	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
@@ -1595,7 +1599,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
 			
 			if(cache_hit) {
-				print($"Get cache {name} = {cache_value[2]}");
+				//print($"Get cache {name} = {cache_value[2]}");
 				
 				global.cache_hit++;
 				return cache_value[2];
@@ -1627,8 +1631,24 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) { #region
+		
 		if(value_tag == "dimension" && node.attributes.use_project_dimension)
 			return PROJECT.attributes.surface_dimension;
+		
+		if(!is_anim) {
+			if(sep_axis) {
+				if(ds_list_empty(animators[i].values)) return 0;
+				
+				var val = array_verify(val, array_length(animators));
+				for( var i = 0, n = array_length(animators); i < n; i++ )
+					val[i] = animators[i].values[| 0].value;
+				return val;
+			} 
+			
+			if(ds_list_empty(animator.values)) return 0;
+			
+			return animator.values[| 0].value;
+		}
 		
 		if(sep_axis) {
 			var val = [];
@@ -1637,8 +1657,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return val;
 		} 
 		
-		var _val = animator.getValue(_time);
-		return _val;
+		return animator.getValue(_time);
 	} #endregion
 	
 	static arrayBalance = function(val) { #region //Balance array (generate uniform array from single values)
@@ -1680,6 +1699,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			} else 
 				val = valueExpressionProcess(val);
 			return arrayBalance(val);
+			
 		} #endregion
 		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float) && accept_array) { #region Dimension conversion
@@ -1705,6 +1725,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			} else if (is_surface(val)) 
 				return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
 			return [1, 1];
+			
 		} #endregion
 		
 		val = arrayBalance(val);
@@ -1714,31 +1735,31 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			for( var i = 0, n = array_length(val); i < n; i++ )
 				_val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
 			return _val;
+			
 		} #endregion
 		
 		return valueProcess(val, nod, applyUnit, arrIndex);
 	} #endregion
 	
 	static getValueRecursive = function(_time = CURRENT_FRAME) { #region
-		var val = [ __getAnimValue(_time), self ];
 		
 		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger event will not propagate from input to output, need to be done manually
-			return val;
+			return [ ds_list_empty(animator.values)? 0 : animator.values[| 0].value, self ];
+		
+		var val = [ __getAnimValue(_time), self ];
 		
 		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out)
 			val = value_from_loop.getValue(_time);
+			
 		else if(value_from && value_from != self)
 			val = value_from.getValueRecursive(_time);
 		
 		if(expUse && is_struct(expTree) && expTree.validate()) {
-			//print($"========== EXPRESSION CALLED ==========");
-			//print(debug_get_callstack(8));
 			
 			if(global.EVALUATE_HEAD != noone && global.EVALUATE_HEAD == self)  {
 				noti_warning($"Expression evaluation error : recursive call detected.");
+				
 			} else {
-				//print($"==================== EVAL BEGIN {expTree} ====================");
-				//printCallStack();
 				
 				global.EVALUATE_HEAD = self;
 				expContext = { 

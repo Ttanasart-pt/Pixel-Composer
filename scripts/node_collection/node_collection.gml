@@ -138,7 +138,9 @@ function upgroupNode(collection, record = true) { #region
 } #endregion
 
 function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 
-	nodes = ds_list_create();
+	nodes       = ds_list_create();
+	node_length = ds_list_size(nodes);
+	
 	ungroupable			= true;
 	auto_render_time	= false;
 	combine_render_time = true;
@@ -156,8 +158,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	attributes.input_display_list  = [];
 	attributes.output_display_list = [];
-	attributes.w = 128;
-	attributes.h = 128;
 	
 	managedRenderOrder = false;
 	
@@ -192,37 +192,45 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	array_push(attributeEditors, ["Edit Output Display", function() { return 0; },
 		button(function() { dialogCall(o_dialog_group_input_order).setNode(self, JUNCTION_CONNECT.output); }) ]);
 	
+	hasInsp1 = false;
 	insp1UpdateTooltip   = __txtx("panel_inspector_execute", "Execute node contents");
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
+	hasInsp2 = false;
 	insp2UpdateTooltip = "Clear cache";
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
 	
-	static inspector1Update   = function() { onInspector1Update(); }
-	static onInspector1Update = function() { RenderList(nodes, true); }
-	static hasInspector1Update = function(group = false) { #region
-		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			if(nodes[| i].hasInspector1Update())
-				return true;
-		}
-		
-		return false;
-	} #endregion
+	static inspector1Update    = function() { onInspector1Update(); }
+	static onInspector1Update  = function() { RenderList(nodes, true); }
+	static hasInspector1Update = function() { INLINE return hasInsp1; }
 	
-	static inspector2Update   = function() { onInspector2Update(); }
-	static onInspector2Update = function() { #region
-		for( var i = 0; i < ds_list_size(nodes); i++ ) {
+	static inspector2Update    = function() { onInspector2Update(); }
+	static onInspector2Update  = function() { #region
+		var i = 0;
+		
+		repeat(node_length) {
 			if(nodes[| i].hasInspector2Update())
 				nodes[| i].inspector2Update();
+			i++;
 		}
 	} #endregion
-	static hasInspector2Update = function(group = false) { #region
-		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			if(nodes[| i].hasInspector2Update())
-				return true;
-		}
+	static hasInspector2Update = function() { INLINE return hasInsp2; }
+	
+	will_refresh = false;
+	static refreshNodes = function() { #region
+		will_refresh = false; 
+		node_length  = ds_list_size(nodes);
 		
-		return false;
+		hasInsp1 = false;
+		hasInsp2 = false;
+		
+		var i = 0;
+		repeat(node_length) {
+			hasInsp1 |= nodes[| i].hasInspector1Update();
+			hasInsp2 |= nodes[| i].hasInspector2Update();
+			
+			i++;
+		}
 	} #endregion
 	
 	static getNodeBase = function() { #region 
@@ -234,23 +242,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		INLINE
 		if(instanceBase == noone) return nodes;
 		return instanceBase.getNodeList();
-	} #endregion
-	
-	static setHeight = function() { #region
-		var _hi = ui(32);
-		var _ho = ui(32);
-		
-		for( var i = 0; i < ds_list_size(inputs); i++ )
-			if(inputs[| i].isVisible()) _hi += 24;
-		if(active_draw_index == 1) _hi += 24;
-		draw_dummy  = active_draw_index == 1;
-		
-		for( var i = 0; i < ds_list_size(outputs); i++ )
-			if(outputs[| i].isVisible()) _ho += 24;
-		
-		var preH = (preview_surface && previewable)? 128 : 0;
-		
-		h = max(min_h, preH, _hi, _ho);
 	} #endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
@@ -267,17 +258,17 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getOutputNodes = function() { #region
-		var nodes = [];
+		var _nodes = [];
 		for( var i = custom_output_index; i < ds_list_size(outputs); i++ ) {
 			var _junc = outputs[| i];
 			
 			for( var j = 0; j < array_length(_junc.value_to); j++ ) {
 				var _to = _junc.value_to[j];
 				if(_to.value_from != _junc) continue;
-				array_push_unique(nodes, _to.node);
+				array_push_unique(_nodes, _to.node);
 			}
 		}
-		return nodes;
+		return _nodes;
 	} #endregion
 	
 	static getInput = function(junc = noone) { #region
@@ -290,7 +281,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from group: {INAME}");
 		
-		var nodes = [];
+		var _nodes = [];
 		if(isRenderActive()) {
 			var allReady = true;
 			for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
@@ -304,18 +295,18 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				}
 			}
 		
-			nodes = __nodeLeafList(getNodeList());
+			_nodes = __nodeLeafList(getNodeList());
 		}
 		
 		LOG_BLOCK_END();
-		return nodes;
+		return _nodes;
 	} #endregion
 	
 	static getNextNodesExternal = function() { #region //get node connected to the parent object
 		LOG_IF(global.FLAG.render == 1, $"Checking next node external for {INAME}");
 		LOG_BLOCK_START();
 		
-		var nodes = [];
+		var nextNodes = [];
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
 			var _ot = outputs[| i];
 			if(!_ot.forward) continue;
@@ -329,12 +320,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				LOG_IF(global.FLAG.render == 1, $"Checking node {_node.internalName} : {_node.isRenderable()}");
 				if(!_node.isRenderable()) continue;
 				
-				array_push(nodes, _to.node);
+				array_push(nextNodes, _to.node);
 			}
 		}
 		LOG_BLOCK_END();
 		
-		return nodes;
+		return nextNodes;
 	} #endregion
 	
 	static setRenderStatus = function(result) { #region
@@ -379,6 +370,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		recordAction(ACTION_TYPE.group_added, self, _node);
 		_node.group = self;
+		
+		will_refresh = true;
 	} #endregion
 	
 	static remove = function(_node) { #region
@@ -397,6 +390,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			nodeDelete(_node);
 		else
 			_node.group = group;
+			
+		will_refresh = true;
 	} #endregion
 	
 	static clearCache = function() { #region
@@ -406,7 +401,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	} #endregion
 	
-	static stepBegin = function() { doStepBegin(); }
+	static stepBegin = function() { 
+		if(will_refresh) refreshNodes();
+		doStepBegin(); 
+	}
 	
 	static step = function() { #region
 		if(combine_render_time) {
@@ -415,8 +413,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			for(var i = 0; i < ds_list_size(node_list); i++)
 				render_time += node_list[| i].render_time;
 		}
-		
-		w = attributes.w;
 		
 		onStep();
 	} #endregion
@@ -460,7 +456,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getTool = function() { #region
-		for(var i = 0; i < ds_list_size(nodes); i++) { 
+		for(var i = 0; i < node_length; i++) { 
 			var _node = nodes[| i];
 			if(_node.isTool) return _node.getTool();
 		}
@@ -476,7 +472,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		var dups = ds_list_create();
 		
-		for(var i = 0; i < ds_list_size(nodes); i++) {
+		for(var i = 0; i < node_length; i++) {
 			var _node = nodes[| i];
 			var _cnode = _node.clone(target);
 			ds_list_add(dups, _cnode);
@@ -514,7 +510,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		setRenderStatus(false);
 		if(_clearCache) clearInputCache();
 		
-		for( var i = 0; i < ds_list_size(nodes); i++ )
+		for( var i = 0; i < node_length; i++ )
 			nodes[| i].resetRender(_clearCache);
 	} #endregion
 	
@@ -543,7 +539,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getGraphPreviewSurface = function() { #region
 		var _output_junc = outputs[| preview_channel];
 		
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
+		for( var i = 0, n = node_length; i < n; i++ ) {
 			if(!nodes[| i].active) continue;
 			if(is_instanceof(nodes[| i], Node_Group_Thumbnail))
 				_output_junc = nodes[| i].inputs[| 0];
@@ -562,12 +558,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static enable = function() { #region
 		active = true; timeline_item.active = true;
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) nodes[| i].enable();
+		for( var i = 0, n = node_length; i < n; i++ ) nodes[| i].enable();
 	} #endregion
 	
 	static disable = function() { #region
 		active = false; timeline_item.active = false;
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) nodes[| i].disable();
+		for( var i = 0, n = node_length; i < n; i++ ) nodes[| i].disable();
 	} #endregion
 	
 	static processSerialize = function(_map) { #region

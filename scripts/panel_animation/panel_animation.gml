@@ -26,6 +26,7 @@
 	function panel_animation_duplicate()	{ CALL("animation_duplicate");	PANEL_ANIMATION.doDuplicate();  }
 	function panel_animation_copy()			{ CALL("animation_copy");		PANEL_ANIMATION.doCopy();       }
 	function panel_animation_paste()		{ CALL("animation_paste");		PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing); }
+	function panel_animation_show_nodes()	{ CALL("animation_paste");		PANEL_ANIMATION.show_nodes = !PANEL_ANIMATION.show_nodes; }
 #endregion
 
 enum KEYFRAME_DRAG_TYPE {
@@ -70,8 +71,6 @@ function Panel_Animation() : PanelContent() constructor {
 	
 		dopesheet_dragging = noone;
 		dopesheet_drag_mx  = 0;
-	
-		dope_sheet_node_padding = ui(0);
 	#endregion
 	
 	#region ---- timeline ----
@@ -122,6 +121,7 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	#region ---- display ---- 
 		show_node_outside_context = true;
+		show_nodes = true;
 		
 		tooltip_loop_prop = noone;
 		tooltip_loop_type = new tooltipSelector(__txtx("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
@@ -138,7 +138,12 @@ function Panel_Animation() : PanelContent() constructor {
 		hovering_folder = noone;
 		hovering_order  = noone;
 		
-		node_name_type	= 0;
+		node_name_type	  = 0;
+		node_name_tooltip = new tooltipSelector("Name Display", [
+			__txtx("panel_animation_name_full", "Full name"),
+			__txtx("panel_animation_name_type", "Node type"),
+			__txtx("panel_animation_name_only", "Node name"),
+		]);
 	#endregion
 	
 	#region ---- stagger ----
@@ -202,6 +207,15 @@ function Panel_Animation() : PanelContent() constructor {
 	#endregion
 	
 	#region ++++ hotkeys ++++
+
+		__collapse = false;
+		function collapseToggle() { #region
+			PANEL_ANIMATION.__collapse = !PANEL_ANIMATION.__collapse;
+		
+			for( var i = 0, n = array_length(PANEL_ANIMATION.timeline_contents); i < n; i++ )
+				PANEL_ANIMATION.timeline_contents[i].item.show = PANEL_ANIMATION.__collapse;
+		} #endregion
+	
 		addHotkey("",			"Play/Pause",		vk_space,	MOD_KEY.none,	panel_animation_play_pause);
 		addHotkey("",			"Resume/Pause",		vk_space,	MOD_KEY.shift,	panel_animation_resume);
 								
@@ -214,6 +228,8 @@ function Panel_Animation() : PanelContent() constructor {
 		addHotkey("Animation", "Duplicate",			"D",		MOD_KEY.ctrl,	panel_animation_duplicate);
 		addHotkey("Animation", "Copy",				"C",		MOD_KEY.ctrl,	panel_animation_copy);
 		addHotkey("Animation", "Paste",				"V",		MOD_KEY.ctrl,	panel_animation_paste);
+		addHotkey("Animation", "Collapse Toggle",	"C",		MOD_KEY.none,	collapseToggle);
+		addHotkey("Animation", "Toggle nodes",		"H",		MOD_KEY.none,	panel_animation_show_nodes);
 	#endregion
 	
 	#region ++++ context menu ++++
@@ -316,6 +332,15 @@ function Panel_Animation() : PanelContent() constructor {
 			var _dir = new timelineItemGroup();
 			PROJECT.timelines.addItem(_dir);
 		},	THEME.folder_content),
+		-1,
+		menuItem(__txt("Expand all"), function() {
+			for( var i = 0, n = array_length(timeline_contents); i < n; i++ )
+				timeline_contents[i].item.show = true;
+		}),
+		menuItem(__txt("Collapse all"), function() {
+			for( var i = 0, n = array_length(timeline_contents); i < n; i++ )
+				timeline_contents[i].item.show = false;
+		}),
 	];
 	
 	var _clrs = COLORS.labels;
@@ -345,7 +370,9 @@ function Panel_Animation() : PanelContent() constructor {
 	name_menu_item = [
 		clr,
 		-1,
-		name_menu_empty[0]
+		name_menu_empty[0],
+		name_menu_empty[2],
+		name_menu_empty[3],
 	];
 	
 	name_menu_group = [
@@ -1082,7 +1109,7 @@ function Panel_Animation() : PanelContent() constructor {
 	function _drawDopesheetAnimatorKeys(_cont, animator, msx, msy) { #region
 		var _node     = _cont.node;
 		var prop_y	  = animator.y;
-		var node_y	  = _cont.y + dope_sheet_node_padding;
+		var node_y	  = _cont.y;
 		var anim_set  = true;
 		var key_hover = noone;
 		
@@ -1265,9 +1292,19 @@ function Panel_Animation() : PanelContent() constructor {
 		var cc = prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_inner;
 		if(hov) cc = COLORS._main_text_accent;
 		
+		var _tx = ui(32);
 		draw_set_color(cc);
+		
+		if(!show_nodes) {
+			var _txt = animator.prop.node.getDisplayName();
+			
+			draw_set_alpha(aa * 0.5);
+			draw_text_add(_tx, ty - 2, _txt);
+			_tx += string_width(_txt) + ui(4);
+		}
+		
 		draw_set_alpha(aa);
-		draw_text_add(ui(32), ty - 2, animator.getName());
+		draw_text_add(_tx, ty - 2, animator.getName());
 		draw_set_alpha(1);
 	} #endregion
 	
@@ -1322,7 +1359,7 @@ function Panel_Animation() : PanelContent() constructor {
 				if(!_cont.show) continue;
 				
 				var _y = _cont.y;
-				var _h = _cont.h + dope_sheet_node_padding;
+				var _h = _cont.h;
 				
 				if(_y + _h < 0) continue;
 				if(_y > h) break;
@@ -1361,7 +1398,7 @@ function Panel_Animation() : PanelContent() constructor {
 				if(!_cont.show) continue;
 				
 				var _y = _cont.y;
-				var _h = _cont.h + dope_sheet_node_padding;
+				var _h = _cont.h;
 				
 				if(_y + _h < 0) continue;
 				if(_y > h) break;
@@ -1373,7 +1410,7 @@ function Panel_Animation() : PanelContent() constructor {
 					continue;
 				}
 				
-				__drawDopesheetLabelItem(_cont, 0, _cont.y + dope_sheet_node_padding, msx, msy);
+				if(show_nodes) __drawDopesheetLabelItem(_cont, 0, _cont.y, msx, msy);
 				
 				if(_cont.type == "node" && _cont.item.show)
 				for( var j = 0; j < array_length(_cont.animators); j++ )
@@ -1433,9 +1470,9 @@ function Panel_Animation() : PanelContent() constructor {
 				if(mouse_wheel_up())	dope_sheet_y_to = clamp(dope_sheet_y_to + ui(32) * SCROLL_SPEED, -dope_sheet_y_max, 0);
 			}
 					
-			var scr_x = bar_x + dope_sheet_w + ui(4);
-			var scr_y = ui(8);
-			var scr_s = dope_sheet_h;
+			var scr_x    = bar_x + dope_sheet_w + ui(4);
+			var scr_y    = ui(8);
+			var scr_s    = dope_sheet_h;
 			var scr_prog = -dope_sheet_y / dope_sheet_y_max;
 			var scr_size = dope_sheet_h / (dope_sheet_h + dope_sheet_y_max);
 					
@@ -1490,8 +1527,6 @@ function Panel_Animation() : PanelContent() constructor {
 					continue;
 				
 				var _expand = _cont.type == "node" && _cont.item.show; 
-				key_y	+= dope_sheet_node_padding;
-				_cont.h	+= dope_sheet_node_padding;
 				
 				var _ks = key_y;
 				if(_cont.item.color_dsp > -1) {
@@ -1504,8 +1539,8 @@ function Panel_Animation() : PanelContent() constructor {
 					var c1 = colorMultiply(_cont.item.color_cur, COLORS.panel_animation_dope_key_bg_hover);
 				}
 				
-				key_y	+= ui(20) + _expand * ui(10);
-				_cont.h	+= ui(20);
+				key_y	+= ui(20) * show_nodes + _expand * ui(10);
+				_cont.h	+= ui(20) * show_nodes;
 				_ks      = key_y - ui(10);
 				
 				if(_expand) {
@@ -2083,15 +2118,15 @@ function Panel_Animation() : PanelContent() constructor {
 		}
 		
 		by += ui(32);
-		var txt = "";
-		switch(node_name_type) {
-			case 0 : txt = __txtx("panel_animation_name_full", "Show full name"); break;
-			case 1 : txt = __txtx("panel_animation_name_type", "Show node type"); break;
-			case 2 : txt = __txtx("panel_animation_name_only", "Show node name"); break;
-		}
+		node_name_tooltip.index = node_name_type;
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.node_name_type, node_name_type) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, node_name_tooltip, THEME.node_name_type, node_name_type) == 2)
 			node_name_type = (node_name_type + 1) % 3;
+		
+		by += ui(32);
+		txt = __txtx("panel_animation_show_node", "Toggle node label");
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.junc_visible, show_nodes) == 2)
+			show_nodes = !show_nodes;
 		
 		by += ui(32);
 		txt = __txtx("panel_animation_keyframe_override", "Override Keyframe");
