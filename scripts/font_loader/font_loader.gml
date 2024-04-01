@@ -1,6 +1,8 @@
 globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, FONT_CUST_CACHE, GLYPH_MAP;
 globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code, f_sdf, f_sdf_medium;
 
+global.LINE_HEIGHTS = {};
+
 #region default
 	FONT_DEF        = true;
 	FONT_CACHE      = {};
@@ -22,6 +24,31 @@ globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code, f_sdf, 
 	f_sdf_medium  = _f_sdf_medium;
 	FONT_ISLOADED = false;
 #endregion
+
+function __font_add_height(font) { #region
+	INLINE 
+	
+	draw_set_font(font);
+	global.LINE_HEIGHTS[$ font] = string_height("l");
+} #endregion
+
+function __font_refresh() { #region
+	__font_add_height(f_h1);
+	__font_add_height(f_h2);
+	__font_add_height(f_h3);
+	__font_add_height(f_h5);
+					
+	__font_add_height(f_p0);
+	__font_add_height(f_p0b);
+		
+	__font_add_height(f_p1);
+	__font_add_height(f_p2);
+	__font_add_height(f_p3);
+		
+	__font_add_height(f_code);
+	__font_add_height(f_sdf);
+	__font_add_height(f_sdf_medium);
+} #endregion
 
 function _font_add(path, size, sdf = false, custom = false) { #region
 	var _cache = custom? FONT_CUST_CACHE : FONT_CACHE;
@@ -134,6 +161,8 @@ function loadFonts() { #region
 		f_sdf  = _f_sdf;
 		f_sdf_medium  = _f_sdf_medium;
 		FONT_ISLOADED = false;
+		
+		__font_refresh();
 		return;
 	}
 	
@@ -157,6 +186,8 @@ function loadFonts() { #region
 	f_sdf_medium = _font_load_from_struct(fontDef, "sdf_medium",  _f_sdf_medium);
 	
 	FONT_ISLOADED = true;
+	
+	__font_refresh();
 } #endregion
 
 #region unused font cache

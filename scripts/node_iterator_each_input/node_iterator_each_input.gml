@@ -9,15 +9,16 @@ function Node_Iterator_Each_Input(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
 	
-	outputs[| 0].getValueRecursive = function() {
+	outputs[| 0].getValueRecursive = function(arr) {
 		if(!variable_struct_exists(group, "iterated"))
-			return outputs[| 0].getValueDefault();
+			return outputs[| 0].getValueDefault(arr);
 			
 		var ind = group.iterated;
 		var val = group.getInputData(0);
 		var ivl = array_safe_get_fast(val, ind);
 		
-		return [ ivl, group.inputs[| 0] ];
+		arr[@ 0] = ivl;
+		arr[@ 1] = group.inputs[| 0];
 	}
 	
 	static step = function() {

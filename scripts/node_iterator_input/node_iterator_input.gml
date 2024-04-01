@@ -9,26 +9,31 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
 	
-	outputs[| 0].getValueRecursive = function() {
+	outputs[| 0].getValueRecursive = function(arr) {
 		if(!struct_has(group, "iterated"))
-			return outputs[| 0].getValueDefault();
+			return outputs[| 0].getValueDefault(arr);
 		
 		var _to = outputs[| 1].getJunctionTo();
 		
 		// Not connect to any loop output
-		if(array_empty(_to))
-			return [ noone, inParent ];
+		if(array_empty(_to)) {
+			arr[@ 0] = noone;
+			arr[@ 1] = inParent;
+			return;
+		}
 		
 		var _node_output = _to[0];
 		
 		// First iteration, get value from outside
 		if(_node_output == noone || group.iterated == 0) {
-			var _def = outputs[| 0].getValueDefault();
-			return [ variable_clone(_def[0]), _def[1] ];
+			outputs[| 0].getValueDefault(arr);
+			arr[@ 0] = variable_clone(arr[@ 0]);
+			return;
 		}
 		
 		// Later iteration, get value from output
-		return [ _node_output.node.cache_value, inParent ];
+		arr[@ 0] = _node_output.node.cache_value;
+		arr[@ 1] = inParent;
 	}
 	
 	outputs[| 1] = nodeValue("Loop entrance", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0)

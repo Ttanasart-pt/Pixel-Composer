@@ -599,7 +599,7 @@ function Panel_Animation() : PanelContent() constructor {
 			if(inspecting)
 				inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
 			
-			var _fr = ceil(bar_w / timeline_scale / timeline_separate) * timeline_separate;
+			var _fr = ceil((bar_w / timeline_scale - timeline_shift) / timeline_separate) * timeline_separate;
 			
 			for(var i = timeline_separate; i <= _fr; i += timeline_separate) {
 				var bar_line_x = i * timeline_scale + timeline_shift;
@@ -1582,7 +1582,7 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			dope_sheet_y_max = max(0, dope_sheet_y_max - dope_sheet_h + ui(48));
 			
-			var _fr = ceil(bar_w / timeline_scale / timeline_separate) * timeline_separate;
+			var _fr = ceil((bar_w / timeline_scale - timeline_shift) / timeline_separate) * timeline_separate;
 			
 			for(var i = timeline_sep_line; i <= _fr; i += timeline_sep_line) {
 				var bar_line_x = i * timeline_scale + timeline_shift;
@@ -1827,7 +1827,7 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_set_color(COLORS.panel_animation_timeline_top);
 			draw_rectangle(0, 0, bar_w, hh, false);
 			
-			var _fr = ceil(bar_w / timeline_scale / timeline_separate) * timeline_separate;
+			var _fr = ceil((bar_w / timeline_scale - timeline_shift) / timeline_separate) * timeline_separate;
 			
 			for(var i = timeline_separate; i <= _fr; i += timeline_separate) {
 				var bar_line_x = i * timeline_scale + timeline_shift;
@@ -1926,7 +1926,7 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			if(timeline_stretch == 1) {
 				var len = round((mx - bar_x - timeline_shift) / timeline_scale) - 2;
-				len = max(1, len);
+				    len = max(1, len);
 				TOOLTIP = __txtx("panel_animation_length", "Animation length") + " " + string(len);
 				TOTAL_FRAMES = len;
 				
@@ -1934,10 +1934,11 @@ function Panel_Animation() : PanelContent() constructor {
 					timeline_stretch = 0;
 					
 				draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS.panel_animation_end_line, 1);
+				
 			} else if(timeline_stretch == 2) {
-				var len = round((mx - bar_x - timeline_shift) / timeline_scale) - 2;
-				len = max(1, len);
-				TOOLTIP = __txtx("panel_animation_length", "Animation length") + " " + string(len);
+				var len  = round((mx - bar_x - timeline_shift) / timeline_scale) - 2;
+				    len  = max(1, len);
+				TOOLTIP  = __txtx("panel_animation_length", "Animation length") + " " + string(len);
 				var _len = TOTAL_FRAMES;
 				TOTAL_FRAMES = len;
 				
@@ -1970,6 +1971,7 @@ function Panel_Animation() : PanelContent() constructor {
 					timeline_stretch = 0;
 					
 				draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS.panel_animation_end_line, 1);
+				
 			} else {
 				if(!IS_PLAYING && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
 					if(key_mod_press(CTRL)) {
@@ -2027,21 +2029,19 @@ function Panel_Animation() : PanelContent() constructor {
 	} #endregion
 	
 	function drawAnimationControl() { #region
-		var bx = ui(8);
-		var by = h - ui(40);
 		var mini = w < ui(348);
-		
-		if(mini) by = h - ui(40);
 		
 		var amo = array_length(control_buttons);
 		var col = floor((w - ui(8)) / ui(36));
 		var row = ceil(amo / col);
 		if(col < 1) return;
 		
+		var bx = tool_width / 2 - ui(36) * amo / 2 + ui(8);
+		var by = h - ui(40);
+		
 		for( var i = 0; i < row; i++ ) {
 			var colAmo = min(amo - i * col, col);
-			if(mini) 
-				bx = w / 2 - ui(36) * colAmo / 2;
+			if(mini) bx = w / 2 - ui(36) * colAmo / 2;
 			
 			for( var j = 0; j < colAmo; j++ ) {
 				var ind = i * col + j;
@@ -2108,6 +2108,7 @@ function Panel_Animation() : PanelContent() constructor {
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_animation_scale_animation", "Scale animation"), THEME.animation_timing, 2) == 2)
 			dialogPanelCall(new Panel_Animation_Scaler(), x + bx + ui(32), y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
 		
+		var max_y = by - ui(28);
 		if(by < ui(28)) return;
 		by = ui(8);
 		
@@ -2117,23 +2118,23 @@ function Panel_Animation() : PanelContent() constructor {
 			PROJECT.timelines.addItem(_dir);
 		}
 		
-		by += ui(32);
+		by += ui(32); if(by > max_y) return;
 		node_name_tooltip.index = node_name_type;
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, node_name_tooltip, THEME.node_name_type, node_name_type) == 2)
 			node_name_type = (node_name_type + 1) % 3;
 		
-		by += ui(32);
+		by += ui(32); if(by > max_y) return;
 		txt = __txtx("panel_animation_show_node", "Toggle node label");
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.junc_visible, show_nodes) == 2)
 			show_nodes = !show_nodes;
 		
-		by += ui(32);
+		by += ui(32); if(by > max_y) return;
 		txt = __txtx("panel_animation_keyframe_override", "Override Keyframe");
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.keyframe_override, global.FLAG.keyframe_override) == 2)
 			global.FLAG.keyframe_override = !global.FLAG.keyframe_override;
 		
-		by += ui(32);
+		by += ui(32); if(by > max_y) return;
 		txt = __txt("Onion skin");
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.onion_skin,, PROJECT.onion_skin.enabled? c_white : COLORS._main_icon) == 2)
 			PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;
@@ -2161,7 +2162,7 @@ function Panel_Animation() : PanelContent() constructor {
 			if(dope_sheet_h > 8) {
 				drawDopesheet();
 				
-				if(pHOVER && point_in_rectangle(mx, my, tool_width + ui(10), ui(8), tool_width + ui(12), ui(8) + dope_sheet_h)) {
+				if(pHOVER && point_in_rectangle(mx, my, tool_width + ui(8), ui(8), tool_width + ui(12), ui(8) + dope_sheet_h)) {
 					CURSOR = cr_size_we;
 					if(mouse_press(mb_left, pFOCUS)) {
 						tool_width_drag  = true;
@@ -2174,7 +2175,7 @@ function Panel_Animation() : PanelContent() constructor {
 		drawAnimationControl();
 		
 		if(timeline_show_time > -1) {
-			TOOLTIP = __txt("Frame") + " " + string(timeline_show_time + 1) + "/" + string(TOTAL_FRAMES);
+			TOOLTIP = $"{__txt("Frame")} {timeline_show_time + 1}/{TOTAL_FRAMES}";
 			timeline_show_time = -1;
 		}
 	} #endregion

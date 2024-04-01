@@ -56,7 +56,10 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	} #endregion
 	
 	static getValue = function() { #region
-		return [ value_buffer, junc_out ];
+		INLINE
+		
+		arr[@ 0] = value_buffer;
+		arr[@ 1] = junc_out;
 	} #endregion
 	
 	static drawConnections = function(params = {}) { #region

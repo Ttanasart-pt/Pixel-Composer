@@ -206,7 +206,10 @@
 		if(array_length(strs) == 1) {
 			var splt = string_splice(strs[0], "[");
 			var inp = PROJECT.globalNode.getInput(strs[0]);
-			return inp == noone? 0 : inp.getValueRecursive()[0];
+			if(inp == 0) return 0;
+			
+			return inp.getValueRecursive([ 0, 0 ])[0];
+			
 		} else if(struct_has(PROJECT_VARIABLES, strs[0])) {
 			var _str_var = PROJECT_VARIABLES[$ strs[0]];
 			if(!struct_has(_str_var, strs[1])) return 0;

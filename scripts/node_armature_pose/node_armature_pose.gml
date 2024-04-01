@@ -135,7 +135,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var ss  = point_distance(posing_mx, posing_my, smx, smy) / posing_sx;
 				var ori = posing_bone.getPoint(0);
 				var ang = point_direction(ori.x, ori.y, smx, smy);
-				var rot = ang - posing_sy;
+				var rot = ang - posing_sy - posing_bone.parent.pose_angle;
 				
 				var val = array_clone(posing_input.getValue());
 				val[TRANSFORM.sca_x] = ss;
@@ -190,7 +190,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				var ori = posing_bone.getPoint(0);
 				var val = posing_input.getValue();
-				posing_sx = posing_bone.length / posing_bone.pose_local_scale;
+				posing_sx = posing_bone.length / posing_bone.pose_scale * posing_bone.parent.pose_scale;
 				posing_sy = posing_bone.angle - posing_bone.pose_local_angle;
 				posing_sz = point_direction(ori.x, ori.y, smx, smy);
 				

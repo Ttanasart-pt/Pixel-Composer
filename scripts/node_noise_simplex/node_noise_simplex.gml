@@ -78,7 +78,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		surface_set_shader(_outSurf, sh_simplex);
 			shader_set_f("dimension", _dim);
 			shader_set_f("position",  _pos);
-			shader_set_f("rotation",  radtodeg(_ang));
+			shader_set_f("rotation",  degtorad(_ang));
 			shader_set_f_map("scale",     _data[2], _data[8], inputs[| 2]);
 			shader_set_f_map("iteration", _data[3], _data[9], inputs[| 3]);
 			

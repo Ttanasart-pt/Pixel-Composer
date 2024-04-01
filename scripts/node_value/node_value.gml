@@ -635,6 +635,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.inputs_data[index] = _value;
 		node.input_value_map[$ internalName] = _value;
 		
+		__curr_get_val = [ 0, 0 ];
 	#endregion
 	
 	#region ---- draw ----
@@ -1456,7 +1457,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static valueProcess = function(value, nodeFrom, applyUnit = true, arrIndex = 0) { #region
 		var typeFrom = nodeFrom.type;
-		var display  = nodeFrom.display_type;
 		
 		#region color compatibility [ color, palette, gradient ]
 			if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { 
@@ -1589,7 +1589,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
 		
-		global.cache_call++;
+		//global.cache_call++;
 		if(useCache && use_cache) {
 			var cache_hit = cache_value[0];
 			cache_hit &= !isActiveDynamic(_time) || cache_value[1] == _time;
@@ -1599,12 +1599,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
 			
 			if(cache_hit) {
-				//print($"Get cache {name} = {cache_value[2]}");
-				
-				global.cache_hit++;
+				//global.cache_hit++;
 				return cache_value[2];
 			}
-	
 		}
 		
 		var val = _getValue(_time, applyUnit, arrIndex, log);
@@ -1623,9 +1620,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_value[1] = _time;
 		}
 		
-		cache_value[2] = variable_clone(val, 1);
+		cache_value[2] = val;
 		cache_value[3] = applyUnit;
-		updateColor(val);
+		
+		if(!IS_PLAYING) updateColor(val);
 		
 		return val;
 	} #endregion
@@ -1643,7 +1641,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				for( var i = 0, n = array_length(animators); i < n; i++ )
 					val[i] = animators[i].values[| 0].value;
 				return val;
-			} 
+			}
 			
 			if(ds_list_empty(animator.values)) return 0;
 			
@@ -1683,9 +1681,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static _getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) { #region
-		var _val = getValueRecursive(_time);
-		var val = _val[0];
-		var nod = _val[1];
+		
+		getValueRecursive(self.__curr_get_val, _time);
+		var val = __curr_get_val[0];
+		var nod = __curr_get_val[1];
+		
 		var typ = nod.type;
 		var dis = nod.display_type;
 		
@@ -1741,18 +1741,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return valueProcess(val, nod, applyUnit, arrIndex);
 	} #endregion
 	
-	static getValueRecursive = function(_time = CURRENT_FRAME) { #region
+	static getValueRecursive = function(arr = __curr_get_val, _time = CURRENT_FRAME) { #region
 		
-		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger event will not propagate from input to output, need to be done manually
-			return [ ds_list_empty(animator.values)? 0 : animator.values[| 0].value, self ];
+		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) { //trigger event will not propagate from input to output, need to be done manually
+			arr[@ 0] = ds_list_empty(animator.values)? 0 : animator.values[| 0].value;
+			arr[@ 1] = self;
+			return;
+		}
 		
-		var val = [ __getAnimValue(_time), self ];
+		arr[@ 0] = __getAnimValue(_time);
+		arr[@ 1] = self;
 		
 		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out)
-			val = value_from_loop.getValue(_time);
+			value_from_loop.getValue(arr);
 			
 		else if(value_from && value_from != self)
-			val = value_from.getValueRecursive(_time);
+			value_from.getValueRecursive(arr, _time);
 		
 		if(expUse && is_struct(expTree) && expTree.validate()) {
 			
@@ -1763,27 +1767,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				global.EVALUATE_HEAD = self;
 				expContext = { 
-					name: name,
-					node_name: node.display_name,
-					value: val[0],
-					node_values: node.input_value_map,
+					name :        name,
+					node_name :   node.display_name,
+					value :       arr[0],
+					node_values : node.input_value_map,
 				};
 				
 				var _exp_res = expTree.eval(variable_clone(expContext));
 				printIf(global.LOG_EXPRESSION, $">>>> Result = {_exp_res}");
 				
 				if(is_undefined(_exp_res)) {
-					val[0] = 0;
+					arr[@ 0] = 0;
 					noti_warning("Expression not returning valid values.");
 				} else 
-					val[0] = _exp_res;
+					arr[@ 0] = _exp_res;
 				global.EVALUATE_HEAD = noone;
 			}
-			
-			return val;
 		}
-		
-		return val;
 	} #endregion
 	
 	static setAnim = function(anim, record = false) { #region

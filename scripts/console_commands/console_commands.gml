@@ -86,8 +86,8 @@ function cmd_submit(command) { #region
 			break;
 		
 		default: 
-			if(struct_has(FUNCTIONS, cmd[0])) {
-				var _f    = FUNCTIONS[$ cmd[0]];
+			if(struct_has(CMD_FUNCTIONS, cmd[0])) {
+				var _f    = CMD_FUNCTIONS[$ cmd[0]];
 				var _vars = string_splice(array_safe_get_fast(cmd, 1, ""), ",");
 				var _args = [];
 					

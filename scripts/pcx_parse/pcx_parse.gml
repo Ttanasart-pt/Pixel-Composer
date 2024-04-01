@@ -233,7 +233,7 @@
 				if(ds_stack_empty(op)) ds_stack_push(op, ch);
 				else {
 					var _top = ds_stack_top(op);
-					if(_top == "(" || ds_map_exists(global.FUNCTIONS, _top) || pres[? ch] > pres[? _top]) {
+					if(_top == "(" || ds_map_exists(global.PCX_FUNCTIONS, _top) || pres[? ch] > pres[? _top]) {
 						ds_stack_push(op, ch);
 					} else {
 						while(pres[? ch] <= pres[? ds_stack_top(op)] && !ds_stack_empty(op))
@@ -320,7 +320,7 @@
 				
 				if(vsl == "") continue;
 				
-				if(ds_map_exists(global.FUNCTIONS, vsl)) { //function
+				if(ds_map_exists(global.PCX_FUNCTIONS, vsl)) { //function
 					ds_stack_push(op, vsl);
 					last_push = "fn";
 				} else {
@@ -361,7 +361,7 @@
 	function buildFuncTree(operator, vl) { #region
 		if(ds_stack_empty(vl)) return noone;
 		
-		if(ds_map_exists(global.FUNCTIONS, operator)) {
+		if(ds_map_exists(global.PCX_FUNCTIONS, operator)) {
 			if(ds_stack_empty(vl)) 
 				return noone;
 				

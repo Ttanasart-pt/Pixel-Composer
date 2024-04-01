@@ -196,7 +196,7 @@ function pxl_autocomplete_server(prompt, params = [], context = {}) {
 	//////////////////////////////////
 	ds_priority_clear(pr_list);
 	
-	var F = global.FUNCTIONS;
+	var F = global.PCX_FUNCTIONS;
 	var _keys = ds_map_keys_to_array(F);
 	
 	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
@@ -217,9 +217,9 @@ function pxl_autocomplete_server(prompt, params = [], context = {}) {
 }
 
 function pxl_function_guide_server(prompt) { 
-	if(!ds_map_exists(global.FUNCTIONS, prompt)) return "";
+	if(!ds_map_exists(global.PCX_FUNCTIONS, prompt)) return "";
 	
-	var fn = global.FUNCTIONS[? prompt];
+	var fn = global.PCX_FUNCTIONS[? prompt];
 	var guide = prompt + "(";
 	for( var i = 0, n = array_length(fn[0]); i < n; i++ ) 
 		guide += (i? ", " : "") + string(fn[0][i]);

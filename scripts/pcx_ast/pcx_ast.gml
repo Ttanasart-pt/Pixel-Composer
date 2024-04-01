@@ -1,72 +1,72 @@
 #region data
 	global.EVALUATE_HEAD = noone;
 
-	global.FUNCTIONS    = ds_map_create();
-	global.FUNCTIONS[? "sin"]    = [ ["radian"], function(val) { return sin(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "cos"]    = [ ["radian"], function(val) { return cos(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "tan"]    = [ ["radian"], function(val) { return tan(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS = ds_map_create();
+	global.PCX_FUNCTIONS[? "sin"]    = [ ["radian"], function(val) { return sin(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "cos"]    = [ ["radian"], function(val) { return cos(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "tan"]    = [ ["radian"], function(val) { return tan(array_safe_get_fast(val, 0)); } ];
 	
-	global.FUNCTIONS[? "dsin"]    = [ ["degree"], function(val) { return dsin(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "dcos"]    = [ ["degree"], function(val) { return dcos(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "dtan"]    = [ ["degree"], function(val) { return dtan(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "dsin"]    = [ ["degree"], function(val) { return dsin(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "dcos"]    = [ ["degree"], function(val) { return dcos(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "dtan"]    = [ ["degree"], function(val) { return dtan(array_safe_get_fast(val, 0)); } ];
 	
-	global.FUNCTIONS[? "arcsin"] = [ ["x"],       function(val) { return arcsin(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "arccos"] = [ ["x"],       function(val) { return arccos(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "arctan"] = [ ["x"],       function(val) { return arctan(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "arctan2"] = [ ["y", "x"], function(val) { return arctan2(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1)); } ];
+	global.PCX_FUNCTIONS[? "arcsin"] = [ ["x"],       function(val) { return arcsin(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "arccos"] = [ ["x"],       function(val) { return arccos(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "arctan"] = [ ["x"],       function(val) { return arctan(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "arctan2"] = [ ["y", "x"], function(val) { return arctan2(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1)); } ];
 	
-	global.FUNCTIONS[? "darcsin"]  = [ ["x"],      function(val) { return darcsin(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "darccos"]  = [ ["x"],      function(val) { return darccos(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "darctan"]  = [ ["x"],      function(val) { return darctan(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "darctan2"] = [ ["y", "x"], function(val) { return darctan2(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1)); } ];
+	global.PCX_FUNCTIONS[? "darcsin"]  = [ ["x"],      function(val) { return darcsin(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "darccos"]  = [ ["x"],      function(val) { return darccos(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "darctan"]  = [ ["x"],      function(val) { return darctan(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "darctan2"] = [ ["y", "x"], function(val) { return darctan2(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1)); } ];
 	
-	global.FUNCTIONS[? "abs"]    = [ ["x"], function(val) { return abs(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "round"]  = [ ["x"], function(val) { return round(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "ceil"]   = [ ["x"], function(val) { return ceil(array_safe_get_fast(val, 0));  } ];
-	global.FUNCTIONS[? "floor"]  = [ ["x"], function(val) { return floor(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "fract"]  = [ ["x"], function(val) { return frac(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "sign"]   = [ ["x"], function(val) { return sign(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "abs"]    = [ ["x"], function(val) { return abs(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "round"]  = [ ["x"], function(val) { return round(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "ceil"]   = [ ["x"], function(val) { return ceil(array_safe_get_fast(val, 0));  } ];
+	global.PCX_FUNCTIONS[? "floor"]  = [ ["x"], function(val) { return floor(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "fract"]  = [ ["x"], function(val) { return frac(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "sign"]   = [ ["x"], function(val) { return sign(array_safe_get_fast(val, 0)); } ];
 	
-	global.FUNCTIONS[? "min"]   = [ ["x", "y"], function(val) { return min(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1)); } ];
-	global.FUNCTIONS[? "max"]   = [ ["x", "y"], function(val) { return max(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1)); } ];
-	global.FUNCTIONS[? "clamp"] = [ ["x", "min = 0", "max = 1"], function(val) { return clamp(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1, 0), array_safe_get_fast(val, 2, 1)); } ];
+	global.PCX_FUNCTIONS[? "min"]   = [ ["x", "y"], function(val) { return min(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1)); } ];
+	global.PCX_FUNCTIONS[? "max"]   = [ ["x", "y"], function(val) { return max(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1)); } ];
+	global.PCX_FUNCTIONS[? "clamp"] = [ ["x", "min = 0", "max = 1"], function(val) { return clamp(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1, 0), array_safe_get_fast(val, 2, 1)); } ];
 	
-	global.FUNCTIONS[? "lerp"]   = [ ["x", "y", "amount"], function(val) { return lerp(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1), array_safe_get_fast(val, 2)); } ];
+	global.PCX_FUNCTIONS[? "lerp"]   = [ ["x", "y", "amount"], function(val) { return lerp(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1), array_safe_get_fast(val, 2)); } ];
 	
-	global.FUNCTIONS[? "wiggle"] = [ ["time", "frequency", "octave = 1", "seed = 0"],	function(val) { 
+	global.PCX_FUNCTIONS[? "wiggle"] = [ ["time", "frequency", "octave = 1", "seed = 0"],	function(val) { 
 																								return wiggle(0, 1, TOTAL_FRAMES / array_safe_get_fast(val, 1), 
 																												array_safe_get_fast(val, 0), 
 																												array_safe_get_fast(val, 3, 0), 
 																												array_safe_get_fast(val, 2, 1)); 
 																						} ];
-	global.FUNCTIONS[? "random"] = [ ["min = 0", "max = 1"],	function(val) { 
+	global.PCX_FUNCTIONS[? "random"] = [ ["min = 0", "max = 1"],	function(val) { 
 																	return random_range(array_safe_get_fast(val, 0, 0), 
 																					    array_safe_get_fast(val, 1, 1)); 
 																} ];
-	global.FUNCTIONS[? "irandom"] = [ ["min = 0", "max = 1"],	function(val) { 
+	global.PCX_FUNCTIONS[? "irandom"] = [ ["min = 0", "max = 1"],	function(val) { 
 																	return irandom_range(array_safe_get_fast(val, 0, 0), 
 																					     array_safe_get_fast(val, 1, 1)); 
 																} ];
 	
-	global.FUNCTIONS[? "range"] = [ ["length", "start = 0", "step = 1"],	function(val) { 
+	global.PCX_FUNCTIONS[? "range"] = [ ["length", "start = 0", "step = 1"],	function(val) { 
 																				var arr = array_create(array_safe_get_fast(val, 0, 0));
 																				for( var i = 0, n = array_length(arr); i < n; i++ ) 
 																					arr[i] = array_safe_get_fast(val, 1, 0) + i * array_safe_get_fast(val, 2, 1);
 																				return arr;
 																			} ];
 	
-	global.FUNCTIONS[? "length"] = [ ["value"],	function(val) { 
+	global.PCX_FUNCTIONS[? "length"] = [ ["value"],	function(val) { 
 													if(is_array(val))	return array_length(val);
 													if(is_string(val))	return string_length(val);
 													return 0;
 												} ];
 	
-	global.FUNCTIONS[? "string"] = [ ["value"], function(val) { return string(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "number"] = [ ["value"], function(val) { return toNumber(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "chr"]    = [ ["x"],		function(val) { return chr(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "ord"]    = [ ["char"],  function(val) { return ord(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "string"] = [ ["value"], function(val) { return string(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "number"] = [ ["value"], function(val) { return toNumber(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "chr"]    = [ ["x"],		function(val) { return chr(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "ord"]    = [ ["char"],  function(val) { return ord(array_safe_get_fast(val, 0)); } ];
 	
-	global.FUNCTIONS[? "draw"]    = [ ["surface", "x = 0", "y = 0", "xs = 1", "ys = 1", "rot = 0", "color = white", "alpha = 1"], 
+	global.PCX_FUNCTIONS[? "draw"]    = [ ["surface", "x = 0", "y = 0", "xs = 1", "ys = 1", "rot = 0", "color = white", "alpha = 1"], 
 		function(val) { 
 			var _surface = array_safe_get_fast(val, 0, -1);
 			if(!is_surface(_surface)) return false;
@@ -82,13 +82,13 @@
 			return true;
 		} ];
 	
-	global.FUNCTIONS[? "surface_get_dimension"] = [ ["surface"], function(val) { var s = array_safe_get_fast(val, 0); return [ surface_get_width_safe(s), surface_get_height_safe(s) ];  } ];
-	global.FUNCTIONS[? "surface_get_width"]     = [ ["surface"], function(val) { return surface_get_width_safe(array_safe_get_fast(val, 0));  } ];
-	global.FUNCTIONS[? "surface_get_height"]    = [ ["surface"], function(val) { return surface_get_height_safe(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "surface_get_dimension"] = [ ["surface"], function(val) { var s = array_safe_get_fast(val, 0); return [ surface_get_width_safe(s), surface_get_height_safe(s) ];  } ];
+	global.PCX_FUNCTIONS[? "surface_get_width"]     = [ ["surface"], function(val) { return surface_get_width_safe(array_safe_get_fast(val, 0));  } ];
+	global.PCX_FUNCTIONS[? "surface_get_height"]    = [ ["surface"], function(val) { return surface_get_height_safe(array_safe_get_fast(val, 0)); } ];
 	
-	global.FUNCTIONS[? "color_hex"] = [ ["char"],  function(val) { return colorFromHex(array_safe_get_fast(val, 0)); } ];
-	global.FUNCTIONS[? "color_rgb"] = [ ["red", "green", "blue"],  function(val) { return make_color_rgb(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1), array_safe_get_fast(val, 2)); } ];
-	global.FUNCTIONS[? "color_hsv"] = [ ["red", "green", "blue"],  function(val) { return make_color_hsv(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1), array_safe_get_fast(val, 2)); } ];
+	global.PCX_FUNCTIONS[? "color_hex"] = [ ["char"],  function(val) { return colorFromHex(array_safe_get_fast(val, 0)); } ];
+	global.PCX_FUNCTIONS[? "color_rgb"] = [ ["red", "green", "blue"],  function(val) { return make_color_rgb(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1), array_safe_get_fast(val, 2)); } ];
+	global.PCX_FUNCTIONS[? "color_hsv"] = [ ["red", "green", "blue"],  function(val) { return make_color_hsv(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1), array_safe_get_fast(val, 2)); } ];
 	
 	globalvar PROJECT_VARIABLES;
 	PROJECT_VARIABLES = {};
@@ -312,7 +312,7 @@
 		static validate = function() { #region
 			dependency = [];
 			
-			if(ds_map_exists(global.FUNCTIONS, symbol)) {
+			if(ds_map_exists(global.PCX_FUNCTIONS, symbol)) {
 				if(!is_array(l)) return false;
 				for( var i = 0, n = array_length(l); i < n; i++ )
 					if(!_validate(l[i])) return false;
@@ -355,10 +355,10 @@
 			//print($"{symbol}, {l} | {r}")
 			//print(params);
 			
-			if(ds_map_exists(global.FUNCTIONS, symbol)) {
+			if(ds_map_exists(global.PCX_FUNCTIONS, symbol)) {
 				if(!is_array(l)) return 0;
 				
-				var _fn = global.FUNCTIONS[? symbol];
+				var _fn = global.PCX_FUNCTIONS[? symbol];
 				var _ev = _fn[1];
 				var _l  = array_create(array_length(l));
 				

@@ -71,8 +71,11 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		}
 	} #endregion
 	
-	static getValue = function() { #region
-		return [ value_buffer, junc_out ];
+	static getValue = function(arr) { #region
+		INLINE
+		
+		arr[@ 0] = value_buffer;
+		arr[@ 1] = junc_out;
 	} #endregion
 	
 	static update = function() { #region

@@ -458,6 +458,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getTool = function() { #region
 		for(var i = 0; i < node_length; i++) { 
 			var _node = nodes[| i];
+			if(!_node.active) continue;
 			if(_node.isTool) return _node.getTool();
 		}
 		

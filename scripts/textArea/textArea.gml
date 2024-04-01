@@ -811,7 +811,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _hw, _y + hh);
 		var tsw       = _w;
 		var tsh       = hh;
-		text_surface  = surface_verify(text_surface, tsw, tsh);
+		var _update   = !surface_valid(text_surface, tsw, tsh);
+		if(_update) text_surface = surface_verify(text_surface, tsw, tsh);
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, hh, boxColor, 1);
 		
@@ -955,9 +956,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				deactivate();
 				
 		} else {
-			surface_set_shader(text_surface, noone, false, BLEND.add);
-				display_text(tx, text_y + ui(7), _text);
-			surface_reset_shader();
+			if(_update && _input_text != _text) {
+				surface_set_shader(text_surface, noone, false, BLEND.add);
+					display_text(tx, text_y + ui(7), _text);
+				surface_reset_shader();
+			}
 			
 			BLEND_ALPHA
 				draw_surface(text_surface, _x, _y);

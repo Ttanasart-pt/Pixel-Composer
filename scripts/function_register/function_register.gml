@@ -11,8 +11,8 @@
 	}
 	
 	function __fnInit() {
-		globalvar FUNCTIONS;
-		FUNCTIONS = {};
+		globalvar CMD_FUNCTIONS;
+		CMD_FUNCTIONS = {};
 		
 		__registerFunction("new",		NEW);
 		__registerFunction("save",		SAVE_AT,		[ ARG("project", function() { return PROJECT; }, true), ARG("path", ""), ARG("log", "save at ") ]);
@@ -34,7 +34,7 @@
 
 function __registerFunction(name, fn, args = []) { #region
 	INLINE
-	FUNCTIONS[$ name] = { fn, args };
+	CMD_FUNCTIONS[$ name] = { fn, args };
 } #endregion
 
 function callStatusFunction(name) { #region
@@ -48,7 +48,7 @@ function callStatusFunction(name) { #region
 function callFunction(name, args) { #region
 	INLINE
 	
-	var _f = FUNCTIONS[$ name];
+	var _f = CMD_FUNCTIONS[$ name];
 	
 	switch(array_length(_f.args)) {
 		case  0 : _f.fn();																																						break;

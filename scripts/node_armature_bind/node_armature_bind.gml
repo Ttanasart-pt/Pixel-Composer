@@ -1,3 +1,13 @@
+function __armature_bind_data(_surface, _bone, _tran, _aang, _pang, _asca, _psca) constructor {
+	surface   =	new Surface(_surface);
+	bone      = _bone.ID;
+	transform =	_tran;
+	applyRot  =	_aang;
+	applyRotl =	_pang;
+	applySca  =	_asca;
+	applyScal = _psca;
+}
+
 function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Armature Bind";
 	
@@ -60,6 +70,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var index = -1;
 		var amo   = min(ds_list_size(inputs) - data_length, array_length(current_data));
+		var _bind = getSingleValue(2);
+		var use_data = _bind != noone;
 		
 		for(var i = input_fix_len; i < amo; i += data_length) {
 			index++;
@@ -186,10 +198,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var amo = floor((ds_list_size(inputs) - input_fix_len) / data_length) - 1;
 		if(array_length(current_data) != ds_list_size(inputs)) return 0;
 		
-		var ty = _y + bh + ui(8);
+		if(use_data) {
+			layer_renderer.h = bh + ui(8);
+			return layer_renderer.h;
+		}
 		
-		//draw_set_color(COLORS.node_composite_separator);
-		//draw_line(_x + 16, ty - ui(4), _x + _w - 16, ty - ui(4));
+		var ty = _y + bh + ui(8);
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 		draw_text_add(_x + ui(16), ty + ui(4), __txt("Surfaces"));
@@ -443,21 +457,6 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static getInputIndex = function(index) { #region
 		if(index < input_fix_len) return index;
 		return input_fix_len + (index - input_fix_len) * data_length;
-	} #endregion
-	
-	static setHeight = function() { #region
-		var _hi = ui(32);
-		var _ho = ui(32);
-		
-		for( var i = 0; i < getInputAmount(); i++ ) 
-			if(inputs[| getInputIndex(i)].isVisible())	
-				_hi += 24;
-			
-		for( var i = 0; i < ds_list_size(outputs); i++ ) 
-			if(outputs[| i].isVisible()) 
-				_ho += 24;
-		
-		h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
 	} #endregion
 	
 	static onValueFromUpdate = function(index) { #region
@@ -803,22 +802,31 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var bg		  = 0;
 		var imageAmo  = use_data? array_length(_bind) : (ds_list_size(inputs) - input_fix_len) / data_length;
 		var _vis	  = attributes.layer_visible;
-		var _bg  = 0;
+		var _bg  = 0, _s;
 		
 		for(var i = 0; i < imageAmo; i++) {
 			var vis  = array_safe_get_fast(_vis, i, true);
 			if(!vis) continue;
 			
 			var datInd = input_fix_len + i * data_length;
-			var _s     = use_data? _bind[i].getSurface() : _data[datInd];
+			_s = noone;
+			
+			if(use_data) {
+				var _bindData = array_safe_get(_bind, i);
+				if(is_instanceof(_bindData, __armature_bind_data))
+					_s = _bindData.surface.get();
+					
+			} else {
+				_s = array_safe_get(_data, datInd);
+			}
+			
 			if(!is_surface(_s)) continue;
 			
 			var _b = use_data? _bind[i].bone : inputs[| datInd].display_data.bone_id;
 			
-			if(!ds_map_exists(boneMap, _b)) {
-				//print($"Bone not exist {_bone} from map {ds_map_size(boneMap)}")
+			if(!ds_map_exists(boneMap, _b))
 				continue;
-			}
+			
 			_b = boneMap[? _b];
 			
 			var _tran = use_data? _bind[i].transform : _data[datInd + 1];
@@ -848,15 +856,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			];
 			
 			array_push(atlas_data, new SurfaceAtlas(_s, _pos[0], _pos[1], _rot, _sca[0], _sca[1]));
-			array_push(bind_data, {
-				surface:	new Surface(_s),
-				bone:		_b.ID,
-				transform:	_tran,
-				applyRot:	_aang,
-				applyRotl:	_pang,
-				applySca:	_asca,
-				applyScal:	_psca,
-			});
+			array_push(bind_data,  new __armature_bind_data(_s, _b, _tran, _aang, _pang, _asca, _psca));
 			
 			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.alphamulp);
 				blend_temp_surface = temp_surface[2];

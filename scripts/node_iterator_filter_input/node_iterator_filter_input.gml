@@ -7,14 +7,15 @@ function Node_Iterator_Filter_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	outputs[| 0] = nodeValue("Value in", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0 );
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
-	outputs[| 0].getValueRecursive = function() { #region
+	outputs[| 0].getValueRecursive = function(arr) { #region
 		if(!variable_struct_exists(group, "iterated"))
-			return outputs[| 0].getValueDefault();
+			return outputs[| 0].getValueDefault(arr);
 			
 		var ind = group.iterated;
 		var val = group.getInputData(0);
 		
-		return [ array_safe_get_fast(val, ind), group.inputs[| 0] ];
+		arr[@ 0] = array_safe_get_fast(val, ind)
+		arr[@ 1] = group.inputs[| 0];
 	} #endregion
 	
 	static step = function() { #region

@@ -1103,11 +1103,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} #endregion
 	
 	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus) { #region
-		if(!active) return;
+		
 		var hover = noone;
 		
 		var wh = junction_draw_hei_y * _s;
 		var ww = w * _s * 0.5;
+		var wt = w * _s * 0.25;
 		var wx = _x + w * _s - ww - 8;
 		var lx = _x + 12 * _s;
 		
@@ -1120,6 +1121,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var boundH = _x > draw_boundary[0] - w * _s && _x < draw_boundary[2];
 		var boundV = 1;//_y > draw_boundary[1] - h * _s && _y < draw_boundary[3];
 		var extY   = 0;
+		var drawText = _s > 0.5;
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
@@ -1127,8 +1129,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			jun.y = jy;
 			
-			draw_set_text(f_sdf, fa_left, fa_center, jun.color_display);
-			draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
+			if(drawText) {
+				draw_set_text(f_sdf, fa_left, fa_center, jun.color_display);
+				draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
+				
+			} else {
+				draw_set_color(jun.color_display);
+				draw_rectangle(lx, jun.y - 1 * _s, lx + wt, jun.y + 4 * _s, false);
+			}
 			
 			if(jun.value_from || wd == noone) {
 				jy += wh;
@@ -1180,6 +1188,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
+			if(!jun.isVisible()) continue;
 			
 			if(jun.drawJunction(_s, _mx, _my))
 				hover = jun;
@@ -1649,6 +1658,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			outputs[| i].destroy();
 		
 		onDestroy();
+		if(group) group.refreshNodes();
 		
 		RENDER_ALL_REORDER
 	} #endregion
@@ -1657,6 +1667,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(active) return;
 		enable();
 		ds_list_add(group == noone? PROJECT.nodes : group.getNodeList(), self);
+		if(group) group.refreshNodes();
 		
 		RENDER_ALL_REORDER
 	} #endregion

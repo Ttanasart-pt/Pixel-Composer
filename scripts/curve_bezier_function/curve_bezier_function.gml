@@ -124,18 +124,17 @@ function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) { #region
 	if(_bz[0] == _bz[2] && _bz[0] == _bz[4] && _bz[0] == _bz[5]) return _bz[0];
 	
 	repeat(_binRep) {
-		var _ftx = power(1 - _xt, 3) * 0 
-			 + 3 * power(1 - _xt, 2) * _xt * _bz[1] 
-			 + 3 * (1 - _xt) * power(_xt, 2) * _bz[3]
-			 + power(_xt, 3) * 1;
+		var _1xt = 1 - _xt;
+		
+		var _ftx =  3 * _1xt * _1xt * _xt * _bz[1] 
+			      + 3 * _1xt *  _xt * _xt * _bz[3]
+			      +      _xt *  _xt * _xt;
 		
 		if(abs(_ftx - _x) < _tolr)
 			return eval_curve_segment_t(_bz, _xt);
 		
-		if(_xt < _x)
-			st = _xt;
-		else
-			ed = _xt;
+		if(_xt < _x) st = _xt;
+		else         ed = _xt;
 		
 		_xt = (st + ed) / 2;
 	}
@@ -143,13 +142,18 @@ function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) { #region
 	var _newRep = 8;
 	
 	repeat(_newRep) {
-		var slope =   (  9 * _bz[1] - 9 * _bz[3] + 3) * _xt * _xt
-					+ (-12 * _bz[1] + 6 * _bz[3]) * _xt
-					+    3 * _bz[1];
-		var _ftx = power(1 - _xt, 3) * 0 
-				 + 3 * power(1 - _xt, 2) * _xt * _bz[1] 
-				 + 3 * (1 - _xt) * power(_xt, 2) * _bz[3]
-				 + power(_xt, 3) * 1
+		var _bz1 = _bz[1];
+		var _bz3 = _bz[3];
+		
+		var slope =   (  9 * _bz1 - 9 * _bz3 + 3) * _xt * _xt
+					+ (-12 * _bz1 + 6 * _bz3) * _xt
+					+    3 * _bz1;
+		
+		var _1xt = 1 - _xt;
+		
+		var _ftx = 3 * _1xt * _1xt * _xt * _bz1 
+				 + 3 * _1xt *  _xt * _xt * _bz3
+				 +      _xt *  _xt * _xt
 				 - _x;
 		
 		_xt -= _ftx / slope;

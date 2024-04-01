@@ -437,12 +437,14 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					builder_sx = smx;
 					builder_sy = smy;
 					UNDO_HOLDING = true;
+					
 				} else if(anchor_selecting[1] == 1) {
 					builder_bone = createBone(anchor_selecting[0], 0, 0);
 					builder_type = 1;
 					builder_sx = smx;
 					builder_sy = smy;
 					UNDO_HOLDING = true;
+					
 				} else if(anchor_selecting[1] == 2) {
 					var _pr = anchor_selecting[0];
 					recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
@@ -457,6 +459,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					_pr.addChild(_md);
 					
 					UNDO_HOLDING = true;
+					triggerRender();
 				}
 			}
 			

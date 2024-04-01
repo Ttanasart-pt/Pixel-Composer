@@ -510,7 +510,7 @@ event_inherited();
 	ds_list_add(pref_node, __txt("Node"));
 	
 	ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_node_param_show", "Show paramater"),
+		__txtx("pref_node_param_show", "Show paramater on new node"),
 		"node_param_show",
 		
 		new checkBox(function() { 

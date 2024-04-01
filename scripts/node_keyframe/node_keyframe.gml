@@ -90,8 +90,10 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 
 function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	#region ---- main ----
-		suffix   = "";
-		values	 = ds_list_create();
+		suffix      = "";
+		values	    = ds_list_create();
+		//staticValue = 0;
+		
 		length   = 1;
 		sep_axis = _sep_axis;
 		
@@ -259,6 +261,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static getName = function() { return prop.name + suffix; }
 	
 	static getValue = function(_time = CURRENT_FRAME) { #region
+		//if(!prop.is_anim) return staticValue;
 		
 		///////////////////////////////////////////////////////////// TRIGGER TYPE /////////////////////////////////////////////////////////////
 		
@@ -515,6 +518,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	} #endregion
 	
 	static setValue = function(_val = 0, _record = true, _time = CURRENT_FRAME, ease_in = 0, ease_out = 0) { #region
+		//staticValue = _val;
 		
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(!prop.is_anim) {
@@ -718,6 +722,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			ds_list_add(values, vk);
 		}
 		
+		//staticValue = ds_list_empty(values)? 0 : values[| 0].value;
 		updateKeyMap();
 	} #endregion
 	

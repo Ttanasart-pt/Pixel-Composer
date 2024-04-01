@@ -22,33 +22,34 @@ function string_decimal(str) {
 	return (neg? "-" : "") + string_digits(pre) + "." + string_digits(pos);
 }
 
-function toNumberFast(str) {
-	INLINE
-	
-	var r = real(str);
-	if(is_real(r)) return r;
-	return 0;
-}
-
 function toNumber(str) {
 	INLINE
 	
-	if(is_real(str))   return str;
-	if(!isNumber(str)) return 0;
+	try { return real(str); } 
+	catch(e) {}
 	
-	var expo = 0;
-	if(string_pos("e", str)) {
-		var pos = string_pos("e", str);
-		expo = real(string_copy(str, pos + 1, string_length(str) - pos));
-	}
-	
-	str = string_replace_all(str, ",", ".");
-	str = string_decimal(str);
-	if(str == "") return 0;
-	if(str == ".") return 0;
-	if(str == "-") return 0;
-	return real(str) * power(10, expo);
+	return 0;
 }
+
+//function toNumber(str) {
+//	INLINE
+	
+//	if(is_real(str))   return str;
+//	if(!isNumber(str)) return 0;
+	
+//	var expo = 0;
+//	if(string_pos("e", str)) {
+//		var pos = string_pos("e", str);
+//		expo = real(string_copy(str, pos + 1, string_length(str) - pos));
+//	}
+	
+//	str = string_replace_all(str, ",", ".");
+//	str = string_decimal(str);
+//	if(str == "") return 0;
+//	if(str == ".") return 0;
+//	if(str == "-") return 0;
+//	return real(str) * power(10, expo);
+//}
 
 function isNumber(str) {
 	if(is_real(str)) return true;
