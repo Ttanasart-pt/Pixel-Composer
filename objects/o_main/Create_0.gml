@@ -196,6 +196,7 @@
 						node = Node_create_WAV_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
 						break;
 					case ".pxc" :
+					case ".cpxc" :
 						LOAD_PATH(p);
 						break;
 					case ".pxcc" :
@@ -219,6 +220,7 @@
 #region version
 	version_check = -1;
 	version_latest = 0;
+	
 	//if(os_is_network_connected()) {
 	//	var version = "https://gist.githubusercontent.com/Ttanasart-pt/d9eefbda84a78863c122b8b155bc0cda/raw/version.txt";
 	//	version_check = http_get(version);
@@ -401,7 +403,7 @@
 			    path = string_replace_all(path, "\n", "");
 			    path = string_replace_all(path, "\"", "");
 				
-			if(file_exists_empty(path) && filename_ext(path) == ".pxc")
+			if(file_exists_empty(path) && (filename_ext(path) == ".pxc" || filename_ext(path) == ".cpxc"))
 				PROGRAM_ARGUMENTS._path = path;
 				
 		} else

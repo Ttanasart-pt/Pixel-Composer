@@ -23,6 +23,7 @@ function FileObject(_name, _path) constructor { #region
 			type = FILE_TYPE.assets;
 			break;
 		case ".pxc" : 
+		case ".cpxc" : 
 			type = FILE_TYPE.project;
 			break;
 	} #endregion

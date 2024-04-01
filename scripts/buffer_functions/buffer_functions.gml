@@ -89,3 +89,11 @@ function buffer_setPixel(buffer, _w, _h, _x, _y, _c) { #region
 	buffer_seek(buffer, buffer_seek_start, (_w * _y + _x) * 4);
 	buffer_write(buffer, buffer_u32, _c);
 } #endregion
+	
+function buffer_compress_string(str) { #region
+	var _len   = string_length(str);
+	var buffer = buffer_create(1, buffer_grow, 1);
+	
+	buffer_write(buffer, buffer_string, str);
+	return buffer_compress(buffer, 0, buffer_get_size(buffer));
+} #endregion

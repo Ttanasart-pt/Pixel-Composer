@@ -1,7 +1,7 @@
 function LOAD(safe = false) { #region
 	if(DEMO) return false;
 	
-	var path = get_open_filename("Pixel Composer PROJECT (.pxc)|*.pxc", "");
+	var path = get_open_filename("Pixel Composer project (.pxc)|*.pxc;*.cpxc", "");
 	key_release();
 	if(path == "") return;
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") return;
@@ -71,7 +71,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		return false;
 	}
 	
-	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") {
+	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc" && filename_ext(path) != ".cpxc") {
 		log_warning("LOAD", "File not a valid PROJECT");
 		return false;
 	}
@@ -102,10 +102,19 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	printIf(log, $" > Create temp : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	var _load_content;
+	var _ext = filename_ext(path);
+	var s;
 	
-	var f = file_text_open_read(path);
-	var s = file_text_read_all(f);
-	        file_text_close(f);
+	if(_ext == ".pxc") {
+		var f = file_text_open_read(path);
+		s = file_text_read_all(f);
+		file_text_close(f);
+		
+	} else if(_ext == ".cpxc") {
+		var b = buffer_decompress(buffer_load(path));
+		s = buffer_read(b, buffer_string);
+	}
+	
 	_load_content = json_parse(s);
 	
 	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();

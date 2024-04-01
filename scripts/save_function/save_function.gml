@@ -94,11 +94,11 @@ function SAVE(project = PROJECT) { #region
 function SAVE_AS(project = PROJECT) { #region
 	if(DEMO) return false;
 	
-	var path = get_save_filename("Pixel Composer project (.pxc)|*.pxc", "");
+	var path = get_save_filename("Pixel Composer project (.pxc)|*.pxc|Compressed Pixel Composer project (.cpxc)|*.cpxc", "");
 	key_release();
 	if(path == "") return false;
 	
-	if(filename_ext(path) != ".pxc")
+	if(filename_ext(path) != ".pxc" && filename_ext(path) != ".cpxc")
 		path += ".pxc";
 	
 	if(file_exists_empty(path))
@@ -119,7 +119,9 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
 	//	path = $"{filename_dir(path)}/[{VERSION_STRING}] {filename_name(path)}";
 	
 	if(file_exists_empty(path)) file_delete(path);
-	file_text_write_all(path, save_serialize(project));
+	var _ext = filename_ext(path);
+	     if(_ext == ".pxc")  file_text_write_all(path, save_serialize(project));
+	else if(_ext == ".cpxc") buffer_save(buffer_compress_string(save_serialize(project)), path);
 	
 	SAVING    = false;
 	project.readonly  = false;

@@ -100,7 +100,7 @@ _HOVERING_ELEMENT = noone;
 			string_lead_zero(current_day, 2) + "T" + 
 			string_lead_zero(current_hour, 2) + 
 			string_lead_zero(current_minute, 2) + 
-			string_lead_zero(current_second, 2) + ".pxc";
+			string_lead_zero(current_second, 2) + filename_ext(PROJECT.path);
 		
 		try		 { SAVE_AT(PROJECT, loc + fname, "Autosaved "); }
 		catch(e) { print(exception_print(e)); }

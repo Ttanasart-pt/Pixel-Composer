@@ -21,21 +21,6 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_interpolation();
 
-	attributes[? "initalset"] = false;
-	
-	static onValueFromUpdate = function(index) { #region
-		if(index == 0 && attributes[? "initalset"] == false) {
-			var _surf = getInputData(0);
-			if(!is_surface(_surf)) return;
-			
-			var _sw = surface_get_width_safe(_surf);
-			var _sh = surface_get_height_safe(_surf);
-			
-			inputs[| 1].setValue([ _sw / 2, _sh / 2, _sw / 2, _sh / 2, AREA_SHAPE.rectangle ]);
-			attributes[? "initalset"] = true;
-		}
-	} if(!LOADING && !APPENDING) run_in(1, function() { onValueFromUpdate(0); }) #endregion
-	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
