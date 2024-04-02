@@ -1411,13 +1411,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		preview_surface = surf;
-		if(preview_surface == noone) return;
+		if(!is_surface(preview_surface)) return;
 		
-		//if(__preview_surf != preview_surface) {
-			__preview_sw   = surface_get_width(preview_surface);
-			__preview_sh   = surface_get_height(preview_surface);
-		//	__preview_surf = preview_surface;
-		//}
+		__preview_sw   = surface_get_width(preview_surface);
+		__preview_sh   = surface_get_height(preview_surface);
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var aa   = 0.5 + 0.5 * renderActive;

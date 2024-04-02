@@ -956,11 +956,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				deactivate();
 				
 		} else {
-			if(_update && _input_text != _text) {
-				surface_set_shader(text_surface, noone, false, BLEND.add);
-					display_text(tx, text_y + ui(7), _text);
-				surface_reset_shader();
-			}
+			surface_set_shader(text_surface, noone, false, BLEND.add);
+				display_text(tx, text_y + ui(7), _text);
+			surface_reset_shader();
 			
 			BLEND_ALPHA
 				draw_surface(text_surface, _x, _y);

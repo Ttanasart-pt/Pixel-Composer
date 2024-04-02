@@ -568,7 +568,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static processSerialize = function(_map) { #region
-		_map[? "instance_base"]	= instanceBase? instanceBase.node_id : noone;
+		_map.instance_base	= instanceBase? instanceBase.node_id : noone;
 	} #endregion
 	
 	static preConnect = function() { #region 

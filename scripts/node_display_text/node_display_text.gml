@@ -75,13 +75,13 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static button_reactive_update = function() { #region
-		ml_press   = lerp_float(ml_press  , 0, 10);
-		ml_release = lerp_float(ml_release, 0, 10);
-		ml_double  = lerp_float(ml_double,  0, 10);
-		mr_press   = lerp_float(mr_press  , 0, 10);
-		mr_release = lerp_float(mr_release, 0, 10);
-		mm_press   = lerp_float(mm_press  , 0, 10);
-		mm_release = lerp_float(mm_release, 0, 10);
+		ml_press   = lerp_float(ml_press  , 0, 5);
+		ml_release = lerp_float(ml_release, 0, 5);
+		ml_double  = lerp_float(ml_double,  0, 5);
+		mr_press   = lerp_float(mr_press  , 0, 5);
+		mr_release = lerp_float(mr_release, 0, 5);
+		mm_press   = lerp_float(mm_press  , 0, 5);
+		mm_release = lerp_float(mm_release, 0, 5);
 		
 		if(mouse_press(mb_left))     ml_press   = 2;
 		if(mouse_release(mb_left))   ml_release = 2;
@@ -173,7 +173,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								draw_sprite_stretched_points(THEME.ui_panel_fg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4);
 									
 								draw_set_color(_cc);
-								draw_text_transformed(_tx, _y, _bch, _s * fsize, _s * fsize, 0);
+								draw_text_add(_tx, _y, _bch, _s * fsize);
 								
 								var _reac = button_reactive(string_to_var(_bch));
 								if(_reac > 0) {
@@ -198,9 +198,10 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								_tw = string_width(_key)  * _s * _tss;
 								_th = string_height(_key) * _s * _tss;
 								
+								draw_set_color(COLORS._main_accent);
+								
 								if(point_in_rectangle(_mx, _my, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4)) {
-									draw_set_color(COLORS._main_accent);
-									draw_set_alpha(1);
+									draw_sprite_stretched_points(THEME.ui_panel_fg, 1, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_accent, 1);
 									
 									switch(string_lower(_c[1])) {
 										case "graph" :      FOCUSING_PANEL = PANEL_GRAPH;      break;
@@ -210,7 +211,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 										case "collection" : FOCUSING_PANEL = findPanel("Panel_Collection"); break;
 									}
 								}
-								draw_text_transformed(_tx, _y, _key, _s * _tss, _s * _tss, 0);
+								
+								draw_text_add(_tx, _y, _key, _s * _tss);
 								
 								_tx += _tw;
 								width += string_width(_key) * _tss;
@@ -250,7 +252,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					_tw = string_width(_ch);
 					_th = string_height(_ch);
 			
-					draw_text_transformed(_tx, _y, _ch, _s * fsize, _s * fsize, 0);
+					draw_text_add(_tx, _y, _ch, _s * fsize);
 					_tx += _tw * _s * fsize;
 					width += _tw * fsize;
 					break;
