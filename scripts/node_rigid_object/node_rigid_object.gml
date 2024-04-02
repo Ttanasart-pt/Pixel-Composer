@@ -756,6 +756,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static attributeDeserialize = function(attr) { #region
+		struct_append(attributes, attr); 
+		
 		if(struct_has(attr, "mesh"))
 			attributes.mesh = json_parse(attr.mesh);
 	} #endregion

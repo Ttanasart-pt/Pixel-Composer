@@ -79,8 +79,11 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outParent.from = self;
 			
 		ds_list_add(group.outputs, outParent);
-		group.refreshNodeDisplay();
-		group.sortIO();
+		
+		if(!LOADING && !APPENDING) {
+			group.refreshNodeDisplay();
+			group.sortIO();
+		}
 		
 		outParent.setFrom(inputs[| 0]);
 	} if(!LOADING && !APPENDING) createOutput(); #endregion
@@ -104,7 +107,6 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(group == noone) return;
 		
 		createOutput(false);
-		group.sortIO();
 	} #endregion
 	
 	static doApplyDeserialize = function() { #region
@@ -113,8 +115,10 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onDestroy = function() { #region
 		if(is_undefined(outParent)) return;
+		
 		ds_list_remove(group.outputs, outParent);
 		group.sortIO();
+		group.refreshNodes();
 	} #endregion
 	
 	static ungroup = function() { #region

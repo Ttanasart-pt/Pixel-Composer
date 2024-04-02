@@ -372,6 +372,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static attributeDeserialize = function(attr) { #region
+		struct_append(attributes, attr); 
+		
 		if(struct_has(attr, "layer_visible"))
 			attributes.layer_visible = attr.layer_visible;
 	} #endregion

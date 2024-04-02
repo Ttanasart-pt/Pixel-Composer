@@ -1313,7 +1313,7 @@
     {"name":"sh_grid_tri","order":3,"path":"shaders/sh_grid_tri/sh_grid_tri.yy",},
     {"name":"sh_herringbone_tile","order":5,"path":"shaders/sh_herringbone_tile/sh_herringbone_tile.yy",},
     {"name":"sh_image_trace","order":34,"path":"shaders/sh_image_trace/sh_image_trace.yy",},
-    {"name":"sh_invert_all","order":20,"path":"shaders/sh_invert_all/sh_invert_all.yy",},
+    {"name":"sh_mask_invert","order":20,"path":"shaders/sh_mask_invert/sh_mask_invert.yy",},
     {"name":"sh_invert","order":17,"path":"shaders/sh_invert/sh_invert.yy",},
     {"name":"sh_kuwahara_ani","order":37,"path":"shaders/sh_kuwahara_ani/sh_kuwahara_ani.yy",},
     {"name":"sh_kuwahara","order":36,"path":"shaders/sh_kuwahara/sh_kuwahara.yy",},

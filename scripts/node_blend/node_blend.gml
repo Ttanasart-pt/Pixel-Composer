@@ -147,10 +147,6 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[| 7].setVisible(_outp == 4);
 		
 		inputs[| 14].setVisible(_fill == 0 && !_atlas);
-		
-		var _msk = is_surface(getSingleValue(4));
-		inputs[| 12].setVisible(_msk);
-		inputs[| 12].setVisible(_msk);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region

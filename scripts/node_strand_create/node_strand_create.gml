@@ -554,6 +554,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static attributeDeserialize = function(attr) { #region
+		struct_append(attributes, attr); 
+		
 		if(struct_has(attr, "fixStrand"))
 			groomed.deserialize(attr.fixStrand);
 			

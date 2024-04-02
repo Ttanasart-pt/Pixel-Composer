@@ -814,6 +814,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	loadPin = noone;
 	static attributeDeserialize = function(attr) { #region
+		struct_append(attributes, attr); 
+		
 		if(struct_has(attr, "pin"))			loadPin = attr.pin;
 		if(struct_has(attr, "mesh_bound"))  attributes.mesh_bound = attr.mesh_bound;;
 	} #endregion

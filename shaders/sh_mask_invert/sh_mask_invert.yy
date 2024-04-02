@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_invert_all",
-  "name":"sh_invert_all",
+  "%Name":"sh_mask_invert",
+  "name":"sh_mask_invert",
   "parent":{
     "name":"color",
     "path":"folders/shader/filter/color.yy",

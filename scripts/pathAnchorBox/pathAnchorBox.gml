@@ -76,7 +76,7 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		tb[4].draw(_tx + (_tw + 4) * 2 + _bw + 8, _ty, _tw, _th, _data[4], _m);
 		tb[5].draw(_tx + (_tw + 4) * 3 + _bw + 8, _ty, _tw, _th, _data[5], _m);
 		
-		var _linked = _data[6];
+		var _linked = array_safe_get(_data, 6);
 		var _blend  = !_linked? COLORS._main_accent : COLORS._main_icon;
 		var bx =  _x +  _w / 2 - _bw / 2 - 2;
 		var by = _ty + _th / 2 - _bw / 2;

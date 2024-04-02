@@ -291,8 +291,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		ds_list_add(group.inputs, inParent);
 		outputs[| 0].setFrom(inParent, false, false);
-		group.refreshNodeDisplay();
-		group.sortIO();
+		
+		if(!LOADING && !APPENDING) {
+			group.refreshNodeDisplay();
+			group.sortIO();
+		}
 			
 		onValueUpdate(0);
 		
@@ -379,8 +382,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static onDestroy = function() { #region
 		if(is_undefined(inParent)) return;
+		
 		ds_list_remove(group.inputs, inParent);
 		group.sortIO();
+		group.refreshNodes();
 	} #endregion
 	
 	static ungroup = function() { #region

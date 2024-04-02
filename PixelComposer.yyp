@@ -1828,7 +1828,7 @@
     {"id":{"name":"sh_herringbone_tile","path":"shaders/sh_herringbone_tile/sh_herringbone_tile.yy",},},
     {"id":{"name":"sh_image_trace","path":"shaders/sh_image_trace/sh_image_trace.yy",},},
     {"id":{"name":"sh_interpret_number","path":"shaders/sh_interpret_number/sh_interpret_number.yy",},},
-    {"id":{"name":"sh_invert_all","path":"shaders/sh_invert_all/sh_invert_all.yy",},},
+    {"id":{"name":"sh_mask_invert","path":"shaders/sh_mask_invert/sh_mask_invert.yy",},},
     {"id":{"name":"sh_invert","path":"shaders/sh_invert/sh_invert.yy",},},
     {"id":{"name":"sh_kuwahara_ani","path":"shaders/sh_kuwahara_ani/sh_kuwahara_ani.yy",},},
     {"id":{"name":"sh_kuwahara","path":"shaders/sh_kuwahara/sh_kuwahara.yy",},},

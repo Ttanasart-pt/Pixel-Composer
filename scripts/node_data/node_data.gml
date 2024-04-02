@@ -357,17 +357,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			inputs[| i].visible_in_list = false;
 		
 		inputs_amount = (input_display_list == -1 || !use_display_list)? ds_list_size(inputs) : array_length(input_display_list);
-		inputs_index  = array_create(inputs_amount);
-		var _i = 0;
+		inputs_index  = [];
+		
 		for( var i = 0; i < inputs_amount; i++ ) {
 			var _input = getInputJunctionIndex(i);
 			if(_input == noone) continue;
 			
-			inputs_index[_i++] = _input;
-			inputs[| _input].visible_in_list = true;
+			var _inp = inputs[| _input];
+			if(!is_struct(_inp) || !is_instanceof(_inp, NodeValue)) continue;
+			
+			array_push(inputs_index, _input);
+			_inp.visible_in_list = true;
 		}
-		inputs_amount = _i;
-		array_resize(inputs_index, inputs_amount);
+		inputs_amount = array_length(inputs_index);
 		
 		outputs_amount = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
 		outputs_index  = array_create_ext(outputs_amount, function(index) { return getOutputJunctionIndex(index); });
@@ -515,7 +517,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
 		if(update_on_frame) return true;
-		if(!rendered) return true;
+		if(!rendered)       return true;
 		
 		force_requeue = false;
 		for(var i = 0; i < ds_list_size(inputs); i++)
@@ -716,16 +718,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static triggerRender = function() { #region
 		LOG_BLOCK_START();
-		//printCallStack();
 		LOG_IF(global.FLAG.render == 1, $"Trigger render for {self}");
 		
-		setRenderStatus(false);
+		resetRender(false);
 		RENDER_PARTIAL
 		
-		if(is_instanceof(group, Node_Collection) && group.reset_all_child) {
-			group.resetRender();
+		if(is_instanceof(group, Node_Collection)) {
+			group.triggerRender();
 		} else {
-			resetRender();
 			
 			var nodes = getNextNodesRaw();
 			for(var i = 0; i < array_length(nodes); i++)
@@ -793,6 +793,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!inputs[| j].isRendered()) return false;
 		
 		return true;
+	} #endregion
+	
+	static setRenderStatus = function(result) { #region
+		INLINE
+		
+		if(rendered == result) return;
+		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {self} : {result}");
+		
+		rendered = result;
 	} #endregion
 	
 	static getPreviousNodes = function() { #region
@@ -896,15 +905,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} #endregion
 	
 	static onInspect = function() {}
-	
-	static setRenderStatus = function(result) { #region
-		INLINE
-		
-		if(rendered == result) return;
-		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {self} : {result}");
-		
-		rendered = result;
-	} #endregion
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) { #region
 		var xx = x * _s + _x;
@@ -1616,6 +1616,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static enable  = function() { INLINE active = true;  timeline_item.active = true;  }
 	static disable = function() { INLINE active = false; timeline_item.active = false; }
 	
+	static onDestroy = function() {}
+	
 	static destroy = function(_merge = false) { #region
 		if(!active) return;
 		disable();
@@ -1660,10 +1662,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		RENDER_ALL_REORDER
 	} #endregion
 	
+	static onRestore = function() {}
+	
 	static restore = function() { #region
 		if(active) return;
 		enable();
-		ds_list_add(group == noone? PROJECT.nodes : group.getNodeList(), self);
+		
+		onRestore();
 		if(group) group.refreshNodes();
 		
 		RENDER_ALL_REORDER
@@ -1680,8 +1685,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				value_validation[jun.value_validation]++;
 		}
 	} #endregion
-	
-	static onDestroy = function() {}
 	
 	static clearInputCache = function() { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ )
@@ -2118,7 +2121,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static attributeDeserialize = function(attr) { #region
 		if(struct_has(attributes, "use_project_dimension") && !struct_has(attr, "use_project_dimension"))
 			attributes.use_project_dimension = false;
-		struct_override(attributes, attr); 
+		
+		struct_append(attributes, attr); 
 	} #endregion
 	
 	static postDeserialize = function() {}

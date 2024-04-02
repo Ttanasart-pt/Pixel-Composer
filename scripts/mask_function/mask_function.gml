@@ -31,7 +31,8 @@ function mask_modify(mask, invert = false, feather = 0) { #region
 	
 	__temp_mask = surface_verify(__temp_mask, surface_get_width_safe(mask), surface_get_height_safe(mask));
 	
-	surface_set_shader(__temp_mask, invert? sh_invert_all : noone);
+	surface_set_shader(__temp_mask, sh_mask_invert);
+		shader_set_i("invert", invert);
 		draw_surface(mask, 0, 0);
 	surface_reset_shader();
 	
