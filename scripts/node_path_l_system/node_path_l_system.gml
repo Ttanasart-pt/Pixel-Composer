@@ -10,7 +10,7 @@ function L_Turtle(x = 0, y = 0, ang = 90, w = 1, color = c_white) constructor { 
 
 function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "L System";
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8);
 	

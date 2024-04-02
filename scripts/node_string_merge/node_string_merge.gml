@@ -1,7 +1,7 @@
 function Node_String_Merge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Combine Text";
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	setIsDynamicInput(1);
 	

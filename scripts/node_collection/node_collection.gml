@@ -454,6 +454,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for( var i = 0; i < _ilen; i++ ) 
 			array_push_unique(_iarr, i);
 		for( var i = array_length(_iarr) - 1; i >= 0; i-- ) {
+			if(is_array(_iarr[i])) continue;
 			if(_iarr[i] >= _ilen) array_delete(_iarr, i, 1);
 		}
 		
@@ -467,8 +468,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for( var i = 0; i < _olen; i++ ) 
 			array_push_unique(_oarr, i);
 		for( var i = array_length(_oarr) - 1; i >= 0; i-- ) {
-			if(_oarr[i] >= _olen)
-				array_delete(_oarr, i, 1);
+			if(is_array(_iarr[i])) continue;
+			if(_oarr[i] >= _olen) array_delete(_oarr, i, 1);
 		}
 		output_display_list = attributes.output_display_list;
 		
@@ -610,12 +611,49 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return _attr;
 	} #endregion
 	
-	static doApplyDeserialize = function() { #region
+	static preApplyDeserialize = function() { #region
 		var attr = attributes;
+		
+		if(LOADING_VERSION < 11690) { #region
+			var pr = ds_priority_create();
+			
+			for( var i = ds_list_size(inputs) - 1; i >= custom_input_index; i-- ) {
+				if(!struct_has(inputs[| i].attributes, "input_priority")) continue;
+				
+				var _pri = inputs[| i].attributes.input_priority;
+				ds_priority_add(pr, inputs[| i], _pri);
+				ds_list_delete(inputs, i);
+			}
+			
+			repeat(ds_priority_size(pr)) ds_list_add(inputs, ds_priority_delete_min(pr));
+			
+			for( var i = ds_list_size(outputs) - 1; i >= custom_output_index; i-- ) {
+				if(!struct_has(outputs[| i].attributes, "output_priority")) continue;
+				
+				var _pri = outputs[| i].attributes.output_priority;
+				ds_priority_add(pr, outputs[| i], _pri);
+				ds_list_delete(outputs, i);
+			}
+			
+			repeat(ds_priority_size(pr)) ds_list_add(outputs, ds_priority_delete_min(pr));
+			
+			ds_priority_destroy(pr);
+			return;
+		} #endregion
 		
 		if(struct_has(attr, "custom_input_list")) {
 			var _ilist = attr.custom_input_list;
 			var _inarr = {};
+			var _dilst = [];
+			
+			//for( var i = custom_input_index, n = ds_list_size(inputs); i < n; i++ ) {
+			//	if(struct_has(inputs[| i], "from"))
+			//		array_push(_dilst, inputs[| i].from.node_id);
+			//}
+			
+			if(APPENDING)
+			for( var i = 0, n = array_length(_ilist); i < n; i++ ) 
+				_ilist[i] = ds_map_try_get(APPEND_MAP, _ilist[i], _ilist[i]);
 			
 			for( var i = ds_list_size(inputs) - 1; i >= custom_input_index; i-- ) {
 				if(!struct_has(inputs[| i], "from")) continue;
@@ -632,11 +670,23 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				
 				ds_list_add(inputs, _inarr[$ _ilist[i]]);
 			}
+			
+			//var custom_input_list = [];
+			//for( var i = custom_input_index, n = ds_list_size(inputs); i < n; i++ ) {
+			//	if(struct_has(inputs[| i], "from"))
+			//		array_push(custom_input_list, inputs[| i].from.node_id);
+			//}
+		
+			//print($"\n\ti: {_ilist}\n\td: {_dilst}\n\to: {custom_input_list}\n");
 		}
 		
 		if(struct_has(attr, "custom_output_list")) {
 			var _ilist = attr.custom_output_list;
 			var _inarr = {};
+			
+			if(APPENDING)
+			for( var i = 0, n = array_length(_ilist); i < n; i++ ) 
+				_ilist[i] = ds_map_try_get(APPEND_MAP, _ilist[i], _ilist[i]);
 			
 			for( var i = ds_list_size(outputs) - 1; i >= custom_output_index; i-- ) {
 				if(!struct_has(outputs[| i], "from")) continue;
@@ -653,12 +703,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				
 				ds_list_add(outputs, _inarr[$ _ilist[i]]);
 			}
-		}
-		
-		var custom_input_list = [];
-		for( var i = custom_input_index, n = ds_list_size(inputs); i < n; i++ ) {
-			if(struct_has(inputs[| i], "from"))
-				array_push(custom_input_list, inputs[| i].from.node_id);
 		}
 		
 	} #endregion

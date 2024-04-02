@@ -1,7 +1,7 @@
 function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Switch";
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Index", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
 		.setVisible(true, true)

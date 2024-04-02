@@ -1,7 +1,6 @@
 function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Group Output";
 	color = COLORS.node_blend_collection;
-	preview_draw = false;
 	is_group_io  = true;
 	
 	destroy_when_upgroup = true;
@@ -101,6 +100,10 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		outParent.setType(inputs[| 0].type);
 		outParent.display_type = inputs[| 0].display_type;
+	} #endregion
+	
+	static getGraphPreviewSurface = function() { #region
+		return inputs[| 0].getValue();
 	} #endregion
 	
 	static postDeserialize = function() { #region

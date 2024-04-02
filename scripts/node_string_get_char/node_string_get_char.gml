@@ -1,6 +1,6 @@
 function Node_String_Get_Char(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Get Character";
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(true, true);

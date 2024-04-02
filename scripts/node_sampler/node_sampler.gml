@@ -1,6 +1,6 @@
 function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Sampler";
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	

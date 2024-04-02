@@ -2129,6 +2129,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static processDeserialize = function() {}
 		
 	static applyDeserialize = function(preset = false) { #region
+		preApplyDeserialize();
+		
 		var _inputs = load_map.inputs;
 		var amo = min(ds_list_size(inputs), array_length(_inputs));
 		
@@ -2166,7 +2168,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		doApplyDeserialize();
 	} #endregion
 	
-	static doApplyDeserialize = function() {}
+	static preApplyDeserialize = function() {}
+	static doApplyDeserialize  = function() {}
 	
 	static loadGroup = function(context = noone) { #region
 		if(_group == noone) {

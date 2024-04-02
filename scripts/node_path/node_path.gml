@@ -12,7 +12,7 @@ enum _ANCHOR {
 function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path";
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Path progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Sample position from path.")
 		.setDisplay(VALUE_DISPLAY.slider);

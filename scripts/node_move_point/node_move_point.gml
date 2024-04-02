@@ -2,7 +2,7 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name		= "Translate Point";
 	color		= COLORS.node_blend_number;
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, ])
 		.setDisplay(VALUE_DISPLAY.vector)

@@ -1,7 +1,7 @@
 function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array";
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })
@@ -179,7 +179,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(outputs[| 0].type == VALUE_TYPE.surface)
 			w = 128;
 		else
-			w = 96;
+			setDimension(96, 80);
 	} #endregion
 	
 	static postConnect = function() { #region

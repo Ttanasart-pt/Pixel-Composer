@@ -9,7 +9,7 @@ function Node_Surface_data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outputs[| 1] = nodeValue("Array length", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _insurf	= getInputData(0);

@@ -3,7 +3,7 @@ function Node_Timeline_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	use_cache = CACHE_USE.auto;
 	color = COLORS.node_blend_number;
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	
 	PANEL_ANIMATION.timeline_preview = self;

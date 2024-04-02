@@ -2,7 +2,7 @@ function Node_Lerp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name		= "Lerp";
 	color		= COLORS.node_blend_number;
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	inputs[| 1] = nodeValue("b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);

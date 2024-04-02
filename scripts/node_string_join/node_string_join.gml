@@ -1,7 +1,7 @@
 function Node_String_Join(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Join Text";
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Text array", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, [])
 		.setVisible(true, true);

@@ -1,7 +1,7 @@
 function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Mesh to Path";
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
 		.setVisible(true, true);

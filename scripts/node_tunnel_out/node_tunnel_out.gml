@@ -4,7 +4,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	is_group_io  = true;
 	preview_draw = false;
 	
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
 		.setDisplay(VALUE_DISPLAY.text_tunnel)

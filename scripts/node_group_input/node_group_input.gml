@@ -367,6 +367,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(is_undefined(inParent)) return;
 	} #endregion
 	
+	static getGraphPreviewSurface = function() { #region
+		return inputs[| 0].getValue();
+	} #endregion
+	
 	static postDeserialize = function() { createInput(false); }
 	
 	static doApplyDeserialize = function() { #region

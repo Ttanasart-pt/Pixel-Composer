@@ -1,6 +1,6 @@
 function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Find pixel";
-	w = 96;
+	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
