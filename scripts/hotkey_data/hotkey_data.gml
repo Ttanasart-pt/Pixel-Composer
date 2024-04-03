@@ -54,6 +54,16 @@
 			"Move Target":	new hotkeySimple("T"),
 		},
 	};
+	
+	function getToolHotkey(_group, _key, _def = "") {
+		INLINE
+		
+		if(!struct_has(HOTKEYS_CUSTOM, _group)) return _def;
+		
+		var _grp = HOTKEYS_CUSTOM[$ _group];
+		if(!struct_has(_grp, _key)) return _def;
+		return _grp[$ _key].key;
+	}
 #endregion
 
 #region hotkeys	
@@ -110,16 +120,15 @@
 		if(_context == "") ds_list_insert(HOTKEYS[? _context], 0, key);
 		else			   ds_list_add(HOTKEYS[? _context], key);
 	}
-#endregion
-
-#region functions
-	function getHotkey(_group, _key, _def = "") {
-		INLINE
+	
+	function getHotkey(context, name) {
+		if(!ds_map_exists(HOTKEYS, context)) return noone;
 		
-		if(!struct_has(HOTKEYS_CUSTOM, _group)) return _def;
+		for(var i = 0; i < ds_list_size(HOTKEYS[? context]); i++) {
+			var hotkey	= HOTKEYS[? _context][| i];
+			if(hotkey.name == name) return hotkey;
+		}
 		
-		var _grp = HOTKEYS_CUSTOM[$ _group];
-		if(!struct_has(_grp, _key)) return _def;
-		return _grp[$ _key].key;
+		return noone;
 	}
 #endregion

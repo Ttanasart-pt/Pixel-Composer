@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"tooltip_hotkey",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"tooltip_hotkey",
+  "parent":{
+    "name":"tooltip",
+    "path":"folders/functions/tooltip.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

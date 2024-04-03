@@ -1,4 +1,4 @@
-function draw_tooltip_text(txt) {
+function draw_tooltip_text(txt) { #region
 	if(string_length(txt) > 1024)
 		txt = string_copy(txt, 1, 1024) + "...";
 	
@@ -13,9 +13,9 @@ function draw_tooltip_text(txt) {
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
 	draw_text_line(mx + ui(8), my + ui(8), txt, -1, tw);
-}
+} #endregion
 
-function draw_tooltip_color(clr) {
+function draw_tooltip_color(clr) { #region
 	if(is_array(clr)) {
 		draw_tooltip_palette(clr);
 		return;
@@ -32,9 +32,9 @@ function draw_tooltip_color(clr) {
 	
 	draw_set_color(clr);
 	draw_rectangle(mx + ui(8), my + ui(8), mx + ui(ww + 8), my + ui(hh + 8), false);
-}
+} #endregion
 
-function draw_tooltip_palette(clr) {
+function draw_tooltip_palette(clr) { #region
 	if(array_empty(clr)) return;
 	
 	var ph = ui(32);
@@ -58,9 +58,9 @@ function draw_tooltip_palette(clr) {
 		drawPalette(clr[i], mx + ui(8), _y, ui(ww), ph);
 		_y += ph;
 	}
-}
+} #endregion
 
-function draw_tooltip_gradient(clr) {
+function draw_tooltip_gradient(clr) { #region
 	var gh = ui(32);
 	if(!is_array(clr)) clr = [ clr ];
 	
@@ -78,9 +78,9 @@ function draw_tooltip_gradient(clr) {
 		clr[i].draw(mx + ui(8), _y, ui(ww), gh);
 		_y += gh;
 	}
-}
+} #endregion
 
-function draw_tooltip_surface_array(surf) {
+function draw_tooltip_surface_array(surf) { #region
 	if(!is_array(surf) || array_empty(surf)) return;
 	
 	if(is_instanceof(surf[0], SurfaceAtlas)) {
@@ -121,9 +121,9 @@ function draw_tooltip_surface_array(surf) {
 		draw_set_color(COLORS._main_icon);
 		draw_rectangle(cx - sw * ss / 2, cy - sh * ss / 2, cx + sw * ss / 2 - 1, cy + sh * ss / 2 - 1, true);
 	}
-}
+} #endregion
 
-function draw_tooltip_surface(surf) {
+function draw_tooltip_surface(surf) { #region
 	if(is_array(surf)) {
 		draw_tooltip_surface_array(array_spread(surf))
 		return;
@@ -151,9 +151,9 @@ function draw_tooltip_surface(surf) {
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + ui(16), hh + ui(16));
 	
 	draw_surface_ext_safe(surf, mx + ui(8), my + ui(8), ss, ss);
-}
+} #endregion
 
-function draw_tooltip_sprite(spr) {
+function draw_tooltip_sprite(spr) { #region
 	if(!sprite_exists(spr)) return;
 	
 	var sw = sprite_get_width(spr);
@@ -176,9 +176,9 @@ function draw_tooltip_sprite(spr) {
 	
 	for( var i = 0; i < sn; i++ )
 		draw_sprite_ext(spr, i, sx + i * (sw * ss + 2), sy, ss, ss, 0, c_white, 1);
-}
+} #endregion
 
-function draw_tooltip_atlas(atlas) {
+function draw_tooltip_atlas(atlas) { #region
 	if(!is_array(atlas)) atlas = [ atlas ];
 	
 	var amo = array_length(atlas);
@@ -223,9 +223,9 @@ function draw_tooltip_atlas(atlas) {
 		draw_text_add(sx + ui(160), _y + ui(16), atl.rotation);
 		draw_text_add(sx + ui(160), _y + ui(32), $"{atl.sx}, {atl.sy}");
 	}
-}
+} #endregion
 
-function draw_tooltip_buffer(buff) {
+function draw_tooltip_buffer(buff) { #region
 	var txt = buffer_get_string(buff, false, 400);
 	var len = string_length(txt);
 	
@@ -249,4 +249,4 @@ function draw_tooltip_buffer(buff) {
 		draw_set_text(f_code, fa_left, fa_bottom, COLORS._main_text_sub);
 		draw_text(mx + ui(8), my + th + ui(8), $"...({buffer_get_size(buff)} bytes)");
 	}
-}
+} #endregion

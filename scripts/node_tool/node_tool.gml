@@ -11,7 +11,7 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 	static checkHotkey = function() {
 		INLINE
 		
-		return getHotkey(ctx, name);
+		return getToolHotkey(ctx, name);
 	}
 	
 	static getName = function(index = 0) {

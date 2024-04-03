@@ -174,7 +174,7 @@ function Panel_Animation() : PanelContent() constructor {
 		  function() { PROJECT.animator.stop(); } 
 		],
 		[ 
-		  function() { return PROJECT.animator.is_playing? __txt("Pause") : __txt("Play"); }, 
+		  function() { return PROJECT.animator.is_playing? __txt("Pause") : __txt("Play from current (Shift + Space)"); }, 
 		  function() { return !PROJECT.animator.is_playing; }, 
 		  function() { return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
 		  function() { if(PROJECT.animator.is_playing) PROJECT.animator.pause(); else PROJECT.animator.resume(); } 
