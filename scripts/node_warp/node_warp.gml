@@ -42,12 +42,12 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	drag_my   = 0;
 	drag_s    = [[0, 0], [0, 0]];
 	
-	attributes[? "initalset"] = LOADING || APPENDING;
+	attributes.initalset = LOADING || APPENDING;
 	
 	warp_surface = array_create(2);
 	
 	static onValueFromUpdate = function(index) { #region
-		if(index == 0 && attributes[? "initalset"] == false) {
+		if(index == 0 && attributes.initalset == false) {
 			var _surf = getInputData(0);
 			if(!is_surface(_surf)) return;
 			
@@ -59,7 +59,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[| 3].setValue([   0, _sh ]);
 			inputs[| 4].setValue([ _sw, _sh ]);
 			
-			attributes[? "initalset"] = true;
+			attributes.initalset = true;
 		}
 	} if(!LOADING && !APPENDING) run_in(1, function() { onValueFromUpdate(0); }) #endregion
 	

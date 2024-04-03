@@ -34,6 +34,7 @@
 	}
 	
 	function get_asset(key) {
+		
 		if(!ds_map_exists(global.ASSET_MAP, key)) return noone;
 		
 		if(ds_map_exists(global.ASSET_CACHE, key)) {
@@ -49,7 +50,7 @@
 		
 		var spr = global.ASSET_MAP[? key].getSpr();
 		global.ASSET_CACHE[? key] = surface_create_from_sprite(spr);
-			
+		
 		return global.ASSET_CACHE[? key];
 	}
 #endregion

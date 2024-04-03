@@ -437,6 +437,15 @@ event_inherited();
 		})
 	));
 	
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("panel_graph_group_require_shift", "Hold Shift to enter group"),
+		"panel_graph_group_require_shift",
+		new checkBox(function() { 
+			PREFERENCES.panel_graph_group_require_shift = !PREFERENCES.panel_graph_group_require_shift;
+			PREF_SAVE();
+		})
+	));
+	
 	ds_list_add(pref_appr, __txt("Inspector"));
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(

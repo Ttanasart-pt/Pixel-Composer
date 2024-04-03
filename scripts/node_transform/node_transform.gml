@@ -63,7 +63,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 13] = nodeValue("Echo amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
 	
-	inputs[| 14] = nodeValue("Opacity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 14] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	input_display_list = [ 11, 0, 

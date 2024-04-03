@@ -28,9 +28,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	insp2UpdateTooltip = "Clear cache";
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
-	
-	preview_surface = noone;
-	
+		
 	static onInspector2Update = function() { clearCache(); }
 	
 	static createNewInput = function() { #region

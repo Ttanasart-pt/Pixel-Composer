@@ -330,6 +330,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return nextNodes;
 	} #endregion
 	
+	static clearTopoSorted = function() { INLINE topoSorted = false; for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) { nodes[| i].clearTopoSorted(); } }
+	
 	static setRenderStatus = function(result) { #region
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
@@ -468,7 +470,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for( var i = 0; i < _olen; i++ ) 
 			array_push_unique(_oarr, i);
 		for( var i = array_length(_oarr) - 1; i >= 0; i-- ) {
-			if(is_array(_iarr[i])) continue;
+			if(is_array(_oarr[i])) continue;
 			if(_oarr[i] >= _olen) array_delete(_oarr, i, 1);
 		}
 		output_display_list = attributes.output_display_list;
@@ -548,6 +550,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static onDoubleClick = function(panel) { #region
+		if(PREFERENCES.panel_graph_group_require_shift && !key_mod_press(SHIFT)) return false;
+		
 		__temp_panel = panel;
 		
 		if(PREFERENCES.graph_open_group_in_tab)
@@ -557,6 +561,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		if(ononDoubleClick != noone)
 			ononDoubleClick(panel);
+			
+		return true;
 	} #endregion
 	
 	static ononDoubleClick = noone;
@@ -646,11 +652,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _inarr = {};
 			var _dilst = [];
 			
-			//for( var i = custom_input_index, n = ds_list_size(inputs); i < n; i++ ) {
-			//	if(struct_has(inputs[| i], "from"))
-			//		array_push(_dilst, inputs[| i].from.node_id);
-			//}
-			
 			if(APPENDING)
 			for( var i = 0, n = array_length(_ilist); i < n; i++ ) 
 				_ilist[i] = ds_map_try_get(APPEND_MAP, _ilist[i], _ilist[i]);
@@ -671,13 +672,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				ds_list_add(inputs, _inarr[$ _ilist[i]]);
 			}
 			
-			//var custom_input_list = [];
-			//for( var i = custom_input_index, n = ds_list_size(inputs); i < n; i++ ) {
-			//	if(struct_has(inputs[| i], "from"))
-			//		array_push(custom_input_list, inputs[| i].from.node_id);
-			//}
-		
-			//print($"\n\ti: {_ilist}\n\td: {_dilst}\n\to: {custom_input_list}\n");
 		}
 		
 		if(struct_has(attr, "custom_output_list")) {
@@ -703,6 +697,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				
 				ds_list_add(outputs, _inarr[$ _ilist[i]]);
 			}
+			
 		}
 		
 	} #endregion

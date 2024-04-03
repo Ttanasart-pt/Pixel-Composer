@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -9,20 +6,19 @@ uniform sampler2D scene;
 uniform vec2 scnDimension;
 uniform vec2 camDimension;
 
-uniform vec2 position;
+uniform vec2  position;
 uniform float zoom;
-uniform int sampleMode;
-uniform int bg;
+uniform int   sampleMode;
 uniform float bokehStrength;
 
 const float GoldenAngle = 2.39996323;
 const float Iterations = 400.0;
 
 const float ContrastAmount = 150.0;
-const vec3 ContrastFactor = vec3(9.0);
+const vec3  ContrastFactor = vec3(9.0);
 const float Smooth = 2.0;
 
-vec4 sampleTexture(sampler2D samp, vec2 pos) {
+vec4 sampleTexture(sampler2D samp, vec2 pos) { #region
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2D(samp, pos);
 	
@@ -39,14 +35,14 @@ vec4 sampleTexture(sampler2D samp, vec2 pos) {
 		return texture2D(samp, vec2(pos.x, fract(pos.y)));
 	
 	return vec4(0.);
-}
+} #endregion
 
-vec4 bokeh(sampler2D tex, vec2 uv, float radius) { //ref. sh_blur_bokeh
-	vec3 num, weight;
+vec4 bokeh(sampler2D tex, vec2 uv, float radius) { #region ref. sh_blur_bokeh
+	vec3  num, weight;
 	float alpha = 0.;
-    float rec = 1.0; // reciprocal 
-    vec2 horizontalAngle = vec2(0.0, radius * 0.01 / sqrt(Iterations));
-    vec2 aspect = vec2(scnDimension.y / scnDimension.x, 1.0);
+    float rec   = 1.0; // reciprocal 
+    vec2  horizontalAngle = vec2(0.0, radius * 0.01 / sqrt(Iterations));
+    vec2  aspect = vec2(scnDimension.y / scnDimension.x, 1.0);
     
 	mat2 Rotation = mat2(
 	    cos(GoldenAngle), sin(GoldenAngle),
@@ -70,19 +66,20 @@ vec4 bokeh(sampler2D tex, vec2 uv, float radius) { //ref. sh_blur_bokeh
 		weight	+= bokeh;
 	}
 	
-	return vec4(num / weight, alpha / ((weight.r + weight.g + weight.b) / 3.));
-}
+	float _a = alpha / ((weight.r + weight.g + weight.b) / 3.);
+	return vec4(num / weight, pow(_a, 3.));
+} #endregion
 
-void main() {
+void main() { #region
 	vec2 pos = position + (v_vTexcoord - vec2(.5)) * (camDimension / scnDimension) * zoom;
-	//if(bg == 1) pos = position + (v_vTexcoord - vec2(.5)) * (camDimension / scnDimension);
-    vec4 _col0 = sampleTexture( backg, v_vTexcoord );
+	
+	vec4 _col0 = sampleTexture( backg, v_vTexcoord );
 	vec4 _col1 = bokeh( scene, pos, bokehStrength );
     
 	float al = _col1.a + _col0.a * (1. - _col1.a);
 	vec4 res = _col0 * _col0.a * (1. - _col1.a) + _col1 * _col1.a;
-	res  /= al;
-	res.a = al;
+	res   /= al;
+	res.a  = al;
 	
     gl_FragColor = res;
-}
+} #endregion

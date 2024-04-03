@@ -625,7 +625,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			if(!is_instanceof(inputs[| i], NodeValue)) continue;
 			
-			var val = inputs[| i].getValue(frame,,, false);
+			var val = inputs[| i].getValue(frame);
 			setInputData(i, val);
 		}
 	} #endregion
@@ -1067,7 +1067,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawNodeName = function(xx, yy, _s) { #region
 		
-		draw_name = false;
 		var _name = renamed? display_name : name;
 		if(_name == "") return;
 		
@@ -1278,10 +1277,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(show_output_name) {
 			for(var i = 0; i < ds_list_size(outputs); i++)
-				outputs[| i].drawNameBG(_s);
+				if(outputs[| i].visible) outputs[| i].drawNameBG(_s);
 			
 			for(var i = 0; i < ds_list_size(outputs); i++)
-				outputs[| i].drawName(_s, _mx, _my);
+				if(outputs[| i].visible) outputs[| i].drawName(_s, _mx, _my);
 		}
 		
 		if(NODE_HAS_INSP1 && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
@@ -1387,9 +1386,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return noone;
 	} #endregion
 	
-	__preview_surf = noone;
+	__preview_surf = false;
 	__preview_sw   = noone;
 	__preview_sh   = noone;
+	
+	static setPreview = function(_surf) { #region
+		preview_surface = _surf;
+		__preview_surf  = is_surface(_surf);
+	} #endregion
 	
 	static drawPreview = function(xx, yy, _s) { #region
 		var surf = getGraphPreviewSurface();
@@ -1410,8 +1414,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			surf = surf[preview_index];
 		}
 		
-		preview_surface = surf;
-		if(!is_surface(preview_surface)) return;
+		setPreview(surf);
+		if(!__preview_surf) return;
 		
 		__preview_sw   = surface_get_width(preview_surface);
 		__preview_sh   = surface_get_height(preview_surface);
@@ -1424,13 +1428,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _sh = __preview_sh;
 		var _ss = min(bbox.w / _sw, bbox.h / _sh);
 		draw_surface_ext(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
-		
-		//draw_surface_bbox(preview_surface, bbox, c_white, aa * graph_preview_alpha);
 	} #endregion
 	
 	static getNodeDimension = function(showFormat = true) { #region
-		if(!is_surface(preview_surface))
-			return preview_array;
+		if(!__preview_surf) return preview_array;
 		
 		var pw = surface_get_width_safe(preview_surface);
 		var ph = surface_get_height_safe(preview_surface);
@@ -1466,7 +1467,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(struct_get(display_parameter, "show_dimension")) {
 			var txt = string(getNodeDimension(_s > 0.65));
 			draw_text(round(tx), round(ty), txt);
-			ty += string_height(txt) - 2;
+			ty += line_get_height(f_p2) - 2;
 		}
 		
 		draw_set_font(f_p3);
@@ -1537,8 +1538,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(show_parameter)
 			drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus);
 		
-		if(_s >= 0.75) 
-			drawNodeName(xx, yy, _s);
+		draw_name = false;
+		if(_s >= 0.75) drawNodeName(xx, yy, _s);
 		
 		if(active_draw_index > -1) {
 			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, round(w * _s), round(h * _s), active_draw_index > 1? COLORS.node_border_file_drop : COLORS._main_accent, 1);
@@ -2125,8 +2126,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		struct_append(attributes, attr); 
 	} #endregion
 	
-	static postDeserialize = function() {}
 	static processDeserialize = function() {}
+	static postDeserialize = function() {}
 		
 	static applyDeserialize = function(preset = false) { #region
 		preApplyDeserialize();

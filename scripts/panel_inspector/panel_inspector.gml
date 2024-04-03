@@ -29,6 +29,8 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
 
 function Inspector_Sprite(spr) constructor { self.spr = spr; }
 
+function Inspector_Spacer(height, line = false) constructor { self.h = height; self.line = line; }
+
 function Panel_Inspector() : PanelContent() constructor {
 	#region ---- main ----
 		title = __txt("Inspector");
@@ -523,7 +525,19 @@ function Panel_Inspector() : PanelContent() constructor {
 				} else {
 					if(i >= array_length(_inspecting.input_display_list)) break;
 					var jun_disp = _inspecting.input_display_list[i];
-					if(is_instanceof(jun_disp, Inspector_Sprite)) {					// SPRITE
+					if(is_instanceof(jun_disp, Inspector_Spacer)) {					// SPACER
+						var _hh = ui(jun_disp.h);
+						var _yy = yy + _hh / 2 - ui(2);
+						
+						if(jun_disp.line) {
+							draw_set_color(COLORS.panel_inspector_key_separator);
+							draw_line(ui(8), _yy, con_w - ui(8), _yy);
+						}
+						
+						hh += _hh;
+						continue;
+						
+					} else if(is_instanceof(jun_disp, Inspector_Sprite)) {			// SPRITE
 						var _spr = jun_disp.spr;
 						var _sh  = sprite_get_height(_spr);
 						
@@ -532,7 +546,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						hh += _sh + ui(8);
 						continue;
 						
-					} if(is_array(jun_disp)) {										// LABEL
+					} else if(is_array(jun_disp)) {									// LABEL
 						var pad = i && _colsp == false? ui(4) : 0
 						_colsp  = false;
 						yy += pad;

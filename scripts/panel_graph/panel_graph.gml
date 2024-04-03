@@ -912,10 +912,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(node_hovering != noone)
 				_HOVERING_ELEMENT = node_hovering;
 			
-			if(node_hovering != noone && pFOCUS && struct_has(node_hovering, "onDoubleClick") && DOUBLE_CLICK) {
-				node_hovering.onDoubleClick(self);
-				DOUBLE_CLICK  = false;
-				node_hovering = noone;
+			if(node_hovering != noone && pFOCUS && DOUBLE_CLICK && struct_has(node_hovering, "onDoubleClick")) {
+				
+				if(node_hovering.onDoubleClick(self)) {
+					DOUBLE_CLICK  = false;
+					node_hovering = noone;
+				}
 			}
 			
 			if(node_hovering) node_hovering.onDrawHover(gr_x, gr_y, mx, my, graph_s);

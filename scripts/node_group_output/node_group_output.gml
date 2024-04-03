@@ -17,10 +17,8 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	onSetDisplayName = function() { attributes.inherit_name = false; }
 	
 	inputs[| 0].onSetFrom = function(juncFrom) {
-		if(attributes.inherit_name) {
+		if(attributes.inherit_name && !LOADING && !APPENDING)
 			setDisplayName(juncFrom.name);
-			attributes.inherit_name = false;
-		}
 	}
 	
 	static setRenderStatus = function(result) { #region

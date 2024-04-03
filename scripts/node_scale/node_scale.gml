@@ -38,6 +38,7 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var surf  = _data[0];
 		var scale = _data[1];
 		var mode  = _data[2];
 		var targ  = _data[3];
@@ -47,7 +48,7 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[| 1].setVisible(mode == 0);
 		inputs[| 3].setVisible(mode == 1);
 		
-		var isAtlas = is_instanceof(_data[0], SurfaceAtlas);
+		var isAtlas = is_instanceof(surf, SurfaceAtlas);
 		if(isAtlas && !is_instanceof(_outSurf, SurfaceAtlas))
 			_outSurf = _data[0].clone(true);
 		var _surf = isAtlas? _outSurf.getSurface() : _outSurf;
@@ -57,12 +58,12 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			case 0 :
 				scx = scale;
 				scy = scale;
-				ww	= scale * surface_get_width_safe(_data[0]);
-				hh	= scale * surface_get_height_safe(_data[0]);
+				ww	= scale * surface_get_width_safe(surf);
+				hh	= scale * surface_get_height_safe(surf);
 				break;
 			case 1 : 
-				scx = targ[0] / surface_get_width_safe(_data[0]);
-				scy = targ[1] / surface_get_height_safe(_data[0]);
+				scx = targ[0] / surface_get_width_safe(surf);
+				scy = targ[1] / surface_get_height_safe(surf);
 				ww	= targ[0];
 				hh	= targ[1];
 				break;
@@ -77,11 +78,11 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		if(isAtlas) {
 			if(_atlS) {
-				_outSurf.x = _data[0].x * scx;
-				_outSurf.y = _data[0].y * scy;
+				_outSurf.x = surf.x * scx;
+				_outSurf.y = surf.y * scy;
 			} else {
-				_outSurf.x = _data[0].x;
-				_outSurf.y = _data[0].y;
+				_outSurf.x = surf.x;
+				_outSurf.y = surf.y;
 			}
 			
 			_outSurf.setSurface(_surf);

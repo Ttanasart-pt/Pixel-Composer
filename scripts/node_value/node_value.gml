@@ -650,6 +650,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_junction_index   = type;
 		
 		junction_drawing = [ THEME.node_junctions_single, type ];
+		hover_in_graph   = false;
 		
 		drag_type = 0;
 		drag_mx   = 0;
@@ -1639,13 +1640,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				var val = array_verify(val, array_length(animators));
 				for( var i = 0, n = array_length(animators); i < n; i++ )
-					val[i] = animators[i].values[| 0].value;
+					val[i] = animators[i].processType(animators[i].values[| 0].value);
 				return val;
 			}
 			
 			if(ds_list_empty(animator.values)) return 0;
 			
-			return animator.values[| 0].value;
+			return animator.processType(animator.values[| 0].value);
 		}
 		
 		if(sep_axis) {
@@ -1743,15 +1744,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getValueRecursive = function(arr = __curr_get_val, _time = CURRENT_FRAME) { #region
 		
-		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) { //trigger event will not propagate from input to output, need to be done manually
-			arr[@ 0] = ds_list_empty(animator.values)? 0 : animator.values[| 0].value;
-			arr[@ 1] = self;
-			return;
-		}
-		
 		arr[@ 0] = __getAnimValue(_time);
 		arr[@ 1] = self;
 		
+		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger event will not propagate from input to output, need to be done manually
+			return;
+			
 		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out)
 			value_from_loop.getValue(arr);
 			
@@ -1854,7 +1852,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static showValue = function() { #region
 		INLINE
 		
-		var val = animator.values[| 0].value;
+		var val = 0;
 		
 		if(value_from != noone || is_anim || expUse) 
 			val = getValue(CURRENT_FRAME, false, 0, true, true);
@@ -1862,9 +1860,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		else if(sep_axis) {
 			show_val = array_verify(show_val, array_length(animators));
 			for( var i = 0, n = array_length(animators); i < n; i++ )
-				show_val[i] = animators[i].values[| 0].value;
+				show_val[i] = ds_list_empty(animators[i].values)? 0 : animators[i].processType(animators[i].values[| 0].value);
 			val = show_val;
-		}
+		} else 
+			val = ds_list_empty(animator.values)? 0 : animator.processType(animator.values[| 0].value);
 		
 		return val;
 	} #endregion
@@ -1895,7 +1894,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return false;
 		}
 		
-		if(array_depth == 0 && !typeArray(display_type)) { //Value is not an array by default, and no array depth enforced
+		if(array_depth == 0 && !typeArray(display_type)) { // Value is not an array by default, and no array depth enforced
 			if(_cac) cache_array[1] = true;
 			return true;
 		}
@@ -2304,7 +2303,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
 		var _d  = 12 * _s;
-		var is_hover = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d, y + _d);
+		var is_hover   = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d, y + _d);
+		hover_in_graph = is_hover;
 		
 		var _bgS = THEME.node_junctions_bg;
 		var _fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
@@ -2351,22 +2351,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static drawName = function(_s, _mx, _my) { #region
-		var _hover = PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, x, y, 10 * _s);
-		var _draw_cc = _hover? COLORS._main_text : COLORS._main_text_sub;
+		
+		var _draw_cc = hover_in_graph? COLORS._main_text : COLORS._main_text_sub;
 		draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
 		
 		if(type == VALUE_TYPE.action) {
 			var tx = x;
 			draw_set_text(f_p1, fa_center, fa_center, _draw_cc);
 			draw_text_int(tx, y - (line_get_height() + 16) / 2, name);
+			
 		} else if(connect_type == JUNCTION_CONNECT.input) {
 			var tx = x - 12 * _s;
 			draw_set_halign(fa_right);
 			draw_text_int(tx, y, name);
+			
 		} else {
 			var tx = x + 12 * _s;
 			draw_set_halign(fa_left);
 			draw_text_int(tx, y, name);
+			
 		}
 	} #endregion
 	

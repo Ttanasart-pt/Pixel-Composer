@@ -35,13 +35,25 @@ function file_read_wav(path) {
 	}
 	
 	wav_file_load_time = current_time;
+	var _buffer_size   = buffer_get_size(wav_file_reader);
 	
 	//RIFF
-	var debug_str = "";
+	var debug_str = $">> READING WAV [{path}] <<\n";
+	debug_str += $"Buffer size: {_buffer_size}\n\n";
+	
 	debug_str += "-- RIFF --\n";
 	var b = file_read_ASCII(wav_file_reader, 4);		debug_str += $"{b}\n";
 	var l = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Packages: {l}\n";
 	var w = file_read_ASCII(wav_file_reader, 4);		debug_str += $"{w}\n";
+	
+	if(b != "RIFF" || w != "WAVE") {
+		printIf(global.FLAG.wav_import, debug_str);
+		noti_warning("Not a valid .wav file.");
+		return noone;
+	}
+	
+	if(buffer_get_size(wav_file_reader) != l + 8)
+		noti_warning(".wav file has different size than the package header. This may cause reading error.");
 	
 	//FORMAT
 	debug_str += "-- FORMAT --\n";
@@ -49,15 +61,16 @@ function file_read_wav(path) {
 	var l  = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Length:   {l}\n";
 	
 	if(l != 16) {
-		noti_warning("File format not supported, the audio file need to be 8, 16 bit PCM wav with no extension.");
+		printIf(global.FLAG.wav_import, debug_str);
+		noti_warning("File format not supported, the audio file need to be 8, 16 bit uncompressed PCM wav with no extension.");
 		return noone;
 	}
 	
-	var l  = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"0x01:     {l}\n";
+	var l  = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Linear quantize: {l}\n";
 	var ch = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Channels: {ch}\n";
 	var sm = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Sample:   {sm}\n";
 	var l  = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"BPS:	    {l}\n";
-	var br = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Bitrate:  {br}\n";
+	var br = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Byterate: {br}\n";
 	var l  = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Bit/Sam:  {l}\n";
 	
 	//DATA
@@ -75,12 +88,18 @@ function file_read_wav(path) {
 	debug_str += $"BPC:      {bpc * 8}\n";
 	debug_str += $"bits:     {bits}\n";
 	debug_str += $"samples:  {sm}\n";
-	debug_str += $"duration: {real(bits) / real(sm)}\n";
+	debug_str += $"duration: {real(bits) / real(sm)}s\n";
 	
 	for( var j = 0; j < ch; j++ )
 		data[j]  = array_create(bits);
 	
 	wav_file_range = [0, 0];
+	
+	var _buffer_left = _buffer_size - buffer_tell(wav_file_reader);
+	if(_buffer_left < l) {
+		noti_warning($"The file is smaller than the definded length. ({_buffer_left} < {l})");
+		bits = floor(_buffer_left / br);
+	}
 	
 	content = new audioObject(sm, ch);
 	content.sound     = data;
@@ -96,6 +115,7 @@ function file_read_wav(path) {
 
 function file_read_wav_step() {
 	if(!wav_file_reading) return false;
+	if(!content)          return false;
 	
 	var t = current_time;
 	var bf_type, lim;
@@ -104,11 +124,15 @@ function file_read_wav_step() {
 	else if(content.bit_depth == 32) { bf_type = buffer_s32; lim = 2_147_483_648; }
 	
 	for(; wav_file_prg < content.packet; wav_file_prg++ ) {
-		var ch = 0;
-		for( var j = 0; j < content.channels; j++ ) {
+		var ch  = 0;
+		var cha = content.channels;
+		var j   = 0;
+		
+		repeat( cha ) {
 			var b = buffer_read(wav_file_reader, bf_type) / lim;
 			ch += b;
 			content.sound[j][wav_file_prg] = b;
+			j++;
 		}
 		
 		content.soundF[0][wav_file_prg] = ch / content.channels;

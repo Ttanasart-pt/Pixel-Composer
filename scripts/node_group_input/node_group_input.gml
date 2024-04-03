@@ -122,10 +122,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	onSetDisplayName = function() { attributes.inherit_name = false; }
 	
 	outputs[| 0].onSetTo = function(juncTo) {
-		if(attributes.inherit_name) {
+		if(attributes.inherit_name && !LOADING && !APPENDING)
 			setDisplayName(juncTo.name);
-			attributes.inherit_name = false;
-		}
 		
 		if(!attributes.inherit_type) return;
 		attributes.inherit_type = false;

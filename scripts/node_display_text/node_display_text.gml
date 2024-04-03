@@ -200,7 +200,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								
 								draw_set_color(COLORS._main_accent);
 								
-								if(point_in_rectangle(_mx, _my, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4)) {
+								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4)) {
 									draw_sprite_stretched_points(THEME.ui_panel_fg, 1, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_accent, 1);
 									
 									switch(string_lower(_c[1])) {

@@ -40,6 +40,7 @@
 	
 	PREFERENCES.panel_layout_file				= "Vertical";
 	PREFERENCES.panel_graph_dragging			= MOD_KEY.alt;
+	PREFERENCES.panel_graph_group_require_shift	= true;
 	PREFERENCES.panel_preview_dragging			= MOD_KEY.alt;
 	
 	PREFERENCES.inspector_focus_on_double_click	= true;

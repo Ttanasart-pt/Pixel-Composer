@@ -186,9 +186,11 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(!attributes.play) return;
 		
+		if(IS_FIRST_FRAME) { audio_stop_sound(preview_audio); }
+		
 		if(PROJECT.animator.is_playing) {
 			var dur = CURRENT_FRAME / PROJECT.animator.framerate - attributes.preview_shift;
-			
+				
 			if(!audio_is_playing(preview_audio))
 				preview_id = audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur);
 		}
