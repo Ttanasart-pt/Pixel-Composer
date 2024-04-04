@@ -1039,9 +1039,13 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_text(w - ui(8), right_menu_y, __txt("Active"));
 				right_menu_y += string_height("l");
 			}
-		
+			
+			var txt = $"{__txt("fps")} {fps}";
+			if(PREFERENCES.panel_preview_show_real_fps)
+				txt += $" / {FPS_REAL}";
+				
 			draw_set_text(f_p0, fa_right, fa_top, fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
-			draw_text(w - ui(8), right_menu_y, $"{__txt("fps")} {fps} / {FPS_REAL}");
+			draw_text(w - ui(8), right_menu_y, txt);
 			right_menu_y += string_height("l");
 		
 			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);

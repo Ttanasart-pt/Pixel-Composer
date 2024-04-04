@@ -273,7 +273,7 @@ event_inherited();
 #region interface
 	pref_appr = ds_list_create();
 	
-	ds_list_add(pref_appr, __txt("Interface"));
+	ds_list_add(pref_appr, __txt("Interface")); /////////////////////////////////////////////////////////////// Interface
 	
 	PREFERENCES._display_scaling = PREFERENCES.display_scaling;
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(
@@ -356,7 +356,7 @@ event_inherited();
 		})
 	));
 	
-	ds_list_add(pref_appr, __txt("Graph"));
+	ds_list_add(pref_appr, __txt("Graph")); //////////////////////////////////////////////////////////////////////// Graph
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_add_node_remember", "Remember add node position"),
@@ -446,7 +446,18 @@ event_inherited();
 		})
 	));
 	
-	ds_list_add(pref_appr, __txt("Inspector"));
+	ds_list_add(pref_appr, __txt("Preview")); ////////////////////////////////////////////////////////////////////// Preview
+	
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_preview_show_real_fps", "Show real fps"),
+		"panel_preview_show_real_fps",
+		new checkBox(function(str) { 
+			PREFERENCES.panel_preview_show_real_fps = !PREFERENCES.panel_preview_show_real_fps;
+			PREF_SAVE();
+		})
+	));
+	
+	ds_list_add(pref_appr, __txt("Inspector")); //////////////////////////////////////////////////////////////////// Inspector
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_inspector_focus_on_double_click", "Focus on double click"),
@@ -457,7 +468,7 @@ event_inherited();
 		})
 	));
 	
-	ds_list_add(pref_appr, __txt("Collection"));
+	ds_list_add(pref_appr, __txt("Collection")); /////////////////////////////////////////////////////////////////// Collection
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_collection_preview_speed", "Collection preview speed"),
@@ -468,7 +479,7 @@ event_inherited();
 		})
 	));
 	
-	ds_list_add(pref_appr, __txt("Notification"));
+	ds_list_add(pref_appr, __txt("Notification")); ///////////////////////////////////////////////////////////////// Notification
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_warning_notification_time", "Warning notification time"),
@@ -479,7 +490,7 @@ event_inherited();
 		})
 	));
 	
-	ds_list_add(pref_appr, __txt("Text Area"));
+	ds_list_add(pref_appr, __txt("Text Area")); //////////////////////////////////////////////////////////////////// Text area
 	
 	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_widget_autocomplete_delay", "Code Autocomplete delay"),

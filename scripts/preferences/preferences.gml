@@ -3,107 +3,138 @@
 	PREFERENCES  = {};
 	HOTKEYS_DATA = {};
 	
-	PREFERENCES.ui_framerate					= 120;
-	PREFERENCES.path_resolution					= 32;
-	PREFERENCES.move_directory					= false;
-	
-	PREFERENCES.node_recents_amount				= 20;
+	#region ////////////////////////////////////////////////////////////////////// GENERAL UI //////////////////////////////////////////////////////////////////////
 												
-	PREFERENCES.double_click_delay				= 0.25;
-	PREFERENCES.mouse_wheel_speed				= 1.00;
-												
-	PREFERENCES.keyboard_repeat_start			= 0.50;
-	PREFERENCES.keyboard_repeat_speed			= 0.10;
-												
-	PREFERENCES.show_splash						= true;
-	PREFERENCES.splash_expand_recent			= false;
+		PREFERENCES.display_scaling					= 1;
+		PREFERENCES.window_width					= 1600;
+		PREFERENCES.window_height					= 800;
+		PREFERENCES.window_maximize					= false;
 	
-	PREFERENCES.notification_time				= 180;
-	PREFERENCES.notify_load_version				= true;
-												
-	PREFERENCES.display_scaling					= 1;
-	PREFERENCES.window_width					= 1600;
-	PREFERENCES.window_height					= 800;
-	PREFERENCES.window_maximize					= false;
+		PREFERENCES.theme							= "default";
+		PREFERENCES.local							= "en";
+		PREFERENCES.font_overwrite					= "";
+		
+		PREFERENCES.ui_framerate					= 120;
+		PREFERENCES.path_resolution					= 32;
+		PREFERENCES.move_directory					= false;
+		
+		PREFERENCES.notification_time				= 180;
+		PREFERENCES.notify_load_version				= true;
+		PREFERENCES.show_crash_dialog				= false;
+		
+		PREFERENCES.test_mode						= false;
+		PREFERENCES.auto_save_time					= 300;
+		PREFERENCES.use_legacy_exception			= false;
 	
-	PREFERENCES.connection_line_width			= 2;
-	PREFERENCES.connection_line_sample			= 1;
-	PREFERENCES.connection_line_corner			= 8;
-	PREFERENCES.connection_line_aa				= 2;
-	PREFERENCES.connection_line_transition		= true;
-	PREFERENCES.connection_line_highlight		= 0;
-	PREFERENCES.connection_line_highlight_fade	= 0.75;
-	PREFERENCES.connection_line_highlight_all	= false;
-	PREFERENCES.curve_connection_line			= 1;
+		PREFERENCES.caret_blink						= 0.75;
 	
-	PREFERENCES.default_surface_side			= 32;
+		PREFERENCES.textbox_shake					= 0;
+		PREFERENCES.textbox_particle				= 0;
 	
-	PREFERENCES.panel_layout_file				= "Vertical";
-	PREFERENCES.panel_graph_dragging			= MOD_KEY.alt;
-	PREFERENCES.panel_graph_group_require_shift	= true;
-	PREFERENCES.panel_preview_dragging			= MOD_KEY.alt;
+	#endregion
+			
+	#region ////////////////////////////////////////////////////////////////////////// IO //////////////////////////////////////////////////////////////////////////
+				
+		PREFERENCES.double_click_delay				= 0.25;
+		PREFERENCES.mouse_wheel_speed				= 1.00;
 	
-	PREFERENCES.inspector_focus_on_double_click	= true;
-	PREFERENCES.inspector_view_default			= 1;
+		PREFERENCES.keyboard_repeat_start			= 0.50;
+		PREFERENCES.keyboard_repeat_speed			= 0.10;
+		
+	#endregion
 	
-	PREFERENCES.node_show_render_status			= false;
-	PREFERENCES.node_show_time					= true;
+	#region ///////////////////////////////////////////////////////////////////////// DIALOG ////////////////////////////////////////////////////////////////////////
+		
+		PREFERENCES.node_recents_amount				= 20;
+			
+		PREFERENCES.show_splash						= true;
+		PREFERENCES.splash_expand_recent			= false;
 	
-	PREFERENCES.expand_hover					= false;
+		PREFERENCES.dialog_add_node_grouping		= true;
+		PREFERENCES.dialog_add_node_view			= 0;
 	
-	PREFERENCES.graph_zoom_smoooth				= 4;
-	PREFERENCES.graph_open_group_in_tab			= false;
+		PREFERENCES.dialog_add_node_w				= 532;
+		PREFERENCES.dialog_add_node_h				= 400;
+		
+		PREFERENCES.add_node_remember				= true;
 	
-	PREFERENCES.theme							= "default";
-	PREFERENCES.local							= "en";
-	PREFERENCES.font_overwrite					= "";
+	#endregion
 	
-	PREFERENCES.dialog_add_node_grouping		= true;
-	PREFERENCES.dialog_add_node_view			= 0;
+	#region //////////////////////////////////////////////////////////////////////// PANEL /////////////////////////////////////////////////////////////////////////
 	
-	PREFERENCES.physics_gravity					= [ 0, 10 ];
-												
-	PREFERENCES.test_mode						= false;
-	PREFERENCES.auto_save_time					= 300;
-	PREFERENCES.use_legacy_exception			= false;
+		PREFERENCES.panel_layout_file				= "Vertical";
 	
-	PREFERENCES.dialog_add_node_w				= 532;
-	PREFERENCES.dialog_add_node_h				= 400;
+		PREFERENCES.panel_graph_dragging			= MOD_KEY.alt;
+		PREFERENCES.panel_graph_group_require_shift	= true;
 	
-	PREFERENCES.panel_menu_resource_monitor		= false;
-	PREFERENCES.panel_menu_right_control		= os_type == os_windows;
+		PREFERENCES.panel_preview_dragging			= MOD_KEY.alt;
+		PREFERENCES.panel_preview_show_real_fps		= false;
 	
-	PREFERENCES.show_crash_dialog				= false;
-	PREFERENCES.save_file_minify				= true;
-	PREFERENCES.render_all_export				= true;
+		PREFERENCES.panel_menu_resource_monitor		= false;
+		PREFERENCES.panel_menu_right_control		= os_type == os_windows;
 	
-	PREFERENCES.alt_picker						= true;
-	PREFERENCES.clear_temp_on_close				= true;
-	PREFERENCES.pan_mouse_key					= mb_middle;
+		PREFERENCES.inspector_focus_on_double_click	= true;
+		PREFERENCES.inspector_view_default			= 1;
 	
-	PREFERENCES.widget_autocomplete_delay       = 500;
+		PREFERENCES.node_show_render_status			= false;
+		PREFERENCES.node_show_time					= true;
+		
+		PREFERENCES.expand_hover					= false;
 	
-	PREFERENCES.show_supporter_icon				= true;
+		PREFERENCES.graph_zoom_smoooth				= 4;
+		PREFERENCES.graph_open_group_in_tab			= false;
 	
-	PREFERENCES.temp_path						= "%DIR%/temp/";
-	PREFERENCES.ImageMagick_path				= "%APP%/imagemagick/";
-	PREFERENCES.webp_path						= "%APP%/webp/";
-	PREFERENCES.gifski_path						= "%APP%/gifski/";
-	PREFERENCES.ffmpeg_path						= "%APP%/ffmpeg/";
+		PREFERENCES.connection_line_width			= 2;
+		PREFERENCES.connection_line_sample			= 1;
+		PREFERENCES.connection_line_corner			= 8;
+		PREFERENCES.connection_line_aa				= 2;
+		PREFERENCES.connection_line_transition		= true;
+		PREFERENCES.connection_line_highlight		= 0;
+		PREFERENCES.connection_line_highlight_fade	= 0.75;
+		PREFERENCES.connection_line_highlight_all	= false;
+		PREFERENCES.curve_connection_line			= 1;
+		
+		PREFERENCES.collection_animated				= true;
+		PREFERENCES.collection_preview_speed		= 60;
+		PREFERENCES.collection_scale				= 1;
+		
+		PREFERENCES.pan_mouse_key					= mb_middle;
+		
+	#endregion
 	
-	PREFERENCES.collection_animated				= true;
-	PREFERENCES.collection_preview_speed		= 60;
-	PREFERENCES.collection_scale				= 1;
+	#region //////////////////////////////////////////////////////////////////////// WIDGET ////////////////////////////////////////////////////////////////////////
 	
-	PREFERENCES.caret_blink						= 0.75;
+		PREFERENCES.widget_autocomplete_delay       = 500;
+		PREFERENCES.alt_picker						= true;
 	
-	PREFERENCES.add_node_remember				= true;
+	#endregion
 	
-	PREFERENCES.textbox_shake					= 0;
-	PREFERENCES.textbox_particle				= 0;
+	#region //////////////////////////////////////////////////////////////////////// NODES /////////////////////////////////////////////////////////////////////////
 	
-	PREFERENCES.node_param_show					= false;
-	PREFERENCES.node_param_width				= 192;
+		PREFERENCES.node_param_show					= false;
+		PREFERENCES.node_param_width				= 192;
+	
+	#endregion
+	
+	#region //////////////////////////////////////////////////////////////////////// MISC //////////////////////////////////////////////////////////////////////////
+	
+		PREFERENCES.save_file_minify				= true;
+		PREFERENCES.render_all_export				= true;
+		PREFERENCES.clear_temp_on_close				= true;
+	
+		PREFERENCES.show_supporter_icon				= true;
+	
+	#endregion
+	
+	#region //////////////////////////////////////////////////////////////////////// PATHS /////////////////////////////////////////////////////////////////////////
+	
+		PREFERENCES.temp_path						= "%DIR%/temp/";
+		PREFERENCES.ImageMagick_path				= "%APP%/imagemagick/";
+		PREFERENCES.webp_path						= "%APP%/webp/";
+		PREFERENCES.gifski_path						= "%APP%/gifski/";
+		PREFERENCES.ffmpeg_path						= "%APP%/ffmpeg/";
+	
+	#endregion
 	
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
 #endregion

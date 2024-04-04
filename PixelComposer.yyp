@@ -301,7 +301,7 @@
         "Itch":{
           "CopyToMask":"0",
         },
-      },"CopyToMask":-1,"filePath":"datafiles","name":"ApolloHelp.html","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+      },"CopyToMask":0,"filePath":"datafiles","name":"ApolloHelp.html","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Actions.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Actions.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"icons.ai","CopyToMask":-1,"filePath":"datafiles/data/Actions","name":"icons.ai","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Armature Build.json","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes","name":"Armature Build.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -414,7 +414,7 @@
         "Itch":{
           "CopyToMask":"0",
         },
-      },"CopyToMask":-1,"filePath":"datafiles","name":"README.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+      },"CopyToMask":0,"filePath":"datafiles","name":"README.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
