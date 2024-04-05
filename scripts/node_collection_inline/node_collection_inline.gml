@@ -51,17 +51,17 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static getNodeBorder = function(_ind, _vertex, _node) { #region
 		var _rad = 6;
-		var _stp = 15;
+		var _stp = 30;
 		
 		var _nx0 = is_instanceof(_node, input_node_type)?  _node.x + _node.w / 2 : _node.x - 32 + _rad;
 		var _ny0 = _node.y - 32 + _rad;
 		var _nx1 = is_instanceof(_node, output_node_type)? _node.x + _node.w / 2 : _node.x + _node.w + 32 - _rad;
 		var _ny1 = _node.y + _node.h + 32 - _rad;
 		
-		for( var i =   0; i <  90; i += _stp ) _vertex[_ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
-		for( var i =  90; i < 180; i += _stp ) _vertex[_ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
-		for( var i = 180; i < 270; i += _stp ) _vertex[_ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
-		for( var i = 270; i < 360; i += _stp ) _vertex[_ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
+		for( var i =   0; i <=  90; i += _stp ) _vertex[_ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
+		for( var i =  90; i <= 180; i += _stp ) _vertex[_ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
+		for( var i = 180; i <= 270; i += _stp ) _vertex[_ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
+		for( var i = 270; i <= 360; i += _stp ) _vertex[_ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
 		
 		return _ind;
 	} #endregion
@@ -101,7 +101,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		group_vertex = [];
 		
 		if(_ind == 0) return;
-		var _vtrx = array_create(_ind * 4 * 6);
+		var _vtrx = array_create(_ind * 4 * (90 / 30 + 1));
 		
 		var _ind = 0;
 		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
@@ -137,13 +137,29 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			array_delete(_vtrx, 1, _linS - 1);
 		
 			group_vertex = [ _vtrx[0], _vtrx[1] ];
-		
+			
 			for( var i = 2, n = array_length(_vtrx); i < n; i++ ) {
 				var _v = _vtrx[i];
 			
 				while( array_length(group_vertex) >= 2 && ccw( group_vertex[array_length(group_vertex) - 2], group_vertex[array_length(group_vertex) - 1], _v ) >= 0 )
 					array_pop(group_vertex);
 				array_push(group_vertex, _v);
+			}
+			
+			for( var i = array_length(group_vertex) - 1; i >= 0; i-- ) {
+				var n  = array_length(group_vertex);
+				if(n < 4) break;
+				
+				var v0 = group_vertex[(i - 1 + n) % n];
+				var v1 = group_vertex[i];
+				var v2 = group_vertex[(i + 1) % n];
+				
+				var a0 = point_direction(v1[0], v1[1], v0[0], v0[1]);
+				var a1 = point_direction(v1[0], v1[1], v2[0], v2[1]);
+				var d  = angle_difference(a0, a1);
+				
+				if(min(abs(d), abs(d - 180)) <= 2) 
+					array_delete(group_vertex, i, 1);
 			}
 		#endregion
 	} #endregion
@@ -263,7 +279,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		//	var _vx = _x + a[0] * _s;
 		//	var _vy = _y + a[1] * _s;
 			
-		//	draw_circle(_vx, _vy, 3, false);
+		//	draw_circle(_vx, _vy, 1, false);
 		//}
 		
 		return _hov;

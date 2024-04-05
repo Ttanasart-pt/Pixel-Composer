@@ -299,52 +299,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	function initSize() { toCenterNode(); } initSize();
 	
-	#region ++++ toolbars ++++
-	toolbars = [
-		[ 
-			THEME.icon_preview_export,
-			function() { return 0;  },
-			function() { return __txtx("panel_graph_export_image", "Export graph as image"); }, 
-			function() { dialogPanelCall(new Panel_Graph_Export_Image(self)); }
-		],
-		[ 
-			THEME.icon_center_canvas,
-			function() { return 0;  },
-			function() { return __txtx("panel_graph_center_to_nodes", "Center to nodes"); }, 
-			function() { toCenterNode(); } 
-		],
-		[ 
-			THEME.icon_minimap,
-			function() { return minimap_show;  },
-			function() { return minimap_show? __txtx("panel_graph_minimap_enabled", "Minimap enabled") : __txtx("panel_graph_minimap_disabled", "Minimap disabled"); }, 
-			function() { minimap_show = !minimap_show; } 
-		],
-		[ 
-			THEME.icon_curve_connection,
-			function() { return PREFERENCES.curve_connection_line;  },
-			function() { return __txtx("panel_graph_connection_line", "Connection render settings"); }, 
-			function(param) { 
-				dialogPanelCall(new Panel_Graph_Connection_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-			} 
-		],
-		[ 
-			THEME.icon_grid_setting,
-			function() { return 0; },
-			function() { return __txtx("grid_title", "Grid settings"); }, 
-			function(param) { 
-				dialogPanelCall(new Panel_Graph_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-			} 
-		],
-		[ 
-			THEME.icon_visibility,
-			function() { return 0; },
-			function() { return __txtx("graph_visibility_title", "Visibility settings"); }, 
-			function(param) { 
-				dialogPanelCall(new Panel_Graph_View_Setting(display_parameter), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-			} 
-		],
-	]; #endregion
-	
 	#region ++++ hotkeys ++++
 		addHotkey("Graph", "Add node",			    "A", MOD_KEY.none,					panel_graph_add_node);
 		addHotkey("Graph", "Focus content",			"F", MOD_KEY.none,					panel_graph_focus_content);
@@ -387,6 +341,55 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 													
 		addHotkey("Graph", "Pan",					"", MOD_KEY.ctrl,					panel_graph_pan);
 		addHotkey("Graph", "Zoom",					"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_graph_zoom);
+	#endregion
+	
+	#region ++++ toolbars ++++
+		tooltip_center   = new tooltipHotkey(__txtx("panel_graph_center_to_nodes", "Center to nodes"), "Graph", "Focus content");
+	
+		toolbars = [
+			[ 
+				THEME.icon_preview_export,
+				function() { return 0;  },
+				function() { return __txtx("panel_graph_export_image", "Export graph as image"); }, 
+				function() { dialogPanelCall(new Panel_Graph_Export_Image(self)); }
+			],
+			[ 
+				THEME.icon_center_canvas,
+				function() { return 0;  },
+				function() { return tooltip_center; }, 
+				function() { toCenterNode(); } 
+			],
+			[ 
+				THEME.icon_minimap,
+				function() { return minimap_show;  },
+				function() { return minimap_show? __txtx("panel_graph_minimap_enabled", "Minimap enabled") : __txtx("panel_graph_minimap_disabled", "Minimap disabled"); }, 
+				function() { minimap_show = !minimap_show; } 
+			],
+			[ 
+				THEME.icon_curve_connection,
+				function() { return PREFERENCES.curve_connection_line;  },
+				function() { return __txtx("panel_graph_connection_line", "Connection render settings"); }, 
+				function(param) { 
+					dialogPanelCall(new Panel_Graph_Connection_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+				} 
+			],
+			[ 
+				THEME.icon_grid_setting,
+				function() { return 0; },
+				function() { return __txtx("grid_title", "Grid settings"); }, 
+				function(param) { 
+					dialogPanelCall(new Panel_Graph_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+				} 
+			],
+			[ 
+				THEME.icon_visibility,
+				function() { return 0; },
+				function() { return __txtx("graph_visibility_title", "Visibility settings"); }, 
+				function(param) { 
+					dialogPanelCall(new Panel_Graph_View_Setting(display_parameter), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+				} 
+			],
+		]; 
 	#endregion
 	
 	#region ++++ node setters ++++
@@ -514,10 +517,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			pan.content.setInspecting(node_hover);
 			pan.content.locked = true;
 		});
-		menu_send_export	= menuItem(__txtx("panel_graph_send_to_export", "Send to export"),		function() { setCurrentExport(node_hover); },	noone, ["Graph", "Export"]);
-		menu_toggle_preview = menuItem(__txtx("panel_graph_toggle_preview", "Toggle node preview"), function() { setTriggerPreview(); },			noone, ["Graph", "Toggle preview"]);
-		menu_toggle_render  = menuItem(__txtx("panel_graph_toggle_render", "Toggle node render"),	function() { setTriggerRender(); },				noone, ["Graph", "Toggle render"]);
-		menu_open_group     = menuItem(__txtx("panel_graph_enter_group", "Open group"),				function() { PANEL_GRAPH.addContext(node_hover); }, THEME.group);
+		menu_send_export	= menuItem(__txtx("panel_graph_send_to_export", "Send to export"),			function() { setCurrentExport(node_hover); },	noone, ["Graph", "Export"]);
+		menu_toggle_preview = menuItem(__txtx("panel_graph_toggle_preview", "Toggle node preview"),		function() { setTriggerPreview(); },			noone, ["Graph", "Toggle preview"]);
+		menu_toggle_render  = menuItem(__txtx("panel_graph_toggle_render", "Toggle node render"),		function() { setTriggerRender(); },				noone, ["Graph", "Toggle render"]);
+		menu_toggle_param   = menuItem(__txtx("panel_graph_toggle_parameter", "Toggle node parameters"),function() { setTriggerParameter(); },			noone, ["Graph", "Toggle parameters"]);
+		menu_open_group     = menuItem(__txtx("panel_graph_enter_group", "Open group"),					function() { PANEL_GRAPH.addContext(node_hover); }, THEME.group);
 		
 		function openGroupTab(group) {
 			var graph = new Panel_Graph(project);
@@ -1052,7 +1056,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						array_push(menu, menu_node_color, -1, menu_sent_to_preview, menu_send_to_window, menu_sent_to_inspector);
 						if(!DEMO) 
 							array_push(menu, menu_send_export);
-						array_push(menu, -1, menu_toggle_preview, menu_toggle_render);
+						array_push(menu, -1, menu_toggle_preview, menu_toggle_render, menu_toggle_param);
 					
 						if(is_instanceof(node_hover, Node_Collection))
 							array_push(menu, -1, menu_open_group, menu_open_group_tab, menu_group_ungroup);

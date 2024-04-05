@@ -292,13 +292,4 @@
 		var grav = struct_try_get(PREFERENCES, "physics_gravity", [ 0, 10 ]);
 		physics_world_gravity(array_safe_get_fast(grav, 0, 0), array_safe_get_fast(grav, 1, 10));
 	} #endregion
-	
-	function find_hotkey(_context, _name) { #region
-		if(!ds_map_exists(HOTKEYS, _context)) return noone;
-		
-		for(var j = 0; j < ds_list_size(HOTKEYS[? _context]); j++) {
-			if(HOTKEYS[? _context][| j].name == _name)
-				return HOTKEYS[? _context][| j];
-		}
-	} #endregion
 #endregion

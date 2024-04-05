@@ -121,14 +121,12 @@
 		else			   ds_list_add(HOTKEYS[? _context], key);
 	}
 	
-	function getHotkey(context, name) {
-		if(!ds_map_exists(HOTKEYS, context)) return noone;
+	function find_hotkey(_context, _name) { #region
+		if(!ds_map_exists(HOTKEYS, _context)) return noone;
 		
-		for(var i = 0; i < ds_list_size(HOTKEYS[? context]); i++) {
-			var hotkey	= HOTKEYS[? _context][| i];
-			if(hotkey.name == name) return hotkey;
+		for(var j = 0; j < ds_list_size(HOTKEYS[? _context]); j++) {
+			if(HOTKEYS[? _context][| j].name == _name)
+				return HOTKEYS[? _context][| j];
 		}
-		
-		return noone;
-	}
+	} #endregion
 #endregion

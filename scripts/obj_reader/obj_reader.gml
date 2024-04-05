@@ -9,9 +9,9 @@ function readObj_init() {
 	_VBT = [];
 	_VBN = [];
 	mats = [];
-	matIndex = [];
-	tris = [];
-	mtlPath = "";
+	matIndex   = [];
+	tris       = [];
+	mtlPath    = "";
 	use_normal = true;
 	v  = ds_list_create();
 	vt = ds_list_create();
@@ -36,6 +36,7 @@ function readObj_file() {
 			case "v" :
 				ds_list_add(v, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
 				break;
+				
 			case "vt" :
 				var _u = toNumber(sep[1]);
 				var _v = toNumber(sep[2]);
@@ -54,6 +55,7 @@ function readObj_file() {
 				
 				ds_list_add(vn, [ _nx, _ny, _nz ]);
 				break;
+				
 			case "f" :
 				var _len = array_length(sep);
 				var _f   = array_create(_len - 1);
@@ -62,13 +64,13 @@ function readObj_file() {
 				
 				for( var i = 1; i < _len; i++ ) {
 					var _sp    = string_split(sep[i], "/");
-					if(array_length(_sp) < 2) continue;
+					if(array_length(_sp) < 3) continue;
 					
 					_f[i - 1]  = toNumber(_sp[0]);
 					_ft[i - 1] = toNumber(_sp[1]);
 					_fn[i - 1] = toNumber(_sp[2]);
 					
-					if(array_length(_sp) < 3) use_normal = false;
+					use_normal = array_length(_sp) >= 4;
 				}
 				
 				tri += _len - 2;
@@ -76,6 +78,7 @@ function readObj_file() {
 				ds_list_add(ft, _ft); //get texture map
 				ds_list_add(fn, _fn); //get normal
 				break;
+				
 			case "usemtl" :
 				var mname = "";
 				for( var i = 1; i < array_length(sep); i++ )
@@ -97,12 +100,14 @@ function readObj_file() {
 				
 				tri = 0;
 				break;
+				
 			case "mtllib" :
 				mtlPath = "";
 				for( var i = 1; i < array_length(sep); i++ )
 					mtlPath += (i == 1? "" : " ") + sep[i];
 				mtlPath = string_trim(mtlPath);
 				break;
+				
 			case "o" :
 				//print("Reading vertex group: " + sep[1])
 				break;

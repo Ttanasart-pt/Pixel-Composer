@@ -199,111 +199,6 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
 	
-	#region ++++ toolbars & actions ++++
-	topbar_height  = ui(32);
-	toolbar_height = ui(40);
-	toolbars = [
-		[ 
-			THEME.icon_reset_when_preview,
-			function() { return resetViewOnDoubleClick;  },
-			function() { return resetViewOnDoubleClick? __txtx("panel_preview_center_canvas_on_preview", "Center canvas on preview") :
-					__txtx("panel_preview_keep_canvas_on_preview", "Keep canvas on preview"); }, 
-			function() { resetViewOnDoubleClick = !resetViewOnDoubleClick; } 
-		],
-		[ 
-			THEME.icon_split_view,
-			function() { return splitView;  },
-			function() { 
-				switch(splitView) {
-					case 0 : return __txtx("panel_preview_split_view_off", "Split view off");
-					case 1 : return __txtx("panel_preview_horizontal_split_view", "Horizontal split view");
-					case 2 : return __txtx("panel_preview_vertical_split_view", "Vertical split view");
-				}
-				return __txtx("panel_preview_split_view", "Split view");
-			}, 
-			function() { splitView = (splitView + 1) % 3; } 
-		],
-		[
-			THEME.icon_tile_view,
-			function() { var t = [3, 0, 1, 2]; return array_safe_get_fast(t, tileMode);  },
-			function() { 
-				switch(tileMode) {
-					case 0 : return __txtx("panel_preview_tile_off", "Tile off");
-					case 1 : return __txtx("panel_preview_tile_horizontal", "Tile horizontal");
-					case 2 : return __txtx("panel_preview_tile_vertical", "Tile vertical");
-					case 3 : return __txtx("panel_preview_tile_both", "Tile both");
-				}
-				return __txtx("panel_preview_tile_mode", "Tile mode");
-			}, 
-			function(data) { 
-				menuCall("preview_tile_menu", data.x + ui(28), data.y + ui(28), [
-					menuItem(__txtx("panel_preview_tile_off", "Tile off"),					function() { tileMode = 0; }),
-					menuItem(__txtx("panel_preview_tile_horizontal", "Tile horizontal"),	function() { tileMode = 1; }),
-					menuItem(__txtx("panel_preview_tile_vertical", "Tile vertical"),		function() { tileMode = 2; }),
-					menuItem(__txtx("panel_preview_tile_both", "Tile both"),				function() { tileMode = 3; }),
-				]);
-			} 
-		],
-		[ 
-			THEME.icon_grid_setting,
-			function() { return 0; },
-			function() { return __txtx("grid_title", "Grid setting") }, 
-			function(param) { 
-				var dia = dialogPanelCall(new Panel_Preview_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-			} 
-		],
-		[ 
-			THEME.onion_skin,
-			function() { return 0; },
-			function() { return __txt("Onion Skin") }, 
-			function(param) { 
-				var dia = dialogPanelCall(new Panel_Preview_Onion_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-			} 
-		],
-	];
-	
-	toolbars_3d = [
-		[ 
-			THEME.d3d_preview_settings,
-			function() { return 0; },
-			function() { return __txt("3D Preview Settings") }, 
-			function(param) { 
-				var dia = dialogPanelCall(new Panel_Preview_3D_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-			} 
-		],
-		[ 
-			THEME.d3d_snap_settings,
-			function() { return 0; },
-			function() { return __txt("3D Snap Settings") }, 
-			function(param) { 
-				var dia = dialogPanelCall(new Panel_Preview_Snap_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-			} 
-		],
-	];
-	
-	actions = [
-		[ 
-			THEME.lock,
-			__txtx("panel_preview_lock_preview", "Lock previewing node"), 
-			function() { locked = !locked; },
-			function() { return !locked; },
-		],
-		[ 
-			THEME.icon_preview_export,
-			__txtx("panel_preview_export_canvas", "Export canvas"), 
-			function() { saveCurrentFrame(); },
-			function() { return 0; },
-		],
-		[ 
-			THEME.icon_center_canvas,
-			__txtx("panel_preview_center_canvas", "Center canvas"), 
-			function() { fullView(); },
-			function() { return 0; },
-		],
-		
-	]
-	#endregion
-	
 	#region ++++ hotkey ++++
 		addHotkey("Preview", "Focus content",			"F", MOD_KEY.none,	panel_preview_focus_content);
 		addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	panel_preview_save_current_frame);
@@ -313,6 +208,113 @@ function Panel_Preview() : PanelContent() constructor {
 	
 		addHotkey("Preview", "Pan",		"", MOD_KEY.ctrl,					panel_preview_pan);
 		addHotkey("Preview", "Zoom",	"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_preview_zoom);
+	#endregion
+	
+	#region ++++ toolbars & actions ++++
+		topbar_height  = ui(32);
+		toolbar_height = ui(40);
+		toolbars = [
+			[ 
+				THEME.icon_reset_when_preview,
+				function() { return resetViewOnDoubleClick;  },
+				function() { return resetViewOnDoubleClick? __txtx("panel_preview_center_canvas_on_preview", "Center canvas on preview") :
+						__txtx("panel_preview_keep_canvas_on_preview", "Keep canvas on preview"); }, 
+				function() { resetViewOnDoubleClick = !resetViewOnDoubleClick; } 
+			],
+			[ 
+				THEME.icon_split_view,
+				function() { return splitView;  },
+				function() { 
+					switch(splitView) {
+						case 0 : return __txtx("panel_preview_split_view_off", "Split view off");
+						case 1 : return __txtx("panel_preview_horizontal_split_view", "Horizontal split view");
+						case 2 : return __txtx("panel_preview_vertical_split_view", "Vertical split view");
+					}
+					return __txtx("panel_preview_split_view", "Split view");
+				}, 
+				function() { splitView = (splitView + 1) % 3; } 
+			],
+			[
+				THEME.icon_tile_view,
+				function() { var t = [3, 0, 1, 2]; return array_safe_get_fast(t, tileMode);  },
+				function() { 
+					switch(tileMode) {
+						case 0 : return __txtx("panel_preview_tile_off", "Tile off");
+						case 1 : return __txtx("panel_preview_tile_horizontal", "Tile horizontal");
+						case 2 : return __txtx("panel_preview_tile_vertical", "Tile vertical");
+						case 3 : return __txtx("panel_preview_tile_both", "Tile both");
+					}
+					return __txtx("panel_preview_tile_mode", "Tile mode");
+				}, 
+				function(data) { 
+					menuCall("preview_tile_menu", data.x + ui(28), data.y + ui(28), [
+						menuItem(__txtx("panel_preview_tile_off", "Tile off"),					function() { tileMode = 0; }),
+						menuItem(__txtx("panel_preview_tile_horizontal", "Tile horizontal"),	function() { tileMode = 1; }),
+						menuItem(__txtx("panel_preview_tile_vertical", "Tile vertical"),		function() { tileMode = 2; }),
+						menuItem(__txtx("panel_preview_tile_both", "Tile both"),				function() { tileMode = 3; }),
+					]);
+				} 
+			],
+			[ 
+				THEME.icon_grid_setting,
+				function() { return 0; },
+				function() { return __txtx("grid_title", "Grid setting") }, 
+				function(param) { 
+					var dia = dialogPanelCall(new Panel_Preview_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+				} 
+			],
+			[ 
+				THEME.onion_skin,
+				function() { return 0; },
+				function() { return __txt("Onion Skin") }, 
+				function(param) { 
+					var dia = dialogPanelCall(new Panel_Preview_Onion_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+				} 
+			],
+		];
+	
+		toolbars_3d = [
+			[ 
+				THEME.d3d_preview_settings,
+				function() { return 0; },
+				function() { return __txt("3D Preview Settings") }, 
+				function(param) { 
+					var dia = dialogPanelCall(new Panel_Preview_3D_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+				} 
+			],
+			[ 
+				THEME.d3d_snap_settings,
+				function() { return 0; },
+				function() { return __txt("3D Snap Settings") }, 
+				function(param) { 
+					var dia = dialogPanelCall(new Panel_Preview_Snap_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+				} 
+			],
+		];
+		
+		tooltip_center   = new tooltipHotkey(__txtx("panel_preview_center_canvas", "Center canvas"), "Preview", "Focus content");
+		
+		actions = [
+			[ 
+				THEME.lock,
+				__txtx("panel_preview_lock_preview", "Lock previewing node"), 
+				function() { locked = !locked; },
+				function() { return !locked; },
+			],
+			[ 
+				THEME.icon_preview_export,
+				__txtx("panel_preview_export_canvas", "Export canvas"), 
+				function() { saveCurrentFrame(); },
+				function() { return 0; },
+			],
+			[ 
+				THEME.icon_center_canvas,
+				tooltip_center, 
+				function() { fullView(); },
+				function() { return 0; },
+			],
+		
+		];
 	#endregion
 	
 	function setNodePreview(node) { #region

@@ -5,6 +5,7 @@ if(winMan_isMinimized()) exit;
 	if(is_struct(TOOLTIP)) {
 		if(struct_has(TOOLTIP, "drawTooltip"))
 			TOOLTIP.drawTooltip();
+			
 	} else if(is_array(TOOLTIP)) {
 		var content = TOOLTIP[0];
 		var type    = TOOLTIP[1];

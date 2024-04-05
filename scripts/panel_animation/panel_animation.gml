@@ -165,47 +165,6 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	copy_clipboard = ds_list_create();
 	
-	#region ++++ control_buttons ++++
-	control_buttons = [ 
-		[ 
-		  function() { return __txt("Stop"); }, 
-		  function() { return 4; }, 
-		  function() { return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
-		  function() { PROJECT.animator.stop(); } 
-		],
-		[ 
-		  function() { return PROJECT.animator.is_playing? __txt("Pause") : __txt("Play from current (Shift + Space)"); }, 
-		  function() { return !PROJECT.animator.is_playing; }, 
-		  function() { return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
-		  function() { if(PROJECT.animator.is_playing) PROJECT.animator.pause(); else PROJECT.animator.resume(); } 
-		],
-		[ 
-		  function() { return __txtx("panel_animation_go_to_first_frame", "Go to first frame"); }, 
-		  function() { return 3; }, 
-		  function() { return COLORS._main_icon; },
-		  function() { PROJECT.animator.firstFrame(); } 
-		],
-		[ 
-		  function() { return __txtx("panel_animation_go_to_last_frame", "Go to last frame"); }, 
-		  function() { return 2; }, 
-		  function() { return COLORS._main_icon; },
-		  function() { PROJECT.animator.lastFrame(); } 
-		],
-		[ 
-		  function() { return __txtx("panel_animation_previous_frame", "Previous frame"); }, 
-		  function() { return 5; }, 
-		  function() { return COLORS._main_icon; },
-		  function() { PROJECT.animator.setFrame(PROJECT.animator.real_frame - 1); } 
-		],
-		[ 
-		  function() { return __txtx("panel_animation_next_frame", "Next frame"); }, 
-		  function() { return 6; }, 
-		  function() { return COLORS._main_icon; },
-		  function() { PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1); } 
-		],
-	];
-	#endregion
-	
 	#region ++++ hotkeys ++++
 
 		__collapse = false;
@@ -230,6 +189,56 @@ function Panel_Animation() : PanelContent() constructor {
 		addHotkey("Animation", "Paste",				"V",		MOD_KEY.ctrl,	panel_animation_paste);
 		addHotkey("Animation", "Collapse Toggle",	"C",		MOD_KEY.none,	collapseToggle);
 		addHotkey("Animation", "Toggle nodes",		"H",		MOD_KEY.none,	panel_animation_show_nodes);
+		
+		tooltip_toggle_nodes = new tooltipHotkey(__txtx("panel_animation_show_node", "Toggle node label"), "Animation", "Toggle nodes");
+	#endregion
+	
+	#region ++++ control_buttons ++++
+		tooltip_resume   = new tooltipHotkey(__txt("Resume"), "", "Resume/Pause");
+		tooltip_pause    = new tooltipHotkey(__txt("Pause"),  "", "Resume/Pause");
+		tooltip_fr_first = new tooltipHotkey(__txtx("panel_animation_go_to_first_frame", "Go to first frame"),  "", "First frame");
+		tooltip_fr_last  = new tooltipHotkey(__txtx("panel_animation_go_to_last_frame", "Go to last frame"),    "", "Last frame");
+		tooltip_fr_prev  = new tooltipHotkey(__txtx("panel_animation_previous_frame", "Previous frame"),        "", "Previous frame");
+		tooltip_fr_next  = new tooltipHotkey(__txtx("panel_animation_next_frame", "Next frame"),                "", "Next frame");
+	
+		control_buttons = [ 
+			[ 
+			  function() { return __txt("Stop"); }, 
+			  function() { return 4; }, 
+			  function() { return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
+			  function() { PROJECT.animator.stop(); } 
+			],
+			[ 
+			  function() { return PROJECT.animator.is_playing? tooltip_pause : tooltip_resume; }, 
+			  function() { return !PROJECT.animator.is_playing; }, 
+			  function() { return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
+			  function() { if(PROJECT.animator.is_playing) PROJECT.animator.pause(); else PROJECT.animator.resume(); } 
+			],
+			[ 
+			  function() { return tooltip_fr_first; }, 
+			  function() { return 3; }, 
+			  function() { return COLORS._main_icon; },
+			  function() { PROJECT.animator.firstFrame(); } 
+			],
+			[ 
+			  function() { return tooltip_fr_last; }, 
+			  function() { return 2; }, 
+			  function() { return COLORS._main_icon; },
+			  function() { PROJECT.animator.lastFrame(); } 
+			],
+			[ 
+			  function() { return tooltip_fr_prev; }, 
+			  function() { return 5; }, 
+			  function() { return COLORS._main_icon; },
+			  function() { PROJECT.animator.setFrame(PROJECT.animator.real_frame - 1); } 
+			],
+			[ 
+			  function() { return tooltip_fr_next; }, 
+			  function() { return 6; }, 
+			  function() { return COLORS._main_icon; },
+			  function() { PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1); } 
+			],
+		];
 	#endregion
 	
 	#region ++++ context menu ++++
@@ -2125,8 +2134,7 @@ function Panel_Animation() : PanelContent() constructor {
 			node_name_type = (node_name_type + 1) % 3;
 		
 		by += ui(32); if(by > max_y) return;
-		txt = __txtx("panel_animation_show_node", "Toggle node label");
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.junc_visible, show_nodes) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, tooltip_toggle_nodes, THEME.junc_visible, show_nodes) == 2)
 			show_nodes = !show_nodes;
 		
 		by += ui(32); if(by > max_y) return;
