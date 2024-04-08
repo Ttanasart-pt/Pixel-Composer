@@ -210,8 +210,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 2] = nodeValue("Spring Force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { Mesh_setTriangle(); } });
+	inputs[| 3] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { Mesh_setTriangle(); } });
 	
 	inputs[| 4] = nodeValue("Diagonal Link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Include diagonal link to prevent drastic grid deformation.");
 	

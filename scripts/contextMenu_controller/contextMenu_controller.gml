@@ -57,7 +57,9 @@
 		self.toggle = toggle;
 		self.params = params;
 		color   = c_white;
-		isShelf = false;
+		
+		isShelf     = false;
+		shelfObject = noone;
 		
 		shiftMenu = noone;
 		

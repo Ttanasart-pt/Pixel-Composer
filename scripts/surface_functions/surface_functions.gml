@@ -170,6 +170,18 @@
 		return surface_get_height(s);
 	} #endregion
 
+	function surface_get_format_safe(s, crop = true) { #region
+		INLINE
+	
+		if(is_struct(s)) {
+			if(is_instanceof(s, dynaSurf)) return s.getFormat();
+			else if(is_instanceof(s, SurfaceAtlas)) return surface_get_format(s.getSurface());
+			else return surface_rgba8unorm;
+		}
+	
+		return surface_get_format(s);
+	} #endregion
+
 	function surface_get_dimension(s) { #region
 		INLINE
 	

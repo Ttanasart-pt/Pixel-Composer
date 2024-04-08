@@ -145,9 +145,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true })
 		.rejectArray();
 		
-	triggerSpawn = function() { inputs[| 44].setAnim(true); inputs[| 44].setValue(true); };
 	inputs[| 44] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger,  false )
-		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger", onClick: triggerSpawn, output: true })
+		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
 		.rejectArray();
 	
 	inputs[| 45] = nodeValue("Follow Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )

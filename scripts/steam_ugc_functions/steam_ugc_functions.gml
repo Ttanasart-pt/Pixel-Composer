@@ -1,8 +1,8 @@
 function __initSteamUGC() { #region
 	globalvar STEAM_SUBS, STEAM_COLLECTION, STEAM_PROJECTS;
-	STEAM_SUBS		 = ds_list_create();
-	STEAM_COLLECTION = ds_list_create();
-	STEAM_PROJECTS   = ds_list_create();
+	STEAM_SUBS		   = ds_list_create();
+	STEAM_COLLECTION   = ds_list_create();
+	STEAM_PROJECTS     = ds_list_create();
 	
 	if(DEMO) return;
 	if(!STEAM_ENABLED) return;

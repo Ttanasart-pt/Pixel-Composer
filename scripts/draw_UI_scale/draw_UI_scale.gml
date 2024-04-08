@@ -25,7 +25,7 @@ function line_get_width(txt, font = noone, offset = 0) {
 	}
 	
 	function resetScale(scale, willResize = false) {
-		if(scale == PREFERENCES.display_scaling) return;
+		if(PREFERENCES.display_scaling == scale) return;
 		
 		PREFERENCES.display_scaling = scale;
 		resetPanel();

@@ -16,10 +16,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	link_inactive_color = noone;
 	
-	tooltip	= new tooltipSelector("Axis", [
-		__txt("Independent"),
-		__txt("Linked"),
-	]);
+	tooltip	= new tooltipSelector("Axis", [ __txt("Independent"), __txt("Linked") ]);
 	
 	onModifyIndex = function(index, val) { 
 		var v = toNumber(val);

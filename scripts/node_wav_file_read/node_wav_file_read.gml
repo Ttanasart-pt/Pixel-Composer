@@ -31,13 +31,11 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "audio|*.wav" })
 		.rejectArray();
 	
-	inputs[| 1]  = nodeValue("Sync length", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", onClick: function() { 
+	inputs[| 1]  = nodeValue("Sync length", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", UI : true, onClick: function() { 
 			if(content == noone) return;
-			var frm = max(1, ceil(content.duration * PROJECT.animator.framerate));
-			TOTAL_FRAMES = frm;
-		} })
-		.rejectArray();
+			TOTAL_FRAMES = max(1, ceil(content.duration * PROJECT.animator.framerate));
+		} });
 		
 	inputs[| 2]  = nodeValue("Mono", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 		

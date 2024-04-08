@@ -115,30 +115,31 @@ if(winMan_isMinimized()) exit;
 			case "Color" :
 				draw_sprite_stretched_ext(THEME.color_picker_box, 1, mouse_mx + ui(-16), mouse_my + ui(-16), ui(32), ui(32), DRAGGING.data, 0.5);
 				break;
+				
 			case "Palette" :
 				drawPalette(DRAGGING.data, mouse_mx - ui(64), mouse_my - ui(12), ui(128), ui(24), 0.5);
 				break;
+				
 			case "Gradient" :
 				DRAGGING.data.draw(mouse_mx - ui(64), mouse_my - ui(12), ui(128), ui(24), 0.5);
 				break;
-			case "Asset" :
-				if(DRAGGING.data.spr) {
-					var ss = 32 / max(sprite_get_width(DRAGGING.data.spr), sprite_get_height(DRAGGING.data.spr))
-					draw_sprite_ext(DRAGGING.data.spr, 0, mouse_mx, mouse_my, ss, ss, 0, c_white, 0.5);
-				}
-				break;
-			case "Collection" :
-				if(DRAGGING.data.spr) {
-					var ss = 32 / max(sprite_get_width(DRAGGING.data.spr), sprite_get_height(DRAGGING.data.spr))
-					draw_sprite_ext(DRAGGING.data.spr, 0, mouse_mx, mouse_my, ss, ss, 0, c_white, 0.5);
-				}
-				break;
+				
 			case "Bool" :
 				draw_set_alpha(0.5);
 				draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 				draw_text_bbox({ xc: mouse_mx, yc: mouse_my, w: ui(128), h: ui(24) }, __txt(DRAGGING.data? "True" : "False"));
 				draw_set_alpha(1);
 				break;
+				
+			case "Asset" :
+			case "Project" :
+			case "Collection" :
+				if(DRAGGING.data.spr) {
+					var ss = ui(48) / max(sprite_get_width(DRAGGING.data.spr), sprite_get_height(DRAGGING.data.spr))
+					draw_sprite_ext(DRAGGING.data.spr, 0, mouse_mx + ui(8), mouse_my + ui(8), ss, ss, 0, c_white, 0.5);
+				}
+				break;
+				
 			default:
 				draw_set_alpha(0.5);
 				draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);

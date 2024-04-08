@@ -33,11 +33,9 @@ function __d3dMaterial(surface = noone) constructor {
 		gpu_set_tex_filter(texFilter);
 	}
 	
-	static clone = function() {
-		var _mat = new __d3dMaterial();
+	static clone = function(replaceSurface = surface) {
+		var _mat = new __d3dMaterial(replaceSurface);
 		
-		_mat.surface   = surface;
-	
 		_mat.diffuse   = diffuse;
 		_mat.specular  = specular;
 		_mat.metalic   = metalic;
@@ -47,7 +45,39 @@ function __d3dMaterial(surface = noone) constructor {
 		_mat.normalStr = normalStr;
 	
 		_mat.reflective = reflective;
+		_mat.texFilter  = texFilter;
 		
 		return _mat;
+	}
+	
+	static serialize = function() {
+		var s = { 
+			diffuse,
+			specular,  
+			metalic,   
+			shine,     
+			
+			normalStr, 
+			
+			reflective,
+			texFilter, 
+		};
+			
+		return json_stringify(s, false);
+	}
+	
+	static deserialize = function(str) {
+		var s = json_try_parse(str, noone);
+		if(s == noone) return;
+		
+		diffuse   = s.diffuse;
+		specular  = s.specular;
+		metalic   = s.metalic;
+		shine     = s.shine;
+		
+		normalStr = s.normalStr;
+		
+		reflective = s.reflective;
+		texFilter  = s.texFilter;
 	}
 }

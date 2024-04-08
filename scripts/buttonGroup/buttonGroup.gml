@@ -79,10 +79,10 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
 				
 				if(_selecting == i) {
-					draw_sprite_stretched(spr, 2, bx, _y, ww, _h);
+					draw_sprite_stretched(spr, 2, floor(bx), _y, ceil(ww), _h);
 					draw_sel = [spr, bx];
 				} else {
-					buttons[i].draw(bx, _y, ww, _h, _m, spr);
+					buttons[i].draw(floor(bx), _y, ceil(ww), _h, _m, spr);
 					if(buttons[i].clicked) onClick(i);
 				}
 				

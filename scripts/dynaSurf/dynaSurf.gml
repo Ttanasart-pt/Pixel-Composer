@@ -11,6 +11,7 @@ function dynaSurf() constructor {
 	
 	static getWidth  = function() { return is_surface(array_safe_get_fast(surfaces, 0))? surface_get_width(surfaces[0])  : 1; }
 	static getHeight = function() { return is_surface(array_safe_get_fast(surfaces, 0))? surface_get_height(surfaces[0]) : 1; }
+	static getFormat = function() { return is_surface(array_safe_get_fast(surfaces, 0))? surface_get_format(surfaces[0]) : surface_rgba8unorm; }
 	
 	static draw = function(_x = 0, _y = 0, _sx = 1, _sy = 1, _ang = 0, _col = c_white, _alp = 1) {}
 	static drawStretch = function(_x = 0, _y = 0, _w = 1, _h = 1, _ang = 0, _col = c_white, _alp = 1) {

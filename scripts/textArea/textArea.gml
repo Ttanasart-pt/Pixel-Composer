@@ -177,9 +177,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		}
 		var guide = function_guide_server(_fn);
 		
-		o_dialog_textbox_function_guide.dialog_x = rx + cursor_pos_x + 1;
-		o_dialog_textbox_function_guide.dialog_y = ry + cursor_pos_y - 12;
-			
 		if(guide != "") {
 			o_dialog_textbox_function_guide.activate(self);
 			o_dialog_textbox_function_guide.prompt   = guide;
@@ -944,6 +941,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				if(o_dialog_textbox_autocomplete.textbox == self) {
 					o_dialog_textbox_autocomplete.dialog_x = rx + _x + cursor_pos_x + 1;
 					o_dialog_textbox_autocomplete.dialog_y = ry + _y + cursor_pos_y + line_get_height() + 1;
+				}
+				
+				if(o_dialog_textbox_function_guide.textbox == self) {
+					o_dialog_textbox_function_guide.dialog_x = rx + _x + cursor_pos_x + 1;
+					o_dialog_textbox_function_guide.dialog_y = ry + _y + cursor_pos_y - 12;
 				}
 			#endregion
 			

@@ -131,7 +131,7 @@ function upgroupNode(collection, record = true) { #region
 		collection.remove(remNode); 
 	}
 	
-	nodeDelete(collection);
+	collection.destroy();
 	UNDO_HOLDING = false;
 	
 	if(record) recordAction(ACTION_TYPE.ungroup, collection, { content: _content });
@@ -392,7 +392,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			_node.ungroup();
 			
 		if(_node.destroy_when_upgroup) 
-			nodeDelete(_node);
+			_node.destroy();
 		else
 			_node.group = group;
 			

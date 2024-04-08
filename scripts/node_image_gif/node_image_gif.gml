@@ -31,8 +31,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
 		
-	inputs[| 1] = nodeValue("Set animation length to gif", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", onClick: function() { 
+	inputs[| 1] = nodeValue("Set animation length to gif", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() { 
 				if(!spr) return;
 				if(!sprite_exists(spr)) return;
 				TOTAL_FRAMES = sprite_get_number(spr);

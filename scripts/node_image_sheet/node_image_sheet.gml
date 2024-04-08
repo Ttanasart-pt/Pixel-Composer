@@ -28,8 +28,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), ]);
 	
-	inputs[| 10] = nodeValue("Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0, "Automatically set amount based on sprite size.")
-		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", onClick: function() { #region
+	inputs[| 10] = nodeValue("Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false, "Automatically set amount based on sprite size.")
+		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", UI : true, onClick: function() { #region
 			var _sur = getInputData(0);
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
 			var ww = surface_get_width_safe(_sur);
@@ -52,8 +52,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			doUpdate();
 		} }); #endregion
 		
-	inputs[| 11] = nodeValue("Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", onClick: function() { 
+	inputs[| 11] = nodeValue("Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", UI : true, onClick: function() { 
 			var _atl = outputs[| 1].getValue();
 			var _spd = getInputData(8);
 			TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));

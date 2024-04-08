@@ -3,7 +3,7 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	object_class = __3dTerrain;
 	
-	inputs[| in_mesh + 0] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
+	inputs[| in_mesh + 0] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
 		.setVisible(true, true);
 	
 	inputs[| in_mesh + 1] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )

@@ -3,39 +3,23 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	update_on_frame = true;
 	setDimension(96, 32 + 24 * 1);
 	
-	inputs[| 0] = nodeValue("Trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false)
-		.setVisible(false, false);
+	inputs[| 0] = nodeValue("Trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
-	inputs[| 1] = nodeValue("Trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false)
-		.setVisible(true, true)
-		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger", onClick: function() { onInspector2Update(); } });
-	
-	outputs[| 0] = nodeValue("Trigger", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false);
+	outputs[| 0] = nodeValue("Trigger", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false );
 	
 	insp2UpdateTooltip   = "Trigger";
 	insp2UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
-	doTrigger = 0;
+	static onInspector2Update = function() { inputs[| 0].setAnim(true); inputs[| 0].setValue(true); }
 	
-	static onInspector2Update = function() { #region
-		inputs[| 0].setAnim(true);
-		inputs[| 0].setValue(true);
-	} #endregion
-	
-	static step = function() { #region
-		if(doTrigger == 1) {
-			outputs[| 0].setValue(true);
-			doTrigger = -1;
-		} else if(doTrigger == -1) {
-			outputs[| 0].setValue(false);
-			doTrigger = 0;
-		}
-	} #endregion
-	
-	static update = function() { #region
-		var trg = getInputData(0);
-		if(trg) doTrigger = 1;
-	} #endregion
+	static update = function() { 
+		var _val = inputs[| 0].getValue();
+		
+		//print($"{CURRENT_FRAME}: {ds_list_to_array(inputs[| 0].animator.values)} | {inputs[| 0].animator.getValue(CURRENT_FRAME)}");
+		
+		outputs[| 0].setValue(_val);
+	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
@@ -51,6 +35,6 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		draw_circle_border(bbox.xc, bbox.yc, rr, 4);
 		
 		draw_set_circle_precision(32);
-		if(trg) draw_circle(bbox.xc, bbox.yc, rr - 6, false);
+		if(trg) draw_circle(bbox.xc - 1, bbox.yc - 1, rr - 6, false);
 	} #endregion
 }

@@ -37,9 +37,9 @@ if !ready exit;
 
 #region draw
 	section_current = "";
-	var px = dialog_x + ui(padding + page_width);
+	var px = dialog_x + ui(padding) + page_width;
 	var py = dialog_y + ui(title_height);
-	var pw = dialog_w - ui(padding + page_width + padding);
+	var pw = dialog_w - ui(padding + padding) - page_width;
 	var ph = dialog_h - ui(title_height + padding);
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
@@ -81,7 +81,7 @@ if !ready exit;
 			loadColor(PREFERENCES.theme);
 		}
 		
-		var x1 = dialog_x + ui(padding + page_width);
+		var x1 = dialog_x + ui(padding) + page_width;
 		var x2 = _x - ui(32);
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);

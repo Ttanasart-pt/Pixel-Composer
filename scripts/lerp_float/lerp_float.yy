@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"lerp_float",
   "parent":{
-    "name":"value",
-    "path":"folders/functions/value.yy",
+    "name":"math",
+    "path":"folders/functions/math.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

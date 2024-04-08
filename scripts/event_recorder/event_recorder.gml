@@ -77,7 +77,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				break;
 				
 			case ACTION_TYPE.node_added :
-				nodeDelete(obj);
+				obj.destroy();
 				break;
 				
 			case ACTION_TYPE.node_delete :
@@ -113,7 +113,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				
 			case ACTION_TYPE.collection_loaded :
 				for( var i = 0, n = array_length(obj); i < n; i++ ) 
-					nodeDelete(obj[i]);
+					obj[i].destroy();
 				break;
 				
 			case ACTION_TYPE.struct_modify : 
@@ -166,7 +166,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				break;
 				
 			case ACTION_TYPE.node_delete :
-				nodeDelete(obj);
+				obj.destroy();
 				break;
 				
 			case ACTION_TYPE.junction_connect :

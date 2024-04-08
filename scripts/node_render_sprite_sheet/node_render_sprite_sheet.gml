@@ -202,11 +202,11 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		#endregion
 		
 		#region draw
-			surface_set_target(_surf);
-			DRAW_CLEAR
-				
-			BLEND_OVERRIDE
+			surface_set_shader(_surf, noone);
 			
+			var curr_w = -1;
+			var curr_h = -1;
+	
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
 					var px = padd[2];
@@ -216,7 +216,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						var _h  = surface_get_height_safe(inpt[i]);
 						var _sx = px;
 						var _sy = py;
-					
+						
+						curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
+						if(curr_w != _w || curr_h == _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
+						
 						switch(alig) {
 							case 1 : _sy = py + (hh - _h) / 2;	break;
 							case 2 : _sy = py + (hh - _h);		break;
@@ -237,6 +240,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						var _sx = px;
 						var _sy = py;
 							
+						curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
+						if(curr_w != _w || curr_h == _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
+						
 						switch(alig) {
 							case 1 : _sx = px + (ww - _w) / 2;	break;
 							case 2 : _sx = px + (ww - _w);		break;
@@ -270,6 +276,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 							var _w = surface_get_width_safe(inpt[index]);
 							var _h = surface_get_height_safe(inpt[index]);
 							
+							curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
+							if(curr_w != _w || curr_h == _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
+						
 							array_push(_atl, new SurfaceAtlas(inpt[index], px, py));
 							draw_surface_safe(inpt[index], px, py);
 								
@@ -280,13 +289,16 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					}
 					break;
 				}
-				BLEND_NORMAL;
-			surface_reset_target();
+				
+			surface_reset_shader();
 		#endregion
 		
 		outputs[| 0].setValue(_surf);
 		outputs[| 1].setValue(_atl);
 	} #endregion
+	
+	anim_curr_w = -1;
+	anim_curr_h = -1;
 	
 	static animationInit = function(clear = false) { #region
 		var inpt = getInputData(0);
@@ -343,6 +355,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var sh = surface_get_height_safe(_surfi);
 			ww = sw;
 			hh = sh;
+			
+			anim_curr_w = sw; 
+			anim_curr_h = sh;
 				
 			switch(pack) {
 				case SPRITE_STACK.horizontal :						
@@ -460,6 +475,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			var _w = surface_get_width_safe(_surfi);
 			var _h = surface_get_height_safe(_surfi);
+			
+			if(anim_curr_w != _w || anim_curr_h == _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
 			
 			var px;
 			var _sx = 0;

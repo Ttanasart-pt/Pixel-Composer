@@ -75,17 +75,17 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 		}
 		
 		if(input_node == noone || output_node == noone) {
-			if(input_node)  nodeDelete(input_node);
-			if(output_node) nodeDelete(output_node);
-			nodeDelete(self);
+			if(input_node)  input_node.destroy();
+			if(output_node) output_node.destroy();
+			destroy();
 		}
 	} #endregion
 	
 	static update = function() { #region
 		if(input_node == noone || output_node == noone) {
-			if(input_node)  nodeDelete(input_node);
-			if(output_node) nodeDelete(output_node);
-			nodeDelete(self);
+			if(input_node)  input_node.destroy();
+			if(output_node) output_node.destroy();
+			destroy();
 			return;
 		}
 		

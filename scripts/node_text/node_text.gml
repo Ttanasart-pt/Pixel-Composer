@@ -112,6 +112,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	} #endregion
 	
 	static step = function() { #region
+		var _font = getSingleValue(1);
 		var _dimt = getSingleValue(9);
 		var _path = getSingleValue(13);
 		
@@ -122,7 +123,12 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[|  8].setVisible(_dimt == 0 || _use_path);
 		inputs[|  9].setVisible(!_use_path);
 		inputs[| 14].setVisible( _use_path);
-		inputs[| 15].setVisible(_dimt == 0 && !_use_path);
+		inputs[| 15].setVisible(_dimt == 0 && !_use_path && _font != "");
+		
+		inputs[|  2].setVisible(_font != "");
+		inputs[|  3].setVisible(_font != "");
+		inputs[| 11].setVisible(_font != "");
+		inputs[| 12].setVisible(_font != "");
 	} #endregion
 	
 	static waveGet = function(_ind) { #region
@@ -367,7 +373,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						__temp_tx += string_width(_chr) + __temp_trck;
 					});
 					
-					_ty += line_get_height() + _line;
+					_ty += string_height("l") + _line;
 				} else {
 					draw_set_text(font, fa_left, fa_top, _col);
 					tx = _padd[PADDING.left];
@@ -397,7 +403,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						__temp_tx += (string_width(_chr) + __temp_trck) * __temp_ss;
 					});
 				
-					ty += (line_get_height() + _line) * _ss;
+					ty += (string_height("l") + _line) * _ss;
 				}
 			} #endregion
 		surface_reset_shader();

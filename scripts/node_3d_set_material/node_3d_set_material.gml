@@ -1,7 +1,7 @@
 function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group) constructor {
 	name = "Set Material";
 	
-	inputs[| in_mesh + 0] = nodeValue("Materials", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone)
+	inputs[| in_mesh + 0] = nodeValue("Materials", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	

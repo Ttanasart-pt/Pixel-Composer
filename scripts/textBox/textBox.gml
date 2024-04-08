@@ -135,6 +135,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		if(WIDGET_CURRENT != self) return;
 		
 		apply();
+		if(is_callable(onRelease))
+			apply(true);
+			
 		WIDGET_CURRENT = noone;
 		UNDO_HOLDING = false;
 		
@@ -328,6 +331,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			} else 
 				cursor_select	= -1;
 			move_cursor(-cursor);
+			
 		} else if(keyboard_check_pressed(vk_end)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
@@ -335,13 +339,17 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			} else 
 				cursor_select	= -1;
 			move_cursor(string_length(_input_text) - cursor);
+			
 		} else if(keyboard_check_pressed(vk_escape)) {
 			_input_text = _last_text;
 			deactivate();
-		} else if(keyboard_check_pressed(vk_enter))
+			
+		} else if(keyboard_check_pressed(vk_enter)) {
 			deactivate();
-		else if(auto_update && (edited || keyboard_check_pressed(vk_anykey)))
+			
+		} else if(auto_update && (edited || keyboard_check_pressed(vk_anykey))) {
 			apply();
+		}
 	} #endregion
 	
 	static display_text = function(_x, _y, _text, _w, _m = -1) { #region

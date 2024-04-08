@@ -17,6 +17,8 @@ function Panel_Collection() : PanelContent() constructor {
 	min_h = ui(40);
 	
 	roots = [ ["Collections", COLLECTIONS] , ["Assets", global.ASSETS] ];
+	if(STEAM_ENABLED) array_push(roots, ["Project", STEAM_PROJECTS]);
+	
 	mode  = 0;
 	root  = roots[mode][1];
 	context = root;
@@ -143,26 +145,36 @@ function Panel_Collection() : PanelContent() constructor {
 	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) { #region
 		draw_clear_alpha(c_white, 0);
 		
-		switch(mode) {
-			case 0 : if(!COLLECTIONS.scanned)   COLLECTIONS.scan([".json", ".pxcc"]); break;
-		}
-		
 		var nodes;
-		if(mode == 0 && context == root) nodes = STEAM_COLLECTION;
-		else nodes = search_string == ""? context.content : search_list;
-		
 		var steamNode = [];
-		for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
-			var meta = STEAM_COLLECTION[| i].meta;	
-			if(array_exists(meta.tags, context.name))
-				array_push(steamNode, STEAM_COLLECTION[| i]);	
+		
+		if(mode == 0) {
+			if(!COLLECTIONS.scanned) 
+				COLLECTIONS.scan([".json", ".pxcc"]); 
+			
+			if(context == root) nodes = STEAM_COLLECTION;
+			else				nodes = context.content;
+			
+			for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
+				var meta = STEAM_COLLECTION[| i].meta;	
+				if(array_exists(meta.tags, context.name))
+					array_push(steamNode, STEAM_COLLECTION[| i]);	
+			}
+		
+		} else if(mode == 1) {
+			nodes = context.content;
+			
+		} else if(mode == 2) {
+			nodes = context;
 		}
+		
+		if(search_string != "") nodes = search_list;
 		
 		var node_list  = ds_list_size(nodes);
 		var node_count = node_list + array_length(steamNode);
-		var frame  = PREFERENCES.collection_animated? current_time * PREFERENCES.collection_preview_speed / 3000 : 0;
-		var _cw    = contentPane.surface_w;
-		var _hover = pHOVER && contentPane.hover;
+		var frame	   = PREFERENCES.collection_animated? current_time * PREFERENCES.collection_preview_speed / 3000 : 0;
+		var _cw		   = contentPane.surface_w;
+		var _hover	   = pHOVER && contentPane.hover;
 		var hh = 0;
 		
 		updated_prog = lerp_linear(updated_prog, 0, 0.01);
@@ -171,6 +183,7 @@ function Panel_Collection() : PanelContent() constructor {
 			var grid_size  = ui(64);
 			var grid_width = ui(80);
 			var grid_space = ui(12);
+			
 			var col = max(1, floor(_cw / (grid_width + grid_space)));
 			var row = ceil(node_count / col);
 			var yy  = _y + grid_space;
@@ -182,6 +195,7 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			for(var i = 0; i < row; i++) {
 				name_height = 0;
+				
 				for(var j = 0; j < col; j++) {
 					var index = i * col + j;
 					if(index >= node_count) break;
@@ -205,8 +219,17 @@ function Panel_Collection() : PanelContent() constructor {
 						
 						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-							if(mouse_press(mb_left, pFOCUS))
-								DRAGGING = { type : _node.type == FILE_TYPE.collection? "Collection" : "Asset", data : _node }
+							
+							if(mouse_press(mb_left, pFOCUS)) {
+								var _typ = "";
+								switch(_node.type) {
+									case FILE_TYPE.collection : _typ = "Collection"; break;
+									case FILE_TYPE.assets     : _typ = "Asset";      break;
+									case FILE_TYPE.project    : _typ = "Project";    break;
+								}
+								
+								DRAGGING = { type : _typ, data : _node }
+							}
 							
 							if(!DEMO && mouse_press(mb_right, pFOCUS)) {
 								_menu_node = _node;
@@ -262,6 +285,7 @@ function Panel_Collection() : PanelContent() constructor {
 				hh += hght;
 				yy += hght;
 			}
+			
 		} else {
 			var list_width  = _cw;
 			var list_height = ui(28);
@@ -353,7 +377,9 @@ function Panel_Collection() : PanelContent() constructor {
 		initSize();
 		
 		folderPane.resize(group_w - ui(8), content_h);
-		contentPane.resize(content_w - ui(6), content_h);
+		
+		if(mode == 2)	contentPane.resize(w - ui(16), content_h);
+		else			contentPane.resize(content_w - ui(6), content_h);
 	} #endregion
 	
 	function setContext(cont) { #region
@@ -374,37 +400,48 @@ function Panel_Collection() : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var content_y = ui(48);
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
-		contentPane.setFocusHover(pFOCUS, pHOVER);
-		contentPane.draw(group_w, content_y, mx - group_w, my - content_y);
 		
-		folderPane.setFocusHover(pFOCUS, pHOVER);
-		folderPane.draw(0, content_y, mx, my - content_y);
-		
-		#region resize width
-			if(group_w_dragging) {
-				CURSOR = cr_size_we;
-				
-				var _gw = group_w_sx + (mx - group_w_mx);
-				_gw = max(ui(180), _gw);
-				group_w = _gw;
-				
-				onResize();
-				
-				if(mouse_release(mb_left)) {
-					group_w_dragging = false;
-				}
-			}
+		if(mode == 2) {
+			var pad = ui(8);
 			
-			if(pHOVER && point_in_rectangle(mx, my, group_w - ui(2), content_y, group_w + ui(2), content_y + content_h)) {
-				CURSOR = cr_size_we;
-				if(pFOCUS && mouse_press(mb_left)) {
-					group_w_dragging = true;
-					group_w_mx = mx;
-					group_w_sx = group_w;
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, content_y, w - pad * 2, content_h);
+			contentPane.setFocusHover(pFOCUS, pHOVER);
+			contentPane.draw(pad, content_y, mx - pad, my - content_y);
+			
+		} else {
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
+			contentPane.setFocusHover(pFOCUS, pHOVER);
+			contentPane.draw(group_w, content_y, mx - group_w, my - content_y);
+		
+			folderPane.setFocusHover(pFOCUS, pHOVER);
+			folderPane.draw(0, content_y, mx, my - content_y);
+			
+			#region resize width
+				if(group_w_dragging) {
+					CURSOR = cr_size_we;
+				
+					var _gw = group_w_sx + (mx - group_w_mx);
+					_gw = max(ui(180), _gw);
+					group_w = _gw;
+				
+					onResize();
+				
+					if(mouse_release(mb_left)) {
+						group_w_dragging = false;
+					}
 				}
-			}
-		#endregion
+			
+				if(pHOVER && point_in_rectangle(mx, my, group_w - ui(2), content_y, group_w + ui(2), content_y + content_h)) {
+					CURSOR = cr_size_we;
+					if(pFOCUS && mouse_press(mb_left)) {
+						group_w_dragging = true;
+						group_w_mx = mx;
+						group_w_sx = group_w;
+					}
+				}
+			#endregion
+		
+		}
 		
 		var _x = ui(20);
 		var _y = ui(24);
@@ -413,11 +450,11 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		for( var i = 0, n = array_length(roots); i < n; i++ ) {
 			var r = roots[i];
-			var b = buttonInstant(THEME.button_hide_fill, _x - ui(8), _y - bh / 2, string_width(r[0]) + ui(20), bh, [mx, my], pFOCUS, pHOVER);
-			if(b == 2) {
+			if(buttonInstant(THEME.button_hide_fill, _x - ui(8), _y - bh / 2, string_width(r[0]) + ui(20), bh, [mx, my], pFOCUS, pHOVER) == 2) {
 				mode = i;
 				root = r[1];
 				context = root;
+				onResize();
 			}
 			
 			draw_set_text(f_p0b, fa_left, fa_center, i == mode? COLORS._main_text : COLORS._main_text_sub);

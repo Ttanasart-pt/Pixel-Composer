@@ -31,10 +31,10 @@
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION;
 
 	LATEST_VERSION	= 11600;
-	VERSION			= 11690;
+	VERSION			= 11692;
 	SAVE_VERSION	= 11690;
-	VERSION_STRING  = "1.16.9";
-	BUILD_NUMBER	= 11690;
+	VERSION_STRING  = "1.16.9.2";
+	BUILD_NUMBER	= 11692;
 	
 	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();
@@ -89,7 +89,7 @@
 	#macro mouse_raw_y (device_mouse_raw_y(0) + window_get_y())
 	#macro mouse_ui [device_mouse_x_to_gui(0), device_mouse_y_to_gui(0)]
 	
-	#macro sFOCUS FOCUS == self.id
+	#macro sFOCUS (FOCUS == self.id)
 	#macro sHOVER (!CURSOR_IS_LOCK && HOVER == self.id)
 	
 	#macro DELTA_TIME delta_time / 1_000_000

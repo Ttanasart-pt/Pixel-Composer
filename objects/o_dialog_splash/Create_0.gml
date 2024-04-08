@@ -96,7 +96,7 @@ event_inherited();
 				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_inner);
 				draw_text(fx + ui(12), ly, filename_name_only(_rec));
 			
-				ly += line_get_height(, ui(4));
+				ly += line_get_height() + ui(4);
 				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text_cut(fx + ui(12), ly, _rec, ww - ui(24));
 			}
@@ -191,7 +191,7 @@ event_inherited();
 							surface_set_target(clip_surf);
 								DRAW_CLEAR
 								
-								draw_sprite_ui_uniform(spr, 0, 0, 0, s);
+								draw_sprite_uniform(spr, 0, 0, 0, s);
 								gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
 								draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, _spw, _sph);
 								BLEND_NORMAL
@@ -199,7 +199,7 @@ event_inherited();
 							
 							draw_surface(clip_surf, _sx, _sy);
 						} else {
-							draw_sprite_ui_uniform(spr, 0, _sx, _sy, s);
+							draw_sprite_uniform(spr, 0, _sx, _sy, s);
 						}
 					} #endregion
 				}

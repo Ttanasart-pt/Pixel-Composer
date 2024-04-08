@@ -154,14 +154,6 @@
 		return _node;
 	}
 	
-	function nodeDelete(node, _merge = false) {
-		var list = node.group == noone? PROJECT.nodes : node.group.getNodeList();
-		ds_list_remove(list, node);
-		node.destroy(_merge);
-		
-		recordAction(ACTION_TYPE.node_delete, node);
-	}
-	
 	function nodeCleanUp() {
 		var key = ds_map_find_first(PROJECT.nodeMap);
 		repeat(ds_map_size(PROJECT.nodeMap)) {

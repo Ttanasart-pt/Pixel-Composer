@@ -19,6 +19,6 @@ function Node_Iterator_Each_Length(_x, _y, _group = noone) : Node(_x, _y, _group
 	}
 	
 	static onLoadGroup = function() { #region
-		if(group == noone) nodeDelete(self);
+		if(group == noone) destroy();
 	} #endregion
 }

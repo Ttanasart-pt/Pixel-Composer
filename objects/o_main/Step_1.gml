@@ -278,3 +278,4 @@ _HOVERING_ELEMENT = noone;
 #endregion
 
 //if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call * 100}%)");
+//if(!is_struct(FOCUS)) print(FOCUS);

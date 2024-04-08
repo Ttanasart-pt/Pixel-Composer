@@ -179,7 +179,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				if(!is_instanceof(_in, NodeValue)) continue;
 				if(_in.type != VALUE_TYPE.trigger) continue;
 				
-				array_push(input_buttons, _in);
+				if(_in.runInUI) array_push(input_buttons, _in);
 			}
 			
 			input_button_length = array_length(input_buttons);
@@ -581,14 +581,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var i = 0;
 		
 		repeat( input_button_length ) {
-			var _in = input_buttons[i];
+			var _in = input_buttons[i++];
 			
-			if(_in.getStaticValue() && !_in.display_data.output) {
+			if(_in.getStaticValue()) {
 				_in.editWidget.onClick();
 				_in.setValue(false);
 			}
-			
-			i++;
 		}
 		
 		if(NODE_HAS_INSP1 && inspectInput1.getStaticValue()) {
@@ -1417,8 +1415,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		setPreview(surf);
 		if(!__preview_surf) return;
 		
-		__preview_sw   = surface_get_width(preview_surface);
-		__preview_sh   = surface_get_height(preview_surface);
+		__preview_sw   = surface_get_width_safe(preview_surface);
+		__preview_sh   = surface_get_height_safe(preview_surface);
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var aa   = 0.5 + 0.5 * renderActive;
@@ -1427,7 +1425,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _sw = __preview_sw;
 		var _sh = __preview_sh;
 		var _ss = min(bbox.w / _sw, bbox.h / _sh);
-		draw_surface_ext(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
+		draw_surface_ext_safe(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss);
 	} #endregion
 	
 	static getNodeDimension = function(showFormat = true) { #region
@@ -1435,7 +1433,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var pw = surface_get_width_safe(preview_surface);
 		var ph = surface_get_height_safe(preview_surface);
-		var format = surface_get_format(preview_surface);
+		var format = surface_get_format_safe(preview_surface);
 		
 		var txt = $"[{pw} x {ph} ";
 		if(preview_amount) txt = $"{preview_amount} x {txt}";
@@ -1619,9 +1617,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onDestroy = function() {}
 	
-	static destroy = function(_merge = false) { #region
+	static destroy = function(_merge = false, record = true) { #region
 		if(!active) return;
 		disable();
+		
+		ds_list_remove(group == noone? PROJECT.nodes : group.getNodeList(), self);
 		
 		if(PANEL_GRAPH.node_hover     == self) PANEL_GRAPH.node_hover     = noone;
 		PANEL_GRAPH.nodes_selecting = [];
@@ -1660,6 +1660,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		onDestroy();
 		if(group) group.refreshNodes();
 		
+		if(record) recordAction(ACTION_TYPE.node_delete, self);
+		
 		RENDER_ALL_REORDER
 	} #endregion
 	
@@ -1668,6 +1670,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static restore = function() { #region
 		if(active) return;
 		enable();
+		
+		ds_list_add(group == noone? PROJECT.nodes : group.getNodeList(), self);
 		
 		onRestore();
 		if(group) group.refreshNodes();

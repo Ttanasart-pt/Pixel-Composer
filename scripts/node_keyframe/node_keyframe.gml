@@ -138,9 +138,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(!prop.is_anim && !LOADING && !APPENDING) return;
 		
-		if(ds_list_empty(values)) {
-			array_resize(key_map, TOTAL_FRAMES);
-			return;
+		if(ds_list_empty(values)) { 
+			array_resize(key_map, TOTAL_FRAMES); 
+			return; 
 		}
 		
 		var _len = max(TOTAL_FRAMES, values[| ds_list_size(values) - 1].time);
@@ -148,6 +148,13 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(array_length(key_map) != _len)
 			array_resize(key_map, _len);
+		
+		if(prop.type == VALUE_TYPE.trigger) {
+			array_fill(key_map, 0, _len, 0);
+			for( var i = 0, n = ds_list_size(values); i < n; i++ )
+				key_map[values[| i].time] = true;
+			return;
+		} 
 		
 		if(ds_list_size(values) < 2) {
 			array_fill(key_map, 0, _len, 0);
@@ -262,25 +269,16 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static getValue = function(_time = CURRENT_FRAME) { #region
 		//if(!prop.is_anim) return staticValue;
+		length = ds_list_size(values);
 		
 		///////////////////////////////////////////////////////////// TRIGGER TYPE /////////////////////////////////////////////////////////////
 		
 		if(prop.type == VALUE_TYPE.trigger) {
-			if(length == 0) 
-				return false;
-			
-			if(!prop.is_anim)
-				return values[| 0].value;
+			if(length == 0 || !prop.is_anim) return false;
 			
 			if(array_length(key_map) != TOTAL_FRAMES) updateKeyMap();
 			
-			var _keyIndex = key_map[_time];
-			
-			if(_keyIndex == -1 || _keyIndex == 999_999) 
-				return false;
-			
-			var _key = values[| _keyIndex];
-			return _key.time == _time? _key.value : false;
+			return key_map[_time];
 		}
 		
 		///////////////////////////////////////////////////////////// OPTIMIZATION /////////////////////////////////////////////////////////////
@@ -534,6 +532,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					
 					_key.value = _val;
 					return false;
+					
 				} else if(_key.time > _time) {
 					ds_list_insert(values, i, new valueKey(_time, _val, self));
 					updateKeyMap();
@@ -541,6 +540,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				}
 			}
 			
+			//print($"{_time}: {_val} | Insert last");
 			ds_list_add(values, new valueKey(_time, _val, self));
 			updateKeyMap();
 			return true;
@@ -610,11 +610,13 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 			var val = values[| i].value;
 			
-			if(prop.type == VALUE_TYPE.struct)
-				_value_list[1] = json_stringify(val);
-			else if(is_struct(val))
-				_value_list[1] = val.serialize();
-			else if(!sep_axis && typeArray(prop.display_type) && is_array(val)) {
+			if(prop.type == VALUE_TYPE.struct) {
+				val = json_stringify(val);
+				
+			} else if(is_struct(val)) {
+				val = val.serialize();
+				
+			} else if(!sep_axis && typeArray(prop.display_type) && is_array(val)) {
 				var __v = [];
 				for(var j = 0; j < array_length(val); j++) {
 					if(is_struct(val[j]) && struct_has(val[j], "serialize"))
@@ -622,10 +624,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					else 
 						array_push(__v, val[j]); 
 				}
-				_value_list[1] = __v;
-			} else
-				_value_list[1] = values[| i].value;
+				val = __v;
+				
+			}
 			
+			_value_list[1] = val;
 			_value_list[2] = values[| i].ease_in;
 			_value_list[3] = values[| i].ease_out;
 			_value_list[4] = values[| i].ease_in_type;
@@ -642,7 +645,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static deserialize = function(_data, scale = false) { #region
 		ds_list_clear(values);
 		
-		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
+		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { #region //backward compat: Gradient
 			var _val = [];
 			var value = _data[0][1];
 			
@@ -661,7 +664,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 			updateKeyMap();
 			return;
-		}
+		} #endregion
 					
 		var base = prop.def_val;
 		
@@ -693,6 +696,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var grad = new gradientObject();
 				_val = grad.deserialize(value);
 			
+			} else if(prop.type == VALUE_TYPE.d3Material) {
+				var mat = new __d3dMaterial();
+				_val = mat.deserialize(value);
+			
 			} else if(prop.type == VALUE_TYPE.color) {
 				if(is_array(_val)) {
 					for( var i = 0, n = array_length(_val); i < n; i++ )
@@ -710,7 +717,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					for(var j = 0; j < array_length(base); j++)
 						_val[j] = processValue(value);
 				}
-			}
+			} 
 			
 			//print($"Deserialize {prop.node.name}:{prop.name} = {_val} ");
 			var vk = new valueKey(_time, _val, self, ease_in, ease_out);

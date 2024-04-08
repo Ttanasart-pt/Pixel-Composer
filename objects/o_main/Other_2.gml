@@ -100,7 +100,7 @@
 	
 	if(!IS_CMD) { 
 		__initPanel();
-	
+		
 		if(file_exists_empty("icon.png"))
 			file_copy("icon.png", DIRECTORY + "icon.png");
 	

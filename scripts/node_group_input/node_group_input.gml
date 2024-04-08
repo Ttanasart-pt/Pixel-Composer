@@ -402,7 +402,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	} #endregion
 		
 	static onLoadGroup = function() { #region
-		if(group == noone) nodeDelete(self);
+		if(group == noone) destroy();
 	} #endregion
 	
 }

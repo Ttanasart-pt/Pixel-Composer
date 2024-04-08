@@ -2,17 +2,17 @@ function Node_Animation_Control(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name = "Animation Control";
 	setDimension(96, 96);
 	
-	inputs[| 0] = nodeValue("Toggle Play / Pause", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0);
+	inputs[| 0] = nodeValue("Toggle Play / Pause", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
 	
-	inputs[| 1] = nodeValue("Pause", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0);
+	inputs[| 1] = nodeValue("Pause", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
 	
-	inputs[| 2] = nodeValue("Resume", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0);
+	inputs[| 2] = nodeValue("Resume", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
 	
-	inputs[| 3] = nodeValue("Play From Beginning", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0);
+	inputs[| 3] = nodeValue("Play From Beginning", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
 	
-	inputs[| 4] = nodeValue("Play once", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0);
+	inputs[| 4] = nodeValue("Play once", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
 	
-	inputs[| 5] = nodeValue("Skip Frames", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0);
+	inputs[| 5] = nodeValue("Skip Frames", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
 	
 	inputs[| 6] = nodeValue("Skip Frames Count", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	

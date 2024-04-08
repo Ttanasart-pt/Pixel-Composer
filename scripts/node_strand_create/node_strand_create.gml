@@ -46,8 +46,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 14] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Uniform", "Random" ]);
 	
-	inputs[| 15] = nodeValue("Bake hair", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes.")
-		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", onClick: function() { 
+	inputs[| 15] = nodeValue("Bake hair", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes.")
+		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", UI : true, onClick: function() { 
 			attributes.use_groom = !attributes.use_groom; 
 			if(attributes.use_groom)
 				groomed = strands.clone();

@@ -120,7 +120,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 			};
 		}
 		
-		try { nodeDelete(_b); } catch(e) {}
+		try { _b.destroy(); } catch(e) {}
 		
 		_junc.inputs  = _jin;
 		_junc.outputs = _jot;

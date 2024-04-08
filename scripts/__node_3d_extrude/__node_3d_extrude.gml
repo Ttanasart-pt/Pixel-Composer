@@ -25,8 +25,8 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 7] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 8] = nodeValue("Manual generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { generateMesh(); doUpdate(); } });
+	inputs[| 8] = nodeValue("Manual generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { generateMesh(); doUpdate(); } });
 		
 	inputs[| 9] = nodeValue("Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);

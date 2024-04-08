@@ -114,11 +114,13 @@ function Panel_Menu() : PanelContent() constructor {
 	#region //////// MENU ////////
 	menus = [
 		[ __txt("File"), menu_file ],
+		
 		[ __txt("Edit"), [
 			menuItem(__txt("Undo"), function() { UNDO(); }, THEME.undo, ["", "Undo"]),
 			menuItem(__txt("Redo"), function() { REDO(); }, THEME.redo, ["", "Redo"]),
 			menuItem(__txt("History"), function() { dialogPanelCall(new Panel_History()); }),
 		]],
+		
 		[ __txt("Preview"), [
 			menuItem(__txtx("panel_menu_center_preview", "Center preview"), function() { PANEL_PREVIEW.do_fullView = true; }, THEME.icon_center_canvas, ["Preview", "Focus content"]), 
 			menuItem(__txtx("panel_menu_save_current_preview_as", "Save current preview as..."), function() { PANEL_PREVIEW.saveCurrentFrame(); }, noone, ["Preview", "Save current frame"]), 
@@ -128,6 +130,7 @@ function Panel_Menu() : PanelContent() constructor {
 				[ s_menu_black,			function() { PANEL_PREVIEW.canvas_bg = c_black; } ],
 			]),
 		]], 
+		
 		[ __txt("Animation"), [
 			menuItem(__txtx("panel_menu_animation_setting", "Animation Settings..."), function() { 
 				var dia = dialogPanelCall(new Panel_Animation_Setting()); 
@@ -138,6 +141,7 @@ function Panel_Menu() : PanelContent() constructor {
 				dialogPanelCall(new Panel_Animation_Scaler()); 
 			}, THEME.animation_timing),
 		]],
+		
 		[ __txt("Rendering"), [
 			menuItem(__txtx("panel_menu_render_all_nodes", "Render all nodes"), function() { 
 				RENDER_ALL_REORDER 
@@ -158,6 +162,7 @@ function Panel_Menu() : PanelContent() constructor {
 				function() { PREFERENCES.render_all_export = !PREFERENCES.render_all_export; },,,	
 				function() { return PREFERENCES.render_all_export; } ),
 		]],
+		
 		[ __txt("Panels"), [
 			menuItem(__txt("Workspace"), function(_dat) { 
 				var arr = [], lays = [];
@@ -218,6 +223,7 @@ function Panel_Menu() : PanelContent() constructor {
 				]);
 			} ).setIsShelf(),
 		]],
+		
 		[ __txt("Help"), menu_help ],
 	]; 
 	#endregion
@@ -638,7 +644,8 @@ function Panel_Menu() : PanelContent() constructor {
 					}
 				}
 				
-				draw_text_int((_x0 + _x1) / 2, (_y0 + _y1) / 2, txt);
+				draw_text(round((_x0 + _x1) / 2), round((_y0 + _y1) / 2), txt);
+				_xx1 = _x0 - ui(8);
 			} else {
 				var _xx1 = ui(40);
 				var y1 = h - ui(20);
@@ -678,7 +685,7 @@ function Panel_Menu() : PanelContent() constructor {
 			
 			if(hori) {
 				tx0 = nx0;
-				tx1 = w - ui(16);
+				tx1 = _xx1;
 				ty0 = 0;
 				ty1 = h;
 				tcx  = (tx0 + tx1) / 2;

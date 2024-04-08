@@ -64,7 +64,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	static createNewInput = function(index = -1) { #region
 		if(index == -1) index = ds_list_size(inputs);
 		
-		inputs[| index] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone)
+		inputs[| index] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial())
 							.setVisible(true, true);
 	} #endregion
 	

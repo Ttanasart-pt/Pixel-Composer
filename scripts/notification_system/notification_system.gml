@@ -43,10 +43,10 @@
 	}
 	
 	function noti_status(str, icon = noone, flash = false, ref = noone) {
-		if(TEST_ERROR) return {};
-		
 		str = string(str);
 		show_debug_message("STATUS: " + str);
+		
+		if(TEST_ERROR) return {};
 		if(PANEL_MAIN == 0) return;
 		
 		if(flash && PANEL_MENU) {
@@ -95,8 +95,10 @@
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
 		
-		if(!instance_exists(o_dialog_warning))
-			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).warning_text = str;
+		if(!instance_exists(o_dialog_warning)) {
+			var dia = dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16));
+			if(dia) dia.warning_text = str;
+		}
 		
 		if(ref) {
 			var onClick = function() { PANEL_GRAPH.focusNode(self.ref); };

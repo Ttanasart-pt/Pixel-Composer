@@ -1,19 +1,13 @@
-/// @description 
-if !ready exit;
+/// @description Insert description here
+event_inherited();
 
-#region destroy
-	var hovering = false;
+var hov = point_in(mouse_mx, mouse_my);
 	
-	for( var i = 0; i < ds_list_size(children); i++ ) {
-		var ch = children[| i];
-		if(!instance_exists(ch)) continue;
-		var x0 = ch.dialog_x;
-		var x1 = ch.dialog_x + ch.dialog_w;
-		var y0 = ch.dialog_y;
-		var y1 = ch.dialog_y + ch.dialog_h;
-		hovering |= sHOVER && point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1);
-	}
+for( var i = 0, n = array_length(children); i < n; i++ ) {
+	if(!instance_exists(children[i])) continue; 
+	hov |= children[i].point_in(mouse_mx, mouse_my);
+}
 	
-	if(mouse_press(mb_any, !hovering))
-		instance_destroy(self);
-#endregion
+_hovering_ch = hov;
+if((mouse_check_button_pressed(mb_left)) && !hov) 
+	instance_destroy();

@@ -7,7 +7,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	outputs[| 0] = nodeValue("Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
 	
-	outputs[| 1] = nodeValue("Receive data", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, 0);
+	outputs[| 1] = nodeValue("Receive data", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false);
 	
 	input_display_list = [ 1, 0 ];
 	

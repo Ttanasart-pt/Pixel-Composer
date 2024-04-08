@@ -5,8 +5,8 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" })
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { 
+	inputs[| 1] = nodeValue("Generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { 
 			updateObj();
 			doUpdate(); 
 		} });

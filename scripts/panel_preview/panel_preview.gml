@@ -679,8 +679,8 @@ function Panel_Preview() : PanelContent() constructor {
 			var _ps1 = is_surface(preview_surfaces[1]);
 			
 			if(_ps0) {
-				var _sw = surface_get_width(preview_surfaces[0]);
-				var _sh = surface_get_height(preview_surfaces[0]);
+				var _sw = surface_get_width_safe(preview_surfaces[0]);
+				var _sh = surface_get_height_safe(preview_surfaces[0]);
 				
 				preview_surface[0] = surface_verify(preview_surface[0], _sw, _sh);
 				
@@ -689,13 +689,13 @@ function Panel_Preview() : PanelContent() constructor {
 					shader_set_i("keys",    array_length(PROJECT.attributes.palette));
 					shader_set_i("alpha",   1);
 					
-					draw_surface(preview_surfaces[0], 0, 0);
+					draw_surface_safe(preview_surfaces[0]);
 				surface_reset_shader();
 			}
 				
 			if(_ps1) {
-				var _sw = surface_get_width(preview_surfaces[1]);
-				var _sh = surface_get_height(preview_surfaces[1]);
+				var _sw = surface_get_width_safe(preview_surfaces[1]);
+				var _sh = surface_get_height_safe(preview_surfaces[1]);
 				
 				preview_surface[1] = surface_verify(preview_surface[1], _sw, _sh);
 				
@@ -704,7 +704,7 @@ function Panel_Preview() : PanelContent() constructor {
 					shader_set_i("keys",    array_length(PROJECT.attributes.palette));
 					shader_set_i("alpha",   1);
 					
-					draw_surface(preview_surfaces[1], 0, 0);
+					draw_surface_safe(preview_surfaces[1]);
 				surface_reset_shader();
 			}
 			

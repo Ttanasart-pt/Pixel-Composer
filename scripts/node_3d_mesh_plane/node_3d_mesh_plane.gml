@@ -3,7 +3,7 @@ function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 	
 	object_class = __3dPlane;
 	
-	inputs[| in_mesh + 0] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
+	inputs[| in_mesh + 0] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
 		.setVisible(true, true);
 	
 	inputs[| in_mesh + 1] = nodeValue("Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2 )
@@ -11,7 +11,7 @@ function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 	
 	inputs[| in_mesh + 2] = nodeValue("Both side", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
 	
-	inputs[| in_mesh + 3] = nodeValue("Back Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
+	inputs[| in_mesh + 3] = nodeValue("Back Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
 	
 	input_display_list = [
 		__d3d_input_list_mesh, in_mesh + 1, 

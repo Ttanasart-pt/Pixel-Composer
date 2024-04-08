@@ -1,12 +1,12 @@
 {
   "$GMScript":"",
-  "%Name":"math_function",
+  "%Name":"materialBox",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"math_function",
+  "name":"materialBox",
   "parent":{
-    "name":"math",
-    "path":"folders/functions/math.yy",
+    "name":"widgets",
+    "path":"folders/widgets.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

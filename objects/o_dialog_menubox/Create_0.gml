@@ -12,12 +12,14 @@ event_inherited();
 	alarm[0] = -1;
 	menu     = 1;
 	hght     = ui(36);
-	children = ds_list_create();
-	ds_list_add(children, self);
 	
 	tooltips  = [];
 	show_icon = false;
 	context   = noone;
+	
+	_hovering_ch = true;
+	
+	setFocus(self.id);
 	
 	function setMenu(_menu, align = fa_left) {
 		menu = _menu;
@@ -28,11 +30,9 @@ event_inherited();
 		dialog_w = 0;
 		dialog_h = 0;
 		
-		while(ds_list_size(children) > 1) {
-			var ch = children[| 1];
-			instance_destroy(children[| 1]);
-			ds_list_delete(children, 1);
-		}
+		for( var i = 0, n = array_length(children); i < n; i++ ) 
+			instance_destroy(children[i]);
+		children = [];
 		
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		for(var i = 0; i < array_length(menu); i++) {

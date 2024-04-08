@@ -873,11 +873,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidget = noone;
 		switch(display_type) {
 			case VALUE_DISPLAY.button : #region
-				editWidget = button(method(node, display_data.onClick));
-				editWidget.text = display_data.name;
-				if(!struct_has(display_data, "output")) display_data.output = false;
+				var _onClick;
+				
+				if(struct_has(display_data, "onClick")) 
+					_onClick = method(node, display_data.onClick);
+				else 
+					_onClick = function() { setAnim(true); setValueDirect(true); };
+				
+				editWidget   = button(_onClick).setText(struct_try_get(display_data, "name", "Trigger"));
+				runInUI      = struct_try_get(display_data, "UI", false);
 				
 				visible = false;
+				rejectArray();
+				
 				return; #endregion
 		}
 		
@@ -1132,40 +1140,34 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 				}
 				break;
-			case VALUE_TYPE.boolean :	#region
+			case VALUE_TYPE.boolean :	 #region
 				if(name == "Active") editWidget = new checkBoxActive(function() { return setValueInspector(!animator.getValue()); } );
 				else				 editWidget = new checkBox(      function() { return setValueInspector(!animator.getValue()); } );
 				
 				key_inter    = CURVE_TYPE.cut;
 				extract_node = "Node_Boolean";
 				break; #endregion
-			case VALUE_TYPE.color :		#region
+			case VALUE_TYPE.color :		 #region
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
-						editWidget = new buttonColor(function(color) { 
-							return setValueInspector(color);
-						} );
+						editWidget = new buttonColor(function(color) { return setValueInspector(color); } );
 						
 						graph_h		 = ui(16);
 						extract_node = "Node_Color";
 						break;
 					case VALUE_DISPLAY.palette :
-						editWidget = new buttonPalette(function(color) { 
-							return setValueInspector(color);
-						} );
+						editWidget = new buttonPalette(function(color) { return setValueInspector(color); } );
 						
 						extract_node = "Node_Palette";
 						break;
 				}
 				break; #endregion
-			case VALUE_TYPE.gradient :	#region
-				editWidget = new buttonGradient(function(gradient) { 
-					return setValueInspector(gradient);
-				} );
+			case VALUE_TYPE.gradient :	 #region
+				editWidget = new buttonGradient(function(gradient) { return setValueInspector(gradient); } );
 						
 				extract_node = "Node_Gradient_Out";
 				break; #endregion
-			case VALUE_TYPE.path :		#region
+			case VALUE_TYPE.path :		 #region
 				switch(display_type) {
 					case VALUE_DISPLAY.path_array :
 						editWidget = new pathArrayBox(node, display_data.filter, function(path) { setValueInspector(path); } );
@@ -1198,40 +1200,28 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.path_font :
-						editWidget = new fontScrollBox(
-							function(val) {
-								return setValueInspector(DIRECTORY + "Fonts/" + FONT_INTERNAL[val]);
-							}
-						);
+						editWidget = new fontScrollBox( function(val) { return setValueInspector(DIRECTORY + "Fonts/" + FONT_INTERNAL[val]); } );
 						break;
 				}
 				break; #endregion
-			case VALUE_TYPE.curve :		#region
+			case VALUE_TYPE.curve :		 #region
 				display_type = VALUE_DISPLAY.curve;
-				editWidget = new curveBox(function(_modified) { 
-					return setValueInspector(_modified); 
-				});
+				editWidget = new curveBox(function(_modified) { return setValueInspector(_modified); });
 				break; #endregion
-			case VALUE_TYPE.text :		#region
+			case VALUE_TYPE.text :		 #region
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
-						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
-							return setValueInspector(str); 
-						});
+						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
 						extract_node = "Node_String";
 						break;
 						
 					case VALUE_DISPLAY.text_box :
-						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { 
-							return setValueInspector(str); 
-						});
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
 						extract_node = "Node_String";
 						break;
 					
 					case VALUE_DISPLAY.codeLUA :
-						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
-							return setValueInspector(str); 
-						});
+						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
 						
 						editWidget.font = f_code;
 						editWidget.format = TEXT_AREA_FORMAT.codeLUA;
@@ -1240,9 +1230,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.codeHLSL:
-						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
-							return setValueInspector(str); 
-						});
+						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
 						
 						editWidget.autocomplete_server	 = hlsl_autocomplete_server;
 						editWidget.function_guide_server = hlsl_function_guide_server;
@@ -1256,9 +1244,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					
 					case VALUE_DISPLAY.text_tunnel :
-						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { 
-							return setValueInspector(str); 
-						});
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
 						extract_node = "Node_String";
 						break;
 					
@@ -1267,17 +1253,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 				}
 				break; #endregion
-			case VALUE_TYPE.d3Material :
-			case VALUE_TYPE.surface :	#region
-				editWidget = new surfaceBox(function(ind) { 
-					return setValueInspector(ind); 
+			case VALUE_TYPE.d3Material : #region
+				editWidget = new materialBox(function(ind) { 
+					var res = setValueInspector(ind); 
+					node.triggerRender();
+					return res;
 				} );
 				
 				if(!struct_has(display_data, "atlas")) display_data.atlas = true;
 				show_in_inspector = true;
 				extract_node = "Node_Canvas";
 				break; #endregion
-			case VALUE_TYPE.pathnode :	#region
+			case VALUE_TYPE.surface :	 #region
+				editWidget = new surfaceBox(function(ind) { return setValueInspector(ind); } );
+				
+				if(!struct_has(display_data, "atlas")) display_data.atlas = true;
+				show_in_inspector = true;
+				extract_node = "Node_Canvas";
+				break; #endregion
+			case VALUE_TYPE.pathnode :	 #region
 				extract_node = "Node_Path";
 				break; #endregion
 		}
@@ -1540,15 +1534,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		} #endregion
 		
-		if(typeFrom == VALUE_TYPE.surface && type == VALUE_TYPE.d3Material) { #region
-			if(!is_array(value)) return is_surface(value)? new __d3dMaterial(value) : noone;
-			
-			var _val = array_create(array_length(value));
-			for( var i = 0, n = array_length(value); i < n; i++ ) 
-				_val[i] = is_surface(value[i])? new __d3dMaterial(value[i]) : noone;
-			return _val;
-		} #endregion
-		
 		if((typeFrom == VALUE_TYPE.integer || typeFrom == VALUE_TYPE.float || typeFrom == VALUE_TYPE.boolean) && type == VALUE_TYPE.color)
 			return value >= 1? value : make_color_hsv(0, 0, value * 255);
 			
@@ -1588,7 +1573,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region
 		if(type == VALUE_TYPE.trigger)
-			useCache = false;
+			return _getValue(_time, false, 0, false);
 		
 		//global.cache_call++;
 		if(useCache && use_cache) {
@@ -1729,6 +1714,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		} #endregion
 		
+		if(type == VALUE_TYPE.d3Material) { #region
+			if(nod == self) {
+				return def_val;
+				
+			} else if(typ == VALUE_TYPE.surface) {
+				if(!is_array(val)) return def_val.clone(val);
+				
+				var _val = array_create(array_length(val));
+				for( var i = 0, n = array_length(val); i < n; i++ ) 
+					_val[i] = def_val.clone(value[i]);
+				
+				return _val;
+			}
+		} #endregion
+		
 		val = arrayBalance(val);
 		
 		if(isArray(val) && array_length(val) < 1024) { #region Process data
@@ -1747,9 +1747,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		arr[@ 0] = __getAnimValue(_time);
 		arr[@ 1] = self;
 		
-		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger event will not propagate from input to output, need to be done manually
-			return;
-			
 		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out)
 			value_from_loop.getValue(arr);
 			
@@ -2173,7 +2170,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static removeFromLoop = function(_remove_list = true) { #region
 		if(value_from_loop != noone)
-			nodeDelete(value_from_loop);
+			value_from_loop.destroy();
 		
 		PROJECT.modified = true;
 	} #endregion

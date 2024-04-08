@@ -90,7 +90,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			_ind++;
 		}
 		if(_hash == "") {
-			nodeDelete(self);
+			destroy();
 			return;
 		}
 		_hash = md5_string_utf8(_hash);
@@ -219,6 +219,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	} #endregion
 	
 	static drawNodeBG = function(_x, _y, _mx, _my, _s) { #region
+		
 		refreshGroupBG();
 		if(array_length(group_vertex) < 3) return false;
 		

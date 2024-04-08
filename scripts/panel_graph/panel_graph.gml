@@ -1024,7 +1024,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								
 								var _to = value_focus.value_to_loop[i];
 								array_push(menu, menuItem($"[{_to.junc_in.node.display_name}] {_to.junc_in.getName()}", function(data) {
-									nodeDelete(data.params.juncTo);
+									data.params.juncTo.destroy();
 								}, _to.icon_24,,, { juncTo: _to }));
 							}
 						} else {
@@ -1089,7 +1089,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							if(is_instanceof(junction_hovering, Node_Feedback_Inline)) {
 								var _jun = junction_hovering.junc_out;
 								array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", function(data) {
-									nodeDelete(__junction_hovering);
+									__junction_hovering.destroy();
 								}, THEME.feedback));
 							} else {
 								var _jun = junction_hovering.value_from;
@@ -1194,6 +1194,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var _node = nodes_list[| i];
+				
 				if(is_instanceof(_node, Node_Frame)) continue;
 				try {
 					var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
@@ -1439,7 +1440,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				
 				if(_connect[0] == -9) {
 					if(_connect[1].value_from_loop != noone)
-						nodeDelete(_connect[1].value_from_loop);
+						_connect[1].value_from_loop.destroy();
 						
 					var menu = [
 						menuItem("Feedback", function(data) {
@@ -2135,7 +2136,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 		function doDelete(_merge = false) { #region
 			__temp_merge = _merge;
-			array_foreach(nodes_selecting, function(node) { if(node.manual_deletable) nodeDelete(node, __temp_merge); });
+			array_foreach(nodes_selecting, function(node) { if(node.manual_deletable) node.destroy(__temp_merge); });
 			nodes_selecting = [];
 		} #endregion
 		
@@ -2184,10 +2185,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				node = nodeBuild("Node_Color", mouse_grid_x, mouse_grid_y, getCurrentContext());
 				node.inputs[| 0].setValue(DRAGGING.data);
 				break;
+				
 			case "Palette":
 				node = nodeBuild("Node_Palette", mouse_grid_x, mouse_grid_y, getCurrentContext());
 				node.inputs[| 0].setValue(DRAGGING.data);
 				break;
+				
 			case "Gradient":
 				node = nodeBuild("Node_Gradient_Out", mouse_grid_x, mouse_grid_y, getCurrentContext());
 				node.inputs[| 0].setValue(DRAGGING.data);
@@ -2208,17 +2211,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					node.inputs[| 0].setValue(DRAGGING.data);
 				}
 				break;
+				
 			case "Bool":
 				node = nodeBuild("Node_Boolean", mouse_grid_x, mouse_grid_y, getCurrentContext());
 				node.inputs[| 0].setValue(DRAGGING.data);
 				break;
+				
 			case "Text":
 				node = nodeBuild("Node_String", mouse_grid_x, mouse_grid_y, getCurrentContext());
 				node.inputs[| 0].setValue(DRAGGING.data);
 				break;
+				
 			case "Path":
 				node = nodeBuild("Node_Path", mouse_grid_x, mouse_grid_y, getCurrentContext());
 				break;
+				
 			case "Struct":
 				node = nodeBuild("Node_Struct", mouse_grid_x, mouse_grid_y, getCurrentContext());
 				break;
@@ -2226,6 +2233,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			case "Asset":
 				var app = Node_create_Image_path(mouse_grid_x, mouse_grid_y, DRAGGING.data.path);
 				break;
+				
 			case "Collection":
 				var path = DRAGGING.data.path;
 				nodes_selecting = [];
@@ -2255,6 +2263,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					app.y = mouse_grid_y;
 				}
 				break;
+			
+			case "Project":
+				run_in(1, function(path) { LOAD_PATH(path); }, [ DRAGGING.data.path ]);
+				break;
+				
 		}
 			
 		if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.isLeaf()) {

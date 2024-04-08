@@ -2,10 +2,10 @@
 event_inherited();
 
 #region data
-	dialog_w = ui( 900);
-	dialog_h = ui( 640);
+	dialog_w   = ui(900);
+	dialog_h   = ui(640);
+	page_width = ui(160);
 	
-	page_width = 160;
 	destroy_on_click_out = true;
 	destroy_on_escape    = false;
 	
@@ -20,9 +20,9 @@ event_inherited();
 	onResize = function() {
 		sp_page.resize(page_width - ui(4), dialog_h - ui(title_height + padding));
 		
-		sp_pref.resize(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding));
-		sp_hotkey.resize(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding));
-		sp_colors.resize(dialog_w - ui(padding + padding + page_width), dialog_h - (title_height + ui(padding + 40)));
+		sp_pref.resize(  dialog_w - ui(padding + padding) - page_width, dialog_h - ui(title_height + padding));
+		sp_hotkey.resize(dialog_w - ui(padding + padding) - page_width, dialog_h - ui(title_height + padding));
+		sp_colors.resize(dialog_w - ui(padding + padding) - page_width, dialog_h - (title_height + ui(padding + 40)));
 	}
 #endregion
 
@@ -226,6 +226,7 @@ event_inherited();
 		"test_mode",
 		new checkBox(function() { 
 			PREFERENCES.test_mode = !PREFERENCES.test_mode; 
+			should_restart = true;
 			PREF_SAVE();
 		})
 	));
@@ -281,14 +282,16 @@ event_inherited();
 		slider(0.5, 2, 0.01, function(val) { 
 			PREFERENCES._display_scaling = val;
 			should_restart = true;
+			
 		}, function() { 
-			PREFERENCES._display_scaling = clamp(PREFERENCES._display_scaling, 0.5, 2);
+			PREFERENCES._display_scaling = max(PREFERENCES._display_scaling, 0.5);
 			resetScale(PREFERENCES._display_scaling, true);
 			should_restart = true;
 		}),
 		
 		function() { return PREFERENCES._display_scaling; },
-		function(val) { 
+		function(val) {
+			
 			PREFERENCES._display_scaling = val;
 			resetScale(PREFERENCES._display_scaling, true);
 			should_restart = true;
@@ -333,6 +336,15 @@ event_inherited();
 			.setSideButton(button(function() { PREFERENCES.font_overwrite = get_open_filename("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
 			.setFont(f_p2)
 			.setEmpty()
+	));
+	
+	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_windows_control", "Use Windows style window control."),
+		"panel_menu_right_control",
+		new checkBox(function() { 
+			PREFERENCES.panel_menu_right_control = !PREFERENCES.panel_menu_right_control; 
+			PREF_SAVE();
+		})
 	));
 	
 	ds_list_add(pref_appr, __txt("Splash"));
@@ -406,15 +418,6 @@ event_inherited();
 		"connection_line_transition",
 		new checkBox(function() { 
 			PREFERENCES.connection_line_transition = !PREFERENCES.connection_line_transition;
-			PREF_SAVE();
-		})
-	));
-	
-	ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-		__txtx("pref_windows_control", "Use Windows style window control."),
-		"panel_menu_right_control",
-		new checkBox(function() { 
-			PREFERENCES.panel_menu_right_control = !PREFERENCES.panel_menu_right_control; 
 			PREF_SAVE();
 		})
 	));
@@ -589,7 +592,7 @@ event_inherited();
 		}, false);
 	sb_theme.align = fa_left;
 	
-	sp_colors = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - (title_height + ui(padding) + ui(40)), function(_y, _m, _r) {
+	sp_colors = new scrollPane(dialog_w - ui(padding + padding) - page_width, dialog_h - (title_height + ui(padding) + ui(40)), function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh		= 0;
 		var th		= ui(28);
@@ -703,7 +706,7 @@ event_inherited();
 	];
 	hk_editing = noone;
 	
-	sp_hotkey = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding), function(_y, _m) {
+	sp_hotkey = new scrollPane(dialog_w - ui(padding + padding) - page_width, dialog_h - ui(title_height + padding), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var padd		= ui(8);
 		var hh			= ui(8);
@@ -974,7 +977,7 @@ event_inherited();
 #region scrollpane
 	current_list = pref_global;
 	
-	sp_pref = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding), function(_y, _m, _r) {
+	sp_pref = new scrollPane(dialog_w - ui(padding + padding) - page_width, dialog_h - ui(title_height + padding), function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh		= 0;
 		var th		= TEXTBOX_HEIGHT;
