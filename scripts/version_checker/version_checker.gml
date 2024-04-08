@@ -4,7 +4,7 @@ function check_version(path) {
 		return true;
 	}
 	
-	//if(TESTING) return true;
+	if(TESTING) return true;
 	
 	var res = json_load_struct(path);
 	json_save_struct(path, { version: BUILD_NUMBER });

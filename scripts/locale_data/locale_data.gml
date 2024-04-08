@@ -4,8 +4,10 @@
 		fontDir: "",
 		config: { per_character_line_break: false },
 	};
+	global.missing_locale = {}
+	
 	TEST_LOCALE = false;
-	LOCALE_DEF  = true;
+	LOCALE_DEF  =  true;
 	
 	function __initLocale() { #region
 		var lfile = $"data/Locale/en.zip";
@@ -45,8 +47,9 @@
 		if(LOCALE_DEF && !TEST_LOCALE) return def;
 		
 		if(TEST_LOCALE) {
-			if(!struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
-				show_debug_message($"LOCALE: \"{key}\": \"{def}\",");
+			if(key != "" && !struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
+				global.missing_locale[$ key] = def;
+				show_debug_message($"LOCALE: {global.missing_locale}");
 				return def;
 			}
 			return "";
@@ -67,8 +70,9 @@
 		    key = string_replace_all(key, " ", "_");
 			
 		if(TEST_LOCALE) {
-			if(!struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
-				show_debug_message($"LOCALE: \"{key}\": \"{txt}\",");
+			if(key != "" && !struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
+				global.missing_locale[$ key] = txt;
+				show_debug_message($"LOCALE: {global.missing_locale}");
 				return txt;
 			}	
 			return "";
@@ -80,7 +84,7 @@
 	function __txta(txt) { #region
 		var _txt = __txt(txt);
 		for(var i = 1; i < argument_count; i++)
-			_txt = string_replace_all(_txt, "{" + string(i) + "}", string(argument[i]));
+			_txt = string_replace_all(_txt, $"\{{i}\}", string(argument[i]));
 		
 		return _txt;
 	} #endregion
@@ -91,7 +95,7 @@
 		if(LOCALE_DEF && !TEST_LOCALE) return def;
 		
 		if(TEST_LOCALE) {
-			if(!struct_has(LOCALE.node, node)) {
+			if(node != "Node_Custom" && !struct_has(LOCALE.node, node)) {
 				show_debug_message($"LOCALE [NODE]: \"{node}\": \"{def}\",");
 				return def;
 			}
@@ -110,7 +114,7 @@
 		if(LOCALE_DEF && !TEST_LOCALE) return def;
 			
 		if(TEST_LOCALE) {
-			if(!struct_has(LOCALE.node, node)) {
+			if(node != "Node_Custom" && !struct_has(LOCALE.node, node)) {
 				show_debug_message($"LOCALE [TIP]: \"{node}\": \"{def}\",");
 				return def;
 			}

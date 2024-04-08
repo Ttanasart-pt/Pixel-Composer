@@ -404,5 +404,26 @@
     "pref_ui_font": "Overwrite UI font",
     "panel_menu_node_credit": "Node credit dialog",
 
+    "panel_collection_update_thumbnail": "Update thumbnail",
+    "panel_collection_workshop_upload": "Upload to Steam Workshop",
+    "panel_graph_toggle_parameter" : "Toggle node parameters", 
+    "panel_graph_group_require_shift" : "Hold Shift to enter group", 
+    "pref_add_node_remember" : "Remember add node position", 
+    "pref_preview_show_real_fps" : "Show real fps", 
+    "pref_widget_textbox_shake" : "Textbox shake", 
+    "pref_widget_textbox_particles" : "Textbox particles", 
+    "panel_menu_test_error" : "Display Error", 
+    "pref_node_param_show" : "Show paramater on new node", 
+    "panel_menu_test_warning" : "Display Warning", 
+    "pref_node_param_width" : "Default param width", 
+    "panel_menu_test_gen_theme" : "Generate theme object", 
+    "collapse_toggle" : "Collapse Toggle", 
+    "panel_animation_name_only" : "Node name", 
+    "toggle_nodes" : "Toggle nodes", 
+    "panel_animation_name_type" : "Node type", 
+    "toggle_parameters" : "Toggle parameters", 
+    "panel_driver" : "Driver...", 
+    "panel_preview_lock_preview" : "Lock previewing node", 
+
     "" : ""
 }

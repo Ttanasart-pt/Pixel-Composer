@@ -347,5 +347,14 @@
     "mk_effects": "MK Effects",
     "flip_fluid": "FLIP Fluid",
 
+    "projects": "Projects",
+    "project": "Project",
+    "portable_project_(.zip)": "Portable project (.zip)",
+    "brightness": "Brightness",
+    "alpha": "Alpha",
+    "material": "Material",
+    "packing": "Packing",
+    "resume" : "Resume", 
+
     "" : ""
 }

@@ -627,6 +627,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		process_array = true;
 		dynamic_array = false;
 		validateValue = true;
+		runInUI       = false;
 		
 		fullUpdate = false;
 		
@@ -1980,7 +1981,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				for( var i = 0, n = array_length(animators); i < n; i++ )
 					updated |= animators[i].setValue(val[i], _inp && record, time); 
 			} else
-				updated = animators[index].setValue(val, _inp && record, time); 
+				updated = animators[index].setValue(val, _inp && record, time);
+				
 		} else {
 			if(index != noone) {
 				_val = animator.getValue(time);
@@ -1990,7 +1992,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 			
 			updated = animator.setValue(_val, _inp && record, time); 
-			
+			//print($"{updated}: {index} - {_val}");
 		}
 		
 		if(type == VALUE_TYPE.gradient)				updated = true;

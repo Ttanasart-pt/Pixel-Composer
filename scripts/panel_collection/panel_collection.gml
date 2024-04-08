@@ -17,7 +17,7 @@ function Panel_Collection() : PanelContent() constructor {
 	min_h = ui(40);
 	
 	roots = [ ["Collections", COLLECTIONS] , ["Assets", global.ASSETS] ];
-	if(STEAM_ENABLED) array_push(roots, ["Project", STEAM_PROJECTS]);
+	if(STEAM_ENABLED) array_push(roots, ["Projects", STEAM_PROJECTS]);
 	
 	mode  = 0;
 	root  = roots[mode][1];

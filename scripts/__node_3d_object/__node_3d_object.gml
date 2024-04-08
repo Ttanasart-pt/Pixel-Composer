@@ -202,12 +202,13 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 				var mAdj, nor, prj;
 					
 				var ray = _camera.viewPointToWorldRay(drag_mx, drag_my);
-					
+				var val = [ drag_val[0], drag_val[1], drag_val[2] ];
+				
 				if(drag_axis < 3) {
 					switch(drag_axis) {
-						case 0 : nor = new __vec3(0, 1, 0); prj = new __vec3(1,  0,  0); break;
-						case 1 : nor = new __vec3(0, 0, 1); prj = new __vec3(0,  1,  0); break;
-						case 2 : nor = new __vec3(1, 0, 0); prj = new __vec3(0,  0,  1); break;
+						case 0 : nor = new __vec3(0, 1, 0); prj = new __vec3(1, 0, 0); break;
+						case 1 : nor = new __vec3(0, 0, 1); prj = new __vec3(0, 1, 0); break;
+						case 2 : nor = new __vec3(1, 0, 0); prj = new __vec3(0, 0, 1); break;
 					}
 						
 					if(_axis == 0) {
@@ -223,9 +224,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						var _dist = _diff.dot(prj);
 						
 						for( var i = 0; i < 3; i++ ) 
-							drag_val[i] += prj.getIndex(i) * _dist;
+							val[i] += prj.getIndex(i) * _dist;
 						
-						if(inputs[| index].setValue(value_snap(drag_val, _snx)))
+						if(inputs[| index].setValue(value_snap(val, _snx)))
 							UNDO_HOLDING = true;
 					}
 				} else {
@@ -245,13 +246,14 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						var _diff = mAdj.subtract(drag_prev);
 						
 						for( var i = 0; i < 3; i++ ) 
-							drag_val[i] += _diff.getIndex(i);
+							val[i] += _diff.getIndex(i);
 						
-						if(inputs[| index].setValue(value_snap(drag_val, _snx))) 
+						if(inputs[| index].setValue(value_snap(val, _snx))) 
 							UNDO_HOLDING = true;
 					}
 				}
 					
+				drag_val  = [ val[0], val[1], val[2] ];
 				drag_prev = mAdj;
 			}
 				
