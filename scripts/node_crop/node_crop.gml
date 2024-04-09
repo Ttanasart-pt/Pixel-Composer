@@ -212,9 +212,10 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _inSurf		= _data[0];
-		var _crop		= _data[1];
-		var _dim		= [ surface_get_width_safe(_inSurf) - _crop[0] - _crop[2], surface_get_height_safe(_inSurf) - _crop[1] - _crop[3] ];
+		var _inSurf	= _data[0];
+		var _crop	= _data[1];
+		var _sdim   = surface_get_dimension(_inSurf);
+		var _dim	= [ _sdim[0] - _crop[0] - _crop[2], _sdim[1] - _crop[1] - _crop[3] ];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		

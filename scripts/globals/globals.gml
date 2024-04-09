@@ -45,6 +45,9 @@
 	HOTKEY_CONTEXT[| 0] = "";
 	
 	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
+	global.KEYS = {
+		download_links: ""
+	};
 #endregion
 
 #region inputs

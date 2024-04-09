@@ -6,14 +6,18 @@ event_inherited();
 	dialog_h = ui(480);
 	destroy_on_click_out = true;
 	
-	note = "";
+	pages = [ "Release note", "Downloads" ];
+	page  = 0;
 	
-	var _link = $"https://gist.githubusercontent.com/Ttanasart-pt/f21a140906a60c6e12c99ebfecec1645/raw/{VERSION_STRING}";
-	note_get = http_get(_link);
+#endregion
+
+#region note
+	note_get = http_get($"https://gist.githubusercontent.com/Ttanasart-pt/f21a140906a60c6e12c99ebfecec1645/raw/{VERSION_STRING}");
+	note     = "";
 	
 	sp_note = new scrollPane(dialog_w - ui(80), dialog_h - ui(88), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		BLEND_ALPHA_MULP
+		draw_clear_alpha(COLORS.dialog_splash_badge, 1);
+		
 		var xx = ui(8);
 		var yy = ui(8);
 		var ww = sp_note.surface_w - ui(16);
@@ -103,7 +107,81 @@ event_inherited();
 			}
 		}
 		
-		BLEND_NORMAL
 		return yy + ui(64);
+	})
+#endregion
+
+#region downloads
+	dl_get = http_get(global.KEYS.download_links);
+	dls    = [];
+	downloading = {};
+	
+	sp_dl = new scrollPane(dialog_w - ui(80), dialog_h - ui(88), function(_y, _m) {
+		draw_clear_alpha(COLORS.dialog_splash_badge, 1);
+		
+		var xx = ui(8);
+		var yy = _y + ui(8);
+		
+		var ww = sp_dl.surface_w - ui(16);
+		var hh = ui(56);
+		
+		for( var i = 0, n = array_length(dls); i < n; i++ ) {
+			var dl = dls[i];
+			var vr = dl.version;
+			hh     = dl.status? ui(56) : ui(36);
+			
+			var hov = sHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh);
+			
+			draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
+			
+			if(dl.status == 0 && hov) {
+				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
+				if(mouse_press(mb_left, sFOCUS)) {
+					var path = get_save_filename("Compressed zip (.zip)| *.zip", $"PixelComposer {vr}.zip");
+					if(path != "") {
+						dl.status        = 1;
+						dl.download_path = path;
+						
+						var _get = http_get_file(dl.link, path);
+						downloading[$ _get] = dl;
+					}
+				}
+			
+			} else if(dl.status == 2 && hov) {
+				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
+				if(mouse_press(mb_left, sFOCUS)) 
+					shellOpenExplorer(filename_dir(dl.download_path));
+					
+			} else 
+				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
+			
+			draw_set_text(f_p0b, fa_left, fa_top, dl.status == 2? COLORS._main_text : COLORS._main_text_sub);
+			draw_text(xx + ui(8), yy + ui(8), vr);
+			
+			if(dl.status == 1) {
+				var _bw  = ww - ui(16);
+				var _bh  = ui(12);
+				var _bx  = xx + ui(8);
+				var _by  = yy + hh - _bh - ui(8);
+				var _prg = dl.size_total == 0? 0 : dl.size_downloaded / dl.size_total;
+				
+				draw_sprite_stretched(THEME.progress_bar, 0, _bx, _by, _bw, _bh);
+				draw_sprite_stretched(THEME.progress_bar, 1, _bx, _by, _bw * _prg, _bh);
+				
+			} else if(dl.status == 2) {
+				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
+				draw_text_cut(xx + ui(8), yy + ui(32), dl.download_path, ww - ui(16));
+			}
+			
+			if(dl.status) {
+				draw_set_text(f_p1, fa_right, fa_top, COLORS._main_text_sub);
+				draw_text(xx + ww - ui(8), yy + ui(10), string_byte_format(dl.size_total));
+				
+			}
+			
+			yy += hh + ui(4);
+		}
+		
+		return yy + ui(64) - _y;
 	})
 #endregion

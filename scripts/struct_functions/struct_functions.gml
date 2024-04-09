@@ -2,6 +2,8 @@
 #macro struct_key variable_struct_get_names
 
 function struct_override(original, override) { #region
+	INLINE
+	
 	var args = variable_struct_get_names(override);
 	
 	for( var i = 0, n = array_length(args); i < n; i++ ) {
@@ -15,11 +17,12 @@ function struct_override(original, override) { #region
 } #endregion
 
 function struct_append(original, append) { #region
+	INLINE
+	
 	var args = variable_struct_get_names(append);
 	
-	for( var i = 0, n = array_length(args); i < n; i++ ) {
+	for( var i = 0, n = array_length(args); i < n; i++ )
 		original[$ args[i]] = append[$ args[i]];
-	}
 	
 	return original;
 } #endregion
