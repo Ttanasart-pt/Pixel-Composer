@@ -8,6 +8,7 @@ event_inherited();
 	dialog_y = 0;
 	dialog_w = 300;
 	dialog_h = 160;
+	on_top   = true;
 	
 	selecting = 0;
 	textbox	  = noone;
@@ -27,7 +28,7 @@ event_inherited();
 		INLINE
 		if(textbox != self.textbox) return;
 		
-		self.textbox   = noone;
+		self.textbox = noone;
 	}
 	
 	sc_content = new scrollPane(dialog_w, dialog_h, function(_y, _m) {
@@ -43,8 +44,10 @@ event_inherited();
 			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
 				selecting = i;
 				
-				if(mouse_press(mb_left))
+				if(mouse_press(mb_left)) {
 					applyAutoComplete(_dat[3]);
+					MOUSE_BLOCK = true;
+				}
 			}
 			
 			if(selecting == i) {
@@ -78,7 +81,8 @@ event_inherited();
 		}
 			
 		if(keyboard_check_pressed(vk_down)) {
-			selecting = safe_mod(selecting + 1, array_length(data));
+			selecting++
+			if(selecting >= array_length(data) - 1) selecting = 0;
 			
 			sc_content.scroll_y_to = -(selecting - 2) * hght;
 		}

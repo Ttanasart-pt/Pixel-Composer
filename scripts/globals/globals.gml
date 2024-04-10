@@ -46,7 +46,7 @@
 	
 	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
 	global.KEYS = {
-		download_links: ""
+		download_links: "",
 	};
 #endregion
 

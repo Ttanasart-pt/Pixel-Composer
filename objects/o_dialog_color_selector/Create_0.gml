@@ -11,8 +11,8 @@ event_inherited();
 	name = __txtx("color_selector_title", "Color selector");
 	
 	previous_color = c_black;
-	selector    = new colorSelector();
-	drop_target = noone;
+	selector       = new colorSelector();
+	drop_target    = noone;
 	
 	function setDefault(color) {
 		selector.setColor(color);

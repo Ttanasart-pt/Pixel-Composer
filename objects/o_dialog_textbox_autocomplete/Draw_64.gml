@@ -1,8 +1,9 @@
 /// @description 
 active = textbox != noone && array_length(data);
-if(textbox == noone) exit;
-if(textbox != WIDGET_CURRENT) exit;
-if(array_empty(data)) exit;
+if(textbox == noone)				exit;
+if(textbox != WIDGET_CURRENT)		exit;
+if(array_empty(data))				exit;
+if(dialog_x == 0 && dialog_y == 0)	exit;
 
 #region
 	dialog_x = clamp(dialog_x, 0, WIN_W - dialog_w - 1);
@@ -32,7 +33,7 @@ if(array_empty(data)) exit;
 
 #region draw
 	draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
-	sc_content.setFocusHover(sFOCUS, sHOVER);
+	sc_content.setFocusHover(true, true);
 	sc_content.draw(dialog_x, dialog_y);
 	draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 #endregion

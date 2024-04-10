@@ -137,7 +137,7 @@ event_inherited();
 			if(dl.status == 0 && hov) {
 				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 				if(mouse_press(mb_left, sFOCUS)) {
-					var path = get_save_filename("Compressed zip (.zip)| *.zip", $"PixelComposer {vr}.zip");
+					var path = get_save_filename_ext("Compressed zip (.zip)| *.zip", $"PixelComposer {vr}.zip", "", "Download location");
 					if(path != "") {
 						dl.status        = 1;
 						dl.download_path = path;

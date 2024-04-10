@@ -128,11 +128,13 @@
 	
 	#region //////////////////////////////////////////////////////////////////////// PATHS /////////////////////////////////////////////////////////////////////////
 	
-		PREFERENCES.temp_path						= "%DIR%/temp/";
-		PREFERENCES.ImageMagick_path				= "%APP%/imagemagick/";
-		PREFERENCES.webp_path						= "%APP%/webp/";
-		PREFERENCES.gifski_path						= "%APP%/gifski/";
-		PREFERENCES.ffmpeg_path						= "%APP%/ffmpeg/";
+		PREFERENCES.temp_path			= "%DIR%/temp/";
+		PREFERENCES.ImageMagick_path	= "%APP%/imagemagick/";
+		PREFERENCES.webp_path			= "%APP%/webp/";
+		PREFERENCES.gifski_path			= "%APP%/gifski/";
+		PREFERENCES.ffmpeg_path			= "%APP%/ffmpeg/";
+		
+		PREFERENCES.versions			= {};
 	
 	#endregion
 	

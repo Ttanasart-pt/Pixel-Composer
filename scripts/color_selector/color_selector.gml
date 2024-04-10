@@ -165,7 +165,7 @@ function colorSelector(onApply = noone) constructor {
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, col_x - ui(8), col_y - ui(8), ui(256 + 16), ui(256 + 16));
 	
-		color_surface = surface_verify(color_surface, 256, 256);
+		color_surface = surface_verify(color_surface, ui(256), ui(256));
 		surface_set_target(color_surface);			
 			if(disp_mode == 0) {
 				shader_set(sh_color_picker_hue);
@@ -179,7 +179,7 @@ function colorSelector(onApply = noone) constructor {
 				shader_set_palette(palette);
 			}
 			
-			draw_sprite_uniform(s_fx_pixel, 0, 0, 0, 256);
+			draw_sprite_uniform(s_fx_pixel, 0, 0, 0, ui(256));
 			shader_reset();
 		surface_reset_target();
 		

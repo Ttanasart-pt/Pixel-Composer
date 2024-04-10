@@ -749,6 +749,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	static drawParam = function(params) { #region
 		setParam(params);
 		
+		if(format == TEXT_AREA_FORMAT.codeHLSL || format == TEXT_AREA_FORMAT.codeLUA) 
+			font = f_code;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	} #endregion
 	
