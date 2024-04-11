@@ -3,6 +3,8 @@ function Node_Iterator_Filter_Inline_Input(_x, _y, _group = noone) : Node(_x, _y
 	color = COLORS.node_blend_loop;
 	loop  = noone;
 	
+	clonable = false;
+	inline_parent_object = "Node_Iterate_Filter_Inline";
 	manual_ungroupable	 = false;
 	
 	inputs[| 0] = nodeValue("Array in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] )

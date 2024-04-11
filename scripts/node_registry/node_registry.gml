@@ -226,6 +226,8 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	global.__currPage    = "";
 	global.__currNewPage = "";
+	
+	#macro NODE_ADD_CAT if(!IS_CMD) addNodeCatagory
 #endregion
 	
 function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) { #region
@@ -286,10 +288,10 @@ function __initNodes() {
 	// NODE LIST
 	
 	var fav = ds_list_create();
-	addNodeCatagory("Favourites", fav);
+	NODE_ADD_CAT("Favourites", fav);
 	
 	var group = ds_list_create(); #region
-	addNodeCatagory("Group", group, ["Node_Group"]); 
+	NODE_ADD_CAT("Group", group, ["Node_Group"], COLORS.node_blend_collection); 
 		ds_list_add(group, "Groups");
 		addNodeObject(group, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
 		addNodeObject(group, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
@@ -297,7 +299,7 @@ function __initNodes() {
 	#endregion
 	
 	var iter = ds_list_create(); #region
-	addNodeCatagory("Loop", iter, ["Node_Iterate"]);
+	NODE_ADD_CAT("Loop", iter, ["Node_Iterate"], COLORS.node_blend_loop);
 		ds_list_add(iter, "Groups");
 		addNodeObject(iter, "Loop Input",	s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]).hideRecent();
 		addNodeObject(iter, "Loop Output",	s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]).hideRecent();
@@ -311,14 +313,14 @@ function __initNodes() {
 	#endregion
 	
 	var iter_il = ds_list_create(); #region
-	addNodeCatagory("Loop", iter_il, ["Node_Iterate_Inline"]);
+	NODE_ADD_CAT("Loop", iter_il, ["Node_Iterate_Inline"], COLORS.node_blend_loop);
 		ds_list_add(iter_il, "Loops");
 		addNodeObject(iter_il, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(iter_il, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
 	#endregion
 	
 	var itere = ds_list_create(); #region
-	addNodeCatagory("Loop", itere, ["Node_Iterate_Each"]);
+	NODE_ADD_CAT("Loop", itere, ["Node_Iterate_Each"], COLORS.node_blend_loop);
 		ds_list_add(itere, "Groups");
 		addNodeObject(itere, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
 		addNodeObject(itere, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
@@ -330,14 +332,14 @@ function __initNodes() {
 	#endregion
 	
 	var itere_il = ds_list_create(); #region
-	addNodeCatagory("Loop", itere_il, ["Node_Iterate_Each_Inline"]);
+	NODE_ADD_CAT("Loop", itere_il, ["Node_Iterate_Each_Inline"], COLORS.node_blend_loop);
 		ds_list_add(itere_il, "Loops");
 		addNodeObject(itere_il, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(itere_il, "Array Length",	s_node_iterator_length,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
 	#endregion
 	
 	var filter = ds_list_create(); #region
-	addNodeCatagory("Filter", filter, ["Node_Iterate_Filter"]);
+	NODE_ADD_CAT("Filter", filter, ["Node_Iterate_Filter"], COLORS.node_blend_loop);
 		ds_list_add(filter, "Groups");
 		addNodeObject(filter, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
 		addNodeObject(filter, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
@@ -349,14 +351,14 @@ function __initNodes() {
 	#endregion
 	
 	var filter_il = ds_list_create(); #region
-	addNodeCatagory("Filter", filter_il, ["Node_Iterate_Filter_Inline"]);
+	NODE_ADD_CAT("Filter", filter_il, ["Node_Iterate_Filter_Inline"], COLORS.node_blend_loop);
 		ds_list_add(filter_il, "Loops");
 		addNodeObject(filter_il, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(filter_il, "Array Length",	s_node_iterator_length,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
 	#endregion
 	
 	var feed = ds_list_create(); #region
-	addNodeCatagory("Feedback", feed, ["Node_Feedback"]);
+	NODE_ADD_CAT("Feedback", feed, ["Node_Feedback"], COLORS.node_blend_feedback);
 		ds_list_add(feed, "Groups");
 		addNodeObject(feed, "Input",		s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]).hideRecent();
 		addNodeObject(feed, "Output",		s_node_feedback_output,	"Node_Feedback_Output",	[1, Node_Feedback_Output]).hideRecent();
@@ -364,7 +366,7 @@ function __initNodes() {
 	#endregion
 	
 	var vfx = ds_list_create(); #region
-	addNodeCatagory("VFX", vfx, ["Node_VFX_Group", "Node_VFX_Group_Inline"]);
+	NODE_ADD_CAT("VFX", vfx, ["Node_VFX_Group", "Node_VFX_Group_Inline"], COLORS.node_blend_vfx);
 		ds_list_add(vfx, "Groups");
 		addNodeObject(vfx, "Input",			s_node_vfx_input,			"Node_Group_Input",			[1, Node_Group_Input]).hideRecent().hideGlobal();
 		addNodeObject(vfx, "Output",		s_node_vfx_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent().hideGlobal();
@@ -394,7 +396,7 @@ function __initNodes() {
 	#endregion
 	
 	var rigidSim = ds_list_create(); #region
-	addNodeCatagory("RigidSim", rigidSim, ["Node_Rigid_Group", "Node_Rigid_Group_Inline"]);
+	NODE_ADD_CAT("RigidSim", rigidSim, ["Node_Rigid_Group", "Node_Rigid_Group_Inline"], COLORS.node_blend_simulation);
 		ds_list_add(rigidSim, "Group");
 		addNodeObject(rigidSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent().hideGlobal();
 		addNodeObject(rigidSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent().hideGlobal();
@@ -415,7 +417,7 @@ function __initNodes() {
 	#endregion
 	
 	var smokeSim = ds_list_create(); #region
-	addNodeCatagory("SmokeSim", smokeSim, ["Node_Smoke_Group", "Node_Smoke_Group_Inline"]);
+	NODE_ADD_CAT("SmokeSim", smokeSim, ["Node_Smoke_Group", "Node_Smoke_Group_Inline"], COLORS.node_blend_smoke);
 		ds_list_add(smokeSim, "Group");
 		addNodeObject(smokeSim, "Input",			s_node_group_input,				"Node_Group_Input",			[1, Node_Group_Input]).hideRecent().hideGlobal();
 		addNodeObject(smokeSim, "Output",			s_node_group_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent().hideGlobal();
@@ -437,7 +439,7 @@ function __initNodes() {
 	#endregion
 	
 	var flipSim = ds_list_create(); #region
-	addNodeCatagory("FLIP Fluid", flipSim, ["Node_FLIP_Group_Inline"]);
+	NODE_ADD_CAT("FLIP Fluid", flipSim, ["Node_FLIP_Group_Inline"], COLORS.node_blend_fluid);
 		ds_list_add(flipSim, "Domain");
 		addNodeObject(flipSim, "Domain",			s_node_fluidSim_domain,			"Node_FLIP_Domain",		[1, Node_FLIP_Domain]).hideRecent().setVersion(11620);
 		addNodeObject(flipSim, "Render",			s_node_fluidSim_render,			"Node_FLIP_Render",		[1, Node_FLIP_Render]).hideRecent().setVersion(11620);
@@ -459,7 +461,7 @@ function __initNodes() {
 	#endregion
 	
 	var strandSim = ds_list_create(); #region
-	addNodeCatagory("StrandSim", strandSim, ["Node_Strand_Group", "Node_Strand_Group_Inline"]);
+	NODE_ADD_CAT("StrandSim", strandSim, ["Node_Strand_Group", "Node_Strand_Group_Inline"], COLORS.node_blend_strand);
 		ds_list_add(strandSim, "Group");
 		addNodeObject(strandSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent().hideGlobal();
 		addNodeObject(strandSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent().hideGlobal();

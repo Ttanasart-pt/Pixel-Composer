@@ -16,7 +16,7 @@ function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) { #region
 	return node_create;
 } #endregion
 
-function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) { #region
+function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_list = ds_list_create()) { #region
 	static log   = false;
 	UNDO_HOLDING = true;
 	
@@ -32,18 +32,19 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) { #region
 	
 	if(!struct_has(_map, "nodes")) return noone;
 	var _node_list	  = _map.nodes;
-	var appended_list = ds_list_create();
 	var node_create   = ds_list_create();
 	
 	APPENDING = true;
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
-	ds_map_clear(APPEND_MAP);
+	if(!CLONING) ds_map_clear(APPEND_MAP);
 	var t = current_time;
 	
 	for(var i = 0; i < array_length(_node_list); i++) {
+		var ex = ds_map_exists(APPEND_MAP, _node_list[i].id);
+		
 		var _node = nodeLoad(_node_list[i], true, context);
-		if(_node) ds_list_add(appended_list, _node);
+		if(_node && !ex) ds_list_add(appended_list, _node);
 	}
 	printIf(log, "Load time: " + string(current_time - t)); t = current_time;
 	
@@ -79,8 +80,10 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) { #region
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].preConnect();
-		for(var i = 0; i < ds_list_size(appended_list); i++)
+			
+		for(var i = 0; i < ds_list_size(appended_list); i++) 
 			appended_list[| i].connect();
+			
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].postConnect();
 	} catch(e) {

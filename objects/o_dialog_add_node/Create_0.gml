@@ -246,8 +246,9 @@ event_inherited();
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) { #region
 		draw_clear_alpha(COLORS._main_text, 0);
 		
-		var hh  = 0;
-		var hg  = ui(28);
+		var ww = category_width - ui(32);
+		var hh = 0;
+		var hg = ui(28);
 		
 		var start = category == NODE_CATEGORY? -2 : 0;
 		
@@ -268,13 +269,19 @@ event_inherited();
 					}
 					draw_set_color(COLORS._main_text_accent);
 				}
+				
+				if(cat.color != noone) {
+					BLEND_OVERRIDE
+					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, ww, hg, merge_color(c_white, cat.color, 0.5), 1);
+					BLEND_NORMAL
+				}
 			}
 			
 			var _hov = false;
 			
-			if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, category_width - ui(32), _y + hh + hg - 1)) {
+			if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, ww, _y + hh + hg - 1)) {
 				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, category_width - ui(32), hg, CDEF.main_white, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, ww, hg, CDEF.main_white, 1);
 				BLEND_NORMAL
 				
 				_hov = true;

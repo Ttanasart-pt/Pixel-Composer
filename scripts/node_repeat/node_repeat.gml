@@ -1,19 +1,21 @@
-function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Repeat";
+	dimension_index = 1;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
 	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
+	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
+		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Linear",   s_node_repeat_axis, 0), 
 												 new scrollItem("Grid",     s_node_repeat_axis, 1), 
 												 new scrollItem("Circular", s_node_repeat_axis, 2), ]);
 	
-	inputs[| 4] = nodeValue("Shift position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [DEF_SURF_W / 2, 0])
+	inputs[| 4] = nodeValue("Shift position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function() { return getDimension(); });
 	
@@ -46,7 +48,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	inputs[| 15] = nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 16] = nodeValue("Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, at random, pr spread or each image to one output." )
+	inputs[| 16] = nodeValue("Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, at random, or spread or each image to one output." )
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Order", "Random", "Spread" ]);
 	
 	inputs[| 17] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(99999) );
@@ -107,17 +109,17 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	attribute_surface_depth();
 	
-	static getDimension = function() { #region
-		var _surf = getInputData(0);
-		if(is_array(_surf)) {
-			if(array_length(_surf) == 0) return [1, 1];
-			if(!is_surface(_surf[0])) return [1, 1];
-			return [ surface_get_width_safe(_surf[0]), surface_get_height_safe(_surf[0]) ];
-		}
+	//static getDimension = function() { #region
+	//	var _surf = getInputData(0);
+	//	if(is_array(_surf)) {
+	//		if(array_length(_surf) == 0) return [1, 1];
+	//		if(!is_surface(_surf[0])) return [1, 1];
+	//		return [ surface_get_width_safe(_surf[0]), surface_get_height_safe(_surf[0]) ];
+	//	}
 			
-		if(!is_surface(_surf)) return [1, 1];
-		return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
-	} #endregion
+	//	if(!is_surface(_surf)) return [1, 1];
+	//	return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
+	//} #endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var a = inputs[| 9].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor); active &= !a;
@@ -141,50 +143,64 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var a = inputs[| 31].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getInputData(1)); active &= !a;
 	} #endregion
 	
-	static step = function() { #region
+	static preGetInputs = function() { #region
+		var _arr = getSingleValue(16);
+		var _pat = getSingleValue(3);
+		
+		inputs[|  0].setArrayDepth(_arr != 2);
+		
+		inputs[|  4].setVisible( _pat == 0 || _pat == 1);
+		inputs[|  7].setVisible( _pat == 2);
+		inputs[|  8].setVisible( _pat == 2);
+		inputs[| 18].setVisible( _pat == 1);
+		inputs[| 19].setVisible( _pat == 1);
+		inputs[| 26].setVisible( _pat == 0);
+		
 		inputs[| 14].mappableStep();
 	} #endregion
 	
-	function doRepeat(_outSurf, _inSurf) { #region
-		var _dim    = getInputData( 1);
-		var _amo    = getInputData( 2);
-		var _pat    = getInputData( 3);
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
+		
+		var _iSrf = _data[ 0];
+		var _dim  = _data[ 1];
+		var _amo  = _data[ 2];
+		var _pat  = _data[ 3];
 							  
-		var _spos = getInputData( 9);
+		var _spos = _data[ 9];
 		
-		var _rpos = getInputData( 4);
-		var _rsta = getInputData(26);
-		var _rrot = getInputData( 5);
-		var _rsca = getInputData( 6);
-		var _msca = getInputData(10);
+		var _rpos = _data[ 4];
+		var _rsta = _data[26];
+		var _rrot = _data[ 5];
+		var _rsca = _data[ 6];
+		var _msca = _data[10];
 		
-		var _aran = getInputData( 7);
-		var _arad = getInputData( 8);
+		var _aran = _data[ 7];
+		var _arad = _data[ 8];
 		
-		var _path = getInputData(11);
-		var _prng = getInputData(12);
-		var _prsh = getInputData(13);
+		var _path = _data[11];
+		var _prng = _data[12];
+		var _prsh = _data[13];
 		
-		var _grad       = getInputData(14);
-		var _grad_map   = getInputData(30);
-		var _grad_range = getInputData(31);
+		var _grad       = _data[14];
+		var _grad_map   = _data[30];
+		var _grad_range = _data[31];
 		
-		var _arr = getInputData(16);
-		var _sed = getInputData(17);
+		var _arr = _data[16];
+		var _sed = _data[17];
 		
-		var _col = getInputData(18);
-		var _cls = getInputData(19);
+		var _col = _data[18];
+		var _cls = _data[19];
 		
-		var _an_use = getInputData(29);
+		var _an_use = _data[29];
 		
-		var _an_mid = getInputData(20);
-		var _an_ran = getInputData(21);
-		var _an_fal = getInputData(25);
-		var _an_pos = getInputData(22);
-		var _an_rot = getInputData(23);
-		var _an_sca = getInputData(24);
+		var _an_mid = _data[20];
+		var _an_ran = _data[21];
+		var _an_fal = _data[25];
+		var _an_pos = _data[22];
+		var _an_rot = _data[23];
+		var _an_sca = _data[24];
 		
-		var _an_bld = getInputData(27);
+		var _an_bld = _data[27];
 		var _an_alp = _color_get_alpha(_an_bld);
 		
 		var _surf, runx, runy, posx, posy, scax, scay, rot;
@@ -240,10 +256,18 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					scay += _an_sca[1] * _inf;
 				}
 				
-				var _surf = _inSurf;
+				var _surf = _iSrf;
 				
-				if(is_array(_inSurf)) 
-					_surf = array_safe_get_fast(_inSurf, _arr? irandom(array_length(_inSurf) - 1) : safe_mod(i, array_length(_inSurf)));
+				if(is_array(_iSrf)) {
+					var _sid = 0;
+					
+					     if(_arr == 0) _sid = safe_mod(i, array_length(_iSrf));
+					else if(_arr == 1) _sid = irandom(array_length(_iSrf) - 1);
+					
+					_surf = array_safe_get_fast(_iSrf, _sid);
+				}
+				
+				if(!is_surface(_surf)) continue;
 				
 				var _sw = surface_get_width_safe(_surf);
 				var _sh = surface_get_height_safe(_surf);
@@ -277,46 +301,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(_rsta == 2)	runy += _sh / 2;
 			}
 		surface_reset_target();
-	} #endregion
-	
-	static update = function(frame = CURRENT_FRAME) { #region
-		var _inSurf = getInputData(0);
-		if(is_array(_inSurf) && array_length(_inSurf) == 0) return;
-		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
-					
-		var _dim = getInputData(1);
-		var _pat = getInputData(3);
-		var cDep = attrDepth();
 		
-		var _arr = getInputData(16);
-		
-		inputs[|  4].setVisible( _pat == 0 || _pat == 1);
-		inputs[|  7].setVisible( _pat == 2);
-		inputs[|  8].setVisible( _pat == 2);
-		inputs[| 18].setVisible( _pat == 1);
-		inputs[| 19].setVisible( _pat == 1);
-		inputs[| 26].setVisible( _pat == 0);
-		
-		var runx, runy, posx, posy, scax, scay, rot;
-		var _outSurf = outputs[| 0].getValue();
-		
-		if(is_array(_inSurf) && _arr == 2) {
-			if(!is_array(_outSurf)) surface_free(_outSurf);
-			else {
-				for( var i = 0, n = array_length(_outSurf); i < n; i++ )
-					surface_free(_outSurf[i]);
-			}
-			
-			for( var i = 0, n = array_length(_inSurf); i < n; i++ ) {
-				var _out = surface_create(_dim[0], _dim[1], cDep);
-				_outSurf[i] = _out;
-				doRepeat(_out, _inSurf[i]);
-			}
-		} else {
-			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], cDep);
-			doRepeat(_outSurf, _inSurf);
-		}
-		
-		outputs[| 0].setValue(_outSurf);
+		return _outSurf;
 	} #endregion
 }

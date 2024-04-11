@@ -20,7 +20,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#region ---- main & active ----
 		active       = true;
 		renderActive = true;
-	
+		
 		node_id = UUID_generate();
 		group   = _group;
 		manual_deletable	 = true;
@@ -36,6 +36,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		array_push(PROJECT.nodeArray, self);
 		
 		inline_context = noone;
+		inline_parent_object  = "";
 	#endregion
 	
 	static resetInternalName = function() { #region
@@ -89,6 +90,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		will_setHeight = false;
 		
 		selectable   = true;
+		clonable     = true;
 		draw_padding = 4;
 		auto_height  = true;
 		
@@ -287,6 +289,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	#region ---- log ----
 		messages = [];
+	#endregion
+	
+	#region ---- serialization ----
+		load_scale = false;
+		load_map   = -1;
+		load_group = noone;
 	#endregion
 	
 	static createNewInput = noone;
@@ -2013,8 +2021,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static doSerialize = function(_map) {}
 	static processSerialize = function(_map) {}
 	
-	load_scale = false;
-	load_map = -1;
 	static deserialize = function(_map, scale = false, preset = false) { #region					>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DESERIALIZE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		load_map   = _map;
 		load_scale = scale;
@@ -2034,8 +2040,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(internalName == "")
 				resetInternalName();
 			
-			_group = struct_try_get(load_map, "group", noone);
-			if(_group == -1) _group = noone;
+			load_group = struct_try_get(load_map, "group", noone);
+			if(load_group == -1) load_group = noone;
 			
 			x = struct_try_get(load_map, "x");
 			y = struct_try_get(load_map, "y");
@@ -2177,20 +2183,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static doApplyDeserialize  = function() {}
 	
 	static loadGroup = function(context = noone) { #region
-		if(_group == noone) {
+		if(load_group == noone) {
 			if(context != noone) context.add(self);
 		} else {
-			if(APPENDING) _group = GetAppendID(_group);
+			if(APPENDING) load_group = GetAppendID(load_group);
 			
-			if(ds_map_exists(PROJECT.nodeMap, _group)) {
-				if(struct_has(PROJECT.nodeMap[? _group], "add"))
-					PROJECT.nodeMap[? _group].add(self);
+			if(ds_map_exists(PROJECT.nodeMap, load_group)) {
+				if(struct_has(PROJECT.nodeMap[? load_group], "add"))
+					PROJECT.nodeMap[? load_group].add(self);
 				else {
-					var txt = $"Group load failed. Node ID {_group} is not a group.";
+					var txt = $"Group load failed. Node ID {load_group} is not a group.";
 					throw(txt);
 				}
 			} else {
-				var txt = $"Group load failed. Can't find node ID {_group}";
+				var txt = $"Group load failed. Can't find node ID {load_group}";
 				throw(txt);
 			}
 		}

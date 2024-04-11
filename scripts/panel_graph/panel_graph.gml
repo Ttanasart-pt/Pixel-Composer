@@ -1310,7 +1310,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					
 					for(var i = 0; i < ds_list_size(nodes_list); i++) {
 						var _node = nodes_list[| i];
+						
+						if(!_node.selectable) continue;
 						if(is_instanceof(_node, Node_Frame) && !nodes_select_frame) continue;
+						
 						var _x = (_node.x + graph_x) * graph_s;
 						var _y = (_node.y + graph_y) * graph_s;
 						var _w = _node.w * graph_s;
@@ -1344,7 +1347,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			}
 			
 			if(mouse_on_graph && !node_bg_hovering && mouse_press(mb_left, pFOCUS) && !graph_dragging_key && !graph_zooming_key) {
-				if(junction_hovering && junction_hovering.draw_line_shift_hover) {
+				if(is_instanceof(junction_hovering, NodeValue) && junction_hovering.draw_line_shift_hover) {
 					nodes_select_mx		= mx;
 					nodes_select_my		= my;
 					nodes_junction_d	= junction_hovering;
@@ -1872,47 +1875,69 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(array_empty(nodes_selecting)) return;
 			
 			var _map  = {};
+			var _pmap = {};
 			var _node = [];
-			for(var i = 0; i < array_length(nodes_selecting); i++)
-				SAVE_NODE(_node, nodes_selecting[i],,,, getCurrentContext());
+			
+			for(var i = 0; i < array_length(nodes_selecting); i++) {
+				var _n = nodes_selecting[i];
+				
+				if(_n.inline_parent_object != "")
+					_pmap[$ _n.inline_context.node_id] = _n.inline_parent_object;
+					
+				SAVE_NODE(_node, _n,,,, getCurrentContext());
+			}
+			
 			_map.nodes = _node;
 			
-			APPENDING = true;
-			CLONING	  = true;
-			var _app  = __APPEND_MAP(_map);
-			recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(_app));
+			ds_map_clear(APPEND_MAP);
+			ds_list_clear(APPEND_LIST);
 			
-			APPENDING = false;
-			CLONING	  = false;
+			CLONING	= true;
+				var _pmap_keys = variable_struct_get_names(_pmap);
+				for( var i = 0, n = array_length(_pmap_keys); i < n; i++ ) {
+					var _pkey     = _pmap_keys[i];
+					var _original = PROJECT.nodeMap[? _pkey];
+					var _nodeS    = _pmap[$ _pkey];
+					
+					CLONING_GROUP = _original;
+					var _newGroup = nodeBuild(_nodeS, _original.x, _original.y);
+					APPEND_MAP[? _pkey] = _newGroup;
+				}
+				
+				APPEND_LIST = __APPEND_MAP(_map,, APPEND_LIST);
+				recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(APPEND_LIST));
+			CLONING	= false;
 			
-			if(ds_list_size(_app) == 0) {
-				ds_list_destroy(_app);
-				return;
-			}
+			if(ds_list_size(APPEND_LIST) == 0) return;
 			
 			for(var i = 0; i < array_length(nodes_selecting); i++) {
 				var _orignal = nodes_selecting[i];
-				var _cloned  = ds_map_try_get(APPEND_MAP, _orignal.node_id, "");
+				if(!_orignal.clonable) continue;
 				
-				if(_orignal.inline_context != noone && _cloned != "") 
-					_orignal.inline_context.addNode(PROJECT.nodeMap[? _cloned]);
+				var _cloned     = ds_map_try_get(APPEND_MAP, _orignal.node_id, "");
+				var _inline_ctx = _orignal.inline_context;
+				
+				if(_inline_ctx != noone && _cloned != "") {
+					_inline_ctx = ds_map_try_get(APPEND_MAP, _inline_ctx.node_id, _inline_ctx);
+					_inline_ctx.addNode(PROJECT.nodeMap[? _cloned]);
+				}
 			}
 			
 			var x0 = 99999999;
 			var y0 = 99999999;
-			for(var i = 0; i < ds_list_size(_app); i++) {
-				var _node = _app[| i];
+			for(var i = 0; i < ds_list_size(APPEND_LIST); i++) {
+				var _node = APPEND_LIST[| i];
 				
 				x0 = min(x0, _node.x);
 				y0 = min(y0, _node.y);
 			}
 		
-			node_dragging = _app[| 0];
+			node_dragging = APPEND_LIST[| 0];
 			node_drag_mx  = x0; node_drag_my  = y0;
 			node_drag_sx  = x0; node_drag_sy  = y0;
 			node_drag_ox  = x0; node_drag_oy  = y0;
 			
-			nodes_selecting = array_create_from_list(_app);
+			nodes_selecting = array_create_from_list(APPEND_LIST);
 		} #endregion
 
 		function doInstance() { #region

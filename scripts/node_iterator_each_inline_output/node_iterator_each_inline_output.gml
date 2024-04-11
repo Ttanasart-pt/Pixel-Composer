@@ -3,6 +3,8 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	color = COLORS.node_blend_loop;
 	loop  = noone;
 	
+	clonable = false;
+	inline_parent_object = "Node_Iterate_Each_Inline";
 	manual_ungroupable	 = false;
 	
 	inputs[| 0] = nodeValue("Value out", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
@@ -27,9 +29,7 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 		var arr = outputs[| 0].getValue();
 		var itr = loop.iterated - 1;
 		
-		arr[@ itr] = val;
+		array_safe_set(arr, itr, val);
 		outputs[| 0].setValue(arr);
-		
-		//print($"Output iteration {itr} = {val} | {arr}");
 	} #endregion
 }

@@ -61,7 +61,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static getDimension = function(arr = 0) { #region
-		if(dimension_index == -1) return [1, 1];
+		if(dimension_index == -1) return [ 1, 1 ];
 		
 		var _in = getSingleValue(dimension_index, arr);
 		
@@ -332,6 +332,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 			all_inputs[i][l] = inputs[| i].arrayBalance(_in[_index]);
 		} #endregion
+		
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region

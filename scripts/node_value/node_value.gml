@@ -614,6 +614,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#region ---- value ----
 		def_val	    = _value;
 		def_length  = is_array(def_val)? array_length(def_val) : 0;
+		def_depth   = array_get_depth(def_val);
 		unit		= new nodeValueUnit(self);
 		def_unit    = VALUE_UNIT.constant;
 		dyna_depo   = ds_list_create();
@@ -1592,6 +1593,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		var val = _getValue(_time, applyUnit, arrIndex, log);
+		if(!accept_array && array_get_depth(val) > def_depth) {
+			noti_warning($"{name} does not accept array data.",, node);
+			return 0;
+		}
 		
 		draw_junction_index = type;
 		if(type == VALUE_TYPE.surface || type == VALUE_TYPE.any) {
@@ -1645,7 +1650,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return animator.getValue(_time);
 	} #endregion
 	
-	static arrayBalance = function(val) { #region //Balance array (generate uniform array from single values)
+	static arrayBalance = function(val) { #region // Balance array (generate uniform array from single values)
 		if(!is_array(def_val))
 			return val;
 			
@@ -1657,12 +1662,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!is_array(val))
 			return array_create(def_length, val);
-		else if(array_length(val) < def_length) {
-			var _val = array_create(def_length);
-			for( var i = 0; i < def_length; i++ )
-				_val[i] = array_safe_get_fast(val, i, 0);
-			return _val;
-		} 
+		
+		if(array_length(val) < def_length)
+			array_resize(val, def_length);
 		
 		return val;
 	} #endregion
@@ -1689,7 +1691,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		} #endregion
 		
-		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float) && accept_array) { #region Dimension conversion
+		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { #region Dimension conversion
 			if(is_array(val)) {
 				var eqSize = true;
 				var sArr = [];
@@ -1711,7 +1713,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return sArr;
 			} else if (is_surface(val)) 
 				return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
-			return [1, 1];
+			return [ 1, 1 ];
 			
 		} #endregion
 		
@@ -2651,6 +2653,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static connect = function(log = false) { #region
+		//print($"{node} | {con_node} : {con_index}");
+		
 		if(con_node == -1 || con_index == -1)
 			return true;
 		

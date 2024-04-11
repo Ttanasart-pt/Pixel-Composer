@@ -123,7 +123,7 @@ function Panel_Notification() : PanelContent() constructor {
 					var bh = ui(28);
 					
 					var bx = _w - ui(0) - bw;
-					var by = yy + ui(0) + ui(2);
+					var by = yy + ui(0) + ui(1);
 					
 					draw_sprite_stretched_ext(THEME.group_label, 0, bx, by, bw, bh, COLORS._main_icon_dark, 0.75);
 					

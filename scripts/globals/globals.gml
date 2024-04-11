@@ -1,13 +1,18 @@
 #region save
-	globalvar LOADING, APPENDING, CLONING, LOADING_VERSION;
-	globalvar CONNECTION_CONFLICT;
+	globalvar LOADING, CLONING, CLONING_GROUP;
+	globalvar CONNECTION_CONFLICT, LOADING_VERSION;
 	globalvar MESSAGE;
 	
-	LOADING		= false;
+	globalvar APPENDING, APPEND_MAP, APPEND_LIST;
+	APPEND_MAP      = ds_map_create();
+	APPEND_LIST     = ds_list_create();
+	
+	LOADING		    = false;
 	LOADING_VERSION = 0;
-	CLONING		= false;
-	APPENDING	= false;
-	MESSAGE     = noone;
+	CLONING_GROUP   = noone;
+	CLONING		    = false;
+	APPENDING	    = false;
+	MESSAGE         = noone;
 	
 	CONNECTION_CONFLICT = ds_queue_create();
 	
@@ -35,9 +40,6 @@
 	SAVE_VERSION	= 11690;
 	VERSION_STRING  = "1.16.9.2";
 	BUILD_NUMBER	= 11692;
-	
-	globalvar APPEND_MAP;
-	APPEND_MAP      = ds_map_create();
 	
 	globalvar HOTKEYS, HOTKEY_CONTEXT;
 	HOTKEYS			= ds_map_create();

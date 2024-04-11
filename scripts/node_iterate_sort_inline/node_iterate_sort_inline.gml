@@ -12,7 +12,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	output_node_type = Node_Iterator_Sort_Inline_Output;
 	iterated         = 0;
 	
-	if(!LOADING && !APPENDING && !CLONING) { #region
+	if(!LOADING && !APPENDING) { #region
 		var input  = nodeBuild("Node_Iterator_Sort_Inline_Input",  x,       y);
 		var output = nodeBuild("Node_Iterator_Sort_Inline_Output", x + 256, y);
 		
@@ -24,6 +24,13 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		
 		input_node.loop  = self;
 		output_node.loop = self;
+		
+		if(CLONING && is_instanceof(CLONING_GROUP, Node_Iterate_Sort_Inline)) {
+			APPEND_MAP[? CLONING_GROUP.input_node.node_id]  = input;
+			APPEND_MAP[? CLONING_GROUP.output_node.node_id] = output;
+			
+			ds_list_add(APPEND_LIST, input, output);
+		}
 	} #endregion
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
