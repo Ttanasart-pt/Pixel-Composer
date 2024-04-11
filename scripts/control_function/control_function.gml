@@ -35,6 +35,12 @@
 		keyboard_key_release(vk_alt);
 	}
 	
+	function key_mod_press_any() {
+		INLINE
+		
+		return CTRL == KEYBOARD_STATUS.pressing || ALT == KEYBOARD_STATUS.pressing || SHIFT == KEYBOARD_STATUS.pressing;
+	}
+	
 	function key_mod_press(key) {
 		INLINE
 		

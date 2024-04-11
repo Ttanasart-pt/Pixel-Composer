@@ -199,6 +199,12 @@ function gradientObject(color = c_black) constructor { #region
 		
 		var key_count = ceil(lerp(array_length(keys), array_length(target.keys), amount));
 		
+		if(key_count == 0) return grad;
+		if(key_count == 1) {
+			grad.keys[0] = new gradientKey(0, merge_color(eval(0), target.eval(0), amount));
+			return grad;
+		}
+		
 		for( var i = 0; i < key_count; i++ ) {
 			var rat = i / (key_count - 1);
 			

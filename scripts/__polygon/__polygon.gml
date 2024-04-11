@@ -1,4 +1,4 @@
-function polygon_simplify(points, tolerance = 4) {
+function polygon_simplify(points, tolerance = 4) { #region
 	var remSt = ds_stack_create();
 	
 	var len = array_length(points);
@@ -25,9 +25,9 @@ function polygon_simplify(points, tolerance = 4) {
 	ds_stack_destroy(remSt);
 	
 	return points;
-}
+} #endregion
 
-function polygon_points_classify(points) {
+function polygon_points_classify(points) { #region
 	var len = array_length(points);
 	
 	var maxx = -99999;
@@ -65,9 +65,9 @@ function polygon_points_classify(points) {
 	}
 			
 	return [ convexs, reflects, _side ];
-}
+} #endregion
 
-function polygon_triangulate_convex(points) {
+function polygon_triangulate_convex(points) { #region
 	var triangles = [];
 	
 	var len = array_length(points);
@@ -81,19 +81,19 @@ function polygon_triangulate_convex(points) {
 	}
 	
 	return triangles;
-}
+} #endregion
 
-function polygon_triangulate(points, tolerance = 4) {
+function polygon_triangulate(points, tolerance = 4) { #region
 	points = polygon_simplify(points, tolerance);
 	var classes   = polygon_points_classify(points);
 	var convexes  = classes[0];
 	var reflected = classes[1];
 	var checkSide = classes[2];
-	var pointInd  = [];
 	
 	if(array_length(reflected) == 0) 
 		return polygon_triangulate_convex(points);
 	
+	var pointInd  = array_create(array_length(points));
 	for( var i = 0, n = array_length(points); i < n; i++ )
 		pointInd[i] = i;
 	
@@ -104,10 +104,10 @@ function polygon_triangulate(points, tolerance = 4) {
 		if(array_length(convexes) == 0) return triangles;
 		
 		var len = array_length(pointInd);
-		var c0 = convexes[0];
+		var c0  = convexes[0];
 		var c0i = array_find(pointInd, c0);
-		var c1 = pointInd[safe_mod(c0i - 1 + len, len)];
-		var c2 = pointInd[safe_mod(c0i + 1, len)];
+		var c1  = pointInd[safe_mod(c0i - 1 + len, len)];
+		var c2  = pointInd[safe_mod(c0i + 1, len)];
 		
 		var p0 = points[c0];
 		var p1 = points[c1];
@@ -171,7 +171,7 @@ function polygon_triangulate(points, tolerance = 4) {
 			array_push(convexes, c0);
 			
 			if(repeated++ > len) {
-				print("mesh error")
+				//print("mesh error")
 				break;
 			}
 		}
@@ -181,9 +181,9 @@ function polygon_triangulate(points, tolerance = 4) {
 		array_push(triangles, [points[pointInd[0]], points[pointInd[1]], points[pointInd[2]]]);
 	
 	return triangles;
-}
+} #endregion
 
-function polygon_triangulate_convex_fan(points) {
+function polygon_triangulate_convex_fan(points) { #region
 	var triangles = [];
 	
 	var amo = array_length(points);
@@ -202,4 +202,4 @@ function polygon_triangulate_convex_fan(points) {
 		array_push(triangles, [ points[i], points[(i + 1) % amo], pc ]);
 	}
 	return triangles;
-}
+} #endregion

@@ -154,6 +154,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return 8 + _h;
 	}); #endregion
 	
+	temp_surface = array_create(1);
+	
 	input_display_list = [ 
 		["Output",	  false], 0, frame_renderer, 12, 13, 
 		["Brush",	   true], 6, 15, 17, 16, 
@@ -216,7 +218,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		brush_rand_dir  = [ 0, 0, 0, 0, 0 ];
 		brush_seed      = irandom_range(100000, 999999);
 		brush_next_dist = 0;
-	
+		
+		freeform_shape  = [];
+		
 		draw_stack  = ds_list_create();
 	#endregion
 	
@@ -246,7 +250,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_fil8            = [ "Diagonal", tool_fil8_edit, "fill8", tool_attribute ];
 		
 		tools = [
-			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle ]),
+			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection ]),
 			
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
 					.setSetting(tool_size),
@@ -260,10 +264,45 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ])
 					.setSetting(tool_size),
 					
+			new NodeTool( "Freefrom",	  THEME.canvas_tools_freeform)
+					.setSetting(tool_size),
+					
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
 					.setSetting(tool_thrs)
 					.setSetting(tool_fil8),
 		];
+	#endregion
+	
+	#region fix size points
+		fix_points = [];
+		
+		fix_points[0] = [];
+		fix_points[1] = [];
+		fix_points[2] = [[ 0, 0 ], [ 1, 0 ], [ 0, 1 ], [ 1, 1 ]];
+		fix_points[3] = [[ 0, 0 ], [ -1, 0 ], [ 0, -1 ], [ 1, 0 ], [ 0, 1 ]];
+		fix_points[4] = [[ 0, 0 ], [ -1, 0 ], [ 0, -1 ], [ -1, -1 ], [ -2, -1 ], [ -2, 0 ], [ -1, -2 ], [ 0, -2 ], [ 1, -1 ], [ 1, 0 ], [ -1, 1 ], [ 0, 1 ]];
+		fix_points[5] = [
+			[  0,  0 ], 
+			[ -1, -1 ], [  0, -1 ], [  1, -1 ], [ -1,  0 ], [  1,  0 ], [ -1,  1 ], [  0,  1 ], [  1,  1 ], 
+			[ -1, -2 ], [  0, -2 ], [  1, -2 ], [ -1,  2 ], [  0,  2 ], [  1,  2 ], [ -2, -1 ], [ -2,  0 ], [ -2,  1 ], [  2, -1 ], [  2,  0 ], [  2,  1 ], 
+		];
+		fix_points[6] = [
+			[  0,  0 ], 
+			[ -1, -1 ], [  0, -1 ], [  1, -1 ], [ -1,  0 ], [  1,  0 ], [ -1,  1 ], [  0,  1 ], [  1,  1 ], 
+			[ -1, -2 ], [  0, -2 ], [  1, -2 ], [ -1,  2 ], [  0,  2 ], [ -2, -1 ], [ -2,  0 ], [ -2,  1 ], [  2, -1 ], [  2,  0 ], [ -2, -2 ],
+			[ -1, -3 ], [  0, -3 ], [ -3, -1 ], [ -3,  0 ], 
+		];
+		fix_points[7] = [
+			[  0,  0 ], 
+			[ -1, -1 ], [  0, -1 ], [  1, -1 ], [ -1,  0 ], [  1,  0 ], [ -1,  1 ], [  0,  1 ], [  1,  1 ], 
+			[ -1, -2 ], [  0, -2 ], [  1, -2 ], [ -1,  2 ], [  0,  2 ], [  1,  2 ], [ -2, -1 ], [ -2,  0 ], [ -2,  1 ], [  2, -1 ], [  2,  0 ], [  2,  1 ], [ -2, -2 ], [  2, -2 ], [ -2, 2 ], [ 2, 2 ],
+			[ -1, -3 ], [  0, -3 ], [  1, -3 ], [ -1,  3 ], [  0,  3 ], [  1,  3 ], [ -3, -1 ], [ -3,  0 ], [ -3,  1 ], [  3, -1 ], [  3,  0 ], [  3,  1 ], 
+		];
+		
+		fix_points[8] = array_append(variable_clone(fix_points[7]), [ [-4, -2], [-4, -1], [-4, 0], [-4, 1], [-3, -3], [-3, -2], [-3, 2], [-2, -4], [-2, -3], [-2, 3], [-1, -4], [0, -4], [1, -4], [2, -3], [3, -2] ]);
+		fix_points[9] = array_append(variable_clone(fix_points[7]), [ [-4, -1], [-4, 0],  [-4, 1], [-3, -2], [-3, -2], [-3, 2], [-2, -3], [-2, 3], [-1, -4], [-1, 4], [0, -4], [0, 4], [1, -4], [1, 4], [2, -3], [2, 3], [3, -2], [3, 2], [4, -1], [4, 0], [4, 1] ]);
+		
+		fix_points_amount = array_length(fix_points);
 	#endregion
 	
 	function setToolColor(color) { tool_attribute.color = color; }
@@ -336,11 +375,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function refreshFrames() { #region
-		var fr = attributes.frames;
+		var fr   = attributes.frames;
+		var _dim = attributes.dimension;
 		
 		if(array_length(canvas_surface) < fr) {
 			for( var i = array_length(canvas_surface); i < fr; i++ ) {
-				canvas_surface[i] = surface_create_empty(1, 1);
+				canvas_surface[i] = surface_create(_dim[0], _dim[1]);
+				surface_set_target(canvas_surface[i]);
+					DRAW_CLEAR
+				surface_reset_target();
 			}
 		} else 
 			array_resize(canvas_surface, fr);
@@ -449,21 +492,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	function draw_point_size(_x, _y, _draw = false) { #region
 		if(brush_surface == noone) {
+			
 			if(brush_size <= 1) 
 				draw_point(_x, _y);
-			else if(brush_size == 2) { 
-				draw_point(_x, _y);
-				draw_point(_x + 1, _y);
-				draw_point(_x,     _y + 1);
-				draw_point(_x + 1, _y + 1);
-			} else if(brush_size == 3) { 
-				draw_point(_x, _y);	
-				draw_point(_x - 1, _y);	
-				draw_point(_x,     _y - 1);	
-				draw_point(_x + 1, _y);	
-				draw_point(_x,     _y + 1);	
+				
+			else if(brush_size < fix_points_amount) { 
+				var fx = fix_points[brush_size];
+				for( var i = 0, n = array_length(fx); i < n; i++ )
+					draw_point(_x + fx[i][0], _y + fx[i][1]);	
+					
 			} else
 				draw_circle_prec(_x, _y, brush_size / 2, 0);
+				
 		} else {
 			var _sw = surface_get_width_safe(brush_surface);
 			var _sh = surface_get_height_safe(brush_surface);
@@ -478,13 +518,27 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	function draw_line_size(_x0, _y0, _x1, _y1, _draw = false) { #region 
 		
-		if(brush_size == 1 && brush_surface == noone) {
-			if(_x1 > _x0) _x0--;
-			if(_y1 > _y0) _y0--;
-			if(_y1 < _y0) _y1--;
-			if(_x1 < _x0) _x1--;
-		
-			draw_line(_x0, _y0, _x1, _y1);
+		if(brush_surface == noone) {
+			
+			if(brush_size < fix_points_amount) {
+				if(_x1 > _x0) _x0--;
+				if(_y1 > _y0) _y0--;
+				if(_y1 < _y0) _y1--;
+				if(_x1 < _x0) _x1--;
+			}
+			
+			if(brush_size == 1) {
+				draw_line(_x0, _y0, _x1, _y1);
+				
+			} else if(brush_size < fix_points_amount) { 
+				
+				var fx = fix_points[brush_size];
+				for( var i = 0, n = array_length(fx); i < n; i++ )
+					draw_line(_x0 + fx[i][0], _y0 + fx[i][1], _x1 + fx[i][0], _y1 + fx[i][1]);	
+					
+			} else
+				draw_line_width(_x0, _y0, _x1, _y1, brush_size);
+			
 		} else {
 			var diss  = point_distance(_x0, _y0, _x1, _y1);
 			var dirr  = point_direction(_x0, _y0, _x1, _y1);
@@ -536,15 +590,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _min_y = min(_y0, _y1);
 		var _may_y = max(_y0, _y1);
 		
-		if(_fill) {
-			draw_rectangle(_min_x, _min_y, _max_x, _may_y, 0);
-		} else if(brush_size == 1 && brush_surface == noone)
+		if(_fill) draw_rectangle(_min_x, _min_y, _max_x, _may_y, 0);
+		
+		if(brush_size == 1 && brush_surface == noone)
 			draw_rectangle(_min_x + 1, _min_y + 1, _max_x - 1, _may_y - 1, 1);
 		else {
-			draw_line_size(_min_x, _min_y, _max_x, _min_y);
-			draw_line_size(_min_x, _min_y, _min_x, _may_y);
-			draw_line_size(_max_x, _may_y, _max_x, _min_y);
-			draw_line_size(_max_x, _may_y, _min_x, _may_y);
+			draw_set_color(c_red);    draw_line_size(_min_x, _min_y, _max_x, _min_y);
+			draw_set_color(c_blue);   draw_line_size(_min_x, _min_y, _min_x, _may_y);
+			draw_set_color(c_green);  draw_line_size(_max_x, _may_y, _max_x, _min_y);
+			draw_set_color(c_yellow); draw_line_size(_max_x, _may_y, _min_x, _may_y);
 		}
 	} #endregion
 	
@@ -569,25 +623,23 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _min_y = min(_y0, _y1) - 1;
 		var _max_y = max(_y0, _y1);
 		
-		if(_fill) {
-			draw_ellipse(_min_x, _min_y, _max_x, _max_y, 0);
-		} else {
-			var samp = 64;
-			var cx = (_min_x + _max_x) / 2;
-			var cy = (_min_y + _max_y) / 2;
-			var rx = abs(_x0 - _x1) / 2;
-			var ry = abs(_y0 - _y1) / 2;
+		if(_fill) draw_ellipse(_min_x, _min_y, _max_x, _max_y, 0);
+		
+		var samp = 64;
+		var cx = (_min_x + _max_x) / 2;
+		var cy = (_min_y + _max_y) / 2;
+		var rx = abs(_x0 - _x1) / 2;
+		var ry = abs(_y0 - _y1) / 2;
 			
-			var ox, oy, nx, ny;
-			for( var i = 0; i <= samp; i++ ) {
-				nx = cx + lengthdir_x(rx, 360 / samp * i);
-				ny = cy + lengthdir_y(ry, 360 / samp * i);
+		var ox, oy, nx, ny;
+		for( var i = 0; i <= samp; i++ ) {
+			nx = cx + lengthdir_x(rx, 360 / samp * i);
+			ny = cy + lengthdir_y(ry, 360 / samp * i);
 				
-				if(i) draw_line_size(ox, oy, nx, ny);
+			if(i) draw_line_size(ox, oy, nx, ny);
 				
-				ox = nx;
-				oy = ny;
-			}
+			ox = nx;
+			oy = ny;
 		}
 	} #endregion
 	
@@ -708,6 +760,75 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_alpha(1);
 	} #endregion
 	
+	function freeform_step(active, _x, _y, _s, _mx, _my, _draw) { #region
+		var _dim = attributes.dimension;
+		
+		var _mmx = (_mx - _x) / _s;
+		var _mmy = (_my - _y) / _s;
+		brush_size = 1;
+		
+		if(mouse_holding) {
+			if(abs(_mmx - mouse_pre_x) + abs(_mmy - mouse_pre_y) >= 1) {
+				
+				if(_draw) {
+					surface_set_target(drawing_surface);
+						draw_line_size(round(mouse_pre_x - 0.5), round(mouse_pre_y - 0.5), round(_mmx - 0.5), round(_mmy - 0.5), true);
+					surface_reset_target();
+				}
+					
+				mouse_pre_x = _mmx;
+				mouse_pre_y = _mmy;
+					
+				array_push(freeform_shape, new __vec2(_mmx, _mmy) );
+			}
+			
+			if(mouse_release(mb_left)) {
+					
+				surface_set_target(drawing_surface);
+					draw_line_size(_mmx, _mmy, freeform_shape[0].x, freeform_shape[0].y, true);
+				surface_reset_target();
+				
+				if(array_length(freeform_shape) > 3) {
+					var _triangles = polygon_triangulate(freeform_shape, 1);
+					
+					temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
+					
+					surface_set_target(temp_surface[0]);
+						draw_primitive_begin(pr_trianglelist);
+							for( var i = 0, n = array_length(_triangles); i < n; i++ ) {
+								var p0 = _triangles[i][0];
+								var p1 = _triangles[i][1];
+								var p2 = _triangles[i][2];
+								
+								draw_vertex(round(p0.x), round(p0.y));
+								draw_vertex(round(p1.x), round(p1.y));
+								draw_vertex(round(p2.x), round(p2.y));
+							}							 
+						draw_primitive_end();
+						draw_surface(drawing_surface, 0, 0);
+					surface_reset_target();
+					
+					surface_set_shader(drawing_surface, sh_freeform_fill_cleanup);
+						shader_set_f("dimension", _dim);
+						
+						draw_surface_ext(temp_surface[0], 0, 0, 1, 1, 0, draw_get_color(), draw_get_alpha());
+					surface_reset_shader();
+				}
+				
+				mouse_holding = false;
+			}
+			
+		} else if(mouse_press(mb_left, active)) {
+			mouse_pre_x = _mmx;
+			mouse_pre_y = _mmy;
+				
+			mouse_holding  = true;
+			freeform_shape = [ new __vec2(_mmx, _mmy) ];
+				
+			surface_clear(drawing_surface);
+		}
+	} #endregion
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(instance_exists(o_dialog_color_picker)) return;
 		
@@ -725,6 +846,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _brushDist	= getInputData(15);
 		var _brushRotD	= getInputData(16);
 		var _brushRotR  = getInputData(17);
+		
+		var _applySelection = false;
 		
 		if(PEN_USE && tool_attribute.pressure)
 			brush_size = round(lerp(tool_attribute.pressure_size[0], tool_attribute.pressure_size[1], power(PEN_PRESSURE / 1024, 2)));
@@ -786,11 +909,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		draw_set_color(_col);
 		
-		if(!isUsingTool("Selection"))
-			gpu_set_colorwriteenable(tool_attribute.channel[0], tool_attribute.channel[1], tool_attribute.channel[2], tool_attribute.channel[3]);
+		if(!isUsingTool("Selection")) gpu_set_colorwriteenable(tool_attribute.channel[0], tool_attribute.channel[1], tool_attribute.channel[2], tool_attribute.channel[3]);
+		
+		var _tool_resizable = false;
 		
 		if(isUsingTool("Selection")) { #region
-			if(is_selected) {
+			
+			if(is_selected) { #region selected
 				if(!is_surface(selection_surface)) {
 					is_selected = false;
 				} else {
@@ -827,61 +952,107 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 							surface_reset_target();
 							
 							surface_store_buffer();
-							surface_free(selection_surface);
+							_applySelection = true;
 						}
 					}
 				}
-			}
-			
-			if(!is_selected) {
-				if(is_selecting) {
-					var sel_x0 = min(selection_sx, mouse_cur_x);
-					var sel_y0 = min(selection_sy, mouse_cur_y);
-					var sel_x1 = max(selection_sx, mouse_cur_x);
-					var sel_y1 = max(selection_sy, mouse_cur_y);
+			} else { #region selection
 				
-					var sel_w = sel_x1 - sel_x0 + 1;
-					var sel_h = sel_y1 - sel_y0 + 1;
-				
-					selection_mask = surface_verify(selection_mask, sel_w, sel_h);
-					surface_set_target(selection_mask);
-						DRAW_CLEAR
-						draw_set_color(c_white);
-						if(isUsingTool("Selection", 0))
-							draw_rectangle(0, 0, sel_w, sel_h, false);
-						else if(isUsingTool("Selection", 1))
-							draw_ellipse(0, 0, sel_w - 1, sel_h - 1, false);
-					surface_reset_target();
-				
-					if(mouse_release(mb_left)) {
-						is_selecting = false;
+				if(isUsingTool("Selection", 2) && mouse_press(mb_left, active)) {
+					is_selecting = true;
+					surface_free_safe(selection_mask);
+				}
 					
-						if(sel_x0 != sel_x1 && sel_y0 != sel_y1) {
-							is_selected = true;
-						
-							selection_surface = surface_create(sel_w, sel_h);
-						
-							surface_set_target(selection_surface);
-								DRAW_CLEAR
-								draw_surface_safe(_canvas_surface, -sel_x0, -sel_y0);
+				if(is_selecting) {
+					var sel_x0, sel_y0, sel_x1, sel_y1;
+					var sel_w = 1, sel_h = 1;
+					
+					if(isUsingTool("Selection", 2)) { #region freeform
+						freeform_step(active, _x, _y, _s, _mx, _my, false);
+			
+						if(mouse_release(mb_left)) {
+							is_selecting = false;
 							
-								BLEND_MULTIPLY
-									draw_surface_safe(selection_mask, 0, 0);
-								BLEND_NORMAL
-							surface_reset_target();
+							sel_x0 = _dim[0];
+							sel_y0 = _dim[1];
+							sel_x1 = 0;
+							sel_y1 = 0;
 							
-							storeAction();
-							surface_set_target(_canvas_surface);
-								gpu_set_blendmode(bm_subtract);
-								draw_surface_safe(selection_surface, sel_x0, sel_y0);
-								gpu_set_blendmode(bm_normal);
-							surface_reset_target();
-						
-							surface_store_buffer();
-						
-							selection_position = [ sel_x0, sel_y0 ];
+							for( var i = 0, n = array_length(freeform_shape); i < n; i++ ) {
+								var _f = freeform_shape[i];
+								
+								sel_x0 = min(sel_x0, round(_f.x - 0.5));
+								sel_y0 = min(sel_y0, round(_f.y - 0.5));
+								sel_x1 = max(sel_x1, round(_f.x - 0.5));
+								sel_y1 = max(sel_y1, round(_f.y - 0.5));
+							}
+				
+							sel_w = sel_x1 - sel_x0 + 1;
+							sel_h = sel_y1 - sel_y0 + 1;
+							
+							if(sel_w > 1 && sel_h > 1) {
+								selection_mask = surface_verify(selection_mask, sel_w, sel_h);
+								surface_set_target(selection_mask);
+									DRAW_CLEAR
+									draw_surface(drawing_surface, -sel_x0, -sel_y0);
+								surface_reset_target();
+							}
+							
+							surface_clear(drawing_surface);
 						}
+					#endregion
+					
+					} else { #region shape
+						sel_x0 = min(selection_sx, mouse_cur_x);
+						sel_y0 = min(selection_sy, mouse_cur_y);
+						sel_x1 = max(selection_sx, mouse_cur_x);
+						sel_y1 = max(selection_sy, mouse_cur_y);
+				
+						sel_w = sel_x1 - sel_x0 + 1;
+						sel_h = sel_y1 - sel_y0 + 1;
+				
+						selection_mask = surface_verify(selection_mask, sel_w, sel_h);
+						surface_set_target(selection_mask);
+							DRAW_CLEAR
+							draw_set_color(c_white);
+							if(isUsingTool("Selection", 0))
+								draw_rectangle(0, 0, sel_w, sel_h, false);
+							
+							else if(isUsingTool("Selection", 1)) {
+								draw_set_circle_precision(32);
+								draw_ellipse(0, 0, sel_w - 1, sel_h - 1, false);
+							}
+						surface_reset_target();
+					#endregion
 					}
+					
+					if(mouse_release(mb_left)) is_selecting = false;
+					
+					if(mouse_release(mb_left) && sel_w > 1 && sel_h > 1) {
+						is_selected = true;
+						
+						selection_surface = surface_create(sel_w, sel_h);
+						surface_set_target(selection_surface);
+							DRAW_CLEAR
+							draw_surface_safe(_canvas_surface, -sel_x0, -sel_y0);
+							
+							BLEND_MULTIPLY
+								draw_surface_safe(selection_mask, 0, 0);
+							BLEND_NORMAL
+						surface_reset_target();
+							
+						storeAction();
+						surface_set_target(_canvas_surface);
+							gpu_set_blendmode(bm_subtract);
+							draw_surface_safe(selection_surface, sel_x0, sel_y0);
+							gpu_set_blendmode(bm_normal);
+						surface_reset_target();
+						
+						surface_store_buffer();
+						
+						selection_position = [ sel_x0, sel_y0 ];
+					}
+					
 				} else {
 					if(mouse_press(mb_left, active)) {
 						is_selecting = true;
@@ -891,9 +1062,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						surface_free_safe(selection_mask);
 					}
 				}
-			}
+			} #endregion
+			
 		#endregion
 		} else if(isUsingTool("Pencil") || isUsingTool("Eraser")) { #region
+			
 			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT) && key_mod_press(CTRL)) {
 				var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
@@ -952,24 +1125,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			mouse_pre_x = mouse_cur_x;
 			mouse_pre_y = mouse_cur_y;
 			
-			if(brush_sizing) {
-				var s = brush_sizing_s + (_mx - brush_sizing_mx) / 16;
-				    s = max(1, s);
-				tool_attribute.size = s;
-				
-				if(mouse_release(mb_right)) 
-					brush_sizing = false;
-			} else if(mouse_press(mb_right, active) && key_mod_press(SHIFT) && brush_surface == noone) {
-				brush_sizing    = true;
-				brush_sizing_s  = _siz;
-				brush_sizing_mx = _mx;
-				brush_sizing_my = _my;
-				
-				brush_sizing_dx = mouse_cur_x;
-				brush_sizing_dy = mouse_cur_y;
-			}
+			_tool_resizable = true;
+			
 		#endregion
 		} else if(isUsingTool("Rectangle") || isUsingTool("Ellipse")) { #region
+			
 			if(mouse_holding && key_mod_press(SHIFT)) {
 				var ww = mouse_cur_x - mouse_pre_x;
 				var hh = mouse_cur_y - mouse_pre_y;
@@ -977,13 +1137,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				mouse_cur_x = mouse_pre_x + ss * sign(ww);
 				mouse_cur_y = mouse_pre_y + ss * sign(hh);
-			}
-			
-			if(mouse_press(mb_left, active)) {
-				mouse_pre_x = mouse_cur_x;
-				mouse_pre_y = mouse_cur_y;
-				
-				mouse_holding = true;
 			}
 			
 			if(mouse_holding) {
@@ -1000,26 +1153,25 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					apply_draw_surface();
 					mouse_holding = false;
 				}
+			} else if(mouse_press(mb_left, active)) {
+				mouse_pre_x = mouse_cur_x;
+				mouse_pre_y = mouse_cur_y;
+				
+				mouse_holding = true;
 			}
 			
-			if(brush_sizing) {
-				var s = brush_sizing_s + (_mx - brush_sizing_mx) / 16;
-				    s = max(1, s);
-				inputs[| 2].setValue(s);
-				
-				if(mouse_release(mb_right)) 
-					brush_sizing = false;
-			} else if(mouse_press(mb_right, active) && key_mod_press(SHIFT) && brush_surface == noone) {
-				brush_sizing    = true;
-				brush_sizing_s  = brush_size;
-				brush_sizing_mx = _mx;
-				brush_sizing_my = _my;
-				
-				brush_sizing_dx = mouse_cur_x;
-				brush_sizing_dy = mouse_cur_y;
-			}
+			_tool_resizable = true;
+			
+		#endregion
+		} else if(isUsingTool("Freefrom")) { #region 
+			freeform_step(active, _x, _y, _s, _mx, _my, true);
+			
+			if(mouse_release(mb_left))
+				apply_draw_surface();
+			
 		#endregion
 		} else if(isUsingTool("Fill") || (DRAGGING && DRAGGING.type == "Color")) { #region
+			
 			var fill = DRAGGING? mouse_release(mb_left, active) : mouse_press(mb_left, active);
 			
 			if(fill && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1)) {
@@ -1040,8 +1192,36 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_store_buffer();
 				surface_reset_target();
 			}
+			
 		#endregion
 		}
+		
+		if(_tool_resizable) { #region tools size
+			if(hover && key_mod_press(CTRL)) {
+				if(mouse_wheel_down()) tool_attribute.size = max( 1, tool_attribute.size - 1);
+				if(mouse_wheel_up())   tool_attribute.size = min(64, tool_attribute.size + 1);
+			}
+			
+			if(brush_sizing) {
+				var s = brush_sizing_s + (_mx - brush_sizing_mx) / 16;
+				    s = max(1, s);
+				tool_attribute.size = s;
+				
+				if(mouse_release(mb_right)) 
+					brush_sizing = false;
+					
+			} else if(mouse_press(mb_right, active) && key_mod_press(SHIFT) && brush_surface == noone) {
+				
+				brush_sizing    = true;
+				brush_sizing_s  = _siz;
+				brush_sizing_mx = _mx;
+				brush_sizing_my = _my;
+				
+				brush_sizing_dx = mouse_cur_x;
+				brush_sizing_dy = mouse_cur_y;
+			}
+			
+		} #endregion
 		
 		draw_set_alpha(1);
 		gpu_set_colorwriteenable(true, true, true, true);
@@ -1063,13 +1243,17 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				draw_set_color(_col);
 				if(isUsingTool("Selection")) {
-					if(is_selected)
+					if(is_selected || _applySelection)
 						draw_surface_safe(selection_surface, selection_position[0], selection_position[1]);
+						
 					else if(is_selecting) {
 						var sel_x0 = min(selection_sx, mouse_cur_x);
 						var sel_y0 = min(selection_sy, mouse_cur_y);
 						draw_surface_safe(selection_mask, sel_x0, sel_y0);
 					}
+					
+					if(_applySelection) surface_free(selection_surface);
+					
 				} else if(isUsingTool("Pencil") || isUsingTool("Eraser")) {
 					if(isUsingTool("Eraser")) draw_set_color(c_white);
 					
@@ -1081,6 +1265,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						else
 							draw_point_size(mouse_cur_x, mouse_cur_y);
 					}
+					
 				} else if(isUsingTool("Rectangle"))	{
 					if(brush_sizing) 
 						draw_point_size(brush_sizing_dx, brush_sizing_dy);
@@ -1088,6 +1273,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, isUsingTool("Rectangle", 1));
 					else 
 						draw_point_size(mouse_cur_x, mouse_cur_y);
+						
 				} else if(isUsingTool("Ellipse")) {
 					if(brush_sizing) 
 						draw_point_size(brush_sizing_dx, brush_sizing_dy);
@@ -1095,27 +1281,35 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, isUsingTool("Ellipse", 1)); 
 					else 
 						draw_point_size(mouse_cur_x, mouse_cur_y);
+						
+				} else if(isUsingTool("Freefrom")) {
+					draw_point_size(mouse_cur_x, mouse_cur_y);
 				}
 			surface_reset_shader();
 			
-			if((active || mouse_holding) && isUsingTool()) { 
-				if(isUsingTool("Selection")) {
-					if(is_selected) {
-						var pos_x = _x + selection_position[0] * _s;
-						var pos_y = _y + selection_position[1] * _s;
-						var sel_w = surface_get_width_safe(selection_surface)  * _s;
-						var sel_h = surface_get_height_safe(selection_surface) * _s;
+			if(isUsingTool()) { 
+				var _drawSelection = isUsingTool("Selection") && is_selected;
+				
+				if(_drawSelection) { #region
+					var pos_x = _x + selection_position[0] * _s;
+					var pos_y = _y + selection_position[1] * _s;
+					var sel_w = surface_get_width_safe(selection_surface)  * _s;
+					var sel_h = surface_get_height_safe(selection_surface) * _s;
+					
+					draw_surface_ext_safe(selection_surface, pos_x, pos_y, _s, _s, 0, c_white, 1);
+					
+					draw_set_color(c_black);
+					draw_rectangle(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true);
 						
-						draw_set_color(c_white);
-						draw_rectangle_dashed(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true, 4);
-						
-						draw_surface_ext_safe(selection_surface, pos_x, pos_y, _s, _s, 0, c_white, 1);
-					}
-				} else {
+					draw_set_color(c_white);
+					draw_rectangle_dashed(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true, 6, current_time / 100);
+				} #endregion
+					
+				if(!isUsingTool("Selection") && (active || mouse_holding)) { #region
 					gpu_set_colorwriteenable(tool_attribute.channel[0], tool_attribute.channel[1], tool_attribute.channel[2], tool_attribute.channel[3]);
 					draw_surface_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, isUsingTool("Eraser")? c_red : c_white, isUsingTool("Eraser")? 0.2 : _alp);
 					gpu_set_colorwriteenable(true, true, true, true);
-				}
+				} #endregion
 				
 				surface_set_target(_preview_draw_surface);
 					DRAW_CLEAR
@@ -1123,9 +1317,25 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_reset_target();
 				
 				shader_set(sh_brush_outline);
-					shader_set_f("dimension", surface_get_width_safe(_preview_draw_surface), surface_get_height_safe(_preview_draw_surface));
+					shader_set_f("dimension", surface_get_width(_preview_draw_surface), surface_get_height(_preview_draw_surface));
 					draw_surface_ext_safe(_preview_draw_surface, 0, 0, 1, 1, 0, c_white, 1);
 				shader_reset();
+				
+				if(isUsingTool("Selection", 2) && mouse_holding) { #region
+					var ox, oy, nx, ny;
+					
+					draw_set_color(c_white);
+						
+					for( var i = 0, n = array_length(freeform_shape); i < n; i++ ) {
+						nx = _x + freeform_shape[i].x * _s;
+						ny = _y + freeform_shape[i].y * _s;
+						
+						if(i) draw_line(ox, oy, nx, ny);
+							
+						ox = nx;
+						oy = ny;
+					}
+				} #endregion
 			}
 		#endregion
 		

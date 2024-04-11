@@ -783,7 +783,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		if(mouse_on_graph && pHOVER && graph_draggable) {
 			var _s = graph_s;
-			if(mouse_wheel_down()) { //zoom out
+			if(mouse_wheel_down() && !key_mod_press_any()) { //zoom out
 				for( var i = 1, n = array_length(scale); i < n; i++ ) {
 					if(scale[i - 1] < graph_s_to && graph_s_to <= scale[i]) {
 						graph_s_to = scale[i - 1];
@@ -791,7 +791,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					}
 				}
 			}
-			if(mouse_wheel_up()) { // zoom in
+			if(mouse_wheel_up() && !key_mod_press_any()) { // zoom in
 				for( var i = 1, n = array_length(scale); i < n; i++ ) {
 					if(scale[i - 1] <= graph_s_to && graph_s_to < scale[i]) {
 						graph_s_to = scale[i];

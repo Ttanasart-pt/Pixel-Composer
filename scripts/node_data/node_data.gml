@@ -622,7 +622,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		INLINE
 		
 		inputs_data[index] = value;
-		input_value_map[$ inputs[| index].internalName] = value;
+		var _inp = inputs[| index];
+		if(is_struct(_inp)) input_value_map[$ _inp.internalName] = value;
 	} #endregion
 	
 	static getInputs = function(frame = CURRENT_FRAME) { #region
