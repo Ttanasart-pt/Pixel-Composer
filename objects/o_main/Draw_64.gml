@@ -60,7 +60,7 @@ draw_clear(COLORS.bg);
 	winManDraw();
 #endregion
 
-if(APP_SURF_OVERRIDE) {
+if(APP_SURF_OVERRIDE) { #region
 	surface_reset_target();
 	draw_surface(POST_APP_SURF, 0, 0);
 	
@@ -71,4 +71,4 @@ if(APP_SURF_OVERRIDE) {
 	surface_set_target(POST_APP_SURF);
 		draw_surface(APP_SURF, 0, 0);
 	surface_reset_target();
-}
+} #endregion

@@ -3,11 +3,13 @@
 	HOTKEYS_CUSTOM  = {
 		"Node_Canvas": {
 			"Selection": new hotkeySimple("S"),
+			"Magic Selection": new hotkeySimple("W"),
 			"Pencil":	 new hotkeySimple("B"),
 			"Eraser":	 new hotkeySimple("E"),
 			"Rectangle": new hotkeySimple("N"),
 			"Ellipse":	 new hotkeySimple("M"),
 			"Fill":		 new hotkeySimple("F"),
+			"Freeform":	 new hotkeySimple("Q"),
 		},
 		"Node_Mesh_Warp": {
 			"Edit control point": new hotkeySimple("V"),

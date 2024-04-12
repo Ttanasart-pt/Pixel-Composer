@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"canvas_fix_points",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_fix_points",
+  "parent":{
+    "name":"util",
+    "path":"folders/nodes/data/canvas/util.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

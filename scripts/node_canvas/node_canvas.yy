@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_canvas",
   "parent":{
-    "name":"io",
-    "path":"folders/nodes/data/io.yy",
+    "name":"canvas",
+    "path":"folders/nodes/data/canvas.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

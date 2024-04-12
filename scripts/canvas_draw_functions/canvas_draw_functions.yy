@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"canvas_draw_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_draw_functions",
+  "parent":{
+    "name":"util",
+    "path":"folders/nodes/data/canvas/util.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

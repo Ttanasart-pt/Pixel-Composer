@@ -557,17 +557,18 @@
 		return _arr;
 	} #endregion
 
-	function surface_encode(surface) { #region
-		if(!is_real(surface)) return "";
-		if(!surface_exists(surface)) return "";
+	function surface_encode(surface, stringify = true) { #region
+		if(!is_surface(surface)) return "";
 	
 		var buff = buffer_create(surface_get_width_safe(surface) * surface_get_height_safe(surface) * 4, buffer_fixed, 1);
+		
 		buffer_get_surface(buff, surface, 0);
 		var comp = buffer_compress(buff, 0, buffer_get_size(buff));
-		var enc = buffer_base64_encode(comp, 0, buffer_get_size(comp));
+		var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
+		var str  = { width: surface_get_width_safe(surface), height: surface_get_height_safe(surface), buffer: enc };
 		buffer_delete(buff);
-		var str = { width: surface_get_width_safe(surface), height: surface_get_height_safe(surface), buffer: enc };
-		return json_stringify(str);
+		
+		return stringify? json_stringify(str) : str;
 	} #endregion
 
 	function surface_decode(struct) { #region

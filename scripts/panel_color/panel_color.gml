@@ -5,9 +5,7 @@ enum COLOR_SELECTOR_MODE {
 
 function Panel_Color() : PanelContent() constructor {
 	title = __txt("Color");
-	showHeader	 = false;
-	title_height = 64;
-	padding		 = 24;
+	padding = 8;
 	
 	w = ui(320);
 	h = ui(320);
@@ -29,6 +27,9 @@ function Panel_Color() : PanelContent() constructor {
 		hue = color_get_hue(color) / 255;
 		sat = color_get_saturation(color) / 255;
 		val = color_get_value(color) / 255;
+		
+		if(COLORS_GLOBAL_SET != noone)
+			COLORS_GLOBAL_SET(color);
 	}
 	
 	static setHSV = function(h = hue, s = sat, v = val) {
@@ -37,25 +38,31 @@ function Panel_Color() : PanelContent() constructor {
 		val = v;
 		
 		color = make_color_hsv(h * 255, s * 255, v * 255);
+		
+		if(COLORS_GLOBAL_SET != noone)
+			COLORS_GLOBAL_SET(color);
 	}
 	setHSV();
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		PANEL_PADDING
-		PANEL_TITLE
 		
 		var px = ui(padding);
-		var py = ui(title_height);
+		var py = ui(padding);
 		var pw = w - ui(padding + padding);
-		var ph = h - ui(title_height + padding);
+		var ph = h - ui(padding + padding);
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
+		if(COLORS_GLOBAL_GET != noone) {
+			var c = COLORS_GLOBAL_GET();
+			if(c != color) setColor(c);
+		}
+			
 		var cont_x = ui(padding);
-		var cont_y = ui(title_height);
+		var cont_y = ui(padding);
 		var cont_w = w - ui(padding + padding + ui(16 + 8));
-		var cont_h = h - ui(title_height + padding + ui(24 + 8));
+		var cont_h = h - ui(padding + padding + ui(24 + 8));
 		
 		shader_set(sh_color_select_content);
 		shader_set_i("mode", mode);
@@ -64,7 +71,7 @@ function Panel_Color() : PanelContent() constructor {
 		draw_sprite_stretched(s_fx_pixel, 0, cont_x, cont_y, cont_w, cont_h);
 		
 		var sel_x = cont_x + cont_w + ui(8);
-		var sel_y = ui(title_height);
+		var sel_y = ui(padding);
 		var sel_w = ui(16);
 		var sel_h = cont_h;
 		
@@ -115,6 +122,7 @@ function Panel_Color() : PanelContent() constructor {
 			var cy = cont_y + (1 - val) * cont_h - ui(6);
 			draw_sprite_stretched_ext(s_ui_base_white, 0, sel_x - ui(3), hy - ui(6), ui(16 + 6), ui(10), make_color_hsv(hue * 255, 255, 255), 1);
 			draw_sprite_stretched_ext(s_ui_base_white, 0, cx, cy, ui(12), ui(12), color, 1);
+			
 		} else if(mode == 1) {
 			var vy = sel_y + (1 - val) * sel_h;
 			var cx = cont_x + hue * cont_w - ui(6);
@@ -137,11 +145,17 @@ function Panel_Color() : PanelContent() constructor {
 					draw_sprite_stretched_ext(THEME.ui_panel_active, 0, cx, cy, ui(24), ui(24), c_white, 1);
 					if(mouse_press(mb_left, pFOCUS)) {
 						array_insert(colors, 0, color);
-						DRAGGING = {
-							type: "Color",
-							data: color
+						
+						if(COLORS_GLOBAL_SET != noone) {
+							COLORS_GLOBAL_SET(color);
+							
+						} else {
+							DRAGGING = {
+								type: "Color",
+								data: color
+							}
+							MESSAGE = DRAGGING;
 						}
-						MESSAGE = DRAGGING;
 					}
 				}
 				continue;
@@ -158,14 +172,6 @@ function Panel_Color() : PanelContent() constructor {
 				MESSAGE = DRAGGING;
 			}
 		}
-		
-		var bx = w - ui(32 + 16);
-		var by = title_height / 2 - ui(16 + !in_dialog * 2);
-		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Mode"), THEME.color_wheel,, c_white) == 2) 
-			mode = !mode;
-		
-		bx -= ui(32);
 		
 		if(DRAGGING && DRAGGING.type == "Color" && pHOVER) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, 2, 2, w - 4, h - 4, COLORS._main_value_positive, 1);	

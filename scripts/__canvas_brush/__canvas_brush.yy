@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"__canvas_brush",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__canvas_brush",
+  "parent":{
+    "name":"tools",
+    "path":"folders/nodes/data/canvas/tools.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

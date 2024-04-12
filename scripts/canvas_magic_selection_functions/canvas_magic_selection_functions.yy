@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"canvas_magic_selection_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_magic_selection_functions",
+  "parent":{
+    "name":"util",
+    "path":"folders/nodes/data/canvas/util.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

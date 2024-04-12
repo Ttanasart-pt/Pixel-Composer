@@ -143,7 +143,7 @@ enum MOD_KEY {
 	alt    = 4
 }
 
-function key_press(_key, _mod) {
+function key_press(_key, _mod = MOD_KEY.none) {
 	if(WIDGET_CURRENT) return false;
 	if(_mod == MOD_KEY.none && _key == 0) return false;
 	

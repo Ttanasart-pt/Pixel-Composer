@@ -1,8 +1,6 @@
 function Panel_Palette() : PanelContent() constructor {
 	title = __txt("Palettes");
-	showHeader	 = false;
-	title_height = 64;
-	padding		 = 24;
+	padding = 8;
 	
 	w = ui(320);
 	h = ui(480);
@@ -14,10 +12,10 @@ function Panel_Palette() : PanelContent() constructor {
 	function onResize() {
 		PANEL_PADDING
 		
-		sp_palettes.resize(w - ui(padding + padding), h - ui(title_height + padding));
+		sp_palettes.resize(w - ui(padding + padding), h - ui(padding + padding));
 	}
 	
-	sp_palettes = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding), function(_y, _m) {
+	sp_palettes = new scrollPane(w - ui(padding + padding), h - ui(padding + padding), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var ww  = sp_palettes.surface_w;
 		var hh  = ui(28);
@@ -48,28 +46,56 @@ function Panel_Palette() : PanelContent() constructor {
 			draw_text(ui(10), yy + ui(2), preset.name);
 			drawPaletteGrid(preset.palette, ui(10), yy + ui(24), ww - ui(20), _gs);
 			
-			if(isHover && mouse_press(mb_left, pFOCUS)) {
-				if(point_in_rectangle(_m[0], _m[1], ui(10), yy + ui(24), ww - ui(10), yy + ui(24) + _height)) {
-					var m_ax = _m[0] - ui(10);
-					var m_ay = _m[1] - (yy + ui(24));
+			if(isHover) {
+				if(mouse_press(mb_left, pFOCUS)) {
+					if(point_in_rectangle(_m[0], _m[1], ui(10), yy + ui(24), ww - ui(10), yy + ui(24) + _height)) {
+						var m_ax = _m[0] - ui(10);
+						var m_ay = _m[1] - (yy + ui(24));
 					
-					var m_gx = floor(m_ax / _gs);
-					var m_gy = floor(m_ay / _gs);
+						var m_gx = floor(m_ax / _gs);
+						var m_gy = floor(m_ay / _gs);
 						
-					var _index = m_gy * col + m_gx;
-					if(_index < pre_amo && _index >= 0) {
+						var _index = m_gy * col + m_gx;
+						if(_index < pre_amo && _index >= 0) {
+							if(COLORS_GLOBAL_SET != noone) {
+								COLORS_GLOBAL_SET(array_safe_get_fast(preset.palette, _index));
+							
+							} else {
+								DRAGGING = {
+									type: "Color",
+									data: array_safe_get_fast(preset.palette, _index)
+								}
+								MESSAGE = DRAGGING;
+							}
+						}
+					} else if(point_in_rectangle(_m[0], _m[1], ui(10), yy, ww - ui(10), yy + ui(24))) {
 						DRAGGING = {
-							type: "Color",
-							data: array_safe_get_fast(preset.palette, _index)
+							type: "Palette",
+							data: preset.palette
 						}
 						MESSAGE = DRAGGING;
 					}
-				} else if(point_in_rectangle(_m[0], _m[1], ui(10), yy, ww - ui(10), yy + ui(24))) {
-					DRAGGING = {
-						type: "Palette",
-						data: preset.palette
-					}
-					MESSAGE = DRAGGING;
+				}
+				
+				if(mouse_press(mb_right, pFOCUS)) {
+					hovering = preset;
+					
+					menuCall("palette_window_preset_menu",,, [
+						menuItem(__txt("Refresh"), function() { 
+							__initPalette();
+						}),
+						menuItem(__txtx("palette_change_preview_size", "Change preview size"), function() { 
+							view_mode = (view_mode + 1) % 3;
+						}),
+						-1, 
+						menuItem(__txtx("palette_editor_set_default", "Set as default"), function() { 
+							DEF_PALETTE = array_clone(hovering.palette);
+						}),
+						menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
+							file_delete(hovering.path); 
+							__initPalette();
+						}),
+					]);
 				}
 			} 
 			
@@ -82,27 +108,16 @@ function Panel_Palette() : PanelContent() constructor {
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		PANEL_PADDING
-		PANEL_TITLE
 		
 		var px = ui(padding);
-		var py = ui(title_height);
+		var py = ui(padding);
 		var pw = w - ui(padding + padding);
-		var ph = h - ui(title_height + padding);
+		var ph = h - ui(padding + padding);
 	
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		sp_palettes.setFocusHover(pFOCUS, pHOVER);
 		sp_palettes.draw(px, py, mx - px, my - py);
 		
-		var bx = w - ui(32 + 16);
-		var by = title_height / 2 - ui(16 + !in_dialog * 2);
-		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Refresh"), THEME.refresh_icon, 1, COLORS._main_icon) == 2) 
-			__initPalette();
-		
-		bx -= ui(32)
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("palette_change_preview_size", "Change preview size"), THEME.icon_visibility, 1, COLORS._main_icon) == 2) 
-			view_mode = (view_mode + 1) % 3;
 	}
 }

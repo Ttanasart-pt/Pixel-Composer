@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_canvas_mask",
+  "name":"sh_canvas_mask",
+  "parent":{
+    "name":"tools",
+    "path":"folders/nodes/data/canvas/tools.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

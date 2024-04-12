@@ -1188,6 +1188,8 @@ function Panel_Preview() : PanelContent() constructor {
 			overlayHover &= !key_mod_press(CTRL);
 		var params = { w, h, toolbar_height };
 		
+		reset_global_getset();
+		
 		if(_node.is_3D)	{
 			if(key_mod_press(CTRL) || d3_tool_snap) {
 				_snx = d3_tool_snap_position;
@@ -1323,6 +1325,57 @@ function Panel_Preview() : PanelContent() constructor {
 		if(thov && !key_mod_press_any()) {
 			if(mouse_wheel_up())   tool_y_to = clamp(tool_y_to + ui(64) * SCROLL_SPEED, -tool_y_max, 0);
 			if(mouse_wheel_down()) tool_y_to = clamp(tool_y_to - ui(64) * SCROLL_SPEED, -tool_y_max, 0);
+		}
+		
+		if(_node.rightTools != -1) {
+			var _tbx = w - toolbar_width;
+			var xx   = _tbx + ui(1)  + toolbar_width / 2;
+			var yy   = ui(34) + tool_size  / 2 + tool_y;
+			
+			var _sw = -toolbar_width / sprite_get_width(THEME.tool_side);
+			var _sh = h - toolbar_height - ui(32) / sprite_get_height(THEME.tool_side);
+			
+			draw_sprite_ext(THEME.tool_side, 1, w + 1, ui(32), _sw, _sh, 0, c_white, aa);
+			
+			var thov = pHOVER && point_in_rectangle(mx, my, _tbx, toolbar_height, w, h - toolbar_height);
+			if(thov) canvas_hover = false;
+			
+			for(var i = 0; i < array_length(_node.rightTools); i++) { #region iterate each tools
+				var tool = _node.rightTools[i];
+				var _x0  = xx - tool_size / 2;
+				var _y0  = yy - tool_size / 2;
+				var _x1  = xx + tool_size / 2;
+				var _y1  = yy + tool_size / 2;
+				
+				if(thov && point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x1, _y1 - 1))
+					tool_hovering = tool;
+				
+				if(tool_hovering == tool) {
+					draw_sprite_stretched(THEME.button_hide, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+					TOOLTIP = tool.getDisplayName();
+					
+					if(mouse_press(mb_left, pFOCUS))
+						tool.toggle();
+				}
+					
+				if(pFOCUS && WIDGET_CURRENT == noone) {
+					var _key = tool.checkHotkey();
+					
+					if(_key != "" && keyboard_check_pressed(ord(_key)))
+						tool.toggleKeyboard();
+				}
+				
+				if(tool_current == tool) {
+					draw_sprite_stretched_ext(THEME.button_hide, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+					draw_sprite_stretched_ext(THEME.button_hide, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+				}
+				
+				draw_sprite_colored(tool.spr, 0, xx, yy);
+				
+				yy         += tool_size;
+			} #endregion
+		
+			
 		}
 	} #endregion
 	
