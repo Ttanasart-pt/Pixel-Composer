@@ -12,7 +12,7 @@ function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection
 		var _thr		= tool_attribute.thres;
 		var _fill_type	= tool_attribute.fill8;
 		
-		if(!selector.is_selected && mouse_press(mb_left, active)) {
+		if(!selector.is_select_drag && mouse_press(mb_left, active)) {
 			
 			canvas_buffer = node.canvas_buffer;
 			preview_index = node.preview_index;

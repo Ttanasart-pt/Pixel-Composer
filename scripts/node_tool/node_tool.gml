@@ -1,5 +1,5 @@
 function NodeTool(name, spr, context = instanceof(other)) constructor {
-	ctx = context;
+	ctx         = context;
 	self.name   = name;
 	self.spr    = spr;
 	
@@ -19,11 +19,7 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 	}
 	
 	static setToolObject = function(toolObject) { self.toolObject = toolObject; return self; }
-	static setToolFn     = function(toolFn, arguments = {}) { 
-		self.toolFn       = toolFn; 
-		self.toolFnParam =  arguments;
-		return self; 
-	}
+	static setToolFn     = function(toolFn) {     self.toolFn     = toolFn;     return self; }
 	
 	static getName = function(index = 0) { return is_array(name)? array_safe_get_fast(name, index, "") : name; }
 	
@@ -61,8 +57,8 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 	
 	static toggle = function(index = 0) {
 		if(toolFn != noone) {
-			if(subtools == 0) toolFn(toolFnParam);
-			else              toolFn[index](toolFnParam);
+			if(subtools == 0) toolFn(ctx);
+			else              toolFn[index](ctx);
 			return;
 		}
 		

@@ -16,7 +16,7 @@ function canvas_tool_selection_freeform(selector, brush) : canvas_tool_selection
 		
 		if(is_selected) { onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); return; }
 		
-		if(mouse_press(mb_left, active)) {
+		if(!selector.is_select_drag && mouse_press(mb_left, active)) {
 			is_selecting = true;
 			selection_sx = mouse_cur_x;
 			selection_sy = mouse_cur_y;

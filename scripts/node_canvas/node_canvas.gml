@@ -258,13 +258,21 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	#endregion
 	
-	#region right tools
+	#region ++++ right tools ++++
 		__action_rotate_90_cw  = method(self, function() { if(tool_selection.is_selected) tool_selection.rotate90cw()  else canvas_action_rotate(-90); });
 		__action_rotate_90_ccw = method(self, function() { if(tool_selection.is_selected) tool_selection.rotate90ccw() else canvas_action_rotate( 90); });
 		__action_flip_h        = method(self, function() { if(tool_selection.is_selected) tool_selection.flipH()       else canvas_action_flip(1); });
 		__action_flip_v        = method(self, function() { if(tool_selection.is_selected) tool_selection.flipV()       else canvas_action_flip(0); });
+		__action_add_node      = method(self, function(ctx) { dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx }); });
+		
+		nodeTool        = noone;
+		nodeToolPreview = new NodeTool( "Apply Node",	  THEME.canvas_resize, self ).setToolFn( __action_add_node );
 		
 		rightTools_general = [ 
+			nodeToolPreview,
+			
+			-1,
+			
 			new NodeTool( "Resize Canvas",	  THEME.canvas_resize ).setToolObject( new canvas_tool_resize() ),
 			
 			new NodeTool( [ "Rotate 90 CW", "Rotate 90 CCW" ],
@@ -278,9 +286,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		rightTools_selection = [ 
 			new NodeTool( "Outline", THEME.canvas_tools_outline ).setToolObject( new canvas_tool_outline() ),
-			new NodeTool( [ "Inset", "Extrude" ], 
-				[ THEME.canvas_tools_inset, THEME.canvas_tools_extrude ] )
-				.setToolObject( [ new canvas_tool_inset(), new canvas_tool_extrude() ] ),
+			new NodeTool( [ "Extrude", "Inset" ], 
+				[ THEME.canvas_tools_extrude, THEME.canvas_tools_inset ] )
+				.setToolObject( [ new canvas_tool_extrude(), new canvas_tool_inset() ] ),
 		];
 		
 		rightTools = rightTools_general;
@@ -526,8 +534,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		brush.node = self;
 		brush.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
-		if(active && key_mod_press(ALT)) { #region color selector
-			var dialog = instance_create(0, 0, o_dialog_color_picker);
+		if(!tool_selection.is_selected && active && key_mod_press(ALT)) { #region color selector
+			var dialog     = instance_create(0, 0, o_dialog_color_picker);
 			dialog.onApply = setToolColor;
 			dialog.def_c   = tool_attribute.color;
 		} #endregion
@@ -558,7 +566,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				array_append(rightTools, rightTools_selection);
 			}
 			
-			if(_currTool != noone) {
+			if(nodeTool != noone) 
+				_tool = nodeTool;
+				
+			else if(_currTool != noone) {
 				_tool = _currTool.getToolObject();
 				
 				switch(_currTool.getName()) {
@@ -599,6 +610,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				if(is_instanceof(_tool, canvas_tool_selection) && tool_selection.is_selected) tool_selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			}
+			
 		#endregion
 		
 		if(_tool && _tool.override) {

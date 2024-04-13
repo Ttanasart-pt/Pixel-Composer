@@ -128,6 +128,11 @@ event_inherited();
 		
 		if(!_node) return;
 		
+		if(is_instanceof(context, Node_Canvas)) {
+			context.nodeTool = new canvas_tool_node(context, _node);
+			return;
+		}
+		
 		if(is_instanceof(_node, AddNodeItem)) {
 			_node.onClick({
 				node_called,
