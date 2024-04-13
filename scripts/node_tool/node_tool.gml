@@ -8,15 +8,26 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 	settings  = [];
 	attribute = {};
 	
+	toolObject  = noone;
+	toolFn      = noone;
+	toolFnParam = {};
+	
 	static checkHotkey = function() {
 		INLINE
 		
 		return getToolHotkey(ctx, name);
 	}
 	
-	static getName = function(index = 0) {
-		return is_array(name)? array_safe_get_fast(name, index, "") : name;
+	static setToolObject = function(toolObject) { self.toolObject = toolObject; return self; }
+	static setToolFn     = function(toolFn, arguments = {}) { 
+		self.toolFn       = toolFn; 
+		self.toolFnParam =  arguments;
+		return self; 
 	}
+	
+	static getName = function(index = 0) { return is_array(name)? array_safe_get_fast(name, index, "") : name; }
+	
+	static getToolObject = function() { return is_array(toolObject)? toolObject[selecting] : toolObject; }
 	
 	static getDisplayName = function(index = 0) {
 		var _key = checkHotkey();
@@ -49,6 +60,12 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 	}
 	
 	static toggle = function(index = 0) {
+		if(toolFn != noone) {
+			if(subtools == 0) toolFn(toolFnParam);
+			else              toolFn[index](toolFnParam);
+			return;
+		}
+		
 		if(subtools == 0) {
 			PANEL_PREVIEW.tool_current = PANEL_PREVIEW.tool_current == self? noone : self;
 		} else {
@@ -63,6 +80,9 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 		
 		if(PANEL_PREVIEW.tool_current == self)
 			onToggle();
+			
+		var _obj = getToolObject();
+		if(_obj) _obj.init();
 	}
 	
 	static toggleKeyboard = function() {

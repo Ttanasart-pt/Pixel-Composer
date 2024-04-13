@@ -3,8 +3,8 @@
   "%Name":"sh_canvas_mask",
   "name":"sh_canvas_mask",
   "parent":{
-    "name":"tools",
-    "path":"folders/nodes/data/canvas/tools.yy",
+    "name":"shader",
+    "path":"folders/nodes/data/canvas/shader.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

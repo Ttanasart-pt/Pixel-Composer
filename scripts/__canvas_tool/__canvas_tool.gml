@@ -1,6 +1,8 @@
 function canvas_tool() constructor { 
 	
 	node = noone;
+	
+	override = false;
 	relative = false;
 	
 	relative_position  = [ 0, 0 ];
@@ -10,6 +12,10 @@ function canvas_tool() constructor {
 	
 	brush_resizable = false;
 	mouse_holding   = false;
+	
+	subtool = 0;
+	
+	function init() {}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		

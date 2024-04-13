@@ -619,6 +619,13 @@
 
 	function surface_save_safe(surface, path) { #region
 		if(!is_surface(surface)) return;
+		
+		     if(is_instanceof(surface, SurfaceAtlas))     surface = surface.surface.get();
+		else if(is_instanceof(surface, SurfaceAtlasFast)) surface = surface.surface;
+		else if(is_instanceof(surface, dynaSurf))		  surface = array_safe_get(surface.surfaces, 0);
+		
+		if(!surface_exists(surface)) return;
+		
 		var f = surface_get_format(surface);
 	
 		if(f == surface_rgba8unorm) {

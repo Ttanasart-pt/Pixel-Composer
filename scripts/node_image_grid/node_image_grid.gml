@@ -139,11 +139,11 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var sw = surface_get_width_safe(_s);
 			var sh = surface_get_height_safe(_s);
 			
-			array_push(atlas, new SurfaceAtlas(_surf[j], sx, sy));
+			array_push(atlas, new SurfaceAtlas(_s, sx, sy));
 			surface_set_shader(temp_surface[!ppind], sh_draw_surface);
 				shader_set_f("dimension", ww, hh);
 				
-				shader_set_surface("fore", _surf[j]);
+				shader_set_surface("fore", _s);
 				shader_set_f("fdimension", sw, sh);
 				shader_set_f("position",   sx + _padd[PADDING.left], sy + _padd[PADDING.top]);
 					

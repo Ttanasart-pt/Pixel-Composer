@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"canvas_actions_transform",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_actions_transform",
+  "parent":{
+    "name":"actions",
+    "path":"folders/nodes/data/canvas/actions.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

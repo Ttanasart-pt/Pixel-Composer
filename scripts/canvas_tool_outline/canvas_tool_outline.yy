@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"canvas_tool_outline",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_tool_outline",
+  "parent":{
+    "name":"actions",
+    "path":"folders/nodes/data/canvas/actions.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

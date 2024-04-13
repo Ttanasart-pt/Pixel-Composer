@@ -51,9 +51,11 @@ function Panel_Notification() : PanelContent() constructor {
 		draw_set_font(f_p3);
 		var timeW = string_width("00:00:00");
 		
-		for( var i = 0; i < ds_list_size(STATUSES); i++ ) {
+		for( var i = 0; i < amo; i++ ) {
 			var index = amo - 1 - i;
 			var noti = STATUSES[| index];
+			
+			if(is_undefined(noti))      continue;
 			if(noti.type & filter == 0) continue;
 			
 			draw_set_font(f_p2);
@@ -82,10 +84,11 @@ function Panel_Notification() : PanelContent() constructor {
 								ds_list_remove(STATUSES, o_dialog_menubox.noti);
 							}), 
 						],, noti);
+						
 						dia.noti = noti;
 					}
 				}
-			
+				
 				if(noti.life_max > 0) {
 					var _nwx = sp_noti.w - ui(12) - ui(40);
 					var _nw  = _nwx * noti.life / noti.life_max;

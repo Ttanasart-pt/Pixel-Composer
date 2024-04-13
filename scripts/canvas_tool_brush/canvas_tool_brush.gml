@@ -43,6 +43,8 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 					
 				apply_draw_surface();
 			}
+			
+			node.tool_pick_color(mouse_cur_x, mouse_cur_y);
 				
 			mouse_pre_draw_x = mouse_cur_x;
 			mouse_pre_draw_y = mouse_cur_y;	

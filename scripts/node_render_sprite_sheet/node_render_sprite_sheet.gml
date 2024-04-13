@@ -136,7 +136,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		#region frame
 			var _st, _ed;
-			var _ln = array_length(inpt) - 1;
+			var _ln = array_length(inpt);
 			
 			if(rang[0] < 0)  _st = _ln + rang[0];
 			else             _st = rang[0];
@@ -148,8 +148,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			_st = clamp(_st, 0, _ln);
 			_ed = clamp(_ed, 0, _ln);
 			
-			if(_ed <= _st) return;
-			var amo = _ed - _st;
+			if(_ed < _st) return;
+			var amo = _ed - _st + 1;
 		#endregion
 		
 		var ww   = 0;
@@ -157,16 +157,17 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _atl = [];
 		
 		#region surface generate
+			
 			switch(pack) { 
 				case SPRITE_STACK.horizontal :
-					for(var i = _st; i < _ed; i++) {
+					for(var i = _st; i <= _ed; i++) {
 						ww += surface_get_width_safe(inpt[i]);
 						if(i > _st) ww += spac;
 						hh  = max(hh, surface_get_height_safe(inpt[i]));
 					}
 					break;
 				case SPRITE_STACK.vertical :
-					for(var i = _st; i < _ed; i++) {
+					for(var i = _st; i <= _ed; i++) {
 						ww  = max(ww, surface_get_width_safe(inpt[i]));
 						hh += surface_get_height_safe(inpt[i]);
 						if(i > _st) hh += spac;
@@ -211,14 +212,14 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				case SPRITE_STACK.horizontal :
 					var px = padd[2];
 					var py = padd[1];
-					for(var i = _st; i < _ed; i++) {
+					for(var i = _st; i <= _ed; i++) {
 						var _w  = surface_get_width_safe(inpt[i]);
 						var _h  = surface_get_height_safe(inpt[i]);
 						var _sx = px;
 						var _sy = py;
 						
 						curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
-						if(curr_w != _w || curr_h == _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
+						if(curr_w != _w || curr_h != _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
 						
 						switch(alig) {
 							case 1 : _sy = py + (hh - _h) / 2;	break;
@@ -234,14 +235,14 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				case SPRITE_STACK.vertical :
 					var px = padd[2];
 					var py = padd[1];
-					for(var i = _st; i < _ed; i++) {
+					for(var i = _st; i <= _ed; i++) {
 						var _w = surface_get_width_safe(inpt[i]);
 						var _h = surface_get_height_safe(inpt[i]);
 						var _sx = px;
 						var _sy = py;
 							
 						curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
-						if(curr_w != _w || curr_h == _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
+						if(curr_w != _w || curr_h != _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
 						
 						switch(alig) {
 							case 1 : _sx = px + (ww - _w) / 2;	break;
@@ -277,7 +278,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 							var _h = surface_get_height_safe(inpt[index]);
 							
 							curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
-							if(curr_w != _w || curr_h == _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
+							if(curr_w != _w || curr_h != _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
 						
 							array_push(_atl, new SurfaceAtlas(inpt[index], px, py));
 							draw_surface_safe(inpt[index], px, py);
@@ -476,7 +477,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _w = surface_get_width_safe(_surfi);
 			var _h = surface_get_height_safe(_surfi);
 			
-			if(anim_curr_w != _w || anim_curr_h == _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
+			if(anim_curr_w != _w || anim_curr_h != _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
 			
 			var px;
 			var _sx = 0;

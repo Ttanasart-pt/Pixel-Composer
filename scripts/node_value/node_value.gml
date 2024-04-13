@@ -1546,7 +1546,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(typeFrom == VALUE_TYPE.text)
 				value = toNumber(value);
 			
-			return applyUnit? unit.apply(value, arrIndex) : value;
+			value = applyUnit? unit.apply(value, arrIndex) : value;
+			
+			if(value_tag == "dimension") {
+				for( var i = 0, n = array_length(value); i < n; i++ ) 
+					value[i] = clamp(value[i], 0, 8192);
+			}
+			
+			return value;
 		} #endregion
 		
 		if(type == VALUE_TYPE.surface && connect_type == JUNCTION_CONNECT.input && !is_surface(value) && def_val == USE_DEF)

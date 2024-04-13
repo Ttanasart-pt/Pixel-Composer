@@ -52,6 +52,8 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 			mouse_pre_y = mouse_cur_y;
 				
 			mouse_holding = true;
+			
+			node.tool_pick_color(mouse_cur_x, mouse_cur_y);
 		}
 			
 	}

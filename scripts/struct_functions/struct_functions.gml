@@ -16,6 +16,24 @@ function struct_override(original, override) { #region
 	return original;
 } #endregion
 
+function struct_override_nested(original, override) { #region
+	INLINE
+	
+	var args = variable_struct_get_names(override);
+	
+	for( var i = 0, n = array_length(args); i < n; i++ ) {
+		var _key = args[i];
+		
+		if(!struct_has(original, _key)) continue;
+		if(is_struct(original[$ _key]))
+			struct_override_nested(original[$ _key], override[$ _key])
+		else 
+			original[$ _key] = override[$ _key];
+	}
+	
+	return original;
+} #endregion
+
 function struct_append(original, append) { #region
 	INLINE
 	

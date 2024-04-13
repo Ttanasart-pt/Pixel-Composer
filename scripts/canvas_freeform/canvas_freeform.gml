@@ -65,6 +65,8 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) { #region
 				
 		mouse_holding  = true;
 		freeform_shape = [ new __vec2(_mmx, _mmy) ];
+		
+		node.tool_pick_color(_mmx, _mmy);
 				
 		surface_clear(drawing_surface);
 	}

@@ -208,7 +208,10 @@
 			var inp = PROJECT.globalNode.getInput(strs[0]);
 			if(inp == 0) return 0;
 			
-			return inp.getValueRecursive([ 0, 0 ])[0];
+			var _arr = [ 0, 0 ];
+			inp.getValueRecursive(_arr);
+			
+			return _arr[0];
 			
 		} else if(struct_has(PROJECT_VARIABLES, strs[0])) {
 			var _str_var = PROJECT_VARIABLES[$ strs[0]];

@@ -250,7 +250,7 @@
 			PREFERENCES.theme = "default";
 			
 		var f = json_load_struct(DIRECTORY + "key_nodes.json");
-		struct_override(HOTKEYS_CUSTOM, f);
+		struct_override_nested(HOTKEYS_CUSTOM, f);
 		
 		LOCALE_DEF = PREFERENCES.local == "en";
 		THEME_DEF  = PREFERENCES.theme == "default";

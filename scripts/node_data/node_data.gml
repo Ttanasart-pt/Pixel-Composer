@@ -2140,7 +2140,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static processDeserialize = function() {}
 	static postDeserialize = function() {}
-		
+	
 	static applyDeserialize = function(preset = false) { #region
 		preApplyDeserialize();
 		

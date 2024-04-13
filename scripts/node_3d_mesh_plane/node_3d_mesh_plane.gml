@@ -10,8 +10,9 @@ function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y", "Z" ]);
 	
 	inputs[| in_mesh + 2] = nodeValue("Both side", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+		.rejectArray();
 	
-	inputs[| in_mesh + 3] = nodeValue("Back Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 3] = nodeValue("Back Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() );
 	
 	input_display_list = [
 		__d3d_input_list_mesh, in_mesh + 1, 
@@ -19,8 +20,9 @@ function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 		["Material",	false], in_mesh + 2, in_mesh + 0, in_mesh + 3, 
 	]
 	
-	static step = function() {
-		var _both = getSingleValue(in_mesh + 2);
+	static preGetInputs = function() {
+		var _both = inputs[| in_mesh + 2].getValue();
+		
 		inputs[| in_mesh + 3].setVisible(_both, _both);
 	}
 	
