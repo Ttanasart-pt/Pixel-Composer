@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_3d_material",
   "parent":{
-    "name":"data",
-    "path":"folders/nodes/data.yy",
+    "name":"3D",
+    "path":"folders/nodes/data/3D.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
