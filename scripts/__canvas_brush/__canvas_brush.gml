@@ -5,7 +5,8 @@ function canvas_brush() constructor {
 	brush_sizing_my = 0;
 	brush_sizing_dx = 0;
 	brush_sizing_dy = 0;
-		
+	
+	brush_use_surface = false;
 	brush_surface   = noone;
 	brush_size      = 1;
 	brush_dist_min  = 1;
@@ -38,7 +39,14 @@ function canvas_brush() constructor {
 		
 		brush_dist_min = max(1, _brushDist[0]);
 		brush_dist_max = max(1, _brushDist[1]);
-		brush_surface  = is_surface(_brushSurf)? _brushSurf : noone;
+		
+		if(brush_use_surface) {
+			if(!is_surface(brush_surface)) {
+				brush_surface = noone;
+				brush_use_surface = false;
+			}
+		} else
+			brush_surface = is_surface(_brushSurf)? _brushSurf : noone;
 		
 		if(!_brushRotD) 
 			brush_direction = 0;

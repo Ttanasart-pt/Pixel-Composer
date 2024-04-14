@@ -1,4 +1,4 @@
-// 2024-04-14 12:22:32
+// 2024-04-14 12:22:33
 function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	
 	self.canvas = canvas;

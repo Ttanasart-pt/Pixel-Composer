@@ -1,4 +1,4 @@
-// 2024-04-14 12:16:16
+// 2024-04-14 12:49:10
 function canvas_tool_selection_freeform(selector, brush) : canvas_tool_selection(selector) constructor {
 	
 	self.brush = brush;

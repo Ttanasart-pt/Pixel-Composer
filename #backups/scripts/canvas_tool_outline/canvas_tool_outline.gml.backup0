@@ -1,3 +1,4 @@
+// 2024-04-14 12:51:21
 function canvas_tool_outline() : canvas_tool_shader() constructor {
 	
 	mouse_sx = 0;

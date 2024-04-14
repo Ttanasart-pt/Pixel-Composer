@@ -33,7 +33,7 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 			
 		else 
 			createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h);
-	}
+	} #endregion
 	
 	function modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, _add) { #region
 		if(sel_w == 1 && sel_h == 1) return;
@@ -218,7 +218,7 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 			var sel_w = surface_get_width_safe(selection_surface);
 			var sel_h = surface_get_height_safe(selection_surface);
 						
-			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h)) {
+			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h) && surface_get_pixel_ext(selection_mask, mouse_cur_x, mouse_cur_y)) {
 				is_select_drag = true;
 				selection_sx = pos_x;
 				selection_sy = pos_y;
@@ -244,15 +244,25 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		else if(is_surface(selection_surface)) { apply(); }
 	} #endregion
 	
-	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(is_selected)
-			draw_surface_safe(selection_surface, selection_position[0], selection_position[1]);
-						
-		else if(is_selecting) {
-			var sel_x0 = min(selection_sx, mouse_cur_x);
-			var sel_y0 = min(selection_sy, mouse_cur_y);
-			draw_surface_safe(selection_mask, sel_x0, sel_y0);
+	function onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	
+	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var sel_x0, sel_y0;
+		
+		if(is_selecting) {
+			sel_x0 = min(selection_sx, mouse_cur_x);
+			sel_y0 = min(selection_sy, mouse_cur_y);
+		} else {
+			sel_x0 = selection_position[0];
+			sel_y0 = selection_position[1];
 		}
+		
+		var _dx = _x + sel_x0 * _s;
+		var _dy = _y + sel_y0 * _s;
+		
+		draw_surface_ext_safe(selection_mask, _dx, _dy, _s, _s);
+		
+		onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region

@@ -1,4 +1,4 @@
-// 2024-04-14 12:14:14
+// 2024-04-14 12:16:16
 function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection(selector) constructor {
 	 
 	self.tool_attribute = toolAttr;
@@ -58,7 +58,7 @@ function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection
 		}
 	}
 	
-	function onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y);
 	}
 }

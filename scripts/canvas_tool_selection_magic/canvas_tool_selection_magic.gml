@@ -57,4 +57,7 @@ function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection
 		}
 	}
 	
+	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y);
+	}
 }

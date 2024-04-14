@@ -6,7 +6,7 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	
 	applySelection = canvas.tool_selection.is_selected;
 	
-	destiSurface  = applySelection? canvas.tool_selection.selection_surface : canvas._canvas_surface;
+	destiSurface  = applySelection? canvas.tool_selection.selection_surface : canvas.getCanvasSurface();
 	if(!is_surface(destiSurface)) {
 		canvas.nodeTool = noone;
 		return;
@@ -22,9 +22,10 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	surface_reset_shader();
 	
 	static destroy = function() {
+		noti_warning("Selected node has no surface output.");
+		
+		if(applySelection) canvas.tool_selection.apply();
 		canvas.nodeTool = noone;
-		if(nodeObject != noone)
-			nodeObject.cleanUp();
 		
 		surface_free(targetSurface);
 		surface_free(maskedSurface);
@@ -32,7 +33,7 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	
 	nodeObject = node.build(0, 0);
 	
-	if(nodeObject == noone) {
+	if(nodeObject == noone || !is_instanceof(nodeObject, Node)) {
 		destroy();
 		return;
 	}

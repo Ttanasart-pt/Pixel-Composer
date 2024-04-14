@@ -805,7 +805,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		var _hh = ui(40);
 		_y += _hh;
 		
-		if(is_instanceof(inspecting, Node_Canvas) && inspecting.nodeTool != noone)
+		if(is_instanceof(inspecting, Node_Canvas) && inspecting.nodeTool != noone && is_instanceof(inspecting.nodeTool.nodeObject, Node))
 			return drawNodeProperties(_y, _m, inspecting.nodeTool.nodeObject);
 			
 		if(inspectGroup >= 0) 

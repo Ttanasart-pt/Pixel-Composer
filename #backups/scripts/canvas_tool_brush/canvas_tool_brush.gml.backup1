@@ -1,4 +1,4 @@
-// 2024-04-14 10:03:44
+// 2024-04-14 10:04:07
 function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	self.brush = brush;
 	isEraser   = eraser;
@@ -14,7 +14,6 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
-		print(brush.brush_surface);
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		

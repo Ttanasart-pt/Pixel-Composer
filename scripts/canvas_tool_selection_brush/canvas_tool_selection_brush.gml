@@ -1,4 +1,3 @@
-// 2024-04-14 12:16:19
 function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(selector) constructor {
 	
 	self.brush = brush;
