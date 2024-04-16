@@ -201,7 +201,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
 	
 	static inspector1Update    = function() { onInspector1Update(); }
-	static onInspector1Update  = function() { RenderList(nodes, true); }
+	static onInspector1Update  = function() { RenderList(nodes); }
 	static hasInspector1Update = function() { INLINE return hasInsp1; }
 	
 	static inspector2Update    = function() { onInspector2Update(); }

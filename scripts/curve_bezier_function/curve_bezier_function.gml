@@ -194,3 +194,29 @@ function curveMap(_bz, _prec = 32, _tolr = 0.00001) constructor {
 		return lerp(map[_indL], map[_indH], _indF);
 	} #endregion
 }
+
+function draw_curve_bezier(x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec = 32) { #region
+	var ox, oy, nx, ny;
+	
+	var _st = 1 / prec;
+	
+	for (var i = 0; i <= prec; i++) {
+		var _t  = _st * i;
+		var _t1 = 1 - _t;
+		
+		nx = _t1 * _t1 * _t1 * x0 + 
+		     3 * (_t1 * _t1 * _t) * cx0 + 
+		     3 * (_t1 * _t  * _t) * cx1 + 
+		     _t * _t * _t * x1;
+		     
+		ny = _t1 * _t1 * _t1 * y0 + 
+		     3 * (_t1 * _t1 * _t) * cy0 + 
+		     3 * (_t1 * _t  * _t) * cy1 + 
+		     _t * _t * _t * y1;
+		     
+	     if(i) draw_line(ox, oy, nx, ny);
+		     
+		ox = nx;
+		oy = ny;
+	}
+} #endregion

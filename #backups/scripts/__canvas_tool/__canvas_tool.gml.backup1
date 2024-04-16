@@ -1,4 +1,4 @@
-// 2024-04-14 10:20:09
+// 2024-04-16 10:48:44
 function canvas_tool() constructor { 
 	
 	node = noone;
@@ -16,6 +16,12 @@ function canvas_tool() constructor {
 	mouse_holding   = false;
 	
 	subtool = 0;
+	
+	function disable() {
+		PANEL_PREVIEW.tool_current = noone;
+	}
+	
+	function getTool() { return self; }
 	
 	function init() {}
 	

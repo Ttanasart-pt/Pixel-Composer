@@ -1,4 +1,4 @@
-// 2024-04-14 12:31:10
+// 2024-04-14 12:48:56
 function canvas_tool_resize() : canvas_tool() constructor {
 	
 	override = true;

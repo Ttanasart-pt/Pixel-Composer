@@ -10,8 +10,6 @@ function Panel_Palette() : PanelContent() constructor {
 	color_dragging = noone;
 	
 	function onResize() {
-		PANEL_PADDING
-		
 		sp_palettes.resize(w - ui(padding + padding), h - ui(padding + padding));
 	}
 	
@@ -25,8 +23,9 @@ function Panel_Palette() : PanelContent() constructor {
 			case 1 : _gs = ui(32); break;	
 			case 2 : _gs = ui(16); break;	
 		}
-		var yy  = _y;
 		var _height;
+		var yy  = _y;
+		var cur = COLORS_GLOBAL_GET != noone? COLORS_GLOBAL_GET() : noone;
 		
 		for(var i = 0; i < array_length(PALETTES); i++) {
 			var preset	= PALETTES[i];
@@ -44,7 +43,7 @@ function Panel_Palette() : PanelContent() constructor {
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(10), yy + ui(2), preset.name);
-			drawPaletteGrid(preset.palette, ui(10), yy + ui(24), ww - ui(20), _gs);
+			drawPaletteGrid(preset.palette, ui(10), yy + ui(24), ww - ui(20), _gs, cur);
 			
 			if(isHover) {
 				if(mouse_press(mb_left, pFOCUS)) {

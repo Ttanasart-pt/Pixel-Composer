@@ -22,9 +22,14 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 	mouse_pre_y = 0;
 	
 	function createSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) { #region
+		
 		if(is_selected)
 			apply();
-			
+		else {
+			createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h);
+			return;
+		}
+		
 		if(key_mod_press(SHIFT))
 			modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, true);
 			

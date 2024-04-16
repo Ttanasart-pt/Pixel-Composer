@@ -99,6 +99,8 @@ function Panel_Preview() : PanelContent() constructor {
 		tileMode = 0;
 		
 		bg_color = COLORS.panel_bg_clear;
+		
+		mouse_pos_string = "";
 	#endregion
 	
 	#region ---- tool ----
@@ -1071,7 +1073,14 @@ function Panel_Preview() : PanelContent() constructor {
 				var mpx = floor((mx - canvas_x) / canvas_s);
 				var mpy = floor((my - canvas_y) / canvas_s);
 				draw_text(right_menu_x, right_menu_y, $"[{mpx}, {mpy}]");
+				
+				if(mouse_pos_string != "") {
+					right_menu_y += string_height("l");
+					draw_text(right_menu_x, right_menu_y, $"{mouse_pos_string}");
+				}
 			}
+			
+			mouse_pos_string = "";
 		
 			if(_node == noone) return;
 		
@@ -1477,9 +1486,9 @@ function Panel_Preview() : PanelContent() constructor {
 				var key  = sett[2];
 				var atr  = sett[3];
 				
-				if(i == 0 && nme != "") {
-					tolx      += ui(8);
-					tol_max_w += ui(8);
+				if(nme != "") {
+					tolx      += ui(8) + bool(i == 0) * ui(8);
+					tol_max_w += ui(8) + bool(i == 0) * ui(8);
 				} 
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
@@ -1500,6 +1509,7 @@ function Panel_Preview() : PanelContent() constructor {
 					case "checkBoxGroup" : tolw = tolh * wdg.size;	break;
 					case "checkBox" :	   tolw = tolh;				break;
 					case "scrollBox" :     tolw = ui(96);			break;
+					case "buttonClass" :   tolw = wdg.text == ""? tolh : tolw; break;
 				}
 				
 				var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key],, [ mx, my ])
@@ -1507,11 +1517,6 @@ function Panel_Preview() : PanelContent() constructor {
 				params.font = f_p3;
 				
 				wdg.drawParam(params);
-				
-				if(nme != "") {
-					tolx      += ui(8);
-					tol_max_w += ui(8);
-				} 
 				
 				tolx	  += tolw + ui(8) + (nme != "") * ui(8);
 				tol_max_w += tolw + ui(8) + (nme != "") * ui(8);

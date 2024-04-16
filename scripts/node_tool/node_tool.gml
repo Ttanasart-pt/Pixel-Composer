@@ -78,7 +78,7 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 			onToggle();
 			
 		var _obj = getToolObject();
-		if(_obj) _obj.init();
+		if(_obj) _obj.init(ctx);
 	}
 	
 	static toggleKeyboard = function() {

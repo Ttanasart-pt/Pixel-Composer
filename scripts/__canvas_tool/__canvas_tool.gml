@@ -16,6 +16,12 @@ function canvas_tool() constructor {
 	
 	subtool = 0;
 	
+	function disable() {
+		PANEL_PREVIEW.tool_current = noone;
+	}
+	
+	function getTool() { return self; }
+	
 	function init() {}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}

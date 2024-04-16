@@ -248,7 +248,7 @@ event_inherited();
 		}
 	} #endregion
 	
-	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) { #region
+	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) { #region catagory_pane
 		draw_clear_alpha(COLORS._main_text, 0);
 		
 		var ww = category_width - ui(32);
@@ -339,7 +339,7 @@ event_inherited();
 		return hh;
 	}); #endregion
 	
-	content_pane = new scrollPane(dialog_w - category_width - ui(8), dialog_h - ui(66), function(_y, _m) { #region
+	content_pane = new scrollPane(dialog_w - category_width - ui(8), dialog_h - ui(66), function(_y, _m) { #region content_pane
 		draw_clear_alpha(c_white, 0);
 		var _hover = sHOVER && content_pane.hover;
 		var _list  = node_list;

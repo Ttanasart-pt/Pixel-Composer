@@ -6,7 +6,6 @@ enum CANVAS_TOOL_SHAPE {
 function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 	self.brush   = brush;
 	self.shape   = shape;
-	self.fill    = false;
 	
 	brush_resizable = true;
 	mouse_holding   = false;
@@ -35,10 +34,10 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 			surface_set_shader(drawing_surface, noone);
 			
 				if(shape == CANVAS_TOOL_SHAPE.rectangle)
-					canvas_draw_rect_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, fill);
+					canvas_draw_rect_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
 					
 				else if(shape == CANVAS_TOOL_SHAPE.ellipse)
-					canvas_draw_ellp_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, fill);
+					canvas_draw_ellp_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
 					
 			surface_reset_shader();
 				
@@ -66,10 +65,10 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 		}
 		
 		if(shape == CANVAS_TOOL_SHAPE.rectangle)
-			canvas_draw_rect_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, fill);
+			canvas_draw_rect_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
 			
 		if(shape == CANVAS_TOOL_SHAPE.ellipse)
-			canvas_draw_ellp_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, fill); 
+			canvas_draw_ellp_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool); 
 	}
 	
 }

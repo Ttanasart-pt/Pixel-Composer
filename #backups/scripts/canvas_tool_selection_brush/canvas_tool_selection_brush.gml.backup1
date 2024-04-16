@@ -1,4 +1,4 @@
-// 2024-04-14 12:16:19
+// 2024-04-16 07:47:35
 function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(selector) constructor {
 	
 	self.brush = brush;
@@ -63,10 +63,12 @@ function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(se
 			sel_x1 = max(sel_x1, mouse_cur_x + brush.brush_size);
 			sel_y1 = max(sel_y1, mouse_cur_y + brush.brush_size);
 				
-			if(mouse_release(mb_left)) {
-				var _sel_w = sel_x1 - sel_x0;
-				var _sel_h = sel_y1 - sel_y0;
+			var _sel_w = sel_x1 - sel_x0;
+			var _sel_h = sel_y1 - sel_y0;
+			
+			PANEL_PREVIEW.mouse_pos_string = $"[{_sel_w}, {_sel_h}]";
 				
+			if(mouse_release(mb_left)) {
 				var _sel = surface_create(_sel_w, _sel_h);
 				surface_set_shader(_sel);
 					draw_surface(selection_mask, -sel_x0, -sel_y0);

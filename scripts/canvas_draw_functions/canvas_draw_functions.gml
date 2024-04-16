@@ -24,7 +24,7 @@ function canvas_draw_point_size(brush, _x, _y, _draw = false) { #region
 	}
 } #endregion
 	
-function canvas_draw_line_size(brush, _x0, _y0, _x1, _y1, _draw = false) { #region 
+function canvas_draw_line_size(brush, _x0, _y0, _x1, _y1, _draw = false, _cap = false) { #region 
 		
 	if(brush.brush_surface == noone) {
 			
@@ -44,8 +44,13 @@ function canvas_draw_line_size(brush, _x0, _y0, _x1, _y1, _draw = false) { #regi
 			for( var i = 0, n = array_length(fx); i < n; i++ )
 				draw_line(_x0 + fx[i][0], _y0 + fx[i][1], _x1 + fx[i][0], _y1 + fx[i][1]);	
 					
-		} else
+		} else {
 			draw_line_width(_x0, _y0, _x1, _y1, brush.brush_size);
+			if(_cap) {
+				canvas_draw_point_size(brush, _x0, _y0, true);
+				canvas_draw_point_size(brush, _x1, _y1, true);
+			}
+		}
 			
 	} else {
 		var diss  = point_distance(_x0, _y0, _x1, _y1);
@@ -153,6 +158,32 @@ function canvas_draw_ellp_size(brush, _x0, _y0, _x1, _y1,  _fill) { #region
 				
 		if(i) canvas_draw_line_size(brush, ox, oy, nx, ny);
 				
+		ox = nx;
+		oy = ny;
+	}
+} #endregion
+
+function canvas_draw_curve_brush(brush, x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec = 32) { #region 
+	var ox, oy, nx, ny;
+	
+	var _st = 1 / prec;
+	
+	for (var i = 0; i <= prec; i++) {
+		var _t  = _st * i;
+		var _t1 = 1 - _t;
+		
+		nx = _t1 * _t1 * _t1 * x0 + 
+		     3 * (_t1 * _t1 * _t) * cx0 + 
+		     3 * (_t1 * _t  * _t) * cx1 + 
+		     _t * _t * _t * x1;
+		     
+		ny = _t1 * _t1 * _t1 * y0 + 
+		     3 * (_t1 * _t1 * _t) * cy0 + 
+		     3 * (_t1 * _t  * _t) * cy1 + 
+		     _t * _t * _t * y1;
+		     
+	     if(i) canvas_draw_line_size(brush, ox, oy, nx, ny, true, true);
+		     
 		ox = nx;
 		oy = ny;
 	}

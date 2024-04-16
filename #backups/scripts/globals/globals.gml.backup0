@@ -1,122 +1,56 @@
-// 2023-08-07 09:56:48
+// 2024-04-16 08:32:52
 #region save
-	globalvar LOADING, APPENDING, CLONING, SAFE_MODE;
-	globalvar CONNECTION_CONFLICT, ALWAYS_FULL;
+	globalvar LOADING, CLONING, CLONING_GROUP;
+	globalvar CONNECTION_CONFLICT, LOADING_VERSION;
+	globalvar MESSAGE;
 	
-	LOADING		= false;
-	CLONING		= false;
-	APPENDING	= false;
-	SAFE_MODE	= false;
+	globalvar APPENDING, APPEND_MAP, APPEND_LIST;
+	APPEND_MAP      = ds_map_create();
+	APPEND_LIST     = ds_list_create();
+	
+	LOADING		    = false;
+	LOADING_VERSION = 0;
+	CLONING_GROUP   = noone;
+	CLONING		    = false;
+	APPENDING	    = false;
+	MESSAGE         = noone;
 	
 	CONNECTION_CONFLICT = ds_queue_create();
 	
 	randomize();
-	ALWAYS_FULL = false;
 #endregion
 
-#region project
-	function Project() constructor {
-		active	= true; /// @is {bool}
-		
-		path	= ""; /// @is {string}
-		version = SAVE_VERSION; /// @is {number}
-		seed    = irandom_range(100000, 999999); /// @is {number}
-		
-		modified = false; /// @is {bool}
-		readonly = false; /// @is {bool} 
-		
-		nodes	    = ds_list_create();
-		nodeMap	    = ds_map_create();
-		nodeNameMap = ds_map_create();
-		
-		animator	= new AnimationManager();
-		
-		globalNode	= new Node_Global();
-		
-		previewGrid = {
-			show	: false,
-			snap	: false,
-			width	: 16,
-			height	: 16,
-			opacity : 0.5,
-			color   : COLORS.panel_preview_grid,
-		}
-		
-		graphGrid = {
-			show	: true,
-			snap	: true,
-			size	: 32,
-			opacity : 0.05,
-			color   : c_white,
-		}
-		
-		addons = {};
-		
-		onion_skin = {
-			enabled: false,
-			range: [ -1, 1 ],
-			step: 1,
-			color: [ c_red, c_blue ],
-			alpha: 0.5,
-			on_top: true,
-		};
-		
-		attributes = {
-			surface_dimension: [ 32, 32 ],
-			palette: [ c_black, c_white ]
-		}
-		
-		attributeEditor = [
-			[ "Default Surface",	"surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; }) ],
-			[ "Palette",			"palette",			 new buttonPalette(function(pal) { attributes.palette = pal; }) ],
-		]
-		
-		static cleanup = function() {
-			if(!ds_map_empty(nodeMap))
-				array_map(ds_map_keys_to_array(nodeMap), function(_key, _ind) { nodeMap[? _key].active = false; });
-			
-			ds_list_destroy(nodes);
-			ds_map_destroy(nodeMap);
-			ds_map_destroy(nodeNameMap);
-		}
-	}
-	
-	globalvar PROJECTS; /// @is {Project[]}
-	globalvar PROJECT; /// @is {Project}
-	
-	gml_pragma("global", "__init()");
-	function __init() {
-		PROJECT  = new Project();
-		PROJECTS = [ PROJECT ];
-	}
-#endregion
-
-#region main
+#region ======================================================================= MAIN =======================================================================
 	globalvar OS, DEBUG, THEME, COLOR_KEYS;
-	OS = os_type;
-	//OS = os_macosx;
+	globalvar CMD, CMDIN;
+	globalvar FPS_REAL;
+	
+	OS    = os_type;
+	CMD   = [];
+	CMDIN = [];
+	FPS_REAL = 0;
 	
 	DEBUG = false;
 	THEME = new Theme();
 	COLOR_KEYS = [];
 	
-	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER;
-	
-	VERSION			= 11484;
-	SAVE_VERSION	= 11482;
-	VERSION_STRING  = "1.15rc4";
-	BUILD_NUMBER	= 11484;
-	
-	globalvar APPEND_MAP;
-	APPEND_MAP      = ds_map_create();
+	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION;
+
+	LATEST_VERSION	= 11600;
+	VERSION			= 11700;
+	SAVE_VERSION	= 11690;
+	VERSION_STRING  = "1.17.rc1";
+	BUILD_NUMBER	= 11700;
 	
 	globalvar HOTKEYS, HOTKEY_CONTEXT;
 	HOTKEYS			= ds_map_create();
 	HOTKEY_CONTEXT	= ds_list_create();
 	HOTKEY_CONTEXT[| 0] = "";
 	
-	globalvar CURSOR, TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
-	globalvar UPDATE, RENDER_QUEUE;
+	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
+	global.KEYS = {
+		download_links: "",
+	};
 #endregion
 
 #region inputs
@@ -126,36 +60,47 @@
 	
 	DOUBLE_CLICK_POS = [ 0, 0 ];
 	DOUBLE_CLICK = false;
-	FOCUS = noone;
+	
+	FOCUS     = noone;
 	FOCUS_STR = "";
-	HOVER = noone;
+	
+	HOVER             = noone;
 	HOVERING_ELEMENT  = noone;
 	_HOVERING_ELEMENT = noone;
+	
 	DIALOG_CLICK = true;
 	
-	globalvar ADD_NODE_PAGE;
-	ADD_NODE_PAGE = 0;
+	globalvar ADD_NODE_PAGE, ADD_NODE_SCROLL;
+	
+	ADD_NODE_PAGE   = 0;
+	ADD_NODE_SCROLL = 0;
 #endregion
 
 #region macro
+	#macro TEMPDIR filepath_resolve(PREFERENCES.temp_path)
+	
+	#macro NOT_LOAD !LOADING && !APPENDING
+	
 	#macro WIN_W window_get_width()
 	#macro WIN_H window_get_height()
 	
 	#macro WIN_SW window_get_width()
 	#macro WIN_SH window_get_height()
 	
-	#macro UI_SCALE PREF_MAP[? "display_scaling"]
+	#macro UI_SCALE PREFERENCES.display_scaling
 	
-	#macro mouse_mx device_mouse_x_to_gui(0)
-	#macro mouse_my device_mouse_y_to_gui(0)
+	#macro mouse_mx (PEN_USE? PEN_X : device_mouse_x_to_gui(0))
+	#macro mouse_my (PEN_USE? PEN_Y : device_mouse_y_to_gui(0))
 	#macro mouse_raw_x (device_mouse_raw_x(0) + window_get_x())
 	#macro mouse_raw_y (device_mouse_raw_y(0) + window_get_y())
 	#macro mouse_ui [device_mouse_x_to_gui(0), device_mouse_y_to_gui(0)]
 	
-	#macro sFOCUS FOCUS == self.id
-	#macro sHOVER HOVER == self.id
+	#macro sFOCUS (FOCUS == self.id)
+	#macro sHOVER (!CURSOR_IS_LOCK && HOVER == self.id)
 	
 	#macro DELTA_TIME delta_time / 1_000_000
+	
+	#macro INLINE gml_pragma("forceinline");
 	
 	#macro CONF_TESTING false
 	globalvar TESTING, TEST_ERROR;
@@ -165,10 +110,6 @@
 	#macro DEMO	false
 	#macro ItchDemo:DEMO  true
 	#macro SteamDemo:DEMO true
-	#macro MacAlpha:DEMO  true
-	
-	#macro ALPHA false
-	#macro MacAlpha:ALPHA true
 	
 	#region color
 		#macro c_ui_blue_dkblack	$251919
@@ -202,22 +143,20 @@
 	#macro PANEL_PAD THEME_VALUE.panel_padding
 	
 	function print(str) {
-		//show_debug_message(string(str));
+		INLINE
 		noti_status(string(str));
 	}
 	
 	function printIf(cond, log) {
-		if(!cond) return;
-		show_debug_message(log);
+		INLINE
+		if(cond) print(log);
 	}
 #endregion
 
 #region presets
 	function INIT_FOLDERS() {
-		if(!directory_exists(DIRECTORY + "Palettes"))
-			directory_create(DIRECTORY + "Palettes");
-		if(!directory_exists(DIRECTORY + "Gradients"))
-			directory_create(DIRECTORY + "Gradients");
+		directory_verify(DIRECTORY + "Palettes");
+		directory_verify(DIRECTORY + "Gradients");
 	}
 #endregion
 
@@ -237,10 +176,33 @@
 	DEF_SURFACE_RESET();
 #endregion
 
-#region PATCH	
-	#macro PATCH_STATIC static _doUpdate = function() { doUpdate() };
+#region functions
+	function __fnInit_Global() {
+		__registerFunction("fullscreen",	global_fullscreen);
+		__registerFunction("render_all",	global_render_all);
+		__registerFunction("project_close",	global_project_close);
+		
+		__registerFunction("theme_reload",	global_theme_reload);
+	}
+	
+	function global_fullscreen()	{ CALL("fullscreen");		winMan_setFullscreen(!window_is_fullscreen);	}
+	function global_render_all()	{ CALL("render_all");		RENDER_ALL_REORDER								}
+	function global_project_close()	{ CALL("project_close");	PANEL_GRAPH.close();							}
+	
+	function global_theme_reload()	{ CALL("theme_reload");		loadGraphic(PREFERENCES.theme); resetPanel();	}
+	
+	function reset_global_getset() {
+		COLORS_GLOBAL_GET = noone;
+		COLORS_GLOBAL_SET = noone;
+	}
 #endregion
 
 #region debug
 	global.FLAG = {};
+	
+	global.FLAG.render				= 0;
+	global.FLAG.renderTime			= false;
+	global.FLAG.keyframe_override	= true;
+	global.FLAG.wav_import			= true;
+	global.FLAG.ase_import			= false;
 #endregion

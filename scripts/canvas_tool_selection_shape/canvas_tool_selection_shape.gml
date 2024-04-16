@@ -35,7 +35,9 @@ function canvas_tool_selection_shape(selector, shape) : canvas_tool_selection(se
 				}
 					
 			surface_reset_target();
-				
+			
+			PANEL_PREVIEW.mouse_pos_string = $"[{sel_w}, {sel_h}]";
+			
 			if(mouse_release(mb_left)) {
 				is_selecting = false;
 				selector.createSelection(selection_mask, sel_x0, sel_y0, sel_w, sel_h);

@@ -37,12 +37,12 @@ function string_real(val, digMax = 999, decMin = 5) { #region
 	
 	if(is_array(val)) {
 		var s = "[";
-		for( var i = 0, n = array_length(val); i < n; i++ ) 
-			s += (i? ", " : "") + string_real(val[i]);
+		var i = 0, n = array_length(val);
+		repeat( n ) { s += (i? ", " : "") + string_real(val[i]); i++; }
 		return s + "]";
 	}
 	
-	if(val == 0 || !is_real(val)) return "0";
+	if(val == 0 || !is_numeric(val)) return "0";
 	
 	var pres, p = 1;
 	var presMax = min(decMin, digMax - ceil(log10(ceil(abs(val)))));

@@ -139,23 +139,23 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
 	var amo = array_length(_pal);
 	var col = floor(_w / _gs);
 	var row = ceil(amo / col);
+	var cx = -1, cy = -1;
+	var _pd = ui(5);
 	
 	for(var i = 0; i < array_length(_pal); i++) {
 		draw_set_color(_pal[i]);
 		var _x0 = _x + safe_mod(i, col) * _gs;
 		var _y0 = _y + floor(i / col) * _gs;
+		
 		draw_rectangle(_x0, _y0 + 1, _x0 + _gs, _y0 + _gs, false);
+		
+		if(c_color == _pal[i]) {
+			cx = _x0;
+			cy = _y0;
+		}
 	}
 	
-	if(c_color == -1) return;
+	if(cx == -1) return;
 	
-	for(var i = 0; i < array_length(_pal); i++) {
-		if(c_color != _pal[i]) continue;
-			
-		var _x0 = _x + safe_mod(i, col) * _gs;
-		var _y0 = _y + floor(i / col) * _gs;
-				
-		draw_set_color(c_white);
-		draw_rectangle_border(_x0, _y0 + 1, _x0 + _gs, _y0 + _gs, 2);
-	}
+	draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - _pd, cy + 1 - _pd, _gs + _pd * 2, _gs + _pd * 2);
 } #endregion

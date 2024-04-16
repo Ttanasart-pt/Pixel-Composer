@@ -1,4 +1,4 @@
-// 2024-04-14 12:59:25
+// 2024-04-16 14:17:00
 function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Canvas";
 	color	= COLORS.node_blend_canvas;
@@ -54,7 +54,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	frame_renderer_x_max = 0;
 	
 	frame_renderer_content = surface_create(1, 1);
-	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region frame_renderer
 		var _h = 64;
 		_y += 8;
 		
@@ -128,7 +128,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				_fr_x += _sw * _ss + 8;
 				frame_renderer_x_max += _sw * _ss + 8;
-			}
+			} 
 			
 			if(_del > noone) removeFrame(_del);
 		surface_reset_shader();
@@ -183,7 +183,27 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		preview_draw_mask     = surface_create_empty(1, 1);
 		
 		draw_stack = ds_list_create();
-		brush      = new canvas_brush();
+		
+	#endregion
+	
+	#region ++++ tool object ++++
+		brush = new canvas_brush();
+		
+		tool_selection = new canvas_tool_selection();
+		
+		tool_brush     = new canvas_tool_brush(brush, false);
+		tool_eraser    = new canvas_tool_brush(brush, true);
+		tool_rectangle = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.rectangle);
+		tool_ellipse   = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.ellipse);
+		tool_fill      = new canvas_tool_fill(tool_attribute);
+		tool_freeform  = new canvas_tool_draw_freeform(brush);
+		tool_curve_bez = new canvas_tool_curve_bezier(brush);
+		
+		tool_sel_rectangle = new canvas_tool_selection_shape(tool_selection, CANVAS_TOOL_SHAPE.rectangle);
+		tool_sel_ellipse   = new canvas_tool_selection_shape(tool_selection, CANVAS_TOOL_SHAPE.ellipse);
+		tool_sel_freeform  = new canvas_tool_selection_freeform(tool_selection, brush);
+		tool_sel_magic     = new canvas_tool_selection_magic(tool_selection, tool_attribute);
+		tool_sel_brush     = new canvas_tool_selection_brush(tool_selection, brush);
 		
 	#endregion
 	
@@ -197,7 +217,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.pickColor = c_white;
 		tool_drawLayer_edit      = new buttonGroup( [ THEME.canvas_draw_layer, THEME.canvas_draw_layer, THEME.canvas_draw_layer ], function(val) { tool_attribute.drawLayer = val; });
 		
-		tool_attribute.mirror = [ false, false ];
+		tool_attribute.mirror = [ false, false, false ];
 		tool_mirror_edit      = new checkBoxGroup( THEME.canvas_mirror, function(ind, val) { tool_attribute.mirror[ind] = val; });
 		
 		tool_settings          = [ [ "", tool_channel_edit,   "channel",   tool_attribute ], 
@@ -223,48 +243,52 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_fil8_edit       = new checkBox(function() { tool_attribute.fill8 = !tool_attribute.fill8; });
 		tool_fil8            = [ "Diagonal", tool_fil8_edit, "fill8", tool_attribute ];
 		
-		tools = [
-			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ]),
-			
-			new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
+		tool_attribute.button_apply = [ false, false ];
+		tool_curve_apply  = button( function() { tool_curve_bez.apply();   } ).setIcon(THEME.toolbar_check, 0);
+		tool_curve_cancel = button( function() { tool_curve_bez.cancel(); } ).setIcon(THEME.toolbar_check, 1);
+		
+		toolObject_selection_magic = new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
 				.setSetting(tool_thrs)
-				.setSetting(tool_fil8),
+				.setSetting(tool_fil8)
+				.setToolObject(tool_sel_magic)
+		
+		tools = [
+			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ])
+				.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_brush ]),
+			
+			toolObject_selection_magic,
 			
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
-				.setSetting(tool_size),
-					
+				.setSetting(tool_size)
+				.setToolObject(tool_brush),
+			
 			new NodeTool( "Eraser",		  THEME.canvas_tools_eraser)
-				.setSetting(tool_size),
+				.setSetting(tool_size)
+				.setToolObject(tool_eraser),
 					
 			new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect,  THEME.canvas_tools_rect_fill  ])
-				.setSetting(tool_size),
+				.setSetting(tool_size)
+				.setToolObject(tool_rectangle),
 					
 			new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ])
-				.setSetting(tool_size),
-					
+				.setSetting(tool_size)
+				.setToolObject(tool_ellipse),
+			
+			new NodeTool( "Curve",		  THEME.canvas_tool_curve_icon)
+				.setSetting(tool_size)
+				.setSetting([ "", tool_curve_apply,  0, tool_attribute ])
+				.setSetting([ "", tool_curve_cancel, 0, tool_attribute ])
+				.setToolObject(tool_curve_bez),
+			
 			new NodeTool( "Freeform",	  THEME.canvas_tools_freeform)
-				.setSetting(tool_size),
+				.setSetting(tool_size)
+				.setToolObject(tool_freeform),
 					
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
 				.setSetting(tool_thrs)
-				.setSetting(tool_fil8),
+				.setSetting(tool_fil8)
+				.setToolObject(tool_fill),
 		];
-		
-		tool_selection = new canvas_tool_selection();
-		
-		tool_brush     = new canvas_tool_brush(brush, false);
-		tool_eraser    = new canvas_tool_brush(brush, true);
-		tool_rectangle = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.rectangle);
-		tool_ellipse   = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.ellipse);
-		tool_fill      = new canvas_tool_fill(tool_attribute);
-		tool_freeform  = new canvas_tool_draw_freeform(brush);
-		
-		tool_sel_rectangle = new canvas_tool_selection_shape(tool_selection, CANVAS_TOOL_SHAPE.rectangle);
-		tool_sel_ellipse   = new canvas_tool_selection_shape(tool_selection, CANVAS_TOOL_SHAPE.ellipse);
-		tool_sel_freeform  = new canvas_tool_selection_freeform(tool_selection, brush);
-		tool_sel_magic     = new canvas_tool_selection_magic(tool_selection, tool_attribute);
-		tool_sel_brush     = new canvas_tool_selection_brush(tool_selection, brush);
-		
 	#endregion
 	
 	#region ++++ right tools ++++
@@ -314,9 +338,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Make/Reset Brush", THEME.canvas_tools_pencil ).setToolFn( __action_make_brush ),
 			-1,
 			new NodeTool( "Outline", THEME.canvas_tools_outline ).setToolObject( new canvas_tool_outline() ),
-			new NodeTool( [ "Extrude", "Inset" ], 
-				[ THEME.canvas_tools_extrude, THEME.canvas_tools_inset ] )
-				.setToolObject( [ new canvas_tool_extrude(), new canvas_tool_inset() ] ),
+			new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setToolObject( new canvas_tool_extrude() ),
+			new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setToolObject( new canvas_tool_inset()   ),
+		];
+		
+		rightTools_not_selection = [ 
+			-1,
+			new NodeTool( "Outline", THEME.canvas_tools_outline, self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[3]) ),
+			new NodeTool( "Extrude", THEME.canvas_tools_extrude, self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[4]) ),
+			new NodeTool( "Inset",   THEME.canvas_tools_inset,   self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[5]) ),
 		];
 		
 		rightTools_brush = [ 
@@ -330,6 +360,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_eraser.rightTools    = rightTools_brush;
 		tool_rectangle.rightTools = rightTools_brush;
 		tool_ellipse.rightTools   = rightTools_brush;
+		
+		selection_tool_after = noone;
 	#endregion
 	
 	function setToolColor(color) { tool_attribute.color = color; }
@@ -391,7 +423,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return hh + ui(4);
 	} #endregion
 	
-	function removeFrame(index = 0) { #region
+	static removeFrame = function(index = 0) { #region
 		if(attributes.frames <= 1) return;
 		
 		if(preview_index == attributes.frames) 
@@ -403,7 +435,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		update();
 	} #endregion
 	
-	function refreshFrames() { #region
+	static refreshFrames = function() { #region
 		var fr   = attributes.frames;
 		var _dim = attributes.dimension;
 		
@@ -429,7 +461,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	function setCanvasSurface(surface, index = preview_index) { INLINE canvas_surface[index] = surface; }
 	
-	function storeAction() { #region
+	static storeAction = function() { #region
 		var action = recordAction(ACTION_TYPE.custom, function(data) { 
 			is_selected = false;
 			
@@ -447,7 +479,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		action.clear_action = function(data) { surface_free_safe(data.surface); };
 	} #endregion
 	
-	function apply_surfaces() { #region
+	static apply_surfaces = function() { #region
 		for( var i = 0; i < attributes.frames; i++ )
 			apply_surface(i);
 	} #endregion
@@ -502,7 +534,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		apply_surface(index);
 	} #endregion
 	
-	function tool_pick_color(_x, _y) { #region
+	static tool_pick_color = function(_x, _y) { #region
 		if(tool_selection.is_selected)
 			tool_attribute.pickColor = surface_get_pixel(tool_selection.selection_surface, _x - tool_selection.selection_position[0], _y - tool_selection.selection_position[1]);
 		else
@@ -532,9 +564,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				BLEND_ALPHA
 					
-					if(tool_attribute.mirror[0]) draw_surface_ext_safe(drawing_surface, _spx * 2 + _spw - _spx, -_spy, -1, 1);
-					if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, -_spx, _spy * 2 + _sph - _spy, 1, -1);
-					if(tool_attribute.mirror[0] && tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _spx * 2 + _spw - _spx, _spy * 2 + _sph - _spy, -1, -1);
+					if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _spx * 2 + _spw - _spx, -_spy, -1, 1);
+					if(tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, -_spx, _spy * 2 + _sph - _spy, 1, -1);
+					if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _spx * 2 + _spw - _spx, _spy * 2 + _sph - _spy, -1, -1);
 					
 				BLEND_NORMAL
 				
@@ -554,11 +586,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_surface(drawing_surface, 0, 0);
 				
 				BLEND_ALPHA
-					
-					if(tool_attribute.mirror[0]) draw_surface_ext_safe(drawing_surface, _dim[0], 0, -1, 1);
-					if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, 0, _dim[1], 1, -1);
-					if(tool_attribute.mirror[0] && tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], -1, -1);
-					
+					if(tool_attribute.mirror[0] == false) {
+						if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _dim[0], 0, -1, 1);
+						if(tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, 0, _dim[1], 1, -1);
+						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], -1, -1);
+					} else {
+						if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], -1, 1, -90);
+						if(tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface,       0,       0, -1, 1,  90);
+						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], 1, 1, 180);
+					}
 				BLEND_NORMAL
 			surface_reset_target();
 			
@@ -642,6 +678,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			array_append(rightTools, rightTools_general);
 			
 			if(tool_selection.is_selected) array_append(rightTools, rightTools_selection);
+			else						   array_append(rightTools, rightTools_not_selection);
 			
 			if(nodeTool != noone) 
 				_tool = nodeTool;
@@ -649,37 +686,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			else if(_currTool != noone) {
 				_tool = _currTool.getToolObject();
 				
-				switch(_currTool.getName()) {
-					case "Pencil"   : _tool = tool_brush;		break;
-					case "Eraser"   : _tool = tool_eraser;		break;
-					case "Fill"     : _tool = tool_fill;		break;
-					case "Freeform" : _tool = tool_freeform;	break;
-					
-					case "Rectangle" : 
-						_tool = tool_rectangle; 
-						_tool.fill = _currTool.selecting == 1;
-						break;
-					
-					case "Ellipse" : 
-						_tool = tool_ellipse; 
-						_tool.fill = _currTool.selecting == 1;
-						break;
-					
-					case "Selection" : 
-						switch(_currTool.selecting) {
-							case 0 : _tool = tool_sel_rectangle; break;
-							case 1 : _tool = tool_sel_ellipse;   break;
-							case 2 : _tool = tool_sel_freeform;  break;
-							case 3 : _tool = tool_sel_brush;     break;
-						}
-						
-						break;
-						
-					case "Magic Selection" : _tool = tool_sel_magic; break;
-					
-				}
-				
 				if(_tool) {
+					_tool.node = self;
+					_tool = _tool.getTool();
 					_tool.subtool = _currTool.selecting;
 					array_append(rightTools, _tool.rightTools);
 				}
@@ -690,6 +699,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				tool_selection.apply_draw_surface = apply_draw_surface;
 				
 				if(is_instanceof(_tool, canvas_tool_selection) && tool_selection.is_selected) tool_selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				
+				tool_mirror_edit.sprs = (!tool_selection.is_selected && tool_attribute.mirror[0])? THEME.canvas_mirror_diag : THEME.canvas_mirror;
 			}
 			
 			if(_tool && _tool.override) {
@@ -771,14 +782,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var _spw = tool_selection.selection_size[0];
 					var _sph = tool_selection.selection_size[1];
 					
-					if(tool_attribute.mirror[0]) draw_surface_ext_safe(_drawing_surface, _spx * 2 + _spw, 0, -1, 1);
-					if(tool_attribute.mirror[1]) draw_surface_ext_safe(_drawing_surface, 0, _spy * 2 + _sph, 1, -1);
-					if(tool_attribute.mirror[0] && tool_attribute.mirror[1]) draw_surface_ext_safe(_drawing_surface, _spx * 2 + _spw, _spy * 2 + _sph, -1, -1);
+					if(tool_attribute.mirror[1]) draw_surface_ext_safe(_drawing_surface, _spx * 2 + _spw, 0, -1, 1);
+					if(tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface, 0, _spy * 2 + _sph, 1, -1);
+					if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface, _spx * 2 + _spw, _spy * 2 + _sph, -1, -1);
 					
 				} else {
-					if(tool_attribute.mirror[0]) draw_surface_ext_safe(_drawing_surface, _dim[0], 0, -1, 1);
-					if(tool_attribute.mirror[1]) draw_surface_ext_safe(_drawing_surface, 0, _dim[1], 1, -1);
-					if(tool_attribute.mirror[0] && tool_attribute.mirror[1]) draw_surface_ext_safe(_drawing_surface, _dim[0], _dim[1], -1, -1);
+					if(tool_attribute.mirror[0] == false) {
+						if(tool_attribute.mirror[1]) draw_surface_ext_safe(_drawing_surface, _dim[0],       0, -1, 1);
+						if(tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface,       0, _dim[1], 1, -1);
+						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface, _dim[0], _dim[1], -1, -1);
+					} else {
+						if(tool_attribute.mirror[1]) draw_surface_ext_safe(_drawing_surface, _dim[0], _dim[1], -1, 1, -90);
+						if(tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface,       0,       0, -1, 1,  90);
+						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface, _dim[0], _dim[1], 1, 1, 180);
+					}
 				}
 				
 				draw_set_color(tool_attribute.color);
@@ -786,7 +803,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					canvas_draw_point_size(brush, brush.brush_sizing_dx, brush.brush_sizing_dy);
 				else if(_tool)
 					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				
 			surface_reset_shader();
 				
 			draw_surface_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, isUsingTool("Eraser")? c_red : c_white, isUsingTool("Eraser")? 0.2 : _alp);

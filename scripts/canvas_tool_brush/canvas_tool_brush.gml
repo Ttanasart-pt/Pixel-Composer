@@ -27,7 +27,6 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		}
 			
 		if(mouse_press(mb_left, active)) {
-			brush_next_dist = 0;
 				
 			surface_set_shader(drawing_surface, noone);
 				canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y, true);
@@ -36,7 +35,6 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 			mouse_holding = true;
 			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) { ///////////////// shift line
 				surface_set_shader(drawing_surface, noone, true, BLEND.alpha);
-					brush_next_dist = 0;
 					canvas_draw_line_size(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
 				surface_reset_shader();
 				mouse_holding = false;

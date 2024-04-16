@@ -27,8 +27,15 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 		if(applySelection) canvas.tool_selection.apply();
 		canvas.nodeTool = noone;
 		
-		surface_free(targetSurface);
-		surface_free(maskedSurface);
+		surface_free_safe(maskedSurface);
+		
+		cleanUp();
+	}
+	
+	static cleanUp = function() {
+		surface_free_safe(targetSurface);
+		surface_free_safe(maskedSurface);
+		nodeObject.destroy();
 	}
 	
 	nodeObject = node.build(0, 0);
@@ -65,21 +72,41 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function apply() {
+		var _surf = surface_create(sw, sh);
 		
 		if(applySelection) {
+			
+			surface_set_shader(_surf, sh_blend_normal);
+				shader_set_surface("fore",		maskedSurface);
+				shader_set_f("dimension",		1, 1);
+				shader_set_f("opacity",			1);
+				
+				draw_surface(canvas.tool_selection.selection_surface, 0, 0);
+			surface_reset_shader();
+			
 			surface_free(canvas.tool_selection.selection_surface);
-			canvas.tool_selection.selection_surface = maskedSurface;
+			canvas.tool_selection.selection_surface = _surf;
 			canvas.tool_selection.apply();
 			
 		} else {
 			canvas.storeAction();
-			canvas.setCanvasSurface(maskedSurface);
+			
+			surface_set_shader(_surf, sh_blend_normal);
+				shader_set_surface("fore",		maskedSurface);
+				shader_set_f("dimension",		1, 1);
+				shader_set_f("opacity",			1);
+				
+				draw_surface(canvas.getCanvasSurface(), 0, 0);
+			surface_reset_shader();
+			
+			canvas.setCanvasSurface(_surf);
 			canvas.surface_store_buffer();
 		}
 		
 		PANEL_PREVIEW.tool_current = noone;
 		canvas.nodeTool = noone;
-		surface_free_safe(targetSurface);
+		
+		cleanUp();
 	}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -109,7 +136,10 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 			else if(inputJunction.name == "Dimension")
 				inputJunction.setValue([ sw, sh ]);
 		}
-		nodeObject.update();
+		if(is_instanceof(nodeObject, Node_Collection))
+			RenderList(nodeObject.nodes);
+		else 
+			nodeObject.update();
 		
 		var _surf = outputJunction.getValue();
 			
@@ -125,6 +155,7 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 		} else
 			maskedSurface = _surf;
 			
+		draw_surface_ext_safe(destiSurface,  _dx, _dy, _s, _s);
 		draw_surface_ext_safe(maskedSurface, _dx, _dy, _s, _s);
 		
 		     if(mouse_press(mb_left, active))  { apply();	MOUSE_BLOCK = true; }

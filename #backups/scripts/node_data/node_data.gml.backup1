@@ -1,4 +1,4 @@
-// 2023-08-08 14:41:40
+// 2023-08-08 14:42:15
 global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
 function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x, _y) constructor {
@@ -1445,7 +1445,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		for(var i = 0; i < amo; i++) {
 			if(inputs[| i] == noone || _inputs[i] == noone) continue;
-			print($"Apply deserialize {_inputs[| i].name} to {inputs[| i].name}");
+			print($"Apply deserialize {_inputs[i].name} to {inputs[| i].name}");
 			inputs[| i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		
