@@ -2,6 +2,8 @@ function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection
 	 
 	self.tool_attribute = toolAttr;
 	
+	selecting = false;
+	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
@@ -13,7 +15,7 @@ function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection
 		var _fill_type	= tool_attribute.fill8;
 		
 		if(!selector.is_select_drag && mouse_press(mb_left, active)) {
-			
+			selecting = true;
 			canvas_buffer = node.canvas_buffer;
 			preview_index = node.preview_index;
 		
@@ -57,7 +59,8 @@ function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection
 				if(node.selection_tool_after != noone)
 					node.selection_tool_after.toggle();
 					node.selection_tool_after  = noone;
-			}
+			} else 
+				selector.apply();
 		}
 	}
 	

@@ -1,0 +1,1605 @@
+// 2024-04-18 11:59:03
+#event properties (no comments/etc. here are saved)
+parent_index = -1;
+persistent = true;
+uses_physics = false;
+
+#event create init
+#region log
+	var path = "log_temp.txt";
+	var f = file_text_open_append(path);
+	file_text_write_string(f, $"[MESSAGE] {_log_template()}session begin\n");
+	file_text_close(f);
+	
+	gpu_set_tex_mip_enable(mip_off);
+	gc_enable(true);
+	gc_target_frame_time(100);
+#endregion
+
+#region window
+	window_set_min_width(960);
+	window_set_min_height(600);
+	draw_set_circle_precision(64);
+	winManInit();
+	
+	depth       = 0;
+	win_wp      = WIN_W;
+	win_hp      = WIN_H;
+	win_resize  = false;
+	
+	room_width  = WIN_W;
+	room_height = WIN_H;
+	
+	DIALOG_DEPTH_HOVER = 0;
+	UPDATE             = RENDER_TYPE.none;
+	CURSOR             = cr_default;
+	CURSOR_LOCK		   = false;
+	CURSOR_IS_LOCK	   = false;
+	CURSOR_LOCK_X	   = 0;
+	CURSOR_LOCK_Y	   = 0;
+	TOOLTIP            = "";
+	DRAGGING           = noone;
+	KEYBOARD_STRING    = "";
+	
+	RENDER_QUEUE = new Queue();
+	RENDER_ORDER = [];
+	
+	globalvar AUTO_SAVE_TIMER;
+	AUTO_SAVE_TIMER = 0;
+	
+	_cursor	 = CURSOR;
+	dc_check = 0;
+	kb_time  = 0;
+	kb_hold  = false;
+	kb_hkey  = 0;
+	
+	fpss = array_create(10);
+	fpsr = 0;
+	
+	_cursor_lock = false;
+	
+	watcher_surface = surface_create(1, 1);
+	
+	panelInit();
+	
+	addHotkey("", "New file", "N",				MOD_KEY.ctrl, NEW);
+	if(!DEMO) {
+		addHotkey("", "Save", "S",				MOD_KEY.ctrl,					SAVE);
+		addHotkey("", "Save as", "S",			MOD_KEY.ctrl | MOD_KEY.shift,	SAVE_AS);
+		addHotkey("", "Save all", "S",			MOD_KEY.ctrl | MOD_KEY.alt,		SAVE_ALL);
+		addHotkey("", "Open", "O",				MOD_KEY.ctrl,					LOAD);
+	}
+	
+	addHotkey("", "Undo", "Z",					MOD_KEY.ctrl,					UNDO);
+	addHotkey("", "Redo", "Z",					MOD_KEY.ctrl | MOD_KEY.shift,	REDO);
+	
+	addHotkey("", "Full panel",   "`",			MOD_KEY.none,					set_focus_fullscreen);
+	addHotkey("", "Reset layout", vk_f10,		MOD_KEY.ctrl,					resetPanel);
+	
+	addHotkey("", "Open notification", vk_f12,	MOD_KEY.none,					function() { dialogPanelCall(new Panel_Notification()); });
+	
+	addHotkey("", "Fullscreen", vk_f11,			MOD_KEY.none,					global_fullscreen);
+	addHotkey("", "Render all", vk_f5,			MOD_KEY.none,					global_render_all);
+	
+	addHotkey("", "Close file", "Q",			MOD_KEY.ctrl,					global_project_close);
+	addHotkey("", "Close program", vk_f4,		MOD_KEY.alt,					window_close);
+	addHotkey("", "Reload theme", vk_f10,		MOD_KEY.ctrl | MOD_KEY.shift,	global_theme_reload);
+	
+	globalvar HOTKEY_MOD, HOTKEY_BLOCK;
+	HOTKEY_MOD   = 0;
+	HOTKEY_BLOCK = false;
+#endregion
+
+#region Loader
+	globalvar GIF_READER;
+	
+	GIF_READER = ds_list_create();
+	gif_complete_st = ds_stack_create();
+#endregion
+
+#region tunnel
+	globalvar TUNNELS_IN, TUNNELS_IN_MAP, TUNNELS_OUT;
+	TUNNELS_IN     = ds_map_create();
+	TUNNELS_IN_MAP = ds_map_create();
+	TUNNELS_OUT    = ds_map_create();
+#endregion
+
+#region add on callback
+	globalvar ANIMATION_PRE, ANIMATION_POST;
+	
+	ANIMATION_PRE = [];
+	ANIMATION_POST = [];
+	
+	function __addon_preAnim() {
+		for( var i = 0, n = array_length(ANIMATION_PRE); i < n; i++ ) 
+			ANIMATION_PRE[i]();
+	}
+	
+	function __addon_postAnim() {
+		for( var i = 0, n = array_length(ANIMATION_POST); i < n; i++ ) 
+			ANIMATION_POST[i]();
+	}
+#endregion
+
+#region file drop
+	if(OS == os_windows) {
+		file_dropper_init();
+	} else if(OS == os_macosx) {
+		file_dnd_set_hwnd(window_handle());
+		file_dnd_set_enabled(true);
+		
+		_file_dnd_filelist  = "";
+		file_dnd_filelist   = "";
+		file_dnd_pattern    = "*.*";
+		file_dnd_allowfiles = true; 
+		file_dnd_allowdirs  = true;
+		file_dnd_allowmulti = true;
+	}
+	
+	drop_path = [];
+	
+	function load_file_path(path) {
+		if(!is_array(path)) path = [ path ];
+		if(array_length(path) == 0) return; 
+		
+		var type = "others";
+		
+		if(array_length(path) == 1 && directory_exists(path[0]))
+			type = "image";
+			
+		for( var i = 0, n = array_length(path); i < n; i++ ) {
+			var p = path[i];
+			var ext = string_lower(filename_ext(p));
+			
+			switch(ext) {
+				case ".png"	 :
+				case ".jpg"	 :
+				case ".jpeg" :
+					type = "image";
+					break;
+			}
+		}
+		
+		var is_multi = type == "image" && (array_length(path) > 1 || directory_exists(path[0]));
+		
+		if(is_multi) {
+			with(dialogCall(o_dialog_add_multiple_images, WIN_W / 2, WIN_H / 2))
+				setPath(path);
+		} else {
+			if(!IS_CMD) PANEL_GRAPH.onStepBegin();
+			
+			var node = noone;
+			for( var i = 0, n = array_length(path); i < n; i++ ) {
+				var p = path[i];
+				var ext = string_lower(filename_ext(p));
+				
+				switch(ext) {
+					case ".txt"  :
+						node = Node_create_Text_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".csv"  :
+						node = Node_create_CSV_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".json"  :
+						node = Node_create_Json_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".ase"  :
+					case ".aseprite"  :
+						node = Node_create_ASE_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".png"	 :
+					case ".jpg"	 :
+					case ".jpeg" :
+						node = Node_create_Image_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".gif" :
+						node = Node_create_Image_gif_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".obj" :
+						node = Node_create_3D_Obj_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".wav" :
+						node = Node_create_WAV_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".pxc" :
+					case ".cpxc" :
+						LOAD_PATH(p);
+						break;
+					case ".pxcc" :
+						APPEND(p);
+						break;
+				}
+				
+				if(!IS_CMD)PANEL_GRAPH.mouse_grid_y += 160;
+			}
+			
+			if(node && !IS_CMD)
+				PANEL_GRAPH.toCenterNode();
+		}
+	}
+#endregion
+
+#region undo
+	action_last_frame = [];
+#endregion
+
+#region version
+	version_check = -1;
+	version_latest = 0;
+	
+	//if(os_is_network_connected()) {
+	//	var version = "https://gist.githubusercontent.com/Ttanasart-pt/d9eefbda84a78863c122b8b155bc0cda/raw/version.txt";
+	//	version_check = http_get(version);
+	//}
+#endregion
+
+#region parameter
+	minimized = false;
+	_modified = false;
+#endregion
+
+#region dialog
+	globalvar DIALOGS, WIDGET_TAB_BLOCK;
+	DIALOGS = ds_list_create();
+	WIDGET_TAB_BLOCK = false;
+	
+	instance_create(0, 0, o_dialog_textbox_autocomplete);
+	instance_create(0, 0, o_dialog_textbox_function_guide);
+#endregion
+
+#region async
+	globalvar PORT_MAP, NETWORK_SERVERS, NETWORK_CLIENTS;
+	globalvar IMAGE_FETCH_MAP;
+	
+	global.FILE_LOAD_ASYNC = ds_map_create();
+	PORT_MAP = ds_map_create();
+	NETWORK_SERVERS = ds_map_create();
+	NETWORK_CLIENTS = ds_map_create();
+	
+	IMAGE_FETCH_MAP = ds_map_create();
+	
+	asyncInit();
+	
+	network_set_config(network_config_use_non_blocking_socket, 0);
+#endregion
+
+#region steam
+	globalvar STEAM_ENABLED, STEAM_APP_ID, STEAM_USER_ID, STEAM_USERNAME;
+	globalvar STEAM_UGC_ITEM_UPLOADING, STEAM_UGC_ITEM_ID, STEAM_UGC_ITEM_FILE, STEAM_UGC_UPDATE_HANDLE;
+	globalvar STEAM_UGC_SUBMIT_ID, STEAM_UGC_UPDATE_MAP, STEAM_UGC_PUBLISH_ID, STEAM_UGC_UPDATE, STEAM_UGC_TYPE;
+	globalvar STEAM_SUB_ID;
+	
+	enum STEAM_UGC_FILE_TYPE {
+		collection,
+		project,
+		node_preset
+	}
+	
+	STEAM_UGC_TYPE = STEAM_UGC_FILE_TYPE.collection;
+	STEAM_SUB_ID   = 0;
+	STEAM_USER_ID  = 0;
+	STEAM_USERNAME = "";
+	
+	STEAM_UGC_UPDATE_HANDLE = 0;
+	STEAM_UGC_ITEM_ID = 0;
+	STEAM_UGC_PUBLISH_ID = 0;
+	STEAM_UGC_SUBMIT_ID = 0;
+	STEAM_UGC_ITEM_UPLOADING = false;
+	STEAM_ENABLED = steam_initialised();
+	STEAM_UGC_UPDATE = false;
+	STEAM_UGC_UPDATE_MAP = ds_map_create();
+	
+	if(STEAM_ENABLED) {
+		STEAM_APP_ID = steam_get_app_id();
+		STEAM_USER_ID = steam_get_user_account_id();
+		STEAM_USERNAME = steam_get_persona_name();
+		steam_set_warning_message_hook();
+	}
+#endregion
+
+#region physics
+	physics_world_update_iterations(100);
+#endregion
+
+#region color selector
+	globalvar NODE_DROPPER_TARGET, NODE_DROPPER_TARGET_CAN, NODE_COLOR_SHOW_PALETTE;
+	NODE_DROPPER_TARGET		= noone;
+	NODE_DROPPER_TARGET_CAN = false;
+	NODE_COLOR_SHOW_PALETTE = false;
+#endregion
+
+#region draw
+	
+#endregion
+
+#region 3D
+	globalvar USE_DEPTH;
+	_use_depth = noone;
+	USE_DEPTH  = false;
+	
+	set3DGlobalPreview();
+#endregion
+
+#region debug
+	global.__debug_runner = 0;
+	__debug_animator_counter = 0;
+	
+	//instance_create(0, 0, o_video_banner, { title: "Trail effect" });
+	//instance_create_depth(0, 0, -32000, FLIP_Domain);
+	//instance_create_depth(0, 0, -32000, FLIP_Domain);
+#endregion
+
+#region server
+	globalvar TCP_SERVER, TCP_PORT, TCP_CLIENTS;
+	TCP_SERVER  = false;
+	TCP_PORT    = noone;
+	TCP_CLIENTS = [];
+	
+#endregion
+
+#region arguments
+	#macro IS_CMD PROGRAM_ARGUMENTS._cmd
+	
+	alarm[1] = 2;
+	
+	globalvar PROGRAM_ARGUMENTS, CLI_EXPORT_AMOUNT;
+	
+	PROGRAM_ARGUMENTS = { 
+		_path :      "",
+		_cmd :       false,
+		_run :       false,
+		_rendering : false,
+		_exporting : [],
+		_persist :   false,
+		_trusted:    false,
+		_lua:        true,
+	};
+	
+	CLI_EXPORT_AMOUNT = 0;
+	
+	var paramCount = parameter_count();
+	var paramType  = "_path";
+	var useTCP     = false;
+	
+	for( var i = 0; i < paramCount; i++ ) {
+		var param = parameter_string(i);
+		//print($"    >>> params {i}: {param}");
+		
+		if(string_starts_with(param, "-")) {
+			switch(param) {
+				case "-c" : 
+				case "--crashed" : 
+					if(PREFERENCES.show_crash_dialog) 
+						run_in(1, function() { dialogCall(o_dialog_crashed); });
+					break;
+				
+				case "-h" : 
+				case "--headless" : 
+					PROGRAM_ARGUMENTS._cmd = true; 
+					break;
+					
+				case "-p" : 
+				case "--persist" : 
+					PROGRAM_ARGUMENTS._persist = true; 
+					break;
+					
+				case "-t" : 
+				case "--trusted" : 
+					PROGRAM_ARGUMENTS._trusted = true; 
+					break;
+					
+				case "-s" : 
+				case "--server" : 
+					PROGRAM_ARGUMENTS._persist = true; 
+					useTCP = true;
+					break;
+					
+				case "-sl" : 
+				case "--skiplua" : 
+					PROGRAM_ARGUMENTS._lua = false; 
+					break;
+					
+				default :
+					paramType = string_trim(param, ["-"]);
+					break;
+			}
+			
+		} else if(paramType == "_path") {
+			var path = param;
+			    path = string_replace_all(path, "\n", "");
+			    path = string_replace_all(path, "\"", "");
+				
+			if(file_exists_empty(path) && (filename_ext(path) == ".pxc" || filename_ext(path) == ".cpxc"))
+				PROGRAM_ARGUMENTS._path = path;
+				
+		} else
+			PROGRAM_ARGUMENTS[$ paramType] = cmd_path(param);
+	}
+	
+	if(IS_CMD) {
+		draw_enable_drawevent(false);
+		log_console($"Running PixelComposer {VERSION_STRING}");
+		
+		PROGRAM_ARGUMENTS._run = true; 
+		PROGRAM_ARGUMENTS._rendering = true; 
+	}
+	
+	if(file_exists_empty(PROGRAM_ARGUMENTS._path)) {
+		run_in(1, function() { load_file_path(PROGRAM_ARGUMENTS._path); });
+		
+	} else if(IS_CMD)
+		game_end();
+	
+	if(useTCP && struct_has(PROGRAM_ARGUMENTS, "port")) {
+		TCP_PORT   = PROGRAM_ARGUMENTS.port;
+		TCP_SERVER = network_create_server_raw(network_socket_tcp, TCP_PORT, 32);
+		
+		log_console($"Open port: {TCP_PORT}");
+	}
+#endregion
+
+#event alarm1 init
+#region prefload
+	__migration_check();
+	
+	if(!file_exists_empty(PROGRAM_ARGUMENTS._path) && PREFERENCES.show_splash)
+		dialogCall(o_dialog_splash);
+#endregion
+
+#event step init
+if(winMan_isMinimized()) exit;
+winManStep()
+
+//print("===== Step start =====");
+
+if(PROJECT.active && !PROJECT.safeMode) { #region
+	PROJECT.animator.step();
+	PROJECT.globalNode.step();
+	LIVE_UPDATE = false;
+	
+	try {
+		if(PANEL_MAIN != 0) PANEL_MAIN.step();
+		array_foreach(PROJECT.nodeArray, function(_node) { 
+			if(!_node.active) return; 
+			_node.triggerCheck(); 
+			_node.step(); 
+		});
+	} catch(e) {
+		noti_warning("Step error: " + exception_print(e));
+	}
+} #endregion
+
+#region hotkey
+	HOTKEY_MOD = 0;
+	if(CTRL  == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.ctrl;
+	if(SHIFT == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.shift;
+	if(ALT   == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.alt;
+	
+	if(!instance_exists(o_dialog_preference) && !HOTKEY_BLOCK) {
+		if(ds_map_exists(HOTKEYS, "")) {
+			var l = HOTKEYS[? ""];
+			for(var i = 0; i < ds_list_size(l); i++) {
+				var hotkey = l[| i];
+				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
+			
+				if(key_press(hotkey.key, hotkey.modi)) {
+					hotkey.action();
+					break;
+				}
+			}
+		}
+		
+		if(ds_map_exists(HOTKEYS, FOCUS_STR)) {
+			var list = HOTKEYS[? FOCUS_STR];
+			for(var i = 0; i < ds_list_size(list); i++) {
+				var hotkey	= list[| i];
+				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
+			
+				if(key_press(hotkey.key, hotkey.modi)) {
+					hotkey.action();
+					break;
+				}
+			}
+		}
+	}
+	
+	HOTKEY_BLOCK = false;
+#endregion
+
+#region GIF builder
+	for( var i = 0; i < ds_list_size(GIF_READER); i++ ) {
+		var _reader = GIF_READER[| i];
+		
+		var _reading = _reader[0].reading();
+		if(_reading) {
+			var ret = _reader[2];
+			ret(new __gif_sprite_builder(_reader[0]));
+			ds_stack_push(gif_complete_st, i);
+		}
+	}
+	
+	while(!ds_stack_empty(gif_complete_st)) {
+		var i = ds_stack_pop(gif_complete_st);
+		buffer_delete(GIF_READER[| i][1]);
+		delete GIF_READER[| i][0];
+		ds_list_delete(GIF_READER, i);
+	}
+#endregion
+
+#region file drop
+	if(OS == os_windows) {
+		if(array_length(drop_path)) {
+			load_file_path(drop_path);
+			drop_path = [];
+		}
+	} else if(OS == os_macosx) {		
+		file_dnd_set_files(file_dnd_pattern, file_dnd_allowfiles, file_dnd_allowdirs, file_dnd_allowmulti);
+		file_dnd_filelist = file_dnd_get_files();
+		
+		if(file_dnd_filelist != "" && _file_dnd_filelist != file_dnd_filelist) {
+			var path  = string_trim(file_dnd_filelist);
+			load_file_path(string_splice(path, "\n"));
+		}
+		
+		_file_dnd_filelist = file_dnd_filelist;
+	}
+#endregion
+
+#region window
+	if(_modified != PROJECT.modified) {
+		_modified = PROJECT.modified;
+		
+		var cap = "";
+		if(PROJECT.safeMode) cap += "[SAFE MODE] ";
+		if(PROJECT.readonly) cap += "[READ ONLY] ";
+		cap += PROJECT.path + (PROJECT.modified? "*" : "") + " - Pixel Composer";
+		
+		window_set_caption(cap);
+	}
+#endregion
+
+#region notification
+	if(!ds_list_empty(WARNING)) {
+		var rem = ds_stack_create();
+		
+		for( var i = 0; i < ds_list_size(WARNING); i++ ) {
+			var w = WARNING[| i];
+			if(--w.life <= 0)
+				ds_stack_push(rem, w);
+		}
+		
+		while(!ds_stack_empty(rem)) {
+			ds_list_delete(WARNING, ds_stack_pop(rem));	
+		}
+		
+		ds_stack_destroy(rem);
+	}
+#endregion
+
+#region steam
+	steam_update();
+	
+	if(STEAM_ENABLED) {
+		if (steam_is_screenshot_requested()) {
+		    var file = "PixelComposer_" + string(irandom_range(100_000, 999_999)) + ".png";
+		    screen_save(file);
+		    steam_send_screenshot(file, window_get_width(), window_get_height());
+		}
+	}
+#endregion
+
+#event step_begin init
+global.__debug_runner++;
+global.cache_call = 0;
+global.cache_hit  = 0;
+
+HOVERING_ELEMENT  = _HOVERING_ELEMENT;
+_HOVERING_ELEMENT = noone;
+
+#region minimize
+	if(winMan_isMinimized()) {
+		if(!minimized) game_set_speed(1, gamespeed_fps);
+		minimized = true;
+		exit;
+	} else if(!minimized)
+		window_preminimize_rect = [ window_get_x(), window_get_y(), window_get_width(), window_get_height() ];
+
+	if(minimized) {
+		game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
+		window_set_rectangle(window_preminimize_rect[0], window_preminimize_rect[1], window_preminimize_rect[2], window_preminimize_rect[3]);
+		
+		minimized = false;
+	}
+#endregion
+
+#region fpss
+	if(fpsr++ % 5 == 0) {
+		var ff = 0;
+		for( var i = 1; i < 10; i++ ) {
+			fpss[i] = fpss[i - 1]
+			ff += fpss[i];
+		}
+		fpss[0] = fps_real;
+		ff     += fps_real;
+		FPS_REAL = round(ff / 10);
+	}
+#endregion
+
+#region window & mouse
+	//if(keyboard_check_pressed(vk_f12)) DEBUG = !DEBUG;
+	
+	if(_cursor != CURSOR) {
+		window_set_cursor(CURSOR);
+		_cursor = CURSOR;
+	} 
+	CURSOR = cr_default;
+	
+	if(_cursor_lock != CURSOR_LOCK) {
+		window_mouse_set_locked(CURSOR_LOCK);
+		if(!CURSOR_LOCK) window_mouse_set(CURSOR_LOCK_X, CURSOR_LOCK_Y);
+	}
+	
+	_cursor_lock   = CURSOR_LOCK;
+	CURSOR_IS_LOCK = CURSOR_LOCK;
+	CURSOR_LOCK    = false;
+	
+	if(!is_surface(watcher_surface)) {
+		RENDER_ALL
+		watcher_surface = surface_create(1, 1);
+	}
+	
+	PEN_USE = false;
+	PEN_RELEASED      = false;
+	PEN_RIGHT_PRESS   = false;
+	PEN_RIGHT_RELEASE = false;
+	
+	if(!IS_CMD) tabletstuff_perform_event(id, ev_other, ev_user10);
+	
+	//print($"{PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
+	//print($"{mouse_x}, {mouse_y}");
+#endregion
+
+#region focus
+	if(mouse_release(mb_any)) DIALOG_CLICK = true;
+	
+	HOVER = noone;
+	with(_p_dialog) checkMouse();
+	
+	if(PANEL_MAIN != 0) PANEL_MAIN.stepBegin();
+	
+	DIALOG_DEPTH_HOVER = 0;
+	
+	with(_p_dialog) checkFocus();
+	with(_p_dialog) checkDepth();
+	
+	with(_p_dialog) doDrag();
+	with(_p_dialog) doResize();
+#endregion
+
+#region auto save
+	AUTO_SAVE_TIMER += delta_time / 1_000_000;
+	
+	if(PROJECT.modified && PREFERENCES.auto_save_time > 0 && AUTO_SAVE_TIMER > PREFERENCES.auto_save_time) {
+		AUTO_SAVE_TIMER = 0;
+		var loc = DIRECTORY + "Autosave/";
+		directory_verify(loc);
+		
+		var fname = string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), "") + 
+			"_autosave" + string(current_year) + "-" + 
+			string_lead_zero(current_month, 2) + "-" + 
+			string_lead_zero(current_day, 2) + "T" + 
+			string_lead_zero(current_hour, 2) + 
+			string_lead_zero(current_minute, 2) + 
+			string_lead_zero(current_second, 2) + filename_ext(PROJECT.path);
+		
+		try		 { SAVE_AT(PROJECT, loc + fname, "Autosaved "); }
+		catch(e) { print(exception_print(e)); }
+	}
+#endregion
+
+#region animation & render
+	DEF_SURFACE_RESET();
+	
+	if(!PROJECT.safeMode && UPDATE_RENDER_ORDER) {
+		ResetAllNodesRender();
+		NodeTopoSort();
+	}
+	
+	if(LIVE_UPDATE)
+		Render();
+	else if(!PROJECT.safeMode) {
+		UPDATE_RENDER_ORDER = false;
+		
+		if(PROJECT.active) {
+			PROJECT.animator.is_simulating = false;
+			array_foreach(PROJECT.nodeArray, function(_node) { if(!_node.active) return; _node.stepBegin(); });
+			
+			if(PROGRAM_ARGUMENTS._run) {
+				if(PROJECT != noone && PROJECT.path != "") {
+					exportAll();
+					PROGRAM_ARGUMENTS._run = false;
+				}
+						
+			} else if(IS_PLAYING || IS_RENDERING) {
+				if(PROJECT.animator.frame_progress) {
+					__addon_preAnim();
+					
+					if(IS_FIRST_FRAME)
+						ResetAllNodesRender();
+						
+					if(IS_CMD) Render(false);
+					else       Render(true);
+					
+					__addon_postAnim();
+				}
+				PROJECT.animator.frame_progress = false;
+				
+			} else {
+				if(UPDATE & RENDER_TYPE.full)
+					Render();
+					
+				else if(UPDATE & RENDER_TYPE.partial)
+					Render(true);
+					
+			}
+		}
+	}
+	
+	if(PROGRAM_ARGUMENTS._rendering && PROGRAM_ARGUMENTS._run == false && array_empty(PROGRAM_ARGUMENTS._exporting)) {
+		log_console($"Export {CLI_EXPORT_AMOUNT} {CLI_EXPORT_AMOUNT > 1? "files" : "file"} completed");
+		
+		if(PROGRAM_ARGUMENTS._persist) {
+			PROGRAM_ARGUMENTS._rendering = false;
+			cli_wait();
+		} else
+			game_end();
+	}
+	
+	UPDATE = RENDER_TYPE.none;
+#endregion
+
+#region clicks
+	DOUBLE_CLICK = false;
+	if(mouse_press(mb_left)) {
+		if(dc_check > 0) {
+			if(point_distance(mouse_mx, mouse_my, DOUBLE_CLICK_POS[0], DOUBLE_CLICK_POS[1]) < 8)
+				DOUBLE_CLICK = true;
+			dc_check = 0;
+		} else {
+			dc_check = PREFERENCES.double_click_delay;
+			DOUBLE_CLICK_POS = [ mouse_mx, mouse_my ];
+		}
+	}
+	
+	dc_check -= DELTA_TIME;
+#endregion
+
+#region step
+	if(array_length(action_last_frame) > 0) {
+		ds_stack_push(UNDO_STACK, action_last_frame);
+		ds_stack_clear(REDO_STACK);
+	}
+	action_last_frame = [];
+#endregion
+
+#region modifiers
+	if(CTRL == KEYBOARD_STATUS.up)
+		CTRL = KEYBOARD_STATUS.idle;
+	if(SHIFT == KEYBOARD_STATUS.up)
+		SHIFT = KEYBOARD_STATUS.idle;
+	if(ALT == KEYBOARD_STATUS.up)
+		ALT = KEYBOARD_STATUS.idle;
+	
+	if(CTRL == KEYBOARD_STATUS.pressing && !keyboard_check(vk_control))
+		CTRL = KEYBOARD_STATUS.up;
+	
+	if(SHIFT == KEYBOARD_STATUS.pressing && !keyboard_check(vk_shift))
+		SHIFT = KEYBOARD_STATUS.up;
+	
+	if(ALT == KEYBOARD_STATUS.pressing && !keyboard_check(vk_alt))
+		ALT = KEYBOARD_STATUS.up;
+	
+	if(CTRL == KEYBOARD_STATUS.down)
+		CTRL  = KEYBOARD_STATUS.pressing;
+	
+	if(SHIFT == KEYBOARD_STATUS.down)
+		SHIFT = KEYBOARD_STATUS.pressing;
+	
+	if(ALT == KEYBOARD_STATUS.down)
+		ALT = KEYBOARD_STATUS.pressing;
+	
+	if(keyboard_check_pressed(vk_control))
+		CTRL = KEYBOARD_STATUS.down;
+	if(keyboard_check_pressed(vk_shift))
+		SHIFT = KEYBOARD_STATUS.down;
+	if(keyboard_check_pressed(vk_alt))
+		ALT = KEYBOARD_STATUS.down;
+	
+	if(keyboard_check_released(vk_control))
+		CTRL = KEYBOARD_STATUS.up;
+	if(keyboard_check_released(vk_shift))
+		SHIFT = KEYBOARD_STATUS.up;
+	if(keyboard_check_released(vk_alt))
+		ALT = KEYBOARD_STATUS.up;	
+#endregion
+
+#region mouse wrap
+	MOUSE_WRAPPING = max(0, MOUSE_WRAPPING - 1);
+	
+	if(MOUSE_WRAP) {
+		var _pad = 2;
+		
+		if(mouse_mx < _pad) {
+			window_mouse_set(window_get_width() - _pad, mouse_my);
+			MOUSE_WRAPPING = 2;
+		} else if(mouse_mx > window_get_width() - _pad) {
+			window_mouse_set(_pad, mouse_my);
+			MOUSE_WRAPPING = 2;
+		}
+			
+		if(mouse_my < _pad) {
+			window_mouse_set(mouse_mx, window_get_height() - _pad);
+			MOUSE_WRAPPING = 2;
+		} else if(mouse_my > window_get_height() - _pad) {
+			window_mouse_set(mouse_mx, _pad);
+			MOUSE_WRAPPING = 2;
+		}
+	}
+	MOUSE_WRAP = false;
+#endregion
+
+#region depth
+	if(_use_depth != USE_DEPTH) {
+		_use_depth = USE_DEPTH;
+		surface_depth_disable(!USE_DEPTH);
+	}
+	
+	USE_DEPTH = false;
+#endregion
+
+#region cmd
+	var _resPath = program_directory + "in";
+	
+	if(file_exists(_resPath)) {
+		var cmd = file_read_all(_resPath);
+		cmd_submit(cmd);
+		file_delete(_resPath);
+	}
+#endregion
+
+//if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call * 100}%)");
+//if(!is_struct(FOCUS)) print(FOCUS);
+
+#event keyboard:vk_anykey 
+var trigger = false;
+
+KEYBOARD_PRESSED = vk_nokey;
+kb_time += DELTA_TIME;
+if(kb_hold && kb_time >= PREFERENCES.keyboard_repeat_speed) {
+	trigger = true;
+	kb_time = 0;
+} else if(!kb_hold && kb_time >= PREFERENCES.keyboard_repeat_start) {
+	trigger = true;
+	kb_time = 0;
+	kb_hold = true;
+}
+
+if(!trigger) exit;
+
+KEYBOARD_PRESSED = kb_hkey;
+
+if(keyboard_check(vk_backspace))
+	KEYBOARD_STRING = string_copy(KEYBOARD_STRING, 1, string_length(KEYBOARD_STRING) - 1);
+else
+	KEYBOARD_STRING += keyboard_lastchar;
+	
+if(WIDGET_CURRENT && is_instanceof(WIDGET_CURRENT, textInput))
+	WIDGET_CURRENT.onKey(KEYBOARD_PRESSED);
+
+#event other_game_start main directory, parameter
+//print("===== Game Start Begin =====");
+
+#region directory
+	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF;
+	DIRECTORY = "";
+	PRESIST_PREF = {
+		path: ""
+	};
+	
+	APP_DIRECTORY = env_user();
+	show_debug_message($"App directory: {APP_DIRECTORY}");
+	
+	directory_verify(APP_DIRECTORY);
+	
+	var perstPath = APP_DIRECTORY + "persistPreference.json"; 
+	if(file_exists_empty(perstPath)) {
+		struct_override(PRESIST_PREF, json_load_struct(perstPath));
+		DIRECTORY    = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
+	}
+	
+	if(DIRECTORY != "") {
+		var _ch = string_char_last(DIRECTORY);
+		if(_ch != "\\" && _ch != "/") DIRECTORY += "\\";
+	
+		show_debug_message($"Env directory: {DIRECTORY}");
+		var dir_valid = DIRECTORY != "" && directory_exists(DIRECTORY);
+		var tmp = file_text_open_write(DIRECTORY + "val_check.txt");
+	
+		if(tmp == -1) {
+			dir_valid = false;
+			show_message($"WARNING: Inaccessible main directory ({DIRECTORY}) this may be caused by non existing folder, or Pixel Composer has no permission to open the folder.");
+		} else {
+			file_text_close(tmp);
+			file_delete($"{DIRECTORY}val_check.txt");
+		}
+		
+		if(!dir_valid) {
+			show_debug_message("Invalid directory revert back to default %APPDATA%");
+			DIRECTORY = APP_DIRECTORY;
+		}
+	} else 
+		DIRECTORY = APP_DIRECTORY;
+	
+	directory_verify(DIRECTORY);
+	
+	APP_LOCATION = program_directory;
+	if(OS == os_macosx)
+		APP_LOCATION = string_replace(APP_LOCATION, "/Contents/MacOS/", "/Contents/Resources/");
+	if(string_pos("GameMakerStudio2\\Cache\\runtimes", APP_LOCATION))
+		APP_LOCATION = working_directory;
+	print($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
+#endregion
+
+#region Set up
+	var t = current_time;
+	PREF_LOAD();
+	
+	var dir  = string(DIRECTORY) + "log";
+	directory_verify(dir);
+	
+	log_clear();
+	log_newline();
+	log_message("SESSION", "Begin");
+	log_message("DIRECTORY", DIRECTORY);
+	
+	PREF_APPLY();
+	var t0   = get_timer();
+	var t    = get_timer();
+	var _lua = PROGRAM_ARGUMENTS._lua;
+	
+				  __initKeys()
+				  __initPatreon();              log_message("SESSION", $"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { __initTheme();                log_message("SESSION", $"> init Theme         | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { loadFonts();                  log_message("SESSION", $"> init Font          | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initProject();              log_message("SESSION", $"> init Project       | complete in {get_timer() - t}");    t = get_timer(); }
+	
+	if(!IS_CMD) { __initAction();               log_message("SESSION", $"> init Action        | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initSurfaceFormat();        log_message("SESSION", $"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { __initCollection();           log_message("SESSION", $"> init Collection    | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initAssets();               log_message("SESSION", $"> init Assets        | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initPresets();              log_message("SESSION", $"> init Presets       | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initFontFolder();           log_message("SESSION", $"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer(); }
+	if(_lua)    { __initLua();                  log_message("SESSION", $"> init Lua           | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initNodeData();             log_message("SESSION", $"> init NodeData      | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initNodes();                log_message("SESSION", $"> init Nodes         | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { __initSteamUGC();             log_message("SESSION", $"> init SteamUGC      | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initAddon();                log_message("SESSION", $"> init Addon         | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initPalette();              log_message("SESSION", $"> init Palette       | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initGradient();             log_message("SESSION", $"> init Gradient      | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initPen();					log_message("SESSION", $"> init Pen           | complete in {get_timer() - t}");    t = get_timer(); }
+    
+    if(!IS_CMD) { loadAddon();                  log_message("SESSION", $"> init Addons        | complete in {get_timer() - t}");    t = get_timer(); }
+    
+    if(!IS_CMD) { LOAD_SAMPLE();                log_message("SESSION", $"> init sample        | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { INIT_FOLDERS();               log_message("SESSION", $"> init folders       | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { RECENT_LOAD();                log_message("SESSION", $"> init recents       | complete in {get_timer() - t}");    t = get_timer(); }
+    
+	log_message("SESSION", $">> Initialization complete in {get_timer() - t0}");
+	
+	if(!IS_CMD) { 
+		__initPanel();
+		
+		if(file_exists_empty("icon.png"))
+			file_copy("icon.png", DIRECTORY + "icon.png");
+	
+		var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
+		shell_execute_async("assoc", cmd);
+	
+		var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
+		shell_execute_async("assoc", cmd);
+	}
+	
+	directory_set_current_working(DIRECTORY);
+#endregion
+
+#region lua
+	//lua_error_handler = _lua_error;
+#endregion
+
+//print("===== Game Start End =====");
+
+#event other_game_end 
+#region log
+	log_message("SESSION", "Ended");
+	PREF_SAVE();
+#endregion
+
+#region steam
+	if(STEAM_ENABLED)
+		steam_shutdown();
+#endregion
+
+#event other_room_start init
+PROJECT.modified = false;
+
+#region reset data
+	ds_stack_clear(UNDO_STACK);
+	ds_stack_clear(REDO_STACK);
+#endregion
+
+#event other_user10 Pen tablet event
+
+var e; e = tabletstuff_get_event_data();
+if (!ds_map_exists(e, "pointer_info_pen")) exit;
+PEN_USE = true;
+
+/*
+    See:
+        https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-pointer_pen_info
+    for flags and constants in the fields.
+*/
+
+var f = e[? "pointer_info_flags"];
+
+var pp = e[? "pointer_info_pen_pressure"];
+var pr = e[? "pointer_info_pen_rotation"];
+var px = e[? "pointer_info_pixel_location_x"] - window_get_x();
+var py = e[? "pointer_info_pixel_location_y"] - window_get_y();
+var pb = e[? "pointer_info_button_change_type"];
+
+var tx = e[? "pointer_info_pen_tilt_x"];
+var ty = e[? "pointer_info_pen_tilt_y"];
+
+PEN_X_DELTA = px - PEN_X;
+PEN_Y_DELTA = px - PEN_Y;
+
+//print($"{PEN_X_DELTA}, {PEN_Y_DELTA}");
+
+PEN_X = px;
+PEN_Y = py;
+
+PEN_PRESSURE = pp;
+
+var contact = bool(f & 0x4);
+if(PEN_CONTACT && !contact)
+	PEN_RELEASED = true;
+PEN_CONTACT = contact;
+
+var b1 = bool(f & 0x10); // POINTER_FLAG_FIRSTBUTTON
+var b2 = bool(f & 0x20); // POINTER_FLAG_SECONDBUTTON
+
+if(!PEN_RIGHT_CLICK && b2) PEN_RIGHT_PRESS   = true;
+if(PEN_RIGHT_CLICK && !b2) PEN_RIGHT_RELEASE = true;
+
+PEN_RIGHT_CLICK = b2;
+
+//print($"{PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
+
+
+#event async_image 
+if(!ds_map_exists(IMAGE_FETCH_MAP, async_load[? "id"])) exit;
+
+var _callback = IMAGE_FETCH_MAP[? async_load[? "id"]];
+_callback(async_load);
+
+#event async_http network
+if(ds_map_exists(global.FILE_LOAD_ASYNC, async_load[? "id"])) {
+	var cb = global.FILE_LOAD_ASYNC[? async_load[? "id"]];
+	var callback = cb[0];
+	var arguments = cb[1];
+	
+	callback(arguments);
+}
+
+asyncLoad(async_load);
+
+#event async_network 
+var _id = async_load[? "id"];
+
+if(_id == TCP_SERVER) {
+	var t = async_load[? "type"];
+	
+    if (t == network_type_connect) {
+        var sock = ds_map_find_value(async_load, "socket");
+		array_push(TCP_CLIENTS, sock);
+		log_console($"Client connected: {sock}");
+		
+	} else if (t == network_type_disconnect) {
+        var sock = ds_map_find_value(async_load, "socket");
+		array_remove(TCP_CLIENTS, sock);
+		log_console($"Client disconnected: {sock}");
+		
+    } else if (t == network_type_data) {
+		var _buffer  = ds_map_find_value(async_load, "buffer"); 
+		var cmd_type = buffer_read(_buffer, buffer_string );
+		cmd_submit(cmd_type);
+	}
+	
+	exit;
+}
+
+if(!ds_map_exists(PORT_MAP, _id)) exit;
+var nodeTarget = PORT_MAP[? _id];
+nodeTarget.asyncPackets(async_load);
+
+#event async_steam 
+var ev_id = async_load[? "id"];
+var ev_type = async_load[? "event_type"];
+
+if(string(ev_id) == string(STEAM_UGC_ITEM_ID) && ev_type == "ugc_create_item") {
+	STEAM_UGC_PUBLISH_ID = async_load[? "published_file_id"];
+	STEAM_UGC_UPDATE_HANDLE = steam_ugc_start_item_update(STEAM_APP_ID, STEAM_UGC_PUBLISH_ID);
+	
+	steam_ugc_set_item_title(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.name);
+	steam_ugc_set_item_description(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.description);
+	steam_ugc_set_item_visibility(STEAM_UGC_UPDATE_HANDLE, ugc_visibility_public);
+	
+	var tgs = array_clone(STEAM_UGC_ITEM_FILE.meta.tags);
+	switch(STEAM_UGC_TYPE) {
+		case STEAM_UGC_FILE_TYPE.collection :	array_insert_unique(tgs, 0, "Collection");	break;
+		case STEAM_UGC_FILE_TYPE.project :		array_insert_unique(tgs, 0, "Project");		break;
+		case STEAM_UGC_FILE_TYPE.node_preset :	array_insert_unique(tgs, 0, "Node preset");	break;
+	}
+	
+	array_push_unique(tgs, VERSION_STRING);
+	
+	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
+	steam_ugc_set_item_preview(STEAM_UGC_UPDATE_HANDLE, TEMPDIR + "steamUGCthumbnail.png");
+	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, DIRECTORY + "steamUGC");
+	
+	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, "Initial upload");
+	exit;
+}
+
+if(string(ev_id) == string(STEAM_UGC_SUBMIT_ID)) {
+	STEAM_UGC_ITEM_UPLOADING = false;
+	
+	var type = "";
+	switch(STEAM_UGC_TYPE) {
+		case STEAM_UGC_FILE_TYPE.collection :	type = "Collection";	break;
+		case STEAM_UGC_FILE_TYPE.project :		type = "Project";		break;
+		case STEAM_UGC_FILE_TYPE.node_preset :	type = "Node preset";	break;
+	}
+	
+	if(async_load[? "result"] == ugc_result_success) {
+		if(STEAM_UGC_UPDATE) {
+			log_message("WORKSHOP", type + " updated", THEME.workshop_update);
+			PANEL_MENU.setNotiIcon(THEME.workshop_update);
+		} else {
+			log_message("WORKSHOP", type + " uploaded", THEME.workshop_upload);
+			PANEL_MENU.setNotiIcon(THEME.workshop_upload);
+		}
+		
+		STEAM_SUB_ID = steam_ugc_subscribe_item(STEAM_UGC_PUBLISH_ID);
+		exit;
+	} 
+	
+	switch(async_load[? "result"]) { #region error
+		case   2: log_warning("WORKSHOP", "Generic failure.");    break;
+		case   3: log_warning("WORKSHOP", "Your Steam client doesn't have a connection to the back-end.");    break;
+		case   5: log_warning("WORKSHOP", "Password/ticket is invalid."); break;
+		case   6: log_warning("WORKSHOP", "The user is logged in elsewhere.");    break;
+		case   7: log_warning("WORKSHOP", "Protocol version is incorrect.");  break;
+		case   8: log_warning("WORKSHOP", "A parameter is incorrect.");   break;
+		case   9: log_warning("WORKSHOP", "File was not found."); break;
+		case  10: log_warning("WORKSHOP", "Called method is busy - action not taken.");  break;
+		case  11: log_warning("WORKSHOP", "Called object was in an invalid state."); break;
+		case  12: log_warning("WORKSHOP", "The name was invalid.");  break;
+		case  13: log_warning("WORKSHOP", "The email was invalid."); break;
+		case  14: log_warning("WORKSHOP", "The name is not unique.");    break;
+		case  15: log_warning("WORKSHOP", "Access is denied.");  break;
+		case  16: log_warning("WORKSHOP", "Operation timed out.");   break;
+		case  17: log_warning("WORKSHOP", "The user is VAC2 banned.");   break;
+		case  18: log_warning("WORKSHOP", "Account not found."); break;
+		case  19: log_warning("WORKSHOP", "The Steam ID was invalid.");  break;
+		case  20: log_warning("WORKSHOP", "The requested service is currently unavailable.");    break;
+		case  21: log_warning("WORKSHOP", "The user is not logged on."); break;
+		case  22: log_warning("WORKSHOP", "Request is pending, it may be in process or waiting on third party.");    break;
+		case  23: log_warning("WORKSHOP", "Encryption or Decryption failed.");   break;
+		case  24: log_warning("WORKSHOP", "Insufficient privilege.");    break;
+		case  25: log_warning("WORKSHOP", "Too much of a good thing.");  break;
+		case  26: log_warning("WORKSHOP", "Access has been revoked (used for revoked guest passes.)");   break;
+		case  27: log_warning("WORKSHOP", "License/Guest pass the user is trying to access is expired.");    break;
+		case  28: log_warning("WORKSHOP", "Guest pass has already been redeemed by account, cannot be used again."); break;
+		case  29: log_warning("WORKSHOP", "The request is a duplicate and the action has already occurred in the past, ignored this time."); break;
+		case  30: log_warning("WORKSHOP", "All the games in this guest pass redemption request are already owned by the user."); break;
+		case  31: log_warning("WORKSHOP", "IP address not found.");  break;
+		case  32: log_warning("WORKSHOP", "Failed to write change to the data store.");  break;
+		case  33: log_warning("WORKSHOP", "Failed to acquire access lock for this operation.");  break;
+		case  34: log_warning("WORKSHOP", "The logon session has been replaced.");   break;
+		case  35: log_warning("WORKSHOP", "Failed to connect."); break;
+		case  36: log_warning("WORKSHOP", "The authentication handshake has failed.");   break;
+		case  37: log_warning("WORKSHOP", "There has been a generic IO failure.");   break;
+		case  38: log_warning("WORKSHOP", "The remote server has disconnected.");    break;
+		case  39: log_warning("WORKSHOP", "Failed to find the shopping cart requested.");    break;
+		case  40: log_warning("WORKSHOP", "A user blocked the action."); break;
+		case  41: log_warning("WORKSHOP", "The target is ignoring sender."); break;
+		case  42: log_warning("WORKSHOP", "Nothing matching the request found.");    break;
+		case  43: log_warning("WORKSHOP", "The account is disabled.");   break;
+		case  44: log_warning("WORKSHOP", "This service is not accepting content changes right now.");   break;
+		case  45: log_warning("WORKSHOP", "Account doesn't have value, so this feature isn't available.");   break;
+		case  46: log_warning("WORKSHOP", "Allowed to take this action, but only because requester is admin.");  break;
+		case  47: log_warning("WORKSHOP", "A Version mismatch in content transmitted within the Steam protocol.");   break;
+		case  48: log_warning("WORKSHOP", "The current CM can't service the user making a request, user should try another.");   break;
+		case  49: log_warning("WORKSHOP", "You are already logged in elsewhere, this cached credential login has failed.");  break;
+		case  50: log_warning("WORKSHOP", "The user is logged in elsewhere. (Use k_EResultLoggedInElsewhere instead!)"); break;
+		case  51: log_warning("WORKSHOP", "Long running operation has suspended/paused. (eg. content download.)");   break;
+		case  52: log_warning("WORKSHOP", "Operation has been canceled, typically by user. (eg. a content download.)");  break;
+		case  53: log_warning("WORKSHOP", "Operation canceled because data is ill formed or unrecoverable.");    break;
+		case  54: log_warning("WORKSHOP", "Operation canceled - not enough disk space.");    break;
+		case  55: log_warning("WORKSHOP", "The remote or IPC call has failed."); break;
+		case  56: log_warning("WORKSHOP", "Password could not be verified as it's unset server side.");  break;
+		case  57: log_warning("WORKSHOP", "External account (PSN, Facebook...) is not linked to a Steam account.");  break;
+		case  58: log_warning("WORKSHOP", "PSN ticket was invalid.");    break;
+		case  59: log_warning("WORKSHOP", "External account (PSN, Facebook...) is already linked to some other account, must explicitly request to replace/delete the link first."); break;
+		case  60: log_warning("WORKSHOP", "The sync cannot resume due to a conflict between the local and remote files.");   break;
+		case  61: log_warning("WORKSHOP", "The requested new password is not allowed."); break;
+		case  62: log_warning("WORKSHOP", "New value is the same as the old one. This is used for secret question and answer."); break;
+		case  63: log_warning("WORKSHOP", "Account login denied due to 2nd factor authentication failure."); break;
+		case  64: log_warning("WORKSHOP", "The requested new password is not legal.");   break;
+		case  65: log_warning("WORKSHOP", "Account login denied due to auth code invalid."); break;
+		case  66: log_warning("WORKSHOP", "Account login denied due to 2nd factor auth failure - and no mail has been sent.");   break;
+		case  67: log_warning("WORKSHOP", "The users hardware does not support Intel's Identity Protection Technology (IPT).");  break;
+		case  68: log_warning("WORKSHOP", "Intel's Identity Protection Technology (IPT) has failed to initialize."); break;
+		case  69: log_warning("WORKSHOP", "Operation failed due to parental control restrictions for current user.");    break;
+		case  70: log_warning("WORKSHOP", "Facebook query returned an error.");  break;
+		case  71: log_warning("WORKSHOP", "Account login denied due to an expired auth code.");  break;
+		case  72: log_warning("WORKSHOP", "The login failed due to an IP restriction."); break;
+		case  73: log_warning("WORKSHOP", "The current users account is currently locked for use. This is likely due to a hijacking and pending ownership verification.");   break;
+		case  74: log_warning("WORKSHOP", "The logon failed because the accounts email is not verified.");   break;
+		case  75: log_warning("WORKSHOP", "There is no URL matching the provided values.");  break;
+		case  76: log_warning("WORKSHOP", "Bad Response due to a Parse failure, missing field, etc.");   break;
+		case  77: log_warning("WORKSHOP", "The user cannot complete the action until they re-enter their password.");    break;
+		case  78: log_warning("WORKSHOP", "The value entered is outside the acceptable range."); break;
+		case  79: log_warning("WORKSHOP", "Something happened that we didn't expect to ever happen.");   break;
+		case  80: log_warning("WORKSHOP", "The requested service has been configured to be unavailable.");   break;
+		case  81: log_warning("WORKSHOP", "The files submitted to the CEG server are not valid.");   break;
+		case  82: log_warning("WORKSHOP", "The device being used is not allowed to perform this action.");   break;
+		case  83: log_warning("WORKSHOP", "The action could not be complete because it is region restricted.");  break;
+		case  84: log_warning("WORKSHOP", "Temporary rate limit exceeded, try again later, different from k_EResultLimitExceeded which may be permanent.");  break;
+		case  85: log_warning("WORKSHOP", "Need two-factor code to login."); break;
+		case  86: log_warning("WORKSHOP", "The thing we're trying to access has been deleted."); break;
+		case  87: log_warning("WORKSHOP", "Login attempt failed, try to throttle response to possible attacker.");   break;
+		case  88: log_warning("WORKSHOP", "Two factor authentication (Steam Guard) code is incorrect."); break;
+		case  89: log_warning("WORKSHOP", "The activation code for two-factor authentication (Steam Guard) didn't match.");  break;
+		case  90: log_warning("WORKSHOP", "The current account has been associated with multiple partners.");    break;
+		case  91: log_warning("WORKSHOP", "The data has not been modified.");    break;
+		case  92: log_warning("WORKSHOP", "The account does not have a mobile device associated with it.");  break;
+		case  93: log_warning("WORKSHOP", "The time presented is out of range or tolerance.");   break;
+		case  94: log_warning("WORKSHOP", "SMS code failure - no match, none pending, etc.");    break;
+		case  95: log_warning("WORKSHOP", "Too many accounts access this resource.");    break;
+		case  96: log_warning("WORKSHOP", "Too many changes to this account.");  break;
+		case  97: log_warning("WORKSHOP", "Too many changes to this phone.");    break;
+		case  98: log_warning("WORKSHOP", "Cannot refund to payment method, must use wallet.");  break;
+		case  99: log_warning("WORKSHOP", "Cannot send an email.");  break;
+		case 100: log_warning("WORKSHOP", "Can't perform operation until payment has settled.");    break;
+		case 101: log_warning("WORKSHOP", "The user needs to provide a valid captcha.");    break;
+		case 102: log_warning("WORKSHOP", "A game server login token owned by this token's owner has been banned.");    break;
+		case 103: log_warning("WORKSHOP", "Game server owner is denied for some other reason such as account locked, community ban, vac ban, missing phone, etc."); break;
+		case 104: log_warning("WORKSHOP", "The type of thing we were requested to act on is invalid."); break;
+		case 105: log_warning("WORKSHOP", "The IP address has been banned from taking this action.");   break;
+		case 106: log_warning("WORKSHOP", "This Game Server Login Token (GSLT) has expired from disuse; it can be reset for use."); break;
+		case 107: log_warning("WORKSHOP", "user doesn't have enough wallet funds to complete the action");  break;
+		case 108: log_warning("WORKSHOP", "There are too many of this thing pending already");  break;
+	} #endregion
+}
+
+#event async_social Firebase
+
+if (async_load[? "type"] == "FirebaseFirestore_Collection_Query") {
+	PATREON_MAIL_CALLBACK(async_load);
+	exit;
+}
+
+#event async_system 
+var ev_id   = async_load[? "id"];
+var ev_type = async_load[? "event_type"];
+
+if(ev_type == "file_drop") {
+	dropping = async_load[?"filename"];
+	array_push(drop_path, dropping);
+}
+
+#event draw_gui init
+if(winMan_isMinimized()) exit;
+
+_MOUSE_BLOCK = MOUSE_BLOCK;
+MOUSE_BLOCK  = false;
+
+if(APP_SURF_OVERRIDE) {
+	APP_SURF      = surface_verify(APP_SURF,      WIN_W, WIN_H);
+	PRE_APP_SURF  = surface_verify(PRE_APP_SURF,  WIN_W, WIN_H);
+	POST_APP_SURF = surface_verify(POST_APP_SURF, WIN_W, WIN_H);
+
+	surface_set_target(APP_SURF);
+}
+
+draw_clear(COLORS.bg);
+
+#region widget scroll
+	if(!WIDGET_TAB_BLOCK) {
+		if(keyboard_check_pressed(vk_tab)) {
+			if(key_mod_press(SHIFT)) widget_previous();
+			else                     widget_next();
+		}
+		
+		if(keyboard_check_pressed(vk_enter))
+			widget_trigger();
+		
+		if(keyboard_check_pressed(vk_escape))
+			widget_clear();
+	}
+	
+	WIDGET_TAB_BLOCK = false;
+#endregion
+
+#region register UI element
+	WIDGET_ACTIVE = [];
+#endregion
+
+#region panels
+	if(PANEL_MAIN == 0) resetPanel();
+	
+	var surf = surface_get_target();
+	try {
+		PANEL_MAIN.draw();
+	} catch(e) { 
+		while(surface_get_target() != surf)
+			surface_reset_target();
+		
+		noti_warning(exception_print(e));
+	}
+	
+	panelDraw();
+#endregion
+
+#region notes
+	for( var i = 0, n = array_length(PROJECT.notes); i < n; i++ )
+		PROJECT.notes[i].draw();
+#endregion
+
+#region window
+	winManDraw();
+#endregion
+
+if(APP_SURF_OVERRIDE) { #region
+	surface_reset_target();
+	draw_surface(POST_APP_SURF, 0, 0);
+	
+	surface_set_target(PRE_APP_SURF);
+		draw_surface(APP_SURF, 0, 0);
+	surface_reset_target();
+	
+	surface_set_target(POST_APP_SURF);
+		draw_surface(APP_SURF, 0, 0);
+	surface_reset_target();
+} #endregion
+
+#event draw_gui_end tooltip filedrop
+if(winMan_isMinimized()) exit;
+
+#region tooltip
+	if(is_struct(TOOLTIP)) {
+		if(struct_has(TOOLTIP, "drawTooltip"))
+			TOOLTIP.drawTooltip();
+			
+	} else if(is_array(TOOLTIP)) {
+		var content = TOOLTIP[0];
+		var type    = TOOLTIP[1];
+			
+		if(is_method(content)) content = content();
+			
+		switch(type) {
+			case VALUE_TYPE.float   :
+			case VALUE_TYPE.integer : 
+			case VALUE_TYPE.text    :
+			case VALUE_TYPE.struct  :
+			case VALUE_TYPE.path    :
+				draw_tooltip_text(string_real(content));
+				break;
+				
+			case VALUE_TYPE.boolean :
+				draw_tooltip_text(printBool(content));
+				break;
+				
+			case VALUE_TYPE.curve :
+				draw_tooltip_text("[" + __txt("Curve Object") + "]");
+				break;
+				
+			case VALUE_TYPE.color : 
+				draw_tooltip_color(content);
+				break;
+				
+			case VALUE_TYPE.gradient :
+				draw_tooltip_gradient(content);
+				break;
+				
+			case VALUE_TYPE.d3object :
+				draw_tooltip_text("[" + __txt("3D Object") + "]");
+				break;
+				
+			case VALUE_TYPE.object :
+				draw_tooltip_text("[" + __txt("Object") + "]");
+				break;
+				
+			case VALUE_TYPE.surface :
+				draw_tooltip_surface(content);
+				break;
+				
+			case VALUE_TYPE.rigid :
+				draw_tooltip_text("[" + __txt("Rigidbody Object") + " (id: " + string(content[$ "object"]) + ")]");
+				break;
+				
+			case VALUE_TYPE.particle :
+				var txt = "[" + 
+					__txt("Particle Object") + 
+					" (size: " + string(array_length(content)) + ") " + 
+					"]";
+				draw_tooltip_text(txt);
+				break;
+				
+			case VALUE_TYPE.pathnode :
+				draw_tooltip_text("[" + __txt("Path Object") + "]");
+				break;
+				
+			case VALUE_TYPE.sdomain :
+				draw_tooltip_text("[" + __txt("Domain") + " (id: " + string(content) + ")]");
+				break;
+				
+			case VALUE_TYPE.strands :
+				var txt = __txt("Strands Object");
+				if(is_struct(content))
+					txt += " (strands: " + string(array_length(content.hairs)) + ")";
+				draw_tooltip_text("[" + txt + "]");
+				break;
+				
+			case VALUE_TYPE.mesh :
+				var txt = __txt("Mesh Object");
+				if(is_struct(content))
+					txt += " (triangles: " + string(array_length(content.triangles)) + ")";
+				draw_tooltip_text("[" + txt + "]");
+				break;
+				
+			case VALUE_TYPE.d3vertex :
+				var txt = __txt("3D Vertex");
+				txt += " (groups: " + string(array_length(content)) + ")";
+				draw_tooltip_text("[" + txt + "]");
+				break;
+				
+			case VALUE_TYPE.buffer :
+				draw_tooltip_buffer(content);
+				break;
+				
+			case "sprite" :
+				draw_tooltip_sprite(content);
+				break;
+				
+			default :
+				var tt = "";
+				if(is_struct(content)) tt = $"[{instanceof(content)}] {content}";
+				else                   tt = string(content);
+				
+				draw_tooltip_text(tt);
+		} 
+	} else if(TOOLTIP != "")
+		draw_tooltip_text(TOOLTIP);
+	TOOLTIP = "";
+#endregion
+
+#region dragging
+	if(DRAGGING != noone) {
+		switch(DRAGGING.type) {
+			case "Color" :
+				draw_sprite_stretched_ext(THEME.color_picker_box, 1, mouse_mx + ui(-16), mouse_my + ui(-16), ui(32), ui(32), DRAGGING.data, 0.5);
+				break;
+				
+			case "Palette" :
+				drawPalette(DRAGGING.data, mouse_mx - ui(64), mouse_my - ui(12), ui(128), ui(24), 0.5);
+				break;
+				
+			case "Gradient" :
+				DRAGGING.data.draw(mouse_mx - ui(64), mouse_my - ui(12), ui(128), ui(24), 0.5);
+				break;
+				
+			case "Bool" :
+				draw_set_alpha(0.5);
+				draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
+				draw_text_bbox({ xc: mouse_mx, yc: mouse_my, w: ui(128), h: ui(24) }, __txt(DRAGGING.data? "True" : "False"));
+				draw_set_alpha(1);
+				break;
+				
+			case "Asset" :
+			case "Project" :
+			case "Collection" :
+				if(DRAGGING.data.spr) {
+					var ss = ui(48) / max(sprite_get_width(DRAGGING.data.spr), sprite_get_height(DRAGGING.data.spr))
+					draw_sprite_ext(DRAGGING.data.spr, 0, mouse_mx + ui(8), mouse_my + ui(8), ss, ss, 0, c_white, 0.5);
+				}
+				break;
+				
+			default:
+				draw_set_alpha(0.5);
+				draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
+				draw_text_bbox({ xc: mouse_mx, yc: mouse_my, w: ui(128), h: ui(24) }, DRAGGING.data);
+				draw_set_alpha(1);
+		}
+		
+		if(mouse_release(mb_left)) 
+			DRAGGING = noone;
+	}
+#endregion
+
+#region safe mode
+	if(PROJECT.safeMode) {
+		draw_sprite_stretched_ext(THEME.ui_panel_active, 0, 0, 0, WIN_W, WIN_H, COLORS._main_value_negative, 1);
+		draw_set_text(f_h1, fa_right, fa_bottom, COLORS._main_value_negative);
+		draw_set_alpha(0.25);
+		draw_text(WIN_W - ui(16), WIN_H - ui(8), __txtx("safe_mode", "SAFE MODE"));
+		draw_set_alpha(1);
+	}
+#endregion
+
+#region draw gui top
+	PANEL_MAIN.drawGUI();
+	
+	if(NODE_DROPPER_TARGET != noone) {
+		draw_sprite_ui(THEME.node_dropper, 0, mouse_x + ui(20), mouse_y + ui(20));
+		if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN))
+			NODE_DROPPER_TARGET = noone;
+		NODE_DROPPER_TARGET_CAN = true;
+	} else	
+		NODE_DROPPER_TARGET_CAN = false;
+		
+	panelDisplayDraw();
+#endregion
+
+#region debug
+	if(global.FLAG[$ "hover_element"]) {
+		draw_set_text(f_p0, fa_right, fa_bottom, COLORS._main_text);
+		if(HOVERING_ELEMENT)
+			draw_text(WIN_W, WIN_H, $"[{instanceof(HOVERING_ELEMENT)}]");
+	}
+#endregion
+
+#region frame
+	draw_set_color(merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.95));
+	draw_rectangle(1, 1, WIN_W - 2, WIN_H - 2, true);
+#endregion
+
+#event keypress:vk_anykey 
+kb_hkey = keyboard_key == 0? keyboard_lastkey : keyboard_key;
+kb_time = 0;
+kb_hold = false;
+
+KEYBOARD_PRESSED = kb_hkey;
+
+if(keyboard_check(vk_backspace))
+	KEYBOARD_STRING  = string_copy(KEYBOARD_STRING, 1, string_length(KEYBOARD_STRING) - 1);
+else
+	KEYBOARD_STRING += keyboard_lastchar;
+	
+if(KEYBOARD_PRESSED == -1) {
+	for( var i = 0, n = array_length(global.KEYS_VK); i < n; i++ ) {
+		if(keyboard_check(global.KEYS_VK[i]))
+			KEYBOARD_PRESSED = global.KEYS_VK[i];
+	}
+}
+
+#event keyrelease:vk_anykey 
+kb_time = 0;
+kb_hold = false;
+keyboard_lastchar = "";
+
+kb_hkey = vk_nokey;
+KEYBOARD_PRESSED = vk_nokey;

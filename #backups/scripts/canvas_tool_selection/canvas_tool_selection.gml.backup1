@@ -1,4 +1,4 @@
-// 2024-04-15 19:18:37
+// 2024-04-18 09:09:57
 function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 	
 	self.selector = selector;
@@ -230,15 +230,18 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 				selection_sy = pos_y;
 				selection_mx = mouse_cur_x;
 				selection_my = mouse_cur_y;
+				
 			}
 		}
 		
 		if(key_press(vk_delete)) {
 			is_selected = false;
 			surface_free(selection_surface);
-		}
-		
-		if(key_press(ord("C"), MOD_KEY.ctrl)) copySelection();
+			
+		} else if(key_press(vk_escape)) {
+			apply();
+			
+		} else if(key_press(ord("C"), MOD_KEY.ctrl)) copySelection();
 	} #endregion
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region

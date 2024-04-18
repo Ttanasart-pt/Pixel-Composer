@@ -22,12 +22,8 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	surface_reset_shader();
 	
 	static destroy = function() {
-		noti_warning("Selected node has no surface output.");
-		
 		if(applySelection) canvas.tool_selection.apply();
 		canvas.nodeTool = noone;
-		
-		surface_free_safe(maskedSurface);
 		
 		cleanUp();
 	}
@@ -35,12 +31,25 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	static cleanUp = function() {
 		surface_free_safe(targetSurface);
 		surface_free_safe(maskedSurface);
-		nodeObject.destroy();
+		
+		if(is_struct(nodeObject)) {
+			if(is_instanceof(nodeObject, Node))
+				nodeObject.destroy();
+				
+			else {
+				var keys = struct_get_names(nodeObject);
+				for (var i = 0, n = array_length(keys); i < n; i++) 
+					if(is_instanceof(nodeObject[$ keys[i]], Node))
+						nodeObject[$ keys[i]].destroy();
+			}
+		}
+		
 	}
 	
 	nodeObject = node.build(0, 0);
 	
 	if(nodeObject == noone || !is_instanceof(nodeObject, Node)) {
+		noti_warning("Not tools only allows a single node.");
 		destroy();
 		return;
 	}
@@ -65,6 +74,7 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	}
 	
 	if(outputJunction == noone) {
+		noti_warning("Selected node has no surface output.");
 		destroy();
 		return;
 	}

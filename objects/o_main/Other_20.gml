@@ -21,6 +21,9 @@ var pb = e[? "pointer_info_button_change_type"];
 var tx = e[? "pointer_info_pen_tilt_x"];
 var ty = e[? "pointer_info_pen_tilt_y"];
 
+PEN_X_DELTA = px - PEN_X;
+PEN_Y_DELTA = px - PEN_Y;
+
 PEN_X = px;
 PEN_Y = py;
 

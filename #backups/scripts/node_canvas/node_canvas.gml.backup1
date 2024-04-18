@@ -1,4 +1,4 @@
-// 2024-04-16 14:16:53
+// 2024-04-18 10:49:51
 function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Canvas";
 	color	= COLORS.node_blend_canvas;
@@ -215,10 +215,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_attribute.drawLayer = 0;
 		tool_attribute.pickColor = c_white;
-		tool_drawLayer_edit      = new buttonGroup( [ THEME.canvas_draw_layer, THEME.canvas_draw_layer, THEME.canvas_draw_layer ], function(val) { tool_attribute.drawLayer = val; });
+		tool_drawLayer_edit      = new buttonGroup( [ THEME.canvas_draw_layer, THEME.canvas_draw_layer, THEME.canvas_draw_layer ], function(val) { tool_attribute.drawLayer = val; })
+										.setTooltips( [ "Draw on top", "Draw behind", "Draw inside" ] );
 		
 		tool_attribute.mirror = [ false, false, false ];
-		tool_mirror_edit      = new checkBoxGroup( THEME.canvas_mirror, function(ind, val) { tool_attribute.mirror[ind] = val; });
+		tool_mirror_edit      = new checkBoxGroup( THEME.canvas_mirror, function(ind, val) { tool_attribute.mirror[ind] = val; })
+										.setTooltips( [ "Toggle diagonal", "", "" ] );
 		
 		tool_settings          = [ [ "", tool_channel_edit,   "channel",   tool_attribute ], 
 								   [ "", tool_drawLayer_edit, "drawLayer", tool_attribute ],
@@ -513,12 +515,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		surface_clear(drawing_surface);
 	} #endregion
 	
-	function surface_store_buffers(index = preview_index) { #region
+	static surface_store_buffers = function(index = preview_index) { #region
 		for( var i = 0; i < attributes.frames; i++ )
 			surface_store_buffer(i);
 	} #endregion
 	
-	function surface_store_buffer(index = preview_index) { #region
+	static surface_store_buffer = function(index = preview_index) { #region
 		if(index >= attributes.frames) return;
 		
 		buffer_delete(canvas_buffer[index]);
@@ -817,6 +819,42 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				shader_set_f("dimension", _sw, _sh);
 				draw_surface_ext_safe(preview_draw_mask, 0, 0, 1, 1, 0, c_white, 1);
 			shader_reset();
+		
+			draw_set_color(COLORS._main_accent);
+			if(tool_selection.is_selected) {
+				var _spx = tool_selection.selection_position[0];
+				var _spy = tool_selection.selection_position[1];
+				var _spw = tool_selection.selection_size[0];
+				var _sph = tool_selection.selection_size[1];
+				
+				var _x0 = _x + _spx * _s;
+				var _x1 = _x + (_spx + _spw) * _s;
+				var _xc = _x + (_spx + _spw / 2) * _s;
+				
+				var _y0 = _y + _spy * _s;
+				var _y1 = _y + (_spy + _sph) * _s;
+				var _yc = _y + (_spy + _sph / 2) * _s;
+				
+				if(tool_attribute.mirror[1]) draw_line(_xc, _y0, _xc, _y1);
+				if(tool_attribute.mirror[2]) draw_line(_x0, _yc, _x1, _yc);
+				
+			} else {
+				var _x0 = _x;
+				var _x1 = _x + _dim[0] * _s;
+				var _xc = _x + _dim[0] / 2 * _s;
+				
+				var _y0 = _y;
+				var _y1 = _y + _dim[1] * _s;
+				var _yc = _y + _dim[1] / 2 * _s;
+				
+				if(tool_attribute.mirror[0] == false) {
+					if(tool_attribute.mirror[1]) draw_line(_xc, _y0, _xc, _y1);
+					if(tool_attribute.mirror[2]) draw_line(_x0, _yc, _x1, _yc);
+				} else {
+					if(tool_attribute.mirror[1]) draw_line(_x0, _y1, _x1, _y0);
+					if(tool_attribute.mirror[2]) draw_line(_x0, _y0, _x1, _y1);
+				}
+			}
 			
 			if(_tool) _tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
@@ -916,8 +954,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				outputs[| 0].setValue(output_surface);
 		}
 	} #endregion
-	
-	static getPreviewValues = function() { return nodeTool == noone || nodeTool.applySelection? output_surface : noone; }
 	
 	static doSerialize = function(_map) { #region
 		surface_store_buffers();

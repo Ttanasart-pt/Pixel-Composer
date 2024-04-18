@@ -1,3 +1,4 @@
+// 2024-04-18 08:59:03
 function checkBoxGroup(sprs, _onClick) : widget() constructor {
 	self.sprs = sprs;
 	self.size = sprite_get_number(sprs);

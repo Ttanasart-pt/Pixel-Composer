@@ -1,4 +1,4 @@
-// 2024-04-14 12:48:00
+// 2024-04-18 12:06:16
 function canvas_brush() constructor {
 	brush_sizing    = false;
 	brush_sizing_s  = 0;
