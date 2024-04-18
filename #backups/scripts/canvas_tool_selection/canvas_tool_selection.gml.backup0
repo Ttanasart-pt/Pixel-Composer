@@ -1,4 +1,4 @@
-// 2024-04-18 14:17:33
+// 2024-04-18 14:19:06
 function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 	
 	self.selector = selector;

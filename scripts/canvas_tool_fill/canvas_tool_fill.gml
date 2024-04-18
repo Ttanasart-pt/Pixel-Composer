@@ -8,7 +8,7 @@ function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _thr		= tool_attribute.thres;
-		var _fill_type	= tool_attribute.fill8;
+		var _fill_type	= tool_attribute.fillType;
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
@@ -23,6 +23,7 @@ function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 				switch(_fill_type) {
 					case 0 : canvas_flood_fill_scanline(_canvas_surface, mouse_cur_x, mouse_cur_y, _thr, false); break;
 					case 1 : canvas_flood_fill_scanline(_canvas_surface, mouse_cur_x, mouse_cur_y, _thr, true);  break;
+					case 2 : canvas_flood_fill_all(_canvas_surface, mouse_cur_x, mouse_cur_y, _thr);  break;
 				}
 			surface_reset_target();
 			

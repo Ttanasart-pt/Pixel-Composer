@@ -1505,8 +1505,10 @@ function Panel_Preview() : PanelContent() constructor {
 						tolw = ui(40);
 						if(wdg.side_button != noone) tolw += tolh + ui(8);
 						break;
-						
+					
+					case "buttonGroup":
 					case "checkBoxGroup" : tolw = tolh * wdg.size;	break;
+					
 					case "checkBox" :	   tolw = tolh;				break;
 					case "scrollBox" :     tolw = ui(96);			break;
 					case "buttonClass" :   tolw = wdg.text == ""? tolh : tolw; break;
@@ -1518,8 +1520,8 @@ function Panel_Preview() : PanelContent() constructor {
 				
 				wdg.drawParam(params);
 				
-				tolx	  += tolw + ui(8) + (nme != "") * ui(8);
-				tol_max_w += tolw + ui(8) + (nme != "") * ui(8);
+				tolx	  += tolw + ui(8);
+				tol_max_w += tolw + ui(8);
 			}
 			
 			tol_max_w = max(0, tol_max_w - w);			

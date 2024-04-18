@@ -1,13 +1,15 @@
 function buttonGroup(_data, _onClick) : widget() constructor {
 	data    = _data;
 	onClick = _onClick;
+	size    = array_length(data);
 	
 	display_button = false;
 	buttonSpr      = [ THEME.button_left, THEME.button_middle, THEME.button_right ];
 	fColor         = COLORS._main_text;
 	
-	current_selecting = 0;
 	tooltips  = [];
+	
+	current_selecting = 0;
 	
 	for(var i = 0; i < array_length(data); i++) 
 		buttons[i] = button(-1);

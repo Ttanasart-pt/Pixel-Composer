@@ -78,27 +78,41 @@ function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) { #r
 	buffer_delete(_ff_buff);
 } #endregion
 
-function canvas_fill(_x, _y, _surf, _thres) { #region
-	var _alp = _color_get_alpha(tool_attribute.color);
-		
-	var w = surface_get_width_safe(_surf);
-	var h = surface_get_height_safe(_surf);
-		
-	var _c1 = surface_getpixel_ext(_surf, _x, _y);
+function canvas_flood_fill_all(_surf, _x, _y, _thres) { #region
+	
+	var colorBase = surface_getpixel_ext(_surf, _x, _y);
+	var colorFill = colorBase;
+	
 	var thr = _thres * _thres;
+	
+	var _ff_w    = surface_get_width(_surf);
+	var _ff_h    = surface_get_height(_surf);
+	var _ff_buff = buffer_create(_ff_w * _ff_h * 4, buffer_fixed, 4);
+	buffer_get_surface(_ff_buff, _surf, 0);
+	buffer_seek(_ff_buff, buffer_seek_start, 0);
+	
+	var sel_x0 = surface_w;
+	var sel_y0 = surface_h;
+	var sel_x1 = 0;
+	var sel_y1 = 0;
+	
+	for (var i = 0; i < _ff_h; i++)
+	for (var j = 0; j < _ff_w; j++) {
 		
-	draw_set_alpha(_alp);
-	for( var i = 0; i < w; i++ ) {
-		for( var j = 0; j < h; j++ ) {
-			if(i == _x && j == _y) {
-				draw_point(i, j);
-				continue;
-			}
-				
-			var _c2 = surface_getpixel_ext(_surf, i, j);
-			if(color_diff(_c1, _c2, true) <= thr)
-				draw_point(i, j);
-		}
+		var c = buffer_read(_ff_buff, buffer_u32);
+		var d = color_diff(colorBase, c, true, true);
+		
+		if(d > _thres) continue;
+		draw_point(j, i);
+		
+		sel_x0 = min(sel_x0, j);
+		sel_y0 = min(sel_y0, i);
+		sel_x1 = max(sel_x1, j);
+		sel_y1 = max(sel_y1, i);
+		    
 	}
-	draw_set_alpha(1);
+	
+	buffer_delete(_ff_buff);
+	
+	return [ sel_x0, sel_y0, sel_x1, sel_y1 ];
 } #endregion

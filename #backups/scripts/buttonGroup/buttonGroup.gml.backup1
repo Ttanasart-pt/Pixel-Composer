@@ -1,4 +1,4 @@
-// 2024-04-18 08:59:10
+// 2024-04-18 15:00:45
 function buttonGroup(_data, _onClick) : widget() constructor {
 	data    = _data;
 	onClick = _onClick;
@@ -7,8 +7,10 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	buttonSpr      = [ THEME.button_left, THEME.button_middle, THEME.button_right ];
 	fColor         = COLORS._main_text;
 	
-	current_selecting = 0;
+	size = array_length(data);
 	tooltips  = [];
+	
+	current_selecting = 0;
 	
 	for(var i = 0; i < array_length(data); i++) 
 		buttons[i] = button(-1);

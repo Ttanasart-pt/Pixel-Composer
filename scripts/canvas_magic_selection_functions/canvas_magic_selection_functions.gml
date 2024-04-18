@@ -92,3 +92,42 @@ function canvas_magic_selection_scanline(_surf, _x, _y, _thres, _corner = false)
 	
 	return [ sel_x0, sel_y0, sel_x1, sel_y1 ];
 } #endregion
+
+function canvas_magic_selection_all(_surf, _x, _y, _thres) { #region
+	
+	var colorBase = surface_getpixel_ext(_surf, _x, _y);
+	var colorFill = colorBase;
+	
+	var thr = _thres * _thres;
+	
+	var _ff_w    = surface_get_width(_surf);
+	var _ff_h    = surface_get_height(_surf);
+	var _ff_buff = buffer_create(_ff_w * _ff_h * 4, buffer_fixed, 4);
+	buffer_get_surface(_ff_buff, _surf, 0);
+	buffer_seek(_ff_buff, buffer_seek_start, 0);
+	
+	var sel_x0 = surface_w;
+	var sel_y0 = surface_h;
+	var sel_x1 = 0;
+	var sel_y1 = 0;
+	
+	for (var i = 0; i < _ff_h; i++)
+	for (var j = 0; j < _ff_w; j++) {
+		
+		var c = buffer_read(_ff_buff, buffer_u32);
+		var d = color_diff(colorBase, c, true, true);
+		
+		if(d > _thres) continue;
+		draw_point(j, i);
+		
+		sel_x0 = min(sel_x0, j);
+		sel_y0 = min(sel_y0, i);
+		sel_x1 = max(sel_x1, j);
+		sel_y1 = max(sel_y1, i);
+		    
+	}
+	
+	buffer_delete(_ff_buff);
+	
+	return [ sel_x0, sel_y0, sel_x1, sel_y1 ];
+} #endregion
