@@ -20,6 +20,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	slidable    = false;
 	sliding     = false;
+	slidePen    = false;
 	slide_delta = 0;
 	slide_int   = false;
 	slide_speed = 1 / 10;
@@ -510,33 +511,38 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				var _defval = toNumber(_current_text);
 				slider_def_val = _defval;
 				slider_cur_val = _defval;
-	
-				CURSOR_LOCK_X = mouse_mx;
-				CURSOR_LOCK_Y = mouse_my;
+				
+				slidePen = PEN_USE;
+				
+				if(!slidePen) {
+					CURSOR_LOCK_X = mouse_mx;
+					CURSOR_LOCK_Y = mouse_my;
+				}
 				
 				sliding  = 2;
 			}
 			
 			if(sliding == 2) {
-				MOUSE_BLOCK = true;
-				CURSOR_LOCK = true;
+				if(!slidePen)
+					CURSOR_LOCK = true;
 
-				if(mouse_check_button_pressed(mb_right)) {
+				if(mouse_press(mb_right)) {
 					_input_text = string_real(slider_def_val);
 					sliding = 0;
 					apply();
 					deactivate();
-	
+					
 					UNDO_HOLDING = false;
 					
 				} else {
+					MOUSE_BLOCK = true;
 					var _s   = slide_speed;
 					
-					var _mdx = PEN_USE? PEN_X_DELTA : window_mouse_get_delta_x();
-					var _mdy = PEN_USE? PEN_Y_DELTA : window_mouse_get_delta_y();
+					var _mdx = slidePen? PEN_X_DELTA : window_mouse_get_delta_x();
+					var _mdy = slidePen? PEN_Y_DELTA : window_mouse_get_delta_y();
 					
 					var _dx  = abs(_mdx) > abs(_mdy)? _mdx : -_mdy;
-
+					
 					if(key_mod_press(CTRL) && !slide_snap) _s *= 10;
 					if(key_mod_press(ALT))  _s /= 10;
 
@@ -694,11 +700,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 				
 				if(slidable && mouse_press(mb_left, active)) {
-					sliding  = 1;
+					sliding     = 1;
 					slide_delta = 0;
-					
-					slide_mx = _m[0];
-					slide_my = _m[1];
 				} 
 			
 			} else if(!hide)

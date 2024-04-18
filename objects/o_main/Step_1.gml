@@ -63,6 +63,9 @@ _HOVERING_ELEMENT = noone;
 	PEN_RIGHT_PRESS   = false;
 	PEN_RIGHT_RELEASE = false;
 	
+	PEN_X_DELTA = 0;
+	PEN_Y_DELTA = 0;
+	
 	if(!IS_CMD) tabletstuff_perform_event(id, ev_other, ev_user10);
 	
 	//print($"{PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");

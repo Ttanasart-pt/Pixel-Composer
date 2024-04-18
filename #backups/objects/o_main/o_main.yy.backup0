@@ -1,4 +1,4 @@
-// 2024-04-18 11:59:25
+// 2024-04-18 13:01:11
 #event properties (no comments/etc. here are saved)
 parent_index = -1;
 persistent = true;
@@ -653,6 +653,9 @@ _HOVERING_ELEMENT = noone;
 	PEN_RIGHT_PRESS   = false;
 	PEN_RIGHT_RELEASE = false;
 	
+	PEN_X_DELTA = 0;
+	PEN_Y_DELTA = 0;
+	
 	if(!IS_CMD) tabletstuff_perform_event(id, ev_other, ev_user10);
 	
 	//print($"{PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
@@ -1042,7 +1045,6 @@ PROJECT.modified = false;
 
 var e; e = tabletstuff_get_event_data();
 if (!ds_map_exists(e, "pointer_info_pen")) exit;
-PEN_USE = true;
 
 /*
     See:
@@ -1062,10 +1064,12 @@ var tx = e[? "pointer_info_pen_tilt_x"];
 var ty = e[? "pointer_info_pen_tilt_y"];
 
 PEN_X_DELTA = px - PEN_X;
-PEN_Y_DELTA = px - PEN_Y;
+PEN_Y_DELTA = py - PEN_Y;
 
 PEN_X = px;
 PEN_Y = py;
+
+// print($"{PEN_X} | {PEN_X_DELTA}");
 
 PEN_PRESSURE = pp;
 
@@ -1083,7 +1087,7 @@ if(PEN_RIGHT_CLICK && !b2) PEN_RIGHT_RELEASE = true;
 PEN_RIGHT_CLICK = b2;
 
 //print($"{PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
-
+PEN_USE = true;
 
 #event async_image 
 if(!ds_map_exists(IMAGE_FETCH_MAP, async_load[? "id"])) exit;

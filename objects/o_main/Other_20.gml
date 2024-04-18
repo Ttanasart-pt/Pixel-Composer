@@ -2,7 +2,6 @@
 
 var e; e = tabletstuff_get_event_data();
 if (!ds_map_exists(e, "pointer_info_pen")) exit;
-PEN_USE = true;
 
 /*
     See:
@@ -22,10 +21,12 @@ var tx = e[? "pointer_info_pen_tilt_x"];
 var ty = e[? "pointer_info_pen_tilt_y"];
 
 PEN_X_DELTA = px - PEN_X;
-PEN_Y_DELTA = px - PEN_Y;
+PEN_Y_DELTA = py - PEN_Y;
 
 PEN_X = px;
 PEN_Y = py;
+
+// print($"{PEN_X} | {PEN_X_DELTA}");
 
 PEN_PRESSURE = pp;
 
@@ -43,3 +44,4 @@ if(PEN_RIGHT_CLICK && !b2) PEN_RIGHT_RELEASE = true;
 PEN_RIGHT_CLICK = b2;
 
 //print($"{PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
+PEN_USE = true;
