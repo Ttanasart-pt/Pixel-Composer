@@ -183,6 +183,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		draw_stack = ds_list_create();
 		
+		attributes.show_slope_check = true;
+		array_push(attributeEditors, "Display");
+		array_push(attributeEditors, [ "Slope Check", function() { return attributes.show_slope_check; }, new checkBox(function() { attributes.show_slope_check = !attributes.show_slope_check; }) ]);
 	#endregion
 	
 	#region ++++ tool object ++++

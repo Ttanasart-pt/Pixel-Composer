@@ -11,6 +11,12 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	mouse_pre_draw_x = undefined;
 	mouse_pre_draw_y = undefined;
 	
+	mouse_line_drawing = false;
+	mouse_line_x0 = 0;
+	mouse_line_y0 = 0;
+	mouse_line_x1 = 0;
+	mouse_line_y1 = 0;
+	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
@@ -78,9 +84,42 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(isEraser) draw_set_color(c_white);
 		
-		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) 
+		mouse_line_drawing = false;
+		
+		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) {
+			
 			canvas_draw_line_brush(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
-		else
+			mouse_line_drawing = true;
+			mouse_line_x0 = min(mouse_cur_x, mouse_pre_draw_x);
+			mouse_line_y0 = min(mouse_cur_y, mouse_pre_draw_y);
+			mouse_line_x1 = max(mouse_cur_x, mouse_pre_draw_x) + 1;
+			mouse_line_y1 = max(mouse_cur_y, mouse_pre_draw_y) + 1;
+			
+		} else
 			canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
 	}
+	
+	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		
+		if(mouse_line_drawing && !brush.brush_sizing && node.attributes.show_slope_check) {
+			var _x0 = _x + mouse_line_x0 * _s;
+			var _y0 = _y + mouse_line_y0 * _s;
+			var _x1 = _x + mouse_line_x1 * _s;
+			var _y1 = _y + mouse_line_y1 * _s;
+			
+			var _w  = mouse_line_x1 - mouse_line_x0;
+			var _h  = mouse_line_y1 - mouse_line_y0;
+			var _as = max(_w, _h) % min(_w, _h) == 0;
+			
+			draw_set_color(_as? COLORS._main_value_positive : COLORS._main_accent);
+			draw_rectangle(_x0, _y0, _x1, _y1, true);
+			
+			draw_set_text(f_p3, fa_center, fa_top);
+			draw_text((_x0 + _x1) / 2, _y1 + 8, _w);
+			
+			draw_set_text(f_p3, fa_left, fa_center);
+			draw_text(_x1 + 8, (_y0 + _y1) / 2, _h);
+		}
+	}
+	
 }
