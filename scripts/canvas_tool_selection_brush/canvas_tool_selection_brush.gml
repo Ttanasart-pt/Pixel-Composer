@@ -27,7 +27,7 @@ function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(se
 			selection_mask = surface_verify(selection_mask, _dim[0], _dim[1]);
 			
 			surface_set_shader(selection_mask, noone);
-				canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y, true);
+				canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y, true);
 			surface_reset_shader();
 				
 			is_selecting = true;
@@ -48,8 +48,8 @@ function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(se
 			if(_move || !_1stp) {
 				surface_set_target(selection_mask);
 					BLEND_ADD
-					if(_1stp) canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y, true);
-					canvas_draw_line_size(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
+					if(_1stp) canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y, true);
+					canvas_draw_line_brush(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
 					BLEND_NORMAL
 				surface_reset_target();
 			}
@@ -86,6 +86,6 @@ function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(se
 	}
 	
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y);
+		canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
 	}
 }

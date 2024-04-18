@@ -1,4 +1,4 @@
-// 2024-04-18 09:09:57
+// 2024-04-18 13:48:56
 function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 	
 	self.selector = selector;
@@ -183,7 +183,7 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		surface_set_shader(_drawnSurface, sh_canvas_apply_draw);
 			shader_set_i("drawLayer", _drawLay);
 			shader_set_i("eraser",    0);
-			shader_set_f("channels",  node.tool_attribute.channel);
+			shader_set_f("channels",  1, 1, 1, 1);
 			shader_set_f("alpha",     1);
 			
 			shader_set_surface("back", _canvas_surface);
@@ -224,7 +224,7 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 			var sel_w = surface_get_width_safe(selection_surface);
 			var sel_h = surface_get_height_safe(selection_surface);
 						
-			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h) && surface_get_pixel_ext(selection_mask, mouse_cur_x, mouse_cur_y)) {
+			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h)) {
 				is_select_drag = true;
 				selection_sx = pos_x;
 				selection_sy = pos_y;

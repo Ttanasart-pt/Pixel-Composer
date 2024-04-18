@@ -542,7 +542,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			tool_attribute.pickColor = surface_get_pixel(getCanvasSurface(), _x, _y);
 	} #endregion
 	
-	function apply_draw_surface() { #region
+	function apply_draw_surface(_applyAlpha = true) { #region
 		var _can = getCanvasSurface();
 		var _drw = drawing_surface;
 		var _dim = attributes.dimension;
@@ -610,7 +610,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			shader_set_i("drawLayer", tool_attribute.drawLayer);
 			shader_set_i("eraser",    isUsingTool("Eraser"));
 			shader_set_f("channels",  tool_attribute.channel);
-			shader_set_f("alpha",     _color_get_alpha(tool_attribute.color));
+			shader_set_f("alpha",     _applyAlpha? _color_get_alpha(tool_attribute.color) : 1);
 			shader_set_f("mirror",    tool_attribute.mirror);
 			shader_set_color("pickColor", tool_attribute.pickColor);
 			
@@ -732,7 +732,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		#endregion
 		
-		draw_set_color(tool_attribute.color);
+		var _alp = _color_get_alpha(tool_attribute.color);
+		
+		draw_set_color(isUsingTool("Eraser")? c_white : tool_attribute.color);
+		draw_set_alpha(1);
 		
 		if(_tool) { #region tool step
 			
@@ -766,11 +769,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 		} #endregion
 		
-		draw_set_alpha(1);
-		
 		#region preview
-			var _alp = _color_get_alpha(tool_attribute.color);
-			
 			if(tool_selection.is_selected) tool_selection.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			if(_tool) _tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
@@ -800,13 +799,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				draw_set_color(tool_attribute.color);
+				
 				if(brush.brush_sizing) 
-					canvas_draw_point_size(brush, brush.brush_sizing_dx, brush.brush_sizing_dy);
+					canvas_draw_point_brush(brush, brush.brush_sizing_dx, brush.brush_sizing_dy);
 				else if(_tool)
 					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					
+				draw_set_alpha(1);
 			surface_reset_shader();
 				
-			draw_surface_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, isUsingTool("Eraser")? c_red : c_white, isUsingTool("Eraser")? 0.2 : _alp);
+			draw_surface_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, isUsingTool("Eraser")? c_red : c_white, isUsingTool("Eraser")? .2 : _alp);
 			
 			surface_set_target(preview_draw_mask);
 				DRAW_CLEAR

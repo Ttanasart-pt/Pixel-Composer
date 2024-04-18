@@ -1,11 +1,11 @@
-// 2024-04-16 09:31:58
+// 2024-04-18 13:17:35
 enum COLOR_SELECTOR_MODE {
 	hue,
 	value
 }
 
 function Panel_Color() : PanelContent() constructor {
-	title = __txt("Color");
+	title   = __txt("Color");
 	padding = 8;
 	
 	w = ui(320);
@@ -13,32 +13,37 @@ function Panel_Color() : PanelContent() constructor {
 	
 	mode = COLOR_SELECTOR_MODE.hue;
 	
-	hue = 1;
-	sat = 1;
-	val = 1;
-	color = c_black;
+	hue   = 1;
+	sat   = 1;
+	val   = 1;
+	alp   = 1;
+	color = cola(c_black, 1);
 	
 	drag_con = false;
 	drag_sel = false;
 	
 	colors = [];
 	
+	alpha_slider = slider(0, 1, 0.01, function(val) { alp = val; setHSV(); })
+	
 	static setColor = function(color) {
 		self.color = color;
-		hue = color_get_hue(color) / 255;
+		hue = color_get_hue(color)        / 255;
 		sat = color_get_saturation(color) / 255;
-		val = color_get_value(color) / 255;
+		val = color_get_value(color)      / 255;
+		alp = color_get_alpha(color)      / 255;
 		
 		if(COLORS_GLOBAL_SET != noone)
 			COLORS_GLOBAL_SET(color);
 	}
 	
-	static setHSV = function(h = hue, s = sat, v = val) {
+	static setHSV = function(h = hue, s = sat, v = val, a = alp) {
 		hue = h;
 		sat = s;
 		val = v;
+		alp = a;
 		
-		color = make_color_hsv(h * 255, s * 255, v * 255);
+		color = make_color_hsva(h * 255, s * 255, v * 255, a * 255);
 		
 		if(COLORS_GLOBAL_SET != noone)
 			COLORS_GLOBAL_SET(color);
@@ -59,11 +64,13 @@ function Panel_Color() : PanelContent() constructor {
 			var c = COLORS_GLOBAL_GET();
 			if(c != color) setColor(c);
 		}
-			
+		
+		var alp_h = ui(20);
+		
 		var cont_x = ui(padding);
 		var cont_y = ui(padding);
-		var cont_w = w - ui(padding + padding + ui(16 + 8));
-		var cont_h = h - ui(padding + padding + ui(24 + 8));
+		var cont_w = w - ui(padding + padding) - ui(16 + 8);
+		var cont_h = h - ui(padding + padding) - ui(24 + 8 + 8) - alp_h;
 		
 		shader_set(sh_color_select_content);
 		shader_set_i("mode", mode);
@@ -81,6 +88,14 @@ function Panel_Color() : PanelContent() constructor {
 		shader_set_f("hue",  hue);
 		draw_sprite_stretched(s_fx_pixel, 0, sel_x, sel_y, sel_w, sel_h);
 		shader_reset();
+		
+		var alp_x = ui(padding);
+		var alp_y = cont_y + cont_h + ui(8);
+		var alp_w = w - ui(padding * 2);
+		
+		alpha_slider.setFocusHover(pFOCUS, pHOVER);
+		alpha_slider.setFont(f_p1);
+		alpha_slider.draw(alp_x, alp_y, alp_w, alp_h, alp, [ mx, my ]);
 		
 		if(drag_con) {
 			if(mode == 0) {
@@ -136,10 +151,10 @@ function Panel_Color() : PanelContent() constructor {
 		
 		for( var i = 0; i < amo; i++ ) {
 			var cx = ui(padding) + ui(24 + 4) * i;
-			var cy = cont_y + cont_h + ui(8);
+			var cy = h - ui(8 + 24);
 			
 			if(i == 0) {
-				draw_sprite_stretched_ext(s_ui_base_white, 0, cx + ui(4), cy + ui(4), ui(16), ui(16), color, 1);
+				draw_sprite_stretched_ext(s_ui_base_white, 0, cx + ui(4), cy + ui(4), ui(16), ui(16), color, color_get_alpha(color) / 255);
 				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, cx, cy, ui(24), ui(24), c_white, 0.5);
 				
 				if(pHOVER && point_in_rectangle(mx, my, cx, cy, cx + ui(24), cy + ui(24))) {

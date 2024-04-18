@@ -1,4 +1,4 @@
-// 2024-04-14 11:31:22
+// 2024-04-18 13:40:02
 varying vec2 v_vTexcoord;	
 varying vec4 v_vColour;
 
@@ -7,44 +7,38 @@ uniform int   eraser;
 uniform vec4  channels;
 uniform vec4  pickColor;
 uniform float alpha;
-uniform vec2  mirror;
 
 uniform sampler2D back;
 uniform sampler2D fore;
-
-vec4 blend( in vec4 bgc, in vec4 fgc ) {
-	vec4 _fgc = vec4(fgc);
-	
-	_fgc   *= channels;
-	_fgc.a *= alpha;
-	
-	if(eraser == 1) {
-		bgc -= _fgc;
-		return bgc;
-	}
-	
-	if(drawLayer == 1) {
-		vec4 temp = _fgc;
-		_fgc = bgc;
-		bgc = temp;
-	}
-	
-	if(drawLayer == 2) {
-		if(bgc != pickColor) return bgc;
-	}
-	
-	float al  = _fgc.a + bgc.a * (1. - _fgc.a);
-	vec4 _res = ((_fgc * _fgc.a) + (bgc * bgc.a * (1. - _fgc.a))) / al;
-	_res.a = al;
-	
-	return _res;
-}
 
 void main() {
 	vec4 bc = texture2D( back, v_vTexcoord );
 	vec4 fc = texture2D( fore, v_vTexcoord );
 	
-	vec4 res = blend(bc, fc);
+	fc   *= channels;
+	fc.a *= alpha;
+	
+	if(eraser == 1) {
+		bc -= fc;
+		gl_FragColor = bc;
+		return;
+	}
+	
+	gl_FragColor = bc;
+	
+	if(drawLayer == 1) {
+		vec4 temp = fc;
+		fc = bc;
+		bc = temp;
+	}
+	
+	if(drawLayer == 2) {
+		if(bc != pickColor) return;
+	}
+	
+	float al = fc.a + bc.a * (1. - fc.a);
+	vec4 res = ((fc * fc.a) + (bc * bc.a * (1. - fc.a))) / al;
+	res.a = al;
 	
 	gl_FragColor = res;
 }

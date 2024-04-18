@@ -34,10 +34,10 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 			surface_set_shader(drawing_surface, noone);
 			
 				if(shape == CANVAS_TOOL_SHAPE.rectangle)
-					canvas_draw_rect_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
+					canvas_draw_rect_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
 					
 				else if(shape == CANVAS_TOOL_SHAPE.ellipse)
-					canvas_draw_ellp_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
+					canvas_draw_ellp_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
 					
 			surface_reset_shader();
 				
@@ -60,15 +60,15 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 		if(!mouse_holding) {
-			canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y);
+			canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
 			return;
 		}
 		
 		if(shape == CANVAS_TOOL_SHAPE.rectangle)
-			canvas_draw_rect_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
+			canvas_draw_rect_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
 			
 		if(shape == CANVAS_TOOL_SHAPE.ellipse)
-			canvas_draw_ellp_size(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool); 
+			canvas_draw_ellp_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool); 
 	}
 	
 }

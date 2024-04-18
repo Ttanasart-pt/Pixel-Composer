@@ -1,5 +1,5 @@
-// 2024-04-18 12:09:16
-function canvas_draw_point_size(brush, _x, _y, _draw = false) { #region
+// 2024-04-18 13:37:35
+function canvas_draw_point_brush(brush, _x, _y, _draw = false) { #region
 	if(brush.brush_surface == noone) {
 			
 		if(brush.brush_size <= 1) 
@@ -25,7 +25,7 @@ function canvas_draw_point_size(brush, _x, _y, _draw = false) { #region
 	}
 } #endregion
 	
-function canvas_draw_line_size(brush, _x0, _y0, _x1, _y1, _draw = false, _cap = false) { #region 
+function canvas_draw_line_brush(brush, _x0, _y0, _x1, _y1, _draw = false, _cap = false) { #region 
 		
 	if(brush.brush_surface == noone) {
 			
@@ -48,8 +48,8 @@ function canvas_draw_line_size(brush, _x0, _y0, _x1, _y1, _draw = false, _cap = 
 		} else {
 			draw_line_width(_x0, _y0, _x1, _y1, brush.brush_size);
 			if(_cap) {
-				canvas_draw_point_size(brush, _x0, _y0, true);
-				canvas_draw_point_size(brush, _x1, _y1, true);
+				canvas_draw_point_brush(brush, _x0, _y0, true);
+				canvas_draw_point_brush(brush, _x1, _y1, true);
 			}
 		}
 			
@@ -67,7 +67,7 @@ function canvas_draw_line_size(brush, _x0, _y0, _x1, _y1, _draw = false, _cap = 
 				var _px = _x0 + st_x * _i;
 				var _py = _y0 + st_y * _i;
 					
-				canvas_draw_point_size(brush, _px, _py, _draw);
+				canvas_draw_point_brush(brush, _px, _py, _draw);
 					
 				brush.brush_next_dist = random_range(brush.brush_dist_min, brush.brush_dist_max);
 				_i   += brush.brush_next_dist;
@@ -79,25 +79,25 @@ function canvas_draw_line_size(brush, _x0, _y0, _x1, _y1, _draw = false, _cap = 
 			brush.brush_next_dist -= diss;
 			
 		if(brush.brush_dist_min == brush.brush_dist_max && brush.brush_dist_min == 1)
-			canvas_draw_point_size(brush, _x1, _y1, _draw);
+			canvas_draw_point_brush(brush, _x1, _y1, _draw);
 	}
 } #endregion
 	
-function canvas_draw_rect_size(brush, _x0, _y0, _x1, _y1, _fill) { #region
+function canvas_draw_rect_brush(brush, _x0, _y0, _x1, _y1, _fill) { #region
 	if(_x0 == _x1 && _y0 == _y1) {
-		canvas_draw_point_size(brush, _x0, _y0);
+		canvas_draw_point_brush(brush, _x0, _y0);
 		return;
 		
 	} else if(_x0 == _x1) {
-		canvas_draw_point_size(brush, _x0, _y0);
-		canvas_draw_point_size(brush, _x1, _y1);
-		canvas_draw_line_size(brush, _x0, _y0, _x0, _y1);
+		canvas_draw_point_brush(brush, _x0, _y0);
+		canvas_draw_point_brush(brush, _x1, _y1);
+		canvas_draw_line_brush(brush, _x0, _y0, _x0, _y1);
 		return;
 		
 	} else if(_y0 == _y1) {
-		canvas_draw_point_size(brush, _x0, _y0);
-		canvas_draw_point_size(brush, _x1, _y1);
-		canvas_draw_line_size(brush, _x0, _y0, _x1, _y0);
+		canvas_draw_point_brush(brush, _x0, _y0);
+		canvas_draw_point_brush(brush, _x1, _y1);
+		canvas_draw_line_brush(brush, _x0, _y0, _x1, _y0);
 		return;
 	}
 		
@@ -111,28 +111,28 @@ function canvas_draw_rect_size(brush, _x0, _y0, _x1, _y1, _fill) { #region
 	if(brush.brush_size == 1 && brush.brush_surface == noone)
 		draw_rectangle(_min_x + 1, _min_y + 1, _max_x - 1, _may_y - 1, 1);
 	else {
-		canvas_draw_line_size(brush, _min_x, _min_y, _max_x, _min_y);
-		canvas_draw_line_size(brush, _min_x, _min_y, _min_x, _may_y);
-		canvas_draw_line_size(brush, _max_x, _may_y, _max_x, _min_y);
-		canvas_draw_line_size(brush, _max_x, _may_y, _min_x, _may_y);
+		canvas_draw_line_brush(brush, _min_x, _min_y, _max_x, _min_y);
+		canvas_draw_line_brush(brush, _min_x, _min_y, _min_x, _may_y);
+		canvas_draw_line_brush(brush, _max_x, _may_y, _max_x, _min_y);
+		canvas_draw_line_brush(brush, _max_x, _may_y, _min_x, _may_y);
 	}
 } #endregion
 	
-function canvas_draw_ellp_size(brush, _x0, _y0, _x1, _y1,  _fill) { #region
+function canvas_draw_ellp_brush(brush, _x0, _y0, _x1, _y1,  _fill) { #region
 	if(_x0 == _x1 && _y0 == _y1) {
-		canvas_draw_point_size(brush, _x0, _y0);
+		canvas_draw_point_brush(brush, _x0, _y0);
 		return;
 		
 	} else if(_x0 == _x1) {
-		canvas_draw_point_size(brush, _x0, _y0);
-		canvas_draw_point_size(brush, _x1, _y1);
-		canvas_draw_line_size(brush, _x0, _y0, _x0, _y1);
+		canvas_draw_point_brush(brush, _x0, _y0);
+		canvas_draw_point_brush(brush, _x1, _y1);
+		canvas_draw_line_brush(brush, _x0, _y0, _x0, _y1);
 		return;
 		
 	} else if(_y0 == _y1) {
-		canvas_draw_point_size(brush, _x0, _y0);
-		canvas_draw_point_size(brush, _x1, _y1);
-		canvas_draw_line_size(brush, _x0, _y0, _x1, _y0);
+		canvas_draw_point_brush(brush, _x0, _y0);
+		canvas_draw_point_brush(brush, _x1, _y1);
+		canvas_draw_line_brush(brush, _x0, _y0, _x1, _y0);
 		return;
 	}
 		
@@ -174,7 +174,7 @@ function canvas_draw_ellp_size(brush, _x0, _y0, _x1, _y1,  _fill) { #region
 		nx = round(cx + lengthdir_x(rx, 360 / samp * i));
 		ny = round(cy + lengthdir_y(ry, 360 / samp * i));
 				
-		if(i) canvas_draw_line_size(brush, ox, oy, nx, ny);
+		if(i) canvas_draw_line_brush(brush, ox, oy, nx, ny);
 				
 		ox = nx;
 		oy = ny;
@@ -200,7 +200,7 @@ function canvas_draw_curve_brush(brush, x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec
 		     3 * (_t1 * _t  * _t) * cy1 + 
 		     _t * _t * _t * y1;
 		     
-	     if(i) canvas_draw_line_size(brush, ox, oy, nx, ny, true, true);
+	     if(i) canvas_draw_line_brush(brush, ox, oy, nx, ny, true, true);
 		     
 		ox = nx;
 		oy = ny;

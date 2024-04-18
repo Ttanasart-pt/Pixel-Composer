@@ -24,7 +24,7 @@ function canvas_tool_draw_freeform(brush) : canvas_tool() constructor {
 	}
 	
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y);
+		canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
 	}
 	
 }

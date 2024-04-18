@@ -9,7 +9,7 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) { #region
 				
 			if(_draw) {
 				surface_set_target(drawing_surface);
-					canvas_draw_line_size(brush, round(mouse_pre_x - 0.5), round(mouse_pre_y - 0.5), round(_mmx - 0.5), round(_mmy - 0.5), true);
+					canvas_draw_line_brush(brush, round(mouse_pre_x - 0.5), round(mouse_pre_y - 0.5), round(_mmx - 0.5), round(_mmy - 0.5), true);
 				surface_reset_target();
 			}
 					
@@ -22,7 +22,7 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) { #region
 		if(mouse_release(mb_left)) {
 					
 			surface_set_target(drawing_surface);
-				canvas_draw_line_size(brush, _mmx, _mmy, freeform_shape[0].x, freeform_shape[0].y, true);
+				canvas_draw_line_brush(brush, _mmx, _mmy, freeform_shape[0].x, freeform_shape[0].y, true);
 			surface_reset_target();
 				
 			if(array_length(freeform_shape) > 3) {

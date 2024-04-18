@@ -29,13 +29,13 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		if(mouse_press(mb_left, active)) {
 				
 			surface_set_shader(drawing_surface, noone);
-				canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y, true);
+				canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y, true);
 			surface_reset_shader();
 				
 			mouse_holding = true;
 			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) { ///////////////// shift line
 				surface_set_shader(drawing_surface, noone, true, BLEND.alpha);
-					canvas_draw_line_size(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
+					canvas_draw_line_brush(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
 				surface_reset_shader();
 				mouse_holding = false;
 					
@@ -54,8 +54,8 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 				
 			if(_move || !_1stp) {
 				surface_set_shader(drawing_surface, noone, false, BLEND.alpha);
-					if(_1stp) canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y, true);
-					canvas_draw_line_size(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
+					if(_1stp) canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y, true);
+					canvas_draw_line_brush(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
 				surface_reset_shader();
 			}
 				
@@ -79,8 +79,8 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		if(isEraser) draw_set_color(c_white);
 		
 		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) 
-			canvas_draw_line_size(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
+			canvas_draw_line_brush(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 		else
-			canvas_draw_point_size(brush, mouse_cur_x, mouse_cur_y);
+			canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
 	}
 }
