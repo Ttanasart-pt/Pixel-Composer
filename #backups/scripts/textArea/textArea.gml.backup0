@@ -1,3 +1,4 @@
+// 2024-04-20 10:28:31
 enum TEXT_AREA_FORMAT {
 	_default,
 	codeLUA,

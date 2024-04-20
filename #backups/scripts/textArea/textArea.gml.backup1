@@ -1,3 +1,4 @@
+// 2024-04-20 10:27:46
 enum TEXT_AREA_FORMAT {
 	_default,
 	codeLUA,
@@ -1025,6 +1026,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				}
 			}
 		#endregion
+		
+		draw_set_color(c_white);
+		draw_circle(_x, _y, 16, false);
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _w, hh, COLORS._main_value_positive, 1);

@@ -1634,7 +1634,6 @@
     {"id":{"name":"surface_draw_functions","path":"scripts/surface_draw_functions/surface_draw_functions.yy",},},
     {"id":{"name":"surface_functions","path":"scripts/surface_functions/surface_functions.yy",},},
     {"id":{"name":"surface_get_palette","path":"scripts/surface_get_palette/surface_get_palette.yy",},},
-    {"id":{"name":"surface_valid","path":"scripts/surface_valid/surface_valid.yy",},},
     {"id":{"name":"surfaceBox","path":"scripts/surfaceBox/surfaceBox.yy",},},
     {"id":{"name":"testing_script","path":"scripts/testing_script/testing_script.yy",},},
     {"id":{"name":"text_file","path":"scripts/text_file/text_file.yy",},},

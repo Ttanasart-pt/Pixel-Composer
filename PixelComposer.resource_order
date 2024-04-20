@@ -1147,7 +1147,6 @@
     {"name":"surface_draw_functions","order":6,"path":"scripts/surface_draw_functions/surface_draw_functions.yy",},
     {"name":"surface_functions","order":4,"path":"scripts/surface_functions/surface_functions.yy",},
     {"name":"surface_get_palette","order":2,"path":"scripts/surface_get_palette/surface_get_palette.yy",},
-    {"name":"surface_valid","order":5,"path":"scripts/surface_valid/surface_valid.yy",},
     {"name":"surfaceBox","order":4,"path":"scripts/surfaceBox/surfaceBox.yy",},
     {"name":"text_file","order":5,"path":"scripts/text_file/text_file.yy",},
     {"name":"textArrayBox","order":1,"path":"scripts/textArrayBox/textArrayBox.yy",},
