@@ -1,3 +1,4 @@
+// 2024-04-20 09:03:18
 enum KEY_TYPE    { normal, adder }
 enum CURVE_TYPE  { linear, bezier, cut }
 enum DRIVER_TYPE { none, linear, wiggle, sine }

@@ -86,9 +86,7 @@ event_inherited();
 			
 			if(isHover) {
 				if(mouse_press(mb_left, interactable && sFOCUS)) {
-					palette = array_create(array_length(pal.palette));
-					for( var j = 0; j < array_length(pal.palette); j++ )
-						palette[j] = cola(pal.palette[j]);
+					palette = array_clone(pal.palette);
 					onApply(palette);
 					
 					index_selecting = 0;

@@ -587,9 +587,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_type == VALUE_TYPE.color) {
 			if(is_array(_value)) {
 				for( var i = 0, n = array_length(_value); i < n; i++ ) 
-					_value[i] = int64(cola(_value[i]));
+					_value[i] = cola(_value[i], _color_get_alpha(_value[i]));
 			} else 
-				_value = int64(cola(_value));
+				_value = cola(_value, _color_get_alpha(_value));
 		}
 		
 		key_inter   = CURVE_TYPE.linear;

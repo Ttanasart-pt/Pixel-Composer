@@ -2,7 +2,7 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Palette to Gradient";
 	w    = 96;
 	
-	inputs[| 0] = nodeValue("Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
+	inputs[| 0] = nodeValue("Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))
 		.setDisplay(VALUE_DISPLAY.palette)
 		.setVisible(true, true);
 	
