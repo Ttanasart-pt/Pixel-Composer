@@ -1,4 +1,4 @@
-// 2024-04-18 16:15:08
+// 2024-04-18 18:31:59
 function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Canvas";
 	color	= COLORS.node_blend_canvas;
