@@ -1,4 +1,4 @@
-// 2024-04-21 17:06:08
+// 2024-04-21 20:02:06
 function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Pin";
 	w = 32;
@@ -57,34 +57,32 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
-		isHovering = false;
-		var hover = noone;
+		
+		var _dval = PANEL_GRAPH.value_dragging;
+		var hover = _dval == noone || _dval.connect_type == JUNCTION_CONNECT.input? outputs[| 0] : inputs[| 0];
 		var xx	  = x * _s + _x;
 		var yy	  = y * _s + _y;
-		var hov   = PANEL_GRAPH.value_dragging; 
+		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
-		if(hov == noone && point_in_circle(_mx, _my, xx, yy, _s * 24)) { 
-			isHovering = true;
-			hover_scale_to = 1;
-		}
+		hover.drawJunction(_s, _mx, _my);
 		
-		if(outputs[| 0].drawJunction(_s, _mx, _my))
-			hover = outputs[| 0];
+		if(!isHovering) return noone;
 		
+		hover_scale_to = 1;
 		return hover;
 	} #endregion
 	
 	static drawNode = function(_x, _y, _mx, _my, _s) { #region
-		if(group != PANEL_GRAPH.getCurrentContext()) return;
+		// if(group != PANEL_GRAPH.getCurrentContext()) return;
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
 		hover_alpha = 0.5;
 		if(active_draw_index > -1) {
-			hover_alpha			= 1;
-			hover_scale_to		= 1;
-			active_draw_index	= -1;
+			hover_alpha		  =  1;
+			hover_scale_to	  =  1;
+			active_draw_index = -1;
 		}
 		
 		if(hover_scale > 0) {

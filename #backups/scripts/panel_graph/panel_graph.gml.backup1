@@ -1,3 +1,4 @@
+// 2024-04-21 19:33:07
 #region funtion calls
 	function __fnInit_Graph() {
 		__registerFunction("graph_add_node",			panel_graph_add_node);
@@ -1200,7 +1201,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
 					if(val) {
 						value_focus = val;
-						if(key_mod_press(SHIFT)) TOOLTIP = [ val.getValue(), val.type ];
+						if(key_mod_press(SHIFT))
+							TOOLTIP = [ val.getValue(), val.type ];
 					}
 				} catch(e) {
 					log_warning("NODE DRAW", exception_print(e));
