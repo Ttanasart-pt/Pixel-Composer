@@ -33,7 +33,7 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		}
 			
 		if(mouse_press(mb_left, active)) {
-				
+			
 			surface_set_shader(drawing_surface, noone);
 				canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y, true);
 			surface_reset_shader();
@@ -121,5 +121,4 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 			draw_text(_x1 + 8, (_y0 + _y1) / 2, _h);
 		}
 	}
-	
 }

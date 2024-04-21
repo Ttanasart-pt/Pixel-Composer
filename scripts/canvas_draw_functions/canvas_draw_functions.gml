@@ -18,7 +18,7 @@ function canvas_draw_point_brush(brush, _x, _y, _draw = false) { #region
 		var _r  = brush.brush_direction + angle_random_eval(brush.brush_rand_dir, brush.brush_seed);
 		var _p  = point_rotate(-_sw / 2, -_sh / 2, 0, 0, _r);
 			
-		draw_surface_ext_safe(brush.brush_surface, _x + _p[0], _y + _p[1], 1, 1, _r, draw_get_color(), draw_get_alpha());
+		draw_surface_ext_safe(brush.brush_surface, round(_x + _p[0]), round(_y + _p[1]), 1, 1, _r, draw_get_color(), draw_get_alpha());
 			
 		if(_draw) brush.brush_seed = irandom_range(100000, 999999);
 	}

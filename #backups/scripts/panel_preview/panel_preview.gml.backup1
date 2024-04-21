@@ -1,4 +1,4 @@
-// 2024-04-18 15:02:59
+// 2024-04-21 14:21:06
 #region funtion calls
 	function __fnInit_Preview() {
 		__registerFunction("preview_focus_content",				panel_preview_focus_content);
@@ -123,7 +123,8 @@ function Panel_Preview() : PanelContent() constructor {
 		toolbar_height = ui(40);
 		
 		tool_hovering     = false;
-		tool_side_drawing = false;
+		tool_side_draw_l  = false;
+		tool_side_draw_r  = false;
 		overlay_hovering  = false;
 		
 		sbChannel = new scrollBox([], function(index) { #region
@@ -571,9 +572,11 @@ function Panel_Preview() : PanelContent() constructor {
 		if(node != noone) bbox = node.getPreviewBoundingBox();
 		if(bbox == noone) bbox = BBOX().fromWH(0, 0, PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
 		
-		var ss = min((w - 32 - tool_side_drawing * 40) / bbox.w, (h - 32 - toolbar_height * 2) / bbox.h);
+		var tl = tool_side_draw_l * 40;
+		var tr = tool_side_draw_r * 40;
+		var ss = min((w - 32 - tl - tr) / bbox.w, (h - 32 - toolbar_height * 2) / bbox.h);
 		canvas_s = ss;
-		canvas_x = w / 2 - bbox.w * canvas_s / 2 - bbox.x0 * canvas_s + (tool_side_drawing * 40 / 2);
+		canvas_x = w / 2 - bbox.w * canvas_s / 2 - bbox.x0 * canvas_s + (tl - tr) / 2;
 		canvas_y = h / 2 - bbox.h * canvas_s / 2 - bbox.y0 * canvas_s;
 	} #endregion
 	
@@ -1117,7 +1120,7 @@ function Panel_Preview() : PanelContent() constructor {
 			preview_x_max = 0;
 			
 			if(array_length(pseq) > 1) {
-				var _xx = tool_side_drawing * ui(40);
+				var _xx = tool_side_draw_l * ui(40);
 				var xx  = _xx + preview_x + ui(8);
 				var yy  = h - toolbar_height - prev_size - ui(8);
 			
@@ -1195,7 +1198,8 @@ function Panel_Preview() : PanelContent() constructor {
 		var cy = canvas_y + _node.preview_y * canvas_s;
 		var _snx = 0, _sny = 0;
 		
-		tool_side_drawing = _node.tools != -1;
+		tool_side_draw_l = _node.tools != -1;
+		tool_side_draw_r = _node.rightTools != -1;
 		
 		if(_node.tools != -1 && point_in_rectangle(_mx, _my, 0, 0, toolbar_width, h)) {
 			isHover = false;

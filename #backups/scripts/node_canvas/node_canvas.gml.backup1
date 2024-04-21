@@ -1,4 +1,4 @@
-// 2024-04-20 08:26:31
+// 2024-04-21 14:28:39
 function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Canvas";
 	color	= COLORS.node_blend_canvas;
@@ -864,6 +864,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(_tool) _tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
+			canvas_draw_point_brush(brush, _x, _y, true);
 		#endregion
 		
 		var _x0 = _x;

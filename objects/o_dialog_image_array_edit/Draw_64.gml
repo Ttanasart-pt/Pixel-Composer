@@ -39,6 +39,7 @@ if !target exit;
 				array_push(arr, paths[i]);
 			
 			target.inputs[| 0].setValue(arr);
+			target.triggerRender();
 		}
 	}
 	

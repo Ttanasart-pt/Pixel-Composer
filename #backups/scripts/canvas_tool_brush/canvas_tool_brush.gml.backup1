@@ -1,4 +1,4 @@
-// 2024-04-18 15:43:04
+// 2024-04-21 14:13:22
 function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	self.brush = brush;
 	isEraser   = eraser;
@@ -102,7 +102,7 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	
 	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
-		if(mouse_line_drawing && !brush.brush_sizing) {
+		if(mouse_line_drawing && !brush.brush_sizing && node.attributes.show_slope_check) {
 			var _x0 = _x + mouse_line_x0 * _s;
 			var _y0 = _y + mouse_line_y0 * _s;
 			var _x1 = _x + mouse_line_x1 * _s;
@@ -122,5 +122,4 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 			draw_text(_x1 + 8, (_y0 + _y1) / 2, _h);
 		}
 	}
-	
 }
