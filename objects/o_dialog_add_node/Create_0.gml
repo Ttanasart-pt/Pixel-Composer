@@ -129,7 +129,7 @@ event_inherited();
 		if(!_node) return;
 		
 		if(is_instanceof(context, Node_Canvas)) {
-			context.nodeTool = new canvas_tool_node(context, _node);
+			context.nodeTool = new canvas_tool_node(context, _node).init();
 			return;
 		}
 		

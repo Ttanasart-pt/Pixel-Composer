@@ -22,7 +22,6 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 	mouse_pre_y = 0;
 	
 	function createSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) { #region
-		
 		if(is_selected)
 			apply();
 		else {
@@ -83,8 +82,7 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		var _nw = _x1 - _x0;
 		var _nh = _y1 - _y0;
 		
-		var _selection_surface = surface_create(_nw, _nh);
-		var _selection_mask    = surface_create(_nw, _nh);
+		var _selection_mask = surface_create(_nw, _nh);
 		
 		surface_set_target(_selection_mask);
 			DRAW_CLEAR
@@ -99,33 +97,8 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 			BLEND_NORMAL
 		surface_reset_target();
 		
-		surface_set_target(_selection_surface);
-			DRAW_CLEAR
-			draw_surface_safe(_canvas_surface, -_x0, -_y0);
-			
-			BLEND_MULTIPLY
-				draw_surface_safe(_selection_mask, 0, 0);
-			BLEND_NORMAL
-		surface_reset_target();
-		
-		surface_free(selection_surface);
-		surface_free(selection_mask);
-		
-		selection_surface = _selection_surface;
-		selection_mask    = _selection_mask; 
-		
-		node.storeAction();
-		surface_set_target(_canvas_surface);
-			gpu_set_blendmode(bm_subtract);
-			draw_surface_safe(selection_surface, _x0, _y0);
-			gpu_set_blendmode(bm_normal);
-		surface_reset_target();
-						
-		node.surface_store_buffer();
-						
-		selection_position = [ _x0, _y0 ];
-		selection_size     = [ _nw, _nh ];
-		is_selected = true;
+		createNewSelection(_selection_mask, _x0, _y0, _nw, _nh);
+		surface_free(_selection_mask);
 	} #endregion
 	
 	function createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) { #region
@@ -163,8 +136,9 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 	} #endregion
 	
 	function copySelection() { #region
-		var s = surface_encode(selection_surface);
-		clipboard_set_text(s);
+		var s = surface_encode(selection_surface, false);
+		s.position = selection_position;
+		clipboard_set_text(json_stringify(s));
 	} #endregion
 	
 	function apply() { #region
@@ -240,7 +214,7 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		} else if(key_press(vk_escape)) {
 			apply();
 			
-		} else if(key_press(ord("C"), MOD_KEY.ctrl)) copySelection();
+		}
 	} #endregion
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region

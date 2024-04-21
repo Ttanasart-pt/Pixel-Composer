@@ -1,4 +1,4 @@
-// 2024-04-14 12:39:09
+// 2024-04-21 15:41:27
 #region ==================================== DRAW ====================================
 
 	function draw_surface_safe(surface, _x = 0, _y = 0) { #region
@@ -572,10 +572,10 @@
 		return stringify? json_stringify(str) : str;
 	} #endregion
 
-	function surface_decode(struct) { #region
-		var buff = buffer_base64_decode(struct.buffer);
+	function surface_decode(_struct) { #region
+		var buff = buffer_base64_decode(_struct.buffer);
 		var buff = buffer_decompress(buff);
-		return surface_create_from_buffer(struct.width, struct.height, buff);
+		return surface_create_from_buffer(_struct.width, _struct.height, buff);
 	} #endregion
 
 	function surface_format_get_bytes(format) { #region

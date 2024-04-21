@@ -571,10 +571,10 @@
 		return stringify? json_stringify(str) : str;
 	} #endregion
 
-	function surface_decode(struct) { #region
-		var buff = buffer_base64_decode(struct.buffer);
+	function surface_decode(_struct) { #region
+		var buff = buffer_base64_decode(_struct.buffer);
 		var buff = buffer_decompress(buff);
-		return surface_create_from_buffer(struct.width, struct.height, buff);
+		return surface_create_from_buffer(_struct.width, _struct.height, buff);
 	} #endregion
 
 	function surface_format_get_bytes(format) { #region

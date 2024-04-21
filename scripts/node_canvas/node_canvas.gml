@@ -467,21 +467,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	function setCanvasSurface(surface, index = preview_index) { INLINE canvas_surface[index] = surface; }
 	
 	static storeAction = function() { #region
+		
 		var action = recordAction(ACTION_TYPE.custom, function(data) { 
-			is_selected = false;
+			if(tool_selection.is_selected) tool_selection.apply();
 			
 			var _canvas = surface_clone(getCanvasSurface(data.index));
 			
 			if(is_surface(data.surface))
-				setCanvasSurface(surface_clone(data.surface), data.index); 
+				setCanvasSurface(data.surface, data.index); 
 			surface_store_buffer(data.index); 
-			surface_free(data.surface);
 			
 			data.surface = _canvas;
-			data.index   = preview_index;
-		}, { surface: surface_clone(getCanvasSurface()), tooltip: "Modify canvas", index: preview_index });
+		}, { surface: surface_clone(getCanvasSurface(preview_index)), tooltip: $"Modify canvas {preview_index}", index: preview_index });
 		
-		action.clear_action = function(data) { surface_free_safe(data.surface); };
+		// action.clear_action = function(data) { surface_free_safe(data.surface); };
 	} #endregion
 	
 	static apply_surfaces = function() { #region
@@ -541,9 +540,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static tool_pick_color = function(_x, _y) { #region
 		if(tool_selection.is_selected)
-			tool_attribute.pickColor = surface_get_pixel(tool_selection.selection_surface, _x - tool_selection.selection_position[0], _y - tool_selection.selection_position[1]);
+			tool_attribute.pickColor = surface_get_pixel_ext(tool_selection.selection_surface, _x - tool_selection.selection_position[0], _y - tool_selection.selection_position[1]);
 		else
-			tool_attribute.pickColor = surface_get_pixel(getCanvasSurface(), _x, _y);
+			tool_attribute.pickColor = surface_get_pixel_ext(getCanvasSurface(), _x, _y);
 	} #endregion
 	
 	function apply_draw_surface(_applyAlpha = true) { #region
@@ -552,9 +551,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _dim = attributes.dimension;
 		var _tmp;
 		
-		storeAction();
-		
 		if(tool_selection.is_selected) {
+			
 			var _tmp = surface_create(surface_get_width(tool_selection.selection_mask), surface_get_height(tool_selection.selection_mask));
 			
 			var _spx = tool_selection.selection_position[0];
@@ -582,6 +580,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			_can = tool_selection.selection_surface;
 		} else {
+			storeAction();
+			
 			var _tmp = surface_create(_dim[0], _dim[1]);
 			
 			surface_set_target(_tmp);
@@ -616,7 +616,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			shader_set_f("channels",  tool_attribute.channel);
 			shader_set_f("alpha",     _applyAlpha? _color_get_alpha(tool_attribute.color) : 1);
 			shader_set_f("mirror",    tool_attribute.mirror);
-			shader_set_color("pickColor", tool_attribute.pickColor);
+			shader_set_color("pickColor", tool_attribute.pickColor, _color_get_alpha(tool_attribute.pickColor));
 			
 			shader_set_surface("back", _can);
 			shader_set_surface("fore", _tmp);
@@ -873,21 +873,37 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_rectangle(_x0, _y0, _x1 - 1, _y1 - 1, true);
 		draw_set_alpha(1);
 		
-		previewing = 1;
-		
-		if((_tool == noone || !_tool.mouse_holding) && key_press(ord("V"), MOD_KEY.ctrl)) { #region
-			var _str = json_try_parse(clipboard_get_text(), noone);
-		
-			if(is_struct(_str) && struct_has(_str, "buffer")) {
-				var _surf = surface_decode(_str);
+		#region hotkeys
+			if(key_press(ord("C"), MOD_KEY.ctrl) && tool_selection.is_selected) {
+				tool_selection.copySelection();
+				tool_selection.apply();
+			}
+			
+			if(key_press(ord("V"), MOD_KEY.ctrl) && (_tool == noone || !_tool.mouse_holding)) {
+				var _str = json_try_parse(clipboard_get_text(), noone);
 				
-				if(is_surface(_surf)) {
-					tool_selection.selection_surface  = _surf;
-					tool_selection.is_selected        = true;
-					tool_selection.selection_position = [ 0, 0 ];
+				if(is_struct(_str) && struct_has(_str, "buffer")) {
+					print(_str);
+					var _surf = surface_decode(_str);
+					
+					if(is_surface(_surf)) {
+						tool_selection.selection_surface  = _surf;
+						tool_selection.is_selected        = true;
+						
+						tool_selection.selection_position = [ 0, 0 ];
+						tool_selection.selection_size = [ surface_get_width(_surf), surface_get_height(_surf) ];
+						
+						if(key_mod_press(SHIFT)) {
+							var _sel_pos = struct_try_get(_str, "position", [ 0, 0 ]);
+							if(is_array(_sel_pos) && array_length(_sel_pos) == 2)
+								tool_selection.selection_position = _sel_pos;
+						}
+					}
 				}
 			}
-		} #endregion
+		#endregion
+		
+		previewing = 1;
 	} #endregion
 	
 	static step = function() { #region

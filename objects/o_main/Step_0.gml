@@ -22,11 +22,6 @@ if(PROJECT.active && !PROJECT.safeMode) { #region
 } #endregion
 
 #region hotkey
-	HOTKEY_MOD = 0;
-	if(CTRL  == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.ctrl;
-	if(SHIFT == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.shift;
-	if(ALT   == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.alt;
-	
 	if(!instance_exists(o_dialog_preference) && !HOTKEY_BLOCK) {
 		if(ds_map_exists(HOTKEYS, "")) {
 			var l = HOTKEYS[? ""];

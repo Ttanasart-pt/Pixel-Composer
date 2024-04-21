@@ -196,44 +196,35 @@ _HOVERING_ELEMENT = noone;
 #endregion
 
 #region modifiers
-	if(CTRL == KEYBOARD_STATUS.up)
-		CTRL = KEYBOARD_STATUS.idle;
-	if(SHIFT == KEYBOARD_STATUS.up)
-		SHIFT = KEYBOARD_STATUS.idle;
-	if(ALT == KEYBOARD_STATUS.up)
-		ALT = KEYBOARD_STATUS.idle;
+	if(CTRL  == KEYBOARD_STATUS.up) CTRL  = KEYBOARD_STATUS.idle;
+	if(SHIFT == KEYBOARD_STATUS.up) SHIFT = KEYBOARD_STATUS.idle;
+	if(ALT   == KEYBOARD_STATUS.up) ALT   = KEYBOARD_STATUS.idle;
 	
-	if(CTRL == KEYBOARD_STATUS.pressing && !keyboard_check(vk_control))
+	if(CTRL  == KEYBOARD_STATUS.pressing && !keyboard_check(vk_control))
 		CTRL = KEYBOARD_STATUS.up;
 	
 	if(SHIFT == KEYBOARD_STATUS.pressing && !keyboard_check(vk_shift))
 		SHIFT = KEYBOARD_STATUS.up;
 	
-	if(ALT == KEYBOARD_STATUS.pressing && !keyboard_check(vk_alt))
-		ALT = KEYBOARD_STATUS.up;
+	if(ALT   == KEYBOARD_STATUS.pressing && !keyboard_check(vk_alt))
+		ALT   = KEYBOARD_STATUS.up;
 	
-	if(CTRL == KEYBOARD_STATUS.down)
-		CTRL  = KEYBOARD_STATUS.pressing;
+	if(CTRL  == KEYBOARD_STATUS.down) CTRL  = KEYBOARD_STATUS.pressing;
+	if(SHIFT == KEYBOARD_STATUS.down) SHIFT = KEYBOARD_STATUS.pressing;
+	if(ALT   == KEYBOARD_STATUS.down) ALT   = KEYBOARD_STATUS.pressing;
 	
-	if(SHIFT == KEYBOARD_STATUS.down)
-		SHIFT = KEYBOARD_STATUS.pressing;
+	if(keyboard_check_pressed(vk_control)) CTRL  = KEYBOARD_STATUS.down;
+	if(keyboard_check_pressed(vk_shift))   SHIFT = KEYBOARD_STATUS.down;
+	if(keyboard_check_pressed(vk_alt))     ALT   = KEYBOARD_STATUS.down;
 	
-	if(ALT == KEYBOARD_STATUS.down)
-		ALT = KEYBOARD_STATUS.pressing;
+	if(keyboard_check_released(vk_control)) CTRL  = KEYBOARD_STATUS.up;
+	if(keyboard_check_released(vk_shift))   SHIFT = KEYBOARD_STATUS.up;
+	if(keyboard_check_released(vk_alt))     ALT   = KEYBOARD_STATUS.up;	
 	
-	if(keyboard_check_pressed(vk_control))
-		CTRL = KEYBOARD_STATUS.down;
-	if(keyboard_check_pressed(vk_shift))
-		SHIFT = KEYBOARD_STATUS.down;
-	if(keyboard_check_pressed(vk_alt))
-		ALT = KEYBOARD_STATUS.down;
-	
-	if(keyboard_check_released(vk_control))
-		CTRL = KEYBOARD_STATUS.up;
-	if(keyboard_check_released(vk_shift))
-		SHIFT = KEYBOARD_STATUS.up;
-	if(keyboard_check_released(vk_alt))
-		ALT = KEYBOARD_STATUS.up;	
+	HOTKEY_MOD = 0;
+	if(CTRL  == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.ctrl;
+	if(SHIFT == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.shift;
+	if(ALT   == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.alt;
 #endregion
 
 #region mouse wrap

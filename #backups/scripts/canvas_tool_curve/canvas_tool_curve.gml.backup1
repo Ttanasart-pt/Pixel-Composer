@@ -1,4 +1,4 @@
-// 2024-04-16 11:00:38
+// 2024-04-21 15:02:12
 function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 	self.brush = brush;
 	brush_resizable = true;
@@ -71,6 +71,8 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 		}
 		
 		if(mouse_press(mb_left, active)) {
+			recordAction(ACTION_TYPE.var_modify, self, [ array_clone(anchors), "anchors" ]);
+			
 			if(mouse_hovering[0] == noone) {
 				array_push(anchors, [ 0, 0, mouse_cur_x, mouse_cur_y, 0, 0 ]);
 				editing[0] = array_length(anchors) - 1;

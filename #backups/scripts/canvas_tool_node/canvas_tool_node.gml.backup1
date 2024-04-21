@@ -1,35 +1,19 @@
-// 2024-04-17 08:13:29
+// 2024-04-21 14:53:39
 function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	
 	self.canvas = canvas;
 	self.node   = node;
-	override = true;
+	override    = true;
 	
-	applySelection = canvas.tool_selection.is_selected;
-	
-	destiSurface  = applySelection? canvas.tool_selection.selection_surface : canvas.getCanvasSurface();
-	if(!is_surface(destiSurface)) {
-		canvas.nodeTool = noone;
-		return;
-	}
-	
-	sw = surface_get_width(destiSurface);
-	sh = surface_get_height(destiSurface);
-	targetSurface = surface_create(sw, sh);
-	maskedSurface = surface_create(sw, sh);
-	
-	surface_set_shader(targetSurface, noone);
-		draw_surface_safe(destiSurface);
-	surface_reset_shader();
+	applySelection = false;
 	
 	static destroy = function() {
 		if(applySelection) canvas.tool_selection.apply();
-		canvas.nodeTool = noone;
-		
 		cleanUp();
 	}
 	
 	static cleanUp = function() {
+		
 		surface_free_safe(targetSurface);
 		surface_free_safe(maskedSurface);
 		
@@ -47,37 +31,56 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 		
 	}
 	
-	nodeObject = node.build(0, 0);
-	
-	if(nodeObject == noone || !is_instanceof(nodeObject, Node)) {
-		noti_warning("Not tools only allows a single node.");
-		destroy();
-		return;
-	}
-	
-	inputJunction  = noone;
-	outputJunction = noone;
-	
-	for( var i = 0, n = ds_list_size(nodeObject.inputs); i < n; i++ ) {
-		var _in = nodeObject.inputs[| i];
-		if(_in.type == VALUE_TYPE.surface || _in.name == "Dimension") {
-			inputJunction = _in;
-			break;
+	function init() {
+		
+		applySelection = canvas.tool_selection.is_selected;
+		destiSurface   = applySelection? canvas.tool_selection.selection_surface : canvas.getCanvasSurface();
+		if(!is_surface(destiSurface))
+			return noone;
+		
+		sw = surface_get_width(destiSurface);
+		sh = surface_get_height(destiSurface);
+		targetSurface = surface_create(sw, sh);
+		maskedSurface = surface_create(sw, sh);
+		
+		surface_set_shader(targetSurface, noone);
+			draw_surface_safe(destiSurface);
+		surface_reset_shader();
+		
+		nodeObject = node.build(0, 0);
+		
+		if(nodeObject == noone || !is_instanceof(nodeObject, Node)) {
+			noti_warning("Not tools only allows a single node.");
+			destroy();
+			return noone;
 		}
-	}
-	
-	for( var i = 0, n = ds_list_size(nodeObject.outputs); i < n; i++ ) {
-		var _in = nodeObject.outputs[| i];
-		if(_in.type == VALUE_TYPE.surface) {
-			outputJunction = _in;
-			break;
+		
+		inputJunction  = noone;
+		outputJunction = noone;
+		
+		for( var i = 0, n = ds_list_size(nodeObject.inputs); i < n; i++ ) {
+			var _in = nodeObject.inputs[| i];
+			if(_in.type == VALUE_TYPE.surface || _in.name == "Dimension") {
+				inputJunction = _in;
+				break;
+			}
 		}
-	}
-	
-	if(outputJunction == noone) {
-		noti_warning("Selected node has no surface output.");
-		destroy();
-		return;
+		
+		for( var i = 0, n = ds_list_size(nodeObject.outputs); i < n; i++ ) {
+			var _in = nodeObject.outputs[| i];
+			if(_in.type == VALUE_TYPE.surface) {
+				outputJunction = _in;
+				break;
+			}
+		}
+		
+		if(outputJunction == noone) {
+			noti_warning("Selected node has no surface output.");
+			destroy();
+			return noone;
+		}
+		
+		return self;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,7 +118,6 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 		}
 		
 		PANEL_PREVIEW.tool_current = noone;
-		canvas.nodeTool = noone;
 		
 		cleanUp();
 	}

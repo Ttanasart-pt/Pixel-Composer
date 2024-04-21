@@ -1,4 +1,4 @@
-// 2024-04-16 11:36:08
+// 2024-04-21 14:51:29
 #event properties (no comments/etc. here are saved)
 parent_index = _p_dialog;
 uses_physics = false;
@@ -134,7 +134,7 @@ event_inherited();
 		if(!_node) return;
 		
 		if(is_instanceof(context, Node_Canvas)) {
-			context.nodeTool = new canvas_tool_node(context, _node);
+			context.nodeTool = new canvas_tool_node(context, _node).init();
 			return;
 		}
 		
