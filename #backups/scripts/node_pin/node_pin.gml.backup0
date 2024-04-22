@@ -1,4 +1,4 @@
-// 2024-04-21 20:02:06
+// 2024-04-22 13:04:19
 function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Pin";
 	w = 32;
@@ -64,12 +64,12 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var yy	  = y * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
-		hover.drawJunction(_s, _mx, _my);
+		var jhov = hover.drawJunction(_s, _mx, _my);
 		
 		if(!isHovering) return noone;
 		
 		hover_scale_to = 1;
-		return hover;
+		return jhov? hover : noone;
 	} #endregion
 	
 	static drawNode = function(_x, _y, _mx, _my, _s) { #region
@@ -86,10 +86,11 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		if(hover_scale > 0) {
-			draw_set_color(COLORS._main_accent);
-			draw_set_alpha(hover_alpha);
-			draw_circle_border(xx, yy, _s * hover_scale * 20, 2);
-			draw_set_alpha(1);
+			var _r = hover_scale * _s * 24;
+			shader_set(sh_node_circle);
+				shader_set_color("color", COLORS._main_accent, hover_alpha);
+				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
+			shader_reset();
 		}
 		
 		hover_scale    = lerp_float(hover_scale, hover_scale_to, 3);

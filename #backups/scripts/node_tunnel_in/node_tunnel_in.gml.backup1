@@ -1,3 +1,4 @@
+// 2024-04-22 13:07:55
 function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Tunnel In";
 	color = COLORS.node_blend_tunnel;
@@ -33,9 +34,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static checkDuplicate = function() { #region
 		var _key = getInputData(0);
-		var amo  = ds_map_size(TUNNELS_IN_MAP);
-		var k    = ds_map_find_first(TUNNELS_IN_MAP);
-		var dup  = false;
+		var amo = ds_map_size(TUNNELS_IN_MAP);
+		var k   = ds_map_find_first(TUNNELS_IN_MAP);
+		var dup = false;
 		
 		repeat(amo) {
 			if(k != node_id && TUNNELS_IN_MAP[? k] == _key)
