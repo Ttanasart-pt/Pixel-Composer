@@ -47,3 +47,24 @@ function draw_line_dashed_color(x0, y0, x1, y1, th, c0, c1, dash_distance = 8) {
 		oy = ny;
 	}
 }
+
+function draw_line_dotted(x0, y0, x1, y1, radius, shift, distanceMulp = 1) {
+	var dis = point_distance(x0, y0, x1, y1);
+	var dir = point_direction(x0, y0, x1, y1);
+	var dtd = radius * distanceMulp * 2;
+	var part = floor(dis / dtd);
+	
+	var dx = lengthdir_x(1, dir);
+	var dy = lengthdir_y(1, dir);
+	
+	var nd, nx, ny;
+	var rat = dtd / dis;
+	
+	for( var i = 0; i < part; i++ ) {
+		nd = dis * frac(i * rat + shift / dis);
+		nx = x0 + dx * nd;
+		ny = y0 + dy * nd;
+		
+		draw_circle(nx, ny, radius, false);
+	}
+}
