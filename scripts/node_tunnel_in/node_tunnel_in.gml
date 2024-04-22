@@ -11,8 +11,11 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	hover_scale_to = 0;
 	hover_alpha    = 0;
 	
-	inputs[| 0] = nodeValue("Name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
-		.setDisplay(VALUE_DISPLAY.text_tunnel)
+	var tname = "";
+	if(!LOADING && !APPENDING) 
+		tname = $"tunnel{ds_map_size(TUNNELS_IN_MAP)}";
+	
+	inputs[| 0] = nodeValue("Name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, tname )
 		.rejectArray();
 		
 	inputs[| 1] = nodeValue("Value in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, noone )
@@ -25,19 +28,19 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static onInspector2Update = function() { #region
 		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y);
-		_node.inputs[| 0].setValue(getInputData(0));
+		_node.inputs[| 0].setValue(inputs[| 0].getValue());
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { onValueUpdate(); }
 	
 	static resetMap = function() { #region
-		var _key = getInputData(0);
+		var _key = inputs[| 0].getValue();
 		TUNNELS_IN_MAP[? node_id] = _key;
 		TUNNELS_IN[? _key] = inputs[| 1];
-	} #endregion
+	} resetMap(); #endregion
 	
 	static checkDuplicate = function() { #region
-		var _key = getInputData(0);
+		var _key = inputs[| 0].getValue();
 		var amo  = ds_map_size(TUNNELS_IN_MAP);
 		var k    = ds_map_find_first(TUNNELS_IN_MAP);
 		var dup  = false;
@@ -59,7 +62,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static onValueUpdate = function(index = -1) { #region
-		var _key = getInputData(0);
+		var _key = inputs[| 0].getValue();
 		resetMap();
 		
 		var amo = ds_map_size(TUNNELS_IN_MAP);
@@ -81,7 +84,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static step = function() { #region
-		var _key = getInputData(0);
+		var _key = inputs[| 0].getValue();
 		
 		value_validation[VALIDATION.error] = error_notification != noone;
 		
@@ -97,9 +100,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getNextNodes = function() { #region
 		var nodes = [];
 		var nodeNames = [];
-		var _key = getInputData(0);
-		var amo = ds_map_size(TUNNELS_OUT);
-		var k = ds_map_find_first(TUNNELS_OUT);
+		var _key = inputs[| 0].getValue();
+		var amo  = ds_map_size(TUNNELS_OUT);
+		var k    = ds_map_find_first(TUNNELS_OUT);
 		
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {INAME}");
@@ -148,30 +151,32 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var xx = _x + x * _s;
 		var yy = _y + y * _s;
 		
-		var hover = isHovering;
+		var hover = isHovering || hover_alpha == 1;
 		var tun   = findPanel("Panel_Tunnels");
 		hover |= tun && tun.tunnel_hover == self;
 		if(!hover) return;
 		
-		var _key = getInputData(0);
-		var amo  = ds_map_size(TUNNELS_OUT);
-		var k    = ds_map_find_first(TUNNELS_OUT);
+		var _key  = inputs[| 0].getValue();
+		var _keys = ds_map_keys_to_array(TUNNELS_OUT);
 		
-		draw_set_color(COLORS.node_blend_tunnel);
-				
-		repeat(amo) {
-			if(TUNNELS_OUT[? k] == _key && ds_map_exists(PROJECT.nodeMap, k)) {
-				var node = PROJECT.nodeMap[? k];
-				if(node.group != group) continue;
-				
-				var tox = _x + node.x * _s;
-				var toy = _y + node.y * _s;
-				draw_line_dotted(xx, yy, tox, toy, 4 * _s, current_time / 10, 2);
-			}
+		draw_set_color(inputs[| 1].color_display);
+		draw_set_alpha(0.5);
+		
+		for (var i = 0, n = array_length(_keys); i < n; i++) {
+			var _k = _keys[i];
 			
-			k = ds_map_find_next(TUNNELS_OUT, k);
+			if(TUNNELS_OUT[? _k] != _key) continue;
+			if(!ds_map_exists(PROJECT.nodeMap, _k)) continue;
+			
+			var node = PROJECT.nodeMap[? _k];
+			if(node.group != group) continue;
+			
+			var tox = _x + node.x * _s;
+			var toy = _y + node.y * _s;
+			draw_line_dotted(xx, yy, tox, toy, 2 * _s, current_time / 10, 3);
 		}
 		
+		draw_set_alpha(1);
 	} #endregion
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
@@ -227,7 +232,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		hover_scale_to = 0;
 		
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
-		draw_text_transformed(xx, yy - 12, string(getInputData(0)), _s * 0.4, _s * 0.4, 0);
+		draw_text_transformed(xx, yy - 12, string(inputs[| 0].getValue()), _s * 0.4, _s * 0.4, 0);
 		
 		return drawJunctions(_x, _y, _mx, _my, _s);
 	} #endregion

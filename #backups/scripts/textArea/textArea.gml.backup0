@@ -1,4 +1,4 @@
-// 2024-04-20 10:28:31
+// 2024-04-22 15:44:58
 enum TEXT_AREA_FORMAT {
 	_default,
 	codeLUA,
@@ -131,7 +131,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		o_dialog_textbox_autocomplete.deactivate(self);
 		o_dialog_textbox_function_guide.deactivate(self);
 		
-		if(!isCodeFormat()) return;
 		if(autocomplete_server == noone) return;
 		if(!use_autocomplete) return;
 		
@@ -144,19 +143,22 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			localParams = parser_server(crop, autocomplete_object);
 		
 		var data = autocomplete_server(pmt, localParams, autocomplete_context);
+		
 		o_dialog_textbox_autocomplete.data   = data;
 		if(array_length(data)) {
 			o_dialog_textbox_autocomplete.data   = data;
 			o_dialog_textbox_autocomplete.prompt = pmt;
 			autocomplete_modi = true;
 		}
+		
+		if(function_guide_server == noone) return;
 					
 		var _c  = cursor;
 		var _v  = false;
 		var _fn = "";
 		var _el = 0;
 		var amo = 0;
-					
+		
 		while(_c > 1) {
 			var cch0 = string_char_at(_input_text, _c - 1);
 			var cch1 = string_char_at(_input_text, _c);

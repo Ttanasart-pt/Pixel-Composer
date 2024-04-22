@@ -1,4 +1,4 @@
-// 2024-04-21 14:21:07
+// 2024-04-22 18:45:51
 #region funtion calls
 	function __fnInit_Preview() {
 		__registerFunction("preview_focus_content",				panel_preview_focus_content);
@@ -1086,6 +1086,7 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			mouse_pos_string = "";
 		
+			right_menu_x = w - ui(8);
 			if(_node == noone) return;
 		
 			right_menu_y += string_height("l");
@@ -1094,7 +1095,6 @@ function Panel_Preview() : PanelContent() constructor {
 			draw_text(right_menu_x, right_menu_y, txt);
 		
 			right_menu_y += string_height("l");
-			right_menu_x = w - ui(8);
 		#endregion
 		
 		var pseq = getNodePreviewSequence();

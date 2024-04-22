@@ -99,7 +99,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 		}
 	} 
 	
-	if(!struct_has(self, "__overlay_hover")) __overlay_hover = [ 0, 0 ];
+	__overlay_hover = array_verify(__overlay_hover, 2);
 	__overlay_hover[0] = lerp_float(__overlay_hover[0], d0, 4);
 	__overlay_hover[1] = lerp_float(__overlay_hover[1], d1, 4);
 	

@@ -1,6 +1,6 @@
 function draw_line_dashed(x0, y0, x1, y1, th = 1, dash_distance = 8, dash_shift = 0) {
-	var dis = point_distance(x0, y0, x1, y1);
-	var dir = point_direction(x0, y0, x1, y1);
+	var dis  = point_distance(x0, y0, x1, y1);
+	var dir  = point_direction(x0, y0, x1, y1);
 	var part = ceil(dis / dash_distance);
 	
 	var dx = lengthdir_x(1, dir);
@@ -24,8 +24,8 @@ function draw_line_dashed(x0, y0, x1, y1, th = 1, dash_distance = 8, dash_shift 
 }
 
 function draw_line_dashed_color(x0, y0, x1, y1, th, c0, c1, dash_distance = 8) {
-	var dis = point_distance(x0, y0, x1, y1);
-	var dir = point_direction(x0, y0, x1, y1);
+	var dis  = point_distance(x0, y0, x1, y1);
+	var dir  = point_direction(x0, y0, x1, y1);
 	var part = ceil(dis / dash_distance);
 	
 	var dx = lengthdir_x(1, dir);
@@ -49,10 +49,11 @@ function draw_line_dashed_color(x0, y0, x1, y1, th, c0, c1, dash_distance = 8) {
 }
 
 function draw_line_dotted(x0, y0, x1, y1, radius, shift, distanceMulp = 1) {
-	var dis = point_distance(x0, y0, x1, y1);
-	var dir = point_direction(x0, y0, x1, y1);
-	var dtd = radius * distanceMulp * 2;
+	var dis  = point_distance(x0, y0, x1, y1);
+	var dir  = point_direction(x0, y0, x1, y1);
+	var dtd  = radius * distanceMulp * 2;
 	var part = floor(dis / dtd);
+	    dtd  = dis / part;
 	
 	var dx = lengthdir_x(1, dir);
 	var dy = lengthdir_y(1, dir);

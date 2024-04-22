@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_tunnel_in",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"tunnel",
+    "path":"folders/nodes/data/misc/tunnel.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -14,8 +14,8 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	outputs[| 1] = nodeValue("Sorted index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, []);
 	
-	static sortAcs = function(v1, v2) { return v1[1] < v2[1]; }
-	static sortDes = function(v1, v2) { return v1[1] > v2[1]; }
+	static sortAcs = function(v1, v2) { return v2.val - v1.val; }
+	static sortDes = function(v1, v2) { return v1.val - v2.val; }
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var arr = getInputData(0);
@@ -26,25 +26,26 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			
 		if(!is_array(arr)) return;
 		
+		var len = array_length(arr);
+		
 		if(inputs[| 0].value_from != noone) {
 			inputs[| 0].setType(inputs[| 0].value_from.type);
 			outputs[| 0].setType(inputs[| 0].value_from.type);
 		}
 		
-		var _arr = [];
-		for( var i = 0, n = array_length(arr); i < n; i++ )
-			_arr[i] = [ i, arr[i] ];
-		
+		var _arr = array_map(arr, function(v, i) { return { index: i, val: v }; });
 		array_sort(_arr, asc? sortAcs : sortDes);
 		
-		var res = [ [], [] ];
-		for( var i = 0, n = array_length(_arr); i < n; i++ ) {
-			res[0][i] = _arr[i][0];
-			res[1][i] = _arr[i][1];
+		var resV = array_verify(outputs[| 0].getValue(), len);
+		var resO = array_verify(outputs[| 1].getValue(), len);
+		
+		for( var i = 0; i < len; i++ ) {
+			resO[i] = _arr[i].index;
+			resV[i] = _arr[i].val;
 		}
 		
-		outputs[| 0].setValue(res[1]);
-		outputs[| 1].setValue(res[0]);
+		outputs[| 0].setValue(resV);
+		outputs[| 1].setValue(resO);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

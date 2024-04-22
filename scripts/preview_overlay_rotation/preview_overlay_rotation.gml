@@ -44,12 +44,12 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		draw_set_alpha(1);
 	}
 	
-	if(!struct_has(self, "__overlay_hover")) __overlay_hover = 0;
-	__overlay_hover = lerp_float(__overlay_hover, index, 4);
+	__overlay_hover = array_verify(__overlay_hover, 1);
+	__overlay_hover[0] = lerp_float(__overlay_hover[0], index, 4);
 	
 	shader_set(sh_node_widget_rotator);
 		shader_set_color("color", COLORS._main_accent);
-		shader_set_f("index",     __overlay_hover);
+		shader_set_f("index",     __overlay_hover[0]);
 		shader_set_f("angle",     degtorad(_val + 90));
 		
 		var _arx = _x + lengthdir_x(_rad - 4, _val);

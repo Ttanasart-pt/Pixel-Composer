@@ -39,9 +39,9 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		}
 	} 
 		
-	if(!struct_has(self, "__overlay_hover")) __overlay_hover = 0;
-	__overlay_hover = lerp_float(__overlay_hover, index, 4);
-	draw_anchor(__overlay_hover, _ax, _ay, _r);
+	__overlay_hover = array_verify(__overlay_hover, 1);
+	__overlay_hover[0] = lerp_float(__overlay_hover[0], index, 4);
+	draw_anchor(__overlay_hover[0], _ax, _ay, _r);
 	
 	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
 	draw_text_add(round(_ax), round(_ay - 4), name);

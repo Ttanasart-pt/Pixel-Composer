@@ -1085,6 +1085,7 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			mouse_pos_string = "";
 		
+			right_menu_x = w - ui(8);
 			if(_node == noone) return;
 		
 			right_menu_y += string_height("l");
@@ -1093,7 +1094,6 @@ function Panel_Preview() : PanelContent() constructor {
 			draw_text(right_menu_x, right_menu_y, txt);
 		
 			right_menu_y += string_height("l");
-			right_menu_x = w - ui(8);
 		#endregion
 		
 		var pseq = getNodePreviewSequence();

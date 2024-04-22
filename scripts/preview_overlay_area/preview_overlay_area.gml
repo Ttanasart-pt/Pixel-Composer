@@ -381,7 +381,7 @@ function preview_overlay_area(interact, active, _x, _y, _s, _mx, _my, _snx, _sny
 	
 	var mode = editWidget.mode;
 	
-	if(!struct_has(self, "__overlay_hover")) __overlay_hover = [ 0, 0, 0, 0, 0 ];
+	__overlay_hover = array_verify(__overlay_hover, 5);
 	
 	switch(mode) {
 		case AREA_MODE.area :	   return preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);

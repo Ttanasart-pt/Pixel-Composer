@@ -111,6 +111,7 @@
 			PREFERENCES.panel_layout_file = "Vertical";
 			PREFERENCES._display_scaling  = 1;
 			PREFERENCES.display_scaling   = 0;
+			
 			resetScale(1);
 		}
 		
@@ -134,13 +135,13 @@
 		PANEL_COLLECTION = new Panel_Collection();
 	} #endregion
 	
-	function resetPanel() { #region
+	function resetPanel(check = true) { #region
 		clearPanel();
 		panelObjectInit();
 		loadPanelStruct(PANEL_MAIN, CURRENT_PANEL.panel);
 		PANEL_MAIN.refresh();
 		
-		checkPanelValid();
+		if(check) checkPanelValid();
 	} #endregion
 	
 	function __initPanel() { #region

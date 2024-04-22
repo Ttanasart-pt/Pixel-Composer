@@ -844,7 +844,7 @@ function __initNodes() {
 		addNodeObject(values, "Array Convolute",	s_node_array_convolute,	"Node_Array_Convolute",			[1, Node_Array_Convolute]).setVersion(11540);
 		addNodeObject(values, "Array Composite",	s_node_array_composite,	"Node_Array_Composite",			[1, Node_Array_Composite]).setVersion(11540);
 		addNodeObject(values, "Array Sample",		s_node_array_sample,	"Node_Array_Sample",			[1, Node_Array_Sample]).setVersion(11540);
-		addNodeObject(values, "Sort Number",		s_node_array_sort,		"Node_Array_Sort",				[1, Node_Array_Sort], ["array sort"]).setVersion(1120);
+		addNodeObject(values, "Sort Array",			s_node_array_sort,		"Node_Array_Sort",				[1, Node_Array_Sort], ["array sort"]).setVersion(1120);
 		addNodeObject(values, "Shuffle Array",		s_node_array_shuffle,	"Node_Array_Shuffle",			[1, Node_Array_Shuffle], ["array shuffle"]).setVersion(1120);
 		addNodeObject(values, "Loop Array",			s_node_loop_array,		"Node_Iterate_Each_Inline",		[1, Node_Iterate_Each_Inline], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
 		addNodeObject(values, "Filter Array",		s_node_filter_array,	"Node_Iterate_Filter_Inline",	[1, Node_Iterate_Filter_Inline],, "Filter array using condition.").setVersion(1140);

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"tunnel_server",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"tunnel_server",
+  "parent":{
+    "name":"tunnel",
+    "path":"folders/nodes/data/misc/tunnel.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

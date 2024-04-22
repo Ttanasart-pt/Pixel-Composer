@@ -1,4 +1,4 @@
-// 2024-04-15 17:50:18
+// 2024-04-22 17:28:13
 #region preference
 	globalvar PREFERENCES, PREFERENCES_DEF, HOTKEYS_DATA;
 	PREFERENCES  = {};

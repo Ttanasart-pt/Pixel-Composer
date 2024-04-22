@@ -28,7 +28,7 @@ function line_get_width(txt, font = noone, offset = 0) {
 		if(PREFERENCES.display_scaling == scale) return;
 		
 		PREFERENCES.display_scaling = scale;
-		resetPanel();
+		resetPanel(false);
 		loadFonts();
 			
 		if(willResize) time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, onResize));
