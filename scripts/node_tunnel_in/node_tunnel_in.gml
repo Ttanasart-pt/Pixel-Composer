@@ -210,7 +210,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		#region draw arc
 			var prev_s = preview_connecting? 1 + sin(current_time / 100) * 0.1 : 1;
-			preview_scale = lerp_float(preview_scale, prev_s, 5);
+			preview_scale      = lerp_float(preview_scale, prev_s, 5);
 			preview_connecting = false;
 			
 			shader_set(sh_node_arc);
