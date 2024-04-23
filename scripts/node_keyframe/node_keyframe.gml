@@ -427,6 +427,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static processType = function(_val) { #region
 		INLINE
 		
+		if(PROJECT.attributes.strict) return _val;
 		var _res = _val;
 		
 		if(!sep_axis && typeArray(prop.display_type) && is_array(_val)) {
@@ -443,7 +444,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(is_array(_val))     return _val;
 		if(is_struct(_val))    return _val;
-		//if(is_undefined(_val)) return 0;
 		
 		switch(prop.type) {
 			case VALUE_TYPE.integer : return prop.unit.mode == VALUE_UNIT.constant? round(_val) : _val;

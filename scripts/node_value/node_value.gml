@@ -525,6 +525,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	#region ---- main ----
 		active  = true;
+		from    = noone;
 		node    = _node;
 		x	    = node.x;
 		y       = node.y;
@@ -1614,7 +1615,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getStaticValue = function() { INLINE return ds_list_empty(animator.values)? 0 : animator.values[| 0].value; } 
 	
-	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region
+	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region //Get value
 		if(type == VALUE_TYPE.trigger)
 			return _getValue(_time, false, 0, false);
 		
@@ -1659,36 +1660,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!IS_PLAYING) updateColor(val);
 		
 		return val;
-	} #endregion
-	
-	static __getAnimValue = function(_time = CURRENT_FRAME) { #region
-		
-		if(value_tag == "dimension" && node.attributes.use_project_dimension)
-			return PROJECT.attributes.surface_dimension;
-		
-		if(!is_anim) {
-			if(sep_axis) {
-				if(ds_list_empty(animators[i].values)) return 0;
-				
-				var val = array_verify(val, array_length(animators));
-				for( var i = 0, n = array_length(animators); i < n; i++ )
-					val[i] = animators[i].processType(animators[i].values[| 0].value);
-				return val;
-			}
-			
-			if(ds_list_empty(animator.values)) return 0;
-			
-			return animator.processType(animator.values[| 0].value);
-		}
-		
-		if(sep_axis) {
-			var val = [];
-			for( var i = 0, n = array_length(animators); i < n; i++ )
-				val[i] = animators[i].getValue(_time);
-			return val;
-		} 
-		
-		return animator.getValue(_time);
 	} #endregion
 	
 	static arrayBalance = function(val) { #region // Balance array (generate uniform array from single values)
@@ -1773,6 +1744,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		} #endregion
 		
+		if(PROJECT.attributes.strict) return val;
+		
 		val = arrayBalance(val);
 		
 		if(isArray(val) && array_length(val) < 1024) { #region Process data
@@ -1823,6 +1796,36 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				global.EVALUATE_HEAD = noone;
 			}
 		}
+	} #endregion
+	
+	static __getAnimValue = function(_time = CURRENT_FRAME) { #region
+		
+		if(value_tag == "dimension" && node.attributes.use_project_dimension)
+			return PROJECT.attributes.surface_dimension;
+		
+		if(!is_anim) {
+			if(sep_axis) {
+				if(ds_list_empty(animators[i].values)) return 0;
+				
+				var val = array_verify(val, array_length(animators));
+				for( var i = 0, n = array_length(animators); i < n; i++ )
+					val[i] = animators[i].processType(animators[i].values[| 0].value);
+				return val;
+			}
+			
+			if(ds_list_empty(animator.values)) return 0;
+			
+			return animator.processType(animator.values[| 0].value);
+		}
+		
+		if(sep_axis) {
+			var val = [];
+			for( var i = 0, n = array_length(animators); i < n; i++ )
+				val[i] = animators[i].getValue(_time);
+			return val;
+		} 
+		
+		return animator.getValue(_time);
 	} #endregion
 	
 	static setAnim = function(anim, record = false) { #region
@@ -2142,9 +2145,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static isRendered = function() { #region
 		if(type == VALUE_TYPE.node)	return true;
 		
-		if( value_from == noone) return true;
+		if(value_from == noone) return true;
 		
-		var controlNode = struct_has(value_from, "from")? value_from.from : value_from.node;
+		var controlNode = value_from.from? value_from.from : value_from.node;
 		if(!controlNode.active)			  return true;
 		if(!controlNode.isRenderActive()) return true;
 		

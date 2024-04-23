@@ -1,4 +1,4 @@
-// 2024-04-22 19:32:35
+// 2024-04-23 11:37:07
 function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Tunnel Out";
 	color = COLORS.node_blend_tunnel;
@@ -179,7 +179,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		hover_scale_to = 0;
 		
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
-		draw_text_transformed(xx, yy - 12, string(inputs[| 0].getValue()), _s * 0.4, _s * 0.4, 0);
+		draw_text_transformed(xx, yy - 12 * _s, string(inputs[| 0].getValue()), _s * 0.4, _s * 0.4, 0);
 		
 		return drawJunctions(_x, _y, _mx, _my, _s);
 	} #endregion

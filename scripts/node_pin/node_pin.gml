@@ -95,7 +95,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(renamed && display_name != "" && display_name != "Pin") {
 			draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
-			draw_text_transformed(xx, yy - 12, display_name, _s * 0.4, _s * 0.4, 0);
+			draw_text_transformed(xx, yy - 12 * _s, display_name, _s * 0.4, _s * 0.4, 0);
 		}
 		
 		return drawJunctions(_x, _y, _mx, _my, _s);

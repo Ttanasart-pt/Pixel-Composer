@@ -937,6 +937,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static refreshNodeDisplay = function() { #region
 		INLINE
+		if(IS_PLAYING) return;
 		
 		updateIO();
 		setHeight();
@@ -1445,17 +1446,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var ph = surface_get_height_safe(preview_surface);
 		var format = surface_get_format_safe(preview_surface);
 		
-		var txt = $"[{pw} x {ph} ";
+		var txt = $"[{pw} x {ph}";
 		if(preview_amount) txt = $"{preview_amount} x {txt}";
 		
 		switch(format) {
-			case surface_rgba4unorm	 : txt += showFormat? "4RGBA"	: "4R";  break;
-			case surface_rgba8unorm	 : txt += showFormat? "8RGBA"	: "8R";  break;
-			case surface_rgba16float : txt += showFormat? "16RGBA"	: "16R"; break;
-			case surface_rgba32float : txt += showFormat? "32RGBA"	: "32R"; break;
-			case surface_r8unorm	 : txt += showFormat? "8BW"		: "8B";  break;
-			case surface_r16float	 : txt += showFormat? "16BW"	: "16B"; break;
-			case surface_r32float	 : txt += showFormat? "32BW"	: "32B"; break;
+			case surface_rgba8unorm	 : break;
+			case surface_rgba4unorm	 : txt += showFormat? " 4RGBA"	: " 4R";  break;
+			case surface_rgba16float : txt += showFormat? " 16RGBA"	: " 16R"; break;
+			case surface_rgba32float : txt += showFormat? " 32RGBA"	: " 32R"; break;
+			case surface_r8unorm	 : txt += showFormat? " 8BW"	: " 8B";  break;
+			case surface_r16float	 : txt += showFormat? " 16BW"	: " 16B"; break;
+			case surface_r32float	 : txt += showFormat? " 32BW"	: " 32B"; break;
 		}
 		
 		txt += "]";
@@ -1468,17 +1469,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return;
 		if(_s * w < 64) return;
 		
-		draw_set_text(f_p2, fa_center, fa_top, COLORS.panel_graph_node_dimension);
+		draw_set_text(f_p3, fa_center, fa_top, COLORS.panel_graph_node_dimension);
 		var tx = xx + w * _s / 2;
 		var ty = yy + (h + 4) * _s - 2;
 		
 		if(struct_get(display_parameter, "show_dimension")) {
 			var txt = string(getNodeDimension(_s > 0.65));
 			draw_text(round(tx), round(ty), txt);
-			ty += line_get_height(f_p2) - 2;
+			ty += string_height(txt) - 2;
 		}
-		
-		draw_set_font(f_p3);
 		
 		if(struct_get(display_parameter, "show_compute")) {
 			var rt = 0, unit = "";
@@ -1486,14 +1485,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(render_time == 0) {
 				draw_set_color(COLORS._main_text_sub);
 				unit = "us";
+				
 			} else if(render_time < 1000) {
 				rt = round(render_time / 10) * 10;
 				unit = "us";
 				draw_set_color(COLORS.speed[2]);
+				
 			} else if(render_time < 1000000) {
 				rt = string_format(render_time / 1000, -1, 2);
 				unit = "ms";
 				draw_set_color(COLORS.speed[1]);
+				
 			} else {
 				rt = string_format(render_time / 1000000, -1, 2);
 				unit = "s";
@@ -1502,7 +1504,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(render_cached) draw_set_color(COLORS._main_text_sub);
 			
-			draw_text(round(tx), round(ty), string(rt) + " " + unit);
+			draw_text(round(tx), round(ty), $"{rt} {unit}");
 		}
 	} #endregion
 	

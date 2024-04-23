@@ -1,4 +1,4 @@
-// 2024-04-22 19:32:21
+// 2024-04-22 19:32:35
 function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Tunnel Out";
 	color = COLORS.node_blend_tunnel;

@@ -1,4 +1,4 @@
-// 2024-04-14 12:50:09
+// 2024-04-23 16:49:06
 #region funtion calls
 	function __fnInit_Inspector() {
 		__registerFunction("inspector_copy_prop",				panel_inspector_copy_prop);
