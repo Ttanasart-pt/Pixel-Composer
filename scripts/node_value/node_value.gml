@@ -873,7 +873,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	} setDropKey(); #endregion
 	
-	static resetDisplay = function() { #region		//////////////////// RESET DISPLAY ////////////////////
+	static resetDisplay = function() { #region //////////////////// RESET DISPLAY ////////////////////
 		editWidget = noone;
 		switch(display_type) {
 			case VALUE_DISPLAY.button : #region
