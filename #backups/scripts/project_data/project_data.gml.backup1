@@ -1,4 +1,4 @@
-// 2024-04-23 16:49:37
+// 2024-04-23 17:06:05
 #region global
 	globalvar PROJECTS, PROJECT;
 	PROJECT = noone;
@@ -108,7 +108,7 @@
 					} 
 				],
 				
-				[ "Strict",	"strict", new checkBox(function() { attributes.strict = !attributes.strict; RENDER_ALL return true; }), function() {} ],
+				//[ "Strict",	"strict", new checkBox(function() { attributes.strict = !attributes.strict; RENDER_ALL return true; }), function() {} ],
 			];
 			
 			static setPalette = function(pal = noone) { 

@@ -107,7 +107,7 @@
 					} 
 				],
 				
-				[ "Strict",	"strict", new checkBox(function() { attributes.strict = !attributes.strict; RENDER_ALL return true; }), function() {} ],
+				//[ "Strict",	"strict", new checkBox(function() { attributes.strict = !attributes.strict; RENDER_ALL return true; }), function() {} ],
 			];
 			
 			static setPalette = function(pal = noone) { 

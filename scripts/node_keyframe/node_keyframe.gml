@@ -427,7 +427,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static processType = function(_val) { #region
 		INLINE
 		
-		if(PROJECT.attributes.strict) return _val;
+		if(PROJECT.attributes.strict) return processValue(_val);
 		var _res = _val;
 		
 		if(!sep_axis && typeArray(prop.display_type) && is_array(_val)) {
