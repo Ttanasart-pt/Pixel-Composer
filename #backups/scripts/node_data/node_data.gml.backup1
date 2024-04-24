@@ -1,4 +1,4 @@
-// 2024-04-23 11:32:21
+// 2024-04-24 07:47:31
 global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
 #macro INAME internalName == ""? name : internalName
@@ -938,6 +938,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static refreshNodeDisplay = function() { #region
 		INLINE
+		if(IS_PLAYING) return;
 		
 		updateIO();
 		setHeight();

@@ -1,5 +1,6 @@
+// 2024-04-24 07:54:27
 #region symbols
-	global.LOG_EXPRESSION = false;
+	global.LOG_EXPRESSION = true;
 	
 	global.EQUATION_PRES = ds_map_create();
 	global.EQUATION_PRES[? "+"] = 1;

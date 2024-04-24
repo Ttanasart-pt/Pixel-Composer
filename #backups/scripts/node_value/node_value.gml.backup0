@@ -1,4 +1,4 @@
-// 2024-04-23 17:16:51
+// 2024-04-24 08:43:01
 #region ---- global names ----
 	global.junctionEndName = [ "Hold", "Loop", "Ping pong", "Wrap" ];
 
@@ -1599,12 +1599,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static valueExpressionProcess = function(value) { #region
+		if(is_array(value)) {
+			for (var i = 0, n = array_length(value); i < n; i++)
+				value[i] = valueExpressionProcess(value[i]);
+			return value;
+		}
+	
 		switch(type) {
 			case VALUE_TYPE.float : 
 			case VALUE_TYPE.integer : 
-				if(!is_numeric(value))
-					return toNumber(value);
-				break;
+				return is_numeric(value)? value : toNumber(value);
+				
 			case VALUE_TYPE.boolean : 
 				return bool(value);
 		}
@@ -1636,6 +1641,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		var val = _getValue(_time, applyUnit, arrIndex, log);
+		
 		if(!accept_array && array_get_depth(val) > def_depth) {
 			noti_warning($"{name} does not accept array data.",, node);
 			return 0;
@@ -1663,25 +1669,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	} #endregion
 	
-	static arrayBalance = function(val) { #region // Balance array (generate uniform array from single values)
-		if(!is_array(def_val))
-			return val;
-			
-		if(isDynamicArray()) 
-			return val;
-		
-		if(isArray(val))
-			return val;
-		
-		if(!is_array(val))
-			return array_create(def_length, val);
-		
-		if(array_length(val) < def_length)
-			array_resize(val, def_length);
-		
-		return val;
-	} #endregion
-	
 	static _getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) { #region
 		
 		getValueRecursive(self.__curr_get_val, _time);
@@ -1694,15 +1681,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == JUNCTION_CONNECT.output)
 			return val;
 		
-		if(expUse) { #region expression
-			if(is_array(val)) {
-				for( var i = 0, n = array_length(val); i < n; i++ )
-					val[i] = valueExpressionProcess(val[i]);
-			} else 
-				val = valueExpressionProcess(val);
-			return arrayBalance(val);
-			
-		} #endregion
+		if(expUse) return arrayBalance(valueExpressionProcess(val));
 		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { #region Dimension conversion
 			if(is_array(val)) {
@@ -1797,6 +1776,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				global.EVALUATE_HEAD = noone;
 			}
 		}
+	} #endregion
+	
+	static arrayBalance = function(val) { #region
+		if(!is_array(def_val))
+			return val;
+			
+		if(isDynamicArray()) 
+			return val;
+		
+		if(isArray(val))
+			return val;
+		
+		if(!is_array(val))
+			return array_create(def_length, val);
+		
+		if(array_length(val) < def_length)
+			array_resize(val, def_length);
+		
+		return val;
 	} #endregion
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) { #region
