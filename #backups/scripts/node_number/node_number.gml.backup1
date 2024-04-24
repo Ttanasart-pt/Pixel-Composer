@@ -1,4 +1,4 @@
-// 2024-04-24 08:13:56
+// 2024-04-24 10:55:15
 function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Number";
 	color = COLORS.node_blend_number;
@@ -97,7 +97,6 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _dat = getInputData(0);
 		var _int = getInputData(1);
 		
-		print(_dat);
 		var _res = processNumber(_dat, _int);
 		outputs[| 0].setValue(_res);
 	} #endregion

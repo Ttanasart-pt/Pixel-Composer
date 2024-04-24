@@ -158,7 +158,7 @@ void main() { #region
 			}
 		}
 	}
-		
+	
 	if(!isOutline) {
 		gl_FragColor = col;
 		return;

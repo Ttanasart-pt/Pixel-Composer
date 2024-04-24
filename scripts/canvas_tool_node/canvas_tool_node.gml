@@ -12,14 +12,14 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	}
 	
 	static cleanUp = function() {
-		
+		UNDO_HOLDING = true;
 		surface_free_safe(targetSurface);
 		surface_free_safe(maskedSurface);
 		
 		if(is_struct(nodeObject)) {
 			if(is_instanceof(nodeObject, Node))
 				nodeObject.destroy();
-				
+			
 			else {
 				var keys = struct_get_names(nodeObject);
 				for (var i = 0, n = array_length(keys); i < n; i++) 
@@ -28,6 +28,8 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 			}
 		}
 		
+		node.nodeTool = noone;
+		UNDO_HOLDING = false;
 	}
 	
 	function init() {
@@ -86,31 +88,48 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	
 	function apply() {
 		var _surf = surface_create(sw, sh);
+		var _repl = key_mod_press(SHIFT);
 		
 		if(applySelection) {
+			var _fore = canvas.tool_selection.selection_surface;
 			
-			surface_set_shader(_surf, sh_blend_normal);
-				shader_set_surface("fore",		maskedSurface);
-				shader_set_f("dimension",		1, 1);
-				shader_set_f("opacity",			1);
+			if(_repl) {
+				surface_set_shader(_surf, noone);
+					draw_surface_safe(maskedSurface);
+				surface_reset_shader();
 				
-				draw_surface(canvas.tool_selection.selection_surface, 0, 0);
-			surface_reset_shader();
+			} else {
+				surface_set_shader(_surf, sh_blend_normal);
+					shader_set_surface("fore",		maskedSurface);
+					shader_set_f("dimension",		1, 1);
+					shader_set_f("opacity",			1);
+					
+					draw_surface_safe(_fore);
+				surface_reset_shader();
+			}
 			
-			surface_free(canvas.tool_selection.selection_surface);
+			surface_free(_fore);
 			canvas.tool_selection.selection_surface = _surf;
 			canvas.tool_selection.apply();
 			
 		} else {
+			var _fore = canvas.getCanvasSurface();
 			canvas.storeAction();
 			
-			surface_set_shader(_surf, sh_blend_normal);
-				shader_set_surface("fore",		maskedSurface);
-				shader_set_f("dimension",		1, 1);
-				shader_set_f("opacity",			1);
+			if(_repl) {
+				surface_set_shader(_surf, noone);
+					draw_surface_safe(maskedSurface);
+				surface_reset_shader();
 				
-				draw_surface(canvas.getCanvasSurface(), 0, 0);
-			surface_reset_shader();
+			} else {
+				surface_set_shader(_surf, sh_blend_normal);
+					shader_set_surface("fore",		maskedSurface);
+					shader_set_f("dimension",		1, 1);
+					shader_set_f("opacity",			1);
+					
+					draw_surface_safe(_fore);
+				surface_reset_shader();
+			}
 			
 			canvas.setCanvasSurface(_surf);
 			canvas.surface_store_buffer();
@@ -158,16 +177,17 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 		if(applySelection) {
 			maskedSurface = surface_verify(maskedSurface, sw, sh);
 			surface_set_shader(maskedSurface);
-				draw_surface(_surf, 0, 0);
+				draw_surface_safe(_surf);
 				BLEND_MULTIPLY
-					draw_surface(canvas.tool_selection.selection_mask, 0, 0);
+					draw_surface_safe(canvas.tool_selection.selection_mask, 0, 0);
 				BLEND_NORMAL
 			surface_reset_shader();
 			
 		} else
 			maskedSurface = _surf;
-			
-		draw_surface_ext_safe(destiSurface,  _dx, _dy, _s, _s);
+		
+		if(!key_mod_press(SHIFT))
+			draw_surface_ext_safe(destiSurface,  _dx, _dy, _s, _s);
 		draw_surface_ext_safe(maskedSurface, _dx, _dy, _s, _s);
 		
 		     if(mouse_press(mb_left, active))  { apply();	MOUSE_BLOCK = true; }

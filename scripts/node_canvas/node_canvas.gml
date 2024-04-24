@@ -824,7 +824,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				shader_set_f("dimension", _sw, _sh);
 				draw_surface_ext_safe(preview_draw_mask, 0, 0, 1, 1, 0, c_white, 1);
 			shader_reset();
-		
+			
 			draw_set_color(COLORS._main_accent);
 			if(tool_selection.is_selected) {
 				var _spx = tool_selection.selection_position[0];
