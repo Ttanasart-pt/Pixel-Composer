@@ -11,7 +11,7 @@
 	function panel_inspector_paste_prop()				{ CALL("inspector_paste_prop");			PANEL_INSPECTOR.propSelectPaste();		}
 	function panel_inspector_toggle_animation()			{ CALL("inspector_toggle_animation");	PANEL_INSPECTOR.anim_toggling = true;	}
 	
-	function panel_inspector_color_pick()				{ CALL("inspector_color_pick");			if(!PREFERENCES.alt_picker) return; PANEL_INSPECTOR.color_picking = true;	}
+	function panel_inspector_color_pick()				{ CALL("inspector_color_pick");			if(!PREFERENCES.alt_picker&& !MOUSE_BLOCK) return; PANEL_INSPECTOR.color_picking = true;	}
 #endregion
 
 function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor { #region
