@@ -1,3 +1,4 @@
+// 2024-04-25 18:19:41
 function draw_text_line(_x, _y, _text, _sep, _w) { #region
 	INLINE
 	__draw_text_ext_transformed(_x, _y, _text, _sep, _w, 1, 1, 0);

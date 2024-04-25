@@ -1,3 +1,4 @@
+// 2024-04-25 18:20:17
 function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Display Text";
 	w = 240;

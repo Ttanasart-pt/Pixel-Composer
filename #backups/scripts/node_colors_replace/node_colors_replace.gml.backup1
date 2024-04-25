@@ -1,4 +1,4 @@
-// 2024-04-25 15:59:49
+// 2024-04-25 16:11:37
 function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Colors";
 	
@@ -23,10 +23,12 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 	__init_mask_modifier(4); // inputs 7, 8, 
 	
-	palette_selecting = false;
+	palette_selecting = noone;
 	palette_select    = [ -1, -1 ];
 	
 	function setColor(colr) { #region
+		palette_selecting = noone;
+		
 		var _to   = array_clone(getInputData(2));
 		
 		for (var i = palette_select[0]; i <= palette_select[1]; i++)
@@ -133,20 +135,20 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			draw_sprite_ext(THEME.arrow, 0, (_x0 + ss + _x1) / 2, _y0 + ss / 2, 1, 1, 0, c_white, 0.5);
 			draw_sprite_stretched_ext(THEME.color_picker_box, 1, _x1, _y0, _xw, ss, to, 1);
+			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x1, _y0, _xw, ss, COLORS._main_icon, 0.5);
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x1, _y0, _x1 + _xw, _y0 + ss)) {
-				if(!palette_selecting)
+				if(palette_selecting == noone)
 					draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x1, _y0, _xw, ss, c_white, 1);
 				
-				if(!palette_selecting && mouse_press(mb_left, _focus)) {
-					palette_selecting = true;
+				if(palette_selecting == noone && mouse_press(mb_left, _focus)) {
+					palette_selecting = 1;
 					palette_select[0] = i;
 				}
 				
-				if(palette_selecting)
+				if(palette_selecting == 1)
 					palette_select[1] = i;
-			} else 
-				draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x1, _y0, _xw, ss, COLORS._main_icon, 0.5);
+			}
 				
 			if(i == min(palette_select[0], palette_select[1])) {
 				_sel_x0 = _x1;
@@ -165,8 +167,8 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _sel_x0, _sel_y0, _sel_x1 - _sel_x0, _sel_y1 - _sel_y0, c_white, 1);
 			
-			if(mouse_release(mb_left, _focus)) {
-				palette_selecting = false;
+			if(palette_selecting == 1 && mouse_release(mb_left, _focus)) {
+				palette_selecting = 2;
 				palette_select    = [ _mn, _mx ];
 				
 				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
