@@ -22,11 +22,14 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 	__init_mask_modifier(4); // inputs 7, 8, 
 	
-	selecting_index = 0;
+	palette_selecting = false;
+	palette_select    = [ -1, -1 ];
 	
 	function setColor(colr) { #region
 		var _to   = array_clone(getInputData(2));
-		_to[selecting_index] = colr;
+		
+		for (var i = palette_select[0]; i <= palette_select[1]; i++)
+			_to[i] = colr;
 		
 		inputs[| 2].setValue(_to);			// Not necessary due to array reference
 	} #endregion
@@ -43,7 +46,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		new MenuItem("Sort Green",		function() /*=>*/ { sortPalette(6) }),
 		new MenuItem("Sort Blue",		function() /*=>*/ { sortPalette(7) }),
 	];
-		
+	
 	render_palette = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var bx = _x;
 		var by = _y;
@@ -78,6 +81,15 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, hh - top, COLORS.node_composite_bg_blend, 1);
 		
+		var _selecting_y = 0;
+		var _selecting_h = 0;
+		var _sample = PANEL_PREVIEW.sample_color;
+		
+		var _sel_x0 = 0;
+		var _sel_x1 = 0;
+		var _sel_y0 = 0;
+		var _sel_y1 = 0;
+		
 		for( var i = 0; i < amo; i++ ) {
 			var fr = array_safe_get_fast(_from, i);
 			var to = array_safe_get_fast(_to,   i);
@@ -85,7 +97,10 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _x0 = _x  + ui(8);
 			var _y0 = _yy + ui(8) + i * (ss + ui(8));
 			
-			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x0, _y0, ss, ss, COLORS._main_icon, 0.5);
+			var _cc = _sample == fr? c_white : COLORS._main_icon;
+			var _aa = 0.5 + (_sample == fr) * 0.5;
+			
+			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x0, _y0, ss, ss, _cc, _aa);
 			draw_sprite_stretched_ext(THEME.color_picker_box, 1, _x0, _y0, ss, ss, fr, 1);
 			
 			var _x1 = _x0 + ss + ui(32);
@@ -108,7 +123,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), _m, _focus, _hover,, THEME.color_wheel,, c_white) == 2) {
 				var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 				pick.onApply = setColor;
-				selecting_index = i;
+				palette_select = [ i, i ];
 			}
 			
 			_x2 -= ui(4);
@@ -116,21 +131,48 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _xw = _x2 - _x1;
 			
 			draw_sprite_ext(THEME.arrow, 0, (_x0 + ss + _x1) / 2, _y0 + ss / 2, 1, 1, 0, c_white, 0.5);
-			
 			draw_sprite_stretched_ext(THEME.color_picker_box, 1, _x1, _y0, _xw, ss, to, 1);
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x1, _y0, _x1 + _xw, _y0 + ss)) {
-				draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x1, _y0, _xw, ss, COLORS._main_icon, 1);
+				if(!palette_selecting)
+					draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x1, _y0, _xw, ss, c_white, 1);
 				
-				if(mouse_press(mb_left, _focus)) {
-					var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-					dialog.setDefault(to);
-					dialog.selector.onApply = setColor;
-					dialog.onApply = setColor;
-					selecting_index = i;
+				if(!palette_selecting && mouse_press(mb_left, _focus)) {
+					palette_selecting = true;
+					palette_select[0] = i;
 				}
+				
+				if(palette_selecting)
+					palette_select[1] = i;
 			} else 
 				draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x1, _y0, _xw, ss, COLORS._main_icon, 0.5);
+				
+			if(i == min(palette_select[0], palette_select[1])) {
+				_sel_x0 = _x1;
+				_sel_y0 = _y0;
+			}
+			
+			if(i == max(palette_select[0], palette_select[1])) {
+				_sel_x1 = _x1 + _xw;
+				_sel_y1 = _y0 + ss;
+			}
+		}
+		
+		if(palette_selecting) {
+			var _mn = min(palette_select[0], palette_select[1]);
+			var _mx = max(palette_select[0], palette_select[1]);
+			
+			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _sel_x0, _sel_y0, _sel_x1 - _sel_x0, _sel_y1 - _sel_y0, c_white, 1);
+			
+			if(mouse_release(mb_left, _focus)) {
+				palette_selecting = false;
+				palette_select    = [ _mn, _mx ];
+				
+				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
+				dialog.setDefault(_to[palette_select[0]]);
+				dialog.selector.onApply = setColor;
+				dialog.onApply = setColor;
+			}
 		}
 		
 		return hh;
