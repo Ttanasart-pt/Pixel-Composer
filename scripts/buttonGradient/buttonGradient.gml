@@ -44,7 +44,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		if(is_array(_gradient)) {
 			if(array_length(_gradient) == 0) return 0;
 			
-			h = ui(12) + array_length(_gradient) * _gh;
+			h = ui(8) + array_length(_gradient) * _gh;
 			current_gradient = _gradient[0];
 		} else {
 			h = _h;

@@ -45,7 +45,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		if(array_length(_color) > 0 && is_array(_color[0])) {
 			if(array_length(_color[0]) == 0) return 0;
 			
-			h = ui(12) + array_length(_color) * _ph;
+			h = ui(8) + array_length(_color) * _ph;
 			current_palette = _color[0];
 		} else {
 			h = _h;
@@ -76,8 +76,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 			var _px  = _x + ui(4);
 			var _py  = _y + ui(4) + i * _ph;
 			
-			if(is_array(_pal))
-				drawPalette(_pal, _px, _py, _pw, _ph);
+			if(is_array(_pal)) drawPalette(_pal, _px, _py, _pw, _ph);
 		}
 		
 		if(WIDGET_CURRENT == self)

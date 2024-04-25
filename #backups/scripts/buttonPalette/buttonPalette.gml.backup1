@@ -1,4 +1,4 @@
-// 2024-04-16 09:39:25
+// 2024-04-25 11:09:41
 function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	onApply      = _onApply;
 	parentDialog = dialog;
@@ -77,8 +77,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 			var _px  = _x + ui(4);
 			var _py  = _y + ui(4) + i * _ph;
 			
-			if(is_array(_pal))
-				drawPalette(_pal, _px, _py, _pw, _ph);
+			if(is_array(_pal)) drawPalette(_pal, _px, _py, _pw, _ph);
 		}
 		
 		if(WIDGET_CURRENT == self)

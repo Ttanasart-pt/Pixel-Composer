@@ -31,6 +31,19 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		inputs[| 2].setValue(_to);			// Not necessary due to array reference
 	} #endregion
 		
+	sort_menu = [
+		new MenuItem("Sort Brightness", function() /*=>*/ { sortPalette(0) }),
+		new MenuItem("Sort Dark",		function() /*=>*/ { sortPalette(1) }),
+		
+		new MenuItem("Sort Hue",		function() /*=>*/ { sortPalette(2) }),
+		new MenuItem("Sort Saturation", function() /*=>*/ { sortPalette(3) }),
+		new MenuItem("Sort Value",		function() /*=>*/ { sortPalette(4) }),
+		
+		new MenuItem("Sort Red",		function() /*=>*/ { sortPalette(5) }),
+		new MenuItem("Sort Green",		function() /*=>*/ { sortPalette(6) }),
+		new MenuItem("Sort Blue",		function() /*=>*/ { sortPalette(7) }),
+	];
+		
 	render_palette = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var bx = _x;
 		var by = _y;
@@ -49,6 +62,10 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var vis = jun.visible;
 		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.junc_visible, vis) == 2)
 			jun.visible = !vis;
+			
+		bx += bs + ui(4);
+		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.sort_16) == 2)
+			menuCall("", mouse_mx + ui(4), mouse_my + ui(4), sort_menu);
 			
 		var _from = getInputData(1);
 		var _to   = getInputData(2);
@@ -136,6 +153,36 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			attributes.auto_refresh = !attributes.auto_refresh;
 			triggerRender();
 		})]);
+		
+	static sortPalette = function(type) {
+		var palFrom = inputs[| 1].getValue();
+		var palTo   = inputs[| 2].getValue();
+		
+		var _map = ds_map_create();
+		for (var i = 0, n = array_length(palFrom); i < n; i++)
+			_map[? palFrom[i]] = palTo[i];
+		
+		switch(type) {
+			case 0 : array_sort(palFrom, __sortBright); break;
+			case 1 : array_sort(palFrom, __sortDark);   break;
+			
+			case 2 : array_sort(palFrom, __sortHue); break;
+			case 3 : array_sort(palFrom, __sortSat); break;
+			case 4 : array_sort(palFrom, __sortVal); break;
+			
+			case 5 : array_sort(palFrom, __sortRed);   break;
+			case 6 : array_sort(palFrom, __sortGreen); break;
+			case 7 : array_sort(palFrom, __sortBlue);  break;
+		}
+		
+		for (var i = 0, n = array_length(palTo); i < n; i++)
+			palTo[i] = _map[? palFrom[i]]
+		
+		ds_map_destroy(_map);
+		
+		inputs[| 1].setValue(palFrom);
+		inputs[| 2].setValue(palTo);
+	}
 			
 	static refreshPalette = function() { #region
 		var _surf = inputs[| 0].getValue();
