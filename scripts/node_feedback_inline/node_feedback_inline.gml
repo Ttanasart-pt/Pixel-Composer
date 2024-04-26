@@ -74,9 +74,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) { return false; }
 	
-	static postDeserialize = function() { #region
-		scanJunc();
-	} #endregion
+	static postDeserialize = function() { scanJunc(); }
 		
 	static onDestroy = function() { #region
 		if(junc_in)  junc_in.value_from_loop = noone;

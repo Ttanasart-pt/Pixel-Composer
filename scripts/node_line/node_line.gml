@@ -328,7 +328,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(_total <= 0) break;
 					
-					if(_prog_next == _prog_curr && _segIndexPrev == _segIndex) { print("Terminate line not moving"); break; }
+					if(_prog_next == _prog_curr && _segIndexPrev == _segIndex) { /*print("Terminate line not moving");*/ break; }
 					else if(_prog_next > _prog_curr) {
 						_prog_total += _prog_next - _prog_curr;
 						_total      -= _prog_next - _prog_curr;
@@ -339,10 +339,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_ox		   = _nx;
 					_oy		   = _ny;
 						
-					if(_total_prev == _total && _segIndexPrev == _segIndex && ++_freeze > 16) { print("Terminate line not moving"); break; }
+					if(_total_prev == _total && _segIndexPrev == _segIndex && ++_freeze > 16) { /*print("Terminate line not moving");*/ break; }
 					_total_prev = _total;
 					
-					if(_segIndex >= _segLengthAmo) { print("Terminate line finish last segment"); break; }
+					if(_segIndex >= _segLengthAmo) { /*print("Terminate line finish last segment");*/ break; }
 				}
 				
 				array_resize(points, pointAmo);
