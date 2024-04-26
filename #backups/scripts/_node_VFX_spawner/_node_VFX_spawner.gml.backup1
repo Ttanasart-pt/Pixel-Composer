@@ -1,3 +1,4 @@
+// 2024-04-26 09:57:25
 function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Spawner";
 	update_on_frame = true;
@@ -99,7 +100,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 30] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.rejectArray()
 	
-	inputs[| 31] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface,  [] );
+	inputs[| 31] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface,  [] )
+		.setArrayDepth(1)
+		.rejectArray();
 	
 	inputs[| 32] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(100000, 999999))
 		.rejectArray();

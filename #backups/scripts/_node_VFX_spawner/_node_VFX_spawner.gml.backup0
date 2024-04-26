@@ -1,3 +1,4 @@
+// 2024-04-26 09:58:54
 function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Spawner";
 	update_on_frame = true;

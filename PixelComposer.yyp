@@ -303,11 +303,6 @@
     {"$GMFolder":"","%Name":"text","folderPath":"folders/widgets/text.yy","name":"text","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "IncludedFiles":[
-    {"$GMIncludedFile":"","%Name":"ApolloHelp.html","ConfigValues":{
-        "Itch":{
-          "CopyToMask":"0",
-        },
-      },"CopyToMask":0,"filePath":"datafiles","name":"ApolloHelp.html","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Actions.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Actions.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"icons.ai","CopyToMask":-1,"filePath":"datafiles/data/Actions","name":"icons.ai","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Armature Build.json","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes","name":"Armature Build.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -362,6 +357,11 @@
     {"$GMIncludedFile":"","%Name":"related_node.json","CopyToMask":-1,"filePath":"datafiles/data","name":"related_node.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Theme.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Theme.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"tooltip.zip","CopyToMask":3035426170322551022,"filePath":"datafiles/data","name":"tooltip.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"0",
+        },
+      },"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ffmpeg.exe","CopyToMask":-1,"filePath":"datafiles/ffmpeg/bin","name":"ffmpeg.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE","CopyToMask":-1,"filePath":"datafiles/ffmpeg","name":"LICENSE","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"README.txt","CopyToMask":-1,"filePath":"datafiles/ffmpeg","name":"README.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -416,11 +416,6 @@
     {"$GMIncludedFile":"","%Name":"mf.dll","CopyToMask":-1,"filePath":"datafiles","name":"mf.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfcore.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfcore.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfplat.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfplat.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"README.txt","ConfigValues":{
-        "Itch":{
-          "CopyToMask":"0",
-        },
-      },"CopyToMask":0,"filePath":"datafiles","name":"README.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -455,7 +450,6 @@
     {"$GMIncludedFile":"","%Name":"CommonPS.hlsl","CopyToMask":-1,"filePath":"datafiles/Shaders/3dInstance","name":"CommonPS.hlsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"CommonVS.hlsl","CopyToMask":-1,"filePath":"datafiles/Shaders/3dInstance","name":"CommonVS.hlsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"rubber_duck_toy_1k.bin","CopyToMask":-1,"filePath":"datafiles/Shaders/3dInstance","name":"rubber_duck_toy_1k.bin","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"Steamworks_Extension_Documentation.html","CopyToMask":0,"filePath":"datafiles","name":"Steamworks_Extension_Documentation.html","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ucrtbased.dll","ConfigValues":{},"CopyToMask":-1,"filePath":"datafiles","name":"ucrtbased.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"webpmux.exe","CopyToMask":-1,"filePath":"datafiles/webp","name":"webpmux.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Welcome files.zip","CopyToMask":-1,"filePath":"datafiles","name":"Welcome files.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

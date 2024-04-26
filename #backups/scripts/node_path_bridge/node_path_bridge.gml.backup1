@@ -1,3 +1,4 @@
+// 2024-04-26 14:39:57
 function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Bridge Path";
 	w    = 96;

@@ -1,3 +1,4 @@
+// 2024-04-26 10:18:35
 function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
 	name     = "Surface Extrude";
 	
