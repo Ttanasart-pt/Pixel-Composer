@@ -136,6 +136,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _p = eval_bezier(_rat, p0[0], p0[1], p1[0], p1[1], _c0x, _c0y, _c1x, _c1y);
 			out.x = _p[0];
 			out.y = _p[1];
+			
 		} else {
 			out.x = lerp(p0[0], p1[0], _rat);
 			out.y = lerp(p0[1], p1[1], _rat);

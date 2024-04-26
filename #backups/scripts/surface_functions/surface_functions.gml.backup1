@@ -1,4 +1,4 @@
-// 2024-04-21 15:41:27
+// 2024-04-26 15:43:13
 #region ==================================== DRAW ====================================
 
 	function draw_surface_safe(surface, _x = 0, _y = 0) { #region
@@ -559,7 +559,8 @@
 	} #endregion
 
 	function surface_encode(surface, stringify = true) { #region
-		if(!is_surface(surface)) return "";
+		if(is_instanceof(surface, SurfaceAtlas)) surface = surface.surface.get();
+		if(!surface_exists(surface)) return "";
 	
 		var buff = buffer_create(surface_get_width_safe(surface) * surface_get_height_safe(surface) * 4, buffer_fixed, 1);
 		

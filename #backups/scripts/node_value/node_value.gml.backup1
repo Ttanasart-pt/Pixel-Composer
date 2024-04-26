@@ -1,4 +1,4 @@
-// 2024-04-24 08:42:22
+// 2024-04-24 08:43:01
 #region ---- global names ----
 	global.junctionEndName = [ "Hold", "Loop", "Ping pong", "Wrap" ];
 

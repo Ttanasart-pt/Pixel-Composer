@@ -1,4 +1,4 @@
-// 2024-04-26 09:57:25
+// 2024-04-26 16:29:54
 function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Spawner";
 	update_on_frame = true;
@@ -100,9 +100,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 30] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.rejectArray()
 	
-	inputs[| 31] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface,  [] )
-		.setArrayDepth(1)
-		.rejectArray();
+	inputs[| 31] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface,  [] );
 	
 	inputs[| 32] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(100000, 999999))
 		.rejectArray();
@@ -358,8 +356,18 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		if(array_empty(surfs)) return;
 		
 		for( var i = 0, n = array_length(surfs); i < n; i++ ) {
-			if(is_surface(surface_cache[$ surfs[i]])) continue;
-			surface_cache[$ surfs[i]] = surface_clone(surfs[i]);
+			var _s = surfs[i];
+			
+			if(is_surface(surface_cache[$ _s])) 
+				continue;
+				
+			if(is_instanceof(_s, SurfaceAtlas))
+				_s = _s.surface.get();
+				
+			if(!surface_exists(_s))
+				continue;
+			
+			surface_cache[$ surfs[i]] = surface_clone(_s);
 		}
 	} #endregion
 	

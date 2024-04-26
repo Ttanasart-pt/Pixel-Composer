@@ -218,8 +218,9 @@
 
 	function surface_get_pixel_ext(surface, _x, _y) { #region
 		INLINE
-	
-		if(!is_surface(surface)) return 0;
+		
+		if(is_instanceof(surface, SurfaceAtlas)) surface = surface.surface.get();
+		if(!surface_exists(surface)) return 0;
 		var px = surface_getpixel_ext(surface, _x, _y);
 	
 		if(is_numeric(px)) return int64(px);
@@ -558,7 +559,8 @@
 	} #endregion
 
 	function surface_encode(surface, stringify = true) { #region
-		if(!is_surface(surface)) return "";
+		if(is_instanceof(surface, SurfaceAtlas)) surface = surface.surface.get();
+		if(!surface_exists(surface)) return "";
 	
 		var buff = buffer_create(surface_get_width_safe(surface) * surface_get_height_safe(surface) * 4, buffer_fixed, 1);
 		
