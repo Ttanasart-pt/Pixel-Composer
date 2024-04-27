@@ -1,3 +1,4 @@
+// 2024-04-27 09:32:10
 enum RENDER_TYPE {
 	none = 0,
 	partial = 1,
@@ -73,7 +74,7 @@ function NodeListSort(_list, _nodeList) { #region
 	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ ) 
 		_nodeList[| i].clearTopoSorted();
 	
-	// print($"===================== NODE LIST SORT =====================")
+	print($"===================== NODE LIST SORT =====================")
 	
 	ds_list_clear(_list);
 	__topoSort(_list, _nodeList);
@@ -92,7 +93,7 @@ function __sortNode(_list, _node) { #region
 		array_push(_parents, _in);
 	}
 		
-	// print($"        > Checking {_node.name}: {array_length(_parents)}");
+	print($"        > Checking {_node.name}: {array_length(_parents)}");
 		
 	if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
 		__topoSort(_list, _node.nodes);
@@ -104,7 +105,7 @@ function __sortNode(_list, _node) { #region
 		ds_list_add(_list, _node);
 		_node.topoSorted = true;
 			
-		// print($"        > Adding > {_node.name}");
+		print($"        > Adding > {_node.name}");
 	}
 } #endregion
 
@@ -137,7 +138,7 @@ function __topoSort(_list, _nodeList) { #region
 		if(_isRoot) array_push(_root, _node);
 	}
 	
-	// print($"Root: {_root}");
+	print($"Root: {_root}");
 	
 	for( var i = 0, n = array_length(_root); i < n; i++ ) 
 		__sortNode(_list, _root[i]);

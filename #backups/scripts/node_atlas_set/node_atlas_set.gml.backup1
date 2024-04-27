@@ -1,3 +1,4 @@
+// 2024-04-27 10:00:54
 function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Atlas Set";
 	previewable = true;
@@ -8,15 +9,15 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 1] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
-	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
+		.setDisplay(VALUE_DISPLAY.vector, 2)
 		.setArrayDepth(1);
 	
 	inputs[| 3] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
 		.setArrayDepth(1);
 	
-	inputs[| 4] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 4] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
+		.setDisplay(VALUE_DISPLAY.vector, 2)
 		.setArrayDepth(1);
 		
 	inputs[| 5] = nodeValue("Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [])

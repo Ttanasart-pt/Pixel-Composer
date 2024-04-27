@@ -1,3 +1,4 @@
+// 2024-04-27 10:05:49
 function Node_Atlas_Get(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Atlas Get";
 	previewable = true;
