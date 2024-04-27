@@ -1,4 +1,4 @@
-// 2024-04-27 15:33:00
+// 2024-04-27 15:45:59
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -57,6 +57,8 @@ vec4 smear(vec2 angle) { #region
 			maxBright = bright;
 			res = col;
 		}
+		
+		//if(col.a > 0.) res = col;
 	}
 	
 	if(modulateStr == 1) {

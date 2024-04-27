@@ -1,4 +1,4 @@
-// 2024-04-22 18:54:03
+// 2024-04-27 16:12:22
 function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constructor { #region
 	name = _name;
 	spr  = _spr;
@@ -566,6 +566,7 @@ function __initNodes() {
 		addNodeObject(filter, "Shape Blur",			s_node_shape_blur,		"Node_Blur_Shape",		[1, Node_Blur_Shape]).setVersion(11650);
 		addNodeObject(filter, "Average",			s_node_average,			"Node_Average",			[1, Node_Average],, "Average color of every pixels in the image.").setVersion(1110);
 		addNodeObject(filter, "Smear",				s_node_smear,			"Node_Smear",			[1, Node_Smear]).setVersion(11670);
+		addNodeObject(filter, "Kuwahara",			s_node_kuwahara,		"Node_Kuwahara",		[1, Node_Kuwahara]).setVersion(11660);
 		
 		ds_list_add(filter, "Warps");
 		addNodeObject(filter, "Mirror",				s_node_mirror,			"Node_Mirror",			[1, Node_Mirror],, "Reflect the image along a reflection line.").setVersion(1070);
@@ -600,8 +601,6 @@ function __initNodes() {
 		addNodeObject(filter, "Chromatic Aberration",	s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	[1, Node_Chromatic_Aberration],, "Apply chromatic aberration effect to the image.");
 		addNodeObject(filter, "Vignette",			s_node_vignette,		"Node_Vignette",		[1, Node_Vignette],, "Apply vignette effect to the border.").setVersion(11630);
 		addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA],, "Apply fast approximate anti-aliasing to the image.");
-		addNodeObject(filter, "Kuwahara",			s_node_kuwahara,		"Node_Kuwahara",		[1, Node_Kuwahara]).setVersion(11660);
-		//addNodeObject(filter, "Rim",				s_node_kuwahara,		"Node_Rim",				[1, Node_Rim]).setVersion(11690);
 		//addNodeObject(filter, "Blend Edge",			s_node_FXAA,			"Node_Blend_Edge",		[1, Node_Blend_Edge]).setVersion(11640);
 		
 		ds_list_add(filter, "Colors");

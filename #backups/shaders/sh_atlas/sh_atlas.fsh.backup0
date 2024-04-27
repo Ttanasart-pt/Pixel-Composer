@@ -1,10 +1,11 @@
-// 2024-04-18 08:42:38
+// 2024-04-27 16:30:10
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
 
 #define TAU 6.283185307179586
+#define distance_sample 64.
 
 void main() {
 	vec2 tx  = 1. / dimension;
@@ -14,11 +15,11 @@ void main() {
 	if(col.a == 1.)
 		return;
 	
-	for(float i = 1.; i <= 64.; i++) {
+	for(float i = 1.; i <= distance_sample; i++) {
 		float base = 1.;
 		float top  = 0.;
 		
-		for(float j = 0.; j <= 64.; j++) {
+		for(float j = 0.; j <= 128.; j++) {
 			float ang = top / base * TAU;
 			top += 2.;
 			if(top >= base) {
@@ -26,8 +27,8 @@ void main() {
 				base *= 2.;
 			}
 			
-			vec2 pxs = v_vTexcoord + vec2( cos(ang),  sin(ang)) * i * tx;
-			vec4 sam = texture2D( gm_BaseTexture, pxs );
+			vec2  pxs = v_vTexcoord + vec2( cos(ang),  sin(ang)) * i * tx;
+			vec4  sam = texture2D( gm_BaseTexture, pxs );
 				
 			if(sam.a < 1.) continue;
 			

@@ -18,7 +18,7 @@ void main() {
 		float base = 1.;
 		float top  = 0.;
 		
-		for(float j = 0.; j <= 64.; j++) {
+		for(float j = 0.; j <= 128.; j++) {
 			float ang = top / base * TAU;
 			top += 2.;
 			if(top >= base) {
