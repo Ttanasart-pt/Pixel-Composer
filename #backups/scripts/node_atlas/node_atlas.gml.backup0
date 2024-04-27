@@ -1,4 +1,4 @@
-// 2024-04-18 08:44:11
+// 2024-04-27 18:41:22
 function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Expand";
 	
@@ -27,7 +27,7 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		if(_meth == 0) {
 			var _bg  = 0;
-			var _itr = ceil(max(_dim[0], _dim[1]) / 64);
+			var _itr = ceil(max(_dim[0], _dim[1]) / 16);
 		
 			surface_set_shader(temp_surface[!_bg]);
 				draw_surface_safe(_surf);

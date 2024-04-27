@@ -26,7 +26,7 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		if(_meth == 0) {
 			var _bg  = 0;
-			var _itr = ceil(max(_dim[0], _dim[1]) / 64);
+			var _itr = ceil(max(_dim[0], _dim[1]) / 16);
 		
 			surface_set_shader(temp_surface[!_bg]);
 				draw_surface_safe(_surf);
