@@ -1662,9 +1662,12 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 	} #endregion
 	
-	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
+	function drawContent(panel) { #region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
 			
+		if(do_fullView) fullView();
+		do_fullView = false;
+		
 		var _prev_node   = getNodePreview();
 		
 		d3_active = _prev_node != noone && _prev_node.is_3D;
@@ -1703,11 +1706,6 @@ function Panel_Preview() : PanelContent() constructor {
 			if(tool) drawNodeTools(pFOCUS, tool);
 		} else 
 			tool_current = noone;
-		
-		if(do_fullView) {
-			do_fullView = false;
-			fullView();
-		}
 		
 		if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
 			menuCall("preview_context_menu",,, [ 

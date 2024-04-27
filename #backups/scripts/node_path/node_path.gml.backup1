@@ -1,3 +1,4 @@
+// 2024-04-27 12:34:23
 enum _ANCHOR {
 	x,
 	y,
@@ -892,7 +893,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
 	
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
-		var pix = (path_loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal;
+		var pix = (path_loop? frac(_rat), clamp(_rat, 0, 0.99)) * lengthTotal;
 		return getPointDistance(pix, _ind, out);
 	} #endregion
 	

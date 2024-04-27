@@ -1,4 +1,4 @@
-// 2024-04-24 09:55:24
+// 2024-04-27 10:52:15
 #region funtion calls
 	function __fnInit_Inspector() {
 		__registerFunction("inspector_copy_prop",				panel_inspector_copy_prop);
@@ -859,7 +859,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		     if(inspectGroup == 1)  txt = $"[{array_length(PANEL_GRAPH.nodes_selecting)}] {txt}"; 
 		else if(inspectGroup == -1) txt = $"[{array_length(PANEL_GRAPH.nodes_selecting)}] Multiple nodes"; 
 		
-		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), txt, [mx, my]);
+		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), txt, [ mx, my ]);
 		
 		if(inspectGroup >= 0) {
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
@@ -932,27 +932,25 @@ function Panel_Inspector() : PanelContent() constructor {
 		}
 	} #endregion
 	
-	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
+	function drawContent(panel) { #region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
 		
-		if(inspecting && !inspecting.active)
-			inspecting = noone;
+		if(inspecting && !inspecting.active) inspecting = noone;
 		
 		if(inspecting) {
-			var _ins     = instanceof(inspecting);
-			var _nodes   = PANEL_GRAPH.nodes_selecting;
+			var _nodes = PANEL_GRAPH.nodes_selecting;
 			
 			inspectGroup = array_length(_nodes) > 1;
 			inspectings  = array_empty(_nodes)? [ inspecting ] : _nodes;
 			
-			for( var i = 0, n = array_length(_nodes); i < n; i++ )
-				if(instanceof(_nodes[i]) != _ins) { inspectGroup = -1; break; }
+			for( var i = 1, n = array_length(_nodes); i < n; i++ ) if(instanceof(_nodes[i]) != instanceof(_nodes[0])) { inspectGroup = -1; break; }
 			
 			title = inspecting.renamed? inspecting.display_name : inspecting.name;
 			inspecting.inspectorStep();
 			drawInspectingNode();
+			
 		} else {
 			title = __txt("Inspector");
 			
