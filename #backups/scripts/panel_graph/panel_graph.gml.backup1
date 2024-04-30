@@ -1,4 +1,4 @@
-// 2024-04-30 15:48:50
+// 2024-04-30 15:49:15
 #region funtion calls
 	function __fnInit_Graph() {
 		__registerFunction("graph_add_node",			panel_graph_add_node);
