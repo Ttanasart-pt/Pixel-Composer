@@ -132,12 +132,12 @@
 	} #endregion
 
 	function surface_valid(surf, w, h, format = surface_rgba8unorm) { #region
-	INLINE
-	
-	if(!is_surface(surf)) return false;
-	var _sw = surface_get_width(surf);
-	var _sh = surface_get_height(surf);
-	var _f  = surface_get_format(surf);
+		INLINE
+		
+		if(!is_surface(surf)) return false;
+		var _sw = surface_get_width(surf);
+		var _sh = surface_get_height(surf);
+		var _f  = surface_get_format(surf);
 	
 	return _sw == w && _sh == h && _f == format;
 } #endregion
@@ -472,9 +472,9 @@
 	function surface_valid_size(s) { #region
 		INLINE
 	
-		if(!is_numeric(s))    return 1;
+		if(!is_numeric(s)) return 1;
 		if(is_infinity(s)) return 1;
-		return clamp(round(s), 1, 8196);
+		return clamp(round(s), 1, 8192);
 	} #endregion
 
 	function surface_array_free(arr) { #region

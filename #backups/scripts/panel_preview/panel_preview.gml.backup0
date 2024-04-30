@@ -1,4 +1,4 @@
-// 2024-04-27 10:32:06
+// 2024-04-30 13:08:35
 #region funtion calls
 	function __fnInit_Preview() {
 		__registerFunction("preview_focus_content",				panel_preview_focus_content);
@@ -1776,4 +1776,20 @@ function Panel_Preview() : PanelContent() constructor {
 			ind++;
 		}
 	} #endregion
+	
+	
+	static serialize   = function() { 
+		return { 
+			name: instanceof(self), 
+			preview_node, 
+		}; 
+	}
+	
+	static deserialize = function(data) { 
+		preview_node = data.preview_node;
+		
+		run_in(1, fullView)
+		return self; 
+	}
+	
 }

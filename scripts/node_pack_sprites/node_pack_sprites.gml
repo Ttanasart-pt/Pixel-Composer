@@ -37,10 +37,10 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _sh = surface_get_height_safe(_surf);
 			
 			draw_rectangle(
-				_x + _s * (_sx + spac), 
-				_y + _s * (_sy + spac), 
-				_x + _s * (_sx + _sw - spac), 
-				_y + _s * (_sy + _sh - spac), true);
+				_x + _s * (_sx), 
+				_y + _s * (_sy), 
+				_x + _s * (_sx + _sw), 
+				_y + _s * (_sy + _sh), true);
 		}
 	} #endregion
 	
@@ -77,14 +77,17 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _hei = getInputData(3);
 				pack = sprite_pack_skyline(_rects, _wid, _hei); 
 				break;
+				
 			case 1 : 
 				var _wid = getInputData(2);
 				pack = sprite_pack_shelf(_rects, _wid); 
 				break;
+				
 			case 2 : 
 				var _hei = getInputData(3);
 				pack = sprite_pack_bottom_left(_rects, _hei); 
 				break;
+				
 			case 3 : 
 				pack = sprite_pack_best_fit(_rects); 
 				break;

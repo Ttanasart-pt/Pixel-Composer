@@ -1,4 +1,4 @@
-// 2024-04-22 17:28:16
+// 2024-04-30 13:08:37
 #region data
 	globalvar PANEL_MAIN, PANEL_MENU, PANEL_PREVIEW, PANEL_INSPECTOR, PANEL_GRAPH, PANEL_ANIMATION, PANEL_COLLECTION;
 	globalvar FULL_SCREEN_PANEL, FULL_SCREEN_CONTENT, FULL_SCREEN_PARENT;
@@ -48,11 +48,11 @@
 	
 	function getPanelFromName(name, create = false) { #region
 		switch(name) {
-			case "Panel_Menu"       : return (create || findPanel(name))? new Panel_Menu()		 : PANEL_MENU;
-			case "Panel_Inspector"  : return (create || findPanel(name))? new Panel_Inspector()	 : PANEL_INSPECTOR;
-			case "Panel_Animation"  : return (create || findPanel(name))? new Panel_Animation()	 : PANEL_ANIMATION;
-			case "Panel_Preview"    : return (create || findPanel(name))? new Panel_Preview()	 : PANEL_PREVIEW;
-			case "Panel_Graph"      : return (create || findPanel(name))? new Panel_Graph()		 : PANEL_GRAPH;
+			case "Panel_Menu"       : var p = (create || findPanel(name))? new Panel_Menu()		 : PANEL_MENU;		PANEL_MENU	    = p; return p;
+			case "Panel_Inspector"  : var p = (create || findPanel(name))? new Panel_Inspector() : PANEL_INSPECTOR; PANEL_INSPECTOR = p; return p;
+			case "Panel_Animation"  : var p = (create || findPanel(name))? new Panel_Animation() : PANEL_ANIMATION; PANEL_ANIMATION = p; return p;
+			case "Panel_Preview"    : var p = (create || findPanel(name))? new Panel_Preview()	 : PANEL_PREVIEW;	PANEL_PREVIEW	= p; return p;
+			case "Panel_Graph"      : var p = (create || findPanel(name))? new Panel_Graph()	 : PANEL_GRAPH; 	PANEL_GRAPH 	= p; return p;
 			
 			case "Panel_Collection"		: return new Panel_Collection();
 			case "Panel_Workspace"		: return new Panel_Workspace();
@@ -76,6 +76,7 @@
 		var cont = str.content;
 		
 		if(variable_struct_exists(str, "split")) {
+			
 			var pan = panel;
 			if(str.split == "v")
 				pan = panel.split_v(ui(str.width));
@@ -87,10 +88,17 @@
 				loadPanelStruct(pan[1], cont[1]);
 			}
 		} else {
+			
 			if(!is_array(cont)) cont = [ cont ];
 			for( var i = 0, n = array_length(cont); i < n; i++ ) {
-				var _cont = getPanelFromName(cont[i])
-				if(_cont != noone) panel.setContent(_cont);
+				var _content = cont[i];
+				var _key = is_struct(_content)? _content.name : _content;
+				
+				var _pnCont = getPanelFromName(_key, true);
+				if(_pnCont == noone) continue; 
+				
+				panel.setContent(_pnCont);
+				if(is_struct(_content)) _pnCont.deserialize(_content);
 			}
 		}
 	} #endregion
@@ -327,34 +335,33 @@
 		}
 	} #endregion
 	
-	function panelSerialize() { #region
-		var cont = {};
-		cont.panel = _panelSerialize(PANEL_MAIN);
-		return cont;
+	function panelSerialize(_content = false) { #region
+		return { panel : _panelSerialize(PANEL_MAIN, _content) };
 	} #endregion
 	
-	function _panelSerialize(panel) { #region
+	function _panelSerialize(_panel, _content = false) { #region
 		var cont = {};
 		var ind = 0;
 		
 		cont.content = [];
-		if(panel.split != "" && ds_list_size(panel.childs) == 2) {
-			cont.split = panel.split;
-			if(panel.split == "h") {
-				ind = panel.childs[| 1].w < panel.childs[| 0].w;
-				cont.width = panel.childs[| ind].w * (panel.childs[| ind].x == panel.x? 1 : -1);
+		if(_panel.split != "" && ds_list_size(_panel.childs) == 2) {
+			cont.split = _panel.split;
+			if(_panel.split == "h") {
+				ind = _panel.childs[| 1].w < _panel.childs[| 0].w;
+				cont.width = _panel.childs[| ind].w * (_panel.childs[| ind].x == _panel.x? 1 : -1);
 				
 			} else {
-				ind = panel.childs[| 1].h < panel.childs[| 0].h;
-				cont.width = panel.childs[| ind].h * (panel.childs[| ind].y == panel.y? 1 : -1);
+				ind = _panel.childs[| 1].h < _panel.childs[| 0].h;
+				cont.width = _panel.childs[| ind].h * (_panel.childs[| ind].y == _panel.y? 1 : -1);
 			}
 			
-			ind = panel.childs[| 1].x == panel.x && panel.childs[| 1].y == panel.y;
-			for( var i = 0; i < ds_list_size(panel.childs); i++ )
-				cont.content[i] = _panelSerialize(panel.childs[| (ind + i) % 2]);
+			ind = _panel.childs[| 1].x == _panel.x && _panel.childs[| 1].y == _panel.y;
+			for( var i = 0; i < ds_list_size(_panel.childs); i++ )
+				cont.content[i] = _panelSerialize(_panel.childs[| (ind + i) % 2], _content);
+				
 		} else {
-			for( var i = 0, n = array_length(panel.content); i < n; i++ )
-				cont.content[i] = instanceof(panel.content[i]);
+			for( var i = 0, n = array_length(_panel.content); i < n; i++ )
+				cont.content[i] = _content? _panel.content[i].serialize() : instanceof(_panel.content[i]);
 		}
 		
 		return cont;

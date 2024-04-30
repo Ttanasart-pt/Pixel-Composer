@@ -17,7 +17,7 @@
 	
 	globalvar window_preminimize_rect;  window_preminimize_rect = [ 0, 0, 1, 1 ];
 	
-	#macro DISPLAY_REFRESH CURRENT_PANEL = panelSerialize(); display_refresh();
+	#macro DISPLAY_REFRESH CURRENT_PANEL = panelSerialize(true); display_refresh();
 #endregion
 
 function winManInit() { #region

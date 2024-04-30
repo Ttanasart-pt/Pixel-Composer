@@ -1022,4 +1022,20 @@ function Panel_Inspector() : PanelContent() constructor {
 		if(!locked && PANEL_GRAPH.getFocusingNode() && inspecting != PANEL_GRAPH.getFocusingNode())
 			setInspecting(PANEL_GRAPH.getFocusingNode());
 	} #endregion
+
+	static serialize   = function() { 
+		return { 
+			name: instanceof(self), 
+			inspecting, 
+			inspectings,
+		}; 
+	}
+	
+	static deserialize = function(data) { 
+		inspecting  = data.inspecting;
+		inspectings = data.inspectings;
+		
+		return self; 
+	}
+	
 }

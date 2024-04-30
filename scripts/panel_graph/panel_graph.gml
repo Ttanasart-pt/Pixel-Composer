@@ -131,14 +131,21 @@ function connectionParameter() constructor { #region
 } #endregion
 
 function Panel_Graph(project = PROJECT) : PanelContent() constructor {
-	title = __txt("Graph");
+	title       = __txt("Graph");
 	title_raw   = "";
 	context_str = "Graph";
-	icon  = THEME.panel_graph_icon;
+	icon        = THEME.panel_graph_icon;
+	
+	function setTitle() {
+		title_raw = project.path == ""? "New project" : filename_name_only(project.path);
+		title = title_raw + (project.modified? "*" : ""); 
+	}
 	
 	static setProject = function(project) {
 		self.project = project;
 		nodes_list   = project.nodes;
+		
+		setTitle();
 	}
 	setProject(project);
 	
@@ -1801,15 +1808,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		context_frame_ey = context_frame_sy + 16;
 	} #endregion
 	
-	function setTitle() { #region
-		title = title_raw + (project.modified? "*" : "");
-	} #endregion
-	
 	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
 		if(!project.active) return;
 		
-		if(project.path == "")	title_raw = "New project";
-		else					title_raw = filename_name_only(project.path);
 		dragGraph();
 		
 		var context = getCurrentContext();
@@ -2074,32 +2075,42 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var _n0 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[0] : nodes_selecting[1];
 			var _n1 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[1] : nodes_selecting[0];
 			
-			if(_n0.outputs[| 0].type != VALUE_TYPE.surface || _n1.outputs[| 0].type != VALUE_TYPE.surface) return;
-			
 			var cx = max(_n0.x, _n1.x) + 160;
 			var cy = round((_n0.y + _n1.y) / 2 / 32) * 32;
 			
-			var _blend = new Node_Blend(cx, cy, getCurrentContext());
-			_blend.inputs[| 0].setFrom(_n0.outputs[| 0]);
-			_blend.inputs[| 1].setFrom(_n1.outputs[| 0]);
+			var _j0 = _n0.outputs[| 0]; 
+			var _j1 = _n1.outputs[| 0]; 
+				
+			if(_j0.type == VALUE_TYPE.surface && _j1.type == VALUE_TYPE.surface) {
+				var _blend = new Node_Blend(cx, cy, getCurrentContext());
+				_blend.inputs[| 0].setFrom(_j0);
+				_blend.inputs[| 1].setFrom(_j1);
+				
+			} else if((_j0.type == VALUE_TYPE.integer || _j0.type == VALUE_TYPE.float) && (_j1.type == VALUE_TYPE.integer || _j1.type == VALUE_TYPE.float)) {
+				var _blend = new Node_Math(cx, cy, getCurrentContext());
+				_blend.inputs[| 1].setFrom(_j0);
+				_blend.inputs[| 2].setFrom(_j1);
+				
+			}
 			
 			nodes_selecting = [];
 		} #endregion
-	
+		
 		function doCompose() { #region
 			if(array_empty(nodes_selecting)) return;
 		
-			var cx = nodes_selecting[0].x;
-			var cy = 0;
-			var pr  = ds_priority_create();
-			var amo = array_length(nodes_selecting);
-			var len = 0;
+			var cx   = nodes_selecting[0].x;
+			var cy   = 0;
+			var pr   = ds_priority_create();
+			var amo  = array_length(nodes_selecting);
+			var len  = 0;
 			
 			for(var i = 0; i < amo; i++) {
 				var _node = nodes_selecting[i];
 				if(ds_list_size(_node.outputs) == 0) continue;
+				
 				if(_node.outputs[| 0].type != VALUE_TYPE.surface) continue;
-					
+				
 				cx = max(cx, _node.x);
 				cy += _node.y;
 				
@@ -2110,7 +2121,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			cx = cx + 160;
 			cy = round(cy / len / 32) * 32;
 			
-			var _compose = nodeBuild("Node_Composite", cx, cy);
+			var _compose = new Node_Composite(cx, cy, getCurrentContext());
 			
 			repeat(len) {
 				var _node = ds_priority_delete_min(pr);
@@ -2338,6 +2349,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	static onFullScreen = function() { run_in(1, fullView); }
+	
+	static serialize   = function() { 
+		return { 
+			name: instanceof(self), 
+			project, 
+		}; 
+	}
+	
+	static deserialize = function(data) { 
+		setProject(data.project);
+		return self; 
+	}
 	
 	function close() { #region
 		var panels = findPanels("Panel_Graph");

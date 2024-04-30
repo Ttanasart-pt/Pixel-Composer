@@ -36,7 +36,7 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	} #endregion
 	
 	static update = function() { #region
-		if(recoverCache()) return;
+		if(recoverCache() || cache_loading) return;
 		
 		if(!inputs[| 0].value_from) return;
 		if(!inputs[| 0].value_from.node.renderActive) {

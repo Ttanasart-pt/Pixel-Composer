@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -10,8 +7,8 @@ uniform int maxShape;
 uniform int ignore;
 
 void main() {
-	vec4 zero = vec4(0.);
-	vec2 pxPos = v_vTexcoord * vec2(float(maxShape), 1.);
+	vec4 zero  = vec4(0.);
+	vec2 pxPos = v_vTexcoord * vec2(float(maxShape), 1.) - 0.5;
 	
 	int amo = 0;
 	vec4 list[1024];
@@ -41,6 +38,5 @@ void main() {
 		amo++;
 	}
 	
-	if(floor(pxPos.x) == 0.)
-		gl_FragColor = vec4(float(amo) / 255., 0., 0., 1.);
+	if(floor(pxPos.x) == 0.) gl_FragColor = vec4(amo, 0., 0., 0.);
 }

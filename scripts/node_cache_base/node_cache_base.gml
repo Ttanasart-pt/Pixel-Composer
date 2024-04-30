@@ -38,6 +38,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	static enableNodeGroup = function() { #region
 		if(LOADING || APPENDING) return; 
+		print("Enacle");
 		
 		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
 			cache_group_members[i].renderActive = true;
@@ -46,6 +47,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	static disableNodeGroup = function() { #region
 		if(LOADING || APPENDING) return;
+		print("Disable");
 		
 		if(IS_PLAYING && IS_LAST_FRAME)
 		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )

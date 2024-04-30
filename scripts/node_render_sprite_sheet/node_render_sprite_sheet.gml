@@ -378,7 +378,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			ww += padd[0] + padd[2];
 			hh += padd[1] + padd[3];
 				
-			_out[i] = surface_verify(array_safe_get_fast(_out, i), ww, hh, cDep);
+			_out[i] = surface_verify(array_safe_get_fast(_out, i), surface_valid_size(ww), surface_valid_size(hh), cDep);
 			
 			if(clear) surface_clear(_out[i]);
 		}

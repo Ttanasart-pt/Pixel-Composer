@@ -1,31 +1,26 @@
 function sprite_pack_best_fit(rectangles) {
-    array_sort(rectangles, function(rect1, rect2) {
-        return rect2.w * rect2.h - rect1.w * rect1.h;
-    });
 	
-    var area = new Rectangle(0, 0, 0, 0);
+	var area = new Rectangle(0, 0, 0, 0);
+	if(array_length(rectangles) <= 1) return [ area, rectangles ];
 	
-	var grW = 1;
-	var grH = 1;
+    array_sort(rectangles, function(rect1, rect2) { return rect2.w * rect2.h - rect1.w * rect1.h; });
+	
+	var grW  = rectangles[0].w;
+	var grH  = rectangles[0].h;
 	var _or, _nr;
 	
-    for (var i = 0; i < array_length(rectangles); i++) {
+    for (var i = 1; i < array_length(rectangles); i++) {
         _nr = rectangles[i];
 		
-		if(i) {
-			grW = gcd(_nr.w, grW);
-			grH = gcd(_nr.h, grH);
-		} else {
-			grW = _nr.w;
-			grH = _nr.h;
-		}
+		grW = gcd(_nr.w, grW);
+		grH = gcd(_nr.h, grH);
 	}
 	
     for (var i = 0; i < array_length(rectangles); i++) {
         var rect = rectangles[i];
 
         var bestSpace = noone;
-        var bestArea = new Rectangle(0, 0, 0, 0);
+        var bestArea  = new Rectangle(0, 0, 0, 0);
 		
         for (var xx = area.x; xx <= area.x + area.w; xx += grW)
         for (var yy = area.y; yy <= area.y + area.h; yy += grH) {

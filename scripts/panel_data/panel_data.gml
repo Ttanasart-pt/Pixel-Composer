@@ -947,6 +947,9 @@ function PanelContent() constructor { #region
 	static checkClosable = function() { return true; }
 	
 	static onClose = function() {}
+	
+	static serialize   = function()     { return { name: instanceof(self) }; }
+	static deserialize = function(data) { return self; }
 } #endregion
 
 function setFocus(target, fstring = noone) { #region

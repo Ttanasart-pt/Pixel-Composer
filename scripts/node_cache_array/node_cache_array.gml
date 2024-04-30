@@ -45,6 +45,8 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	} #endregion
 	
 	static update = function() { #region
+		if(cache_loading) return;
+	
 		if(!inputs[| 0].value_from) return;
 		if(!inputs[| 0].value_from.node.renderActive) {
 			if(!cacheExist(CURRENT_FRAME))

@@ -1775,4 +1775,20 @@ function Panel_Preview() : PanelContent() constructor {
 			ind++;
 		}
 	} #endregion
+	
+	
+	static serialize   = function() { 
+		return { 
+			name: instanceof(self), 
+			preview_node, 
+		}; 
+	}
+	
+	static deserialize = function(data) { 
+		preview_node = data.preview_node;
+		
+		run_in(1, fullView)
+		return self; 
+	}
+	
 }

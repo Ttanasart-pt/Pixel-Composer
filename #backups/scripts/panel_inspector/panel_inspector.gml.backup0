@@ -1,4 +1,4 @@
-// 2024-04-27 10:52:15
+// 2024-04-30 13:07:08
 #region funtion calls
 	function __fnInit_Inspector() {
 		__registerFunction("inspector_copy_prop",				panel_inspector_copy_prop);
@@ -1023,4 +1023,20 @@ function Panel_Inspector() : PanelContent() constructor {
 		if(!locked && PANEL_GRAPH.getFocusingNode() && inspecting != PANEL_GRAPH.getFocusingNode())
 			setInspecting(PANEL_GRAPH.getFocusingNode());
 	} #endregion
+
+	static serialize   = function() { 
+		return { 
+			name: instanceof(self), 
+			inspecting, 
+			inspectings,
+		}; 
+	}
+	
+	static deserialize = function(data) { 
+		inspecting  = data.inspecting;
+		inspectings = data.inspectings;
+		
+		return self; 
+	}
+	
 }
