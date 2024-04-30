@@ -26,7 +26,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	} #endregion
 	
 	static bypassNextNode = function() { #region
-		return iterated < getIterationCount() - 1;
+		return iterated < getIterationCount();
 	} #endregion
 	
 	static getNextNodes = function() { #region

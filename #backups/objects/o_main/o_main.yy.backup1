@@ -1,4 +1,4 @@
-// 2024-04-21 15:25:55
+// 2024-04-21 15:26:33
 #event properties (no comments/etc. here are saved)
 parent_index = -1;
 persistent = true;
@@ -810,8 +810,6 @@ _HOVERING_ELEMENT = noone;
 	if(CTRL  == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.ctrl;
 	if(SHIFT == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.shift;
 	if(ALT   == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.alt;
-	
-	print(HOTKEY_MOD);
 #endregion
 
 #region mouse wrap

@@ -649,12 +649,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(PROJECT.safeMode) return;
 		if(NODE_EXTRACT)     return;
 		
-		var render_timer = get_timer();
+		var render_timer  = get_timer();
+		var _updateRender = !is_instanceof(self, Node_Collection) || !managedRenderOrder;
+		if(_updateRender) setRenderStatus(true);
 		
 		if(cached_manual || (use_cache == CACHE_USE.auto && recoverCache())) {
 			render_cached = true;
 			
-			if(!is_instanceof(self, Node_Collection)) setRenderStatus(true);
+			// if(_updateRender) setRenderStatus(true);
+				
 		} else {
 			render_cached = false;
 			getInputs(frame);
@@ -662,7 +665,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			LOG_BLOCK_START();
 			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {INAME} <<<<<<<<<<");
 			
-			if(!is_instanceof(self, Node_Collection)) setRenderStatus(true);
+			// if(_updateRender) setRenderStatus(true);
+			
 			var sBase = surface_get_target();	
 			
 			try {
@@ -844,7 +848,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {INAME}");
-		LOG_BLOCK_START();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _ot = outputs[| i];
@@ -855,7 +858,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				if(!_to.active) continue; 
 				if(!_to.bypassNextNode()) continue;
 				
-				LOG_BLOCK_END();
 				LOG_BLOCK_END();
 		
 				return _to.getNextNodes();
@@ -874,7 +876,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		LOG_IF(global.FLAG.render == 1, $"→→ Push {nodeNames} to queue.");
 		
-		LOG_BLOCK_END();
 		LOG_BLOCK_END();
 		return nodes;
 	} #endregion

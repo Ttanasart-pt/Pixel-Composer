@@ -1,3 +1,4 @@
+// 2024-04-28 12:25:29
 function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
 	name  = "Pixel Builder";
 	color = COLORS.node_blend_feedback;

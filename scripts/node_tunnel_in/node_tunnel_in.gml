@@ -109,7 +109,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {INAME}");
-		LOG_BLOCK_START();
 		
 		repeat(amo) {
 			if(TUNNELS_OUT[? k] == _key) {
@@ -122,7 +121,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		LOG_IF(global.FLAG.render == 1, $"→→ Push {nodeNames} to queue.");
 		
-		LOG_BLOCK_END();
 		LOG_BLOCK_END();
 		return nodes;
 	} #endregion

@@ -1,4 +1,4 @@
-// 2024-04-16 08:42:15
+// 2024-04-28 14:15:07
 enum COLLECTION_TAG {
 	group = 1,
 	loop = 2
@@ -337,7 +337,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
 		rendered = result;
-		if(rendered == result) return;
+		if(rendered == result) {
+			LOG_BLOCK_END();
+			return;
+		}
 		
 		if(result)
 		for( var i = custom_output_index, n = ds_list_size(outputs); i < n; i++ ) {

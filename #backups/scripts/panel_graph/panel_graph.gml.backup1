@@ -1,4 +1,4 @@
-// 2024-04-21 19:33:07
+// 2024-04-30 10:46:07
 #region funtion calls
 	function __fnInit_Graph() {
 		__registerFunction("graph_add_node",			panel_graph_add_node);
@@ -12,6 +12,7 @@
 		__registerFunction("graph_add_vec2",			panel_graph_add_vec2);
 		__registerFunction("graph_add_vec3",			panel_graph_add_vec3);
 		__registerFunction("graph_add_vec4",			panel_graph_add_vec4);
+		__registerFunction("graph_add_display",			panel_graph_add_display);
 		__registerFunction("graph_add_transform",		panel_graph_add_transform);
 		
 		__registerFunction("graph_select_all",			panel_graph_select_all);
@@ -46,12 +47,13 @@
 	function panel_graph_preview_focus()		{ CALL("graph_preview_focus");		PANEL_GRAPH.setCurrentPreview(); }
 	function panel_graph_preview_window()		{ CALL("graph_preview_window");		PANEL_GRAPH.create_preview_window(PANEL_GRAPH.getFocusingNode()); }
 	
-	function panel_graph_import_image()			{ CALL("graph_import_image");		nodeBuild("Node_Image",				PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
-	function panel_graph_import_image_array()	{ CALL("graph_import_image_array");	nodeBuild("Node_Image_Sequence",	PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
-	function panel_graph_add_number()			{ CALL("graph_add_number");			nodeBuild("Node_Number",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
-	function panel_graph_add_vec2()				{ CALL("graph_add_vec2");			nodeBuild("Node_Vector2",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
-	function panel_graph_add_vec3()				{ CALL("graph_add_vec3");			nodeBuild("Node_Vector3",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
-	function panel_graph_add_vec4()				{ CALL("graph_add_vec4");			nodeBuild("Node_Vector4",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y);	 }
+	function panel_graph_import_image()			{ CALL("graph_import_image");		PANEL_GRAPH.createNodeHotkey("Node_Image");			 }
+	function panel_graph_import_image_array()	{ CALL("graph_import_image_array");	PANEL_GRAPH.createNodeHotkey("Node_Image_Sequence"); }
+	function panel_graph_add_number()			{ CALL("graph_add_number");			PANEL_GRAPH.createNodeHotkey("Node_Number");		 }
+	function panel_graph_add_vec2()				{ CALL("graph_add_vec2");			PANEL_GRAPH.createNodeHotkey("Node_Vector2");		 }
+	function panel_graph_add_vec3()				{ CALL("graph_add_vec3");			PANEL_GRAPH.createNodeHotkey("Node_Vector3");		 }
+	function panel_graph_add_vec4()				{ CALL("graph_add_vec4");			PANEL_GRAPH.createNodeHotkey("Node_Vector4");		 }
+	function panel_graph_add_display()			{ CALL("graph_add_disp");			PANEL_GRAPH.createNodeHotkey("Node_Display_Text");	 }
 	function panel_graph_add_transform()		{ CALL("graph_add_transform");		PANEL_GRAPH.doTransform();	 }
 	
 	function panel_graph_select_all()			{ CALL("graph_select_all");			PANEL_GRAPH.nodes_selecting = ds_list_to_array(PANEL_GRAPH.nodes_list);	 }
@@ -312,6 +314,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		addHotkey("Graph", "Add vector2",			"2", MOD_KEY.none,					panel_graph_add_vec2);
 		addHotkey("Graph", "Add vector3",			"3", MOD_KEY.none,					panel_graph_add_vec3);
 		addHotkey("Graph", "Add vector4",			"4", MOD_KEY.none,					panel_graph_add_vec4);
+		addHotkey("Graph", "Add display",			"D", MOD_KEY.none,					panel_graph_add_display);
 		addHotkey("Graph", "Transform node",		"T", MOD_KEY.ctrl,					panel_graph_add_transform);
 																						
 		addHotkey("Graph", "Select all",			"A", MOD_KEY.ctrl,					panel_graph_select_all);
@@ -1201,8 +1204,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
 					if(val) {
 						value_focus = val;
-						if(key_mod_press(SHIFT))
-							TOOLTIP = [ val.getValue(), val.type ];
+						if(key_mod_press(SHIFT)) TOOLTIP = [ val.getValue(), val.type ];
 					}
 				} catch(e) {
 					log_warning("NODE DRAW", exception_print(e));
@@ -1859,6 +1861,33 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	#region                                                 ++++++++++++++++ node manipulation ++++++++++++++++
+		function createNodeHotkey(_node) { #region
+			var node = nodeBuild(_node, mouse_grid_x, mouse_grid_y);
+			
+			if(value_dragging) {
+				
+				if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
+					if(node.input_display_list != -1) {
+						for (var i = 0, n = array_length(node.input_display_list); i < n; i++) {
+							if(!is_real(node.input_display_list[i])) continue;
+							if(node.inputs[| node.input_display_list[i]].setFrom(value_dragging)) break;
+						}
+							
+					} else {
+						for (var i = 0, n = ds_list_size(node.inputs); i < n; i++)
+							if(node.inputs[| i].setFrom(value_dragging)) break;
+					}
+					
+				} else if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+					
+					for (var i = 0, n = ds_list_size(node.outputs); i < n; i++)
+						if(value_dragging.setFrom(node.outputs[| i])) break;
+				}
+				
+				value_dragging = noone;
+			}
+		} #endregion
+		
 		function doTransform() { #region
 			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
 				var node = nodes_selecting[i];

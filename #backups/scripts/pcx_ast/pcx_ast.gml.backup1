@@ -1,3 +1,4 @@
+// 2024-04-28 09:54:13
 #region data
 	global.EVALUATE_HEAD = noone;
 
@@ -66,6 +67,12 @@
 	global.PCX_FUNCTIONS[? "chr"]    = [ ["x"],		function(val) { return chr(array_safe_get_fast(val, 0)); } ];
 	global.PCX_FUNCTIONS[? "ord"]    = [ ["char"],  function(val) { return ord(array_safe_get_fast(val, 0)); } ];
 	
+	global.PCX_FUNCTIONS[? "print"]    = [ ["string", "warning = 0"],  function(val) { 
+		if(array_safe_get_fast(val, 1)) noti_warning(array_safe_get_fast(val, 0))
+		else print(array_safe_get_fast(val, 0)); 
+		return 0; 
+	} ];
+	
 	global.PCX_FUNCTIONS[? "draw"]    = [ ["surface", "x = 0", "y = 0", "xs = 1", "ys = 1", "rot = 0", "color = white", "alpha = 1"], 
 		function(val) { 
 			var _surface = array_safe_get_fast(val, 0, -1);
@@ -89,12 +96,6 @@
 	global.PCX_FUNCTIONS[? "color_hex"] = [ ["char"],  function(val) { return colorFromHex(array_safe_get_fast(val, 0)); } ];
 	global.PCX_FUNCTIONS[? "color_rgb"] = [ ["red", "green", "blue"],  function(val) { return make_color_rgb(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1), array_safe_get_fast(val, 2)); } ];
 	global.PCX_FUNCTIONS[? "color_hsv"] = [ ["red", "green", "blue"],  function(val) { return make_color_hsv(array_safe_get_fast(val, 0), array_safe_get_fast(val, 1), array_safe_get_fast(val, 2)); } ];
-	
-	global.PCX_FUNCTIONS[? "print"]    = [ ["string", "warning = 0"],  function(val) { 
-		if(array_safe_get_fast(val, 1)) noti_warning(array_safe_get_fast(val, 0))
-		else print(array_safe_get_fast(val, 0)); 
-		return 0; 
-	} ];
 	
 	globalvar PROJECT_VARIABLES;
 	PROJECT_VARIABLES = {};

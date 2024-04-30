@@ -1,4 +1,4 @@
-// 2024-04-26 09:11:44
+// 2024-04-30 08:22:45
 function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x, _y, _group) constructor {
 	name    = "Loop";
 	color   = COLORS.node_blend_loop;
@@ -27,7 +27,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	} #endregion
 	
 	static bypassNextNode = function() { #region
-		return iterated < getIterationCount() - 1;
+		return iterated < getIterationCount();
 	} #endregion
 	
 	static getNextNodes = function() { #region

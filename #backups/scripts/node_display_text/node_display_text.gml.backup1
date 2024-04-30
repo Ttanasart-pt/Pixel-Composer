@@ -1,10 +1,9 @@
-// 2024-04-25 18:20:01
+// 2024-04-30 10:52:20
 function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Display Text";
-	w = 240;
-	h = 160;
+	setDimension(16, 16);
 	
-	bg_spr		= THEME.node_frame_bg;
+	bg_spr = THEME.node_frame_bg;
 	
 	size_dragging = false;
 	size_dragging_w = w;
@@ -21,11 +20,10 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Text")
-		.rejectArray();
+	inputs[| 1] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Text");
 	
 	inputs[| 2] = nodeValue("Style", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Header", "Sub header", "Normal"])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Header", "Sub header", "Normal" ])
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75)
@@ -267,11 +265,11 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static string_raw = function(txt) { #region
-		var index = 1;
-		var _len = string_length(txt);
-		var _ch = "";
-		var _mode = 0;
-		var ss = "";
+		var index  = 1;
+		var _len   = string_length(txt);
+		var _ch    = "";
+		var _mode  = 0;
+		var ss     = "";
 		var ch_str = "";
 		
 		while(index <= _len) {
@@ -336,9 +334,11 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				if(line_width > 0 && string_width(string_raw(ss + _ps)) * fsize >= line_width) {
 					array_push(_lines, ss);
 					ss = _ps;
+					
 				} else if(string_length(_tx) <= 0) {
 					array_push(_lines, ss + _ps);
 					ss = "";
+					
 				} else 
 					ss += _ps;	
 			}
@@ -348,8 +348,32 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static onValueUpdate = function(index = 0) { #region
-		if(index == 1 || index == 4)
-			line_update(getInputData(1), getInputData(4));
+		if(index == 1 || index == 4) line_update(getInputData(1), getInputData(4));
+	} #endregion
+	
+	static preDraw = function(_x, _y, _s) { #region
+		var xx = (x - 3) * _s + _x;
+		var yy = y * _s + _y;
+		var jun;
+		
+		if(in_cache_len != array_length(inputDisplayList) || out_cache_len != ds_list_size(outputs)) {
+			refreshNodeDisplay();
+			
+			in_cache_len  = array_length(inputDisplayList);
+			out_cache_len = ds_list_size(outputs);
+		}
+			
+		var _iny = yy + (junction_draw_hei_y * 0.5) * _s;
+		
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) { inputs[| i].x = xx; inputs[| i].y = _iny; }
+		
+		for(var i = 0; i < in_cache_len; i++) {
+			jun = inputDisplayList[i];
+			
+			jun.x = xx;
+			jun.y = _iny;
+			_iny += junction_draw_hei_y * _s;
+		}
 	} #endregion
 	
 	static drawNodeBase = function(xx, yy, mx, my, _s) { #region
@@ -388,8 +412,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			ta_editor.draw(tx, ty, wid * _s, 0, txt, [ mx, my ] );
 		} else {
-			if(_prev_text != txt)
-				line_update(txt, wid);
+			print(txt)
+			if(_prev_text != txt) line_update(txt, wid);
 			
 			draw_set_alpha(alp);
 			draw_set_text(font, fa_left, fa_top, color);
@@ -404,7 +428,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			draw_set_alpha(1);
 			
-			if(PANEL_GRAPH.node_hovering == self && PANEL_GRAPH.getFocusingNode() == self) {
+			if(inputs[| 1].value_from == noone && PANEL_GRAPH.node_hovering == self && PANEL_GRAPH.getFocusingNode() == self) {
 				if(point_in_rectangle(mx, my, xx, yy, xx + ww + 8, yy + hh + 8) && DOUBLE_CLICK) {
 					ta_editor._current_text = txt;
 					ta_editor.activate();
@@ -415,6 +439,22 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_scale = _s;
 		w = ww + 8;
 		h = hh + 8;
+	} #endregion
+	
+	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
+		if(!active) return;
+		
+		var hover = noone;
+		draw_set_circle_precision(16);
+		
+		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
+			var jun = inputDisplayList[i];
+			
+			if(jun.drawJunction_fast(_s * 4, _mx, _my))
+				hover = jun;
+		}
+		
+		return hover;
 	} #endregion
 	
 	static drawNode = function(_x, _y, _mx, _my, _s) { #region
@@ -431,6 +471,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		button_reactive_update();
 		drawNodeBase(xx, yy, _mx, _my, _s);
-		return noone;
+		
+		return drawJunctions(xx, yy, _mx, _my, _s);
 	} #endregion
 }

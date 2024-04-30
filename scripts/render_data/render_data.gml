@@ -167,6 +167,8 @@ function __nodeIsRenderLeaf(_node) { #region
 } #endregion
 
 function Render(partial = false, runAction = false) { #region
+	LOG_END();
+
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render, $"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {CURRENT_FRAME}] ==============================");
 	
@@ -299,8 +301,6 @@ function RenderList(list) { #region
 			LOG_IF(global.FLAG.render == 1, $"Found leaf {_node.internalName}");
 			ds_queue_enqueue(queue, _node);
 			_node.forwardPassiveDynamic();
-			
-			LOG_BLOCK_END();
 		}
 		
 		LOG_IF(global.FLAG.render == 1, "Get leaf complete: found " + string(ds_queue_size(queue)) + " leaves.");
@@ -331,7 +331,8 @@ function RenderList(list) { #region
 	} catch(e) {
 		noti_warning(exception_print(e));
 	}
-		
+	
+	LOG_BLOCK_END();	
 	LOG_IF(global.FLAG.render == 1, "=== RENDER COMPLETE ===\n");
 	LOG_END();
 	

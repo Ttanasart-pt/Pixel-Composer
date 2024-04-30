@@ -1,4 +1,4 @@
-// 2024-04-20 08:21:26
+// 2024-04-28 11:57:27
 #macro DEF_SURF_W		PROJECT.attributes.surface_dimension[0]
 #macro DEF_SURF_H		PROJECT.attributes.surface_dimension[1]
 #macro DEF_SURF			PROJECT.attributes.surface_dimension
@@ -205,23 +205,35 @@
 		if(array_length(strs) == 0) return 0;
 		
 		if(array_length(strs) == 1) {
-			var splt = string_splice(strs[0], "[");
-			var inp = PROJECT.globalNode.getInput(strs[0]);
-			if(inp == 0) return 0;
+			var _var = strs[0];
+			
+			var splt = string_splice(_var, "[");
+			var inp = PROJECT.globalNode.getInput(_var);
+			if(inp == noone) {
+				noti_warning($"Variable {_var} not found.");
+				return 0;
+			}
 			
 			var _arr = [ 0, 0 ];
 			inp.getValueRecursive(_arr);
-			
 			return _arr[0];
 			
 		} else if(struct_has(PROJECT_VARIABLES, strs[0])) {
-			var _str_var = PROJECT_VARIABLES[$ strs[0]];
-			if(!struct_has(_str_var, strs[1])) return 0;
 			
-			var val = _str_var[$ strs[1]][0];
+			var _cat = strs[0];
+			var _fnc = strs[1];
+			var _str_var = PROJECT_VARIABLES[$ _cat];
+			
+			if(!struct_has(_str_var, _fnc)) {
+				noti_warning($"Variable {_fnc} not found.");
+				return 0;
+			}
+			
+			var val = _str_var[$ _fnc][0];
 			if(is_callable(val))
 				return val();
 			return val;
+			
 		} else if(array_length(strs) > 2) { 
 			var key = strs[0];
 			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return 0;
@@ -243,8 +255,10 @@
 			var _junc_key = string_lower(strs[2]);
 			var _junc     = ds_map_try_get(map, _junc_key, noone);
 			
-			if(_junc == noone) return 0;
-			
+			if(_junc == noone) {
+				noti_warning($"Junction {_junc_key} not found.")
+				return 0;
+			}
 			return _junc.getValue();
 		}
 		
