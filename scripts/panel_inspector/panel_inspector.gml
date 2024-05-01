@@ -753,9 +753,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		}
 		
 		#region color picker
-			if(key_mod_press(ALT) && color_picker_index) {
-				pickers[picker_index].editWidget.onColorPick();
-			}
+			// if(key_mod_press(ALT) && color_picker_index)
+			// 	pickers[picker_index].editWidget.onColorPick();
 			
 			if(MESSAGE != noone && MESSAGE.type == "Color") {
 				var inp = array_safe_get_fast(pickers, picker_index, 0);

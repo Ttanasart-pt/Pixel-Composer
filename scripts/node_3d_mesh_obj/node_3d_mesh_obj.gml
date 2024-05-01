@@ -150,8 +150,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		materialNames = [ "Material" ];
 		materialIndex = [ 0 ];
 		materials     = [ new MTLmaterial("Material") ];
-			
-		if(array_length(materialNames)) {
+		
+		if(obj_raw.use_material) {
 			var _dir     = filename_dir(current_path);
 			var _pathMtl = string_copy(current_path, 1, string_length(current_path) - 4) + ".mtl";
 			if(obj_raw.mtl_path != "") _pathMtl  = _dir + "/" + obj_raw.mtl_path;
@@ -179,8 +179,6 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		
 		for(var i = 0; i < array_length(materialNames); i++) 
 			createMaterial(i);
-		
-		outputs[| 0].setValue(object);
 		
 		triggerRender();
 	} #endregion

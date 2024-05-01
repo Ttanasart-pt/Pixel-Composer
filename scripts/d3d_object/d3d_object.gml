@@ -109,6 +109,11 @@ function __3dObject() constructor {
 	static getCenter = function() { return new __vec3(transform.position.x, transform.position.y, transform.position.z); }
 	static getBBOX   = function() { return new __bbox3D(size.multiplyVec(transform.scale).multiply(-0.5), size.multiplyVec(transform.scale).multiply(0.5)); }
 	
+	#region params
+		defDrawParam  = { wireframe: false };
+		defDrawParamW = { wireframe:  true };
+	#endregion
+	
 	static submit		= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
 	static submitUI		= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
 	static submitSel	= function(scene = {}, shader = noone) { #region
@@ -119,7 +124,7 @@ function __3dObject() constructor {
 	static submitShader = function(scene = {}, shader = noone) {}
 	static submitShadow = function(scene = {}, object = noone) {}
 	
-	static submitVertex = function(scene = {}, shader = noone) { #region
+	static submitVertex = function(scene = {}, shader = noone, param = defDrawParam) { #region
 		var _shader = sh_d3d_default;
 		
 		switch(VF) {
@@ -170,8 +175,6 @@ function __3dObject() constructor {
 					vertex_submit(VB[i], render_type, _tex);
 				} else
 					vertex_submit(VB[i], render_type, _tex);
-					
-				// print($"Submit vertex ({scene}) [{VB[i]}: {vertex_get_buffer_size(VB[i])}]");
 			}
 			
 			gpu_set_tex_repeat(false);

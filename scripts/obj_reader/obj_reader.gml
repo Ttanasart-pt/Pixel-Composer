@@ -15,7 +15,8 @@ function readObj_init(_scale = 1) {
 	matIndex   = [];
 	tris       = [];
 	mtlPath    = "";
-	use_normal = true;
+	use_material = false;
+	use_normal   = true;
 	
 	v  = ds_list_create();
 	vt = ds_list_create();
@@ -84,6 +85,7 @@ function readObj_file() {
 				break;
 				
 			case "usemtl" :
+				use_material = true;
 				var mname = "";
 				for( var i = 1; i < array_length(sep); i++ )
 					mname += (i == 1? "" : " ") + sep[i];
@@ -285,6 +287,7 @@ function readObj_buff() {
 		vertex_groups: VBS,
 		object_counts: _vblen,
 		
+		use_material:	use_material,
 		materials:		mats,
 		material_index: matIndex,
 		use_normal:		use_normal,

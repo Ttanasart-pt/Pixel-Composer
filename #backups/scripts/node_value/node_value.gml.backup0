@@ -1,4 +1,4 @@
-// 2024-05-01 19:28:09
+// 2024-05-01 19:40:14
 #region ---- global names ----
 	global.junctionEndName = [ "Hold", "Loop", "Ping pong", "Wrap" ];
 
@@ -2014,7 +2014,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var _eval = new BBMOD_Quaternion(_qval[0], _qval[1], _qval[2], _qval[3]).ToEuler(true);
 			return setValueDirect(_qval);
 		}
-		
 		return setValueDirect(val, index);
 	}
 	

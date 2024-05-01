@@ -2013,7 +2013,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var _eval = new BBMOD_Quaternion(_qval[0], _qval[1], _qval[2], _qval[3]).ToEuler(true);
 			return setValueDirect(_qval);
 		}
-		
 		return setValueDirect(val, index);
 	}
 	
