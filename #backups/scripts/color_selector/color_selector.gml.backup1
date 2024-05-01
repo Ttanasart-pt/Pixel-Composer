@@ -1,4 +1,4 @@
-// 2024-05-01 08:40:09
+// 2024-05-01 08:42:38
 function colorSelector(onApply = noone) constructor {
 	self.onApply = onApply;
 	

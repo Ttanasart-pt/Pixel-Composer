@@ -65,12 +65,5 @@ function filename_name_only(name) { #region
 	return string_replace(name, filename_ext(name), "")
 } #endregion
 	
-function string_to_var(str) { #region
-	INLINE
-	return string_replace_all(string_lower(str), " ", "_");
-} #endregion
-
-function string_quote(str) { #region
-	INLINE
-	return $"\"{str}\"";
-} #endregion
+function string_to_var(str) { INLINE return string_replace_all(string_lower(str), " ", "_"); }
+function string_quote(str)  { INLINE return $"\"{str}\""; }

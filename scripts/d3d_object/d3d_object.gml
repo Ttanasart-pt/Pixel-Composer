@@ -17,7 +17,7 @@ function __3dObject() constructor {
 	vertex = [];
 	normal_vertex = [];
 	object_counts = 1;
-	VB  = noone;
+	VB  = [];
 	
 	NVB = noone;
 	normal_draw_size = 0.2;
@@ -134,11 +134,9 @@ function __3dObject() constructor {
 		
 		preSubmitVertex(scene);
 		
-		if(VB != noone) { #region
-			transform.submitMatrix();
-			
-			matrix_set(matrix_world, matrix_stack_top());
-		} #endregion
+		transform.submitMatrix();
+		
+		matrix_set(matrix_world, matrix_stack_top());
 		
 		#region ++++ Submit & Material ++++
 			gpu_set_tex_repeat(true);
@@ -173,7 +171,7 @@ function __3dObject() constructor {
 				} else
 					vertex_submit(VB[i], render_type, _tex);
 					
-				//print($"Submit vertex ({scene}) [{VB[i]}]");
+				// print($"Submit vertex ({scene}) [{VB[i]}: {vertex_get_buffer_size(VB[i])}]");
 			}
 			
 			gpu_set_tex_repeat(false);
@@ -242,11 +240,9 @@ function __3dObject() constructor {
 	} #endregion
 	
 	static destroy = function() { #region
-		if(is_array(VB)) {
-			for( var i = 0, n = array_length(VB); i < n; i++ ) 
-				vertex_delete_buffer(VB[i]);
-		} else if(VB != noone)
-			vertex_delete_buffer(VB);
+		for( var i = 0, n = array_length(VB); i < n; i++ ) 
+			vertex_delete_buffer(VB[i]);
+		VB = [];
 		onDestroy();
 	} #endregion
 	

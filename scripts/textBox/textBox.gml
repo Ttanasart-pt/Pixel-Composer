@@ -6,9 +6,9 @@ enum TEXTBOX_INPUT {
 function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	onRelease = noone;
 	
-	align  = _input == TEXTBOX_INPUT.number? fa_center : fa_left;
-	hide   = false;
-	color  = COLORS._main_text;
+	align     = _input == TEXTBOX_INPUT.number? fa_center : fa_left;
+	hide      = false;
+	color     = COLORS._main_text;
 	boxColor  = c_white;
 	format    = TEXT_AREA_FORMAT._default;
 	precision = 5;
@@ -497,8 +497,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_set_alpha(1);
 			}
 		}
-			
+		
+		var _dpx = disp_x;	
 		disp_x = lerp_float(disp_x, disp_x_to, 5);
+		if(_dpx != disp_x) _update = true;
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		

@@ -302,7 +302,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static renderWebp = function(temp_path, target_path) { #region
-		var _path = file_find_first(temp_path + "*.png", 0);
+		var _path  = file_find_first(temp_path + "*.png", 0);
 		var frames = [];
 		
 		while(_path != "") {
@@ -311,7 +311,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var shell_cmd = _pathTemp + " -define webp:lossless=true " + _frame;
 			
 			array_push(frames, _frame);
-			shell_execute_async(magick, shell_cmd, self);
+			shell_execute_async(magick, shell_cmd, self, false);
 			
 		    _path = file_find_next();
 		}
@@ -323,7 +323,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var cmd = "";
 		
 		for( var i = 0, n = array_length(frames); i < n; i++ )
-			cmd += "-frame " + frames[i] + " +" + string(framerate) + "+0+0+1 ";
+			cmd += $"-frame {frames[i]} +{framerate}+0+0+1 ";
 		
 		cmd += "-bgcolor 0,0,0,0 ";
 		cmd += "-o " + string_quote(target_path);
@@ -341,7 +341,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var qual = getInputData(10);
 		if(rate == 0) rate = 1;
 		
+		temp_path   = string_replace_all(temp_path, "/", "\\");
 		target_path = string_replace_all(target_path, "/", "\\");
+		
 		var framerate  = 100 / rate;
 		var loop_str   = loop? 0 : 1;
 		var use_gifski = false;

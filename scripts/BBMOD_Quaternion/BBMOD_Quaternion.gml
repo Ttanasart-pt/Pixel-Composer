@@ -587,7 +587,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		return self;
 	};
 	
-	static ToEuler = function() {
+	static ToEuler = function(isArray = false) {
 		var ysqr = Y * Y;
 
 	    // roll (x-axis rotation)
@@ -606,11 +606,15 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	    var yaw = arctan2(t3, t4);
 
 	    // Convert radians to degrees
-	    var _dx = roll * 180.0 / pi;
+	    var _dx = roll  * 180.0 / pi;
 	    var _dy = pitch * 180.0 / pi;
-	    var _dz = yaw * 180.0 / pi;
+	    var _dz = yaw   * 180.0 / pi;
 
-	    return new __rot3(_dx, _dy, _dz);
+		_dx = round(_dx * 1000) / 1000;
+		_dy = round(_dy * 1000) / 1000;
+		_dz = round(_dz * 1000) / 1000;
+
+	    return isArray? [ _dx, _dy, _dz ] : new __rot3(_dx, _dy, _dz);
 	}
 
 	/// @func ToMatrix([_dest[, _index]])

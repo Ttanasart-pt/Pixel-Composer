@@ -4,15 +4,27 @@ enum QUARTERNION_DISPLAY {
 }
 
 function quarternionBox(_onModify) : widget() constructor {
-	onModify = _onModify;
-	current_value = [];
+	onModify      = _onModify;
+	current_value = [ 0, 0, 0, 0 ];
+	current_unit  = QUARTERNION_DISPLAY.quarterion;
 	
 	onModifyIndex = function(index, val) { 
 		var v = toNumber(val);
 		
-		if(is_callable(onModify))
+		if(current_unit == QUARTERNION_DISPLAY.quarterion) {
 			return onModify(index, v); 
-		return noone;
+			
+		} else {
+			var v  = toNumber(val);
+			var qv = [
+				current_value[0], 
+				current_value[1], 
+				current_value[2], 
+			];
+			
+			qv[index] = v;
+			return onModify(noone, qv);
+		}
 	}
 	
 	size    = 4;
@@ -79,8 +91,6 @@ function quarternionBox(_onModify) : widget() constructor {
 		if(array_empty(_data)) return 0;
 		if(is_array(_data[0])) return 0;
 		
-		current_value = _data;
-		
 		var _bs   = min(_h, ui(32));
 		var _disp = struct_try_get(_display_data, "angle_display");
 		
@@ -88,7 +98,7 @@ function quarternionBox(_onModify) : widget() constructor {
 			var bx = _x + _w - _bs;
 			var by = _y + _h / 2 - _bs / 2;
 			tooltip.index = _disp;
-		
+			
 			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, iactive, ihover, tooltip, THEME.unit_angle, _disp, c_white) == 2) {
 				clickable = false;
 				_display_data.angle_display = (_disp + 1) % 2;
@@ -96,6 +106,17 @@ function quarternionBox(_onModify) : widget() constructor {
 			_w -= _bs + ui(8);
 		}
 		
+		current_unit = _display_data.angle_display;
+		
+		if(current_unit == QUARTERNION_DISPLAY.quarterion || (!tb[0].sliding && !tb[1].sliding && !tb[2].sliding)) {
+			current_value[0] = _data[0];
+			current_value[1] = _data[1];
+			current_value[2] = _data[2];
+			
+			if(current_unit == QUARTERNION_DISPLAY.quarterion)
+				current_value[3] = _data[3];
+		}
+			
 		size = _disp? 3 : 4;
 		var ww = _w / size;
 		var bx = _x;
@@ -124,7 +145,6 @@ function quarternionBox(_onModify) : widget() constructor {
 	
 	static clone = function() { #region
 		var cln = new quarternionBox(onModify);
-		
 		return cln;
 	} #endregion
 }

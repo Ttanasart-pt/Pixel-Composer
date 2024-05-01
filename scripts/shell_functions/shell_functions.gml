@@ -24,7 +24,7 @@ function shell_execute(path, command, ref = noone) { #region
 	return res;
 } #endregion
 
-function shell_execute_async(path, command, ref = noone) { #region
+function shell_execute_async(path, command, ref = noone, _log = true) { #region
 	INLINE
 	
 	if(IS_CMD) return shell_execute(path, command, ref);
@@ -36,7 +36,7 @@ function shell_execute_async(path, command, ref = noone) { #region
 	
 	var txt = $"{path} {command}";
 	var res = ProcessExecuteAsync(txt);
-	print($"Execute async {path} {command} | {res}");
+	if(_log) print($"Execute async {path} {command} | {res}");
 	
 	return res;
 } #endregion

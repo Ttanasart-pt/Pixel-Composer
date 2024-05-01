@@ -49,9 +49,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		tools = [ tool_pos, tool_rot, tool_sca ];
 		
 		tool_axis_edit = new scrollBox([ "local", "global" ], function(val) { tool_attribute.context = val; });
-		tool_axis_edit.font      = f_p2;
-		tool_axis_edit.arrow_spr = THEME.arrow;
-		tool_axis_edit.arrow_ind = 3;
+		// tool_axis_edit.font      = f_p2;
+		// tool_axis_edit.arrow_spr = THEME.arrow;
+		// tool_axis_edit.arrow_ind = 3;
 		tool_attribute.context   = 0;
 		tool_settings = [
 			[ "Axis", tool_axis_edit, "context", tool_attribute ],
@@ -279,7 +279,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	static drawGizmoRotation = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
 		#region ---- main ----
-			var _rot  = inputs[| index].getValue(,,, true);
+			var _rot  = inputs[| index].getValue();
 			var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 		
@@ -293,7 +293,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var th;
 		
 			var _posView = _camera.worldPointToViewPoint(_vpos);
-		
+			
 			var cx = _posView.x;
 			var cy = _posView.y;
 		

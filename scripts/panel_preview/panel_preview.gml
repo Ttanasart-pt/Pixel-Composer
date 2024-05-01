@@ -926,7 +926,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		#region defer
 			var _prev_obj = _prev_node.getPreviewObject();
-			d3_deferData  = d3_scene_preview.deferPass(_prev_obj, w, h, d3_deferData);
+			if(_prev_obj) d3_deferData  = d3_scene_preview.deferPass(_prev_obj, w, h, d3_deferData);
 		#endregion
 		
 		#region grid
@@ -1503,6 +1503,7 @@ function Panel_Preview() : PanelContent() constructor {
 				}
 				
 				wdg.setFocusHover(pFOCUS, pHOVER);
+				var _tool_font = f_p3;
 				
 				switch(instanceof(wdg)) {
 					case "textBox" :       
@@ -1511,16 +1512,27 @@ function Panel_Preview() : PanelContent() constructor {
 						break;
 					
 					case "buttonGroup":
-					case "checkBoxGroup" : tolw = tolh * wdg.size;	break;
+					case "checkBoxGroup" : 
+						tolw = tolh * wdg.size;	
+						break;
 					
-					case "checkBox" :	   tolw = tolh;				break;
-					case "scrollBox" :     tolw = ui(96);			break;
-					case "buttonClass" :   tolw = wdg.text == ""? tolh : tolw; break;
+					case "checkBox" :	
+						tolw = tolh;
+						break;
+					
+					case "scrollBox" :
+						tolw = ui(96);
+						_tool_font = f_p2;
+						break;
+					
+					case "buttonClass" : 
+						tolw = wdg.text == ""? tolh : tolw; 
+						break;
 				}
 				
 				var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key],, [ mx, my ])
 				params.s    = tolh;
-				params.font = f_p3;
+				params.font = _tool_font;
 				
 				wdg.drawParam(params);
 				

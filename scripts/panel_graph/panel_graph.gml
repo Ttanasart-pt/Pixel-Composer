@@ -166,7 +166,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	#endregion
 	
 	#region ---- position ----
-		scale			= [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.50, 0.65, 0.80, 1, 1.2, 1.35, 1.5, 2.0];
+		scale			= [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.50, 0.65, 0.80, 1, 1.2, 1.35, 1.5, 2.0 ];
 		graph_s			= 1;
 		graph_s_to		= graph_s;
 		

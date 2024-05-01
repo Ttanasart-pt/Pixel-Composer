@@ -32,10 +32,13 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	inputs[| in_mesh + 1] = nodeValue("Flip UV", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Flip UV axis, can be use to fix some texture mapping error.")
 		.rejectArray();
 	
+	inputs[| in_mesh + 2] = nodeValue("Import Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.rejectArray();
+		
 	input_display_list = [
 		__d3d_input_list_mesh,
 		__d3d_input_list_transform,
-		["Object",	 false], in_mesh + 0, 
+		["Object",	 false], in_mesh + 0, in_mesh + 2, 
 		["Material", false], in_mesh + 1, 
 	]
 	
@@ -57,7 +60,10 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { current_path = ""; }
+	static onInspector1Update = function() { 
+		current_path = ""; 
+		outputs[| 0].setValue(noone);
+	}
 
 	function setPath(path) { inputs[| in_mesh + 0].setValue(path); }
 	
@@ -100,7 +106,9 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		if(!file_exists_empty(_path)) return;
 		current_path = _path;
 		
-		readObj_init();
+		var _scale = inputs[| in_mesh + 2].getValue();
+		
+		readObj_init(_scale);
 		
 		obj_read_time    = get_timer();
 		obj_read_file    = file_text_open_read(current_path);
@@ -119,23 +127,24 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		use_display_list = true;
 		if(obj_raw == noone) return;
 		
-		//var txt = $"========== OBJ import ==========\n";
-		//txt += $"Vertex counts:   {obj_raw.vertex_count}\n";
-		//txt += $"Object counts:   {obj_raw.object_counts}\n";
-		//txt += $"Material counts: {array_length(obj_raw.materials)}\n";
-		//txt += $"Model BBOX:      {obj_raw.model_size}\n";
-		//txt += $"Load completed in {(get_timer() - obj_read_time) / 1000} ms\n";
-		//print(txt);
+		// var txt = $"========== OBJ import ==========\n";
+		// txt += $"Vertex counts:   {obj_raw.vertex_count}\n";
+		// txt += $"Object counts:   {obj_raw.object_counts}\n";
+		// txt += $"Material counts: {array_length(obj_raw.materials)}\n";
+		// txt += $"Model BBOX:      {obj_raw.model_size}\n";
+		// txt += $"Load completed in {(get_timer() - obj_read_time) / 1000} ms\n";
+		// print(txt);
 		
 		var span = max(abs(obj_raw.model_size.x), abs(obj_raw.model_size.y), abs(obj_raw.model_size.z));
 		if(span > 10) noti_warning($"The model is tool large to display properly ({span}u). Scale the model down to preview.");
 		
 		if(object != noone) object.destroy();
+		
 		object = new __3dObject();
-		object.VB      = obj_raw.vertex_groups;
-		object.vertex  = obj_raw.vertex;
-		object.object_counts  = obj_raw.object_counts;
+		object.VB     = obj_raw.vertex_groups;
+		object.vertex = obj_raw.vertex;
 		object.size   = obj_raw.model_size;
+		object.object_counts  = obj_raw.object_counts;
 		use_normal    = obj_raw.use_normal;
 		
 		materialNames = [ "Material" ];
@@ -170,6 +179,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		
 		for(var i = 0; i < array_length(materialNames); i++) 
 			createMaterial(i);
+		
+		outputs[| 0].setValue(object);
 		
 		triggerRender();
 	} #endregion
@@ -206,6 +217,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		_object.VB		= object.VB;
 		_object.NVB		= object.NVB;
 		_object.vertex  = object.vertex;
+		_object.size    = object.size;
 		_object.object_counts	= object.object_counts;
 		_object.materials		= materials;
 		_object.material_index	= materialIndex;
@@ -217,7 +229,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	static getPreviewValues = function() { return array_safe_get_fast(all_inputs, in_mesh + 2, noone); }
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		if(!obj_reading) return;
 		
 		var cx = xx + w * _s / 2;
@@ -225,7 +237,6 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		var rr = min(w - 32, h - 32) * _s / 2;
 		
 		draw_set_color(COLORS._main_icon);
-		//draw_arc(cx, cy, rr, 90, 90 - 360 * (obj_read_progress + obj_read_prog_sub) / obj_read_prog_tot, 4 * _s, 180);
 		draw_arc(cx, cy, rr, current_time / 5, current_time / 5 + 90, 4 * _s, 90);
 	} #endregion
 }

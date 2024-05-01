@@ -64,7 +64,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
 	inputs[| 9] = nodeValue("Corner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.01] });
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
 	
 	inputs[| 10] = nodeValue("Shape color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	

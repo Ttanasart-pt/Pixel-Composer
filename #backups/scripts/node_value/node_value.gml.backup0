@@ -1,4 +1,4 @@
-// 2024-04-28 11:37:34
+// 2024-05-01 19:28:09
 #region ---- global names ----
 	global.junctionEndName = [ "Hold", "Loop", "Ping pong", "Wrap" ];
 
@@ -1152,7 +1152,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						});
 						
 						extract_node = "Node_Vector4";
-						display_data.angle_display = QUARTERNION_DISPLAY.quarterion;
+						display_data.angle_display = QUARTERNION_DISPLAY.euler;
 						break; #endregion
 						
 					case VALUE_DISPLAY.path_anchor :	#region
@@ -1552,19 +1552,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return applyUnit? unit.apply(value, arrIndex) : value;
 		} #endregion
 		
-		if(display_type == VALUE_DISPLAY.d3quarternion) { #region
-			if(!applyUnit) return value;
-			var dispType = display_data.angle_display;
-			
-			switch(dispType) {
-				case QUARTERNION_DISPLAY.quarterion : 
-					return value;
-				case QUARTERNION_DISPLAY.euler : 
-					var euler = new BBMOD_Quaternion().FromEuler(value[0], value[1], value[2]).ToArray();
-					return euler;
-			}
-		} #endregion
-		
 		if(type == VALUE_TYPE.text) { #region
 			switch(display_type) {
 				case VALUE_DISPLAY.text_array : return value;
@@ -1911,6 +1898,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} else 
 			val = ds_list_empty(animator.values)? 0 : animator.processType(animator.values[| 0].value);
 		
+		if(display_type == VALUE_DISPLAY.d3quarternion) {
+			switch(display_data.angle_display) {
+				case QUARTERNION_DISPLAY.quarterion :	return val;
+				case QUARTERNION_DISPLAY.euler :		return new BBMOD_Quaternion(val[0], val[1], val[2], val[3]).ToEuler(true);
+			}
+		}
+		
 		return val;
 	} #endregion
 	
@@ -1993,6 +1987,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setValueInspector = function(val = 0, index = noone) { #region
 		INLINE
+		
 		var res = false;
 		val = unit.invApply(val);
 		
@@ -2003,27 +1998,32 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _node = PANEL_INSPECTOR.inspectings[i];
 				if(ind >= ds_list_size(_node.inputs)) continue;
 				
-				var r = _node.inputs[| ind].setValueDirect(val, index);
+				var r = _node.inputs[| ind].setValueInspectorDirect(val, index);
 				if(_node == node) res = r;
 			}
 		} else {
-			res = setValueDirect(val, index);
-			
-			//print($"Node {node} : {node.name} {node.internalName}");
-			//print($"Inspecting {PANEL_INSPECTOR.inspecting} : {PANEL_INSPECTOR.inspecting.name} {PANEL_INSPECTOR.inspecting.internalName}");
-			//print($"{node == PANEL_INSPECTOR.inspecting}");
-			//print("");
+			res = setValueInspectorDirect(val, index);
 		}
 			
 		return res;
 	} #endregion
+	
+	static setValueInspectorDirect = function(val = 0, index = noone) {
+		if(display_type == VALUE_DISPLAY.d3quarternion && display_data.angle_display == QUARTERNION_DISPLAY.euler) {
+			var _qval = new BBMOD_Quaternion().FromEuler(-val[0], -val[1], -val[2]).ToArray();
+			var _eval = new BBMOD_Quaternion(_qval[0], _qval[1], _qval[2], _qval[3]).ToEuler(true);
+			return setValueDirect(_qval);
+		}
+		
+		return setValueDirect(val, index);
+	}
 	
 	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) { #region
 		is_modified = true;
 		var updated = false;
 		var _val    = val;
 		var _inp    = connect_type == JUNCTION_CONNECT.input;
-		
+			
 		if(sep_axis) {
 			if(index == noone) {
 				for( var i = 0, n = array_length(animators); i < n; i++ )
@@ -2039,8 +2039,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_val[index] = val;
 			}
 			
-			updated = animator.setValue(_val, _inp && record, time); 
-			//print($"{updated}: {index} - {_val}");
+			updated = animator.setValue(_val, _inp && record, time);
 		}
 		
 		if(type == VALUE_TYPE.gradient)				updated = true;

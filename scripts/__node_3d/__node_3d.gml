@@ -35,7 +35,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	static refreshPreview = function() { #region
 		var _prev_obj = getPreviewObjects();
 		
-		mesh_prev_surface = surface_verify(mesh_prev_surface, 64, 64);
+		mesh_prev_surface = surface_verify(mesh_prev_surface, PREFERENCES.node_3d_preview_size, PREFERENCES.node_3d_preview_size);
 		surface_set_target(mesh_prev_surface);
 			DRAW_CLEAR
 			
@@ -56,12 +56,12 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 				
 				D3D_GLOBAL_PREVIEW.custom_transform.position.set(_c._multiply(-1));
 				
-				var _sca = 1 / _b.getMaximumScale();
-				D3D_GLOBAL_PREVIEW.custom_transform.scale.set(_sca);
+				var _sca = 2 / _b.getScale();
+				//print($"Submitting object {_prev}\n{_b}, {_c}, {_sca}");
 				
+				D3D_GLOBAL_PREVIEW.custom_transform.scale.set(_sca);
 				D3D_GLOBAL_PREVIEW.submitUI(_prev);
 			}
-			
 		surface_reset_target();
 		
 		D3D_GLOBAL_PREVIEW.camera.resetCamera();
@@ -78,5 +78,8 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		if(!isHighlightingInGraph()) aa *= 0.25;
 		
 		draw_surface_bbox(mesh_prev_surface, bbox,, aa);
+		onDrawNodeOver(xx, yy, _mx, _my, _s, _hover, _focus);
 	} #endregion
+	
+	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) { }
 }

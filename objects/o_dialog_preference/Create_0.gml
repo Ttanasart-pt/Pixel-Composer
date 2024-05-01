@@ -551,6 +551,17 @@ event_inherited();
 			PREF_SAVE();
 		})
 	));
+	
+	ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_node_3d_preview", "Preview surface size"),
+		"node_3d_preview_size",
+		
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			PREFERENCES.node_3d_preview_size = clamp(val, 16, 1024);
+			PREF_SAVE();
+		})
+	));
+	
 #endregion
 
 #region theme

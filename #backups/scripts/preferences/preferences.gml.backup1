@@ -1,4 +1,4 @@
-// 2024-04-28 08:01:20
+// 2024-05-01 15:57:54
 #region preference
 	globalvar PREFERENCES, PREFERENCES_DEF, HOTKEYS_DATA;
 	PREFERENCES  = {};
@@ -114,6 +114,7 @@
 	
 		PREFERENCES.node_param_show					= false;
 		PREFERENCES.node_param_width				= 192;
+		PREFERENCES.node_3d_preview_size			= 256;
 	
 	#endregion
 	

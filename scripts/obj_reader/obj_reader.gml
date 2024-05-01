@@ -1,18 +1,22 @@
-function readObj_init() {
+function readObj_init(_scale = 1) {
 	obj_reading = true;
 	obj_read_progress = 0;
 	obj_read_prog_sub = 0;
 	obj_read_prog_tot = 3;
 	obj_raw = noone;
 	
+	obj_reading_scale = _scale;
+	
 	_VB  = [];
 	_VBT = [];
 	_VBN = [];
 	mats = [];
+	
 	matIndex   = [];
 	tris       = [];
 	mtlPath    = "";
 	use_normal = true;
+	
 	v  = ds_list_create();
 	vt = ds_list_create();
 	vn = ds_list_create();
@@ -34,7 +38,11 @@ function readObj_file() {
 		
 		switch(sep[0]) {
 			case "v" :
-				ds_list_add(v, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
+				ds_list_add(v, [ 
+					toNumber(sep[1]) * obj_reading_scale, 
+					toNumber(sep[2]) * obj_reading_scale, 
+					toNumber(sep[3]) * obj_reading_scale 
+				]);
 				break;
 				
 			case "vt" :
@@ -43,15 +51,11 @@ function readObj_file() {
 				
 				ds_list_add(vt, [ _u, _v ]);
 				break;
+				
 			case "vn" :
 				var _nx = toNumber(sep[1]);
 				var _ny = toNumber(sep[2]);
 				var _nz = toNumber(sep[3]);
-				//var _di = sqrt(_nx * _nx + _ny * _ny + _nz * _nz);
-				
-				//_nx /= _di;
-				//_ny /= _di;
-				//_nz /= _di;
 				
 				ds_list_add(vn, [ _nx, _ny, _nz ]);
 				break;
@@ -143,23 +147,28 @@ function readObj_cent() {
 		_bmin = v[| 0];
 		_bmax = v[| 0];
 		cv = [0, 0, 0];
+		
 		vertex = ds_list_size(v);
 		
 		for( var i = 0; i < vertex; i++ ) {
 			var _v = v[| i];
-			cv[0] += _v[0];
-			cv[1] += _v[1];
-			cv[2] += _v[2];
+			var _v0 = _v[0]; 
+			var _v1 = _v[1];
+			var _v2 = _v[2];
+			
+			cv[0] += _v0;
+			cv[1] += _v1;
+			cv[2] += _v2;
 			
 			_bmin = [
-				min(_bmin[0], _v[0]),
-				min(_bmin[1], _v[1]),
-				min(_bmin[2], _v[2]),
+				min(_bmin[0], _v0),
+				min(_bmin[1], _v1),
+				min(_bmin[2], _v2),
 			];
 			_bmax = [
-				max(_bmax[0], _v[0]),
-				max(_bmax[1], _v[1]),
-				max(_bmax[2], _v[2]),
+				max(_bmax[0], _v0),
+				max(_bmax[1], _v1),
+				max(_bmax[2], _v2),
 			];
 		}
 		
@@ -173,7 +182,9 @@ function readObj_cent() {
 			_bmax[2] - _bmin[2],
 		);
 		
-		var sc   = 1;
+		//print($"{obj_size}");
+		
+		var sc = 1;
 		//var span = max(abs(_size.x), abs(_size.y), abs(_size.z));
 		//if(span > 10) sc = span / 10;
 		
