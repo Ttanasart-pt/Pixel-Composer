@@ -1,9 +1,0 @@
-// 2024-04-16 09:50:49
-function canvas_tool_outline_select() : canvas_tool() constructor {
-	override = true;
-	
-	function init(node) {
-		PANEL_PREVIEW.tool_current = node.tools[1];
-		node.selection_tool_after  = new canvas_tool_outline();
-	}
-}
