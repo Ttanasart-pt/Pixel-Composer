@@ -17,10 +17,12 @@ void main() {
 	if(c.rgb == vec3(0.)) return;
 	if(c == red) return;
 	
-	float ite = diagonal == 1? 8. : 4.;
-	
+	float ite  = diagonal == 1? 8. : 4.;
 	float base = 1.;
 	float top  = 0.;
+	vec2  shf  = vec2(0.);
+	vec2  tx   = 1. / dimension;
+	
 	for(float i = 0.; i < ite; i++) {
 		float ang = top / base * TAU;
 		top += 2.;
@@ -29,8 +31,11 @@ void main() {
 			base *= 2.;
 		}
 		
+		shf.x = cos(ang);
+		shf.y = sin(ang);
+		
 		for(float j = 0.; j < dimension.x; j++) {
-			vec2 _pos = v_vTexcoord + vec2(cos(ang), sin(ang)) * j / dimension;
+			vec2 _pos = v_vTexcoord + shf * j * tx;
 			
 			if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.)
 				break;

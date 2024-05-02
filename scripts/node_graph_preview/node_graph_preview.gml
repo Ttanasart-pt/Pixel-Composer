@@ -85,7 +85,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var _hov = false;
 		
-		if(PANEL_INSPECTOR.inspecting == self) {
+		if(PANEL_INSPECTOR.inspecting == self && PANEL_GRAPH.node_hovering == noone && PANEL_GRAPH.junction_hovering == noone) {
 			var _sw = surface_get_width_safe(surf);
 			var _sh = surface_get_height_safe(surf);
 			

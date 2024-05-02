@@ -1,6 +1,9 @@
 function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Rearrange";
 	
+	draw_pad_w  = 10;
+	setDimension(96, 48);
+	
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setArrayDepth(1)
 		.setVisible(true, true);
@@ -140,4 +143,12 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		outputs[| 0].setValue(res);
 	} #endregion
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
+		var str  = outputs[| 0].getValue();
+		var bbox = drawGetBbox(xx, yy, _s);
+		draw_text_bbox(bbox, str);
+	} #endregion
+	
 }

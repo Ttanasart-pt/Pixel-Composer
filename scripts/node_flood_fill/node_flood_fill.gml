@@ -24,11 +24,14 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	__init_mask_modifier(1); // inputs 8, 9
 	
+	inputs[| 10] = nodeValue("Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Override", "Multiply" ]);
+	
 	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3,
 		["Surfaces", false], 0, 1, 2, 8, 9, 
-		["Fill",	 false], 4, 6, 5, 7, 
+		["Fill",	 false], 4, 6, 5, 7, 10, 
 	]
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
@@ -55,10 +58,11 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var inSurf = _data[0];
 		if(!is_surface(inSurf)) return _outSurf;
 		
-		var _pos = _data[4];
-		var _col = _data[5];
-		var _thr = _data[6];
-		var _dia = _data[7];
+		var _pos = _data[ 4];
+		var _col = _data[ 5];
+		var _thr = _data[ 6];
+		var _dia = _data[ 7];
+		var _bnd = _data[10];
 		
 		var _filC = surface_get_pixel_ext(inSurf, _pos[0], _pos[1]);
 		
@@ -86,7 +90,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		surface_reset_target();
 		
 		var ind = 0;
-		var it  = attributes.fill_iteration == -1? sw + sh : attributes.fill_iteration;
+		var it  = attributes.fill_iteration == -1? 8 : attributes.fill_iteration;
 		repeat(it) {
 			ind = !ind;
 			
@@ -98,8 +102,10 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		}
 		
 		surface_set_shader(_outSurf, sh_flood_fill_replace);
-			shader_set_color("color", _col);
+			shader_set_color("color",  _col);
 			shader_set_surface("mask", temp_surface[ind]);
+			shader_set_i("blend",      _bnd);
+			
 			draw_surface_safe(inSurf, 0, 0);
 		surface_reset_shader();
 		
