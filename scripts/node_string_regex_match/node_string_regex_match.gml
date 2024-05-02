@@ -1,7 +1,7 @@
 function Node_String_Regex_Match(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RegEx Match";
 	
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(true, true);

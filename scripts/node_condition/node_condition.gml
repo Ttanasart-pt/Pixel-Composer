@@ -1,7 +1,7 @@
 function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Condition";
 	
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Check value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 		.setVisible(true, true);

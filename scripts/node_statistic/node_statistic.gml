@@ -28,7 +28,7 @@ enum STAT_OPERATOR {
 function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Statistic";
 	
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Sum", "Mean", "Median", "Max", "Min" ])

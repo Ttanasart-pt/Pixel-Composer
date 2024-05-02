@@ -1,7 +1,7 @@
 function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Struct";
 	
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	outputs[| 0] = nodeValue("Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
 	

@@ -2,7 +2,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Scatter Points";
 	color = COLORS.node_blend_number;
 	
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	onSurfaceSize = function() { return getInputData(7, DEF_SURF); };
 	inputs[| 0] = nodeValue("Point area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA_REF )

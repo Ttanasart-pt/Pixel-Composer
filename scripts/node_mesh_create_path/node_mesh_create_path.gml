@@ -1,7 +1,7 @@
 function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Path to Mesh";
 	
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);

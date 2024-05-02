@@ -2,7 +2,7 @@ function Node_To_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name		= "To Number";
 	color		= COLORS.node_blend_number;
 	
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(true, true);

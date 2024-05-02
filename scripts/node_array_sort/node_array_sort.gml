@@ -1,7 +1,7 @@
 function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Sort Array";
 	
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Array in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [])
 		.setVisible(true, true);
@@ -12,7 +12,8 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	outputs[| 0] = nodeValue("Sorted array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
-	outputs[| 1] = nodeValue("Sorted index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, []);
+	outputs[| 1] = nodeValue("Sorted index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [])
+		.setVisible(false);
 	
 	static sortAcs = function(v1, v2) { return v2.val - v1.val; }
 	static sortDes = function(v1, v2) { return v1.val - v2.val; }

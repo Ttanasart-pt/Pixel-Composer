@@ -5,7 +5,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	node_draw_icon = s_node_vfx_override;
 	
 	manual_ungroupable = false;
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
 		.setVisible(true, true);

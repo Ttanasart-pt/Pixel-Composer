@@ -1,7 +1,7 @@
 function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Area";
 	color = COLORS.node_blend_number;
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)

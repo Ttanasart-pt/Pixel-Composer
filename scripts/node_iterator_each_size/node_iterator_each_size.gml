@@ -3,7 +3,7 @@ function Node_Iterator_Each_Length(_x, _y, _group = noone) : Node(_x, _y, _group
 	color = COLORS.node_blend_loop;
 	destroy_when_upgroup = true;
 	
-	setDimension(96, 80);
+	setDimension(96, 48);
 	
 	outputs[| 0] = nodeValue("Length", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	

@@ -17,7 +17,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	manual_ungroupable	 = false;
 	node_draw_icon       = s_node_vfx_accel;
 
-	setDimension(96, 80);
+	setDimension(96, 48);
 	seed  = 1;
 	
 	inputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
