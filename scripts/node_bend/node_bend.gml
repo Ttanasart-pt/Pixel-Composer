@@ -18,11 +18,13 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 5] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
+	inputs[| 6] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1, 
 		["Surfaces", false], 0, 
-		["Bend",     false], 2, 3, 4, 5, 
+		["Bend",     false], 2, 3, 4, 5, 6, 
 	]
 	
 	mesh = [];
@@ -46,6 +48,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _typ = getInputData(2);
 		
 		inputs[| 5].setVisible(_typ == 1);
+		inputs[| 6].setVisible(_typ == 1);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -54,6 +57,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _axs  = _data[3];
 		var _amo  = _data[4];
 		var _sca  = _data[5];
+		var _shf  = _data[6];
 		
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);
@@ -212,15 +216,15 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var u3 = x3 / _sw, v3 = y3 / _sh;
 					
 					if(_axs == 0) {
-						x0 += sin(v0 * pi * _sca) * _amo * _sh / 2;
-						x1 += sin(v1 * pi * _sca) * _amo * _sh / 2;
-						x2 += sin(v2 * pi * _sca) * _amo * _sh / 2;
-						x3 += sin(v3 * pi * _sca) * _amo * _sh / 2;
+						x0 += sin(v0 * pi * _sca - _shf * pi * 2) * _amo * _sh / 2;
+						x1 += sin(v1 * pi * _sca - _shf * pi * 2) * _amo * _sh / 2;
+						x2 += sin(v2 * pi * _sca - _shf * pi * 2) * _amo * _sh / 2;
+						x3 += sin(v3 * pi * _sca - _shf * pi * 2) * _amo * _sh / 2;
 					} else {
-						y0 += sin(u0 * pi * _sca) * _amo * _sw / 2;
-						y1 += sin(u1 * pi * _sca) * _amo * _sw / 2;
-						y2 += sin(u2 * pi * _sca) * _amo * _sw / 2;
-						y3 += sin(u3 * pi * _sca) * _amo * _sw / 2;
+						y0 += sin(u0 * pi * _sca - _shf * pi * 2) * _amo * _sw / 2;
+						y1 += sin(u1 * pi * _sca - _shf * pi * 2) * _amo * _sw / 2;
+						y2 += sin(u2 * pi * _sca - _shf * pi * 2) * _amo * _sw / 2;
+						y3 += sin(u3 * pi * _sca - _shf * pi * 2) * _amo * _sw / 2;
 					}
 					
 					_minx = _minx == undefined? min(x0, x1, x2, x3) : min(_minx, x0, x1, x2, x3);

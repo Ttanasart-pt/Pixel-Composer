@@ -2396,8 +2396,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static drawName = function(_s, _mx, _my) { #region
 		
-		var _draw_cc = hover_in_graph? COLORS._main_text : COLORS._main_text_sub;
+		var _draw_cc = COLORS._main_text;
+		var _draw_aa = hover_in_graph? 1 : 0.8;
 		draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
+		draw_set_alpha(_draw_aa);
 		
 		if(type == VALUE_TYPE.action) {
 			var tx = x;
@@ -2415,6 +2417,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			draw_text_int(tx, y, name);
 			
 		}
+		
+		draw_set_alpha(1);
 	} #endregion
 	
 	static drawConnections = function(params = {}) { #region
