@@ -1,6 +1,6 @@
 function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Mesh Transform";
-	w    = 96;
+	setDimension(96, 48);;
 	
 	inputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
 		.setVisible(true, true);

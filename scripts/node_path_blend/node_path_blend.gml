@@ -1,6 +1,6 @@
 function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name   = "Blend Path";
-	w      = 96;
+	setDimension(96, 48);;
 	length = 0;
 	
 	inputs[| 0] = nodeValue("Path 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)

@@ -1,6 +1,6 @@
 function Node_Project_Data(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Project Data";
-	w    = 96;
+	setDimension(96, 48);;
 	
 	outputs[| 0] = nodeValue("Name", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "")
 		.setVisible(false);

@@ -1,7 +1,7 @@
 function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) constructor {
 	name = "Equation";
 	
-	w   = 96;
+	setDimension(96, 48);;
 	ast = noone;
 	
 	inputs[| 0] = nodeValue("Equation", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");

@@ -1,6 +1,6 @@
 function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Array";
-	w    = 96;
+	setDimension(96, 48);;
 	
 	setIsDynamicInput(1);
 	cached_pos = ds_map_create();

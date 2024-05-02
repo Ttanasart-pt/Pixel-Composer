@@ -1,6 +1,6 @@
 function Node_Smoke_Domain_Queue(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) constructor {
 	name = "Queue Domain";
-	w    = 96;
+	setDimension(96, 48);;
 	
 	manual_ungroupable	 = false;
 	

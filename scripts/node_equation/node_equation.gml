@@ -33,6 +33,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name		= "Equation";
 	color		= COLORS.node_blend_number;
 	
+	draw_pad_w  = 10;
 	setDimension(96, 48);
 	ast = [];
 	
@@ -167,7 +168,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var str = getInputData(0);
 		
 		var bbox = drawGetBbox(xx, yy, _s);
-		var ss	 = string_scale(str, bbox.w - 10 * _s, bbox.h);
+		var ss	 = string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	} #endregion
 	

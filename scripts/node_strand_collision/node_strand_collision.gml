@@ -2,7 +2,7 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name  = "Strand Collision";
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
-	w     = 96;
+	setDimension(96, 48);;
 	
 	manual_ungroupable	 = false;
 	

@@ -1,7 +1,7 @@
 function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Input";
 	color = COLORS.node_blend_dynaSurf;
-	w    = 96;
+	setDimension(96, 48);;
 	
 	manual_deletable	 = false;
 	destroy_when_upgroup = true;

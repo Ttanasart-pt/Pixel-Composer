@@ -1,6 +1,6 @@
 function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Sample Path";
-	w    = 96;
+	setDimension(96, 48);;
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);

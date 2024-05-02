@@ -12,7 +12,7 @@
 	globalvar window_drag_sw;			window_drag_sw        = 0;
 	globalvar window_drag_sh;			window_drag_sh        = 0;
 
-	globalvar window_min_w;				window_min_w = 960;
+	globalvar window_min_w;				window_min_setDimension(96, 48);0;
 	globalvar window_min_h;				window_min_h = 600;
 	
 	globalvar window_preminimize_rect;  window_preminimize_rect = [ 0, 0, 1, 1 ];

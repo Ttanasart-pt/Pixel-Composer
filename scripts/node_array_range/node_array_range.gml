@@ -1,6 +1,6 @@
 function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Range";
-	w    = 96;
+	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.rejectArray();

@@ -2,7 +2,7 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	name  = "Strand Force";
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
-	w     = 96;
+	setDimension(96, 48);;
 	
 	manual_ungroupable	 = false;
 	

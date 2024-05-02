@@ -91,8 +91,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		selectable   = true;
 		clonable     = true;
-		draw_padding = 4;
 		auto_height  = true;
+		draw_padding = 4;
+		draw_pad_w   = 0;
+		draw_pad_h   = 0;
 		
 		display_parameter = new connectionParameter();
 		
@@ -1058,8 +1060,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_w *= _s;
 		_h *= _s;
 		
-		_w -= draw_padding * 2;
-		_h -= draw_padding * 2 + 20 * pad_label;
+		_w -= max(draw_padding, draw_pad_w) * 2;
+		_h -= max(draw_padding, draw_pad_h) * 2 + 20 * pad_label;
 		
 		var _xc = xx +  w * _s / 2;
 		var _yc = yy + _h / 2 + pad_label * 20 + draw_padding;

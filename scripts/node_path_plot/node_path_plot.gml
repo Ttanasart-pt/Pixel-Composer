@@ -1,7 +1,7 @@
 function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name   = "Plot Path";
 	length = 0;
-	w      = 96;
+	setDimension(96, 48);;
 	
 	inputs[| 0] = nodeValue("Output scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ])
 		.setDisplay(VALUE_DISPLAY.vector);

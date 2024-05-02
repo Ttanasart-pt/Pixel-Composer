@@ -1,6 +1,6 @@
 function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Remap Path";
-	w    = 96;
+	setDimension(96, 48);;
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);
