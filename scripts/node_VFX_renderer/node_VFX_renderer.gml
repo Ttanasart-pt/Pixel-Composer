@@ -86,14 +86,9 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static step = function() { #region
-		var _dim = getInputData(0);
 		var _typ = getInputData(2);
 		
 		inputs[| 3].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
-		
-		//var _outSurf = outputs[| 0].getValue();
-		//    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		//outputs[| 0].setValue(_outSurf);
 		
 		if(previewing && is_instanceof(group, Node_VFX_Group)) 
 			group.preview_node = self;
@@ -116,7 +111,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var surf_w = surface_get_width_safe(_outSurf);
 		var surf_h = surface_get_height_safe(_outSurf);
-			
+		
 		surface_set_shader(_outSurf, _type == PARTICLE_RENDER_TYPE.surface? sh_sample : noone);
 		if(_type == PARTICLE_RENDER_TYPE.surface)
 			shader_set_interpolation(_outSurf);
@@ -134,13 +129,17 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				if(!is_array(parts) || array_length(parts) == 0) continue;
 				if(!is_array(parts[0])) parts = [ parts ];
 				
-				for(var j = 0; j < array_length(parts); j++)
-				for(var k = 0; k < array_length(parts[j]); k++) {
-					parts[j][k].render_type = _type;
-					parts[j][k].line_draw   = _llife;
+				for(var j = 0; j < array_length(parts); j++) {
+					var part = parts[j];
 					
-					if(parts[j][k].active || _type) 
-						parts[j][k].draw(_exact, surf_w, surf_h);
+					for(var k = 0; k < array_length(part); k++) {
+						var _part = part[k];
+						
+						_part.render_type = _type;
+						_part.line_draw   = _llife;
+						
+						if(_part.active || _type) _part.draw(_exact, surf_w, surf_h);
+					}
 				}
 			}
 			

@@ -17,21 +17,43 @@ enum PARTICLE_RENDER_TYPE {
 
 function __particleObject() constructor {
 	active  = false;
-	x       = 0;
-	y       = 0;
+	
+	x   = 0;
+	y   = 0;
+	rot	= 0;
+	scx = 1;
+	scy = 1;
+	
+	surf  = noone;
+	blend = c_white;
+	alp   = 1;
 	
 	static kill = function() {}
 	
 	static step = function() {}
 	
-	static draw = function() {}
+	__temp_pt = [ 0, 0 ];
+	static draw = function(exact, surf_w, surf_h) { #region
+		if(!surface_exists(surf)) return;
+		
+		var _sw = surface_get_width(surf)  * scx;
+		var _sh = surface_get_height(surf) * scy;
+		
+		point_rotate(-_sw / 2, -_sh / 2, 0, 0, rot, __temp_pt);
+		print($"Drawing {surf} at {x + __temp_pt[0]}, {y + __temp_pt[1]} > {scx}, {scy} > {blend}, {alp}");
+		draw_surface_ext(surf, x + __temp_pt[0], y + __temp_pt[1], scx, scy, rot, blend, alp);
+	} #endregion
 	
+	static clone = function() { #region
+		var _p = new __particleObject();
+		struct_override(_p, self);
+		return _p;
+	} #endregion
 }
 
 function __part(_node) : __particleObject() constructor {
 	seed    = irandom(99999);
 	node    = _node;
-	active  = false;
 	
 	/////////////////////// Lifespans /////////////////////// 
 	life       = 0;
@@ -42,8 +64,6 @@ function __part(_node) : __particleObject() constructor {
 	/////////////////////// Transforms /////////////////////// 
 	prevx   = 0;
 	prevy   = 0;
-	x       = 0;
-	y       = 0;
 	speedx  = 0;
 	speedy  = 0;
 	turning = 0;
@@ -60,8 +80,6 @@ function __part(_node) : __particleObject() constructor {
 	gravX   = 0;
 	gravY   = 0;
 	
-	scx   = 1;
-	scy   = 1;
 	sc_sx = 1;
 	sc_sy = 1;
 	sct   = noone;
@@ -69,7 +87,6 @@ function __part(_node) : __particleObject() constructor {
 	scx_history = [];
 	scy_history = [];
 	
-	rot		= 0;
 	follow	= false;
 	rot_s	= 0;
 	
@@ -81,7 +98,6 @@ function __part(_node) : __particleObject() constructor {
 	/////////////////////// Render /////////////////////// 
 	render_type = PARTICLE_RENDER_TYPE.surface;
 	
-	surf     = noone;
 	arr_type = 0;
 	
 	drawx   = 0;
@@ -91,8 +107,6 @@ function __part(_node) : __particleObject() constructor {
 	drawsy  = 0;
 	
 	col       = -1;
-	blend	  = c_white;
-	alp       = 1;
 	alp_draw  = alp;
 	alp_fade  = 0;
 	currColor = c_white;

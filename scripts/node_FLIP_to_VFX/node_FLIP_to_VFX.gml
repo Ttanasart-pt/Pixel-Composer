@@ -23,9 +23,10 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!instance_exists(domain)) return;
 		if(domain.domain == noone)   return;
 		
-		var _x, _y, _px, _py, _r, _l, _a, _v, _sx, _sy;
+		var _x, _y, _p, _px, _py, _r, _l, _a, _v, _sx, _sy;
 		var _mx  = min(array_length(domain.particlePos) / 2 - 1, domain.numParticles);
-		var _ind = 0, _p;
+		var _pa  = outputs[| 0].getValue();
+		var _ind = 0;
 		
 		for( var i = 0; i < _mx; i++ ) {
 			_x  = domain.particlePos[i * 2 + 0];
@@ -33,7 +34,10 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			if(_x == 0 && _y == 0) continue;
 			
-			_p = parts[_ind++];
+			_p = parts[_ind];
+			_pa[_ind] = _p;
+			_ind++;
+			
 			_p.active = true;
 			_p.x = _x;
 			_p.y = _y;
@@ -41,12 +45,8 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			if(_ind >= attributes.part_amount) break;
 		}
 		
-		for( ; _ind < attributes.part_amount; i++ ) {
-			_p = parts[_ind++];
-			_p.active = false;
-		}
-		
-		outputs[| 0].setValue(parts);
+		array_resize(_pa, _ind);
+		outputs[| 0].setValue(_pa);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

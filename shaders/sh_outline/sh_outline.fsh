@@ -159,18 +159,20 @@ void main() { #region
 		}
 	}
 	
-	if(!isOutline) {
-		gl_FragColor = col;
-		return;
-	}
+	gl_FragColor = col;
+	if(!isOutline) return;
 	
 	float _aa = 1.;
 	
 	if(is_aa == 1) _aa = min(smoothstep(bSiz + bStr + 1., bSiz + bStr, closetDistance), smoothstep(bStr - 1., bStr, closetDistance));
 	else           _aa = min(step(-(bSiz + bStr + 0.5), -closetDistance), step(bStr - 0.5, closetDistance));
+	if(_aa == 0.) return;
 	
 	if(is_blend == 0) col = blendColor(baseColor, borderColor, _aa);
-	else              col = blendColor(side == 0? baseColor : closetColor, borderColor, _aa * bld);
+	else {
+		col = blendColor(side == 0? baseColor : closetColor, borderColor, _aa * bld);
+		col.a = _aa;
+	}
 	
     gl_FragColor = col;
 } #endregion

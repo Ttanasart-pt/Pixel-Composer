@@ -4,23 +4,21 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	icon  = THEME.vfx;
 	node_draw_icon = s_node_vfx_override;
 	
-	manual_ungroupable	 = false;
+	manual_ungroupable = false;
 	setDimension(96, 80);
 	
 	inputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Positions", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue("Positions", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, noone );
 	
-	inputs[| 2] = nodeValue("Rotations", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue("Rotations", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, noone );
 	
-	inputs[| 3] = nodeValue("Scales", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
+	inputs[| 3] = nodeValue("Scales", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, noone );
 	
-	inputs[| 4] = nodeValue("Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 4] = nodeValue("Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, noone );
 	
-	inputs[| 5] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
+	inputs[| 5] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, noone );
 	
 	inputs[| 6] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
 		.setVisible(true, false);
@@ -40,12 +38,19 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var nParts = array_create(array_length(parts));
 		
-		var _a_pos = is_array(_pos);
-		var _a_sca = is_array(_sca);
-		var _a_rot = is_array(_rot);
-		var _a_col = is_array(_col);
-		var _a_alp = is_array(_alp);
-		var _a_srf = is_array(_srf);
+		var _a_pos = inputs[| 1].value_from != noone;
+		var _a_rot = inputs[| 2].value_from != noone;
+		var _a_sca = inputs[| 3].value_from != noone;
+		var _a_col = inputs[| 4].value_from != noone;
+		var _a_alp = inputs[| 5].value_from != noone;
+		var _a_srf = inputs[| 6].value_from != noone;
+		
+		if(array_get_depth(_pos) < 2) _pos = [ _pos ];
+		if(array_get_depth(_sca) < 2) _sca = [ _sca ];
+		if(!is_array(_rot))			  _rot = [ _rot ];
+		if(!is_array(_col))			  _col = [ _col ];
+		if(!is_array(_alp))			  _alp = [ _alp ];
+		if(!is_array(_srf))			  _srf = [ _srf ];
 		
 		var _l_pos = array_length(_pos);
 		var _l_sca = array_length(_sca);
@@ -57,24 +62,24 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for( var i = 0, n = array_length(parts); i < n; i++ ) {
 			var nPart = parts[i].clone();
 			
-			if(_a_pos && _l_pos > i && is_array(_pos[i])) {
-				nPart.x = _pos[i][0];
-				nPart.y = _pos[i][1];
+			if(_a_pos) {
+				nPart.x = _pos[i % _l_pos][0];
+				nPart.y = _pos[i % _l_pos][1];
 			}
 			
-			if(_a_sca && _l_sca > i && is_array(_sca[i])) {
-				nPart.scx = _sca[i][0];
-				nPart.scy = _sca[i][1];
+			if(_a_sca) {
+				nPart.scx = _sca[i % _l_sca][0];
+				nPart.scy = _sca[i % _l_sca][1];
 			}
 			
-			if(_a_rot && _l_rot > i) nPart.rot   = array_safe_get_fast(_rot, i);
-			if(_a_col && _l_col > i) nPart.blend = array_safe_get_fast(_col, i);
-			if(_a_alp && _l_alp > i) nPart.alp   = array_safe_get_fast(_alp, i);
-			if(_a_srf && _l_srf > i) nPart.surf  = array_safe_get_fast(_srf, i);
+			if(_a_rot) nPart.rot   = array_safe_get_fast(_rot, i % _l_rot);
+			if(_a_col) nPart.blend = array_safe_get_fast(_col, i % _l_col);
+			if(_a_alp) nPart.alp   = array_safe_get_fast(_alp, i % _l_alp);
+			if(_a_srf) nPart.surf  = array_safe_get_fast(_srf, i % _l_srf);
 			
 			nParts[i] = nPart;
 		}
-		
+	
 		outputs[| 0].setValue(nParts);
 	}
 	

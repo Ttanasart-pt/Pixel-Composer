@@ -26,7 +26,7 @@
 	overRelaxation   = 1.5;
 	
 	obstracles       = [];
-	wallCollide      = true;
+	wallCollide      = 0b1111;
 	wallElasticity   = 1;
 	
 	skip_incompressible = false;

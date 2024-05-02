@@ -64,7 +64,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 2].editWidget.auto_update	= true;
 	
 	format_single = ["Single image", "Image sequence", "Animation"];
-	format_array  = ["Multiple images", "Image sequences", "Animation"];
+	format_array  = ["Multiple images", "Image sequences", "Animations"];
 	
 	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: format_single, update_hover: false })
@@ -342,6 +342,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(rate == 0) rate = 1;
 		
 		temp_path   = string_replace_all(temp_path, "/", "\\");
+		temp_path   = string_trim(temp_path, ["*.png"]);
 		target_path = string_replace_all(target_path, "/", "\\");
 		
 		var framerate  = 100 / rate;
@@ -365,6 +366,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(file_exists_empty(target_path)) file_delete(target_path);
 		
 		temp_path   = string_replace_all(temp_path, "/", "\\");
+		temp_path   = string_trim(temp_path, ["*.png"]);
 		target_path = string_replace_all(target_path, "/", "\\");
 		
 		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}%05d.png\" -c:v libx264 -r {rate} -pix_fmt yuv420p -crf {qual} {string_quote(target_path)}";
@@ -381,6 +383,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(file_exists_empty(target_path)) file_delete(target_path);
 		
 		temp_path   = string_replace_all(temp_path, "/", "\\");
+		temp_path   = string_trim(temp_path, ["*.png"]);
 		target_path = string_replace_all(target_path, "/", "\\");
 		
 		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}%05d.png\" -plays 0 {string_quote(target_path)}";
