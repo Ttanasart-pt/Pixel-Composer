@@ -8,7 +8,8 @@ function Node_create_Image(_x, _y, _group = noone) { #region
 	
 	var node = new Node_Image(_x, _y, _group);
 	node.inputs[| 0].setValue(path);
-	node.doUpdate();
+	if(path != "") node.doUpdate();
+	
 	return node;
 } #endregion
 

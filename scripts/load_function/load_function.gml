@@ -141,6 +141,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		try {
 			var _node_list = _load_content.nodes;
 			for(var i = 0, n = array_length(_node_list); i < n; i++) {
+				// printIf(log, $"   >> Loading nodes : {_node_list[i].type}");
 				var _node = nodeLoad(_node_list[i]);
 				if(_node) ds_list_add(create_list, _node);
 			}

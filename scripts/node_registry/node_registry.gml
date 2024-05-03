@@ -99,6 +99,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		var _buildCon = createNode[0];
 		if(createUseParam) _param = struct_append(_param, createNode[2]);
 		
+		print($"         >> building {node}");
 		var _node = noone;
 		if(_buildCon)	_node = new createNode[1](_x, _y, _group, _param);
 		else			_node = createNode[1](_x, _y, _group, _param);
@@ -237,7 +238,7 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) { #r
 		log_warning("LOAD", $"Node type {_name} not found");
 		return noone;
 	}
-		
+	
 	var _node = ALL_NODES[? _name];
 	return _node.build(_x, _y, _group);
 } #endregion

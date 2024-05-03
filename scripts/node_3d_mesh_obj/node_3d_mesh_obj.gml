@@ -225,7 +225,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		return _object;
 	} #endregion
 	
-	static getPreviewValues = function() { return array_safe_get_fast(all_inputs, in_mesh + 2, noone); }
+	static getPreviewValues = function() { return array_safe_get_fast(all_inputs, in_mesh + 3, noone); }
 	
 	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		if(!obj_reading) return;

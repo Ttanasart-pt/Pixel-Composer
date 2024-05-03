@@ -1704,7 +1704,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				var _val = array_create(array_length(val));
 				for( var i = 0, n = array_length(val); i < n; i++ ) 
-					_val[i] = def_val.clone(value[i]);
+					_val[i] = def_val.clone(val[i]);
 				
 				return _val;
 			}

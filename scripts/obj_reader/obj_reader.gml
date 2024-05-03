@@ -18,12 +18,12 @@ function readObj_init(_scale = 1) {
 	use_material = false;
 	use_normal   = true;
 	
-	v  = ds_list_create();
-	vt = ds_list_create();
-	vn = ds_list_create();
-	f  = ds_list_create();
-	ft = ds_list_create();
-	fn = ds_list_create();
+	v   = ds_list_create();
+	vt  = ds_list_create();
+	vn  = ds_list_create();
+	f   = ds_list_create();
+	ft  = ds_list_create();
+	fn  = ds_list_create();
 	tri = 0;
 }
 
@@ -34,7 +34,7 @@ function readObj_file() {
 		var l = file_text_readln(obj_read_file);
 		l = string_trim(l);
 		
-		var sep = string_split(l, " ");
+		var sep = string_split(l, " ", true);
 		if(array_length(sep) == 0) continue;
 		
 		switch(sep[0]) {
@@ -146,9 +146,18 @@ function readObj_file() {
 
 function readObj_cent() {
 	#region centralize vertex
-		_bmin = v[| 0];
-		_bmax = v[| 0];
-		cv = [0, 0, 0];
+		var _v0 = v[| 0];
+		var _bminx = _v0[0];
+		var _bminy = _v0[1];
+		var _bminz = _v0[2];
+		
+		var _bmaxx = _v0[0];
+		var _bmaxy = _v0[1];
+		var _bmaxz = _v0[2];
+		
+		var cvx = 0;
+		var cvy = 0;
+		var cvz = 0;
 		
 		vertex = ds_list_size(v);
 		
@@ -158,42 +167,35 @@ function readObj_cent() {
 			var _v1 = _v[1];
 			var _v2 = _v[2];
 			
-			cv[0] += _v0;
-			cv[1] += _v1;
-			cv[2] += _v2;
+			cvx += _v0;
+			cvy += _v1;
+			cvz += _v2;
 			
-			_bmin = [
-				min(_bmin[0], _v0),
-				min(_bmin[1], _v1),
-				min(_bmin[2], _v2),
-			];
-			_bmax = [
-				max(_bmax[0], _v0),
-				max(_bmax[1], _v1),
-				max(_bmax[2], _v2),
-			];
+			_bminx = min(_bminx, _v0);
+			_bminy = min(_bminy, _v1);
+			_bminz = min(_bminz, _v2);
+			
+			_bmaxx = max(_bmaxx, _v0);
+			_bmaxy = max(_bmaxy, _v1);
+			_bmaxz = max(_bmaxz, _v2);
 		}
 		
-		cv[0] /= vertex;
-		cv[1] /= vertex;
-		cv[2] /= vertex;
+		cvx /= vertex;
+		cvy /= vertex;
+		cvz /= vertex;
 		
 		obj_size = new __vec3(
-			_bmax[0] - _bmin[0],
-			_bmax[1] - _bmin[1],
-			_bmax[2] - _bmin[2],
+			_bmaxx - _bminx,
+			_bmaxy - _bminy,
+			_bmaxz - _bminz,
 		);
 		
-		//print($"{obj_size}");
-		
-		var sc = 1;
-		//var span = max(abs(_size.x), abs(_size.y), abs(_size.z));
-		//if(span > 10) sc = span / 10;
-		
-		for( var i = 0, n = ds_list_size(v); i < n; i++ ) {
-			v[| i][0] = (v[| i][0] - cv[0]) / sc;
-			v[| i][1] = (v[| i][1] - cv[1]) / sc;
-			v[| i][2] = (v[| i][2] - cv[2]) / sc;
+		for( var i = 0; i < vertex; i++ ) {
+			var _v = v[| i];
+			
+			_v[0] = _v[0] - cvx;
+			_v[1] = _v[1] - cvy;
+			_v[2] = _v[2] - cvz;
 		}
 	#endregion
 	
@@ -238,24 +240,32 @@ function readObj_buff() {
 					_pft[k] = vt[| _vTindex];
 				}
 				
+				var _pf0  = _pf[0],  _pf1  = _pf[1],  _pf2  = _pf[2];
+				var _pfn0 = _pfn[0], _pfn1 = _pfn[1], _pfn2 = _pfn[2];
+				var _pft0 = _pft[0], _pft1 = _pft[1], _pft2 = _pft[2];
+				
 				if(_vlen >= 3) {
-					vertex_add_pntc(VB, _pf[0], _pfn[0], _pft[0]);
-					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
-					vertex_add_pntc(VB, _pf[1], _pfn[1], _pft[1]);
+					vertex_add_pntc(VB, _pf0, _pfn0, _pft0);
+					vertex_add_pntc(VB, _pf2, _pfn2, _pft2);
+					vertex_add_pntc(VB, _pf1, _pfn1, _pft1);
 					
-					ds_list_add(_v, new __vertex(_pf[0][0], _pf[0][1], _pf[0][2]).setNormal(_pfn[0][0], _pfn[0][1]).setUV(_pft[0][0], _pft[0][1]));
-					ds_list_add(_v, new __vertex(_pf[2][0], _pf[2][1], _pf[2][2]).setNormal(_pfn[2][0], _pfn[2][1]).setUV(_pft[2][0], _pft[2][1]));
-					ds_list_add(_v, new __vertex(_pf[1][0], _pf[1][1], _pf[1][2]).setNormal(_pfn[1][0], _pfn[1][1]).setUV(_pft[1][0], _pft[1][1]));
+					ds_list_add(_v, new __vertex(_pf0[0], _pf0[1], _pf0[2]).setNormal(_pfn0[0], _pfn0[1]).setUV(_pft0[0], _pft0[1]));
+					ds_list_add(_v, new __vertex(_pf2[0], _pf2[1], _pf2[2]).setNormal(_pfn2[0], _pfn2[1]).setUV(_pft2[0], _pft2[1]));
+					ds_list_add(_v, new __vertex(_pf1[0], _pf1[1], _pf1[2]).setNormal(_pfn1[0], _pfn1[1]).setUV(_pft1[0], _pft1[1]));
 				} 
 				
 				if(_vlen >= 4) {
-					vertex_add_pntc(VB, _pf[0], _pfn[0], _pft[0]);
-					vertex_add_pntc(VB, _pf[3], _pfn[3], _pft[3]);
-					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
+					var _pf3  = _pf[3];
+					var _pfn3 = _pfn[3];
+					var _pft3 = _pft[3];
 					
-					ds_list_add(_v, new __vertex(_pf[0][0], _pf[0][1], _pf[0][2]).setNormal(_pfn[0][0], _pfn[0][1]).setUV(_pft[0][0], _pft[0][1]));
-					ds_list_add(_v, new __vertex(_pf[3][0], _pf[3][1], _pf[3][2]).setNormal(_pfn[3][0], _pfn[3][1]).setUV(_pft[3][0], _pft[3][1]));
-					ds_list_add(_v, new __vertex(_pf[2][0], _pf[2][1], _pf[2][2]).setNormal(_pfn[2][0], _pfn[2][1]).setUV(_pft[2][0], _pft[2][1]));
+					vertex_add_pntc(VB, _pf0, _pfn0, _pft0);
+					vertex_add_pntc(VB, _pf3, _pfn3, _pft3);
+					vertex_add_pntc(VB, _pf2, _pfn2, _pft2);
+					
+					ds_list_add(_v, new __vertex(_pf0[0], _pf0[1], _pf0[2]).setNormal(_pfn0[0], _pfn0[1]).setUV(_pft0[0], _pft0[1]));
+					ds_list_add(_v, new __vertex(_pf3[0], _pf3[1], _pf3[2]).setNormal(_pfn3[0], _pfn3[1]).setUV(_pft3[0], _pft3[1]));
+					ds_list_add(_v, new __vertex(_pf2[0], _pf2[1], _pf2[2]).setNormal(_pfn2[0], _pfn2[1]).setUV(_pft2[0], _pft2[1]));
 				}
 			}
 			
