@@ -2,6 +2,7 @@ function Node_Iterator_Sort_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	name  = "Sort result";
 	color = COLORS.node_blend_loop;
 	loop  = noone;
+	setDimension(96, 48);
 	
 	clonable = false;
 	inline_parent_object = "Node_Iterate_Sort_Inline";

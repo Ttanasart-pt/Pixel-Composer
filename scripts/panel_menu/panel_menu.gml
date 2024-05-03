@@ -32,7 +32,7 @@ function Panel_Menu() : PanelContent() constructor {
 				
 				return submenuCall(_dat, arr);
 		}).setIsShelf(),
-		menuItem(__txtx("panel_menu_auto_save_folder", "Open autosave folder"), function() { shellOpenExplorer(DIRECTORY + "autosave"); }, THEME.save_auto),
+		menuItem(__txtx("panel_menu_auto_save_folder", "Open autosave folder"), function() { shellOpenExplorer(DIRECTORY + "autosave"); }, THEME.save_auto, ["", "Autosave folder"]),
 		menuItem(__txt("Import"),			 function(_dat) { 
 			var arr = [
 				menuItem(__txt("Portable project (.zip)") + "...", function() { __IMPORT_ZIP(); }),
@@ -51,12 +51,12 @@ function Panel_Menu() : PanelContent() constructor {
 	];
 	
 	menu_file = [
-		menuItem(__txt("Preferences") + "...", function() { dialogCall(o_dialog_preference); }, THEME.gear),
-		menuItem(__txt("Splash screen"), function() { dialogCall(o_dialog_splash); }),
+		menuItem(__txt("Preferences") + "...", function() { dialogCall(o_dialog_preference); }, THEME.gear, ["", "Preference"]),
+		menuItem(__txt("Splash screen"), function() { dialogCall(o_dialog_splash); }, noone, ["", "Splash Screen"]),
 		-1,
 		menuItem(__txt("Addons"), function(_dat) { 
 			var arr = [
-				menuItem(__txt("Addons") + "...", function() { dialogPanelCall(new Panel_Addon()); }),
+				menuItem(__txt("Addons") + "...", function() { dialogPanelCall(new Panel_Addon()); }, noone, ["", "Addons"]),
 				menuItem(__txtx("panel_menu_addons_key", "Key displayer"), function() { 
 					if(instance_exists(addon_key_displayer)) {
 						instance_destroy(addon_key_displayer);
@@ -76,10 +76,10 @@ function Panel_Menu() : PanelContent() constructor {
 			return submenuCall(_dat, arr);
 		}, THEME.addon_icon ).setIsShelf(),
 		-1,
-		menuItem(__txt("Fullscreen"),			 function() { winMan_setFullscreen(!window_is_fullscreen); },, ["", "Fullscreen"]),
-		menuItem(__txt("Close current project"), function() { PANEL_GRAPH.close(); },, [ "", "Close file" ]),
-		menuItem(__txt("Close all projects"),	 function() { for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]); },, [ "", "Close all" ]),
-		menuItem(__txt("Close program"),		 function() { window_close(); },, [ "", "Close program" ]),
+		menuItem(__txt("Fullscreen"),			 function() { winMan_setFullscreen(!window_is_fullscreen); }, noone, ["", "Fullscreen"]),
+		menuItem(__txt("Close current project"), function() { PANEL_GRAPH.close(); }, noone, [ "", "Close file" ]),
+		menuItem(__txt("Close all projects"),	 function() { for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]); }, noone, [ "", "Close all" ]),
+		menuItem(__txt("Close program"),		 function() { window_close(); }, noone, [ "", "Close program" ]),
 	]; 
 	
 	if(!DEMO) menu_file = array_append(menu_file_nondemo, menu_file);
@@ -112,13 +112,16 @@ function Panel_Menu() : PanelContent() constructor {
 	#endregion
 	
 	#region //////// MENU ////////
+	menuItem_undo = menuItem(__txt("Undo"), function() { UNDO(); }, THEME.undo, ["", "Undo"]);
+	menuItem_redo = menuItem(__txt("Redo"), function() { REDO(); }, THEME.redo, ["", "Redo"]);
+	
 	menus = [
 		[ __txt("File"), menu_file ],
 		
 		[ __txt("Edit"), [
-			menuItem(__txt("Undo"), function() { UNDO(); }, THEME.undo, ["", "Undo"]),
-			menuItem(__txt("Redo"), function() { REDO(); }, THEME.redo, ["", "Redo"]),
-			menuItem(__txt("History"), function() { dialogPanelCall(new Panel_History()); }),
+			menuItem_undo,
+			menuItem_redo,
+			menuItem(__txt("History"), function() { dialogPanelCall(new Panel_History()); }, noone, ["", "History"]),
 		]],
 		
 		[ __txt("Preview"), [
@@ -135,7 +138,7 @@ function Panel_Menu() : PanelContent() constructor {
 			menuItem(__txtx("panel_menu_animation_setting", "Animation Settings..."), function() { 
 				var dia = dialogPanelCall(new Panel_Animation_Setting()); 
 				dia.anchor = ANCHOR.none;
-			}, THEME.animation_setting),
+			}, THEME.animation_setting, ["Animation", "Settings"]),
 			-1,
 			menuItem(__txtx("panel_menu_animation_scaler", "Animation Scaler..."), function() { 
 				dialogPanelCall(new Panel_Animation_Scaler()); 
@@ -198,28 +201,28 @@ function Panel_Menu() : PanelContent() constructor {
 				return submenuCall(_dat, arr);
 			}).setIsShelf(),
 			-1,
-			menuItem(__txt("Collections"),		function() { panelAdd("Panel_Collection", true) },,,	function() { return findPanel("Panel_Collection") != noone; } ),
-			menuItem(__txt("Graph"),			function() { panelAdd("Panel_Graph", true) },,,			function() { return findPanel("Panel_Graph") != noone; } ),
-			menuItem(__txt("Preview"),			function() { panelAdd("Panel_Preview", true) },,,		function() { return findPanel("Panel_Preview") != noone; } ),
-			menuItem(__txt("Inspector"),		function() { panelAdd("Panel_Inspector", true) },,,		function() { return findPanel("Panel_Inspector") != noone; } ),
-			menuItem(__txt("Workspace"),		function() { panelAdd("Panel_Workspace", true) },,,		function() { return findPanel("Panel_Workspace") != noone; } ),
-			menuItem(__txt("Animation"),		function() { panelAdd("Panel_Animation", true) },,,		function() { return findPanel("Panel_Animation") != noone; } ),
-			menuItem(__txt("Notifications"),	function() { panelAdd("Panel_Notification", true) },,,	function() { return findPanel("Panel_Notification") != noone; } ),
-			menuItem(__txtx("panel_globalvar", "Global Variables"),	function() { panelAdd("Panel_Globalvar", true) },,,		function() { return findPanel("Panel_Globalvar") != noone; } ),
+			menuItem(__txt("Collections"),		function() { panelAdd("Panel_Collection", true) },	 noone, ["", "Collections Panel"],	function() { return findPanel("Panel_Collection")   != noone; } ),
+			menuItem(__txt("Graph"),			function() { panelAdd("Panel_Graph", true) },		 noone, ["", "Graph Panel"],		function() { return findPanel("Panel_Graph")        != noone; } ),
+			menuItem(__txt("Preview"),			function() { panelAdd("Panel_Preview", true) }, 	 noone, ["", "Preview Panel"],		function() { return findPanel("Panel_Preview")      != noone; } ),
+			menuItem(__txt("Inspector"),		function() { panelAdd("Panel_Inspector", true) },	 noone, ["", "Inspector Panel"],	function() { return findPanel("Panel_Inspector")    != noone; } ),
+			menuItem(__txt("Workspace"),		function() { panelAdd("Panel_Workspace", true) },	 noone, ["", "Workspace Panel"],	function() { return findPanel("Panel_Workspace")    != noone; } ),
+			menuItem(__txt("Animation"),		function() { panelAdd("Panel_Animation", true) },	 noone, ["", "Animation Panel"],	function() { return findPanel("Panel_Animation")    != noone; } ),
+			menuItem(__txt("Notifications"),	function() { panelAdd("Panel_Notification", true) }, noone, ["", "Notification Panel"],	function() { return findPanel("Panel_Notification") != noone; } ),
+			menuItem(__txtx("panel_globalvar", "Global Variables"),	function() { panelAdd("Panel_Globalvar", true) }, noone, noone,		function() { return findPanel("Panel_Globalvar")	!= noone; } ),
 			
 			menuItem(__txt("Nodes"), function(_dat) { 
 				return submenuCall(_dat, [
-					menuItem(__txt("Align"),	function() { panelAdd("Panel_Node_Align", true) },,,	function() { return findPanel("Panel_Node_Align") != noone; } ),
-					menuItem(__txt("Nodes"),	function() { panelAdd("Panel_Nodes", true) },,,			function() { return findPanel("Panel_Nodes") != noone; } ),
-					menuItem(__txt("Tunnels"),	function() { panelAdd("Panel_Tunnels", true) },,,		function() { return findPanel("Panel_Tunnels") != noone; } ),
+					menuItem(__txt("Align"),	function() { panelAdd("Panel_Node_Align", true) },	noone, ["", "Align Panel"],		function() { return findPanel("Panel_Node_Align") != noone; } ),
+					menuItem(__txt("Nodes"),	function() { panelAdd("Panel_Nodes", true) },		noone, ["", "Nodes Panel"],		function() { return findPanel("Panel_Nodes")      != noone; } ),
+					menuItem(__txt("Tunnels"),	function() { panelAdd("Panel_Tunnels", true) }, 	noone, ["", "Tunnels Panel"],	function() { return findPanel("Panel_Tunnels")    != noone; } ),
 				]);
 			} ).setIsShelf(),
 			
 			menuItem(__txt("Color"), function(_dat) { 
 				return submenuCall(_dat, [
-					menuItem(__txt("Color"),		function() { panelAdd("Panel_Color", true) },,,		function() { return findPanel("Panel_Color") != noone; } ),
-					menuItem(__txt("Palettes"),		function() { panelAdd("Panel_Palette", true) },,,	function() { return findPanel("Panel_Palette") != noone; } ),
-					menuItem(__txt("Gradients"),	function() { panelAdd("Panel_Gradient", true) },,,	function() { return findPanel("Panel_Gradient") != noone; } ),
+					menuItem(__txt("Color"),		function() { panelAdd("Panel_Color", true) },	 noone, ["", "Color Panel"], 	 function() { return findPanel("Panel_Color")    != noone; } ),
+					menuItem(__txt("Palettes"),		function() { panelAdd("Panel_Palette", true) },  noone, ["", "Palettes Panel"],  function() { return findPanel("Panel_Palette")  != noone; } ),
+					menuItem(__txt("Gradients"),	function() { panelAdd("Panel_Gradient", true) }, noone, ["", "Gradients Panel"], function() { return findPanel("Panel_Gradient") != noone; } ),
 				]);
 			} ).setIsShelf(),
 		]],
@@ -230,55 +233,27 @@ function Panel_Menu() : PanelContent() constructor {
 	
 	if(TESTING) { #region
 		array_push(menus, [ __txt("Dev"), [
-			menuItem(__txtx("panel_debug_console", "Console"), function() { 
-				panelAdd("Panel_Console", true)
-			}),
-			menuItem(__txtx("panel_debug_overlay", "Debug overlay"), function() { 
-				show_debug_overlay(true);
-			}),
-			menuItem(__txtx("panel_menu_tester", "Tester"), function() { 
-				var dia = dialogPanelCall(new Panel_Test());
-				dia.destroy_on_click_out = false;
-			}),
+			menuItem(__txtx("panel_debug_console", "Console"),									function() /*=>*/ { panelAdd("Panel_Console", true) }, noone, ["", "Console Panel"]),
+			menuItem(__txtx("panel_debug_overlay", "Debug overlay"),							function() /*=>*/ { show_debug_overlay(true); }),
+			menuItem(__txtx("panel_menu_tester", "Tester"), 									function() /*=>*/ { var dia = dialogPanelCall(new Panel_Test()); dia.destroy_on_click_out = false; }),
 			-1, 
 			
-			menuItem(__txtx("panel_menu_test_load_all", "Load all current collections"), function() { 
-				__test_load_current_collections();
-			}),
-			menuItem(__txtx("panel_menu_test_update_all", "Update all current collections"), function() { 
-				__test_update_current_collections();
-			}),
-			menuItem(__txtx("panel_menu_test_add_meta", "Add metadata to current collections"), function() { 
-				__test_metadata_current_collections();
-			}),
-			menuItem(__txtx("panel_menu_test_update_sam", "Update sample projects"), function() { 
-				__test_update_sample_projects();
-			}),
+			menuItem(__txtx("panel_menu_test_load_all", "Load all current collections"),		function() /*=>*/ { __test_load_current_collections(); }),
+			menuItem(__txtx("panel_menu_test_update_all", "Update all current collections"),	function() /*=>*/ { __test_update_current_collections(); }),
+			menuItem(__txtx("panel_menu_test_add_meta", "Add metadata to current collections"), function() /*=>*/ { __test_metadata_current_collections(); }),
+			menuItem(__txtx("panel_menu_test_update_sam", "Update sample projects"),			function() /*=>*/ { __test_update_sample_projects(); }),
 			-1,
-			menuItem(__txtx("panel_menu_test_load_nodes", "Load all nodes"), function() { 
-				__test_load_all_nodes();
-			}),
-			menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"), function() { 
-				var dia = dialogPanelCall(new Panel_Node_Data_Gen());
-				dia.destroy_on_click_out = false;
-			}),
-			menuItem(__txtx("panel_menu_test_gen_theme", "Generate theme object"), function() { 
-				__test_generate_theme();
-			}),
+			menuItem(__txtx("panel_menu_test_load_nodes", "Load all nodes"),					function() /*=>*/ { __test_load_all_nodes(); }),
+			menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"),				function() /*=>*/ { var dia = dialogPanelCall(new Panel_Node_Data_Gen()); dia.destroy_on_click_out = false; }),
+			menuItem(__txtx("panel_menu_test_gen_theme", "Generate theme object"),				function() /*=>*/ {  __test_generate_theme(); }),
 			-1,
-			menuItem(__txtx("panel_menu_test_warning", "Display Warning"), function() { 
-				noti_warning("Error message")
-			}),
-			menuItem(__txtx("panel_menu_test_error", "Display Error"), function() { 
-				noti_error("Error message")
-			}),
-			menuItem(__txtx("panel_menu_test_crash", "Force crash"), function() { 
-				print(1 + "a");
-			}),
+			menuItem(__txtx("panel_menu_test_warning", "Display Warning"),						function() /*=>*/ { noti_warning("Error message") }),
+			menuItem(__txtx("panel_menu_test_error", "Display Error"),							function() /*=>*/ { noti_error("Error message") }),
+			menuItem(__txtx("panel_menu_test_crash", "Force crash"),							function() /*=>*/ { print(1 + "a"); }),
 			-1,
 			menuItem(__txt("Misc."), function(_dat) { 
 				return submenuCall(_dat, [
-					menuItem(__txtx("panel_menu_node_credit", "Node credit dialog"), function() { var dia = dialogPanelCall(new Panel_Node_Cost()); }),
+					menuItem(__txtx("panel_menu_node_credit", "Node credit dialog"), function() /*=>*/ { var dia = dialogPanelCall(new Panel_Node_Cost()); }),
 				]);
 			} ).setIsShelf(),
 		]]);
@@ -286,9 +261,7 @@ function Panel_Menu() : PanelContent() constructor {
 	
 	menu_help_steam = array_clone(menu_help);
 	array_push(menu_help_steam, -1, 
-		menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() {
-			steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
-		}, THEME.steam) );
+		menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() /*=>*/ { steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/"); }, THEME.steam) );
 	
 	function onFocusBegin() { PANEL_MENU = self; }
 	
@@ -310,8 +283,8 @@ function Panel_Menu() : PanelContent() constructor {
 				txt = $"{__txt("Undo")} {act[0]}";
 		}
 		
-		menus[1][1][0].active = !ds_stack_empty(UNDO_STACK);
-		menus[1][1][0].name = txt;
+		menuItem_undo.active = !ds_stack_empty(UNDO_STACK);
+		menuItem_undo.name = txt;
 		
 		if(ds_stack_empty(REDO_STACK)) {
 			txt = __txt("Redo");
@@ -323,8 +296,8 @@ function Panel_Menu() : PanelContent() constructor {
 				txt = $"{__txt("Redo")} {act[0]}";
 		}
 		
-		menus[1][1][1].active = !ds_stack_empty(REDO_STACK);
-		menus[1][1][1].name = txt;
+		menuItem_redo.active = !ds_stack_empty(REDO_STACK);
+		menuItem_redo.name = txt;
 	} #endregion
 	
 	function drawContent(panel) { #region
@@ -404,8 +377,11 @@ function Panel_Menu() : PanelContent() constructor {
 			var _ww     = 0;
 		
 			for(var i = 0; i < array_length(menus); i++) {
+				var _menu = menus[i];
+				var _name = _menu[0];
+				
 				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-				var ww = string_width(menus[i][0]) + ui(16);
+				var ww = string_width(_name) + ui(16);
 				var hh = line_get_height() + ui(8);
 			
 				if(hori) {
@@ -433,13 +409,13 @@ function Panel_Menu() : PanelContent() constructor {
 					draw_sprite_stretched(THEME.menu_button, 0, x0, y0, x1 - x0, y1 - y0);
 					
 					if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
-						if(hori) menuCall("main_" + menus[i][0] + "_menu", x + x0, y + y1, menus[i][1]);
-						else     menuCall("main_" + menus[i][0] + "_menu", x + x1, y + y0, menus[i][1]);
+						if(hori) menuCall($"main_{_name}_menu", x + x0, y + y1, _menu[1]);
+						else     menuCall($"main_{_name}_menu", x + x1, y + y0, _menu[1]);
 					}
 				}
 			
 				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-				draw_text_add(xc, yc, menus[i][0]);
+				draw_text_add(xc, yc, _name);
 			
 				if(hori) {
 					xx  += ww + 8;
@@ -552,7 +528,7 @@ function Panel_Menu() : PanelContent() constructor {
 				
 				switch(action) {
 					case "exit":
-						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_exit, 0, COLORS._main_accent);
+						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], true, pHOVER,, THEME.window_exit, 0, COLORS._main_accent);
 						if(b) _draggable = false;
 						if(b == 2) window_close();
 						break;
@@ -561,7 +537,7 @@ function Panel_Menu() : PanelContent() constructor {
 						if(OS == os_macosx)
 							win_max = __win_is_maximized;
 						
-						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_maximize, win_max, [ COLORS._main_icon, CDEF.lime ]);
+						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], true, pHOVER,, THEME.window_maximize, win_max, [ COLORS._main_icon, CDEF.lime ]);
 						if(b) _draggable = false;
 						if(b == 2) {
 							if(OS == os_windows) {
@@ -582,7 +558,7 @@ function Panel_Menu() : PanelContent() constructor {
 						}
 						break;
 					case "minimize":
-						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]);
+						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], true, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]);
 						if(b) _draggable = false;
 						if(b == -2) {
 							if(OS == os_windows)
@@ -593,7 +569,7 @@ function Panel_Menu() : PanelContent() constructor {
 						break;
 					case "fullscreen":
 						var win_full = window_is_fullscreen;
-						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_fullscreen, win_full, [ COLORS._main_icon, CDEF.cyan ]);
+						var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], true, pHOVER,, THEME.window_fullscreen, win_full, [ COLORS._main_icon, CDEF.cyan ]);
 						if(b) _draggable = false;
 						if(b == 2) {
 							if(OS == os_windows)

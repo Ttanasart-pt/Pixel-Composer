@@ -2,6 +2,7 @@ function Node_Iterator_Filter_Inline_Output(_x, _y, _group = noone) : Node(_x, _
 	name  = "Filter Output";
 	color = COLORS.node_blend_loop;
 	loop  = noone;
+	setDimension(96, 48);
 	
 	clonable = false;
 	inline_parent_object = "Node_Iterate_Filter_Inline";

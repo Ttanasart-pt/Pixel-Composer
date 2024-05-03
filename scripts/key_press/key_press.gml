@@ -85,7 +85,7 @@
 #region get name
 	function key_get_name(_key, _mod) {
 		if(_key == 0 && _mod == MOD_KEY.none)
-			return "None";
+			return "";
 		
 		var dk = "";
 		if(_mod & MOD_KEY.ctrl)		dk += "Ctrl+";

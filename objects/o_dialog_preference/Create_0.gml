@@ -803,8 +803,9 @@ event_inherited();
 						sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				}
 				
+				var _lb_y = yy + hh + ui(4);
 				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-				draw_text_add(ui(24), yy + hh, name);
+				draw_text_add(ui(24), _lb_y, name);
 				
 				var dk = key_get_name(key.key, key.modi);
 				var kw = string_width(dk);
@@ -852,11 +853,11 @@ event_inherited();
 					
 					dk = key_get_name(key.key, key.modi);
 					kw = string_width(dk);
-					draw_sprite_stretched(THEME.button_hide, 2, key_x1 - ui(40) - kw, yy + hh - ui(6), kw + ui(32), th + ui(12));
+					draw_sprite_stretched(THEME.button_hide, 2, key_x1 - ui(40) - kw, yy + hh, kw + ui(32), th);
 				} else {
 					var bx = key_x1 - ui(40) - kw;
-					var by = yy + hh - ui(6);
-					if(buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th + ui(12), _m, sFOCUS, sHOVER && sp_hotkey.hover) == 2) {
+					var by = yy + hh;
+					if(buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th, _m, sFOCUS, sHOVER && sp_hotkey.hover) == 2) {
 						hk_editing = key;
 						keyboard_lastchar = pkey;
 					}
@@ -866,7 +867,7 @@ event_inherited();
 				if(hk_editing == key) cc = COLORS._main_text_accent;
 				
 				draw_set_text(f_p0, fa_right, fa_top, cc);
-				draw_text_add(key_x1 - ui(24), yy + hh, dk);
+				draw_text_add(key_x1 - ui(24), _lb_y, dk);
 				
 				if(key.key != dkey || key.modi != dmod) {
 					modified = true;
@@ -910,13 +911,15 @@ event_inherited();
 				
 				var name  = __txt(_hotkey);
 				var pkey  = hotkey.key;
-				if(pkey == "") pkey = "None";
 				
-				if(j % 2 == 0)
-					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy + hh - padd, sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
-						
+				if(j % 2 == 0) {
+					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy + hh - padd, 
+						sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+				}
+				
+				var _lb_y = yy + hh + ui(4);		
 				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-				draw_text_add(ui(24), yy + hh, name);
+				draw_text_add(ui(24), _lb_y, name);
 				
 				var kw = string_width(pkey);
 				var bx = key_x1 - ui(40) - kw;
@@ -931,11 +934,11 @@ event_inherited();
 						PREF_SAVE();
 					}
 					
-					draw_sprite_stretched(THEME.button_hide, 2, key_x1 - ui(40) - kw, yy + hh - ui(6), kw + ui(32), th + ui(12));
+					draw_sprite_stretched(THEME.button_hide, 2, key_x1 - ui(40) - kw, yy + hh, kw + ui(32), th);
 				} else {
 					var bx = key_x1 - ui(40) - kw;
-					var by = yy + hh - ui(6);
-					if(buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th + ui(12), _m, sFOCUS, sHOVER && sp_hotkey.hover) == 2) {
+					var by = yy + hh;
+					if(buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th, _m, sFOCUS, sHOVER && sp_hotkey.hover) == 2) {
 						hk_editing = key;
 						keyboard_lastchar = pkey;
 					}
@@ -945,7 +948,7 @@ event_inherited();
 				if(hk_editing == key) cc = COLORS._main_text_accent;
 				
 				draw_set_text(f_p0, fa_right, fa_top, cc);
-				draw_text_add(key_x1 - ui(24), yy + hh, pkey);
+				draw_text_add(key_x1 - ui(24), _lb_y, pkey);
 				
 				if(key.key != key.dkey) {
 					modified = true;

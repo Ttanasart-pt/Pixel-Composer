@@ -4,7 +4,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	is_group_io = true;
 	
 	manual_ungroupable = false;
-	setDimension(96, 32 + 24 * 2);
+	setDimension(96, 48);
 	
 	inputs[| 0].setFrom_condition = function(_valueFrom) { #region
 		if(instanceof(_valueFrom.node) != "Node_Iterator_Input") return true;

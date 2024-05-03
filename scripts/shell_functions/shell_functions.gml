@@ -7,6 +7,8 @@ function shellOpenExplorer(path) { #region
 		path = string_replace_all(path, "\\", "/");
 		var res = shell_execute_async("open", path);
 	} 
+	
+	return 0;
 } #endregion
 
 function shell_execute(path, command, ref = noone) { #region

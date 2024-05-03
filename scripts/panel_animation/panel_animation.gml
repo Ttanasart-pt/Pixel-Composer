@@ -190,6 +190,11 @@ function Panel_Animation() : PanelContent() constructor {
 		addHotkey("Animation", "Collapse Toggle",	"C",		MOD_KEY.none,	collapseToggle);
 		addHotkey("Animation", "Toggle nodes",		"H",		MOD_KEY.none,	panel_animation_show_nodes);
 		
+		addHotkey("Animation", "Settings",			"S",		MOD_KEY.ctrl | MOD_KEY.shift,	function() { 
+			var dia = dialogPanelCall(new Panel_Animation_Setting()); 
+			dia.anchor = ANCHOR.none;
+		});
+		
 		tooltip_toggle_nodes = new tooltipHotkey(__txtx("panel_animation_show_node", "Toggle node label"), "Animation", "Toggle nodes");
 	#endregion
 	

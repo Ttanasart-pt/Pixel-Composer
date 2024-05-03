@@ -846,8 +846,8 @@ function __initNodes() {
 		addNodeObject(values, "Sort Array",			s_node_array_sort,		"Node_Array_Sort",				[1, Node_Array_Sort], ["array sort"]).setVersion(1120);
 		addNodeObject(values, "Shuffle Array",		s_node_array_shuffle,	"Node_Array_Shuffle",			[1, Node_Array_Shuffle], ["array shuffle"]).setVersion(1120);
 		addNodeObject(values, "Loop Array",			s_node_loop_array,		"Node_Iterate_Each_Inline",		[1, Node_Iterate_Each_Inline], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
-		addNodeObject(values, "Filter Array",		s_node_filter_array,	"Node_Iterate_Filter_Inline",	[1, Node_Iterate_Filter_Inline],, "Filter array using condition.").setVersion(1140);
-		addNodeObject(values, "Sort Array",			s_node_sort_array,		"Node_Iterate_Sort_Inline",		[1, Node_Iterate_Sort_Inline],, "Sort array using node graph.").setVersion(1143);
+		addNodeObject(values, "Filter Array",		s_node_filter_array,	"Node_Iterate_Filter_Inline",	[1, Node_Iterate_Filter_Inline], ["array filter"], "Filter array using condition.").setVersion(1140);
+		addNodeObject(values, "Sort Array (inline)",s_node_sort_array,		"Node_Iterate_Sort_Inline",		[1, Node_Iterate_Sort_Inline], ["array sort"], "Sort array using node graph.").setVersion(1143);
 		addNodeObject(values, "Parse CSV",			s_node_csv_parse,		"Node_Array_CSV_Parse",			[1, Node_Array_CSV_Parse]).setVersion(1145);
 		
 		ds_list_add(values, "Paths");

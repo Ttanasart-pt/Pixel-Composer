@@ -162,6 +162,7 @@
 		panelDisplayInit();
 		
 		checkPanelValid();
+		__initPanelHotkeys();
 	} #endregion
 	
 	function setPanel() { #region
@@ -431,5 +432,40 @@
 		if(instanceof(FOCUS) != "Panel") return false;
 		
 		return instanceof(FOCUS.getContent()) == instanceof(content);
+	}
+#endregion
+
+#region hotkey
+	function __initPanelHotkeys() {
+		addHotkey("", "Preference",    "", MOD_KEY.none, function() /*=>*/ {return dialogCall(o_dialog_preference)});
+		addHotkey("", "Splash screen", "", MOD_KEY.none, function() /*=>*/ {return dialogCall(o_dialog_splash)});
+		addHotkey("", "Release note",  "", MOD_KEY.none, function() /*=>*/ {return dialogCall(o_dialog_release_note)});
+		addHotkey("", "Autosave folder",  "", MOD_KEY.none, function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "autosave")});
+		
+		addHotkey("", "Recent files",  "R", MOD_KEY.ctrl | MOD_KEY.shift, function() /*=>*/ {
+			var arr = [];
+			for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)
+				array_push(arr, menuItem(RECENT_FILES[| i], function(_dat) { LOAD_PATH(_dat.name); }));
+			
+			return menuCall("Recent files",,, arr);
+		});
+		
+		addHotkey("", "Addons",  "", MOD_KEY.none, function() /*=>*/ {return dialogPanelCall(new Panel_Addon())});
+		addHotkey("", "History", "", MOD_KEY.none, function() /*=>*/ {return dialogPanelCall(new Panel_History())});
+		
+		addHotkey("", "Notification Panel", "", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Notification",	true)});
+		addHotkey("", "Collections Panel",  "", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Collection",	true)});
+		addHotkey("", "Graph Panel",	  	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Graph", 		true)});
+		addHotkey("", "Preview Panel",  	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Preview",		true)});
+		addHotkey("", "Inspector Panel",	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Inspector", 	true)});
+		addHotkey("", "Workspace Panel",	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Workspace", 	true)});
+		addHotkey("", "Animation Panel",	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Animation", 	true)});
+		addHotkey("", "Align Panel",		"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Node_Align",	true)});
+		addHotkey("", "Nodes Panel",		"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Nodes", 		true)});
+		addHotkey("", "Tunnels Panel",  	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Tunnels",		true)});
+		addHotkey("", "Color Panel",		"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Color", 		true)});
+		addHotkey("", "Palettes Panel", 	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Palette",		true)});
+		addHotkey("", "Gradients Panel",	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Gradient",		true)});
+		addHotkey("", "Console Panel",  	"",	MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Console",		true)});
 	}
 #endregion
