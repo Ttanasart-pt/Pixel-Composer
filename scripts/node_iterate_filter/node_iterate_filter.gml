@@ -9,7 +9,7 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _gr
 	custom_input_index  = ds_list_size(inputs);
 	custom_output_index = ds_list_size(inputs);
 	
-	if(!LOADING && !APPENDING && !CLONING) { #region
+	if(NODE_NEW_MANUAL) { #region
 		var input  = nodeBuild("Node_Iterator_Filter_Input", -256, -32, self);
 		var output = nodeBuild("Node_Iterator_Filter_Output", 256, -32, self);
 		

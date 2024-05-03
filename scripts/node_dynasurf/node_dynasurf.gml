@@ -10,7 +10,7 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	custom_input_index  = ds_list_size(inputs);
 	custom_output_index = ds_list_size(outputs);
 	
-	if(!LOADING && !APPENDING && !CLONING) { #region
+	if(NODE_NEW_MANUAL) { #region
 		var _input  = nodeBuild("Node_DynaSurf_In",  -256, -32, self);
 		var _output = nodeBuild("Node_DynaSurf_Out",  256, -32, self);
 		

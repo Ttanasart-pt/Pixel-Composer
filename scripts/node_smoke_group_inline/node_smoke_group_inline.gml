@@ -5,7 +5,7 @@ function Node_Smoke_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	
 	is_simulation = true;
 	
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		var _domain = nodeBuild("Node_Smoke_Domain", x,       y);
 		var _render = nodeBuild("Node_Smoke_Render", x + 320, y);
 		

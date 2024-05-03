@@ -99,7 +99,6 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		var _buildCon = createNode[0];
 		if(createUseParam) _param = struct_append(_param, createNode[2]);
 		
-		print($"         >> building {node}");
 		var _node = noone;
 		if(_buildCon)	_node = new createNode[1](_x, _y, _group, _param);
 		else			_node = createNode[1](_x, _y, _group, _param);

@@ -21,7 +21,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	outputNode = noone;
 	nodeValid  = false;
 	
-	if(!LOADING && !APPENDING && !CLONING) { #region
+	if(NODE_NEW_MANUAL) { #region
 		var input0 = nodeBuild("Node_Iterator_Sort_Input", -256, -64, self);
 		input0.setDisplayName("Value 1");
 		input0.attributes.sort_inputs = 1;

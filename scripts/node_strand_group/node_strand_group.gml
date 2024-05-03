@@ -7,7 +7,7 @@ function Node_Strand_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	ungroupable          = false;
 	update_on_frame      = true;
 	
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		var _create = nodeBuild("Node_Strand_Create", -384, -32, self);
 		var _update = nodeBuild("Node_Strand_Update",    0, -32, self);
 		var _render = nodeBuild("Node_Strand_Render",  128, -32, self);

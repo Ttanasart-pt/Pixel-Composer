@@ -1,6 +1,6 @@
 function Node_create_Display_Image(_x, _y, _group = noone) { #region
 	var path = "";
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		path = get_open_filename("image|*.png;*.jpg", "");
 		key_release();
 		if(path == "") return noone;

@@ -9,7 +9,7 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	inputs[| 0] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 10 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		var _object = nodeBuild("Node_Rigid_Object", x,       y);
 		var _output = nodeBuild("Node_Rigid_Render", x + 160, y);
 		

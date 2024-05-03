@@ -1,6 +1,6 @@
 function Node_create_Image_Animated(_x, _y, _group = noone) { #region
 	var path = "";
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		path = get_open_filenames_compat("image|*.png;*.jpg", "");
 		key_release();
 		if(path == "") return noone;
@@ -9,7 +9,7 @@ function Node_create_Image_Animated(_x, _y, _group = noone) { #region
 	var node  = new Node_Image_Animated(_x, _y, _group);
 	var paths = string_splice(path, "\n");
 	node.inputs[| 0].setValue(paths);
-	node.doUpdate();
+	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
 } #endregion

@@ -1,6 +1,6 @@
 function Node_create_Export(_x, _y, _group = noone) { #region
 	var path = "";
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		path = get_save_filename(@"Portable Network Graphics (.png)|*.png|
 Joint Photographic Experts Group (.jpg)|*.jpg|
 Graphics Interchange Format (.gif)|*.gif|
@@ -13,9 +13,8 @@ MPEG-4 (.mp4)|*.mp4",
 	
 	var node = new Node_Export(_x, _y, _group);
 	node.inputs[| 1].setValue(path);
-	node.extensionCheck();
+	if(NODE_NEW_MANUAL) node.extensionCheck();
 	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 

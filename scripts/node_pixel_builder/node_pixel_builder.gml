@@ -13,7 +13,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	custom_input_index  = ds_list_size(inputs);
 	custom_output_index = ds_list_size(outputs);
 	
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		var input  = nodeBuild("Node_PB_Layer", -256, -32, self);
 		RENDER_ALL 
 	}

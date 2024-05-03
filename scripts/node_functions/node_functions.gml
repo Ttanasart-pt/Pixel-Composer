@@ -3,6 +3,7 @@
 #macro DEF_SURF			PROJECT.attributes.surface_dimension
 
 #macro DEF_PALETTE		PROJECT.attributes.palette
+#macro NODE_NEW_MANUAL  !LOADING && !APPENDING && !CLONING
 
 #region 
 	function node_draw_transform_init() {

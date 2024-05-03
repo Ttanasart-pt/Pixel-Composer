@@ -6,7 +6,7 @@ function Node_Strand_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	is_simulation   = true;
 	update_on_frame = true;
 	
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		var _create = nodeBuild("Node_Strand_Create", x,       y);
 		var _render = nodeBuild("Node_Strand_Render", x + 256, y);
 		

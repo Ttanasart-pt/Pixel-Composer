@@ -6,7 +6,7 @@ function Node_FLIP_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline
 	is_simulation   = true;
 	update_on_frame = true;
 	
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		var _domain = nodeBuild("Node_FLIP_Domain",  x,       y);
 		var _spawn  = nodeBuild("Node_FLIP_Spawner", x + 160, y);
 		var _render = nodeBuild("Node_FLIP_Render",  x + 320, y);

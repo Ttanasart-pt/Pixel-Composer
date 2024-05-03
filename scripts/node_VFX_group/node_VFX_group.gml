@@ -20,7 +20,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	
 	custom_input_index = ds_list_size(inputs);
 	
-	if(!LOADING && !APPENDING && !CLONING) { #region
+	if(NODE_NEW_MANUAL) { #region
 		var input  = nodeBuild("Node_VFX_Spawner", -256, -32, self);
 		var output = nodeBuild("Node_VFX_Renderer_Output", 256 + 32 * 5, -32, self);
 		

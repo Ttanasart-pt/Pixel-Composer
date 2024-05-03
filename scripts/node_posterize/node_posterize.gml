@@ -26,8 +26,11 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 8] = nodeValue("Space", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "RGB", "LAB" ]);
+	
 	input_display_list = [ 5, 0, 
-		["Palette", false, 2], 1, 3, 4, 7,
+		["Palette", false, 2], 1, 3, 4, 7, 8, 
 		["Alpha",   false, 6], 
 	];
 	
@@ -42,18 +45,21 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		inputs[| 3].setVisible(!_use_pal);
 		inputs[| 4].setVisible(!_use_pal);
 		inputs[| 4].mappableStep();
+		inputs[| 8].setVisible(_use_pal);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _gra     = _data[1];
-		var _use_gra = _data[2];
+		var _pal     = _data[1];
+		var _use_pal = _data[2];
 		var _alp     = _data[6];
+		var _spce    = _data[8];
 		
-		if(_use_gra) {
+		if(_use_pal) {
 			surface_set_shader(_outSurf, sh_posterize_palette);
-				shader_set_f("palette", paletteToArray(_gra));
-				shader_set_i("keys", array_length(_gra));
+				shader_set_f("palette", paletteToArray(_pal));
+				shader_set_i("keys", array_length(_pal));
 				shader_set_i("alpha", _alp);
+				shader_set_i("space", _spce);
 				
 				draw_surface_safe(_data[0]);
 			surface_reset_shader();

@@ -58,7 +58,7 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	
 	domain = fd_rectangle_create(PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
 	
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		var _render = nodeBuild("Node_Smoke_Render_Output",  128, -32, self);
 	}
 	

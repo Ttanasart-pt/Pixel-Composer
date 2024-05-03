@@ -6,6 +6,7 @@ varying vec4 v_vColour;
 uniform vec4 palette[PALETTE_LIMIT];
 uniform int keys;
 uniform int alpha;
+uniform int space;
 
 vec3 rgb2xyz( vec3 c ) {
     vec3 tmp;
@@ -32,23 +33,30 @@ vec3 rgb2lab(vec3 c) {
     return vec3( lab.x / 100.0, 0.5 + 0.5 * ( lab.y / 127.0 ), 0.5 + 0.5 * ( lab.z / 127.0 ));
 }
 
-float colorDifferent(in vec4 c1, in vec4 c2) {
+float colorDifferentLAB(in vec4 c1, in vec4 c2) {
 	vec3 lab1 = rgb2lab(c1.rgb);
 	vec3 lab2 = rgb2lab(c2.rgb);
 	
 	return length(lab1 - lab2);
 }
 
+float colorDifferentRGB(in vec4 c1, in vec4 c2) {
+	return length(c1.rgb - c2.rgb);
+}
+
 void main() {
 	vec4 _col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
 	vec4  col = alpha == 1? _col * _col.a : _col;
 	
-	int closet_index = 0;
-	float closet_value = 99.;
+	int   closet_index = 0;
+	float closet_value = 999.;
 	
 	for(int i = 0; i < keys; i++) {
 		vec4 p_col = palette[i];
-		float dif = colorDifferent(p_col, col);
+		float dif = 0.;
+		
+		     if(space == 0) dif = colorDifferentRGB(p_col, col);
+		else if(space == 1) dif = colorDifferentLAB(p_col, col);
 		
 		if(dif < closet_value) {
 			closet_value = dif;

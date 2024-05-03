@@ -1013,6 +1013,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					node_hover = node_hovering;	
 					
 					if(value_focus) {
+						print($"Right click value focus {value_focus}");
+						
 						__junction_hovering = value_focus;
 						
 						var menu = [ menu_junc_color ];
@@ -1062,6 +1064,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						menuCall("graph_node_selected_menu",,, menu);
 						
 					} else if(node_hover && node_hover.draggable) {
+						print($"Right click node hover {node_hover}");
+						
 						var menu = [];
 						array_push(menu, menu_node_color, -1, menu_sent_to_preview, menu_send_to_window, menu_sent_to_inspector);
 						if(!DEMO) 
@@ -1084,6 +1088,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					
 						menuCall("graph_node_selected_multiple_menu",,, menu );
 					} else if(node_hover == noone) {
+						print($"Right click not node hover");
+						
 						var menu = [];
 						
 						__junction_hovering = junction_hovering;

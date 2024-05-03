@@ -1,6 +1,6 @@
 function Node_create_Image(_x, _y, _group = noone) { #region
 	var path = "";
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(NODE_NEW_MANUAL) {
 		path = get_open_filename("image|*.png;*.jpg", "");
 		key_release();
 		if(path == "") return noone;
@@ -8,7 +8,7 @@ function Node_create_Image(_x, _y, _group = noone) { #region
 	
 	var node = new Node_Image(_x, _y, _group);
 	node.inputs[| 0].setValue(path);
-	if(path != "") node.doUpdate();
+	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
 } #endregion
