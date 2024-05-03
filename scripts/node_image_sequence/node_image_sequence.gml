@@ -113,6 +113,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			var ext = string_lower(filename_ext(path));
 			setDisplayName(filename_name_only(path));
+			edit_time = max(edit_time, file_get_modify_s(path));
 			
 			switch(ext) {
 				case ".png"	 :
@@ -125,7 +126,6 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						return false;
 					}
 					
-					edit_time = max(edit_time, file_get_modify_s(path));
 					array_push(spr, _spr);
 					break;
 			}
@@ -139,7 +139,9 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static step = function() { #region
 		if(attributes.file_checker)
 		for( var i = 0, n = array_length(path_current); i < n; i++ ) {
-			if(file_get_modify_s(path_current[i]) > edit_time) {
+			var _ed = file_get_modify_s(path_current[i]);
+			
+			if(_ed > edit_time) {
 				updatePaths();
 				triggerRender();
 				break;

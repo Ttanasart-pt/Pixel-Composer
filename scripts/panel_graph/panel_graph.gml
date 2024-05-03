@@ -1200,7 +1200,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#region draw node
 			var t = get_timer();
 			for(var i = 0; i < ds_list_size(nodes_list); i++)
-				nodes_list[| i].onDrawNodeBehind(gr_x, gr_y, mx, my, graph_s);
+				nodes_list[| i].drawNodeBehind(gr_x, gr_y, mx, my, graph_s);
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var _node = nodes_list[| i];
@@ -1376,7 +1376,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	function drawJunctionConnect() { #region
+		
 		if(value_dragging) {
+			if(!value_dragging.node.active) { value_dragging = noone; return; }
+			
 			var xx     = value_dragging.x;
 			var yy     = value_dragging.y;
 			var _mx    = mx;

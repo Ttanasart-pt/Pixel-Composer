@@ -1567,6 +1567,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _s > 0.5? drawJunctions(xx, yy, _mx, _my, _s) : drawJunctions_fast(xx, yy, _mx, _my, _s);
 	} #endregion
 	
+	static drawNodeBehind = function(_x, _y, _mx, _my, _s) { #region
+		if(draw_graph_culled) return;
+		if(!active) return;
+		
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		onDrawNodeBehind(_x, _y, _mx, _my, _s);
+	} #endregion
+	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {}

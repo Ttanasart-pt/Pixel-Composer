@@ -50,22 +50,21 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _alp     = _data[6];
 		
 		if(_use_gra) {
-			var _colors = paletteToArray(_gra);
-			
 			surface_set_shader(_outSurf, sh_posterize_palette);
-				shader_set_f("palette", _colors);
+				shader_set_f("palette", paletteToArray(_gra));
 				shader_set_i("keys", array_length(_gra));
 				shader_set_i("alpha", _alp);
 				
-				draw_surface_safe(_data[0], 0, 0);
+				draw_surface_safe(_data[0]);
 			surface_reset_shader();
+			
 		} else {
 			surface_set_shader(_outSurf, sh_posterize);
 				shader_set_i("colors",    _data[3]);
 				shader_set_f_map("gamma", _data[4], _data[7], inputs[| 4]);
 				shader_set_i("alpha",     _alp);
 			
-				draw_surface_safe(_data[0], 0, 0);
+				draw_surface_safe(_data[0]);
 			surface_reset_shader();
 		}
 		
