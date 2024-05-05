@@ -109,12 +109,52 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	];
 	
 	temp_surface = [ noone ];
+	use_path     = false;
+	path_points  = [];
+	point_simp   = [];
+	triangles	 = []; 
 	
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _path	= getInputData(14);
-		if(_path != noone && struct_has(_path, "getPointRatio")) return;
+		if(use_path) {
+			draw_set_text(f_p3, fa_center, fa_top);
+			draw_set_color(COLORS._main_accent);
+			var ox, oy, nx, ny;
+			
+			for (var i = 0, n = array_length(point_simp); i < n; i++) {
+				var p = point_simp[i];
+				nx = _x + p.x * _s;
+				ny = _y + p.y * _s;
+				
+				if(i) draw_line(ox, oy, nx, ny);
+				// draw_circle(nx, ny, 3, false);
+				// draw_text(nx, ny + 8, i);
+				
+				ox = nx;
+				oy = ny;
+			}
+			
+			// draw_set_color(c_red);
+			// for( var i = 0, n = array_length(triangles); i < n; i++ ) {
+			// 	var tri = triangles[i];
+			// 	var p0  = tri[0];
+			// 	var p1  = tri[1];
+			// 	var p2  = tri[2];
+				
+			// 	var p0x = _x + p0.x * _s;
+			// 	var p0y = _y + p0.y * _s;
+			// 	var p1x = _x + p1.x * _s;
+			// 	var p1y = _y + p1.y * _s;
+			// 	var p2x = _x + p2.x * _s;
+			// 	var p2y = _y + p2.y * _s;
+				
+			// 	draw_line(p0x, p0y, p1x, p1y);
+			// 	draw_line(p0x, p0y, p2x, p2y);
+			// 	draw_line(p1x, p1y, p2x, p2y);
+			// }
+			return;
+		}
 		
 		var _type = getInputData(15);
 		
@@ -186,8 +226,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[| 15].setVisible(true);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		use_path = _path != noone && struct_has(_path, "getPointRatio");
 		
-		if(_path != noone && struct_has(_path, "getPointRatio")) { #region
+		if(use_path) { #region
 			inputs[|  3].setVisible(false);
 			inputs[|  4].setVisible(false);
 			inputs[|  5].setVisible(false);
@@ -201,20 +242,19 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				if(_bg) draw_clear_alpha(0, 1);
 				else	DRAW_CLEAR
 				
-				var points = [];
 				var segCount = _path.getSegmentCount();
 				if(segCount) {
 					var quality = 8;
-					var sample = quality * segCount;
+					var sample  = quality * segCount;
+					var _step   = 1 / sample;
 					
-					for( var i = 0; i < sample; i++ ) {
-						var t = i / sample;
-						var pos = _path.getPointRatio(t);
+					path_points = array_verify(path_points, sample);
+					for( var i = 0; i < sample; i++ ) 
+						path_points[i] = _path.getPointRatio(i * _step, array_safe_get(path_points, i, undefined));
 					
-						array_push(points, pos);
-					}
-					
-					var triangles = polygon_triangulate(points);
+					var tri = polygon_triangulate(path_points);
+					triangles  = tri[0];
+					point_simp = tri[1];
 					
 					draw_set_color(_color);
 					draw_primitive_begin(pr_trianglelist);

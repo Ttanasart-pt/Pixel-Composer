@@ -26,7 +26,7 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) { #region
 			surface_reset_target();
 				
 			if(array_length(freeform_shape) > 3) {
-				var _triangles = polygon_triangulate(freeform_shape, 1);
+				var _triangles = polygon_triangulate(freeform_shape, 1)[0];
 					
 				var temp_surface = surface_create(_dim[0], _dim[1]);
 					

@@ -57,13 +57,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	];
 	
 	#region ---- path ----
-		path_loop   = false;
-		anchors		= [];
-		segments    = [];
-		lengths		= [];
-		lengthAccs	= [];
-		lengthTotal	= 0;
-		boundary    = new BoundingBox();
+		path_loop    = false;
+		anchors		 = [];
+		segments     = [];
+		lengths		 = [];
+		lengthAccs	 = [];
+		lengthTotal	 = 0;
+		boundary     = new BoundingBox();
 	
 		cached_pos = ds_map_create();
 	#endregion
@@ -568,7 +568,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			for( var i = 0, n = array_length(segments); i < n; i++ ) { #region draw path
 				var _seg = segments[i];
-				var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
+				var _ox  = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 					
 				for( var j = 0, m = array_length(_seg); j < m; j++ ) {
 					_nx = _x + _seg[j][0] * _s;
@@ -801,12 +801,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
 	
 	static updateLength = function() { #region
-		boundary    = new BoundingBox();
-		segments    = [];
-		lengths     = [];
-		lengthAccs  = [];
-		lengthTotal = 0;
+		boundary     = new BoundingBox();
+		segments     = [];
+		lengths      = [];
+		lengthAccs   = [];
+		lengthTotal  = 0;
 		
+		var _index  = 0;
 		var loop    = getInputData(1);
 		var sample  = PREFERENCES.path_resolution;
 		var ansize  = ds_list_size(inputs) - input_fix_len;

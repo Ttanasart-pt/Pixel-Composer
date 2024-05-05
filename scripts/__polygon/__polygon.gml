@@ -5,16 +5,16 @@ function polygon_simplify(points, tolerance = 4) { #region
 	for( var i = 0; i < len; i++ ) {
 		var _px0 = points[i].x;
 		var _py0 = points[i].y;
-		var _px1 = points[safe_mod(i + 1, len)].x;
-		var _py1 = points[safe_mod(i + 1, len)].y;
-		var _px2 = points[safe_mod(i + 2, len)].x;
-		var _py2 = points[safe_mod(i + 2, len)].y;
+		var _px1 = points[(i + 1) % len].x;
+		var _py1 = points[(i + 1) % len].y;
+		var _px2 = points[(i + 2) % len].x;
+		var _py2 = points[(i + 2) % len].y;
 		
 		var dir0 = point_direction(_px0, _py0, _px1, _py1);
 		var dir1 = point_direction(_px1, _py1, _px2, _py2);
 			
-		if(abs(dir0 - dir1) <= tolerance) 
-			ds_stack_push(remSt, safe_mod(i + 1, len));
+		if((_px0 == _px1 && _py0 == _py1) || abs(dir0 - dir1) <= tolerance) 
+			ds_stack_push(remSt, (i + 1) % len);
 	}
 		
 	while(!ds_stack_empty(remSt)) {
@@ -44,22 +44,23 @@ function polygon_points_classify(points) { #region
 	var side, _side = 0;
 	var convexs     = [];
 	var reflects    = [];
-	var startindex  = safe_mod(maxindex - 1 + len, len);
+	var startindex  = (maxindex - 1 + len) % len;
 	
 	for( var i = 0; i < len; i++ ) {
-		var index = safe_mod(startindex + i, len);
+		var index = (startindex + i) % len;
 		var _px0 = points[index].x;
 		var _py0 = points[index].y;
-		var _px1 = points[safe_mod(index + 1, len)].x;
-		var _py1 = points[safe_mod(index + 1, len)].y;
-		var _px2 = points[safe_mod(index + 2, len)].x;
-		var _py2 = points[safe_mod(index + 2, len)].y;
+		var _px1 = points[(index + 1) % len].x;
+		var _py1 = points[(index + 1) % len].y;
+		var _px2 = points[(index + 2) % len].x;
+		var _py2 = points[(index + 2) % len].y;
 		
 		var side = cross_product(_px0, _py0, _px1, _py1, _px2, _py2);
+		
 		if(_side != 0 && sign(_side) != sign(side))
-			array_push(reflects, safe_mod(index + 1, len));
+			array_push(reflects, (index + 1) % len);
 		else {
-			array_push(convexs, safe_mod(index + 1, len));
+			array_push(convexs, (index + 1) % len);
 			_side = sign(side);
 		}
 	}
@@ -83,25 +84,28 @@ function polygon_triangulate_convex(points) { #region
 	return triangles;
 } #endregion
 
-function polygon_triangulate(points, tolerance = 4) { #region
-	points = polygon_simplify(points, tolerance);
+function polygon_triangulate(points, tolerance = 4) { #region // ear clipping
+	if(array_length(points) < 3) return [ [], points ];
+	
+	if(tolerance > 0) points = polygon_simplify(points, tolerance);
+	if(array_length(points) < 3) return [ [], points ];
+	
 	var classes   = polygon_points_classify(points);
 	var convexes  = classes[0];
 	var reflected = classes[1];
 	var checkSide = classes[2];
 	
 	if(array_length(reflected) == 0) 
-		return polygon_triangulate_convex(points);
+		return [ polygon_triangulate_convex(points), points ];
 	
-	var pointInd  = array_create(array_length(points));
-	for( var i = 0, n = array_length(points); i < n; i++ )
-		pointInd[i] = i;
-	
+	var pointInd  = array_create_ext(array_length(points), function(i) /*=>*/ { return i; });
 	var triangles = [];
-	var repeated = 0;
+	var repeated  = 0;
+	
+	//print($"Ear cutting : {array_length(points)} verticies");
 	
 	while(array_length(pointInd) > 3) {
-		if(array_length(convexes) == 0) return triangles;
+		if(array_length(convexes) == 0) return [ triangles, points ];
 		
 		var len = array_length(pointInd);
 		var c0  = convexes[0];
@@ -117,9 +121,7 @@ function polygon_triangulate(points, tolerance = 4) { #region
 		var isEar = true;
 		for( var i = 0; i < len; i++ ) {
 			var ind = pointInd[i];
-			if(ind == c0) continue;
-			if(ind == c1) continue;
-			if(ind == c2) continue;
+			if(ind == c0 || ind == c1 || ind == c2) continue;
 			
 			var p = points[ind];
 			if(point_in_triangle(p.x, p.y, p0.x, p0.y, p1.x, p1.y, p2.x, p2.y)) {
@@ -171,16 +173,16 @@ function polygon_triangulate(points, tolerance = 4) { #region
 			array_push(convexes, c0);
 			
 			if(repeated++ > len) {
-				//print("mesh error")
+				noti_warning("Mesh error");
 				break;
 			}
 		}
 	}
 	
 	if(array_length(pointInd) == 3) 
-		array_push(triangles, [points[pointInd[0]], points[pointInd[1]], points[pointInd[2]]]);
+		array_push(triangles, [ points[pointInd[0]], points[pointInd[1]], points[pointInd[2]] ]);
 	
-	return triangles;
+	return [ triangles, points ];
 } #endregion
 
 function polygon_triangulate_convex_fan(points) { #region

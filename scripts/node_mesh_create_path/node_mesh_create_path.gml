@@ -46,7 +46,7 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var triangles = [];
 		switch(_algo) {
-			case 0 : triangles = polygon_triangulate(points); break;
+			case 0 : triangles = polygon_triangulate(points)[0]; break;
 			case 1 : triangles = polygon_triangulate_convex_fan(points); break;
 			case 2 : triangles = delaunay_triangulation(points); break;
 		}

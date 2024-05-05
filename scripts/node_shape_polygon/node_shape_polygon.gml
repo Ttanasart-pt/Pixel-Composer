@@ -195,7 +195,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var shapes = [];
 				for( var i = 0, n = array_length(points); i < n; i++ ) {
 					if(points[i].type == SHAPE_TYPE.points)
-						shapes[i] = polygon_triangulate(points[i].points);
+						shapes[i] = polygon_triangulate(points[i].points)[0];
 						
 					else if(points[i].type == SHAPE_TYPE.triangles)
 						shapes[i] = points[i].triangles;
