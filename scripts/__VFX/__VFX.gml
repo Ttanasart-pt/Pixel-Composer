@@ -24,6 +24,9 @@ function __particleObject() constructor {
 	scx = 1;
 	scy = 1;
 	
+	x_history = [];
+	y_history = [];
+	
 	surf  = noone;
 	blend = c_white;
 	alp   = 1;
@@ -68,9 +71,6 @@ function __part(_node) : __particleObject() constructor {
 	speedy  = 0;
 	turning = 0;
 	turnSpd = 0;
-	
-	x_history = [];
-	y_history = [];
 	
 	accel   = 0;
 	spVec   = [ 0, 0 ];

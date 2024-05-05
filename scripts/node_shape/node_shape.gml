@@ -180,6 +180,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[|  7].setVisible(true);
 		inputs[|  8].setVisible(true);
 		inputs[|  9].setVisible(true);
+		inputs[| 12].setVisible(_path == noone);
+		inputs[| 20].setVisible(_path == noone);
 		inputs[| 13].setVisible(true);
 		inputs[| 15].setVisible(true);
 		

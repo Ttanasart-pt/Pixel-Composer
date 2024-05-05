@@ -224,6 +224,7 @@ function colorSelector(onApply = noone) constructor {
 					draw_sprite_stretched_ext(s_ui_base_white, 0, col_x + ui(sat - 6), col_y + ui(256 - val - 6), ui(12), ui(12), current_color, 1);
 				else if(disp_mode == 1)
 					draw_sprite_stretched_ext(s_ui_base_white, 0, col_x + ui(hue - 6), col_y + ui(256 - sat - 6), ui(12), ui(12), current_color, 1);
+					
 			} else {
 				if(disp_mode == 0) {
 					draw_sprite_stretched_ext(s_ui_base_white, 0, hue_x - ui(3), _sy - ui(6), ui(24), ui(10), make_color_hsv(hue, 255, 255), 1);
@@ -253,6 +254,7 @@ function colorSelector(onApply = noone) constructor {
 				if(NODE_COLOR_SHOW_PALETTE) {
 					current_color = disp_mode == 0? surface_getpixel(color_surface, sat, 256 - val) : 
 													surface_getpixel(color_surface, hue, 256 - sat);
+					current_color = cola(current_color, 1);
 					if(onApply != noone) onApply(current_color);
 				}
 				
@@ -274,6 +276,7 @@ function colorSelector(onApply = noone) constructor {
 				if(NODE_COLOR_SHOW_PALETTE) {
 					current_color = disp_mode == 0? surface_getpixel(color_surface, sat, 256 - val) : 
 													surface_getpixel(color_surface, hue, 256 - sat);
+					current_color = cola(current_color, 1);
 					if(onApply != noone) onApply(current_color);
 				}
 				
