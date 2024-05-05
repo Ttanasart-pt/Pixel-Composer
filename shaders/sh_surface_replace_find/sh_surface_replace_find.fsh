@@ -29,7 +29,6 @@ float matchTemplate(vec2 pos) {
 	for( float i = 0.; i < targetDimension.x; i++ ) 
 	for( float j = 0.; j < targetDimension.y; j++ ) {
 		vec4 targ = texture2D( target, vec2(0.5 + i, 0.5 + j) * targTx );
-		if(targ.a == 0.) continue;
 		
 		vec2 bpx  = pos + vec2(i, j);
 		vec4 base = texture2D( gm_BaseTexture, bpx * baseTx );
@@ -45,8 +44,6 @@ void main() {
 	gl_FragColor = vec4(0.);
 	
 	vec4 base = texture2D( gm_BaseTexture, v_vTexcoord );
-	if(base.a == 0.)
-		return;
 	
 	vec2 px = v_vTexcoord * dimension;
 	

@@ -24,7 +24,6 @@ void main() {
 		
 		if(wg.r == 1. && abs(wg.g - index) < 0.01) {
 			gl_FragColor = texture2D( replace, (replace_dim - vec2(i, j) - 1. + .5) / replace_dim );
-			//gl_FragColor = vec4((replace_dim - vec2(i, j)) / replace_dim, 0., 1.);
 			return;
 		}
 	}

@@ -97,7 +97,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			
 		var amo = array_length(_tar);
 		for( var i = 0; i < amo; i++ ) matchTemplate(i / amo, temp_surface[0], _bas, _tar[i], _cthr, _pthr, _fst);
-		return temp_surface[0];
+		//return temp_surface[0];
 		
 		_outSurf = surface_verify(_outSurf, _sw, _sh);
 		surface_set_target(_outSurf);

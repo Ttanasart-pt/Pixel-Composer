@@ -728,7 +728,7 @@ function Panel_Preview() : PanelContent() constructor {
 						
 						switch(tileMode) {
 							case 0 :
-								if(PROJECT.onion_skin.enabled) drawOnionSkin(node, psx, psy, ss); 
+								if(PROJECT.onion_skin.enabled) drawOnionSkin(_node, psx, psy, ss); 
 								else                           draw_surface_ext(preview_surface[0], psx, psy, ss, ss, 0, c_white, preview_node[0].preview_alpha); 
 								break;
 								
