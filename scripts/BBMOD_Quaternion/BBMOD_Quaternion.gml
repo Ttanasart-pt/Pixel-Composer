@@ -667,3 +667,76 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		return _dest;
 	};
 }
+
+
+function quarternionArraySlerp(_q0, _q1, _s) {
+	INLINE
+
+	var _q10 = _q0[0];
+	var _q11 = _q0[1];
+	var _q12 = _q0[2];
+	var _q13 = _q0[3];
+
+	var _q20 = _q1[0];
+	var _q21 = _q1[1];
+	var _q22 = _q1[2];
+	var _q23 = _q1[3];
+
+	var _norm;
+
+	_norm = 1.0 / sqrt(_q10 * _q10
+		+ _q11 * _q11
+		+ _q12 * _q12
+		+ _q13 * _q13);
+
+	_q10 *= _norm;
+	_q11 *= _norm;
+	_q12 *= _norm;
+	_q13 *= _norm;
+
+	_norm = sqrt(_q20 * _q20
+		+ _q21 * _q21
+		+ _q22 * _q22
+		+ _q23 * _q23);
+
+	_q20 *= _norm;
+	_q21 *= _norm;
+	_q22 *= _norm;
+	_q23 *= _norm;
+
+	var _dot = _q10 * _q20
+		+ _q11 * _q21
+		+ _q12 * _q22
+		+ _q13 * _q23;
+
+	if (_dot < 0.0) {
+		_dot = -_dot;
+		_q20 *= -1.0;
+		_q21 *= -1.0;
+		_q22 *= -1.0;
+		_q23 *= -1.0;
+	}
+
+	if (_dot > 0.9995)
+		return [
+			lerp(_q10, _q20, _s),
+			lerp(_q11, _q21, _s),
+			lerp(_q12, _q22, _s),
+			lerp(_q13, _q23, _s)
+		];
+
+	var _theta0    = arccos(_dot);
+	var _theta     = _theta0 * _s;
+	var _sinTheta  = sin(_theta);
+	var _sinTheta0 = sin(_theta0);
+	
+	var _s2 = _sinTheta / _sinTheta0;
+	var _s1 = cos(_theta) - (_dot * _s2);
+
+	return [
+		(_q10 * _s1) + (_q20 * _s2),
+		(_q11 * _s1) + (_q21 * _s2),
+		(_q12 * _s1) + (_q22 * _s2),
+		(_q13 * _s1) + (_q23 * _s2)
+	];
+};

@@ -15,7 +15,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 2] = nodeValue("Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue("Segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
+	inputs[| 3] = nodeValue("Segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
 	
 	inputs[| 4] = nodeValue("Elasticity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05, "Length preservation, the higher the value the easier it is to stretch each segment.")
 		.setDisplay(VALUE_DISPLAY.slider);

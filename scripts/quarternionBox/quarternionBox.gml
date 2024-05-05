@@ -94,6 +94,15 @@ function quarternionBox(_onModify) : widget() constructor {
 		var _bs   = min(_h, ui(32));
 		var _disp = struct_try_get(_display_data, "angle_display");
 		
+		if(_display_data.angle_display == QUARTERNION_DISPLAY.quarterion || (!tb[0].sliding && !tb[1].sliding && !tb[2].sliding)) {
+			current_value[0] = _data[0];
+			current_value[1] = _data[1];
+			current_value[2] = _data[2];
+			
+			if(_display_data.angle_display == QUARTERNION_DISPLAY.quarterion)
+				current_value[3] = _data[3];
+		}
+		
 		if((_w - _bs) / 2 > ui(64)) {
 			var bx = _x + _w - _bs;
 			var by = _y + _h / 2 - _bs / 2;
@@ -107,15 +116,6 @@ function quarternionBox(_onModify) : widget() constructor {
 		}
 		
 		current_unit = _display_data.angle_display;
-		
-		if(current_unit == QUARTERNION_DISPLAY.quarterion || (!tb[0].sliding && !tb[1].sliding && !tb[2].sliding)) {
-			current_value[0] = _data[0];
-			current_value[1] = _data[1];
-			current_value[2] = _data[2];
-			
-			if(current_unit == QUARTERNION_DISPLAY.quarterion)
-				current_value[3] = _data[3];
-		}
 			
 		size = _disp? 3 : 4;
 		var ww = _w / size;
