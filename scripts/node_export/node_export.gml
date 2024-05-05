@@ -341,7 +341,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(rate == 0) rate = 1;
 		
 		temp_path   = string_replace_all(temp_path, "/", "\\");
-		temp_path   = string_trim(temp_path, ["*.png"]);
 		target_path = string_replace_all(target_path, "/", "\\");
 		
 		var framerate  = 100 / rate;
@@ -365,10 +364,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(file_exists_empty(target_path)) file_delete(target_path);
 		
 		temp_path   = string_replace_all(temp_path, "/", "\\");
-		temp_path   = string_trim(temp_path, ["*.png"]);
+		temp_path   = string_trim(temp_path, ["*.png"]) + "%05d.png";
 		target_path = string_replace_all(target_path, "/", "\\");
 		
-		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}%05d.png\" -c:v libx264 -r {rate} -pix_fmt yuv420p -crf {qual} {string_quote(target_path)}";
+		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}\" -c:v libx264 -r {rate} -pix_fmt yuv420p -crf {qual} {string_quote(target_path)}";
 		
 		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
 		render_type       = "mp4";
@@ -382,10 +381,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(file_exists_empty(target_path)) file_delete(target_path);
 		
 		temp_path   = string_replace_all(temp_path, "/", "\\");
-		temp_path   = string_trim(temp_path, ["*.png"]);
+		temp_path   = string_trim(temp_path, ["*.png"]) + "%05d.png";
 		target_path = string_replace_all(target_path, "/", "\\");
 		
-		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}%05d.png\" -plays 0 {string_quote(target_path)}";
+		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}\" -plays 0 {string_quote(target_path)}";
 		
 		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
 		render_type       = "apng";
