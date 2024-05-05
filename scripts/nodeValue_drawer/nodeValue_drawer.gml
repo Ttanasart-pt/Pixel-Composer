@@ -104,8 +104,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	}
 	
 	draw_set_text(_font, fa_left, fa_center, cc);
-	var lb_w = string_width(_name) + ui(48);
-	var lb_x = xx + ui(40);
+	var lb_w = ui(40 + 16) + string_width(_name);
+	var lb_x = ui(40)      + xx;
 	
 	if(jun.color != -1) { #region
 		draw_sprite_ext(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);
@@ -147,7 +147,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			} else 
 				draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 0.75);
 			
-			lb_w += ui(56);
+			lb_w += ui(32);
 		}
 	#endregion
 			
@@ -262,7 +262,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var _hsy = yy + lb_h;
 	var padd = ui(8);
 	
-	var labelWidth = max(lb_w, min(ui(80) + ww * 0.2, ui(200)));
+	var labelWidth = max(lb_w, min(ww * 0.4, ui(200)));
 	var editBoxX   = xx	+ !breakLine * labelWidth;
 	var editBoxY   = breakLine? _hsy : yy;
 	

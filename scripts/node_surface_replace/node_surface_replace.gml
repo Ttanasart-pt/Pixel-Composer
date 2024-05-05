@@ -1,6 +1,5 @@
 function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Image";
-	preview_channel = 1;
 	
 	inputs[| 0] = nodeValue("Base Image", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
@@ -36,13 +35,12 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	temp_surface = [ surface_create(1, 1) ];
 	
 	static matchTemplate = function(_index, _surf, _base, _target, _cthr, _pthr, _fst) {
+		
 		surface_set_shader(_surf, _fst? sh_surface_replace_fast_find : sh_surface_replace_find, false);
 			shader_set_f("dimension", surface_get_width_safe(_base), surface_get_height_safe(_base));
 			
 			shader_set_surface("target", _target);
 			shader_set_f("targetDimension", surface_get_width_safe(_target), surface_get_height_safe(_target));
-			
-			//print($"{surface_get_width_safe(_base)}, {surface_get_height_safe(_base)} | {surface_get_width_safe(_target)}, {surface_get_height_safe(_target)}");
 			
 			shader_set_f("colorThreshold", _cthr);
 			shader_set_f("pixelThreshold", _pthr);
@@ -61,6 +59,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	}
 	
 	static replaceTemplate = function(_index, _surf, _base, _res, _replace, _fst) {
+		
 		surface_set_shader(_surf, _fst? sh_surface_replace_fast_replace : sh_surface_replace_replace, false, BLEND.normal);
 			shader_set_f("dimension",  surface_get_width_safe(_base), surface_get_height_safe(_base));
 			shader_set_surface("replace", _replace);
@@ -90,25 +89,25 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		if(!is_array(_tar)) _tar = [ _tar ]; 
 		if(!is_array(_rep)) _rep = [ _rep ];
 		
-		temp_surface[0] = surface_verify(temp_surface[0], surface_get_width_safe(_bas), surface_get_height_safe(_bas));
-		surface_set_target(temp_surface[0]);
-			DRAW_CLEAR
-		surface_reset_target();
+		var _sw = surface_get_width_safe(_bas);
+		var _sh = surface_get_height_safe(_bas);
+		
+		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh);
+		surface_clear(temp_surface[0]);
 			
 		var amo = array_length(_tar);
-		for( var i = 0; i < amo; i++ )
-			matchTemplate(i / amo, temp_surface[0], _bas, _tar[i], _cthr, _pthr, _fst);
-		//return temp_surface[0];
+		for( var i = 0; i < amo; i++ ) matchTemplate(i / amo, temp_surface[0], _bas, _tar[i], _cthr, _pthr, _fst);
+		return temp_surface[0];
 		
-		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_bas), surface_get_height_safe(_bas));
+		_outSurf = surface_verify(_outSurf, _sw, _sh);
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			if(_drw) draw_surface_safe(_bas);
 		surface_reset_target();
 			
 		var amo = array_length(_rep);
-		for( var i = 0; i < amo; i++ )
-			replaceTemplate(i / amo, _outSurf, _bas, temp_surface[0], _rep[i], _fst, _drw);
+		for( var i = 0; i < amo; i++ ) replaceTemplate(i / amo, _outSurf, _bas, temp_surface[0], _rep[i], _fst);
+		
 		return _outSurf;
 	}
 }
