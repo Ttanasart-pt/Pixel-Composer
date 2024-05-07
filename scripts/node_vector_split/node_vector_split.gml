@@ -15,7 +15,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	outputs[| 3] = nodeValue("w", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	static step = function() { #region
-		if(inputs[| 0].isLeaf()) return;
+		if(inputs[| 0].value_from == noone) return;
 		var type = VALUE_TYPE.float;
 		if(inputs[| 0].value_from.type == VALUE_TYPE.integer)
 			type = VALUE_TYPE.integer;

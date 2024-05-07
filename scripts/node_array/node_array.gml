@@ -107,7 +107,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_l[| i].index = i;
 			array_push(input_display_list, i);
 			
-			if(i >= input_fix_len && _l[| i].isLeaf())
+			if(i >= input_fix_len && _l[| i].value_from == noone)
 				extra = false;
 		}
 		array_insert(input_display_list, 1, array_adjust_tool);

@@ -32,7 +32,7 @@ function __Node_Base(x, y) constructor {
 		
 			for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 				var _inp = inputs[| i];
-				if(_inp.is_anim && _inp.isLeaf()) {
+				if(_inp.is_anim && _inp.value_from == noone) {
 					_cur_anim = true;
 					break;
 				}

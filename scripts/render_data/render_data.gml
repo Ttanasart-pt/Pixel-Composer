@@ -15,24 +15,6 @@ enum RENDER_TYPE {
 	#macro RENDER_PARTIAL								    UPDATE |= RENDER_TYPE.partial;
 #endregion
 
-function __nodeLeafList(_list) { #region
-	var nodes = [];
-	var nodeNames = [];
-	
-	for( var i = 0, n = ds_list_size(_list); i < n; i++ ) {
-		var _node = _list[| i];
-		if(!_node.active)			 { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [inactive]");       continue; }
-		if(!_node.isLeafList(_list)) { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not leaf]");       continue; }
-		if(!_node.isRenderable())    { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not renderable]"); continue; }
-		
-		array_push(nodes, _node);
-		array_push(nodeNames, _node.internalName);
-	}
-	
-	LOG_LINE_IF(global.FLAG.render == 1, $"Push node {nodeNames} to queue");
-	return nodes;
-} #endregion
-
 function ResetAllNodesRender() { #region
 	LOG_IF(global.FLAG.render == 1, $"XXXXXXXXXXXXXXXXXXXX RESETTING ALL NODES [frame {CURRENT_FRAME}] XXXXXXXXXXXXXXXXXXXX");
 	
@@ -146,6 +128,25 @@ function __topoSort(_list, _nodeList) { #region
 		if(!_leftOver[i].topoSorted)
 			ds_list_insert(_list, 0, _leftOver[i]);
 	}
+} #endregion
+
+function __nodeLeafList(_list) { #region
+	var nodes     = [];
+	var nodeNames = [];
+	
+	for( var i = 0, n = ds_list_size(_list); i < n; i++ ) {
+		var _node = _list[| i];
+		
+		if(!_node.active)			 { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [inactive]");       continue; }
+		if(!_node.isLeafList(_list)) { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not leaf]");       continue; }
+		if(!_node.isRenderable())    { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not renderable]"); continue; }
+		
+		array_push(nodes, _node);
+		array_push(nodeNames, _node.internalName);
+	}
+	
+	LOG_LINE_IF(global.FLAG.render == 1, $"Push node {nodeNames} to queue");
+	return nodes;
 } #endregion
 
 function __nodeIsRenderLeaf(_node) { #region

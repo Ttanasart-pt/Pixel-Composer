@@ -36,9 +36,9 @@
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION;
 
 	LATEST_VERSION	= 11600;
-	VERSION			= 11701;
+	VERSION			= 11702;
 	SAVE_VERSION	= 11690;
-	VERSION_STRING  = "1.17.0.1";
+	VERSION_STRING  = "1.17.0.2";
 	BUILD_NUMBER	= 11707;
 	
 	globalvar HOTKEYS, HOTKEY_CONTEXT;
@@ -197,11 +197,11 @@
 #endregion
 
 #region debug
-	global.FLAG = {};
-	
-	global.FLAG.render				= 0;
-	global.FLAG.renderTime			= false;
-	global.FLAG.keyframe_override	= true;
-	global.FLAG.wav_import			= true;
-	global.FLAG.ase_import			= false;
+	global.FLAG = {
+		render				: 0,
+		renderTime			: false,
+		keyframe_override	: true,
+		wav_import			: true,
+		ase_import			: false,
+	};
 #endregion

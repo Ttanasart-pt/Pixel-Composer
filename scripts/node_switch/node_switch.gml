@@ -87,7 +87,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static step = function() { #region
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _inp = inputs[| i + 1];
-			if(_inp.isLeaf()) continue;
+			if(_inp.value_from == noone) continue;
 			
 			_inp.setType(_inp.value_from.type);
 		}

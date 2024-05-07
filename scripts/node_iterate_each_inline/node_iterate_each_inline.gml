@@ -1,6 +1,7 @@
 function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x, _y, _group) constructor {
 	name  = "Loop Array";
 	color = COLORS.node_blend_loop;
+	managedRenderOrder = true;
 	
 	is_root     = false;
 	input_node  = noone;
@@ -47,8 +48,9 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from inline iterate");
 		
 		resetRender();
-		LOG_IF(global.FLAG.render == 1, $"Loop restart: iteration {iterated}");
 		var _nodes = __nodeLeafList(nodes);
+		LOG_IF(global.FLAG.render == 1, $"Loop restart: iteration {iterated} : leaf {_nodes}");
+		
 		array_push_unique(_nodes, input_node);
 		iterated++;
 		

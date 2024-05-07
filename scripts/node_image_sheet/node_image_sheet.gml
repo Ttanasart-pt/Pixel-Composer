@@ -24,7 +24,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 8]  = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 9]  = nodeValue("Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 9]  = nodeValue("Main Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), ]);
 	
@@ -38,16 +38,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _size = getInputData(1);
 			var _offs = getInputData(4);
 			var _spac = getInputData(5);
-			var _orie = getInputData(9);
-		
+			
 			var sh_w = _size[0] + _spac[0];
 			var sh_h = _size[1] + _spac[1];
 		
 			var fill_w = floor((ww - _offs[0]) / sh_w);
 			var fill_h = floor((hh - _offs[1]) / sh_h);
 			
-			if(_orie == 0)	inputs[| 3].setValue([ fill_w, fill_h ]);
-			else			inputs[| 3].setValue([ fill_h, fill_w ]);
+			inputs[| 3].setValue([ fill_w, fill_h ]);
 		
 			doUpdate();
 		} }); #endregion
@@ -96,7 +94,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	surf_size_h = 1;
 	
 	surf_space  = 0;
-	surf_origin = 0;
+	surf_axis   = 0;
 	
 	sprite_pos   = [];
 	sprite_valid = [];
@@ -111,21 +109,28 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	function getSpritePosition(index) { #region
 		var _dim = curr_dim;
-		var _col = curr_amo[0];
 		var _off = curr_off;
 		var _spa = surf_space;
-		var _ori = surf_origin;
+		var _axs = surf_axis;
 		
-		var _irow = floor(index / _col);
-		var _icol = safe_mod(index, _col);
+		var _irow, _icol;
+		
+		if(_axs == 0) {
+			_irow = floor(index / curr_amo[0]);
+			_icol = safe_mod(index, curr_amo[0]);
+			
+		} else {
+			_icol = floor(index / curr_amo[1]);
+			_irow = safe_mod(index, curr_amo[1]);
+			
+		}
 		
 		var _x, _y;
 		
 		var _x = _off[0] + _icol * (_dim[0] + _spa[0]);
 		var _y = _off[1] + _irow * (_dim[1] + _spa[1]);
 		
-		if(_ori == 0) return [ _x, _y ];
-		else		  return [ _y, _x ];
+		return [ _x, _y ];
 	} #endregion 
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
@@ -303,7 +308,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _pad	= getInputData(6);
 		
 		surf_space  = getInputData(5);
-		surf_origin = getInputData(9);
+		surf_axis   = getInputData(9);
 		
 		var ww   = _dim[0] + _pad[0] + _pad[2];
 		var hh   = _dim[1] + _pad[1] + _pad[3];
@@ -322,7 +327,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		curr_amo = is_array(_amo)? _amo : [1, 1];
 		curr_off = _off;
 		
-		if(ww <= 1 || hh <= 1) return;
+		if(ww < 1 || hh < 1) return;
 		
 		if(_filt) {
 			var filSize = 4;
@@ -352,9 +357,11 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			if(!is_surface(_s)) 
 				_s = surface_create(ww, hh, cDep);
+				
 			else if(surface_get_format(_s) != cDep) {
 				surface_free(_s);
 				_s = surface_create(ww, hh, cDep);
+				
 			} else if(_resizeSurf) 
 				surface_resize(_s, ww, hh);
 			

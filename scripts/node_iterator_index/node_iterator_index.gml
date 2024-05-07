@@ -13,7 +13,7 @@ function Node_Iterator_Index(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(inline_context != noone) gr = inline_context;
 		
 		if(gr == noone) return;
-		outputs[| 0].setValue(gr.iterated);
+		outputs[| 0].setValue(gr.iterated - 1);
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

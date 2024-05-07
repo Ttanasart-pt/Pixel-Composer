@@ -251,7 +251,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		force_requeue    = false;
 		is_simulation    = false;
 		
-		in_VFX = false;
+		in_VFX  = false;
 		
 		is_group_io = false;
 	#endregion
@@ -778,7 +778,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 			var _inp = inputs[| i];
-			if(!_inp.isLeaf()) return false;
+			if(!_inp.value_from == noone) return false;
 		}
 		
 		return true;
@@ -790,8 +790,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(list == noone) return isLeaf();
 		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			var _inp = inputs[| i];
-			if(!_inp.isLeafList(list)) return false;
+			var _inp = inputs[| i].value_from;
+			
+			// print($"Checking isLeafList {inputs[| i]} < {_inp} | list {ds_list_to_array(list)}");
+			if(_inp != noone && ds_list_exist(list, _inp.node)) 
+				return false;
 		}
 		
 		return true;
@@ -1361,7 +1364,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				jun.draw_blend       = -1;
 			}
 			
-			if(jun.isLeaf()) continue;
+			if( jun.value_from == noone) continue;
 			if(!jun.value_from.node.active) continue;
 			if(!jun.isVisible()) continue;
 			
@@ -1619,7 +1622,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!PREFERENCES.connection_line_highlight_all && _depth == 1) return;
 		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			if(inputs[| i].isLeaf()) continue;
+			if(inputs[| i].value_from == noone) continue;
 			inputs[| i].value_from.node.drawBranch(_depth + 1);
 		}
 	} #endregion
@@ -1660,7 +1663,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			for(var j = 0; j < array_length(jun.value_to); j++) {
 				var _vt = jun.value_to[j];
-				if(_vt.isLeaf()) break;
+				if(_vt.value_from == noone) break;
 				if(_vt.value_from.node != self) break;
 				
 				_vt.removeFrom(false);
@@ -1668,7 +1671,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				if(!_merge) continue;
 				
 				for( var k = 0; k < ds_list_size(inputs); k++ ) {
-					if(inputs[| k].isLeaf()) continue;
+					if(inputs[| k].value_from == noone) continue;
 					if(_vt.setFrom(inputs[| k].value_from)) break;
 				}
 			}
@@ -1806,7 +1809,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 			var _input = inputs[| i];
-			if(_input.isLeaf()) continue;
+			if(_input.value_from == noone) continue;
 			
 			_input.value_from.node.cachedPropagate(_group);
 		}
@@ -1825,7 +1828,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i];
-			if(_in.isLeaf())						continue;
+			if(_in.value_from == noone)				continue;
 			if(_in.value_from.node.group == group)	continue;
 			
 			var _ind = string(_in.value_from);

@@ -21,7 +21,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	is_beginning = false;
 	
 	static getState = function() { #region
-		if(inputs[| 2].isLeaf()) return lua_state;
+		if(inputs[| 2].value_from == noone) return lua_state;
 		return inputs[| 2].value_from.node.getState();
 	} #endregion
 	

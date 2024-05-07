@@ -54,8 +54,8 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		inputs[| 7].setVisible(_mode == 2, _mode == 2);
 		inputs[| 8].setVisible(_mode == 2, _mode == 2);
 		
-		inputs[| 3].setType(inputs[| 3].isLeaf()? VALUE_TYPE.any : inputs[| 3].value_from.type);
-		inputs[| 4].setType(inputs[| 4].isLeaf()? VALUE_TYPE.any : inputs[| 4].value_from.type);
+		inputs[| 3].setType(inputs[| 3].value_from == noone? VALUE_TYPE.any : inputs[| 3].value_from.type);
+		inputs[| 4].setType(inputs[| 4].value_from == noone? VALUE_TYPE.any : inputs[| 4].value_from.type);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region

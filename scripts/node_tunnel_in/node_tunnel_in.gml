@@ -91,7 +91,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		value_validation[VALIDATION.error] = error_notification != noone;
 		
-		if(inputs[| 1].isLeaf()) {
+		if(inputs[| 1].value_from == noone) {
 			inputs[| 1].setType(VALUE_TYPE.any);
 			inputs[| 1].display_type = VALUE_DISPLAY._default;
 		} else {

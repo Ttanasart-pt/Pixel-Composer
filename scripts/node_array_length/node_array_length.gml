@@ -8,7 +8,7 @@ function Node_Array_Length(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outputs[| 0] = nodeValue("Size", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
 	static step = function() { #region
-		inputs[| 0].setType(inputs[| 0].isLeaf()? VALUE_TYPE.any : inputs[| 0].value_from.type);
+		inputs[| 0].setType(inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region

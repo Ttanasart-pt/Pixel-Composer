@@ -49,7 +49,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	} if(!LOADING && !APPENDING) createNewInput(); #endregion
 	
 	static getState = function() { #region
-		if(inputs[| 3].isLeaf()) return lua_state;
+		if(inputs[| 3].value_from == noone) return lua_state;
 		return inputs[| 3].value_from.node.getState();
 	} #endregion
 	

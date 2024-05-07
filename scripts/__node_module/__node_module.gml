@@ -9,7 +9,7 @@ function NodeModule(parent) constructor {
 	static isLeaf = function() { #region
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 			var _inp = inputs[| i];
-			if(!_inp.isLeaf()) return false;
+			if(_inp.value_from != noone) return false;
 		}
 		
 		return true;
@@ -19,7 +19,7 @@ function NodeModule(parent) constructor {
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var jun = inputs[| i];
 			
-			if(jun.isLeaf()) continue;
+			if(jun.value_from == noone) continue;
 			if(!jun.value_from.node.active) continue;
 			if(!jun.isVisible()) continue;
 			

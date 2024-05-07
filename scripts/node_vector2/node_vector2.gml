@@ -116,7 +116,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		setDimension(96, 80, false);
 				
-		if(disp == 1 && inputs[| 0].isLeaf() && inputs[| 1].isLeaf())
+		if(disp == 1 && inputs[| 0].value_from == noone && inputs[| 1].value_from == noone)
 			setDimension(160, 160, false);
 	} #endregion
 	

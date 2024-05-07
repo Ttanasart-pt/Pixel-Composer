@@ -19,7 +19,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	outputs[| 0] = nodeValue("Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static step = function() { #region
-		if(inputs[| 0].isLeaf()) return;
+		if(inputs[| 0].value_from == noone) return;
 		
 		inputs[| 0].setType(inputs[| 0].value_from.type);
 		outputs[| 0].setType(inputs[| 0].value_from.type);

@@ -44,7 +44,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static step = function() { #region
-		if(inputs[| 0].isLeaf()) {
+		if(inputs[| 0].value_from == noone) {
 			inputs[| 0].setType(VALUE_TYPE.any);
 			outputs[| 0].setType(VALUE_TYPE.any);
 		} else {
@@ -53,7 +53,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		for( var i = 0; i < ds_list_size(inputs) - 1; i += data_length )
-			inputs[| i].setType(inputs[| i].isLeaf()? VALUE_TYPE.any : inputs[| i].value_from.type);
+			inputs[| i].setType(inputs[| i].value_from == noone? VALUE_TYPE.any : inputs[| i].value_from.type);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region

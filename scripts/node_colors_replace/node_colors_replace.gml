@@ -59,7 +59,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 		bx += bs + ui(4);
 		var jun   = inputs[| 2];
-		var index = jun.isLeaf()? jun.is_anim : 2;
+		var index = jun.value_from == noone? jun.is_anim : 2;
 		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.animate_clock, index, index == 2? COLORS._main_accent : COLORS._main_icon) == 2) 
 			jun.setAnim(!jun.is_anim);
 		

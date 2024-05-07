@@ -196,7 +196,7 @@ event_inherited();
 			for( var i = 0; i < ds_list_size(_new_list); i++ ) {
 				var _in = _new_list[| i].inputs;
 				for( var j = 0; j < ds_list_size(_in); j++ ) {
-					if(_in[| j].isLeaf())
+					if(_in[| j].value_from == noone)
 						ds_list_add(_inputs, _in[| j]);
 				}
 				

@@ -19,13 +19,13 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 	static step = function() {
 		if(!variable_struct_exists(group, "iterated")) return;
 		
-		var type = inputs[| 0].isLeaf()? VALUE_TYPE.any : inputs[| 0].value_from.type;
+		var type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
 		inputs[| 0].setType(type)
 		group.outputs[| 0].setType(type);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		if(inputs[| 0].isLeaf()) {
+		if(inputs[| 0].value_from == noone) {
 			group.iterationUpdate();
 			return;
 		}

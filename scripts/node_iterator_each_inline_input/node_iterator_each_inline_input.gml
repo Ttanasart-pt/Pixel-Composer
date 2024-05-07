@@ -27,6 +27,6 @@ function Node_Iterator_Each_Inline_Input(_x, _y, _group = noone) : Node(_x, _y, 
 		var val = inputs[| 0].getValue();
 		var itr = loop.iterated - 1;
 		
-		outputs[| 0].setValue(array_safe_get_fast(val, itr));
+		outputs[| 0].setValue(val[itr]);
 	} #endregion
 }

@@ -55,7 +55,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static step = function() { 
 		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
 			var inp  = inputs[| i + 1];
-			var typ  = inp.isLeaf()? VALUE_TYPE.any : inp.value_from.type;
+			var typ  = inp.value_from == noone? VALUE_TYPE.any : inp.value_from.type;
 			inp.setType(typ);
 		}
 	}

@@ -336,9 +336,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var loop = getInputData( 5);
 		var opti = getInputData( 6);
 		var fuzz = getInputData( 7);
-		var rate = getInputData( 8);
+		var rate = max(1, getInputData( 8));
 		var qual = getInputData(10);
-		if(rate == 0) rate = 1;
 		
 		temp_path   = string_replace_all(temp_path, "/", "\\");
 		target_path = string_replace_all(target_path, "/", "\\");

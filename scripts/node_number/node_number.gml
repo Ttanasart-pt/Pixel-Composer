@@ -57,14 +57,14 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[| 5].setVisible(false);
 				break;
 			case 1 : 
-				if(inputs[| 0].isLeaf() && !show_parameter) setDimension(160, 96, false);
+				if(inputs[| 0].value_from == noone && !show_parameter) setDimension(160, 96, false);
 				
 				inputs[| 3].setVisible(true);
 				inputs[| 4].setVisible(true);
 				inputs[| 5].setVisible(true);
 				break;
 			case 2 : 
-				if(inputs[| 0].isLeaf() && !show_parameter) setDimension(128, 128, false);
+				if(inputs[| 0].value_from == noone && !show_parameter) setDimension(128, 128, false);
 					
 				inputs[| 3].setVisible(false);
 				inputs[| 4].setVisible(false);
