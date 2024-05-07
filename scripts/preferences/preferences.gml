@@ -9,7 +9,8 @@
 		PREFERENCES.window_width					= 1600;
 		PREFERENCES.window_height					= 800;
 		PREFERENCES.window_maximize					= false;
-	
+		PREFERENCES.window_monitor					= "";
+		
 		PREFERENCES.theme							= "default";
 		PREFERENCES.local							= "en";
 		PREFERENCES.font_overwrite					= "";
@@ -99,7 +100,6 @@
 		PREFERENCES.collection_scale				= 1;
 		
 		PREFERENCES.pan_mouse_key					= mb_middle;
-		
 	#endregion
 	
 	#region //////////////////////////////////////////////////////////////////////// WIDGET ////////////////////////////////////////////////////////////////////////
@@ -219,6 +219,7 @@
 		PREFERENCES.window_maximize	= window_is_maximized;
 		PREFERENCES.window_width	= max(960, window_minimize_size[0]);
 		PREFERENCES.window_height	= max(600, window_minimize_size[1]);
+		PREFERENCES.window_monitor  = window_monitor;
 		
 		map.preferences = PREFERENCES;
 		
@@ -276,17 +277,31 @@
 		else                                 setException();
 		
 		if(OS != os_macosx && !LOADING) {
-			if(PREFERENCES.window_maximize) {
-				winMan_Maximize();
-			} else {
-				var ww = PREFERENCES.window_width;
-				var hh = PREFERENCES.window_height;
-				window_minimize_size = [ ww, hh ];
+			var _monitors = display_measure_all();
+			var _monitor  = noone;
+			
+			if(is_array(_monitors))
+			for( var i = 0, n = array_length(_monitors); i < n; i++ ) {
+				var _m = _monitors[i];
+				if(!is_array(_m) || array_length(_m) < 10) continue;
 				
-				window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
-				window_set_size(ww, hh);
-				gameframe_set_shadow(true);
+				if(PREFERENCES.window_monitor == _m[9]) 
+					_monitor = _m;
 			}
+			
+			var ww = PREFERENCES.window_width;
+			var hh = PREFERENCES.window_height;
+			window_minimize_size = [ ww, hh ];
+			
+			if(is_array(_monitor) && array_length(_monitor) >= 8)
+				window_set_rectangle(_monitor[0] + _monitor[2] / 2 - ww / 2, _monitor[1] + _monitor[3] / 2 - hh / 2, ww, hh);
+			else
+				window_set_rectangle(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2, ww, hh);
+			
+			if(PREFERENCES.window_maximize)
+				winMan_Maximize();
+					
+			gameframe_set_shadow(true);
 		}
 		
 		window_refresh();

@@ -11,6 +11,7 @@
 	globalvar window_drag_sy;			window_drag_sy        = 0;
 	globalvar window_drag_sw;			window_drag_sw        = 0;
 	globalvar window_drag_sh;			window_drag_sh        = 0;
+	globalvar window_monitor;			window_monitor        = 0;
 
 	globalvar window_min_w;				window_min_w = 960;
 	globalvar window_min_h;				window_min_h = 600;
@@ -136,6 +137,20 @@ function winManStep() { #region
 			if(_window_get_showborder(window_handle()))
 				_window_set_showborder(window_handle(), false);
 		}
+	}
+	
+	window_monitor = 0;
+	var _monitors = display_measure_all();
+	var _x = window_get_x() + WIN_W / 2;
+	var _y = window_get_y() + WIN_H / 2;
+	
+	if(is_array(_monitors))
+	for( var i = 0, n = array_length(_monitors); i < n; i++ ) {
+		var _monitor = _monitors[i];
+		if(!is_array(_monitor) || array_length(_monitor) < 10) continue;
+		
+		if(point_in_rectangle(_x, _y, _monitor[0], _monitor[1], _monitor[0] + _monitor[2], _monitor[1] + _monitor[3])) 
+			window_monitor = _monitor[9];
 	}
 	
 	if(window_drag_status == 0) return;
