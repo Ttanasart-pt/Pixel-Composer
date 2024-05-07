@@ -27,7 +27,7 @@ if(winMan_isMinimized()) exit;
 					break;
 					
 				case VALUE_TYPE.curve :
-					draw_tooltip_text($"[{__txt("Curve Object"}]");
+					draw_tooltip_text($"[{__txt("Curve Object")}]");
 					break;
 					
 				case VALUE_TYPE.color : 
@@ -51,12 +51,11 @@ if(winMan_isMinimized()) exit;
 					break;
 					
 				case VALUE_TYPE.rigid :
-					draw_tooltip_text($"[{__txt("Rigidbody Object")} (id: {content[$ "object"]})]");
+					draw_tooltip_text($"[{__txt("Rigidbody Object")} (id: {content.object})]");
 					break;
 					
 				case VALUE_TYPE.particle :
-					var txt = $"[{__txt("Particle Object")} (size: {array_length(content)}) ]";
-					draw_tooltip_text(txt);
+					draw_tooltip_text($"[{__txt("Particle Object")} (size: {array_length(content)}) ]");
 					break;
 					
 				case VALUE_TYPE.pathnode :

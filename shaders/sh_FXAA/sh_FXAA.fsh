@@ -6,6 +6,8 @@ varying vec4 v_vColour;
 
 //Texel size (1/resolution)
 uniform vec2 dimension;
+uniform float cornerDis;
+uniform float mixAmo;
 
 #define SPAN_MAX   (8.0)			//Maximum texel span
 //These are more technnical and probably don't need changing:
@@ -16,10 +18,10 @@ vec4 textureFXAA(sampler2D tex, vec2 uv) {
 	vec2 u_texel = 1. / dimension;
 	//Sample center and 4 corners
     vec3 rgbCC = texture2D(tex, uv).rgb;
-    vec3 rgb00 = texture2D(tex, uv + vec2( -0.5, -0.5) * u_texel).rgb;
-    vec3 rgb10 = texture2D(tex, uv + vec2( +0.5, -0.5) * u_texel).rgb;
-    vec3 rgb01 = texture2D(tex, uv + vec2( -0.5, +0.5) * u_texel).rgb;
-    vec3 rgb11 = texture2D(tex, uv + vec2( +0.5, +0.5) * u_texel).rgb;
+    vec3 rgb00 = texture2D(tex, uv + vec2( -cornerDis, -cornerDis) * u_texel).rgb;
+    vec3 rgb10 = texture2D(tex, uv + vec2( +cornerDis, -cornerDis) * u_texel).rgb;
+    vec3 rgb01 = texture2D(tex, uv + vec2( -cornerDis, +cornerDis) * u_texel).rgb;
+    vec3 rgb11 = texture2D(tex, uv + vec2( +cornerDis, +cornerDis) * u_texel).rgb;
 	
 	//Luma coefficients
     const vec3 luma = vec3(0.299, 0.587, 0.114);
@@ -32,12 +34,17 @@ vec4 textureFXAA(sampler2D tex, vec2 uv) {
 	
 	//Compute gradient from luma values
     vec2 dir = vec2((luma01 + luma11) - (luma00 + luma10), (luma00 + luma01) - (luma10 + luma11));
+    
 	//Diminish dir length based on total luma
     float dirReduce = max((luma00 + luma10 + luma01 + luma11) * REDUCE_MUL, REDUCE_MIN);
+    
 	//Divide dir by the distance to nearest edge plus dirReduce
     float rcpDir = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
+    
 	//Multiply by reciprocal and limit to pixel span
     dir = clamp(dir * rcpDir, -SPAN_MAX, SPAN_MAX) * u_texel.xy;
+	
+	vec4 O = texture2D(tex, uv);
 	
 	//Average middle texels along dir line
     vec4 A = 0.5 * (
@@ -56,8 +63,9 @@ vec4 textureFXAA(sampler2D tex, vec2 uv) {
     
 	//Get average luma
 	float lumaB = dot(B.rgb, luma);
+	
 	//If the average is outside the luma range, using the middle average
-    return ((lumaB < lumaMin) || (lumaB > lumaMax)) ? A : B;
+    return mix(O, ((lumaB < lumaMin) || (lumaB > lumaMax)) ? A : B, mixAmo);
 }
 
 void main() {
