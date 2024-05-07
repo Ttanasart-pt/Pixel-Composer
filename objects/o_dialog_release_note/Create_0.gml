@@ -128,7 +128,7 @@ event_inherited();
 		for( var i = 0, n = array_length(dls); i < n; i++ ) {
 			var dl = dls[i];
 			var vr = dl.version;
-			hh     = dl.status? ui(56) : ui(36);
+			hh     = dl.status == 0? ui(36) : ui(56);
 			
 			var hov = sHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh);
 			
@@ -151,7 +151,12 @@ event_inherited();
 				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 				if(mouse_press(mb_left, sFOCUS)) 
 					shellOpenExplorer(filename_dir(dl.download_path));
-					
+			
+			} else if(dl.status == -1 && hov) {
+				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
+				if(mouse_press(mb_left, sFOCUS)) 
+					url_open(dl.download_path);
+				
 			} else 
 				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
 			
@@ -171,6 +176,10 @@ event_inherited();
 			} else if(dl.status == 2) {
 				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text_cut(xx + ui(8), yy + ui(32), dl.download_path, ww - ui(16));
+				
+			} else if(dl.status == -1) {
+				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_value_negative);
+				draw_text_cut(xx + ui(8), yy + ui(32), $"HTTP get error : open the download link in browser.", ww - ui(16));
 			}
 			
 			if(dl.status) {

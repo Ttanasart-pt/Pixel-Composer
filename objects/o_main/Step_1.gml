@@ -11,6 +11,7 @@ _HOVERING_ELEMENT = noone;
 		if(!minimized) game_set_speed(1, gamespeed_fps);
 		minimized = true;
 		exit;
+		
 	} else if(!minimized)
 		window_preminimize_rect = [ window_get_x(), window_get_y(), window_get_width(), window_get_height() ];
 
@@ -201,7 +202,7 @@ _HOVERING_ELEMENT = noone;
 	if(ALT   == KEYBOARD_STATUS.up) ALT   = KEYBOARD_STATUS.idle;
 	
 	if(CTRL  == KEYBOARD_STATUS.pressing && !keyboard_check(vk_control))
-		CTRL = KEYBOARD_STATUS.up;
+		CTRL  = KEYBOARD_STATUS.up;
 	
 	if(SHIFT == KEYBOARD_STATUS.pressing && !keyboard_check(vk_shift))
 		SHIFT = KEYBOARD_STATUS.up;

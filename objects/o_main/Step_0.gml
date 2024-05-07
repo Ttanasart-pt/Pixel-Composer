@@ -79,6 +79,7 @@ if(PROJECT.active && !PROJECT.safeMode) { #region
 			load_file_path(drop_path);
 			drop_path = [];
 		}
+		
 	} else if(OS == os_macosx) {		
 		file_dnd_set_files(file_dnd_pattern, file_dnd_allowfiles, file_dnd_allowdirs, file_dnd_allowmulti);
 		file_dnd_filelist = file_dnd_get_files();
@@ -128,7 +129,7 @@ if(PROJECT.active && !PROJECT.safeMode) { #region
 	
 	if(STEAM_ENABLED) {
 		if (steam_is_screenshot_requested()) {
-		    var file = "PixelComposer_" + string(irandom_range(100_000, 999_999)) + ".png";
+		    var file = $"PixelComposer_{seed_random(6)}.png";
 		    screen_save(file);
 		    steam_send_screenshot(file, window_get_width(), window_get_height());
 		}
