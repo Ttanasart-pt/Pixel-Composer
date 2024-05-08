@@ -33,7 +33,7 @@ function ResetAllNodesRender() { #region
 } #endregion
 
 function NodeTopoSort() { #region
-	//print($"======================= RESET TOPO =======================")
+	LOG_IF(global.FLAG.render == 1, $"======================= RESET TOPO =======================")
 	
 	var _key = ds_map_find_first(PROJECT.nodeMap);
 	var amo  = ds_map_size(PROJECT.nodeMap);
@@ -48,7 +48,7 @@ function NodeTopoSort() { #region
 	ds_list_clear(PROJECT.nodeTopo);
 	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
 	
-	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {ds_list_size(PROJECT.nodeTopo)} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
+	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {ds_list_size(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 } #endregion
 
 function NodeListSort(_list, _nodeList) { #region
@@ -93,6 +93,7 @@ function __sortNode(_list, _node) { #region
 function __topoSort(_list, _nodeList) { #region
 	var _root     = [];
 	var _leftOver = [];
+	var _global   = _nodeList == PROJECT.nodes;
 	
 	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ ) {
 		var _node   = _nodeList[| i];
@@ -103,17 +104,18 @@ function __topoSort(_list, _nodeList) { #region
 			continue;
 		}
 		
-		for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
-			var _to = _node.outputs[| j].getJunctionTo();
+		if(_node.attributes.show_update_trigger && !array_empty(_node.updatedOutTrigger.getJunctionTo())) {
+			_isRoot = false;
 			
-			for( var k = 0, p = array_length(_to); k < p; k++ ) {
-				if(ds_list_exist(_nodeList, _to[k].node)) {
-					_isRoot = false;
-					break;
-				}
+		} else {
+			for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
+				var _to = _node.outputs[| j].getJunctionTo();
+				
+				if(_global) _isRoot &= array_empty(_to);
+				else        _isRoot &= !array_any(_to, function(_val) { return ds_list_exist(_nodeList, _val.node); } );
+				
+				if(!_isRoot) break;
 			}
-			
-			if(!_isRoot) break;
 		}
 		
 		if(_isRoot) array_push(_root, _node);

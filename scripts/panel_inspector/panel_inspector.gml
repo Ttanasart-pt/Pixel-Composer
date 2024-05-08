@@ -287,9 +287,13 @@ function Panel_Inspector() : PanelContent() constructor {
 				continue;
 			}
 			
+			var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
+			
 			switch(i) {
 				case 0 :
 					var _edt = PROJECT.attributeEditor;
+					var _lh;
+					
 					for( var j = 0; j < array_length(_edt); j++ ) {
 						var title = _edt[j][0];
 						var param = _edt[j][1];
@@ -299,70 +303,109 @@ function Panel_Inspector() : PanelContent() constructor {
 						var widx = ui(8);
 						var widy = yy;
 						
-						draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
-						draw_text_add(ui(16), yy, __txt(title));
-						yy += line_get_height() + ui(6);
-						hh += line_get_height() + ui(6);
-					
+						draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
+						draw_text_over(ui(16), viewMode == INSP_VIEW_MODE.spacious? yy : yy + ui(3), __txt(title));
+						
+						if(viewMode == INSP_VIEW_MODE.spacious) {
+							_lh = line_get_height();
+							yy += _lh + ui(6);
+							hh += _lh + ui(6);
+							
+						} else if(viewMode == INSP_VIEW_MODE.compact) {
+							_lh = line_get_height() + ui(6);
+						}
+						
 						editW.setFocusHover(pFOCUS, _hover);
 						if(pFOCUS) editW.register(contentPane);
 						
 						var wh = 0;
-						var _data  = PROJECT.attributes[$ param];
-						var _param = new widgetParam(ui(16), yy, w - ui(16 + 48), TEXTBOX_HEIGHT, _data, {}, _m, rx, ry);
+						var _data = PROJECT.attributes[$ param];
+						var _wdx  = viewMode == INSP_VIEW_MODE.spacious? ui(16) : ui(140);
+						var _wdy  = yy;
+						var _wdw  = w - ui(48) - _wdx;
+						var _wdh  = viewMode == INSP_VIEW_MODE.spacious? TEXTBOX_HEIGHT  : _lh;
+						
+						var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry);
+						_param.font = _font;
 						
 						wh = editW.drawParam(_param);
 						
 						var jun  = PANEL_GRAPH.value_dragging;
 						var widw = con_w - ui(16);
-						var widh = line_get_height() + ui(6) + wh + ui(4);
+						var widh = viewMode == INSP_VIEW_MODE.spacious? _lh + ui(6) + wh + ui(4) : max(wh, _lh);
 						
 						if(jun != noone && _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
 							draw_sprite_stretched_ext(THEME.ui_panel_active, 0, widx, widy, widw, widh, COLORS._main_value_positive, 1);
 							attribute_hovering = drpFn;
 						}
 						
-						yy += wh + ui(8);
-						hh += wh + ui(8);
+						if(viewMode == INSP_VIEW_MODE.spacious) {
+							yy += wh + ui(8);
+							hh += wh + ui(8);
+							
+						} else if(viewMode == INSP_VIEW_MODE.compact) {
+							yy += max(wh, _lh) + ui(6);
+							hh += max(wh, _lh) + ui(6);
+						}
 					}
+					
 					break;
+					
 				case 1 :
 					for( var j = 0; j < array_length(meta.displays); j++ ) {
 						var display = meta.displays[j];
 					
-						draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
-						draw_text_add(ui(16), yy, __txt(display[0]));
-						yy += line_get_height() + ui(6);
-						hh += line_get_height() + ui(6);
-				
+						draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
+						draw_text_over(ui(16), viewMode == INSP_VIEW_MODE.spacious? yy : yy + ui(3), __txt(display[0]));
+						
+						if(viewMode == INSP_VIEW_MODE.spacious) {
+							_lh = line_get_height();
+							yy += _lh + ui(6);
+							hh += _lh + ui(6);
+							
+						} else if(viewMode == INSP_VIEW_MODE.compact) {
+							_lh = line_get_height() + ui(6);
+						}
+						
 						meta_tb[j].setFocusHover(pFOCUS, _hover);
 						if(pFOCUS) meta_tb[j].register(contentPane);
-					
+						
 						var wh = 0;
 						var _dataFunc = display[1];
-						var _data     = _dataFunc(meta);
+						var _data = _dataFunc(meta);
+						var _wdx  = viewMode == INSP_VIEW_MODE.spacious? ui(16) : ui(140);
+						var _wdy  = yy;
+						var _wdw  = w - ui(48) - _wdx;
+						var _wdh  = display[2];
+						
+						var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry);
+						_param.font = _font;
 						
 						switch(instanceof(meta_tb[j])) {
-							case "textArea" :	
-								wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], _data, _m);
-								break;
-							case "textArrayBox" :	
-								meta_tb[j].arraySet = current_meta.tags;
-								wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], _m, rx, ry);
-								break;
+							case "textArrayBox" : meta_tb[j].arraySet = current_meta.tags; break;
 						}
-					
-						yy += wh + ui(8);
-						hh += wh + ui(8);
+						
+						wh = meta_tb[j].drawParam(_param);
+						
+						if(viewMode == INSP_VIEW_MODE.spacious) {
+							yy += wh + ui(8);
+							hh += wh + ui(8);
+							
+						} else if(viewMode == INSP_VIEW_MODE.compact) {
+							yy += max(wh, _lh) + ui(6);
+							hh += max(wh, _lh) + ui(6);
+						}
 					}
+					
 					break;
+					
 				case 2 :
 					if(findPanel("Panel_Globalvar")) {
 						yy += ui(4);
 						hh += ui(4);
 						continue;
 					}
-				
+					
 					var gvh = globalvar_viewer_draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
 					yy += gvh + ui(8);
 					hh += gvh + ui(8);
@@ -386,7 +429,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
 						var byc = by + bh / 2;
 						draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-						draw_text_add(bxc + ui(48), byc, txt);
+						draw_text_over(bxc + ui(48), byc, txt);
 						
 						bx += bw + ui(4);
 						
@@ -400,7 +443,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
 						var byc = by + bh / 2;
 						draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-						draw_text_add(bxc + ui(48), byc, txt);
+						draw_text_over(bxc + ui(48), byc, txt);
 					} else {
 						var bw = bbw;
 					
@@ -415,9 +458,11 @@ function Panel_Inspector() : PanelContent() constructor {
 						var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
 						var byc = by + bh / 2;
 						draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-						draw_text_add(bxc + ui(48), byc, txt);
+						draw_text_over(bxc + ui(48), byc, txt);
 					}
+					
 					break;
+					
 				case 3 :
 					var context = PANEL_GRAPH.getCurrentContext();
 					var _h = drawNodeProperties(yy, _m, context);
@@ -427,8 +472,8 @@ function Panel_Inspector() : PanelContent() constructor {
 					break;
 			}
 			
-			yy += ui(8);
-			hh += ui(8);
+			yy += viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
+			hh += viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
 		}
 		
 		return hh;
@@ -885,13 +930,6 @@ function Panel_Inspector() : PanelContent() constructor {
 			draw_sprite_ui_uniform(THEME.preset, 1, bx + ui(32) / 2, by + ui(32) / 2, 1, COLORS._main_icon_dark);
 		}
 		
-		by += ui(36);
-		view_mode_tooltip.index = viewMode;
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, view_mode_tooltip, THEME.inspector_view, viewMode) == 2) {
-			viewMode = !viewMode;
-			PREFERENCES.inspector_view_default = viewMode;
-		}
-		
 		//////////////////////////////////////////////////////////////////// INSPECTOR ACTIONS ////////////////////////////////////////////////////////////////////
 		
 		var bx = w - ui(44);
@@ -936,6 +974,12 @@ function Panel_Inspector() : PanelContent() constructor {
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
 		
 		if(inspecting && !inspecting.active) inspecting = noone;
+		
+		view_mode_tooltip.index = viewMode;
+		if(buttonInstant(THEME.button_hide,  ui(8), ui(48), ui(32), ui(32), [mx, my], pFOCUS, pHOVER, view_mode_tooltip, THEME.inspector_view, viewMode) == 2) {
+			viewMode = !viewMode;
+			PREFERENCES.inspector_view_default = viewMode;
+		}
 		
 		if(inspecting) {
 			var _nodes = PANEL_GRAPH.nodes_selecting;

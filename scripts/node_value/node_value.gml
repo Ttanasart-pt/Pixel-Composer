@@ -1650,7 +1650,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_value[2] = val;
 		cache_value[3] = applyUnit;
 		
-		if(!IS_PLAYING) updateColor(val);
+		updateColor(val);
 		
 		return val;
 	} #endregion
@@ -1713,6 +1713,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(PROJECT.attributes.strict) return val;
 		
 		val = arrayBalance(val);
+		
+		if(value_from != noone && display_type == VALUE_DISPLAY.d3quarternion && display_data.angle_display == QUARTERNION_DISPLAY.euler)
+			val = quarternionFromEuler(val[0], val[1], val[2]);
 		
 		if(isArray(val) && array_length(val) < 1024) { #region Process data
 			var _val = array_create(array_length(val));
@@ -1900,7 +1903,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(display_type == VALUE_DISPLAY.d3quarternion) {
 			switch(display_data.angle_display) {
 				case QUARTERNION_DISPLAY.quarterion :	return val;
-				case QUARTERNION_DISPLAY.euler :		return new BBMOD_Quaternion(val[0], val[1], val[2], val[3]).ToEuler(true);
+				case QUARTERNION_DISPLAY.euler :		return quarternionToEuler(val[0], val[1], val[2], val[3]);
 			}
 		}
 		
@@ -2009,8 +2012,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setValueInspectorDirect = function(val = 0, index = noone) {
 		if(display_type == VALUE_DISPLAY.d3quarternion && display_data.angle_display == QUARTERNION_DISPLAY.euler) {
-			var _qval = new BBMOD_Quaternion().FromEuler(-val[0], -val[1], -val[2]).ToArray();
-			var _eval = new BBMOD_Quaternion(_qval[0], _qval[1], _qval[2], _qval[3]).ToEuler(true);
+			var _qval = quarternionFromEuler(-val[0], -val[1], -val[2]);
 			return setValueDirect(_qval);
 		}
 		return setValueDirect(val, index);
@@ -2063,12 +2065,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == JUNCTION_CONNECT.output) {
 			if(self.index == 0) {
 				node.preview_value = getValue();
-				node.preview_array = "[" + array_shape(node.preview_value) + "]";
+				node.preview_array = $"[{array_shape(node.preview_value)}]";
 			}
 			return;
 		}
 		
-		if(is_instanceof(node, Node))
+		if(is_instanceof(node, Node) && self.index >= 0)
 			node.setInputData(self.index, animator.getValue(time));
 		
 		if(tags == VALUE_TAG.updateInTrigger || tags == VALUE_TAG.updateOutTrigger) return true;
@@ -2720,8 +2722,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(log) log_warning("LOAD", $"[Connect] Reconnecting {node.name} to {_nd.name}", node);
 		
-		     if(con_index == VALUE_TAG.updateInTrigger)  setFrom(_nd.updatedInTrigger);
-		else if(con_index == VALUE_TAG.updateOutTrigger) setFrom(_nd.updatedOutTrigger);
+		     if(con_index == VALUE_TAG.updateInTrigger)  return setFrom(_nd.updatedInTrigger);
+		else if(con_index == VALUE_TAG.updateOutTrigger) return setFrom(_nd.updatedOutTrigger);
 		else if(con_index < _ol) {
 			var _set = setFrom(_nd.outputs[| con_index], false, true);
 			if(_set) return true;

@@ -668,6 +668,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	};
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function quarternionArraySlerp(_q0, _q1, _s) {
 	INLINE
@@ -740,3 +741,69 @@ function quarternionArraySlerp(_q0, _q1, _s) {
 		(_q13 * _s1) + (_q23 * _s2)
 	];
 };
+
+function quarternionFromEuler(_x, _y, _z) {
+	INLINE
+
+	_x = -_x * 0.5;
+	_y = -_y * 0.5;
+	_z = -_z * 0.5;
+
+	var _q1Sin, _q1Cos, _temp;
+	var _qX, _qY, _qZ, _qW;
+
+	_q1Sin = dsin(_z);
+	_q1Cos = dcos(_z);
+
+	_temp = dsin(_x);
+
+	_qX = _q1Cos * _temp;
+	_qY = _q1Sin * _temp;
+
+	_temp = dcos(_x);
+
+	_qZ = _q1Sin * _temp;
+	_qW = _q1Cos * _temp;
+
+	_q1Sin = dsin(_y);
+	_q1Cos = dcos(_y);
+
+	var X = _qX * _q1Cos - _qZ * _q1Sin;
+	var Y = _qW * _q1Sin + _qY * _q1Cos;
+	var Z = _qZ * _q1Cos + _qX * _q1Sin;
+	var W = _qW * _q1Cos - _qY * _q1Sin;
+
+	return [ X, Y, Z, W ];
+}
+
+function quarternionToEuler(X, Y, Z, W) {
+	INLINE
+
+	var ysqr = Y * Y;
+
+    // roll (x-axis rotation)
+    var t0 = +2.0 * (W * X + Y * Z);
+    var t1 = +1.0 - 2.0 * (X * X + ysqr);
+    var roll = arctan2(t0, t1);
+
+    // pitch (y-axis rotation)
+    var t2 = +2.0 * (W * Y - Z * X);
+    t2 = clamp(t2, -1.0, 1.0);  // Prevent numerical instability
+    var pitch = arcsin(t2);
+
+    // yaw (z-axis rotation)
+    var t3 = +2.0 * (W * Z + X * Y);
+    var t4 = +1.0 - 2.0 * (ysqr + Z * Z);
+    var yaw = arctan2(t3, t4);
+
+    // Convert radians to degrees
+    var _dx = roll  * 180.0 / pi;
+    var _dy = pitch * 180.0 / pi;
+    var _dz = yaw   * 180.0 / pi;
+
+	var _dx = round(_dx * 1000) / 1000;
+	var _dy = round(_dy * 1000) / 1000;
+	var _dz = round(_dz * 1000) / 1000;
+
+    return [ _dx, _dy, _dz ];
+}

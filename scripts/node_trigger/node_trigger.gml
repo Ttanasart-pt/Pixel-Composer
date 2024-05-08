@@ -1,7 +1,6 @@
 function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Trigger";
-	update_on_frame = true;
-	setDimension(96, 32 + 24 * 1);
+	setDimension(96, 56);
 	
 	inputs[| 0] = nodeValue("Trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
@@ -15,8 +14,6 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	static update = function() { 
 		var _val = inputs[| 0].getValue();
-		
-		//print($"{CURRENT_FRAME}: {ds_list_to_array(inputs[| 0].animator.values)} | {inputs[| 0].animator.getValue(CURRENT_FRAME)}");
 		
 		outputs[| 0].setValue(_val);
 	}

@@ -569,9 +569,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.getValue()) { 
+				
 				getInputs();
 				update();
-			
+				
 				updatedInTrigger.setValue(false);
 			}
 			updatedOutTrigger.setValue(false);
@@ -824,6 +825,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getPreviousNodes = function() { #region
 		var prev = [];
 		
+		if(attributes.show_update_trigger && updatedInTrigger.value_from) 
+			array_push(prev, updatedInTrigger.value_from.node);
+		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 			var _in = inputs[| i];
 			
@@ -943,7 +947,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static refreshNodeDisplay = function() { #region
 		INLINE
-		if(IS_PLAYING) return;
 		
 		updateIO();
 		setHeight();
