@@ -1013,7 +1013,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					node_hover = node_hovering;	
 					
 					if(value_focus) {
-						print($"Right click value focus {value_focus}");
+						// print($"Right click value focus {value_focus}");
 						
 						__junction_hovering = value_focus;
 						
@@ -1064,7 +1064,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						menuCall("graph_node_selected_menu",,, menu);
 						
 					} else if(node_hover && node_hover.draggable) {
-						print($"Right click node hover {node_hover}");
+						// print($"Right click node hover {node_hover}");
 						
 						var menu = [];
 						array_push(menu, menu_node_color, -1, menu_sent_to_preview, menu_send_to_window, menu_sent_to_inspector);
@@ -1088,7 +1088,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					
 						menuCall("graph_node_selected_multiple_menu",,, menu );
 					} else if(node_hover == noone) {
-						print($"Right click not node hover");
+						// print($"Right click not node hover");
 						
 						var menu = [];
 						
@@ -1612,7 +1612,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			draw_set_color(COLORS._main_text);
 			draw_set_alpha(i < ds_list_size(node_context) - 1? 0.33 : 1);
-			draw_text(xx, tbh - 2, tt);
+			draw_text(xx, tbh, tt);
 			draw_set_alpha(1);
 			xx += tw;
 			xx += ui(32);

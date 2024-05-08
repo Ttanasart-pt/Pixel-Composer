@@ -43,7 +43,6 @@ function __particleObject() constructor {
 		var _sh = surface_get_height(surf) * scy;
 		
 		point_rotate(-_sw / 2, -_sh / 2, 0, 0, rot, __temp_pt);
-		print($"Drawing {surf} at {x + __temp_pt[0]}, {y + __temp_pt[1]} > {scx}, {scy} > {blend}, {alp}");
 		draw_surface_ext(surf, x + __temp_pt[0], y + __temp_pt[1], scx, scy, rot, blend, alp);
 	} #endregion
 	

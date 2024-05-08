@@ -1,10 +1,7 @@
 function Panel_Addon() : PanelContent() constructor {
 	title = __txt("Addons");
 	icon  = THEME.addon_icon;
-	
-	showHeader	 = false;
-	title_height = 64;
-	padding		 = 24;
+	padding = 8;
 	
 	#region data
 		w = ui(400);
@@ -37,7 +34,6 @@ function Panel_Addon() : PanelContent() constructor {
 	#endregion
 	
 	function onResize() {
-		PANEL_PADDING
 		sc_addon.resize(w - ui(padding + padding), h - ui(title_height + padding + 40));
 	}
 	
@@ -160,14 +156,12 @@ function Panel_Addon() : PanelContent() constructor {
 
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		PANEL_PADDING
-		PANEL_TITLE
 		
 		var px = ui(padding);
-		var py = ui(title_height);
+		var py = ui(padding);
 		var pw = w - ui(padding + padding);
-		var ph = h - ui(title_height + padding);
-	
+		var ph = h - ui(padding + padding);
+		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		if(pFOCUS) WIDGET_CURRENT = tb_search;
 		tb_search.draw(px, py, pw, ui(32), search_string, [mx, my]);

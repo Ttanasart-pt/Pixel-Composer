@@ -164,6 +164,6 @@ function GetAppendID(old_id) { #region
 	
 	if(ds_map_exists(APPEND_MAP, old_id)) 
 		return APPEND_MAP[? old_id];
-	print("Get append ID error: " + string(old_id));
+	// print("Get append ID error: " + string(old_id));
 	return noone;
 } #endregion

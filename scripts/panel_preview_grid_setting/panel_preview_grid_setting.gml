@@ -6,6 +6,13 @@ function Panel_Preview_Grid_Setting() : Panel_Linear_Setting() constructor {
 	#region data
 		properties = [
 			new __Panel_Linear_Setting_Item(
+				__txt("Pixel Grid"),
+				new checkBox(function() { PROJECT.previewGrid.pixel = !PROJECT.previewGrid.pixel; }),
+				function() { return PROJECT.previewGrid.pixel; },
+				function(val) { PROJECT.previewGrid.pixel = val; },
+				false,
+			),
+			new __Panel_Linear_Setting_Item(
 				__txt("Enabled"),
 				new checkBox(function() { PROJECT.previewGrid.show = !PROJECT.previewGrid.show; }),
 				function() { return PROJECT.previewGrid.show; },

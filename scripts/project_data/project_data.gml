@@ -33,6 +33,8 @@
 			size	: [ 16, 16 ],
 			opacity : 0.5,
 			color   : COLORS.panel_preview_grid,
+			
+			pixel   : false,
 		} #endregion
 		
 		graphGrid = { #region

@@ -94,6 +94,7 @@ function __topoSort(_list, _nodeList) { #region
 	var _root     = [];
 	var _leftOver = [];
 	var _global   = _nodeList == PROJECT.nodes;
+	__temp_nodeList = _nodeList;
 	
 	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ ) {
 		var _node   = _nodeList[| i];
@@ -112,7 +113,7 @@ function __topoSort(_list, _nodeList) { #region
 				var _to = _node.outputs[| j].getJunctionTo();
 				
 				if(_global) _isRoot &= array_empty(_to);
-				else        _isRoot &= !array_any(_to, function(_val) { return ds_list_exist(_nodeList, _val.node); } );
+				else        _isRoot &= !array_any(_to, function(_val) { return ds_list_exist(__temp_nodeList, _val.node); } );
 				
 				if(!_isRoot) break;
 			}

@@ -821,6 +821,30 @@ function Panel_Preview() : PanelContent() constructor {
 		} #endregion
 		
 		if(is_surface(preview_surfaces[0])) { #region outline
+			if(PROJECT.previewGrid.pixel && canvas_s >= 16) {
+				
+				var gw = pswd / canvas_s;
+				var gh = pshd / canvas_s;
+				
+				var cx = canvas_x;
+				var cy = canvas_y;
+				
+				draw_set_color(PROJECT.previewGrid.color);
+				draw_set_alpha(PROJECT.previewGrid.opacity * 0.5 * clamp((canvas_s - 16) / 16, 0, 1));
+				
+				for( var i = 1; i < gw; i++ ) {
+					var _xx = cx + i * canvas_s;
+					draw_line(_xx, cy, _xx, cy + pshd);
+				}
+			
+				for( var i = 1; i < gh; i++ ) {
+					var _yy = cy + i * canvas_s;
+					draw_line(cx, _yy - 1, cx + pswd, _yy - 1);
+				}
+				
+				draw_set_alpha(1);
+			}
+			
 			if(PROJECT.previewGrid.show) {
 				var _gw = PROJECT.previewGrid.size[0] * canvas_s;
 				var _gh = PROJECT.previewGrid.size[1] * canvas_s;
