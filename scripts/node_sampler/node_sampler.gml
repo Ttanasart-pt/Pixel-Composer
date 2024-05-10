@@ -18,6 +18,8 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static getPreviewValues = function() { return getInputData(0); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		PROCESSOR_OVERLAY_CHECK
+		
 		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var _suf = current_data[0];

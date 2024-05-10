@@ -73,16 +73,18 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
+		PROCESSOR_OVERLAY_CHECK
+		
 		var _surf = outputs[| 0].getValue();
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
 			_surf = _surf[preview_index];
 		}
 		
-		var tl = array_clone(getInputData(1));
-		var tr = array_clone(getInputData(2));
-		var bl = array_clone(getInputData(3));
-		var br = array_clone(getInputData(4));
+		var tl = array_clone(current_data[1]);
+		var tr = array_clone(current_data[2]);
+		var bl = array_clone(current_data[3]);
+		var br = array_clone(current_data[4]);
 		
 		tl[0] = _x + tl[0] * _s;
 		tr[0] = _x + tr[0] * _s;

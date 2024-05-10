@@ -29,8 +29,10 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static getPreviewValues = function() { return getInputData(0); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
-		var _inSurf	= getSingleValue(0);
-		var _spRaw 	= getSingleValue(1);
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _inSurf	= current_data[0];
+		var _spRaw 	= current_data[1];
 		var _splice;
 		
 		for( var i = 0, n = array_length(_spRaw); i < n; i++ )

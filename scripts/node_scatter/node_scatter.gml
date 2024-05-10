@@ -147,6 +147,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	scatter_mapp = [];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		PROCESSOR_OVERLAY_CHECK
+		
 		var _distType = current_data[6];
 		
 		if(_distType < 3) {
@@ -154,7 +156,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			active &= !a;
 		}
 			
-		var a = inputs[| 29].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(1)); active &= !a;
+		var a = inputs[| 29].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !a;
 	} #endregion
 	
 	static onValueUpdate = function(index) { #region

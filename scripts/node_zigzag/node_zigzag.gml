@@ -42,7 +42,9 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var pos = getInputData(2);
+		PROCESSOR_OVERLAY_CHECK
+		
+		var pos = current_data[2];
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		

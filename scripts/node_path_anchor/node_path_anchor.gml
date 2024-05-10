@@ -23,10 +23,12 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _pos = getInputData(0);
-		var _cn1 = getInputData(1);
-		var _cn2 = getInputData(2);
-		var _mir = getInputData(3);
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _pos = current_data[0];
+		var _cn1 = current_data[1];
+		var _cn2 = current_data[2];
+		var _mir = current_data[3];
 		
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;

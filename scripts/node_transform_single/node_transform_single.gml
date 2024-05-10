@@ -48,6 +48,8 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	overlay_drag_sa  = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		PROCESSOR_OVERLAY_CHECK
+		
 		if(array_length(current_data) < ds_list_size(inputs)) return;
 		
 		var _surf = outputs[| 0].getValue();

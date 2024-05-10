@@ -17,11 +17,11 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(process_amount > 1) return;
+		PROCESSOR_OVERLAY_CHECK
 		
-		var _pos	= getInputData(0);
-		var _span	= getInputData(1);
-		var _shape	= getInputData(2);
+		var _pos	= current_data[0];
+		var _span	= current_data[1];
+		var _shape	= current_data[2];
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;
 		var ex = _span[0] * _s;

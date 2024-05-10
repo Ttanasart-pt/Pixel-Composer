@@ -32,18 +32,6 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		draw_set_color(COLORS._main_accent);
-		
-		//for( var i = 0, n = array_length(mesh); i < n; i++ ) {
-		//	var _t = mesh[i];
-				
-		//	draw_line(_x + _t[0][0] * _s, _y + _t[0][1] * _s, _x + _t[1][0] * _s, _y + _t[1][1] * _s);
-		//	draw_line(_x + _t[1][0] * _s, _y + _t[1][1] * _s, _x + _t[2][0] * _s, _y + _t[2][1] * _s);
-		//	draw_line(_x + _t[2][0] * _s, _y + _t[2][1] * _s, _x + _t[0][0] * _s, _y + _t[0][1] * _s);
-		//}
-	} #endregion
-	
 	static step = function() { #region
 		var _typ = getInputData(2);
 		

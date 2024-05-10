@@ -34,7 +34,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(array_length(current_data) < 1) return;
+		PROCESSOR_OVERLAY_CHECK
 		
 		var _dim		= current_data[1];
 		

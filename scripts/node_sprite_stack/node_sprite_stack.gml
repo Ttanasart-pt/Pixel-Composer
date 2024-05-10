@@ -56,7 +56,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	preview_custom_x_max = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var pos = getInputData(4);
+		PROCESSOR_OVERLAY_CHECK
+		
+		var pos = current_data[4];
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		

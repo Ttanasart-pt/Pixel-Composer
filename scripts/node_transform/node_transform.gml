@@ -334,7 +334,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _surf = getInputData(0);
+		var _surf = current_data[0];
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
 			_surf = _surf[preview_index];
@@ -346,16 +346,16 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_surf_out = _surf_out[preview_index];
 		}
 		
-		var __pos = getSingleValue(2);
+		var __pos = current_data[2];
 		var pos   = [ __pos[0], __pos[1] ];
 		var _pos  = [ __pos[0], __pos[1] ];
 		
-		var __anc = getSingleValue(3);
+		var __anc = current_data[3];
 		var anc   = [ __anc[0], __anc[1] ];
 		var _anc  = [ __anc[0], __anc[1] ];
 		
-		var rot = getSingleValue(5);
-		var sca = getSingleValue(6);
+		var rot = current_data[5];
+		var sca = current_data[6];
 		
 		var srw = surface_get_width_safe(_surf);
 		var srh = surface_get_height_safe(_surf);
@@ -542,6 +542,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				overlay_drag_sy  = anc[1];
 				overlay_drag_px  = pos[0];
 				overlay_drag_py  = pos[1];
+				
 			} else if(point_in_circle(_mx, _my, tl[0], tl[1], 8) || 
 			          point_in_circle(_mx, _my, tr[0], tr[1], 8) || 
 					  point_in_circle(_mx, _my, bl[0], bl[1], 8) || 
@@ -559,10 +560,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				overlay_drag_my  = _my;
 				overlay_drag_sx  = sca[0];
 				overlay_drag_sy  = sca[1];
+				
 			} else if(point_in_circle(_mx, _my, rth[0], rth[1], 8)) {
 				overlay_dragging = 3;
 				overlay_drag_ma  = point_direction(bax, bay, _mx, _my);
 				overlay_drag_sa  = rot;
+				
 			} else if(point_in_triangle(_mx, _my, tl[0], tl[1], tr[0], tr[1], bl[0], bl[1]) || 
 			          point_in_triangle(_mx, _my, tr[0], tr[1], bl[0], bl[1], br[0], br[1])) {
 				overlay_dragging = 1;

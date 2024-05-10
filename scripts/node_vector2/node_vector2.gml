@@ -55,8 +55,10 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var __ax = getInputData(0);
-		var __ay = getInputData(1);
+		PROCESSOR_OVERLAY_CHECK
+		
+		var __ax = current_data[0];
+		var __ay = current_data[1];
 		
 		if(is_array(__ax) || is_array(__ay)) return;
 						

@@ -109,23 +109,13 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	attribute_surface_depth();
 	
-	//static getDimension = function() { #region
-	//	var _surf = getInputData(0);
-	//	if(is_array(_surf)) {
-	//		if(array_length(_surf) == 0) return [1, 1];
-	//		if(!is_surface(_surf[0])) return [1, 1];
-	//		return [ surface_get_width_safe(_surf[0]), surface_get_height_safe(_surf[0]) ];
-	//	}
-			
-	//	if(!is_surface(_surf)) return [1, 1];
-	//	return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
-	//} #endregion
-	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		PROCESSOR_OVERLAY_CHECK
+		
 		var a = inputs[| 9].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor); active &= !a;
 		
-		var _pat  = getInputData(3);
-		var _spos = getInputData(9);
+		var _pat  = current_data[3];
+		var _spos = current_data[9];
 		
 		var px = _x + _spos[0] * _s;
 		var py = _y + _spos[1] * _s;
@@ -140,7 +130,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 		}
 		
-		var a = inputs[| 31].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getInputData(1)); active &= !a;
+		var a = inputs[| 31].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !a;
 	} #endregion
 	
 	static preGetInputs = function() { #region

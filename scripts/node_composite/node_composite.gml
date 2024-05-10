@@ -35,6 +35,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	layer_dragging	= noone;
 	layer_remove	= -1;
 	layer_renderer	= new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+		PROCESSOR_OVERLAY_CHECK
+		
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
 		if(array_length(current_data) != ds_list_size(inputs)) return 0;
 		
@@ -316,7 +318,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var pad = getInputData(0);
+		var pad = current_data[0];
 		var ww  = overlay_w;
 		var hh  = overlay_h;
 		

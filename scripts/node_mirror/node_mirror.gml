@@ -25,8 +25,10 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _pos   = getInputData(1);
-		var _ang   = getInputData(2);
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _pos   = current_data[1];
+		var _ang   = current_data[2];
 		var _posx = _pos[0] * _s + _x;
 		var _posy = _pos[1] * _s + _y;
 		

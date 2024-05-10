@@ -117,6 +117,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		PROCESSOR_OVERLAY_CHECK
+		
 		if(use_path) {
 			draw_set_text(f_p3, fa_center, fa_top);
 			draw_set_color(COLORS._main_accent);
@@ -128,40 +130,19 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				ny = _y + p.y * _s;
 				
 				if(i) draw_line(ox, oy, nx, ny);
-				// draw_circle(nx, ny, 3, false);
-				// draw_text(nx, ny + 8, i);
 				
 				ox = nx;
 				oy = ny;
 			}
-			
-			// draw_set_color(c_red);
-			// for( var i = 0, n = array_length(triangles); i < n; i++ ) {
-			// 	var tri = triangles[i];
-			// 	var p0  = tri[0];
-			// 	var p1  = tri[1];
-			// 	var p2  = tri[2];
-				
-			// 	var p0x = _x + p0.x * _s;
-			// 	var p0y = _y + p0.y * _s;
-			// 	var p1x = _x + p1.x * _s;
-			// 	var p1y = _y + p1.y * _s;
-			// 	var p2x = _x + p2.x * _s;
-			// 	var p2y = _y + p2.y * _s;
-				
-			// 	draw_line(p0x, p0y, p1x, p1y);
-			// 	draw_line(p0x, p0y, p2x, p2y);
-			// 	draw_line(p1x, p1y, p2x, p2y);
-			// }
 			return;
 		}
 		
-		var _type = getInputData(15);
+		var _type = current_data[15];
 		
 		if(_type == 0) {
 			inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		} else if(_type == 1) {
-			var _pos = getInputData(16);
+			var _pos = current_data[16];
 			var _px  = _x + _pos[0] * _s;
 			var _py  = _y + _pos[1] * _s;
 			
