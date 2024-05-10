@@ -17,6 +17,10 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	loop		= true;
 	cached_pos  = ds_map_create();
 	
+	attributes.maximum_dim = 64;
+	array_push(attributeEditors, ["Max Dimension", function() { return attributes.maximum_dim; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { attributes.maximum_dim = clamp(val, 8, 8192); })]);
+	
 	static getBoundary		= function() { return boundary; }
 	static getAccuLength	= function() { return lengthAccs; }
 	static getLength		= function() { return lengthTotal; }
@@ -96,73 +100,78 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(!is_surface(_surf)) return;
 		
 		var _dim = surface_get_dimension(_surf);
+		var _sca = min(1, attributes.maximum_dim / _dim[0], attributes.maximum_dim / _dim[1]);
+		_dim[0] *= _sca;
+		_dim[1] *= _sca;
+		
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 		
 		surface_set_shader(temp_surface[0], sh_image_trace);
 			shader_set_f("dimension", _dim);
-			draw_surface(_surf, 0, 0);
+			draw_surface_stretched(_surf, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
 		
 		var _w   = _dim[0], _h  = _dim[1];
 		var _x   = 0,       _y  = 0;
 		
 		var _buff = buffer_from_surface(temp_surface[0], false);
-		var _emp  = false;
+		var _emp  = true;
+		var _ind  = 0;
 		
-		while(buffer_getPixel(_buff, _w, _h, _x, _y) == 0) {
-			_x++;
-			if(_x == _w) {
-				_x = 0;
-				_y++;
-				if(_y == _h) {
-					_emp = true;
-					break;
-				}
+		buffer_seek(_buff, buffer_seek_start, 0);
+		repeat(_w * _h) {
+			var _b = buffer_read(_buff, buffer_u32);
+			if(_b > 0) {
+				_emp = false;
+				_x   = _ind % _w;
+				_y   = floor(_ind / _w);
+				break;
 			}
+			_ind++;
 		}
 		
-		if(_emp) return;
+		if(_emp) { print("Empty surface"); return; }
 		
-		var _sx = _x;
-		var _sy = _y;
-		var _c  = 0;
-		var _px = _x;
-		var _py = _y;
-		var _a  = [];
+		var _sx  = _x;
+		var _sy  = _y;
+		var _px  = _x;
+		var _py  = _y;
 		var _amo = _w * _h;
 		var _rep = 0;
 		
+		var _a   = array_create(_amo * 2);
+		var _ind = 0;
+		
 		do {
-			buffer_setPixel(_buff, _w, _h, _x, _y, 0);
-			array_push(_a, [ _x + 0.5, _y + 0.5 ]);
+			buffer_write_at(_buff, (_y * _w + _x) * 4, buffer_u32, 0);
+			_a[_ind++] = _x / _sca + 0.5;
+			_a[_ind++] = _y / _sca + 0.5;
 			
-			     if(_x < _w - 1 && buffer_getPixel(_buff, _w, _h, _x + 1, _y)) { _x++; }
-			else if(_y < _h - 1 && buffer_getPixel(_buff, _w, _h, _x, _y + 1)) { _y++; }
-			else if(_x > 0      && buffer_getPixel(_buff, _w, _h, _x - 1, _y)) { _x--; }
-			else if(_y > 0      && buffer_getPixel(_buff, _w, _h, _x, _y - 1)) { _y--; }
+			     if(_x < _w - 1 && buffer_read_at(_buff, ((_y    ) * _w + _x + 1) * 4, buffer_u32)) { _x++; }
+			else if(_y < _h - 1 && buffer_read_at(_buff, ((_y + 1) * _w + _x    ) * 4, buffer_u32)) { _y++; }
+			else if(_x > 0      && buffer_read_at(_buff, ((_y    ) * _w + _x - 1) * 4, buffer_u32)) { _x--; }
+			else if(_y > 0      && buffer_read_at(_buff, ((_y - 1) * _w + _x    ) * 4, buffer_u32)) { _y--; }
 			
-			else if(_x < _w - 1 && _y < _h - 1 && buffer_getPixel(_buff, _w, _h, _x + 1, _y + 1)) { _x++; _y++; }
-			else if(_x < _w - 1 && _y > 0      && buffer_getPixel(_buff, _w, _h, _x + 1, _y - 1)) { _x++; _y--; }
-			else if(_x > 0      && _y < _h - 1 && buffer_getPixel(_buff, _w, _h, _x - 1, _y + 1)) { _x--; _y++; }
-			else if(_x > 0      && _y > 0      && buffer_getPixel(_buff, _w, _h, _x - 1, _y - 1)) { _x--; _y--; }
+			else if(_x < _w - 1 && _y < _h - 1 && buffer_read_at(_buff, ((_y + 1) * _w + _x + 1) * 4, buffer_u32)) { _x++; _y++; }
+			else if(_x < _w - 1 && _y > 0      && buffer_read_at(_buff, ((_y - 1) * _w + _x + 1) * 4, buffer_u32)) { _x++; _y--; }
+			else if(_x > 0      && _y < _h - 1 && buffer_read_at(_buff, ((_y + 1) * _w + _x - 1) * 4, buffer_u32)) { _x--; _y++; }
+			else if(_x > 0      && _y > 0      && buffer_read_at(_buff, ((_y - 1) * _w + _x - 1) * 4, buffer_u32)) { _x--; _y--; }
 			
 			if(++_rep >= _amo) break;
 		} until(_x == _sx && _y == _sy);
 		
 		buffer_delete(_buff);
 		
-		anchors = [];
+		anchors = array_verify(anchors, _ind / 2);
+		var _aind = 0;
 		
-		var lx = _a[0][0];
-		var ly = _a[0][1];
+		var lx = _a[0];
+		var ly = _a[1];
 		var ox, oy, nx, ny;
 		
-		array_push(_a, _a[0]);
-		array_push(anchors, _a[0]);
-		
-		for( var i = 0, n = array_length(_a); i < n; i++ ) {
-			nx = _a[i][0];
-			ny = _a[i][1];
+		for( var i = 0; i < _ind; i += 2 ) {
+			nx = _a[i + 0];
+			ny = _a[i + 1];
 			
 			if(i) {
 				var na = point_direction(ox, oy, nx, ny);
@@ -172,7 +181,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					lx = ox;
 					ly = oy;
 					
-					array_push(anchors, [ ox, oy ]);
+					anchors[_aind++] = [ ox, oy ];
 				}
 			}
 			
@@ -180,25 +189,30 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			oy = ny;
 		}
 		
-		array_push(anchors, _a[0]);
+		anchors[_aind++] = [ _a[0], _a[1] ];
+		array_resize(anchors, _aind);
 		
 		var ox, oy, nx, ny;
 		lengthTotal = 0;
-		lengths     = [];
-		lengthAccs  = [];
+		lengths     = array_verify(lengths,    (_ind / 2) - 1);
+		lengthAccs  = array_verify(lengthAccs, (_ind / 2) - 1);
 		boundary    = new BoundingBox();
 		
-		for( var i = 0, n = array_length(anchors); i < n; i++ ) {
-			nx = _a[i][0];
-			ny = _a[i][1];
+		var _lind = 0;
+		
+		for( var i = 0; i < _ind; i += 2 ) {
+			nx = _a[i + 0];
+			ny = _a[i + 1];
 			
 			boundary.addPoint(nx, ny);
 			
 			if(i) {
 				var ds = point_distance(ox, oy, nx, ny);
-				lengthTotal += ds;
-				array_push(lengths,    ds);
-				array_push(lengthAccs, lengthTotal);
+				
+				lengthTotal      += ds;
+				lengths[_lind]    = ds;
+				lengthAccs[_lind] = lengthTotal;
+				_lind++;
 			}
 			
 			ox = nx;

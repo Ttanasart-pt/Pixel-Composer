@@ -2108,12 +2108,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(!typeCompatible(_valueFrom.type, type)) { 
-			if(log) noti_warning($"setFrom: Type mismatch {_valueFrom.type} to {type}",, node);
+			noti_warning($"Connection error: Incompatible type {_valueFrom.type} to {type}",, node);
 			return -1;
 		}
 		
 		if(typeIncompatible(_valueFrom, self)) {
-			if(log) noti_warning("setFrom: Type mismatch",, node);
+			noti_warning("Connection error: Incompatible type",, node);
 			return -1;
 		}
 		
@@ -2128,7 +2128,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(!accept_array && isArray(_valueFrom.getValue())) {
-			if(log) noti_warning("setFrom: Array mismatch",, node);
+			noti_warning($"Connection error: {name} does not support array input.",, node);
 			return -1;
 		}
 			

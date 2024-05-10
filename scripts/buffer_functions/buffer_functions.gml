@@ -55,8 +55,15 @@ function buffer_from_file(path) { #region
 } #endregion
 
 function buffer_read_at(buffer, position, type) { #region
+	INLINE
 	buffer_seek(buffer, buffer_seek_start, position);
 	return buffer_read(buffer, type);
+} #endregion
+
+function buffer_write_at(buffer, position, type, data) { #region
+	INLINE
+	buffer_seek(buffer, buffer_seek_start, position);
+	return buffer_write(buffer, type, data);
 } #endregion
 
 function buffer_serialize(buffer, compress = true) { #region
