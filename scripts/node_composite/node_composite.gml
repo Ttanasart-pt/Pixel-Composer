@@ -389,6 +389,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				if(inputs[| input_dragging].setValue([ pos_x, pos_y ]))
 					UNDO_HOLDING = true;
+					
 			} else if(drag_type == NODE_COMPOSE_DRAG.rotate) {
 				var aa = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
 				var da = angle_difference(dragging_mx, aa);
@@ -401,11 +402,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 				if(inputs[| input_dragging].setValue(sa))
 					UNDO_HOLDING = true;	
+			
 			} else if(drag_type == NODE_COMPOSE_DRAG.scale) {
-				var _surf = getInputData(surf_dragging + 0);
-				var _rot  = getInputData(surf_dragging + 2);
-				var _sw = surface_get_width_safe(_surf);
-				var _sh = surface_get_height_safe(_surf);
+				var _surf = current_data[surf_dragging + 0];
+				var _rot  = current_data[surf_dragging + 2];
+				var _sw   = surface_get_width_safe(_surf);
+				var _sh   = surface_get_height_safe(_surf);
 				
 				var _p = point_rotate(_mx - dragging_mx, _my - dragging_my, 0, 0, -_rot);
 				var sca_x = _p[0] / _s / _sw * 2;
@@ -417,7 +419,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 				
 				if(inputs[| input_dragging].setValue([ sca_x, sca_y ]))
-					UNDO_HOLDING = true;	
+					UNDO_HOLDING = true;
+				
 			}
 			
 			if(mouse_release(mb_left)) {

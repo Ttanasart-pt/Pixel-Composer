@@ -35,12 +35,14 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 13] = nodeValue("Edge transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Flip", "Rotate" ] );
 		
+	inputs[| 14] = nodeValue("Sort array by bit", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
 		["Surfaces",	  true], 0, 1, 
 		["Tile set",	 false], 2, 4, 
 		["Edge",		 false], 5, 12, 13, 10, 11,
 		["Edge Textures", true], 6, 7, 8, 9, 
-		["Output",		 false], 3, 
+		["Output",		 false], 3, 14, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -141,6 +143,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	} #endregion
 	
 	static step = function() { #region
+		var _outType = getSingleValue( 3);
 		var _edgType = getSingleValue( 5);
 		var _edgFull = getSingleValue(11);
 		
@@ -149,6 +152,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[|  8].setVisible(_edgType == 1, _edgType == 1);
 		inputs[|  9].setVisible(_edgType == 1, _edgType == 1);
 		inputs[| 13].setVisible(_edgType == 0);
+		inputs[| 14].setVisible(_outType == 1);
 	} #endregion
 	
 	static generateFull = function(_data, _tex0, _tex1, _edge, _crop, indMain, indEdge_et, indEdge_eb, indEdge_el, indEdge_er) { #region

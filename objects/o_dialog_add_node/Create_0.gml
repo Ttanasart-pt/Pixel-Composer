@@ -549,8 +549,8 @@ event_inherited();
 		} else if(PREFERENCES.dialog_add_node_view == 1) { #region list
 			var list_width  = content_pane.surface_w;
 			var list_height = ui(28);
-			var yy      = _y + list_height / 2;
-			var bg_ind	= 0;
+			var yy          = _y + list_height / 2;
+			var bg_ind	    = 0;
 			hh += list_height;
 			
 			for(var i = 0; i < node_count; i++) {
