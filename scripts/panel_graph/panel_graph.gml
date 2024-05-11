@@ -544,6 +544,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			setFocus(panel);
 		}
 		menu_open_group_tab = menuItem(__txtx("panel_graph_enter_group_new_tab", "Open group in new tab"), function() { openGroupTab(node_hover); }, THEME.group);
+		menu_group_group    = menuItem(__txt("Ungroup"),			function() { doGroup(); }, THEME.group, ["Graph", "group"]);
 		menu_group_ungroup  = menuItem(__txt("Ungroup"),			function() { doUngroup(); }, THEME.group, ["Graph", "Ungroup"]);
 		menu_group_tool     = menuItem(__txt("Set as group tool"),	function() { node_hover.setTool(!node_hover.isTool); });
 					
@@ -561,24 +562,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			]);
 		}).setIsShelf();
 					
-		menu_nodes_align = menuItem(__txtx("panel_graph_align_nodes", "Align nodes"), function(_dat) { 
-			return submenuCall(_dat, [
-				menuItemGroup(__txtx("horizontal", "Horizontal"), [ 
-					[ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_selecting, fa_left); } ],
-					[ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_selecting, fa_center); } ],
-					[ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_selecting, fa_right); } ],
-				]),
-				menuItemGroup(__txtx("vertical", "Vertical"), [ 
-					[ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_selecting, fa_top); } ],
-					[ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_selecting, fa_middle); } ],
-					[ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_selecting, fa_bottom); } ],
-				]),
-				menuItemGroup(__txtx("distribute", "Distribute"), [ 
-					[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_selecting); } ],
-					[ [THEME.obj_distribute_v, 0],		   function() { node_vdistribute(nodes_selecting); } ],
-				]),
-			]);
-		}).setIsShelf();
+		menu_nodes_align = menuItemGroup(__txtx("panel_graph_align_nodes", "Align"), [
+				[ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_selecting, fa_left); } ],
+				[ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_selecting, fa_center); } ],
+				[ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_selecting, fa_right); } ],
+				
+				[ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_selecting, fa_top); } ],
+				[ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_selecting, fa_middle); } ],
+				[ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_selecting, fa_bottom); } ],
+				
+				[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_selecting); } ],
+				[ [THEME.obj_distribute_v, 0],		   function() { node_vdistribute(nodes_selecting); } ],
+		]);
 		menu_nodes_blend   = menuItem(__txtx("panel_graph_blend_nodes", "Blend nodes"),				function() { doBlend(); },	 noone, ["Graph", "Blend"]);
 		menu_nodes_compose = menuItem(__txtx("panel_graph_compose_nodes", "Compose nodes"),			function() { doCompose(); }, noone, ["Graph", "Compose"]);
 		menu_nodes_array   = menuItem(__txtx("panel_graph_array_from_nodes", "Array from nodes"),	function() { doArray(); },   noone, ["Graph", "Array"]);
@@ -1077,14 +1072,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						
 						if(node_hover.group != noone)
 							array_push(menu, menu_group_tool);
-					
+						if(array_length(nodes_selecting) >= 2) 
+							array_push(menu, -1, menu_nodes_group, menu_nodes_frame);
+							
 						array_push(menu, -1, menu_node_delete_merge, menu_node_delete_cut, menu_node_duplicate, menu_node_copy);
 						if(array_empty(nodes_selecting)) array_push(menu, menu_node_copy_prop, menu_node_paste_prop);
 						
 						array_push(menu, -1, menu_node_transform, menu_node_canvas);
 						
-						if(array_empty(nodes_selecting) >= 2) 
-							array_push(menu, -1, menu_nodes_align, menu_nodes_blend, menu_nodes_compose, menu_nodes_array, menu_nodes_group, menu_nodes_frame);
+						if(array_length(nodes_selecting) >= 2) 
+							array_push(menu, -1, menu_nodes_align, menu_nodes_blend, menu_nodes_compose, menu_nodes_array);
 					
 						menuCall("graph_node_selected_multiple_menu",,, menu );
 					} else if(node_hover == noone) {
