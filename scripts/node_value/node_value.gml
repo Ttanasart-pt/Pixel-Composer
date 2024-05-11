@@ -497,7 +497,7 @@ function nodeValueUnit(_nodeValue) constructor { #region
 		if(is_array(base) && !is_array(value))
 			return value;
 			
-		var _val = array_create(array_length(value));
+		var _val = array_clone(value);
 		
 		switch(disp) {
 			case VALUE_DISPLAY.padding :
@@ -790,6 +790,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} else 
 			visible = inspector;
 		node.will_setHeight = true;
+		
 		return self;
 	} #endregion
 	

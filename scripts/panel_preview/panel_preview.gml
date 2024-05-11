@@ -1786,9 +1786,10 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function saveCurrentFrame() { #region
 		var prevS = getNodePreviewSurface();
+		var _node = getNodePreview();
 		if(!is_surface(prevS)) return;
 		
-		var path = get_save_filename("image|*.png;*.jpg", "export"); 
+		var path = get_save_filename("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name); 
 		key_release();
 		if(path == "") return;
 		if(filename_ext(path) != ".png") path += ".png";
@@ -1797,7 +1798,7 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function saveAllCurrentFrames() { #region
-		var path = get_save_filename("image|*.png;*.jpg", "export"); 
+		var path = get_save_filename("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name); 
 		key_release();
 		if(path == "") return;
 		

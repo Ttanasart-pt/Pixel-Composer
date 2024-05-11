@@ -4,6 +4,7 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform float tolerance;
 uniform int   strict;
+uniform int   fill;
 
 float d(in vec4 c1, in vec4 c2)    { return length(c1.rgb * c1.a - c2.rgb * c2.a) / sqrt(3.); }
 bool  s(in vec4 c1, in vec4 c2)    { return d(c1, c2) <= tolerance; }
@@ -66,7 +67,12 @@ void main() {
 	vec4 a8 = texture2D( gm_BaseTexture, v_vTexcoord + vec2( tx.x,  tx.y));	
 	
 	gl_FragColor = a4;
-	if(a4.a == 0.) return;
+	if(a4.a == 0.) {
+		if(fill == 0) return;
+		
+		gl_FragColor = sel4(a4, a1, a3, a5, a7);
+		return;
+	}
 	
 	if(strict == 0) {
 		if(a1.a > 0. && !s(a4, a1) && s(a1, a3) && s(a1, a5)) gl_FragColor = sel3(a4, a1, a3, a5);

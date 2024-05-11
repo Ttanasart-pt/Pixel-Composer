@@ -307,7 +307,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(!is_surface(_distMap))
 					return _outSurf;
 				
-				if(scatter_map != _distMap || scatter_maps != seed || scatter_mapa != _amount)
+				// if(scatter_map != _distMap || scatter_maps != seed || scatter_mapa != _amount)
 					scatter_mapp = get_points_from_dist(_distMap, _amount, seed);
 				
 				scatter_map  = _distMap;

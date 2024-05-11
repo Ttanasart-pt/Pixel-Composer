@@ -136,7 +136,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspectInput1.index = -1;
 		inspectInput2.index = -1;
 		
-		autoUpdatedTrigger = true;
 		updatedInTrigger   = nodeValue("Update",  self, JUNCTION_CONNECT.input,  VALUE_TYPE.trigger, false).setVisible(true, true);
 		updatedOutTrigger  = nodeValue("Updated", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false).setVisible(true, true);
 		
@@ -580,6 +579,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(will_setHeight) {
 			setHeight();
+			getJunctionList();
 			will_setHeight = false;
 		}
 		

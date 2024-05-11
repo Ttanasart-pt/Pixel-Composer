@@ -10,7 +10,6 @@ enum ARRAY_PROCESS {
 function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	attributes.array_process = ARRAY_PROCESS.loop;
 	current_data	= [];
-	inputs_data		= [];
 	inputs_is_array = [];
 	all_inputs      = [];
 	
