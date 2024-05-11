@@ -1109,14 +1109,17 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			mouse_pos_string = "";
 		
-			right_menu_x = w - ui(8);
-			if(_node == noone) return;
+			if(_node == noone) {
+				right_menu_x = w - ui(8);
+				return;
+			}
 		
 			right_menu_y += string_height("l");
 			var txt = $"{canvas_w} x {canvas_h}px";
 			if(canvas_a) txt = $"{canvas_a} x {txt}";
 			draw_text(right_menu_x, right_menu_y, txt);
 		
+			right_menu_x = w - ui(8);
 			right_menu_y += string_height("l");
 		#endregion
 		

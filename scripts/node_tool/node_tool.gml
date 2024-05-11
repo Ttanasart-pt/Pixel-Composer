@@ -26,12 +26,10 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 	static getToolObject = function() { return is_array(toolObject)? toolObject[selecting] : toolObject; }
 	
 	static getDisplayName = function(index = 0) {
+		var _nme = getName(index);
 		var _key = checkHotkey();
 		
-		var _nme = getName(index);
-		if(_key != "") _nme += $" ({_key})";
-		
-		return _nme;
+		return _key == ""? _nme : new tooltipHotkey(_nme).setKey(_key);
 	}
 	
 	static setSetting = function(sets) { array_push(settings, sets); return self; }

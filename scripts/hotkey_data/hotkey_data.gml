@@ -8,7 +8,7 @@
 			"Eraser":			new hotkeySimple("E"),
 			"Rectangle":		new hotkeySimple("N"),
 			"Ellipse":			new hotkeySimple("M"),
-			"Fill":				new hotkeySimple("F"),
+			"Fill":				new hotkeySimple("G"),
 			"Freeform":			new hotkeySimple("Q"),
 		},
 		"Node_Mesh_Warp": {

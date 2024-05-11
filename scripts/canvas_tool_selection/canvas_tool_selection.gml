@@ -198,12 +198,14 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 			var sel_h = surface_get_height_safe(selection_surface);
 						
 			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h)) {
-				is_select_drag = true;
-				selection_sx = pos_x;
-				selection_sy = pos_y;
-				selection_mx = mouse_cur_x;
-				selection_my = mouse_cur_y;
-				
+				var _c = surface_getpixel_ext(selection_mask, mouse_cur_x - pos_x, mouse_cur_y - pos_y);
+				if(_c > 0) {
+					is_select_drag = true;
+					selection_sx = pos_x;
+					selection_sy = pos_y;
+					selection_mx = mouse_cur_x;
+					selection_my = mouse_cur_y;
+				}
 			}
 		}
 		

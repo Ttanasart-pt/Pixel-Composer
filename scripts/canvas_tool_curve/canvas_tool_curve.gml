@@ -122,6 +122,7 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 	
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		draw_surface_ext_safe(drawing_surface, _x, _y, _s, _s);
+		canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
 	}
 	
 	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

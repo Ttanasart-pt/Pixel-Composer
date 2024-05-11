@@ -1,8 +1,10 @@
-function tooltipHotkey(text, context, name) constructor {
+function tooltipHotkey(text, context = "", name = "") constructor {
 	self.text   = text;
 	self.hotkey = find_hotkey(context, name);
 	
 	keyStr = hotkey?  key_get_name(hotkey.key, hotkey.modi) : "";
+	
+	static setKey = function(key) { keyStr = key; return self;  }
 	
 	static drawTooltip = function() {
 		draw_set_font(f_p0);
