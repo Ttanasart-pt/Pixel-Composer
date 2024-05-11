@@ -1398,6 +1398,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		color_display = type == VALUE_TYPE.action? #8fde5d : draw_fg;
+		
 	} #endregion
 	
 	static setType = function(_type) { #region
@@ -2345,7 +2346,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_s /= 2;
 		
 		var hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var _d  = 12 * _s;
+		var _d  = 16 * _s;
 		var is_hover   = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d, y + _d);
 		hover_in_graph = is_hover;
 		
@@ -2641,6 +2642,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		visible = struct_try_get(_map, "visible", visible);
 		color   = struct_try_get(_map, "color", -1);
 		
+		updateColor();
+		
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return;
 		
@@ -2689,7 +2692,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		attributeApply();
-		
 		onValidate();
 	} #endregion
 	
