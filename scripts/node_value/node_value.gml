@@ -1492,6 +1492,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static valueProcess = function(value, nodeFrom, applyUnit = true, arrIndex = 0) { #region
 		var typeFrom = nodeFrom.type;
 		
+		if(applyUnit && display_type == VALUE_DISPLAY.d3quarternion && display_data.angle_display == QUARTERNION_DISPLAY.euler)
+			return quarternionFromEuler(value[0], value[1], value[2]);
+		
 		#region color compatibility [ color, palette, gradient ]
 			if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { 
 				if(is_instanceof(value, gradientObject))
@@ -1562,7 +1565,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if((typeFrom == VALUE_TYPE.integer || typeFrom == VALUE_TYPE.float || typeFrom == VALUE_TYPE.boolean) && type == VALUE_TYPE.color)
 			return value >= 1? value : make_color_hsv(0, 0, value * 255);
-			
+		
 		if(typeFrom == VALUE_TYPE.boolean && type == VALUE_TYPE.text)
 			return value? "true" : "false";
 		
@@ -1715,9 +1718,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(PROJECT.attributes.strict) return val;
 		
 		val = arrayBalance(val);
-		
-		if(value_from != noone && display_type == VALUE_DISPLAY.d3quarternion && display_data.angle_display == QUARTERNION_DISPLAY.euler)
-			val = quarternionFromEuler(val[0], val[1], val[2]);
 		
 		if(isArray(val) && array_length(val) < 1024) { #region Process data
 			var _val = array_create(array_length(val));
@@ -1902,13 +1902,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} else 
 			val = ds_list_empty(animator.values)? 0 : animator.processType(animator.values[| 0].value);
 		
-		if(display_type == VALUE_DISPLAY.d3quarternion) {
-			switch(display_data.angle_display) {
-				case QUARTERNION_DISPLAY.quarterion :	return val;
-				case QUARTERNION_DISPLAY.euler :		return quarternionToEuler(val[0], val[1], val[2], val[3]);
-			}
-		}
-		
 		return val;
 	} #endregion
 	
@@ -1974,7 +1967,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return array_length(ar);
 	} #endregion
 	
-	static setValue = function(val = 0, record = true, time = CURRENT_FRAME, _update = true) { #region
+	static setValue = function(val = 0, record = true, time = CURRENT_FRAME, _update = true) { #region //Set value
 		val = unit.invApply(val);
 		return setValueDirect(val, noone, record, time, _update);
 	} #endregion
@@ -2002,23 +1995,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _node = PANEL_INSPECTOR.inspectings[i];
 				if(ind >= ds_list_size(_node.inputs)) continue;
 				
-				var r = _node.inputs[| ind].setValueInspectorDirect(val, index);
+				var r = _node.inputs[| ind].setValueDirect(val, index);
 				if(_node == node) res = r;
 			}
 		} else {
-			res = setValueInspectorDirect(val, index);
+			res = setValueDirect(val, index);
 		}
 			
 		return res;
 	} #endregion
-	
-	static setValueInspectorDirect = function(val = 0, index = noone) {
-		if(display_type == VALUE_DISPLAY.d3quarternion && display_data.angle_display == QUARTERNION_DISPLAY.euler) {
-			var _qval = quarternionFromEuler(-val[0], -val[1], -val[2]);
-			return setValueDirect(_qval);
-		}
-		return setValueDirect(val, index);
-	}
 	
 	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) { #region
 		is_modified = true;

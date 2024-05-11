@@ -205,7 +205,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return _f.lerpTo(_t, _lrp);
 		}
 		
-		if(prop.display_type == VALUE_DISPLAY.d3quarternion)
+		if(prop.display_type == VALUE_DISPLAY.d3quarternion && prop.display_data.angle_display == QUARTERNION_DISPLAY.quarterion)
 			return quarternionArraySlerp(_f, _t, _lrp);
 			
 		if(prop.type == VALUE_TYPE.color) {
