@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_tonemap_ace",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_tonemap_ace",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
