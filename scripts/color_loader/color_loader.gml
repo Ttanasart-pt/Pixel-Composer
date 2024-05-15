@@ -1,13 +1,9 @@
 #region colors
 	globalvar CDEF, COLORS, THEME_VALUE;
-	globalvar COLORS_GLOBAL_GET, COLORS_GLOBAL_SET;
 	
 	CDEF		= new ThemeColorDef();
 	COLORS		= new ThemeColor();
 	THEME_VALUE = new ThemeValue();
-	
-	COLORS_GLOBAL_GET = noone;
-	COLORS_GLOBAL_SET = noone;
 #endregion
 
 function loadColor(theme = "default") { #region

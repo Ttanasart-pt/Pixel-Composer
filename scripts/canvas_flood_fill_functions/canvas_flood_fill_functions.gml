@@ -7,12 +7,12 @@ function canvas_ff_fillable(colorBase, colorFill, _x, _y, _thres) { #region
 } #endregion
 
 function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) { #region
-	var colorFill = tool_attribute.color;
+	var colorFill = CURRENT_COLOR;
 	var colorBase = surface_getpixel_ext(_surf, _x, _y);
 	
 	if(colorFill == colorBase) return; //Clicking on the same color as the fill color
 	
-	var _c = tool_attribute.color;
+	var _c = CURRENT_COLOR;
 	draw_set_color(_c);
 	
 	_ff_w    = surface_get_width(_surf);

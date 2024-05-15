@@ -154,25 +154,15 @@
 #endregion
 
 function color_diff(c1, c2, fast = false, alpha = false) { #region
-	var _c1_r = color_get_red(c1);
-	var _c1_g = color_get_green(c1);
-	var _c1_b = color_get_blue(c1);
-	var _c1_a = alpha? color_get_alpha(c1) : 255;
+	var _c1_r = _color_get_red(c1);
+	var _c1_g = _color_get_green(c1);
+	var _c1_b = _color_get_blue(c1);
+	var _c1_a = _color_get_alpha(c1);
 	
-	_c1_a = _c1_a / 255;
-	_c1_r = _c1_r / 255 * _c1_a;
-	_c1_g = _c1_g / 255 * _c1_a;
-	_c1_b = _c1_b / 255 * _c1_a;
-	
-	var _c2_r = color_get_red(c2);
-	var _c2_g = color_get_green(c2);
-	var _c2_b = color_get_blue(c2);
-	var _c2_a = alpha? color_get_alpha(c2) : 255;
-	
-	_c2_a = _c2_a / 255;
-	_c2_r = _c2_r / 255 * _c2_a;
-	_c2_g = _c2_g / 255 * _c2_a;
-	_c2_b = _c2_b / 255 * _c2_a;
+	var _c2_r = _color_get_red(c2);
+	var _c2_g = _color_get_green(c2);
+	var _c2_b = _color_get_blue(c2);
+	var _c2_a = _color_get_alpha(c2);
 	
 	if(fast) return (abs(_c1_r - _c2_r) + abs(_c1_g - _c2_g) + abs(_c1_b - _c2_b)) / 3;
 	return sqrt(sqr(_c1_r - _c2_r) + sqr(_c1_g - _c2_g) + sqr(_c1_b - _c2_b));

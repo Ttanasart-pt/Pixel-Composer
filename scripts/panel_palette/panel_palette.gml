@@ -25,7 +25,7 @@ function Panel_Palette() : PanelContent() constructor {
 		}
 		var _height;
 		var yy  = _y;
-		var cur = COLORS_GLOBAL_GET != noone? COLORS_GLOBAL_GET() : noone;
+		var cur = CURRENT_COLOR;
 		
 		for(var i = 0; i < array_length(PALETTES); i++) {
 			var preset	= PALETTES[i];
@@ -56,16 +56,13 @@ function Panel_Palette() : PanelContent() constructor {
 						
 						var _index = m_gy * col + m_gx;
 						if(_index < pre_amo && _index >= 0) {
-							if(COLORS_GLOBAL_SET != noone) {
-								COLORS_GLOBAL_SET(array_safe_get_fast(preset.palette, _index));
+							CURRENT_COLOR = array_safe_get_fast(preset.palette, _index);
 							
-							} else {
-								DRAGGING = {
-									type: "Color",
-									data: array_safe_get_fast(preset.palette, _index)
-								}
-								MESSAGE = DRAGGING;
+							DRAGGING = {
+								type: "Color",
+								data: array_safe_get_fast(preset.palette, _index)
 							}
+							MESSAGE = DRAGGING;
 						}
 					} else if(point_in_rectangle(_m[0], _m[1], ui(10), yy, ww - ui(10), yy + ui(24))) {
 						DRAGGING = {

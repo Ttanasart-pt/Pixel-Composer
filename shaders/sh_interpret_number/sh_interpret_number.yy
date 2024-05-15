@@ -4,7 +4,7 @@
   "name":"sh_interpret_number",
   "parent":{
     "name":"interpret",
-    "path":"folders/nodes/data/generator/interpret.yy",
+    "path":"folders/shader/generator/interpret.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

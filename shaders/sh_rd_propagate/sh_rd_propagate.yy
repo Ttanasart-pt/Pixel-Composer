@@ -4,7 +4,7 @@
   "name":"sh_rd_propagate",
   "parent":{
     "name":"reaction_diffusion",
-    "path":"folders/nodes/data/generator/reaction_diffusion.yy",
+    "path":"folders/shader/generator/reaction_diffusion.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

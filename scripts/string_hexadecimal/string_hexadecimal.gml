@@ -32,14 +32,14 @@ function number_to_hex(val) {
 	return ss;
 }
 
-function color_get_hex(color) {
+function color_get_hex(color, alpha = true) {
 	var arr = is_array(color) && array_length(color) == 4;
 	var r   = arr? round(color[0] * 256) : color_get_red(color);
 	var g   = arr? round(color[1] * 256) : color_get_green(color);
 	var b   = arr? round(color[2] * 256) : color_get_blue(color);
 	var a   = arr? round(color[3] * 256) : color_get_alpha(color);
-		
-	return number_to_hex(r) + number_to_hex(g) + number_to_hex(b) + (is_int64(color)? number_to_hex(a) : "");
+	
+	return number_to_hex(r) + number_to_hex(g) + number_to_hex(b) + (alpha && is_int64(color)? number_to_hex(a) : "");
 }
 
 function color_from_rgb(str) {

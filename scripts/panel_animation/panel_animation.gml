@@ -684,7 +684,7 @@ function Panel_Animation() : PanelContent() constructor {
 				
 			if(timeline_scubbing) {
 				var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
-				PROJECT.animator.setFrame(clamp(rfrm, 0, TOTAL_FRAMES - 1));
+				PROJECT.animator.setFrame(clamp(rfrm, 0, TOTAL_FRAMES - 1), !key_mod_press(ALT));
 				timeline_show_time  = CURRENT_FRAME;
 					
 				if(timeline_show_time != _scrub_frame) {

@@ -718,6 +718,7 @@ function __initNodes() {
 		addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				[1, Node_Grid], ["tile"],		"Generate grid pattern.");
 		addNodeObject(generator, "Triangular Grid",		s_node_grid_tri,			"Node_Grid_Tri",			[1, Node_Grid_Tri],,			"Generate triangular grid pattern.");
 		addNodeObject(generator, "Hexagonal Grid",		s_node_grid_hex,			"Node_Grid_Hex",			[1, Node_Grid_Hex],,			"Generate hexagonal grid pattern.");
+		 addNodeObject(generator, "Pentagonal Grid",	s_node_grid_pentagonal,			"Node_Grid_Pentagonal",		[1, Node_Grid_Pentagonal],,		"Generate Pentagonal grid pattern.").patreonExtra();
 		addNodeObject(generator, "Pytagorean Tile",		s_node_pytagorean_tile,		"Node_Pytagorean_Tile",		[1, Node_Pytagorean_Tile],,		"Generate Pytagorean tile pattern.").patreonExtra();
 		addNodeObject(generator, "Herringbone Tile",	s_node_herringbone_tile,	"Node_Herringbone_Tile",	[1, Node_Herringbone_Tile],,	"Generate Herringbone tile pattern.").patreonExtra();
 		addNodeObject(generator, "Random Tile",			s_node_random_tile,			"Node_Random_Tile",			[1, Node_Random_Tile],,			"Generate Random tile pattern.").patreonExtra();

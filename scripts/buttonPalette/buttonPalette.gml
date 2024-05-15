@@ -148,7 +148,7 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
 		
 		draw_rectangle(_x0, _y0 + 1, _x0 + _gs, _y0 + _gs, false);
 		
-		if(c_color == _pal[i]) {
+		if(color_diff(c_color, _pal[i]) <= 0) {
 			cx = _x0;
 			cy = _y0;
 		}

@@ -4,7 +4,7 @@
   "name":"sh_cell_noise_random",
   "parent":{
     "name":"cell",
-    "path":"folders/nodes/data/generator/cell.yy",
+    "path":"folders/shader/generator/cell.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

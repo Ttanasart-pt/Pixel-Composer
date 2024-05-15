@@ -38,11 +38,11 @@
 		
 		playback  = ANIMATOR_END.loop;
 		
-		static setFrame = function(frame) { #region
+		static setFrame = function(frame, _round = true) { #region
 			var _c        = current_frame;
 			frame         = clamp(frame, 0, frames_total);
 			real_frame    = frame;
-			current_frame = round(frame);
+			current_frame = _round? round(frame) : frame;
 			
 			frame_progress = _c != current_frame;
 			

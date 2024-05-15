@@ -117,7 +117,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 15] = nodeValue("Custom Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.rejectArray();
 	
-	inputs[| 16] = nodeValue("Auto Export", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 16] = nodeValue("Export on Save", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
 	outputs[| 0] = nodeValue("Loop exit", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
@@ -738,6 +738,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var surf = getInputData( 0);
 		var pngf = getInputData(13);
+		var expo = getInputData(16);
 		
 		if(is_array(surf)) {
 			inputs[| 3].display_data.data	 = format_array;
@@ -752,6 +753,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var anim = getInputData(3); // single, sequence, animation
 		var extn = getInputData(9);
 		var user = getInputData(15);
+		
+		if(expo && anim == NODE_EXPORT_FORMAT.single && IS_SAVING)
+			doInspectorAction();
 		
 		inputs[| 11].setVisible(anim == 1);
 		inputs[| 16].setVisible(anim == 0);
@@ -830,10 +834,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var anim = getInputData(3);
-		var expo = getInputData(16);
 		
 		if(anim == NODE_EXPORT_FORMAT.single) {
-			if(isInLoop() || expo) export(false);
+			if(isInLoop()) export(false);
 			return;
 		}
 		

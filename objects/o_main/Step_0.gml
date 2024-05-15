@@ -4,7 +4,7 @@ winManStep()
 
 //print("===== Step start =====");
 
-if(PROJECT.active && !PROJECT.safeMode) { #region
+if(PROJECT.active && !PROJECT.safeMode) { #region node step
 	PROJECT.animator.step();
 	PROJECT.globalNode.step();
 	LIVE_UPDATE = false;
@@ -19,6 +19,8 @@ if(PROJECT.active && !PROJECT.safeMode) { #region
 	} catch(e) {
 		noti_warning("Step error: " + exception_print(e));
 	}
+	
+	IS_SAVING = false;
 } #endregion
 
 #region hotkey

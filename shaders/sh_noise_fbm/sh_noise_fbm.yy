@@ -4,7 +4,7 @@
   "name":"sh_noise_fbm",
   "parent":{
     "name":"noise",
-    "path":"folders/nodes/data/generator/noise.yy",
+    "path":"folders/shader/generator/noise.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

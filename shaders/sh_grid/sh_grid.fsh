@@ -233,6 +233,7 @@ void main() { #region
 	
 	if(mode == 0) {
 		colr = gradientEval(random(sqSt));
+		
 	} else if(mode == 2) {
 		vec2 uv = fract(_pos * sca);
 		
@@ -248,6 +249,7 @@ void main() { #region
 		}
 		
 		colr = texture2D( gm_BaseTexture, uv );
+		
 	} else if(mode == 3) {
 		vec2 uv = fract(sqSt);
 		colr = texture2D( gm_BaseTexture, uv );

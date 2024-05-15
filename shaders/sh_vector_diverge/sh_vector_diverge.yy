@@ -4,7 +4,7 @@
   "name":"sh_vector_diverge",
   "parent":{
     "name":"vector_mapper",
-    "path":"folders/nodes/data/generator/vector_mapper.yy",
+    "path":"folders/shader/generator/vector_mapper.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

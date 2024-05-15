@@ -4,7 +4,7 @@
   "name":"sh_rsh_corner",
   "parent":{
     "name":"random_shape",
-    "path":"folders/nodes/data/generator/random_shape.yy",
+    "path":"folders/shader/generator/random_shape.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

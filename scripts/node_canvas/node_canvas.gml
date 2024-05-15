@@ -210,8 +210,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	#endregion
 	
 	#region ++++ tools ++++
-		tool_attribute.color   = cola(c_white);
-		
 		tool_attribute.channel = [ true, true, true, true ];
 		tool_channel_edit      = new checkBoxGroup(THEME.tools_canvas_channel, function(ind, val) { tool_attribute.channel[ind] = val; });
 		
@@ -369,9 +367,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		selection_tool_after = noone;
 	#endregion
 	
-	function setToolColor(color) { tool_attribute.color = color; }
-	
-	function getToolColor() { return tool_attribute.color; }
+	function setToolColor(color) { CURRENT_COLOR = color; }
 	
 	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) { #region
 		var _sx0 = xx - tool_size / 2;
@@ -390,11 +386,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		yy += ui(8);
 		hh += ui(8);
-		drawColor(tool_attribute.color, _cx, yy, _cw, _cw);
+		drawColor(CURRENT_COLOR, _cx, yy, _cw, _cw);
 		draw_sprite_stretched_ext(THEME.palette_selecting, 0, _cx - _pd, yy - _pd, _cw + _pd * 2, _cw + _pd * 2, c_white, 1);
 		
 		if(point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch) && mouse_press(mb_left, focus))
-			colorSelectorCall(tool_attribute.color, setToolColor);
+			colorSelectorCall(CURRENT_COLOR, setToolColor);
 		
 		yy += _cw + ui(8);
 		hh += _cw + ui(8);
@@ -410,12 +406,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			draw_sprite_stretched_ext(THEME.palette_mask, ii, _cx, yy, _cw, _ch, _c, 1);
 			
-			if(_c == tool_attribute.color) 
+			if(color_diff(_c, CURRENT_COLOR) <= 0) 
 				_sel = [ _cx, yy ];
 					
 			if(hover && point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch)) {
 				if(mouse_click(mb_left, focus))
-					tool_attribute.color = _c;
+					CURRENT_COLOR = _c;
 			}
 			
 			yy += _ch;
@@ -614,7 +610,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			shader_set_i("drawLayer", tool_attribute.drawLayer);
 			shader_set_i("eraser",    isUsingTool("Eraser"));
 			shader_set_f("channels",  tool_attribute.channel);
-			shader_set_f("alpha",     _applyAlpha? _color_get_alpha(tool_attribute.color) : 1);
+			shader_set_f("alpha",     _applyAlpha? _color_get_alpha(CURRENT_COLOR) : 1);
 			shader_set_f("mirror",    tool_attribute.mirror);
 			shader_set_color("pickColor", tool_attribute.pickColor, _color_get_alpha(tool_attribute.pickColor));
 			
@@ -641,16 +637,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(instance_exists(o_dialog_color_picker)) return;
 		
-		COLORS_GLOBAL_GET = getToolColor;
-		COLORS_GLOBAL_SET = setToolColor;
-		
 		brush.node = self;
 		brush.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		if(!tool_selection.is_selected && active && key_mod_press(ALT)) { #region color selector
 			var dialog     = instance_create(0, 0, o_dialog_color_picker);
 			dialog.onApply = setToolColor;
-			dialog.def_c   = tool_attribute.color;
+			dialog.def_c   = CURRENT_COLOR;
 		} #endregion
 		
 		var _canvas_surface = getCanvasSurface();
@@ -736,9 +729,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		#endregion
 		
-		var _alp = _color_get_alpha(tool_attribute.color);
+		var _alp = _color_get_alpha(CURRENT_COLOR);
 		
-		draw_set_color(isUsingTool("Eraser")? c_white : tool_attribute.color);
+		draw_set_color(isUsingTool("Eraser")? c_white : CURRENT_COLOR);
 		draw_set_alpha(1);
 		
 		if(_tool) { #region tool step
@@ -802,7 +795,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					}
 				}
 				
-				draw_set_color(tool_attribute.color);
+				draw_set_color(CURRENT_COLOR);
 				
 				if(brush.brush_sizing) 
 					canvas_draw_point_brush(brush, brush.brush_sizing_dx, brush.brush_sizing_dy);

@@ -29,7 +29,6 @@ function canvas_brush() constructor {
 		var _brushRotR  = node.getInputData(17);
 		
 		var attr = node.tool_attribute;
-		var _col = attr.color;
 		var _siz = attr.size;
 		
 		brush_size = _siz;

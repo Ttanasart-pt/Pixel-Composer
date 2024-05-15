@@ -20,7 +20,7 @@ function canvas_tool_outline() : canvas_tool_shader() constructor {
 			shader_set_f("borderSize",     _thck, _thck);
 			shader_set_f("borderStart",    0, 0);
 			shader_set_i("side",           _side);
-			shader_set_color("borderColor", node.tool_attribute.color);
+			shader_set_color("borderColor", node.CURRENT_COLOR);
 			
 			draw_surface(preview_surface[0], 0, 0);
 		surface_reset_shader();

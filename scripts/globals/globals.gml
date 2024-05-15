@@ -50,6 +50,9 @@
 	global.KEYS = {
 		download_links: "",
 	};
+	
+	globalvar CURRENT_COLOR;
+	CURRENT_COLOR = c_white;
 #endregion
 
 #region inputs
@@ -189,11 +192,6 @@
 	function global_project_close()	{ CALL("project_close");	PANEL_GRAPH.close();							}
 	
 	function global_theme_reload()	{ CALL("theme_reload");		loadGraphic(PREFERENCES.theme); resetPanel();	}
-	
-	function reset_global_getset() {
-		COLORS_GLOBAL_GET = noone;
-		COLORS_GLOBAL_SET = noone;
-	}
 #endregion
 
 #region debug

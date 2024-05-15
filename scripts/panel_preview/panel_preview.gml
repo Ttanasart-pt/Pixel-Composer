@@ -473,7 +473,7 @@ function Panel_Preview() : PanelContent() constructor {
 			else if(canvas_s > 1)	inc = 0.25;
 			
 			if(mouse_wheel_down() && !key_mod_press_any()) canvas_s = max(round(canvas_s / inc) * inc - inc, 0.10);
-			if(mouse_wheel_up()   && !key_mod_press_any()) canvas_s = min(round(canvas_s / inc) * inc + inc, 64);
+			if(mouse_wheel_up()   && !key_mod_press_any()) canvas_s = min(round(canvas_s / inc) * inc + inc, 1024);
 			
 			if(_canvas_s != canvas_s) {
 				var dx = (canvas_s - _canvas_s) * ((mx - canvas_x) / _canvas_s);
@@ -1238,8 +1238,6 @@ function Panel_Preview() : PanelContent() constructor {
 			overlayHover &= !key_mod_press(CTRL);
 		var params = { w, h, toolbar_height };
 		
-		reset_global_getset();
-		
 		if(_node.is_3D)	{
 			if(key_mod_press(CTRL) || d3_tool_snap) {
 				_snx = d3_tool_snap_position;
@@ -1748,14 +1746,14 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
 			menuCall("preview_context_menu",,, [ 
-				menuItem(__txtx("panel_graph_preview_window", "Send to preview window"), function() { create_preview_window(getNodePreview()); }, noone, ["Preview", "Preview window"]), 
+				menuItem(__txtx("panel_graph_preview_window", "Send to preview window"), function() { create_preview_window(getNodePreview()); },	noone, ["Preview", "Preview window"]), 
 				-1,
-				menuItem(__txtx("panel_preview_save", "Save current preview as") + "...", function() { saveCurrentFrame(); }), 
-				menuItem(__txtx("panel_preview_save_all", "Save all current previews as") + "...", function() { saveAllCurrentFrames(); }), 
+				menuItem(__txtx("panel_preview_save", "Save current preview as") + "...",			function() { saveCurrentFrame(); }, 			noone, ["Preview", "Save current frame"]), 
+				menuItem(__txtx("panel_preview_save_all", "Save all current previews as") + "...",	function() { saveAllCurrentFrames(); }, 		noone, ["Preview", "Save all current frame"]), 
 				-1,
-				menuItem(__txtx("panel_preview_copy_image", "Copy image"), function() { copyCurrentFrame(); }, THEME.copy), 
-				menuItem(__txtx("panel_preview_copy_color", "Copy color") + " [" + string(sample_color) + "]", function() { clipboard_set_text(sample_color); }), 
-				menuItem(__txtx("panel_preview_copy_hex", "Copy hex") + " [" + string(color_get_hex(sample_color)) + "]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 
+				menuItem($"{__txtx("panel_preview_copy_image", "Copy image")}",								function() { copyCurrentFrame(); }, THEME.copy), 
+				menuItem($"{__txtx("panel_preview_copy_color", "Copy color")} [{sample_color}]",			function() { clipboard_set_text(sample_color); }), 
+				menuItem($"{__txtx("panel_preview_copy_hex", "Copy hex")} [{color_get_hex(sample_color)}]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 
 			],, getNodePreview());
 		}
 		

@@ -1,5 +1,6 @@
-globalvar SAVING;
-SAVING = false;
+globalvar SAVING, IS_SAVING;
+SAVING    = false;
+IS_SAVING = false;
 
 function NEW() { #region
 	CALL("new");
@@ -114,7 +115,8 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
 	
 	if(DEMO) return false;
 	
-	SAVING = true;
+	IS_SAVING = true;
+	SAVING    = true;
 	//if(TESTING && string_char_at(filename_name(path), 1) != "[")
 	//	path = $"{filename_dir(path)}/[{VERSION_STRING}] {filename_name(path)}";
 	
