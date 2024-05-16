@@ -22,8 +22,9 @@ if !ready exit;
 		var yy    = dialog_y + ui(60);
 		
 		PANEL_GRAPH.stepBegin();
-		var nx = PANEL_GRAPH.mouse_grid_x;
-		var ny = PANEL_GRAPH.mouse_grid_y;
+		
+		var nx = (PANEL_GRAPH.w / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_x;
+		var ny = (PANEL_GRAPH.h / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_y;
 		
 		draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, xx, yy, xx + grid_width, yy + grid_size)) {
@@ -36,6 +37,15 @@ if !ready exit;
 						for( var i = 0, n = array_length(path_arr); i < n; i++ )  {
 							var path = path_arr[i];
 							Node_create_Image_path(nx, ny, path);
+							ny += 160;
+						}
+						break;
+						
+					case "Node_Canvas" :
+						for( var i = 0, n = array_length(path_arr); i < n; i++ )  {
+							var path = path_arr[i];
+							var _canvas = nodeBuild("Node_Canvas", nx, ny);
+							_canvas.loadImagePath(path);
 							ny += 160;
 						}
 						break;

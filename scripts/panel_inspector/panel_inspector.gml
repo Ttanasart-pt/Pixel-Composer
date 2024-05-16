@@ -1015,10 +1015,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			var bx = w - ui(44);
 			var by = ui(12);
 			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_set_default", "Set Metadata as default"), THEME.save, 0, COLORS._main_icon) == 2) {
-				var path = DIRECTORY + "meta.json";
-				json_save_struct(path, PROJECT.meta.serialize());
-			}
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_set_default", "Set Metadata as default"), THEME.save, 0, COLORS._main_icon) == 2)
+				json_save_struct(DIRECTORY + "meta.json", PROJECT.meta.serialize());
 			
 			by += ui(36);
 			if(STEAM_ENABLED && !workshop_uploading) {

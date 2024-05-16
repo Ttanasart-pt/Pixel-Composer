@@ -58,6 +58,8 @@
 		PREFERENCES.dialog_add_node_h				= 400;
 		
 		PREFERENCES.add_node_remember				= true;
+		
+		PREFERENCES.file_explorer_view				= FILE_EXPLORER_VIEW.list;
 	
 	#endregion
 	
@@ -136,9 +138,14 @@
 		PREFERENCES.ffmpeg_path			= "%APP%/ffmpeg/";
 		
 		PREFERENCES.file_explorer       = "";
+		PREFERENCES.dialog_path         = "";
 		
 		PREFERENCES.versions			= {};
 	
+	#endregion
+	
+	#region ///////////////////////////////////////////////////////////////////////// DATA //////////////////////////////////////////////////////////////////////////
+		PREFERENCES.attr_palette		= [ cola(c_black), cola(c_white) ];
 	#endregion
 	
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
@@ -249,6 +256,9 @@
 		}
 		
 		struct_override(PREFERENCES, map.preferences);
+		
+		if(!is_array(PREFERENCES.attr_palette))
+			PREFERENCES.attr_palette = PREFERENCES_DEF.attr_palette;
 		
 		if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
 			PREFERENCES.theme = "default";

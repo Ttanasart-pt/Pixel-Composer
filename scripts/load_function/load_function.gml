@@ -1,7 +1,7 @@
 function LOAD(safe = false) { #region
 	if(DEMO) return false;
 	
-	var path = get_open_filename("Pixel Composer project (.pxc)|*.pxc;*.cpxc", "");
+	var path = get_open_filename_pxc("Pixel Composer project (.pxc)|*.pxc;*.cpxc", "");
 	key_release();
 	if(path == "") return;
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") return;
@@ -172,8 +172,9 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	if(struct_has(_load_content, "graphGrid"))
 		struct_override(PROJECT.graphGrid, _load_content.graphGrid);
 	
-	if(struct_has(_load_content, "attributes"))
+	if(struct_has(_load_content, "attributes")) {
 		struct_override(PROJECT.attributes, _load_content.attributes);
+	}
 	PROJECT.setPalette();
 	
 	if(struct_has(_load_content, "notes")) {
@@ -321,7 +322,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 } #endregion
 
 function __IMPORT_ZIP() { #region
-	var path = get_open_filename("Pixel Composer portable project (.zip)|*.zip", "");
+	var path = get_open_filename_pxc("Pixel Composer portable project (.zip)|*.zip", "");
 	
 	var _fname = filename_name_only(path);
 	var _fext  = filename_ext(path);

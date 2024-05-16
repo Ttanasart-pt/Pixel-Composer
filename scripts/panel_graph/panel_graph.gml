@@ -1814,7 +1814,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		context_frame_ey = context_frame_sy + 16;
 	} #endregion
 	
-	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
+	function drawContent(panel) { #region MAIN DRAW 
 		if(!project.active) return;
 		
 		dragGraph();

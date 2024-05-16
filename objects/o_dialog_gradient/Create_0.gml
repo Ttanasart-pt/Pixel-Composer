@@ -222,7 +222,7 @@ event_inherited();
 					
 					menuCall("palette_window_preset_menu",,, [
 						menuItem(__txtx("palette_editor_set_default", "Set as default"), function() { 
-							DEF_PALETTE = array_clone(hovering.palette);
+							PROJECT.setPalette(array_clone(hovering.palette));
 						}),
 						menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
 							file_delete(hovering.path); 

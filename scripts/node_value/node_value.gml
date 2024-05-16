@@ -1206,7 +1206,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							
 						editWidget.align = fa_left;
 						editWidget.side_button = button(function() { 
-							var path = display_data.filter == "dir"? get_directory("") : get_open_filename(display_data.filter, "");
+							var path = display_data.filter == "dir"? get_directory("") : get_open_filename_pxc(display_data.filter, "");
 							key_release();
 							if(path == "") return noone;
 							return setValueInspector(path);
@@ -1220,7 +1220,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						editWidget.align = fa_left;
 						editWidget.side_button = button(function() { 
-							var path = get_save_filename(display_data.filter, "");
+							var path = get_save_filename_pxc(display_data.filter, "");
 							key_release();
 							if(path == "") return noone;
 							return setValueInspector(path);

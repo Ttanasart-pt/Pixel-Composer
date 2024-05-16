@@ -15,11 +15,11 @@ function filepath_resolve(path) { #region
 	return _path;
 } #endregion
 
-function get_open_filenames_compat(ext, sel) { #region
+function get_open_filenames_compat(ext, sel, caption = "Open") { #region
 	INLINE
 	
-	if(OS == os_windows) return get_open_filenames(ext, sel);
-	return get_open_filename(ext, sel);
+	if(OS == os_windows) return get_open_filenames_ext(ext, sel, PREFERENCES.dialog_path, caption);
+	return get_open_filename_pxc(ext, sel, caption);
 } #endregion
 	
 function file_get_modify_s(path) { #region
@@ -36,3 +36,19 @@ function file_get_modify_s(path) { #region
 	
 	return ((((_y * 12 + _m) * 31 + _d) * 24 + _h) * 60 + _n) * 60 + _s;
 } #endregion
+
+function get_save_filename_pxc(filter, name, caption = "Save as") {
+	INLINE
+	
+	var path = get_save_filename_ext(filter, name, PREFERENCES.dialog_path, caption);
+	if(path != "") PREFERENCES.dialog_path = filename_dir(path);
+	return path;
+}
+
+function get_open_filename_pxc(filter, name, caption = "Open") {
+	INLINE
+	
+	var path = get_open_filename_ext(filter, name, PREFERENCES.dialog_path, caption);
+	if(path != "") PREFERENCES.dialog_path = filename_dir(path);
+	return path;
+}

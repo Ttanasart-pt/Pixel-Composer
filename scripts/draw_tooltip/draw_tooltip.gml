@@ -163,10 +163,10 @@ function draw_tooltip_sprite(spr) { #region
 	var sh = sprite_get_height(spr);
 	var sn = sprite_get_number(spr);
 	
-	var ss = max(1, min(ui(64) / sw, ui(64) / sh));
+	var ss = min(max(1, min(ui(64) / sw, ui(64) / sh)), ui(320) / sw, ui(320) / sh);
 	
 	var ww = sw * ss * sn + 2 * (sn - 1);
-	var hh = sh * ss;
+	var hh = sh * ss + ui(16);
 	
 	var mx = min(mouse_mx + ui(16), WIN_W - (ww + ui(16)));
 	var my = min(mouse_my + ui(16), WIN_H - (hh + ui(16)));
@@ -179,6 +179,9 @@ function draw_tooltip_sprite(spr) { #region
 	
 	for( var i = 0; i < sn; i++ )
 		draw_sprite_ext(spr, i, sx + i * (sw * ss + 2), sy, ss, ss, 0, c_white, 1);
+	
+	draw_set_text(f_p3, fa_center, fa_bottom, COLORS._main_text_sub);
+	draw_text(mx + (ww + ui(16)) / 2, my + hh + ui(16 - 4), $"{sw} x {sh} px");
 } #endregion
 
 function draw_tooltip_atlas(atlas) { #region

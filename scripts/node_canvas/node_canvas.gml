@@ -156,6 +156,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	temp_surface = array_create(1);
 	
+	live_edit   = false;
+	live_target = "";
+	
 	input_display_list = [ 
 		["Output",	  false], 0, frame_renderer, 12, 13, 
 		["Brush",	   true], 6, 15, 17, 16, 
@@ -966,6 +969,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			} else
 				outputs[| 0].setValue(output_surface);
 		}
+		
+		if(live_edit) {
+			if(!is_struct(PANEL_FILE)) return;
+			
+			var _fileO = PANEL_FILE.file_focus;
+			if(_fileO == noone) return;
+			
+			var path = _fileO.path;
+			if(path == "") return;
+			
+			surface_save(getCanvasSurface(0), path);
+			_fileO.refreshThumbnail();
+		}
+		
 	} #endregion
 	
 	static doSerialize = function(_map) { #region
@@ -1009,4 +1026,38 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static onCleanUp = function() { #region
 		surface_array_free(canvas_surface);
 	} #endregion
+	
+	///////////////////////////////////
+	
+	on_drop_file = function(path) { #region
+		loadImagePath(path);
+		return true;
+	} #endregion
+	
+	static loadImagePath = function(path) { #region
+		if(!file_exists_empty(path)) return noone;
+		
+		var _spr = sprite_add(path, 0, 0, 0, 0, 0);
+		if(_spr == -1) return noone;
+		
+		var _sw = sprite_get_width(_spr);
+		var _sh = sprite_get_height(_spr);
+		
+		var _s  = surface_create(_sw, _sh);
+		surface_set_shader(_s, noone)
+			draw_sprite(_spr, 0, 0, 0);
+		surface_reset_shader();
+		
+		sprite_delete(_spr);
+		
+		attributes.dimension = [_sw, _sh];
+		inputs[|  0].setValue([_sw, _sh]);
+		setCanvasSurface(_s);
+		surface_store_buffer();
+		
+		live_edit   = true;
+		live_target = path;
+	
+		return self;
+	} #endregion 
 }

@@ -1,5 +1,5 @@
 #region data
-	globalvar PANEL_MAIN, PANEL_MENU, PANEL_PREVIEW, PANEL_INSPECTOR, PANEL_GRAPH, PANEL_ANIMATION, PANEL_COLLECTION;
+	globalvar PANEL_MAIN, PANEL_MENU, PANEL_PREVIEW, PANEL_INSPECTOR, PANEL_GRAPH, PANEL_ANIMATION, PANEL_COLLECTION, PANEL_FILE;
 	globalvar FULL_SCREEN_PANEL, FULL_SCREEN_CONTENT, FULL_SCREEN_PARENT;
 	
 	PANEL_MAIN = 0;
@@ -43,6 +43,8 @@
 		PANEL_PREVIEW    = {};
 		PANEL_GRAPH      = {};
 		PANEL_COLLECTION = {};
+		
+		PANEL_FILE       = 0;
 	} #endregion
 	
 	function getPanelFromName(name, create = false) { #region
@@ -51,7 +53,7 @@
 			case "Panel_Inspector"  : var p = (create || findPanel(name))? new Panel_Inspector() : PANEL_INSPECTOR; PANEL_INSPECTOR = p; return p;
 			case "Panel_Animation"  : var p = (create || findPanel(name))? new Panel_Animation() : PANEL_ANIMATION; PANEL_ANIMATION = p; return p;
 			case "Panel_Preview"    : var p = (create || findPanel(name))? new Panel_Preview()	 : PANEL_PREVIEW;	PANEL_PREVIEW	= p; return p;
-			case "Panel_Graph"      : var p = (create || findPanel(name))? new Panel_Graph()	 : PANEL_GRAPH; 	PANEL_GRAPH 	= p; return p;
+			case "Panel_Graph"      : var p = (create || findPanel(name))? new Panel_Graph()	 : PANEL_GRAPH;		PANEL_GRAPH		= p; return p;
 			
 			case "Panel_Collection"		: return new Panel_Collection();
 			case "Panel_Workspace"		: return new Panel_Workspace();
@@ -61,7 +63,7 @@
 			case "Panel_Nodes"			: return new Panel_Nodes();
 			case "Panel_Globalvar"		: return new Panel_Globalvar();
 			case "Panel_Node_Align"		: return new Panel_Node_Align();
-			case "Panel_File_Explorer"	: return new Panel_File_Explorer();
+			case "Panel_File_Explorer"	: var p = (create || findPanel(name))? new Panel_File_Explorer() : PANEL_FILE; 	PANEL_FILE 	= p; return p;
 			
 			case "Panel_Color"		: return new Panel_Color();
 			case "Panel_Palette"	: return new Panel_Palette();

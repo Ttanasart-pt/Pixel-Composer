@@ -3,7 +3,7 @@ event_inherited();
 
 #region data
 	destroy_on_click_out = true;
-	dialog_w = ui(290);
+	dialog_w = ui(370);
 	dialog_h = ui(180);
 	
 	paths	= "";
@@ -32,5 +32,6 @@ event_inherited();
 		ALL_NODES[? "Node_Image"],
 		ALL_NODES[? "Node_Image_Sequence"],
 		ALL_NODES[? "Node_Image_Animated"],
+		ALL_NODES[? "Node_Canvas"],
 	];
 #endregion

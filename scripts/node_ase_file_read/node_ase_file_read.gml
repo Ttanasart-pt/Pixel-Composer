@@ -1,7 +1,7 @@
 function Node_create_ASE_File_Read(_x, _y, _group = noone) { #region
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename("Aseprite file (*.aseprite, *.ase)|*.aseprite;*.ase", "");
+		path = get_open_filename_pxc("Aseprite file (*.aseprite, *.ase)|*.aseprite;*.ase", "");
 		key_release();
 		if(path == "") return noone;
 	}

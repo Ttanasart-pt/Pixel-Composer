@@ -2,6 +2,7 @@
 	function __fnInit_Preview() {
 		__registerFunction("preview_focus_content",				panel_preview_focus_content);
 		__registerFunction("preview_save_current_frame",		panel_preview_save_current_frame);
+		__registerFunction("preview_saveCurrentFrameToFocus",	panel_preview_saveCurrentFrameToFocus);
 		__registerFunction("preview_save_all_current_frame",	panel_preview_save_all_current_frame);
 		__registerFunction("preview_preview_window",			panel_preview_preview_window);
 		__registerFunction("preview_toggle_grid",				panel_preview_toggle_grid);
@@ -12,6 +13,7 @@
 	
 	function panel_preview_focus_content()				{ CALL("preview_focus_content");			PANEL_PREVIEW.fullView();												}
 	function panel_preview_save_current_frame()			{ CALL("preview_save_current_frame");		PANEL_PREVIEW.saveCurrentFrame();										}
+	function panel_preview_saveCurrentFrameToFocus()	{ CALL("preview_saveCurrentFrameToFocus");	PANEL_PREVIEW.saveCurrentFrameToFocus();								}
 	function panel_preview_save_all_current_frame()		{ CALL("preview_save_all_current_frame");	PANEL_PREVIEW.saveAllCurrentFrames();									}
 	function panel_preview_preview_window()				{ CALL("preview_preview_window");			PANEL_PREVIEW.create_preview_window(PANEL_PREVIEW.getNodePreview());	}
 	function panel_preview_toggle_grid()				{ CALL("preview_toggle_grid");				PROJECT.previewGrid.show = !PROJECT.previewGrid.show;					}
@@ -212,7 +214,8 @@ function Panel_Preview() : PanelContent() constructor {
 	#region ++++ hotkey ++++
 		addHotkey("Preview", "Focus content",			"F", MOD_KEY.none,	panel_preview_focus_content);
 		addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	panel_preview_save_current_frame);
-		addHotkey("Preview", "Save all current frame",	-1, MOD_KEY.none,	panel_preview_save_all_current_frame);
+		addHotkey("Preview", "Save to focused file",	"",  MOD_KEY.none,	panel_preview_saveCurrentFrameToFocus);
+		addHotkey("Preview", "Save all current frame",	"",  MOD_KEY.none,	panel_preview_save_all_current_frame);
 		addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	panel_preview_preview_window);
 		addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	panel_preview_toggle_grid);
 	
@@ -302,7 +305,8 @@ function Panel_Preview() : PanelContent() constructor {
 			],
 		];
 		
-		tooltip_center   = new tooltipHotkey(__txtx("panel_preview_center_canvas", "Center canvas"), "Preview", "Focus content");
+		tooltip_center = new tooltipHotkey(__txtx("panel_preview_center_canvas", "Center canvas"), "Preview", "Focus content");
+		tooltip_export = new tooltipHotkey(__txtx("panel_preview_export_canvas", "Export canvas"), "Preview", "Save current frame");
 		
 		actions = [
 			[ 
@@ -313,7 +317,7 @@ function Panel_Preview() : PanelContent() constructor {
 			],
 			[ 
 				THEME.icon_preview_export,
-				__txtx("panel_preview_export_canvas", "Export canvas"), 
+				tooltip_export, 
 				function() { saveCurrentFrame(); },
 				function() { return 0; },
 			],
@@ -1782,12 +1786,31 @@ function Panel_Preview() : PanelContent() constructor {
 		clipboard_set_bitmap(buffer_get_address(buff), surface_get_width_safe(prevS), surface_get_height_safe(prevS));
 	} #endregion
 	
+	function saveCurrentFrameToFocus() { #region
+		var prevS = getNodePreviewSurface();
+		var _node = getNodePreview();
+		
+		if(!is_surface(prevS))     return;
+		if(!is_struct(PANEL_FILE)) return;
+		
+		var _fileO = PANEL_FILE.file_focus;
+		if(_fileO == noone) return;
+		
+		var path = _fileO.path;
+		if(path == "") return;
+		
+		if(filename_ext(path) != ".png") path += ".png";
+		
+		surface_save_safe(prevS, path);
+		_fileO.refreshThumbnail();
+	} #endregion
+	
 	function saveCurrentFrame() { #region
 		var prevS = getNodePreviewSurface();
 		var _node = getNodePreview();
 		if(!is_surface(prevS)) return;
 		
-		var path = get_save_filename("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name); 
+		var path = get_save_filename_pxc("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name, "Save surface as"); 
 		key_release();
 		if(path == "") return;
 		if(filename_ext(path) != ".png") path += ".png";
@@ -1796,7 +1819,7 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function saveAllCurrentFrames() { #region
-		var path = get_save_filename("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name); 
+		var path = get_save_filename_pxc("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name, "Save surfaces as"); 
 		key_release();
 		if(path == "") return;
 		

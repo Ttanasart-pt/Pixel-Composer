@@ -63,3 +63,15 @@ function path_is_image(path) {
 	}
 	return false;
 }
+
+function path_is_project(path) {
+	if(!file_exists_empty(path)) return false;	
+	
+	var ext = filename_ext(path);
+	switch(ext) {
+		case ".pxc":
+		case ".pxcc":
+			return true;
+	}
+	return false;
+}

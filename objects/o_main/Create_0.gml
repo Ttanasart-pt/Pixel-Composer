@@ -132,9 +132,12 @@
 	
 	drop_path = [];
 	
-	function load_file_path(path) {
+	function load_file_path(path, _x = undefined, _y = undefined) {
 		if(!is_array(path)) path = [ path ];
 		if(array_length(path) == 0) return; 
+		
+		_x = _x == undefined? (PANEL_GRAPH.w / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_x : _x;
+		_y = _y == undefined? (PANEL_GRAPH.h / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_y : _y;
 		
 		var type = "others";
 		
@@ -169,36 +172,45 @@
 				
 				switch(ext) {
 					case ".txt"  :
-						node = Node_create_Text_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						node = Node_create_Text_File_Read_path(_x, _y, p);
 						break;
+						
 					case ".csv"  :
-						node = Node_create_CSV_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						node = Node_create_CSV_File_Read_path(_x, _y, p);
 						break;
+						
 					case ".json"  :
-						node = Node_create_Json_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						node = Node_create_Json_File_Read_path(_x, _y, p);
 						break;
+						
 					case ".ase"  :
 					case ".aseprite"  :
-						node = Node_create_ASE_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						node = Node_create_ASE_File_Read_path(_x, _y, p);
 						break;
+						
 					case ".png"	 :
 					case ".jpg"	 :
 					case ".jpeg" :
-						node = Node_create_Image_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						node = Node_create_Image_path(_x, _y, p);
 						break;
+						
 					case ".gif" :
-						node = Node_create_Image_gif_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						node = Node_create_Image_gif_path(_x, _y, p);
 						break;
+						
 					case ".obj" :
-						node = Node_create_3D_Obj_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						node = Node_create_3D_Obj_path(_x, _y, p);
 						break;
+						
 					case ".wav" :
-						node = Node_create_WAV_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						node = Node_create_WAV_File_Read_path(_x, _y, p);
 						break;
+						
 					case ".pxc" :
 					case ".cpxc" :
 						LOAD_PATH(p);
 						break;
+						
 					case ".pxcc" :
 						APPEND(p);
 						break;

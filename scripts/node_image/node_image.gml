@@ -1,7 +1,7 @@
 function Node_create_Image(_x, _y, _group = noone) { #region
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename("image|*.png;*.jpg", "");
+		path = get_open_filename_pxc("image|*.png;*.jpg", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -155,7 +155,6 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_splice.inputs[| 1].setValue([ ww, hh ]);
 			_splice.inputs[| 2].setValue(amo);
 			_splice.inputs[| 3].setValue([ amo, 1 ]);
-			_splice.inspector1Update();
 			
 		#endregion
 	} #endregion

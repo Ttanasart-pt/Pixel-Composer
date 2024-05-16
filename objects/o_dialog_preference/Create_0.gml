@@ -333,7 +333,7 @@ event_inherited();
 		__txtx("pref_ui_font", "Overwrite UI font") + "*",
 		"font_overwrite",
 		new textBox(TEXTBOX_INPUT.text, function(txt) { PREFERENCES.font_overwrite = txt; PREF_SAVE(); })
-			.setSideButton(button(function() { PREFERENCES.font_overwrite = get_open_filename("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
+			.setSideButton(button(function() { PREFERENCES.font_overwrite = get_open_filename_pxc("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
 			.setFont(f_p2)
 			.setEmpty()
 	));

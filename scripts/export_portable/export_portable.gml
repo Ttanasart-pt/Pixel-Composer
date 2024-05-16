@@ -9,7 +9,7 @@ function __pack_file_strip(zip, path) {
 function exportPortable(project = PROJECT) {
 	if(DEMO) return false;
 	
-	var path = get_save_filename("Pixel Composer portable project (.zip)|*.zip", ""); 
+	var path = get_save_filename_pxc("Pixel Composer portable project (.zip)|*.zip", ""); 
 	key_release();
 	if(path == "") return false;
 	

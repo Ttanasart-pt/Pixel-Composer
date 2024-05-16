@@ -62,7 +62,7 @@
 			attributes = {
 				strict            : false,
 				surface_dimension : [ 32, 32 ],
-				palette           : [ cola(c_black), cola(c_white) ],
+				palette           : array_clone(PREFERENCES.attr_palette),
 				palette_fix       : false,
 			}
 			
@@ -114,7 +114,10 @@
 			
 			static setPalette = function(pal = noone) { 
 				if(pal != noone) attributes.palette = pal; 
+				PREFERENCES.attr_palette = array_clone(pal);
+				
 				palettes = paletteToArray(attributes.palette); 
+			
 			} setPalette();
 		#endregion
 		
