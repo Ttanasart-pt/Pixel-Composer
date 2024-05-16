@@ -25,7 +25,7 @@ function get_open_filenames_compat(ext, sel) { #region
 function file_get_modify_s(path) { #region
 	INLINE
 	
-	if(!file_exists(path)) return 0;
+	if(!file_exists_empty(path)) return 0;
 	
 	var _y = file_datetime_modified_year(path);
 	var _m = file_datetime_modified_month(path);

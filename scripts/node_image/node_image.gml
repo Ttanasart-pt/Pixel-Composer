@@ -38,11 +38,10 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	attribute_surface_depth();
 	
-	first_update = false;
-	spr          = [];
-	path_current = [];
-	edit_time    = 0;
+	spr       = noone;
+	edit_time = 0;
 	
+	attributes.check_splice = true;
 	attributes.file_checker = true;
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
@@ -59,7 +58,8 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
 	
 	function createSprite(path) { #region
-		if(path == -1) return noone;
+		if(!file_exists(path)) 
+			return noone;
 		
 		var ext   = string_lower(filename_ext(path));
 		var _name = filename_name_only(path);
@@ -70,35 +70,26 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case ".jpeg":
 			case ".gif":
 				setDisplayName(_name);
-				var spr = sprite_add(path, 1, false, false, 0, 0);
+				var _spr = sprite_add(path, 1, false, false, 0, 0);
 				
-				if(spr == -1) {
+				if(_spr == -1) {
 					noti_warning($"Image node: File not a valid image.");
 					break;
 				}
 				
-				edit_time = max(edit_time, file_get_modify_s(path));
-				return spr;
+				edit_time = file_get_modify_s(path);
+				return _spr;
 		}
 		
 		return noone;
 	} #endregion
 	
-	function updatePaths(path = path_current) { #region
-		if(array_empty(path_current)) first_update = true;
+	function updatePaths(path) { #region
 		
-		for( var i = 0, n = array_length(spr); i < n; i++ )
-			sprite_delete(spr[i]);
-		spr = [];
+		if(sprite_exists(spr))
+			sprite_delete(spr);
 		
-		if(!is_array(path)) path = [ path ];
-		
-		for( var i = 0, n = array_length(path); i < n; i++ ) {
-			path_current[i] = path_get(path[i]);
-			
-			var s = createSprite(path[i]);
-			if(s) array_push(spr, s);
-		}
+		spr = createSprite(path);
 	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");
@@ -110,54 +101,42 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
 	
 	static step = function() { #region
-		if(attributes.file_checker)
-		for( var i = 0, n = array_length(path_current); i < n; i++ ) {
-			if(file_get_modify_s(path_current[i]) > edit_time) {
-				updatePaths();
-				triggerRender();
-				break;
-			}
+		var path = path_get(getInputData(0));
+		
+		if(!file_exists_empty(path)) return;
+		
+		if(attributes.file_checker && file_get_modify_s(path) > edit_time) {
+			updatePaths(path);
+			triggerRender();
 		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
+		
 		var path = path_get(getInputData(0));
 		var pad  = getInputData(1);
 		
 		outputs[| 1].setValue(path);
-		if(!array_equals(path_current, path))
-			updatePaths(path);
+		updatePaths(path);
 		
-		if(array_empty(spr)) return;
+		if(!sprite_exists(spr)) return;
 		
-		var _arr     = array_length(spr) > 1;
 		var _outsurf = outputs[| 0].getValue();
 		
-		if(!is_array(_outsurf)) _outsurf = [ _outsurf ];
+		var ww = sprite_get_width(spr)  + pad[0] + pad[2];
+		var hh = sprite_get_height(spr) + pad[1] + pad[3];
 		
-		for( var i = 0, n = array_length(spr); i < n; i++ ) {
-			var _spr = spr[i];
-			
-			if(!sprite_exists(_spr)) continue;
-			
-			var ww = sprite_get_width(_spr)  + pad[0] + pad[2];
-			var hh = sprite_get_height(_spr) + pad[1] + pad[3];
-			
-			var _surf = array_safe_get_fast(_outsurf, i);
-			    _surf = surface_verify(_surf, ww, hh, attrDepth());
-			
-			surface_set_shader(_surf, noone);
-				draw_sprite(_spr, 0, pad[2], pad[1]);
-			surface_reset_shader();
-			
-			_outsurf[i] = _surf;
-		}
+	    _outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
 		
-		outputs[| 0].setValue(_arr? _outsurf : _outsurf[0]);
+		surface_set_shader(_outsurf, noone);
+			draw_sprite(spr, 0, pad[2], pad[1]);
+		surface_reset_shader();
+		
+		outputs[| 0].setValue(_outsurf);
 		
 		#region splice
-			if(!first_update) return;
-			first_update = false;
+			if(!attributes.check_splice) return;
+			attributes.check_splice = false;
 		
 			if(LOADING || APPENDING) return;
 			if(string_pos("strip", display_name) == 0) return;
@@ -168,8 +147,8 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 			if(amo == 0) return;
 			
-			var ww = sprite_get_width(spr[0]) / amo;
-			var hh = sprite_get_height(spr[0]);
+			var ww = sprite_get_width(spr) / amo;
+			var hh = sprite_get_height(spr);
 					
 			var _splice = nodeBuild("Node_Image_Sheet", x + w + 64, y);
 			_splice.inputs[| 0].setFrom(outputs[| 0], false);

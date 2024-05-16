@@ -185,14 +185,13 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	contentPane = new scrollPane(w - padding - padding - cntPad * 2, h - padding - top_bar - cntPad * 2, function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		if(frame_dragging) {
-			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, frame_drag_mx, frame_drag_my, _m[0], _m[1], COLORS._main_accent);
-			file_selectings = [];
-		}
+		if(frame_dragging) file_selectings = [];
 		
 		file_hovering   = noone;
 		var _h = drawDir(rootFile, 0, _y, contentPane.surface_w, _m);
 		
+		if(frame_dragging) draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, frame_drag_mx, frame_drag_my, _m[0], _m[1], COLORS._main_accent);
+			
 		if(mouse_press(mb_left, pFOCUS)) {
 			if(file_hovering == noone) {
 				file_selectings = [];
@@ -221,11 +220,10 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			}
 			
 			if(mouse_release(mb_left)) {
-				file_dragging = false;
-				
-				if(path_dragging != -1)
+				if(path_dragging != -1 && !pHOVER)
 					o_main.load_file_path(path_dragging);
-					
+				
+				file_dragging = false;	
 				path_dragging = -1;
 			}
 		}
@@ -260,6 +258,13 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			var _ind = 0;
 			var _ppw = _pw;
 			
+			if(point_in_rectangle(_m[0], _m[1], _px, _py, _px + _pw, _py + _ph)) {
+				if(buttonInstant(THEME.button_hide, _px + _ppw - _ph, _py, _ph, _ph, _m, pFOCUS, pHOVER, "", THEME.path_open_20) == 2) {
+					setRoot(_dir.path);
+				}
+				_ppw -= _ph + ui(4);
+			}
+			
 			if(contentPane.hover && point_in_rectangle(_m[0], _m[1], _px, _py, _px + _ppw, _py + _ph)) {
 				file_hovering = _dir;
 				_ind = 3;
@@ -271,7 +276,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				}
 			}
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, _ind, _px, _py, _pw, _ph);
+			draw_sprite_stretched(THEME.ui_panel_bg, _ind, _px, _py, _ppw, _ph);
 			
 			var _tx = _px + ui(2);
 			var _ty = _py + ui(2);

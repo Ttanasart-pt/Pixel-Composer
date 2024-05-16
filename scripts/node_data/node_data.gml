@@ -659,16 +659,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(cached_manual || (use_cache == CACHE_USE.auto && recoverCache())) {
 			render_cached = true;
 			
-			// if(_updateRender) setRenderStatus(true);
-				
 		} else {
 			render_cached = false;
 			getInputs(frame);
 			
 			LOG_BLOCK_START();
 			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {INAME} <<<<<<<<<<");
-			
-			// if(_updateRender) setRenderStatus(true);
 			
 			var sBase = surface_get_target();	
 			

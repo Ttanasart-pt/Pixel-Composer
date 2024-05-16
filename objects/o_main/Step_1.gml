@@ -154,7 +154,6 @@ _HOVERING_ELEMENT = noone;
 					
 				else if(UPDATE & RENDER_TYPE.partial)
 					Render(true);
-					
 			}
 		}
 	}

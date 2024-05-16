@@ -8,7 +8,7 @@ function __path_get(path) {
 	if(file_exists_empty(local_path))
 		return local_path;
 	
-	return -1;
+	return "";
 }
 
 function path_get(path) {
