@@ -14,42 +14,15 @@ function regex_node(val, accept = false) constructor {
 }
 
 function regex_tree(regx) constructor {
-	static delim = ["*", "(", ")", "|", "+", "?", "[", "]", "{", "}", "^", "-"];
-	
-	self.regx = regx;
-	nodes = [];
-	
-	var prev = noone;
-	var delm = "";
-	var len  = string_length(regx);
-	
-	for( var i = 1; i <= len; i++ )  {
-		var _chr = string_char_at(regx, i);
-		
-		if(array_exists(_chr, delim)) {
-			if(prev != noone)
-			switch(_chr) {
-				case "*" : prev.setNext(_chr, prev); break;
-			}
-		} else {
-			var node = new regex_node(_chr, i == len);
-			if(prev != noone) 
-				prev.setNext(_chr, node);
-			prev = node;
-			array_push(nodes, node);
-		}
-	}
+	regs = string_splice(regx, ";", false, false);
 	
 	static isMatch = function(str) {
-		if(array_length(nodes) == 0) return true;
-		var pntr	= nodes[0];
-		var len		= string_length(str);
-		
-		for( var i = 1; i <= len; i++ ) {
-			var _chr = string_char_at(str, i);
-			pntr = pntr.consume(_chr);
+		for (var i = 0, n = array_length(regs); i < n; i++) {
+			var rgx = regs[i];
+			if(RegexMatch(str, rgx))
+				return true;
 		}
 		
-		return pntr.accept;
+		return false;
 	}
 }

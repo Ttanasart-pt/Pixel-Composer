@@ -1,6 +1,7 @@
 function __path_get(path) {
 	INLINE
 	
+	if(directory_exists(path))  return path;
 	if(file_exists_empty(path)) return path;
 		
 	var local_path = $"{filename_dir(PROJECT.path)}/{path}";

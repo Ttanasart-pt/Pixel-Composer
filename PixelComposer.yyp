@@ -1190,6 +1190,7 @@
     {"id":{"name":"node_image_sequence","path":"scripts/node_image_sequence/node_image_sequence.yy",},},
     {"id":{"name":"node_image_sheet","path":"scripts/node_image_sheet/node_image_sheet.yy",},},
     {"id":{"name":"node_image","path":"scripts/node_image/node_image.yy",},},
+    {"id":{"name":"node_directory_search","path":"scripts/node_directory_search/node_directory_search.yy",},},
     {"id":{"name":"node_interpret_number","path":"scripts/node_interpret_number/node_interpret_number.yy",},},
     {"id":{"name":"node_invert","path":"scripts/node_invert/node_invert.yy",},},
     {"id":{"name":"node_isosurf","path":"scripts/node_isosurf/node_isosurf.yy",},},

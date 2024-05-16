@@ -768,6 +768,7 @@
     {"name":"node_image_grid","order":3,"path":"scripts/node_image_grid/node_image_grid.yy",},
     {"name":"node_image_sequence","order":1,"path":"scripts/node_image_sequence/node_image_sequence.yy",},
     {"name":"node_image_sheet","order":4,"path":"scripts/node_image_sheet/node_image_sheet.yy",},
+    {"name":"node_directory_search","order":23,"path":"scripts/node_directory_search/node_directory_search.yy",},
     {"name":"node_interpret_number","order":3,"path":"scripts/node_interpret_number/node_interpret_number.yy",},
     {"name":"node_invert","order":6,"path":"scripts/node_invert/node_invert.yy",},
     {"name":"node_isosurf","order":3,"path":"scripts/node_isosurf/node_isosurf.yy",},

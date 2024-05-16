@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_directory_search",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_directory_search",
+  "parent":{
+    "name":"io",
+    "path":"folders/nodes/data/io.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

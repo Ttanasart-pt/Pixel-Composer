@@ -19,7 +19,7 @@ if(winMan_isMinimized()) exit;
 				case VALUE_TYPE.text    :
 				case VALUE_TYPE.struct  :
 				case VALUE_TYPE.path    :
-					draw_tooltip_text(string_real(content));
+					draw_tooltip_text(content);
 					break;
 					
 				case VALUE_TYPE.boolean :
