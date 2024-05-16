@@ -28,7 +28,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	function setColor(colr) { #region
 		palette_selecting = noone;
 		
-		var _to   = array_clone(getInputData(2));
+		var _to = array_clone(getInputData(2));
 		
 		for (var i = palette_select[0]; i <= palette_select[1]; i++)
 			_to[i] = colr;
@@ -115,7 +115,8 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
 				dialog.selector.dropper_active = true;
 				dialog.selector.dropper_close  = true;
-		
+			
+				palette_select = [ i, i ];
 				dialog.selector.onApply = setColor;
 				dialog.onApply = setColor;
 			}

@@ -23,7 +23,7 @@ function TEST_PATH(path) { #region
 
 function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 	for( var i = 0, n = array_length(PROJECTS); i < n; i++ )
-		if(PROJECTS[i].path == path) return;
+		if(PROJECTS[i].path == path) closeProject(PROJECTS[i]);
 	
 	var _PROJECT = PROJECT;
 	PROJECT = new Project();
