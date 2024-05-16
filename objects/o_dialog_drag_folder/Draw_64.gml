@@ -31,7 +31,7 @@ if !ready exit;
 	
 	if(buttonInstant(THEME.button_def, bx, dir_y, ui(100), ui(40), mouse_ui, sFOCUS, sHOVER) == 2) {
 		if(target) {
-			var paths = paths_to_array(dir_paths, dir_recursive, dir_filter);
+			var paths = paths_to_array_ext(dir_paths, dir_filter);
 			target.updatePaths(paths);
 			target.doUpdate();
 		}

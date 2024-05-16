@@ -208,7 +208,8 @@ function Panel_Menu() : PanelContent() constructor {
 			menuItem(__txt("Workspace"),		function() { panelAdd("Panel_Workspace", true) },	 noone, ["", "Workspace Panel"],	function() { return findPanel("Panel_Workspace")    != noone; } ),
 			menuItem(__txt("Animation"),		function() { panelAdd("Panel_Animation", true) },	 noone, ["", "Animation Panel"],	function() { return findPanel("Panel_Animation")    != noone; } ),
 			menuItem(__txt("Notifications"),	function() { panelAdd("Panel_Notification", true) }, noone, ["", "Notification Panel"],	function() { return findPanel("Panel_Notification") != noone; } ),
-			menuItem(__txtx("panel_globalvar", "Global Variables"),	function() { panelAdd("Panel_Globalvar", true) }, noone, noone,		function() { return findPanel("Panel_Globalvar")	!= noone; } ),
+			menuItem(__txt("Global Variables"), function() { panelAdd("Panel_Globalvar", true) },	 noone, noone,						function() { return findPanel("Panel_Globalvar")	!= noone; } ),
+			menuItem(__txt("File Explorer"),	function() { panelAdd("Panel_File_Explorer", true) },noone, noone,						function() { return findPanel("Panel_File_Explorer") != noone; } ),
 			
 			menuItem(__txt("Nodes"), function(_dat) { 
 				return submenuCall(_dat, [

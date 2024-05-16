@@ -34,7 +34,7 @@ if !target exit;
 		key_release();
 		
 		if(path != "") {
-			var paths = paths_to_array(path);
+			var paths = paths_to_array_ext(path, ".png;.jpg");
 			var arr = target.getInputData(0);
 			
 			for( var i = 0, n = array_length(paths); i < n; i++ ) 

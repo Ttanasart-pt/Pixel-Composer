@@ -9,7 +9,7 @@ event_inherited();
 	target			= noone;
 	dir_paths		= "";
 	dir_recursive	= false;
-	dir_filter		= "*";
+	dir_filter		= ".png";
 	
 	cb_recursive = new checkBox(function(val) { dir_recursive = !dir_recursive; });
 	

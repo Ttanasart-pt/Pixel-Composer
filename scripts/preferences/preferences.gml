@@ -135,6 +135,8 @@
 		PREFERENCES.gifski_path			= "%APP%/gifski/";
 		PREFERENCES.ffmpeg_path			= "%APP%/ffmpeg/";
 		
+		PREFERENCES.file_explorer       = "";
+		
 		PREFERENCES.versions			= {};
 	
 	#endregion

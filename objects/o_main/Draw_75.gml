@@ -14,6 +14,7 @@ if(winMan_isMinimized()) exit;
 			if(is_method(content)) content = content();
 				
 			switch(type) {
+				
 				case VALUE_TYPE.float   :
 				case VALUE_TYPE.integer : 
 				case VALUE_TYPE.text    :

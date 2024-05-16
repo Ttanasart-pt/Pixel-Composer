@@ -13,6 +13,15 @@ function Node_create_Directory_Search(_x, _y, _group = noone) { #region
 	return node;
 } #endregion
 
+function Node_create_Directory_path(_x, _y, path) { #region
+	if(!directory_exists(path)) return noone;
+	
+	var node = new Node_Directory_Search(_x, _y, PANEL_GRAPH.getCurrentContext());
+	node.inputs[| 0].setValue(path);
+	node.doUpdate();
+	return node;	
+} #endregion
+
 function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Directory Search";
 	color = COLORS.node_blend_input;
@@ -90,8 +99,7 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			deleteSprite(paths[$ _paths[i]]);
 		paths = {};
 		
-		var _paths = paths_to_array_ext(path, filter);
-		print(array_length(_paths));
+		var _paths = path_dir_get_files(path, filter);
 		
 		for (var i = 0, n = array_length(_paths); i < n; i++) {
 			var _path = _paths[i];
@@ -100,6 +108,8 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			     if(type == 0) refreshSprite(paths[$ _path]);
 			else if(type == 1) refreshText(paths[$ _path]);
 		}
+		
+		setDisplayName(filename_name_only(path));
 	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");

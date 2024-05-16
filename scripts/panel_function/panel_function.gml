@@ -61,6 +61,7 @@
 			case "Panel_Nodes"			: return new Panel_Nodes();
 			case "Panel_Globalvar"		: return new Panel_Globalvar();
 			case "Panel_Node_Align"		: return new Panel_Node_Align();
+			case "Panel_File_Explorer"	: return new Panel_File_Explorer();
 			
 			case "Panel_Color"		: return new Panel_Color();
 			case "Panel_Palette"	: return new Panel_Palette();

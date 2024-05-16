@@ -78,7 +78,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			return true;
 		}
 		
-		var paths = paths_to_array(path);
+		var paths = paths_to_array_ext(path);
 		
 		inputs[| 0].setValue(path);
 		if(updatePaths(paths)) {

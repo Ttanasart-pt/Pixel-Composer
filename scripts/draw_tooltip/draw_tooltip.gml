@@ -156,6 +156,9 @@ function draw_tooltip_surface(surf) { #region
 function draw_tooltip_sprite(spr) { #region
 	if(!sprite_exists(spr)) return;
 	
+	var ox = sprite_get_xoffset(spr);
+	var oy = sprite_get_yoffset(spr);
+	
 	var sw = sprite_get_width(spr);
 	var sh = sprite_get_height(spr);
 	var sn = sprite_get_number(spr);
@@ -171,8 +174,8 @@ function draw_tooltip_sprite(spr) { #region
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + ui(16), hh + ui(16));
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + ui(16), hh + ui(16));
 	
-	var sx = mx + ui(8);
-	var sy = my + ui(8);
+	var sx = mx + ui(8) + ox * ss;
+	var sy = my + ui(8) + oy * ss;
 	
 	for( var i = 0; i < sn; i++ )
 		draw_sprite_ext(spr, i, sx + i * (sw * ss + 2), sy, ss, ss, 0, c_white, 1);
