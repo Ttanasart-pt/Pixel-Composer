@@ -51,7 +51,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 16] = nodeValue("Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, at random, or spread or each image to one output." )
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Order", "Random", "Spread" ]);
 	
-	inputs[| 17] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(99999) );
+	inputs[| 17] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 17].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 18] = nodeValue("Column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
 	

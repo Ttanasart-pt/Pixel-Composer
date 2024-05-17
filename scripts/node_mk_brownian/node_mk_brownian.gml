@@ -21,7 +21,8 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 7] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random());
+	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 9] = nodeValue("Angular speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -45, 45 ])
 		.setDisplay(VALUE_DISPLAY.range);

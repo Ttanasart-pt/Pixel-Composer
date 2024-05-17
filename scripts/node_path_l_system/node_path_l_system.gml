@@ -29,7 +29,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 6] = nodeValue("Starting angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 90)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999));
+	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	setIsDynamicInput(2);
 	

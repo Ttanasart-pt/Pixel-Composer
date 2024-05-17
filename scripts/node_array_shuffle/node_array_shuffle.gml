@@ -6,7 +6,8 @@ function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 0] = nodeValue("Array in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [])
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(10000, 99999))
+	inputs[| 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Shuffled array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);

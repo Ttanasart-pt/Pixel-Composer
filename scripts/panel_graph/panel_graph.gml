@@ -1413,6 +1413,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			value_dragging.drawJunction(graph_s, value_dragging.x, value_dragging.y);
 			if(target) target.drawJunction(graph_s, target.x, target.y);
 			
+			var _inline_ctx = value_dragging.node.inline_context;
+			if(_inline_ctx && !key_mod_press(SHIFT)) {
+				_inline_ctx.add_point = true;
+				_inline_ctx.point_x   = mouse_graph_x;
+				_inline_ctx.point_y   = mouse_graph_y;
+			}
+			
 			if(mouse_release(mb_left)) {																				// CONNECT junction
 				var _connect = [ 0, noone, noone ];
 				
@@ -1443,6 +1450,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					
 					if(value_focus != value_dragging) {
 						var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+						if(value_dragging.node.inline_context && !key_mod_press(SHIFT))
+							ctx = value_dragging.node.inline_context;
+						
 						with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {	
 							node_target_x = other.mouse_grid_x;
 							node_target_y = other.mouse_grid_y;

@@ -16,7 +16,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	inputs[| 4] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random());
+	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 6] = nodeValue("Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	

@@ -311,6 +311,13 @@ function recordAction(_type, _object, _data = -1, _trigger = 0) { #region
 	return act;
 } #endregion
 
+function recordAction_variable_change(object, variable_name, variable_old_value, undo_label = "") {
+	INLINE
+	recordAction(ACTION_TYPE.var_modify, object, undo_label == ""? [ variable_old_value, variable_name ] : [ variable_old_value, variable_name, undo_label ]);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function mergeAction(act) { #region
 	if(ds_stack_empty(UNDO_STACK)) {
 		ds_stack_push(UNDO_STACK, [ act ]);

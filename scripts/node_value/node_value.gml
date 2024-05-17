@@ -881,7 +881,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_DISPLAY.button : #region
 				var _onClick;
 				
-				if(struct_has(display_data, "onClick")) 
+				if(struct_has(display_data, "onClick"))
 					_onClick = method(node, display_data.onClick);
 				else 
 					_onClick = function() { setAnim(true); setValueDirect(true); };
@@ -907,7 +907,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						if(struct_has(display_data, "slide_speed")) editWidget.setSlidable(display_data.slide_speed);
 						if(struct_has(display_data, "unit"))		editWidget.unit			= display_data.unit;
-						if(struct_has(display_data, "side_button")) editWidget.side_button	= display_data.side_button;
+						if(struct_has(display_data, "side_button")) {
+							editWidget.side_button	= display_data.side_button;
+							editWidget.side_button.context = self;
+						}
 						
 						extract_node = "Node_Number";
 						break; #endregion

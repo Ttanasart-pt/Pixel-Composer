@@ -14,6 +14,10 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	input_node_type  = noone;
 	output_node_type = noone;
 	
+	add_point = false;
+	point_x   = 0;
+	point_y   = 0;
+	
 	is_root = true;
 	
 	static topoSortable = function() { #region
@@ -89,6 +93,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			_hash += $"{_node.x},{_node.y},{_node.w},{_node.h}|";
 			_ind++;
 		}
+		if(add_point) _hash += $"{point_x},{point_y}|";
+		
 		if(_hash == "") {
 			destroy();
 			return;
@@ -109,6 +115,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			if(!_node.active) continue;
 			_ind = getNodeBorder(_ind, _vtrx, _node);
 		}
+		
+		if(add_point) array_push(_vtrx, [ point_x, point_y ]);
 		
 		#region create convex shape
 			__temp_minP = _vtrx[0];
@@ -225,13 +233,13 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		var _hov   = false;
 		var _color = getColor();
-		var _sel   = inspecting;
+		var _sel   = inspecting || add_point;
 		inspecting = false;
 		
 		draw_set_color(_color);
 		group_hover_al = lerp_float(group_hover_al, group_hovering, 4);
 		group_hovering = 0;
-		draw_set_alpha(_sel? 0.1 : 0.025 + 0.025 * group_hover_al);
+		draw_set_alpha(_sel? 0.1 : lerp(0.025, 0.05, group_hover_al));
 		
 		draw_primitive_begin(pr_trianglelist);
 			var a = group_vertex[0];
@@ -261,7 +269,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			}
 		draw_primitive_end();
 		
-		draw_set_alpha(0.3);
+		draw_set_alpha(_sel? 1 : lerp(0.4, 0.65, group_hover_al));
 		draw_primitive_begin(pr_linestrip);
 			for( var i = 0, n = array_length(group_vertex); i < n; i++ ) {
 				var a = group_vertex[i];
@@ -282,6 +290,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 		//	draw_circle(_vx, _vy, 1, false);
 		//}
+		
+		add_point = false;
 		
 		return _hov;
 	} #endregion

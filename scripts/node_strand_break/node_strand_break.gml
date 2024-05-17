@@ -9,7 +9,8 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 	inputs[| input_fix_len + 0] = nodeValue("Chance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| input_fix_len + 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999));
+	inputs[| input_fix_len + 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| input_fix_len + 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	array_push(input_display_list, 
 		["Break",	false], input_fix_len + 0, input_fix_len + 1

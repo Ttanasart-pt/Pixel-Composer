@@ -258,6 +258,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			}
 			
 			if(mouse_release(mb_left)) {
+				var _file_focus = file_focus;
 				file_focus = noone;
 				
 				if(path_dragging != -1 && !array_empty(path_dragging) && !pHOVER) {
@@ -282,6 +283,9 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					if(!_dropped)
 						o_main.load_file_path(path_dragging);
 				}
+				
+				if(_file_focus != file_focus)
+					recordAction_variable_change(self, "file_focus", _file_focus);
 				
 				file_dragging = false;	
 				path_dragging = -1;

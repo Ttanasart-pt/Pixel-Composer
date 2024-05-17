@@ -1195,27 +1195,6 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 		
 		preview_x_max = max(preview_x_max - ui(100), 0);
-		
-		#region ++++ sequence control ++++
-			//var by = h - toolbar_height - prev_size - ui(56);
-			//var bx = ui(10);
-			
-			//var b = buttonInstant(THEME.button_hide, bx, by, ui(40), ui(40), [mx, my], pFOCUS, pHOVER);
-			
-			//if(_node.preview_speed == 0) {
-			//	if(b) {
-			//		draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 1);
-			//		if(b == 2) _node.preview_speed = preview_rate / game_get_speed(gamespeed_fps);
-			//	}
-			//	draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 0.5);
-			//} else {
-			//	if(b) {
-			//		draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, 1);
-			//		if(b == 2) _node.preview_speed = 0;
-			//	}
-			//	draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, .75);
-			//}
-		#endregion
 	} #endregion
 	
 	function drawNodeTools(active, _node) { #region
@@ -1240,7 +1219,9 @@ function Panel_Preview() : PanelContent() constructor {
 			overlayHover &= active && isHover;
 			overlayHover &= point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
 			overlayHover &= !key_mod_press(CTRL);
-		var params = { w, h, toolbar_height };
+			
+		var params     = { w, h, toolbar_height };
+		var mouse_free = false;
 		
 		if(_node.is_3D)	{
 			if(key_mod_press(CTRL) || d3_tool_snap) {
@@ -1248,7 +1229,7 @@ function Panel_Preview() : PanelContent() constructor {
 				_sny = d3_tool_snap_rotation;
 			}
 			
-			_node.drawOverlay3D(overlayHover, d3_scene, _mx, _my, _snx, _sny, params);
+			mouse_free = _node.drawOverlay3D(overlayHover, d3_scene, _mx, _my, _snx, _sny, params);
 		} else {
 			if(key_mod_press(CTRL)) {
 				_snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
@@ -1258,7 +1239,7 @@ function Panel_Preview() : PanelContent() constructor {
 				_sny = PROJECT.previewGrid.size[1];
 			}
 			
-			_node.drawOverlay(isHover, overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
+			mouse_free = _node.drawOverlay(isHover, overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
 		}
 		
 		#region node overlay

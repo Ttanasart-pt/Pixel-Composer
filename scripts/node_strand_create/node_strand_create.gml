@@ -34,7 +34,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 9] = nodeValue("Structure", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2, "The ability to keep its original shape.")
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 10] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(10000, 99999));
+	inputs[| 10] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 10].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 11] = nodeValue("Curl frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	

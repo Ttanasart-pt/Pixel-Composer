@@ -548,10 +548,11 @@ function Panel_Inspector() : PanelContent() constructor {
 				
 				var _param = new widgetParam(wx0, yy, ww, hg, val, {}, _m, x + contentPane.x, y + contentPane.y);
 				    _param.s = hg;
-				edt[2].drawParam(_param);
+				var _wh = edt[2].drawParam(_param);
+				var _hg = max(hg, _wh);
 				
-				yy += hg + ui(8);
-				hh += hg + ui(8);
+				yy += _hg + ui(8);
+				hh += _hg + ui(8);
 			}
 			return hh;
 		} #endregion

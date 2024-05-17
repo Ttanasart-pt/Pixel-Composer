@@ -17,6 +17,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	pressed = false;
 	
 	toggled = false;
+	context = noone;
 	
 	static setLua = function(_lua_thread, _lua_key, _lua_func) { #region
 		lua_thread = _lua_thread;

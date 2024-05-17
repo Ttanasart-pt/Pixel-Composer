@@ -193,9 +193,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.node_param_width = PREFERENCES.node_param_width;
 		attributes.node_width  = 0;
 		attributes.node_height = 0;
+		attributes.annotation  = "";
 		
 		attributeEditors = [
 			"Display",
+			["Annotation",   function() { return attributes.annotation; },       new textArea(TEXTBOX_INPUT.text,  function(val) { attributes.annotation = val; }) ],
 			["Params Width", function() { return attributes.node_param_width; }, new textBox(TEXTBOX_INPUT.number, function(val) { attributes.node_param_width = val; refreshNodeDisplay(); }) ],
 			
 			"Node update",
@@ -1555,6 +1557,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		draw_name = false;
 		if(_s >= 0.75) drawNodeName(xx, yy, _s);
+		
+		if(attributes.annotation != "") {
+			draw_set_text(f_sdf_medium, fa_left, fa_bottom, COLORS._main_text_sub);
+			var _ts = _s * 0.5;
+			BLEND_ADD
+			draw_text_ext_transformed(xx, yy - 8  * _s, attributes.annotation, -1, (w + 8) * _s / _ts, _ts, _ts, 0);
+			BLEND_NORMAL
+		}
 		
 		if(active_draw_index > -1) {
 			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, round(w * _s), round(h * _s), active_draw_index > 1? COLORS.node_border_file_drop : COLORS._main_accent, 1);

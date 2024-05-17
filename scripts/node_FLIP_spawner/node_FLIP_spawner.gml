@@ -31,7 +31,8 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 8] = nodeValue("Spawn Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2 )	
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	inputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999) );
+	inputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 9].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 10] = nodeValue("Spawn Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 45, 135, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_random);

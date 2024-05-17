@@ -9,7 +9,8 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 1] = nodeValue("Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(1000000, 9999999) );
+	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 3] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Graph" ])
