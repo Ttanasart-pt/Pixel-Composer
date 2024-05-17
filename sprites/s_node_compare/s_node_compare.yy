@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"bool",
-    "path":"folders/nodes/data/value/bool.yy",
+    "path":"folders/nodes/icons/value/bool.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

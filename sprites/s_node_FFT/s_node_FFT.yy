@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"number",
-    "path":"folders/nodes/data/value/number.yy",
+    "path":"folders/nodes/icons/value/number.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

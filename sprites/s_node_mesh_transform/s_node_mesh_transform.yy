@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"mesh",
-    "path":"folders/nodes/data/value/mesh.yy",
+    "path":"folders/nodes/icons/value/mesh.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

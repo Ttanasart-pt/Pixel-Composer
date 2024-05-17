@@ -830,6 +830,7 @@ function __initNodes() {
 		
 		ds_list_add(values, "Arrays");
 		addNodeObject(values, "Array",				s_node_array,			"Node_Array",					[1, Node_Array]);
+		addNodeObject(values, "Array Split",		s_node_array_split,		"Node_Array_Split",				[1, Node_Array_Split]);
 		addNodeObject(values, "Array Range",		s_node_array_range,		"Node_Array_Range",				[1, Node_Array_Range],, "Create array of numbers by setting start, end and step length.");
 		addNodeObject(values, "Array Add",			s_node_array_add,		"Node_Array_Add",				[1, Node_Array_Add], ["add array"]);
 		addNodeObject(values, "Array Length",		s_node_array_length,	"Node_Array_Length",			[1, Node_Array_Length]);

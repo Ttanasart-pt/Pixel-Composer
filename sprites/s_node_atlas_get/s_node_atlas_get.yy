@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"atlas",
-    "path":"folders/nodes/data/value/atlas.yy",
+    "path":"folders/nodes/icons/value/atlas.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
