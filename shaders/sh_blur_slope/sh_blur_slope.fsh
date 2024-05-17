@@ -26,6 +26,30 @@ vec2 txMap;
 
 	float sinc ( float x ) { return x == 0.? 1. : sin(x * PI) / (x * PI); }
 
+	vec4 texture2D_bilinear( sampler2D texture, vec2 uv ) {
+		uv = uv * sampleDimension - .5;
+		vec2 iuv = floor( uv );
+		vec2 fuv = fract( uv );
+	
+		vec4 mixed = mix(
+			mix(
+				texture2D( texture, (iuv + vec2(0., 0.)) / sampleDimension ),
+				texture2D( texture, (iuv + vec2(1., 0.)) / sampleDimension ),
+				fuv.x
+			), 
+			mix(
+				texture2D( texture, (iuv + vec2(0., 1.)) / sampleDimension ),
+				texture2D( texture, (iuv + vec2(1., 1.)) / sampleDimension ),
+				fuv.x
+			), 
+			fuv.y
+		);
+	
+		mixed.rgb /= mixed.a;
+	
+		return mixed;
+	}
+
 	vec4 texture2D_rsin( sampler2D texture, vec2 uv ) {
 	    vec2 tx = 1.0 / sampleDimension;
 	    vec2 p  = uv * sampleDimension - vec2(0.5);
@@ -39,7 +63,7 @@ vec2 txMap;
 			if(a > 1.) continue;
 	        float w = sinc(a * PI * tx.x) * sinc(a * PI * tx.y);
 	        vec2 offset = vec2(float(x), float(y)) * tx;
-	        vec4 sample = texture2D(texture, (p + offset + vec2(0.5)) / sampleDimension);
+	        vec4 sample = texture2D_bilinear(texture, (p + offset + vec2(0.5)) / sampleDimension);
 	        sum += w * sample;
 	        weights += w;
 	    }
@@ -53,14 +77,16 @@ vec2 txMap;
 		vec2 fuv = fract( uv );
 		uv = iuv + fuv * fuv * (3.0 - 2.0 * fuv);
 		uv = (uv - 0.5) / sampleDimension;
-		return texture2D( texture, uv );
+		return texture2D_bilinear( texture, uv );
 	}
 
 	vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
-		if(interpolation == 2)		return texture2D_bicubic( texture, uv );
-		else if(interpolation == 3)	return texture2D_rsin( texture, uv );
+		     if(interpolation == 1)	return texture2D_bilinear( texture, uv );
+		else if(interpolation == 2)	return texture2D_bicubic(  texture, uv );
+		else if(interpolation == 3)	return texture2D_rsin(     texture, uv );
 		return texture2D( texture, uv );
 	}
+
 #endregion 
 
 vec4 sampleTexture(sampler2D texture, vec2 pos) { #region

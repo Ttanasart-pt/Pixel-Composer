@@ -16,6 +16,9 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 5] = nodeValue("Alpha tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
+	// inputs[| 6] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	// 	.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y" ]);
+	
 	outputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -28,6 +31,12 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	temp_surface = [ surface_create(1, 1) ];
 	
+	static step = function() { #region
+		// var _all  = getInputData(3);
+		
+		// inputs[| 6].setVisible(_all);
+	} #endregion
+	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _surf = _data[0];
 		var _col  = _data[1];
@@ -36,6 +45,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		var _alp  = _data[4];
 		var _alpT = _data[5];
+		// var _axis = _data[6];
 		
 		if(!is_surface(_surf)) return [0, 0];
 		

@@ -156,9 +156,13 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 47] = nodeValue("Path Deviation", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 )
 		.rejectArray();
 	
+	inputs[| 48] = nodeValue("Reset Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
+		.rejectArray();
+	
 	input_len = ds_list_size(inputs);
 	
-	input_display_list = [ 32,
+	input_display_list = [ 32, 48, 
 		["Sprite",	   false],	0, 22, 23, 26,
 		["Spawn",		true],	27, 16, 44, 1, 2, 3, 4, 30, 24, 5,
 		["Movement",	true],	29, 6, 18,
@@ -176,10 +180,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	array_push(attributeEditors, ["Maximum particles", function() { return attributes.part_amount; },
 		new textBox(TEXTBOX_INPUT.number, function(val) { attributes.part_amount = val; }) ]);
 	
-	parts = array_create(attributes.part_amount);
+	parts        = array_create(attributes.part_amount);
 	parts_runner = 0;
 	
-	seed = 0;
+	seed          = 0;
 	spawn_index   = 0;
 	scatter_index = 0;
 	def_surface   = -1;
@@ -521,6 +525,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static onDrawOverlay = -1;
 	
 	static update = function(frame = CURRENT_FRAME) { #region
+		var _resetSeed = getInputData(48);
+		if(_resetSeed) resetSeed();
+	
 		checkPartPool();
 		onUpdate(frame);
 	} #endregion

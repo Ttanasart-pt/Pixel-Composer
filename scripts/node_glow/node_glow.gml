@@ -28,10 +28,13 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "Alpha" ]);
 		
 	inputs[| 11] = nodeValue("Draw original", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
+	inputs[| 12] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Outer", "Inner" ]);
 		
 	input_display_list = [ 7, 
 		["Surfaces", true], 0, 5, 6, 8, 9, 
-		["Glow",	false], 10, 2, 3,
+		["Glow",	false], 10, 12, 2, 3,
 		["Render",	false], 4, 11, 
 	]
 	
@@ -48,6 +51,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _color    = _data[4];
 		var _mode     = _data[10];
 		var _render   = _data[11];
+		var _side     = _data[12];
 		
 		surface_set_shader(_outSurf, sh_glow);
 			shader_set_dim("dimension", _data[0]);
@@ -57,6 +61,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("strength",  _strength);
 			shader_set_color("color", _color);
 			shader_set_i("render",    _render);
+			shader_set_i("side",      _side);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

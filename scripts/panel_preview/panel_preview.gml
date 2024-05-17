@@ -1583,8 +1583,8 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			if(sample_color != noone) {
 				draw_set_color(sample_color);
-				draw_rectangle(cx, cy, cx + cw, cy + ch, false);
 				draw_set_alpha(1);
+				draw_rectangle(cx, cy, cx + cw, cy + ch, false);
 			}
 		
 			draw_set_color(COLORS.panel_toolbar_outline);

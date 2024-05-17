@@ -29,58 +29,76 @@ float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * 
 	const int RSIN_RADIUS = 1;
 
 	float sinc ( float x ) { return x == 0.? 1. : sin(x * PI) / (x * PI); }
-
+	
+	vec4 texture2D_bilinear( sampler2D texture, vec2 uv ) {
+		uv = uv * sampleDimension - .5;
+		vec2 iuv = floor( uv );
+		vec2 fuv = fract( uv );
+		
+		vec4 mixed = mix(
+			mix(
+				texture2D( texture, (iuv + vec2(0., 0.)) / sampleDimension ),
+				texture2D( texture, (iuv + vec2(1., 0.)) / sampleDimension ),
+				fuv.x
+			), 
+			mix(
+				texture2D( texture, (iuv + vec2(0., 1.)) / sampleDimension ),
+				texture2D( texture, (iuv + vec2(1., 1.)) / sampleDimension ),
+				fuv.x
+			), 
+			fuv.y
+		);
+		
+		mixed.rgb /= mixed.a;
+		
+		return mixed;
+	}
+	
 	vec4 texture2D_rsin( sampler2D texture, vec2 uv ) {
 	    vec2 tx = 1.0 / sampleDimension;
 	    vec2 p  = uv * sampleDimension - vec2(0.5);
-    
+	    
 		vec4 sum = vec4(0.0);
 	    float weights = 0.;
-    
+	    
 	    for (int x = -RSIN_RADIUS; x <= RSIN_RADIUS; x++)
 		for (int y = -RSIN_RADIUS; y <= RSIN_RADIUS; y++) {
 	        float a = length(vec2(float(x), float(y))) / float(RSIN_RADIUS);
 			if(a > 1.) continue;
 	        float w = sinc(a * PI * tx.x) * sinc(a * PI * tx.y);
 	        vec2 offset = vec2(float(x), float(y)) * tx;
-	        vec4 sample = texture2D(texture, (p + offset + vec2(0.5)) / sampleDimension);
+	        vec4 sample = texture2D_bilinear(texture, (p + offset + vec2(0.5)) / sampleDimension);
 	        sum += w * sample;
 	        weights += w;
 	    }
-	
+		
 	    return sum / weights;
 	}
-
+	
 	vec4 texture2D_bicubic( sampler2D texture, vec2 uv ) {
 		uv = uv * sampleDimension + 0.5;
 		vec2 iuv = floor( uv );
 		vec2 fuv = fract( uv );
 		uv = iuv + fuv * fuv * (3.0 - 2.0 * fuv);
 		uv = (uv - 0.5) / sampleDimension;
-		return texture2D( texture, uv );
+		return texture2D_bilinear( texture, uv );
 	}
-
+	
 	vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
-		if(interpolation == 2)		return texture2D_bicubic( texture, uv );
-		else if(interpolation == 3)	return texture2D_rsin( texture, uv );
+		     if(interpolation == 1)	return texture2D_bilinear( texture, uv );
+		else if(interpolation == 2)	return texture2D_bicubic(  texture, uv );
+		else if(interpolation == 3)	return texture2D_rsin(     texture, uv );
 		return texture2D( texture, uv );
 	}
-
+	
 	vec4 sampleTexture(vec2 pos) {
 		if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 			return texture2Dintp(gm_BaseTexture, pos);
 	
-		if(sampleMode == 0) 
-			return vec4(0.);
-			
-		else if(sampleMode == 1) 
-			return texture2Dintp(gm_BaseTexture, clamp(pos, 0., 1.));
-			
-		else if(sampleMode == 2) 
-			return texture2Dintp(gm_BaseTexture, fract(pos));
-		
-		else if(sampleMode == 3) 
-			return vec4(vec3(0.), 1.);
+		     if(sampleMode == 0) return vec4(0.);
+		else if(sampleMode == 1) return texture2Dintp(gm_BaseTexture, clamp(pos, 0., 1.));
+		else if(sampleMode == 2) return texture2Dintp(gm_BaseTexture, fract(pos));
+		else if(sampleMode == 3) return vec4(vec3(0.), 1.);
 		
 		return vec4(0.);
 	}

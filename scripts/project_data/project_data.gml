@@ -59,15 +59,16 @@
 		}; #endregion
 		
 		#region =================== ATTRIBUTES ===================
-			attributes = {
-				strict            : false,
-				surface_dimension : [ 32, 32 ],
-				palette           : array_clone(PREFERENCES.attr_palette),
-				palette_fix       : false,
-			}
+			attributes = variable_clone(PROJECT_ATTRIBUTES);
 			
 			attributeEditor = [
-				[ "Default Surface", "surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; RENDER_ALL return true; }), 
+				[ "Default Surface", "surface_dimension", new vectorBox(2, 
+					function(ind, val) { 
+						attributes.surface_dimension[ind] = val; 
+						PROJECT_ATTRIBUTES.surface_dimension = array_clone(attributes.surface_dimension);
+						RENDER_ALL 
+						return true; 
+					}), 
 					function(junc) {
 						if(!is_struct(junc)) return;
 						if(!is_instanceof(junc, NodeValue)) return;
@@ -113,8 +114,13 @@
 			];
 			
 			static setPalette = function(pal = noone) { 
-				if(pal != noone) attributes.palette = pal; 
-				PREFERENCES.attr_palette = array_clone(pal);
+				if(pal != noone) {
+					for (var i = 0, n = array_length(pal); i < n; i++) 
+						pal[i] = cola(pal[i], _color_get_alpha(pal[i]));
+					
+					attributes.palette = pal; 
+					PROJECT_ATTRIBUTES.palette = array_clone(pal);
+				}
 				
 				palettes = paletteToArray(attributes.palette); 
 			

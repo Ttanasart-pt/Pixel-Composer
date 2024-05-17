@@ -180,8 +180,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	} #endregion
 	
-	static processData_prebatch  = function() { shader_preset_interpolation();  }
-	static processData_postbatch = function() { shader_postset_interpolation(); }
+	// static processData_prebatch  = function() { shader_preset_interpolation();  }
+	// static processData_postbatch = function() { shader_postset_interpolation(); }
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var ins = _data[0];

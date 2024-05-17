@@ -144,11 +144,18 @@
 	
 	#endregion
 	
-	#region ///////////////////////////////////////////////////////////////////////// DATA //////////////////////////////////////////////////////////////////////////
-		PREFERENCES.attr_palette		= [ cola(c_black), cola(c_white) ];
-	#endregion
-	
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
+#endregion
+
+#region project attributes
+	globalvar PROJECT_ATTRIBUTES;
+	
+	PROJECT_ATTRIBUTES = {}
+	
+	PROJECT_ATTRIBUTES.strict            = false;
+	PROJECT_ATTRIBUTES.surface_dimension = [ 32, 32 ];
+	PROJECT_ATTRIBUTES.palette           = [ cola(c_white), cola(c_black) ];
+	PROJECT_ATTRIBUTES.palette_fix       = false;
 #endregion
 
 #region recent files
@@ -232,10 +239,11 @@
 		
 		map.preferences = PREFERENCES;
 		
-		json_save_struct(DIRECTORY + "keys.json",         map);
-		json_save_struct(DIRECTORY + "Nodes/fav.json",	  global.FAV_NODES);
-		json_save_struct(DIRECTORY + "Nodes/recent.json", global.RECENT_NODES);
-		json_save_struct(DIRECTORY + "key_nodes.json",    HOTKEYS_CUSTOM);
+		json_save_struct(DIRECTORY + "keys.json",       		map);
+		json_save_struct(DIRECTORY + "Nodes/fav.json",			global.FAV_NODES);
+		json_save_struct(DIRECTORY + "Nodes/recent.json",		global.RECENT_NODES);
+		json_save_struct(DIRECTORY + "key_nodes.json",  		HOTKEYS_CUSTOM);
+		json_save_struct(DIRECTORY + "default_project.json",    PROJECT_ATTRIBUTES);
 	} #endregion
 	
 	function PREF_LOAD() { #region
@@ -257,9 +265,6 @@
 		
 		struct_override(PREFERENCES, map.preferences);
 		
-		if(!is_array(PREFERENCES.attr_palette))
-			PREFERENCES.attr_palette = PREFERENCES_DEF.attr_palette;
-		
 		if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
 			PREFERENCES.theme = "default";
 			
@@ -273,6 +278,10 @@
 		directory_verify(filepath_resolve(PREFERENCES.temp_path));
 		
 		if(PREFERENCES.move_directory) directory_set_current_working(DIRECTORY);
+		
+		var f = json_load_struct(DIRECTORY + "default_project.json");
+		struct_override(PROJECT_ATTRIBUTES, f);
+		
 	} #endregion
 	
 	function PREF_APPLY() { #region
