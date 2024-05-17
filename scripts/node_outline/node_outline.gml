@@ -1,9 +1,18 @@
 function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Outline";
 	
+	filtering_vl  = false;
+	filter_button = new buttonAnchor(function(ind) { 
+		if(mouse_press(mb_left))
+			filtering_vl = !attributes.filter[ind];
+		attributes.filter[ind] = filtering_vl;
+		triggerRender();
+	});
+	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Width",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY._default, { front_button : filter_button })
 		.setMappable(15);
 	
 	inputs[| 2] = nodeValue("Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
@@ -61,7 +70,10 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_surface_depth();
 	attribute_oversample();
 	
+	attributes.filter = array_create(9, 1);
+	
 	static step = function() { #region
+		var _wid  = getInputData(1);
 		var _side = getInputData(5);
 		
 		inputs[| 12].setVisible(_side == 0);
@@ -84,6 +96,8 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var sam   = struct_try_get(attributes, "oversample");
 		var _crop = _data[12];
 		
+		filter_button.index = attributes.filter;
+		
 		surface_set_shader(_outSurf, sh_outline);
 			shader_set_f("dimension",       ww, hh);
 			shader_set_f_map("borderSize",  _data[1], _data[15], inputs[| 1]);
@@ -97,6 +111,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_f_map("blend_alpha", _data[4], _data[16], inputs[| 4]);
 			shader_set_i("sampleMode",      sam);
 			shader_set_i("crop_border",     _crop);
+			shader_set_i("filter",          attributes.filter);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

@@ -6,7 +6,9 @@ function widget() constructor {
 	ihover  = false;
 	parent  = noone;
 	interactable = true;
+	
 	side_button  = noone;
+	front_button = noone;
 	
 	hide = false;
 	

@@ -34,48 +34,48 @@
 		[ "draw_set_colour", draw_set_colour ],
 
 		// gpu
-		[ "gpu_get_blendenable", gpu_get_blendenable],
-		[ "gpu_get_ztestenable", gpu_get_ztestenable],
-		[ "gpu_get_zfunc", gpu_get_zfunc],
-		[ "gpu_get_zwriteenable", gpu_get_zwriteenable],
-		[ "gpu_get_fog", gpu_get_fog],
-		[ "gpu_get_cullmode", gpu_get_cullmode],
-		[ "gpu_get_blendmode", gpu_get_blendmode],
-		[ "gpu_get_blendmode_ext", gpu_get_blendmode_ext],
-		[ "gpu_get_blendmode_ext_sepalpha", gpu_get_blendmode_ext_sepalpha],
-		[ "gpu_get_blendmode_src", gpu_get_blendmode_src],
-		[ "gpu_get_blendmode_dest", gpu_get_blendmode_dest],
-		[ "gpu_get_blendmode_srcalpha", gpu_get_blendmode_srcalpha],
-		[ "gpu_get_blendmode_destalpha", gpu_get_blendmode_destalpha],
-		[ "gpu_get_colourwriteenable", gpu_get_colourwriteenable],
-		[ "gpu_get_alphatestenable", gpu_get_alphatestenable],
-		[ "gpu_get_alphatestref", gpu_get_alphatestref],
-		[ "gpu_get_texfilter", gpu_get_texfilter],
-		[ "gpu_get_texfilter_ext", gpu_get_texfilter_ext],
-		[ "gpu_get_texrepeat", gpu_get_texrepeat],
-		[ "gpu_get_texrepeat_ext", gpu_get_texrepeat_ext],
+		[ "gpu_get_blendenable", gpu_get_blendenable ],
+		[ "gpu_get_ztestenable", gpu_get_ztestenable ],
+		[ "gpu_get_zfunc", gpu_get_zfunc ],
+		[ "gpu_get_zwriteenable", gpu_get_zwriteenable ],
+		[ "gpu_get_fog", gpu_get_fog ],
+		[ "gpu_get_cullmode", gpu_get_cullmode ],
+		[ "gpu_get_blendmode", gpu_get_blendmode ],
+		[ "gpu_get_blendmode_ext", gpu_get_blendmode_ext ],
+		[ "gpu_get_blendmode_ext_sepalpha", gpu_get_blendmode_ext_sepalpha ],
+		[ "gpu_get_blendmode_src", gpu_get_blendmode_src ],
+		[ "gpu_get_blendmode_dest", gpu_get_blendmode_dest ],
+		[ "gpu_get_blendmode_srcalpha", gpu_get_blendmode_srcalpha ],
+		[ "gpu_get_blendmode_destalpha", gpu_get_blendmode_destalpha ],
+		[ "gpu_get_colourwriteenable", gpu_get_colourwriteenable ],
+		[ "gpu_get_alphatestenable", gpu_get_alphatestenable ],
+		[ "gpu_get_alphatestref", gpu_get_alphatestref ],
+		[ "gpu_get_texfilter", gpu_get_texfilter ],
+		[ "gpu_get_texfilter_ext", gpu_get_texfilter_ext ],
+		[ "gpu_get_texrepeat", gpu_get_texrepeat ],
+		[ "gpu_get_texrepeat_ext", gpu_get_texrepeat_ext ],
 
-		[ "gpu_set_blendenable", gpu_set_blendenable],
-		[ "gpu_set_ztestenable", gpu_set_ztestenable],
-		[ "gpu_set_zfunc", gpu_set_zfunc],
-		[ "gpu_set_zwriteenable", gpu_set_zwriteenable],
-		[ "gpu_set_fog", gpu_set_fog],
-		[ "gpu_set_cullmode", gpu_set_cullmode],
-		[ "gpu_set_blendmode", gpu_set_blendmode],
-		[ "gpu_set_blendmode_ext", gpu_set_blendmode_ext],
-		[ "gpu_set_blendmode_ext_sepalpha", gpu_set_blendmode_ext_sepalpha],
-		[ "gpu_set_colourwriteenable", gpu_set_colourwriteenable],
-		[ "gpu_set_alphatestenable", gpu_set_alphatestenable],
-		[ "gpu_set_alphatestref", gpu_set_alphatestref],
-		[ "gpu_set_texfilter", gpu_set_texfilter],
-		[ "gpu_set_texfilter_ext", gpu_set_texfilter_ext],
-		[ "gpu_set_texrepeat", gpu_set_texrepeat],
-		[ "gpu_set_texrepeat_ext", gpu_set_texrepeat_ext],
+		[ "gpu_set_blendenable", gpu_set_blendenable ],
+		[ "gpu_set_ztestenable", gpu_set_ztestenable ],
+		[ "gpu_set_zfunc", gpu_set_zfunc ],
+		[ "gpu_set_zwriteenable", gpu_set_zwriteenable ],
+		[ "gpu_set_fog", gpu_set_fog ],
+		[ "gpu_set_cullmode", gpu_set_cullmode ],
+		[ "gpu_set_blendmode", gpu_set_blendmode ],
+		[ "gpu_set_blendmode_ext", gpu_set_blendmode_ext ],
+		[ "gpu_set_blendmode_ext_sepalpha", gpu_set_blendmode_ext_sepalpha ],
+		[ "gpu_set_colourwriteenable", gpu_set_colourwriteenable ],
+		[ "gpu_set_alphatestenable", gpu_set_alphatestenable ],
+		[ "gpu_set_alphatestref", gpu_set_alphatestref ],
+		[ "gpu_set_texfilter", gpu_set_texfilter ],
+		[ "gpu_set_texfilter_ext", gpu_set_texfilter_ext ],
+		[ "gpu_set_texrepeat", gpu_set_texrepeat ],
+		[ "gpu_set_texrepeat_ext", gpu_set_texrepeat_ext ],
 
-		[ "gpu_push_state", gpu_push_state],
-		[ "gpu_pop_state", gpu_pop_state],
-		[ "gpu_get_state", gpu_get_state],
-		[ "gpu_set_state", gpu_set_state],
+		[ "gpu_push_state", gpu_push_state ],
+		[ "gpu_pop_state", gpu_pop_state ],
+		[ "gpu_get_state", gpu_get_state ],
+		[ "gpu_set_state", gpu_set_state ],
 
 		// basic form
 		[ "draw_set_color", draw_set_color ],
@@ -233,7 +233,7 @@
 		[ "__sprite_add", function(_ID, _path, _amo, rem = false, smt = false, xoff = 0, yoff = 0) {
 			var _addon = noone;
 			with(_addon_custom) if(self.ID == _ID) _addon = self;
-			if(_addon == noone) return 0;
+			if(_addon == noone) return undefined;
 			
 			_path = string_replace(_path, "./", _addon.directory + "/");
 			return sprite_add(_path, _amo, rem, smt, xoff, yoff);
@@ -792,6 +792,8 @@
 				case "inspector" :	return PANEL_INSPECTOR; 
 				case "main" :		return PANEL_MAIN; 
 			}
+			
+			return undefined;
 		} ],
 		
 		[ "draw_text_set_format",	function(ind) { 
@@ -802,35 +804,37 @@
 				case 3 : draw_set_font(f_p2);  draw_set_color(COLORS._main_text_sub); break;
 				case 4 : draw_set_font(f_p3);  draw_set_color(COLORS._main_text_sub); break;
 			}
+			
+			return undefined;
 		}], 
 		
 		//nodes
 		[ "node_get",	function(nodeId) { 
-			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return 0;
+			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return undefined;
 			return PROJECT.nodeNameMap[? nodeId];
 		}], 
 		
 		[ "node_get_input_value", function(nodeId, input) { 
-			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return 0;
+			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return undefined;
 			var node = PROJECT.nodeNameMap[? nodeId];
 			
-			if(!ds_map_exists(node.inputMap, input)) return 0;
+			if(!ds_map_exists(node.inputMap, input)) return undefined;
 			return node.inputMap[? input].getValue();
 		}], 
 		
 		[ "node_set_input_value", function(nodeId, input, value) { 
-			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return 0;
+			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return undefined;
 			var node = PROJECT.nodeNameMap[? nodeId];
 			
-			if(!ds_map_exists(node.inputMap, input)) return 0;
+			if(!ds_map_exists(node.inputMap, input)) return undefined;
 			return node.inputMap[? input].setValue(value);
 		}], 
 		
 		[ "node_get_output_value", function(nodeId, input) { 
-			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return 0;
+			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return undefined;
 			var node = PROJECT.nodeNameMap[? nodeId];
 			
-			if(!ds_map_exists(node.outputMap, input)) return 0;
+			if(!ds_map_exists(node.outputMap, input)) return undefined;
 			return node.outputMap[? input].getValue();
 		}],
 		
@@ -840,7 +844,8 @@
 			
 			var ele = HOVERING_ELEMENT;
 			for( var i = 0; i < argument_count; i++ ) {
-				if(!struct_has(ele, argument[i])) return undefined;
+				if(!is_struct(ele) || !struct_has(ele, argument[i])) 
+					return undefined;
 				ele = ele[$ argument[i]];
 			}
 			return ele;
@@ -849,7 +854,7 @@
 		[ "__panel_create", function(ID, panel = "") { 
 			var _addon = noone;
 			with(_addon_custom) if(self.ID == ID) _addon = self;
-			if(_addon == noone) return noone;
+			if(_addon == noone) return undefined;
 			
 			var arr = variable_struct_get_names(_addon.panels);
 			
@@ -860,7 +865,7 @@
 				dialogPanelCall(new addonPanel(_addon, pane));
 			}
 			
-			return noone;
+			return undefined;
 		}],
 		
 		@"

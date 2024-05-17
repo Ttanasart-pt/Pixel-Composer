@@ -436,6 +436,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		var _bs = min(h, ui(32));
 		
+		if(_w - _bs > ui(100) && front_button) {
+			front_button.setFocusHover(active, hover);
+			front_button.draw(_x, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			
+			_x += _bs + ui(4);
+			_w -= _bs + ui(4);
+		}
+		
 		if(_w - _bs > ui(100) && side_button) {
 			side_button.setFocusHover(active, hover);
 			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);

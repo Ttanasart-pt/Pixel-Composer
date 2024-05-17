@@ -90,6 +90,7 @@ enum VALUE_DISPLAY {
 	matrix,
 	path_anchor,
 	gradient_range,
+	boolean_grid,
 	
 	//Curve
 	curve,
@@ -381,6 +382,7 @@ function typeArray(_type) { #region
 		case VALUE_DISPLAY.puppet_control :
 		case VALUE_DISPLAY.matrix :
 		case VALUE_DISPLAY.transform :
+		case VALUE_DISPLAY.boolean_grid :
 			
 		case VALUE_DISPLAY.curve :
 			
@@ -905,12 +907,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new textBox(_txt, function(val) { return setValueInspector(val); } );
 						editWidget.setSlidable();
 						
-						if(struct_has(display_data, "slide_speed")) editWidget.setSlidable(display_data.slide_speed);
-						if(struct_has(display_data, "unit"))		editWidget.unit			= display_data.unit;
-						if(struct_has(display_data, "side_button")) {
-							editWidget.side_button	= display_data.side_button;
-							editWidget.side_button.context = self;
-						}
+						if(struct_has(display_data, "slide_speed"))  editWidget.setSlidable(display_data.slide_speed);
+						if(struct_has(display_data, "unit"))		 editWidget.unit			= display_data.unit;
+						if(struct_has(display_data, "side_button"))  editWidget.side_button		= display_data.side_button;
+						if(struct_has(display_data, "front_button")) editWidget.front_button	= display_data.front_button;
 						
 						extract_node = "Node_Number";
 						break; #endregion
@@ -1128,7 +1128,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + string(i);
+							animators[i].suffix = $" {i}";
+						
+						extract_node = "";
+						break; #endregion
+						
+					case VALUE_DISPLAY.boolean_grid : #region
+						editWidget = new matrixGrid(_txt, display_data.size, function(index, val) {
+							return setValueInspector(val, index);
+						}, unit );
+						
+						for( var i = 0, n = array_length(animators); i < n; i++ )
+							animators[i].suffix = $" {i}";
 						
 						extract_node = "";
 						break; #endregion

@@ -18,7 +18,7 @@ event_inherited();
 		var propPath = directory + "\\meta.json";
 		context_menus = {};
 		panels = {};
-	
+		
 		if(file_exists_empty(propPath)) {
 			var meta = json_load_struct(propPath);
 			if(struct_has(meta, "panels")) {

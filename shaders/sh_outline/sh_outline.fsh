@@ -18,6 +18,7 @@ uniform int	  side;
 uniform int	  crop_border;
 uniform int	  is_aa;
 uniform int	  is_blend;
+uniform int	  filter[9];
 
 uniform vec2      blend_alpha;
 uniform int       blend_alphaUseSurf;
@@ -59,6 +60,24 @@ vec4 blendColor(vec4 base, vec4 colr, float alpha) {
 	col.a    = base.a + colr.a * alpha;
 	
 	return col;
+}
+
+bool angleFiltered(float angle) {
+	float _dg  = mod((degrees(angle) + 360. + ((side == 0)? 180. : 0.)), 360.);
+	
+	int  _ind = 0;
+	
+		 if(_dg <= 22.5 + 45. * 0.) _ind = 3;
+	else if(_dg <= 22.5 + 45. * 1.) _ind = 0;
+	else if(_dg <= 22.5 + 45. * 2.) _ind = 1;
+	else if(_dg <= 22.5 + 45. * 3.) _ind = 2;
+	else if(_dg <= 22.5 + 45. * 4.) _ind = 5;
+	else if(_dg <= 22.5 + 45. * 5.) _ind = 8;
+	else if(_dg <= 22.5 + 45. * 6.) _ind = 7;
+	else if(_dg <= 22.5 + 45. * 7.) _ind = 6;
+	else                            _ind = 3;
+	
+	return filter[_ind] == 0;
 }
 
 void main() { #region
@@ -117,6 +136,7 @@ void main() { #region
 					base *= 2.;
 				}
 				
+				if(angleFiltered(ang)) continue;
 				vec2 pxs = pixelPosition + vec2( cos(ang),  sin(ang)) * i;
 				vec2 txs = pxs / dimension;
 				     pxs = floor(pxs) + 0.5;
@@ -143,6 +163,8 @@ void main() { #region
 		float tauDiv = TAU / 4.;
 		for(float j = 0.; j < 4.; j++) {
 			float ang = j * tauDiv;
+			if(angleFiltered(ang)) continue;
+			
 			vec2 pxs = (pixelPosition + vec2( cos(ang),  sin(ang)) ) / dimension;
 			if(side == 0 && crop_border == 1 && (pxs.x < 0. || pxs.x > 1. || pxs.y < 0. || pxs.y > 1.)) continue;
 			
