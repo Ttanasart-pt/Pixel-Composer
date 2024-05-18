@@ -191,7 +191,10 @@
 					case ".png"	 :
 					case ".jpg"	 :
 					case ".jpeg" :
-						node = Node_create_Image_path(_x, _y, p);
+						if(key_mod_press(SHIFT))
+							node = Node_create_Image_path(_x, _y, p);
+						else 
+							node = Node_create_Image_path(_x, _y, p);
 						break;
 						
 					case ".gif" :

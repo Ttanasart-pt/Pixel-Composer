@@ -220,9 +220,14 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				nodeBuild("Node_Canvas", _graph_x, _graph_y).loadImagePath(__menu_file_selecting.path);
 			}),
 			
+			menuItem("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
 		];
 		
-		menu_file_project = [ menuItem("Open", function() { LOAD_AT(__menu_file_selecting.path); }), ];
+		menu_file_project = [ 
+			menuItem("Open", function() { LOAD_AT(__menu_file_selecting.path); }), 
+			
+			menuItem("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
+		];
 		
 		menu_general = [ menuItem("Refresh", function() { if(rootFile) rootFile.getContent() }), ];
 	#endregion
@@ -365,11 +370,11 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			var _ppw = _pw;
 			
 			if(point_in_rectangle(_m[0], _m[1], _px, _py, _px + _pw, _py + _ph)) {
-				if(buttonInstant(THEME.button_hide, _px + _ppw - _ph, _py, _ph, _ph, _m, pFOCUS, pHOVER, "", THEME.path_open_20) == 2)
+				if(buttonInstant(THEME.button_hide, _px + _ppw - _ph, _py, _ph, _ph, _m, pFOCUS, pHOVER, "Set as root", THEME.path_open_20) == 2)
 					setRoot(_dir.path);
 				_ppw -= _ph + ui(2);
 				
-				if(buttonInstant(THEME.button_hide, _px + _ppw - _ph, _py, _ph, _ph, _m, pFOCUS, pHOVER, "", THEME.copy_20) == 2)
+				if(buttonInstant(THEME.button_hide, _px + _ppw - _ph, _py, _ph, _ph, _m, pFOCUS, pHOVER, "Copy path", THEME.copy_20) == 2)
 					clipboard_set_text(_dir.path);
 				_ppw -= _ph + ui(2);
 				
@@ -469,7 +474,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				if(contentPane.hover && point_in_rectangle(_m[0], _m[1], _px, _py, _px + _tw, _py + _ph)) {
 					if(!mouse_click(mb_left)) {
 						draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, _px, _py, _tw, _ph, COLORS._main_icon_light, 1);
-						TOOLTIP = [ _th, "sprite" ];
+						if(!instance_exists(o_dialog_menubox))
+							TOOLTIP = [ _th, "sprite" ];
 					}
 					
 					file_hovering = _fil;
@@ -546,7 +552,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				if(contentPane.hover && point_in_rectangle(_m[0], _m[1], _px, _py, _px + _pw, _py + _ph)) {
 					if(!mouse_click(mb_left)) {
 						draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, _px, _py, _pw, _ph, COLORS._main_icon_light, 1);
-						TOOLTIP = [ _th, "sprite" ];
+						if(!instance_exists(o_dialog_menubox))
+							TOOLTIP = [ _th, "sprite" ];
 					}
 					
 					file_hovering = _fil;

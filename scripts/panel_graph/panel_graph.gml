@@ -1398,7 +1398,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					if(target != noone) 
 						node_hovering.active_draw_index = 1;
 				} else {
-					target = node_hovering.getInput(value_dragging);
+					target = node_hovering.getInput(value_dragging, 0);
 					if(target != noone) 
 						node_hovering.active_draw_index = 1;
 				}

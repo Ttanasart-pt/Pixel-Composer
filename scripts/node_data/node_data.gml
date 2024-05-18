@@ -503,11 +503,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getInput = function(junc = noone, shift = input_fix_len) { #region
 		for( var i = shift; i < ds_list_size(inputs); i++ ) {
-			if(!inputs[| i].visible) continue;
-			if(inputs[| i].value_from != noone) continue;
-			if(junc != noone && !inputs[| i].isConnectable(junc, true)) continue;
+			var _inp = inputs[| i];
 			
-			return inputs[| i];
+			if(!_inp.visible) continue;
+			if(_inp.value_from != noone)  continue;
+			if(junc != noone && (value_bit(junc.type) & value_bit(_inp.type)) == 0)  continue;
+			
+			return _inp;
 		}
 		return noone;
 	} #endregion
