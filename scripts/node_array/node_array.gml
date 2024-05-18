@@ -50,7 +50,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return _h;
 	}); #endregion
 	
-	input_display_list = [ 0, array_adjust_tool, 1 ];
+	input_display_list = [ 0, 1, ["Contents", false], array_adjust_tool, ];
 	
 	setIsDynamicInput(1);
 	
@@ -102,15 +102,15 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			ds_list_add(_l, lastNode);
 		}
 		
-		input_display_list = [];
-		for( var i = 0; i < ds_list_size(_l); i++ ) {
+		input_display_list = array_clone(input_display_list_raw);
+		
+		for( var i = input_fix_len; i < ds_list_size(_l); i++ ) {
 			_l[| i].index = i;
 			array_push(input_display_list, i);
 			
-			if(i >= input_fix_len && _l[| i].value_from == noone)
+			if(_l[| i].value_from == noone)
 				extra = false;
 		}
-		array_insert(input_display_list, 1, array_adjust_tool);
 		
 		ds_list_destroy(inputs);
 		inputs = _l;

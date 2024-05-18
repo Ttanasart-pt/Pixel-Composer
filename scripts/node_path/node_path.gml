@@ -90,10 +90,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static resetDisplayList = function() { #region
 		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
 		
-		input_display_list = [
-			["Path",	false], 0, 2, 1, 3, 
-			["Anchors",	false], 
-		];
+		input_display_list = array_clone(input_display_list_raw);
 		
 		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i++ ) {
 			array_push(input_display_list, i);
@@ -808,12 +805,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		lengthTotal  = 0;
 		
 		var _index  = 0;
-		var loop    = getInputData(1);
 		var sample  = PREFERENCES.path_resolution;
 		var ansize  = ds_list_size(inputs) - input_fix_len;
 		if(ansize < 2) return;
 		
-		var con = loop? ansize : ansize - 1;
+		var con = path_loop? ansize : ansize - 1;
 		
 		for(var i = 0; i < con; i++) {
 			var _a0 = anchors[(i + 0) % ansize];

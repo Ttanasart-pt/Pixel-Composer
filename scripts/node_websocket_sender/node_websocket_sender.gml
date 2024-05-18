@@ -60,12 +60,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		//print($"Connecting to {newUrl}:{newPort} complete");
 	} #endregion
 	
-	insp1UpdateTooltip  = __txt("Resend");
-	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function() { #region
-		triggerRender();
-	} #endregion
+	setInspector(1, __txt("Resend"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() { triggerRender(); });
 	
 	static sendCall = function(ID, params) {
 		var network = ds_map_try_get(NETWORK_CLIENTS, ID, noone);

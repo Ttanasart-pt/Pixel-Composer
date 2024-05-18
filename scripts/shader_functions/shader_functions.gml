@@ -169,7 +169,6 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 		
 		var intp   = attributes.interpolate;
 		
-		gpu_set_tex_filter(intp);
 		shader_set_uniform_i(shader_get_uniform(shader, "interpolation"),	intp);
 		shader_set_uniform_i(shader_get_uniform(shader, "sampleMode"),		attributes.oversample);
 	}
@@ -191,7 +190,6 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 		
 		var intp   = attributes.interpolate;
 		
-		// gpu_set_tex_filter(intp);
 		shader_set_i("interpolation",	intp);
 		shader_set_f("sampleDimension", _dim == noone? surface_get_dimension(surface) : _dim);
 		shader_set_i("sampleMode",		attributes.oversample);
@@ -224,6 +222,8 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	
 	function surface_reset_shader() {
 		if(!__surface_set) return;
+		
+		shader_set_i("interpolation",	0);
 		
 		BLEND_NORMAL;
 		surface_reset_target();

@@ -443,6 +443,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static setIsDynamicInput = function(_data_length = 1, _auto_input = true, _dynamic_input_cond = DYNA_INPUT_COND.connection) { #region
 		is_dynamic_input	= true;						
 		auto_input			= _auto_input;
+		
+		input_display_list_raw = array_clone(input_display_list);
 		input_display_len	= input_display_list == -1? 0 : array_length(input_display_list);
 		input_fix_len		= ds_list_size(inputs);
 		data_length			= _data_length;
@@ -554,10 +556,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		static onInspector1Update  = noone;
 		static inspector1Update    = function() { INLINE onInspector1Update(); }
 		static hasInspector1Update = function() { INLINE return NODE_HAS_INSP1; }
-	
+		
 		static onInspector2Update  = noone;
 		static inspector2Update    = function() { INLINE onInspector2Update(); }
 		static hasInspector2Update = function() { INLINE return NODE_HAS_INSP2; }
+		
+		static setInspector = function(index, _tooltip, _icon, _function) {
+			if(index == 1) {
+				insp1UpdateTooltip  = _tooltip;
+				insp1UpdateIcon     = _icon;
+				onInspector1Update  = _function;
+				
+			} else if(index == 2) {
+				insp2UpdateTooltip  = _tooltip;
+				insp2UpdateIcon     = _icon;
+				onInspector2Update  = _function;
+			}
+		}
 	#endregion
 	
 	static stepBegin = function() { #region

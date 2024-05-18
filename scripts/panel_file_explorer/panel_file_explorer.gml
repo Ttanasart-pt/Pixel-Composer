@@ -22,8 +22,9 @@ function ExpCreateFile(path) {
 
 function ExpFile(path) constructor {
 	self.path = string_trim(path, [ "/", "\\" ]);
-	name = filename_name_only(path);
-	ext  = string_lower(filename_ext(path));
+	name      = filename_name_only(path);
+	ext       = string_lower(filename_ext(path));
+	parent    = noone;
 	
 	load_thumb = false;
 	thumbnail  = noone;
@@ -86,8 +87,11 @@ function ExpDir(path) : ExpFile(path) constructor {
 		var f = file_find_first(path + "\\*", fa_directory);
 		while (f != "") {
 			var _fp = $"{path}\\{f}";
-			if(directory_exists(_fp))
-		    	array_push(directories, ExpCreateFile(_fp));
+			if(directory_exists(_fp)) {
+				var _fileObj = ExpCreateFile(_fp);
+				_fileObj.parent = self;
+		    	array_push(directories, _fileObj);
+			}
 		    f = file_find_next();
 		}
 		
@@ -95,8 +99,11 @@ function ExpDir(path) : ExpFile(path) constructor {
 		var f = file_find_first(path + "\\*", fa_none);
 		while (f != "") {
 			var _fp = $"{path}\\{f}";
-			if(file_exists(_fp) && !directory_exists(_fp))
-		    	array_push(files, ExpCreateFile(_fp));
+			if(file_exists(_fp) && !directory_exists(_fp)) {
+				var _fileObj = ExpCreateFile(_fp);
+				_fileObj.parent = self;
+		    	array_push(files, _fileObj);
+			}
 		    f = file_find_next();
 		}
 		
@@ -174,6 +181,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	padding = ui(8);
 	top_bar = ui(44);
 	
+	grid_size = ui(64);
+	
 	tb_root = new textBox(TEXTBOX_INPUT.text, function(val) {
 		setRoot(val);
 	});
@@ -214,6 +223,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		];
 		
 		menu_file_project = [ menuItem("Open", function() { LOAD_AT(__menu_file_selecting.path); }), ];
+		
+		menu_general = [ menuItem("Refresh", function() { if(rootFile) rootFile.getContent() }), ];
 	#endregion
 	
 	function onFocusBegin() { PANEL_FILE = self; }
@@ -238,8 +249,28 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				frame_drag_my   = _m[1];
 				
 			} else {
-				if(!array_exists(file_selectings, file_hovering))
+				if(key_mod_press(SHIFT)) {
+					if(!array_empty(file_selectings)) {
+						var _frm = file_selectings[array_length(file_selectings) - 1];
+						var _to  = file_hovering;
+						
+						if(is_instanceof(_frm, ExpFile) && is_instanceof(_to, ExpFile) && _frm.parent && _frm.parent == _to.parent) {
+							var _par = _frm.parent;
+							var _ifrm = array_find(_par.files, _frm);
+							var _ito  = array_find(_par.files, _to);
+							
+							file_selectings = array_create(abs(_ifrm - _ito) + 1);
+							var _i = min(_ifrm, _ito);
+							var _j = max(_ifrm, _ito);
+							var _ind = 0;
+							
+							for(; _i <= _j; _i++) file_selectings[_ind++] = _par.files[_i];
+						}
+					}
+					
+				} else if(!array_exists(file_selectings, file_hovering))
 					file_selectings = [ file_hovering ];
+					
 				path_dragging = -1;
 				file_dragging = true;
 				file_drag_mx  = mouse_mx;
@@ -248,6 +279,11 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		}
 		
 		if(mouse_release(mb_left)) frame_dragging = false;
+		
+		if(pFOCUS && mouse_press(mb_right)) {
+			if(file_hovering == noone || is_instanceof(file_hovering, ExpDir)) 
+				menuCall("",,, menu_general);
+		}
 		
 		if(file_dragging) {
 			if(path_dragging == -1 && point_distance(file_drag_mx, file_drag_my, mouse_mx, mouse_my) > 8) {
@@ -290,6 +326,11 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				file_dragging = false;	
 				path_dragging = -1;
 			}
+		}
+		
+		if(view_mode == FILE_EXPLORER_VIEW.grid && pHOVER && key_mod_press(CTRL)) {
+			if(mouse_wheel_down()) grid_size = clamp(grid_size - ui(8), ui(32), ui(128));
+			if(mouse_wheel_up())   grid_size = clamp(grid_size + ui(8), ui(32), ui(128));
 		}
 		
 		return _h;
@@ -466,8 +507,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			}
 			
 		} else if(view_mode == FILE_EXPLORER_VIEW.grid) {
-			var _grid_width  = ui(80);
-			var _grid_height = ui(64);
+			var _grid_width  = grid_size + 1.25;
+			var _grid_height = grid_size;
 			var _grid_spac   = ui(4);
 			var _title_heigh = ui(24);
 			draw_set_text(f_p3, fa_center, fa_bottom, COLORS._main_text);

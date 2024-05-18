@@ -22,7 +22,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	inputs[| 2] = nodeValue("Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "Custom" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]);
 	
 	inputs[| 3] = nodeValue("Dither map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.setVisible(false);
@@ -48,9 +48,12 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	__init_mask_modifier(7); // inputs 11, 12, 
 	
+	inputs[| 13] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 13].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	input_display_list = [ 9, 10, 
+	input_display_list = [ 9, 10, 13, 
 		["Surfaces", true], 0, 7, 8, 11, 12, 
 		["Pattern",	false], 2, 3, 
 		["Dither",	false], 6, 1, 4, 5
@@ -64,7 +67,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _type = getInputData(2);
 		var _mode = getInputData(6);
 		
-		inputs[| 3].setVisible(_type == 3, _type == 3);
+		inputs[| 3].setVisible(_type == 4, _type == 4);
 		inputs[| 1].setVisible(_mode == 0);
 		inputs[| 4].setVisible(_mode == 0);
 		inputs[| 5].setVisible(_mode == 0);
@@ -77,6 +80,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _con    = _data[4];
 		var _conMap = _data[5];
 		var _mode   = _data[6];
+		var _seed   = _data[13];
 		
 		surface_set_shader(_outSurf, _mode? sh_alpha_hash : sh_dither);
 			shader_set_f("dimension", surface_get_dimension(_data[0]));
@@ -87,17 +91,25 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					shader_set_f("ditherSize",	2);
 					shader_set_f("dither",		dither2);
 					break;
+					
 				case 1 :
 					shader_set_i("useMap",		0);
 					shader_set_f("ditherSize",	4);
 					shader_set_f("dither",		dither4);
 					break;
+					
 				case 2 :
 					shader_set_i("useMap",		0);
 					shader_set_f("ditherSize",	8);
 					shader_set_f("dither",		dither8);
 					break;
+					
 				case 3 :
+					shader_set_i("useMap",		2);
+					shader_set_f("seed",	_seed);
+					break;
+					
+				case 4 :
 					if(is_surface(_map)) {
 						shader_set_i("useMap",		 1);
 						shader_set_f("mapDimension", surface_get_dimension(_map));

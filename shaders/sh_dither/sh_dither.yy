@@ -3,8 +3,8 @@
   "%Name":"sh_dither",
   "name":"sh_dither",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"dither",
+    "path":"folders/shader/filter/dither.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

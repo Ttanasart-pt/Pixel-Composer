@@ -5,45 +5,62 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
+	inputs[| 2] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Client", "Server" ]);
+	
+	inputs[| 3] = nodeValue("Url", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	
 	outputs[| 0] = nodeValue("Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
 	
 	outputs[| 1] = nodeValue("Receive data", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false);
 	
-	input_display_list = [ 1, 0 ];
+	input_display_list = [ 1, 2,
+		["Connection", false], 0, 3,
+	];
 	
 	connected_device = 0;
+	network_trigger  = 0;
 	port   = 0;
+	mode   = 0;
+	url    = "";
 	socket = noone;
+	client = noone;
 	
-	function setPort(newPort) { #region
+	function setPort() { #region
+		
+		var _port = getInputData(0);
+		var _mode = getInputData(2);
+		var _url  = getInputData(3);
+		
+		if(_port == port && _mode == mode && _url == url) return;
+		
+		port = _port;
+		mode = _mode;
+		url	 = _url;
+		
 		if(ds_map_exists(PORT_MAP, port))
 			array_remove(PORT_MAP[? port], self);
 		
-		port = newPort;
 		if(!ds_map_exists(PORT_MAP, port))
 			PORT_MAP[? port] = [];
 		array_push(PORT_MAP[? port], self);
 		
-		if(ds_map_exists(NETWORK_SERVERS, port))
-			return;
-		
-		if(socket >= 0) network_destroy(socket);
-		socket = network_create_server_raw(network_socket_ws, port, 16)
-		if(socket < 0) return;
-		
-		NETWORK_SERVERS[? newPort] = socket;
+		if(socket != noone) 
+			network_destroy(socket);
+			
+		if(mode == 0) {
+			client = network_create_socket(network_socket_ws);
+			network_connect_raw(client, url, port);
+			
+		} else if(mode == 1) {
+			socket = network_create_server_raw(network_socket_ws, port, 16);
+			if(socket)
+				NETWORK_SERVERS[? newPort] = socket;
+		}
 	} #endregion
 	
-	insp1UpdateTooltip  = __txt("Refresh Server");
-	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
+	setInspector(1, __txt("Refresh Server"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() { setPort(); });
 	
-	static onInspector1Update = function() { #region
-		var _port = getInputData(0);
-		
-		setPort(_port);
-	} #endregion
-	
-	network_trigger = 0;
 	static asyncPackets = function(_async_load) { #region
 		if(!active) return;
 		
@@ -57,18 +74,20 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 				noti_status($"Websocket server: Client connected at port {port} on node {display_name}");
 				connected_device++;
 				break;
+				
 			case network_type_disconnect :
 				noti_status($"Websocket server: Client disconnected at port {port} on node {display_name}");
 				connected_device--;
 				break;
+				
 			case network_type_data :
-				var buffer = async_load[? "buffer"];
-				var socket = async_load[? "id"];
-				var data = buffer_get_string(buffer);
+				var _buffer = async_load[? "buffer"];
+				var _socket = async_load[? "id"];
+				var data    = buffer_get_string(_buffer);
 				
 				var _data = json_try_parse(data, noone);
-				if(_data == noone)	_data = { rawData: new Buffer(buffer) }
-				else				buffer_delete(buffer);
+				if(_data == noone)	_data = { rawData: new Buffer(_buffer) }
+				else				buffer_delete(_buffer);
 					
 				outputs[| 0].setValue(_data);
 				network_trigger = true;
@@ -77,6 +96,10 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	} #endregion
 	
 	static step = function() { #region
+		var _mode = getInputData(2);
+		
+		inputs[| 3].setVisible(_mode == 0);
+		
 		if(network_trigger == 1) {
 			outputs[| 1].setValue(1);
 			network_trigger = -1;
@@ -88,10 +111,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		if(CLONING) return;
-		var _port = getInputData(0);
-		
-		if(port != _port)
-			setPort(_port);
+		setPort();
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

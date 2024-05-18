@@ -8,7 +8,6 @@ function FileObject(_name, _path) constructor { #region
 	sprFetchID = noone;
 	
 	content   = -1;
-	surface   = noone;
 	
 	var _mdir  = filename_dir(path);
 	var _mname = filename_name_only(path);
@@ -34,13 +33,6 @@ function FileObject(_name, _path) constructor { #region
 	size			= file_size(path);
 	
 	static getName = function() { return name; }
-	
-	static getSurface = function() { #region
-		if(is_surface(surface)) return surface;
-		var spr = getSpr();
-		surface = surface_create_from_sprite_ext(spr, 0);
-		return surface;
-	} #endregion
 	
 	static getThumbnail = function() { #region
 		if(thumbnail != noone && is_surface(thumbnail)) return thumbnail;	// Thumbnail loaded

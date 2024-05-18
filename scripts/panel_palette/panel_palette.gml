@@ -5,7 +5,7 @@ function Panel_Palette() : PanelContent() constructor {
 	w = ui(320);
 	h = ui(480);
 	
-	view_mode = 0;
+	grid_size = ui(16);
 	
 	color_dragging = noone;
 	
@@ -17,15 +17,15 @@ function Panel_Palette() : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var ww  = sp_palettes.surface_w;
 		var hh  = ui(28);
-		var _gs = ui(24);
-		switch(view_mode) {
-			case 0 : _gs = ui(24); break;	
-			case 1 : _gs = ui(32); break;	
-			case 2 : _gs = ui(16); break;	
-		}
+		var _gs = grid_size;
 		var _height;
 		var yy  = _y;
 		var cur = CURRENT_COLOR;
+		
+		if(pHOVER && key_mod_press(CTRL)) {
+			if(mouse_wheel_down()) grid_size = clamp(grid_size - ui(4), ui(8), ui(32));
+			if(mouse_wheel_up())   grid_size = clamp(grid_size + ui(4), ui(8), ui(32));
+		}
 		
 		for(var i = 0; i < array_length(PALETTES); i++) {
 			var preset	= PALETTES[i];
@@ -79,9 +79,6 @@ function Panel_Palette() : PanelContent() constructor {
 					menuCall("palette_window_preset_menu",,, [
 						menuItem(__txt("Refresh"), function() { 
 							__initPalette();
-						}),
-						menuItem(__txtx("palette_change_preview_size", "Change preview size"), function() { 
-							view_mode = (view_mode + 1) % 3;
 						}),
 						-1, 
 						menuItem(__txtx("palette_editor_set_default", "Set as default"), function() { 
