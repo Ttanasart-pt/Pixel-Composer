@@ -319,6 +319,4 @@ Project.fps		   = " + string(PROJECT.animator.framerate) + @";
 ");
 }
 
-function _lua_error(msg, state) {
-	noti_warning("Lua error: " + string(state));
-}
+function _lua_error(msg, state) { noti_warning($"Lua error: {msg}\n{state}"); }

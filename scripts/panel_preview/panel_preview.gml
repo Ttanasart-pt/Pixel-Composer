@@ -1032,9 +1032,11 @@ function Panel_Preview() : PanelContent() constructor {
 					
 					draw_surface_safe(d3_surface);
 					
-					BLEND_MULTIPLY
-					draw_surface_safe(d3_deferData.ssao);
-					BLEND_NORMAL
+					if(is_struct(d3_deferData)) {
+						BLEND_MULTIPLY
+						draw_surface_safe(d3_deferData.ssao);
+						BLEND_NORMAL
+					}
 					break;
 				case 1 : draw_surface_safe(d3_surface_normal);	break;
 				case 2 : draw_surface_safe(d3_surface_depth);	break;

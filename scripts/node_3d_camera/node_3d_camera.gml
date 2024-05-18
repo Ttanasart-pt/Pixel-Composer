@@ -112,6 +112,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	} #endregion
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { #region
+	var _rot = inputs[| 1].display_data.angle_display;
+		tools = _rot == QUARTERNION_DISPLAY.quarterion? tool_quate : tool_euler;
+		if(_rot == QUARTERNION_DISPLAY.euler && isUsingTool("Rotate"))
+			PANEL_PREVIEW.tool_current = noone;
+		
 		var object = getPreviewObjects();
 		if(array_empty(object)) return;
 		object = object[0];
@@ -237,8 +242,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			var _qi3  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0),  90);
 		#endregion
 		
-		if(_sobj == noone || !struct_has(_sobj, "submit")) return [ noone, noone, noone ];
-		
 		switch(_posm) { #region ++++ camera positioning ++++
 			case 0 :
 				camera.useFocus = false;
@@ -307,48 +310,50 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		#endregion
 		
 		#region submit
-			var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
-			_sobj.submitShadow(scene, _sobj);
-			submitShadow();
-			
-			deferData   = scene.deferPass(_sobj, _dim[0], _dim[1], deferData);
-			
 			var _render = outputs[| 0].getValue();
 			var _normal = outputs[| 1].getValue();
 			var _depth  = outputs[| 2].getValue();
+			var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
 		
 			_render = surface_verify(_render, _dim[0], _dim[1]);
 			_normal = surface_verify(_normal, _dim[0], _dim[1]);
 			_depth  = surface_verify(_depth , _dim[0], _dim[1]);
 		
-			surface_set_target_ext(0, _render);
-			surface_set_target_ext(1, _normal);
-			surface_set_target_ext(2, _depth );
-		
-			DRAW_CLEAR
+			if(_sobj) {
+				_sobj.submitShadow(scene, _sobj);
+				submitShadow();
+				
+				deferData   = scene.deferPass(_sobj, _dim[0], _dim[1], deferData);
+				
+				surface_set_target_ext(0, _render);
+				surface_set_target_ext(1, _normal);
+				surface_set_target_ext(2, _depth );
 			
-			gpu_set_zwriteenable(true);
-			gpu_set_cullmode(_back); 
-			
-			if(_blend == 0) {
-				gpu_set_ztestenable(true);
-			} else {
-				BLEND_ADD 
-				gpu_set_ztestenable(false);
+				DRAW_CLEAR
+				
+				gpu_set_zwriteenable(true);
+				gpu_set_cullmode(_back); 
+				
+				if(_blend == 0) {
+					gpu_set_ztestenable(true);
+				} else {
+					BLEND_ADD 
+					gpu_set_ztestenable(false);
+				}
+				
+				camera.applyCamera();
+				scene.reset();
+				scene.submitShader(_sobj);
+				submitShader();
+				
+				scene.apply(deferData);
+				scene.submit(_sobj);
+				
+				BLEND_NORMAL
+				surface_reset_target();
+				
+				camera.resetCamera();
 			}
-			
-			camera.applyCamera();
-			scene.reset();
-			scene.submitShader(_sobj);
-			submitShader();
-			
-			scene.apply(deferData);
-			scene.submit(_sobj);
-			
-			BLEND_NORMAL
-			surface_reset_target();
-			
-			camera.resetCamera();
 		#endregion
 		
 		#region render
@@ -362,10 +367,12 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 					surface_free(_bgSurf);
 				}
 				draw_surface_safe(_render, 0, 0);
-			
-				BLEND_MULTIPLY
-				draw_surface_safe(deferData.ssao);
-				BLEND_NORMAL
+				
+				if(deferData) {
+					BLEND_MULTIPLY
+					draw_surface_safe(deferData.ssao);
+					BLEND_NORMAL
+				}
 			surface_reset_target();
 			surface_free(_render);
 		#endregion

@@ -72,8 +72,8 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _pat  = _data[6];
 		var _mid  = _data[7];
 		
-		inputs[|  8].setVisible(_pat == 1);
-		inputs[|  9].setVisible(_pat == 1);
+		inputs[|  8].setVisible(_pat ==  2);
+		inputs[|  9].setVisible(_pat ==  2);
 		inputs[| 10].setVisible(_type == 2);
 		
 		var _rad = _data[ 8];

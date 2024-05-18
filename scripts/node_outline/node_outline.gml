@@ -70,7 +70,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	attributes.filter = array_create(9, 1);
+	attributes.filter   = array_create(9, 1);
 	
 	static step = function() { #region
 		var _wid  = getInputData(1);
@@ -83,6 +83,8 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 1].mappableStep();
 		inputs[| 4].mappableStep();
 		inputs[| 8].mappableStep();
+		
+		filter_button.index = attributes.filter;
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -95,8 +97,6 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var aa    = _data[6];
 		var sam   = struct_try_get(attributes, "oversample");
 		var _crop = _data[12];
-		
-		filter_button.index = attributes.filter;
 		
 		surface_set_shader(_outSurf, sh_outline);
 			shader_set_f("dimension",       ww, hh);

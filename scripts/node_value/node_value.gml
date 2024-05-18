@@ -615,7 +615,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- value ----
-		def_val	    = _value;
+		def_val	    = variable_clone(_value);
 		def_length  = is_array(def_val)? array_length(def_val) : 0;
 		def_depth   = array_get_depth(def_val);
 		unit		= new nodeValueUnit(self);

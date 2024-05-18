@@ -116,7 +116,7 @@
 #endregion
 
 #region lua
-	//lua_error_handler = _lua_error;
+	lua_error_handler = _lua_error;
 #endregion
 
 //print("===== Game Start End =====");

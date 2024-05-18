@@ -87,10 +87,10 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
 			var key = getInputData(i + 0);
 			var val = inputs[| i + 1];
-			var _ss = min(_s * 0.5, string_scale(key, bbox.w - 12 * _s, 9999));
+			var _ss = min(_s * .4, string_scale(key, bbox.w - 12 * _s, 9999));
 			
 			draw_set_color(value_color(val.type));
-			draw_text_transformed(bbox.x0 + 6 * _s, inputs[| i + 0].y, key, _ss, _ss, 0);
+			draw_text_transformed(bbox.x0 + 6 * _s, val.y, key, _ss, _ss, 0);
 		}
 		
 	}

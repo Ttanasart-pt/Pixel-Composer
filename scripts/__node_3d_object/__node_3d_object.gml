@@ -46,7 +46,10 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		tool_pos = new NodeTool( "Transform", THEME.tools_3d_transform, "Node_3D_Object" );
 		tool_rot = new NodeTool( "Rotate", THEME.tools_3d_rotate, "Node_3D_Object" );
 		tool_sca = new NodeTool( "Scale", THEME.tools_3d_scale, "Node_3D_Object" );
-		tools = [ tool_pos, tool_rot, tool_sca ];
+		
+		tool_euler = [ tool_pos, tool_sca ];
+		tool_quate = [ tool_pos, tool_rot, tool_sca ];
+		tools      = tool_quate;
 		
 		tool_axis_edit = new scrollBox([ "local", "global" ], function(val) { tool_attribute.context = val; });
 		// tool_axis_edit.font      = f_p2;
@@ -282,12 +285,13 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _rot  = inputs[| index].getValue();
 			var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
-		
+			
 			var _camera = params.camera;
 			var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 		
-			var _axis = tool_attribute.context;
-		
+			var _ang    = inputs[| index].display_data.angle_display;
+			var _global = _ang == QUARTERNION_DISPLAY.quarterion? tool_attribute.context : 1;
+			
 			var _hover     = noone;
 			var _hoverDist = 10;
 			var th;
@@ -322,10 +326,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						case 2 : np = new BBMOD_Vec3(lengthdir_x(size, ang), 0, lengthdir_y(size, ang)); break;
 					}
 					
-					if(_axis == 0) 
-						np = _qview.Rotate(_qinv.Rotate(_qrot.Rotate(np)));
-					else if(_axis == 1) 
-						np = _qview.Rotate(_qinv.Rotate(np));
+					if(_global) np = _qview.Rotate(_qinv.Rotate(np));
+					else        np = _qview.Rotate(_qinv.Rotate(_qrot.Rotate(np)));
 					
 					if(j && (op.Z > 0 && np.Z > 0 || drag_axis == i)) {
 						draw_line_round(cx + op.X, cy + op.Y, cx + np.X, cy + np.Y, th);
@@ -354,7 +356,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 					case 2 : drag_rot_axis = new BBMOD_Vec3( 0, -1,  0); break;
 				}
 			
-				if(_axis == 0) drag_rot_axis = _qrot.Rotate(drag_rot_axis).Normalize();
+				if(!_global) drag_rot_axis = _qrot.Rotate(drag_rot_axis).Normalize();
 			}
 			
 			var _nv = _qview.Rotate(_qinv.Rotate(drag_rot_axis));
@@ -367,7 +369,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 				
 				var _currR = new BBMOD_Quaternion().FromAxisAngle(drag_rot_axis, _dist);
 				var _val   = _currR.Mul(drag_val);
-				var _Nrot  = _val.ToArray();
+				var _Nrot  = _ang == QUARTERNION_DISPLAY.quarterion? _val.ToArray() : _val.ToEuler(true);
 				
 				if(inputs[| index].setValue(_Nrot))
 					UNDO_HOLDING = true;
@@ -581,6 +583,11 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	} #endregion
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { #region
+		var _rot = inputs[| 1].display_data.angle_display;
+		tools = _rot == QUARTERNION_DISPLAY.quarterion? tool_quate : tool_euler;
+		if(_rot == QUARTERNION_DISPLAY.euler && isUsingTool("Rotate"))
+			PANEL_PREVIEW.tool_current = noone;
+		
 		var object = getPreviewObjects();
 		if(array_empty(object)) return;
 		object = object[0];
