@@ -13,6 +13,10 @@
 	active    = true;
 	anim_prog = 0;
 	
+	mouse_tx = mouse_mx;
+	mouse_ty = mouse_my;
+	mouse_ta = 0.5;
+	
 	function setMenu(menu) {
 		menus = menu;
 	}

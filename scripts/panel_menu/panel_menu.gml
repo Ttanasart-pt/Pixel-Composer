@@ -224,6 +224,8 @@ function Panel_Menu() : PanelContent() constructor {
 					menuItem(__txt("Color"),		function() { panelAdd("Panel_Color", true) },	 noone, ["", "Color Panel"], 	 function() { return findPanel("Panel_Color")    != noone; } ),
 					menuItem(__txt("Palettes"),		function() { panelAdd("Panel_Palette", true) },  noone, ["", "Palettes Panel"],  function() { return findPanel("Panel_Palette")  != noone; } ),
 					menuItem(__txt("Gradients"),	function() { panelAdd("Panel_Gradient", true) }, noone, ["", "Gradients Panel"], function() { return findPanel("Panel_Gradient") != noone; } ),
+					-1,
+					menuItem(__txt("Palette Mixer"),	function() { panelAdd("Panel_Palette_Mixer", true) }, noone, ["", "Palette Mixer Panel"], function() { return findPanel("Panel_Palette_Mixer") != noone; } ),
 				]);
 			} ).setIsShelf(),
 		]],

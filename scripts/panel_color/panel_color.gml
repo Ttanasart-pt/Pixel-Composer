@@ -103,11 +103,13 @@ function Panel_Color() : PanelContent() constructor {
 		}
 		
 		if(show_hex) {
-			var alp_w = w - ui(padding * 2);
 			var alp_h = ui(20);
+			var alp_w = w - ui(padding * 2) - alp_h - ui(padding);
 			
-			var alp_x = ui(padding);
+			var alp_x = alp_h + ui(padding * 2);
 			var alp_y = _y1 - alp_h;
+			
+			draw_sprite_stretched_ext(s_ui_base_white, 0, ui(padding), alp_y, alp_h, alp_h, CURRENT_COLOR, show_alpha);
 			
 			hex_tb.setFocusHover(pFOCUS, pHOVER);
 			hex_tb.setFont(f_p2);

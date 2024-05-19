@@ -65,10 +65,11 @@
 			case "Panel_Node_Align"		: return new Panel_Node_Align();
 			case "Panel_File_Explorer"	: var p = (create || findPanel(name))? new Panel_File_Explorer() : PANEL_FILE; 	PANEL_FILE 	= p; return p;
 			
-			case "Panel_Color"		: return new Panel_Color();
-			case "Panel_Palette"	: return new Panel_Palette();
-			case "Panel_Gradient"	: return new Panel_Gradient();
-			case "Panel_Console"	: return new Panel_Console();
+			case "Panel_Color"			: return new Panel_Color();
+			case "Panel_Palette"		: return new Panel_Palette();
+			case "Panel_Palette_Mixer"	: return new Panel_Palette_Mixer();
+			case "Panel_Gradient"		: return new Panel_Gradient();
+			case "Panel_Console"		: return new Panel_Console();
 		}
 		
 		return noone;

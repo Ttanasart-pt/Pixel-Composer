@@ -185,8 +185,9 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	
 	tb_root = new textBox(TEXTBOX_INPUT.text, function(val) { setRoot(val); });
 	
-	file_selectings = [];
-	file_hovering   = noone;
+	file_selectings  = [];
+	file_hovering    = noone;
+	context_hovering = noone;
 	
 	file_dragging   = false;
 	file_drag_mx    = 0;
@@ -202,20 +203,15 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	
 	#region menu
 		__menu_file_selecting = noone;
+		__menu_cnxt_selecting = noone;
 		
 		menu_file_image = [
 			menuItem("Add as node", function() {
-				var _graph_x = (PANEL_GRAPH.w / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_x;
-				var _graph_y = (PANEL_GRAPH.h / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_y;
-			
-				Node_create_Image_path(_graph_x, _graph_y, __menu_file_selecting.path);
+				Node_create_Image_path(PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy, __menu_file_selecting.path);
 			}),
 			
 			menuItem("Add as canvas", function() {
-				var _graph_x = (PANEL_GRAPH.w / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_x;
-				var _graph_y = (PANEL_GRAPH.h / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_y;
-			
-				nodeBuild("Node_Canvas", _graph_x, _graph_y).loadImagePath(__menu_file_selecting.path);
+				nodeBuild("Node_Canvas", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(__menu_file_selecting.path);
 			}),
 			
 			menuItem("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
@@ -227,7 +223,34 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			menuItem("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
 		];
 		
-		menu_general = [ menuItem("Refresh", function() { if(rootFile) rootFile.getContent() }), ];
+		menu_general = [ 
+			menuItem("New Canvas", function() { 
+				var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
+				dia.onModify = function (txt) {
+					var _s = surface_create(DEF_SURF_W, DEF_SURF_H);
+					surface_clear(_s);
+					surface_save(_s, txt);
+					surface_free(_s);
+					
+					nodeBuild("Node_Canvas", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(txt);
+					__menu_cnxt_selecting.getContent();
+				};
+				dia.path = __menu_cnxt_selecting.path + "/";
+			}, THEME.new_file), 
+			
+			menuItem("New Folder", function() { 
+				var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
+				dia.name = "New Folder";
+				dia.onModify = function (txt) {
+					directory_create(txt);
+					__menu_cnxt_selecting.getContent();
+				};
+				dia.path = __menu_cnxt_selecting.path + "/";
+			}, THEME.folder), 
+			
+			-1,
+			menuItem("Refresh", function() { if(rootFile) rootFile.getContent() }), 
+		];
 	#endregion
 	
 	function onFocusBegin() { PANEL_FILE = self; }
@@ -237,13 +260,16 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		
 		if(frame_dragging) file_selectings = [];
 		
-		file_hovering   = noone;
-		draggable       = true;
+		file_hovering    = noone;
+		context_hovering = noone;
+		draggable        = true;
 		
 		var _h = drawDir(rootFile, 0, _y, contentPane.surface_w, _m);
 		
 		if(frame_dragging) draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, frame_drag_mx, frame_drag_my, _m[0], _m[1], COLORS._main_accent);
-			
+		if(context_hovering == noone)
+			context_hovering = rootFile;
+		
 		if(draggable && mouse_press(mb_left, pFOCUS)) {
 			if(file_hovering == noone) {
 				file_selectings = [];
@@ -284,6 +310,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		if(mouse_release(mb_left)) frame_dragging = false;
 		
 		if(pFOCUS && mouse_press(mb_right)) {
+			__menu_cnxt_selecting = context_hovering;
+			
 			if(file_hovering == noone || is_instanceof(file_hovering, ExpDir)) 
 				menuCall("",,, menu_general);
 		}
@@ -329,11 +357,18 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				file_dragging = false;	
 				path_dragging = -1;
 				
-			} else if(key_mod_press(CTRL)) {
+			} else if(keyboard_check_pressed(vk_control)) {
+				__menu_file_selecting = file_selectings[0];
 				
-				pieMenuCall("", mouse_mx, mouse_my, [
+				if(path_is_image(__menu_file_selecting.path))
+					pieMenuCall("",,, menu_file_image);
 					
-				]);
+				else if(path_is_project(__menu_file_selecting.path))
+					pieMenuCall("",,, menu_file_project);
+				
+				file_dragging = false;	
+				path_dragging = -1;
+				
 			}
 		}
 		
@@ -358,8 +393,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 		var _ith = line_get_height() + ui(4);
 		
-		var _graph_x = (PANEL_GRAPH.w / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_x;
-		var _graph_y = (PANEL_GRAPH.h / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_y;
+		var _graph_x = PANEL_GRAPH.graph_cx;
+		var _graph_y = PANEL_GRAPH.graph_cy;
 		
 		for (var i = 0, n = array_length(dirObject.directories); i < n; i++) {
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
@@ -523,12 +558,11 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			var _title_heigh = ui(24);
 			draw_set_text(f_p3, fa_center, fa_bottom, COLORS._main_text);
 			
+			var _amo = array_length(dirObject.files);
 			var _col = floor(_w / (_grid_width + _grid_spac));
 			_grid_width = (_w - (_col - 1) * _grid_spac) / _col;
 			
-			for (var i = 0, n = array_length(dirObject.files); i < n; i++) {
-				var _fil = dirObject.files[i];
-				
+			for (var i = 0; i < _amo; i++) {
 				var _cind = i % _col;
 				var _rind = floor(i / _col);
 				
@@ -537,6 +571,12 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				var _pw  = _grid_width;
 				var _ph  = _grid_height + _title_heigh;
 				
+				// if(i == _amo - 1) {
+				// 	draw_sprite_ext(THEME.add, 0, _px + _grid_width / 2, _py + _grid_height / 2, 1, 1, 0, COLORS._main_value_positive, 1);
+				// 	continue;
+				// }
+				
+				var _fil = dirObject.files[i];
 				if(frame_dragging && rectangle_in_rectangle(_px, _py, _px + _pw, _py + _ph, frame_drag_mx, frame_drag_my, _m[0], _m[1]))
 					array_push(file_selectings, _fil);
 				
@@ -591,9 +631,11 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				
 			}
 			
-			var n = array_length(dirObject.files);
-			_h += ceil(n / _col) * (_grid_height + _title_heigh + _grid_spac);
+			_h += ceil(_amo / _col) * (_grid_height + _title_heigh + _grid_spac);
 		}
+		
+		if(context_hovering == noone && pHOVER && point_in_rectangle(_m[0], _m[1], 0, _y, _w, _y + _h))
+			context_hovering = dirObject;
 		
 		return _h;
 	}

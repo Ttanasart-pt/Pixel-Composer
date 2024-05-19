@@ -23,8 +23,8 @@ if !ready exit;
 		
 		PANEL_GRAPH.stepBegin();
 		
-		var nx = (PANEL_GRAPH.w / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_x;
-		var ny = (PANEL_GRAPH.h / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_y;
+		var nx = PANEL_GRAPH.graph_cx;
+		var ny = PANEL_GRAPH.graph_cy;
 		
 		draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, xx, yy, xx + grid_width, yy + grid_size)) {

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_cross_section",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_cross_section",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

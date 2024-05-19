@@ -11,7 +11,7 @@ event_inherited();
 	
 	alarm[0] = -1;
 	menu     = 1;
-	hght     = ui(32);
+	hght     = ui(36);
 	
 	tooltips  = [];
 	show_icon = false;

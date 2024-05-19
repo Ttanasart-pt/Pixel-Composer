@@ -76,6 +76,8 @@
 		PREFERENCES.panel_menu_resource_monitor		= false;
 		PREFERENCES.panel_menu_right_control		= os_type == os_windows;
 	
+		PREFERENCES.panel_menu_palette_node_size    = 20;
+	
 		PREFERENCES.inspector_focus_on_double_click	= true;
 		PREFERENCES.inspector_view_default			= 1;
 	

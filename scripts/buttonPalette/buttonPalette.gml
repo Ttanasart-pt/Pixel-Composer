@@ -138,8 +138,9 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
 	var amo = array_length(_pal);
 	var col = floor(_w / _gs);
 	var row = ceil(amo / col);
-	var cx = -1, cy = -1;
+	var cx  = -1, cy = -1;
 	var _pd = ui(5);
+	var _h  = row * _gs;
 	
 	for(var i = 0; i < array_length(_pal); i++) {
 		draw_set_color(_pal[i]);
@@ -148,13 +149,14 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
 		
 		draw_rectangle(_x0, _y0 + 1, _x0 + _gs, _y0 + _gs, false);
 		
-		if(color_diff(c_color, _pal[i]) <= 0) {
+		if(c_color >= 0 && color_diff(c_color, _pal[i]) <= 0) {
 			cx = _x0;
 			cy = _y0;
 		}
 	}
 	
-	if(cx == -1) return;
+	if(cx == -1) return _h;
 	
 	draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - _pd, cy + 1 - _pd, _gs + _pd * 2, _gs + _pd * 2);
+	return _h;
 } #endregion

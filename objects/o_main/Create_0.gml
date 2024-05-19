@@ -137,8 +137,8 @@
 		if(!is_array(path)) path = [ path ];
 		if(array_length(path) == 0) return; 
 		
-		_x = _x == undefined? (PANEL_GRAPH.w / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_x : _x;
-		_y = _y == undefined? (PANEL_GRAPH.h / 2) / PANEL_GRAPH.graph_s - PANEL_GRAPH.graph_y : _y;
+		_x = _x == undefined? PANEL_GRAPH.graph_cx : _x;
+		_y = _y == undefined? PANEL_GRAPH.graph_cy : _y;
 		
 		var type = "others";
 		
