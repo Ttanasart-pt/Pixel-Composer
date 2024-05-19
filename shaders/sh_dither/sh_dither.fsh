@@ -19,6 +19,9 @@ uniform vec4  palette[32];
 uniform int   keys;
 uniform float seed;
 
+uniform int   usePalette;
+uniform float colors;
+
 float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
 
 #region ============================== COLOR SPACES ==============================
@@ -56,38 +59,52 @@ float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.98
 #endregion
 
 void main() { #region
-	vec4 _col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 _col = texture2D( gm_BaseTexture, v_vTexcoord );
 	
-	bool exactColor     = false;
-	int closet1_index   = 0;
-	int closet2_index   = 0;
-	float closet1_value = 99.;
-	float closet2_value = 99.;
+	bool exactColor = false;
+	vec4 col1, col2;
 	
-	for(int i = 0; i < keys; i++) {
-		vec4 p_col = palette[i];
-		float dif  = colorDifferent(p_col, _col);
+	if(usePalette == 0) {
+		col1 = floor(_col * colors) / colors;
+		col2 = ceil( _col * colors) / colors;
 		
-		if(dif <= 0.001) {
-			exactColor = true;
-			_col = p_col;
-		} else if(dif < closet1_value) {
-			closet2_value = closet1_value;
-			closet2_index = closet1_index;
+		col1.a = _col.a;
+		col2.a = _col.a;
+		
+		exactColor = distance(_col, col1) < 0.05; 
+		
+	} else if(usePalette == 1) {
+		int closet1_index   = 0;
+		int closet2_index   = 0;
+		float closet1_value = 99.;
+		float closet2_value = 99.;
+		
+		for(int i = 0; i < keys; i++) {
+			vec4 p_col = palette[i];
+			float dif  = colorDifferent(p_col, _col);
 			
-			closet1_value = dif;
-			closet1_index = i;
-		} else if(dif < closet2_value) {
-			closet2_value = dif;
-			closet2_index = i;	
+			if(dif <= 0.001) {
+				exactColor = true;
+				_col = p_col;
+			} else if(dif < closet1_value) {
+				closet2_value = closet1_value;
+				closet2_index = closet1_index;
+				
+				closet1_value = dif;
+				closet1_index = i;
+			} else if(dif < closet2_value) {
+				closet2_value = dif;
+				closet2_index = i;	
+			}
 		}
+		
+		col1 = palette[closet1_index];
+		col2 = palette[closet2_index];
 	}
 	
 	if(exactColor) {
 		gl_FragColor = _col;
 	} else {
-		vec4 col1 = palette[closet1_index];
-		vec4 col2 = palette[closet2_index];
 		float d1 = colorDifferent(_col, col1);
 		float d2 = colorDifferent(_col, col2);
 		float rat = d1 / (d1 + d2);

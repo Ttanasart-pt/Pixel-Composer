@@ -37,8 +37,8 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 			_w -= _bs + ui(8);
 		}
 		
-		var _pw = _w - ui(8);
-		var _ph = _h - ui(8);
+		var _pw = _w - ui(4);
+		var _ph = _h - ui(4);
 		
 		current_palette = _color;
 		
@@ -73,8 +73,8 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		
 		for( var i = 0, n = array_length(_color); i < n; i++ ) {
 			var _pal = _color[i];
-			var _px  = _x + ui(4);
-			var _py  = _y + ui(4) + i * _ph;
+			var _px  = _x + ui(2);
+			var _py  = _y + ui(2) + i * _ph;
 			
 			if(is_array(_pal)) drawPalette(_pal, _px, _py, _pw, _ph);
 		}

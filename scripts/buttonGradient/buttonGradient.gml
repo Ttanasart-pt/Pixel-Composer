@@ -36,8 +36,8 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 			_w -= _bs + ui(8);
 		}
 		
-		var _gw = _w - ui(8);
-		var _gh = _h - ui(8);
+		var _gw = _w - ui(4);
+		var _gh = _h - ui(4);
 		
 		current_gradient = _gradient;
 		
@@ -74,8 +74,8 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		
 		for( var i = 0, n = array_length(_gradient); i < n; i++ ) {
 			var _grad = _gradient[i];
-			var _gx   = _x + ui(4);
-			var _gy   = _y + ui(4) + i * _gh;
+			var _gx   = _x + ui(2);
+			var _gy   = _y + ui(2) + i * _gh;
 			
 			if(is_instanceof(_grad, gradientObject))
 				_grad.draw(_gx, _gy, _gw, _gh);

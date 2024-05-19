@@ -1,9 +1,9 @@
 /// @description init
 #region log
 	var path = "log_temp.txt";
-	var f = file_text_open_append(path);
-	file_text_write_string(f, $"[MESSAGE] {_log_template()}session begin\n");
-	file_text_close(f);
+	var file = file_text_open_append(path);
+	file_text_write_string(file, $"[MESSAGE] {_log_template()}session begin\n");
+	file_text_close(file);
 	
 	gpu_set_tex_mip_enable(mip_off);
 	gc_enable(true);
@@ -82,6 +82,7 @@
 	globalvar HOTKEY_MOD, HOTKEY_BLOCK;
 	HOTKEY_MOD   = 0;
 	HOTKEY_BLOCK = false;
+	
 #endregion
 
 #region Loader

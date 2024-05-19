@@ -947,7 +947,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 								var _dim = struct_try_get(display_data, "useGlobal", true);
 								extract_node = [ "Node_Vector2", "Node_Path" ];
 								
-								if(_dim && def_val == DEF_SURF) {
+								if(_dim && array_equals(def_val, DEF_SURF)) {
 									value_tag = "dimension";
 									node.attributes.use_project_dimension = true;
 									editWidget.side_button = button(function() {

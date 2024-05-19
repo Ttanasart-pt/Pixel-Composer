@@ -183,9 +183,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	
 	grid_size = ui(64);
 	
-	tb_root = new textBox(TEXTBOX_INPUT.text, function(val) {
-		setRoot(val);
-	});
+	tb_root = new textBox(TEXTBOX_INPUT.text, function(val) { setRoot(val); });
 	
 	file_selectings = [];
 	file_hovering   = noone;
@@ -330,6 +328,12 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				
 				file_dragging = false;	
 				path_dragging = -1;
+				
+			} else if(key_mod_press(CTRL)) {
+				
+				pieMenuCall("", mouse_mx, mouse_my, [
+					
+				]);
 			}
 		}
 		

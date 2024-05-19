@@ -2,7 +2,6 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	name  = "Render";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	//use_cache = CACHE_USE.auto;
 	
 	manual_ungroupable	 = false;
 	
@@ -24,11 +23,6 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		new checkBox(function() { 
 			attributes.show_objects = !attributes.show_objects;
 		})]);
-	
-	insp2UpdateTooltip = "Clear cache";
-	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
-	
-	static onInspector2Update = function() { clearCache(); }
 	
 	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);
@@ -136,18 +130,18 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		physics_draw_debug();
 		
 		surface_reset_target();
-		cacheCurrentFrame(_outSurf);
+		// cacheCurrentFrame(_outSurf);
 	} #endregion
 		
-	static recoverCache = function(frame = CURRENT_FRAME) { #region
-		if(!is_instanceof(outParent, NodeValue)) return false;
-		if(!cacheExist(frame)) return false;
+	// static recoverCache = function(frame = CURRENT_FRAME) { #region
+	// 	if(!is_instanceof(outParent, NodeValue)) return false;
+	// 	if(!cacheExist(frame)) return false;
 		
-		var _s = cached_output[CURRENT_FRAME];
-		outParent.setValue(_s);
+	// 	var _s = cached_output[CURRENT_FRAME];
+	// 	outParent.setValue(_s);
 			
-		return true;
-	} #endregion
+	// 	return true;
+	// } #endregion
 	
 	static getGraphPreviewSurface = function() { #region
 		if(!is_instanceof(outParent, NodeValue)) return noone;

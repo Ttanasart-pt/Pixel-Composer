@@ -668,7 +668,8 @@ function Panel_Inspector() : PanelContent() constructor {
 						jun_disp.rx = ui(16) + x;
 						jun_disp.ry = top_bar_h + y;
 						
-						hh += jun_disp.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
+						var _wdh = jun_disp.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
+						if(!is_undefined(_wdh)) hh += _wdh;
 						continue;
 					}
 					jun = _inspecting.inputs[| _inspecting.input_display_list[i]];
