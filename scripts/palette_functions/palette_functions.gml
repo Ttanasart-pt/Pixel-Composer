@@ -100,3 +100,16 @@ function __initPalette() {
 	}
 	file_find_close();
 }
+
+#region palette generate
+	function palette_string_hex(palette, alpha = true) {
+		var _str = "";
+		
+		for (var i = 0, n = array_length(palette); i < n; i++) {
+			var _c = palette[i];
+			_str += $"{color_get_hex(_c, alpha)}\n";
+		}
+		
+		return _str;
+	}
+#endregion

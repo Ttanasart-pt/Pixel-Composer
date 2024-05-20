@@ -119,9 +119,9 @@
     {"name":"atlas","order":2,"path":"folders/nodes/icons/value/atlas.yy",},
     {"name":"bool","order":3,"path":"folders/nodes/icons/value/bool.yy",},
     {"name":"color","order":4,"path":"folders/nodes/icons/value/color.yy",},
-    {"name":"path","order":29,"path":"folders/nodes/icons/value/path.yy",},
     {"name":"mesh","order":5,"path":"folders/nodes/icons/value/mesh.yy",},
     {"name":"number","order":6,"path":"folders/nodes/icons/value/number.yy",},
+    {"name":"path","order":29,"path":"folders/nodes/icons/value/path.yy",},
     {"name":"struct","order":9,"path":"folders/nodes/icons/value/struct.yy",},
     {"name":"surface","order":7,"path":"folders/nodes/icons/value/surface.yy",},
     {"name":"texts","order":8,"path":"folders/nodes/icons/value/texts.yy",},
@@ -157,6 +157,7 @@
     {"name":"find_boundary","order":7,"path":"folders/shader/misc/find_boundary.yy",},
     {"name":"Flag","order":3,"path":"folders/shader/MK effects/Flag.yy",},
     {"name":"Tile","order":4,"path":"folders/shader/MK effects/Tile.yy",},
+    {"name":"atlas expand","order":2,"path":"folders/shader/UI/atlas expand.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"ac_disappear","order":2,"path":"animcurves/ac_disappear/ac_disappear.yy",},

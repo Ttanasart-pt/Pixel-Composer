@@ -25,8 +25,11 @@ event_inherited();
 	anchor = ANCHOR.left | ANCHOR.top;
 	node_menu_selecting = noone;
 	
-	display_grid_size = ui(64);
-	display_list_size = ui(28);
+	display_grid_size    = ui(64);
+	display_grid_size_to = display_grid_size;
+	
+	display_list_size    = ui(28);
+	display_list_size_to = display_list_size;
 	
 	is_global = PANEL_GRAPH.getCurrentContext() == noone;
 	
@@ -550,9 +553,10 @@ event_inherited();
 			yy += curr_height;
 			
 			if(sHOVER && key_mod_press(CTRL)) {
-				if(mouse_wheel_down()) display_grid_size = clamp(display_grid_size - ui(8), ui(32), ui(128));
-				if(mouse_wheel_up())   display_grid_size = clamp(display_grid_size + ui(8), ui(32), ui(128));
+				if(mouse_wheel_down()) display_grid_size_to = clamp(display_grid_size_to - ui(8), ui(32), ui(128));
+				if(mouse_wheel_up())   display_grid_size_to = clamp(display_grid_size_to + ui(8), ui(32), ui(128));
 			}
+			display_grid_size = lerp_float(display_grid_size, display_grid_size_to, 3);
 			
 		#endregion
 		
@@ -656,8 +660,9 @@ event_inherited();
 			}
 			
 			if(sHOVER && key_mod_press(CTRL)) {
-				if(mouse_wheel_down()) display_list_size = clamp(display_list_size - ui(4), ui(16), ui(64));
-				if(mouse_wheel_up())   display_list_size = clamp(display_list_size + ui(4), ui(16), ui(64));
+				if(mouse_wheel_down()) display_list_size_to = clamp(display_list_size_to - ui(4), ui(16), ui(64));
+				if(mouse_wheel_up())   display_list_size_to = clamp(display_list_size_to + ui(4), ui(16), ui(64));
+				display_list_size = lerp_float(display_list_size, display_list_size_to, 3);
 			}
 		#endregion
 		}

@@ -5,7 +5,8 @@ function Panel_Palette() : PanelContent() constructor {
 	w = ui(320);
 	h = ui(480);
 	
-	grid_size = ui(16);
+	grid_size    = ui(16);
+	grid_size_to = ui(16);
 	
 	color_dragging = noone;
 	
@@ -23,9 +24,10 @@ function Panel_Palette() : PanelContent() constructor {
 		var cur = CURRENT_COLOR;
 		
 		if(pHOVER && key_mod_press(CTRL)) {
-			if(mouse_wheel_down()) grid_size = clamp(grid_size - ui(4), ui(8), ui(32));
-			if(mouse_wheel_up())   grid_size = clamp(grid_size + ui(4), ui(8), ui(32));
+			if(mouse_wheel_down()) grid_size_to = clamp(grid_size_to - ui(4), ui(8), ui(32));
+			if(mouse_wheel_up())   grid_size_to = clamp(grid_size_to + ui(4), ui(8), ui(32));
 		}
+		grid_size = lerp_float(grid_size, grid_size_to, 3);
 		
 		for(var i = 0; i < array_length(PALETTES); i++) {
 			var preset	= PALETTES[i];
