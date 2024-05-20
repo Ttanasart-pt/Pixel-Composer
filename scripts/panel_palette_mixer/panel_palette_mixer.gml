@@ -78,8 +78,8 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 		var _connections = palette_data.connections;
 		var _blends      = palette_data.blends;
 		
-		if(key_mod_press(SHIFT)) shade_mode = lerp_float(shade_mode, 1, 5);
-		else					 shade_mode = lerp_float(shade_mode, 0, 5);
+		if(key_mod_press(SHIFT)) shade_mode = lerp_float(shade_mode, 1, 10);
+		else					 shade_mode = lerp_float(shade_mode, 0, 10);
 		
 		if(!in_dialog) draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, w, h);
 		
@@ -233,7 +233,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			surface_set_target(connect_surf)
 				DRAW_CLEAR
 				
-				var _gs  = shade_mode > 0? ui(12) : node_size;
+				var _gs  = key_mod_press(SHIFT)? ui(12) : node_size;
 				var _gs2 = _gs / 2;
 				var _ind         = noone;
 				var _hov         = node_hovering;
@@ -275,7 +275,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					}
 				}
 				
-				var _bs = shade_mode > 0? ui(12) : node_size * 0.75;
+				var _bs = key_mod_press(SHIFT)? ui(12) : node_size * 0.75;
 				for (var i = 0, n = array_length(_blends); i < n; i++) {
 					var _blend = _blends[i];
 					

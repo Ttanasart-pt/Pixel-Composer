@@ -134,10 +134,14 @@ function Panel_Color() : PanelContent() constructor {
 			_y1 = alp_y - ui(8);
 		}
 		
-		var cont_x = ui(padding);
-		var cont_y = ui(padding);
-		var cont_w = w - ui(padding + padding) - ui(16 + 8);
-		var cont_h = _y1 - cont_y;
+		var sel_w  = ui(16);
+		var sel_pd = ui(12);
+		
+		var _selPad = ui(12);
+		var cont_x = _selPad;
+		var cont_y = _selPad;
+		var cont_w = w - _selPad * 2 - sel_w - sel_pd;
+		var cont_h = _y1 - ui(4) - cont_y;
 		
 		shader_set(sh_color_select_content);
 		shader_set_i("mode", mode);
@@ -145,9 +149,8 @@ function Panel_Color() : PanelContent() constructor {
 		shader_set_f("val",  val);
 		draw_sprite_stretched(s_fx_pixel, 0, cont_x, cont_y, cont_w, cont_h);
 		
-		var sel_x = cont_x + cont_w + ui(8);
-		var sel_y = ui(padding);
-		var sel_w = ui(16);
+		var sel_x = cont_x + cont_w + sel_pd;
+		var sel_y = _selPad;
 		var sel_h = cont_h;
 		
 		shader_set(sh_color_select_side);
@@ -191,19 +194,46 @@ function Panel_Color() : PanelContent() constructor {
 				drag_sel = true;
 		}
 		
+		var _bar_s = ui(12);
+		var _sd_w  = ui(16 + 6);
+		
 		if(mode == 0) {
 			var hy = sel_y + hue * sel_h;
-			var cx = cont_x + sat * cont_w - ui(6);
-			var cy = cont_y + (1 - val) * cont_h - ui(6);
-			draw_sprite_stretched_ext(s_ui_base_white, 0, sel_x - ui(3), hy - ui(6), ui(16 + 6), ui(10), make_color_hsv(hue * 255, 255, 255), 1);
-			draw_sprite_stretched_ext(s_ui_base_white, 0, cx, cy, ui(12), ui(12), CURRENT_COLOR, 1);
+			var cx = cont_x + sat * cont_w - _bar_s / 2;
+			var cy = cont_y + (1 - val) * cont_h - _bar_s / 2;
+			
+			var _sd_x = sel_x - ui(3);
+			var _sd_y = hy - _bar_s / 2;
+			
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx - 1, cy - 1, _bar_s + 2, _bar_s + 2, c_black, 1);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sd_x - 1, _sd_y - 1, _sd_w + 2, _bar_s + 2, c_black, 1);
+			
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sd_x, _sd_y, _sd_w, _bar_s, make_color_hsv(hue * 255, 255, 255), 1);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx, cy, _bar_s, _bar_s, CURRENT_COLOR, 1);
+			
+			BLEND_ADD
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _sd_x, _sd_y, _sd_w, _bar_s, c_white, 0.75);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cx, cy, _bar_s, _bar_s, c_white, 0.75);
+			BLEND_NORMAL
 			
 		} else if(mode == 1) {
 			var vy = sel_y + (1 - val) * sel_h;
-			var cx = cont_x + hue * cont_w - ui(6);
-			var cy = cont_y + (1 - sat) * cont_h - ui(6);
-			draw_sprite_stretched_ext(s_ui_base_white, 0, sel_x - ui(3), vy - ui(6), ui(16 + 6), ui(10), make_color_hsv(hue * 255, 255, val * 255), 1);
-			draw_sprite_stretched_ext(s_ui_base_white, 0, cx, cy, ui(12), ui(12), CURRENT_COLOR, 1);
+			var cx = cont_x + hue * cont_w - _bar_s / 2;
+			var cy = cont_y + (1 - sat) * cont_h - _bar_s / 2;
+			
+			var _sd_x = sel_x - ui(3);
+			var _sd_y = vy - _bar_s / 2;
+			
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx - 1, cy - 1, _bar_s + 2, _bar_s + 2, c_black, 1);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sd_x - 1, _sd_y - 1, _sd_w + 2, _bar_s + 2, c_black, 1);
+			
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sd_x, _sd_y, _sd_w, _bar_s, make_color_hsv(hue * 255, 255, val * 255), 1);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx, cy, _bar_s, _bar_s, CURRENT_COLOR, 1);
+			
+			BLEND_ADD
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _sd_x, _sd_y, _sd_w, _bar_s, c_white, 0.75);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cx, cy, _bar_s, _bar_s, c_white, 0.75);
+			BLEND_NORMAL
 		}
 		
 		if(DRAGGING && DRAGGING.type == "Color" && pHOVER) {

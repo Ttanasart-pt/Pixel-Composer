@@ -15,8 +15,10 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 void main() {
+	vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
+	
     if(mode == 0)  
-		gl_FragColor = vec4(hsv2rgb(vec3(hue, v_vTexcoord.x, 1. - v_vTexcoord.y)), 1.);
+		gl_FragColor = vec4(hsv2rgb(vec3(hue, v_vTexcoord.x, 1. - v_vTexcoord.y)), col.a);
 	else if(mode == 1)  
-		gl_FragColor = vec4(hsv2rgb(vec3(v_vTexcoord.x, 1. - v_vTexcoord.y, val)), 1.);
+		gl_FragColor = vec4(hsv2rgb(vec3(v_vTexcoord.x, 1. - v_vTexcoord.y, val)), col.a);
 }

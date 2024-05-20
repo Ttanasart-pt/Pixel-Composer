@@ -32,19 +32,18 @@ void main() {
         }
         
         float dist = distance(v_vTexcoord, pos);
+        minDist = min(minDist, dist);
+        
         dist = 1. / pow(dist, influence);
         
         cc += pal * dist;
         w  += dist;
-        
-        minDist = min(minDist, dist);
     }
     
     if(w > 0.) cc /= w;
     
-    if(progress < 1.) {
-        cc.a = smoothstep(0., cc.a, progress * minDist);
-    }
+    if(progress < 1.) 
+        cc.a *= smoothstep(progress * 1.5, progress * 0.5, minDist);
     
     gl_FragColor = cc;
 }
