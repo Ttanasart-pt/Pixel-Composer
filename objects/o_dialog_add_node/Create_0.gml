@@ -548,6 +548,12 @@ event_inherited();
 			
 			hh += curr_height;
 			yy += curr_height;
+			
+			if(sHOVER && key_mod_press(CTRL)) {
+				if(mouse_wheel_down()) display_grid_size = clamp(display_grid_size - ui(8), ui(32), ui(128));
+				if(mouse_wheel_up())   display_grid_size = clamp(display_grid_size + ui(8), ui(32), ui(128));
+			}
+			
 		#endregion
 		
 		} else if(PREFERENCES.dialog_add_node_view == 1) { #region list
@@ -647,6 +653,11 @@ event_inherited();
 					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 					draw_text(ui(16 + 16), _yy + ui(12), lb.text);
 				}
+			}
+			
+			if(sHOVER && key_mod_press(CTRL)) {
+				if(mouse_wheel_down()) display_list_size = clamp(display_list_size - ui(4), ui(16), ui(64));
+				if(mouse_wheel_up())   display_list_size = clamp(display_list_size + ui(4), ui(16), ui(64));
 			}
 		#endregion
 		}

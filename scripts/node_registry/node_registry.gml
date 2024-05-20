@@ -110,8 +110,12 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		var spr_x = _x + grid_size / 2;
 		var spr_y = _y + grid_size / 2;
 		
+		var _spw = sprite_get_width(spr);
+		var _sph = sprite_get_height(spr);
+		var _ss  = grid_size / max(_spw, _sph) * 0.75;
+		
 		gpu_set_tex_filter(true);
-		draw_sprite_ui_uniform(spr, 0, spr_x, spr_y, 0.5);
+		draw_sprite_uniform(spr, 0, spr_x, spr_y, _ss);
 		gpu_set_tex_filter(false);
 				
 		if(new_node) {
