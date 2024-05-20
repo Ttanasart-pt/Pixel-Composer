@@ -696,6 +696,7 @@ function __initNodes() {
 		addNodeObject(generator, "Pixel Builder",		s_node_pixel_builder,		"Node_Pixel_Builder",		[1, Node_Pixel_Builder]).setVersion(11540);
 		addNodeObject(generator, "Bar / Graph",			s_node_bar_graph,			"Node_Plot_Linear",			[0, Node_create_Plot_Linear], global.node_plot_linear_keys,	"Plot graph or bar chart from array of number.").setVersion(1144);
 		addNodeObject(generator, "Profile",				s_node_profile,				"Node_Path_Profile",		[1, Node_Path_Profile]).setVersion(11660);
+		addNodeObject(generator, "Cross Section",		s_node_cross_section,		"Node_Cross_Section",		[1, Node_Cross_Section]).setVersion(11710);
 		
 		ds_list_add(generator, "Noises");
 		addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise],,							"Generate white noise.");
@@ -896,9 +897,10 @@ function __initNodes() {
 		addNodeObject(values, "Mesh Transform",	s_node_mesh_transform,	"Node_Mesh_Transform",		[1, Node_Mesh_Transform]).setVersion(1140);
 			
 		ds_list_add(values, "Atlas");
-		addNodeObject(values, "Draw Atlas",		s_node_draw_atlas,	"Node_Atlas_Draw",	[1, Node_Atlas_Draw],, "Render image atlas to a surface.").setVersion(1141);
-		addNodeObject(values, "Atlas Get",		s_node_atlas_get,	"Node_Atlas_Get",	[1, Node_Atlas_Get]).setVersion(1141);
-		addNodeObject(values, "Atlas Set",		s_node_atlas_set,	"Node_Atlas_Set",	[1, Node_Atlas_Set]).setVersion(1141);
+		addNodeObject(values, "Draw Atlas",			s_node_draw_atlas,		"Node_Atlas_Draw",		[1, Node_Atlas_Draw],, "Render image atlas to a surface.").setVersion(1141);
+		addNodeObject(values, "Atlas Get",			s_node_atlas_get,		"Node_Atlas_Get",		[1, Node_Atlas_Get]).setVersion(1141);
+		addNodeObject(values, "Atlas Set",			s_node_atlas_set,		"Node_Atlas_Set",		[1, Node_Atlas_Set]).setVersion(1141);
+		addNodeObject(values, "Atlas to Struct",	s_node_atlas_struct,	"Node_Atlas_Struct",	[1, Node_Atlas_Struct]).setVersion(11710);
 			
 		ds_list_add(values, "Surface");
 		//addNodeObject(values, "Dynamic Surface",		s_node_dynasurf,			"Node_dynaSurf",	[1, Node_dynaSurf]).setVersion(11520);

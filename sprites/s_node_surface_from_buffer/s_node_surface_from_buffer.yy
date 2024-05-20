@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"surface",
-    "path":"folders/nodes/data/value/surface.yy",
+    "path":"folders/nodes/icons/value/surface.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -205,9 +205,10 @@ function draw_tooltip_atlas(atlas) { #region
 	for( var i = 0; i < amo; i++ ) {
 		var _y = sy + i * ui(48 + 8);
 		
-		var atl = atlas[i];
-		var surf = atl.getSurface();
+		var atl  = atlas[i];
+		if(!is_instanceof(atl, SurfaceAtlas)) continue;
 		
+		var surf = atl.getSurface();
 		if(!is_surface(surf)) continue;
 		
 		var sw = surface_get_width_safe(surf);

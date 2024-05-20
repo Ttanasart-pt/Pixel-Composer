@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"struct",
-    "path":"folders/nodes/data/value/struct.yy",
+    "path":"folders/nodes/icons/value/struct.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

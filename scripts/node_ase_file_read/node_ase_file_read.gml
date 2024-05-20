@@ -91,63 +91,60 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var current_tag = getInputData(2);
 		var amo = array_length(tags);
 		var abx = ui(24);
-		var lb_h = line_get_height(f_p0);
-		var lb_y = _y + lb_h / 2 + ui(6);
 		
 		var by = _y;
 		var hh = 32;
-		var _h = lb_h + hh * amo + 16;
+		var _h = hh * amo + ui(8);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, by, _w, _h, COLORS.node_composite_bg_blend, 1);
 		
-		var index = inputs[| 2].value_from == noone? inputs[| 2].is_anim : 2;
-		draw_sprite_ui_uniform(THEME.animate_clock, index, abx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 0.8);
-		if(_hover && point_in_circle(_m[0], _m[1], abx, lb_y, ui(10))) {
-			draw_sprite_ui_uniform(THEME.animate_clock, index, abx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 1);
-			TOOLTIP = "Toggle animation";
-					
-			if(mouse_press(mb_left, _focus)) {
-				if(inputs[| 2].value_from != noone)
-					inputs[| 2].removeFrom();
-				else
-					inputs[| 2].setAnim(!inputs[| 2].is_anim);
-			}
-		}
-		
 		for( var i = 0, n = array_length(tags); i < n; i++ ) {
-			var _yy = by + lb_h + 8 + i * hh;
+			var _yy = by + ui(4) + i * hh;
 			var tag = tags[i];
 			
+			var cc = tag[? "Color"];
 			var st = tag[? "Frame start"];
 			var ed = tag[? "Frame end"];
 			var rn = ed - st + 1;
+			
 			var progFr = safe_mod(CURRENT_FRAME - _tag_delay, rn) + 1;
-			var prog = progFr / rn;
-			var txt = "";
+			var prog   = progFr / rn;
+			var txt    = "";
+			
+			var _tgy = _yy + ui(2);
+			var _tgh = hh  - ui(4);
 			
 			if(tag[? "Name"] == current_tag) {
-				draw_sprite_stretched_ext(THEME.node_bg_name, 1, _x + 8, _yy, _w - 16, hh, tag[? "Color"], 0.5);
-				draw_sprite_stretched_ext(THEME.node_bg_name, 1, _x + 8, _yy, (_w - 16) * prog, hh, tag[? "Color"], 1.0);
+				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, _w - 16, _tgh, cc, 0.5);
 				
-				txt += string(progFr) + "/";
-			} else 
-				draw_sprite_stretched_ext(THEME.node_bg_name, 1, _x + 8, _yy, 8, hh, tag[? "Color"], 1.0);
+				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, (_w - 16) * prog, _tgh, cc, 0.85);
+				draw_sprite_stretched_ext(THEME.timeline_node, 1, _x + 8, _tgy, (_w - 16) * prog, _tgh, c_white, 0.25);
+				
+				txt = $"{progFr}/{rn}";
+				
+			} else {
+				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, 8, _tgh, cc, 0.85);
+				draw_sprite_stretched_ext(THEME.timeline_node, 1, _x + 8, _tgy, 8, _tgh, c_white, 0.25);
+				
+				txt = $"{rn}";
+			}
+				
 			txt += string(rn);
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x + 8, _yy, _x + _w - 8, _yy + hh)) {
-				draw_sprite_stretched_ext(THEME.node_bg_name, 1, _x + 8, _yy, _w - 16, hh, c_white, 0.1);
-				if(mouse_click(mb_left, _focus)) {
+				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, _w - 16, _tgh, c_white, 0.1);
+				if(mouse_press(mb_left, _focus)) {
 					var _currTag = getInputData(2);
 					var _tagName = tag[? "Name"];
 					inputs[| 2].setValue(_currTag == _tagName? "" : _tagName);
 				}
 			}
 			
-			draw_set_text(f_p1, fa_left, fa_center, tag[? "Name"] == current_tag? tag[? "Color"] : COLORS._main_text);
-			draw_text(_x + 24, _yy + hh / 2, tag[? "Name"]);
+			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+			draw_text_add(_x + 24, _yy + hh / 2, tag[? "Name"]);
 			
 			draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
-			draw_text(_x + _w - 20, _yy + hh / 2, txt);
+			draw_text_add(_x + _w - 20, _yy + hh / 2, txt);
 		}
 		
 		tag_renderer.h = _h;
@@ -176,11 +173,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	first_update = false;
 	
 	on_drop_file = function(path) { #region
-		if(updatePaths(path)) {
-			doUpdate();
-			return true;
-		}
-		return false;
+		inputs[| 0].setValue(path);
+		doUpdate();
+		return true;
 	} #endregion
 	
 	function refreshLayers() { #region
@@ -219,21 +214,20 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	function updatePaths(path = path_current) { #region
 		if(path == -1) return false;
+		if(!file_exists_empty(path)) return false;
 		
 		path_current = path;
 		edit_time    = max(edit_time, file_get_modify_s(path_current));
 		
-		var ext = string_lower(filename_ext(path));
-		var _name = string_replace(filename_name(path), filename_ext(path), "");
+		var ext   = string_lower(filename_ext(path));
+		var _name = filename_name_only(path);
 		
 		if(ext != ".ase" && ext != ".aseprite") return false;
-			
-		outputs[| 2].setValue(path);
 		
 		read_ase(path, content);
 		
 		layers = [];
-		var vis = attributes.layer_visible;
+		var vis    = attributes.layer_visible;
 		var frames = content[? "Frames"];
 		
 		for( var i = 0, n = array_length(frames); i < n; i++ ) {
@@ -305,17 +299,20 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static step = function() { #region
-		if(attributes.file_checker && path_current != "") {
-			if(file_get_modify_s(path_current) > edit_time) {
-				updatePaths();
-				triggerRender();
-			}
+		if(!attributes.file_checker) return;
+		if(path_current == "") return;
+		
+		if(file_get_modify_s(path_current) > edit_time) {
+			updatePaths();
+			triggerRender();
 		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var path        = path_get(getInputData(0));
 		var current_tag = getInputData(2);
+		
+		outputs[| 2].setValue(path);
 		
 		if(path_current != path) updatePaths(path);
 		if(ds_map_empty(content)) return;

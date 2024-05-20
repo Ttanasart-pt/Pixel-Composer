@@ -161,15 +161,21 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			switch(pack) { 
 				case SPRITE_STACK.horizontal :
 					for(var i = _st; i <= _ed; i++) {
-						ww += surface_get_width_safe(inpt[i]);
+						var _surf = array_safe_get(inpt, i);
+						if(!is_surface(_surf)) continue;
+						
+						ww += surface_get_width_safe(_surf);
 						if(i > _st) ww += spac;
-						hh  = max(hh, surface_get_height_safe(inpt[i]));
+						hh  = max(hh, surface_get_height_safe(_surf));
 					}
 					break;
 				case SPRITE_STACK.vertical :
 					for(var i = _st; i <= _ed; i++) {
-						ww  = max(ww, surface_get_width_safe(inpt[i]));
-						hh += surface_get_height_safe(inpt[i]);
+						var _surf = array_safe_get(inpt, i);
+						if(!is_surface(_surf)) continue;
+						
+						ww  = max(ww, surface_get_width_safe(_surf));
+						hh += surface_get_height_safe(_surf);
 						if(i > _st) hh += spac;
 					}
 					break;
@@ -184,10 +190,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						for(var j = 0; j < col; j++) {
 							var index = _st + i * col + j;
 							if(index > _ed) break;
-						
-							row_w += surface_get_width_safe(inpt[index]);
+							
+							var _surf = array_safe_get(inpt, index);
+							if(!is_surface(_surf)) continue;
+							
+							row_w += surface_get_width_safe(_surf);
 							if(j) row_w += spc2[0];
-							row_h  = max(row_h, surface_get_height_safe(inpt[index]));
+							row_h  = max(row_h, surface_get_height_safe(_surf));
 						}
 							
 						ww  = max(ww, row_w);

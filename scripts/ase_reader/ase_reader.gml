@@ -351,8 +351,14 @@ function read_format_array(bin, formatArr, outMap) {
 }
 
 function read_ase(path, fileMap) {
-	printIf(global.FLAG.ase_import, "===== Reading: " + path + " =====");
+	printIf(global.FLAG.ase_import, $"===== Reading: {path} =====");
 	var file = file_bin_open(path, 0);
+	
+	if(file < 0) {
+		noti_warning($"ASE file read error.")
+		return noone;
+	}
+	
 	file_bin_seek(file, 0);
 	
 	ds_map_clear(fileMap);

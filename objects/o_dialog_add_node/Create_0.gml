@@ -25,6 +25,9 @@ event_inherited();
 	anchor = ANCHOR.left | ANCHOR.top;
 	node_menu_selecting = noone;
 	
+	display_grid_size = ui(64);
+	display_list_size = ui(28);
+	
 	is_global = PANEL_GRAPH.getCurrentContext() == noone;
 	
 	#region ---- category ----
@@ -418,8 +421,8 @@ event_inherited();
 		var _hoverContent = _hover;
 			
 		if(PREFERENCES.dialog_add_node_view == 0) { #region grid
-			var grid_size  = ui(64);
-			var grid_width = ui(80);
+			var grid_size  = display_grid_size;
+			var grid_width = grid_size * 1.25;
 			var grid_space = ui(12);
 			var col        = floor(content_pane.surface_w / (grid_width + grid_space));
 			var row        = ceil(node_count / col);
@@ -546,9 +549,10 @@ event_inherited();
 			hh += curr_height;
 			yy += curr_height;
 		#endregion
+		
 		} else if(PREFERENCES.dialog_add_node_view == 1) { #region list
 			var list_width  = content_pane.surface_w;
-			var list_height = ui(28);
+			var list_height = display_list_size;
 			var yy          = _y + list_height / 2;
 			var bg_ind	    = 0;
 			hh += list_height;
@@ -787,7 +791,7 @@ event_inherited();
 			return hh;
 		} #endregion
 		
-		if(PREFERENCES.dialog_add_node_view == 0) { #region grid
+		if(PREFERENCES.dialog_add_node_view == 0) { // grid
 			
 			var col = floor(search_pane.surface_w / (grid_width + grid_space));
 			var yy = _y + grid_space;
@@ -909,8 +913,8 @@ event_inherited();
 					yy += hght;
 				}
 			}
-		#endregion
-		} else if(PREFERENCES.dialog_add_node_view == 1) { #region list
+		
+		} else if(PREFERENCES.dialog_add_node_view == 1) { // list
 			
 			var list_width  = search_pane.surface_w;
 			var list_height = ui(28);
@@ -989,7 +993,6 @@ event_inherited();
 				hh += list_height;
 				yy += list_height;
 			}
-		#endregion
 		}
 		
 		node_focusing = -1;

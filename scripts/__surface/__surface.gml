@@ -1,4 +1,6 @@
-function SurfaceAtlasFast(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1) constructor {
+function Atlas() constructor {}
+
+function SurfaceAtlasFast(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1) : Atlas() constructor {
 	self.surface  = surface;
 	self.x        = _x;
 	self.y        = _y;
@@ -27,7 +29,7 @@ function SurfaceAtlasFast(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blen
 	}
 }
 
-function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1, setDim = true) constructor {
+function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1, setDim = true) : Atlas() constructor {
 	self.surface  = new Surface(surface);
 	self.x        = _x;
 	self.y        = _y;
