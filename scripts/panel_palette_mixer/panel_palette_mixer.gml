@@ -6,7 +6,9 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 	w = ui(320);
 	h = ui(400);
 	
-	connect_surf = surface_create(1, 1);
+	connect_surf       = surface_create(1, 1);
+	connect_blend_surf = surface_create(1, 1);
+	
 	content_surf = surface_create(1, 1);
 	
 	var _def = load_palette_mixer();
@@ -59,6 +61,8 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 	connection_drag = noone;
 	conn_menu_ctx   = noone;
 	
+	shade_mode = 0;
+	
 	pr_palette = ds_priority_create();
 	
 	function setColor(clr) {
@@ -73,6 +77,9 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 		var _palettes    = palette_data.nodes;
 		var _connections = palette_data.connections;
 		var _blends      = palette_data.blends;
+		
+		if(key_mod_press(SHIFT)) shade_mode = lerp_float(shade_mode, 1, 5);
+		else					 shade_mode = lerp_float(shade_mode, 0, 5);
 		
 		if(!in_dialog) draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, w, h);
 		
@@ -108,7 +115,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			
 			draw_sprite_stretched(THEME.button_def, 0, pbg_x, pbg_y, pbg_w, pbg_h);
 			
-			if(pHOVER && point_in_rectangle(mx, my, pbg_x, pbg_x, pbg_w, pbg_h)) {
+			if(pHOVER && point_in_rectangle(mx, my, pbg_x, pbg_y, pbg_x + pbg_w, pbg_y + pbg_h)) {
 				
 				draw_sprite_stretched_ext(THEME.button_def, 3, pbg_x, pbg_y, pbg_w, pbg_h, c_white, 0.5);
 				if(mouse_press(mb_right)) {
@@ -210,6 +217,9 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 		connect_surf = surface_verify(connect_surf, pw, ph);
 		content_surf = surface_verify(content_surf, pw, ph);
 		
+		// for (var i = 0, n = array_length(atlas_surfs); i < n; i++) 
+		// 	atlas_surfs = surface_verify(atlas_surfs, pw, ph);
+		
 		var _mx_x = pw / 2 + mixer_x;
 		var _mx_y = ph / 2 + mixer_y;
 		
@@ -223,7 +233,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			surface_set_target(connect_surf)
 				DRAW_CLEAR
 				
-				var _gs  = node_size;
+				var _gs  = shade_mode > 0? ui(12) : node_size;
 				var _gs2 = _gs / 2;
 				var _ind         = noone;
 				var _hov         = node_hovering;
@@ -248,7 +258,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					var _toy = round(_mx_y + _to.y);
 					
 					var _hv = _hov == noone && _con_hover == i;
-					if(!key_mod_press(SHIFT)) {
+					if(shade_mode == 0) {
 						draw_set_alpha(0.75);
 						draw_line_width_color(_frx, _fry, _tox, _toy, (_hv? 8 : 4) + 2, c_white, c_white);
 						draw_set_alpha(1);
@@ -256,7 +266,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					
 					draw_line_width_color(_frx, _fry, _tox, _toy, _hv? 8 : 4, _fr.color, _to.color);
 					
-					if(_pHover && _bln_hover == noone && distance_to_line(_msx, _msy, _frx, _fry, _tox, _toy) < 6) {
+					if(_pHover && _bln_hover == noone && shade_mode == 0 && distance_to_line(_msx, _msy, _frx, _fry, _tox, _toy) < 6) {
 						conn_hovering = i;
 						
 						var _d0 = point_distance(_frx, _fry, _msx, _msy);
@@ -265,7 +275,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					}
 				}
 				
-				var _bs = node_size * 0.75;
+				var _bs = shade_mode > 0? ui(12) : node_size * 0.75;
 				for (var i = 0, n = array_length(_blends); i < n; i++) {
 					var _blend = _blends[i];
 					
@@ -276,7 +286,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					
 					draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _px - _bs / 2, _py - _bs / 2, _bs, _bs, _c, 1);
 					
-					if(key_mod_press(SHIFT))
+					if(shade_mode > 0)
 						continue;
 					
 					BLEND_ADD
@@ -313,15 +323,15 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					var _py = round(_mx_y + pal.y);
 					var _hv = _pHover && point_in_rectangle(_msx, _msy, _px - _gs2, _py - _gs2, _px + _gs2, _py + _gs2);
 					
-					if(!key_mod_press(SHIFT))
+					if(shade_mode == 0)
 						draw_sprite_stretched(THEME.button_def, _hov == pal, _px - _gs2, _py - _gs2, _gs, _gs);
 					draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _px - _gs2 + 2, _py - _gs2 + 2, _gs - 4, _gs - 4, _c, 1);
-					
-					if(key_mod_press(SHIFT)) continue;
 					
 					BLEND_ADD
 					draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _px - _gs2 + 2, _py - _gs2 + 2, _gs - 4, _gs - 4, c_white, 0.25);
 					BLEND_NORMAL
+					
+					if(shade_mode > 0) continue;
 					
 					if(pal == node_selecting)
 						draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _px - _gs2, _py - _gs2, _gs, _gs, COLORS._main_accent, 1);
@@ -548,17 +558,75 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			surface_reset_target();
 		#endregion
 		
-		shader_set(sh_FXAA);
-		gpu_set_tex_filter(true);
-			shader_set_f("dimension", pw, ph);
-			shader_set_f("cornerDis", 0.5);
-			shader_set_f("mixAmo",    1);
+		#region draw surfaces
+			if(shade_mode > 0) {
+				
+				var _shade_pal = array_create(array_length(palette) * 4);
+				var _shade_pos = array_create(array_length(palette) * 2);
+				var _ind = 0;
+				
+				for (var i = 0, n = array_length(_palettes); i < n; i++) {
+					var _x = _palettes[i].x;
+					var _y = _palettes[i].y;
+					var _c = _palettes[i].color;
+					
+					_shade_pal[_ind * 4 + 0] = _color_get_red(_c);
+					_shade_pal[_ind * 4 + 1] = _color_get_green(_c);
+					_shade_pal[_ind * 4 + 2] = _color_get_blue(_c);
+					_shade_pal[_ind * 4 + 3] = _color_get_alpha(_c);
+					
+					_shade_pos[_ind * 2 + 0] = _mx_x + _x;
+					_shade_pos[_ind * 2 + 1] = _mx_y + _y;
+					
+					_ind++;
+				}
+					
+				for (var i = 0, n = array_length(_blends); i < n; i++) {
+					var _x = _blends[i].x;
+					var _y = _blends[i].y;
+					var _c = _blends[i].color;
+					
+					_shade_pal[_ind * 4 + 0] = _color_get_red(_c);
+					_shade_pal[_ind * 4 + 1] = _color_get_green(_c);
+					_shade_pal[_ind * 4 + 2] = _color_get_blue(_c);
+					_shade_pal[_ind * 4 + 3] = _color_get_alpha(_c);
+					
+					_shade_pos[_ind * 2 + 0] = _mx_x + _x;
+					_shade_pos[_ind * 2 + 1] = _mx_y + _y;
+					
+					_ind++;
+				}
+				
+				connect_blend_surf = surface_verify(connect_blend_surf, pw, ph);
+				
+				surface_set_shader(connect_blend_surf, sh_palette_mixer_atlas_expand_palette);
+					shader_set_f("dimension", pw, ph);
+					shader_set_i("paletteSize", array_length(palette));
+					
+					shader_set_f("palette",   _shade_pal);
+					shader_set_f("positions", _shade_pos);
+					shader_set_f("influence", node_size / ui(4));
+					shader_set_f("progress",  shade_mode);
+					
+					draw_surface(connect_surf, 0, 0);
+				surface_reset_shader();
+				
+				draw_surface(connect_blend_surf, px, py);
+				
+			} else {
+				shader_set(sh_FXAA);
+				gpu_set_tex_filter(true);
+					shader_set_f("dimension", pw, ph);
+					shader_set_f("cornerDis", 0.5);
+					shader_set_f("mixAmo",    1);
+					
+					draw_surface(connect_surf, px, py);
+				gpu_set_tex_filter(false);
+				shader_reset();
+			}
 			
-			draw_surface(connect_surf, px, py);
-		gpu_set_tex_filter(false);
-		shader_reset();
-		
-		draw_surface(content_surf, px, py);
+			draw_surface(content_surf, px, py);
+		#endregion
 		
 		if(_pHover && mouse_press(mb_middle)) {
 			mixer_dragging = true;
@@ -583,9 +651,13 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 		var _cc  = noone;
 		var _txt = "";
 		
-		if(node_hovering) {
+		if(shade_mode > 0) {
+			_cc = surface_getpixel(connect_blend_surf, mx - px, my - py);
+			_txt = $"Sampled #{color_get_hex(_cc)}";
+			
+		} else if(node_hovering) {
 			_cc  = node_hovering.color;
-			_txt = $"Node #{color_get_hex(node_hovering.color)}";
+			_txt = $"Node #{color_get_hex(_cc)}";
 			
 		} else if(blnd_hovering >= 0) {
 			_cc  = palette_data.blends[blnd_hovering].color;

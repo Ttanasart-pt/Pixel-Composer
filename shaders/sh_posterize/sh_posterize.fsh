@@ -117,7 +117,7 @@ void main() {
 	c = pow(c, vec3(gam));
 	c = floor(c * colors) / (colors - 1.);
 	c = pow(c, vec3(1.0 / gam));
-	_col   = vec4(cMin + c * cRan, 1.);
+	_col = vec4(cMin + c * cRan, 1.);
 	
 	_col.a = alpha == 1? 1. : _col.a;
 	
