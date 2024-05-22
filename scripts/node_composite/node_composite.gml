@@ -318,6 +318,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		PROCESSOR_OVERLAY_CHECK
+		
 		var pad = current_data[0];
 		var ww  = overlay_w;
 		var hh  = overlay_h;
@@ -452,7 +454,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _rot  = current_data[index + 2];
 			var _sca  = current_data[index + 3];
 			
-			if(!_surf || is_array(_surf)) continue;
+			if(!is_surface(_surf)) continue;
 			
 			var _ww = surface_get_width_safe(_surf);
 			var _hh = surface_get_height_safe(_surf);
@@ -609,6 +611,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var base	  = _data[3];
 		var cDep	  = attrDepth();
 		
+		if(!is_surface(base)) return _outSurf;
+		
 		#region dimension 
 			var ww = 0, hh = 0;
 		
@@ -661,7 +665,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _bld = _data[_ind + 4];
 			var _alp = _data[_ind + 5];
 			
-			if(!_s || is_array(_s)) continue;
+			if(!is_surface(_s)) continue;
 			
 			var _ww = surface_get_width_safe(_s);
 			var _hh = surface_get_height_safe(_s);
