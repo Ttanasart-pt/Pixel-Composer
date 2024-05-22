@@ -207,11 +207,15 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		
 		menu_file_image = [
 			menuItem("Add as node", function() {
-				Node_create_Image_path(PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy, __menu_file_selecting.path);
+				var node = Node_create_Image_path(PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy, __menu_file_selecting.path);
+				PANEL_PREVIEW.setNodePreview(node);
+				PANEL_INSPECTOR.inspecting = node;
 			}),
 			
 			menuItem("Add as canvas", function() {
-				nodeBuild("Node_Canvas", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(__menu_file_selecting.path);
+				var node = nodeBuild("Node_Canvas", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(__menu_file_selecting.path);
+				PANEL_PREVIEW.setNodePreview(node);
+				PANEL_INSPECTOR.inspecting = node;
 			}),
 			
 			menuItem("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
@@ -232,7 +236,10 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					surface_save(_s, txt);
 					surface_free(_s);
 					
-					nodeBuild("Node_Canvas", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(txt);
+					var node = nodeBuild("Node_Canvas", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(txt);
+					PANEL_PREVIEW.setNodePreview(node);
+					PANEL_INSPECTOR.inspecting = node;
+					
 					__menu_cnxt_selecting.getContent();
 				};
 				dia.path = __menu_cnxt_selecting.path + "/";
@@ -322,6 +329,14 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				
 				for (var i = 0, n = array_length(file_selectings); i < n; i++)
 					path_dragging[i] = file_selectings[i].path;
+			}
+			
+			if(path_dragging != -1 && !array_empty(path_dragging) && !pHOVER) {
+				if(HOVER && is_instanceof(HOVER, Panel)) {
+					var _cont = HOVER.getContent();
+					if(is_instanceof(_cont, Panel_Preview) || is_instanceof(_cont, Panel_Graph)) 
+						HOVER.draw_droppable = true;
+				}
 			}
 			
 			if(mouse_release(mb_left)) {
@@ -497,7 +512,10 @@ function Panel_File_Explorer() : PanelContent() constructor {
 						} _bx += _ph + ui(2);
 						
 						if(buttonInstant(noone, _bx, _py, _ph, _ph, _m, pFOCUS, pHOVER, "", THEME.canvas_20, 0, [ COLORS._main_icon, c_white ]) == 2) {
-							nodeBuild("Node_Canvas", _graph_x, _graph_y).loadImagePath(_fil.path);
+							var node = nodeBuild("Node_Canvas", _graph_x, _graph_y).loadImagePath(_fil.path);
+							PANEL_PREVIEW.setNodePreview(node);
+							PANEL_INSPECTOR.inspecting = node;
+							
 							draggable = false;
 						} _bx += _ph + ui(2);
 						

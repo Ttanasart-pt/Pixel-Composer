@@ -22,11 +22,17 @@ function Panel_Color() : PanelContent() constructor {
 	
 	colors = [];
 	
-	hex_tb       = new textBox(TEXTBOX_INPUT.text, function(val) { setColor(colorFromHex(val)); })
-	alpha_slider = slider(0, 1, 0.01, function(val) { alp = val; setHSV(); })
+	hex_tb       = new textBox(TEXTBOX_INPUT.text, function(_hx) { setColor(colorFromHex(_hx)); })
+	alpha_slider = slider(0, 1, 0.01, function(_a) { alp = _a; setHSV(); })
 	show_alpha   = true;
 	show_palette = false;
 	show_hex     = true;
+	
+	current_color  = c_white;
+	discretize_pal = false;
+	
+	content_surface = surface_create(1, 1);
+	side_surface    = surface_create(1, 1);
 	
 	static setColor = function(color) {
 		CURRENT_COLOR = color;
@@ -37,6 +43,8 @@ function Panel_Color() : PanelContent() constructor {
 		sat = _color_get_saturation(CURRENT_COLOR);
 		val = _color_get_value(CURRENT_COLOR);
 		alp = _color_get_alpha(CURRENT_COLOR);
+		
+		current_color = CURRENT_COLOR;
 	}
 	
 	static setHSV = function(h = hue, s = sat, v = val, a = alp) {
@@ -45,7 +53,10 @@ function Panel_Color() : PanelContent() constructor {
 		val = v;
 		alp = a;
 		
-		CURRENT_COLOR = make_color_hsva(h * 255, s * 255, v * 255, a * 255);
+		var _c = make_color_hsva(h * 255, s * 255, v * 255, a * 255);
+		
+		CURRENT_COLOR = _c;
+		current_color = CURRENT_COLOR;
 		
 	} setHSV();
 	
@@ -109,7 +120,10 @@ function Panel_Color() : PanelContent() constructor {
 			var alp_x = alp_h + ui(padding * 2);
 			var alp_y = _y1 - alp_h;
 			
-			draw_sprite_stretched_ext(s_ui_base_white, 0, ui(padding), alp_y, alp_h, alp_h, CURRENT_COLOR, show_alpha);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, ui(padding), alp_y, alp_h, alp_h, CURRENT_COLOR, alp);
+			BLEND_ADD
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, ui(padding), alp_y, alp_h, alp_h, c_white, 0.3);
+			BLEND_NORMAL
 			
 			hex_tb.setFocusHover(pFOCUS, pHOVER);
 			hex_tb.setFont(f_p2);
@@ -143,47 +157,93 @@ function Panel_Color() : PanelContent() constructor {
 		var cont_w = w - _selPad * 2 - sel_w - sel_pd;
 		var cont_h = _y1 - ui(4) - cont_y;
 		
-		shader_set(sh_color_select_content);
-		shader_set_i("mode", mode);
-		shader_set_f("hue",  hue);
-		shader_set_f("val",  val);
-		draw_sprite_stretched(s_fx_pixel, 0, cont_x, cont_y, cont_w, cont_h);
-		
 		var sel_x = cont_x + cont_w + sel_pd;
 		var sel_y = _selPad;
 		var sel_h = cont_h;
 		
-		shader_set(sh_color_select_side);
-		shader_set_i("mode", mode);
-		shader_set_f("hue",  hue);
-		draw_sprite_stretched(s_fx_pixel, 0, sel_x, sel_y, sel_w, sel_h);
-		shader_reset();
+		content_surface = surface_verify(content_surface, cont_w, cont_h);
+		side_surface    = surface_verify(side_surface,    sel_w,  sel_h);
+		
+		surface_set_target(content_surface);
+			DRAW_CLEAR
+			
+			draw_sprite_stretched(THEME.menu_button_mask, 0, 0, 0, cont_w, cont_h);
+			gpu_set_colorwriteenable(1, 1, 1, 0);
+			shader_set(sh_color_select_content);
+				shader_set_i("mode", mode);
+				shader_set_f("hue",  hue);
+				shader_set_f("sat",  sat);
+				shader_set_f("val",  val);
+				
+				shader_set_i("discretize",	  discretize_pal);
+				shader_set_palette(PROJECT.attributes.palette);
+				
+				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, cont_w, cont_h);
+			shader_reset();
+			gpu_set_colorwriteenable(1, 1, 1, 1);
+		
+		surface_reset_target();
+			
+		surface_set_target(side_surface);
+			DRAW_CLEAR
+			
+			draw_sprite_stretched(THEME.menu_button_mask, 0, 0, 0, sel_w, sel_h);
+			gpu_set_colorwriteenable(1, 1, 1, 0);
+			shader_set(sh_color_select_side);
+				shader_set_i("mode", mode);
+				shader_set_f("hue",  hue);
+				shader_set_f("sat",  sat);
+				shader_set_f("val",  val);
+				
+				shader_set_i("discretize", discretize_pal);
+				shader_set_palette(PROJECT.attributes.palette);
+				
+				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, sel_w, sel_h);
+			shader_reset();
+			gpu_set_colorwriteenable(1, 1, 1, 1);
+			
+		surface_reset_target();
+		
+		draw_surface(content_surface, cont_x, cont_y);
+		draw_surface(side_surface,    sel_x,  sel_y);
+		
+		BLEND_ADD
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.3);
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.3);
+		BLEND_NORMAL
 		
 		if(drag_con) {
+			var _mmx = clamp((mx - cont_x) / cont_w, 0, 1);
+			var _mmy = 1 - clamp((my - cont_y) / cont_h, 0, 1);
+			
 			if(mode == 0) {
-				sat = clamp((mx - cont_x) / cont_w, 0, 1);
-				val = 1 - clamp((my - cont_y) / cont_h, 0, 1);
+				sat = _mmx;
+				val = _mmy;
+				
 			} else if(mode == 1) {
-				hue = clamp((mx - cont_x) / cont_w, 0, 1);
-				sat = 1 - clamp((my - cont_y) / cont_h, 0, 1);
+				hue = _mmx;
+				sat = _mmy;
+				
+			} else if(mode == 2) {
+				hue = _mmx;
+				val = _mmy;
 			}
 				
 			setHSV();
 				
-			if(mouse_release(mb_left))
-				drag_con = false;
+			if(mouse_release(mb_left)) drag_con = false;
 		}
 		
 		if(drag_sel) {
-			if(mode == 0)
-				hue = clamp((my - sel_y) / sel_h, 0, 1);
-			else if(mode == 1)
-				val = 1 - clamp((my - sel_y) / sel_h, 0, 1);
+			var _mmy = clamp((my - sel_y) / sel_h, 0, 1);
+			
+				 if(mode == 0) hue = _mmy;
+			else if(mode == 1) val = 1 - _mmy;
+			else if(mode == 2) sat = 1 - _mmy;
 				
 			setHSV();
-				
-			if(mouse_release(mb_left))
-				drag_sel = false;
+					
+			if(mouse_release(mb_left)) drag_sel = false;
 		}
 		
 		if(mouse_press(mb_left, pFOCUS)) {
@@ -194,47 +254,51 @@ function Panel_Color() : PanelContent() constructor {
 				drag_sel = true;
 		}
 		
-		var _bar_s = ui(12);
-		var _sd_w  = ui(16 + 6);
+		var bs = ui(12);
+		var sw = ui(16 + 6);
+		
+		var cx = 0;
+		var cy = 0;
+		var sx = sel_x - ui(3);
+		var sy = 0;
+		var sc = c_black;
+		var cc = CURRENT_COLOR;
 		
 		if(mode == 0) {
 			var hy = sel_y + hue * sel_h;
-			var cx = cont_x + sat * cont_w - _bar_s / 2;
-			var cy = cont_y + (1 - val) * cont_h - _bar_s / 2;
+			cx = cont_x + sat * cont_w - bs / 2;
+			cy = cont_y + (1 - val) * cont_h - bs / 2;
 			
-			var _sd_x = sel_x - ui(3);
-			var _sd_y = hy - _bar_s / 2;
-			
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx - 1, cy - 1, _bar_s + 2, _bar_s + 2, c_black, 1);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sd_x - 1, _sd_y - 1, _sd_w + 2, _bar_s + 2, c_black, 1);
-			
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sd_x, _sd_y, _sd_w, _bar_s, make_color_hsv(hue * 255, 255, 255), 1);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx, cy, _bar_s, _bar_s, CURRENT_COLOR, 1);
-			
-			BLEND_ADD
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _sd_x, _sd_y, _sd_w, _bar_s, c_white, 0.75);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cx, cy, _bar_s, _bar_s, c_white, 0.75);
-			BLEND_NORMAL
+			sy = hy - bs / 2;
+			sc = make_color_hsv(hue * 255, 255, 255);
 			
 		} else if(mode == 1) {
 			var vy = sel_y + (1 - val) * sel_h;
-			var cx = cont_x + hue * cont_w - _bar_s / 2;
-			var cy = cont_y + (1 - sat) * cont_h - _bar_s / 2;
+			cx = cont_x + hue * cont_w - bs / 2;
+			cy = cont_y + (1 - sat) * cont_h - bs / 2;
 			
-			var _sd_x = sel_x - ui(3);
-			var _sd_y = vy - _bar_s / 2;
+			sy = vy - bs / 2;
+			sc = make_color_hsv(hue * 255, 255, val * 255);
+		
+		} else if(mode == 2) {
+			var sy = sel_y + (1 - sat) * sel_h;
+			cx = cont_x + hue * cont_w - bs / 2;
+			cy = cont_y + (1 - val) * cont_h - bs / 2;
 			
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx - 1, cy - 1, _bar_s + 2, _bar_s + 2, c_black, 1);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sd_x - 1, _sd_y - 1, _sd_w + 2, _bar_s + 2, c_black, 1);
-			
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sd_x, _sd_y, _sd_w, _bar_s, make_color_hsv(hue * 255, 255, val * 255), 1);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx, cy, _bar_s, _bar_s, CURRENT_COLOR, 1);
-			
-			BLEND_ADD
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _sd_x, _sd_y, _sd_w, _bar_s, c_white, 0.75);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cx, cy, _bar_s, _bar_s, c_white, 0.75);
-			BLEND_NORMAL
+			sy = sy - bs / 2;
+			sc = make_color_hsv(hue * 255, sat * 255, 255);
 		}
+		
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx - 1, cy - 1, bs + 2, bs + 2, c_black, 0.1);
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, sx - 1, sy - 1, sw + 2, bs + 2, c_black, 0.1);
+		
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, sx, sy, sw, bs, sc, 1);
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx, cy, bs, bs, cc, 1);
+		
+		BLEND_ADD
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, sx, sy, sw, bs, c_white, 0.75);
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cx, cy, bs, bs, c_white, 0.75);
+		BLEND_NORMAL
 		
 		if(DRAGGING && DRAGGING.type == "Color" && pHOVER) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, 2, 2, w - 4, h - 4, COLORS._main_value_positive, 1);	
@@ -244,12 +308,19 @@ function Panel_Color() : PanelContent() constructor {
 		
 		if(mouse_press(mb_right, pFOCUS)) {
 			menuCall("color_window_menu",,, [
+				menuItem(__txt("Hue"),  		function() { mode = 0; } ),
+				menuItem(__txt("Value"),		function() { mode = 1; } ),
+				menuItem(__txt("Saturation"),	function() { mode = 2; } ),
+				-1,
 				menuItem(__txt("Toggle Alpha"),   function() { show_alpha   = !show_alpha;   }, noone, noone, function() /*=>*/ {return show_alpha}   ),
 				menuItem(__txt("Toggle Palette"), function() { show_palette = !show_palette; }, noone, noone, function() /*=>*/ {return show_palette} ),
 				menuItem(__txt("Toggle Hex"),     function() { show_hex     = !show_hex;     }, noone, noone, function() /*=>*/ {return show_hex}     ),
+				-1,
+				menuItem(__txt("Discretize"),     function() { discretize_pal = !discretize_pal; }, noone, noone, function() /*=>*/ {return discretize_pal} ),
 			]);
 		}
 		
-		refreshHSV();
+		if(current_color != CURRENT_COLOR)
+			refreshHSV();
 	}
 }

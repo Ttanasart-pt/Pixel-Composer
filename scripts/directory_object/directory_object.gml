@@ -186,11 +186,11 @@ function DirectoryObject(name, path) constructor { #region
 		}
 	} #endregion
 	
-	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _colors = {}) { #region
+	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _params = {}) { #region
 		var hg = ui(28);
 		var hh = 0;
 		
-		var color_selecting = struct_try_get(_colors, "selecting", COLORS.collection_path_current_bg);
+		var font = struct_try_get(_params, "font", f_p0);
 		
 		if(!ds_list_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, ui(32), _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, CDEF.main_white, 1);
@@ -215,8 +215,7 @@ function DirectoryObject(name, path) constructor { #region
 		if(ds_list_empty(subDir)) draw_sprite_ui_uniform(THEME.folder_content, parent.context == self, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_empty);
 		else                      draw_sprite_ui_uniform(THEME.folder_content, open, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_nonempty);
 		
-		if(path == parent.context.path) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
-		else							draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
+		draw_set_text(font, fa_left, fa_center, path == parent.context.path? COLORS._main_text_accent : COLORS._main_text_inner);
 		draw_text_add(_x + ui(32), _y + hg / 2, name);
 		hh += hg;
 		_y += hg;
@@ -224,7 +223,7 @@ function DirectoryObject(name, path) constructor { #region
 		if(open && !ds_list_empty(subDir)) {
 			var l_y = _y;
 			for(var i = 0; i < ds_list_size(subDir); i++) {
-				var _hg = subDir[| i].draw(parent, _x + ui(16), _y, _m, _w - ui(16), _hover, _focus, _homedir, _colors);
+				var _hg = subDir[| i].draw(parent, _x + ui(16), _y, _m, _w - ui(16), _hover, _focus, _homedir, _params);
 				draw_set_color(COLORS.collection_tree_line);
 				draw_line(_x + ui(12), _y + hg / 2, _x + ui(16), _y + hg / 2);
 				

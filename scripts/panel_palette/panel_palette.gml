@@ -9,6 +9,9 @@ function Panel_Palette() : PanelContent() constructor {
 	grid_size_to = ui(16);
 	
 	color_dragging = noone;
+	drag_from_self = false;
+	
+	__save_palette_data = [];
 	
 	function onResize() {
 		sp_palettes.resize(w - ui(padding + padding), h - ui(padding + padding));
@@ -28,6 +31,33 @@ function Panel_Palette() : PanelContent() constructor {
 			if(mouse_wheel_up())   grid_size_to = clamp(grid_size_to + ui(4), ui(8), ui(32));
 		}
 		grid_size = lerp_float(grid_size, grid_size_to, 3);
+		
+		if(DRAGGING && DRAGGING.type == "Palette" && !drag_from_self) {
+			var _add_h = ui(28);
+			var _hov = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + _add_h);
+			
+			draw_sprite_stretched_ext(THEME.timeline_node, 0, 0, yy, ww, _add_h, COLORS._main_value_positive, .4);
+			draw_sprite_stretched_ext(THEME.timeline_node, 1, 0, yy, ww, _add_h, COLORS._main_value_positive, .7 + _hov * .25);
+			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
+			draw_text_add(ww / 2, yy + _add_h / 2, __txt("New palette"));
+			
+			if(_hov && mouse_release(mb_left)) {
+				__save_palette_data = DRAGGING.data;
+				
+				fileNameCall($"{DIRECTORY}Palettes", function (_path) {
+					if(filename_ext(_path) != ".hex") _path += ".hex";
+					
+					var _str = palette_string_hex(__save_palette_data, false);
+					file_text_write_all(_path, _str);
+					__initPalette();
+				});
+			}
+			
+			yy += _add_h + ui(8);
+			hh += _add_h + ui(8);
+		}
+		
+		if(mouse_release(mb_left)) drag_from_self = false;
 		
 		for(var i = 0; i < array_length(PALETTES); i++) {
 			var preset	= PALETTES[i];
@@ -52,7 +82,7 @@ function Panel_Palette() : PanelContent() constructor {
 					if(point_in_rectangle(_m[0], _m[1], ui(10), yy + ui(24), ww - ui(10), yy + ui(24) + _height)) {
 						var m_ax = _m[0] - ui(10);
 						var m_ay = _m[1] - (yy + ui(24));
-					
+						
 						var m_gx = floor(m_ax / _gs);
 						var m_gy = floor(m_ay / _gs);
 						
@@ -72,6 +102,7 @@ function Panel_Palette() : PanelContent() constructor {
 							data: preset.palette
 						}
 						MESSAGE = DRAGGING;
+						drag_from_self = true;
 					}
 				}
 				

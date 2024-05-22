@@ -1,4 +1,4 @@
-#region funtion calls
+#region function calls
 	function __fnInit_Graph() {
 		__registerFunction("graph_add_node",			panel_graph_add_node);
 		__registerFunction("graph_focus_content",		panel_graph_focus_content);
@@ -1385,7 +1385,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	function drawJunctionConnect() { #region
 		
-		if(value_dragging) {
+		if(value_dragging) { 
 			if(!value_dragging.node.active) { value_dragging = noone; return; }
 			
 			var xx     = value_dragging.x;
@@ -1394,7 +1394,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var _my    = my;
 			var target = noone;
 			
-			if(value_focus && value_focus != value_dragging && value_focus.connect_type != value_dragging.connect_type)
+			if(value_focus && value_focus != value_dragging)
 				target = value_focus;
 				
 			if(key_mod_press(CTRL) && node_hovering != noone) {
@@ -1425,29 +1425,49 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				_inline_ctx.point_y   = mouse_graph_y;
 			}
 			
-			if(mouse_release(mb_left)) {																				// CONNECT junction
+			if(mouse_release(mb_left)) { //// CONNECT junction 
 				var _connect = [ 0, noone, noone ];
 				
 				if(PANEL_INSPECTOR && PANEL_INSPECTOR.attribute_hovering != noone) {
 					PANEL_INSPECTOR.attribute_hovering(value_dragging);
-				} else if(target != noone) {
-					var _addInput = false;
-					if(target.value_from == noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input)
-						_addInput = true;
 					
-					if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
-						if(array_empty(value_draggings)) {
-							_connect = [ value_dragging.setFrom(target), value_dragging, target ];
-						} else {
-							for( var i = 0, n = array_length(value_draggings); i < n; i++ )
-								value_draggings[i].setFrom(target);
+				} else if(target != noone) {
+					
+					if(target.connect_type == value_dragging.connect_type) {
+						
+						if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+							if(target.value_from) {
+								value_dragging.setFrom(target.value_from);
+								target.removeFrom();
+							}
+							
+						} else if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
+							var _tos = target.getJunctionTo();
+							
+							for (var i = 0, n = array_length(_tos); i < n; i++)
+								_tos[i].setFrom(value_dragging);
 						}
-					} else if(_addInput && !array_empty(value_draggings)) {
-						for( var i = 0, n = array_length(value_draggings); i < n; i++ )
-							target.node.addInput(value_draggings[i]);
+						
 					} else {
-						_connect = [ target.setFrom(value_dragging), target, value_dragging ];
+						var _addInput = target.value_from == noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input;
+						
+						if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+							if(array_empty(value_draggings)) {
+								_connect = [ value_dragging.setFrom(target), value_dragging, target ];
+							} else {
+								for( var i = 0, n = array_length(value_draggings); i < n; i++ )
+									value_draggings[i].setFrom(target);
+							}
+							
+						} else if(_addInput && !array_empty(value_draggings)) {
+							for( var i = 0, n = array_length(value_draggings); i < n; i++ )
+								target.node.addInput(value_draggings[i]);
+								
+						} else {
+							_connect = [ target.setFrom(value_dragging), target, value_dragging ];
+						}
 					}
+					
 				} else {
 					if(value_dragging.connect_type == JUNCTION_CONNECT.input)
 						value_dragging.removeFrom();

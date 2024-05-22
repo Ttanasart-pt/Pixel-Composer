@@ -22,10 +22,8 @@ vec3 hsv2rgb(vec3 c) {
 void main() {
 	vec3 _rgb;
 	
-	if(usePalette == 0) 
-		_rgb = hsv2rgb(vec3(v_vTexcoord.y, 1., 1.)); 
-	else if(usePalette == 1) 
-		_rgb = hsv2rgb(vec3(v_vTexcoord.y, sat, value)); 
+		 if(usePalette == 0) _rgb = hsv2rgb(vec3(v_vTexcoord.y, 1., 1.)); 
+	else if(usePalette == 1) _rgb = hsv2rgb(vec3(v_vTexcoord.y, sat, value)); 
 		
 	vec4 color = vec4(_rgb.r, _rgb.g, _rgb.b, v_vColour.a);
 	

@@ -61,6 +61,10 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 	connection_drag = noone;
 	conn_menu_ctx   = noone;
 	
+	pal_draging = false;
+	pal_drag_mx = 0;
+	pal_drag_my = 0;
+	
 	shade_mode = 0;
 	
 	pr_palette = ds_priority_create();
@@ -78,7 +82,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 		var _connections = palette_data.connections;
 		var _blends      = palette_data.blends;
 		
-		if(key_mod_press(SHIFT)) shade_mode = lerp_float(shade_mode, 1, 10);
+		if(key_mod_press(SHIFT)) shade_mode = lerp_float(shade_mode, 1, 20);
 		else					 shade_mode = lerp_float(shade_mode, 0, 10);
 		
 		if(!in_dialog) draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, w, h);
@@ -118,9 +122,6 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			if(pHOVER && point_in_rectangle(mx, my, pbg_x, pbg_y, pbg_x + pbg_w, pbg_y + pbg_h)) {
 				
 				draw_sprite_stretched_ext(THEME.button_def, 3, pbg_x, pbg_y, pbg_w, pbg_h, c_white, 0.5);
-				if(mouse_press(mb_right)) {
-					////////////////////////////////////////////
-				}
 			}
 			
 			ds_priority_clear(pr_palette);
@@ -184,10 +185,8 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			var _by = pal_y;
 			var _bs = ui(24);
 			
-			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, pal_h, [ mx, my ], pFOCUS, pHOVER, "", THEME.hamburger_s) == 2) {
-				// DRAGGING = { type: "Palette", data: palette }
-				// MESSAGE = DRAGGING;
-				
+			var _b = buttonInstant(THEME.button_hide, _bx, _by, _bs, pal_h, [ mx, my ], pFOCUS, pHOVER, "", THEME.hamburger_s);
+			if(_b == 2) {
 				menuCall("",,, [
 					menuItem("Save palette as...", function() {
 						var _path = get_save_filename_pxc("Hex paleete|*.hex", "Palette");
@@ -201,6 +200,23 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 						}
 					}), 
 				]);
+				
+				pal_draging = true;
+				pal_drag_mx = mx;
+				pal_drag_my = my;
+			}
+			
+			if(pal_draging) {
+				if(point_distance(pal_drag_mx, pal_drag_my, mx, my) > 8) {
+					DRAGGING = { type: "Palette", data: palette };
+					MESSAGE = DRAGGING;
+					pal_draging = false;
+					
+					instance_destroy(o_dialog_menubox);
+				}
+				
+				if(mouse_release(mb_left))
+					pal_draging = false;
 			}
 		#endregion
 		
@@ -459,11 +475,11 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 							menuItem("Save mixed...", function() { 
 								var _path = get_save_filename_pxc("JSON|*.json", "New mixed");
 								if(_path != "") save_palette_mixer(palette_data, _path);
-							}),
+							}, THEME.save),
 							menuItem("Load mixed...", function() { 
 								var _path = get_open_filename_pxc("JSON|*.json", "");
 								if(_path != "") palette_data = load_palette_mixer(_path);
-							}),
+							}, THEME.noti_icon_file_load),
 							-1,
 							menuItem("Clear palette", function() { palette_data = { nodes: [], connections: [], blends: [], } }, THEME.cross),
 						]);

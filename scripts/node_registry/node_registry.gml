@@ -112,7 +112,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		
 		var _spw = sprite_get_width(spr);
 		var _sph = sprite_get_height(spr);
-		var _ss  = grid_size / max(_spw, _sph) * 0.75;
+		var _ss  = grid_size / max(_spw, _sph) * 0.6;
 		
 		gpu_set_tex_filter(true);
 		draw_sprite_uniform(spr, 0, spr_x, spr_y, _ss);
@@ -130,7 +130,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		
 		var fav = array_exists(global.FAV_NODES, node);
 		if(fav) draw_sprite_ui_uniform(THEME.star, 0, _x + grid_size - ui(10), _y + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
-			
+		
 		var spr_x = _x + grid_size - 4;
 		var spr_y = _y + 4;
 				

@@ -228,6 +228,8 @@ function Panel_Menu() : PanelContent() constructor {
 					menuItem(__txt("Palette Mixer"),	function() { panelAdd("Panel_Palette_Mixer", true) }, noone, ["", "Palette Mixer Panel"], function() { return findPanel("Panel_Palette_Mixer") != noone; } ),
 				]);
 			} ).setIsShelf(),
+			
+			menuItem(__txt("Histogram"),		function() { panelAdd("Panel_Preview_Histogram", true) }, noone, noone,	function() { return findPanel("Panel_Preview_Histogram") != noone; } ),
 		]],
 		
 		[ __txt("Help"), menu_help ],

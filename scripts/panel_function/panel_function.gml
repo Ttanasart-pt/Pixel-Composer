@@ -70,6 +70,8 @@
 			case "Panel_Palette_Mixer"	: return new Panel_Palette_Mixer();
 			case "Panel_Gradient"		: return new Panel_Gradient();
 			case "Panel_Console"		: return new Panel_Console();
+			
+			case "Panel_Preview_Histogram"	: return new Panel_Preview_Histogram();
 		}
 		
 		return noone;

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_preview_histogram",
+  "name":"sh_preview_histogram",
+  "parent":{
+    "name":"histogram",
+    "path":"folders/shader/UI/histogram.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

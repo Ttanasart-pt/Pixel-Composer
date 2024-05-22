@@ -51,6 +51,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 	tab_holding_sy = 0;
 	tab_cover	   = noone;
 	
+	draw_droppable = false;
+	
 	border_rb_close = menuItem(__txt("Close"), function() { #region
 		var con = getContent();
 		if(con == noone) return;
@@ -704,12 +706,17 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 				} else if(mouse_press(mb_right)) {
 					var menu = array_clone(border_rb_menu);
 					if(instanceof(getContent()) == "Panel_Menu")
-						array_remove(menu, 2, border_rb_close);
+						array_remove(menu, border_rb_close);
 						
 					menuCall("panel_border_menu",,, menu);
 				}
 			}
 		} 
+		
+		if(draw_droppable) {
+			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_value_positive, 1);	
+			draw_droppable = false;
+		}
 		
 		if(o_main.panel_dragging != noone && m_ot && !key_mod_press(CTRL))
 			checkHover();

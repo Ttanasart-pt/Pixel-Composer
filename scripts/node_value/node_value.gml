@@ -2346,8 +2346,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_s /= 2;
 		
 		var hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var _d  = 16 * _s;
-		var is_hover   = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d, y + _d);
+		var _d  = 24 * _s;
+		var is_hover   = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d - 1, y + _d - 1);
 		hover_in_graph = is_hover;
 		
 		var _bgS = THEME.node_junctions_bg;
