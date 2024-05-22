@@ -77,10 +77,20 @@ function log_clear() { #region
 		file_delete(path);
 } #endregion
 
+function os_type_sting() {
+	switch(os_type) {
+		case os_windows : return "Windows";
+		case os_macosx  : return "MacOS";
+		case os_linux   : return "Linux";
+	}
+	
+	return "undefined";
+}
+
 function exception_print(e) { #region
 	if(!is_struct(e) || !struct_has(e, "longMessage")) return string(e);
 	
-	var str = "\n\n==========  Crash log  ==========\n\n" + e.longMessage;	
+	var str = $"\n\n==========  Crash log [PXC {VERSION_STRING}] [{os_type_sting()}] ==========\n\n" + e.longMessage;	
 	str += "\n\n========== Stack trace ==========\n\n";	
 	
 	for( var i = 0, n = array_length(e.stacktrace); i < n; i++ )
@@ -99,13 +109,16 @@ function setException() { #region
 		if(!SAVING && !TESTING && !IS_CMD) SAVE_AT(PROJECT, path);
 		
 		var tt = "";
-		tt += "\n-------------------------- OH NO --------------------------\n\n";
+		tt += $"\n-------------------------- Pixel Composer {VERSION_STRING} Crashed --------------------------\n";
 		tt += "\n" + ex.longMessage;
 		tt += "\n" + ex.script;
-		tt += "\n-------------------------- STACK TRACE --------------------------\n\n";
+		tt += "\n\n-------------------------- STACK TRACE --------------------------\n\n";
 		for( var i = 0, n = array_length(ex.stacktrace); i < n; i++ )
 			tt += ex.stacktrace[i] + "\n";
-		tt += "\n---------------------------- :( ----------------------------\n";
+		tt += "\n\n\n\n-------------------------- Device Info --------------------------\n";
+		tt += $"\nVersion: {VERSION_STRING} ({VERSION})";
+		tt += $"\nOperating system: {os_type_sting()} ({os_version})"
+		tt += "\n\n---------------------------- :( ----------------------------\n";
 		
 		var path = $"{env_user()}crash_log.txt";
 		

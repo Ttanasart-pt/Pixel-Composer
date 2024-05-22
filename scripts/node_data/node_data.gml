@@ -2004,6 +2004,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) { return 0; }
 	
+	static getJunctionTos = function() { #region
+		var _vto = array_create(ds_list_size(outputs));
+		for (var j = 0, m = ds_list_size(outputs); j < m; j++)
+			_vto[j] = array_clone(outputs[| j].value_to);
+		return _vto;
+	} #endregion
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	static serialize = function(scale = false, preset = false) { #region							>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SERIALIZE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		if(!active) return;
 		

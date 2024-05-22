@@ -127,9 +127,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
  
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var sample = PREFERENCES.path_resolution;
-		var loop   = getInputData(1);
-		var ansize = ds_list_size(inputs) - input_fix_len;
+		var sample  = PREFERENCES.path_resolution;
+		var loop    = getInputData(1);
+		var ansize  = ds_list_size(inputs) - input_fix_len;
 		var _edited = false;
 		
 		var pos = outputs[| 0].getValue();
@@ -596,7 +596,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					var _ax1 = 0, _ay1 = 0;
 			
 					if(array_length(_a) < 6) continue;
-			
+					
 					if(_a[2] != 0 || _a[3] != 0 || _a[4] != 0 || _a[5] != 0) {
 						_ax0 = _x + (_a[0] + _a[2]) * _s;
 						_ay0 = _y + (_a[1] + _a[3]) * _s;
@@ -611,7 +611,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						draw_sprite_colored(THEME.anchor_selector, 2, _ax0, _ay0);
 						draw_sprite_colored(THEME.anchor_selector, 2, _ax1, _ay1);
 					}
-			
+					
 					draw_sprite_colored(THEME.anchor_selector, 0, xx, yy);
 					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
 					draw_text(xx + ui(4), yy - ui(4), inputs[| input_fix_len + i].name);
@@ -925,11 +925,15 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var _a = [];
 		for(var i = input_fix_len; i < ds_list_size(inputs); i++) {
-			var _anc = array_clone(getInputData(i));
+			var _val = getInputData(i);
+			var _anc = array_create(7, 0);
 			
+			for(var j = 0; j < 7; j++)
+				_anc[j] = array_safe_get(_val, j);
+				
 			if(_rnd) {
-				_anc[0] = round(_anc[0]);
-				_anc[1] = round(_anc[1]);
+				_anc[0] = round(_val[0]);
+				_anc[1] = round(_val[1]);
 			}
 			
 			array_push(_a, _anc);

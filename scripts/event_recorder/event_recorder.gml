@@ -108,7 +108,29 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				
 			case ACTION_TYPE.ungroup :
 				obj.restore();
-				groupNodes(data.content, obj, false);
+				groupNodes(data.content, obj, false, false);
+				
+				for (var i = 0, n = array_length(data.deleted); i < n; i++) {
+					var _dl = data.deleted[i];
+					var _nd = _dl.node;
+					var _vt = _dl.value_to;
+					_nd.enable();
+					
+					for (var j = 0, m = ds_list_size(_nd.outputs); j < m; j++) {
+						var _out = _nd.outputs[| j];
+						var _too = _vt[j];
+						
+						for (var k = 0, p = array_length(_too); k < p; k++)
+							_too[k].setFrom(_out);
+					}
+				}
+				
+				var _connectTo = data.connectTo;
+				
+				for (var i = 0, n = array_length(_connectTo);    i < n; i++)
+				for (var j = 0, m = array_length(_connectTo[i]); j < m; j++)
+					_connectTo[i][j].setFrom(obj.outputs[| i]);
+				
 				break;
 				
 			case ACTION_TYPE.collection_loaded :

@@ -51,9 +51,9 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 		_content[i] = _ctx_nodes[i];
 	}
 	
-	var _io = { inputs: {}, outputs: {}, map: {} };
-	
 	if(check_connect) { #region IO creation
+		var _io = { inputs: {}, outputs: {}, map: {} };
+		
 		for(var i = 0; i < array_length(nodeArray); i++)
 			nodeArray[i].checkConnectGroup(_io);
 		
@@ -119,22 +119,53 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 } #endregion
 
 function upgroupNode(collection, record = true) { #region
-	UNDO_HOLDING = true;
-	var _content = [];
+	UNDO_HOLDING  = true;
+	var _content  = [], _deleted = [];
 	var node_list = collection.getNodeList();
+	var _node_arr = ds_list_to_array(node_list);
+	var _conn_to  = collection.getJunctionTos();
 	
-	while(!ds_list_empty(node_list)) {
-		var remNode = node_list[| 0];
-		if(!remNode.destroy_when_upgroup)
-			array_push(_content, remNode);
+	var _cx = 0, _cy = 0;
+	var _nn = 0;
+	
+	for (var i = 0, n = array_length(_node_arr); i < n; i++) {
+		var _node = _node_arr[i];
+		if(!_node.selectable) continue;
 		
-		collection.remove(remNode); 
+		_cx += _node.x;
+		_cy += _node.y;
+		_nn++;
+	}
+	
+	if(_nn) {
+		_cx = collection.x - _cx / _nn;
+		_cy = collection.y - _cy / _nn;
+	}
+	
+	for (var i = 0, n = array_length(_node_arr); i < n; i++) {
+		var remNode = _node_arr[i];
+		
+		remNode.x += _cx;
+		remNode.y += _cy;
+		
+		if(remNode.destroy_when_upgroup) {
+			var _vto = remNode.getJunctionTos();
+			array_push(_deleted, { node: remNode, value_to : _vto });
+		} else
+			array_push(_content, remNode);
+		collection.remove(remNode);
 	}
 	
 	collection.destroy();
 	UNDO_HOLDING = false;
 	
-	if(record) recordAction(ACTION_TYPE.ungroup, collection, { content: _content });
+	if(!record) return;
+	
+	recordAction(ACTION_TYPE.ungroup, collection, { 
+		content :   _content,
+		deleted :   _deleted,
+		connectTo : _conn_to,
+	});
 } #endregion
 
 function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 
@@ -383,21 +414,23 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static remove = function(_node) { #region
-		var node_list = getNodeList();
-		var _pos = ds_list_find_index(node_list, _node);
-		ds_list_delete(node_list, _pos);
-		var list = group == noone? PANEL_GRAPH.nodes_list : group.getNodeList();
-		ds_list_add(list, _node);
+		var _hide = _node.destroy_when_upgroup;
+		
+		if(!_hide) {
+			var node_list = getNodeList();
+			var list = group == noone? PANEL_GRAPH.nodes_list : group.getNodeList();
+			
+			ds_list_remove(node_list, _node);
+			ds_list_add(list,         _node);
+		}
 		
 		recordAction(ACTION_TYPE.group_removed, self, _node);
 		
-		if(struct_has(_node, "ungroup"))
-			_node.ungroup();
+		if(struct_has(_node, "onUngroup"))
+			_node.onUngroup();
 			
-		if(_node.destroy_when_upgroup) 
-			_node.destroy();
-		else
-			_node.group = group;
+		if(_hide) _node.disable();
+		else      _node.group = group;
 			
 		will_refresh = true;
 		node_length  = ds_list_size(nodes);

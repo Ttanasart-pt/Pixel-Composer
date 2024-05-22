@@ -1,7 +1,7 @@
 function Panel_History() : PanelContent() constructor {
 	title = __txt("History");
-	w = ui(400);
-	h = ui(480);
+	w     = ui(400);
+	h     = ui(480);
 	
 	anchor = ANCHOR.left | ANCHOR.top;
 	hold = false;
@@ -34,12 +34,10 @@ function Panel_History() : PanelContent() constructor {
 	refreshList();
 
 	onResize = function() {
-		PANEL_PADDING
-		
-		sc_history.resize(w - ui(padding + padding), h - ui(title_height + padding));
+		sc_history.resize(w - padding * 2, h - padding * 2);
 	}
 	
-	sc_history = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding), function(_y, _m) {
+	sc_history = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
 		draw_clear_alpha(COLORS._main_text, 0);
 		
 		if((ds_list_size(redo_list) != ds_stack_size(REDO_STACK)) || (ds_list_size(undo_list) != ds_stack_size(UNDO_STACK)))
@@ -153,11 +151,11 @@ function Panel_History() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding);
-	
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2;
+		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		sc_history.setFocusHover(pFOCUS, pHOVER);
 		sc_history.draw(px, py, mx - px, my - py);

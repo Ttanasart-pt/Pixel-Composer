@@ -118,10 +118,13 @@
 
 	function is_surface(s) { #region
 		INLINE
-	
-		if(is_instanceof(s, dynaSurf) || is_instanceof(s, SurfaceAtlas)) return true;
-		if(is_numeric(s) && s > 0 && surface_exists(s))   return true;
-		return false;
+		
+		return !is_array(s) && (
+			is_instanceof(s, dynaSurf) || 
+			is_instanceof(s, SurfaceAtlas) || 
+			(is_numeric(s) && s > 0 && surface_exists(s))
+		);
+		
 	} #endregion
 
 	function surface_verify(surf, w, h, format = surface_rgba8unorm) { #region
@@ -149,6 +152,7 @@
 	function surface_get_width_safe(s, crop = true) { #region
 		INLINE
 	
+		if(!is_surface(s)) return 1;
 		if(is_struct(s)) {
 			if(is_instanceof(s, dynaSurf)) return s.getWidth();
 			else if(is_instanceof(s, SurfaceAtlas)) return crop? surface_get_width(s.getSurface()) : s.oriSurf_w;
@@ -161,6 +165,7 @@
 	function surface_get_height_safe(s, crop = true) { #region
 		INLINE
 	
+		if(!is_surface(s)) return 1;
 		if(is_struct(s)) {
 			if(is_instanceof(s, dynaSurf)) return s.getHeight();
 			else if(is_instanceof(s, SurfaceAtlas)) return crop? surface_get_height(s.getSurface()) : s.oriSurf_h;

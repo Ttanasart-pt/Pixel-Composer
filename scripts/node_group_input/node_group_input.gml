@@ -375,7 +375,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		group.refreshNodes();
 	} #endregion
 	
-	static ungroup = function() { #region
+	static onUngroup = function() { #region
 		var fr = inParent.value_from;
 		
 		for( var i = 0; i < array_length(outputs[| 0].value_to); i++ ) {

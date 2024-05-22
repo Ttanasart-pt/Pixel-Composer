@@ -29,7 +29,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 												 new scrollItem("Vertical",   s_node_alignment, 1), 
 												 new scrollItem("Grid",       s_node_alignment, 2), ])
 		.rejectArray();
-	
+		
 	inputs[| 4] = nodeValue("Grid column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
 		.rejectArray();
 	

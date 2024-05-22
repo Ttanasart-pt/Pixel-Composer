@@ -969,7 +969,7 @@ function __initNodes() {
 		ds_list_add(node, "Groups");
 		addNodeObject(node, "Group",			s_node_group,			"Node_Group",					[1, Node_Group]);
 		addNodeObject(node, "Feedback",			s_node_feedback,		"Node_Feedback",				[1, Node_Feedback],, "Create a group that reuse output from last frame to the current one.");
-		addNodeObject(node, "Loop",				s_node_loop,			"Node_Iterate",					[1, Node_Iterate], ["iterate", "for"], "Create group that reuse output as input repeatedly in one frame.");
+		addNodeObject(node, "Loop",				s_node_loop,			"Node_Iterate",					[1, Node_Iterate], ["iterate", "for"], "Create group that reuse output as input repeatedly in one frame.").isDeprecated();
 		addNodeObject(node, "Loop Array",		s_node_loop_array,		"Node_Iterate_Each_Inline",		[1, Node_Iterate_Each_Inline], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
 		addNodeObject(node, "Filter Array",		s_node_filter_array,	"Node_Iterate_Filter_Inline",	[1, Node_Iterate_Filter_Inline],, "Filter array using condition.").setVersion(1140);
 		

@@ -122,7 +122,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		group.refreshNodes();
 	} #endregion
 	
-	static ungroup = function() { #region
+	static onUngroup = function() { #region
 		var fr = inputs[| 0].value_from;
 		
 		for( var i = 0; i < array_length(outParent.value_to); i++ ) {
