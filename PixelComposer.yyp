@@ -470,7 +470,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.2.0.132",
+    "IDEVersion":"2024.4.1.152",
   },
   "name":"PixelComposer",
   "resources":[
@@ -1974,6 +1974,7 @@
     {"id":{"name":"sh_polar","path":"shaders/sh_polar/sh_polar.yy",},},
     {"id":{"name":"sh_posterize_palette","path":"shaders/sh_posterize_palette/sh_posterize_palette.yy",},},
     {"id":{"name":"sh_posterize","path":"shaders/sh_posterize/sh_posterize.yy",},},
+    {"id":{"name":"sh_preview_histogram_outline","path":"shaders/sh_preview_histogram_outline/sh_preview_histogram_outline.yy",},},
     {"id":{"name":"sh_preview_histogram","path":"shaders/sh_preview_histogram/sh_preview_histogram.yy",},},
     {"id":{"name":"sh_pytagorean_tile","path":"shaders/sh_pytagorean_tile/sh_pytagorean_tile.yy",},},
     {"id":{"name":"sh_quarsicrystal","path":"shaders/sh_quarsicrystal/sh_quarsicrystal.yy",},},
@@ -2049,7 +2050,6 @@
     {"id":{"name":"sh_widget_rotator_range","path":"shaders/sh_widget_rotator_range/sh_widget_rotator_range.yy",},},
     {"id":{"name":"sh_widget_rotator","path":"shaders/sh_widget_rotator/sh_widget_rotator.yy",},},
     {"id":{"name":"sh_zigzag","path":"shaders/sh_zigzag/sh_zigzag.yy",},},
-    {"id":{"name":"sh_preview_histogram_outline","path":"shaders/sh_preview_histogram_outline/sh_preview_histogram_outline.yy",},},
     {"id":{"name":"credit_badge_popular","path":"sprites/credit_badge_popular/credit_badge_popular.yy",},},
     {"id":{"name":"credit_badge_value","path":"sprites/credit_badge_value/credit_badge_value.yy",},},
     {"id":{"name":"node_credit","path":"sprites/node_credit/node_credit.yy",},},
