@@ -2163,6 +2163,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return controlNode.rendered;
 	} #endregion
 	
+	static triggerSetFrom = function() { node.valueUpdate(index); }
+	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region ////Set from
 		//print($"Connecting {_valueFrom.name} to {name}");
 		

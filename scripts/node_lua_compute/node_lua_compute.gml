@@ -191,7 +191,11 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		doCompile();
 	} #endregion
 	
-	static onDestroy = function() { #region
+	static onDestroy = function() {
 		lua_state_destroy(lua_state);
-	} #endregion
+	}
+	
+	static onRestore = function() {
+		lua_state = lua_create();
+	}
 }

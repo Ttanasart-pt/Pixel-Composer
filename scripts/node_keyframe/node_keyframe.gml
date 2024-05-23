@@ -444,6 +444,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static insertKey = function(_key, _index) { ds_list_insert(values, _index, _key); }
 	
+	function onUndo() { updateKeyMap(); prop.triggerSetFrom(); }
+	
 	static setKeyTime = function(_key, _time, _replace = true, record = false) { #region
 		if(!ds_list_exist(values, _key))	return 0;
 		if(_key.time == _time && !_replace)	return 0;
@@ -482,7 +484,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				setKeyTime(data.key, data.time, false); 
 				
 				data.time = _prevTime;
-			}, { key : _key, time : _prevTime });
+			}, { key : _key, time : _prevTime }, onUndo);
 			
 			ds_list_insert(values, i, _key);
 			if(_replace) updateKeyMap();
@@ -494,7 +496,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			setKeyTime(data.key, data.time, false); 
 			
 			data.time = _prevTime;
-		}, { key : _key, time : _prevTime });
+		}, { key : _key, time : _prevTime }, onUndo);
 			
 		ds_list_add(values, _key);
 		if(_replace) updateKeyMap();
@@ -536,7 +538,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(isEqual(values[| 0].value, _val)) 
 				return false;
 			
-			if(_record) recordAction(ACTION_TYPE.var_modify, values[| 0], [ values[| 0].value, "value", prop.name ]);
+			if(_record) recordAction(ACTION_TYPE.var_modify, values[| 0], [ values[| 0].value, "value", prop.name ], onUndo);
 			
 			values[| 0].value = _val;
 			return true;
@@ -545,7 +547,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(ds_list_size(values) == 0) { // Should not be called normally
 			var k = new valueKey(_time, _val, self, ease_in, ease_out);
 			ds_list_add(values, k);
-			if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values) - 1, $"add {prop.name} keyframe" ], function() { updateKeyMap(); });
+			if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values) - 1, $"add {prop.name} keyframe" ], onUndo);
 			return true;
 		}
 		
@@ -555,7 +557,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(!global.FLAG.keyframe_override) return false;
 				
 				if(_key.value != _val) {
-					if(_record) recordAction(ACTION_TYPE.var_modify, _key, [ _key.value, "value", prop.name ]);
+					if(_record) recordAction(ACTION_TYPE.var_modify, _key, [ _key.value, "value", prop.name ], onUndo);
 					_key.value = _val;
 					return true;
 				}
@@ -563,14 +565,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			} else if(_key.time > _time) {
 				var k = new valueKey(_time, _val, self, ease_in, ease_out);
 				ds_list_insert(values, i, k);
-				if(_record) recordAction(ACTION_TYPE.list_insert, values, [k, i, $"add {prop.name} keyframe" ], function() { updateKeyMap(); });
+				if(_record) recordAction(ACTION_TYPE.list_insert, values, [k, i, $"add {prop.name} keyframe" ], onUndo);
 				updateKeyMap();
 				return true;
 			}
 		}
 		
 		var k = new valueKey(_time, _val, self, ease_in, ease_out);
-		if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values), $"add {prop.name} keyframe" ], function() { updateKeyMap(); });
+		if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values), $"add {prop.name} keyframe" ], onUndo);
 		ds_list_add(values, k);
 		updateKeyMap();
 		return true;

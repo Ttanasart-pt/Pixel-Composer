@@ -36,7 +36,11 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		catch(e) { noti_warning(exception_print(e),, self); }
 	} #endregion
 	
-	static onDestroy = function() { #region
+	static onDestroy = function() {
 		lua_state_destroy(lua_state);
-	} #endregion
+	}
+	
+	static onRestore = function() {
+		lua_state = lua_create();
+	}
 }

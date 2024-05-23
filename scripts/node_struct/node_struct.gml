@@ -24,12 +24,11 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			ds_list_add(_in, inputs[| i]);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(getInputData(i) != "") {
+			var _val = inputs[| i].getValue();
+			
+			if(_val != "") {
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1].setVisible(false, true));
-			} else {
-				delete inputs[| i + 0];
-				delete inputs[| i + 1];
 			}
 		}
 		
@@ -44,12 +43,12 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static onValueUpdate = function(index = 0) {
 		if(LOADING || APPENDING) return;
-		
-		refreshDynamicInput();
-		
 		if(index < 0) return;
+		
 		if(safe_mod(index - input_fix_len, data_length) == 0)
-			inputs[| index + 1].name = getInputData(index) + " value";
+			inputs[| index + 1].name = $"{getInputData(index)} value";
+			
+		refreshDynamicInput();
 	}
 	
 	static step = function() { 
@@ -67,6 +66,8 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var key = getInputData(i + 0);
 			var val = getInputData(i + 1);
 			var frm = inputs[| i + 1].value_from;
+			
+			if(key == "") continue;
 			
 			if(frm != noone && frm.type == VALUE_TYPE.surface)
 				str[$ key] = new Surface(val);

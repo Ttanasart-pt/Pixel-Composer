@@ -40,16 +40,13 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		array_resize(input_display_list, input_display_len);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(getInputData(i) != "") {
+			if(inputs[| i].getValue() != "") {
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1]);
 				inputs[| i + 1].setVisible(false, true);
 				
 				array_push(input_display_list, i + 0);
 				array_push(input_display_list, i + 1);
-			} else {
-				delete inputs[| i + 0];
-				delete inputs[| i + 1];
 			}
 		}
 		
@@ -64,6 +61,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static onValueFromUpdate = function(index) { #region
 		if(LOADING || APPENDING) return;
+		if(index < 0) return;
 		
 		inputs[| 1].setType(inputs[| 1].value_from? inputs[| 1].value_from.type : VALUE_TYPE.any);
 		
@@ -79,7 +77,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(LOADING || APPENDING) return;
 		
 		if(safe_mod(index - input_fix_len, data_length) == 0) //Variable name
-			inputs[| index + 1].name = getInputData(index) + " value";
+			inputs[| index + 1].name = $"{getInputData(index)} value";
 		
 		refreshDynamicInput();
 	} #endregion
