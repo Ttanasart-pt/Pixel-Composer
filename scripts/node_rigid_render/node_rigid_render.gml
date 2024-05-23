@@ -15,8 +15,6 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	setIsDynamicInput(1);
-	
 	attribute_surface_depth();
 	
 	attributes.show_objects = true;	
@@ -31,36 +29,13 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	static onInspector2Update = function() { clearCache(); }
 	
-	static createNewInput = function() { #region
+	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
 			.setVisible(true, true);
-	} if(!LOADING && !APPENDING) createNewInput(); #endregion
-	
-	static refreshDynamicInput = function() { #region
-		var _l = ds_list_create();
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(i < input_fix_len || inputs[| i].value_from)
-				ds_list_add(_l, inputs[| i]);
-			else
-				delete inputs[| i];	
-		}
 		
-		for( var i = 0; i < ds_list_size(_l); i++ )
-			_l[| i].index = i;
-		
-		ds_list_destroy(inputs);
-		inputs = _l;
-		
-		createNewInput();
-	} #endregion
-	
-	static onValueFromUpdate = function(index) { #region
-		if(index < input_fix_len) return;
-		if(LOADING || APPENDING) return;
-		
-		refreshDynamicInput();
-	} #endregion
+		return inputs[| index];	
+	} setDynamicInput(1, true, VALUE_TYPE.rigid);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
@@ -98,7 +73,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_set_color(c_white);
 			physics_world_draw_debug(flag);
 		} else {
-			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+			for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
 				var objNode = getInputData(i);
 				if(!is_array(objNode)) continue;
 				

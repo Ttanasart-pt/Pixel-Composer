@@ -30,14 +30,12 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Inputs",		 true], 
 	];
 
-	setIsDynamicInput(3, false);
-	
 	argument_name = [];
 	argument_val  = [];
 	
 	lua_state = lua_create();
 	
-	static createNewInput = function() { #region
+	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
@@ -48,7 +46,12 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[| index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);
 		inputs[| index + 2].editWidget.interactable = false;
-	} if(!LOADING && !APPENDING) createNewInput(); #endregion
+		
+		return inputs[| index + 0];
+	} 
+	
+	setDynamicInput(3, false);
+	if(!LOADING && !APPENDING) createNewInput();
 	
 	static getState = function() { #region
 		if(inputs[| 3].value_from == noone) 
@@ -74,15 +77,6 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				if(inputs[| i + 2].editWidget != noone)
 					inputs[| i + 2].editWidget.interactable = true;
 				
-				var type = getInputData(i + 1);
-				switch(type) {
-					case 0 : inputs[| i + 2].setType(VALUE_TYPE.float);		break;
-					case 1 : inputs[| i + 2].setType(VALUE_TYPE.text);		break;
-					case 2 : inputs[| i + 2].setType(VALUE_TYPE.surface);	break;
-					case 3 : inputs[| i + 2].setType(VALUE_TYPE.struct);	break;
-				}
-					
-				inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);
 				array_push(input_display_list, i + 2);
 			} else {
 				delete inputs[| i + 0];
@@ -97,13 +91,31 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		ds_list_destroy(inputs);
 		inputs = _in;
 		
+		refreshInputType();
 		createNewInput();
+	} #endregion
+	
+	static refreshInputType = function() { #region
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+			var type = getInputData(i + 1);
+			switch(type) {
+				case 0 : inputs[| i + 2].setType(VALUE_TYPE.float);		break;
+				case 1 : inputs[| i + 2].setType(VALUE_TYPE.text);		break;
+				case 2 : inputs[| i + 2].setType(VALUE_TYPE.surface);	break;
+				case 3 : inputs[| i + 2].setType(VALUE_TYPE.struct);	break;
+			}
+				
+			inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);
+		}
 	} #endregion
 	
 	static onValueUpdate = function(index = 0) { #region
 		if(LOADING || APPENDING) return;
 		
-		if((index - input_fix_len) % data_length == 0) refreshDynamicInput();
+		var _ind = (index - input_fix_len) % data_length;
+		
+			 if(_ind == 0) refreshDynamicInput();
+		else if(_ind == 1) refreshInputType();
 	} #endregion
 	
 	static step = function() { #region

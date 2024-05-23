@@ -42,7 +42,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		["Material", false], in_mesh + 1, 
 	]
 	
-	setIsDynamicInput(1);
+	setDynamicInput(1, false);
 	
 	obj_reading       = false;
 	obj_raw			  = noone;

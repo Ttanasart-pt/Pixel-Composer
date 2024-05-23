@@ -28,40 +28,24 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		var bw = _w / 2 - ui(4);
 		var bh = ui(36);
-		var bx = _x;
-		var by = _y + ui(8);
-		if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, _focus, _hover) == 2) {
+		if(buttonTextIconInstant(THEME.button_hide, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add")) == 2) {
 			createNewInput();
 		}
 		
-		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_icon_light);
-		var bxc = bx + bw / 2 - (string_width("Add") + ui(64)) / 2;
-		var byc = by + bh / 2;
-		draw_sprite_ui(THEME.add, 0, bxc + ui(24), byc,,,, COLORS._main_icon_light);
-		draw_text(bxc + ui(48), byc, __txt("Add"));
-		
-		var bx = _x + bw + ui(8);
 		var amo = ds_list_size(inputs);
-		if(amo > 1 && buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, _focus, _hover) == 2) {
+		if(amo > 1 && buttonTextIconInstant(THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove")) == 2) {
 			var _out = outputs[| ds_list_size(outputs) - 1];
 			for( var i = 0, n = array_length(_out.value_to); i < n; i++ )
 				_out.value_to[i].removeFrom();
 			
 			array_remove(input_display_list, ds_list_size(inputs) - 1);
 			ds_list_delete(inputs,  ds_list_size(inputs)  - 1);
+			ds_list_delete(inputs,  ds_list_size(inputs)  - 1);
 			ds_list_delete(outputs, ds_list_size(outputs) - 1);
 		}
 		
-		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_icon_light);
-		var bxc = bx + bw / 2 - (string_width("Remove") + ui(64)) / 2;
-		var byc = by + bh / 2;
-		draw_sprite_ui(THEME.minus, 0, bxc + ui(24), byc,,,, COLORS._main_icon_light, (amo > 1) * 0.5 + 0.5);
-		draw_set_alpha((amo > 1) * 0.5 + 0.5);
-		draw_text(bxc + ui(48), byc, __txt("Remove"));
-		draw_set_alpha(1);
-		
 		var _wx = TEXTBOX_HEIGHT + ui(16);
-		var _wy = by + bh + ui(8);
+		var _wy = _y + bh + ui(16);
 		var _wh = TEXTBOX_HEIGHT;
 		var _ww = _w - _wx - _wh - ui(8);
 		
@@ -110,10 +94,9 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		["Watchers", false], watcher_controllers, 
 	];
 	
-	setIsDynamicInput(2);
-	
-	static createNewInput = function() { #region
-		index_watching = ds_list_size(inputs);
+	static createNewInput = function() {
+		var _index = ds_list_size(inputs);
+		index_watching = _index;
 		
 		var _inp = nodeValue("Index", self, JUNCTION_CONNECT.input,  VALUE_TYPE.integer, -1 );
 		_inp.editWidget.slidable = false;
@@ -121,7 +104,9 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		ds_list_add(inputs,  nodeValue("Normalize", self, JUNCTION_CONNECT.input,  VALUE_TYPE.boolean, false ));
 		
 		ds_list_add(outputs, nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1 ));
-	} #endregion
+		
+		return _inp;
+	} setDynamicInput(2, false);
 	
 	index_watching = noone;
 	disp_value     = 0;

@@ -37,17 +37,9 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	setDimension(96, 48);
 	ast = [];
 	
-	inputs[| 0] = nodeValue("Equation", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	attributes.size = 0;
 	
-	static createNewInput = function() { #region
-		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
-			.setDisplay(VALUE_DISPLAY.text_box);
-		
-		inputs[| index + 1] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-			.setVisible(true, true);
-		inputs[| index + 1].editWidget.interactable = false;
-	} #endregion
+	inputs[| 0] = nodeValue("Equation", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
@@ -56,9 +48,24 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		argument_renderer.y = _y;
 		argument_renderer.w = _w;
 		
-		var tx = _x + ui(8);
-		var ty = _y + ui(8);
-		var hh = ui(8);
+		var bw = _w / 2 - ui(4);
+		var bh = ui(36);
+		if(buttonTextIconInstant(THEME.button_hide, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add")) == 2) {
+			attributes.size++;
+			refreshDynamicInput();
+			update();
+		}
+		
+		var amo = attributes.size;
+		if(buttonTextIconInstant(THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove")) == 2) {
+			attributes.size = max(attributes.size - 1, 0);
+			refreshDynamicInput();
+			update();
+		}
+		
+		var tx  = _x + ui(8);
+		var ty  = _y + bh + ui(16);
+		var hh  = bh + ui(16);
 		var _th = TEXTBOX_HEIGHT;
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
@@ -94,42 +101,48 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Arguments",	false], argument_renderer,
 		["Inputs",		 true], 
 	]
-
-	setIsDynamicInput(2);
 	
-	if(!LOADING && !APPENDING) createNewInput();
+	static createNewInput = function() {
+		var index = ds_list_size(inputs);
+		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+			.setDisplay(VALUE_DISPLAY.text_box);
+		
+		inputs[| index + 1] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+			.setVisible(true, true);
+		
+		return inputs[| index + 0];
+	} setDynamicInput(2, false);
 	
 	static refreshDynamicInput = function() { #region
-		var _in = ds_list_create();
+		var _l  = ds_list_create();
+		var amo = attributes.size;
 		
-		for( var i = 0; i < input_fix_len; i++ )
-			ds_list_add(_in, inputs[| i]);
+		for(var i = 0; i < input_fix_len; i++ )
+			ds_list_add(_l, inputs[| i]);
 		
-		array_resize(input_display_list, input_display_len);
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			var varName = getInputData(i);
+		for(var i = 0; i < amo; i++ ) {
+			var _i = input_fix_len + i * data_length;
 			
-			if(varName != "") {
-				ds_list_add(_in, inputs[| i + 0]);
-				ds_list_add(_in, inputs[| i + 1]);
-				inputs[| i + 1].editWidget.setInteract(true);
-				inputs[| i + 1].name = varName;
-				
-				array_push(input_display_list, i + 1);
-			} else {
-				delete inputs[| i + 0];
-				delete inputs[| i + 1];
-			}
+			if(_i >= ds_list_size(_l))
+				createNewInput();
+			
+			for(var j = 0; j < data_length; j++) 
+				ds_list_add(_l, inputs[| _i + j]);
 		}
 		
-		for( var i = 0; i < ds_list_size(_in); i++ )
-			_in[| i].index = i;
+		input_display_list = array_clone(input_display_list_raw);
+		
+		for( var i = input_fix_len; i < ds_list_size(_l); i++ ) {
+			_l[| i].index = i;
+			array_push(input_display_list, i);
+		}
 		
 		ds_list_destroy(inputs);
-		inputs = _in;
+		inputs = _l;
 		
-		createNewInput();
+		getJunctionList();
+		setHeight();
+		
 	} #endregion
 	
 	static onValueUpdate = function(index = 0) { #region
@@ -137,8 +150,6 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		if(safe_mod(index - input_fix_len, data_length) == 0) //Variable name
 			inputs[| index + 1].name = getInputData(index);
-		
-		refreshDynamicInput();
 	} #endregion
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region

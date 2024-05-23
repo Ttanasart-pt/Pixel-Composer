@@ -1,7 +1,6 @@
 function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Add";
 	setDimension(96, 32 + 24);
-	min_h = h;
 	
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);
@@ -11,8 +10,6 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
-	setIsDynamicInput(1);
-	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		
@@ -20,33 +17,7 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			.setVisible(true, true);
 		
 		return inputs[| index];
-	}
-	if(!LOADING && !APPENDING) createNewInput();
-	
-	static refreshDynamicInput = function() {
-		var _l = ds_list_create();
-		
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(i < input_fix_len || inputs[| i].value_from)
-				ds_list_add(_l, inputs[| i]);
-			else
-				delete inputs[| i];	
-		}
-		
-		for( var i = 0; i < ds_list_size(_l); i++ )
-			_l[| i].index = i;
-		
-		ds_list_destroy(inputs);
-		inputs = _l;
-		
-		createNewInput();
-	}
-	
-	static onValueFromUpdate = function(index) {
-		if(LOADING || APPENDING) return;
-		
-		refreshDynamicInput();
-	}
+	} setDynamicInput(1);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);
@@ -65,7 +36,7 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		outputs[| 0].setType(_type);
 		
 		var _out = array_clone(_arr);
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _val = getInputData(i);
 			inputs[| i].setType(_type);
 			

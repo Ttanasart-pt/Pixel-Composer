@@ -13,7 +13,7 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		var _object = nodeBuild("Node_Rigid_Object", x,       y);
 		var _output = nodeBuild("Node_Rigid_Render", x + 160, y);
 		
-		_output.inputs[| 2].setFrom(_object.outputs[| 0])
+		_output.dummy_input.setFrom(_object.outputs[| 0])
 		
 		addNode(_object);
 		addNode(_output);

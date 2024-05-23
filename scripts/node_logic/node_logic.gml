@@ -41,16 +41,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 												 new scrollItem("Xor" , s_node_logic, 5), ])
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(true, true);
-
-	input_display_list = [
-		0, 1, 
-	]
-		
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
-	
-	setIsDynamicInput(1);
 	
 	static createNewInput = function()  {
 		var index = ds_list_size(inputs);
@@ -59,37 +50,8 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		inputs[| index] = nodeValue(jname,  self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
 			.setVisible(true, true);
 		
-		array_push(input_display_list, index);
 		return inputs[| index];
-	} 
-	
-	if!(LOADING || APPENDING) 
-		createNewInput();
-	
-	static refreshDynamicInput = function() {
-		var _in = ds_list_create();
-		
-		for( var i = 0; i < input_fix_len; i++ )
-			ds_list_add(_in, inputs[| i]);
-		
-		array_resize(input_display_list, input_display_len);
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(inputs[| i].value_from) {
-				ds_list_add(_in, inputs[| i]);
-				array_push(input_display_list, i);
-			} else
-				delete inputs[| i];
-		}
-		
-		for( var i = 0; i < ds_list_size(_in); i++ )
-			_in[| i].index = i;
-		
-		ds_list_destroy(inputs);
-		inputs = _in;
-		
-		createNewInput();
-	}
+	} setDynamicInput(1, true, VALUE_TYPE.boolean);
 	
 	static trimInputs = function(amo) {
 		if(ds_list_size(inputs) < amo + 1) {
@@ -99,7 +61,6 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			while(ds_list_size(inputs) > amo + 1) 
 				ds_list_delete(inputs, amo + 1);
 		}
-		array_resize(input_display_list, amo + 1);
 	}
 	
 	static onValueUpdate = function(index) {
@@ -109,50 +70,34 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		switch(mode) {
 			case LOGIC_OPERATOR.lnot :  
 				trimInputs(1);
+				auto_input = false;
 				return;
+				
 			case LOGIC_OPERATOR.lnand :	
 			case LOGIC_OPERATOR.lnor :	
 			case LOGIC_OPERATOR.lxor :	
 				trimInputs(2);
+				auto_input = false;
 				return;
 			
 			case LOGIC_OPERATOR.land :	
 			case LOGIC_OPERATOR.lor :	
-				while(ds_list_size(inputs) < 3) 
-					createNewInput();
-				return;
-		}
-	}
-	
-	static onValueFromUpdate = function(index) {
-		if(LOADING || APPENDING) return;
-		
-		var mode = getInputData(0);
-		switch(mode) {
-			case LOGIC_OPERATOR.lnot :  
-				trimInputs(1);
-				return;
-			case LOGIC_OPERATOR.lnand :	
-			case LOGIC_OPERATOR.lnor :	
-			case LOGIC_OPERATOR.lxor :	
-				trimInputs(2);
+				auto_input = true;
 				return;
 		}
 		
-		if(index < input_fix_len) return;
-		
-		refreshDynamicInput();
+		will_setHeight = true;
 	}
 	
 	static _eval = function(mode, a, b) {
 		switch(mode) {
-			case LOGIC_OPERATOR.land :	return bool(a) && bool(b);
-			case LOGIC_OPERATOR.lor :	return bool(a) || bool(b);   
+			case LOGIC_OPERATOR.land :	return  bool(a) && bool(b);
+			case LOGIC_OPERATOR.lor :	return  bool(a) || bool(b);   
 			case LOGIC_OPERATOR.lnot :  return !bool(a);
 											    
 			case LOGIC_OPERATOR.lnand :	return !(bool(a) && bool(b));
 			case LOGIC_OPERATOR.lnor :	return !(bool(a) || bool(b));
-			case LOGIC_OPERATOR.lxor :	return  bool(a) ^^ bool(b);
+			case LOGIC_OPERATOR.lxor :	return   bool(a) ^^ bool(b);
 		}
 		return false;
 	}
@@ -199,7 +144,8 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case LOGIC_OPERATOR.land :	
 			case LOGIC_OPERATOR.lor :	
 				var val = a;
-				var to  = max(2, ds_list_size(inputs) - 1);
+				var to  = ds_list_size(inputs);
+				
 				for( var i = 2; i < to; i++ ) {
 					var b = getInputData(i);
 					val = evalLogicArray(mode, val, b);

@@ -32,13 +32,15 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	setIsDynamicInput(2);
-	
-	static createNewInput = function() { #region
+	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index + 0] = nodeValue("Name " + string(index - input_fix_len), self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		inputs[| index + 1] = nodeValue("Rule " + string(index - input_fix_len), self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
-	} #endregion
+		
+		return inputs[| index + 0];
+	}
+	
+	setDynamicInput(2, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
@@ -138,12 +140,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		createNewInput();
 	} #endregion
 	
-	static onValueUpdate = function(index) {
-		if(LOADING || APPENDING) return;
-		
-		refreshDynamicInput();
+	static onValueUpdate = function(index) { #region
+		if(index > input_fix_len && !LOADING && !APPENDING) 
+			refreshDynamicInput();
 	}
-	
+		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
@@ -273,9 +274,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(ds_list_size(inputs) < input_fix_len + 2) return;
 		
 		var rules = {};
-		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _name = getInputData(i + 0);
 			var _rule = getInputData(i + 1);
+			if(_name == "") continue;
+			
 			if(!struct_has(rules, _name))
 				rules[$ _name] = [ _rule ];
 			else

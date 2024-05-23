@@ -25,6 +25,8 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
 			self.parent = parent;
 		}
 	}
+	
+	static toString = function() { return $"Custon renderer"; }
 } #endregion
 
 function Inspector_Sprite(spr) constructor { self.spr = spr; }

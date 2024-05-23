@@ -11,10 +11,10 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		inputs[| index + 1] = nodeValue("value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 			.setVisible(false, false);
-	}
+			
+		return inputs[| index + 0];
+	} setDynamicInput(2, false);
 
-	setIsDynamicInput(2);
-	
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	static refreshDynamicInput = function() {

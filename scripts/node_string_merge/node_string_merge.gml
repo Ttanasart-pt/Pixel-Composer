@@ -3,48 +3,16 @@ function Node_String_Merge(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	setDimension(96, 48);
 	
-	setIsDynamicInput(1);
-	
 	outputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	
-	static createNewInput = function() { #region
+	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		
 		inputs[| index] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
 			.setVisible(true, true);
 		
 		return inputs[| index];
-	} if(!LOADING && !APPENDING) createNewInput(); #endregion
-	
-	static refreshDynamicInput = function() { #region
-		var _l = ds_list_create();
-		
-		for( var i = 0; i < input_fix_len; i++ ) 
-			_l[| i] = inputs[| i];
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(inputs[| i].value_from || inputs[| i].getValue() != "")
-				ds_list_add(_l, inputs[| i]);
-		}
-		
-		for( var i = 0; i < ds_list_size(_l); i++ )
-			_l[| i].index = i;	
-		
-		ds_list_destroy(inputs);
-		inputs = _l;
-		
-		createNewInput();
-	} #endregion
-	
-	static onValueUpdate = function(index) { #region
-		if(LOADING || APPENDING) return;
-		refreshDynamicInput();
-	} #endregion
-	
-	static onValueFromUpdate = function(index) { #region
-		if(LOADING || APPENDING) return;
-		refreshDynamicInput();
-	} #endregion
+	} setDynamicInput(1, true, VALUE_TYPE.text);
 	
 	static processData = function(_output, _data, _index = 0) { 
 		var _str = "";

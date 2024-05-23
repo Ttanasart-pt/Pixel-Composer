@@ -25,8 +25,6 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		["Rendering", false], 1, 2, 3, 
 	];
 	
-	setIsDynamicInput(2);
-	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
@@ -35,7 +33,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static createNewInput = function() { #region
+	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		
 		inputs[| index + 0] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
@@ -46,8 +44,11 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 			.setVisible(true, true);
 			
 		array_push(input_display_list, ["Particle", false], index + 0, index + 1);
-	} if(!LOADING && !APPENDING) createNewInput(); #endregion
 		
+		return inputs[| index + 1];
+	} setDynamicInput(2, true, VALUE_TYPE.particle);
+	dyna_input_check_shift = 1;
+	
 	static createOutput = function() { #region
 		if(group == noone) return;
 		if(!is_struct(group)) return;
@@ -64,42 +65,6 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		group.refreshNodeDisplay();
 		group.sortIO();
 	} if(!LOADING && !APPENDING) createOutput(); #endregion
-	
-	static refreshDynamicInput = function() { #region
-		var _l    = ds_list_create();
-		var _disp = [];
-		
-		for( var i = 0; i < input_display_len ; i ++ )
-			array_push(_disp, input_display_list[i]);
-		
-		for( var i = 0; i < input_fix_len; i++ )
-			ds_list_add(_l, inputs[| i]);
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(!inputs[| i + 1].value_from) continue;
-			
-			ds_list_add(_l, inputs[| i + 0]);
-			ds_list_add(_l, inputs[| i + 1]);
-			
-			array_push(_disp, ["Particle", false], i + 0, i + 1);
-		}
-		
-		for( var i = 0; i < ds_list_size(_l); i++ )
-			_l[| i].index = i;
-		
-		ds_list_destroy(inputs);
-		inputs = _l;
-		input_display_list = _disp;
-		
-		createNewInput();
-	} #endregion
-	
-	static onValueFromUpdate = function(index) { #region
-		if(index < input_fix_len) return;
-		if(LOADING || APPENDING) return;
-		
-		refreshDynamicInput();
-	} #endregion
 	
 	static step = function() { #region
 		if(outParent == undefined) return;

@@ -187,6 +187,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			input_button_length = array_length(input_buttons);
 		});
+		
+		dummy_input = noone;
 	#endregion
 	
 	#region --- attributes ----
@@ -420,10 +422,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				_hi += junction_draw_hei_y;
 		}
 		
+		if(auto_input && dummy_input) _hi += junction_draw_hei_y;
+		
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 			if(outputs[| i].isVisible()) _ho += junction_draw_hei_y;
 		
-		h     = max(min_h, _prev_surf * 128, _hi, _ho, attributes.node_height);
+		h = max(min_h, _prev_surf * 128, _hi, _ho, attributes.node_height);
 		fix_h = h;
 		
 	} #endregion
@@ -440,56 +444,76 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return self;
 	} #endregion
 	
-	static setIsDynamicInput = function(_data_length = 1, _auto_input = true, _dynamic_input_cond = DYNA_INPUT_COND.connection) { #region
-		is_dynamic_input	= true;						
-		auto_input			= _auto_input;
+	#region //////////////////////////////// Dynamic IO ////////////////////////////////
+		auto_input = false;
+		dyna_input_check_shift = 0;
+		static createNewInput  = -1;
 		
-		input_display_list_raw = array_clone(input_display_list);
-		input_display_len	= input_display_list == -1? 0 : array_length(input_display_list);
-		input_fix_len		= ds_list_size(inputs);
-		data_length			= _data_length;
+		static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) { #region
+			is_dynamic_input	= true;						
+			auto_input			= _auto_input;
+			dummy_type	 		= _dummy_type;
+			
+			input_display_list_raw = array_clone(input_display_list, 1);
+			input_display_len	= input_display_list == -1? 0 : array_length(input_display_list);
+			input_fix_len		= ds_list_size(inputs);
+			data_length			= _data_length;
+			
+			dynamic_input_cond  = _dynamic_input_cond;
+			
+			if(auto_input) {
+				dummy_input = nodeValue("Add value", self, JUNCTION_CONNECT.input, dummy_type, 0)
+							.setDummy(function() { return createNewInput(); })
+							.setVisible(false, true);
+			}
+		} #endregion
 		
-		dynamic_input_cond  = _dynamic_input_cond;
-	} #endregion
-	
-	static createNewInput = -1;
-	
-	static refreshDynamicInput = function() { #region
-		var _in = ds_list_create();
-		
-		for( var i = 0; i < input_fix_len; i++ )
-			ds_list_add(_in, inputs[| i]);
-		
-		array_resize(input_display_list, input_display_len);
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			var _active = false;
-			if(dynamic_input_cond & DYNA_INPUT_COND.connection)
-				_active |= inputs[| i].value_from != noone;
-			if(dynamic_input_cond & DYNA_INPUT_COND.zero) {
-				var _val = inputs[| i].getValue();
-				_active |= _val != 0 || _val != "";
+		static refreshDynamicInput = function() { #region
+			var _in = ds_list_create();
+			
+			for( var i = 0; i < input_fix_len; i++ )
+				ds_list_add(_in, inputs[| i]);
+			
+			input_display_list = array_clone(input_display_list_raw, 1);
+			var sep = false;
+			
+			for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+				var _active = false;
+				if(dynamic_input_cond & DYNA_INPUT_COND.connection)
+					_active |= inputs[| i + dyna_input_check_shift].value_from != noone;
+					
+				if(dynamic_input_cond & DYNA_INPUT_COND.zero) {
+					var _val = inputs[| i + dyna_input_check_shift].getValue();
+					_active |= _val != 0 || _val != "";
+				}
+				
+				if(_active) {
+					if(sep && data_length > 1) array_push(input_display_list, new Inspector_Spacer(20, true));
+					sep = true;
+				
+					for( var j = 0; j < data_length; j++ ) {
+						var _ind = i + j;
+						
+						ds_list_add(_in, inputs[| _ind]);
+						if(input_display_list != -1)
+							array_push(input_display_list, _ind);
+					}
+				} else {
+					for( var j = 0; j < data_length; j++ )
+						delete inputs[| i + j];
+				}
 			}
 			
-			if(_active) {
-				for( var j = 0; j < data_length; j++ ) {
-					ds_list_add(_in, inputs[| i + j]);
-					array_push(input_display_list, i + j);
-				}
-			} else {
-				for( var j = 0; j < data_length; j++ )
-					delete inputs[| i + j];
-			}
-		}
+			for( var i = 0; i < ds_list_size(_in); i++ )
+				_in[| i].index = i;
+			
+			ds_list_destroy(inputs);
+			inputs = _in;
+		} #endregion
+	
+		static getInputAmount = function() { return (ds_list_size(inputs) - input_fix_len) / data_length; }
 		
-		for( var i = 0; i < ds_list_size(_in); i++ )
-			_in[| i].index = i;
-		
-		ds_list_destroy(inputs);
-		inputs = _in;
-		
-		createNewInput();
-	} #endregion
+	#endregion //////////////////////////////// Dynamic IO ////////////////////////////////
 	
 	static getOutput = function(junc = noone) { #region
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
@@ -502,6 +526,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} #endregion
 	
 	static getInput = function(junc = noone, shift = input_fix_len) { #region
+		if(dummy_input) return dummy_input;
+	
 		for( var i = shift; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
 			
@@ -554,7 +580,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!LOADING) PROJECT.modified = true;
 	} #endregion
 	
-	#region ++++ inspector update ++++
+	#region //// inspector update
 		static onInspector1Update  = noone;
 		static inspector1Update    = function() { INLINE onInspector1Update(); }
 		static hasInspector1Update = function() { INLINE return NODE_HAS_INSP1; }
@@ -739,7 +765,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static valueFromUpdate = function(index) { #region
 		onValueFromUpdate(index);
 		
-		if(is_dynamic_input) will_setHeight = true;
+		if(auto_input && !LOADING && !APPENDING) 
+			refreshDynamicInput();
+			
+		if(is_dynamic_input) 
+			will_setHeight = true;
+			
 		cacheCheck();
 	} #endregion
 	
@@ -982,6 +1013,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			array_push(inputDisplayList, jun);
 		}
+		
+		if(auto_input && dummy_input) array_push(inputDisplayList, dummy_input);
 	}#endregion
 	
 	static preDraw = function(_x, _y, _s) { #region
@@ -1293,8 +1326,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var yy = y * _s + _y;
 		
 		var _hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == self);
-		show_input_name  = _hov && point_in_rectangle(_mx, _my, xx - 8 * _s, yy + 20 * _s, xx + 8 * _s, yy + h * _s);
-		show_output_name = _hov && point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
+		show_input_name  = _hov && point_in_rectangle(_mx, _my, xx - 12 * _s, yy + 20 * _s, xx + 12 * _s, yy + h * _s);
+		show_output_name = _hov && point_in_rectangle(_mx, _my, xx + (w - 12) * _s, yy + 20 * _s, xx + (w + 12) * _s, yy + h * _s);
 		
 		if(show_input_name) {
 			for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {

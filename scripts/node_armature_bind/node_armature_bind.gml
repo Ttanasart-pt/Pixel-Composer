@@ -66,8 +66,6 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	layer_remove	= -1;
 	
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region 
-		PROCESSOR_OVERLAY_CHECK
-		
 		ds_map_clear(surfMap);
 		
 		var index = -1;
@@ -85,8 +83,6 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				array_push(surfMap[? _id], [ index, _surf ]);
 			else
 				surfMap[? _id] = [ [ index, _surf ] ];
-				
-			//print($"Add {_surf} to {_id}");
 		}
 		
 		#region draw bones
@@ -197,7 +193,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _ty, _w, bh - ui(32), COLORS._main_accent, 1);
 		#endregion
 		
-		var amo = floor((ds_list_size(inputs) - input_fix_len) / data_length) - 1;
+		var amo = floor((ds_list_size(inputs) - input_fix_len) / data_length);
 		if(array_length(current_data) != ds_list_size(inputs)) return 0;
 		
 		if(use_data) {
@@ -381,7 +377,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	];
 	input_display_list_len = array_length(input_display_list);
 	
-	function deleteLayer(index) { #region 
+	function deleteLayer(index) {
 		var idx = input_fix_len + index * data_length;
 		for( var i = 0; i < data_length; i++ ) {
 			ds_list_delete(inputs, idx);
@@ -393,13 +389,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				input_display_list[i] = input_display_list[i] - data_length;
 		}
 		
-		if(ds_list_size(inputs) == input_fix_len)
-			createNewInput();
 		doUpdate();
-	#endregion
 	}
 	
-	static createNewInput = function() { #region 
+	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
@@ -423,12 +416,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			array_push(attributes.layer_visible, true);
 		while(_s >= array_length(attributes.layer_selectable))
 			array_push(attributes.layer_selectable, true);
-	#endregion
-	}
-	
-	setIsDynamicInput(6);
-	
-	if(!LOADING && !APPENDING) createNewInput();
+		
+		return inputs[| index + 0];
+	} setDynamicInput(6);
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	blend_temp_surface = temp_surface[2];
@@ -452,20 +442,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	bone = noone;
 	surface_selecting = noone;
 	
-	static getInputAmount = function() { #region
-		return input_fix_len + (ds_list_size(inputs) - input_fix_len) / data_length;
-	} #endregion
-	
 	static getInputIndex = function(index) { #region
 		if(index < input_fix_len) return index;
 		return input_fix_len + (index - input_fix_len) * data_length;
-	} #endregion
-	
-	static onValueFromUpdate = function(index) { #region
-		if(LOADING || APPENDING) return;
-		
-		if(index + data_length >= ds_list_size(inputs))
-			createNewInput();
 	} #endregion
 	
 	static setBone = function() { #region

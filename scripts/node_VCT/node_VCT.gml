@@ -15,8 +15,6 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		["Automations", false], 
 	];
 
-	setIsDynamicInput(1);
-	
 	static createNewInput = function(key = "") {
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);

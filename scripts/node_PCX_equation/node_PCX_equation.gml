@@ -1,20 +1,10 @@
 function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) constructor {
 	name = "Equation";
 	
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	ast = noone;
 	
 	inputs[| 0] = nodeValue("Equation", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
-	
-	static createNewInput = function() { #region
-		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
-			.setDisplay(VALUE_DISPLAY.text_box);
-		
-		inputs[| index + 1] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone )
-			.setVisible(true, true);
-		inputs[| index + 1].editWidget.interactable = false;
-	} #endregion
 	
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone );
 	
@@ -51,20 +41,29 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 		return hh;
 	}); #endregion
 	
-	argument_renderer.register = function(parent = noone) { #region
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ )
-			inputs[| i].editWidget.register(parent);
-	} #endregion
 	
 	input_display_list = [ 
 		["Function",	false], 0,
 		["Arguments",	false], argument_renderer,
 		["Inputs",		 true], 
 	]
-
-	setIsDynamicInput(2);
 	
-	if(!LOADING && !APPENDING) createNewInput();
+	static createNewInput = function() {
+		var index = ds_list_size(inputs);
+		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+			.setDisplay(VALUE_DISPLAY.text_box);
+		
+		inputs[| index + 1] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone )
+			.setVisible(true, true);
+		inputs[| index + 1].editWidget.interactable = false;
+		
+		return inputs[| index + 0];
+	} setDynamicInput(2, false);
+	
+	argument_renderer.register = function(parent = noone) { #region
+		for( var i = input_fix_len; i < ds_list_size(inputs); i++ )
+			inputs[| i].editWidget.register(parent);
+	} #endregion
 	
 	static refreshDynamicInput = function() { #region
 		var _in = ds_list_create();

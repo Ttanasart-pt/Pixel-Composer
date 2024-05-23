@@ -13,7 +13,7 @@ function Node_Module_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	//input_display_list = [ 0 ];
 	
-	setIsDynamicInput(1);
+	setDynamicInput(1);
 	
 	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);

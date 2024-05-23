@@ -41,7 +41,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		["Anchors",	false], 
 	];
 	
-	setIsDynamicInput(1);
+	setDynamicInput(1, false);
 	
 	tool_pathDrawer = new NodeTool( "Draw path", THEME.path_tools_draw )	
 		.addSetting("Smoothness", VALUE_TYPE.float,   function(val) { tool_pathDrawer.attribute.thres = val; }, "thres", 4)

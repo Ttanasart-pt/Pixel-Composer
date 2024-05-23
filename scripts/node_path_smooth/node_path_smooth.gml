@@ -18,7 +18,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Anchors",	false], 
 	];
 	
-	setIsDynamicInput(1);
+	setDynamicInput(1, false);
 	
 	tools = [
 		new NodeTool( "Anchor add / remove", THEME.path_tools_add ),
@@ -265,10 +265,10 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			];
 		} else {
 			for( var i = 0, n = amo; i < n; i++ ) {
-				var _a0 = array_safe_get_fast(anchors, i - 1,, ARRAY_OVERFLOW.loop);
-				var _a1 = array_safe_get_fast(anchors, i    ,, ARRAY_OVERFLOW.loop);
-				var _a2 = array_safe_get_fast(anchors, i + 1,, ARRAY_OVERFLOW.loop);
-			
+				var _a0 = array_safe_get_fast(anchors, (i - 1) % n, [ 0, 0 ]);
+				var _a1 = array_safe_get_fast(anchors, (i    ) % n, [ 0, 0 ]);
+				var _a2 = array_safe_get_fast(anchors, (i + 1) % n, [ 0, 0 ]);
+				
 				var _dr  = point_direction(_a0[0], _a0[1], _a2[0], _a2[1]);
 				var _ds0 = point_distance(_a1[0], _a1[1], _a0[0], _a0[1]) / smot;
 				var _ds2 = point_distance(_a1[0], _a1[1], _a2[0], _a2[1]) / smot;

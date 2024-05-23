@@ -10,7 +10,13 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 1] = nodeValue("Default value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(false, true);
 	
-	static createNewInput = function() { #region
+	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	
+	input_display_list = [ 0,
+		["Inputs", false], 1
+	]
+	
+	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index + 0] = nodeValue("Case", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
@@ -19,15 +25,9 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		array_push(input_display_list, index + 0);
 		array_push(input_display_list, index + 1);
-	} #endregion
-	
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
-	
-	input_display_list = [ 0,
-		["Inputs", false], 1
-	]
-	
-	setIsDynamicInput(2);
+		
+		return inputs[| index + 0];
+	} setDynamicInput(2, false);
 	
 	if(!LOADING && !APPENDING) createNewInput();
 	

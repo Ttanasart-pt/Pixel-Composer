@@ -85,9 +85,13 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				break;
 				
 			case ACTION_TYPE.junction_connect :
-				var _d = obj.value_from;
-				obj.setFrom(data);
-				data = _d;
+				if(obj.is_dummy) {
+					data[0].setFrom(noone);
+				} else {
+					var _d = obj.value_from;
+					obj.setFrom(data);
+					data = _d;
+				}
 				break;
 				
 			case ACTION_TYPE.junction_disconnect :
@@ -192,9 +196,14 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				break;
 				
 			case ACTION_TYPE.junction_connect :
-				var _d = obj.value_from;
-				obj.setFrom(data);
-				data = _d;
+				if(obj.is_dummy) {
+					obj.setFrom(data[1]);
+					data[0] = obj.dummy_target;
+				} else {
+					var _d = obj.value_from;
+					obj.setFrom(data);
+					data = _d;
+				}
 				break;
 				
 			case ACTION_TYPE.junction_disconnect :

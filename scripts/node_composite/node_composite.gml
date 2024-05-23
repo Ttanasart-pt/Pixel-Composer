@@ -37,11 +37,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	layer_renderer	= new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
-		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
-		if(array_length(current_data) != ds_list_size(inputs)) return 0;
-		
-		var lh = 28;
-		var eh = 36;
+		var amo = getInputAmount();
+		var lh  = 28;
+		var eh  = 36;
 		
 		properties_expand = array_verify(properties_expand, amo);
 		var _h = 4;
@@ -85,22 +83,23 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _px, _py, _pw, _ph, COLORS.node_composite_bg_blend, 1);
 				
-				var jun = inputs[| index + 4];
-				var bl_wid = jun.editWidget;
+				var jn_bld = inputs[| index + 4];
+				var jn_alp = inputs[| index + 5];
 				
-				var _param = new widgetParam(_px + 4, _py + 4, _pww, _pwh, jun.showValue(), jun.display_data, _m, layer_renderer.rx, layer_renderer.ry);
-				bl_wid.setFocusHover(_focus, _hover);
+				var wd_bld = jn_bld.editWidget;
+				var wd_alp = jn_alp.editWidget;
 				
-				bl_wid.font = f_p2;
-				bl_wid.drawParam(_param);
-				bl_wid.font = f_p0;
+				var _param = new widgetParam(_px + 4, _py + 4, _pww, _pwh, jn_bld.showValue(), jn_bld.display_data, _m, layer_renderer.rx, layer_renderer.ry);
+				    _param.font = f_p2;
+				    
+				wd_bld.setFocusHover(_focus, _hover);
+				wd_bld.drawParam(_param);
 				
-				var jun = inputs[| index + 5];
-				var bl_wid = jun.editWidget;
-				
-				var _param = new widgetParam(_px + 4 + _pww + 8, _py + 4, _pww, _pwh, jun.showValue(), jun.display_data, _m, layer_renderer.rx, layer_renderer.ry);
-				bl_wid.setFocusHover(_focus, _hover);
-				bl_wid.drawParam(_param);
+				var _param = new widgetParam(_px + 4 + _pww + 8, _py + 4, _pww, _pwh, jn_alp.showValue(), jn_alp.display_data, _m, layer_renderer.rx, layer_renderer.ry);
+				    _param.font = f_p2;
+				    
+				wd_alp.setFocusHover(_focus, _hover);
+				wd_alp.drawParam(_param);
 			} #endregion
 			
 			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
@@ -226,7 +225,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	];
 	
 	input_display_list_len = array_length(input_display_list);
-	setIsDynamicInput(6);
 	
 	function deleteLayer(index) { #region
 		var idx = input_fix_len + index * data_length;
@@ -246,7 +244,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		doUpdate();
 	} #endregion
 	
-	static createNewInput = function() { #region
+	static createNewInput = function() { 
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
@@ -279,8 +277,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 		while(_s >= array_length(attributes.layer_selectable))
 			array_push(attributes.layer_selectable, true);
-			
-	} if(!LOADING && !APPENDING) createNewInput(); #endregion
+		
+		return inputs[| index + 0];
+	} setDynamicInput(6);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -307,15 +306,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	atlas_data = [];
 	
 	surface_selecting = noone;
-	
-	static getInputAmount = function() { INLINE return input_fix_len + (ds_list_size(inputs) - input_fix_len) / data_length; }
-	
-	static onValueFromUpdate = function(index) { #region
-		if(LOADING || APPENDING) return;
-		
-		if(index + data_length >= ds_list_size(inputs))
-			createNewInput();
-	} #endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
@@ -438,9 +428,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _vis = attributes.layer_visible;
 		var _sel = attributes.layer_selectable;
 		
-		var amo = (ds_list_size(inputs) - input_fix_len) / data_length;
-		if(array_length(current_data) < input_fix_len + amo * data_length)
-			return;
+		var amo = getInputAmount();
 		
 		var anchors = array_create(ds_list_size(inputs));
 		
@@ -646,7 +634,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		var res_index = 0;
-		var imageAmo  = (ds_list_size(inputs) - input_fix_len) / data_length;
+		var imageAmo  = getInputAmount();
 		var _vis      = attributes.layer_visible;
 		var bg        = 0;
 		var _bg       = 0;

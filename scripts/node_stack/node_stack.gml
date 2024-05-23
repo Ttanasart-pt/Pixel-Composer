@@ -17,15 +17,6 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 3] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.padding)
 		.rejectArray();
-		
-	setIsDynamicInput(1);
-	
-	static createNewInput = function() { #region
-		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1 )
-			.setVisible(true, true);
-	} #endregion
-	if(!LOADING && !APPENDING) createNewInput();
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -33,32 +24,15 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	temp_surface = [ noone, noone ];
 	
+	static createNewInput = function() {
+		var index = ds_list_size(inputs);
+		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1 )
+			.setVisible(true, true);
+			
+		return inputs[| index];
+	} setDynamicInput(1, true, VALUE_TYPE.surface);
+	
 	attribute_surface_depth();
-	
-	static refreshDynamicInput = function() { #region
-		var _l = ds_list_create();
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(i < input_fix_len || inputs[| i].value_from)	
-				ds_list_add(_l, inputs[| i]);
-			else
-				delete inputs[| i];	
-		}
-		
-		for( var i = 0; i < ds_list_size(_l); i++ )
-			_l[| i].index = i;
-		
-		ds_list_destroy(inputs);
-		inputs = _l;
-		
-		createNewInput();
-	} #endregion
-	
-	static onValueFromUpdate = function(index) { #region
-		if(index < input_fix_len) return;
-		if(LOADING || APPENDING) return;
-		
-		refreshDynamicInput();
-	} #endregion
 	
 	static step = function() { #region
 		var _axis = getInputData(0);
@@ -76,7 +50,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ww = 0;
 		var hh = 0;
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
 			var _surf = getInputData(i);
 			if(!is_array(_surf)) _surf = [ _surf ];
 			
@@ -117,7 +91,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ppind = 0;
 		var sx = 0, sy = 0;
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
 			var _surf = getInputData(i);
 			if(!is_array(_surf)) _surf = [ _surf ];
 				

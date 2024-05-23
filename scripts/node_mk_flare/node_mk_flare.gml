@@ -95,8 +95,6 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _flares = inputs[| 5].getValue();
 		var _amo = array_length(_flares);
 		
-		//print($"{_flares}: {_amo}");
-		
 		var _fx = _x;
 		var _fy = _y + ui(8);
 		var _fh = ui(32);
@@ -313,12 +311,6 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	seed         = seed_random();
 	
 	flares = [];
-	
-	setIsDynamicInput(1);
-	
-	static createNewInput = function() { #region
-		ds_list_add(inputs,  nodeValue("Index", self, JUNCTION_CONNECT.input,  VALUE_TYPE.float, [] ).setArrayDepth(1));
-	} #endregion
 	
 	ox = 0;
 	oy = 0;

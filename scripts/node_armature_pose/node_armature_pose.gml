@@ -9,8 +9,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Bones", false]
 	]
 	
-	setIsDynamicInput(1);
-	
 	outputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.output, VALUE_TYPE.armature, noone);
 	
 	boneMap = ds_map_create();
@@ -26,7 +24,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	array_push(attributeEditors, ["Display bone", function() { return attributes.display_bone; }, 
 		new scrollBox(["Octahedral", "Stick"], function(ind) { attributes.display_bone = ind; })]);
 	
-	static createNewInput = function(bone = noone) { #region
+	static createNewInput = function(bone = noone) {
 		var index = ds_list_size(inputs);
 		
 		inputs[| index] = nodeValue(bone != noone? bone.name : "bone", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )
@@ -38,7 +36,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		array_push(input_display_list, index);
 		
 		return inputs[| index];
-	} #endregion
+	} setDynamicInput(1, false);
 	
 	static setBone = function() { #region
 		//print("Setting dem bones...");

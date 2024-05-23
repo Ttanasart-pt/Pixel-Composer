@@ -24,12 +24,10 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Rendering", false], 1, 2, 3, 
 	];
 	
-	setIsDynamicInput(2);
-	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static createNewInput = function() { #region
+	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		
 		inputs[| index + 0] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
@@ -40,7 +38,10 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			.setVisible(true, true);
 		
 		array_push(input_display_list, ["Particle", false], index + 0, index + 1);
-	} if(!LOADING && !APPENDING) createNewInput(); #endregion
+		
+		return inputs[| index + 1];
+	} setDynamicInput(2, true, VALUE_TYPE.particle);
+	dyna_input_check_shift = 1;
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -48,42 +49,6 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
 	
 	static onInspector2Update = function() { clearCache(); }
-	
-	static refreshDynamicInput = function() { #region
-		var _l    = ds_list_create();
-		var _disp = [];
-		
-		for( var i = 0; i < input_display_len; i++ )
-			array_push(_disp, input_display_list[i]);
-		
-		for( var i = 0; i < input_fix_len; i++ )
-			ds_list_add(_l, inputs[| i]);
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(!inputs[| i + 1].value_from) continue;
-			
-			ds_list_add(_l, inputs[| i + 0]);
-			ds_list_add(_l, inputs[| i + 1]);
-			
-			array_push(_disp, ["Particle", false], i + 0, i + 1);
-		}
-		
-		for( var i = 0; i < ds_list_size(_l); i++ )
-			_l[| i].index = i;
-		
-		ds_list_destroy(inputs);
-		inputs = _l;
-		input_display_list = _disp;
-		
-		createNewInput();
-	} #endregion
-	
-	static onValueFromUpdate = function(index) { #region
-		if(index < input_fix_len) return;
-		if(LOADING || APPENDING) return;
-		
-		refreshDynamicInput();
-	} #endregion
 	
 	static step = function() { #region
 		var _typ = getInputData(2);

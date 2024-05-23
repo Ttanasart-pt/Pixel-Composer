@@ -3,6 +3,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setDimension(96, 48);
 	
+	attributes.size = 0;
+	attributes.spread_value = false;
+	
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })
 		.rejectArray();
@@ -15,49 +18,36 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var bw = _w / 2 - ui(4);
 		var bh = ui(36);
-		var bx = _x;
-		var by = _y + ui(8);
-		if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, _focus, _hover) == 2) {
-			var amo = ds_list_size(inputs) - input_fix_len;
-			attributes.size = amo + 1;
+		if(buttonTextIconInstant(THEME.button_hide, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add")) == 2) {
+			attributes.size++;
 			refreshDynamicInput();
 			update();
 		}
 		
-		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_icon_light);
-		var bxc = bx + bw / 2 - (string_width("Add") + ui(64)) / 2;
-		var byc = by + bh / 2;
-		draw_sprite_ui(THEME.add, 0, bxc + ui(24), byc,,,, COLORS._main_icon_light);
-		draw_text(bxc + ui(48), byc, __txt("Add"));
-		
-		var bx = _x + bw + ui(8);
 		var amo = attributes.size;
-		if(amo > 1 && buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, _focus, _hover) == 2) {
-			var amo = ds_list_size(inputs) - input_fix_len;
-			attributes.size = max(amo - 1, 1);
+		if(buttonTextIconInstant(THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove")) == 2) {
+			attributes.size = max(attributes.size - 1, 0);
 			refreshDynamicInput();
 			update();
 		}
-		
-		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_icon_light);
-		var bxc = bx + bw / 2 - (string_width("Remove") + ui(64)) / 2;
-		var byc = by + bh / 2;
-		draw_sprite_ui(THEME.minus, 0, bxc + ui(24), byc,,,, COLORS._main_icon_light, (amo > 1) * 0.5 + 0.5);
-		draw_set_alpha((amo > 1) * 0.5 + 0.5);
-		draw_text(bxc + ui(48), byc, __txt("Remove"));
-		draw_set_alpha(1);
 		
 		return _h;
 	}); #endregion
 	
 	input_display_list = [ 0, 1, ["Contents", false], array_adjust_tool, ];
 	
-	setIsDynamicInput(1);
-	
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
-	attributes.size = 1;
-	attributes.spread_value = false;
+	static createNewInput = function() {
+		var index = ds_list_size(inputs);
+		var _typ  = getType();
+		
+		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, _typ, -1 )
+			.setVisible(true, true);
+		array_push(input_display_list, index);
+		
+		return inputs[| index];
+	} setDynamicInput(1);
 	
 	static getType = function() { #region
 		var _type = getInputData(0);
@@ -71,56 +61,33 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 	} #endregion
 	
-	static createNewInput = function() { #region
-		var index = ds_list_size(inputs);
-		var _typ  = getType();
-		
-		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, _typ, -1 )
-			.setVisible(true, true);
-		array_push(input_display_list, index);
-		
-		return inputs[| index];
-	} if(!LOADING && !APPENDING) createNewInput(); #endregion
-	
-	//dummy_input = nodeValue("Add value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0).setDummy(function() { return createNewInput(); });
-	
 	static refreshDynamicInput = function() { #region
-		var _l       = ds_list_create();
-		var amo      = attributes.size;
-		var extra    = true;
-		var lastNode = noone;
+		var _l  = ds_list_create();
+		var amo = attributes.size;
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(i < input_fix_len + amo || inputs[| i].value_from) {
-				ds_list_add(_l, inputs[| i]);
-				if(i >= input_fix_len)
-					inputs[| i].setVisible(true, true);
-			}
+			var _inp = inputs[| i];
+			
+			if(i < input_fix_len + amo || _inp.value_from)
+				ds_list_add(_l, _inp);
 		}
 		
-		var _add = amo - (ds_list_size(_l) - input_fix_len);
-		repeat(_add) {
-			lastNode = createNewInput();
-			ds_list_add(_l, lastNode);
-		}
+		var _add = amo - getInputAmount();
+		repeat(_add) ds_list_add(_l, createNewInput());
 		
 		input_display_list = array_clone(input_display_list_raw);
 		
 		for( var i = input_fix_len; i < ds_list_size(_l); i++ ) {
 			_l[| i].index = i;
 			array_push(input_display_list, i);
-			
-			if(_l[| i].value_from == noone)
-				extra = false;
 		}
 		
 		ds_list_destroy(inputs);
 		inputs = _l;
 		
-		if(extra) lastNode = createNewInput();
-		_l[| ds_list_size(_l) - 1].setVisible(false, true);
-		
 		getJunctionList();
+		setHeight();
+		
 	} #endregion
 	
 	static updateType = function(resetVal = false) { #region
@@ -183,10 +150,11 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(is_array(val) && spd) array_append(res, val);
 			else                     array_push(res, val);
+			
+			if(_typ == VALUE_TYPE.any && inputs[| i].value_from)
+				outputs[| 0].setType(inputs[| i].value_from.type);
 		}
 		
-		if(_typ == VALUE_TYPE.any && inputs[| input_fix_len].value_from)
-			outputs[| 0].setType(inputs[| input_fix_len].value_from.type);
 		outputs[| 0].setValue(res);
 		
 		if(outputs[| 0].type == VALUE_TYPE.surface)

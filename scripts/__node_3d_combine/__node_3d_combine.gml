@@ -62,17 +62,13 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Objects",				 true], 
 	];
 	
-	setIsDynamicInput(1);
-	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("3D objects", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
 	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	output_display_list = [
-		0, 2, 1
-	]
+	output_display_list = [ 0, 2, 1 ]
 	
 	_3d_node_init(1, /*Transform*/ 4, 5, 1, 2, 3);
 	
@@ -82,35 +78,8 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			.setVisible(true, true);
 			
 		array_push(input_display_list, index);
-	}
-	if(!LOADING && !APPENDING) createNewInput();
-	
-	static refreshDynamicInput = function() {
-		var _l = ds_list_create();
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(i < input_fix_len || inputs[| i].value_from)	
-				ds_list_add(_l, inputs[| i]);
-			else
-				delete inputs[| i];	
-		}
 		
-		for( var i = 0; i < ds_list_size(_l); i++ )
-			_l[| i].index = i;
-		
-		ds_list_destroy(inputs);
-		inputs = _l;
-		
-		var _d = [];
-		for( var i = 0, n = array_length(input_display_list); i < n; i++ ) {
-			var ind = input_display_list[i];
-			
-			if(i < input_display_len || ind < ds_list_size(inputs))
-				array_push(_d, input_display_list[i]);
-		}
-		input_display_list = _d;
-		
-		createNewInput();
-	}
+	} setDynamicInput(1, true, VALUE_TYPE.d3object);
 	
 	static onValueFromUpdate = function(index) {
 		if(index < input_fix_len) return;

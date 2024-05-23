@@ -132,7 +132,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	} #endregion
 }
 
-function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1) { #region
+function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1) {
 	var res = 0;
 	var cc  = is_array(_icon_blend)? _icon_blend[0] : _icon_blend;
 	
@@ -161,4 +161,16 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 		draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, _icon_scale, cc, _icon_alpha);
 	
 	return res;
-} #endregion
+}
+
+function buttonTextIconInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_label = "") {
+	var _b = buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip);
+	
+	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_icon_light);
+	var bxc = _x + _w / 2 - (string_width(_icon_label) + ui(64)) / 2;
+	var byc = _y + _h / 2;
+	draw_sprite_ui(_icon, 0, bxc + ui(24), byc,,,, COLORS._main_icon_light);
+	draw_text(bxc + ui(48), byc, _icon_label);
+	
+	return _b;
+}

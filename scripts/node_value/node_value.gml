@@ -2163,8 +2163,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return controlNode.rendered;
 	} #endregion
 	
-	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region
+	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region ////Set from
 		//print($"Connecting {_valueFrom.name} to {name}");
+		
+		if(is_dummy) {
+			var _targ    = dummy_get();
+			dummy_target = _targ;
+			UNDO_HOLDING = true;
+			var _res     = _targ.setFrom(_valueFrom, _update, checkRecur, log);
+			UNDO_HOLDING = false;
+			
+			recordAction(ACTION_TYPE.junction_connect, self, [ _targ, _valueFrom ]);
+			return _res;
+		}
 		
 		if(_valueFrom == noone)
 			return removeFrom();
@@ -2343,13 +2354,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static drawJunction_fast = function(_s, _mx, _my) { #region
 		INLINE
 		
-		var hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var is_hover = hov && abs(_mx - x) + abs(_my - y) < _s;
+		var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
+		var _hov = hov && abs(_mx - x) + abs(_my - y) < _s;
+		var _aa  = 0.75 + (!is_dummy * 0.25);
 		
 		draw_set_color(draw_fg);
+		draw_set_alpha(_aa);
 		draw_circle(x, y, _s, false);
-			
-		return is_hover;
+		draw_set_alpha(1);
+		
+		return _hov;
 	} #endregion
 	
 	static drawJunction = function(_s, _mx, _my) { #region
@@ -2363,7 +2377,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _bgS = THEME.node_junctions_bg;
 		var _fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
 		
-		if(type == VALUE_TYPE.action) {
+		if(is_dummy) {
+			__draw_sprite_ext(THEME.node_junction_add, is_hover, x, y, _s, _s, 0, c_white, 0.5 + 0.5 * is_hover);
+			
+		} else if(type == VALUE_TYPE.action) {
 			var _cbg = c_white;
 			
 			if(draw_blend != -1)
@@ -2407,7 +2424,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static drawName = function(_s, _mx, _my) { #region
 		
 		var _draw_cc = COLORS._main_text;
-		var _draw_aa = hover_in_graph? 1 : 0.8;
+		var _draw_aa = 0.8 + hover_in_graph * 0.2;
 		draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
 		draw_set_alpha(_draw_aa);
 		

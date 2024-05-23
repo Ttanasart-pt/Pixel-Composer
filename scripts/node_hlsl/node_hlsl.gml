@@ -55,7 +55,7 @@ output.color = surfaceColor;")
 		["Values",		 true], 
 	];
 
-	setIsDynamicInput(3, false);
+	setDynamicInput(3, false);
 	
 	static refreshDynamicInput = function() { #region
 		var _in = ds_list_create();

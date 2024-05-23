@@ -27,11 +27,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	attribute_surface_depth();
 
-	setIsDynamicInput(6);
-	
 	temp_surface = [ noone, noone ];
 	
-	static createNewInput = function() { #region
+	static createNewInput = function() { 
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
@@ -59,49 +57,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		for( var i = 0; i < data_length; i++ ) array_push(input_display_list, index + i);
 		
-	} if(!LOADING && !APPENDING) createNewInput(); #endregion
-	
-	static refreshDynamicInput = function() { #region
-		var _in = ds_list_create();
-		
-		for( var i = 0; i < input_fix_len; i++ )
-			ds_list_add(_in, inputs[| i]);
-		
-		array_resize(input_display_list, input_display_len);
-		
-		var sep = false;
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(inputs[| i].value_from) {
-				if(sep) array_push(input_display_list, new Inspector_Spacer(20, true));
-				sep = true;
-				
-				for( var j = 0; j < data_length; j++ ) {
-					ds_list_add(_in, inputs[| i + j]);
-					array_push(input_display_list, i + j);
-				}
-				
-			} else {
-				for( var j = 0; j < data_length; j++ )
-					delete inputs[| i + j];
-			}
-		}
-		
-		for( var i = 0; i < ds_list_size(_in); i++ )
-			_in[| i].index = i;
-		
-		ds_list_destroy(inputs);
-		inputs = _in;
-		
-		createNewInput();
-	} #endregion
-	
-	static onValueFromUpdate = function(index) { #region
-		if(index < input_fix_len) return;
-		if(LOADING || APPENDING) return;
-		
-		refreshDynamicInput();
-	} #endregion
+		return inputs[| index + 0];
+	} setDynamicInput(6, true, VALUE_TYPE.surface);
 	
 	static getPreviewValues = function() { return getInputData(input_fix_len); }
 	
@@ -131,8 +88,6 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		if(!is_surface(_data[input_fix_len])) return;
-		
 		var _area = _data[0];
 		var _zoom = _data[1];
 		
@@ -157,7 +112,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			surface_clear(temp_surface[i]);
 		}
 		
-		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
+		var amo = getInputAmount();
+		if(amo <= 0) return _outSurf;
 		
 		shader_set(sh_camera);
 		shader_set_f("camDimension", _surf_w, _surf_h);

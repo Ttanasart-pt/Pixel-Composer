@@ -2,7 +2,6 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Path Array";
 	setDimension(96, 48);;
 	
-	setIsDynamicInput(1);
 	cached_pos = ds_map_create();
 	
 	outputs[| 0] = nodeValue("Path array", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
@@ -14,39 +13,11 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			.setVisible(true, true);
 		
 		return inputs[| index];
-	} if(!LOADING && !APPENDING) createNewInput(); #endregion
-	
-	static refreshDynamicInput = function() { #region
-		var _l = ds_list_create();
-		
-		for( var i = 0; i < input_fix_len; i++ ) 
-			_l[| i] = inputs[| i];
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(inputs[| i].value_from)
-				ds_list_add(_l, inputs[| i]);
-			else
-				delete inputs[| i];	
-		}
-		
-		for( var i = 0; i < ds_list_size(_l); i++ )
-			_l[| i].index = i;	
-		
-		ds_list_destroy(inputs);
-		inputs = _l;
-		
-		createNewInput();
-	} #endregion
-	
-	static onValueFromUpdate = function(index) { #region
-		if(LOADING || APPENDING) return;
-		
-		refreshDynamicInput();
-	} #endregion
+	} setDynamicInput(1, true, VALUE_TYPE.pathnode);
 	
 	static getLineCount = function() { #region
 		var l = 0;
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			l += struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 		}
@@ -54,7 +25,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getSegmentCount = function(ind = 0) { #region
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -66,7 +37,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getLength = function(ind = 0) { #region
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -78,7 +49,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getAccuLength = function(ind = 0) { #region
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -90,7 +61,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getPointRatio = function(_rat, ind = 0) { #region
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -102,7 +73,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getPointDistance = function(_dist, ind = 0) { #region
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -114,7 +85,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getBoundary = function(ind = 0) { #region
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -126,7 +97,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			if(!struct_has(_path, "drawOverlay")) continue;
 			

@@ -34,48 +34,15 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Sum", "Mean", "Median", "Max", "Min" ])
 		.rejectArray();
 	
-	setIsDynamicInput(1);
-	
-	static createNewInput = function() { #region
+	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -1 )
 			.setVisible(false, true);
-	} #endregion
-	if(!LOADING && !APPENDING) createNewInput();
+			
+		return inputs[| index];
+	} setDynamicInput(1, true, VALUE_TYPE.float);
 	
 	outputs[| 0] = nodeValue("Statistic", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1);
-	
-	static refreshDynamicInput = function() { #region
-		var _l = ds_list_create();
-		
-		for( var i = 0; i < input_fix_len; i++ ) {
-			_l[| i] = inputs[| i];
-		}
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-			if(inputs[| i].value_from) {
-				ds_list_add(_l, inputs[| i]);
-				inputs[| i].setVisible(true, true);
-			} else {
-				delete inputs[| i];	
-			}
-		}
-		
-		for( var i = 0; i < ds_list_size(_l); i++ ) {
-			_l[| i].index = i;	
-		}
-		
-		ds_list_destroy(inputs);
-		inputs = _l;
-		
-		createNewInput();
-	} #endregion
-	
-	static onValueFromUpdate = function(index) { #region
-		if(LOADING || APPENDING) return;
-		
-		refreshDynamicInput();
-	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var type = getInputData(0);
