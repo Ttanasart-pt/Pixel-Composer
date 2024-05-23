@@ -82,6 +82,8 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return inputs[| index];
 	} if(!LOADING && !APPENDING) createNewInput(); #endregion
 	
+	//dummy_input = nodeValue("Add value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0).setDummy(function() { return createNewInput(); });
+	
 	static refreshDynamicInput = function() { #region
 		var _l       = ds_list_create();
 		var amo      = attributes.size;
@@ -164,6 +166,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var _typ = getType();
 		if(_typ != VALUE_TYPE.any) return;
+		if(index >= ds_list_size(inputs)) return;
 		
 		inputs[| index].setType(inputs[| index].value_from? inputs[| index].value_from.type : _typ);
 		inputs[| index].resetDisplay();

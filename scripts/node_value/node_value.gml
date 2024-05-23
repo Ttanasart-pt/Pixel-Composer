@@ -567,6 +567,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		active_tooltip = "";
 		
 		tags = VALUE_TAG.none;
+		
+		is_dummy  = false;
+		dummy_get = noone;
 	#endregion
 	
 	#region ---- connection ----
@@ -731,6 +734,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		con_node  = -1;
 		con_index = -1;
 	#endregion
+	
+	static setDummy = function(get_node) { #region
+		is_dummy  = true;
+		dummy_get = get_node;
+		
+		return self;
+	} #endregion
 	
 	static setDefault = function(vals) { #region
 		if(LOADING || APPENDING) return self;

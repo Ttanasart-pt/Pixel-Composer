@@ -63,7 +63,7 @@ function node_valign(nodeList, alignment = fa_middle) {
 }
 
 function node_hdistribute(nodeList) {
-	var amo = array_length(nodeList);
+	var amo   = array_length(nodeList);
 	var nodes = ds_priority_create();
 	
 	var x0 =  999999;
@@ -87,7 +87,7 @@ function node_hdistribute(nodeList) {
 }
 
 function node_vdistribute(nodeList) {
-	var amo = ds_list_size(nodeList);
+	var amo   = array_length(nodeList);
 	var nodes = ds_priority_create();
 	
 	var y0 =  999999;
