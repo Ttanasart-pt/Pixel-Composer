@@ -3,7 +3,6 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setDimension(96, 48);
 	
-	attributes.size = 0;
 	attributes.spread_value = false;
 	
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
@@ -18,17 +17,15 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var bw = _w / 2 - ui(4);
 		var bh = ui(36);
-		if(buttonTextIconInstant(THEME.button_hide, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add")) == 2) {
-			attributes.size++;
-			refreshDynamicInput();
-			update();
+		if(buttonTextIconInstant(true, THEME.button_hide, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2) {
+			attributes.size = max(attributes.size, (ds_list_size(inputs) - input_fix_len) / data_length ) + 1;
+			onInputResize();
 		}
 		
 		var amo = attributes.size;
-		if(buttonTextIconInstant(THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove")) == 2) {
-			attributes.size = max(attributes.size - 1, 0);
-			refreshDynamicInput();
-			update();
+		if(buttonTextIconInstant(attributes.size > 0, THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
+			attributes.size--;
+			onInputResize();
 		}
 		
 		return _h;
@@ -47,7 +44,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		array_push(input_display_list, index);
 		
 		return inputs[| index];
-	} setDynamicInput(1);
+	}
+	
+	setDynamicInput(1);
 	
 	static getType = function() { #region
 		var _type = getInputData(0);
@@ -145,7 +144,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ind  = 0;
 		var spd  = getInputData(1);
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
 			var val = getInputData(i);
 			
 			if(is_array(val) && spd) array_append(res, val);

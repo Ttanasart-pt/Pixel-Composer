@@ -10,55 +10,108 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 1] = nodeValue("Default value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(false, true);
 	
+	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+		var _h = ui(48);
+		
+		var bw = _w / 2 - ui(4);
+		var bh = ui(36);
+		if(buttonTextIconInstant(true, THEME.button_hide, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2)
+			addInput();
+		
+		var amo = attributes.size;
+		if(buttonTextIconInstant(attributes.size > 0, THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2)
+			deleteInput(ds_list_size(inputs) - data_length);
+		
+		return _h;
+	}); #endregion
+	
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
-	input_display_list = [ 0,
-		["Inputs", false], 1
+	input_display_list = [ 0, 1, 
+		["Cases",  false], size_adjust_tool
 	]
 	
-	static createNewInput = function() {
-		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue("Case", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+	#region //////////////////////////////// Dynamic IO ////////////////////////////////
 		
-		inputs[| index + 1] = nodeValue("value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
-			.setVisible(false, false);
+		static createNewInput = function(list = inputs) {
+			var index = ds_list_size(list);
+			var bDel  = button(function() { node.deleteInput(index); })
+					.setIcon(THEME.minus_16, 0, COLORS._main_icon);
+			
+			list[| index + 0] = nodeValue("Case", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+				.setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel })
+				.setAnimable(false);
+			bDel.setContext(list[| index + 0]);
+			
+			list[| index + 1] = nodeValue("value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+				.setVisible(false, false);
+			
+			return list[| index + 0];
+		} 
 		
-		array_push(input_display_list, index + 0);
-		array_push(input_display_list, index + 1);
+		setDynamicInput(2, false);
 		
-		return inputs[| index + 0];
-	} setDynamicInput(2, false);
-	
-	if(!LOADING && !APPENDING) createNewInput();
-	
-	static refreshDynamicInput = function() { #region
-		var _in = ds_list_create();
-		
-		for( var i = 0; i < input_fix_len; i++ )
-			ds_list_add(_in, inputs[| i]);
-		
-		array_resize(input_display_list, input_display_len);
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(inputs[| i].getValue() != "") {
-				ds_list_add(_in, inputs[| i + 0]);
-				ds_list_add(_in, inputs[| i + 1]);
-				inputs[| i + 1].setVisible(false, true);
+		static addInput = function() {
+			var index = ds_list_size(inputs);
+			
+			attributes.size++;
+			createNewInput();
+			
+			if(!UNDO_HOLDING) {
+				var _inputs = array_create(data_length);
+				for(var i = 0; i < data_length; i++)
+					_inputs[i] = inputs[| index + i];
 				
-				array_push(input_display_list, i + 0);
-				array_push(input_display_list, i + 1);
+				recordAction(ACTION_TYPE.custom, function(data, undo) {
+					if(undo) deleteInput(data.index);
+					else     insertInput(data.index, data.inputs);
+				}, { index, inputs : _inputs });
 			}
+			
+			onInputResize();
 		}
 		
-		for( var i = 0; i < ds_list_size(_in); i++ )
-			_in[| i].index = i;
+		static deleteInput = function(index) {
+			if(!UNDO_HOLDING) {
+				var _inputs = array_create(data_length);
+				for(var i = 0; i < data_length; i++)
+					_inputs[i] = inputs[| index + i];
+				
+				recordAction(ACTION_TYPE.custom, function(data, undo) {
+					if(undo) insertInput(data.index, data.inputs);
+					else     deleteInput(data.index);
+				}, { index, inputs : _inputs });
+			}
+			
+			attributes.size--;
+			for(var i = data_length - 1; i >= 0; i--)
+				ds_list_delete(inputs, index + i);
+			
+			onInputResize();
+		}
 		
-		ds_list_destroy(inputs);
-		inputs = _in;
+		static insertInput = function(index, _inputs) {
+			attributes.size++;
+			
+			for(var i = 0; i < data_length; i++)
+				ds_list_insert(inputs, index + i, _inputs[i]);
+			
+			onInputResize();
+		}
 		
-		createNewInput();
-	} #endregion
+		static refreshDynamicInput = function() {
+			input_display_list = array_clone(input_display_list_raw);
+			
+			for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+				inputs[| i].index = i;
+				array_push(input_display_list, i);
+			}
+			
+			getJunctionList();
+		}
 	
+	#endregion //////////////////////////////// Dynamic IO ////////////////////////////////
+		
 	static onValueFromUpdate = function(index) { #region
 		if(LOADING || APPENDING) return;
 		if(index < 0) return;
@@ -76,8 +129,10 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
-		if(safe_mod(index - input_fix_len, data_length) == 0) //Variable name
+		if(safe_mod(index - input_fix_len, data_length) == 0) {
+			inputs[| index + 1].setVisible(false, true);
 			inputs[| index + 1].name = $"{getInputData(index)} value";
+		}
 		
 		refreshDynamicInput();
 	} #endregion
@@ -97,7 +152,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		outputs[| 0].setType(inputs[| 1].value_from? inputs[| 1].value_from.type : VALUE_TYPE.any);
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _cas = getInputData(i + 0);
 			var _val = getInputData(i + 1);
 			
@@ -116,7 +171,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var sele = getInputData(0);
 		var _res = getInputData(1);
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _cas = getInputData(i + 0);
 			if(sele == _cas) frm = inputs[| i + 1]; 
 		}
@@ -139,10 +194,12 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_text_transformed(bbox.x0 + 8 * _s, inputs[| 1].y, str, ss, ss, 0);
 		}
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			if(!inputs[| i + 1].visible) continue;
 			
-			var str = string(getInputData(i));
+			var str = string(getInputData(i, ""));
+			if(str == "") continue;
+			
 			var ss	= min(_s * 0.4, string_scale(str, bbox.w - 16 * _s, 999));
 			draw_set_color(value_color(inputs[| i + 1].type));
 			draw_text_transformed(bbox.x0 + 8 * _s, inputs[| i + 1].y, str, ss, ss, 0);

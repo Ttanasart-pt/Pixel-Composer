@@ -19,6 +19,11 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	toggled = false;
 	context = noone;
 	
+	static setContext = function(struct) { #region
+		onClick = method(struct, onClick);
+		return self;
+	} #endregion
+	
 	static setLua = function(_lua_thread, _lua_key, _lua_func) { #region
 		lua_thread = _lua_thread;
 		lua_thread_key = _lua_key;
@@ -163,14 +168,16 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 	return res;
 }
 
-function buttonTextIconInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_label = "") {
-	var _b = buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip);
+function buttonTextIconInstant(active, spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_label = "", _icon_blend = COLORS._main_icon_light, _icon_alpha = 1) {
+	var _b = 0;
 	
-	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_icon_light);
+	if(active) _b = buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip);
+	
+	draw_set_text(f_p1, fa_left, fa_center, active? COLORS._main_icon_light : COLORS._main_icon);
 	var bxc = _x + _w / 2 - (string_width(_icon_label) + ui(64)) / 2;
 	var byc = _y + _h / 2;
-	draw_sprite_ui(_icon, 0, bxc + ui(24), byc,,,, COLORS._main_icon_light);
-	draw_text(bxc + ui(48), byc, _icon_label);
+	draw_sprite_ui(_icon, 0, bxc + ui(24), byc, 1, 1, 0, _icon_blend, _icon_alpha * (0.5 + 0.5 * active));
+	draw_text_add(bxc + ui(48), byc, _icon_label);
 	
 	return _b;
 }

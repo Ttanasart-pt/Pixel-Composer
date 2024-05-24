@@ -28,12 +28,12 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		var bw = _w / 2 - ui(4);
 		var bh = ui(36);
-		if(buttonTextIconInstant(THEME.button_hide, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add")) == 2) {
+		if(buttonTextIconInstant(true, THEME.button_hide, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2) {
 			createNewInput();
 		}
 		
 		var amo = ds_list_size(inputs);
-		if(amo > 1 && buttonTextIconInstant(THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove")) == 2) {
+		if(buttonTextIconInstant(amo > 1, THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
 			var _out = outputs[| ds_list_size(outputs) - 1];
 			for( var i = 0, n = array_length(_out.value_to); i < n; i++ )
 				_out.value_to[i].removeFrom();

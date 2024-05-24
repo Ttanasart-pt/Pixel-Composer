@@ -1037,6 +1037,8 @@
     {"name":"node_tunnel_out","order":1,"path":"scripts/node_tunnel_out/node_tunnel_out.yy",},
     {"name":"node_twirl","order":4,"path":"scripts/node_twirl/node_twirl.yy",},
     {"name":"node_unicode","order":1,"path":"scripts/node_unicode/node_unicode.yy",},
+    {"name":"node_value_base","order":17,"path":"scripts/node_value_base/node_value_base.yy",},
+    {"name":"node_value_types","order":18,"path":"scripts/node_value_types/node_value_types.yy",},
     {"name":"node_value","order":5,"path":"scripts/node_value/node_value.yy",},
     {"name":"node_vector_cross_2D","order":11,"path":"scripts/node_vector_cross_2D/node_vector_cross_2D.yy",},
     {"name":"node_vector_cross_3D","order":10,"path":"scripts/node_vector_cross_3D/node_vector_cross_3D.yy",},

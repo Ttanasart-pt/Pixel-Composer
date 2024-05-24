@@ -40,7 +40,9 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			.setVisible(false, true);
 			
 		return inputs[| index];
-	} setDynamicInput(1, true, VALUE_TYPE.float);
+	} 
+	
+	setDynamicInput(1, true, VALUE_TYPE.float);
 	
 	outputs[| 0] = nodeValue("Statistic", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1);
 	
@@ -48,14 +50,9 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var type = getInputData(0);
 		var res = 0;
 		
-		if(ds_list_size(inputs) - 1 == input_fix_len) {
-			outputs[| 0].setValue(0);
-			return;
-		}
-		
 		switch(type) {
 			case STAT_OPERATOR._sum : 
-				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
 					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ )
@@ -71,7 +68,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				}
 				
 				var amo = 0;
-				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
 					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ ) {
@@ -86,14 +83,14 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				res /= amo;
 				break;
 			case STAT_OPERATOR._median : 
-				if(ds_list_size(inputs) - 1 - input_fix_len == 0) {
+				if(ds_list_size(inputs) - input_fix_len == 0) {
 					res = 0;
 					break;
 				}
 				
 				var vals = [];
 				var amo = 0;
-				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
 					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ ) {
@@ -119,7 +116,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				break;
 			case STAT_OPERATOR._min : 
 				var _min = 9999999999;
-				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
 					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ )
@@ -132,7 +129,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			case STAT_OPERATOR._max : 
 				var _max = -9999999999;
 				
-				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
 					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ )

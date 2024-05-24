@@ -149,7 +149,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				break;
 				
 			case ACTION_TYPE.custom : 
-				obj(data);
+				obj(data, true);
 				break;
 		}
 		
@@ -239,7 +239,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				break;
 				
 			case ACTION_TYPE.custom : 
-				obj(data);
+				obj(data, false);
 				break;
 		}
 		
@@ -342,9 +342,9 @@ function recordAction(_type, _object, _data = -1, _trigger = 0) { #region
 	return act;
 } #endregion
 
-function recordAction_variable_change(object, variable_name, variable_old_value, undo_label = "") {
+function recordAction_variable_change(object, variable_name, variable_old_value, undo_label = "", _trigger = 0) {
 	INLINE
-	recordAction(ACTION_TYPE.var_modify, object, undo_label == ""? [ variable_old_value, variable_name ] : [ variable_old_value, variable_name, undo_label ]);
+	recordAction(ACTION_TYPE.var_modify, object, undo_label == ""? [ variable_old_value, variable_name ] : [ variable_old_value, variable_name, undo_label ], _trigger);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

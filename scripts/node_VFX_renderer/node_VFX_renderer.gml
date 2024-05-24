@@ -40,7 +40,9 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		array_push(input_display_list, ["Particle", false], index + 0, index + 1);
 		
 		return inputs[| index + 1];
-	} setDynamicInput(2, true, VALUE_TYPE.particle);
+	} 
+	
+	setDynamicInput(2, true, VALUE_TYPE.particle);
 	dyna_input_check_shift = 1;
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -81,7 +83,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(_type == PARTICLE_RENDER_TYPE.surface)
 			shader_set_interpolation(_outSurf);
 			
-			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+			for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 				var blend = inputs[| i + 0].getValue(_time);
 				var parts = inputs[| i + 1].getValue(_time);
 				

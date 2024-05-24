@@ -466,6 +466,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 							.setDummy(function() { return createNewInput(); })
 							.setVisible(false, true);
 			}
+			
+			attributes.size = 0;
 		} #endregion
 		
 		static refreshDynamicInput = function() { #region
@@ -512,6 +514,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		} #endregion
 	
 		static getInputAmount = function() { return (ds_list_size(inputs) - input_fix_len) / data_length; }
+		
+		function onInputResize() { refreshDynamicInput(); triggerRender(); }
 		
 	#endregion //////////////////////////////// Dynamic IO ////////////////////////////////
 	
@@ -999,7 +1003,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		getJunctionList();
 	} run_in(1, function() { refreshNodeDisplay(); }); #endregion
 	
-	static getJunctionList = function() { #region
+	static getJunctionList = function() { #region ////getJunctionList
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		inputDisplayList = [];
 		
