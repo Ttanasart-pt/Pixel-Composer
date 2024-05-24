@@ -57,7 +57,7 @@ void main() {
 		if(uv.x < 0. || uv.y < 0.) continue;
 		if(uv.x - .5 + targetDimension.x > dimension.x || uv.y - .5 + targetDimension.y > dimension.y) continue;
 		
-		gl_FragColor = vec4(1.);
+		//gl_FragColor = vec4(1.);
 		float matchTemp = matchTemplate(uv);
 		if(matchTemp > match) {
 			match    = matchTemp;

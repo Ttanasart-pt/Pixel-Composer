@@ -63,8 +63,10 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		
 		surface_set_shader(_surf, _fst? sh_surface_replace_fast_replace : sh_surface_replace_replace, false, BLEND.normal);
 			shader_set_f("dimension",  surface_get_width_safe(_base), surface_get_height_safe(_base));
+			
 			shader_set_surface("replace", _replace);
 			shader_set_f("replace_dim", surface_get_width_safe(_replace), surface_get_height_safe(_replace));
+			
 			shader_set_surface("findRes", _res);
 			shader_set_f("index", _index);
 			
@@ -95,10 +97,12 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh);
 		surface_clear(temp_surface[0]);
-			
-		var amo = array_length(_tar);
-		for( var i = 0; i < amo; i++ ) matchTemplate(i / amo, temp_surface[0], _bas, _tar[i], _cthr, _pthr, _fst);
-		//return temp_surface[0];
+		
+		var tamo = array_length(_tar);
+		var ramo = array_length(_rep);
+		
+		for( var i = 0; i < tamo; i++ ) matchTemplate(i / tamo, temp_surface[0], _bas, _tar[i], _cthr, _pthr, _fst);
+		// return temp_surface[0];
 		
 		_outSurf = surface_verify(_outSurf, _sw, _sh);
 		surface_set_target(_outSurf);
@@ -106,8 +110,11 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			if(_drw) draw_surface_safe(_bas);
 		surface_reset_target();
 			
-		var amo = array_length(_rep);
-		for( var i = 0; i < amo; i++ ) replaceTemplate(i / amo, _outSurf, _bas, temp_surface[0], _rep[i], _fst);
+		var amo = max(tamo, ramo);
+		for( var i = 0; i < amo; i++ ) {
+			var _ri = i % ramo;
+			replaceTemplate(_ri / amo, _outSurf, _bas, temp_surface[0], _rep[_ri], _fst);
+		}
 		
 		return _outSurf;
 	}
