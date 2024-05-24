@@ -496,9 +496,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					for( var j = 0; j < data_length; j++ ) {
 						var _ind = i + j;
 						
-						ds_list_add(_in, inputs[| _ind]);
 						if(input_display_list != -1)
-							array_push(input_display_list, _ind);
+							array_push(input_display_list, ds_list_size(_in));
+						ds_list_add(_in, inputs[| _ind]);
 					}
 				} else {
 					for( var j = 0; j < data_length; j++ )
@@ -511,6 +511,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			ds_list_destroy(inputs);
 			inputs = _in;
+			
 		} #endregion
 	
 		static getInputAmount = function() { return (ds_list_size(inputs) - input_fix_len) / data_length; }

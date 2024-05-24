@@ -49,6 +49,12 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		onAddNode(node);
 	} #endregion
 	
+	static addPoint = function(_x, _y) {
+		add_point = true;
+		point_x   = _x;
+		point_y   = _y;
+	}
+	
 	static onAddNode = function(node) {}
 	
 	static ccw = function(a, b, c) { return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]); }

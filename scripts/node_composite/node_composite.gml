@@ -279,7 +279,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			array_push(attributes.layer_selectable, true);
 		
 		return inputs[| index + 0];
-	} setDynamicInput(6);
+	} 
+	
+	setDynamicInput(6, true, VALUE_TYPE.surface);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

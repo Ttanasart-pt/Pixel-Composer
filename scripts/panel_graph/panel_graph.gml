@@ -1419,11 +1419,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(target) target.drawJunction(graph_s, target.x, target.y);
 			
 			var _inline_ctx = value_dragging.node.inline_context;
-			if(_inline_ctx && !key_mod_press(SHIFT)) {
-				_inline_ctx.add_point = true;
-				_inline_ctx.point_x   = mouse_graph_x;
-				_inline_ctx.point_y   = mouse_graph_y;
+			
+			if(_inline_ctx) {
+				if(is_instanceof(value_dragging.node, _inline_ctx.input_node_type) && value_dragging.connect_type == JUNCTION_CONNECT.input)
+					_inline_ctx = noone;
+				else if(is_instanceof(value_dragging.node, _inline_ctx.output_node_type) && value_dragging.connect_type == JUNCTION_CONNECT.output)
+					_inline_ctx = noone;
 			}
+				
+			if(_inline_ctx && !key_mod_press(SHIFT))
+				_inline_ctx.addPoint(mouse_graph_x, mouse_graph_y);
 			
 			if(mouse_release(mb_left)) { //// CONNECT junction 
 				var _connect = [ 0, noone, noone ];
