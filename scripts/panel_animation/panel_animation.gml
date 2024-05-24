@@ -869,7 +869,13 @@ function Panel_Animation() : PanelContent() constructor {
 					if(!valArray) _kv = [ _kv ];
 						
 					for( var ki = 0; ki < array_length(_kv); ki++ ) {
-						draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+						var cc = COLORS.panel_animation_graph_line;
+						if(valArray)
+							cc = array_safe_get(COLORS.axis, ki, cc);
+						else if(animator.prop.sep_axis)
+							cc = array_safe_get(COLORS.axis, animator.index, cc);
+						draw_set_color(cc);
+						
 						ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
 						
 						if(_time == key.time) draw_line(nx, oy[ki], nx, ny[ki]);
@@ -893,7 +899,12 @@ function Panel_Animation() : PanelContent() constructor {
 				}
 				
 				for( var ki = 0; ki < array_length(_kv); ki++ ) {
-					draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+					var cc = COLORS.panel_animation_graph_line;
+					if(valArray)
+						cc = array_safe_get(COLORS.axis, ki, cc);
+					else if(animator.prop.sep_axis)
+						cc = array_safe_get(COLORS.axis, animator.index, cc);
+					draw_set_color(cc);
 					
 					ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
 					
@@ -921,7 +932,13 @@ function Panel_Animation() : PanelContent() constructor {
 					}
 				
 					for( var ki = 0; ki < array_length(_kv); ki++ ) {
-						draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+						var cc = COLORS.panel_animation_graph_line;
+						if(valArray)
+							cc = array_safe_get(COLORS.axis, ki, cc);
+						else if(animator.prop.sep_axis)
+							cc = array_safe_get(COLORS.axis, animator.index, cc);
+						draw_set_color(cc);
+						
 						ny[ki] = value_map(lerp(_kv[ki], _kn[ki], nly), _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
 						
 						if(array_length(oy) > ki) draw_line(ox, oy[ki], nx, ny[ki]);
@@ -943,7 +960,13 @@ function Panel_Animation() : PanelContent() constructor {
 			if(!valArray) _kv = [ _kv ];
 				
 			for( var ki = 0; ki < array_length(_kv); ki++ ) {
-				draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+				var cc = COLORS.panel_animation_graph_line;
+				if(valArray)
+					cc = array_safe_get(COLORS.axis, ki, cc);
+				else if(animator.prop.sep_axis)
+					cc = array_safe_get(COLORS.axis, animator.index, cc);
+				draw_set_color(cc);
+				
 				sy = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
 				draw_line(0, sy, t_first, sy);
 					
@@ -962,7 +985,13 @@ function Panel_Animation() : PanelContent() constructor {
 						if(!valArray) _kv = [ _kv ];
 						
 						for( var ki = 0; ki < array_length(_kv); ki++ ) {
-							draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+							var cc = COLORS.panel_animation_graph_line;
+							if(valArray)
+								cc = array_safe_get(COLORS.axis, ki, cc);
+							else if(animator.prop.sep_axis)
+								cc = array_safe_get(COLORS.axis, animator.index, cc);
+							draw_set_color(cc);
+							
 							ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
 							if(_time == key_last.time)
 								draw_line(t_last, oy[ki], t_last, ny[ki]);
@@ -980,7 +1009,13 @@ function Panel_Animation() : PanelContent() constructor {
 					if(!valArray) _kv = [ _kv ];
 					
 					for( var ki = 0; ki < array_length(_kv); ki++ ) {
-						draw_set_color(valArray? COLORS.axis[ki] : (animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS.panel_animation_graph_line));
+						var cc = COLORS.panel_animation_graph_line;
+						if(valArray)
+							cc = array_safe_get(COLORS.axis, ki, cc);
+						else if(animator.prop.sep_axis)
+							cc = array_safe_get(COLORS.axis, animator.index, cc);
+						draw_set_color(cc);
+						
 						ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
 						draw_line(t_last, oy[ki], t_last, ny[ki]);
 						draw_line(t_last, ny[ki], bar_show_w, ny[ki]);
