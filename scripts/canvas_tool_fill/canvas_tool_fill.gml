@@ -23,7 +23,7 @@ function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 				switch(_fill_type) {
 					case 0 : canvas_flood_fill_scanline(_canvas_surface, mouse_cur_x, mouse_cur_y, _thr, false); break;
 					case 1 : canvas_flood_fill_scanline(_canvas_surface, mouse_cur_x, mouse_cur_y, _thr, true);  break;
-					case 2 : canvas_flood_fill_all(_canvas_surface, mouse_cur_x, mouse_cur_y, _thr);  break;
+					case 2 : canvas_flood_fill_all(     _canvas_surface, mouse_cur_x, mouse_cur_y, _thr);        break;
 				}
 			surface_reset_target();
 			

@@ -25,15 +25,17 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
+	inputs[| 9] = nodeValue("Replace Empty", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surfaces",	 true], 0, 1, 2, 7, 8, 
 		["Searching",	false], 5, 3, 6, 
-		["Render",		false], 4, 
+		["Render",		false], 4, 9, 
 	];
 	
-	temp_surface = [ surface_create(1, 1) ];
+	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	
 	static matchTemplate = function(_index, _surf, _base, _target, _cthr, _pthr, _fst) {
 		
@@ -59,9 +61,12 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		surface_reset_shader();
 	}
 	
-	static replaceTemplate = function(_index, _surf, _base, _res, _replace, _fst) {
+	static replaceTemplate = function(_index, _base, _res, _replace, _fst) {
 		
-		surface_set_shader(_surf, _fst? sh_surface_replace_fast_replace : sh_surface_replace_replace, false, BLEND.normal);
+		shader_set(_fst? sh_surface_replace_fast_replace : sh_surface_replace_replace);
+		surface_set_target_ext(0, temp_surface[1]);
+		surface_set_target_ext(1, temp_surface[2]);
+		
 			shader_set_f("dimension",  surface_get_width_safe(_base), surface_get_height_safe(_base));
 			
 			shader_set_surface("replace", _replace);
@@ -88,6 +93,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		
 		var _cthr = _data[3];
 		var _pthr = _data[6];
+		var _oalp = _data[9];
 		
 		if(!is_array(_tar)) _tar = [ _tar ]; 
 		if(!is_array(_rep)) _rep = [ _rep ];
@@ -95,8 +101,10 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var _sw = surface_get_width_safe(_bas);
 		var _sh = surface_get_height_safe(_bas);
 		
-		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh);
-		surface_clear(temp_surface[0]);
+		for (var i = 0, n = array_length(temp_surface); i < n; i++) {
+			temp_surface[i] = surface_verify(temp_surface[i], _sw, _sh);
+			surface_clear(temp_surface[i]);
+		}
 		
 		var tamo = array_length(_tar);
 		var ramo = array_length(_rep);
@@ -104,17 +112,24 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		for( var i = 0; i < tamo; i++ ) matchTemplate(i / tamo, temp_surface[0], _bas, _tar[i], _cthr, _pthr, _fst);
 		// return temp_surface[0];
 		
-		_outSurf = surface_verify(_outSurf, _sw, _sh);
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			if(_drw) draw_surface_safe(_bas);
-		surface_reset_target();
-			
 		var amo = max(tamo, ramo);
 		for( var i = 0; i < amo; i++ ) {
 			var _ri = i % ramo;
-			replaceTemplate(_ri / amo, _outSurf, _bas, temp_surface[0], _rep[_ri], _fst);
+			replaceTemplate(_ri / amo, _bas, temp_surface[0], _rep[_ri], _fst);
 		}
+		
+		_outSurf = surface_verify(_outSurf, _sw, _sh);
+		surface_set_target(_outSurf);
+			DRAW_CLEAR
+			BLEND_ALPHA
+			if(_drw) draw_surface_safe(_bas);
+			if(_oalp) {
+				BLEND_SUBTRACT
+				draw_surface_safe(temp_surface[2]);
+				BLEND_ALPHA
+			}
+			draw_surface_safe(temp_surface[1]);
+		surface_reset_target();
 		
 		return _outSurf;
 	}

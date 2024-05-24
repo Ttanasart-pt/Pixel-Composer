@@ -11,8 +11,6 @@ uniform sampler2D findRes;
 uniform float index;
 
 void main() {
-	gl_FragColor = vec4(0.);
-	
 	vec2 px = v_vTexcoord * dimension - (replace_dim - 1.);
 	
 	for( float i = 0.; i < replace_dim.x; i++ ) 
@@ -23,7 +21,8 @@ void main() {
 		vec4 wg = texture2D( findRes, uv / dimension );
 		
 		if(wg.r == 1. && abs(wg.g - index) < 0.01) {
-			gl_FragColor = texture2D( replace, (replace_dim - vec2(i, j) - 1. + .5) / replace_dim );
+			gl_FragData[0] = texture2D( replace, (replace_dim - vec2(i, j) - 1. + .5) / replace_dim );
+			gl_FragData[1] = vec4(1.);
 			return;
 		}
 	}

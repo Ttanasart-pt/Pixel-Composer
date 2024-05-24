@@ -12,8 +12,9 @@ uniform float index;
 
 void main() {
     vec4 res = texture2D( findRes, v_vTexcoord );
-	if(res.a == 1. && abs(res.b - index) < 0.01)
-		gl_FragColor = texture2D( replace, res.rg );
-	else 
-		gl_FragColor = vec4(0.);
+    
+	if(res.a == 1. && abs(res.b - index) < 0.01) {
+		gl_FragData[0] = texture2D( replace, res.rg );
+		gl_FragData[1] = vec4(1.);
+	}
 }
