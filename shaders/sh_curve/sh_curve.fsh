@@ -16,6 +16,9 @@ uniform int   g_amount;
 uniform float b_curve[64];
 uniform int   b_amount;
 
+uniform float a_curve[64];
+uniform int   a_amount;
+
 float eval_curve_segment_t(in float _y0, in float ax0, in float ay0, in float bx1, in float by1, in float _y1, in float prog) {
 	return _y0 * pow(1. - prog, 3.) + 
 		   ay0 * 3. * pow(1. - prog, 2.) * prog + 
@@ -105,13 +108,12 @@ void main() {
 	col.r = curveEval(r_curve, r_amount, col.r);
 	col.g = curveEval(g_curve, g_amount, col.g);
 	col.b = curveEval(b_curve, b_amount, col.b);
+	col.a = curveEval(a_curve, b_amount, col.a);
 	
 	float w = (col.r + col.g + col.b) / 3.;
 	float wtarget = curveEval(w_curve, w_amount, w);
 	
-	col.r *= wtarget / w;
-	col.g *= wtarget / w;
-	col.b *= wtarget / w;
+	col.rgb *= wtarget / w;
 	
     gl_FragColor = col;
 }

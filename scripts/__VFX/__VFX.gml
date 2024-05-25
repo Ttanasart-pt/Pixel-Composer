@@ -115,6 +115,8 @@ function __part(_node) : __particleObject() constructor {
 	
 	anim_speed = 1;
 	anim_end   = ANIM_END_ACTION.loop;
+	anim_stre  = false;
+	anim_len   = 1;
 	
 	line_draw = 1;
 	
@@ -148,6 +150,8 @@ function __part(_node) : __particleObject() constructor {
 		
 		drawx = x;
 		drawy = y;
+		
+		anim_len = is_array(surf)? array_length(surf) : 1;
 		
 		life_incr = 0;
 		life = _life;
@@ -329,19 +333,21 @@ function __part(_node) : __particleObject() constructor {
 		scy = drawsy * scCurve;
 		
 		if(arr_type == 2 && surf != noone && is_array(surf)) {
-			var ind = abs(round((life_total - life) * anim_speed));
-			var len = array_length(surf);
+			var _life_prog = life_total - life;
+			var ind = anim_stre? _life_prog / life_total * anim_speed * (anim_len - 1) :
+			                     _life_prog * anim_speed;
+			ind = abs(round(ind));
 			
 			switch(anim_end) {
 				case ANIM_END_ACTION.loop: 
-					ss = surf[safe_mod(ind, len)];
+					ss = surf[safe_mod(ind, anim_len)];
 					break;
 				case ANIM_END_ACTION.pingpong:
-					var ping = safe_mod(ind, (len - 1) * 2 + 1); 
-					ss = surf[ping >= len? (len - 1) * 2 - ping : ping];
+					var ping = safe_mod(ind, (anim_len - 1) * 2 + 1); 
+					ss = surf[ping >= anim_len? (anim_len - 1) * 2 - ping : ping];
 					break;
 				case ANIM_END_ACTION.destroy:
-					if(ind >= len) {
+					if(ind >= anim_len) {
 						kill();
 						return;
 					}

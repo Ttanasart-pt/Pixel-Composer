@@ -29,6 +29,9 @@ uniform vec2 center;
 uniform vec2 scale;
 uniform vec2 trep;
 
+uniform vec2  arrow;
+uniform float arrow_head;
+
 uniform vec4 bgColor;
 
 #define PI  3.14159265359
@@ -170,6 +173,95 @@ float sdParallelogram( in vec2 p, float wi, float he, float sk ) {
     return sqrt(d.x) * sign(-d.y);
 }
 
+float sdHeart( in vec2 p ) {
+    p.x = abs(p.x);
+    p.y = -p.y + 0.9;
+    p /= 1.65;
+	
+    if( p.y+p.x>1.0 )
+        return sqrt(dot2(p-vec2(0.25,0.75))) - sqrt(2.0)/4.0;
+    return sqrt(min(dot2(p-vec2(0.00,1.00)),
+                    dot2(p-0.5*max(p.x+p.y,0.0)))) * sign(p.x-p.y);
+}
+
+float sdCutDisk( in vec2 p, in float r, in float h ) {
+    float w = sqrt(r*r-h*h); // constant for any given shape
+    p.x = abs(p.x);
+    float s = max( (h-r)*p.x*p.x+w*w*(h+r-2.0*p.y), h*p.x-w*p.y );
+    return (s<0.0) ? length(p)-r :
+           (p.x<w) ? h - p.y     :
+                     length(p-vec2(w,h));
+}
+
+float sdPie( in vec2 p, in vec2 c, in float r ) {
+    p.x = abs(p.x);
+    float l = length(p) - r;
+    float m = length(p-c*clamp(dot(p,c),0.0,r)); // c=sin/cos of aperture
+    return max(l,m*sign(c.y*p.x-c.x*p.y));
+}
+
+float sdRoundedCross( in vec2 p, in float h ) {
+    float k = 0.5*(h+1.0/h);               // k should be const/precomputed at modeling time
+    
+    p = abs(p);
+    return ( p.x<1.0 && p.y<p.x*(k-h)+h ) ? 
+             k-sqrt(dot2(p-vec2(1,k)))  :  // circular arc
+           sqrt(min(dot2(p-vec2(0,h)),     // top corner
+                    dot2(p-vec2(1,0))));   // right corner
+}
+
+float sdArrow( in vec2 p, float w1, float w2, float k ) { // The arrow goes from a to b. It's thickness is w1. The arrow head's thickness is w2.
+    // constant setup
+    vec2 a = vec2(-1., 0.);
+    vec2 b = vec2(1., 0.);
+    
+	vec2  ba = b - a;
+    float l2 = dot(ba,ba);
+    float l = sqrt(l2);
+
+    // pixel setup
+    p = p-a;
+    p = mat2(ba.x,-ba.y,ba.y,ba.x)*p/l;
+    p.y = abs(p.y);
+    vec2 pz = p-vec2(l-w2*k,w2);
+
+    // === distance (four segments) === 
+
+    vec2 q = p;
+    q.x -= clamp( q.x, 0.0, l-w2*k );
+    q.y -= w1;
+    float di = dot(q,q);
+    //----
+    q = pz;
+    q.y -= clamp( q.y, w1-w2, 0.0 );
+    di = min( di, dot(q,q) );
+    //----
+    if( p.x<w1 ) // conditional is optional
+    {
+    q = p;
+    q.y -= clamp( q.y, 0.0, w1 );
+    di = min( di, dot(q,q) );
+    }
+    //----
+    if( pz.x>0.0 ) // conditional is optional
+    {
+    q = pz;
+    q -= vec2(k,-1.0)*clamp( (q.x*k-q.y)/(k*k+1.0), 0.0, w2 );
+    di = min( di, dot(q,q) );
+    }
+    
+    // === sign === 
+    
+    float si = 1.0;
+    float z = l - p.x;
+    if( min(p.x,z)>0.0 ) //if( p.x>0.0 && z>0.0 )
+    {
+      float h = (pz.x<0.0) ? w1 : z/k;
+      if( p.y<h ) si = -1.0;
+    }
+    return si*sqrt(di);
+}
+
 void main() {
 	float color = 0.;
 	vec2  coord = (v_vTexcoord - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) / scale;
@@ -202,14 +294,21 @@ void main() {
 	  else if(shape == 10) d = sdRhombus(		coord, vec2(1. - corner) ) - corner;
 	  else if(shape == 11) d = sdTrapezoid( 	coord, trep.x - corner, trep.y - corner, 1. - corner ) - corner;
 	  else if(shape == 12) d = sdParallelogram( coord, 1. - corner - parall, 1. - corner, parall) - corner;
+	  else if(shape == 13) d = sdHeart( 		coord );
+	  else if(shape == 14) d = sdCutDisk( 		coord, 1., inner );
+	  else if(shape == 15) d = sdPie( 			coord, vec2(sin(angle), cos(angle)), 1. );
+	  else if(shape == 16) d = sdRoundedCross( 	coord, 1. - corner ) - corner;
+	  else if(shape == 17) d = sdArrow( 		coord, arrow.x, arrow.y, arrow_head);
 	
 	if(drawDF == 1) {
 		color = -d;
 		color = (color - dfLevel.x) / (dfLevel.y - dfLevel.x);
 	} else if(aa == 0)
 		color = step(d, 0.0);
-	else
-		color = smoothstep(0.02, -0.02, d);
+	else {
+		float _aa = 1. / max(dimension.x, dimension.y);
+		color = smoothstep(_aa, -_aa, d);
+	}
 	
 	gl_FragColor = mix(bgColor, v_vColour, color);
 }

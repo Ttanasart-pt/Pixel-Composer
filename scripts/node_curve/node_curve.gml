@@ -24,11 +24,13 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	__init_mask_modifier(5); // inputs 9, 10
 	
+	inputs[| 11] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 7, 8, 
 		["Surfaces", true],	0, 5, 6, 9, 10, 
-		["Curve",	false],	1, 2, 3, 4, 
+		["Curve",	false],	1, 2, 3, 4, 11, 
 	];
 	
 	attribute_surface_depth();
@@ -42,6 +44,7 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _rcur = _data[2];
 		var _gcur = _data[3];
 		var _bcur = _data[4];
+		var _acur = _data[11];
 		
 		surface_set_shader(_outSurf, sh_curve);
 			shader_set_f("w_curve",  _wcur);
@@ -55,6 +58,9 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 									
 			shader_set_f("b_curve",  _bcur);
 			shader_set_i("b_amount", array_length(_bcur));
+			
+			shader_set_f("a_curve",  _acur);
+			shader_set_i("a_amount", array_length(_acur));
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();
