@@ -5,14 +5,15 @@ function path_search(paths, _filter = ".png") {
 	return _paths;
 }
 
-function path_dir_get_files(paths, _extension = ".png") {
+function path_dir_get_files(paths, _extension = ".png", _recur = true) {
 	paths      = string_trim_end(paths, ["/", "\\"]);
 	var _ext   = string_splice(_extension, ";", false, false);
 	var _paths = [];
 	
-	if(!directory_exists(paths)) return [];
+	if(!directory_exists(paths)) return _paths;
 	
-	var st = ds_stack_create();
+	var st    = ds_stack_create();
+	var _root = true;
 	ds_stack_push(st, paths);
 	
 	while(!ds_stack_empty(st)) {
@@ -22,15 +23,17 @@ function path_dir_get_files(paths, _extension = ".png") {
 		while(file != "") {
 			var file_full = curr_path + "/" + file;
 			
-			if(directory_exists(file_full))
+			if((_recur || _root) && directory_exists(file_full))
 				ds_stack_push(st, file_full);
 				
-			else if(array_exists(_ext, filename_ext(file)))
+			else if(array_exists(_ext, string_lower(filename_ext(file))))
 				array_push(_paths, file_full);
 		
 			file = file_find_next();
 		}
 		file_find_close();
+		
+		_root = false;
 	}
 	
 	ds_stack_destroy(st);

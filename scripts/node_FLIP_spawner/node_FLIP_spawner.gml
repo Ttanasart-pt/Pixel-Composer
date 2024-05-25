@@ -10,7 +10,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Spawn Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Circle", s_node_shape_type, 1), new scrollItem("Rectangle", s_node_shape_type, 0), "Surface" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ]);
 	
 	inputs[| 2] = nodeValue("Spawn Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.25 ] )
 		.setDisplay(VALUE_DISPLAY.vector)

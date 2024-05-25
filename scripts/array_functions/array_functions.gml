@@ -149,6 +149,16 @@ function array_find(arr, val) { #region
 	});
 } #endregion
 
+function array_find_string(arr, val) { #region
+	INLINE
+	self.__temp_val = string_lower(val);
+	
+	if(!is_array(arr)) return -1;
+	return array_find_index(arr, function(_val, _ind) {
+		return string_lower(_val) == self.__temp_val;
+	});
+} #endregion
+
 function array_remove(arr, val) { #region
 	INLINE
 	

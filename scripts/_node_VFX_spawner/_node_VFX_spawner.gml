@@ -250,8 +250,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _path = getInputData(46);
 		
-		if(_rotation[1] < _rotation[0]) _rotation[1] += 360;
-		
 		var _posDist = [];
 		
 		random_set_seed(seed); seed++;

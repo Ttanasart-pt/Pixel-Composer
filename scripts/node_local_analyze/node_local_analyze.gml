@@ -13,8 +13,8 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
 	
 	inputs[| 4] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Square",  s_node_shape_type, 0), 
-												 new scrollItem("Circle",  s_node_shape_type, 1), 
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Square",  s_node_shape_rectangle, 0), 
+												 new scrollItem("Circle",  s_node_shape_circle,    0), 
 												 new scrollItem("Diamond", s_node_shape_misc, 0) ]);
 		
 	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);

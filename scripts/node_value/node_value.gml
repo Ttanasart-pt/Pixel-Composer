@@ -543,20 +543,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.vector_range :	#region
 						var val = animator.getValue();
 						
-						editWidget = new vectorRangeBox(array_length(val), _txt, function(index, val) { 
-							return setValueInspector(val, index);
-						}, unit );
+						editWidget = new vectorRangeBox(array_length(val), _txt, function(index, val) { return setValueInspector(val, index); }, unit );
 						
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
-						if(array_length(val) == 2)
-							extract_node = "Node_Vector2";
-						else if(array_length(val) == 3)
-							extract_node = "Node_Vector3";
-						else if(array_length(val) == 4)
-							extract_node = "Node_Vector4";
+							 if(array_length(val) == 2) extract_node = "Node_Vector2";
+						else if(array_length(val) == 3) extract_node = "Node_Vector3";
+						else if(array_length(val) == 4) extract_node = "Node_Vector4";
 							
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + string(array_safe_get_fast(global.displaySuffix_VecRange, i));
@@ -574,9 +569,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 					case VALUE_DISPLAY.rotation_range : #region
-						editWidget = new rotatorRange(function(index, val) { 
-							return setValueInspector(val, index);
-						} );
+						editWidget = new rotatorRange(function(index, val) { return setValueInspector(val, index); } );
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Range, i);
@@ -584,10 +577,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_Vector2";
 						break; #endregion
 						
-					case VALUE_DISPLAY.rotation_random: #region
-						editWidget = new rotatorRandom(function(index, val) { 
-							return setValueInspector(val, index);
-						} );
+					case VALUE_DISPLAY.rotation_random : #region
+						editWidget = new rotatorRandom(function(index, val) { return setValueInspector(val, index); } );
 						
 						extract_node = "Node_Vector2";
 						break; #endregion
@@ -617,9 +608,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 					case VALUE_DISPLAY.area :			#region
-						editWidget = new areaBox(function(index, val) { 
-							return setValueInspector(val, index);
-						}, unit);
+						editWidget = new areaBox(function(index, val) { return setValueInspector(val, index); }, unit);
 						
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
@@ -633,11 +622,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 					case VALUE_DISPLAY.padding :		#region
-						editWidget = new paddingBox(function(index, val) { 
-							//var _val = animator.getValue();
-							//_val[index] = val;
-							return setValueInspector(val, index);
-						}, unit);
+						editWidget = new paddingBox(function(index, val) { return setValueInspector(val, index); }, unit);
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
@@ -647,9 +632,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 					case VALUE_DISPLAY.corner :			#region
-						editWidget = new cornerBox(function(index, val) { 
-							return setValueInspector(val, index);
-						}, unit);
+						editWidget = new cornerBox(function(index, val) { return setValueInspector(val, index); }, unit);
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
@@ -659,9 +642,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 					case VALUE_DISPLAY.puppet_control : #region
-						editWidget = new controlPointBox(function(index, val) { 
-							return setValueInspector(val, index);
-						});
+						editWidget = new controlPointBox(function(index, val) { return setValueInspector(val, index); });
 						
 						extract_node = "";
 						break; #endregion
@@ -686,9 +667,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(!is_struct(display_data)) display_data = { data: display_data };
 						var choices = __txt_junction_data(instanceof(node), connect_type, index, display_data.data);
 						
-						editWidget = new buttonGroup(choices, function(val) { 
-							return setValueInspector(val);
-						} );
+						editWidget = new buttonGroup(choices, function(val) { return setValueInspector(val); } );
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
@@ -696,9 +675,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 					case VALUE_DISPLAY.matrix :			#region
-						editWidget = new matrixGrid(_txt, display_data.size, function(index, val) {
-							return setValueInspector(val, index);
-						}, unit );
+						editWidget = new matrixGrid(_txt, display_data.size, function(index, val) { return setValueInspector(val, index); }, unit );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
@@ -708,9 +685,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 					case VALUE_DISPLAY.boolean_grid : #region
-						editWidget = new matrixGrid(_txt, display_data.size, function(index, val) {
-							return setValueInspector(val, index);
-						}, unit );
+						editWidget = new matrixGrid(_txt, display_data.size, function(index, val) { return setValueInspector(val, index); }, unit );
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {i}";
@@ -725,9 +700,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 					case VALUE_DISPLAY.toggle :			#region
-						editWidget = new toggleGroup(display_data.data, function(val) { 
-							return setValueInspector(val);
-						} );
+						editWidget = new toggleGroup(display_data.data, function(val) { return setValueInspector(val); } );
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
@@ -735,18 +708,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 					case VALUE_DISPLAY.d3quarternion :	#region
-						editWidget = new quarternionBox(function(index, val) { 
-							return setValueInspector(val, index);
-						});
+						editWidget = new quarternionBox(function(index, val) { return setValueInspector(val, index); });
 						
 						extract_node = "Node_Vector4";
 						display_data.angle_display = QUARTERNION_DISPLAY.euler;
 						break; #endregion
 						
 					case VALUE_DISPLAY.path_anchor :	#region
-						editWidget = new pathAnchorBox(function(index, val) { 
-							return setValueInspector(val, index);
-						});
+						editWidget = new pathAnchorBox(function(index, val) { return setValueInspector(val, index); });
 						
 						extract_node = "Node_Path_Anchor";
 						break; #endregion
@@ -770,6 +739,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						graph_h		 = ui(16);
 						extract_node = "Node_Color";
 						break;
+						
 					case VALUE_DISPLAY.palette :
 						editWidget = new buttonPalette(function(color) { return setValueInspector(color); } );
 						
@@ -789,6 +759,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.path_array :
 						editWidget = new pathArrayBox(node, display_data.filter, function(path) { setValueInspector(path); } );
 						break;
+						
 					case VALUE_DISPLAY.path_load :
 						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueInspector(str); } );
 							

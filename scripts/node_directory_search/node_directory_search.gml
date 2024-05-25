@@ -33,6 +33,8 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 2]  = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Surface", "Text" ]);
+	
+	inputs[| 3]  = nodeValue("Recursive", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		
 	outputs[| 0] = nodeValue("Outputs", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
 		.setVisible(true, true);
@@ -93,13 +95,19 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var path   = getInputData(0);
 		var filter = getInputData(1);
 		var type   = getInputData(2);
+		var recurs = getInputData(3);
 		
 		var _paths = struct_get_names(paths);
 		for (var i = 0, n = array_length(_paths); i < n; i++)
 			deleteSprite(paths[$ _paths[i]]);
 		paths = {};
 		
-		var _paths = path_dir_get_files(path, filter);
+		var _paths = path_dir_get_files(path, filter, recurs);
+		
+		if(array_empty(_paths)) {
+			noti_warning("Directory Search: Empty search results.")
+			return;
+		} 
 		
 		for (var i = 0, n = array_length(_paths); i < n; i++) {
 			var _path = _paths[i];
@@ -109,7 +117,8 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			else if(type == 1) refreshText(paths[$ _path]);
 		}
 		
-		setDisplayName(filename_name_only(path));
+		var _p = string_trim_end(path, ["/", "\\"]);
+		setDisplayName(filename_name_only(_p));
 	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");

@@ -36,7 +36,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setAnimable(false);
 	
 	inputs[| 5] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Box", s_node_shape_type, 0), new scrollItem("Circle", s_node_shape_type, 1), new scrollItem("Custom", s_node_shape_misc, 1) ])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Box", s_node_shape_rectangle, 0), new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Custom", s_node_shape_misc, 1) ])
 		.rejectArray()
 		.setAnimable(false);
 	
