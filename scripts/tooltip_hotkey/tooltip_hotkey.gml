@@ -26,13 +26,8 @@ function tooltipHotkey(text, context = "", name = "") constructor {
 		draw_set_color(COLORS._main_text);
 		draw_text_line(mx + ui(8), my + ui(8), text, -1, tw);
 		
-		draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
-		var _tw = string_width( keyStr);
-		var _th = string_height(keyStr);
 		var _hx = mx + tw + ui(6);
 		var _hy = my + th / 2 + ui(10);
-		
-		draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, _hx - _tw - ui(4), _hy - _th / 2 - ui(3), _tw + ui(8), _th + ui(3), COLORS._main_text_sub, 0.5);
-		draw_text(_hx, _hy, keyStr);
+		hotkey_draw(keyStr, _hx, _hy);
 	}
 }

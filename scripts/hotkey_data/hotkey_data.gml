@@ -132,3 +132,14 @@
 		}
 	} #endregion
 #endregion
+
+function hotkey_draw(keyStr, _x, _y) {
+	if(keyStr == "") return;
+	
+	draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
+	var _tw = string_width( keyStr);
+	var _th = string_height(keyStr);
+	
+	draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, _x - _tw - ui(4), _y - _th / 2 - ui(3), _tw + ui(8), _th + ui(3), COLORS._main_text_sub, 0.5);
+	draw_text(_x, _y, keyStr);
+}

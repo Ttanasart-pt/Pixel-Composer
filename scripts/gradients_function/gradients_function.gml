@@ -6,6 +6,8 @@ enum GRADIENT_INTER {
 	srgb
 }
 
+global.gradient_sort_list = ds_priority_create();
+
 function gradientKey(time, value) constructor { #region
 	self.time  = time;
 	self.value = value;
@@ -25,6 +27,17 @@ function gradientObject(color = c_black) constructor { #region
 	cacheRes  = 128;
 	caches    = array_create(cacheRes);
 	keyLength = 0;
+	
+	static refresh = function() { 
+		
+		ds_priority_clear(global.gradient_sort_list);
+		for (var i = 0, n = array_length(keys); i < n; i++) 
+			ds_priority_add(global.gradient_sort_list, keys[i], keys[i].time);
+		for (var i = 0, n = array_length(keys); i < n; i++) 
+			keys[i] = ds_priority_delete_min(global.gradient_sort_list);
+			
+		cache();
+	}
 	
 	static clone = function() { #region
 		var g = new gradientObject();

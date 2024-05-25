@@ -11,12 +11,12 @@
 		var ind   = -1;
 		
 		switch(query) {
-			case "square" :   ind = 0; break;
-			case "circle" :   ind = 1; break;
-			case "triangle" : ind = 2; node.inputs[| 4].setValue(3); break;
-			case "pentagon" : ind = 2; node.inputs[| 4].setValue(5); break;
-			case "hexagon" :  ind = 2; node.inputs[| 4].setValue(6); break;
-			case "ring" :     ind = 9; break;
+			case "square" :   ind = array_find_string(node.shape_types, "rectangle");	break;
+			case "circle" :   ind = array_find_string(node.shape_types, "ellipse"); 	break;
+			case "ring" :     ind = array_find_string(node.shape_types, "donut");		break;
+			case "triangle" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[| 4].setValue(3); break;
+			case "pentagon" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[| 4].setValue(5); break;
+			case "hexagon" :  ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[| 4].setValue(6); break;
 			
 			default : ind = array_find_string(node.shape_types, query);
 		}

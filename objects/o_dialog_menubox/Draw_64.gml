@@ -141,11 +141,11 @@ if(!ready) exit;
 				draw_sprite_ui_uniform(THEME.arrow, 0, dialog_x + dialog_w - ui(20), yy + hght / 2, 1, COLORS._main_icon);	
 			} else if(_menuItem.hotkey != noone) {
 				var _key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
+				
 				if(_key) {
-					draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
-					draw_set_alpha(_menuItem.active * 0.75 + 0.25);
-					draw_text(dialog_x + dialog_w - ui(16), yy + hght / 2, key_get_name(_key.key, _key.modi));	
-					draw_set_alpha(1);
+					var _hx = dialog_x + dialog_w - ui(16);
+					var _hy = yy + hght / 2 + ui(2);
+					hotkey_draw(key_get_name(_key.key, _key.modi), _hx, _hy);
 				}	
 			}
 		}

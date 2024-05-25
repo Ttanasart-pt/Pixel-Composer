@@ -43,10 +43,17 @@ function color_get_hex(color, alpha = true) {
 }
 
 function color_from_rgb(str) {
+	if(string_length(str) < 6) return -1;
+	
 	var _r = string_hexadecimal(string_copy(str, 1, 2));
 	var _g = string_hexadecimal(string_copy(str, 3, 2));
 	var _b = string_hexadecimal(string_copy(str, 5, 2));
-		
+	
+	if(string_length(str) == 8) {
+		var _a = string_hexadecimal(string_copy(str, 7, 2));
+		return make_color_rgba(_r, _g, _b, _a);
+	}
+	
 	return make_color_rgb(_r, _g, _b);
 }
 

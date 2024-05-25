@@ -13,6 +13,7 @@ event_inherited();
 	index_selecting = 0;
 	index_dragging  = -1;
 	interactable    = true;
+	drop_target     = noone;
 	
 	index_drag_x = 0; index_drag_x_to = 0;
 	index_drag_y = 0; index_drag_y_to = 0;

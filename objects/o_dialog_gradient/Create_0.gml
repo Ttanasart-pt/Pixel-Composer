@@ -7,8 +7,9 @@ event_inherited();
 	title_height = 52;
 	
 	name = __txtx("gradient_editor_title", "Gradient editor");
-	gradient = noone;
-	interactable = true;
+	gradient      = noone;
+	interactable  = true;
+	drop_target   = noone;
 	
 	key_selecting = noone;
 	key_dragging  = noone;
