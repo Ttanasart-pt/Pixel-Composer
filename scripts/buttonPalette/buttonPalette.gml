@@ -125,6 +125,8 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 				var _cy = _y + _pph + ui(4);
 				var _cw = _w - ui(4);
 				var _ch = h - _pph - ui(4 + 2);
+				var _pd  = ui(2);
+				var _pd2 = _pd / 2;
 				
 				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _cx, _cy, _cw, _ch, CDEF.main_mdblack, 1);	
 				
@@ -135,11 +137,11 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 					var _ccw = _cw;
 					var _cch = _colr_h;
 					
-					draw_sprite_stretched_ext(THEME.palette_mask, 1, _ccx + ui(2), _ccy + ui(2), _ccw - ui(4), _cch - ui(4), _c, 1);
+					draw_sprite_stretched_ext(THEME.palette_mask, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, _c, 1);
 					
 					if(hover && point_in_rectangle(_m[0], _m[1], _ccx, _ccy, _ccx + _ccw, _ccy + _cch - 1)) {
 						BLEND_ADD
-						draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _ccx + ui(2), _ccy + ui(2), _ccw - ui(4), _cch - ui(4), c_white, .3);
+						draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, c_white, .3);
 						BLEND_NORMAL
 						
 						if(mouse_press(mb_left, active))

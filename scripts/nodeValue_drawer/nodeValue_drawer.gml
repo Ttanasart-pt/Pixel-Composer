@@ -332,7 +332,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			case VALUE_TYPE.surface : 
 				param.h = breakLine? ui(96) : ui(48);
 				break;
-				
+			
 			case VALUE_TYPE.curve :   
 				param.h = breakLine? ui(160) : ui(100);
 				if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + param.h))
@@ -342,6 +342,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		var _widH = wid.drawParam(param) ?? 0;
 		widH = _widH - (TEXTBOX_HEIGHT * !breakLine);
+		
+		mbRight &= wid.right_click_block;
 	#endregion
 	} else if(jun.display_type == VALUE_DISPLAY.label) { #region label
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);

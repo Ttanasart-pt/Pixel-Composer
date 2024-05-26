@@ -7,6 +7,8 @@ function widget() constructor {
 	parent  = noone;
 	interactable = true;
 	
+	right_click_block = true;
+	
 	side_button  = noone;
 	front_button = noone;
 	

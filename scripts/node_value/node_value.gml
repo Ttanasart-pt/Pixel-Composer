@@ -873,7 +873,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break; #endregion
 		}
 		
-		if(struct_has(display_data, "side_button") && editWidget.side_button == noone)
+		if(is_struct(display_data) && struct_has(display_data, "side_button") && editWidget.side_button == noone)
 			editWidget.side_button = display_data.side_button;
 		
 		editWidgetRaw = editWidget;

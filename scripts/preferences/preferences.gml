@@ -72,6 +72,7 @@
 	
 		PREFERENCES.panel_preview_dragging			= MOD_KEY.alt;
 		PREFERENCES.panel_preview_show_real_fps		= false;
+		// PREFERENCES.panel_preview_tran_colors		= [  ];
 	
 		PREFERENCES.panel_menu_resource_monitor		= false;
 		PREFERENCES.panel_menu_right_control		= os_type == os_windows;

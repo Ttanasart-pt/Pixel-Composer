@@ -128,8 +128,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				txt = $"{rn}";
 			}
-				
-			txt += string(rn);
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x + 8, _yy, _x + _w - 8, _yy + hh)) {
 				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, _w - 16, _tgh, c_white, 0.1);
@@ -226,12 +224,12 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		read_ase(path, content);
 		
-		layers = [];
+		layers     = [];
 		var vis    = attributes.layer_visible;
 		var frames = content[? "Frames"];
 		
 		for( var i = 0, n = array_length(frames); i < n; i++ ) {
-			var frame = frames[i];
+			var frame  = frames[i];
 			var chunks = frame[? "Chunks"];
 			
 			for( var j = 0; j < array_length(chunks); j++ ) {
@@ -255,11 +253,13 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 							array_push(p_arr, make_color_rgb(plt[k][0], plt[k][1], plt[k][2]));
 						outputs[| 3].setValue(p_arr);
 						break;
+						
 					case 0x2004: //layer
 						var name = chunk[? "Name"];
 						array_push(layers, new ase_layer(name));
 						array_push(vis, true);
 						break;
+						
 					case 0x2005: //cel
 						var _layer = chunk[? "Layer index"];
 						var cel	= new ase_cel(layers[_layer], chunk, content);

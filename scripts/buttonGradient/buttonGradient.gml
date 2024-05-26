@@ -51,6 +51,8 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		y = _y;
 		w = _w;
 		
+		right_click_block = true;
+		
 		var _bs = min(_h, ui(32));
 		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
@@ -129,6 +131,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				var _cw = _w - ui(4);
 				var _ch = h - _ggh - ui(4 + 2);
 				var _ks = ui(16);
+				var _hv = noone;
 				
 				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _ggx, _cy, _ggw, _ch, CDEF.main_mdblack, 1);	
 				
@@ -154,6 +157,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 					
 					if(hover && point_in_rectangle(_m[0], _m[1], _kx - _ks / 2, _ky - _ks / 2, _kx + _ks / 2, _ky + _ks / 2)) {
 						_ka = 1;
+						_hv = _k;
 						
 						if(mouse_press(mb_left, active)) {
 							drag_color_index = _k;
@@ -172,6 +176,28 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 						BLEND_ADD
 						draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, c_white, _ka);
 						BLEND_NORMAL
+					}
+				}
+				
+				if(_hv != noone) {
+					right_click_block = false;
+					if(array_length(_gradient.keys) > 1 && mouse_press(mb_right, active)) {
+						array_remove(_gradient.keys, _hv);
+						_gradient.refresh();
+						apply(_gradient);
+					}
+					
+				} else if(point_in_rectangle(_m[0], _m[1], _ggx, _cy, _ggx + _ggw, _cy + _ch)) {
+					if(mouse_press(mb_left, active)) {
+						var _ti = clamp((_m[0] - _ggx) / _ggw, 0, 1);
+						var _va = _gradient.eval(_ti);
+						var _nk = new gradientKey(_ti, _va);
+						
+						_gradient.add(_nk);
+						
+						drag_color_index = _nk;
+						edit_color_mx    = _m[0];
+						edit_color_sx    = _ti;
 					}
 				}
 			}
