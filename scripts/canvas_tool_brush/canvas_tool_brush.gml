@@ -22,7 +22,7 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
-		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT) && key_mod_press(CTRL)) {
+		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_presses(SHIFT, CTRL)) {
 			var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 			var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 			var _a = round(aa / 45) * 45;

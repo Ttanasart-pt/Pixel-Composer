@@ -1,88 +1,3 @@
-function nodeValueUnit(_nodeValue) constructor { #region
-	self._nodeValue = _nodeValue;
-	
-	mode = VALUE_UNIT.constant;
-	reference = noone;
-	triggerButton = button(function() { 
-		mode = !mode; 
-		_nodeValue.cache_value[0] = false;
-		_nodeValue.unitConvert(mode);
-		_nodeValue.node.doUpdate();
-	});
-	triggerButton.icon_blend = COLORS._main_icon_light;
-	triggerButton.icon       = THEME.unit_ref;
-	triggerButton.tooltip    = new tooltipSelector("Unit", ["Pixel", "Fraction"]);
-	
-	static setMode = function(type) { #region
-		if(type == "constant" && mode == VALUE_UNIT.constant) return;
-		if(type == "relative" && mode == VALUE_UNIT.reference) return;
-		
-		mode = type == "constant"? VALUE_UNIT.constant : VALUE_UNIT.reference;
-		_nodeValue.cache_value[0] = false;
-		_nodeValue.unitConvert(mode);
-		_nodeValue.node.doUpdate();
-	} #endregion
-	
-	static draw = function(_x, _y, _w, _h, _m) { #region
-		triggerButton.icon_index = mode;
-		triggerButton.tooltip.index = mode;
-		
-		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide);
-	} #endregion
-	
-	static invApply = function(value, index = 0) { #region
-		if(mode == VALUE_UNIT.constant) 
-			return value;
-		if(reference == noone)
-			return value;
-		
-		return convertUnit(value, VALUE_UNIT.reference, index);
-	} #endregion
-	
-	static apply = function(value, index = 0) { #region
-		if(mode == VALUE_UNIT.constant) return value;
-		if(reference == noone)			return value;
-		
-		return convertUnit(value, VALUE_UNIT.constant, index);
-	} #endregion
-	
-	static convertUnit = function(value, unitTo, index = 0) { #region
-		var disp = _nodeValue.display_type;
-		var base = reference(index);
-		var inv  = unitTo == VALUE_UNIT.reference;
-		
-		if(!is_array(base) && !is_array(value))
-			return inv? value / base : value * base;
-		
-		if(!is_array(base) && is_array(value)) {
-			var _val = array_create(array_length(value));
-			for( var i = 0, n = array_length(value); i < n; i++ )
-				_val[i] = inv? value[i] / base : value[i] * base;
-			return _val;
-		}
-		
-		if(is_array(base) && !is_array(value))
-			return value;
-			
-		var _val = array_clone(value);
-		
-		switch(disp) {
-			case VALUE_DISPLAY.padding :
-			case VALUE_DISPLAY.vector :
-			case VALUE_DISPLAY.vector_range :
-				for( var i = 0, n = array_length(value); i < n; i++ )
-					_val[i] = inv? value[i] / base[i % 2] : value[i] * base[i % 2];
-				return _val;
-			case VALUE_DISPLAY.area :
-				for( var i = 0; i < 4; i++ )
-					_val[i] = inv? value[i] / base[i % 2] : value[i] * base[i % 2];
-				return _val;
-		}
-		
-		return value;
-	} #endregion
-} #endregion
-
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
 function nodeValueMap(_name, _node, _junc = noone)						 { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false, false).setMapped(_junc); }
 function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ]).setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
@@ -346,7 +261,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static resetValue = function() { #region
 		unit.mode = def_unit;
-		setValue(unit.apply(def_val)); 
+		setValue(unit.apply(variable_clone(def_val))); 
 		attributes.mapped = false;
 		
 		is_modified = false; 
@@ -1084,23 +999,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(display_type == VALUE_DISPLAY.area) { #region
 			
 			if(struct_has(nodeFrom.display_data, "onSurfaceSize")) {
-				var surf = nodeFrom.display_data.onSurfaceSize();
-				
-				var ww = surf[0];
-				var hh = surf[1];
-			
+				var surf     = nodeFrom.display_data.onSurfaceSize();
 				var dispType = array_safe_get_fast(value, 5, AREA_MODE.area);
-			
+				
 				switch(dispType) {
 					case AREA_MODE.area : 
 						break;
 					
 					case AREA_MODE.padding : 
+						var ww = unit.mode == VALUE_UNIT.reference? 1 : surf[0];
+						var hh = unit.mode == VALUE_UNIT.reference? 1 : surf[1];
+						
 						var cx = (ww - value[0] + value[2]) / 2
 						var cy = (value[1] + hh - value[3]) / 2;
 						var sw = abs((ww - value[0]) - value[2]) / 2;
 						var sh = abs(value[1] - (hh - value[3])) / 2;
-					
+						
 						value = [cx, cy, sw, sh, value[4], value[5]];
 						break;
 					
@@ -1448,13 +1362,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	show_val = [];
-	static showValue = function() { #region
+	static showValue = function() { #region ////showValue
 		INLINE
 		
 		var val = 0;
 		
 		if(value_from != noone || is_anim || expUse) 
-			val = getValue(CURRENT_FRAME, false, 0, true, true);
+			val = getValue(CURRENT_FRAME, false);
 			
 		else if(sep_axis) {
 			show_val = array_verify(show_val, array_length(animators));

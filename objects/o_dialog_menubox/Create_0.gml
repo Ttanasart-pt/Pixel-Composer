@@ -9,9 +9,9 @@ event_inherited();
 	mouse_inside = false;
 	selecting    = -1;
 	
-	alarm[0] = -1;
-	menu     = 1;
-	hght     = ui(36);
+	alarm[0]  = -1;
+	menu      = 1;
+	hght      = ui(36);
 	
 	tooltips  = [];
 	show_icon = false;
@@ -22,6 +22,8 @@ event_inherited();
 	setFocus(self.id);
 	
 	function setMenu(_menu, align = fa_left) {
+		with(_p_dialog) { if(on_top) continue; other.depth = min(depth - 1, other.depth); }
+		
 		menu = _menu;
 		dialog_x = x;
 		dialog_y = y;

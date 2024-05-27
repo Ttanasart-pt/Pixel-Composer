@@ -1217,10 +1217,12 @@ function Panel_Preview() : PanelContent() constructor {
 			mouse_on_preview = 0;
 		}
 		
+		var _dragging = key_mod_press(CTRL) && !key_mod_press(SHIFT) && !key_mod_press(ALT);
+		
 		var overlayHover =  tool_hovering == noone && !overlay_hovering;
 			overlayHover &= active && isHover;
 			overlayHover &= point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
-			overlayHover &= !key_mod_press(CTRL);
+			overlayHover &= !_dragging;
 			
 		var params     = { w, h, toolbar_height };
 		var mouse_free = false;

@@ -899,7 +899,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		#endregion
 		
-		previewing = 1;
 	} #endregion
 	
 	static step = function() { #region

@@ -3,6 +3,9 @@ function buttonAnchor(_onClick) : widget() constructor {
 	index   = 4;
 	click   = true;
 	
+	center  = true;
+	context = noone;
+	
 	static drawParam = function(params) {
 		return draw(params.x, params.y, params.w, params.h, params.m);
 	}
@@ -21,6 +24,8 @@ function buttonAnchor(_onClick) : widget() constructor {
 		
 		for( var i = -1; i <= 1; i++ ) 
 		for( var j = -1; j <= 1; j++ ) {
+			if(!center && i == 0 && j == 0) continue;
+			
 			var _bx  = cx + j * spacing;
 			var _by  = cy + i * spacing;
 			var _in  = (i + 1) * 3 + (j + 1);

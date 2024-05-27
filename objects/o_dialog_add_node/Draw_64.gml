@@ -88,4 +88,7 @@ if !ready exit;
 	
 	node_tooltip = noone;
 	ADD_NODE_SCROLL = content_pane.scroll_y_to;
+	
+	if(mouse_release(mb_right))
+		right_free = true;
 #endregion

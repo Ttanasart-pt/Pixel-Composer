@@ -31,6 +31,8 @@ event_inherited();
 	display_list_size    = ui(28);
 	display_list_size_to = display_list_size;
 	
+	right_free = !mouse_click(mb_right);
+	
 	is_global = PANEL_GRAPH.getCurrentContext() == noone;
 	
 	#region ---- category ----
@@ -59,7 +61,6 @@ event_inherited();
 		
 		node_menu_selecting = node;
 		var fav  = array_exists(global.FAV_NODES, node.node);
-		
 		var menu = [
 			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), 
 			function() {
@@ -482,7 +483,7 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node);
-					else if(mouse_release(mb_right, sFOCUS))
+					else if(mouse_release(mb_right, right_free && sFOCUS))
 						rightClick(_node);
 				}
 				
@@ -610,7 +611,7 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_active, 0, ui(16), yy, list_width - ui(32), list_height, COLORS._main_accent, 1);
 					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node);
-					else if(mouse_release(mb_right, sFOCUS))
+					else if(mouse_release(mb_right, right_free && sFOCUS))
 						rightClick(_node);
 				}
 				
@@ -848,7 +849,7 @@ event_inherited();
 					node_selecting = i;
 					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node, _param);
-					else if(struct_has(_node, "node") && mouse_release(mb_right, sFOCUS))
+					else if(struct_has(_node, "node") && mouse_release(mb_right, right_free && sFOCUS))
 						rightClick(_node);
 				}
 				
@@ -966,7 +967,7 @@ event_inherited();
 					node_selecting = i;
 					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node, _param);
-					else if(struct_has(_node, "node") && mouse_release(mb_right, sFOCUS))
+					else if(struct_has(_node, "node") && mouse_release(mb_right, right_free && sFOCUS))
 						rightClick(_node);
 				}
 				

@@ -53,13 +53,23 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	else if(drag_type == 4) _b = value_snap(drag_sy - (_my - drag_my) / _s, _sny);
 	
 	if(drag_type) {
-		var _val = array_clone(showValue());
-		     if(drag_type == 1) _val[0] = _r;
-		else if(drag_type == 2) _val[1] = _t;
-		else if(drag_type == 3) _val[2] = _l;
-		else if(drag_type == 4) _val[3] = _b;
+		var _svl  = showValue();
+		var _sval = array_clone(_svl);
+		if(unit.mode == VALUE_UNIT.reference) {
+			var _ref = unit.reference();
+			_sval[0] *= _ref[0];
+			_sval[1] *= _ref[1];
+			_sval[2] *= _ref[0];
+			_sval[3] *= _ref[1];
+		}
 		
-		if(setValueInspector(_val)) UNDO_HOLDING = true;
+		     if(drag_type == 1) _sval[0] = _r;
+		else if(drag_type == 2) _sval[1] = _t;
+		else if(drag_type == 3) _sval[2] = _l;
+		else if(drag_type == 4) _sval[3] = _b;
+		
+		if(setValueInspector(_sval))
+			UNDO_HOLDING = true;
 		
 		if(mouse_release(mb_left)) {
 			drag_type = 0;

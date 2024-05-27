@@ -37,14 +37,18 @@
 	
 	function key_mod_press_any() {
 		INLINE
-		
 		return CTRL == KEYBOARD_STATUS.pressing || ALT == KEYBOARD_STATUS.pressing || SHIFT == KEYBOARD_STATUS.pressing;
 	}
 	
-	function key_mod_press(key) {
-		INLINE
-		
-		return key == KEYBOARD_STATUS.pressing;
+	function key_mod_press(key)    { INLINE return key == KEYBOARD_STATUS.pressing; }
+	function key_mod_presses(keys) { 
+		INLINE 
+		switch(argument_count) {
+			case 1 : return argument[0] == KEYBOARD_STATUS.pressing;
+			case 2 : return argument[0] == KEYBOARD_STATUS.pressing && argument[1] == KEYBOARD_STATUS.pressing;
+			case 3 : return argument[0] == KEYBOARD_STATUS.pressing && argument[1] == KEYBOARD_STATUS.pressing && argument[2] == KEYBOARD_STATUS.pressing;
+		}
+		return false; 
 	}
 	
 	function key_mod_press_index(keyindex) {

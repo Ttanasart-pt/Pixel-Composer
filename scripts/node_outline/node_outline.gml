@@ -1,8 +1,10 @@
 function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Outline";
 	
-	filtering_vl  = false;
-	filter_button = new buttonAnchor(function(ind) { 
+	attributes.filter = array_create(9, 1);
+	filtering_vl = false;
+	
+	filter_button = new buttonAnchor(function(ind) {
 		if(mouse_press(mb_left))
 			filtering_vl = !attributes.filter[ind];
 		attributes.filter[ind] = filtering_vl;
@@ -69,8 +71,6 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	attribute_surface_depth();
 	attribute_oversample();
-	
-	attributes.filter   = array_create(9, 1);
 	
 	static step = function() { #region
 		var _wid  = getInputData(1);

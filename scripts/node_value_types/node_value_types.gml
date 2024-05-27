@@ -432,3 +432,98 @@ function isGraphable(prop) { #region
 		
 	return false;
 } #endregion
+
+function nodeValueUnit(_nodeValue) constructor { #region
+	self._nodeValue = _nodeValue;
+	
+	mode = VALUE_UNIT.constant;
+	reference = noone;
+	triggerButton = button(function() { 
+		mode = !mode; 
+		_nodeValue.cache_value[0] = false;
+		_nodeValue.unitConvert(mode);
+		_nodeValue.node.doUpdate();
+	});
+	triggerButton.icon_blend = COLORS._main_icon_light;
+	triggerButton.icon       = THEME.unit_ref;
+	triggerButton.tooltip    = new tooltipSelector("Unit", ["Pixel", "Fraction"]);
+	
+	static setMode = function(type) { #region
+		if(type == "constant" && mode == VALUE_UNIT.constant) return;
+		if(type == "relative" && mode == VALUE_UNIT.reference) return;
+		
+		mode = type == "constant"? VALUE_UNIT.constant : VALUE_UNIT.reference;
+		_nodeValue.cache_value[0] = false;
+		_nodeValue.unitConvert(mode);
+		_nodeValue.node.doUpdate();
+	} #endregion
+	
+	static draw = function(_x, _y, _w, _h, _m) { #region
+		triggerButton.icon_index = mode;
+		triggerButton.tooltip.index = mode;
+		
+		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide);
+	} #endregion
+	
+	static invApply = function(value, index = 0) { #region
+		if(mode == VALUE_UNIT.constant) 
+			return value;
+		if(reference == noone)
+			return value;
+		
+		return convertUnit(value, VALUE_UNIT.reference, index);
+	} #endregion
+	
+	static apply = function(value, index = 0) { #region
+		if(mode == VALUE_UNIT.constant) return value;
+		if(reference == noone)			return value;
+		
+		return convertUnit(value, VALUE_UNIT.constant, index);
+	} #endregion
+	
+	static convertUnit = function(value, unitTo, index = 0) { #region
+		var disp = _nodeValue.display_type;
+		var base = reference(index);
+		var inv  = unitTo == VALUE_UNIT.reference;
+		
+		if(!is_array(base)) {
+			if(inv) base = base == 0? 0 : 1 / base;
+			
+			if(!is_array(value)) 
+				return value * base;
+				
+			var _val = array_create(array_length(value));
+			for( var i = 0, n = array_length(value); i < n; i++ )
+				_val[i] = value[i] * base;
+			return _val;
+			
+		} else if(is_array(value)) {
+			if(inv) {
+				base = [
+					base[0] == 0? 0 : 1 / base[0],
+					base[1] == 0? 0 : 1 / base[1],	
+				];
+			}
+			
+			switch(disp) {
+				case VALUE_DISPLAY.padding :
+				case VALUE_DISPLAY.vector :
+				case VALUE_DISPLAY.vector_range :
+					var _val = array_create(array_length(value));
+					for( var i = 0, n = array_length(value); i < n; i++ )
+						_val[i] = value[i] * base[i % 2];
+					return _val;
+					
+				case VALUE_DISPLAY.area :
+					var _val = array_clone(value);
+					for( var i = 0; i < 4; i++ )
+						_val[i] = value[i] * base[i % 2];
+						
+					return _val;
+			}
+		}
+		
+		return value;
+		
+	} #endregion
+} #endregion

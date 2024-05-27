@@ -179,7 +179,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						var cy = array_safe_get_fast(_data, 1);
 						var sw = array_safe_get_fast(_data, 2);
 						var sh = array_safe_get_fast(_data, 3);
-						var ss = onSurfaceSize();
+						var ss = unit.mode == VALUE_UNIT.reference? [ 1, 1 ] : onSurfaceSize();
 						
 						onModify(0, ss[0] - (cx + sw));
 						onModify(1, cy - sh);
@@ -188,11 +188,11 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						break;
 						
 					case AREA_MODE.padding : //padding to two points
-						var r = array_safe_get_fast(_data, 0);
-						var t = array_safe_get_fast(_data, 1);
-						var l = array_safe_get_fast(_data, 2);
-						var b = array_safe_get_fast(_data, 3);
-						var ss = onSurfaceSize();
+						var r  = array_safe_get_fast(_data, 0);
+						var t  = array_safe_get_fast(_data, 1);
+						var l  = array_safe_get_fast(_data, 2);
+						var b  = array_safe_get_fast(_data, 3);
+						var ss = unit.mode == VALUE_UNIT.reference? [ 1, 1 ] : onSurfaceSize();
 						
 						onModify(0, l);
 						onModify(1, t);
