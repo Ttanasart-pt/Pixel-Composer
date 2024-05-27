@@ -26,7 +26,7 @@ function Panel_Workspace() : PanelContent() constructor {
 	function onFocusBegin() { refreshContent(); }
 	
 	function drawContent(panel) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var _hori = hori;
 		hori = w > h;
@@ -92,7 +92,7 @@ function Panel_Workspace() : PanelContent() constructor {
 				}
 			}
 			
-			draw_set_color(PREFERENCES.panel_layout_file == str? COLORS._main_text : COLORS._main_text_sub)
+			draw_set_color(PREFERENCES.panel_layout_file == str? COLORS._main_text : COLORS._main_text_sub);
 			draw_text_add(hori? x0 + ui(8) : (x0 + x1) / 2, y0 + ui(4), str);
 			
 			if(hori) {

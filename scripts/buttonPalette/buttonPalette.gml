@@ -140,12 +140,19 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 					draw_sprite_stretched_ext(THEME.palette_mask, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, _c, 1);
 					
 					if(hover && point_in_rectangle(_m[0], _m[1], _ccx, _ccy, _ccx + _ccw, _ccy + _cch - 1)) {
-						BLEND_ADD
-						draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, c_white, .3);
-						BLEND_NORMAL
-						
-						if(mouse_press(mb_left, active))
-							triggerSingle(i);
+						if(DRAGGING && DRAGGING.type == "Color") {
+							draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, COLORS._main_value_positive, 1);
+							if(mouse_release(mb_left)) {
+								current_palette[i] = DRAGGING.data;
+								apply(current_palette);
+							}
+							
+						} else {
+							draw_sprite_stretched_add(THEME.menu_button_mask, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, c_white, .3);
+							
+							if(mouse_press(mb_left, active))
+								triggerSingle(i);
+						}
 					}
 				}
 			}
@@ -218,21 +225,40 @@ function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { #region
 	}
 } #endregion
 
-
 function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
 	var amo = array_length(_pal);
 	var col = floor(_w / _gs);
 	var row = ceil(amo / col);
 	var cx  = -1, cy = -1;
-	var _pd = ui(5);
 	var _h  = row * _gs;
 	
-	for(var i = 0; i < array_length(_pal); i++) {
-		draw_set_color(_pal[i]);
-		var _x0 = _x + safe_mod(i, col) * _gs;
-		var _y0 = _y + floor(i / col) * _gs;
+	for(var i = 0; i < amo; i++) {
+		var _cc = safe_mod(i, col);
+		var _rr = floor(i / col);
+		var _x0 = _x + _cc * _gs;
+		var _y0 = _y + _rr * _gs;
+		var _i  = 0;
 		
-		draw_rectangle(_x0, _y0 + 1, _x0 + _gs, _y0 + _gs, false);
+		if(amo == 1) {
+			_i = 1;
+		} else {
+			if(row == 1) {
+				     if(i == 0)       _i = 2;
+				else if(i == amo - 1) _i = 3;
+			} else {
+				     if(i == 0)                           _i = 6;
+				else if(_cc == col - 1 && i + col > amo) {
+					if(_rr == 0) _i = 3;
+					else         _i = 9;
+				}
+				else if(_rr == 0 && _cc == col - 1)       _i = 7;
+				else if(_rr == row - 1 && _cc == 0)       _i = 8;
+				else if(i == amo - 1)                     _i = 9;
+				
+			}
+		}
+		
+		draw_sprite_stretched_ext(THEME.palette_mask, _i, _x0, _y0 + 1, _gs, _gs, _pal[i], 1);
 		
 		if(c_color >= 0 && color_diff(c_color, _pal[i]) <= 0) {
 			cx = _x0;
@@ -240,8 +266,10 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
 		}
 	}
 	
-	if(cx == -1) return _h;
+	if(cx != -1) {
+		var _pd = ui(5);
+		draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - _pd, cy + 1 - _pd, _gs + _pd * 2, _gs + _pd * 2);
+	}
 	
-	draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - _pd, cy + 1 - _pd, _gs + _pd * 2, _gs + _pd * 2);
 	return _h;
 } #endregion

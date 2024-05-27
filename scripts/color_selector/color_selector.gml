@@ -17,10 +17,11 @@ function colorSelector(onApply = noone) constructor {
 	
 	disp_mode = 0;
 	
-	palette = [];
+	palette = PROJECT.attributes.palette;
 	discretize_pal = true;
 	
-	color_surface = surface_create_valid(ui(256), ui(256));
+	content_surface = surface_create_valid(1, 1);
+	side_surface    = surface_create_valid(1, 1);
 	
 	tb_hue = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
@@ -164,96 +165,118 @@ function colorSelector(onApply = noone) constructor {
 	}
 	
 	static draw = function(_x, _y, focus, hover) {
-		var col_x = _x + ui(8);
-		var col_y = _y + ui(8);
+		var cont_x = _x + ui(8);
+		var cont_y = _y + ui(8);
+		var cont_w = ui(256);
+		var cont_h = ui(256);
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, col_x - ui(8), col_y - ui(8), ui(256 + 16), ui(256 + 16));
-	
-		color_surface = surface_verify(color_surface, ui(256), ui(256));
-		surface_set_target(color_surface);			
-			if(disp_mode == 0) {
-				shader_set(sh_color_picker_hue);
-				shader_set_f("hue", hue / 256);
-				shader_set_i("usePalette", NODE_COLOR_SHOW_PALETTE && discretize_pal);
-				shader_set_palette(palette);
-			} else if(disp_mode == 1) {
-				shader_set(sh_color_picker_value);
-				shader_set_f("value", val / 256);
-				shader_set_i("usePalette", NODE_COLOR_SHOW_PALETTE && discretize_pal);
-				shader_set_palette(palette);
-			}
+		var sel_x = cont_x + ui(280);
+		var sel_y = cont_y;
+		var sel_w = ui(16);
+		var sel_h = cont_h;
+		var discr = NODE_COLOR_SHOW_PALETTE && discretize_pal;
+		
+		content_surface = surface_verify(content_surface, cont_w, cont_h);
+		side_surface    = surface_verify(side_surface,    sel_w,  sel_h);
+		
+		surface_set_target(content_surface);			
+			DRAW_CLEAR
 			
-			draw_sprite_uniform(s_fx_pixel, 0, 0, 0, ui(256));
+			draw_sprite_stretched(THEME.menu_button_mask, 0, 0, 0, cont_w, cont_h);
+			gpu_set_colorwriteenable(1, 1, 1, 0);
+			shader_set(sh_color_select_content);
+				shader_set_i("mode", disp_mode);
+				shader_set_f("hue",  hue / 256);
+				shader_set_f("sat",  sat / 256);
+				shader_set_f("val",  val / 256);
+				
+				shader_set_i("discretize",	  discr);
+				shader_set_palette(palette);
+				
+				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, cont_w, cont_h);
 			shader_reset();
+			gpu_set_colorwriteenable(1, 1, 1, 1);
 		surface_reset_target();
 		
-		draw_surface_ext_safe(color_surface, col_x, col_y,,,,, interactable * 0.5 + 0.5);
-		
-		#region side control
-			var hue_x = col_x + ui(280);
-			var hue_y = col_y;
-					
-			draw_sprite_stretched(THEME.ui_panel_bg, 1, hue_x - ui(8), hue_y - ui(8), ui(32), ui(256 + 16));
+		surface_set_target(side_surface);
+			DRAW_CLEAR
 			
-			if(disp_mode == 0) {
-				shader_set(sh_color_picker_side_hue);
-					shader_set_i("usePalette", NODE_COLOR_SHOW_PALETTE && discretize_pal);
-					shader_set_palette(palette);
-					shader_set_f("sat", sat / 256);
-					shader_set_f("value", val / 256);
-					
-					draw_sprite_stretched_ext(s_fx_pixel, 0, hue_x, hue_y, ui(16), ui(256), c_white, interactable * 0.5 + 0.5);
-				shader_reset();
-			} else if(disp_mode == 1) {
-				shader_set(sh_color_picker_side_value);
-					shader_set_i("usePalette", NODE_COLOR_SHOW_PALETTE && discretize_pal);
-					shader_set_palette(palette);
-					shader_set_f("hue", hue / 256);
-					shader_set_f("sat", sat / 256);
-					
-					draw_sprite_stretched_ext(s_fx_pixel, 0, hue_x, hue_y, ui(16), ui(256), c_white, interactable * 0.5 + 0.5)
-				shader_reset();
-			}
-			
-			var _sy = disp_mode == 0? hue_y + ui(hue) : hue_y + ui(256 - val);
-			
-			if(NODE_COLOR_SHOW_PALETTE) {
-				draw_sprite_stretched_ext(s_ui_base_white, 0, hue_x - ui(3), _sy - ui(6), ui(24), ui(10), current_color, 1);
+			draw_sprite_stretched(THEME.menu_button_mask, 0, 0, 0, sel_w, sel_h);
+			gpu_set_colorwriteenable(1, 1, 1, 0);
+			shader_set(sh_color_select_side);
+				shader_set_i("mode", disp_mode);
+				shader_set_f("hue",  hue / 256);
+				shader_set_f("sat",  sat / 256);
+				shader_set_f("val",  val / 256);
 				
-				if(disp_mode == 0)
-					draw_sprite_stretched_ext(s_ui_base_white, 0, col_x + ui(sat - 6), col_y + ui(256 - val - 6), ui(12), ui(12), current_color, 1);
-				else if(disp_mode == 1)
-					draw_sprite_stretched_ext(s_ui_base_white, 0, col_x + ui(hue - 6), col_y + ui(256 - sat - 6), ui(12), ui(12), current_color, 1);
-					
-			} else {
-				if(disp_mode == 0) {
-					draw_sprite_stretched_ext(s_ui_base_white, 0, hue_x - ui(3), _sy - ui(6), ui(24), ui(10), make_color_hsv(hue, 255, 255), 1);
-					draw_sprite_stretched_ext(s_ui_base_white, 0, col_x + ui(sat - 6), col_y + ui(256 - val - 6), ui(12), ui(12), current_color, 1);
-				} else if(disp_mode == 1) {
-					draw_sprite_stretched_ext(s_ui_base_white, 0, hue_x - ui(3), _sy - ui(6), ui(24), ui(10), make_color_hsv(hue, 255, val), 1);
-					draw_sprite_stretched_ext(s_ui_base_white, 0, col_x + ui(hue - 6), col_y + ui(256 - sat - 6), ui(12), ui(12), current_color, 1);
-				}
-			}
+				shader_set_i("discretize", discr);
+				shader_set_palette(palette);
+				
+				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, sel_w, sel_h);
+			shader_reset();
+			gpu_set_colorwriteenable(1, 1, 1, 1);
 			
+		surface_reset_target();
+		
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, cont_x - ui(8), cont_y - ui(8), cont_w + ui(16), cont_h + ui(16));
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, sel_x - ui(8), sel_y - ui(8), sel_w + ui(16), sel_h + ui(16));
+		
+		draw_surface(content_surface, cont_x, cont_y);
+		draw_surface(side_surface,    sel_x,  sel_y);
+		
+		BLEND_ADD
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.2);
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.2);
+		BLEND_NORMAL
+		
+		#region control
+			var _cs = ui(12);
+			var _p2 = _cs / 2;
+			var _p  = _p2 / 2;
+			var _sc;
+			
+			var _cx = disp_mode == 0? cont_x + ui(sat) - _p2 : cont_x + ui(hue) - _p2;
+			var _cy = disp_mode == 0? cont_y + ui(256 - val) - _p2 : cont_y + ui(256 - sat) - _p2;
+			
+			var _sw = _p2 + sel_w;
+			var _sh = _cs;
+			var _sx = sel_x - _p;
+			var _sy = (disp_mode == 0? sel_y + ui(hue) : sel_y + ui(256 - val)) - _sh / 2;
+			
+			
+			if(discr) _sc = current_color;
+			else      _sc = disp_mode == 0? make_color_hsv(hue, 255, 255) : make_color_hsv(hue, 255, val);
+			
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _cx - 1, _cy - 1, _cs + 2, _cs + 2, c_black, 0.5);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx - 1, _sy - 1, _sw + 2, _sh + 2, c_black, 0.5);
+			
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx, _sy, _sw, _sh, _sc, 1);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _cx, _cy, _cs, _cs, current_color, 1);
+			
+			BLEND_ADD
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _sx, _sy, _sw, _sh, c_white, 0.75);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _cx, _cy, _cs, _cs, c_white, 0.75);
+			BLEND_NORMAL
+		
 			if(mouse_press(mb_left, interactable && focus)) {
-				if(point_in_rectangle(mouse_mx, mouse_my, hue_x, hue_y, hue_x + ui(16), hue_y + ui(256)))
+				if(point_in_rectangle(mouse_mx, mouse_my, sel_x, sel_y, sel_x + ui(16), sel_y + ui(256)))
 					side_dragging = true;
-				else if(point_in_rectangle(mouse_mx, mouse_my, col_x, col_y, col_x + ui(256), col_y + ui(256)))
+				else if(point_in_rectangle(mouse_mx, mouse_my, cont_x, cont_y, cont_x + ui(256), cont_y + ui(256)))
 					area_dragging = true;
 			}
 			
 			if(side_dragging) {
 				if(disp_mode == 0) {
-					hue = clamp((mouse_my - hue_y) / UI_SCALE, 0, 256);
+					hue = clamp((mouse_my - sel_y) / UI_SCALE, 0, 256);
 				} else if(disp_mode == 1) {
-					val = 256 - clamp((mouse_my - hue_y) / UI_SCALE, 0, 256);
+					val = 256 - clamp((mouse_my - sel_y) / UI_SCALE, 0, 256);
 				}
 				
 				setHSV();
 				
-				if(NODE_COLOR_SHOW_PALETTE) {
-					current_color = disp_mode == 0? surface_getpixel(color_surface, sat, 256 - val) : 
-													surface_getpixel(color_surface, hue, 256 - sat);
+				if(discr) {
+					current_color = disp_mode == 0? surface_getpixel(content_surface, sat, 256 - val) : 
+													surface_getpixel(content_surface, hue, 256 - sat);
 					current_color = cola(current_color, 1);
 					if(onApply != noone) onApply(current_color);
 				}
@@ -264,18 +287,18 @@ function colorSelector(onApply = noone) constructor {
 		
 			if(area_dragging) {
 				if(disp_mode == 0) {
-					sat = clamp((mouse_mx - col_x) / UI_SCALE, 0, 256);
-					val = 256 - clamp((mouse_my - col_y) / UI_SCALE, 0, 256);
+					sat = clamp((mouse_mx - cont_x) / UI_SCALE, 0, 256);
+					val = 256 - clamp((mouse_my - cont_y) / UI_SCALE, 0, 256);
 				} else if(disp_mode == 1) {
-					hue = clamp((mouse_mx - col_x) / UI_SCALE, 0, 256);
-					sat = 256 - clamp((mouse_my - col_y) / UI_SCALE, 0, 256);	
+					hue = clamp((mouse_mx - cont_x) / UI_SCALE, 0, 256);
+					sat = 256 - clamp((mouse_my - cont_y) / UI_SCALE, 0, 256);	
 				}
 				
 				setHSV();
 				
-				if(NODE_COLOR_SHOW_PALETTE) {
-					current_color = disp_mode == 0? surface_getpixel(color_surface, sat, 256 - val) : 
-													surface_getpixel(color_surface, hue, 256 - sat);
+				if(discr) {
+					current_color = disp_mode == 0? surface_getpixel(content_surface, sat, 256 - val) : 
+													surface_getpixel(content_surface, hue, 256 - sat);
 					current_color = cola(current_color, 1);
 					if(onApply != noone) onApply(current_color);
 				}
@@ -286,7 +309,7 @@ function colorSelector(onApply = noone) constructor {
 		#endregion
 		
 		#region type
-			var tx = hue_x + ui(36);
+			var tx = sel_x + ui(36);
 			var ty = _y + ui(4);
 			
 			scr_disp.setFocusHover(focus, hover);
@@ -308,8 +331,8 @@ function colorSelector(onApply = noone) constructor {
 		#endregion
 		
 		#region data
-			var data_x = hue_x + ui(40);
-			var data_y = col_y + ui(40);
+			var data_x = sel_x + ui(40);
+			var data_y = cont_y + ui(40);
 			var wdw = ui(160);
 			var wdh = ui( 27);
 			var txh = wdh + ui(4);
@@ -348,11 +371,11 @@ function colorSelector(onApply = noone) constructor {
 			//////////////////////////////////////////////////////////////////
 			
 			tb_hex.active  = focus;  tb_hex.hover  = hover;
-			tb_hex.draw(hue_x - ui(128), col_y + ui(256 + 24), ui(108), TEXTBOX_HEIGHT, color_get_hex(current_color),  mouse_ui);
+			tb_hex.draw(sel_x - ui(128), cont_y + ui(256 + 24), ui(108), TEXTBOX_HEIGHT, color_get_hex(current_color),  mouse_ui);
 		#endregion
 		
-		var cx = col_x + ui(16);
-		var cy = col_y + ui(296);
+		var cx = cont_x + ui(16);
+		var cy = cont_y + ui(296);
 		var aa = _color_get_alpha(current_color);
 		
 		draw_sprite_stretched_ext(THEME.color_picker_box, 0, cx - ui(20), cy - ui(20), ui(40), ui(40), COLORS._main_icon_dark, 1);

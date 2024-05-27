@@ -93,7 +93,7 @@ function Panel_Palette() : PanelContent() constructor {
 							DRAGGING = {
 								type: "Color",
 								data: array_safe_get_fast(preset.palette, _index)
-							}
+							} 
 							MESSAGE = DRAGGING;
 						}
 					} else if(point_in_rectangle(_m[0], _m[1], ui(10), yy, ww - ui(10), yy + ui(24))) {

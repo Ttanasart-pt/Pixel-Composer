@@ -819,9 +819,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var sg = array_create(sample);
 			
 			for(var j = 0; j <= sample; j++) {
-				p = eval_bezier(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], 
-				                            _a0[0] + _a0[4], _a0[1] + _a0[5], 
-											_a1[0] + _a1[2], _a1[1] + _a1[3]);
+				if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0)
+					p = [ lerp(_a0[0], _a1[0], j / sample), lerp(_a0[1], _a1[1], j / sample) ];
+				else
+					p = eval_bezier(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], 
+					                            _a0[0] + _a0[4], _a0[1] + _a0[5], 
+												_a1[0] + _a1[2], _a1[1] + _a1[3]);
 				sg[j] = p;
 				_nx   = p[0];
 				_ny   = p[1];

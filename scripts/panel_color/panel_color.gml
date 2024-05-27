@@ -80,7 +80,9 @@ function Panel_Color() : PanelContent() constructor {
 				var cx = ui(padding) + ui(24 + 4) * i;
 				
 				if(i == 0) {
-					draw_sprite_stretched_ext(s_ui_base_white, 0, cx + ui(4), cy + ui(4), ui(16), ui(16), CURRENT_COLOR, _color_get_alpha(CURRENT_COLOR));
+					draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx + ui(4), cy + ui(4), ui(16), ui(16), CURRENT_COLOR, _color_get_alpha(CURRENT_COLOR));
+					draw_sprite_stretched_add(THEME.menu_button_mask, 1, cx + ui(4), cy + ui(4), ui(16), ui(16), c_white, 0.3);
+					
 					draw_sprite_stretched_ext(THEME.ui_panel_active, 0, cx, cy, ui(24), ui(24), c_white, 0.5);
 					
 					if(pHOVER && point_in_rectangle(mx, my, cx, cy, cx + ui(24), cy + ui(24))) {
@@ -99,15 +101,21 @@ function Panel_Color() : PanelContent() constructor {
 				}
 				
 				var c  = colors[i - 1];
-				draw_sprite_stretched_ext(s_ui_base_white, 0, cx, cy, ui(24), ui(24), c, 1);
+				var aa = 0.3;
+				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx, cy, ui(24), ui(24), c, 1);
 				
-				if(mouse_press(mb_left, pFOCUS) && point_in_rectangle(mx, my, cx, cy, cx + ui(24), cy + ui(24))) {
-					DRAGGING = {
-						type: "Color",
-						data: c
+				if(point_in_rectangle(mx, my, cx, cy, cx + ui(24), cy + ui(24))) {
+					aa = 0.5;
+					if(mouse_press(mb_left, pFOCUS)) {
+						DRAGGING = {
+							type: "Color",
+							data: c
+						}
+						MESSAGE = DRAGGING;
 					}
-					MESSAGE = DRAGGING;
 				}
+				
+				draw_sprite_stretched_add(THEME.menu_button_mask, 1, cx, cy, ui(24), ui(24), c_white, aa);
 			}
 			
 			_y1 = cy - ui(8);
@@ -121,9 +129,20 @@ function Panel_Color() : PanelContent() constructor {
 			var alp_y = _y1 - alp_h;
 			
 			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, ui(padding), alp_y, alp_h, alp_h, CURRENT_COLOR, alp);
-			BLEND_ADD
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, ui(padding), alp_y, alp_h, alp_h, c_white, 0.3);
-			BLEND_NORMAL
+			
+			aa = 0.3;
+			if(point_in_rectangle(mx, my, ui(padding), alp_y, ui(padding) + alp_h, alp_y + alp_h)) {
+				aa = 0.5;
+				if(mouse_press(mb_left, pFOCUS)) {
+					DRAGGING = {
+						type: "Color",
+						data: CURRENT_COLOR
+					} 
+					MESSAGE = DRAGGING;
+				}
+			}
+			
+			draw_sprite_stretched_add(THEME.menu_button_mask, 1, ui(padding), alp_y, alp_h, alp_h, c_white, aa);
 			
 			hex_tb.setFocusHover(pFOCUS, pHOVER);
 			hex_tb.setFont(f_p2);
@@ -208,8 +227,8 @@ function Panel_Color() : PanelContent() constructor {
 		draw_surface(side_surface,    sel_x,  sel_y);
 		
 		BLEND_ADD
-		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.3);
-		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.3);
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.2);
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.2);
 		BLEND_NORMAL
 		
 		if(drag_con) {
@@ -289,8 +308,8 @@ function Panel_Color() : PanelContent() constructor {
 			sc = make_color_hsv(hue * 255, sat * 255, 255);
 		}
 		
-		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx - 1, cy - 1, bs + 2, bs + 2, c_black, 0.1);
-		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, sx - 1, sy - 1, sw + 2, bs + 2, c_black, 0.1);
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx - 1, cy - 1, bs + 2, bs + 2, c_black, 0.5);
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, sx - 1, sy - 1, sw + 2, bs + 2, c_black, 0.5);
 		
 		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, sx, sy, sw, bs, sc, 1);
 		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx, cy, bs, bs, cc, 1);

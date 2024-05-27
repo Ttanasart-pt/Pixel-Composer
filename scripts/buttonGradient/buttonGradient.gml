@@ -11,6 +11,8 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	edit_color_mx    = 0;
 	edit_color_sx    = 0;
 	
+	hover_index = 0;
+	
 	function apply(value) { #region
 		if(!interactable) return;
 		onApply(value);
@@ -132,6 +134,8 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				var _ch = h - _ggh - ui(4 + 2);
 				var _ks = ui(16);
 				var _hv = noone;
+				var _hi = noone;
+				var _hover_index = hover_index;
 				
 				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _ggx, _cy, _ggw, _ch, CDEF.main_mdblack, 1);	
 				
@@ -158,6 +162,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 					if(hover && point_in_rectangle(_m[0], _m[1], _kx - _ks / 2, _ky - _ks / 2, _kx + _ks / 2, _ky + _ks / 2)) {
 						_ka = 1;
 						_hv = _k;
+						_hi = i;
 						
 						if(mouse_press(mb_left, active)) {
 							drag_color_index = _k;
@@ -169,13 +174,18 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 							triggerSingle(_k);
 					}
 					
-					if(drag_color_index == _k || edit_color_index == _k) {
-						draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_accent, 1);
+					if(_hover_index == i && DRAGGING && DRAGGING.type == "Color") {
+						draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_value_positive, 1);
+						if(mouse_release(mb_left)) {
+							_k.value = DRAGGING.data;
+							apply(current_gradient);
+						}
 						
 					} else {
-						BLEND_ADD
-						draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, c_white, _ka);
-						BLEND_NORMAL
+						if(drag_color_index == _k || edit_color_index == _k)
+							draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_accent, 1);
+						else
+							draw_sprite_stretched_add(THEME.menu_button_mask, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, c_white, _ka);
 					}
 				}
 				
@@ -200,6 +210,8 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 						edit_color_sx    = _ti;
 					}
 				}
+				
+				hover_index = _hi;
 			}
 			
 			if(drag_color_index != -1) {

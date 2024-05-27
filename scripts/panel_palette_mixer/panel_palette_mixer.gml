@@ -233,9 +233,6 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 		connect_surf = surface_verify(connect_surf, pw, ph);
 		content_surf = surface_verify(content_surf, pw, ph);
 		
-		// for (var i = 0, n = array_length(atlas_surfs); i < n; i++) 
-		// 	atlas_surfs = surface_verify(atlas_surfs, pw, ph);
-		
 		var _mx_x = pw / 2 + mixer_x;
 		var _mx_y = ph / 2 + mixer_y;
 		

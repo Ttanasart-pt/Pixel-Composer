@@ -108,23 +108,31 @@ if(winMan_isMinimized()) exit;
 
 #region dragging
 	if(DRAGGING != noone) {
+		var mx = mouse_mx + ui(8);
+		var my = mouse_my + ui(8);
+		
 		switch(DRAGGING.type) {
 			case "Color" :
-				draw_sprite_stretched_ext(THEME.color_picker_box, 1, mouse_mx + ui(-16), mouse_my + ui(-16), ui(32), ui(32), DRAGGING.data, 0.5);
+				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, mx, my, ui(32), ui(32), DRAGGING.data, 1);
+				draw_sprite_stretched_add(THEME.menu_button_mask, 1, mx, my, ui(32), ui(32), c_white, 0.3);
 				break;
 				
 			case "Palette" :
-				drawPalette(DRAGGING.data, mouse_mx - ui(64), mouse_my - ui(12), ui(128), ui(24), 0.5);
+				var _l = array_safe_length(DRAGGING.data);
+				var _w = max(ui(128), _l * ui(10));
+				drawPalette(DRAGGING.data, mx, my, _w, ui(24), 1);
+				draw_sprite_stretched_add(THEME.menu_button_mask, 1, mx, my, _w, ui(24), c_white, 0.3);
 				break;
 				
 			case "Gradient" :
-				DRAGGING.data.draw(mouse_mx - ui(64), mouse_my - ui(12), ui(128), ui(24), 0.5);
+				DRAGGING.data.draw(mx, my, ui(128), ui(24), 1);
+				draw_sprite_stretched_add(THEME.menu_button_mask, 1, mx, my, ui(128), ui(24), c_white, 0.3);
 				break;
 				
 			case "Bool" :
 				draw_set_alpha(0.5);
 				draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
-				draw_text_bbox({ xc: mouse_mx, yc: mouse_my, w: ui(128), h: ui(24) }, __txt(DRAGGING.data? "True" : "False"));
+				draw_text_bbox({ xc: mx, yc: my, w: ui(128), h: ui(24) }, __txt(DRAGGING.data? "True" : "False"));
 				draw_set_alpha(1);
 				break;
 				
@@ -133,14 +141,14 @@ if(winMan_isMinimized()) exit;
 			case "Collection" :
 				if(DRAGGING.data.spr) {
 					var ss = ui(48) / max(sprite_get_width(DRAGGING.data.spr), sprite_get_height(DRAGGING.data.spr))
-					draw_sprite_ext(DRAGGING.data.spr, 0, mouse_mx + ui(8), mouse_my + ui(8), ss, ss, 0, c_white, 0.5);
+					draw_sprite_ext(DRAGGING.data.spr, 0, mx, my, ss, ss, 0, c_white, 1);
 				}
 				break;
 				
 			default:
 				draw_set_alpha(0.5);
 				draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
-				draw_text_bbox({ xc: mouse_mx, yc: mouse_my, w: ui(128), h: ui(24) }, DRAGGING.data);
+				draw_text_bbox({ xc: mx, yc: my, w: ui(128), h: ui(24) }, DRAGGING.data);
 				draw_set_alpha(1);
 		}
 		

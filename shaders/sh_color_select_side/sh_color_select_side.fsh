@@ -21,11 +21,11 @@ vec3 hsv2rgb(vec3 c) {
 void main() {
 	vec4 c;
 	
-		 if(mode == 0) c = vec4(hsv2rgb(vec3(v_vTexcoord.y, 1., 1.)), 1.);
-	else if(mode == 1) c = vec4(hsv2rgb(vec3(hue, 1., 1. - v_vTexcoord.y)), 1.);
-	else if(mode == 2) c = vec4(hsv2rgb(vec3(hue, 1. - v_vTexcoord.y, 1.)), 1.);
-	
 	if(discretize == 1) {
+			 if(mode == 0) c = vec4(hsv2rgb(vec3(v_vTexcoord.y, sat, val)), 1.);
+		else if(mode == 1) c = vec4(hsv2rgb(vec3(hue, sat, 1. - v_vTexcoord.y)), 1.);
+		else if(mode == 2) c = vec4(hsv2rgb(vec3(hue, 1. - v_vTexcoord.y, val)), 1.);
+		
 		int index = 0;
 		float minDist = 999.;
 		for(int i = 0; i < paletteAmount; i++) {
@@ -38,6 +38,11 @@ void main() {
 		}
 		
 		c = palette[index];
+		
+	} else {
+			 if(mode == 0) c = vec4(hsv2rgb(vec3(v_vTexcoord.y, 1., 1.)), 1.);
+		else if(mode == 1) c = vec4(hsv2rgb(vec3(hue, 1., 1. - v_vTexcoord.y)), 1.);
+		else if(mode == 2) c = vec4(hsv2rgb(vec3(hue, 1. - v_vTexcoord.y, 1.)), 1.);
 	}
 	
 	gl_FragColor = c;
