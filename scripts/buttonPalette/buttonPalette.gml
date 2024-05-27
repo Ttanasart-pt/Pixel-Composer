@@ -260,7 +260,8 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
 		
 		draw_sprite_stretched_ext(THEME.palette_mask, _i, _x0, _y0 + 1, _gs, _gs, _pal[i], 1);
 		
-		if(c_color >= 0 && color_diff(c_color, _pal[i]) <= 0) {
+		var _same = (c_color & 0x00FFFFFF) == (_pal[i] & 0x00FFFFFF);
+		if(c_color >= 0 && _same) {
 			cx = _x0;
 			cy = _y0;
 		}

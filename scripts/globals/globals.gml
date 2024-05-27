@@ -63,8 +63,8 @@
 	DOUBLE_CLICK_POS = [ 0, 0 ];
 	DOUBLE_CLICK = false;
 	
-	FOCUS     = noone;
-	FOCUS_STR = "";
+	FOCUS      = noone;
+	FOCUS_STR  = "";
 	
 	HOVER             = noone;
 	HOVERING_ELEMENT  = noone;

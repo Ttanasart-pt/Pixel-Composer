@@ -43,8 +43,8 @@ event_inherited();
 		var hh  = ui(32);
 		var _gs = sp_preset_size;
 		var yy  = _y + ui(8);
-		var _height, pre_amo;
 		var _hover = sHOVER && sp_presets.hover;
+		var _height, pre_amo;
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		for(var i = -1; i < array_length(PALETTES); i++) {
@@ -76,10 +76,8 @@ event_inherited();
 				draw_circle_prec(ui(16) + ui(4), yy + ui(16), ui(4), false);
 			}
 			
-			if(preset_selecting == i)
-				drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs, selector.current_color);
-			else
-				drawPalette(pal.palette, ui(16), yy + ui(28), ww, ui(20));
+			if(preset_selecting == i) drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs, selector.current_color);
+			else                      drawPalette(pal.palette, ui(16), yy + ui(28), ww, ui(20));
 			
 			if(!click_block && mouse_click(mb_left, interactable && sFOCUS)) {
 				if(preset_selecting == i && _hover && point_in_rectangle(_m[0], _m[1], ui(16), yy + ui(28), ui(16) + ww, yy + ui(28) + _height)) {

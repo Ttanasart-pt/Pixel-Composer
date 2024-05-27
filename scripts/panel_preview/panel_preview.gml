@@ -331,6 +331,8 @@ function Panel_Preview() : PanelContent() constructor {
 		];
 	#endregion
 	
+	////============ DATA ============
+	
 	function setNodePreview(node) { #region
 		if(locked) return;
 		
@@ -397,6 +399,8 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function onFocusBegin() { PANEL_PREVIEW = self; }
+	
+	////============ VIEW ============
 	
 	function dragCanvas() { #region
 		if(canvas_dragging) {
@@ -604,10 +608,12 @@ function Panel_Preview() : PanelContent() constructor {
 			ww = max(ww, string_width(_node.outputs[| i].name) + ui(40));
 		}
 		
-		sbChannel.data_list = chName;
-		sbChannel.setFocusHover(pFOCUS, pHOVER);
-		sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
-		right_menu_y += ui(40);
+		if(!array_empty(chName)) {
+			sbChannel.data_list = chName;
+			sbChannel.setFocusHover(pFOCUS, pHOVER);
+			sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
+			right_menu_y += ui(40);
+		}
 	} #endregion
 	
 	function drawNodeChannel3D(_x, _y) { #region
@@ -621,6 +627,10 @@ function Panel_Preview() : PanelContent() constructor {
 		d3Channel.draw(_x - ww, _y - hh / 2, ww, hh, d3ChannelNames[d3_preview_channel], [mx, my], x, y);
 		right_menu_y += ui(40);
 	} #endregion
+	
+	static onFullScreen = function() { run_in(1, fullView); }
+	
+	////============ DRAW ============
 	
 	function drawOnionSkin(node, psx, psy, ss) { #region
 		var _surf = preview_surfaces[0];
@@ -1750,7 +1760,7 @@ function Panel_Preview() : PanelContent() constructor {
 		drawToolBar(tool);
 	} #endregion
 	
-	static onFullScreen = function() { run_in(1, fullView); }
+	////=========== ACTION ===========
 	
 	function copyCurrentFrame() { #region
 		var prevS = getNodePreviewSurface();
