@@ -67,7 +67,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
 			
-			if(i < input_fix_len + amo || _inp.value_from)
+			if(i < input_fix_len + amo || _inp.hasJunctionFrom())
 				ds_list_add(_l, _inp);
 		}
 		

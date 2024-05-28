@@ -567,9 +567,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var _seg = segments[i];
 				var _ox  = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 					
-				for( var j = 0, m = array_length(_seg); j < m; j++ ) {
-					_nx = _x + _seg[j][0] * _s;
-					_ny = _y + _seg[j][1] * _s;
+				for( var j = 0, m = array_length(_seg); j < m; j += 2 ) {
+					_nx = _x + _seg[j + 0] * _s;
+					_ny = _y + _seg[j + 1] * _s;
 						
 					minx = min(minx, _nx); maxx = max(maxx, _nx);
 					miny = min(miny, _ny); maxy = max(maxy, _ny);
@@ -816,18 +816,20 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _a1 = anchors[(i + 1) % ansize];
 			
 			var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
-			var sg = array_create(sample);
+			var sg = array_create((sample + 1) * 2);
 			
 			for(var j = 0; j <= sample; j++) {
-				if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0)
-					p = [ lerp(_a0[0], _a1[0], j / sample), lerp(_a0[1], _a1[1], j / sample) ];
-				else
-					p = eval_bezier(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], 
-					                            _a0[0] + _a0[4], _a0[1] + _a0[5], 
-												_a1[0] + _a1[2], _a1[1] + _a1[3]);
-				sg[j] = p;
-				_nx   = p[0];
-				_ny   = p[1];
+				
+				if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
+					_nx = lerp(_a0[0], _a1[0], j / sample);
+					_ny = lerp(_a0[1], _a1[1], j / sample);
+				} else {
+					_nx = eval_bezier_x(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+					_ny = eval_bezier_y(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+				}
+				
+				sg[j * 2 + 0] = _nx;
+				sg[j * 2 + 1] = _ny;
 				
 				boundary.addPoint(_nx, _ny);
 				if(j) l += point_distance(_nx, _ny, _ox, _oy);	
@@ -880,9 +882,14 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 			var _t = _dist / lengths[i];
-			var _p = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-			out.x  = _p[0];
-			out.y  = _p[1];
+			
+			if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
+				out.x = lerp(_a0[0], _a1[0], _t);
+				out.y = lerp(_a0[1], _a1[1], _t);
+			} else {
+				out.x = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+				out.y = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+			}
 			
 			cached_pos[? _cKey] = out.clone();
 			return out;
@@ -913,9 +920,17 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var _a0 = anchors[_i0];
 		var _a1 = anchors[_i1];
-		var p   = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+		var px, py;
 		
-		return new __vec2(p[0], p[1]);
+		if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
+			px = lerp(_a0[0], _a1[0], _t);
+			py = lerp(_a0[1], _a1[1], _t);
+		} else {
+			px = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+			py = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+		}
+			
+		return new __vec2(px, py);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region

@@ -532,7 +532,7 @@ function __initNodes() {
 		
 		ds_list_add(transform, "Warps");
 		addNodeObject(transform, "Crop",			s_node_crop,			"Node_Crop",			[1, Node_Crop],, "Crop out image to create smaller ones.");
-		addNodeObject(transform, "Crop Content",	s_node_crop_content,	"Node_Crop_Content",	[1, Node_Crop_Content],, "Crop out empty pixel pixel from the image.");
+		addNodeObject(transform, "Crop Content",	s_node_crop_content,	"Node_Crop_Content",	[1, Node_Crop_Content],, "Crop out empty pixel from the image.");
 		addNodeObject(transform, "Bend",			s_node_bend,			"Node_Bend",			[1, Node_Bend], ["wrap"]).setVersion(11650);
 		addNodeObject(transform, "Warp",			s_node_warp,			"Node_Warp",			[1, Node_Warp], ["warp corner"], "Warp image by freely moving the corners.");
 		addNodeObject(transform, "Skew",			s_node_skew,			"Node_Skew",			[1, Node_Skew], ["shear"], "Skew image horizontally, or vertically.");
@@ -553,7 +553,7 @@ function __initNodes() {
 		//addNodeObject(filter, "Lovify",				s_node_lovify,			 "Node_Lovify",			  [1, Node_Lovify],, "Add love to your image.").setIcon(s_lovify_icon);
 		
 		ds_list_add(filter, "Combines");
-		addNodeObject(filter, "Blend",				s_node_blend,			 "Node_Blend",			  [0, Node_create_Blend], global.node_blend_keys, "Blend 2 images using different blendmodes.");
+		addNodeObject(filter, "Blend",				s_node_blend,			 "Node_Blend",			  [0, Node_create_Blend], global.node_blend_keys, "Blend 2 images using different blend modes.");
 		addNodeObject(filter, "RGBA Combine",		s_node_RGB_combine,		 "Node_Combine_RGB",	  [1, Node_Combine_RGB],, "Combine 4 image in to one. Each image use to control RGBA channel.").setVersion(1070);
 		addNodeObject(filter, "HSV Combine",		s_node_HSV_combine,		 "Node_Combine_HSV",	  [1, Node_Combine_HSV],, "Combine 4 image in to one. Each image use to control HSVA channel.").setVersion(1070);
 		addNodeObject(filter, "Override Channel",	s_node_ovreride_channel, "Node_Override_Channel", [1, Node_Override_Channel],, "Replace RGBA value of one surface with anothers.").setVersion(11640);
@@ -564,7 +564,7 @@ function __initNodes() {
 		addNodeObject(filter, "Directional Blur",	s_node_blur_directional,"Node_Blur_Directional",[1, Node_Blur_Directional], ["motion blur"], "Blur image given a direction.");
 		addNodeObject(filter, "Slope Blur",			s_node_blur_slope,		"Node_Blur_Slope",		[1, Node_Blur_Slope], ["motion blur"], "Blur along a gradient of a slope map.").setVersion(11640);
 		addNodeObject(filter, "Zoom Blur",			s_node_zoom,			"Node_Blur_Zoom",		[1, Node_Blur_Zoom],, "Blur image by zooming in/out from a mid point.");
-		addNodeObject(filter, "Radial Blur",		s_node_radial,			"Node_Blur_Radial",		[1, Node_Blur_Radial],, "Blur image by rotating aroung a mid point.").setVersion(1110);
+		addNodeObject(filter, "Radial Blur",		s_node_radial,			"Node_Blur_Radial",		[1, Node_Blur_Radial],, "Blur image by rotating around a mid point.").setVersion(1110);
 		addNodeObject(filter, "Lens Blur",			s_node_bokeh,			"Node_Blur_Bokeh",		[1, Node_Blur_Bokeh], ["bokeh"], "Create bokeh effect. Blur lighter color in a lens-like manner.").setVersion(1110);
 		addNodeObject(filter, "Contrast Blur",		s_node_blur_contrast,	"Node_Blur_Contrast",	[1, Node_Blur_Contrast],, "Blur only pixel of a similiar color.");
 		addNodeObject(filter, "Shape Blur",			s_node_shape_blur,		"Node_Blur_Shape",		[1, Node_Blur_Shape]).setVersion(11650);
@@ -587,14 +587,14 @@ function __initNodes() {
 		addNodeObject(filter, "Outline",			s_node_border,			"Node_Outline",			[1, Node_Outline], ["border"], "Add border to the image.");
 		addNodeObject(filter, "Glow",				s_node_glow,			"Node_Glow",			[1, Node_Glow],, "Apply glow to the border of the image.");
 		addNodeObject(filter, "Shadow",				s_node_shadow,			"Node_Shadow",			[1, Node_Shadow],, "Apply shadow behind the image.");
-		addNodeObject(filter, "Bloom",				s_node_bloom,			"Node_Bloom",			[1, Node_Bloom],, "Apply bloom effect, bluring and brighten the bright part of the image.");
+		addNodeObject(filter, "Bloom",				s_node_bloom,			"Node_Bloom",			[1, Node_Bloom],, "Apply bloom effect, blurring and brighten the bright part of the image.");
 		addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			[1, Node_Trail],, "Blend animation by filling in the pixel 'in-between' two or more frames.").setVersion(1130);
 		addNodeObject(filter, "Erode",				s_node_erode,			"Node_Erode",			[1, Node_Erode],, "Remove pixel that are close to the border of the image.");
 		addNodeObject(filter, "Corner",				s_node_corner,			"Node_Corner",			[1, Node_Corner], ["round corner"], "Round out sharp corner of the image.").setVersion(1110);
 		addNodeObject(filter, "Blobify",			s_node_blobify,			"Node_Blobify",			[1, Node_Blobify]).setVersion(11650);
 		addNodeObject(filter, "2D Light",			s_node_2d_light,		"Node_2D_light",		[1, Node_2D_light],, "Apply different shaped light on the image.");
 		addNodeObject(filter, "Cast Shadow",		s_node_shadow_cast,		"Node_Shadow_Cast",		[1, Node_Shadow_Cast], ["raycast"], "Apply light that create shadow using shadow mask.").setVersion(1100);
-		addNodeObject(filter, "Pixel Expand",		s_node_atlas,			"Node_Atlas",			[1, Node_Atlas], ["atlas"], "Replace transparent pixel with the closet non-transparent pixel.");
+		addNodeObject(filter, "Pixel Expand",		s_node_atlas,			"Node_Atlas",			[1, Node_Atlas], ["atlas"], "Replace transparent pixel with the closest non-transparent pixel.");
 		addNodeObject(filter, "Pixel Cloud",		s_node_pixel_cloud,		"Node_Pixel_Cloud",		[1, Node_Pixel_Cloud],, "Displace each pixel of the image randomly.");
 		addNodeObject(filter, "Pixel Sort",			s_node_pixel_sort,		"Node_Pixel_Sort",		[1, Node_Pixel_Sort],, "Sort pixel by brightness in horizontal, or vertial axis.");
 		addNodeObject(filter, "Edge Detect",		s_node_edge_detect,		"Node_Edge_Detect",		[1, Node_Edge_Detect],, "Edge detect by applying Sobel, Prewitt, or Laplacian kernel.");
@@ -649,7 +649,7 @@ function __initNodes() {
 			
 		ds_list_add(d3d, "3D");
 		addNodeObject(d3d, "3D Camera",		s_node_3d_camera,			"Node_3D_Camera",			[1, Node_3D_Camera],, "Create 3D camera that render scene to surface.").setVersion(11510);
-		addNodeObject(d3d, "3D Camera Set",	s_node_3d_camera_set,		"Node_3D_Camera_Set",		[1, Node_3D_Camera_Set],, "3D camera with build-in key and fill directional lights.").setVersion(11571);
+		addNodeObject(d3d, "3D Camera Set",	s_node_3d_camera_set,		"Node_3D_Camera_Set",		[1, Node_3D_Camera_Set],, "3D camera with built-in key and fill directional lights.").setVersion(11571);
 		addNodeObject(d3d, "3D Material",	s_node_3d_meterial,			"Node_3D_Material",			[1, Node_3D_Material],, "Create 3D material with adjustable parameters.").setVersion(11510);
 		addNodeObject(d3d, "3D Scene",		s_node_3d_scene,			"Node_3D_Scene",			[1, Node_3D_Scene],, "Combine multiple 3D objects into a single junction.").setVersion(11510);
 		addNodeObject(d3d, "3D Repeat",		s_node_3d_array,			"Node_3D_Repeat",			[1, Node_3D_Repeat],, "Repeat the same 3D mesh multiple times.").setVersion(11510);
@@ -750,6 +750,9 @@ function __initNodes() {
 		addNodeObject(generator, "Separate Shape",		s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape],,	"Separate disconnected pixel each into an image in an image array.");
 		addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill],,		"Fill connected pixel with colors.").setVersion(1147);		
 		addNodeObject(generator, "Flood Fill",			s_node_flood_fill,			"Node_Flood_Fill",			[1, Node_Flood_Fill],,		"Filled connected pixel given position and color.").setVersion(1133);
+		
+		ds_list_add(generator, "Ray March");
+		/**/addNodeObject(generator, "RM Primitive",		s_node_mk_rain,				"Node_RM_Primitive",		[1, Node_RM_Primitive]).setVersion(11720);
 		
 		ds_list_add(generator, "MK Effects");
 		addNodeObject(generator, "MK Rain",				s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain]).setVersion(11600);

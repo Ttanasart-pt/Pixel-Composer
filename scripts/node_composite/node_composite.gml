@@ -430,8 +430,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _vis = attributes.layer_visible;
 		var _sel = attributes.layer_selectable;
 		
-		var amo = getInputAmount();
-		
+		var amo     = getInputAmount();
 		var anchors = array_create(ds_list_size(inputs));
 		
 		for(var i = 0; i < amo; i++) {
@@ -493,6 +492,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(!_surf || is_array(_surf)) continue;
 			
 			var a = anchors[index];
+			if(!is_struct(a)) continue;
 			
 			if(surface_selecting == index) {
 				var _ri = 0;
@@ -513,6 +513,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				draw_sprite_colored(THEME.anchor_rotate, _ri, a.rr[0], a.rr[1],, a.rot);
 				draw_sprite_colored(THEME.anchor_scale,  _si, a.d3[0], a.d3[1],, a.rot);
+				
 			} else if(point_in_rectangle_points(_mx, _my, a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1]) && 
 				(hovering != surface_selecting || surface_selecting == noone)) {
 					

@@ -133,9 +133,8 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _c1x = _cnt[_ind][2];
 			var _c1y = _cnt[_ind][3];
 			
-			var _p = eval_bezier(_rat, p0[0], p0[1], p1[0], p1[1], _c0x, _c0y, _c1x, _c1y);
-			out.x = _p[0];
-			out.y = _p[1];
+			out.x = eval_bezier_x(_rat, p0[0], p0[1], p1[0], p1[1], _c0x, _c0y, _c1x, _c1y);
+			out.y = eval_bezier_y(_rat, p0[0], p0[1], p1[0], p1[1], _c0x, _c0y, _c1x, _c1y);
 			
 		} else {
 			out.x = lerp(p0[0], p1[0], _rat);
@@ -221,10 +220,9 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						var _ll = 0;
 					
 						for( var k = 0; k < 1; k += _smp ) {
-							var _p = eval_bezier(k, _a0[0], _a0[1], _a1[0], _a1[1], _c0x, _c0y, _c1x, _c1y);
-							nx = _p[0];
-							ny = _p[1];
-						
+							nx = eval_bezier_x(k, _a0[0], _a0[1], _a1[0], _a1[1], _c0x, _c0y, _c1x, _c1y);
+							ny = eval_bezier_y(k, _a0[0], _a0[1], _a1[0], _a1[1], _c0x, _c0y, _c1x, _c1y);
+							
 							if(k > 0) _ll += point_distance(ox, oy, nx, ny);
 						
 							ox = nx;

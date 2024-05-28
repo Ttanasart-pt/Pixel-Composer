@@ -119,6 +119,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 37] = nodeValue("Exact", self,  JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
+	inputs[| 38] = nodeValue("Spacing", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "After", "Between", "Around" ]);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
@@ -128,7 +131,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	input_display_list = [ 10, 
 		["Surfaces", 	 true], 0, 1, 15, 24, 25, 26, 27, 
 		["Scatter",		false], 6, 5, 13, 14, 17, 9, 31, 2, 30, 35, 
-		["Path",		false], 19, 20, 21, 22, 
+		["Path",		false], 19, 38, 20, 21, 22, 
 		["Position",	false], 33, 36, 37, 
 		["Rotation",	false], 7, 4, 32, 
 		["Scale",	    false], 3, 8, 34, 
@@ -175,6 +178,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _sct = getInputData(9);
 		var _arr = getInputData(15);
 		var _amn = getInputData(26);
+		var _spa = getInputData(38);
 		
 		update_on_frame = _arr && (_amn[0] != 0 || _amn[1] != 0);
 		
@@ -186,8 +190,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[|  9].setVisible(_dis != 2 && _dis != 3);
 		inputs[| 19].setVisible(_dis == 4, _dis == 4);
 		inputs[| 20].setVisible(_dis == 4);
-		inputs[| 21].setVisible(_dis == 4);
+		inputs[| 21].setVisible(_dis == 4 && _spa == 0);
 		inputs[| 22].setVisible(_dis == 4);
+		inputs[| 38].setVisible(_dis == 4 && _sct == 0);
 		inputs[| 24].setVisible(_arr == 3, _arr == 3);
 		inputs[| 25].setVisible(_arr == 4, _arr == 4);
 		inputs[| 26].setVisible(_arr);
@@ -223,6 +228,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		inputs[| 11].mappableStep();
 	} #endregion
+	
+	////=========== PROCESS ===========
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		if(_output_index == 1) return scatter_data;
@@ -275,6 +282,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var cirRng  = _data[35];
 		var posShf  = _data[36];
 		var posExt  = _data[37];
+		var pthSpac = _data[38];
 		
 		var _in_w, _in_h;
 		
@@ -436,7 +444,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					case NODE_SCATTER_DIST.map : 
 						sp = array_safe_get_fast(_posDist, i);
 						if(!is_array(sp)) continue;
-					
+						
 						_x = _area[0] + _area[2] * (sp[0] * 2 - 1.);
 						_y = _area[1] + _area[3] * (sp[1] * 2 - 1.);
 						break;
@@ -444,16 +452,35 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					case NODE_SCATTER_DIST.data : 
 						sp = array_safe_get_fast(_distData, i);
 						if(!is_array(sp)) continue;
-					
+						
 						_x = array_safe_get_fast(sp, 0);
 						_y = array_safe_get_fast(sp, 1);
 						_v = array_safe_get_fast(sp, 2, noone);
 						break;
 						
 					case NODE_SCATTER_DIST.path : 
-						_pathProgress = _scat? random(1) : i / max(1, _pre_amount);
-						_pathProgress = frac((_pathProgress + pathShf) * 0.9999);
-					
+						if(_scat == 0) {
+							switch(pthSpac) {
+								case 0 :
+									_pathProgress = i / max(1, _pre_amount);
+									_pathProgress = frac(_pathProgress + pathShf);
+									break;
+									
+								case 1 :
+									_pathProgress = i / max(1, _pre_amount - 1);
+									break;
+									
+								case 2 :
+									_pathProgress = (i + 0.5) / max(1, _pre_amount);
+									break;
+									
+							}
+							
+						} else {
+							_pathProgress = random(1);
+							_pathProgress = frac(_pathProgress + pathShf);
+						}
+						
 						var pp = path.getPointRatio(_pathProgress, path_line_index);
 						_x = pp.x + random_range(-pathDis, pathDis);
 						_y = pp.y + random_range(-pathDis, pathDis);
@@ -497,8 +524,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_r *= _v;
 					
 				if(_dist == NODE_SCATTER_DIST.path && pathRot) {
-					var p0 = path.getPointRatio(clamp(_pathProgress - 0.001, 0, 0.9999), path_line_index);
-					var p1 = path.getPointRatio(clamp(_pathProgress + 0.001, 0, 0.9999), path_line_index);
+					var pr1 = clamp(_pathProgress + 0.01, 0, 1);
+					var pr0 = pr1 - 0.02;
+					
+					var p0 = path.getPointRatio(pr0, path_line_index);
+					var p1 = path.getPointRatio(pr1, path_line_index);
 					
 					var dirr = point_direction(p0.x, p0.y, p1.x, p1.y);
 					_r += dirr;

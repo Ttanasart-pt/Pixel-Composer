@@ -352,7 +352,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////========== DYNAMIC IO ==========
 	
-	auto_input = false;
+	dummy_input = noone;
+	auto_input  = false;
 	dyna_input_check_shift = 0;
 	static createNewInput  = -1;
 	
@@ -388,11 +389,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _active = false;
+			var _inp    = inputs[| i + dyna_input_check_shift];
+			
 			if(dynamic_input_cond & DYNA_INPUT_COND.connection)
-				_active |= inputs[| i + dyna_input_check_shift].value_from != noone;
+				_active |= _inp.hasJunctionFrom();
 				
 			if(dynamic_input_cond & DYNA_INPUT_COND.zero) {
-				var _val = inputs[| i + dyna_input_check_shift].getValue();
+				var _val = _inp.getValue();
 				_active |= _val != 0 || _val != "";
 			}
 			
@@ -413,8 +416,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		for( var i = 0; i < ds_list_size(_in); i++ )
+		var _ina = ds_list_size(_in);
+		for( var i = 0; i < _ina; i++ )
 			_in[| i].index = i;
+		
+		if(dummy_input) dummy_input.index = _ina;
 		
 		ds_list_destroy(inputs);
 		inputs = _in;

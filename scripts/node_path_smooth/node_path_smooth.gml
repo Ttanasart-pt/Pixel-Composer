@@ -82,9 +82,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				var _seg = segments[i];
 				var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 					
-				for( var j = 0, m = array_length(_seg); j < m; j++ ) {
-					_nx = _x + _seg[j][0] * _s;
-					_ny = _y + _seg[j][1] * _s;
+				for( var j = 0, m = array_length(_seg); j < m; j += 2 ) {
+					_nx = _x + _seg[j + 0] * _s;
+					_ny = _y + _seg[j + 1] * _s;
 						
 					if(j) {
 						if((key_mod_press(CTRL) || isUsingTool(0)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
@@ -156,15 +156,20 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _c1 = controls[(i + 1) % ansize];
 			
 			var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
-			var sg = array_create(sample);
+			var sg = array_create(sample * 2);
 			
 			for(var j = 0; j < sample; j++) {
-				p = eval_bezier(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], 
-											_a0[0] + _c0[2], _a0[1] + _c0[3], 
-											_a1[0] + _c1[0], _a1[1] + _c1[1]);
-				sg[j] = p;
-				_nx   = p[0];
-				_ny   = p[1];
+				
+				if(_c0[2] == 0 && _c0[3] == 0 && _c1[0] == 0 && _c1[1] == 0) {
+					_nx = lerp(_a0[0], _a1[0], j / sample);
+					_ny = lerp(_a0[1], _a1[1], j / sample);
+				} else {
+					_nx = eval_bezier_x(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
+					_ny = eval_bezier_y(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
+				}
+				
+				sg[j * 2 + 0] = _nx;
+				sg[j * 2 + 1] = _ny;
 				
 				boundary.addPoint(_nx, _ny);
 				if(j) l += point_distance(_nx, _ny, _ox, _oy);	
@@ -217,11 +222,14 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			}
 			
 			var _t = _dist / lengths[i];
-			var _p = eval_bezier(_t, _a0[0],  _a0[1], _a1[0],  _a1[1], 
-				 					 _a0[0] + _c0[2], _a0[1] + _c0[3], 
-				 					 _a1[0] + _c1[0], _a1[1] + _c1[1]);
-			out.x  = _p[0];
-			out.y  = _p[1];
+			
+			if(_c0[2] == 0 && _c0[3] == 0 && _c1[0] == 0 && _c1[1] == 0) {
+				out.x = lerp(_a0[0], _a1[0], _t);
+				out.y = lerp(_a0[1], _a1[1], _t);
+			} else {
+				out.x = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
+				out.y = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
+			}
 			
 			cached_pos[? _cKey] = out.clone();
 			return out;

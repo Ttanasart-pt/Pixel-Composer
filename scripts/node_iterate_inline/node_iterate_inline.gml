@@ -44,6 +44,14 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		return _nodes;
 	} #endregion
 	
+	static connectJunctions = function(jFrom, jTo) {
+		junc_in  = jFrom.is_dummy? jFrom.dummy_get() : jFrom;
+		junc_out = jTo;
+		
+		attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
+		attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
+	}
+	
 	static scanJunc = function() { #region
 		var node_in  = PROJECT.nodeMap[? attributes.junc_in[0]];
 		var node_out = PROJECT.nodeMap[? attributes.junc_out[0]];

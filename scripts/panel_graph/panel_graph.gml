@@ -1506,6 +1506,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							var junc_out = data.params.junc_out;
 							
 							var feed = nodeBuild("Node_Feedback_Inline", 0, 0);
+							// feed.connectJunctions(junc_in, junc_out);
 							feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
 							feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
 							feed.scanJunc();

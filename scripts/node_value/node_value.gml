@@ -216,31 +216,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		con_index = -1;
 	#endregion
 	
+	/////============= META =============
+	
 	static setDummy = function(get_node) { #region
 		is_dummy  = true;
 		dummy_get = get_node;
 		
-		return self;
-	} #endregion
-	
-	static setDefault = function(vals) { #region
-		if(LOADING || APPENDING) return self;
-		
-		ds_list_clear(animator.values);
-		for( var i = 0, n = array_length(vals); i < n; i++ )
-			ds_list_add(animator.values, new valueKey(vals[i][0], vals[i][1], animator));
-			
-		return self;
-	} #endregion
-	
-	static getName = function() { #region
-		if(name_custom) return name;
-		return __txt_junction_name(instanceof(node), connect_type, index, name);
-	} #endregion
-	
-	static setName = function(_name) { #region
-		INLINE
-		name = _name;
 		return self;
 	} #endregion
 	
@@ -256,6 +237,51 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		INLINE
 		setActive(OS == os_windows, "Not available on MacOS");
 		
+		return self;
+	} #endregion
+	
+	static nonValidate = function() { #region
+		validateValue = false;
+		return self;
+	} #endregion
+	
+	static nonForward = function() { #region
+		forward = false;
+		return self;
+	} #endregion
+	
+	/////============= NAME =============
+	
+	static getName = function() { #region
+		if(name_custom) return name;
+		return __txt_junction_name(instanceof(node), connect_type, index, name);
+	} #endregion
+	
+	static setName = function(_name) { #region
+		INLINE
+		name = _name;
+		return self;
+	} #endregion
+	
+	/////============= VALUE ============
+	
+	static setType = function(_type) { #region
+		if(type == _type) return false;
+		
+		type = _type;
+		draw_junction_index = type;
+		updateColor();
+		
+		return true;
+	} #endregion
+	
+	static setDefault = function(vals) { #region
+		if(LOADING || APPENDING) return self;
+		
+		ds_list_clear(animator.values);
+		for( var i = 0, n = array_length(vals); i < n; i++ )
+			ds_list_add(animator.values, new valueKey(vals[i][0], vals[i][1], animator));
+			
 		return self;
 	} #endregion
 	
@@ -276,37 +302,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
-	static setVisible = function(inspector) { #region
-		if(connect_type == JUNCTION_CONNECT.input) {
-			show_in_inspector = inspector;
-			visible = argument_count > 1? argument[1] : visible;
-		} else 
-			visible = inspector;
-		node.will_setHeight = true;
-		
-		return self;
-	} #endregion
-	
-	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) { #region
-		display_type	  = _type;
-		display_data	  = _data;
-		resetDisplay();
-		
-		return self;
-	} #endregion
-	
-	static setAnimable = function(_anim) { #region
-		animable = _anim;
-		return self;
-	} #endregion
-	
 	static rejectArray = function() { #region
 		accept_array = false;
-		return self;
-	} #endregion
-	
-	static uncache = function() { #region
-		use_cache = false;
 		return self;
 	} #endregion
 	
@@ -320,30 +317,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
-	static rejectConnect = function() { #region
-		auto_connect = false;
-		return self;
-	} #endregion
-	
 	static rejectArrayProcess = function() { #region
 		process_array = false;
 		return self;
-	} #endregion
-	
-	static nonForward = function() { #region
-		forward = false;
-		return self;
-	} #endregion
-	
-	static nonValidate = function() { #region
-		validateValue = false;
-		return self;
-	} #endregion
-	
-	static isAnimable = function() { #region
-		if(type == VALUE_TYPE.PCXnode)				 return false;
-		if(display_type == VALUE_DISPLAY.text_array) return false;
-		return animable;
 	} #endregion
 	
 	static setDropKey = function() { #region
@@ -367,6 +343,133 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				drop_key = "None";
 		}
 	} setDropKey(); #endregion
+	
+	static setMappable = function(index) { #region
+		attributes.mapped     = false;
+		attributes.map_index  = index;
+		
+		mapButton = button(function() { 
+						attributes.mapped = !attributes.mapped;
+						var val = getValue();
+						if( attributes.mapped && is_numeric(val)) setValue([0, val]);
+						if(!attributes.mapped && is_array(val))   setValue(array_safe_get_fast(val, 0));
+						setArrayDepth(attributes.mapped);
+						
+						node.triggerRender(); 
+					})
+				.setIcon( THEME.value_use_surface, [ function() { return attributes.mapped; } ], COLORS._main_icon )
+				.setTooltip("Toggle map");
+		
+		switch(type) {
+			case VALUE_TYPE.gradient :
+				mapWidget = noone;
+				break;
+				
+			default : 
+				mapWidget = new rangeBox(TEXTBOX_INPUT.number, function(index, val) { return setValueDirect(val, index); });
+				mapWidget.side_button = mapButton;
+				break;
+		}
+		
+		editWidget.side_button = mapButton;
+		
+		return self;
+	} #endregion
+	
+	static setMapped = function(junc) { #region
+		mappedJunc = junc;
+		isTimelineVisible = function() { INLINE return is_anim && value_from == noone && mappedJunc.attributes.mapped; }
+		return self;
+	} #endregion
+	
+	static mappableStep = function() { #region
+		editWidget = mapWidget && attributes.mapped? mapWidget : editWidgetRaw;
+		setArrayDepth(attributes.mapped);
+		
+		var inp = node.inputs[| attributes.map_index];
+		var vis = attributes.mapped && show_in_inspector;
+		
+		if(inp.visible != vis) {
+			inp.visible = vis;
+			node.refreshNodeDisplay();
+		}
+	} #endregion
+	
+	/////========== ANIMATION ==========
+	
+	static setAnimable = function(_anim) { #region
+		animable = _anim;
+		return self;
+	} #endregion
+	
+	static isAnimable = function() { #region
+		if(type == VALUE_TYPE.PCXnode)				 return false;
+		if(display_type == VALUE_DISPLAY.text_array) return false;
+		return animable;
+	} #endregion
+	
+	static setAnim = function(anim, record = false) { #region
+		if(is_anim == anim) return;
+		if(record) {
+			recordAction(ACTION_TYPE.custom, function(data) {
+				setAnim(data.is_anim);
+				data.is_anim = !data.is_anim;
+			}, { anim: is_anim });
+		}
+		is_anim = anim;
+		
+		if(is_anim) {
+			if(ds_list_empty(animator.values))
+				ds_list_add(animator.values, new valueKey(CURRENT_FRAME, animator.getValue(), animator));
+			animator.values[| 0].time = CURRENT_FRAME;
+			animator.updateKeyMap();
+			
+			for( var i = 0, n = array_length(animators); i < n; i++ ) {
+				if(ds_list_empty(animators[i].values))
+					ds_list_add(animators[i].values, new valueKey(CURRENT_FRAME, animators[i].getValue(), animators[i]));
+				animators[i].values[| 0].time = CURRENT_FRAME;
+				animators[i].updateKeyMap();
+			}
+		} else {
+			var _val = animator.getValue();
+			ds_list_clear(animator.values);
+			animator.values[| 0] = new valueKey(0, _val, animator);
+			animator.updateKeyMap();
+			
+			for( var i = 0, n = array_length(animators); i < n; i++ ) {
+				var _val = animators[i].getValue();
+				ds_list_clear(animators[i].values);
+				animators[i].values[| 0] = new valueKey(0, _val, animators[i]);
+				animators[i].updateKeyMap();
+			}
+		}
+		
+		if(type == VALUE_TYPE.gradient && struct_has(attributes, "map_index")) 
+			node.inputs[| attributes.map_index + 1].setAnim(anim);
+		
+		node.refreshTimeline();
+	} #endregion
+		
+	/////============ DISPLAY ===========
+	
+	static setVisible = function(inspector) { #region
+		if(connect_type == JUNCTION_CONNECT.input) {
+			show_in_inspector = inspector;
+			visible = argument_count > 1? argument[1] : visible;
+		} else 
+			visible = inspector;
+		node.will_setHeight = true;
+		
+		return self;
+	} #endregion
+	
+	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) { #region
+		display_type	  = _type;
+		display_data	  = _data;
+		resetDisplay();
+		
+		return self;
+	} #endregion
 	
 	static resetDisplay = function() { #region //////////////////// RESET DISPLAY ////////////////////
 		editWidget = noone;
@@ -803,168 +906,50 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		updateColor();
 	} resetDisplay(); #endregion
 	
-	static setMappable = function(index) { #region
-		attributes.mapped     = false;
-		attributes.map_index  = index;
+	/////============ RENDER ============
+	
+	static isRendered = function() { #region
+		if(type == VALUE_TYPE.node)	return true;
 		
-		mapButton = button(function() { 
-						attributes.mapped = !attributes.mapped;
-						var val = getValue();
-						if( attributes.mapped && is_numeric(val)) setValue([0, val]);
-						if(!attributes.mapped && is_array(val))   setValue(array_safe_get_fast(val, 0));
-						setArrayDepth(attributes.mapped);
-						
-						node.triggerRender(); 
-					})
-				.setIcon( THEME.value_use_surface, [ function() { return attributes.mapped; } ], COLORS._main_icon )
-				.setTooltip("Toggle map");
+		if(value_from == noone) return true;
 		
-		switch(type) {
-			case VALUE_TYPE.gradient :
-				mapWidget = noone;
-				break;
-				
-			default : 
-				mapWidget = new rangeBox(TEXTBOX_INPUT.number, function(index, val) { return setValueDirect(val, index); });
-				mapWidget.side_button = mapButton;
-				break;
-		}
+		var controlNode = value_from.from? value_from.from : value_from.node;
+		if(!controlNode.active)			  return true;
+		if(!controlNode.isRenderActive()) return true;
 		
-		editWidget.side_button = mapButton;
-		
-		return self;
+		return controlNode.rendered;
 	} #endregion
 	
-	static setMapped = function(junc) { #region
-		mappedJunc = junc;
-		isTimelineVisible = function() { INLINE return is_anim && value_from == noone && mappedJunc.attributes.mapped; }
-		return self;
-	} #endregion
-	
-	static mappableStep = function() { #region
-		editWidget = mapWidget && attributes.mapped? mapWidget : editWidgetRaw;
-		setArrayDepth(attributes.mapped);
-		
-		var inp = node.inputs[| attributes.map_index];
-		var vis = attributes.mapped && show_in_inspector;
-		
-		if(inp.visible != vis) {
-			inp.visible = vis;
-			node.refreshNodeDisplay();
-		}
-	} #endregion
-	
-	static setColor = function(col) { #region
-		color = col;
-		updateColor();
-		
-		if(value_from != noone)
-			value_from.setColor(col);
-		
-		return self;
-	} #endregion
-	
-	static updateColor = function(val = undefined) { #region
+	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
 		INLINE
 		
-		if(color == -1) {
-			draw_bg = isArray(val)? value_color_bg_array(draw_junction_index) : value_color_bg(draw_junction_index);
-			draw_fg = value_color(draw_junction_index);
-		} else {
-			draw_bg = isArray(val)? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(draw_junction_index);
-			draw_fg = color;
+		if(value_from_loop)     return true;
+		if(value_from != noone) return false;
+		
+		if(expUse) {
+			if(!is_struct(expTree)) return false;
+			var res = expTree.isDynamic();
+			
+			switch(res) {
+				case EXPRESS_TREE_ANIM.none :		return false;
+				case EXPRESS_TREE_ANIM.base_value : force_requeue = true; return is_anim;
+				case EXPRESS_TREE_ANIM.animated :	force_requeue = true; return true;
+			}
 		}
 		
-		color_display = type == VALUE_TYPE.action? #8fde5d : draw_fg;
-		
+		return is_anim;
 	} #endregion
 	
-	static setType = function(_type) { #region
-		if(type == _type) return false;
-		
-		type = _type;
-		draw_junction_index = type;
-		updateColor();
-		
-		return true;
-	} #endregion
+	/////============= CACHE ============
 	
-	static setUseExpression = function(useExp) { #region
-		INLINE
-		if(expUse == useExp) return;
-		expUse = useExp;
-		node.triggerRender();
-	} #endregion
-	
-	static setExpression = function(_expression) { #region
-		expUse = true;
-		expression = _expression;
-		expressionUpdate();
-	} #endregion
-	
-	static expressionUpdate = function() { #region
-		expTree = evaluateFunctionList(expression);
-		resetCache();
-		node.triggerRender();
-	} #endregion
-	
-	static onValidate = function() { #region
-		if(!validateValue) return;
-		var _val = value_validation, str = "";
-		value_validation = VALIDATION.pass; 
-		
-		switch(type) {
-			case VALUE_TYPE.path:
-				switch(display_type) {
-					case VALUE_DISPLAY.path_load: 
-						var path = animator.getValue();
-						if(is_array(path)) path = path[0];
-						
-						if(!is_string(path) || path == "") {
-							str = $"Path invalid: {path}";
-							break;
-						}
-						
-						if(path_get(path) == -1) {
-							value_validation = VALIDATION.error;	
-							str = $"File not exist: {path}";
-						}
-						break;
-					case VALUE_DISPLAY.path_array: 
-						var paths = animator.getValue();
-						if(is_array(paths)) {
-							for( var i = 0, n = array_length(paths); i < n; i++ ) {
-								if(path_get(paths[i]) != -1) continue;
-								value_validation = VALIDATION.error;	
-								str = "File not exist: " + string(paths[i]);
-							} 
-						} else {
-							value_validation = VALIDATION.error;	
-							str = "File not exist: " + string(paths);
-						}
-						break;
-				}
-				break;
-		}
-		
-		node.onValidate();
-		
-		if(_val == value_validation) return self;
-		
-		#region notification
-			if(value_validation == VALIDATION.error && error_notification == noone) {
-				error_notification = noti_error(str);
-				error_notification.onClick = function() { PANEL_GRAPH.focusNode(node); };
-			}
-				
-			if(value_validation == VALIDATION.pass && error_notification != noone) {
-				noti_remove(error_notification);
-				error_notification = noone;
-			}
-		#endregion
-		
+	static uncache = function() { #region
+		use_cache = false;
 		return self;
 	} #endregion
+	
+	static resetCache = function() { cache_value[0] = false; }
+	
+	/////============== GET =============
 	
 	static valueProcess = function(value, nodeFrom, applyUnit = true, arrIndex = 0) { #region
 		var typeFrom = nodeFrom.type;
@@ -1083,8 +1068,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		return value;
 	} #endregion
-	
-	static resetCache = function() { cache_value[0] = false; }
 	
 	static getStaticValue = function() { INLINE return ds_list_empty(animator.values)? 0 : animator.values[| 0].value; } 
 	
@@ -1297,69 +1280,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return animator.getValue(_time);
 	} #endregion
 	
-	static setAnim = function(anim, record = false) { #region
-		if(is_anim == anim) return;
-		if(record) {
-			recordAction(ACTION_TYPE.custom, function(data) {
-				setAnim(data.is_anim);
-				data.is_anim = !data.is_anim;
-			}, { anim: is_anim });
-		}
-		is_anim = anim;
-		
-		if(is_anim) {
-			if(ds_list_empty(animator.values))
-				ds_list_add(animator.values, new valueKey(CURRENT_FRAME, animator.getValue(), animator));
-			animator.values[| 0].time = CURRENT_FRAME;
-			animator.updateKeyMap();
-			
-			for( var i = 0, n = array_length(animators); i < n; i++ ) {
-				if(ds_list_empty(animators[i].values))
-					ds_list_add(animators[i].values, new valueKey(CURRENT_FRAME, animators[i].getValue(), animators[i]));
-				animators[i].values[| 0].time = CURRENT_FRAME;
-				animators[i].updateKeyMap();
-			}
-		} else {
-			var _val = animator.getValue();
-			ds_list_clear(animator.values);
-			animator.values[| 0] = new valueKey(0, _val, animator);
-			animator.updateKeyMap();
-			
-			for( var i = 0, n = array_length(animators); i < n; i++ ) {
-				var _val = animators[i].getValue();
-				ds_list_clear(animators[i].values);
-				animators[i].values[| 0] = new valueKey(0, _val, animators[i]);
-				animators[i].updateKeyMap();
-			}
-		}
-		
-		if(type == VALUE_TYPE.gradient && struct_has(attributes, "map_index")) 
-			node.inputs[| attributes.map_index + 1].setAnim(anim);
-		
-		node.refreshTimeline();
-	} #endregion
-		
 	static isTimelineVisible = function() { INLINE return is_anim && value_from == noone; }
-	
-	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
-		INLINE
-		
-		if(value_from_loop)     return true;
-		if(value_from != noone) return false;
-		
-		if(expUse) {
-			if(!is_struct(expTree)) return false;
-			var res = expTree.isDynamic();
-			
-			switch(res) {
-				case EXPRESS_TREE_ANIM.none :		return false;
-				case EXPRESS_TREE_ANIM.base_value : force_requeue = true; return is_anim;
-				case EXPRESS_TREE_ANIM.animated :	force_requeue = true; return true;
-			}
-		}
-		
-		return is_anim;
-	} #endregion
 	
 	show_val = [];
 	static showValue = function() { #region ////showValue
@@ -1379,6 +1300,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			val = ds_list_empty(animator.values)? 0 : animator.processType(animator.values[| 0].value);
 		
 		return val;
+	} #endregion
+	
+	static getShowString = function() { #region
+		var val = showValue();
+		return string_real(val);
+	} #endregion
+	
+	static unitConvert = function(mode) { #region
+		var _v = animator.values;
+		
+		for( var i = 0; i < ds_list_size(_v); i++ )
+			_v[| i].value = unit.convertUnit(_v[| i].value, mode);
 	} #endregion
 	
 	static isDynamicArray = function() { #region
@@ -1441,6 +1374,66 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			ar = ar[0];
 		
 		return array_length(ar);
+	} #endregion
+	
+	/////============== SET =============
+	
+	static onValidate = function() { #region
+		if(!validateValue) return;
+		var _val = value_validation, str = "";
+		value_validation = VALIDATION.pass; 
+		
+		switch(type) {
+			case VALUE_TYPE.path:
+				switch(display_type) {
+					case VALUE_DISPLAY.path_load: 
+						var path = animator.getValue();
+						if(is_array(path)) path = path[0];
+						
+						if(!is_string(path) || path == "") {
+							str = $"Path invalid: {path}";
+							break;
+						}
+						
+						if(path_get(path) == -1) {
+							value_validation = VALIDATION.error;	
+							str = $"File not exist: {path}";
+						}
+						break;
+					case VALUE_DISPLAY.path_array: 
+						var paths = animator.getValue();
+						if(is_array(paths)) {
+							for( var i = 0, n = array_length(paths); i < n; i++ ) {
+								if(path_get(paths[i]) != -1) continue;
+								value_validation = VALIDATION.error;	
+								str = "File not exist: " + string(paths[i]);
+							} 
+						} else {
+							value_validation = VALIDATION.error;	
+							str = "File not exist: " + string(paths);
+						}
+						break;
+				}
+				break;
+		}
+		
+		node.onValidate();
+		
+		if(_val == value_validation) return self;
+		
+		#region notification
+			if(value_validation == VALIDATION.error && error_notification == noone) {
+				error_notification = noti_error(str);
+				error_notification.onClick = function() { PANEL_GRAPH.focusNode(node); };
+			}
+				
+			if(value_validation == VALIDATION.pass && error_notification != noone) {
+				noti_remove(error_notification);
+				error_notification = noone;
+			}
+		#endregion
+		
+		return self;
 	} #endregion
 	
 	static setValue = function(val = 0, record = true, time = CURRENT_FRAME, _update = true) { #region ////Set value
@@ -1556,6 +1549,51 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	} #endregion
 	
+	static setString = function(str) { #region
+		if(connect_type == JUNCTION_CONNECT.output) return;
+		var _o = animator.getValue();
+		
+		if(string_pos(",", str) > 0) {
+			string_replace(str, "[", "");
+			string_replace(str, "]", "");
+			
+			var ss  = str, pos, val = [], ind = 0;
+			
+			while(string_length(ss) > 0) {
+				pos = string_pos(",", ss);
+				
+				if(pos == 0) {
+					val[ind++] = toNumber(ss);
+					ss = "";
+				} else {
+					val[ind++] = toNumber(string_copy(ss, 1, pos - 1));
+					ss  = string_copy(ss, pos + 1, string_length(ss) - pos);
+				}
+			}
+			
+			var _t = typeArray(display_type);
+			if(_t) {
+				if(array_length(_o) == array_length(val) || _t == 2)
+					setValue(val);
+			} else if(array_length(val) > 0) {
+				setValue(val[0]);	
+			}
+		} else {
+			if(is_array(_o)) {
+				setValue(array_create(array_length(_o), toNumber(str)));
+			} else {
+				setValue(toNumber(str));
+			}
+		}
+	} #endregion
+	
+	/////=========== CONNECT ===========
+	
+	static rejectConnect = function() { #region
+		auto_connect = false;
+		return self;
+	} #endregion
+	
 	static isConnectable = function(_valueFrom, checkRecur = true, log = false) { #region
 		if(_valueFrom == -1 || _valueFrom == undefined || _valueFrom == noone) {
 			if(log) noti_warning($"LOAD: Cannot set node connection from {_valueFrom} to {name} of node {node.name}.",, node);
@@ -1605,22 +1643,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return 1;
 	} #endregion
 	
-	static isRendered = function() { #region
-		if(type == VALUE_TYPE.node)	return true;
-		
-		if(value_from == noone) return true;
-		
-		var controlNode = value_from.from? value_from.from : value_from.node;
-		if(!controlNode.active)			  return true;
-		if(!controlNode.isRenderActive()) return true;
-		
-		return controlNode.rendered;
-	} #endregion
-	
 	static triggerSetFrom = function() { node.valueUpdate(index); }
 	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region ////Set from
-		//print($"Connecting {_valueFrom.name} to {name}");
+		// print($"Connecting {_valueFrom.name} to {name}");
 		
 		if(is_dummy) {
 			var _targ    = dummy_get();
@@ -1699,49 +1725,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		PROJECT.modified = true;
 	} #endregion
 	
-	static getShowString = function() { #region
-		var val = showValue();
-		return string_real(val);
-	} #endregion
-	
-	static setString = function(str) { #region
-		if(connect_type == JUNCTION_CONNECT.output) return;
-		var _o = animator.getValue();
-		
-		if(string_pos(",", str) > 0) {
-			string_replace(str, "[", "");
-			string_replace(str, "]", "");
-			
-			var ss  = str, pos, val = [], ind = 0;
-			
-			while(string_length(ss) > 0) {
-				pos = string_pos(",", ss);
-				
-				if(pos == 0) {
-					val[ind++] = toNumber(ss);
-					ss = "";
-				} else {
-					val[ind++] = toNumber(string_copy(ss, 1, pos - 1));
-					ss  = string_copy(ss, pos + 1, string_length(ss) - pos);
-				}
-			}
-			
-			var _t = typeArray(display_type);
-			if(_t) {
-				if(array_length(_o) == array_length(val) || _t == 2)
-					setValue(val);
-			} else if(array_length(val) > 0) {
-				setValue(val[0]);	
-			}
-		} else {
-			if(is_array(_o)) {
-				setValue(array_create(array_length(_o), toNumber(str)));
-			} else {
-				setValue(toNumber(str));
-			}
-		}
-	} #endregion
-	
 	static checkConnection = function(_remove_list = true) { #region
 		if(value_from == noone) return;
 		if(value_from.node.active) return;
@@ -1759,11 +1742,47 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	} #endregion
 	
-	static unitConvert = function(mode) { #region
-		var _v = animator.values;
+	static hasJunctionFrom = function() { INLINE return value_from != noone || value_from_loop != noone; }
+	
+	static getJunctionTo = function() { #region
+		var _junc_to = [];
 		
-		for( var i = 0; i < ds_list_size(_v); i++ )
-			_v[| i].value = unit.convertUnit(_v[| i].value, mode);
+		for(var i = 0; i < array_length(value_to); i++) {
+			var _to = value_to[i];
+			if(!_to.node.active || _to.value_from == noone) continue; 
+			if(_to.value_from != self) continue;
+			
+			array_push(_junc_to, _to);
+		}
+		
+		return _junc_to;
+	} #endregion
+	
+	/////============= DRAW =============
+	
+	static setColor = function(col) { #region
+		color = col;
+		updateColor();
+		
+		if(value_from != noone)
+			value_from.setColor(col);
+		
+		return self;
+	} #endregion
+	
+	static updateColor = function(val = undefined) { #region
+		INLINE
+		
+		if(color == -1) {
+			draw_bg = isArray(val)? value_color_bg_array(draw_junction_index) : value_color_bg(draw_junction_index);
+			draw_fg = value_color(draw_junction_index);
+		} else {
+			draw_bg = isArray(val)? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(draw_junction_index);
+			draw_fg = color;
+		}
+		
+		color_display = type == VALUE_TYPE.action? #8fde5d : draw_fg;
+		
 	} #endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
@@ -1986,91 +2005,28 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return visible_in_list;
 	} #endregion
 	
-	static extractNode = function(_type = extract_node) { #region
-		if(_type == "") return noone;
-		
-		var ext = nodeBuild(_type, node.x, node.y);
-		ext.x -= ext.w + 32;
-		
-		for( var i = 0; i < ds_list_size(ext.outputs); i++ ) {
-			if(setFrom(ext.outputs[| i])) break;
-		}
-		
-		var animFrom = animator.values;
-		var len = 2;
-		
-		switch(_type) {
-			case "Node_Vector4": len++;
-			case "Node_Vector3": len++;
-			case "Node_Vector2": 
-				for( var j = 0; j < len; j++ ) {
-					var animTo = ext.inputs[| j].animator;
-					var animLs = animTo.values;
-					
-					ext.inputs[| j].setAnim(is_anim);
-					ds_list_clear(animLs);
-				}
-				
-				for( var i = 0; i < ds_list_size(animFrom); i++ ) {
-					for( var j = 0; j < len; j++ ) {
-						var animTo = ext.inputs[| j].animator;
-						var animLs = animTo.values;
-						var a = animFrom[| i].clone(animTo);
-						
-						a.value = a.value[j];
-						ds_list_add(animLs, a);
-					}
-				}
-				break;
-			case "Node_Path": 
-				break;
-			default:
-				var animTo = ext.inputs[| 0].animator;
-				var animLs = animTo.values;
-				
-				ext.inputs[| 0].setAnim(is_anim);
-				ds_list_clear(animLs);
-				
-				for( var i = 0; i < ds_list_size(animFrom); i++ )
-					ds_list_add(animLs, animFrom[| i].clone(animTo));
-				break;
-		}
-		
-		ext.doUpdate();
+	/////========== EXPRESSION ==========
+	
+	static setUseExpression = function(useExp) { #region
+		INLINE
+		if(expUse == useExp) return;
+		expUse = useExp;
+		node.triggerRender();
 	} #endregion
 	
-	static hasJunctionFrom = function() { INLINE return value_from != noone; }
-	
-	static getJunctionTo = function() { #region
-		var _junc_to = [];
-		
-		for(var i = 0; i < array_length(value_to); i++) {
-			var _to = value_to[i];
-			if(!_to.node.active || _to.value_from == noone) continue; 
-			if(_to.value_from != self) continue;
-			
-			array_push(_junc_to, _to);
-		}
-		
-		return _junc_to;
+	static setExpression = function(_expression) { #region
+		expUse = true;
+		expression = _expression;
+		expressionUpdate();
 	} #endregion
 	
-	static dragValue = function() { #region
-		if(drop_key == "None") return;
-		
-		DRAGGING = { 
-			type: drop_key, 
-			data: showValue(),
-		}
-		
-		if(type == VALUE_TYPE.path) {
-			DRAGGING.data = new FileObject(node.name, DRAGGING.data);
-			DRAGGING.data.getSpr();
-		}
-		
-		if(connect_type == JUNCTION_CONNECT.input)
-			DRAGGING.from = self;
+	static expressionUpdate = function() { #region
+		expTree = evaluateFunctionList(expression);
+		resetCache();
+		node.triggerRender();
 	} #endregion
+	
+	/////=========== SERIALIZE ===========
 	
 	static serialize = function(scale = false, preset = false) { #region
 		var _map = {};
@@ -2223,6 +2179,78 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	} #endregion
 	
+	/////============= MISC =============
+	
+	static extractNode = function(_type = extract_node) { #region
+		if(_type == "") return noone;
+		
+		var ext = nodeBuild(_type, node.x, node.y);
+		ext.x -= ext.w + 32;
+		
+		for( var i = 0; i < ds_list_size(ext.outputs); i++ ) {
+			if(setFrom(ext.outputs[| i])) break;
+		}
+		
+		var animFrom = animator.values;
+		var len = 2;
+		
+		switch(_type) {
+			case "Node_Vector4": len++;
+			case "Node_Vector3": len++;
+			case "Node_Vector2": 
+				for( var j = 0; j < len; j++ ) {
+					var animTo = ext.inputs[| j].animator;
+					var animLs = animTo.values;
+					
+					ext.inputs[| j].setAnim(is_anim);
+					ds_list_clear(animLs);
+				}
+				
+				for( var i = 0; i < ds_list_size(animFrom); i++ ) {
+					for( var j = 0; j < len; j++ ) {
+						var animTo = ext.inputs[| j].animator;
+						var animLs = animTo.values;
+						var a = animFrom[| i].clone(animTo);
+						
+						a.value = a.value[j];
+						ds_list_add(animLs, a);
+					}
+				}
+				break;
+			case "Node_Path": 
+				break;
+			default:
+				var animTo = ext.inputs[| 0].animator;
+				var animLs = animTo.values;
+				
+				ext.inputs[| 0].setAnim(is_anim);
+				ds_list_clear(animLs);
+				
+				for( var i = 0; i < ds_list_size(animFrom); i++ )
+					ds_list_add(animLs, animFrom[| i].clone(animTo));
+				break;
+		}
+		
+		ext.doUpdate();
+	} #endregion
+	
+	static dragValue = function() { #region
+		if(drop_key == "None") return;
+		
+		DRAGGING = { 
+			type: drop_key, 
+			data: showValue(),
+		}
+		
+		if(type == VALUE_TYPE.path) {
+			DRAGGING.data = new FileObject(node.name, DRAGGING.data);
+			DRAGGING.data.getSpr();
+		}
+		
+		if(connect_type == JUNCTION_CONNECT.input)
+			DRAGGING.from = self;
+	} #endregion
+	
 	static destroy = function() { #region
 		if(error_notification != noone) {
 			noti_remove(error_notification);
@@ -2230,13 +2258,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}	
 	} #endregion
 	
-	static cleanUp = function() { #region
-		
-	} #endregion
+	static cleanUp = function() {}
 		
 	static toString = function() { return (connect_type == JUNCTION_CONNECT.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"; }
 }
 
+/////========== FUNCTIONS ==========
+	
 function drawJuncConnection(from, to, params) { #region
 	#region parameters
 		var log  = params.log;
