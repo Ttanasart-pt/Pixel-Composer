@@ -110,6 +110,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 29] = nodeValue("Tile Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
@@ -118,7 +121,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Deform",     true], 15, 16, 17, 18, 19, 
 		["Transform", false], 3, 4, 
 		["Camera",    false], 13, 14, 5, 6, 
-		["Render",    false], 7, 9, 10, 8, 20, 
+		["Render",    false], 7, 9, 10, 8, 20, 29, 
+		["Tile",      false], 20, 29, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
@@ -246,6 +250,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _heig = _data[26];
 		var _radR = _data[27];
 		var _sizz = _data[28];
+		var _tilA = _data[29];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
@@ -273,12 +278,13 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f("rotation",    _rot);
 			shader_set_f("objectScale", _sca);
 			
-			shader_set_i("ortho",     _ort);
-			shader_set_f("fov",       _fov);
-			shader_set_f("orthoScale",_ortS);
-			shader_set_f("viewRange", _rng);
-			shader_set_f("depthInt",  _dpi);
-			shader_set_f("tileSize",  _tile);
+			shader_set_i("ortho",       _ort);
+			shader_set_f("fov",         _fov);
+			shader_set_f("orthoScale",  _ortS);
+			shader_set_f("viewRange",   _rng);
+			shader_set_f("depthInt",    _dpi);
+			shader_set_f("tileSize",    _tile);
+			shader_set_f("tileAmount",  _tilA);
 			
 			shader_set_color("ambient",   _amb);
 			shader_set_f("ambientIntns",  _ambI);

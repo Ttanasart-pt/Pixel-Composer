@@ -752,7 +752,7 @@ function __initNodes() {
 		addNodeObject(generator, "Flood Fill",			s_node_flood_fill,			"Node_Flood_Fill",			[1, Node_Flood_Fill],,		"Filled connected pixel given position and color.").setVersion(1133);
 		
 		ds_list_add(generator, "Ray March");
-		/**/addNodeObject(generator, "RM Primitive",		s_node_mk_rain,				"Node_RM_Primitive",		[1, Node_RM_Primitive]).setVersion(11720);
+		addNodeObject(generator, "RM Primitive",		s_node_rm_primitive,		"Node_RM_Primitive",		[1, Node_RM_Primitive]).setVersion(11720);
 		
 		ds_list_add(generator, "MK Effects");
 		addNodeObject(generator, "MK Rain",				s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain]).setVersion(11600);

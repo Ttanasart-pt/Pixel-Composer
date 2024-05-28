@@ -36,6 +36,7 @@ uniform float orthoScale;
 uniform vec2  viewRange;
 uniform float depthInt;
 uniform vec3  tileSize;
+uniform vec3  tileAmount;
 
 uniform vec4 ambient;
 uniform float ambientIntns;
@@ -313,8 +314,9 @@ uniform vec3 lightPosition;
 	vec3  round(vec3  v) { return vec3(round(v.x), round(v.y), round(v.z)); }
 	
 	vec3 tilePosition(vec3 p) {
-		vec3 q = p - tileSize * round(p / tileSize);
-		return q;
+		if(tileAmount == vec3(0.)) 
+			return p - tileSize * round(p / tileSize);
+		 return p - tileSize * clamp(round(p / tileSize), -tileAmount, tileAmount);
 	}
 	
 #endregion

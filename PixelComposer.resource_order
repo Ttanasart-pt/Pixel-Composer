@@ -1896,6 +1896,7 @@
     {"name":"s_node_rigidSim_render_output","order":10,"path":"sprites/s_node_rigidSim_render_output/s_node_rigidSim_render_output.yy",},
     {"name":"s_node_rigidSim_renderer","order":1,"path":"sprites/s_node_rigidSim_renderer/s_node_rigidSim_renderer.yy",},
     {"name":"s_node_rigidSim_wall","order":11,"path":"sprites/s_node_rigidSim_wall/s_node_rigidSim_wall.yy",},
+    {"name":"s_node_rm_primitive","order":51,"path":"sprites/s_node_rm_primitive/s_node_rm_primitive.yy",},
     {"name":"s_node_sampler","order":19,"path":"sprites/s_node_sampler/s_node_sampler.yy",},
     {"name":"s_node_scale_algo","order":7,"path":"sprites/s_node_scale_algo/s_node_scale_algo.yy",},
     {"name":"s_node_scale","order":6,"path":"sprites/s_node_scale/s_node_scale.yy",},

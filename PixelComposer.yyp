@@ -2470,6 +2470,7 @@
     {"id":{"name":"s_node_rigidSim_renderer","path":"sprites/s_node_rigidSim_renderer/s_node_rigidSim_renderer.yy",},},
     {"id":{"name":"s_node_rigidSim_wall","path":"sprites/s_node_rigidSim_wall/s_node_rigidSim_wall.yy",},},
     {"id":{"name":"s_node_rigidSim","path":"sprites/s_node_rigidSim/s_node_rigidSim.yy",},},
+    {"id":{"name":"s_node_rm_primitive","path":"sprites/s_node_rm_primitive/s_node_rm_primitive.yy",},},
     {"id":{"name":"s_node_sampler","path":"sprites/s_node_sampler/s_node_sampler.yy",},},
     {"id":{"name":"s_node_scale_algo","path":"sprites/s_node_scale_algo/s_node_scale_algo.yy",},},
     {"id":{"name":"s_node_scale","path":"sprites/s_node_scale/s_node_scale.yy",},},
