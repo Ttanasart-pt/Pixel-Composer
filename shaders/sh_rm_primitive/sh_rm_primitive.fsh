@@ -6,6 +6,7 @@ varying vec4 v_vColour;
 
 const int MAX_MARCHING_STEPS = 255;
 const float EPSILON = .0001;
+const float PI = 3.14159265358979323846;
 
 uniform int   shape;
 uniform vec3  size;
@@ -274,12 +275,12 @@ uniform vec3 lightPosition;
 	}
 	
 	vec3 wave(vec3 p) {
-	    p.x += sin(p.y * waveAmp.y + waveShift.x) * waveInt.x + 
-	    	   sin(p.z * waveAmp.z + waveShift.x) * waveInt.x;
-	    p.y += sin(p.x * waveAmp.x + waveShift.y) * waveInt.y + 
-	    	   sin(p.z * waveAmp.z + waveShift.y) * waveInt.y;
-	    p.z += sin(p.y * waveAmp.y + waveShift.z) * waveInt.z + 
-	    	   sin(p.x * waveAmp.x + waveShift.z) * waveInt.z;
+	    p.x += sin(p.y * waveAmp.y + waveShift.x * PI * 2.) * waveInt.x + 
+	    	   sin(p.z * waveAmp.z + waveShift.x * PI * 2.) * waveInt.x;
+	    p.y += sin(p.x * waveAmp.x + waveShift.y * PI * 2.) * waveInt.y + 
+	    	   sin(p.z * waveAmp.z + waveShift.y * PI * 2.) * waveInt.y;
+	    p.z += sin(p.y * waveAmp.y + waveShift.z * PI * 2.) * waveInt.z + 
+	    	   sin(p.x * waveAmp.x + waveShift.z * PI * 2.) * waveInt.z;
 		return p;
 	}
 	
@@ -331,11 +332,12 @@ float sceneSDF(vec3 p) {
     p /= objectScale;
     p -= position;
     
+    p = wave(p);
+    
     if(tileSize != vec3(0.))
     	p = tilePosition(p);
     
     p = twist(p);
-    p = wave(p);
     
     vec4 el = vec4(0.);
     

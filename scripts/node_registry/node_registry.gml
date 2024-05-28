@@ -556,7 +556,7 @@ function __initNodes() {
 		addNodeObject(filter, "Blend",				s_node_blend,			 "Node_Blend",			  [0, Node_create_Blend], global.node_blend_keys, "Blend 2 images using different blend modes.");
 		addNodeObject(filter, "RGBA Combine",		s_node_RGB_combine,		 "Node_Combine_RGB",	  [1, Node_Combine_RGB],, "Combine 4 image in to one. Each image use to control RGBA channel.").setVersion(1070);
 		addNodeObject(filter, "HSV Combine",		s_node_HSV_combine,		 "Node_Combine_HSV",	  [1, Node_Combine_HSV],, "Combine 4 image in to one. Each image use to control HSVA channel.").setVersion(1070);
-		addNodeObject(filter, "Override Channel",	s_node_ovreride_channel, "Node_Override_Channel", [1, Node_Override_Channel],, "Replace RGBA value of one surface with anothers.").setVersion(11640);
+		addNodeObject(filter, "Override Channel",	s_node_ovreride_channel, "Node_Override_Channel", [1, Node_Override_Channel],, "Replace RGBA value of one surface with another.").setVersion(11640);
 		
 		ds_list_add(filter, "Blurs");
 		addNodeObject(filter, "Blur",				s_node_blur,			"Node_Blur",			[1, Node_Blur], ["gaussian blur"], "Blur image smoothly.");
@@ -722,7 +722,7 @@ function __initNodes() {
 		ds_list_add(generator, "Patterns");
 		addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe],,				"Generate stripe pattern.");
 		addNodeObject(generator, "Zigzag",				s_node_zigzag,				"Node_Zigzag",				[1, Node_Zigzag],,				"Generate zigzag pattern.");
-		addNodeObject(generator, "Checker",				s_node_checker,				"Node_Checker",				[1, Node_Checker],,				"Genearte checkerboard pattern.");
+		addNodeObject(generator, "Checker",				s_node_checker,				"Node_Checker",				[1, Node_Checker],,				"Generate checkerboard pattern.");
 		addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				[1, Node_Grid], ["tile"],		"Generate grid pattern.");
 		addNodeObject(generator, "Triangular Grid",		s_node_grid_tri,			"Node_Grid_Tri",			[1, Node_Grid_Tri],,			"Generate triangular grid pattern.");
 		addNodeObject(generator, "Hexagonal Grid",		s_node_grid_hex,			"Node_Grid_Hex",			[1, Node_Grid_Hex],,			"Generate hexagonal grid pattern.");
