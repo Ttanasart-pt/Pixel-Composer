@@ -2481,6 +2481,7 @@
     {"id":{"name":"s_node_shadow_cast","path":"sprites/s_node_shadow_cast/s_node_shadow_cast.yy",},},
     {"id":{"name":"s_node_shadow_type","path":"sprites/s_node_shadow_type/s_node_shadow_type.yy",},},
     {"id":{"name":"s_node_shadow","path":"sprites/s_node_shadow/s_node_shadow.yy",},},
+    {"id":{"name":"s_node_shape_3d","path":"sprites/s_node_shape_3d/s_node_shape_3d.yy",},},
     {"id":{"name":"s_node_shape_blur","path":"sprites/s_node_shape_blur/s_node_shape_blur.yy",},},
     {"id":{"name":"s_node_shape_circle","path":"sprites/s_node_shape_circle/s_node_shape_circle.yy",},},
     {"id":{"name":"s_node_shape_leaf","path":"sprites/s_node_shape_leaf/s_node_shape_leaf.yy",},},

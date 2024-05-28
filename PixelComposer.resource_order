@@ -1907,6 +1907,7 @@
     {"name":"s_node_shadow_cast","order":50,"path":"sprites/s_node_shadow_cast/s_node_shadow_cast.yy",},
     {"name":"s_node_shadow_type","order":1,"path":"sprites/s_node_shadow_type/s_node_shadow_type.yy",},
     {"name":"s_node_shadow","order":49,"path":"sprites/s_node_shadow/s_node_shadow.yy",},
+    {"name":"s_node_shape_3d","order":26,"path":"sprites/s_node_shape_3d/s_node_shape_3d.yy",},
     {"name":"s_node_shape_blur","order":7,"path":"sprites/s_node_shape_blur/s_node_shape_blur.yy",},
     {"name":"s_node_shape_circle","order":24,"path":"sprites/s_node_shape_circle/s_node_shape_circle.yy",},
     {"name":"s_node_shape_leaf","order":25,"path":"sprites/s_node_shape_leaf/s_node_shape_leaf.yy",},

@@ -5,9 +5,41 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 const int MAX_MARCHING_STEPS = 255;
-const float MIN_DIST = 3.;
-const float MAX_DIST = 6.;
-const float EPSILON  = .0001;
+const float EPSILON = .0001;
+
+uniform int   shape;
+uniform vec3  size;
+uniform float radius;
+uniform float thickness;
+uniform float crop;
+uniform float angle;
+uniform float height;
+uniform vec2  radRange;
+uniform float sizeUni;
+uniform vec3  elongate;
+uniform float rounded;
+
+uniform vec3 waveAmp;
+uniform vec3 waveInt;
+uniform vec3 waveShift;
+
+uniform int   twistAxis;
+uniform float twistAmount;
+
+uniform vec3  position;
+uniform vec3  rotation;
+uniform float objectScale;
+
+uniform int   ortho;
+uniform float fov;
+uniform float orthoScale;
+uniform vec2  viewRange;
+uniform float depthInt;
+uniform vec3  tileSize;
+
+uniform vec4 ambient;
+uniform float ambientIntns;
+uniform vec3 lightPosition;
 
 #region ================ Transform ================
     mat3 rotateX(float dg) {
@@ -57,7 +89,7 @@ const float EPSILON  = .0001;
     }
 #endregion
 
-#region ================ Primitives ================
+#region =============== Primitives ================
     
     float dot2( in vec2 v ) { return dot(v,v); }
 	float dot2( in vec3 v ) { return dot(v,v); }
@@ -84,8 +116,8 @@ const float EPSILON  = .0001;
     
     //////////////////////////////////////////////////////////////////////////////////////////////
     
-    float sdSphere(vec3 p) {
-        return length(p) - 1.0;
+    float sdSphere(vec3 p, float radius) {
+        return length(p) - radius;
     }
     
     float sdEllipsoid( vec3 p, vec3 r ) {
@@ -99,6 +131,7 @@ const float EPSILON  = .0001;
 		return length(q)-t.y;
 	}
 	
+	// r is the sphere's radius, h is the plane's position
 	float sdCutSphere( vec3 p, float r, float h ) {
 		// sampling independent computations (only depend on shape)
 		float w = sqrt(r*r-h*h);
@@ -110,7 +143,10 @@ const float EPSILON  = .0001;
 		     (q.x<w) ? h - q.y     :
 		               length(q-vec2(w,h));
 	}
-
+	
+	// r = sphere's radius
+	// h = cutting's plane's position
+	// t = thickness
 	float sdCutHollowSphere( vec3 p, float r, float h, float t ) {
 		// sampling independent computations (only depend on shape)
 		float w = sqrt(r*r-h*h);
@@ -121,7 +157,9 @@ const float EPSILON  = .0001;
 		                      abs(length(q)-r) ) - t;
 	}
 
-    float sdCappedTorus( vec3 p, vec2 sc, float ra, float rb) {
+    float sdCappedTorus( vec3 p, float an, float ra, float rb) {
+    	vec2 sc = vec2(sin(an),cos(an));
+    	
 		p.x = abs(p.x);
 		float k = (sc.y*p.x>sc.x*p.y) ? dot(p.xy,sc) : length(p.xy);
 		return sqrt( dot(p,p) + ra*ra - 2.0*ra*k ) - rb;
@@ -144,7 +182,8 @@ const float EPSILON  = .0001;
 		return length( pa - ba*h ) - r;
 	}
 	
-	float sdCone( vec3 p, vec2 c, float h ) {
+	float sdCone( vec3 p, float an, float h ) {
+		vec2 c = vec2(sin(an),cos(an));
 		// c is the sin/cos of the angle, h is height
 		// Alternatively pass q instead of (c,h),
 		// which is the point at the base in 2D
@@ -169,7 +208,7 @@ const float EPSILON  = .0001;
 		return s*sqrt( min(dot2(ca),dot2(cb)) );
 	}
 	
-	float sdRoundCone( vec3 p, float r1, float r2, float h ) {
+	float sdRoundCone( vec3 p, float h, float r1, float r2 ) {
 		// sampling independent computations (only depend on shape)
 		float b = (r1-r2)/h;
 		float a = sqrt(1.0-b*b);
@@ -182,8 +221,8 @@ const float EPSILON  = .0001;
 		return dot(q, vec2(a,b) ) - r1;
 	}
 
-	float sdSolidAngle( vec3 p, vec2 c, float ra ) {
-		// c is the sin/cos of the angle
+	float sdSolidAngle( vec3 p, float an, float ra ) {
+		vec2 c = vec2(sin(an),cos(an));
 		vec2 q = vec2( length(p.xz), p.y );
 		float l = length(q) - ra;
 		float m = length(q - c*clamp(dot(q,c),0.0,ra) );
@@ -226,16 +265,110 @@ const float EPSILON  = .0001;
 	}
 #endregion
 
+#region ================= Modify ==================
+	
+	vec4 opElongate( in vec3 p, in vec3 h ) {
+	    vec3 q = abs(p)-h;
+	    return vec4( max(q,0.0), min(max(q.x,max(q.y,q.z)),0.0) );
+	}
+	
+	vec3 wave(vec3 p) {
+	    p.x += sin(p.y * waveAmp.y + waveShift.x) * waveInt.x + 
+	    	   sin(p.z * waveAmp.z + waveShift.x) * waveInt.x;
+	    p.y += sin(p.x * waveAmp.x + waveShift.y) * waveInt.y + 
+	    	   sin(p.z * waveAmp.z + waveShift.y) * waveInt.y;
+	    p.z += sin(p.y * waveAmp.y + waveShift.z) * waveInt.z + 
+	    	   sin(p.x * waveAmp.x + waveShift.z) * waveInt.z;
+		return p;
+	}
+	
+	vec3 twist(vec3 p) {
+	    
+	    float c = cos(twistAmount * p[twistAxis]);
+	    float s = sin(twistAmount * p[twistAxis]);
+	    mat2  m = mat2(c, -s, s, c);
+	    
+	    if(twistAxis == 0) {
+	    	vec2 q = m * p.yz;
+	    	return vec3(p.x, q);
+	    	
+	    } else if(twistAxis == 1) {
+	    	vec2 q = m * p.xz;
+	    	return vec3(q.x, p.y, q.y);
+	    	
+	    } else if(twistAxis == 2) {
+	    	vec2 q = m * p.xy;
+	    	return vec3(q, p.z);
+	    	
+	    } 
+	    
+	    return p;
+	}
+	
+#endregion
+
+#region ================ View Mod =================
+	
+	float round(float v) { return fract(v) >= 0.5? ceil(v) : floor(v); }
+	vec3  round(vec3  v) { return vec3(round(v.x), round(v.y), round(v.z)); }
+	
+	vec3 tilePosition(vec3 p) {
+		vec3 q = p - tileSize * round(p / tileSize);
+		return q;
+	}
+	
+#endregion
+
 float sceneSDF(vec3 p) {
     float d;
-    mat3 rx = rotateX(45.);
-    mat3 ry = rotateY(45.);
+    mat3 rx = rotateX(rotation.x);
+    mat3 ry = rotateY(rotation.y);
+    mat3 rz = rotateZ(rotation.z);
     
-    p = inverse(rx * ry) * p;
+    p = inverse(rx * ry * rz) * p;
+    p /= objectScale;
+    p -= position;
     
-    // d = sdSphere(p);
-    // d = sdBox(p, vec3(.5));
-    d = sdBoxFrame(p, vec3(.5), 0.1);
+    if(tileSize != vec3(0.))
+    	p = tilePosition(p);
+    
+    p = twist(p);
+    p = wave(p);
+    
+    vec4 el = vec4(0.);
+    
+    if(elongate != vec3(0.)) {
+	    el = opElongate(p, elongate);
+	    p  = el.xyz;
+    }
+    
+         if(shape == 0) d = sdPlane(p, vec3(0., 0., 1.), 0.);
+    else if(shape == 1) d = sdBox(p, size / 2.);
+    else if(shape == 2) d = sdBoxFrame(p, size / 2., thickness);
+    //3
+    else if(shape == 4) d = sdSphere(p, radius);
+    else if(shape == 5) d = sdEllipsoid(p, size / 2.);
+    else if(shape == 6) d = sdCutSphere(p, radius, crop);
+    else if(shape == 7) d = sdCutHollowSphere(p, radius, crop, thickness);
+    else if(shape == 8) d = sdTorus(p, vec2(radius, thickness));
+    else if(shape == 9) d = sdCappedTorus(p, angle, radius, thickness);
+    //10
+    else if(shape == 11) d = sdCappedCylinder(p, height, radius);
+    else if(shape == 12) d = sdCapsule(p, vec3(-height, 0., 0.), vec3(height, 0., 0.), radius);
+    else if(shape == 13) d = sdCone(p, angle, height);
+    else if(shape == 14) d = sdCappedCone(p, height, radRange.x, radRange.y);
+    else if(shape == 15) d = sdRoundCone(p, height, radRange.x, radRange.y);
+    else if(shape == 16) d = sdSolidAngle(p, angle, radius);
+    //17
+    else if(shape == 18) d = sdOctahedron(p, sizeUni);
+    else if(shape == 19) d = sdPyramid(p, sizeUni);
+    
+    if(elongate != vec3(0.)) {
+    	d += el.w;
+    }
+    
+    d -= rounded;
+    d *= objectScale;
     
     return d;
 }
@@ -249,7 +382,7 @@ vec3 normal(vec3 p) {
 }
 
 float march(vec3 camera, vec3 direction) {
-    float depth = MIN_DIST;
+    float depth = viewRange.x;
     
     for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
         float dist = sceneSDF(camera + depth * direction);
@@ -257,34 +390,43 @@ float march(vec3 camera, vec3 direction) {
 			return depth;
         
         depth += dist;
-        if (depth >= MAX_DIST)
-            return MAX_DIST;
+        if (depth >= viewRange.y)
+            return viewRange.y;
     }
     
-    return MAX_DIST;
+    return viewRange.y;
 }
 
 void main() {
-    float z    = 1. / tan(radians(30.) / 2.);
-    vec3  dir  = normalize(vec3((v_vTexcoord - .5) * 2., -z));
-    vec3  eye  = vec3(0., 0., 5.);
+	vec3 eye, dir;
+	
+	if(ortho == 1) {
+		dir = vec3(0., 0., 1.);
+		eye = vec3((v_vTexcoord - .5) * 2. * orthoScale, viewRange.x);
+		
+	} else {
+	    float z = 1. / tan(radians(fov) / 2.);
+	    dir = normalize(vec3((v_vTexcoord - .5) * 2., -z));
+	    eye = vec3(0., 0., 5.);
+	}
+	
     float dist = march(eye, dir);
     
-    if(dist > MAX_DIST - EPSILON) {
+    if(dist > viewRange.y - EPSILON) {
         gl_FragColor = vec4(0., 0., 0., 1.);
         return;
     }
     
-    vec3 c = vec3(1.);
+    vec3 c = ambient.rgb;
     
-    float distNorm = 1. - (dist - MIN_DIST) / (MAX_DIST - MIN_DIST);
+    float distNorm = 1. - (dist - viewRange.x) / (viewRange.y - viewRange.x);
           distNorm = smoothstep(.0, .3, distNorm) + .2;
-    c *= vec3(distNorm);
+    c *= mix(vec3(1.), vec3(distNorm), depthInt);
     
     vec3 coll  = eye + dir * dist;
     vec3 norm  = normal(coll);
-    vec3 light = normalize(vec3(-0.5, -0.5, 1.));
-    float lamo = dot(norm, light) + 0.2;
+    vec3 light = normalize(lightPosition);
+    float lamo = dot(norm, light) + ambientIntns;
     
     c *= lamo;
     
