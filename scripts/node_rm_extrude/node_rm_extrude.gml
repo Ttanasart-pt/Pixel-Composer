@@ -1,32 +1,10 @@
-function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "RM Primitive";
+function Node_RM_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+	name = "RM Extrude";
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	shape_types = [ 
-		"Plane", "Box", "Box Frame",
-		-1, 
-		"Sphere", "Ellipse", "Cut Sphere", "Cut Hollow Sphere", "Torus", "Capped Torus",
-		-1,
-		"Cylinder", "Capsule", "Cone", "Capped Cone", "Round Cone", "3D Arc", 
-		-1, 
-		"Octahedron", "Pyramid", 
-		-1,
-		"Extrude"
-	];
-	shape_types_str = [];
-	
-	var _ind = 0;
-	for( var i = 0, n = array_length(shape_types); i < n; i++ ) {
-		if(shape_types[i] == -1) 
-			shape_types_str[i] = -1;
-		else 
-			shape_types_str[i] = new scrollItem(shape_types[i], s_node_shape_3d, _ind++, COLORS._main_icon_light);
-	}
-	
-	inputs[| 1] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, shape_types_str);
+	inputs[| 1] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -115,17 +93,15 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 29] = nodeValue("Tile Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 30] = nodeValue("Extrude Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
-		["Primitive", false], 1, 21, 22, 23, 24, 25, 26, 27, 28, 30, 
+		["Primitive", false], 1, 21, 22, 23, 24, 25, 26, 27, 28, 
 		["Modify",    false], 12, 11, 
 		["Deform",     true], 15, 16, 17, 18, 19, 
 		["Transform", false], 3, 4, 
 		["Camera",    false], 13, 14, 5, 6, 
-		["Render",    false], 7, 9, 10, 8, 
+		["Render",    false], 7, 9, 10, 8, 20, 29, 
 		["Tile",      false], 20, 29, 
 	];
 	
@@ -143,7 +119,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		inputs[| 26].setVisible(false);
 		inputs[| 27].setVisible(false);
 		inputs[| 28].setVisible(false);
-		inputs[| 30].setVisible(false);
 		
 		var _shape = shape_types[_shp];
 		switch(_shape) { // Size
@@ -172,7 +147,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			case "Torus" : 
 			case "Cut Hollow Sphere" : 
 			case "Capped Torus" : 
-			case "Extrude" : 
 				inputs[| 23].setVisible(true);
 				break;
 		}
@@ -212,14 +186,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		switch(_shape) { // Uniform Size
 			case "Octahedron" : 
 			case "Pyramid" : 
-			case "Extrude" : 
 				inputs[| 28].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Extrude
-			case "Extrude" : 
-				inputs[| 30].setVisible(true);
 				break;
 		}
 		
@@ -264,11 +231,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _radR = _data[27];
 		var _sizz = _data[28];
 		var _tilA = _data[29];
-		var _extr = _data[30];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		
-		// gpu_set_texfilter(true);
 		
 		surface_set_shader(_outSurf, sh_rm_primitive);
 			shader_set_i("shape",       _shp);
@@ -282,7 +246,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f("sizeUni",     _sizz);
 			shader_set_f("elongate",    _elon);
 			shader_set_f("rounded",     _rond);
-			shader_set_surface("extrudeSurface", _extr);
 			
 			shader_set_f("waveAmp",     _wavA);
 			shader_set_f("waveInt",     _wavI);
@@ -309,8 +272,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
-		
-		gpu_set_texfilter(false);
 		
 		return _outSurf; 
 	}

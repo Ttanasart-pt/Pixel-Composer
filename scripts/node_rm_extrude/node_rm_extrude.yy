@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_rm_extrude",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_rm_extrude",
+  "parent":{
+    "name":"ray march",
+    "path":"folders/nodes/data/generator/ray march.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

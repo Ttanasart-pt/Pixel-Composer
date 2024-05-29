@@ -4,7 +4,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-const int MAX_MARCHING_STEPS = 255;
+const int MAX_MARCHING_STEPS = 512;
 const float EPSILON = .0001;
 const float PI = 3.14159265358979323846;
 
@@ -19,6 +19,7 @@ uniform vec2  radRange;
 uniform float sizeUni;
 uniform vec3  elongate;
 uniform float rounded;
+uniform sampler2D extrudeSurface;
 
 uniform vec3 waveAmp;
 uniform vec3 waveInt;
@@ -265,6 +266,16 @@ uniform vec3 lightPosition;
 		
 		return sqrt( (d2+q.z*q.z)/m2 ) * sign(max(q.z,-p.y));
 	}
+	
+	float sdExtrude( vec3 p, float s, float h ) {
+		vec2 pos = p.xz / s / 2. + 0.5;
+		vec4 sm  = texture2D(extrudeSurface, pos);
+		float am = (sm.r + sm.g + sm.b) / 3. * sm.a;
+		
+		float d = 0.1 - am;
+	    vec2  w = vec2( d, abs(p.y) - h * am );
+	    return min(max(w.x, w.y), 0.0) + length(max(w, 0.0));
+	}
 #endregion
 
 #region ================= Modify ==================
@@ -366,6 +377,8 @@ float sceneSDF(vec3 p) {
     //17
     else if(shape == 18) d = sdOctahedron(p, sizeUni);
     else if(shape == 19) d = sdPyramid(p, sizeUni);
+    //20
+    else if(shape == 21) d = sdExtrude(p, sizeUni, thickness);
     
     if(elongate != vec3(0.)) {
     	d += el.w;
