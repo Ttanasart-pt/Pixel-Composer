@@ -21,11 +21,14 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	__init_mask_modifier(5); // inputs 7, 8, 
 	
+	inputs[| 9] = nodeValue("Include", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b11)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: [ "Inner", "Side" ] });
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1, 
 		["Surfaces",  true], 0, 5, 6, 7, 8, 
-		["Effect",	 false], 4, 2, 3, 
+		["Effect",	 false], 4, 9, 2, 3, 
 	]
 	
 	attribute_surface_depth();
@@ -41,6 +44,7 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _tol = _data[2];
 		var _itr = _data[3];
 		var _str = _data[4];
+		var _inn = _data[9];
 		
 		var _sw  = surface_get_width_safe(surf);
 		var _sh  = surface_get_height_safe(surf);
@@ -57,6 +61,8 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				shader_set_f("dimension", _sw, _sh);
 				shader_set_f("tolerance", _tol);
 				shader_set_i("strict",    _str);
+				shader_set_i("inner",     bool(_inn & 0b01));
+				shader_set_i("side",      bool(_inn & 0b10));
 			
 				draw_surface_safe(temp_surface[!_bg]);
 			surface_reset_shader();

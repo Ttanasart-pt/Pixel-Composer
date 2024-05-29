@@ -77,7 +77,7 @@ event_inherited();
 			}
 			
 			if(preset_selecting == i) 
-				var _palRes = drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs, selector.current_color);
+				var _palRes = drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs, { color : selector.current_color, mx : _m[0], my : _m[1] });
 			else
 				drawPalette(pal.palette, ui(16), yy + ui(28), ww, ui(20));
 			

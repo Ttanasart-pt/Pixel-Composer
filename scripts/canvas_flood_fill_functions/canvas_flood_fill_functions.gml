@@ -2,13 +2,15 @@ function _ff_getPixel(_x, _y) { return buffer_read_at(_ff_buff, (_y * _ff_w + _x
 	
 function canvas_ff_fillable(colorBase, colorFill, _x, _y, _thres) { #region
 	var c = _ff_getPixel(_x, _y);
-	var d = color_diff(colorBase, c, true, true);
+	var d = color_diff_alpha(colorBase, c);
+	 //print($"Checking [{_x}, {_y}]: {colorBase} - {c} : {_color_get_alpha(colorBase)} - {_color_get_alpha(c)} | {d}");
 	return d <= _thres && c != colorFill;
 } #endregion
 
 function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) { #region
+
 	var colorFill = CURRENT_COLOR;
-	var colorBase = surface_getpixel_ext(_surf, _x, _y);
+	var colorBase = int64(surface_getpixel_ext(_surf, _x, _y));
 	
 	if(colorFill == colorBase) return; //Clicking on the same color as the fill color
 	
@@ -24,13 +26,15 @@ function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) { #r
 	var spanAbove, spanBelow;
 	var thr = _thres * _thres;
 
-	var queue = ds_queue_create();
-	ds_queue_enqueue(queue, [_x, _y]);
+	var qx = ds_queue_create();
+	var qy = ds_queue_create();
+	ds_queue_enqueue(qx, _x);
+	ds_queue_enqueue(qy, _y);
 	
-	while(!ds_queue_empty(queue)) {
-		var pos = ds_queue_dequeue(queue);
-		x1 = pos[0];
-		y1 = pos[1];
+	while(!ds_queue_empty(qx)) {
+		
+		x1 = ds_queue_dequeue(qx);
+		y1 = ds_queue_dequeue(qy);
 		
 		if(_ff_getPixel(x1, y1) == colorFill) continue; //Color in queue is already filled
 		
@@ -47,32 +51,47 @@ function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) { #r
 			buffer_write(_ff_buff, buffer_u32, _c);
 			
 			if(y1 > 0) {
-				if(_corner && x1 > 0 && canvas_ff_fillable(colorBase, colorFill, x1 - 1, y1 - 1, thr))		//Check top left pixel
-					ds_queue_enqueue(queue, [x1 - 1, y1 - 1]);
+				if(_corner && x1 > 0 && canvas_ff_fillable(colorBase, colorFill, x1 - 1, y1 - 1, thr)) {	//Check top left pixel
+					ds_queue_enqueue(qx, x1 - 1);
+					ds_queue_enqueue(qy, y1 - 1);
+				}
 					
-				if(canvas_ff_fillable(colorBase, colorFill, x1, y1 - 1, thr))								//Check top pixel
-					ds_queue_enqueue(queue, [x1, y1 - 1]);
+				if(canvas_ff_fillable(colorBase, colorFill, x1, y1 - 1, thr)) {								//Check top pixel
+					ds_queue_enqueue(qx, x1);
+					ds_queue_enqueue(qy, y1 - 1);
+				}
 			}
 				
 			if(y1 < surface_h - 1) {
-				if(_corner && x1 > 0 && canvas_ff_fillable(colorBase, colorFill, x1 - 1, y1 + 1, thr))		//Check bottom left pixel
-					ds_queue_enqueue(queue, [x1 - 1, y1 + 1]);
+				if(_corner && x1 > 0 && canvas_ff_fillable(colorBase, colorFill, x1 - 1, y1 + 1, thr)) {	//Check bottom left pixel
+					ds_queue_enqueue(qx, x1 - 1);
+					ds_queue_enqueue(qy, y1 + 1);
+				}
 					
-				if(canvas_ff_fillable(colorBase, colorFill, x1, y1 + 1, thr))								//Check bottom pixel
-					ds_queue_enqueue(queue, [x1, y1 + 1]);
+				if(canvas_ff_fillable(colorBase, colorFill, x1, y1 + 1, thr)) {								//Check bottom pixel
+					ds_queue_enqueue(qx, x1);
+					ds_queue_enqueue(qy, y1 + 1);
+				}
 			}
 				
 			if(_corner && x1 < surface_w - 1) {
-				if(y1 > 0 && canvas_ff_fillable(colorBase, colorFill, x1 + 1, y1 - 1, thr))				//Check top right pixel
-					ds_queue_enqueue(queue, [x1 + 1, y1 - 1]);
+				if(y1 > 0 && canvas_ff_fillable(colorBase, colorFill, x1 + 1, y1 - 1, thr)) {				//Check top right pixel
+					ds_queue_enqueue(qx, x1 + 1);
+					ds_queue_enqueue(qy, y1 - 1);
+				}
 					
-				if(y1 < surface_h - 1 && canvas_ff_fillable(colorBase, colorFill, x1 + 1, y1 + 1, thr))	//Check bottom right pixel
-					ds_queue_enqueue(queue, [x1 + 1, y1 + 1]);
+				if(y1 < surface_h - 1 && canvas_ff_fillable(colorBase, colorFill, x1 + 1, y1 + 1, thr)) {	//Check bottom right pixel
+					ds_queue_enqueue(qx, x1 + 1);
+					ds_queue_enqueue(qy, y1 + 1);
+				}
 			}
 				
 			x1++;
 		}
 	}
+	
+	ds_queue_destroy(qx);
+	ds_queue_destroy(qy);
 		
 	draw_set_alpha(1);
 	buffer_delete(_ff_buff);
@@ -100,7 +119,7 @@ function canvas_flood_fill_all(_surf, _x, _y, _thres) { #region
 	for (var j = 0; j < _ff_w; j++) {
 		
 		var c = buffer_read(_ff_buff, buffer_u32);
-		var d = color_diff(colorBase, c, true, true);
+		var d = color_diff_alpha(colorBase, c);
 		
 		if(d > _thres) continue;
 		draw_point(j, i);

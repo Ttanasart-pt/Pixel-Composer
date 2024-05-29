@@ -153,19 +153,32 @@
 } #endregion
 #endregion
 
-function color_diff(c1, c2, fast = false, alpha = false) { #region
-	var _c1_r = _color_get_red(c1);
-	var _c1_g = _color_get_green(c1);
-	var _c1_b = _color_get_blue(c1);
-	var _c1_a = _color_get_alpha(c1);
+function color_diff_fast(c1, c2) { #region
+	INLINE
 	
-	var _c2_r = _color_get_red(c2);
-	var _c2_g = _color_get_green(c2);
-	var _c2_b = _color_get_blue(c2);
-	var _c2_a = _color_get_alpha(c2);
+	return (abs(_color_get_red(c1)   - _color_get_red(c2)) + 
+	        abs(_color_get_green(c1) - _color_get_green(c2)) + 
+	        abs(_color_get_blue(c1)  - _color_get_blue(c2))
+	        ) / 3;
+} #endregion
+
+function color_diff_alpha(c1, c2) { #region
+	INLINE
 	
-	if(fast) return (abs(_c1_r - _c2_r) + abs(_c1_g - _c2_g) + abs(_c1_b - _c2_b)) / 3;
-	return sqrt(sqr(_c1_r - _c2_r) + sqr(_c1_g - _c2_g) + sqr(_c1_b - _c2_b));
+	return sqrt(sqr(_color_get_red(c1)   - _color_get_red(c2)) + 
+	            sqr(_color_get_green(c1) - _color_get_green(c2)) + 
+	            sqr(_color_get_blue(c1)  - _color_get_blue(c2)) + 
+	            sqr(_color_get_alpha(c1) - _color_get_alpha(c2))
+	            );
+} #endregion
+
+function color_diff(c1, c2) { #region
+	INLINE 
+	
+	return sqrt(sqr(_color_get_red(c1)   - _color_get_red(c2)) + 
+	            sqr(_color_get_green(c1) - _color_get_green(c2)) + 
+	            sqr(_color_get_blue(c1)  - _color_get_blue(c2))
+	            );
 } #endregion
 
 #region merge

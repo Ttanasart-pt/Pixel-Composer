@@ -190,7 +190,7 @@ event_inherited();
 			}
 			
 			if(palette_selecting == i)
-				var _palRes = drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs);
+				var _palRes = drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs, { mx : _m[0], my : _m[1] });
 			else
 				drawPalette(pal.palette, ui(16), yy + ui(28), ww, ui(20));
 			
