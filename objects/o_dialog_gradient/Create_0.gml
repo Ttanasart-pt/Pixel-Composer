@@ -190,27 +190,18 @@ event_inherited();
 			}
 			
 			if(palette_selecting == i)
-				drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs);
+				var _palRes = drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs);
 			else
 				drawPalette(pal.palette, ui(16), yy + ui(28), ww, ui(20));
 			
 			if(!click_block && mouse_click(mb_left, interactable && sFOCUS)) {
-				if(palette_selecting == i && _hover && point_in_rectangle(_m[0], _m[1], ui(16), yy + ui(28), ui(16) + ww, yy + ui(28) + _height)) {
-					var m_ax = _m[0] - ui(16);
-					var m_ay = _m[1] - (yy + ui(28));
+				if(palette_selecting == i && _hover && _palRes.hoverIndex > noone) {
+					var c = _palRes.hoverColor;
+					if(is_real(c)) c = cola(c);
 					
-					var m_gx = floor(m_ax / _gs);
-					var m_gy = floor(m_ay / _gs);
-						
-					var _index = m_gy * col + m_gx;
-					if(_index < pre_amo && _index >= 0) {
-						var c = pal.palette[_index];
-						
-						if(is_real(c)) c = cola(c);
-						
-						selector.setColor(c);
-						selector.setHSV();
-					}
+					selector.setColor(c);
+					selector.setHSV();
+					
 				} else if(isHover) {
 					palette_selecting = i;
 					click_block = true;

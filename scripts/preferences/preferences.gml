@@ -104,6 +104,8 @@
 		PREFERENCES.collection_preview_speed		= 60;
 		PREFERENCES.collection_scale				= 1;
 		
+		PREFERENCES.palette_stretch				    = false;
+		
 		PREFERENCES.pan_mouse_key					= mb_middle;
 	#endregion
 	

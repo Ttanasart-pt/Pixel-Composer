@@ -22,6 +22,11 @@ event_inherited();
 		instance_destroy();
 	});
 	
+	function setName(_name) {
+		self.name = _name;
+		return self;
+	}
+	
 	WIDGET_CURRENT  = tb_name;
 	KEYBOARD_STRING = "";
 #endregion

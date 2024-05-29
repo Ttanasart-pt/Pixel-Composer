@@ -79,8 +79,10 @@ function loadPalette(path) { #region
 	return pal;
 } #endregion
 	
-globalvar PALETTES;
+globalvar PALETTES, PALETTE_LOSPEC;
+
 PALETTES = [];
+PALETTE_LOSPEC = 0;
 
 function __initPalette() {
 	PALETTES = [];

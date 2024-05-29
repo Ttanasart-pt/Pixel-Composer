@@ -1,4 +1,7 @@
 /// @description init
+if(init_pressing && mouse_release(mb_left))
+	init_pressing = false;
+
 if !ready  exit;
 if !active exit;
 

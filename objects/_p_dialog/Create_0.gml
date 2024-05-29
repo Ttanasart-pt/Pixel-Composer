@@ -30,6 +30,8 @@
 	destroy_on_escape    = true;
 	destroy_on_click_out = false;
 	anchor = ANCHOR.none;
+	
+	init_pressing = mouse_click(mb_left);
 #endregion
 
 #region windows
@@ -194,7 +196,7 @@
 		if(!active)               return;
 		if(!DIALOG_CLICK)         return;
 		
-		if(mouse_press(mb_any)) {
+		if(!init_pressing && mouse_press(mb_any)) {
 			if(!isTop())              return;
 			
 			for( var i = 0, n = array_length(children); i < n; i++ )

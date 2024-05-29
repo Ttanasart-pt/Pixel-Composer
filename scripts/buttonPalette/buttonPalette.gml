@@ -225,17 +225,26 @@ function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { #region
 	}
 } #endregion
 
-function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
+function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) { #region
+	var c_color  = struct_try_get(params, "color",   -1);
+	var _stretch = struct_try_get(params, "stretch", false);
+	var _mx      = struct_try_get(params, "mx",      -1);
+	var _my      = struct_try_get(params, "my",      -1);
+	
 	var amo = array_length(_pal);
 	var col = floor(_w / _gs);
 	var row = ceil(amo / col);
 	var cx  = -1, cy = -1;
 	var _h  = row * _gs;
 	
+	var _gw  = _stretch? _w / (min(col, amo)) : _gs;
+	var _hov = noone;
+	var _hcc = noone;
+	
 	for(var i = 0; i < amo; i++) {
 		var _cc = safe_mod(i, col);
 		var _rr = floor(i / col);
-		var _x0 = _x + _cc * _gs;
+		var _x0 = _x + _cc * _gw;
 		var _y0 = _y + _rr * _gs;
 		var _i  = 0;
 		
@@ -258,7 +267,11 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
 			}
 		}
 		
-		draw_sprite_stretched_ext(THEME.palette_mask, _i, _x0, _y0 + 1, _gs, _gs, _pal[i], 1);
+		draw_sprite_stretched_ext(THEME.palette_mask, _i, _x0, _y0 + 1, _cc == col - 1? _gw : ceil(_gw), _gs, _pal[i], 1);
+		if(point_in_rectangle(_mx, _my, _x0, _y0, _x0 + _gw, _y0 + _gs)) {
+			_hov = i;
+			_hcc = _pal[i];
+		}
 		
 		var _same = (c_color & 0x00FFFFFF) == (_pal[i] & 0x00FFFFFF);
 		if(c_color >= 0 && _same) {
@@ -269,8 +282,12 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) { #region
 	
 	if(cx != -1) {
 		var _pd = ui(5);
-		draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - _pd, cy + 1 - _pd, _gs + _pd * 2, _gs + _pd * 2);
+		draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - _pd, cy + 1 - _pd, _gw + _pd * 2, _gs + _pd * 2);
 	}
 	
-	return _h;
+	return {
+		height: _h,
+		hoverIndex: _hov,
+		hoverColor: _hcc,
+	};
 } #endregion

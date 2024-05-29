@@ -76,22 +76,16 @@ event_inherited();
 				draw_circle_prec(ui(16) + ui(4), yy + ui(16), ui(4), false);
 			}
 			
-			if(preset_selecting == i) drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs, selector.current_color);
-			else                      drawPalette(pal.palette, ui(16), yy + ui(28), ww, ui(20));
+			if(preset_selecting == i) 
+				var _palRes = drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs, selector.current_color);
+			else
+				drawPalette(pal.palette, ui(16), yy + ui(28), ww, ui(20));
 			
 			if(!click_block && mouse_click(mb_left, interactable && sFOCUS)) {
-				if(preset_selecting == i && _hover && point_in_rectangle(_m[0], _m[1], ui(16), yy + ui(28), ui(16) + ww, yy + ui(28) + _height)) {
-					var m_ax = _m[0] - ui(16);
-					var m_ay = _m[1] - (yy + ui(28));
+				if(preset_selecting == i && _hover && _palRes.hoverIndex > noone) {
+					selector.setColor(_palRes.hoverColor);
+					selector.setHSV();
 					
-					var m_gx = floor(m_ax / _gs);
-					var m_gy = floor(m_ay / _gs);
-						
-					var _index = m_gy * col + m_gx;
-					if(_index < pre_amo && _index >= 0) {
-						selector.setColor(pal.palette[_index]);
-						selector.setHSV();
-					}
 				} else if(isHover) {
 					preset_selecting = i;
 					click_block = true;

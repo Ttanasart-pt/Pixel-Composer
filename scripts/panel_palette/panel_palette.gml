@@ -13,6 +13,31 @@ function Panel_Palette() : PanelContent() constructor {
 	
 	__save_palette_data = [];
 	
+	menu_refresh = menuItem(__txt("Refresh"), function() { __initPalette(); });
+	menu_add     = menuItem(__txt("Add"), function(_dat) {
+		return submenuCall(_dat, [
+			menuItem(__txt("File..."), function() {
+				var _p = get_open_filename("hex|*.hex|gpl|*.gpl|Image|.png", "palette");
+				if(!file_exists_empty(_p)) return;
+				
+				file_copy(_p, $"{DIRECTORY}Palettes/{filename_name(_p)}");
+				__initPalette();
+			}),
+			menuItem(__txt("Lospec..."), function() {
+				fileNameCall("", function(txt) {
+					if(txt == "") return;
+					txt = string_lower(txt);
+					txt = string_replace_all(txt, " ", "-");
+					
+					var _url = $"https://Lospec.com/palette-list{txt}.json";
+					PALETTE_LOSPEC = http_get(_url);
+				}).setName("Palette")
+			}),
+		]);
+	}).setIsShelf();
+	
+	menu_stretch = menuItem(__txt("Stretch"), function() { PREFERENCES.palette_stretch = !PREFERENCES.palette_stretch; }, noone, noone, function() /*=>*/ {return PREFERENCES.palette_stretch});
+	  
 	function onResize() {
 		sp_palettes.resize(w - ui(padding + padding), h - ui(padding + padding));
 	}
@@ -22,9 +47,9 @@ function Panel_Palette() : PanelContent() constructor {
 		var ww  = sp_palettes.surface_w;
 		var hh  = ui(28);
 		var _gs = grid_size;
-		var _height;
 		var yy  = _y;
 		var cur = CURRENT_COLOR;
+		var _height;
 		
 		if(pHOVER && key_mod_press(CTRL)) {
 			if(mouse_wheel_down()) grid_size_to = clamp(grid_size_to - ui(4), ui(8), ui(32));
@@ -57,15 +82,34 @@ function Panel_Palette() : PanelContent() constructor {
 			hh += _add_h + ui(8);
 		}
 		
+		if(PALETTE_LOSPEC) {
+			var _add_h = ui(28);
+			var _add_w = ui(64);
+			var _add_x = ww / 2 + sin(current_time / 400) * (ww - _add_w) / 2 - _add_w / 2;
+			
+			draw_sprite_stretched_ext(THEME.timeline_node, 0, 0, yy, ww, _add_h, COLORS._main_value_positive, .4);
+			draw_sprite_stretched_ext(THEME.timeline_node, 0, _add_x, yy, _add_w, _add_h, COLORS._main_value_positive, .3);
+			draw_sprite_stretched_ext(THEME.timeline_node, 1, 0, yy, ww, _add_h, COLORS._main_value_positive, .7);
+			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
+			draw_text_add(ww / 2, yy + _add_h / 2, __txt("Loading Lospec Palette..."));
+			
+			yy += _add_h + ui(8);
+			hh += _add_h + ui(8);
+		}
+		
 		if(mouse_release(mb_left)) drag_from_self = false;
+		
+		var right_clicked = false;
+		var pd    = lerp(ui(4), ui(10), (grid_size - ui(8)) / (ui(32) - ui(8)));
+		var param = { color: cur, stretch : PREFERENCES.palette_stretch, mx : _m[0], my : _m[1] };
 		
 		for(var i = 0; i < array_length(PALETTES); i++) {
 			var preset	= PALETTES[i];
 			var pre_amo = array_length(preset.palette);
-			var col     = floor((ww - ui(20)) / _gs);
+			var col     = floor((ww - pd * 2) / _gs);
 			var row     = ceil(pre_amo / col);
 			
-			_height = ui(34) + row * _gs;
+			_height = ui(21) + row * _gs + pd;
 			
 			var isHover = pHOVER && point_in_rectangle(_m[0], _m[1], 0, max(0, yy), ww, min(sp_palettes.h, yy + _height));
 			
@@ -74,29 +118,21 @@ function Panel_Palette() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.node_active, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text(ui(10), yy + ui(2), preset.name);
-			drawPaletteGrid(preset.palette, ui(10), yy + ui(24), ww - ui(20), _gs, cur);
+			draw_text(pd, yy + ui(2), preset.name);
+			var _palRes = drawPaletteGrid(preset.palette, pd, yy + ui(20), ww - pd * 2, _gs, param);
 			
 			if(isHover) {
 				if(mouse_press(mb_left, pFOCUS)) {
-					if(point_in_rectangle(_m[0], _m[1], ui(10), yy + ui(24), ww - ui(10), yy + ui(24) + _height)) {
-						var m_ax = _m[0] - ui(10);
-						var m_ay = _m[1] - (yy + ui(24));
+					if(_palRes.hoverIndex > noone) {
+						CURRENT_COLOR = _palRes.hoverColor;
 						
-						var m_gx = floor(m_ax / _gs);
-						var m_gy = floor(m_ay / _gs);
+						DRAGGING = {
+							type: "Color",
+							data: _palRes.hoverColor
+						} 
+						MESSAGE = DRAGGING;
 						
-						var _index = m_gy * col + m_gx;
-						if(_index < pre_amo && _index >= 0) {
-							CURRENT_COLOR = array_safe_get_fast(preset.palette, _index);
-							
-							DRAGGING = {
-								type: "Color",
-								data: array_safe_get_fast(preset.palette, _index)
-							} 
-							MESSAGE = DRAGGING;
-						}
-					} else if(point_in_rectangle(_m[0], _m[1], ui(10), yy, ww - ui(10), yy + ui(24))) {
+					} else if(point_in_rectangle(_m[0], _m[1], pd, yy, ww - pd, yy + ui(20))) {
 						DRAGGING = {
 							type: "Palette",
 							data: preset.palette
@@ -108,11 +144,11 @@ function Panel_Palette() : PanelContent() constructor {
 				
 				if(mouse_press(mb_right, pFOCUS)) {
 					hovering = preset;
+					right_clicked = true;
 					
 					menuCall("palette_window_preset_menu",,, [
-						menuItem(__txt("Refresh"), function() { 
-							__initPalette();
-						}),
+						menu_add,
+						menu_refresh,
 						-1, 
 						menuItem(__txtx("palette_editor_set_default", "Set as default"), function() { 
 							PROJECT.setPalette(array_clone(hovering.palette));
@@ -121,12 +157,23 @@ function Panel_Palette() : PanelContent() constructor {
 							file_delete(hovering.path); 
 							__initPalette();
 						}),
+						-1,
+						menu_stretch,
 					]);
 				}
 			} 
 			
-			yy += _height + ui(8);
-			hh += _height + ui(8);
+			yy += _height + ui(4);
+			hh += _height + ui(4);
+		}
+		
+		if(!right_clicked && mouse_press(mb_right, pFOCUS)) {
+			menuCall("palette_window_preset_menu_empty",,, [
+				menu_add,
+				menu_refresh,
+				-1,
+				menu_stretch,
+			]);
 		}
 		
 		return hh;
