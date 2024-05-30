@@ -108,7 +108,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			var col = floor(pal_w / pal_s);
 			var row = ceil(array_length(_palettes) / col);
 			
-			var pal_h = pal_s * row;
+			var pal_h = pal_s * max(1, row);
 			var pal_x = in_dialog? padding : ui(16);
 			var pal_y = in_dialog? h - pal_h - padding : h - pal_h - ui(16);
 			
@@ -526,7 +526,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 				if(node_selecting) {
 					node_selecting.color = CURRENT_COLOR;
 					
-					if(keyboard_check_pressed(vk_delete)) { /////////////////// NODE DELETE 
+					if(keyboard_check_pressed(vk_delete)) { /////////////////// Node Delete 
 					
 						var _delId = array_find(_palettes, node_selecting);
 						
@@ -558,16 +558,74 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					}
 				}
 				
-				if(_pHover && DRAGGING && DRAGGING.type == "Color") {
-					if(mouse_release(mb_left)) {
-						var _node = { color : DRAGGING.data, x : value_snap(_mmx, 8), y : value_snap(_mmy, 8) };
-						array_push(palette_data.nodes, _node);
-							
-						DRAGGING = noone;
+				if(_pHover && DRAGGING) {
+					var _rx = value_snap(_mmx, 8);
+					var _ry = value_snap(_mmy, 8);
+					
+					_xx = _rx;
+					_yy = _ry;
+					
+					if(DRAGGING.type == "Color") {
+						draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _mx_x + _xx - _gs / 2, _mx_y + _yy - _gs / 2, _gs, _gs, DRAGGING.data, 0.75);
 						
-						save_palette_mixer(palette_data);
+						if(mouse_release(mb_left)) {
+							var _node = { color : DRAGGING.data, x : _rx, y : _ry };
+							array_push(palette_data.nodes, _node);
+								
+							DRAGGING = noone;
+							
+							save_palette_mixer(palette_data);
+						}
+					} else if(DRAGGING.type == "Palette") {
+						var _pal = DRAGGING.data;
+						var _amo = array_length(_pal);
+						var _pxs = array_create(_amo);
+						var _pys = array_create(_amo);
+						var _px = _xx;
+						var _py = _yy;
+						var _colRow, _colPrev, _colCurr;
+						var _ligInc = 0;
+						
+						for (var i = 0; i < _amo; i++) {
+							_colCurr = _pal[i];
+							
+							if(i == 0) {
+								_colRow  = _colCurr;
+							} else {
+								var _lPrev = _color_get_light(_colPrev);
+								var _lCurr = _color_get_light(_colCurr);
+								var _sg  = sign(_lCurr - _lPrev);
+								
+								if(_ligInc == 0) _ligInc = _sg;
+								else if(_ligInc != _sg) {
+									_ligInc = 0;
+									_px  = _xx;
+									_py += _gs * 2;
+								}
+							}
+							
+							_pxs[i] = _px;
+							_pys[i] = _py;
+							
+							draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _mx_x + _px - _gs / 2, _mx_y + _py - _gs / 2, _gs, _gs, _colCurr, 0.75);
+							_px += _gs * 2;
+							
+							_colPrev = _colCurr;
+						}
+						
+						if(mouse_release(mb_left)) {
+							for (var i = 0; i < _amo; i++) {
+								var _node = { color : _pal[i], x : _pxs[i], y : _pys[i] };
+								array_push(palette_data.nodes, _node);
+							}
+								
+							DRAGGING = noone;
+							
+							save_palette_mixer(palette_data);
+						}
 					}
 				}
+				
 			surface_reset_target();
 		#endregion
 		

@@ -13,6 +13,8 @@
 	function _color_get_hue(color)        { INLINE return color_get_hue(color)        / 255; }
 	function _color_get_saturation(color) { INLINE return color_get_saturation(color) / 255; }
 	function _color_get_value(color)      { INLINE return color_get_value(color)      / 255; }
+	
+	function _color_get_light(color) { INLINE return 0.299 * _color_get_red(color) + 0.587 * _color_get_green(color) + 0.114 * _color_get_blue(color); }
 #endregion
 
 #region conversions
