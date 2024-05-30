@@ -317,6 +317,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			for (var i = 0, n = array_length(temp_surface); i < n; i++)
 				shader_set_surface($"texture{i}", temp_surface[i]);
 			
+			shader_set_f("time",        CURRENT_FRAME / TOTAL_FRAMES);
+			
 			shader_set_i("shape",       _shpI);
 			shader_set_f("size",        _size);
 			shader_set_f("radius",      _rad);

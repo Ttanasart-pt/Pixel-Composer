@@ -50,7 +50,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 	node_hovering  = noone;
 	node_dragging  = noone;
 	node_drag_mx   = 0;
-	node_drag_my   = 0;
+	node_drag_my   = 0; 
 	node_drag_sx   = 0;
 	node_drag_sy   = 0;
 	node_selecting = noone;

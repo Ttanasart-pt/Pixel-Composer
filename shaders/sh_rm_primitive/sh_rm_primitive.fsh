@@ -18,6 +18,8 @@ uniform sampler2D texture1;
 uniform sampler2D texture2;
 uniform sampler2D texture3;
 
+uniform float time;
+
 uniform int   shape;
 uniform vec3  size;
 uniform float radius;
@@ -306,7 +308,7 @@ mat3 rotMatrix, irotMatrix;
 		vec4 sm  = sampleTexture(extrudeSurface, pos);
 		float am = (sm.r + sm.g + sm.b) / 3. * sm.a;
 		
-		float d = 0.1 - am;
+		float d = 0.3 - am;
 	    vec2  w = vec2( d, abs(p.y) - h );
 	    return min(max(w.x, w.y), 0.0) + length(max(w, 0.0));
 	}
@@ -486,9 +488,6 @@ void main() {
     if(dist > viewRange.y - EPSILON) // Not hitting anything.
         return;
     
-    // if(sin(wcoll.y * 64.) > -.9)
-    // 	return;
-    
     vec3 c = ambient.rgb;
     
     float distNorm = 1. - (dist - viewRange.x) / (viewRange.y - viewRange.x);
@@ -500,6 +499,9 @@ void main() {
     float lamo = dot(norm, light) + ambientIntns;
     
     c *= lamo;
+    
+    // if(sin((wcoll.y + time * PI * 2.) * 96.) < -.9)
+    // 	c *= 4.;
     
     gl_FragColor = vec4(c, 1.);
 }
