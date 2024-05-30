@@ -30,7 +30,7 @@ function canvas_tool_extrude() : canvas_tool_shader() constructor {
 			shader_set_f("dimension", _dim);
 			shader_set_f("shift",     _dx, _dy);
 			shader_set_f("itr",       round(sqrt(_dx * _dx + _dy * _dy)));
-			shader_set_color("color", node.CURRENT_COLOR);
+			shader_set_color("color", CURRENT_COLOR);
 			
 			draw_surface(preview_surface[0], 0, 0);
 		surface_reset_shader();

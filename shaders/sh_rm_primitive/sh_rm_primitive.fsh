@@ -5,8 +5,18 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 const int MAX_MARCHING_STEPS = 512;
-const float EPSILON = .0001;
+const float EPSILON = 1e-5;
 const float PI = 3.14159265358979323846;
+
+const float SUBTEXTURE_SIZE = 1024.;
+const float TEXTURE_N = 8192. / SUBTEXTURE_SIZE;
+const float TEXTURE_S = TEXTURE_N * TEXTURE_N;
+const float TEXTURE_T = SUBTEXTURE_SIZE / 8192.;
+
+uniform sampler2D texture0;
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+uniform sampler2D texture3;
 
 uniform int   shape;
 uniform vec3  size;
@@ -19,7 +29,7 @@ uniform vec2  radRange;
 uniform float sizeUni;
 uniform vec3  elongate;
 uniform float rounded;
-uniform sampler2D extrudeSurface;
+uniform int   extrudeSurface;
 
 uniform vec3 waveAmp;
 uniform vec3 waveInt;
@@ -44,7 +54,9 @@ uniform vec4 ambient;
 uniform float ambientIntns;
 uniform vec3 lightPosition;
 
-#region ================ Transform ================
+mat3 rotMatrix, irotMatrix;
+
+#region ////========== Transform ============
     mat3 rotateX(float dg) {
         float c = cos(radians(dg));
         float s = sin(radians(dg));
@@ -92,14 +104,36 @@ uniform vec3 lightPosition;
     }
 #endregion
 
-#region =============== Primitives ================
-    
+#region ////============= Util ==============
+	
     float dot2( in vec2 v ) { return dot(v,v); }
 	float dot2( in vec3 v ) { return dot(v,v); }
 	float ndot( in vec2 a, in vec2 b ) { return a.x*b.x - a.y*b.y; }
 	
+	vec4 sampleTexture(int index, vec2 coord) {
+		float i = float(index);
+		
+		float txIndex = floor(i / TEXTURE_S);
+		float stcInd  = i - txIndex * TEXTURE_S;
+		
+		float row     = floor(stcInd / TEXTURE_N);
+		float col     = stcInd - row * TEXTURE_N;
+		
+		vec2 tx = vec2(col, row) * TEXTURE_T;
+		vec2 sm = tx + coord * TEXTURE_T;
+		
+			 if(txIndex == 0.) return texture2D(texture0, sm);
+		else if(txIndex == 1.) return texture2D(texture1, sm);
+		else if(txIndex == 2.) return texture2D(texture2, sm);
+		else if(txIndex == 3.) return texture2D(texture3, sm);
+		
+		return texture2D(texture0, sm);
+	}
+#endregion
+
+#region ////========== Primitives ===========
+    
 	float sdPlane( vec3 p, vec3 n, float h ) {
-		// n must be normalized
 		return dot(p,n) + h;
 	}
 	
@@ -269,7 +303,17 @@ uniform vec3 lightPosition;
 	
 	float sdExtrude( vec3 p, float s, float h ) {
 		vec2 pos = p.xz / s / 2. + 0.5;
-		vec4 sm  = texture2D(extrudeSurface, pos);
+		vec4 sm  = sampleTexture(extrudeSurface, pos);
+		float am = (sm.r + sm.g + sm.b) / 3. * sm.a;
+		
+		float d = 0.1 - am;
+	    vec2  w = vec2( d, abs(p.y) - h );
+	    return min(max(w.x, w.y), 0.0) + length(max(w, 0.0));
+	}
+	
+	float sdTerrain( vec3 p, float s, float h ) {
+		vec2 pos = p.xz / s / 2. + 0.5;
+		vec4 sm  = sampleTexture(extrudeSurface, pos);
 		float am = (sm.r + sm.g + sm.b) / 3. * sm.a;
 		
 		float d = 0.1 - am;
@@ -278,7 +322,7 @@ uniform vec3 lightPosition;
 	}
 #endregion
 
-#region ================= Modify ==================
+#region ////============ Modify =============
 	
 	vec4 opElongate( in vec3 p, in vec3 h ) {
 	    vec3 q = abs(p)-h;
@@ -320,7 +364,7 @@ uniform vec3 lightPosition;
 	
 #endregion
 
-#region ================ View Mod =================
+#region ////=========== View Mod ============
 	
 	float round(float v) { return fract(v) >= 0.5? ceil(v) : floor(v); }
 	vec3  round(vec3  v) { return vec3(round(v.x), round(v.y), round(v.z)); }
@@ -333,13 +377,12 @@ uniform vec3 lightPosition;
 	
 #endregion
 
-float sceneSDF(vec3 p) {
+////========= Ray Marching ==========
+
+float sceneSDF(vec3 p) { 
     float d;
-    mat3 rx = rotateX(rotation.x);
-    mat3 ry = rotateY(rotation.y);
-    mat3 rz = rotateZ(rotation.z);
     
-    p = inverse(rx * ry * rz) * p;
+    p  = irotMatrix * p;
     p /= objectScale;
     p -= position;
     
@@ -357,28 +400,29 @@ float sceneSDF(vec3 p) {
 	    p  = el.xyz;
     }
     
-         if(shape == 0) d = sdPlane(p, vec3(0., 0., 1.), 0.);
-    else if(shape == 1) d = sdBox(p, size / 2.);
-    else if(shape == 2) d = sdBoxFrame(p, size / 2., thickness);
-    //3
-    else if(shape == 4) d = sdSphere(p, radius);
-    else if(shape == 5) d = sdEllipsoid(p, size / 2.);
-    else if(shape == 6) d = sdCutSphere(p, radius, crop);
-    else if(shape == 7) d = sdCutHollowSphere(p, radius, crop, thickness);
-    else if(shape == 8) d = sdTorus(p, vec2(radius, thickness));
-    else if(shape == 9) d = sdCappedTorus(p, angle, radius, thickness);
-    //10
-    else if(shape == 11) d = sdCappedCylinder(p, height, radius);
-    else if(shape == 12) d = sdCapsule(p, vec3(-height, 0., 0.), vec3(height, 0., 0.), radius);
-    else if(shape == 13) d = sdCone(p, angle, height);
-    else if(shape == 14) d = sdCappedCone(p, height, radRange.x, radRange.y);
-    else if(shape == 15) d = sdRoundCone(p, height, radRange.x, radRange.y);
-    else if(shape == 16) d = sdSolidAngle(p, angle, radius);
-    //17
-    else if(shape == 18) d = sdOctahedron(p, sizeUni);
-    else if(shape == 19) d = sdPyramid(p, sizeUni);
-    //20
-    else if(shape == 21) d = sdExtrude(p, sizeUni, thickness);
+         if(shape == 100) d = sdPlane(p, vec3(0., 0., 1.), 0.);
+    else if(shape == 101) d = sdBox(p, size / 2.);
+    else if(shape == 102) d = sdBoxFrame(p, size / 2., thickness);
+    
+    else if(shape == 200) d = sdSphere(p, radius);
+    else if(shape == 201) d = sdEllipsoid(p, size / 2.);
+    else if(shape == 202) d = sdCutSphere(p, radius, crop);
+    else if(shape == 203) d = sdCutHollowSphere(p, radius, crop, thickness);
+    else if(shape == 204) d = sdTorus(p, vec2(radius, thickness));
+    else if(shape == 205) d = sdCappedTorus(p, angle, radius, thickness);
+    
+    else if(shape == 300) d = sdCappedCylinder(p, height, radius);
+    else if(shape == 301) d = sdCapsule(p, vec3(-height, 0., 0.), vec3(height, 0., 0.), radius);
+    else if(shape == 302) d = sdCone(p, angle, height);
+    else if(shape == 303) d = sdCappedCone(p, height, radRange.x, radRange.y);
+    else if(shape == 304) d = sdRoundCone(p, height, radRange.x, radRange.y);
+    else if(shape == 305) d = sdSolidAngle(p, angle, radius);
+    
+    else if(shape == 400) d = sdOctahedron(p, sizeUni);
+    else if(shape == 401) d = sdPyramid(p, sizeUni);
+    
+    else if(shape == 500) d = sdExtrude(p, sizeUni, thickness);
+    else if(shape == 501) d = sdTerrain(p, sizeUni, thickness);
     
     if(elongate != vec3(0.)) {
     	d += el.w;
@@ -415,6 +459,14 @@ float march(vec3 camera, vec3 direction) {
 }
 
 void main() {
+	gl_FragColor = vec4(0., 0., 0., 1.);
+	
+	mat3 rx = rotateX(rotation.x);
+    mat3 ry = rotateY(rotation.y);
+    mat3 rz = rotateZ(rotation.z);
+    rotMatrix  = rx * ry * rz;
+    irotMatrix = inverse(rotMatrix);
+    
 	vec3 eye, dir;
 	
 	if(ortho == 1) {
@@ -428,11 +480,14 @@ void main() {
 	}
 	
     float dist = march(eye, dir);
+    vec3  coll = eye + dir * dist;
+    vec3 wcoll = irotMatrix * coll;
     
-    if(dist > viewRange.y - EPSILON) {
-        gl_FragColor = vec4(0., 0., 0., 1.);
+    if(dist > viewRange.y - EPSILON) // Not hitting anything.
         return;
-    }
+    
+    // if(sin(wcoll.y * 64.) > -.9)
+    // 	return;
     
     vec3 c = ambient.rgb;
     
@@ -440,7 +495,6 @@ void main() {
           distNorm = smoothstep(.0, .3, distNorm) + .2;
     c *= mix(vec3(1.), vec3(distNorm), depthInt);
     
-    vec3 coll  = eye + dir * dist;
     vec3 norm  = normal(coll);
     vec3 light = normalize(lightPosition);
     float lamo = dot(norm, light) + ambientIntns;
