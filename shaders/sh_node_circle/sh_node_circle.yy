@@ -4,7 +4,7 @@
   "name":"sh_node_circle",
   "parent":{
     "name":"node",
-    "path":"folders/widgets/node.yy",
+    "path":"folders/shader/UI/node.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

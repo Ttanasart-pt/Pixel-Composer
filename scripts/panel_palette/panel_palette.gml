@@ -12,6 +12,7 @@ function Panel_Palette() : PanelContent() constructor {
 	drag_from_self = false;
 	
 	__save_palette_data = [];
+	view_label = true;
 	
 	menu_refresh = menuItem(__txt("Refresh"), function() { __initPalette(); });
 	menu_add     = menuItem(__txt("Add"), function(_dat) {
@@ -37,6 +38,7 @@ function Panel_Palette() : PanelContent() constructor {
 	}).setIsShelf();
 	
 	menu_stretch = menuItem(__txt("Stretch"), function() { PREFERENCES.palette_stretch = !PREFERENCES.palette_stretch; }, noone, noone, function() /*=>*/ {return PREFERENCES.palette_stretch});
+	menu_mini    = menuItem(__txt("Label"), function() { view_label = !view_label; }, noone, noone, function() /*=>*/ {return view_label});
 	  
 	function onResize() {
 		sp_palettes.resize(w - ui(padding + padding), h - ui(padding + padding));
@@ -55,7 +57,7 @@ function Panel_Palette() : PanelContent() constructor {
 			if(mouse_wheel_down()) grid_size_to = clamp(grid_size_to - ui(4), ui(8), ui(32));
 			if(mouse_wheel_up())   grid_size_to = clamp(grid_size_to + ui(4), ui(8), ui(32));
 		}
-		grid_size = lerp_float(grid_size, grid_size_to, 3);
+		grid_size = lerp_float(grid_size, grid_size_to, 10);
 		
 		if(DRAGGING && DRAGGING.type == "Palette" && !drag_from_self) {
 			var _add_h = ui(28);
@@ -100,8 +102,9 @@ function Panel_Palette() : PanelContent() constructor {
 		if(mouse_release(mb_left)) drag_from_self = false;
 		
 		var right_clicked = false;
-		var pd    = lerp(ui(4), ui(10), (grid_size - ui(8)) / (ui(32) - ui(8)));
+		var pd    = view_label? lerp(ui(4), ui(10), (grid_size - ui(8)) / (ui(32) - ui(8))) : ui(3);
 		var param = { color: cur, stretch : PREFERENCES.palette_stretch, mx : _m[0], my : _m[1] };
+		var _font = grid_size > ui(12)? f_p2 : f_p3;
 		
 		for(var i = 0; i < array_length(PALETTES); i++) {
 			var preset	= PALETTES[i];
@@ -109,19 +112,28 @@ function Panel_Palette() : PanelContent() constructor {
 			var col     = floor((ww - pd * 2) / _gs);
 			var row     = ceil(pre_amo / col);
 			
-			_height = ui(21) + row * _gs + pd;
-			
+			var _th  = line_get_height(_font);
+			var _phh = row * _gs;
+			var _height = view_label? _th + _phh + pd : _phh + pd * 2;
+			var _paly   = view_label? yy + _th : yy + pd;
+			var _palh   = _gs;
 			var isHover = pHOVER && point_in_rectangle(_m[0], _m[1], 0, max(0, yy), ww, min(sp_palettes.h, yy + _height));
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, _height);
-			if(isHover) 
-				draw_sprite_stretched_ext(THEME.node_active, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
+			if(isHover) draw_sprite_stretched_ext(THEME.node_active, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
 			
-			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text(pd, yy + ui(2), preset.name);
-			var _palRes = drawPaletteGrid(preset.palette, pd, yy + ui(20), ww - pd * 2, _gs, param);
+			var _palRes = drawPaletteGrid(preset.palette, pd, _paly, ww - pd * 2, _palh, param);
+			if(view_label) {
+				draw_set_text(_font, fa_left, fa_top, COLORS._main_text_sub);
+				draw_text_add(pd, yy + ui(2), preset.name);
+			}
 			
 			if(isHover) {
+				if(_palRes.hoverIndex > noone) {
+					var _box = _palRes.hoverBBOX;
+					draw_sprite_stretched_add(THEME.menu_button_mask, 1, _box[0] + 1, _box[1] + 1, _box[2] - 2, _box[3] - 2, c_white, 0.3);
+				}
+				
 				if(mouse_press(mb_left, pFOCUS)) {
 					if(_palRes.hoverIndex > noone) {
 						CURRENT_COLOR = _palRes.hoverColor;
@@ -159,6 +171,7 @@ function Panel_Palette() : PanelContent() constructor {
 						}),
 						-1,
 						menu_stretch,
+						menu_mini,
 					]);
 				}
 			} 
@@ -173,6 +186,7 @@ function Panel_Palette() : PanelContent() constructor {
 				menu_refresh,
 				-1,
 				menu_stretch,
+				menu_mini,
 			]);
 		}
 		

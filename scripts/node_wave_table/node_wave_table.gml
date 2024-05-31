@@ -1,73 +1,67 @@
-function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name			= "Wiggler";
+function Node_Wave_Table(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+	name			= "Wave Table";
 	update_on_frame = true;
 	setDimension(96, 96);
 	
 	inputs[| 0] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue("Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 )
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
+	inputs[| 1] = nodeValue("Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2 )
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 8, 0.01] });
 	
-	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
-	
-	inputs[| 3] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
+	inputs[| 2] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Graph" ]);
 	
-	inputs[| 4] = nodeValue("Clip", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b11 )
-		.setDisplay(VALUE_DISPLAY.toggle, { data : [ "Start", "End" ] });
+	inputs[| 3] = nodeValue("Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 3, 0.01] });
 		
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	input_display_list = [
-		["Display",	 true],	3,
-		["Wiggle",	false], 2, 0, 1, 4, 
+		["Display",	 true],	2,
+		["Wave",	false], 3, 0, 1,
 	];
 	
 	graph_display = array_create(64, 0);
 	
-	range_min    = 0;
-	range_max    = 0;
-	disp_text    = 0;
-	wiggle_seed  = 0;
-	wiggle_freq  = 1;
+	pattern   = 0;
+	frequency = 0;
+	range_min = 0;
+	range_max = 0;
+	disp_text = 0;
 	
-	clip_start = true;
-	clip_end   = true;
+	function getPattern(_patt, _time) {
+		switch(_patt % 3) {
+			case 0 : return sin(_time * pi * 2);
+			case 1 : return frac(_time) < 0.5? 1 : -1;
+			case 2 : return frac(_time + 0.5) * 2 - 1;
+		}
+		
+		return 0;
+	}
 	
-	function __getWiggle(_time = 0) { #region
+	function __getWave(_time = 0) {
+		var _p0 = floor(pattern);
+		var _p1 = floor(pattern) + 1;
+		var _fr = frac(pattern);
 		
-		var _ed   = TOTAL_FRAMES;
-		var sdMin = floor(_time / wiggle_freq) * wiggle_freq;
-		var sdMax = min(_ed, sdMin + wiggle_freq);
+		var _v0  = getPattern(_p0, _time * frequency) * .5 + .5;
+		var _v1  = getPattern(_p1, _time * frequency) * .5 + .5;
+		var _lrp = lerp(_v0, _v1, _fr);
 		
-		var _x0 = (clip_start && sdMin <= 0)?    0.5 : random1D(PROJECT.seed + wiggle_seed + sdMin);
-		var _x1 = (clip_end && sdMax >= _ed)?	 0.5 : random1D(PROJECT.seed + wiggle_seed + sdMax);
-		
-		var t = (_time - sdMin) / (sdMax - sdMin);
-		    t = -(cos(pi * t) - 1) / 2;
-		    
-		var _lrp = lerp(_x0, _x1, t);
 		return lerp(range_min, range_max, _lrp);
-	} #endregion
+	}
 	
 	static onValueUpdate = function(index = 0) {
 		var ran     = getSingleValue(0);
 		range_min   = array_safe_get_fast(ran, 0);
 		range_max   = array_safe_get_fast(ran, 1);
 		
-		var fre     = getSingleValue(1);
-		wiggle_freq = fre == 0? 1 : max(1, TOTAL_FRAMES / fre);
-		wiggle_seed = getSingleValue(2);
+		frequency   = getSingleValue(1);
+		pattern     = getSingleValue(3);
 		
-		var clp     = getSingleValue(4);
-		clip_start  = bool(clp & 0b01);
-		clip_end    = bool(clp & 0b10);
-		
-		var step = TOTAL_FRAMES / 64;
 		for( var i = 0; i < 64; i++ )
-			graph_display[i] = __getWiggle(step * i);
+			graph_display[i] = __getWave(i / 64);
 	} 
 	
 	run_in(1, function() { onValueUpdate(); });
@@ -77,15 +71,10 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		range_min   = array_safe_get_fast(ran, 0);
 		range_max   = array_safe_get_fast(ran, 1);
 		
-		var fre     = _data[1];
-		wiggle_freq = fre == 0? 1 : max(1, TOTAL_FRAMES / fre);
-		wiggle_seed = _data[2];
+		frequency   = _data[1];
+		pattern     = _data[3];
 		
-		var clp     = _data[4];
-		clip_start  = bool(clp & 0b01);
-		clip_end    = bool(clp & 0b10);
-		
-		var val = __getWiggle(CURRENT_FRAME);
+		var val = __getWave(CURRENT_FRAME / TOTAL_FRAMES);
 		if(_output_index == 0) disp_text = val;
 		
 		return val;
@@ -95,9 +84,7 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		var ran  = array_safe_get_fast(current_data, 0);
-		var fre  = array_safe_get_fast(current_data, 1);
-		var sed  = array_safe_get_fast(current_data, 2);
-		var disp = array_safe_get_fast(current_data, 3);
+		var disp = array_safe_get_fast(current_data, 2);
 		var time = CURRENT_FRAME;
 		var total_time = TOTAL_FRAMES;
 		
@@ -148,7 +135,6 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				draw_set_color(COLORS.node_wiggler_frame);
 				draw_rectangle(x0, y0, x1, y1, true);
-				
 				break;
 		}
 	} #endregion

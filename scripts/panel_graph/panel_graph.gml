@@ -79,8 +79,21 @@
 	function panel_graph_copy()					{ CALL("graph_copy");				PANEL_GRAPH.doCopy();					}
 	function panel_graph_paste()				{ CALL("graph_paste");				PANEL_GRAPH.doPaste();					}
 																															
-	function panel_graph_pan()					{ CALL("graph_pan");				PANEL_GRAPH.graph_dragging_key = true;	}
-	function panel_graph_zoom()					{ CALL("graph_zoom");				PANEL_GRAPH.graph_zooming_key = true;	}
+	function panel_graph_pan() { 
+		CALL("graph_pan");
+		if(PANEL_GRAPH.node_hovering) return;
+		if(PANEL_GRAPH.value_focus)   return;
+		
+		PANEL_GRAPH.graph_dragging_key = true;
+	}
+	
+	function panel_graph_zoom()	{ 
+		CALL("graph_zoom");	
+		if(PANEL_GRAPH.node_hovering) return;
+		if(PANEL_GRAPH.value_focus)   return;
+		
+		PANEL_GRAPH.graph_zooming_key = true;	
+	}
 #endregion
 
 function connectionParameter() constructor { #region
@@ -130,6 +143,8 @@ function connectionParameter() constructor { #region
 	}
 } #endregion
 
+//// ========== Graph Panel ==========
+	
 function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	title       = __txt("Graph");
 	title_raw   = "";
@@ -407,259 +422,121 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		]; 
 	#endregion
 	
-	#region ++++ node setters ++++
-		function setCurrentPreview(_node = getFocusingNode()) { #region
-			if(!_node) return;
-		
-			PANEL_PREVIEW.setNodePreview(_node);
-		} #endregion
+	//// =========== Get Set ===========
 	
-		function setCurrentExport(_node = getFocusingNode()) { #region
-			if(DEMO) return;
-			if(!_node) return;
-		
-			var _outp = -1;
-			var _path = -1;
-		
-			for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
-				if(_node.outputs[| i].type == VALUE_TYPE.path)
-					_path = _node.outputs[| i];
-				if(_node.outputs[| i].type == VALUE_TYPE.surface && _outp == -1)
-					_outp = _node.outputs[| i];
-			}
-		
-			if(_outp == -1) return;
-		
-			var _export = nodeBuild("Node_Export", _node.x + _node.w + 64, _node.y);
-			if(_path != -1)
-				_export.inputs[| 1].setFrom(_path);
-		
-			_export.inputs[| 0].setFrom(_outp);
-		} #endregion
+	function setCurrentPreview(_node = getFocusingNode()) { #region
+		if(!_node) return;
 	
-		function setCurrentCanvas(_node = getFocusingNode()) { #region
-			if(!_node) return;
-		
-			var _outp = -1;
-			var surf  = -1;
-		
-			for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
-				if(_node.outputs[| i].type != VALUE_TYPE.surface) continue;
-				
+		PANEL_PREVIEW.setNodePreview(_node);
+	} #endregion
+
+	function setCurrentExport(_node = getFocusingNode()) { #region
+		if(DEMO) return;
+		if(!_node) return;
+	
+		var _outp = -1;
+		var _path = -1;
+	
+		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
+			if(_node.outputs[| i].type == VALUE_TYPE.path)
+				_path = _node.outputs[| i];
+			if(_node.outputs[| i].type == VALUE_TYPE.surface && _outp == -1)
 				_outp = _node.outputs[| i];
-				surf  = _outp.getValue();
+		}
+	
+		if(_outp == -1) return;
+	
+		var _export = nodeBuild("Node_Export", _node.x + _node.w + 64, _node.y);
+		if(_path != -1)
+			_export.inputs[| 1].setFrom(_path);
+	
+		_export.inputs[| 0].setFrom(_outp);
+	} #endregion
+
+	function setCurrentCanvas(_node = getFocusingNode()) { #region
+		if(!_node) return;
+	
+		var _outp = -1;
+		var surf  = -1;
+	
+		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
+			if(_node.outputs[| i].type != VALUE_TYPE.surface) continue;
+			
+			_outp = _node.outputs[| i];
+			surf  = _outp.getValue();
+			break;
+		}
+	
+		if(_outp == -1) return;
+		if(!is_array(surf)) surf = [ surf ];
+		
+		var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y);
+		var _dim    = surface_get_dimension(surf[0]);
+		
+		_canvas.attributes.dimension = _dim;
+		_canvas.attributes.frames    = array_length(surf);
+		_canvas.canvas_surface       = surface_array_clone(surf);
+		_canvas.inputs[| 0].setValue(_dim);
+		
+		_canvas.apply_surfaces();
+		
+	} #endregion
+
+	function setTriggerPreview() { #region
+		__temp_show = false;
+		array_foreach(nodes_selecting, function(node, index) {
+			if(index == 0) __temp_show = !node.previewable;
+			node.previewable = __temp_show;
+			node.refreshNodeDisplay();
+		});
+	} #endregion
+
+	function setTriggerParameter() { #region
+		__temp_show = false;
+		array_foreach(nodes_selecting, function(node, index) {
+			if(index == 0) __temp_show = !node.show_parameter;
+			node.show_parameter = __temp_show;
+			node.refreshNodeDisplay();
+		});
+	} #endregion
+
+	function setTriggerRender() { #region
+		__temp_active = false;
+		array_foreach(nodes_selecting, function(node, index) {
+			if(index == 0) __temp_active = !node.renderActive;
+			node.renderActive = __temp_active;
+		});
+	} #endregion
+
+	function setCurrentCanvasBlend(_node = getFocusingNode()) { #region
+		if(!_node) return;
+	
+		var _outp = -1;
+		var surf = -1;
+	
+		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
+			if(_node.outputs[| i].type == VALUE_TYPE.surface) {
+				_outp = _node.outputs[| i];
+				var _val = _node.outputs[| i].getValue();
+				if(is_array(_val))
+					surf  = _val[_node.preview_index];
+				else
+					surf  = _val;
 				break;
 			}
-		
-			if(_outp == -1) return;
-			if(!is_array(surf)) surf = [ surf ];
-			
-			var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y);
-			var _dim    = surface_get_dimension(surf[0]);
-			
-			_canvas.attributes.dimension = _dim;
-			_canvas.attributes.frames    = array_length(surf);
-			_canvas.canvas_surface       = surface_array_clone(surf);
-			_canvas.inputs[| 0].setValue(_dim);
-			
-			_canvas.apply_surfaces();
-			
-		} #endregion
-	
-		function setTriggerPreview() { #region
-			__temp_show = false;
-			array_foreach(nodes_selecting, function(node, index) {
-				if(index == 0) __temp_show = !node.previewable;
-				node.previewable = __temp_show;
-				node.refreshNodeDisplay();
-			});
-		} #endregion
-	
-		function setTriggerParameter() { #region
-			__temp_show = false;
-			array_foreach(nodes_selecting, function(node, index) {
-				if(index == 0) __temp_show = !node.show_parameter;
-				node.show_parameter = __temp_show;
-				node.refreshNodeDisplay();
-			});
-		} #endregion
-	
-		function setTriggerRender() { #region
-			__temp_active = false;
-			array_foreach(nodes_selecting, function(node, index) {
-				if(index == 0) __temp_active = !node.renderActive;
-				node.renderActive = __temp_active;
-			});
-		} #endregion
-	
-		function setCurrentCanvasBlend(_node = getFocusingNode()) { #region
-			if(!_node) return;
-		
-			var _outp = -1;
-			var surf = -1;
-		
-			for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
-				if(_node.outputs[| i].type == VALUE_TYPE.surface) {
-					_outp = _node.outputs[| i];
-					var _val = _node.outputs[| i].getValue();
-					if(is_array(_val))
-						surf  = _val[_node.preview_index];
-					else
-						surf  = _val;
-					break;
-				}
-			}
-		
-			if(_outp == -1) return;
-		
-			var _canvas = nodeBuild("Node_Canvas", _node.x, _node.y + _node.h + 64);
-		
-			_canvas.inputs[| 0].setValue([surface_get_width_safe(surf), surface_get_height_safe(surf)]);
-			_canvas.inputs[| 5].setValue(true);
-		
-			var _blend = new Node_Blend(_node.x + _node.w + 64, _node.y, getCurrentContext());
-			_blend.inputs[| 0].setFrom(_outp);
-			_blend.inputs[| 1].setFrom(_canvas.outputs[| 0]);
-		} #endregion
-	#endregion
-	
-	#region ++++ context menu ++++
-		menu_sent_to_preview   = menuItem(__txtx("panel_graph_send_to_preview", "Send to preview"),			function() { setCurrentPreview(node_hover); });
-		menu_send_to_window    = menuItem(__txtx("panel_graph_preview_window", "Send to preview window"),	function() { create_preview_window(node_hover); }, noone, ["Graph", "Preview window"]);
-		menu_sent_to_inspector = menuItem(__txtx("panel_graph_inspector_panel", "Send to new inspector"),	function() {
-			var pan = panelAdd("Panel_Inspector", true);
-			pan.destroy_on_click_out = false;
-			pan.content.setInspecting(node_hover);
-			pan.content.locked = true;
-		});
-		menu_send_export	= menuItem(__txtx("panel_graph_send_to_export", "Send to export"),			function() { setCurrentExport(node_hover); },	noone, ["Graph", "Export"]);
-		menu_toggle_preview = menuItem(__txtx("panel_graph_toggle_preview", "Toggle node preview"),		function() { setTriggerPreview(); },			noone, ["Graph", "Toggle preview"]);
-		menu_toggle_render  = menuItem(__txtx("panel_graph_toggle_render", "Toggle node render"),		function() { setTriggerRender(); },				noone, ["Graph", "Toggle render"]);
-		menu_toggle_param   = menuItem(__txtx("panel_graph_toggle_parameter", "Toggle node parameters"),function() { setTriggerParameter(); },			noone, ["Graph", "Toggle parameters"]);
-		menu_open_group     = menuItem(__txtx("panel_graph_enter_group", "Open group"),					function() { PANEL_GRAPH.addContext(node_hover); }, THEME.group);
-		
-		function openGroupTab(group) {
-			var graph = new Panel_Graph(project);
-			panel.setContent(graph, true);
-								
-			for( var i = 0; i < ds_list_size(node_context); i++ ) 
-				graph.addContext(node_context[| i]);
-			graph.addContext(group);
-			
-			setFocus(panel);
 		}
-		menu_open_group_tab = menuItem(__txtx("panel_graph_enter_group_new_tab", "Open group in new tab"), function() { openGroupTab(node_hover); }, THEME.group);
-		menu_group_group    = menuItem(__txt("Ungroup"),			function() { doGroup(); }, THEME.group, ["Graph", "group"]);
-		menu_group_ungroup  = menuItem(__txt("Ungroup"),			function() { doUngroup(); }, THEME.group, ["Graph", "Ungroup"]);
-		menu_group_tool     = menuItem(__txt("Set as group tool"),	function() { node_hover.setTool(!node_hover.isTool); });
-					
-		menu_node_delete_merge = menuItem(__txtx("panel_graph_delete_and_merge_connection", "Delete and merge connection"), function() { doDelete(true); }, THEME.cross, ["Graph", "Delete (merge)"]);
-		menu_node_delete_cut   = menuItem(__txtx("panel_graph_delete_and_cut_connection", "Delete and cut connection"),		function() { doDelete(false); }, THEME.cross, ["Graph", "Delete (break)"]);
-		menu_node_duplicate    = menuItem(__txt("Duplicate"),	function() { doDuplicate(); },	THEME.duplicate,	["Graph", "Duplicate"]);
-		menu_node_copy         = menuItem(__txt("Copy"),		function() { doCopy(); },		THEME.copy,			["Graph", "Copy"]);
-					
-		menu_node_transform  = menuItem(__txtx("panel_graph_add_transform", "Add transform"), function() { doTransform(); }, noone, ["Graph", "Transform node"]);
-		menu_node_canvas     = menuItem(__txtx("panel_graph_canvas", "Canvas"),
-		function(_dat) { 
-			return submenuCall(_dat, [
-				menuItem(__txtx("panel_graph_copy_to_canvas", "Copy to canvas"), function() { setCurrentCanvas(node_hover); },      noone, ["Graph", "Canvas"]),
-				menuItem(__txtx("panel_graph_overlay_canvas", "Overlay canvas"), function() { setCurrentCanvasBlend(node_hover); }, noone, ["Graph", "Canvas blend"])
-			]);
-		}).setIsShelf();
-					
-		menu_nodes_align = menuItemGroup(__txtx("panel_graph_align_nodes", "Align"), [
-				[ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_selecting, fa_left); } ],
-				[ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_selecting, fa_center); } ],
-				[ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_selecting, fa_right); } ],
-				
-				[ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_selecting, fa_top); } ],
-				[ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_selecting, fa_middle); } ],
-				[ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_selecting, fa_bottom); } ],
-				
-				[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_selecting); } ],
-				[ [THEME.obj_distribute_v, 0],		   function() { node_vdistribute(nodes_selecting); } ],
-		]);
-		menu_nodes_blend   = menuItem(__txtx("panel_graph_blend_nodes", "Blend nodes"),				function() { doBlend(); },	 noone, ["Graph", "Blend"]);
-		menu_nodes_compose = menuItem(__txtx("panel_graph_compose_nodes", "Compose nodes"),			function() { doCompose(); }, noone, ["Graph", "Compose"]);
-		menu_nodes_array   = menuItem(__txtx("panel_graph_array_from_nodes", "Array from nodes"),	function() { doArray(); },   noone, ["Graph", "Array"]);
-		menu_nodes_group   = menuItem(__txtx("panel_graph_group_nodes", "Group nodes"),				function() { doGroup(); },   THEME.group, ["Graph", "Group"]);	
-		menu_nodes_frame   = menuItem(__txtx("panel_graph_frame_nodes", "Frame nodes"),				function() { doFrame(); },   noone, ["Graph", "Frame"]);
-		
-		menu_node_copy_prop  = menuItem(__txtx("panel_graph_copy_prop",  "Copy all properties"),	function() { doCopyProp();  });
-		menu_node_paste_prop = menuItem(__txtx("panel_graph_paste_prop", "Paste all properties"),	function() { doPasteProp(); });
-		
-		#region node color
-			function setSelectingNodeColor(color) { 
-				__temp_color = color;
-				
-				if(node_hover) node_hover.attributes.color = __temp_color;
-				array_foreach(nodes_selecting, function(node) { node.attributes.color = __temp_color; });
-			}
-			
-			var _clrs = COLORS.labels;
-			var _item = array_create(array_length(_clrs));
 	
-			for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
-				_item[i] = [ 
-					[ THEME.timeline_color, i > 0, _clrs[i] ], 
-					function(_data) { 
-						setSelectingNodeColor(_data.color);
-					}, "", { color: i == 0? -1 : _clrs[i] }
-				];
-			}
+		if(_outp == -1) return;
 	
-			array_push(_item, [ 
-				[ THEME.timeline_color, 2 ], 
-				function(_data) { 
-					colorSelectorCall(node_hover? node_hover.attributes.color : c_white, setSelectingNodeColor);
-				}
-			]);
+		var _canvas = nodeBuild("Node_Canvas", _node.x, _node.y + _node.h + 64);
 	
-			menu_node_color = menuItemGroup(__txt("Node Color"), _item);
-			menu_node_color.spacing = ui(24);
-		#endregion
-		
-		#region junction color
-			__junction_hovering = noone;
-			
-			function setSelectingJuncColor(color) { 
-				if(__junction_hovering == noone) return; 
-				__junction_hovering.setColor(color);
-				
-				for(var i = 0; i < array_length(nodes_selecting); i++) {
-					var _node = nodes_selecting[i];
-					
-					for( var j = 0, m = ds_list_size(_node.inputs); j < m; j++ ) {
-						var _input = _node.inputs[| j];
-						if(_input.value_from == noone) continue;
-						_input.setColor(color);
-					}
-				}
-			}
-		
-			var _clrs = COLORS.labels;
-			var _item = array_create(array_length(_clrs));
+		_canvas.inputs[| 0].setValue([surface_get_width_safe(surf), surface_get_height_safe(surf)]);
+		_canvas.inputs[| 5].setValue(true);
 	
-			for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
-				_item[i] = [ 
-					[ THEME.timeline_color, i > 0, _clrs[i] ], 
-					function(_data) { 
-						setSelectingJuncColor(_data.color);
-					}, "", { color: i == 0? -1 : _clrs[i] }
-				];
-			}
-	
-			array_push(_item, [ 
-				[ THEME.timeline_color, 2 ], 
-				function(_data) { 
-					colorSelectorCall(__junction_hovering? __junction_hovering.color : c_white, setSelectingJuncColor);
-				}
-			]);
-	
-			menu_junc_color = menuItemGroup(__txt("Connection Color"), _item);
-			menu_junc_color.spacing = ui(24);
-		#endregion
-	#endregion
+		var _blend = new Node_Blend(_node.x + _node.w + 64, _node.y, getCurrentContext());
+		_blend.inputs[| 0].setFrom(_outp);
+		_blend.inputs[| 1].setFrom(_canvas.outputs[| 0]);
+	} #endregion
 	
 	function getFocusingNode() { INLINE return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
 	
@@ -672,25 +549,151 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		return cont == noone? project.nodes : cont.getNodeList();
 	} #endregion
 	
+	//// =========== Menus ===========
+	
+	menu_sent_to_preview   = menuItem(__txtx("panel_graph_send_to_preview", "Send to preview"),			function() { setCurrentPreview(node_hover); });
+	menu_send_to_window    = menuItem(__txtx("panel_graph_preview_window", "Send to preview window"),	function() { create_preview_window(node_hover); }, noone, ["Graph", "Preview window"]);
+	menu_sent_to_inspector = menuItem(__txtx("panel_graph_inspector_panel", "Send to new inspector"),	function() {
+		var pan = panelAdd("Panel_Inspector", true);
+		pan.destroy_on_click_out = false;
+		pan.content.setInspecting(node_hover);
+		pan.content.locked = true;
+	});
+	menu_send_export	= menuItem(__txtx("panel_graph_send_to_export", "Send to export"),			function() { setCurrentExport(node_hover); },	noone, ["Graph", "Export"]);
+	menu_toggle_preview = menuItem(__txtx("panel_graph_toggle_preview", "Toggle node preview"),		function() { setTriggerPreview(); },			noone, ["Graph", "Toggle preview"]);
+	menu_toggle_render  = menuItem(__txtx("panel_graph_toggle_render", "Toggle node render"),		function() { setTriggerRender(); },				noone, ["Graph", "Toggle render"]);
+	menu_toggle_param   = menuItem(__txtx("panel_graph_toggle_parameter", "Toggle node parameters"),function() { setTriggerParameter(); },			noone, ["Graph", "Toggle parameters"]);
+	menu_open_group     = menuItem(__txtx("panel_graph_enter_group", "Open group"),					function() { PANEL_GRAPH.addContext(node_hover); }, THEME.group);
+	
+	function openGroupTab(group) {
+		var graph = new Panel_Graph(project);
+		panel.setContent(graph, true);
+							
+		for( var i = 0; i < ds_list_size(node_context); i++ ) 
+			graph.addContext(node_context[| i]);
+		graph.addContext(group);
+		
+		setFocus(panel);
+	}
+	menu_open_group_tab = menuItem(__txtx("panel_graph_enter_group_new_tab", "Open group in new tab"), function() { openGroupTab(node_hover); }, THEME.group);
+	menu_group_group    = menuItem(__txt("Ungroup"),			function() { doGroup(); }, THEME.group, ["Graph", "group"]);
+	menu_group_ungroup  = menuItem(__txt("Ungroup"),			function() { doUngroup(); }, THEME.group, ["Graph", "Ungroup"]);
+	menu_group_tool     = menuItem(__txt("Set as group tool"),	function() { node_hover.setTool(!node_hover.isTool); });
+				
+	menu_node_delete_merge = menuItem(__txtx("panel_graph_delete_and_merge_connection", "Delete and merge connection"), function() { doDelete(true); }, THEME.cross, ["Graph", "Delete (merge)"]);
+	menu_node_delete_cut   = menuItem(__txtx("panel_graph_delete_and_cut_connection", "Delete and cut connection"),		function() { doDelete(false); }, THEME.cross, ["Graph", "Delete (break)"]);
+	menu_node_duplicate    = menuItem(__txt("Duplicate"),	function() { doDuplicate(); },	THEME.duplicate,	["Graph", "Duplicate"]);
+	menu_node_copy         = menuItem(__txt("Copy"),		function() { doCopy(); },		THEME.copy,			["Graph", "Copy"]);
+				
+	menu_node_transform  = menuItem(__txtx("panel_graph_add_transform", "Add transform"), function() { doTransform(); }, noone, ["Graph", "Transform node"]);
+	menu_node_canvas     = menuItem(__txtx("panel_graph_canvas", "Canvas"),
+	function(_dat) { 
+		return submenuCall(_dat, [
+			menuItem(__txtx("panel_graph_copy_to_canvas", "Copy to canvas"), function() { setCurrentCanvas(node_hover); },      noone, ["Graph", "Canvas"]),
+			menuItem(__txtx("panel_graph_overlay_canvas", "Overlay canvas"), function() { setCurrentCanvasBlend(node_hover); }, noone, ["Graph", "Canvas blend"])
+		]);
+	}).setIsShelf();
+				
+	menu_nodes_align = menuItemGroup(__txtx("panel_graph_align_nodes", "Align"), [
+			[ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_selecting, fa_left); } ],
+			[ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_selecting, fa_center); } ],
+			[ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_selecting, fa_right); } ],
+			
+			[ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_selecting, fa_top); } ],
+			[ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_selecting, fa_middle); } ],
+			[ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_selecting, fa_bottom); } ],
+			
+			[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_selecting); } ],
+			[ [THEME.obj_distribute_v, 0],		   function() { node_vdistribute(nodes_selecting); } ],
+	]);
+	menu_nodes_blend   = menuItem(__txtx("panel_graph_blend_nodes", "Blend nodes"),				function() { doBlend(); },	 noone, ["Graph", "Blend"]);
+	menu_nodes_compose = menuItem(__txtx("panel_graph_compose_nodes", "Compose nodes"),			function() { doCompose(); }, noone, ["Graph", "Compose"]);
+	menu_nodes_array   = menuItem(__txtx("panel_graph_array_from_nodes", "Array from nodes"),	function() { doArray(); },   noone, ["Graph", "Array"]);
+	menu_nodes_group   = menuItem(__txtx("panel_graph_group_nodes", "Group nodes"),				function() { doGroup(); },   THEME.group, ["Graph", "Group"]);	
+	menu_nodes_frame   = menuItem(__txtx("panel_graph_frame_nodes", "Frame nodes"),				function() { doFrame(); },   noone, ["Graph", "Frame"]);
+	
+	menu_node_copy_prop  = menuItem(__txtx("panel_graph_copy_prop",  "Copy all properties"),	function() { doCopyProp();  });
+	menu_node_paste_prop = menuItem(__txtx("panel_graph_paste_prop", "Paste all properties"),	function() { doPasteProp(); });
+	
+	#region node color
+		function setSelectingNodeColor(color) { 
+			__temp_color = color;
+			
+			if(node_hover) node_hover.attributes.color = __temp_color;
+			array_foreach(nodes_selecting, function(node) { node.attributes.color = __temp_color; });
+		}
+		
+		var _clrs = COLORS.labels;
+		var _item = array_create(array_length(_clrs));
+
+		for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
+			_item[i] = [ 
+				[ THEME.timeline_color, i > 0, _clrs[i] ], 
+				function(_data) { 
+					setSelectingNodeColor(_data.color);
+				}, "", { color: i == 0? -1 : _clrs[i] }
+			];
+		}
+
+		array_push(_item, [ 
+			[ THEME.timeline_color, 2 ], 
+			function(_data) { 
+				colorSelectorCall(node_hover? node_hover.attributes.color : c_white, setSelectingNodeColor);
+			}
+		]);
+
+		menu_node_color = menuItemGroup(__txt("Node Color"), _item);
+		menu_node_color.spacing = ui(24);
+	#endregion
+	
+	#region junction color
+		__junction_hovering = noone;
+		
+		function setSelectingJuncColor(color) { 
+			if(__junction_hovering == noone) return; 
+			__junction_hovering.setColor(color);
+			
+			for(var i = 0; i < array_length(nodes_selecting); i++) {
+				var _node = nodes_selecting[i];
+				
+				for( var j = 0, m = ds_list_size(_node.inputs); j < m; j++ ) {
+					var _input = _node.inputs[| j];
+					if(_input.value_from == noone) continue;
+					_input.setColor(color);
+				}
+			}
+		}
+	
+		var _clrs = COLORS.labels;
+		var _item = array_create(array_length(_clrs));
+
+		for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
+			_item[i] = [ 
+				[ THEME.timeline_color, i > 0, _clrs[i] ], 
+				function(_data) { 
+					setSelectingJuncColor(_data.color);
+				}, "", { color: i == 0? -1 : _clrs[i] }
+			];
+		}
+
+		array_push(_item, [ 
+			[ THEME.timeline_color, 2 ], 
+			function(_data) { 
+				colorSelectorCall(__junction_hovering? __junction_hovering.color : c_white, setSelectingJuncColor);
+			}
+		]);
+
+		menu_junc_color = menuItemGroup(__txt("Connection Color"), _item);
+		menu_junc_color.spacing = ui(24);
+	#endregion
+	
+	//// ============ Views ============
+	
 	function onFocusBegin() { #region
 		PANEL_GRAPH = self; 
 		PROJECT = project;
 		
 		nodes_select_drag = 0;
-	} #endregion
-	
-	function stepBegin() { #region
-		var gr_x = graph_x * graph_s;
-		var gr_y = graph_y * graph_s;
-		var m_x  = (mx - gr_x) / graph_s;
-		var m_y  = (my - gr_y) / graph_s;
-		mouse_graph_x = m_x;
-		mouse_graph_y = m_y;
-		
-		mouse_grid_x = round(m_x / project.graphGrid.size) * project.graphGrid.size;
-		mouse_grid_y = round(m_y / project.graphGrid.size) * project.graphGrid.size;
-		
-		setTitle();
 	} #endregion
 	
 	function focusNode(_node) { #region
@@ -829,6 +832,56 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		graph_x = round(graph_x);
 		graph_y = round(graph_y);
 	} #endregion
+	
+	//// =========== Context ==========
+	
+	function resetContext() { #region
+		ds_list_clear(node_context);
+		nodes_list = project.nodes;
+		toCenterNode();
+	} #endregion
+	
+	function addContext(node) { #region
+		var _node = node.getNodeBase();
+		setContextFrame(false, _node);
+		
+		nodes_list = _node.nodes;
+		ds_list_add(node_context, _node);
+		
+		node_dragging     = noone;
+		nodes_selecting = [];
+		selection_block   = 1;
+		
+		toCenterNode();
+	} #endregion
+	
+	function setContextFrame(dirr, node) { #region
+		context_framing = true;
+		context_frame_direct   = dirr;
+		context_frame_progress = 0;
+		context_frame_sx = w / 2 - 8;
+		context_frame_sy = h / 2 - 8;
+		context_frame_ex = context_frame_sx + 16;
+		context_frame_ey = context_frame_sy + 16;
+	} #endregion
+	
+	//// ============ Step ============
+	
+	function stepBegin() { #region
+		var gr_x = graph_x * graph_s;
+		var gr_y = graph_y * graph_s;
+		var m_x  = (mx - gr_x) / graph_s;
+		var m_y  = (my - gr_y) / graph_s;
+		mouse_graph_x = m_x;
+		mouse_graph_y = m_y;
+		
+		mouse_grid_x = round(m_x / project.graphGrid.size) * project.graphGrid.size;
+		mouse_grid_y = round(m_y / project.graphGrid.size) * project.graphGrid.size;
+		
+		setTitle();
+	} #endregion
+	
+	//// ============ Draw ============
 	
 	function drawGrid() { #region
 		if(!display_parameter.show_grid) return;
@@ -1167,11 +1220,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(_hov != noone && is_struct(_hov)) hov = _hov;
 			}
 		
-			if(value_dragging && connection_draw_mouse != noone) {
+			if(value_dragging && connection_draw_mouse != noone && !key_mod_press(SHIFT)) {
 				var _cmx = connection_draw_mouse[0];
 				var _cmy = connection_draw_mouse[1];
 				var _cmt = connection_draw_target;
-		
+				
 				if(array_empty(value_draggings))
 					value_dragging.drawConnectionMouse(param, _cmx, _cmy, _cmt);
 				else {
@@ -1383,11 +1436,136 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		printIf(log, $"Draw selection frame : {get_timer() - t}"); t = get_timer();
 	} #endregion
 	
-	function drawJunctionConnect() { #region
-		
-		if(value_dragging) { 
-			if(!value_dragging.node.active) { value_dragging = noone; return; }
+	function connectDraggingValueTo(target) { #region
+		var _connect = [ 0, noone, noone ];
 			
+			if(PANEL_INSPECTOR && PANEL_INSPECTOR.attribute_hovering != noone) {
+				PANEL_INSPECTOR.attribute_hovering(value_dragging);
+				
+			} else if(target != noone) {
+				
+				if(target.connect_type == value_dragging.connect_type) {
+					
+					if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+						if(target.value_from) {
+							value_dragging.setFrom(target.value_from);
+							target.removeFrom();
+						}
+						
+					} else if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
+						var _tos = target.getJunctionTo();
+						
+						for (var i = 0, n = array_length(_tos); i < n; i++)
+							_tos[i].setFrom(value_dragging);
+					}
+					
+				} else {
+					var _addInput = target.value_from == noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input;
+					
+					if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+						if(array_empty(value_draggings)) {
+							_connect = [ value_dragging.setFrom(target), value_dragging, target ];
+						} else {
+							for( var i = 0, n = array_length(value_draggings); i < n; i++ )
+								value_draggings[i].setFrom(target);
+						}
+						
+					} else if(_addInput && !array_empty(value_draggings)) {
+						for( var i = 0, n = array_length(value_draggings); i < n; i++ )
+							target.node.addInput(value_draggings[i]);
+							
+					} else {
+						_connect = [ target.setFrom(value_dragging), target, value_dragging ];
+					}
+				}
+				
+			} else {
+				if(value_dragging.connect_type == JUNCTION_CONNECT.input)
+					value_dragging.removeFrom();
+				value_dragging.node.triggerRender();
+				
+				if(value_focus != value_dragging) {
+					var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+					if(value_dragging.node.inline_context && !key_mod_press(SHIFT))
+						ctx = value_dragging.node.inline_context;
+					
+					with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {	
+						node_target_x = other.mouse_grid_x;
+						node_target_y = other.mouse_grid_y;
+						node_called   = other.value_dragging;
+						
+						alarm[0] = 1;
+					}
+				}
+			}
+			
+			value_dragging        = noone;
+			connection_draw_mouse = noone;
+			
+			if(_connect[0] == -9) {
+				if(_connect[1].value_from_loop != noone)
+					_connect[1].value_from_loop.destroy();
+					
+				var menu = [
+					menuItem("Feedback", function(data) {
+						var junc_in  = data.params.junc_in;
+						var junc_out = data.params.junc_out;
+						
+						var feed = nodeBuild("Node_Feedback_Inline", 0, 0);
+						// feed.connectJunctions(junc_in, junc_out);
+						feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
+						feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
+						feed.scanJunc();
+						
+					}, THEME.feedback_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
+					
+					menuItem("Loop", function(data) {
+						var junc_in  = data.params.junc_in;
+						var junc_out = data.params.junc_out;
+						
+						var feed = nodeBuild("Node_Iterate_Inline", 0, 0);
+						feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
+						feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
+						feed.scanJunc();
+						
+					}, THEME.loop_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
+				];
+				
+				menuCall(,,, menu);
+			}
+	} #endregion
+	
+	function draggingValue() {
+		if(!value_dragging.node.active) { 
+			value_dragging = noone; 
+			return; 
+		}
+			
+		if(key_mod_press(SHIFT)) {
+			array_push_unique(value_draggings, value_dragging)
+			
+			if(value_focus) 
+				array_push_unique(value_draggings, value_focus);
+			
+			for (var i = 0, n = array_length(value_draggings); i < n; i++) {
+				var _v = value_draggings[i];
+				var xx = _v.x - 1;
+				var yy = _v.y - 1;
+				
+				shader_set(sh_node_circle);
+					shader_set_color("color", COLORS._main_accent);
+					shader_set_f("thickness", 0.05);
+					shader_set_f("antialias", 0.05);
+					draw_rectangle(xx - 12 * graph_s, yy - 12 * graph_s, xx + 12 * graph_s, yy + 12 * graph_s, false);
+				shader_reset();
+			}
+			
+			if(mouse_release(mb_left)) {
+				value_dragging        = noone;
+				connection_draw_mouse = noone;
+			}
+			
+		} else {
 			var xx     = value_dragging.x;
 			var yy     = value_dragging.y;
 			var _mx    = mx;
@@ -1430,105 +1608,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(_inline_ctx && !key_mod_press(SHIFT))
 				_inline_ctx.addPoint(mouse_graph_x, mouse_graph_y);
 			
-			if(mouse_release(mb_left)) { //// CONNECT junction 
-				var _connect = [ 0, noone, noone ];
-				
-				if(PANEL_INSPECTOR && PANEL_INSPECTOR.attribute_hovering != noone) {
-					PANEL_INSPECTOR.attribute_hovering(value_dragging);
-					
-				} else if(target != noone) {
-					
-					if(target.connect_type == value_dragging.connect_type) {
-						
-						if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
-							if(target.value_from) {
-								value_dragging.setFrom(target.value_from);
-								target.removeFrom();
-							}
-							
-						} else if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
-							var _tos = target.getJunctionTo();
-							
-							for (var i = 0, n = array_length(_tos); i < n; i++)
-								_tos[i].setFrom(value_dragging);
-						}
-						
-					} else {
-						var _addInput = target.value_from == noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input;
-						
-						if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
-							if(array_empty(value_draggings)) {
-								_connect = [ value_dragging.setFrom(target), value_dragging, target ];
-							} else {
-								for( var i = 0, n = array_length(value_draggings); i < n; i++ )
-									value_draggings[i].setFrom(target);
-							}
-							
-						} else if(_addInput && !array_empty(value_draggings)) {
-							for( var i = 0, n = array_length(value_draggings); i < n; i++ )
-								target.node.addInput(value_draggings[i]);
-								
-						} else {
-							_connect = [ target.setFrom(value_dragging), target, value_dragging ];
-						}
-					}
-					
-				} else {
-					if(value_dragging.connect_type == JUNCTION_CONNECT.input)
-						value_dragging.removeFrom();
-					value_dragging.node.triggerRender();
-					
-					if(value_focus != value_dragging) {
-						var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
-						if(value_dragging.node.inline_context && !key_mod_press(SHIFT))
-							ctx = value_dragging.node.inline_context;
-						
-						with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {	
-							node_target_x = other.mouse_grid_x;
-							node_target_y = other.mouse_grid_y;
-							node_called   = other.value_dragging;
-							
-							alarm[0] = 1;
-						}
-					}
-				}
-				
-				value_dragging        = noone;
-				connection_draw_mouse = noone;
-				
-				if(_connect[0] == -9) {
-					if(_connect[1].value_from_loop != noone)
-						_connect[1].value_from_loop.destroy();
-						
-					var menu = [
-						menuItem("Feedback", function(data) {
-							var junc_in  = data.params.junc_in;
-							var junc_out = data.params.junc_out;
-							
-							var feed = nodeBuild("Node_Feedback_Inline", 0, 0);
-							// feed.connectJunctions(junc_in, junc_out);
-							feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
-							feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
-							feed.scanJunc();
-							
-						}, THEME.feedback_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
-						
-						menuItem("Loop", function(data) {
-							var junc_in  = data.params.junc_in;
-							var junc_out = data.params.junc_out;
-							
-							var feed = nodeBuild("Node_Iterate_Inline", 0, 0);
-							feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
-							feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
-							feed.scanJunc();
-							
-						}, THEME.loop_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
-					];
-					
-					menuCall(,,, menu);
-				}
-			}
-		} else if(value_focus && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
+			if(mouse_release(mb_left)) 
+				connectDraggingValueTo(target);
+		} 
+	}
+	
+	function drawJunctionConnect() { #region
+		
+		if(value_dragging)
+			draggingValue();
+		
+		if(value_dragging == noone && value_focus && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
 			value_dragging  = value_focus;
 			value_draggings = [];
 			
@@ -1570,7 +1660,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					
 					ds_priority_destroy(_jlist);
 				}
-			} else {
+			} 
+			
+			if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
 				if(key_mod_press(CTRL) && value_dragging.value_from) {
 					var fr = value_dragging.value_from;
 					value_dragging.removeFrom();
@@ -1581,12 +1673,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		nodes_selecting_jun = array_clone(nodes_selecting, 1);
 		
-		#region draw junction name
-			var gr_x = graph_x * graph_s;
-			var gr_y = graph_y * graph_s;
-			for(var i = 0; i < ds_list_size(nodes_list); i++)
-				nodes_list[| i].drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
-		#endregion
+		var gr_x = graph_x * graph_s;
+		var gr_y = graph_y * graph_s;
+		for(var i = 0; i < ds_list_size(nodes_list); i++)
+			nodes_list[| i].drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
 		
 	} #endregion
 	
@@ -1825,37 +1915,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		draw_set_alpha(1);
 	} #endregion
 	
-	function resetContext() { #region
-		ds_list_clear(node_context);
-		nodes_list = project.nodes;
-		toCenterNode();
-	} #endregion
-	
-	function addContext(node) { #region
-		var _node = node.getNodeBase();
-		setContextFrame(false, _node);
-		
-		nodes_list = _node.nodes;
-		ds_list_add(node_context, _node);
-		
-		node_dragging     = noone;
-		nodes_selecting = [];
-		selection_block   = 1;
-		
-		toCenterNode();
-	} #endregion
-	
-	function setContextFrame(dirr, node) { #region
-		context_framing = true;
-		context_frame_direct   = dirr;
-		context_frame_progress = 0;
-		context_frame_sx = w / 2 - 8;
-		context_frame_sy = h / 2 - 8;
-		context_frame_ex = context_frame_sx + 16;
-		context_frame_ey = context_frame_sy + 16;
-	} #endregion
-	
-	function drawContent(panel) { #region ======================================= MAIN DRAW ======================================= 
+	function drawContent(panel) { #region ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// MAIN DRAW
 		if(!project.active) return;
 		
 		dragGraph();
@@ -1910,381 +1970,381 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		}
 	} #endregion
 	
-	#region                                                 ++++++++++++++++ node manipulation ++++++++++++++++
-		function createNodeHotkey(_node) { #region
-			var node = nodeBuild(_node, mouse_grid_x, mouse_grid_y);
+	//// ============ Action ============
+	
+	function createNodeHotkey(_node) { #region
+		var node = nodeBuild(_node, mouse_grid_x, mouse_grid_y);
+		
+		if(value_dragging) {
 			
-			if(value_dragging) {
-				
-				if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
-					if(node.input_display_list != -1) {
-						for (var i = 0, n = array_length(node.input_display_list); i < n; i++) {
-							if(!is_real(node.input_display_list[i])) continue;
-							if(node.inputs[| node.input_display_list[i]].setFrom(value_dragging)) break;
-						}
-							
-					} else {
-						for (var i = 0, n = ds_list_size(node.inputs); i < n; i++)
-							if(node.inputs[| i].setFrom(value_dragging)) break;
+			if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
+				if(node.input_display_list != -1) {
+					for (var i = 0, n = array_length(node.input_display_list); i < n; i++) {
+						if(!is_real(node.input_display_list[i])) continue;
+						if(node.inputs[| node.input_display_list[i]].setFrom(value_dragging)) break;
 					}
-					
-				} else if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
-					
-					for (var i = 0, n = ds_list_size(node.outputs); i < n; i++)
-						if(value_dragging.setFrom(node.outputs[| i])) break;
+						
+				} else {
+					for (var i = 0, n = ds_list_size(node.inputs); i < n; i++)
+						if(node.inputs[| i].setFrom(value_dragging)) break;
 				}
 				
-				value_dragging = noone;
-			}
-		} #endregion
-		
-		function doTransform() { #region
-			for( var i = 0; i < array_length(nodes_selecting); i++ ) {
-				var node = nodes_selecting[i];
-				if(ds_list_empty(node.outputs)) continue;
+			} else if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
 				
-				var _o = node.outputs[| 0];
-				if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurface) {
-					var tr = nodeBuild("Node_Transform", node.x + node.w + 64, node.y);
-					tr.inputs[| 0].setFrom(_o);
-				}
+				for (var i = 0, n = ds_list_size(node.outputs); i < n; i++)
+					if(value_dragging.setFrom(node.outputs[| i])) break;
 			}
-		} #endregion
+			
+			value_dragging = noone;
+		}
+	} #endregion
 	
-		function doDuplicate() { #region
-			if(array_empty(nodes_selecting)) return;
+	function doTransform() { #region
+		for( var i = 0; i < array_length(nodes_selecting); i++ ) {
+			var node = nodes_selecting[i];
+			if(ds_list_empty(node.outputs)) continue;
 			
-			var _map  = {};
-			var _pmap = {};
-			var _node = [];
-			
-			for(var i = 0; i < array_length(nodes_selecting); i++) {
-				var _n = nodes_selecting[i];
-				
-				if(_n.inline_parent_object != "")
-					_pmap[$ _n.inline_context.node_id] = _n.inline_parent_object;
-					
-				SAVE_NODE(_node, _n,,,, getCurrentContext());
+			var _o = node.outputs[| 0];
+			if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurface) {
+				var tr = nodeBuild("Node_Transform", node.x + node.w + 64, node.y);
+				tr.inputs[| 0].setFrom(_o);
 			}
-			
-			_map.nodes = _node;
-			
-			ds_map_clear(APPEND_MAP);
-			ds_list_clear(APPEND_LIST);
-			
-			CLONING	= true;
-				var _pmap_keys = variable_struct_get_names(_pmap);
-				for( var i = 0, n = array_length(_pmap_keys); i < n; i++ ) {
-					var _pkey     = _pmap_keys[i];
-					var _original = PROJECT.nodeMap[? _pkey];
-					var _nodeS    = _pmap[$ _pkey];
-					
-					CLONING_GROUP = _original;
-					var _newGroup = nodeBuild(_nodeS, _original.x, _original.y);
-					APPEND_MAP[? _pkey] = _newGroup;
-				}
-				
-				APPEND_LIST = __APPEND_MAP(_map,, APPEND_LIST);
-				recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(APPEND_LIST));
-			CLONING	= false;
-			
-			if(ds_list_size(APPEND_LIST) == 0) return;
-			
-			for(var i = 0; i < array_length(nodes_selecting); i++) {
-				var _orignal = nodes_selecting[i];
-				if(!_orignal.clonable) continue;
-				
-				var _cloned     = ds_map_try_get(APPEND_MAP, _orignal.node_id, "");
-				var _inline_ctx = _orignal.inline_context;
-				
-				if(_inline_ctx != noone && _cloned != "") {
-					_inline_ctx = ds_map_try_get(APPEND_MAP, _inline_ctx.node_id, _inline_ctx);
-					_inline_ctx.addNode(PROJECT.nodeMap[? _cloned]);
-				}
-			}
-			
-			var x0 = 99999999;
-			var y0 = 99999999;
-			for(var i = 0; i < ds_list_size(APPEND_LIST); i++) {
-				var _node = APPEND_LIST[| i];
-				
-				x0 = min(x0, _node.x);
-				y0 = min(y0, _node.y);
-			}
-		
-			node_dragging = APPEND_LIST[| 0];
-			node_drag_mx  = x0; node_drag_my  = y0;
-			node_drag_sx  = x0; node_drag_sy  = y0;
-			node_drag_ox  = x0; node_drag_oy  = y0;
-			
-			nodes_selecting = array_create_from_list(APPEND_LIST);
-		} #endregion
+		}
+	} #endregion
 
-		function doInstance() { #region
-			var node = getFocusingNode();
-			if(node == noone) return;
+	function doDuplicate() { #region
+		if(array_empty(nodes_selecting)) return;
 		
-			if(node.instanceBase == noone) {
-				node.isInstancer = true;
+		var _map  = {};
+		var _pmap = {};
+		var _node = [];
+		
+		for(var i = 0; i < array_length(nodes_selecting); i++) {
+			var _n = nodes_selecting[i];
 			
-				CLONING = true;
-				var _type = instanceof(node);
-				var _node = nodeBuild(_type, x, y);
-				CLONING = false;
+			if(_n.inline_parent_object != "")
+				_pmap[$ _n.inline_context.node_id] = _n.inline_parent_object;
 				
-				_node.setInstance(node);
+			SAVE_NODE(_node, _n,,,, getCurrentContext());
+		}
+		
+		_map.nodes = _node;
+		
+		ds_map_clear(APPEND_MAP);
+		ds_list_clear(APPEND_LIST);
+		
+		CLONING	= true;
+			var _pmap_keys = variable_struct_get_names(_pmap);
+			for( var i = 0, n = array_length(_pmap_keys); i < n; i++ ) {
+				var _pkey     = _pmap_keys[i];
+				var _original = PROJECT.nodeMap[? _pkey];
+				var _nodeS    = _pmap[$ _pkey];
+				
+				CLONING_GROUP = _original;
+				var _newGroup = nodeBuild(_nodeS, _original.x, _original.y);
+				APPEND_MAP[? _pkey] = _newGroup;
 			}
+			
+			APPEND_LIST = __APPEND_MAP(_map,, APPEND_LIST);
+			recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(APPEND_LIST));
+		CLONING	= false;
 		
-			var _nodeNew  = _node.clone();
+		if(ds_list_size(APPEND_LIST) == 0) return;
 		
-			node_dragging = _nodeNew;
-			node_drag_mx  = _nodeNew.x; node_drag_my  = _nodeNew.y;
-			node_drag_sx  = _nodeNew.x; node_drag_sy  = _nodeNew.y;
-			node_drag_ox  = _nodeNew.x; node_drag_oy  = _nodeNew.y;
-		} #endregion
+		for(var i = 0; i < array_length(nodes_selecting); i++) {
+			var _orignal = nodes_selecting[i];
+			if(!_orignal.clonable) continue;
+			
+			var _cloned     = ds_map_try_get(APPEND_MAP, _orignal.node_id, "");
+			var _inline_ctx = _orignal.inline_context;
+			
+			if(_inline_ctx != noone && _cloned != "") {
+				_inline_ctx = ds_map_try_get(APPEND_MAP, _inline_ctx.node_id, _inline_ctx);
+				_inline_ctx.addNode(PROJECT.nodeMap[? _cloned]);
+			}
+		}
+		
+		var x0 = 99999999;
+		var y0 = 99999999;
+		for(var i = 0; i < ds_list_size(APPEND_LIST); i++) {
+			var _node = APPEND_LIST[| i];
+			
+			x0 = min(x0, _node.x);
+			y0 = min(y0, _node.y);
+		}
 	
-		function doCopy() { #region
-			if(array_empty(nodes_selecting)) return;
-			clipboard_set_text("");
+		node_dragging = APPEND_LIST[| 0];
+		node_drag_mx  = x0; node_drag_my  = y0;
+		node_drag_sx  = x0; node_drag_sy  = y0;
+		node_drag_ox  = x0; node_drag_oy  = y0;
 		
-			var _map   = {};
-			_map.nodes = [];
-			for(var i = 0; i < array_length(nodes_selecting); i++)
-				SAVE_NODE(_map.nodes, nodes_selecting[i],,,, getCurrentContext());
-			
-			clipboard_set_text(json_stringify_minify(_map));
-		} #endregion
+		nodes_selecting = array_create_from_list(APPEND_LIST);
+	} #endregion
+
+	function doInstance() { #region
+		var node = getFocusingNode();
+		if(node == noone) return;
 	
-		function doPaste() { #region
-			var txt  = clipboard_get_text();
-			var _map = json_try_parse(txt, noone);
-			
-			if(txt == "") return;
-			
-			if(is_struct(_map)) {
-				ds_map_clear(APPEND_MAP);
-				APPENDING = true;
-				CLONING	  = true;
-				var _app  = __APPEND_MAP(_map);
-				APPENDING = false;
-				CLONING	  = false;
-				
-				if(_app == noone) 
-					return;
-			
-				if(ds_list_size(_app) == 0) {
-					ds_list_destroy(_app);
-					return;
-				}
-			
-				var x0 = 99999999;
-				var y0 = 99999999;
-				for(var i = 0; i < ds_list_size(_app); i++) {
-					var _node = _app[| i];
-				
-					x0 = min(x0, _node.x);
-					y0 = min(y0, _node.y);
-				}
+		if(node.instanceBase == noone) {
+			node.isInstancer = true;
 		
-				node_dragging = _app[| 0];
-				node_drag_mx  = x0; node_drag_my  = y0;
-				node_drag_sx  = x0; node_drag_sy  = y0;
-				node_drag_ox  = x0; node_drag_oy  = y0;
+			CLONING = true;
+			var _type = instanceof(node);
+			var _node = nodeBuild(_type, x, y);
+			CLONING = false;
 			
-				nodes_selecting = array_create_from_list(_app);
+			_node.setInstance(node);
+		}
+	
+		var _nodeNew  = _node.clone();
+	
+		node_dragging = _nodeNew;
+		node_drag_mx  = _nodeNew.x; node_drag_my  = _nodeNew.y;
+		node_drag_sx  = _nodeNew.x; node_drag_sy  = _nodeNew.y;
+		node_drag_ox  = _nodeNew.x; node_drag_oy  = _nodeNew.y;
+	} #endregion
+
+	function doCopy() { #region
+		if(array_empty(nodes_selecting)) return;
+		clipboard_set_text("");
+	
+		var _map   = {};
+		_map.nodes = [];
+		for(var i = 0; i < array_length(nodes_selecting); i++)
+			SAVE_NODE(_map.nodes, nodes_selecting[i],,,, getCurrentContext());
+		
+		clipboard_set_text(json_stringify_minify(_map));
+	} #endregion
+
+	function doPaste() { #region
+		var txt  = clipboard_get_text();
+		var _map = json_try_parse(txt, noone);
+		
+		if(txt == "") return;
+		
+		if(is_struct(_map)) {
+			ds_map_clear(APPEND_MAP);
+			APPENDING = true;
+			CLONING	  = true;
+			var _app  = __APPEND_MAP(_map);
+			APPENDING = false;
+			CLONING	  = false;
+			
+			if(_app == noone) 
+				return;
+		
+			if(ds_list_size(_app) == 0) {
+				ds_list_destroy(_app);
 				return;
 			}
 		
-			if(filename_ext(txt) == ".pxc")
-				APPEND(txt);
-			else if(filename_ext(txt) == ".pxcc")
-				APPEND(txt);
-			else if(filename_ext(txt) == ".png") {
-				if(file_exists_empty(txt)) {
-					Node_create_Image_path(0, 0, txt);
-					return;
-				}
-		
-				var path = TEMPDIR + "url_pasted_" + string(irandom_range(100000, 999999)) + ".png";
-				var img = http_get_file(txt, path);
-				CLONING = true;
-				var node = Node_create_Image(0, 0);
-				CLONING = false;
-				var args = [node, path];
-		
-				global.FILE_LOAD_ASYNC[? img] = [ function(args) {
-					args[0].inputs[| 0].setValue(args[1]);
-					args[0].doUpdate();
-				}, args];
-			}
-		} #endregion
-	
-		function doBlend() { #region
-			if(array_length(nodes_selecting) != 2) return;
+			var x0 = 99999999;
+			var y0 = 99999999;
+			for(var i = 0; i < ds_list_size(_app); i++) {
+				var _node = _app[| i];
 			
-			var _n0 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[0] : nodes_selecting[1];
-			var _n1 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[1] : nodes_selecting[0];
-			
-			var cx = max(_n0.x, _n1.x) + 160;
-			var cy = round((_n0.y + _n1.y) / 2 / 32) * 32;
-			
-			var _j0 = _n0.outputs[| 0]; 
-			var _j1 = _n1.outputs[| 0]; 
-				
-			if(_j0.type == VALUE_TYPE.surface && _j1.type == VALUE_TYPE.surface) {
-				var _blend = new Node_Blend(cx, cy, getCurrentContext());
-				_blend.inputs[| 0].setFrom(_j0);
-				_blend.inputs[| 1].setFrom(_j1);
-				
-			} else if((_j0.type == VALUE_TYPE.integer || _j0.type == VALUE_TYPE.float) && (_j1.type == VALUE_TYPE.integer || _j1.type == VALUE_TYPE.float)) {
-				var _blend = new Node_Math(cx, cy, getCurrentContext());
-				_blend.inputs[| 1].setFrom(_j0);
-				_blend.inputs[| 2].setFrom(_j1);
-				
-			}
-			
-			nodes_selecting = [];
-		} #endregion
-		
-		function doCompose() { #region
-			if(array_empty(nodes_selecting)) return;
-		
-			var cx   = nodes_selecting[0].x;
-			var cy   = 0;
-			var pr   = ds_priority_create();
-			var amo  = array_length(nodes_selecting);
-			var len  = 0;
-			
-			for(var i = 0; i < amo; i++) {
-				var _node = nodes_selecting[i];
-				if(ds_list_size(_node.outputs) == 0) continue;
-				
-				if(_node.outputs[| 0].type != VALUE_TYPE.surface) continue;
-				
-				cx = max(cx, _node.x);
-				cy += _node.y;
-				
-				ds_priority_add(pr, _node, _node.y);
-				len++;
-			}
-			
-			cx = cx + 160;
-			cy = round(cy / len / 32) * 32;
-			
-			var _compose = new Node_Composite(cx, cy, getCurrentContext());
-			
-			repeat(len) {
-				var _node = ds_priority_delete_min(pr);
-				_compose.addInput(_node.outputs[| 0]);
-			}
-			
-			nodes_selecting = [];
-			ds_priority_destroy(pr);
-		} #endregion
-	
-		function doArray() { #region
-			if(array_empty(nodes_selecting)) return;
-		
-			var cx  = nodes_selecting[0].x;
-			var cy  = 0;
-			var pr  = ds_priority_create();
-			var amo = array_length(nodes_selecting);
-			var len = 0;
-			
-			for(var i = 0; i < amo; i++) {
-				var _node = nodes_selecting[i];
-				if(ds_list_size(_node.outputs) == 0) continue;
-				
-				cx = max(cx, _node.x);
-				cy += _node.y;
-				
-				ds_priority_add(pr, _node, _node.y);
-				len++;
-			}
-			
-			cx = cx + 160;
-			cy = round(cy / len / 32) * 32;
-		
-			var _array = nodeBuild("Node_Array", cx, cy);
-			
-			repeat(len) {
-				var _node = ds_priority_delete_min(pr);
-				_array.addInput(_node.outputs[| 0]);
-			}
-			
-			nodes_selecting = [];
-			ds_priority_destroy(pr);
-		} #endregion
-	
-		function doGroup() { #region
-			if(array_empty(nodes_selecting)) return;
-			groupNodes(nodes_selecting);
-		} #endregion
-	
-		function doUngroup() { #region
-			var _node = getFocusingNode();
-			if(_node == noone) return;
-			if(!is_instanceof(_node, Node_Collection) || !_node.ungroupable) return;
-		
-			upgroupNode(_node);
-		} #endregion
-	
-		function doFrame() { #region
-			var x0 = 999999, y0 = 999999, x1 = -999999, y1 = -999999;
-			
-			for( var i = 0; i < array_length(nodes_selecting); i++ )  {
-				var _node = nodes_selecting[i];
 				x0 = min(x0, _node.x);
 				y0 = min(y0, _node.y);
-				x1 = max(x1, _node.x + _node.w);
-				y1 = max(y1, _node.y + _node.h);
 			}
-			
-			x0 -= 64;
-			y0 -= 64;
-			x1 += 64;
-			y1 += 64;
-		
-			var f = new Node_Frame(x0, y0, getCurrentContext());
-			f.inputs[| 0].setValue([x1 - x0, y1 - y0]);
-		} #endregion
 	
-		function doDelete(_merge = false) { #region
-			__temp_merge = _merge;
-			array_foreach(nodes_selecting, function(node) { if(node.manual_deletable) node.destroy(__temp_merge); });
-			nodes_selecting = [];
-		} #endregion
+			node_dragging = _app[| 0];
+			node_drag_mx  = x0; node_drag_my  = y0;
+			node_drag_sx  = x0; node_drag_sy  = y0;
+			node_drag_ox  = x0; node_drag_oy  = y0;
 		
-		node_prop_clipboard = noone;
-		function doCopyProp() { #region
-			if(node_hover == noone) return;
-			node_prop_clipboard = node_hover;
-		} #endregion
-			
-		function doPasteProp() { #region
-			if(node_hover == noone) return;
-			if(node_prop_clipboard == noone) return;
-			if(!node_prop_clipboard.active) return;
-			
-			if(instanceof(node_prop_clipboard) != instanceof(node_hover)) return;
-			
-			var _vals = [];
-			for( var i = 0, n = ds_list_size(node_prop_clipboard.inputs); i < n; i++ ) {
-				var _inp = node_prop_clipboard.inputs[| i];
-				_vals[i] = _inp.serialize();
+			nodes_selecting = array_create_from_list(_app);
+			return;
+		}
+	
+		if(filename_ext(txt) == ".pxc")
+			APPEND(txt);
+		else if(filename_ext(txt) == ".pxcc")
+			APPEND(txt);
+		else if(filename_ext(txt) == ".png") {
+			if(file_exists_empty(txt)) {
+				Node_create_Image_path(0, 0, txt);
+				return;
 			}
+	
+			var path = TEMPDIR + "url_pasted_" + string(irandom_range(100000, 999999)) + ".png";
+			var img = http_get_file(txt, path);
+			CLONING = true;
+			var node = Node_create_Image(0, 0);
+			CLONING = false;
+			var args = [node, path];
+	
+			global.FILE_LOAD_ASYNC[? img] = [ function(args) {
+				args[0].inputs[| 0].setValue(args[1]);
+				args[0].doUpdate();
+			}, args];
+		}
+	} #endregion
+
+	function doBlend() { #region
+		if(array_length(nodes_selecting) != 2) return;
+		
+		var _n0 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[0] : nodes_selecting[1];
+		var _n1 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[1] : nodes_selecting[0];
+		
+		var cx = max(_n0.x, _n1.x) + 160;
+		var cy = round((_n0.y + _n1.y) / 2 / 32) * 32;
+		
+		var _j0 = _n0.outputs[| 0]; 
+		var _j1 = _n1.outputs[| 0]; 
 			
-			for( var i = 0, n = ds_list_size(node_hover.inputs); i < n; i++ ) {
-				var _inp = node_hover.inputs[| i];
-				if(_inp.value_from != noone) continue;
-				
-				_inp.applyDeserialize(_vals[i]);
-			}
+		if(_j0.type == VALUE_TYPE.surface && _j1.type == VALUE_TYPE.surface) {
+			var _blend = new Node_Blend(cx, cy, getCurrentContext());
+			_blend.inputs[| 0].setFrom(_j0);
+			_blend.inputs[| 1].setFrom(_j1);
 			
-			node_hover.clearInputCache();
-			RENDER_PARTIAL
-		} #endregion
-	#endregion
+		} else if((_j0.type == VALUE_TYPE.integer || _j0.type == VALUE_TYPE.float) && (_j1.type == VALUE_TYPE.integer || _j1.type == VALUE_TYPE.float)) {
+			var _blend = new Node_Math(cx, cy, getCurrentContext());
+			_blend.inputs[| 1].setFrom(_j0);
+			_blend.inputs[| 2].setFrom(_j1);
+			
+		}
+		
+		nodes_selecting = [];
+	} #endregion
+	
+	function doCompose() { #region
+		if(array_empty(nodes_selecting)) return;
+	
+		var cx   = nodes_selecting[0].x;
+		var cy   = 0;
+		var pr   = ds_priority_create();
+		var amo  = array_length(nodes_selecting);
+		var len  = 0;
+		
+		for(var i = 0; i < amo; i++) {
+			var _node = nodes_selecting[i];
+			if(ds_list_size(_node.outputs) == 0) continue;
+			
+			if(_node.outputs[| 0].type != VALUE_TYPE.surface) continue;
+			
+			cx = max(cx, _node.x);
+			cy += _node.y;
+			
+			ds_priority_add(pr, _node, _node.y);
+			len++;
+		}
+		
+		cx = cx + 160;
+		cy = round(cy / len / 32) * 32;
+		
+		var _compose = new Node_Composite(cx, cy, getCurrentContext());
+		
+		repeat(len) {
+			var _node = ds_priority_delete_min(pr);
+			_compose.addInput(_node.outputs[| 0]);
+		}
+		
+		nodes_selecting = [];
+		ds_priority_destroy(pr);
+	} #endregion
+
+	function doArray() { #region
+		if(array_empty(nodes_selecting)) return;
+	
+		var cx  = nodes_selecting[0].x;
+		var cy  = 0;
+		var pr  = ds_priority_create();
+		var amo = array_length(nodes_selecting);
+		var len = 0;
+		
+		for(var i = 0; i < amo; i++) {
+			var _node = nodes_selecting[i];
+			if(ds_list_size(_node.outputs) == 0) continue;
+			
+			cx = max(cx, _node.x);
+			cy += _node.y;
+			
+			ds_priority_add(pr, _node, _node.y);
+			len++;
+		}
+		
+		cx = cx + 160;
+		cy = round(cy / len / 32) * 32;
+	
+		var _array = nodeBuild("Node_Array", cx, cy);
+		
+		repeat(len) {
+			var _node = ds_priority_delete_min(pr);
+			_array.addInput(_node.outputs[| 0]);
+		}
+		
+		nodes_selecting = [];
+		ds_priority_destroy(pr);
+	} #endregion
+
+	function doGroup() { #region
+		if(array_empty(nodes_selecting)) return;
+		groupNodes(nodes_selecting);
+	} #endregion
+
+	function doUngroup() { #region
+		var _node = getFocusingNode();
+		if(_node == noone) return;
+		if(!is_instanceof(_node, Node_Collection) || !_node.ungroupable) return;
+	
+		upgroupNode(_node);
+	} #endregion
+
+	function doFrame() { #region
+		var x0 = 999999, y0 = 999999, x1 = -999999, y1 = -999999;
+		
+		for( var i = 0; i < array_length(nodes_selecting); i++ )  {
+			var _node = nodes_selecting[i];
+			x0 = min(x0, _node.x);
+			y0 = min(y0, _node.y);
+			x1 = max(x1, _node.x + _node.w);
+			y1 = max(y1, _node.y + _node.h);
+		}
+		
+		x0 -= 64;
+		y0 -= 64;
+		x1 += 64;
+		y1 += 64;
+	
+		var f = new Node_Frame(x0, y0, getCurrentContext());
+		f.inputs[| 0].setValue([x1 - x0, y1 - y0]);
+	} #endregion
+
+	function doDelete(_merge = false) { #region
+		__temp_merge = _merge;
+		array_foreach(nodes_selecting, function(node) { if(node.manual_deletable) node.destroy(__temp_merge); });
+		nodes_selecting = [];
+	} #endregion
+	
+	node_prop_clipboard = noone;
+	function doCopyProp() { #region
+		if(node_hover == noone) return;
+		node_prop_clipboard = node_hover;
+	} #endregion
+		
+	function doPasteProp() { #region
+		if(node_hover == noone) return;
+		if(node_prop_clipboard == noone) return;
+		if(!node_prop_clipboard.active) return;
+		
+		if(instanceof(node_prop_clipboard) != instanceof(node_hover)) return;
+		
+		var _vals = [];
+		for( var i = 0, n = ds_list_size(node_prop_clipboard.inputs); i < n; i++ ) {
+			var _inp = node_prop_clipboard.inputs[| i];
+			_vals[i] = _inp.serialize();
+		}
+		
+		for( var i = 0, n = ds_list_size(node_hover.inputs); i < n; i++ ) {
+			var _inp = node_hover.inputs[| i];
+			if(_inp.value_from != noone) continue;
+			
+			_inp.applyDeserialize(_vals[i]);
+		}
+		
+		node_hover.clearInputCache();
+		RENDER_PARTIAL
+	} #endregion
 	
 	function dropFile(path) { #region
 		if(node_hovering && is_callable(node_hovering.on_drop_file))
@@ -2399,6 +2459,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	static onFullScreen = function() { run_in(1, fullView); }
+	
+	//// =========== Serialize ===========
 	
 	static serialize   = function() { 
 		return { 
