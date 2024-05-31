@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_wave_table",
   "parent":{
-    "name":"animation",
-    "path":"folders/nodes/data/animation.yy",
+    "name":"value",
+    "path":"folders/nodes/data/animation/value.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
