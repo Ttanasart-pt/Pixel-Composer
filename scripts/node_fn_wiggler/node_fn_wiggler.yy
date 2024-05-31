@@ -1,12 +1,12 @@
 {
   "$GMScript":"",
-  "%Name":"node_wave_table",
+  "%Name":"node_fn_wiggler",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_wave_table",
+  "name":"node_fn_wiggler",
   "parent":{
-    "name":"value",
-    "path":"folders/nodes/data/animation/value.yy",
+    "name":"fn",
+    "path":"folders/nodes/data/animation/fn.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

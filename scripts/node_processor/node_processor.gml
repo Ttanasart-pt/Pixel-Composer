@@ -346,9 +346,12 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		processData_postbatch();
 		
 		postProcess();
+		postPostProcess();
 	} #endregion
 	
 	static postProcess = function() {}
+	
+	static postPostProcess = function() {}
 	
 	static processSerialize = function(_map) { #region
 		_map.array_process = attributes.array_process;

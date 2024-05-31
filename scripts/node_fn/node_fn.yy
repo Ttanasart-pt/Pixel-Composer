@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_fn",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_fn",
+  "parent":{
+    "name":"fn",
+    "path":"folders/nodes/data/animation/fn.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
