@@ -953,9 +953,12 @@ function __initNodes() {
 		addNodeObject(animation, "Stagger",			s_node_stagger,		"Node_Stagger",		[1, Node_Stagger]).setVersion(11640);
 		
 		ds_list_add(animation, "Value");	
-		addNodeObject(animation, "WaveTable",		s_node_wave,		"Node_Fn_WaveTable",	[1, Node_Fn_WaveTable],, "Create value changing overtime in wave pattern.");
-		addNodeObject(animation, "Wiggler",			s_node_wiggler,		"Node_Wiggler",			[1, Node_Wiggler],, "Create random value smoothly changing over time.");
-			
+		addNodeObject(animation, "WaveTable",		s_node_wave,		  "Node_Fn_WaveTable",	[1, Node_Fn_WaveTable],, "Create value changing overtime in wave pattern.");
+		addNodeObject(animation, "Wiggler",			s_node_wiggler,		  "Node_Wiggler",		[1, Node_Wiggler],, "Create random value smoothly changing over time.");
+		addNodeObject(animation, "Ease",			s_node_ease,		  "Node_Fn_Ease",		[1, Node_Fn_Ease],, "");
+		addNodeObject(animation, "Math",			s_node_fx_math, 	  "Node_Fn_Math",		[1, Node_Fn_Math],, "");
+		addNodeObject(animation, "SmoothStep",		s_node_fx_smoothstep, "Node_Fn_SmoothStep",	[1, Node_Fn_SmoothStep],, "");
+		
 		ds_list_add(animation, "Audio");
 		addNodeObject(animation, "WAV File In",	 s_node_wav_file_read,	"Node_WAV_File_Read",	[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
 		addNodeObject(animation, "WAV File Out", s_node_wav_file_write,	"Node_WAV_File_Write",	[1, Node_WAV_File_Write],, "Save wav audio file.").setVersion(1145);

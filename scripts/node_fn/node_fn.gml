@@ -1,5 +1,6 @@
 function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name			= "Fn";
+	time_based      = true;
 	update_on_frame = true;
 	setDimension(96, 96);
 	
@@ -15,7 +16,8 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	];
 	
 	text_display      = 0;
-	graph_display     = array_create(64, 0);
+	graph_res         = 64;
+	graph_display     = array_create(graph_res, 0);
 	graph_display_min = 0;
 	graph_display_max = 0;
 	
@@ -25,13 +27,16 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		graph_display_min = undefined;
 		graph_display_max = undefined;
 		
-		for( var i = 0; i < 64; i++ ) {
-			var _c = __fnEval(i / 64);
+		for( var i = 0; i < graph_res; i++ ) {
+			var _c = __fnEval(refreshDisplayX(i));
 			graph_display[i] = _c;
 			graph_display_min = graph_display_min == undefined? _c : min(graph_display_min, _c);
 			graph_display_max = graph_display_max == undefined? _c : max(graph_display_max, _c);
 		}
 	}
+	
+	static refreshDisplayX = function(i) { return i / graph_res; }
+	static getDisplayX     = function(i) { return graph_display[i]; }
 	
 	static postPostProcess = function() { if(!IS_PLAYING) refreshDisplay(); }
 	
@@ -72,10 +77,10 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 				draw_set_text(f_sdf, fa_right, fa_bottom, COLORS._main_text_sub);
 				draw_text_transformed(x1 - 2 * _s, y1, text_display, 0.3 * _s, 0.3 * _s, 0);
 				
-				var lw = ww / (64 - 1);
+				var lw = ww / (graph_res - 1);
 				var ox, oy;
 				draw_set_color(c_white);
-				for( var i = 0; i < 64; i++ ) {
+				for( var i = 0; i < graph_res; i++ ) {
 					var _x = x0 + i * lw;
 					var _y = yc - (graph_display[i] - val) / _ran * hh;
 					if(i) draw_line(ox, oy, _x, _y);
@@ -83,9 +88,12 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 					ox = _x;
 					oy = _y;
 				}
-				draw_set_color(COLORS._main_accent);
-				var _fx = x0 + (time / total_time * ww);
-				draw_line(_fx, y0, _fx, y1);
+				
+				if(time_based) {
+					draw_set_color(COLORS._main_accent);
+					var _fx = x0 + (time / total_time * ww);
+					draw_line(_fx, y0, _fx, y1);
+				}
 				
 				draw_set_color(COLORS.node_wiggler_frame);
 				draw_rectangle(x0, y0, x1, y1, true);
