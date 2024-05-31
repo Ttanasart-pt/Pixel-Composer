@@ -1712,6 +1712,7 @@
     {"name":"s_node_fluidSim_wall","order":12,"path":"sprites/s_node_fluidSim_wall/s_node_fluidSim_wall.yy",},
     {"name":"s_node_fold_noise","order":43,"path":"sprites/s_node_fold_noise/s_node_fold_noise.yy",},
     {"name":"s_node_frame","order":1,"path":"sprites/s_node_frame/s_node_frame.yy",},
+    {"name":"s_node_fx_math","order":11,"path":"sprites/s_node_fx_math/s_node_fx_math.yy",},
     {"name":"s_node_fx_smoothstep","order":9,"path":"sprites/s_node_fx_smoothstep/s_node_fx_smoothstep.yy",},
     {"name":"s_node_FXAA","order":22,"path":"sprites/s_node_FXAA/s_node_FXAA.yy",},
     {"name":"s_node_gabor","order":32,"path":"sprites/s_node_gabor/s_node_gabor.yy",},
