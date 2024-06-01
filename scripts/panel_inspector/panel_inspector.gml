@@ -559,7 +559,6 @@ function Panel_Inspector() : PanelContent() constructor {
 			return hh;
 		} #endregion
 		
-		var color_picker_selecting = noone;
 		var color_picker_index     = 0;
 		var pickers = [];
 		var _colsp  = false;
@@ -834,7 +833,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				prop_highlight = noone;
 		}
 		
-		return hh;
+		return hh + ui(64);
 	} #endregion
 	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) { #region

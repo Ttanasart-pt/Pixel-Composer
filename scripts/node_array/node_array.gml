@@ -91,6 +91,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static updateType = function(resetVal = false) { #region
 		var _typ = getType();
+		if(getInputAmount() <= 0) return;
 		
 		if(_typ == VALUE_TYPE.any && inputs[| input_fix_len].value_from)
 			outputs[| 0].setType(inputs[| input_fix_len].value_from.type);

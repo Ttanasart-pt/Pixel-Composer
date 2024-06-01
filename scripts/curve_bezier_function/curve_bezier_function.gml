@@ -6,15 +6,15 @@
 #macro CURVE_DEF_10 [0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
 #macro CURVE_DEF_11 [0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]
 
-function draw_curve(x0, y0, _w, _h, _bz, miny = 0, maxy = 1) { #region
+function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1) { #region
 	var segments = array_length(_bz) / 6 - 1;
+	var _ox, _oy;
 	
 	for( var i = 0; i < segments; i++ ) {
 		var ind = i * 6;
+		
 		var _x0 = _bz[ind + 2];
 		var _y0 = _bz[ind + 3];
-	  //var bx0 = _x0 + _bz[ind + 0];
-	  //var by0 = _y0 + _bz[ind + 1];
 		var ax0 = _x0 + _bz[ind + 4];
 		var ay0 = _y0 + _bz[ind + 5];
 		
@@ -22,35 +22,28 @@ function draw_curve(x0, y0, _w, _h, _bz, miny = 0, maxy = 1) { #region
 		var _y1 = _bz[ind + 6 + 3];
 		var bx1 = _x1 + _bz[ind + 6 + 0];
 		var by1 = _y1 + _bz[ind + 6 + 1];
-	  //var ax1 = _x1 + _bz[ind + 6 + 4];
-	  //var ay1 = _y1 + _bz[ind + 6 + 5];
 		
-		var dx0 = x0 + _w * _x0;
-		var dx1 = x0 + _w * _x1;
-		var dw  = dx1 - dx0;
-		var smp = ceil((_x1 - _x0) * 32);
+		var smp = ceil((_x1 - _x0) / (maxx - minx) * 32);
+		var bbz = [ _y0, ax0, ay0, bx1, by1, _y1 ];
 		
-		draw_curve_segment(dx0, y0, dw, _h, [_y0, ax0, ay0, bx1, by1, _y1], smp, miny, maxy);
-	}
-} #endregion
-
-function draw_curve_segment(x0, y0, _w, _h, _bz, SAMPLE = 32, miny = 0, maxy = 1) { #region
-	var _ox, _oy;
-	
-	for(var i = 0; i <= SAMPLE; i++) {
-		var t = i / SAMPLE;
-		var _r  = eval_curve_segment_t_position(t, _bz);
-		var _rx = _r[0], _ry = _r[1];
-		_ry = (_ry - miny) / (maxy - miny);
+		if(_x1 < minx) continue;
 		
-		var _nx = _rx * _w + x0;
-		var _ny = (_h? _ry : 1 - _ry) * abs(_h) + y0;
-		
-		if(i) 
-			draw_line(_ox, _oy, _nx, _ny);
-		
-		_ox = _nx;
-		_oy = _ny;
+		for(var j = 0; j <= smp; j++) {
+			var t   = j / smp;
+			var _r  = eval_curve_segment_t_position(t, bbz);
+			var _rx = ((_x0 + _r[0] * (_x1 - _x0)) - minx) / (maxx - minx);
+			var _ry = (_r[1] - miny) / (maxy - miny);
+			
+			var _nx = x0 + _w * _rx;
+			var _ny = y0 + _h * (1 - _ry);
+			
+			if(j) draw_line(_ox, _oy, _nx, _ny);
+			
+			_ox = _nx;
+			_oy = _ny;
+			
+			if(_nx > x0 + _w) return;
+		}
 	}
 } #endregion
 

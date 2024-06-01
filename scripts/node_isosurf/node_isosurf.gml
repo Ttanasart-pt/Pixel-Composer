@@ -14,12 +14,16 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setArrayDynamic()
 		.setArrayDepth(1);
 	
+	inputs[| 4] = nodeValue("Offsets", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setArrayDepth(1);
+	
 	outputs[| 0] = nodeValue("IsoSurf", self, JUNCTION_CONNECT.output, VALUE_TYPE.dynaSurface, noone);
 	
 	knob_hover    = noone;
 	knob_dragging = noone;
-	drag_sv  = 0;
-	drag_sa  = 0;
+	drag_sv = 0;
+	drag_sa = 0;
 	
 	angle_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var hh     = ui(240);
@@ -89,30 +93,45 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}); #endregion
 	
 	input_display_list = [
-		["Iso",		  false], 0, 2, angle_renderer, 
-		["Surfaces",  false], 1, 
+		["Iso",		false], 0, 2, angle_renderer, 
+		["Data",	false], 1, 4, 
 	];
 	
 	static onValueUpdate = function(index) {
-		if(index == 0) {
-			var _amo = getInputData(0);
-			var _ang = array_create(_amo);
-			
-			for( var i = 0, n = _amo; i < n; i++ ) 
-				_ang[i] = 360 * (i / _amo);
-			inputs[| 3].setValue(_ang);
+		if(index != 0) return;
+		
+		var _amo = getInputData(0);
+		var _ang = array_create(_amo);
+		var _off = array_create(_amo);
+		
+		for( var i = 0, n = _amo; i < n; i++ ) {
+			_ang[i] = 360 * (i / _amo);
+			_off[i] = [ 0, 0 ];
 		}
+		
+		inputs[| 3].setValue(_ang);
+		inputs[| 4].setValue(_off);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _amo   = _data[0];
-		var _surf  = _data[1];
-		var _ashft = _data[2];
-		var _angle = _data[3];
-		var _iso   = new dynaSurf_iso();
+		var _amo    = _data[0];
+		var _surf   = _data[1];
+		var _ashft  = _data[2];
+		var _angle  = _data[3];
+		var _offset = _data[4];
+		var _iso    = new dynaSurf_iso();
 		
-		for( var i = 0; i < _amo; i++ ) 
+		_iso.offsetx = array_create(_amo);
+		_iso.offsety = array_create(_amo);
+		
+		for( var i = 0; i < _amo; i++ ) {
 			_iso.surfaces[i] = array_safe_get_fast(_surf, i, noone);
+			
+			var _off = array_safe_get_fast(_offset, i);
+			_iso.offsetx[i] = array_safe_get_fast(_off, 0);
+			_iso.offsety[i] = array_safe_get_fast(_off, 1);
+		}
+		
 		_iso.angles      = _angle;
 		_iso.angle_shift = _ashft;
 		

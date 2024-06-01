@@ -17,7 +17,8 @@ event_inherited();
 	show_icon = false;
 	context   = noone;
 	
-	_hovering_ch = true;
+	_hovering_ch  = true;
+	init_pressing = false;
 	
 	setFocus(self.id);
 	

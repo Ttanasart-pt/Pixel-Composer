@@ -263,13 +263,21 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var padd = ui(8);
 	
 	var labelWidth = max(lb_w, min(ww * 0.4, ui(200)));
-	var editBoxX   = xx	+ !breakLine * labelWidth;
-	var editBoxY   = breakLine? _hsy : yy;
+	var widExtend  = breakLine;
+	
+	switch(jun.type) {
+		case VALUE_TYPE.curve :   
+			widExtend = true;
+			break;
+	}
+	
+	var editBoxX   = xx	+ !widExtend * labelWidth;
+	var editBoxY   = widExtend? _hsy : yy;
 	
 	var editBoxW   = (xx + ww) - editBoxX;
-	var editBoxH   = breakLine? TEXTBOX_HEIGHT : lb_h;
+	var editBoxH   = widExtend? TEXTBOX_HEIGHT : lb_h;
 			
-	var widH	= breakLine? editBoxH : 0;
+	var widH	= widExtend? editBoxH : 0;
 	var mbRight	= true;
 	
 	if(jun.expUse) { #region expression editor
@@ -282,8 +290,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		if(_focus) jun.express_edit.register(_scrollPane);
 			
 		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
-		widH = wd_h - (TEXTBOX_HEIGHT * !breakLine);
+		widH = wd_h - (TEXTBOX_HEIGHT * !widExtend);
 	#endregion
+	
 	} else if(wid && jun.display_type != VALUE_DISPLAY.none) { #region edit widget
 		wid.setFocusHover(_focus, _hover);
 		
@@ -319,10 +328,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			case VALUE_TYPE.boolean : 
 				if(is_instanceof(wid, checkBoxActive)) break;
 				
-				param.halign = breakLine? fa_left : fa_center;
+				param.halign = widExtend? fa_left : fa_center;
 				param.s      = editBoxH;
 				
-				if(!breakLine) {
+				if(!widExtend) {
 					param.w = ww - min(ui(80) + ww * 0.2, ui(200));
 					param.x = editBoxX + editBoxW - param.w;
 				}
@@ -330,18 +339,17 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			case VALUE_TYPE.d3Material : 
 			case VALUE_TYPE.surface : 
-				param.h = breakLine? ui(96) : ui(48);
+				param.h = widExtend? ui(96) : ui(48);
 				break;
 			
 			case VALUE_TYPE.curve :   
-				param.h = breakLine? ui(160) : ui(100);
-				if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + param.h))
+				if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + wid.h))
 					mbRight = false;
 				break;
 		}
 		
 		var _widH = wid.drawParam(param) ?? 0;
-		widH = _widH - (TEXTBOX_HEIGHT * !breakLine);
+		widH = _widH - (TEXTBOX_HEIGHT * !widExtend);
 		
 		mbRight &= wid.right_click_block;
 	#endregion

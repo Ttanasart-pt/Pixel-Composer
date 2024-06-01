@@ -168,21 +168,7 @@ if(!ready) exit;
 	
 	draw_sprite_stretched(THEME.menu_bg, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 	
-	//draw_set_color(c_red);
-	//draw_set_alpha(_hovering_ch * 0.5 + 0.5);
-	//draw_circle(dialog_x, dialog_y, 6, false);
-	
-	//draw_set_color(c_lime);
-	//draw_set_alpha(sHOVER * 0.5 + 0.5);
-	//draw_circle(dialog_x + 16, dialog_y, 6, false);
-	
-	//draw_set_color(c_yellow);
-	//draw_set_alpha(sFOCUS * 0.5 + 0.5);
-	//draw_circle(dialog_x + 32, dialog_y, 6, false);
-	
-	//draw_set_alpha(1);
-	
-	if(mouse_inside && mouse_release(mb_left)) mouse_inside = false;
+	if(mouse_inside && (mouse_release(mb_left) || mouse_release(mb_right))) mouse_inside = false;
 #endregion
 
 #region debug
