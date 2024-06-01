@@ -753,7 +753,7 @@ function __initNodes() {
 		
 		ds_list_add(generator, "Ray Marching");
 		addNodeObject(generator, "RM Primitive",		s_node_rm_primitive,		"Node_RM_Primitive",		[1, Node_RM_Primitive], ["ray marching"]).setVersion(11720);
-		addNodeObject(generator, "RM Terrain",			s_node_rm_primitive,		"Node_RM_Terrain",			[1, Node_RM_Terrain], ["ray marching"]).setVersion(11720);
+		addNodeObject(generator, "RM Terrain",			s_node_rm_terrain,			"Node_RM_Terrain",			[1, Node_RM_Terrain], ["ray marching"]).setVersion(11720);
 		
 		ds_list_add(generator, "MK Effects");
 		addNodeObject(generator, "MK Rain",				s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain]).setVersion(11600);

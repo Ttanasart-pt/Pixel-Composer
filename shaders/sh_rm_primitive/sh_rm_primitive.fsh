@@ -51,6 +51,8 @@ uniform float depthInt;
 uniform vec3  tileSize;
 uniform vec3  tileAmount;
 
+uniform int  drawBg;
+uniform vec4 background;
 uniform vec4 ambient;
 uniform float ambientIntns;
 uniform vec3 lightPosition;
@@ -384,7 +386,7 @@ float sceneSDF(vec3 p) {
 	    p  = el.xyz;
     }
     
-         if(shape == 100) d = sdPlane(p, vec3(0., 0., 1.), 0.);
+         if(shape == 100) d = sdPlane(p, vec3(0., -1., 0.), 0.);
     else if(shape == 101) d = sdBox(p, size / 2.);
     else if(shape == 102) d = sdBoxFrame(p, size / 2., thickness);
     
@@ -440,7 +442,7 @@ float march(vec3 camera, vec3 direction) {
 }
 
 void main() {
-	gl_FragColor = vec4(0., 0., 0., 1.);
+	gl_FragColor = drawBg == 1? background : vec4(0.);
 	
 	mat3 rx = rotateX(rotation.x);
     mat3 ry = rotateY(rotation.y);
@@ -469,18 +471,18 @@ void main() {
     
     vec3 c = ambient.rgb;
     
-    float distNorm = 1. - (dist - viewRange.x) / (viewRange.y - viewRange.x);
-          distNorm = smoothstep(.0, .3, distNorm) + .2;
-    c *= mix(vec3(1.), vec3(distNorm), depthInt);
+    ///////////////////////////////////////////////////////////
+    float distNorm = (dist - viewRange.x) / (viewRange.y - viewRange.x);
+    distNorm = 1. - distNorm;
+    distNorm = smoothstep(.0, .3, distNorm);
+    c = mix(background.rgb, c, mix(1., distNorm, depthInt));
     
     vec3 norm  = normal(coll);
     vec3 light = normalize(lightPosition);
     float lamo = dot(norm, light) + ambientIntns;
     
-    c *= lamo;
-    
-    // if(sin((wcoll.y + time * PI * 2.) * 96.) < -.9)
-    // 	c *= 4.;
+    c = mix(background.rgb, c, lamo);
+    // c *= lamo;
     
     gl_FragColor = vec4(c, 1.);
 }

@@ -232,6 +232,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _posDist = [];
 		
+		if(array_empty(_inSurf)) return;
+		
 		random_set_seed(seed); seed++;
 		var _amo = irandom_range(_spawn_amount[0], _spawn_amount[1]);
 		if(_distrib == 2) _posDist = get_points_from_dist(_dist_map, _amo, seed);
@@ -335,8 +337,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static getSurfaceCache = function() { #region
 		var surfs = getInputData(0);
 		
-		if(!is_array(surfs)) surfs = [ surfs ];
 		if(array_empty(surfs)) return;
+		if(!is_array(surfs)) surfs = [ surfs ];
 		
 		for( var i = 0, n = array_length(surfs); i < n; i++ ) {
 			var _s = surfs[i];
@@ -496,7 +498,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _spr  = getInputData(0);
-		if(is_array(_spr)) _spr = _spr[0];
+		if(array_empty(_spr)) return;
+		if(is_array(_spr))
+			_spr = _spr[0];
+		
 		var _flag = is_instanceof(_spr, SurfaceAtlas)? 0b0001 : 0b0011;
 		
 		inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);

@@ -23,7 +23,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shape_types_str[i] = new scrollItem(shape_types[i], s_node_shape_3d, _ind++, COLORS._main_icon_light);
 	}
 	
-	inputs[| 1] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, shape_types_str);
 	
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
@@ -41,7 +41,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 6] = nodeValue("View Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 3, 6 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 7] = nodeValue("Depth", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 7] = nodeValue("Depth", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 8] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -.5, -.5, 1 ])
@@ -113,6 +113,10 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 29] = nodeValue("Tile Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	inputs[| 30] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	
+	inputs[| 31] = nodeValue("Draw BG", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
@@ -121,7 +125,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Deform",     true], 15, 16, 17, 18, 19, 
 		["Transform", false], 2, 3, 4, 
 		["Camera",    false], 13, 14, 5, 6, 
-		["Render",    false], 7, 9, 10, 8, 
+		["Render",    false], 31, 30, 7, 9, 10, 8, 
 		["Tile",      false], 20, 29, 
 	];
 	
@@ -257,6 +261,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _radR = _data[27];
 		var _sizz = _data[28];
 		var _tilA = _data[29];
+		var _bgc  = _data[30];
+		var _bgd  = _data[31];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
@@ -265,7 +271,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var tx = 1024;
 		surface_set_shader(temp_surface[0]);
-			draw_surface_stretched_safe(_extr, tx * 0, tx * 0, tx, tx);
+			
 		surface_reset_shader();
 		
 		gpu_set_texfilter(true);
@@ -334,9 +340,11 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f("tileSize",    _tile);
 			shader_set_f("tileAmount",  _tilA);
 			
-			shader_set_color("ambient",   _amb);
-			shader_set_f("ambientIntns",  _ambI);
-			shader_set_f("lightPosition", _lPos);
+			shader_set_i("drawBg",  	   _bgd);
+			shader_set_color("background", _bgc);
+			shader_set_color("ambient",    _amb);
+			shader_set_f("ambientIntns",   _ambI);
+			shader_set_f("lightPosition",  _lPos);
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
