@@ -31,7 +31,6 @@ uniform vec2  radRange;
 uniform float sizeUni;
 uniform vec3  elongate;
 uniform float rounded;
-uniform int   extrudeSurface;
 
 uniform vec3 waveAmp;
 uniform vec3 waveInt;
@@ -113,6 +112,8 @@ mat3 rotMatrix, irotMatrix;
 	float ndot( in vec2 a, in vec2 b ) { return a.x*b.x - a.y*b.y; }
 	
 	vec4 sampleTexture(int index, vec2 coord) {
+		if(coord.x < 0. || coord.y < 0. || coord.x > 1. || coord.y > 1.) return vec4(0.);
+		
 		float i = float(index);
 		
 		float txIndex = floor(i / TEXTURE_S);
@@ -303,25 +304,6 @@ mat3 rotMatrix, irotMatrix;
 		return sqrt( (d2+q.z*q.z)/m2 ) * sign(max(q.z,-p.y));
 	}
 	
-	float sdExtrude( vec3 p, float s, float h ) {
-		vec2 pos = p.xz / s / 2. + 0.5;
-		vec4 sm  = sampleTexture(extrudeSurface, pos);
-		float am = (sm.r + sm.g + sm.b) / 3. * sm.a;
-		
-		float d = 0.3 - am;
-	    vec2  w = vec2( d, abs(p.y) - h );
-	    return min(max(w.x, w.y), 0.0) + length(max(w, 0.0));
-	}
-	
-	float sdTerrain( vec3 p, float s, float h ) {
-		vec2 pos = p.xz / s / 2. + 0.5;
-		vec4 sm  = sampleTexture(extrudeSurface, pos);
-		float am = (sm.r + sm.g + sm.b) / 3. * sm.a;
-		
-		float d = 0.1 - am;
-	    vec2  w = vec2( d, abs(p.y) - h * am );
-	    return min(max(w.x, w.y), 0.0) + length(max(w, 0.0));
-	}
 #endregion
 
 #region ////============ Modify =============
@@ -422,9 +404,6 @@ float sceneSDF(vec3 p) {
     
     else if(shape == 400) d = sdOctahedron(p, sizeUni);
     else if(shape == 401) d = sdPyramid(p, sizeUni);
-    
-    else if(shape == 500) d = sdExtrude(p, sizeUni, thickness);
-    else if(shape == 501) d = sdTerrain(p, sizeUni, thickness);
     
     if(elongate != vec3(0.)) {
     	d += el.w;

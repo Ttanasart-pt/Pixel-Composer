@@ -751,8 +751,9 @@ function __initNodes() {
 		addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill],,		"Fill connected pixel with colors.").setVersion(1147);		
 		addNodeObject(generator, "Flood Fill",			s_node_flood_fill,			"Node_Flood_Fill",			[1, Node_Flood_Fill],,		"Filled connected pixel given position and color.").setVersion(1133);
 		
-		ds_list_add(generator, "Ray March");
+		ds_list_add(generator, "Ray Marching");
 		addNodeObject(generator, "RM Primitive",		s_node_rm_primitive,		"Node_RM_Primitive",		[1, Node_RM_Primitive], ["ray marching"]).setVersion(11720);
+		addNodeObject(generator, "RM Terrain",			s_node_rm_primitive,		"Node_RM_Terrain",			[1, Node_RM_Terrain], ["ray marching"]).setVersion(11720);
 		
 		ds_list_add(generator, "MK Effects");
 		addNodeObject(generator, "MK Rain",				s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain]).setVersion(11600);
@@ -953,11 +954,11 @@ function __initNodes() {
 		addNodeObject(animation, "Stagger",			s_node_stagger,		"Node_Stagger",		[1, Node_Stagger]).setVersion(11640);
 		
 		ds_list_add(animation, "Value");	
-		addNodeObject(animation, "WaveTable",		s_node_wave,		  "Node_Fn_WaveTable",	[1, Node_Fn_WaveTable],, "Create value changing overtime in wave pattern.");
+		addNodeObject(animation, "WaveTable",		s_node_wave,		  "Node_Fn_WaveTable",	[1, Node_Fn_WaveTable],, "Create value changing overtime in wave pattern.").setVersion(11720);
 		addNodeObject(animation, "Wiggler",			s_node_wiggler,		  "Node_Wiggler",		[1, Node_Wiggler],, "Create random value smoothly changing over time.");
-		addNodeObject(animation, "Ease",			s_node_ease,		  "Node_Fn_Ease",		[1, Node_Fn_Ease],, "");
-		addNodeObject(animation, "Math",			s_node_fx_math, 	  "Node_Fn_Math",		[1, Node_Fn_Math],, "");
-		addNodeObject(animation, "SmoothStep",		s_node_fx_smoothstep, "Node_Fn_SmoothStep",	[1, Node_Fn_SmoothStep],, "");
+		addNodeObject(animation, "Ease",			s_node_ease,		  "Node_Fn_Ease",		[1, Node_Fn_Ease],, "").setVersion(11720);
+		addNodeObject(animation, "Math",			s_node_fx_math, 	  "Node_Fn_Math",		[1, Node_Fn_Math],, "").setVersion(11720);
+		addNodeObject(animation, "SmoothStep",		s_node_fx_smoothstep, "Node_Fn_SmoothStep",	[1, Node_Fn_SmoothStep],, "").setVersion(11720);
 		
 		ds_list_add(animation, "Audio");
 		addNodeObject(animation, "WAV File In",	 s_node_wav_file_read,	"Node_WAV_File_Read",	[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);

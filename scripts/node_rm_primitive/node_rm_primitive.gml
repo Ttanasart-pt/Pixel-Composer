@@ -12,8 +12,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		"Cylinder", "Capsule", "Cone", "Capped Cone", "Round Cone", "3D Arc", 
 		-1, 
 		"Octahedron", "Pyramid", 
-		-1,
-		"Extrude", "Terrain"
 	];
 	shape_types_str = [];
 	
@@ -115,12 +113,10 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 29] = nodeValue("Tile Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 30] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
-		["Primitive", false], 1, 21, 22, 23, 24, 25, 26, 27, 28, 30, 
+		["Primitive", false], 1, 21, 22, 23, 24, 25, 26, 27, 28, 
 		["Modify",    false], 12, 11, 
 		["Deform",     true], 15, 16, 17, 18, 19, 
 		["Transform", false], 2, 3, 4, 
@@ -145,7 +141,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		inputs[| 26].setVisible(false);
 		inputs[| 27].setVisible(false);
 		inputs[| 28].setVisible(false);
-		inputs[| 30].setVisible(false);
 		
 		var _shape = shape_types[_shp];
 		switch(_shape) { // Size
@@ -221,13 +216,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				break;
 		}
 		
-		switch(_shape) { // Extrude surface
-			case "Terrain" : 
-			case "Extrude" : 
-				inputs[| 30].setVisible(true);
-				break;
-		}
-		
 		inputs[|  5].setVisible(_ort == 0);
 		inputs[| 14].setVisible(_ort == 1);
 	}
@@ -269,7 +257,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _radR = _data[27];
 		var _sizz = _data[28];
 		var _tilA = _data[29];
-		var _extr = _data[30];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
@@ -309,9 +296,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				
 				case "Octahedron" :     	_shpI = 400; break;
 				case "Pyramid" :        	_shpI = 401; break;
-				
-				case "Extrude" :        	_shpI = 500; break;
-				case "Terrain" :        	_shpI = 501; break;
 			}
 			
 			for (var i = 0, n = array_length(temp_surface); i < n; i++)
@@ -330,7 +314,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f("sizeUni",     _sizz);
 			shader_set_f("elongate",    _elon);
 			shader_set_f("rounded",     _rond);
-			shader_set_i("extrudeSurface", 0);
 			
 			shader_set_f("waveAmp",     _wavA);
 			shader_set_f("waveInt",     _wavI);

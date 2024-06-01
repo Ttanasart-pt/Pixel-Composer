@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_rm_extrude",
-  "name":"sh_rm_extrude",
+  "%Name":"sh_rm_terrain",
+  "name":"sh_rm_terrain",
   "parent":{
     "name":"ray march",
     "path":"folders/shader/ray march.yy",
