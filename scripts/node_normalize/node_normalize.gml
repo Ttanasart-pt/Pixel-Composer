@@ -3,7 +3,10 @@ function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	input_display_list = [ 0 ];
+	inputs[| 1] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "BW", "RGB" ]);
+	
+	input_display_list = [ 0, 1 ];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -17,6 +20,7 @@ function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _surf = _data[0];
+		var _mode = _data[1];
 		
 		var _sw  = surface_get_width(_surf);
 		var _sh  = surface_get_height(_surf);
@@ -87,6 +91,14 @@ function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		buffer_delete(_bMax);
 		buffer_delete(_bMin);
 	#endregion
+	
+	if(_mode == 0) {
+		var _bmax = (_max[0] + _max[1] + _max[2]) / 2;
+		var _bmin = (_min[0] + _min[1] + _min[2]) / 2;
+		
+		_max = [ _bmax, _bmax, _bmax ];
+		_min = [ _bmin, _bmin, _bmin ];
+	}
 	
 	surface_set_shader(_outSurf, sh_normalize);
 		shader_set_f("cMax",       _max);

@@ -51,11 +51,18 @@ uniform float depthInt;
 uniform vec3  tileSize;
 uniform vec3  tileAmount;
 
-uniform int  drawBg;
-uniform vec4 background;
-uniform vec4 ambient;
+uniform int   drawBg;
+uniform vec4  background;
 uniform float ambientIntns;
-uniform vec3 lightPosition;
+uniform vec3  lightPosition;
+
+uniform vec4  ambient;
+uniform float reflective;
+
+uniform int   useEnv;
+
+uniform int   volumetric;
+uniform float volumeDensity;
 
 mat3 rotMatrix, irotMatrix;
 
@@ -134,6 +141,12 @@ mat3 rotMatrix, irotMatrix;
 		
 		return texture2D(texture0, sm);
 	}
+	
+	vec2 equirectangularUv(vec3 dir) {
+		vec3 n = normalize(dir);
+		return vec2((atan(n.x, n.z) / (PI * 2.)) + 0.5, 1. - acos(n.y) / PI);
+	}
+	
 #endregion
 
 #region ////========== Primitives ===========
@@ -368,10 +381,6 @@ mat3 rotMatrix, irotMatrix;
 float sceneSDF(vec3 p) { 
     float d;
     
-    p  = irotMatrix * p;
-    p /= objectScale;
-    p -= position;
-    
     p = wave(p);
     
     if(tileSize != vec3(0.))
@@ -426,7 +435,7 @@ vec3 normal(vec3 p) {
 }
 
 float march(vec3 camera, vec3 direction) {
-    float depth = viewRange.x;
+	float depth = viewRange.x;
     
     for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
         float dist = sceneSDF(camera + depth * direction);
@@ -437,12 +446,29 @@ float march(vec3 camera, vec3 direction) {
         if (depth >= viewRange.y)
             return viewRange.y;
     }
+	 
+  return viewRange.y;  
+}
+
+float marchDensity(vec3 camera, vec3 direction) {
+	float st   = 1. / float(MAX_MARCHING_STEPS);
+	float dens = 0.;
+	float stp  = volumeDensity == 0. ? 0. : pow(2., 10. * volumeDensity * 0.5 - 10.);
+	   
+    for (int i = 0; i <= MAX_MARCHING_STEPS; i++) {
+        float depth = mix(viewRange.x, viewRange.y, float(i) * st);
+        vec3  pos   = camera + depth * direction;
+        float hit   = sceneSDF(pos);
+        float inst  = (pos.y + objectScale) / (objectScale * 2.);
+              inst  = inst <= 0.? 0. : pow(2., 10. * inst - 10.) * 10.;
+        
+        if (hit <= 0.) dens += stp * inst;
+    }
     
-    return viewRange.y;
+    return dens;
 }
 
 void main() {
-	gl_FragColor = drawBg == 1? background : vec4(0.);
 	
 	mat3 rx = rotateX(rotation.x);
     mat3 ry = rotateY(rotation.y);
@@ -450,16 +476,32 @@ void main() {
     rotMatrix  = rx * ry * rz;
     irotMatrix = inverse(rotMatrix);
     
-	vec3 eye, dir;
+    float dz  = 1. / tan(radians(fov) / 2.);
+    vec3  dir = normalize(vec3((v_vTexcoord - .5) * 2., -dz));
+    vec3  eye = vec3(0., 0., 5.);
 	
-	if(ortho == 1) {
-		dir = vec3(0., 0., 1.);
-		eye = vec3((v_vTexcoord - .5) * 2. * orthoScale, viewRange.x);
+	dir  = normalize(irotMatrix * dir) / objectScale;
+	eye  = irotMatrix * eye;
+	eye /= objectScale;
+	eye -= position;
+	
+	vec4 bg = background;
+	if(useEnv == 1) {
+		float  edz  = 1. / tan(radians(fov * 2.) / 2.);
+    	vec3   edir = normalize(vec3((v_vTexcoord - .5) * 2., -edz));
+		       edir = normalize(irotMatrix * edir) / objectScale;
 		
-	} else {
-	    float z = 1. / tan(radians(fov) / 2.);
-	    dir = normalize(vec3((v_vTexcoord - .5) * 2., -z));
-	    eye = vec3(0., 0., 5.);
+		vec2 envUV = equirectangularUv(edir);
+		vec4 endC  = sampleTexture(0, envUV);
+		bg = endC;
+	}
+	
+	gl_FragColor = drawBg == 1? bg : vec4(0.);
+	
+	if(volumetric == 1) {
+		float _dens = clamp(marchDensity(eye, dir), 0., 1.);
+		gl_FragColor = mix(background, ambient, _dens);
+		return;
 	}
 	
     float dist = march(eye, dir);
@@ -472,17 +514,35 @@ void main() {
     vec3 c = ambient.rgb;
     
     ///////////////////////////////////////////////////////////
+    
+    
     float distNorm = (dist - viewRange.x) / (viewRange.y - viewRange.x);
     distNorm = 1. - distNorm;
     distNorm = smoothstep(.0, .3, distNorm);
     c = mix(background.rgb, c, mix(1., distNorm, depthInt));
     
+    ///////////////////////////////////////////////////////////
+    
     vec3 norm  = normal(coll);
+    vec3 ref   = reflect(dir, norm);
+    
+    if(useEnv == 1) {
+		vec4 refC =   sampleTexture(0, equirectangularUv(ref))
+		            + sampleTexture(0, equirectangularUv(ref + vec3( 0.01, 0., 0.))) * 0.5
+		            + sampleTexture(0, equirectangularUv(ref + vec3(-0.01, 0., 0.))) * 0.5
+		            + sampleTexture(0, equirectangularUv(ref + vec3(0.,  0.01, 0.))) * 0.5
+		            + sampleTexture(0, equirectangularUv(ref + vec3(0., -0.01, 0.))) * 0.5
+		            + sampleTexture(0, equirectangularUv(ref + vec3(0., 0.,  0.01))) * 0.5
+		            + sampleTexture(0, equirectangularUv(ref + vec3(0., 0., -0.01))) * 0.5;
+		refC /= 4.;
+		
+		c = mix(c, c * refC.rgb, reflective);
+    }
+	
+    ///////////////////////////////////////////////////////////
+    
     vec3 light = normalize(lightPosition);
-    float lamo = dot(norm, light) + ambientIntns;
-    
+    float lamo = min(1., max(0., dot(norm, light)) + ambientIntns);
     c = mix(background.rgb, c, lamo);
-    // c *= lamo;
-    
     gl_FragColor = vec4(c, 1.);
 }

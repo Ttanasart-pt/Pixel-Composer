@@ -29,7 +29,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 3] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 30, 45, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 4] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
@@ -47,9 +47,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 8] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -.5, -.5, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 9] = nodeValue("Ambient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 9] = nodeValue("Base Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 10] = nodeValue("Ambient Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 10] = nodeValue("Ambient Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 11] = nodeValue("Elongate", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
@@ -117,16 +117,30 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 31] = nodeValue("Draw BG", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 32] = nodeValue("Volumetric", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 33] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	inputs[| 34] = nodeValue("Environment", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, false);
+	
+	inputs[| 35] = nodeValue("Reflective", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
-		["Primitive", false], 1, 21, 22, 23, 24, 25, 26, 27, 28, 
-		["Modify",    false], 12, 11, 
-		["Deform",     true], 15, 16, 17, 18, 19, 
-		["Transform", false], 2, 3, 4, 
-		["Camera",    false], 13, 14, 5, 6, 
-		["Render",    false], 31, 30, 7, 9, 10, 8, 
-		["Tile",      false], 20, 29, 
+		["Primitive",  false], 1, 21, 22, 23, 24, 25, 26, 27, 28, 
+		["Modify",     false], 12, 11, 
+		["Deform",      true], 15, 16, 17, 18, 19, 
+		["Transform",  false], 2, 3, 4, 
+		["Material",   false], 9, 35, 
+		["Camera",     false], 13, 14, 5, 6, 
+		["Render",     false], 31, 30, 34, 10, 7, 8, 
+		["Tile",       false], 20, 29, 
+		["Volumetric",  true, 32], 33, 
 	];
 	
 	temp_surface = [ 0, 0, 0, 0 ];
@@ -264,6 +278,11 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _bgc  = _data[30];
 		var _bgd  = _data[31];
 		
+		var _vol  = _data[32];
+		var _vden = _data[33];
+		var bgEnv = _data[34];
+		var _refl = _data[35];
+		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		for (var i = 0, n = array_length(temp_surface); i < n; i++)
@@ -271,7 +290,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var tx = 1024;
 		surface_set_shader(temp_surface[0]);
-			
+			draw_surface_stretched_safe(bgEnv, tx * 0, tx * 0, tx, tx);
 		surface_reset_shader();
 		
 		gpu_set_texfilter(true);
@@ -282,26 +301,26 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _shpI = 0;
 			
 			switch(_shape) {
-				case "Plane" :				_shpI = 100; break;
-				case "Box" :				_shpI = 101; break;
-				case "Box Frame" :      	_shpI = 102; break;
+				case "Plane" :				_shpI = 100;												break;
+				case "Box" :				_shpI = 101;												break;
+				case "Box Frame" :      	_shpI = 102;												break;
+									
+				case "Sphere" :         	_shpI = 200;												break;
+				case "Ellipse" :        	_shpI = 201;												break;
+				case "Cut Sphere" :     	_shpI = 202;												break;
+				case "Cut Hollow Sphere" :	_shpI = 203; _crop = _crop / pi * 2.15;						break;
+				case "Torus" :          	_shpI = 204;												break;
+				case "Capped Torus" :   	_shpI = 205;												break;
 				
-				case "Sphere" :         	_shpI = 200; break;
-				case "Ellipse" :        	_shpI = 201; break;
-				case "Cut Sphere" :     	_shpI = 202; break;
-				case "Cut Hollow Sphere" :	_shpI = 203; break;
-				case "Torus" :          	_shpI = 204; break;
-				case "Capped Torus" :   	_shpI = 205; break;
+				case "Cylinder" :       	_shpI = 300;												break;
+				case "Capsule" :        	_shpI = 301;												break;
+				case "Cone" :           	_shpI = 302;												break;
+				case "Capped Cone" :    	_shpI = 303;												break;
+				case "Round Cone" :     	_shpI = 304;												break;
+				case "3D Arc" :         	_shpI = 305;												break;
 				
-				case "Cylinder" :       	_shpI = 300; break;
-				case "Capsule" :        	_shpI = 301; break;
-				case "Cone" :           	_shpI = 302; break;
-				case "Capped Cone" :    	_shpI = 303; break;
-				case "Round Cone" :     	_shpI = 304; break;
-				case "3D Arc" :         	_shpI = 305; break;
-				
-				case "Octahedron" :     	_shpI = 400; break;
-				case "Pyramid" :        	_shpI = 401; break;
+				case "Octahedron" :     	_shpI = 400;												break;
+				case "Pyramid" :        	_shpI = 401;												break;
 			}
 			
 			for (var i = 0, n = array_length(temp_surface); i < n; i++)
@@ -342,9 +361,16 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			shader_set_i("drawBg",  	   _bgd);
 			shader_set_color("background", _bgc);
-			shader_set_color("ambient",    _amb);
 			shader_set_f("ambientIntns",   _ambI);
 			shader_set_f("lightPosition",  _lPos);
+			
+			shader_set_color("ambient",    _amb);
+			shader_set_f("reflective",     _refl);
+			
+			shader_set_i("volumetric",     _vol);
+			shader_set_f("volumeDensity",  _vden);
+			
+			shader_set_i("useEnv",  is_surface(bgEnv));
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
