@@ -622,6 +622,7 @@ function __initNodes() {
 		addNodeObject(filter, "Level",				s_node_level,			"Node_Level",			[1, Node_Level],, "Adjust brightness of an image by changing its brightness range.");
 		addNodeObject(filter, "Level Selector",		s_node_level_selector,	"Node_Level_Selector",	[1, Node_Level_Selector],, "Isolate part of the image that falls in the selected brightness range.");
 		addNodeObject(filter, "Curve",				s_node_curve_edit,		"Node_Curve",			[1, Node_Curve],, "Adjust brightness of an image using curves.").setVersion(1120);
+		addNodeObject(filter, "HSV Curve",			s_node_curve_hsv,		"Node_Curve_HSV",		[1, Node_Curve_HSV],, "Adjust hsv values of an image using curves.").setVersion(11720);
 		addNodeObject(filter, "Threshold",			s_node_threshold,		"Node_Threshold",		[1, Node_Threshold],, "Set a threshold where pixel darker will becomes black, and brighter to white. Also works with alpha.").setVersion(1080);
 		addNodeObject(filter, "Alpha Cutoff",		s_node_alpha_cut,		"Node_Alpha_Cutoff",	[1, Node_Alpha_Cutoff], ["remove alpha"], "Remove pixel with low alpha value.");
 		addNodeObject(filter, "Normalize",			s_node_normalize,		"Node_Normalize",		[1, Node_Normalize]).setVersion(11710);

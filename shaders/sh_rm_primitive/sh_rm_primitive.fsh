@@ -462,7 +462,7 @@ float marchDensity(vec3 camera, vec3 direction) {
         float inst  = (pos.y + objectScale) / (objectScale * 2.);
               inst  = inst <= 0.? 0. : pow(2., 10. * inst - 10.) * 10.;
         
-        if (hit <= 0.) dens += stp * inst;
+        if (hit <= 0.) dens += stp;
     }
     
     return dens;
