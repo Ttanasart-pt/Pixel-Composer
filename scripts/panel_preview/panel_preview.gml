@@ -20,6 +20,13 @@
 	
 	function panel_preview_pan()						{ CALL("preview_pan");						PANEL_PREVIEW.canvas_dragging_key = true; }
 	function panel_preview_zoom()						{ CALL("preview_zoom");						PANEL_PREVIEW.canvas_zooming_key  = true; }
+	
+	function panel_preview_3d_view_front()				{ CALL("preview_3d_view_front");	PANEL_PREVIEW.d3_view_action_front(); }
+	function panel_preview_3d_view_back()				{ CALL("preview_3d_view_back");		PANEL_PREVIEW.d3_view_action_back(); }
+	function panel_preview_3d_view_right()				{ CALL("preview_3d_view_right");	PANEL_PREVIEW.d3_view_action_right(); }
+	function panel_preview_3d_view_left()				{ CALL("preview_3d_view_left");		PANEL_PREVIEW.d3_view_action_left(); }
+	function panel_preview_3d_view_top()				{ CALL("preview_3d_view_top");		PANEL_PREVIEW.d3_view_action_top();   }
+	function panel_preview_3d_view_bottom()				{ CALL("preview_3d_view_bottom");	PANEL_PREVIEW.d3_view_action_bottom();   }
 #endregion
 
 function Panel_Preview() : PanelContent() constructor {
@@ -161,7 +168,9 @@ function Panel_Preview() : PanelContent() constructor {
 			d3_camH = 1;
 		
 			d3_view_camera.setFocusAngle(135, 45, 4);
-			d3_camLerp = false;
+			d3_camLerp   = 0;
+			d3_camLerp_x = 0;
+			d3_camLerp_y = 0;
 	
 			d3_camTarget = new __vec3();
 		
@@ -221,6 +230,13 @@ function Panel_Preview() : PanelContent() constructor {
 	
 		addHotkey("Preview", "Pan",		"", MOD_KEY.ctrl,					panel_preview_pan);
 		addHotkey("Preview", "Zoom",	"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_preview_zoom);
+		
+		addHotkey("Preview", "3D Front view",	vk_numpad1,	MOD_KEY.none,	panel_preview_3d_view_front);
+		addHotkey("Preview", "3D Back view",	vk_numpad1,	MOD_KEY.alt,	panel_preview_3d_view_back);
+		addHotkey("Preview", "3D Right view ",	vk_numpad3,	MOD_KEY.none,	panel_preview_3d_view_right);
+		addHotkey("Preview", "3D Left view ",	vk_numpad3,	MOD_KEY.alt,	panel_preview_3d_view_left);
+		addHotkey("Preview", "3D Top view",		vk_numpad7,	MOD_KEY.none,	panel_preview_3d_view_top);
+		addHotkey("Preview", "3D Bottom view",	vk_numpad7,	MOD_KEY.alt,	panel_preview_3d_view_bottom);
 	#endregion
 	
 	#region ++++ toolbars & actions ++++
@@ -327,8 +343,14 @@ function Panel_Preview() : PanelContent() constructor {
 				function() { fullView(); },
 				function() { return 0; },
 			],
-		
 		];
+		
+		static d3_view_action_front  = function() { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =   0; }
+		static d3_view_action_back   = function() { d3_camLerp = 1; d3_camLerp_x = 180; d3_camLerp_y =   0; }
+		static d3_view_action_right  = function() { d3_camLerp = 1; d3_camLerp_x =  90; d3_camLerp_y =   0; }
+		static d3_view_action_left   = function() { d3_camLerp = 1; d3_camLerp_x = -90; d3_camLerp_y =   0; }
+		static d3_view_action_bottom = function() { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y = -89; }
+		static d3_view_action_top    = function() { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =  89; }
 	#endregion
 	
 	////============ DATA ============
@@ -497,6 +519,14 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function dragCanvas3D() { #region
+		if(d3_camLerp) {
+			d3_view_camera.focus_angle_x = lerp_float(d3_view_camera.focus_angle_x, d3_camLerp_x, 3, 1);
+			d3_view_camera.focus_angle_y = lerp_float(d3_view_camera.focus_angle_y, d3_camLerp_y, 3, 1);
+			
+			if(d3_view_camera.focus_angle_x == d3_camLerp_x && d3_view_camera.focus_angle_y == d3_camLerp_y)
+				d3_camLerp = false;
+		}
+		
 		if(d3_camPanning) {
 			if(!MOUSE_WRAPPING) {
 				var dx = mx - d3_camPan_mx;
@@ -1088,12 +1118,14 @@ function Panel_Preview() : PanelContent() constructor {
 		var _node = getNodePreview();
 		
 		#region status texts (top right)
+			var _lh = line_get_height(f_p0);
+			
 			if(right_menu_x == 0) right_menu_x = w - ui(8);
 			
 			if(PANEL_PREVIEW == self) {
 				draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_accent);
 				draw_text(right_menu_x, right_menu_y, __txt("Active"));
-				right_menu_y += string_height("l");
+				right_menu_y += _lh;
 			}
 			
 			var txt = $"{__txt("fps")} {fps}";
@@ -1102,40 +1134,40 @@ function Panel_Preview() : PanelContent() constructor {
 				
 			draw_set_text(f_p0, fa_right, fa_top, fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
 			draw_text(right_menu_x, right_menu_y, txt);
-			right_menu_y += string_height("l");
+			right_menu_y += _lh;
 		
 			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
 			draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {CURRENT_FRAME + 1}/{TOTAL_FRAMES}");
 		
-			right_menu_y += string_height("l");
+			right_menu_y += _lh;
 			draw_text(right_menu_x, right_menu_y, $"x{canvas_s}");
 		
 			if(pHOVER) {
-				right_menu_y += string_height("l");
+				right_menu_y += _lh;
 				var mpx = floor((mx - canvas_x) / canvas_s);
 				var mpy = floor((my - canvas_y) / canvas_s);
 				draw_text(right_menu_x, right_menu_y, $"[{mpx}, {mpy}]");
 				
 				if(mouse_pos_string != "") {
-					right_menu_y += string_height("l");
+					right_menu_y += _lh;
 					draw_text(right_menu_x, right_menu_y, $"{mouse_pos_string}");
 				}
 			}
 			
-			mouse_pos_string = "";
-		
-			if(_node == noone) {
+			if(_node != noone && !d3_active) {
+				right_menu_y += _lh;
+				var txt = $"{canvas_w} x {canvas_h}px";
+				if(canvas_a) txt = $"{canvas_a} x {txt}";
+				
+				draw_text(right_menu_x, right_menu_y, txt);
+			
 				right_menu_x = w - ui(8);
-				return;
+				right_menu_y += _lh;
 			}
-		
-			right_menu_y += string_height("l");
-			var txt = $"{canvas_w} x {canvas_h}px";
-			if(canvas_a) txt = $"{canvas_a} x {txt}";
-			draw_text(right_menu_x, right_menu_y, txt);
-		
+			
+			mouse_pos_string = "";
 			right_menu_x = w - ui(8);
-			right_menu_y += string_height("l");
+			
 		#endregion
 		
 		var pseq = getNodePreviewSequence();
