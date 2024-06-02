@@ -3,8 +3,9 @@ varying vec4 v_vColour;
 
 uniform vec2 dimension;
 uniform int  ignore;
+uniform int  mode;
 
-float sampVal(vec4 col) { return length(col.rgb) * col.a; }
+float sampVal(vec4 col) { return mode == 1? col.a : length(col.a); }
 
 void main() {
 	vec2 px = v_vTexcoord * dimension - .5;

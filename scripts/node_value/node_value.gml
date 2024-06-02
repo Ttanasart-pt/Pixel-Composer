@@ -297,6 +297,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) { #region
+		express_edit.side_button = unit.triggerButton;
+		
 		unit.reference  = ref;
 		unit.mode		= mode;
 		def_unit        = mode;
@@ -961,8 +963,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////============== GET =============
 	
-	static valueProcess = function(value, nodeFrom, applyUnit = true, arrIndex = 0) { #region
-		var typeFrom = nodeFrom.type;
+	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) { #region
+		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
 		
 		if(applyUnit && display_type == VALUE_DISPLAY.d3quarternion && display_data.angle_display == QUARTERNION_DISPLAY.euler)
 			return quarternionFromEuler(value[0], value[1], value[2]);
@@ -993,7 +995,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(display_type == VALUE_DISPLAY.area) { #region
 			
-			if(struct_has(nodeFrom.display_data, "onSurfaceSize")) {
+			if(!is_undefined(nodeFrom) && struct_has(nodeFrom.display_data, "onSurfaceSize")) {
 				var surf     = nodeFrom.display_data.onSurfaceSize();
 				var dispType = array_safe_get_fast(value, 5, AREA_MODE.area);
 				
@@ -1063,25 +1065,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return value;
 	} #endregion
 	
-	static valueExpressionProcess = function(value) { #region
-		if(is_array(value)) {
-			for (var i = 0, n = array_length(value); i < n; i++)
-				value[i] = valueExpressionProcess(value[i]);
-			return value;
-		}
-	
-		switch(type) {
-			case VALUE_TYPE.float : 
-			case VALUE_TYPE.integer : 
-				return is_numeric(value)? value : toNumber(value);
-				
-			case VALUE_TYPE.boolean : 
-				return bool(value);
-		}
-		
-		return value;
-	} #endregion
-	
 	static getStaticValue = function() { INLINE return ds_list_empty(animator.values)? 0 : animator.values[| 0].value; } 
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region ////Get value
@@ -1143,8 +1126,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == JUNCTION_CONNECT.output)
 			return val;
-		
-		if(expUse) return arrayBalance(valueExpressionProcess(val));
 		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { #region Dimension conversion
 			if(is_array(val)) {

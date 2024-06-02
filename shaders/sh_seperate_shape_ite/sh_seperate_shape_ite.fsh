@@ -1,17 +1,18 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 dimension;
+uniform vec2  dimension;
 uniform float threshold;
-uniform int ignore;
+uniform int   ignore;
+uniform int   mode;
 uniform sampler2D map;
 
-vec3 sampVal(vec4 col) { return col.rgb * col.a; }
+vec4 sampVal(vec4 col) { return mode == 1? vec4(col.a) : col; }
 
 void main() {
-	vec3 baseCol = sampVal(texture2D( map, v_vTexcoord ));
+	vec4 baseCol = sampVal(texture2D( map, v_vTexcoord ));
 	
-	if(ignore == 1 && baseCol == vec3(0.)) {
+	if(ignore == 1 && baseCol == vec4(0.)) {
 		gl_FragColor = vec4(0.);
 		return;
 	}
@@ -24,9 +25,9 @@ void main() {
 	for(float i = -1.; i <= 1.; i++)
 	for(float j = -1.; j <= 1.; j++) {
 		vec2 pos   = clamp(v_vTexcoord + vec2(i, j) * tx, 0., 1.);
-		vec3 samCl = sampVal(texture2D( map, pos ));
+		vec4 samCl = sampVal(texture2D( map, pos ));
 		
-		if(ignore == 1 && samCl == vec3(0.)) continue;
+		if(ignore == 1 && samCl == vec4(0.)) continue;
 		
 		if(distance(samCl, baseCol) <= threshold) {
 			vec4 _col = texture2D( gm_BaseTexture, pos );

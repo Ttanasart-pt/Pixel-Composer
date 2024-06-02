@@ -291,6 +291,12 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 		widH = wd_h - (TEXTBOX_HEIGHT * !widExtend);
+		
+		var un = jun.unit;
+		if(un.reference != noone) {
+			un.triggerButton.icon_index    = un.mode;
+			un.triggerButton.tooltip.index = un.mode;
+		}
 	#endregion
 	
 	} else if(wid && jun.display_type != VALUE_DISPLAY.none) { #region edit widget

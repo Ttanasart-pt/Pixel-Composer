@@ -17,12 +17,15 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 4] = nodeValue("Ignore blank", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Skip empty and black shape.")
 		.rejectArray();
 	
+	inputs[| 5] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "Alpha" ] )
+		
 	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Atlas",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
-		["Shape",	false], 0, 1, 4,
+		["Shape",	false], 0, 5, 1, 4,
 		["Override Color", true, 2], 3,
 	]
 	
@@ -45,6 +48,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _ovr    = getInputData(2);
 		var _ovrclr = getInputData(3);
 		var _ignore = getInputData(4);
+		var _mode   = getInputData(5);
 		var t = current_time;
 		
 		if(!is_surface(_inSurf)) return;
@@ -56,6 +60,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		#region region indexing
 			surface_set_shader(temp_surface[1], sh_seperate_shape_index);
+				shader_set_i("mode",      _mode);
 				shader_set_i("ignore",    _ignore);
 				shader_set_f("dimension", ww, hh);
 				
@@ -63,7 +68,8 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			surface_reset_shader();
 			
 			shader_set(sh_seperate_shape_ite);
-				shader_set_i("ignore", _ignore);
+				shader_set_i("mode",      _mode);
+				shader_set_i("ignore",    _ignore);
 				shader_set_f("dimension", ww, hh);
 				shader_set_f("threshold", _thres);
 				shader_set_surface("map", _inSurf);
@@ -110,11 +116,11 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_val = array_create(px);
 			
 			var _atlas = array_create(px);
-			var _reg   = ds_map_keys_to_array(reg);
+			var key    = ds_map_keys_to_array(reg);
 			var _ind   = 0;
 			
 			for(var i = 0; i < px; i++) {
-				var _k  = _reg[i];
+				var _k  = key[i];
 				var ccx = reg[? _k];
 				
 				var min_x = round(ccx[0]);
