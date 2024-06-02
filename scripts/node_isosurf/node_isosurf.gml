@@ -1,7 +1,8 @@
 function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name	= "IsoSurf";
 	
-	inputs[| 0] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 0] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+		.setRange(1, undefined);
 	
 	inputs[| 1] = nodeValue("Surfaces", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.setVisible(true, true)
@@ -20,6 +21,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	outputs[| 0] = nodeValue("IsoSurf", self, JUNCTION_CONNECT.output, VALUE_TYPE.dynaSurface, noone);
 	
+	knob_select   = noone;
 	knob_hover    = noone;
 	knob_dragging = noone;
 	drag_sv = 0;
@@ -65,17 +67,26 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				draw_surface_ext(_surf, _knx - _sw * _ss / 2, _kny - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
 			}
 			
-			draw_set_color(COLORS._main_text_sub);
-			draw_rectangle(_knx - 16, _kny - 16, _knx + 16, _kny + 16, true);
+			var cc = COLORS._main_icon;
+			if(i == knob_hover)  cc = COLORS._main_icon_light;
+			if(i == knob_select) cc = COLORS._main_accent;
+			
+			ui_rect_wh(_knx - 20, _kny - 20, 40, 40, cc);
+			
+			if(point_in_rectangle(_m[0], _m[1], _knx - 20, _kny - 20, _knx + 20, _kny + 20))
+				_khover = i;
 		}
 		
 		knob_hover = _khover;
+		
+		if(mouse_press(mb_left, _focus) && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh))
+			knob_select = knob_hover;
 		
 		if(knob_dragging == noone) {
 			if(knob_hover >= 0 && mouse_press(mb_left, _focus)) {
 				knob_dragging = knob_hover;
 				drag_sv = _angle[knob_hover];
-				drag_sa = _angle[knob_hover];
+				drag_sa = point_direction(_kx, _ky, _m[0], _m[1]);
 			}
 		} else {
 			var delta    = angle_difference(point_direction(_kx, _ky, _m[0], _m[1]), drag_sa);
@@ -92,21 +103,97 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return hh;
 	}); #endregion
 	
+	offsetRenderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+		var hh = ui(160);
+		var _surfs = getInputData(1);
+		var _offs  = getInputData(4);
+		
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, hh, COLORS.node_composite_bg_blend, 1);
+		
+		if(!is_array(_surfs) || !is_array(_offs)) return hh;
+		if(knob_select == noone) return hh;
+		
+		var surf = array_safe_get(_surfs, knob_select);
+		if(!is_surface(surf)) return hh;
+		
+		var amo  = array_length(_surfs);
+		var _off = array_safe_get(_offs, knob_select);
+		
+		var pd  = ui(8);
+		var sw  = _w - pd * 2;
+		var sh  = hh - pd * 2;
+		var srw = surface_get_width(surf);
+		var srh = surface_get_height(surf);
+		var ss  = min((sw - pd) / srw, (sh - pd) / srh);
+		
+		var sx  = _x + _w / 2 - srw * ss / 2;
+		var sy  = _y + hh / 2 - srh * ss / 2;
+		
+		ui_fill_rect_wh(sx, sy, srw * ss, srh * ss, CDEF.main_dkblack);
+		draw_surface_ext(surf, sx, sy, ss, ss, 0, c_white, 1);
+		
+		if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
+			var _mx = clamp(value_snap((_m[0] - sx) / ss, 0.5), 0, srw);
+			var _my = clamp(value_snap((_m[1] - sy) / ss, 0.5), 0, srh);
+			
+			draw_set_text(f_p3, fa_right, fa_bottom, COLORS._main_text_sub);
+			draw_text(_x + _w - 4, _y + hh - 4, $"{_mx}, {_my}");
+			
+			var _ox = sx + _mx * ss - 1;
+			var _oy = sy + _my * ss - 1;
+			
+			draw_set_color(CDEF.main_dkgrey);
+			draw_line(sx, _oy, sx + srw * ss, _oy);
+			draw_line(_ox, sy, _ox, sy + srh * ss);
+			
+			if(mouse_click(mb_left, _focus)) {
+				_offs[knob_select][0] = _mx;
+				_offs[knob_select][1] = _my;
+				
+				inputs[| 4].setValue(_offs);
+			}
+		}
+		
+		ui_rect_wh(sx, sy, srw * ss, srh * ss, COLORS._main_icon);
+		
+		if(!is_array(_off)) return hh;
+		var _ox = sx + _off[0] * ss - 1;
+		var _oy = sy + _off[1] * ss - 1;
+		
+		draw_set_color(c_white);
+		draw_line_width(_ox - 4, _oy, _ox + 4, _oy, 2);
+		draw_line_width(_ox, _oy - 4, _ox, _oy + 4, 2);
+		
+		return hh;
+	}); #endregion
+	
 	input_display_list = [
-		["Iso",		false], 0, 2, angle_renderer, 
+		["Iso",		false], 0, 2, angle_renderer, offsetRenderer, 
 		["Data",	false], 1, 4, 
 	];
+	
+	static resetOffset = function() {
+		var _amo = getInputData(0);
+		var _off = array_create(_amo);
+		
+		for( var i = 0, n = _amo; i < n; i++ )
+			_off[i] = [ 0, 0 ];
+		
+		inputs[| 4].setValue(_off);
+	}
 	
 	static onValueUpdate = function(index) {
 		if(index != 0) return;
 		
 		var _amo = getInputData(0);
+		var _off = getInputData(4);
+		
 		var _ang = array_create(_amo);
-		var _off = array_create(_amo);
+		array_resize(_off, _amo);
 		
 		for( var i = 0, n = _amo; i < n; i++ ) {
 			_ang[i] = 360 * (i / _amo);
-			_off[i] = [ 0, 0 ];
+			_off[i] = array_verify(_off[i], 2);
 		}
 		
 		inputs[| 3].setValue(_ang);

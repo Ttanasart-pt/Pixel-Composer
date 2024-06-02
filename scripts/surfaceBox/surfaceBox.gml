@@ -86,9 +86,12 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 			if(is_instanceof(_surface, __d3dMaterial))
 				_surface = _surface.surface;
 			
-			if(is_surface(_surface)) {
-				var sfw = surface_get_width_safe(_surface);	
-				var sfh = surface_get_height_safe(_surface);	
+			if(is_instanceof(_surface, dynaSurf))
+				_surface = array_safe_get_fast(_surface.surfaces, 0, noone);
+			
+			if(surface_exists(_surface)) {
+				var sfw = surface_get_width(_surface);	
+				var sfh = surface_get_height(_surface);	
 				var ss  = min(sw / sfw, sh / sfh);
 				var _sx = sx0 + sw / 2 - ss * sfw / 2;
 				var _sy = sy0 + sh / 2 - ss * sfh / 2;
@@ -114,8 +117,7 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 				draw_text_add(sx1 - ui(3), sy1 + ui(1), _txt);
 			}
 			
-			draw_set_color(COLORS.widget_surface_frame);
-			draw_rectangle(sx0, sy0, sx1 - 1, sy1 - 1, true);
+			ui_rect(sx0, sy0, sx1, sy1, COLORS.widget_surface_frame);
 			
 			if(_type == VALUE_TYPE.surface)
 				draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - min(_h / 2, ui(20)), _y + _h / 2, min(1, _h / 64), COLORS._main_icon, 0.5 + 0.5 * interactable);

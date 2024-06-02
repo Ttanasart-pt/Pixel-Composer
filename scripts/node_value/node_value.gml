@@ -125,6 +125,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.input_value_map[$ internalName] = _value;
 		
 		__curr_get_val = [ 0, 0 ];
+		
+		value_range_min = undefined;
+		value_range_max = undefined;
 	#endregion
 	
 	#region ---- draw ----
@@ -298,6 +301,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		unit.mode		= mode;
 		def_unit        = mode;
 		cache_value[0]  = false;
+		
+		return self;
+	} #endregion
+	
+	static setRange = function(_min, _max) { #region
+		value_range_min = _min;
+		value_range_max = _max;
 		
 		return self;
 	} #endregion
@@ -1040,6 +1050,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				for( var i = 0, n = array_length(value); i < n; i++ ) 
 					value[i] = clamp(value[i], 0, 8192);
 			}
+			
+			if(value_range_min != undefined) value = max(value, value_range_min);
+			if(value_range_max != undefined) value = min(value, value_range_max);
 			
 			return value;
 		} #endregion

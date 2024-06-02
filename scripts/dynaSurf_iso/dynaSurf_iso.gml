@@ -23,12 +23,12 @@ function dynaSurf_iso() : dynaSurf() constructor {
 	static draw = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {
 		var _ind  = getIndex(_rot);
 		var _surf = array_get(surfaces, _ind);
-		var _offx = array_get(offsetx,  _ind);
-		var _offy = array_get(offsety,  _ind);
+		var _offx = array_get(offsetx,  _ind) * _xs;
+		var _offy = array_get(offsety,  _ind) * _ys;
 		
 		var _pos  = getAbsolutePos(_x, _y, _xs, _ys, _rot);
 		
-		draw_surface_ext_safe(_surf, _pos[0] + _offx, _pos[1] + _offy, _xs, _ys, 0, _col, _alp);
+		draw_surface_ext_safe(_surf, _pos[0] - _offx, _pos[1] - _offy, _xs, _ys, 0, _col, _alp);
 	}
 	
 	static drawTile = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _col = c_white, _alp = 1) {
@@ -39,10 +39,10 @@ function dynaSurf_iso() : dynaSurf() constructor {
 	static drawPart = function(_l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {
 		var _ind  = getIndex(_rot);
 		var _surf = array_get(surfaces, _ind);
-		var _offx = array_get(offsetx,  _ind);
-		var _offy = array_get(offsety,  _ind);
+		var _offx = array_get(offsetx,  _ind) * _xs;
+		var _offy = array_get(offsety,  _ind) * _ys;
 		
-		draw_surface_part_ext_safe(_surf, _l, _t, _w, _h, _x + _offx, _y + _offy, _xs, _ys, 0, _col, _alp);
+		draw_surface_part_ext_safe(_surf, _l, _t, _w, _h, _x - _offx, _y - _offy, _xs, _ys, 0, _col, _alp);
 	}
 	
 	static clone = function() {

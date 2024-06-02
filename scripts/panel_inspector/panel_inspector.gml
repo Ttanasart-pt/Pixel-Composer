@@ -833,7 +833,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				prop_highlight = noone;
 		}
 		
-		return hh + ui(64);
+		return hh;
 	} #endregion
 	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) { #region
@@ -880,7 +880,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			_hh += _h;
 		}
 		
-		return _hh;
+		return _hh + ui(64);
 	}); #endregion
 	
 	function propSelectCopy() { #region

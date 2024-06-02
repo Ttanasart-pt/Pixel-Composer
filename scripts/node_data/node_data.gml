@@ -1529,7 +1529,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _sw = __preview_sw;
 		var _sh = __preview_sh;
 		var _ss = min(bbox.w / _sw, bbox.h / _sh);
-		draw_surface_ext_safe(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss);
+		
+		var _ps = preview_surface;
+		if(is_struct(_ps) && is_instanceof(_ps, dynaSurf))
+			_ps = array_safe_get_fast(_ps.surfaces, 0, noone);
+			
+		draw_surface_ext_safe(_ps, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss);
 	} #endregion
 	
 	static getNodeDimension = function(showFormat = true) { #region
@@ -1738,15 +1743,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getPreviewValues = function() { #region
 		if(preview_channel >= ds_list_size(outputs)) return noone;
 		
-		switch(outputs[| preview_channel].type) {
-			case VALUE_TYPE.surface :
-			case VALUE_TYPE.dynaSurface :
-				break;
-			default :
-				return noone;
-		}
+		var _type = outputs[| preview_channel].type;
+		if(_type != VALUE_TYPE.surface && _type != VALUE_TYPE.dynaSurface)
+			return noone;
 		
-		return outputs[| preview_channel].getValue();
+		var val = outputs[| preview_channel].getValue();
+		if(is_struct(val) && is_instanceof(val, dynaSurf))
+			val = array_safe_get_fast(val.surfaces, 0, noone);
+		
+		return val;
 	} #endregion
 	
 	static getPreviewBoundingBox = function() { #region
