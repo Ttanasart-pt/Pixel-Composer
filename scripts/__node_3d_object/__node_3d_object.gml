@@ -1,12 +1,15 @@
 function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Object";
+	gizmo = new __3dGizmoAxis(.2, COLORS._main_accent);
+	
 	cached_object = [];
 	object_class  = noone;
 	
 	preview_channel = 0;
+	apply_anchor    = false;
 	
 	inputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector, { linkable: false });
 	
 	inputs[| 1] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.d3quarternion);
@@ -15,7 +18,12 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 3] = nodeValue("Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector, { 
+			linkable: false, 
+			side_button : button(function() { apply_anchor = !apply_anchor; triggerRender(); })
+				.setIcon(THEME.icon_3d_anchor, [ function() /*=>*/ {return apply_anchor} ], c_white)
+				.setTooltip("Apply Position") 
+		});
 	
 	in_d3d = ds_list_size(inputs);
 	
@@ -616,6 +624,15 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		var _sca = _data[2];
 		var _anc = _data[3];
 		
+		if(apply_anchor)
+			_pos = [
+				_pos[0] + _anc[0],
+				_pos[1] + _anc[1],
+				_pos[2] + _anc[2],
+			];
+		
+		gizmo.transform.position.set(	_pos[0], _pos[1], _pos[2]);
+		
 		object.transform.position.set(	_pos[0], _pos[1], _pos[2]);
 		object.transform.anchor.set(	_anc[0], _anc[1], _anc[2]);
 		object.transform.rotation.set(	_rot[0], _rot[1], _rot[2], _rot[3]);
@@ -626,6 +643,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		
 	static getObject = function(index, class = object_class) { #region
 		var _obj = array_safe_get_fast(cached_object, index, noone);
+		
 		if(_obj == noone) {
 			_obj = new class();
 		} else if(!is_instanceof(_obj, class)) {
@@ -636,4 +654,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		cached_object[index] = _obj;
 		return _obj;
 	} #endregion
+	
+	static getPreviewObjects		= function() { return [ getPreviewObject(), gizmo ]; }
+	static getPreviewObjectOutline  = function() { return [ getPreviewObject(), gizmo ]; }
+	
 }

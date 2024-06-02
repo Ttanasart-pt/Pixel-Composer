@@ -121,6 +121,7 @@ function __3dObject() constructor {
 		_s.show_normal = false;
 		submitVertex(_s, sh_d3d_silhouette); 
 	} #endregion
+	
 	static submitShader = function(scene = {}, shader = noone) {}
 	static submitShadow = function(scene = {}, object = noone) {}
 	

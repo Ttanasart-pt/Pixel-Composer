@@ -1002,10 +1002,10 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		#region draw
 			d3_scene_preview.reset();
-			gpu_set_cullmode(cull_counterclockwise); 
+			gpu_set_cullmode(cull_counterclockwise);
 			
 			var _prev_obj = _prev_node.getPreviewObjects();
-				
+			
 			if(d3_scene_preview == d3_scene) {
 				if(d3_scene_light_enabled) {
 					d3_scene_preview.addLightDirectional(d3_scene_light0);
@@ -1016,19 +1016,18 @@ function Panel_Preview() : PanelContent() constructor {
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 				var _prev = _prev_obj[i];
 				if(_prev == noone) continue;
-					
+				 
 				_prev.submitShader(d3_scene_preview);
 			}
 				
 			d3_scene_preview.apply(d3_deferData);
 			
-			//print("========= Submit begin =========");
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 				var _prev = _prev_obj[i];
 				if(_prev == noone) continue;
-				_prev.submitUI(d3_scene_preview);							//////////////// SUBMIT ////////////////
+				
+				_prev.submitUI(d3_scene_preview);
 			}
-			//print("=========  Submit end  =========");
 			
 			gpu_set_cullmode(cull_noculling); 
 			surface_reset_target();

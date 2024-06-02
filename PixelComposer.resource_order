@@ -405,6 +405,7 @@
     {"name":"d3d_cube","order":1,"path":"scripts/d3d_cube/d3d_cube.yy",},
     {"name":"d3d_cylinder_nocaps","order":9,"path":"scripts/d3d_cylinder_nocaps/d3d_cylinder_nocaps.yy",},
     {"name":"d3d_cylinder","order":2,"path":"scripts/d3d_cylinder/d3d_cylinder.yy",},
+    {"name":"d3d_gizmo_axis","order":7,"path":"scripts/d3d_gizmo_axis/d3d_gizmo_axis.yy",},
     {"name":"d3d_gizmo_circle_z","order":4,"path":"scripts/d3d_gizmo_circle_z/d3d_gizmo_circle_z.yy",},
     {"name":"d3d_gizmo_line_dashed","order":3,"path":"scripts/d3d_gizmo_line_dashed/d3d_gizmo_line_dashed.yy",},
     {"name":"d3d_gizmo_line","order":1,"path":"scripts/d3d_gizmo_line/d3d_gizmo_line.yy",},

@@ -767,6 +767,7 @@
     {"id":{"name":"d3d_cube","path":"scripts/d3d_cube/d3d_cube.yy",},},
     {"id":{"name":"d3d_cylinder_nocaps","path":"scripts/d3d_cylinder_nocaps/d3d_cylinder_nocaps.yy",},},
     {"id":{"name":"d3d_cylinder","path":"scripts/d3d_cylinder/d3d_cylinder.yy",},},
+    {"id":{"name":"d3d_gizmo_axis","path":"scripts/d3d_gizmo_axis/d3d_gizmo_axis.yy",},},
     {"id":{"name":"d3d_gizmo_circle_z","path":"scripts/d3d_gizmo_circle_z/d3d_gizmo_circle_z.yy",},},
     {"id":{"name":"d3d_gizmo_line_dashed","path":"scripts/d3d_gizmo_line_dashed/d3d_gizmo_line_dashed.yy",},},
     {"id":{"name":"d3d_gizmo_line","path":"scripts/d3d_gizmo_line/d3d_gizmo_line.yy",},},
