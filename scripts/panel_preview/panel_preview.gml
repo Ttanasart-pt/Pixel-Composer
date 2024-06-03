@@ -1278,13 +1278,14 @@ function Panel_Preview() : PanelContent() constructor {
 		var _node = getNodePreview();
 		
 		#region status texts (top right)
-			var _lh = line_get_height(f_p0);
+			draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text);
+			var _lh = line_get_height();
 			
 			if(right_menu_x == 0) right_menu_x = w - ui(8);
 			
 			if(show_info) {
 				if(PANEL_PREVIEW == self) {
-					draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_accent);
+					draw_set_color(COLORS._main_text_accent);
 					draw_text(right_menu_x, right_menu_y, __txt("Active"));
 					right_menu_y += _lh;
 				}
@@ -1293,37 +1294,39 @@ function Panel_Preview() : PanelContent() constructor {
 				if(PREFERENCES.panel_preview_show_real_fps)
 					txt += $" / {FPS_REAL}";
 					
-				draw_set_text(f_p0, fa_right, fa_top, fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
+				draw_set_color(fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
 				draw_text(right_menu_x, right_menu_y, txt);
 				right_menu_y += _lh;
 			
-				draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
+				draw_set_color(COLORS._main_text_sub);
 				draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {CURRENT_FRAME + 1}/{TOTAL_FRAMES}");
 			
-				right_menu_y += _lh;
-				draw_text(right_menu_x, right_menu_y, $"x{canvas_s}");
-			
-				if(pHOVER) {
+				if(!d3_active) {
 					right_menu_y += _lh;
-					var mpx = floor((mx - canvas_x) / canvas_s);
-					var mpy = floor((my - canvas_y) / canvas_s);
-					draw_text(right_menu_x, right_menu_y, $"[{mpx}, {mpy}]");
-					
-					if(mouse_pos_string != "") {
+					draw_text(right_menu_x, right_menu_y, $"x{canvas_s}");
+				
+					if(pHOVER) {
 						right_menu_y += _lh;
-						draw_text(right_menu_x, right_menu_y, $"{mouse_pos_string}");
+						var mpx = floor((mx - canvas_x) / canvas_s);
+						var mpy = floor((my - canvas_y) / canvas_s);
+						draw_text(right_menu_x, right_menu_y, $"[{mpx}, {mpy}]");
+						
+						if(mouse_pos_string != "") {
+							right_menu_y += _lh;
+							draw_text(right_menu_x, right_menu_y, $"{mouse_pos_string}");
+						}
 					}
-				}
-				
-				if(_node != noone && !d3_active) {
-					right_menu_y += _lh;
-					var txt = $"{canvas_w} x {canvas_h}px";
-					if(canvas_a) txt = $"{canvas_a} x {txt}";
 					
-					draw_text(right_menu_x, right_menu_y, txt);
-				
-					right_menu_x = w - ui(8);
-					right_menu_y += _lh;
+					if(_node != noone) {
+						right_menu_y += _lh;
+						var txt = $"{canvas_w} x {canvas_h}px";
+						if(canvas_a) txt = $"{canvas_a} x {txt}";
+						
+						draw_text(right_menu_x, right_menu_y, txt);
+					
+						right_menu_x = w - ui(8);
+						right_menu_y += _lh;
+					}
 				}
 				
 				mouse_pos_string = "";
@@ -1979,7 +1982,6 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function saveCurrentFrameToFocus() { #region
 		var prevS = getNodePreviewSurface();
-		var _node = getNodePreview();
 		
 		if(!is_surface(prevS))     return;
 		if(!is_struct(PANEL_FILE)) return;
@@ -1999,10 +2001,13 @@ function Panel_Preview() : PanelContent() constructor {
 	function saveCurrentFrame() { #region
 		var prevS = getNodePreviewSurface();
 		var _node = getNodePreview();
+		
+		if(_node == noone) return;
 		if(!is_surface(prevS)) return;
 		
 		var path = get_save_filename_pxc("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name, "Save surface as"); 
 		key_release();
+		
 		if(path == "") return;
 		if(filename_ext(path) != ".png") path += ".png";
 		
@@ -2010,8 +2015,13 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function saveAllCurrentFrames() { #region
-		var path = get_save_filename_pxc("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name, "Save surfaces as"); 
+		var _node = getNodePreview();
+		
+		if(_node == noone) return;
+		
+		var path  = get_save_filename_pxc("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name, "Save surfaces as"); 
 		key_release();
+		
 		if(path == "") return;
 		
 		var ext = ".png";

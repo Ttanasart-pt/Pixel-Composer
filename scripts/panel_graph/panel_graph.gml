@@ -2012,7 +2012,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var ovy = ui(8);
 		if(show_view_control == 2)
 			ovy += ui(36);
-		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
+		draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
 		draw_text(w - ui(8), ovy, $"x{graph_s_to}");
 		
 		drawNodes();
