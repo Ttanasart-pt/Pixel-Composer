@@ -115,7 +115,7 @@ function Panel_Preview() : PanelContent() constructor {
 		mouse_pos_string = "";
 		
 		show_info = true;
-		show_view_control = true;
+		show_view_control = 1;
 	#endregion
 	
 	#region ---- tool ----
@@ -352,7 +352,7 @@ function Panel_Preview() : PanelContent() constructor {
 			],
 			[ 
 				THEME.icon_visibility,
-				function() { return __txtx("graph_visibility_title", "Visibility settings"); }, 
+				__txtx("graph_visibility_title", "Visibility settings"), 
 				function(param) { 
 					dialogPanelCall(new Panel_Preview_View_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 				},
@@ -1138,7 +1138,10 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		#region view controller
 			if(show_view_control) {
-				var _view_x = tool_side_draw_l * toolbar_width + ui(8);
+				var _side   = show_view_control == 1? 1 : -1;
+				var _view_x = show_view_control == 1? 
+					    tool_side_draw_l * toolbar_width + ui(8) : 
+					w - tool_side_draw_r * toolbar_width - ui(8);
 				var _view_y = topbar_height + ui(8);
 				var _hab = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
 				view_hovering = false;
@@ -1146,7 +1149,7 @@ function Panel_Preview() : PanelContent() constructor {
 				if(d3_active) { 
 					var d3_view_wr = ui(32);
 					
-					var _d3x = _view_x + d3_view_wr;
+					var _d3x = _view_x + d3_view_wr * _side;
 					var _d3y = _view_y + d3_view_wr;
 					var _hv  = false;
 					
@@ -1184,7 +1187,7 @@ function Panel_Preview() : PanelContent() constructor {
 					}
 					
 					var d3_view_wz = ui(16);
-					var _d3x = _view_x + d3_view_wr * 2 + ui(20);
+					var _d3x = _view_x + (d3_view_wr * 2 + ui(20)) * _side;
 					var _d3y = _view_y + d3_view_wz;
 					var _hv  = false;
 					
@@ -1209,7 +1212,7 @@ function Panel_Preview() : PanelContent() constructor {
 				} else {
 					var d3_view_wz = ui(16);
 					
-					var _d3x = _view_x + d3_view_wz;
+					var _d3x = _view_x + d3_view_wz * _side;
 					var _d3y = _view_y + d3_view_wz;
 					var _hv  = false;
 					
@@ -1235,7 +1238,7 @@ function Panel_Preview() : PanelContent() constructor {
 					draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
 					draw_sprite_ext(THEME.view_pan, 0, _d3x, _d3y, 1, 1, 0, view_pan_tool? COLORS._main_accent : COLORS._main_icon, 1);
 					
-					_d3x += d3_view_wz + ui(4) + d3_view_wz;
+					_d3x += (d3_view_wz + ui(4) + d3_view_wz) * _side;
 					_d3y =  _view_y + d3_view_wz;
 					_hv  =  false;
 					
@@ -1265,6 +1268,11 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 		
 		right_menu_y = toolbar_height - ui(4);
+		if(show_view_control == 2) {
+			if(d3_active) right_menu_y += ui(72);
+			else		  right_menu_y += ui(40);
+		} 
+		
 		toolbar_draw = false;
 		
 		var _node = getNodePreview();

@@ -1,6 +1,6 @@
-function draw_text_line(_x, _y, _text, _sep, _w) { #region
+function draw_text_line(_x, _y, _text, _sep, _w, forceCut = false) { #region
 	INLINE
-	__draw_text_ext_transformed(_x, _y, _text, _sep, _w, 1, 1, 0);
+	__draw_text_ext_transformed(_x, _y, _text, _sep, _w, 1, 1, 0, forceCut);
 } #endregion
 
 function draw_text_add(_x, _y, _text, scale = 1) { #region
@@ -114,12 +114,12 @@ function draw_text_highlight() { #region
 	
 } #endregion
 
-function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation, forceCut = false) { #region
+function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation, _break = LOCALE.config.per_character_line_break) { #region
 	INLINE
 	_x = round(_x);
 	_y = round(_y);
 	
-	if(!LOCALE.config.per_character_line_break && !forceCut) {
+	if(!_break) {
 		BLEND_ALPHA_MULP;
 		draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation);
 		BLEND_NORMAL;
@@ -156,7 +156,8 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation, 
 	var ha = draw_get_halign();
 	var va = draw_get_valign();
 	var xx = _x, yy = _y;
-	var hh = string_height("M") * array_length(lines) * sy;
+	var lh = line_get_height();
+	var hh = lh * array_length(lines) * sy;
 	
 	draw_set_halign(fa_left);
 	draw_set_valign(fa_top);
@@ -178,7 +179,7 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation, 
 		}
 		
 		draw_text_transformed(xx, yy, lines[i], sx, sy, rotation);
-		yy += string_height("M") * sy;
+		yy += lh * sy;
 	}
 	BLEND_NORMAL;
 	
@@ -220,21 +221,21 @@ function __string_width_ext(text, sep, w) { #region
 
 function __string_height_ext(text, sep, w, _break = LOCALE.config.per_character_line_break) { #region
 	INLINE
-	if(!_break)
-		return _string_height_ext(text, sep, w);
+	if(!_break) return _string_height_ext(text, sep, w);
 	
 	var lw  = 0;
 	var amo = string_length(text);
 	if(amo == 0) return 0;
 	
-	var hh  = string_height("M");
+	var lh = line_get_height();
+	var hh = lh;
 	
 	for( var i = 1; i <= amo; i++ ) {
 		var ch = string_char_at(text, i);
 		var ww = string_width(ch);
 		
 		if(lw + ww > w) {
-			hh += string_height("M");
+			hh += lh;
 			lw = ww;
 		} else 
 			lw += ww;

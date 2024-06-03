@@ -67,3 +67,16 @@ function filename_name_only(name) { #region
 	
 function string_to_var(str) { INLINE return string_replace_all(string_lower(str), " ", "_"); }
 function string_quote(str)  { INLINE return $"\"{str}\""; }
+
+function array_to_string(arr) {
+	if(!is_array(arr))   return string(arr);
+	if(array_empty(arr)) return "[]";
+	
+	var s = "[";
+	
+	for (var i = 0, n = array_length(arr); i < n - 1; i++)
+		s += array_to_string(arr[i]) + ", ";
+	s += array_to_string(arr[i])
+	
+	return s + "]";
+}

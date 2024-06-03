@@ -67,14 +67,27 @@ function path_is_image(path) {
 	return false;
 }
 
-function path_is_project(path) {
-	if(!file_exists_empty(path)) return false;	
+function path_is_project(path, checkExist = true) {
+	if(checkExist && !file_exists_empty(path)) return false;
 	
 	var ext = filename_ext(path);
+	    ext = string_lower(string_letters(ext));
+	
 	switch(ext) {
-		case ".pxc":
-		case ".pxcc":
+		case "pxc":
+		case "cpxc":
 			return true;
 	}
 	return false;
 }
+
+function path_is_backup(path) {
+	if(!path_is_project(path)) return false;
+	
+	var ext = string_lower(filename_ext(path));
+	    ext = string_replace(ext, ".", "");
+	
+	return string_letters(ext) != ext;
+}
+
+function filename_ext_raw(path) { return string_lower(string_letters(filename_ext(path))); }

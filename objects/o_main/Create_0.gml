@@ -169,53 +169,53 @@
 			var node = noone;
 			for( var i = 0, n = array_length(path); i < n; i++ ) {
 				var p = path[i];
-				var ext = string_lower(filename_ext(p));
+				var ext = filename_ext_raw(p);
 				
 				switch(ext) {
-					case ".txt"  :
+					case "txt"  :
 						node = Node_create_Text_File_Read_path(_x, _y, p);
 						break;
 						
-					case ".csv"  :
+					case "csv"  :
 						node = Node_create_CSV_File_Read_path(_x, _y, p);
 						break;
 						
-					case ".json"  :
+					case "json"  :
 						node = Node_create_Json_File_Read_path(_x, _y, p);
 						break;
 						
-					case ".ase"  :
-					case ".aseprite"  :
+					case "ase"  :
+					case "aseprite"  :
 						node = Node_create_ASE_File_Read_path(_x, _y, p);
 						break;
 						
-					case ".png"	 :
-					case ".jpg"	 :
-					case ".jpeg" :
+					case "png"	 :
+					case "jpg"	 :
+					case "jpeg" :
 						if(key_mod_press(SHIFT))
 							node = Node_create_Image_path(_x, _y, p);
 						else 
 							node = Node_create_Image_path(_x, _y, p);
 						break;
 						
-					case ".gif" :
+					case "gif" :
 						node = Node_create_Image_gif_path(_x, _y, p);
 						break;
 						
-					case ".obj" :
+					case "obj" :
 						node = Node_create_3D_Obj_path(_x, _y, p);
 						break;
 						
-					case ".wav" :
+					case "wav" :
 						node = Node_create_WAV_File_Read_path(_x, _y, p);
 						break;
 						
-					case ".pxc" :
-					case ".cpxc" :
+					case "pxc" :
+					case "cpxc" :
 						LOAD_PATH(p);
 						break;
 						
-					case ".pxcc" :
+					case "pxcc" :
 						APPEND(p);
 						break;
 				}
@@ -419,7 +419,7 @@
 			    path = string_replace_all(path, "\n", "");
 			    path = string_replace_all(path, "\"", "");
 				
-			if(file_exists_empty(path) && (filename_ext(path) == ".pxc" || filename_ext(path) == ".cpxc"))
+			if(path_is_project(path))
 				PROGRAM_ARGUMENTS._path = path;
 				
 		} else

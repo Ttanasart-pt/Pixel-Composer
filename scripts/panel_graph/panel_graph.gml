@@ -178,7 +178,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		connection_param = new connectionParameter();
 		
 		bg_color = c_black;
-		show_view_control = true;
+		
+		show_view_control = 1;
 	#endregion
 	
 	#region ---- position ----
@@ -933,11 +934,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		view_hovering = false;
 		if(!show_view_control) return;
 		
-		var _hab = pHOVER && !view_pan_tool && !view_zoom_tool;
+		var _side = show_view_control == 1? 1 : -1;
+		var _hab  = pHOVER && !view_pan_tool && !view_zoom_tool;
 		
 		var d3_view_wz = ui(16);
 		
-		var _d3x = ui(8) + d3_view_wz;
+		var _d3x = show_view_control == 1? 
+						    ui(8) + d3_view_wz : 
+						w - ui(8) - d3_view_wz;
+						
 		var _d3y = ui(8) + d3_view_wz;
 		var _hv  = false;
 		
@@ -963,7 +968,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
 		draw_sprite_ext(THEME.view_pan, 0, _d3x, _d3y, 1, 1, 0, view_pan_tool? COLORS._main_accent : COLORS._main_icon, 1);
 		
-		_d3x += d3_view_wz + ui(4) + d3_view_wz;
+		_d3x += (d3_view_wz + ui(4) + d3_view_wz) * _side;
 		_hv  =  false;
 		
 		if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
@@ -2004,8 +2009,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		drawGrid();
 		drawViewControl();
 		
+		var ovy = ui(8);
+		if(show_view_control == 2)
+			ovy += ui(36);
 		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
-		draw_text(w - ui(8), ui(8), $"x{graph_s_to}");
+		draw_text(w - ui(8), ovy, $"x{graph_s_to}");
 		
 		drawNodes();
 		drawJunctionConnect();
@@ -2229,12 +2237,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			nodes_selecting = array_create_from_list(_app);
 			return;
 		}
-	
-		if(filename_ext(txt) == ".pxc")
+		
+		var _ext = filename_ext_raw(txt);
+		
+		if(_ext == "pxc")
 			APPEND(txt);
-		else if(filename_ext(txt) == ".pxcc")
+			
+		else if(_ext == "pxcc")
 			APPEND(txt);
-		else if(filename_ext(txt) == ".png") {
+			
+		else if(_ext == "png") {
 			if(file_exists_empty(txt)) {
 				Node_create_Image_path(0, 0, txt);
 				return;

@@ -15,14 +15,15 @@ function FileObject(_name, _path) constructor { #region
 	meta	   = noone;
 	type	   = FILE_TYPE.collection;
 	
-	switch(string_lower(filename_ext(path))) { #region
-		case ".png" :	
-		case ".jpg" :	
-		case ".gif" :	
+	switch(filename_ext_raw(path)) { #region
+		case "png" :	
+		case "jpg" :	
+		case "gif" :	
 			type = FILE_TYPE.assets;
 			break;
-		case ".pxc" : 
-		case ".cpxc" : 
+			
+		case "pxc" : 
+		case "cpxc" : 
 			type = FILE_TYPE.project;
 			break;
 	} #endregion
@@ -107,10 +108,11 @@ function FileObject(_name, _path) constructor { #region
 		
 		meta.name = name;
 		
-		switch(filename_ext(path)) {
-			case ".pxc"  : meta.type = FILE_TYPE.project;		break;
-			case ".pxcc" : meta.type = FILE_TYPE.collection;	break;
-			default :	   meta.type = FILE_TYPE.assets;		break;
+		switch(filename_ext_raw(path)) {
+			case "pxc"  : 
+			case "cpxc" : meta.type = FILE_TYPE.project;	break;
+			case "pxcc" : meta.type = FILE_TYPE.collection;	break;
+			default :	  meta.type = FILE_TYPE.assets;		break;
 		}
 		
 		return meta;

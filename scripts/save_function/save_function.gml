@@ -87,8 +87,9 @@ function SAVE_ALL() { #region
 function SAVE(project = PROJECT) { #region
 	if(DEMO) return false;
 	
-	if(project.path == "" || project.readonly)
+	if(project.path == "" || project.readonly || path_is_backup(project.path))
 		return SAVE_AS(project);
+		
 	return SAVE_AT(project, project.path);
 } #endregion
 
@@ -99,8 +100,8 @@ function SAVE_AS(project = PROJECT) { #region
 	key_release();
 	if(path == "") return false;
 	
-	if(filename_ext(path) != ".pxc" && filename_ext(path) != ".cpxc")
-		path += ".pxc";
+	if(!path_is_project(path, false))
+		path = filename_name_only(path) + ".pxc";
 	
 	if(file_exists_empty(path))
 		log_warning("SAVE", "Overrided file : " + path);
@@ -120,10 +121,21 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
 	//if(TESTING && string_char_at(filename_name(path), 1) != "[")
 	//	path = $"{filename_dir(path)}/[{VERSION_STRING}] {filename_name(path)}";
 	
+	if(PREFERENCES.save_backup) {
+		for(var i = PREFERENCES.save_backup - 1; i >= 0; i--) {
+			var _p = path;
+			if(i) _p = $"{path}{string(i)}"
+			
+			if(file_exists(_p))
+				file_rename(_p, $"{path}{string(i + 1)}");
+		}
+	}
+	
 	if(file_exists_empty(path)) file_delete(path);
-	var _ext = filename_ext(path);
-	     if(_ext == ".pxc")  file_text_write_all(path, save_serialize(project));
-	else if(_ext == ".cpxc") buffer_save(buffer_compress_string(save_serialize(project)), path);
+	var _ext = filename_ext_raw(path);
+	
+	     if(_ext == "pxc")  file_text_write_all(path, save_serialize(project));
+	else if(_ext == "cpxc") buffer_save(buffer_compress_string(save_serialize(project)), path);
 	
 	SAVING    = false;
 	project.readonly  = false;

@@ -8,21 +8,23 @@ function LOAD_FOLDER(list, folder) { #region
 	var file = file_find_first(path + "/*", fa_directory);
 	
 	while(file != "") {		
-		if(filename_ext(file) == ".pxc") {
-			var full_path = path + "/" + file;
-			var f = new FileObject(filename_name_only(file), full_path);
-			var icon_path = string_replace(full_path, filename_ext(full_path), ".png");
-				
-			if(file_exists_empty(icon_path)) {
-				f.spr = sprite_add(icon_path, 0, false, false, 0, 0);
-				sprite_set_offset(f.spr, sprite_get_width(f.spr) / 2, sprite_get_height(f.spr) / 2);
-			}
-			
-			f.tag = folder;
-			
-			ds_list_add(list, f);
-		}
+		var f = file;
+		var full_path = path + "/" + file;
 		file = file_find_next();
+		
+		if(!path_is_project(full_path)) continue;
+		
+		var f = new FileObject(filename_name_only(f), full_path);
+		var icon_path = string_replace(full_path, filename_ext(full_path), ".png");
+			
+		if(file_exists_empty(icon_path)) {
+			f.spr = sprite_add(icon_path, 0, false, false, 0, 0);
+			sprite_set_offset(f.spr, sprite_get_width(f.spr) / 2, sprite_get_height(f.spr) / 2);
+		}
+		
+		f.tag = folder;
+		
+		ds_list_add(list, f);
 	}
 	file_find_close();
 } #endregion

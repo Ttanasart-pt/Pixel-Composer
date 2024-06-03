@@ -23,7 +23,7 @@ function ExpCreateFile(path) {
 function ExpFile(path) constructor {
 	self.path = string_trim(path, [ "/", "\\" ]);
 	name      = filename_name_only(path);
-	ext       = string_lower(filename_ext(path));
+	ext       = filename_ext_raw(path);
 	parent    = noone;
 	
 	load_thumb = false;
@@ -39,8 +39,8 @@ function ExpFile(path) constructor {
 		
 		thumbnail = -1;
 		switch(ext) {
-			case ".png" :
-			case ".jpg" :
+			case "png" :
+			case "jpg" :
 				thumbnail = sprite_add(path, 0, 0, 0, 0, 0);
 				if(thumbnail) {
 					load_thumb = true;
@@ -50,8 +50,9 @@ function ExpFile(path) constructor {
 				}
 				break;
 				
-			case ".pxc":
-			case ".pxcc":
+			case "cpxc":
+			case "pxc":
+			case "pxcc":
 				thumbnail = THEME.icon_64;
 				th_w = 64;
 				th_h = 64;

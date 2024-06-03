@@ -4,7 +4,7 @@ function LOAD(safe = false) { #region
 	var path = get_open_filename_pxc("Pixel Composer project (.pxc)|*.pxc;*.cpxc", "");
 	key_release();
 	if(path == "") return;
-	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") return;
+	if(!path_is_project(path)) return;
 				
 	gc_collect();
 	var proj = LOAD_PATH(path, false, safe);
@@ -71,7 +71,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		return false;
 	}
 	
-	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc" && filename_ext(path) != ".cpxc") {
+	if(!path_is_project(path)) {
 		log_warning("LOAD", "File not a valid PROJECT");
 		return false;
 	}
@@ -102,15 +102,15 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	printIf(log, $" > Create temp : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	var _load_content;
-	var _ext = filename_ext(path);
+	var _ext = filename_ext_raw(path);
 	var s;
 	
-	if(_ext == ".pxc") {
+	if(_ext == "pxc") {
 		var f = file_text_open_read(path);
 		s = file_text_read_all(f);
 		file_text_close(f);
 		
-	} else if(_ext == ".cpxc") {
+	} else if(_ext == "cpxc") {
 		var b = buffer_decompress(buffer_load(path));
 		s = buffer_read(b, buffer_string);
 	}

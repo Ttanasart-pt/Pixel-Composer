@@ -15,10 +15,10 @@ function Panel_Preview_View_Setting(previewPanel) : Panel_Linear_Setting() const
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("View Control"),
-				new checkBox(function() { previewPanel.show_view_control = !previewPanel.show_view_control; }),
+				new buttonGroup([ "None", "Left", "Right" ], function(val) { previewPanel.show_view_control = val; }),
 				function() { return previewPanel.show_view_control },
 				function(val) { previewPanel.show_view_control = val; },
-				true,
+				1,
 			),
 		];
 		

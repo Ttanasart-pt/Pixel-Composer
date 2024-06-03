@@ -20,7 +20,7 @@ function Panel_Test() : PanelContent() constructor {
 		var f = file_find_first(dir + "\\*", fa_none);
 		while(f != "") {
 			var path = dir + "\\" + f;
-			if(filename_ext(path) == ".pxc")
+			if(filename_ext_raw(path) == "pxc")
 				array_push(test_files, path);
 			f = file_find_next();
 		}

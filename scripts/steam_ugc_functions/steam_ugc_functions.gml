@@ -56,7 +56,7 @@ function __loadSteamUGC(file_id, item_map) { #region
 } #endregion
 
 function __loadSteamUGCCollection(file_id, f, path) { #region
-	if(filename_ext(f) != ".pxcc") return;
+	if(filename_ext_raw(f) != "pxcc") return;
 	
 	var fullPath  = $"{path}/{f}";
 	var name      = filename_name_only(f);
@@ -81,7 +81,7 @@ function __loadSteamUGCCollection(file_id, f, path) { #region
 } #endregion
 
 function __loadSteamUGCProject(file_id, f, path) { #region
-	if(filename_ext(f) != ".pxc") return;
+	if(!path_is_project(f, false)) return;
 	
 	var fullPath  = $"{path}/{f}";
 	var name      = filename_name_only(f);

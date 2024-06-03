@@ -44,10 +44,10 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("View Control"),
-				new checkBox(function() { graphPanel.show_view_control = !graphPanel.show_view_control; }),
+				new buttonGroup([ "None", "Left", "Right" ], function(val) { graphPanel.show_view_control = val; }),
 				function() { return graphPanel.show_view_control },
 				function(val) { graphPanel.show_view_control = val; },
-				true,
+				1,
 			),
 		];
 		
