@@ -104,6 +104,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				y1 = _y + y1 * _s;
 				
 				draw_line(x0, y0, x1, y1);
+				
+				draw_circle(x0, y0, 4, false);
 			}
 		}
 	} #endregion
@@ -230,8 +232,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _prog_next  = 0;
 				var _prog		= _prog_curr + 1;	//Record previous position to delete from _total
 				var _prog_total	= 0;				//Record the distance the pointer has moved so far
-				var points		= is_array(lines[i])? lines[i] : [];
-				var pointArrLen = array_length(points);
+				var points		= [];
 				var pointAmo    = 0;
 				var wght;
 				var _pathPng;
@@ -296,6 +297,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					_nx = p.x;
 					_ny = p.y;
+					// print($"{_nx}, {_ny}");
 						
 					if(_total < _pathEnd) { //Do not wiggle the last point.
 						var _d = point_direction(_ox, _oy, _nx, _ny);
@@ -304,26 +306,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 						
 					if(_prog_total >= _pathStr) { //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
-						var _pntData;
-						if(pointAmo < pointArrLen && is_struct(points[pointAmo])) {
-							_pntData          = points[pointAmo];
-							_pntData.x        = _nx;
-							_pntData.y        = _ny; 
-							_pntData.prog     = (_prog_total - _pathStr) / (_pathEnd - _pathStr);
-							_pntData.progCrop = _prog_curr / _pathLength;
-							_pntData.weight   = wght;
-						} else {
-							_pntData = { 
-								x:        _nx, 
-								y:        _ny, 
-								prog:     (_prog_total - _pathStr) / (_pathEnd - _pathStr), 
-								progCrop: _prog_curr / _pathLength, 
-								weight:   wght 
-							}
-							points[pointAmo] = _pntData;
-						} 
-						
-						pointAmo++;
+						points[pointAmo++] = { 
+							x:        _nx, 
+							y:        _ny, 
+							prog:     (_prog_total - _pathStr) / (_pathEnd - _pathStr), 
+							progCrop: _prog_curr / _pathLength, 
+							weight:   wght 
+						}
 					}
 					
 					if(_total <= 0) break;
@@ -346,6 +335,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 				
 				array_resize(points, pointAmo);
+				
 				lines[_lineAmo++] = points;
 			}
 			
