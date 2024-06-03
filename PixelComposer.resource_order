@@ -1130,6 +1130,7 @@
     {"name":"panel_preview_histogram","order":8,"path":"scripts/panel_preview_histogram/panel_preview_histogram.yy",},
     {"name":"panel_preview_onion_setting","order":5,"path":"scripts/panel_preview_onion_setting/panel_preview_onion_setting.yy",},
     {"name":"panel_preview_snap_setting","order":3,"path":"scripts/panel_preview_snap_setting/panel_preview_snap_setting.yy",},
+    {"name":"panel_preview_view_settings","order":9,"path":"scripts/panel_preview_view_settings/panel_preview_view_settings.yy",},
     {"name":"panel_preview_window","order":1,"path":"scripts/panel_preview_window/panel_preview_window.yy",},
     {"name":"panel_test","order":8,"path":"scripts/panel_test/panel_test.yy",},
     {"name":"panel_text_editor","order":9,"path":"scripts/panel_text_editor/panel_text_editor.yy",},

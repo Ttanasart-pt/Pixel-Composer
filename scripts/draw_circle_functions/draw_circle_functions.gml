@@ -110,11 +110,11 @@ function draw_arc_width(_x, _y, _r, _th, _angSt, _angEd) { #region
 	var diff = _angEd >= _angSt? _angEd - _angSt : _angEd + 360 - _angSt;
 	
 	for(var i = 0; i <= abs(diff); i += 4) {
-		var as = _angSt + i * sign(diff);
-		var nxI = _x + lengthdir_x(_r - _th / 2, as);
-		var nyI = _y + lengthdir_y(_r - _th / 2, as);
-		var nxO = _x + lengthdir_x(_r + _th / 2, as);
-		var nyO = _y + lengthdir_y(_r + _th / 2, as);
+		var _as = _angSt + i * sign(diff);
+		var nxI = _x + lengthdir_x(_r - _th / 2, _as);
+		var nyI = _y + lengthdir_y(_r - _th / 2, _as);
+		var nxO = _x + lengthdir_x(_r + _th / 2, _as);
+		var nyO = _y + lengthdir_y(_r + _th / 2, _as);
 		
 		if(i) {
 			draw_vertex(oxI, oyI);
@@ -144,11 +144,11 @@ function draw_arc_forward(_x, _y, _r, _th, _angSt, _angEd) { #region
 	var diff = _aEd - _aSt;
 	
 	for(var i = 0; i <= abs(diff); i += 4) {
-		var as = _aSt + i * sign(diff);
-		var nxI = _x + lengthdir_x(_r - _th / 2, as);
-		var nyI = _y + lengthdir_y(_r - _th / 2, as);
-		var nxO = _x + lengthdir_x(_r + _th / 2, as);
-		var nyO = _y + lengthdir_y(_r + _th / 2, as);
+		var _as = _aSt + i * sign(diff);
+		var nxI = _x + lengthdir_x(_r - _th / 2, _as);
+		var nyI = _y + lengthdir_y(_r - _th / 2, _as);
+		var nxO = _x + lengthdir_x(_r + _th / 2, _as);
+		var nyO = _y + lengthdir_y(_r + _th / 2, _as);
 		
 		if(i) {
 			draw_vertex(oxI, oyI);
@@ -168,3 +168,16 @@ function draw_arc_forward(_x, _y, _r, _th, _angSt, _angEd) { #region
 	
 	draw_primitive_end();
 } #endregion
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function draw_circle_ui(_x, _y, _r, _o, _c = c_white, _a = 1) {
+	shader_set(sh_node_circle);
+		shader_set_color("color", _c, _a);
+		shader_set_f("thickness", _o);
+		shader_set_f("antialias", 1 / _r);
+		shader_set_i("fill", _o == 0);
+		
+		draw_sprite_stretched(s_fx_pixel, 0, _x - _r, _y - _r, _r * 2, _r * 2);
+	shader_reset();
+}

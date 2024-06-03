@@ -188,7 +188,6 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);
 		}
 		
-		doCompile();
 	} #endregion
 	
 	static onDestroy = function() {

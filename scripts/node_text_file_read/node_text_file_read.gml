@@ -64,7 +64,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		triggerRender();
 	} #endregion
 	
-	function updatePaths(path) { #region
+	function updatePaths(path = path_current) { #region
 		if(path == -1) return false;
 		
 		var ext   = string_lower(filename_ext(path));
@@ -73,7 +73,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[| 1].setValue(path);
 				
 		content = file_read_all(path);
-				
+		
 		if(path_current == "") 
 			first_update = true;
 		path_current = path;
@@ -83,10 +83,16 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	} #endregion
 	
 	static step = function() { #region
-		if(attributes.file_checker && path_current != "") {
-			if(file_get_modify_s(path_current) > edit_time) {
-				updatePaths();
-				triggerRender();
+		if(attributes.file_checker && file_exists_empty(path_current)) {
+			var _modi = file_get_modify_s(path_current);
+			
+			if(_modi > edit_time) {
+				edit_time = _modi;
+				
+				run_in(2, function() {
+					updatePaths();
+					triggerRender();
+				});
 			}
 		}
 	} #endregion

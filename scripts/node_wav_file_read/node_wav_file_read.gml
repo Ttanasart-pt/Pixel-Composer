@@ -193,7 +193,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				preview_id = audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur);
 		}
 			   
-		if(attributes.file_checker && path_current != "") {
+		if(attributes.file_checker && file_exists_empty(path_current)) {
 			if(file_get_modify_s(path_current) > edit_time) {
 				updatePaths();
 				triggerRender();

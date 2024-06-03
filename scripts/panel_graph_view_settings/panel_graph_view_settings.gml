@@ -1,7 +1,8 @@
-function Panel_Graph_View_Setting(display) : Panel_Linear_Setting() constructor {
+function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() constructor {
 	title = __txtx("graph_view_settings", "View Settings");
 	
 	w = ui(380);
+	self.graphPanel   = graphPanel;
 	display_parameter = display;
 	
 	#region data
@@ -40,6 +41,13 @@ function Panel_Graph_View_Setting(display) : Panel_Linear_Setting() constructor 
 				function() { return display_parameter.preview_scale },
 				function(val) { display_parameter.preview_scale = val; },
 				100,
+			),
+			new __Panel_Linear_Setting_Item(
+				__txt("View Control"),
+				new checkBox(function() { graphPanel.show_view_control = !graphPanel.show_view_control; }),
+				function() { return graphPanel.show_view_control },
+				function(val) { graphPanel.show_view_control = val; },
+				true,
 			),
 		];
 		

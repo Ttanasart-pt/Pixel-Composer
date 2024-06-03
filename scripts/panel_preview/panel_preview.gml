@@ -70,6 +70,9 @@ function Panel_Preview() : PanelContent() constructor {
 		canvas_zoom_m   = 0;
 		canvas_zoom_s   = 0;
 		
+		view_pan_tool  = false;
+		view_zoom_tool = false;
+		
 		sample_color = noone;
 		sample_x = noone;
 		sample_y = noone;
@@ -110,6 +113,9 @@ function Panel_Preview() : PanelContent() constructor {
 		bg_color = COLORS.panel_bg_clear;
 		
 		mouse_pos_string = "";
+		
+		show_info = true;
+		show_view_control = true;
 	#endregion
 	
 	#region ---- tool ----
@@ -130,10 +136,11 @@ function Panel_Preview() : PanelContent() constructor {
 		toolbar_width  = ui(40);
 		toolbar_height = ui(40);
 		
-		tool_hovering     = false;
+		tool_hovering     = noone;
 		tool_side_draw_l  = false;
 		tool_side_draw_r  = false;
 		overlay_hovering  = false;
+		view_hovering     = false;
 		
 		sbChannel = new scrollBox([], function(index) { #region
 			var node = getNodePreview();
@@ -177,7 +184,7 @@ function Panel_Preview() : PanelContent() constructor {
 			d3_camPanning = false;
 			d3_camPan_mx  = 0;
 			d3_camPan_my  = 0;
-		
+			
 			d3_zoom_speed = 0.2;
 			d3_pan_speed  = 2;
 		#endregion
@@ -343,6 +350,14 @@ function Panel_Preview() : PanelContent() constructor {
 				function() { fullView(); },
 				function() { return 0; },
 			],
+			[ 
+				THEME.icon_visibility,
+				function() { return __txtx("graph_visibility_title", "Visibility settings"); }, 
+				function(param) { 
+					dialogPanelCall(new Panel_Preview_View_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+				},
+				function() { return 0; },
+			],
 		];
 		
 		static d3_view_action_front  = function() { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =   0; }
@@ -438,8 +453,10 @@ function Panel_Preview() : PanelContent() constructor {
 			canvas_drag_my = my;
 			setMouseWrap();
 			
-			if(mouse_release(canvas_drag_key)) 
+			if(mouse_release(canvas_drag_key)) {
 				canvas_dragging = false;
+				view_pan_tool   = false;
+			}
 		}
 		
 		if(canvas_zooming) {
@@ -460,8 +477,10 @@ function Panel_Preview() : PanelContent() constructor {
 			canvas_zoom_m = my;
 			setMouseWrap();
 			
-			if(mouse_release(canvas_drag_key)) 
+			if(mouse_release(canvas_drag_key)) {
 				canvas_zooming = false;
+				view_zoom_tool = false;
+			}
 		}
 		
 		if(pHOVER && canvas_hover) {
@@ -550,8 +569,10 @@ function Panel_Preview() : PanelContent() constructor {
 			d3_camPan_my = my;
 			setMouseWrap();
 			
-			if(mouse_release(canvas_drag_key)) 
+			if(mouse_release(canvas_drag_key)) {
 				d3_camPanning = false;
+				view_pan_tool = false;
+			}
 		}
 		
 		if(canvas_zooming) {
@@ -563,8 +584,10 @@ function Panel_Preview() : PanelContent() constructor {
 			canvas_zoom_m = my;
 			setMouseWrap();
 			
-			if(mouse_release(canvas_drag_key)) 
+			if(mouse_release(canvas_drag_key)) {
 				canvas_zooming = false;
+				view_zoom_tool = false;
+			}
 		}
 		
 		if(pHOVER && canvas_hover) {
@@ -1112,6 +1135,135 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function drawPreviewOverlay() { #region
+		
+		#region view controller
+			if(show_view_control) {
+				var _view_x = tool_side_draw_l * toolbar_width + ui(8);
+				var _view_y = topbar_height + ui(8);
+				var _hab = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
+				view_hovering = false;
+				
+				if(d3_active) { 
+					var d3_view_wr = ui(32);
+					
+					var _d3x = _view_x + d3_view_wr;
+					var _d3y = _view_y + d3_view_wr;
+					var _hv  = false;
+					
+					if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wr)) {
+						_hv = true;
+						view_hovering = true;
+						
+						if(mouse_press(mb_left, pFOCUS)) {
+							canvas_drag_key = mb_left;
+							d3_camPanning   = true;
+							d3_camPan_mx    = mx;
+							d3_camPan_my    = my;
+							
+							view_pan_tool = true;
+						}
+					}
+					
+					if(view_pan_tool)
+						_hv = true;
+					
+					draw_circle_ui(_d3x, _d3y, d3_view_wr, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
+					
+					var _qview = new BBMOD_Quaternion().FromEuler(d3_view_camera.focus_angle_y, -d3_view_camera.focus_angle_x, 0);
+					var _as = [
+						new BBMOD_Vec3(-1, 0, 0),
+						new BBMOD_Vec3(0,  0, 1),
+						new BBMOD_Vec3(0, -1, 0),
+					];
+					
+					for(var i = 0; i < 3; i++) {
+						_as[i] = _qview.Rotate(_as[i]);
+						
+						draw_set_color(COLORS.axis[i]);
+						draw_line_round(_d3x, _d3y, _d3x + _as[i].X * (d3_view_wr * 0.75), _d3y + _as[i].Y * (d3_view_wr * 0.75), 3);
+					}
+					
+					var d3_view_wz = ui(16);
+					var _d3x = _view_x + d3_view_wr * 2 + ui(20);
+					var _d3y = _view_y + d3_view_wz;
+					var _hv  = false;
+					
+					if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
+						_hv = true;
+						view_hovering = true;
+						
+						if(mouse_press(mb_left, pFOCUS)) {
+							canvas_drag_key = mb_left;
+							canvas_zooming  = true;	
+							canvas_zoom_m   = my;
+							view_zoom_tool  = true;
+						}
+					}
+					
+					if(view_zoom_tool)
+						_hv = true;
+					
+					draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+					draw_sprite_ext(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
+					
+				} else {
+					var d3_view_wz = ui(16);
+					
+					var _d3x = _view_x + d3_view_wz;
+					var _d3y = _view_y + d3_view_wz;
+					var _hv  = false;
+					
+					if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
+						_hv = true;
+						view_hovering = true;
+						
+						if(mouse_press(mb_left, pFOCUS)) {
+							canvas_drag_key = mb_left;
+							canvas_dragging = true;
+							canvas_drag_mx  = mx;
+							canvas_drag_my  = my;
+							canvas_drag_sx  = canvas_x;
+							canvas_drag_sy  = canvas_y;
+							
+							view_pan_tool = true;
+						}
+					}
+					
+					if(view_pan_tool)
+						_hv = true;
+					
+					draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+					draw_sprite_ext(THEME.view_pan, 0, _d3x, _d3y, 1, 1, 0, view_pan_tool? COLORS._main_accent : COLORS._main_icon, 1);
+					
+					_d3x += d3_view_wz + ui(4) + d3_view_wz;
+					_d3y =  _view_y + d3_view_wz;
+					_hv  =  false;
+					
+					if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
+						_hv = true;
+						view_hovering = true;
+						
+						if(mouse_press(mb_left, pFOCUS)) {
+							canvas_drag_key = mb_left;
+							canvas_zooming  = true;	
+							canvas_zoom_mx  = w / 2;
+							canvas_zoom_my  = h / 2;
+							canvas_zoom_m   = my;
+							canvas_zoom_s   = canvas_s;
+							
+							view_zoom_tool  = true;
+						}
+					}
+					
+					if(view_zoom_tool)
+						_hv = true;
+					
+					draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+					draw_sprite_ext(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
+				}
+			}
+		#endregion
+		
 		right_menu_y = toolbar_height - ui(4);
 		toolbar_draw = false;
 		
@@ -1122,50 +1274,53 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			if(right_menu_x == 0) right_menu_x = w - ui(8);
 			
-			if(PANEL_PREVIEW == self) {
-				draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_accent);
-				draw_text(right_menu_x, right_menu_y, __txt("Active"));
-				right_menu_y += _lh;
-			}
-			
-			var txt = $"{__txt("fps")} {fps}";
-			if(PREFERENCES.panel_preview_show_real_fps)
-				txt += $" / {FPS_REAL}";
-				
-			draw_set_text(f_p0, fa_right, fa_top, fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
-			draw_text(right_menu_x, right_menu_y, txt);
-			right_menu_y += _lh;
-		
-			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
-			draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {CURRENT_FRAME + 1}/{TOTAL_FRAMES}");
-		
-			right_menu_y += _lh;
-			draw_text(right_menu_x, right_menu_y, $"x{canvas_s}");
-		
-			if(pHOVER) {
-				right_menu_y += _lh;
-				var mpx = floor((mx - canvas_x) / canvas_s);
-				var mpy = floor((my - canvas_y) / canvas_s);
-				draw_text(right_menu_x, right_menu_y, $"[{mpx}, {mpy}]");
-				
-				if(mouse_pos_string != "") {
+			if(show_info) {
+				if(PANEL_PREVIEW == self) {
+					draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_accent);
+					draw_text(right_menu_x, right_menu_y, __txt("Active"));
 					right_menu_y += _lh;
-					draw_text(right_menu_x, right_menu_y, $"{mouse_pos_string}");
 				}
-			}
-			
-			if(_node != noone && !d3_active) {
-				right_menu_y += _lh;
-				var txt = $"{canvas_w} x {canvas_h}px";
-				if(canvas_a) txt = $"{canvas_a} x {txt}";
 				
+				var txt = $"{__txt("fps")} {fps}";
+				if(PREFERENCES.panel_preview_show_real_fps)
+					txt += $" / {FPS_REAL}";
+					
+				draw_set_text(f_p0, fa_right, fa_top, fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
 				draw_text(right_menu_x, right_menu_y, txt);
-			
-				right_menu_x = w - ui(8);
 				right_menu_y += _lh;
+			
+				draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
+				draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {CURRENT_FRAME + 1}/{TOTAL_FRAMES}");
+			
+				right_menu_y += _lh;
+				draw_text(right_menu_x, right_menu_y, $"x{canvas_s}");
+			
+				if(pHOVER) {
+					right_menu_y += _lh;
+					var mpx = floor((mx - canvas_x) / canvas_s);
+					var mpy = floor((my - canvas_y) / canvas_s);
+					draw_text(right_menu_x, right_menu_y, $"[{mpx}, {mpy}]");
+					
+					if(mouse_pos_string != "") {
+						right_menu_y += _lh;
+						draw_text(right_menu_x, right_menu_y, $"{mouse_pos_string}");
+					}
+				}
+				
+				if(_node != noone && !d3_active) {
+					right_menu_y += _lh;
+					var txt = $"{canvas_w} x {canvas_h}px";
+					if(canvas_a) txt = $"{canvas_a} x {txt}";
+					
+					draw_text(right_menu_x, right_menu_y, txt);
+				
+					right_menu_x = w - ui(8);
+					right_menu_y += _lh;
+				}
+				
+				mouse_pos_string = "";
 			}
 			
-			mouse_pos_string = "";
 			right_menu_x = w - ui(8);
 			
 		#endregion
@@ -1264,6 +1419,7 @@ function Panel_Preview() : PanelContent() constructor {
 			overlayHover &= active && isHover;
 			overlayHover &= point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
 			overlayHover &= !_dragging;
+			overlayHover &= !view_hovering;
 			
 		var params     = { w, h, toolbar_height };
 		var mouse_free = false;
@@ -1522,8 +1678,6 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function drawToolBar(_tool) { #region
 		var ty = h - toolbar_height;
-		//draw_sprite_stretched_ext(THEME.toolbar_shadow, 0, 0, ty - 12 + 4, w, 12, c_white, 0.5);
-		
 		var aa = d3_active? 0.8 : 1;
 		draw_sprite_stretched_ext(THEME.toolbar, 1, 0,  0, w, topbar_height, c_white, aa);
 		draw_sprite_stretched_ext(THEME.toolbar, 0, 0, ty, w, toolbar_height, c_white, aa);
@@ -1655,7 +1809,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var tbIndex   = tb[3]();
 			
 			var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, tbIndex);
-			if(b == 2) tb[2]();
+			if(b == 2) tb[2]( { x: x + tbx - ui(14), y: y + tby - ui(14) } );
 			
 			tbx -= ui(32);
 		}
@@ -1767,6 +1921,9 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		var inspect_node = PANEL_INSPECTOR.getInspecting();
 		
+		tool_side_draw_l = false;
+		tool_side_draw_r = false;
+				
 		var tool = noone;
 		if(inspect_node) {
 			tool = inspect_node.getTool();

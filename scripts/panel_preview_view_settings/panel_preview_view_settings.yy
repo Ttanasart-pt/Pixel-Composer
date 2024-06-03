@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"panel_preview_view_settings",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_preview_view_settings",
+  "parent":{
+    "name":"preview",
+    "path":"folders/panels/preview.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
