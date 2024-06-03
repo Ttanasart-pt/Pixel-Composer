@@ -87,9 +87,12 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static step = function() { #region
 		if(attributes.file_checker && file_exists_empty(path_current)) {
-			if(file_get_modify_s(path_current) > edit_time) {
-				updatePaths();
-				triggerRender();
+			var _modi = file_get_modify_s(path_current);
+			
+			if(_modi > edit_time) {
+				edit_time = _modi;
+				
+				run_in(2, function() { updatePaths(); triggerRender(); });
 			}
 		}
 	} #endregion
