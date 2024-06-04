@@ -15,8 +15,22 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	if(drag_type) {
 		_index = 1;
 		
-		var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
-		var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
+		var _nx = (drag_sx + (_mx - drag_mx) - _x) / _s;
+		var _ny = (drag_sy + (_my - drag_my) - _y) / _s;
+		
+		_nx = value_snap(_nx, _snx);
+		_ny = value_snap(_ny, _sny);
+		
+		if(key_mod_press(SHIFT)) {
+			if(abs(_mx - drag_mx) > abs(_my - drag_my)) 
+				_ny = drag_ry;
+			else
+				_nx = drag_rx;
+			
+			draw_set_color(COLORS._main_accent);
+			draw_line(drag_sx, drag_sy, _x + _nx * _s, _y + _ny * _s);
+		}
+		
 		if(key_mod_press(CTRL)) {
 			_val[0] = round(_nx);
 			_val[1] = round(_ny);
@@ -44,9 +58,11 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			drag_my   = _my;
 			drag_sx   = _ax;
 			drag_sy   = _ay;
+			drag_rx   = __ax;
+			drag_ry   = __ay;
 		}
 	} 
-		
+	
 	__overlay_hover = array_verify(__overlay_hover, 1);
 	__overlay_hover[0] = lerp_float(__overlay_hover[0], _index, 4);
 	draw_anchor(__overlay_hover[0], _ax, _ay, _r);

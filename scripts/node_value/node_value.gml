@@ -149,6 +149,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		drag_my   = 0;
 		drag_sx   = 0;
 		drag_sy   = 0;
+		drag_rx   = 0;
+		drag_ry   = 0;
 		
 		color = -1;
 		color_display = 0;
@@ -298,6 +300,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) { #region
 		express_edit.side_button = unit.triggerButton;
+		
+		if(is_instanceof(editWidget, textBox)) 
+			editWidget.side_button = unit.triggerButton;
 		
 		unit.reference  = ref;
 		unit.mode		= mode;
@@ -1445,11 +1450,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	} #endregion
 	
-	static setValueInspector = function(val = 0, index = noone) { #region
+	static setValueInspector = function(_val = 0, index = noone) { #region
 		INLINE
 		
 		var res = false;
-		val = unit.invApply(val);
+		var val = unit.invApply(_val);
 		
 		if(PANEL_INSPECTOR && PANEL_INSPECTOR.inspectGroup == 1) {
 			var ind = self.index;

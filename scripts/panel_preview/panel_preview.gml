@@ -1135,138 +1135,6 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function drawPreviewOverlay() { #region
-		
-		#region view controller
-			if(show_view_control) {
-				var _side   = show_view_control == 1? 1 : -1;
-				var _view_x = show_view_control == 1? 
-					    tool_side_draw_l * toolbar_width + ui(8) : 
-					w - tool_side_draw_r * toolbar_width - ui(8);
-				var _view_y = topbar_height + ui(8);
-				var _hab = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
-				view_hovering = false;
-				
-				if(d3_active) { 
-					var d3_view_wr = ui(32);
-					
-					var _d3x = _view_x + d3_view_wr * _side;
-					var _d3y = _view_y + d3_view_wr;
-					var _hv  = false;
-					
-					if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wr)) {
-						_hv = true;
-						view_hovering = true;
-						
-						if(mouse_press(mb_left, pFOCUS)) {
-							canvas_drag_key = mb_left;
-							d3_camPanning   = true;
-							d3_camPan_mx    = mx;
-							d3_camPan_my    = my;
-							
-							view_pan_tool = true;
-						}
-					}
-					
-					if(view_pan_tool)
-						_hv = true;
-					
-					draw_circle_ui(_d3x, _d3y, d3_view_wr, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
-					
-					var _qview = new BBMOD_Quaternion().FromEuler(d3_view_camera.focus_angle_y, -d3_view_camera.focus_angle_x, 0);
-					var _as = [
-						new BBMOD_Vec3(-1, 0, 0),
-						new BBMOD_Vec3(0,  0, 1),
-						new BBMOD_Vec3(0, -1, 0),
-					];
-					
-					for(var i = 0; i < 3; i++) {
-						_as[i] = _qview.Rotate(_as[i]);
-						
-						draw_set_color(COLORS.axis[i]);
-						draw_line_round(_d3x, _d3y, _d3x + _as[i].X * (d3_view_wr * 0.75), _d3y + _as[i].Y * (d3_view_wr * 0.75), 3);
-					}
-					
-					var d3_view_wz = ui(16);
-					var _d3x = _view_x + (d3_view_wr * 2 + ui(20)) * _side;
-					var _d3y = _view_y + d3_view_wz;
-					var _hv  = false;
-					
-					if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
-						_hv = true;
-						view_hovering = true;
-						
-						if(mouse_press(mb_left, pFOCUS)) {
-							canvas_drag_key = mb_left;
-							canvas_zooming  = true;	
-							canvas_zoom_m   = my;
-							view_zoom_tool  = true;
-						}
-					}
-					
-					if(view_zoom_tool)
-						_hv = true;
-					
-					draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
-					draw_sprite_ext(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
-					
-				} else {
-					var d3_view_wz = ui(16);
-					
-					var _d3x = _view_x + d3_view_wz * _side;
-					var _d3y = _view_y + d3_view_wz;
-					var _hv  = false;
-					
-					if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
-						_hv = true;
-						view_hovering = true;
-						
-						if(mouse_press(mb_left, pFOCUS)) {
-							canvas_drag_key = mb_left;
-							canvas_dragging = true;
-							canvas_drag_mx  = mx;
-							canvas_drag_my  = my;
-							canvas_drag_sx  = canvas_x;
-							canvas_drag_sy  = canvas_y;
-							
-							view_pan_tool = true;
-						}
-					}
-					
-					if(view_pan_tool)
-						_hv = true;
-					
-					draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
-					draw_sprite_ext(THEME.view_pan, 0, _d3x, _d3y, 1, 1, 0, view_pan_tool? COLORS._main_accent : COLORS._main_icon, 1);
-					
-					_d3x += (d3_view_wz + ui(4) + d3_view_wz) * _side;
-					_d3y =  _view_y + d3_view_wz;
-					_hv  =  false;
-					
-					if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
-						_hv = true;
-						view_hovering = true;
-						
-						if(mouse_press(mb_left, pFOCUS)) {
-							canvas_drag_key = mb_left;
-							canvas_zooming  = true;	
-							canvas_zoom_mx  = w / 2;
-							canvas_zoom_my  = h / 2;
-							canvas_zoom_m   = my;
-							canvas_zoom_s   = canvas_s;
-							
-							view_zoom_tool  = true;
-						}
-					}
-					
-					if(view_zoom_tool)
-						_hv = true;
-					
-					draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
-					draw_sprite_ext(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
-				}
-			}
-		#endregion
-		
 		right_menu_y = toolbar_height - ui(4);
 		if(show_view_control == 2) {
 			if(d3_active) right_menu_y += ui(72);
@@ -1406,10 +1274,141 @@ function Panel_Preview() : PanelContent() constructor {
 		preview_x_max = max(preview_x_max - ui(100), 0);
 	} #endregion
 	
+	function drawViewController() {
+		if(!show_view_control) return;
+		
+		var _side   = show_view_control == 1? 1 : -1;
+		var _view_x = show_view_control == 1? 
+			    tool_side_draw_l * toolbar_width + ui(8) : 
+			w - tool_side_draw_r * toolbar_width - ui(8);
+		var _view_y = topbar_height + ui(8);
+		var _hab = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
+		view_hovering = false;
+		
+		if(d3_active) { 
+			var d3_view_wr = ui(32);
+			
+			var _d3x = _view_x + d3_view_wr * _side;
+			var _d3y = _view_y + d3_view_wr;
+			var _hv  = false;
+			
+			if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wr)) {
+				_hv = true;
+				view_hovering = true;
+				
+				if(mouse_press(mb_left, pFOCUS)) {
+					canvas_drag_key = mb_left;
+					d3_camPanning   = true;
+					d3_camPan_mx    = mx;
+					d3_camPan_my    = my;
+					
+					view_pan_tool = true;
+				}
+			}
+			
+			if(view_pan_tool)
+				_hv = true;
+			
+			draw_circle_ui(_d3x, _d3y, d3_view_wr, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
+			
+			var _qview = new BBMOD_Quaternion().FromEuler(d3_view_camera.focus_angle_y, -d3_view_camera.focus_angle_x, 0);
+			var _as = [
+				new BBMOD_Vec3(-1, 0, 0),
+				new BBMOD_Vec3(0,  0, 1),
+				new BBMOD_Vec3(0, -1, 0),
+			];
+			
+			for(var i = 0; i < 3; i++) {
+				_as[i] = _qview.Rotate(_as[i]);
+				
+				draw_set_color(COLORS.axis[i]);
+				draw_line_round(_d3x, _d3y, _d3x + _as[i].X * (d3_view_wr * 0.75), _d3y + _as[i].Y * (d3_view_wr * 0.75), 3);
+			}
+			
+			var d3_view_wz = ui(16);
+			var _d3x = _view_x + (d3_view_wr * 2 + ui(20)) * _side;
+			var _d3y = _view_y + d3_view_wz;
+			var _hv  = false;
+			
+			if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
+				_hv = true;
+				view_hovering = true;
+				
+				if(mouse_press(mb_left, pFOCUS)) {
+					canvas_drag_key = mb_left;
+					canvas_zooming  = true;	
+					canvas_zoom_m   = my;
+					view_zoom_tool  = true;
+				}
+			}
+			
+			if(view_zoom_tool)
+				_hv = true;
+			
+			draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+			draw_sprite_ext(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
+			
+		} else {
+			var d3_view_wz = ui(16);
+			
+			var _d3x = _view_x + d3_view_wz * _side;
+			var _d3y = _view_y + d3_view_wz;
+			var _hv  = false;
+			
+			if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
+				_hv = true;
+				view_hovering = true;
+				
+				if(mouse_press(mb_left, pFOCUS)) {
+					canvas_drag_key = mb_left;
+					canvas_dragging = true;
+					canvas_drag_mx  = mx;
+					canvas_drag_my  = my;
+					canvas_drag_sx  = canvas_x;
+					canvas_drag_sy  = canvas_y;
+					
+					view_pan_tool = true;
+				}
+			}
+			
+			if(view_pan_tool)
+				_hv = true;
+			
+			draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+			draw_sprite_ext(THEME.view_pan, 0, _d3x, _d3y, 1, 1, 0, view_pan_tool? COLORS._main_accent : COLORS._main_icon, 1);
+			
+			_d3x += (d3_view_wz + ui(4) + d3_view_wz) * _side;
+			_d3y =  _view_y + d3_view_wz;
+			_hv  =  false;
+			
+			if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
+				_hv = true;
+				view_hovering = true;
+				
+				if(mouse_press(mb_left, pFOCUS)) {
+					canvas_drag_key = mb_left;
+					canvas_zooming  = true;	
+					canvas_zoom_mx  = w / 2;
+					canvas_zoom_my  = h / 2;
+					canvas_zoom_m   = my;
+					canvas_zoom_s   = canvas_s;
+					
+					view_zoom_tool  = true;
+				}
+			}
+			
+			if(view_zoom_tool)
+				_hv = true;
+			
+			draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+			draw_sprite_ext(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
+		}
+	}
+	
 	function drawNodeTools(active, _node) { #region
 		var _mx = mx;
 		var _my = my;
-		var isHover = pHOVER && mouse_on_preview == 1;
+		var overHover = pHOVER && mouse_on_preview == 1;
 		var tool_size  = ui(32);
 		
 		var cx = canvas_x + _node.preview_x * canvas_s;
@@ -1420,17 +1419,19 @@ function Panel_Preview() : PanelContent() constructor {
 		tool_side_draw_r = _node.rightTools != -1;
 		
 		if(_node.tools != -1 && point_in_rectangle(_mx, _my, 0, 0, toolbar_width, h)) {
-			isHover = false;
+			overHover = false;
 			mouse_on_preview = 0;
 		}
 		
-		var _dragging = key_mod_press(CTRL) && !key_mod_press(SHIFT) && !key_mod_press(ALT);
+		overHover &= !view_hovering;
+		overHover &= tool_hovering == noone && !overlay_hovering;
+		overHover &= !(view_pan_tool || view_zoom_tool);
+		overHover &= point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
 		
-		var overlayHover =  tool_hovering == noone && !overlay_hovering;
-			overlayHover &= active && isHover;
-			overlayHover &= point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
-			overlayHover &= !_dragging;
-			overlayHover &= !view_hovering;
+		var overActive =  active && overHover;
+		
+		var _dragging = key_mod_press(CTRL) && !key_mod_press(SHIFT) && !key_mod_press(ALT);
+		overActive &= !_dragging;
 			
 		var params     = { w, h, toolbar_height };
 		var mouse_free = false;
@@ -1441,7 +1442,7 @@ function Panel_Preview() : PanelContent() constructor {
 				_sny = d3_tool_snap_rotation;
 			}
 			
-			mouse_free = _node.drawOverlay3D(overlayHover, d3_scene, _mx, _my, _snx, _sny, params);
+			mouse_free = _node.drawOverlay3D(overActive, d3_scene, _mx, _my, _snx, _sny, params);
 		} else {
 			if(key_mod_press(CTRL)) {
 				_snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
@@ -1451,7 +1452,7 @@ function Panel_Preview() : PanelContent() constructor {
 				_sny = PROJECT.previewGrid.size[1];
 			}
 			
-			mouse_free = _node.drawOverlay(isHover, overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
+			mouse_free = _node.drawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
 		}
 		
 		#region node overlay
@@ -1941,6 +1942,8 @@ function Panel_Preview() : PanelContent() constructor {
 			if(tool) drawNodeTools(pFOCUS, tool);
 		} else 
 			tool_current = noone;
+		
+		drawViewController();
 		
 		if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
 			menuCall("preview_context_menu",,, [ 
