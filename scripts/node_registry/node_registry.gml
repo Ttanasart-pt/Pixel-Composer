@@ -486,7 +486,7 @@ function __initNodes() {
 	
 	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 	
-	var input = ds_list_create(); #region //input
+	var input = ds_list_create(); #region //io
 	addNodeCatagory("IO", input);
 		ds_list_add(input, "Images");
 		addNodeObject(input, "Canvas",				s_node_canvas,			"Node_Canvas",					[1, Node_Canvas], ["draw"], "Draw on surface using brush, eraser, etc.");
@@ -497,6 +497,7 @@ function __initNodes() {
 		addNodeObject(input, "Image Array",			s_node_image_sequence,	"Node_Image_Sequence",			[0, Node_create_Image_Sequence],, "Load multiple images from your computer as array.");
 		addNodeObject(input, "Animation",			s_node_image_animation, "Node_Image_Animated",			[0, Node_create_Image_Animated],, "Load multiple images from your computer as animation.");
 		addNodeObject(input, "Array to Anim",		s_node_image_sequence_to_anim, "Node_Sequence_Anim",	[1, Node_Sequence_Anim],, "Convert array of images into animation.");
+		/**/addNodeObject(input, "SVG",					s_node_image_sequence_to_anim, "Node_SVG",	[1, Node_SVG],, "Load SVG file.");
 		if(!DEMO) addNodeObject(input, "Export",	s_node_export,			"Node_Export",					[0, Node_create_Export],, "Export image, image array to file, image sequence, animation.");
 		
 		ds_list_add(input, "Files");
@@ -510,6 +511,8 @@ function __initNodes() {
 		addNodeObject(input, "ASE Layer",			s_node_ase_layer,		"Node_ASE_layer",			[1, Node_ASE_layer],, "Load Aseprite project file").setVersion(1100);
 		addNodeObject(input, "WAV File In",			s_node_wav_file_read,	"Node_WAV_File_Read",		[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
 		addNodeObject(input, "WAV File Out",		s_node_wav_file_write,	"Node_WAV_File_Write",		[1, Node_WAV_File_Write],, "Save wav audio file.").setVersion(1145);
+		addNodeObject(input, "XML File In",			s_node_xml_file_read,	"Node_XML_File_Read",		[0, Node_create_XML_File_Read],, "Load xml file.").setVersion(11720);
+		addNodeObject(input, "XML File Out",		s_node_xml_file_write,	"Node_XML_File_Write",		[1, Node_XML_File_Write],, "Write struct to xml file.").setVersion(11720);
 		addNodeObject(input, "Byte File In",		s_node_byte_file_read,	"Node_Byte_File_Read",		[1, Node_Byte_File_Read],,  "Load any file to buffer.").setVersion(11670);
 		addNodeObject(input, "Byte File Out",		s_node_byte_file_write,	"Node_Byte_File_Write",		[1, Node_Byte_File_Write],, "Save buffer content to a file.").setVersion(11670);
 		addNodeObject(input, "Directory Search",	s_node_directory,		"Node_Directory_Search",	[0, Node_create_Directory_Search],, "Search for files in directory.").setVersion(11710);

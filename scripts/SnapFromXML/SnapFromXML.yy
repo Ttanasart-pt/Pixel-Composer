@@ -1,12 +1,12 @@
 {
   "$GMScript":"",
-  "%Name":"node_image_sequence",
+  "%Name":"SnapFromXML",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_image_sequence",
+  "name":"SnapFromXML",
   "parent":{
-    "name":"image",
-    "path":"folders/nodes/data/io/image.yy",
+    "name":"XML",
+    "path":"folders/_extensions/SNAP/XML.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -17,11 +17,13 @@ enum MATH_OPERATOR {
 	round,
 	
 	lerp,
-	abs
+	abs,
+	
+	clamp,
 }
 
 #region create
-	global.node_math_keys = [ "add", "subtract", "multiply", "divide", "power", "root", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan", "lerp", "abs" ];
+	global.node_math_keys = [ "add", "subtract", "multiply", "divide", "power", "root", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan", "lerp", "abs", "clamp" ];
 	
 	function Node_create_Math(_x, _y, _group = noone, _param = {}) {
 		var query = struct_try_get(_param, "query", "");
@@ -47,6 +49,8 @@ enum MATH_OPERATOR {
 		
 			case "lerp" :		node.inputs[| 0].setValue(MATH_OPERATOR.lerp);		break;
 			case "abs" :		node.inputs[| 0].setValue(MATH_OPERATOR.abs);		break;
+			
+			case "clamp" :		node.inputs[| 0].setValue(MATH_OPERATOR.clamp);		break;
 		} #endregion
 	
 		return node;
@@ -61,7 +65,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ 
 			/* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
-			/*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs" ])
+			/*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp" ])
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -106,6 +110,8 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			case MATH_OPERATOR.lerp :		return lerp(a, b, c);
 			case MATH_OPERATOR.abs :		return abs(a);
+			
+			case MATH_OPERATOR.clamp :		return clamp(a, b, c);
 		}
 		return 0;
 	} #endregion
@@ -141,7 +147,6 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 		}
 		
-		inputs[| 2].name = "b";
 		inputs[| 5].setVisible(false);
 		
 		switch(mode) {
@@ -152,39 +157,56 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.power :
 			case MATH_OPERATOR.root :	
 			case MATH_OPERATOR.modulo :	
-				inputs[| 2].setVisible(true);
+				inputs[| 2].name = "b";
+				
+				inputs[| 2].setVisible(true, true);
 				break;
+				
 			case MATH_OPERATOR.sin :
 			case MATH_OPERATOR.cos :
 			case MATH_OPERATOR.tan :
-				inputs[| 2].setVisible(true);
 				inputs[| 2].name = "Amplitude";
+				
+				inputs[| 2].setVisible(true, true);
 				break;
+				
 			case MATH_OPERATOR.floor :
 			case MATH_OPERATOR.ceiling :
 			case MATH_OPERATOR.round :
 			case MATH_OPERATOR.abs :
 				inputs[| 2].setVisible(false);
 				break;
+				
 			case MATH_OPERATOR.lerp :
-				inputs[| 2].setVisible(true);
-				inputs[| 5].setVisible(true);
+				inputs[| 2].name = "To";
+				inputs[| 5].name = "Amount";
+				
+				inputs[| 2].setVisible(true, true);
+				inputs[| 5].setVisible(true, true);
+				break;
+				
+			case MATH_OPERATOR.clamp :
+				inputs[| 2].name = "Min";
+				inputs[| 5].name = "Max";
+				
+				inputs[| 2].setVisible(true, true);
+				inputs[| 5].setVisible(true, true);
 				break;
 			default: return;
 		}
 	} #endregion
 	
 	function evalArray(a, b, c = 0) { #region
-		var as = is_array(a);
-		var bs = is_array(b);
-		var cs = is_array(c);
+		var _as = is_array(a);
+		var _bs = is_array(b);
+		var _cs = is_array(c);
 		
-		if(!as && !bs && !cs)
+		if(!_as && !_bs && !_cs)
 			return _eval(a, b, c);
 		
-		if(!as) a = [ a ];
-		if(!bs) b = [ b ];
-		if(!cs) c = [ c ];
+		if(!_as) a = [ a ];
+		if(!_bs) b = [ b ];
+		if(!_cs) c = [ c ];
 		
 		var al = array_length(a);
 		var bl = array_length(b);
@@ -205,9 +227,10 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		use_mod = getInputData(0);
+		use_deg = getInputData(3);
+		
 		var a	= getInputData(1);
 		var b	= getInputData(2);
-		use_deg = getInputData(3);
 		var c	= getInputData(5);
 		
 		var val = evalArray(a, b, c);
@@ -218,29 +241,31 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		switch(getInputData(0)) {
-			case MATH_OPERATOR.add :		str = "+"; break;
-			case MATH_OPERATOR.subtract :	str = "-"; break;
-			case MATH_OPERATOR.multiply :	str = "*"; break;
-			case MATH_OPERATOR.divide :		str = "/"; break;
-			case MATH_OPERATOR.power :		str = "pow"; break;
-			case MATH_OPERATOR.root :		str = "root"; break;
+			case MATH_OPERATOR.add :		str = "+";     break;
+			case MATH_OPERATOR.subtract :	str = "-";     break;
+			case MATH_OPERATOR.multiply :	str = "*";     break;
+			case MATH_OPERATOR.divide :		str = "/";     break;
+			case MATH_OPERATOR.power :		str = "pow";   break;
+			case MATH_OPERATOR.root :		str = "root";  break;
 			
-			case MATH_OPERATOR.sin :		str = "sin"; break;
-			case MATH_OPERATOR.cos :		str = "cos"; break;
-			case MATH_OPERATOR.tan :		str = "tan"; break;
-			case MATH_OPERATOR.modulo :		str = "mod"; break;
+			case MATH_OPERATOR.sin :		str = "sin";   break;
+			case MATH_OPERATOR.cos :		str = "cos";   break;
+			case MATH_OPERATOR.tan :		str = "tan";   break;
+			case MATH_OPERATOR.modulo :		str = "mod";   break;
 			
 			case MATH_OPERATOR.floor :		str = "floor"; break;
-			case MATH_OPERATOR.ceiling :	str = "ceil"; break;
+			case MATH_OPERATOR.ceiling :	str = "ceil";  break;
 			case MATH_OPERATOR.round :		str = "round"; break;
 			
-			case MATH_OPERATOR.lerp :		str = "lerp"; break;
-			case MATH_OPERATOR.abs :		str = "abs"; break;
+			case MATH_OPERATOR.lerp :		str = "lerp";  break;
+			case MATH_OPERATOR.abs :		str = "abs";   break;
+			
+			case MATH_OPERATOR.clamp :		str = "clamp"; break;
 			default: return;
 		}
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);
-		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss * 0.8, ss * 0.8, 0);
 	} #endregion
 }

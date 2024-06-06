@@ -27,6 +27,13 @@ function SurfaceAtlasFast(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blen
 		
 		return self;
 	}
+	
+	static getSurface = function() {
+		INLINE
+		
+		return surface;
+	}
+	
 }
 
 function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1, setDim = true) : Atlas() constructor {

@@ -1,9 +1,9 @@
 {
   "$GMScript":"",
-  "%Name":"node_image_sequence",
+  "%Name":"node_svg",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_image_sequence",
+  "name":"node_svg",
   "parent":{
     "name":"image",
     "path":"folders/nodes/data/io/image.yy",

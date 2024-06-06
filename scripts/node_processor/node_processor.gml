@@ -22,7 +22,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	batch_output = false;	//Run processData once with all outputs as array.
 	
-	icon    = THEME.node_processor_icon;
+	icon = THEME.node_processor_icon;
 	
 	array_push(attributeEditors, "Array processor");
 	array_push(attributeEditors, [ "Array process type", function() { return attributes.array_process; }, 
@@ -217,49 +217,58 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static processBatchOutput = function() { #region
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			if(outputs[| i].type != VALUE_TYPE.surface) continue;
-			var _res = outputs[| i].getValue();
-			surface_array_free(_res);
-			outputs[| i].setValue(noone);
-		}
+		var _is = ds_list_size(inputs);
+		var _os = ds_list_size(outputs);
 		
+		var _outVal = array_create(_os);
+		for(var i = 0; i < _os; i++)
+			_outVal[i] = outputs[| i].getValue();
+			
 		if(process_amount == 1) {
-			var data = processData(noone, inputs_data, 0, 0);
-			for(var i = 0; i < ds_list_size(outputs); i++) {
-				var _outp = array_safe_get_fast(data, i, undefined);
-				if(_outp == undefined) continue;
-				outputs[| i].setValue(_outp);
-			}
-		} else {
-			var _outputs = array_create(ds_list_size(outputs));
-			for( var l = 0; l < process_amount; l++ ) {
-				var _data = array_create(ds_list_size(inputs));
-				for(var i = 0; i < ds_list_size(inputs); i++)
-					_data[i] = all_inputs[i][l];
+			current_data = inputs_data;
+			var data = processData(_outVal, inputs_data, 0, 0);
+			
+			if(_os == 1) {
+				outputs[| 0].setValue(data);
 				
-				var data = processData(0, _data, 0, l);
-				for(var i = 0; i < ds_list_size(outputs); i++) {
+			} else {
+				for(var i = 0; i < _os; i++) {
 					var _outp = array_safe_get_fast(data, i, undefined);
-					_outputs[i][l] = _outp;
+					if(_outp == undefined) continue;
+					outputs[| i].setValue(_outp);
 				}
 			}
-				
-			for( var i = 0, n = ds_list_size(outputs); i < n; i++ )
-				outputs[| i].setValue(_outputs[i]);
+			
+			return;
 		}
+		
+		var _inputs  = array_create(_is);
+		var _outputs = array_create(_os);
+		
+		for( var l = 0; l < process_amount; l++ ) {
+			
+			for(var i = 0; i < _is; i++)
+				_inputs[i] = all_inputs[i][l];
+			
+			if(l == 0 || l == preview_index) 
+				current_data = _inputs;
+			
+			var data = processData(_outVal, _inputs, 0, l);
+			
+			if(_os == 1) _outputs[0][l] = data;
+			else		 for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
+		}
+			
+		for( var i = 0, n = _os; i < n; i++ )
+			outputs[| i].setValue(_outputs[i]);
+		
 	} #endregion
 	
 	static processOutput = function() { #region
-		var val;
-		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
-			if(outputs[| i].process_array) {
-				val = processDataArray(i);
-				if(val == undefined) continue;
-			} else
-				val = processData(noone, noone, i);
-			outputs[| i].setValue(val);
+			var val = outputs[| i].process_array? processDataArray(i) : processData(outputs[| i].getValue(), noone, i);
+			if(val != undefined)
+				outputs[| i].setValue(val);
 		}
 	} #endregion
 	
@@ -341,8 +350,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		processData_prebatch();
+		
 		if(batch_output) processBatchOutput();
 		else			 processOutput();
+		
 		processData_postbatch();
 		
 		postProcess();

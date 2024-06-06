@@ -1,12 +1,12 @@
 {
   "$GMScript":"",
-  "%Name":"node_image_sequence",
+  "%Name":"node_xml_file_write",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_image_sequence",
+  "name":"node_xml_file_write",
   "parent":{
-    "name":"image",
-    "path":"folders/nodes/data/io/image.yy",
+    "name":"io",
+    "path":"folders/nodes/data/io.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

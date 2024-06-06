@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_sequence_anim",
   "parent":{
-    "name":"io",
-    "path":"folders/nodes/data/io.yy",
+    "name":"image",
+    "path":"folders/nodes/data/io/image.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

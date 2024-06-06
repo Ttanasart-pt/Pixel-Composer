@@ -168,25 +168,25 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	} #endregion
 	
 	static apply = function(release = false) { #region
-		var _input_text_current = _input_text;
+		var _val = _input_text;
 		disp_x_to = 0;
 		
 		if(input == TEXTBOX_INPUT.number)
-			_input_text_current = evaluateFunction(_input_text);
+			_val = evaluateFunction(_input_text);
 		
-		if(no_empty && _input_text_current == "") 
-			_input_text_current = _last_text;
-		current_value = _input_text_current;
+		if(no_empty && _val == "") 
+			_val = _last_text;
+		current_value = _val;
 		
 		if(release) {
 			if(is_callable(onRelease)) {
-				var _modi = onRelease(_input_text_current);
+				var _modi = onRelease(_val);
 				if(_modi && IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
 				return _modi;
 			}
 		} else {
 			if(is_callable(onModify)) {
-				var _modi = onModify(_input_text_current);
+				var _modi = onModify(_val);
 				if(_modi && IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
 				return _modi;
 			}

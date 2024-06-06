@@ -1,12 +1,12 @@
 {
   "$GMScript":"",
-  "%Name":"node_image_sequence",
+  "%Name":"svg_reader",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_image_sequence",
+  "name":"svg_reader",
   "parent":{
-    "name":"image",
-    "path":"folders/nodes/data/io/image.yy",
+    "name":"svg",
+    "path":"folders/functions/svg.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

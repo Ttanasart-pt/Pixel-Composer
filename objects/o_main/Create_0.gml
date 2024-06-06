@@ -210,6 +210,14 @@
 						node = Node_create_WAV_File_Read_path(_x, _y, p);
 						break;
 						
+					case "xml" :
+						node = Node_create_XML_File_Read_path(_x, _y, p);
+						break;
+						
+					case "svg" :
+						node = Node_create_SVG_path(_x, _y, p);
+						break;
+						
 					case "pxc" :
 					case "cpxc" :
 						LOAD_PATH(p);

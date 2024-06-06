@@ -7,6 +7,7 @@ enum OUTPUT_SCALING {
 
 function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Transform";
+	batch_output = true;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
@@ -66,7 +67,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 14] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	input_display_list = [ 11, 0, 
+	input_display_list = [ 11, 0,  
 		["Output",		 true],	9, 1, 7,
 		["Position",	false], 2, 10, 
 		["Rotation",	false], 3, 5, 8, 
@@ -76,6 +77,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	outputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 1, 1 ])
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false);
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -180,10 +185,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	} #endregion
 	
-	// static processData_prebatch  = function() { shader_preset_interpolation();  }
-	// static processData_postbatch = function() { shader_postset_interpolation(); }
-	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outData, _data, _output_index, _array_index) { #region
 		var ins = _data[0];
 		
 		var out_type  = _data[9];
@@ -200,13 +202,20 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var echo_amo  = _data[13];
 		var alp       = _data[14];
 		
+		var _outSurf  = _outData[0];
+		var _outRes   = array_create(ds_list_size(outputs));
+		
 		var cDep = attrDepth();
 		
 		var ww  = surface_get_width_safe(ins);
 		var hh  = surface_get_height_safe(ins);
 		var _ww = ww;
 		var _hh = hh;
-		if(_ww <= 1 && _hh <= 1) return _outSurf;
+		
+		_outRes[0] = _outSurf;
+		_outRes[1] = [ ww, hh ];
+		
+		if(_ww <= 1 && _hh <= 1) return _outRes;
 		
 		switch(out_type) { #region output dimension
 			case OUTPUT_SCALING.same_as_input :
@@ -242,8 +251,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				break;
 		} #endregion
 		
-		if(_ww <= 0 || _hh <= 0) return;
+		_outRes[1] = [ ww, hh ];
+		
+		if(_ww <= 0 || _hh <= 0) return _outRes;
+		
 		_outSurf = surface_verify(_outSurf, _ww, _hh, cDep);
+		_outRes[0] = _outSurf;
 		
 		anc[0] *= ww * sca[0];
 		anc[1] *= hh * sca[1];
@@ -317,7 +330,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			[ sca[0], sca[1] ],
 		];
 		
-		return _outSurf;
+		return _outRes;
 	} #endregion
 	
 	overlay_dragging = 0;

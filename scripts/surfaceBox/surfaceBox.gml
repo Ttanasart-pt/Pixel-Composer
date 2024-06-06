@@ -77,17 +77,20 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 			var _arrLen = 0;
 			var _arrInd = 0;
 			
-			if(is_array(_surface) && array_length(_surface)) {
-				_arrLen  = array_length(_surface);
-				_arrInd  = safe_mod(round(current_time / 250), array_length(_surface));
-				_surface = _surface[_arrInd];
+			if(is_array(_surface)) {
+				var _sprd = array_spread(_surface);
+				
+				if(array_length(_sprd)) {
+					_arrLen  = array_length(_sprd);
+					_arrInd  = safe_mod(round(current_time / 250), _arrLen);
+					_surface = _sprd[_arrInd];
+				} else 
+					_surface = noone;
 			}
 			
-			if(is_instanceof(_surface, __d3dMaterial))
-				_surface = _surface.surface;
-			
-			if(is_instanceof(_surface, dynaSurf))
-				_surface = array_safe_get_fast(_surface.surfaces, 0, noone);
+			if(is_instanceof(_surface, __d3dMaterial)) _surface = _surface.surface;
+			else if(is_instanceof(_surface, dynaSurf)) _surface = array_safe_get_fast(_surface.surfaces, 0, noone);
+			else if(is_instanceof(_surface, Atlas))    _surface = _surface.getSurface();
 			
 			if(surface_exists(_surface)) {
 				var sfw = surface_get_width(_surface);	

@@ -521,10 +521,6 @@ function nodeValueUnit(_nodeValue) constructor { #region
 						
 					return _val;
 			}
-		} else {
-			base = array_safe_get(base, 0, 1);
-			if(inv) base = base == 0? 0 : 1 / base;
-			return value * base;
 		}
 		
 		return value;
