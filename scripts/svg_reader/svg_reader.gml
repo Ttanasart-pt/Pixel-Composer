@@ -38,20 +38,16 @@ function svg_parse(xmlStr) {
 			var _ch = svg_object.children[i];
 			
 			switch(_ch.type) {
-				case "path" : svg.contents[_ind++] = svg_parse_path(_ch, svg); break;
+				case "path" :	  svg.contents[_ind++] = new SVG_path(svg).setAttr(_ch.attributes);		break;
+				case "rect" :	  svg.contents[_ind++] = new SVG_rect(svg).setAttr(_ch.attributes);		break;
+				case "circle" :   svg.contents[_ind++] = new SVG_circle(svg).setAttr(_ch.attributes);	break;
+				case "ellipse" :  svg.contents[_ind++] = new SVG_ellipse(svg).setAttr(_ch.attributes);	break;
+				case "line" :	  svg.contents[_ind++] = new SVG_line(svg).setAttr(_ch.attributes);		break;
+				case "polyline" : svg.contents[_ind++] = new SVG_polyline(svg).setAttr(_ch.attributes);	break;
+				case "polygon" :  svg.contents[_ind++] = new SVG_polygon(svg).setAttr(_ch.attributes);	break;
 			}
 		}
 	}
 	
 	return svg;
-}
-
-function svg_parse_path(pathStr, svgObj) {
-	var _path = new SVG_path(svgObj);
-	var attr  = pathStr.attributes;
-	
-	if(struct_has(attr, "d"))
-		_path.setDef(attr.d)
-	
-	return _path;
 }

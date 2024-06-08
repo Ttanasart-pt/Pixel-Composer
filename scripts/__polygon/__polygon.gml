@@ -1,22 +1,31 @@
 function polygon_simplify(points, tolerance = 4) { #region
-	var remSt = ds_stack_create();
 	
-	var len = array_length(points);
+	// Delete duplicated points
+	for( var i = array_length(points) - 1; i >= 1; i-- ) {
+		if(points[i].equal(points[i - 1]))
+			array_delete(points, i, 1);
+	}
+	if(points[0].equal(points[array_length(points) - 1]))
+		array_pop(points);
+	
+	var remSt = ds_stack_create();
+	var len   = array_length(points);
+	
 	for( var i = 0; i < len; i++ ) {
-		var _px0 = points[i].x;
-		var _py0 = points[i].y;
-		var _px1 = points[(i + 1) % len].x;
-		var _py1 = points[(i + 1) % len].y;
-		var _px2 = points[(i + 2) % len].x;
-		var _py2 = points[(i + 2) % len].y;
+		var _px0 = points[(i - 1 + len) % len].x;
+		var _py0 = points[(i - 1 + len) % len].y;
+		var _px1 = points[i].x;
+		var _py1 = points[i].y;
+		var _px2 = points[(i + 1 + len) % len].x;
+		var _py2 = points[(i + 1 + len) % len].y;
 		
 		var dir0 = point_direction(_px0, _py0, _px1, _py1);
 		var dir1 = point_direction(_px1, _py1, _px2, _py2);
-			
-		if((_px0 == _px1 && _py0 == _py1) || abs(dir0 - dir1) <= tolerance) 
-			ds_stack_push(remSt, (i + 1) % len);
-	}
 		
+		if((_px0 == _px1 && _py0 == _py1) || abs(dir0 - dir1) <= tolerance) 
+			ds_stack_push(remSt, i);
+	}
+	
 	while(!ds_stack_empty(remSt)) {
 		var ind = ds_stack_pop(remSt);
 		array_delete(points, ind, 1);
@@ -102,7 +111,7 @@ function polygon_triangulate(points, tolerance = 4) { #region // ear clipping
 	var triangles = [];
 	var repeated  = 0;
 	
-	//print($"Ear cutting : {array_length(points)} verticies");
+	// print($"Ear cutting : {points}");
 	
 	while(array_length(pointInd) > 3) {
 		if(array_length(convexes) == 0) return [ triangles, points, checkSide ];
@@ -173,6 +182,13 @@ function polygon_triangulate(points, tolerance = 4) { #region // ear clipping
 			array_push(convexes, c0);
 			
 			if(repeated++ > len) {
+				// print($"point: {points}");
+				// print($"index: {pointInd}");
+				// print($"convx: {convexes}");
+				
+				// for (var i = 0, n = array_length(pointInd); i < n; i++)
+				// 	print(points[pointInd[i]]);
+				
 				noti_warning("Mesh error");
 				break;
 			}
