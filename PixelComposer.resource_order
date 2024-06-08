@@ -1989,6 +1989,7 @@
     {"name":"s_node_struct","order":1,"path":"sprites/s_node_struct/s_node_struct.yy",},
     {"name":"s_node_surface_from_buffer","order":2,"path":"sprites/s_node_surface_from_buffer/s_node_surface_from_buffer.yy",},
     {"name":"s_node_surface_to_buffer","order":3,"path":"sprites/s_node_surface_to_buffer/s_node_surface_to_buffer.yy",},
+    {"name":"s_node_svg","order":38,"path":"sprites/s_node_svg/s_node_svg.yy",},
     {"name":"s_node_switch","order":20,"path":"sprites/s_node_switch/s_node_switch.yy",},
     {"name":"s_node_terminal_trigger","order":41,"path":"sprites/s_node_terminal_trigger/s_node_terminal_trigger.yy",},
     {"name":"s_node_text_char_get","order":2,"path":"sprites/s_node_text_char_get/s_node_text_char_get.yy",},

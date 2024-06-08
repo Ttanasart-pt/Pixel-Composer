@@ -11,7 +11,7 @@ if(PROJECT.active && !PROJECT.safeMode) { #region node step
 	
 	try {
 		if(PANEL_MAIN != 0) PANEL_MAIN.step();
-		array_foreach(PROJECT.nodeArray, function(_node) { 
+		array_foreach(PROJECT.allNodes, function(_node) { 
 			if(!_node.active) return; 
 			_node.triggerCheck(); 
 			_node.step(); 

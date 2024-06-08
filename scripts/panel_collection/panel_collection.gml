@@ -145,15 +145,15 @@ function Panel_Collection() : PanelContent() constructor {
 	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) { #region
 		draw_clear_alpha(c_white, 0);
 		
-		var nodes;
+		var content;
 		var steamNode = [];
 		
 		if(mode == 0) {
 			if(!COLLECTIONS.scanned) 
 				COLLECTIONS.scan([".json", ".pxcc"]); 
 			
-			if(context == root) nodes = STEAM_COLLECTION;
-			else				nodes = context.content;
+			if(context == root) content = STEAM_COLLECTION;
+			else				content = context.content;
 			
 			for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
 				var meta = STEAM_COLLECTION[| i].meta;	
@@ -162,15 +162,15 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 		
 		} else if(mode == 1) {
-			nodes = context.content;
+			content = context.content;
 			
 		} else if(mode == 2) {
-			nodes = context;
+			content = context;
 		}
 		
-		if(search_string != "") nodes = search_list;
+		if(search_string != "") content = search_list;
 		
-		var node_list  = ds_list_size(nodes);
+		var node_list  = ds_list_size(content);
 		var node_count = node_list + array_length(steamNode);
 		var frame	   = PREFERENCES.collection_animated? current_time * PREFERENCES.collection_preview_speed / 3000 : 0;
 		var _cw		   = contentPane.surface_w;
@@ -200,7 +200,7 @@ function Panel_Collection() : PanelContent() constructor {
 					var index = i * col + j;
 					if(index >= node_count) break;
 					
-					var _node = index < node_list? nodes[| index] : steamNode[index - node_list];
+					var _node = index < node_list? content[| index] : steamNode[index - node_list];
 					var _nx   = grid_space + (grid_width + grid_space) * j;
 					var _boxx = _nx + (grid_width - grid_size) / 2;
 					_boxx = round(_boxx);
@@ -293,7 +293,7 @@ function Panel_Collection() : PanelContent() constructor {
 			hh += list_height;
 		
 			for(var i = 0; i < node_count; i++) {
-				var _node = i < node_list? nodes[| i] : steamNode[i - node_list];
+				var _node = i < node_list? content[| i] : steamNode[i - node_list];
 				if(!_node) continue;
 				
 				if(yy + list_height >= 0 && yy <= contentPane.surface_h) {

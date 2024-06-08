@@ -3,7 +3,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	color = COLORS.node_blend_loop;
 	
 	is_root  = false;
-	topoList = ds_list_create();
+	topoList = [];
 	
 	input_node  = noone;
 	output_node = noone;
@@ -31,13 +31,13 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			APPEND_MAP[? CLONING_GROUP.input_node.node_id]  = input;
 			APPEND_MAP[? CLONING_GROUP.output_node.node_id] = output;
 			
-			ds_list_add(APPEND_LIST, input, output);
+			array_push(APPEND_LIST, input, output);
 		}
 	} #endregion
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ )
-			if(nodes[| i].isActiveDynamic(frame)) return true;
+		for( var i = 0, n = array_length(nodes); i < n; i++ )
+			if(nodes[i].isActiveDynamic(frame)) return true;
 		
 		return false;
 	} #endregion
@@ -47,7 +47,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	} #endregion
 	
 	static refreshMember = function() { #region
-		ds_list_clear(nodes);
+		nodes = [];
 		
 		for( var i = 0, n = array_length(attributes.members); i < n; i++ ) {
 			if(!ds_map_exists(PROJECT.nodeMap, attributes.members[i])) {
@@ -57,7 +57,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			
 			var _node = PROJECT.nodeMap[? attributes.members[i]];
 			_node.inline_context = self;
-			ds_list_add(nodes, _node);
+			array_push(nodes, _node);
 			
 			if(is_instanceof(_node, Node_Iterator_Sort_Inline_Input)) {
 				input_node = _node;
@@ -152,8 +152,6 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		output_node.outputs[| 0].setType(type);
 		
 		if(input_node.inputs[| 0].value_from == noone) return;
-		
-		//print($"=============== STARTING SORT with {ds_list_size(topoList)}/{ds_list_size(nodes)} nodes ===============")
 		
 		var arrIn  = input_node.inputs[| 0].getValue();
 		var arrOut = output_node.outputs[| 0].getValue();

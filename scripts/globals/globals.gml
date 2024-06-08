@@ -5,7 +5,7 @@
 	
 	globalvar APPENDING, APPEND_MAP, APPEND_LIST;
 	APPEND_MAP      = ds_map_create();
-	APPEND_LIST     = ds_list_create();
+	APPEND_LIST     = [];
 	
 	LOADING		    = false;
 	LOADING_VERSION = 0;

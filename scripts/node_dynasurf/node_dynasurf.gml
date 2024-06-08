@@ -51,8 +51,8 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		rendered = result;
 		
 		if(result)
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var _n = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var _n = nodes[i];
 			
 			if(!is_instanceof(_n, Node_DynaSurf_Out) && 
 			   !is_instanceof(_n, Node_DynaSurf_Out_Width) &&
@@ -73,8 +73,8 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	static setDynamicSurface = function() { #region
 		var _dyna = new compute_dynaSurf();
 		
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var _n = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var _n = nodes[i];
 			
 			if(is_instanceof(_n, Node_DynaSurf_Out))
 				_dyna.drawFn   = _n.outputs[| 0].getValue();

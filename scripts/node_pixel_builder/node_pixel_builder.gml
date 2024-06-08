@@ -33,8 +33,8 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	} #endregion
 	
 	static checkComplete = function() { #region
-		for( var i = 0; i < ds_list_size(nodes); i++ )
-			if(!nodes[| i].rendered) return [];
+		for( var i = 0; i < array_length(nodes); i++ )
+			if(!nodes[i].rendered) return [];
 		
 		buildPixel();
 		
@@ -56,8 +56,8 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		var _dim     = getInputData(0);
 		var _surfs   = ds_map_create();
 		
-		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			var _n = nodes[| i];
+		for( var i = 0; i < array_length(nodes); i++ ) {
+			var _n = nodes[i];
 			
 			for( var j = 0; j < ds_list_size(_n.outputs); j++ ) {
 				var _out = _n.outputs[| j];

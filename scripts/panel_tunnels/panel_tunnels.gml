@@ -16,15 +16,11 @@ function Panel_Tunnels() : PanelContent() constructor {
 		tunnel_hover  = noone;
 		
 		function scanNodes() {
-			var amo = ds_map_size(PROJECT.nodeMap);
-			var k   = ds_map_find_first(PROJECT.nodeMap);
-		
 			tunnel_ins = [];
 			
-			repeat(amo) {
-				var node = PROJECT.nodeMap[? k];
-				k = ds_map_find_next(PROJECT.nodeMap, k);
-			
+			for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
+				var node = PROJECT.allNodes[i];
+				
 				if(instanceof(node) == "Node_Tunnel_In") 
 					array_push(tunnel_ins, node);
 			}

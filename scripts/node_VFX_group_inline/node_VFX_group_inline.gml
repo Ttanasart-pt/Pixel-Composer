@@ -4,7 +4,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	icon  = THEME.vfx;
 	
 	is_root  = false;
-	topoList = ds_list_create();
+	topoList = [];
 	
 	inputs[| 0] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
 		.rejectArray();
@@ -38,8 +38,8 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	static getNextNodes = function() { return __nodeLeafList(nodes); }
 	
 	static reset = function() { #region
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var node = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
 			if(!struct_has(node, "reset")) continue;
 			node.reset();
 		}
@@ -61,8 +61,8 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 			node.doUpdate(i);
 		}
 		
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var node = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
 			if(!struct_has(node, "resetSeed")) continue;
 			node.resetSeed();
 		}

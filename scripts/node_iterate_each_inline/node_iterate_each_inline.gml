@@ -30,7 +30,7 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			APPEND_MAP[? CLONING_GROUP.input_node.node_id]  = input;
 			APPEND_MAP[? CLONING_GROUP.output_node.node_id] = output;
 			
-			ds_list_add(APPEND_LIST, input, output);
+			array_push(APPEND_LIST, input, output);
 		}
 	} #endregion
 	
@@ -60,7 +60,7 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	} #endregion
 	
 	static refreshMember = function() { #region
-		ds_list_clear(nodes);
+		nodes = [];
 		
 		for( var i = 0, n = array_length(attributes.members); i < n; i++ ) {
 			if(!ds_map_exists(PROJECT.nodeMap, attributes.members[i])) {
@@ -71,7 +71,7 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			var _node = PROJECT.nodeMap[? attributes.members[i]];
 			_node.inline_context = self;
 			
-			ds_list_add(nodes, _node);
+			array_push(nodes, _node);
 			
 			if(is_instanceof(_node, Node_Iterator_Each_Inline_Input)) {
 				input_node = _node;

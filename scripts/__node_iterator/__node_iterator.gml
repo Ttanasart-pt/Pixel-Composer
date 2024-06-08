@@ -17,8 +17,8 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	iterated = 0;
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ )
-			if(nodes[| i].isActiveDynamic(frame)) return true;
+		for( var i = 0, n = array_length(nodes); i < n; i++ )
+			if(nodes[i].isActiveDynamic(frame)) return true;
 		
 		return false;
 	} #endregion
@@ -51,9 +51,9 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		
 		var _nodes = [];
 		
-		for( var i = 0; i < ds_list_size(nodes); i++ ) { // check if every node is updated
-			if(!nodes[| i].rendered) {
-				LOG_IF(global.FLAG.render == 1, $"Skipped due to node {nodes[| i].internalName} not rendered.");
+		for( var i = 0; i < array_length(nodes); i++ ) { // check if every node is updated
+			if(!nodes[i].rendered) {
+				LOG_IF(global.FLAG.render == 1, $"Skipped due to node {nodes[i].internalName} not rendered.");
 				LOG_BLOCK_END();
 				return _nodes;
 			}
@@ -92,16 +92,16 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	static iterationUpdate = function() { #region
 		var maxIter = getIterationCount();
 		
-		for( var i = 0; i < ds_list_size(nodes); i++ ) // check if every node is updated
-			if(!nodes[| i].rendered) {
-				LOG_LINE_IF(global.FLAG.render, $"------------------< Iteration update: {iterated} / {maxIter} [RENDER FAILED by {nodes[| i]}] >------------------");
+		for( var i = 0; i < array_length(nodes); i++ ) // check if every node is updated
+			if(!nodes[i].rendered) {
+				LOG_LINE_IF(global.FLAG.render, $"------------------< Iteration update: {iterated} / {maxIter} [RENDER FAILED by {nodes[i]}] >------------------");
 				return;
 			}
 		
 		iterated++;
 		
-		for( var i = 0; i < ds_list_size(nodes); i++ )
-			nodes[| i].clearInputCache();
+		for( var i = 0; i < array_length(nodes); i++ )
+			nodes[i].clearInputCache();
 		
 		if(iterated == maxIter) {
 			LOG_LINE_IF(global.FLAG.render, $"------------------< Iteration update: {iterated} / {maxIter} [COMPLETE] >------------------");

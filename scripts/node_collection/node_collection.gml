@@ -121,8 +121,7 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 function upgroupNode(collection, record = true) { #region
 	UNDO_HOLDING  = true;
 	var _content  = [], _deleted = [];
-	var node_list = collection.getNodeList();
-	var _node_arr = ds_list_to_array(node_list);
+	var _node_arr = collection.getNodeList();
 	var _conn_to  = collection.getJunctionTos();
 	
 	var _cx = 0, _cy = 0;
@@ -169,8 +168,8 @@ function upgroupNode(collection, record = true) { #region
 } #endregion
 
 function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 
-	nodes       = ds_list_create();
-	node_length = ds_list_size(nodes);
+	nodes       = [];
+	node_length = 0;
 	
 	ungroupable			= true;
 	auto_render_time	= false;
@@ -239,9 +238,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static onInspector2Update  = function() { #region
 		var i = 0;
 		
-		repeat(ds_list_size(nodes)) {
-			if(nodes[| i].hasInspector2Update())
-				nodes[| i].inspector2Update();
+		repeat(array_length(nodes)) {
+			if(nodes[i].hasInspector2Update())
+				nodes[i].inspector2Update();
 			i++;
 		}
 	} #endregion
@@ -254,12 +253,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		hasInsp1 = false;
 		hasInsp2 = false;
 		
-		node_length  = ds_list_size(nodes);
+		node_length  = array_length(nodes);
 		
 		var i = 0;
 		repeat(node_length) {
-			hasInsp1 |= nodes[| i].hasInspector1Update();
-			hasInsp2 |= nodes[| i].hasInspector2Update();
+			hasInsp1 |= nodes[i].hasInspector1Update();
+			hasInsp2 |= nodes[i].hasInspector2Update();
 			
 			i++;
 		}
@@ -361,7 +360,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return nextNodes;
 	} #endregion
 	
-	static clearTopoSorted = function() { INLINE topoSorted = false; for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) { nodes[| i].clearTopoSorted(); } }
+	static clearTopoSorted = function() { INLINE topoSorted = false; for( var i = 0, n = array_length(nodes); i < n; i++ ) { nodes[i].clearTopoSorted(); } }
 	
 	static setRenderStatus = function(result) { #region
 		LOG_BLOCK_START();
@@ -402,15 +401,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static exitGroup = function() {}
 	
 	static add = function(_node) { #region
-		ds_list_add(getNodeList(), _node);
+		array_push(getNodeList(), _node);
 		var list = _node.group == noone? PANEL_GRAPH.nodes_list : _node.group.getNodeList();
-		ds_list_remove(list, _node);
+		array_remove(list, _node);
 		
 		recordAction(ACTION_TYPE.group_added, self, _node);
 		_node.group = self;
 		
 		will_refresh = true;
-		node_length  = ds_list_size(nodes);
+		node_length  = array_length(nodes);
 	} #endregion
 	
 	static remove = function(_node) { #region
@@ -420,8 +419,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var node_list = getNodeList();
 			var list = group == noone? PANEL_GRAPH.nodes_list : group.getNodeList();
 			
-			ds_list_remove(node_list, _node);
-			ds_list_add(list,         _node);
+			array_remove(node_list, _node);
+			array_push(list, _node);
 		}
 		
 		recordAction(ACTION_TYPE.group_removed, self, _node);
@@ -433,14 +432,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		else      _node.group = group;
 			
 		will_refresh = true;
-		node_length  = ds_list_size(nodes);
+		node_length  = array_length(nodes);
 	} #endregion
 	
 	static clearCache = function() { #region
-		var node_list = getNodeList();
-		for(var i = 0; i < ds_list_size(node_list); i++) {
-			node_list[| i].clearCache();
-		}
+		array_foreach(getNodeList(), function(node) { node.clearCache(); });
 	} #endregion
 	
 	static stepBegin = function() { #region
@@ -451,9 +447,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static step = function() { #region
 		if(combine_render_time) {
 			render_time = 0;
-			var node_list = getNodeList();
-			for(var i = 0; i < ds_list_size(node_list); i++)
-				render_time += node_list[| i].render_time;
+			array_foreach(getNodeList(), function(node) { render_time += node.render_time; });
 		}
 		
 		onStep();
@@ -517,8 +511,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getTool = function() { #region
-		for(var i = 0, n = ds_list_size(nodes); i < n; i++) { 
-			var _node = nodes[| i];
+		for(var i = 0, n = array_length(nodes); i < n; i++) { 
+			var _node = nodes[i];
 			if(!_node.active) continue;
 			if(_node.isTool) return _node.getTool();
 		}
@@ -534,8 +528,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		var dups = ds_list_create();
 		
-		for(var i = 0, n = ds_list_size(nodes); i < n; i++) { 
-			var _node = nodes[| i];
+		for(var i = 0, n = array_length(nodes); i < n; i++) { 
+			var _node = nodes[i];
 			var _cnode = _node.clone(target);
 			ds_list_add(dups, _cnode);
 			
@@ -554,16 +548,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static enable = function() { #region
 		active = true;
-		var node_list = getNodeList();
-		for( var i = 0; i < ds_list_size(node_list); i++ )
-			node_list[| i].enable();
+		array_foreach(getNodeList(), function(node) { node.enable(); });
 	} #endregion
 	
 	static disable = function() { #region
 		active = false;
-		var node_list = getNodeList();
-		for( var i = 0; i < ds_list_size(node_list); i++ )
-			node_list[| i].disable();
+		array_foreach(getNodeList(), function(node) { node.disable(); });
 	} #endregion
 	
 	static resetRender = function(_clearCache = false) { #region
@@ -573,8 +563,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(_clearCache) clearInputCache();
 		
 		if(reset_all_child)
-		for(var i = 0, n = ds_list_size(nodes); i < n; i++)
-			nodes[| i].resetRender(_clearCache);
+		for(var i = 0, n = array_length(nodes); i < n; i++)
+			nodes[i].resetRender(_clearCache);
 	} #endregion
 	
 	static setInstance = function(node) { #region
@@ -606,10 +596,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getGraphPreviewSurface = function() { #region
 		var _output_junc = outputs[| preview_channel];
 		
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			if(!nodes[| i].active) continue;
-			if(is_instanceof(nodes[| i], Node_Group_Thumbnail))
-				_output_junc = nodes[| i].inputs[| 0];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			if(!nodes[i].active) continue;
+			if(is_instanceof(nodes[i], Node_Group_Thumbnail))
+				_output_junc = nodes[i].inputs[| 0];
 		}
 		
 		if(!is_instanceof(_output_junc, NodeValue)) return noone;
@@ -625,12 +615,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static enable = function() { #region
 		active = true; timeline_item.active = true;
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) nodes[| i].enable();
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) nodes[i].enable();
 	} #endregion
 	
 	static disable = function() { #region
 		active = false; timeline_item.active = false;
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) nodes[| i].disable();
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) nodes[i].disable();
 	} #endregion
 	
 	static attributeSerialize = function() { #region

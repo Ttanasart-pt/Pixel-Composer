@@ -55,7 +55,7 @@
 	function panel_graph_add_display()			{ CALL("graph_add_disp");			PANEL_GRAPH.createNodeHotkey("Node_Display_Text");	 }
 	function panel_graph_add_transform()		{ CALL("graph_add_transform");		PANEL_GRAPH.doTransform();	 }
 	
-	function panel_graph_select_all()			{ CALL("graph_select_all");			PANEL_GRAPH.nodes_selecting = ds_list_to_array(PANEL_GRAPH.nodes_list);	 }
+	function panel_graph_select_all()			{ CALL("graph_select_all");			PANEL_GRAPH.nodes_selecting = PANEL_GRAPH.nodes_list;	 }
 	function panel_graph_toggle_grid()			{ CALL("graph_toggle_grid");		PANEL_GRAPH.display_parameter.show_grid = !PANEL_GRAPH.display_parameter.show_grid;	 }
 	function panel_graph_toggle_preview()		{ CALL("graph_toggle_preview");		PANEL_GRAPH.setTriggerPreview();		}
 	function panel_graph_toggle_parameter()		{ CALL("graph_toggle_parameter");	PANEL_GRAPH.setTriggerParameter();		}
@@ -227,7 +227,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	#endregion
 	
 	#region ---- nodes ----
-		node_context = ds_list_create();
+		node_context  = [];
 		
 		node_dragging = noone;
 		node_drag_mx  = 0;
@@ -299,10 +299,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	toolbar_height = ui(40);
 	
-	function toCenterNode(_list = nodes_list) { #region
+	function toCenterNode(_arr = nodes_list) { #region
 		if(!project.active) return; 
 		
-		if(ds_list_empty(_list)) {
+		if(array_empty(_arr)) {
 			graph_x = round(w / 2 / graph_s);
 			graph_y = round(h / 2 / graph_s);
 			return;
@@ -313,8 +313,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var miny =  99999;
 		var maxy = -99999;
 			
-		for(var i = 0; i < ds_list_size(_list); i++) {
-			var _node = _list[| i];
+		for(var i = 0; i < array_length(_arr); i++) {
+			var _node = _arr[i];
 			if(!is_struct(_node) || !is_instanceof(_node, Node) || !_node.active)
 				continue;
 			
@@ -544,12 +544,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		_blend.inputs[| 1].setFrom(_canvas.outputs[| 0]);
 	} #endregion
 	
-	function getFocusingNode() { INLINE return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
+	function getFocusingNode() { return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
 	
-	function getCurrentContext() { #region
-		if(ds_list_empty(node_context)) return noone;
-		return node_context[| ds_list_size(node_context) - 1];
-	} #endregion
+	function getCurrentContext() { return array_empty(node_context)? noone : node_context[array_length(node_context) - 1]; }
 	
 	function getNodeList(cont = getCurrentContext()) { #region
 		return cont == noone? project.nodes : cont.getNodeList();
@@ -575,8 +572,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var graph = new Panel_Graph(project);
 		panel.setContent(graph, true);
 							
-		for( var i = 0; i < ds_list_size(node_context); i++ ) 
-			graph.addContext(node_context[| i]);
+		for( var i = 0; i < array_length(node_context); i++ ) 
+			graph.addContext(node_context[i]);
 		graph.addContext(group);
 		
 		setFocus(panel);
@@ -714,10 +711,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	function fullView() { #region
 		INLINE
-		var _l = ds_list_create_from_array(nodes_selecting);
-		toCenterNode(array_empty(nodes_selecting)? nodes_list : _l);
-		ds_list_destroy(_l);
-		
+		toCenterNode(array_empty(nodes_selecting)? nodes_list : node_selecting);
 		graph_s_to = 1;
 	} #endregion
 	
@@ -846,7 +840,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	//// =========== Context ==========
 	
 	function resetContext() { #region
-		ds_list_clear(node_context);
+		node_context = [];
 		nodes_list = project.nodes;
 		toCenterNode();
 	} #endregion
@@ -856,7 +850,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		setContextFrame(false, _node);
 		
 		nodes_list = _node.nodes;
-		ds_list_add(node_context, _node);
+		array_push(node_context, _node);
 		
 		node_dragging     = noone;
 		nodes_selecting = [];
@@ -1000,8 +994,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var gr_y = graph_y * graph_s;
 		var _hov = false;
 		
-		for(var i = 0; i < ds_list_size(nodes_list); i++) {
-			var h = nodes_list[| i].drawPreviewBackground(gr_x, gr_y, mx, my, graph_s);
+		for(var i = 0; i < array_length(nodes_list); i++) {
+			var h = nodes_list[i].drawPreviewBackground(gr_x, gr_y, mx, my, graph_s);
 			_hov |= h;
 		}
 		
@@ -1028,16 +1022,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		_frame_hovering = frame_hovering;
 		frame_hovering  = noone;
 		
-		for(var i = 0; i < ds_list_size(nodes_list); i++) {
-			nodes_list[| i].cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
-			nodes_list[| i].preDraw(gr_x, gr_y, graph_s, gr_x, gr_y);
+		for(var i = 0; i < array_length(nodes_list); i++) {
+			nodes_list[i].cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
+			nodes_list[i].preDraw(gr_x, gr_y, graph_s, gr_x, gr_y);
 		}
 		printIf(log, $"Predraw time: {get_timer() - t}"); t = get_timer();
 		
 		#region draw frame
-			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				if(nodes_list[| i].drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter))
-					frame_hovering = nodes_list[| i];
+			for(var i = 0; i < array_length(nodes_list); i++) {
+				if(nodes_list[i].drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter))
+					frame_hovering = nodes_list[i];
 			}
 		#endregion
 		printIf(log, $"Frame draw time: {get_timer() - t}"); t = get_timer();
@@ -1045,8 +1039,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#region hover
 			node_hovering = noone;
 			if(pHOVER)
-			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				var _node = nodes_list[| i];
+			for(var i = 0; i < array_length(nodes_list); i++) {
+				var _node = nodes_list[i];
 				_node.branch_drawing = false;
 				if(_node.pointIn(gr_x, gr_y, mx, my, graph_s))
 					node_hovering = _node;
@@ -1100,8 +1094,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								nodes_selecting = [ node_hovering ];
 								
 								if(!key_mod_press(CTRL))
-								for(var i = 0; i < ds_list_size(nodes_list); i++) { //select content
-									var _node = nodes_list[| i];
+								for(var i = 0; i < array_length(nodes_list); i++) { //select content
+									var _node = nodes_list[i];
 									if(_node == node_hovering) continue;
 									
 									if(!_node.selectable) continue;
@@ -1286,13 +1280,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			param.active    = hoverable;
 			param.setPos(gr_x, gr_y, graph_s, mx, my);
 			param.setBoundary(-64, -64, w + 64, h + 64);
-			param.setProp(ds_list_size(nodes_list), display_parameter.highlight);
+			param.setProp(array_length(nodes_list), display_parameter.highlight);
 			param.setDraw(aa, bg_color);
 			
-			for(var i = 0; i < ds_list_size(nodes_list); i++) {
+			for(var i = 0; i < array_length(nodes_list); i++) {
 				param.cur_layer = i + 1;
 				
-				var _hov = nodes_list[| i].drawConnections(param);
+				var _hov = nodes_list[i].drawConnections(param);
 				if(_hov != noone && is_struct(_hov)) hov = _hov;
 			}
 		
@@ -1336,11 +1330,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		#region draw node
 			var t = get_timer();
-			for(var i = 0; i < ds_list_size(nodes_list); i++)
-				nodes_list[| i].drawNodeBehind(gr_x, gr_y, mx, my, graph_s);
+			for(var i = 0; i < array_length(nodes_list); i++)
+				nodes_list[i].drawNodeBehind(gr_x, gr_y, mx, my, graph_s);
 			
-			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				var _node = nodes_list[| i];
+			for(var i = 0; i < array_length(nodes_list); i++) {
+				var _node = nodes_list[i];
 				
 				if(is_instanceof(_node, Node_Frame)) continue;
 				try {
@@ -1354,8 +1348,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			for(var i = 0; i < ds_list_size(nodes_list); i++)
-				nodes_list[| i].drawBadge(gr_x, gr_y, graph_s);	
+			for(var i = 0; i < array_length(nodes_list); i++)
+				nodes_list[i].drawBadge(gr_x, gr_y, graph_s);	
 				
 			if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
 				value_focus = PANEL_INSPECTOR.prop_hover;
@@ -1366,8 +1360,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(mouse_press(mb_left))
 				node_dragging = noone;
 			
-			for(var i = 0; i < ds_list_size(nodes_list); i++)
-				nodes_list[| i].groupCheck(gr_x, gr_y, graph_s, mx, my);
+			for(var i = 0; i < array_length(nodes_list); i++)
+				nodes_list[i].groupCheck(gr_x, gr_y, graph_s, mx, my);
 			
 			if(node_dragging && !key_mod_press(ALT)) {
 				var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
@@ -1454,8 +1448,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(nodes_select_drag == 2) {
 					draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
 					
-					for(var i = 0; i < ds_list_size(nodes_list); i++) {
-						var _node = nodes_list[| i];
+					for(var i = 0; i < array_length(nodes_list); i++) {
+						var _node = nodes_list[i];
 						
 						if(!_node.selectable) continue;
 						if(is_instanceof(_node, Node_Frame) && !nodes_select_frame) continue;
@@ -1752,8 +1746,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		var gr_x = graph_x * graph_s;
 		var gr_y = graph_y * graph_s;
-		for(var i = 0; i < ds_list_size(nodes_list); i++)
-			nodes_list[| i].drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
+		for(var i = 0; i < array_length(nodes_list); i++)
+			nodes_list[i].drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
 		
 	} #endregion
 	
@@ -1778,37 +1772,34 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var bh  = toolbar_height - ui(12);
 		var tbh = h - toolbar_height / 2;
 		
-		for(var i = -1; i < ds_list_size(node_context); i++) {
+		for(var i = -1; i < array_length(node_context); i++) {
 			if(i == -1) {
 				tt = __txt("Global");
 			} else {
-				var _cnt = node_context[| i];
+				var _cnt = node_context[i];
 				tt = _cnt.renamed? _cnt.display_name : _cnt.name;
 			}
 			
 			tw = string_width(tt);
 			th = string_height(tt);
 			
-			if(i < ds_list_size(node_context) - 1) {
+			if(i < array_length(node_context) - 1) {
 				if(buttonInstant(THEME.button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], pFOCUS, pHOVER) == 2) {
 					node_hover		  = noone;
 					nodes_selecting = [];
 					PANEL_PREVIEW.resetNodePreview();
-					setContextFrame(true, node_context[| i + 1]);
-					var _nodeFocus = node_context[| i + 1];
+					setContextFrame(true, node_context[i + 1]);
+					var _nodeFocus = node_context[i + 1];
 					
 					if(i == -1)
 						resetContext();
 					else {
-						for(var j = ds_list_size(node_context) - 1; j > i; j--)
-							ds_list_delete(node_context, j);
-						nodes_list = node_context[| i].getNodeList();
+						array_resize(node_context, i + 1);
+						nodes_list = node_context[i].getNodeList();
 					}
 					
 					nodes_selecting = [ _nodeFocus ];
-					var _l = ds_list_create_from_array(nodes_selecting)
-					toCenterNode(_l);
-					ds_list_destroy(_l);
+					toCenterNode(nodes_selecting);
 					break;
 				}
 				
@@ -1816,7 +1807,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			}
 			
 			draw_set_color(COLORS._main_text);
-			draw_set_alpha(i < ds_list_size(node_context) - 1? 0.33 : 1);
+			draw_set_alpha(i < array_length(node_context) - 1? 0.33 : 1);
 			draw_text(xx, tbh, tt);
 			draw_set_alpha(1);
 			xx += tw;
@@ -1877,14 +1868,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		surface_set_target(minimap_surface);
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0.75);
-		if(!ds_list_empty(nodes_list)) {
+		if(!array_empty(nodes_list)) {
 			var minx =  99999;
 			var maxx = -99999;
 			var miny =  99999;
 			var maxy = -99999;
 			
-			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				var _node = nodes_list[| i];
+			for(var i = 0; i < array_length(nodes_list); i++) {
+				var _node = nodes_list[i];
 				minx = min(_node.x - 32, minx);
 				maxx = max(_node.x + _node.w + 32, maxx);
 				
@@ -1899,8 +1890,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var ss  = min(minimap_w / spw, minimap_h / sph);
 			
 			draw_set_alpha(0.4);
-			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				var _node = nodes_list[| i];
+			for(var i = 0; i < array_length(nodes_list); i++) {
+				var _node = nodes_list[i];
 				
 				var nx = minimap_w / 2 + (_node.x - cx) * ss;
 				var ny = minimap_h / 2 + (_node.y - cy) * ss;
@@ -2113,7 +2104,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		_map.nodes = _node;
 		
 		ds_map_clear(APPEND_MAP);
-		ds_list_clear(APPEND_LIST);
+		APPEND_LIST = [];
 		
 		CLONING	= true;
 			var _pmap_keys = variable_struct_get_names(_pmap);
@@ -2128,10 +2119,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			}
 			
 			APPEND_LIST = __APPEND_MAP(_map,, APPEND_LIST);
-			recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(APPEND_LIST));
+			recordAction(ACTION_TYPE.collection_loaded, array_clone(APPEND_LIST));
 		CLONING	= false;
 		
-		if(ds_list_size(APPEND_LIST) == 0) return;
+		if(array_empty(APPEND_LIST)) return;
 		
 		for(var i = 0; i < array_length(nodes_selecting); i++) {
 			var _orignal = nodes_selecting[i];
@@ -2148,19 +2139,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		var x0 = 99999999;
 		var y0 = 99999999;
-		for(var i = 0; i < ds_list_size(APPEND_LIST); i++) {
-			var _node = APPEND_LIST[| i];
+		for(var i = 0; i < array_length(APPEND_LIST); i++) {
+			var _node = APPEND_LIST[i];
 			
 			x0 = min(x0, _node.x);
 			y0 = min(y0, _node.y);
 		}
 	
-		node_dragging = APPEND_LIST[| 0];
+		node_dragging = APPEND_LIST[0];
 		node_drag_mx  = x0; node_drag_my  = y0;
 		node_drag_sx  = x0; node_drag_sy  = y0;
 		node_drag_ox  = x0; node_drag_oy  = y0;
 		
-		nodes_selecting = array_create_from_list(APPEND_LIST);
+		nodes_selecting = APPEND_LIST;
 	} #endregion
 
 	function doInstance() { #region
@@ -2215,26 +2206,24 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(_app == noone) 
 				return;
 		
-			if(ds_list_size(_app) == 0) {
-				ds_list_destroy(_app);
+			if(array_empty(_app))
 				return;
-			}
 		
 			var x0 = 99999999;
 			var y0 = 99999999;
-			for(var i = 0; i < ds_list_size(_app); i++) {
-				var _node = _app[| i];
+			for(var i = 0; i < array_length(_app); i++) {
+				var _node = _app[i];
 			
 				x0 = min(x0, _node.x);
 				y0 = min(y0, _node.y);
 			}
 	
-			node_dragging = _app[| 0];
+			node_dragging = _app[0];
 			node_drag_mx  = x0; node_drag_my  = y0;
 			node_drag_sx  = x0; node_drag_sy  = y0;
 			node_drag_ox  = x0; node_drag_oy  = y0;
 		
-			nodes_selecting = array_create_from_list(_app);
+			nodes_selecting = _app;
 			return;
 		}
 		
@@ -2501,25 +2490,25 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				
 				var app = APPEND(DRAGGING.data.path, getCurrentContext());
 			
-				if(!is_struct(app) && ds_exists(app, ds_type_list)) {
+				if(is_array(app)) {
 					var cx = 0;
 					var cy = 0;
+					var amo = array_length(app);
 					
-					for( var i = 0; i < ds_list_size(app); i++ ) {
-						cx += app[| i].x;
-						cy += app[| i].y;
+					for( var i = 0; i < amo; i++ ) {
+						cx += app[i].x;
+						cy += app[i].y;
 					}
 					
-					cx /= ds_list_size(app);
-					cy /= ds_list_size(app);
+					cx /= amo;
+					cy /= amo;
 					
-					for( var i = 0; i < ds_list_size(app); i++ ) {
-						app[| i].x = app[| i].x - cx + mouse_grid_x;
-						app[| i].y = app[| i].y - cy + mouse_grid_y;
+					for( var i = 0; i < amo; i++ ) {
+						app[i].x = app[i].x - cx + mouse_grid_x;
+						app[i].y = app[i].y - cy + mouse_grid_y;
 					}
 					
-					ds_list_destroy(app);
-				} else {
+				} else if(is_struct(app) && is_instanceof(app, Node)) {
 					app.x = mouse_grid_x;
 					app.y = mouse_grid_y;
 				}
@@ -2538,10 +2527,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	static bringNodeToFront = function(node) { #region
-		if(!ds_list_exist(nodes_list, node)) return;
+		if(!array_exists(nodes_list, node)) return;
 		
-		ds_list_remove(nodes_list, node);
-		ds_list_add(nodes_list, node);
+		array_remove(nodes_list, node);
+		array_push(nodes_list, node);
 	} #endregion
 	
 	static onFullScreen = function() { run_in(1, fullView); }

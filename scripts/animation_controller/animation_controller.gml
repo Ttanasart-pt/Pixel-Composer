@@ -64,14 +64,7 @@
 		static resetAnimation = function() { #region
 			INLINE
 			
-			var _key = ds_map_find_first(PROJECT.nodeMap);
-			var amo = ds_map_size(PROJECT.nodeMap);
-		
-			repeat(amo) {
-				var _node = PROJECT.nodeMap[? _key];
-				_node.resetAnimation();
-				_key = ds_map_find_next(PROJECT.nodeMap, _key);	
-			}
+			array_foreach(PROJECT.allNodes, function(node) { node.resetAnimation(); });
 		} #endregion
 		
 		static toggle = function() { #region

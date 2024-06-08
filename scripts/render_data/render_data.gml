@@ -18,42 +18,37 @@ enum RENDER_TYPE {
 function ResetAllNodesRender() { #region
 	LOG_IF(global.FLAG.render == 1, $"XXXXXXXXXXXXXXXXXXXX RESETTING ALL NODES [frame {CURRENT_FRAME}] XXXXXXXXXXXXXXXXXXXX");
 	
-	var _key = ds_map_find_first(PROJECT.nodeMap);
-	var amo  = ds_map_size(PROJECT.nodeMap);
-		
-	repeat(amo) {
-		var _node = PROJECT.nodeMap[? _key];
+	array_foreach(PROJECT.allNodes, function(_node) { 
 		_node.setRenderStatus(false);
-		
 		for( var i = 0, n = ds_list_size(_node.inputs); i < n; i++ ) 
 			_node.inputs[| i].resetCache();
-		
-		_key = ds_map_find_next(PROJECT.nodeMap, _key);	
-	}
+		return 0;
+	});
+	
 } #endregion
 
 function NodeTopoSort() { #region
 	LOG_IF(global.FLAG.render == 1, $"======================= RESET TOPO =======================")
 	
-	var _key = ds_map_find_first(PROJECT.nodeMap);
-	var amo  = ds_map_size(PROJECT.nodeMap);
+	var amo  = array_length(PROJECT.allNodes);
 	var _t   = get_timer();
 	
-	repeat(amo) {
-		var _node = PROJECT.nodeMap[? _key];
+	array_foreach(PROJECT.allNodes, function(_node) { 
 		_node.clearTopoSorted();
-		_key = ds_map_find_next(PROJECT.nodeMap, _key);	
-	}
+		return 0;
+	});
 	
-	ds_list_clear(PROJECT.nodeTopo);
+	PROJECT.nodeTopo = [];
 	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
 	
-	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {ds_list_size(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
+	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 } #endregion
 
 function NodeListSort(_list, _nodeList) { #region
-	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ ) 
-		_nodeList[| i].clearTopoSorted();
+	array_foreach(_nodeList, function(node) {
+		node.clearTopoSorted();
+		return 0;
+	});
 	
 	// print($"===================== NODE LIST SORT =====================")
 	
@@ -61,7 +56,7 @@ function NodeListSort(_list, _nodeList) { #region
 	__topoSort(_list, _nodeList);
 } #endregion
 
-function __sortNode(_list, _node) { #region
+function __sortNode(_arr, _node) { #region
 	if(_node.topoSorted) return;
 		
 	var _parents = [];
@@ -77,27 +72,27 @@ function __sortNode(_list, _node) { #region
 	// print($"        > Checking {_node.name}: {array_length(_parents)}");
 		
 	if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
-		__topoSort(_list, _node.nodes);
+		__topoSort(_arr, _node.nodes);
 	
 	for( var i = 0, n = array_length(_parents); i < n; i++ ) 
-		__sortNode(_list, _parents[i]);
+		__sortNode(_arr, _parents[i]);
 	
 	if(!_node.topoSorted) {
-		ds_list_add(_list, _node);
+		array_push(_arr, _node);
 		_node.topoSorted = true;
 			
 		// print($"        > Adding > {_node.name}");
 	}
 } #endregion
 
-function __topoSort(_list, _nodeList) { #region
+function __topoSort(_arr, _nodeArr) { #region
 	var _root     = [];
 	var _leftOver = [];
-	var _global   = _nodeList == PROJECT.nodes;
-	__temp_nodeList = _nodeList;
+	var _global   = _nodeArr == PROJECT.nodes;
+	__temp_nodeList = _nodeArr;
 	
-	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ ) {
-		var _node   = _nodeList[| i];
+	for( var i = 0, n = array_length(_nodeArr); i < n; i++ ) {
+		var _node   = _nodeArr[i];
 		var _isRoot = true;
 		
 		if(is_instanceof(_node, Node_Collection_Inline) && !_node.is_root) {
@@ -113,7 +108,7 @@ function __topoSort(_list, _nodeList) { #region
 				var _to = _node.outputs[| j].getJunctionTo();
 				
 				if(_global) _isRoot &= array_empty(_to);
-				else        _isRoot &= !array_any(_to, function(_val) { return ds_list_exist(__temp_nodeList, _val.node); } );
+				else        _isRoot &= !array_any(_to, function(_val) { return array_exists(__temp_nodeList, _val.node); } );
 				
 				if(!_isRoot) break;
 			}
@@ -125,23 +120,23 @@ function __topoSort(_list, _nodeList) { #region
 	// print($"Root: {_root}");
 	
 	for( var i = 0, n = array_length(_root); i < n; i++ ) 
-		__sortNode(_list, _root[i]);
+		__sortNode(_arr, _root[i]);
 	
 	for( var i = 0, n = array_length(_leftOver); i < n; i++ ) {
 		if(!_leftOver[i].topoSorted)
-			ds_list_insert(_list, 0, _leftOver[i]);
+			array_insert(_arr, 0, _leftOver[i]);
 	}
 } #endregion
 
-function __nodeLeafList(_list) { #region
+function __nodeLeafList(_arr) { #region
 	var nodes     = [];
 	var nodeNames = [];
 	
-	for( var i = 0, n = ds_list_size(_list); i < n; i++ ) {
-		var _node = _list[| i];
+	for( var i = 0, n = array_length(_arr); i < n; i++ ) {
+		var _node = _arr[i];
 		
 		if(!_node.active)			 { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [inactive]");       continue; }
-		if(!_node.isLeafList(_list)) { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not leaf]");       continue; }
+		if(!_node.isLeafList(_arr))  { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not leaf]");       continue; }
 		if(!_node.isRenderable())    { LOG_LINE_IF(global.FLAG.render == 1, $"Reject {_node.internalName} [not renderable]"); continue; }
 		
 		array_push(nodes, _node);
@@ -188,27 +183,24 @@ function Render(partial = false, runAction = false) { #region
 		var reset_all = !partial;
 		
 		if(reset_all) {
-			LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {ds_list_size(PROJECT.nodeTopo)} nodes xxxxxxxxxx");
-			var _key = ds_map_find_first(PROJECT.nodeMap);
-			var amo = ds_map_size(PROJECT.nodeMap);
+			LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {array_length(PROJECT.nodeTopo)} nodes xxxxxxxxxx");
 			
-			repeat(amo) {
-				var _node = PROJECT.nodeMap[? _key];
+			for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
+				var _node = PROJECT.allNodes[i];
 				_node.setRenderStatus(false);
-				_key = ds_map_find_next(PROJECT.nodeMap, _key);	
 			}
 		}
 		
 		// get leaf node
-		LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {ds_list_size(PROJECT.nodeTopo)} nodes -----");
+		LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {array_length(PROJECT.nodeTopo)} nodes -----");
 		RENDER_QUEUE.clear();
-		for( var i = 0, n = ds_list_size(PROJECT.nodeTopo); i < n; i++ ) {
-			var _node = PROJECT.nodeTopo[| i];
+		for( var i = 0, n = array_length(PROJECT.nodeTopo); i < n; i++ ) {
+			var _node = PROJECT.nodeTopo[i];
 			_node.passiveDynamic = false;
 		}
 		
-		for( var i = 0, n = ds_list_size(PROJECT.nodeTopo); i < n; i++ ) {
-			var _node = PROJECT.nodeTopo[| i];
+		for( var i = 0, n = array_length(PROJECT.nodeTopo); i < n; i++ ) {
+			var _node = PROJECT.nodeTopo[i];
 			_node.render_time = 0;
 			
 			if(!__nodeIsRenderLeaf(_node))
@@ -269,18 +261,18 @@ function Render(partial = false, runAction = false) { #region
 	LOG_END();
 } #endregion
 
-function __renderListReset(list) { #region
-	for( var i = 0; i < ds_list_size(list); i++ ) {
-		list[| i].setRenderStatus(false);
+function __renderListReset(arr) { #region
+	for( var i = 0; i < array_length(arr); i++ ) {
+		list[i].setRenderStatus(false);
 		
-		if(struct_has(list[| i], "nodes"))
-			__renderListReset(list[| i].nodes);
+		if(struct_has(list[i], "nodes"))
+			__renderListReset(list[i].nodes);
 	}
 } #endregion
 
-function RenderList(list) { #region
+function RenderList(arr) { #region
 	LOG_BLOCK_START();
-	LOG_IF(global.FLAG.render == 1, $"=============== RENDER LIST START [{ds_list_size(list)}] ===============");
+	LOG_IF(global.FLAG.render == 1, $"=============== RENDER LIST START [{array_length(arr)}] ===============");
 	var queue = ds_queue_create();
 	
 	try {
@@ -288,16 +280,16 @@ function RenderList(list) { #region
 		var error	  = 0;
 		var t		  = current_time;
 		
-		__renderListReset(list);
+		__renderListReset(arr);
 		
 		// get leaf node
-		for( var i = 0, n = ds_list_size(list); i < n; i++ ) {
-			var _node = list[| i];
+		for( var i = 0, n = array_length(arr); i < n; i++ ) {
+			var _node = arr[i];
 			_node.passiveDynamic = false;
 		}
 		
-		for( var i = 0, n = ds_list_size(list); i < n; i++ ) {
-			var _node = list[| i];
+		for( var i = 0, n = array_length(arr); i < n; i++ ) {
+			var _node = arr[i];
 			
 			if(!__nodeIsRenderLeaf(_node))
 				continue;

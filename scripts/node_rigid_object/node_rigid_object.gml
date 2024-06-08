@@ -178,8 +178,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(gr == noone) return;
 		
 		if(previewing == 0) {
-			for( var i = 0, n = ds_list_size(gr.nodes); i < n; i++ ) {
-				var _node = gr.nodes[| i];
+			for( var i = 0, n = array_length(gr.nodes); i < n; i++ ) {
+				var _node = gr.nodes[i];
 				if(!is_instanceof(_node, Node_Rigid_Object)) continue;
 				var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
 				active &= _hov;

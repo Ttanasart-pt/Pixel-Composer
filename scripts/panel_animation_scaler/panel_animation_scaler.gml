@@ -22,10 +22,10 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 	
 	static scale = function() {
 		var fac = scale_to / TOTAL_FRAMES;
-		var key = ds_map_find_first(PROJECT.nodeMap);
-		repeat(ds_map_size(PROJECT.nodeMap)) {
-			var _node = PROJECT.nodeMap[? key];
-			key = ds_map_find_next(PROJECT.nodeMap, key);
+		
+		for (var k = 0, n = array_length(PROJECT.allNodes); k < n; k++) {
+			var _node = PROJECT.allNodes[k];
+			
 			if(!_node || !_node.active) continue;
 			
 			for(var i = 0; i < ds_list_size(_node.inputs); i++) {
@@ -37,6 +37,7 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 				}
 			}
 		}
+		
 		TOTAL_FRAMES = scale_to;
 		close();
 	}

@@ -164,14 +164,13 @@
 	}
 	
 	function nodeCleanUp() {
-		var key = ds_map_find_first(PROJECT.nodeMap);
-		repeat(ds_map_size(PROJECT.nodeMap)) {
-			if(PROJECT.nodeMap[? key]) {
-				PROJECT.nodeMap[? key].active = false;
-				PROJECT.nodeMap[? key].cleanUp();
-				delete PROJECT.nodeMap[? key];
-			}
-			key = ds_map_find_next(PROJECT.nodeMap, key);
+		for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
+			var _node = PROJECT.allNodes[i];
+			
+			if(!is_struct(_node)) continue;
+			_node.active = false;
+			_node.cleanUp();
+			delete _node;
 		}
 		
 		ds_map_clear(APPEND_MAP);
@@ -185,16 +184,12 @@
 	
 	function refreshNodeMap() {
 		ds_map_clear(PROJECT.nodeNameMap);
-		var key = ds_map_find_first(PROJECT.nodeMap);
-		var amo = ds_map_size(PROJECT.nodeMap);
 		
-		repeat(amo) {
-			var node = PROJECT.nodeMap[? key];
+		for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
+			var node = PROJECT.allNodes[i];
 			
 			if(node.internalName != "") 
 				PROJECT.nodeNameMap[? node.internalName] = node;
-			
-			key = ds_map_find_next(PROJECT.nodeMap, key);
 		}
 	}
 	

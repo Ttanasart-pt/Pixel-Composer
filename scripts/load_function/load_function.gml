@@ -136,14 +136,14 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	
 	printIf(log, $" > Load meta : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
-	var create_list = ds_list_create();
+	var create_list = [];
 	if(struct_has(_load_content, "nodes")) {
 		try {
 			var _node_list = _load_content.nodes;
 			for(var i = 0, n = array_length(_node_list); i < n; i++) {
 				// printIf(log, $"   >> Loading nodes : {_node_list[i].type}");
 				var _node = nodeLoad(_node_list[i]);
-				if(_node) ds_list_add(create_list, _node);
+				if(_node) array_push(create_list, _node);
 			}
 		} catch(e) {
 			log_warning("LOAD", exception_print(e));
@@ -216,8 +216,8 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	ds_queue_clear(CONNECTION_CONFLICT);
 	
 	try {
-		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].loadGroup();
+		array_foreach(create_list, function(node) { node.loadGroup(); } );
+		
 	} catch(e) {
 		log_warning("LOAD, group", exception_print(e));
 		return false;
@@ -226,8 +226,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	printIf(log, $" > Load group : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	try {
-		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].postDeserialize();
+		array_foreach(create_list, function(node) { node.postDeserialize(); } );
 	} catch(e) {
 		log_warning("LOAD, deserialize", exception_print(e));
 	}
@@ -235,8 +234,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	printIf(log, $" > Deserialize: {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	try {
-		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].applyDeserialize();
+		array_foreach(create_list, function(node) { node.applyDeserialize(); } );
 	} catch(e) {
 		log_warning("LOAD, apply deserialize", exception_print(e));
 	}
@@ -244,12 +242,9 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	printIf(log, $" > Apply deserialize : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	try {
-		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].preConnect();
-		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].connect();
-		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].postConnect();
+		array_foreach(create_list, function(node) { node.preConnect();  } );
+		array_foreach(create_list, function(node) { node.connect();     } );
+		array_foreach(create_list, function(node) { node.postConnect(); } );
 	} catch(e) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
@@ -278,8 +273,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	printIf(log, $" > Conflict : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	try {
-		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].postLoad();
+		array_foreach(create_list, function(node) { node.postLoad(); } );
 	} catch(e) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
@@ -287,8 +281,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	printIf(log, $" > Post load : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	try {
-		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].clearInputCache();
+		array_foreach(create_list, function(node) { node.clearInputCache(); } );
 	} catch(e) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
@@ -316,7 +309,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	
 	if(!IS_CMD) run_in(1, PANEL_GRAPH.toCenterNode);
 	
-	printIf(log, $"========== Load {ds_map_size(PROJECT.nodeMap)} nodes completed in {(get_timer() - t0) / 1000} ms ==========");
+	printIf(log, $"========== Load {array_length(PROJECT.allNodes)} nodes completed in {(get_timer() - t0) / 1000} ms ==========");
 	
 	return true;
 } #endregion

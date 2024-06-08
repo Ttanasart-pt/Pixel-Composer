@@ -28,12 +28,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		destroy_when_upgroup = false;
 		
 		var l = _group == noone? PROJECT.nodes : _group.getNodeList();
-		ds_list_add(l, self);
+		array_push(l, self);
 		
 		active_index = -1;
 		active_range = [ 0, TOTAL_FRAMES - 1 ];
 		
-		array_push(PROJECT.nodeArray, self);
+		array_push(PROJECT.allNodes, self);
 		
 		inline_context = noone;
 		inline_parent_object  = "";
@@ -261,7 +261,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	#region ---- timeline ----
 		timeline_item    = new timelineItemNode(self);
-		anim_priority    = ds_map_size(PROJECT.nodeMap);
+		anim_priority    = array_length(PROJECT.allNodes);
 		is_anim_timeline = false;
 	#endregion
 	
@@ -901,7 +901,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _inp = inputs[| i].value_from;
 			
 			// print($"Checking isLeafList {inputs[| i]} < {_inp} | list {ds_list_to_array(list)}");
-			if(_inp != noone && ds_list_exist(list, _inp.node)) 
+			if(_inp != noone && array_exists(list, _inp.node)) 
 				return false;
 		}
 		
@@ -1915,8 +1915,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			return;
 		}
 		
-		for( var i = 0; i < ds_list_size(group.nodes); i++ )
-			group.nodes[| i].isTool = false;
+		for( var i = 0; i < array_length(group.nodes); i++ )
+			group.nodes[i].isTool = false;
 		
 		isTool = true;
 	} #endregion
@@ -2234,7 +2234,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return;
 		disable();
 		
-		ds_list_remove(group == noone? PROJECT.nodes : group.getNodeList(), self);
+		array_remove(group == noone? PROJECT.nodes : group.getNodeList(), self);
 		
 		if(PANEL_GRAPH.node_hover     == self) PANEL_GRAPH.node_hover     = noone;
 		PANEL_GRAPH.nodes_selecting = [];
@@ -2284,7 +2284,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(active) return;
 		enable();
 		
-		ds_list_add(group == noone? PROJECT.nodes : group.getNodeList(), self);
+		array_push(group == noone? PROJECT.nodes : group.getNodeList(), self);
 		
 		onRestore();
 		if(group) group.refreshNodes();

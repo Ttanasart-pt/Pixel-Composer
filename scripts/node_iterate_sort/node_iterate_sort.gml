@@ -11,7 +11,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, noone );
 	
-	topoList = ds_list_create();
+	topoList = [];
 	
 	custom_input_index  = ds_list_size(inputs);
 	custom_output_index = ds_list_size(inputs);
@@ -35,8 +35,8 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	} #endregion
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ )
-			if(nodes[| i].isActiveDynamic(frame)) return true;
+		for( var i = 0, n = array_length(nodes); i < n; i++ )
+			if(nodes[i].isActiveDynamic(frame)) return true;
 		
 		return false;
 	} #endregion
@@ -63,8 +63,8 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		
 			var _typ = inputs[| 0].type;
 		
-			for( var i = 0; i < ds_list_size(nodes); i++ ) {
-				var _n = nodes[| i];
+			for( var i = 0; i < array_length(nodes); i++ ) {
+				var _n = nodes[i];
 				if(!struct_has(_n.attributes, "sort_inputs")) continue;
 				
 				switch(_n.attributes.sort_inputs) {
@@ -83,7 +83,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 						inputReady += 2;
 						break;
 					case 9 : 
-						outputNode = nodes[| i].inputs[| 0];
+						outputNode = nodes[i].inputs[| 0];
 						inputReady += 4;
 						break;
 				}

@@ -8,20 +8,20 @@
 		active	= true; /// @is {bool}
 		
 		meta      = __getdefaultMetaData();	
-		path	  = ""; /// @is {string}								
+		path	  = ""; /// @is {string}
 		thumbnail = "";													
-		version   = SAVE_VERSION; /// @is {number}						
-		seed      = irandom_range(100000, 999999); /// @is {number}		
+		version   = SAVE_VERSION; /// @is {number}
+		seed      = irandom_range(100000, 999999); /// @is {number}
 		
 		modified  = false; /// @is {bool}
-		readonly  = false; /// @is {bool} 
+		readonly  = false; /// @is {bool}
 		safeMode  = false;
 		
-		nodes	    = ds_list_create();
-		nodeArray   = [];
+		allNodes    = [];
+		nodes	    = [];
+		nodeTopo    = [];
 		nodeMap	    = ds_map_create();
 		nodeNameMap = ds_map_create();
-		nodeTopo    = ds_list_create();
 		
 		animator	   = new AnimationManager();
 		globalNode	   = new Node_Global();
@@ -132,14 +132,11 @@
 		notes = [];
 		
 		static cleanup = function() { #region
-			if(!ds_map_empty(nodeMap))
-				array_map(ds_map_keys_to_array(nodeMap), function(_key, _ind) { 
-					var _node = nodeMap[? _key];
-					_node.active = false; 
-					_node.cleanUp(); 
-				});
+			array_foreach(allNodes, function(_node) { 
+				_node.active = false; 
+				_node.cleanUp(); 
+			});
 			
-			ds_list_destroy(nodes);
 			ds_map_destroy(nodeMap);
 			ds_map_destroy(nodeNameMap);
 			

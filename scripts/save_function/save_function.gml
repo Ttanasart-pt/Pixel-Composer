@@ -18,16 +18,14 @@ function save_serialize(project = PROJECT, _outMap = false) { #region
 	_map.version = SAVE_VERSION;
 	
 	var _node_list = [];
-	var _key = ds_map_find_first(project.nodeMap);
+	var amo = array_length(project.allNodes);
+	var i   = 0;
 	
-	repeat(ds_map_size(project.nodeMap)) {
-		var _node = project.nodeMap[? _key];
-		
-		if(_node.active)
-			array_push(_node_list, _node.serialize());
-		
-		_key = ds_map_find_next(project.nodeMap, _key);	
+	repeat(amo) {
+		var _node = project.allNodes[i++];
+		if(_node.active) array_push(_node_list, _node.serialize());
 	}
+	
 	_map.nodes = _node_list;
 	
 	var _anim_map = {};
@@ -154,14 +152,17 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, c
 	_content.version = SAVE_VERSION;
 	
 	var _nodes = [];
-	var cx = 0;
-	var cy = 0;
-	for(var i = 0; i < ds_list_size(_list); i++) {
-		cx += _list[| i].x;
-		cy += _list[| i].y;
+	var cx     = 0;
+	var cy     = 0;
+	var amo    = array_length(_list);
+	
+	for(var i = 0; i < amo; i++) {
+		cx += _list[i].x;
+		cy += _list[i].y;
 	}
-	cx = round((cx / ds_list_size(_list)) / 32) * 32;
-	cy = round((cy / ds_list_size(_list)) / 32) * 32;
+	
+	cx = round((cx / amo) / 32) * 32;
+	cy = round((cy / amo) / 32) * 32;
 	
 	if(save_surface) {
 		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
@@ -171,8 +172,8 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, c
 		}
 	}
 	
-	for(var i = 0; i < ds_list_size(_list); i++)
-		SAVE_NODE(_nodes, _list[| i], cx, cy, true, context);
+	for(var i = 0; i < amo; i++)
+		SAVE_NODE(_nodes, _list[i], cx, cy, true, context);
 	_content.nodes = _nodes;
 	
 	json_save_struct(_path, _content, !PREFERENCES.save_file_minify);
@@ -230,8 +231,8 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 
 function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_GRAPH.getCurrentContext()) { #region
 	if(struct_has(_node, "nodes")) {
-		for(var i = 0; i < ds_list_size(_node.nodes); i++)
-			SAVE_NODE(_arr, _node.nodes[| i], dx, dy, scale, context);
+		for(var i = 0; i < array_length(_node.nodes); i++)
+			SAVE_NODE(_arr, _node.nodes[i], dx, dy, scale, context);
 	}
 	
 	var m = _node.serialize(scale);

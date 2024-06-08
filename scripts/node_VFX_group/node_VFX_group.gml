@@ -10,7 +10,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	update_on_frame    = true;
 	managedRenderOrder = true;
 	
-	topoList	 = ds_list_create();
+	topoList	 = [];
 	ungroupable  = false;
 	preview_node = noone;
 	allCached    = false;
@@ -34,15 +34,15 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
 	
 	static onInspector2Update = function() { #region
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var node = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
 			node.clearCache(); 
 		}
 	} #endregion
 	
 	static reset = function() { #region
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var node = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
 			if(!struct_has(node, "reset")) continue;
 			node.reset();
 		}
@@ -65,8 +65,8 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 			node.doUpdate(i);
 		}
 		
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var node = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
 			if(!struct_has(node, "resetSeed")) continue;
 			node.resetSeed();
 		}
@@ -77,8 +77,8 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 			NodeListSort(topoList, nodes);
 		
 		allCached = true;
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var node = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
 			if(!node.recoverCache()) allCached = false;
 		}
 		
@@ -86,8 +86,8 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 			reset();
 			
 		if(allCached) {
-			for( var i = 0, n = ds_list_size(nodes); i < n; i++ )
-				nodes[| i].setRenderStatus(true);
+			for( var i = 0, n = array_length(nodes); i < n; i++ )
+				nodes[i].setRenderStatus(true);
 			setRenderStatus(true);
 		}
 	} #endregion
@@ -95,8 +95,8 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	static ononDoubleClick = function(panel) { #region
 		preview_node = noone;
 		
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var node = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
 			if(is_instanceof(node, Node_VFX_Renderer_Output) || 
 			   is_instanceof(node, Node_VFX_Renderer)) {
 				   preview_node = node;

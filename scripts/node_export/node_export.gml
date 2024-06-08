@@ -21,12 +21,8 @@ MPEG-4 (.mp4)|*.mp4",
 function exportAll() {
 	if(IS_RENDERING) return;
 	
-	var key = ds_map_find_first(PROJECT.nodeMap);
-	
-	repeat(ds_map_size(PROJECT.nodeMap)) {
-		var node = PROJECT.nodeMap[? key];		
-		key = ds_map_find_next(PROJECT.nodeMap, key);
-			
+	for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
+		var node = PROJECT.allNodes[i];
 		if(!node.active) continue;
 		if(!is_instanceof(node, Node_Export)) continue;
 		

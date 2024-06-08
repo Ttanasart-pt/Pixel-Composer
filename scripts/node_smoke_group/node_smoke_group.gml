@@ -63,8 +63,8 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	}
 	
 	static update = function() {
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var node = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
 			if(node.cacheExist()) node.cachedPropagate();
 		}
 		

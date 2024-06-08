@@ -1,6 +1,6 @@
 function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 	
 	attributes.members  = [];
-	nodes          = ds_list_create();
+	nodes          = [];
 	group_vertex   = [];
 	group_dragging = false;
 	group_adding   = false;
@@ -27,7 +27,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	static removeNode = function(node) { #region
 		array_remove(attributes.members, node.node_id);
 		
-		ds_list_remove(nodes, node);
+		array_remove(nodes, node);
 		
 		if(node.inline_context == self)
 			node.inline_context = noone;
@@ -42,9 +42,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		node.inline_context = self;
 		
 		array_push_unique(attributes.members, node.node_id);
-		
-		if(!ds_list_exist(nodes, node))
-			ds_list_add(nodes, node);
+		array_push_unique(nodes, node);
 		
 		onAddNode(node);
 	} #endregion
@@ -77,7 +75,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	} #endregion
 	
 	static refreshMember = function() { #region
-		ds_list_clear(nodes);
+		nodes = [];
 		
 		for( var i = 0, n = array_length(attributes.members); i < n; i++ ) {
 			if(!ds_map_exists(PROJECT.nodeMap, attributes.members[i])) {
@@ -93,8 +91,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _hash = "";
 		var _ind  = 0;
 		
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var _node = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var _node = nodes[i];
 			if(!_node.active) continue;
 			_hash += $"{_node.x},{_node.y},{_node.w},{_node.h}|";
 			_ind++;
@@ -116,8 +114,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _vtrx = array_create(_ind * 4 * (90 / 30 + 1));
 		
 		var _ind = 0;
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var _node = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var _node = nodes[i];
 			if(!_node.active) continue;
 			_ind = getNodeBorder(_ind, _vtrx, _node);
 		}
@@ -228,8 +226,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		setRenderStatus(false);
 		if(_clearCache) clearInputCache();
 		
-		for( var i = 0; i < ds_list_size(nodes); i++ )
-			nodes[| i].resetRender(_clearCache);
+		for( var i = 0; i < array_length(nodes); i++ )
+			nodes[i].resetRender(_clearCache);
 	} #endregion
 	
 	static drawNodeBG = function(_x, _y, _mx, _my, _s) { #region

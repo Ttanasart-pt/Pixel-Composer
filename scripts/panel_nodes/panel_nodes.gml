@@ -25,14 +25,14 @@ function Panel_Nodes() : PanelContent() constructor {
 		sc_nodes.resize(w - ui(padding + padding), h - ui(padding + title_height + 40));
 	}
 	
-	function drawNodeList(_list, _x0, _x1, _y, _m) {
+	function drawNodeList(_arr, _x0, _x1, _y, _m) {
 		var ww  = sc_nodes.surface_w;
 		var hg  = ui(28);
 		
 		var _h  = 0;
 		
-		for( var i = 0; i < ds_list_size(_list); i++ ) {
-			var node = _list[| i];
+		for( var i = 0; i < array_length(_arr); i++ ) {
+			var node = _arr[i];
 			var name = node.renamed? node.display_name : node.name;
 			
 			if(string_lower(search_string) != "" && string_lower(string_pos(search_string, name)) == 0)

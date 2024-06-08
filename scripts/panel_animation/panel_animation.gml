@@ -1992,10 +1992,8 @@ function Panel_Animation() : PanelContent() constructor {
 				TOTAL_FRAMES = len;
 				
 				if(_len != len) {
-					var key = ds_map_find_first(PROJECT.nodeMap);
-					repeat(ds_map_size(PROJECT.nodeMap)) {
-						var _node = PROJECT.nodeMap[? key];
-						key = ds_map_find_next(PROJECT.nodeMap, key);
+					for (var m = 0, n = array_length(PROJECT.allNodes); m < n; m++) {
+						var _node = PROJECT.allNodes[m];
 						if(!_node || !_node.active) continue;
 						
 						for(var i = 0; i < ds_list_size(_node.inputs); i++) {

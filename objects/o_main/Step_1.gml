@@ -126,7 +126,7 @@ _HOVERING_ELEMENT = noone;
 		
 		if(PROJECT.active) {
 			PROJECT.animator.is_simulating = false;
-			array_foreach(PROJECT.nodeArray, function(_node) { if(!_node.active) return; _node.stepBegin(); });
+			array_foreach(PROJECT.allNodes, function(_node) { if(!_node.active) return; _node.stepBegin(); });
 			
 			if(PROGRAM_ARGUMENTS._run) {
 				if(PROJECT != noone && PROJECT.path != "") {

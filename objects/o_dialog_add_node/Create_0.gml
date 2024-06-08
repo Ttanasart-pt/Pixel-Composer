@@ -220,17 +220,18 @@ event_inherited();
 		//try to connect
 		if(node_called != noone) { //dragging from junction
 			var _call_input = node_called.connect_type == JUNCTION_CONNECT.input;
-			var _node_list  = _call_input? _outputs : _inputs;
-			for(var i = 0; i < ds_list_size(_node_list); i++) {
-				var _target = _node_list[| i]; 
+			var _junc_list  = _call_input? _outputs : _inputs;
+			
+			for(var i = 0; i < ds_list_size(_junc_list); i++) {
+				var _target = _junc_list[| i]; 
 				if(!_target.visible) continue;
 				
 				if(_target.auto_connect) {
-					if(_call_input && node_called.isConnectable(_node_list[| i])) {
-						node_called.setFrom(_node_list[| i]);
+					if(_call_input && node_called.isConnectable(_junc_list[| i])) {
+						node_called.setFrom(_junc_list[| i]);
 						_new_node.x -= _new_node.w;
-					} else if(!_call_input && _node_list[| i].isConnectable(node_called))
-						_node_list[| i].setFrom(node_called);
+					} else if(!_call_input && _junc_list[| i].isConnectable(node_called))
+						_junc_list[| i].setFrom(node_called);
 					break;
 				}
 			}

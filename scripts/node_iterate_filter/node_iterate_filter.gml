@@ -28,8 +28,8 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _gr
 		var _int = noone;
 		var _oup = noone;
 		
-		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
-			var _n = nodes[| i];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var _n = nodes[i];
 			
 			if(is_instanceof(_n, Node_Iterator_Filter_Input))
 				_int = _n;
