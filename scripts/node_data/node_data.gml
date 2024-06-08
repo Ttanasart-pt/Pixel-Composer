@@ -1328,6 +1328,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
+			if(!jun.isVisible()) continue;
 			
 			if(jun.drawJunction_fast(_s, _mx, _my))
 				hover = jun;

@@ -33,3 +33,5 @@ function lerp_color(from, to, ratio) {
 	if(abs(from - to) < 1) return to;
 	return merge_color(from, to, ratio);
 }
+
+function lerp_invert(val, from, to) { return (val - from) / (to - from); }

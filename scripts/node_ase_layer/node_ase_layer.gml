@@ -16,31 +16,23 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static onValueFromUpdate = function(index) { findLayer(); }
 	
 	static findLayer = function() { #region
+		layer_object = noone;
+		
 		var data = getInputData(0);
 		if(data == noone) return;
 		
-		var layer_index = 0;
-		layer_object = noone;
-		
 		for( var i = 0, n = array_length(data.layers); i < n; i++ ) {
-			if(data.layers[i].name != display_name) continue;
-			
-			layer_object = data.layers[i];
-			break;
+			if(data.layers[i].name == display_name) 
+				layer_object = data.layers[i];
 		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		var data = getInputData(0);
-		if(data == noone) return;
-		
-		if(_name != display_name) {
-			_name = display_name;
-			findLayer();
-		}
-		
+		findLayer();
 		if(layer_object == noone) return;
-		var cel = layer_object.getCel(CURRENT_FRAME - data._tag_delay);
+		
+		var data = getInputData(0);
+		var cel  = layer_object.getCel(CURRENT_FRAME - data._tag_delay);
 		
 		var celDim = getInputData(1);
 		var ww = data.content[? "Width"];

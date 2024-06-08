@@ -19,7 +19,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Loop", "Pingpong", "Random" ]);
 	
 	inputs[| 6] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

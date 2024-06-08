@@ -4,7 +4,7 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
 	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });

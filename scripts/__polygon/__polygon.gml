@@ -85,10 +85,10 @@ function polygon_triangulate_convex(points) { #region
 } #endregion
 
 function polygon_triangulate(points, tolerance = 4) { #region // ear clipping
-	if(array_length(points) < 3) return [ [], points ];
+	if(array_length(points) < 3) return [ [], points, 1 ];
 	
 	if(tolerance > 0) points = polygon_simplify(points, tolerance);
-	if(array_length(points) < 3) return [ [], points ];
+	if(array_length(points) < 3) return [ [], points, 1 ];
 	
 	var classes   = polygon_points_classify(points);
 	var convexes  = classes[0];
@@ -96,7 +96,7 @@ function polygon_triangulate(points, tolerance = 4) { #region // ear clipping
 	var checkSide = classes[2];
 	
 	if(array_length(reflected) == 0) 
-		return [ polygon_triangulate_convex(points), points ];
+		return [ polygon_triangulate_convex(points), points, checkSide ];
 	
 	var pointInd  = array_create_ext(array_length(points), function(i) /*=>*/ { return i; });
 	var triangles = [];
@@ -105,7 +105,7 @@ function polygon_triangulate(points, tolerance = 4) { #region // ear clipping
 	//print($"Ear cutting : {array_length(points)} verticies");
 	
 	while(array_length(pointInd) > 3) {
-		if(array_length(convexes) == 0) return [ triangles, points ];
+		if(array_length(convexes) == 0) return [ triangles, points, checkSide ];
 		
 		var len = array_length(pointInd);
 		var c0  = convexes[0];
@@ -182,7 +182,7 @@ function polygon_triangulate(points, tolerance = 4) { #region // ear clipping
 	if(array_length(pointInd) == 3) 
 		array_push(triangles, [ points[pointInd[0]], points[pointInd[1]], points[pointInd[2]] ]);
 	
-	return [ triangles, points ];
+	return [ triangles, points, checkSide ];
 } #endregion
 
 function polygon_triangulate_convex_fan(points) { #region

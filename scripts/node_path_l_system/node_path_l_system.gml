@@ -30,7 +30,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);

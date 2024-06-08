@@ -5,7 +5,7 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	inputs[| 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 
 	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

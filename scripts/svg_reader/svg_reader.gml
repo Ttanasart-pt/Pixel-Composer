@@ -21,12 +21,14 @@ function svg_parse(xmlStr) {
 		var bbox = attr.viewBox;
 		bbox = string_splice(bbox);
 		for (var i = 0, n = array_length(bbox); i < n; i++)
-			bbox[i] = toNumber(string_digits(bbox[i]))
+			bbox[i] = real(bbox[i])
 		svg.bbox   = bbox;
 	}
 	
 	if(struct_has(attr, "fill")) {
-		svg.fill = attr.fill;
+		var _f = attr.fill;
+		_f = string_replace_all(_f, "#", "");
+		svg.fill = color_from_rgb(_f);
 	}
 	
 	if(struct_has(svg_object, "children")) {
@@ -36,7 +38,7 @@ function svg_parse(xmlStr) {
 			var _ch = svg_object.children[i];
 			
 			switch(_ch.type) {
-				case "path" : svg.contents[_ind++] = svg_parse_path(_ch); break;
+				case "path" : svg.contents[_ind++] = svg_parse_path(_ch, svg); break;
 			}
 		}
 	}
@@ -44,8 +46,8 @@ function svg_parse(xmlStr) {
 	return svg;
 }
 
-function svg_parse_path(pathStr) {
-	var _path = new SVG_path();
+function svg_parse_path(pathStr, svgObj) {
+	var _path = new SVG_path(svgObj);
 	var attr  = pathStr.attributes;
 	
 	if(struct_has(attr, "d"))

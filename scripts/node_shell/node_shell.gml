@@ -18,7 +18,7 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static update = function() { 
 		var _pro = getInputData(0);
 		var _scr = getInputData(1);
-		if(_pro == "" || _scr == "") return;
+		if(_pro == "" && _scr == "") return;
 		
 		if(trusted) {
 			shell_execute_async(_pro, _scr);

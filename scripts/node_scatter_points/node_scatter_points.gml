@@ -24,7 +24,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.rejectArray();
 	
 	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 	
 	inputs[| 6] = nodeValue("Fixed position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Fix point position, and only select point in the area.");

@@ -8,7 +8,7 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
 	inputs[| inl + 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| inl + 3] = nodeValue("Clip", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b11 )
 		.setDisplay(VALUE_DISPLAY.toggle, { data : [ "Start", "End" ] });

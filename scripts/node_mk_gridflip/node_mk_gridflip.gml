@@ -10,7 +10,7 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	inputs[| 3] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 4] = nodeValue("Surface back", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	

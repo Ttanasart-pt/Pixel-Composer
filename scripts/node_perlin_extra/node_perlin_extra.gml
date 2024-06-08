@@ -19,7 +19,7 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		addShaderProp(SHADER_UNIFORM.integer, "tile");
 			
 	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 		
 	inputs[| 6] = nodeValue("Color mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)

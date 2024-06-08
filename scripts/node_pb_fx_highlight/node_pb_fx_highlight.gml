@@ -14,7 +14,7 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 	inputs[| 5] = nodeValue("Roughness Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
 		
 	inputs[| 6] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	holding_side = noone;
 	

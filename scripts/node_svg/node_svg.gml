@@ -72,6 +72,13 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		triggerRender();
 	} #endregion
 	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _scale   = getInputData(1);
+		
+		if(is_instanceof(content, SVG)) 
+			content.drawOverlay(hover, active, _x, _y, _s * _scale, _mx, _my, _snx, _sny);
+	}
+	
 	static step = function() { #region
 		var path = path_get(getInputData(0));
 		if(!file_exists_empty(path)) return;
@@ -88,18 +95,19 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(path != curr_path)
 			readFile(path);
 		
+		if(!is_instanceof(content, SVG)) return;
 		outputs[| 1].setValue(path);
 		
+		var _scale   = getInputData(1);
 		var _outsurf = outputs[| 0].getValue();
 		
-		var ww = 1;
-		var hh = 1;
+		var ww = content.width  * _scale;
+		var hh = content.height * _scale;
 		
 	    _outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
-		print(content);
 		
 		surface_set_shader(_outsurf, noone);
-			
+			content.draw(_scale);
 		surface_reset_shader();
 		
 		outputs[| 0].setValue(_outsurf);

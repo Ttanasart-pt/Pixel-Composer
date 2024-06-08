@@ -6,7 +6,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 1] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 3] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);

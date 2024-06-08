@@ -1,4 +1,4 @@
-function Node_create_ASE_File_Read(_x, _y, _group = noone) { #region
+function Node_create_ASE_File_Read(_x, _y, _group = noone) { 
 	var path = "";
 	if(NODE_NEW_MANUAL) {
 		path = get_open_filename_pxc("Aseprite file (*.aseprite, *.ase)|*.aseprite;*.ase", "");
@@ -11,9 +11,9 @@ function Node_create_ASE_File_Read(_x, _y, _group = noone) { #region
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
-} #endregion
+} 
 
-function Node_create_ASE_File_Read_path(_x, _y, path) { #region
+function Node_create_ASE_File_Read_path(_x, _y, path) { 
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_ASE_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext());
@@ -21,7 +21,7 @@ function Node_create_ASE_File_Read_path(_x, _y, path) { #region
 	node.doUpdate();
 	
 	return node;	
-} #endregion
+} 
 
 function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "ASE File In";
@@ -49,7 +49,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	hold_visibility = true;
-	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var amo = array_length(layers);
 		var hh = 28;
 		var _h = hh * amo + 16;
@@ -85,9 +85,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		return _h;
-	}); #endregion
+	}); 
 	
-	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var current_tag = getInputData(2);
 		var amo = array_length(tags);
 		var abx = ui(24);
@@ -118,19 +118,20 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, _w - 16, _tgh, cc, 0.5);
 				
 				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, (_w - 16) * prog, _tgh, cc, 0.85);
-				draw_sprite_stretched_ext(THEME.timeline_node, 1, _x + 8, _tgy, (_w - 16) * prog, _tgh, c_white, 0.25);
+				draw_sprite_stretched_add(THEME.timeline_node, 1, _x + 8, _tgy, (_w - 16) * prog, _tgh, c_white, 0.1);
 				
 				txt = $"{progFr}/{rn}";
 				
 			} else {
-				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, 8, _tgh, cc, 0.85);
-				draw_sprite_stretched_ext(THEME.timeline_node, 1, _x + 8, _tgy, 8, _tgh, c_white, 0.25);
+				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, 10, _tgh, cc, 0.85);
+				draw_sprite_stretched_add(THEME.timeline_node, 1, _x + 8, _tgy, 10, _tgh, c_white, 0.1);
 				
 				txt = $"{rn}";
 			}
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x + 8, _yy, _x + _w - 8, _yy + hh)) {
-				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, _w - 16, _tgh, c_white, 0.1);
+				draw_sprite_stretched_add(THEME.timeline_node, 0, _x + 8, _tgy, _w - 16, _tgh, c_white, 0.1);
+				
 				if(mouse_press(mb_left, _focus)) {
 					var _currTag = getInputData(2);
 					var _tagName = tag[? "Name"];
@@ -139,15 +140,19 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 			
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_x + 24, _yy + hh / 2, tag[? "Name"]);
+			draw_set_alpha(1);
+			draw_text_add(_x + 28, _yy + hh / 2, tag[? "Name"]);
 			
-			draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
+			draw_set_halign(fa_right);
+			draw_set_alpha(0.4);
 			draw_text_add(_x + _w - 20, _yy + hh / 2, txt);
+			
+			draw_set_alpha(1);
 		}
 		
 		tag_renderer.h = _h;
 		return _h;
-	}); #endregion
+	}); 
 
 	input_display_list = [
 		["File",	 true], 0,
@@ -170,13 +175,13 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	first_update = false;
 	
-	on_drop_file = function(path) { #region
+	on_drop_file = function(path) { 
 		inputs[| 0].setValue(path);
 		doUpdate();
 		return true;
-	} #endregion
+	} 
 	
-	function refreshLayers() { #region
+	function refreshLayers() { 
 		var _nh = 64;
 		var nx = x + w + 32;
 		var nh = (array_length(layers) - 1) / 2 * _nh;
@@ -208,11 +213,14 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			lvs[i].inputs[| 1].setValue(use_cel);
 			lvs[i].setDisplayName(_name);
 		}
-	} #endregion
+	} 
 	
-	function updatePaths(path = path_current) { #region
+	function updatePaths(path = path_current) { 
 		if(path == -1) return false;
-		if(!file_exists_empty(path)) return false;
+		if(!file_exists_empty(path)) {
+			noti_warning("File not exist.");
+			return false;
+		}
 		
 		path_current = path;
 		edit_time    = max(edit_time, file_get_modify_s(path_current));
@@ -288,27 +296,27 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		return true;
-	} #endregion
+	} 
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { #region
+	static onInspector1Update = function() { 
 		updatePaths(path_get(getInputData(0)));
 		triggerRender();
-	} #endregion
+	} 
 	
-	static step = function() { #region
+	static step = function() { 
 		if(!attributes.file_checker) return;
-		if(path_current == "") return;
+		if(!file_exists_empty(path_current)) return;
 		
 		if(file_get_modify_s(path_current) > edit_time) {
 			updatePaths();
 			triggerRender();
 		}
-	} #endregion
+	} 
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) { 
 		var path        = path_get(getInputData(0));
 		var current_tag = getInputData(2);
 		
@@ -359,19 +367,19 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_surface_safe(_inSurf, xx, yy);
 			}
 		surface_reset_target();
-	} #endregion
+	} 
 	
-	static attributeSerialize = function() { #region
+	static attributeSerialize = function() { 
 		var att = {};
 		att.layer_visible = attributes.layer_visible;
 		
 		return att;
-	} #endregion
+	} 
 	
-	static attributeDeserialize = function(attr) { #region
+	static attributeDeserialize = function(attr) { 
 		struct_append(attributes, attr); 
 		
 		if(struct_has(attr, "layer_visible"))
 			attributes.layer_visible = attr.layer_visible;
-	} #endregion
+	} 
 }
