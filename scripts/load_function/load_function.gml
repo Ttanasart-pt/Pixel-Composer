@@ -141,7 +141,6 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		try {
 			var _node_list = _load_content.nodes;
 			for(var i = 0, n = array_length(_node_list); i < n; i++) {
-				// printIf(log, $"   >> Loading nodes : {_node_list[i].type}");
 				var _node = nodeLoad(_node_list[i]);
 				if(_node) array_push(create_list, _node);
 			}
@@ -150,68 +149,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 		}
 	}
 	
-	printIf(log, $" > Load nodes : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	try {
-		if(struct_has(_load_content, "animator")) {
-			var _anim_map = _load_content.animator;
-			PROJECT.animator.frames_total	= struct_try_get(_anim_map, "frames_total",   30);
-			PROJECT.animator.framerate		= struct_try_get(_anim_map, "framerate",      30);
-			PROJECT.animator.frame_range	= struct_try_get(_anim_map, "frame_range", noone);
-		}
-	} catch(e) {
-		log_warning("LOAD, animator", exception_print(e));
-	}
-	
-	if(struct_has(_load_content, "onion_skin"))
-		struct_override(PROJECT.onion_skin, _load_content.onion_skin);
-	
-	if(struct_has(_load_content, "previewGrid"))
-		struct_override(PROJECT.previewGrid, _load_content.previewGrid);
-	
-	if(struct_has(_load_content, "graphGrid"))
-		struct_override(PROJECT.graphGrid, _load_content.graphGrid);
-	
-	if(struct_has(_load_content, "attributes")) {
-		struct_override(PROJECT.attributes, _load_content.attributes);
-	}
-	PROJECT.setPalette();
-	
-	if(struct_has(_load_content, "notes")) {
-		PROJECT.notes = array_create(array_length(_load_content.notes));
-		for( var i = 0, n = array_length(_load_content.notes); i < n; i++ )
-			PROJECT.notes[i] = new Note.deserialize(_load_content.notes[i]);
-	}
-	
-	try {
-		if(struct_has(_load_content, "metadata"))
-			PROJECT.meta.deserialize(_load_content.metadata);
-	} catch(e) {
-		log_warning("LOAD, metadata", exception_print(e));
-	}
-	
-	PROJECT.globalNode = new Node_Global();
-	try {
-		if(struct_has(_load_content, "global"))
-			PROJECT.globalNode.deserialize(_load_content.global);
-		else if(struct_has(_load_content, "global_node"))
-			PROJECT.globalNode.deserialize(_load_content.global_node);
-	} catch(e) {
-		log_warning("LOAD, global", exception_print(e));
-	}
-	
-	try {
-		if(struct_has(_load_content, "addon")) {
-			var _addon = _load_content.addon;
-			PROJECT.addons = _addon;
-			struct_foreach(_addon, function(_name, _value) { addonLoad(_name, false); });
-		} else 
-			PROJECT.addons = {};
-	} catch(e) {
-		log_warning("LOAD, addon", exception_print(e));
-	}
-	
-	printIf(log, $" > Load data : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
+	PROJECT.deserialize(_load_content);
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	

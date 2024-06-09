@@ -3,6 +3,13 @@
 	PROJECT = noone;
 #endregion
 
+#region layer
+	function Layer() constructor {
+		name  = "New Layer";
+		nodes = [];
+	}
+#endregion
+
 #region project
 	function Project() constructor {
 		active	= true; /// @is {bool}
@@ -22,6 +29,8 @@
 		nodeTopo    = [];
 		nodeMap	    = ds_map_create();
 		nodeNameMap = ds_map_create();
+		
+		composer    = noone;
 		
 		animator	   = new AnimationManager();
 		globalNode	   = new Node_Global();
@@ -144,6 +153,85 @@
 		} #endregion
 			
 		static toString = function() { return $"ProjectObject [{path}]"; }
+	
+		static serialize = function() {
+			var _map = {};
+			_map.version = SAVE_VERSION;
+			
+			var _anim_map = {};
+			_anim_map.frames_total = animator.frames_total;
+			_anim_map.framerate    = animator.framerate;
+			_anim_map.frame_range  = animator.frame_range;
+			_map.animator		   = _anim_map;
+			
+			_map.metadata    = meta.serialize();
+			_map.global_node = globalNode.serialize();
+			_map.onion_skin  = onion_skin;
+			
+			_map.previewGrid = previewGrid;
+			_map.graphGrid   = graphGrid;
+			_map.attributes  = attributes;
+			
+			_map.timelines   = timelines.serialize();
+			_map.notes       = array_map(notes, function(note) { return note.serialize(); } );
+			
+			_map.composer    = composer == noone? -4 : composer.serialize();
+			
+			__node_list = [];
+			array_foreach(allNodes, function(node) { if(node.active) array_push(__node_list, node.serialize()); })
+			_map.nodes = __node_list;
+			
+			
+			var prev = PANEL_PREVIEW.getNodePreviewSurface();
+			if(!is_surface(prev)) _map.preview = "";
+			else				  _map.preview = surface_encode(surface_size_lim(prev, 128, 128));
+			
+			var _addon = {};
+			with(_addon_custom) {
+				var _ser = lua_call(thread, "serialize");
+				_addon[$ name] = PREFERENCES.save_file_minify? json_stringify_minify(_ser) : json_stringify(_ser);
+			}
+			_map.addon = _addon;
+			
+			return _map;
+		}
+		
+		static deserialize = function(_map) {
+			if(struct_has(_map, "animator")) {
+				var _anim_map = _map.animator;
+				animator.frames_total	= struct_try_get(_anim_map, "frames_total",   30);
+				animator.framerate		= struct_try_get(_anim_map, "framerate",      30);
+				animator.frame_range	= struct_try_get(_anim_map, "frame_range", noone);
+			}
+			
+			if(struct_has(_map, "onion_skin"))	struct_override(onion_skin,  _map.onion_skin);
+			if(struct_has(_map, "previewGrid")) struct_override(previewGrid, _map.previewGrid);
+			if(struct_has(_map, "graphGrid"))	struct_override(graphGrid,	 _map.graphGrid);
+			if(struct_has(_map, "attributes"))	struct_override(attributes,  _map.attributes);
+			if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
+			
+			setPalette();
+			
+			if(struct_has(_map, "notes")) {
+				notes = array_create(array_length(_map.notes));
+				for( var i = 0, n = array_length(_map.notes); i < n; i++ )
+					notes[i] = new Note.deserialize(_map.notes[i]);
+			}
+			
+			globalNode = new Node_Global();
+			     if(struct_has(_map, "global"))      globalNode.deserialize(_map.global);
+			else if(struct_has(_map, "global_node")) globalNode.deserialize(_map.global_node);
+			
+			if(struct_has(_map, "composer") && _map.composer != -4)
+				composer.deserialize(_map.composer);
+			
+			addons = {};
+			if(struct_has(_map, "addon")) {
+				var _addon = _map.addon;
+				addons = _addon;
+				struct_foreach(_addon, function(_name, _value) { addonLoad(_name, false); });
+			}
+		}
 	}
 	
 	function __initProject() {

@@ -48,10 +48,12 @@ function FileObject(_name, _path) constructor { #region
 	} #endregion
 	
 	static getSpr = function() { #region
-		if(spr != -1)			return spr;
+		if(spr != -1 && sprite_exists(spr))	
+			return spr;
+			
 		if(sprFetchID != noone) return -1;
 		
-		if(array_length(spr_path) == 0) {
+		if(array_empty(spr_path)) {
 			if(loadThumbnailAsync) {
 				sprFetchID = sprite_add_ext(self.path, 0, 0, 0, true);
 				IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
@@ -62,6 +64,7 @@ function FileObject(_name, _path) constructor { #region
 				spr = sprite_add(self.path, 0, 0, 0, 0, 0);
 				if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 			}
+			
 			return spr;
 		}
 		

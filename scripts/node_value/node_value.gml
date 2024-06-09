@@ -368,8 +368,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		mapButton = button(function() { 
 						attributes.mapped = !attributes.mapped;
 						var val = getValue();
-						if( attributes.mapped && is_numeric(val)) setValue([0, val]);
-						if(!attributes.mapped && is_array(val))   setValue(array_safe_get_fast(val, 0));
+						
+						if( attributes.mapped)
+							setValue([0, 0]);
+						
+						if(!attributes.mapped && is_array(def_val))
+							setValue(def_val);
+						
 						setArrayDepth(attributes.mapped);
 						
 						node.triggerRender(); 
@@ -410,6 +415,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			inp.visible = vis;
 			node.refreshNodeDisplay();
 		}
+		
 	} #endregion
 	
 	/////========== ANIMATION ==========

@@ -114,13 +114,14 @@
 	} #endregion
 	
 	function checkPanelValid() { #region
-		var val = true;
-		if(!is_instanceof(PANEL_GRAPH.panel, Panel))     val = false;
-		if(!is_instanceof(PANEL_PREVIEW.panel, Panel))   val = false;
-		if(!is_instanceof(PANEL_INSPECTOR.panel, Panel)) val = false;
+		var val  = true;
+		var _mst = "";
+		if(!is_instanceof(PANEL_GRAPH.panel, Panel))     { val = false; _mst += "Graph, "     };
+		if(!is_instanceof(PANEL_PREVIEW.panel, Panel))   { val = false; _mst += "Preview, "   };
+		if(!is_instanceof(PANEL_INSPECTOR.panel, Panel)) { val = false; _mst += "Inspector, " };
 		
 		if(!val) {
-			noti_warning("Invalid Panel Layout, layout and UI scale will be reset to the default value.\n\nRestart recommended.");
+			noti_warning($"Invalid Panel Layout, missing {_mst} panel(s). Reset to the default layout and restart recommened.");
 			
 			PREFERENCES.panel_layout_file = "Vertical";
 			PREFERENCES._display_scaling  = 1;

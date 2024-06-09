@@ -141,6 +141,9 @@ function Panel_Collection() : PanelContent() constructor {
 	});
 	tb_search.auto_update = true;
 	
+	grid_size    = ui(64);
+	grid_size_to = grid_size;
+	
 	contentView = 0;
 	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) { #region
 		draw_clear_alpha(c_white, 0);
@@ -180,9 +183,10 @@ function Panel_Collection() : PanelContent() constructor {
 		updated_prog = lerp_linear(updated_prog, 0, 0.01);
 		
 		if(contentView == 0) {
-			var grid_size  = ui(64);
-			var grid_width = ui(80);
-			var grid_space = ui(12);
+			var grid_width = round(grid_size * 1.25);
+			if(grid_width > ui(80)) grid_width = grid_size;
+			
+			var grid_space = round(grid_size * 0.1875);
 			
 			var col = max(1, floor(_cw / (grid_width + grid_space)));
 			var row = ceil(node_count / col);
@@ -277,7 +281,7 @@ function Panel_Collection() : PanelContent() constructor {
 					}
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_inner);
-					var _txtH = draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width,, true);
+					var _txtH = draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width, 1, true);
 					name_height = max(name_height, _txtH + 8);
 				}
 				
@@ -285,6 +289,12 @@ function Panel_Collection() : PanelContent() constructor {
 				hh += hght;
 				yy += hght;
 			}
+			
+			if(pHOVER && key_mod_press(CTRL) && point_in_rectangle(_m[0], _m[1], 0, 0, contentPane.surface_w, contentPane.surface_h)) {
+				if(mouse_wheel_down()) grid_size_to = clamp(grid_size_to - ui(4), ui(32), ui(160));
+				if(mouse_wheel_up())   grid_size_to = clamp(grid_size_to + ui(4), ui(32), ui(160));
+			}
+			grid_size = lerp_float(grid_size, grid_size_to, 5);
 			
 		} else {
 			var list_width  = _cw;

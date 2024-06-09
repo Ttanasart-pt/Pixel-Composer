@@ -35,14 +35,14 @@ function Inspector_Spacer(height, line = false) constructor { self.h = height; s
 
 function Panel_Inspector() : PanelContent() constructor {
 	#region ---- main ----
-		title = __txt("Inspector");
 		context_str = "Inspector";
+		title = __txt("Inspector");
 		icon  = THEME.panel_inspector_icon;
 	
-		w = ui(400);
-		h = ui(640);
+		w     = ui(400);
+		h     = ui(640);
 		min_w = ui(160);
-	
+		
 		locked		 = false;
 		inspecting	 = noone;
 		inspectings  = [];
@@ -73,6 +73,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		picker_index  = 0;
 		picker_change = false;
+		
+		attribute_hovering = noone;
 	#endregion
 	
 	globalvar_viewer_init();

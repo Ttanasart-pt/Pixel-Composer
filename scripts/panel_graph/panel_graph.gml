@@ -160,6 +160,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		self.project = project;
 		nodes_list   = project.nodes;
 		
+		// layer_index  = noone;
 		setTitle();
 	}
 	setProject(project);
@@ -1509,100 +1510,100 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	function connectDraggingValueTo(target) { #region
 		var _connect = [ 0, noone, noone ];
 			
-			if(PANEL_INSPECTOR && PANEL_INSPECTOR.attribute_hovering != noone) {
-				PANEL_INSPECTOR.attribute_hovering(value_dragging);
+		if(is_instanceof(PANEL_INSPECTOR, Panel_Inspector) && PANEL_INSPECTOR.attribute_hovering != noone) {
+			PANEL_INSPECTOR.attribute_hovering(value_dragging);
+			
+		} else if(target != noone) {
+			
+			if(target.connect_type == value_dragging.connect_type) {
 				
-			} else if(target != noone) {
-				
-				if(target.connect_type == value_dragging.connect_type) {
-					
-					if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
-						if(target.value_from) {
-							value_dragging.setFrom(target.value_from);
-							target.removeFrom();
-						}
-						
-					} else if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
-						var _tos = target.getJunctionTo();
-						
-						for (var i = 0, n = array_length(_tos); i < n; i++)
-							_tos[i].setFrom(value_dragging);
+				if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+					if(target.value_from) {
+						value_dragging.setFrom(target.value_from);
+						target.removeFrom();
 					}
 					
-				} else {
-					var _addInput = target.value_from == noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input;
+				} else if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
+					var _tos = target.getJunctionTo();
 					
-					if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
-						if(array_empty(value_draggings)) {
-							_connect = [ value_dragging.setFrom(target), value_dragging, target ];
-						} else {
-							for( var i = 0, n = array_length(value_draggings); i < n; i++ )
-								value_draggings[i].setFrom(target);
-						}
-						
-					} else if(_addInput && !array_empty(value_draggings)) {
-						for( var i = 0, n = array_length(value_draggings); i < n; i++ )
-							target.node.addInput(value_draggings[i]);
-							
-					} else {
-						_connect = [ target.setFrom(value_dragging), target, value_dragging ];
-					}
+					for (var i = 0, n = array_length(_tos); i < n; i++)
+						_tos[i].setFrom(value_dragging);
 				}
 				
 			} else {
-				if(value_dragging.connect_type == JUNCTION_CONNECT.input)
-					value_dragging.removeFrom();
-				value_dragging.node.triggerRender();
+				var _addInput = target.value_from == noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input;
 				
-				if(value_focus != value_dragging) {
-					var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
-					if(value_dragging.node.inline_context && !key_mod_press(SHIFT))
-						ctx = value_dragging.node.inline_context;
-					
-					with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {	
-						node_target_x = other.mouse_grid_x;
-						node_target_y = other.mouse_grid_y;
-						node_called   = other.value_dragging;
-						
-						alarm[0] = 1;
+				if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+					if(array_empty(value_draggings)) {
+						_connect = [ value_dragging.setFrom(target), value_dragging, target ];
+					} else {
+						for( var i = 0, n = array_length(value_draggings); i < n; i++ )
+							value_draggings[i].setFrom(target);
 					}
+					
+				} else if(_addInput && !array_empty(value_draggings)) {
+					for( var i = 0, n = array_length(value_draggings); i < n; i++ )
+						target.node.addInput(value_draggings[i]);
+						
+				} else {
+					_connect = [ target.setFrom(value_dragging), target, value_dragging ];
 				}
 			}
 			
-			value_dragging        = noone;
-			connection_draw_mouse = noone;
+		} else {
+			if(value_dragging.connect_type == JUNCTION_CONNECT.input)
+				value_dragging.removeFrom();
+			value_dragging.node.triggerRender();
 			
-			if(_connect[0] == -9) {
-				if(_connect[1].value_from_loop != noone)
-					_connect[1].value_from_loop.destroy();
-					
-				var menu = [
-					menuItem("Feedback", function(data) {
-						var junc_in  = data.params.junc_in;
-						var junc_out = data.params.junc_out;
-						
-						var feed = nodeBuild("Node_Feedback_Inline", 0, 0);
-						// feed.connectJunctions(junc_in, junc_out);
-						feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
-						feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
-						feed.scanJunc();
-						
-					}, THEME.feedback_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
-					
-					menuItem("Loop", function(data) {
-						var junc_in  = data.params.junc_in;
-						var junc_out = data.params.junc_out;
-						
-						var feed = nodeBuild("Node_Iterate_Inline", 0, 0);
-						feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
-						feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
-						feed.scanJunc();
-						
-					}, THEME.loop_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
-				];
+			if(value_focus != value_dragging) {
+				var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+				if(value_dragging.node.inline_context && !key_mod_press(SHIFT))
+					ctx = value_dragging.node.inline_context;
 				
-				menuCall(,,, menu);
+				with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {	
+					node_target_x = other.mouse_grid_x;
+					node_target_y = other.mouse_grid_y;
+					node_called   = other.value_dragging;
+					
+					alarm[0] = 1;
+				}
 			}
+		}
+		
+		value_dragging        = noone;
+		connection_draw_mouse = noone;
+		
+		if(_connect[0] == -9) {
+			if(_connect[1].value_from_loop != noone)
+				_connect[1].value_from_loop.destroy();
+				
+			var menu = [
+				menuItem("Feedback", function(data) {
+					var junc_in  = data.params.junc_in;
+					var junc_out = data.params.junc_out;
+					
+					var feed = nodeBuild("Node_Feedback_Inline", 0, 0);
+					// feed.connectJunctions(junc_in, junc_out);
+					feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
+					feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
+					feed.scanJunc();
+					
+				}, THEME.feedback_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
+				
+				menuItem("Loop", function(data) {
+					var junc_in  = data.params.junc_in;
+					var junc_out = data.params.junc_out;
+					
+					var feed = nodeBuild("Node_Iterate_Inline", 0, 0);
+					feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
+					feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
+					feed.scanJunc();
+					
+				}, THEME.loop_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
+			];
+			
+			menuCall(,,, menu);
+		}
 	} #endregion
 	
 	function draggingValue() {

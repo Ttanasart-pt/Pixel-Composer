@@ -51,15 +51,15 @@ function __Node_Base(x, y) constructor {
 	static step   = function() {}
 	static update = function(frame = CURRENT_FRAME) {}
 	
-	static valueUpdate = function(index) {}
+	static valueUpdate   = function(index) {}
 	static triggerRender = function() {}
 	
 	static onValidate = function() {}
-	static onDestroy = function() {}
+	static onDestroy  = function() {}
 	
 	static clearCache = function() {}
 	static clearCacheForward = function() {}
 	
-	static serialize = function() {}
+	static serialize   = function() {}
 	static deserialize = function(_map) {}
 }

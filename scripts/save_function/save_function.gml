@@ -14,50 +14,9 @@ function NEW() { #region
 } #endregion
 
 function save_serialize(project = PROJECT, _outMap = false) { #region
-	var _map = {};
-	_map.version = SAVE_VERSION;
-	
-	var _node_list = [];
-	var amo = array_length(project.allNodes);
-	var i   = 0;
-	
-	repeat(amo) {
-		var _node = project.allNodes[i++];
-		if(_node.active) array_push(_node_list, _node.serialize());
-	}
-	
-	_map.nodes = _node_list;
-	
-	var _anim_map = {};
-	_anim_map.frames_total = project.animator.frames_total;
-	_anim_map.framerate    = project.animator.framerate;
-	_anim_map.frame_range  = project.animator.frame_range;
-	_map.animator		   = _anim_map;
-	
-	_map.metadata    = PROJECT.meta.serialize();
-	_map.global_node = project.globalNode.serialize();
-	_map.onion_skin  = project.onion_skin;
-	
-	_map.previewGrid = project.previewGrid;
-	_map.graphGrid   = project.graphGrid;
-	_map.attributes  = project.attributes;
-	
-	_map.timelines   = project.timelines.serialize();
-	_map.notes       = array_map(project.notes, function(note) { return note.serialize(); } );
-	
-	var prev = PANEL_PREVIEW.getNodePreviewSurface();
-	if(!is_surface(prev)) _map.preview = "";
-	else				  _map.preview = surface_encode(surface_size_lim(prev, 128, 128));
-	
-	var _addon = {};
-	with(_addon_custom) {
-		var _ser = lua_call(thread, "serialize");
-		_addon[$ name] = PREFERENCES.save_file_minify? json_stringify_minify(_ser) : json_stringify(_ser);
-	}
-	_map.addon = _addon;
+	var _map = project.serialize();
 	
 	if(_outMap) return _map;
-	
 	return PREFERENCES.save_file_minify? json_stringify_minify(_map) : json_stringify(_map, true);
 } #endregion
 
