@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_pixel_sampler",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_pixel_sampler",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

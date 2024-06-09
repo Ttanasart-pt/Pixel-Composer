@@ -179,42 +179,42 @@ event_inherited();
 				_outputs = res[$ _node.outputNode].outputs;
 		} else {
 			var _new_list = APPEND(_node.path);
+			if(_new_list == noone) return;
+			
 			_inputs  = ds_list_create();
 			_outputs = ds_list_create();
 			
 			var tx = 99999;
 			var ty = 99999;
-			for( var i = 0; i < ds_list_size(_new_list); i++ ) {
-				tx = min(tx, _new_list[| i].x);
-				ty = min(tx, _new_list[| i].y);
+			for( var i = 0; i < array_length(_new_list); i++ ) {
+				tx = min(tx, _new_list[i].x);
+				ty = min(tx, _new_list[i].y);
 				
-				if(is_instanceof(context, Node_Collection_Inline) && !is_instanceof(_new_list[| i], Node_Collection_Inline))
-					context.addNode(_new_list[| i]);
+				if(is_instanceof(context, Node_Collection_Inline) && !is_instanceof(_new_list[i], Node_Collection_Inline))
+					context.addNode(_new_list[i]);
 			}
 			
 			var shx = tx - node_target_x;
 			var shy = ty - node_target_y;
 			
-			for( var i = 0; i < ds_list_size(_new_list); i++ ) {
-				_new_list[| i].x -= shx;
-				_new_list[| i].y -= shy;
+			for( var i = 0; i < array_length(_new_list); i++ ) {
+				_new_list[i].x -= shx;
+				_new_list[i].y -= shy;
 			}
 			
-			for( var i = 0; i < ds_list_size(_new_list); i++ ) {
-				var _in = _new_list[| i].inputs;
+			for( var i = 0; i < array_length(_new_list); i++ ) {
+				var _in = _new_list[i].inputs;
 				for( var j = 0; j < ds_list_size(_in); j++ ) {
 					if(_in[| j].value_from == noone)
 						ds_list_add(_inputs, _in[| j]);
 				}
 				
-				var _ot = _new_list[| i].outputs;
+				var _ot = _new_list[i].outputs;
 				for( var j = 0; j < ds_list_size(_ot); j++ ) {
 					if(array_empty(_ot[| j].value_to))
 						ds_list_add(_outputs, _ot[| j]);
 				}
 			}
-			
-			ds_list_destroy(_new_list);
 		}
 		
 		//try to connect

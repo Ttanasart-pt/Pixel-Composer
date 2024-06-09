@@ -1388,6 +1388,7 @@
     {"id":{"name":"node_pin","path":"scripts/node_pin/node_pin.yy",},},
     {"id":{"name":"node_pixel_builder","path":"scripts/node_pixel_builder/node_pixel_builder.yy",},},
     {"id":{"name":"node_pixel_cloud","path":"scripts/node_pixel_cloud/node_pixel_cloud.yy",},},
+    {"id":{"name":"node_pixel_sampler","path":"scripts/node_pixel_sampler/node_pixel_sampler.yy",},},
     {"id":{"name":"node_pixel_sort","path":"scripts/node_pixel_sort/node_pixel_sort.yy",},},
     {"id":{"name":"node_plot_linear","path":"scripts/node_plot_linear/node_plot_linear.yy",},},
     {"id":{"name":"node_polar","path":"scripts/node_polar/node_polar.yy",},},

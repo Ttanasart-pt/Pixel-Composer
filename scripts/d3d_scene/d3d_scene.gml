@@ -177,7 +177,10 @@ function __3dScene(camera, name = "New scene") constructor {
 	} #endregion
 	
 	static ssaoPass = function(deferData) { #region
-		if(!ssao_enabled) return;
+		if(!ssao_enabled) {
+			surface_free(deferData.ssao);
+			return;
+		}
 		
 		var _sw = surface_get_width_safe(deferData.geometry_data[0]);
 		var _sh = surface_get_height_safe(deferData.geometry_data[0]);
@@ -196,6 +199,7 @@ function __3dScene(camera, name = "New scene") constructor {
 		surface_reset_shader();
 		
 		deferData.ssao = surface_verify(deferData.ssao, _sw, _sh);
+		
 		surface_set_shader(deferData.ssao, sh_d3d_ssao_blur);
 			shader_set_f("dimension", _sw, _sh);
 			shader_set_surface("vNormal",   deferData.geometry_data[2]);
