@@ -1999,7 +1999,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		draw_clear(bg_color);
 		node_bg_hovering = drawBasePreview();
 		drawGrid();
-		drawViewControl();
 		
 		var ovy = ui(8);
 		if(show_view_control == 2)
@@ -2014,6 +2013,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		mouse_on_graph = true;
 		drawToolBar();
 		drawMinimap();
+		
+		drawViewControl();
 		
 		if(pFOCUS && !view_hovering) 
 			array_foreach(nodes_selecting, function(node) { node.focusStep(); });

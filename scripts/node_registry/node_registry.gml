@@ -342,7 +342,7 @@ function __initNodes() {
 		addNodeObject(itere_il, "Array Length",	s_node_iterator_length,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
 	#endregion
 	
-	var filter = ds_list_create(); #region //filter
+	var filter = ds_list_create(); #region //iterate filter
 	NODE_ADD_CAT("Filter", filter, ["Node_Iterate_Filter"], COLORS.node_blend_loop);
 		ds_list_add(filter, "Groups");
 		addNodeObject(filter, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
@@ -354,14 +354,14 @@ function __initNodes() {
 		addNodeObject(filter, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]).hideRecent();
 	#endregion
 	
-	var filter_il = ds_list_create(); #region //filter inline
+	var filter_il = ds_list_create(); #region //iterate filter inline
 	NODE_ADD_CAT("Filter", filter_il, ["Node_Iterate_Filter_Inline"], COLORS.node_blend_loop);
 		ds_list_add(filter_il, "Loops");
 		addNodeObject(filter_il, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(filter_il, "Array Length",	s_node_iterator_length,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
 	#endregion
 	
-	var feed = ds_list_create(); #region //feedback
+	var feed = ds_list_create(); #region //iterate feedback
 	NODE_ADD_CAT("Feedback", feed, ["Node_Feedback"], COLORS.node_blend_feedback);
 		ds_list_add(feed, "Groups");
 		addNodeObject(feed, "Input",		s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]).hideRecent();
@@ -607,7 +607,8 @@ function __initNodes() {
 		addNodeObject(filter, "Replace Image",		s_node_image_replace,	"Node_Surface_Replace",	[1, Node_Surface_Replace], ["image replace"], "Replace instances of an image with a new one.").setVersion(1140);
 		addNodeObject(filter, "Chromatic Aberration",	s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	[1, Node_Chromatic_Aberration],, "Apply chromatic aberration effect to the image.");
 		addNodeObject(filter, "Vignette",			s_node_vignette,		"Node_Vignette",		[1, Node_Vignette],, "Apply vignette effect to the border.").setVersion(11630);
-		addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA],, "Apply fast approximate anti-aliasing to the image.");
+		addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA],, "Apply fast approximate anti-aliasing to te image.");
+		addNodeObject(filter, "JPEG",				s_node_JPEG,			"Node_JPEG",			[1, Node_JPEG],, "Apply JPEG compression to the image.").setVersion(11730);
 		//addNodeObject(filter, "Blend Edge",			s_node_FXAA,			"Node_Blend_Edge",		[1, Node_Blend_Edge]).setVersion(11640);
 		
 		ds_list_add(filter, "Colors");
