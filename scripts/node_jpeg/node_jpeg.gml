@@ -22,11 +22,19 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	__init_mask_modifier(5); // inputs 8, 9
 	
+	inputs[| 10] = nodeValue("Transformation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Cosine", "Zigzag", "Smooth Zigzag", "Step" ]);
+	
+	inputs[| 11] = nodeValue("Phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+	
+	inputs[| 12] = nodeValue("Deconstruct Only", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1, 
 		["Surface", false], 0, 5, 6, 7, 
-		["Effects", false], 2, 3, 4, 
+		["Effects", false], 2, 3, 4, 10, 11, 12, 
 	];
 	
 	temp_surface = array_create(2);
@@ -38,29 +46,38 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _surf = _data[0];
-		var _patc = _data[2];
-		var _comp = _data[3];
-		var _recn = _data[4];
+		var _surf  = _data[0];
+		var _patc  = _data[2];
+		var _comp  = _data[3];
+		var _recn  = _data[4];
+		var _tran  = _data[10];
+		var _phas  = _data[11];
+		var _recon = _data[12];
 		
 		var _dim  = surface_get_dimension(_surf);
 		
 		for( var i = 0; i < 2; i++ ) temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1], surface_rgba16float);
-			
-		surface_set_shader(temp_surface[0], sh_jpeg_dct);
-			shader_set_f("dimension",   _dim);
-			shader_set_i("patch",       _patc);
-			shader_set_f("compression", _comp);
-			
-			draw_surface_safe(_surf);
-		surface_reset_shader();
+		
+		if(!_recon) {
+			surface_set_shader(temp_surface[0], sh_jpeg_dct);
+				shader_set_f("dimension",   _dim);
+				shader_set_i("patch",       _patc);
+				shader_set_f("compression", _comp);
+				shader_set_f("phase",       degtorad(_phas));
+				shader_set_i("transform",   _tran);
+				
+				draw_surface_safe(_surf);
+			surface_reset_shader();
+		}
 		
 		surface_set_shader(temp_surface[1], sh_jpeg_recons);
 			shader_set_f("dimension",   _dim);
 			shader_set_i("patch",       _patc);
 			shader_set_i("reconstruct", _recn);
+			shader_set_f("phase",       degtorad(_phas));
+			shader_set_i("transform",   _tran);
 			
-			draw_surface_safe(temp_surface[0]);
+			draw_surface_safe(_recon? _surf : temp_surface[0]);
 		surface_reset_shader();
 		
 		surface_set_shader(_outSurf);

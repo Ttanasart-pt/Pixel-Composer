@@ -6,9 +6,55 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 uniform int   patch;
+uniform int   transform;
 uniform float compression;
+uniform float phase;
 
-float DCTcoeff(vec2 k, vec2 x) { return cos(PI * k.x * x.x) * cos(PI * k.y * x.y); }
+float DCTcoeff(vec2 k, vec2 x) { return cos(PI * k.x * x.x + phase) * cos(PI * k.y * x.y + phase); }
+float ZIGcoeff(vec2 k, vec2 x) { 
+	float a, b;
+	
+	float fx = fract(k.x * x.x + phase / PI / 2. + .5);
+	a = fx < 0.5? fx * 2. : (1. - fx) * 2.;
+	a = a * 2. - 1.;
+	
+	float fy = fract(k.y * x.y + phase / PI / 2. + .5);
+	b = fy < 0.5? fy * 2. : (1. - fy) * 2.;
+	b = b * 2. - 1.;
+	
+	return a * b;
+}
+
+float SMTcoeff(vec2 k, vec2 x) { 
+	float a, b;
+	
+	float fx = fract(k.x * x.x + phase / PI / 2. + .5);
+	a = fx < 0.5? fx * 2. : (1. - fx) * 2.;
+	a = smoothstep(0., 1., a);
+	a = a * 2. - 1.;
+	
+	float fy = fract(k.y * x.y + phase / PI / 2. + .5);
+	b = fy < 0.5? fy * 2. : (1. - fy) * 2.;
+	b = smoothstep(0., 1., b);
+	b = b * 2. - 1.;
+	
+	return a * b;
+}
+
+float STPcoeff(vec2 k, vec2 x) { 
+	float a, b;
+	float sp = 1. / 2.;
+	
+	float _fx = fract(k.x * x.x + phase / PI / 2.);
+	float fx  = _fx >= 0.5 - sp && _fx <= 0.5 + sp? 0. : step(0.5, _fx);
+	a = a * 2. - 1.;
+	
+	float _fy = fract(k.y * x.y + phase / PI / 2.);
+	float fy  = _fy >= 0.5 - sp && _fy <= 0.5 + sp? 0. : step(0.5, _fy);
+	b = b * 2. - 1.;
+	
+	return a * b;
+}
 
 float round(float val) { return fract(val) > 0.5? ceil(val) : floor(val); }
 vec4  round(vec4  val) { return vec4(round(val.x), round(val.y), round(val.z), round(val.w)); }
@@ -24,7 +70,13 @@ void main() {
     for(int x = 0; x < patch; ++x)
 	for(int y = 0; y < patch; ++y) {
 	    vec4  s = texture2D( gm_BaseTexture, (K + vec2(x, y) + .5) / dimension);
-	    float c = DCTcoeff(k, (vec2(x, y) + .5) / float(patch));
+	    float c = 0.;
+	    
+	    	 if(transform == 0) c = DCTcoeff(k, (vec2(x, y) + .5) / float(patch));
+	    else if(transform == 1) c = ZIGcoeff(k, (vec2(x, y) + .5) / float(patch));
+	    else if(transform == 2) c = SMTcoeff(k, (vec2(x, y) + .5) / float(patch));
+	    else if(transform == 3) c = STPcoeff(k, (vec2(x, y) + .5) / float(patch));
+	    
 	    c *= k.x < .5? SQRT2 : 1.;
 	    c *= k.y < .5? SQRT2 : 1.;
 	    
