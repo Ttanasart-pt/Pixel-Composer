@@ -175,7 +175,7 @@
 			_map.timelines   = timelines.serialize();
 			_map.notes       = array_map(notes, function(note) { return note.serialize(); } );
 			
-			_map.composer    = composer == noone? -4 : composer.serialize();
+			_map.composer    = composer;
 			
 			__node_list = [];
 			array_foreach(allNodes, function(node) { if(node.active) array_push(__node_list, node.serialize()); })
@@ -209,6 +209,7 @@
 			if(struct_has(_map, "graphGrid"))	struct_override(graphGrid,	 _map.graphGrid);
 			if(struct_has(_map, "attributes"))	struct_override(attributes,  _map.attributes);
 			if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
+			if(struct_has(_map, "composer"))	composer = _map.composer;
 			
 			setPalette();
 			
@@ -222,8 +223,6 @@
 			     if(struct_has(_map, "global"))      globalNode.deserialize(_map.global);
 			else if(struct_has(_map, "global_node")) globalNode.deserialize(_map.global_node);
 			
-			if(struct_has(_map, "composer") && _map.composer != -4)
-				composer.deserialize(_map.composer);
 			
 			addons = {};
 			if(struct_has(_map, "addon")) {

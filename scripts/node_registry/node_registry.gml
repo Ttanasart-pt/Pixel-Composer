@@ -722,6 +722,7 @@ function __initNodes() {
 		addNodeObject(generator, "Strand Noise",		s_node_strand_noise,		"Node_Noise_Strand",		[1, Node_Noise_Strand]).setVersion(11650);
 		addNodeObject(generator, "Bubble Noise",		s_node_bubble_noise,		"Node_Noise_Bubble",		[1, Node_Noise_Bubble]).patreonExtra();
 		addNodeObject(generator, "Flow Noise",			s_node_flow_noise,			"Node_Flow_Noise",			[1, Node_Flow_Noise]).patreonExtra();
+		addNodeObject(generator, "Cristal Noise",		s_node_cristal,				"Node_Noise_Cristal",		[1, Node_Noise_Cristal]).patreonExtra();
 		
 		ds_list_add(generator, "Patterns");
 		addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe],,				"Generate stripe pattern.");

@@ -712,7 +712,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	function fullView() { #region
 		INLINE
-		toCenterNode(array_empty(nodes_selecting)? nodes_list : node_selecting);
+		toCenterNode(array_empty(nodes_selecting)? nodes_list : nodes_selecting);
 		graph_s_to = 1;
 	} #endregion
 	

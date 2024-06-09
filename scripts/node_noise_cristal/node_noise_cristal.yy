@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_noise_cristal",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_noise_cristal",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

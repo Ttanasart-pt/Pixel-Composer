@@ -34,6 +34,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	hold_select		= true;
 	layer_dragging	= noone;
 	layer_remove	= -1;
+	
 	layer_renderer	= new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
@@ -45,6 +46,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _h = 4;
 		for(var i = 0; i < amo; i++) 
 			_h += lh + 4 + properties_expand[i] * eh;
+		_h = max(16, _h);
+			
 		layer_renderer.h = _h;
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
@@ -151,9 +154,17 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
 			
 			draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text_accent : COLORS._main_text);
+			var _txt = inputs[| index].name;
+			var _txx = _sx1 + 12;
+			var _txy = _cy + lh / 2 + 2;
+			var _txw = string_width(_txt);
+			var _txh = string_height(_txt);
 			draw_set_alpha(aa);
-			draw_text(_sx1 + 12, _cy + lh / 2 + 2, inputs[| index].name);
+			draw_text(_txx, _txy, _txt);
 			draw_set_alpha(1);
+			
+			if(surface_selecting == index) 
+				draw_sprite_stretched_add(THEME.menu_button_mask, 1, _txx - ui(8), _txy - _txh / 2 - ui(2), _txw + ui(16), _txh + ui(4), COLORS._main_icon, 0.3);
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
 				hoverIndex = ind;
@@ -178,8 +189,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_sprite_ui_uniform(THEME.arrow, _exp? 3 : 0, _bx, _cy + lh / 2 + _exp * 2, 1, cc);
 			
 			if(hover && layer_dragging == noone || layer_dragging == ind) {
-				if(mouse_press(mb_left, _focus))
+				if(mouse_press(mb_left, _focus)) {
 					layer_dragging = ind;
+					surface_selecting = index;
+				}
 			}
 			
 			_cy += _lh;

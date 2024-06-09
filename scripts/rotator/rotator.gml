@@ -71,10 +71,10 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			if(dragging) {
 				_kc = COLORS._main_icon_light;
 			
-				var real_val = round(dragging.delta_acc + drag_sv);
-				var val      = key_mod_press(CTRL)? round(real_val / 15) * 15 : real_val;
+				var real_val = dragging.delta_acc + drag_sv;
+				var val      = key_mod_press(CTRL)? value_snap(real_val, 15) : real_val;
 			
-				if(valStep != -1) val = round(real_val / valStep) * valStep;
+				if(valStep != -1) val = value_snap(real_val, valStep);
 			
 				if(onModify(val))
 					UNDO_HOLDING = true;

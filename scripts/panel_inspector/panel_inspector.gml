@@ -254,10 +254,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		attribute_hovering = noone;
 		
 		for( var i = 0, n = array_length(meta_display); i < n; i++ ) {
-			if(i == 3) {
-				var context = PANEL_GRAPH.getCurrentContext();
-				if(context == noone) continue;
-			}
+			if(i == 3 && PANEL_GRAPH.getCurrentContext() == noone) continue;
 			
 			var _meta = meta_display[i];
 			var _txt  = array_safe_get_fast(_meta, 0);
