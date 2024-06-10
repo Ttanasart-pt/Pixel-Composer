@@ -574,6 +574,7 @@ function __initNodes() {
 		addNodeObject(filter, "Average",			s_node_average,			"Node_Average",			[1, Node_Average],, "Average color of every pixels in the image.").setVersion(1110);
 		addNodeObject(filter, "Smear",				s_node_smear,			"Node_Smear",			[1, Node_Smear]).setVersion(11670);
 		addNodeObject(filter, "Kuwahara",			s_node_kuwahara,		"Node_Kuwahara",		[1, Node_Kuwahara]).setVersion(11660);
+		addNodeObject(filter, "Brush",				s_node_brush_linear,	"Node_Brush_Linear",	[1, Node_Brush_Linear]).patreonExtra();
 		
 		ds_list_add(filter, "Warps");
 		addNodeObject(filter, "Mirror",				s_node_mirror,			"Node_Mirror",			[1, Node_Mirror],, "Reflect the image along a reflection line.").setVersion(1070);
