@@ -737,7 +737,7 @@ function __initNodes() {
 		addNodeObject(generator, "Herringbone Tile",	s_node_herringbone_tile,	"Node_Herringbone_Tile",	[1, Node_Herringbone_Tile],,	"Generate Herringbone tile pattern.").patreonExtra();
 		addNodeObject(generator, "Random Tile",			s_node_random_tile,			"Node_Random_Tile",			[1, Node_Random_Tile],,			"Generate Random tile pattern.").patreonExtra();
 		addNodeObject(generator, "Quasicrystal",		s_node_quasicircle,			"Node_Quasicrystal",		[1, Node_Quasicrystal]).setVersion(11660);
-		addNodeObject(generator, "Pixel Sampler",		s_node_quasicircle,			"Node_Pixel_Sampler",		[1, Node_Pixel_Sampler]).setVersion(11730);
+		addNodeObject(generator, "Pixel Sampler",		s_node_pixel_sampler,		"Node_Pixel_Sampler",		[1, Node_Pixel_Sampler]).setVersion(11730);
 			
 		ds_list_add(generator, "Populate");
 		addNodeObject(generator, "Repeat",				s_node_repeat,				"Node_Repeat",				[1, Node_Repeat],,		"Repeat image multiple times linearly, or in grid pattern.").setVersion(1100);

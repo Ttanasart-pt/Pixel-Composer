@@ -7,7 +7,7 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Keep Size", "Expand" ]);
 	
 	inputs[| 2] = nodeValue("Match Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Brightness", "RGB Match", "Hue Match" ]);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Brightness", "RGB", "Hue" ]);
 		
 	inputs[| 3] = nodeValue("Surfaces", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, [ noone ] )
 		.setArrayDepth(1);
