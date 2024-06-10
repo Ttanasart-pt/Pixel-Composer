@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_honey_noise",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_honey_noise",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
