@@ -14,8 +14,9 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 			if(ctx == noone) continue;
 			array_push_unique(_ctx_nodes, ctx);
 			
-			for( var k = 0, n = array_length(ctx.members); k < n; k++ ) {
-				if(array_exists(nodeArray, ctx.members[k])) continue;
+			for( var k = 0, n = array_length(ctx.nodes); k < n; k++ ) {
+				if(array_exists(nodeArray, ctx.nodes[k])) continue;
+				
 				noti_warning("Grouping incomplete inline group is not allowed.");
 				return;
 			}
@@ -141,17 +142,17 @@ function upgroupNode(collection, record = true) { #region
 		_cy = collection.y - _cy / _nn;
 	}
 	
-	for (var i = 0, n = array_length(_node_arr); i < n; i++) {
-		var remNode = _node_arr[i];
-		
-		remNode.x += _cx;
-		remNode.y += _cy;
+	for (var i = array_length(_node_arr) - 1; i >= 0; i--) {
+		var remNode    = _node_arr[i];
+			remNode.x += _cx;
+			remNode.y += _cy;
 		
 		if(remNode.destroy_when_upgroup) {
 			var _vto = remNode.getJunctionTos();
 			array_push(_deleted, { node: remNode, value_to : _vto });
 		} else
 			array_push(_content, remNode);
+			
 		collection.remove(remNode);
 	}
 	

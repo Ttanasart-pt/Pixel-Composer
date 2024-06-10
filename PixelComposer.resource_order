@@ -1665,6 +1665,7 @@
     {"name":"s_node_bokeh","order":6,"path":"sprites/s_node_bokeh/s_node_bokeh.yy",},
     {"name":"s_node_boolean","order":3,"path":"sprites/s_node_boolean/s_node_boolean.yy",},
     {"name":"s_node_border","order":8,"path":"sprites/s_node_border/s_node_border.yy",},
+    {"name":"s_node_brush_linear","order":65,"path":"sprites/s_node_brush_linear/s_node_brush_linear.yy",},
     {"name":"s_node_bubble_noise","order":45,"path":"sprites/s_node_bubble_noise/s_node_bubble_noise.yy",},
     {"name":"s_node_BW","order":9,"path":"sprites/s_node_BW/s_node_BW.yy",},
     {"name":"s_node_byte_file_read","order":28,"path":"sprites/s_node_byte_file_read/s_node_byte_file_read.yy",},
