@@ -2,7 +2,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name	= "IsoSurf";
 	
 	inputs[| 0] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
-		.setRange(1, undefined);
+		.setValidator(VV_min(1));
 	
 	inputs[| 1] = nodeValue("Surfaces", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.setVisible(true, true)

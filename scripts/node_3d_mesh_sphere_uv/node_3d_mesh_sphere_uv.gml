@@ -3,9 +3,11 @@ function Node_3D_Mesh_Sphere_UV(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _
 	
 	object_class = __3dUVSphere;
 	
-	inputs[| in_mesh + 0] = nodeValue("Horizontal Slices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 );
+	inputs[| in_mesh + 0] = nodeValue("Horizontal Slices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 )
+		.setValidator(VV_min(2));
 	
-	inputs[| in_mesh + 1] = nodeValue("Vertical Slices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16 );
+	inputs[| in_mesh + 1] = nodeValue("Vertical Slices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16 )
+		.setValidator(VV_min(3));
 	
 	inputs[| in_mesh + 2] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
 		.setVisible(true, true);

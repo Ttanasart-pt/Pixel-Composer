@@ -126,8 +126,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		__curr_get_val = [ 0, 0 ];
 		
-		value_range_min = undefined;
-		value_range_max = undefined;
+		validator = noone;
 	#endregion
 	
 	#region ---- draw ----
@@ -312,12 +311,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
-	static setRange = function(_min, _max) { #region
-		value_range_min = _min;
-		value_range_max = _max;
+	static setValidator = function(val) {
+		validator = val;
 		
 		return self;
-	} #endregion
+	}
 	
 	static rejectArray = function() { #region
 		accept_array = false;
@@ -1064,8 +1062,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					value[i] = clamp(value[i], 0, 8192);
 			}
 			
-			if(value_range_min != undefined) value = max(value, value_range_min);
-			if(value_range_max != undefined) value = min(value, value_range_max);
+			if(validator != noone)
+				value = validator.validate(value);
 			
 			return value;
 		} #endregion

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_pixel_sample",
+  "name":"sh_pixel_sample",
+  "parent":{
+    "name":"generator",
+    "path":"folders/shader/generator.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

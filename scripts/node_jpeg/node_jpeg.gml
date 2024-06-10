@@ -6,11 +6,13 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 1;
 		
-	inputs[| 2] = nodeValue("Patch Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
+	inputs[| 2] = nodeValue("Patch Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8)
+		.setValidator(VV_min(1));
 	
 	inputs[| 3] = nodeValue("Compression", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 10);
 	
-	inputs[| 4] = nodeValue("Reconstruction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
+	inputs[| 4] = nodeValue("Reconstruction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8)
+		.setValidator(VV_min(0));
 	
 	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
@@ -30,11 +32,13 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 12] = nodeValue("Deconstruct Only", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
+	inputs[| 13] = nodeValue("Reconstruct All", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1, 
 		["Surface", false], 0, 5, 6, 7, 
-		["Effects", false], 2, 3, 4, 10, 11, 12, 
+		["Effects", false], 2, 3, 13, 4, 10, 11, 12, 
 	];
 	
 	temp_surface = array_create(2);
@@ -43,6 +47,10 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		var _reall = getSingleValue(13);
+		
+		inputs[| 4].setVisible(!_reall);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -53,6 +61,7 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _tran  = _data[10];
 		var _phas  = _data[11];
 		var _recon = _data[12];
+		var _reall = _data[13];
 		
 		var _dim  = surface_get_dimension(_surf);
 		
@@ -73,7 +82,7 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_set_shader(temp_surface[1], sh_jpeg_recons);
 			shader_set_f("dimension",   _dim);
 			shader_set_i("patch",       _patc);
-			shader_set_i("reconstruct", _recn);
+			shader_set_i("reconstruct", _reall? _patc : _recn);
 			shader_set_f("phase",       degtorad(_phas));
 			shader_set_i("transform",   _tran);
 			

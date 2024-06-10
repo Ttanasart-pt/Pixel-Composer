@@ -26,14 +26,15 @@ uniform sampler2D blend_alphaSurf;
 
 uniform int sampleMode;
 uniform int outline_only;
+uniform int highRes;
 
-vec2 round(in vec2 v) { #region
+vec2 round(in vec2 v) { 
 	v.x = fract(v.x) > 0.5? ceil(v.x) : floor(v.x);	
 	v.y = fract(v.y) > 0.5? ceil(v.y) : floor(v.y);	
 	return v;
-} #endregion
+}
 
-vec4 sampleTexture(vec2 pos) { #region
+vec4 sampleTexture(vec2 pos) {
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2D(gm_BaseTexture, pos);
 	
@@ -50,7 +51,7 @@ vec4 sampleTexture(vec2 pos) { #region
 		return vec4(vec3(0.), 1.);
 		
 	return vec4(0.);
-} #endregion
+}
 
 vec4 blendColor(vec4 base, vec4 colr, float alpha) {
 	
@@ -80,7 +81,7 @@ bool angleFiltered(float angle) {
 	return filter[_ind] == 0;
 }
 
-void main() { #region
+void main() {
 	#region params
 		float bStr = borderStart.x;
 		if(borderStartUseSurf == 1) {
@@ -123,12 +124,15 @@ void main() { #region
 	#endregion
 	
 	if(bSiz + bStr > 0.) {
-		for(float i = 1.; i <= 32.; i++) {
-			if(i > bStr + bSiz + float(is_aa)) break;
+		float itr = bStr + bSiz + float(is_aa);
+		float atr = highRes == 1? 256. : 64.;
+		
+		for(float i = 1.; i <= itr; i++) {
+			// if(i > bStr + bSiz + float(is_aa)) break;
 			
 			float base = 1.;
 			float top  = 0.;
-			for(float j = 0.; j <= 64.; j++) {
+			for(float j = 0.; j <= atr; j++) {
 				float ang = top / base * TAU;
 				top += 2.;
 				if(top >= base) {
@@ -197,4 +201,4 @@ void main() { #region
 	}
 	
     gl_FragColor = col;
-} #endregion
+}

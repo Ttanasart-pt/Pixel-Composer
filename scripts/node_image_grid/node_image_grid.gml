@@ -7,6 +7,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+		.setValidator(VV_min(1))
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
