@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_collection_inline",
   "parent":{
-    "name":"__base__",
-    "path":"folders/nodes/data/__base__.yy",
+    "name":"collections",
+    "path":"folders/nodes/data/__base__/collections.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_canvas_group",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_canvas_group",
+  "parent":{
+    "name":"canvas",
+    "path":"folders/nodes/data/canvas.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1044,7 +1044,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				var _node = nodes_list[i];
 				_node.branch_drawing = false;
 				if(_node.pointIn(gr_x, gr_y, mx, my, graph_s))
-					node_hovering = _node;
+					node_hovering = _node.modify_parent == noone? _node : _node.modify_parent;
 			}
 			
 			if(node_hovering != noone)
@@ -1673,6 +1673,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(is_instanceof(value_dragging.node, _inline_ctx.input_node_type) && value_dragging.connect_type == JUNCTION_CONNECT.input)
 					_inline_ctx = noone;
 				else if(is_instanceof(value_dragging.node, _inline_ctx.output_node_type) && value_dragging.connect_type == JUNCTION_CONNECT.output)
+					_inline_ctx = noone;
+				
+				if(!_inline_ctx.modifiable)
 					_inline_ctx = noone;
 			}
 				

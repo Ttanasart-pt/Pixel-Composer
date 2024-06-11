@@ -663,7 +663,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						
 						continue;
 						
-					} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
+					} else if(is_struct(jun_disp) && is_instanceof(jun_disp, Inspector_Custom_Renderer)) {
 						jun_disp.register(contentPane);
 						jun_disp.rx = ui(16) + x;
 						jun_disp.ry = top_bar_h + y;

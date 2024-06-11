@@ -399,7 +399,7 @@ function Panel_Preview() : PanelContent() constructor {
 	function getNodePreviewSequence()	{ return preview_sequence[splitView? splitSelection : 0]; }
 	
 	function getPreviewData() { #region
-		preview_surfaces  = [ noone, noone ];
+		preview_surfaces = [ noone, noone ];
 		preview_sequence = [ noone, noone ];
 		
 		for( var i = 0; i < 2; i++ ) {
@@ -1572,7 +1572,7 @@ function Panel_Preview() : PanelContent() constructor {
 			tool_y_max += tool_size;
 		} #endregion
 		
-		var _h = _node.drawTools(_mx, _my, xx, yy - tool_size / 2, tool_size, thov, pFOCUS);
+		var _h = _node.drawTools == noone? 0 : _node.drawTools(_mx, _my, xx, yy - tool_size / 2, tool_size, thov, pFOCUS);
 		yy         += _h;
 		tool_y_max += _h;
 		
@@ -1933,17 +1933,17 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		var inspect_node = PANEL_INSPECTOR.getInspecting();
 		
+		drawViewController();
+		
 		tool_side_draw_l = false;
 		tool_side_draw_r = false;
-				
+		
 		var tool = noone;
 		if(inspect_node) {
 			tool = inspect_node.getTool();
 			if(tool) drawNodeTools(pFOCUS, tool);
 		} else 
 			tool_current = noone;
-		
-		drawViewController();
 		
 		if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
 			menuCall("preview_context_menu",,, [ 

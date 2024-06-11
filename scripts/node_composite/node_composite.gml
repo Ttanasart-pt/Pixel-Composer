@@ -34,19 +34,38 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	hold_select		= true;
 	layer_dragging	= noone;
 	layer_remove	= -1;
+	canvas_draw     = false;
+	
+	renaming       = noone;
+	rename_text    = "";
+	renaming_index = noone;
+	tb_rename = new textBox(TEXTBOX_INPUT.text, function(_name) { 
+		if(renaming == noone) return;
+		
+		if(is_real(renaming)) 
+			inputs[| renaming].setName(_name);
+			
+		else if(is_struct(renaming) && is_instanceof(renaming, Node))
+			renaming.setDisplayName(_name) 
+			
+		renaming = noone;
+		renaming_index = noone;
+	});
+	tb_rename.font = f_p1;
+	tb_rename.hide = true;
 	
 	layer_renderer	= new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
 		var amo = getInputAmount();
-		var lh  = 28;
-		var eh  = 36;
+		var lh  = ui(28);
+		var eh  = ui(36);
 		
 		properties_expand = array_verify(properties_expand, amo);
-		var _h = 4;
+		var _h = ui(4);
 		for(var i = 0; i < amo; i++) 
-			_h += lh + 4 + properties_expand[i] * eh;
-		_h = max(16, _h);
+			_h += lh + ui(4) + properties_expand[i] * eh;
+		_h = max(ui(16), _h);
 			
 		layer_renderer.h = _h;
 		
@@ -54,8 +73,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _vis = attributes.layer_visible;
 		var _sel = attributes.layer_selectable;
-		var ly   = _y + 4;
-		var ssh  = lh - 4;
+		var ly   = _y + ui(4);
+		var ssh  = lh - ui(4);
 		var hoverIndex = noone;
 		
 		var _cy = ly;
@@ -66,8 +85,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var index = input_fix_len + ind * data_length;
 			var _surf = current_data[index + 0];
 			var _pos  = current_data[index + 1];
+			var _inp  = inputs[| index];
 			
-			var _bx = _x + _w - 24;
+			var _bx = _x + _w - ui(24);
 			var aa  = (ind != layer_dragging || layer_dragging == noone)? 1 : 0.5;
 			var vis = _vis[ind];
 			var sel = _sel[ind];
@@ -76,13 +96,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _lh  = lh + 4 + _exp * eh;
 			
 			if(_exp) { #region extended
-				var _px = _x + 4;
-				var _py = _cy + lh + 4;
-				var _pw = _w - 8;
-				var _ph = eh - 4;
+				var _px = _x + ui(4);
+				var _py = _cy + lh + ui(4);
+				var _pw = _w - ui(8);
+				var _ph = eh - ui(4);
 				
-				var _pww = (_pw - 8) / 2 - 8;
-				var _pwh = _ph - 8;
+				var _pww = (_pw - ui(8)) / 2 - ui(8);
+				var _pwh = _ph - ui(8);
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _px, _py, _pw, _ph, COLORS.node_composite_bg_blend, 1);
 				
@@ -92,20 +112,20 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var wd_bld = jn_bld.editWidget;
 				var wd_alp = jn_alp.editWidget;
 				
-				var _param = new widgetParam(_px + 4, _py + 4, _pww, _pwh, jn_bld.showValue(), jn_bld.display_data, _m, layer_renderer.rx, layer_renderer.ry);
+				var _param = new widgetParam(_px + ui(4), _py + ui(4), _pww, _pwh, jn_bld.showValue(), jn_bld.display_data, _m, layer_renderer.rx, layer_renderer.ry);
 				    _param.font = f_p2;
 				    
 				wd_bld.setFocusHover(_focus, _hover);
 				wd_bld.drawParam(_param);
 				
-				var _param = new widgetParam(_px + 4 + _pww + 8, _py + 4, _pww, _pwh, jn_alp.showValue(), jn_alp.display_data, _m, layer_renderer.rx, layer_renderer.ry);
+				var _param = new widgetParam(_px + ui(4) + _pww + ui(8), _py + ui(4), _pww, _pwh, jn_alp.showValue(), jn_alp.display_data, _m, layer_renderer.rx, layer_renderer.ry);
 				    _param.font = f_p2;
 				    
 				wd_alp.setFocusHover(_focus, _hover);
 				wd_alp.drawParam(_param);
 			} #endregion
 			
-			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
+			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
 				
 				if(mouse_press(mb_left, _focus))
@@ -115,8 +135,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(!is_surface(_surf)) continue;
 			
-			var _bx = _x + 16 + 24;
-			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 12)) {
+			var _bx = _x + ui(16 + 24);
+			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
 				
 				if(mouse_press(mb_left, _focus))
@@ -129,8 +149,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			} else 
 				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
 			
-			_bx += 12 + 1 + 12;
-			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 12)) {
+			_bx += ui(12 + 1 + 12);
+			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 				draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, c_white);
 				
 				if(mouse_press(mb_left, _focus))
@@ -141,11 +161,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			} else 
 				draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
 			
-			var hover = point_in_rectangle(_m[0], _m[1], _bx + 12 + 6, _cy, _x + _w - 48, _cy + lh - 1);
+			var hover = point_in_rectangle(_m[0], _m[1], _bx + ui(12 + 6), _cy, _x + _w - ui(48), _cy + lh - 1);
 			
-			var _sx0 = _bx + 12 + 6;
+			var _sx0 = _bx + ui(12 + 6);
 			var _sx1 = _sx0 + ssh;
-			var _sy0 = _cy + 3;
+			var _sy0 = _cy + ui(3);
 			var _sy1 = _sy0 + ssh;
 			
 			var _ssw = surface_get_width_safe(_surf);
@@ -154,32 +174,45 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
 			
 			draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text_accent : COLORS._main_text);
-			var _txt = inputs[| index].name;
-			var _txx = _sx1 + 12;
-			var _txy = _cy + lh / 2 + 2;
-			var _txw = string_width(_txt);
-			var _txh = string_height(_txt);
-			draw_set_alpha(aa);
-			draw_text(_txx, _txy, _txt);
-			draw_set_alpha(1);
+			var _txt = _inp.name;
 			
-			if(surface_selecting == index) 
-				draw_sprite_stretched_add(THEME.menu_button_mask, 1, _txx - ui(8), _txy - _txh / 2 - ui(2), _txw + ui(16), _txh + ui(4), COLORS._main_icon, 0.3);
+			if(canvas_draw) {
+				if(_inp.value_from && is_instanceof(_inp.value_from.node, Node_Canvas))
+					_txt = _inp.value_from.node.display_name;
+			}
+			
+			var _txx = _sx1 + ui(12);
+			var _txy = _cy + lh / 2 + ui(2);
+			
+			if(renaming_index == index) {
+				tb_rename.setFocusHover(_focus, _hover);
+				tb_rename.draw(_txx, _cy, _w - ui(172), lh, rename_text, _m);
+			
+			} else {
+				var _txw = string_width(_txt);
+				var _txh = string_height(_txt);
+				draw_set_alpha(aa);
+				draw_text(_txx, _txy, _txt);
+				draw_set_alpha(1);
+				
+				if(surface_selecting == index) 
+					draw_sprite_stretched_add(THEME.menu_button_mask, 1, _txx - ui(8), _txy - _txh / 2 - ui(2), _txw + ui(16), _txh + ui(4), COLORS._main_icon, 0.3);
+			}
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
 				hoverIndex = ind;
 				if(layer_dragging != noone) {
 					draw_set_color(COLORS._main_accent);
 					if(layer_dragging > ind)
-						draw_line_width(_x + 16, _cy + lh + 2, _x + _w - 16, _cy + lh + 2, 2);
+						draw_line_width(_x + ui(16), _cy + lh + 2, _x + _w - ui(16), _cy + lh + ui(2), 2);
 					else if(layer_dragging < ind)
-						draw_line_width(_x + 16, _cy - 2, _x + _w - 16, _cy - 2, 2);
+						draw_line_width(_x + ui(16), _cy - 2, _x + _w - ui(16), _cy - ui(2), 2);
 				}
 			}
 			
-			var _bx = _x + 8 + 8;
+			var _bx = _x + ui(8 + 8);
 			var cc  = COLORS._main_icon;
-			if(point_in_rectangle(_m[0], _m[1], _bx - 8, _cy + 4, _bx + 8, _cy + lh - 4)) {
+			if(point_in_rectangle(_m[0], _m[1], _bx - ui(8), _cy + ui(4), _bx + ui(8), _cy + lh - ui(4))) {
 				cc = c_white;
 				
 				if(mouse_press(mb_left, _focus))
@@ -189,6 +222,18 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_sprite_ui_uniform(THEME.arrow, _exp? 3 : 0, _bx, _cy + lh / 2 + _exp * 2, 1, cc);
 			
 			if(hover && layer_dragging == noone || layer_dragging == ind) {
+				if(DOUBLE_CLICK) {
+					renaming_index = index;
+					renaming       = index;
+					rename_text    = _txt;
+					
+					if(canvas_draw && _inp.value_from && is_instanceof(_inp.value_from.node, Node_Canvas))
+						renaming = _inp.value_from.node;
+						
+					tb_rename._current_text = _txt;
+					tb_rename.activate();
+				}
+				
 				if(mouse_press(mb_left, _focus)) {
 					layer_dragging = ind;
 					surface_selecting = index;
@@ -261,7 +306,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		inputs[| index + 0] = nodeValue(_s? ($"Surface {_s}") : "Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+		inputs[| index + 0] = nodeValue($"Surface {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 		inputs[| index + 0].hover_effect  = 0;
 		
 		inputs[| index + 1] = nodeValue($"Position {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
@@ -304,6 +349,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	blend_temp_surface = temp_surface[2];
 	
+	surface_selecting = noone;
 	surf_dragging  = -1;
 	input_dragging = -1;
 	drag_type      = 0;
@@ -319,8 +365,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	overlay_h = 0;
 	
 	atlas_data = [];
-	
-	surface_selecting = noone;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK

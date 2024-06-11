@@ -37,6 +37,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		inline_context = noone;
 		inline_parent_object  = "";
+		
+		modifiable    = true;
+		modify_parent = noone;
 	#endregion
 	
 	static resetInternalName = function() { #region
@@ -1921,7 +1924,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		isTool = true;
 	} #endregion
 	
-	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) { return 0; }
+	static drawTools = noone;
 	
 	/////=========== SERIALIZE ===========
 	

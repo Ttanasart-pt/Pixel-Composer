@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_value_types",
   "parent":{
-    "name":"__base__",
-    "path":"folders/nodes/data/__base__.yy",
+    "name":"values",
+    "path":"folders/nodes/data/__base__/values.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

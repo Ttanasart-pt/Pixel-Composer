@@ -5,6 +5,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_dragging = false;
 	group_adding   = false;
 	vertex_hash    = "";
+	modifiable     = true;
 	
 	managedRenderOrder = false;
 	group_hovering = false;
@@ -178,6 +179,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) { #region
 		if(array_length(group_vertex) < 3) return;
+		if(!modifiable) return;
+		
 		var _m       = [ _mx / _s - _x, _my / _s - _y ];
 		
 		group_adding = false;

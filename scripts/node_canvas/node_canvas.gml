@@ -899,6 +899,25 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		#endregion
 		
+		if(DRAGGING && hover&& mouse_release(mb_left)) { #region drag n drop
+			if(DRAGGING.type == "Color") {
+				var mouse_cur_x = round((_mx - _x) / _s - 0.5);
+				var mouse_cur_y = round((_my - _y) / _s - 0.5);
+				var _filType    = tool_attribute.fillType;
+				var _filThres   = tool_attribute.thres;
+				
+				storeAction();
+				surface_set_target(_canvas_surface);
+					switch(_filType) {
+						case 0 : 
+						case 1 : canvas_flood_fill_scanline(_canvas_surface, mouse_cur_x, mouse_cur_y, _filThres, _filType); break;
+						case 2 : canvas_flood_fill_all(     _canvas_surface, mouse_cur_x, mouse_cur_y, _filThres); break;
+					}
+				surface_reset_target();
+				surface_store_buffer();
+			}
+		} #endregion
+		
 	} #endregion
 	
 	static step = function() { #region
