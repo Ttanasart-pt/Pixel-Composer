@@ -1897,8 +1897,8 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function drawContent(panel) { #region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
-			
-		if(do_fullView) fullView();
+		
+		if(do_fullView) run_in(1, fullView);
 		do_fullView = false;
 		
 		var _prev_node   = getNodePreview();

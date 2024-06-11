@@ -2241,6 +2241,7 @@
     {"id":{"name":"s_node_cache","path":"sprites/s_node_cache/s_node_cache.yy",},},
     {"id":{"name":"s_node_camera_repeat","path":"sprites/s_node_camera_repeat/s_node_camera_repeat.yy",},},
     {"id":{"name":"s_node_camera","path":"sprites/s_node_camera/s_node_camera.yy",},},
+    {"id":{"name":"s_node_canvas_group","path":"sprites/s_node_canvas_group/s_node_canvas_group.yy",},},
     {"id":{"name":"s_node_canvas","path":"sprites/s_node_canvas/s_node_canvas.yy",},},
     {"id":{"name":"s_node_caustic","path":"sprites/s_node_caustic/s_node_caustic.yy",},},
     {"id":{"name":"s_node_character","path":"sprites/s_node_character/s_node_character.yy",},},

@@ -57,6 +57,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _h = 64;
 		_y += 8;
 		
+		var _anim  = getInputData(12);
 		var _cnt_hover = false;
 		
 		draw_sprite_stretched(THEME.button_def, 0, _x, _y, _w, _h);
@@ -66,11 +67,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			_cnt_hover = _hover;
 		}
 		
-		var _ww = _w - 4 - 40;
-		var _hh = _h - 4 - 4;
+		var _aw = ui(32);
+		var _ww = _w - ui(4) - _aw;
+		var _hh = _h - ui(4) - ui(4);
 		
-		var _x0 = _x + 4;
-		var _y0 = _y + 4;
+		var _x0 = _x + ui(4);
+		var _y0 = _y + ui(4);
 		var _x1 = _x0 + _ww;
 		var _y1 = _y0 + _hh;
 		
@@ -119,7 +121,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						if(mouse_press(mb_left, _focus)) 
 							_del = i;
 					} else if(point_in_rectangle(_msx, _msy, _sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss)) {
-						if(mouse_press(mb_left, _focus)) preview_index = i;
+						if(mouse_press(mb_left, _focus)) {
+							if(_anim) PROJECT.animator.setFrame(i);
+							else      preview_index = i;
+						}
 					}
 				}
 				
@@ -141,11 +146,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(mouse_wheel_up())   frame_renderer_x_to = clamp(frame_renderer_x_to - 80, 0, frame_renderer_x_max);
 		}
 		
-		var _bs = 32;
-		var _bx = _x1 + ui(20) - _bs / 2;
+		var _bs = _aw - ui(8);
+		var _bx = _x1 + _aw / 2 - _bs / 2;
 		var _by = _y + _h / 2  - _bs / 2;
 		
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, _focus, _hover,, THEME.add,, COLORS._main_value_positive) == 2) {
+		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, _focus, _hover, "", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
 			attributes.frames++;
 			refreshFrames();
 			update();

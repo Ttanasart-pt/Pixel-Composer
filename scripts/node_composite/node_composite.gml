@@ -34,7 +34,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	hold_select		= true;
 	layer_dragging	= noone;
 	layer_remove	= -1;
-	canvas_draw     = false;
+	canvas_draw     = noone;
 	
 	renaming       = noone;
 	rename_text    = "";
@@ -54,6 +54,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	tb_rename.font = f_p1;
 	tb_rename.hide = true;
 	
+	layer_height    = 0;
 	layer_renderer	= new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
@@ -63,13 +64,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		properties_expand = array_verify(properties_expand, amo);
 		var _h = ui(4);
-		for(var i = 0; i < amo; i++) 
-			_h += lh + ui(4) + properties_expand[i] * eh;
-		_h = max(ui(16), _h);
-			
-		layer_renderer.h = _h;
 		
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, layer_height, COLORS.node_composite_bg_blend, 1);
 		
 		var _vis = attributes.layer_visible;
 		var _sel = attributes.layer_selectable;
@@ -86,6 +82,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _surf = current_data[index + 0];
 			var _pos  = current_data[index + 1];
 			var _inp  = inputs[| index];
+			var _junc = _inp.value_from? _inp.value_from.node : noone;
 			
 			var _bx = _x + _w - ui(24);
 			var aa  = (ind != layer_dragging || layer_dragging == noone)? 1 : 0.5;
@@ -93,111 +90,174 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var sel = _sel[ind];
 			
 			var _exp = properties_expand[i];
-			var _lh  = lh + 4 + _exp * eh;
+			var _lh  = lh + ui(4) + _exp * eh;
+			_h += _lh;
 			
-			if(_exp) { #region extended
-				var _px = _x + ui(4);
-				var _py = _cy + lh + ui(4);
-				var _pw = _w - ui(8);
-				var _ph = eh - ui(4);
-				
-				var _pww = (_pw - ui(8)) / 2 - ui(8);
-				var _pwh = _ph - ui(8);
-				
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _px, _py, _pw, _ph, COLORS.node_composite_bg_blend, 1);
-				
-				var jn_bld = inputs[| index + 4];
-				var jn_alp = inputs[| index + 5];
-				
-				var wd_bld = jn_bld.editWidget;
-				var wd_alp = jn_alp.editWidget;
-				
-				var _param = new widgetParam(_px + ui(4), _py + ui(4), _pww, _pwh, jn_bld.showValue(), jn_bld.display_data, _m, layer_renderer.rx, layer_renderer.ry);
-				    _param.font = f_p2;
-				    
-				wd_bld.setFocusHover(_focus, _hover);
-				wd_bld.drawParam(_param);
-				
-				var _param = new widgetParam(_px + ui(4) + _pww + ui(8), _py + ui(4), _pww, _pwh, jn_alp.showValue(), jn_alp.display_data, _m, layer_renderer.rx, layer_renderer.ry);
-				    _param.font = f_p2;
-				    
-				wd_alp.setFocusHover(_focus, _hover);
-				wd_alp.drawParam(_param);
-			} #endregion
-			
-			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
-				draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
-				
-				if(mouse_press(mb_left, _focus))
-					layer_remove = ind;
-			} else 
-				draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
-			
-			if(!is_surface(_surf)) continue;
-			
-			var _bx = _x + ui(16 + 24);
-			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
-				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
-				
-				if(mouse_press(mb_left, _focus))
-					hold_visibility = !_vis[ind];
+			#region extended
+				if(_exp) { 
+					var _px = _x + ui(4);
+					var _py = _cy + lh + ui(4);
+					var _pw = _w - ui(8);
+					var _ph = eh - ui(4);
 					
-				if(mouse_click(mb_left, _focus) && _vis[ind] != hold_visibility) {
-					_vis[ind] = hold_visibility;
-					doUpdate();
+					var _pww = (_pw - ui(8)) / 2 - ui(8);
+					var _pwh = _ph - ui(8);
+					
+					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _px, _py, _pw, _ph, COLORS.node_composite_bg_blend, 1);
+					
+					var jn_bld = inputs[| index + 4];
+					var jn_alp = inputs[| index + 5];
+					
+					var wd_bld = jn_bld.editWidget;
+					var wd_alp = jn_alp.editWidget;
+					
+					var _param = new widgetParam(_px + ui(4), _py + ui(4), _pww, _pwh, jn_bld.showValue(), jn_bld.display_data, _m, layer_renderer.rx, layer_renderer.ry);
+					    _param.font = f_p2;
+					    
+					wd_bld.setFocusHover(_focus, _hover);
+					wd_bld.drawParam(_param);
+					
+					var _param = new widgetParam(_px + ui(4) + _pww + ui(8), _py + ui(4), _pww, _pwh, jn_alp.showValue(), jn_alp.display_data, _m, layer_renderer.rx, layer_renderer.ry);
+					    _param.font = f_p2;
+					    
+					wd_alp.setFocusHover(_focus, _hover);
+					wd_alp.drawParam(_param);
+				} 
+			#endregion
+			
+			#region draw buttons
+				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
+					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
+					
+					if(mouse_press(mb_left, _focus))
+						layer_remove = ind;
+				} else 
+					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
+				
+				if(!is_surface(_surf)) continue;
+				
+				var _bx = _x + ui(16 + 24);
+				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
+					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
+					
+					if(mouse_press(mb_left, _focus))
+						hold_visibility = !_vis[ind];
+						
+					if(mouse_click(mb_left, _focus) && _vis[ind] != hold_visibility) {
+						_vis[ind] = hold_visibility;
+						doUpdate();
+					}
+				} else 
+					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
+				
+				_bx += ui(12 + 1 + 12);
+				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
+					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, c_white);
+					
+					if(mouse_press(mb_left, _focus))
+						hold_select = !_sel[ind];
+						
+					if(mouse_click(mb_left, _focus) && _sel[ind] != hold_select)
+						_sel[ind] = hold_select;
+				} else 
+					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
+				
+				var hover = point_in_rectangle(_m[0], _m[1], _bx + ui(12 + 6), _cy, _x + _w - ui(48), _cy + lh - 1);
+			#endregion
+			
+			#region draw surface
+				var _sx0 = _bx + ui(12 + 6);
+				var _sx1 = _sx0 + ssh;
+				var _sy0 = _cy + ui(3);
+				var _sy1 = _sy0 + ssh;
+				
+				var _ssw = surface_get_width_safe(_surf);
+				var _ssh = surface_get_height_safe(_surf);
+				var _sss = min(ssh / _ssw, ssh / _ssh);
+				draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
+				
+				if(surface_selecting == index) draw_sprite_stretched_add(THEME.menu_button_mask, 1, _sx0, _sy0, ssh, ssh, COLORS._main_accent, 1);
+				else						   draw_sprite_stretched_add(THEME.menu_button_mask, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, 0.3);
+			#endregion
+			
+			#region layers
+				var _junc_canvas = noone;
+				var _jun_layer   = noone;
+				if(canvas_draw != noone && _junc && struct_has(canvas_draw.layers, _junc.node_id)) {
+					_jun_layer   = canvas_draw.layers[$ _junc.node_id];
+					_junc_canvas = _jun_layer.canvas;
 				}
-			} else 
-				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
+			#endregion
 			
-			_bx += ui(12 + 1 + 12);
-			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
-				draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, c_white);
+			#region draw title
+				draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text_accent : COLORS._main_text);
+				var _txt = _inp.name;
+				var _txx = _sx1 + ui(12);
+				var _txy = _cy + lh / 2 + ui(2);
 				
-				if(mouse_press(mb_left, _focus))
-					hold_select = !_sel[ind];
+				if(canvas_draw != noone && _junc_canvas)
+					_txt = _junc_canvas.display_name;
+				
+				if(renaming_index == index) {
+					tb_rename.setFocusHover(_focus, _hover);
+					tb_rename.draw(_txx, _cy, _w - ui(172), lh, rename_text, _m);
+				
+				} else {
+					var _txw = string_width(_txt);
+					var _txh = string_height(_txt);
 					
-				if(mouse_click(mb_left, _focus) && _sel[ind] != hold_select)
-					_sel[ind] = hold_select;
-			} else 
-				draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
+					if(_junc_canvas) {
+						draw_sprite_ui_uniform(THEME.icon_canvas, 0, _txx + ui(12), _txy - ui(1), 1, COLORS._main_icon, aa * .8);
+						
+						draw_set_alpha(aa);
+						draw_text(_txx + ui(28), _txy, _txt);
+						draw_set_alpha(1);
+					} else {
+						draw_set_alpha(aa);
+						draw_text(_txx, _txy, _txt);
+						draw_set_alpha(1);
+					}
+				}
+			#endregion
 			
-			var hover = point_in_rectangle(_m[0], _m[1], _bx + ui(12 + 6), _cy, _x + _w - ui(48), _cy + lh - 1);
-			
-			var _sx0 = _bx + ui(12 + 6);
-			var _sx1 = _sx0 + ssh;
-			var _sy0 = _cy + ui(3);
-			var _sy1 = _sy0 + ssh;
-			
-			var _ssw = surface_get_width_safe(_surf);
-			var _ssh = surface_get_height_safe(_surf);
-			var _sss = min(ssh / _ssw, ssh / _ssh);
-			draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
-			
-			draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text_accent : COLORS._main_text);
-			var _txt = _inp.name;
-			
-			if(canvas_draw) {
-				if(_inp.value_from && is_instanceof(_inp.value_from.node, Node_Canvas))
-					_txt = _inp.value_from.node.display_name;
-			}
-			
-			var _txx = _sx1 + ui(12);
-			var _txy = _cy + lh / 2 + ui(2);
-			
-			if(renaming_index == index) {
-				tb_rename.setFocusHover(_focus, _hover);
-				tb_rename.draw(_txx, _cy, _w - ui(172), lh, rename_text, _m);
-			
-			} else {
-				var _txw = string_width(_txt);
-				var _txh = string_height(_txt);
-				draw_set_alpha(aa);
-				draw_text(_txx, _txy, _txt);
-				draw_set_alpha(1);
-				
-				if(surface_selecting == index) 
-					draw_sprite_stretched_add(THEME.menu_button_mask, 1, _txx - ui(8), _txy - _txh / 2 - ui(2), _txw + ui(16), _txh + ui(4), COLORS._main_icon, 0.3);
-			}
+			#region modifiers
+				if(_jun_layer) {
+					var _modis = _jun_layer.modifier;
+					var _mdx = _txx - ui(23);
+					var _mdy = _cy + _lh;
+					var mh   = ui(24);
+					
+					for (var j = array_length(_modis) - 1; j >= 0; j--) {
+						var _modi = _modis[j];
+						var _mtx  = _mdx;
+						
+						if(_modi.active_index != -1) {
+							var _bx = _mtx + ui(12);
+							var _by = _mdy + mh / 2;
+							
+							var _acti = _modi.inputs[| _modi.active_index].getValue();
+							
+							if(_hover && point_in_circle(_m[0], _m[1], _bx, _by, ui(12))) {
+								draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, c_white);
+								
+								if(mouse_press(mb_left, _focus))
+									_modi.inputs[| _modi.active_index].setValue(!_acti);
+							} else 
+								draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, COLORS._main_icon);
+								
+						}
+						
+						_mtx += ui(24);
+						var _mhov = _hover && point_in_rectangle(_m[0], _m[1], _mtx, _mdy, _x + _w, _mdy + mh - 1);
+						draw_set_text(f_p2, fa_left, fa_center, _mhov? COLORS._main_text : COLORS._main_text_sub);
+						draw_text_add(_mtx, _mdy + mh / 2 - ui(2), _modi.display_name);
+						
+						_h   += mh;
+						_lh  += mh;
+						_mdy += mh;
+					}
+				}
+			#endregion
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
 				hoverIndex = ind;
@@ -227,8 +287,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					renaming       = index;
 					rename_text    = _txt;
 					
-					if(canvas_draw && _inp.value_from && is_instanceof(_inp.value_from.node, Node_Canvas))
-						renaming = _inp.value_from.node;
+					if(canvas_draw != noone && _junc_canvas)
+						renaming = _junc_canvas;
 						
 					tb_rename._current_text = _txt;
 					tb_rename.activate();
@@ -273,7 +333,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			layer_dragging = noone;
 		}
 		
-		return _h;
+		layer_height     = max(ui(16), _h);
+		layer_renderer.h = layer_height;
+		
+		return layer_height;
 	}); #endregion
 	
 	input_display_list = [
@@ -646,6 +709,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _dim_type = getSingleValue(1);
 		
 		inputs[| 2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
+		
+		if(canvas_draw != noone && surface_selecting == noone && getInputAmount())
+			surface_selecting = input_fix_len;
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region

@@ -1043,14 +1043,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			for(var i = 0; i < array_length(nodes_list); i++) {
 				var _node = nodes_list[i];
 				_node.branch_drawing = false;
+				
 				if(_node.pointIn(gr_x, gr_y, mx, my, graph_s))
-					node_hovering = _node.modify_parent == noone? _node : _node.modify_parent;
+					node_hovering = _node;
 			}
 			
 			if(node_hovering != noone)
 				_HOVERING_ELEMENT = node_hovering;
 			
-			if(node_hovering != noone && _focus && DOUBLE_CLICK && struct_has(node_hovering, "onDoubleClick")) {
+			if(node_hovering != noone && _focus && DOUBLE_CLICK && node_hovering.onDoubleClick != -1) {
 				
 				if(node_hovering.onDoubleClick(self)) {
 					DOUBLE_CLICK  = false;
@@ -1111,6 +1112,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								}
 							} else if(DOUBLE_CLICK) {
 								PANEL_PREVIEW.setNodePreview(node_hovering);
+								
 								if(PREFERENCES.inspector_focus_on_double_click) {
 									if(PANEL_INSPECTOR.panel && struct_has(PANEL_INSPECTOR.panel, "switchContent"))
 										PANEL_INSPECTOR.panel.switchContent(PANEL_INSPECTOR);
@@ -1252,6 +1254,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					
 				if(is_instanceof(frame_hovering, Node_Collection_Inline) && DOUBLE_CLICK && array_empty(nodes_selecting)) { #region
 					nodes_selecting = [ frame_hovering ];
+					
+					if(frame_hovering.onDoubleClick != -1) frame_hovering.onDoubleClick(self)
+					if(frame_hovering.previewable)         PANEL_PREVIEW.setNodePreview(frame_hovering);
 				} #endregion
 			}
 		#endregion
@@ -1561,9 +1566,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					ctx = value_dragging.node.inline_context;
 				
 				with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {	
-					node_target_x = other.mouse_grid_x;
-					node_target_y = other.mouse_grid_y;
-					node_called   = other.value_dragging;
+					node_target_x     = other.mouse_grid_x;
+					node_target_y     = other.mouse_grid_y;
+					node_target_x_raw = other.mouse_grid_x;
+					node_target_y_raw = other.mouse_grid_y;
+					node_called       = other.value_dragging;
 					
 					alarm[0] = 1;
 				}
@@ -1761,6 +1768,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		with(_dia) {	
 			node_target_x     = other.mouse_grid_x;
 			node_target_y     = other.mouse_grid_y;
+			node_target_x_raw = other.mouse_grid_x;
+			node_target_y_raw = other.mouse_grid_y;
 			junction_hovering = other.junction_hovering;
 			
 			resetPosition();

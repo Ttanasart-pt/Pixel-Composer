@@ -1695,6 +1695,7 @@
     {"name":"s_node_cache","order":27,"path":"sprites/s_node_cache/s_node_cache.yy",},
     {"name":"s_node_camera_repeat","order":19,"path":"sprites/s_node_camera_repeat/s_node_camera_repeat.yy",},
     {"name":"s_node_camera","order":3,"path":"sprites/s_node_camera/s_node_camera.yy",},
+    {"name":"s_node_canvas_group","order":39,"path":"sprites/s_node_canvas_group/s_node_canvas_group.yy",},
     {"name":"s_node_caustic","order":35,"path":"sprites/s_node_caustic/s_node_caustic.yy",},
     {"name":"s_node_chromatic_abarration","order":10,"path":"sprites/s_node_chromatic_abarration/s_node_chromatic_abarration.yy",},
     {"name":"s_node_color_adjust","order":1,"path":"sprites/s_node_color_adjust/s_node_color_adjust.yy",},

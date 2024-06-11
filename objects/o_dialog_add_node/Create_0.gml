@@ -6,6 +6,8 @@ event_inherited();
 	
 	node_target_x	  = 0;
 	node_target_y	  = 0;
+	node_target_x_raw = 0;
+	node_target_y_raw = 0;
 	node_called		  = noone;
 	junction_hovering = noone;
 	
@@ -236,12 +238,11 @@ event_inherited();
 				}
 			}
 		} else if(junction_hovering != noone) { //right click on junction
-			var to = junction_hovering;
+			var to   = junction_hovering;
 			var from = junction_hovering.value_from;
-				
+			
 			for( var i = 0; i < ds_list_size(_inputs); i++ ) {
 				var _in = _inputs[| i];
-				
 				if(_in.auto_connect && _in.isConnectable(from)) {
 					_in.setFrom(from);
 					break;
@@ -253,6 +254,22 @@ event_inherited();
 				if(to.isConnectable(_ot)) {
 					to.setFrom(_ot);
 					break;
+				}
+			}
+			
+			if(_new_node) {
+				var _fx = from.node.x, _fy = from.node.y;
+				var _tx =   to.node.x, _ty =   to.node.y;
+				var _ny = node_target_y_raw;
+				
+				if(_tx > _fx) {
+					var _rt = abs((_ny - _fy) / (_ty - _fy));
+					
+						 if(_rt < 0.3) _new_node.y = _fy;
+					else if(_rt > 0.7) {
+						_new_node.y = _ty;
+						// _new_node.x = min(_new_node.x, _tx - _new_node.w - 32);
+					}
 				}
 			}
 		}
