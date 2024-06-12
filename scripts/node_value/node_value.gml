@@ -370,7 +370,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if( attributes.mapped)
 							setValue([0, 0]);
 						
-						if(!attributes.mapped && is_array(def_val))
+						if(!attributes.mapped)
 							setValue(def_val);
 						
 						setArrayDepth(attributes.mapped);

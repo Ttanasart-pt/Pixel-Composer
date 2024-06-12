@@ -26,9 +26,12 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 6] = nodeValue("Blending", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
+	inputs[| 7] = nodeValue("Smoothness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider);
+		
 	input_display_list = [ 3, 4, 
 		["Surfaces", true], 0, 
-		["Blend",	false], 2, 1, 5, 6, 
+		["Blend",	false], 2, 1, 5, 6, 7, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -48,16 +51,36 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
 			temp_surface[i] = surface_verify(temp_surface[i], _sw, _sh);
 		
-		surface_set_shader(_outSurf, sh_blend_edge);
-			shader_set_f("dimension", _sw, _sh);
-			shader_set_f_map("width", clamp(_data[1], 0.001, 0.999), _data[5], inputs[| 1]);
-			shader_set_i("edge"     , _data[2]);
-			shader_set_f("blend"    , clamp(_data[6], 0.001, 0.999));
-			
-			draw_surface(_data[0], 0, 0);
-		surface_reset_shader();
+		var _edg = _data[2];
 		
-		//return temp_surface[0];
+		if(_edg == 0) {
+			surface_set_shader(temp_surface[0], sh_blend_edge);
+				shader_set_f("dimension", _sw, _sh);
+				shader_set_f_map("width", _data[1], _data[5], inputs[| 1]);
+				shader_set_i("edge"     , 0);
+				shader_set_f("blend"    , clamp(_data[6], 0.001, 0.999));
+				shader_set_f("smooth"   , _data[7]);
+				
+				draw_surface(_data[0], 0, 0);
+			surface_reset_shader();
+			
+			surface_set_shader(_outSurf, sh_blend_edge);
+				shader_set_i("edge"     , 1);
+				
+				draw_surface(temp_surface[0], 0, 0);
+			surface_reset_shader();
+			
+		} else {
+			surface_set_shader(_outSurf, sh_blend_edge);
+				shader_set_f("dimension", _sw, _sh);
+				shader_set_f_map("width", _data[1], _data[5], inputs[| 1]);
+				shader_set_i("edge"     , _edg - 1);
+				shader_set_f("blend"    , clamp(_data[6], 0.001, 0.999));
+				
+				draw_surface(_data[0], 0, 0);
+			surface_reset_shader();
+			
+		}
 		
 		return _outSurf;
 	}

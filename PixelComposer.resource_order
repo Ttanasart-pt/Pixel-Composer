@@ -1675,6 +1675,7 @@
     {"name":"s_node_bend_type","order":21,"path":"sprites/s_node_bend_type/s_node_bend_type.yy",},
     {"name":"s_node_bend","order":20,"path":"sprites/s_node_bend/s_node_bend.yy",},
     {"name":"s_node_bevel","order":4,"path":"sprites/s_node_bevel/s_node_bevel.yy",},
+    {"name":"s_node_blend_edge","order":67,"path":"sprites/s_node_blend_edge/s_node_blend_edge.yy",},
     {"name":"s_node_blend","order":5,"path":"sprites/s_node_blend/s_node_blend.yy",},
     {"name":"s_node_blobify","order":6,"path":"sprites/s_node_blobify/s_node_blobify.yy",},
     {"name":"s_node_bloom","order":7,"path":"sprites/s_node_bloom/s_node_bloom.yy",},

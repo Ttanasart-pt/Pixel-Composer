@@ -9,6 +9,7 @@ uniform int       widthUseSurf;
 uniform sampler2D widthSurf;
 
 uniform float blend;
+uniform float smooth;
 
 void main() {
 	float wid    = width.x;
@@ -20,17 +21,24 @@ void main() {
 	
 	float bnd = 1. - blend;
 	vec4  off;
-	float m = 0.;
-	vec2  v  = 1. - max(vec2(0.), abs(v_vTexcoord - 0.5) * 2. / wid - bnd) / (1. - bnd);
-	vec2  vi = 1. - max(vec2(0.), (1. - abs(v_vTexcoord - 0.5) * 2.) / wid - bnd) / (1. - bnd);
-	float mi = 1. - max(vi.x, vi.y);
+	float m  = 0.;
+	vec2  v  = 1. - max(vec2(0.), (1. - abs(v_vTexcoord - 0.5) * 2.) / wid - bnd) / (1. - bnd);
 	
-	     if(edge == 0) m = min(max(v.x, v.y), max(v.x, v.y) + mi - 1.);
-	else if(edge == 1) m = v.x;
-	else if(edge == 2) m = v.y;
+	vec4 c1 = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 c2;
+	
+	if(edge == 0) { 
+		m  = v.x;
+		c2 = texture2D( gm_BaseTexture, vec2(fract(v_vTexcoord.x + 0.5), v_vTexcoord.y) );
+		
+	} else if(edge == 1) { 
+		m  = v.y;
+		c2 = texture2D( gm_BaseTexture, vec2(v_vTexcoord.x, fract(v_vTexcoord.y + 0.5)) );
+		
+	} 
 	
 	m = clamp(m, 0., 1.);
-	//m = smoothstep(0., 1., m);
+	m = mix(m, smoothstep(0., 1., m), smooth);
 	
-	gl_FragColor = vec4(vec3(m), 1.);
+	gl_FragColor = mix(c1, c2, m);
 }
