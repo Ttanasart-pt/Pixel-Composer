@@ -175,8 +175,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		menu_junc_expression_dis = menuItem(__txtx("panel_inspector_disable_expression", "Disable expression"), function() { __dialog_junction.expUse = false;		});
 		menu_junc_extract		 = menuItem(__txtx("panel_inspector_extract_single", "Extract to node"),		function() { __dialog_junction.extractNode();		});
 		
-		menu_junc_copy	= menuItem(__txt("Copy"),	function() { clipboard_set_text(__dialog_junction.getShowString()); },	THEME.copy,  ["Inspector", "Copy property"]);
-		menu_junc_paste	= menuItem(__txt("Paste"),	function() { __dialog_junction.setString(clipboard_get_text()); },		THEME.paste, ["Inspector", "Paste property"]);
+		menu_junc_copy	= menuItem(__txt("Copy"),	function() { clipboard_set_text(__dialog_junction.getString()); },	THEME.copy,  ["Inspector", "Copy property"]);
+		menu_junc_paste	= menuItem(__txt("Paste"),	function() { __dialog_junction.setString(clipboard_get_text()); },	THEME.paste, ["Inspector", "Paste property"]);
 		
 		function setSelectingItemColor(color) { 
 			if(__dialog_junction == noone) return; 
@@ -884,12 +884,11 @@ function Panel_Inspector() : PanelContent() constructor {
 	
 	function propSelectCopy() { #region
 		if(!prop_selecting) return;
-		clipboard_set_text(prop_selecting.getShowString());
+		clipboard_set_text(prop_selecting.getString());
 	} #endregion
 	
 	function propSelectPaste() { #region
 		if(!prop_selecting) return;
-		
 		prop_selecting.setString(clipboard_get_text());
 	} #endregion
 	

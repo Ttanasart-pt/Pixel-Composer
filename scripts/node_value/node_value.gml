@@ -1305,11 +1305,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	} #endregion
 	
-	static getShowString = function() { #region
-		var val = showValue();
-		return string_real(val);
-	} #endregion
-	
 	static unitConvert = function(mode) { #region
 		var _v = animator.values;
 		
@@ -1552,42 +1547,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	} #endregion
 	
+	static getString = function() { #region
+		var val = showValue();
+		
+		if(type == VALUE_TYPE.text) return val;
+		return json_beautify(val);
+	} #endregion
+	
 	static setString = function(str) { #region
 		if(connect_type == JUNCTION_CONNECT.output) return;
-		var _o = animator.getValue();
+		if(type == VALUE_TYPE.text) { setValue(str); return; }
 		
-		if(string_pos(",", str) > 0) {
-			string_replace(str, "[", "");
-			string_replace(str, "]", "");
-			
-			var ss  = str, pos, val = [], ind = 0;
-			
-			while(string_length(ss) > 0) {
-				pos = string_pos(",", ss);
-				
-				if(pos == 0) {
-					val[ind++] = toNumber(ss);
-					ss = "";
-				} else {
-					val[ind++] = toNumber(string_copy(ss, 1, pos - 1));
-					ss  = string_copy(ss, pos + 1, string_length(ss) - pos);
-				}
-			}
-			
-			var _t = typeArray(display_type);
-			if(_t) {
-				if(array_length(_o) == array_length(val) || _t == 2)
-					setValue(val);
-			} else if(array_length(val) > 0) {
-				setValue(val[0]);	
-			}
-		} else {
-			if(is_array(_o)) {
-				setValue(array_create(array_length(_o), toNumber(str)));
-			} else {
-				setValue(toNumber(str));
-			}
-		}
+		var _dat = json_try_parse(str);
+		
+		if(typeArray(display_type) && !is_array(_dat))
+			_dat = [ _dat ];
+		
+		setValue(_dat);
 	} #endregion
 	
 	/////=========== CONNECT ===========

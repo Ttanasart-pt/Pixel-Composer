@@ -1674,7 +1674,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_droppable = false;
 		}
 		
-		if(bg_spr_add) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, c_white, 0.15);
+		if(bg_spr_add) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, c_white, 0.1);
 		
 		return _s > 0.5? drawJunctions(xx, yy, _mx, _my, _s) : drawJunctions_fast(xx, yy, _mx, _my, _s);
 	} #endregion
