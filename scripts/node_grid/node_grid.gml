@@ -67,12 +67,13 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 23] = nodeValue("Texture angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 		
-	//inputs[| 24] = nodeValue("Random Rotate", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 24] = nodeValue("Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 4, 15, 2, 13, 3, 14, 9, 8, 16,
-		["Render",	false], 10, 11, 5, 20, 6, 7, 12, 
+		["Render",	false], 10, 11, 5, 20, 6, 7, 12, 24, 
 		["Truchet",  true, 17], 18, 19, 22, 23, 
 	];
 	
@@ -101,9 +102,10 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		var _col_gap = _data[6];
 		
-		inputs[| 5].setVisible(_mode == 0);
-		inputs[| 6].setVisible(_mode != 1);
-		inputs[| 7].setVisible(_mode == 2 || _mode == 3);
+		inputs[|  5].setVisible(_mode == 0);
+		inputs[|  6].setVisible(_mode != 1);
+		inputs[| 24].setVisible(_mode == 1);
+		inputs[|  7].setVisible(_mode == 2 || _mode == 3);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		surface_set_shader(_outSurf, sh_grid);
@@ -124,6 +126,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("truchetThresX",  _data[19]);
 			shader_set_f("truchetThresY",  _data[22]);
 			shader_set_f("truchetAngle",   _data[23]);
+			shader_set_f("level",          _data[24]);
 			
 			shader_set_color("gapCol",  _col_gap);
 			

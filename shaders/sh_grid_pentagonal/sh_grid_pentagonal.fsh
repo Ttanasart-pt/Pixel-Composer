@@ -27,6 +27,7 @@ uniform sampler2D widthSurf;
 
 uniform vec4  gapCol;
 uniform int   gradient_use;
+uniform vec2  level;
 
 float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 
@@ -279,6 +280,7 @@ void main() {
 		colr = gradientEval(random(coord));
 		
 	} else if(mode == 1) {
+		dist = (dist - level.x) / (level.y - level.x);
 		colr = vec4(vec3(dist), 1.);
 		
 	} else if(mode == 2) {

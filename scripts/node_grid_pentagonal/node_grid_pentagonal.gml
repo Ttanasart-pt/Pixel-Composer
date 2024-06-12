@@ -49,10 +49,13 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	/////////////////////////////////////////////////////////////////////
 	
+	inputs[| 16] = nodeValue("Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
+		.setDisplay(VALUE_DISPLAY.slider_range);
+	
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 4, 13, 2, 11, 3, 12, 
-		["Render",	false], 8, 9, 5, 14, 6, 7, 10, 
+		["Render",	false], 8, 9, 5, 14, 6, 7, 10, 16, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -79,9 +82,10 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		
 		var _col_gap = _data[6];
 		
-		inputs[| 5].setVisible(_mode == 0);
-		inputs[| 6].setVisible(_mode != 1);
-		inputs[| 7].setVisible(_mode == 2 || _mode == 3);
+		inputs[|  5].setVisible(_mode == 0);
+		inputs[|  6].setVisible(_mode != 1);
+		inputs[| 16].setVisible(_mode == 1);
+		inputs[|  7].setVisible(_mode == 2 || _mode == 3);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		surface_set_shader(_outSurf, sh_grid_pentagonal);
@@ -92,9 +96,10 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			shader_set_f_map("width",	_data[ 3], _data[12], inputs[| 3]);
 			shader_set_f_map("angle",	_data[ 4], _data[13], inputs[| 4]);
 			
-			shader_set_i("mode",		   _mode);
-			shader_set_f("seed", 		   _data[ 9]);
-			shader_set_i("aa",			   _data[10]);
+			shader_set_i("mode",	_mode);
+			shader_set_f("seed", 	_data[ 9]);
+			shader_set_i("aa",		_data[10]);
+			shader_set_f("level",   _data[16]);
 			
 			shader_set_color("gapCol",  _col_gap);
 			

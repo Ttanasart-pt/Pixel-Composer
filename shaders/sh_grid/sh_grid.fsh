@@ -26,6 +26,7 @@ uniform sampler2D shiftSurf;
 
 uniform vec4  gapCol;
 uniform int   gradient_use;
+uniform vec2  level;
 
 uniform int   textureTruchet;
 uniform float truchetSeed;
@@ -227,6 +228,7 @@ void main() { #region
 	vec4 colr;
 	
 	if(mode == 1) {
+		dist = (dist - level.x) / (level.y - level.x);
 		gl_FragColor = vec4(vec3(dist), 1.);
 		return;
 	}
