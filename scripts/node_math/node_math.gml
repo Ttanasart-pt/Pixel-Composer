@@ -20,10 +20,11 @@ enum MATH_OPERATOR {
 	abs,
 	
 	clamp,
+	snap,
 }
 
 #region create
-	global.node_math_keys = [ "add", "subtract", "multiply", "divide", "power", "root", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan", "lerp", "abs", "clamp" ];
+	global.node_math_keys = [ "add", "subtract", "multiply", "divide", "power", "root", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan", "lerp", "abs", "clamp", "snap" ];
 	
 	function Node_create_Math(_x, _y, _group = noone, _param = {}) {
 		var query = struct_try_get(_param, "query", "");
@@ -51,6 +52,7 @@ enum MATH_OPERATOR {
 			case "abs" :		node.inputs[| 0].setValue(MATH_OPERATOR.abs);		break;
 			
 			case "clamp" :		node.inputs[| 0].setValue(MATH_OPERATOR.clamp);		break;
+			case "snap" :		node.inputs[| 0].setValue(MATH_OPERATOR.snap);		break;
 		} #endregion
 	
 		return node;
@@ -65,7 +67,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ 
 			/* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
-			/*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp" ])
+			/*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap" ])
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -112,6 +114,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.abs :		return abs(a);
 			
 			case MATH_OPERATOR.clamp :		return clamp(a, b, c);
+			case MATH_OPERATOR.snap :		return value_snap(a, b);
 		}
 		return 0;
 	} #endregion
@@ -192,6 +195,13 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				inputs[| 2].setVisible(true, true);
 				inputs[| 5].setVisible(true, true);
 				break;
+				
+			case MATH_OPERATOR.snap :
+				inputs[| 2].name = "Snap";
+				
+				inputs[| 2].setVisible(true, true);
+				break;
+				
 			default: return;
 		}
 	} #endregion
@@ -261,6 +271,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.abs :		str = "abs";   break;
 			
 			case MATH_OPERATOR.clamp :		str = "clamp"; break;
+			case MATH_OPERATOR.snap :		str = "snap";  break;
 			default: return;
 		}
 		
