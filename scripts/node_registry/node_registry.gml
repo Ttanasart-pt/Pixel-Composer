@@ -777,6 +777,7 @@ function __initNodes() {
 		addNodeObject(generator, "MK Blinker",			s_node_mk_blinker,			"Node_MK_Blinker",			[1, Node_MK_Blinker]).setVersion(11630);
 		addNodeObject(generator, "MK Lens Flare",		s_node_mk_flare,			"Node_MK_Flare",			[1, Node_MK_Flare]).setVersion(11630);
 		addNodeObject(generator, "MK Delay Machine",	s_node_mk_delay_machine,	"Node_MK_Delay_Machine",	[1, Node_MK_Delay_Machine]).setVersion(11680);
+		/**/ addNodeObject(generator, "MK Fracture",			s_node_mk_delay_machine,	"Node_MK_Fracture",			[1, Node_MK_Fracture]).setVersion(11740);
 		//addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle]).patreonExtra();
 	#endregion
 	

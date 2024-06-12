@@ -961,7 +961,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			_hv = true;
 		
 		draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
-		draw_sprite_ext(THEME.view_pan, 0, _d3x, _d3y, 1, 1, 0, view_pan_tool? COLORS._main_accent : COLORS._main_icon, 1);
+		draw_sprite_ui(THEME.view_pan, 0, _d3x, _d3y, 1, 1, 0, view_pan_tool? COLORS._main_accent : COLORS._main_icon, 1);
 		
 		_d3x += (d3_view_wz + ui(4) + d3_view_wz) * _side;
 		_hv  =  false;
@@ -986,7 +986,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			_hv = true;
 		
 		draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
-		draw_sprite_ext(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
+		draw_sprite_ui(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
 		
 	} #endregion
 	

@@ -1288,6 +1288,7 @@
     {"id":{"name":"node_mk_flag","path":"scripts/node_mk_flag/node_mk_flag.yy",},},
     {"id":{"name":"node_mk_flame","path":"scripts/node_mk_flame/node_mk_flame.yy",},},
     {"id":{"name":"node_mk_flare","path":"scripts/node_mk_flare/node_mk_flare.yy",},},
+    {"id":{"name":"node_mk_fracture","path":"scripts/node_mk_fracture/node_mk_fracture.yy",},},
     {"id":{"name":"node_mk_gridballs","path":"scripts/node_mk_gridballs/node_mk_gridballs.yy",},},
     {"id":{"name":"node_mk_gridflip","path":"scripts/node_mk_gridflip/node_mk_gridflip.yy",},},
     {"id":{"name":"node_mk_rain","path":"scripts/node_mk_rain/node_mk_rain.yy",},},

@@ -202,7 +202,8 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection_Inline(_x, _y, _gro
 			if(_ind == noone) 
 				_ind = composite.input_fix_len;
 			
-			var _can = composite.inputs[| _ind].value_from;
+			var _inp = composite.inputs[| _ind];
+			var _can = _inp? _inp.value_from : noone;
 			if(_can && struct_has(layers, _can.node.node_id))
 				canvas_sel = layers[$ _can.node.node_id].canvas;
 		}

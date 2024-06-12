@@ -872,6 +872,7 @@
     {"name":"node_mk_flag","order":5,"path":"scripts/node_mk_flag/node_mk_flag.yy",},
     {"name":"node_mk_flame","order":7,"path":"scripts/node_mk_flame/node_mk_flame.yy",},
     {"name":"node_mk_flare","order":12,"path":"scripts/node_mk_flare/node_mk_flare.yy",},
+    {"name":"node_mk_fracture","order":15,"path":"scripts/node_mk_fracture/node_mk_fracture.yy",},
     {"name":"node_mk_gridflip","order":2,"path":"scripts/node_mk_gridflip/node_mk_gridflip.yy",},
     {"name":"node_mk_rain","order":1,"path":"scripts/node_mk_rain/node_mk_rain.yy",},
     {"name":"node_mk_saber","order":3,"path":"scripts/node_mk_saber/node_mk_saber.yy",},
