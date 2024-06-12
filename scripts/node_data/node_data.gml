@@ -75,7 +75,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		icon    = noone;
 		icon_24 = noone;
 		bg_spr  = THEME.node_bg;
-		bg_sel_spr	  = THEME.node_active;
+		bg_spr_add = true;
+		bg_sel_spr = THEME.node_active;
 	
 		name = "";
 		display_name = "";
@@ -208,7 +209,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			["Params Width", function() { return attributes.node_param_width; }, new textBox(TEXTBOX_INPUT.number, function(val) { attributes.node_param_width = val; refreshNodeDisplay(); }) ],
 			
 			"Node update",
-			["Auto update", function() { return attributes.update_graph; }, new checkBox(function() { attributes.update_graph = !attributes.update_graph; }) ],
+			["Auto update",    function() { return attributes.update_graph; },		  new checkBox(function() { attributes.update_graph = !attributes.update_graph; }) ],
 			["Update trigger", function() { return attributes.show_update_trigger; }, new checkBox(function() { attributes.show_update_trigger = !attributes.show_update_trigger; }) ],
 		];
 		
@@ -1672,6 +1673,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, w * _s, h * _s, COLORS._main_value_positive, 1);
 			draw_droppable = false;
 		}
+		
+		if(bg_spr_add) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, c_white, 0.15);
 		
 		return _s > 0.5? drawJunctions(xx, yy, _mx, _my, _s) : drawJunctions_fast(xx, yy, _mx, _my, _s);
 	} #endregion

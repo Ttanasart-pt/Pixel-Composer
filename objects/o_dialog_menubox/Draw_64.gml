@@ -37,7 +37,7 @@ if(!ready) exit;
 			
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, _hc, _ha);
 			
-			var _click = (!mouse_inside && mouse_release(mb_left)) || keyboard_check_released(vk_enter);
+			var _click = sFOCUS && (!mouse_inside && mouse_release(mb_left)) || keyboard_check_released(vk_enter);
 			
 			if(_hovering_ch && is_instanceof(_menuItem, MenuItem) && _menuItem.active && _click) {
 					
