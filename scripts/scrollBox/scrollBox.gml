@@ -101,7 +101,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		}
 		
 		var _sps = min(1, _h / 24);
-		var _ars = min(1, _h / 64);
+		var _ars = min(1, _h / 48);
 		var _arw = sprite_get_width(arrow_spr) * _ars + ui(8);
 		var _spr = is_instanceof(_selVal, scrollItem) && _selVal.spr;
 		

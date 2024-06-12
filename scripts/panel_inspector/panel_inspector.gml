@@ -211,10 +211,11 @@ function Panel_Inspector() : PanelContent() constructor {
 		menu_junc_color.spacing = ui(24);
 	#endregion
 	
-	function setInspecting(inspecting) { #region
+	function setInspecting(inspecting, _lock = false) { #region
 		if(locked) return;
 		
 		self.inspecting = inspecting;
+		if(_lock) locked = true;
 		
 		if(inspecting != noone)
 			inspecting.onInspect();

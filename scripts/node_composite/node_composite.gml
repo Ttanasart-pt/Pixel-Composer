@@ -207,10 +207,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					var _txh = string_height(_txt);
 					
 					if(_junc_canvas) {
-						draw_sprite_ui_uniform(THEME.icon_canvas, 0, _txx + ui(12), _txy - ui(1), 1, COLORS._main_icon, aa * .8);
+						draw_sprite_ui_uniform(THEME.icon_canvas, 0, _txx + ui(8), _txy - ui(1), 1, draw_get_color(), aa * .8);
 						
 						draw_set_alpha(aa);
-						draw_text(_txx + ui(28), _txy, _txt);
+						draw_text(_txx + ui(8 + 16), _txy, _txt);
 						draw_set_alpha(1);
 					} else {
 						draw_set_alpha(aa);
@@ -223,9 +223,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			#region modifiers
 				if(_jun_layer) {
 					var _modis = _jun_layer.modifier;
-					var _mdx = _txx - ui(23);
-					var _mdy = _cy + _lh;
-					var mh   = ui(24);
+					var _mdx   = _sx0;
+					var _mdy   = _cy + _lh;
+					var mh     = ui(24);
 					
 					for (var j = array_length(_modis) - 1; j >= 0; j--) {
 						var _modi = _modis[j];
@@ -251,6 +251,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						var _mhov = _hover && point_in_rectangle(_m[0], _m[1], _mtx, _mdy, _x + _w, _mdy + mh - 1);
 						draw_set_text(f_p2, fa_left, fa_center, _mhov? COLORS._main_text : COLORS._main_text_sub);
 						draw_text_add(_mtx, _mdy + mh / 2 - ui(2), _modi.display_name);
+						
+						if(_mhov && DOUBLE_CLICK) {
+							var pan = panelAdd("Panel_Inspector", true);
+							// pan.destroy_on_click_out = false;
+							pan.content.setInspecting(_modi, true);
+						}
 						
 						_h   += mh;
 						_lh  += mh;
