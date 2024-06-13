@@ -359,16 +359,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	} setDropKey(); #endregion
 	
-	static setMappable = function(index) { #region
+	mappedJunc  = noone;
+	mapped_vec4 = false;
+	
+	static setMappable = function(index, vec4 = false) { #region
 		attributes.mapped     = false;
 		attributes.map_index  = index;
+		mapped_vec4 = vec4;
 		
 		mapButton = button(function() { 
 						attributes.mapped = !attributes.mapped;
 						var val = getValue();
 						
 						if( attributes.mapped)
-							setValue([0, 0]);
+							setValue(mapped_vec4? [ 0, 0, 0, 0 ] : [ 0, 0 ]);
 						
 						if(!attributes.mapped)
 							setValue(def_val);
@@ -386,7 +390,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 				
 			default : 
-				mapWidget = new rangeBox(TEXTBOX_INPUT.number, function(index, val) { return setValueDirect(val, index); });
+				mapWidget = vec4? 
+					new vectorRangeBox(4, TEXTBOX_INPUT.number, function(index, val) { return setValueDirect(val, index); }) : 
+					new rangeBox(TEXTBOX_INPUT.number, function(index, val) { return setValueDirect(val, index); });
 				mapWidget.side_button = mapButton;
 				break;
 		}

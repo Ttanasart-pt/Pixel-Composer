@@ -73,6 +73,8 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		y = _y;
 		w = _w;
 		
+		_data = array_verify(_data, size);
+		
 		if(struct_has(_display_data, "linked")) linked = _display_data.linked;
 		var _hh = linked? _h : _h * 2 + ui(4);
 		h = h == 0? _hh : lerp_float(h, _hh, 5);
@@ -82,9 +84,15 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		
 		var _bs = min(_h, ui(32));
 		if((_w - _bs) / 2 > ui(64)) {
+			if(side_button) {
+				side_button.setFocusHover(active, hover);
+				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+				_w -= _bs + ui(4);
+			}
+			
 			var bx  = _x;
 			var by  = _y + _h / 2 - _bs / 2;
-		
+			
 			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
 				linked = !linked;
 				_display_data.linked = linked;
