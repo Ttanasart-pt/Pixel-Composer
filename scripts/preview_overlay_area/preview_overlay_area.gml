@@ -53,8 +53,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	else if(drag_type == 4) _b = value_snap(drag_sy - (_my - drag_my) / _s, _sny);
 	
 	if(drag_type) {
-		var _svl  = showValue();
-		var _sval = array_clone(_svl);
+		var _sval = array_clone(showValue());
 		if(unit.mode == VALUE_UNIT.reference) {
 			var _ref = unit.reference();
 			_sval[0] *= _ref[0];
@@ -170,11 +169,21 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	var _hov = [ 0, 0, 0 ];
 	var _r   = 10;
 	
+	if(drag_type) {
+		var _sval = array_clone(showValue());
+		if(unit.mode == VALUE_UNIT.reference) {
+			var _ref = unit.reference();
+			_sval[0] *= _ref[0];
+			_sval[1] *= _ref[1];
+			_sval[2] *= _ref[0];
+			_sval[3] *= _ref[1];
+		}
+	}
+	
 	if(drag_type == 1) {
 		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
 		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 		
-		var _sval = array_clone(showValue());
 		_sval[0]  = _xx;
 		_sval[1]  = _yy;
 		
@@ -189,7 +198,6 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
 		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 		
-		var _sval = array_clone(showValue());
 		_sval[2]  = _xx;
 		_sval[3]  = _yy;
 		
