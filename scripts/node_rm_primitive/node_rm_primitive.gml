@@ -134,6 +134,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 37] = nodeValue("Triplanar Smoothing", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 10, 0.1 ] });
 	
+	inputs[| 38] = nodeValue("Texture Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.);
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
@@ -141,7 +143,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Modify",     false], 12, 11, 
 		["Deform",      true], 15, 16, 17, 18, 19, 
 		["Transform",  false], 2, 3, 4, 
-		["Material",   false], 9, 36, 35, 37, 
+		["Material",   false], 9, 36, 35, 37, 38, 
 		["Camera",     false], 13, 14, 5, 6, 
 		["Render",     false], 31, 30, 34, 10, 7, 8, 
 		["Tile",       false], 20, 29, 
@@ -290,6 +292,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _text = _data[36];
 		var _triS = _data[37];
+		var _texs = _data[38];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
@@ -379,6 +382,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_i("volumetric",     _vol);
 			shader_set_f("volumeDensity",  _vden);
 			shader_set_f("triplanar",      _triS);
+			shader_set_f("textureScale",   _texs);
 			
 			shader_set_i("useEnv",      is_surface(bgEnv));
 			shader_set_i("useTexture",  is_surface(_text));

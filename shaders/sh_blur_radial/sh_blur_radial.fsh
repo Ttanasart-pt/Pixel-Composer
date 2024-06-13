@@ -123,7 +123,6 @@ void main() {
 	float angle  = atan(vecPc.y, vecPc.x);
 	float dist   = length(vecPc);
 	vec4  clr    = vec4(0.);
-	vec4  res    = vec4(0.);
 	float weight = 0.;
 	float maxBright = 0.;
 	

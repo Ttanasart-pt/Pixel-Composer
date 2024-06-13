@@ -61,6 +61,7 @@ uniform float reflective;
 
 uniform int   useEnv;
 uniform int   useTexture;
+uniform float textureScale;
 uniform float triplanar;
 
 uniform int   volumetric;
@@ -530,7 +531,7 @@ void main() {
     if(dist > viewRange.y - EPSILON) // Not hitting anything.
         return;
     
-    vec3 c = useTexture == 1? boxmap(1, coll, norm, triplanar).rgb * ambient.rgb : ambient.rgb;
+    vec3 c = useTexture == 1? boxmap(1, coll * textureScale, norm, triplanar).rgb * ambient.rgb : ambient.rgb;
     
     ///////////////////////////////////////////////////////////
     

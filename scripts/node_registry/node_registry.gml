@@ -745,6 +745,7 @@ function __initNodes() {
 		ds_list_add(generator, "Populate");
 		addNodeObject(generator, "Repeat",				s_node_repeat,				"Node_Repeat",				[1, Node_Repeat],,		"Repeat image multiple times linearly, or in grid pattern.").setVersion(1100);
 		addNodeObject(generator, "Scatter",				s_node_scatter,				"Node_Scatter",				[1, Node_Scatter],,		"Scatter image randomly multiple times.");
+		addNodeObject(generator, "Repeat Texture",		s_node_repeat_texture,		"Node_Repeat_Texture",		[1, Node_Repeat_Texture],, "Repeat texture over larger surface without repeating patterns.");
 			
 		ds_list_add(generator, "Simulation");
 		addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			[1, Node_Particle],,						"Generate particle effect.");

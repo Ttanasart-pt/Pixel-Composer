@@ -13,7 +13,7 @@ uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
 
 uniform int	sampleMode;
-uniform int	gamm;
+uniform int	gamma;
 
 vec2 tx;
 vec2 txMap;
@@ -142,7 +142,7 @@ void main() {
 	}
 	
     vec4 res = colr / alpha;
-    if(gamma == 1) res.rgb = pow(result.rgb, vec3(1. / 2.2));
+    if(gamma == 1) res.rgb = pow(res.rgb, vec3(1. / 2.2));
     
     gl_FragColor = res;
 }

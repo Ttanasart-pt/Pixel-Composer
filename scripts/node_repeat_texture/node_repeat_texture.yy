@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_repeat_texture",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_repeat_texture",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
