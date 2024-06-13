@@ -7,6 +7,7 @@ uniform vec2 dimension;
 uniform int useMask;
 uniform sampler2D mask;
 uniform int sampleMode;
+uniform int gamma;
 
 uniform int overrideColor;
 uniform vec4 overColor;
@@ -196,6 +197,8 @@ void main() { #region
 		if(abs(i + j) >= cel * 2.) continue;
 		
 		vec4  sam = sampleTexture( v_vTexcoord + vec2(i, j) * texel );
+		if(gamma == 1) sam.rgb = pow(sam.rgb, vec3(2.2));
+		
 		float wei = 1. - (abs(i) + abs(j)) / (realSize * 2.);
 		wei *= clamp(abs(i + j - floor(realSize) * 2.), 0., 1.);
 		
@@ -206,6 +209,7 @@ void main() { #region
 	}
 	
 	clr /= totalWeight;
+	if(gamma == 1) clr.rgb = pow(clr.rgb, vec3(1. / 2.2));
 	
 	if(overrideColor == 1) {
 		clr.rgb = overColor.rgb;

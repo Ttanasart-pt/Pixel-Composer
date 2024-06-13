@@ -31,9 +31,11 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 10] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 1, 0.01] });
 		
+	inputs[| 11] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true], 0, 3, 4, 7, 8, 
-		["Blur",	false], 2, 1, 9, 10, 
+		["Blur",	false], 2, 1, 9, 10, 11, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -57,6 +59,7 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_surface("slopeMap", _data[2]);
 			shader_set_f("slopeMapDim",    surface_get_dimension(_data[2]));
 			shader_set_i("sampleMode",	  struct_try_get(attributes, "oversample"));
+			shader_set_i("gamma",          _data[11]);
 			
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();

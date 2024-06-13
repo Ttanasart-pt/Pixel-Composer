@@ -25,11 +25,13 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	__init_mask_modifier(5); // inputs 9, 10
 	
+	inputs[| 11] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 7, 8, 
 		["Surfaces", true],	0, 5, 6, 9, 10, 
-		["Blur",	false],	1, 3, 4, 
+		["Blur",	false],	1, 3, 4, 11, 
 	];
 	
 	attribute_surface_depth();
@@ -47,13 +49,14 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _mask  = _data[5];
 		var _mix   = _data[6];
 		var _overc = _isovr? _data[4] : noone;
+		var _gam   = _data[11];
 		
 		inputs[| 4].setVisible(_isovr);
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(_isovr? _overc : 0, 0);
 			BLEND_OVERRIDE;
-			draw_surface_safe(surface_apply_gaussian(_data[0], _size, false, c_white, _clamp, _overc), 0, 0);
+			draw_surface_safe(surface_apply_gaussian(_data[0], _size, false, c_white, _clamp, _overc, _gam), 0, 0);
 			BLEND_NORMAL;
 		surface_reset_target();
 		

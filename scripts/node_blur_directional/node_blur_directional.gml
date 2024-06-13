@@ -34,9 +34,11 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	inputs[| 11] = nodeValue("Single direction",   self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 12] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true], 0, 3, 4, 7, 8, 
-		["Blur",	false], 1, 9, 2, 10, 11, 
+		["Blur",	false], 1, 9, 2, 10, 11, 12, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -71,6 +73,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			shader_set_f_map("strength",  _data[ 1], _data[ 9], inputs[|  1]);
 			shader_set_f_map("direction", _data[ 2], _data[10], inputs[|  2]);
 			shader_set_i("scale",         _data[11]);
+			shader_set_i("gamma",         _data[12]);
 			shader_set_i("sampleMode",	  struct_try_get(attributes, "oversample"));
 			
 			draw_surface_safe(_data[0], 0, 0);

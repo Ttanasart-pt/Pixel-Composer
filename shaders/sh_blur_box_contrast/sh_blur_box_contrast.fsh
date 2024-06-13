@@ -8,6 +8,7 @@ uniform vec2  dimension;
 uniform float size;
 uniform float treshold;
 uniform int   direction;
+uniform int   gamma;
 
 vec3 rgb2xyz( vec3 c ) { #region
     vec3 tmp;
@@ -53,12 +54,17 @@ void main() {
 		float amp = 1. - dist / sz2;
 		vec2 pxs  = v_vTexcoord + vec2( i, j ) * tx;
 		vec4 bcol = texture2D( gm_BaseTexture, pxs);
-			
+		
 		if(c.a == bcol.a && colorDifferent(c, bcol) <= treshold) {
+			if(gamma == 1) bcol.rgb = pow(bcol.rgb, vec3(2.2));
+			
 			col += bcol * amp;
 			div += amp;
 		}
 	}
 	
-	gl_FragColor = col / div;
+	vec4 res = col / div;
+	if(gamma == 1) res.rgb = pow(res.rgb, vec3(1. / 2.2));
+	
+	gl_FragColor = res;
 }

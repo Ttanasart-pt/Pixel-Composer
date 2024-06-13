@@ -7,6 +7,7 @@ varying vec4 v_vColour;
 uniform vec2  center;
 uniform int   sampleMode;
 uniform int   blurMode;
+uniform int   gamma;
 
 uniform vec2      strength;
 uniform int       strengthUseSurf;
@@ -81,10 +82,14 @@ void main() { #region
     for(float i = 0.; i < nsamples * 2. + 1.; i++) {
         float scale = 1.0 + ((blrStart + i) * scale_factor);
 		vec2 pos    = uv * scale + center;
-		color += sampleTexture(pos);
+		
+		vec4 col = sampleTexture(pos);
+		if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
+		color += col;
     }
     
     color /= nsamples * 2. + 1.;
+    if(gamma == 1) color.rgb = pow(color.rgb, vec3(1. / 2.2));
     
 	gl_FragColor = color;
 } #endregion

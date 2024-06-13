@@ -36,9 +36,11 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 15] = nodeValue("Use Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 16] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [ 8, 9, 
 		["Surfaces", true],	0, 6, 7, 10, 11, 
-		["Blur",	false],	1, 3, 4, 5, 
+		["Blur",	false],	1, 3, 4, 5, 16, 
 		["Effects",	false, 15],	12, 13, 14, 
 	];
 	
@@ -63,6 +65,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _msk    = _data[6];
 		var _mix    = _data[7];
 		var _useGrd = _data[15];
+		var _gam    = _data[16];
 		
 		inputs[| 5].setVisible(_isovr);
 		
@@ -73,6 +76,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_f("dimension",  surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
 			shader_set_f("size",       _size);
 			shader_set_i("sampleMode", _samp);
+			shader_set_i("gamma",      _gam);
 			
 			shader_set_i("overrideColor", _isovr);
 			shader_set_color("overColor", _overc);

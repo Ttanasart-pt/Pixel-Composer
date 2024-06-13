@@ -6,7 +6,8 @@ varying vec4 v_vColour;
 
 uniform vec2 center;
 uniform vec2 dimension;
-uniform int sampleMode;
+uniform int  sampleMode;
+uniform int  gamma;
 
 uniform vec2      strength;
 uniform int       strengthUseSurf;
@@ -62,6 +63,7 @@ vec4 texture2D_rsin( sampler2D texture, vec2 uv ) {
         float w = sinc(a * PI * tx.x) * sinc(a * PI * tx.y);
         vec2 offset = vec2(float(x), float(y)) * tx;
         vec4 sample = texture2D_bilinear(texture, (p + offset + vec2(0.5)) / sampleDimension);
+        
         sum += w * sample;
         weights += w;
     }
@@ -132,17 +134,14 @@ void main() {
 		float ang = angle + i / 100.;
 		vec4 col = sampleTexture((pxCen + vec2(cos(ang), sin(ang)) * dist) / dimension);
 		
-		// float bright = (col.r + col.g + col.b) / 3. * col.a;
+		if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
 		
 		clr += col;
 		weight += col.a;
-		
-		// if(bright > maxBright) {
-		// 	maxBright = bright;
-		// 	res = col;
-		// }
 	}
 	
-    gl_FragColor = clr / weight;
-    // gl_FragColor = res;
+    vec4 res = clr / weight;
+    if(gamma == 1) res.rgb = pow(res.rgb, vec3(1. / 2.2));
+    
+    gl_FragColor = res;
 }

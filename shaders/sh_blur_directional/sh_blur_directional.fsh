@@ -13,6 +13,7 @@ uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
 
 uniform int	  sampleMode;
+uniform int	  gamma;
 
 vec4 sampleTexture(vec2 pos) { #region
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
@@ -41,6 +42,8 @@ vec4 dirBlur(vec2 angle) { #region
 	if(scale == 0) {
 	    for(float i = -1.0; i <= 1.0; i += delta) {
 			vec4 col  = sampleTexture( v_vTexcoord - angle * i);
+			if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
+			
 	        acc      += col;
 			weight   += col.a;
 	    }
@@ -50,6 +53,8 @@ vec4 dirBlur(vec2 angle) { #region
 	} else {
 		for(float i = 0.; i <= 1.0; i += delta) {
 			vec4 col  = sampleTexture( v_vTexcoord - angle * i);
+			if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
+			
 	        acc      += col  ;
 			weight   += col.a;
 	    }
@@ -60,6 +65,7 @@ vec4 dirBlur(vec2 angle) { #region
 		acc += sampleTexture( v_vTexcoord );
 	}
 	
+	if(gamma == 1) acc.rgb = pow(acc.rgb, vec3(1. / 2.2));
     return acc;
 } #endregion
 

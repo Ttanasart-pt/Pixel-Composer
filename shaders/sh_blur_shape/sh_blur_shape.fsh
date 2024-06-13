@@ -11,6 +11,7 @@ uniform sampler2D mask;
 uniform int sampleMode;
 
 uniform int mode;
+uniform int gamma;
 
 float sampleMask() { #region
 	if(useMask == 0) return 1.;
@@ -67,6 +68,8 @@ void main() {
 		vec4  c = sampleTexture((px + bPx) * tx);
 		float b = sampleBlurMask(bPx / blurMaskDimension + 0.5);
 		
+		if(gamma == 1) c.rgb = pow(c.rgb, vec3(2.2));
+		
 		if(mode == 0) {
 			col    += c * b;
 			weight += b;
@@ -77,6 +80,8 @@ void main() {
 	
 	     if(mode == 0) col /= weight;
 	else if(mode == 1) col.a = 1.;
+	
+	if(gamma == 1) col.rgb = pow(col.rgb, vec3(1. / 2.2));
 	
 	gl_FragColor = col;
 }

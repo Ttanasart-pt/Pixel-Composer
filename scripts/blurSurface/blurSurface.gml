@@ -28,7 +28,7 @@ function __gaussian_get_kernel(size) {
 	return gau_array;
 }
 
-function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampleMode = 0, overColor = noone) {
+function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampleMode = 0, overColor = noone, gamma = false) {
 	var format = surface_get_format(surface);
 	var _sw    = surface_get_width_safe(surface);
 	var _sh    = surface_get_height_safe(surface);
@@ -51,6 +51,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		shader_set_i("sampleMode", sampleMode);
 		shader_set_i("size",       size);
 		shader_set_i("horizontal", 1);
+		shader_set_i("gamma",      gamma);
 		
 		shader_set_i("overrideColor", overColor != noone);
 		shader_set_f("overColor",     colToVec4(overColor));

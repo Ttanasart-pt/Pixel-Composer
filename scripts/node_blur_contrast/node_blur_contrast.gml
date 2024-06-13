@@ -22,9 +22,11 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	__init_mask_modifier(3); // inputs 7, 8
 	
+	inputs[| 9] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true], 0, 3, 4, 7, 8, 
-		["Blur",	false], 1, 2,
+		["Blur",	false], 1, 2, 9, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -43,6 +45,7 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _tres = _data[2];
 		var _mask = _data[3];
 		var _mix  = _data[4];
+		var _gam  = _data[9];
 		
 		var ww = surface_get_width_safe(_surf);
 		var hh = surface_get_height_safe(_surf);
@@ -51,6 +54,7 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_f("dimension", [ ww, hh ]);
 			shader_set_f("size",      _size);
 			shader_set_f("treshold",  _tres);
+			shader_set_i("gamma",     _gam);
 			
 			draw_surface_safe(_surf, 0, 0);
 		surface_reset_shader();

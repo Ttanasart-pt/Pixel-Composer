@@ -22,9 +22,11 @@ function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	__init_mask_modifier(3); // inputs 7, 8
 	
+	inputs[| 9] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true],	0, 3, 4, 7, 8, 
-		["Blur",	false],	7, 1, 2, 
+		["Blur",	false],	7, 1, 2, 9, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -43,6 +45,7 @@ function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _blur = _data[1];
 		var _mask = _data[2];
 		var _mode = _data[7];
+		var _gam  = _data[9];
 		
 		surface_set_shader(_outSurf, sh_blur_shape);
 			shader_set_f("dimension",         surface_get_dimension(_data[0]));
@@ -50,6 +53,8 @@ function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var b = shader_set_surface("blurMask",    _blur);
 			shader_set_i("sampleMode", _samp);
 			shader_set_i("mode",       _mode);
+			shader_set_i("mode",       _mode);
+			shader_set_i("gamma",      _gam);
 			
 			gpu_set_tex_filter_ext(b, true);
 			

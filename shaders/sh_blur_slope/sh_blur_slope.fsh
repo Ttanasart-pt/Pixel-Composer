@@ -13,6 +13,7 @@ uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
 
 uniform int	sampleMode;
+uniform int	gamm;
 
 vec2 tx;
 vec2 txMap;
@@ -131,6 +132,8 @@ void main() {
 		
 		float str = 1. - (i / str);
 		vec4  c = sampleTexture(gm_BaseTexture, pos);
+		if(gamma == 1) c.rgb = pow(c.rgb, vec3(2.2));
+		
 		colr  += c * str;
 		alpha += str;
 		
@@ -138,5 +141,8 @@ void main() {
 		pos += slp * stepSize;
 	}
 	
-    gl_FragColor = colr / alpha;
+    vec4 res = colr / alpha;
+    if(gamma == 1) res.rgb = pow(result.rgb, vec3(1. / 2.2));
+    
+    gl_FragColor = res;
 }

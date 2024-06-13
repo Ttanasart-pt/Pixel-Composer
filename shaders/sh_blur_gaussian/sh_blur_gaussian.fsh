@@ -14,6 +14,8 @@ uniform int	  sampleMode;
 uniform int  overrideColor;
 uniform vec4 overColor;
 
+uniform int  gamma;
+
 vec4 sampleTexture(vec2 pos) {
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2D(gm_BaseTexture, pos);
@@ -37,8 +39,11 @@ float wgh = 0.;
 
 vec4 sample(in vec2 pos, in int index) {
 	vec4 col = sampleTexture( pos );
+	if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
+	
 	col.rgb *= weight[index] * col.a;
 	wgh     += weight[index] * col.a;
+	
 	return col;
 }
 
@@ -64,6 +69,8 @@ void main() {
 	
 	result.rgb /=  wgh;
 	result.a    =  wgh;
+	
+	if(gamma == 1) result.rgb = pow(result.rgb, vec3(1. / 2.2));
 	
 	gl_FragColor = result;
 	if(overrideColor == 1) {
