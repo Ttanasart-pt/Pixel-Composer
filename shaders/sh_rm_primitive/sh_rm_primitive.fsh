@@ -60,6 +60,8 @@ uniform vec4  ambient;
 uniform float reflective;
 
 uniform int   useEnv;
+uniform int   useTexture;
+uniform float triplanar;
 
 uniform int   volumetric;
 uniform float volumeDensity;
@@ -376,6 +378,22 @@ mat3 rotMatrix, irotMatrix;
 	
 #endregion
 
+#region ////=========== Texturing ============
+	
+	vec4 boxmap( in int textureIndex, in vec3 p, in vec3 n, in float k ) {
+	    // project+fetch
+	    vec4 x = sampleTexture( textureIndex, fract(p.yz) );
+	    vec4 y = sampleTexture( textureIndex, fract(p.zx) );
+	    vec4 z = sampleTexture( textureIndex, fract(p.xy) );
+	    
+	    // blend weights
+	    vec3 w = pow( abs(n), vec3(k) );
+	    // blend and return
+	    return (x * w.x + y * w.y + z * w.z) / (w.x + w.y + w.z);
+	}
+
+#endregion
+
 ////========= Ray Marching ==========
 
 float sceneSDF(vec3 p) { 
@@ -507,14 +525,14 @@ void main() {
     float dist = march(eye, dir);
     vec3  coll = eye + dir * dist;
     vec3 wcoll = irotMatrix * coll;
+    vec3 norm  = normal(coll);
     
     if(dist > viewRange.y - EPSILON) // Not hitting anything.
         return;
     
-    vec3 c = ambient.rgb;
+    vec3 c = useTexture == 1? boxmap(1, coll, norm, triplanar).rgb * ambient.rgb : ambient.rgb;
     
     ///////////////////////////////////////////////////////////
-    
     
     float distNorm = (dist - viewRange.x) / (viewRange.y - viewRange.x);
     distNorm = 1. - distNorm;
@@ -523,7 +541,6 @@ void main() {
     
     ///////////////////////////////////////////////////////////
     
-    vec3 norm  = normal(coll);
     vec3 ref   = reflect(dir, norm);
     
     if(useEnv == 1) {
@@ -544,5 +561,6 @@ void main() {
     vec3 light = normalize(lightPosition);
     float lamo = min(1., max(0., dot(norm, light)) + ambientIntns);
     c = mix(background.rgb, c, lamo);
+    
     gl_FragColor = vec4(c, 1.);
 }

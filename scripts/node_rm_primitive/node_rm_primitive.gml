@@ -129,6 +129,11 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 35] = nodeValue("Reflective", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
+	inputs[| 36] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, false);
+	
+	inputs[| 37] = nodeValue("Triplanar Smoothing", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 10, 0.1 ] });
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
@@ -136,7 +141,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Modify",     false], 12, 11, 
 		["Deform",      true], 15, 16, 17, 18, 19, 
 		["Transform",  false], 2, 3, 4, 
-		["Material",   false], 9, 35, 
+		["Material",   false], 9, 36, 35, 37, 
 		["Camera",     false], 13, 14, 5, 6, 
 		["Render",     false], 31, 30, 34, 10, 7, 8, 
 		["Tile",       false], 20, 29, 
@@ -283,6 +288,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var bgEnv = _data[34];
 		var _refl = _data[35];
 		
+		var _text = _data[36];
+		var _triS = _data[37];
+		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		for (var i = 0, n = array_length(temp_surface); i < n; i++)
@@ -291,6 +299,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var tx = 1024;
 		surface_set_shader(temp_surface[0]);
 			draw_surface_stretched_safe(bgEnv, tx * 0, tx * 0, tx, tx);
+			draw_surface_stretched_safe(_text, tx * 1, tx * 0, tx, tx);
 		surface_reset_shader();
 		
 		gpu_set_texfilter(true);
@@ -369,8 +378,10 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			shader_set_i("volumetric",     _vol);
 			shader_set_f("volumeDensity",  _vden);
+			shader_set_f("triplanar",      _triS);
 			
-			shader_set_i("useEnv",  is_surface(bgEnv));
+			shader_set_i("useEnv",      is_surface(bgEnv));
+			shader_set_i("useTexture",  is_surface(_text));
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
