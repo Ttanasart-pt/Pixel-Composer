@@ -1,6 +1,9 @@
 //Inigo Quilez 
 //Oh where would I be without you.
 
+#define MAX_SHAPES 16
+#define MAX_OP     32
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -18,54 +21,65 @@ uniform sampler2D texture1;
 uniform sampler2D texture2;
 uniform sampler2D texture3;
 
-uniform float time;
+uniform int   operations[MAX_OP];
+uniform int   opLength;
 
-uniform int   shape;
-uniform vec3  size;
-uniform float radius;
-uniform float thickness;
-uniform float crop;
-uniform float angle;
-uniform float height;
-uniform vec2  radRange;
-uniform float sizeUni;
-uniform vec3  elongate;
-uniform float rounded;
+///////////////////////////////////////////////////////////////////
 
-uniform vec3 waveAmp;
-uniform vec3 waveInt;
-uniform vec3 waveShift;
+uniform int   shapeAmount;
+uniform int   shape[MAX_SHAPES]                                   ;
+uniform vec3  size[MAX_SHAPES]                                    ;
+uniform float radius[MAX_SHAPES]                                  ;
+uniform float thickness[MAX_SHAPES]                               ;
+uniform float crop[MAX_SHAPES]                                    ;
+uniform float angle[MAX_SHAPES]                                   ;
+uniform float height[MAX_SHAPES]                                  ;
+uniform vec2  radRange[MAX_SHAPES]                                ;
+uniform float sizeUni[MAX_SHAPES]                                 ;
+uniform vec3  elongate[MAX_SHAPES]                                ;
+uniform float rounded[MAX_SHAPES]                                 ;
+uniform vec4  corner[MAX_SHAPES]                                  ;
+uniform vec2  size2D[MAX_SHAPES]                                  ;
+uniform int   sides[MAX_SHAPES]                                   ;
 
-uniform int   twistAxis;
-uniform float twistAmount;
+uniform vec3  waveAmp[MAX_SHAPES]                                 ;
+uniform vec3  waveInt[MAX_SHAPES]                                 ;
+uniform vec3  waveShift[MAX_SHAPES]                               ;
 
-uniform vec3  position;
-uniform vec3  rotation;
-uniform float objectScale;
+uniform int   twistAxis[MAX_SHAPES]                               ;
+uniform float twistAmount[MAX_SHAPES]                             ;
+
+uniform vec3  position[MAX_SHAPES]                                ;
+uniform vec3  rotation[MAX_SHAPES]                                ;
+uniform float objectScale[MAX_SHAPES]                             ;
+
+uniform vec3  tileSize[MAX_SHAPES]                                ;
+uniform vec3  tileAmount[MAX_SHAPES]                              ;
+
+uniform vec4  diffuseColor[MAX_SHAPES]                            ;
+uniform float reflective[MAX_SHAPES]                              ;
+
+uniform int   volumetric[MAX_SHAPES]                              ;
+uniform float volumeDensity[MAX_SHAPES]                           ;
+
+uniform int   useTexture[MAX_SHAPES]                              ;
+uniform float textureScale[MAX_SHAPES]                            ;
+uniform float triplanar[MAX_SHAPES]                               ;
+
+///////////////////////////////////////////////////////////////////
 
 uniform int   ortho;
 uniform float fov;
 uniform float orthoScale;
 uniform vec2  viewRange;
 uniform float depthInt;
-uniform vec3  tileSize;
-uniform vec3  tileAmount;
 
 uniform int   drawBg;
 uniform vec4  background;
 uniform float ambientIntns;
 uniform vec3  lightPosition;
 
-uniform vec4  ambient;
-uniform float reflective;
-
 uniform int   useEnv;
-uniform int   useTexture;
-uniform float textureScale;
-uniform float triplanar;
-
-uniform int   volumetric;
-uniform float volumeDensity;
 
 mat3 rotMatrix, irotMatrix;
 
@@ -152,7 +166,33 @@ mat3 rotMatrix, irotMatrix;
 	
 #endregion
 
-#region ////========== Primitives ===========
+#region ////======== 2D Primitives ==========
+	
+	float sdRoundedBox( in vec2 p, in vec2 b, in vec4 r ) {
+	    r.xy = (p.x > 0.0)? r.xy : r.zw;
+	    r.x  = (p.y > 0.0)? r.x  : r.y;
+	    vec2 q = abs(p) - b + r.x;
+	    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r.x;
+	}
+	
+	float sdRegularPolygon(in vec2 p, in float r, in int n ) {
+	    // these 4 lines can be precomputed for a given shape
+	    float an = 3.141593 / float(n);
+	    vec2  acs = vec2(cos(an), sin(an));
+	
+	    // reduce to first sector
+	    float bn = mod(atan(p.x, p.y), 2.0 * an) - an;
+	    p = length(p) * vec2(cos(bn), abs(sin(bn)));
+	
+	    // line sdf
+	    p -= r * acs;
+	    p.y += clamp( -p.y, 0.0, r * acs.y);
+	    return length(p) * sign(p.x);
+	}
+		
+#endregion
+
+#region ////======== 3D Primitives ==========
     
 	float sdPlane( vec3 p, vec3 n, float h ) {
 		return dot(p,n) + h;
@@ -327,35 +367,40 @@ mat3 rotMatrix, irotMatrix;
 #region ////============ Modify =============
 	
 	vec4 opElongate( in vec3 p, in vec3 h ) {
-	    vec3 q = abs(p)-h;
-	    return vec4( max(q,0.0), min(max(q.x,max(q.y,q.z)),0.0) );
+	    vec3 q = abs(p) - h;
+	    return vec4( max(q, 0.0),  min(max(q.x, max(q.y, q.z)), 0.0) );
 	}
 	
-	vec3 wave(vec3 p) {
-	    p.x += sin(p.y * waveAmp.y + waveShift.x * PI * 2.) * waveInt.x + 
-	    	   sin(p.z * waveAmp.z + waveShift.x * PI * 2.) * waveInt.x;
-	    p.y += sin(p.x * waveAmp.x + waveShift.y * PI * 2.) * waveInt.y + 
-	    	   sin(p.z * waveAmp.z + waveShift.y * PI * 2.) * waveInt.y;
-	    p.z += sin(p.y * waveAmp.y + waveShift.z * PI * 2.) * waveInt.z + 
-	    	   sin(p.x * waveAmp.x + waveShift.z * PI * 2.) * waveInt.z;
+	float opExtrusion( in vec3 p, in float h, in float df2d ) {
+	    vec2 w = vec2( df2d, abs(p.z) - h );
+	    return min(max(w.x, w.y), 0.0) + length(max(w, 0.0));
+	}
+
+	vec3 wave(int index, vec3 p) {
+	    p.x += sin(p.y * waveAmp[index].y + waveShift[index].x * PI * 2.) * waveInt[index].x + 
+	    	   sin(p.z * waveAmp[index].z + waveShift[index].x * PI * 2.) * waveInt[index].x;
+	    p.y += sin(p.x * waveAmp[index].x + waveShift[index].y * PI * 2.) * waveInt[index].y + 
+	    	   sin(p.z * waveAmp[index].z + waveShift[index].y * PI * 2.) * waveInt[index].y;
+	    p.z += sin(p.y * waveAmp[index].y + waveShift[index].z * PI * 2.) * waveInt[index].z + 
+	    	   sin(p.x * waveAmp[index].x + waveShift[index].z * PI * 2.) * waveInt[index].z;
 		return p;
 	}
 	
-	vec3 twist(vec3 p) {
+	vec3 twist(int index, vec3 p) {
 	    
-	    float c = cos(twistAmount * p[twistAxis]);
-	    float s = sin(twistAmount * p[twistAxis]);
+	    float c = cos(twistAmount[index] * p[twistAxis[index]]);
+	    float s = sin(twistAmount[index] * p[twistAxis[index]]);
 	    mat2  m = mat2(c, -s, s, c);
 	    
-	    if(twistAxis == 0) {
+	    if(twistAxis[index] == 0) {
 	    	vec2 q = m * p.yz;
 	    	return vec3(p.x, q);
 	    	
-	    } else if(twistAxis == 1) {
+	    } else if(twistAxis[index] == 1) {
 	    	vec2 q = m * p.xz;
 	    	return vec3(q.x, p.y, q.y);
 	    	
-	    } else if(twistAxis == 2) {
+	    } else if(twistAxis[index] == 2) {
 	    	vec2 q = m * p.xy;
 	    	return vec3(q, p.z);
 	    	
@@ -364,6 +409,21 @@ mat3 rotMatrix, irotMatrix;
 	    return p;
 	}
 	
+	float opSmoothUnion( float d1, float d2, float k ) {
+	    float h = clamp( 0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0 );
+	    return mix( d2, d1, h ) - k * h * (1.0 - h);
+	}
+	
+	float opSmoothSubtraction( float d1, float d2, float k ) {
+	    float h = clamp( 0.5 - 0.5 * (d2 + d1) / k, 0.0, 1.0 );
+	    return mix( d2, -d1, h ) + k * h * (1.0 - h);
+	}
+	
+	float opSmoothIntersection( float d1, float d2, float k ) {
+	    float h = clamp( 0.5 - 0.5 * (d2 - d1) / k, 0.0, 1.0 );
+	    return mix( d2, d1, h ) + k * h * (1.0 - h);
+	}
+
 #endregion
 
 #region ////=========== View Mod ============
@@ -371,10 +431,10 @@ mat3 rotMatrix, irotMatrix;
 	float round(float v) { return fract(v) >= 0.5? ceil(v) : floor(v); }
 	vec3  round(vec3  v) { return vec3(round(v.x), round(v.y), round(v.z)); }
 	
-	vec3 tilePosition(vec3 p) {
-		if(tileAmount == vec3(0.)) 
-			return p - tileSize * round(p / tileSize);
-		 return p - tileSize * clamp(round(p / tileSize), -tileAmount, tileAmount);
+	vec3 tilePosition(int index, vec3 p) {
+		if(tileAmount[index] == vec3(0.)) 
+			return p - tileSize[index] * round(p / tileSize[index]);
+		 return p - tileSize[index] * clamp(round(p / tileSize[index]), -tileAmount[index], tileAmount[index]);
 	}
 	
 #endregion
@@ -397,67 +457,81 @@ mat3 rotMatrix, irotMatrix;
 
 ////========= Ray Marching ==========
 
-float sceneSDF(vec3 p) { 
+float sceneSDF(int index, vec3 p) { 
     float d;
     
-    p = wave(p);
+    mat3 rx = rotateX(rotation[index].x);
+    mat3 ry = rotateY(rotation[index].y);
+    mat3 rz = rotateZ(rotation[index].z);
+    rotMatrix  = rx * ry * rz;
+    irotMatrix = inverse(rotMatrix);
     
-    if(tileSize != vec3(0.))
-    	p = tilePosition(p);
+    p /= objectScale[index];
+	p -= position[index];
+    p =  irotMatrix * p;
+	
+    p = wave(index, p);
     
-    p = twist(p);
+    if(tileSize[index] != vec3(0.))
+    	p = tilePosition(index, p);
+    
+    p = twist(index, p);
     
     vec4 el = vec4(0.);
     
-    if(elongate != vec3(0.)) {
-	    el = opElongate(p, elongate);
+    if(elongate[index] != vec3(0.)) {
+	    el = opElongate(p, elongate[index]);
 	    p  = el.xyz;
     }
     
-         if(shape == 100) d = sdPlane(p, vec3(0., -1., 0.), 0.);
-    else if(shape == 101) d = sdBox(p, size / 2.);
-    else if(shape == 102) d = sdBoxFrame(p, size / 2., thickness);
+    int shp = shape[index];
     
-    else if(shape == 200) d = sdSphere(p, radius);
-    else if(shape == 201) d = sdEllipsoid(p, size / 2.);
-    else if(shape == 202) d = sdCutSphere(p, radius, crop);
-    else if(shape == 203) d = sdCutHollowSphere(p, radius, crop, thickness);
-    else if(shape == 204) d = sdTorus(p, vec2(radius, thickness));
-    else if(shape == 205) d = sdCappedTorus(p, angle, radius, thickness);
+         if(shp == 100) d = sdPlane(           p, vec3(0., -1., 0.), 0.);
+    else if(shp == 101) d = sdBox(             p, size[index] / 2.);
+    else if(shp == 102) d = sdBoxFrame(        p, size[index] / 2., thickness[index]);
+    else if(shp == 103) d = opExtrusion(       p, thickness[index], sdRoundedBox(p.xy, size2D[index], corner[index]));
     
-    else if(shape == 300) d = sdCappedCylinder(p, height, radius);
-    else if(shape == 301) d = sdCapsule(p, vec3(-height, 0., 0.), vec3(height, 0., 0.), radius);
-    else if(shape == 302) d = sdCone(p, angle, height);
-    else if(shape == 303) d = sdCappedCone(p, height, radRange.x, radRange.y);
-    else if(shape == 304) d = sdRoundCone(p, height, radRange.x, radRange.y);
-    else if(shape == 305) d = sdSolidAngle(p, angle, radius);
+    else if(shp == 200) d = sdSphere(          p, radius[index]);
+    else if(shp == 201) d = sdEllipsoid(       p, size[index] / 2.);
+    else if(shp == 202) d = sdCutSphere(       p, radius[index], crop[index]);
+    else if(shp == 203) d = sdCutHollowSphere( p, radius[index], crop[index], thickness[index]);
+    else if(shp == 204) d = sdTorus(           p, vec2(radius[index], thickness[index]));
+    else if(shp == 205) d = sdCappedTorus(     p, angle[index], radius[index], thickness[index]);
     
-    else if(shape == 400) d = sdOctahedron(p, sizeUni);
-    else if(shape == 401) d = sdPyramid(p, sizeUni);
+    else if(shp == 300) d = sdCappedCylinder(  p, height[index], radius[index]);
+    else if(shp == 301) d = sdCapsule(         p, vec3(-height[index], 0., 0.), vec3(height[index], 0., 0.), radius[index]);
+    else if(shp == 302) d = sdCone(            p, angle[index], height[index]);
+    else if(shp == 303) d = sdCappedCone(      p, height[index], radRange[index].x, radRange[index].y);
+    else if(shp == 304) d = sdRoundCone(       p, height[index], radRange[index].x, radRange[index].y);
+    else if(shp == 305) d = sdSolidAngle(      p, angle[index], radius[index]);
+    else if(shp == 306) d = opExtrusion(       p, thickness[index], sdRegularPolygon(p.xy, 0.5, sides[index]));
     
-    if(elongate != vec3(0.)) {
+    else if(shp == 400) d = sdOctahedron(      p, sizeUni[index]);
+    else if(shp == 401) d = sdPyramid(         p, sizeUni[index]);
+    
+    if(elongate[index] != vec3(0.)) {
     	d += el.w;
     }
     
-    d -= rounded;
-    d *= objectScale;
+    d -= rounded[index];
+    d *= objectScale[index];
     
     return d;
 }
 
-vec3 normal(vec3 p) {
+vec3 normal(int index, vec3 p) {
     return normalize(vec3(
-        sceneSDF(vec3(p.x + EPSILON, p.y, p.z)) - sceneSDF(vec3(p.x - EPSILON, p.y, p.z)),
-        sceneSDF(vec3(p.x, p.y + EPSILON, p.z)) - sceneSDF(vec3(p.x, p.y - EPSILON, p.z)),
-        sceneSDF(vec3(p.x, p.y, p.z + EPSILON)) - sceneSDF(vec3(p.x, p.y, p.z - EPSILON))
+        sceneSDF(index, vec3(p.x + EPSILON, p.y, p.z)) - sceneSDF(index, vec3(p.x - EPSILON, p.y, p.z)),
+        sceneSDF(index, vec3(p.x, p.y + EPSILON, p.z)) - sceneSDF(index, vec3(p.x, p.y - EPSILON, p.z)),
+        sceneSDF(index, vec3(p.x, p.y, p.z + EPSILON)) - sceneSDF(index, vec3(p.x, p.y, p.z - EPSILON))
     ));
 }
 
-float march(vec3 camera, vec3 direction) {
+float march(int index, vec3 camera, vec3 direction) {
 	float depth = viewRange.x;
     
     for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
-        float dist = sceneSDF(camera + depth * direction);
+        float dist = sceneSDF(index, camera + depth * direction);
         if (dist < EPSILON) 
 			return depth;
         
@@ -469,16 +543,16 @@ float march(vec3 camera, vec3 direction) {
   return viewRange.y;  
 }
 
-float marchDensity(vec3 camera, vec3 direction) {
+float marchDensity(int index, vec3 camera, vec3 direction) {
 	float st   = 1. / float(MAX_MARCHING_STEPS);
 	float dens = 0.;
-	float stp  = volumeDensity == 0. ? 0. : pow(2., 10. * volumeDensity * 0.5 - 10.);
+	float stp  = volumeDensity[index] == 0. ? 0. : pow(2., 10. * volumeDensity[index] * 0.5 - 10.);
 	   
     for (int i = 0; i <= MAX_MARCHING_STEPS; i++) {
         float depth = mix(viewRange.x, viewRange.y, float(i) * st);
         vec3  pos   = camera + depth * direction;
-        float hit   = sceneSDF(pos);
-        float inst  = (pos.y + objectScale) / (objectScale * 2.);
+        float hit   = sceneSDF(index, pos);
+        float inst  = (pos.y + objectScale[index]) / (objectScale[index] * 2.);
               inst  = inst <= 0.? 0. : pow(2., 10. * inst - 10.) * 10.;
         
         if (hit <= 0.) dens += stp;
@@ -487,81 +561,170 @@ float marchDensity(vec3 camera, vec3 direction) {
     return dens;
 }
 
-void main() {
+vec4 scene(int index, out float depth, out vec3 coll, out vec3 norm) {
+	depth = 0.;
 	
-	mat3 rx = rotateX(rotation.x);
-    mat3 ry = rotateY(rotation.y);
-    mat3 rz = rotateZ(rotation.z);
-    rotMatrix  = rx * ry * rz;
-    irotMatrix = inverse(rotMatrix);
-    
     float dz  = 1. / tan(radians(fov) / 2.);
     vec3  dir = normalize(vec3((v_vTexcoord - .5) * 2., -dz));
     vec3  eye = vec3(0., 0., 5.);
 	
-	dir  = normalize(irotMatrix * dir) / objectScale;
-	eye  = irotMatrix * eye;
-	eye /= objectScale;
-	eye -= position;
-	
-	vec4 bg = background;
-	if(useEnv == 1) {
-		float  edz  = 1. / tan(radians(fov * 2.) / 2.);
-    	vec3   edir = normalize(vec3((v_vTexcoord - .5) * 2., -edz));
-		       edir = normalize(irotMatrix * edir) / objectScale;
-		
-		vec2 envUV = equirectangularUv(edir);
-		vec4 endC  = sampleTexture(0, envUV);
-		bg = endC;
+	if(volumetric[index] == 1) {
+		float _dens = clamp(marchDensity(index, eye, dir), 0., 1.);
+		return diffuseColor[index] * _dens;
 	}
 	
-	gl_FragColor = drawBg == 1? bg : vec4(0.);
-	
-	if(volumetric == 1) {
-		float _dens = clamp(marchDensity(eye, dir), 0., 1.);
-		gl_FragColor = mix(background, ambient, _dens);
-		return;
-	}
-	
-    float dist = march(eye, dir);
-    vec3  coll = eye + dir * dist;
-    vec3 wcoll = irotMatrix * coll;
-    vec3 norm  = normal(coll);
+    depth = march(index, eye, dir);
+    coll  = eye + dir * depth;
+    norm  = normal(index, coll);
     
-    if(dist > viewRange.y - EPSILON) // Not hitting anything.
-        return;
+    if(depth > viewRange.y - EPSILON) // Not hitting anything.
+        return vec4(0.);
     
-    vec3 c = useTexture == 1? boxmap(1, coll * textureScale, norm, triplanar).rgb * ambient.rgb : ambient.rgb;
+    vec3 c = useTexture[index] == 1? 
+    	boxmap(int(TEXTURE_S) + index, coll * textureScale[index], norm, triplanar[index]).rgb * diffuseColor[index].rgb : 
+    	diffuseColor[index].rgb;
     
     ///////////////////////////////////////////////////////////
     
-    float distNorm = (dist - viewRange.x) / (viewRange.y - viewRange.x);
+    float distNorm = (depth - viewRange.x) / (viewRange.y - viewRange.x);
     distNorm = 1. - distNorm;
     distNorm = smoothstep(.0, .3, distNorm);
-    c = mix(background.rgb, c, mix(1., distNorm, depthInt));
+    c = mix(c * background.rgb, c, mix(1., distNorm, depthInt));
     
     ///////////////////////////////////////////////////////////
     
-    vec3 ref   = reflect(dir, norm);
-    
     if(useEnv == 1) {
-		vec4 refC =   sampleTexture(0, equirectangularUv(ref))
-		            + sampleTexture(0, equirectangularUv(ref + vec3( 0.01, 0., 0.))) * 0.5
-		            + sampleTexture(0, equirectangularUv(ref + vec3(-0.01, 0., 0.))) * 0.5
-		            + sampleTexture(0, equirectangularUv(ref + vec3(0.,  0.01, 0.))) * 0.5
-		            + sampleTexture(0, equirectangularUv(ref + vec3(0., -0.01, 0.))) * 0.5
-		            + sampleTexture(0, equirectangularUv(ref + vec3(0., 0.,  0.01))) * 0.5
-		            + sampleTexture(0, equirectangularUv(ref + vec3(0., 0., -0.01))) * 0.5;
-		refC /= 4.;
-		
-		c = mix(c, c * refC.rgb, reflective);
+    	vec3 ref  = reflect(dir, norm);
+		vec4 refC = sampleTexture(0, equirectangularUv(ref));
+		c = mix(c, c * refC.rgb, reflective[index]);
     }
 	
     ///////////////////////////////////////////////////////////
     
     vec3 light = normalize(lightPosition);
     float lamo = min(1., max(0., dot(norm, light)) + ambientIntns);
-    c = mix(background.rgb, c, lamo);
+    c = mix(c * background.rgb, c, lamo);
     
-    gl_FragColor = vec4(c, 1.);
+    return vec4(c, 1.);
+}
+
+vec4 sceneBlend(float depth, vec4 color, vec3 norm) {
+	if(depth > viewRange.y - EPSILON) // Not hitting anything.
+        return vec4(0.);
+    
+    vec3 c = color.rgb;
+    
+    ///////////////////////////////////////////////////////////
+    
+    float distNorm = (depth - viewRange.x) / (viewRange.y - viewRange.x);
+    distNorm = 1. - distNorm;
+    distNorm = smoothstep(.0, .3, distNorm);
+    c = mix(c * background.rgb, c, mix(1., distNorm, depthInt));
+    
+    vec3 light = normalize(lightPosition);
+    float lamo = min(1., max(0., dot(norm, light)) + ambientIntns);
+    c = mix(c * background.rgb, c, lamo);
+    
+    return vec4(c, 1.);
+}
+
+vec4 blend(in vec4 bg, in vec4 fg) {
+	float al = fg.a + bg.a * (1. - fg.a);
+	if(al == 0.) return bg;
+	
+	vec4 res = ((fg * fg.a) + (bg * bg.a * (1. - fg.a))) / al;
+	res.a = al;
+	
+	return res;
+}
+
+vec4 operate() {
+	vec4  color[MAX_OP];
+	vec3  colis[MAX_OP];
+	vec3  norml[MAX_OP];
+	float depth[MAX_OP];
+	
+	int top = 0;
+	int opr = 0;
+	
+	float d1, d2, dm, rt;
+	vec3  n1, n2, cl;
+	vec4  c1, c2;
+	float yy = viewRange.y - EPSILON;
+	
+	for(int i = 0; i < opLength; i++) {
+		opr = operations[i];
+		
+		if(opr < 100) {
+			color[top] = scene(opr, d1, cl, n1);
+			depth[top] = d1;
+			colis[top] = cl;
+			norml[top] = n1;
+			top++;
+			
+		} else {
+			top--;
+			c1 = color[top];
+			d1 = depth[top];
+			n1 = norml[top];
+			
+			top--;
+			c2 = color[top];
+			d2 = depth[top];
+			n2 = norml[top];
+			
+			if(opr == 100) {
+				if(d1 < yy || d2 < yy) {
+					
+					if(d1 < d2) {
+						color[top] = c1;
+						depth[top] = d1;
+						norml[top] = n1;
+					} else {
+						color[top] = c2;
+						depth[top] = d2;
+						norml[top] = n2;
+					}
+					
+				} else {
+					
+					color[top] = vec4(0.);
+					depth[top] = 0.;
+					norml[top] = vec3(0.);
+					
+				}
+				
+				top++;
+			}
+		}
+	}
+	
+	return color[0];
+}
+
+void main() {
+	
+	vec4 bg = background;
+	if(useEnv == 1) {
+		float  edz  = 1. / tan(radians(fov * 2.) / 2.);
+		vec3   edir = normalize(vec3((v_vTexcoord - .5) * 2., -edz));
+		       //edir = normalize(irotMatrix * edir) / objectScale[index];
+		
+		vec2 envUV = equirectangularUv(edir);
+		vec4 endC  = sampleTexture(0, envUV);
+		bg = endC;
+	}
+	
+	vec4  result = drawBg == 1? bg : vec4(0.);
+	float d;
+	vec3  c, n;
+	
+	if(operations[0] == -1)
+		result = blend(result, scene(0, d, c, n));
+	else
+		result = blend(result, operate());
+	
+    //////////////////////////////////////////////////
+    
+    gl_FragColor = result;
 }

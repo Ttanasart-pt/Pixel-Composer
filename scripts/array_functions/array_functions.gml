@@ -187,8 +187,8 @@ function array_insert_unique(arr, ind, val) { #region
 function array_append(arr, arr0) { #region
 	INLINE
 	
-	if(!is_array(arr))  return arr;
-	if(!is_array(arr0)) return arr;
+	if(!is_array(arr))    return arr;
+	if(!is_array(arr0)) { array_push(arr, arr0); return arr; }
 	
 	for( var i = 0, n = array_length(arr0); i < n; i++ )
 		array_push(arr, arr0[i]);

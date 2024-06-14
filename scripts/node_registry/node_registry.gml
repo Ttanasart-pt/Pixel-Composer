@@ -741,7 +741,7 @@ function __initNodes() {
 		addNodeObject(generator, "Random Tile",			s_node_random_tile,			"Node_Random_Tile",			[1, Node_Random_Tile],,			"Generate Random tile pattern.").patreonExtra();
 		addNodeObject(generator, "Quasicrystal",		s_node_quasicircle,			"Node_Quasicrystal",		[1, Node_Quasicrystal]).setVersion(11660);
 		addNodeObject(generator, "Pixel Sampler",		s_node_pixel_sampler,		"Node_Pixel_Sampler",		[1, Node_Pixel_Sampler]).setVersion(11730);
-			
+		
 		ds_list_add(generator, "Populate");
 		addNodeObject(generator, "Repeat",				s_node_repeat,				"Node_Repeat",				[1, Node_Repeat],,		"Repeat image multiple times linearly, or in grid pattern.").setVersion(1100);
 		addNodeObject(generator, "Scatter",				s_node_scatter,				"Node_Scatter",				[1, Node_Scatter],,		"Scatter image randomly multiple times.");
@@ -765,6 +765,7 @@ function __initNodes() {
 		ds_list_add(generator, "Ray Marching");
 		addNodeObject(generator, "RM Primitive",		s_node_rm_primitive,		"Node_RM_Primitive",		[1, Node_RM_Primitive], ["ray marching"]).setVersion(11720);
 		addNodeObject(generator, "RM Terrain",			s_node_rm_terrain,			"Node_RM_Terrain",			[1, Node_RM_Terrain], ["ray marching"]).setVersion(11720);
+		addNodeObject(generator, "RM Combine",			s_node_rm_combine,			"Node_RM_Combine",			[1, Node_RM_Combine], ["ray marching"]).setVersion(11740);
 		
 		ds_list_add(generator, "MK Effects");
 		addNodeObject(generator, "MK Rain",				s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain]).setVersion(11600);

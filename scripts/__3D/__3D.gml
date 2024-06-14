@@ -571,8 +571,8 @@ enum CAMERA_PROJ {
 		
 		shader_set(shader);
 		shader_set_uniform_f_array_safe(uniVertex_lightFor, lightFor);
-		shader_set_uniform_f_array_safe(uniLightAmb, colorArrayFromReal(_aclr));
-		shader_set_uniform_f_array_safe(uniLightClr, colorArrayFromReal(_lclr));
+		shader_set_uniform_f_array_safe(uniLightAmb, colorToArray(_aclr));
+		shader_set_uniform_f_array_safe(uniLightClr, colorToArray(_lclr));
 		shader_set_uniform_f(uniLightInt, _lint);
 		shader_set_uniform_i(uniLightNrm, use_normal);
 		

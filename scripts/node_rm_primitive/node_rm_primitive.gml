@@ -1,15 +1,16 @@
 function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RM Primitive";
+	batch_output = true;
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	shape_types = [ 
-		"Plane", "Box", "Box Frame",
+		"Plane", "Box", "Box Frame", "Box Round", 
 		-1, 
 		"Sphere", "Ellipse", "Cut Sphere", "Cut Hollow Sphere", "Torus", "Capped Torus",
 		-1,
-		"Cylinder", "Capsule", "Cone", "Capped Cone", "Round Cone", "3D Arc", 
+		"Cylinder", "Prism", "Capsule", "Cone", "Capped Cone", "Round Cone", "3D Arc", 
 		-1, 
 		"Octahedron", "Pyramid", 
 	];
@@ -102,8 +103,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 26] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 27] = nodeValue("Radius Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .7)
-		.setDisplay(VALUE_DISPLAY.slider);
+	inputs[| 27] = nodeValue("Radius Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ .7, .1 ])
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 28] = nodeValue("Uniform Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -136,21 +137,34 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 38] = nodeValue("Texture Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.);
 	
+	inputs[| 39] = nodeValue("Corner", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.25, 0.25, 0.25, 0.25 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 40] = nodeValue("2D Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 41] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3);
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	outputs[| 1] = nodeValue("Shape Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, noone);
+	
 	input_display_list = [ 0,
-		["Primitive",  false], 1, 21, 22, 23, 24, 25, 26, 27, 28, 
+		["Primitive",  false],  1, 21, 22, 23, 24, 25, 26, 27, 28, 39, 40, 41, 
 		["Modify",     false], 12, 11, 
 		["Deform",      true], 15, 16, 17, 18, 19, 
-		["Transform",  false], 2, 3, 4, 
-		["Material",   false], 9, 36, 35, 37, 38, 
-		["Camera",     false], 13, 14, 5, 6, 
-		["Render",     false], 31, 30, 34, 10, 7, 8, 
+		["Transform",  false],  2,  3,  4, 
+		["Material",   false],  9, 36, 35, 37, 38, 
+		["Camera",     false], 13, 14,  5,  6, 
+		["Render",     false], 31, 30, 34, 10,  7,  8, 
 		["Tile",       false], 20, 29, 
 		["Volumetric",  true, 32], 33, 
 	];
 	
-	temp_surface = [ 0, 0, 0, 0 ];
+	temp_surface = [ 0, 0 ];
+	object = new RM_Shape();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
@@ -166,6 +180,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		inputs[| 26].setVisible(false);
 		inputs[| 27].setVisible(false);
 		inputs[| 28].setVisible(false);
+		inputs[| 39].setVisible(false);
+		inputs[| 40].setVisible(false);
+		inputs[| 41].setVisible(false);
 		
 		var _shape = shape_types[_shp];
 		switch(_shape) { // Size
@@ -191,11 +208,13 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		switch(_shape) { // Thickness
 			case "Box Frame" : 
+			case "Box Round" : 
 			case "Torus" : 
 			case "Cut Hollow Sphere" : 
 			case "Capped Torus" : 
 			case "Terrain" : 
 			case "Extrude" : 
+			case "Prism" : 
 				inputs[| 23].setVisible(true);
 				break;
 		}
@@ -238,6 +257,24 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			case "Terrain" : 
 			case "Extrude" : 
 				inputs[| 28].setVisible(true);
+				break;
+		}
+		
+		switch(_shape) { // Corner
+			case "Box Round" : 
+				inputs[| 39].setVisible(true);
+				break;
+		}
+		
+		switch(_shape) { // Size 2D
+			case "Box Round" : 
+				inputs[| 40].setVisible(true);
+				break;
+		}
+		
+		switch(_shape) { // Sides
+			case "Prism" : 
+				inputs[| 41].setVisible(true);
 				break;
 		}
 		
@@ -293,6 +330,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _text = _data[36];
 		var _triS = _data[37];
 		var _texs = _data[38];
+		var _corn = _data[39];
+		var _sz2d = _data[40];
+		var _side = _data[41];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
@@ -302,96 +342,105 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var tx = 1024;
 		surface_set_shader(temp_surface[0]);
 			draw_surface_stretched_safe(bgEnv, tx * 0, tx * 0, tx, tx);
-			draw_surface_stretched_safe(_text, tx * 1, tx * 0, tx, tx);
 		surface_reset_shader();
 		
-		gpu_set_texfilter(true);
+		var _shape = shape_types[_shp];
+		var _shpI  = 0;
 		
+		switch(_shape) {
+			case "Plane" :				_shpI = 100;												break;
+			case "Box" :				_shpI = 101;												break;
+			case "Box Frame" :      	_shpI = 102;												break;
+			case "Box Round" :      	_shpI = 103;												break;
+								
+			case "Sphere" :         	_shpI = 200;												break;
+			case "Ellipse" :        	_shpI = 201;												break;
+			case "Cut Sphere" :     	_shpI = 202;												break;
+			case "Cut Hollow Sphere" :	_shpI = 203; _crop = _crop / pi * 2.15;						break;
+			case "Torus" :          	_shpI = 204;												break;
+			case "Capped Torus" :   	_shpI = 205;												break;
+			
+			case "Cylinder" :       	_shpI = 300;												break;
+			case "Capsule" :        	_shpI = 301;												break;
+			case "Cone" :           	_shpI = 302;												break;
+			case "Capped Cone" :    	_shpI = 303;												break;
+			case "Round Cone" :     	_shpI = 304;												break;
+			case "3D Arc" :         	_shpI = 305;												break;
+			case "Prism" :         		_shpI = 306;												break;
+			
+			case "Octahedron" :     	_shpI = 400;												break;
+			case "Pyramid" :        	_shpI = 401;												break;
+		}
+		
+		object.operations    = -1;
+		object.shapeAmount   =  1;
+		
+		object.shape         = _shpI;
+		object.size          = _size;
+		object.radius        = _rad ;
+		object.thickness     = _thk ;
+		object.crop          = _crop;
+		object.angle         = degtorad(_angl);
+		object.height        = _heig;
+		object.radRange      = _radR;
+		object.sizeUni       = _sizz;
+		object.elongate      = _elon;
+		object.rounded       = _rond;
+		object.corner        = _corn;
+		object.size2D        = _sz2d;
+		object.sides         = _side;
+		
+		object.waveAmp       = _wavA;
+		object.waveInt       = _wavI;
+		object.waveShift     = _wavS;
+		
+		object.twistAxis     = _twsX;
+		object.twistAmount   = _twsA;
+		
+		object.position      = _pos;
+		object.rotation      = _rot;
+		object.objectScale   = _sca;
+		
+		object.tileSize      = _tile;
+		object.tileAmount    = _tilA;
+		
+		object.diffuseColor  = colorToArray(_amb, true);
+		object.reflective    = _refl;
+		    
+		object.volumetric    = _vol;
+		object.volumeDensity = _vden;
+		    
+		object.texture       = [ _text ];
+		object.useTexture    = is_surface(_text);
+		object.textureScale  = _texs;
+		object.triplanar     = _triS;
+			
+		object.setTexture(temp_surface[1]);
+		
+		gpu_set_texfilter(true);
 		surface_set_shader(_outSurf, sh_rm_primitive);
 			
-			var _shape = shape_types[_shp];
-			var _shpI = 0;
-			
-			switch(_shape) {
-				case "Plane" :				_shpI = 100;												break;
-				case "Box" :				_shpI = 101;												break;
-				case "Box Frame" :      	_shpI = 102;												break;
-									
-				case "Sphere" :         	_shpI = 200;												break;
-				case "Ellipse" :        	_shpI = 201;												break;
-				case "Cut Sphere" :     	_shpI = 202;												break;
-				case "Cut Hollow Sphere" :	_shpI = 203; _crop = _crop / pi * 2.15;						break;
-				case "Torus" :          	_shpI = 204;												break;
-				case "Capped Torus" :   	_shpI = 205;												break;
-				
-				case "Cylinder" :       	_shpI = 300;												break;
-				case "Capsule" :        	_shpI = 301;												break;
-				case "Cone" :           	_shpI = 302;												break;
-				case "Capped Cone" :    	_shpI = 303;												break;
-				case "Round Cone" :     	_shpI = 304;												break;
-				case "3D Arc" :         	_shpI = 305;												break;
-				
-				case "Octahedron" :     	_shpI = 400;												break;
-				case "Pyramid" :        	_shpI = 401;												break;
-			}
-			
-			for (var i = 0, n = array_length(temp_surface); i < n; i++)
-				shader_set_surface($"texture{i}", temp_surface[i]);
-			
-			shader_set_f("time",        CURRENT_FRAME / TOTAL_FRAMES);
-			
-			shader_set_i("shape",       _shpI);
-			shader_set_f("size",        _size);
-			shader_set_f("radius",      _rad);
-			shader_set_f("thickness",   _thk);
-			shader_set_f("crop",        _crop);
-			shader_set_f("angle",        degtorad(_angl));
-			shader_set_f("height",      _heig);
-			shader_set_f("radRange",    _radR);
-			shader_set_f("sizeUni",     _sizz);
-			shader_set_f("elongate",    _elon);
-			shader_set_f("rounded",     _rond);
-			
-			shader_set_f("waveAmp",     _wavA);
-			shader_set_f("waveInt",     _wavI);
-			shader_set_f("waveShift",   _wavS);
-			
-			shader_set_i("twistAxis",   _twsX);
-			shader_set_f("twistAmount", _twsA);
-			
-			shader_set_f("position",    _pos);
-			shader_set_f("rotation",    _rot);
-			shader_set_f("objectScale", _sca);
+			shader_set_surface($"texture0", temp_surface[0]);
 			
 			shader_set_i("ortho",       _ort);
 			shader_set_f("fov",         _fov);
 			shader_set_f("orthoScale",  _ortS);
 			shader_set_f("viewRange",   _rng);
 			shader_set_f("depthInt",    _dpi);
-			shader_set_f("tileSize",    _tile);
-			shader_set_f("tileAmount",  _tilA);
 			
 			shader_set_i("drawBg",  	   _bgd);
 			shader_set_color("background", _bgc);
 			shader_set_f("ambientIntns",   _ambI);
 			shader_set_f("lightPosition",  _lPos);
 			
-			shader_set_color("ambient",    _amb);
-			shader_set_f("reflective",     _refl);
-			
-			shader_set_i("volumetric",     _vol);
-			shader_set_f("volumeDensity",  _vden);
-			shader_set_f("triplanar",      _triS);
-			shader_set_f("textureScale",   _texs);
-			
 			shader_set_i("useEnv",      is_surface(bgEnv));
-			shader_set_i("useTexture",  is_surface(_text));
+			
+			object.apply();
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
-		
 		gpu_set_texfilter(false);
 		
-		return _outSurf; 
+		return [ _outSurf, object ]; 
 	}
 } 

@@ -1,9 +1,9 @@
 {
   "$GMScript":"",
-  "%Name":"node_rm_terrain",
+  "%Name":"__raymarching",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_rm_terrain",
+  "name":"__raymarching",
   "parent":{
     "name":"raymarching",
     "path":"folders/nodes/data/3D/raymarching.yy",

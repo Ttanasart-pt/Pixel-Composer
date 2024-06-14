@@ -53,8 +53,9 @@
 		return make_color_rgb(r, g, b);
 	} #endregion
 	
-	function colorArrayFromReal(clr) { #region
+	function colorToArray(clr, alpha = false) { #region
 		INLINE
+		if(alpha) return [ _color_get_red(clr), _color_get_green(clr), _color_get_blue(clr), _color_get_alpha(clr) ];	
 		return [ _color_get_red(clr), _color_get_green(clr), _color_get_blue(clr) ];	
 	} #endregion
 

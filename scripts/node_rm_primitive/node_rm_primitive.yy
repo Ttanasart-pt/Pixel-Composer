@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_rm_primitive",
   "parent":{
-    "name":"ray march",
-    "path":"folders/nodes/data/generator/ray march.yy",
+    "name":"raymarching",
+    "path":"folders/nodes/data/3D/raymarching.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
