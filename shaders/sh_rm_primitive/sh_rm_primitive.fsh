@@ -27,6 +27,7 @@ uniform int   opLength;
 ///////////////////////////////////////////////////////////////////
 
 uniform int   shapeAmount;
+
 uniform int   shape[MAX_SHAPES]                                   ;
 uniform vec3  size[MAX_SHAPES]                                    ;
 uniform float radius[MAX_SHAPES]                                  ;
@@ -581,7 +582,7 @@ vec4 scene(int index, out float depth, out vec3 coll, out vec3 norm) {
         return vec4(0.);
     
     vec3 c = useTexture[index] == 1? 
-    	boxmap(int(TEXTURE_S) + index, coll * textureScale[index], norm, triplanar[index]).rgb * diffuseColor[index].rgb : 
+    	boxmap(int(TEXTURE_S) + index, irotMatrix * coll * textureScale[index], irotMatrix * norm, triplanar[index]).rgb * diffuseColor[index].rgb : 
     	diffuseColor[index].rgb;
     
     ///////////////////////////////////////////////////////////
@@ -600,26 +601,6 @@ vec4 scene(int index, out float depth, out vec3 coll, out vec3 norm) {
     }
 	
     ///////////////////////////////////////////////////////////
-    
-    vec3 light = normalize(lightPosition);
-    float lamo = min(1., max(0., dot(norm, light)) + ambientIntns);
-    c = mix(c * background.rgb, c, lamo);
-    
-    return vec4(c, 1.);
-}
-
-vec4 sceneBlend(float depth, vec4 color, vec3 norm) {
-	if(depth > viewRange.y - EPSILON) // Not hitting anything.
-        return vec4(0.);
-    
-    vec3 c = color.rgb;
-    
-    ///////////////////////////////////////////////////////////
-    
-    float distNorm = (depth - viewRange.x) / (viewRange.y - viewRange.x);
-    distNorm = 1. - distNorm;
-    distNorm = smoothstep(.0, .3, distNorm);
-    c = mix(c * background.rgb, c, mix(1., distNorm, depthInt));
     
     vec3 light = normalize(lightPosition);
     float lamo = min(1., max(0., dot(norm, light)) + ambientIntns);
@@ -674,26 +655,15 @@ vec4 operate() {
 			n2 = norml[top];
 			
 			if(opr == 100) {
-				if(d1 < yy || d2 < yy) {
-					
-					if(d1 < d2) {
-						color[top] = c1;
-						depth[top] = d1;
-						norml[top] = n1;
-					} else {
-						color[top] = c2;
-						depth[top] = d2;
-						norml[top] = n2;
-					}
-					
+				if(d1 < d2) {
+					color[top] = c1;
+					depth[top] = d1;
+					norml[top] = n1;
 				} else {
-					
-					color[top] = vec4(0.);
-					depth[top] = 0.;
-					norml[top] = vec3(0.);
-					
+					color[top] = c2;
+					depth[top] = d2;
+					norml[top] = n2;
 				}
-				
 				top++;
 			}
 		}
