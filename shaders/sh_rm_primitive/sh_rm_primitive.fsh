@@ -87,6 +87,8 @@ uniform vec3  lightPosition;
 
 uniform int   useEnv;
 
+float influences[MAX_SHAPES];
+
 #region ////========== Transform ============
     mat3 rotateX(float dg) {
         float c = cos(radians(dg));
@@ -533,16 +535,18 @@ float sceneSDF(int index, vec3 p) {
 float operateSceneSDF(vec3 p, out vec3 blendIndx) {
 	blendIndx = vec3(0.);
 	
-	if(operations[0] == -1)
+	if(operations[0] == -1) {
+		influences[0] = 1.;
 		return sceneSDF(0, p);
+	}
 	
 	float depth[MAX_OP];
-	float index[MAX_OP];
+	int   index[MAX_OP];
 	
-	float d1, d2, o1, o2;
-	float mrg;
-	int top = 0;
-	int opr = 0;
+	float d1, d2, mrg;
+	int   o1, o2;
+	int   top = 0;
+	int   opr = 0;
 	
 	for(int i = 0; i < opLength; i++) {
 		opr = operations[i];
@@ -550,7 +554,7 @@ float operateSceneSDF(vec3 p, out vec3 blendIndx) {
 		
 		if(opr < 100) {
 			depth[top] = sceneSDF(opr, p);
-			index[top] = float(opr);
+			index[top] = opr;
 			top++;
 			
 		} else if(top >= 2) {
@@ -566,38 +570,48 @@ float operateSceneSDF(vec3 p, out vec3 blendIndx) {
 				if(d1 < d2) {
 					depth[top] = d1;
 					index[top] = o1;
-					blendIndx.x = o1;
-					blendIndx.z = 0.;
+					blendIndx.x = float(o1);
+					
+					influences[o1] = 1.;
+					influences[o2] = 0.;
 					
 				} else {
 					depth[top] = d2;
 					index[top] = o2;
-					blendIndx.x = o2;
-					blendIndx.z = 0.;
+					blendIndx.x = float(o2);
+					
+					influences[o1] = 0.;
+					influences[o2] = 1.;
 						
 				}
 				
 			} else if(opr == 101) {
 				vec2 m = smin(d1, d2, mrg);
-				blendIndx.x = o1;
-				blendIndx.y = o2;
+				blendIndx.x = float(o1);
+				blendIndx.y = float(o2);
 				blendIndx.z = m.y;
+				
+				influences[o1] = 1. - m.y;
+				influences[o2] = m.y;
 				
 				depth[top]  = m.x;
 				index[top]  = d1 < d2? o1 : o2;
 				
 			} else if(opr == 102) {
 				float m = opSmoothSubtraction(d1, d2, mrg);
-				blendIndx.x = o2;
-				blendIndx.z = 0.;
+				blendIndx.x = float(o2);
+				
+				influences[o1] = 0.;
 				
 				depth[top]  = m;
 				index[top]  = o2;
 				
 			} else if(opr == 103) {
 				float m = opSmoothIntersection(d1, d2, mrg);
-				blendIndx.x = o1;
-				blendIndx.z = 0.;
+				blendIndx.x = float(o1);
+				
+				influences[o1] = 1.;
+				influences[o2] = 0.;
 				
 				depth[top]  = m;
 				index[top]  = o1;
@@ -616,11 +630,17 @@ float operateSceneSDF(vec3 p, out vec3 blendIndx) {
 vec3 normal(vec3 p) {
 	vec3 b;
 	
-    return normalize(vec3(
-        operateSceneSDF(vec3(p.x + EPSILON, p.y, p.z), b) - operateSceneSDF(vec3(p.x - EPSILON, p.y, p.z), b),
-        operateSceneSDF(vec3(p.x, p.y + EPSILON, p.z), b) - operateSceneSDF(vec3(p.x, p.y - EPSILON, p.z), b),
-        operateSceneSDF(vec3(p.x, p.y, p.z + EPSILON), b) - operateSceneSDF(vec3(p.x, p.y, p.z - EPSILON), b)
-    ));
+	vec2 e = vec2(1.0, -1.0) * 0.0001;
+    return normalize( e.xyy * operateSceneSDF( p + e.xyy, b ) + 
+					  e.yyx * operateSceneSDF( p + e.yyx, b ) + 
+					  e.yxy * operateSceneSDF( p + e.yxy, b ) + 
+					  e.xxx * operateSceneSDF( p + e.xxx, b ) );
+					  
+    // return normalize(vec3(
+    //     operateSceneSDF(vec3(p.x + EPSILON, p.y, p.z), b) - operateSceneSDF(vec3(p.x - EPSILON, p.y, p.z), b),
+    //     operateSceneSDF(vec3(p.x, p.y + EPSILON, p.z), b) - operateSceneSDF(vec3(p.x, p.y - EPSILON, p.z), b),
+    //     operateSceneSDF(vec3(p.x, p.y, p.z + EPSILON), b) - operateSceneSDF(vec3(p.x, p.y, p.z - EPSILON), b)
+    // ));
 }
 
 float march(vec3 camera, vec3 direction, out vec3 blendIndx) {
@@ -636,7 +656,22 @@ float march(vec3 camera, vec3 direction, out vec3 blendIndx) {
             return viewRange.y;
     }
 	 
-  return viewRange.y;  
+	return viewRange.y;  
+}
+
+float marchLinear(vec3 camera, vec3 direction, out vec3 blendIndx) {
+	float st   = 1. / float(MAX_MARCHING_STEPS);
+	
+    for (int i = 0; i <= MAX_MARCHING_STEPS; i++) {
+        float depth = mix(viewRange.x, viewRange.y, float(i) * st);
+        vec3  pos   = camera + depth * direction;
+        float hit   = operateSceneSDF(pos, blendIndx);
+        
+        if (hit <= 0.)
+        	return depth;
+    }
+    
+    return viewRange.y;
 }
 
 float marchDensity(vec3 camera, vec3 direction) {
@@ -671,7 +706,7 @@ vec4 scene() {
     vec2  cps = (v_vTexcoord - .5) * 2.;
     	  cps.x *= camRatio;
     	  
-    vec3  dir = normalize(vec3(cps, -dz));
+    vec3  dir = vec3(cps, -dz);
     vec3  eye = vec3(0., 0., 5.);
 	
     dir  = normalize(camIrotMatrix * dir);
@@ -696,21 +731,31 @@ vec4 scene() {
     if(depth > viewRange.y - EPSILON) // Not hitting anything.
         return vec4(0.);
     
-    rx = rotateX(mix(rotation[idx0].x, rotation[idx1].x, rat));
-    ry = rotateY(mix(rotation[idx0].y, rotation[idx1].y, rat));
-    rz = rotateZ(mix(rotation[idx0].z, rotation[idx1].z, rat));
-    mat3 rotMatrix  = rx * ry * rz;
-    mat3 irotMatrix = inverse(rotMatrix);
+    ///////////////////////////////////////////////////////////
     
-    vec3 c0 = useTexture[idx0] == 1? 
-    	boxmap(int(TEXTURE_S) + idx0, irotMatrix * coll * textureScale[idx0], irotMatrix * norm, triplanar[idx0]).rgb * diffuseColor[idx0].rgb : 
-    	diffuseColor[idx0].rgb;
+    float totalInfluences = 0.;
+    for(int i = 0; i < shapeAmount; i++)
+    	totalInfluences += influences[i];
     
-    vec3 c1 = useTexture[idx1] == 1? 
-    	boxmap(int(TEXTURE_S) + idx1, irotMatrix * coll * textureScale[idx1], irotMatrix * norm, triplanar[idx1]).rgb * diffuseColor[idx1].rgb : 
-    	diffuseColor[idx1].rgb;
+    vec3 c = vec3(0.);
     
-    vec3 c = mix(c0, c1, rat);
+    if(totalInfluences > 0.) {
+	    for(int i = 0; i < shapeAmount; i++) {
+	    	if(influences[i] == 0.) continue;
+	    	
+	    	rx = rotateX(rotation[i].x);
+		    ry = rotateY(rotation[i].y);
+		    rz = rotateZ(rotation[i].z);
+		    mat3 rotMatrix  = rx * ry * rz;
+		    mat3 irotMatrix = inverse(rotMatrix);
+		    
+		    vec3 _c = useTexture[i] == 1? 
+		    	boxmap(int(TEXTURE_S) + i, irotMatrix * coll * textureScale[i], irotMatrix * norm, triplanar[i]).rgb * diffuseColor[i].rgb : 
+		    	diffuseColor[i].rgb;
+		    
+		    c += _c * (influences[i] / totalInfluences);
+	    }
+    }
     
     ///////////////////////////////////////////////////////////
     

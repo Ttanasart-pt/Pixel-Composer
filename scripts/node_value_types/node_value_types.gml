@@ -234,7 +234,7 @@ function value_color_bg_array(i) { #region
 		#bd4882, //dynaSurf
 		#83839b, //PCX
 		#3ca370, //audiobit
-		#c1007c, //3D SDF
+		#4b5bab, //3D SDF
 	];
 	
 	if(i == 99) return $5dde8f;
