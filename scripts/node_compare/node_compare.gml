@@ -49,7 +49,7 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
 	
-	static _eval = function(mode, a, b) {
+	static _compare = function(mode, a, b) {
 		switch(mode) {
 			case COMPARE_OPERATOR.equal :		 return a == b;
 			case COMPARE_OPERATOR.nonEqual :	 return a != b;
@@ -63,31 +63,38 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		return 0;
 	}
 	
+	static evalArray = function(mode, a, b) {
+		var _as = is_array(a);
+		var _bs = is_array(b);
+		var al  = _as? array_length(a) : 0;
+		var bl  = _bs? array_length(b) : 0;
+		
+		var val = 0;
+		
+		if(!_as && !_bs)
+			val = _compare(mode, a, b);
+			
+		else if(!_as && _bs) {
+			for( var i = 0; i < bl; i++ )
+				val[i] = evalArray(mode, a, b[i]);
+				
+		} else if(_as && !_bs) {
+			for( var i = 0; i < al; i++ )
+				val[i] = evalArray(mode, a[i], b);
+				
+		} else {
+			for( var i = 0; i < max(al, bl); i++ ) 
+				val[i] = evalArray(mode, array_safe_get_fast(a, i), array_safe_get_fast(b, i));
+		}
+		
+		return val;
+	}
+	
 	static update = function(frame = CURRENT_FRAME) { 
 		var mode = getInputData(0);
 		var a    = getInputData(1);
 		var b    = getInputData(2);
-		
-		//print($"compare node | Comparing {mode}: {a}, {b}.");
-		
-		var as = is_array(a);
-		var bs = is_array(b);
-		var al = as? array_length(a) : 0;
-		var bl = bs? array_length(b) : 0;
-		
-		var val = 0;
-		if(!as && !bs)
-			val = _eval(mode, a, b);
-		else if(!as && bs) {
-			for( var i = 0; i < bl; i++ )
-				val[i] = _eval(mode, a, b[i]);
-		} else if(as && !bs) {
-			for( var i = 0; i < al; i++ )
-				val[i] = _eval(mode, a[i], b);
-		} else {
-			for( var i = 0; i < max(al, bl); i++ ) 
-				val[i] = _eval(mode, array_safe_get_fast(a, i), array_safe_get_fast(b, i));
-		}
+		var val  = evalArray(mode, a, b);
 		
 		outputs[| 0].setValue(val);
 	}
