@@ -13,7 +13,7 @@ function svg_parse(xmlStr) {
 	var ww   = struct_try_get(attr, "width",  1);
 	var hh   = struct_try_get(attr, "height", 1);
 	
-	var svg = new SVG();
+	var svg = new SVG().setAttr(attr);
 	svg.width  = toNumber(string_digits(ww));
 	svg.height = toNumber(string_digits(hh));
 	
@@ -23,12 +23,6 @@ function svg_parse(xmlStr) {
 		for (var i = 0, n = array_length(bbox); i < n; i++)
 			bbox[i] = real(bbox[i])
 		svg.bbox   = bbox;
-	}
-	
-	if(struct_has(attr, "fill")) {
-		var _f = attr.fill;
-		_f = string_replace_all(_f, "#", "");
-		svg.fill = color_from_rgb(_f);
 	}
 	
 	if(struct_has(svg_object, "children")) {

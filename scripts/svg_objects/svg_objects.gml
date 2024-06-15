@@ -18,7 +18,12 @@ function SVGElement(svgObj = noone) constructor {
 		stroke       = struct_try_get(attr, "stroke",       undefined);
 		stroke_width = struct_try_get(attr, "stroke-width", undefined);
 		
+		if(is_string(fill))   fill   = color_from_rgb(string_replace_all(fill,   "#", ""));
+		if(is_string(stroke)) stroke = color_from_rgb(string_replace_all(stroke, "#", ""));
+		
 		shapeAttr(attr);
+		
+		return self;
 	}
 	
 	static shapeAttr = function(attr) {}
@@ -38,8 +43,6 @@ function SVG(svgObj = noone) : SVGElement(svgObj) constructor {
 	
 	static mapX = function(px) { return lerp_invert(px, bbox[0], bbox[0] + bbox[2]) *  width; }
 	static mapY = function(py) { return lerp_invert(py, bbox[1], bbox[1] + bbox[3]) * height; }
-	
-	static setAttr = function(attr) {}
 	
 	static getSurface = function(scale = 1) { return surface_create(width * scale, height * scale); }
 	
