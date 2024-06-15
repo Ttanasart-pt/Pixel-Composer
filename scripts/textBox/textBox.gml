@@ -23,7 +23,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	slidePen    = false;
 	slide_delta = 0;
 	slide_int   = false;
-	slide_speed = 1 / 10;
+	slide_speed = 1 / 25;
 	slide_snap  = 0;
 	slide_range = noone;
 	curr_range  = [ 0, 1 ];

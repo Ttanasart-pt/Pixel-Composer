@@ -34,27 +34,46 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 10] = nodeValue("Environment", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, false);
 	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	inputs[| 11] = nodeValue("Camera Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 30, 45, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 11] = nodeValue("Shape 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {})
-		.setVisible(true, true);
-	
-	inputs[| 12] = nodeValue("Shape 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {})
-		.setVisible(true, true);
+	inputs[| 12] = nodeValue("Camera Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 13] = nodeValue("Shape 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {})
+		.setVisible(true, true);
+	
+	inputs[| 14] = nodeValue("Shape 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {})
+		.setVisible(true, true);
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 15] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Place", "Union", "Subtract", "Intersect" ]);
+	
+	inputs[| 16] = nodeValue("Merge", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Shape Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, noone);
 	
 	input_display_list = [ 0,
-		["Camera", false], 1, 2, 3, 4, 5, 
-		["Render", false], 6, 7, 8, 10, 9, 
-		["Shapes", false], 11, 12, 
+		["Combine", false], 15, 13, 14, 
+		["Camera",  false], 11, 12, 1, 2, 3, 4, 5, 
+		["Render",  false], 6, 7, 8, 10, 9, 
 	]
 	
+	object = noone;
 	temp_surface = [ 0, 0 ];
+	
+	static step = function() {
+		var _type = getSingleValue(15);
+		
+		inputs[| 16].setVisible(_type > 0);
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) {
 		var _dim = _data[0];
@@ -70,9 +89,13 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _amb = _data[8];
 		var _lig = _data[9];
 		var _env = _data[10];
+		var _crt = _data[11];
+		var _csa = _data[12];
 		
-		var _sh0 = _data[11];
-		var _sh1 = _data[12];
+		var _sh0 = _data[13];
+		var _sh1 = _data[14];
+		var _typ = _data[15];
+		var _mer = _data[16];
 		
 		if(!is_instanceof(_sh0, RM_Object)) return [ _outSurf, noone ];
 		if(!is_instanceof(_sh1, RM_Object)) return [ _outSurf, noone ];
@@ -87,7 +110,14 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			draw_surface_stretched_safe(_env, tx * 0, tx * 0, tx, tx);
 		surface_reset_shader();
 		
-		var object = new RM_Operation("combine", _sh0, _sh1);
+		switch(_typ) {
+			case 0 : object = new RM_Operation("combine",   _sh0, _sh1); break;
+			case 1 : object = new RM_Operation("union",     _sh0, _sh1); break;
+			case 2 : object = new RM_Operation("subtract",  _sh0, _sh1); break;
+			case 3 : object = new RM_Operation("intersect", _sh0, _sh1); break;
+ 		}
+ 		
+ 		object.merge = _mer;
 		object.flatten();
 		object.setTexture(temp_surface[1]);
 		
@@ -95,6 +125,9 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		surface_set_shader(_outSurf, sh_rm_primitive);
 			
 			shader_set_surface($"texture0", temp_surface[0]);
+			
+			shader_set_f("camRotation", _crt);
+			shader_set_f("camScale",    _csa);
 			
 			shader_set_i("ortho",       _pro);
 			shader_set_f("fov",         _fov);

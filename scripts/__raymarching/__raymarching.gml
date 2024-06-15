@@ -43,6 +43,7 @@ function RM_Object() constructor {
 	triplanar     = [];
 	
 	opmap = -1;
+	oparg = [];
 	
 	uniformKeys   = [ "shape", "size", "radius", "thickness", "crop", "angle", "height", "radRange", "sizeUni", "elongate", "rounded", "corner", "size2D", "sides", 
 					  "waveAmp", "waveInt", "waveShift", 
@@ -73,6 +74,7 @@ function RM_Object() constructor {
 		if(shapeAmount <= 0) return;
 		
 		shader_set_i("operations",       opmap);
+		shader_set_i("opArgument",       oparg);
 		shader_set_i("opLength",         array_safe_length(opmap));
 		
 		shader_set_i("shape",            shape);
@@ -124,6 +126,7 @@ function RM_Operation(type, left, right) : RM_Object() constructor {
 	self.type  = type;
 	self.left  = left;
 	self.right = right;
+	merge = 0;
 	
 	static reset = function() {
 		
@@ -174,13 +177,20 @@ function RM_Operation(type, left, right) : RM_Object() constructor {
 			
 			if(is_string(_a)) {
 				switch(_a) {
-					case "combine" : array_push(opmap, 100); break;
+					case "combine"   : array_push(opmap, 100); break;
+					case "union"     : array_push(opmap, 101); break;
+					case "subtract"  : array_push(opmap, 102); break;
+					case "intersect" : array_push(opmap, 103); break;
 				}
-			} else if(is_struct(_a))
+				
+				array_push(oparg, merge);
+				
+			} else if(is_struct(_a)) {
 				array_push(opmap, _a.flatten_index);
+				array_push(oparg, 0);
+			}
 		}
 		
-		// print(opmap);
 		shapeAmount = array_length(_nodes);
 		
 		reset();

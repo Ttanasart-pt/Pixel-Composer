@@ -30,7 +30,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 30, 45, 0 ])
+	inputs[| 3] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 4] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
@@ -147,6 +147,12 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
+	inputs[| 42] = nodeValue("Camera Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 30, 45, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 43] = nodeValue("Camera Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Shape Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, noone);
@@ -157,7 +163,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Deform",      true], 15, 16, 17, 18, 19, 
 		["Transform",  false],  2,  3,  4, 
 		["Material",   false],  9, 36, 35, 37, 38, 
-		["Camera",     false], 13, 14,  5,  6, 
+		["Camera",     false], 42, 43, 13, 14,  5,  6, 
 		["Render",     false], 31, 30, 34, 10,  7,  8, 
 		["Tile",       false], 20, 29, 
 		["Volumetric",  true, 32], 33, 
@@ -334,6 +340,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _sz2d = _data[40];
 		var _side = _data[41];
 		
+		var _crt  = _data[42];
+		var _csa  = _data[43];
+		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		for (var i = 0, n = array_length(temp_surface); i < n; i++)
@@ -422,6 +431,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			shader_set_surface($"texture0", temp_surface[0]);
 			
+			shader_set_f("camRotation", _crt);
+			shader_set_f("camScale",    _csa);
+			
 			shader_set_i("ortho",       _ort);
 			shader_set_f("fov",         _fov);
 			shader_set_f("orthoScale",  _ortS);
@@ -443,4 +455,5 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		return [ _outSurf, object ]; 
 	}
+	
 } 
