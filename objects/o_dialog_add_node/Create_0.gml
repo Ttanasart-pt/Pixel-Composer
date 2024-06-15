@@ -659,12 +659,14 @@ event_inherited();
 			}
 			
 			if(PREFERENCES.dialog_add_node_grouping) {
-				gpu_set_blendmode(bm_subtract);
-				draw_set_color(c_white);
-				draw_rectangle(0, 0, content_pane.surface_w, ui(16 + 24 / 2), false);
-				gpu_set_blendmode(bm_normal);
-				
 				var len = array_length(group_labels);
+				if(len) {
+					gpu_set_blendmode(bm_subtract);
+					draw_set_color(c_white);
+					draw_rectangle(0, 0, content_pane.surface_w, ui(16 + 24 / 2), false);
+					gpu_set_blendmode(bm_normal);
+				}
+				
 				for( var i = 0; i < len; i++ ) {
 					var lb = group_labels[i];
 					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));

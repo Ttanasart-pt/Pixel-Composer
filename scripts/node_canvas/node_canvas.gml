@@ -953,7 +953,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var cDep   = attrDepth();
 		
-		if(_bgDim && is_surface(_bg)) _dim = [ surface_get_width_safe(_bg), surface_get_height_safe(_bg) ];
+		if(_bgDim) {
+			var _bgDim = _bg;
+			if(is_array(_bgDim) && !array_empty(_bgDim)) _bgDim = _bg[0];
+			
+			if(is_surface(_bgDim))
+				_dim = [ surface_get_width_safe(_bgDim), surface_get_height_safe(_bgDim) ];
+		}
 		attributes.dimension = _dim;
 		apply_surfaces();
 		
@@ -965,6 +971,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(_frames == 1) {
 			var _canvas_surface = getCanvasSurface(0);
+			if(is_array(_bg) && !array_empty(_bg)) _bg = _bg[0];
+			
 			output_surface[0]   = surface_verify(output_surface[0], _dim[0], _dim[1], cDep);
 			
 			surface_set_shader(output_surface[0], noone,, BLEND.alpha);
@@ -977,11 +985,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		} else {
 			for( var i = 0; i < _frames; i++ ) {
 				var _canvas_surface = getCanvasSurface(i);
-				output_surface[i] = surface_verify(output_surface[i], _dim[0], _dim[1], cDep);
+				var _bgArray        = is_array(_bg)? array_safe_get_fast(_bg, i, 0) : _bg;
+				output_surface[i]   = surface_verify(output_surface[i], _dim[0], _dim[1], cDep);
 			
 				surface_set_shader(output_surface[i], noone,, BLEND.alpha);
-					if(_bgr && is_surface(_bg))
-						draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
+					if(_bgr && is_surface(_bgArray))
+						draw_surface_stretched_ext(_bgArray, 0, 0, _dim[0], _dim[1], c_white, _bga);
 					draw_surface_safe(_canvas_surface, 0, 0);
 				surface_reset_shader();
 			}
