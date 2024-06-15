@@ -15,11 +15,12 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	inputs[| in_mesh + 4] = nodeValue("Height array", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [] )
 		.setArrayDepth(2);
+		
+	inputs[| in_mesh + 5] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
 	input_display_list = [
-		__d3d_input_list_mesh, 
 		__d3d_input_list_transform,
-		["Terrain",		false], in_mesh + 3, in_mesh + 1, in_mesh + 2, in_mesh + 4, 
+		["Terrain",		false], in_mesh + 3, in_mesh + 1, in_mesh + 2, in_mesh + 4, in_mesh + 5, 
 		["Material",	false], in_mesh + 0, 
 	]
 	
@@ -36,30 +37,38 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		var _sub = _data[in_mesh + 3];
 		var _his = _data[in_mesh + 2];
 		var _hia = _data[in_mesh + 4];
+		var _smt = _data[in_mesh + 5];
 		
-		var _h = array_create((_sub + 1) * (_sub + 1));
+		var _h     = array_create((_sub + 1) * (_sub + 1));
 		var object = getObject(_array_index);
 		
 		if(_inT == 0 && is_surface(_his)) {
 			var _ind = 0;
-			var _pxw = surface_get_width(_his)  / (_sub + 1);
-			var _pxh = surface_get_height(_his) / (_sub + 1);
+			var _sw  = surface_get_width(_his);
+			var _sh  = surface_get_height(_his);
+			
+			var _pxw = _sw / (_sub + 1);
+			var _pxh = _sh / (_sub + 1);
+			var _bf  = buffer_from_surface(_his, false);
 			
 			for( var i = 0; i < _sub + 1; i++ ) 
 			for( var j = 0; j < _sub + 1; j++ ) {
-				var cc = surface_getpixel(_his, j * _pxw, i * _pxh);
+				var ps   = clamp(round(i * _pxh), 0, _sh) * _sw + clamp(round(j * _pxw), 0, _sw);
+				buffer_seek(_bf, buffer_seek_start, ps * 4);
+				
+				var cc   = buffer_read(_bf, buffer_u32);
 				_h[_ind] = colorBrightness(cc);
 				_ind++;
 			}
+			
+			buffer_delete(_bf);
 		} else if(_inT == 1 && !array_empty(_hia)) {
 			if(is_array(_hia[0])) _hia = array_spread(_hia);
 			
 			array_copy(_h, 0, _hia, 0, min(array_length(_h), array_length(_hia)));
 		}
 		
-		if(IS_FIRST_FRAME) object.initModel();
-		
-		object.checkParameter({ subdivision: _sub });
+		object.checkParameter({ subdivision: _sub, smooth: _smt });
 		object.updateHeight(_h);
 		object.materials   = [ _mat ];
 		
