@@ -180,7 +180,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		drag_axis  = noone;
 		drag_sv    = 0;
 		drag_delta = 0;
-		drag_prev  = 0;
+		drag_pre0  = 0;
+		drag_pre1  = 0;
 		drag_dist  = 0;
 		drag_val   = 0;
 		
@@ -200,6 +201,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	static drawGizmoPosition = function(index, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
 		#region ---- main ----
 			var _pos  = inputs[| index].getValue(,,, true);
+			    // _pos  = [ -_pos[0], _pos[2], -_pos[1] ];
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 			
 			var _camera = params.camera;
@@ -275,45 +277,45 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 				}
 			}
 			
-			for( var i = 3; i < 6; i++ ) {
-				for( var j = 0; j < 4; j++ )
-					ga[i][j] = _qview.Rotate(_qinv.Rotate(ga[i][j]));
+			// for( var i = 3; i < 6; i++ ) {
+			// 	for( var j = 0; j < 4; j++ )
+			// 		ga[i][j] = _qview.Rotate(_qinv.Rotate(ga[i][j]));
 				
-				th = 1;
+			// 	th = 1;
 				
-				var p0x = cx + ga[i][0].X, p0y = cy + ga[i][0].Y;
-				var p1x = cx + ga[i][1].X, p1y = cy + ga[i][1].Y;
-				var p2x = cx + ga[i][2].X, p2y = cy + ga[i][2].Y;
-				var p3x = cx + ga[i][3].X, p3y = cy + ga[i][3].Y;
+			// 	var p0x = cx + ga[i][0].X, p0y = cy + ga[i][0].Y;
+			// 	var p1x = cx + ga[i][1].X, p1y = cy + ga[i][1].Y;
+			// 	var p2x = cx + ga[i][2].X, p2y = cy + ga[i][2].Y;
+			// 	var p3x = cx + ga[i][3].X, p3y = cy + ga[i][3].Y;
 				
-				var _pax = (p0x + p1x + p2x + p3x) / 4;
-				var _pay = (p0y + p1y + p2y + p3y) / 4;
+			// 	var _pax = (p0x + p1x + p2x + p3x) / 4;
+			// 	var _pay = (p0y + p1y + p2y + p3y) / 4;
 				
-				if((abs(p0x - _pax) + abs(p1x - _pax) + abs(p2x - _pax) + abs(p3x - _pax)) / 4 < 1)
-					continue;
-				if((abs(p0y - _pay) + abs(p1y - _pay) + abs(p2y - _pay) + abs(p3y - _pay)) / 4 < 1)
-					continue;
+			// 	if((abs(p0x - _pax) + abs(p1x - _pax) + abs(p2x - _pax) + abs(p3x - _pax)) / 4 < 1)
+			// 		continue;
+			// 	if((abs(p0y - _pay) + abs(p1y - _pay) + abs(p2y - _pay) + abs(p3y - _pay)) / 4 < 1)
+			// 		continue;
 				
-				draw_set_color(COLORS.axis[(i - 3 - 1 + 3) % 3]);
-				if(axis_hover == i || drag_axis == i) {
-					draw_primitive_begin(pr_trianglestrip);
-						draw_vertex(p0x, p0y);
-						draw_vertex(p1x, p1y);
-						draw_vertex(p3x, p3y);
-						draw_vertex(p2x, p2y);
-					draw_primitive_end();
+			// 	draw_set_color(COLORS.axis[(i - 3 - 1 + 3) % 3]);
+			// 	if(axis_hover == i || drag_axis == i) {
+			// 		draw_primitive_begin(pr_trianglestrip);
+			// 			draw_vertex(p0x, p0y);
+			// 			draw_vertex(p1x, p1y);
+			// 			draw_vertex(p3x, p3y);
+			// 			draw_vertex(p2x, p2y);
+			// 		draw_primitive_end();
 					
-				} else if (drag_axis == noone) {
-					draw_line(p0x, p0y, p1x, p1y);
-					draw_line(p1x, p1y, p2x, p2y);
-					draw_line(p2x, p2y, p3x, p3y);
-					draw_line(p3x, p3y, p0x, p0y);
-				} else 
-					continue;
+			// 	} else if (drag_axis == noone) {
+			// 		draw_line(p0x, p0y, p1x, p1y);
+			// 		draw_line(p1x, p1y, p2x, p2y);
+			// 		draw_line(p2x, p2y, p3x, p3y);
+			// 		draw_line(p3x, p3y, p0x, p0y);
+			// 	} else 
+			// 		continue;
 				
-				if(point_in_rectangle_points(_mx, _my, p0x, p0y, p1x, p1y, p3x, p3y, p2x, p2y))
-					_hover = i;
-			}
+			// 	if(point_in_rectangle_points(_mx, _my, p0x, p0y, p1x, p1y, p3x, p3y, p2x, p2y))
+			// 		_hover = i;
+			// }
 			
 			axis_hover = _hover;
 		#endregion display
@@ -323,54 +325,36 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 				drag_mx += _mx - drag_px;
 				drag_my += _my - drag_py;
 					
-				var mAdj, nor, prj;
+				var mAdj, nor, prj, app;
 					
 				var ray = _camera.viewPointToWorldRay(drag_mx, drag_my);
 				var val = [ drag_val[0], drag_val[1], drag_val[2] ];
 				
-				if(drag_axis < 3) {
-					switch(drag_axis) {
-						case 0 : nor = new __vec3(0, 1, 0); prj = new __vec3(1, 0, 0); break;
-						case 1 : nor = new __vec3(0, 0, 1); prj = new __vec3(0, 1, 0); break;
-						case 2 : nor = new __vec3(1, 0, 0); prj = new __vec3(0, 0, 1); break;
-					}
-					
-					var pln = new __plane(drag_original, nor);
-					mAdj = d3d_intersect_ray_plane(ray, pln);
-						
-					if(drag_prev != undefined) {
-						var _diff = mAdj.subtract(drag_prev);
-						var _dist = _diff.dot(prj);
-						
-						for( var i = 0; i < 3; i++ ) 
-							val[i] += prj.getIndex(i) * _dist;
-						
-						if(inputs[| index].setValue(value_snap(val, _snx)))
-							UNDO_HOLDING = true;
-					}
-				} else {
-					switch(drag_axis) {
-						case 3 : nor = new __vec3(0, 0, 1); break;
-						case 4 : nor = new __vec3(1, 0, 0); break;
-						case 5 : nor = new __vec3(0, 1, 0); break;
-					}
-						
-					var pln = new __plane(drag_original, nor);
-					mAdj = d3d_intersect_ray_plane(ray, pln);
-						
-					if(drag_prev != undefined) {
-						var _diff = mAdj.subtract(drag_prev);
-						
-						for( var i = 0; i < 3; i++ ) 
-							val[i] += _diff.getIndex(i);
-						
-						if(inputs[| index].setValue(value_snap(val, _snx))) 
-							UNDO_HOLDING = true;
-					}
+				switch(drag_axis) {
+					case 0 : 
+					case 3 : nor = new __vec3(0, 1, 0); prj = new __vec3(1, 0, 0); app =  0; break;
+					case 1 : 
+					case 4 : nor = new __vec3(0, 0, 1); prj = new __vec3(0, 1, 0); app = -2; break;
+					case 2 : 
+					case 5 : nor = new __vec3(1, 0, 0); prj = new __vec3(0, 0, 1); app =  1; break;
 				}
+				
+				var pln = new __plane(drag_original, nor);
+				mAdj = d3d_intersect_ray_plane(ray, pln);
+				
+				if(drag_pre0 != undefined) {
+					var _diff = mAdj.subtract(drag_pre0);
+					var _dist = _diff.dot(prj);
 					
+					val[abs(app)] -= _dist * (app >= 0? 1 : -1);
+				}
+				
+				drag_pre0 = mAdj;
+				
+				if(inputs[| index].setValue(value_snap(val, _snx)))
+					UNDO_HOLDING = true;
+				
 				drag_val  = [ val[0], val[1], val[2] ];
-				drag_prev = mAdj;
 			}
 				
 			setMouseWrap();
@@ -380,7 +364,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			
 		if(_hover != noone && mouse_press(mb_left, active)) { #region
 			drag_axis = _hover;
-			drag_prev = undefined;
+			drag_pre0 = undefined;
+			drag_pre1 = undefined;
 			drag_mx	= _mx;
 			drag_my	= _my;
 			drag_px = _mx;
@@ -394,8 +379,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	} #endregion
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
-		var _pos  = getSingleValue(2);
-		var _vpos = new __vec3( _pos[0], _pos[1], _pos[2] );
+		var _pos    = getSingleValue(2);
+		var _camera = params.camera;
+		var _vpos   = new __vec3( -_pos[0], _pos[2], -_pos[1] );
 		
 		if(isUsingTool("Transform"))	drawGizmoPosition(2, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
 		

@@ -1133,10 +1133,14 @@ function Panel_Preview() : PanelContent() constructor {
 	function draw3DSdf(_node) { #region
 		_node.previewing = 1;
 		
+		var _env = _node.environ; 
+		var _obj = _node.object; 
+		
 		d3_scene_preview = d3_scene;
 		d3_scene_preview.camera = d3_view_camera;
 		
 		#region view
+			d3_view_camera.fov = max(1, _env.fov * 1.23);
 			var _pos, targ, _blend = 1;
 			
 			targ = d3_camTarget;
@@ -1173,9 +1177,6 @@ function Panel_Preview() : PanelContent() constructor {
 			d3_view_camera.setViewSize(w, h);
 			d3_view_camera.setMatrix();
 		#endregion
-		
-		var _env = _node.environ; 
-		var _obj = _node.object; 
 		
 		draw_clear(bg_color);
 			
