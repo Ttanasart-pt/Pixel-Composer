@@ -101,6 +101,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		if(add_point) _hash += $"{point_x},{point_y}|";
 		
 		if(_hash == "") {
+			group_vertex = [];
 			destroy();
 			return;
 		}
@@ -288,15 +289,6 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		draw_primitive_end();
 		
 		draw_set_alpha(1);
-		
-		//draw_set_color(c_white);
-		//for( var i = 0, n = array_length(group_vertex); i < n; i++ ) {
-		//	a = group_vertex[i];
-		//	var _vx = _x + a[0] * _s;
-		//	var _vy = _y + a[1] * _s;
-			
-		//	draw_circle(_vx, _vy, 1, false);
-		//}
 		
 		add_point = false;
 		

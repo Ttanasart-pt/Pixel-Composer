@@ -1024,15 +1024,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		frame_hovering  = noone;
 		
 		for(var i = 0; i < array_length(nodes_list); i++) {
-			nodes_list[i].cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
-			nodes_list[i].preDraw(gr_x, gr_y, graph_s, gr_x, gr_y);
+			var _nl = nodes_list[i];
+			
+			_nl.cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
+			_nl.preDraw(gr_x, gr_y, graph_s, gr_x, gr_y);
 		}
 		printIf(log, $"Predraw time: {get_timer() - t}"); t = get_timer();
 		
 		#region draw frame
 			for(var i = 0; i < array_length(nodes_list); i++) {
-				if(nodes_list[i].drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter))
-					frame_hovering = nodes_list[i];
+				var _nl = nodes_list[i];
+				
+				if(_nl.drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter))
+					frame_hovering = _nl;
 			}
 		#endregion
 		printIf(log, $"Frame draw time: {get_timer() - t}"); t = get_timer();
