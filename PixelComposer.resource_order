@@ -985,6 +985,7 @@
     {"name":"node_random_tile","order":8,"path":"scripts/node_random_tile/node_random_tile.yy",},
     {"name":"node_random","order":5,"path":"scripts/node_random/node_random.yy",},
     {"name":"node_rate_remap","order":3,"path":"scripts/node_rate_remap/node_rate_remap.yy",},
+    {"name":"node_raymarching","order":5,"path":"scripts/node_raymarching/node_raymarching.yy",},
     {"name":"node_rd","order":4,"path":"scripts/node_rd/node_rd.yy",},
     {"name":"node_region_fill","order":1,"path":"scripts/node_region_fill/node_region_fill.yy",},
     {"name":"node_registry","order":11,"path":"scripts/node_registry/node_registry.yy",},

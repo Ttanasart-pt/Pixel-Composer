@@ -60,10 +60,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		tools      = tool_quate;
 		
 		tool_axis_edit = new scrollBox([ "local", "global" ], function(val) { tool_attribute.context = val; });
-		// tool_axis_edit.font      = f_p2;
-		// tool_axis_edit.arrow_spr = THEME.arrow;
-		// tool_axis_edit.arrow_ind = 3;
-		tool_attribute.context   = 0;
+		tool_attribute.context = 0;
 		tool_settings = [
 			[ "Axis", tool_axis_edit, "context", tool_attribute ],
 		];

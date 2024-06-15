@@ -72,6 +72,7 @@ uniform float triplanar[MAX_SHAPES]                               ;
 
 uniform vec3  camRotation;
 uniform float camScale;
+uniform float camRatio;
 
 uniform int   ortho;
 uniform float fov;
@@ -85,8 +86,6 @@ uniform float ambientIntns;
 uniform vec3  lightPosition;
 
 uniform int   useEnv;
-
-mat3 rotMatrix, irotMatrix;
 
 #region ////========== Transform ============
     mat3 rotateX(float dg) {
@@ -475,8 +474,8 @@ float sceneSDF(int index, vec3 p) {
     mat3 rx = rotateX(rotation[index].x);
     mat3 ry = rotateY(rotation[index].y);
     mat3 rz = rotateZ(rotation[index].z);
-    rotMatrix  = rx * ry * rz;
-    irotMatrix = inverse(rotMatrix);
+    mat3 rotMatrix  = rx * ry * rz;
+    mat3 irotMatrix = inverse(rotMatrix);
     
     p /= objectScale[index];
 	p -= position[index];
@@ -541,20 +540,20 @@ float operateSceneSDF(vec3 p, out vec3 blendIndx) {
 	float index[MAX_OP];
 	
 	float d1, d2, o1, o2;
-	float merge;
+	float mrg;
 	int top = 0;
 	int opr = 0;
 	
 	for(int i = 0; i < opLength; i++) {
 		opr = operations[i];
-		merge = opArgument[i];
+		mrg = opArgument[i];
 		
 		if(opr < 100) {
 			depth[top] = sceneSDF(opr, p);
 			index[top] = float(opr);
 			top++;
 			
-		} else {
+		} else if(top >= 2) {
 			top--;
 			d1 = depth[top];
 			o1 = index[top];
@@ -567,21 +566,19 @@ float operateSceneSDF(vec3 p, out vec3 blendIndx) {
 				if(d1 < d2) {
 					depth[top] = d1;
 					index[top] = o1;
-				 blendIndx.x = o1;
-				 blendIndx.z = 0.;
+					blendIndx.x = o1;
+					blendIndx.z = 0.;
 					
 				} else {
 					depth[top] = d2;
 					index[top] = o2;
-				 blendIndx.x = o2;
-				 blendIndx.z = 0.;
-					
+					blendIndx.x = o2;
+					blendIndx.z = 0.;
+						
 				}
 				
-				top++;
-				
 			} else if(opr == 101) {
-				vec2 m = smin(d1, d2, merge);
+				vec2 m = smin(d1, d2, mrg);
 				blendIndx.x = o1;
 				blendIndx.y = o2;
 				blendIndx.z = m.y;
@@ -590,15 +587,15 @@ float operateSceneSDF(vec3 p, out vec3 blendIndx) {
 				index[top]  = d1 < d2? o1 : o2;
 				
 			} else if(opr == 102) {
-				float m = opSmoothSubtraction(d1, d2, merge);
-				blendIndx.x = o1;
+				float m = opSmoothSubtraction(d1, d2, mrg);
+				blendIndx.x = o2;
 				blendIndx.z = 0.;
 				
 				depth[top]  = m;
-				index[top]  = o1;
+				index[top]  = o2;
 				
 			} else if(opr == 103) {
-				float m = opSmoothIntersection(d1, d2, merge);
+				float m = opSmoothIntersection(d1, d2, mrg);
 				blendIndx.x = o1;
 				blendIndx.z = 0.;
 				
@@ -606,7 +603,11 @@ float operateSceneSDF(vec3 p, out vec3 blendIndx) {
 				index[top]  = o1;
 				
 			}
-		}
+			
+			top++;
+			
+		} else  //error, not enough values
+			break;
 	}
 	
 	return depth[0];
@@ -667,10 +668,13 @@ vec4 scene() {
     mat3 camIrotMatrix = inverse(camRotMatrix);
     
     float dz  = 1. / tan(radians(fov) / 2.);
-    vec3  dir = normalize(vec3((v_vTexcoord - .5) * 2., -dz));
+    vec2  cps = (v_vTexcoord - .5) * 2.;
+    	  cps.x *= camRatio;
+    	  
+    vec3  dir = normalize(vec3(cps, -dz));
     vec3  eye = vec3(0., 0., 5.);
 	
-    dir  = normalize(camIrotMatrix * dir) / camScale;
+    dir  = normalize(camIrotMatrix * dir);
 	eye  = camIrotMatrix * eye;
 	eye /= camScale;
 	
@@ -691,6 +695,12 @@ vec4 scene() {
     
     if(depth > viewRange.y - EPSILON) // Not hitting anything.
         return vec4(0.);
+    
+    rx = rotateX(mix(rotation[idx0].x, rotation[idx1].x, rat));
+    ry = rotateY(mix(rotation[idx0].y, rotation[idx1].y, rat));
+    rz = rotateZ(mix(rotation[idx0].z, rotation[idx1].z, rat));
+    mat3 rotMatrix  = rx * ry * rz;
+    mat3 irotMatrix = inverse(rotMatrix);
     
     vec3 c0 = useTexture[idx0] == 1? 
     	boxmap(int(TEXTURE_S) + idx0, irotMatrix * coll * textureScale[idx0], irotMatrix * norm, triplanar[idx0]).rgb * diffuseColor[idx0].rgb : 

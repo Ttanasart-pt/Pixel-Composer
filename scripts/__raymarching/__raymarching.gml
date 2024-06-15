@@ -43,7 +43,7 @@ function RM_Object() constructor {
 	triplanar     = [];
 	
 	opmap = -1;
-	oparg = [];
+	oparg = -1;
 	
 	uniformKeys   = [ "shape", "size", "radius", "thickness", "crop", "angle", "height", "radRange", "sizeUni", "elongate", "rounded", "corner", "size2D", "sides", 
 					  "waveAmp", "waveInt", "waveShift", 
@@ -74,7 +74,7 @@ function RM_Object() constructor {
 		if(shapeAmount <= 0) return;
 		
 		shader_set_i("operations",       opmap);
-		shader_set_i("opArgument",       oparg);
+		shader_set_f("opArgument",       oparg);
 		shader_set_i("opLength",         array_safe_length(opmap));
 		
 		shader_set_i("shape",            shape);
@@ -119,6 +119,9 @@ function RM_Object() constructor {
 		shader_set_f("textureScale",     textureScale);
 		shader_set_f("triplanar",        triplanar);
 	}
+	
+	static serialize   = function() { return ""};
+	static deserialize = function() { };
 }
 
 function RM_Operation(type, left, right) : RM_Object() constructor {
@@ -170,8 +173,10 @@ function RM_Operation(type, left, right) : RM_Object() constructor {
 			_a.flatten_index = array_length(_nodes);
 			array_push(_nodes, _a);
 		}
-			
+		
 		opmap = [];
+		oparg = [];
+		
 		for (var i = 0, n = array_length(_arr); i < n; i++) {
 			var _a = _arr[i];
 			
@@ -202,4 +207,39 @@ function RM_Operation(type, left, right) : RM_Object() constructor {
 
 function RM_Shape() : RM_Object() constructor {
 	
+}
+
+function RM_Environment() constructor {
+	surface = noone;
+	bgEnv   = noone;
+	
+	projection = 0;
+	fov        = 0;
+	orthoScale = 1;
+	viewRange  = [ 0, 1 ];
+	depthInt   = 0;
+	
+	bgColor    = c_black;
+	bgDraw     = false;
+	ambInten   = 0;
+	light      = [ 1, 0.5, 0 ];
+	
+	static apply = function() {
+		
+		shader_set_surface($"texture0", surface);
+		
+		shader_set_i("ortho",       projection);
+		shader_set_f("fov",         fov);
+		shader_set_f("orthoScale",  orthoScale);
+		shader_set_f("viewRange",   viewRange);
+		shader_set_f("depthInt",    depthInt);
+		
+		shader_set_i("drawBg",  	   bgColor);
+		shader_set_color("background", bgDraw);
+		shader_set_f("ambientIntns",   ambInten);
+		shader_set_f("lightPosition",  light);
+		
+		shader_set_i("useEnv",      is_surface(bgEnv));
+		
+	}
 }

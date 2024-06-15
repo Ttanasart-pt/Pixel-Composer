@@ -1412,6 +1412,7 @@
     {"id":{"name":"node_random_tile","path":"scripts/node_random_tile/node_random_tile.yy",},},
     {"id":{"name":"node_random","path":"scripts/node_random/node_random.yy",},},
     {"id":{"name":"node_rate_remap","path":"scripts/node_rate_remap/node_rate_remap.yy",},},
+    {"id":{"name":"node_raymarching","path":"scripts/node_raymarching/node_raymarching.yy",},},
     {"id":{"name":"node_rd","path":"scripts/node_rd/node_rd.yy",},},
     {"id":{"name":"node_region_fill","path":"scripts/node_region_fill/node_region_fill.yy",},},
     {"id":{"name":"node_registry","path":"scripts/node_registry/node_registry.yy",},},

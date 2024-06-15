@@ -1,6 +1,5 @@
-function Node_RM_Combine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "RM Combine";
-	batch_output = true;
+function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constructor {
+	name  = "RM Combine";
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -42,10 +41,10 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 13] = nodeValue("Shape 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {})
+	inputs[| 13] = nodeValue("Shape 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdf, {})
 		.setVisible(true, true);
 	
-	inputs[| 14] = nodeValue("Shape 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {})
+	inputs[| 14] = nodeValue("Shape 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdf, {})
 		.setVisible(true, true);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,23 +57,25 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Shape Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, noone);
+	outputs[| 1] = nodeValue("Shape Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdf, noone);
 	
 	input_display_list = [ 0,
-		["Combine", false], 15, 13, 14, 
+		["Combine", false], 15, 16, 13, 14, 
 		["Camera",  false], 11, 12, 1, 2, 3, 4, 5, 
 		["Render",  false], 6, 7, 8, 10, 9, 
 	]
 	
-	object = noone;
 	temp_surface = [ 0, 0 ];
+	environ = new RM_Environment();
+	object  = noone;
+	
+	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
 	
 	static step = function() {
 		var _type = getSingleValue(15);
 		
 		inputs[| 16].setVisible(_type > 0);
 	}
-	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) {
 		var _dim = _data[0];
 		
@@ -85,7 +86,7 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _dep = _data[5];
 		
 		var _bgd = _data[6];
-		var _bgc = _data[7];
+		var _enc = _data[7];
 		var _amb = _data[8];
 		var _lig = _data[9];
 		var _env = _data[10];
@@ -121,27 +122,28 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		object.flatten();
 		object.setTexture(temp_surface[1]);
 		
+		environ.surface = temp_surface[0];
+		environ.bgEnv   = _env;
+		
+		environ.projection = _ort;
+		environ.fov        = _fov;
+		environ.orthoScale = _ort;
+		environ.viewRange  = _vrn;
+		environ.depthInt   = _dep;
+		
+		environ.bgColor    = _enc;
+		environ.bgDraw     = _bgd;
+		environ.ambInten   = _amb;
+		environ.light      = _lig;
+		
 		gpu_set_texfilter(true);
 		surface_set_shader(_outSurf, sh_rm_primitive);
 			
-			shader_set_surface($"texture0", temp_surface[0]);
-			
 			shader_set_f("camRotation", _crt);
 			shader_set_f("camScale",    _csa);
+			shader_set_f("camRatio",    _dim[0] / _dim[1]);
 			
-			shader_set_i("ortho",       _pro);
-			shader_set_f("fov",         _fov);
-			shader_set_f("orthoScale",  _ort);
-			shader_set_f("viewRange",   _vrn);
-			shader_set_f("depthInt",    _dep);
-			
-			shader_set_i("drawBg",  	   _bgd);
-			shader_set_color("background", _bgc);
-			shader_set_f("ambientIntns",   _amb);
-			shader_set_f("lightPosition",  _lig);
-			
-			shader_set_i("useEnv",      is_surface(_env));
-			
+			environ.apply();
 			object.apply();
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);

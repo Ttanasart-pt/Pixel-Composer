@@ -943,14 +943,10 @@ function Panel_Preview() : PanelContent() constructor {
 		} #endregion
 	} #endregion
 	
-	function draw3D() { #region
-		var _prev_node = getNodePreview();
-		if(_prev_node == noone) return;
-		if(!_prev_node.is_3D)   return;
+	function draw3DPolygon(_node) { #region
+		_node.previewing = 1;
 		
-		_prev_node.previewing = 1;
-		
-		d3_scene_preview = struct_has(_prev_node, "scene")? _prev_node.scene : d3_scene;
+		d3_scene_preview = struct_has(_node, "scene")? _node.scene : d3_scene;
 		d3_scene_preview.camera = d3_view_camera;
 		
 		#region view
@@ -1002,7 +998,7 @@ function Panel_Preview() : PanelContent() constructor {
 			if(d3_scene_preview == d3_scene) {
 				d3_scene_light0.shadow_map_scale = d3_view_camera.focus_dist * 2;
 				
-				var _prev_obj = _prev_node.getPreviewObject();
+				var _prev_obj = _node.getPreviewObject();
 				if(_prev_obj != noone) {
 					d3_scene_light0.submitShadow(d3_scene_preview, _prev_obj);
 					_prev_obj.submitShadow(d3_scene_preview, _prev_obj);
@@ -1016,7 +1012,7 @@ function Panel_Preview() : PanelContent() constructor {
 		d3_surface_outline = surface_verify(d3_surface_outline, w, h);
 		
 		#region defer
-			var _prev_obj = _prev_node.getPreviewObject();
+			var _prev_obj = _node.getPreviewObject();
 			if(_prev_obj) d3_deferData  = d3_scene_preview.deferPass(_prev_obj, w, h, d3_deferData);
 		#endregion
 		
@@ -1057,7 +1053,7 @@ function Panel_Preview() : PanelContent() constructor {
 			d3_scene_preview.reset();
 			gpu_set_cullmode(cull_counterclockwise);
 			
-			var _prev_obj = _prev_node.getPreviewObjects();
+			var _prev_obj = _node.getPreviewObjects();
 			
 			if(d3_scene_preview == d3_scene) {
 				if(d3_scene_light_enabled) {
@@ -1108,7 +1104,7 @@ function Panel_Preview() : PanelContent() constructor {
 		#region outline
 			var inspect_node = PANEL_INSPECTOR.getInspecting();
 			
-			if(inspect_node && inspect_node.is_3D) {
+			if(inspect_node && inspect_node.is_3D == NODE_3D.polygon) {
 				var _inspect_obj = inspect_node.getPreviewObjectOutline();
 				
 				surface_set_target(d3_surface_outline);
@@ -1132,6 +1128,45 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 		
 		d3_scene_preview.camera.resetCamera();
+	} #endregion
+	
+	function draw3DSdf(_node) { #region
+		_node.previewing = 1;
+		
+		var _env = _node.environ; 
+		var _obj = _node.object; 
+		
+		draw_clear(bg_color);
+			
+		gpu_set_texfilter(true);
+		shader_set(sh_rm_primitive);
+			var zm = 4 / d3_view_camera.focus_dist;
+			
+			shader_set_f("camRotation", [ d3_view_camera.focus_angle_y, -d3_view_camera.focus_angle_x, 0 ]);
+			shader_set_f("camScale",    zm);
+			shader_set_f("camRatio",    w / h);
+			
+			_env.apply();
+			_obj.apply();
+			
+			shader_set_i("drawBg",  	0);
+			shader_set_f("viewRange",   [ d3_view_camera.view_near, d3_view_camera.view_far ]);
+			shader_set_f("depthInt",    0);
+			
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, w, h);
+		shader_reset();
+		gpu_set_texfilter(false);
+		
+	} #endregion
+	
+	function draw3D() { #region
+		var _node = getNodePreview();
+		if(_node == noone) return;
+		
+		switch(_node.is_3D) {
+			case NODE_3D.polygon :	draw3DPolygon(_node);	break;
+			case NODE_3D.sdf :		draw3DSdf(_node);		break;
+		}
 	} #endregion
 	
 	function drawPreviewOverlay() { #region
@@ -1436,14 +1471,7 @@ function Panel_Preview() : PanelContent() constructor {
 		var params     = { w, h, toolbar_height };
 		var mouse_free = false;
 		
-		if(_node.is_3D)	{
-			if(key_mod_press(CTRL) || d3_tool_snap) {
-				_snx = d3_tool_snap_position;
-				_sny = d3_tool_snap_rotation;
-			}
-			
-			mouse_free = _node.drawOverlay3D(overActive, d3_scene, _mx, _my, _snx, _sny, params);
-		} else {
+		if(_node.is_3D == NODE_3D.none)	{
 			if(key_mod_press(CTRL)) {
 				_snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
 				_sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
@@ -1453,6 +1481,13 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 			
 			mouse_free = _node.drawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
+		} else {
+			if(key_mod_press(CTRL) || d3_tool_snap) {
+				_snx = d3_tool_snap_position;
+				_sny = d3_tool_snap_rotation;
+			}
+			
+			mouse_free = _node.drawOverlay3D(overActive, d3_scene, _mx, _my, _snx, _sny, params);
 		}
 		
 		#region node overlay
@@ -1901,9 +1936,8 @@ function Panel_Preview() : PanelContent() constructor {
 		if(do_fullView) run_in(1, fullView);
 		do_fullView = false;
 		
-		var _prev_node   = getNodePreview();
-		
-		d3_active = _prev_node != noone && _prev_node.is_3D;
+		var _prev_node = getNodePreview();
+		d3_active      = _prev_node != noone && _prev_node.is_3D != NODE_3D.none;
 		
 		draw_clear(bg_color);
 		if(canvas_bg == -1 && canvas_s >= 0.1) 

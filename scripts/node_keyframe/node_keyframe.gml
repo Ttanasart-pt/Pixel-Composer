@@ -601,7 +601,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(prop.type == VALUE_TYPE.struct) {
 				val = json_stringify(val);
 				
-			} else if(is_struct(val)) {
+			} else if(is_struct(val) && struct_has(val, "serialize")) {
 				val = val.serialize();
 				
 			} else if(!sep_axis && typeArray(prop.display_type) && is_array(val)) {

@@ -1,6 +1,6 @@
 function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "3D";
-	is_3D = true;
+	is_3D = NODE_3D.polygon;
 	surface_depth_disable(false);
 	
 	mesh_prev_surface = surface_create(64, 64);

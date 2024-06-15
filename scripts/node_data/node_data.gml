@@ -15,6 +15,12 @@ enum DYNA_INPUT_COND {
 	zero       = 1 << 1,
 }
 
+enum NODE_3D {
+	none,
+	polygon,
+	sdf,
+}
+
 function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	#region ---- main & active ----
@@ -286,7 +292,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- 3d ----
-		is_3D = false;
+		is_3D = NODE_3D.none;
 	#endregion
 	
 	#region ---- cache ----
@@ -512,7 +518,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			will_setHeight = false;
 		}
 		
-		if(is_3D) USE_DEPTH = true;
+		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		if(is_simulation) PROJECT.animator.is_simulating = true;
 	} #endregion
 	

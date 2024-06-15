@@ -54,10 +54,9 @@ enum VALUE_TYPE {
 	
 	dynaSurface = 31,
 	PCXnode     = 32,
-	
-	audioBit  = 33,
-	
-	fdomain   = 34,
+	audioBit    = 33,
+	fdomain     = 34,
+	sdf         = 35,
 	
 	action	  = 99,
 }
@@ -186,6 +185,7 @@ function value_color(i) { #region
 		#c2c2d1, //PCX
 		#8fde5d, //audiobit
 		#4da6ff, //flipfluid
+		#c1007c, //3D SDF
 	];
 	static JUNCTION_COLORS_LENGTH = array_length(JUNCTION_COLORS);
 	
@@ -234,6 +234,7 @@ function value_color_bg_array(i) { #region
 		#bd4882, //dynaSurf
 		#83839b, //PCX
 		#3ca370, //audiobit
+		#c1007c, //3D SDF
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -282,6 +283,7 @@ function value_bit(i) { #region
 		case VALUE_TYPE.PCXnode		: return 1 << 34;
 		case VALUE_TYPE.audioBit	: return 1 << 35;
 		case VALUE_TYPE.fdomain 	: return 1 << 36;
+		case VALUE_TYPE.sdf 		: return 1 << 37;
 		
 		case VALUE_TYPE.any			: return ~0 & ~(1 << 32);
 	}
@@ -355,10 +357,9 @@ function value_type_from_string(str) { #region
 		
 		case "dynaSurface" : return VALUE_TYPE.dynaSurface;
 		case "PCXnode"	   : return VALUE_TYPE.PCXnode;
-		
-		case "audioBit"	: return VALUE_TYPE.audioBit;
-		
-		case "fDomain"	: return VALUE_TYPE.fdomain;
+		case "audioBit"	   : return VALUE_TYPE.audioBit;
+		case "fDomain"	   : return VALUE_TYPE.fdomain;
+		case "sdf"		   : return VALUE_TYPE.sdf;
 		
 		case "action"	: return VALUE_TYPE.action;
 	}
