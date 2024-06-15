@@ -339,11 +339,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		if(array_empty(surfs)) return;
 		if(!is_array(surfs)) surfs = [ surfs ];
+		surfs = array_spread(surfs);
 		
 		for( var i = 0, n = array_length(surfs); i < n; i++ ) {
 			var _s = surfs[i];
 			
-			if(is_surface(surface_cache[$ _s])) 
+			if(surface_exists(surface_cache[$ _s])) 
 				continue;
 				
 			if(is_instanceof(_s, SurfaceAtlas))

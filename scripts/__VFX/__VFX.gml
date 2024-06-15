@@ -360,7 +360,7 @@ function __part(_node) : __particleObject() constructor {
 			ss = array_safe_get_fast(surf, clamp(_sca, 0, array_length(surf) - 1));
 		}
 		
-		var surface = is_instanceof(ss, SurfaceAtlas)? ss.getSurface() : node.surface_cache[$ ss];
+		var surface = node.surface_cache[$ ss];
 		var _useS   = is_surface(surface);
 		
 		if(arr_type == 3) {

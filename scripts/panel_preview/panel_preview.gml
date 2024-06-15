@@ -1133,6 +1133,47 @@ function Panel_Preview() : PanelContent() constructor {
 	function draw3DSdf(_node) { #region
 		_node.previewing = 1;
 		
+		d3_scene_preview = d3_scene;
+		d3_scene_preview.camera = d3_view_camera;
+		
+		#region view
+			var _pos, targ, _blend = 1;
+			
+			targ = d3_camTarget;
+			_pos = d3d_PolarToCart(targ.x, targ.y, targ.z, d3_view_camera.focus_angle_x, d3_view_camera.focus_angle_y, d3_view_camera.focus_dist);
+			
+			if(d3_active_transition == 1) {
+				var _up  = new __vec3(0, 0, -1);
+				
+				d3_view_camera.position._lerp_float(_pos, 5, 0.1);
+				d3_view_camera.focus._lerp_float(   targ, 5, 0.1);
+				d3_view_camera.up._lerp_float(       _up, 5, 0.1);
+				
+				if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
+					d3_active_transition = 0;
+			} else if(d3_active_transition == -1) {
+				var _pos = new __vec3(0, 0, 8);
+				var targ = new __vec3(0, 0, 0);
+				var _up  = new __vec3(0, 1, 0);
+				
+				d3_view_camera.position._lerp_float(_pos, 5, 0.1);
+				d3_view_camera.focus._lerp_float(   targ, 5, 0.1);
+				d3_view_camera.up._lerp_float(       _up, 5, 0.1);
+				
+				_blend = d3_view_camera.position.distance(_pos) / 2;
+				_blend = clamp(_blend, 0, 1);
+				
+				if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
+					d3_active_transition = 0;
+			} else {
+				d3_view_camera.position.set(_pos);
+				d3_view_camera.focus.set(targ);
+			}
+			
+			d3_view_camera.setViewSize(w, h);
+			d3_view_camera.setMatrix();
+		#endregion
+		
 		var _env = _node.environ; 
 		var _obj = _node.object; 
 		

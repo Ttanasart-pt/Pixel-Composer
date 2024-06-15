@@ -54,8 +54,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue("Atlas Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
-		.setArrayDepth(1);
+	outputs[| 1] = nodeValue("Atlas Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
 		["Surfaces",  false], 0, 1, 2,
@@ -64,6 +63,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		//["Rendering", false], 10, 
 		["Custom Range", true, 11], 8, 
 	]
+	
+	atlases = [];
 	
 	attribute_surface_depth();
 
@@ -154,7 +155,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		var ww   = 0;
 		var hh   = 0;
-		var _atl = [];
+		atlases  = [];
 		
 		#region surface generate
 			
@@ -235,7 +236,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 							case 2 : _sy = py + (hh - _h);		break;
 						}
 					
-						array_push(_atl, new SurfaceAtlas(inpt[i], _sx, _sy));
+						array_push(atlases, new SurfaceAtlas(inpt[i], _sx, _sy));
 						draw_surface_safe(inpt[i], _sx, _sy);
 					
 						px += _w + spac;
@@ -258,7 +259,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 							case 2 : _sx = px + (ww - _w);		break;
 						}
 					
-						array_push(_atl, new SurfaceAtlas(inpt[i], _sx, _sy));
+						array_push(atlases, new SurfaceAtlas(inpt[i], _sx, _sy));
 						draw_surface_safe(inpt[i], _sx, _sy);
 					
 						py += _h + spac;
@@ -289,7 +290,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 							curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
 							if(curr_w != _w || curr_h != _h) noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.");
 						
-							array_push(_atl, new SurfaceAtlas(inpt[index], px, py));
+							array_push(atlases, new SurfaceAtlas(inpt[index], px, py));
 							draw_surface_safe(inpt[index], px, py);
 								
 							px += _w + spc2[0];
@@ -304,7 +305,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		#endregion
 		
 		outputs[| 0].setValue(_surf);
-		outputs[| 1].setValue(_atl);
+		outputs[| 1].setValue(array_spread(atlases));
 	} #endregion
 	
 	anim_curr_w = -1;
@@ -324,7 +325,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var user = getInputData(11);
 		
 		var _out = outputs[| 0].getValue();
-		var _atl = outputs[| 1].getValue();
 		var cDep = attrDepth();
 		
 		printIf(log, $"Init animation");
@@ -359,7 +359,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _surfi = inpt[i];
 			if(!is_surface(_surfi)) continue;
 					
-			_atl[i]    = [];
+			atlases[i]    = [];
 					
 			var sw = surface_get_width_safe(_surfi);
 			var sh = surface_get_height_safe(_surfi);
@@ -394,7 +394,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 		if(!arr) _out = array_safe_get_fast(_out, 0);
 		outputs[| 0].setValue(_out);
-		outputs[| 1].setValue(_atl);
+		outputs[| 1].setValue(array_spread(atlases));
 				
 		printIf(log, $"Surface generated [{ww}, {hh}]");
 	} #endregion
@@ -412,7 +412,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		//var ovlp = getInputData(10);
 		var user = getInputData(11);
 		
-		var _atl = outputs[| 1].getValue();
 		var cDep = attrDepth();
 		
 		printIf(log, $"Rendering animation {name}/{CURRENT_FRAME}");
@@ -463,13 +462,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			if(!is_surface(_surfi)) {
 				printIf(log, $"   > Skip input not surface");
-				_atl[i] = noone;
+				atlases[i] = noone;
 				break;
 			} 
 			
-			if(!is_array(array_safe_get_fast(_atl, i)))
-				_atl[i] = [];
-			var _atli = _atl[i];
+			if(!is_array(array_safe_get_fast(atlases, i)))
+				atlases[i] = [];
+			var _atli = atlases[i];
 			
 			var oo = noone;
 			if(!is_array(oupt))	oo = oupt;
@@ -538,6 +537,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		} #endregion
 		
 		if(drawn) array_safe_set(anim_drawn, CURRENT_FRAME, true);
-		outputs[| 1].setValue(_atl);
+		outputs[| 1].setValue(array_spread(atlases));
 	} #endregion
 }
