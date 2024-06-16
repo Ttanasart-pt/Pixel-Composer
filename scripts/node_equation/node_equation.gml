@@ -57,7 +57,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 		
 		var amo = attributes.size;
-		if(buttonTextIconInstant(attributes.size > 0 && THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
+		if(buttonTextIconInstant(attributes.size > 0, THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
 			attributes.size--;
 			refreshDynamicInput();
 			update();

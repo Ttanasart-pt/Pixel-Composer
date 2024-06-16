@@ -688,6 +688,13 @@ function __initNodes() {
 			
 		ds_list_add(d3d, "Points");
 		addNodeObject(d3d, "Point Affector",	s_node_3d_point_affector,	"Node_3D_Point_Affector",	[1, Node_3D_Point_Affector],, "Generate array of 3D points interpolating between two values based on the distance.").setVersion(11570);
+		
+		ds_list_add(d3d, "Ray Marching");
+		addNodeObject(d3d, "RM Primitive",		s_node_rm_primitive,		"Node_RM_Primitive",		[1, Node_RM_Primitive], ["ray marching"]).setVersion(11720);
+		addNodeObject(d3d, "RM Terrain",		s_node_rm_terrain,			"Node_RM_Terrain",			[1, Node_RM_Terrain],   ["ray marching"]).setVersion(11720);
+		addNodeObject(d3d, "RM Combine",		s_node_rm_combine,			"Node_RM_Combine",			[1, Node_RM_Combine],   ["ray marching"]).setVersion(11740);
+		addNodeObject(d3d, "RM Render",			s_node_rm_render,			"Node_RM_Render",			[1, Node_RM_Render],	["ray marching"]).setVersion(11740);
+		
 	#endregion
 	
 	var generator = ds_list_create(); #region //generator
@@ -761,11 +768,6 @@ function __initNodes() {
 		addNodeObject(generator, "Separate Shape",		s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape],,	"Separate disconnected pixel each into an image in an image array.");
 		addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill],,		"Fill connected pixel with colors.").setVersion(1147);		
 		addNodeObject(generator, "Flood Fill",			s_node_flood_fill,			"Node_Flood_Fill",			[1, Node_Flood_Fill],,		"Filled connected pixel given position and color.").setVersion(1133);
-		
-		ds_list_add(generator, "Ray Marching");
-		addNodeObject(generator, "RM Primitive",		s_node_rm_primitive,		"Node_RM_Primitive",		[1, Node_RM_Primitive], ["ray marching"]).setVersion(11720);
-		addNodeObject(generator, "RM Terrain",			s_node_rm_terrain,			"Node_RM_Terrain",			[1, Node_RM_Terrain], ["ray marching"]).setVersion(11720);
-		addNodeObject(generator, "RM Combine",			s_node_rm_combine,			"Node_RM_Combine",			[1, Node_RM_Combine], ["ray marching"]).setVersion(11740);
 		
 		ds_list_add(generator, "MK Effects");
 		addNodeObject(generator, "MK Rain",				s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain]).setVersion(11600);

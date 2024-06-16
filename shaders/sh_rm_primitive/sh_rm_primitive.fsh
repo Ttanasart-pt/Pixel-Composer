@@ -55,8 +55,12 @@ uniform vec3  position[MAX_SHAPES]                                ;
 uniform vec3  rotation[MAX_SHAPES]                                ;
 uniform float objectScale[MAX_SHAPES]                             ;
 
+uniform int   tileActive[MAX_SHAPES]                              ;
 uniform vec3  tileSize[MAX_SHAPES]                                ;
 uniform vec3  tileAmount[MAX_SHAPES]                              ;
+uniform vec3  tileShiftPos[MAX_SHAPES]                            ;
+uniform vec3  tileShiftRot[MAX_SHAPES]                            ;
+uniform float tileShiftSca[MAX_SHAPES]                            ;
 
 uniform vec4  diffuseColor[MAX_SHAPES]                            ;
 uniform float reflective[MAX_SHAPES]                              ;
@@ -139,6 +143,11 @@ float influences[MAX_SHAPES];
 
 #region ////============= Util ==============
 	
+	float random  (in vec3 st) { return fract(sin(dot(st + vec3(1.0534, 0.453, 1.678), vec3(12.9898, 78.233, 63.1076))) * 43758.5453123); }
+	
+	float round(float v) { return fract(v) >= 0.5? ceil(v) : floor(v); }
+	vec3  round(vec3  v) { return vec3(round(v.x), round(v.y), round(v.z)); }
+	
     float dot2( in vec2 v ) { return dot(v,v); }
 	float dot2( in vec3 v ) { return dot(v,v); }
 	float ndot( in vec2 a, in vec2 b ) { return a.x*b.x - a.y*b.y; }
@@ -194,6 +203,15 @@ float influences[MAX_SHAPES];
 	    p -= r * acs;
 	    p.y += clamp( -p.y, 0.0, r * acs.y);
 	    return length(p) * sign(p.x);
+	}
+	
+	float sdPie( in vec2 p, in float angle, in float r ) {
+		vec2 c = vec2(sin(angle), cos(angle));
+		
+	    p.x = abs(p.x);
+	    float l = length(p) - r;
+	    float m = length(p - c * clamp(dot(p, c), 0.0, r)); // c=sin/cos of aperture
+	    return max(l, m * sign(c.y * p.x - c.x * p.y));
 	}
 		
 #endregion
@@ -441,13 +459,16 @@ float influences[MAX_SHAPES];
 	
 #region ////=========== View Mod ============
 	
-	float round(float v) { return fract(v) >= 0.5? ceil(v) : floor(v); }
-	vec3  round(vec3  v) { return vec3(round(v.x), round(v.y), round(v.z)); }
-	
 	vec3 tilePosition(vec3 amount, vec3 size, vec3 p) {
 		if(amount == vec3(0.)) 
 			return p - size * round(p / size);
 		return p - size * clamp(round(p / size), -amount, amount);
+	}
+	
+	vec3 tileIndex(vec3 amount, vec3 size, vec3 p) {
+		if(amount == vec3(0.)) 
+			return size * round(p / size);
+		return size * clamp(round(p / size), -amount, amount);
 	}
 
 #endregion
@@ -479,14 +500,32 @@ float sceneSDF(int index, vec3 p) {
     mat3 rotMatrix  = rx * ry * rz;
     mat3 irotMatrix = inverse(rotMatrix);
     
-    p /= objectScale[index];
+    float sca = objectScale[index];
+    p /= sca;
 	p -= position[index];
     p =  irotMatrix * p;
 	
     p = wave(waveAmp[index], waveShift[index], waveInt[index], p);
     
-    if(tileSize[index] != vec3(0.))
+    if(tileActive[index] == 1) {
     	p = tilePosition(tileAmount[index], tileSize[index], p);
+    	vec3 tindex = tileIndex(tileAmount[index], tileSize[index], p);
+    	
+    	vec3  tpos   = tileShiftPos[index] * random(tindex + vec3(1., 0., 0.));
+    	vec3  trot   = tileShiftRot[index] * random(tindex + vec3(0., 1., 0.));
+    	float tsca   = 1. + tileShiftSca[index] * (random(tindex + vec3(0., 0., 1.)) * 2. - 1.);
+    	
+	    mat3 trx = rotateX(trot.x);
+	    mat3 try = rotateY(trot.y);
+	    mat3 trz = rotateZ(trot.z);
+	    mat3 trotMatrix  = rx * ry * rz;
+	    mat3 tirotMatrix = inverse(rotMatrix);
+	    
+    	sca *= tsca;
+    	p /= tsca;
+    	p -= tpos;
+	    p =  tirotMatrix * p;
+    }
     
     p = twist(twistAmount[index], twistAxis[index], p);
     
@@ -518,6 +557,7 @@ float sceneSDF(int index, vec3 p) {
     else if(shp == 304) d = sdRoundCone(       p, height[index], radRange[index].x, radRange[index].y);
     else if(shp == 305) d = sdSolidAngle(      p, angle[index], radius[index]);
     else if(shp == 306) d = opExtrusion(       p, thickness[index], sdRegularPolygon(p.xy, 0.5, sides[index]));
+    else if(shp == 307) d = opExtrusion(       p, thickness[index], sdPie(p.xy, angle[index], radius[index]));
     
     else if(shp == 400) d = sdOctahedron(      p, sizeUni[index]);
     else if(shp == 401) d = sdPyramid(         p, sizeUni[index]);
@@ -527,7 +567,7 @@ float sceneSDF(int index, vec3 p) {
     }
     
     d -= rounded[index];
-    d *= objectScale[index];
+    d *= sca;
     
     return d;
 }

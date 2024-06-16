@@ -28,8 +28,12 @@ function RM_Object() constructor {
 	rotation      = [];
 	objectScale   = [];
 	
-	tileSize      = [];
+	tileActive    = [];
 	tileAmount    = [];
+	tileSpace     = [];
+	tilePos       = [];
+	tileRot       = [];
+	tileSca       = [];
 	
 	diffuseColor  = [];
 	reflective    = [];
@@ -49,12 +53,14 @@ function RM_Object() constructor {
 					  "waveAmp", "waveInt", "waveShift", 
 					  "twistAxis", "twistAmount", 
 					  "position", "rotation", "objectScale", 
-					  "tileSize", "tileAmount", 
+					  "tileActive", "tileAmount", "tileSpace", "tilePos", "tileRot", "tileSca", 
 					  "diffuseColor", "reflective", 
 					  "volumetric", "volumeDensity", 
 					  "texture", "useTexture", "textureScale", "triplanar" 
 					];
 	textureAtl    = noone;
+	
+	static flatten = function() {}
 	
 	static setTexture = function(textureAtlas) {
 		var tx = 1024;
@@ -103,8 +109,12 @@ function RM_Object() constructor {
 		shader_set_f("rotation",         rotation);
 		shader_set_f("objectScale",      objectScale);
 		
-		shader_set_f("tileSize",         tileSize);
+		shader_set_i("tileActive",       tileActive);
 		shader_set_f("tileAmount",       tileAmount);
+		shader_set_f("tileSize",         tileSpace);
+		shader_set_f("tileShiftPos",     tilePos);
+		shader_set_f("tileShiftRot",     tileRot);
+		shader_set_f("tileShiftSca",     tileSca);
 		
 		shader_set_f("diffuseColor",     diffuseColor); 
 		shader_set_f("reflective",       reflective);
@@ -155,7 +165,7 @@ function RM_Operation(type, left, right) : RM_Object() constructor {
 		
 		array_append(_arr, __flatten(_l));
 		array_append(_arr, __flatten(_r));
-		array_push(_arr, _op);
+		array_push(_arr, [ _op, node ]);
 		
 		return _arr;
 	}
@@ -180,15 +190,15 @@ function RM_Operation(type, left, right) : RM_Object() constructor {
 		for (var i = 0, n = array_length(_arr); i < n; i++) {
 			var _a = _arr[i];
 			
-			if(is_string(_a)) {
-				switch(_a) {
+			if(is_array(_a)) {
+				switch(_a[0]) {
 					case "combine"   : array_push(opmap, 100); break;
 					case "union"     : array_push(opmap, 101); break;
 					case "subtract"  : array_push(opmap, 102); break;
 					case "intersect" : array_push(opmap, 103); break;
 				}
 				
-				array_push(oparg, merge);
+				array_push(oparg, _a[1].merge);
 				
 			} else if(is_struct(_a)) {
 				array_push(opmap, _a.flatten_index);
@@ -234,8 +244,8 @@ function RM_Environment() constructor {
 		shader_set_f("viewRange",   viewRange);
 		shader_set_f("depthInt",    depthInt);
 		
-		shader_set_i("drawBg",  	   bgColor);
-		shader_set_color("background", bgDraw);
+		shader_set_i("drawBg",  	   bgDraw);
+		shader_set_color("background", bgColor);
 		shader_set_f("ambientIntns",   ambInten);
 		shader_set_f("lightPosition",  light);
 		

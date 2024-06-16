@@ -9,7 +9,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		-1, 
 		"Sphere", "Ellipse", "Cut Sphere", "Cut Hollow Sphere", "Torus", "Capped Torus",
 		-1,
-		"Cylinder", "Prism", "Capsule", "Cone", "Capped Cone", "Round Cone", "3D Arc", 
+		"Cylinder", "Prism", "Capsule", "Cone", "Capped Cone", "Round Cone", "3D Arc", "Pie", 
 		-1, 
 		"Octahedron", "Pyramid", 
 	];
@@ -79,7 +79,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	inputs[| 19] = nodeValue("Twist Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 8, 0.1 ] });
 	
-	inputs[| 20] = nodeValue("Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 20] = nodeValue("Tile Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,6 +152,22 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	inputs[| 43] = nodeValue("Camera Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
+	inputs[| 44] = nodeValue("Render", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[| 45] = nodeValue("Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+		
+	inputs[| 46] = nodeValue("Tiled Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+		
+	inputs[| 47] = nodeValue("Tiled Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+		
+	inputs[| 48] = nodeValue("Tiled Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Shape Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdf, noone);
@@ -161,10 +177,11 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		["Modify",     false], 12, 11, 
 		["Deform",      true], 15, 16, 17, 18, 19, 
 		["Transform",  false],  2,  3,  4, 
+		["Tile",       false, 45], 20, 29, 46, 47, 48, 
 		["Material",   false],  9, 36, 35, 37, 38, 
+		
 		["Camera",     false], 42, 43, 13, 14,  5,  6, 
-		["Render",     false], 31, 30, 34, 10,  7,  8, 
-		["Tile",       false], 20, 29, 
+		["Render",     false, 44], 31, 30, 34, 10,  7,  8, 
 		["Volumetric",  true, 32], 33, 
 	];
 	
@@ -395,6 +412,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	static step = function() {
 		var _shp = getSingleValue( 1);
 		var _ort = getSingleValue(13);
+		var _ren = getSingleValue(44);
 		
 		inputs[| 21].setVisible(false);
 		inputs[| 22].setVisible(false);
@@ -407,6 +425,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		inputs[| 39].setVisible(false);
 		inputs[| 40].setVisible(false);
 		inputs[| 41].setVisible(false);
+		
+		outputs[| 0].setVisible(_ren, _ren);
 		
 		var _shape = shape_types[_shp];
 		switch(_shape) { // Size
@@ -426,6 +446,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			case "Cylinder" : 
 			case "Capsule" : 
 			case "3D Arc" : 
+			case "Pie" : 
 				inputs[| 22].setVisible(true);
 				break;
 		}
@@ -439,6 +460,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			case "Terrain" : 
 			case "Extrude" : 
 			case "Prism" : 
+			case "Pie" : 
 				inputs[| 23].setVisible(true);
 				break;
 		}
@@ -454,6 +476,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			case "Capped Torus" : 
 			case "Cone" : 
 			case "3D Arc" : 
+			case "Pie" : 
 				inputs[| 25].setVisible(true);
 				break;
 		}
@@ -532,7 +555,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		var _wavS = _data[17];
 		var _twsX = _data[18];
 		var _twsA = _data[19];
-		var _tile = _data[20];
 		
 		var _size = _data[21];
 		var _rad  = _data[22];
@@ -542,7 +564,6 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		var _heig = _data[26];
 		var _radR = _data[27];
 		var _sizz = _data[28];
-		var _tilA = _data[29];
 		var _bgc  = _data[30];
 		var _bgd  = _data[31];
 		
@@ -560,6 +581,14 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		
 		var _crt  = _data[42];
 		var _csa  = _data[43];
+		var _ren  = _data[44];
+		
+		var _tileActive  = _data[46];
+		var _tileAmount  = _data[29];
+		var _tileSpace   = _data[20];
+		var _tilePos     = _data[47];
+		var _tileRot     = _data[48];
+		var _tileSca     = _data[49];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
@@ -594,6 +623,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			case "Round Cone" :     	_shpI = 304;												break;
 			case "3D Arc" :         	_shpI = 305;												break;
 			case "Prism" :         		_shpI = 306;												break;
+			case "Pie" :         		_shpI = 307;												break;
 			
 			case "Octahedron" :     	_shpI = 400;												break;
 			case "Pyramid" :        	_shpI = 401;												break;
@@ -628,8 +658,12 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		object.rotation      = _rot;
 		object.objectScale   = _sca;
 		
-		object.tileSize      = _tile;
-		object.tileAmount    = _tilA;
+		object.tileActive    = _tileActive;
+		object.tileAmount    = _tileAmount;
+		object.tileSpace     = _tileSpace;
+		object.tilePos       = _tilePos;
+		object.tileRot       = _tileRot;
+		object.tileSca       = _tileSca;
 		
 		object.diffuseColor  = colorToArray(_amb, true);
 		object.reflective    = _refl;
@@ -658,19 +692,21 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		environ.ambInten   = _ambI;
 		environ.light      = _lPos;
 		
-		gpu_set_texfilter(true);
-		surface_set_shader(_outSurf, sh_rm_primitive);
-			
-			shader_set_f("camRotation", _crt);
-			shader_set_f("camScale",    _csa);
-			shader_set_f("camRatio",    _dim[0] / _dim[1]);
-			
-			environ.apply();
-			object.apply();
-			
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
-		surface_reset_shader();
-		gpu_set_texfilter(false);
+		if(_ren) {
+			gpu_set_texfilter(true);
+			surface_set_shader(_outSurf, sh_rm_primitive);
+				
+				shader_set_f("camRotation", _crt);
+				shader_set_f("camScale",    _csa);
+				shader_set_f("camRatio",    _dim[0] / _dim[1]);
+				
+				environ.apply();
+				object.apply();
+				
+				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
+			surface_reset_shader();
+			gpu_set_texfilter(false);
+		}
 		
 		return [ _outSurf, object ]; 
 	}

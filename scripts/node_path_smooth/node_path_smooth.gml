@@ -37,7 +37,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	#endregion
 	
 	#region ---- editor ----
-		
+		line_hover = noone;
 	#endregion
 	
 	static resetDisplayList = function() { #region
@@ -273,9 +273,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			];
 		} else {
 			for( var i = 0, n = amo; i < n; i++ ) {
-				var _a0 = array_safe_get_fast(anchors, (i - 1) % n, [ 0, 0 ]);
-				var _a1 = array_safe_get_fast(anchors, (i    ) % n, [ 0, 0 ]);
-				var _a2 = array_safe_get_fast(anchors, (i + 1) % n, [ 0, 0 ]);
+				var _a0 = array_safe_get_fast(anchors, (i - 1 + amo) % n, [ 0, 0 ]);
+				var _a1 = array_safe_get_fast(anchors, (i     + amo) % n, [ 0, 0 ]);
+				var _a2 = array_safe_get_fast(anchors, (i + 1 + amo) % n, [ 0, 0 ]);
 				
 				var _dr  = point_direction(_a0[0], _a0[1], _a2[0], _a2[1]);
 				var _ds0 = point_distance(_a1[0], _a1[1], _a0[0], _a0[1]) / smot;

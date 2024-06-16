@@ -74,13 +74,24 @@ function __3dObject() constructor {
 	static buildVertex = function(_vertex) { #region
 		var _buffer = vertex_create_buffer();
 		vertex_begin(_buffer, VF);
-			for( var i = 0, n = array_length(_vertex); i < n; i++ ) {
-				var v = _vertex[i];
-				
-				switch(VF) {
-					case global.VF_POS_COL :			vertex_add_vc(_buffer, v);		break;
-					case global.VF_POS_NORM_TEX_COL :	vertex_add_vntc(_buffer, v);	break;
-				}
+			switch(VF) {
+				case global.VF_POS_COL :			
+					for( var i = 0, n = array_length(_vertex); i < n; i++ ) {
+						var v = _vertex[i];
+						vertex_position_3d(_buffer, v.x, v.y, v.z);
+						vertex_color(_buffer, v.color, v.alpha);
+					}
+					break;
+					
+				case global.VF_POS_NORM_TEX_COL : 
+					for( var i = 0, n = array_length(_vertex); i < n; i++ ) {
+						var v = _vertex[i];
+						vertex_position_3d(_buffer, v.x, v.y, v.z);
+						vertex_normal(_buffer, v.nx, v.ny, v.nz);
+						vertex_texcoord(_buffer, v.u, v.v);
+						vertex_color(_buffer, v.color, v.alpha);
+					}
+					break;
 			}
 		vertex_end(_buffer);
 		//vertex_freeze(_buffer);

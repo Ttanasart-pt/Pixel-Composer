@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_rm_render",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_rm_render",
+  "parent":{
+    "name":"raymarching",
+    "path":"folders/nodes/data/3D/raymarching.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

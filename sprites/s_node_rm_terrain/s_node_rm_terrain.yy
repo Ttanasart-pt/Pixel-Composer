@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"generator",
-    "path":"folders/nodes/icons/generator.yy",
+    "name":"3D",
+    "path":"folders/nodes/icons/3D.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

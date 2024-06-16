@@ -107,3 +107,5 @@ function buffer_compress_string(str) { #region
 	buffer_write(buffer, buffer_string, str);
 	return buffer_compress(buffer, 0, buffer_get_size(buffer));
 } #endregion
+
+function buffer_to_start(buff) { INLINE buffer_seek(buff, buffer_seek_start, 0); }
