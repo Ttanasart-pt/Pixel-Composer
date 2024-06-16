@@ -79,7 +79,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	inputs[| 19] = nodeValue("Twist Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 8, 0.1 ] });
 	
-	inputs[| 20] = nodeValue("Tile Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 20] = nodeValue("Tile Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +110,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 29] = nodeValue("Tile Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 29] = nodeValue("Tile Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 30] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
@@ -177,7 +177,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		["Modify",     false], 12, 11, 
 		["Deform",      true], 15, 16, 17, 18, 19, 
 		["Transform",  false],  2,  3,  4, 
-		["Tile",       false, 45], 20, 29, 46, 47, 48, 
+		["Tile",       false, 45], 20, 29, /*46, 47, 48,*/
 		["Material",   false],  9, 36, 35, 37, 38, 
 		
 		["Camera",     false], 42, 43, 13, 14,  5,  6, 
@@ -583,12 +583,12 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		var _csa  = _data[43];
 		var _ren  = _data[44];
 		
-		var _tileActive  = _data[46];
+		var _tileActive  = _data[45];
 		var _tileAmount  = _data[29];
 		var _tileSpace   = _data[20];
-		var _tilePos     = _data[47];
-		var _tileRot     = _data[48];
-		var _tileSca     = _data[49];
+		var _tilePos     = _data[46];
+		var _tileRot     = _data[47];
+		var _tileSca     = _data[48];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		

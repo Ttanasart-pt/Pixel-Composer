@@ -1038,7 +1038,7 @@ function Panel_Preview() : PanelContent() constructor {
 				
 					var _scale = _dist * 2;
 					while(_scale > 32) _scale /= 2;
-				
+					
 					shader_set_f("axisBlend", _blend);
 					shader_set_f("scale", _scale);
 					shader_set_f("shift", _tx / _dist / 2, _ty / _dist / 2);
@@ -1194,6 +1194,18 @@ function Panel_Preview() : PanelContent() constructor {
 			shader_set_i("drawBg",  	0);
 			shader_set_f("viewRange",   [ d3_view_camera.view_near, d3_view_camera.view_far ]);
 			shader_set_f("depthInt",    0);
+			
+			var _scale = zm / 2;
+			var _step  = 1;
+			while(_scale > 32) {
+				_scale /= 2;
+				_step  /= 2;
+			}
+			
+			shader_set_i("drawGrid",  	true);
+			shader_set_f("gridStep",  	_step);
+			shader_set_f("gridScale",  	zm / 2);
+			shader_set_f("axisBlend",   1.);
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, w, h);
 		shader_reset();

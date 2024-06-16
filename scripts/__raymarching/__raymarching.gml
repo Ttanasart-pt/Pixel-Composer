@@ -112,9 +112,9 @@ function RM_Object() constructor {
 		shader_set_i("tileActive",       tileActive);
 		shader_set_f("tileAmount",       tileAmount);
 		shader_set_f("tileSize",         tileSpace);
-		shader_set_f("tileShiftPos",     tilePos);
-		shader_set_f("tileShiftRot",     tileRot);
-		shader_set_f("tileShiftSca",     tileSca);
+		// shader_set_f("tileShiftPos",     tilePos);
+		// shader_set_f("tileShiftRot",     tileRot);
+		// shader_set_f("tileShiftSca",     tileSca);
 		
 		shader_set_f("diffuseColor",     diffuseColor); 
 		shader_set_f("reflective",       reflective);
@@ -250,6 +250,7 @@ function RM_Environment() constructor {
 		shader_set_f("lightPosition",  light);
 		
 		shader_set_i("useEnv",      is_surface(bgEnv));
+		shader_set_i("drawGrid",  	false);
 		
 	}
 }

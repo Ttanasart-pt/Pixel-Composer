@@ -1,3 +1,5 @@
+#extension GL_OES_standard_derivatives : enable
+
 //Inigo Quilez 
 //Oh where would I be without you.
 
@@ -90,6 +92,10 @@ uniform float ambientIntns;
 uniform vec3  lightPosition;
 
 uniform int   useEnv;
+uniform int   drawGrid;
+uniform float gridStep;
+uniform float gridScale;
+uniform float axisBlend;
 
 float influences[MAX_SHAPES];
 
@@ -177,6 +183,16 @@ float influences[MAX_SHAPES];
 	vec2 equirectangularUv(vec3 dir) {
 		vec3 n = normalize(dir);
 		return vec2((atan(n.x, n.z) / (PI * 2.)) + 0.5, 1. - acos(n.y) / PI);
+	}
+	
+	vec4 blend(in vec4 bg, in vec4 fg) {
+		float al = fg.a + bg.a * (1. - fg.a);
+		if(al == 0.) return bg;
+		
+		vec4 res = ((fg * fg.a) + (bg * bg.a * (1. - fg.a))) / al;
+		res.a = al;
+		
+		return res;
 	}
 	
 #endregion
@@ -486,7 +502,27 @@ float influences[MAX_SHAPES];
 	    // blend and return
 	    return (x * w.x + y * w.y + z * w.z) / (w.x + w.y + w.z);
 	}
-
+	
+	
+	vec4 viewGrid(vec2 pos, float scale) {
+	    vec2 coord      = pos * scale; // use the scale variable to set the distance between the lines
+	    vec2 derivative = fwidth(coord);
+	    vec2 grid       = abs(fract(coord - 0.5) - 0.5) / derivative;
+	    float line      = min(grid.x, grid.y);
+	    float minimumy  = min(derivative.y, 1.);
+	    float minimumx  = min(derivative.x, 1.);
+	    vec4 color = vec4(.3, .3, .3, 1. - min(line, 1.));
+	    
+	    // y axis
+	    if(pos.x > -1. * minimumx / scale && pos.x < 1. * minimumx / scale)
+	        color.y = 0.3 + axisBlend * 0.7;
+	    // x axis
+	    
+	    if(pos.y > -1. * minimumy / scale && pos.y < 1. * minimumy / scale)
+	        color.x = 0.3 + axisBlend * 0.7;
+	    return color;
+	}
+	
 #endregion
 
 ////========= Ray Marching ==========
@@ -508,22 +544,23 @@ float sceneSDF(int index, vec3 p) {
     p = wave(waveAmp[index], waveShift[index], waveInt[index], p);
     
     if(tileActive[index] == 1) {
-    	p = tilePosition(tileAmount[index], tileSize[index], p);
     	vec3 tindex = tileIndex(tileAmount[index], tileSize[index], p);
     	
-    	vec3  tpos   = tileShiftPos[index] * random(tindex + vec3(1., 0., 0.));
-    	vec3  trot   = tileShiftRot[index] * random(tindex + vec3(0., 1., 0.));
+    	vec3  tpos   =      tileShiftPos[index] * (random(tindex + vec3(1., 0., 0.)) * 2. - 1.);
+    	vec3  trot   =      tileShiftRot[index] * (random(tindex + vec3(0., 1., 0.)) * 2. - 1.);
     	float tsca   = 1. + tileShiftSca[index] * (random(tindex + vec3(0., 0., 1.)) * 2. - 1.);
+    	
+    	tindex += tpos;
+    	p = p - tindex;
     	
 	    mat3 trx = rotateX(trot.x);
 	    mat3 try = rotateY(trot.y);
 	    mat3 trz = rotateZ(trot.z);
 	    mat3 trotMatrix  = rx * ry * rz;
-	    mat3 tirotMatrix = inverse(rotMatrix);
+	    mat3 tirotMatrix = inverse(trotMatrix);
 	    
     	sca *= tsca;
     	p /= tsca;
-    	p -= tpos;
 	    p =  tirotMatrix * p;
     }
     
@@ -642,6 +679,7 @@ float operateSceneSDF(vec3 p, out vec3 blendIndx) {
 				blendIndx.x = float(o2);
 				
 				influences[o1] = 0.;
+				influences[o2] = 1.;
 				
 				depth[top]  = m;
 				index[top]  = o2;
@@ -735,6 +773,8 @@ float marchDensity(vec3 camera, vec3 direction) {
     return dens;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 vec4 scene() {
     mat3 rx = rotateX(camRotation.x);
     mat3 ry = rotateY(camRotation.y);
@@ -767,9 +807,16 @@ vec4 scene() {
     
     vec3 coll  = eye + dir * depth;
     vec3 norm  = normal(coll);
+    vec4 grid  = vec4(0.);
+    
+    if(drawGrid == 1 && sign(eye.y) != sign(coll.y)) {
+		vec3  gp = eye + dir * depth * (abs(eye.y) / (abs(coll.y) + abs(eye.y)));
+		grid = viewGrid( gp.xz, gridStep );
+		grid.a *= clamp(1. - length(gp.xz) * gridScale, 0., 1.) * 0.75;
+    }
     
     if(depth > viewRange.y - EPSILON) // Not hitting anything.
-        return vec4(0.);
+        return drawGrid == 1? grid : vec4(0.);
     
     ///////////////////////////////////////////////////////////
     
@@ -818,17 +865,14 @@ vec4 scene() {
     float lamo = min(1., max(0., dot(norm, light)) + ambientIntns);
     c = mix(c * background.rgb, c, lamo);
     
-    return vec4(c, 1.);
-}
-
-vec4 blend(in vec4 bg, in vec4 fg) {
-	float al = fg.a + bg.a * (1. - fg.a);
-	if(al == 0.) return bg;
-	
-	vec4 res = ((fg * fg.a) + (bg * bg.a * (1. - fg.a))) / al;
-	res.a = al;
-	
-	return res;
+    ///////////////////////////////////////////////////////////
+    
+    vec4 res = vec4(c, 1.);
+    
+    if(drawGrid == 1 && sign(eye.y) != sign(coll.y))
+		res = blend(res, grid);
+    
+    return res;
 }
 
 void main() {
