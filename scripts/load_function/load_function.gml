@@ -22,8 +22,12 @@ function TEST_PATH(path) { #region
 } #endregion
 
 function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
-	for( var i = 0, n = array_length(PROJECTS); i < n; i++ )
-		if(PROJECTS[i].path == path) closeProject(PROJECTS[i]);
+	for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) {
+		var _p = array_safe_get_fast(PROJECTS, i);
+		if(!is_instanceof(_p, Project)) continue;
+		
+		if(_p.path == path) closeProject(_p);
+	}
 	
 	var _PROJECT = PROJECT;
 	PROJECT = new Project();
