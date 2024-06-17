@@ -13,6 +13,9 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 	normal_draw_size = 0.05;
 	vertex_array = [];
 	
+	flevel_min = 0; flevel_max = 1;
+	blevel_min = 0; blevel_max = 1;
+	
 	static initModel = function() { 
 		if(!is_surface(surface)) return;
 		
@@ -32,6 +35,9 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 		var hb_buff = 0;
 		var cb_buff = 0;
 		
+		var flevel_rg = flevel_max - flevel_min;
+		var blevel_rg = blevel_max - blevel_min;
+		
 		/////////////////////////////////////////////////////////////// Buffer
 		
 		if(useH) {
@@ -47,8 +53,10 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 		
 			repeat(hg_hh * hg_ww) {
 				var cc = buffer_read(height_buffer, buffer_u32);
-				var _b = round(colorBrightness(cc & ~0b11111111) * 65536);
-				buffer_write(h_buff, buffer_u16, _b);
+				var _b = colorBrightness(cc & ~0b11111111);
+				    _b = flevel_min + flevel_rg * _b;
+				    
+				buffer_write(h_buff, buffer_u16, round(_b * 65536));
 			}
 		
 			buffer_delete(height_buffer);
@@ -96,8 +104,10 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 			
 			repeat(hg_hh * hg_ww) {
 				var cc = buffer_read(height_buffer, buffer_u32);
-				var _b = round(colorBrightness(cc & ~0b11111111) * 65536);
-				buffer_write(hb_buff, buffer_u16, _b);
+				var _b = colorBrightness(cc & ~0b11111111);
+				    _b = blevel_min + blevel_rg * _b;
+				    
+				buffer_write(hb_buff, buffer_u16, round(_b * 65536));
 			}
 		
 			buffer_delete(height_buffer);
