@@ -238,6 +238,8 @@ function RM_Environment() constructor {
 		
 		shader_set_surface($"texture0", surface);
 		
+		shader_set_i("MAX_MARCHING_STEPS", 512);
+		
 		shader_set_i("ortho",       projection);
 		shader_set_f("fov",         fov);
 		shader_set_f("orthoScale",  orthoScale);

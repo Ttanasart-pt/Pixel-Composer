@@ -9,7 +9,6 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-const int MAX_MARCHING_STEPS = 512;
 const float EPSILON = 1e-5;
 const float PI = 3.14159265358979323846;
 
@@ -23,6 +22,7 @@ uniform sampler2D texture1;
 uniform sampler2D texture2;
 uniform sampler2D texture3;
 
+uniform int   MAX_MARCHING_STEPS;
 uniform int   operations[MAX_OP];
 uniform float opArgument[MAX_OP];
 uniform int   opLength;
@@ -97,7 +97,7 @@ uniform float gridStep;
 uniform float gridScale;
 uniform float axisBlend;
 
-float influences[MAX_SHAPES];
+float influences[MAX_SHAPES]; 
 
 #region ////========== Transform ============
     mat3 rotateX(float dg) {
@@ -709,16 +709,11 @@ vec3 normal(vec3 p) {
 	vec3 b;
 	
 	vec2 e = vec2(1.0, -1.0) * 0.0001;
-    return normalize( e.xyy * operateSceneSDF( p + e.xyy, b ) + 
+	return normalize( e.xyy * operateSceneSDF( p + e.xyy, b ) + 
 					  e.yyx * operateSceneSDF( p + e.yyx, b ) + 
 					  e.yxy * operateSceneSDF( p + e.yxy, b ) + 
 					  e.xxx * operateSceneSDF( p + e.xxx, b ) );
-					  
-    // return normalize(vec3(
-    //     operateSceneSDF(vec3(p.x + EPSILON, p.y, p.z), b) - operateSceneSDF(vec3(p.x - EPSILON, p.y, p.z), b),
-    //     operateSceneSDF(vec3(p.x, p.y + EPSILON, p.z), b) - operateSceneSDF(vec3(p.x, p.y - EPSILON, p.z), b),
-    //     operateSceneSDF(vec3(p.x, p.y, p.z + EPSILON), b) - operateSceneSDF(vec3(p.x, p.y, p.z - EPSILON), b)
-    // ));
+    
 }
 
 float march(vec3 camera, vec3 direction, out vec3 blendIndx) {

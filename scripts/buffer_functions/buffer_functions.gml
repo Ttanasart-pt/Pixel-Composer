@@ -109,3 +109,5 @@ function buffer_compress_string(str) { #region
 } #endregion
 
 function buffer_to_start(buff) { INLINE buffer_seek(buff, buffer_seek_start, 0); }
+
+function buffer_delete_safe(buff) { INLINE if(buffer_exists(buff)) buffer_delete(buff); }

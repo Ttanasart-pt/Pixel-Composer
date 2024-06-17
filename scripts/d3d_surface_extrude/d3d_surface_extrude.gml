@@ -6,11 +6,9 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 	self.height  = height;
 	self.smooth  = smooth;
 	
-	surface_w = 1;
-	surface_h = 1;
-	
-	height_w = 1;
-	height_h = 1;
+	back     = false;
+	bsurface = noone;
+	bheight  = noone;
 	
 	normal_draw_size = 0.05;
 	vertex_array = [];
@@ -18,118 +16,167 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 	static initModel = function() { 
 		if(!is_surface(surface)) return;
 		
-		var _surface = surface;
-		var _height  = height;
+		var _surface  = surface;
+		var _height   = height;
+		var _bsurface = noone;
+		var _bheight  = noone;
 		
-		var ww = surface_get_width_safe(_surface);
-		var hh = surface_get_height_safe(_surface);
+		var ww    = surface_get_width_safe(_surface);
+		var hh    = surface_get_height_safe(_surface);
+		var hg_ww = surface_get_width_safe(_height);
+		var hg_hh = surface_get_height_safe(_height);
 		
-		surface_w = ww;
-		surface_h = hh;
+		var useH    = is_surface(_height);
+		var h_buff  = 0;
+		var c_buff  = 0;
+		var hb_buff = 0;
+		var cb_buff = 0;
 		
-		var ap   = ww / hh;
-		var tw   = ap / ww;
-		var th   =  1 / hh;
-		var sw   = -ap / 2;
-		var sh   = 0.5;
-		var fw   = 1 / ww;
-		var fh   = 1 / hh;
-		var useH = is_surface(_height);
-		var hei  = 0;
+		/////////////////////////////////////////////////////////////// Buffer
 		
-		#region ---- buffer prepare ----
-			if(smooth) {
-				var ts = surface_create(ww, hh);
-				surface_set_shader(ts, sh_3d_extrude_filler);
-					shader_set_f("dimension", ww, hh);
-					draw_surface(_surface, 0, 0);
-				surface_reset_shader();
-				_surface = ts;
+		if(useH) {
+			var hgtW = hg_ww / ww;
+			var hgtH = hg_hh / hh;
 			
-				if(useH) {
-					var ds = surface_create(ww, hh);
-					surface_set_shader(ds, sh_3d_extrude_filler_depth);
-						shader_set_f("dimension", ww, hh);
-						draw_surface(_height, 0, 0);
-					surface_reset_shader();
-					_height = ds;
-				}
+			var height_buffer = buffer_create(hg_ww * hg_hh * 4, buffer_fixed, 2);
+			buffer_get_surface(height_buffer, _height, 0);
+			buffer_seek(height_buffer, buffer_seek_start, 0);
+		
+			h_buff = buffer_create(hg_hh * hg_ww * 2, buffer_fixed, 2);
+			buffer_to_start(h_buff);
+		
+			repeat(hg_hh * hg_ww) {
+				var cc = buffer_read(height_buffer, buffer_u32);
+				var _b = round(colorBrightness(cc & ~0b11111111) * 65536);
+				buffer_write(h_buff, buffer_u16, _b);
 			}
 		
-			if(useH) {
-				height_w = surface_get_width_safe(_height);
-				height_h = surface_get_height_safe(_height);
+			buffer_delete(height_buffer);
+		}
+	
+		var surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
+		buffer_get_surface(surface_buffer, _surface, 0);
+		buffer_seek(surface_buffer, buffer_seek_start, 0);
+		
+		c_buff = buffer_create(hh * ww, buffer_fast, 1);
+		buffer_to_start(c_buff);
+		
+		repeat(hh * ww) {
+			var cc = buffer_read(surface_buffer, buffer_u32);
+			var _a = (cc & (0xFF << 24)) >> 24;
+			buffer_write(c_buff, buffer_u8, _a);
+		}
+		
+		buffer_delete(surface_buffer);
+		
+		if(back) {
+			_bsurface = surface_create(ww, hh);
+			_bheight  = surface_create(hg_ww, hg_hh);
+			
+			BLEND_OVERRIDE
+				surface_set_target(_bsurface);
+					DRAW_CLEAR
+					draw_surface_stretched(is_surface(bsurface)? bsurface : surface, 0, 0, ww, hh);
+				surface_reset_target();
 				
-				var hgtW = height_w / ww;
-				var hgtH = height_h / hh;
-				
-				var height_buffer = buffer_create(height_w * height_h * 4, buffer_fixed, 2);
-				buffer_get_surface(height_buffer, _height, 0);
-				buffer_seek(height_buffer, buffer_seek_start, 0);
+				surface_set_target(_bheight);
+					DRAW_CLEAR
+					draw_surface_stretched(is_surface(bheight)? bheight : _height, 0, 0, hg_ww, hg_hh);
+				surface_reset_target();
+			BLEND_NORMAL
 			
-				var hei = buffer_create(height_h * height_w * 2, buffer_fixed, 2);
-				buffer_to_start(hei);
+			/////////////////////////////////////////////////////////////////////////////////////////////////
 			
-				repeat(height_h * height_w) {
-					var cc = buffer_read(height_buffer, buffer_u32);
-					var _b = round(colorBrightness(cc & ~0b11111111) * 65536);
-					buffer_write(hei, buffer_u16, _b);
-				}
+			var height_buffer = buffer_create(hg_ww * hg_hh * 4, buffer_fixed, 2);
+			buffer_get_surface(height_buffer, _bheight, 0);
+			buffer_seek(height_buffer, buffer_seek_start, 0);
+		
+			hb_buff = buffer_create(hg_hh * hg_ww * 2, buffer_fixed, 2);
+			buffer_to_start(hb_buff);
 			
-				buffer_delete(height_buffer);
+			repeat(hg_hh * hg_ww) {
+				var cc = buffer_read(height_buffer, buffer_u32);
+				var _b = round(colorBrightness(cc & ~0b11111111) * 65536);
+				buffer_write(hb_buff, buffer_u16, _b);
 			}
 		
-			var surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
-			buffer_get_surface(surface_buffer, _surface, 0);
-			buffer_seek(surface_buffer, buffer_seek_start, 0);
+			buffer_delete(height_buffer);
 			
-			var ap = buffer_create(hh * ww, buffer_fast, 1);
-				buffer_to_start(ap);
+			/////////////////////////////////////////////////////////////////////////////////////////////////
+				
+			// var surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
+			// buffer_get_surface(surface_buffer, _bsurface, 0);
+			// buffer_seek(surface_buffer, buffer_seek_start, 0);
 			
-			repeat(hh * ww) {
-				var cc = buffer_read(surface_buffer, buffer_u32);
-				var _a = (cc & (0b11111111 << 24)) >> 24;
-				buffer_write(ap, buffer_u8, _a);
-			}
+			// cb_buff = buffer_create(hh * ww, buffer_fast, 1);
+			// buffer_to_start(cb_buff);
 			
-			buffer_delete(surface_buffer);
+			// repeat(hh * ww) {
+			// 	var cc = buffer_read(surface_buffer, buffer_u32);
+			// 	var _a = (cc & (0xFF << 24)) >> 24;
+			// 	buffer_write(cb_buff, buffer_u8, _a);
+			// }
 			
-			if(smooth) {
-				surface_free(_surface);
-				if(useH) surface_free(_height);
-			}
-		#endregion
+			// buffer_delete(surface_buffer);
+			
+			surface_free(_bsurface);
+			surface_free(_bheight);
+		}
+		
+		///////////////////////////////////////////////////////////////
+		
+		var asp = ww / hh;
+		var tw  = asp / ww;
+		var th  =  1 / hh;
+		var sw  = -asp / 2;
+		var sh  = 0.5;
+		var fw  = 1 / ww;
+		var fh  = 1 / hh;
 		
 		var _len = array_length(vertex_array);
-		for(var i = _len; i < ww * hh * 36; i++)
+		var _amo = back? ww * hh * 60 : ww * hh * 36;
+		for(var i = _len; i < _amo; i++)
 			vertex_array[i] = new __vertex();
 			
-		var v   = array_create(ww * hh * 36);
+		var v   = array_create(_amo);
 		var ind = 0;
 		
 		var i = 0, j = 0, n = 0;
 		
 		repeat(hh * ww) {
-			if(!smooth && buffer_read_at(ap, (j) * ww + (i), buffer_u8) == 0) continue;
+			i = floor(n / ww);
+			j = n % ww;
+			n++;
+			
+			if(buffer_read_at(c_buff, j * ww + i, buffer_u8) == 0) continue;
 			
 			var i0 = sw + i * tw;
 			var j0 = sh - j * th;
 			var i1 = i0 + tw;
 			var j1 = j0 - th;
 			
-			var tx0 = fw * i, tx1 = tx0 + fw;
-			var ty0 = fh * j, ty1 = ty0 + fh;
+			var tx0 =   i * fw * 0.5;
+			var tx1 = tx0 + fw * 0.5;
 			
-			var dep = useH? buffer_read_at(hei, (round(i * hgtW) + round(j * hgtH) * height_w) * 2, buffer_u16) / 65536 * 0.5
+			var tb0 = tx0 + 0.5;
+			var tb1 = tb0 + fw * 0.5;
+			
+			var ty0 =   j * fh;
+			var ty1 = ty0 + fh;
+			
+			var dep  = useH? buffer_read_at(h_buff,  (round(i * hgtW) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536 * 0.5
 				              : 0.5;
+			var depb = back? buffer_read_at(hb_buff, (round(i * hgtW) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536 * 0.5
+				              : dep;
+			depb = -depb;
 			
-			v[ind] = vertex_array[ind].set(i1, j0, -dep, 0, 0, -1, tx1, ty0); ind++;
-			v[ind] = vertex_array[ind].set(i0, j0, -dep, 0, 0, -1, tx0, ty0); ind++;
-			v[ind] = vertex_array[ind].set(i1, j1, -dep, 0, 0, -1, tx1, ty1); ind++;
+			v[ind] = vertex_array[ind].set(i1, j0, depb, 0, 0, -1, tb1, ty0); ind++;
+			v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 0, -1, tb0, ty0); ind++;
+			v[ind] = vertex_array[ind].set(i1, j1, depb, 0, 0, -1, tb1, ty1); ind++;
 						    				  					  				   
-			v[ind] = vertex_array[ind].set(i1, j1, -dep, 0, 0, -1, tx1, ty1); ind++;
-			v[ind] = vertex_array[ind].set(i0, j0, -dep, 0, 0, -1, tx0, ty0); ind++;
-			v[ind] = vertex_array[ind].set(i0, j1, -dep, 0, 0, -1, tx0, ty1); ind++;
+			v[ind] = vertex_array[ind].set(i1, j1, depb, 0, 0, -1, tb1, ty1); ind++;
+			v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 0, -1, tb0, ty0); ind++;
+			v[ind] = vertex_array[ind].set(i0, j1, depb, 0, 0, -1, tb0, ty1); ind++;
 									  	  
 			v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 0, 1, tx1, ty0); ind++;
 			v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, 0, 1, tx1, ty1); ind++;
@@ -138,64 +185,164 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 			v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, 0, 1, tx1, ty1); ind++;
 			v[ind] = vertex_array[ind].set(i0, j1,  dep, 0, 0, 1, tx0, ty1); ind++;
 			v[ind] = vertex_array[ind].set(i0, j0,  dep, 0, 0, 1, tx0, ty0); ind++;
-						   
-			if((useH && dep * 2 > buffer_read_at(hei, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * height_w) * 2, buffer_u16) / 65536)
-				|| (j == 0 || buffer_read_at(ap, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
 				
-				v[ind] = vertex_array[ind].set(i0, j0,  dep, 0, 1, 0, tx1, ty0); ind++;
-				v[ind] = vertex_array[ind].set(i0, j0, -dep, 0, 1, 0, tx0, ty0); ind++;
-				v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 1, 0, tx1, ty1); ind++;
-							    	  	  	  					  				   
-				v[ind] = vertex_array[ind].set(i0, j0, -dep, 0, 1, 0, tx1, ty1); ind++;
-				v[ind] = vertex_array[ind].set(i1, j0, -dep, 0, 1, 0, tx0, ty0); ind++;
-				v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 1, 0, tx0, ty1); ind++;
-			}
+			if(back) {
 				
-			if((useH && dep * 2 > buffer_read_at(hei, (round(i * hgtW) + min(round((j + 1) * hgtH), height_h - 1) * height_w) * 2, buffer_u16) / 65536)
-				|| (j == hh - 1 || buffer_read_at(ap, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
+				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (j == 0 || buffer_read_at(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
+						
+					v[ind] = vertex_array[ind].set(i0, j0,  dep, 0, 1, 0, tx1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i0, j0,    0, 0, 1, 0, tx0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 1, 0, tx1, ty1); ind++;
+								    	  	  	  					  				   
+					v[ind] = vertex_array[ind].set(i0, j0,    0, 0, 1, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0,    0, 0, 1, 0, tx0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 1, 0, tx0, ty1); ind++;
+				}
 				
-				v[ind] = vertex_array[ind].set(i0, j1,  dep, 0, -1, 0, tx1, ty0); ind++;
-				v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, -1, 0, tx1, ty1); ind++;
-				v[ind] = vertex_array[ind].set(i0, j1, -dep, 0, -1, 0, tx0, ty0); ind++;
-							    				  					 				  
-				v[ind] = vertex_array[ind].set(i0, j1, -dep, 0, -1, 0, tx1, ty1); ind++;
-				v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, -1, 0, tx0, ty1); ind++;
-				v[ind] = vertex_array[ind].set(i1, j1, -dep, 0, -1, 0, tx0, ty0); ind++;
+				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (j == 0 || buffer_read_at(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
+						
+					v[ind] = vertex_array[ind].set(i0, j0,    0, 0, 1, 0, tb1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 1, 0, tb0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0,    0, 0, 1, 0, tb1, ty1); ind++;
+					
+					v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 1, 0, tb1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0, depb, 0, 1, 0, tb0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0,    0, 0, 1, 0, tb0, ty1); ind++;
+				}
+					
+				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + min(round((j + 1) * hgtH), hg_hh - 1) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (j == hh - 1 || buffer_read_at(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
+						
+					v[ind] = vertex_array[ind].set(i0, j1,  dep, 0, -1, 0, tx1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, -1, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1,    0, 0, -1, 0, tx0, ty0); ind++;
+								    				  					 				  
+					v[ind] = vertex_array[ind].set(i0, j1,    0, 0, -1, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, -1, 0, tx0, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,    0, 0, -1, 0, tx0, ty0); ind++;
+				}
+					
+				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (round(i * hgtW) + min(round((j + 1) * hgtH), hg_hh - 1) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (j == hh - 1 || buffer_read_at(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
+					
+					v[ind] = vertex_array[ind].set(i0, j1,    0, 0, -1, 0, tb1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,    0, 0, -1, 0, tb1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1, depb, 0, -1, 0, tb0, ty0); ind++;
+								    				  					 				  
+					v[ind] = vertex_array[ind].set(i0, j1, depb, 0, -1, 0, tb1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,    0, 0, -1, 0, tb0, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1, depb, 0, -1, 0, tb0, ty0); ind++;
+				}
+				
+				if((useH && dep * 2 > buffer_read_at(h_buff, (max(0, round((i - 1) * hgtW)) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (i == 0 || buffer_read_at(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
+						
+					v[ind] = vertex_array[ind].set(i0, j0,  dep, -1, 0, 0, tx1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1,  dep, -1, 0, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j0,    0, -1, 0, 0, tx0, ty0); ind++;
+								    				  					 				  
+					v[ind] = vertex_array[ind].set(i0, j0,    0, -1, 0, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1,  dep, -1, 0, 0, tx0, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1,    0, -1, 0, 0, tx0, ty0); ind++;
+				}
+				
+				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (max(0, round((i - 1) * hgtW)) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (i == 0 || buffer_read_at(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
+					
+					v[ind] = vertex_array[ind].set(i0, j0,    0, -1, 0, 0, tb1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1,    0, -1, 0, 0, tb1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j0, depb, -1, 0, 0, tb0, ty0); ind++;
+								    				  					 				  
+					v[ind] = vertex_array[ind].set(i0, j0, depb, -1, 0, 0, tb1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1,    0, -1, 0, 0, tb0, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1, depb, -1, 0, 0, tb0, ty0); ind++;
+				}
+				
+				if((useH && dep * 2 > buffer_read_at(h_buff, (min(round((i + 1) * hgtW), hg_ww - 1 ) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (i == ww - 1 || buffer_read_at(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
+					
+					v[ind] = vertex_array[ind].set(i1, j0,  dep, 1, 0, 0, tx1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0,    0, 1, 0, 0, tx0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,  dep, 1, 0, 0, tx1, ty1); ind++;
+								    				  					  				   
+					v[ind] = vertex_array[ind].set(i1, j0,    0, 1, 0, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,    0, 1, 0, 0, tx0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,  dep, 1, 0, 0, tx0, ty1); ind++;
+				}
+					
+				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (min(round((i + 1) * hgtW), hg_ww - 1 ) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (i == ww - 1 || buffer_read_at(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
+					
+					v[ind] = vertex_array[ind].set(i1, j0,    0, 1, 0, 0, tb1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0, depb, 1, 0, 0, tb0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,    0, 1, 0, 0, tb1, ty1); ind++;
+								    				  					  				   
+					v[ind] = vertex_array[ind].set(i1, j0, depb, 1, 0, 0, tb1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1, depb, 1, 0, 0, tb0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,    0, 1, 0, 0, tb0, ty1); ind++;
+				}
+				
+			} else {
+				
+				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (j == 0 || buffer_read_at(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
+						
+					v[ind] = vertex_array[ind].set(i0, j0,  dep, 0, 1, 0, tx1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 1, 0, tx0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 1, 0, tx1, ty1); ind++;
+								    	  	  	  					  				   
+					v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 1, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0, depb, 0, 1, 0, tx0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 1, 0, tx0, ty1); ind++;
+				}
+					
+				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + min(round((j + 1) * hgtH), hg_hh - 1) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (j == hh - 1 || buffer_read_at(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
+					
+					v[ind] = vertex_array[ind].set(i0, j1,  dep, 0, -1, 0, tx1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, -1, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1, depb, 0, -1, 0, tx0, ty0); ind++;
+								    				  					 				  
+					v[ind] = vertex_array[ind].set(i0, j1, depb, 0, -1, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, -1, 0, tx0, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1, depb, 0, -1, 0, tx0, ty0); ind++;
+				}
+				
+				if((useH && dep * 2 > buffer_read_at(h_buff, (max(0, round((i - 1) * hgtW)) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (i == 0 || buffer_read_at(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
+						
+					v[ind] = vertex_array[ind].set(i0, j0,  dep, -1, 0, 0, tx1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1,  dep, -1, 0, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j0, depb, -1, 0, 0, tx0, ty0); ind++;
+								    				  					 				  
+					v[ind] = vertex_array[ind].set(i0, j0, depb, -1, 0, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1,  dep, -1, 0, 0, tx0, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i0, j1, depb, -1, 0, 0, tx0, ty0); ind++;
+				}
+				
+				if((useH && dep * 2 > buffer_read_at(h_buff, (min(round((i + 1) * hgtW), hg_ww - 1 ) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
+					|| (i == ww - 1 || buffer_read_at(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
+					
+					v[ind] = vertex_array[ind].set(i1, j0,  dep, 1, 0, 0, tx1, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j0, depb, 1, 0, 0, tx0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,  dep, 1, 0, 0, tx1, ty1); ind++;
+								    				  					  				   
+					v[ind] = vertex_array[ind].set(i1, j0, depb, 1, 0, 0, tx1, ty1); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1, depb, 1, 0, 0, tx0, ty0); ind++;
+					v[ind] = vertex_array[ind].set(i1, j1,  dep, 1, 0, 0, tx0, ty1); ind++;
+				}
 			}
 			
-			if((useH && dep * 2 > buffer_read_at(hei, (max(0, round((i - 1) * hgtW)) + round(j * hgtH) * height_w) * 2, buffer_u16) / 65536)
-				|| (i == 0 || buffer_read_at(ap, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
-				
-				v[ind] = vertex_array[ind].set(i0, j0,  dep, -1, 0, 0, tx1, ty0); ind++;
-				v[ind] = vertex_array[ind].set(i0, j1,  dep, -1, 0, 0, tx1, ty1); ind++;
-				v[ind] = vertex_array[ind].set(i0, j0, -dep, -1, 0, 0, tx0, ty0); ind++;
-							    				  					 				  
-				v[ind] = vertex_array[ind].set(i0, j0, -dep, -1, 0, 0, tx1, ty1); ind++;
-				v[ind] = vertex_array[ind].set(i0, j1,  dep, -1, 0, 0, tx0, ty1); ind++;
-				v[ind] = vertex_array[ind].set(i0, j1, -dep, -1, 0, 0, tx0, ty0); ind++;
-			}
-			
-			if((useH && dep * 2 > buffer_read_at(hei, (min(round((i + 1) * hgtW), height_w - 1 ) + round(j * hgtH) * height_w) * 2, buffer_u16) / 65536)
-				|| (i == ww - 1 || buffer_read_at(ap, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
-				
-				v[ind] = vertex_array[ind].set(i1, j0,  dep, 1, 0, 0, tx1, ty0); ind++;
-				v[ind] = vertex_array[ind].set(i1, j0, -dep, 1, 0, 0, tx0, ty0); ind++;
-				v[ind] = vertex_array[ind].set(i1, j1,  dep, 1, 0, 0, tx1, ty1); ind++;
-							    				  					  				   
-				v[ind] = vertex_array[ind].set(i1, j0, -dep, 1, 0, 0, tx1, ty1); ind++;
-				v[ind] = vertex_array[ind].set(i1, j1, -dep, 1, 0, 0, tx0, ty0); ind++;
-				v[ind] = vertex_array[ind].set(i1, j1,  dep, 1, 0, 0, tx0, ty1); ind++;
-			}
-			
-			n++;
-			i = floor(n / ww);
-			j = n % ww;
 		}
 		
 		array_resize(v, ind);
 		
-		if(hei) buffer_delete(hei);
-		buffer_delete(ap);
+		buffer_delete_safe(h_buff);
+		buffer_delete_safe(c_buff);
+		buffer_delete_safe(hb_buff);
+		buffer_delete_safe(cb_buff);
 		
 		vertex = [ v ];
 		VB     = build();
