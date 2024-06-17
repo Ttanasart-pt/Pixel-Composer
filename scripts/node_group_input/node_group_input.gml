@@ -162,39 +162,53 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			case "Range" :	
 				if(!is_array(_val) || array_length(_val) != 2) 
 					inParent.animator = new valueAnimator([0, 0], inParent);
+					
+				inParent.def_val = [0, 0];
 				inParent.setDisplay(VALUE_DISPLAY.range); 
 				break;
 			
 			case "Slider" :	
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
+				
+				inParent.def_val = 0;
 				inParent.setDisplay(VALUE_DISPLAY.slider, { range: [_range[0], _range[1], _step] });	
 				break;
 			case "Slider range" :	
 				if(!is_array(_val) || array_length(_val) != 2) 
 					inParent.animator = new valueAnimator([0, 0], inParent);
+					
+				inParent.def_val = [0, 0];
 				inParent.setDisplay(VALUE_DISPLAY.slider_range, { range: [_range[0], _range[1], _step] });
 				break;
 				
 			case "Rotation" : 
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
+				
+				inParent.def_val = 0;
 				inParent.setDisplay(VALUE_DISPLAY.rotation);	
 				break;
 				
 			case "Rotation range" :
 				if(!is_array(_val) || array_length(_val) != 2) 
 					inParent.animator = new valueAnimator([0, 0], inParent);
+					
+				inParent.def_val = [0, 0];
 				inParent.setDisplay(VALUE_DISPLAY.rotation_range);
 				break;
 				
 			case "Padding" :
 				if(!is_array(_val) || array_length(_val) != 4)
 					inParent.animator = new valueAnimator([0, 0, 0, 0], inParent);
+					
+				inParent.def_val = [0, 0, 0, 0];
 				inParent.setDisplay(VALUE_DISPLAY.padding);
 				break;
 				
 			case "Area" :
 				if(!is_array(_val) || array_length(_val) != 5)
 					inParent.animator = new valueAnimator(DEF_AREA, inParent);
+					
+				inParent.def_val = array_clone(DEF_AREA);
 				inParent.setDisplay(VALUE_DISPLAY.area);
 				break;
 				
@@ -204,14 +218,20 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					case 0 : 
 						if(!is_array(_val) || array_length(_val) != 2)
 							inParent.animator = new valueAnimator([0, 0], inParent);
+							
+							inParent.def_val = [0, 0];
 						break;
 					case 1 : 
 						if(!is_array(_val) || array_length(_val) != 3)
 							inParent.animator = new valueAnimator([0, 0, 0], inParent);
+							
+							inParent.def_val = [0, 0, 0];
 						break;
 					case 2 : 
 						if(!is_array(_val) || array_length(_val) != 4)
 							inParent.animator = new valueAnimator([0, 0, 0, 0], inParent);
+							
+							inParent.def_val = [0, 0, 0, 0];
 						break;
 				}
 				if(_dtype == "Vector")				inParent.setDisplay(VALUE_DISPLAY.vector);
@@ -220,17 +240,23 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			case "Enum button" : 
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
+				
+				inParent.def_val = 0;
 				inParent.setDisplay(VALUE_DISPLAY.enum_button, string_splice(_enum_label, ",")); 
 				break;
 				
 			case "Menu scroll" : 
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
+				
+				inParent.def_val = 0;
 				inParent.setDisplay(VALUE_DISPLAY.enum_scroll, string_splice(_enum_label, ",")); 
 				break;
 			
 			case "Palette" :
 				if(!is_array(_val))
 					inParent.animator = new valueAnimator([c_black], inParent);
+					
+				inParent.def_val = [c_black];
 				inParent.setDisplay(VALUE_DISPLAY.palette);
 				break;
 				
@@ -239,16 +265,22 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				outputs[| 0].setType(inParent.type);
 				
 				inParent.animator = new valueAnimator(new gradientObject(c_white), inParent);
+				
+				inParent.def_val = new gradientObject(c_white);
 				inParent.setDisplay(VALUE_DISPLAY._default);
 				break;
 				
 			case "Curve":
 				inParent.animator = new valueAnimator(CURVE_DEF_11, inParent);
+				
+				inParent.def_val = array_clone(CURVE_DEF_11);
 				inParent.setDisplay(VALUE_DISPLAY.curve);
 				break;
 				
 			default:
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
+				
+				inParent.def_val = 0;
 				inParent.setDisplay(VALUE_DISPLAY._default);
 				break;
 		}

@@ -576,7 +576,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		instanceBase = noone;
 	} #endregion
 	
-	static onDoubleClick = function(panel) { #region
+	function onDoubleClick(panel) { #region
 		if(PREFERENCES.panel_graph_group_require_shift && !key_mod_press(SHIFT)) return false;
 		
 		__temp_panel = panel;

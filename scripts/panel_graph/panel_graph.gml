@@ -1055,8 +1055,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(node_hovering != noone)
 				_HOVERING_ELEMENT = node_hovering;
 			
-			if(node_hovering != noone && _focus && DOUBLE_CLICK && node_hovering.onDoubleClick != -1) {
+			if(DOUBLE_CLICK) {
+				// print($"Double click {node_hovering} || {_focus} || {instanceof(node_hovering)}");
 				
+				if(node_hovering != noone && _focus && node_hovering.onDoubleClick != -1)
 				if(node_hovering.onDoubleClick(self)) {
 					DOUBLE_CLICK  = false;
 					node_hovering = noone;
@@ -2405,7 +2407,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 
 	function doDelete(_merge = false) { #region
 		__temp_merge = _merge;
-		array_foreach(nodes_selecting, function(node) { if(node.manual_deletable) node.destroy(__temp_merge); });
+		
+		for(i = array_length(nodes_selecting) - 1; i >= 0; i--) {
+			var _node = array_safe_get_fast(nodes_selecting, i, 0);
+			if(_node && _node.manual_deletable) 
+				_node.destroy(__temp_merge);
+		}
 		nodes_selecting = [];
 	} #endregion
 	
