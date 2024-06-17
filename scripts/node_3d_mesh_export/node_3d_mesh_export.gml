@@ -16,7 +16,6 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["Export", false], 1, 2, 3, 
 	];
 	
-	
 	insp1UpdateTooltip   = "Export";
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	

@@ -105,7 +105,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				draw_line(x0, y0, x1, y1);
 				
-				draw_circle(x0, y0, 4, false);
+				// draw_circle(x0, y0, 4, false);
 			}
 		}
 	} #endregion

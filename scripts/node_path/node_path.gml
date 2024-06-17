@@ -41,6 +41,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		["Anchors",	false], 
 	];
 	
+	output_display_list = [ 1, 0, 2 ];
+	
 	setDynamicInput(1, false);
 	
 	tool_pathDrawer = new NodeTool( "Draw path", THEME.path_tools_draw )	

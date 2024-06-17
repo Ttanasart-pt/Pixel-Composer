@@ -76,7 +76,7 @@ function curveBox(_onModify) : widget() constructor {
 			show_coord = true;
 			_data = array_clone(_data);
 			
-			if(node_drag_typ == 0) { 
+			if(node_drag_typ == 0) { //anchor
 				
 				var _mx = (_m[0] - _x) / cw;
 					_mx = clamp(_mx * (maxx - minx) + minx, 0, 1);
@@ -93,9 +93,7 @@ function curveBox(_onModify) : widget() constructor {
 					var bfx = _data[node_dragging - 6];
 					var afx = _data[node_dragging + 6];
 					
-					if(_mx == bfx)		node_dragging -= 6;
-					else if(_mx == afx) node_dragging += 6;
-					else				_data[node_dragging + 0] = _mx;
+					if(_mx > bfx && _mx < afx) _data[node_dragging + 0] = _mx;
 				}
 				
 				if(key_mod_press(CTRL) || grid_snap) 
@@ -115,6 +113,7 @@ function curveBox(_onModify) : widget() constructor {
 					array_push(_xindex, _x0);
 					array_push(_pindex, _x0);
 				}
+				
 				array_sort(_xindex, true);
 				
 				if(node_point > 0 && node_point < points - 1) {
@@ -135,7 +134,9 @@ function curveBox(_onModify) : widget() constructor {
 						UNDO_HOLDING = true;
 				} else if(onModify(_data))
 					UNDO_HOLDING = true;
-			} else { 
+					
+			} else { //control
+			
 				var _px = _data[node_dragging + 0];
 				var _py = _data[node_dragging + 1];
 				
@@ -144,14 +145,16 @@ function curveBox(_onModify) : widget() constructor {
 					
 				var _my = 1 - (_m[1] - _y) / ch;
 					_my = lerp(miny, maxy, _my);
-					
+				
+				var _w_spc = node_drag_typ > 0? _data[node_dragging + 6] - _px : _px - _data[node_dragging - 6];
+
 				if(key_mod_press(CTRL) || grid_snap) _mx = value_snap(_mx, grid_step);
-				_data[node_dragging - 2] = (_px - _mx) * node_drag_typ;
-				_data[node_dragging + 2] = (_mx - _px) * node_drag_typ;
+				_data[node_dragging - 2] = (_px - _mx) * node_drag_typ / _w_spc;
+				_data[node_dragging + 2] = (_mx - _px) * node_drag_typ / _w_spc;
 				
 				if(key_mod_press(CTRL) || grid_snap) _my = value_snap(_my, grid_step);
-				_data[node_dragging - 1] = clamp(_py - _my, -1, 1) * node_drag_typ;
-				_data[node_dragging + 3] = clamp(_my - _py, -1, 1) * node_drag_typ;
+				_data[node_dragging - 1] = clamp(_py - _my, -1, 1) * node_drag_typ / _w_spc;
+				_data[node_dragging + 3] = clamp(_my - _py, -1, 1) * node_drag_typ / _w_spc;
 				
 				display_pos_x = node_drag_typ? _data[node_dragging - 2] : _data[node_dragging + 2];
 				display_pos_y = node_drag_typ? _data[node_dragging - 1] : _data[node_dragging + 3];
@@ -216,10 +219,14 @@ function curveBox(_onModify) : widget() constructor {
 					var ind = i * 6;
 					var _x0 = _data[ind + 2];
 					var _y0 = _data[ind + 3];
-					var bx0 = _x0 + _data[ind + 0];
-					var by0 = _y0 + _data[ind + 1];
-					var ax0 = _x0 + _data[ind + 4];
-					var ay0 = _y0 + _data[ind + 5];
+					
+					var _w_prev = i > 0?          _x0 - _data[ind - 6 + 2] : 1;
+					var _w_next = i < points - 1? _data[ind + 6 + 2] - _x0 : 1;
+					
+					var bx0 = _x0 + _data[ind + 0] * _w_prev;
+					var by0 = _y0 + _data[ind + 1] * _w_prev;
+					var ax0 = _x0 + _data[ind + 4] * _w_next;
+					var ay0 = _y0 + _data[ind + 5] * _w_next;
 			
 					bx0 = get_x(bx0);
 					by0 = get_y(by0);

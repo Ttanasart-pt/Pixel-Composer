@@ -673,7 +673,7 @@ function __initNodes() {
 		addNodeObject(d3d, "3D Cone",		s_node_3d_cone,			"Node_3D_Mesh_Cone",		[1, Node_3D_Mesh_Cone]).setVersion(11510);
 		addNodeObject(d3d, "3D Terrain",	s_node_3d_displace,		"Node_3D_Mesh_Terrain",		[1, Node_3D_Mesh_Terrain],, "Create 3D terrain from height map.").setVersion(11560);
 		addNodeObject(d3d, "Surface Extrude",	s_node_3d_extrude,	"Node_3D_Mesh_Extrude",		[1, Node_3D_Mesh_Extrude],, "Extrude 2D image into 3D object.").setVersion(11510);
-			
+		
 		ds_list_add(d3d, "Light");
 		addNodeObject(d3d, "Directional Light",	s_node_3d_light_directi,	"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional],, "Create directional light directed at the origin point.").setVersion(11510);
 		addNodeObject(d3d, "Point Light",		s_node_3d_light_point,		"Node_3D_Light_Point",			[1, Node_3D_Light_Point],, "Create point light to illuminate surrounding area.").setVersion(11510);
@@ -686,7 +686,7 @@ function __initNodes() {
 		addNodeObject(d3d, "UV Remap",			s_node_uv_remap,			"Node_3D_UV_Remap",			[1, Node_3D_UV_Remap],, "Remap UV map using plane.").setVersion(11570);
 		///**/ addNodeObject(d3d, "3D Instancer",		s_node_3d_set_material,		"Node_3D_Instancer",	[1, Node_3D_Instancer]).setVersion(11560);
 		///**/ addNodeObject(d3d, "3D Particle",		s_node_3d_set_material,		"Node_3D_Particle",		[1, Node_3D_Particle]).setVersion(11560);
-			
+		
 		ds_list_add(d3d, "Points");
 		addNodeObject(d3d, "Point Affector",	s_node_3d_point_affector,	"Node_3D_Point_Affector",	[1, Node_3D_Point_Affector],, "Generate array of 3D points interpolating between two values based on the distance.").setVersion(11570);
 		
@@ -900,6 +900,7 @@ function __initNodes() {
 		addNodeObject(values, "Bridge Path",	s_node_path_bridge,		"Node_Path_Bridge",		[1, Node_Path_Bridge]).setVersion(11640);
 		addNodeObject(values, "Bake Path",		s_node_path_bake,		"Node_Path_Bake",		[1, Node_Path_Bake]).setVersion(11640);
 		addNodeObject(values, "Map Path",		s_node_path_mapp,		"Node_Path_Map",		[1, Node_Path_Map]).setVersion(11640);
+		addNodeObject(values, "Scatter Path",	s_node_path_scatter,	"Node_Path_Scatter",	[1, Node_Path_Scatter]).setVersion(11740);
 		
 		ds_list_add(values, "Boolean");
 		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",		[1, Node_Boolean]);
