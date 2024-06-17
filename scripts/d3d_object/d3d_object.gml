@@ -5,19 +5,19 @@
 	global.VF_POS_COL = vertex_format_end();
 	
 	vertex_format_begin();
-	vertex_format_add_position_3d();
-	vertex_format_add_normal();
-	vertex_format_add_texcoord();
-	vertex_format_add_color();
+	vertex_format_add_position_3d();	// x y z    // 12
+	vertex_format_add_normal();			// x y z    // 12
+	vertex_format_add_texcoord();		// u v      // 8
+	vertex_format_add_color();			// r g b a  // 4
 	global.VF_POS_NORM_TEX_COL = vertex_format_end();
 	global.VF_POS_NORM_TEX_COL_size = 36;
 #endregion
 
 function __3dObject() constructor {
 	vertex = [];
+	VB     = [];
 	normal_vertex = [];
 	object_counts = 1;
-	VB  = [];
 	
 	NVB = noone;
 	normal_draw_size = 0.2;
