@@ -41,7 +41,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		["Anchors",	false], 
 	];
 	
-	output_display_list = [ 1, 0, 2 ];
+	output_display_list  = [ 1, 0, 2 ];
+	path_preview_surface = noone;
 	
 	setDynamicInput(1, false);
 	
@@ -845,6 +846,50 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			lengthTotal  += l;
 			lengthAccs[i] = lengthTotal;
 		}
+		
+		var minx   = boundary.minx - 8, miny = boundary.miny - 8;
+		var maxx   = boundary.maxx + 8, maxy = boundary.maxy + 8;
+		var rngx   = maxx - minx,   rngy = maxy - miny;
+		var prev_s = 128;
+		var _surf  = surface_create(prev_s, prev_s);
+		
+		_surf = surface_verify(_surf, prev_s, prev_s);
+		surface_set_target(_surf);
+			DRAW_CLEAR
+			
+			var ox, oy, nx, ny;
+			draw_set_color(c_white);
+			for (var i = 0, n = array_length(segments); i < n; i++) {
+				var segment = segments[i];
+				
+				for (var j = 0, m = array_length(segment); j < m; j += 2) {
+					nx = (segment[j + 0] - minx) / rngx * prev_s;
+					ny = (segment[j + 1] - miny) / rngy * prev_s;
+					
+					if(j) draw_line_round(ox, oy, nx, ny, 3);
+					
+					ox = nx;
+					oy = ny;
+				}
+			}
+			
+			draw_set_color(COLORS._main_accent);
+			for (var i = 0, n = array_length(anchors); i < n; i++) {
+				var _a0 = anchors[i];
+				draw_circle((_a0[0] - minx) / rngx * prev_s, (_a0[1] - miny) / rngy * prev_s, 6, false);
+			}
+		surface_reset_target();
+		
+		path_preview_surface = surface_verify(path_preview_surface, prev_s, prev_s);
+		surface_set_shader(path_preview_surface, sh_FXAA);
+			shader_set_f("dimension",  prev_s, prev_s);
+			shader_set_f("cornerDis",  0.5);
+			shader_set_f("mixAmo",     1);
+			
+			draw_surface(_surf, 0, 0);
+		surface_reset_shader();
+		
+		surface_free(_surf);
 	} #endregion
 	
 	static getLineCount		= function() { return 1; }
@@ -985,6 +1030,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(THEME.node_draw_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		gpu_set_tex_filter(true);
+		draw_surface_bbox(path_preview_surface, bbox);
+		gpu_set_tex_filter(false);
 	} #endregion
 }

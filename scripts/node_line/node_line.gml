@@ -1,5 +1,6 @@
 function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {	
 	name = "Line";
+	batch_output = true;
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -43,7 +44,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 15] = nodeValue("Span color over path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply the full 'color over length' to the trimmed path.");
 	
-	inputs[| 16] = nodeValue("Greyscale over width", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 16] = nodeValue("Width pass", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 17] = nodeValue("1px mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Render pixel perfect 1px line.");
 	
@@ -78,6 +79,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	outputs[| 1] = nodeValue("Width Pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	lines = [];
 	
@@ -133,7 +136,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		if(index == 11) ds_map_clear(widthMap);
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outData, _data, _output_index, _array_index) { #region
 		#region data
 			var _dim   = _data[0];
 			var _bg    = _data[1];
@@ -195,7 +198,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		random_set_seed(_sed);
 		var _sedIndex = 0;
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		var _colorPass = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
+		var _widthPass = surface_verify(_outData[1], _dim[0], _dim[1], attrDepth());
 			
 		var p = new __vec2();
 		var _ox, _nx, _nx1, _oy, _ny, _ny1;
@@ -281,9 +285,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						// print($"_pp = {_pp}, total = {_total}");
 						
 						p = _pat.getPointDistance(_pp, i, p);
-						
 						if(struct_has(_pat, "getWeightDistance"))
 							wght = _pat.getWeightDistance(_pp, i);
+							
 					} else {
 						_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
 						_pathPng   = _ratInv? 1 - _prog_curr : _prog_curr;
@@ -341,6 +345,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			array_resize(lines, _lineAmo);
 		#endregion
+		
 		} else { #region
 			var x0, y0, x1, y1;
 			var _0 = point_rectangle_overlap(_dim[0], _dim[1], (_ang + 180) % 360);
@@ -385,143 +390,233 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		} #endregion
 		
 		#region draw
+			
+			surface_set_target(_colorPass);
+				if(_bg) draw_clear_alpha(0, 1);
+				else	DRAW_CLEAR
+				
+				if(_useTex) { #region
+					var tex = surface_get_texture(_tex);
+					
+					shader_set(sh_draw_mapping);
+					shader_set_f("position", _texPos);
+					shader_set_f("rotation", degtorad(_texRot));
+					shader_set_f("scale",    _texSca);
+					
+					shader_set_interpolation(_tex);
+				} #endregion
+				
+				for( var i = 0, n = array_length(lines); i < n; i++ ) {
+					var points = lines[i];
+					if(array_length(points) < 2) continue;
+					
+					var _caps = [];
+					
+					if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
+					else        draw_primitive_begin(pr_trianglestrip);
+					
+					random_set_seed(_sed + i);
+					var pxs = [];
+					var dat = array_safe_get_fast(_pathData, i, noone);
+					
+					var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
+					
+					for( var j = 0; j < array_length(points); j++ ) {
+						var p0   = points[j];
+						var _nx  = p0.x - 0.5 * _1px;
+						var _ny  = p0.y - 0.5 * _1px;
+						var prog = p0.prog;
+						var prgc = p0.progCrop;
+						var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 0;
+						
+						var widProg = value_snap_real(_widap? prog : prgc, 0.01);
+						
+						_nw  = random_range(_wid[0], _wid[1]);
+						if(!ds_map_exists(widthMap, widProg))
+							widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
+						_nw *= widthMap[? widProg];
+						_nw *= p0.weight;
+						
+						_nc = colorMultiply(_col_base, _color.eval(_colP? prog : prgc));
+						
+						if(_cap) { #region
+							if(j == 1) {
+								_d = _dir + 180;
+								_caps[0] = [ _oc, _ox, _oy, _ow / 2, _d - 90, _d ];
+								_caps[1] = [ _oc, _ox, _oy, _ow / 2, _d, _d + 90 ];
+							}
+							
+							if(j == array_length(points) - 1) {
+								_d = _dir;
+								_caps[2] = [ _nc, _nx, _ny, _nw / 2, _d - 90, _d ];
+								_caps[3] = [ _nc, _nx, _ny, _nw / 2, _d, _d + 90 ];
+							}
+						} #endregion
+						
+						if(_1px) { #region
+							if(j) {
+								var dst = point_distance(_ox, _oy, _nx, _ny);
+								if(dst <= 1 && i < array_length(points) - 1) continue;
+								draw_line_color(_ox, _oy, _nx, _ny, _oc, _nc);
+							}
+							
+							_ox = _nx;
+							_oy = _ny;
+							_oc = _nc;
+						#endregion
+						} else { #region
+							if(j) {
+								var _nd0 = _dir;
+								var _nd1 = _nd0;
+								
+								if(j < array_length(points) - 1) {
+									var p2 = points[j + 1];
+									var _nnx = p2.x;
+									var _nny = p2.y;
+							
+									_nd1 = point_direction(_nx, _ny, _nnx, _nny);
+									_nd = _nd0 + angle_difference(_nd1, _nd0) / 2;
+								} else 
+									_nd = _nd0;
+								
+								if(_useTex) {
+									var _len = array_length(points) - 1;
+									
+									var ox0 = _ox + lengthdir_x(_ow / 2, _od + 90);
+									var oy0 = _oy + lengthdir_y(_ow / 2, _od + 90);
+									var nx0 = _nx + lengthdir_x(_nw / 2, _nd + 90);
+									var ny0 = _ny + lengthdir_y(_nw / 2, _nd + 90);
 		
-		surface_set_target(_outSurf);
-			if(_bg) draw_clear_alpha(0, 1);
-			else	DRAW_CLEAR
-			
-			if(_useTex) { #region
-				var tex = surface_get_texture(_tex);
-				
-				shader_set(sh_draw_mapping);
-				shader_set_f("position", _texPos);
-				shader_set_f("rotation", degtorad(_texRot));
-				shader_set_f("scale",    _texSca);
-				
-				shader_set_interpolation(_tex);
-			} #endregion
-			
-			for( var i = 0, n = array_length(lines); i < n; i++ ) {
-				var points = lines[i];
-				if(array_length(points) < 2) continue;
-				
-				var _caps = [];
-				
-				if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
-				else        draw_primitive_begin(pr_trianglestrip);
-				
-				random_set_seed(_sed + i);
-				var pxs = [];
-				var dat = array_safe_get_fast(_pathData, i, noone);
-				
-				var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
-				
-				for( var j = 0; j < array_length(points); j++ ) {
-					var p0   = points[j];
-					var _nx  = p0.x - 0.5 * _1px;
-					var _ny  = p0.y - 0.5 * _1px;
-					var prog = p0.prog;
-					var prgc = p0.progCrop;
-					var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 0;
-					
-					var widProg = value_snap_real(_widap? prog : prgc, 0.01);
-					
-					_nw  = random_range(_wid[0], _wid[1]);
-					if(!ds_map_exists(widthMap, widProg))
-						widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
-					_nw *= widthMap[? widProg];
-					_nw *= p0.weight;
-					
-					_nc = colorMultiply(_col_base, _color.eval(_colP? prog : prgc));
-					
-					if(_cap) { #region
-						if(j == 1) {
-							_d = _dir + 180;
-							_caps[0] = [ _oc, _ox, _oy, _ow / 2, _d - 90, _d ];
-							_caps[1] = [ _oc, _ox, _oy, _ow / 2, _d, _d + 90 ];
-						}
+									var ox1 = _ox + lengthdir_x(_ow / 2, _od + 90 + 180);
+									var oy1 = _oy + lengthdir_y(_ow / 2, _od + 90 + 180);
+									var nx1 = _nx + lengthdir_x(_nw / 2, _nd + 90 + 180);
+									var ny1 = _ny + lengthdir_y(_nw / 2, _nd + 90 + 180);
+									
+									draw_vertex_texture_color(ox0, oy0, 0, (j - 1) / _len, _oc, 1);
+									draw_vertex_texture_color(ox1, oy1, 1, (j - 1) / _len, _oc, 1);
+									draw_vertex_texture_color(nx0, ny0, 0, (j - 0) / _len, _nc, 1);
+									draw_vertex_texture_color(nx1, ny1, 1, (j - 0) / _len, _nc, 1);
+									
+								} else
+									draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, _oc, _nc);
+							} else {
+								var p1   = points[j + 1];
+								_nd = point_direction(_nx, _ny, p1.x, p1.y);
+							}
 						
-						if(j == array_length(points) - 1) {
-							_d = _dir;
-							_caps[2] = [ _nc, _nx, _ny, _nw / 2, _d - 90, _d ];
-							_caps[3] = [ _nc, _nx, _ny, _nw / 2, _d, _d + 90 ];
+							_ox = _nx;
+							_oy = _ny;
+							_od = _nd;
+							_ow = _nw;
+							_oc = _nc;
 						}
-					} #endregion
-					
-					if(_1px) { #region
-						if(j) {
-							var dst = point_distance(_ox, _oy, _nx, _ny);
-							if(dst <= 1 && i < array_length(points) - 1) continue;
-							draw_line_color(_ox, _oy, _nx, _ny, _oc, _nc);
-						}
-						
-						_ox = _nx;
-						_oy = _ny;
-						_oc = _nc;
 					#endregion
-					} else { #region
-						if(j) {
-							var _nd0 = _dir;
-							var _nd1 = _nd0;
-							
-							if(j < array_length(points) - 1) {
-								var p2 = points[j + 1];
-								var _nnx = p2.x;
-								var _nny = p2.y;
-						
-								_nd1 = point_direction(_nx, _ny, _nnx, _nny);
-								_nd = _nd0 + angle_difference(_nd1, _nd0) / 2;
-							} else 
-								_nd = _nd0;
-							
-							if(_useTex) {
-								var _len = array_length(points) - 1;
-								
-								var ox0 = _ox + lengthdir_x(_ow / 2, _od + 90);
-								var oy0 = _oy + lengthdir_y(_ow / 2, _od + 90);
-								var nx0 = _nx + lengthdir_x(_nw / 2, _nd + 90);
-								var ny0 = _ny + lengthdir_y(_nw / 2, _nd + 90);
-	
-								var ox1 = _ox + lengthdir_x(_ow / 2, _od + 90 + 180);
-								var oy1 = _oy + lengthdir_y(_ow / 2, _od + 90 + 180);
-								var nx1 = _nx + lengthdir_x(_nw / 2, _nd + 90 + 180);
-								var ny1 = _ny + lengthdir_y(_nw / 2, _nd + 90 + 180);
-								
-								draw_vertex_texture_color(ox0, oy0, 0, (j - 1) / _len, _oc, 1);
-								draw_vertex_texture_color(ox1, oy1, 1, (j - 1) / _len, _oc, 1);
-								draw_vertex_texture_color(nx0, ny0, 0, (j - 0) / _len, _nc, 1);
-								draw_vertex_texture_color(nx1, ny1, 1, (j - 0) / _len, _nc, 1);
-							} else if(_colW)
-								draw_line_width2_angle_width(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, merge_color(_oc, c_black, 0.5), merge_color(_nc, c_black, 0.5));
-							else
-								draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, _oc, _nc);
-						} else {
-							var p1   = points[j + 1];
-							_nd = point_direction(_nx, _ny, p1.x, p1.y);
-						}
-					
-						_ox = _nx;
-						_oy = _ny;
-						_od = _nd;
-						_ow = _nw;
-						_oc = _nc;
 					}
-				#endregion
+					
+					draw_primitive_end();
+					
+					for( var j = 0, m = array_length(_caps); j < m; j++ ) {
+						var _cps = _caps[j];
+						draw_set_color(_cps[0]);
+						draw_circle_angle(_cps[1], _cps[2], _cps[3], _cps[4], _cps[5], _capP);
+					}
 				}
 				
-				draw_primitive_end();
-				
-				for( var j = 0, m = array_length(_caps); j < m; j++ ) {
-					var _cps = _caps[j];
-					draw_set_color(_cps[0]);
-					draw_circle_angle(_cps[1], _cps[2], _cps[3], _cps[4], _cps[5], _capP);
-				}
-			}
+				if(_useTex) shader_reset();
+			surface_reset_target();
 			
-			if(_useTex) shader_reset();
-		surface_reset_target();
+			if(_colW && !_1px) {
+				
+				surface_set_target(_widthPass);
+					if(_bg) draw_clear_alpha(0, 1);
+					else	DRAW_CLEAR
+					
+					for( var i = 0, n = array_length(lines); i < n; i++ ) {
+						var points = lines[i];
+						if(array_length(points) < 2) continue;
+						
+						var _caps = [];
+						
+						draw_primitive_begin(pr_trianglestrip);
+						
+						random_set_seed(_sed + i);
+						var pxs = [];
+						var dat = array_safe_get_fast(_pathData, i, noone);
+						
+						var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
+						
+						for( var j = 0; j < array_length(points); j++ ) {
+							var p0   = points[j];
+							var _nx  = p0.x - 0.5 * _1px;
+							var _ny  = p0.y - 0.5 * _1px;
+							var prog = p0.prog;
+							var prgc = p0.progCrop;
+							var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 0;
+							
+							var widProg = value_snap_real(_widap? prog : prgc, 0.01);
+							
+							_nw  = random_range(_wid[0], _wid[1]);
+							if(!ds_map_exists(widthMap, widProg))
+								widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
+							_nw *= widthMap[? widProg];
+							_nw *= p0.weight;
+							
+							if(_cap) { #region
+								if(j == 1) {
+									_d = _dir + 180;
+									_caps[0] = [ c_grey, _ox, _oy, _ow / 2, _d - 90, _d ];
+									_caps[1] = [ c_grey, _ox, _oy, _ow / 2, _d, _d + 90 ];
+								}
+								
+								if(j == array_length(points) - 1) {
+									_d = _dir;
+									_caps[2] = [ c_grey, _nx, _ny, _nw / 2, _d - 90, _d ];
+									_caps[3] = [ c_grey, _nx, _ny, _nw / 2, _d, _d + 90 ];
+								}
+							} #endregion
+							
+							if(j) {
+								var _nd0 = _dir;
+								var _nd1 = _nd0;
+								
+								if(j < array_length(points) - 1) {
+									var p2 = points[j + 1];
+									var _nnx = p2.x;
+									var _nny = p2.y;
+							
+									_nd1 = point_direction(_nx, _ny, _nnx, _nny);
+									_nd = _nd0 + angle_difference(_nd1, _nd0) / 2;
+								} else 
+									_nd = _nd0;
+								
+								draw_line_width2_angle_width(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, c_white, c_white);
+							} else {
+								var p1   = points[j + 1];
+								_nd = point_direction(_nx, _ny, p1.x, p1.y);
+							}
+						
+							_ox = _nx;
+							_oy = _ny;
+							_od = _nd;
+							_ow = _nw;
+							
+						#endregion
+						}
+						
+						draw_primitive_end();
+						
+						for( var j = 0, m = array_length(_caps); j < m; j++ ) {
+							var _cps = _caps[j];
+							draw_set_color(_cps[0]);
+							draw_circle_angle(_cps[1], _cps[2], _cps[3], _cps[4], _cps[5], _capP);
+						}
+					}
+					
+				surface_reset_target();
+				
+			}
 		#endregion
 		
-		return _outSurf;
+		return [ _colorPass, _widthPass ];
 	} #endregion
 }

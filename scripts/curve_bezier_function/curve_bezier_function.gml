@@ -1,38 +1,78 @@
 //curve format [-cx0, -cy0, x0, y0, +cx0, +cy0, -cx1, -cy1, x1, y1, +cx1, +cy1]
 //segment format [y0, +cx0, +cy0, -cx1, -cy1, y1]
 
-#macro CURVE_DEF_00 [0, 0, 0, 0, 1/3,    0, /**/ -1/3,    0, 1, 0, 0, 0]
-#macro CURVE_DEF_01 [0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0]
-#macro CURVE_DEF_10 [0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
-#macro CURVE_DEF_11 [0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]
+#macro CURVE_DEF_00 [0, 1, /**/ 0, 0, 0, 0, 1/3,    0, /**/ -1/3,    0, 1, 0, 0, 0]
+#macro CURVE_DEF_01 [0, 1, /**/ 0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0]
+#macro CURVE_DEF_10 [0, 1, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
+#macro CURVE_DEF_11 [0, 1, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]
 
-function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1) { #region
-	var segments = array_length(_bz) / 6 - 1;
+function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1, _shift = 0, _scale = 1) { #region
+	var _amo = array_length(_bz);
+	var _shf = _amo % 6;
+	
+	var segments = (_amo - _shf) / 6 - 1;
 	var _ox, _oy;
 	
+	var rngx = maxx - minx;
+	var rngy = maxy - miny;
+	
 	for( var i = 0; i < segments; i++ ) {
-		var ind = i * 6;
+		var ind = _shf + i * 6;
 		
-		var _x0 = _bz[ind + 2];
-		var _y0 = _bz[ind + 3];
+		var _x0 =       _bz[ind + 2];
+		var _y0 =       _bz[ind + 3];
 		var ax0 = _x0 + _bz[ind + 4];
 		var ay0 = _y0 + _bz[ind + 5];
 		
-		var _x1 = _bz[ind + 6 + 2];
-		var _y1 = _bz[ind + 6 + 3];
+		var _x1 =       _bz[ind + 6 + 2];
+		var _y1 =       _bz[ind + 6 + 3];
 		var bx1 = _x1 + _bz[ind + 6 + 0];
 		var by1 = _y1 + _bz[ind + 6 + 1];
 		
-		var smp = ceil((_x1 - _x0) / (maxx - minx) * 32);
+		var _xr = _x1 - _x0;
+		
+		var smp = ceil(_xr / rngx * 32);
 		var bbz = [ _y0, ax0, ay0, bx1, by1, _y1 ];
 		
-		if(_x1 < minx) continue;
+		//if(_x1 < minx) continue;
+		
+		if(i == 0) {
+			var _rx = _x0 * _scale + _shift;
+			var _ry = _y0;
+			
+			_rx = ( _rx - minx ) / rngx;
+			_ry = ( _ry - miny ) / rngy;
+			
+			var _nx = x0 + _w * _rx;
+			var _ny = y0 + _h * (1 - _ry);
+			
+			draw_line(x0, _ny, _nx, _ny);
+		}
+		
+		if(i == segments - 1) {
+			var _rx = _x1 * _scale + _shift;
+			var _ry = _y1;
+			
+			_rx = ( _rx - minx ) / rngx;
+			_ry = ( _ry - miny ) / rngy;
+			
+			var _nx = x0 + _w * _rx;
+			var _ny = y0 + _h * (1 - _ry);
+			
+			draw_line(x0 + _w, _ny, _nx, _ny);
+		}
 		
 		for(var j = 0; j <= smp; j++) {
 			var t   = j / smp;
 			var _r  = eval_curve_segment_t_position(t, bbz);
-			var _rx = ((_x0 + _r[0] * (_x1 - _x0)) - minx) / (maxx - minx);
-			var _ry = (_r[1] - miny) / (maxy - miny);
+			
+			var _rx = _r[0] * _xr + _x0;
+			var _ry = _r[1];
+			
+			_rx = _rx * _scale + _shift;
+			
+			_rx = ( _rx - minx ) / rngx;
+			_ry = ( _ry - miny ) / rngy;
 			
 			var _nx = x0 + _w * _rx;
 			var _ny = y0 + _h * (1 - _ry);
@@ -47,17 +87,23 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1)
 	}
 } #endregion
 
-function eval_curve_segment_t_position(t, _bz) { #region
+function eval_curve_segment_t_position(_t, _bz) { #region
+	var _t2 = _t * _t;
+	var _t3 = _t * _t * _t;
+	var _T  =  1 - _t;
+	var _T2 = _T * _T;
+	var _T3 = _T * _T * _T;
+	
 	return [ 
-		       power(1 - t, 3) * 0 
-			 + 3 * power(1 - t, 2) * t * _bz[1] 
-			 + 3 * (1 - t) * power(t, 2) * _bz[3]
-			 + power(t, 3) * 1, 
+		           _T3       * 0 
+			 + 3 * _T2 * _t  * _bz[1] 
+			 + 3 * _T  * _t2 * _bz[3]
+			 +           _t3 * 1, 
 			 
-			   power(1 - t, 3) * _bz[0]
-			 + 3 * power(1 - t, 2) * t * _bz[2] 
-			 + 3 * (1 - t) * power(t, 2) * _bz[4]
-			 + power(t, 3) * _bz[5]
+			       _T3 *       _bz[0]
+			 + 3 * _T2 * _t  * _bz[2] 
+			 + 3 * _T  * _t2 * _bz[4]
+			 +           _t3 * _bz[5]
 		];
 } #endregion
 
@@ -69,19 +115,30 @@ function eval_curve_segment_t(_bz, t) { #region
 } #endregion
 
 function eval_curve_x(_bz, _x, _tolr = 0.00001) { #region
-	static _CURVE_DEF_01 = [0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0];
-	static _CURVE_DEF_10 = [0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0];
-	static _CURVE_DEF_11 = [0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0];
+	static _CURVE_DEF_01 = [0, 1, /**/ 0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0];
+	static _CURVE_DEF_10 = [0, 1, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0];
+	static _CURVE_DEF_11 = [0, 1, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0];
 	
 	if(array_equals(_bz, _CURVE_DEF_11)) return 1;
 	if(array_equals(_bz, _CURVE_DEF_01)) return _x;
 	if(array_equals(_bz, _CURVE_DEF_10)) return 1 - _x;
 	
-	var segments = array_length(_bz) / 6 - 1;
+	var _amo   = array_length(_bz);
+	var _shf   = _amo % 6;
+	var _shift = 0;
+	var _scale = 1;
+		
+	if(_shf) {
+		var _shift = _bz[0];
+		var _scale = _bz[1];
+	}
+	
+	var segments = (_amo - _shf) / 6 - 1;
+	_x = _x / _scale - _shift;
 	_x = clamp(_x, 0, 1);
 	
 	for( var i = 0; i < segments; i++ ) {
-		var ind = i * 6;
+		var ind = _shf + i * 6;
 		var _x0 = _bz[ind + 2];
 		var _y0 = _bz[ind + 3];
 	  //var bx0 = _x0 + _bz[ind + 0];

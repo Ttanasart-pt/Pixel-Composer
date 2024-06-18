@@ -701,9 +701,15 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(is_array(value)) {
 					for(var j = 0; j < array_length(value); j++)
 						_val[j] = processValue(value[j]);
+						
 				} else if(is_array(base)) {
 					for(var j = 0; j < array_length(base); j++)
 						_val[j] = processValue(value);
+				}
+				
+				if(prop.type == VALUE_TYPE.curve && array_length(value) % 6 == 0) {
+					array_insert(_val, 0, 0);
+					array_insert(_val, 1, 1);
 				}
 			} 
 			

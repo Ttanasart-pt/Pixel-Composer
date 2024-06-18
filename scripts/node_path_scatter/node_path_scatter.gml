@@ -1,5 +1,6 @@
 function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Scatter Path";
+	
 	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Base Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
@@ -182,9 +183,18 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				flip : _flip,
 			}
 			
-			segment_counts[i] = array_clone(path_scat.getSegmentCount(0));
-			line_lengths[i]   = array_clone(path_scat.getLength(0));
-			accu_lengths[i]   = array_clone(path_scat.getAccuLength(0));
+			var _segment_counts = array_clone(path_scat.getSegmentCount(0));
+			var _line_lengths   = array_clone(path_scat.getLength(0));
+			var _accu_lengths   = array_clone(path_scat.getAccuLength(0));
+			
+			_line_lengths *= _sca;
+			
+			for (var j = 0, m = array_length(_accu_lengths); j < m; j++) 
+				_accu_lengths[j] *= _sca;
+			
+			segment_counts[i] = _segment_counts;
+			line_lengths[i]   = _line_lengths;
+			accu_lengths[i]   = _accu_lengths;
 		}
 		
 		outputs[| 0].setValue(self);
