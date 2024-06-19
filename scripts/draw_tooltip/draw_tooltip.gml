@@ -270,3 +270,43 @@ function draw_tooltip_buffer(buff) { #region
 		draw_text(mx + pd, my + th + pd, $"...({buffer_get_size(buff)} bytes)");
 	}
 } #endregion
+
+function draw_tooltip_curve(curve) { #region
+	
+	var ww = ui(160);
+	var hh = ui(160);
+		
+	var pd = ui(8);
+	var mx = min(mouse_mx + ui(16), WIN_W - (ww + pd * 2));
+	var my = min(mouse_my + ui(16), WIN_H - (hh + pd * 2));
+		
+	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
+	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
+	
+	var x0 = mx + pd;
+	var x1 = x0 + ww;
+	var y0 = my + pd;
+	var y1 = y0 + hh;
+	
+	var st = 0.1;
+		
+	draw_set_color(COLORS.widget_curve_line);
+	draw_set_alpha(0.15);
+	
+	for( var i = st; i < 1; i += st ) {
+		var _y0 = y0 + hh * (1 - i);
+		draw_line(x0, _y0, x1, _y0);
+		
+		var _x0 = x0 + ww * i;
+		draw_line(_x0, y0, _x0, y1);
+	}
+	
+	draw_set_alpha(1);
+	
+	draw_set_color(COLORS._main_accent);
+	draw_curve(x0, y0, ww, hh, curve);
+	
+	draw_set_color(COLORS.widget_curve_outline);
+	draw_rectangle(x0, y0, x1, y1, true);
+	
+} #endregion

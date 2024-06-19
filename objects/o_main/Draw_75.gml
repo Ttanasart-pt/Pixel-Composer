@@ -28,7 +28,8 @@ if(winMan_isMinimized()) exit;
 					break;
 					
 				case VALUE_TYPE.curve :
-					draw_tooltip_text($"[{__txt("Curve Object")}]");
+					// draw_tooltip_text($"[{__txt("Curve Object")}]");
+					draw_tooltip_curve(content);
 					break;
 					
 				case VALUE_TYPE.color : 

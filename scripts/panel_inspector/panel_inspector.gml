@@ -1011,7 +1011,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			if(PROJECT.meta.steam == FILE_STEAM_TYPE.steamOpen) {
 				var _tw = string_width(txt) / 2;
-				draw_sprite_ui(THEME.steam, 0, w / 2 - _tw - ui(16), ui(32),,,, COLORS._main_icon);
+				BLEND_ADD
+				draw_sprite_ui(THEME.steam, 0, w / 2 - _tw - ui(16), ui(29), 1, 1, 0, COLORS._main_icon);
+				BLEND_NORMAL
 			}
 			
 			var bx = w - ui(44);

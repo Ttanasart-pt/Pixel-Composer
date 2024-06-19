@@ -248,11 +248,14 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	#region ++++ context menu ++++
 	keyframe_menu = [ #region
+		
 		menuItem(__txtx("panel_animation_lock_y", "Lock/Unlock Y easing"), function() { 
-				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
-					var k = keyframe_selecting[i];
-					k.ease_y_lock = !k.ease_y_lock;
-				} }),
+			for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
+				var k = keyframe_selecting[i];
+				k.ease_y_lock = !k.ease_y_lock;
+			} 
+		}),
+				
 		menuItemGroup(__txtx("panel_animation_ease_in", "Ease in"),  [ 
 			[ [THEME.timeline_ease, 0], function() { 
 				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
@@ -673,7 +676,7 @@ function Panel_Animation() : PanelContent() constructor {
 						var t = (_keyframe.time + 1) * timeline_scale + timeline_shift;
 						_keyframe.dopesheet_x = t;
 						
-						draw_sprite_ui_uniform(THEME.timeline_keyframe, _keyframe.getDrawIndex(), t, key_y, 1, COLORS.panel_animation_keyframe_hide);
+						draw_sprite_ui_uniform(THEME.timeline_keyframe, 0, t, key_y, 1, COLORS.panel_animation_keyframe_hide);
 					}
 				}
 			}
@@ -1093,14 +1096,45 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 	} #endregion
 	
+	function editKeyframe(keyframe, _x = mouse_mx + ui(8), _y = mouse_my + ui(8)) {
+		var _wid = keyframe.anim.prop.editWidget;
+		__keyframe_editing = keyframe;
+		
+		switch(animator.prop.type) {
+			case VALUE_TYPE.color : 
+				switch(animator.prop.display_type) {
+					case VALUE_DISPLAY.palette : 
+						var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
+						dialog.setDefault(keyframe.value);
+						dialog.onApply      = function(val) { __keyframe_editing.value = val; };
+						dialog.drop_target  = _wid;
+						break;
+					
+					default :
+						var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
+						dialog.setDefault(keyframe.value);
+						dialog.selector.onApply = function(val) { __keyframe_editing.value = val; };
+						dialog.onApply          = function(val) { __keyframe_editing.value = val; };
+						dialog.drop_target      = _wid;
+				}
+				break;
+			
+			case VALUE_TYPE.gradient : 
+				var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
+				dialog.setDefault(keyframe.value.clone());
+				dialog.onApply      = function(val) { __keyframe_editing.value = val; };
+				dialog.drop_target  = _wid;
+				break;
+				
+			default : 
+				dialogCall(o_dialog_value_editor, _x, _y).setKey(keyframe);
+		}
+	}
+	
 	function _drawDopesheetAnimatorKeysBG(animator, msx, msy) { #region
 		var prop_dope_y = animator.y;
 		var key_hover   = noone;
 		var key_list    = animator.values;
-		
-		//if(animator.prop.name == "Active") { #region active prop
-			
-		//} #endregion
 		
 		if((animator.prop.on_end == KEYFRAME_END.loop || animator.prop.on_end == KEYFRAME_END.ping) && ds_list_size(key_list) > 1) {
 			var keyframe_s = animator.prop.loop_range == -1? key_list[| 0].time : key_list[| ds_list_size(key_list) - 1 - animator.prop.loop_range].time;
@@ -1155,7 +1189,6 @@ function Panel_Animation() : PanelContent() constructor {
 		return key_hover;
 	} #endregion
 	
-	//// DRAW KEYFRAMES
 	__keyframe_editing = noone;
 	
 	function _drawDopesheetAnimatorKeys(_cont, animator, msx, msy) { #region 
@@ -1192,7 +1225,8 @@ function Panel_Animation() : PanelContent() constructor {
 			if(pHOVER && point_in_circle(msx, msy, t, prop_y, ui(8))) {
 				cc = COLORS.panel_animation_keyframe_selected;
 				key_hover = keyframe;
-				TOOLTIP = [ keyframe.value, animator.prop.type ];
+				if(!instance_exists(o_dialog_menubox))
+					TOOLTIP = [ keyframe.value, animator.prop.type ];
 									
 				if(pFOCUS && !key_mod_press(SHIFT)) {
 					if(DOUBLE_CLICK) {
@@ -1204,39 +1238,7 @@ function Panel_Animation() : PanelContent() constructor {
 						
 					} else if(mouse_press(mb_left)) {
 						if(key_mod_press(CTRL)) {
-							
-							var _wid = animator.prop.editWidget;
-							__keyframe_editing = keyframe;
-							
-							switch(animator.prop.type) {
-								case VALUE_TYPE.color : 
-									switch(animator.prop.display_type) {
-										case VALUE_DISPLAY.palette : 
-											var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
-											dialog.setDefault(keyframe.value);
-											dialog.onApply      = function(val) { __keyframe_editing.value = val; };
-											dialog.drop_target  = _wid;
-											break;
-										
-										default :
-											var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-											dialog.setDefault(keyframe.value);
-											dialog.selector.onApply = function(val) { __keyframe_editing.value = val; };
-											dialog.onApply          = function(val) { __keyframe_editing.value = val; };
-											dialog.drop_target      = _wid;
-									}
-									break;
-								
-								case VALUE_TYPE.gradient : 
-									var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
-									dialog.setDefault(keyframe.value.clone());
-									dialog.onApply      = function(val) { __keyframe_editing.value = val; };
-									dialog.drop_target  = _wid;
-									break;
-									
-								default : 
-									dialogCall(o_dialog_value_editor, mouse_mx + ui(8), mouse_my + ui(8)).setKey(keyframe);
-							}
+							editKeyFrame(keyframe);
 							
 						} else {
 							keyframe_dragging = keyframe;
@@ -1247,13 +1249,13 @@ function Panel_Animation() : PanelContent() constructor {
 					}
 				}
 			}
-								
+			
 			if(stagger_mode == 1 && array_exists(keyframe_selecting, keyframe))
 				cc = key_hover == keyframe? COLORS.panel_animation_keyframe_selected : COLORS._main_accent;
 			
 			var ind = keyframe.getDrawIndex();
-			
 			draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc);
+			
 			if(array_exists(keyframe_selecting, keyframe)) 
 				draw_sprite_ui_uniform(THEME.timeline_keyframe_selecting, ind, t, prop_y, 1, COLORS._main_accent);
 						
@@ -1279,11 +1281,14 @@ function Panel_Animation() : PanelContent() constructor {
 		var tx   = tool_width;
 		var ty   = animator.y - 1;
 		
-		var hov = item_dragging == noone && pHOVER && point_in_rectangle(msx, msy, 0, ty - ui(8), w, ty + ui(8));
+		var hov = item_dragging == noone && pHOVER && point_in_rectangle(msx, msy, 0, ty - ui(8), w - ui(64), ty + ui(8));
 		
 		//// DRAW NAME
-		var cc = prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_inner;
+		var cc = prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_sub;
 		if(hov) cc = COLORS._main_text_accent;
+		
+		draw_set_color(CDEF.main_mdblack);
+		draw_rectangle(ui(32), ty - ui(8), tool_width, ty + ui(8), false);
 		
 		draw_set_color(cc);
 		
@@ -2110,13 +2115,18 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		if(mouse_press(mb_right, pFOCUS)) { #region context menu
 			if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + dope_sheet_w, ui(8) + dope_sheet_h)) {
+				
 				if(array_empty(keyframe_selecting)) menuCall("animation_keyframe_empty_menu",,, keyframe_menu_empty);
 				else								menuCall("animation_keyframe_menu",,, keyframe_menu,, keyframe_selecting);
+				
 			} else if(point_in_rectangle(mx, my, ui(8), ui(8), ui(8) + tool_width, ui(8) + dope_sheet_h)) {
+				
 				if(context_selecting_item == noone)
 					menuCall("animation_name_empty_menu",,, name_menu_empty);
+					
 				else if(is_instanceof(context_selecting_item.item, timelineItemNode))
 					menuCall("animation_name_empty_menu",,, name_menu_item);
+					
 				else if(is_instanceof(context_selecting_item.item, timelineItemGroup))
 					menuCall("animation_name_empty_menu",,, name_menu_group);
 			}
