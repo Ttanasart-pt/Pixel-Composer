@@ -40,7 +40,12 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 	nodes_select = [ "All nodes", "Selected" ];
 	widgets      = [];
 	
-	widgets[0] = [ "Nodes",				new scrollBox(nodes_select, function(val) { sel = val; nodeList = val? ds_list_create_from_array(targetPanel.nodes_selecting) : targetPanel.nodes_list; refresh(); }, false),
+	widgets[0] = [ "Nodes",				new scrollBox(nodes_select, 
+		function(val) { 
+			sel      = val; 
+			nodeList = val? targetPanel.nodes_selecting : targetPanel.nodes_list; 
+			refresh(); 
+		}, false),
 		function() { return nodes_select[sel] }  ];
 		
 	widgets[1] = [ "Scale",				new textBox(TEXTBOX_INPUT.number, function(val) { settings.scale = val; refresh(); }),

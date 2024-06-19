@@ -2020,18 +2020,24 @@ function Panel_Preview() : PanelContent() constructor {
 		drawPreviewOverlay();
 		
 		var inspect_node = PANEL_INSPECTOR.getInspecting();
+		var tool = noone;
 		
 		drawViewController();
 		
 		tool_side_draw_l = false;
 		tool_side_draw_r = false;
 		
-		var tool = noone;
-		if(inspect_node) {
-			tool = inspect_node.getTool();
-			if(tool) drawNodeTools(pFOCUS, tool);
-		} else 
-			tool_current = noone;
+		if(PANEL_PREVIEW == self) {
+			if(inspect_node) {
+				tool = inspect_node.getTool();
+				if(tool) drawNodeTools(pFOCUS, tool);
+			} else 
+				tool_current = noone;
+		}
+		
+		if(!d3_active) drawSplitView();
+		
+		drawToolBar(tool);
 		
 		if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
 			menuCall("preview_context_menu",,, [ 
@@ -2046,8 +2052,6 @@ function Panel_Preview() : PanelContent() constructor {
 			],, getNodePreview());
 		}
 		
-		if(!d3_active) drawSplitView();
-		drawToolBar(tool);
 	} #endregion
 	
 	////=========== ACTION ===========
