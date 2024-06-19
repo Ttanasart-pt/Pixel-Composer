@@ -1155,7 +1155,8 @@ function Panel_Animation() : PanelContent() constructor {
 		return key_hover;
 	} #endregion
 	
-	function _drawDopesheetAnimatorKeys(_cont, animator, msx, msy) { #region
+	//// DRAW KEYFRAMES
+	function _drawDopesheetAnimatorKeys(_cont, animator, msx, msy) { #region 
 		var _node     = _cont.node;
 		var prop_y	  = animator.y;
 		var node_y	  = _cont.y;
@@ -1189,6 +1190,7 @@ function Panel_Animation() : PanelContent() constructor {
 			if(pHOVER && point_in_circle(msx, msy, t, prop_y, ui(8))) {
 				cc = COLORS.panel_animation_keyframe_selected;
 				key_hover = keyframe;
+				TOOLTIP = [ keyframe.value, animator.prop.type ];
 									
 				if(pFOCUS && !key_mod_press(SHIFT)) {
 					if(DOUBLE_CLICK) {
@@ -1238,6 +1240,55 @@ function Panel_Animation() : PanelContent() constructor {
 		var tx   = tool_width;
 		var ty   = animator.y - 1;
 		
+		var hov = item_dragging == noone && pHOVER && point_in_rectangle(msx, msy, 0, ty - ui(8), w, ty + ui(8));
+		
+		//// DRAW NAME
+		var cc = prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_inner;
+		if(hov) cc = COLORS._main_text_accent;
+		
+		draw_set_color(cc);
+		
+		var _title_x = ui(32);
+		if(!show_nodes) {
+			var _txt = animator.prop.node.getDisplayName();
+			
+			draw_set_alpha(aa * 0.5);
+			draw_text_add(_title_x, ty - 2, _txt);
+			_title_x += string_width(_txt) + ui(4);
+		}
+		
+		var _txt = animator.getName();
+		draw_set_alpha(aa);
+		draw_text_add(_title_x, ty - 2, _txt);
+		draw_set_alpha(1);
+		_title_x += string_width(_txt) + ui(4);
+		
+		if(hov) {
+			value_hovering = prop;
+			if(mouse_click(mb_left, pFOCUS))
+				value_focusing = prop;
+		}
+		
+		var _gx = ui(20);
+		var _gy = ty;
+		if(hov)
+		if(buttonInstant(noone, _gx - ui(10), _gy - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.animate_prop_go, 0, [COLORS._main_icon, COLORS._main_icon_on_inner], 0.75) == 2) {
+			graphFocusNode(_node);
+			PANEL_INSPECTOR.highlightProp(prop);
+		}
+		
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		var _tool_a = 0.5 + hov * 0.5;
+		
+		var _on_end_disp = prop.on_end || hov;
+		var _tool_x0 = tool_width - ui(20 + 16 * (3 + _on_end_disp * 1.5) + 12);
+		var _tool_x1 = tool_width;
+		draw_set_color(c_white);
+		BLEND_SUBTRACT
+		draw_rectangle(_tool_x0, ty - ui(8), _tool_x1, ty + ui(8), false);
+		BLEND_NORMAL
+		
 		if(prop.show_graph) {
 			var _y1 = ty + ui(10) + prop.graph_h + ui(8);
 			var c1  = colorMultiply(_item.item.color_cur, COLORS.panel_animation_dope_key_bg_hover);
@@ -1251,7 +1302,7 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		#region keyframe control
 			tx = tool_width - ui(20 + 16 * 3);
-			if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 0, [COLORS._main_icon, COLORS._main_icon_on_inner]) == 2) {
+			if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 0, [COLORS._main_icon, COLORS._main_icon_on_inner], _tool_a) == 2) {
 				var _t = -1;
 				for(var k = 0; k < ds_list_size(animator.values); k++) {
 					var _key = animator.values[| k];
@@ -1262,7 +1313,7 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 				
 			tx = tool_width - ui(20 + 16 * 1);
-			if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 2, [COLORS._main_icon, COLORS._main_icon_on_inner]) == 2) {
+			if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 2, [COLORS._main_icon, COLORS._main_icon_on_inner], _tool_a) == 2) {
 				for(var k = 0; k < ds_list_size(animator.values); k++) {
 					var _key = animator.values[| k];
 					if(_key.time > CURRENT_FRAME) {
@@ -1275,7 +1326,7 @@ function Panel_Animation() : PanelContent() constructor {
 				
 		#region add keyframe
 			tx = tool_width - ui(20 + 16 * 2);
-			if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 1, [COLORS._main_accent, COLORS._main_icon_on_inner]) == 2) {
+			if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 1, [COLORS._main_accent, COLORS._main_icon_on_inner], _tool_a) == 2) {
 				var _add = false;
 				for(var k = 0; k < ds_list_size(animator.values); k++) {
 					var _key = animator.values[| k];
@@ -1297,18 +1348,19 @@ function Panel_Animation() : PanelContent() constructor {
 		if(isGraphable(prop)) {
 			tx = tool_width - ui(16);
 			if(pHOVER && point_in_rectangle(msx, msy, tx - ui(9), ty - ui(10), tx + ui(10), ty + ui(8))) {
-				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, COLORS._main_icon_on_inner, 1);
+				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, COLORS._main_icon_on_inner, _tool_a);
 				TOOLTIP = __txtx("panel_animation_show_graph", "Show graph");
 				
 				if(mouse_press(mb_left, pFOCUS))
 					prop.show_graph = !prop.show_graph;
 			} else
-				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, prop.show_graph? COLORS._main_accent : COLORS._main_icon);
+				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, prop.show_graph? COLORS._main_accent : COLORS._main_icon, _tool_a);
 		}
 						
 		tx = tool_width - ui(20 + 16 * 4.5);
+		
 		if(pHOVER && point_in_rectangle(msx, msy, tx - ui(10), ty - ui(9), tx + ui(10), ty + ui(8))) {
-			draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, COLORS._main_icon_on_inner, 1);
+			draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, COLORS._main_icon_on_inner, _on_end_disp);
 			
 			if(tooltip_loop_prop != prop) 
 				tooltip_loop_type.arrow_pos = noone;
@@ -1321,39 +1373,8 @@ function Panel_Animation() : PanelContent() constructor {
 			if(mouse_press(mb_left, pFOCUS)) 
 				on_end_dragging_anim = prop;
 		} else
-			draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, on_end_dragging_anim == prop? COLORS._main_accent : COLORS._main_icon);
-						
-		var hov = item_dragging == noone && pHOVER && point_in_rectangle(msx, msy, 0, ty - ui(8), w, ty + ui(8));
-		if(hov) {
-			value_hovering = prop;
-			if(mouse_click(mb_left, pFOCUS))
-				value_focusing = prop;
-		}
+			draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, on_end_dragging_anim == prop? COLORS._main_accent : COLORS._main_icon, _on_end_disp);
 		
-		var _gx = ui(20);
-		var _gy = ty;
-		if(hov)
-		if(buttonInstant(noone, _gx - ui(10), _gy - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.animate_prop_go, 0, [COLORS._main_icon, COLORS._main_icon_on_inner], 0.75) == 2) {
-			graphFocusNode(_node);
-			PANEL_INSPECTOR.highlightProp(prop);
-		}
-		
-		var cc = prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_inner;
-		if(hov) cc = COLORS._main_text_accent;
-		
-		var _tx = ui(32);
-		draw_set_color(cc);
-		
-		if(!show_nodes) {
-			var _txt = animator.prop.node.getDisplayName();
-			
-			draw_set_alpha(aa * 0.5);
-			draw_text_add(_tx, ty - 2, _txt);
-			_tx += string_width(_txt) + ui(4);
-		}
-		
-		draw_set_alpha(aa);
-		draw_text_add(_tx, ty - 2, animator.getName());
 		draw_set_alpha(1);
 	} #endregion
 	
@@ -1383,7 +1404,7 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	function _drawDopesheetLabel() { #region
 		surface_set_target(dope_sheet_name_surface);	
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
 		var msx = mx - ui(8);
 		var msy = my - ui(8);
 		

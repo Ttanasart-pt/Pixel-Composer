@@ -64,6 +64,14 @@ function draw_sprite_bbox(spr, ind, _bbox) { #region
 	__draw_sprite_stretched(spr, ind, _bbox.x0, _bbox.y0, _bbox.w, _bbox.h);
 } #endregion
 
+function draw_sprite_bbox_uniform(spr, ind, _bbox) { #region
+	INLINE
+	if(_bbox == noone) return;
+	var _minS = min(_bbox.w, _bbox.h);
+	
+	__draw_sprite_stretched(spr, ind, _bbox.xc - _minS / 2, _bbox.y0 - _minS / 2, _minS, _minS);
+} #endregion
+
 function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white) { #region
 	INLINE
 	draw_sprite_ext(spr, ind, _x, _y, scale, scale, 0, color, 1);

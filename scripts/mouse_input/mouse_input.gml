@@ -9,6 +9,7 @@
 	PEN_RELEASED = false;
 	
 	#macro SCROLL_SPEED PREFERENCES.mouse_wheel_speed
+	#macro MOUSE_MOVED (window_mouse_get_delta_x() || window_mouse_get_delta_y())
 	
 	function setMouseWrap() {
 		INLINE

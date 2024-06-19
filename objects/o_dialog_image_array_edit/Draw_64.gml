@@ -34,14 +34,12 @@ if !target exit;
 		key_release();
 		
 		if(path != "") {
-			var paths = paths_to_array_ext(path, ".png;.jpg");
-			var arr = target.getInputData(0);
+			var paths = string_splice(path, "\n");
+			var arr   = target.getValue();
+			array_append(arr, paths);
 			
-			for( var i = 0, n = array_length(paths); i < n; i++ ) 
-				array_push(arr, paths[i]);
-			
-			target.inputs[| 0].setValue(arr);
-			target.triggerRender();
+			target.setValue(arr);
+			target.node.triggerRender();
 		}
 	}
 	

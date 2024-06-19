@@ -866,7 +866,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					nx = (segment[j + 0] - minx) / rngx * prev_s;
 					ny = (segment[j + 1] - miny) / rngy * prev_s;
 					
-					if(j) draw_line_round(ox, oy, nx, ny, 3);
+					if(j) draw_line_round(ox, oy, nx, ny, 4);
 					
 					ox = nx;
 					oy = ny;
@@ -876,7 +876,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_set_color(COLORS._main_accent);
 			for (var i = 0, n = array_length(anchors); i < n; i++) {
 				var _a0 = anchors[i];
-				draw_circle((_a0[0] - minx) / rngx * prev_s, (_a0[1] - miny) / rngy * prev_s, 6, false);
+				draw_circle((_a0[0] - minx) / rngx * prev_s, (_a0[1] - miny) / rngy * prev_s, 8, false);
 			}
 		surface_reset_target();
 		
@@ -1030,8 +1030,14 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
-		gpu_set_tex_filter(true);
-		draw_surface_bbox(path_preview_surface, bbox);
-		gpu_set_tex_filter(false);
+		
+		if(array_empty(segments)) {
+			draw_sprite_fit(s_node_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+			
+		} else {
+			gpu_set_tex_filter(true);
+			draw_surface_bbox(path_preview_surface, bbox);
+			gpu_set_tex_filter(false);
+		}
 	} #endregion
 }

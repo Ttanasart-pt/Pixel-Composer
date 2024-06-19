@@ -35,22 +35,26 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[| 11] = nodeValue("Flip if Negative", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
+	inputs[| 12] = nodeValue("Origin", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "First", "Zero" ]);
+	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
 	input_display_list = [ 5, 
 		["Paths",     false], 0, 1, 10, 9, 
 		["Scatter",   false], 8, 3, 
-		["Position",  false], 2, 
+		["Position",  false], 12, 2, 
 		["Rotation",  false], 7, 11, 
 		["Scale",     false], 4, 6, 
 	];
 	
 	cached_pos     = ds_map_create();
+	
+	line_amount    = 0;
 	paths          = [];
 	segment_counts = [];
 	line_lengths   = [];
 	accu_lengths   = [];
-	line_amount    = 0;
 	
 	__temp_p = [ 0, 0 ];
 	
@@ -63,12 +67,11 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	} #endregion
 	
-	static getLineCount    = function() { return line_amount; }
-	static getSegmentCount = function(ind = 0) { return array_safe_get_fast(segment_counts, ind); }
-	static getLength       = function(ind = 0) { return array_safe_get_fast(line_lengths, ind); }
-	static getAccuLength   = function(ind = 0) { return array_safe_get_fast(accu_lengths, ind); }
-	
-	static getPointRatio = function(_rat, ind = 0, out = undefined) { #region
+	static getLineCount     = function() { return line_amount; }
+	static getSegmentCount  = function(ind = 0) { return array_safe_get_fast(segment_counts, ind); }
+	static getLength        = function(ind = 0) { return array_safe_get_fast(line_lengths, ind); }
+	static getAccuLength    = function(ind = 0) { return array_safe_get_fast(accu_lengths, ind); }
+	static getPointRatio    = function(_rat, ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
 		var _path = array_safe_get_fast(paths, ind, 0);
@@ -78,6 +81,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(!is_struct(_pathObj) || !struct_has(_pathObj, "getPointRatio"))
 			return out;
 		
+		var _ind  = _path.index;
 		var _ori  = _path.ori;
 		var _pos  = _path.pos;
 		var _rot  = _path.rot;
@@ -88,7 +92,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		_rat *= _trm;
 		
-		out = _pathObj.getPointRatio(_rat, 0, out);
+		out = _pathObj.getPointRatio(_rat, _ind, out);
 		
 		var _px = out.x - _ori[0];
 		var _py = out.y - _ori[1];
@@ -103,21 +107,19 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		return out;
 	} #endregion
-	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(ind), ind, out); }
-	
-	static getBoundary = function(ind = 0) { #region
+	static getBoundary      = function(ind = 0) { #region
 		var _path = getInputData(0);
 		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox( 0, 0, 1, 1 ); 
 	} #endregion
-		
+	
 	static update = function() { #region
 		ds_map_clear(cached_pos);
 		
 		var path_base = getInputData(0);
 		var path_scat = getInputData(1);
 		var _range    = getInputData(2);
-		var _amount   = getInputData(3);
+		var _repeat   = getInputData(3);
 		var _scale    = getInputData(4);
 		var _seed     = getInputData(5);
 		var _sca_wid  = getInputData(6);
@@ -126,75 +128,100 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _trim     = getInputData(9);
 		var _trim_rng = getInputData(10);
 		var _flip     = getInputData(11);
-		
-		amount = 0;
+		var _resetOri = getInputData(12);
 		
 		if(path_base == noone) return;
 		if(path_scat == noone) return;
-		
-		line_amount    = _amount;
-		paths          = array_create(_amount);
-		segment_counts = array_create(_amount);
-		line_lengths   = array_create(_amount);
-		accu_lengths   = array_create(_amount);
-		
 		var p = new __vec2();
 		
 		random_set_seed(_seed);
 		
-		for (var i = 0, n = array_length(paths); i < n; i++) {
+		var _line_amounts = path_scat.getLineCount();
+		var _ind = 0;
+		
+		line_amount    = _repeat * _line_amounts;
+		paths          = array_create(line_amount);
+		segment_counts = array_create(line_amount);
+		line_lengths   = array_create(line_amount);
+		accu_lengths   = array_create(line_amount);
+		
+		var ori, pos;
+		var _prog_raw, _prog;
+		var x0, y0, x1, y1;
+		var _dir, _sca, _rot, _rotW, _trm;
+		
+		for (var i = 0; i < _repeat; i++) {
 			
-			p = path_scat.getPointRatio(0, p);
-			var ori = [ p.x, p.y ];
+			_prog_raw = _distrib? random_range(0, 1) : (i / max(1, _repeat - 1)) * 0.9999;
+			_prog     = lerp(_range[0], _range[1], _prog_raw);
 			
-			var _prog_raw = _distrib? random_range(0, 1) : (i / max(1, line_amount - 1)) * 0.9999;
-			var _prog     = lerp(_range[0], _range[1], _prog_raw);
+			_sca  = random_range(_scale[0], _scale[1]);
+			_sca *= eval_curve_x(_sca_wid, _prog_raw);
 			
-			p = path_base.getPointRatio(_prog, p);
-			var pos = [ p.x, p.y ];
+			_rot = angle_random_eval(_rotation);
 			
-			p = path_base.getPointRatio(clamp(_prog - 0.001, 0., 0.9999), p);
-			var x0 = p.x;
-			var y0 = p.y;
-			
-			p = path_base.getPointRatio(clamp(_prog + 0.001, 0., 0.9999), p);
-			var x1 = p.x;
-			var y1 = p.y;
-			
-			var _dir  = point_direction(x0, y0, x1, y1);
-			var _sca  = random_range(_scale[0], _scale[1]);
-			    _sca *= eval_curve_x(_sca_wid, _prog_raw);
-			
-			var _rot  = _dir;
-			var _rotW = angle_random_eval(_rotation);
-			    _rot += _rotW;
-			    
-			var _trm  = _trim_rng;
-			    _trm *= eval_curve_x(_trim, _prog_raw);
-			
-			paths[i] = {
-				path : path_scat,
-				ori  : ori,
-				pos  : pos,
-				rot  : _rot,
-				rotW : _rotW,
-				sca  : _sca,
-				trim : max(0, _trm),
-				flip : _flip,
+			_trm  = _trim_rng;
+			_trm *= eval_curve_x(_trim, _prog_raw);
+					
+			for (var k = 0; k < _line_amounts; k++) {
+				
+				switch(_resetOri) {
+					case 0 : 
+						p = path_scat.getPointRatio(0, k, p);
+						ori = [ p.x, p.y ];
+						break;
+						
+					case 1 : 
+						p = path_scat.getPointRatio(0, 0, p);
+						ori = [ p.x, p.y ];
+						break;
+						
+					case 2 : 
+						ori = [ 0, 0 ];
+						break;
+				}
+				
+				p = path_base.getPointRatio(_prog, k, p);
+				pos = [ p.x, p.y ];
+				
+				p = path_base.getPointRatio(clamp(_prog - 0.001, 0., 0.9999), k, p);
+				x0 = p.x;
+				y0 = p.y;
+				
+				p = path_base.getPointRatio(clamp(_prog + 0.001, 0., 0.9999), k, p);
+				x1 = p.x;
+				y1 = p.y;
+				
+				_dir  = point_direction(x0, y0, x1, y1);
+				_dir += _rot;
+				    
+				paths[_ind] = {
+					path  : path_scat,
+					index : k,
+					ori   : ori,
+					pos   : pos,
+					rot   : _dir,
+					rotW  : _rot,
+					sca   : _sca,
+					trim  : max(0, _trm),
+					flip  : _flip,
+				}
+				
+				var _segment_counts = array_clone(path_scat.getSegmentCount(k));
+				var _line_lengths   = array_clone(path_scat.getLength(k));
+				var _accu_lengths   = array_clone(path_scat.getAccuLength(k));
+				
+				_line_lengths *= _sca;
+				
+				for (var j = 0, m = array_length(_accu_lengths); j < m; j++) 
+					_accu_lengths[j] *= _sca;
+				
+				segment_counts[_ind] = _segment_counts;
+				line_lengths[_ind]   = _line_lengths;
+				accu_lengths[_ind]   = _accu_lengths;
+				
+				_ind++;
 			}
-			
-			var _segment_counts = array_clone(path_scat.getSegmentCount(0));
-			var _line_lengths   = array_clone(path_scat.getLength(0));
-			var _accu_lengths   = array_clone(path_scat.getAccuLength(0));
-			
-			_line_lengths *= _sca;
-			
-			for (var j = 0, m = array_length(_accu_lengths); j < m; j++) 
-				_accu_lengths[j] *= _sca;
-			
-			segment_counts[i] = _segment_counts;
-			line_lengths[i]   = _line_lengths;
-			accu_lengths[i]   = _accu_lengths;
 		}
 		
 		outputs[| 0].setValue(self);

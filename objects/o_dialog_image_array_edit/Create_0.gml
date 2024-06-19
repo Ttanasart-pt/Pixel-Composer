@@ -27,7 +27,6 @@ event_inherited();
 	
 	sp_content = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding), function(_y, _m) {
 		if(!target) return 0;
-		if(!struct_has(target, "spr")) return 0;
 		
 		draw_clear_alpha(COLORS.dialog_array_edit_bg, 0);
 		
@@ -37,9 +36,7 @@ event_inherited();
 		var hh  = ui(100);
 		var pad = ui(16);
 		
-		var arr = target.getInputData(0);
-		if(array_length(arr) != array_length(target.spr)) 
-			target.updatePaths(arr);
+		var arr = target.getValue();
 		
 		var len = array_length(arr);
 		var col = floor((sp_content.surface_w - pad) / (ww + pad));
@@ -56,13 +53,15 @@ event_inherited();
 				var index = i * col + j;
 				if(index >= len) break;
 				
-				var xx = pad + (ww + pad) * j;
+				var path = arr[index];
+				var xx   = pad + (ww + pad) * j;
 				
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
+				draw_sprite_stretched_add(THEME.ui_panel_fg, 0, xx, yy, ww, hh, c_white, 0.3);
 				
 				if(sHOVER && sp_content.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh)) {
 					inb_hover = index;
-					if(dragging == -1)
+					if(dragging == -1 || dragging == index) 
 						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, ww, hh, COLORS._main_accent, 1);
 					
 					if(mouse_press(mb_left, sFOCUS))
@@ -74,7 +73,7 @@ event_inherited();
 					}
 				}
 				
-				var spr   = array_safe_get_fast(target.spr, index, noone);
+				var spr = struct_try_get(SPRITE_PATH_MAP, path, noone);
 				if(spr == noone || !sprite_exists(spr)) 
 					spr = s_texture_default;
 				
@@ -88,8 +87,7 @@ event_inherited();
 				draw_sprite_ext(spr, 0, spr_x, spr_y, spr_s, spr_s, 0, c_white, aa);
 				
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-				var path  = arr[index];
-				var name  = string_cut_line(string_replace(filename_name(path), filename_ext(path), ""), ww);
+				var name  = string_cut_line(filename_name_only(path), ww);
 				var txt_h = string_height_ext(name, -1, ww);
 				
 				draw_text_line(xx + ww / 2, yy + hh + ui(16), name, -1, ww);
@@ -114,11 +112,11 @@ event_inherited();
 		if(menu > -1) {
 			menuCall("image_array_edit_menu",,, [
 				menuItem(__txt("Remove"), function() {
-					var arr = target.getInputData(0);
+					var arr = target.getValue();
 					array_delete(arr, menuOn, 1);
 					
-					target.inputs[| 0].setValue(arr);
-					target.triggerRender();
+					target.setValue(arr);
+					target.node.triggerRender();
 				})
 			],, target );
 		}
@@ -131,24 +129,24 @@ event_inherited();
 	function rearrange(oldindex, newindex) {
 		if(oldindex == newindex) return;
 		
-		var arr = target.getInputData(0);
+		var arr = target.getValue();
 		var val = arr[oldindex];
 		array_delete(arr, oldindex, 1);
 		array_insert(arr, newindex, val);
 		
-		target.inputs[| 0].setValue(arr);
-		target.triggerRender();
+		target.setValue(arr);
+		target.node.triggerRender();
 	}
 	
 	sortAsc = true;
 	function sortByName() {
 		if(!target) return 0;
-		var arr = target.getInputData(0);
+		var arr = target.getValue();
 		
 		array_sort(arr, bool(sortAsc));
 		sortAsc = !sortAsc;
 		
-		target.inputs[| 0].setValue(arr);
-		target.triggerRender();
+		target.setValue(arr);
+		target.node.triggerRender();
 	}
 #endregion

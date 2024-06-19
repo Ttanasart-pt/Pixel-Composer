@@ -53,7 +53,8 @@
 	function panel_graph_add_vec3()				{ CALL("graph_add_vec3");			PANEL_GRAPH.createNodeHotkey("Node_Vector3");		 }
 	function panel_graph_add_vec4()				{ CALL("graph_add_vec4");			PANEL_GRAPH.createNodeHotkey("Node_Vector4");		 }
 	function panel_graph_add_display()			{ CALL("graph_add_disp");			PANEL_GRAPH.createNodeHotkey("Node_Display_Text");	 }
-	function panel_graph_add_transform()		{ CALL("graph_add_transform");		PANEL_GRAPH.doTransform();	 }
+	
+	function panel_graph_add_math_add()			{ CALL("graph_add_math_add");		PANEL_GRAPH.createNodeHotkey(Node_create_Math, { query: "add" });	 }
 	
 	function panel_graph_select_all()			{ CALL("graph_select_all");			PANEL_GRAPH.nodes_selecting = PANEL_GRAPH.nodes_list;	 }
 	function panel_graph_toggle_grid()			{ CALL("graph_toggle_grid");		PANEL_GRAPH.display_parameter.show_grid = !PANEL_GRAPH.display_parameter.show_grid;	 }
@@ -63,6 +64,7 @@
 																															
 	function panel_graph_export()				{ CALL("graph_export");				PANEL_GRAPH.setCurrentExport();			}
 	
+	function panel_graph_add_transform()		{ CALL("graph_add_transform");		PANEL_GRAPH.doTransform();	 }
 	function panel_graph_blend()				{ CALL("graph_blend");				PANEL_GRAPH.doBlend();					}
 	function panel_graph_compose()				{ CALL("graph_compose");			PANEL_GRAPH.doCompose();				}
 	function panel_graph_array()				{ CALL("graph_array");				PANEL_GRAPH.doArray();					}
@@ -341,14 +343,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		addHotkey("Graph", "Preview focusing node",	"P", MOD_KEY.none,					panel_graph_preview_focus);
 		addHotkey("Graph", "Preview window",		"P", MOD_KEY.ctrl,					panel_graph_preview_window);
 																						
-		addHotkey("Graph", "Import image",			"I", MOD_KEY.none,					panel_graph_import_image);
-		addHotkey("Graph", "Import image array",	"I", MOD_KEY.shift,					panel_graph_import_image_array);
-		addHotkey("Graph", "Add number",			"1", MOD_KEY.none,					panel_graph_add_number);
-		addHotkey("Graph", "Add vector2",			"2", MOD_KEY.none,					panel_graph_add_vec2);
-		addHotkey("Graph", "Add vector3",			"3", MOD_KEY.none,					panel_graph_add_vec3);
-		addHotkey("Graph", "Add vector4",			"4", MOD_KEY.none,					panel_graph_add_vec4);
-		addHotkey("Graph", "Add display",			"D", MOD_KEY.none,					panel_graph_add_display);
-		addHotkey("Graph", "Transform node",		"T", MOD_KEY.ctrl,					panel_graph_add_transform);
+		addHotkey("Graph", "Import image",			"I",	MOD_KEY.none,				panel_graph_import_image);
+		addHotkey("Graph", "Import image array",	"I",	MOD_KEY.shift,				panel_graph_import_image_array);
+		addHotkey("Graph", "Add Number",			"1",	MOD_KEY.none,				panel_graph_add_number);
+		addHotkey("Graph", "Add Vector2",			"2",	MOD_KEY.none,				panel_graph_add_vec2);
+		addHotkey("Graph", "Add Vector3",			"3",	MOD_KEY.none,				panel_graph_add_vec3);
+		addHotkey("Graph", "Add Vector4",			"4",	MOD_KEY.none,				panel_graph_add_vec4);
+		addHotkey("Graph", "Add Display",			"D",	MOD_KEY.none,				panel_graph_add_display);
+		addHotkey("Graph", "Transform node",		"T",	MOD_KEY.ctrl,				panel_graph_add_transform);
 																						
 		addHotkey("Graph", "Select all",			"A", MOD_KEY.ctrl,					panel_graph_select_all);
 		addHotkey("Graph", "Toggle grid",			"G", MOD_KEY.none,					panel_graph_toggle_grid);
@@ -2065,8 +2067,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	//// ============ Action ============
 	
-	function createNodeHotkey(_node) { #region
-		var node = nodeBuild(_node, mouse_grid_x, mouse_grid_y);
+	function createNodeHotkey(_node, _param = noone) { #region
+		var node;
+		
+		if(is_string(_node)) node = nodeBuild(_node, mouse_grid_x, mouse_grid_y);
+		else                 node = _node(mouse_grid_x, mouse_grid_y, getCurrentContext(), _param);
 		
 		if(value_dragging) {
 			

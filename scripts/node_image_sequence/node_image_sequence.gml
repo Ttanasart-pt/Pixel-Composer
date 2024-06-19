@@ -37,7 +37,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	spr   = [];
 	color = COLORS.node_blend_input;
 	
-	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
+	inputs[| 0]  = nodeValue("Paths", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
 		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
 	
 	inputs[| 1]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
@@ -120,7 +120,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				case ".png"	 :
 				case ".jpg"	 :
 				case ".jpeg" :
-					var _spr = sprite_add(path, 1, false, false, 0, 0);
+					var _spr = sprite_add_map(path);
 					
 					if(_spr == -1) {
 						noti_warning($"Image node: File not a valid image.");

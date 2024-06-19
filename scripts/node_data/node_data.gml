@@ -1621,7 +1621,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) {}
 	
-	static drawNodeBG = function(_x, _y, _mx, _my, _s, display_parameter = noone) { return false; }
+	static drawNodeBG = function(_x, _y, _mx, _my, _s, display_parameter = noone) { 
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		drawDimension(xx, yy, _s);
+		return false; 
+	}
 	
 	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) { #region
 		if(draw_graph_culled) return;
@@ -1640,7 +1646,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_sprite_stretched_ext(THEME.node_glow_border, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
-		drawDimension(xx, yy, _s);
 		
 		draggable = true;
 		

@@ -24,18 +24,33 @@ enum MATH_OPERATOR {
 }
 
 #region create
-	global.node_math_keys = [ "add", "subtract", "multiply", "divide", "power", "root", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan", "lerp", "abs", "clamp", "snap" ];
+	global.node_math_keys = [ "add", "subtract", "multiply", "divide", "power", "root", "+", "-", "*", "/", "^", 
+	                          "sin", "cos", "tan", 
+	                          "modulo", 
+	                          "round", "ceiling", "floor", 
+	                          "lerp", "abs", 
+	                          "clamp", "snap" ];
 	
 	function Node_create_Math(_x, _y, _group = noone, _param = {}) {
 		var query = struct_try_get(_param, "query", "");
 		var node  = new Node_Math(_x, _y, _group);
 	
 		switch(query) { #region
-			case "add" :		node.inputs[| 0].setValue(MATH_OPERATOR.add);		break;
-			case "subtract" :	node.inputs[| 0].setValue(MATH_OPERATOR.subtract);	break;
-			case "multiply" :	node.inputs[| 0].setValue(MATH_OPERATOR.multiply);	break;
-			case "divide" :		node.inputs[| 0].setValue(MATH_OPERATOR.divide);	break;
-			case "power" :		node.inputs[| 0].setValue(MATH_OPERATOR.power); 	break;
+			case "add" :		
+			case "+" :		
+								node.inputs[| 0].setValue(MATH_OPERATOR.add);		break;
+			case "subtract" :	
+			case "-" :	
+								node.inputs[| 0].setValue(MATH_OPERATOR.subtract);	break;
+			case "multiply" :	
+			case "*" :	
+								node.inputs[| 0].setValue(MATH_OPERATOR.multiply);	break;
+			case "divide" :		
+			case "/" :		
+								node.inputs[| 0].setValue(MATH_OPERATOR.divide);	break;
+			case "power" :		
+			case "^" :		
+								node.inputs[| 0].setValue(MATH_OPERATOR.power); 	break;
 			case "root" :		node.inputs[| 0].setValue(MATH_OPERATOR.root);		break;
 		
 			case "sin" :		node.inputs[| 0].setValue(MATH_OPERATOR.sin);		break;

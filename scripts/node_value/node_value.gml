@@ -802,7 +802,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.path :		 #region
 				switch(display_type) {
 					case VALUE_DISPLAY.path_array :
-						editWidget = new pathArrayBox(node, display_data.filter, function(path) { setValueInspector(path); } );
+						editWidget = new pathArrayBox(self, display_data.filter, function(path) { setValueInspector(path); } );
 						break;
 						
 					case VALUE_DISPLAY.path_load :
