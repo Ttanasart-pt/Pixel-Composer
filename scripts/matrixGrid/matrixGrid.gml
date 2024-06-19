@@ -9,37 +9,37 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 	b_link = button(function() { linked = !linked; });
 	b_link.icon = THEME.value_link;
 	
-	onModifyIndex = function(index, val) { 
+	onModifyIndex = function(val, index) { 
 		var modi = false;
 		
 		if(linked) {
 			for( var i = 0; i < inputs; i++ )
-				modi |= onModify(i, toNumber(val)); 
+				modi |= onModify(toNumber(val), i); 
 			return modi;
 		}
 		
-		return onModify(index, toNumber(val)); 
+		return onModify(toNumber(val), index); 
 	}
 	
-	onModifySingle[0] = function(val) { return onModifyIndex(0, val); }
-	onModifySingle[1] = function(val) { return onModifyIndex(1, val); }
-	onModifySingle[2] = function(val) { return onModifyIndex(2, val); }
-	onModifySingle[3] = function(val) { return onModifyIndex(3, val); }
+	onModifySingle[0] = function(val) { return onModifyIndex(val, 0); }
+	onModifySingle[1] = function(val) { return onModifyIndex(val, 1); }
+	onModifySingle[2] = function(val) { return onModifyIndex(val, 2); }
+	onModifySingle[3] = function(val) { return onModifyIndex(val, 3); }
 	
-	onModifySingle[4] = function(val) { return onModifyIndex(4, val); }
-	onModifySingle[5] = function(val) { return onModifyIndex(5, val); }
-	onModifySingle[6] = function(val) { return onModifyIndex(6, val); }
-	onModifySingle[7] = function(val) { return onModifyIndex(7, val); }
+	onModifySingle[4] = function(val) { return onModifyIndex(val, 4); }
+	onModifySingle[5] = function(val) { return onModifyIndex(val, 5); }
+	onModifySingle[6] = function(val) { return onModifyIndex(val, 6); }
+	onModifySingle[7] = function(val) { return onModifyIndex(val, 7); }
 	
-	onModifySingle[ 8] = function(val) { return onModifyIndex( 8, val); }
-	onModifySingle[ 9] = function(val) { return onModifyIndex( 9, val); }
-	onModifySingle[10] = function(val) { return onModifyIndex(10, val); }
-	onModifySingle[11] = function(val) { return onModifyIndex(11, val); }
+	onModifySingle[ 8] = function(val) { return onModifyIndex(val, 8); }
+	onModifySingle[ 9] = function(val) { return onModifyIndex(val, 9); }
+	onModifySingle[10] = function(val) { return onModifyIndex(val, 10); }
+	onModifySingle[11] = function(val) { return onModifyIndex(val, 11); }
 	
-	onModifySingle[12] = function(val) { return onModifyIndex(12, val); }
-	onModifySingle[13] = function(val) { return onModifyIndex(13, val); }
-	onModifySingle[14] = function(val) { return onModifyIndex(14, val); }
-	onModifySingle[15] = function(val) { return onModifyIndex(15, val); }
+	onModifySingle[12] = function(val) { return onModifyIndex(val, 12); }
+	onModifySingle[13] = function(val) { return onModifyIndex(val, 13); }
+	onModifySingle[14] = function(val) { return onModifyIndex(val, 14); }
+	onModifySingle[15] = function(val) { return onModifyIndex(val, 15); }
 	
 	extras = -1;
 	

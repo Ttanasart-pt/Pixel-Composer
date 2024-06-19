@@ -1,10 +1,11 @@
 function widget() constructor {
-	active  = false;
-	hover   = false;
-	hovering= false;
-	iactive = false;
-	ihover  = false;
-	parent  = noone;
+	active   = false;
+	hover    = false;
+	hovering = false;
+	iactive  = false;
+	ihover   = false;
+	parent   = noone;
+	keyframe = noone;
 	interactable = true;
 	
 	right_click_block = true;

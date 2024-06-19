@@ -12,22 +12,22 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		__txtx("widget_range_constant", "Constant"),
 	]);
 	
-	onModifyIndex = function(index, val) { 
+	onModifyIndex = function(val, index) { 
 		if(linked) {
 			var modi = false;
-			modi |= onModify(floor(index / 2) * 2 + 0, toNumber(val)); 
-			modi |= onModify(floor(index / 2) * 2 + 1, toNumber(val)); 
+			modi |= onModify(toNumber(val), floor(index / 2) * 2 + 0); 
+			modi |= onModify(toNumber(val), floor(index / 2) * 2 + 1); 
 			return modi;
 		}
 		
-		return onModify(index, toNumber(val)); 
+		return onModify(toNumber(val), index); 
 	}
 	
 	axis = [ "x", "y", "z", "w"];
-	onModifySingle[0] = function(val) { return onModifyIndex(0, toNumber(val)); }
-	onModifySingle[1] = function(val) { return onModifyIndex(1, toNumber(val)); }
-	onModifySingle[2] = function(val) { return onModifyIndex(2, toNumber(val)); }
-	onModifySingle[3] = function(val) { return onModifyIndex(3, toNumber(val)); }
+	onModifySingle[0] = function(val) { return onModifyIndex(toNumber(val), 0); }
+	onModifySingle[1] = function(val) { return onModifyIndex(toNumber(val), 1); }
+	onModifySingle[2] = function(val) { return onModifyIndex(toNumber(val), 2); }
+	onModifySingle[3] = function(val) { return onModifyIndex(toNumber(val), 3); }
 	
 	extras = -1;
 	
@@ -99,8 +99,8 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			
 				if(linked) {
 					for(var i = 0; i < size; i += 2) {
-						onModify(i + 0, _data[i]);
-						onModify(i + 1, _data[i]);
+						onModify(_data[i], i + 0);
+						onModify(_data[i], i + 1);
 					}
 				}
 			}

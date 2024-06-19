@@ -9,10 +9,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 	knob_hovering = noone;
 	
 	mode = 0;
-	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable([ 0.1, 15 ], true); tb_min_0.hide = true;
-	tb_max_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(2, val); } ).setSlidable([ 0.1, 15 ], true); tb_max_0.hide = true;
-	tb_min_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(3, val); } ).setSlidable([ 0.1, 15 ], true); tb_min_1.hide = true;
-	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(4, val); } ).setSlidable([ 0.1, 15 ], true); tb_max_1.hide = true;
+	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 1); } ).setSlidable([ 0.1, 15 ], true); tb_min_0.hide = true;
+	tb_max_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 2); } ).setSlidable([ 0.1, 15 ], true); tb_max_0.hide = true;
+	tb_min_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 3); } ).setSlidable([ 0.1, 15 ], true); tb_min_1.hide = true;
+	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 4); } ).setSlidable([ 0.1, 15 ], true); tb_max_1.hide = true;
 	
 	tooltip    = new tooltipSelector("Mode", [
 		__txtx("widget_rotator_random_range",        "Range"), 
@@ -87,23 +87,26 @@ function rotatorRandom(_onModify) : widget() constructor {
 				tooltip.index = mode;
 				if(buttonInstant(noone, _x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, active, hover, tooltip, THEME.rotator_random_mode, mode, [ COLORS._main_icon, c_white ]) == 2) { #region
 					mode = (mode + 1) % 4;
-					onModify(0, mode);
+					onModify(mode, 0);
 			
 					if(mode == 0) {
-						onModify(1,   0);
-						onModify(2, 180);
+						onModify(  0, 1);
+						onModify(180, 2);
+						
 					} else if(mode == 1) {
-						onModify(1,    (_data[1] + _data[2]) / 2);
-						onModify(2, abs(_data[1] - _data[2]) / 2);
+						onModify((_data[1] + _data[2]) / 2,    1);
+						onModify(abs(_data[1] - _data[2]) / 2, 2);
+						
 					} else if(mode == 2) {
-						onModify(1,   0);
-						onModify(2,  90);
-						onModify(3, 180);
-						onModify(4, 270);
+						onModify(0,   1);
+						onModify(90,  2);
+						onModify(180, 3);
+						onModify(270, 4);
+						
 					} else if(mode == 3) {
-						onModify(1,  45);
-						onModify(2, 225);
-						onModify(3,  45);
+						onModify(45,  1);
+						onModify(225, 2);
+						onModify(45,  3);
 					}
 			
 				} #endregion
@@ -139,17 +142,17 @@ function rotatorRandom(_onModify) : widget() constructor {
 						curr_val[2] = round(dragging.delta_acc + drag_sv[2]);
 						
 						val   = key_mod_press(CTRL)? round(curr_val[1] / 15) * 15 : curr_val[1];
-						modi |= onModify(1, val);
+						modi |= onModify(val, 1);
 						
 						val   = key_mod_press(CTRL)? round(curr_val[2] / 15) * 15 : curr_val[2];
-						modi |= onModify(2, val);
+						modi |= onModify(val, 2);
 				
 						if(modi) UNDO_HOLDING = true;
 					
 						MOUSE_BLOCK = true;
 					
 						if(mouse_check_button_pressed(mb_right)) {
-							for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
+							for( var i = 0; i < 5; i++ ) onModify(drag_dat[i], i);
 						
 							instance_destroy(rotator_Rotator);
 							dragging       = noone;
@@ -214,12 +217,12 @@ function rotatorRandom(_onModify) : widget() constructor {
 						real_val[1] = round(dragging.delta_acc + drag_sv[1]);
 						val = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
 						
-						if(onModify(1, val)) UNDO_HOLDING = true;
+						if(onModify(val, 1)) UNDO_HOLDING = true;
 					
 						MOUSE_BLOCK = true;
 					
 						if(mouse_check_button_pressed(mb_right)) {
-							for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
+							for( var i = 0; i < 5; i++ ) onModify(drag_dat[i], i);
 						
 							instance_destroy(rotator_Rotator);
 							dragging       = noone;
@@ -294,7 +297,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							real_val[ind] = round(drag_sv[ind] + dragging.delta_acc);
 							val = key_mod_press(CTRL)? round(real_val[ind] / 15) * 15 : real_val[ind];
 						
-							if(onModify(ind, val)) modi = true;
+							if(onModify(val, ind)) modi = true;
 						}
 					
 						if(modi) {
@@ -303,7 +306,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 						}
 					
 						if(mouse_check_button_pressed(mb_right)) {
-							for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
+							for( var i = 0; i < 5; i++ ) onModify(drag_dat[i], i);
 						
 							instance_destroy(rotator_Rotator);
 							dragging       = noone;
@@ -390,12 +393,12 @@ function rotatorRandom(_onModify) : widget() constructor {
 						real_val[ind] = round(drag_sv[ind] + dragging.delta_acc);
 						val = key_mod_press(CTRL)? round(real_val[ind] / 15) * 15 : real_val[ind];
 						
-						if(onModify(ind, val)) UNDO_HOLDING = true;
+						if(onModify(val, ind)) UNDO_HOLDING = true;
 					
 						MOUSE_BLOCK = true;
 					
 						if(mouse_check_button_pressed(mb_right)) {
-							for( var i = 0; i < 5; i++ ) onModify(i, drag_dat[i]);
+							for( var i = 0; i < 5; i++ ) onModify(drag_dat[i], i);
 						
 							instance_destroy(rotator_Rotator);
 							dragging       = noone;

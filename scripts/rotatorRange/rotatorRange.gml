@@ -8,8 +8,8 @@ function rotatorRange(_onModify) : widget() constructor {
 	
 	knob_hovering = noone;
 	
-	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, val); } ).setSlidable([ 0.1, 15 ], true); tb_min.hide = true;
-	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } ).setSlidable([ 0.1, 15 ], true); tb_max.hide = true;
+	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 0); } ).setSlidable([ 0.1, 15 ], true); tb_min.hide = true;
+	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 1); } ).setSlidable([ 0.1, 15 ], true); tb_max.hide = true;
 	
 	static setInteract = function(interactable = noone) { #region
 		self.interactable = interactable;
@@ -76,16 +76,16 @@ function rotatorRange(_onModify) : widget() constructor {
 				real_val[1]   = round(dragging.delta_acc + drag_sv[1]);
 				
 				val   = key_mod_press(CTRL)? round(real_val[0] / 15) * 15 : real_val[0];
-				modi |= onModify(0, val);
+				modi |= onModify(val, 0);
 				
 				val   = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
-				modi |= onModify(1, val);
+				modi |= onModify(val, 1);
 				
 				if(modi) UNDO_HOLDING = true;
 				MOUSE_BLOCK = true;
 			
 				if(mouse_check_button_pressed(mb_right)) {
-					for( var i = 0; i < 2; i++ ) onModify(i, drag_dat[i]);
+					for( var i = 0; i < 2; i++ ) onModify(drag_dat[i], i);
 						
 					instance_destroy(rotator_Rotator);
 					dragging       = noone;

@@ -1156,6 +1156,8 @@ function Panel_Animation() : PanelContent() constructor {
 	} #endregion
 	
 	//// DRAW KEYFRAMES
+	__keyframe_editing = noone;
+	
 	function _drawDopesheetAnimatorKeys(_cont, animator, msx, msy) { #region 
 		var _node     = _cont.node;
 		var prop_y	  = animator.y;
@@ -1199,12 +1201,49 @@ function Panel_Animation() : PanelContent() constructor {
 						keyframe_dragout = false;
 						keyframe_drag_mx = mx;
 						keyframe_drag_my = my;
+						
 					} else if(mouse_press(mb_left)) {
-						keyframe_dragging = keyframe;
-						keyframe_drag_type = KEYFRAME_DRAG_TYPE.move;
-						keyframe_drag_mx = mx;
-						keyframe_drag_my = my;
-						keyframe_drag_my = my;
+						if(key_mod_press(CTRL)) {
+							
+							var _wid = animator.prop.editWidget;
+							__keyframe_editing = keyframe;
+							
+							switch(animator.prop.type) {
+								case VALUE_TYPE.color : 
+									switch(animator.prop.display_type) {
+										case VALUE_DISPLAY.palette : 
+											var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
+											dialog.setDefault(keyframe.value);
+											dialog.onApply      = function(val) { __keyframe_editing.value = val; };
+											dialog.drop_target  = _wid;
+											break;
+										
+										default :
+											var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
+											dialog.setDefault(keyframe.value);
+											dialog.selector.onApply = function(val) { __keyframe_editing.value = val; };
+											dialog.onApply          = function(val) { __keyframe_editing.value = val; };
+											dialog.drop_target      = _wid;
+									}
+									break;
+								
+								case VALUE_TYPE.gradient : 
+									var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
+									dialog.setDefault(keyframe.value.clone());
+									dialog.onApply      = function(val) { __keyframe_editing.value = val; };
+									dialog.drop_target  = _wid;
+									break;
+									
+								default : 
+									dialogCall(o_dialog_value_editor, mouse_mx + ui(8), mouse_my + ui(8)).setKey(keyframe);
+							}
+							
+						} else {
+							keyframe_dragging = keyframe;
+							keyframe_drag_type = KEYFRAME_DRAG_TYPE.move;
+							keyframe_drag_mx = mx;
+							keyframe_drag_my = my;
+						}
 					}
 				}
 			}
@@ -1336,12 +1375,12 @@ function Panel_Animation() : PanelContent() constructor {
 						_add = true;
 						break;
 					} else if(_key.time > CURRENT_FRAME) {
-						ds_list_insert(animator.values, k, new valueKey(CURRENT_FRAME, animator.getValue(), animator));
+						ds_list_insert(animator.values, k, new valueKey(CURRENT_FRAME, variable_clone(animator.getValue()), animator));
 						_add = true;
 						break;	
 					}
 				}
-				if(!_add) ds_list_add(animator.values, new valueKey(CURRENT_FRAME, animator.getValue(, false), animator));	
+				if(!_add) ds_list_add(animator.values, new valueKey(CURRENT_FRAME, variable_clone(animator.getValue(, false)), animator));	
 			}
 		#endregion
 				
@@ -1858,9 +1897,7 @@ function Panel_Animation() : PanelContent() constructor {
 					if(!array_exists(keyframe_selecting, key_hover))
 						keyframe_selecting = [ key_hover ];
 				}
-			}
-							
-			if(mouse_press(mb_left, pFOCUS)) {
+				
 				if(stagger_mode == 1) {
 					if(key_hover == noone || !array_exists(keyframe_selecting, key_hover)) 
 						stagger_mode = 0;

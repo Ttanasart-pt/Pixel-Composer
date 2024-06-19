@@ -72,8 +72,8 @@
 			
 			attributeEditor = [
 				[ "Default Surface", "surface_dimension", new vectorBox(2, 
-					function(ind, val) { 
-						attributes.surface_dimension[ind] = val; 
+					function(val, index) { 
+						attributes.surface_dimension[index] = val; 
 						PROJECT_ATTRIBUTES.surface_dimension = array_clone(attributes.surface_dimension);
 						RENDER_ALL 
 						return true; 

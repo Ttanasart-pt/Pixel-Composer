@@ -1,8 +1,10 @@
 function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
-	title = __txtx("panel_export_graph", "Export Graph");
-	w = ui(360);
-	h = ui(524);
-	min_h = h;
+	title   = __txtx("panel_export_graph", "Export Graph");
+	padding = ui(8);
+	w       = ui(640);
+	h       = ui(400);
+	set_w   = ui(240);
+	surf_s  = w - set_w - padding * 2;
 	
 	self.targetPanel = targetPanel;
 	
@@ -24,33 +26,45 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		borderAlpha	: 0.05,
 	};
 	
-	sel = 0;
+	sel          = 0;
 	nodes_select = [ "All nodes", "Selected" ];
-	widgets = [];
+	widgets      = [];
+	
 	widgets[0] = [ "Nodes",				new scrollBox(nodes_select, function(val) { sel = val; nodeList = val? ds_list_create_from_array(targetPanel.nodes_selecting) : targetPanel.nodes_list; refresh(); }, false),
 		function() { return nodes_select[sel] }  ];
+		
 	widgets[1] = [ "Scale",				new textBox(TEXTBOX_INPUT.number, function(val) { settings.scale = val; refresh(); }),
 		function() { return settings.scale }	];
+		
 	widgets[2] = [ "Padding",			new textBox(TEXTBOX_INPUT.number, function(val) { settings.padding = val; refresh(); }),
 		function() { return settings.padding }	];
+		
 	widgets[3] = [ "Solid Background",	new checkBox(function() { settings.bgEnable = !settings.bgEnable; refresh(); }),
 		function() { return settings.bgEnable }	];
+		
 	widgets[4] = [ "Background Color",	new buttonColor(function(val) { settings.bgColor = val; refresh(); }),
 		function() { return settings.bgColor }	];
+		
 	widgets[5] = [ "Render Grid",		new checkBox(function() { settings.gridEnable = !settings.gridEnable; refresh(); }),
 		function() { return settings.gridEnable }	];
+		
 	widgets[6] = [ "Grid Color",		new buttonColor(function(val) { settings.gridColor = val; refresh(); }),
 		function() { return settings.gridColor }	];
+		
 	widgets[7] = [ "Grid Opacity",		new textBox(TEXTBOX_INPUT.number, function(val) { settings.gridAlpha = val; refresh(); }),
 		function() { return settings.gridAlpha }	];
+		
 	widgets[8] = [ "Border",			new textBox(TEXTBOX_INPUT.number, function(val) { settings.borderPad = val; refresh(); }),
 		function() { return settings.borderPad }	];
+		
 	widgets[9] = [ "Border Color",		new buttonColor(function(val) { settings.borderColor = val; refresh(); }),
 		function() { return settings.borderColor }	];
+		
 	widgets[10] = [ "Border Opacity",	new textBox(TEXTBOX_INPUT.number, function(val) { settings.borderAlpha = val; refresh(); }),
 		function() { return settings.borderAlpha }	];
+		
 	
-	b_export = button(function() { #region
+	b_export = button(function() {
 		if(!is_surface(surface)) return;
 		
 		var path = get_save_filename_pxc("image|*.png;*.jpg", "Screenshot");
@@ -59,9 +73,11 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		if(filename_ext(path) != ".png") path += ".png";
 		surface_save(surface, path);
 		noti_status($"Graph image exported at {path}");
-	}); #endregion
+	});
 	
-	sc_settings = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding + 204), function(_y, _m) { #region
+	b_export.text = __txt("Export") + "...";
+	
+	sc_settings = new scrollPane(set_w, h - padding * 2, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var _ww = ui(160);
@@ -89,13 +105,15 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		
 		var _h = wh * array_length(widgets) + _hh;
 		return _h;
-	}); #endregion
+	});
 	
-	function onResize() { #region
-		sc_settings.resize(w - ui(padding + padding), h - ui(title_height + padding + 204));
-	} #endregion
+	function onResize() {
+		surf_s = w - set_w - padding * 2;
+		
+		sc_settings.resize(set_w, h - padding * 2);
+	}
 	
-	function refresh() { #region
+	function refresh() {
 		if(is_surface(surface))
 			surface_free(surface);
 		surface = noone;
@@ -104,54 +122,53 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 			return;
 			
 		surface = graph_export_image(targetPanel.nodes_list, nodeList, settings);
-	} refresh(); #endregion
+	} refresh();
 	
-	function drawContent(panel) { #region
+	function drawContent(panel) {
 		var tx = padding;
 		var ty = padding;
 		var sh = 160;
 		
+		var _sx0 = tx, _sx1 = _sx0 + surf_s;
+		var _sy0 = ty, _sy1 = _sy0 + surf_s;
+		
 		if(is_surface(surface)) {
 			var _sw = surface_get_width_safe(surface);
 			var _sh = surface_get_height_safe(surface);
+			var  ss = min(surf_s / _sw, surf_s / _sh);
 			
-			var ss = min((w - padding * 2) / _sw, sh / _sh);
-			draw_surface_ext_safe(surface, w / 2 - _sw * ss / 2, ty + sh / 2 - _sh * ss / 2, ss, ss, 0, c_white, 1);
+			draw_surface_ext_safe(surface, _sx0 + surf_s / 2 - _sw * ss / 2, 
+			                               _sy0 + surf_s / 2 - _sh * ss / 2, ss, ss, 0, c_white, 1);
 			
 			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text_sub);
-			draw_text_add(w / 2, ty + sh - ui(2), $"{surface_get_width_safe(surface)} x {surface_get_height_safe(surface)} px");
+			draw_text_add(w / 2, ty + sh - ui(2), $"{_sw} x {_sh} px");
 		}
 		
 		draw_set_color(COLORS._main_icon);
-		draw_rectangle(tx, ty, tx + w - padding * 2, ty + sh, 1);
+		draw_rectangle(_sx0, _sy0, _sx1, _sy1, 1);
 		
-		var bx = w - padding - ui(4) - ui(24);
-		var by = padding + ui(4);
+		var bx = _sx1 - ui(24);
+		var by = _sy0;
 		var _m = [ mx, my ];
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, pFOCUS, pHOVER) == 2)
 			refresh();
 		draw_sprite_ui(THEME.refresh_16, 0, bx + ui(12), by + ui(12),,,, COLORS._main_icon, 1);
 		
-		var sx = tx;
-		var sy = ty + sh + ui(16);
+		var sx = _sx1;
+		var sy = _sy0;
 		
 		sc_settings.setFocusHover(pFOCUS, pHOVER);
 		sc_settings.draw(sx, sy, mx - sx, my - sy);
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-		var txt = __txt("Export") + "...";
-		var _bw = string_width(txt)  + ui(32);
-		var _bh = string_height(txt) + ui(12);
+		var _bw = ui(64);
+		var _bh = ui(24);
 		bx = w - padding - _bw;
 		by = h - padding - _bh;
 			
 		b_export.setInteract(is_surface(surface));
 		b_export.setFocusHover(pFOCUS, pHOVER);
 		b_export.draw(bx, by, _bw, _bh, _m);
-		
-		draw_set_alpha(is_surface(surface) * 0.5 + 0.5);
-		draw_text(bx + ui(16), by + ui(6), txt);
-		draw_set_alpha(1);
-	} #endregion
+	}
 }

@@ -37,56 +37,56 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	
 	onModifySingle[0] = function(val) { #region
 		var v = toNumber(val);
-		var m = onModify(0, v);
+		var m = onModify(v, 0);
 		
 		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
 			return m;
 		
-		m |= onModify(1, v);
-		m |= onModify(2, v);
-		m |= onModify(3, v);
+		m |= onModify(v, 1);
+		m |= onModify(v, 2);
+		m |= onModify(v, 3);
 		
 		return m;
 	} #endregion
 	
 	onModifySingle[1] = function(val) { #region
 		var v = toNumber(val);
-		var m = onModify(1, v);
+		var m = onModify(v, 1);
 		
 		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
 			return m;
 		
-		m |= onModify(0, v);
-		m |= onModify(2, v);
-		m |= onModify(3, v);
+		m |= onModify(v, 0);
+		m |= onModify(v, 2);
+		m |= onModify(v, 3);
 		
 		return m;
 	} #endregion
 	
 	onModifySingle[2] = function(val) { #region
 		var v = toNumber(val);
-		var m = onModify(2, v);
+		var m = onModify(v, 2);
 		
 		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
 			return m;
 		
-		m |= onModify(0, v);
-		m |= onModify(1, v);
-		m |= onModify(3, v);
+		m |= onModify(v, 0);
+		m |= onModify(v, 1);
+		m |= onModify(v, 3);
 		
 		return m;
 	} #endregion
 	
 	onModifySingle[3] = function(val) { #region
 		var v = toNumber(val);
-		var m = onModify(3, v);
+		var m = onModify(v, 3);
 		
 		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
 			return m;
 		
-		m |= onModify(0, v);
-		m |= onModify(1, v);
-		m |= onModify(2, v);
+		m |= onModify(v, 0);
+		m |= onModify(v, 1);
+		m |= onModify(v, 2);
 		
 		return m;
 	} #endregion
@@ -181,10 +181,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						var sh = array_safe_get_fast(_data, 3);
 						var ss = unit.mode == VALUE_UNIT.reference? [ 1, 1 ] : onSurfaceSize();
 						
-						onModify(0, ss[0] - (cx + sw));
-						onModify(1, cy - sh);
-						onModify(2, cx - sw);
-						onModify(3, ss[1] - (cy + sh));
+						onModify(ss[0] - (cx + sw), 0);
+						onModify(cy - sh,           1);
+						onModify(cx - sw,           2);
+						onModify(ss[1] - (cy + sh), 3);
 						break;
 						
 					case AREA_MODE.padding : //padding to two points
@@ -194,10 +194,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						var b  = array_safe_get_fast(_data, 3);
 						var ss = unit.mode == VALUE_UNIT.reference? [ 1, 1 ] : onSurfaceSize();
 						
-						onModify(0, l);
-						onModify(1, t);
-						onModify(2, ss[0] - r);
-						onModify(3, ss[1] - b);
+						onModify(l,         0);
+						onModify(t,         1);
+						onModify(ss[0] - r, 2);
+						onModify(ss[1] - b, 3);
 						break;
 						
 					case AREA_MODE.two_point : //twp points to area
@@ -206,14 +206,14 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						var x1 = array_safe_get_fast(_data, 2);
 						var y1 = array_safe_get_fast(_data, 3);
 						
-						onModify(0, (x0 + x1) / 2);
-						onModify(1, (y0 + y1) / 2);
-						onModify(2, abs(x0 - x1) / 2);
-						onModify(3, abs(y0 - y1) / 2);
+						onModify(   (x0 + x1) / 2, 0);
+						onModify(   (y0 + y1) / 2, 1);
+						onModify(abs(x0 - x1) / 2, 2);
+						onModify(abs(y0 - y1) / 2, 3);
 						break;
 				}
 				
-				onModify(5, (mode + 1) % 3);
+				onModify((mode + 1) % 3, 5);
 			} #endregion
 			
 			var _bx   = _x + _w - _bs;
@@ -226,24 +226,24 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				switch(mode) {
 					case AREA_MODE.area :
 						var ss = onSurfaceSize();
-						onModify(0, cnvt? 0.5 : ss[0] / 2);
-						onModify(1, cnvt? 0.5 : ss[1] / 2);
-						onModify(2, cnvt? 0.5 : ss[0] / 2);
-						onModify(3, cnvt? 0.5 : ss[1] / 2);
+						onModify(cnvt? 0.5 : ss[0] / 2, 0);
+						onModify(cnvt? 0.5 : ss[1] / 2, 1);
+						onModify(cnvt? 0.5 : ss[0] / 2, 2);
+						onModify(cnvt? 0.5 : ss[1] / 2, 3);
 						break;
 					case AREA_MODE.padding :   
 						var ss = onSurfaceSize();
 						onModify(0, 0);
-						onModify(1, 0);
-						onModify(2, 0);
-						onModify(3, 0);
+						onModify(0, 1);
+						onModify(0, 2);
+						onModify(0, 3);
 						break;
 					case AREA_MODE.two_point : 
 						var ss = onSurfaceSize();
-						onModify(0, 0);
-						onModify(1, 0);
-						onModify(2, cnvt? 1 : ss[0]);
-						onModify(3, cnvt? 1 : ss[1]);
+						onModify(0,               0);
+						onModify(0,               1);
+						onModify(cnvt? 1 : ss[0], 2);
+						onModify(cnvt? 1 : ss[1], 3);
 						break;
 				}
 			} #endregion
@@ -257,7 +257,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				
 			if(useShape && !is_array(_bind) && buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, _bact, _bhov,, THEME.inspector_area, _bind) == 2) {
 				var val = (array_safe_get_fast(_data, 4) + 1) % 2;
-				onModify(4, val);
+				onModify(val, 4);
 			}
 		  
 			if(mode == AREA_MODE.padding) {

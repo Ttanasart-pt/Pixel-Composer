@@ -18,7 +18,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	tooltip	= new tooltipSelector("Axis", [ __txt("Independent"), __txt("Linked") ]);
 	
-	onModifyIndex = function(index, val) { 
+	onModifyIndex = function(val, index) { 
 		var v = toNumber(val);
 		
 		if(linked) {
@@ -27,21 +27,21 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				tb[i]._input_text = v;
 				
 				if(is_callable(onModify))
-					modi |= onModify(i, v); 
+					modi |= onModify(v, i); 
 			}
 			return modi;
 		}
 		
 		if(is_callable(onModify))
-			return onModify(index, v); 
+			return onModify(v, index); 
 		return noone;
 	}
 	
 	axis = [ "x", "y", "z", "w" ];
-	onModifySingle[0] = function(val) { return onModifyIndex(0, val); }
-	onModifySingle[1] = function(val) { return onModifyIndex(1, val); }
-	onModifySingle[2] = function(val) { return onModifyIndex(2, val); }
-	onModifySingle[3] = function(val) { return onModifyIndex(3, val); }
+	onModifySingle[0] = function(val) { return onModifyIndex(val, 0); }
+	onModifySingle[1] = function(val) { return onModifyIndex(val, 1); }
+	onModifySingle[2] = function(val) { return onModifyIndex(val, 2); }
+	onModifySingle[3] = function(val) { return onModifyIndex(val, 3); }
 	
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);

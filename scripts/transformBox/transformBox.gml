@@ -9,13 +9,13 @@ enum TRANSFORM {
 function transformBox(_onModify) : widget() constructor {
 	onModify = _onModify;
 	
-	onModifySingle[TRANSFORM.pos_x] = function(val) { onModify(TRANSFORM.pos_x, val); }
-	onModifySingle[TRANSFORM.pos_y] = function(val) { onModify(TRANSFORM.pos_y, val); }
-	onModifySingle[TRANSFORM.rot  ] = function(val) { onModify(TRANSFORM.rot  , val); } //unused
-	onModifySingle[TRANSFORM.sca_x] = function(val) { onModify(TRANSFORM.sca_x, val); }
-	onModifySingle[TRANSFORM.sca_y] = function(val) { onModify(TRANSFORM.sca_y, val); }
+	onModifySingle[TRANSFORM.pos_x] = function(val) { onModify(val, TRANSFORM.pos_x); }
+	onModifySingle[TRANSFORM.pos_y] = function(val) { onModify(val, TRANSFORM.pos_y); }
+	onModifySingle[TRANSFORM.rot  ] = function(val) { onModify(val, TRANSFORM.rot  ); } //unused
+	onModifySingle[TRANSFORM.sca_x] = function(val) { onModify(val, TRANSFORM.sca_x); }
+	onModifySingle[TRANSFORM.sca_y] = function(val) { onModify(val, TRANSFORM.sca_y); }
 	
-	rot = new rotator(function(val) { onModify(TRANSFORM.rot, val); });
+	rot = new rotator(function(val) { onModify(val, TRANSFORM.rot); });
 	
 	labels = [ "x", "y", "rot", "sx", "sy" ];
 	

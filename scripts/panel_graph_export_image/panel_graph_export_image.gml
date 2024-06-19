@@ -1,5 +1,5 @@
 function graph_export_image(allList, nodeList, settings = {}) {
-	var amo = ds_list_size(nodeList);
+	var amo = array_length(nodeList);
 	if(amo < 1) return;
 	
 	var scale    = struct_try_get(settings, "scale", 1);
@@ -16,13 +16,13 @@ function graph_export_image(allList, nodeList, settings = {}) {
 	var borderColor	= struct_try_get(settings, "borderColor", c_white);
 	var borderAlpha	= struct_try_get(settings, "borderAlpha", 0.5);
 	
-	var bbox_x0 = nodeList[| 0].x * scale;
-	var bbox_y0 = nodeList[| 0].y * scale;
-	var bbox_x1 = bbox_x0 + nodeList[| 0].w * scale;
-	var bbox_y1 = bbox_y0 + nodeList[| 0].h * scale;
+	var bbox_x0 = nodeList[0].x * scale;
+	var bbox_y0 = nodeList[0].y * scale;
+	var bbox_x1 = bbox_x0 + nodeList[0].w * scale;
+	var bbox_y1 = bbox_y0 + nodeList[0].h * scale;
 	
-	for( var i = 0; i < ds_list_size(nodeList); i++ ) {
-		var _node = nodeList[| i];
+	for( var i = 0; i < array_length(nodeList); i++ ) {
+		var _node = nodeList[i];
 		_node.draw_graph_culled = false;
 		
 		var _x = _node.x * scale;
@@ -76,13 +76,13 @@ function graph_export_image(allList, nodeList, settings = {}) {
 			draw_set_alpha(1);
 		}
 		
-		for(var i = 0; i < ds_list_size(allList); i++)
-			allList[| i].preDraw(gr_x, gr_y, scale);
+		for(var i = 0; i < array_length(allList); i++)
+			allList[i].preDraw(gr_x, gr_y, scale);
 		
 		#region draw frame
-			for(var i = 0; i < ds_list_size(nodeList); i++) {
-				if(instanceof(nodeList[| i]) != "Node_Frame") continue;
-				nodeList[| i].drawNode(gr_x, gr_y, mx, my, scale);
+			for(var i = 0; i < array_length(nodeList); i++) {
+				if(instanceof(nodeList[i]) != "Node_Frame") continue;
+				nodeList[i].drawNode(gr_x, gr_y, mx, my, scale);
 			}
 		#endregion
 		
@@ -100,8 +100,8 @@ function graph_export_image(allList, nodeList, settings = {}) {
 				param.avoid_label     = true;
 				param.preview_scale   = 100;
 				
-				for(var i = 0; i < ds_list_size(nodeList); i++)
-					nodeList[| i].drawConnections(param, true);
+				for(var i = 0; i < array_length(nodeList); i++)
+					nodeList[i].drawConnections(param, true);
 			surface_reset_target();
 		
 			shader_set(sh_downsample);
@@ -113,11 +113,11 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		#endregion
 		
 		#region draw node
-			for(var i = 0; i < ds_list_size(nodeList); i++)
-				nodeList[| i].onDrawNodeBehind(gr_x, gr_y, mx, my, scale);
+			for(var i = 0; i < array_length(nodeList); i++)
+				nodeList[i].onDrawNodeBehind(gr_x, gr_y, mx, my, scale);
 			
-			for(var i = 0; i < ds_list_size(nodeList); i++) {
-				var _node = nodeList[| i];
+			for(var i = 0; i < array_length(nodeList); i++) {
+				var _node = nodeList[i];
 				if(instanceof(_node) == "Node_Frame") continue;
 				var val = _node.drawNode(gr_x, gr_y, mx, my, scale, param);
 			}

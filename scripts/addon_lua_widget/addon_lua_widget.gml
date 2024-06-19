@@ -60,7 +60,7 @@ end",
 			if(_addon == noone) return noone;
 			
 			var wd  = new vectorBox(size, noone);
-			wd.setLua(_addon.thread, onModify, function(i, v) { 
+			wd.setLua(_addon.thread, onModify, function(v, i) { 
 				return lua_call(lua_thread, lua_thread_key, i + 1, v); 
 			});
 			

@@ -921,8 +921,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 							ch_y += line_get_height();
 						}
 					
-						cursor_pos_x = cursor_pos_x == 0? cursor_pos_x_to : lerp_float(cursor_pos_x, cursor_pos_x_to, 2);
-						cursor_pos_y = cursor_pos_y == 0? cursor_pos_y_to : lerp_float(cursor_pos_y, cursor_pos_y_to, 2);
+						cursor_pos_x = cursor_pos_x == 0? cursor_pos_x_to : lerp_float(cursor_pos_x, cursor_pos_x_to, 1);
+						cursor_pos_y = cursor_pos_y == 0? cursor_pos_y_to : lerp_float(cursor_pos_y, cursor_pos_y_to, 1);
 					#endregion
 					
 					display_text(tx, text_y + ui(7), _input_text, msx, msy, hover && hoverRect);

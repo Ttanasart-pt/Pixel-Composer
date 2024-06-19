@@ -9,8 +9,8 @@ function __sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	dragging = noone;
 	drag_sv  = 0;
 	
-	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, clamp(val, minn, maxx)); });
-	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, clamp(val, minn, maxx)); });
+	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(clamp(val, minn, maxx), 0); });
+	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(clamp(val, minn, maxx), 1); });
 	
 	tb_value_min.slidable = true;
 	tb_value_max.slidable = true;
@@ -83,13 +83,13 @@ function __sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 			if(key_mod_press(CTRL))
 				val = round(val);
 			
-			if(onModify(dragging_index, val))
+			if(onModify(val, dragging_index))
 				UNDO_HOLDING = true;
 			
 			MOUSE_BLOCK = true;
 			
 			if(mouse_check_button_pressed(mb_right)) {
-				onModify(dragging_index, drag_sv);
+				onModify(drag_sv, dragging_index);
 				instance_destroy(dragging);
 				dragging     = noone;
 				UNDO_HOLDING = false;

@@ -18,15 +18,15 @@ function controlPointBox(_onModify) : widget() constructor {
 	onModify = _onModify;
 	onSurfaceSize = -1;
 	
-	tbCx = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.cx,     toNumber(val)); });			tbCx.hide = true; tbCx.slidable = true;
-	tbCy = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.cy,     toNumber(val)); });			tbCy.hide = true; tbCy.slidable = true;
-	tbFx = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.fx,     toNumber(val)); });			tbFx.hide = true; tbFx.slidable = true;
-	tbFy = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.fy,     toNumber(val)); });			tbFy.hide = true; tbFy.slidable = true;
-	tbW  = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.width,  max(0, toNumber(val))); });	tbW.hide  = true; tbW.slidable  = true;
-	tbH  = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(PUPPET_CONTROL.height, max(0, toNumber(val))); });	tbH.hide  = true; tbH.slidable  = true;
-	rot  = new rotator(function(val) { return onModify(PUPPET_CONTROL.fy, toNumber(val)); });
+	tbCx = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(toNumber(val),         PUPPET_CONTROL.cx    ); });	tbCx.hide = true; tbCx.slidable = true;
+	tbCy = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(toNumber(val),         PUPPET_CONTROL.cy    ); });	tbCy.hide = true; tbCy.slidable = true;
+	tbFx = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(toNumber(val),         PUPPET_CONTROL.fx    ); });	tbFx.hide = true; tbFx.slidable = true;
+	tbFy = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(toNumber(val),         PUPPET_CONTROL.fy    ); });	tbFy.hide = true; tbFy.slidable = true;
+	tbW  = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(max(0, toNumber(val)), PUPPET_CONTROL.width ); });	tbW.hide  = true; tbW.slidable  = true;
+	tbH  = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(max(0, toNumber(val)), PUPPET_CONTROL.height); });	tbH.hide  = true; tbH.slidable  = true;
+	rot  = new rotator(function(val) { return onModify(toNumber(val), PUPPET_CONTROL.fy); });
 	
-	sW   = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(PUPPET_CONTROL.width,  toNumber(val)); })
+	sW   = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(toNumber(val), PUPPET_CONTROL.width); })
 			.setSlidable(0.01, false, [ 1, 32 ]);
 	
 	tbCx.label = "cx";
@@ -39,7 +39,7 @@ function controlPointBox(_onModify) : widget() constructor {
 	
 	scMode = new scrollBox(
 		sMode, 
-		function(val) { onModify(PUPPET_CONTROL.mode, toNumber(val)); }
+		function(val) { onModify(toNumber(val), PUPPET_CONTROL.mode); }
 	);
 	
 	widgets = [ scMode, tbCx, tbCy, tbFx, tbFy, tbW, tbH, rot, sW ];

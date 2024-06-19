@@ -260,6 +260,7 @@
     {"name":"o_dialog_splash","order":9,"path":"objects/o_dialog_splash/o_dialog_splash.yy",},
     {"name":"o_dialog_textbox_autocomplete","order":7,"path":"objects/o_dialog_textbox_autocomplete/o_dialog_textbox_autocomplete.yy",},
     {"name":"o_dialog_textbox_function_guide","order":8,"path":"objects/o_dialog_textbox_function_guide/o_dialog_textbox_function_guide.yy",},
+    {"name":"o_dialog_value_editor","order":9,"path":"objects/o_dialog_value_editor/o_dialog_value_editor.yy",},
     {"name":"o_dialog_warning","order":10,"path":"objects/o_dialog_warning/o_dialog_warning.yy",},
     {"name":"o_main","order":1,"path":"objects/o_main/o_main.yy",},
     {"name":"o_pie_menu","order":14,"path":"objects/o_pie_menu/o_pie_menu.yy",},

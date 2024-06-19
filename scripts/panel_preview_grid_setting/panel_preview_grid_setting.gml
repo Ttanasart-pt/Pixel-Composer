@@ -28,7 +28,7 @@ function Panel_Preview_Grid_Setting() : Panel_Linear_Setting() constructor {
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("Grid size"),
-				new vectorBox(2, function(index, value) {
+				new vectorBox(2, function(value, index) {
 					var _v = PROJECT.previewGrid.size[index];
 					PROJECT.previewGrid.size[index] = max(1, value);
 					

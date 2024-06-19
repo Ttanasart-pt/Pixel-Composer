@@ -8,11 +8,11 @@ function quarternionBox(_onModify) : widget() constructor {
 	current_value = [ 0, 0, 0, 0 ];
 	current_unit  = QUARTERNION_DISPLAY.quarterion;
 	
-	onModifyIndex = function(index, val) { 
+	onModifyIndex = function(val, index) { 
 		var v = toNumber(val);
 		
 		if(current_unit == QUARTERNION_DISPLAY.quarterion) {
-			return onModify(index, v); 
+			return onModify(v, index); 
 			
 		} else {
 			var v  = toNumber(val);
@@ -23,7 +23,7 @@ function quarternionBox(_onModify) : widget() constructor {
 			];
 			
 			qv[index] = v;
-			return onModify(noone, qv);
+			return onModify(qv);
 		}
 	}
 	
@@ -34,10 +34,10 @@ function quarternionBox(_onModify) : widget() constructor {
 	disp_w    = noone;
 	clickable = true;
 	
-	onModifySingle[0] = function(val) { return onModifyIndex(0, val); }
-	onModifySingle[1] = function(val) { return onModifyIndex(1, val); }
-	onModifySingle[2] = function(val) { return onModifyIndex(2, val); }
-	onModifySingle[3] = function(val) { return onModifyIndex(3, val); }
+	onModifySingle[0] = function(val) { return onModifyIndex(val, 0); }
+	onModifySingle[1] = function(val) { return onModifyIndex(val, 1); }
+	onModifySingle[2] = function(val) { return onModifyIndex(val, 2); }
+	onModifySingle[3] = function(val) { return onModifyIndex(val, 3); }
 	
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);

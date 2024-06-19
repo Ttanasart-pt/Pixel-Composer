@@ -6,7 +6,7 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 	holding   = noone;
 	tooltips  = [];
 	
-	static trigger     = function(ind, val) { onClick(ind, val); }
+	static trigger     = function(value, index) { onClick(value, index); }
 	static setTooltips = function(tt) { tooltips = tt; return self; } 
 	
 	static drawParam = function(params) {
@@ -47,10 +47,10 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 				TOOLTIP = array_safe_get(tooltips, i, "");
 				
 				if(holding != noone)
-					trigger(i, holding);
+					trigger(holding, i);
 				
 				if(mouse_press(mb_left, active)) {
-					trigger(i, !_value[i]);
+					trigger(!_value[i], i);
 					holding = _value[i];
 				}
 			} else

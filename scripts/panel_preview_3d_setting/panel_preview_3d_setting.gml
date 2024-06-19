@@ -39,7 +39,7 @@ function Panel_Preview_3D_Setting(panel) : Panel_Linear_Setting() constructor {
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("View Plane"),
-				new vectorBox(2, function(index, value) { 
+				new vectorBox(2, function(value, index) { 
 					if(index == 0)		preview_panel.d3_view_camera.view_near = value;
 					else if(index == 1) preview_panel.d3_view_camera.view_far = value;
 				}),

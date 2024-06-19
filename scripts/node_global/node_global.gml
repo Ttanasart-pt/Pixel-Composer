@@ -23,19 +23,19 @@ function variable_editor(nodeVal) constructor {
 		RENDER_ALL
 	});
 	
-	vb_range = new vectorBox(2, function(index, val) { 
-		slider_range[index] = val;
+	vb_range = new vectorBox(2, function(value, index) { 
+		slider_range[index] = value;
 		refreshInput();
 	});
 	
-	tb_step = new textBox(TEXTBOX_INPUT.number, function(val) { 
-		slider_step = val;
+	tb_step = new textBox(TEXTBOX_INPUT.number, function(value) { 
+		slider_step = value;
 		refreshInput();
 	});
 	
-	sc_type = new scrollBox(val_type_name, function(val) {
-		type_index = val;
-		sc_disp.data_list = display_list[val];
+	sc_type = new scrollBox(val_type_name, function(value) {
+		type_index = value;
+		sc_disp.data_list = display_list[value];
 		disp_index = 0;
 		refreshInput();
 		
@@ -43,8 +43,8 @@ function variable_editor(nodeVal) constructor {
 	} );
 	sc_type.update_hover = false;
 	
-	sc_disp = new scrollBox(display_list[0], function(val) {
-		disp_index = val;
+	sc_disp = new scrollBox(display_list[0], function(value) {
+		disp_index = value;
 		refreshInput();
 		
 		RENDER_ALL

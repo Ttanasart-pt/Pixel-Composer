@@ -10,21 +10,21 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		__txtx("widget_range_constant", "Constant"),
 	]);
 	
-	onModifyIndex = function(index, val) { 
+	onModifyIndex = function(val, index) { 
 		var modi = false;
 		
 		if(linked) {
 			for( var i = 0; i < 2; i++ )
-				modi |= onModify(i, toNumber(val)); 
+				modi |= onModify(toNumber(val), i); 
 			return modi;
 		}
 		
-		return onModify(index, toNumber(val)); 
+		return onModify(toNumber(val), index); 
 	}
 	
 	labels = [ "min", "max" ];
-	onModifySingle[0] = function(val) { return onModifyIndex(0, toNumber(val)); }
-	onModifySingle[1] = function(val) { return onModifyIndex(1, toNumber(val)); }
+	onModifySingle[0] = function(val) { return onModifyIndex(toNumber(val), 0); }
+	onModifySingle[1] = function(val) { return onModifyIndex(toNumber(val), 1); }
 	
 	extras = -1;
 	
@@ -92,8 +92,8 @@ function rangeBox(_type, _onModify) : widget() constructor {
 				_display_data.linked = linked;
 			
 				if(linked) {
-					onModify(0, _data[0]);
-					onModify(1, _data[0]);
+					onModify(_data[0], 0);
+					onModify(_data[0], 1);
 				}
 			}
 		

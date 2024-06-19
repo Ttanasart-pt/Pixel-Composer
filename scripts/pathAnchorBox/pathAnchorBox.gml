@@ -1,13 +1,13 @@
 function pathAnchorBox(_onModify) : widget() constructor {
 	onModify = _onModify;
 	
-	onModifySingle[0] = function(val) { return onModify(0, toNumber(val)); }
-	onModifySingle[1] = function(val) { return onModify(1, toNumber(val)); }
+	onModifySingle[0] = function(val) { return onModify(toNumber(val), 0); }
+	onModifySingle[1] = function(val) { return onModify(toNumber(val), 1); }
 	
-	onModifySingle[2] = function(val) { return onModify(2, toNumber(val)); }
-	onModifySingle[3] = function(val) { return onModify(3, toNumber(val)); }
-	onModifySingle[4] = function(val) { return onModify(4, toNumber(val)); }
-	onModifySingle[5] = function(val) { return onModify(5, toNumber(val)); }
+	onModifySingle[2] = function(val) { return onModify(toNumber(val), 2); }
+	onModifySingle[3] = function(val) { return onModify(toNumber(val), 3); }
+	onModifySingle[4] = function(val) { return onModify(toNumber(val), 4); }
+	onModifySingle[5] = function(val) { return onModify(toNumber(val), 5); }
 	
 	for(var i = 0; i < 6; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
@@ -82,7 +82,7 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		var by = _ty + _th / 2 - _bw / 2;
 		
 		if(buttonInstant(THEME.button_hide, bx, by, _bw, _bw, _m, active, hover, "Linked", THEME.value_link, !_linked, _blend) == 2)
-			onModify(6, !_linked);
+			onModify(!_linked, 6);
 		
 		resetFocus();
 		return h;

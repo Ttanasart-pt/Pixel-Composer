@@ -649,7 +649,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					disp_x_to -= _w - ui(16);
 				
 				cursor_pos_y = c_y0;
-				cursor_pos   = cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 2);
+				cursor_pos   = cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 1);
 				
 				if(cursor_select > -1) { //draw highlight
 					draw_set_color(COLORS.widget_text_highlight);

@@ -6,8 +6,8 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 	
 	onModify = _onModify;
 	
-	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, clamp(val, curr_range[0], curr_range[1])); }).setSlidable(_step, _int, _range);
-	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, clamp(val, curr_range[0], curr_range[1])); }).setSlidable(_step, _int, _range);
+	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(clamp(val, curr_range[0], curr_range[1]), 0); }).setSlidable(_step, _int, _range);
+	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(clamp(val, curr_range[0], curr_range[1]), 1); }).setSlidable(_step, _int, _range);
 	
 	tb_value_min.hide = true;
 	tb_value_max.hide = true;
