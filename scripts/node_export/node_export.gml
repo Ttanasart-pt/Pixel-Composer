@@ -115,10 +115,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 16] = nodeValue("Export on Save", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
-	outputs[| 0] = nodeValue("Loop exit", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
-	
-	outputs[| 1] = nodeValue("Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
-		.setVisible(false);
+	outputs[| 0] = nodeValue("Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	template_guide = [
 		["%d",  "Directory"],
@@ -492,7 +489,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static save_surface = function(_surf, _path) { #region
 		var form = getInputData(3);
-		//print($">>>>>>>>>>>>>>>>>>>> save surface {_surf} - {_path} <<<<<<<<<<<<<<<<<<<<");
+		// print($">>>>>>>>>>>>>>>>>>>> save surface {_surf} - {_path} <<<<<<<<<<<<<<<<<<<<");
 		
 		if(form == NODE_EXPORT_FORMAT.animation) {
 			surface_save_safe(_surf, _path);
@@ -551,7 +548,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static export = function(log = true) { #region
-		//print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} <<<<<<<<<<<<<<<<<<<<");
+		// print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} <<<<<<<<<<<<<<<<<<<<");
 		
 		exportLog = log;
 		
@@ -599,6 +596,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 			}
+			
 		} else if(is_surface(surf)) {
 			var p = path;
 			if(is_array(path)) p = path[0];
@@ -620,6 +618,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 			}
 		}
+		
+		// print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} complete <<<<<<<<<<<<<<<<<<<<");
 	} #endregion
 	
 	static renderCompleted = function() { #region
@@ -689,14 +689,19 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	insp2UpdateTooltip = "Export All";
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { #region
+	static onInspector1Update = function(_fromValue = false) { #region
 		if(IS_RENDERING) return;
+		
+		if(_fromValue) {
+			export();
+			return;
+		}
 		
 		if(isInLoop())	RENDER_ALL
 		else			doInspectorAction();
 	} #endregion
 	
-	static onInspector2Update = function() { #region
+	static onInspector2Update = function(_fromValue = false) { #region
 		if(IS_RENDERING) return;
 		exportAll(); 
 	} #endregion
@@ -744,7 +749,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			inputs[| 3].editWidget.data_list = format_single;
 		}
 		
-		outputs[| 1].setValue(surf);
+		outputs[| 0].setValue(surf);
 		
 		var anim = getInputData(3); // single, sequence, animation
 		var extn = getInputData(9);
@@ -807,8 +812,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			} else 
 				inputs[| 10].setVisible(false);
 		}
-		
-		outputs[| 0].visible = isInLoop();
 		
 		if(render_process_id != 0) {
 			var res = ProcIdExists(render_process_id);

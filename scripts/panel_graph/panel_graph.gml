@@ -1588,7 +1588,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		value_dragging        = noone;
 		connection_draw_mouse = noone;
 		
-		if(_connect[0] == -9) {
+		if(_connect[0] == -7) {
 			if(_connect[1].value_from_loop != noone)
 				_connect[1].value_from_loop.destroy();
 				

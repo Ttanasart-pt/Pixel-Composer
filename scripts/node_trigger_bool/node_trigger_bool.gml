@@ -18,17 +18,8 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	doTrigger = 0;
 	
-	static step = function() {
-		if(doTrigger == 1) {
-			outputs[| 0].setValue(true);
-			doTrigger = -1;
-		} else if(doTrigger == -1) {
-			outputs[| 0].setValue(false);
-			doTrigger = 0;
-		}
-	}
-	
 	static update = function() {  
+		
 		var val = getInputData(0);
 		var con = getInputData(1);
 		
@@ -38,6 +29,8 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			case 2 : doTrigger =  prevVal && !val;	break;
 			case 3 : doTrigger =  prevVal !=  val;	break;
 		}
+		
+		outputs[| 0].setValue(doTrigger);
 		
 		preview = doTrigger;
 		prevVal = val;

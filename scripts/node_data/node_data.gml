@@ -802,8 +802,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		if(NODE_HAS_INSP1 && inspectInput1.getValue()) onInspector1Update();
-		if(NODE_HAS_INSP2 && inspectInput2.getValue()) onInspector2Update();
+		if(NODE_HAS_INSP1 && inspectInput1.getValue()) onInspector1Update(true);
+		if(NODE_HAS_INSP2 && inspectInput2.getValue()) onInspector2Update(true);
 		
 		updatedOutTrigger.setValue(true);
 		

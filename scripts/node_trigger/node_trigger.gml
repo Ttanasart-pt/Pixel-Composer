@@ -13,8 +13,8 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static onInspector2Update = function() { inputs[| 0].setAnim(true); inputs[| 0].setValue(true); }
 	
 	static update = function() { 
-		var _val = inputs[| 0].getValue();
 		
+		var _val = inputs[| 0].getValue();
 		outputs[| 0].setValue(_val);
 	}
 	
