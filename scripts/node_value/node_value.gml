@@ -559,6 +559,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							if(struct_has(display_data, "linkable"))	 editWidget.linkable    = display_data.linkable;
 							if(struct_has(display_data, "per_line"))	 editWidget.per_line    = display_data.per_line;
 							if(struct_has(display_data, "linked"))		 editWidget.linked      = display_data.linked;
+							if(struct_has(display_data, "slideSpeed"))	 editWidget.setSlideSpeed(display_data.slideSpeed);
 							
 							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 							

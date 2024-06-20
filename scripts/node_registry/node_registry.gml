@@ -701,21 +701,21 @@ function __initNodes() {
 	var generator = ds_list_create(); #region //generator
 	addNodeCatagory("Generate", generator);
 		ds_list_add(generator, "Colors");
-		addNodeObject(generator, "Solid",				s_node_solid,				"Node_Solid",				[1, Node_Solid],,			"Create image of a single color.");
-		addNodeObject(generator, "Draw Gradient",		s_node_gradient,			"Node_Gradient",			[1, Node_Gradient],,		"Create image from gradient.");
-		addNodeObject(generator, "4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points],, "Create image from 4 color points.");
+		addNodeObject(generator, "Solid",					s_node_solid,				"Node_Solid",				[1, Node_Solid],,			"Create image of a single color.");
+		addNodeObject(generator, "Draw Gradient",			s_node_gradient,			"Node_Gradient",			[1, Node_Gradient],,		"Create image from gradient.");
+		addNodeObject(generator, "Draw 4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points],, "Create image from 4 color points.");
 		
 		ds_list_add(generator, "Drawer");
-		addNodeObject(generator, "Line",				s_node_line,				"Node_Line",				[1, Node_Line],,										"Draw line on an image. Connect path data to it to draw line from path.");
+		addNodeObject(generator, "Draw Line",			s_node_line,				"Node_Line",				[1, Node_Line],,										"Draw line on an image. Connect path data to it to draw line from path.");
 		addNodeObject(generator, "Draw Text",			s_node_text_render,			"Node_Text",				[1, Node_Text],,										"Draw text on an image.");
-		addNodeObject(generator, "Shape",				s_node_shape,				"Node_Shape",				[0, Node_create_Shape], global.node_shape_keys,			"Draw simple shapes using signed distance field.");
-		addNodeObject(generator, "Polygon Shape",		s_node_shape_polygon,		"Node_Shape_Polygon",		[1, Node_Shape_Polygon],,								"Draw polygonal shapes.").setVersion(1130);
+		addNodeObject(generator, "Draw Shape",			s_node_shape,				"Node_Shape",				[0, Node_create_Shape], global.node_shape_keys,			"Draw simple shapes using signed distance field.");
+		addNodeObject(generator, "Draw Shape Polygon",	s_node_shape_polygon,		"Node_Shape_Polygon",		[1, Node_Shape_Polygon],,								"Draw polygonal shapes.").setVersion(1130);
+		addNodeObject(generator, "Draw Random Shape",	s_node_random_shape,		"Node_Random_Shape",		[1, Node_Random_Shape],,								"Generate random shape, use for testing purposes.").setVersion(1147);
+		addNodeObject(generator, "Draw Bar / Graph",	s_node_bar_graph,			"Node_Plot_Linear",			[0, Node_create_Plot_Linear], global.node_plot_linear_keys,	"Plot graph or bar chart from array of number.").setVersion(1144);
+		addNodeObject(generator, "Draw Path Profile",	s_node_profile,				"Node_Path_Profile",		[1, Node_Path_Profile]).setVersion(11660);
+		addNodeObject(generator, "Draw Cross Section",	s_node_cross_section,		"Node_Cross_Section",		[1, Node_Cross_Section]).setVersion(11710);
 		addNodeObject(generator, "Interpret Number",	s_node_interpret_number,	"Node_Interpret_Number",	[1, Node_Interpret_Number],,							"Convert array of number into surface.").setVersion(11530);
-		addNodeObject(generator, "Random Shape",		s_node_random_shape,		"Node_Random_Shape",		[1, Node_Random_Shape],,								"Generate random shape, use for testing purposes.").setVersion(1147);
 		addNodeObject(generator, "Pixel Builder",		s_node_pixel_builder,		"Node_Pixel_Builder",		[1, Node_Pixel_Builder]).setVersion(11540);
-		addNodeObject(generator, "Bar / Graph",			s_node_bar_graph,			"Node_Plot_Linear",			[0, Node_create_Plot_Linear], global.node_plot_linear_keys,	"Plot graph or bar chart from array of number.").setVersion(1144);
-		addNodeObject(generator, "Profile",				s_node_profile,				"Node_Path_Profile",		[1, Node_Path_Profile]).setVersion(11660);
-		addNodeObject(generator, "Cross Section",		s_node_cross_section,		"Node_Cross_Section",		[1, Node_Cross_Section]).setVersion(11710);
 		
 		ds_list_add(generator, "Noises");
 		addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise],,							"Generate white noise.");

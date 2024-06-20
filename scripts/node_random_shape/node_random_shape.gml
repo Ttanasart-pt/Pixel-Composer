@@ -1,5 +1,5 @@
 function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Random Shape";
+	name = "Draw Random Shape";
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);

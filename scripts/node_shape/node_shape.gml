@@ -2,7 +2,7 @@
 	global.node_shape_keys = [ 
 		"rectangle", "ellipse", "regular polygon", "star", "arc", "teardrop", "cross", "leaf", "crescent", "donut", 
 		"square", "circle", "triangle", "pentagon", "hexagon", "ring", "diamond", "trapezoid", "parallelogram", "heart", 
-		"arrow", 
+		"arrow", "gear", 
 	];
 	
 	function Node_create_Shape(_x, _y, _group = noone, _param = {}) { #region
@@ -29,7 +29,7 @@
 #endregion
 
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Shape";
+	name = "Draw Shape";
 	
 	onSurfaceSize = function() { return getInputData(0, DEF_SURF); };
 	
@@ -44,7 +44,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 						-1, 
 						"Regular polygon", "Star", "Cross", "Rounded Cross",  
 						-1, 
-						"Teardrop", "Leaf", "Heart", "Arrow", 
+						"Teardrop", "Leaf", "Heart", "Arrow", "Gear", 
 					];
 	shape_types_str = [];
 	
@@ -124,12 +124,20 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	inputs[| 24] = nodeValue("Arrow Head", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3 );
 		
+	inputs[| 25] = nodeValue("Teeth Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 6 );
+		
+	inputs[| 26] = nodeValue("Teeth Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.2, 0.2 ] )
+		.setDisplay(VALUE_DISPLAY.vector, { slideSpeed : 0.01 });
+		
+	inputs[| 27] = nodeValue("Teeth Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		.setDisplay(VALUE_DISPLAY.rotation);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",     false], 0, 6, 
 		["Transform",  false], 15, 3, 16, 17, 19, 
-		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 
+		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 
 		["Render",	    true], 10, 12, 20, 18,
 		["Background",	true, 1], 11, 
 	];
@@ -297,6 +305,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			inputs[| 22].setVisible(false);
 			inputs[| 23].setVisible(false);
 			inputs[| 24].setVisible(false);
+			inputs[| 25].setVisible(false);
+			inputs[| 26].setVisible(false);
+			inputs[| 27].setVisible(false);
 			
 			var _shp = array_safe_get(shape_types, _shape, "");
 			if(is_struct(_shp)) _shp = _shp.data;
@@ -466,6 +477,22 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_i("shape", 17);
 					shader_set_f("arrow",      _data[23]);
 					shader_set_f("arrow_head", _data[24]);
+					break;
+					
+				case "Gear":
+					inputs[| 13].setVisible(true);
+					inputs[| 25].setVisible(true);
+					inputs[| 26].setVisible(true);
+					inputs[| 27].setVisible(true);
+					
+					inputs[| 13].name = "Inner Radius";
+					
+					shader_set_i("shape", 18);
+					shader_set_f("inner", _data[13]);
+					
+					shader_set_i("teeth",		_data[25]);
+					shader_set_f("teethSize",	_data[26]);
+					shader_set_f("teethAngle",	_data[27]);
 					break;
 					
 			} #endregion

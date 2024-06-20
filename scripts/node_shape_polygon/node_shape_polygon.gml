@@ -1,5 +1,5 @@
 function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Polygon Shape";
+	name = "Draw Shape Polygon";
 	
 	shapesArray = [ "Rectangle", "Ellipse", "Star", "Capsule", "Ring", "Arc", "Gear", "Cross" ];
 	for( var i = 0, n = array_length(shapesArray); i < n; i++ ) 

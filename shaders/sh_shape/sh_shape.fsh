@@ -29,6 +29,10 @@ uniform vec2 center;
 uniform vec2 scale;
 uniform vec2 trep;
 
+uniform int   teeth;
+uniform vec2  teethSize;
+uniform float teethAngle;
+ 
 uniform vec2  arrow;
 uniform float arrow_head;
 
@@ -39,6 +43,8 @@ uniform vec4 bgColor;
 
 float ndot(vec2 a, vec2 b ) { return a.x*b.x - a.y*b.y; }
 float dot2(in vec2 v ) { return dot(v,v); }
+
+mat2 rot(in float ang) { return mat2(cos(ang), - sin(ang), sin(ang), cos(ang)); }
 
 float sdRegularPolygon(in vec2 p, in float r, in int n, in float ang ) {
     // these 4 lines can be precomputed for a given shape
@@ -80,6 +86,12 @@ float sdArc( in vec2 p, in vec2 sca, in vec2 scb, in float ra, in float rb ) {
     p.x = abs(p.x);
     float k = (scb.y * p.x > scb.x * p.y) ? dot(p.xy,scb) : length(p);
     return sqrt( dot(p, p) + ra * ra - 2.0 * ra * k ) - rb;
+}
+
+float sdSegment( in vec2 p, in vec2 a, in vec2 b ) {
+    vec2 pa = p - a, ba = b - a;
+    float h = clamp( dot(pa, ba) / dot(ba, ba), 0.0, 1.0 );
+    return length( pa - ba * h );
 }
 
 float sdRoundBox( in vec2 p, in vec2 b, in vec4 r ) {
@@ -135,6 +147,33 @@ float sdDonut(vec2 p, float s) {
 	return max(o, -i);
 }
 
+float sdGear(vec2 p, float s, int teeth, vec2 teethSize, float teethAngle) {
+	
+	float teeth_w = teethSize.y;
+	float teeth_h = teethSize.x;
+	float s1;
+	vec2  _p;
+	
+	float rad = 1. - teeth_w;
+	float o = length(p) / rad- 1.;
+	float i = length(p) / (rad * s) - 1.;
+	float d = o;
+	
+	float _angSt  = TAU / float(teeth);
+	for(int i = 0; i < teeth; i++) {
+		_p = p;
+		_p = _p * rot(radians(teethAngle) + float(i) * _angSt);
+		_p = _p - vec2(1. - teeth_w, .0);
+		
+		s1 = sdBox(_p, vec2(teeth_w, teeth_h));
+		d  = min(d, s1);
+	}
+	
+	d = max(d, -i);
+	
+	return d;
+}
+
 float sdRhombus( in vec2 p, in vec2 b )  {
     p = abs(p);
 
@@ -142,12 +181,6 @@ float sdRhombus( in vec2 p, in vec2 b )  {
     float d = length( p - 0.5 * b * vec2(1.0 - h, 1.0 + h) );
 
 	return d * sign( p.x * b.y + p.y * b.x - b.x * b.y );
-}
-
-float sdSegment( in vec2 p, in vec2 a, in vec2 b ) {
-    vec2 pa = p - a, ba = b - a;
-    float h = clamp( dot(pa, ba) / dot(ba, ba), 0.0, 1.0 );
-    return length( pa - ba * h );
 }
 
 float sdTrapezoid( in vec2 p, in float r1, float r2, float he ) {
@@ -299,6 +332,7 @@ void main() {
 	  else if(shape == 15) d = sdPie( 			coord, vec2(sin(angle), cos(angle)), 1. );
 	  else if(shape == 16) d = sdRoundedCross( 	coord, 1. - corner ) - corner;
 	  else if(shape == 17) d = sdArrow( 		coord, arrow.x, arrow.y, arrow_head);
+	  else if(shape == 18) d = sdGear( 			coord, inner, teeth, teethSize, teethAngle);
 	
 	if(drawDF == 1) {
 		color = -d;
