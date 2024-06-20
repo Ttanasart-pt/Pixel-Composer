@@ -10,14 +10,20 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
+	input_display_list = [ 1, 0 ];
+	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		
 		inputs[| index] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
 			.setVisible(true, true);
 		
+		array_push(input_display_list, index);
+		
 		return inputs[| index];
-	} setDynamicInput(1);
+	} 
+	
+	setDynamicInput(1);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);
@@ -40,10 +46,8 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _val = getInputData(i);
 			inputs[| i].setType(_type);
 			
-			if(is_array(_val) && spd)
-				array_append(_out, _val);
-			else 
-				array_push(_out, _val);
+			if(is_array(_val) && spd) array_append(_out, _val);
+			else                      array_push(_out, _val);
 		}
 		
 		outputs[| 0].setValue(_out);
