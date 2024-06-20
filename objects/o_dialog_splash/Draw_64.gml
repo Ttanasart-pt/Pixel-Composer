@@ -88,26 +88,29 @@ if !ready exit;
 		draw_set_text(f_p0, fa_left, fa_bottom, project_page == i? COLORS._main_text : COLORS._main_text_sub);
 		var txt  = pages[i];
 		var dtxt = __txt(txt);
-		var amo  = noone;
+		var amo  = 0;
 		
 		switch(txt) {
 			case "Sample projects" : amo = ds_list_size(SAMPLE_PROJECTS); break;
 			case "Workshop" :		 amo = ds_list_size(STEAM_PROJECTS);  break;
-			case "Contests" :		 amo = array_length(contests);		  break;
+			case "Contests" :		 dtxt = ""; break;
 		}
 		
 		var tw = ui(16) + string_width(dtxt);
-		if(amo) tw += ui(8) + string_width(amo) + ui(8);
+		if(amo) tw += ui(8) + string_width(amo) + ui(6);
+		if(txt == "Contests") tw = ui(32 + 8);
 		
-		if(txt == "Contests") tw += ui(32);
 		var _x1 = min(bx + tw, x1);
 		var _tabW = _x1 - bx;
 		
 		if(project_page == i) {
 			draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab, 1);
 			tab_cover = BBOX().fromWH(bx, y0, tw, THEME_VALUE.panel_tab_extend);
+			
 		} else if(point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + _tabW, y0)) {
+			
 			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab_hover, 1);
+			draw_sprite_stretched_add(THEME.ui_panel_tab, 0, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab_hover, 0.1);
 			
 			if(mouse_click(mb_left, sFOCUS)) {
 				project_page = i;
@@ -122,7 +125,7 @@ if !ready exit;
 		
 		var _btx = bx + ui(8);
 		if(txt == "Contests") {
-			draw_sprite_ui(THEME.trophy, 0, _btx + ui(16), y0 - ui(14),,,, CDEF.yellow);
+			draw_sprite_ui(THEME.trophy, 0, _btx + ui(12), y0 - ui(14),,,, COLORS._main_icon);
 			_btx += ui(32);
 		}
 		
@@ -135,12 +138,15 @@ if !ready exit;
 		_btx += ui(8) + string_width(dtxt);
 		
 		if(amo && _x1 + ui(32) < x1) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), string_width(amo) + ui(8), ui(24), COLORS._main_icon, 1);
-		
-			_btx += ui(4);
+			var _btw = string_width(amo) + ui(8);
+			var _bth = ui(22);
+			var _btc = COLORS._main_icon_light;
 			
-			if(txt == "Contests") draw_set_color(CDEF.yellow);
-			else				  draw_set_color(COLORS._main_text);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), _btw, _bth, _btc, 1);
+			draw_sprite_stretched_add(THEME.ui_panel_fg, 1, _btx, y0 - ui(26), _btw, _bth, _btc, 0.1);
+			
+			_btx += ui(4);
+			draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text_sub);
 			draw_text(_btx, y0 - ui(4), amo);
 		}
 		

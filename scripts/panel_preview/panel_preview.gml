@@ -704,20 +704,30 @@ function Panel_Preview() : PanelContent() constructor {
 			
 		st += fr;
 		ed += fr;
+		
+		var surf, aa, cc;
 			
+		if(!_top) {
+			draw_surface_ext_safe(_surf, psx, psy, ss, ss);
+			BLEND_ADD
+		}
+		
 		for( var i = st; i <= ed; i += _step ) {
-			var surf = node.getCacheFrame(i);
+			surf = node.getCacheFrame(i);
 			if(!is_surface(surf)) continue;
 				
-			var aa = power(_alph, abs((i - fr) / _step));
-			var cc = c_white;
+			aa = power(_alph, abs((i - fr) / _step));
+			cc = c_white;
 			if(i < fr)		cc = _colr[0];
 			else if(i > fr) cc = _colr[1];
 				
 			draw_surface_ext_safe(surf, psx, psy, ss, ss, 0, cc, aa);
 		}
-			
+		
+		BLEND_NORMAL
+		
 		if(_top) draw_surface_ext_safe(_surf, psx, psy, ss, ss);
+		
 	} #endregion
 	
 	function drawNodePreview() { #region
