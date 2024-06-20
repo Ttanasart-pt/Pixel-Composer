@@ -141,8 +141,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 					_display_data.linked =  linked;
 				
 					if(linked) {
-						onModify(0, _data[0]);
-						onModify(1, _data[0]);
+						onModify(_data[0], 0);
+						onModify(_data[0], 1);
 					}
 				}
 			
