@@ -449,21 +449,25 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _dim = attributes.dimension;
 		
 		if(array_length(canvas_surface) < fr) {
-			for( var i = array_length(canvas_surface); i < fr; i++ ) {
-				canvas_surface[i] = surface_create(_dim[0], _dim[1]);
-				surface_set_target(canvas_surface[i]);
-					DRAW_CLEAR
-				surface_reset_target();
-			}
-		} else 
+			for( var i = array_length(canvas_surface); i < fr; i++ )
+				canvas_surface[i] = surface_create_empty(_dim[0], _dim[1]);
+			
+		} else {
+			for( var i = fr; i < array_length(canvas_surface); i++ )
+				surface_free_safe(canvas_surface[i]);
 			array_resize(canvas_surface, fr);
+		}
 		
 		if(array_length(canvas_buffer) < fr) {
-			for( var i = array_length(canvas_buffer); i < fr; i++ ) {
+			for( var i = array_length(canvas_buffer); i < fr; i++ )
 				canvas_buffer[i] = buffer_create(1 * 1 * 4, buffer_fixed, 2);
-			}
-		} else 
+				
+		} else {
+			for( var i = fr; i < array_length(canvas_buffer); i++ )
+				buffer_delete_safe(canvas_buffer[i]);
+				
 			array_resize(canvas_buffer, fr);
+		}
 	} #endregion
 	
 	function getCanvasSurface(index = preview_index) { INLINE return array_safe_get_fast(canvas_surface, index); }
@@ -484,7 +488,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			data.surface = _canvas;
 		}, { surface: surface_clone(getCanvasSurface(preview_index)), tooltip: $"Modify canvas {preview_index}", index: preview_index });
 		
-		// action.clear_action = function(data) { surface_free_safe(data.surface); };
 	} #endregion
 	
 	static apply_surfaces = function() { #region
@@ -498,12 +501,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _canvas_surface = getCanvasSurface(index);
 		
-		if(!is_surface(_canvas_surface)) { // recover surface from bufffer in case of VRAM refresh
+		if(!surface_exists(_canvas_surface)) { // recover surface from bufffer in case of VRAM refresh
 			setCanvasSurface(surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer[index]), index);
 			
 		} else if(surface_get_width_safe(_canvas_surface) != _dim[0] || surface_get_height_safe(_canvas_surface) != _dim[1]) { // resize surface
 			var _cbuff = array_safe_get_fast(canvas_buffer, index);
-			if(buffer_exists(_cbuff)) buffer_delete(_cbuff);
+			buffer_delete_safe(_cbuff);
 			
 			canvas_buffer[index] = buffer_create(_dim[0] * _dim[1] * 4, buffer_fixed, 4);
 			
@@ -529,9 +532,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static surface_store_buffer = function(index = preview_index) { #region
 		if(index >= attributes.frames) return;
 		
-		buffer_delete(canvas_buffer[index]);
+		buffer_delete_safe(canvas_buffer[index]);
 		
 		var _canvas_surface = getCanvasSurface(index);
+		if(!surface_exists(_canvas_surface)) return;
 		
 		surface_w = surface_get_width_safe(_canvas_surface);
 		surface_h = surface_get_height_safe(_canvas_surface);
@@ -542,12 +546,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		apply_surface(index);
 	} #endregion
 	
-	static tool_pick_color = function(_x, _y) { #region
-		if(tool_selection.is_selected)
-			tool_attribute.pickColor = surface_get_pixel_ext(tool_selection.selection_surface, _x - tool_selection.selection_position[0], _y - tool_selection.selection_position[1]);
-		else
-			tool_attribute.pickColor = surface_get_pixel_ext(getCanvasSurface(), _x, _y);
-	} #endregion
+	static tool_pick_color = function(_x, _y) {
+		tool_attribute.pickColor = tool_selection.is_selected?
+				surface_get_pixel_ext(tool_selection.selection_surface, _x - tool_selection.selection_position[0], _y - tool_selection.selection_position[1]) : 
+				surface_get_pixel_ext(getCanvasSurface(), _x, _y);
+	}
 	
 	function apply_draw_surface(_applyAlpha = true) { #region
 		var _can = getCanvasSurface();
@@ -557,7 +560,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(tool_selection.is_selected) {
 			
-			var _tmp = surface_create(surface_get_width(tool_selection.selection_mask), surface_get_height(tool_selection.selection_mask));
+			var _tmp = surface_create(surface_get_width_safe(tool_selection.selection_mask), surface_get_width_safe(tool_selection.selection_mask));
 			
 			var _spx = tool_selection.selection_position[0];
 			var _spy = tool_selection.selection_position[1];
@@ -570,15 +573,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_surface(drawing_surface, -_spx, -_spy);
 				
 				BLEND_ALPHA
-					
 					if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _spx * 2 + _spw - _spx, -_spy, -1, 1);
 					if(tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, -_spx, _spy * 2 + _sph - _spy, 1, -1);
 					if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _spx * 2 + _spw - _spx, _spy * 2 + _sph - _spy, -1, -1);
-					
-				BLEND_NORMAL
 				
 				BLEND_MULTIPLY
-				draw_surface(tool_selection.selection_mask, 0, 0);
+					draw_surface(tool_selection.selection_mask, 0, 0);
 				BLEND_NORMAL
 			surface_reset_target();
 			
@@ -609,8 +609,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 		}
 		
-		var _sw = surface_get_width(_can);
-		var _sh = surface_get_height(_can);
+		var _sw = surface_get_width_safe(_can);
+		var _sh = surface_get_height_safe(_can);
 		
 		var _drawnSurface = surface_create(_sw, _sh);
 		
@@ -721,10 +721,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				draw_surface_ext_safe(preview_draw_surface, _x, _y, _s);
 				
-				surface_set_target(preview_draw_mask);
-					DRAW_CLEAR
+				surface_set_shader(preview_draw_mask, noone);
 					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				surface_reset_target();
+				surface_reset_shader();
 				
 				shader_set(sh_brush_outline);
 					shader_set_f("dimension", _sw, _sh);
@@ -884,10 +883,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _str = json_try_parse(clipboard_get_text(), noone);
 				
 				if(is_struct(_str) && struct_has(_str, "buffer")) {
-					print(_str);
 					var _surf = surface_decode(_str);
 					
-					if(is_surface(_surf)) {
+					if(surface_exists(_surf)) {
 						tool_selection.selection_surface  = _surf;
 						tool_selection.is_selected        = true;
 						
@@ -1083,7 +1081,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		sprite_delete(_spr);
 		
 		attributes.dimension = [_sw, _sh];
-		inputs[|  0].setValue([_sw, _sh]);
+		inputs[| 0].setValue([_sw, _sh]);
 		setCanvasSurface(_s);
 		surface_store_buffer();
 		
