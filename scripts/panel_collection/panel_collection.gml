@@ -451,15 +451,21 @@ function Panel_Collection() : PanelContent() constructor {
 			#endregion
 		
 		}
-		
-		var _x = ui(20);
-		var _y = ui(24);
-		var bh = line_get_height(f_p0b, 8);
+		   
+		var _x    = ui(20);
+		var _y    = ui(24);
+		var bh    = line_get_height(f_p0b, 8);
 		var rootx = 0;
 		
+		draw_set_font(f_p0b);
+		
 		for( var i = 0, n = array_length(roots); i < n; i++ ) {
-			var r = roots[i];
-			if(buttonInstant(THEME.button_hide_fill, _x - ui(8), _y - bh / 2, string_width(r[0]) + ui(20), bh, [mx, my], pFOCUS, pHOVER) == 2) {
+			var r   = roots[i];
+			var _bx = _x - ui(8);
+			var _by = _y - bh / 2;
+			var _bw = string_width(r[0]) + ui(20);
+			
+			if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bw, bh, [ mx, my ], pFOCUS, pHOVER) == 2) {
 				mode = i;
 				root = r[1];
 				context = root;
