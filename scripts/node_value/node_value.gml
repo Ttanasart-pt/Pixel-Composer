@@ -1589,42 +1589,42 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(_valueFrom == value_from) {
 			if(log) noti_warning("whaT");
-			return -1;
+			return -2;
 		}
 		
 		if(_valueFrom == self) {
 			if(log) noti_warning("setFrom: Self connection is not allowed.",, node);
-			return -1;
+			return -3;
 		}
 		
 		if(!typeCompatible(_valueFrom.type, type)) { 
 			noti_warning($"Connection error: Incompatible type {_valueFrom.type} to {type}",, node);
-			return -1;
+			return -4;
 		}
 		
 		if(typeIncompatible(_valueFrom, self)) {
 			noti_warning("Connection error: Incompatible type",, node);
-			return -1;
+			return -5;
 		}
 		
 		if(connect_type == _valueFrom.connect_type) {
 			if(log) noti_warning("setFrom: Connect type mismatch",, node);
-			return -1;
+			return -6;
 		}
 		
 		if(checkRecur && _valueFrom.searchNodeBackward(node)) {
 			if(log) noti_warning("setFrom: Cyclic connection not allowed.",, node);
-			return -9;
+			return -7;
 		}
 		
 		if(!accept_array && isArray(_valueFrom.getValue())) {
 			noti_warning($"Connection error: {name} does not support array input.",, node);
-			return -1;
+			return -8;
 		}
 			
 		if(!accept_array && _valueFrom.type == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) {
 			if(log) noti_warning("setFrom: Array mismatch",, node);
-			return -1;
+			return -9;
 		}
 		
 		return 1;
@@ -1633,7 +1633,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static triggerSetFrom = function() { node.valueUpdate(index); }
 	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region ////Set from
-		// print($"Connecting {_valueFrom.name} to {name}");
 		
 		if(is_dummy) {
 			var _targ    = dummy_get();
@@ -1910,13 +1909,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_set_alpha(1);
 	} #endregion
 	
-	static drawConnections = function(params = {}) { #region
-		if(value_from == noone)		return noone;
-		if(!value_from.node.active) return noone;
-		if(!isVisible())			return noone;
-		
+	static drawConnectionsRaw = function(params = {}) { return drawJuncConnection(value_from, self, params); }
+	static drawConnections    = function(params = {}) {
+		if(value_from == noone || !value_from.node.active || !isVisible()) 
+			return noone;
 		return drawJuncConnection(value_from, self, params);
-	} #endregion
+	}
 	
 	static drawConnectionMouse = function(params, _mx, _my, target) { #region
 		var ss = params.s;
@@ -2303,6 +2301,7 @@ function drawJuncConnection(from, to, params) { #region
 		to.draw_line_shift_hover = false;
 			
 		var downDirection = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
+		// if(downDirection) print($"{to} : {from}");
 	#endregion
 	
 	#region +++++ CHECK HOVER +++++

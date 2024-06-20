@@ -1409,6 +1409,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	} #endregion
 	
+	__draw_inputs = []
 	static drawConnections = function(params = {}) { #region
 		if(!active) return;
 		
@@ -1442,41 +1443,39 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		}
 		
-		var st = 0;
-		if(NODE_HAS_INSP1) st = -1;
-		if(NODE_HAS_INSP2) st = -2;
+		__draw_inputs = array_verify(__draw_inputs, ds_list_size(inputs));
+		var _len = 0;
+		var _jun, _hov;
 		
-		var _inputs = array_create(ds_list_size(inputs));
-		var _len    = 0;
+		if(NODE_HAS_INSP1) {
+			_hov = inspectInput1.drawConnections(params);
+			if(_hov) hovering = _hov;
+		}
+		
+		if(NODE_HAS_INSP2) {
+			_hov = inspectInput2.drawConnections(params);
+			if(_hov) hovering = _hov;
+		}
 		
 		var drawLineIndex = 1;
-		for(var i = st; i < ds_list_size(inputs); i++) {
-			var jun;
-			if(i == -1)			jun = inspectInput1;
-			else if(i == -2)	jun = inspectInput2;
-			else				jun = inputs[| i];
+		for(var i = 0, n = ds_list_size(inputs); i < n; i++) {
+			_jun = inputs[| i];
+			_jun.draw_blend_color = bg;
+			_jun.draw_blend       = high? PREFERENCES.connection_line_highlight_fade : -1;
 			
-			if(high) {
-				jun.draw_blend_color = bg;
-				jun.draw_blend       = PREFERENCES.connection_line_highlight_fade;
-			} else {
-				jun.draw_blend_color = bg;
-				jun.draw_blend       = -1;
-			}
+			if( _jun.value_from == noone)    continue;
+			if(!_jun.value_from.node.active) continue;
+			if(!_jun.isVisible())            continue;
 			
-			if( jun.value_from == noone) continue;
-			if(!jun.value_from.node.active) continue;
-			if(!jun.isVisible()) continue;
-			
-			if(i >= 0) _inputs[_len++] = jun;
+			if(i >= 0) __draw_inputs[_len++] = _jun;
 		}
 		
 		for( var i = 0; i < _len; i++ ) {
-			var jun = _inputs[i];
+			_jun = __draw_inputs[i];
+			_jun.drawLineIndex = 1 + (i > _len / 2? (_len - 1 - i) : i) * 0.5;
 			
-			jun.drawLineIndex = 1 + (i > _len / 2? (_len - 1 - i) : i) * 0.5;
-			var hov = jun.drawConnections(params);
-			if(hov) hovering = hov;
+			_hov = _jun.drawConnectionsRaw(params);
+			if(_hov) hovering = _hov;
 		}
 		
 		if(attributes.show_update_trigger) {
