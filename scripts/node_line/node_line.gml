@@ -22,8 +22,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 7] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone, "Draw line along path.")
-		.setVisible(true, true)
-		.setArrayDepth(1);
+		.setVisible(true, true);
 	
 	inputs[| 8] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1], "Range of the path to draw.")
 		.setDisplay(VALUE_DISPLAY.slider_range);
