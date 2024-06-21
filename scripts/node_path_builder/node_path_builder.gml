@@ -1,6 +1,6 @@
 function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Builder";
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	#region ---- path ----
 		path_loop    = false;

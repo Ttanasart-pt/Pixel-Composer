@@ -196,7 +196,7 @@
 
 #region debug
 	global.FLAG = {
-		render				: 1,
+		render				: 0,
 		renderTime			: false,
 		keyframe_override	: true,
 		wav_import			: true,

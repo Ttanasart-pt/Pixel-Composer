@@ -11,6 +11,8 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(1);
 	
+	path_amount = 1;
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _path = getInputData(0);
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -18,7 +20,9 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _segs = outputs[| 0].getValue();
 		var ox, oy, nx, ny;
 		
+		if(path_amount == 1) _segs = [ _segs ];
 		draw_set_color(COLORS._main_icon);
+		
 		for( var i = 0, n = array_length(_segs); i < n; i++ ) {
 			var _seg = _segs[i];
 			
@@ -41,8 +45,9 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(_path == noone)	return;
 		if(_dist <= 0)		return;
 		
-		var _amo  = _path.getLineCount();
-		var _segs = array_create(_amo);
+		var _amo    = _path.getLineCount();
+		path_amount = _amo;
+		var _segs   = array_create(_amo);
 		
 		var _p = new __vec2();
 		
@@ -59,6 +64,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			_segs[i] = _seg;
 		}
 		
+		if(_amo == 1) _segs = _segs[0];
 		outputs[| 0].setValue(_segs);
 	} #endregion
 	
