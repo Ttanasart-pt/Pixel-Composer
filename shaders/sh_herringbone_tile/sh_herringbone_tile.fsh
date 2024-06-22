@@ -26,6 +26,7 @@ uniform int   textureTruchet;
 uniform float truchetSeed;
 uniform float truchetThres;
 uniform vec2  truchetAngle;
+uniform vec2  level;
 
 uniform float tileLength;
 
@@ -230,7 +231,8 @@ void main() { #region
 	vec4 colr;
 	
 	if(mode == 1) {
-		gl_FragColor = vec4(vec3(hc.y), 1.0);
+		float dist = (hc.y - level.x) / (level.y - level.x);
+		gl_FragColor = vec4(vec3(dist), 1.0);
 		return;
 	}
 	
