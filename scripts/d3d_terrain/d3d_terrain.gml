@@ -9,8 +9,6 @@ function __3dTerrain() : __3dObject() constructor {
 	heights = array_create((subdivision + 1) * (subdivision + 1));
 	
 	static initModel = function() {
-		print("Init")
-		
 		var _hs = 1 / 2;
 		var _vt = array_create(3 * 2 * subdivision * subdivision);
 		var _in = 0;

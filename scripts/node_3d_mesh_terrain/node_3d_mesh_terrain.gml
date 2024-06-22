@@ -18,9 +18,12 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		
 	inputs[| in_mesh + 5] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
+	inputs[| in_mesh + 6] = nodeValue("Front Height Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
+		.setDisplay(VALUE_DISPLAY.slider_range);
+	
 	input_display_list = [
 		__d3d_input_list_transform,
-		["Terrain",		false], in_mesh + 3, in_mesh + 1, in_mesh + 2, in_mesh + 4, in_mesh + 5, 
+		["Terrain",		false], in_mesh + 3, in_mesh + 1, in_mesh + 2, in_mesh + 4, in_mesh + 5, in_mesh + 6, 
 		["Material",	false], in_mesh + 0, 
 	]
 	
@@ -38,9 +41,14 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		var _his = _data[in_mesh + 2];
 		var _hia = _data[in_mesh + 4];
 		var _smt = _data[in_mesh + 5];
+		var _lvl = _data[in_mesh + 6];
 		
 		var _h     = array_create((_sub + 1) * (_sub + 1));
 		var object = getObject(_array_index);
+		
+		var lv_min = _lvl[0];
+		var lv_max = _lvl[1];
+		var lv_rng = lv_max - lv_min;
 		
 		if(_inT == 0 && is_surface(_his)) {
 			var _ind = 0;
@@ -57,7 +65,7 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 				buffer_seek(_bf, buffer_seek_start, ps * 4);
 				
 				var cc   = buffer_read(_bf, buffer_u32);
-				_h[_ind] = colorBrightness(cc);
+				_h[_ind] = lv_min + colorBrightness(cc) * lv_rng;
 				_ind++;
 			}
 			
