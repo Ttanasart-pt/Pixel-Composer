@@ -65,11 +65,17 @@ float eval_curve_segment_x(in float _y0, in float ax0, in float ay0, in float bx
 }
 
 float curveEval(in float[64] curve, in int amo, in float _x) {
-	_x = clamp(_x, 0., 1.);
-	int segments = amo / 6 - 1;
 	
-	for( int i = 0; i < segments; i++ ) {
-		int ind = i * 6;
+	int   _shf   = amo - int(floor(float(amo) / 6.) * 6.);
+	int   _segs  = (amo - _shf) / 6 - 1;
+	float _shift = _shf > 0? curve[0] : 0.;
+	float _scale = _shf > 1? curve[1] : 1.;
+	
+	_x = _x / _scale - _shift;
+	_x = clamp(_x, 0., 1.);
+	
+	for( int i = 0; i < _segs; i++ ) {
+		int ind = _shf + i * 6;
 		float _x0 = curve[ind + 2];
 		float _y0 = curve[ind + 3];
 	  //float bx0 = _x0 + curve[ind + 0];
