@@ -164,8 +164,7 @@ if !ready exit;
 	
 			if(!expand) {
 				draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
-				draw_text(x1 - ui(82), y0 - ui(4), __txt("Art by") + " ");
-				draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4),, c_white, 0.5);
+				draw_text(x1 - ui(0), y0 - ui(4), __txt("Art by Kenney"));
 			}
 			break;
 		case "Workshop" : 

@@ -1,6 +1,5 @@
 function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Scatter Path";
-	
 	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Base Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
@@ -162,7 +161,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			_trm  = _trim_rng;
 			_trm *= eval_curve_x(_trim, _prog_raw);
-					
+			
 			for (var k = 0; k < _line_amounts; k++) {
 				
 				switch(_resetOri) {
@@ -194,7 +193,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				_dir  = point_direction(x0, y0, x1, y1);
 				_dir += _rot;
-				    
+				
 				paths[_ind] = {
 					path  : path_scat,
 					index : k,
