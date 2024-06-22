@@ -26,9 +26,16 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	__init_mask_modifier(5); // inputs 9, 10
 	
+	inputs[| 11] = nodeValue("Aspect Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	inputs[| 12] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+	
 	input_display_list = [ 7, 8, 
-		["Surfaces", true],	0, 5, 6, 9, 10, 
-		["Bloom",	false],	1, 2, 3, 4,
+		["Surfaces",     true],	0, 5, 6, 9, 10, 
+		["Bloom",	    false],	1, 2, 3, 4,
+		["Directional",	 true],	11, 12, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -42,11 +49,13 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _size = _data[1];
-		var _tole = _data[2];
-		var _stre = _data[3];
-		var _mask = _data[4];
-		var pass1 = surface_create_valid(surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf), attrDepth());	
+		var _size  = _data[1];
+		var _tole  = _data[2];
+		var _stre  = _data[3];
+		var _mask  = _data[4];
+		var _ratio = _data[11];
+		var _angle = _data[12];
+		var pass1  = surface_create_valid(surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf), attrDepth());	
 		
 		surface_set_shader(pass1, sh_bloom_pass);
 			draw_clear_alpha(c_black, 1);
@@ -59,7 +68,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
-		var pass1blur = surface_apply_gaussian(pass1, _size, true, c_black, 1);
+		var pass1blur = surface_apply_gaussian(pass1, _size, true, c_black, 1, noone, false, _ratio, _angle);
 		surface_free(pass1);
 		
 		surface_set_shader(_outSurf, sh_blend_add_alpha_adj);

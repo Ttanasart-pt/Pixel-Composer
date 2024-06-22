@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -9,6 +6,7 @@ uniform int  horizontal;
 
 uniform float weight[128];
 uniform int	  size;
+uniform float angle;
 uniform int	  sampleMode;
 
 uniform int  overrideColor;
@@ -48,19 +46,20 @@ vec4 sample(in vec2 pos, in int index) {
 }
 
 void main() {
-    vec2  tex_offset = 1.0 / dimension, pos;
-    vec4  result = sample( v_vTexcoord, 0 );
+    vec2 tex_offset = 1.0 / dimension, pos;
+    vec4 result     = sample( v_vTexcoord, 0 );
+    mat2 rot        = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
 	
     if(horizontal == 1) {
         for(int i = 1; i < size; i++) {
-			pos = vec2(tex_offset.x * float(i), 0.0);
+			pos = rot * vec2(tex_offset.x * float(i), 0.0);
 			
 			result += sample( v_vTexcoord + pos, i );
 			result += sample( v_vTexcoord - pos, i );
         }
     } else {
         for(int i = 1; i < size; i++) {
-			pos = vec2(0.0, tex_offset.y * float(i));
+			pos = rot * vec2(0.0, tex_offset.y * float(i));
 			
 			result += sample( v_vTexcoord + pos, i );
 			result += sample( v_vTexcoord - pos, i );

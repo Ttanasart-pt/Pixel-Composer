@@ -20,13 +20,13 @@ function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 7] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Blur", "Max" ]);
 	
-	__init_mask_modifier(3); // inputs 7, 8
+	__init_mask_modifier(3); // inputs 8, 9, 
 	
-	inputs[| 9] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 10] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true],	0, 3, 4, 7, 8, 
-		["Blur",	false],	7, 1, 2, 9, 
+		["Surfaces", true],	0, 3, 4, 8, 9, 
+		["Blur",	false],	7, 1, 2, 10, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

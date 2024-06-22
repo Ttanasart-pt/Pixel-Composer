@@ -28,7 +28,7 @@ function __gaussian_get_kernel(size) {
 	return gau_array;
 }
 
-function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampleMode = 0, overColor = noone, gamma = false) {
+function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampleMode = 0, overColor = noone, gamma = false, ratio = 1, angle = 0) {
 	var format = surface_get_format(surface);
 	var _sw    = surface_get_width_safe(surface);
 	var _sh    = surface_get_height_safe(surface);
@@ -52,6 +52,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		shader_set_i("size",       size);
 		shader_set_i("horizontal", 1);
 		shader_set_i("gamma",      gamma);
+		shader_set_f("angle",      degtorad(angle));
 		
 		shader_set_i("overrideColor", overColor != noone);
 		shader_set_f("overColor",     colToVec4(overColor));
@@ -62,10 +63,13 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 	
 	surface_set_target(__blur_vert);
 		draw_clear_alpha(bg_c, bg);
-		
+		var _size_v = round(size * ratio);
+			
 		shader_set(sh_blur_gaussian);
+		shader_set_f("weight",    __gaussian_get_kernel(_size_v));
+		shader_set_i("size",       _size_v);
 		shader_set_i("horizontal", 0);
-		
+			
 		draw_surface_safe(__blur_hori, 0, 0);
 		shader_reset();
 	surface_reset_target();
