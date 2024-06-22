@@ -207,7 +207,7 @@ void main() { #region
 		}
 	#endregion
 	
-    vec2 pos = (v_vTexcoord - position) * sca, _pos;
+    vec2 pos    = (v_vTexcoord - position) * sca, _pos;
 	float ratio = dimension.x / dimension.y;
 	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
 	_pos.y = pos.x * ratio * sin(ang) + pos.y * cos(ang);
@@ -226,7 +226,7 @@ void main() { #region
 		vec2 uv = fract(tri.xy / sca);
 		colr = gradientEval(random(uv));
 	} else if(mode == 2) {
-		vec2 uv = fract((_pos * vec2(1., c30) - tri.xy) + vec2(0.5, 0.));
+		vec2 uv  = fract((_pos * vec2(1., c30) - tri.xy) + vec2(0.5, 0.));
 		
 		if(textureTruchet == 1) {
 			float rx  = random(floor(tri.xy) + truchetSeed / 100.);
@@ -243,9 +243,10 @@ void main() { #region
 		}
 		
 		colr = texture2D( gm_BaseTexture, uv );
+		
 	} else if(mode == 3) {
-		vec2 uv = clamp(tri.xy / sca, 0., 1.);
-		colr = texture2D( gm_BaseTexture, uv );
+		vec2 uv = clamp(tri.xy / sca / vec2(dimension.x / dimension.y, c30), 0., 1.);
+		colr    = texture2D( gm_BaseTexture, uv );
 	}
 	
 	float _aa = 3. / max(dimension.x, dimension.y);

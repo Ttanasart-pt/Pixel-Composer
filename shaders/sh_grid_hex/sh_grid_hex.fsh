@@ -265,9 +265,10 @@ void main() { #region
 		}
 		
 		colr = texture2D( gm_BaseTexture, uv );
+		
 	} else if(mode == 3) {
-		vec2 uv = clamp(abs(hc.zw) / sca, 0., 1.);
-		colr = texture2D( gm_BaseTexture, uv );
+		vec2 uv = clamp(abs(hc.zw) / sca / vec2(dimension.x / dimension.y, 1.), 0., 1.);
+		colr    = texture2D( gm_BaseTexture, uv );
 	}
 	
 	float _aa = 3. / max(dimension.x, dimension.y);

@@ -52,10 +52,12 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	inputs[| 16] = nodeValue("Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 	
+	inputs[| 17] = nodeValue("Use Texture Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 4, 13, 2, 11, 3, 12, 
-		["Render",	false], 8, 9, 5, 14, 6, 7, 10, 16, 
+		["Render",	false], 8, 9, 5, 14, 6, 7, 17, 10, 16, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -80,12 +82,18 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var _sam  = _data[7];
 		var _mode = _data[8];
 		
-		var _col_gap = _data[6];
+		var _col_gap  = _data[6];
+		var _tex_mode = _mode == 2 || _mode == 3;
 		
 		inputs[|  5].setVisible(_mode == 0);
 		inputs[|  6].setVisible(_mode != 1);
 		inputs[| 16].setVisible(_mode == 1);
-		inputs[|  7].setVisible(_mode == 2 || _mode == 3);
+		
+		inputs[|  7].setVisible(_tex_mode, _tex_mode);
+		inputs[| 17].setVisible(_tex_mode, _tex_mode);
+		
+		var _tex_dim = is_surface(_sam) && _tex_mode && _data[17];
+		if(_tex_dim) _dim = surface_get_dimension(_sam);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		surface_set_shader(_outSurf, sh_grid_pentagonal);
