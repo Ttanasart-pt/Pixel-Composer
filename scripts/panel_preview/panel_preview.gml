@@ -1202,7 +1202,6 @@ function Panel_Preview() : PanelContent() constructor {
 			_obj.apply();
 			
 			shader_set_i("drawBg",  	0);
-			shader_set_f("viewRange",   [ d3_view_camera.view_near, d3_view_camera.view_far ]);
 			shader_set_f("depthInt",    0);
 			
 			var _scale = zm / 2;

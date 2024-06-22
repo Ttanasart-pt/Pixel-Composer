@@ -1096,13 +1096,14 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 	} #endregion
 	
-	function editKeyframe(keyframe, _x = mouse_mx + ui(8), _y = mouse_my + ui(8)) {
-		var _wid = keyframe.anim.prop.editWidget;
+	function editKeyFrame(keyframe, _x = mouse_mx + ui(8), _y = mouse_my + ui(8)) {
+		var _prop = keyframe.anim.prop;
+		var _wid  = _prop.editWidget;
 		__keyframe_editing = keyframe;
 		
-		switch(animator.prop.type) {
+		switch(_prop.type) {
 			case VALUE_TYPE.color : 
-				switch(animator.prop.display_type) {
+				switch(_prop.display_type) {
 					case VALUE_DISPLAY.palette : 
 						var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
 						dialog.setDefault(keyframe.value);

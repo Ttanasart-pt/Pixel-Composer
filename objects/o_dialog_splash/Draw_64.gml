@@ -147,7 +147,7 @@ if !ready exit;
 			
 			_btx += ui(4);
 			draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text_sub);
-			draw_text(_btx, y0 - ui(4), amo);
+			draw_text(_btx, y0 - ui(6), amo);
 		}
 		
 		bx += _tabW;

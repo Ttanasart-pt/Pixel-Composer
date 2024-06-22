@@ -153,6 +153,7 @@
 		INLINE
 		if(cond) print(log);
 	}
+	
 #endregion
 
 #region presets

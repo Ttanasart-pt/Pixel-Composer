@@ -121,7 +121,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	inputs[| 32] = nodeValue("Volumetric", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 33] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 33] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.3)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 34] = nodeValue("Environment", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, false);

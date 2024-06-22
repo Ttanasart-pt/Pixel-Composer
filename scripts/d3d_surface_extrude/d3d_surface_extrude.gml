@@ -87,47 +87,36 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 					draw_surface_stretched(is_surface(bsurface)? bsurface : surface, 0, 0, ww, hh);
 				surface_reset_target();
 				
-				surface_set_target(_bheight);
-					DRAW_CLEAR
-					draw_surface_stretched(is_surface(bheight)? bheight : _height, 0, 0, hg_ww, hg_hh);
-				surface_reset_target();
+				if(useH) {
+					surface_set_target(_bheight);
+						DRAW_CLEAR
+						draw_surface_stretched(is_surface(bheight)? bheight : _height, 0, 0, hg_ww, hg_hh);
+					surface_reset_target();
+				}
 			BLEND_NORMAL
 			
 			/////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			var height_buffer = buffer_create(hg_ww * hg_hh * 4, buffer_fixed, 2);
-			buffer_get_surface(height_buffer, _bheight, 0);
-			buffer_seek(height_buffer, buffer_seek_start, 0);
-		
-			hb_buff = buffer_create(hg_hh * hg_ww * 2, buffer_fixed, 2);
-			buffer_to_start(hb_buff);
+			if(useH) {
+				var height_buffer = buffer_create(hg_ww * hg_hh * 4, buffer_fixed, 2);
+				buffer_get_surface(height_buffer, _bheight, 0);
+				buffer_seek(height_buffer, buffer_seek_start, 0);
 			
-			repeat(hg_hh * hg_ww) {
-				var cc = buffer_read(height_buffer, buffer_u32);
-				var _b = colorBrightness(cc & ~0b11111111);
-				    _b = blevel_min + blevel_rg * _b;
-				    
-				buffer_write(hb_buff, buffer_u16, round(_b * 65536));
+				hb_buff = buffer_create(hg_hh * hg_ww * 2, buffer_fixed, 2);
+				buffer_to_start(hb_buff);
+				
+				repeat(hg_hh * hg_ww) {
+					var cc = buffer_read(height_buffer, buffer_u32);
+					var _b = colorBrightness(cc & ~0b11111111);
+					    _b = blevel_min + blevel_rg * _b;
+					    
+					buffer_write(hb_buff, buffer_u16, round(_b * 65536));
+				}
+			
+				buffer_delete(height_buffer);
 			}
-		
-			buffer_delete(height_buffer);
 			
 			/////////////////////////////////////////////////////////////////////////////////////////////////
-				
-			// var surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
-			// buffer_get_surface(surface_buffer, _bsurface, 0);
-			// buffer_seek(surface_buffer, buffer_seek_start, 0);
-			
-			// cb_buff = buffer_create(hh * ww, buffer_fast, 1);
-			// buffer_to_start(cb_buff);
-			
-			// repeat(hh * ww) {
-			// 	var cc = buffer_read(surface_buffer, buffer_u32);
-			// 	var _a = (cc & (0xFF << 24)) >> 24;
-			// 	buffer_write(cb_buff, buffer_u8, _a);
-			// }
-			
-			// buffer_delete(surface_buffer);
 			
 			surface_free(_bsurface);
 			surface_free(_bheight);
@@ -143,16 +132,14 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 		var fw  = 1 / ww;
 		var fh  = 1 / hh;
 		
-		var _len = array_length(vertex_array);
-		var _amo = back? ww * hh * 60 : ww * hh * 36;
-		for(var i = _len; i < _amo; i++)
-			vertex_array[i] = new __vertex();
+		for (var i = 0, n = array_length(VB); i < n; i++) 
+			vertex_delete_buffer(VB[i]);
 			
-		var v   = array_create(_amo);
+		var _vb = vertex_create_buffer();
 		var ind = 0;
-		
 		var i = 0, j = 0, n = 0;
 		
+		vertex_begin(_vb, VF);
 		repeat(hh * ww) {
 			i = floor(n / ww);
 			j = n % ww;
@@ -176,122 +163,122 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 			
 			var dep  = useH? buffer_read_at(h_buff,  (round(i * hgtW) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536 * 0.5
 				              : 0.5;
-			var depb = back? buffer_read_at(hb_buff, (round(i * hgtW) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536 * 0.5
+			var depb = useH && back? buffer_read_at(hb_buff, (round(i * hgtW) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536 * 0.5
 				              : dep;
 			depb = -depb;
 			
-			v[ind] = vertex_array[ind].set(i1, j0, depb, 0, 0, -1, tb1, ty0); ind++;
-			v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 0, -1, tb0, ty0); ind++;
-			v[ind] = vertex_array[ind].set(i1, j1, depb, 0, 0, -1, tb1, ty1); ind++;
+			__vertex_add_pntc(_vb, i1, j0, depb, 0, 0, -1, tb1, ty0);
+			__vertex_add_pntc(_vb, i0, j0, depb, 0, 0, -1, tb0, ty0);
+			__vertex_add_pntc(_vb, i1, j1, depb, 0, 0, -1, tb1, ty1);
 						    				  					  				   
-			v[ind] = vertex_array[ind].set(i1, j1, depb, 0, 0, -1, tb1, ty1); ind++;
-			v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 0, -1, tb0, ty0); ind++;
-			v[ind] = vertex_array[ind].set(i0, j1, depb, 0, 0, -1, tb0, ty1); ind++;
+			__vertex_add_pntc(_vb, i1, j1, depb, 0, 0, -1, tb1, ty1);
+			__vertex_add_pntc(_vb, i0, j0, depb, 0, 0, -1, tb0, ty0);
+			__vertex_add_pntc(_vb, i0, j1, depb, 0, 0, -1, tb0, ty1);
 									  	  
-			v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 0, 1, tx1, ty0); ind++;
-			v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, 0, 1, tx1, ty1); ind++;
-			v[ind] = vertex_array[ind].set(i0, j0,  dep, 0, 0, 1, tx0, ty0); ind++;
+			__vertex_add_pntc(_vb, i1, j0,  dep, 0, 0, 1, tx1, ty0);
+			__vertex_add_pntc(_vb, i1, j1,  dep, 0, 0, 1, tx1, ty1);
+			__vertex_add_pntc(_vb, i0, j0,  dep, 0, 0, 1, tx0, ty0);
 						    		  	    					 				  
-			v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, 0, 1, tx1, ty1); ind++;
-			v[ind] = vertex_array[ind].set(i0, j1,  dep, 0, 0, 1, tx0, ty1); ind++;
-			v[ind] = vertex_array[ind].set(i0, j0,  dep, 0, 0, 1, tx0, ty0); ind++;
+			__vertex_add_pntc(_vb, i1, j1,  dep, 0, 0, 1, tx1, ty1);
+			__vertex_add_pntc(_vb, i0, j1,  dep, 0, 0, 1, tx0, ty1);
+			__vertex_add_pntc(_vb, i0, j0,  dep, 0, 0, 1, tx0, ty0);
 				
 			if(back) {
 				
 				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == 0 || buffer_read_at(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
 						
-					v[ind] = vertex_array[ind].set(i0, j0,  dep, 0, 1, 0, tx1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i0, j0,    0, 0, 1, 0, tx0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 1, 0, tx1, ty1); ind++;
+					__vertex_add_pntc(_vb, i0, j0,  dep, 0, 1, 0, tx1, ty0);
+					__vertex_add_pntc(_vb, i0, j0,    0, 0, 1, 0, tx0, ty0);
+					__vertex_add_pntc(_vb, i1, j0,  dep, 0, 1, 0, tx1, ty1);
 								    	  	  	  					  				   
-					v[ind] = vertex_array[ind].set(i0, j0,    0, 0, 1, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0,    0, 0, 1, 0, tx0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 1, 0, tx0, ty1); ind++;
+					__vertex_add_pntc(_vb, i0, j0,    0, 0, 1, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i1, j0,    0, 0, 1, 0, tx0, ty0);
+					__vertex_add_pntc(_vb, i1, j0,  dep, 0, 1, 0, tx0, ty1);
 				}
 				
 				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == 0 || buffer_read_at(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
 						
-					v[ind] = vertex_array[ind].set(i0, j0,    0, 0, 1, 0, tb1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 1, 0, tb0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0,    0, 0, 1, 0, tb1, ty1); ind++;
+					__vertex_add_pntc(_vb, i0, j0,    0, 0, 1, 0, tb1, ty0);
+					__vertex_add_pntc(_vb, i0, j0, depb, 0, 1, 0, tb0, ty0);
+					__vertex_add_pntc(_vb, i1, j0,    0, 0, 1, 0, tb1, ty1);
 					
-					v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 1, 0, tb1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0, depb, 0, 1, 0, tb0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0,    0, 0, 1, 0, tb0, ty1); ind++;
+					__vertex_add_pntc(_vb, i0, j0, depb, 0, 1, 0, tb1, ty1);
+					__vertex_add_pntc(_vb, i1, j0, depb, 0, 1, 0, tb0, ty0);
+					__vertex_add_pntc(_vb, i1, j0,    0, 0, 1, 0, tb0, ty1);
 				}
 					
 				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + min(round((j + 1) * hgtH), hg_hh - 1) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == hh - 1 || buffer_read_at(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
 						
-					v[ind] = vertex_array[ind].set(i0, j1,  dep, 0, -1, 0, tx1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, -1, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1,    0, 0, -1, 0, tx0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j1,  dep, 0, -1, 0, tx1, ty0);
+					__vertex_add_pntc(_vb, i1, j1,  dep, 0, -1, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i0, j1,    0, 0, -1, 0, tx0, ty0);
 								    				  					 				  
-					v[ind] = vertex_array[ind].set(i0, j1,    0, 0, -1, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, -1, 0, tx0, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,    0, 0, -1, 0, tx0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j1,    0, 0, -1, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i1, j1,  dep, 0, -1, 0, tx0, ty1);
+					__vertex_add_pntc(_vb, i1, j1,    0, 0, -1, 0, tx0, ty0);
 				}
 					
 				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (round(i * hgtW) + min(round((j + 1) * hgtH), hg_hh - 1) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == hh - 1 || buffer_read_at(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
 					
-					v[ind] = vertex_array[ind].set(i0, j1,    0, 0, -1, 0, tb1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,    0, 0, -1, 0, tb1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1, depb, 0, -1, 0, tb0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j1,    0, 0, -1, 0, tb1, ty0);
+					__vertex_add_pntc(_vb, i1, j1,    0, 0, -1, 0, tb1, ty1);
+					__vertex_add_pntc(_vb, i0, j1, depb, 0, -1, 0, tb0, ty0);
 								    				  					 				  
-					v[ind] = vertex_array[ind].set(i0, j1, depb, 0, -1, 0, tb1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,    0, 0, -1, 0, tb0, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1, depb, 0, -1, 0, tb0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j1, depb, 0, -1, 0, tb1, ty1);
+					__vertex_add_pntc(_vb, i1, j1,    0, 0, -1, 0, tb0, ty1);
+					__vertex_add_pntc(_vb, i1, j1, depb, 0, -1, 0, tb0, ty0);
 				}
 				
 				if((useH && dep * 2 > buffer_read_at(h_buff, (max(0, round((i - 1) * hgtW)) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == 0 || buffer_read_at(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
 						
-					v[ind] = vertex_array[ind].set(i0, j0,  dep, -1, 0, 0, tx1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1,  dep, -1, 0, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j0,    0, -1, 0, 0, tx0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j0,  dep, -1, 0, 0, tx1, ty0);
+					__vertex_add_pntc(_vb, i0, j1,  dep, -1, 0, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i0, j0,    0, -1, 0, 0, tx0, ty0);
 								    				  					 				  
-					v[ind] = vertex_array[ind].set(i0, j0,    0, -1, 0, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1,  dep, -1, 0, 0, tx0, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1,    0, -1, 0, 0, tx0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j0,    0, -1, 0, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i0, j1,  dep, -1, 0, 0, tx0, ty1);
+					__vertex_add_pntc(_vb, i0, j1,    0, -1, 0, 0, tx0, ty0);
 				}
 				
 				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (max(0, round((i - 1) * hgtW)) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == 0 || buffer_read_at(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
 					
-					v[ind] = vertex_array[ind].set(i0, j0,    0, -1, 0, 0, tb1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1,    0, -1, 0, 0, tb1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j0, depb, -1, 0, 0, tb0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j0,    0, -1, 0, 0, tb1, ty0);
+					__vertex_add_pntc(_vb, i0, j1,    0, -1, 0, 0, tb1, ty1);
+					__vertex_add_pntc(_vb, i0, j0, depb, -1, 0, 0, tb0, ty0);
 								    				  					 				  
-					v[ind] = vertex_array[ind].set(i0, j0, depb, -1, 0, 0, tb1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1,    0, -1, 0, 0, tb0, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1, depb, -1, 0, 0, tb0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j0, depb, -1, 0, 0, tb1, ty1);
+					__vertex_add_pntc(_vb, i0, j1,    0, -1, 0, 0, tb0, ty1);
+					__vertex_add_pntc(_vb, i0, j1, depb, -1, 0, 0, tb0, ty0);
 				}
 				
 				if((useH && dep * 2 > buffer_read_at(h_buff, (min(round((i + 1) * hgtW), hg_ww - 1 ) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == ww - 1 || buffer_read_at(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
 					
-					v[ind] = vertex_array[ind].set(i1, j0,  dep, 1, 0, 0, tx1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0,    0, 1, 0, 0, tx0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,  dep, 1, 0, 0, tx1, ty1); ind++;
+					__vertex_add_pntc(_vb, i1, j0,  dep, 1, 0, 0, tx1, ty0);
+					__vertex_add_pntc(_vb, i1, j0,    0, 1, 0, 0, tx0, ty0);
+					__vertex_add_pntc(_vb, i1, j1,  dep, 1, 0, 0, tx1, ty1);
 								    				  					  				   
-					v[ind] = vertex_array[ind].set(i1, j0,    0, 1, 0, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,    0, 1, 0, 0, tx0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,  dep, 1, 0, 0, tx0, ty1); ind++;
+					__vertex_add_pntc(_vb, i1, j0,    0, 1, 0, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i1, j1,    0, 1, 0, 0, tx0, ty0);
+					__vertex_add_pntc(_vb, i1, j1,  dep, 1, 0, 0, tx0, ty1);
 				}
 					
 				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (min(round((i + 1) * hgtW), hg_ww - 1 ) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == ww - 1 || buffer_read_at(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
 					
-					v[ind] = vertex_array[ind].set(i1, j0,    0, 1, 0, 0, tb1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0, depb, 1, 0, 0, tb0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,    0, 1, 0, 0, tb1, ty1); ind++;
+					__vertex_add_pntc(_vb, i1, j0,    0, 1, 0, 0, tb1, ty0);
+					__vertex_add_pntc(_vb, i1, j0, depb, 1, 0, 0, tb0, ty0);
+					__vertex_add_pntc(_vb, i1, j1,    0, 1, 0, 0, tb1, ty1);
 								    				  					  				   
-					v[ind] = vertex_array[ind].set(i1, j0, depb, 1, 0, 0, tb1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1, depb, 1, 0, 0, tb0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,    0, 1, 0, 0, tb0, ty1); ind++;
+					__vertex_add_pntc(_vb, i1, j0, depb, 1, 0, 0, tb1, ty1);
+					__vertex_add_pntc(_vb, i1, j1, depb, 1, 0, 0, tb0, ty0);
+					__vertex_add_pntc(_vb, i1, j1,    0, 1, 0, 0, tb0, ty1);
 				}
 				
 			} else {
@@ -299,63 +286,62 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == 0 || buffer_read_at(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
 						
-					v[ind] = vertex_array[ind].set(i0, j0,  dep, 0, 1, 0, tx1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 1, 0, tx0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 1, 0, tx1, ty1); ind++;
+					__vertex_add_pntc(_vb, i0, j0,  dep, 0, 1, 0, tx1, ty0);
+					__vertex_add_pntc(_vb, i0, j0, depb, 0, 1, 0, tx0, ty0);
+					__vertex_add_pntc(_vb, i1, j0,  dep, 0, 1, 0, tx1, ty1);
 								    	  	  	  					  				   
-					v[ind] = vertex_array[ind].set(i0, j0, depb, 0, 1, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0, depb, 0, 1, 0, tx0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0,  dep, 0, 1, 0, tx0, ty1); ind++;
+					__vertex_add_pntc(_vb, i0, j0, depb, 0, 1, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i1, j0, depb, 0, 1, 0, tx0, ty0);
+					__vertex_add_pntc(_vb, i1, j0,  dep, 0, 1, 0, tx0, ty1);
 				}
 					
 				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + min(round((j + 1) * hgtH), hg_hh - 1) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == hh - 1 || buffer_read_at(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
 					
-					v[ind] = vertex_array[ind].set(i0, j1,  dep, 0, -1, 0, tx1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, -1, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1, depb, 0, -1, 0, tx0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j1,  dep, 0, -1, 0, tx1, ty0);
+					__vertex_add_pntc(_vb, i1, j1,  dep, 0, -1, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i0, j1, depb, 0, -1, 0, tx0, ty0);
 								    				  					 				  
-					v[ind] = vertex_array[ind].set(i0, j1, depb, 0, -1, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,  dep, 0, -1, 0, tx0, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1, depb, 0, -1, 0, tx0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j1, depb, 0, -1, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i1, j1,  dep, 0, -1, 0, tx0, ty1);
+					__vertex_add_pntc(_vb, i1, j1, depb, 0, -1, 0, tx0, ty0);
 				}
 				
 				if((useH && dep * 2 > buffer_read_at(h_buff, (max(0, round((i - 1) * hgtW)) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == 0 || buffer_read_at(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
 						
-					v[ind] = vertex_array[ind].set(i0, j0,  dep, -1, 0, 0, tx1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1,  dep, -1, 0, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j0, depb, -1, 0, 0, tx0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j0,  dep, -1, 0, 0, tx1, ty0);
+					__vertex_add_pntc(_vb, i0, j1,  dep, -1, 0, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i0, j0, depb, -1, 0, 0, tx0, ty0);
 								    				  					 				  
-					v[ind] = vertex_array[ind].set(i0, j0, depb, -1, 0, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1,  dep, -1, 0, 0, tx0, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i0, j1, depb, -1, 0, 0, tx0, ty0); ind++;
+					__vertex_add_pntc(_vb, i0, j0, depb, -1, 0, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i0, j1,  dep, -1, 0, 0, tx0, ty1);
+					__vertex_add_pntc(_vb, i0, j1, depb, -1, 0, 0, tx0, ty0);
 				}
 				
 				if((useH && dep * 2 > buffer_read_at(h_buff, (min(round((i + 1) * hgtW), hg_ww - 1 ) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == ww - 1 || buffer_read_at(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
 					
-					v[ind] = vertex_array[ind].set(i1, j0,  dep, 1, 0, 0, tx1, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j0, depb, 1, 0, 0, tx0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,  dep, 1, 0, 0, tx1, ty1); ind++;
+					__vertex_add_pntc(_vb, i1, j0,  dep, 1, 0, 0, tx1, ty0);
+					__vertex_add_pntc(_vb, i1, j0, depb, 1, 0, 0, tx0, ty0);
+					__vertex_add_pntc(_vb, i1, j1,  dep, 1, 0, 0, tx1, ty1);
 								    				  					  				   
-					v[ind] = vertex_array[ind].set(i1, j0, depb, 1, 0, 0, tx1, ty1); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1, depb, 1, 0, 0, tx0, ty0); ind++;
-					v[ind] = vertex_array[ind].set(i1, j1,  dep, 1, 0, 0, tx0, ty1); ind++;
+					__vertex_add_pntc(_vb, i1, j0, depb, 1, 0, 0, tx1, ty1);
+					__vertex_add_pntc(_vb, i1, j1, depb, 1, 0, 0, tx0, ty0);
+					__vertex_add_pntc(_vb, i1, j1,  dep, 1, 0, 0, tx0, ty1);
 				}
 			}
 			
 		}
-		
-		array_resize(v, ind);
+		vertex_end(_vb);
 		
 		buffer_delete_safe(h_buff);
 		buffer_delete_safe(c_buff);
 		buffer_delete_safe(hb_buff);
 		buffer_delete_safe(cb_buff);
 		
-		vertex = [ v ];
-		VB     = build();
+		// vertex = [ v ];
+		VB = [ _vb ];
 	} initModel();
 	
 	static onParameterUpdate = initModel;

@@ -731,10 +731,14 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			_txt = $"Node #{color_get_hex(_cc)}";
 			
 		} else if(blnd_hovering >= 0) {
+			blnd_hovering = min(blnd_hovering, array_length(palette_data.blends) - 1);
+			
 			_cc  = palette_data.blends[blnd_hovering].color;
 			_txt = $"Blend point #{color_get_hex(_cc)}";
 			
 		} else if(conn_hovering >= 0) {
+			conn_hovering = min(conn_hovering, array_length(palette_data.connections) - 1);
+			
 			var conn = palette_data.connections[conn_hovering];
 			var _fr  = _palettes[conn[0]];
 			var _to  = _palettes[conn[1]];

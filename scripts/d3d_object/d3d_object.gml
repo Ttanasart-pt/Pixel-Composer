@@ -94,7 +94,6 @@ function __3dObject() constructor {
 					break;
 			}
 		vertex_end(_buffer);
-		//vertex_freeze(_buffer);
 		
 		return _buffer;
 	} #endregion

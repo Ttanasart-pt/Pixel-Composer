@@ -34,6 +34,16 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	temp_surface = [ noone, noone ];
 	
+	insp1UpdateTooltip   = "Refresh";
+	insp1UpdateIcon      = [ THEME.refresh_20, 0, COLORS._main_value_positive ];
+	
+	static onInspector1Update = function(_fromValue = false) {
+		for(var i = 0; i < process_amount; i++) {
+			var _object = getObject(i);
+			_object.initModel();
+		}
+	}
+	
 	static step = function() {
 		var _double = getSingleValue(in_mesh + 4);
 		
@@ -59,9 +69,9 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		
 		if(!is_surface(_surf)) return noone;
 		
-		var _matN  = _mat.clone();
-		var object = getObject(_array_index);
-		object.checkParameter( { 
+		var _matN   = _mat.clone();
+		var _object = getObject(_array_index);
+		_object.checkParameter( { 
 			smooth  : _smt,
 			
 			surface : _surf, 
@@ -89,11 +99,11 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		surface_reset_shader();
 		
 		_matN.surface    = _nSurf;
-		object.materials = [ _matN ];
+		_object.materials = [ _matN ];
 		
-		setTransform(object, _data);
+		setTransform(_object, _data);
 		
-		return object;
+		return _object;
 	} #endregion
 	
 	static getPreviewValues = function() { return array_safe_get_fast(all_inputs, in_mesh + 0, noone); }

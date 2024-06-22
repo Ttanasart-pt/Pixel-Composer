@@ -610,7 +610,7 @@ float sceneSDF(int index, vec3 p) {
 }
 
 float operateSceneSDF(vec3 p, out vec3 blendIndx) {
-	blendIndx = vec3(0.);
+	blendIndx = vec3(0., 0., 1.);
 	
 	if(operations[0] == -1) {
 		influences[0] = 1.;
@@ -748,24 +748,26 @@ float marchLinear(vec3 camera, vec3 direction, out vec3 blendIndx) {
 }
 
 float marchDensity(vec3 camera, vec3 direction) {
-	float st   = 1. / float(MAX_MARCHING_STEPS);
-	float dens = 0.;
+	float maxx    = float(MAX_MARCHING_STEPS);
+	float st      = 1. / maxx;
+	float density = 0.;
+	float dens, stp;
 	vec3  blendIndx;
-	  
-    for (int i = 0; i <= MAX_MARCHING_STEPS; i++) {
-        float depth = mix(viewRange.x, viewRange.y, float(i) * st);
+	 
+    for (float i = 0.; i <= maxx; i++) {
+        float depth = mix(viewRange.x, viewRange.y, i * st);
         vec3  pos   = camera + depth * direction;
         float hit   = operateSceneSDF(pos, blendIndx);
         
         if (hit <= 0.) {
-        	float dens  = volumeDensity[int(floor(blendIndx.x))];
-        	float stp   = dens == 0. ? 0. : pow(2., 10. * dens * 0.5 - 10.);
+        	dens = volumeDensity[int(floor(blendIndx.x))];
+        	stp  = dens == 0. ? 0. : pow(2., 10. * dens - 10.);
         	
-        	dens += stp;
+        	density += stp;
         }
     }
     
-    return dens;
+    return density;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -788,7 +790,7 @@ vec4 scene() {
 	eye  = camIrotMatrix * eye;
 	eye /= camScale;
 	
-	if(volumetric[0] == 1) {
+	if(volumetric[0] == 1) { 
 		float _dens = clamp(marchDensity(eye, dir), 0., 1.);
 		return diffuseColor[0] * _dens;
 	}

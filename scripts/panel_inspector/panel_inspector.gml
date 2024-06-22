@@ -249,8 +249,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		var hh = ui(8);
 		var yy = _y + ui(8);
 		
-		var rx = x + ui(16);
-		var ry = y + top_bar_h;
+		var rx  = x + ui(16);
+		var ry  = y + top_bar_h;
+		var lbh = viewMode? ui(32) : ui(26);
 		
 		attribute_hovering = noone;
 		
@@ -262,30 +263,28 @@ function Panel_Inspector() : PanelContent() constructor {
 			var _b	  = array_safe_get_fast(_meta, 2, noone);
 			var _x1   = con_w - (_b != noone) * ui(30);
 			
-			if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + ui(32))) {
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_hover, 1);
+			if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_hover, 1);
 						
 				if(mouse_press(mb_left, pFOCUS))
 					meta_display[i][1] = !meta_display[i][1];
 			} else
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_bg, 1);
 			
 			if(_b != noone) {
 				_b.setFocusHover(pFOCUS, _hover);
-				_b.draw(_x1, yy + ui(2), ui(28), ui(28), _m, THEME.button_hide_fill);
+				_b.draw(_x1, yy + ui(2), ui(28), lbh - ui(4), _m, THEME.button_hide_fill);
 			}
 			
-			draw_sprite_ui(THEME.arrow, meta_display[i][1]? 0 : 3, ui(16), yy + ui(32) / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);	
+			draw_sprite_ui(THEME.arrow, meta_display[i][1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);	
 			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
-			draw_text_add(ui(32), yy + ui(32) / 2, _txt);
+			draw_set_text(viewMode? f_p0 : f_p1, fa_left, fa_center, COLORS._main_text_inner);
+			draw_text_add(ui(32), yy + lbh / 2, _txt);
 			
-			yy += ui(32 + 8);
-			hh += ui(32 + 8);
+			yy += lbh + ui(viewMode? 8 : 6);
+			hh += lbh + ui(viewMode? 8 : 6);
 			
 			if(meta_display[i][1]) {
-				yy += ui(4);
-				hh += ui(4);
 				continue;
 			}
 			
@@ -446,6 +445,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						var byc = by + bh / 2;
 						draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
 						draw_text_over(bxc + ui(48), byc, txt);
+						
 					} else {
 						var bw = bbw;
 					
@@ -474,8 +474,8 @@ function Panel_Inspector() : PanelContent() constructor {
 					break;
 			}
 			
-			yy += viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
-			hh += viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
+			yy += ui(viewMode? 4 : 2);
+			hh += ui(viewMode? 4 : 2);
 		}
 		
 		return hh;

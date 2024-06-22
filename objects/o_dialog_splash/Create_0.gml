@@ -33,7 +33,7 @@ event_inherited();
 		x0 = x1 + ui(16);
 		x1 = dialog_x + dialog_w - ui(16);
 	
-		sp_sample.resize(x1 - x0 - ui(12), y1 - y0);
+		sp_sample.resize( x1 - x0 - ui(12), y1 - y0 - 1);
 		sp_contest.resize(x1 - x0 - ui(12), y1 - y0 - 2);
 	}
 	
@@ -47,8 +47,8 @@ event_inherited();
 		var expand = PREFERENCES.splash_expand_recent;
 		var ww  = ui(264);
 		var hh	= ui(8);
-		var pad = ui(8);
-		var hgt	= ui(16) + line_get_height(f_p0b) + line_get_height(f_p1);
+		var pad = ui(6);
+		var hgt	= ui(14) + line_get_height(f_p0b) + line_get_height(f_p2);
 		_y += pad;
 		
 		var col = expand? 2 : 1;
@@ -92,12 +92,12 @@ event_inherited();
 					}
 				}
 			
-				var ly = recent_thumbnail? _y + hg - (line_get_height(f_p0b) + line_get_height(f_p1)) - ui(8) : _y + ui(8);
+				var ly = recent_thumbnail? _y + hg - (line_get_height(f_p0b) + line_get_height(f_p2)) - ui(8) : _y + ui(6);
 				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_inner);
 				draw_text(fx + ui(12), ly, filename_name_only(_rec));
 			
-				ly += line_get_height() + ui(4);
-				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
+				ly += line_get_height() + ui(2);
+				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text_cut(fx + ui(12), ly, _rec, ww - ui(24));
 			}
 			
@@ -111,7 +111,7 @@ event_inherited();
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
 	
-	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) { #region
+	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 1, function(_y, _m) { #region
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
 		
 		var txt = pages[project_page];
@@ -216,7 +216,7 @@ event_inherited();
 					var _rr = THEME_VALUE.selection_corner_radius;
 					draw_roundrect_ext(tx - _tw / 2 - ui(6), ty - ui(2), tx + _tw / 2 + ui(6), ty + _th, _rr, _rr, 0);
 					draw_set_color(_project.tag == "Getting started"? COLORS._main_text_accent : COLORS._main_text_sub);
-					draw_text(tx, ty - ui(2), _project.tag);						
+					draw_text(tx, ty - ui(1), _project.tag);						
 						
 					ty += line_get_height(, ui(4));
 				} #endregion

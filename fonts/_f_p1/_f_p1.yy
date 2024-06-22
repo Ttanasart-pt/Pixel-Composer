@@ -3,7 +3,7 @@
   "%Name":"_f_p1",
   "AntiAlias":1,
   "applyKerning":0,
-  "ascender":14,
+  "ascender":15,
   "ascenderOffset":0,
   "bold":true,
   "canGenerateBitmap":true,

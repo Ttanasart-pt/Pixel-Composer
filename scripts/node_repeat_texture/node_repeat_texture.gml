@@ -29,6 +29,7 @@ function Node_Repeat_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _seed = _data[3];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		if(!is_surface(_surf)) return _outSurf;
 		
 		var _sdim = surface_get_dimension(_surf);
 		

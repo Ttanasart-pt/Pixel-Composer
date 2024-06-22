@@ -69,7 +69,7 @@ function draw_sprite_bbox_uniform(spr, ind, _bbox) { #region
 	if(_bbox == noone) return;
 	var _minS = min(_bbox.w, _bbox.h);
 	
-	__draw_sprite_stretched(spr, ind, _bbox.xc - _minS / 2, _bbox.y0 - _minS / 2, _minS, _minS);
+	__draw_sprite_stretched(spr, ind, _bbox.xc - _minS / 2, _bbox.yc - _minS / 2, _minS, _minS);
 } #endregion
 
 function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white) { #region
