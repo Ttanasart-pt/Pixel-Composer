@@ -14,6 +14,23 @@ function SVGElement(svgObj = noone) constructor {
 	stroke_width = undefined;
 	
 	static setAttr = function(attr) {
+		
+		var box  = struct_try_get(attr, "viewBox", "");
+		var ww   = struct_try_get(attr, "width",   "");
+		var hh   = struct_try_get(attr, "height",  "");
+		
+		box = string_splice(box, " ");
+		var bx = toNumber(array_safe_get(box, 0, 0));
+		var by = toNumber(array_safe_get(box, 1, 0));
+		var bw = toNumber(array_safe_get(box, 2, 1));
+		var bh = toNumber(array_safe_get(box, 3, 1));
+		
+		width  = toNumber(ww);
+		height = toNumber(hh);
+		
+		if(string_pos("%", ww)) width  *= bw / 100;
+		if(string_pos("%", hh)) height *= bh / 100;
+		
 		fill         = struct_try_get(attr, "fill",         undefined);
 		stroke       = struct_try_get(attr, "stroke",       undefined);
 		stroke_width = struct_try_get(attr, "stroke-width", undefined);
@@ -70,7 +87,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 	
 	static setTris = function() {
 		shapes = [];
-		var ox, oy, nx, ny, x0, y0;
+		var ox, oy, nx, ny, x0, y0, x1, y1;
 		
 		for (var i = 0, n = array_length(segments); i < n; i++) {
 			var _seg = segments[i];
@@ -87,11 +104,14 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 				nx = _s[0];
 				ny = _s[1];
 				
-				if(j && array_length(_s) == 4) {
-					x0 = _s[2];
-					y0 = _s[3];
-					
-					array_push(_ctri, [ ox, oy, x0, y0, nx, ny ]);
+				if(j) {
+					if(array_length(_s) == 4) {
+						x0 = _s[2];
+						y0 = _s[3];
+						
+						array_push(_ctri, [ ox, oy, x0, y0, nx, ny ]);
+						
+					}
 				}
 				
 				ox = nx;
@@ -104,6 +124,61 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 			// print($"{i}: {array_length(_pTri[0])} - {_pTri[2]}");
 		}
 		
+	}
+	
+	static bezierCubicApprox = function(anchors, x1, y1, x2, y2, x3, y3, x4, y4) {
+		var _len = point_distance(x1, y1, x2, y2)
+		         + point_distance(x2, y2, x3, y3)
+		         + point_distance(x3, y3, x4, y4);
+		         
+		var _smp = ceil(_len / 12);
+		var _stp = 1 / _smp;
+		var _p;
+		
+		for(var i = 0; i < _smp; i++) {
+			_p = eval_bezier((i + 1) * _stp, x1, y1, x4, y4, x2, y2, x3, y3);
+			array_push(anchors, [ parent.mapX(_p[0]), parent.mapY(_p[1]) ]);
+		}
+	}
+	
+	static arcToBezier = function(anchors, _x1, _y1, _x2, _y2, _rx, _ry, _a, _fa, _fs) {
+		
+		// var x1p = (_x1 - _x2) / 2 *   dcos(_a)  + (_y1 - _y2) / 2 * dsin(_a);
+		// var y1p = (_x1 - _x2) / 2 * (-dsin(_a)) + (_y1 - _y2) / 2 * dcos(_a);
+		
+		// var _rr = sqrt((_rx * _rx * _ry * _ry - _rx * _rx * y1p * y1p - _ry * _ry * x1p * x1p) / (_rx * _rx * y1p * y1p + _ry * _ry * x1p * x1p));
+		// // if(_fa == _fs) _rr *= -1;
+		
+		// var _cxp =  _rr * _rx * y1p / _ry;
+		// var _cyp = -_rr * _ry * x1p / _rx;
+		
+		// var _cx = _cxp * dcos(_a) + _cyp * (-dsin(_a)) + (_x1 + _x2) / 2;
+		// var _cy = _cxp * dsin(_a) + _cyp *   dcos(_a)  + (_y1 + _y2) / 2;
+		
+		// var _a1  = point_direction(_cx, _cy, _x1, _y1);
+		// var _a2  = point_direction(_cx, _cy, _x2, _y2);
+		// var _dif = angle_difference(_a1, _a2);
+		// // if(!_fs && _dif > 0) _dif -= 360;
+		// // if( _fs && _dif < 0) _dif += 360;
+		
+		// var _ang = _a1 + _dif / 2;
+		// var _px  = dcos(_ang) * _rx;
+		// var _py  = dsin(_ang) * _ry;
+		// var _p   = point_rotate(_px, _py, 0, 0, _a);
+		
+		// array_push(anchors, [ parent.mapX(_cx + _p[0]), parent.mapY(_cy + _p[1]) ]);
+		array_push(anchors, [ parent.mapX(_x2),         parent.mapY(_y2) ]);
+		
+		// var _stp = abs(_dif) * (_rx + _ry) / 360;
+		// for(var i = 1; i <= _stp; i++) {
+		// 	var _ang = lerp_angle_linear(_a1, _a2, i / _stp);
+			
+		// 	var _px  = dcos(_ang) * _rx;
+		// 	var _py  = dsin(_ang) * _ry;
+		// 	var _p   = point_rotate(_px, _py, 0, 0, _a);
+			
+		// 	array_push(anchors, [ parent.mapX(_cx + _p[0]), parent.mapY(_cy + _p[1]) ]);
+		// }
 	}
 	
 	static shapeAttr = function(attr) {
@@ -122,6 +197,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 		var _om = ord("-"); 
 		var _od = ord(".");
 		var _os = ord(" ");
+		var _oc = ord(",");
 		
 		var _sx = 0, _sy = 0;
 		var _tx = 0, _ty = 0;
@@ -162,7 +238,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 				_val += _chr;
 			}
 			
-			if(_och == _os || _chrn == _om || (_chrn >= _oa && _chrn <= _oz) || (_chrn >= _oA && _chrn <= _oZ)) {
+			if(_och == _os || _och == _oc || _chrn == _om || (_chrn >= _oa && _chrn <= _oz) || (_chrn >= _oA && _chrn <= _oZ)) {
 				
 				if(_val != "")
 					array_push(_par, real(_val));
@@ -266,6 +342,8 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 						
 					case "C" : //Cubic bezier absolute
 						if(array_length(_par) >= 6) {
+							var _x0 = _tx;
+							var _y0 = _ty;
 							var _x1 = _par[0];
 							var _y1 = _par[1];
 							var _x2 = _par[2];
@@ -276,18 +354,22 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 							_cx = _x2 - _tx;
 							_cy = _y2 - _ty;
 							
-							array_push(anchors, [ parent.mapX(_tx), 
-												  parent.mapY(_ty), 
-												  parent.mapX(_x1), 
-												  parent.mapY(_y1), 
-												  parent.mapX(_x2), 
-												  parent.mapY(_y2) ]);
+							bezierCubicApprox(anchors, _x0, _y0, _x1, _y1, _x2, _y2, _tx, _ty);
+							
+							// array_push(anchors, [ parent.mapX(_tx), 
+							// 					  parent.mapY(_ty), 
+							// 					  parent.mapX(_x1), 
+							// 					  parent.mapY(_y1), 
+							// 					  parent.mapX(_x2), 
+							// 					  parent.mapY(_y2) ]);
 							_par = [];
 						}
 						break;
 						
 					case "c" : //Cubic bezier relative
 						if(array_length(_par) >= 6) {
+							var _x0 = _tx;
+							var _y0 = _ty;
 							var _x1 = _tx + _par[0];
 							var _y1 = _ty + _par[1];
 							var _x2 = _tx + _par[2];
@@ -298,12 +380,14 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 							_cx = _x2 - _tx;
 							_cy = _y2 - _ty;
 							
-							array_push(anchors, [ parent.mapX(_tx), 
-												  parent.mapY(_ty), 
-												  parent.mapX(_x1), 
-												  parent.mapY(_y1), 
-												  parent.mapX(_x2), 
-												  parent.mapY(_y2) ]);
+							bezierCubicApprox(anchors, _x0, _y0, _x1, _y1, _x2, _y2, _tx, _ty);
+							
+							// array_push(anchors, [ parent.mapX(_tx), 
+							// 					  parent.mapY(_ty), 
+							// 					  parent.mapX(_x1), 
+							// 					  parent.mapY(_y1), 
+							// 					  parent.mapX(_x2), 
+							// 					  parent.mapY(_y2) ]);
 							_par = [];
 						}
 						break;
@@ -424,12 +508,49 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 						}
 						break;
 						
+					case "A" : //Elliptical arc
+						if(array_length(_par) >= 7) {
+							var _x0 = _tx;
+							var _y0 = _ty;
+							var _rx = _par[0];
+							var _ry = _par[1];
+							var _a  = _par[2];
+							var _la = _par[3];
+							var _sw = _par[4];
+							    _tx = _par[5];
+							    _ty = _par[6];
+							
+							arcToBezier(anchors, _x0, _y0, _tx, _ty, _rx, _ry, _a, _la, _sw);
+							_par = [];
+							
+							noti_warning("SVG 2.0 feature detected [Elliptical arc] : Reimport file to SVG 1.1 to prevent draw error.")
+						}
+						break;
+						
+					case "a" : //Elliptical arc
+						if(array_length(_par) >= 7) {
+							var _x0 = _tx;
+							var _y0 = _ty;
+							var _rx  = _par[0];
+							var _ry  = _par[1];
+							var _a   = _par[2];
+							var _la  = _par[3];
+							var _sw  = _par[4];
+							    _tx += _par[5];
+							    _ty += _par[6];
+							
+							arcToBezier(anchors, _x0, _y0, _tx, _ty, _rx, _ry, _a, _la, _sw);
+							_par = [];
+							
+							noti_warning("SVG 2.0 feature detected [Elliptical arc] : Reimport file to SVG 1.1 to prevent draw error.")
+						}
+						break;
+						
 				}
 			} 
 		}
 		
 		setTris();
-		// print(segments);
 		
 		return self;
 	}
@@ -462,20 +583,23 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 			BLEND_OVERRIDE
 			
 				draw_primitive_begin(pr_trianglelist);
-				for (var j = 0, m = array_length(_tri); j < m; j++) {
-					draw_vertex(_tri[j][0].x * scale, _tri[j][0].y * scale);
-					draw_vertex(_tri[j][1].x * scale, _tri[j][1].y * scale);
-					draw_vertex(_tri[j][2].x * scale, _tri[j][2].y * scale);
-				}
+					for (var j = 0, m = array_length(_tri); j < m; j++) {
+						draw_vertex(_tri[j][0].x * scale, _tri[j][0].y * scale);
+						draw_vertex(_tri[j][1].x * scale, _tri[j][1].y * scale);
+						draw_vertex(_tri[j][2].x * scale, _tri[j][2].y * scale);
+					}
 				draw_primitive_end();
 				
 				shader_set(sh_svg_curve_quad);
 				draw_primitive_begin(pr_trianglelist);
-				for (var j = 0, m = array_length(_ctr); j < m; j++) {
-					draw_vertex_texture(_ctr[j][0] * scale, _ctr[j][1] * scale, 0.0, 0);
-					draw_vertex_texture(_ctr[j][2] * scale, _ctr[j][3] * scale, 0.5, 0);
-					draw_vertex_texture(_ctr[j][4] * scale, _ctr[j][5] * scale, 1.0, 1);
-				}
+					for (var j = 0, m = array_length(_ctr); j < m; j++) {
+						if(array_length(_ctr[j]) == 6) {
+							draw_vertex_texture(_ctr[j][0] * scale, _ctr[j][1] * scale, 0.0, 0);
+							draw_vertex_texture(_ctr[j][2] * scale, _ctr[j][3] * scale, 0.5, 0);
+							draw_vertex_texture(_ctr[j][4] * scale, _ctr[j][5] * scale, 1.0, 1);
+							
+						}
+					}
 				draw_primitive_end();
 				shader_reset();
 			

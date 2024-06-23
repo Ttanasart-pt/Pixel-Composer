@@ -9,13 +9,7 @@ function svg_parse(xmlStr) {
 	if(struct_try_get(svg_object, "type") != "svg") return noone;
 	
 	var attr = svg_object.attributes;
-	
-	var ww   = struct_try_get(attr, "width",  1);
-	var hh   = struct_try_get(attr, "height", 1);
-	
-	var svg = new SVG().setAttr(attr);
-	svg.width  = toNumber(ww);
-	svg.height = toNumber(hh);
+	var svg  = new SVG().setAttr(attr);
 	
 	if(struct_has(attr, "viewBox")) {
 		var bbox = attr.viewBox;
