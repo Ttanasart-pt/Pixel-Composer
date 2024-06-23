@@ -729,14 +729,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInputData = function(index, def = 0) { #region
 		INLINE
 		
-		return array_safe_get_fast(inputs_data, index, def);
+		var _dat = array_safe_get_fast(inputs_data, index, def);
+		return _dat;
 	} #endregion
 	
 	static setInputData = function(index, value) { #region
 		INLINE
 		
-		inputs_data[index] = value;
 		var _inp = inputs[| index];
+		inputs_data[index] = value;
 		if(is_struct(_inp)) input_value_map[$ _inp.internalName] = value;
 	} #endregion
 	

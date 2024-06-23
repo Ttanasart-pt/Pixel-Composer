@@ -1340,28 +1340,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_array[0] = true;
 		}
 		
-		if(!is_array(val)) { //Value is scalar
-			if(_cac) cache_array[1] = false;
-			return false;
-		}
-		
-		if(array_depth == 0 && !typeArray(display_type)) { // Value is not an array by default, and no array depth enforced
-			if(_cac) cache_array[1] = true;
-			return true;
-		}
-		
-		var ar = val;
-		repeat(array_depth + typeArray(display_type)) { //Recursively get the first member of subarray to check if value has depth of "array_depth" or not
-			if(!is_array(ar) || !array_length(ar)) { //empty array
-				if(_cac) cache_array[1] = false;
-				return false;
-			}
-			
-			ar = ar[0];
-		}
-		
-		if(_cac) cache_array[1] = is_array(ar);
-		return is_array(ar);
+		var _dep = array_get_depth(val) > array_depth + typeArray(display_type);
+		if(_cac) cache_array[1] = _dep;
+		return _dep;
 	} #endregion
 	
 	static arrayLength = function(val = undefined) { #region

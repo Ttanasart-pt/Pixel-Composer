@@ -8,6 +8,7 @@ function Node_String_Join(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 1] = nodeValue("Divider", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.rejectArray();
+		
 	inputs[| 1].editWidget.format = TEXT_AREA_FORMAT.delimiter;
 	
 	outputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
