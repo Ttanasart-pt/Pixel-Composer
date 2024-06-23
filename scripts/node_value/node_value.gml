@@ -369,15 +369,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		mapButton = button(function() { 
 						attributes.mapped = !attributes.mapped;
-						var val = getValue();
 						
-						if( attributes.mapped)
-							setValue(mapped_vec4? [ 0, 0, 0, 0 ] : [ 0, 0 ]);
-						
-						if(!attributes.mapped)
-							setValue(def_val);
-						
-						setArrayDepth(attributes.mapped);
+						if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
+							if(attributes.mapped) setValue(mapped_vec4? [ 0, 0, 0, 0 ] : [ 0, 0 ]);
+							else                  setValue(def_val);
+							setArrayDepth(attributes.mapped);
+						}
 						
 						node.triggerRender(); 
 					})

@@ -1,6 +1,9 @@
 function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _dim) {
-	var _val  = array_clone(getValue());
-	var hover = -1;
+	var _val   = array_clone(getValue());
+	var _targI = node.inputs[| mappedJunc.attributes.map_index];
+	var _surf  = _targI.getValue();
+	
+	var hover  = -1;
 	if(!is_array(_val) || array_empty(_val)) return hover;
 	if(is_array(_val[0]))					 return hover;
 	
@@ -19,6 +22,10 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	
 	var cc = COLORS.labels[2];
 	var _r = 10;
+	
+	__overlay_hover = array_verify(__overlay_hover, 2);
+	if(surface_exists(_surf) && (__overlay_hover[0] > 0 || __overlay_hover[1] > 0))
+		draw_surface_stretched_ext(_surf, _x, _y, _sw * _s, _sh * _s, c_white, 0.25);
 	
 	draw_set_text(f_p1, fa_left, fa_bottom, cc);
 	draw_text_add(_ax0 + ui(4), _ay0 - ui(4), "1");
@@ -99,12 +106,11 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 		}
 	} 
 	
-	__overlay_hover = array_verify(__overlay_hover, 2);
 	__overlay_hover[0] = lerp_float(__overlay_hover[0], d0, 4);
 	__overlay_hover[1] = lerp_float(__overlay_hover[1], d1, 4);
 	
 	draw_anchor(__overlay_hover[0], _ax0, _ay0, _r);
-	draw_anchor(__overlay_hover[0], _ax1, _ay1, _r);
+	draw_anchor(__overlay_hover[1], _ax1, _ay1, _r);
 	
 	return hover;
 }
