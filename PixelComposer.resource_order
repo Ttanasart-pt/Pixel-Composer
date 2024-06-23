@@ -1542,6 +1542,7 @@
     {"name":"sh_rsh_erode","order":2,"path":"shaders/sh_rsh_erode/sh_rsh_erode.yy",},
     {"name":"sh_rsh_rotate","order":1,"path":"shaders/sh_rsh_rotate/sh_rsh_rotate.yy",},
     {"name":"sh_sample_points","order":9,"path":"shaders/sh_sample_points/sh_sample_points.yy",},
+    {"name":"sh_scale_cleanedge","order":57,"path":"shaders/sh_scale_cleanedge/sh_scale_cleanedge.yy",},
     {"name":"sh_scale2x","order":13,"path":"shaders/sh_scale2x/sh_scale2x.yy",},
     {"name":"sh_scale3x","order":15,"path":"shaders/sh_scale3x/sh_scale3x.yy",},
     {"name":"sh_sdf_dist","order":4,"path":"shaders/sh_sdf_dist/sh_sdf_dist.yy",},

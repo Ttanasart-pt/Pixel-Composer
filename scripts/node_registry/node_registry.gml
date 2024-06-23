@@ -530,7 +530,7 @@ function __initNodes() {
 		ds_list_add(transform, "Transformations");
 		addNodeObject(transform, "Transform",		s_node_transform,		"Node_Transform",		[1, Node_Transform], ["move", "rotate", "scale"], "Move, rotate, and scale image.");
 		addNodeObject(transform, "Scale",			s_node_scale,			"Node_Scale",			[1, Node_Scale], ["resize"], "Simple node for scaling image.");
-		addNodeObject(transform, "Scale Algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		[0, Node_create_Scale_Algo], ["scale2x", "scale3x"], "Scale image using scale2x, scale3x algorithm.");
+		addNodeObject(transform, "Scale Algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		[0, Node_create_Scale_Algo], ["scale2x", "scale3x", "cleanshape"], "Scale image using scale2x, scale3x algorithm.");
 		addNodeObject(transform, "Flip",			s_node_flip,			"Node_Flip",			[1, Node_Flip], ["mirror"], "Flip image horizontally or vertically.");
 		addNodeObject(transform, "Offset",			s_node_offset,			"Node_Offset",			[1, Node_Offset],, "Shift image with tiling.");
 		

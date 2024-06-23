@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_scale_cleanedge",
+  "name":"sh_scale_cleanedge",
+  "parent":{
+    "name":"filter",
+    "path":"folders/shader/filter.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

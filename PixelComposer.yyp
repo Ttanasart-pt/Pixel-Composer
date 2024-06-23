@@ -2065,6 +2065,7 @@
     {"id":{"name":"sh_rsh_rotate","path":"shaders/sh_rsh_rotate/sh_rsh_rotate.yy",},},
     {"id":{"name":"sh_sample_points","path":"shaders/sh_sample_points/sh_sample_points.yy",},},
     {"id":{"name":"sh_sample","path":"shaders/sh_sample/sh_sample.yy",},},
+    {"id":{"name":"sh_scale_cleanedge","path":"shaders/sh_scale_cleanedge/sh_scale_cleanedge.yy",},},
     {"id":{"name":"sh_scale2x","path":"shaders/sh_scale2x/sh_scale2x.yy",},},
     {"id":{"name":"sh_scale3x","path":"shaders/sh_scale3x/sh_scale3x.yy",},},
     {"id":{"name":"sh_sdf_dist","path":"shaders/sh_sdf_dist/sh_sdf_dist.yy",},},
