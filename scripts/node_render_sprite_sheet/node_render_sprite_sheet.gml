@@ -86,12 +86,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		inputs[| 9].setVisible(pack == SPRITE_STACK.grid);
 		
 		if(grup == SPRITE_ANIM_GROUP.animation) {
-			inputs[| 8].editWidget.minn = FIRST_FRAME + 1;
-			inputs[| 8].editWidget.maxx = LAST_FRAME + 1;
+			inputs[| 8].editWidget.slide_range[0] = FIRST_FRAME + 1;
+			inputs[| 8].editWidget.slide_range[1] = LAST_FRAME + 1;
 			if(!user) inputs[| 8].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
 		} else {
-			inputs[| 8].editWidget.minn = 0;
-			inputs[| 8].editWidget.maxx = array_length(inpt) - 1;
+			inputs[| 8].editWidget.slide_range[0] = 0;
+			inputs[| 8].editWidget.slide_range[1] = array_length(inpt) - 1;
 			if(!user) inputs[| 8].setValueDirect([ 0, array_length(inpt) - 1], noone, false, 0, false);
 		}
 		

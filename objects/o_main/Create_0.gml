@@ -228,11 +228,10 @@
 						break;
 				}
 				
-				if(!IS_CMD)PANEL_GRAPH.mouse_grid_y += 160;
+				if(!IS_CMD) PANEL_GRAPH.mouse_grid_y += 160;
 			}
 			
-			if(node && !IS_CMD)
-				PANEL_GRAPH.toCenterNode();
+			// if(node && !IS_CMD) PANEL_GRAPH.toCenterNode();
 		}
 	}
 #endregion

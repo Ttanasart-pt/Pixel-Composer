@@ -14,8 +14,8 @@ function svg_parse(xmlStr) {
 	var hh   = struct_try_get(attr, "height", 1);
 	
 	var svg = new SVG().setAttr(attr);
-	svg.width  = toNumber(string_digits(ww));
-	svg.height = toNumber(string_digits(hh));
+	svg.width  = toNumber(ww);
+	svg.height = toNumber(hh);
 	
 	if(struct_has(attr, "viewBox")) {
 		var bbox = attr.viewBox;

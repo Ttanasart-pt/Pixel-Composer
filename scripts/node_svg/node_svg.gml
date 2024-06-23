@@ -58,6 +58,10 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(ext != ".svg") return;
 		
 		var _rawContent = file_text_read_all_lines(path);
+		var _st         = string_pos("<svg", _rawContent);
+		var _end        = string_length(_rawContent);
+		_rawContent     = string_copy(_rawContent, _st, _end - _st + 1);
+		
 		rawContent = SnapFromXML(_rawContent);
 		content    = svg_parse(rawContent);
 		
