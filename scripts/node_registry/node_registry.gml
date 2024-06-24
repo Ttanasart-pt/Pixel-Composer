@@ -674,6 +674,7 @@ function __initNodes() {
 		addNodeObject(d3d, "3D Cone",		s_node_3d_cone,			"Node_3D_Mesh_Cone",		[1, Node_3D_Mesh_Cone]).setVersion(11510);
 		addNodeObject(d3d, "3D Terrain",	s_node_3d_displace,		"Node_3D_Mesh_Terrain",		[1, Node_3D_Mesh_Terrain],, "Create 3D terrain from height map.").setVersion(11560);
 		addNodeObject(d3d, "Surface Extrude",	s_node_3d_extrude,	"Node_3D_Mesh_Extrude",		[1, Node_3D_Mesh_Extrude],, "Extrude 2D image into 3D object.").setVersion(11510);
+		addNodeObject(d3d, "Path Extrude",	s_node_3d_path_extrude,	"Node_3D_Mesh_Path_Extrude",[1, Node_3D_Mesh_Path_Extrude],, "Extrude path into 3D object.").setVersion(11750);
 		
 		ds_list_add(d3d, "Light");
 		addNodeObject(d3d, "Directional Light",	s_node_3d_light_directi,	"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional],, "Create directional light directed at the origin point.").setVersion(11510);
@@ -902,6 +903,7 @@ function __initNodes() {
 		addNodeObject(values, "Bake Path",		s_node_path_bake,		"Node_Path_Bake",		[1, Node_Path_Bake]).setVersion(11640);
 		addNodeObject(values, "Map Path",		s_node_path_mapp,		"Node_Path_Map",		[1, Node_Path_Map]).setVersion(11640);
 		addNodeObject(values, "Scatter Path",	s_node_path_scatter,	"Node_Path_Scatter",	[1, Node_Path_Scatter]).setVersion(11740);
+		addNodeObject(values, "3D Path",		s_node_path_3d,			"Node_Path_3D",			[1, Node_Path_3D], [ "path 3d" ]).setVersion(11750);
 		
 		ds_list_add(values, "Boolean");
 		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",		[1, Node_Boolean]);
@@ -1039,6 +1041,7 @@ function __initNodes() {
 		addNodeObject(node, "Monitor Capture",	s_node_monitor_capture,		"Node_Monitor_Capture",		[1, Node_Monitor_Capture]);
 		addNodeObject(node, "GUI In",			s_node_gui_in,				"Node_Application_In",		[1, Node_Application_In]);
 		addNodeObject(node, "GUI Out",			s_node_gui_out,				"Node_Application_Out",		[1, Node_Application_Out]);
+		// addNodeObject(node, "DLL",				s_node_gui_out,				"Node_DLL",					[1, Node_DLL]).setVersion(11750);
 	#endregion
 	
 	var actions = ds_list_create();

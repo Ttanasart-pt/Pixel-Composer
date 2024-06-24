@@ -212,6 +212,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _ww = ww;
 		var _hh = hh;
 		
+		if(!is_surface(ins)) {
+			surface_free(_outSurf);
+			_outSurf = noone;
+		}
+		
 		_outRes[0] = _outSurf;
 		_outRes[1] = [ ww, hh ];
 		

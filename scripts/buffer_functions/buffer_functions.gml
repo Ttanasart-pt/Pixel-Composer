@@ -23,6 +23,21 @@ function buffer_get_string(buffer, text = true, limit = 400) { #region
     return ss;
 } #endregion
 
+function buffer_to_string(buffer) { #region
+	if(!buffer_exists(buffer)) return "";
+
+	buffer_seek(buffer, buffer_seek_start, 0);
+	var len = buffer_get_size(buffer);
+    var ss  = "";
+    
+    repeat(len) {
+		var _r = buffer_read(buffer, buffer_u8);
+		ss += chr(_r);
+	}
+    
+    return ss;
+} #endregion
+
 function buffer_from_string(str) { #region
 	var _b = buffer_create(string_length(str) * 1, buffer_fast, 1);
 	for( var i = 1; i <= string_length(str); i++ ) 

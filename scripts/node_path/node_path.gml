@@ -37,8 +37,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setArrayDepth(1);
 	
 	input_display_list = [
-		["Path",	false], 0, 2, 1, 3, 
-		["Anchors",	false], 
+		["Path",		false], 1, 3, 
+		["Sampling",	false], 0, 2, 
+		["Anchors",		false], 
 	];
 	
 	output_display_list  = [ 1, 0, 2 ];
@@ -130,15 +131,15 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
  
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var sample  = PREFERENCES.path_resolution;
-		var loop    = getInputData(1);
-		var ansize  = ds_list_size(inputs) - input_fix_len;
-		var _edited = false;
+		var ansize = ds_list_size(inputs) - input_fix_len;
+		var edited = false;
 		
 		var pos = outputs[| 0].getValue();
 		
 		draw_set_color(COLORS._main_accent);
 		draw_circle(_x + pos[0] * _s, _y + pos[1] * _s, 4, false);
+		
+		/////////////////////////////////////////////////////// EDIT ///////////////////////////////////////////////////////
 		
 		if(transform_type > 0) { 
 			var _transform_minx = transform_minx;
@@ -166,7 +167,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					p[1] += dy / _s;
 						
 					if(inputs[| i].setValue(p))
-						_edited = true;
+						edited = true;
 				}
 				
 				transform_mx = mx;
@@ -278,12 +279,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					p[_ANCHOR.c2y] = _p5 - p[_ANCHOR.y];
 					
 					if(inputs[| i].setValue(p))
-						_edited = true;
+						edited = true;
 				}
 			#endregion
 			}
 			
-			if(_edited)
+			if(edited)
 				UNDO_HOLDING = true;
 				
 			if(mouse_release(mb_left)) {
@@ -299,7 +300,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var inp = inputs[| input_fix_len + drag_point];
 				var anc = array_clone(inp.getValue());
 				
-				if(drag_type != 0 && SHIFT == KEYBOARD_STATUS.down)
+				if(drag_type != 0 && key_mod_press(SHIFT))
 					anc[_ANCHOR.ind] = !anc[_ANCHOR.ind];
 				
 				if(drag_type == 0) { //drag anchor point
@@ -348,7 +349,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				} 
 				
 				if(inp.setValue(anc))
-					_edited = true;
+					edited = true;
 			#endregion
 			} else if(drag_type == 2) {		#region pen tools
 				var ox, oy, nx, ny;
@@ -485,7 +486,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				for( var i = 0; i < 4; i++ ) {
 					if(inputs[| input_fix_len + i].setValue(a[i]))
-						_edited = true;
+						edited = true;
 				}
 			#endregion
 			} else if(drag_type == 4) {		#region draw circle
@@ -539,12 +540,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				for( var i = 0; i < 4; i++ ) {
 					if(inputs[| input_fix_len + i].setValue(a[i]))
-						_edited = true;
+						edited = true;
 				}
 			#endregion
 			}
 			
-			if(_edited) UNDO_HOLDING = true;
+			if(edited) UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left)) {
 				drag_point = -1;
@@ -552,6 +553,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				UNDO_HOLDING = false;
 			}
 		}
+		
+		/////////////////////////////////////////////////////// DRAW PATH ///////////////////////////////////////////////////////
 		
 		var _line_hover  = -1;
 		var anchor_hover = -1;
@@ -564,7 +567,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var maxx = -99999, maxy = -99999;
 				
 		if(!array_empty(anchors)) {
-			draw_set_color(isUsingTool(0)? c_white : COLORS._main_accent);
+			draw_set_color(isUsingTool(0)? COLORS._main_icon : COLORS._main_accent);
 			
 			for( var i = 0, n = array_length(segments); i < n; i++ ) { #region draw path
 				var _seg = segments[i];
@@ -639,6 +642,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		line_hover = _line_hover;
+		
+		/////////////////////////////////////////////////////// TOOLS ///////////////////////////////////////////////////////
 		
 		if(isUsingTool(0)) {								#region transform tools
 			var hov = 0;

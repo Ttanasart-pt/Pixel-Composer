@@ -80,13 +80,13 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		
 			var _camera = params.camera;
 			var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
-		
+			
 			var _axis = tool_attribute.context;
 		
 			var _hover     = noone;
 			var _hoverDist = 10;
 			var th;
-		
+			
 			var _posView = _camera.worldPointToViewPoint(_vpos);
 		
 			var cx = _posView.x;
@@ -244,8 +244,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						case 5 : nor = new __vec3(0, 1, 0); break;
 					}
 						
-					if(_axis == 0) 
-						nor = _qrot.Rotate(nor);
+					if(_axis == 0) nor = _qrot.Rotate(nor);
 						
 					var pln = new __plane(drag_original, nor);
 					mAdj = d3d_intersect_ray_plane(ray, pln);

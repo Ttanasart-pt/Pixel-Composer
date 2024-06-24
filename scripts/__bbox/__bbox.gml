@@ -30,6 +30,42 @@ function BoundingBox(minx = noone, miny = noone, maxx = noone, maxy = noone) con
 	static clone = function() { return new BoundingBox(minx, miny, maxx, maxy); }
 }
 
+function BoundingBox3D(minx = noone, miny = noone, minz = noone, maxx = noone, maxy = noone, maxz = noone) : BoundingBox(minx, miny, maxx, maxy) constructor {
+	self.minz = minz;
+	self.maxz = maxz;
+	
+	depth  = maxz - minz;
+	
+	static addPoint = function(px, py, pz) {
+		minx = minx == noone? px : min(minx, px);
+		miny = miny == noone? py : min(miny, py);
+		minz = minz == noone? pz : min(minz, pz);
+		
+		maxx = maxx == noone? px : max(maxx, px);
+		maxy = maxy == noone? py : max(maxy, py);
+		maxz = maxz == noone? pz : max(maxz, pz);
+		
+		width  = maxx - minx;
+		height = maxy - miny;
+		depth  = maxz - minz;
+	}
+	
+	static lerpTo = function(bbox, rat) {
+		var b = new BoundingBox3D(
+			lerp( minx, bbox.minx, rat ), 
+			lerp( miny, bbox.miny, rat ), 
+			lerp( minz, bbox.minz, rat ), 
+			
+			lerp( maxx, bbox.maxx, rat ), 
+			lerp( maxy, bbox.maxy, rat ),
+			lerp( maxz, bbox.maxz, rat ),
+		);		
+		return b;
+	}
+	
+	static clone = function() { return new BoundingBox3D(minx, miny, minz, maxx, maxy, maxz); }
+}
+
 function BBOX() { return new __BBOX(); }
 function __BBOX() constructor {
 	x0 = 0; x1 = 0; 

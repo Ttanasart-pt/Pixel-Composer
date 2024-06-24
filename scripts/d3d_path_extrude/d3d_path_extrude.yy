@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"d3d_path_extrude",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"d3d_path_extrude",
+  "parent":{
+    "name":"mesh",
+    "path":"folders/functions/3d/mesh.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

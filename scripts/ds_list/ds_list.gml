@@ -65,9 +65,15 @@ function ds_list_remove(list, item) {
 function ds_list_append(list, _append) {
 	INLINE
 	
-	for( var i = 0; i < ds_list_size(_append); i++ ) {
+	for( var i = 0; i < ds_list_size(_append); i++ )
 		ds_list_add(list, _append[| i]);
-	}
+}
+
+function ds_list_append_array(list, _append) {
+	INLINE
+	
+	for( var i = 0; i < array_length(_append); i++ )
+		ds_list_add(list, _append[i]);
 }
 
 function ds_list_exist(list, item) {
