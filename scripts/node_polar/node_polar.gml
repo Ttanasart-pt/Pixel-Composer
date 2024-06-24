@@ -62,7 +62,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_i("distMode",  _data[9]);
 			shader_set_f_map("blend", _data[6], _data[11], inputs[| 6]);
 			shader_set_i("swap",      _data[10]);
-			shader_set_f("tile",      _data[12]);
+			shader_set_2("tile",      _data[12]);
 			
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();

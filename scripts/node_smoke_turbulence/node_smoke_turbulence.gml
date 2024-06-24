@@ -51,8 +51,8 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 			shader_set(sh_fd_turbulence);
 			BLEND_OVERRIDE;
 			
-			shader_set_uniform_f(shader_get_uniform(sh_fd_turbulence, "scale"), _sca);
-			shader_set_uniform_f(shader_get_uniform(sh_fd_turbulence, "seed"), _sed);
+			shader_set_uniform_f(shader_get_uniform(sh_fd_turbulence, "scale"),    _sca);
+			shader_set_uniform_f(shader_get_uniform(sh_fd_turbulence, "seed"),     _sed);
 			shader_set_uniform_f(shader_get_uniform(sh_fd_turbulence, "strength"), _str);
 			draw_sprite_stretched(s_fx_pixel, 0, _are[0] - _are[2], _are[1] - _are[3], _are[2] * 2, _are[3] * 2);
 			BLEND_NORMAL;

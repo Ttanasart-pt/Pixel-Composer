@@ -128,8 +128,8 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_i("textureTruchet", _data[14]);
 			shader_set_f("truchetSeed",    _data[15]);
 			shader_set_f("truchetThres",   _data[16]);
-			shader_set_f("truchetAngle",   _data[19]);
-			shader_set_f("level",          _data[20]);
+			shader_set_2("truchetAngle",   _data[19]);
+			shader_set_2("level",          _data[20]);
 			
 			shader_set_gradient(_data[5], _data[17], _data[18], inputs[| 5]);
 			

@@ -133,8 +133,8 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("truchetSeed",    _data[18]);
 			shader_set_f("truchetThresX",  _data[19]);
 			shader_set_f("truchetThresY",  _data[22]);
-			shader_set_f("truchetAngle",   _data[23]);
-			shader_set_f("level",          _data[24]);
+			shader_set_2("truchetAngle",   _data[23]);
+			shader_set_2("level",          _data[24]);
 			
 			shader_set_color("gapCol",  _col_gap);
 			

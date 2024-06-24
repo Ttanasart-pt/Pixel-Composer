@@ -107,7 +107,7 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			shader_set_i("mode",	_mode);
 			shader_set_f("seed", 	_data[ 9]);
 			shader_set_i("aa",		_data[10]);
-			shader_set_f("level",   _data[16]);
+			shader_set_2("level",   _data[16]);
 			
 			shader_set_color("gapCol",  _col_gap);
 			

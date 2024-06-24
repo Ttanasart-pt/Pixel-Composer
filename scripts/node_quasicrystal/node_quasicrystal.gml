@@ -76,7 +76,7 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_set_shader(_outSurf, sh_quarsicrystal);
 			shader_set_f("dimension",	 _dim[0], _dim[1]);
 			shader_set_f("position",	 _pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_f("rangleRange",	 _aran);
+			shader_set_2("rangleRange",	 _aran);
 			
 			shader_set_f_map("amount",	_data[1], _data[6], inputs[|  1]);
 			shader_set_f_map("angle",	_data[2], _data[7], inputs[|  2]);

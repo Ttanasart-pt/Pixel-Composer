@@ -75,7 +75,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_set_shader(_outSurf, sh_skew);
 		shader_set_interpolation(_data[0]);
 			shader_set_dim("dimension",	_data[0]);
-			shader_set_f("center",		_data[4]);
+			shader_set_2("center",		_data[4]);
 			shader_set_i("axis",		_data[1]);
 			shader_set_f_map("amount",  _data[2], _data[12], inputs[| 2]);
 			shader_set_i("sampleMode",	_samp);

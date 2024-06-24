@@ -239,10 +239,10 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				for( var i = 0; i < _amo; i++ ) {
 					if(_hig && i == _amo - 1) {
 						shader_set(sh_replace_color);
-						shader_set_i("type", _hig);
+						shader_set_i("type",      _hig);
 						shader_set_f("dimension", _ww, _hh);
-						shader_set_f("shift", _shf[0] / _ww, _shf[1] / _hh);
-						shader_set_f("angle", degtorad(_rot));
+						shader_set_f("shift",     _shf[0] / _ww, _shf[1] / _hh);
+						shader_set_f("angle",     degtorad(_rot));
 						draw_surface_ext_safe(_in, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _hiC, _color_get_alpha(_hiC));
 						shader_reset();
 					} else

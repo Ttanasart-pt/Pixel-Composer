@@ -331,7 +331,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					inputs[| 21].setVisible( true);
 					
 					shader_set_i("shape", 11);
-					shader_set_f("trep",  _data[21]);
+					shader_set_2("trep",  _data[21]);
 					break;
 					
 				case "Parallelogram" :
@@ -475,7 +475,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					inputs[| 24].setVisible(true);
 					
 					shader_set_i("shape", 17);
-					shader_set_f("arrow",      _data[23]);
+					shader_set_2("arrow",      _data[23]);
 					shader_set_f("arrow_head", _data[24]);
 					break;
 					
@@ -491,7 +491,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_f("inner", _data[13]);
 					
 					shader_set_i("teeth",		_data[25]);
-					shader_set_f("teethSize",	_data[26]);
+					shader_set_2("teethSize",	_data[26]);
 					shader_set_f("teethAngle",	_data[27]);
 					break;
 					
@@ -501,12 +501,12 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_f("bgColor",   _bgcol);
 			shader_set_i("aa",        _aa);
 			shader_set_i("drawDF",    _df);
-			shader_set_f("dfLevel",    _level);
+			shader_set_2("dfLevel",    _level);
 			shader_set_i("tile",      _tile);
 			shader_set_f("corner",    _corner);
 			
-			shader_set_f("center",    _center);
-			shader_set_f("scale",     _scale );
+			shader_set_2("center",    _center);
+			shader_set_2("scale",     _scale );
 			shader_set_f("rotation",  degtorad(_rotat));
 			
 			draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], _color, _color_get_alpha(_color));

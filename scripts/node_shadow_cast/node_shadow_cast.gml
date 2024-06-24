@@ -118,10 +118,10 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[| 8].setVisible(_type == 0);
 		
 		if(!is_surface(_bg)) return _outSurf;
-	
+		
 		surface_set_shader(_outSurf, sh_shadow_cast);
 			shader_set_f("dimension",         surface_get_width_safe(_bg), surface_get_height_safe(_bg));
-			shader_set_f("lightPos",         _pos);
+			shader_set_2("lightPos",         _pos);
 			shader_set_color("lightAmb",     _lamb);
 			shader_set_color("lightClr",     _lclr);
 			shader_set_f("lightRadius",      _rad);

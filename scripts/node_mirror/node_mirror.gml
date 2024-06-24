@@ -53,7 +53,7 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		surface_set_shader(_outSurf, _output_index? sh_mirror_mask : sh_mirror);
 			shader_set_f("dimension", _dim);
-			shader_set_f("position",  _pos);
+			shader_set_2("position",  _pos);
 			shader_set_f("angle",     degtorad(_ang));
 			
 			draw_surface_safe(_suf);

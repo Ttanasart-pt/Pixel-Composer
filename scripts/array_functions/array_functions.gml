@@ -55,6 +55,7 @@ enum ARRAY_OVERFLOW {
 	pingpong
 }
 
+#macro aGetF array_safe_get_fast
 function array_safe_get_fast(arr, index, def = 0) { #region
 	INLINE
 	

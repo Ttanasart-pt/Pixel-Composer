@@ -75,7 +75,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		surface_set_shader(_outSurf, sh_twirl);
 		shader_set_interpolation(_data[0]);
 			shader_set_f("dimension" , surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
-			shader_set_f("center"    ,   _data[1]);
+			shader_set_2("center"    ,   _data[1]);
 			shader_set_f_map("strength", _data[2], _data[11], inputs[| 2]);
 			shader_set_f_map("radius"  , _data[3], _data[12], inputs[| 3]);
 			shader_set_i("sampleMode",   sam);

@@ -65,18 +65,18 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_grid_noise);
-		shader_set_f("dimension", _dim);
-		shader_set_f("position", _pos);
-		shader_set_f("scale", _sca);
+		shader_set_f("dimension",  _dim);
+		shader_set_2("position",   _pos);
+		shader_set_2("scale",      _sca);
 		shader_set_i("useSampler", is_surface(_sam));
-		shader_set_f("shift", _shf);
-		shader_set_i("shiftAxis", _shfAx);
-		shader_set_f("seed", _sed);
+		shader_set_f("shift",      _shf);
+		shader_set_i("shiftAxis",  _shfAx);
+		shader_set_f("seed",       _sed);
 			
-		shader_set_i("colored", _col);
-		shader_set_f("colorRanR", _clr);
-		shader_set_f("colorRanG", _clg);
-		shader_set_f("colorRanB", _clb);
+		shader_set_i("colored",    _col);
+		shader_set_2("colorRanR",  _clr);
+		shader_set_2("colorRanG",  _clg);
+		shader_set_2("colorRanB",  _clb);
 		
 		if(is_surface(_sam))
 			draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);

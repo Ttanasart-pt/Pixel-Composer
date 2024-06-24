@@ -27,6 +27,10 @@ function shader_set_i_array(shader, uniform, array) { #region
 	shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array);
 } #endregion
 
+function shader_set_2(uniform, v) { INLINE var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1)); } 
+function shader_set_3(uniform, v) { INLINE var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2)); } 
+function shader_set_4(uniform, v) { INLINE var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2), aGetF(v, 3)); } 
+
 function shader_set_f(uniform, value) { #region
 	INLINE
 	

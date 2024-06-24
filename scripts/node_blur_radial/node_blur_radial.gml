@@ -72,7 +72,7 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_interpolation(_data[0]);
 			shader_set_f("dimension", surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
 			shader_set_f_map("strength", _data[1], _data[10], inputs[| 1]);
-			shader_set_f("center",       _cen);
+			shader_set_2("center",       _cen);
 			shader_set_f("gamma",        _data[11]);
 			
 			draw_surface_safe(_data[0]);

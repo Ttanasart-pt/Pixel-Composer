@@ -28,7 +28,7 @@ function Node_PB_Fx_Strip(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 		
 		surface_set_shader(_nbox.content, sh_pb_strip);
 			shader_set_dim(, _pbox.content);
-			shader_set_f("scale",  _scal);
+			shader_set_f("scale", _scal);
 			shader_set_i("shift", _shft);
 			shader_set_i("axis",  _angl);
 			

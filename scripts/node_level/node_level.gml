@@ -125,17 +125,17 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _ao = _data[16];
 		
 		surface_set_shader(_outSurf, sh_level);
-			shader_set_f("lwi", _wi);
-			shader_set_f("lri", _ri);
-			shader_set_f("lgi", _gi);
-			shader_set_f("lbi", _bi);
-			shader_set_f("lai", _ai);
+			shader_set_2("lwi", _wi);
+			shader_set_2("lri", _ri);
+			shader_set_2("lgi", _gi);
+			shader_set_2("lbi", _bi);
+			shader_set_2("lai", _ai);
 			
-			shader_set_f("lwo", _wo);
-			shader_set_f("lro", _ro);
-			shader_set_f("lgo", _go);
-			shader_set_f("lbo", _bo);
-			shader_set_f("lao", _ao);
+			shader_set_2("lwo", _wo);
+			shader_set_2("lro", _ro);
+			shader_set_2("lgo", _go);
+			shader_set_2("lbo", _bo);
+			shader_set_2("lao", _ao);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

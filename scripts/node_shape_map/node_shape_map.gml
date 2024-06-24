@@ -54,7 +54,7 @@ function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(_shape == 0) {
 			surface_set_shader(_outSurf, sh_shape_map_circle);
 			shader_set_interpolation(_data[0]);
-				shader_set_f("scale",   _scale);
+				shader_set_2("scale",   _scale);
 				shader_set_f("txScale", _sca);
 				shader_set_f("angle",   _rot);
 				
@@ -65,7 +65,7 @@ function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_set_shader(_outSurf, sh_shape_map_polygon);
 			shader_set_interpolation(_data[0]);
 				shader_set_f("sides",   _sides);
-				shader_set_f("scale",   _scale);
+				shader_set_2("scale",   _scale);
 				shader_set_f("txScale", _sca);
 				shader_set_f("angle",   _rot);
 				

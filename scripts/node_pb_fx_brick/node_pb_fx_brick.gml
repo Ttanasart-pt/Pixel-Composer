@@ -42,7 +42,7 @@ function Node_PB_Fx_Brick(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 		
 		surface_set_shader(_nbox.content, sh_pb_brick);
 			shader_set_dim(, _pbox.content);
-			shader_set_f("scale", _scal);
+			shader_set_2("scale", _scal);
 			shader_set_i("axis",  _axis);
 			shader_set_f("shift", _shft);
 			

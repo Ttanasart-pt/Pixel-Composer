@@ -47,7 +47,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		surface_set_shader(_outSurf, sh_chromatic_aberration);
 		shader_set_interpolation(_data[0]);
 			shader_set_f("dimension", surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
-			shader_set_f("center",       _data[1]);
+			shader_set_2("center",       _data[1]);
 			shader_set_f_map("strength", _data[2], _data[4], inputs[| 2]);
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

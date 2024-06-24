@@ -105,16 +105,16 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_i("shape",       1);
 			shader_set_i("tile",        _tile);
 			shader_set_i("useTexture",  is_surface(_text));
-			shader_set_f("position",    _pos);
-			shader_set_f("rotation",    _rot);
+			shader_set_3("position",    _pos);
+			shader_set_3("rotation",    _rot);
 			shader_set_f("objectScale", _sca);
 			shader_set_f("thickness",   _thk);
 			
 			shader_set_f("fov",         _fov);
-			shader_set_f("viewRange",   _rng);
+			shader_set_2("viewRange",   _rng);
 			shader_set_f("depthInt",    _dpi);
 			
-			shader_set_f("sunPosition", _sun);
+			shader_set_3("sunPosition", _sun);
 			shader_set_f("shadow",      _sha);
 			
 			shader_set_color("background", _bgc);
