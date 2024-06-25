@@ -6,10 +6,12 @@ FONT_SPRITES = ds_map_create();
 		if(ds_map_exists(FONT_SPRITES, path)) return;
 		
 		var f = _font_add(path, 32);
+		if(!font_exists(f)) return;
+		
 		draw_set_text(f, fa_left, fa_top, c_white);
 		var name = "ABCabc123";
-		var ww = string_width(name);
-		var hh = string_height(name);
+		var ww   = max(1, string_width(name));
+		var hh   = max(1, string_height(name));
 		
 		var s = surface_create(ww, hh);
 		surface_set_target(s);

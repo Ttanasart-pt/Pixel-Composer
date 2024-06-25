@@ -35,10 +35,13 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	inputs[| in_mesh + 2] = nodeValue("Import Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.rejectArray();
 		
+	inputs[| in_mesh + 3] = nodeValue("Invert Y", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		.rejectArray();
+		
 	input_display_list = [
 		__d3d_input_list_mesh,
 		__d3d_input_list_transform,
-		["Object",	 false], in_mesh + 0, in_mesh + 2, 
+		["Object",	 false], in_mesh + 0, in_mesh + 2, in_mesh + 3,  
 		["Material", false], in_mesh + 1, 
 	]
 	
@@ -107,8 +110,9 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		current_path = _path;
 		
 		var _scale = inputs[| in_mesh + 2].getValue();
+		var _yneg  = inputs[| in_mesh + 3].getValue();
 		
-		readObj_init(_scale);
+		readObj_init(_scale, _yneg);
 		
 		obj_read_time    = get_timer();
 		obj_read_file    = file_text_open_read(current_path);

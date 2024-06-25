@@ -1028,6 +1028,7 @@
     {"id":{"name":"node_3d_mesh_plane","path":"scripts/node_3d_mesh_plane/node_3d_mesh_plane.yy",},},
     {"id":{"name":"node_3d_mesh_sphere_ico","path":"scripts/node_3d_mesh_sphere_ico/node_3d_mesh_sphere_ico.yy",},},
     {"id":{"name":"node_3d_mesh_sphere_uv","path":"scripts/node_3d_mesh_sphere_uv/node_3d_mesh_sphere_uv.yy",},},
+    {"id":{"name":"node_3d_mesh_stack_slice","path":"scripts/node_3d_mesh_stack_slice/node_3d_mesh_stack_slice.yy",},},
     {"id":{"name":"node_3d_mesh_terrain","path":"scripts/node_3d_mesh_terrain/node_3d_mesh_terrain.yy",},},
     {"id":{"name":"node_3d_particle","path":"scripts/node_3d_particle/node_3d_particle.yy",},},
     {"id":{"name":"node_3d_point_affector","path":"scripts/node_3d_point_affector/node_3d_point_affector.yy",},},

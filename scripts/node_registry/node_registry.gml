@@ -686,6 +686,7 @@ function __initNodes() {
 		addNodeObject(d3d, "Transform",			s_node_3d_transform,		"Node_3D_Transform",		[1, Node_3D_Transform],, "Transform 3D object.").setVersion(11570);
 		addNodeObject(d3d, "Transform Scene",	s_node_3d_transform_scene,	"Node_3D_Transform_Scene",	[1, Node_3D_Transform_Scene],, "Transform 3D scene, accepts array of transformations for each objects.").setVersion(11570);
 		addNodeObject(d3d, "UV Remap",			s_node_uv_remap,			"Node_3D_UV_Remap",			[1, Node_3D_UV_Remap],, "Remap UV map using plane.").setVersion(11570);
+		addNodeObject(d3d, "Slice Stack",		s_node_3d_stack_slice,		"Node_3D_Mesh_Stack_Slice",	[1, Node_3D_Mesh_Stack_Slice],, "").setVersion(11750);
 		///**/ addNodeObject(d3d, "3D Instancer",		s_node_3d_set_material,		"Node_3D_Instancer",	[1, Node_3D_Instancer]).setVersion(11560);
 		///**/ addNodeObject(d3d, "3D Particle",		s_node_3d_set_material,		"Node_3D_Particle",		[1, Node_3D_Particle]).setVersion(11560);
 		

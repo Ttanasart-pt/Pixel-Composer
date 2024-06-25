@@ -1,4 +1,4 @@
-function readObj_init(_scale = 1) {
+function readObj_init(_scale = 1, _yneg = false) {
 	obj_reading = true;
 	obj_read_progress = 0;
 	obj_read_prog_sub = 0;
@@ -6,6 +6,7 @@ function readObj_init(_scale = 1) {
 	obj_raw = noone;
 	
 	obj_reading_scale = _scale;
+	obj_reading_yneg  = _yneg;
 	
 	_VB  = [];
 	_VBT = [];
@@ -39,11 +40,19 @@ function readObj_file() {
 		
 		switch(sep[0]) {
 			case "v" :
-				ds_list_add(v, [ 
-					toNumber(sep[1]) * obj_reading_scale, 
-					toNumber(sep[2]) * obj_reading_scale, 
-					toNumber(sep[3]) * obj_reading_scale 
-				]);
+				if(obj_reading_yneg) {
+					ds_list_add(v, [ 
+						 toNumber(sep[1]) * obj_reading_scale, 
+						 toNumber(sep[3]) * obj_reading_scale,
+						-toNumber(sep[2]) * obj_reading_scale, 
+					]);
+				} else {
+					ds_list_add(v, [ 
+						toNumber(sep[1]) * obj_reading_scale, 
+						toNumber(sep[2]) * obj_reading_scale, 
+						toNumber(sep[3]) * obj_reading_scale,
+					]);
+				}
 				break;
 				
 			case "vt" :
@@ -270,7 +279,7 @@ function readObj_buff() {
 			}
 			
 			vertex_end(VB);
-			vertex_freeze(VB);
+			// vertex_freeze(VB);
 		
 			VBS[i]  = VB;
 			V[i]    = ds_list_to_array(_v);

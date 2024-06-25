@@ -647,6 +647,7 @@
     {"name":"node_3d_mesh_plane","order":7,"path":"scripts/node_3d_mesh_plane/node_3d_mesh_plane.yy",},
     {"name":"node_3d_mesh_sphere_ico","order":5,"path":"scripts/node_3d_mesh_sphere_ico/node_3d_mesh_sphere_ico.yy",},
     {"name":"node_3d_mesh_sphere_uv","order":4,"path":"scripts/node_3d_mesh_sphere_uv/node_3d_mesh_sphere_uv.yy",},
+    {"name":"node_3d_mesh_stack_slice","order":7,"path":"scripts/node_3d_mesh_stack_slice/node_3d_mesh_stack_slice.yy",},
     {"name":"node_3d_mesh_terrain","order":9,"path":"scripts/node_3d_mesh_terrain/node_3d_mesh_terrain.yy",},
     {"name":"node_3d_point_affector","order":11,"path":"scripts/node_3d_point_affector/node_3d_point_affector.yy",},
     {"name":"node_3d_repeat","order":1,"path":"scripts/node_3d_repeat/node_3d_repeat.yy",},

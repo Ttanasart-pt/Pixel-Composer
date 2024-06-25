@@ -39,7 +39,7 @@ function __3dObject() constructor {
 		var check = false;
 		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
 			var key = _keys[i];
-			if(self[$ key] != params[$ key])
+			if(!isEqual(self[$ key], params[$ key]))
 				check = true;
 			self[$ key] = params[$ key];
 		}

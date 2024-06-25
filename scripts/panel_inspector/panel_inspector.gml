@@ -29,9 +29,9 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
 	static toString = function() { return $"Custon renderer"; }
 } #endregion
 
-function Inspector_Sprite(spr) constructor { self.spr = spr; }
-
-function Inspector_Spacer(height, line = false) constructor { self.h = height; self.line = line; }
+function Inspector_Sprite(spr)					constructor { self.spr = spr; }
+function Inspector_Spacer(height, line = false) constructor { self.h = height;  self.line = line; }
+function Inspector_Label( text, font = f_p3)	constructor { self.text = text; self.font = font; }
 
 function Panel_Inspector() : PanelContent() constructor {
 	#region ---- main ----
@@ -589,6 +589,17 @@ function Panel_Inspector() : PanelContent() constructor {
 						var _sh  = sprite_get_height(_spr);
 						
 						draw_sprite(_spr, 0, xc, yy);
+						
+						hh += _sh + ui(8);
+						continue;
+						
+					} else if(is_instanceof(jun_disp, Inspector_Label)) {			// TEXT
+						var _txt = jun_disp.text;
+						
+						draw_set_text(jun_disp.font, fa_left, fa_top, COLORS._main_text_sub);
+						var _sh = string_height_ext(_txt, -1, con_w - ui(16)) + ui(16);
+						draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, yy, con_w, _sh, COLORS._main_icon_light);
+						draw_text_ext(ui(8), yy + ui(8), _txt, -1, con_w - ui(16));
 						
 						hh += _sh + ui(8);
 						continue;

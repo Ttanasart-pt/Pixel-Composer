@@ -3,8 +3,11 @@ function isEqual(val1, val2, struct_expand = false, _depth = 0) { #region
 	
 	if(_depth > 8) return false;
 	
-	if(is_array(val1) && is_array(val2))	return array_member_equal(val1, val2, _depth);
-	if(struct_expand && is_struct(val1) && is_struct(val2))	return struct_equal(val1, val2, _depth);
+	if(is_array(val1) && is_array(val2))
+		return array_member_equal(val1, val2, _depth);
+		
+	if(struct_expand && is_struct(val1) && is_struct(val2))	
+		return struct_equal(val1, val2, _depth);
 	
 	return val1 == val2;
 } #endregion

@@ -10,7 +10,7 @@
 			} else if(is_instanceof(surface, SurfaceAtlas))
 				surface = surface.getSurface();
 		}
-		if(!surface_exists(surface)) return;
+		if(is_array(surface) || !surface_exists(surface)) return;
 	
 		__channel_pre(surface);
 			draw_surface(surface, _x, _y);
@@ -27,7 +27,7 @@
 			} else if(is_instanceof(surface, SurfaceAtlas))
 				surface = surface.getSurface();
 		}
-		if(!surface_exists(surface)) return;
+		if(is_array(surface) || !surface_exists(surface)) return;
 	
 		__channel_pre(surface);
 			draw_surface_stretched(surface, _x, _y, _w, _h);
@@ -45,7 +45,7 @@
 				surface = surface.getSurface();
 		}
 	
-		if(!surface_exists(surface)) return;
+		if(is_array(surface) || !surface_exists(surface)) return;
 	
 		__channel_pre(surface);
 			draw_surface_ext(surface, _x, _y, _xs, _ys, _rot, _col, _alpha);
@@ -62,7 +62,7 @@
 			} else if(is_instanceof(surface, SurfaceAtlas))
 				surface = surface.getSurface();
 		}
-		if(!surface_exists(surface)) return;
+		if(is_array(surface) || !surface_exists(surface)) return;
 	
 		__channel_pre(surface);
 			draw_surface_tiled(surface, _x, _y);
@@ -79,7 +79,7 @@
 			} else if(is_instanceof(surface, SurfaceAtlas))
 				surface = surface.getSurface();
 		}
-		if(!surface_exists(surface)) return;
+		if(is_array(surface) || !surface_exists(surface)) return;
 	
 		var back = surface_get_target();
 		var bdim = surface_get_dimension(back);
@@ -105,7 +105,7 @@
 		} else if(is_instanceof(surface, SurfaceAtlas))
 			surface = surface.getSurface();
 	}
-	if(!surface_exists(surface)) return;
+	if(is_array(surface) || !surface_exists(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface_part_ext(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _col, _alpha);
@@ -225,7 +225,7 @@
 		INLINE
 		
 		if(is_instanceof(surface, SurfaceAtlas)) surface = surface.surface.get();
-		if(!surface_exists(surface)) return 0;
+		if(is_array(surface) || !surface_exists(surface)) return 0;
 		var px = surface_getpixel_ext(surface, _x, _y);
 	
 		if(is_numeric(px)) return int64(px);
@@ -565,7 +565,7 @@
 
 	function surface_encode(surface, stringify = true) { #region
 		if(is_instanceof(surface, SurfaceAtlas)) surface = surface.surface.get();
-		if(!surface_exists(surface)) return "";
+		if(is_array(surface) || !surface_exists(surface)) return "";
 	
 		var buff = buffer_create(surface_get_width_safe(surface) * surface_get_height_safe(surface) * 4, buffer_fixed, 1);
 		
@@ -631,7 +631,7 @@
 		else if(is_instanceof(surface, SurfaceAtlasFast)) surface = surface.surface;
 		else if(is_instanceof(surface, dynaSurf))		  surface = array_safe_get(surface.surfaces, 0);
 		
-		if(!surface_exists(surface)) return;
+		if(is_array(surface) || !surface_exists(surface)) return;
 		
 		var f = surface_get_format(surface);
 	
