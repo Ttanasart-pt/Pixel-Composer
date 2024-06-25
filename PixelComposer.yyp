@@ -2195,6 +2195,7 @@
     {"id":{"name":"s_node_3d_sphere_ico","path":"sprites/s_node_3d_sphere_ico/s_node_3d_sphere_ico.yy",},},
     {"id":{"name":"s_node_3d_sphere_uv","path":"sprites/s_node_3d_sphere_uv/s_node_3d_sphere_uv.yy",},},
     {"id":{"name":"s_node_3d_sphere","path":"sprites/s_node_3d_sphere/s_node_3d_sphere.yy",},},
+    {"id":{"name":"s_node_3d_stack_slice","path":"sprites/s_node_3d_stack_slice/s_node_3d_stack_slice.yy",},},
     {"id":{"name":"s_node_3d_transform_scene","path":"sprites/s_node_3d_transform_scene/s_node_3d_transform_scene.yy",},},
     {"id":{"name":"s_node_3d_transform","path":"sprites/s_node_3d_transform/s_node_3d_transform.yy",},},
     {"id":{"name":"s_node_9patch","path":"sprites/s_node_9patch/s_node_9patch.yy",},},

@@ -1652,6 +1652,7 @@
     {"name":"s_node_3d_sphere_ico","order":15,"path":"sprites/s_node_3d_sphere_ico/s_node_3d_sphere_ico.yy",},
     {"name":"s_node_3d_sphere_uv","order":16,"path":"sprites/s_node_3d_sphere_uv/s_node_3d_sphere_uv.yy",},
     {"name":"s_node_3d_sphere","order":8,"path":"sprites/s_node_3d_sphere/s_node_3d_sphere.yy",},
+    {"name":"s_node_3d_stack_slice","order":32,"path":"sprites/s_node_3d_stack_slice/s_node_3d_stack_slice.yy",},
     {"name":"s_node_3d_transform_scene","order":22,"path":"sprites/s_node_3d_transform_scene/s_node_3d_transform_scene.yy",},
     {"name":"s_node_3d_transform","order":4,"path":"sprites/s_node_3d_transform/s_node_3d_transform.yy",},
     {"name":"s_node_ace","order":61,"path":"sprites/s_node_ace/s_node_ace.yy",},

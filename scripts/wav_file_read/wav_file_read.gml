@@ -89,6 +89,7 @@ function file_read_wav(path) {
 	content.packet 	  = bits;
 	
 	printIf(global.FLAG.wav_import, debug_str);
+	print($"Reading buffer {bits} pack from data length {l} with remaining data {_buffer_left}");
 	
 	return content;
 }
@@ -103,7 +104,8 @@ function file_read_wav_step() {
 	else if(content.bit_depth == 16) { bf_type = buffer_s16; lim =        32_768; }
 	else if(content.bit_depth == 32) { bf_type = buffer_s32; lim = 2_147_483_648; }
 	
-	for(; wav_file_prg < content.packet; wav_file_prg++ ) {
+	// print($"Reading {wav_file_prg} to {content.packet} ({content.packet - wav_file_prg}) with remaining data {(buffer_get_size(wav_file_reader) - buffer_tell(wav_file_reader)) / (content.bit_depth / 8)}");
+	while(wav_file_prg < content.packet) {
 		var ch  = 0;
 		var cha = content.channels;
 		var j   = 0;
@@ -116,6 +118,7 @@ function file_read_wav_step() {
 		}
 		
 		content.soundF[0][wav_file_prg] = ch / content.channels;
+		wav_file_prg++;
 		
 		if(current_time - t > 1000 / 30) return false;
 	}
