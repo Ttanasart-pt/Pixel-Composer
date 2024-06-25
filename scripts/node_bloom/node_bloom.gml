@@ -32,10 +32,13 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 12] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
+	// inputs[| 13] = nodeValue("Types", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	// 	.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Gaussian" ]);
+	
 	input_display_list = [ 7, 8, 
-		["Surfaces",     true],	0, 5, 6, 9, 10, 
-		["Bloom",	    false],	1, 2, 3, 4,
-		["Directional",	 true],	11, 12, 
+		["Surfaces",  true], 0, 5, 6, 9, 10, 
+		["Bloom",	 false], 1, 2, 3, 4,
+		["Blur",	  true], 11, 12, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

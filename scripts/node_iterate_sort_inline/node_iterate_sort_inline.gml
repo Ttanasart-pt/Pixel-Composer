@@ -86,7 +86,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		}
 		
 		if(IS_FIRST_FRAME) toSort = true;
-		if(toSort) NodeListSort(topoList, nodes);
+		if(toSort) topoList = NodeListSort(nodes);
 		toSort = false;
 		
 		input_node.startSort = true;

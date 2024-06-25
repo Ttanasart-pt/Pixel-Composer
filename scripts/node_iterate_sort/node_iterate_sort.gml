@@ -50,7 +50,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		if(IS_FIRST_FRAME) {
-			NodeListSort(topoList, nodes);
+			topoList = NodeListSort(nodes);
 			
 			inputNodes     = [ noone, noone ];
 			outputNode     = noone;

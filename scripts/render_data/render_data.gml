@@ -44,16 +44,15 @@ function NodeTopoSort() { #region
 	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 } #endregion
 
-function NodeListSort(_list, _nodeList) { #region
+function NodeListSort(_nodeList) { #region
 	array_foreach(_nodeList, function(node) {
 		node.clearTopoSorted();
 		return 0;
 	});
 	
-	// print($"===================== NODE LIST SORT =====================")
-	
-	ds_list_clear(_list);
-	__topoSort(_list, _nodeList);
+	var _arr = [];
+	__topoSort(_arr, _nodeList);
+	return _arr;
 } #endregion
 
 function __sortNode(_arr, _node) { #region
@@ -263,10 +262,10 @@ function Render(partial = false, runAction = false) { #region
 
 function __renderListReset(arr) { #region
 	for( var i = 0; i < array_length(arr); i++ ) {
-		list[i].setRenderStatus(false);
+		arr[i].setRenderStatus(false);
 		
-		if(struct_has(list[i], "nodes"))
-			__renderListReset(list[i].nodes);
+		if(struct_has(arr[i], "nodes"))
+			__renderListReset(arr[i].nodes);
 	}
 } #endregion
 
@@ -316,7 +315,7 @@ function RenderList(arr) { #region
 				var nextNodes = rendering.getNextNodes();
 				for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
 					var _node = nextNodes[i];
-					if(ds_list_exist(list, _node) && _node.isRenderable())
+					if(array_exists(arr, _node) && _node.isRenderable())
 						ds_queue_enqueue(queue, _node);
 				}
 			} 

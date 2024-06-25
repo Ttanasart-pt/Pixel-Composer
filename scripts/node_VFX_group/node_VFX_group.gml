@@ -52,8 +52,8 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 		
 		if(IS_PLAYING)
 		for( var i = 0; i < TOTAL_FRAMES; i++ )
-		for( var j = 0, m = ds_list_size(topoList); j < m; j++ ) {
-			var node = topoList[| j];
+		for( var j = 0, m = array_length(topoList); j < m; j++ ) {
+			var node = topoList[j];
 			var _ins = instanceof(node);
 			
 			if(!string_pos("Node_VFX", _ins)) 
@@ -74,7 +74,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	
 	static update = function() { #region
 		if(IS_FIRST_FRAME) 
-			NodeListSort(topoList, nodes);
+			topoList = NodeListSort(nodes);
 		
 		allCached = true;
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
