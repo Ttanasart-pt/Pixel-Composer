@@ -83,6 +83,8 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var _surfBuff = buffer_from_surface(_matSurf, false);
 				var _surfW    = surface_get_width(_matSurf);
 				var _surfH    = surface_get_height(_matSurf);
+				
+				// print($"{_matSurf} : {_surfBuff} [{buffer_get_size(_surfBuff)}]");
 			}
 				
 			switch(_mesh.VF) {
@@ -128,7 +130,12 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 						faces_maxz = max(faces_maxz, _pz);
 						
 						if(_pid == 9) {
-							_pnt[9]  = _useSurf? buffer_read_at(_surfBuff, (round(_vv * _surfH) * _surfW + round(_uu * _surfW)) * 4, buffer_u32) : c_white;
+							_uu = frac(_uu) < 0? 1 + frac(_uu) : frac(_uu);
+							_vv = frac(_vv) < 0? 1 + frac(_vv) : frac(_vv);
+							var _uvPx = round(_vv * (_surfH - 1)) * _surfW + round(_uu * (_surfW - 1));
+							// print($"{_uvPx} : {_uu}, {_vv}");
+							
+							_pnt[9]  = _useSurf? buffer_read_at(_surfBuff, _uvPx * 4, buffer_u32) : c_white;
 							_pnt[10] = max(_pnt[0], _pnt[3], _pnt[6]);
 							
 							_pnt[11] = (_pnt[0] + _pnt[3] + _pnt[6]) / 3;
@@ -148,6 +155,12 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			if(_useSurf) buffer_delete(_surfBuff);
 		}
+		
+		var _ranx  = faces_maxx - faces_minx;
+		var _rany  = faces_maxy - faces_miny;
+		var _ranz  = faces_maxz - faces_minz;
+		
+		mesh_data.text = $"Faces: {_ind}\nSize: [{_ranx}, {_rany}, {_ranz}]";
 		
 		array_sort(_fac, function(a1, a2) { return sign(a2[10] - a1[10]); });
 		
@@ -196,8 +209,6 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _ranx  = faces_maxx - faces_minx;
 		var _rany  = faces_maxy - faces_miny;
 		var _ranz  = faces_maxz - faces_minz;
-		
-		mesh_data.text = $"Faces: {_faces}\nSize: [{_ranx}, {_rany}, {_ranz}]";
 		
 		var _stpx = _ranx / dimensions[0];
 		var _stpy = _rany / dimensions[1];
@@ -311,7 +322,7 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	}
 	
 	static update = function() {
-		
+		meshInit();
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

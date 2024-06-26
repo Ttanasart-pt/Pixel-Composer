@@ -62,9 +62,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		var a = inputs[| 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, THEME.anchor); active &= a;
-		var a = inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);				active &= a;
-		var a = inputs[| 5].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);				active &= a;
+		var a = inputs[| 3].drawOverlay(hover, active, px, py, _s * 4, _mx, _my, _snx, _sny, THEME.anchor); active &= a;
+		var a = inputs[| 4].drawOverlay(hover, active, _x, _y, _s,     _mx, _my, _snx, _sny);				active &= a;
+		var a = inputs[| 5].drawOverlay(hover, active, px, py, _s,     _mx, _my, _snx, _sny);				active &= a;
 	} #endregion
 	
 	static drawPreviewToolOverlay = function(hover, active, _mx, _my, _panel) { #region
@@ -94,7 +94,6 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			draw_surface_ext_safe(_s, _sx, _sy, _ss, _ss);
 			
 			if(hover && point_in_rectangle(_mx, _my, _sx - ui(4), _sy, _sx + _sw * _ss + ui(4), _sy + _sh * _ss)) {
-				hov = true;
 				preview_custom_index = i;
 				
 				draw_set_color(COLORS._main_accent);
@@ -103,11 +102,13 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			draw_rectangle(_sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss, true);
 			
-			sx += prev_size + ui(8);
-			preview_custom_x_max += prev_size + ui(8);
+			sx += _sw * _ss + ui(8);
+			preview_custom_x_max += _sw * _ss + ui(8);
 		}
 		
 		preview_custom_x_max = max(preview_custom_x_max - _panel.w + ui(64), 0);
+		
+		var hov = hover && point_in_rectangle(_mx, _my, 0, sy, _panel.x1, _panel.x1);
 		
 		if(hov) {
 			if(mouse_wheel_down()) preview_custom_x_to -= ui(128);

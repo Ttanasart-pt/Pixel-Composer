@@ -35,7 +35,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	inputs[| in_mesh + 2] = nodeValue("Import Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.rejectArray();
 		
-	inputs[| in_mesh + 3] = nodeValue("Invert Y", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| in_mesh + 3] = nodeValue("Swap YZ", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "YZ", "Z-Y", "-ZY" ])
 		.rejectArray();
 		
 	input_display_list = [
@@ -99,7 +100,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		} else {
 			var sol = nodeBuild("Node_Solid", x - (w + 128), matY + m_index * (128 + 32));
 			sol.name = mat.name + " texture";
-			sol.inputs[| 1].setValue(mat.diff);
+			sol.inputs[| 1].setValue(cola(mat.diff));
 			
 			inputs[| index].setFrom(sol.outputs[| 0]);
 		}
@@ -131,13 +132,13 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		use_display_list = true;
 		if(obj_raw == noone) return;
 		
-		// var txt = $"========== OBJ import ==========\n";
-		// txt += $"Vertex counts:   {obj_raw.vertex_count}\n";
-		// txt += $"Object counts:   {obj_raw.object_counts}\n";
-		// txt += $"Material counts: {array_length(obj_raw.materials)}\n";
-		// txt += $"Model BBOX:      {obj_raw.model_size}\n";
-		// txt += $"Load completed in {(get_timer() - obj_read_time) / 1000} ms\n";
-		// print(txt);
+		var txt = $"========== OBJ import ==========\n";
+		txt += $"Vertex counts:   {obj_raw.vertex_count}\n";
+		txt += $"Object counts:   {obj_raw.object_counts}\n";
+		txt += $"Material counts: {array_length(obj_raw.materials)}\n";
+		txt += $"Model BBOX:      {obj_raw.model_size}\n";
+		txt += $"Load completed in {(get_timer() - obj_read_time) / 1000} ms\n";
+		logNode(txt);
 		
 		var span = max(abs(obj_raw.model_size.x), abs(obj_raw.model_size.y), abs(obj_raw.model_size.z));
 		if(span > 10) {

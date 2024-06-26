@@ -40,18 +40,30 @@ function readObj_file() {
 		
 		switch(sep[0]) {
 			case "v" :
-				if(obj_reading_yneg) {
-					array_push(v, [ 
-						 real(sep[1]) * obj_reading_scale, 
-						 real(sep[3]) * obj_reading_scale,
-						-real(sep[2]) * obj_reading_scale, 
-					]);
-				} else {
-					array_push(v, [ 
-						real(sep[1]) * obj_reading_scale, 
-						real(sep[2]) * obj_reading_scale, 
-						real(sep[3]) * obj_reading_scale,
-					]);
+				switch(obj_reading_yneg) {
+					case 0 :
+						array_push(v, [ 
+							real(sep[1]) * obj_reading_scale, 
+							real(sep[2]) * obj_reading_scale, 
+							real(sep[3]) * obj_reading_scale,
+						]);
+						break;
+					
+					case 1 :	
+						array_push(v, [ 
+							 real(sep[1]) * obj_reading_scale, 
+							 real(sep[3]) * obj_reading_scale,
+							-real(sep[2]) * obj_reading_scale, 
+						]);
+						break;
+						
+					case 2 :	
+						array_push(v, [ 
+							 real(sep[1]) * obj_reading_scale, 
+							-real(sep[3]) * obj_reading_scale,
+							 real(sep[2]) * obj_reading_scale, 
+						]);
+						break;
 				}
 				break;
 				

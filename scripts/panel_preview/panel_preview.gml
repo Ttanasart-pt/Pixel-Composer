@@ -214,10 +214,6 @@ function Panel_Preview() : PanelContent() constructor {
 			d3_tool_snap_rotation = 15;
 		#endregion
 		
-		#region shadow map
-			
-		#endregion
-		
 		#region view channel
 			d3ChannelNames = [ "Rendered", "Normal", "Depth" ];
 			d3Channel = new scrollBox(d3ChannelNames, function(index) { d3_preview_channel = index; });

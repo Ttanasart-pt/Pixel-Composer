@@ -568,10 +568,10 @@ function Panel_Inspector() : PanelContent() constructor {
 			var con_w = contentPane.surface_w;
 			var con_h = contentPane.surface_h - yy;
 			
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, yy, con_w, con_h, COLORS._main_icon);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, yy, con_w, con_h, merge_color(CDEF.main_ltgrey, CDEF.main_white, 0.5));
 			yy += ui(8);
 			
-			for (var i = 0, n = array_length(_logs); i < n; i++) {
+			for (var i = array_length(_logs) - 1; i >= 0; i--) {
 				var _log = _logs[i];
 				
 				var _time = _log[0];
