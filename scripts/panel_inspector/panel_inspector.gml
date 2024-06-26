@@ -94,9 +94,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		tb_prop_filter.hide			= true;
 		filter_text = "";
 	
-		prop_page_button = new buttonGroup([ "Properties", "Settings" ], function(val) { prop_page = val; });
+		prop_page_button = new buttonGroup([ "Properties", "Settings", THEME.message_16 ], function(val) { prop_page = val; });
 		prop_page_button.buttonSpr	= [ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ];
-		prop_page_button.font		= f_p1;
+		prop_page_button.font		= f_p2;
 		prop_page_button.fColor		= COLORS._main_text_sub;
 		prop_page = 0;
 	#endregion
@@ -505,7 +505,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		var xc = con_w / 2;
 		
-		if(prop_page == 1) { #region attribute/settings editor
+		if(prop_page == 1) { // attribute/settings editor
 			hh += ui(8);
 			var hg  = ui(32);
 			var yy  = _y + hh;
@@ -557,7 +557,41 @@ function Panel_Inspector() : PanelContent() constructor {
 				hh += _hg + ui(8);
 			}
 			return hh;
-		} #endregion
+			
+		} else if(prop_page == 2) { 
+			var _logs = _inspecting.messages;
+			_inspecting.messages_bub = false;
+			var _tmw  = ui(64);
+			var yy = _y;
+			var hh = ui(64);
+			
+			var con_w = contentPane.surface_w;
+			var con_h = contentPane.surface_h - yy;
+			
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, yy, con_w, con_h, COLORS._main_icon);
+			yy += ui(8);
+			
+			for (var i = 0, n = array_length(_logs); i < n; i++) {
+				var _log = _logs[i];
+				
+				var _time = _log[0];
+				var _text = _log[1];
+				
+				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+				var _hg = string_height_ext(_text, -1, con_w - _tmw - ui(10 + 8)) + ui(4);
+				if(i % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, ui(4), yy, con_w - ui(8), _hg, CDEF.main_dkblack, 0.25);
+				
+				draw_text_add(ui(10), yy + ui(2), _time);
+				
+				draw_set_color(COLORS._main_text);
+				draw_text_ext_add(_tmw + ui(10), yy + ui(2), _text, -1, con_w - _tmw - ui(10 + 8));
+				
+				yy += _hg;
+				hh += _hg;
+			}
+			
+			return hh;
+		}
 		
 		var color_picker_index     = 0;
 		var pickers = [];
@@ -857,8 +891,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		if(inspecting == noone) return drawMeta(_y, _m);
 		
+		prop_page_button.data[2] = inspecting.messages_bub? THEME.message_16_grey_bubble : THEME.message_16_grey;
 		prop_page_button.setFocusHover(pFOCUS, pHOVER);
-		prop_page_button.draw(ui(32), _y + ui(4), contentPane.w - ui(76), ui(28), prop_page, _m, x + contentPane.x, y + contentPane.y);
+		prop_page_button.draw(ui(32), _y + ui(4), contentPane.w - ui(76), ui(24), prop_page, _m, x + contentPane.x, y + contentPane.y);
 		
 		var _hh = ui(40);
 		_y += _hh;

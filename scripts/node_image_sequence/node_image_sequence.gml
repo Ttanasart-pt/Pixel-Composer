@@ -123,7 +123,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					var _spr = sprite_add_map(path);
 					
 					if(_spr == -1) {
-						noti_warning($"Image node: File not a valid image.");
+						var _txt = $"Image node: File not a valid image.";
+						logNode(_txt); noti_warning(_txt);
 						return false;
 					}
 					

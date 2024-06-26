@@ -306,7 +306,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- log ----
-		messages = [];
+		messages = [ ];
+		messages_bub = false;
+		
+		static logNode = function(text) { 
+			var _time = $"{string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}.{string_lead_zero(current_second, 2)}";
+			messages_bub = true;
+			array_push(messages, [ _time, text ]); 
+		}
 	#endregion
 	
 	#region ---- serialization ----
@@ -2074,7 +2081,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _data_length    = load_map.data_length;
 		var _dynamic_inputs = (array_length(load_map.inputs) - _input_fix_len) / _data_length;
 		if(frac(_dynamic_inputs) != 0) {
-			noti_warning("LOAD: Uneven dynamic input.");
+			var _txt = "LOAD: Uneven dynamic input.";
+			logNode(_txt); noti_warning(_txt);
+			
 			_dynamic_inputs = ceil(_dynamic_inputs);
 		}
 		

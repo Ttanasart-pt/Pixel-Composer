@@ -590,7 +590,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			if(exportLog && form != NODE_EXPORT_FORMAT.animation && !IS_CMD) {
-				var noti  = log_message("EXPORT", $"Export {array_length(surf)} images complete.", THEME.noti_icon_tick, COLORS._main_value_positive, false);
+				var _txt = $"Export {array_length(surf)} images complete.";
+				logNode(_txt);
+				
+				var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false);
 				noti.path = filename_dir(p);
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 				
@@ -611,7 +614,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			p = save_surface(surf, p);
 			
 			if(exportLog && form != NODE_EXPORT_FORMAT.animation && !IS_CMD) {
-				var noti  = log_message("EXPORT", $"Export image as {p}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
+				var _txt = $"Export image as {p}";
+				logNode(_txt);
+				
+				var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false);
 				noti.path = filename_dir(p);
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 					

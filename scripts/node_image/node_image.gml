@@ -73,7 +73,8 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var _spr = sprite_add(path, 1, false, false, 0, 0);
 				
 				if(_spr == -1) {
-					noti_warning($"Image node: File not a valid image.");
+					var _txt = $"Image node: File not a valid image.";
+					logNode(_txt); noti_warning(_txt);
 					break;
 				}
 				

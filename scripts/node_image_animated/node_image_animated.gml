@@ -133,7 +133,8 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					var _spr = sprite_add(_path, 1, false, false, 0, 0);
 					
 					if(_spr == -1) {
-						noti_warning($"Image node: File not a valid image.");
+						var _txt = $"Image node: File not a valid image.";
+						logNode(_txt); noti_warning(_txt);
 						return false;
 					}
 					

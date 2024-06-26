@@ -62,44 +62,64 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			current_selecting = array_safe_get_fast(current_selecting, 0);
 		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
-		var amo = array_length(data);
-		var ww  = _w / amo;
+		var amo  = array_length(data);
+		var _tw  = _w;
+		var _mx  = false, _t = 0;
+		var _sw  = _h + ui(8);
+		var tamo = amo;
 		
 		var total_width = 0;
 		draw_set_font(font);
 		for(var i = 0; i < amo; i++) {
-			if(is_string(data[i]))
-				total_width += string_width(data[i]) + ui(32);
+			var _d = data[i];
+			
+		    if(is_string(_d)) {
+		    	_t = 1;
+		    	total_width += ui(32) + string_width(_d);
+		    	
+			} else if(sprite_exists(_d)) {
+				if(_t) _mx = true;
+				if(_mx) tamo--;
+				
+				total_width += _sw;
+				_tw -= _sw;
+			}
 		}
 		
 		display_button = total_width < _w;
+		var ww  = (_mx? _tw : _w) / tamo;
 		
 		if(display_button) {
 			var bx = _x;
 			var draw_sel = noone;
 			
 			for(var i = 0; i < amo; i++) {
+				var _d = data[i];
+				
 				buttons[i].setFocusHover(active, hover);
 				buttons[i].tooltip = array_safe_get(tooltips, i, "");
 				
+				var bww = !is_string(_d) && sprite_exists(_d) && _mx? _sw : ww;
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
 				
 				if(_selecting == i) {
-					draw_sprite_stretched(spr, 2, floor(bx), _y, ceil(ww), _h);
+					draw_sprite_stretched(spr, 2, floor(bx), _y, ceil(bww), _h);
 					draw_sel = [spr, bx];
 				} else {
-					buttons[i].draw(floor(bx), _y, ceil(ww), _h, _m, spr);
+					buttons[i].draw(floor(bx), _y, ceil(bww), _h, _m, spr);
 					if(buttons[i].clicked) onClick(i);
 				}
 				
 				if(is_string(data[i])) {
 					draw_set_text(font, fa_center, fa_center, fColor);
-					draw_text(bx + ww / 2, _y + _h / 2, data[i]);
+					draw_text_add(bx + bww / 2, _y + _h / 2, data[i]);
+					
 				} else if(sprite_exists(data[i])) {
-					draw_sprite_ui_uniform(data[i], i, bx + ww / 2, _y + _h / 2);
+					draw_sprite_ui_uniform(data[i], i, bx + bww / 2, _y + _h / 2, 1);
+					
 				}
 				
-				bx += ww;
+				bx += bww;
 			}
 			
 			if(draw_sel != noone)

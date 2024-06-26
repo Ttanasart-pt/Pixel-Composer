@@ -162,7 +162,10 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		file_text_write_all(   _path, _obj);
 		if(_mat) file_text_write_all(_mtlPath, _mtl);
 		
-		var noti  = log_message("EXPORT", $"Export model complete.", THEME.noti_icon_tick, COLORS._main_value_positive, false);
+		var _txt = $"Export model complete.";
+		logNode(_txt);
+		
+		var noti = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false);
 		noti.path = filename_dir(_path);
 		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 	}

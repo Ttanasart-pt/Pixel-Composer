@@ -89,6 +89,8 @@ function file_read_wav(path) {
 	content.packet 	  = bits;
 	
 	printIf(global.FLAG.wav_import, debug_str);
+	logNode(debug_str);
+	
 	print($"Reading buffer {bits} pack from data length {l} with remaining data {_buffer_left}");
 	
 	return content;

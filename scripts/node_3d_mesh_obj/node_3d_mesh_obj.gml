@@ -140,7 +140,10 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		// print(txt);
 		
 		var span = max(abs(obj_raw.model_size.x), abs(obj_raw.model_size.y), abs(obj_raw.model_size.z));
-		if(span > 10) noti_warning($"The model is tool large to display properly ({span}u). Scale the model down to preview.");
+		if(span > 10) {
+			var _txt = $"The model is tool large to display properly ({span}u). Scale the model down to preview.";
+			logNode(_txt); noti_warning(_txt);
+		}
 		
 		if(object != noone) object.destroy();
 		
@@ -171,8 +174,10 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 					var _ord = array_find(materialNames, _mat);
 					materialIndex[i] = _ord;
 				}
-			} else
-				noti_warning("Load mtl error: Material amount defined in .mtl file not match the .obj file.")
+			} else {
+				var _txt = "Load mtl error: Material amount defined in .mtl file not match the .obj file.";
+				logNode(_txt); noti_warning(_txt);
+			}
 		}
 		
 		array_resize(input_display_list, input_display_len);

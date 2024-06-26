@@ -242,7 +242,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			cache_data.result = _temp_s;
 			if(string_length(cache_data.result) > attributes.rule_length_limit) {
-				noti_warning($"L System: Rules length limit ({attributes.rule_length_limit}) reached.");
+				var _txt = $"L System: Rules length limit ({attributes.rule_length_limit}) reached.";
+				logNode(_txt); noti_warning(_txt);
 				break;
 			}
 		}

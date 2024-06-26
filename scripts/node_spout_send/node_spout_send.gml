@@ -9,7 +9,10 @@ function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.setVisible(false);
 	
 	spoutIndex = spoutSenderInit();
-	if(spoutIndex == noone) noti_warning("Spout initialize error");
+	if(spoutIndex == noone) {
+		var _txt = "Spout initialize error";
+		logNode(_txt); noti_warning(_txt);
+	}
 	
 	surf_buff = buffer_create(1, buffer_grow, 1);
 	

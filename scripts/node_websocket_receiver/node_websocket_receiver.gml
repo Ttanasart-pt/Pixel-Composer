@@ -70,12 +70,16 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		
 		switch(type) {
 			case network_type_connect :
-				noti_status($"Websocket server: Client connected at port {port} on node {display_name}");
+				var _txt = $"Websocket server: Client connected at port {port} on node {display_name}";
+				logNode(_txt); noti_status(_txt);
+				
 				connected_device++;
 				break;
 				
 			case network_type_disconnect :
-				noti_status($"Websocket server: Client disconnected at port {port} on node {display_name}");
+				var _txt = $"Websocket server: Client disconnected at port {port} on node {display_name}";
+				logNode(_txt); noti_status(_txt);
+				
 				connected_device--;
 				break;
 				
