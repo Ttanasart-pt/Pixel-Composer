@@ -95,29 +95,32 @@ function draw_sprite_colored(spr, ind, _x, _y, scale = 1, rot = 0, color = COLOR
 	if(num % 2 == 0) draw_sprite_ui(spr, num / 2 + ind, _x, _y, scale, scale, rot, color);
 } #endregion
 	
-function draw_anchor(_index, _x, _y, _r) { #region
+function draw_anchor(_index, _x, _y, _r, _type = 0) { #region
 	shader_set(sh_node_widget_scalar);
 		shader_set_color("color", COLORS._main_accent);
 		shader_set_f("index",     _index);
+		shader_set_i("type",      _type);
 		
 		draw_sprite_stretched(s_fx_pixel, 0, _x - _r, _y - _r, _r * 2, _r * 2);
 	shader_reset();
 } #endregion
 	
-function draw_anchor_cross(_index, _x, _y, _r) { #region
+function draw_anchor_cross(_index, _x, _y, _r, _type = 0) { #region
 	shader_set(sh_node_widget_scalar_cross);
 		shader_set_color("color", COLORS._main_accent);
 		shader_set_f("index",     _index);
+		shader_set_i("type",      _type);
 		
 		draw_sprite_stretched(s_fx_pixel, 0, _x - _r, _y - _r, _r * 2, _r * 2);
 	shader_reset();
 } #endregion
 	
-function draw_anchor_line(_index, _x, _y, _r, _a) { #region
+function draw_anchor_line(_index, _x, _y, _r, _a, _type = 0) { #region
 	shader_set(sh_node_widget_scalar_line);
 		shader_set_color("color", COLORS._main_accent);
 		shader_set_f("index",     _index);
 		shader_set_f("angle",     degtorad(_a));
+		shader_set_i("type",      _type);
 		
 		draw_sprite_stretched(s_fx_pixel, 0, _x - _r, _y - _r, _r * 2, _r * 2);
 	shader_reset();

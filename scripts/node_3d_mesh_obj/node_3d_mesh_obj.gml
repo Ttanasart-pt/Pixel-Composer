@@ -35,8 +35,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	inputs[| in_mesh + 2] = nodeValue("Import Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.rejectArray();
 		
-	inputs[| in_mesh + 3] = nodeValue("Swap YZ", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "YZ", "Z-Y", "-ZY" ])
+	inputs[| in_mesh + 3] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "XYZ", "XZ-Y", "X-ZY" ])
 		.rejectArray();
 		
 	input_display_list = [
@@ -111,9 +111,9 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		current_path = _path;
 		
 		var _scale = inputs[| in_mesh + 2].getValue();
-		var _yneg  = inputs[| in_mesh + 3].getValue();
+		var _axis  = inputs[| in_mesh + 3].getValue();
 		
-		readObj_init(_scale, _yneg);
+		readObj_init(_scale, _axis);
 		
 		obj_read_time    = get_timer();
 		obj_read_file    = file_text_open_read(current_path);
@@ -156,7 +156,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		use_normal    = obj_raw.use_normal;
 		
 		materialNames = [ "Material" ];
-		materialIndex = [ 0 ];
+		materialIndex = obj_raw.material_index;
 		materials     = [ new MTLmaterial("Material") ];
 		
 		if(obj_raw.use_material) {
@@ -169,12 +169,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 				materialNames = array_create(array_length(materials));
 				for( var i = 0, n = array_length(materials); i < n; i++ )
 					materialNames[i] = materials[i].name;
-			
-				for( var i = 0, n = array_length(materials); i < n; i++ ) {
-					var _mat = obj_raw.materials[i];
-					var _ord = array_find(materialNames, _mat);
-					materialIndex[i] = _ord;
-				}
+				
 			} else {
 				var _txt = "Load mtl error: Material amount defined in .mtl file not match the .obj file.";
 				logNode(_txt); noti_warning(_txt);
@@ -240,11 +235,12 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		if(!obj_reading) return;
 		
-		var cx = xx + w * _s / 2;
-		var cy = yy + h * _s / 2;
-		var rr = min(w - 32, h - 32) * _s / 2;
+		var bbox = drawGetBbox(xx, yy, _s);
+		var rr   = min(bbox.w - 16, bbox.h - 16) / 2;
+		var ast  = current_time / 5;
+		var prg  = obj_read_progress / obj_read_prog_tot;
 		
 		draw_set_color(COLORS._main_icon);
-		draw_arc(cx, cy, rr, current_time / 5, current_time / 5 + 90, 4 * _s, 90);
+		draw_arc(bbox.xc, bbox.yc, rr, ast, ast + prg * 360, 4 * _s, 90);
 	} #endregion
 }

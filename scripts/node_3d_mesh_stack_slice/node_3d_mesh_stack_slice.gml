@@ -11,13 +11,16 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	inputs[| 3] = nodeValue("Slices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
 	
+	inputs[| 4] = nodeValue("BBOX Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+		
 	outputs[| 0] = nodeValue("Outputs", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
 	mesh_data = new Inspector_Label("", f_code);
 	
 	input_display_list = [ 
-		["Model",  false], 0, mesh_data, 
+		["Model",  false], 0, 4, mesh_data, 
 		["Slices", false], 1, 3, 
 	];
 	
@@ -36,18 +39,24 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	splice_prog_tot = 0;
 	splice_pixel    = 0;
 	
+	bbox_padding = [ 0, 0, 0 ];
+	
 	faces_minx = 99999; faces_maxx = -99999;
 	faces_miny = 99999; faces_maxy = -99999;
 	faces_minz = 99999; faces_maxz = -99999;
 	
 	faces_data = [];
 	faces_amo  = 1;
+	faces_cull = 0;
 	
-	point_size = 14;
+	point_size = 15;
 	
 	dimensions = [ 1, 1 ];
 	slicesAmo  = 1;
 	surfaces   = [];
+	
+	start_time = 0;
+	end_time   = 0;
 	
 	insp1UpdateTooltip   = "Splice";
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
@@ -58,8 +67,13 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	}
 	
 	static meshInit = function() {
+		start_time = get_timer();
+		
 		var _mesh = getInputData(0);
 		if(_mesh == params.mesh) return;
+		
+		params.mesh = _mesh;
+		if(_mesh == noone) return;
 		
 		faces_minx = 99999; faces_maxx = -99999;
 		faces_miny = 99999; faces_maxy = -99999;
@@ -68,6 +82,8 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _vbs = _mesh.VB;
 		var _fac = [];
 		var _ind = 0;
+		
+		faces_cull = 0;
 		
 		for (var i = 0, n = array_length(_vbs); i < n; i++) {
 			var _vb = _vbs[i];
@@ -130,19 +146,36 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 						faces_maxz = max(faces_maxz, _pz);
 						
 						if(_pid == 9) {
-							_uu = frac(_uu) < 0? 1 + frac(_uu) : frac(_uu);
-							_vv = frac(_vv) < 0? 1 + frac(_vv) : frac(_vv);
-							var _uvPx = round(_vv * (_surfH - 1)) * _surfW + round(_uu * (_surfW - 1));
-							// print($"{_uvPx} : {_uu}, {_vv}");
+							if(_pnt[2] != _pnt[5] || _pnt[5] != _pnt[8]) {
+								_pnt[9]  = c_white;
+								
+								if(_useSurf) {
+									_uu = frac(_uu) < 0? 1 + frac(_uu) : frac(_uu);
+									_vv = frac(_vv) < 0? 1 + frac(_vv) : frac(_vv);
+									var _uvPx = round(_vv * (_surfH - 1)) * _surfW + round(_uu * (_surfW - 1));
+									_pnt[9] = buffer_read_at(_surfBuff, _uvPx * 4, buffer_u32);
+								}
+								
+								_pnt[10] = max(_pnt[0], _pnt[3], _pnt[6]);
+								_pnt[11] = min(_pnt[0], _pnt[3], _pnt[6]);
+								
+								_pnt[12] = (_pnt[0] + _pnt[3] + _pnt[6]) / 3;
+								_pnt[13] = (_pnt[1] + _pnt[4] + _pnt[7]) / 3;
+								_pnt[14] = (_pnt[2] + _pnt[5] + _pnt[8]) / 3;
+								
+								// _pnt[15] = _pnt[3] - _pnt[0];
+							 //   _pnt[16] = _pnt[4] - _pnt[1];
+							 //   _pnt[17] = _pnt[5] - _pnt[2];
+							    
+							 //   _pnt[18] = _pnt[6] - _pnt[0];
+							 //   _pnt[19] = _pnt[7] - _pnt[1];
+							 //   _pnt[20] = _pnt[8] - _pnt[2];
+								
+								_fac[_ind++] = _pnt;
+								
+							} else 
+								faces_cull++;
 							
-							_pnt[9]  = _useSurf? buffer_read_at(_surfBuff, _uvPx * 4, buffer_u32) : c_white;
-							_pnt[10] = max(_pnt[0], _pnt[3], _pnt[6]);
-							
-							_pnt[11] = (_pnt[0] + _pnt[3] + _pnt[6]) / 3;
-							_pnt[12] = (_pnt[1] + _pnt[4] + _pnt[7]) / 3;
-							_pnt[13] = (_pnt[2] + _pnt[5] + _pnt[8]) / 3;
-							
-							_fac[_ind++] = _pnt;
 							_pnt = [];
 							_pid = 0;
 							
@@ -155,12 +188,6 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			if(_useSurf) buffer_delete(_surfBuff);
 		}
-		
-		var _ranx  = faces_maxx - faces_minx;
-		var _rany  = faces_maxy - faces_miny;
-		var _ranz  = faces_maxz - faces_minz;
-		
-		mesh_data.text = $"Faces: {_ind}\nSize: [{_ranx}, {_rany}, {_ranz}]";
 		
 		array_sort(_fac, function(a1, a2) { return sign(a2[10] - a1[10]); });
 		
@@ -205,18 +232,20 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static splice = function() {
 		if(!splicing) return;
 		
+		preview_index = splice_progress;
+		
 		var _faces = faces_amo;
-		var _ranx  = faces_maxx - faces_minx;
-		var _rany  = faces_maxy - faces_miny;
-		var _ranz  = faces_maxz - faces_minz;
+		var _ranx  = faces_maxx - faces_minx + bbox_padding[0] * 2;
+		var _rany  = faces_maxy - faces_miny + bbox_padding[1] * 2;
+		var _ranz  = faces_maxz - faces_minz + bbox_padding[2] * 2;
 		
 		var _stpx = _ranx / dimensions[0];
 		var _stpy = _rany / dimensions[1];
 		var _stpz = _ranz / slicesAmo;
 		
-		var _strx = faces_minx + _stpx / 2;
-		var _stry = faces_miny + _stpy / 2;
-		var _strz = faces_minz + _stpz / 2;
+		var _strx = faces_minx - bbox_padding[0] + _stpx / 2;
+		var _stry = faces_miny - bbox_padding[1] + _stpy / 2 + _stpy * 0.1;
+		var _strz = faces_minz - bbox_padding[2] + _stpz / 2;
 		
 		var _f1x, _f1y, _f1z, _f2x, _f2y, _f2z, _f3x, _f3y, _f3z;
 		var w = dimensions[0];
@@ -228,7 +257,7 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		var _left = _pxAmo - splice_pixel;
 		var _time = get_timer();
-		
+				
 		surface_set_target(_surf);
 			
 			repeat(_left) {
@@ -238,6 +267,10 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 				
 				var _px = _strx + _x * _stpx;
 				var _py = _stry + _y * _stpy;
+				
+				var _vx = 1;//_px;
+				var _vy = 0;//_py;
+				var _vz = 0;//_pz;
 				
 				var _inSide = false;
 				var _fc     = c_white;
@@ -262,36 +295,40 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 				    var edge2y = _f3y - _f1y;
 				    var edge2z = _f3z - _f1z;
 				    
-				    var pvecx = _py * edge2z - _pz * edge2y;
-				    var pvecy = _pz * edge2x - _px * edge2z;
-				    var pvecz = _px * edge2y - _py * edge2x;
+				    // var rc2e_vecx = _vy * edge2z - _vz * edge2y;
+				    // var rc2e_vecy = _vz * edge2x - _vx * edge2z;
+				    // var rc2e_vecz = _vx * edge2y - _vy * edge2x;
+				    // var det = edge1x * rc2e_vecx + edge1y * rc2e_vecy + edge1z * rc2e_vecz;
 				    
-				    var det = edge1x * pvecx + edge1y * pvecy + edge1z * pvecz;
+				    var det = edge1z * edge2y - edge1y * edge2z;
 				    
 				    if (abs(det) < 0.0001) continue;
-				    
 				    var inv_det = 1.0 / det;
 				    
-				    var tvecx = _px - _f1x;
-				    var tvecy = _py - _f1y;
-				    var tvecz = _pz - _f1z;
+				    var s_vecx = _px - _f1x;
+				    var s_vecy = _py - _f1y;
+				    var s_vecz = _pz - _f1z;
 				    
-				    var u = (tvecx * pvecx + tvecy * pvecy + tvecz * pvecz) * inv_det;
+				    // var u = (s_vecx * rc2e_vecx + s_vecy * rc2e_vecy + s_vecz * rc2e_vecz) * inv_det;
+				    
+				    var u = (s_vecz * edge2y - s_vecy * edge2z) * inv_det;
 				    if (u < 0.0 || u > 1.0) continue;
 				    
-				    var qvecx = tvecy * edge1z - tvecz * edge1y;
-				    var qvecy = tvecz * edge1x - tvecx * edge1z;
-				    var qvecz = tvecx * edge1y - tvecy * edge1x;
+				    var sc1e_vecx = s_vecy * edge1z - s_vecz * edge1y;
 				    
-				    var v = (_px * qvecx + _py * qvecy + _pz * qvecz) * inv_det;
+				    // var v = (_vx * sc1e_vecx + _vy * sc1e_vecy + _vz * sc1e_vecz) * inv_det;
+				    var v = sc1e_vecx * inv_det;
 				    if (v < 0.0 || u + v > 1.0) continue;
 				    
-				    var t = (edge2x * qvecx + edge2y * qvecy + edge2z * qvecz) * inv_det;
+				    var sc1e_vecy = s_vecz * edge1x - s_vecx * edge1z;
+				    var sc1e_vecz = s_vecx * edge1y - s_vecy * edge1x;
+				    
+				    var t = (edge2x * sc1e_vecx + edge2y * sc1e_vecy + edge2z * sc1e_vecz) * inv_det;
 				    if(t <= 0) continue;
 					
 					_inSide = !_inSide;
 					
-					var _d = sqr(_px - faces_data[_f + 11]) + sqr(_py - faces_data[_f + 12]) + sqr(_pz - faces_data[_f + 13]);
+					var _d = sqr(_px - faces_data[_f + 12]) + sqr(_py - faces_data[_f + 13]) + sqr(_pz - faces_data[_f + 14]);
 					if(_d < _dist) {
 						_dist = _d;
 						_fc   = faces_data[_f + 9];
@@ -313,6 +350,9 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 			if(splice_progress >= splice_prog_tot) {
 				splicing = false;
 				triggerRender();
+				
+				end_time   = get_timer();
+				logNode($"Slice completed in {(end_time - start_time) / 1000}ms");
 			}
 		}
 	}
@@ -323,18 +363,27 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	static update = function() {
 		meshInit();
+		
+		bbox_padding = getInputData(4);
+		var _ranx  = faces_maxx - faces_minx + bbox_padding[0] * 2;
+		var _rany  = faces_maxy - faces_miny + bbox_padding[1] * 2;
+		var _ranz  = faces_maxz - faces_minz + bbox_padding[2] * 2;
+		
+		mesh_data.text = $"Faces: {faces_amo} (culled {faces_cull})\nSize: [{_ranx}, {_rany}, {_ranz}]";
+		
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		if(splicing) {
-			var cx = xx + w * _s / 2;
-			var cy = yy + h * _s / 2;
-			var rr = min(w - 32, h - 32) * _s / 2;
-			
-			draw_set_color(COLORS._main_icon);
-			draw_arc(cx, cy, rr, current_time / 5, current_time / 5 + 90, 4 * _s, 90);
-			return;
-		}
+		if(!splicing) return;
+		
+		var bbox = drawGetBbox(xx, yy, _s);
+		var rr   = min(bbox.w - 16, bbox.h - 16) / 2;
+		var ast  = current_time / 5;
+		var prg  = (splice_progress + splice_pixel / (dimensions[0] * dimensions[1])) / splice_prog_tot;
+		
+		draw_set_color(COLORS._main_icon);
+		draw_arc(bbox.xc, bbox.yc, rr, ast, ast + prg * 360, 4 * _s, 90);
 	}
 	
+	static getPreviewBoundingBox = function() { return BBOX().fromWH(0, 0, dimensions[0], dimensions[1]); }
 }

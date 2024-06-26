@@ -9,7 +9,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 2] = nodeValue("Stack amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
 	
-	inputs[| 3] = nodeValue("Stack shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 1 ] )
+	inputs[| 3] = nodeValue("Stack shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 4] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ] )
@@ -34,7 +34,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 11] = nodeValue("Highlight alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue("Array process", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 12] = nodeValue("Array process", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "Combined" ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -59,12 +59,19 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		PROCESSOR_OVERLAY_CHECK
 		
 		var pos = current_data[4];
+		var sck = current_data[3];
+		
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
+		var sx = px + sck[0] * _s * 4;
+		var sy = py + sck[1] * _s * 4;
 		
-		var a = inputs[| 3].drawOverlay(hover, active, px, py, _s * 4, _mx, _my, _snx, _sny, THEME.anchor); active &= a;
-		var a = inputs[| 4].drawOverlay(hover, active, _x, _y, _s,     _mx, _my, _snx, _sny);				active &= a;
-		var a = inputs[| 5].drawOverlay(hover, active, px, py, _s,     _mx, _my, _snx, _sny);				active &= a;
+		draw_set_color(COLORS._main_accent);
+		draw_line(px, py, sx, sy);
+		
+		var a = inputs[| 3].drawOverlay(hover, active, px, py, _s * 4, _mx, _my, _snx, _sny, 1); active &= a;
+		var a = inputs[| 4].drawOverlay(hover, active, _x, _y, _s,     _mx, _my, _snx, _sny);	 active &= a;
+		var a = inputs[| 5].drawOverlay(hover, active, px, py, _s,     _mx, _my, _snx, _sny);	 active &= a;
 	} #endregion
 	
 	static drawPreviewToolOverlay = function(hover, active, _mx, _my, _panel) { #region
@@ -108,7 +115,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		preview_custom_x_max = max(preview_custom_x_max - _panel.w + ui(64), 0);
 		
-		var hov = hover && point_in_rectangle(_mx, _my, 0, sy, _panel.x1, _panel.x1);
+		var hov = hover && point_in_rectangle(_mx, _my, 0, sy, _panel.x1, _panel.y1);
 		
 		if(hov) {
 			if(mouse_wheel_down()) preview_custom_x_to -= ui(128);

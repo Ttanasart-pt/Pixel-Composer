@@ -1,4 +1,4 @@
-function readObj_init(_scale = 1, _yneg = false) {
+function readObj_init(_scale = 1, _axis = false) {
 	obj_reading = true;
 	obj_read_progress = 0;
 	obj_read_prog_sub = 0;
@@ -6,7 +6,7 @@ function readObj_init(_scale = 1, _yneg = false) {
 	obj_raw = noone;
 	
 	obj_reading_scale = _scale;
-	obj_reading_yneg  = _yneg;
+	obj_reading_axis  = _axis;
 	
 	_VB  = [];
 	_VBT = [];
@@ -40,7 +40,7 @@ function readObj_file() {
 		
 		switch(sep[0]) {
 			case "v" :
-				switch(obj_reading_yneg) {
+				switch(obj_reading_axis) {
 					case 0 :
 						array_push(v, [ 
 							real(sep[1]) * obj_reading_scale, 

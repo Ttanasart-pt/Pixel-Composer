@@ -1768,9 +1768,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return preview_overlay_rotation(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
 						
 			case VALUE_DISPLAY.vector :
-				var _spr = argument_count > arc + 0? argument[arc + 0] : THEME.anchor_selector;
+				var _typ = argument_count > arc + 0? argument[arc + 0] : 0;
 				var _sca = argument_count > arc + 1? argument[arc + 1] : 1;
-				return preview_overlay_vector(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
+				return preview_overlay_vector(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ);
 				
 			case VALUE_DISPLAY.gradient_range :
 				var _dim = argument[arc];

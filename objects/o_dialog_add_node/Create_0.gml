@@ -179,6 +179,8 @@ event_inherited();
 			
 			if(_node.outputNode != noone)
 				_outputs = res[$ _node.outputNode].outputs;
+			
+			return;
 		} else {
 			var _new_list = APPEND(_node.path);
 			if(_new_list == noone) return;
