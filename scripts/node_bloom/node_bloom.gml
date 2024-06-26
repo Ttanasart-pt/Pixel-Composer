@@ -32,13 +32,17 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 12] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	// inputs[| 13] = nodeValue("Types", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-	// 	.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Gaussian" ]);
+	inputs[| 13] = nodeValue("Types", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Gaussian", "Zoom" ]);
 	
+	inputs[| 14] = nodeValue("Zoom Origin", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
+		
 	input_display_list = [ 7, 8, 
 		["Surfaces",  true], 0, 5, 6, 9, 10, 
 		["Bloom",	 false], 1, 2, 3, 4,
-		["Blur",	  true], 11, 12, 
+		["Blur",	 false], 13, 11, 12, 14, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -47,8 +51,20 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	surface_blur_init();
 	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var _typ = getSingleValue(13);
+		
+		if(_typ == 1)
+			inputs[| 14].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	} #endregion
+	
 	static step = function() { #region
 		__step_mask_modifier();
+		
+		var _typ = getSingleValue(13);
+		inputs[| 11].setVisible(_typ == 0);
+		inputs[| 12].setVisible(_typ == 0);
+		inputs[| 14].setVisible(_typ == 1);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -56,8 +72,12 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _tole  = _data[2];
 		var _stre  = _data[3];
 		var _mask  = _data[4];
+		
+		var _type  = _data[13];
 		var _ratio = _data[11];
 		var _angle = _data[12];
+		var _zoom  = _data[14];
+		
 		var pass1  = surface_create_valid(surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf), attrDepth());	
 		
 		surface_set_shader(pass1, sh_bloom_pass);
@@ -71,7 +91,11 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
-		var pass1blur = surface_apply_gaussian(pass1, _size, true, c_black, 1, noone, false, _ratio, _angle);
+		var pass1blur;
+		
+		     if(_type == 0) pass1blur = surface_apply_gaussian( pass1, _size, true, c_black, 1, noone, false, _ratio, _angle);
+		else if(_type == 1) pass1blur = surface_apply_blur_zoom(pass1, _size, _zoom[0], _zoom[1], 2, 1);
+		
 		surface_free(pass1);
 		
 		surface_set_shader(_outSurf, sh_blend_add_alpha_adj);

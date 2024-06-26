@@ -54,8 +54,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			
 		} else if(mode == 1) {
 			socket = network_create_server_raw(network_socket_ws, port, 16);
-			if(socket)
-				NETWORK_SERVERS[? newPort] = socket;
+			if(socket) NETWORK_SERVERS[? port] = socket;
 		}
 	} #endregion
 	

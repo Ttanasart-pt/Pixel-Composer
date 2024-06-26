@@ -6,7 +6,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
 		.setMappable(12);
 	
-	inputs[| 2] = nodeValue("Center",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 2] = nodeValue("Center",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 		
@@ -81,7 +81,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_i("useMask", is_surface(_data[5]));
 			shader_set_surface("mask", _data[5]);
 				
-			draw_surface_safe(_data[0], 0, 0);
+			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);

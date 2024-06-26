@@ -78,3 +78,27 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 	
 	return __blur_vert;
 }
+
+
+function surface_apply_blur_zoom(surface, size, origin_x, origin_y, blurMode = 0, sampleMode = 0) {
+	var format = surface_get_format(surface);
+	var _sw    = surface_get_width_safe(surface);
+	var _sh    = surface_get_height_safe(surface);
+	
+	__blur_hori = surface_verify(__blur_hori, _sw, _sh, format);
+	
+	size = min(size, 128) / 128;
+	var gau_array = __gaussian_get_kernel(size);
+	
+	surface_set_shader(__blur_hori, sh_blur_zoom);
+		shader_set_f("center",       origin_x / _sw, origin_y / _sh);
+		shader_set_f_map("strength", size);
+		shader_set_i("blurMode",     blurMode);
+		shader_set_i("sampleMode",   sampleMode);
+		shader_set_i("gamma",        0);
+		
+		draw_surface_safe(surface);
+	surface_reset_shader();
+	
+	return __blur_hori;
+}

@@ -69,12 +69,17 @@ function shader_set_f(uniform, value) { #region
 	}
 } #endregion
 
-function shader_set_f_map(uniform, value, surface, junc) { #region
+function shader_set_f_map(uniform, value, surface = noone, junc = noone) { #region
 	INLINE
 	
-	shader_set_f(      uniform, is_array(value)? value : [ value, value ]); 
-	shader_set_i(      uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
-	shader_set_surface(uniform + "Surf",    surface);
+	shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
+	
+	if(surface == noone) {
+		shader_set_i(      uniform + "UseSurf", false);
+	} else {
+		shader_set_i(      uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
+		shader_set_surface(uniform + "Surf",    surface);
+	}
 } #endregion
 
 function shader_set_f_map_s(uniform, value, surface, junc) { #region
