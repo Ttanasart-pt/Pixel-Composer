@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_box_pattern",
+  "name":"sh_box_pattern",
+  "parent":{
+    "name":"generator",
+    "path":"folders/shader/generator.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
