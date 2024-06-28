@@ -7,6 +7,7 @@ enum LIGHT_SHAPE_2D {
 
 function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "2D Light";
+	batch_output = false;
 	
 	shader = sh_2d_light;
 	uniform_colr = shader_get_uniform(shader, "color");

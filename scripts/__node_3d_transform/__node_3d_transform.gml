@@ -1,5 +1,6 @@
 function __Node_3D_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Transform";
+	batch_output = false;
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);

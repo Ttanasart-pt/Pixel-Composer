@@ -1,5 +1,6 @@
 function __Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Sphere";
+	batch_output = false;
 	dimension_index = 1;
 	
 	inputs[| 0] = nodeValue("Subdivisions", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [8, 4], "Amount of polygon in X and Y axis.")

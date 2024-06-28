@@ -11,7 +11,7 @@ enum COMPOSE_OUTPUT_SCALING {
 }
 
 function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name		= "Composite";
+	name = "Composite";
 	
 	inputs[| 0] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.padding);
@@ -408,8 +408,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
-		.rejectArrayProcess();
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
+	
+	outputs[| 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [1, 1])
+		.setVisible(false)
+		.setDisplay(VALUE_DISPLAY.vector);
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	blend_temp_surface = temp_surface[2];
@@ -428,8 +431,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	overlay_w = 0;
 	overlay_h = 0;
-	
-	atlas_data = [];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
@@ -716,18 +717,18 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_selecting = input_fix_len;
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		if(_output_index == 1) return atlas_data;
-		if(_output_index == 0 && _array_index == 0) atlas_data = [];
+	static processData = function(_outData, _data, _output_index, _array_index) { #region
+		var _outSurf  = _outData[0];
 		
-		if(array_length(_data) <= input_fix_len) return _outSurf;
+		if(array_length(_data) <= input_fix_len) return [ _outSurf, noone, [1, 1] ];
+		
 		var _pad	  = _data[0];
 		var _dim_type = _data[1];
 		var _dim	  = _data[2];
 		var base	  = _data[3];
 		var cDep	  = attrDepth();
 		
-		if(!is_surface(base)) return _outSurf;
+		if(!is_surface(base)) return [ _outSurf, noone, [1, 1] ];
 		
 		#region dimension 
 			var ww = 0, hh = 0;
@@ -766,6 +767,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _vis      = attributes.layer_visible;
 		var bg        = 0;
 		var _bg       = 0;
+		var _atlas    = [];
 		
 		blend_temp_surface = temp_surface[2];
 		
@@ -793,7 +795,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _d0 = point_rotate(cx - _sw / 2, cy - _sh / 2, cx, cy, _rot);
 			
-			array_push(atlas_data, new SurfaceAtlas(_s, _d0[0], _d0[1], _rot, _sca[0], _sca[1]));
+			array_push(_atlas, new SurfaceAtlas(_s, _d0[0], _d0[1], _rot, _sca[0], _sca[1]));
 			
 			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
 				draw_surface_blend_ext(temp_surface[!_bg], _s, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, _alp, _bld, true);
@@ -808,7 +810,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();
 		
-		return _outSurf;
+		return [ _outSurf, _atlas, [ww, hh] ];
 	} #endregion
 	
 	static attributeSerialize = function() { #region

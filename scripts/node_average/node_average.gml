@@ -1,5 +1,6 @@
 function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Average";
+	batch_output = false;
 	
 	shader = sh_average;
 	uniform_dim = shader_get_uniform(shader, "dimension");

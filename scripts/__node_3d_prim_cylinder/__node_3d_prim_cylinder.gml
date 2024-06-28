@@ -1,5 +1,6 @@
 function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Cylinder";
+	batch_output = false;
 	dimension_index = 2;
 	
 	inputs[| 0] = nodeValue("Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);

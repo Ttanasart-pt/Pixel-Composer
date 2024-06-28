@@ -26,22 +26,33 @@ function _sprite_load_from_struct(str, theme, key) { #region
 	INLINE
 	
 	var path = _sprite_path(str.path, theme);
-	var s    = sprite_add(path, str.subimages, false, true, str.xorigin, str.yorigin);
+	var s    = sprite_add(path, str.s, false, true, str.x, str.y);
 	
-	if(str.slice) {
-		var slice = sprite_nineslice_create();	
-		slice.enabled = str.slice.enabled;
-		slice.left    = str.slice.left;
-		slice.right   = str.slice.right;
-		slice.top     = str.slice.top;
-		slice.bottom  = str.slice.bottom;
-		
-		if(struct_has(str.slice, "tilemode"))
-			slice.tilemode = str.slice.tilemode;
-		
-		if(s >= 0) sprite_set_nineslice(s, slice);
-		else log_message("THEME", $"Load sprite {path} failed.");
+	if(s < 0) {
+		log_message("THEME", $"Load sprite {path} failed.");
+		return 0;
 	}
+		
+	if(struct_has(str, "slice")) {
+		var slice = sprite_nineslice_create();	
+		slice.enabled = true;
+		
+		if(is_array(str.slice)) {
+			slice.left    = str.slice[0];
+			slice.right   = str.slice[1];
+			slice.top     = str.slice[2];
+			slice.bottom  = str.slice[3];
+			
+		} else if(is_real(str.slice)) {
+			slice.left    = str.slice;
+			slice.right   = str.slice;
+			slice.top     = str.slice;
+			slice.bottom  = str.slice;
+			
+		}
+		sprite_set_nineslice(s, slice);
+	}
+	
 	return s; 
 } #endregion
 

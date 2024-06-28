@@ -9,6 +9,7 @@ enum NODE_SCATTER_DIST {
 
 function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scatter";
+	batch_output = false;
 	dimension_index = 1;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);

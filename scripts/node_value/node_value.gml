@@ -1808,13 +1808,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static drawJunction = function(_s, _mx, _my) { #region
 		_s /= 2;
 		
-		var hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var _d  = 24 * _s;
+		var hov        = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
+		var _d         = 24 * _s;
 		var is_hover   = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d - 1, y + _d - 1);
 		hover_in_graph = is_hover;
-		
-		var _bgS = THEME.node_junctions_bg;
-		var _fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
 		
 		if(is_dummy) {
 			__draw_sprite_ext(THEME.node_junction_add, is_hover, x, y, _s, _s, 0, c_white, 0.5 + 0.5 * is_hover);
@@ -1834,7 +1831,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_cbg = merge_color(draw_blend_color, _cbg, draw_blend);
 				_cfg = merge_color(draw_blend_color, _cfg, draw_blend);
 			}
-		
+			
+			var _bgS, _fgS;
+			
+			if(_s > .5) {
+				_bgS = THEME.node_junctions_bg_x2;
+				_fgS = is_hover? THEME.node_junctions_outline_hover_x2 : THEME.node_junctions_outline_x2;
+				
+			} else {
+				_bgS = THEME.node_junctions_bg;
+				_fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
+				_s  *= 2;
+			}
+			
 			__draw_sprite_ext(_bgS, draw_junction_index, x, y, _s, _s, 0, _cbg, 1);
 			__draw_sprite_ext(_fgS, draw_junction_index, x, y, _s, _s, 0, _cfg, 1);
 		}

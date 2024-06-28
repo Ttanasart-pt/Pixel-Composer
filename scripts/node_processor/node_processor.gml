@@ -20,7 +20,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	manage_atlas = true;
 	atlas_index  = 0;
 	
-	batch_output = false;	//Run processData once with all outputs as array.
+	batch_output = true;	//Run processData once with all outputs as array.
 	
 	icon = THEME.node_processor_icon;
 	

@@ -1,5 +1,6 @@
 function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
 	name = "Transform 3D";
+	batch_output = false;
 	
 	preview_channel = 1;
 	object        = new __3dPlane();

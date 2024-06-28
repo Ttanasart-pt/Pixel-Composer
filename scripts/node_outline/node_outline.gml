@@ -1,5 +1,6 @@
 function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Outline";
+	batch_output = false;
 	
 	attributes.filter = array_create(9, 1);
 	filtering_vl = false;
