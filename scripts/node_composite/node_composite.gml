@@ -356,18 +356,14 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	function deleteLayer(index) { #region
 		var idx = input_fix_len + index * data_length;
 		
-		for( var i = 0; i < data_length; i++ ) {
+		for( var i = 0; i < data_length; i++ )
 			ds_list_delete(inputs, idx);
-			array_remove(input_display_list, idx + i);
-		}
 		
-		for( var i = input_display_list_len; i < array_length(input_display_list); i++ ) {
-			if(input_display_list[i] > idx)
-				input_display_list[i] = input_display_list[i] - data_length;
-		}
+		input_display_list = array_clone(input_display_list_raw, 1);
 		
-		if(ds_list_size(inputs) == input_fix_len)
-			createNewInput();
+		for(var i = input_fix_len, n = ds_list_size(inputs); i < n; i++)
+			array_push(input_display_list, i);
+		
 		doUpdate();
 	} #endregion
 	
