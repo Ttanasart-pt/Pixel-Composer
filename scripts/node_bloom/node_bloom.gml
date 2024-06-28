@@ -47,8 +47,9 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	attribute_surface_depth();
+	temp_surface = [ 0 ];
 	
+	attribute_surface_depth();
 	surface_blur_init();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
@@ -68,6 +69,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var _surf  = _data[0];
 		var _size  = _data[1];
 		var _tole  = _data[2];
 		var _stre  = _data[3];
@@ -78,36 +80,37 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _angle = _data[12];
 		var _zoom  = _data[14];
 		
-		var pass1  = surface_create_valid(surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf), attrDepth());	
+		var _sw = surface_get_width_safe(_surf);
+		var _sh = surface_get_height_safe(_surf);
 		
-		surface_set_shader(pass1, sh_bloom_pass);
+		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh);	
+		
+		surface_set_shader(temp_surface[0], sh_bloom_pass);
 			draw_clear_alpha(c_black, 1);
 			shader_set_f("size",      _size);
 			shader_set_f("tolerance", _tole);
 				
-			shader_set_i("useMask", is_surface(_mask));
+			shader_set_i("useMask",    is_surface(_mask));
 			shader_set_surface("mask", _mask);
 				
-			draw_surface_safe(_data[0]);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		var pass1blur;
 		
-		     if(_type == 0) pass1blur = surface_apply_gaussian( pass1, _size, true, c_black, 1, noone, false, _ratio, _angle);
-		else if(_type == 1) pass1blur = surface_apply_blur_zoom(pass1, _size, _zoom[0], _zoom[1], 2, 1);
-		
-		surface_free(pass1);
+		     if(_type == 0) pass1blur = surface_apply_gaussian( temp_surface[0], _size, true, c_black, 1, noone, false, _ratio, _angle);
+		else if(_type == 1) pass1blur = surface_apply_blur_zoom(temp_surface[0], _size, _zoom[0], _zoom[1], 2, 1);
 		
 		surface_set_shader(_outSurf, sh_blend_add_alpha_adj);
 			shader_set_surface("fore", pass1blur);
 			shader_set_f("opacity",	   _stre);
 			
-			draw_surface_safe(_data[0]);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
-		_outSurf = channel_apply(_data[0], _outSurf, _data[8]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[5], _data[6]);
+		_outSurf = channel_apply(_surf, _outSurf, _data[8]);
 		
 		return _outSurf;
 	}

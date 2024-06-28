@@ -1,6 +1,5 @@
 function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {	
 	name = "Draw Line";
-	batch_output = true;
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);

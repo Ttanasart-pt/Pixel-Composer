@@ -217,26 +217,31 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static processBatchOutput = function() { #region
-		var _is = ds_list_size(inputs);
-		var _os = ds_list_size(outputs);
+		var _is  = ds_list_size(inputs);
+		var _os  = ds_list_size(outputs);
+		var _dep = attrDepth();
 		
-		var _outVal = array_create(_os);
-		for(var i = 0; i < _os; i++)
-			_outVal[i] = outputs[| i].getValue();
+		var data;
+		var _out = array_create(_os);
+		for(var i = 0; i < _os; i++) _out[i] = outputs[| i].getValue();
 			
 		if(process_amount == 1) {
 			current_data = inputs_data;
-			var data = processData(_outVal, inputs_data, 0, 0);
+			
+			var _dim = getDimension();
+			
+			for(var i = 0; i < _os; i++) {
+				if(outputs[| i].type == VALUE_TYPE.surface) 
+					_out[i] = surface_verify(_out[i], _dim[0], _dim[1], _dep);
+			}
 			
 			if(_os == 1) {
+				data = processData(_out[0], inputs_data, 0, 0);
 				outputs[| 0].setValue(data);
 				
 			} else {
-				for(var i = 0; i < _os; i++) {
-					var _outp = array_safe_get_fast(data, i, undefined);
-					if(_outp == undefined) continue;
-					outputs[| i].setValue(_outp);
-				}
+				data = processData(_out, inputs_data, 0, 0);
+				for(var i = 0; i < _os; i++) outputs[| i].setValue(data[i]);
 			}
 			
 			return;
@@ -247,16 +252,26 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		for( var l = 0; l < process_amount; l++ ) {
 			
-			for(var i = 0; i < _is; i++)
-				_inputs[i] = all_inputs[i][l];
+			for(var i = 0; i < _is; i++) _inputs[i] = all_inputs[i][l];
+			if(l == 0 || l == preview_index) current_data = _inputs;
 			
-			if(l == 0 || l == preview_index) 
-				current_data = _inputs;
+			var _dim  = getDimension(l);
+			var _outa = array_create(_os);
 			
-			var data = processData(_outVal, _inputs, 0, l);
+			for(var i = 0; i < _os; i++) {
+				_outa[i] = array_safe_get(_out[i], l);
+				if(outputs[| i].type == VALUE_TYPE.surface) 
+					_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], _dep);
+			}
 			
-			if(_os == 1) _outputs[0][l] = data;
-			else		 for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
+			if(_os == 1) {
+				data = processData(_outa[0], _inputs, 0, l);
+				_outputs[0][l] = data;
+				
+			} else {
+				data = processData(_outa, _inputs, 0, l);
+				for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
+			}
 		}
 			
 		for( var i = 0, n = _os; i < n; i++ )
