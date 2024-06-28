@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_interlaced",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_interlaced",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

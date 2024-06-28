@@ -39,7 +39,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
-	static getSingleValue = function(_index, _arr = preview_index, output = false) { #region
+	static getSingleValue = function(_index, _arr = preview_index, output = false) { 
 		var _l  = output? outputs : inputs;
 		var _n  = _l[| _index];
 		var _in = output? _n.getValue() : getInputData(_index);
@@ -57,9 +57,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		return array_safe_get_fast(_in, _aIndex);
-	} #endregion
+	} 
 	
-	static getDimension = function(arr = 0) { #region
+	static getDimension = function(arr = 0) { 
 		if(dimension_index == -1) return [ 1, 1 ];
 		
 		var _in = getSingleValue(dimension_index, arr);
@@ -74,9 +74,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return _in;
 			
 		return [1, 1];
-	} #endregion
+	} 
 	
-	static processDataArray = function(outIndex) { #region
+	static processDataArray = function(outIndex) { 
 		var _output = outputs[| outIndex];
 		var _out    = _output.getValue();
 		var _atlas  = false;
@@ -214,9 +214,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		return _out;
-	} #endregion
+	}
 	
-	static processBatchOutput = function() { #region
+	static processBatchOutput = function() { 
 		var _is  = ds_list_size(inputs);
 		var _os  = ds_list_size(outputs);
 		var _dep = attrDepth();
@@ -277,19 +277,19 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for( var i = 0, n = _os; i < n; i++ )
 			outputs[| i].setValue(_outputs[i]);
 		
-	} #endregion
+	} 
 	
-	static processOutput = function() { #region
+	static processOutput = function() { 
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var val = outputs[| i].process_array? processDataArray(i) : processData(outputs[| i].getValue(), noone, i);
 			if(val != undefined)
 				outputs[| i].setValue(val);
 		}
-	} #endregion
+	} 
 	
 	static preGetInputs = function() {}
 	
-	static getInputs = function() { #region
+	static getInputs = function() {
 		preGetInputs();
 		
 		var _len = ds_list_size(inputs);
@@ -361,9 +361,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			all_inputs[i][l] = inputs[| i].arrayBalance(_in[_index]);
 		} #endregion
 		
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		processData_prebatch();
 		
 		if(batch_output) processBatchOutput();
@@ -373,23 +373,23 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		postProcess();
 		postPostProcess();
-	} #endregion
+	}
 	
 	static postProcess = function() {}
 	
 	static postPostProcess = function() {}
 	
-	static processSerialize = function(_map) { #region
+	static processSerialize = function(_map) {
 		_map.array_process = attributes.array_process;
-	} #endregion
+	}
 	
-	static processDeserialize = function() { #region
+	static processDeserialize = function() {
 		attributes.array_process = struct_try_get(load_map, "array_process", ARRAY_PROCESS.loop);
-	} #endregion
+	}
 	
 	///////////////////// CACHE /////////////////////
 	
-	static cacheCurrentFrameIndex = function(_frame, index) { #region
+	static cacheCurrentFrameIndex = function(_frame, index) {
 		cacheArrayCheck();
 		if(CURRENT_FRAME < 0) return;
 		if(CURRENT_FRAME >= array_length(cached_output)) return;
@@ -401,13 +401,13 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		array_safe_set(cache_result, CURRENT_FRAME, true);
 		
 		return cached_output[CURRENT_FRAME];
-	} #endregion
+	}
 	
-	static getCacheFrameIndex = function(frame = CURRENT_FRAME, index = 0) { #region
+	static getCacheFrameIndex = function(frame = CURRENT_FRAME, index = 0) {
 		if(frame < 0) return false;
 		if(!cacheExist(frame)) return noone;
 		
 		var surf = array_safe_get_fast(cached_output, frame);
 		return array_safe_get_fast(surf, index);
-	} #endregion
+	}
 }
