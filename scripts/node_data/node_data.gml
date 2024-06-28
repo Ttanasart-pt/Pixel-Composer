@@ -1,8 +1,6 @@
 global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
 #macro INAME internalName == ""? name : internalName
-#macro NODE_HAS_INSP1 (onInspector1Update != noone)
-#macro NODE_HAS_INSP2 (onInspector2Update != noone)
 
 enum CACHE_USE {
 	none,
@@ -81,8 +79,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		icon    = noone;
 		icon_24 = noone;
 		bg_spr  = THEME.node_bg;
-		bg_spr_add = true;
-		bg_sel_spr = THEME.node_active;
+		bg_spr_add     = 0.1;
+		bg_spr_add_clr = c_white;
+		bg_sel_spr     = THEME.node_active;
 	
 		name = "";
 		display_name = "";
@@ -479,11 +478,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onInspector1Update  = noone;
 	static inspector1Update    = function() { INLINE onInspector1Update(); }
-	static hasInspector1Update = function() { INLINE return NODE_HAS_INSP1; }
+	static hasInspector1Update = function() { INLINE return onInspector1Update != noone; }
 	
 	static onInspector2Update  = noone;
 	static inspector2Update    = function() { INLINE onInspector2Update(); }
-	static hasInspector2Update = function() { INLINE return NODE_HAS_INSP2; }
+	static hasInspector2Update = function() { INLINE return onInspector2Update != noone; }
 	
 	static setInspector = function(index, _tooltip, _icon, _function) {
 		if(index == 1) {
@@ -505,8 +504,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		doStepBegin();
 		
-		if(NODE_HAS_INSP1) inspectInput1.name = insp1UpdateTooltip;
-		if(NODE_HAS_INSP2) inspectInput2.name = insp2UpdateTooltip;
+		if(hasInspector1Update()) inspectInput1.name = insp1UpdateTooltip;
+		if(hasInspector2Update()) inspectInput2.name = insp2UpdateTooltip;
 		
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.getValue()) { 
@@ -543,12 +542,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		if(NODE_HAS_INSP1 && inspectInput1.getStaticValue()) {
+		if(hasInspector1Update() && inspectInput1.getStaticValue()) {
 			onInspector1Update();
 			inspectInput1.setValue(false);
 		}
 		
-		if(NODE_HAS_INSP2 && inspectInput2.getStaticValue()) {
+		if(hasInspector2Update() && inspectInput2.getStaticValue()) {
 			onInspector2Update();
 			inspectInput2.setValue(false);
 		}
@@ -810,8 +809,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		if(NODE_HAS_INSP1 && inspectInput1.getValue()) onInspector1Update(true);
-		if(NODE_HAS_INSP2 && inspectInput2.getValue()) onInspector2Update(true);
+		if(hasInspector1Update() && inspectInput1.getValue()) onInspector1Update(true);
+		if(hasInspector2Update() && inspectInput2.getValue()) onInspector2Update(true);
 		
 		updatedOutTrigger.setValue(true);
 		
@@ -1078,15 +1077,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var yy = y * _s + _y;
 		var jun;
 		
-		var inspCount = NODE_HAS_INSP1 + NODE_HAS_INSP2;
+		var inspCount = hasInspector1Update() + hasInspector2Update();
 		var ind = 1;
-		if(NODE_HAS_INSP1) {
+		if(hasInspector1Update()) {
 			inspectInput1.x = xx + w * _s * ind / (inspCount + 1);
 			inspectInput1.y = yy;
 			ind++;
 		}
 		
-		if(NODE_HAS_INSP2) {
+		if(hasInspector2Update()) {
 			inspectInput2.x = xx + w * _s * ind / (inspCount + 1);
 			inspectInput2.y = yy;
 			ind++;
@@ -1144,21 +1143,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return !high || _selc;
 	} #endregion
 	
-	static getColor = function() { #region
-		INLINE
-		return attributes.color == -1? color : attributes.color;
-	} #endregion
+	static getColor = function() { INLINE return attributes.color == -1? color : attributes.color; }
 	
-	static drawNodeBase = function(xx, yy, _s) { #region
-		if(draw_graph_culled) return;
-		if(!active) return;
-		
-		var aa = 0.25 + 0.5 * renderActive;
-		if(!isHighlightingInGraph()) aa *= 0.25;
-		var cc = getColor();
-		
-		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, cc, aa);
-	} #endregion 
+	static drawNodeBase = function(xx, yy, _s) { INLINE draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, getColor(), (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph())); }
 	
 	__draw_bbox = BBOX();
 	static drawGetBbox = function(xx, yy, _s) { #region
@@ -1188,14 +1175,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} #endregion
 	
 	static drawNodeName = function(xx, yy, _s) { #region
-		
 		var _name = renamed? display_name : name;
 		if(_name == "") return;
 		
 		draw_name = true;
 		
-		var aa = 0.25 + 0.5 * renderActive;
-		if(!isHighlightingInGraph()) aa *= 0.25;
+		var ts = clamp(power(_s, 0.5), 0.5, 1);
+		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph());
 		var cc = getColor();
 		
 		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), cc, aa);
@@ -1204,22 +1190,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(PREFERENCES.node_show_render_status && !rendered)
 			cc = isRenderable()? COLORS._main_value_positive : COLORS._main_value_negative;
 		
-		draw_set_text(f_p1, fa_left, fa_center, cc);
+		aa += 0.25;
 		
-		if(NODE_HAS_INSP1) icon = THEME.refresh_16;
-		var ts = clamp(power(_s, 0.5), 0.5, 1);
+		if(icon) draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10),,, aa);
 		
-		var aa = 0.5 + 0.5 * renderActive;
-		if(!isHighlightingInGraph()) aa *= 0.25;
-		
-		draw_set_alpha(aa);
-		
-		if(icon && _s > 0.75) {
-			draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10),,, aa);	
-			draw_text_cut(round(xx + ui(24)), round(yy + ui(10)), _name, w * _s - ui(24), ts);
-		} else
-			draw_text_cut(round(xx + ui(8)), round(yy + ui(10)), _name, w * _s - ui(8), ts);
-			
+		draw_set_text(f_p1, fa_left, fa_center, cc, aa);
+			var _xpd = ui(8 + (icon != noone) * 16);
+			draw_text_cut(round(xx + _xpd), round(yy + ui(10)), _name, w * _s - _xpd, ts);
 		draw_set_alpha(1);
 	} #endregion
 	
@@ -1315,10 +1292,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				hover = jun;
 		}
 		
-		if(NODE_HAS_INSP1 && inspectInput1.drawJunction(_s, _mx, _my))
+		if(hasInspector1Update() && inspectInput1.drawJunction(_s, _mx, _my))
 			hover = inspectInput1;
 			
-		if(NODE_HAS_INSP2 && inspectInput2.drawJunction(_s, _mx, _my))
+		if(hasInspector2Update() && inspectInput2.drawJunction(_s, _mx, _my))
 			hover = inspectInput2;
 		
 		if(attributes.show_update_trigger) {
@@ -1354,10 +1331,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				hover = jun;
 		}
 		
-		if(NODE_HAS_INSP1 && inspectInput1.drawJunction_fast(_s, _mx, _my))
+		if(hasInspector1Update() && inspectInput1.drawJunction_fast(_s, _mx, _my))
 			hover = inspectInput1;
 			
-		if(NODE_HAS_INSP2 && inspectInput2.drawJunction_fast(_s, _mx, _my))
+		if(hasInspector2Update() && inspectInput2.drawJunction_fast(_s, _mx, _my))
 			hover = inspectInput2;
 		
 		if(attributes.show_update_trigger) {
@@ -1406,12 +1383,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				if(outputs[| i].visible) outputs[| i].drawName(_s, _mx, _my);
 		}
 		
-		if(NODE_HAS_INSP1 && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
+		if(hasInspector1Update() && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
 			inspectInput1.drawNameBG(_s);
 			inspectInput1.drawName(_s, _mx, _my);
 		}
 		
-		if(NODE_HAS_INSP2 && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput2.x, inspectInput2.y, 10)) {
+		if(hasInspector2Update() && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput2.x, inspectInput2.y, 10)) {
 			inspectInput2.drawNameBG(_s);
 			inspectInput2.drawName(_s, _mx, _my);
 		}
@@ -1455,12 +1432,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _len = 0;
 		var _jun, _hov;
 		
-		if(NODE_HAS_INSP1) {
+		if(hasInspector1Update()) {
 			_hov = inspectInput1.drawConnections(params);
 			if(_hov) hovering = _hov;
 		}
 		
-		if(NODE_HAS_INSP2) {
+		if(hasInspector2Update()) {
 			_hov = inspectInput2.drawConnections(params);
 			if(_hov) hovering = _hov;
 		}
@@ -1668,8 +1645,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
 		} 
 		
-		if(show_parameter)
-			drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus);
+		if(show_parameter) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus);
 		
 		draw_name = false;
 		if(_s >= 0.75) drawNodeName(xx, yy, _s);
@@ -1692,7 +1668,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_droppable = false;
 		}
 		
-		if(bg_spr_add) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, c_white, 0.1);
+		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, bg_spr_add_clr, bg_spr_add);
 		
 		return _s > 0.5? drawJunctions(xx, yy, _mx, _my, _s) : drawJunctions_fast(xx, yy, _mx, _my, _s);
 	} #endregion

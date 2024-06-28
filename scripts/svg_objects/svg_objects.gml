@@ -13,37 +13,57 @@ function SVGElement(svgObj = noone) constructor {
 	stroke       = undefined;
 	stroke_width = undefined;
 	
+	static attrColor = function(attr, key) {
+		if(!struct_has(attr, key)) return undefined;
+		
+		var str = attr[$ key];
+		if(is_real(str))      return str;
+		if(is_string(str))    return colorFromHex(string_replace(str, "#", ""));
+		
+		return c_black;
+	}
+	
+	static attrReal = function(str, def = 0) {
+		if(is_undefined(str)) return str;
+		if(is_real(str))      return str;
+		
+		var e;
+		if(is_string(str)) {
+			try      { return real(str); } 
+			catch(e) { return def; }
+		}
+		
+		return def;
+	}
+	
 	static setAttr = function(attr) {
 		
 		var box  = struct_try_get(attr, "viewBox", "");
 		var ww   = struct_try_get(attr, "width",   "");
 		var hh   = struct_try_get(attr, "height",  "");
 		
-		box = string_splice(box, " ");
-		var bx = toNumber(array_safe_get(box, 0, 0));
-		var by = toNumber(array_safe_get(box, 1, 0));
-		var bw = toNumber(array_safe_get(box, 2, 1));
-		var bh = toNumber(array_safe_get(box, 3, 1));
+		    box = string_splice(box, " ");
+		var bx  = attrReal(array_safe_get(box, 0, 0), 0);
+		var by  = attrReal(array_safe_get(box, 1, 0), 0);
+		var bw  = attrReal(array_safe_get(box, 2, 1), 1);
+		var bh  = attrReal(array_safe_get(box, 3, 1), 1);
 		
-		width  = toNumber(ww);
-		height = toNumber(hh);
+		width  = attrReal(ww, 1);
+		height = attrReal(hh, 1);
 		
 		if(string_pos("%", ww)) width  *= bw / 100;
 		if(string_pos("%", hh)) height *= bh / 100;
 		
-		fill         = struct_try_get(attr, "fill",         undefined);
-		stroke       = struct_try_get(attr, "stroke",       undefined);
+		fill         = attrColor(attr, "fill");
+		stroke       = attrColor(attr, "stroke");
 		stroke_width = struct_try_get(attr, "stroke-width", undefined);
 		
-		if(is_string(fill))   fill   = color_from_rgb(string_replace_all(fill,   "#", ""));
-		if(is_string(stroke)) stroke = color_from_rgb(string_replace_all(stroke, "#", ""));
-		
-		shapeAttr(attr);
+		onSetAttr(attr);
 		
 		return self;
 	}
 	
-	static shapeAttr = function(attr) {}
+	static onSetAttr = function(attr) {}
 	
 	static draw = function(scale = 1) {}
 	
@@ -61,17 +81,48 @@ function SVG(svgObj = noone) : SVGElement(svgObj) constructor {
 	static mapX = function(px) { return lerp_invert(px, bbox[0], bbox[0] + bbox[2]) *  width; }
 	static mapY = function(py) { return lerp_invert(py, bbox[1], bbox[1] + bbox[3]) * height; }
 	
+	static onSetAttr = function(attr) {
+		if(struct_has(attr, "viewBox")) {
+			var _bbox = attr.viewBox;
+			_bbox = string_splice(_bbox);
+			for (var i = 0, n = array_length(_bbox); i < n; i++)
+				bbox[i] = attrReal(_bbox[i]);
+		}
+	}
+	
+	static setContent = function(cont) {
+		if(!struct_has(cont, "children")) return;
+		
+		setAttr(cont.attributes);
+		var _ind = 0;
+		
+		for (var i = 0, n = array_length(cont.children); i < n; i++) {
+			var _ch = cont.children[i];
+			
+			switch(_ch.type) {
+				case "path" :	  contents[_ind++] = new SVG_path(self).setAttr(_ch.attributes);		break;
+				case "rect" :	  contents[_ind++] = new SVG_rect(self).setAttr(_ch.attributes);		break;
+				case "circle" :   contents[_ind++] = new SVG_circle(self).setAttr(_ch.attributes);		break;
+				case "ellipse" :  contents[_ind++] = new SVG_ellipse(self).setAttr(_ch.attributes);		break;
+				case "line" :	  contents[_ind++] = new SVG_line(self).setAttr(_ch.attributes);		break;
+				case "polyline" : contents[_ind++] = new SVG_polyline(self).setAttr(_ch.attributes);	break;
+				case "polygon" :  contents[_ind++] = new SVG_polygon(self).setAttr(_ch.attributes);		break;
+			}
+		}
+		
+		return self;
+	}
+	
 	static getSurface = function(scale = 1) { return surface_create(width * scale, height * scale); }
 	
 	static draw = function(scale = 1) {
-		if(!is_undefined(fill)) 
-			draw_set_color(fill);
 		
-		if(!is_undefined(fill_opacity)) 
-			draw_set_alpha(fill_opacity);
-		
-		for (var i = 0, n = array_length(contents); i < n; i++)
+		for (var i = 0, n = array_length(contents); i < n; i++) {
+			if(!is_undefined(fill)) 		draw_set_color(fill);
+			if(!is_undefined(fill_opacity)) draw_set_alpha(fill_opacity);
+			
 			contents[i].draw(scale);
+		}
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -181,7 +232,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 		// }
 	}
 	
-	static shapeAttr = function(attr) {
+	static onSetAttr = function(attr) {
 		
 		var def   = struct_try_get(attr, "d", "");
 		var _mode = "";
@@ -672,7 +723,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 
 function SVG_rect(svgObj = noone) : SVGElement(svgObj) constructor {
 	
-	static shapeAttr = function(attr) {
+	static onSetAttr = function(attr) {
 		x = struct_try_get(attr, "x", 0);
 		y = struct_try_get(attr, "y", 0);
 		
@@ -719,7 +770,7 @@ function SVG_circle(svgObj = noone) : SVGElement(svgObj) constructor {
 	cy = 0;
 	r  = 0;
 	
-	static shapeAttr = function(attr) {
+	static onSetAttr = function(attr) {
 		cx = struct_try_get(attr, "cx", 0);
 		cy = struct_try_get(attr, "cy", 0);
 		
@@ -764,7 +815,7 @@ function SVG_ellipse(svgObj = noone) : SVGElement(svgObj) constructor {
 	rx = 0;
 	ry = 0;
 	
-	static shapeAttr = function(attr) {
+	static onSetAttr = function(attr) {
 		cx = struct_try_get(attr, "cx", 0);
 		cy = struct_try_get(attr, "cy", 0);
 		
@@ -812,7 +863,7 @@ function SVG_line(svgObj = noone) : SVGElement(svgObj) constructor {
 	x1 = 0;
 	y1 = 0;
 	
-	static shapeAttr = function(attr) {
+	static onSetAttr = function(attr) {
 		x0 = struct_try_get(attr, "x0", 0);
 		y0 = struct_try_get(attr, "y0", 0);
 		
@@ -852,7 +903,7 @@ function SVG_line(svgObj = noone) : SVGElement(svgObj) constructor {
 function SVG_polyline(svgObj = noone) : SVGElement(svgObj) constructor {
 	points = [];
 	
-	static shapeAttr = function(attr) {
+	static onSetAttr = function(attr) {
 		points = struct_try_get(attr, "points", []);
 	}
 	
@@ -907,7 +958,7 @@ function SVG_polyline(svgObj = noone) : SVGElement(svgObj) constructor {
 function SVG_polygon(svgObj = noone) : SVGElement(svgObj) constructor {
 	points = [];
 	
-	static shapeAttr = function(attr) {
+	static onSetAttr = function(attr) {
 		points = struct_try_get(attr, "points", []);
 	}
 	

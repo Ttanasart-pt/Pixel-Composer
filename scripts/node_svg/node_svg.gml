@@ -1,11 +1,11 @@
-function Node_create_SVG_path(_x, _y, path) { #region
+function Node_create_SVG_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_SVG(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	return node;	
-} #endregion
+}
 
 function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "SVG";
@@ -20,9 +20,6 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 1] = nodeValue("SVG Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
 	
-	outputs[| 2] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
-		.setVisible(true, true);
-	
 	attribute_surface_depth();
 	
 	rawContent = noone;
@@ -35,7 +32,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
-	on_drop_file = function(path) { #region
+	on_drop_file = function(path) {
 		inputs[| 0].setValue(path);
 		
 		if(readFile(path)) {
@@ -44,9 +41,9 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		return false;
-	} #endregion
+	}
 	
-	function readFile(path) { #region
+	function readFile(path) {
 		curr_path = path;
 		if(!file_exists_empty(path)) 
 			return noone;
@@ -57,7 +54,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(ext != ".svg") return;
 		
-		var _rawContent = file_text_read_all_lines(path);
+		var _rawContent = file_read_all(path);
 		var _st         = string_pos("<svg", _rawContent);
 		var _end        = string_length(_rawContent);
 		_rawContent     = string_copy(_rawContent, _st, _end - _st + 1);
@@ -66,15 +63,15 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		content    = svg_parse(rawContent);
 		
 		return;
-	} #endregion
+	}
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { #region
+	static onInspector1Update = function() {
 		readFile(path_get(getInputData(0)));
 		triggerRender();
-	} #endregion
+	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _scale   = getInputData(1);
@@ -83,7 +80,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			content.drawOverlay(hover, active, _x, _y, _s * _scale, _mx, _my, _snx, _sny);
 	}
 	
-	static step = function() { #region
+	static step = function() {
 		var path = path_get(getInputData(0));
 		if(!file_exists_empty(path)) return;
 		
@@ -92,9 +89,9 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			readFile(path);
 			triggerRender();
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var path = path_get(getInputData(0));
 		if(path != curr_path)
 			readFile(path);
@@ -116,5 +113,5 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		outputs[| 0].setValue(_outsurf);
 		outputs[| 1].setValue(rawContent);
-	} #endregion
+	}
 }

@@ -28,6 +28,7 @@ function draw_set_text(font, halign, valign) {
 	INLINE
 	
 	if(argument_count > 3) draw_set_color(argument[3]);
+	if(argument_count > 4) draw_set_alpha(argument[4]);
 	
 	draw_set_font(font);
 	draw_set_halign(halign);

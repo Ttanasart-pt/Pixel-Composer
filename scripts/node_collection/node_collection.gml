@@ -232,19 +232,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
 	
 	static inspector1Update    = function() { onInspector1Update(); }
-	static onInspector1Update  = function() { RenderList(nodes); }
+	static onInspector1Update  = function() { array_foreach(NodeListSort(nodes), function(n) { if(n.hasInspector1Update()) n.inspector1Update(); }); }
 	static hasInspector1Update = function() { INLINE return hasInsp1; }
 	
 	static inspector2Update    = function() { onInspector2Update(); }
-	static onInspector2Update  = function() { #region
-		var i = 0;
-		
-		repeat(array_length(nodes)) {
-			if(nodes[i].hasInspector2Update())
-				nodes[i].inspector2Update();
-			i++;
-		}
-	} #endregion
+	static onInspector2Update  = function() { array_foreach(NodeListSort(nodes), function(n) { if(n.hasInspector2Update()) n.inspector2Update(); }); }
 	static hasInspector2Update = function() { INLINE return hasInsp2; }
 	
 	will_refresh = false;
@@ -456,13 +448,23 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static onStep = function() {}
 	
-	static onPreDraw = function(_x, _y, _s, _iny, _outy) { #region
+	static onPreDraw = function(_x, _y, _s, _iny, _outy) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
 		input_dummy.x = xx;
 		input_dummy.y = _iny;
-	} #endregion
+		
+		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && (!PREFERENCES.panel_graph_group_require_shift || key_mod_press(SHIFT));
+		bg_spr_add = 0.1 + (0.1 * _hv);
+	}
+	
+	static drawNodeBase = function(xx, yy, _s) {
+		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && (!PREFERENCES.panel_graph_group_require_shift || key_mod_press(SHIFT));
+		var _aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph()) + _hv * 0.1;
+		
+		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, getColor(), _aa);
+	}
 	
 	static preConnect = function() { #region
 		sortIO();
