@@ -54,21 +54,22 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	frame_renderer_x_max = 0;
 	
 	frame_renderer_content = surface_create(1, 1);
-	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region frame_renderer
-		var _h = 64;
-		_y += 8;
-		
+	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _full = true) { #region frame_renderer
+		var _h = _full? 64 : 48;
 		var _anim  = getInputData(12);
 		var _cnt_hover = false;
 		
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
+		if(_full) {
+			_y += 8;
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
+		}
 		
 		if(_hover && frame_renderer.parent != noone && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			frame_renderer.parent.scroll_lock = true;
 			_cnt_hover = _hover;
 		}
 		
-		var _pd = ui(2);
+		var _pd = _full? ui(2) : 0;
 		var _aw = ui(32);
 		var _ww = _w - _pd - _aw;
 		var _hh = _h - _pd - _pd;
@@ -116,7 +117,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var _del_y = _sy          + 10;
 					var _del_a = noone;
 					
-					if(point_in_circle(_msx, _msy, _del_x, _del_y, 8)) {
+					if(key_mod_press(SHIFT) && point_in_circle(_msx, _msy, _del_x, _del_y, 8)) {
 						_del_a = 1;
 						
 						if(mouse_press(mb_left, _focus)) 
@@ -163,7 +164,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			update();
 		}
 		
-		return 8 + _h;
+		return _h + 8 * _full;
 	}); #endregion
 	
 	temp_surface = array_create(1);

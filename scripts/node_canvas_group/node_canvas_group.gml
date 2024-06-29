@@ -42,10 +42,12 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	});
 	
 	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
-		var _h  = ui(4);
+		var _h  = 0;
 		var _yy = _y;
 		
-		for (var i = 0, n = array_length(canvases); i < n; i++) {
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, frame_renderer.h, COLORS.node_composite_bg_blend, 1);
+		
+		for (var i = array_length(canvases) - 1; i >= 0; i--) {
 			var _canvas = canvases[i];
 			
 			var _frame_render = _canvas.frame_renderer;
@@ -53,13 +55,14 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		    _frame_render.rx = frame_renderer.rx;
 		    _frame_render.ry = frame_renderer.ry;
 		    
-		    var _wdh = _frame_render.draw(_x, _yy, _w, _m, _hover, _focus);
+		    var _wdh = _frame_render.draw(_x, _yy, _w, _m, _hover, _focus, false);
 			if(!is_undefined(_wdh)) {
 				_h  += _wdh;
 				_yy += _wdh;
 			}
 		}
 		
+		frame_renderer.h = _h;
 		return _h;
 	});
 	
