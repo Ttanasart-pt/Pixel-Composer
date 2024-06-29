@@ -280,7 +280,7 @@ function timelineItemNode_Image_Animated(node) : timelineItemNode(node) construc
 		}
 	}
 	
-	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy) {
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		if(!is_instanceof(node, Node_Image_Animated)) return;
 		if(!node.attributes.show_timeline) return;
 		

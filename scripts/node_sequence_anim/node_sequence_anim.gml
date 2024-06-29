@@ -163,7 +163,7 @@ function timelineItemNode_Sequence_Anim(node) : timelineItemNode(node) construct
 		}
 	}
 	
-	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy) {
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		if(!is_instanceof(node, Node_Sequence_Anim)) return;
 		if(!node.attributes.show_timeline) return;
 		

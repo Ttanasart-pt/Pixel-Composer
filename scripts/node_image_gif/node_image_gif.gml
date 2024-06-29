@@ -258,7 +258,7 @@ function timelineItemNode_Image_gif(node) : timelineItemNode(node) constructor {
 		}
 	}
 	
-	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy) {
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		if(!is_instanceof(node, Node_Image_gif)) return;
 		if(!node.attributes.show_timeline) return;
 		

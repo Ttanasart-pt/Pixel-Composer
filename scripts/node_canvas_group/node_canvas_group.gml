@@ -2,6 +2,9 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	name  = "Canvas Group";
 	color = COLORS.node_blend_canvas;
 	
+	timeline_item_group = new timelineItemGroup_Canvas(self);
+	PROJECT.timelines.addItem(timeline_item_group);
+	
 	modifiable = false;
 	
 	inputs[|  0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
@@ -84,7 +87,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	
 	group_input_display_list = [ 0, 
 		["Layers", false], layer_renderer, 
-		["Frames", false], frame_renderer, 
+		["Frames",  true], frame_renderer, 
 		["Inputs", false], 
 	];
 	
@@ -148,10 +151,18 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		node.modifiable    = false;
 		node.modify_parent = self;
 		
-		     if(is_instanceof(node, Node_Canvas))    array_push(canvases, node);
-		else if(is_instanceof(node, Node_Composite)) composite = node;
-			
+	    if(is_instanceof(node, Node_Canvas))    {
+     		array_push(canvases, node);
+     		node.timeline_item.removeSelf();
+			timeline_item_group.addItem(node.timeline_item);
+		
+		} else if(is_instanceof(node, Node_Composite)) {
+			composite = node;
+			composite.canvas_group = self;
+		}
+		
 		refreshLayer();
+		onLayerChanged();
 	}
 	
 	static layerAdd = function() {
@@ -172,6 +183,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		
 		_b += 32;
 		var _canvas = nodeBuild("Node_Canvas", _l, _b);
+		_canvas.setDisplayName($"Layer {array_length(canvases)}");
 		_canvas.inputs[| 12].setValue(true);
 		
 		composite.dummy_input.setFrom(_canvas.outputs[| 0]);
@@ -189,11 +201,36 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		if(!nod) return;
 		
 		nod.destroy();
+		onLayerChanged();
+	}
+	
+	static onLayerChanged = function() {
+		if(composite == noone) return;
+		
+		var imageAmo   = composite.getInputAmount();
+		var _canvas_tm = [];
+		var _grp_cont  = timeline_item_group.contents;
+		
+		for(var i = 0; i < imageAmo; i++) {
+			var _ind  = composite.input_fix_len + i * composite.data_length;
+			var _inp  = composite.inputs[| _ind];
+			var _junc = _inp.value_from? _inp.value_from.node : noone;
+			
+			if(_junc == noone) continue;
+			if(!struct_has(layers, _junc.node_id)) continue;
+			
+			var _jun_layer   = layers[$ _junc.node_id];
+			var _junc_canvas = _jun_layer.canvas;
+			
+			array_remove(_grp_cont,    _junc_canvas.timeline_item);
+			array_insert(_grp_cont, 0, _junc_canvas.timeline_item);
+		}
 	}
 	
 	if(NODE_NEW_MANUAL) {
 		var _canvas  = nodeBuild("Node_Canvas", x - 160, y);
 		_canvas.inputs[| 12].setValue(true);
+		_canvas.setDisplayName($"Background");
 		
 		var _compose = nodeBuild("Node_Composite", x, y);
 		_compose.dummy_input.setFrom(_canvas.outputs[| 0]);
@@ -237,6 +274,11 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 			rightTools    = canvas_sel.rightTools;
 			drawTools     = canvas_sel.drawTools;
 		}
+		
+		if(timeline_item_group) {
+			timeline_item_group.name  = getDisplayName();
+			timeline_item_group.color = getColor();
+		}
 	}
 	
 	static update = function() {
@@ -251,4 +293,21 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	}
 
 	sortIO();
+}
+
+function timelineItemGroup_Canvas(node = noone) : timelineItemGroup() constructor {
+	self.node = node;
+	
+	static onSerialize = function(_map) {
+		_map.node_id = is_struct(node)? node.node_id : -4;
+	}
+	
+	static onDeserialize = function(_map) {
+		var _node_id = _map.node_id;
+		
+		if(ds_map_exists(PROJECT.nodeMap, _node_id)) {
+			node = PROJECT.nodeMap[? _node_id];
+			node.timeline_item_group = self;
+		}
+	}
 }

@@ -33,7 +33,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 11] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue("Frames animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 12] = nodeValue("Frames animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	
 	inputs[| 13] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
 	
@@ -128,10 +128,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					} else if(point_in_rectangle(_msx, _msy, _sx, _sy, _sx + _ssw, _sy + _ssh)) {
 						_del_a = 0;
 						
-						if(mouse_press(mb_left, _focus)) {
-							if(_anim) PROJECT.animator.setFrame(i);
-							else      preview_index = i;
-						}
+						if(mouse_press(mb_left, _focus)) 
+							setFrame(i);
 					}
 					
 					if(_del_a != noone) {
@@ -161,7 +159,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _bx = _x1 + _aw / 2 - _bs / 2;
 		var _by = _y + _h / 2  - _bs / 2;
 		
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, _focus, _hover, "", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
+		if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, _focus, _hover, "", THEME.add_16, 0, [ COLORS._main_icon, COLORS._main_value_positive ]) == 2) {
 			attributes.frames++;
 			refreshFrames();
 			update();
@@ -386,6 +384,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		selection_tool_after = noone;
 	#endregion
+	
+	static setFrame = function(frame) {
+		var _anim  = getInputData(12);
+		if(_anim) PROJECT.animator.setFrame(frame);
+		else      preview_index = frame;
+	}
 	
 	function setToolColor(color) { CURRENT_COLOR = color; }
 	
@@ -1125,29 +1129,76 @@ function timelineItemNode_Canvas(node) : timelineItemNode(node) constructor {
 		if(!is_instanceof(node, Node_Canvas)) return;
 		if(!node.attributes.show_timeline) return;
 		
+	}
+	
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
+		if(!is_instanceof(node, Node_Canvas)) return;
+		if(!node.attributes.show_timeline) return;
+		
 		var _surfs = node.output_surface;
 		var _surf, _rx, _ry;
+		var _rx0, _ry0;
+		var _h = h - 2;
+		
+		_ry  = _h / 2 + _y;
+		_ry0 = _y;
+		
+		var _chv = _hover && _msy > _ry0 && _msy <= _ry0 + h;
+		var _hov = false;
 		
 		for (var i = 0, n = array_length(_surfs); i < n; i++) {
 			_surf = _surfs[i];
 			if(!surface_exists(_surf)) continue;
 			
-			_rx = _x + (i + 1) * _s;
-			_ry = h / 2 + _y;
+			_rx  = _x + (i + 1) * _s;
+			_rx0 = _rx - _h / 2;
 			
 			var _sw = surface_get_width_safe(_surf);
 			var _sh = surface_get_height_safe(_surf);
-			var _ss = h / max(_sw, _sh);
+			var _ss = _h / max(_sw, _sh);
 			
-			draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, .5);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _rx0, _ry0, _h, _h, CDEF.main_dkblack);
+			
+			if(i == node.preview_index) {
+				draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
+				draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _rx0, _ry0, _h, _h, COLORS._main_accent);
+				
+			} else {
+				draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, 0.1);
+				draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _rx0, _ry0, _h, _h, COLORS._main_icon, 0.3);
+			}
+			
+			if(_hover && point_in_rectangle(_msx, _msy, _rx0, _ry0, _rx0 + _h, _ry0 + _h)) {
+				draw_sprite_stretched_add(THEME.menu_button_mask, 1, _rx0, _ry0, _h, _h, c_white, 0.3);
+				_hov = true;
+				
+				if(mouse_press(mb_left, _focus))
+					node.setFrame(i);
+			}
 		}
-	}
-	
-	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy) {
-		if(!is_instanceof(node, Node_Canvas)) return;
-		if(!node.attributes.show_timeline) return;
 		
-		drawDopesheetOutput(_x, _y, _s, _msx, _msy);
+		if(!_hov && _chv) {
+			var _fr = round((_msx - _x) / _s);
+			if(_fr < 1 || _fr > TOTAL_FRAMES) return _hov;
+			
+			_rx  = _x + _fr * _s;
+			_rx0 = _rx - _h / 2;
+			
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _rx0, _ry0, _h, _h, CDEF.main_dkblack);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _rx0, _ry0, _h, _h, COLORS._main_value_positive, 0.75);
+			
+			if(mouse_press(mb_left, _focus)) {
+				node.attributes.frames = _fr;
+				node.refreshFrames();
+				node.update();
+				
+				node.setFrame(_fr - 1);
+			}
+			
+			return true;
+		}
+		
+		return _hov;
 	}
 	
 	static onSerialize = function(_map) {

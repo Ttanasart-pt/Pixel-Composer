@@ -34,6 +34,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	hold_select		= true;
 	layer_dragging	= noone;
 	layer_remove	= -1;
+	
+	canvas_group    = noone;
 	canvas_draw     = noone;
 	
 	renaming       = noone;
@@ -353,6 +355,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 			
 			layer_dragging = noone;
+			if(canvas_group) canvas_group.onLayerChanged();
 		}
 		
 		layer_height     = max(ui(16), _h);

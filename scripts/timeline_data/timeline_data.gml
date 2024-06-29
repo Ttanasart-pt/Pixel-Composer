@@ -14,7 +14,7 @@ function timelineItem() constructor {
 	
 	static drawLabel         = function(_x, _y, _w, _msx, _msy) {}
 	static drawDopesheet     = function(_x, _y, _s, _msx, _msy) {}
-	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy) {}
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {}
 	
 	static removeSelf = function() {
 		if(parent == noone) return;
@@ -23,14 +23,17 @@ function timelineItem() constructor {
 		return self;
 	}
 	
+	static onSerialize = function(_map) {}
 	static serialize = function() {}
 	
+	static onDeserialize = function(_map) {}
 	static deserialize = function(_map) {
 		
 		switch(_map.type) {
 			case "Folder" : return new timelineItemGroup().deserialize(_map);
 			case "Node"   : return new timelineItemNode(noone).deserialize(_map);
 			
+			case "timelineItemGroup_Canvas" :			return new timelineItemGroup_Canvas().deserialize(_map);
 			case "timelineItemNode_Canvas" :			return new timelineItemNode_Canvas(noone).deserialize(_map);
 			case "timelineItemNode_Image_Animated" :	return new timelineItemNode_Image_Animated(noone).deserialize(_map);
 			case "timelineItemNode_Sequence_Anim" : 	return new timelineItemNode_Sequence_Anim(noone).deserialize(_map);
@@ -57,14 +60,16 @@ function timelineItemNode(node) : timelineItem() constructor {
 		if(col == -1)
 		for( var i = array_length(cxt) - 1; i >= 0; i-- ) {
 			var _context = cxt[i];
-			if(_context.item.getColor() == -1) continue;
-			col = _context.item.getColor();
+			var _c = _context.item.getColor();
+			if(_c == -1) continue;
+			
+			col = _c;
 			break;
 		}
-		if(col == -1) col = CDEF.main_grey;
+		if(col == -1) col = merge_color(CDEF.main_ltgrey, CDEF.main_white, 0.3);
 		color_cur = col;
 		
-		var cc  = colorMultiply(col, COLORS.panel_animation_dope_bg);
+		var cc = colorMultiply(col, COLORS.panel_animation_dope_bg);
 		
 		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
 			cc  = colorMultiply(col, COLORS.panel_animation_dope_bg_hover);
@@ -72,16 +77,15 @@ function timelineItemNode(node) : timelineItem() constructor {
 		}
 		
 		color_dsp = cc;
-		draw_sprite_stretched_ext(THEME.timeline_folder, 0, _x, _y, _w, lh, cc, alpha);
-		//draw_sprite_stretched_ext(THEME.timeline_node, 1, _x, _y, _w, lh, COLORS.panel_animation_node_outline, 1);
-			
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _x, _y, _w, lh, cc, alpha);
+		// draw_sprite_stretched_add(THEME.menu_button_mask, 1, _x, _y, _w, lh, c_white, 0.1);
+		
 		var tx = lx + lw - ui(7);
 		if(buttonInstant(THEME.button_hide, tx - ui(9), _y + ui(1), ui(18), ui(18), [ _msx, _msy ], focus, hover, 
 			__txtx("panel_animation_goto", "Go to node"), THEME.animate_node_go, 0, col == -1? CDEF.main_grey : col) == 2)
 				graphFocusNode(node);
 			
-		if(_sel)
-			draw_sprite_stretched_ext(THEME.timeline_node, 1, _x, _y + 1, _w, lh - 2, COLORS._main_accent, 1);
+		if(_sel) draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _x, _y, _w, lh, COLORS._main_accent, 1);
 		
 		var aa = 0.75;
 		if(hover && point_in_rectangle(_msx, _msy, lx, _y, lx + ui(20), _y + lh)) {
@@ -111,7 +115,7 @@ function timelineItemNode(node) : timelineItem() constructor {
 		return res;
 	}
 	
-	static drawDopesheetOutput = function(_x, _y, _s, _msx, _msy) {
+	static drawDopesheetOutput = function(_x, _y, _s, _msx, _msy) { return;
 		var _surf = node.outputs[| 0].getValue();
 		if(!is_surface(_surf)) return;
 		
@@ -132,7 +136,6 @@ function timelineItemNode(node) : timelineItem() constructor {
 	static setColor = function(color) { node.attributes.color = color; }
 	static getColor = function()      { return node.attributes.color; }
 	
-	static onSerialize = function(_map) {}
 	static serialize   = function() {
 		var _map = {};
 		
@@ -144,11 +147,11 @@ function timelineItemNode(node) : timelineItem() constructor {
 		return _map;
 	}
 	
-	static onDeserialize = function(_map) {}
 	static deserialize   = function(_map) {
 		show  = struct_try_get(_map, "show", true);
 		
 		var _node_id = _map.node_id;
+		
 		if(_node_id == 0) {
 			node = PROJECT.globalNode;
 			node.timeline_item = self;
@@ -158,12 +161,13 @@ function timelineItemNode(node) : timelineItem() constructor {
 		}
 		
 		onDeserialize(_map);
+		
 		return self;
 	}
 }
 
 function timelineItemGroup() : timelineItem() constructor {
-	name = "";
+	name     = "";
 	renaming = false;
 	tb_name  = new textBox(TEXTBOX_INPUT.text, function(val) { name = val; renaming = false; });
 	contents = [];
@@ -197,20 +201,21 @@ function timelineItemGroup() : timelineItem() constructor {
 		if(col == -1) col = CDEF.main_grey;
 		color_cur = col;
 		
-		var bnd = hig? merge_color(c_white, COLORS.panel_animation_dope_bg, 0.8) : COLORS.panel_animation_dope_bg;
+		var bnd = hig? merge_color(c_white, COLORS.panel_animation_dope_bg, .9) : COLORS.panel_animation_dope_bg;
 		var cc  = colorMultiply(col, bnd);
 		
 		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
-			bnd = hig? merge_color(c_white, COLORS.panel_animation_dope_bg_hover, 0.8) : COLORS.panel_animation_dope_bg_hover;
+			bnd = hig? merge_color(c_white, COLORS.panel_animation_dope_bg_hover, .9) : COLORS.panel_animation_dope_bg_hover;
 			cc  = colorMultiply(col, bnd);
 			res = 1;
 		}
 		
 		color_dsp = cc;
-		draw_sprite_stretched_ext(THEME.timeline_folder, 0, _x, _y, _w, lh, cc, alpha);
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _x, _y, _w, lh, cc, alpha);
+		// draw_sprite_stretched_add(THEME.menu_button_mask, 1, _x, _y, _w, lh, c_white, 0.1);
 		
 		if(fdHover == self)
-			draw_sprite_stretched_ext(THEME.timeline_folder, 1, _x, _y, _w, lh, col == -1? COLORS._main_accent : col, 1);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _x, _y + 1, _w, lh - 2, col == -1? COLORS._main_accent : col, 1);
 		
 		var aa = 0.75;
 		if(hover && point_in_rectangle(_msx, _msy, lx, _y, lx + ui(20), _y + lh)) {
@@ -262,6 +267,7 @@ function timelineItemGroup() : timelineItem() constructor {
 		for( var i = 0, n = array_length(contents); i < n; i++ )
 			_content[i] = contents[i].serialize();
 		_map.contents = _content;
+		onSerialize(_map);
 		
 		return _map;
 	}
@@ -276,6 +282,7 @@ function timelineItemGroup() : timelineItem() constructor {
 			contents[i] = new timelineItem().deserialize(_map.contents[i]);
 			contents[i].parent = self;
 		}
+		onDeserialize(_map);
 			
 		return self;
 	}

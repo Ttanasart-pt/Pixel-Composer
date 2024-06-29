@@ -572,7 +572,6 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	function getTimelineContent() { #region
 		timeline_contents = [];
-		
 		getTimelineContentFolder(PROJECT.timelines);
 	} #endregion
 	
@@ -1430,7 +1429,8 @@ function Panel_Animation() : PanelContent() constructor {
 		var _hov = pHOVER && (msy > 0 && msy < dope_sheet_h);
 		var _foc = pFOCUS;
 		
-		var _res = _item.item.drawLabel(_item, _itx, _ity, _itw, msx, msy, _hov, _foc, item_dragging, hovering_folder, node_name_type, alpha);
+		var pd   = ui(4);
+		var _res = _item.item.drawLabel(_item, _itx + pd, _ity, _itw - pd * 2, msx, msy, _hov, _foc, item_dragging, hovering_folder, node_name_type, alpha);
 		
 		if(_res == 1) {
 			if(mouse_press(mb_left, _foc)) {
@@ -2027,14 +2027,16 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			var cf = string(CURRENT_FRAME + 1);
 			var tx = string_width(cf) + ui(4);
-			draw_rectangle(bar_line_x - tx / 2, PANEL_PAD, bar_line_x + tx / 2, hh, false);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
 			
 			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_on_accent);
 			draw_text_add(bar_line_x, PANEL_PAD, cf);
 			
 			for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
 				var _cont = timeline_contents[i];
-				_cont.item.drawDopesheetOver(timeline_shift, _cont.y, timeline_scale, msx, msy);
+				var _hov  = _cont.item.drawDopesheetOver(timeline_shift, _cont.y, timeline_scale, msx, msy, pHOVER, pFOCUS);
+				if(is_undefined(_hov)) continue;
+				if(_hov) keyframe_boxable = false;
 			}
 		#endregion
 		
@@ -2119,7 +2121,7 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		_drawDopesheetLabel();
 		
-		if(mouse_press(mb_right, pFOCUS)) { #region context menu
+		if(keyframe_boxable && mouse_press(mb_right, pFOCUS)) { #region context menu
 			if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + dope_sheet_w, ui(8) + dope_sheet_h)) {
 				
 				if(array_empty(keyframe_selecting)) menuCall("animation_keyframe_empty_menu",,, keyframe_menu_empty);
