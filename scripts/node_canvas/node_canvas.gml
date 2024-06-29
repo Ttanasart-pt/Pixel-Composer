@@ -47,6 +47,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 17] = nodeValue("Random direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_random);
 	
+	inputs[| 18] = nodeValue("Animation Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Loop", "Hold", "Clear" ]);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	frame_renderer_x     = 0;
@@ -54,7 +57,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	frame_renderer_x_max = 0;
 	
 	frame_renderer_content = surface_create(1, 1);
-	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _full = true) { #region frame_renderer
+	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _full = true, _fx = frame_renderer_x) { #region frame_renderer
 		var _h = _full? 64 : 48;
 		var _anim  = getInputData(12);
 		var _cnt_hover = false;
@@ -88,7 +91,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _fr_h = _hh - 8;
 			var _fr_w = _fr_h;
 			
-			var _fr_x = 4 - frame_renderer_x;
+			var _fr_x = 4 - _fx;
 			var _fr_y = 4;
 			
 			var surfs = output_surface;
@@ -109,7 +112,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _ssw = _sw * _ss;
 				var _ssh = _sh * _ss;
 				
-				draw_surface_ext(_surf, _sx, _sy, _ss, _ss, 0, c_white, 0.75);
+				draw_surface_ext(_surf, _sx, _sy, _ss, _ss, 0, c_white, 1);
 				draw_sprite_stretched_add(THEME.menu_button_mask, 1, _sx, _sy, _ssw, _ssh, i == preview_index? COLORS._main_accent : COLORS.panel_toolbar_outline, 1);
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _x0, _y0, _x1, _y1)) {
@@ -165,15 +168,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		return _h + 8 * _full;
-	}); #endregion
+		
+	}).setNode(self); #endregion
 	
-	temp_surface = array_create(1);
+	temp_surface = array_create(2);
 	
 	live_edit   = false;
 	live_target = "";
 	
 	input_display_list = [ 
-		["Output",	  false], 0, frame_renderer, 12, 13, 
+		["Output",	  false], 0, frame_renderer, 12, 18, 13, 
 		["Brush",	   true], 6, 15, 17, 16, 
 		["Background", true, 10], 8, 14, 9, 
 	];
@@ -935,17 +939,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var fram  = attributes.frames;
 		var brush = getInputData(6);
 		var anim  = getInputData(12);
-		var anims = getInputData(13);
 		
-		inputs[| 12].setVisible(fram > 1);
-		inputs[| 13].setVisible(fram > 1 && anim);
 		inputs[| 15].setVisible(is_surface(brush));
 		inputs[| 16].setVisible(is_surface(brush));
 		
 		update_on_frame = fram > 1 && anim;
 		
-		if(update_on_frame) 
-			preview_index = safe_mod(CURRENT_FRAME * anims, fram);
+		if(update_on_frame) {
+			var anims = getInputData(13);
+			var atype = getInputData(18);
+			
+			if(atype == 0)  preview_index = safe_mod(CURRENT_FRAME * anims, fram);
+			else			preview_index = min(CURRENT_FRAME * anims, fram - 1);
+		}
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
@@ -956,6 +962,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _anim  = getInputData(12);
 		var _anims = getInputData(13);
 		var _bgDim = getInputData(14);
+		var _atype = getInputData(18);
 		
 		var cDep   = attrDepth();
 		
@@ -993,7 +1000,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _canvas_surface = getCanvasSurface(i);
 				var _bgArray        = is_array(_bg)? array_safe_get_fast(_bg, i, 0) : _bg;
 				output_surface[i]   = surface_verify(output_surface[i], _dim[0], _dim[1], cDep);
-			
+				
 				surface_set_shader(output_surface[i], noone,, BLEND.alpha);
 					if(_bgr && is_surface(_bgArray))
 						draw_surface_stretched_ext(_bgArray, 0, 0, _dim[0], _dim[1], c_white, _bga);
@@ -1001,9 +1008,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_reset_shader();
 			}
 			
+			temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], cDep);
+			surface_clear(temp_surface[1]);
+			
 			if(_anim) {
-				var _fr_index = safe_mod(CURRENT_FRAME * _anims, _frames);
-				outputs[| 0].setValue(output_surface[_fr_index]);
+				var _fr_index = CURRENT_FRAME * _anims;
+				switch(_atype) {
+					case 0 : _fr_index = safe_mod(_fr_index, _frames);				break;
+					case 1 : _fr_index = min(_fr_index, _frames - 1);				break;
+					case 2 : _fr_index = _fr_index < _frames? _fr_index : noone;	break;
+				}
+				
+				outputs[| 0].setValue(_fr_index == noone? temp_surface[1] : output_surface[_fr_index]);
+				
 			} else
 				outputs[| 0].setValue(output_surface);
 		}

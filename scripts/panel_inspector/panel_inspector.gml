@@ -16,6 +16,7 @@
 
 function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor { #region
 	h = 64;
+	node = noone;
 	self.draw = drawFn;
 	
 	if(registerFn != noone) register = registerFn;
@@ -25,6 +26,8 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
 			self.parent = parent;
 		}
 	}
+	
+	static setNode = function(node) { self.node = node; return self; }
 	
 	static toString = function() { return $"Custon renderer"; }
 } #endregion

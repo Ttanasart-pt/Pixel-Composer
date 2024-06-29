@@ -162,7 +162,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				} else 
 					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
 				
-				var hover = point_in_rectangle(_m[0], _m[1], _bx + ui(12 + 6), _cy, _x + _w - ui(48), _cy + lh - 1);
+				var hover = _hover && point_in_rectangle(_m[0], _m[1], _bx + ui(12 + 6), _cy, _x + _w - ui(48), _cy + lh - 1);
 			#endregion
 			
 			#region draw surface
@@ -180,7 +180,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				else						   draw_sprite_stretched_add(THEME.menu_button_mask, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, 0.3);
 			#endregion
 			
-			#region layers
+			#region canvas layers
 				var _junc_canvas = noone;
 				var _jun_layer   = noone;
 				if(canvas_draw != noone && _junc && struct_has(canvas_draw.layers, _junc.node_id)) {
@@ -190,11 +190,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			#endregion
 			
 			#region draw title
-				draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text_accent : COLORS._main_text);
 				var _txt = _inp.name;
 				var _txx = _sx1 + ui(12);
 				var _txy = _cy + lh / 2 + ui(2);
 				
+				if(_junc_canvas) hover &= _m[0] > _txx + ui(8 + 16);
+				
+				draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text_accent : COLORS._main_text);
 				if(canvas_draw != noone && _junc_canvas)
 					_txt = _junc_canvas.display_name;
 				
@@ -207,7 +209,22 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					var _txh = string_height(_txt);
 					
 					if(_junc_canvas) {
-						draw_sprite_ui_uniform(THEME.icon_canvas, 0, _txx + ui(8), _txy - ui(1), 1, draw_get_color(), aa * .8);
+						var _icx = _txx + ui(8);
+						var _icy = _txy - ui(1);
+						var _icc = COLORS._main_icon;
+						var _ica = aa * .8;
+						
+						if(_hover && point_in_circle(_m[0], _m[1], _icx, _icy, ui(10))) {
+							_icc = COLORS._main_icon_light;
+							_ica = 1;
+							
+							if(DOUBLE_CLICK) {
+								var pan = panelAdd("Panel_Inspector", true);
+								pan.content.setInspecting(_junc_canvas, true);
+							}
+						}
+				
+						draw_sprite_ui_uniform(THEME.icon_canvas, 0, _icx, _icy, 1, _icc, _ica);
 						
 						draw_set_alpha(aa);
 						draw_text(_txx + ui(8 + 16), _txy, _txt);
@@ -254,7 +271,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						
 						if(_mhov && DOUBLE_CLICK) {
 							var pan = panelAdd("Panel_Inspector", true);
-							// pan.destroy_on_click_out = false;
 							pan.content.setInspecting(_modi, true);
 						}
 						
@@ -408,7 +424,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
 	
 	outputs[| 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [1, 1])
 		.setVisible(false)

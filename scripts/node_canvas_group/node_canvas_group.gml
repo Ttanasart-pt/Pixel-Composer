@@ -14,6 +14,10 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	composite  = noone;
 	canvas_sel = noone;
 	
+	frame_renderer_x     = 0;
+	frame_renderer_x_to  = 0;
+	frame_renderer_x_max = 0;
+	
 	layer_height = 0;
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h  = ui(4);
@@ -46,6 +50,9 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		var _yy = _y;
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, frame_renderer.h, COLORS.node_composite_bg_blend, 1);
+		var _cnt_hover = _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + frame_renderer.h);
+		
+		frame_renderer_x_max = 0;
 		
 		for (var i = array_length(canvases) - 1; i >= 0; i--) {
 			var _canvas = canvases[i];
@@ -55,11 +62,20 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		    _frame_render.rx = frame_renderer.rx;
 		    _frame_render.ry = frame_renderer.ry;
 		    
-		    var _wdh = _frame_render.draw(_x, _yy, _w, _m, _hover, _focus, false);
-			if(!is_undefined(_wdh)) {
-				_h  += _wdh;
-				_yy += _wdh;
-			}
+		    var _wdh = _frame_render.draw(_x, _yy, _w, _m, _hover, _focus, false, frame_renderer_x);
+			if(is_undefined(_wdh)) continue;
+			
+			frame_renderer_x_max = max(frame_renderer_x_max, _frame_render.node.frame_renderer_x_max);
+			_h  += _wdh - ui(2);
+			_yy += _wdh - ui(2);
+		}
+		_h += ui(2);
+		
+		frame_renderer_x = lerp_float(frame_renderer_x, frame_renderer_x_to, 3);
+		
+		if(_cnt_hover) {
+			if(mouse_wheel_down()) frame_renderer_x_to = clamp(frame_renderer_x_to + 80, 0, frame_renderer_x_max);
+			if(mouse_wheel_up())   frame_renderer_x_to = clamp(frame_renderer_x_to - 80, 0, frame_renderer_x_max);
 		}
 		
 		frame_renderer.h = _h;
