@@ -7,9 +7,8 @@ event_inherited();
 	dialog_w = ui(960);
 	dialog_h = ui(600);
 	
-	pages = ["Sample projects"];
-	if(STEAM_ENABLED) 
-		array_push(pages, "Workshop");
+	pages = ["Welcome Files"];
+	if(STEAM_ENABLED) array_push(pages, "Workshop");
 	project_page = 0;
 	
 	thumbnail_retriever = 0;
@@ -112,127 +111,169 @@ event_inherited();
 	x1 = dialog_x + dialog_w - ui(16);
 	
 	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 1, function(_y, _m) { #region
-		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
+		draw_clear_alpha(CDEF.main_black, 0);
+		draw_set_color(CDEF.main_black);
+		draw_rectangle(0, 1, sp_sample.surface_w, sp_sample.surface_h - 1, false);
 		
 		var txt = pages[project_page];
-		var list;
+		var list, _group_label;
 		
 		switch(txt) {
-			case "Sample projects" : list = SAMPLE_PROJECTS; break;
-			case "Workshop" :		 list = STEAM_PROJECTS;  break;
+			case "Welcome Files" : list = SAMPLE_PROJECTS; _group_label =  true; break;
+			case "Workshop" : 	   list = STEAM_PROJECTS;  _group_label = false; break;
 		}
 		
+		var ww = sp_sample.surface_w;
 		var hh = 0;
-		var grid_width = ui(128);
-		var grid_heigh = txt == "Workshop"? ui(128) : ui(96);
-		var grid_space = ui(20);
+		var grid_width = ui(104);
+		var grid_heigh = txt == "Workshop"? grid_width : grid_width * 0.75;
+		var grid_space = grid_width / 8;
 		var grid_line  = ui(4);
 		
 		var node_count = ds_list_size(list);
-		var col        = floor(sp_sample.surface_w / (grid_width + grid_space));
-		var row        = ceil(node_count / col);
-		var hh         = ui(20);
-		var yy         = _y + ui(20);
+		var col = floor(ww / (grid_width + grid_space));
+		var row = ceil(node_count / col);
+		var hh  = ui(20);
+		var xx  = grid_space;
+		var yy  = _y + hh;
 		var name_height = 0;
 		
-		for(var i = 0; i < row; i++) {
-			name_height = 0;
+		grid_space = (ww - col * grid_width) / (col + 1);
+		var group_labels  = [];
+		var _curr_tag = "";
+		var _cur_col  = 0;
+		var _nx, _boxx;
+		
+		for(var i = 0; i < node_count; i++) {
 			
-			for(var j = 0; j < col; j++) {
-				var index = i * col + j;
-				if(index >= node_count) break;
+			var _project = list[| i];
+			
+			if(_group_label && _curr_tag != _project.tag) {
 				
-				var _project = list[| index];
-				var _nx      = grid_space + (grid_width + grid_space) * j;
-				var _boxx    = _nx;
-				
-				if(yy > -grid_heigh && yy < sp_sample.surface_h) {
-					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
-					if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) { #region
-						var _meta = _project.getMetadata();
-						if(txt == "Workshop")
-							TOOLTIP = _meta;
-						
-						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
-						if(mouse_press(mb_left, sFOCUS)) {
-							LOAD_PATH(_project.path, true);
-							PROJECT.thumbnail = array_safe_get_fast(_project.spr_path, 0);
-							
-							if(txt == "Workshop") {
-								PROJECT.meta.file_id = _meta.file_id;
-								PROJECT.meta.steam   = FILE_STEAM_TYPE.steamOpen;
-							}
-							instance_destroy();
-						}
-					} #endregion
-					
-					var spr = _project.getSpr();
-					if(spr) { #region
-						var gw = grid_width - ui(8);
-						var gh = grid_heigh - ui(8);
-						
-						var sw = sprite_get_width(spr);
-						var sh = sprite_get_height(spr);
-						
-						var s = min(gw / sw, gh / sh);
-						
-						var ox = (sprite_get_xoffset(spr) - sw / 2) * s;
-						var oy = (sprite_get_yoffset(spr) - sh / 2) * s;
-						
-						var _sx = _boxx + grid_width / 2 + ox;
-						var _sy = yy    + grid_heigh / 2 + oy;
-						
-						var _spw = sw * s;
-						var _sph = sh * s;
-						
-						if(txt == "Workshop") {
-							clip_surf = surface_verify(clip_surf, _spw, _sph);
-							
-							surface_set_target(clip_surf);
-								DRAW_CLEAR
-								
-								draw_sprite_uniform(spr, 0, 0, 0, s);
-								gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
-								draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, _spw, _sph);
-								BLEND_NORMAL
-							surface_reset_target();
-							
-							draw_surface(clip_surf, _sx, _sy);
-						} else {
-							draw_sprite_uniform(spr, 0, _sx, _sy, s);
-						}
-					} #endregion
+				if(name_height) {
+					var hght = grid_heigh + name_height + grid_line;
+					hh += hght;
+					yy += hght;
 				}
 				
-				var tx = _boxx + grid_width / 2;
-				var ty = yy + grid_heigh + ui(4);
-				draw_set_text(f_p2, fa_center, fa_top);
+				array_push(group_labels, { y: yy, text: _project.tag });
+				hh += ui(24 + 12);
+				yy += ui(24 + 12);
+				
+				_nx = xx;
+				_curr_tag   = _project.tag;
+				_cur_col    = 0;
+				name_height = 0;
+			} 
+			
+			_nx = xx + (grid_width + grid_space) * _cur_col;
+			_boxx = _nx;
+			
+			if(yy > -grid_heigh && yy < sp_sample.surface_h) {
+				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
+				if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
+					var _meta = _project.getMetadata();
+					if(txt == "Workshop")
+						TOOLTIP = _meta;
 					
-				if(txt == "Sample projects") { #region
-					var _tw = string_width(_project.tag);
-					var _th = string_height(_project.tag);
+					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
+					if(mouse_press(mb_left, sFOCUS)) {
+						LOAD_PATH(_project.path, true);
+						PROJECT.thumbnail = array_safe_get_fast(_project.spr_path, 0);
 						
-					draw_set_color(COLORS.dialog_splash_badge);
-					var _rr = THEME_VALUE.selection_corner_radius;
-					draw_roundrect_ext(tx - _tw / 2 - ui(6), ty - ui(2), tx + _tw / 2 + ui(6), ty + _th, _rr, _rr, 0);
-					draw_set_color(_project.tag == "Getting started"? COLORS._main_text_accent : COLORS._main_text_sub);
-					draw_text(tx, ty - ui(1), _project.tag);						
-						
-					ty += line_get_height(, ui(4));
-				} #endregion
+						if(txt == "Workshop") {
+							PROJECT.meta.file_id = _meta.file_id;
+							PROJECT.meta.steam   = FILE_STEAM_TYPE.steamOpen;
+						}
+						instance_destroy();
+					}
+				}
+				
+				var spr = _project.getSpr();
+				if(spr) {
+					var gw = grid_width - ui(8);
+					var gh = grid_heigh - ui(8);
 					
-				draw_set_text(f_p1, fa_center, fa_top, COLORS._main_text);
-				name_height = max(name_height, string_height_ext(_project.name, -1, grid_width) + ui(8));
-				draw_text_ext_add(tx, ty - ui(2), _project.name, -1, grid_width);
+					var sw = sprite_get_width(spr);
+					var sh = sprite_get_height(spr);
+					
+					var s = min(gw / sw, gh / sh);
+					
+					var ox = (sprite_get_xoffset(spr) - sw / 2) * s;
+					var oy = (sprite_get_yoffset(spr) - sh / 2) * s;
+					
+					var _sx = _boxx + grid_width / 2 + ox;
+					var _sy = yy    + grid_heigh / 2 + oy;
+					
+					var _spw = sw * s;
+					var _sph = sh * s;
+					
+					if(txt == "Workshop") {
+						clip_surf = surface_verify(clip_surf, _spw, _sph);
+						
+						surface_set_target(clip_surf);
+							DRAW_CLEAR
+							
+							draw_sprite_uniform(spr, 0, 0, 0, s);
+							gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
+							draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, _spw, _sph);
+							BLEND_NORMAL
+						surface_reset_target();
+						
+						draw_surface(clip_surf, _sx, _sy);
+					} else {
+						draw_sprite_uniform(spr, 0, _sx, _sy, s);
+					}
+				}
 			}
 			
-			var hght = grid_heigh + name_height + grid_line;
-			if(txt == "Sample projects") hght += line_get_height(f_p2, ui(4));
+			var tx    = _boxx + grid_width / 2;
+			var ty    = yy + grid_heigh + ui(4);
+			var _name = _project.name;
+			if(string_digits(string_char_at(_name, 1)) != "")
+				_name = string_copy(_name, string_pos(" ", _name), string_length(_name) - string_pos(" ", _name) + 1);
 			
-			hh += hght;
-			yy += hght;
+			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
+			name_height = max(name_height, string_height_ext(_name, -1, grid_width) + ui(8));
+			draw_text_ext_add(tx, ty - ui(2), _name, -1, grid_width);
+		
+			if(++_cur_col >= col || i == node_count - 1) {
+				if(name_height) {
+					var hght = grid_heigh + name_height + grid_line;
+					hh += hght;
+					yy += hght;
+				}
+				
+				name_height = 0;
+				_cur_col    = 0;
+			}
+			
 		}
 		
+		if(_group_label) {
+			var len = array_length(group_labels);
+			if(len) {
+				gpu_set_blendmode(bm_subtract);
+				draw_set_color(c_white);
+				draw_rectangle(0, 0, ww, ui(36), false);
+				gpu_set_blendmode(bm_normal);
+			}
+			
+			var pd = grid_space / 2;
+			
+			for( var i = 0; i < len; i++ ) {
+				var lb = group_labels[i];
+				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+				
+				BLEND_OVERRIDE
+				draw_sprite_stretched_ext(THEME.group_label, 0, pd, _yy, ww - pd * 2, ui(24), c_white, 0.3);
+				BLEND_NORMAL
+				
+				draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
+				draw_text_add(pd + ui(16), _yy + ui(12), lb.text);
+			}
+		}
+			
 		return hh + ui(20);
 	}); #endregion
 #endregion
@@ -260,7 +301,7 @@ event_inherited();
 	contest_viewing = noone;
 	
 	sp_contest = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh = 0;
 		
 		if(contest_viewing == noone) {

@@ -69,7 +69,7 @@ if !ready exit;
 	var expand = PREFERENCES.splash_expand_recent;
 	
 	switch(pages[project_page]) {
-		case "Sample projects" :
+		case "Welcome Files" :
 		case "Workshop" :
 			if(buttonInstant(THEME.button_hide_fill, x1, (y0 + y1) / 2 - ui(32), ui(16), ui(32), mouse_ui, sFOCUS, sHOVER,, THEME.arrow, expand? 2 : 0) == 2) {
 				PREFERENCES.splash_expand_recent = !PREFERENCES.splash_expand_recent;
@@ -91,7 +91,7 @@ if !ready exit;
 		var amo  = 0;
 		
 		switch(txt) {
-			case "Sample projects" : amo = ds_list_size(SAMPLE_PROJECTS); break;
+			case "Welcome Files" : amo = ds_list_size(SAMPLE_PROJECTS); break;
 			case "Workshop" :		 amo = ds_list_size(STEAM_PROJECTS);  break;
 			case "Contests" :		 dtxt = ""; break;
 		}
@@ -158,7 +158,7 @@ if !ready exit;
 	draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 	
 	switch(pages[project_page]) {
-		case "Sample projects" :
+		case "Welcome Files" :
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0);
 	

@@ -37,6 +37,20 @@ function LOAD_SAMPLE() { #region
 	directory_verify(targ);
 	zip_unzip(zzip, targ);
 	
-	LOAD_FOLDER(SAMPLE_PROJECTS, "Getting started");
-	LOAD_FOLDER(SAMPLE_PROJECTS, "Sample Projects");
+	var _dir = [];
+	var path = $"{DIRECTORY}Welcome files/";
+	var file = file_find_first(path + "/*", fa_directory);
+	
+	while(file != "") {		
+		if(directory_exists(path + "/" + file)) 
+			array_push(_dir, file);
+		file = file_find_next();
+	}
+	file_find_close();
+	
+	LOAD_FOLDER(SAMPLE_PROJECTS, "Getting started"); array_remove(_dir, "Getting started");
+	LOAD_FOLDER(SAMPLE_PROJECTS, "Sample Projects"); array_remove(_dir, "Sample Projects");
+	
+	for (var i = 0, n = array_length(_dir); i < n; i++) 
+		LOAD_FOLDER(SAMPLE_PROJECTS, _dir[i]); 
 } #endregion

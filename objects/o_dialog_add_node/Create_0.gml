@@ -474,10 +474,7 @@ event_inherited();
 					cProg = 0;
 					curr_height = 0;
 					
-					array_push(group_labels, {
-						y: yy,
-						text: __txt(_node)
-					});
+					array_push(group_labels, { y: yy, text: __txt(_node) });
 					
 					hh += ui(24 + 12);
 					yy += ui(24 + 12);
@@ -553,7 +550,7 @@ event_inherited();
 				if(len) {
 					gpu_set_blendmode(bm_subtract);
 					draw_set_color(c_white);
-					draw_rectangle(0, 0, content_pane.surface_w, ui(16 + 24 / 2), false);
+					draw_rectangle(0, 0, content_pane.surface_w, ui(36), false);
 					gpu_set_blendmode(bm_normal);
 				}
 				
@@ -565,8 +562,8 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.group_label, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24), c_white, 0.3);
 					BLEND_NORMAL;
 					
-					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-					draw_text(ui(16 + 16), _yy + ui(12), lb.text);
+					draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
+					draw_text_add(ui(16 + 16), _yy + ui(12), lb.text);
 				}
 			}
 			
@@ -665,7 +662,7 @@ event_inherited();
 				if(len) {
 					gpu_set_blendmode(bm_subtract);
 					draw_set_color(c_white);
-					draw_rectangle(0, 0, content_pane.surface_w, ui(16 + 24 / 2), false);
+					draw_rectangle(0, 0, content_pane.surface_w, ui(36), false);
 					gpu_set_blendmode(bm_normal);
 				}
 				
@@ -677,8 +674,8 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.group_label, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24), c_white, 0.3);
 					BLEND_NORMAL;
 					
-					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-					draw_text(ui(16 + 16), _yy + ui(12), lb.text);
+					draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
+					draw_text_add(ui(16 + 16), _yy + ui(12), lb.text);
 				}
 			}
 			

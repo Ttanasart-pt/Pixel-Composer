@@ -1,4 +1,4 @@
-function Node_Canvas_Group(_x, _y, _group) : Node_Collection_Inline(_x, _y, _group) constructor {
+function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) constructor {
 	name  = "Canvas Group";
 	color = COLORS.node_blend_canvas;
 	
@@ -6,6 +6,8 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection_Inline(_x, _y, _gro
 	
 	inputs[|  0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
+	
+	custom_input_index = ds_list_size(inputs);
 	
 	layers     = {};
 	canvases   = [];
@@ -61,9 +63,10 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection_Inline(_x, _y, _gro
 		return _h;
 	});
 	
-	input_display_list = [ 0, 
+	group_input_display_list = [ 0, 
 		["Layers", false], layer_renderer, 
 		["Frames", false], frame_renderer, 
+		["Inputs", false], 
 	];
 	
 	static refreshNodes = function() {
@@ -122,14 +125,12 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection_Inline(_x, _y, _gro
 		
 	}
 	
-	static onAddNode = function(node) {
+	static onAdd = function(node) {
 		node.modifiable    = false;
 		node.modify_parent = self;
 		
-		if(is_instanceof(node, Node_Canvas))
-			array_push(canvases, node);
-		else if(is_instanceof(node, Node_Composite))
-			composite = node;
+		     if(is_instanceof(node, Node_Canvas))    array_push(canvases, node);
+		else if(is_instanceof(node, Node_Composite)) composite = node;
 			
 		refreshLayer();
 	}
@@ -156,7 +157,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection_Inline(_x, _y, _gro
 		
 		composite.dummy_input.setFrom(_canvas.outputs[| 0]);
 		
-		addNode(_canvas);
+		add(_canvas);
 		return _canvas;
 	}
 	
@@ -172,14 +173,17 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection_Inline(_x, _y, _gro
 	}
 	
 	if(NODE_NEW_MANUAL) {
-		var _canvas  = nodeBuild("Node_Canvas", x, y);
+		var _canvas  = nodeBuild("Node_Canvas", x - 160, y);
 		_canvas.inputs[| 12].setValue(true);
 		
-		var _compose = nodeBuild("Node_Composite", x + 160, y);
+		var _compose = nodeBuild("Node_Composite", x, y);
 		_compose.dummy_input.setFrom(_canvas.outputs[| 0]);
 		
-		addNode(_canvas);
-		addNode(_compose);
+		add(_canvas);
+		add(_compose);
+		
+		var _output = nodeBuild("Node_Group_Output", x + 160, y, self);
+		_output.inputs[| 0].setFrom(_compose.outputs[| 0]);
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -226,4 +230,6 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection_Inline(_x, _y, _gro
 		refreshMember();
 		refreshNodes();
 	}
+
+	sortIO();
 }

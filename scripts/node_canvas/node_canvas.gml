@@ -60,23 +60,22 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _anim  = getInputData(12);
 		var _cnt_hover = false;
 		
-		draw_sprite_stretched(THEME.button_def, 0, _x, _y, _w, _h);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		
 		if(_hover && frame_renderer.parent != noone && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			frame_renderer.parent.scroll_lock = true;
 			_cnt_hover = _hover;
 		}
 		
+		var _pd = ui(2);
 		var _aw = ui(32);
-		var _ww = _w - ui(4) - _aw;
-		var _hh = _h - ui(4) - ui(4);
+		var _ww = _w - _pd - _aw;
+		var _hh = _h - _pd - _pd;
 		
-		var _x0 = _x + ui(4);
-		var _y0 = _y + ui(4);
+		var _x0 = _x + _pd;
+		var _y0 = _y + _pd;
 		var _x1 = _x0 + _ww;
 		var _y1 = _y0 + _hh;
-		
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, _x0, _y0, _ww, _hh);
 		
 		frame_renderer_x_max   = 0;
 		frame_renderer_content = surface_verify(frame_renderer_content, _ww, _hh);
@@ -87,7 +86,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _fr_h = _hh - 8;
 			var _fr_w = _fr_h;
 			
-			var _fr_x = 8 - frame_renderer_x;
+			var _fr_x = 4 - frame_renderer_x;
 			var _fr_y = 4;
 			
 			var surfs = output_surface;
@@ -105,33 +104,40 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _sx = _fr_x;
 				var _sy = _fr_y + _fr_h / 2 - _sh * _ss / 2;
 				
+				var _ssw = _sw * _ss;
+				var _ssh = _sh * _ss;
+				
 				draw_surface_ext(_surf, _sx, _sy, _ss, _ss, 0, c_white, 0.75);
+				draw_sprite_stretched_add(THEME.menu_button_mask, 1, _sx, _sy, _ssw, _ssh, i == preview_index? COLORS._main_accent : COLORS.panel_toolbar_outline, 1);
 				
-				draw_set_color(i == preview_index? COLORS._main_accent : COLORS.panel_toolbar_outline);
-				draw_rectangle(_sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss, true);
-				
-				var _del_x = _sx + _sw * _ss - 8;
-				var _del_y = _sy + 8;
-				var _del_a = 0;
-				
-				if(_hover) {
+				if(_hover && point_in_rectangle(_m[0], _m[1], _x0, _y0, _x1, _y1)) {
+					var _del_x = _sx + _fr_w  - 10;
+					var _del_y = _sy          + 10;
+					var _del_a = noone;
+					
 					if(point_in_circle(_msx, _msy, _del_x, _del_y, 8)) {
 						_del_a = 1;
 						
 						if(mouse_press(mb_left, _focus)) 
 							_del = i;
-					} else if(point_in_rectangle(_msx, _msy, _sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss)) {
+					} else if(point_in_rectangle(_msx, _msy, _sx, _sy, _sx + _ssw, _sy + _ssh)) {
+						_del_a = 0;
+						
 						if(mouse_press(mb_left, _focus)) {
 							if(_anim) PROJECT.animator.setFrame(i);
 							else      preview_index = i;
 						}
 					}
+					
+					if(_del_a != noone) {
+						draw_sprite_ext(THEME.cross_12, 0, _del_x, _del_y, 1, 1, 0, c_white, .5 + _del_a * .5);
+						draw_sprite_stretched_add(THEME.menu_button_mask, 1, _sx, _sy, _ssw, _ssh, c_white, .2);
+					}
 				}
 				
-				draw_sprite(THEME.close_16, _del_a, _del_x, _del_y);
-				
-				_fr_x += _sw * _ss + 8;
-				frame_renderer_x_max += _sw * _ss + 8;
+				var _xw = _ssw + 4;
+				_fr_x += _xw;
+				frame_renderer_x_max += _xw;
 			} 
 			
 			if(_del > noone) removeFrame(_del);

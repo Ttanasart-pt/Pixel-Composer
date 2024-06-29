@@ -187,6 +187,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	metadata = new MetaDataManager();
 	
+	group_input_display_list  = [];
+	group_output_display_list = [];
 	attributes.input_display_list  = [];
 	attributes.output_display_list = [];
 	
@@ -393,7 +395,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static exitGroup = function() {}
 	
-	static add = function(_node) { #region
+	static onAdd = function(_node) {}
+	static add = function(_node) {
 		array_push(getNodeList(), _node);
 		var list = _node.group == noone? PANEL_GRAPH.nodes_list : _node.group.getNodeList();
 		array_remove(list, _node);
@@ -403,9 +406,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		will_refresh = true;
 		node_length  = array_length(nodes);
-	} #endregion
+		
+		onAdd(_node);
+	}
 	
-	static remove = function(_node) { #region
+	static onRemove = function(_node) {}
+	static remove = function(_node) {
 		var _hide = _node.destroy_when_upgroup;
 		
 		if(!_hide) {
@@ -426,7 +432,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			
 		will_refresh = true;
 		node_length  = array_length(nodes);
-	} #endregion
+		onRemove(_node);
+	}
 	
 	static clearCache = function() { #region
 		array_foreach(getNodeList(), function(node) { node.clearCache(); });
@@ -486,27 +493,29 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _ilen = ds_list_size(inputs);
 		var _iarr = attributes.input_display_list;
 		
-		for( var i = 0; i < _ilen; i++ ) 
+		for( var i = custom_input_index; i < _ilen; i++ ) 
 			array_push_unique(_iarr, i);
+			
 		for( var i = array_length(_iarr) - 1; i >= 0; i-- ) {
 			if(is_array(_iarr[i])) continue;
 			if(_iarr[i] >= _ilen) array_delete(_iarr, i, 1);
 		}
 		
-		input_display_list = attributes.input_display_list;
+		input_display_list = array_merge(group_input_display_list, attributes.input_display_list);
 		
 		///////////////////////////////////////////////////////////////////
 		
 		var _olen = ds_list_size(outputs);
 		var _oarr = attributes.output_display_list;
 		
-		for( var i = 0; i < _olen; i++ ) 
+		for( var i = custom_output_index; i < _olen; i++ ) 
 			array_push_unique(_oarr, i);
 		for( var i = array_length(_oarr) - 1; i >= 0; i-- ) {
 			if(is_array(_oarr[i])) continue;
 			if(_oarr[i] >= _olen) array_delete(_oarr, i, 1);
 		}
-		output_display_list = attributes.output_display_list;
+		
+		output_display_list = array_merge(group_output_display_list, attributes.output_display_list);
 		
 		///////////////////////////////////////////////////////////////////
 		
