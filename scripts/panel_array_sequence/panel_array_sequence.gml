@@ -84,7 +84,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 		surface_set_target(sequence_surface);
 			DRAW_CLEAR
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, 1, sequence_x, 0, len * _ns, ph);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, sequence_x, 0, len * _ns, ph, COLORS._main_icon_light);
 			
 			var ax = sequence_x + len * _ns + ui(12);
 			var ay = ui(24) + _ns / 2;
@@ -101,7 +101,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				
 				draw_set_color(COLORS._main_text_sub);
 				draw_set_alpha(0.5);
-				draw_line(_sx, ui(24), _sx, ph);
+				draw_line(_sx, ui(24), _sx, ph - ui(2));
 				draw_set_alpha(1);
 				
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);

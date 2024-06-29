@@ -27,6 +27,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name			= "Image GIF";
 	color			= COLORS.node_blend_input;
 	update_on_frame = true;
+	setAlwaysTimeline(new timelineItemNode_Image_gif(self));
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
@@ -231,4 +232,40 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static onDestroy = function() { #region
 		if(sprite_exists(spr)) sprite_flush(spr);
 	} #endregion
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function timelineItemNode_Image_gif(node) : timelineItemNode(node) constructor {
+	
+	static drawDopesheet = function(_x, _y, _s, _msx, _msy) {
+		if(!is_instanceof(node, Node_Image_gif)) return;
+		if(!node.attributes.show_timeline) return;
+		
+		var _spr = node.spr;
+		if(!sprite_exists(_spr)) return;
+		
+		var _rx, _ry;
+		var _sw = sprite_get_width(_spr);
+		var _sh = sprite_get_height(_spr);
+		var _ss = h / max(_sw, _sh);
+		
+		for (var i = 0, n = sprite_get_number(_spr); i < n; i++) {
+			_rx = _x + (i + 1) * _s;
+			_ry = h / 2 + _y;
+			
+			draw_sprite_ext(_spr, i, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, .5);
+		}
+	}
+	
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy) {
+		if(!is_instanceof(node, Node_Image_gif)) return;
+		if(!node.attributes.show_timeline) return;
+		
+		drawDopesheetOutput(_x, _y, _s, _msx, _msy);
+	}
+	
+	static onSerialize = function(_map) {
+		_map.type = "timelineItemNode_Image_gif";
+	}
 }

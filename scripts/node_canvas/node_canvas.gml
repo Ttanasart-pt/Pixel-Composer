@@ -1,6 +1,7 @@
 function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Canvas";
 	color	= COLORS.node_blend_canvas;
+	setAlwaysTimeline(new timelineItemNode_Canvas(self));
 	
 	inputs[|  0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -1096,4 +1097,42 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 		return self;
 	} #endregion 
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function timelineItemNode_Canvas(node) : timelineItemNode(node) constructor {
+	
+	static drawDopesheet = function(_x, _y, _s, _msx, _msy) {
+		if(!is_instanceof(node, Node_Canvas)) return;
+		if(!node.attributes.show_timeline) return;
+		
+		var _surfs = node.output_surface;
+		var _surf, _rx, _ry;
+		
+		for (var i = 0, n = array_length(_surfs); i < n; i++) {
+			_surf = _surfs[i];
+			if(!surface_exists(_surf)) continue;
+			
+			_rx = _x + (i + 1) * _s;
+			_ry = h / 2 + _y;
+			
+			var _sw = surface_get_width_safe(_surf);
+			var _sh = surface_get_height_safe(_surf);
+			var _ss = h / max(_sw, _sh);
+			
+			draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, .5);
+		}
+	}
+	
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy) {
+		if(!is_instanceof(node, Node_Canvas)) return;
+		if(!node.attributes.show_timeline) return;
+		
+		drawDopesheetOutput(_x, _y, _s, _msx, _msy);
+	}
+	
+	static onSerialize = function(_map) {
+		_map.type = "timelineItemNode_Canvas";
+	}
 }

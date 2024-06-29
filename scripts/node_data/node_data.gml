@@ -2047,6 +2047,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			triggerRender();
 		}
+		
+		if(anim_timeline && attributes.show_timeline) refreshTimeline();
 	} #endregion
 	
 	static inputBalance = function() { #region //Cross version compatibility for dynamic input nodes

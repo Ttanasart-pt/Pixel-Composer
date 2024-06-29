@@ -1,4 +1,6 @@
 function timelineItem() constructor { 
+	h = ui(20);
+	
 	show   = true;
 	active = true;
 	
@@ -10,31 +12,39 @@ function timelineItem() constructor {
 	static setColor = function(color) { self.color = color; }
 	static getColor = function()      { return color; }
 	
-	static drawLabel = function(_x, _y, _w, _msx, _msy) {}
+	static drawLabel         = function(_x, _y, _w, _msx, _msy) {}
+	static drawDopesheet     = function(_x, _y, _s, _msx, _msy) {}
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy) {}
 	
-	static removeSelf = function() { #region
+	static removeSelf = function() {
 		if(parent == noone) return;
 		array_remove(parent.contents, self);
 		
 		return self;
-	} #endregion
+	}
 	
 	static serialize = function() {}
 	
-	static deserialize = function(_map) { #region
+	static deserialize = function(_map) {
+		
 		switch(_map.type) {
+			case "Folder" : return new timelineItemGroup().deserialize(_map);
 			case "Node"   : return new timelineItemNode(noone).deserialize(_map);
-			case "Folder" : return new timelineItemGroup(noone).deserialize(_map);
+			
+			case "timelineItemNode_Canvas" :			return new timelineItemNode_Canvas(noone).deserialize(_map);
+			case "timelineItemNode_Image_Animated" :	return new timelineItemNode_Image_Animated(noone).deserialize(_map);
+			case "timelineItemNode_Sequence_Anim" : 	return new timelineItemNode_Sequence_Anim(noone).deserialize(_map);
+			case "timelineItemNode_Image_gif" : 		return new timelineItemNode_Image_gif(noone).deserialize(_map);
 		}
 		
 		return self;
-	} #endregion
+	}
 }
 
 function timelineItemNode(node) : timelineItem() constructor {
 	self.node = node;
 	
-	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) { #region
+	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
 		var _sel = node == PANEL_INSPECTOR.getInspecting();
 		
 		var lx = _x + _item.depth * ui(12) + ui(2);
@@ -99,22 +109,43 @@ function timelineItemNode(node) : timelineItem() constructor {
 			draw_text_add(txx, _y + lh / 2 - ui(2), node.display_name);
 		
 		return res;
-	} #endregion
+	}
+	
+	static drawDopesheetOutput = function(_x, _y, _s, _msx, _msy) {
+		var _surf = node.outputs[| 0].getValue();
+		if(!is_surface(_surf)) return;
+		
+		var _h  = h - 2;
+		var _rx = _x + (CURRENT_FRAME + 1) * _s;
+		var _ry = h / 2 + _y;
+		
+		var _sw = surface_get_width_safe(_surf);
+		var _sh = surface_get_height_safe(_surf);
+		var _ss = _h / max(_sw, _sh);
+		
+		// draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _rx - h / 2, _ry - h / 2, h, h, CDEF.main_dkblack);
+		draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
+		
+		// draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _rx - h / 2, _ry - h / 2, h, h, CDEF.main_dkgrey);
+	}
 	
 	static setColor = function(color) { node.attributes.color = color; }
 	static getColor = function()      { return node.attributes.color; }
 	
-	static serialize = function() { #region
+	static onSerialize = function(_map) {}
+	static serialize   = function() {
 		var _map = {};
 		
 		_map.type    = "Node";
 		_map.show    = show;
 		_map.node_id = is_struct(node)? node.node_id : -4;
+		onSerialize(_map);
 		
 		return _map;
-	} #endregion
+	}
 	
-	static deserialize = function(_map) { #region
+	static onDeserialize = function(_map) {}
+	static deserialize   = function(_map) {
 		show  = struct_try_get(_map, "show", true);
 		
 		var _node_id = _map.node_id;
@@ -126,8 +157,9 @@ function timelineItemNode(node) : timelineItem() constructor {
 			node.timeline_item = self;
 		}
 		
+		onDeserialize(_map);
 		return self;
-	} #endregion
+	}
 }
 
 function timelineItemGroup() : timelineItem() constructor {
@@ -145,7 +177,7 @@ function timelineItemGroup() : timelineItem() constructor {
 		});
 	} #endregion
 	
-	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) { #region
+	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
 		var lx = _x + _item.depth * ui(12) + ui(2);
 		var lw = _w - _item.depth * ui(12) - ui(4);
 		
@@ -199,16 +231,16 @@ function timelineItemGroup() : timelineItem() constructor {
 		}
 		
 		return res;
-	} #endregion
+	}
 	
-	static addItem = function(_item) { #region
+	static addItem = function(_item) {
 		array_push(contents, _item);
 		_item.parent = self;
 		
 		return self;
-	} #endregion
+	}
 	
-	static destroy = function() { #region
+	static destroy = function() {
 		var ind = array_find(parent.contents, self);
 		array_delete(parent.contents, ind, 1);
 		
@@ -216,9 +248,9 @@ function timelineItemGroup() : timelineItem() constructor {
 			array_insert(parent.contents, ind++, contents[i]);
 			contents[i].parent = parent;
 		}
-	} #endregion
+	}
 	
-	static serialize = function() { #region
+	static serialize = function() {
 		var _map = {};
 		
 		_map.type  = "Folder";
@@ -232,9 +264,9 @@ function timelineItemGroup() : timelineItem() constructor {
 		_map.contents = _content;
 		
 		return _map;
-	} #endregion
+	}
 	
-	static deserialize = function(_map) { #region
+	static deserialize = function(_map) {
 		color = _map.color;
 		name  = struct_try_get(_map, "name", "");
 		show  = struct_try_get(_map, "show", true);
@@ -246,5 +278,5 @@ function timelineItemGroup() : timelineItem() constructor {
 		}
 			
 		return self;
-	} #endregion
+	}
 }

@@ -24,11 +24,12 @@ function __Node_Base(x, y) constructor {
 	#region ---- timeline ----
 		timeline_item    = new timelineItemNode(self);
 		anim_priority    = 0;
+		anim_timeline    = false;
 		is_anim_timeline = false;
 		
-		static refreshTimeline = function() { #region
+		static refreshTimeline = function() {
 			var _pre_anim = is_anim_timeline;
-			var _cur_anim = false;
+			var _cur_anim = anim_timeline;
 		
 			for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 				var _inp = inputs[| i];
@@ -37,15 +38,25 @@ function __Node_Base(x, y) constructor {
 					break;
 				}
 			}
-			
-			if(_pre_anim && !_cur_anim)
-				timeline_item.removeSelf();
-			else if(!_pre_anim && _cur_anim)
-				PROJECT.timelines.addItem(timeline_item);
-			
 			is_anim_timeline = _cur_anim;
-		} #endregion
-	
+			if(_pre_anim == _cur_anim) return;
+			
+			if(_cur_anim) PROJECT.timelines.addItem(timeline_item);
+			else          timeline_item.removeSelf();
+		}
+		
+		static setAlwaysTimeline = function(item = timeline_item) {
+			attributes.show_timeline = true;
+			array_push(attributeEditors, [ "Show In Timeline", function() { return attributes.show_timeline; }, new checkBox(function() { 
+				attributes.show_timeline = !attributes.show_timeline; 
+				anim_timeline = attributes.show_timeline;
+				refreshTimeline();
+			}) ]);
+			
+			timeline_item   = item;
+			anim_timeline   = true; 
+			refreshTimeline();
+		}
 	#endregion
 	
 	static step   = function() {}

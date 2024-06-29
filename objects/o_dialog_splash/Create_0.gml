@@ -191,13 +191,15 @@ event_inherited();
 				
 				var spr = _project.getSpr();
 				if(spr) {
-					var gw = grid_width - ui(8);
-					var gh = grid_heigh - ui(8);
+					var gw = grid_width - ui(4);
+					var gh = grid_heigh - ui(4);
+					// print($"{gw}, {gh}");
 					
 					var sw = sprite_get_width(spr);
 					var sh = sprite_get_height(spr);
 					
 					var s = min(gw / sw, gh / sh);
+					if(abs(s - 1) < 0.1) s = 1;
 					
 					var ox = (sprite_get_xoffset(spr) - sw / 2) * s;
 					var oy = (sprite_get_yoffset(spr) - sh / 2) * s;

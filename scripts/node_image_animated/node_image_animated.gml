@@ -34,6 +34,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Animation";
 	spr   = [];
 	color = COLORS.node_blend_input;
+	setAlwaysTimeline(new timelineItemNode_Image_Animated(self));
 	
 	update_on_frame = true;
 	
@@ -251,4 +252,42 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(_drw) draw_sprite(spr[_frame], 0, curr_x, curr_y);
 		surface_reset_shader();
 	} #endregion
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function timelineItemNode_Image_Animated(node) : timelineItemNode(node) constructor {
+	
+	static drawDopesheet = function(_x, _y, _s, _msx, _msy) {
+		if(!is_instanceof(node, Node_Image_Animated)) return;
+		if(!node.attributes.show_timeline) return;
+		
+		var _sprs = node.spr;
+		var _spr, _rx, _ry;
+		
+		for (var i = 0, n = array_length(_sprs); i < n; i++) {
+			_spr = _sprs[i];
+			if(!sprite_exists(_spr)) continue;
+			
+			_rx = _x + (i + 1) * _s;
+			_ry = h / 2 + _y;
+			
+			var _sw = sprite_get_width(_spr);
+			var _sh = sprite_get_height(_spr);
+			var _ss = h / max(_sw, _sh);
+			
+			draw_sprite_ext(_spr, 0, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, .5);
+		}
+	}
+	
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy) {
+		if(!is_instanceof(node, Node_Image_Animated)) return;
+		if(!node.attributes.show_timeline) return;
+		
+		drawDopesheetOutput(_x, _y, _s, _msx, _msy);
+	}
+	
+	static onSerialize = function(_map) {
+		_map.type = "timelineItemNode_Image_Animated";
+	}
 }
