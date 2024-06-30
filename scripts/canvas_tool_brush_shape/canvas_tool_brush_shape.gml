@@ -91,6 +91,7 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 		
 		var _as = max(_w, _h) % min(_w, _h) == 0;
 		
+		draw_set_alpha(0.5);
 		draw_set_color(_as? COLORS._main_value_positive : COLORS._main_accent);
 		draw_rectangle(_x0, _y0, _x1, _y1, true);
 		
@@ -99,5 +100,6 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 		
 		draw_set_text(f_p3, fa_left, fa_center);
 		draw_text(_x1 + 8, (_y0 + _y1) / 2, _h);
+		draw_set_alpha(1);
 	}
 }

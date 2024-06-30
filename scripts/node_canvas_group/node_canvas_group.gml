@@ -284,13 +284,17 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 			timeline_item_group.color = getColor();
 		}
 		
-		for (var i = 0, n = array_length(canvases); i < n; i++) {
+		for (var i = 0, n = array_length(canvases); i < n; i++)
 			canvases[i].attributes.show_slope_check = attributes.show_slope_check;
-		}
 	}
 	
 	static update = function() {
 		refreshLayer();
+		
+		var _dim = getInputData(0);
+		
+		for (var i = 0, n = array_length(canvases); i < n; i++)
+			canvases[i].inputs[| 0].setValue(_dim);
 	}
 	
 	static getPreviewValues = function() { return composite == noone? noone : composite.getPreviewValues(); }

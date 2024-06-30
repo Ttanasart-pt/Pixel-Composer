@@ -23,13 +23,36 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
 		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_presses(SHIFT, CTRL)) {
-			var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
-			var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
-			var _a = round(aa / 45) * 45;
-			dd = dd * cos(degtorad(_a - aa));
+			
+			var _dx = mouse_cur_x - mouse_pre_draw_x;
+			var _dy = mouse_cur_y - mouse_pre_draw_y;
+			
+			if(_dx != _dy) {
+				var _ddx = _dx;
+				var _ddy = _dy;
 				
-			mouse_cur_x = mouse_pre_draw_x + lengthdir_x(dd, _a);
-			mouse_cur_y = mouse_pre_draw_y + lengthdir_y(dd, _a);
+				if(abs(_dx) > abs(_dy)) {
+					var _rat = round(_ddx / _ddy);
+					_ddx = _ddy * _rat;
+					
+				} else {
+					var _rat = round(_ddy / _ddx);
+					_ddy = _ddx * _rat;
+					
+				}
+				
+				mouse_cur_x = mouse_pre_draw_x + _ddx - sign(_ddx);
+				mouse_cur_y = mouse_pre_draw_y + _ddy - sign(_ddy);
+				
+				// var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
+				// var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
+				
+				// var _a = round(aa / 45) * 45;
+				// dd = dd * dcos(_a - aa);
+					
+				// mouse_cur_x = mouse_pre_draw_x + lengthdir_x(dd, _a);
+				// mouse_cur_y = mouse_pre_draw_y + lengthdir_y(dd, _a);
+			}
 		}
 			
 		if(mouse_press(mb_left, active)) {
@@ -113,6 +136,7 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		var _h  = mouse_line_y1 - mouse_line_y0;
 		var _as = max(_w, _h) % min(_w, _h) == 0;
 		
+		draw_set_alpha(0.5);
 		draw_set_color(_as? COLORS._main_value_positive : COLORS._main_accent);
 		draw_rectangle(_x0, _y0, _x1, _y1, true);
 		
@@ -121,6 +145,6 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		
 		draw_set_text(f_p3, fa_left, fa_center);
 		draw_text(_x1 + 8, (_y0 + _y1) / 2, _h);
-		
+		draw_set_alpha(1);
 	}
 }
