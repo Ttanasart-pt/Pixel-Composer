@@ -100,25 +100,27 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	}
 	
 	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(!mouse_line_drawing) return;
+		if(brush.brush_sizing)  return;
+		if(!node.attributes.show_slope_check)  return;
 		
-		if(mouse_line_drawing && !brush.brush_sizing && node.attributes.show_slope_check) {
-			var _x0 = _x + mouse_line_x0 * _s;
-			var _y0 = _y + mouse_line_y0 * _s;
-			var _x1 = _x + mouse_line_x1 * _s;
-			var _y1 = _y + mouse_line_y1 * _s;
-			
-			var _w  = mouse_line_x1 - mouse_line_x0;
-			var _h  = mouse_line_y1 - mouse_line_y0;
-			var _as = max(_w, _h) % min(_w, _h) == 0;
-			
-			draw_set_color(_as? COLORS._main_value_positive : COLORS._main_accent);
-			draw_rectangle(_x0, _y0, _x1, _y1, true);
-			
-			draw_set_text(f_p3, fa_center, fa_top);
-			draw_text((_x0 + _x1) / 2, _y1 + 8, _w);
-			
-			draw_set_text(f_p3, fa_left, fa_center);
-			draw_text(_x1 + 8, (_y0 + _y1) / 2, _h);
-		}
+		var _x0 = _x + mouse_line_x0 * _s;
+		var _y0 = _y + mouse_line_y0 * _s;
+		var _x1 = _x + mouse_line_x1 * _s;
+		var _y1 = _y + mouse_line_y1 * _s;
+		
+		var _w  = mouse_line_x1 - mouse_line_x0;
+		var _h  = mouse_line_y1 - mouse_line_y0;
+		var _as = max(_w, _h) % min(_w, _h) == 0;
+		
+		draw_set_color(_as? COLORS._main_value_positive : COLORS._main_accent);
+		draw_rectangle(_x0, _y0, _x1, _y1, true);
+		
+		draw_set_text(f_p3, fa_center, fa_top);
+		draw_text((_x0 + _x1) / 2, _y1 + 8, _w);
+		
+		draw_set_text(f_p3, fa_left, fa_center);
+		draw_text(_x1 + 8, (_y0 + _y1) / 2, _h);
+		
 	}
 }

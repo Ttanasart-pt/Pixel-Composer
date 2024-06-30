@@ -16,6 +16,9 @@ function canvas_tool_shader() : canvas_tool() constructor {
 	function stepEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	function stepMaskEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
+	doForceStep = false;
+	function forceStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(mouse_press(mb_right)) {
 			PANEL_PREVIEW.tool_current = noone;
@@ -45,6 +48,11 @@ function canvas_tool_shader() : canvas_tool() constructor {
 		surface_set_shader(preview_surface[0], noone);
 			draw_surface(_surf, _pos[0], _pos[1]);
 		surface_reset_shader();
+		
+		if(doForceStep) {
+			forceStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			return;
+		}
 		
 		if(mask) {
 			stepMaskEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);

@@ -53,7 +53,4 @@ function canvas_tool_selection_shape(selector, shape) : canvas_tool_selection(se
 		}
 	}
 	
-	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
-	}
 }

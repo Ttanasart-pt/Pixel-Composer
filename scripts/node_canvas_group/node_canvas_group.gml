@@ -1,6 +1,7 @@
 function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) constructor {
 	name  = "Canvas Group";
 	color = COLORS.node_blend_canvas;
+	icon  = THEME.icon_canvas;
 	
 	timeline_item_group = new timelineItemGroup_Canvas(self);
 	PROJECT.timelines.addItem(timeline_item_group);
@@ -11,6 +12,10 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	custom_input_index = ds_list_size(inputs);
+	
+	attributes.show_slope_check = true;
+	array_push(attributeEditors, "Display");
+	array_push(attributeEditors, [ "Draw Guide", function() { return attributes.show_slope_check; }, new checkBox(function() { attributes.show_slope_check = !attributes.show_slope_check; }) ]);
 	
 	layers     = {};
 	canvases   = [];
@@ -255,7 +260,6 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		canvas_sel = noone;
 		
 		if(composite == noone) return;
-		composite.deleteLayer = deleteLayer;
 		
 		if(composite.getInputAmount()) {
 			var _ind = composite.surface_selecting;
@@ -279,6 +283,10 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 			timeline_item_group.name  = getDisplayName();
 			timeline_item_group.color = getColor();
 		}
+		
+		for (var i = 0, n = array_length(canvases); i < n; i++) {
+			canvases[i].attributes.show_slope_check = attributes.show_slope_check;
+		}
 	}
 	
 	static update = function() {
@@ -288,7 +296,6 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	static getPreviewValues = function() { return composite == noone? noone : composite.getPreviewValues(); }
 	
 	static postDeserialize = function() {
-		refreshMember();
 		refreshNodes();
 	}
 

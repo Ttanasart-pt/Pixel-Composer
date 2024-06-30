@@ -1,4 +1,5 @@
 function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) { #region
+	corner = min(corner, abs(x0 - x1) / 2, abs(y0 - y1) / 2);
 	var sample = corner / 4;
 	sample = clamp(sample, 1, 8);
 	

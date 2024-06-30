@@ -203,7 +203,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		attributes.show_slope_check = true;
 		array_push(attributeEditors, "Display");
-		array_push(attributeEditors, [ "Slope Check", function() { return attributes.show_slope_check; }, new checkBox(function() { attributes.show_slope_check = !attributes.show_slope_check; }) ]);
+		array_push(attributeEditors, [ "Draw Guide", function() { return attributes.show_slope_check; }, new checkBox(function() { attributes.show_slope_check = !attributes.show_slope_check; }) ]);
 	#endregion
 	
 	#region ++++ tool object ++++
@@ -355,12 +355,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		];
 		
 		rightTools_selection = [ 
-			-1,
-			new NodeTool( "Make/Reset Brush", THEME.canvas_tools_pencil ).setToolFn( __action_make_brush ),
-			-1,
-			new NodeTool( "Outline", THEME.canvas_tools_outline ).setToolObject( new canvas_tool_outline() ),
-			new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setToolObject( new canvas_tool_extrude() ),
-			new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setToolObject( new canvas_tool_inset()   ),
+			/*  0 */ -1,
+			/*  1 */ new NodeTool( "Make/Reset Brush", THEME.canvas_tools_pencil ).setToolFn( __action_make_brush ),
+			/*  2 */ -1,
+			/*  3 */ new NodeTool( "Outline", THEME.canvas_tools_outline ).setToolObject( new canvas_tool_outline() ),
+			/*  4 */ new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setToolObject( new canvas_tool_extrude() ),
+			/*  5 */ new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setToolObject( new canvas_tool_inset()   ),
+			/*  6 */ new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setToolObject( new canvas_tool_skew()   ),
 		];
 		
 		rightTools_not_selection = [ 
@@ -368,6 +369,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Outline", THEME.canvas_tools_outline, self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[3]) ),
 			new NodeTool( "Extrude", THEME.canvas_tools_extrude, self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[4]) ),
 			new NodeTool( "Inset",   THEME.canvas_tools_inset,   self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[5]) ),
+			new NodeTool( "Skew",    THEME.canvas_tools_skew,    self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[6]) ),
 		];
 		
 		rightTools_brush = [ 

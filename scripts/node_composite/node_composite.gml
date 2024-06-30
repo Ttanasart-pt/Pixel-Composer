@@ -361,6 +361,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		layer_height     = max(ui(16), _h);
 		layer_renderer.h = layer_height;
 		
+		if(layer_remove > -1) {
+			deleteLayer(layer_remove);
+			layer_remove = -1;
+		}
+		
 		return layer_height;
 	}); #endregion
 	
@@ -374,6 +379,26 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	function deleteLayer(index) { #region
 		var idx = input_fix_len + index * data_length;
+		
+		if(canvas_group) {
+			var _inp   = inputs[| idx];
+			var _nodes = [];
+			
+			while(_inp != noone) {
+				var _n = _inp.value_from.node;
+				array_push_unique(_nodes, _n);
+				
+				_inp = noone;
+				for(var i = 0; i < ds_list_size(_n.inputs); i++) {
+					if(_n.inputs[| i].value_from != noone)
+						_inp = _n.inputs[| i];
+				}
+			}
+			
+			for (var i = 0, n = array_length(_nodes); i < n; i++)
+				_nodes[i].destroy();
+			return;
+		} 
 		
 		for( var i = 0; i < data_length; i++ )
 			ds_list_delete(inputs, idx);
@@ -721,10 +746,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		if(layer_remove > -1) {
-			deleteLayer(layer_remove);
-			layer_remove = -1;
-		}
 	} #endregion
 	
 	static step = function() { #region

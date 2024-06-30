@@ -169,7 +169,11 @@ function timelineItemNode(node) : timelineItem() constructor {
 function timelineItemGroup() : timelineItem() constructor {
 	name     = "";
 	renaming = false;
+	
 	tb_name  = new textBox(TEXTBOX_INPUT.text, function(val) { name = val; renaming = false; });
+	tb_name.padding = ui(4);
+	tb_name.hide    = 2;
+	
 	contents = [];
 	
 	static rename = function() { #region
@@ -201,18 +205,15 @@ function timelineItemGroup() : timelineItem() constructor {
 		if(col == -1) col = CDEF.main_grey;
 		color_cur = col;
 		
-		var bnd = hig? merge_color(c_white, COLORS.panel_animation_dope_bg, .9) : COLORS.panel_animation_dope_bg;
+		var bnd = hig? merge_color(c_white, COLORS.panel_animation_dope_bg, .9) : COLORS.panel_animation_dope_bg_hover;
 		var cc  = colorMultiply(col, bnd);
-		
-		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
-			bnd = hig? merge_color(c_white, COLORS.panel_animation_dope_bg_hover, .9) : COLORS.panel_animation_dope_bg_hover;
-			cc  = colorMultiply(col, bnd);
-			res = 1;
-		}
-		
 		color_dsp = cc;
 		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _x, _y, _w, lh, cc, alpha);
-		// draw_sprite_stretched_add(THEME.menu_button_mask, 1, _x, _y, _w, lh, c_white, 0.1);
+		
+		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
+			draw_sprite_stretched_add(THEME.menu_button_mask, 1, _x, _y, _w, lh, c_white, 0.1);
+			res = 1;
+		}
 		
 		if(fdHover == self)
 			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _x, _y + 1, _w, lh - 2, col == -1? COLORS._main_accent : col, 1);
@@ -226,13 +227,17 @@ function timelineItemGroup() : timelineItem() constructor {
 		
 		draw_set_text(f_p2, fa_left, fa_center);
 		if(renaming) {
-			var _param = new widgetParam(lx + ui(20), _y + ui(2), _w - ui(24), lh - ui(4), name,, [ _msx, _msy ]);
-			tb_name.setFont(f_p2);
+			var _param = new widgetParam(lx + ui(20), _y + 1, _w - ui(24), lh - ui(4), name,, [ _msx, _msy ]);
+			    _param.font = f_p2;
+			
+			tb_name.highlight_color = cc;
+			tb_name.highlight_alpha = .5;
+			
 			tb_name.setFocusHover(focus, hover);
 			tb_name.drawParam(_param);
 		} else {
 			draw_set_color(itHover == self? COLORS._main_text_accent : COLORS._main_text);
-			draw_text_add(lx + ui(24), _y + lh / 2 - ui(2), name);
+			draw_text_add(lx + ui(24), _y + lh / 2, name);
 		}
 		
 		return res;

@@ -250,7 +250,16 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 	} #endregion
 	
 	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(!is_selected) return;
+		if(!is_selected) {
+			if(!is_selecting) {
+				var x0 = _x + mouse_cur_x * _s;
+				var y0 = _y + mouse_cur_y * _s;
+				
+				draw_set_color(c_white);
+				draw_rectangle(x0, y0, x0 + _s, y0 + _s, true);
+			}
+			return;
+		}
 		
 		var pos_x = _x + selection_position[0] * _s;
 		var pos_y = _y + selection_position[1] * _s;
@@ -265,7 +274,7 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		draw_set_color(c_white);
 		draw_rectangle_dashed(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true, 6, current_time / 100);
 	} #endregion
-		
+	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function rotate90cw() { #region
