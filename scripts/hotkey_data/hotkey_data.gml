@@ -14,10 +14,10 @@
 				"Freeform":	 new hotkeySimple("Q"),
 				"Fill":		 new hotkeySimple("G"),
 				
-				"Outline":	 new hotkeySimple("O", MOD_KEY.shift),
-				"Extrude":	 new hotkeySimple("E", MOD_KEY.shift),
-				"Inset":	 new hotkeySimple("I", MOD_KEY.shift),
-				"Skew":		 new hotkeySimple("S", MOD_KEY.shift),
+				"Outline":	 new hotkeySimple("O", MOD_KEY.alt),
+				"Extrude":	 new hotkeySimple("E", MOD_KEY.alt),
+				"Inset":	 new hotkeySimple("I", MOD_KEY.alt),
+				"Skew":		 new hotkeySimple("S", MOD_KEY.alt),
 			},
 			
 			"Node_Mesh_Warp": {

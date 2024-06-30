@@ -98,6 +98,9 @@ function NodeTool(name, spr, contextString = instanceof(other)) constructor {
 		
 		if(PANEL_PREVIEW.tool_current == self)
 			onToggle();
+			
+		var _obj = getToolObject();
+		if(_obj) _obj.init(context);
 	}
 	
 	static onToggle = function() {}
