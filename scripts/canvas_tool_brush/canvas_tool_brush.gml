@@ -43,15 +43,6 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 				
 				mouse_cur_x = mouse_pre_draw_x + _ddx - sign(_ddx);
 				mouse_cur_y = mouse_pre_draw_y + _ddy - sign(_ddy);
-				
-				// var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
-				// var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
-				
-				// var _a = round(aa / 45) * 45;
-				// dd = dd * dcos(_a - aa);
-					
-				// mouse_cur_x = mouse_pre_draw_x + lengthdir_x(dd, _a);
-				// mouse_cur_y = mouse_pre_draw_y + lengthdir_y(dd, _a);
 			}
 		}
 			

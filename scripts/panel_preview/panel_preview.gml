@@ -1601,7 +1601,7 @@ function Panel_Preview() : PanelContent() constructor {
 			if(thov && point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x1, _y1 - 1))
 				tool_hovering = tool;
 			
-			if(tool.subtools > 0 && _tool == tool) { #region subtools
+			if(tool.subtools > 0 && _tool == tool) { #region hovering subtools
 				var s_ww = tool_size * tool.subtools;
 				var s_hh = tool_size;
 				draw_sprite_stretched(THEME.menu_bg, 0, _x0 - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
@@ -1636,6 +1636,7 @@ function Panel_Preview() : PanelContent() constructor {
 				if(point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x0 + s_ww, _y1 - 1))
 					tool_hovering = tool;
 			#endregion
+			
 			} else { #region single tools
 				if(tool_hovering == tool) {
 					draw_sprite_stretched(THEME.button_hide, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
@@ -1648,7 +1649,7 @@ function Panel_Preview() : PanelContent() constructor {
 				if(pFOCUS && WIDGET_CURRENT == noone) {
 					var _key = tool.checkHotkey();
 					
-					if(keyboard_check_pressed(ord(string(i + 1))) || (_key != "" && keyboard_check_pressed(ord(_key))))
+					if(keyboard_check_pressed(ord(string(i + 1))) || (_key != noone && _key.isPressing()))
 						tool.toggleKeyboard();
 				}
 				
@@ -1712,7 +1713,7 @@ function Panel_Preview() : PanelContent() constructor {
 				if(thov && point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x1, _y1 - 1))
 					tool_hovering = tool;
 			
-				if(tool.subtools > 0 && _tool == tool) { #region subtools
+				if(tool.subtools > 0 && _tool == tool) { #region hovering subtools
 					
 					var stool = tool.spr;
 					var s_ww  = tool_size * tool.subtools;
@@ -1758,6 +1759,12 @@ function Panel_Preview() : PanelContent() constructor {
 					
 						if(mouse_press(mb_left, pFOCUS))
 							tool.toggle();
+					}
+					
+					if(pFOCUS && WIDGET_CURRENT == noone) {
+						var _key = tool.checkHotkey();
+						if(keyboard_check_pressed(ord(string(i + 1))) || (_key != noone && _key.isPressing()))
+							tool.toggleKeyboard();
 					}
 					
 					if(tool_current == tool) {

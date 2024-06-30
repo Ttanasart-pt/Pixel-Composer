@@ -73,18 +73,21 @@
 	global.KEY_STRING_MAP[? 223] = "`" // actually ` but that needs to be escaped
 	
 	function key_get_index(key) {
+		if(key == "") return noone;
+		
 		var k = ds_map_find_first(global.KEY_STRING_MAP);
 		repeat(ds_map_size(global.KEY_STRING_MAP)) {
 			if(global.KEY_STRING_MAP[? k] == key) return k;
 			k = ds_map_find_next(global.KEY_STRING_MAP, k);
 		}
-		return false;
+		
+		return ord(key);
 	}
 #endregion
 
 #region get name
 	function key_get_name(_key, _mod) {
-		if(_key == 0 && _mod == MOD_KEY.none)
+		if(_key <= 0 && _mod == MOD_KEY.none)
 			return "";
 		
 		var dk = "";
@@ -120,11 +123,11 @@
 			case vk_f10 : dk += "F10"; break;
 			case vk_f11 : dk += "F11"; break;
 			case vk_f12 : dk += "F12"; break;          
-			case -1 : break;
+			
 			default : 
-				if(ds_map_exists(global.KEY_STRING_MAP, _key))
+				if(ds_map_exists(global.KEY_STRING_MAP, _key)) 
 					dk += global.KEY_STRING_MAP[? _key];
-				else 
+				else if(_key > 0) 
 					dk += ansi_char(_key);	
 				break;	
 		}

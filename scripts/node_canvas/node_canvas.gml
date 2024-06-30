@@ -366,10 +366,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		rightTools_not_selection = [ 
 			-1,
-			new NodeTool( "Outline", THEME.canvas_tools_outline, self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[3]) ),
-			new NodeTool( "Extrude", THEME.canvas_tools_extrude, self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[4]) ),
-			new NodeTool( "Inset",   THEME.canvas_tools_inset,   self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[5]) ),
-			new NodeTool( "Skew",    THEME.canvas_tools_skew,    self ).setToolObject( new canvas_tool_with_selector(rightTools_selection[6]) ),
+			new NodeTool( "Outline", THEME.canvas_tools_outline).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[3]) ),
+			new NodeTool( "Extrude", THEME.canvas_tools_extrude).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[4]) ),
+			new NodeTool( "Inset",   THEME.canvas_tools_inset  ).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[5]) ),
+			new NodeTool( "Skew",    THEME.canvas_tools_skew   ).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[6]) ),
 		];
 		
 		rightTools_brush = [ 
@@ -975,9 +975,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(_bgDim) {
 			var _bgDim = _bg;
 			if(is_array(_bgDim) && !array_empty(_bgDim)) _bgDim = _bg[0];
-			
-			if(is_surface(_bgDim))
-				_dim = [ surface_get_width_safe(_bgDim), surface_get_height_safe(_bgDim) ];
+			if(is_surface(_bgDim)) _dim = surface_get_dimension(_bgDim);
 		}
 		attributes.dimension = _dim;
 		apply_surfaces();

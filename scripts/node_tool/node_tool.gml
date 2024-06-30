@@ -1,5 +1,7 @@
-function NodeTool(name, spr, context = instanceof(other)) constructor {
-	ctx         = context;
+function NodeTool(name, spr, contextString = instanceof(other)) constructor {
+	ctx         = contextString;
+	context     = noone;
+	
 	self.name   = name;
 	self.spr    = spr;
 	
@@ -12,12 +14,9 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 	toolFn      = noone;
 	toolFnParam = {};
 	
-	static checkHotkey = function() {
-		INLINE
-		
-		return getToolHotkey(ctx, name);
-	}
+	static checkHotkey   = function() { INLINE return getToolHotkey(ctx, name); }
 	
+	static setContext    = function(context) {    self.context    = context;    return self; }
 	static setToolObject = function(toolObject) { self.toolObject = toolObject; return self; }
 	static setToolFn     = function(toolFn) {     self.toolFn     = toolFn;     return self; }
 	
@@ -29,7 +28,8 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 		var _nme = getName(index);
 		var _key = checkHotkey();
 		
-		return _key == ""? _nme : new tooltipHotkey(_nme).setKey(_key);
+		if(_key == noone) return _nme;
+		return new tooltipHotkey(_nme).setKey(_key.getName());
 	}
 	
 	static setSetting = function(sets) { array_push(settings, sets); return self; }
@@ -55,8 +55,8 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 	
 	static toggle = function(index = 0) {
 		if(toolFn != noone) {
-			if(subtools == 0) toolFn(ctx);
-			else              toolFn[index](ctx);
+			if(subtools == 0) toolFn(context);
+			else              toolFn[index](context);
 			return;
 		}
 		
@@ -76,18 +76,23 @@ function NodeTool(name, spr, context = instanceof(other)) constructor {
 			onToggle();
 			
 		var _obj = getToolObject();
-		if(_obj) _obj.init(ctx);
+		if(_obj) _obj.init(context);
 	}
 	
 	static toggleKeyboard = function() {
+		HOTKEY_BLOCK = true;
+		
 		if(subtools == 0) {
 			PANEL_PREVIEW.tool_current = PANEL_PREVIEW.tool_current == self? noone : self;
+			
 		} else if(PANEL_PREVIEW.tool_current != self) {
 			PANEL_PREVIEW.tool_current = self;
 			selecting = 0;
+			
 		} else if(selecting == subtools - 1) {
 			PANEL_PREVIEW.tool_current = noone;
 			selecting = 0;
+			
 		} else 
 			selecting++;
 		
