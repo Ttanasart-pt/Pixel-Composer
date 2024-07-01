@@ -131,109 +131,13 @@
 		file_dnd_allowmulti = true;
 	}
 	
-	drop_path = [];
+	globalvar FILE_IS_DROPPING, FILE_DROPPING_X, FILE_DROPPING_Y, FILE_DROPPING, FILE_DROPPED;
 	
-	function load_file_path(path, _x = undefined, _y = undefined) {
-		if(!is_array(path)) path = [ path ];
-		if(array_length(path) == 0) return; 
-		
-		_x = _x == undefined? PANEL_GRAPH.graph_cx : _x;
-		_y = _y == undefined? PANEL_GRAPH.graph_cy : _y;
-		
-		var type = "others";
-		
-		if(array_length(path) == 1 && directory_exists(path[0]))
-			type = "image";
-			
-		for( var i = 0, n = array_length(path); i < n; i++ ) {
-			var p = path[i];
-			var ext = string_lower(filename_ext(p));
-			
-			switch(ext) {
-				case ".png"	 :
-				case ".jpg"	 :
-				case ".jpeg" :
-					type = "image";
-					break;
-			}
-		}
-		
-		var is_multi = type == "image" && (array_length(path) > 1 || directory_exists(path[0]));
-		
-		if(is_multi) {
-			with(dialogCall(o_dialog_add_multiple_images, WIN_W / 2, WIN_H / 2))
-				setPath(path);
-		} else {
-			if(!IS_CMD) PANEL_GRAPH.onStepBegin();
-			
-			var node = noone;
-			for( var i = 0, n = array_length(path); i < n; i++ ) {
-				var p = path[i];
-				var ext = filename_ext_raw(p);
-				
-				switch(ext) {
-					case "txt"  :
-						node = Node_create_Text_File_Read_path(_x, _y, p);
-						break;
-						
-					case "csv"  :
-						node = Node_create_CSV_File_Read_path(_x, _y, p);
-						break;
-						
-					case "json"  :
-						node = Node_create_Json_File_Read_path(_x, _y, p);
-						break;
-						
-					case "ase"  :
-					case "aseprite"  :
-						node = Node_create_ASE_File_Read_path(_x, _y, p);
-						break;
-						
-					case "png"	 :
-					case "jpg"	 :
-					case "jpeg" :
-						if(key_mod_press(SHIFT))
-							node = Node_create_Image_path(_x, _y, p);
-						else 
-							node = Node_create_Image_path(_x, _y, p);
-						break;
-						
-					case "gif" :
-						node = Node_create_Image_gif_path(_x, _y, p);
-						break;
-						
-					case "obj" :
-						node = Node_create_3D_Obj_path(_x, _y, p);
-						break;
-						
-					case "wav" :
-						node = Node_create_WAV_File_Read_path(_x, _y, p);
-						break;
-						
-					case "xml" :
-						node = Node_create_XML_File_Read_path(_x, _y, p);
-						break;
-						
-					case "svg" :
-						node = Node_create_SVG_path(_x, _y, p);
-						break;
-						
-					case "pxc" :
-					case "cpxc" :
-						LOAD_PATH(p);
-						break;
-						
-					case "pxcc" :
-						APPEND(p);
-						break;
-				}
-				
-				if(!IS_CMD) PANEL_GRAPH.mouse_grid_y += 160;
-			}
-			
-			// if(node && !IS_CMD) PANEL_GRAPH.toCenterNode();
-		}
-	}
+	FILE_IS_DROPPING = false;
+	FILE_DROPPING_X  = 0;
+	FILE_DROPPING_Y  = 0;
+	FILE_DROPPING    = [];
+	FILE_DROPPED     = false;
 #endregion
 
 #region undo

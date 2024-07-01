@@ -76,13 +76,7 @@ if(PROJECT.active && !PROJECT.safeMode) { #region node step
 #endregion
 
 #region file drop
-	if(OS == os_windows) {
-		if(array_length(drop_path)) {
-			load_file_path(drop_path);
-			drop_path = [];
-		}
-		
-	} else if(OS == os_macosx) {		
+	if(OS == os_macosx) {		
 		file_dnd_set_files(file_dnd_pattern, file_dnd_allowfiles, file_dnd_allowdirs, file_dnd_allowmulti);
 		file_dnd_filelist = file_dnd_get_files();
 		

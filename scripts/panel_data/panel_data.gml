@@ -388,7 +388,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 				dragging = -1;
 			}
 		} else {
-			if(con && point_in_rectangle(mouse_mx, mouse_my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
+			var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx;
+			var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my;
+			
+			if(con && point_in_rectangle(_mx, _my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
 				HOVER = self;
 				if(mouse_press(mb_any))   
 					setFocus(self);
@@ -652,9 +655,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		
 		if(tab) drawTab();
 		
+		var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx;
+		var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my;
+			
 		var p = ui(6);
-		var m_in = point_in_rectangle(mouse_mx, mouse_my, tx + p, ty + p, tx + tw - p, ty + th - p);
-		var m_ot = point_in_rectangle(mouse_mx, mouse_my, tx, ty, tx + tw, ty + th);
+		var m_in = point_in_rectangle(_mx, _my, tx + p, ty + p, tx + tw - p, ty + th - p);
+		var m_ot = point_in_rectangle(_mx, _my, tx, ty, tx + tw, ty + th);
 		mouse_active = m_in;
 		
 		var _tw = tw - padding * 2;
@@ -935,6 +941,7 @@ function PanelContent() constructor { #region
 	
 	static draw = function(panel) { #region
 		self.panel = panel;
+		
 		if(o_main.panel_dragging == noone) {
 			pFOCUS = FOCUS == panel/* && panel.mouse_active*/;
 			pHOVER = !CURSOR_IS_LOCK && HOVER == panel && panel.mouse_active;

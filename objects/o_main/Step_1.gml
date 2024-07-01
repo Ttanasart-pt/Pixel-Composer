@@ -5,6 +5,7 @@ global.cache_hit  = 0;
 
 HOVERING_ELEMENT  = _HOVERING_ELEMENT;
 _HOVERING_ELEMENT = noone;
+FILE_DROPPED      = false;
 
 #region minimize
 	if(winMan_isMinimized()) {

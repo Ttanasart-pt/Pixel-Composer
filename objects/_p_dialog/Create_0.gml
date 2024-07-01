@@ -149,7 +149,10 @@
 	function checkFocus() {
 		if(!active) return;
 		
-		if(point_in(mouse_mx, mouse_my)) {
+		var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx;
+		var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my;
+			
+		if(point_in(_mx, _my)) {
 			if(depth < DIALOG_DEPTH_HOVER) {
 				DIALOG_DEPTH_HOVER = depth;
 				HOVER = self.id;

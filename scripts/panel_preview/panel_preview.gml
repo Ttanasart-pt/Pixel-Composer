@@ -2064,6 +2064,13 @@ function Panel_Preview() : PanelContent() constructor {
 			],, getNodePreview());
 		}
 		
+		if(pHOVER) {
+			if(FILE_IS_DROPPING) 
+				draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
+				
+			if(FILE_DROPPED && !array_empty(FILE_DROPPING)) {}
+		}
+		
 	} #endregion
 	
 	////=========== ACTION ===========

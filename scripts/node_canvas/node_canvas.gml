@@ -362,6 +362,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			/*  4 */ new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setToolObject( new canvas_tool_extrude() ),
 			/*  5 */ new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setToolObject( new canvas_tool_inset()   ),
 			/*  6 */ new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setToolObject( new canvas_tool_skew()   ),
+			/*  7 */ new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setToolObject( new canvas_tool_corner()   ),
 		];
 		
 		rightTools_not_selection = [ 
@@ -370,6 +371,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Extrude", THEME.canvas_tools_extrude).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[4]) ),
 			new NodeTool( "Inset",   THEME.canvas_tools_inset  ).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[5]) ),
 			new NodeTool( "Skew",    THEME.canvas_tools_skew   ).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[6]) ),
+			new NodeTool( "Corner",  THEME.canvas_tools_corner ).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[7]) ),
 		];
 		
 		rightTools_brush = [ 
@@ -701,9 +703,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			rightTools = [];
 			array_append(rightTools, rightTools_general);
 			
-			if(tool_selection.is_selected) array_append(rightTools, rightTools_selection);
-			else						   array_append(rightTools, rightTools_not_selection);
-			
 			if(nodeTool != noone) 
 				_tool = nodeTool;
 				
@@ -726,6 +725,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				tool_mirror_edit.sprs = (!tool_selection.is_selected && tool_attribute.mirror[0])? THEME.canvas_mirror_diag : THEME.canvas_mirror;
 			}
+			
+			if(tool_selection.is_selected) array_append(rightTools, rightTools_selection);
+			else						   array_append(rightTools, rightTools_not_selection);
 			
 			if(_tool && _tool.override) {
 				_tool.node = self;

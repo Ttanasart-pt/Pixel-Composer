@@ -50,6 +50,10 @@ function _sprite_load_from_struct(str, theme, key) { #region
 			slice.bottom  = str.slice;
 			
 		}
+		
+		if(struct_has(str, "slicemode"))
+			slice.tilemode = array_create(5, str.slicemode);
+		
 		sprite_set_nineslice(s, slice);
 	}
 	
