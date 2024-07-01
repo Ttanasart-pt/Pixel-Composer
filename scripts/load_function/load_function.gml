@@ -253,6 +253,9 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	
 	printIf(log, $"========== Load {array_length(PROJECT.allNodes)} nodes completed in {(get_timer() - t0) / 1000} ms ==========");
 	
+	if(PREFERENCES.save_layout && struct_has(_load_content, "layout"))
+		LoadPanelStruct(_load_content.layout.panel);
+	
 	return true;
 } #endregion
 

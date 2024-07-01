@@ -1120,14 +1120,14 @@ function Panel_Inspector() : PanelContent() constructor {
 	static serialize   = function() { 
 		return { 
 			name: instanceof(self), 
-			inspecting, 
-			inspectings,
+			inspecting  : node_get_id(inspecting), 
+			inspectings : array_map(inspectings, function(n) { return node_get_id(n) }),
 		}; 
 	}
 	
 	static deserialize = function(data) { 
-		inspecting  = data.inspecting;
-		inspectings = data.inspectings;
+		inspecting  = node_from_id(data.inspecting);
+		inspectings = array_map(data.inspectings, function(n) { return node_from_id(n); });
 		
 		return self; 
 	}

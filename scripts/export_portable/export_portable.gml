@@ -15,7 +15,7 @@ function exportPortable(project = PROJECT) {
 	
 	var raw_name = filename_name_only(path);
 	var raw_path = filename_path(path) + raw_name;
-	var _proj    = save_serialize(project, true);
+	var _proj    = project.serialize();
 	
 	var zip = zip_create();
 	

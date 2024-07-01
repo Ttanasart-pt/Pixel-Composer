@@ -77,6 +77,8 @@
 		return noone;
 	} #endregion
 	
+	function LoadPanelStruct(struct) { loadPanelStruct(PANEL_MAIN, struct); }
+	
 	function loadPanelStruct(panel, str) { #region
 		var cont = str.content;
 		
@@ -108,10 +110,10 @@
 		}
 	} #endregion
 	
-	function loadPanel(path, panel) { #region
+	function loadPanel(path) {
 		CURRENT_PANEL = json_load_struct(path);
-		loadPanelStruct(panel, CURRENT_PANEL.panel);
-	} #endregion
+		LoadPanelStruct(CURRENT_PANEL.panel);
+	}
 	
 	function checkPanelValid() { #region
 		var val  = true;
@@ -180,7 +182,7 @@
 		var file = $"{DIRECTORY}layouts/{PREFERENCES.panel_layout_file}.json"; 
 		if(!file_exists_empty(file))
 			file = DIRECTORY + "layouts/Horizontal.json"; 
-		loadPanel(file, PANEL_MAIN);
+		loadPanel(file);
 		
 		PANEL_MAIN.refresh();
 		PANEL_MAIN.refreshSize();

@@ -18,6 +18,7 @@
 				"Extrude":	 new hotkeySimple("E", MOD_KEY.alt),
 				"Inset":	 new hotkeySimple("I", MOD_KEY.alt),
 				"Skew":		 new hotkeySimple("S", MOD_KEY.alt),
+				"Corner":	 new hotkeySimple("C", MOD_KEY.alt),
 			},
 			
 			"Node_Mesh_Warp": {

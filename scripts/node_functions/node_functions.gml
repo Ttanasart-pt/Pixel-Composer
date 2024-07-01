@@ -141,6 +141,9 @@
 #endregion
 
 #region node function
+	function node_get_id(node) { return node? node.node_id : noone; }
+	function node_from_id(nid) { return nid && ds_map_exists(PROJECT.nodeMap, nid)? PROJECT.nodeMap[? nid] : noone; }
+	
 	function nodeLoad(_data, scale = false, _group = noone) {
 		INLINE
 		if(!is_struct(_data)) return;

@@ -2,7 +2,7 @@ globalvar SAVING, IS_SAVING;
 SAVING    = false;
 IS_SAVING = false;
 
-function NEW() { #region
+function NEW() {
 	CALL("new");
 	
 	PROJECT = new Project();
@@ -11,16 +11,16 @@ function NEW() { #region
 	var graph = new Panel_Graph(PROJECT);
 	PANEL_GRAPH.panel.setContent(graph, true);
 	PANEL_GRAPH = graph;
-} #endregion
+}
 
-function save_serialize(project = PROJECT, _outMap = false) { #region
+function SERIALIZE_PROJECT(project = PROJECT) {
 	var _map = project.serialize();
+	_map.layout = panelSerialize();
 	
-	if(_outMap) return _map;
 	return PREFERENCES.save_file_minify? json_stringify_minify(_map) : json_stringify(_map, true);
-} #endregion
+}
 
-function SET_PATH(project, path) { #region
+function SET_PATH(project, path) {
 	if(path == "") {
 		project.readonly = false;
 	} else if(!project.readonly) {
@@ -34,23 +34,23 @@ function SET_PATH(project, path) { #region
 	}
 	
 	project.path = path;
-} #endregion
+}
 
-function SAVE_ALL() { #region
+function SAVE_ALL() {
 	for( var i = 0, n = array_length(PROJECTS); i < n; i++ )
 		SAVE(PROJECTS[i]);
-} #endregion
+}
 
-function SAVE(project = PROJECT) { #region
+function SAVE(project = PROJECT) {
 	if(DEMO) return false;
 	
 	if(project.path == "" || project.readonly || path_is_backup(project.path))
 		return SAVE_AS(project);
 		
 	return SAVE_AT(project, project.path);
-} #endregion
+}
 
-function SAVE_AS(project = PROJECT) { #region
+function SAVE_AS(project = PROJECT) {
 	if(DEMO) return false;
 	
 	var path = get_save_filename_pxc("Pixel Composer project (.pxc)|*.pxc|Compressed Pixel Composer project (.cpxc)|*.cpxc", "");
@@ -66,17 +66,15 @@ function SAVE_AS(project = PROJECT) { #region
 	SET_PATH(project, path);
 	
 	return true;
-} #endregion
+}
 
-function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
+function SAVE_AT(project = PROJECT, path = "", log = "save at ") {
 	CALL("save");
 	
 	if(DEMO) return false;
 	
 	IS_SAVING = true;
 	SAVING    = true;
-	//if(TESTING && string_char_at(filename_name(path), 1) != "[")
-	//	path = $"{filename_dir(path)}/[{VERSION_STRING}] {filename_name(path)}";
 	
 	if(PREFERENCES.save_backup) {
 		for(var i = PREFERENCES.save_backup - 1; i >= 0; i--) {
@@ -90,9 +88,10 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
 	
 	if(file_exists_empty(path)) file_delete(path);
 	var _ext = filename_ext_raw(path);
+	var _prj = SERIALIZE_PROJECT(project);
 	
-	     if(_ext == "pxc")  file_text_write_all(path, save_serialize(project));
-	else if(_ext == "cpxc") buffer_save(buffer_compress_string(save_serialize(project)), path);
+	     if(_ext == "pxc")  file_text_write_all(path, _prj);
+	else if(_ext == "cpxc") buffer_save(buffer_compress_string(_prj), path);
 	
 	SAVING    = false;
 	project.readonly  = false;
@@ -102,11 +101,11 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") { #region
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 	
 	return true;
-} #endregion
+}
 
 /////////////////////////////////////////////////////// COLLECTION ///////////////////////////////////////////////////////
 
-function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) { #region
+function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
 	var _content = {};
 	_content.version = SAVE_VERSION;
 	
@@ -151,9 +150,9 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, c
 	
 	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
-} #endregion
+}
 
-function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) { #region
+function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
 	if(save_surface) {
 		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
 		if(is_surface(preview_surface)) {
@@ -186,9 +185,9 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 	
 	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
-} #endregion
+}
 
-function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_GRAPH.getCurrentContext()) { #region
+function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_GRAPH.getCurrentContext()) {
 	if(struct_has(_node, "nodes")) {
 		for(var i = 0; i < array_length(_node.nodes); i++)
 			SAVE_NODE(_arr, _node.nodes[i], dx, dy, scale, context);
@@ -202,4 +201,4 @@ function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_G
 	if(m.group == c) m.group = noone;
 	
 	array_push(_arr, m);
-} #endregion
+}

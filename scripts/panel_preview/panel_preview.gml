@@ -2155,13 +2155,22 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	static serialize   = function() { 
 		return { 
-			name: instanceof(self), 
-			preview_node, 
+			name:          instanceof(self), 
+			preview_node : [ node_get_id(preview_node[0]), node_get_id(preview_node[1]) ],
+			
+			canvas_x,
+			canvas_y,
+			canvas_s,
 		}; 
 	}
 	
 	static deserialize = function(data) { 
-		preview_node = data.preview_node;
+		if(struct_has(data, "preview_node"))
+			preview_node = [ node_from_id(data.preview_node[0]), node_from_id(data.preview_node[1]) ];
+		
+		canvas_x = struct_try_get(data, "canvas_x", canvas_x);
+		canvas_y = struct_try_get(data, "canvas_y", canvas_y);
+		canvas_s = struct_try_get(data, "canvas_s", canvas_s);
 		
 		run_in(1, fullView)
 		return self; 

@@ -2590,11 +2590,24 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		return { 
 			name: instanceof(self), 
 			project, 
+			
+			graph_x,
+			graph_y,
+			
+			graph_s,
+			graph_s_to,
 		}; 
 	}
 	
 	static deserialize = function(data) { 
 		setProject(data.project);
+		
+		graph_x = struct_try_get(data, "graph_x", graph_x);
+		graph_y = struct_try_get(data, "graph_x", graph_y);
+		
+		graph_s    = struct_try_get(data, "graph_x", graph_s);
+		graph_s_to = struct_try_get(data, "graph_x", graph_s_to);
+		
 		return self; 
 	}
 	

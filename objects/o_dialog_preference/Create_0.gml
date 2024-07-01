@@ -180,6 +180,15 @@ event_inherited();
 	ds_list_add(pref_global, __txt("Save/Load"));
 	
 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+		__txtx("pref_save_layout", "Save layout"),
+		"save_layout",
+		new checkBox(function() { 
+			PREFERENCES.save_layout = !PREFERENCES.save_layout;
+			PREF_SAVE();
+		})
+	));
+	
+	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 		__txtx("pref_save_file_minify", "Minify save file"),
 		"save_file_minify",
 		new checkBox(function() { 
