@@ -36,6 +36,8 @@
 		globalNode	   = new Node_Global();
 		nodeController = new __Node_Controller(self);
 		
+		load_layout = false;
+		
 		previewGrid = { #region
 			show	: false,
 			snap	: false,
@@ -176,11 +178,11 @@
 			_map.notes       = array_map(notes, function(note) { return note.serialize(); } );
 			
 			_map.composer    = composer;
+			_map.load_layout = load_layout;
 			
 			__node_list = [];
 			array_foreach(allNodes, function(node) { if(node.active) array_push(__node_list, node.serialize()); })
 			_map.nodes = __node_list;
-			
 			
 			var prev = PANEL_PREVIEW.getNodePreviewSurface();
 			if(!is_surface(prev)) _map.preview = "";
@@ -210,6 +212,8 @@
 			if(struct_has(_map, "attributes"))	struct_override(attributes,  _map.attributes);
 			if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
 			if(struct_has(_map, "composer"))	composer = _map.composer;
+			
+			load_layout	= struct_try_get(_map, "load_layout", load_layout);
 			
 			setPalette();
 			

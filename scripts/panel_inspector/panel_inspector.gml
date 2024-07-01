@@ -1116,7 +1116,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		if(!locked && PANEL_GRAPH.getFocusingNode() && inspecting != PANEL_GRAPH.getFocusingNode())
 			setInspecting(PANEL_GRAPH.getFocusingNode());
 	} #endregion
-
+	
+	//// =========== Serialize ===========
+	
 	static serialize   = function() { 
 		return { 
 			name: instanceof(self), 

@@ -233,7 +233,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 	
 	function split_h(_w) { #region
 		if(abs(_w) > w) {
-			print("Error: Split panel larger than size w (" + string(_w) + " > " + string(w) + ")");
+			print($"Error: Split panel larger than size w ({_w} > {w})");
 			return noone;
 		}
 		
@@ -269,7 +269,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 	
 	function split_v(_h) { #region
 		if(abs(_h) > h) {
-			print("Error: Split panel larger than size h (" + string(_h) + " > " + string(h) + ")");
+			print($"Error: Split panel larger than size h ({_h} > {h})");
 			return noone;
 		}
 		

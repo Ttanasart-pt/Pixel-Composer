@@ -2152,6 +2152,7 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 	} #endregion
 	
+	//// =========== Serialize ===========
 	
 	static serialize   = function() { 
 		return { 

@@ -77,7 +77,10 @@
 		return noone;
 	} #endregion
 	
-	function LoadPanelStruct(struct) { loadPanelStruct(PANEL_MAIN, struct); }
+	function LoadPanelStruct(struct) { 
+		PANEL_MAIN = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
+		loadPanelStruct(PANEL_MAIN, struct); 
+	}
 	
 	function loadPanelStruct(panel, str) { #region
 		var cont = str.content;
@@ -85,10 +88,8 @@
 		if(variable_struct_exists(str, "split")) {
 			
 			var pan = panel;
-			if(str.split == "v")
-				pan = panel.split_v(ui(str.width));
-			else if(str.split == "h")
-				pan = panel.split_h(ui(str.width));
+			     if(str.split == "v") pan = panel.split_v(ui(str.width));
+			else if(str.split == "h") pan = panel.split_h(ui(str.width));
 			
 			if(pan != noone) {
 				loadPanelStruct(pan[0], cont[0]);
@@ -97,6 +98,7 @@
 		} else {
 			
 			if(!is_array(cont)) cont = [ cont ];
+			
 			for( var i = 0, n = array_length(cont); i < n; i++ ) {
 				var _content = cont[i];
 				var _key = is_struct(_content)? _content.name : _content;
@@ -105,7 +107,8 @@
 				if(_pnCont == noone) continue; 
 				
 				panel.setContent(_pnCont);
-				if(is_struct(_content)) _pnCont.deserialize(_content);
+				if(is_struct(_content))
+					_pnCont.deserialize(_content);
 			}
 		}
 	} #endregion

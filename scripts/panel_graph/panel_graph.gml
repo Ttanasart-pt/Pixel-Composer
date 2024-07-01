@@ -162,9 +162,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		self.project = project;
 		nodes_list   = project.nodes;
 		
-		// layer_index  = noone;
 		setTitle();
 	}
+	
+	static reset = function() {
+		onFocusBegin();
+		resetContext();
+	}
+	
 	setProject(project);
 	
 	#region ---- display ----
@@ -2586,10 +2591,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	//// =========== Serialize ===========
 	
-	static serialize   = function() { 
-		return { 
+	static serialize = function() { 
+		_map = { 
 			name: instanceof(self), 
-			project, 
 			
 			graph_x,
 			graph_y,
@@ -2597,25 +2601,33 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			graph_s,
 			graph_s_to,
 		}; 
+		
+		if(!SAVING) _map.project = project;
+		
+		return _map;
 	}
 	
 	static deserialize = function(data) { 
-		setProject(data.project);
+		if(struct_has(data, "project")) setProject(data.project);
 		
 		graph_x = struct_try_get(data, "graph_x", graph_x);
-		graph_y = struct_try_get(data, "graph_x", graph_y);
+		graph_y = struct_try_get(data, "graph_y", graph_y);
 		
-		graph_s    = struct_try_get(data, "graph_x", graph_s);
-		graph_s_to = struct_try_get(data, "graph_x", graph_s_to);
+		graph_s    = struct_try_get(data, "graph_s",    graph_s);
+		graph_s_to = struct_try_get(data, "graph_s_to", graph_s_to);
 		
 		return self; 
 	}
 	
 	function close() { #region
 		var panels = findPanels("Panel_Graph");
+		
 		for( var i = 0, n = array_length(panels); i < n; i++ ) {
-			if(panels[i] == self) continue;
-			if(panels[i].project == project) {
+			var _pan = panels[i];
+			
+			if(_pan == self) continue;
+			
+			if(_pan.project == project) { //Not the last panel with that project, hence not closing the project just a panel.
 				panel.remove(self);
 				return;
 			}

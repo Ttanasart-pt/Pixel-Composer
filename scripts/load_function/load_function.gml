@@ -1,3 +1,10 @@
+function __loadParams(readonly = false, override = false, apply_layout = false) constructor {
+	self.readonly = readonly;
+	self.override = override;
+	
+	self.apply_layout = apply_layout;
+}
+
 function LOAD(safe = false) { #region
 	if(DEMO) return false;
 	
@@ -51,7 +58,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 		array_push(PROJECTS, PROJECT);
 	}
 	
-	var res = LOAD_AT(path, readonly);
+	var res = LOAD_AT(path, new __loadParams(readonly));
 	if(!res) return false;
 	
 	PROJECT.safeMode = safe_mode;
@@ -61,7 +68,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 	return PROJECT;
 } #endregion
 
-function LOAD_AT(path, readonly = false, override = false) { #region
+function LOAD_AT(path, params = new __loadParams()) { #region
 	static log = false;
 	
 	CALL("load");
@@ -82,7 +89,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	
 	LOADING = true;
 	
-	if(override) {
+	if(params.override) {
 		nodeCleanUp();
 		clearPanel();
 		setPanel();
@@ -100,7 +107,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	if(file_exists_empty(temp_file_path)) file_delete(temp_file_path);
 	file_copy(path, temp_file_path);
 	
-	PROJECT.readonly = readonly;
+	PROJECT.readonly = params.readonly;
 	SET_PATH(PROJECT, path);
 	
 	printIf(log, $" > Create temp : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
@@ -253,7 +260,7 @@ function LOAD_AT(path, readonly = false, override = false) { #region
 	
 	printIf(log, $"========== Load {array_length(PROJECT.allNodes)} nodes completed in {(get_timer() - t0) / 1000} ms ==========");
 	
-	if(PREFERENCES.save_layout && struct_has(_load_content, "layout"))
+	if((PROJECT.load_layout || PREFERENCES.save_layout) && struct_has(_load_content, "layout"))
 		LoadPanelStruct(_load_content.layout.panel);
 	
 	return true;

@@ -31,7 +31,7 @@ function LOAD_FOLDER(list, folder) { #region
 
 function LOAD_SAMPLE() { #region
 	ds_list_clear(SAMPLE_PROJECTS);
-	var zzip = "Welcome files.zip";
+	var zzip = "Welcome files/Welcome files.zip";
 	var targ = $"{DIRECTORY}Welcome files";
 	
 	directory_verify(targ);

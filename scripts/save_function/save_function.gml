@@ -15,7 +15,7 @@ function NEW() {
 
 function SERIALIZE_PROJECT(project = PROJECT) {
 	var _map = project.serialize();
-	_map.layout = panelSerialize();
+	_map.layout = panelSerialize(true);
 	
 	return PREFERENCES.save_file_minify? json_stringify_minify(_map) : json_stringify(_map, true);
 }
@@ -93,7 +93,7 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") {
 	     if(_ext == "pxc")  file_text_write_all(path, _prj);
 	else if(_ext == "cpxc") buffer_save(buffer_compress_string(_prj), path);
 	
-	SAVING    = false;
+	SAVING = false;
 	project.readonly  = false;
 	project.modified  = false;
 	
