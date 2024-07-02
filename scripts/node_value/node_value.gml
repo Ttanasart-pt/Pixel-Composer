@@ -1140,6 +1140,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == JUNCTION_CONNECT.output)
 			return val;
 		
+		if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) print($"{typ == VALUE_TYPE.surface}");
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { #region Dimension conversion
 			if(is_array(val)) {
 				var eqSize = true;
@@ -1149,7 +1150,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				for( var i = 0, n = array_length(val); i < n; i++ ) {
 					if(!is_surface(val[i])) continue;
 					
-					var surfSz = [ surface_get_width_safe(val[i]), surface_get_height_safe(val[i]) ];
+					var surfSz = surface_get_dimension(val[i]);
 					array_push(sArr, surfSz);
 					
 					if(i && !array_equals(surfSz, _osZ))

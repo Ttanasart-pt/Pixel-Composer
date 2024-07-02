@@ -171,8 +171,6 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 			
 			_pTri[3]  = _ctri;
 			shapes[i] = _pTri;
-			
-			// print($"{i}: {array_length(_pTri[0])} - {_pTri[2]}");
 		}
 		
 	}

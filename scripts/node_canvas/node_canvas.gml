@@ -210,6 +210,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		brush = new canvas_brush();
 		
 		tool_selection = new canvas_tool_selection();
+		tool_selection.node = self;
 		
 		tool_brush     = new canvas_tool_brush(brush, false);
 		tool_eraser    = new canvas_tool_brush(brush, true);
@@ -717,11 +718,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 			}
 			
+			tool_selection.drawing_surface    = drawing_surface;
+			tool_selection._canvas_surface    = _canvas_surface;
+			tool_selection.apply_draw_surface = apply_draw_surface;
+			
 			if(tool_selection.is_selected) {
-				tool_selection.node = self;
-				tool_selection.drawing_surface    = drawing_surface;
-				tool_selection._canvas_surface    = _canvas_surface;
-				tool_selection.apply_draw_surface = apply_draw_surface;
 				tool_selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				tool_mirror_edit.sprs = (!tool_selection.is_selected && tool_attribute.mirror[0])? THEME.canvas_mirror_diag : THEME.canvas_mirror;
 				

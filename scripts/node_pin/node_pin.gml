@@ -19,29 +19,28 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 0] = nodeValue("Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
-	static step = function() { #region
-		if(inputs[| 0].value_from == noone) return;
+	static update = function() {
+		if(inputs[| 0].value_from != noone) {
 		
-		inputs[| 0].setType(inputs[| 0].value_from.type);
-		outputs[| 0].setType(inputs[| 0].value_from.type);
+			inputs[| 0].setType(inputs[| 0].value_from.type);
+			outputs[| 0].setType(inputs[| 0].value_from.type);
+			
+			inputs[| 0].color_display  = inputs[| 0].value_from.color_display;
+			outputs[| 0].color_display = inputs[| 0].color_display;
+		}
 		
-		inputs[| 0].color_display  = inputs[| 0].value_from.color_display;
-		outputs[| 0].color_display = inputs[| 0].color_display;
-	} #endregion
-	
-	static update = function() { #region
 		var _val = getInputData(0);
 		outputs[| 0].setValue(_val);
-	} #endregion
+	}
 	
-	static pointIn = function(_x, _y, _mx, _my, _s) { #region
+	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
 		return point_in_circle(_mx, _my, xx, yy, _s * 24);
-	} #endregion
+	}
 	
-	static preDraw = function(_x, _y, _s) { #region
+	static preDraw = function(_x, _y, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -50,12 +49,12 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		outputs[| 0].x = xx;
 		outputs[| 0].y = yy;
-	} #endregion
+	}
 	
 	static drawBadge = function(_x, _y, _s) {}
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		
 		var _dval = PANEL_GRAPH.value_dragging;
 		var hover = _dval == noone || _dval.connect_type == JUNCTION_CONNECT.input? outputs[| 0] : inputs[| 0];
@@ -69,9 +68,9 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		hover_scale_to = 1;
 		return jhov? hover : noone;
-	} #endregion
+	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) { #region
+	static drawNode = function(_x, _y, _mx, _my, _s) {
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
@@ -100,5 +99,5 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		return drawJunctions(_x, _y, _mx, _my, _s);
-	} #endregion
+	}
 }
