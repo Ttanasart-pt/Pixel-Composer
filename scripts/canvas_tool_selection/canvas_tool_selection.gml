@@ -21,7 +21,7 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 	mouse_pre_x = 0;
 	mouse_pre_y = 0;
 	
-	function createSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) { #region
+	function createSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) {
 		if(is_selected)
 			apply();
 		else {
@@ -37,9 +37,37 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 			
 		else 
 			createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h);
-	} #endregion
+	}
 	
-	function modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, _add) { #region
+	function createSelectionFromSurface(surface, sel_x0 = 0, sel_y0 = 0) {
+		if(!surface_exists(surface)) return;
+		
+		var sel_w = surface_get_width(surface);
+		var sel_h = surface_get_height(surface);
+		
+		selection_surface = surface_verify(selection_surface, sel_w, sel_h);
+		selection_mask    = surface_verify(selection_mask,    sel_w, sel_h);
+		
+		surface_set_target(selection_surface);
+			DRAW_CLEAR
+			BLEND_OVERRIDE
+			draw_surface(surface, 0, 0);
+			BLEND_NORMAL
+		surface_reset_target();
+		
+		surface_set_target(selection_mask);
+			DRAW_CLEAR
+			BLEND_OVERRIDE
+			draw_surface(surface, 0, 0);
+			BLEND_NORMAL
+		surface_reset_target();
+		
+		selection_position = [ sel_x0, sel_y0 ];
+		selection_size     = [ sel_w,  sel_h  ];
+		is_selected = true;
+	}
+	
+	function modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, _add) {
 		if(sel_w == 1 && sel_h == 1) return;
 		
 		var _x0, _y0, _x1, _y1;
@@ -99,9 +127,9 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		
 		createNewSelection(_selection_mask, _x0, _y0, _nw, _nh);
 		surface_free(_selection_mask);
-	} #endregion
+	}
 	
-	function createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) { #region
+	function createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) {
 		if(sel_w == 1 && sel_h == 1) return;
 		
 		selection_surface = surface_verify(selection_surface, sel_w, sel_h);
@@ -133,15 +161,15 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		selection_position = [ sel_x0, sel_y0 ];
 		selection_size     = [ sel_w,  sel_h  ];
 		is_selected = true;
-	} #endregion
+	}
 	
-	function copySelection() { #region
+	function copySelection() {
 		var s = surface_encode(selection_surface, false);
 		s.position = selection_position;
 		clipboard_set_text(json_stringify(s));
-	} #endregion
+	}
 	
-	function apply() { #region
+	function apply() {
 		var _drawLay = node.tool_attribute.drawLayer;
 		var _sw = surface_get_width(_canvas_surface);
 		var _sh = surface_get_height(_canvas_surface);
@@ -172,9 +200,9 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		node.surface_store_buffer();
 		
 		is_selected = false;
-	} #endregion
+	}
 	
-	function onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	function onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!is_surface(selection_surface)) {
 			is_selected = false;
 			return;
@@ -196,7 +224,8 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 			var pos_y = selection_position[1];
 			var sel_w = surface_get_width_safe(selection_surface);
 			var sel_h = surface_get_height_safe(selection_surface);
-						
+			var _app  = true;
+			
 			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h)) {
 				var _c = surface_getpixel_ext(selection_mask, mouse_cur_x - pos_x, mouse_cur_y - pos_y);
 				if(_c > 0) {
@@ -205,32 +234,35 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 					selection_sy = pos_y;
 					selection_mx = mouse_cur_x;
 					selection_my = mouse_cur_y;
+					
+					_app  = false;
 				}
 			}
+			
+			if(_app && PANEL_PREVIEW.tool_current == noone)
+				apply();
 		}
 		
 		if(key_press(vk_delete)) {
 			is_selected = false;
 			surface_free(selection_surface);
 			
-		} else if(key_press(vk_escape)) {
+		} else if(key_press(vk_escape))
 			apply();
-			
-		}
-	} #endregion
+	}
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
 		if(is_selected) { onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); return; }
 		else if(is_surface(selection_surface)) { apply(); }
-	} #endregion
+	}
 	
 	function onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
-	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var sel_x0, sel_y0;
 		
 		if(is_selecting) {
@@ -247,9 +279,9 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		draw_surface_ext_safe(selection_mask, _dx, _dy, _s, _s);
 		
 		onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	} #endregion
+	}
 	
-	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!is_selected) {
 			if(!is_selecting) {
 				var x0 = _x + mouse_cur_x * _s;
@@ -273,11 +305,11 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 						
 		draw_set_color(c_white);
 		draw_rectangle_dashed(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true, 6, current_time / 100);
-	} #endregion
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	function rotate90cw() { #region
+	function rotate90cw() {
 		var _sw = surface_get_width(selection_surface);
 		var _sh = surface_get_height(selection_surface);
 		
@@ -288,9 +320,9 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		
 		surface_free(selection_surface);
 		selection_surface = _newS;
-	} #endregion
+	}
 	
-	function rotate90ccw() { #region
+	function rotate90ccw() {
 		var _sw = surface_get_width(selection_surface);
 		var _sh = surface_get_height(selection_surface);
 		
@@ -301,9 +333,9 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		
 		surface_free(selection_surface);
 		selection_surface = _newS;
-	} #endregion
+	}
 	
-	function flipH() { #region
+	function flipH() {
 		var _sw = surface_get_width(selection_surface);
 		var _sh = surface_get_height(selection_surface);
 		
@@ -314,9 +346,9 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		
 		surface_free(selection_surface);
 		selection_surface = _newS;
-	} #endregion
+	}
 	
-	function flipV() { #region
+	function flipV() {
 		var _sw = surface_get_width(selection_surface);
 		var _sh = surface_get_height(selection_surface);
 		
@@ -327,5 +359,5 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		
 		surface_free(selection_surface);
 		selection_surface = _newS;
-	} #endregion
+	}
 }

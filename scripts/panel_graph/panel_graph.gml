@@ -2049,18 +2049,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		else if(UPDATE == RENDER_TYPE.partial)
 			draw_text(w - ui(8), ui(28), __txtx("panel_graph_rendering_partial", "Rendering partial") + "...");
 		
-		if(DRAGGING && pHOVER) { #region file dropping
-			if(node_hovering && node_hovering.droppable(DRAGGING)) {
-				node_hovering.draw_droppable = true;
-				if(mouse_release(mb_left))
-					node_hovering.onDrop(DRAGGING);
-			} else {
-				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, 2, 2, w - 4, h - 4, COLORS._main_value_positive, 1);	
-				if(mouse_release(mb_left))
-					checkDropItem();
-			}
-		} #endregion
-		
 		graph_dragging_key = false;
 		graph_zooming_key  = false;
 		
@@ -2071,20 +2059,36 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		////////////////////////////////// File drop //////////////////////////////////
 		
-		if(!array_empty(FILE_DROPPING)) {
-			load_file_path(FILE_DROPPING);
-			FILE_DROPPING = [];
-		}
-		
 		if(pHOVER) {
-			var _gx = mx / graph_s - graph_x;
-			var _gy = my / graph_s - graph_y;
-			
-			if(FILE_IS_DROPPING) 
+			if(DRAGGING) { // file dropping
 				draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
+			
+				if(node_hovering && node_hovering.droppable(DRAGGING)) {
+					node_hovering.draw_droppable = true;
+					if(mouse_release(mb_left))
+						node_hovering.onDrop(DRAGGING);
+				} else {
+					if(mouse_release(mb_left))
+						checkDropItem();
+				}
+			}
+			
+			var _mx = (FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx) - x;
+			var _my = (FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my) - y;
+		
+			var _gx = _mx / graph_s - graph_x;
+			var _gy = _my / graph_s - graph_y;
+			
+			if(FILE_IS_DROPPING) {
+				// draw_sprite_stretched_ext(THEME.node_bg, 1, _mx, _my, 128 * graph_s, 128 * graph_s, COLORS._main_value_positive, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
+			}
 				
-			if(FILE_DROPPED && !array_empty(FILE_DROPPING)) 
+			if(FILE_DROPPED && !array_empty(FILE_DROPPING)) {
+				_gx = mx / graph_s - graph_x;
+				_gy = my / graph_s - graph_y;
 				load_file_path(FILE_DROPPING, _gx, _gy);
+			}
 		}
 		
 	} #endregion

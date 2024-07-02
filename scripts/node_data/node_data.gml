@@ -2321,6 +2321,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	} #endregion
 	
+	static dropPath = noone;
+	
 	static clone = function(target = PANEL_GRAPH.getCurrentContext()) { #region
 		CLONING = true;
 		var _type = instanceof(self);

@@ -297,12 +297,16 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 			canvases[i].inputs[| 0].setValue(_dim);
 	}
 	
+	static dropPath = function(path) {
+		if(canvas_sel) canvas_sel.dropPath(path);
+	}
+		
 	static getPreviewValues = function() { return composite == noone? noone : composite.getPreviewValues(); }
 	
 	static postDeserialize = function() {
 		refreshNodes();
 	}
-
+	
 	sortIO();
 }
 

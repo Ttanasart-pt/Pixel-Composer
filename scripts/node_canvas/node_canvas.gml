@@ -715,19 +715,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					_tool.subtool = _currTool.selecting;
 					array_append(rightTools, _tool.rightTools);
 				}
-				
+			}
+			
+			if(tool_selection.is_selected) {
 				tool_selection.node = self;
 				tool_selection.drawing_surface    = drawing_surface;
 				tool_selection._canvas_surface    = _canvas_surface;
 				tool_selection.apply_draw_surface = apply_draw_surface;
-				
-				if(is_instanceof(_tool, canvas_tool_selection) && tool_selection.is_selected) tool_selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				
+				tool_selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				tool_mirror_edit.sprs = (!tool_selection.is_selected && tool_attribute.mirror[0])? THEME.canvas_mirror_diag : THEME.canvas_mirror;
-			}
-			
-			if(tool_selection.is_selected) array_append(rightTools, rightTools_selection);
-			else						   array_append(rightTools, rightTools_not_selection);
+				
+				array_append(rightTools, rightTools_selection);
+				
+			} else
+				array_append(rightTools, rightTools_not_selection);
 			
 			if(_tool && _tool.override) {
 				_tool.node = self;
@@ -906,11 +907,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var _surf = surface_decode(_str);
 					
 					if(surface_exists(_surf)) {
-						tool_selection.selection_surface  = _surf;
-						tool_selection.is_selected        = true;
-						
-						tool_selection.selection_position = [ 0, 0 ];
-						tool_selection.selection_size = [ surface_get_width(_surf), surface_get_height(_surf) ];
+						tool_selection.createSelectionFromSurface(_surf);
+						surface_free(_surf);
 						
 						if(key_mod_press(SHIFT)) {
 							var _sel_pos = struct_try_get(_str, "position", [ 0, 0 ]);
@@ -1121,6 +1119,29 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 		return self;
 	} #endregion 
+	
+	static dropPath = function(path) {
+		if(!file_exists_empty(path)) return noone;
+		
+		if(tool_selection.is_selected)
+			tool_selection.apply();
+		
+		var _spr = sprite_add(path, 0, 0, 0, 0, 0);
+		if(_spr == -1) return noone;
+		
+		var _sw = sprite_get_width(_spr);
+		var _sh = sprite_get_height(_spr);
+		
+		var surf = surface_create(_sw, _sh);
+		surface_set_shader(surf, noone);
+			draw_sprite(_spr, 0, 0, 0);
+		surface_reset_shader();
+		
+		sprite_delete(_spr);
+		
+		tool_selection.createSelectionFromSurface(surf);
+		surface_free(surf);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
