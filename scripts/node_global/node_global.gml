@@ -219,7 +219,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		return true;
 	} #endregion
 	
-	static getInput = function(key, def = noone) { #region
+	static getInputKey = function(key, def = noone) { #region
 		if(!ds_map_exists(value, key)) return def;
 		return value[? key];
 	} #endregion

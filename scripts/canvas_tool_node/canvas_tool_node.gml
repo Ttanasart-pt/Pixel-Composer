@@ -61,12 +61,18 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 		inputJunction  = noone;
 		outputJunction = noone;
 		
+		setColor = true;
+		
 		for( var i = 0, n = ds_list_size(nodeObject.inputs); i < n; i++ ) {
 			var _in = nodeObject.inputs[| i];
-			if(_in.type == VALUE_TYPE.surface || _in.name == "Dimension") {
+			if(_in.type == VALUE_TYPE.surface || _in.name == "Dimension")
 				inputJunction = _in;
-				break;
+				
+			if(_in.type == VALUE_TYPE.color && setColor) {
+				_in.setValue(CURRENT_COLOR);
+				setColor = false;
 			}
+				
 		}
 		
 		for( var i = 0, n = ds_list_size(nodeObject.outputs); i < n; i++ ) {

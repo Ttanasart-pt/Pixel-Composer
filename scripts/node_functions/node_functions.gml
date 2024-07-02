@@ -206,7 +206,7 @@
 			var _var = strs[0];
 			
 			var splt = string_splice(_var, "[");
-			var inp = PROJECT.globalNode.getInput(_var);
+			var inp = PROJECT.globalNode.getInputKey(_var);
 			if(inp == noone) {
 				noti_warning($"Variable {_var} not found.");
 				return 0;

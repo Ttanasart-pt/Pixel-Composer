@@ -54,7 +54,6 @@ if !ready exit;
 					case "Node_Image_Animated"   : Node_create_Image_Animated_path(nx, ny, path_arr);	break;
 					case "Node_Directory_Search" : Node_create_Directory_path(nx, ny, paths[0]);		break;
 				}
-				PANEL_GRAPH.fullView();
 				instance_destroy();
 			}
 		}

@@ -1666,15 +1666,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(value_focus && value_focus != value_dragging)
 				target = value_focus;
 				
-			if(key_mod_press(CTRL) && node_hovering != noone) {
+			else if(!key_mod_press(CTRL) && node_hovering != noone) {
 				if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
-					target = node_hovering.getOutput(value_dragging);
+					target = node_hovering.getOutput(my, value_dragging);
 					if(target != noone) 
 						node_hovering.active_draw_index = 1;
+						
 				} else {
-					target = node_hovering.getInput(value_dragging, 0);
+					target = node_hovering.getInput(my, value_dragging, 0);
 					if(target != noone) 
 						node_hovering.active_draw_index = 1;
+						
 				}
 			}
 			

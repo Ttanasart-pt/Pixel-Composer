@@ -449,19 +449,27 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	function onInputResize() { refreshDynamicInput(); triggerRender(); }
 	
-	static getOutput = function(junc = noone) { #region
+	static getOutput = function(_y, junc = noone) {
+		var _targ = noone;
+		var _dy   = 9999;
+		
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
 			if(!outputs[| i].visible) continue;
 			if(junc != noone && !junc.isConnectable(outputs[| i], true)) continue;
 			
-			return outputs[| i];
+			var _ddy = abs(outputs[| i].y - _y);
+			if(_ddy < _dy) {
+				_targ = outputs[| i];
+				_dy   = _ddy;
+			}
 		}
-		return noone;
-	} #endregion
+		return _targ;
+	}
 	
-	static getInput = function(junc = noone, shift = input_fix_len) { #region
-		if(dummy_input) return dummy_input;
-	
+	static getInput = function(_y = 0, junc = noone, shift = input_fix_len) {
+		var _targ = noone;
+		var _dy   = 9999;
+		
 		for( var i = shift; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
 			
@@ -469,10 +477,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_inp.value_from != noone)  continue;
 			if(junc != noone && (value_bit(junc.type) & value_bit(_inp.type)) == 0)  continue;
 			
-			return _inp;
+			var _ddy = abs(_inp.y - _y);
+			
+			if(_ddy < _dy) {
+				_targ = _inp;
+				_dy   = _ddy;
+			}
 		}
-		return noone;
-	} #endregion
+		
+		if(dummy_input) {
+			var _ddy = abs(dummy_input.y - _y);
+			if(_ddy < _dy)
+				_targ = dummy_input;
+		}
+		
+		return _targ;
+	}
 	
 	/////========== INSPECTOR ===========
 	
@@ -726,7 +746,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} if(!APPENDING && !LOADING) run_in(1, method(self, resetDefault));
 	
 	static addInput = function(junctionFrom, shift = input_fix_len) { #region
-		var targ = getInput(junctionFrom, shift);
+		var targ = getInput(y, junctionFrom, shift);
 		if(targ == noone) return;
 		
 		targ.setFrom(junctionFrom);
@@ -1360,8 +1380,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var yy = y * _s + _y;
 		
 		var _hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == self);
+		
 		show_input_name  = _hov && point_in_rectangle(_mx, _my, xx - 12 * _s, yy + 20 * _s, xx + 12 * _s, yy + h * _s);
 		show_output_name = _hov && point_in_rectangle(_mx, _my, xx + (w - 12) * _s, yy + 20 * _s, xx + (w + 12) * _s, yy + h * _s);
+		
+		if(PANEL_GRAPH.value_dragging && PANEL_GRAPH.node_hovering == self) {
+			if(PANEL_GRAPH.value_dragging.connect_type == JUNCTION_CONNECT.input) 
+				show_output_name = true;
+			
+			if(PANEL_GRAPH.value_dragging.connect_type == JUNCTION_CONNECT.output) 
+				show_input_name = true;
+		}
 		
 		if(show_input_name) {
 			for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {

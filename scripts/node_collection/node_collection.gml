@@ -298,7 +298,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return _nodes;
 	} #endregion
 	
-	static getInput = function(junc = noone) { #region
+	static getInput = function(_y = 0, junc = noone) { #region
 		return input_dummy;
 	} #endregion
 	
