@@ -47,6 +47,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		min_w = ui(160);
 		
 		locked		 = false;
+		focusable    = true;
+		
 		inspecting	 = noone;
 		inspectings  = [];
 		inspectGroup = false;
@@ -214,11 +216,12 @@ function Panel_Inspector() : PanelContent() constructor {
 		menu_junc_color.spacing = ui(24);
 	#endregion
 	
-	function setInspecting(inspecting, _lock = false) { #region
+	function setInspecting(inspecting, _lock = false, _focus = true) { #region
 		if(locked) return;
 		
 		self.inspecting = inspecting;
 		if(_lock) locked = true;
+		focusable = _focus;
 		
 		if(inspecting != noone)
 			inspecting.onInspect();
@@ -233,7 +236,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		return inspecting.active? inspecting : noone;
 	} #endregion
 	
-	function onFocusBegin() { PANEL_INSPECTOR = self; }
+	function onFocusBegin() { if(!focusable) return; PANEL_INSPECTOR = self; }
 	
 	function onResize() { #region
 		initSize();

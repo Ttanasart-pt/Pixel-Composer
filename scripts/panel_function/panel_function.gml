@@ -47,13 +47,13 @@
 		PANEL_FILE       = 0;
 	} #endregion
 	
-	function getPanelFromName(name, create = false) { #region
+	function getPanelFromName(name, create = false, focus = true) { #region
 		switch(name) {
-			case "Panel_Menu"       : var p = (create || findPanel(name))? new Panel_Menu()		 : PANEL_MENU;		PANEL_MENU	    = p; return p;
-			case "Panel_Inspector"  : var p = (create || findPanel(name))? new Panel_Inspector() : PANEL_INSPECTOR; PANEL_INSPECTOR = p; return p;
-			case "Panel_Animation"  : var p = (create || findPanel(name))? new Panel_Animation() : PANEL_ANIMATION; PANEL_ANIMATION = p; return p;
-			case "Panel_Preview"    : var p = (create || findPanel(name))? new Panel_Preview()	 : PANEL_PREVIEW;	PANEL_PREVIEW	= p; return p;
-			case "Panel_Graph"      : var p = (create || findPanel(name))? new Panel_Graph()	 : PANEL_GRAPH;		PANEL_GRAPH		= p; return p;
+			case "Panel_Menu"       : var p = (create || findPanel(name))? new Panel_Menu()		 : PANEL_MENU;		if(focus) { PANEL_MENU	    = p; } return p;
+			case "Panel_Inspector"  : var p = (create || findPanel(name))? new Panel_Inspector() : PANEL_INSPECTOR; if(focus) { PANEL_INSPECTOR = p; } return p;
+			case "Panel_Animation"  : var p = (create || findPanel(name))? new Panel_Animation() : PANEL_ANIMATION; if(focus) { PANEL_ANIMATION = p; } return p;
+			case "Panel_Preview"    : var p = (create || findPanel(name))? new Panel_Preview()	 : PANEL_PREVIEW;	if(focus) { PANEL_PREVIEW	= p; } return p;
+			case "Panel_Graph"      : var p = (create || findPanel(name))? new Panel_Graph()	 : PANEL_GRAPH;		if(focus) { PANEL_GRAPH		= p; } return p;
 			
 			case "Panel_Collection"		: return new Panel_Collection();
 			case "Panel_Workspace"		: return new Panel_Workspace();
@@ -138,11 +138,11 @@
 		return val;
 	} #endregion
 	
-	function panelAdd(panel, create = false) { #region
-		var pan = getPanelFromName(panel, create);
+	function panelAdd(panel, create = false, focus = true) { #region
+		var pan = getPanelFromName(panel, create, focus);
 		if(pan == noone) return noone;
 		
-		return dialogPanelCall(pan);
+		return dialogPanelCall(pan, noone, noone, { focus });
 	} #endregion
 	
 	function panelObjectInit() { #region

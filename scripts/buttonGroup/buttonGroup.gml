@@ -10,6 +10,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	tooltips  = [];
 	
 	current_selecting = 0;
+	collapsable = true;
 	
 	for(var i = 0; i < array_length(data); i++) 
 		buttons[i] = button(-1);
@@ -21,7 +22,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		return self;
 	}
 	
-	static setTooltips = function(tt) { tooltips = tt; return self; } 
+	static setTooltips = function(tt) { tooltips = tt;    return self; } 
+	static setCollape  = function(cc) { collapsable = cc; return self; } 
 	
 	static trigger = function() {
 		if(current_selecting + 1 >= array_length(data))
@@ -86,7 +88,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			}
 		}
 		
-		display_button = total_width < _w;
+		display_button = !collapsable || total_width < _w;
 		var ww  = (_mx? _tw : _w) / tamo;
 		
 		if(display_button) {

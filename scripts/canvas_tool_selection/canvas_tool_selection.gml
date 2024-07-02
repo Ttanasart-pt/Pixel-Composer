@@ -163,6 +163,34 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		is_selected = true;
 	}
 	
+	function selectAll() {
+		var sel_w = surface_get_width(_canvas_surface);
+		var sel_h = surface_get_height(_canvas_surface);
+		
+		selection_surface = surface_verify(selection_surface, sel_w, sel_h);
+		selection_mask    = surface_verify(selection_mask,    sel_w, sel_h);
+		
+		surface_set_target(selection_surface);
+			DRAW_CLEAR
+			draw_surface_safe(_canvas_surface, 0, 0);
+		surface_reset_target();
+		
+		surface_set_target(selection_mask);
+			draw_clear(c_white);
+		surface_reset_target();
+		
+		node.storeAction();
+		surface_set_target(_canvas_surface);
+			DRAW_CLEAR
+		surface_reset_target();
+						
+		node.surface_store_buffer();
+						
+		selection_position = [ 0, 0 ];
+		selection_size     = [ sel_w,  sel_h  ];
+		is_selected = true;
+	}
+	
 	function copySelection() {
 		var s = surface_encode(selection_surface, false);
 		s.position = selection_position;

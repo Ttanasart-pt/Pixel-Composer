@@ -81,6 +81,8 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 			return noone;
 		}
 		
+		panelAdd("Panel_Inspector", true, false).content.setInspecting(nodeObject, true, false);
+		
 		return self;
 	}
 	

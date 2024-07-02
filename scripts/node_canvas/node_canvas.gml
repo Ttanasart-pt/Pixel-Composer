@@ -235,7 +235,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.drawLayer = 0;
 		tool_attribute.pickColor = c_white;
 		tool_drawLayer_edit      = new buttonGroup( [ THEME.canvas_draw_layer, THEME.canvas_draw_layer, THEME.canvas_draw_layer ], function(val) { tool_attribute.drawLayer = val; })
-										.setTooltips( [ "Draw on top", "Draw behind", "Draw inside" ] );
+										.setTooltips( [ "Draw on top", "Draw behind", "Draw inside" ] )
+										.setCollape(false);
 		
 		tool_attribute.mirror = [ false, false, false ];
 		tool_mirror_edit      = new checkBoxGroup( THEME.canvas_mirror, function(ind, val) { tool_attribute.mirror[ind] = val; })
@@ -262,7 +263,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_attribute.fillType = 0;
 		tool_fil8_edit      	= new buttonGroup( [ THEME.canvas_fill_type, THEME.canvas_fill_type, THEME.canvas_fill_type ], function(val) { tool_attribute.fillType = val; })
-									.setTooltips( [ "Edge", "Edge + Corner", "Entire image" ] );
+									.setTooltips( [ "Edge", "Edge + Corner", "Entire image" ] )
+									.setCollape(false);
 		tool_fil8           	= [ "Fill", tool_fil8_edit, "fillType", tool_attribute ];
 		
 		tool_attribute.button_apply = [ false, false ];
@@ -339,7 +341,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		});
 		
 		nodeTool        = noone;
-		nodeToolPreview = new NodeTool( "Apply Node",	  THEME.canvas_tools_node, self ).setToolFn( __action_add_node );
+		nodeToolPreview = new NodeTool( "Apply Node",	  THEME.canvas_tools_node, self ).setToolFn( __action_add_node )
+								.setContext(self);
 		
 		rightTools_general = [ 
 			nodeToolPreview,
@@ -918,6 +921,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						}
 					}
 				}
+			}
+			
+			if(key_press(ord("A"), MOD_KEY.ctrl)) {
+				if(tool_selection.is_selected) tool_selection.apply();
+				tool_selection.selectAll();
 			}
 		#endregion
 		

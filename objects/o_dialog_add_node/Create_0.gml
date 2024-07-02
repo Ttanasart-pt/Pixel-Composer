@@ -137,7 +137,7 @@ event_inherited();
 		
 		if(!_node) return;
 		
-		if(is_instanceof(context, Node_Canvas)) {
+		if(is_instanceof(context, Node_Canvas) || is_instanceof(context, Node_Canvas_Group)) {
 			UNDO_HOLDING = true;
 			context.nodeTool = new canvas_tool_node(context, _node).init();
 			UNDO_HOLDING = false;
