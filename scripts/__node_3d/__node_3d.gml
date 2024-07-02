@@ -1,7 +1,6 @@
 function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "3D";
 	is_3D = NODE_3D.polygon;
-	surface_depth_disable(false);
 	
 	mesh_prev_surface = surface_create(64, 64);
 	
@@ -35,6 +34,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	static refreshPreview = function() { #region
 		var _prev_obj = getPreviewObjects();
 		
+		surface_depth_disable(false);
 		mesh_prev_surface = surface_verify(mesh_prev_surface, PREFERENCES.node_3d_preview_size, PREFERENCES.node_3d_preview_size);
 		surface_set_target(mesh_prev_surface);
 			DRAW_CLEAR
@@ -63,6 +63,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 				D3D_GLOBAL_PREVIEW.submitUI(_prev);
 			}
 		surface_reset_target();
+		surface_depth_disable(true);
 		
 		D3D_GLOBAL_PREVIEW.camera.resetCamera();
 	} #endregion

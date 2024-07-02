@@ -42,7 +42,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		inputs[| in_mesh + 6].setVisible(_mat_side, _mat_side);
 	} #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) { 
 		var _mat_side = _data[in_mesh + 0];
 		var _mat_1    = _data[in_mesh + 1];
 		var _mat_2    = _data[in_mesh + 2];
@@ -63,7 +63,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		setTransform(object, _data);
 		
 		return object;
-	} #endregion
+	}
 	
 	static getPreviewValues = function() { return array_safe_get_fast(all_inputs, in_mesh + 1, noone); }
 }

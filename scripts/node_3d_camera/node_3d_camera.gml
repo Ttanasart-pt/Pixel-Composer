@@ -242,6 +242,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			var _qi3  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0),  90);
 		#endregion
 		
+		surface_depth_disable(false);
+		
 		switch(_posm) { #region ++++ camera positioning ++++
 			case 0 :
 				camera.useFocus = false;
@@ -376,6 +378,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			surface_reset_target();
 			surface_free(_render);
 		#endregion
+		
+		surface_depth_disable(true);
 		
 		return [ _finalRender, _normal, _depth ];
 	} #endregion

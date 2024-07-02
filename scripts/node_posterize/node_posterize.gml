@@ -118,11 +118,13 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _ssh  = surface_get_height(_sMax);
 				var _max  = [ 0, 0, 0 ];
 				var _min  = [ 1, 1, 1 ];
+				
 				var _bMax = buffer_from_surface(_sMax, false);
 				var _bMin = buffer_from_surface(_sMin, false);
 				
-				buffer_seek(_bMax, buffer_seek_start, 0);
-				buffer_seek(_bMin, buffer_seek_start, 0);
+				buffer_to_start(_bMax);
+				buffer_to_start(_bMin);
+				
 					repeat(_ssw * _ssh) {
 						var _cc = buffer_read(_bMax, buffer_u32);
 						_max[0] = max(_max[0], _color_get_red(_cc));
@@ -135,6 +137,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						_min[2] = min(_min[2], _color_get_blue(_cc));
 						
 					}
+					
 				buffer_delete(_bMax);
 				buffer_delete(_bMin);
 			#endregion
@@ -148,6 +151,10 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 				draw_surface_safe(_surf);
 			surface_reset_shader();
+			
+			// surface_set_shader(_outSurf);
+			// 	draw_surface_safe(_sMax);
+			// surface_reset_shader();
 		}
 		
 		return _outSurf;

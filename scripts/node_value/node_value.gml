@@ -1140,7 +1140,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == JUNCTION_CONNECT.output)
 			return val;
 		
-		if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) print($"{typ == VALUE_TYPE.surface}");
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { #region Dimension conversion
 			if(is_array(val)) {
 				var eqSize = true;
