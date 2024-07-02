@@ -44,12 +44,15 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var pos = current_data[2];
-		var px = _x + pos[0] * _s;
-		var py = _y + pos[1] * _s;
+		var pos  = current_data[2];
+		var px   = _x + pos[0] * _s;
+		var py   = _y + pos[1] * _s;
+		var _hov = false;
 		
-		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		var  hv  = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		
+		return _hov;
 	}
 	
 	static step = function() { #region

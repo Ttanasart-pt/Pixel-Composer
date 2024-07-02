@@ -321,21 +321,24 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	dir = 0;
 	dis = 0;
 		
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	} #endregion
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _hov = false;
+		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		
+		return _hov;
+	}
 	
-	static getDimension = function(arr = 0) { #region
+	static getDimension = function(arr = 0) {
 		var _sr = getSingleValue(0, arr);
 		var _dm = getSingleValue(2, arr);
 		
 		if(is_surface(_sr)) 
 			return surface_get_dimension(_sr);
 		return _dm;
-	} #endregion
+	}
 	
-	static flare_circle   = function(_t, _r, _a, _side = 16, _angle = 0, _s0 = 0, _s1 = 0, _b = c_white) { #region
+	static flare_circle   = function(_t, _r, _a, _side = 16, _angle = 0, _s0 = 0, _s1 = 0, _b = c_white) {
 		var _x = lerp(ox, cx, _t);
 		var _y = lerp(oy, cy, _t);
 		
@@ -358,7 +361,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_reset_shader();
 		
 		BLEND_ADD draw_surface_ext(temp_surface[0], _x - _r, _y - _r, 1, 1, 0, _b, _a);
-	} #endregion
+	}
 	
 	static flare_crescent = function(_t, _r, _a, _side = 16, _angle = 0, _s0 = 0, _s1 = 0, _b = c_white, _ir = 0, _dist = 0) { #region
 		var _x = lerp(ox, cx, _t);

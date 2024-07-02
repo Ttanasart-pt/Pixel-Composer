@@ -39,15 +39,19 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[| 0].getValue();
+		var _hov  = false;
+		
 		if(is_array(_surf)) {
-			if(array_length(_surf) == 0) return;
+			if(array_length(_surf) == 0) return _hov;
 			_surf = _surf[preview_index];
 		}
 		
 		var ww = surface_get_width_safe(_surf) * _s;
 		var hh = surface_get_height_safe(_surf) * _s;
 		
-		inputs[| 3].drawOverlay(hover, active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny);
+		var hv = inputs[| 3].drawOverlay(hover, active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		
+		return _hov;
 	}
 	
 	static step = function() { #region

@@ -69,19 +69,22 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var pos = current_data[4];
-		var px = _x + pos[0] * _s;
-		var py = _y + pos[1] * _s;
+		var pos  = current_data[4];
+		var px   = _x + pos[0] * _s;
+		var py   = _y + pos[1] * _s;
+		var _hov = false;
 		
-		var a = inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
-		var a = inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !a;
-		var a = inputs[| 16].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a;
-	} #endregion
+		var hv = inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);						active &= !hv; _hov |= hv;
+		var hv = inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);						active &= !hv; _hov |= hv;
+		var hv = inputs[| 16].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]);	active &= !hv; _hov |= hv;
+		
+		return _hov;
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _clr = getSingleValue(6);
 		
 		inputs[|  1].mappableStep();
@@ -94,7 +97,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[|  9].setVisible(_clr == 0);
 		inputs[| 18].setVisible(_clr == 1);
 		inputs[|  7].setVisible(_clr == 2);
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _dim  = _data[0];

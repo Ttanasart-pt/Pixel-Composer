@@ -156,13 +156,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _distType = current_data[6];
+		var _hov = false;
 		
-		if(_distType < 3) {
-			var a = inputs[| 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			active &= !a;
-		}
-			
-		var a = inputs[| 29].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !a;
+		if(_distType < 3) { var hv = inputs[| 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
+		var hv = inputs[| 29].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !hv; _hov |= hv;
+		
+		return _hov;
 	} #endregion
 	
 	static onValueUpdate = function(index) { #region

@@ -126,7 +126,7 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _out = outputs[| 0].getValue();
 		if(!is_surface(_out) || !surface_exists(_out)) return;
 		
-		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny,, false);
+		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static submit_vertex = function(index = 0) {

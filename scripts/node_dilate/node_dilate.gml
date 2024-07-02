@@ -51,26 +51,28 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_oversample();
 	attribute_interpolation();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var pos = current_data[1];
+		var pos  = current_data[1];
+		var px   = _x + pos[0] * _s;
+		var py   = _y + pos[1] * _s;
+		var _hov = false;
 		
-		var px = _x + pos[0] * _s;
-		var py = _y + pos[1] * _s;
+		var a = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= a;
+		var a = inputs[| 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= a;
 		
-		var a = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		var a = inputs[| 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
-	} #endregion
+		return _hov;
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		
 		inputs[| 2].mappableStep();
 		inputs[| 3].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var sam    = struct_try_get(attributes, "oversample");
 		
 		surface_set_shader(_outSurf, sh_dilate);
@@ -89,5 +91,5 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		_outSurf = channel_apply(_data[0], _outSurf, _data[8]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

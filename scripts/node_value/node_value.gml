@@ -1760,7 +1760,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_DISPLAY._default :
 				var _angle = argument_count > arc + 0? argument[arc + 0] : 0;
 				var _scale = argument_count > arc + 1? argument[arc + 1] : 1;
-				var _spr   = argument_count > arc + 2? argument[arc + 2] : THEME.anchor_selector;
+				var _spr   = argument_count > arc + 2? argument[arc + 2] : 0;
 				return preview_overlay_scalar(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
 						
 			case VALUE_DISPLAY.rotation :

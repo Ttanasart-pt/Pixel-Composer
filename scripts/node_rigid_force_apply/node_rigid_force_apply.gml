@@ -77,7 +77,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_set_alpha(1);
 			
 			inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			inputs[| 5].drawOverlay(hover, active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, THEME.anchor, 10);
+			inputs[| 5].drawOverlay(hover, active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, 0, 10);
 		} else if(_typ == 3) {
 			var _rad = getInputData(8);
 			
@@ -87,7 +87,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_set_alpha(1);
 			
 			inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
+			inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 		} else 
 			inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}

@@ -1,4 +1,4 @@
-function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr) {
+function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _type = 0) {
 	var _val  = getValue();
 	var hover = -1;
 	if(!is_real(_val)) return hover;
@@ -41,7 +41,7 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		
 	__overlay_hover = array_verify(__overlay_hover, 1);
 	__overlay_hover[0] = lerp_float(__overlay_hover[0], index, 4);
-	draw_anchor(__overlay_hover[0], _ax, _ay, _r);
+	draw_anchor(__overlay_hover[0], _ax, _ay, _r, _type);
 	
 	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
 	draw_text_add(round(_ax), round(_ay - 4), name);

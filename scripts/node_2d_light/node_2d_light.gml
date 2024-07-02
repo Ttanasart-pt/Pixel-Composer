@@ -81,6 +81,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _shape = current_data[1];
+		var _hov   = false;
 		
 		switch(_shape) {
 			case LIGHT_SHAPE_2D.point :
@@ -88,16 +89,18 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var px = _x + pos[0] * _s;
 				var py = _y + pos[1] * _s;
 		
-				inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				inputs[| 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+				var hv = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+				var hv = inputs[| 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
 				break;
 			case LIGHT_SHAPE_2D.line :
 			case LIGHT_SHAPE_2D.line_asym :
 			case LIGHT_SHAPE_2D.spot :
-				inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				var hv = inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+				var hv = inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
 				break;
 		}
+		
+		return _hov;
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

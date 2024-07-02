@@ -3,6 +3,7 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 	self.canvas = canvas;
 	self.node   = node;
 	override    = true;
+	panel       = noone;
 	
 	applySelection = false;
 	
@@ -28,6 +29,7 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 			}
 		}
 		
+		if(panel) panel.remove();
 		node.nodeTool = noone;
 		UNDO_HOLDING = false;
 	}
@@ -81,7 +83,9 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 			return noone;
 		}
 		
-		panelAdd("Panel_Inspector", true, false).content.setInspecting(nodeObject, true, false);
+		panel = panelAdd("Panel_Inspector", true, false);
+		panel.content.setInspecting(nodeObject, true, false);
+		panel.destroy_on_click_out = false;
 		
 		return self;
 	}
@@ -192,8 +196,12 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 			draw_surface_ext_safe(destiSurface,  _dx, _dy, _s, _s);
 		draw_surface_ext_safe(maskedSurface, _dx, _dy, _s, _s);
 		
-		     if(mouse_press(mb_left, active))  { apply();	MOUSE_BLOCK = true; }
-		else if(mouse_press(mb_right, active)) { destroy(); MOUSE_BLOCK = true; }
+		var hov = nodeObject.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		if(is_undefined(hov) || !hov) {
+			     if(mouse_press(mb_left, active))  { apply();	MOUSE_BLOCK = true; }
+			else if(mouse_press(mb_right, active)) { destroy(); MOUSE_BLOCK = true; }
+		}
 	}
 	
 }

@@ -153,6 +153,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
+		var _hov = false;
+		
 		if(use_path) {
 			draw_set_text(f_p3, fa_center, fa_top);
 			draw_set_color(COLORS._main_accent);
@@ -168,21 +170,24 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				ox = nx;
 				oy = ny;
 			}
-			return;
+			return _hov;
 		}
 		
 		var _type = current_data[15];
 		
 		if(_type == 0) {
-			inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var hv = inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+			
 		} else if(_type == 1) {
 			var _pos = current_data[16];
 			var _px  = _x + _pos[0] * _s;
 			var _py  = _y + _pos[1] * _s;
 			
-			inputs[| 16].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny);
-			inputs[| 17].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
+			var hv = inputs[| 16].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+			var hv = inputs[| 17].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		}
+		
+		return _hov;
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region

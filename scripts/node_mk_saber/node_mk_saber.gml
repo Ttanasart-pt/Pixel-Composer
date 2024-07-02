@@ -52,13 +52,15 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		draw_set_color(COLORS._main_accent);
 		draw_line(_p1x, _p1y, _p2x, _p2y);
-		
-		var _a = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
-		var _a = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
+		var _hov = false;
+		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+		var  hv  = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
 		
 		draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
 		draw_text(_p1x + ui(4), _p1y - ui(4), "1");
 		draw_text(_p2x + ui(4), _p2y - ui(4), "2");
+		
+		return _hov;
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

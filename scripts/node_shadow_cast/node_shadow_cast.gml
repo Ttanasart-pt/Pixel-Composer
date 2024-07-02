@@ -83,8 +83,9 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		if(array_length(current_data) != ds_list_size(inputs)) return;
+		var _hov = false;
+		var  hv  = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		if(array_length(current_data) != ds_list_size(inputs)) return _hov;
 		
 		var _type = current_data[5];
 		if(_type == 0) {
@@ -92,8 +93,10 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var px = _x + pos[0] * _s;
 			var py = _y + pos[1] * _s;
 			
-			inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1 / 4, THEME.anchor_scale_hori);
+			var hv = inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1 / 4); _hov |= hv;
 		}
+		
+		return _hov;
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

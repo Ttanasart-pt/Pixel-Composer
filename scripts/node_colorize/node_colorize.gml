@@ -44,18 +44,21 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		inputs[| 12].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, surface_get_dimension(getSingleValue(0)));
-	} #endregion
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _hov = false;
+		var  hv  = inputs[| 12].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, surface_get_dimension(getSingleValue(0))); _hov |= hv;
+		
+		return _hov;
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		
 		inputs[| 1].mappableStep();
 		inputs[| 2].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_shader(_outSurf, sh_colorize);
 			shader_set_gradient(_data[1], _data[11], _data[12], inputs[| 1]);
 			
@@ -70,5 +73,5 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		_outSurf = channel_apply(_data[0], _outSurf, _data[7]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

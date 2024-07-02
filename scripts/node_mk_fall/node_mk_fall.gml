@@ -96,7 +96,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	traj = [];
 	traj_index = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		draw_set_color(COLORS._main_accent);
 		
 		for( var i = 0, n = array_length(traj); i < n; i++ ) {
@@ -117,7 +117,8 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			}
 		}
 		
-		inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var _hov = false;
+		var  hv  = inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		if(getInputData(15)) {
 			var _gr = getInputData(16);
@@ -128,7 +129,9 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			draw_line(0, _y0, 999999, _y0);
 			draw_line(0, _y1, 999999, _y1);
 		}
-	} #endregion
+		
+		return _hov;
+	}
 	
 	static getPosition = function(ind, t, _area) { #region
 		random_set_seed(ind);

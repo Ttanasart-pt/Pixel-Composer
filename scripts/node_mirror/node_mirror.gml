@@ -41,8 +41,11 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		draw_set_color(COLORS._main_accent);
 		draw_line(dx0, dy0, dx1, dy1);
 		
-		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 2].drawOverlay(hover, active, _posx, _posy, _s, _mx, _my, _snx, _sny);
+		var _hov = false;
+		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);		active &= !hv; _hov |= hv;
+		var  hv  = inputs[| 2].drawOverlay(hover, active, _posx, _posy, _s, _mx, _my, _snx, _sny);  active &= !hv; _hov |= hv;
+		
+		return _hov;
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region

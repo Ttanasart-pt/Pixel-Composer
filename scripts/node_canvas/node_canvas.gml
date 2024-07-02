@@ -725,7 +725,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			tool_selection._canvas_surface    = _canvas_surface;
 			tool_selection.apply_draw_surface = apply_draw_surface;
 			
-			if(tool_selection.is_selected) {
+			if(tool_selection.is_selected && !is_instanceof(_tool, canvas_tool_node)) {
 				tool_selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				tool_mirror_edit.sprs = (!tool_selection.is_selected && tool_attribute.mirror[0])? THEME.canvas_mirror_diag : THEME.canvas_mirror;
 				

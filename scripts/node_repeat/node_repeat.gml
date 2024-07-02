@@ -113,7 +113,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
-		var a = inputs[| 9].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor); active &= !a;
+		var _hov = false;
+		var  hv  = inputs[| 9].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
 		
 		var _pat  = current_data[3];
 		var _spos = current_data[9];
@@ -121,17 +122,12 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var px = _x + _spos[0] * _s;
 		var py = _y + _spos[1] * _s;
 		
-		if(_pat == 0 || _pat == 1) {
-			var a = inputs[| 4].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
-			active &= !a;
-			
-		} else if(_pat == 2) {
-			var a = inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
-			active &= !a;
-			
-		}
+		if(_pat == 0 || _pat == 1) { var hv = inputs[| 4].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
+		else if(_pat == 2)         { var hv = inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
 		
-		var a = inputs[| 31].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !a;
+		var hv = inputs[| 31].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !hv; _hov |= hv;
+		
+		return _hov;
 	} #endregion
 	
 	static preGetInputs = function() { #region

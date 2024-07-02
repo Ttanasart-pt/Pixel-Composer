@@ -33,11 +33,15 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var px = ax + pos[0] * _s;
 		var py = ay + pos[1] * _s;
 		
-		active &= !inputs[| 1].drawOverlay(hover, active, ax, ay, _s, _mx, _my, _snx, _sny);
-		active &= !inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		var _hov = false;
+		
+		var hv = inputs[| 1].drawOverlay(hover, active, ax, ay, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+		var hv = inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
 		
 		draw_set_color(COLORS._main_accent);
 		omesh.draw(_x, _y, _s);
+		
+		return _hov;
 	}
 	
 	function pointTransform(p, _pos, _rot, _sca, _anc) {

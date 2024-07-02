@@ -54,14 +54,17 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-	} #endregion
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _hov = false;
+		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) active &= !hv; _hov |= hv;
+		var  hv  = inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) active &= !hv; _hov |= hv;
+		var  hv  = inputs[| 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) active &= !hv; _hov |= hv;
+		var  hv  = inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) active &= !hv; _hov |= hv;
+		
+		return _hov;
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _usePal = getInputData(9);
 		
 		inputs[| 10].setVisible(_usePal, _usePal);
@@ -70,9 +73,9 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		inputs[|  4].setVisible(!_usePal, !_usePal);
 		inputs[|  6].setVisible(!_usePal, !_usePal);
 		inputs[|  8].setVisible(!_usePal, !_usePal);
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
@@ -113,5 +116,5 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 }

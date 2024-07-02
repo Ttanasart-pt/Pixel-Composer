@@ -80,16 +80,19 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var a = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
-		var a = inputs[| 18].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); active &= !a;
+		var _hov = false;
+		var a = inputs[|  1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);						active &= !a; _hov |= a;
+		var a = inputs[| 18].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0));	active &= !a; _hov |= a;
+		
+		return _hov;
 	}
 	
-	static step = function() { #region
+	static step = function() {
 		inputs[| 2].mappableStep();
 		inputs[| 3].mappableStep();
 		inputs[| 4].mappableStep();
 		inputs[| 5].mappableStep();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim  = _data[0];

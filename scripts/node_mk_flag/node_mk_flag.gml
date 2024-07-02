@@ -181,8 +181,9 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 	} #endregion
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _a = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= _a;
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _hov = false;
+		var  hv  = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
 		
 		//for( var i = 0, n = array_length(links); i < n; i++ ) {
 		//	var _l = links[i];
@@ -203,7 +204,9 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		//		draw_line(_p0x, _p0y, _p1x, _p1y);
 		//	}
 		//}
-	} #endregion
+		
+		return _hov;
+	}
 	
 	static processData_prebatch  = function() { #region
 		if(IS_FIRST_FRAME) setGeometry();
