@@ -206,17 +206,15 @@
 	function _findPanel(_type, _pane, _res = noone) { #region
 		if(instanceof(_pane) != "Panel")
 			return _res;
-		if(!ds_exists(_pane.childs, ds_type_list))
-			return _res;
 		
-		if(ds_list_size(_pane.childs) == 0) {
+		if(array_empty(_pane.childs) == 0) {
 			for( var i = 0, n = array_length(_pane.content); i < n; i++ ) 
 				if(instanceof(_pane.content[i]) == _type)
 					return _pane.content[i];
 		}
 		
-		for(var i = 0; i < ds_list_size(_pane.childs); i++) {
-			var _re = _findPanel(_type, _pane.childs[| i], _res);
+		for(var i = 0; i < array_length(_pane.childs); i++) {
+			var _re = _findPanel(_type, _pane.childs[i], _res);
 			if(_re != noone) _res = _re;
 		}
 		
@@ -230,8 +228,6 @@
 	function _findPanels(_type, _pane, _arr = []) { #region
 		if(!is_instanceof(_pane, Panel))
 			return _arr;
-		if(!ds_exists(_pane.childs, ds_type_list))
-			return _arr;
 		
 		for( var i = 0, n = array_length(_pane.content); i < n; i++ ) {
 			var _cnt = instanceof(_pane.content[i]);
@@ -240,8 +236,8 @@
 				array_push(_arr, _pane.content[i]);
 		}
 		
-		for(var i = 0; i < ds_list_size(_pane.childs); i++)
-			_arr = _findPanels(_type, _pane.childs[| i], _arr);
+		for(var i = 0; i < array_length(_pane.childs); i++)
+			_arr = _findPanels(_type, _pane.childs[i], _arr);
 		
 		return _arr;
 	} #endregion
@@ -313,9 +309,9 @@
 						case 3 : p = panel.split_v( panel.h / 2); break;
 					}
 					
-					panel.parent.childs[| (panel_split + 1) % 2] = main;
+					panel.parent.childs[(panel_split + 1) % 2] = main;
 					main.parent = panel.parent;
-					panel.parent.childs[| (panel_split + 0) % 2].setContent(panel_dragging);
+					panel.parent.childs[(panel_split + 0) % 2].setContent(panel_dragging);
 					
 					PANEL_MAIN.refreshSize();
 				} else {
@@ -356,20 +352,20 @@
 		var ind = 0;
 		
 		cont.content = [];
-		if(_panel.split != "" && ds_list_size(_panel.childs) == 2) {
+		if(_panel.split != "" && array_length(_panel.childs) == 2) {
 			cont.split = _panel.split;
 			if(_panel.split == "h") {
-				ind = _panel.childs[| 1].w < _panel.childs[| 0].w;
-				cont.width = _panel.childs[| ind].w * (_panel.childs[| ind].x == _panel.x? 1 : -1);
+				ind = _panel.childs[1].w < _panel.childs[0].w;
+				cont.width = _panel.childs[ind].w * (_panel.childs[ind].x == _panel.x? 1 : -1);
 				
 			} else {
-				ind = _panel.childs[| 1].h < _panel.childs[| 0].h;
-				cont.width = _panel.childs[| ind].h * (_panel.childs[| ind].y == _panel.y? 1 : -1);
+				ind = _panel.childs[1].h < _panel.childs[0].h;
+				cont.width = _panel.childs[ind].h * (_panel.childs[ind].y == _panel.y? 1 : -1);
 			}
 			
-			ind = _panel.childs[| 1].x == _panel.x && _panel.childs[| 1].y == _panel.y;
-			for( var i = 0; i < ds_list_size(_panel.childs); i++ )
-				cont.content[i] = _panelSerialize(_panel.childs[| (ind + i) % 2], _content);
+			ind = _panel.childs[1].x == _panel.x && _panel.childs[1].y == _panel.y;
+			for( var i = 0; i < array_length(_panel.childs); i++ )
+				cont.content[i] = _panelSerialize(_panel.childs[(ind + i) % 2], _content);
 				
 		} else {
 			for( var i = 0, n = array_length(_panel.content); i < n; i++ )
@@ -386,9 +382,10 @@
 	function _panelSerializeArray(panel) { #region
 		var cont = [];
 		
-		if(!ds_list_empty(panel.childs)) {
-			for( var i = 0; i < ds_list_size(panel.childs); i++ )
-				cont[i] = _panelSerializeArray(panel.childs[| i] );
+		if(!array_empty(panel.childs)) {
+			for( var i = 0; i < array_length(panel.childs); i++ )
+				cont[i] = _panelSerializeArray(panel.childs[i] );
+				
 		} else {
 			for( var i = 0, n = array_length(panel.content); i < n; i++ )
 				cont[i] = instanceof(panel.content[i]);
@@ -411,15 +408,15 @@
 			var content = panel.getContent();
 			if(!content.expandable)   return;
 		
-			PANEL_MAIN.childs[| 1].setContent(content);
+			PANEL_MAIN.childs[1].setContent(content);
 			
-			FULL_SCREEN_PARENT  = PANEL_MAIN.childs[| 1];
+			FULL_SCREEN_PARENT  = PANEL_MAIN.childs[1];
 			FULL_SCREEN_PANEL   = panel;
 			FULL_SCREEN_CONTENT = content;
 		
 			content.onFullScreen();
 		} else {
-			PANEL_MAIN.childs[| 1].content = [];
+			PANEL_MAIN.childs[1].content = [];
 			PANEL_MAIN.refreshSize();
 			
 			FULL_SCREEN_CONTENT.onFullScreen();

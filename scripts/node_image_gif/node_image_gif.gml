@@ -232,6 +232,10 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static onDestroy = function() { #region
 		if(sprite_exists(spr)) sprite_flush(spr);
 	} #endregion
+	
+	static dropPath = function(path) {
+		inputs[| 0].setValue(path);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -268,4 +272,5 @@ function timelineItemNode_Image_gif(node) : timelineItemNode(node) constructor {
 	static onSerialize = function(_map) {
 		_map.type = "timelineItemNode_Image_gif";
 	}
+	
 }

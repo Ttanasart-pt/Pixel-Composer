@@ -225,6 +225,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	array_push(attributeEditors, ["Edit Output Display", function() { return 0; },
 		button(function() { dialogCall(o_dialog_group_input_order).setNode(self, JUNCTION_CONNECT.output); }) ]);
 	
+	/////========== INSPECTOR ===========
+	
 	hasInsp1 = false;
 	insp1UpdateTooltip   = __txtx("panel_inspector_execute", "Execute node contents");
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
@@ -240,6 +242,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static inspector2Update    = function() { onInspector2Update(); }
 	static onInspector2Update  = function() { array_foreach(NodeListSort(nodes), function(n) { if(n.hasInspector2Update()) n.inspector2Update(); }); }
 	static hasInspector2Update = function() { INLINE return hasInsp2; }
+	
+	/////============ GROUP =============
 	
 	will_refresh = false;
 	static refreshNodes = function() { #region
@@ -271,18 +275,67 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return instanceBase.getNodeList();
 	} #endregion
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		if(!draw_input_overlay) return;
+	static exitGroup = function() {}
+	
+	static onAdd = function(_node) {}
+	static add = function(_node) {
+		array_push(getNodeList(), _node);
+		var list = _node.group == noone? PANEL_GRAPH.nodes_list : _node.group.getNodeList();
+		array_remove(list, _node);
 		
-		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
-			var _in   = inputs[| i];
-			var _show = _in.from.getInputData(6);
+		recordAction(ACTION_TYPE.group_added, self, _node);
+		_node.group = self;
+		
+		will_refresh = true;
+		node_length  = array_length(nodes);
+		
+		onAdd(_node);
+	}
+	
+	static onRemove = function(_node) {}
+	static remove = function(_node) {
+		var _hide = _node.destroy_when_upgroup;
+		
+		if(!_hide) {
+			var node_list = getNodeList();
+			var list = group == noone? PANEL_GRAPH.nodes_list : group.getNodeList();
 			
-			if(!_show) continue;
-			var _hov = _in.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			if(_hov != undefined) active &= !_hov;
+			array_remove(node_list, _node);
+			array_push(list, _node);
 		}
+		
+		recordAction(ACTION_TYPE.group_removed, self, _node);
+		
+		if(struct_has(_node, "onUngroup"))
+			_node.onUngroup();
+			
+		if(_hide) _node.disable();
+		else      _node.group = group;
+			
+		will_refresh = true;
+		node_length  = array_length(nodes);
+		onRemove(_node);
+	}
+	
+	/////============= STEP ==============
+	
+	static stepBegin = function() { #region
+		if(will_refresh) refreshNodes();
+		doStepBegin(); 
 	} #endregion
+	
+	static step = function() { #region
+		if(combine_render_time) {
+			render_time = 0;
+			array_foreach(getNodeList(), function(node) { render_time += node.render_time; });
+		}
+		
+		onStep();
+	} #endregion
+	
+	static onStep = function() {}
+	
+	/////========== JUNCTIONS ==========
 	
 	static getOutputNodes = function() { #region
 		var _nodes = [];
@@ -301,6 +354,53 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getInput = function(_y = 0, junc = noone) { #region
 		return input_dummy;
 	} #endregion
+	
+	static preConnect = function() { #region
+		sortIO();
+		deserialize(load_map, load_scale);
+	} #endregion
+	
+	static sortIO = function() { #region
+		var _ilen = ds_list_size(inputs);
+		var _iarr = attributes.input_display_list;
+		
+		for( var i = custom_input_index; i < _ilen; i++ ) 
+			array_push_unique(_iarr, i);
+			
+		for( var i = array_length(_iarr) - 1; i >= 0; i-- ) {
+			if(is_array(_iarr[i])) continue;
+			if(_iarr[i] >= _ilen) array_delete(_iarr, i, 1);
+		}
+		
+		input_display_list = array_merge(group_input_display_list, attributes.input_display_list);
+		
+		///////////////////////////////////////////////////////////////////
+		
+		var _olen = ds_list_size(outputs);
+		var _oarr = attributes.output_display_list;
+		
+		for( var i = custom_output_index; i < _olen; i++ ) 
+			array_push_unique(_oarr, i);
+		for( var i = array_length(_oarr) - 1; i >= 0; i-- ) {
+			if(is_array(_oarr[i])) continue;
+			if(_oarr[i] >= _olen) array_delete(_oarr, i, 1);
+		}
+		
+		output_display_list = array_merge(group_output_display_list, attributes.output_display_list);
+		
+		///////////////////////////////////////////////////////////////////
+		
+		refreshNodeDisplay();
+	} #endregion
+	
+	static preConnect = function() { #region 
+		instanceBase = GetAppendID(struct_try_get(load_map, "instance_base", noone));
+		
+		sortIO();
+		applyDeserialize();
+	} #endregion
+	
+	/////========== RENDERING ===========
 	
 	static getNextNodes = function() { return getNextNodesInternal(); } 
 	
@@ -393,67 +493,31 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return false;
 	} #endregion
 	
-	static exitGroup = function() {}
+	static resetRender = function(_clearCache = false) { #region
+		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for group {INAME}");
+		
+		setRenderStatus(false);
+		if(_clearCache) clearInputCache();
+		
+		if(reset_all_child)
+		for(var i = 0, n = array_length(nodes); i < n; i++)
+			nodes[i].resetRender(_clearCache);
+	} #endregion
 	
-	static onAdd = function(_node) {}
-	static add = function(_node) {
-		array_push(getNodeList(), _node);
-		var list = _node.group == noone? PANEL_GRAPH.nodes_list : _node.group.getNodeList();
-		array_remove(list, _node);
-		
-		recordAction(ACTION_TYPE.group_added, self, _node);
-		_node.group = self;
-		
-		will_refresh = true;
-		node_length  = array_length(nodes);
-		
-		onAdd(_node);
-	}
+	/////============= DRAW =============
 	
-	static onRemove = function(_node) {}
-	static remove = function(_node) {
-		var _hide = _node.destroy_when_upgroup;
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		if(!draw_input_overlay) return;
 		
-		if(!_hide) {
-			var node_list = getNodeList();
-			var list = group == noone? PANEL_GRAPH.nodes_list : group.getNodeList();
+		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
+			var _in   = inputs[| i];
+			var _show = _in.from.getInputData(6);
 			
-			array_remove(node_list, _node);
-			array_push(list, _node);
+			if(!_show) continue;
+			var _hov = _in.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(_hov != undefined) active &= !_hov;
 		}
-		
-		recordAction(ACTION_TYPE.group_removed, self, _node);
-		
-		if(struct_has(_node, "onUngroup"))
-			_node.onUngroup();
-			
-		if(_hide) _node.disable();
-		else      _node.group = group;
-			
-		will_refresh = true;
-		node_length  = array_length(nodes);
-		onRemove(_node);
-	}
-	
-	static clearCache = function() { #region
-		array_foreach(getNodeList(), function(node) { node.clearCache(); });
 	} #endregion
-	
-	static stepBegin = function() { #region
-		if(will_refresh) refreshNodes();
-		doStepBegin(); 
-	} #endregion
-	
-	static step = function() { #region
-		if(combine_render_time) {
-			render_time = 0;
-			array_foreach(getNodeList(), function(node) { render_time += node.render_time; });
-		}
-		
-		onStep();
-	} #endregion
-	
-	static onStep = function() {}
 	
 	static onPreDraw = function(_x, _y, _s, _iny, _outy) {
 		var xx = x * _s + _x;
@@ -473,10 +537,22 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, getColor(), _aa);
 	}
 	
-	static preConnect = function() { #region
-		sortIO();
-		deserialize(load_map, load_scale);
-	} #endregion
+	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {
+		if(_s < 0.75) return;
+		
+		var _bx = xx + w * _s - 10;
+		var _by = yy + h * _s - 10;
+		
+		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self;
+		    _hv &= point_in_circle(_mx, _my, _bx, _by, 8);
+		
+		BLEND_ADD
+		draw_sprite_ext(THEME.animate_node_go, 0, _bx, _by, 1, 1, 0, getColor(), 0.2 + _hv * 0.3);
+		BLEND_NORMAL
+		
+		if(_hv && PANEL_GRAPH.pFOCUS && mouse_press(mb_left))
+			panelSetContext(PANEL_GRAPH);
+	}
 	
 	static onDrawJunctions = function(_x, _y, _mx, _my, _s) { #region
 		input_dummy.visible = false;
@@ -489,39 +565,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_dummy = false;
 	} #endregion
 	
-	static sortIO = function() { #region
-		var _ilen = ds_list_size(inputs);
-		var _iarr = attributes.input_display_list;
-		
-		for( var i = custom_input_index; i < _ilen; i++ ) 
-			array_push_unique(_iarr, i);
-			
-		for( var i = array_length(_iarr) - 1; i >= 0; i-- ) {
-			if(is_array(_iarr[i])) continue;
-			if(_iarr[i] >= _ilen) array_delete(_iarr, i, 1);
-		}
-		
-		input_display_list = array_merge(group_input_display_list, attributes.input_display_list);
-		
-		///////////////////////////////////////////////////////////////////
-		
-		var _olen = ds_list_size(outputs);
-		var _oarr = attributes.output_display_list;
-		
-		for( var i = custom_output_index; i < _olen; i++ ) 
-			array_push_unique(_oarr, i);
-		for( var i = array_length(_oarr) - 1; i >= 0; i-- ) {
-			if(is_array(_oarr[i])) continue;
-			if(_oarr[i] >= _olen) array_delete(_oarr, i, 1);
-		}
-		
-		output_display_list = array_merge(group_output_display_list, attributes.output_display_list);
-		
-		///////////////////////////////////////////////////////////////////
-		
-		refreshNodeDisplay();
-	} #endregion
-	
 	static getTool = function() { #region
 		for(var i = 0, n = array_length(nodes); i < n; i++) { 
 			var _node = nodes[i];
@@ -532,78 +575,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return self;
 	} #endregion 
 	
-	static onClone = function(_newNode, target = PANEL_GRAPH.getCurrentContext()) { #region
-		if(instanceBase != noone) {
-			_newNode.instanceBase = instanceBase;
-			return;
-		}
-		
-		var dups = ds_list_create();
-		
-		for(var i = 0, n = array_length(nodes); i < n; i++) { 
-			var _node = nodes[i];
-			var _cnode = _node.clone(target);
-			ds_list_add(dups, _cnode);
-			
-			APPEND_MAP[? _node.node_id] = _cnode.node_id;
-		}
-		
-		APPENDING = true;
-		for(var i = 0; i < ds_list_size(dups); i++) {
-			var _node = dups[| i];
-			_node.connect();
-		}
-		APPENDING = false;
-		
-		ds_list_destroy(dups);
-	} #endregion
-	
-	static enable = function() { #region
-		active = true;
-		array_foreach(getNodeList(), function(node) { node.enable(); });
-	} #endregion
-	
-	static disable = function() { #region
-		active = false;
-		array_foreach(getNodeList(), function(node) { node.disable(); });
-	} #endregion
-	
-	static resetRender = function(_clearCache = false) { #region
-		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for group {INAME}");
-		
-		setRenderStatus(false);
-		if(_clearCache) clearInputCache();
-		
-		if(reset_all_child)
-		for(var i = 0, n = array_length(nodes); i < n; i++)
-			nodes[i].resetRender(_clearCache);
-	} #endregion
-	
-	static setInstance = function(node) { #region
-		instanceBase = node;
-	} #endregion
-	
-	static resetInstance = function() { #region
-		instanceBase = noone;
-	} #endregion
-	
-	function onDoubleClick(panel) { #region
-		if(PREFERENCES.panel_graph_group_require_shift && !key_mod_press(SHIFT)) return false;
-		
-		__temp_panel = panel;
-		
-		if(PREFERENCES.graph_open_group_in_tab)
-			run_in(1, function() { __temp_panel.openGroupTab(self) });
-		else
-			panel.addContext(self);
-		
-		if(ononDoubleClick != noone)
-			ononDoubleClick(panel);
-			
-		return true;
-	} #endregion
-	
-	static ononDoubleClick = noone;
+	/////============ PREVIEW ============
 	
 	static getGraphPreviewSurface = function() { #region
 		var _output_junc = outputs[| preview_channel];
@@ -625,15 +597,23 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return noone;
 	} #endregion
 	
-	static enable = function() { #region
-		active = true; timeline_item.active = true;
-		for( var i = 0, n = array_length(nodes); i < n; i++ ) nodes[i].enable();
+	/////============= CACHE =============
+	
+	static clearCache = function() { #region
+		array_foreach(getNodeList(), function(node) { node.clearCache(); });
 	} #endregion
 	
-	static disable = function() { #region
-		active = false; timeline_item.active = false;
-		for( var i = 0, n = array_length(nodes); i < n; i++ ) nodes[i].disable();
+	/////========== INSTANCING ===========
+	
+	static setInstance = function(node) { #region
+		instanceBase = node;
 	} #endregion
+	
+	static resetInstance = function() { #region
+		instanceBase = noone;
+	} #endregion
+	
+	/////========= SERIALIZATION =========
 	
 	static attributeSerialize = function() { #region
 		sortIO();
@@ -744,11 +724,74 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		_map.instance_base	= instanceBase? instanceBase.node_id : noone;
 	} #endregion
 	
-	static preConnect = function() { #region 
-		instanceBase = GetAppendID(struct_try_get(load_map, "instance_base", noone));
+	/////============ ACTION ============
+	
+	static onClone = function(_newNode, target = PANEL_GRAPH.getCurrentContext()) { #region
+		if(instanceBase != noone) {
+			_newNode.instanceBase = instanceBase;
+			return;
+		}
 		
-		sortIO();
-		applyDeserialize();
+		var dups = ds_list_create();
+		
+		for(var i = 0, n = array_length(nodes); i < n; i++) { 
+			var _node = nodes[i];
+			var _cnode = _node.clone(target);
+			ds_list_add(dups, _cnode);
+			
+			APPEND_MAP[? _node.node_id] = _cnode.node_id;
+		}
+		
+		APPENDING = true;
+		for(var i = 0; i < ds_list_size(dups); i++) {
+			var _node = dups[| i];
+			_node.connect();
+		}
+		APPENDING = false;
+		
+		ds_list_destroy(dups);
+	} #endregion
+	
+	static enable = function() { #region
+		active = true;
+		array_foreach(getNodeList(), function(node) { node.enable(); });
+	} #endregion
+	
+	static disable = function() { #region
+		active = false;
+		array_foreach(getNodeList(), function(node) { node.disable(); });
+	} #endregion
+	
+	function onDoubleClick(panel) { #region
+		if(PREFERENCES.panel_graph_group_require_shift && !key_mod_press(SHIFT)) return false;
+		
+		panelSetContext(panel);
+		
+		if(ononDoubleClick != noone)
+			ononDoubleClick(panel);
+			
+		return true;
+	} #endregion
+	
+	static panelSetContext = function(panel) {
+		__temp_panel = panel;
+		
+		if(PREFERENCES.graph_open_group_in_tab) 
+			run_in(1, function() { __temp_panel.openGroupTab(self) });
+		else
+			panel.addContext(self);
+	}
+	
+	static ononDoubleClick = noone;
+	
+	static enable = function() { #region
+		active = true; timeline_item.active = true;
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) nodes[i].enable();
+	} #endregion
+	
+	static disable = function() { #region
+		active = false; timeline_item.active = false;
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) nodes[i].disable();
 	} #endregion
 	
 }

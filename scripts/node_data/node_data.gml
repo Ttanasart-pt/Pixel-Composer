@@ -1167,6 +1167,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawNodeBase = function(xx, yy, _s) { INLINE draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, getColor(), (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph())); }
 	
+	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {}
+	
 	__draw_bbox = BBOX();
 	static drawGetBbox = function(xx, yy, _s) { #region
 		var pad_label = draw_name && display_parameter.avoid_label;
@@ -1699,6 +1701,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, bg_spr_add_clr, bg_spr_add);
 		
+		drawNodeOverlay(xx, yy, _mx, _my, _s);
+		
 		return _s > 0.5? drawJunctions(xx, yy, _mx, _my, _s) : drawJunctions_fast(xx, yy, _mx, _my, _s);
 	} #endregion
 	
@@ -2219,8 +2223,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	/////=========== CLEAN UP ===========
 	
 	static cleanUp = function() { #region
+		if(ds_exists(inputs, ds_type_list))
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			inputs[| i].cleanUp();
+		
+		if(ds_exists(outputs, ds_type_list))	
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 			outputs[| i].cleanUp();
 		

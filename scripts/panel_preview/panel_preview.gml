@@ -42,7 +42,7 @@ function Panel_Preview() : PanelContent() constructor {
 			canvas_y = h / 2;
 		}
 		run_in(1, function() { initSize() });
-	
+		
 		canvas_x = 0;
 		canvas_y = 0;
 		canvas_s = 1;
@@ -2177,6 +2177,8 @@ function Panel_Preview() : PanelContent() constructor {
 			canvas_x,
 			canvas_y,
 			canvas_s,
+			
+			locked,
 		}; 
 	}
 	
@@ -2187,6 +2189,8 @@ function Panel_Preview() : PanelContent() constructor {
 		canvas_x = struct_try_get(data, "canvas_x", canvas_x);
 		canvas_y = struct_try_get(data, "canvas_y", canvas_y);
 		canvas_s = struct_try_get(data, "canvas_s", canvas_s);
+		
+		locked   = struct_try_get(data, "locked", locked);
 		
 		run_in(1, fullView)
 		return self; 

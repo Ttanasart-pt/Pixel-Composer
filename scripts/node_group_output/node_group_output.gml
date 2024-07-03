@@ -120,6 +120,12 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		ds_list_remove(group.outputs, outParent);
 		group.sortIO();
 		group.refreshNodes();
+		
+		var _tos = outParent.getJunctionTo();
+		
+		for (var i = 0, n = array_length(_tos); i < n; i++) 
+			_tos[i].removeFrom();
+		
 	} #endregion
 	
 	static onUngroup = function() { #region

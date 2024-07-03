@@ -145,9 +145,7 @@ function array_find(arr, val) { #region
 	self.__temp_val = val;
 	
 	if(!is_array(arr)) return -1;
-	return array_find_index(arr, function(_val, _ind) {
-		return isEqual(_val, self.__temp_val);
-	});
+	return array_find_index(arr, function(_val, _ind) { return isEqual(_val, self.__temp_val); });
 } #endregion
 
 function array_find_string(arr, val) { #region

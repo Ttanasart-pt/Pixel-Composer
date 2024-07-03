@@ -6,14 +6,14 @@ enum ANCHOR {
 	right   = 8
 }
 
-function Panel(_parent, _x, _y, _w, _h) constructor { #region
+function Panel(_parent, _x, _y, _w, _h) constructor {
 	parent = _parent;
-	if(parent) ds_list_add(parent.childs, self);
+	if(parent) array_push(parent.childs, self);
 	
 	padding = THEME_VALUE.panel_margin;
 	content = [];
 	content_index = 0;
-	childs  = ds_list_create();
+	childs  = [];
 	anchor  = ANCHOR.none;
 	
 	x = _x;
@@ -53,25 +53,33 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 	
 	draw_droppable = false;
 	
-	border_rb_close = menuItem(__txt("Close"), function() { #region
+	border_rb_close = menuItem(__txt("Close"), function() {
 		var con = getContent();
 		if(con == noone) return;
 		con.close();
-	}, THEME.cross); #endregion
+	}, THEME.cross);
 	
-	border_rb_menu = [ #region
+	border_rb_menu = [
 		menuItem(__txt("Move"),    function() { 
 			extract(); 
 			panel_mouse = 1;
 		}),
 		menuItem(__txtx("panel_pop_out", "Pop out"), function() { popWindow(); }, THEME.node_goto),
 		border_rb_close
-	]; #endregion
+	];
 	
 	static getContent = function() { return array_safe_get_fast(content, content_index, noone); }
 	static hasContent = function() { return bool(array_length(content)); }
 	
-	function resetMask() { #region
+	function replacePanel(panel) {
+		setContent(panel.content);
+		childs = panel.childs;
+		split  = panel.split;
+		
+		refreshSize();
+	}
+	
+	function resetMask() {
 		var tab = array_length(content) > 1;
 		tx = x; ty = y + tab * ui(tab_height);
 		tw = w; th = h - tab * ui(tab_height);
@@ -84,29 +92,29 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		draw_sprite_stretched(THEME.ui_panel_bg, 0, padding, padding, tw - padding * 2, th - padding * 2);
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
-	} resetMask(); #endregion
+	} resetMask();
 	
-	function setPadding(padding) { #region
+	function setPadding(padding) {
 		self.padding = padding;
 		refresh();
-	} #endregion
+	}
 	
-	function refresh() { #region
+	function refresh() {
 		resetMask();
 		
 		for( var i = 0, n = array_length(content); i < n; i++ )
 			content[i].refresh();
 			
-		for( var i = 0; i < ds_list_size(childs); i++ )
-			childs[| i].refresh();
-	} #endregion
+		for( var i = 0; i < array_length(childs); i++ )
+			childs[i].refresh();
+	}
 	
-	function move(dx, dy) { #region
+	function move(dx, dy) {
 		x += dx;
 		y += dy;
 		
-		for(var i = 0; i < ds_list_size(childs); i++) {
-			var _panel = childs[| i];
+		for(var i = 0; i < array_length(childs); i++) {
+			var _panel = childs[i];
 			_panel.move(dx, dy);
 		}
 		
@@ -114,9 +122,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 			content[i].x = x;
 			content[i].y = y;
 		}
-	} #endregion
+	}
 	
-	function resizable(dw, dh, oppose = ANCHOR.left) { #region
+	function resizable(dw, dh, oppose = ANCHOR.left) {
 		var tab = array_length(content) > 1;
 		tx = x; ty = y + tab * ui(tab_height);
 		tw = w; th = h - tab * ui(tab_height);
@@ -130,16 +138,16 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 			return res;
 		}
 		
-		var _c0 = ds_list_get(childs, 0, noone);
-		var _c1 = ds_list_get(childs, 1, noone);
+		var _c0 = array_safe_get(childs, 0, noone);
+		var _c1 = array_safe_get(childs, 1, noone);
 		
 		if(_c0 == noone || _c1 == noone) return false;
 		
 		var ind  = hori? _c1.w > _c0.w : _c1.h > _c0.h;
-		return childs[| ind].resizable(dw, dh, oppose);
-	} #endregion
+		return childs[ind].resizable(dw, dh, oppose);
+	}
 	
-	function refreshSize(recur = true) { #region //refresh content surface after resize
+	function refreshSize(recur = true) { //refresh content surface after resize
 		//__debug_counter("refresh size");
 		var tab = array_length(content) > 1;
 		tx = x; ty = y + tab * ui(tab_height);
@@ -151,67 +159,67 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 			content[i].onResize();
 		}
 			
-		if(ds_list_size(childs) == 2) {
+		if(array_length(childs) == 2) {
 			//print("=== Refreshing (" + string(w) + ", " + string(h) + ") " + string(split) + " ===");
 			
-			var _tw = childs[| 0].w + childs[| 1].w;
-			var _th = childs[| 0].h + childs[| 1].h;
+			var _tw = childs[0].w + childs[1].w;
+			var _th = childs[0].h + childs[1].h;
 			
-			var fixChild = split == "h"? childs[| 1].x < childs[| 0].x : childs[| 1].y < childs[| 0].y;
+			var fixChild = split == "h"? childs[1].x < childs[0].x : childs[1].y < childs[0].y;
 			
-			childs[| fixChild].x = x;
-			childs[| fixChild].y = y;
+			childs[fixChild].x = x;
+			childs[fixChild].y = y;
 			
 			if(split == "h") {
-				childs[|  fixChild].w = round(childs[| fixChild].w / _tw * w);
-				childs[|  fixChild].h = round(h);
+				childs[ fixChild].w = round(childs[fixChild].w / _tw * w);
+				childs[ fixChild].h = round(h);
 			
-				childs[| !fixChild].x = x + childs[| fixChild].w;
-				childs[| !fixChild].y = y;
+				childs[!fixChild].x = x + childs[fixChild].w;
+				childs[!fixChild].y = y;
 					
-				childs[| !fixChild].w = round(w - childs[| fixChild].w);
-				childs[| !fixChild].h = round(h);
+				childs[!fixChild].w = round(w - childs[fixChild].w);
+				childs[!fixChild].h = round(h);
 				
-				childs[|  fixChild].anchor = ANCHOR.left;
-				childs[| !fixChild].anchor = ANCHOR.right;
+				childs[ fixChild].anchor = ANCHOR.left;
+				childs[!fixChild].anchor = ANCHOR.right;
 			} else if(split == "v") {	
-				childs[|  fixChild].w = round(w);
-				childs[|  fixChild].h = round(childs[| fixChild].h / _th * h);
+				childs[ fixChild].w = round(w);
+				childs[ fixChild].h = round(childs[fixChild].h / _th * h);
 			
-				childs[| !fixChild].x = x;
-				childs[| !fixChild].y = y + childs[| fixChild].h;
+				childs[!fixChild].x = x;
+				childs[!fixChild].y = y + childs[fixChild].h;
 					
-				childs[| !fixChild].w = round(w);
-				childs[| !fixChild].h = round(h - childs[| fixChild].h);
+				childs[!fixChild].w = round(w);
+				childs[!fixChild].h = round(h - childs[fixChild].h);
 				
-				childs[|  fixChild].anchor = ANCHOR.top;
-				childs[| !fixChild].anchor = ANCHOR.bottom;
+				childs[ fixChild].anchor = ANCHOR.top;
+				childs[!fixChild].anchor = ANCHOR.bottom;
 			}
 			
 			if(recur)
-			for(var i = 0; i < ds_list_size(childs); i++)
-				childs[| i].refreshSize();
+			for(var i = 0; i < array_length(childs); i++)
+				childs[i].refreshSize();
 		}
 		
 		refresh();
-	} #endregion
+	}
 	
-	function resize(dw, dh, oppose = ANCHOR.left) { #region
+	function resize(dw, dh, oppose = ANCHOR.left) {
 		if(dw == 0 && dh == 0) return;
 		
-		if(ds_list_size(childs) == 2) {
+		if(array_length(childs) == 2) {
 			var hori = oppose == ANCHOR.left || oppose == ANCHOR.right;
-			var ind  = hori? childs[| 1].w > childs[| 0].w : childs[| 1].h > childs[| 0].h;
-			childs[| ind].resize(dw, dh, oppose);
+			var ind  = hori? childs[1].w > childs[0].w : childs[1].h > childs[0].h;
+			childs[ind].resize(dw, dh, oppose);
 		}
 		
 		w = max(round(w + dw), min_w);
 		h = max(round(h + dh), min_h);
 		
 		refreshSize(false);
-	} #endregion
+	}
 	
-	function setContent(_content = noone, _switch = false) { #region
+	function setContent(_content = noone, _switch = false) {
 		if(is_array(_content))
 			content = array_append(content, _content);
 		else 
@@ -223,15 +231,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		if(_switch) setTab(array_find(content, _content));
 			
 		refresh();
-	} #endregion
+	}
 	
-	function switchContent(_content) { #region
+	function switchContent(_content) {
 		var _ind = array_find(content, _content);
 		if(_ind == -1) return;
 		setTab(_ind);
-	} #endregion
+	}
 	
-	function split_h(_w) { #region
+	function split_h(_w) {
 		if(abs(_w) > w) {
 			print($"Error: Split panel larger than size w ({_w} > {w})");
 			return noone;
@@ -243,7 +251,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		_panelParent.split  = "h";
 		
 		var _panelL = self;
-		ds_list_add(_panelParent.childs, _panelL);
+		array_push(_panelParent.childs, _panelL);
 		
 		var _panelR = new Panel(_panelParent, x + _w, y, w - _w, h);
 		_panelR.anchor = ANCHOR.right;
@@ -258,16 +266,16 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		if(parent == noone) 
 			PANEL_MAIN = _panelParent;
 		else
-			ds_list_delete(parent.childs, ds_list_find_index(parent.childs, self));
+			array_remove(parent.childs, self);
 			
 		parent	= _panelParent;
 		anchor	= ANCHOR.left;
 		content = [];
 		
 		return [ _panelL, _panelR ];
-	} #endregion
+	}
 	
-	function split_v(_h) { #region
+	function split_v(_h) {
 		if(abs(_h) > h) {
 			print($"Error: Split panel larger than size h ({_h} > {h})");
 			return noone;
@@ -279,7 +287,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		_panelParent.split  = "v";
 		
 		var _panelT = self;
-		ds_list_add(_panelParent.childs, _panelT);
+		array_push(_panelParent.childs, _panelT);
 		var _panelB = new Panel(_panelParent, x, y + _h, w, h - _h);
 		_panelB.anchor = ANCHOR.bottom;
 		
@@ -293,16 +301,16 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		if(parent == noone) 
 			PANEL_MAIN = _panelParent;
 		else
-			ds_list_delete(parent.childs, ds_list_find_index(parent.childs, self));
+			array_remove(parent.childs, self);
 		
 		parent	= _panelParent;
 		anchor	= ANCHOR.top;
 		content = [];
 		
 		return [_panelT, _panelB];
-	} #endregion
+	}
 	
-	function stepBegin() { #region
+	function stepBegin() {
 		var con = getContent();
 		if(FULL_SCREEN_CONTENT != noone && con == FULL_SCREEN_CONTENT && self != FULL_SCREEN_PARENT) return;
 		
@@ -316,8 +324,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 			var dw  = round(_mx - drag_sm);
 			var res = true;
 			
-			for(var i = 0; i < ds_list_size(childs); i++) {
-				var _panel = childs[| i];
+			for(var i = 0; i < array_length(childs); i++) {
+				var _panel = childs[i];
 				switch(_panel.anchor) {
 					case ANCHOR.left:
 						res &= _panel.resizable(dw, 0, ANCHOR.left);
@@ -331,8 +339,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 			if(res) {
 				drag_sm = _mx;
 				
-				for(var i = 0; i < ds_list_size(childs); i++) {
-					var _panel = childs[| i];
+				for(var i = 0; i < array_length(childs); i++) {
+					var _panel = childs[i];
 					switch(_panel.anchor) {
 						case ANCHOR.left:
 							_panel.resize(dw, 0, ANCHOR.left);
@@ -354,8 +362,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 			var dh  = round(_my - drag_sm);
 			var res = true;
 			
-			for(var i = 0; i < ds_list_size(childs); i++) {
-				var _panel = childs[| i];
+			for(var i = 0; i < array_length(childs); i++) {
+				var _panel = childs[i];
 				switch(_panel.anchor) {
 					case ANCHOR.top:
 						res &= _panel.resizable(0, dh, ANCHOR.top);
@@ -369,8 +377,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 			if(res) {
 				drag_sm = _my;
 				
-				for(var i = 0; i < ds_list_size(childs); i++) {
-					var _panel = childs[| i];
+				for(var i = 0; i < array_length(childs); i++) {
+					var _panel = childs[i];
 					switch(_panel.anchor) {
 						case ANCHOR.top:
 							_panel.resize(0, dh, ANCHOR.top);
@@ -398,38 +406,38 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 				if(FOCUS == self && con) 
 					FOCUS_STR = con.context_str;
 			} else {
-				for(var i = 0; i < ds_list_size(childs); i++)
-					childs[| i].stepBegin();
+				for(var i = 0; i < array_length(childs); i++)
+					childs[i].stepBegin();
 			}
 		}
-	} #endregion
+	}
 	
-	static step = function() { #region
-		for(var i = 0; i < ds_list_size(childs); i++)
-			childs[| i].step();
-	} #endregion
+	static step = function() {
+		for(var i = 0; i < array_length(childs); i++)
+			childs[i].step();
+	}
 	
-	static draw = function() { #region
+	static draw = function() {
 		if(hasContent()) {
 			drawPanel();
 			return;
 		}
 		
-		if(ds_list_empty(childs)) 
+		if(array_empty(childs)) 
 			return;
 		
 		var min_w = ui(32);
 		var min_h = ui(32);
 		if(split == "h") {
-			min_w = childs[| 0].min_w + childs[| 1].min_w;
-			min_h = max(childs[| 0].min_h + childs[| 1].min_h);
+			min_w = childs[0].min_w + childs[1].min_w;
+			min_h = max(childs[0].min_h + childs[1].min_h);
 		} else {
-			min_w = max(childs[| 0].min_w, childs[| 1].min_w);
-			min_h = childs[| 0].min_h + childs[| 1].min_h;
+			min_w = max(childs[0].min_w, childs[1].min_w);
+			min_h = childs[0].min_h + childs[1].min_h;
 		}
 		
-		for(var i = 0; i < ds_list_size(childs); i++) {
-			var _panel = childs[| i];
+		for(var i = 0; i < array_length(childs); i++) {
+			var _panel = childs[i];
 			_panel.draw();
 			
 			if!(HOVER == noone || is_struct(HOVER))
@@ -464,9 +472,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		
 		if(self == PANEL_MAIN && o_main.panel_dragging != noone && key_mod_press(CTRL))
 			checkHover();
-	} #endregion
+	}
 	
-	function drawTab() { #region
+	function drawTab() {
 		tab_surface = surface_verify(tab_surface, w - padding * 2 + 1, tab_height + ui(4));
 		
 		var tsx = x + padding - 1;
@@ -623,9 +631,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		surface_reset_target();
 		
 		draw_surface(tab_surface, tsx, tsy);
-	} #endregion
+	}
 	
-	function setTab(tabIndex, forceFocus = false) { #region
+	function setTab(tabIndex, forceFocus = false) {
 		if(tabIndex < 0) return;
 		if(tabIndex >= array_length(content)) return;
 		if(content_index == tabIndex) {
@@ -640,9 +648,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		
 		var prec = array_safe_get_fast(content, content_index);
 		if(prec) prec.onFocusBegin();
-	} #endregion
+	}
 	
-	function drawPanel() { #region
+	function drawPanel() {
 		if(w <= ui(16)) return;
 		
 		var tab = array_length(content) > 1;
@@ -726,18 +734,18 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		
 		if(o_main.panel_dragging != noone && m_ot && !key_mod_press(CTRL))
 			checkHover();
-	} #endregion
+	}
 	
-	function drawGUI() { #region
-		for( var i = 0; i < ds_list_size(childs); i++ ) 
-			childs[| i].drawGUI();
+	function drawGUI() {
+		for( var i = 0; i < array_length(childs); i++ ) 
+			childs[i].drawGUI();
 		
 		var con = getContent();
 		if(con == noone) return;
 		con.drawGUI();
-	} #endregion
+	}
 	
-	function extract() { #region
+	function extract() {
 		var con = getContent();
 		con.dragSurface = surface_clone(content_surface);
 		o_main.panel_dragging = con;
@@ -750,10 +758,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		FOCUS = noone;
 		
 		if(hasContent()) return;
-		var ind = !ds_list_find_index(parent.childs, self); //index of the other child
-		var sib = parent.childs[| ind];
+		var ind = !array_find(parent.childs, self); //index of the other child
+		var sib = parent.childs[ind];
 		
-		if(!sib.hasContent() && ds_list_size(sib.childs) == 2) { //other child is compound panel
+		if(!sib.hasContent() && array_length(sib.childs) == 2) { //other child is compound panel
 			var gparent = parent.parent;
 			if(gparent == noone) {
 				sib.x = PANEL_MAIN.x; sib.y = PANEL_MAIN.y;
@@ -763,27 +771,27 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 				sib.parent = noone;
 				PANEL_MAIN.refreshSize();
 			} else {
-				var pind    = ds_list_find_index(gparent.childs, parent); //index of parent in grandparent object
-				gparent.childs[| pind] = sib; //replace parent with sibling
+				var pind    = array_find(gparent.childs, parent); //index of parent in grandparent object
+				gparent.childs[pind] = sib; //replace parent with sibling
 				sib.parent = gparent;
 				gparent.refreshSize();
 			}
 		} else if(sib.hasContent()) { //other child is content panel, set parent to content panel
 			parent.setContent(sib.content);
-			ds_list_clear(parent.childs);
+			parent.childs = [];
 		}
-	} #endregion
+	}
 	
-	function popWindow() { #region
+	function popWindow() {
 		var con = getContent();
 		if(con == noone) return;
 		
 		dialogPanelCall(con);
 		extract();
 		o_main.panel_dragging = noone;
-	} #endregion
+	}
 	
-	function checkHover() { #region
+	function checkHover() {
 		var dx = (mouse_mx - x) / w;
 		var dy = (mouse_my - y) / h;
 		var p  = ui(8);
@@ -840,12 +848,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 				}
 			}
 		}
-	} #endregion
+	}
 	
 	function onFocusBegin() { INLINE if(FOCUS.getContent()) FOCUS.getContent().onFocusBegin(); }
 	function onFocusEnd()   { INLINE if(FOCUS.getContent()) FOCUS.getContent().onFocusEnd();   }
 	
-	function remove(con = getContent()) { #region
+	function remove(con = getContent()) {
 		var curr = getContent();
 		
 		array_remove(content, con);
@@ -854,20 +862,18 @@ function Panel(_parent, _x, _y, _w, _h) constructor { #region
 		else			setTab(array_find(content, curr), true);
 		
 		refresh();
-		if(hasContent()) return;
-		if(parent == noone) {
-			show_message("Can't close main panel.");
-			return;
-		}
 		
-		ds_list_delete(parent.childs, ds_list_find_index(parent.childs, self));
-		var otherPanel = parent.childs[| 0];
-		parent.setContent(otherPanel.content);
-		ds_list_clear(parent.childs);
-	} #endregion
-} #endregion
+		if(hasContent()) return;
+		if(parent == noone) { show_message("Can't close the main panel."); return; }
+		
+		if(array_length(parent.childs) == 2) {
+			array_remove(parent.childs, self);
+			parent.replacePanel(parent.childs[0]);
+		}
+	}
+}
 
-function PanelContent() constructor { #region
+function PanelContent() constructor {
 	title		= "";
 	icon		= noone;
 	context_str = "";
@@ -899,10 +905,10 @@ function PanelContent() constructor { #region
 	dragSurface = surface_create(1, 1);
 	showHeader  = true;
 	
-	function refresh() { #region
+	function refresh() {
 		setPanelSize(panel);
 		onResize();
-	} #endregion
+	}
 	
 	function onResize() {}
 	
@@ -911,35 +917,35 @@ function PanelContent() constructor { #region
 	
 	static initSize = function() {}
 	
-	function setPanelSize(panel) { #region
+	function setPanelSize(panel) {
 		x = panel.tx;
 		y = panel.ty;
 		w = panel.tw;
 		h = panel.th;
-	} #endregion
+	}
 	
-	function onSetPanel(panel) { #region
+	function onSetPanel(panel) {
 		self.panel = panel;
 		setPanelSize(panel);
 		initSize();
 		onResize();
-	} #endregion
+	}
 	
-	function panelStepBegin(panel) { #region
+	function panelStepBegin(panel) {
 		setPanelSize(panel);
 		onStepBegin();
-	} #endregion
+	}
 	
-	function onStepBegin() { #region
+	function onStepBegin() {
 		mx = mouse_mx - x;
 		my = mouse_my - y;
 		
 		stepBegin();
-	} #endregion
+	}
 	
 	function stepBegin() {}
 	
-	static draw = function(panel) { #region
+	static draw = function(panel) {
 		self.panel = panel;
 		
 		if(o_main.panel_dragging == noone) {
@@ -948,7 +954,7 @@ function PanelContent() constructor { #region
 		}
 		
 		drawContent(panel);
-	} #endregion
+	}
 	
 	function drawContent(panel) {}
 	
@@ -964,9 +970,9 @@ function PanelContent() constructor { #region
 	
 	static serialize   = function()     { return { name: instanceof(self) }; }
 	static deserialize = function(data) { return self; }
-} #endregion
+}
 
-function setFocus(target, fstring = noone) { #region
+function setFocus(target, fstring = noone) {
 	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusEnd")) || 
 		(is_struct(FOCUS) && struct_has(FOCUS, "onFocusEnd"))) 
 		FOCUS.onFocusEnd();
@@ -979,4 +985,4 @@ function setFocus(target, fstring = noone) { #region
 		(is_struct(FOCUS) && struct_has(FOCUS, "onFocusBegin"))) 
 		FOCUS.onFocusBegin();
 		
-} #endregion
+}

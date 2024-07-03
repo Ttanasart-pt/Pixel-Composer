@@ -114,4 +114,8 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		outputs[| 0].setValue(_outsurf);
 		outputs[| 1].setValue(rawContent);
 	}
+	
+	static dropPath = function(path) {
+		inputs[| 0].setValue(path);
+	}
 }

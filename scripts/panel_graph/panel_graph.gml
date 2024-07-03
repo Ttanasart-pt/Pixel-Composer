@@ -933,6 +933,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	function drawViewControl() { #region
+		if(h < ui(96)) return;
+	
 		view_hovering = false;
 		if(!show_view_control) return;
 		

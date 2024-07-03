@@ -1127,12 +1127,16 @@ function Panel_Inspector() : PanelContent() constructor {
 			name: instanceof(self), 
 			inspecting  : node_get_id(inspecting), 
 			inspectings : array_map(inspectings, function(n) { return node_get_id(n) }),
+			
+			locked,
 		}; 
 	}
 	
 	static deserialize = function(data) { 
 		inspecting  = node_from_id(data.inspecting);
 		inspectings = array_map(data.inspectings, function(n) { return node_from_id(n); });
+		
+		locked      = struct_try_get(data, "locked", locked);
 		
 		return self; 
 	}
