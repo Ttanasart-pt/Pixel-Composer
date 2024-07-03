@@ -120,16 +120,14 @@ uniform int uniAsp;
 			vec2 samplePos = mix(gradient_map_range.xy, gradient_map_range.zw, prog);
 			return texture2D( gradient_map, samplePos );
 		}
-	
-		vec4 col = vec4(0.);
-	
+		
 		for(int i = 0; i < GRADIENT_LIMIT; i++) {
 			if(gradient_time[i] == prog) {
-				col = gradient_color[i];
-				break;
+				return gradient_color[i];
+				
 			} else if(gradient_time[i] > prog) {
 				if(i == 0) 
-					col = gradient_color[i];
+					return gradient_color[i];
 				else {
 					float t  = (prog - gradient_time[i - 1]) / (gradient_time[i] - gradient_time[i - 1]);
 					vec3  c0 = gradient_color[i - 1].rgb;
@@ -137,29 +135,28 @@ uniform int uniAsp;
 					float a  = mix(gradient_color[i - 1].a, gradient_color[i].a, t);
 					
 					if(gradient_blend == 0)
-						col = vec4(mix(c0, c1, t), a);
+						return vec4(mix(c0, c1, t), a);
 						
 					else if(gradient_blend == 1)
-						col = gradient_color[i - 1];
+						return gradient_color[i - 1];
 						
 					else if(gradient_blend == 2)
-						col = vec4(hsvMix(c0, c1, t), a);
+						return vec4(hsvMix(c0, c1, t), a);
 						
 					else if(gradient_blend == 3)
-						col = vec4(oklabMax(c0, c1, t), a);
+						return vec4(oklabMax(c0, c1, t), a);
 					
 					else if(gradient_blend == 4)
-						col = vec4(rgbMix(c0, c1, t), a);
+						return vec4(rgbMix(c0, c1, t), a);
 				}
 				break;
 			}
-			if(i >= gradient_keys - 1) {
-				col = gradient_color[gradient_keys - 1];
-				break;
-			}
+			
+			if(i >= gradient_keys - 1)
+				return gradient_color[gradient_keys - 1];
 		}
 	
-		return col;
+		return gradient_color[gradient_keys - 1];
 	} #endregion
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////

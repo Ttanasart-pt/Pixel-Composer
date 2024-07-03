@@ -98,25 +98,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		return self;
 	} #endregion
 	
-	static setFont = function(font) { #region
-		self.font = font;
-		return self;
-	} #endregion
-	
-	static setLabel = function(label) { #region
-		self.label = label;
-		return self;
-	} #endregion
-	
-	static setPrecision = function(precision) { #region
-		self.precision = precision;
-		return self;
-	} #endregion
-	
-	static setEmpty = function() { #region
-		no_empty = false;
-		return self;
-	} #endregion
+	static setFont		= function(font)		{ self.font 		= font; 		return self; }
+	static setLabel 	= function(label)		{ self.label		= label;		return self; }
+	static setPrecision = function(precision)	{ self.precision	= precision;	return self; }
+	static setPadding	= function(padding) 	{ self.padding		= padding;		return self; }
+	static setEmpty 	= function()			{ no_empty			= false;		return self; }
 	
 	static activate = function() { #region
 		WIDGET_CURRENT = self;

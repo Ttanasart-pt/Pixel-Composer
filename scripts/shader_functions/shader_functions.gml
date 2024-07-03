@@ -31,6 +31,14 @@ function shader_set_2(uniform, v) { INLINE var shader = shader_current(); shader
 function shader_set_3(uniform, v) { INLINE var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2)); } 
 function shader_set_4(uniform, v) { INLINE var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2), aGetF(v, 3)); } 
 
+function shader_set_f_array(uniform, value, max_length = 128) {
+	var shader = shader_current();
+	if(shader == -1) return;
+	
+	if(array_empty(value)) return;
+	shader_set_uniform_f_array_safe(shader_get_uniform(shader, uniform), value, max_length);
+}
+
 function shader_set_f(uniform, value) { #region
 	INLINE
 	

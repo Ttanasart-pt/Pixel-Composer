@@ -248,6 +248,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		selection_block		= 0;
 		nodes_selecting	    = [];
 		nodes_selecting_jun = [];
+		nodes_select_anchor = noone;
 		nodes_select_drag   = 0;
 		nodes_select_frame  = 0;
 		nodes_select_mx     = 0;
@@ -390,50 +391,64 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	#region ++++ toolbars ++++
 		tooltip_center   = new tooltipHotkey(__txtx("panel_graph_center_to_nodes", "Center to nodes"), "Graph", "Focus content");
 	
-		toolbars = [
+		toolbars_general = [
 			[ 
 				THEME.icon_preview_export,
-				function() { return 0;  },
-				function() { return __txtx("panel_graph_export_image", "Export graph as image"); }, 
-				function() { dialogPanelCall(new Panel_Graph_Export_Image(self)); }
+				function() /*=>*/ {return 0}, function() /*=>*/ {return __txtx("panel_graph_export_image", "Export graph as image")}, 
+				function(param) /*=>*/ { dialogPanelCall(new Panel_Graph_Export_Image(self)); }
 			],
 			[ 
 				THEME.icon_center_canvas,
-				function() { return 0;  },
-				function() { return tooltip_center; }, 
-				function() { toCenterNode(); } 
+				function() /*=>*/ {return 0}, function() /*=>*/ {return tooltip_center}, 
+				function(param) /*=>*/ { toCenterNode(); } 
 			],
 			[ 
 				THEME.icon_minimap,
-				function() { return minimap_show;  },
-				function() { return minimap_show? __txtx("panel_graph_minimap_enabled", "Minimap enabled") : __txtx("panel_graph_minimap_disabled", "Minimap disabled"); }, 
-				function() { minimap_show = !minimap_show; } 
+				function() /*=>*/ {return minimap_show}, function() /*=>*/ {return minimap_show? __txtx("panel_graph_minimap_enabled", "Minimap enabled") : __txtx("panel_graph_minimap_disabled", "Minimap disabled")}, 
+				function(param) /*=>*/ { minimap_show = !minimap_show; } 
 			],
 			[ 
 				THEME.icon_curve_connection,
-				function() { return PREFERENCES.curve_connection_line;  },
-				function() { return __txtx("panel_graph_connection_line", "Connection render settings"); }, 
-				function(param) { 
-					dialogPanelCall(new Panel_Graph_Connection_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-				} 
+				function() /*=>*/ {return PREFERENCES.curve_connection_line}, function() /*=>*/ {return __txtx("panel_graph_connection_line", "Connection render settings")}, 
+				function(param) /*=>*/ { dialogPanelCall(new Panel_Graph_Connection_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
 			],
 			[ 
 				THEME.icon_grid_setting,
-				function() { return 0; },
-				function() { return __txtx("grid_title", "Grid settings"); }, 
-				function(param) { 
-					dialogPanelCall(new Panel_Graph_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-				} 
+				function() /*=>*/ {return 0}, function() /*=>*/ {return __txtx("grid_title", "Grid settings")}, 
+				function(param) /*=>*/ { dialogPanelCall(new Panel_Graph_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
 			],
 			[ 
 				THEME.icon_visibility,
-				function() { return 0; },
-				function() { return __txtx("graph_visibility_title", "Visibility settings"); }, 
-				function(param) { 
-					dialogPanelCall(new Panel_Graph_View_Setting(self, display_parameter), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-				} 
+				function() /*=>*/ {return 0}, function() /*=>*/ {return __txtx("graph_visibility_title", "Visibility settings")}, 
+				function(param) /*=>*/ { dialogPanelCall(new Panel_Graph_View_Setting(self, display_parameter), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
 			],
 		]; 
+		
+		toolbars_halign = [
+			[ THEME.object_halign, function() /*=>*/ {return 2}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_halign(nodes_selecting, fa_right);  } ],
+			[ THEME.object_halign, function() /*=>*/ {return 1}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_halign(nodes_selecting, fa_center); } ],
+			[ THEME.object_halign, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_halign(nodes_selecting, fa_left);   } ],
+		];
+		
+		toolbars_valign = [
+			[ THEME.object_valign, function() /*=>*/ {return 2}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_valign(nodes_selecting, fa_top);    } ],
+			[ THEME.object_valign, function() /*=>*/ {return 1}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_valign(nodes_selecting, fa_middle); } ],
+			[ THEME.object_valign, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_valign(nodes_selecting, fa_bottom); } ],
+		];
+		
+		toolbars_distrib = [
+			[ THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_hdistribute(nodes_selecting); } ],
+			[ THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_vdistribute(nodes_selecting); } ],
+		];
+		
+		distribution_spacing = 0;
+		toolbars_distrib_space = [
+			[ THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_hdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ],
+			[ THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_vdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ],
+			[ new textBox(TEXTBOX_INPUT.number, function(val) { distribution_spacing = value_snap(val, 4); } ).setSlidable(1).setPadding(4), function() /*=>*/ {return distribution_spacing} ],
+		];
+		
+		toolbars = [ toolbars_general ];
 	#endregion
 	
 	//// =========== Get Set ===========
@@ -1080,6 +1095,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		#region ++++++++++++ interaction ++++++++++++
 			if(mouse_on_graph && pHOVER) {
+				if(mouse_press(mb_left, _focus)) nodes_select_anchor = noone;
+				
 				#region select
 					if(NODE_DROPPER_TARGET != noone && node_hovering) {
 						node_hovering.draw_droppable = true;
@@ -1142,6 +1159,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								}
 								if(!hover_selected)
 									nodes_selecting = [ node_hovering ];
+									
+								nodes_select_anchor = nodes_select_anchor == node_hovering? noone : node_hovering;
 							}
 							
 							if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
@@ -1283,6 +1302,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(!_node) continue;
 				_node.drawActive(gr_x, gr_y, graph_s);
 			}
+			
+			if(nodes_select_anchor) nodes_select_anchor.active_draw_anchor = true;
 		#endregion
 		printIf(log, $"Draw active: {get_timer() - t}"); t = get_timer();
 		
@@ -1671,8 +1692,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			else if(!key_mod_press(CTRL) && node_hovering != noone) {
 				if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
 					target = node_hovering.getOutput(my, value_dragging);
-					if(target != noone) 
-						node_hovering.active_draw_index = 1;
+					if(target != noone) node_hovering.active_draw_index = 1;
 						
 				} else {
 					target = node_hovering.getInput(my, value_dragging, 0);
@@ -1798,7 +1818,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	function drawContext() { #region
 		draw_set_text(f_p0, fa_left, fa_center);
-		var xx = ui(16), tt, tw, th;
+		var xx  = ui(16), tt, tw, th;
 		var bh  = toolbar_height - ui(12);
 		var tbh = h - toolbar_height / 2;
 		
@@ -1840,9 +1860,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			draw_set_alpha(i < array_length(node_context) - 1? 0.33 : 1);
 			draw_text(xx, tbh, tt);
 			draw_set_alpha(1);
-			xx += tw;
-			xx += ui(32);
+			
+			xx += tw + ui(32);
 		}
+		
+		return xx;
 	} #endregion
 	
 	function drawToolBar() { #region
@@ -1853,25 +1875,57 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			mouse_on_graph = false;
 		
 		draw_sprite_stretched(THEME.toolbar, 0, 0, ty, w, h);
-		drawContext();
+		var cont_x = drawContext();
 		
-		var tbx = w - toolbar_height / 2;
+		var tbx = w - ui(6);
 		var tby = ty + toolbar_height / 2;
+		var _m  = [ mx, my ];
 		
 		for( var i = 0, n = array_length(toolbars); i < n; i++ ) {
-			var tb = toolbars[i];
-			var tbSpr = tb[0];
-			var tbInd = tb[1]();
-			var tbTooltip = tb[2]();
+			var tbs   = toolbars[i];
 			
-			var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, tbInd);
-			if(b == 2) tb[3]( { x: x + tbx - ui(14), y: y + tby - ui(14) } );
+			for (var j = 0, m = array_length(tbs); j < m; j++) {
+				var tb    = tbs[j];
+				var tbObj = tb[0];
+				
+				if(is_instanceof(tbObj, widget)) {
+					tbObj.setFocusHover(pFOCUS, pHOVER);
+					
+					var _wdw = ui(32);
+					var _wdx = tbx - _wdw;
+					if(_wdx < cont_x) break;
+					
+					var _param = new widgetParam(_wdx, ty + ui(8), _wdw, toolbar_height - ui(16), tb[1](), {}, _m, x, y);
+					_param.font = f_p3;
+					
+					tbObj.color = COLORS._main_text_sub;
+					tbObj.drawParam(_param);
+					
+					tbx -= _wdw + ui(4);
+					
+				} else {
+					var tbInd     = tb[1]();
+					var tbTooltip = tb[2]();
+					
+					var bs = ui(28);
+					if(tbx - (bs + ui(4)) < cont_x) break;
+					
+					var b = buttonInstant(THEME.button_hide, tbx - bs, tby - bs / 2, bs, bs, _m, pFOCUS, pHOVER, tbTooltip, tbObj, tbInd);
+					if(b == 2) tb[3]( { x: x + tbx - bs, y: y + tby - bs / 2 } );
+					tbx -= bs + ui(4);
+				}
+				
+			}
 			
-			tbx -= ui(32);
+			tbx -= ui(2);
+			
+			draw_set_color(COLORS.panel_toolbar_separator);
+			draw_line_width(tbx, tby - toolbar_height / 2 + ui(8), tbx, tby + toolbar_height / 2 - ui(8), 2);
+			
+			if(tbx < cont_x) break;
+			tbx -= ui(6);
 		}
 		
-		draw_set_color(COLORS.panel_toolbar_separator);
-		draw_line_width(tbx + ui(12), tby - toolbar_height / 2 + ui(8), tbx + ui(12), tby + toolbar_height / 2 - ui(8), 2);
 	} #endregion
 	
 	function drawMinimap() { #region
@@ -2018,6 +2072,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		dragGraph();
 		
+		toolbars = [ toolbars_general ];
+		if(array_length(nodes_selecting) > 1) {
+			if(array_exists(nodes_selecting, nodes_select_anchor))
+				array_push(toolbars, toolbars_halign, toolbars_valign, toolbars_distrib_space);
+			else 
+				array_push(toolbars, toolbars_halign, toolbars_valign, toolbars_distrib);
+		}
+		
 		graph_cx = (w / 2) / graph_s - graph_x;
 		graph_cy = (h / 2) / graph_s - graph_y;
 		
@@ -2045,13 +2107,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		drawViewControl();
 		
-		if(pFOCUS && !view_hovering) 
-			array_foreach(nodes_selecting, function(node) { node.focusStep(); });
+		if(pFOCUS && !view_hovering) array_foreach(nodes_selecting, function(node) { node.focusStep(); });
 		
-		if(UPDATE == RENDER_TYPE.full)
-			draw_text(w - ui(8), ui(28), __txtx("panel_graph_rendering", "Rendering") + "...");
-		else if(UPDATE == RENDER_TYPE.partial)
-			draw_text(w - ui(8), ui(28), __txtx("panel_graph_rendering_partial", "Rendering partial") + "...");
+			 if(UPDATE == RENDER_TYPE.full)    draw_text(w - ui(8), ui(28), __txtx("panel_graph_rendering", "Rendering") + "...");
+		else if(UPDATE == RENDER_TYPE.partial) draw_text(w - ui(8), ui(28), __txtx("panel_graph_rendering_partial", "Rendering partial") + "...");
 		
 		graph_dragging_key = false;
 		graph_zooming_key  = false;

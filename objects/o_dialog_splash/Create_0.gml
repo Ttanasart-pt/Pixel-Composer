@@ -161,7 +161,7 @@ event_inherited();
 					
 					draw_text(mtx + ui(8), mty + mth / 2, tg);
 					
-					mtx += mtw + ui(8);
+					mtx += mtw + ui(4);
 				}
 				
 				hh += mth + ui(8);
@@ -295,7 +295,7 @@ event_inherited();
 			name_height = max(name_height, string_height_ext(_name, -1, grid_width) + ui(8));
 			draw_text_ext_add(tx, ty - ui(2), _name, -1, grid_width);
 		
-			if(++_cur_col >= col || i == node_count - 1) {
+			if(++_cur_col >= col) {
 				if(name_height) {
 					var hght = grid_heigh + name_height + grid_line;
 					hh += hght;
@@ -306,6 +306,12 @@ event_inherited();
 				_cur_col    = 0;
 			}
 			
+		}
+		
+		if(name_height) {
+			var hght = grid_heigh + name_height + grid_line;
+			hh += hght;
+			yy += hght;
 		}
 		
 		if(_group_label) {

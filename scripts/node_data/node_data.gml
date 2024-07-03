@@ -118,7 +118,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		badgePreview = 0;
 		badgeInspect = 0;
 		
-		active_draw_index = -1;
+		active_draw_index  = -1;
+		active_draw_anchor = false;
 		
 		draw_droppable = false;
 		
@@ -1691,7 +1692,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(active_draw_index > -1) {
 			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, round(w * _s), round(h * _s), active_draw_index > 1? COLORS.node_border_file_drop : COLORS._main_accent, 1);
-			active_draw_index = -1;
+			
+			if(active_draw_anchor) draw_sprite_stretched_add(bg_sel_spr, 0, xx, yy, round(w * _s), round(h * _s), COLORS._main_accent, 0.5);
+			
+			active_draw_anchor = false;
+			active_draw_index  = -1;
 		}
 		
 		if(draw_droppable) {

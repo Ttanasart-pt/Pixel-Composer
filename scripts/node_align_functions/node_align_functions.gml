@@ -109,3 +109,73 @@ function node_vdistribute(nodeList) {
 	
 	ds_priority_destroy(nodes);
 }
+
+function node_hdistribute_dist(nodeList, anchor, distance = 0) {
+	var amo   = array_length(nodeList);
+	var nodes = ds_priority_create();
+	
+	var x0 =  999999;
+	var x1 = -999999;
+	for( var i = 0; i < amo; i++ ) {
+		var _x = nodeList[i].x + nodeList[i].w / 2;
+		x0 = min(x0, _x);
+		x1 = max(x1, _x);
+		
+		ds_priority_add(nodes, nodeList[i], _x);
+	}
+	
+	var ar = array_create(ds_priority_size(nodes));
+	
+	for( var i = 0; i < amo; i++ ) 
+		ar[i] = ds_priority_delete_min(nodes);
+	ds_priority_destroy(nodes);
+	
+	var an_ind   = array_find(ar, anchor);
+	var an_ind_x = anchor.x + anchor.w + distance;
+	
+	for (var i = an_ind + 1, n = array_length(ar); i < n; i++) {
+		ar[i].x   = an_ind_x;
+		an_ind_x += ar[i].w + distance;
+	}
+	
+	var an_ind_x = anchor.x - distance;
+	for (var i = an_ind - 1; i >= 0; i--) {
+		ar[i].x   = an_ind_x - ar[i].w;
+		an_ind_x -= ar[i].w + distance;
+	}
+}
+
+function node_vdistribute_dist(nodeList, anchor, distance = 0) {
+	var amo   = array_length(nodeList);
+	var nodes = ds_priority_create();
+	
+	var y0 =  999999;
+	var y1 = -999999;
+	for( var i = 0; i < amo; i++ ) {
+		var _y = nodeList[i].y + nodeList[i].h / 2;
+		y0 = min(y0, _y);
+		y1 = max(y1, _y);
+		
+		ds_priority_add(nodes, nodeList[i], _y);
+	}
+	
+	var ar = array_create(ds_priority_size(nodes));
+	
+	for( var i = 0; i < amo; i++ ) 
+		ar[i] = ds_priority_delete_min(nodes);
+	ds_priority_destroy(nodes);
+	
+	var an_ind   = array_find(ar, anchor);
+	var an_ind_y = anchor.y + anchor.h + distance;
+	
+	for (var i = an_ind + 1, n = array_length(ar); i < n; i++) {
+		ar[i].y   = an_ind_y;
+		an_ind_y += ar[i].h + distance;
+	}
+	
+	var an_ind_y = anchor.y - distance;
+	for (var i = an_ind - 1; i >= 0; i--) {
+		ar[i].y   = an_ind_y - ar[i].h;
+		an_ind_y -= ar[i].h + distance;
+	}
+}
