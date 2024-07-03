@@ -58,16 +58,20 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(!is_array(_inpt) || array_length(_inpt) == 0) return;
 		
-		var _rects = [];
+		var _rects = [], _ind = 0;
 		
 		for( var i = 0, n = array_length(_inpt); i < n; i++ ) {
 			var s = _inpt[i];
 			if(!is_surface(s)) continue;
 			
-			_rects[i] = new SurfaceAtlas(s);
-			_rects[i].w = surface_get_width_safe(s)  + _spac * 2;
-			_rects[i].h = surface_get_height_safe(s) + _spac * 2;
+			_rects[_ind] = new SurfaceAtlas(s);
+			_rects[_ind].w = surface_get_width_safe(s)  + _spac * 2;
+			_rects[_ind].h = surface_get_height_safe(s) + _spac * 2;
+			
+			_ind++;
 		}
+		
+		array_resize(_rects, _ind);
 		
 		var pack;
 		

@@ -1095,9 +1095,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		#region ++++++++++++ interaction ++++++++++++
 			if(mouse_on_graph && pHOVER) {
-				if(mouse_press(mb_left, _focus)) nodes_select_anchor = noone;
 				
 				#region select
+					var _anc = nodes_select_anchor;
+					if(mouse_press(mb_left, _focus)) _anc = noone;
+					
 					if(NODE_DROPPER_TARGET != noone && node_hovering) {
 						node_hovering.draw_droppable = true;
 						if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN)) {
@@ -1160,13 +1162,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								if(!hover_selected)
 									nodes_selecting = [ node_hovering ];
 									
-								nodes_select_anchor = nodes_select_anchor == node_hovering? noone : node_hovering;
+								if(array_length(nodes_selecting) > 1)
+									_anc = nodes_select_anchor == node_hovering? noone : node_hovering;
 							}
 							
 							if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
 							array_foreach(nodes_selecting, function(node) { bringNodeToFront(node); });
 						}
 					}
+					
+					nodes_select_anchor = _anc;
 				#endregion
 				
 				if(mouse_press(mb_right, _focus)) { #region
