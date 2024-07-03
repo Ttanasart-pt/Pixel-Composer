@@ -122,6 +122,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			[ __txtx("panel_globalvar", "Global variables"), true, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ], 
 			[ __txt("Group Properties"), true ], 
 		];
+		
+		meta_steam_avatar = new checkBox(function() { STEAM_UGC_ITEM_AVATAR = !STEAM_UGC_ITEM_AVATAR; });
 	#endregion
 	
 	#region ---- workshop ----
@@ -299,7 +301,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			switch(i) {
 				case 0 :
 					var _edt = PROJECT.attributeEditor;
-					var _lh;
+					var _lh, wh;
 					
 					for( var j = 0; j < array_length(_edt); j++ ) {
 						var title = _edt[j][0];
@@ -359,6 +361,9 @@ function Panel_Inspector() : PanelContent() constructor {
 					break;
 					
 				case 1 :
+					var _wdx  = viewMode == INSP_VIEW_MODE.spacious? ui(16) : ui(140);
+					var _wdw  = w - ui(48) - _wdx;
+						
 					for( var j = 0; j < array_length(meta.displays); j++ ) {
 						var display = meta.displays[j];
 					
@@ -377,12 +382,9 @@ function Panel_Inspector() : PanelContent() constructor {
 						meta_tb[j].setFocusHover(pFOCUS, _hover);
 						if(pFOCUS) meta_tb[j].register(contentPane);
 						
-						var wh = 0;
 						var _dataFunc = display[1];
 						var _data = _dataFunc(meta);
-						var _wdx  = viewMode == INSP_VIEW_MODE.spacious? ui(16) : ui(140);
 						var _wdy  = yy;
-						var _wdw  = w - ui(48) - _wdx;
 						var _wdh  = display[2];
 						
 						var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry);
@@ -402,6 +404,21 @@ function Panel_Inspector() : PanelContent() constructor {
 							yy += max(wh, _lh) + ui(6);
 							hh += max(wh, _lh) + ui(6);
 						}
+					}
+					
+					if(STEAM_ENABLED) {
+						meta_steam_avatar.setFocusHover(pFOCUS, _hover);
+						if(pFOCUS) meta_steam_avatar.register(contentPane);
+						
+						draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
+						draw_text_over(ui(16), viewMode == INSP_VIEW_MODE.spacious? yy : yy + ui(3), __txt("Show Avatar"));
+						
+						var _param = new widgetParam(_wdx, yy, _wdw, TEXTBOX_HEIGHT, STEAM_UGC_ITEM_AVATAR, {}, _m, rx, ry);
+						_param.font = _font;
+						wh = meta_steam_avatar.drawParam(_param);
+						
+						yy += wh + ui(6); hh += wh + ui(6);
+						if(viewMode == INSP_VIEW_MODE.spacious) { yy += ui(2); hh += ui(2); } 
 					}
 					
 					break;

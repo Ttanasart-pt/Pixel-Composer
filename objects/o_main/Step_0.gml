@@ -129,5 +129,22 @@ if(PROJECT.active && !PROJECT.safeMode) { #region node step
 		    screen_save(file);
 		    steam_send_screenshot(file, window_get_width(), window_get_height());
 		}
+		
+		if (steam_avatar_id > 0 && STEAM_AVATAR == 0) {
+		    var _l_dims    = steam_image_get_size(steam_avatar_id);
+		    var _buff_size = _l_dims[0] * _l_dims[1] * 4;
+		    var _l_cols    = buffer_create(_buff_size, buffer_fixed, 1);
+			var _l_ok      = steam_image_get_rgba(steam_avatar_id, _l_cols, _buff_size);
+		
+		    if(_l_ok) {
+			    var _l_surf = surface_create(_l_dims[0], _l_dims[1]);
+			    buffer_set_surface(_l_cols, _l_surf, 0);
+			    
+				STEAM_AVATAR = sprite_create_from_surface(_l_surf, 0, 0, _l_dims[0], _l_dims[1], false, false, 0, 0);
+				surface_free(_l_surf);
+		    }
+		    
+		    buffer_delete(_l_cols);
+		}
 	}
 #endregion

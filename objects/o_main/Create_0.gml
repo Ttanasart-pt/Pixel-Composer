@@ -185,8 +185,10 @@
 #endregion
 
 #region steam
-	globalvar STEAM_ENABLED, STEAM_APP_ID, STEAM_USER_ID, STEAM_USERNAME;
+	globalvar STEAM_ENABLED, STEAM_APP_ID, STEAM_USER_ID, STEAM_USERNAME, STEAM_AVATAR;
 	globalvar STEAM_UGC_ITEM_UPLOADING, STEAM_UGC_ITEM_ID, STEAM_UGC_ITEM_FILE, STEAM_UGC_UPDATE_HANDLE;
+	globalvar STEAM_UGC_ITEM_AVATAR;
+	
 	globalvar STEAM_UGC_SUBMIT_ID, STEAM_UGC_UPDATE_MAP, STEAM_UGC_PUBLISH_ID, STEAM_UGC_UPDATE, STEAM_UGC_TYPE;
 	globalvar STEAM_SUB_ID;
 	
@@ -200,20 +202,27 @@
 	STEAM_SUB_ID   = 0;
 	STEAM_USER_ID  = 0;
 	STEAM_USERNAME = "";
+	STEAM_AVATAR   = 0;
 	
-	STEAM_UGC_UPDATE_HANDLE = 0;
-	STEAM_UGC_ITEM_ID = 0;
-	STEAM_UGC_PUBLISH_ID = 0;
-	STEAM_UGC_SUBMIT_ID = 0;
-	STEAM_UGC_ITEM_UPLOADING = false;
-	STEAM_ENABLED = steam_initialised();
-	STEAM_UGC_UPDATE = false;
-	STEAM_UGC_UPDATE_MAP = ds_map_create();
+	steam_avatar_id   = "";
+	
+	STEAM_UGC_UPDATE_HANDLE 	= 0;
+	STEAM_UGC_ITEM_ID			= 0;
+	STEAM_UGC_PUBLISH_ID		= 0;
+	STEAM_UGC_SUBMIT_ID 		= 0;
+	STEAM_UGC_ITEM_UPLOADING	= false;
+	STEAM_ENABLED				= steam_initialised();
+	STEAM_UGC_UPDATE			= false;
+	STEAM_UGC_UPDATE_MAP		= ds_map_create();
+	
+	STEAM_UGC_ITEM_AVATAR  = true;
 	
 	if(STEAM_ENABLED) {
-		STEAM_APP_ID = steam_get_app_id();
-		STEAM_USER_ID = steam_get_user_account_id();
-		STEAM_USERNAME = steam_get_persona_name();
+		STEAM_APP_ID    = steam_get_app_id();
+		STEAM_USER_ID   = steam_get_user_account_id();
+		STEAM_USERNAME  = steam_get_persona_name();
+		steam_avatar_id = steam_get_user_avatar(steam_get_user_steam_id(), steam_user_avatar_size_large);
+		
 		steam_set_warning_message_hook();
 	}
 #endregion
