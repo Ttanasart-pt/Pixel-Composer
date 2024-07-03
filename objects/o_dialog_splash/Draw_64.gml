@@ -91,9 +91,9 @@ if !ready exit;
 		var amo  = 0;
 		
 		switch(txt) {
-			case "Welcome Files" : amo = ds_list_size(SAMPLE_PROJECTS); break;
-			case "Workshop" :		 amo = ds_list_size(STEAM_PROJECTS);  break;
-			case "Contests" :		 dtxt = ""; break;
+			case "Welcome Files" : break;
+			case "Workshop" :	   amo = ds_list_size(STEAM_PROJECTS);  break;
+			case "Contests" :	   dtxt = ""; break;
 		}
 		
 		var tw = ui(16) + string_width(dtxt);

@@ -1264,9 +1264,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!is_anim) {
 			if(sep_axis) {
-				if(ds_list_empty(animators[i].values)) return 0;
-				
-				var val = array_verify(val, array_length(animators));
+				var val = array_create(array_length(animators));
 				for( var i = 0, n = array_length(animators); i < n; i++ )
 					val[i] = animators[i].processType(animators[i].values[| 0].value);
 				return val;
