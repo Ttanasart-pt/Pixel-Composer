@@ -32,7 +32,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	slider_def_val = 0;
 	slider_cur_val = 0;
 	
-	label = "";
+	label      = "";
+	labelColor = COLORS._main_text_sub;
 	highlight_color = -1; 
 	highlight_alpha = 1;
 	
@@ -501,7 +502,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_sprite_ui_uniform(THEME.arrow, 0, _ax1, _ay, 1, COLORS._main_accent, 1);
 			
 			} else if(label != "") {
-				draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
+				draw_set_text(font, fa_left, fa_center, labelColor);
 				
 				draw_set_alpha(0.5);
 				draw_text_add(_x + padding, _y + _h / 2, label);

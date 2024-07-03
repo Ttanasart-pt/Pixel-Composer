@@ -164,8 +164,10 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			var by = per_line? _y + (_h + ui(4)) * i : _y;
 			
 			tb[i].setFocusHover(active, hover);
-			tb[i].hide  = !per_line;
-			tb[i].label = axis[i];
+			tb[i].labelColor = sep_axis? COLORS.axis[i] : COLORS._main_text_sub;
+			tb[i].hide       = !per_line;
+			tb[i].label      = axis[i];
+			
 			tb[i].draw(bx, by, ww, _h, _data[i], _m);
 		}
 		

@@ -320,6 +320,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var _show = jun.showValue();
 		var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _show, jun.display_data, _m, rx, ry);
 		    param.font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
+		    param.sep_axis = jun.sep_axis;
 		
 		switch(jun.type) {
 			case VALUE_TYPE.float : 

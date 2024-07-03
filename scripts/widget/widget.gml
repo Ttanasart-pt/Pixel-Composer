@@ -18,7 +18,8 @@ function widget() constructor {
 	lua_thread = noone;
 	lua_thread_key = "";
 	
-	font = f_p0;
+	font     = f_p0;
+	sep_axis = false;
 	
 	x = 0; 
 	y = 0;
@@ -49,6 +50,8 @@ function widget() constructor {
 		font = params.font;
 		rx   = params.rx;
 		ry   = params.ry;
+		
+		sep_axis = params.sep_axis;
 	} #endregion
 	
 	static trigger = function() { }
@@ -114,4 +117,6 @@ function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, 
 	self.display_data = display_data;
 	
 	self.font       = f_p0;
+	
+	sep_axis        = false;
 }
