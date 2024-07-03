@@ -24,9 +24,12 @@ uniform vec2      shift;
 uniform int       shiftUseSurf;
 uniform sampler2D shiftSurf;
 
+uniform float gapAcc;
 uniform vec4  gapCol;
 uniform int   gradient_use;
 uniform vec2  level;
+
+uniform int   diagonal;
 
 uniform int   textureTruchet;
 uniform float truchetSeed;
@@ -199,6 +202,41 @@ void main() { #region
 		}
 	#endregion
 	
+	if(mode == 1) {
+		vec2 px = floor((v_vTexcoord - position) * dimension);
+		
+		sca = floor(sca);
+		vec2 scaG = sca - (gapAcc + 1.);
+		
+		if(diagonal == 0) {
+			vec2 fl  = floor(px / sca) * sca;
+			vec2 fr  = px - fl;
+		
+			if(fr.x > scaG.x || fr.y > scaG.y)
+				gl_FragColor = gapCol;
+				
+			else 
+				gl_FragColor = gradientEval(random(fl));
+				
+		} else if(diagonal == 1) {
+			float _x =  px.x + px.y;
+			float _y = -px.x + px.y;
+			
+			float mx = mod(_x, sca.x);
+			float my = mod(_y, sca.y);
+			
+			if(mx > scaG.x || my > scaG.y)
+				gl_FragColor = gapCol;
+				
+			else 
+				gl_FragColor = gradientEval(random(vec2(_x, _y) - vec2(mx, my)));
+				
+		}
+		return;
+	}
+	
+	sca = dimension / sca;
+	
 	vec2 pos = v_vTexcoord - position, _pos;
 	float ratio = dimension.x / dimension.y;
 	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
@@ -227,7 +265,7 @@ void main() { #region
 		
 	vec4 colr;
 	
-	if(mode == 1) {
+	if(mode == 2) {
 		dist = (dist - level.x) / (level.y - level.x);
 		gl_FragColor = vec4(vec3(dist), 1.);
 		return;
@@ -236,7 +274,7 @@ void main() { #region
 	if(mode == 0) {
 		colr = gradientEval(random(sqSt));
 		
-	} else if(mode == 2) {
+	} else if(mode == 3) {
 		vec2 uv = fract(_pos * sca);
 		
 		if(textureTruchet == 1) {
@@ -252,7 +290,7 @@ void main() { #region
 		
 		colr = texture2D( gm_BaseTexture, uv );
 		
-	} else if(mode == 3) {
+	} else if(mode == 4) {
 		vec2 uv = fract(sqSt);
 		colr = texture2D( gm_BaseTexture, uv );
 	}

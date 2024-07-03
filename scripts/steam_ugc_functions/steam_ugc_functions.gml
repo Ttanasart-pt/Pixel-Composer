@@ -1,8 +1,10 @@
 function __initSteamUGC() { #region
-	globalvar STEAM_SUBS, STEAM_COLLECTION, STEAM_PROJECTS;
+	globalvar STEAM_SUBS, STEAM_COLLECTION, STEAM_PROJECTS, STEAM_TAGS;
+	
 	STEAM_SUBS		   = ds_list_create();
 	STEAM_COLLECTION   = ds_list_create();
 	STEAM_PROJECTS     = ds_list_create();
+	STEAM_TAGS         = [];
 	
 	if(DEMO) return;
 	if(!STEAM_ENABLED) return;
@@ -15,6 +17,7 @@ function steamUCGload() { #region
 	ds_list_clear(STEAM_SUBS);
 	ds_list_clear(STEAM_COLLECTION);
 	ds_list_clear(STEAM_PROJECTS);
+	STEAM_TAGS = [];
 	
 	steam_ugc_get_subscribed_items(STEAM_SUBS);
 	
@@ -103,4 +106,7 @@ function __loadSteamUGCProject(file_id, f, path) { #region
 	var meta     = file.getMetadata(true);
 	meta.steam   = FILE_STEAM_TYPE.steamOpen;
 	meta.file_id = file_id;
+	
+	for (var i = 0, n = array_length(meta.tags); i < n; i++)
+		array_push_unique(STEAM_TAGS, meta.tags[i]);
 } #endregion

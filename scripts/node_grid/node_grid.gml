@@ -8,11 +8,11 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 2 ])
+	inputs[| 2] = nodeValue("Grid Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setMappable(13);
 	
-	inputs[| 3] = nodeValue("Gap", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 3] = nodeValue("Gap", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(14);
 	
@@ -35,7 +35,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.enum_button, ["X", "Y"]);
 		
 	inputs[| 10] = nodeValue("Render type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Colored tile", "Height map", "Texture grid", "Texture sample"]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]);
 		
 	inputs[| 11] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 11].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
@@ -72,9 +72,13 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 25] = nodeValue("Use Texture Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
+	inputs[| 26] = nodeValue("Gap Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	
+	inputs[| 27] = nodeValue("Diagonal", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [
 		["Output",  false], 0,
-		["Pattern",	false], 1, 4, 15, 2, 13, 3, 14, 9, 8, 16,
+		["Pattern",	false], 1, 4, 15, 2, 13, 3, 26, 27, 14, 9, 8, 16,
 		["Render",	false], 10, 11, 5, 20, 6, 7, 25, 12, 24, 
 		["Truchet",  true, 17], 18, 19, 22, 23, 
 	];
@@ -110,11 +114,17 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _mode = _data[10];
 		
 		var _col_gap  = _data[6];
-		var _tex_mode = _mode == 2 || _mode == 3;
+		var _tex_mode = _mode == 3 || _mode == 4;
 		
-		inputs[|  5].setVisible(_mode == 0);
-		inputs[|  6].setVisible(_mode != 1);
-		inputs[| 24].setVisible(_mode == 1);
+		inputs[|  5].setVisible(_mode == 0 || _mode == 1);
+		inputs[|  3].setVisible(_mode == 0 || _mode == 3 || _mode == 4);
+		inputs[| 24].setVisible(_mode == 2);
+		inputs[| 26].setVisible(_mode == 1);
+		
+		inputs[|  4].setVisible(_mode != 1);
+		inputs[|  8].setVisible(_mode != 1);
+		inputs[|  9].setVisible(_mode != 1);
+		inputs[| 27].setVisible(_mode == 1);
 		
 		inputs[|  7].setVisible(_tex_mode, _tex_mode);
 		inputs[| 25].setVisible(_tex_mode, _tex_mode);
@@ -142,6 +152,8 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("truchetThresY",  _data[22]);
 			shader_set_2("truchetAngle",   _data[23]);
 			shader_set_2("level",          _data[24]);
+			shader_set_f("gapAcc",         _data[26]);
+			shader_set_i("diagonal",       _data[27]);
 			
 			shader_set_color("gapCol",  _col_gap);
 			

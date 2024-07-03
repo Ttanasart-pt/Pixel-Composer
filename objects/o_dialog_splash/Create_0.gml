@@ -141,9 +141,9 @@ event_inherited();
 				var mtx = ui(4);
 				var mty = yy;
 				
-				for (var i = 0, n = array_length(META_TAGS); i < n; i++) {
+				for (var i = 0, n = array_length(STEAM_TAGS); i < n; i++) {
 					
-					var tg   = META_TAGS[i];
+					var tg   = STEAM_TAGS[i];
 					var _sel = array_exists(meta_filter, tg);
 					draw_set_text(f_p2, fa_left, fa_center, _sel? COLORS._main_text : COLORS._main_text_sub);
 					
