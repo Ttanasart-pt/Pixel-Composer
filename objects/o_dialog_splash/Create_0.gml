@@ -110,6 +110,8 @@ event_inherited();
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
 	
+	meta_filter = [];
+	
 	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 1, function(_y, _m) { #region
 		draw_clear_alpha(CDEF.main_black, 0);
 		draw_set_color(CDEF.main_black);
@@ -118,13 +120,55 @@ event_inherited();
 		var txt = pages[project_page];
 		var list, _group_label;
 		
+		var ww = sp_sample.surface_w;
+		var hh = ui(20);
+		var yy = _y + hh;
+		
 		switch(txt) {
-			case "Welcome Files" : list = SAMPLE_PROJECTS; _group_label =  true; break;
-			case "Workshop" : 	   list = STEAM_PROJECTS;  _group_label = false; break;
+			case "Welcome Files" : 
+				list = SAMPLE_PROJECTS; 
+				_group_label = true; 
+				break;
+				
+			case "Workshop" : 
+				list = STEAM_PROJECTS;
+				_group_label = false; 
+				
+				hh = ui(8);
+				yy = _y + hh;
+		
+				var mth = ui(24);
+				var mtx = ui(4);
+				var mty = yy;
+				
+				for (var i = 0, n = array_length(META_TAGS); i < n; i++) {
+					
+					var tg   = META_TAGS[i];
+					var _sel = array_exists(meta_filter, tg);
+					draw_set_text(f_p2, fa_left, fa_center, _sel? COLORS._main_text : COLORS._main_text_sub);
+					
+					var  mtw = string_width(tg) + ui(16);
+					var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], mtx, mty, mtx + mtw, mty + mth);
+					
+					BLEND_OVERRIDE
+					draw_sprite_stretched_ext(THEME.group_label, _hov, mtx, mty, mtw, mth, _sel? c_white : COLORS._main_icon, 1);
+					BLEND_NORMAL
+					
+					if(_hov && mouse_press(mb_left)) {
+						if(_sel) array_remove(meta_filter, tg);
+						else     array_push(meta_filter, tg);
+					}
+					
+					draw_text(mtx + ui(8), mty + mth / 2, tg);
+					
+					mtx += mtw + ui(8);
+				}
+				
+				hh += mth + ui(8);
+				yy += mth + ui(8);
+				break;
 		}
 		
-		var ww = sp_sample.surface_w;
-		var hh = 0;
 		var grid_width = ui(104);
 		var grid_heigh = txt == "Workshop"? grid_width : grid_width * 0.75;
 		var grid_space = grid_width / 8;
@@ -133,9 +177,7 @@ event_inherited();
 		var node_count = ds_list_size(list);
 		var col = floor(ww / (grid_width + grid_space));
 		var row = ceil(node_count / col);
-		var hh  = ui(20);
 		var xx  = grid_space;
-		var yy  = _y + hh;
 		var name_height = 0;
 		
 		grid_space = (ww - col * grid_width) / (col + 1);
@@ -145,11 +187,9 @@ event_inherited();
 		var _nx, _boxx;
 		
 		for(var i = 0; i < node_count; i++) {
-			
 			var _project = list[| i];
 			
 			if(_group_label) {
-				
 				if(_curr_tag != _project.tag) {
 					if(name_height) {
 						var hght = grid_heigh + name_height + grid_line;
@@ -174,8 +214,13 @@ event_inherited();
 				
 				if(array_exists(PREFERENCES.welcome_file_closed, _project.tag))
 					continue;
-					
 			} 
+			
+			if(txt == "Workshop" && !array_empty(meta_filter)) {
+				var _meta = _project.getMetadata();
+				if(array_empty(array_intersection(_meta.tags, meta_filter)))
+					continue;
+			}
 			
 			_nx = xx + (grid_width + grid_space) * _cur_col;
 			_boxx = _nx;
