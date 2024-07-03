@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_get_acceleration_b",
   "isCompatibility":false,
   "isDnD":false,

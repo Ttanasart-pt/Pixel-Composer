@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_3d_camera_set",
   "isCompatibility":false,
   "isDnD":false,

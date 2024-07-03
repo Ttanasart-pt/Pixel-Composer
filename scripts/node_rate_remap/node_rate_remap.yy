@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_rate_remap",
   "isCompatibility":false,
   "isDnD":false,

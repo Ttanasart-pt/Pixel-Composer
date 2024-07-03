@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"curve_damping_function",
   "isCompatibility":false,
   "isDnD":false,

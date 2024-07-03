@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_csv_file_read",
   "isCompatibility":false,
   "isDnD":false,

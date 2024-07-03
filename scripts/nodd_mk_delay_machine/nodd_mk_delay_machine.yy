@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"nodd_mk_delay_machine",
   "isCompatibility":false,
   "isDnD":false,

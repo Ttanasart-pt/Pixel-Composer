@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"nodeValue_drawer",
   "isCompatibility":false,
   "isDnD":false,

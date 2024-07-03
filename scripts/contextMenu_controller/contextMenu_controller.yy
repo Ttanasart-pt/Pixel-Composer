@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"contextMenu_controller",
   "isCompatibility":false,
   "isDnD":false,

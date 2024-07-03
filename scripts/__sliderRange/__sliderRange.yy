@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__sliderRange",
   "isCompatibility":false,
   "isDnD":false,

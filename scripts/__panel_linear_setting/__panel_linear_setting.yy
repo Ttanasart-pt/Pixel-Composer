@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__panel_linear_setting",
   "isCompatibility":false,
   "isDnD":false,

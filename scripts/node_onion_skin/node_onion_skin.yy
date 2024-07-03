@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_onion_skin",
   "isCompatibility":false,
   "isDnD":false,

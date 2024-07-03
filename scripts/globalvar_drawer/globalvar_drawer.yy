@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"globalvar_drawer",
   "isCompatibility":false,
   "isDnD":false,

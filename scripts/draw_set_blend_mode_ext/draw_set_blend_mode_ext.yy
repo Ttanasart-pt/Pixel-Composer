@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"draw_set_blend_mode_ext",
   "isCompatibility":true,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_graph",
   "isCompatibility":false,
   "isDnD":false,

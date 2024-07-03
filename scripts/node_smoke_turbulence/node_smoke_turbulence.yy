@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_smoke_turbulence",
   "isCompatibility":false,
   "isDnD":false,

@@ -148,22 +148,33 @@ event_inherited();
 			
 			var _project = list[| i];
 			
-			if(_group_label && _curr_tag != _project.tag) {
+			if(_group_label) {
 				
-				if(name_height) {
-					var hght = grid_heigh + name_height + grid_line;
-					hh += hght;
-					yy += hght;
+				if(_curr_tag != _project.tag) {
+					if(name_height) {
+						var hght = grid_heigh + name_height + grid_line;
+						hh += hght;
+						yy += hght;
+					}
+					
+					array_push(group_labels, { y: yy, text: _project.tag });
+					hh += ui(24 + 6);
+					yy += ui(24 + 6);
+					
+					if(!array_exists(PREFERENCES.welcome_file_closed, _project.tag)) {
+						hh += ui(6);
+						yy += ui(6);
+					}
+					
+					_nx = xx;
+					_curr_tag   = _project.tag;
+					_cur_col    = 0;
+					name_height = 0;
 				}
 				
-				array_push(group_labels, { y: yy, text: _project.tag });
-				hh += ui(24 + 12);
-				yy += ui(24 + 12);
-				
-				_nx = xx;
-				_curr_tag   = _project.tag;
-				_cur_col    = 0;
-				name_height = 0;
+				if(array_exists(PREFERENCES.welcome_file_closed, _project.tag))
+					continue;
+					
 			} 
 			
 			_nx = xx + (grid_width + grid_space) * _cur_col;
@@ -267,12 +278,22 @@ event_inherited();
 				var lb = group_labels[i];
 				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				
+				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, pd + ww, _yy + ui(24));
+				
 				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.group_label, 0, pd, _yy, ww - pd * 2, ui(24), c_white, 0.3);
+				draw_sprite_stretched_ext(THEME.group_label, _hov, pd, _yy, ww - pd * 2, ui(24), c_white, 0.3 + _hov * 0.2);
 				BLEND_NORMAL
 				
+				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
+				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + ui(12), 1, 1, 0, CDEF.main_ltgrey, 1);	
+				
+				if(_hov && mouse_press(mb_left)) {
+					if(_coll) array_remove(PREFERENCES.welcome_file_closed, lb.text);
+					else      array_push(PREFERENCES.welcome_file_closed, lb.text);
+				}
+				
 				draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
-				draw_text_add(pd + ui(16), _yy + ui(12), lb.text);
+				draw_text_add(pd + ui(32), _yy + ui(12), lb.text);
 			}
 		}
 			

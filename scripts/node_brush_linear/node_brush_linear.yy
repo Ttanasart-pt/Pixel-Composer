@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_brush_linear",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_padding",
   "isCompatibility":false,
   "isDnD":false,

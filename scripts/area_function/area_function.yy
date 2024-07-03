@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"area_function",
   "isCompatibility":false,
   "isDnD":false,

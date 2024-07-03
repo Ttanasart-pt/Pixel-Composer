@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_isosurf",
   "isCompatibility":false,
   "isDnD":false,

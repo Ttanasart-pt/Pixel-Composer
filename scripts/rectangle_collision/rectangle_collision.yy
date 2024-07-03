@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"rectangle_collision",
   "isCompatibility":false,
   "isDnD":false,

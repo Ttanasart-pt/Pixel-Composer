@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"ds_priority",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"FirebaseFirestore_operationFromSymbol",
   "isCompatibility":false,
   "isDnD":false,

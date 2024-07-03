@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_replace_material_advanced",
   "isCompatibility":false,
   "isDnD":false,

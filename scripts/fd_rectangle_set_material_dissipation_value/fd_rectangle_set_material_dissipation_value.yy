@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_set_material_dissipation_value",
   "isCompatibility":false,
   "isDnD":false,

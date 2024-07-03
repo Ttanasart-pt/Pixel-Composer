@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"cornerBox",
   "isCompatibility":false,
   "isDnD":false,

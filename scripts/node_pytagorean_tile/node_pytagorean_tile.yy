@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_pytagorean_tile",
   "isCompatibility":false,
   "isDnD":false,

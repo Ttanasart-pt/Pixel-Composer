@@ -139,6 +139,8 @@
 		PREFERENCES.clear_temp_on_close				= true;
 	
 		PREFERENCES.show_supporter_icon				= true;
+		PREFERENCES.welcome_file_order				= [ "Getting started", "Sample Projects" ];
+		PREFERENCES.welcome_file_closed				= [];
 	
 	#endregion
 	

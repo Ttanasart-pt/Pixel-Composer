@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_node_canvas_pressure",
   "isCompatibility":false,
   "isDnD":false,

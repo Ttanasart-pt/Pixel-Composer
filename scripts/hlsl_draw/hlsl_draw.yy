@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"hlsl_draw",
   "isCompatibility":false,
   "isDnD":false,

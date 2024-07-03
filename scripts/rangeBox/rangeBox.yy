@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"rangeBox",
   "isCompatibility":false,
   "isDnD":false,

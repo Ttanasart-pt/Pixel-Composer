@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_texture_remap",
   "isCompatibility":false,
   "isDnD":false,

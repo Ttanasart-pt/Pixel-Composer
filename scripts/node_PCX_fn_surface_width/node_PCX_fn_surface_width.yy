@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_PCX_fn_surface_width",
   "isCompatibility":false,
   "isDnD":false,

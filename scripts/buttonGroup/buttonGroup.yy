@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"buttonGroup",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"tooltip_hotkey",
   "isCompatibility":false,
   "isDnD":false,

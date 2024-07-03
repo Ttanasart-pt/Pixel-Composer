@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_pb_fx_brick",
   "isCompatibility":false,
   "isDnD":false,

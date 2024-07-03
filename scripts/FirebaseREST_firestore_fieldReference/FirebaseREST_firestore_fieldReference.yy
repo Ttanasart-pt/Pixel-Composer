@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"FirebaseREST_firestore_fieldReference",
   "isCompatibility":false,
   "isDnD":false,

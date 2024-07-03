@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_timeline_preview",
   "isCompatibility":false,
   "isDnD":false,

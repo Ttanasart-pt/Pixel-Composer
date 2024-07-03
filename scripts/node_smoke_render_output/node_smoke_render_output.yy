@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_smoke_render_output",
   "isCompatibility":false,
   "isDnD":false,

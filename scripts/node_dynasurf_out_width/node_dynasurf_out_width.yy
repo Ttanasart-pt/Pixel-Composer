@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_dynasurf_out_width",
   "isCompatibility":false,
   "isDnD":false,

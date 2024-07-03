@@ -3,8 +3,10 @@
 	SAMPLE_PROJECTS = ds_list_create();
 #endregion
 
-function LOAD_FOLDER(list, folder) { #region
+function LOAD_FOLDER(list, folder) {
 	var path = $"{DIRECTORY}Welcome files/{folder}";
+	if(!directory_exists(path)) return;
+	
 	var file = file_find_first(path + "/*", fa_directory);
 	
 	while(file != "") {		
@@ -27,9 +29,9 @@ function LOAD_FOLDER(list, folder) { #region
 		ds_list_add(list, f);
 	}
 	file_find_close();
-} #endregion
+}
 
-function LOAD_SAMPLE() { #region
+function LOAD_SAMPLE() {
 	ds_list_clear(SAMPLE_PROJECTS);
 	var zzip = "Welcome files/Welcome files.zip";
 	var targ = $"{DIRECTORY}Welcome files";
@@ -48,9 +50,11 @@ function LOAD_SAMPLE() { #region
 	}
 	file_find_close();
 	
-	LOAD_FOLDER(SAMPLE_PROJECTS, "Getting started"); array_remove(_dir, "Getting started");
-	LOAD_FOLDER(SAMPLE_PROJECTS, "Sample Projects"); array_remove(_dir, "Sample Projects");
+	for (var i = 0, n = array_length(PREFERENCES.welcome_file_order); i < n; i++) {
+		LOAD_FOLDER(SAMPLE_PROJECTS, PREFERENCES.welcome_file_order[i]); 
+		array_remove(_dir, PREFERENCES.welcome_file_order[i]);
+	}	
 	
 	for (var i = 0, n = array_length(_dir); i < n; i++) 
 		LOAD_FOLDER(SAMPLE_PROJECTS, _dir[i]); 
-} #endregion
+}

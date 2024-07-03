@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"pcx_parse",
   "isCompatibility":false,
   "isDnD":false,

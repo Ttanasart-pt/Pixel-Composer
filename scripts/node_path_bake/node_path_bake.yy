@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_path_bake",
   "isCompatibility":false,
   "isDnD":false,

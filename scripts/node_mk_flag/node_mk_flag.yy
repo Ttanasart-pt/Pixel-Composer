@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_mk_flag",
   "isCompatibility":false,
   "isDnD":false,

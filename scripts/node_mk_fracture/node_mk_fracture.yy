@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_mk_fracture",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_Quaternion",
   "isCompatibility":false,
   "isDnD":false,

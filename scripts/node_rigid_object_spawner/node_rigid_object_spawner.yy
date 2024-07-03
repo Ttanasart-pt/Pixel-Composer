@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_rigid_object_spawner",
   "isCompatibility":false,
   "isDnD":false,

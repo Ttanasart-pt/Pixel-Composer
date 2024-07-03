@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_mk_sparkle",
   "isCompatibility":false,
   "isDnD":false,

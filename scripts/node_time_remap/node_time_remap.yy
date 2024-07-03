@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_time_remap",
   "isCompatibility":false,
   "isDnD":false,

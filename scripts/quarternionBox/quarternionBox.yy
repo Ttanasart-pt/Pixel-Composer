@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"quarternionBox",
   "isCompatibility":false,
   "isDnD":false,

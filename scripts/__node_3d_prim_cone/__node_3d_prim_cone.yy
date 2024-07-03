@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__node_3d_prim_cone",
   "isCompatibility":false,
   "isDnD":false,

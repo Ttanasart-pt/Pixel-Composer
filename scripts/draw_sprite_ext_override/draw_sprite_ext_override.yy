@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"draw_sprite_ext_override",
   "isCompatibility":false,
   "isDnD":false,

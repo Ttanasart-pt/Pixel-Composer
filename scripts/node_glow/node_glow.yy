@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_glow",
   "isCompatibility":false,
   "isDnD":false,

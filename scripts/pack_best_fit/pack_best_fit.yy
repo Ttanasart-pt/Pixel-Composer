@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"pack_best_fit",
   "isCompatibility":false,
   "isDnD":false,

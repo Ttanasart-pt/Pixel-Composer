@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_collection_managed",
   "isCompatibility":false,
   "isDnD":false,

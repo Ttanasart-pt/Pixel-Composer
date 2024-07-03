@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"texture_set_repeat",
   "isCompatibility":true,
   "isDnD":false,

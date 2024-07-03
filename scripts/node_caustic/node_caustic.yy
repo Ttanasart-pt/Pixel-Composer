@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_caustic",
   "isCompatibility":false,
   "isDnD":false,

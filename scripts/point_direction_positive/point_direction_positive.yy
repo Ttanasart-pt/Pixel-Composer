@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"point_direction_positive",
   "isCompatibility":false,
   "isDnD":false,

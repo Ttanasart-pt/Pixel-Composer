@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_wrap_area",
   "isCompatibility":false,
   "isDnD":false,

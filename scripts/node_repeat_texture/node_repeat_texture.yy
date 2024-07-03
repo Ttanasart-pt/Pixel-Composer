@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_repeat_texture",
   "isCompatibility":false,
   "isDnD":false,

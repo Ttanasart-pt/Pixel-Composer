@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"tooltip_selector_object",
   "isCompatibility":false,
   "isDnD":false,

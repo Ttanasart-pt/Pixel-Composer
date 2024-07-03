@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_draw_sprite_to_collision_mask_surface",
   "isCompatibility":false,
   "isDnD":false,

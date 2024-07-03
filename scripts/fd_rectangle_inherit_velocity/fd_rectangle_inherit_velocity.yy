@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_inherit_velocity",
   "isCompatibility":false,
   "isDnD":false,

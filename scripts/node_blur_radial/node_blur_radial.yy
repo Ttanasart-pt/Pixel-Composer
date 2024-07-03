@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_blur_radial",
   "isCompatibility":false,
   "isDnD":false,

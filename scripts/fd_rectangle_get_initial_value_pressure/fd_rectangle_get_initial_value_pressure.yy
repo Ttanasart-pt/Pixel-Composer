@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_get_initial_value_pressure",
   "isCompatibility":false,
   "isDnD":false,

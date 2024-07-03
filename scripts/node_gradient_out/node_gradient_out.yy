@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_gradient_out",
   "isCompatibility":false,
   "isDnD":false,

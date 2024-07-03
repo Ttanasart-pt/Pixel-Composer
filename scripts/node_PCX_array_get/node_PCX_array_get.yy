@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_PCX_array_get",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"draw_connect_linear",
   "isCompatibility":false,
   "isDnD":false,

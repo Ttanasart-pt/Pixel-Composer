@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_rigid_override",
   "isCompatibility":false,
   "isDnD":false,

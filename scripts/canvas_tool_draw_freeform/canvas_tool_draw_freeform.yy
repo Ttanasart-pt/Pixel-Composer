@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"canvas_tool_draw_freeform",
   "isCompatibility":false,
   "isDnD":false,

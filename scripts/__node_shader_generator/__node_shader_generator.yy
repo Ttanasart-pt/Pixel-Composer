@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__node_shader_generator",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_lovify",
   "isCompatibility":false,
   "isDnD":false,

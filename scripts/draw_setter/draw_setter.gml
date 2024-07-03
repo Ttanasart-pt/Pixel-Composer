@@ -1,7 +1,7 @@
 #macro draw_set_color draw_set_color_ext
 #macro __draw_set_color draw_set_color
 
-#macro draw_clear draw_clear_ext
+#macro draw_clear draw_clear_ext_override
 #macro __draw_clear draw_clear
 
 function draw_set_color_ext(col) {
@@ -14,7 +14,7 @@ function draw_set_color_ext(col) {
 	draw_set_alpha(a);
 }
 
-function draw_clear_ext(col) {
+function draw_clear_ext_override(col) {
 	if(is_real(col)) {
 		__draw_clear(col);
 		return;

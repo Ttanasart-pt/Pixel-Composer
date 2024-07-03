@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"draw_surface_blend",
   "isCompatibility":false,
   "isDnD":false,

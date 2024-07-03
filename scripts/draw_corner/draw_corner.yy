@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"draw_corner",
   "isCompatibility":false,
   "isDnD":false,

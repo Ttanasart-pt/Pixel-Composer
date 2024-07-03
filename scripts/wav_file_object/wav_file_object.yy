@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"wav_file_object",
   "isCompatibility":false,
   "isDnD":false,

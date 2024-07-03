@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"surface_draw_functions",
   "isCompatibility":false,
   "isDnD":false,

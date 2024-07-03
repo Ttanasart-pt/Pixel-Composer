@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_globalvar",
   "isCompatibility":false,
   "isDnD":false,

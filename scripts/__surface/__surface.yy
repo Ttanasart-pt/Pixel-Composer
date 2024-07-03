@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__surface",
   "isCompatibility":false,
   "isDnD":false,

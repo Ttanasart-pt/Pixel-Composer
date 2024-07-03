@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_tile_random",
   "isCompatibility":false,
   "isDnD":false,

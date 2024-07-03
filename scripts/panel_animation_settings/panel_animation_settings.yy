@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_animation_settings",
   "isCompatibility":false,
   "isDnD":false,

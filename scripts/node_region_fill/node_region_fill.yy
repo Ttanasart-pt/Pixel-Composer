@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_region_fill",
   "isCompatibility":false,
   "isDnD":false,

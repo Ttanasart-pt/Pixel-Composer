@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"d3d_plane",
   "isCompatibility":false,
   "isDnD":false,

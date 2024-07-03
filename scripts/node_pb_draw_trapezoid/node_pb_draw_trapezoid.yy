@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_pb_draw_trapezoid",
   "isCompatibility":false,
   "isDnD":false,

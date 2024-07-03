@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"luaHighlight",
   "isCompatibility":false,
   "isDnD":false,
