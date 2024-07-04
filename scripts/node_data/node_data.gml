@@ -98,6 +98,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		min_w = w;
 		min_h = h;
 		fix_h = h;
+		h_param = h;
 		will_setHeight = false;
 		
 		selectable   = true;
@@ -1153,6 +1154,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_outy += junction_draw_hei_y * _s * jun.isVisible();
 		}
 		
+		if(show_parameter) h = h_param;
+		
 		onPreDraw(_x, _y, _s, _iny, _outy);
 	} #endregion
 	
@@ -1294,6 +1297,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		h = fix_h + extY;
+		h_param = h;
 	} #endregion
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
