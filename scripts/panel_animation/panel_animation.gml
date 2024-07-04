@@ -1937,28 +1937,41 @@ function Panel_Animation() : PanelContent() constructor {
 		#region overlay 
 			var hh = ui(20);
 			
-			draw_set_color(COLORS.panel_animation_timeline_top);
-			draw_rectangle(0, 0, bar_w, hh, false);
+			var bar_line_x = (CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
+			var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
+			
+			draw_set_color(cc);
+			draw_line(bar_line_x, PANEL_PAD, bar_line_x, dope_sheet_h);
+			
+			var _phover = pHOVER && msy > hh;
+			for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
+				var _cont = timeline_contents[i];
+				if(!_cont.show) continue;
+				
+				var _hov  = _cont.item.drawDopesheetOver(timeline_shift, _cont.y, timeline_scale, msx, msy, _phover, pFOCUS);
+				if(is_undefined(_hov)) continue;
+				if(_hov) keyframe_boxable = false;
+			}
 			
 			var _fr = ceil((bar_w / timeline_scale - timeline_shift) / timeline_separate) * timeline_separate;
 			
 			for(var i = timeline_separate; i <= _fr; i += timeline_separate) {
-				var bar_line_x = i * timeline_scale + timeline_shift;
+				var ln_x = i * timeline_scale + timeline_shift;
 				
 				if(i > TOTAL_FRAMES) draw_set_alpha(0.5);
 				
 				draw_set_color(COLORS.panel_animation_frame_divider);
-				draw_line(bar_line_x, 0, bar_line_x, hh);
+				draw_line(ln_x, 0, ln_x, hh);
 				
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
-				draw_text_add(bar_line_x, PANEL_PAD, i);
+				draw_text_add(ln_x, PANEL_PAD, i);
 			}
 			
 			draw_set_alpha(1);
 			
-			var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
+			var end_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
 			draw_set_color(COLORS.panel_animation_end_line);
-			draw_line_width(bar_line_x, 0, bar_line_x, ui(20), 2);
+			draw_line_width(end_x, 0, end_x, ui(20), 2);
 			
 			if(PROJECT.onion_skin.enabled) { //ONION SKIN
 				var rang = PROJECT.onion_skin.range;
@@ -2018,13 +2031,10 @@ function Panel_Animation() : PanelContent() constructor {
 				}
 			}
 			
-			var bar_line_x = (CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
-			var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
+			draw_set_color(COLORS.panel_animation_timeline_top);
+			draw_rectangle(0, 0, bar_w, hh, false);
 			
-			draw_set_color(cc);
 			draw_set_font(f_p2);
-			draw_line(bar_line_x, PANEL_PAD, bar_line_x, dope_sheet_h);
-			
 			var cf = string(CURRENT_FRAME + 1);
 			var tx = string_width(cf) + ui(4);
 			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
@@ -2032,12 +2042,6 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_on_accent);
 			draw_text_add(bar_line_x, PANEL_PAD, cf);
 			
-			for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
-				var _cont = timeline_contents[i];
-				var _hov  = _cont.item.drawDopesheetOver(timeline_shift, _cont.y, timeline_scale, msx, msy, pHOVER, pFOCUS);
-				if(is_undefined(_hov)) continue;
-				if(_hov) keyframe_boxable = false;
-			}
 		#endregion
 		
 		#region stretch

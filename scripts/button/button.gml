@@ -162,7 +162,7 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 	} else if(spr)
 		draw_sprite_stretched(spr, 0, _x, _y, _w, _h);		
 	
-	if(_icon) draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, _icon_scale, cc, _icon_alpha);
+	if(_icon) draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, _icon_scale, cc, _icon_alpha == 1 || res == 0? _icon_alpha : _icon_alpha + 0.4);
 	
 	return res;
 }

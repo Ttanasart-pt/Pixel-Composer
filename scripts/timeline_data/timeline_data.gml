@@ -70,20 +70,23 @@ function timelineItemNode(node) : timelineItem() constructor {
 		color_cur = col;
 		
 		var cc = colorMultiply(col, COLORS.panel_animation_dope_bg);
+		color_dsp = cc;
+		
+		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _x, _y, _w, lh, cc, alpha);
 		
 		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
-			cc  = colorMultiply(col, COLORS.panel_animation_dope_bg_hover);
+			draw_sprite_stretched_add(THEME.menu_button_mask, 0, _x, _y, _w, lh, col, 0.05);
 			res = 1;
 		}
 		
-		color_dsp = cc;
-		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _x, _y, _w, lh, cc, alpha);
-		// draw_sprite_stretched_add(THEME.menu_button_mask, 1, _x, _y, _w, lh, c_white, 0.1);
+		// draw_sprite_stretched_add(THEME.menu_button_mask, 1, _x, _y, _w, lh, c_white, 0.15);
 		
 		var tx = lx + lw - ui(7);
-		if(buttonInstant(THEME.button_hide, tx - ui(9), _y + ui(1), ui(18), ui(18), [ _msx, _msy ], focus, hover, 
-			__txtx("panel_animation_goto", "Go to node"), THEME.animate_node_go, 0, col == -1? CDEF.main_grey : col) == 2)
-				graphFocusNode(node);
+		var tt = __txtx("panel_animation_goto", "Go to node");
+		var _m = [ _msx, _msy ];
+		
+		if(buttonInstant(noone, tx - ui(9), _y + ui(1), ui(18), ui(18), _m, focus, hover, tt, THEME.animate_node_go, 0, col == -1? COLORS._main_icon_light : col, 0.4) == 2)
+			graphFocusNode(node);
 			
 		if(_sel) draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _x, _y, _w, lh, COLORS._main_accent, 1);
 		
@@ -107,7 +110,7 @@ function timelineItemNode(node) : timelineItem() constructor {
 			txx += tw;
 		}
 		
-		draw_set_font(f_p2);
+		draw_set_font(f_p3);
 		draw_set_alpha(1);
 		if(nameType == 0 || nameType == 2) 
 			draw_text_add(txx, _y + lh / 2 - ui(2), node.display_name);
@@ -211,10 +214,11 @@ function timelineItemGroup() : timelineItem() constructor {
 		draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _x, _y, _w, lh, cc, alpha);
 		
 		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
-			draw_sprite_stretched_add(THEME.menu_button_mask, 1, _x, _y, _w, lh, c_white, 0.1);
+			draw_sprite_stretched_add(THEME.menu_button_mask, 0, _x, _y, _w, lh, col, 0.05);
 			res = 1;
 		}
 		
+		draw_sprite_stretched_add(THEME.menu_button_mask, 1, _x, _y, _w, lh, c_white, 0.15);
 		if(fdHover == self)
 			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _x, _y + 1, _w, lh - 2, col == -1? COLORS._main_accent : col, 1);
 		
@@ -225,10 +229,10 @@ function timelineItemGroup() : timelineItem() constructor {
 		}
 		draw_sprite_ui_uniform(THEME.folder_16, show, lx + ui(10), _y + lh / 2, 1, col == -1? CDEF.main_grey : col, aa);
 		
-		draw_set_text(f_p2, fa_left, fa_center);
+		draw_set_text(f_p3, fa_left, fa_center);
 		if(renaming) {
 			var _param = new widgetParam(lx + ui(20), _y + 1, _w - ui(24), lh - ui(4), name,, [ _msx, _msy ]);
-			    _param.font = f_p2;
+			    _param.font = f_p3;
 			
 			tb_name.highlight_color = cc;
 			tb_name.highlight_alpha = .5;
