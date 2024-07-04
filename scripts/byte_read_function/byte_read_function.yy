@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"byte_reader",
+  "%Name":"byte_read_function",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"byte_reader",
+  "name":"byte_read_function",
   "parent":{
     "name":"importers",
     "path":"folders/functions/importers.yy",

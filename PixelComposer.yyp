@@ -724,7 +724,7 @@
     {"id":{"name":"buttonGradient","path":"scripts/buttonGradient/buttonGradient.yy",},},
     {"id":{"name":"buttonGroup","path":"scripts/buttonGroup/buttonGroup.yy",},},
     {"id":{"name":"buttonPalette","path":"scripts/buttonPalette/buttonPalette.yy",},},
-    {"id":{"name":"byte_reader","path":"scripts/byte_reader/byte_reader.yy",},},
+    {"id":{"name":"byte_read_function","path":"scripts/byte_read_function/byte_read_function.yy",},},
     {"id":{"name":"byte_writer","path":"scripts/byte_writer/byte_writer.yy",},},
     {"id":{"name":"canvas_actions_transform","path":"scripts/canvas_actions_transform/canvas_actions_transform.yy",},},
     {"id":{"name":"canvas_draw_functions","path":"scripts/canvas_draw_functions/canvas_draw_functions.yy",},},

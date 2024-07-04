@@ -21,18 +21,18 @@ function ase_cel(_layer, _data, _file) constructor {
 		
 		if(color == 16) { //grey
 			repeat(size) {
-				var bin = buffer_read(data[? "Buffer"], buffer_u16);
-				buffer_write(buff, buffer_u8, bin);
-				buffer_write(buff, buffer_u8, bin);
-				buffer_write(buff, buffer_u8, bin);
-				buffer_write(buff, buffer_u8, bin >> 8);
+				var _bin = buffer_read(data[? "Buffer"], buffer_u16);
+				buffer_write(buff, buffer_u8, _bin);
+				buffer_write(buff, buffer_u8, _bin);
+				buffer_write(buff, buffer_u8, _bin);
+				buffer_write(buff, buffer_u8, _bin >> 8);
 			}
 		} else if(color == 8) { //index
 			var palet  = file[? "Palette"];
 			
 			repeat(size) {
-				var bin = buffer_read(data[? "Buffer"], buffer_u8);
-				var cc  = array_safe_get_fast(palet, bin);
+				var _bin = buffer_read(data[? "Buffer"], buffer_u8);
+				var cc  = array_safe_get_fast(palet, _bin);
 				for( var i = 0; i < 4; i++ )
 					buffer_write(buff, buffer_u8, cc[i]);
 			}

@@ -288,32 +288,32 @@ __ase_format_chunk_tileset = [
 	[_BIN_TYPE.pixel,	"Compressed image", "Data length", function(chunk) { return chunk[? "Flag"] & (1 << 2); }],
 ];
 
-function read_format_type(bin, datType, outMap) {
+function read_format_type(_bin, datType, outMap) {
 	switch(datType) {
-		case _BIN_TYPE.byte:	return bin_read_byte(bin);
-		case _BIN_TYPE.word:	return bin_read_word(bin);
-		case _BIN_TYPE.short:	return bin_read_short(bin);
-		case _BIN_TYPE.dword:	return bin_read_dword(bin);
-		case _BIN_TYPE.long:	return bin_read_long(bin);
-		case _BIN_TYPE.fixed:	return bin_read_fixed(bin);
-		case _BIN_TYPE.float:	return bin_read_float(bin);
-		case _BIN_TYPE.double:	return bin_read_double(bin);
-		case _BIN_TYPE.qword:	return bin_read_qword(bin);
-		case _BIN_TYPE.long64:	return bin_read_long64(bin);
+		case _BIN_TYPE.byte:	return bin_read_byte(_bin);
+		case _BIN_TYPE.word:	return bin_read_word(_bin);
+		case _BIN_TYPE.short:	return bin_read_short(_bin);
+		case _BIN_TYPE.dword:	return bin_read_dword(_bin);
+		case _BIN_TYPE.long:	return bin_read_long(_bin);
+		case _BIN_TYPE.fixed:	return bin_read_fixed(_bin);
+		case _BIN_TYPE.float:	return bin_read_float(_bin);
+		case _BIN_TYPE.double:	return bin_read_double(_bin);
+		case _BIN_TYPE.qword:	return bin_read_qword(_bin);
+		case _BIN_TYPE.long64:	return bin_read_long64(_bin);
 		
-		case _BIN_TYPE.string:	return bin_read_string(bin);
-		case _BIN_TYPE.point:	return bin_read_point(bin);
-		case _BIN_TYPE.size:	return bin_read_size(bin);
-		case _BIN_TYPE.rect:	return bin_read_rect(bin);
-		case _BIN_TYPE.color:	return bin_read_color(bin);
-		case _BIN_TYPE.pixel:	return bin_read_pixel(bin, outMap[? "Color depth"]);
+		case _BIN_TYPE.string:	return bin_read_string(_bin);
+		case _BIN_TYPE.point:	return bin_read_point(_bin);
+		case _BIN_TYPE.size:	return bin_read_size(_bin);
+		case _BIN_TYPE.rect:	return bin_read_rect(_bin);
+		case _BIN_TYPE.color:	return bin_read_color(_bin);
+		case _BIN_TYPE.pixel:	return bin_read_pixel(_bin, outMap[? "Color depth"]);
 	}
 	
 	
 	return 0;
 }
 
-function read_format(bin, format, outMap) {
+function read_format(_bin, format, outMap) {
 	var datType = array_safe_get_fast(format, 0, 0);
 	var key     = array_safe_get_fast(format, 1, "");
 	var amount  = array_safe_get_fast(format, 2, 1);
@@ -323,25 +323,25 @@ function read_format(bin, format, outMap) {
 		amount = amount(outMap);
 		
 	if(amount == 1) {
-		var val = read_format_type(bin, datType, outMap);
+		var val = read_format_type(_bin, datType, outMap);
 		outMap[? key] = val;
 		return val;
 	} else {
 		var a = array_create(amount);
 		for( var i = 0; i < amount; i++ )
-			a[i] = read_format_type(bin, datType, outMap);
+			a[i] = read_format_type(_bin, datType, outMap);
 		outMap[? key] = a;
 		return a;
 	}
 }
 
-function read_format_array(bin, formatArr, outMap) {
+function read_format_array(_bin, formatArr, outMap) {
 	for( var i = 0, n = array_length(formatArr); i < n; i++ ) {
 		if(array_length(formatArr[i]) >= 4 && !formatArr[i][3](outMap)) 
 			continue;
-		var pos = file_bin_position(bin);
-		var val = read_format(bin, formatArr[i], outMap);
-		//printIf(global.FLAG.ase_import, "Pos " + dec_to_hex(pos) + " - " + dec_to_hex(file_bin_position(bin)));
+		var pos = file_bin_position(_bin);
+		var val = read_format(_bin, formatArr[i], outMap);
+		//printIf(global.FLAG.ase_import, "Pos " + dec_to_hex(pos) + " - " + dec_to_hex(file_bin_position(_bin)));
 		
 		if(formatArr[i][1] == "Type")
 			printIf(global.FLAG.ase_import, "\t" + formatArr[i][1] + ":\t 0x" + dec_to_hex(val, 4));
