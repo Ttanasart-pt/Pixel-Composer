@@ -14,6 +14,8 @@ function canvas_tool() constructor {
 	brush_resizable = false;
 	mouse_holding   = false;
 	
+	use_color_3d = false;
+	
 	subtool = 0;
 	
 	function disable() {

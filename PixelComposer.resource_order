@@ -413,6 +413,7 @@
     {"name":"canvas_flood_fill_functions","order":2,"path":"scripts/canvas_flood_fill_functions/canvas_flood_fill_functions.yy",},
     {"name":"canvas_freeform","order":3,"path":"scripts/canvas_freeform/canvas_freeform.yy",},
     {"name":"canvas_magic_selection_functions","order":4,"path":"scripts/canvas_magic_selection_functions/canvas_magic_selection_functions.yy",},
+    {"name":"canvas_tool_brush_shape_iso","order":15,"path":"scripts/canvas_tool_brush_shape_iso/canvas_tool_brush_shape_iso.yy",},
     {"name":"canvas_tool_brush_shape","order":3,"path":"scripts/canvas_tool_brush_shape/canvas_tool_brush_shape.yy",},
     {"name":"canvas_tool_corner","order":7,"path":"scripts/canvas_tool_corner/canvas_tool_corner.yy",},
     {"name":"canvas_tool_curve","order":14,"path":"scripts/canvas_tool_curve/canvas_tool_curve.yy",},

@@ -228,17 +228,20 @@ event_inherited();
 			
 			for(var i = 0; i < ds_list_size(_junc_list); i++) {
 				var _target = _junc_list[| i]; 
-				if(!_target.visible) continue;
+				if(!_target.auto_connect) continue;
 				
-				if(_target.auto_connect) {
-					if(_call_input && node_called.isConnectable(_junc_list[| i])) {
-						node_called.setFrom(_junc_list[| i]);
-						_new_node.x -= _new_node.w;
-					} else if(!_call_input && _junc_list[| i].isConnectable(node_called))
-						_junc_list[| i].setFrom(node_called);
+				if(_call_input && node_called.isConnectable(_junc_list[| i]) == 1) {
+					node_called.setFrom(_junc_list[| i]);
+					_new_node.x -= _new_node.w;
+					break;
+				} 
+				
+				if(!_call_input && _junc_list[| i].isConnectable(node_called) == 1) {
+					_junc_list[| i].setFrom(node_called);
 					break;
 				}
 			}
+			
 		} else if(junction_hovering != noone) { //right click on junction
 			var to   = junction_hovering;
 			var from = junction_hovering.value_from;

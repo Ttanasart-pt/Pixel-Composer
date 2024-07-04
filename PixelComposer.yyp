@@ -732,6 +732,7 @@
     {"id":{"name":"canvas_flood_fill_functions","path":"scripts/canvas_flood_fill_functions/canvas_flood_fill_functions.yy",},},
     {"id":{"name":"canvas_freeform","path":"scripts/canvas_freeform/canvas_freeform.yy",},},
     {"id":{"name":"canvas_magic_selection_functions","path":"scripts/canvas_magic_selection_functions/canvas_magic_selection_functions.yy",},},
+    {"id":{"name":"canvas_tool_brush_shape_iso","path":"scripts/canvas_tool_brush_shape_iso/canvas_tool_brush_shape_iso.yy",},},
     {"id":{"name":"canvas_tool_brush_shape","path":"scripts/canvas_tool_brush_shape/canvas_tool_brush_shape.yy",},},
     {"id":{"name":"canvas_tool_brush","path":"scripts/canvas_tool_brush/canvas_tool_brush.yy",},},
     {"id":{"name":"canvas_tool_corner","path":"scripts/canvas_tool_corner/canvas_tool_corner.yy",},},

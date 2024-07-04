@@ -32,13 +32,10 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 		if(mouse_holding) {
 			
 			surface_set_shader(drawing_surface, noone);
-			
-				if(shape == CANVAS_TOOL_SHAPE.rectangle)
-					canvas_draw_rect_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
-					
-				else if(shape == CANVAS_TOOL_SHAPE.ellipse)
-					canvas_draw_ellp_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
-					
+				switch(shape) {
+					case CANVAS_TOOL_SHAPE.rectangle : canvas_draw_rect_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool); break;
+					case CANVAS_TOOL_SHAPE.ellipse   : canvas_draw_ellp_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool); break;
+				}
 			surface_reset_shader();
 				
 			if(mouse_release(mb_left)) {
@@ -64,11 +61,10 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 			return;
 		}
 		
-		if(shape == CANVAS_TOOL_SHAPE.rectangle)
-			canvas_draw_rect_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool);
-			
-		if(shape == CANVAS_TOOL_SHAPE.ellipse)
-			canvas_draw_ellp_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool); 
+		switch(shape) {
+			case CANVAS_TOOL_SHAPE.rectangle : canvas_draw_rect_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool); break;
+			case CANVAS_TOOL_SHAPE.ellipse   : canvas_draw_ellp_brush(brush, mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, subtool); break;
+		}   
 	}
 	
 	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

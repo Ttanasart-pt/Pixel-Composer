@@ -1557,39 +1557,40 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
-	static isConnectable = function(_valueFrom, checkRecur = true, log = false) { #region
+	static isConnectable = function(_valueFrom, checkRecur = true, _log = false) { #region
+		
 		if(_valueFrom == -1 || _valueFrom == undefined || _valueFrom == noone) {
-			if(log) noti_warning($"LOAD: Cannot set node connection from {_valueFrom} to {name} of node {node.name}.",, node);
+			if(_log) noti_warning($"LOAD: Cannot set node connection from {_valueFrom} to {name} of node {node.name}.",, node);
 			return -1;
 		}
 		
 		if(_valueFrom == value_from) {
-			if(log) noti_warning("whaT");
+			if(_log) noti_warning("whaT");
 			return -2;
 		}
 		
 		if(_valueFrom == self) {
-			if(log) noti_warning("setFrom: Self connection is not allowed.",, node);
+			if(_log) noti_warning("setFrom: Self connection is not allowed.",, node);
 			return -3;
 		}
 		
 		if(!typeCompatible(_valueFrom.type, type)) { 
-			noti_warning($"Connection error: Incompatible type {_valueFrom.type} to {type}",, node);
+			if(_log) noti_warning($"Connection error: Incompatible type {_valueFrom.type} to {type}",, node);
 			return -4;
 		}
 		
 		if(typeIncompatible(_valueFrom, self)) {
-			noti_warning("Connection error: Incompatible type",, node);
+			if(_log) noti_warning("Connection error: Incompatible type",, node);
 			return -5;
 		}
 		
 		if(connect_type == _valueFrom.connect_type) {
-			if(log) noti_warning("setFrom: Connect type mismatch",, node);
+			if(_log) noti_warning("setFrom: Connect type mismatch",, node);
 			return -6;
 		}
 		
 		if(checkRecur && _valueFrom.searchNodeBackward(node)) {
-			if(log) noti_warning("setFrom: Cyclic connection not allowed.",, node);
+			if(_log) noti_warning("setFrom: Cyclic connection not allowed.",, node);
 			return -7;
 		}
 		
@@ -1599,7 +1600,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 			
 		if(!accept_array && _valueFrom.type == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) {
-			if(log) noti_warning("setFrom: Array mismatch",, node);
+			if(_log) noti_warning("setFrom: Array mismatch",, node);
 			return -9;
 		}
 		

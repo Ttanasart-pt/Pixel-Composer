@@ -216,6 +216,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_eraser    = new canvas_tool_brush(brush, true);
 		tool_rectangle = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.rectangle);
 		tool_ellipse   = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.ellipse);
+		tool_iso_cube  = new canvas_tool_shape_iso(brush, CANVAS_TOOL_SHAPE_ISO.cube);
+		
 		tool_fill      = new canvas_tool_fill(tool_attribute);
 		tool_freeform  = new canvas_tool_draw_freeform(brush);
 		tool_curve_bez = new canvas_tool_curve_bezier(brush);
@@ -226,6 +228,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_sel_magic     = new canvas_tool_selection_magic(tool_selection, tool_attribute);
 		tool_sel_brush     = new canvas_tool_selection_brush(tool_selection, brush);
 		
+		use_color_3d = false;
+		color_3d_selected = 0;
 	#endregion
 	
 	#region ++++ tools ++++
@@ -297,6 +301,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ])
 				.setSetting(tool_size)
 				.setToolObject(tool_ellipse),
+			
+			new NodeTool( "Iso Cube",	[ THEME.canvas_tools_iso_cube, THEME.canvas_tools_iso_cube_wire, THEME.canvas_tools_iso_cube_fill ])
+				.setSetting(tool_size)
+				.setToolObject(tool_iso_cube),
 			
 			new NodeTool( "Curve",		  THEME.canvas_tool_curve_icon)
 				.setSetting(tool_size)
@@ -399,7 +407,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		else      preview_index = frame;
 	}
 	
-	function setToolColor(color) { CURRENT_COLOR = color; }
+	function setToolColor(color) { 
+		if(!use_color_3d || color_3d_selected == 0) CURRENT_COLOR = color;
+		else                                        brush.colors[color_3d_selected - 1] = color;
+	}
 	
 	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) { #region
 		var _sx0 = xx - tool_size / 2;
@@ -415,17 +426,50 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _cw = tool_size - ui(16);
 		var _ch = ui(12);
 		var _pd = ui(5);
+		var _currc = CURRENT_COLOR;
 		
 		yy += ui(8);
 		hh += ui(8);
-		drawColor(CURRENT_COLOR, _cx, yy, _cw, _cw);
-		draw_sprite_stretched_ext(THEME.palette_selecting, 0, _cx - _pd, yy - _pd, _cw + _pd * 2, _cw + _pd * 2, c_white, 1);
 		
-		if(point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch) && mouse_press(mb_left, focus))
-			colorSelectorCall(CURRENT_COLOR, setToolColor);
+		if(use_color_3d) {
+			var _3x = _cx + _cw / 2;
+			var _3y =  yy + _cw / 2;
+			
+			draw_sprite_ext(THEME.color_3d, 0, _3x, _3y, 1, 1, 0, CURRENT_COLOR  );
+			draw_sprite_ext(THEME.color_3d, 1, _3x, _3y, 1, 1, 0, brush.colors[0]);
+			draw_sprite_ext(THEME.color_3d, 2, _3x, _3y, 1, 1, 0, brush.colors[1]);
+			
+			draw_sprite_ext(THEME.color_3d_selected, color_3d_selected, _3x, _3y);
+			
+			if(color_3d_selected) _currc = brush.colors[color_3d_selected - 1];
+			
+			if(point_in_circle(_mx, _my, _3x, _3y, ui(16))) {
+				var dir = point_direction(_3x, _3y, _mx, _my);
+				var sel = 0;
+				
+				if(dir > 150 && dir < 270)     sel = 1;
+				else if(dir > 270 || dir < 30) sel = 2;
+				
+				if(mouse_press(mb_left, focus)) { 
+					if(color_3d_selected == sel) colorSelectorCall(sel == 0? CURRENT_COLOR : brush.colors[sel - 1], setToolColor);
+					else color_3d_selected = sel;
+				}
+			}
+			
+			yy += _cw + ui(12);
+			hh += _cw + ui(12);
+			
+		} else {
+			drawColor(CURRENT_COLOR, _cx, yy, _cw, _cw);
+			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _cx - _pd, yy - _pd, _cw + _pd * 2, _cw + _pd * 2, c_white, 1);
+			
+			if(point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _cw) && mouse_press(mb_left, focus))
+				colorSelectorCall(CURRENT_COLOR, setToolColor);
 		
-		yy += _cw + ui(8);
-		hh += _cw + ui(8);
+			yy += _cw + ui(8);
+			hh += _cw + ui(8);
+			
+		}
 		
 		var _sel = noone;
 		
@@ -438,12 +482,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			draw_sprite_stretched_ext(THEME.palette_mask, ii, _cx, yy, _cw, _ch, _c, 1);
 			
-			if(color_diff(_c, CURRENT_COLOR) <= 0) 
+			if(color_diff(_c, _currc) <= 0) 
 				_sel = [ _cx, yy ];
 					
 			if(hover && point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch)) {
 				if(mouse_click(mb_left, focus))
-					CURRENT_COLOR = _c;
+					setToolColor(_c);
 			}
 			
 			yy += _ch;
@@ -703,6 +747,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#region tool
 			var _currTool = PANEL_PREVIEW.tool_current;
 			var _tool     = noone;
+			use_color_3d  = false;
 			
 			rightTools = [];
 			array_append(rightTools, rightTools_general);
@@ -718,6 +763,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					_tool = _tool.getTool();
 					_tool.subtool = _currTool.selecting;
 					array_append(rightTools, _tool.rightTools);
+					
+					use_color_3d = _tool.use_color_3d;
 				}
 			}
 			

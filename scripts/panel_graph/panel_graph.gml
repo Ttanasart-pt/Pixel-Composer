@@ -1559,7 +1559,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		if(is_instanceof(PANEL_INSPECTOR, Panel_Inspector) && PANEL_INSPECTOR.attribute_hovering != noone) {
 			PANEL_INSPECTOR.attribute_hovering(value_dragging);
 			
-		} else if(target != noone) {
+		} else if(target != noone && target != value_dragging) {
 			
 			if(target.connect_type == value_dragging.connect_type) {
 				

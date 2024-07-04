@@ -251,11 +251,15 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		if(canvas_sel) canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
+	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {
+		if(canvas_sel) return canvas_sel.drawTools(_mx, _my, xx, yy, tool_size, hover, focus);
+		return 0;
+	}
+	
 	static step = function() {
 		tools         = -1;
 		tool_settings = [];
 		rightTools    = -1;
-		drawTools     = -1;
 		
 		canvas_sel = noone;
 		
@@ -276,7 +280,6 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 			tools         = canvas_sel.tools;
 			tool_settings = canvas_sel.tool_settings;
 			rightTools    = canvas_sel.rightTools;
-			drawTools     = canvas_sel.drawTools;
 		}
 		
 		if(timeline_item_group) {

@@ -21,6 +21,8 @@ function canvas_brush() constructor {
 	
 	node = noone;
 	
+	colors = [ c_white, c_black ];
+	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 		var _brushSurf	= node.getInputData(6);
