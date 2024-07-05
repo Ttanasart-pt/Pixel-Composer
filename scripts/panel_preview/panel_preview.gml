@@ -1193,9 +1193,10 @@ function Panel_Preview() : PanelContent() constructor {
 			shader_set_f("camRotation", [ d3_view_camera.focus_angle_y, -d3_view_camera.focus_angle_x, 0 ]);
 			shader_set_f("camScale",    zm);
 			shader_set_f("camRatio",    w / h);
+			shader_set_i("shapeAmount", 0);
 			
 			_env.apply();
-			_obj.apply();
+			if(_obj) _obj.apply();
 			
 			shader_set_i("drawBg",  	0);
 			shader_set_f("depthInt",    0);

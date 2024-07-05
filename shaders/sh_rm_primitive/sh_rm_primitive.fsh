@@ -717,6 +717,7 @@ vec3 normal(vec3 p) {
 }
 
 float march(vec3 camera, vec3 direction, out vec3 blendIndx) {
+    if(shapeAmount == 0) return viewRange.y;
 	float depth = viewRange.x;
     
     for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
@@ -806,13 +807,13 @@ vec4 scene() {
     vec3 norm  = normal(coll);
     vec4 grid  = vec4(0.);
     
-    if(drawGrid == 1 && sign(eye.y) != sign(coll.y)) {
+    if(drawGrid == 1 && (shapeAmount == 0 || sign(eye.y) != sign(coll.y))) {
 		vec3  gp = eye + dir * depth * (abs(eye.y) / (abs(coll.y) + abs(eye.y)));
 		grid = viewGrid( gp.xz, gridStep );
 		grid.a *= clamp(1. - length(gp.xz) * gridScale, 0., 1.) * 0.75;
     }
     
-    if(depth > viewRange.y - EPSILON) // Not hitting anything.
+    if(shapeAmount == 0 || depth > viewRange.y - EPSILON) // Not hitting anything.
         return drawGrid == 1? grid : vec4(0.);
     
     ///////////////////////////////////////////////////////////
@@ -885,7 +886,7 @@ void main() {
 	}
 	
 	vec4 result = drawBg == 1? bg : vec4(0.);
-		 result = blend(result, scene());
+	     result = blend(result, scene());
 	
     //////////////////////////////////////////////////
     
