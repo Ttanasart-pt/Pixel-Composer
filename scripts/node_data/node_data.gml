@@ -1200,7 +1200,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return __draw_bbox.fromPoints(x0, y0, x1, y1);
 	} #endregion
 	
-	static drawNodeName = function(xx, yy, _s) { #region
+	static drawNodeName = function(xx, yy, _s) {
 		var _name = renamed? display_name : name;
 		if(_name == "") return;
 		
@@ -1224,7 +1224,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _xpd = ui(8 + (icon != noone) * 16);
 			draw_text_cut(round(xx + _xpd), round(yy + ui(10)), _name, w * _s - _xpd, ts);
 		draw_set_alpha(1);
-	} #endregion
+	}
 	
 	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus) { #region
 		

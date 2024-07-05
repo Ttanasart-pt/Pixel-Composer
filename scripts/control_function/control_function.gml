@@ -7,11 +7,13 @@
 #endregion
 
 #region keyboard
-	enum KEYBOARD_STATUS {
+	enum KEY_STAT {
 		idle,
 		down,
 		pressing,
-		up
+		up,
+		
+		double
 	}	
 	
 	globalvar KEYBOARD_STRING, KEYBOARD_PRESSED;
@@ -19,16 +21,16 @@
 	
 	WIDGET_ACTIVE = [];
 	KEYBOARD_PRESSED = vk_nokey;
-	CTRL  = KEYBOARD_STATUS.idle;
-	ALT   = KEYBOARD_STATUS.idle;
-	SHIFT = KEYBOARD_STATUS.idle;
+	CTRL  = KEY_STAT.idle;
+	ALT   = KEY_STAT.idle;
+	SHIFT = KEY_STAT.idle;
 	
 	function key_release() {
 		INLINE
 		
-		CTRL  = KEYBOARD_STATUS.up;	
-		ALT   = KEYBOARD_STATUS.up;	
-		SHIFT = KEYBOARD_STATUS.up;	
+		CTRL  = KEY_STAT.up;	
+		ALT   = KEY_STAT.up;	
+		SHIFT = KEY_STAT.up;	
 		
 		keyboard_key_release(vk_control);
 		keyboard_key_release(vk_shift);
@@ -37,18 +39,18 @@
 	
 	function key_mod_press_any() {
 		INLINE
-		return CTRL == KEYBOARD_STATUS.pressing || ALT == KEYBOARD_STATUS.pressing || SHIFT == KEYBOARD_STATUS.pressing;
+		return CTRL == KEY_STAT.pressing || ALT == KEY_STAT.pressing || SHIFT == KEY_STAT.pressing;
 	}
 	
-	function key_mod_down(key)    { INLINE return key == KEYBOARD_STATUS.down; }
-	
-	function key_mod_press(key)    { INLINE return key == KEYBOARD_STATUS.pressing; }
+	function key_mod_down(key)     { INLINE return key == KEY_STAT.down;     }
+	function key_mod_double(key)   { INLINE return key == KEY_STAT.double;   }
+	function key_mod_press(key)    { INLINE return key == KEY_STAT.pressing; }
 	function key_mod_presses(keys) { 
 		INLINE 
 		switch(argument_count) {
-			case 1 : return argument[0] == KEYBOARD_STATUS.pressing;
-			case 2 : return argument[0] == KEYBOARD_STATUS.pressing && argument[1] == KEYBOARD_STATUS.pressing;
-			case 3 : return argument[0] == KEYBOARD_STATUS.pressing && argument[1] == KEYBOARD_STATUS.pressing && argument[2] == KEYBOARD_STATUS.pressing;
+			case 1 : return argument[0] == KEY_STAT.pressing;
+			case 2 : return argument[0] == KEY_STAT.pressing && argument[1] == KEY_STAT.pressing;
+			case 3 : return argument[0] == KEY_STAT.pressing && argument[1] == KEY_STAT.pressing && argument[2] == KEY_STAT.pressing;
 		}
 		return false; 
 	}
@@ -57,9 +59,9 @@
 		INLINE
 		
 		switch(keyindex) {
-			case MOD_KEY.alt   : return ALT   == KEYBOARD_STATUS.pressing;
-			case MOD_KEY.shift : return SHIFT == KEYBOARD_STATUS.pressing;
-			case MOD_KEY.ctrl  : return CTRL  == KEYBOARD_STATUS.pressing;
+			case MOD_KEY.alt   : return ALT   == KEY_STAT.pressing;
+			case MOD_KEY.shift : return SHIFT == KEY_STAT.pressing;
+			case MOD_KEY.ctrl  : return CTRL  == KEY_STAT.pressing;
 		}
 		
 		return false;

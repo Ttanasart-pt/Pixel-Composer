@@ -540,8 +540,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {
 		if(_s < 0.75) return;
 		
-		var _bx = xx + w * _s - 10;
-		var _by = yy + h * _s - 10;
+		var _bx = (xx + w / 2 * _s);
+		var _by = (yy + h     * _s) - 10;
 		
 		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self;
 		    _hv &= point_in_circle(_mx, _my, _bx, _by, 8);

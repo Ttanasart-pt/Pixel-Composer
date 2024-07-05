@@ -10,7 +10,7 @@
 	gc_target_frame_time(100);
 #endregion
 
-#region window
+#region window & IO
 	window_set_min_width(960);
 	window_set_min_height(600);
 	draw_set_circle_precision(64);
@@ -46,6 +46,10 @@
 	kb_time  = 0;
 	kb_hold  = false;
 	kb_hkey  = 0;
+	
+	kd_ctrl  = 0;
+	kd_shift = 0;
+	kd_alt   = 0;
 	
 	fpss = array_create(10);
 	fpsr = 0;

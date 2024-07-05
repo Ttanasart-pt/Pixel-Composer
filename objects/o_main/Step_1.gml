@@ -197,35 +197,34 @@ FILE_DROPPED      = false;
 #endregion
 
 #region modifiers
-	if(CTRL  == KEYBOARD_STATUS.up) CTRL  = KEYBOARD_STATUS.idle;
-	if(SHIFT == KEYBOARD_STATUS.up) SHIFT = KEYBOARD_STATUS.idle;
-	if(ALT   == KEYBOARD_STATUS.up) ALT   = KEYBOARD_STATUS.idle;
+	var _d = PREFERENCES.double_click_delay;
 	
-	if(CTRL  == KEYBOARD_STATUS.pressing && !keyboard_check(vk_control))
-		CTRL  = KEYBOARD_STATUS.up;
+	kd_ctrl  += DELTA_TIME;
+	if(CTRL  == KEY_STAT.up) 										CTRL  = KEY_STAT.idle;
+	if(CTRL  == KEY_STAT.pressing && !keyboard_check(vk_control))	CTRL  = KEY_STAT.up;
+	if(CTRL  == KEY_STAT.down || CTRL  == KEY_STAT.double)			CTRL  = KEY_STAT.pressing;
+	if(keyboard_check_pressed(vk_control))						  { CTRL  = kd_ctrl < _d?  KEY_STAT.double : KEY_STAT.down;  kd_ctrl  = 0; }
+	if(keyboard_check_released(vk_control)) 						CTRL  = KEY_STAT.up;
 	
-	if(SHIFT == KEYBOARD_STATUS.pressing && !keyboard_check(vk_shift))
-		SHIFT = KEYBOARD_STATUS.up;
+	kd_shift += DELTA_TIME;
+	if(SHIFT == KEY_STAT.up)                                     	SHIFT = KEY_STAT.idle;
+	if(SHIFT == KEY_STAT.pressing && !keyboard_check(vk_shift))  	SHIFT = KEY_STAT.up;
+	if(SHIFT == KEY_STAT.down || SHIFT == KEY_STAT.double)         	SHIFT = KEY_STAT.pressing;
+	if(keyboard_check_pressed(vk_shift))                          { SHIFT = kd_shift < _d? KEY_STAT.double : KEY_STAT.down;  kd_shift = 0; }
+	if(keyboard_check_released(vk_shift))                       	SHIFT = KEY_STAT.up;
 	
-	if(ALT   == KEYBOARD_STATUS.pressing && !keyboard_check(vk_alt))
-		ALT   = KEYBOARD_STATUS.up;
-	
-	if(CTRL  == KEYBOARD_STATUS.down) CTRL  = KEYBOARD_STATUS.pressing;
-	if(SHIFT == KEYBOARD_STATUS.down) SHIFT = KEYBOARD_STATUS.pressing;
-	if(ALT   == KEYBOARD_STATUS.down) ALT   = KEYBOARD_STATUS.pressing;
-	
-	if(keyboard_check_pressed(vk_control)) CTRL  = KEYBOARD_STATUS.down;
-	if(keyboard_check_pressed(vk_shift))   SHIFT = KEYBOARD_STATUS.down;
-	if(keyboard_check_pressed(vk_alt))     ALT   = KEYBOARD_STATUS.down;
-	
-	if(keyboard_check_released(vk_control)) CTRL  = KEYBOARD_STATUS.up;
-	if(keyboard_check_released(vk_shift))   SHIFT = KEYBOARD_STATUS.up;
-	if(keyboard_check_released(vk_alt))     ALT   = KEYBOARD_STATUS.up;	
+	kd_alt   += DELTA_TIME;
+	if(ALT   == KEY_STAT.up)                                     	ALT   = KEY_STAT.idle;
+	if(ALT   == KEY_STAT.pressing && !keyboard_check(vk_alt))    	ALT   = KEY_STAT.up;
+	if(ALT   == KEY_STAT.down || ALT   == KEY_STAT.double)          ALT   = KEY_STAT.pressing;
+	if(keyboard_check_pressed(vk_alt))                            { ALT   = kd_alt < _d?   KEY_STAT.double : KEY_STAT.down;  kd_alt   = 0; }
+	if(keyboard_check_released(vk_alt))                         	ALT   = KEY_STAT.up;	
 	
 	HOTKEY_MOD = 0;
-	if(CTRL  == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.ctrl;
-	if(SHIFT == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.shift;
-	if(ALT   == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.alt;
+	if(CTRL  == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.ctrl;
+	if(SHIFT == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.shift;
+	if(ALT   == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.alt;
+	
 #endregion
 
 #region mouse wrap

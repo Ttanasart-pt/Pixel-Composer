@@ -1668,9 +1668,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			value_dragging = noone; 
 			return; 
 		}
+		
+		if(key_mod_double(SHIFT)) {
+			var _n = value_dragging.node;
+			var _l = value_dragging.connect_type == JUNCTION_CONNECT.input? _n.inputs : _n.outputs;
+			var _i = value_dragging.connect_type == JUNCTION_CONNECT.input? _n.inputs_index : _n.outputs_index;
 			
-		if(key_mod_press(SHIFT)) {
-			array_push_unique(value_draggings, value_dragging)
+			array_push_unique(value_draggings, value_dragging);
+			
+			for (var i = 0, n = array_length(_i); i < n; i++) {
+				var _j = _l[| _i[i]];
+				array_push_unique(value_draggings, _j);
+			}
+			
+		} else if(key_mod_press(SHIFT)) {
+			array_push_unique(value_draggings, value_dragging);
 			
 			if(value_focus) 
 				array_push_unique(value_draggings, value_focus);
