@@ -225,12 +225,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	#endregion
 	
 	#region ---- mouse ----
-		mouse_graph_x = 0;
-		mouse_graph_y = 0;
-		mouse_grid_x = 0;
-		mouse_grid_y = 0;
-		mouse_on_graph = false;
+		mouse_graph_x  = 0;
+		mouse_graph_y  = 0;
+		mouse_grid_x   = 0;
+		mouse_grid_y   = 0;
 		
+		mouse_create_x  = undefined;
+		mouse_create_y  = undefined;
+		mouse_create_sx = undefined;
+		mouse_create_sy = undefined;
+		
+		mouse_on_graph   = false;
 		node_bg_hovering = false;
 	#endregion
 	
@@ -2163,37 +2168,50 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	//// ============ Action ============
 	
-	function createNodeHotkey(_node, _param = noone) { #region
+	function createNodeHotkey(_node, _param = noone) {
 		var node;
 		
-		if(is_string(_node)) node = nodeBuild(_node, mouse_grid_x, mouse_grid_y);
-		else                 node = _node(mouse_grid_x, mouse_grid_y, getCurrentContext(), _param);
-		
-		if(value_dragging) {
+		if(mouse_create_x == undefined || mouse_create_sx != mouse_grid_x || mouse_create_sy != mouse_grid_y) {
+			mouse_create_sx = mouse_grid_x;
+			mouse_create_sy = mouse_grid_y;
 			
-			if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
-				if(node.input_display_list != -1) {
-					for (var i = 0, n = array_length(node.input_display_list); i < n; i++) {
-						if(!is_real(node.input_display_list[i])) continue;
-						if(node.inputs[| node.input_display_list[i]].setFrom(value_dragging)) break;
-					}
-						
-				} else {
-					for (var i = 0, n = ds_list_size(node.inputs); i < n; i++)
-						if(node.inputs[| i].setFrom(value_dragging)) break;
+			mouse_create_x = mouse_grid_x;
+			mouse_create_y = mouse_grid_y;
+		} 
+		
+		var _mx = mouse_create_x;
+		var _my = mouse_create_y;
+		var _gs = project.graphGrid.size;
+		
+		if(is_string(_node)) node = nodeBuild(_node, _mx, _my);
+		else                 node = _node(_mx, _my, getCurrentContext(), _param);
+		
+		mouse_create_y = ceil((mouse_create_y + node.h + _gs / 2) / _gs) * _gs;
+		
+		if(value_dragging == noone) return;
+			
+		if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
+			if(node.input_display_list != -1) {
+				for (var i = 0, n = array_length(node.input_display_list); i < n; i++) {
+					if(!is_real(node.input_display_list[i])) continue;
+					if(node.inputs[| node.input_display_list[i]].setFrom(value_dragging)) break;
 				}
-				
-			} else if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
-				
-				for (var i = 0, n = ds_list_size(node.outputs); i < n; i++)
-					if(value_dragging.setFrom(node.outputs[| i])) break;
+					
+			} else {
+				for (var i = 0, n = ds_list_size(node.inputs); i < n; i++)
+					if(node.inputs[| i].setFrom(value_dragging)) break;
 			}
 			
-			value_dragging = noone;
+		} else if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+			for (var i = 0, n = ds_list_size(node.outputs); i < n; i++)
+				if(value_dragging.setFrom(node.outputs[| i])) break;
+				
 		}
-	} #endregion
+		
+		value_dragging = noone;
+	}
 	
-	function doTransform() { #region
+	function doTransform() {
 		for( var i = 0; i < array_length(nodes_selecting); i++ ) {
 			var node = nodes_selecting[i];
 			if(ds_list_empty(node.outputs)) continue;
@@ -2204,9 +2222,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				tr.inputs[| 0].setFrom(_o);
 			}
 		}
-	} #endregion
+	}
 
-	function doDuplicate() { #region
+	function doDuplicate() {
 		if(array_empty(nodes_selecting)) return;
 		
 		var _map  = {};
@@ -2273,9 +2291,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		node_drag_ox  = x0; node_drag_oy  = y0;
 		
 		nodes_selecting = APPEND_LIST;
-	} #endregion
+	}
 
-	function doInstance() { #region
+	function doInstance() {
 		var node = getFocusingNode();
 		if(node == noone) return;
 	
@@ -2296,7 +2314,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		node_drag_mx  = _nodeNew.x; node_drag_my  = _nodeNew.y;
 		node_drag_sx  = _nodeNew.x; node_drag_sy  = _nodeNew.y;
 		node_drag_ox  = _nodeNew.x; node_drag_oy  = _nodeNew.y;
-	} #endregion
+	}
 
 	function doCopy() { #region
 		if(array_empty(nodes_selecting)) return;

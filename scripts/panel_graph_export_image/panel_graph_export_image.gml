@@ -135,7 +135,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 				draw_clear_alpha(0, 0);
 			
 			BLEND_OVERRIDE
-			draw_surface(s, borderPad, borderPad);
+			draw_surface(s, 0, 0);
 			BLEND_NORMAL
 			
 			gpu_set_colorwriteenable(1, 1, 1, 1);
@@ -149,9 +149,10 @@ function graph_export_image(allList, nodeList, settings = {}) {
 			} else
 				draw_clear_alpha(0, 0);
 			
-			BLEND_ALPHA_MULP
+			BLEND_OVERRIDE
 			draw_surface(s, borderPad, borderPad);
 			
+			BLEND_ALPHA_MULP
 			draw_set_color(borderColor);
 			draw_set_alpha(borderAlpha);
 				draw_rectangle(borderPad, borderPad, bbox_w + borderPad, bbox_h + borderPad, 1);
