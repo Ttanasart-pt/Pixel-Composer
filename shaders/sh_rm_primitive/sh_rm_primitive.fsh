@@ -537,9 +537,9 @@ float sceneSDF(int index, vec3 p) {
     mat3 irotMatrix = inverse(rotMatrix);
     
     float sca = objectScale[index];
-    p /= sca;
 	p -= position[index];
     p =  irotMatrix * p;
+    p /= sca;
 	
     p = wave(waveAmp[index], waveShift[index], waveInt[index], p);
     

@@ -110,7 +110,7 @@ function node_vdistribute(nodeList) {
 	ds_priority_destroy(nodes);
 }
 
-function node_hdistribute_dist(nodeList, anchor, distance = 0) {
+function node_hdistribute_dist(nodeList, anchor = noone, distance = 0) {
 	var amo   = array_length(nodeList);
 	var nodes = ds_priority_create();
 	
@@ -130,6 +130,7 @@ function node_hdistribute_dist(nodeList, anchor, distance = 0) {
 		ar[i] = ds_priority_delete_min(nodes);
 	ds_priority_destroy(nodes);
 	
+	if(anchor == noone) anchor = ar[0];
 	var an_ind   = array_find(ar, anchor);
 	var an_ind_x = anchor.x + anchor.w + distance;
 	
@@ -145,7 +146,7 @@ function node_hdistribute_dist(nodeList, anchor, distance = 0) {
 	}
 }
 
-function node_vdistribute_dist(nodeList, anchor, distance = 0) {
+function node_vdistribute_dist(nodeList, anchor = noone, distance = 0) {
 	var amo   = array_length(nodeList);
 	var nodes = ds_priority_create();
 	
@@ -165,6 +166,7 @@ function node_vdistribute_dist(nodeList, anchor, distance = 0) {
 		ar[i] = ds_priority_delete_min(nodes);
 	ds_priority_destroy(nodes);
 	
+	if(anchor == noone) anchor = ar[0];
 	var an_ind   = array_find(ar, anchor);
 	var an_ind_y = anchor.y + anchor.h + distance;
 	
@@ -178,4 +180,33 @@ function node_vdistribute_dist(nodeList, anchor, distance = 0) {
 		ar[i].y   = an_ind_y - ar[i].h;
 		an_ind_y -= ar[i].h + distance;
 	}
+}
+
+function node_auto_align(nodeList) {
+	var h_avg = 0, h_var = 0;
+	var v_avg = 0, v_var = 0;
+	
+	var amo = array_length(nodeList);
+	
+	for( var i = 0; i < amo; i++ ) {
+		var _n = nodeList[i];
+		var _x = _n.x;
+		var _y = _n.y;
+		
+		h_avg += _x;
+		v_avg += _y;
+	}
+	
+	h_avg /= amo;
+	v_avg /= amo;
+	
+	for( var i = 0; i < amo; i++ ) {
+		var _n = nodeList[i];
+		
+		h_var += sqr(_n.x - h_avg);
+		v_var += sqr(_n.y - v_avg);
+	}
+	
+	     if(h_var < v_var) { node_halign(nodeList); node_vdistribute(nodeList); }
+	else if(v_var < h_var) { node_valign(nodeList); node_hdistribute(nodeList); }
 }

@@ -80,6 +80,8 @@
 	function panel_graph_duplicate()			{ CALL("graph_duplicate");			PANEL_GRAPH.doDuplicate();				}
 	function panel_graph_copy()					{ CALL("graph_copy");				PANEL_GRAPH.doCopy();					}
 	function panel_graph_paste()				{ CALL("graph_paste");				PANEL_GRAPH.doPaste();					}
+	
+	function panel_graph_auto_align()			{ CALL("graph_auto_align");			node_auto_align(PANEL_GRAPH.nodes_selecting);}
 																															
 	function panel_graph_pan() { 
 		CALL("graph_pan");
@@ -391,6 +393,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 													
 		addHotkey("Graph", "Pan",					"", MOD_KEY.ctrl,					panel_graph_pan);
 		addHotkey("Graph", "Zoom",					"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_graph_zoom);
+		
+		addHotkey("Graph", "Auto Align",			"L", MOD_KEY.none,					panel_graph_auto_align);
 	#endregion
 	
 	#region ++++ toolbars ++++
