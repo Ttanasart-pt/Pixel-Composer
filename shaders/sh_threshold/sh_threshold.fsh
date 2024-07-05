@@ -16,7 +16,7 @@ uniform int       alphaThresholdUseSurf;
 uniform sampler2D alphaThresholdSurf;
 uniform float     alphaSmooth;
 
-float _step( in float threshold, in float val ) { return val <= threshold? 0. : 1.; }
+float _step( in float threshold, in float val ) { return val < threshold? 0. : 1.; }
 
 void main() {
 	float bri = brightThreshold.x;
