@@ -10,6 +10,7 @@
 				"Eraser":	 new hotkeySimple("E"),
 				"Rectangle": new hotkeySimple("N"),
 				"Ellipse":	 new hotkeySimple("M"),
+				"Iso Cube":	 new hotkeySimple(""),
 				"Curve":	 new hotkeySimple(""),
 				"Freeform":	 new hotkeySimple("Q"),
 				"Fill":		 new hotkeySimple("G"),

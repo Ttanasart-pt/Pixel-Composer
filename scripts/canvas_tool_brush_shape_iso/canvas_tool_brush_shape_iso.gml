@@ -68,8 +68,10 @@ function canvas_tool_shape_iso(brush, shape) : canvas_tool() constructor {
 				break;
 		}
 		
-		if(mouse_press(mb_right, active)) 
+		if(key_press(vk_escape)) {
 			mouse_holding = 0;
+			surface_clear(drawing_surface);
+		}
 	}
 	
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -88,6 +90,7 @@ function canvas_tool_shape_iso(brush, shape) : canvas_tool() constructor {
 function canvas_draw_iso_cube(brush, _p, _fill = false) {
 	var p0x = _p[0][0], p0y = _p[0][1];
 	var p1x = _p[1][0], p1y = _p[1][1];
+	var ww  = p1x - p0x;
 	
 	if(p1x < p0x) {
 		var tx = p0x, ty = p0y;
@@ -109,41 +112,31 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 	var p1py = p1y - h1;
 	
 	var _simp = true;
+	var cc = draw_get_color();
 	
 	if(w > 0) {
 		if(round(h2) < 0) {
 			if(round(w1) > 0) {
 				
-				if(p1px < p0px) {
-					p0x = floor(p1px);
-					p0y = floor(p1py);
-					p1x = ceil(p0px) + 1;
-					p1y = ceil(p0py);
-				} else {
-					p0x = floor(p0px);
-					p0y = floor(p0py);
-					p1x = ceil(p1px) + 1;
-					p1y = ceil(p1py);
-				}
+				p0x = floor(p1px);
+				p0y = floor(p1py);
+				p1x = ceil(p0px) + 1;
+				p1y = ceil(p0py);
 				
+				if(ww < 0) { p0x--; p1x--; }
 				_simp = false;
 			}
 			
 		} else if(round(h2) > 0) {
 			if(round(w1) < 0) {
 				
-				if(p1px < p0px) {
-					p0x = floor(p1px);
-					p0y = floor(p1py);
-					p1x = ceil(p0px) + 1;
-					p1y = ceil(p0py);
-				} else {
-					p0x = floor(p0px);
-					p0y = floor(p0py);
-					p1x = ceil(p1px) + 1;
-					p1y = ceil(p1py);
-				}
+				p0x = floor(p0px);
+				p0y = floor(p0py);
+				p1x = ceil(p1px) + 1;
+				p1y = ceil(p1py);
 				
+				if(frac(p0py) >= 0.5) { p0x--; }
+				if(ww < 0 && frac(p0px) == 0 && frac(p0py) == 0) { p0x--; p1x--; }
 				_simp = false;
 				
 			} else if(round(w1) > 0) {
@@ -196,6 +189,8 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 			d = -d;
 		}
 		
+		draw_set_color(cc);
+		
 		if(_fill == 2) {
 			if(d == 0) {
 				canvas_draw_line(p0x,  p0y,  p0px - 1, p0py);
@@ -207,7 +202,6 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 				canvas_draw_triangle(p1x - 1, p1y, p1px,     p1py - 1, p0x,     p0y, false);
 				
 			} else {
-				var cc = draw_get_color();
 				
 				draw_set_color(brush.colors[1]);
 				canvas_draw_triangle(p0px, p0py - 1, p1x, p1y + d, p1x,  p1y,      false);

@@ -7,6 +7,8 @@ function tooltipHotkey(text, context = "", name = "") constructor {
 	static setKey = function(key) { keyStr = key; return self;  }
 	
 	static drawTooltip = function() {
+		if(keyStr == "") { draw_tooltip_text(text); return; }
+		
 		draw_set_font(f_p0);
 		var _w1 = string_width(text);
 		

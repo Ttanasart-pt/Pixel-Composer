@@ -1678,7 +1678,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			for (var i = 0, n = array_length(_i); i < n; i++) {
 				var _j = _l[| _i[i]];
-				array_push_unique(value_draggings, _j);
+				if(_j.type == value_dragging.type)
+					array_push_unique(value_draggings, _j);
 			}
 			
 		} else if(key_mod_press(SHIFT)) {
