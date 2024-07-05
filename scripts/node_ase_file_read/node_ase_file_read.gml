@@ -65,21 +65,26 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_line(_x + 16, _yy - 2, _x + _w - 16, _yy - 2);
 			}
 			
-			var vis = array_safe_get_fast(_vis, i, true);
 			var _bx = _x + 24;
-			if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, 12)) {
-				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, c_white);
-				
-				if(mouse_press(mb_left, _focus))
-					hold_visibility = !_vis[i];
+			
+			if(_layer.type == 0) {
+				var vis = array_safe_get_fast(_vis, i, true);
+				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, 12)) {
+					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, c_white);
 					
-				if(mouse_click(mb_left, _focus) && _vis[i] != hold_visibility) {
-					_vis[@ i] = hold_visibility;
-					update();
-				}
-			} else 
-				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
-				
+					if(mouse_press(mb_left, _focus))
+						hold_visibility = !_vis[i];
+						
+					if(mouse_click(mb_left, _focus) && _vis[i] != hold_visibility) {
+						_vis[@ i] = hold_visibility;
+						update();
+					}
+				} else 
+					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
+					
+			} else if(_layer.type == 1)
+				draw_sprite_ui_uniform(THEME.folder_16, 0, _bx, _yy + hh / 2, 1, COLORS._main_icon);
+			
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text(_bx + 16, _yy + hh / 2, _layer.name);
 		}
@@ -102,9 +107,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _yy = by + ui(4) + i * hh;
 			var tag = tags[i];
 			
-			var cc = tag[? "Color"];
-			var st = tag[? "Frame start"];
-			var ed = tag[? "Frame end"];
+			var cc = tag[$ "Color"];
+			var st = tag[$ "Frame start"];
+			var ed = tag[$ "Frame end"];
 			var rn = ed - st + 1;
 			
 			var progFr = safe_mod(CURRENT_FRAME - _tag_delay, rn) + 1;
@@ -114,7 +119,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _tgy = _yy + ui(2);
 			var _tgh = hh  - ui(4);
 			
-			if(tag[? "Name"] == current_tag) {
+			if(tag[$ "Name"] == current_tag) {
 				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, _w - 16, _tgh, cc, 0.5);
 				
 				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, (_w - 16) * prog, _tgh, cc, 0.85);
@@ -134,14 +139,14 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				if(mouse_press(mb_left, _focus)) {
 					var _currTag = getInputData(2);
-					var _tagName = tag[? "Name"];
+					var _tagName = tag[$ "Name"];
 					inputs[| 2].setValue(_currTag == _tagName? "" : _tagName);
 				}
 			}
 			
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_set_alpha(1);
-			draw_text_add(_x + 28, _yy + hh / 2, tag[? "Name"]);
+			draw_text_add(_x + 28, _yy + hh / 2, tag[$ "Name"]);
 			
 			draw_set_halign(fa_right);
 			draw_set_alpha(0.4);
@@ -167,7 +172,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
-	content      = ds_map_create();
+	content      = noone;
 	layers       = [];
 	tags         = [];
 	_tag_delay   = 0;
@@ -192,6 +197,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var lvs = [];
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
 			var _layer = layers[i];
+			if(_layer.type != 0) continue;
+			
 			var _name  = _layer.name;
 			var _node  = noone;
 			
@@ -230,46 +237,48 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(ext != ".ase" && ext != ".aseprite") return false;
 		
-		read_ase(path, content);
+		content = read_ase(path);
+		if(content == noone) return false;
+		// print(json_stringify(content));
 		
 		layers     = [];
 		var vis    = attributes.layer_visible;
-		var frames = content[? "Frames"];
+		var frames = content[$ "Frames"];
+		if(array_empty(frames)) return false;
 		
 		for( var i = 0, n = array_length(frames); i < n; i++ ) {
 			var frame  = frames[i];
-			var chunks = frame[? "Chunks"];
+			var chunks = frame[$ "Chunks"];
 			
 			for( var j = 0; j < array_length(chunks); j++ ) {
 				var chunk = chunks[j];
 				
-				switch(chunk[? "Type"]) {
+				switch(chunk[$ "Type"]) {
 					case 0x2019: //palette
-						var pck = chunk[? "Palette"];
-						var plt = [];
-						for( var k = 0; k < array_length(pck); k++ ) {
-							var r = pck[k][? "Red"];
-							var g = pck[k][? "Green"];
-							var b = pck[k][? "Blue"];
-							var a = pck[k][? "Alpha"];
-							array_push(plt, [r, g, b, a]);
-						}
-						content[? "Palette"] = plt;
+						var pals = chunk[$ "Palette"];
+						var plt  = [];
+						
+						for( var k = 0; k < array_length(pals); k++ )
+							array_push(plt, [ pals[k][$ "Red"], pals[k][$ "Green"], pals[k][$ "Blue"], pals[k][$ "Alpha"] ]);
+						
+						content[$ "Palette"] = plt;
 						
 						var p_arr = [];
 						for( var k = 0; k < array_length(plt); k++ )
 							array_push(p_arr, make_color_rgb(plt[k][0], plt[k][1], plt[k][2]));
+						
 						outputs[| 3].setValue(p_arr);
 						break;
 						
 					case 0x2004: //layer
-						var name = chunk[? "Name"];
-						array_push(layers, new ase_layer(name));
+						var name = chunk[$ "Name"];
+						
+						array_push(layers, new ase_layer(name, chunk[$ "Layer type"]));
 						array_push(vis, true);
 						break;
 						
 					case 0x2005: //cel
-						var _layer = chunk[? "Layer index"];
+						var _layer = chunk[$ "Layer index"];
 						var cel	= new ase_cel(layers[_layer], chunk, content);
 						layers[_layer].setFrameCel(i, cel);
 						break;
@@ -278,12 +287,12 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		tags = [];
-		var chunks = content[? "Frames"][0][? "Chunks"];
+		var chunks = frames[0][$ "Chunks"];
 		
 		for( var j = 0; j < array_length(chunks); j++ ) {
 			var chunk = chunks[j];
-			if(chunk[? "Type"] != 0x2018) continue;
-			tags = chunk[? "Tags"];
+			if(chunk[$ "Type"] != 0x2018) continue;
+			tags = chunk[$ "Tags"];
 		}
 		
 		update_on_frame = false;
@@ -323,11 +332,11 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		outputs[| 2].setValue(path);
 		
 		if(path_current != path) updatePaths(path);
-		if(ds_map_empty(content)) return;
+		if(content == noone) return;
 		
 		var tag = noone;
 		for( var i = 0, n = array_length(tags); i < n; i++ ) {
-			if(tags[i][? "Name"] == current_tag) {
+			if(tags[i][$ "Name"] == current_tag) {
 				tag = tags[i];
 				break;
 			}
@@ -341,8 +350,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		var vis = attributes.layer_visible;
-		var ww = content[? "Width"];
-		var hh = content[? "Height"];
+		var ww  = content[$ "Width"];
+		var hh  = content[$ "Height"];
 		
 		var surf = outputs[| 0].getValue();
 		    surf = surface_verify(surf, ww, hh);
@@ -361,8 +370,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(!is_surface(_inSurf)) 
 					continue;
 			
-				var xx = cel.data[? "X"];
-				var yy = cel.data[? "Y"];
+				var xx = cel.data[$ "X"];
+				var yy = cel.data[$ "Y"];
 			
 				draw_surface_safe(_inSurf, xx, yy);
 			}
