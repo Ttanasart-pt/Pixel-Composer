@@ -315,8 +315,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	toolbar_height = ui(40);
 	
-	function toCenterNode(_arr = nodes_list) { #region
+	function toCenterNode(_arr = nodes_list) {
 		if(!project.active) return; 
+		
+		graph_s    = 1;
+		graph_s_to = 1;
 		
 		if(array_empty(_arr)) {
 			graph_x = round(w / 2 / graph_s);
@@ -328,25 +331,33 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var maxx = -99999;
 		var miny =  99999;
 		var maxy = -99999;
-			
+		
 		for(var i = 0; i < array_length(_arr); i++) {
 			var _node = _arr[i];
-			if(!is_struct(_node) || !is_instanceof(_node, Node) || !_node.active)
-				continue;
 			
-			minx = min(_node.x - 32, minx);
-			maxx = max(_node.x + _node.w + 32, maxx);
+			if(!is_instanceof(_node, Node)) 					continue;
+			if(is_instanceof(_node, Node_Collection_Inline))	continue;
+			if(is_instanceof(_node, Node_Feedback_Inline))		continue;
+			if(!_node.active)									continue;
+			
+			minx = min(minx, _node.x - 32);
+			maxx = max(maxx, _node.x + _node.w + 32);
 				
-			miny = min(_node.y - 32, miny);
-			maxy = max(_node.y + _node.h + 32, maxy);
+			miny = min(miny, _node.y - 32);
+			maxy = max(maxy, _node.y + _node.h + 32);
 		}
 		
-		graph_x = w / 2 / graph_s - (minx + maxx) / 2;
-		graph_y = (h - toolbar_height) / 2 / graph_s - (miny + maxy) / 2;
+		var cx = (minx + maxx) / 2;
+		var cy = (miny + maxy) / 2;
 		
-		graph_x = round(graph_x);
-		graph_y = round(graph_y);
-	} #endregion
+		graph_x = (w                 ) / 2 - cx;
+		graph_y = (h - toolbar_height) / 2 - cy;
+		
+		graph_x = round(graph_x * graph_s);
+		graph_y = round(graph_y * graph_s);
+		
+		// print($"{cx}, {cy} / {graph_x}, {graph_y}");
+	}
 	
 	function initSize() { toCenterNode(); } initSize();
 	
