@@ -230,7 +230,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		path_current = path;
-		edit_time    = max(edit_time, file_get_modify_s(path_current));
 		
 		var ext   = string_lower(filename_ext(path));
 		var _name = filename_name_only(path);
@@ -320,8 +319,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!file_exists_empty(path_current)) return;
 		
 		if(file_get_modify_s(path_current) > edit_time) {
-			updatePaths();
-			triggerRender();
+			edit_time = max(edit_time, file_get_modify_s(path_current));
+			run_in(5, function() /*=>*/ { updatePaths(); triggerRender(); });
 		}
 	} 
 	
