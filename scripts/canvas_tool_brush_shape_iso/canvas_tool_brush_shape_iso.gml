@@ -92,12 +92,22 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 	var p1x = _p[1][0], p1y = _p[1][1];
 	var ww  = p1x - p0x;
 	
+	var cc = draw_get_color();
+	
 	if(p1x < p0x) {
 		var tx = p0x, ty = p0y;
 		p0x = p1x; p0y = p1y;
 		p1x = tx;  p1y = ty;
 	}
 	
+	if(p1x == p0x && p1y > p0y) {
+		var t = p0y;
+		p0y = p1y;
+		p1y = t;
+	}
+	
+    if(p1x == p0x && p1y < p0y) p1x++;
+    
 	var d  = _p[2];
 	var w  = p1x - p0x + 1;
 	var h  = p0y - p1y;
@@ -112,9 +122,9 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 	var p1py = p1y - h1;
 	
 	var _simp = true;
-	var cc = draw_get_color();
 	
 	if(w > 0) {
+		
 		if(round(h2) < 0) {
 			if(round(w1) > 0) {
 				

@@ -16,9 +16,10 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 5] = nodeValue("Mode",  self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, @"Use color data for extra information.
-    - Linear: Displace along a line.
+    - Linear: Displace along a single line (defined by the position value).
     - Vector: Use red as X displacement, green as Y displacement.
-    - Angle: Use red as angle, green as distance.")
+    - Angle: Use red as angle, green as distance.
+    - Gradient: Displace down the brightness value defined by the Displace map.")
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Linear", "Vector", "Angle", "Gradient" ]);
 	
 	inputs[| 6] = nodeValue("Iterate",  self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, @"If not set, then strength value is multiplied directly to the displacement.

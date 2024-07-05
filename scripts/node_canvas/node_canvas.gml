@@ -276,8 +276,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_curve_cancel = button( function() { tool_curve_bez.cancel(); } ).setIcon(THEME.toolbar_check, 1);
 		
 		toolObject_selection_magic = new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
-				.setSetting(tool_thrs)
-				.setSetting(tool_fil8)
+				.setSetting(tool_thrs, tool_fil8)
 				.setToolObject(tool_sel_magic)
 		
 		tools = [
@@ -370,11 +369,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			/*  0 */ -1,
 			/*  1 */ new NodeTool( "Make/Reset Brush", THEME.canvas_tools_pencil ).setToolFn( __action_make_brush ),
 			/*  2 */ -1,
-			/*  3 */ new NodeTool( "Outline", THEME.canvas_tools_outline ).setToolObject( new canvas_tool_outline() ),
-			/*  4 */ new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setToolObject( new canvas_tool_extrude() ),
-			/*  5 */ new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setToolObject( new canvas_tool_inset()   ),
-			/*  6 */ new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setToolObject( new canvas_tool_skew()   ),
-			/*  7 */ new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setToolObject( new canvas_tool_corner()   ),
+			/*  3 */ new NodeTool( "Outline", THEME.canvas_tools_outline ).setSetting(tool_thrs, tool_fil8).setToolObject( new canvas_tool_outline() ),
+			/*  4 */ new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setSetting(tool_thrs, tool_fil8).setToolObject( new canvas_tool_extrude() ),
+			/*  5 */ new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setSetting(tool_thrs, tool_fil8).setToolObject( new canvas_tool_inset()   ),
+			/*  6 */ new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setSetting(tool_thrs, tool_fil8).setToolObject( new canvas_tool_skew()    ),
+			/*  7 */ new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setSetting(tool_thrs, tool_fil8).setToolObject( new canvas_tool_corner()   ),
 		];
 		
 		rightTools_not_selection = [ 
