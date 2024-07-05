@@ -43,14 +43,14 @@ function graph_export_image(allList, nodeList, settings = {}) {
 	var s  = surface_create(bbox_w, bbox_h);
 	var cs = surface_create(bbox_w * aa, bbox_h * aa);
 	
+	var gr_x = -bbox_x0;
+	var gr_y = -bbox_y0;
+	var mx = gr_x, my = gr_y;
+	
 	surface_set_target(s); //draw nodes
 		if(bgEnable) draw_clear(bgColor);
 		else		 draw_clear_alpha(0, 0);
-		
-		var gr_x = -bbox_x0;
-		var gr_y = -bbox_y0;
-		var mx = gr_x, my = gr_y;
-		
+	
 		if(gridEnable) {
 			var gls = 32;
 			var gr_ls = gls * scale;
@@ -105,13 +105,12 @@ function graph_export_image(allList, nodeList, settings = {}) {
 			surface_reset_target();
 		
 			shader_set(sh_downsample);
-			shader_set_f("down", aa);
-			shader_set_f("dimension", surface_get_width_safe(cs), surface_get_height_safe(cs));
-			draw_surface(cs, 0, 0);
+				shader_set_f("down", aa);
+				shader_set_f("dimension", surface_get_width_safe(cs), surface_get_height_safe(cs));
+				draw_surface(cs, 0, 0);
 			shader_reset();
-			surface_free(cs);
 		#endregion
-		
+			
 		#region draw node
 			for(var i = 0; i < array_length(nodeList); i++)
 				nodeList[i].onDrawNodeBehind(gr_x, gr_y, mx, my, scale);
@@ -125,25 +124,46 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		
 	surface_reset_target();
 	
-	if(borderPad == 0) return s;
-	
 	var _sg = surface_create(bbox_w + borderPad * 2, bbox_h + borderPad * 2);
 	
-	surface_set_target(_sg);
-		if(bgEnable) draw_clear(bgColor);
-		else		 draw_clear_alpha(0, 0);
+	if(borderPad == 0) {
+		surface_set_target(_sg);
+			if(bgEnable) {
+				draw_clear(bgColor);
+				gpu_set_colorwriteenable(1, 1, 1, 0);
+			} else
+				draw_clear_alpha(0, 0);
+			
+			BLEND_OVERRIDE
+			draw_surface(s, borderPad, borderPad);
+			BLEND_NORMAL
+			
+			gpu_set_colorwriteenable(1, 1, 1, 1);
+		surface_reset_target();
 		
-		BLEND_ALPHA_MULP
-		draw_surface(s, borderPad, borderPad);
-		
-		draw_set_color(borderColor);
-		draw_set_alpha(borderAlpha);
-			draw_rectangle(borderPad, borderPad, bbox_w + borderPad, bbox_h + borderPad, 1);
-		draw_set_alpha(1);
-		BLEND_NORMAL
-	surface_reset_target();
+	} else {
+		surface_set_target(_sg);
+			if(bgEnable) {
+				draw_clear(bgColor);
+				gpu_set_colorwriteenable(1, 1, 1, 0);
+			} else
+				draw_clear_alpha(0, 0);
+			
+			BLEND_ALPHA_MULP
+			draw_surface(s, borderPad, borderPad);
+			
+			draw_set_color(borderColor);
+			draw_set_alpha(borderAlpha);
+				draw_rectangle(borderPad, borderPad, bbox_w + borderPad, bbox_h + borderPad, 1);
+			draw_set_alpha(1);
+			BLEND_NORMAL
+			
+			gpu_set_colorwriteenable(1, 1, 1, 1);
+		surface_reset_target();
+	}
 	
-	
+	surface_free(cs);
 	surface_free(s);
+	
 	return _sg;
 }

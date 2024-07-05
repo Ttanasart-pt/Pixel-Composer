@@ -1953,6 +1953,9 @@ function Panel_Animation() : PanelContent() constructor {
 				if(_hov) keyframe_boxable = false;
 			}
 			
+			draw_set_color(COLORS.panel_animation_timeline_top);
+			draw_rectangle(0, 0, bar_w, hh, false);
+			
 			var _fr = ceil((bar_w / timeline_scale - timeline_shift) / timeline_separate) * timeline_separate;
 			
 			for(var i = timeline_separate; i <= _fr; i += timeline_separate) {
@@ -2030,9 +2033,6 @@ function Panel_Animation() : PanelContent() constructor {
 						onion_dragging = noone;
 				}
 			}
-			
-			draw_set_color(COLORS.panel_animation_timeline_top);
-			draw_rectangle(0, 0, bar_w, hh, false);
 			
 			draw_set_font(f_p2);
 			var cf = string(CURRENT_FRAME + 1);
