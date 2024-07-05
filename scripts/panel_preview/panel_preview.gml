@@ -1211,6 +1211,7 @@ function Panel_Preview() : PanelContent() constructor {
 			shader_set_f("gridStep",  	_step);
 			shader_set_f("gridScale",  	zm / 2);
 			shader_set_f("axisBlend",   1.);
+			shader_set_f("viewRange",   [ d3_view_camera.view_near, d3_view_camera.view_far ]);
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, w, h);
 		shader_reset();

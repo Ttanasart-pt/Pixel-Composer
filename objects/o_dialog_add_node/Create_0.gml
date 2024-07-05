@@ -787,7 +787,7 @@ event_inherited();
 				
 				if(match == -9999) continue;
 				
-				ds_priority_add(pr_list, [_node, param], match);
+				ds_priority_add(pr_list, [ _node, param ], match);
 				search_map[? _node] = 1;
 			}
 		}

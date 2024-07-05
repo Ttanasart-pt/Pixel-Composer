@@ -695,9 +695,9 @@ function __initNodes() {
 		addNodeObject(d3d, "Point Affector",	s_node_3d_point_affector,	"Node_3D_Point_Affector",	[1, Node_3D_Point_Affector],, "Generate array of 3D points interpolating between two values based on the distance.").setVersion(11570);
 		
 		ds_list_add(d3d, "Ray Marching");
-		addNodeObject(d3d, "RM Primitive",		s_node_rm_primitive,		"Node_RM_Primitive",		[1, Node_RM_Primitive], ["ray marching"]).setVersion(11720);
+		addNodeObject(d3d, "RM Primitive",		s_node_rm_primitive,		"Node_RM_Primitive",		[1, Node_RM_Primitive], ["ray marching", "rm object"]).setVersion(11720);
 		addNodeObject(d3d, "RM Terrain",		s_node_rm_terrain,			"Node_RM_Terrain",			[1, Node_RM_Terrain],   ["ray marching"]).setVersion(11720);
-		addNodeObject(d3d, "RM Combine",		s_node_rm_combine,			"Node_RM_Combine",			[1, Node_RM_Combine],   ["ray marching"]).setVersion(11740);
+		addNodeObject(d3d, "RM Combine",		s_node_rm_combine,			"Node_RM_Combine",			[1, Node_RM_Combine],   ["ray marching", "rm boolean"]).setVersion(11740);
 		addNodeObject(d3d, "RM Render",			s_node_rm_render,			"Node_RM_Render",			[1, Node_RM_Render],	["ray marching"]).setVersion(11740);
 		
 	#endregion

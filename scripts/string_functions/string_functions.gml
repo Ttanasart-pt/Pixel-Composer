@@ -7,21 +7,23 @@ function string_to_array(str) { #region
 } #endregion
 
 function string_partial_match(str, key) { #region
-	var amo = string_length(str);
-	var run = 1;
-	var consec = 0;
-	var conMax = 0;
+	var amo      = string_length(str);
+	var run      = 1;
+	var consec   = 0;
+	var conMax   = 0;
 	var misMatch = 0;
-	var kchr = string_char_at(key, run);
+	var kchr     = string_char_at(key, run);
+	var ch;
 	
 	for( var i = 1; i <= amo; i++ ) {
-		var ch = string_char_at(str, i);
+		ch = string_char_at(str, i);
 		if(ch == kchr) {
 			consec++;
 			conMax = max(conMax, consec);
 			run++;
 			if(run > string_length(key)) return conMax - (misMatch + (amo - i));
 			kchr = string_char_at(key, run);
+			
 		} else {
 			consec = 0;
 			misMatch += amo - i;
