@@ -28,12 +28,17 @@ function TEST_PATH(path) { #region
 	LOAD_AT(path);
 } #endregion
 
-function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
+function LOAD_PATH(path, readonly = false, safe_mode = false) {
+	var _rep = false;
+	
 	for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) {
 		var _p = array_safe_get_fast(PROJECTS, i);
 		if(!is_instanceof(_p, Project)) continue;
 		
-		if(_p.path == path) closeProject(_p);
+		if(_p.path == path) {
+			_rep = true;
+			closeProject(_p);
+		}
 	}
 	
 	var _PROJECT = PROJECT;
@@ -42,7 +47,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 	if(_PROJECT == noone) {
 		PROJECTS = [ PROJECT ];
 		
-	} else if(_PROJECT.path == "" && !_PROJECT.modified) {
+	} else if(!_rep && _PROJECT.path == "" && !_PROJECT.modified) {
 		var ind = array_find(PROJECTS, _PROJECT);
 		if(ind == -1) ind = 0;
 		PROJECTS[ind] = PROJECT;
@@ -62,11 +67,10 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) { #region
 	if(!res) return false;
 	
 	PROJECT.safeMode = safe_mode;
-	if(!IS_CMD) 
-		setFocus(PANEL_GRAPH.panel);
+	if(!IS_CMD) setFocus(PANEL_GRAPH.panel);
 	
 	return PROJECT;
-} #endregion
+}
 
 function LOAD_AT(path, params = new __loadParams()) { #region
 	static log = false;

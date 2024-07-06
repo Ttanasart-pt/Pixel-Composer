@@ -2188,7 +2188,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(FILE_DROPPED && !array_empty(FILE_DROPPING)) {
 				_gx = mx / graph_s - graph_x;
 				_gy = my / graph_s - graph_y;
-				load_file_path(FILE_DROPPING, _gx, _gy);
+				run_in(1, load_file_path, [ FILE_DROPPING, _gx, _gy ]);
 			}
 		}
 		
