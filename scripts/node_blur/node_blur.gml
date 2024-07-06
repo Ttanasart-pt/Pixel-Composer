@@ -65,6 +65,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		inputs[| 4].setVisible(_isovr);
 		
+		if(!is_surface(_surf)) return _outSurf;
 		var format = surface_get_format(_surf);
 		var _sw    = surface_get_width_safe(_surf);
 		var _sh    = surface_get_height_safe(_surf);
