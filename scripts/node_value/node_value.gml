@@ -165,7 +165,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	#region ---- timeline ----
 		show_graph	= false;
-		graph_h		= ui(64);
+		graph_h		= ui(96);
 	#endregion
 	
 	#region ---- inspector ----

@@ -66,6 +66,7 @@ function timelineItemNode(node) : timelineItem() constructor {
 			col = _c;
 			break;
 		}
+		
 		if(col == -1) col = merge_color(CDEF.main_ltgrey, CDEF.main_white, 0.3);
 		color_cur = col;
 		

@@ -121,7 +121,29 @@
 		return 0.299 * r2 + 0.587 * g2 + 0.224 * b2;
 	} #endregion
 
-	function colorMultiply(c1, c2) { #region
+	function colorMultiplyRGB(c1, c2) {
+		INLINE 
+		
+		if(c1 * c2 == 0) return 0;
+		if(c1 == c_white) return c2;
+		if(c2 == c_white) return c1;
+	
+	    var r1 = c1 >> 16 & 0xFF;
+	    var g1 = c1 >> 8 & 0xFF;
+	    var b1 = c1 & 0xFF;
+	
+	    var r2 = c2 >> 16 & 0xFF;
+	    var g2 = c2 >> 8 & 0xFF;
+	    var b2 = c2 & 0xFF;
+		
+	    var r = min(r1 * r2 / 255, 255);
+	    var g = min(g1 * g2 / 255, 255);
+	    var b = min(b1 * b2 / 255, 255);
+	
+	    return (r << 16) | (g << 8) | b;
+	}
+	
+	function colorMultiply(c1, c2) {
 		INLINE 
 		
 		if(c1 * c2 == 0) return 0;
@@ -157,7 +179,7 @@
 	
 		// if(is_real(c1)) return make_color_rgb((r1 * r2) * 255, (g1 * g2) * 255, (b1 * b2) * 255);
 		// return make_color_rgba((r1 * r2) * 255, (g1 * g2) * 255, (b1 * b2) * 255, (a1 * a2) * 255);
-	} #endregion
+	}
 
 	function colorAdd(c1, c2) { #region
 	if(c1 == 0) return c2;

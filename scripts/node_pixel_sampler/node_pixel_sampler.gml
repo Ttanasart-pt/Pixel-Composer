@@ -29,7 +29,7 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	input_display_list = [
 		["Base Texture", false], 0, 1, 2, 
-		["Surface",		 false], 3, 4, 5, 
+		["Surface",		 false], 3, //4, 5, 
 		["Render",		 false], 7, 8, 
 	];
 	
