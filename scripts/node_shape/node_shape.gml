@@ -80,6 +80,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 9] = nodeValue("Corner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
+	inputs[| 9].overlay_draw_text = false;
 	
 	inputs[| 10] = nodeValue("Shape color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
@@ -150,7 +151,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _hov = false;
@@ -174,28 +175,76 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		}
 		
 		var _type = current_data[15];
+		var _pos  = [ 0, 0 ];
+		var _sca  = [ 1, 1 ];
+		var _px, _py;
+		var hv;
+		
+		var _hov = false;
+		var _int = hover;
 		
 		if(_type == 0) {
-			var hv = inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+			_pos = [ current_data[3][0], current_data[3][1] ];
+			_sca = [ current_data[3][2], current_data[3][3] ];
 			
 		} else if(_type == 1) {
-			var _pos = current_data[16];
-			var _px  = _x + _pos[0] * _s;
-			var _py  = _y + _pos[1] * _s;
+			_pos = current_data[16];
+			_sca = current_data[17];
 			
-			var hv = inputs[| 16].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
-			var hv = inputs[| 17].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		}
+		
+		if(_type != 2) {
+			if(inputs[| 9].show_in_inspector) {
+				var _px = _x  + _pos[0] * _s;
+				var _py = _y  + _pos[1] * _s;
+				
+				var _x0 = _px - _sca[0] * _s;
+				var _y0 = _py - _sca[1] * _s;
+				var _x1 = _px + _sca[0] * _s;
+				var _y1 = _py + _sca[1] * _s;
+				
+				var aa = -45;
+				var ar = 90;
+				
+					 if(_sca[0] < 0 && _sca[1] < 0) { aa =  135; ar = -90; }
+				else if(_sca[0] < 0 && _sca[1] > 0) { aa = -135; ar =   0; }
+				else if(_sca[0] > 0 && _sca[1] < 0) { aa =   45; ar = 180; }
+				
+				var _max_s = max(abs(_sca[0]), abs(_sca[1]));
+				var _corr  = current_data[9] * _s * _max_s;
+				var _cor   = _corr / (sqrt(2) - 1);
+				
+				var cx = _x0 + lengthdir_x(_cor, aa);
+				var cy = _y0 + lengthdir_y(_cor, aa);
+				
+				draw_set_color(COLORS._main_accent);
+				draw_arc(cx, cy, _cor - _corr, ar, ar + 90, 2);
+				
+				hv = inputs[| 9].drawOverlay(_int, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s); _hov |= hv; _int &= !_hov;
+			}
+		}
+		
+		if(_type == 0) {
+			hv = inputs[| 3].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
+			
+		} else if(_type == 1) {
+			_px  = _x + _pos[0] * _s;
+			_py  = _y + _pos[1] * _s;
+			
+			hv = inputs[| 16].drawOverlay(_int, active,  _x,  _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
+			hv = inputs[| 17].drawOverlay(_int, active, _px, _py, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
+		
 		}
 		
 		return _hov;
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _dim	= _data[0];
 		var _bg		= _data[1];
 		var _shape	= _data[2];
 		var _aa		= _data[6];
-		var _corner = _data[9];
+		var _corner = _data[9];  _corner = clamp(_corner, 0, .9);
 		var _color  = _data[10];
 		var _df		= _data[12];
 		var _path	= _data[14];
@@ -248,7 +297,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		use_path = _path != noone && struct_has(_path, "getPointRatio");
 		
-		if(use_path) { #region
+		if(use_path) {
 			inputs[|  3].setVisible(false);
 			inputs[|  4].setVisible(false);
 			inputs[|  5].setVisible(false);
@@ -293,7 +342,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			surface_reset_target();
 			
 			return _outSurf;
-		} #endregion
+		}
 		
 		surface_set_shader(_outSurf, sh_shape);
 			if(_bg) draw_clear_alpha(0, 1);

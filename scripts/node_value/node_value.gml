@@ -160,11 +160,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_blend       = 1;
 		draw_blend_color = 1;
 		
-		__overlay_hover = [];
+		__overlay_hover   = [];
+		overlay_draw_text = true;
 	#endregion
 	
 	#region ---- timeline ----
 		show_graph	= false;
+		show_graphs = array_create(array_safe_length(_value));
 		graph_h		= ui(96);
 	#endregion
 	
@@ -1759,33 +1761,34 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		switch(display_type) {
 			case VALUE_DISPLAY._default :
+			case VALUE_DISPLAY.slider :
 				var _angle = argument_count > arc + 0? argument[arc + 0] : 0;
 				var _scale = argument_count > arc + 1? argument[arc + 1] : 1;
 				var _spr   = argument_count > arc + 2? argument[arc + 2] : 0;
-				return preview_overlay_scalar(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
+				return preview_overlay_scalar(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
 						
 			case VALUE_DISPLAY.rotation :
 				var _rad = argument_count >  arc + 0? argument[ arc + 0] : 64;
-				return preview_overlay_rotation(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
+				return preview_overlay_rotation(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
 						
 			case VALUE_DISPLAY.vector :
 				var _typ = argument_count > arc + 0? argument[arc + 0] : 0;
 				var _sca = argument_count > arc + 1? argument[arc + 1] : 1;
-				return preview_overlay_vector(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ);
+				return preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ);
 				
 			case VALUE_DISPLAY.gradient_range :
 				var _dim = argument[arc];
 				
 				if(mappedJunc.attributes.mapped)
-					return preview_overlay_gradient_range(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _dim);
+					return preview_overlay_gradient_range(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _dim);
 				break;
 						
 			case VALUE_DISPLAY.area :
 				var _flag = argument_count > arc + 0? argument[arc + 0] : 0b0011;
-				return preview_overlay_area(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, struct_try_get(display_data, "onSurfaceSize"));
+				return preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, struct_try_get(display_data, "onSurfaceSize"));
 						
 			case VALUE_DISPLAY.puppet_control :
-				return preview_overlay_puppet(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				return preview_overlay_puppet(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
 		
 		return -1;

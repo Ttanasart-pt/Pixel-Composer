@@ -1224,6 +1224,8 @@ function Panel_Animation() : PanelContent() constructor {
 				var _max = -999999;
 				
 				for( var i = 0, n = array_length(prop.animators); i < n; i++ ) {
+					if(!prop.show_graphs[i]) continue;
+					
 					var animator = prop.animators[i];
 					for(var k = 0; k < ds_list_size(animator.values); k++) {
 						var key_val = animator.values[| k].value;
@@ -1239,8 +1241,11 @@ function Panel_Animation() : PanelContent() constructor {
 					}
 				}
 				
-				for( var i = 0, n = array_length(prop.animators); i < n; i++ )
+				for( var i = 0, n = array_length(prop.animators); i < n; i++ ) {
+					if(!prop.show_graphs[i]) continue;
+					
 					__drawDopesheetGraphLine(prop.animators[i], 0, _mmx, _mmy, _min, _max);
+				}
 			} else
 				__drawDopesheetGraphLine(prop.animator, 0, _mmx, _mmy);
 		surface_reset_target();
@@ -1492,7 +1497,9 @@ function Panel_Animation() : PanelContent() constructor {
 		draw_rectangle(_tool_x0, ty - ui(8), _tool_x1, ty + ui(8), false);
 		BLEND_NORMAL
 		
-		if(prop.show_graph) {
+		var _graph_show = prop.sep_axis? prop.show_graphs[animator.index] : prop.show_graph;
+		
+		if(_graph_show) {
 			var _y1 = ty + ui(10) + prop.graph_h + ui(8);
 			var c1  = colorMultiply(_item.item.color_cur, COLORS.panel_animation_dope_key_bg_hover);
 			draw_set_color(c1);
@@ -1554,10 +1561,12 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, COLORS._main_icon_on_inner, _tool_a);
 				TOOLTIP = __txtx("panel_animation_show_graph", "Show graph");
 				
-				if(mouse_press(mb_left, pFOCUS))
-					prop.show_graph = !prop.show_graph;
+				if(mouse_press(mb_left, pFOCUS)) {
+					if(prop.sep_axis) prop.show_graphs[animator.index] = !_graph_show;
+					else              prop.show_graph                  = !_graph_show;
+				}
 			} else
-				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, prop.show_graph? COLORS._main_accent : COLORS._main_icon, prop.show_graph? 1 : _tool_a);
+				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, _graph_show? COLORS._main_accent : COLORS._main_icon, _graph_show? 1 : _tool_a);
 		}
 						
 		tx = tool_width - ui(20 + 16 * 4.5);
@@ -1847,7 +1856,9 @@ function Panel_Animation() : PanelContent() constructor {
 							_cont.h	+= ui(18);
 						}
 						
-						if(_prop.show_graph && _prop.type != VALUE_TYPE.color) {
+						var _graph_show = _prop.sep_axis? array_any(_prop.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.show_graph;
+						
+						if(_graph_show && _prop.type != VALUE_TYPE.color) {
 							if(_cont.item.color_cur > -1) {
 								draw_set_color(c1);
 								draw_rectangle(0, key_y - ui(10), bar_show_w, key_y + _prop.graph_h - ui(2), false);
@@ -1905,8 +1916,10 @@ function Panel_Animation() : PanelContent() constructor {
 					var _dy   = prop.y;
 					var _prop = prop.prop;
 					
-					if(isGraphable(_prop) && _prop.show_graph)
-						_drawDopesheetGraph(_prop, _dy, msx, msy);
+					if(isGraphable(_prop)) {
+						var _graph_show = _prop.sep_axis? array_any(_prop.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.show_graph;
+						if(_graph_show) _drawDopesheetGraph(_prop, _dy, msx, msy);
+					}
 						
 					for( var k = 0; k < array_length(prop.animators); k++ ) {
 						var key = _drawDopesheetAnimatorKeysBG(prop.animators[k], msx, msy);

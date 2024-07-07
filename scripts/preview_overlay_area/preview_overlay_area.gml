@@ -43,74 +43,74 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 		}
 	}
 	
-	if(!interact) return -1;
-	
-	var _hov = [ 0, 0, 0, 0 ], _hovPos = 0;
-	
-	     if(drag_type == 1) _r = value_snap(drag_sx - (_mx - drag_mx) / _s, _snx);
-	else if(drag_type == 2) _t = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-	else if(drag_type == 3) _l = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-	else if(drag_type == 4) _b = value_snap(drag_sy - (_my - drag_my) / _s, _sny);
-	
-	if(drag_type) {
-		var _sval = array_clone(showValue());
-		if(unit.mode == VALUE_UNIT.reference) {
-			var _ref = unit.reference();
-			_sval[0] *= _ref[0];
-			_sval[1] *= _ref[1];
-			_sval[2] *= _ref[0];
-			_sval[3] *= _ref[1];
+	if(interact) {
+		var _hov = [ 0, 0, 0, 0 ], _hovPos = 0;
+		
+		     if(drag_type == 1) _r = value_snap(drag_sx - (_mx - drag_mx) / _s, _snx);
+		else if(drag_type == 2) _t = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+		else if(drag_type == 3) _l = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+		else if(drag_type == 4) _b = value_snap(drag_sy - (_my - drag_my) / _s, _sny);
+		
+		if(drag_type) {
+			var _sval = array_clone(showValue());
+			if(unit.mode == VALUE_UNIT.reference) {
+				var _ref = unit.reference();
+				_sval[0] *= _ref[0];
+				_sval[1] *= _ref[1];
+				_sval[2] *= _ref[0];
+				_sval[3] *= _ref[1];
+			}
+			
+			     if(drag_type == 1) _sval[0] = _r;
+			else if(drag_type == 2) _sval[1] = _t;
+			else if(drag_type == 3) _sval[2] = _l;
+			else if(drag_type == 4) _sval[3] = _b;
+			
+			if(setValueInspector(_sval))
+				UNDO_HOLDING = true;
+			
+			if(mouse_release(mb_left)) {
+				drag_type = 0;
+				UNDO_HOLDING = false;
+			}
 		}
 		
-		     if(drag_type == 1) _sval[0] = _r;
-		else if(drag_type == 2) _sval[1] = _t;
-		else if(drag_type == 3) _sval[2] = _l;
-		else if(drag_type == 4) _sval[3] = _b;
-		
-		if(setValueInspector(_sval))
-			UNDO_HOLDING = true;
-		
-		if(mouse_release(mb_left)) {
-			drag_type = 0;
-			UNDO_HOLDING = false;
-		}
-	}
-	
-	if(drawSize && point_in_circle(_mx, _my, xc, y0, 16)) {
-		_hov[0] = 1;
-		hover   = 1;
-		
-		if(mouse_press(mb_left, active)) {
-			drag_type = 2;
-			drag_sy   = _t;
-			drag_my   = _my;
-		}
-	} else if(drawSize && point_in_circle(_mx, _my, xc, y1, 16)) {
-		_hov[1] = 1;
-		hover = 3;
-		
-		if(mouse_press(mb_left, active)) {
-			drag_type = 4;
-			drag_sy   = _b;
-			drag_my   = _my;
-		}
-	} else if(drawSize && point_in_circle(_mx, _my, x0, yc, 16)) {
-		_hov[2] = 1;
-		hover = 0;
-		
-		if(mouse_press(mb_left, active)) {
-			drag_type = 3;	
-			drag_sx   = _l;
-			drag_mx   = _mx;
-		}
-	} else if(drawSize && point_in_circle(_mx, _my, x1, yc, 16)) {
-		_hov[3] = 1;
-		hover = 2;
-		
-		if(mouse_press(mb_left, active)) {
-			drag_type = 1;
-			drag_sx   = _r;
-			drag_mx   = _mx;
+		if(drawSize && point_in_circle(_mx, _my, xc, y0, 16)) {
+			_hov[0] = 1;
+			hover   = 1;
+			
+			if(mouse_press(mb_left, active)) {
+				drag_type = 2;
+				drag_sy   = _t;
+				drag_my   = _my;
+			}
+		} else if(drawSize && point_in_circle(_mx, _my, xc, y1, 16)) {
+			_hov[1] = 1;
+			hover = 3;
+			
+			if(mouse_press(mb_left, active)) {
+				drag_type = 4;
+				drag_sy   = _b;
+				drag_my   = _my;
+			}
+		} else if(drawSize && point_in_circle(_mx, _my, x0, yc, 16)) {
+			_hov[2] = 1;
+			hover = 0;
+			
+			if(mouse_press(mb_left, active)) {
+				drag_type = 3;	
+				drag_sx   = _l;
+				drag_mx   = _mx;
+			}
+		} else if(drawSize && point_in_circle(_mx, _my, x1, yc, 16)) {
+			_hov[3] = 1;
+			hover = 2;
+			
+			if(mouse_press(mb_left, active)) {
+				drag_type = 1;
+				drag_sx   = _r;
+				drag_mx   = _mx;
+			}
 		}
 	}
 	
@@ -164,102 +164,102 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 		}
 	}
 	
-	if(!interact) return -1;
-	
-	var _hov = [ 0, 0, 0 ];
-	var _r   = 10;
-	
-	if(drag_type) {
-		var _sval = array_clone(showValue());
-		if(unit.mode == VALUE_UNIT.reference) {
-			var _ref = unit.reference();
-			_sval[0] *= _ref[0];
-			_sval[1] *= _ref[1];
-			_sval[2] *= _ref[0];
-			_sval[3] *= _ref[1];
+	if(interact) {
+		var _hov = [ 0, 0, 0 ];
+		var _r   = 10;
+		
+		if(drag_type) {
+			var _sval = array_clone(showValue());
+			if(unit.mode == VALUE_UNIT.reference) {
+				var _ref = unit.reference();
+				_sval[0] *= _ref[0];
+				_sval[1] *= _ref[1];
+				_sval[2] *= _ref[0];
+				_sval[3] *= _ref[1];
+			}
 		}
-	}
-	
-	if(drag_type == 1) {
-		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 		
-		_sval[0]  = _xx;
-		_sval[1]  = _yy;
-		
-		if(setValueInspector(_sval))
-			UNDO_HOLDING = true;
-							
-		if(mouse_release(mb_left)) {
-			drag_type = 0;
-			UNDO_HOLDING = false;
+		if(drag_type == 1) {
+			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			
+			_sval[0]  = _xx;
+			_sval[1]  = _yy;
+			
+			if(setValueInspector(_sval))
+				UNDO_HOLDING = true;
+								
+			if(mouse_release(mb_left)) {
+				drag_type = 0;
+				UNDO_HOLDING = false;
+			}
+		} else if(drag_type == 2) {
+			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			
+			_sval[2]  = _xx;
+			_sval[3]  = _yy;
+			
+			if(setValueInspector(_sval))
+				UNDO_HOLDING = true;
+								
+			if(mouse_release(mb_left)) {
+				drag_type = 0;
+				UNDO_HOLDING = false;
+			}
+		} else if(drag_type == 3) {
+			var __x0 = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+			var __y0 = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			var __x1 = value_snap(_x1 + (__x0 - _x0), _snx);
+			var __y1 = value_snap(_y1 + (__y0 - _y0), _sny);
+			
+			_val[0] = __x0;
+			_val[1] = __y0;
+			_val[2] = __x1;
+			_val[3] = __y1;
+			
+			if(setValueInspector(_val))
+				UNDO_HOLDING = true;
+								
+			if(mouse_release(mb_left)) {
+				drag_type = 0;
+				UNDO_HOLDING = false;
+			}
 		}
-	} else if(drag_type == 2) {
-		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 		
-		_sval[2]  = _xx;
-		_sval[3]  = _yy;
-		
-		if(setValueInspector(_sval))
-			UNDO_HOLDING = true;
-							
-		if(mouse_release(mb_left)) {
-			drag_type = 0;
-			UNDO_HOLDING = false;
-		}
-	} else if(drag_type == 3) {
-		var __x0 = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		var __y0 = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-		var __x1 = value_snap(_x1 + (__x0 - _x0), _snx);
-		var __y1 = value_snap(_y1 + (__y0 - _y0), _sny);
-		
-		_val[0] = __x0;
-		_val[1] = __y0;
-		_val[2] = __x1;
-		_val[3] = __y1;
-		
-		if(setValueInspector(_val))
-			UNDO_HOLDING = true;
-							
-		if(mouse_release(mb_left)) {
-			drag_type = 0;
-			UNDO_HOLDING = false;
-		}
-	}
-	
-	if(drawSize && point_in_circle(_mx, _my, x0, y0, 8)) {
-		_hov[1] = 1;
-		hover   = 1;
-		
-		if(mouse_press(mb_left, active)) {
-			drag_type = 1;	
-			drag_sx   = _x0;
-			drag_sy   = _y0;
-			drag_mx   = _mx;
-			drag_my   = _my;
-		}
-	} else if(drawSize && point_in_circle(_mx, _my, x1, y1, 8)) {
-		_hov[2] = 1;
-		hover   = 2;
-		
-		if(mouse_press(mb_left, active)) {
-			drag_type = 2;	
-			drag_sx   = _x1;
-			drag_sy   = _y1;
-			drag_mx   = _mx;
-			drag_my   = _my;
-		}
-	} else if(drawPos && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-		_hov[0] = 1;
-		hover   = 3;
-		
-		if(mouse_press(mb_left, active)) {
-			drag_type = 3;	
-			drag_sx   = _x0;
-			drag_sy   = _y0;
-			drag_mx   = _mx;
-			drag_my   = _my;
+		if(drawSize && point_in_circle(_mx, _my, x0, y0, 8)) {
+			_hov[1] = 1;
+			hover   = 1;
+			
+			if(mouse_press(mb_left, active)) {
+				drag_type = 1;	
+				drag_sx   = _x0;
+				drag_sy   = _y0;
+				drag_mx   = _mx;
+				drag_my   = _my;
+			}
+		} else if(drawSize && point_in_circle(_mx, _my, x1, y1, 8)) {
+			_hov[2] = 1;
+			hover   = 2;
+			
+			if(mouse_press(mb_left, active)) {
+				drag_type = 2;	
+				drag_sx   = _x1;
+				drag_sy   = _y1;
+				drag_mx   = _mx;
+				drag_my   = _my;
+			}
+		} else if(drawPos && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
+			_hov[0] = 1;
+			hover   = 3;
+			
+			if(mouse_press(mb_left, active)) {
+				drag_type = 3;	
+				drag_sx   = _x0;
+				drag_sy   = _y0;
+				drag_mx   = _mx;
+				drag_my   = _my;
+			}
 		}
 	}
 	
@@ -305,8 +305,6 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 		}
 	}
 	
-	if(!interact) return -1;
-	
 	var _hov = [ 0, 0 ];
 	var _r   = 10;
 	
@@ -320,6 +318,8 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	
 	if((drag_type == 0 || drag_type == 1) && drawPos)  draw_anchor_cross(__overlay_hover[0], _ax, _ay, _r + 4);
 	if((drag_type == 0 || drag_type == 2) && drawSize) draw_anchor(__overlay_hover[1], _ax + _aw, _ay + _ah, _r);
+	
+	if(!interact) return -1;
 	
 	if(drag_type == 1) {
 		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);

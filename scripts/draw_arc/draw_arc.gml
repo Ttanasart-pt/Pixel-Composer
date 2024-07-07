@@ -5,7 +5,7 @@ function draw_arc(_x, _y, _r, _as, _at, _th = 1, _pr = 32) {
 	var sgn = sign(ad);
 	var ar  = abs(ad) / 360 * _pr;
 	
-	for( var i = 0; i < ar; i++ ) {
+	for( var i = 0; i <= ar; i++ ) {
 		var a = _as + ast * i * sgn;
 		
 		nx = _x + lengthdir_x(_r, a);

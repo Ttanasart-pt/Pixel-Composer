@@ -13,7 +13,8 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 						
 	if(drag_type) {
 		index = 1;
-		var dist = point_distance(_mx, _my, _x, _y) / _s / _scale;
+		var dist = point_distance(_mx, _my, _x, _y) / (_s * _scale);
+		
 		if(key_mod_press(CTRL))
 			dist = round(dist);
 							
@@ -43,8 +44,10 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	__overlay_hover[0] = lerp_float(__overlay_hover[0], index, 4);
 	draw_anchor(__overlay_hover[0], _ax, _ay, _r, _type);
 	
-	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-	draw_text_add(round(_ax), round(_ay - 4), name);
+	if(overlay_draw_text) {
+		draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
+		draw_text_add(round(_ax), round(_ay - 4), name);
+	}
 	
 	return hover;
 }
