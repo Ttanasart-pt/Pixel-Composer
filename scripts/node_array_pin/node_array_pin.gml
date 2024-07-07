@@ -1,5 +1,5 @@
-function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Pin";
+function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+	name = "Array Pin";
 	setDimension(32, 32);
 	
 	auto_height      = false;
@@ -14,23 +14,32 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	bg_spr_add = 0;
 	bg_sel_spr = THEME.node_pin_bg_active;
 	
-	inputs[| 0] = nodeValue("In", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
-		.setVisible(true, true);
+	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
-	outputs[| 0] = nodeValue("Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
-	
-	static update = function() {
-		if(inputs[| 0].value_from != noone) {
+	static createNewInput = function() {
+		var index = ds_list_size(inputs);
 		
-			inputs[| 0].setType(inputs[| 0].value_from.type);
-			outputs[| 0].setType(inputs[| 0].value_from.type);
+		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
+			.setVisible(true, true);
+		
+		return inputs[| index];
+	} setDynamicInput(1);
+	
+	static update = function(frame = CURRENT_FRAME) {
+		var res  = [];
+		var ind  = 0;
+		
+		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+			if(!inputs[| i].value_from) continue;
 			
-			inputs[| 0].color_display  = inputs[| 0].value_from.color_display;
-			outputs[| 0].color_display = inputs[| 0].color_display;
+			var val = getInputData(i);
+			array_push(res, val);
+			
+			inputs[|  i].setType(inputs[| i].value_from.type);
+			outputs[| 0].setType(inputs[| i].value_from.type);
 		}
 		
-		var _val = getInputData(0);
-		outputs[| 0].setValue(_val);
+		outputs[| 0].setValue(res);
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
@@ -44,8 +53,13 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		inputs[| 0].x = xx;
-		inputs[| 0].y = yy;
+		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+			inputs[| i].x = xx;
+			inputs[| i].y = yy;
+		}
+		
+		dummy_input.x = xx;
+		dummy_input.y = yy;
 		
 		outputs[| 0].x = xx;
 		outputs[| 0].y = yy;
@@ -56,7 +70,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		var _dval = PANEL_GRAPH.value_dragging;
-		var hover = _dval == noone || _dval.connect_type == JUNCTION_CONNECT.input? outputs[| 0] : inputs[| 0];
+		var hover = _dval == noone || _dval.connect_type == JUNCTION_CONNECT.input? outputs[| 0] : dummy_input;
 		var xx	  = x * _s + _x;
 		var yy	  = y * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
@@ -91,7 +105,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		hover_scale    = lerp_float(hover_scale, hover_scale_to, 3);
 		hover_scale_to = 0;
 		
-		if(renamed && display_name != "" && display_name != "Pin") {
+		if(renamed && display_name != "" && display_name != "Array Pin") {
 			draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
 			draw_text_transformed(xx, yy - 12 * _s, display_name, _s * 0.4, _s * 0.4, 0);
 		}

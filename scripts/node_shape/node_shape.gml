@@ -79,6 +79,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
 	inputs[| 9] = nodeValue("Corner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setValidator(VV_clamp(0, .5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
 	inputs[| 9].overlay_draw_text = false;
 	
@@ -220,7 +221,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				draw_set_color(COLORS._main_accent);
 				draw_arc(cx, cy, _cor - _corr, ar, ar + 90, 2);
 				
-				hv = inputs[| 9].drawOverlay(_int, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s); _hov |= hv; _int &= !_hov;
+				hv = inputs[| 9].drawOverlay(_int, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 1); _hov |= hv; _int &= !_hov;
 			}
 		}
 		

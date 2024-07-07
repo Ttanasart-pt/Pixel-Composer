@@ -13,12 +13,14 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 						
 	if(drag_type) {
 		index = 1;
-		var dist = point_distance(_mx, _my, _x, _y) / (_s * _scale);
+		var _dist = point_distance(_mx, _my, _x, _y) / (_s * _scale);
+		var _sign = abs(angle_difference(point_direction(_mx, _my, _x, _y), _angle)) > 90? 1 : -1;
 		
 		if(key_mod_press(CTRL))
-			dist = round(dist);
-							
-		if(setValueInspector( dist ))
+			_dist = round(_dist);
+		_dist *= _sign;
+		
+		if(setValueInspector( _dist ))
 			UNDO_HOLDING = true;
 							
 		if(mouse_release(mb_left)) {
@@ -26,7 +28,7 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			UNDO_HOLDING = false;
 		}
 	}
-						
+	
 	if(interact && point_in_circle(_mx, _my, _ax, _ay, _r)) {
 		hover = 1;
 		index = 1;
@@ -39,7 +41,7 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			drag_sy   = _ay;
 		}
 	} 
-		
+	
 	__overlay_hover = array_verify(__overlay_hover, 1);
 	__overlay_hover[0] = lerp_float(__overlay_hover[0], index, 4);
 	draw_anchor(__overlay_hover[0], _ax, _ay, _r, _type);
