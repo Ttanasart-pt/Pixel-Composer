@@ -214,15 +214,15 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			case 0 :
 				var _area = _data[3];
 				
-				_center = [ _area[0] / _dim[0], _area[1] / _dim[1] ];
-				_scale  = [ _area[2] / _dim[0], _area[3] / _dim[1] ];
+				_center = [     _area[0] / _dim[0],      _area[1] / _dim[1]  ];
+				_scale  = [ abs(_area[2] / _dim[0]), abs(_area[3] / _dim[1]) ];
 				break;
 			case 1 :
 				var _posit	= _data[16];
 				var _scal 	= _data[17];
 				
-				_center = [ _posit[0] / _dim[0], _posit[1] / _dim[1] ];
-				_scale  = [  _scal[0] / _dim[0],  _scal[1] / _dim[1] ];
+				_center = [     _posit[0] / _dim[0],     _posit[1] / _dim[1]  ];
+				_scale  = [  abs(_scal[0] / _dim[0]), abs(_scal[1] / _dim[1]) ];
 				break;
 			case 2 :
 				_center = [ 0.5, 0.5 ];
