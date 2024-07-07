@@ -1,7 +1,4 @@
-function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) { #region
-	corner = min(corner, abs(x0 - x1) / 2, abs(y0 - y1) / 2);
-	var sample = corner / 4;
-	sample = clamp(sample, 1, 8);
+function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) {
 	
 	if(cx == noone) cx = (x0 + x1) / 2;
 	if(cy == noone) cy = (y0 + y1) / 2;
@@ -16,6 +13,9 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 					(_x1 == _x0? 0.5 : (cx - _x0) / (_x1 - _x0));
 	var cm  = merge_color(col1, col2, clamp(rat, 0, 1));
 	
+	corner = min(corner, abs(x0 - x1) / 2 + 32, abs(y0 - y1) / 2);
+	var sample = clamp(corner / 4, 1, 8);
+	
 	var iy  = sign(y1 - y0);
 	var iy0 = sign(cy - y0);
 	var iy1 = sign(y1 - cy);
@@ -23,7 +23,7 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 	if(y0 != y1 && inv) {
 		var xx0 = x0 + 16 * _s * indexIn;
 		var xx1 = x1 - 16 * _s * indexOut;
-		var corns = min(corner, 16 * _s);
+		var corns = min(corner, 16 * _s); 
 		corner = min(corner, abs(cy - y0) / 2, abs(cy - y1) / 2, abs(xx1 - xx0) / 2);
 		
 		if(type == LINE_STYLE.solid) {
@@ -69,9 +69,9 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 			draw_line_dashed_color(cx, y1, x1, y1, thick,   cm, col2, 6 * _s);
 		}
 	}
-} #endregion
+}
 
-function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) { #region
+function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) {
 	var sample = corner / 4;
 	sample = clamp(sample, 1, 8);
 	
@@ -85,9 +85,9 @@ function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_whit
 	draw_line_round_color(x0, y0, x1 - corner * sx, y0, thick, col1, colc);
 	draw_line_round_color(x1, y0 + corner * sy, x1, y1, thick, colc, col2);
 	draw_corner(x1 - corner * sx, y0, x1, y0, x1, y0 + corner * sy, thick, colc, sample);
-} #endregion
+}
 
-function distance_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s, indexIn = 1, indexOut = 1) { #region
+function distance_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s, indexIn = 1, indexOut = 1) {
 	var inv = x1 - 16 * _s * indexOut <= x0 + 16 * _s * indexIn;
 	var xx0 = x0 + 16 * _s * indexIn;
 	var xx1 = x1 - 16 * _s * indexOut;
@@ -105,11 +105,11 @@ function distance_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s, indexIn = 1, inde
 	
 		return dist;
 	}
-} #endregion
+}
 
-function distance_to_elbow_corner(mx, my, x0, y0, x1, y1) { #region
+function distance_to_elbow_corner(mx, my, x0, y0, x1, y1) {
 	var dist =           distance_to_line(mx, my, x0, y0, x1, y0);
 	    dist = min(dist, distance_to_line(mx, my, x1, y0, x1, y1));
 	
 	return dist;
-} #endregion
+}
