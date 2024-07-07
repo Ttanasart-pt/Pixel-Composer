@@ -36,12 +36,16 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		bbox_y1 = max(bbox_y1, _y + _h + padding);
 	}
 	
-	var bbox_w = bbox_x1 - bbox_x0;
-	var bbox_h = bbox_y1 - bbox_y0;
+	var _lim_s = 16384 - borderPad * 2;
 	
-	var aa = PREFERENCES.connection_line_aa;
+	var bbox_w = min(_lim_s, bbox_x1 - bbox_x0);
+	var bbox_h = min(_lim_s, bbox_y1 - bbox_y0);
+	
+	if(bbox_w == _lim_s || bbox_h == _lim_s) 
+		noti_warning("Maximum surface size reached. Reduce scale to prevent cropping.");
+	
 	var s  = surface_create(bbox_w, bbox_h);
-	var cs = surface_create(bbox_w * aa, bbox_h * aa);
+	var cs = surface_create(bbox_w, bbox_h);
 	
 	var gr_x = -bbox_x0;
 	var gr_y = -bbox_y0;
@@ -50,7 +54,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 	surface_set_target(s); //draw nodes
 		if(bgEnable) draw_clear(bgColor);
 		else		 draw_clear_alpha(0, 0);
-	
+		
 		if(gridEnable) {
 			var gls = 32;
 			var gr_ls = gls * scale;
@@ -93,7 +97,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 				
 				param.setPos(gr_x, gr_y, scale, mx, my);
 				param.setProp(1, false);
-				param.setDraw(aa, c_black);
+				param.setDraw(1, c_black);
 			
 				param.show_dimension  = true;
 				param.show_compute    = true;
@@ -104,11 +108,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 					nodeList[i].drawConnections(param, true);
 			surface_reset_target();
 		
-			shader_set(sh_downsample);
-				shader_set_f("down", aa);
-				shader_set_f("dimension", surface_get_width_safe(cs), surface_get_height_safe(cs));
-				draw_surface(cs, 0, 0);
-			shader_reset();
+			draw_surface(cs, 0, 0);
 		#endregion
 			
 		#region draw node

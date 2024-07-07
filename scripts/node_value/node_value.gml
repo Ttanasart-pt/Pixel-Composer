@@ -2269,6 +2269,8 @@ function drawJuncConnection(from, to, params) { #region
 		var fromIndex = from.drawLineIndex;
 		var toIndex   = to.drawLineIndex;
 		
+		var _loop = struct_try_get(params, "loop");
+		
 		if(params.minx != 0 && params.maxx != 0) {
 			var minx = params.minx;
 			var miny = params.miny;
@@ -2300,7 +2302,7 @@ function drawJuncConnection(from, to, params) { #region
 		var hovDist = max(th * 2, 6);
 		
 		if(PANEL_GRAPH.pHOVER) {
-			if(from.node == to.node) {
+			if(_loop || from.node == to.node) {
 				hover = distance_line_feedback(mx, my, jx, jy, frx, fry, _s) < hovDist;
 			} else {
 				switch(PREFERENCES.curve_connection_line) { 
@@ -2349,7 +2351,7 @@ function drawJuncConnection(from, to, params) { #region
 		var ty = LINE_STYLE.solid;
 		if(to.type == VALUE_TYPE.node || struct_try_get(params, "dashed"))
 			ty = LINE_STYLE.dashed;
-			
+		
 		var c0, c1;
 		var _selc = to.node.branch_drawing && from.node.branch_drawing;
 	
@@ -2386,7 +2388,7 @@ function drawJuncConnection(from, to, params) { #region
 		
 		draw_set_color(c0);
 		
-		if(from.node == to.node) {
+		if(_loop || from.node == to.node) {
 			draw_line_feedback(jx, jy, frx, fry, th, c1, c0, ss);
 		} else {
 			switch(PREFERENCES.curve_connection_line) { 
