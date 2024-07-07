@@ -1084,7 +1084,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getStaticValue = function() { INLINE return ds_list_empty(animator.values)? 0 : animator.values[| 0].value; } 
 	
-	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region ////Get value
+	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		if(type == VALUE_TYPE.trigger)
 			return _getValue(_time, false, 0, false);
 		
@@ -1113,9 +1113,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_junction_index = type;
 		if(type == VALUE_TYPE.surface || type == VALUE_TYPE.any) {
 			var _sval = val;
-			if(is_array(_sval) && !array_empty(_sval))
+			if(is_array(_sval) && !array_empty(_sval)) 
 				_sval = _sval[0];
-			if(is_instanceof(_sval, SurfaceAtlas))
+				
+			if(is_instanceof(_sval, SurfaceAtlas))     
 				draw_junction_index = VALUE_TYPE.atlas;
 		}
 		
@@ -1130,9 +1131,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		updateColor(val);
 		
 		return val;
-	} #endregion
+	}
 	
-	static _getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) { #region
+	static _getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) {
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
@@ -1144,7 +1145,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == JUNCTION_CONNECT.output)
 			return val;
 		
-		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { #region Dimension conversion
+		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { // Dimension conversion
 			if(is_array(val)) {
 				var eqSize = true;
 				var sArr = [];
@@ -1168,9 +1169,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
 			return [ 1, 1 ];
 			
-		} #endregion
+		}
 		
-		if(type == VALUE_TYPE.d3Material) { #region
+		if(type == VALUE_TYPE.d3Material) {
 			if(nod == self) {
 				return def_val;
 				
@@ -1183,22 +1184,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				return _val;
 			}
-		} #endregion
+		}
 		
 		if(PROJECT.attributes.strict) return val;
 		
 		val = arrayBalance(val);
 		
-		if(isArray(val) && array_length(val) < 1024) { #region Process data
+		if(isArray(val) && array_length(val) < 1024) { // Process data
 			var _val = array_create(array_length(val));
 			for( var i = 0, n = array_length(val); i < n; i++ )
 				_val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
 			return _val;
 			
-		} #endregion
+		}
 		
 		return valueProcess(val, nod, applyUnit, arrIndex);
-	} #endregion
+	}
 	
 	static getValueRecursive = function(arr = __curr_get_val, _time = CURRENT_FRAME) { #region
 		

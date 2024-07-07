@@ -773,9 +773,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inputs_data	= array_verify(inputs_data, ds_list_size(inputs));
 		
 		for(var i = 0; i < ds_list_size(inputs); i++) {
-			if(!is_instanceof(inputs[| i], NodeValue)) continue;
+			var _inp = inputs[| i];
+			if(!is_instanceof(_inp, NodeValue)) continue;
 			
-			var val = inputs[| i].getValue(frame);
+			var val = _inp.getValue(frame);
 			setInputData(i, val);
 		}
 	} #endregion
@@ -1087,6 +1088,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} #endregion
 	
 	static refreshNodeDisplay = function() { #region
+		if(IS_PLAYING) return;
 		INLINE
 		
 		updateIO();

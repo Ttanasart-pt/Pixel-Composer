@@ -124,12 +124,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			current_data = _data;
 			
-			if(active_index > -1 && !_data[active_index]) { // skip
-				if(inputs[| 0].type == VALUE_TYPE.surface)
-					return surface_clone(_data[0], _out);
-				else 
-					return _data[0];
-			}
+			if(active_index > -1 && !_data[active_index]) // skip
+				return inputs[| 0].type == VALUE_TYPE.surface? surface_clone(_data[0], _out) : _data[0];
 			
 			var data = processData(_out, _data, outIndex, 0);					// Process data
 			
@@ -198,6 +194,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					_out[l] = surface_clone(_data[0], _out[l]);
 				else 
 					_out[l] = _data[0];
+					
 			} else {
 				_out[l] = processData(_out[l], _data, outIndex, l);					// Process data
 				
@@ -224,9 +221,18 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var data;
 		var _out = array_create(_os);
 		for(var i = 0; i < _os; i++) _out[i] = outputs[| i].getValue();
-			
+		
+		var _surfOut = outputs[| 0];
+		var _skip = active_index != -1 && !inputs_data[active_index];
+		
 		if(process_amount == 1) {
 			current_data = inputs_data;
+			
+			if(_skip) { // skip
+				var _skp = inputs[| 0].type == VALUE_TYPE.surface? surface_clone(inputs_data[0], _out[0]) : inputs_data[0];
+				_surfOut.setValue(_skp);
+				return;
+			}
 			
 			var _dim = getDimension();
 			
@@ -247,35 +253,42 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return;
 		}
 		
-		var _inputs  = array_create(_is);
-		var _outputs = array_create(_os);
+		if(_skip) {
+			
+			var _skp = inputs[| 0].type == VALUE_TYPE.surface? surface_array_clone(inputs_data[0]) : inputs_data[0];
+			_surfOut.setValue(_skp);
+			
+		} else {
+			
+			var _inputs  = array_create(_is);
+			var _outputs = array_create(_os);
 		
-		for( var l = 0; l < process_amount; l++ ) {
-			
-			for(var i = 0; i < _is; i++) _inputs[i] = all_inputs[i][l];
-			if(l == 0 || l == preview_index) current_data = _inputs;
-			
-			var _dim  = getDimension(l);
-			var _outa = array_create(_os);
-			
-			for(var i = 0; i < _os; i++) {
-				_outa[i] = array_safe_get(_out[i], l);
-				if(outputs[| i].type == VALUE_TYPE.surface) 
-					_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], _dep);
-			}
-			
-			if(_os == 1) {
-				data = processData(_outa[0], _inputs, 0, l);
-				_outputs[0][l] = data;
+			for( var l = 0; l < process_amount; l++ ) {
+				for(var i = 0; i < _is; i++) _inputs[i] = all_inputs[i][l];
+				if(l == 0 || l == preview_index) current_data = _inputs;
 				
-			} else {
-				data = processData(_outa, _inputs, 0, l);
-				for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
+				var _dim  = getDimension(l);
+				var _outa = array_create(_os);
+				
+				for(var i = 0; i < _os; i++) {
+					_outa[i] = array_safe_get(_out[i], l);
+					if(outputs[| i].type == VALUE_TYPE.surface) 
+						_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], _dep);
+				}
+				
+				if(_os == 1) {
+					data = processData(_outa[0], _inputs, 0, l);
+					_outputs[0][l] = data;
+					
+				} else {
+					data = processData(_outa, _inputs, 0, l);
+					for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
+				}
 			}
-		}
 			
-		for( var i = 0, n = _os; i < n; i++ )
-			outputs[| i].setValue(_outputs[i]);
+			for( var i = 0, n = _os; i < n; i++ )
+				outputs[| i].setValue(_outputs[i]);
+		}
 		
 	} 
 	
@@ -301,16 +314,18 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		all_inputs      = array_verify(all_inputs,		_len);
 		
 		for(var i = 0; i < _len; i++) {
-			var raw = inputs[| i].getValue();
-			var amo = inputs[| i].arrayLength(raw);
+			var _in = inputs[| i];
+			
+			var raw = _in._getValue();
+			var amo = _in.arrayLength(raw);
 			var val = raw;
 			
-			if(amo == 0)      val = noone;		//empty array
+				 if(amo == 0) val = noone;		//empty array
 			else if(amo == 1) val = raw[0];		//spread single array
 			amo = max(1, amo);
 			
 			setInputData(i, val);
-			inputs_is_array[i] = inputs[| i].isArray(val);
+			inputs_is_array[i] = _in.isArray(val);
 			
 			switch(attributes.array_process) {
 				case ARRAY_PROCESS.loop : 
@@ -324,7 +339,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					break;
 			}
 			
-			process_length[i] = [amo, process_amount];
+			process_length[i] = [ amo, process_amount ];
 		}
 		
 		var amoMax = process_amount;

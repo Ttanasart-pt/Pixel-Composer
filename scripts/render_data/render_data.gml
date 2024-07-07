@@ -226,7 +226,7 @@ function Render(partial = false, runAction = false) { #region
 			
 			if(renderable) {
 				var _render_pt = get_timer();
-				rendering.doUpdate();
+				rendering.doUpdate(); 
 				_render_time += get_timer() - _render_pt;
 				
 				var nextNodes = rendering.getNextNodes();
@@ -258,6 +258,7 @@ function Render(partial = false, runAction = false) { #region
 	}
 	
 	LOG_END();
+	
 } #endregion
 
 function __renderListReset(arr) { #region

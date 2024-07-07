@@ -15,9 +15,7 @@
 function d3d11_shader_compile_ps(_file, _entryPoint, _profile) {
 	if(!GMD3D11_IS_SUPPORTED) return;
 	INLINE
-	static _fn = external_define(
-		GMD3D11_PATH, "d3d11_shader_compile_ps", dll_cdecl, ty_real,
-		3, ty_string, ty_string, ty_string);
+	static _fn = external_define( GMD3D11_PATH, "d3d11_shader_compile_ps", dll_cdecl, ty_real, 3, ty_string, ty_string, ty_string);
 	return external_call(_fn, _file, _entryPoint, _profile);
 }
 
@@ -35,9 +33,7 @@ function d3d11_shader_compile_ps(_file, _entryPoint, _profile) {
 function d3d11_shader_compile_vs(_file, _entryPoint, _profile) {
 	if(!GMD3D11_IS_SUPPORTED) return;
 	INLINE
-	static _fn = external_define(
-		GMD3D11_PATH, "d3d11_shader_compile_vs", dll_cdecl, ty_real,
-		3, ty_string, ty_string, ty_string);
+	static _fn = external_define( GMD3D11_PATH, "d3d11_shader_compile_vs", dll_cdecl, ty_real, 3, ty_string, ty_string, ty_string);
 	return external_call(_fn, _file, _entryPoint, _profile);
 }
 
@@ -50,9 +46,7 @@ function d3d11_shader_compile_vs(_file, _entryPoint, _profile) {
 function d3d11_shader_override_ps(_ps) {
 	if(!GMD3D11_IS_SUPPORTED) return;
 	INLINE
-	static _fn = external_define(
-		GMD3D11_PATH, "d3d11_shader_override_ps", dll_cdecl, ty_real,
-		1, ty_real);
+	static _fn = external_define( GMD3D11_PATH, "d3d11_shader_override_ps", dll_cdecl, ty_real, 1, ty_real);
 	return external_call(_fn, _ps);
 }
 
@@ -67,9 +61,7 @@ function d3d11_shader_override_ps(_ps) {
 function d3d11_shader_override_vs(_vs) {
 	if(!GMD3D11_IS_SUPPORTED) return;
 	INLINE
-	static _fn = external_define(
-		GMD3D11_PATH, "d3d11_shader_override_vs", dll_cdecl, ty_real,
-		1, ty_real);
+	static _fn = external_define( GMD3D11_PATH, "d3d11_shader_override_vs", dll_cdecl, ty_real, 1, ty_real);
 	return external_call(_fn, _vs);
 }
 
@@ -83,9 +75,7 @@ function d3d11_shader_override_vs(_vs) {
 function d3d11_shader_exists(_shader) {
 	if(!GMD3D11_IS_SUPPORTED) return;
 	INLINE
-	static _fn = external_define(
-		GMD3D11_PATH, "d3d11_shader_exists", dll_cdecl, ty_real,
-		1, ty_real);
+	static _fn = external_define( GMD3D11_PATH, "d3d11_shader_exists", dll_cdecl, ty_real, 1, ty_real);
 	return external_call(_fn, _shader);
 }
 
@@ -97,8 +87,6 @@ function d3d11_shader_exists(_shader) {
 function d3d11_shader_destroy(_shader) {
 	if(!GMD3D11_IS_SUPPORTED) return;
 	INLINE
-	static _fn = external_define(
-		GMD3D11_PATH, "d3d11_shader_destroy", dll_cdecl, ty_real,
-		1, ty_real);
+	static _fn = external_define( GMD3D11_PATH, "d3d11_shader_destroy", dll_cdecl, ty_real, 1, ty_real);
 	return external_call(_fn, _shader);
 }

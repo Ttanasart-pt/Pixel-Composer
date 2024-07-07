@@ -57,7 +57,7 @@ output.color = surfaceColor;")
 
 	setDynamicInput(3, false);
 	
-	static refreshDynamicInput = function() { #region
+	static refreshDynamicInput = function() {
 		var _in = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -91,52 +91,68 @@ output.color = surfaceColor;")
 			switch(type) {
 				case 1 : 
 					if(is_array(cur_valu)) inp_valu.overrideValue(0);
+					
 					inp_valu.setType(VALUE_TYPE.integer);	
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
+					
 				case 0 : 
 					if(is_array(cur_valu)) inp_valu.overrideValue(0);
+					
 					inp_valu.setType(VALUE_TYPE.float);
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
+					
 				case 2 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 2)
 						inp_valu.overrideValue([ 0, 0 ]);
+					
 					inp_valu.setType(VALUE_TYPE.float);	
 					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
+					
 				case 3 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 3)
 						inp_valu.overrideValue([ 0, 0, 0 ]);
+					
 					inp_valu.setType(VALUE_TYPE.float);	
 					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
+					
 				case 4 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 4)
 						inp_valu.overrideValue([ 0, 0, 0, 0 ]);
+					
 					inp_valu.setType(VALUE_TYPE.float);	
 					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
+					
 				case 5 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 9)
 						inp_valu.overrideValue(array_create(9));
+					
 					inp_valu.setType(VALUE_TYPE.float);	
 					inp_valu.setDisplay(VALUE_DISPLAY.matrix, { size: 3 });
 					break;
+					
 				case 6 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 16)
 						inp_valu.overrideValue(array_create(16));
+					
 					inp_valu.setType(VALUE_TYPE.float);	
 					inp_valu.setDisplay(VALUE_DISPLAY.matrix, { size: 4 });
 					break;
+					
 				case 7 : 
 					inp_valu.setType(VALUE_TYPE.surface);	
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
+					
 				case 8 : 
 					inp_valu.setType(VALUE_TYPE.color);	
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
+					
 			}
 				
 			array_push(input_display_list, i + 2);
@@ -154,7 +170,6 @@ output.color = surfaceColor;")
 		//for( var i = 0, n = array_length(input_display_list); i < n; i++ )
 		//	print(input_display_list[i]);
 		//print("==========================");
-	#endregion
 	} if(!LOADING && !APPENDING) refreshDynamicInput();
 	
 	insp1UpdateTooltip  = __txt("Compile");
@@ -223,19 +238,20 @@ struct PixelShaderOutput {
 			var _arg_type = getInputData(i + 1);
 			
 			switch(_arg_type) {
-				case 0 : fs_param += $"float  {_arg_name};\n";   break;							//u_float
-				case 1 : fs_param += $"int    {_arg_name};\n";   break;							//u_int
-				case 2 : fs_param += $"float2 {_arg_name};\n";   break;							//u_vec2
-				case 3 : fs_param += $"float3 {_arg_name};\n";   break;							//u_vec3
-				case 4 : fs_param += $"float4 {_arg_name};\n";   break;							//u_vec4
-				case 5 : fs_param += $"float3x3 {_arg_name};\n"; break;							//u_mat3
-				case 6 : fs_param += $"float4x4 {_arg_name};\n"; break;							//u_mat4
-				case 7 :																		//u_sampler2D
+				case 0 : fs_param += $"float    {_arg_name};\n"; break;							// u_float
+				case 1 : fs_param += $"int      {_arg_name};\n"; break;							// u_int
+				case 2 : fs_param += $"float2   {_arg_name};\n"; break;							// u_vec2
+				case 3 : fs_param += $"float3   {_arg_name};\n"; break;							// u_vec3
+				case 4 : fs_param += $"float4   {_arg_name};\n"; break;							// u_vec4
+				case 5 : fs_param += $"float3x3 {_arg_name};\n"; break;							// u_mat3
+				case 6 : fs_param += $"float4x4 {_arg_name};\n"; break;							// u_mat4
+				case 7 :																		// u_sampler2D
 					fs_sample += $"Texture2D {_arg_name}Object : register(t{sampler_slot});\n";
 					fs_sample += $"SamplerState {_arg_name} : register(s{sampler_slot});\n";
 					sampler_slot++;
 					break;
-				case 8 : fs_param += $"float4 {_arg_name};\n";   break;							//u_vec4
+					
+				case 8 : fs_param += $"float4 {_arg_name};\n";   break;							// u_vec4
 			}
 		}
 		
