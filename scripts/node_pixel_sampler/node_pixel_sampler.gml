@@ -58,7 +58,13 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(_inps == 0)         return _outSurf;
 		
 		var _dim  = surface_get_dimension(_base);
-		var _tdim = surface_get_dimension(_surf[0]);
+		var _tdim = [ 1, 1 ];
+		
+		for (var i = 0, n = array_length(_surf); i < n; i++) {
+			var _d = surface_get_dimension(_surf[i]);
+			_tdim[0] = max(_tdim[0], _d[0]);
+			_tdim[1] = max(_tdim[1], _d[1]);
+		}
 		
 		temp_surface[0] = surface_verify(temp_surface[0], 8192, 8192);
 		

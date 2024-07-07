@@ -39,8 +39,11 @@
 	function functionStringClean(fx) { #region
 		static __BRACKETS = [ "(", "[", "," ];
 		
-		var ch = "", ind = 0, len = string_length(fx);
-		var _fx = "", str = false;
+		var ch  = "";
+		var ind = 0;
+		var len = string_length(fx);
+		var _fx = "";
+		var str = false;
 		var _prevSym = true;
 		
 		while(ind++ <= len) {
@@ -243,11 +246,17 @@
 				}
 				
 				l++;
-			} else if (ch == "(") {
+				
+			} 
+			
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			else if (ch == "(") {
 				if(last_push == "fn")	ds_stack_push(op, [ "〚", ds_stack_size(vl) ]);
 				else					ds_stack_push(op, ch);
 				last_push = "op";
 				l++;
+				
 			} else if (ch == ")") {
 				while(!ds_stack_empty(op)) {
 					var _top = ds_stack_pop(op);
@@ -266,7 +275,12 @@
 				
 				last_push = "vl";
 				l++;
-			} else if (ch == "[") {
+				
+			} 
+			
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			else if (ch == "[") {
 				if(last_push == "vl") {									// Get array member | a[1]
 					ds_stack_push(op, "@");
 					ds_stack_push(op, ch);
@@ -275,6 +289,7 @@
 				
 				last_push = "op";
 				l++;
+				
 			} else if (ch == "］") {
 				while(!ds_stack_empty(op)) {
 					var _top = ds_stack_pop(op);
@@ -293,7 +308,12 @@
 				
 				last_push = "vl";
 				l++;
-			} else if (ch == ",") {
+				
+			} 
+			
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+			else if (ch == ",") {
 				while(!ds_stack_empty(op)) {
 					var _top = ds_stack_top(op);
 					if(_top == "[" || _top == "(") break;
@@ -305,14 +325,32 @@
 				
 				last_push = "op";
 				l++;
-			} else {
+				
+			} 
+			
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+			else { 
 				var vsl = "";
+				var str = false;
 				
 				while(l <= len) {
 					cch = string_char_at(fx, l);
-					if(ds_map_exists(pres, cch) || array_exists(__BRACKETS, cch)) break;
-					if(cch == ",")
-						break;
+					
+					if(cch == "\"") {
+						if(str) {
+							vsl += cch;
+							l++;
+							break;
+						}
+						
+						str = true;
+					}
+					
+					if(!str) {
+						if(ds_map_exists(pres, cch) || array_exists(__BRACKETS, cch)) break;
+						if(cch == ",") break;
+					}
 					
 					vsl += cch;
 					l++;
