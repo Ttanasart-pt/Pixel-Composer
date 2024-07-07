@@ -6,7 +6,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	manual_ungroupable = false;
 	setDimension(96, 48);
 	
-	inputs[| 0].setFrom_condition = function(_valueFrom) { #region
+	inputs[| 0].setFrom_condition = function(_valueFrom) {
 		if(instanceof(_valueFrom.node) != "Node_Iterator_Input") return true;
 		if(inputs[| 1].value_from == noone) return true;
 		if(inputs[| 1].value_from.node == _valueFrom.node) {
@@ -14,13 +14,13 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 			return false;
 		}
 		return true;
-	} #endregion
+	}
 	
 	inputs[| 1] = nodeValue("Loop exit", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1)
 		.uncache()
 		.setVisible(true, true);
 	
-	inputs[| 1].setFrom_condition = function(_valueFrom) { #region
+	inputs[| 1].setFrom_condition = function(_valueFrom) {
 		if(instanceof(_valueFrom.node) != "Node_Iterator_Input") return true;
 		if(inputs[| 0].value_from == noone) return true;
 		if(inputs[| 0].value_from.node == _valueFrom.node) {
@@ -28,20 +28,20 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 			return false;
 		}
 		return true;
-	} #endregion
+	}
 	
 	cache_value = -1;
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function() {
 		if(!struct_has(group, "outputNextNode")) return [];
 		return group.outputNextNode();
-	} #endregion
+	}
 	
-	static initLoop = function() { #region
+	static initLoop = function() {
 		cache_value = noone;
-	} #endregion
+	}
 	
-	static cloneValue = function(_prev_val, _val) { #region
+	static cloneValue = function(_prev_val, _val) {
 		if(inputs[| 0].value_from == noone) return _prev_val;
 		
 		var is_surf	 = inputs[| 0].value_from.type == VALUE_TYPE.surface;
@@ -51,9 +51,9 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 		_new_val = is_surf? surface_array_clone(_val) : array_clone(_val);
 		
 		return _new_val;
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		if(inputs[| 0].value_from == noone) {
 			group.iterationUpdate();
 			return;
@@ -62,5 +62,5 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 		var _val = getInputData(0);
 		cache_value = cloneValue(cache_value, _val);
 		group.iterationUpdate();
-	} #endregion
+	}
 }

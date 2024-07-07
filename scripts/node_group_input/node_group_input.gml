@@ -88,12 +88,31 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	inputs[| 8] = nodeValue("Button Label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Trigger")
 		.setVisible(false);
+	
+	inputs[| 9] = nodeValue("Visible Condition", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Show", "Hide", /* 2 */ new scrollItem("Equal",			s_node_condition_type, 0), 
+												        		 /* 3 */ new scrollItem("Not equal",		s_node_condition_type, 1), 
+												        		 /* 4 */ new scrollItem("Greater ",			s_node_condition_type, 4), 
+												        		 /* 5 */ new scrollItem("Greater or equal",	s_node_condition_type, 5), 
+												        		 /* 6 */ new scrollItem("Lesser",			s_node_condition_type, 2), 
+												        		 /* 7 */ new scrollItem("Lesser or equal",	s_node_condition_type, 3), ]);
+	
+	inputs[| 10] = nodeValue("Visible Check", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	
+	inputs[| 11] = nodeValue("Visible Check To", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	
+	inputs[| 10].setFrom_condition = function(_valueFrom) {
+		if(is_instanceof(_valueFrom.node, Node_Group_Input)) return true;
 		
+		noti_warning("Group IO visibility must be connected directly to another group input.",, self);
+		return false;
+	}
+	
 	for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
 		inputs[| i].uncache().rejectArray();
 		
 	input_display_list = [ 
-		["Display", false], 6, 
+		["Display", false], 6, 9, 10, 11, 
 		["Data",	false], 2, 0, 4, 1, 7, 3, 8, 
 	];
 	
@@ -122,12 +141,54 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[| 2].setValue(ind);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(inParent.isArray()) return;
 		return inParent.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	} #endregion
+	}
 	
-	static onValueUpdate = function(index = 0) { #region
+	static isRenderable = function(log = false) { //Check if every input is ready (updated)
+		if(!active)	return false;
+		if(!isRenderActive()) return false;
+		
+		for(var j = 0; j < 9; j++) if(!inputs[| j].isRendered()) return false;
+		return true;
+	}
+	
+	static visibleCheck = function() {
+		var _vty = inputs[|  9].getValue();
+		
+		inputs[| 10].setVisible(_vty >= 2, _vty >= 2);
+		inputs[| 11].setVisible(_vty >= 2);
+		
+		var _val = inputs[| 10].getValue();
+		var _vto = inputs[| 11].getValue();
+		var _vis = true;
+		
+		switch(_vty) {
+			case 0 : _vis =  true; break;
+			case 1 : _vis = false; break;
+				
+			case 2 : _vis = _val == _vto; break;
+			case 3 : _vis = _val != _vto; break;
+			
+			case 4 : _vis = _val >  _vto; break;
+			case 5 : _vis = _val >= _vto; break;
+			
+			case 6 : _vis = _val <  _vto; break;
+			case 7 : _vis = _val <= _vto; break;
+		}
+		
+		var _v = inParent.visible;
+		if(_v && !_vis) inParent.visible = false;
+		inParent.show_in_inspector = _vis;
+		
+		if(_v != _vis) {
+			group.setHeight();
+			group.getJunctionList();
+		}
+	}
+	
+	static onValueUpdate = function(index = 0) {
 		if(is_undefined(inParent)) return;
 		
 		var _dtype	    = getInputData(0);
@@ -291,9 +352,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				inParent.setDisplay(VALUE_DISPLAY.button, { name: bname, onClick: function() { doTrigger = 1; } });
 				break;
 		}
-	} #endregion
+		
+		visibleCheck();
+	}
 	
-	static createInput = function() { #region
+	static createInput = function() {
 		if(group == noone || !is_struct(group)) return noone;
 				
 		if(!is_undefined(inParent))
@@ -315,14 +378,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		onValueUpdate(0);
 		
 		return inParent;
-	} #endregion
+	}
 	
 	if(!LOADING && !APPENDING) createInput();
 	
 	dtype  = -1;
 	range  = 0;
 	
-	static step = function() { #region
+	static step = function() {
 		if(is_undefined(inParent)) return;
 		
 		var _type		= getInputData(2);
@@ -364,31 +427,37 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			case "Slider" :
 			case "Slider range" :
 				inputs[| 7].setVisible(true);
+				inputs[| 1].setVisible(true);
+				break;
+				
 			case "Range" :
 				inputs[| 1].setVisible(true);
 				break;
+				
 			case "Enum button" :
 			case "Menu scroll" :
 				inputs[| 3].setVisible(true);
 				break;
+				
 			case "Vector" :
 			case "Vector range" :
 				inputs[| 4].setVisible(true);
 				break;
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		if(is_undefined(inParent)) return;
-	} #endregion
+		visibleCheck();
+	}
 	
-	static getGraphPreviewSurface = function() { #region
+	static getGraphPreviewSurface = function() {
 		return inputs[| 0].getValue();
-	} #endregion
+	}
 	
 	static postDeserialize = function() { createInput(false); }
 	
-	static doApplyDeserialize = function() { #region
+	static doApplyDeserialize = function() {
 		if(inParent == undefined) return;
 		if(group == noone) return;
 		
@@ -397,17 +466,17 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		onValueUpdate();
 		
 		group.sortIO();
-	} #endregion
+	}
 	
-	static onDestroy = function() { #region
+	static onDestroy = function() {
 		if(is_undefined(inParent)) return;
 		
 		ds_list_remove(group.inputs, inParent);
 		group.sortIO();
 		group.refreshNodes();
-	} #endregion
+	}
 	
-	static onUngroup = function() { #region
+	static onUngroup = function() {
 		var fr = inParent.value_from;
 		
 		for( var i = 0; i < array_length(outputs[| 0].value_to); i++ ) {
@@ -416,10 +485,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			to.setFrom(fr);
 		}
-	} #endregion
+	}
 		
-	static onLoadGroup = function() { #region
+	static onLoadGroup = function() {
 		if(group == noone) destroy();
-	} #endregion
+	}
 	
 }

@@ -951,7 +951,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static isRenderActive = function() { return renderActive || (PREFERENCES.render_all_export && IS_RENDERING); }
 	
-	static isRenderable = function(log = false) { #region //Check if every input is ready (updated)
+	static isRenderable = function(log = false) { //Check if every input is ready (updated)
 		if(!active)	return false;
 		if(!isRenderActive()) return false;
 		
@@ -959,7 +959,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!inputs[| j].isRendered()) return false;
 		
 		return true;
-	} #endregion
+	}
 	
 	static setRenderStatus = function(result) { #region
 		INLINE

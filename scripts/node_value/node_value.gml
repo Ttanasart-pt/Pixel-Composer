@@ -476,16 +476,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 	/////============ DISPLAY ===========
 	
-	static setVisible = function(inspector) { #region
+	static setVisible = function(inspector) {
+		var v = visible;
+		
 		if(connect_type == JUNCTION_CONNECT.input) {
 			show_in_inspector = inspector;
 			visible = argument_count > 1? argument[1] : visible;
 		} else 
 			visible = inspector;
-		node.will_setHeight = true;
-		
+			
+		node.will_setHeight |= visible != v;
 		return self;
-	} #endregion
+	}
 	
 	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) { #region
 		display_type	  = _type;

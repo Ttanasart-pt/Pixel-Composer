@@ -3,7 +3,7 @@ enum COLLECTION_TAG {
 	loop = 2
 }
 
-function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) { #region
+function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) {
 	#region check inline
 		var _ctx_nodes = [];
 	
@@ -117,9 +117,9 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 	if(record) recordAction(ACTION_TYPE.group, _group, { content: _content });
 	
 	return _group;
-} #endregion
+}
 
-function upgroupNode(collection, record = true) { #region
+function upgroupNode(collection, record = true) {
 	UNDO_HOLDING  = true;
 	var _content  = [], _deleted = [];
 	var _node_arr = collection.getNodeList();
@@ -166,7 +166,7 @@ function upgroupNode(collection, record = true) { #region
 		deleted :   _deleted,
 		connectTo : _conn_to,
 	});
-} #endregion
+}
 
 function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 
 	nodes       = [];
