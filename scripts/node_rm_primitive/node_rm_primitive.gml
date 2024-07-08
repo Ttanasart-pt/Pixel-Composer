@@ -59,10 +59,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 13] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Perspective", "Orthographic" ])
-		.setVisible(false, false);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Perspective", "Orthographic" ]);
 	
-	inputs[| 14] = nodeValue("Ortho Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 5.)
+	inputs[| 14] = nodeValue("Ortho Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
 	
 	inputs[| 15] = nodeValue("Wave Amplitude", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4, 4 ])
 		.setDisplay(VALUE_DISPLAY.vector);

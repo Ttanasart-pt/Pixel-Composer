@@ -780,16 +780,27 @@ vec4 scene() {
     mat3 camRotMatrix  = rx * ry * rz;
     mat3 camIrotMatrix = inverse(camRotMatrix);
     
-    float dz  = 1. / tan(radians(fov) / 2.);
+    vec3 dir, eye;
+    
     vec2  cps = (v_vTexcoord - .5) * 2.;
-    	  cps.x *= camRatio;
-    	  
-    vec3  dir = vec3(cps, -dz);
-    vec3  eye = vec3(0., 0., 5.);
-	
+		  cps.x *= camRatio;
+    		  
+    if(ortho == 0) {
+	    float dz  = 1. / tan(radians(fov) / 2.);
+	    	  
+	    dir = vec3(cps, -dz);
+	    eye = vec3(0., 0., 5.);
+	    
+    } else if(ortho == 1) {
+    		  
+    	dir = vec3(0., 0., -1.);
+	    eye = vec3(cps * orthoScale, 5.);
+    }
+    
     dir  = normalize(camIrotMatrix * dir);
 	eye  = camIrotMatrix * eye;
-	eye /= camScale;
+    
+    eye /= camScale;
 	
 	if(volumetric[0] == 1) { 
 		float _dens = clamp(marchDensity(eye, dir), 0., 1.);

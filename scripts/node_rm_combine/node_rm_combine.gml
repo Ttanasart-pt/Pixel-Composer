@@ -7,8 +7,7 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	inputs[| 1] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Perspective", "Orthographic" ])
-		.setVisible(false, false);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Perspective", "Orthographic" ]);
 	
 	inputs[| 2] = nodeValue("FOV", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
