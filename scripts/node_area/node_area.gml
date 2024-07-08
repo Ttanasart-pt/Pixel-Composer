@@ -6,43 +6,98 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(true, true);
-	inputs[| 1] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ] )
+	
+	inputs[| 1] = nodeValue("Span", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(true, true);
 	
 	inputs[| 2] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, AREA_SHAPE.rectangle )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Rectangle", s_node_shape_rectangle, 0), new scrollItem("Elipse", s_node_shape_circle, 0) ]);
 	
+	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Center Span", "Two Point" ]);
+	
 	outputs[| 0] = nodeValue("Area", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.vector);
+	
+	input_display_list = [ 3, 
+		["Positions", false], 0, 1, 2, 
+	]
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _pos	= current_data[0];
-		var _span	= current_data[1];
-		var _shape	= current_data[2];
-		var px = _x + _pos[0] * _s;
-		var py = _y + _pos[1] * _s;
-		var ex = _span[0] * _s;
-		var ey = _span[1] * _s;
+		var _shape = current_data[2];
+		var _type  = current_data[3];
+		var _hov   = hover;
+		var _hhh   = false;
+		var hv;
+			
+		if(_type == 0) {
+			var _pos	= current_data[0];
+			var _span	= current_data[1];
 		
-		draw_set_color(COLORS._main_accent);
-		switch(_shape) {
-			case AREA_SHAPE.rectangle :
-				draw_rectangle(px - ex, py - ey, px + ex, py + ey, true);
-				break;
-			case AREA_SHAPE.elipse :
-				draw_ellipse(px - ex, py - ey, px + ex, py + ey, true);
-				break;
+			var px = _x + _pos[0] * _s;
+			var py = _y + _pos[1] * _s;
+			var ex = _span[0] * _s;
+			var ey = _span[1] * _s;
+			
+			draw_set_color(COLORS._main_accent);
+			switch(_shape) {
+				case AREA_SHAPE.rectangle : draw_rectangle(px - ex, py - ey, px + ex, py + ey, true); break;
+				case AREA_SHAPE.elipse :    draw_ellipse(px - ex, py - ey, px + ex, py + ey, true);   break;
+			}
+			
+			hv = inputs[| 0].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
+			hv = inputs[| 1].drawOverlay(_hov, active, px, py, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
+			
+		} else if(_type == 1) {
+			var _v0 = current_data[0];
+			var _v1	= current_data[1];
+			
+			var px = _x + _v0[0] * _s;
+			var py = _y + _v0[1] * _s;
+			var ex = _x + _v1[0] * _s;
+			var ey = _y + _v1[1] * _s;
+			
+			draw_set_color(COLORS._main_accent);
+			switch(_shape) {
+				case AREA_SHAPE.rectangle : draw_rectangle(px, py, ex, ey, true); break;
+				case AREA_SHAPE.elipse :    draw_ellipse(px, py, ex, ey, true);   break;
+			}
+			
+			hv = inputs[| 0].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
+			hv = inputs[| 1].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
 		}
-		
-		inputs[| 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 1].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+			
+		return _hhh;
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
-		return [_data[0][0], _data[0][1], _data[1][0], _data[1][1], _data[2]];
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
+		var _v0   = _data[0];
+		var _v1   = _data[1];
+		var _shap = _data[2];
+		var _type = _data[3];
+		
+		if(_type == 0) {
+			inputs[| 0].setName("Position");
+			inputs[| 1].setName("Span");
+			
+			return [ _v0[0], _v0[1], _v1[0], _v1[1], _shap ];
+			 	
+		} else if(_type == 1) {
+			inputs[| 0].setName("Point 1");
+			inputs[| 1].setName("Point 2");
+			
+			var xc = ( _v0[0] + _v1[0] ) / 2;
+			var yc = ( _v0[1] + _v1[1] ) / 2;
+			var ww = abs(_v1[0] - _v0[0]) / 2;
+			var hh = abs(_v1[1] - _v0[1]) / 2;
+			
+			return [ xc, yc, ww, hh, _shap ];
+		}
+		
+		return [ _v0[0], _v0[1], _v1[0], _v1[1], _shap ];
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
