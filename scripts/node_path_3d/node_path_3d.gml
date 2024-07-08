@@ -84,8 +84,8 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		drag_point_sz = 0;
 		
 		drag_plane        = noone;
-		drag_plane_origin = __vec3();
-		drag_plane_normal = __vec3();
+		drag_plane_origin = new __vec3();
+		drag_plane_normal = new __vec3();
 		
 		transform_type = 0;
 		
@@ -97,7 +97,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		transform_mx = 0;   transform_my = 0;   transform_mz = 0;
 	#endregion
 	
-	static resetDisplayList = function() { #region
+	static resetDisplayList = function() {
 		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
 		
 		input_display_list = array_clone(input_display_list_raw);
@@ -106,7 +106,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			array_push(input_display_list, i);
 			inputs[| i].name = $"Anchor {i - input_fix_len}";
 		}
-	} #endregion
+	}
 	
 	static createNewInput = function(  _x = 0,   _y = 0,   _z = 0, 
 									 _dxx = 0, _dxy = 0, _dxz = 0, 
@@ -125,18 +125,16 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		return inputs[| index];
 	}
 	
-	static onValueUpdate = function(index = 0) { #region
+	static onValueUpdate = function(index = 0) {
 		if(index == 2) {
 			var type = getInputData(2);	
 			
 			     if(type == 0) inputs[| 0].setDisplay(VALUE_DISPLAY.slider);
 			else if(type == 1) inputs[| 0].setDisplay(VALUE_DISPLAY._default);
 		}
-	} #endregion
-	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
 	}
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
 		var ansize = ds_list_size(inputs) - input_fix_len;
@@ -479,7 +477,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 	}
 	
-	static updateLength = function() { #region
+	static updateLength = function() { 
 		boundary     = new BoundingBox();
 		segments     = [];
 		lengths      = [];
@@ -579,7 +577,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		// surface_reset_shader();
 		
 		// surface_free(_surf);
-	} #endregion
+	} 
 	
 	static getLineCount		= function() { return 1; }
 	static getSegmentCount	= function() { return array_length(lengths); }
@@ -588,7 +586,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static getLength		= function() { return lengthTotal; }
 	static getAccuLength	= function() { return lengthAccs; }
 	
-	static getPointDistance = function(_dist, _ind = 0, out = undefined) { #region
+	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec3(); else { out.x = 0; out.y = 0; out.z = 0; }
 		if(array_empty(lengths)) return out;
 		
@@ -637,14 +635,14 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 		
 		return out;
-	} #endregion
+	}
 	
-	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
+	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
 		var pix = (path_loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal;
 		return getPointDistance(pix, _ind, out);
-	} #endregion
+	}
 	
-	static getPointSegment = function(_rat) { #region
+	static getPointSegment = function(_rat) {
 		if(array_empty(lengths)) return new __vec3();
 		
 		var loop   = getInputData(1);
@@ -676,9 +674,9 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 			
 		return new __vec3(px, py, pz);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		ds_map_clear(cached_pos);
 		
 		var _rat  = getInputData(0);
@@ -725,20 +723,12 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			
 			outputs[| 0].setValue(_out.toArray());
 		}
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		
-		// if(array_empty(segments)) {
-			draw_sprite_fit(s_node_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-			
-		// } else {
-		// 	gpu_set_tex_filter(true);
-		// 	draw_surface_bbox(path_preview_surface, bbox);
-		// 	gpu_set_tex_filter(false);
-		// }
-	} #endregion
+		draw_sprite_bbox_uniform(s_node_path_3d, 0, bbox);
+	}
 	
 	static getPreviewObject 		= function() { return noone; }
 	static getPreviewObjects		= function() { return []; }

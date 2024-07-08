@@ -19,10 +19,12 @@ function ResetAllNodesRender() { #region
 	LOG_IF(global.FLAG.render == 1, $"XXXXXXXXXXXXXXXXXXXX RESETTING ALL NODES [frame {CURRENT_FRAME}] XXXXXXXXXXXXXXXXXXXX");
 	
 	array_foreach(PROJECT.allNodes, function(_node) { 
+		if(!is_instanceof(_node, Node)) return;
+		
 		_node.setRenderStatus(false);
 		for( var i = 0, n = ds_list_size(_node.inputs); i < n; i++ ) 
 			_node.inputs[| i].resetCache();
-		return 0;
+		return;
 	});
 	
 } #endregion
