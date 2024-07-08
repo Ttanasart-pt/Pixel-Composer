@@ -747,7 +747,7 @@ event_inherited();
 	tb_search.auto_update	= true;
 	WIDGET_CURRENT			= tb_search;
 	
-	function searchNodes() { #region
+	function searchNodes() { 
 		ds_list_clear(search_list);
 		var pr_list = ds_priority_create();
 		
@@ -778,7 +778,7 @@ event_inherited();
 				var match = string_partial_match(string_lower(_node.getName()), search_lower);
 				var param = "";
 				for( var k = 0; k < array_length(_node.tags); k++ ) {
-					var mat = string_partial_match(_node.tags[k], search_lower) - 1000;
+					var mat = string_partial_match(_node.tags[k], search_lower);
 					if(mat > match) {
 						match = mat;
 						param = _node.tags[k];
@@ -800,7 +800,7 @@ event_inherited();
 			ds_list_add(search_list, ds_priority_delete_max(pr_list));
 		
 		ds_priority_destroy(pr_list);
-	} #endregion
+	}
 	
 	search_pane = new scrollPane(dialog_w - ui(36), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
@@ -832,9 +832,9 @@ event_inherited();
 		
 		if(PREFERENCES.dialog_add_node_view == 0) { // grid
 			
-			var col = floor(search_pane.surface_w / (grid_width + grid_space));
-			var yy = _y + grid_space;
-			var index = 0;
+			var col    = floor(search_pane.surface_w / (grid_width + grid_space));
+			var yy     = _y + grid_space;
+			var index  = 0;
 			var name_height = 0;
 			
 			grid_width = round(search_pane.surface_w - grid_space) / col - grid_space;
@@ -856,90 +856,94 @@ event_inherited();
 				var _nx   = grid_space + (grid_width + grid_space) * index;
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				
-				BLEND_OVERRIDE;
-				if(is_instanceof(_node, NodeObject))
-					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-				else if(is_instanceof(_node, NodeAction))
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_action, 1);
-				else if(is_instanceof(_node, AddNodeItem))
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_generic, 1);
-				else
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection, 1);
-				BLEND_NORMAL;
+				var _drw = yy > -grid_size && yy < search_pane.h;
 				
-				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-					node_selecting = i;
-					if(mouse_release(mb_left, sFOCUS))
-						buildNode(_node, _param);
-					else if(struct_has(_node, "node") && mouse_release(mb_right, right_free && sFOCUS))
-						rightClick(_node);
-				}
-				
-				if(node_selecting == i) {
-					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-					if(keyboard_check_pressed(vk_enter))
-						buildNode(_node, _param);
-				}
-				
-				if(struct_has(_node, "tooltip") && _node.getTooltip() != "") {
-					if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
-						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
-						node_tooltip   = _node;
-						node_tooltip_x = search_pane.x + _nx;
-						node_tooltip_y = search_pane.y + yy
-					} else 
-						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
-				}
-				
-				if(is_instanceof(_node, NodeObject)) {
-					_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size, _param);
-				} else {
-					if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
-					if(sprite_exists(_node.spr)) {
-						var _si = current_time * PREFERENCES.collection_preview_speed /  3000;
-						var _sw = sprite_get_width(_node.spr);
-						var _sh = sprite_get_height(_node.spr);
-						var _ss = ui(32) / max(_sw, _sh);
-				
-						var _sox = sprite_get_xoffset(_node.spr);
-						var _soy = sprite_get_yoffset(_node.spr);
-				
-						var _sx = _boxx + grid_size / 2;
-						var _sy = yy + grid_size / 2;
-						_sx += _sw * _ss / 2 - _sox * _ss;
-						_sy += _sh * _ss / 2 - _soy * _ss;
-				
-						draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
+				if(_drw) {
+					BLEND_OVERRIDE;
+						 if(is_instanceof(_node, NodeObject))	draw_sprite_stretched(    THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
+					else if(is_instanceof(_node, NodeAction))	draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_action);
+					else if(is_instanceof(_node, AddNodeItem))	draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_generic);
+					else										draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection);
+					BLEND_NORMAL;
+					
+					if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_size, yy + grid_size)) {
+						node_selecting = i;
+						if(mouse_release(mb_left, sFOCUS))
+							buildNode(_node, _param);
+							
+						else if(struct_has(_node, "node") && mouse_release(mb_right, right_free && sFOCUS))
+							rightClick(_node);
+					}
+					
+					if(node_selecting == i) {
+						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+						if(keyboard_check_pressed(vk_enter))
+							buildNode(_node, _param);
+					}
+					
+					if(struct_has(_node, "tooltip") && _node.getTooltip() != "") {
+						if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
+							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
+							node_tooltip   = _node;
+							node_tooltip_x = search_pane.x + _nx;
+							node_tooltip_y = search_pane.y + yy
+						} else 
+							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
 					}
 				
-					if(is_instanceof(_node, NodeAction))
-						draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
+					if(is_instanceof(_node, NodeObject)) {
+						_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size, _param);
+					} else {
+						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+						if(sprite_exists(_node.spr)) {
+							var _si = current_time * PREFERENCES.collection_preview_speed /  3000;
+							var _sw = sprite_get_width(_node.spr);
+							var _sh = sprite_get_height(_node.spr);
+							var _ss = ui(32) / max(_sw, _sh);
+					
+							var _sox = sprite_get_xoffset(_node.spr);
+							var _soy = sprite_get_yoffset(_node.spr);
+					
+							var _sx = _boxx + grid_size / 2;
+							var _sy = yy + grid_size / 2;
+							_sx += _sw * _ss / 2 - _sox * _ss;
+							_sy += _sh * _ss / 2 - _soy * _ss;
+					
+							draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
+						}
+					
+						if(is_instanceof(_node, NodeAction))
+							draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
+					}
 				}
 				
 				var _name = _node.getName();
-				var _showQuery = _query != "" && is_instanceof(_node, NodeObject) && _node.createNode[0] == 0;
+				var _showQuery = _query != "";
 				
 				draw_set_font(_showQuery? f_p3 : f_p2);
-				var _nmh  = string_height_ext(_name, -1, grid_width);
+				var _nmh = string_height_ext(_name, -1, grid_width);
+				var _nmy = yy + grid_size + 4;
+				var _drw = _nmy > -grid_size && _nmy < search_pane.h;
 				
 				if(_showQuery) {
 					_query = string_title(_query);
-					var _nmy = yy + grid_size + 4;
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_sub);
-					draw_text_ext_add(_boxx + grid_size / 2, _nmy, _name, -1, grid_width); 
+					if(_drw) draw_text_ext_add(_boxx + grid_size / 2, _nmy, _name, -1, grid_width); 
 					_nmy += _nmh - ui(2);
 					
 					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-					draw_text_ext_add(_boxx + grid_size / 2, _nmy, _query, -1, grid_width); 
-					_nmy += string_height_ext(_query, -1, grid_width);
+					var _qhh = string_height_ext(_query, -1, grid_width);
+					if(_drw) _qhh = draw_text_match_ext(_boxx + grid_size / 2, _nmy, _query, grid_width, search_string); 
+					_nmy += _qhh;
+					_nmh += _qhh;
 					
 				} else {
 					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-					draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _name, -1, grid_width);
+					if(_drw) _nmh = draw_text_match_ext(_boxx + grid_size / 2, _nmy, _name, grid_width, search_string);
 				}
 				
-				name_height = max(name_height, _nmh + ui(8));
+				name_height = max(name_height, _nmh);
 				
 				if(node_focusing == i)
 					search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
@@ -952,19 +956,26 @@ event_inherited();
 					yy += hght;
 				}
 			}
+			
 		
 		} else if(PREFERENCES.dialog_add_node_view == 1) { // list
 			
 			var list_width  = search_pane.surface_w;
 			var list_height = ui(28);
-			var yy = _y + list_height / 2;
-			hh += list_height;
-		
+			var sy = _y + list_height / 2;
+			hh += list_height * (amo + 1);
+			
 			for(var i = 0; i < amo; i++) {
 				var s_res  = search_list[| i];
 				var _node  = noone;
 				var _param = {};
 				var _query = "";
+				var yy     = sy + list_height * i;
+				
+				if(yy < -list_height)  continue;
+				if(yy > search_pane.h) break;
+				
+				_param.search_string = search_string;
 				
 				if(is_array(s_res)) {
 					_node        = s_res[0];
@@ -1024,13 +1035,10 @@ event_inherited();
 					}
 					
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-					draw_text_add(list_height + ui(40), yy + list_height / 2, _node.getName());
+					draw_text_match(list_height + ui(40), yy + list_height / 2, _node.getName(), search_string);
 				}
 				
 				if(node_focusing == i) search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
-				
-				hh += list_height;
-				yy += list_height;
 			}
 		}
 		

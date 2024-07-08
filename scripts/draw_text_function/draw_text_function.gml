@@ -1,46 +1,46 @@
-function draw_text_line(_x, _y, _text, _sep, _w, forceCut = false) { #region
+function draw_text_line(_x, _y, _text, _sep, _w, forceCut = false) {
 	INLINE
 	__draw_text_ext_transformed(_x, _y, _text, _sep, _w, 1, 1, 0, forceCut);
-} #endregion
+}
 
-function draw_text_add(_x, _y, _text, scale = 1) { #region
+function draw_text_add(_x, _y, _text, scale = 1) {
 	INLINE
 	BLEND_ALPHA_MULP;
 	if(scale == 1) draw_text(round(_x), round(_y), _text);
 	else           draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
 	BLEND_NORMAL;
-} #endregion
+}
 
-function draw_text_over(_x, _y, _text, scale = 1) { #region
+function draw_text_over(_x, _y, _text, scale = 1) {
 	INLINE
 	BLEND_OVERRIDE;
 	draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
 	BLEND_NORMAL;
-} #endregion
+}
 
-function draw_text_add_float(_x, _y, _text, scale = 1) { #region
+function draw_text_add_float(_x, _y, _text, scale = 1) {
 	INLINE
 	BLEND_ALPHA_MULP;
 	if(scale == 1) draw_text(_x, _y, _text);
 	else           draw_text_transformed(_x, _y, _text, scale, scale, 0);
 	BLEND_NORMAL;
-} #endregion
+}
 
-function draw_text_lang_add(_x, _y, _text, scale = 1) { #region
+function draw_text_lang_add(_x, _y, _text, scale = 1) {
 	INLINE
 	BLEND_ALPHA_MULP;
 	draw_text_lang(_x, _y, _text, scale);
 	BLEND_NORMAL;
-} #endregion
+}
 
-function draw_text_lang_over(_x, _y, _text, scale = 1) { #region
+function draw_text_lang_over(_x, _y, _text, scale = 1) {
 	INLINE
 	BLEND_OVERRIDE;
 	draw_text_lang(_x, _y, _text, scale);
 	BLEND_NORMAL;
-} #endregion
+}
 
-function draw_text_lang(_x, _y, _text, scale = 1) { #region
+function draw_text_lang(_x, _y, _text, scale = 1) {
 	var _w = string_width(_text);
 	var _h = string_height(_text);
 	
@@ -77,17 +77,17 @@ function draw_text_lang(_x, _y, _text, scale = 1) { #region
 	
 	draw_set_font(_f);
 	draw_set_halign(_ha);
-} #endregion
+}
 
-function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) { #region
+function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) {
 	INLINE
 	BLEND_ALPHA_MULP;
 	var h = __draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0, forceCut);
 	BLEND_NORMAL;
 	return h;
-} #endregion
+}
 
-function draw_text_bbox(bbox, text, scale = 1) { #region
+function draw_text_bbox(bbox, text, scale = 1) {
 	INLINE
 	var ss = min(bbox.w / string_width(text), bbox.h / string_height(text));
 	    ss = max(0.5, ss);
@@ -96,25 +96,21 @@ function draw_text_bbox(bbox, text, scale = 1) { #region
 	draw_set_valign(fa_center);
 	
 	draw_text_cut(bbox.xc, bbox.yc, text, bbox.w, ss * scale);
-} #endregion
+}
 
-function draw_text_cut(x, y, str, w, scale = 1) { #region
+function draw_text_cut(x, y, str, w, scale = 1) {
 	INLINE
 	BLEND_ALPHA_MULP;
 	draw_text_transformed(round(x), round(y), string_cut(str, w,, scale), scale, scale, 0);
 	BLEND_NORMAL;
-} #endregion
+}
 
-function draw_text_int(x, y, str) { #region
+function draw_text_int(x, y, str) {
 	INLINE
 	draw_text(round(x), round(y), str);
-} #endregion
+}
 
-function draw_text_highlight() { #region
-	
-} #endregion
-
-function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation, _break = LOCALE.config.per_character_line_break) { #region
+function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx = 1, sy = 1, rotation = 0, _break = LOCALE.config.per_character_line_break) {
 	INLINE
 	_x = round(_x);
 	_y = round(_y);
@@ -187,12 +183,12 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation, 
 	draw_set_valign(va);
 	
 	return hh;
-} #endregion
+}
 
 #macro _string_width_ext string_width_ext
 #macro string_width_ext __string_width_ext
 
-function __string_width_ext(text, sep, w) { #region
+function __string_width_ext(text, sep, w) {
 	INLINE
 	if(!LOCALE.config.per_character_line_break)
 		return _string_width_ext(text, sep, w);
@@ -214,12 +210,12 @@ function __string_width_ext(text, sep, w) { #region
 	
 	mxw = max(mxw, lw);
 	return mxw;
-} #endregion
+}
 
 #macro _string_height_ext string_height_ext
 #macro string_height_ext __string_height_ext
 
-function __string_height_ext(text, sep, w, _break = LOCALE.config.per_character_line_break) { #region
+function __string_height_ext(text, sep, w, _break = LOCALE.config.per_character_line_break) {
 	INLINE
 	if(!_break) return _string_height_ext(text, sep, w);
 	
@@ -242,4 +238,4 @@ function __string_height_ext(text, sep, w, _break = LOCALE.config.per_character_
 	}
 	
 	return hh;
-} #endregion
+}

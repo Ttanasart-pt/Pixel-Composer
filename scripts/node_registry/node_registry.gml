@@ -1,4 +1,4 @@
-function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constructor { #region
+function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constructor {
 	name = _name;
 	spr  = _spr;
 	node = _node;
@@ -19,7 +19,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	is_patreon_extra = false;
 	
-	if(!IS_CMD) { #region
+	if(!IS_CMD) {
 		var pth = DIRECTORY + "Nodes/tooltip/" + node + ".png";
 		if(file_exists_empty(pth)) tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
 		
@@ -29,9 +29,9 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 			if(_n.tooltip != "")
 				tooltip = _n.tooltip;
 		}
-	} #endregion
+	}
 	
-	static setVersion = function(version) { #region
+	static setVersion = function(version) {
 		INLINE 
 		if(IS_CMD) return self;
 		
@@ -46,41 +46,41 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 			ds_list_add(NEW_NODES, self);
 		}
 		return self;
-	} #endregion
+	}
 	
-	static setIcon = function(icon) { #region
+	static setIcon = function(icon) {
 		INLINE 
 		if(IS_CMD) return self;
 		
 		self.icon = icon;
 		return self;
-	} #endregion
+	}
 	
-	static isDeprecated = function() { #region
+	static isDeprecated = function() {
 		INLINE 
 		if(IS_CMD) return self;
 		
 		deprecated = true;
 		return self;
-	} #endregion
+	}
 	
-	static hideRecent = function() { #region
+	static hideRecent = function() {
 		INLINE 
 		if(IS_CMD) return self;
 		
 		show_in_recent = false;
 		return self;
-	} #endregion
+	}
 	
-	static hideGlobal = function() { #region
+	static hideGlobal = function() {
 		INLINE 
 		if(IS_CMD) return self;
 		
 		show_in_global = false;
 		return self;
-	} #endregion
+	}
 	
-	static patreonExtra = function() { #region
+	static patreonExtra = function() {
 		INLINE 
 		if(IS_CMD) return self;
 		
@@ -88,12 +88,12 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		
 		ds_list_add(SUPPORTER_NODES, self);
 		return self;
-	} #endregion
+	}
 	
 	static getName    = function() { return __txt_node_name(node, name);	   }
 	static getTooltip = function() { return __txt_node_tooltip(node, tooltip); }
 	
-	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) { #region
+	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
 		INLINE 
 		
 		var _buildCon = createNode[0];
@@ -104,9 +104,9 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		else			_node = createNode[1](_x, _y, _group, _param);
 		
 		return _node;
-	} #endregion
+	}
 	
-	static drawGrid = function(_x, _y, _mx, _my, grid_size, _param = {}) { #region
+	static drawGrid = function(_x, _y, _mx, _my, grid_size, _param = {}) {
 		var spr_x = _x + grid_size / 2;
 		var spr_y = _y + grid_size / 2;
 		
@@ -147,9 +147,9 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		}
 		
 		if(icon) draw_sprite_ext(icon, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
-	} #endregion
+	}
 	
-	static drawList = function(_x, _y, _mx, _my, list_height, _param = {}) { #region
+	static drawList = function(_x, _y, _mx, _my, list_height, _param = {}) {
 		var fav = array_exists(global.FAV_NODES, node);
 		if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(32), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
 				
@@ -175,9 +175,10 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 			tx += ui(40);
 		}	
 		
-		var _txt   = getName();
-		var _query = struct_try_get(_param, "query", "");
+		var _txt       = getName();
+		var _query     = struct_try_get(_param, "query", "");
 		var _showQuery = _query != "" && createNode[0] == 0;
+		var _search    = struct_try_get(_param, "search_string", 0);
 		
 		if(_showQuery) {			
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
@@ -186,12 +187,14 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 			
 			_query = string_title(_query);
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(tx, _y + list_height / 2, _query);
+			if(_search == 0) draw_text_add(tx, _y + list_height / 2, _query);
+			else             draw_text_match(tx, _y + list_height / 2, _query, _search);
 			tx += string_width(_query);
 			
 		} else {
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(tx, _y + list_height / 2, _txt);
+			if(_search == 0) draw_text_add(tx, _y + list_height / 2, _txt);
+			else             draw_text_match(tx, _y + list_height / 2, _txt, _search);
 			tx += string_width(_txt);
 			
 		}
@@ -212,8 +215,8 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		}
 		
 		return tx;
-	} #endregion
-} #endregion
+	}
+}
 
 #region globalvar
 	globalvar ALL_NODES, NODE_CATEGORY, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
@@ -653,7 +656,7 @@ function __initNodes() {
 		ds_list_add(d3d, "2D Operations");
 		addNodeObject(d3d, "Normal",			s_node_normal,			"Node_Normal",			[1, Node_Normal],, "Create normal map using greyscale value as height.");
 		addNodeObject(d3d, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light],, "Light up the image using normal mapping.");
-		addNodeObject(d3d, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel], ["shade", "auto shade"], "Apply 2D bevel on the image.");
+		addNodeObject(d3d, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel],, "Apply 2D bevel on the image.");
 		addNodeObject(d3d, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 			
 		ds_list_add(d3d, "3D");
