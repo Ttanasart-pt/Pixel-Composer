@@ -904,11 +904,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static getLength		= function() { return lengthTotal; }
 	static getAccuLength	= function() { return lengthAccs; }
 	
-	static getPointDistance = function(_dist, _ind = 0, out = undefined) { #region
+	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		if(array_empty(lengths)) return out;
 		
 		var _cKey = _dist;
+		
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;
@@ -933,7 +934,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				continue;
 			}
 			
-			var _t = _dist / lengths[i];
+			var _t = lengths[i] == 0? 0 : _dist / lengths[i];
 			
 			if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
 				out.x = lerp(_a0[0], _a1[0], _t);
@@ -948,12 +949,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		return out;
-	} #endregion
+	}
 	
-	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
+	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
 		var pix = (path_loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal;
 		return getPointDistance(pix, _ind, out);
-	} #endregion
+	}
 	
 	static getPointSegment = function(_rat) { #region
 		if(array_empty(lengths)) return new __vec2();

@@ -658,7 +658,7 @@ function __initNodes() {
 		addNodeObject(d3d, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light],, "Light up the image using normal mapping.");
 		addNodeObject(d3d, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel],, "Apply 2D bevel on the image.");
 		addNodeObject(d3d, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
-			
+		
 		ds_list_add(d3d, "3D");
 		addNodeObject(d3d, "3D Camera",		s_node_3d_camera,			"Node_3D_Camera",			[1, Node_3D_Camera],, "Create 3D camera that render scene to surface.").setVersion(11510);
 		addNodeObject(d3d, "3D Camera Set",	s_node_3d_camera_set,		"Node_3D_Camera_Set",		[1, Node_3D_Camera_Set],, "3D camera with built-in key and fill directional lights.").setVersion(11571);

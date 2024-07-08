@@ -92,7 +92,7 @@ void main() {
 	}
 
 	if(colored == 0) {
-		float c = middle + (random(mp) - middle) * contrast;
+		float c = middle + (random(mp + 1.) - middle) * contrast;
 	    gl_FragColor = vec4(vec3(c), 1.0);
 	} else if(colored == 1) {
 		gl_FragColor = vec4(colorNoise(mp), 1.);

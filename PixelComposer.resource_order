@@ -1560,6 +1560,8 @@
     {"name":"sh_rd_render","order":2,"path":"shaders/sh_rd_render/sh_rd_render.yy",},
     {"name":"sh_region_fill_border","order":5,"path":"shaders/sh_region_fill_border/sh_region_fill_border.yy",},
     {"name":"sh_region_fill_color","order":1,"path":"shaders/sh_region_fill_color/sh_region_fill_color.yy",},
+    {"name":"sh_region_fill_coordinate_all_init","order":9,"path":"shaders/sh_region_fill_coordinate_all_init/sh_region_fill_coordinate_all_init.yy",},
+    {"name":"sh_region_fill_coordinate_all","order":10,"path":"shaders/sh_region_fill_coordinate_all/sh_region_fill_coordinate_all.yy",},
     {"name":"sh_region_fill_coordinate_init","order":6,"path":"shaders/sh_region_fill_coordinate_init/sh_region_fill_coordinate_init.yy",},
     {"name":"sh_region_fill_init","order":2,"path":"shaders/sh_region_fill_init/sh_region_fill_init.yy",},
     {"name":"sh_region_fill_inner_remove","order":8,"path":"shaders/sh_region_fill_inner_remove/sh_region_fill_inner_remove.yy",},

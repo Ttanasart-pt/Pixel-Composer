@@ -2059,6 +2059,8 @@
     {"id":{"name":"sh_rd_render","path":"shaders/sh_rd_render/sh_rd_render.yy",},},
     {"id":{"name":"sh_region_fill_border","path":"shaders/sh_region_fill_border/sh_region_fill_border.yy",},},
     {"id":{"name":"sh_region_fill_color","path":"shaders/sh_region_fill_color/sh_region_fill_color.yy",},},
+    {"id":{"name":"sh_region_fill_coordinate_all_init","path":"shaders/sh_region_fill_coordinate_all_init/sh_region_fill_coordinate_all_init.yy",},},
+    {"id":{"name":"sh_region_fill_coordinate_all","path":"shaders/sh_region_fill_coordinate_all/sh_region_fill_coordinate_all.yy",},},
     {"id":{"name":"sh_region_fill_coordinate_init","path":"shaders/sh_region_fill_coordinate_init/sh_region_fill_coordinate_init.yy",},},
     {"id":{"name":"sh_region_fill_coordinate","path":"shaders/sh_region_fill_coordinate/sh_region_fill_coordinate.yy",},},
     {"id":{"name":"sh_region_fill_init","path":"shaders/sh_region_fill_init/sh_region_fill_init.yy",},},

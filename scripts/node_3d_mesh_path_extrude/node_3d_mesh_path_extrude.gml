@@ -36,13 +36,13 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		["Material",	false], in_mesh + 4, in_mesh + 2, in_mesh + 3, in_mesh + 9, 
 	]
 	
-	static step = function() { #region
+	static step = function() {
 		var _caps = getInputData(in_mesh + 5);
 		
 		inputs[| in_mesh + 3].setVisible(_caps, _caps);
-	} #endregion
+	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _path    = _data[in_mesh + 0];
 		var _sides   = _data[in_mesh + 1];
 		var _mat_sid = _data[in_mesh + 2];
@@ -104,7 +104,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		setTransform(object, _data);
 		
 		return object;
-	} #endregion
+	}
 	
 	static getPreviewValues = function() { return array_safe_get_fast(all_inputs, in_mesh + 2, noone); }
 }

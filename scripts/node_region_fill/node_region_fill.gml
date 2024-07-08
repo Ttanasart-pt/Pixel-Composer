@@ -27,23 +27,30 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 10] = nodeValue("Texture map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
+	inputs[| 11] = nodeValue("Color Filter", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 4, 
 		["Surfaces", false], 0, 1, 
-		["Fill",	 false], 5, 8, 2, 9, 10, 6, 
+		["Regions",  false, 11], 5, 6, 
+		["Fill",	 false], 8, 2, 9, 10, 
 		["Render",	 false], 7, 
 	];
 	
 	temp_surface = array_create(3);
 		
-	static step = function() { #region
-		var _filt = getInputData(8);
+	static step = function() {
+		var _filt = getInputData( 8);
+		var _fclr = getInputData(11);
 		
 		inputs[|  2].setVisible(_filt == 0);
 		inputs[|  9].setVisible(_filt == 1, _filt == 1);
 		inputs[| 10].setVisible(_filt == 2, _filt == 2);
-	} #endregion
+		
+		inputs[|  5].setVisible(_fclr);
+		inputs[|  6].setVisible(_fclr);
+	}
 		
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
@@ -52,12 +59,14 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _colr = _data[2];
 		var _fill = _data[3];
 		var _seed = _data[4];
-		var _targ = _data[5];
-		var _innr = _data[6];
 		var _rnbg = _data[7];
 		var _filt = _data[8];
 		var _cmap = _data[9];
 		var _tmap = _data[10];
+		
+		var _fclr = _data[11];
+		var _targ = _data[5];
+		var _innr = _data[6];
 		
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf)
@@ -67,70 +76,97 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			surface_clear(temp_surface[i]);
 		}
 		
-		#region filter color
-			surface_set_shader(temp_surface[1], sh_region_fill_init);
-				shader_set_color("targetColor", _targ);
-			
-				draw_surface_safe(_surf);
-			surface_reset_shader();
-		#endregion
+		var base = 0;
+		var cmap = temp_surface[0];
 		
-		#region inner region
-			var base = 0;
-			var amo  = _sw;
-		
-			if(_innr) {
-				repeat( amo ) {
-					surface_set_shader(temp_surface[base], sh_region_fill_inner);
-						shader_set_f("dimension", _sw, _sh);
+		if(_fclr) {
+			#region filter color
+				surface_set_shader(temp_surface[1], sh_region_fill_init);
+					shader_set_color("targetColor", _targ);
 				
+					draw_surface_safe(_surf);
+				surface_reset_shader();
+			#endregion
+			
+			#region inner region
+				var amo  = _sw;
+			
+				if(_innr) {
+					repeat( amo ) {
+						surface_set_shader(temp_surface[base], sh_region_fill_inner);
+							shader_set_f("dimension", _sw, _sh);
+					
+							draw_surface_safe(temp_surface[!base]);
+						surface_reset_shader();
+					
+						base = !base;
+					}
+				
+					surface_set_shader(temp_surface[2], sh_region_fill_inner_remove);
+						draw_surface_safe(temp_surface[!base]);
+					surface_reset_shader();
+				
+				} else {
+					surface_set_shader(temp_surface[2], sh_region_fill_inner_remove);
+						draw_surface_safe(temp_surface[1]);
+					surface_reset_shader();
+				}
+			#endregion
+			
+			#region coordinate
+				surface_set_shader(temp_surface[base], sh_region_fill_coordinate_init);
+					draw_surface_safe(temp_surface[2]);
+				surface_reset_shader();
+				
+				base = !base;
+				var amo = _sw + _sh;
+			
+				repeat( amo ) {
+					surface_set_shader(temp_surface[base], sh_region_fill_coordinate);
+						shader_set_f("dimension",   _sw, _sh);
+						shader_set_surface("base",	temp_surface[2]);
+					
 						draw_surface_safe(temp_surface[!base]);
 					surface_reset_shader();
 				
 					base = !base;
 				}
 			
-				surface_set_shader(temp_surface[2], sh_region_fill_inner_remove);
-					draw_surface_safe(temp_surface[!base]);
-				surface_reset_shader();
-			
-			} else {
-				surface_set_shader(temp_surface[2], sh_region_fill_inner_remove);
-					draw_surface_safe(temp_surface[1]);
-				surface_reset_shader();
-			}
-		#endregion
-		
-		#region coordinate
-			surface_set_shader(temp_surface[base], sh_region_fill_coordinate_init);
-				draw_surface_safe(temp_surface[2]);
-			surface_reset_shader();
-			
-			base = !base;
-			var amo = _sw + _sh;
-		
-			repeat( amo ) {
-				surface_set_shader(temp_surface[base], sh_region_fill_coordinate);
-					shader_set_f("dimension",   _sw, _sh);
-					shader_set_surface("base",	temp_surface[2]);
+				surface_set_shader(temp_surface[base], sh_region_fill_border);
+					shader_set_f("dimension",       _sw, _sh);
+					shader_set_surface("original",	_surf);
 				
 					draw_surface_safe(temp_surface[!base]);
 				surface_reset_shader();
+				
+				cmap = temp_surface[base];
+			#endregion
 			
+		} else {
+			
+			#region coordinate
+				surface_set_shader(temp_surface[base], sh_region_fill_coordinate_all_init);
+					draw_surface_safe(_surf);
+				surface_reset_shader();
+				
 				base = !base;
-			}
-		
-			surface_set_shader(temp_surface[base], sh_region_fill_border);
-				shader_set_f("dimension",       _sw, _sh);
-				shader_set_surface("original",	_surf);
+				var amo = _sw + _sh;
+				
+				repeat( amo ) {
+					surface_set_shader(temp_surface[base], sh_region_fill_coordinate_all);
+						shader_set_f("dimension",   _sw, _sh);
+						shader_set_surface("base",	_surf);
+						
+						draw_surface_safe(temp_surface[!base]);
+					surface_reset_shader();
+					
+					base = !base;
+				}
+				
+				cmap = temp_surface[!base];
+			#endregion
 			
-				draw_surface_safe(temp_surface[!base]);
-			surface_reset_shader();
-		#endregion
-		
-		var _pal = [];
-		for( var i = 0, n = array_length(_colr); i < n; i++ )
-			array_append(_pal, colToVec4(_colr[i]));
+		}
 				
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -138,29 +174,33 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			if(_rnbg == 2) draw_surface_safe(_surf); // render original
 				
 			switch(_filt) {
-				case 0 : 
+				case 0 :  // Random colors
+					var _pal = [];
+					for( var i = 0, n = array_length(_colr); i < n; i++ )
+						array_append(_pal, colToVec4(_colr[i]));
+						
 					shader_set(sh_region_fill_color);
 						shader_set_f("colors",		_pal);
 						shader_set_f("seed",		_seed);
 						shader_set_f("colorAmount", array_length(_colr));
 						
-						draw_surface_safe(temp_surface[base]);
+						draw_surface_safe(cmap);
 					shader_reset();
 					break;
 						
-				case 1 :
+				case 1 : // Color Map
 					shader_set(sh_region_fill_map);
 						shader_set_surface("colorMap",	_cmap);
 						
-						draw_surface_safe(temp_surface[base]);
+						draw_surface_safe(cmap);
 					shader_reset();
 					break;
 						
-				case 2 :
+				case 2 : // Texture Map
 					shader_set(sh_region_fill_rg_map);
 						shader_set_surface("textureMap", _tmap);
 						
-						draw_surface_safe(temp_surface[base]);
+						draw_surface_safe(cmap);
 					shader_reset();
 					break;
 			}

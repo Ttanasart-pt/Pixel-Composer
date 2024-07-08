@@ -57,6 +57,8 @@ function array_to_string(arr) {
 }
 
 function string_partial_match(str, key) {
+	if(str == key) return 9999;
+	
 	var amo      = string_length(str);
 	var run      = 1;
 	var consec   = 0;

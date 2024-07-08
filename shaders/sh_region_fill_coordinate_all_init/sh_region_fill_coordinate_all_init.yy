@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_region_fill_coordinate_all_init",
+  "name":"sh_region_fill_coordinate_all_init",
+  "parent":{
+    "name":"region",
+    "path":"folders/shader/generator/region.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -3,7 +3,7 @@
 #macro __vec3_up      new __vec3(0.0, 0.0, 1.0)
 
 function __vec3(_x = 0, _y = _x, _z = _x) constructor {
-	static set = function(_x = 0, _y = _x, _z = _x) { #region
+	static set = function(_x = 0, _y = _x, _z = _x) {
 		if(is_struct(_x) && is_instanceof(_x, __vec3)) {
 			x = _x.x;
 			y = _x.y;
@@ -29,14 +29,14 @@ function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 		y = _y;
 		z = _z;
 		return self;
-	} set(_x, _y, _z); #endregion
+	} set(_x, _y, _z);
 	
-	static isZero = function() { #region
+	static isZero = function() {
 		INLINE
 		return x == 0 && y == 0 && z == 0;
-	} #endregion
+	}
 	
-	static setIndex = function(index, value) { #region
+	static setIndex = function(index, value) {
 		INLINE
 		switch(index) {
 			case 0 : x = value; break;
@@ -44,73 +44,73 @@ function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 			case 2 : z = value; break;
 		}
 		return self;
-	} #endregion
+	}
 	
-	static getIndex = function(index) { #region
+	static getIndex = function(index) {
 		switch(index) {
 			case 0 : return x;
 			case 1 : return y;
 			case 2 : return z;
 		}
 		return 0;
-	} #endregion
+	}
 
-	static  add = function(_vec3) { #region
+	static  add = function(_vec3) {
 		INLINE
 		return new __vec3(x + _vec3.x, y + _vec3.y, z + _vec3.z);
-	} #endregion
-	static _add = function(_vec3) { #region
+	}
+	static _add = function(_vec3) {
 		INLINE
 		x += _vec3.x;
 		y += _vec3.y;
 		z += _vec3.z;
 		return self;
-	} #endregion
+	}
 
-	static  subtract = function(_vec3) { #region
+	static  subtract = function(_vec3) {
 		INLINE
 		return new __vec3(x - _vec3.x, y - _vec3.y, z - _vec3.z);
-	} #endregion
-	static _subtract = function(_vec3) { #region
+	}
+	static _subtract = function(_vec3) {
 		INLINE
 		x -= _vec3.x;
 		y -= _vec3.y;
 		z -= _vec3.z;
 		return self;
-	} #endregion
+	}
 
-	static  multiply = function(_scalar) { #region
+	static  multiply = function(_scalar) {
 		INLINE
 		return new __vec3(x * _scalar, y * _scalar, z * _scalar);
-	} #endregion
-	static _multiply = function(_scalar) { #region
+	}
+	static _multiply = function(_scalar) {
 		INLINE
 		x *= _scalar;
 		y *= _scalar;
 		z *= _scalar;
 		return self;
-	} #endregion
+	}
 
-	static  multiplyVec = function(_vec) { #region
+	static  multiplyVec = function(_vec) {
 		INLINE
 		return new __vec3(x * _vec.x, y * _vec.y, z * _vec.z);
-	} #endregion
-	static _multiplyVec = function(_vec) { #region
+	}
+	static _multiplyVec = function(_vec) {
 		INLINE
 		x *= _vec.x;
 		y *= _vec.y;
 		z *= _vec.z;
 		return self;
-	} #endregion
+	}
 
-	static  divide = function(_scalar) { #region
+	static  divide = function(_scalar) {
 		INLINE
 		if (_scalar != 0)
 			return new __vec3(x / _scalar, y / _scalar, z / _scalar);
 		
 		return new __vec3(x, y, z); // Avoid division by zero
-	} #endregion
-	static _divide = function(_scalar) { #region
+	}
+	static _divide = function(_scalar) {
 		INLINE
 		if (_scalar != 0) {
 			x /= _scalar;
@@ -118,39 +118,39 @@ function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 			z /= _scalar;
 		}
 		return self;
-	} #endregion
+	}
 
-	static dot = function(_vec3) { #region
+	static dot = function(_vec3) {
 		INLINE
 		return x * _vec3.x + y * _vec3.y + z * _vec3.z;
-	} #endregion
+	}
 	
-	static cross = function(_vec3) { #region
+	static cross = function(_vec3) {
 		INLINE
 	    var cross_x = y * _vec3.z - z * _vec3.y;
 	    var cross_y = z * _vec3.x - x * _vec3.z;
 	    var cross_z = x * _vec3.y - y * _vec3.x;
 	    return new __vec3(cross_x, cross_y, cross_z);
-	} #endregion
+	}
 
-	static distance = function(_vec3) { #region
+	static distance = function(_vec3) {
 		INLINE
 		var dx = _vec3.x - x;
 		var dy = _vec3.y - y;
 		var dz = _vec3.z - z;
 		return sqrt(dx * dx + dy * dy + dz * dz);
-	} #endregion
+	}
 	
-	static length = function() { #region
+	static length = function() {
 		INLINE
 		return sqrt(x * x + y * y + z * z);
-	} #endregion
+	}
 
-	static  normalize = function() { #region
+	static  normalize = function() {
 		INLINE
 		return clone()._normalize();
-	} #endregion
-	static _normalize = function() { #region
+	}
+	static _normalize = function() {
 		INLINE
 		var _length = length();
 		if (_length != 0) {
@@ -159,49 +159,49 @@ function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 			z /= _length;
 		}
 		return self;
-	} #endregion
+	}
 	
-	static _lerpTo = function(to, speed = 0.3) { #region
+	static _lerpTo = function(to, speed = 0.3) {
 		INLINE
 		x = lerp(x, to.x, speed);
 		y = lerp(y, to.y, speed);
 		z = lerp(z, to.z, speed);
-	} #endregion
+	}
 	
-    static _lerp_float = function(to, speed = 5, pre = 0.01) { #region
+    static _lerp_float = function(to, speed = 5, pre = 0.01) {
         INLINE
         x = lerp_float(x, to.x, speed, pre);
         y = lerp_float(y, to.y, speed, pre);
         z = lerp_float(z, to.z, speed, pre);
-    } #endregion
+    }
 
-	static equal = function(to) { #region
+	static equal = function(to) {
 		INLINE
 		return x == to.x && y == to.y && z == to.z;
-	} #endregion
+	}
 	
-	static minVal = function(vec) { #region
+	static minVal = function(vec) {
 		INLINE
 		return new __vec3(
 			min(x, vec.x),
 			min(y, vec.y),
 			min(z, vec.z),
 		);
-	} #endregion
+	}
 	
-	static maxVal = function(vec) { #region
+	static maxVal = function(vec) {
 		INLINE
 		return new __vec3(
 			max(x, vec.x),
 			max(y, vec.y),
 			max(z, vec.z),
 		);
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		INLINE
 		return new __vec3(x, y, z);
-	} #endregion
+	}
 	
 	static toString = function() { return $"[__vec3] ({x}, {y}, {z})"; }
 	

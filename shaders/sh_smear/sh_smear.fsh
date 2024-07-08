@@ -47,7 +47,7 @@ vec4 smear(vec2 angle) { #region
 		
 		if(modulateStr != 2) {
 			if(alpha == 0) col.rgb *= 1. - i;
-			else           col.a *= 1. - i;
+			else           col.a   *= 1. - i;
 		}
 			  
 	    float bright = (col.r + col.g + col.b) / 3. * col.a;
