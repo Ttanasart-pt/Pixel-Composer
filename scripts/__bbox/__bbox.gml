@@ -82,8 +82,8 @@ function __BBOX() constructor {
 	
 		xc = (x0 + x1) / 2; 
 		yc = (y0 + y1) / 2;
-		w  = x1 - x0; 
-		h  = y1 - y0;
+		w  = max(0, abs(x1 - x0));
+		h  = max(0, abs(y1 - y0));
 		
 		return self;
 	}

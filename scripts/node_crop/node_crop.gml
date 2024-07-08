@@ -93,7 +93,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[| 6].setVisible(_asp >  0 && _fit == 0);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _inSurf	= current_data[0];
@@ -332,7 +332,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			draw_rectangle(_px0, _py0, _px1, _py1, true);
 		}
 		
-	} #endregion
+	}
 	
 	static onValueUpdate = function(index) {
 		if(index != 3) return;
@@ -347,7 +347,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[| 6].setValue(min(_dim[0], _dim[1] * _ratio));
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _inSurf	= _data[0];
 		var _crop	= _data[1];
 		var _asp	= _data[3];
@@ -410,5 +410,5 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		return _outSurf;
-	} #endregion
+	}
 }
