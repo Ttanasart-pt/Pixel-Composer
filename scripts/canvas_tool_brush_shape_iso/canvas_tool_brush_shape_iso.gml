@@ -2,9 +2,10 @@ enum CANVAS_TOOL_SHAPE_ISO {
 	cube,
 }
 
-function canvas_tool_shape_iso(brush, shape) : canvas_tool() constructor {
+function canvas_tool_shape_iso(brush, shape, toolAttr) : canvas_tool() constructor {
 	self.brush   = brush;
 	self.shape   = shape;
+	self.tool_attribute = toolAttr;
 	
 	use_color_3d    = true;
 	brush_resizable = true;
@@ -23,9 +24,14 @@ function canvas_tool_shape_iso(brush, shape) : canvas_tool() constructor {
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
+		var _ang = tool_attribute.iso_angle;
+		
 		if(mouse_holding) {
 			surface_set_shader(drawing_surface, noone);
-				canvas_draw_iso_cube(brush, mouse_points, subtool);
+			
+					 if(_ang == 0) canvas_draw_iso_cube( brush, mouse_points, subtool);
+				else if(_ang == 1) canvas_draw_diag_cube(brush, mouse_points, subtool);
+				
 			surface_reset_shader();
 		}
 		
@@ -182,6 +188,189 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 		var h2 = (w + 2 * h) / 4;
 		var h1 = h2 - h;
 		var w1 = h1 * 2;
+		
+		var p0px = p0x + w1;
+		var p0py = p0y + h1;
+		var p1px = p1x - w1;
+		var p1py = p1y - h1;
+		
+		p0py -= (abs(w) > 4);
+		p1py += (abs(w) > 4);
+		
+		if(d > 0) {
+			p0y  += d;
+			p1y  += d;
+			p0py += d;
+			p1py += d;
+			d = -d;
+		}
+		
+		draw_set_color(cc);
+		
+		if(_fill == 2) {
+			if(d == 0) {
+				canvas_draw_line(p0x,  p0y,  p0px - 1, p0py);
+				canvas_draw_line(p0px, p0py, p1x,      p1y);
+				canvas_draw_line(p1x,  p1y,  p1px + 1, p1py);
+				canvas_draw_line(p1px, p1py, p0x,      p0y);
+				
+				canvas_draw_triangle(p0x,     p0y, p0px - 1, p0py,     p1x - 1, p1y, false);
+				canvas_draw_triangle(p1x - 1, p1y, p1px,     p1py - 1, p0x,     p0y, false);
+				
+			} else {
+				
+				draw_set_color(brush.colors[1]);
+				canvas_draw_triangle(p0px, p0py - 1, p1x, p1y + d, p1x,  p1y,      false);
+				canvas_draw_triangle(p0px, p0py - 1, p1x, p1y + d, p0px, p0py + d, false);
+				canvas_draw_line(p0px,     p0py + 1 + d, p1x,  p1y + 1 + d);
+				canvas_draw_line(p0px,     p0py,         p1x,  p1y);
+				canvas_draw_line(p0px,     p0py - 1,     p0px, p0py + d);
+     if(d < -1) canvas_draw_line(p0px,     p0py - 1,     p1x,  p1y - 1);
+				
+				draw_set_color(brush.colors[0]);
+				canvas_draw_triangle(p0px - 1, p0py, p0x,  p0y + d, p0x,      p0y,          false);
+				canvas_draw_triangle(p0px - 1, p0py, p0x,  p0y + d, p0px - 1, p0py - 1 + d, false);
+				canvas_draw_line(p0x,      p0y + d, p0px - 1, p0py + d);
+				canvas_draw_line(p0x,      p0y,     p0px - 1, p0py);
+				canvas_draw_line(p0x,      p0y,     p0x,      p0y + d);
+				canvas_draw_line(p0px - 1, p0py,    p0px - 1, p0py + d);
+				
+				draw_set_color(cc);
+				canvas_draw_triangle(p0x,     p0y + d, p0px - 1, p0py + d,     p1x - 1, p1y + d, false);
+				canvas_draw_triangle(p1x - 1, p1y + d, p1px,     p1py + d - 1, p0x,     p0y + d, false);
+				
+				canvas_draw_line(p0x,  p0y  + d, p0px - 1, p0py + d);
+				canvas_draw_line(p0px, p0py + d, p1x,      p1y  + d);
+				canvas_draw_line(p1x,  p1y  + d, p1px + 1, p1py + d);
+				canvas_draw_line(p1px, p1py + d, p0x,      p0y  + d);
+				
+			}
+			
+		} else {
+			canvas_draw_line_brush(brush, p0x,  p0y,  p0px - 1, p0py);
+			canvas_draw_line_brush(brush, p0px, p0py, p1x,      p1y);
+			
+			if(_fill == 1) {
+				canvas_draw_line_brush(brush, p1x,  p1y,  p1px + 1, p1py);
+				canvas_draw_line_brush(brush, p1px, p1py, p0x,      p0y);
+			}
+			
+			if(d != 0) {
+				canvas_draw_line_brush(brush, p0x,  p0y  + d, p0px - 1, p0py + d);
+				canvas_draw_line_brush(brush, p0px, p0py + d, p1x,      p1y  + d);
+				canvas_draw_line_brush(brush, p1x,  p1y  + d, p1px + 1, p1py + d);
+				canvas_draw_line_brush(brush, p1px, p1py + d, p0x,      p0y  + d);
+				
+				canvas_draw_line_brush(brush, p0x,      p0y,  p0x,      p0y + d);
+				canvas_draw_line_brush(brush, p1x,      p1y,  p1x,      p1y + d);
+				canvas_draw_line_brush(brush, p0px - 1, p0py, p0px - 1, p0py + d);
+				
+				if(_fill == 1)
+					canvas_draw_line_brush(brush, p1px, p1py, p1px, p1py + d);
+				
+			} else if(_fill == 0) {
+				canvas_draw_line_brush(brush, p1x,  p1y,  p1px + 1, p1py);
+				canvas_draw_line_brush(brush, p1px, p1py, p0x,      p0y);
+			}
+		}
+	}
+}
+
+function canvas_draw_diag_cube(brush, _p, _fill = false) {
+	var p0x = _p[0][0], p0y = _p[0][1];
+	var p1x = _p[1][0], p1y = _p[1][1];
+	var ww  = p1x - p0x;
+	
+	var cc = draw_get_color();
+	
+	if(p1x < p0x) {
+		var tx = p0x, ty = p0y;
+		p0x = p1x; p0y = p1y;
+		p1x = tx;  p1y = ty;
+	}
+	
+	if(p1x == p0x && p1y > p0y) {
+		var t = p0y;
+		p0y = p1y;
+		p1y = t;
+	}
+	
+    if(p1x == p0x && p1y < p0y) p1x++;
+    
+	var d  = _p[2];
+	var w  = p1x - p0x + 1;
+	var h  = p0y - p1y;
+	
+	var h1 = (w - h) / 2;
+	var h2 = h1 + h;
+	var w1 = h1;
+	
+	var p0px = p0x + w1;
+	var p0py = p0y + h1;
+	var p1px = p1x - w1;
+	var p1py = p1y - h1;
+	
+	var _simp = true;
+	
+	if(w > 0) {
+		
+		if(round(h2) < 0) {
+			if(round(w1) > 0) {
+				
+				p0x = floor(p1px);
+				p0y = floor(p1py);
+				p1x = ceil(p0px) + 1;
+				p1y = ceil(p0py);
+				
+				if(ww < 0) { p0x--; p1x--; }
+				_simp = false;
+			}
+			
+		} else if(round(h2) > 0) {
+			if(round(w1) < 0) {
+				
+				p0x = floor(p0px);
+				p0y = floor(p0py);
+				p1x = ceil(p1px) + 1;
+				p1y = ceil(p1py);
+				
+				if(frac(p0py) >= 0.5) { p0x--; }
+				if(ww < 0 && frac(p0px) == 0 && frac(p0py) == 0) { p0x--; p1x--; }
+				_simp = false;
+				
+			} else if(round(w1) > 0) {
+				_simp = false;
+				
+			}
+		}
+	}
+	
+	if(_simp) {
+		if(_fill == 2) {
+			if(d == 0) {
+				canvas_draw_line(p0x, p0y, p1x, p1y);
+			} else {
+				canvas_draw_triangle(p0x, p0y, p1x, p1y,     p1x, p1y + d, false);
+				canvas_draw_triangle(p0x, p0y, p0x, p0y + d, p1x, p1y + d, false);
+			}
+			
+		} else {
+			canvas_draw_line_brush(brush, p0x, p0y, p1x, p1y);
+				
+			if(d != 0) {
+				canvas_draw_line_brush(brush, p0x, p0y + d, p1x, p1y + d);
+				
+				canvas_draw_line_brush(brush,  p0x,  p0y,  p0x,  p0y + d);
+				canvas_draw_line_brush(brush,  p1x,  p1y,  p1x,  p1y + d);
+			} 
+		}
+	} else {
+		var w  = p1x - p0x + 1;
+		var h  = p0y - p1y;
+		
+		var h1 = (w - h) / 2;
+		var h2 = h1 + h;
+		var w1 = h1;
 		
 		var p0px = p0x + w1;
 		var p0py = p0y + h1;

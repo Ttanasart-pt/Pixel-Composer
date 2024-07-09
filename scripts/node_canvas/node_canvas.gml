@@ -216,7 +216,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_eraser    = new canvas_tool_brush(brush, true);
 		tool_rectangle = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.rectangle);
 		tool_ellipse   = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.ellipse);
-		tool_iso_cube  = new canvas_tool_shape_iso(brush, CANVAS_TOOL_SHAPE_ISO.cube);
+		tool_iso_cube  = new canvas_tool_shape_iso(brush, CANVAS_TOOL_SHAPE_ISO.cube, tool_attribute);
 		
 		tool_fill      = new canvas_tool_fill(tool_attribute);
 		tool_freeform  = new canvas_tool_draw_freeform(brush);
@@ -272,18 +272,22 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_fil8           	= [ "Fill", tool_fil8_edit, "fillType", tool_attribute ];
 		
 		tool_attribute.button_apply = [ false, false ];
-		tool_curve_apply  = button( function() { tool_curve_bez.apply();   } ).setIcon(THEME.toolbar_check, 0);
+		tool_curve_apply  = button( function() { tool_curve_bez.apply();  } ).setIcon(THEME.toolbar_check, 0);
 		tool_curve_cancel = button( function() { tool_curve_bez.cancel(); } ).setIcon(THEME.toolbar_check, 1);
 		
-		toolObject_selection_magic = new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
-				.setSetting(tool_thrs, tool_fil8)
-				.setToolObject(tool_sel_magic)
+		tool_attribute.iso_angle = 0;
+		tool_isoangle            = new buttonGroup( [ THEME.canvas_iso_angle, THEME.canvas_iso_angle ], function(val) { tool_attribute.iso_angle = val; })
+										.setTooltips( [ "2:1", "1:1" ] )
+										.setCollape(false);
+		tool_iso_settings        = [ "", tool_isoangle,   "iso_angle",   tool_attribute ];
 		
 		tools = [
 			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ])
 				.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_brush ]),
 			
-			toolObject_selection_magic,
+			new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
+				.setSetting(tool_thrs, tool_fil8)
+				.setToolObject(tool_sel_magic),
 			
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
 				.setSetting(tool_size)
@@ -302,7 +306,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setToolObject(tool_ellipse),
 			
 			new NodeTool( "Iso Cube",	[ THEME.canvas_tools_iso_cube, THEME.canvas_tools_iso_cube_wire, THEME.canvas_tools_iso_cube_fill ])
-				.setSetting(tool_size)
+				.setSetting(tool_size, tool_iso_settings)
 				.setToolObject(tool_iso_cube),
 			
 			new NodeTool( "Curve",		  THEME.canvas_tool_curve_icon)
