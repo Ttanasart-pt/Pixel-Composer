@@ -35,7 +35,7 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 					var _rat = round(_ddx / _ddy);
 					_ddx = _ddy * _rat;
 					
-				} else {
+				} else if(abs(_dx) < abs(_dy)) {
 					var _rat = round(_ddy / _ddx);
 					_ddy = _ddx * _rat;
 					
