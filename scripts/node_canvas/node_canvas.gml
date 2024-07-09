@@ -234,7 +234,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	#region ++++ tools ++++
 		tool_attribute.channel = [ true, true, true, true ];
-		tool_channel_edit      = new checkBoxGroup(THEME.tools_canvas_channel, function(ind, val) { tool_attribute.channel[ind] = val; });
+		tool_channel_edit      = new checkBoxGroup(THEME.tools_canvas_channel, function(val, ind) { tool_attribute.channel[ind] = val; });
 		
 		tool_attribute.drawLayer = 0;
 		tool_attribute.pickColor = c_white;
@@ -243,7 +243,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 										.setCollape(false);
 		
 		tool_attribute.mirror = [ false, false, false ];
-		tool_mirror_edit      = new checkBoxGroup( THEME.canvas_mirror, function(ind, val) { tool_attribute.mirror[ind] = val; })
+		tool_mirror_edit      = new checkBoxGroup( THEME.canvas_mirror, function(val, ind) { tool_attribute.mirror[ind] = val; })
 										.setTooltips( [ "Toggle diagonal", "", "" ] );
 		
 		tool_settings          = [ [ "", tool_channel_edit,   "channel",   tool_attribute ], 
