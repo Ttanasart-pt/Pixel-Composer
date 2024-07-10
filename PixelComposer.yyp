@@ -1852,6 +1852,7 @@
     {"id":{"name":"sh_combine_rgb","path":"shaders/sh_combine_rgb/sh_combine_rgb.yy",},},
     {"id":{"name":"sh_content_sampler","path":"shaders/sh_content_sampler/sh_content_sampler.yy",},},
     {"id":{"name":"sh_convolution","path":"shaders/sh_convolution/sh_convolution.yy",},},
+    {"id":{"name":"sh_coord","path":"shaders/sh_coord/sh_coord.yy",},},
     {"id":{"name":"sh_corner_erode","path":"shaders/sh_corner_erode/sh_corner_erode.yy",},},
     {"id":{"name":"sh_corner_iterate","path":"shaders/sh_corner_iterate/sh_corner_iterate.yy",},},
     {"id":{"name":"sh_corner","path":"shaders/sh_corner/sh_corner.yy",},},

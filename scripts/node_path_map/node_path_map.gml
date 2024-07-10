@@ -11,7 +11,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	inputs[| 2] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 3] = nodeValue("Subdivision", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16)
-		.setValidator(VV_min(1))
+		.setValidator(VV_min(2))
 		.rejectArray();
 		
 	outputs[| 0] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -19,6 +19,8 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	input_display_list = [ 0, 
 		["Mapping", false], 1, 2, 3, 
 	]
+	
+	temp_surface = [ 0 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path = getInputData(0);
@@ -35,10 +37,20 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		var _amo  = _path.getLineCount();
 		
-		if(!is_surface(_surf) || _amo < 2) return;
+		if(_amo < 2) return;
+		
+		if(!is_surface(_surf)) {
+			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
+			
+			surface_set_shader(temp_surface[0], sh_coord);
+				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
+			surface_reset_shader()
+			
+			_surf = temp_surface[0];
+		}
 		
 		var _pnt = array_create(_amo + 1);
-		var _isb = 1 / _sub;
+		var _isb = 1 / (_sub - 1);
 		var _pp  = new __vec2();
 		
 		for( var i = 0; i < _amo; i++ ) {

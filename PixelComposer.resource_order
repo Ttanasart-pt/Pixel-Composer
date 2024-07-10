@@ -1382,6 +1382,7 @@
     {"name":"sh_combine_rgb","order":11,"path":"shaders/sh_combine_rgb/sh_combine_rgb.yy",},
     {"name":"sh_content_sampler","order":1,"path":"shaders/sh_content_sampler/sh_content_sampler.yy",},
     {"name":"sh_convolution","order":23,"path":"shaders/sh_convolution/sh_convolution.yy",},
+    {"name":"sh_coord","order":30,"path":"shaders/sh_coord/sh_coord.yy",},
     {"name":"sh_corner_erode","order":1,"path":"shaders/sh_corner_erode/sh_corner_erode.yy",},
     {"name":"sh_corner_iterate","order":2,"path":"shaders/sh_corner_iterate/sh_corner_iterate.yy",},
     {"name":"sh_cross_histogram","order":26,"path":"shaders/sh_cross_histogram/sh_cross_histogram.yy",},
