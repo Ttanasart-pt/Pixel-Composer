@@ -1795,26 +1795,38 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return -1;
 	} #endregion
 	
-	static drawJunction_fast = function(_s, _mx, _my) { #region
+	static drawJunction_fast = function(_s, _mx, _my) {
 		INLINE
 		
 		var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var _hov = hov && abs(_mx - x) + abs(_my - y) < _s;
+		var _d   = node.junction_draw_hei_y * _s;
+		var _hov = hov && point_in_rectangle(_mx, _my, x - 6 * _s, y - _d / 2, x + 6 * _s, y + _d / 2 - 1);
 		var _aa  = 0.75 + (!is_dummy * 0.25);
+		hover_in_graph = _hov;
 		
 		draw_set_color(draw_fg);
 		draw_set_alpha(_aa);
-		draw_circle(x, y, _s, false);
+		
+		if(node.previewable)
+			draw_circle(x, y, _s * 6, false);
+			
+		else if(index == -1)
+			draw_rectangle(	x - _s * 4, y - _s * 1.5, 
+							x + _s * 4, y + _s * 1.5, false);
+		else
+			draw_rectangle(	x - _s * 1.5, y - _s * 4, 
+							x + _s * 1.5, y + _s * 4, false);
+		
 		draw_set_alpha(1);
 		
 		return _hov;
-	} #endregion
+	}
 	
-	static drawJunction = function(_s, _mx, _my) { #region
+	static drawJunction = function(_s, _mx, _my) {
 		_s /= 2;
 		
 		var hov        = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var _d         = 24 * _s;
+		var _d         = node.junction_draw_hei_y * _s;
 		var is_hover   = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d - 1, y + _d - 1);
 		hover_in_graph = is_hover;
 		
@@ -1854,10 +1866,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return is_hover;
-	} #endregion
+	}
 	
-	static drawNameBG = function(_s) { #region
-		draw_set_text(f_p1, fa_left, fa_center);
+	static drawNameBG = function(_s) {
+		var _f = node.previewable? f_p1 : f_p3;
+		draw_set_text(_f, fa_left, fa_center);
 		
 		var tw = string_width(name) + 32;
 		var th = string_height(name) + 16;
@@ -1865,41 +1878,46 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(type == VALUE_TYPE.action) {
 			var tx = x;
 			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - tw / 2, y - th, tw, th, c_white, 0.5);
+			
 		} else if(connect_type == JUNCTION_CONNECT.input) {
 			var tx = x - 12 * _s;
 			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - tw + 16, y - th / 2, tw, th, c_white, 0.5);
+			
 		} else {
 			var tx = x + 12 * _s;
 			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - 16, y - th / 2, tw, th, c_white, 0.5);
 		}
-	} #endregion
+	}
 	
-	static drawName = function(_s, _mx, _my) { #region
+	static drawName = function(_s, _mx, _my) {
 		
 		var _draw_cc = COLORS._main_text;
-		var _draw_aa = 0.8 + hover_in_graph * 0.2;
-		draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
+		var _draw_aa = 0.6 + hover_in_graph * 0.4;
+		
+		var _f = node.previewable? f_p1 : f_p3;
+		
+		draw_set_text(_f, fa_left, fa_center, _draw_cc);
 		draw_set_alpha(_draw_aa);
 		
 		if(type == VALUE_TYPE.action) {
 			var tx = x;
-			draw_set_text(f_p1, fa_center, fa_center, _draw_cc);
-			draw_text_int(tx, y - (line_get_height() + 16) / 2, name);
+			draw_set_text(_f, fa_center, fa_center, _draw_cc);
+			draw_text_add(tx, y - (line_get_height() + 16) / 2, name);
 			
 		} else if(connect_type == JUNCTION_CONNECT.input) {
 			var tx = x - 12 * _s;
 			draw_set_halign(fa_right);
-			draw_text_int(tx, y, name);
+			draw_text_add(tx, y, name);
 			
 		} else {
 			var tx = x + 12 * _s;
 			draw_set_halign(fa_left);
-			draw_text_int(tx, y, name);
+			draw_text_add(tx, y, name);
 			
 		}
 		
 		draw_set_alpha(1);
-	} #endregion
+	}
 	
 	static drawConnectionsRaw = function(params = {}) { return drawJuncConnection(value_from, self, params); }
 	static drawConnections    = function(params = {}) {

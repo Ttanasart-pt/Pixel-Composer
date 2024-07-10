@@ -92,11 +92,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		tooltip = "";
 		x = _x;
 		y = _y;
-	
+		
+		name_height = 16;
 		w = 128;
 		h = 128;
 		min_w = w;
-		min_h = h;
+		min_h = name_height;
 		fix_h = h;
 		h_param = h;
 		will_setHeight = false;
@@ -623,36 +624,57 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		outputs_index  = array_create_ext(outputs_amount, function(index) { return getOutputJunctionIndex(index); });
 	} run_in(1, function() /*=>*/ { updateIO() });
 	
-	static setHeight = function() { #region
+	static setHeight = function() {
 		w = show_parameter? attributes.node_param_width : min_w;
 		
 		if(!auto_height) return;
 		junction_draw_hei_y = show_parameter? 32 : 24;
 		junction_draw_pad_y = show_parameter? min_h : 32;
 		
-		var _hi = junction_draw_pad_y + show_parameter * 4;
-		var _ho = junction_draw_pad_y + show_parameter * 4;
+		var _hi, _ho;
+		
+		if(previewable) {
+			_hi = junction_draw_pad_y + show_parameter * 4;
+			_ho = junction_draw_pad_y + show_parameter * 4;
+			
+		} else {
+			junction_draw_hei_y = 16;
+			junction_draw_pad_y = name_height / 2;
+			
+			_hi = name_height;
+			_ho = name_height;
+		}
 		
 		var _prev_surf = previewable && preview_draw && 
 			(	is_surface(getGraphPreviewSurface()) || 
 				(preview_channel >= 0 && preview_channel < ds_list_size(outputs) && outputs[| preview_channel].type == VALUE_TYPE.surface)
 			);
+		var _p = previewable;
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
-			if(is_instanceof(_inp, NodeValue) && _inp.isVisible()) 
-				_hi += junction_draw_hei_y;
+			if(is_instanceof(_inp, NodeValue) && _inp.isVisible()) {
+				if(_p) _hi += junction_draw_hei_y;
+				_p = true;
+			}
 		}
 		
 		if(auto_input && dummy_input) _hi += junction_draw_hei_y;
+		var _p = previewable;
 		
-		for( var i = 0; i < ds_list_size(outputs); i++ )
-			if(outputs[| i].isVisible()) _ho += junction_draw_hei_y;
+		for( var i = 0; i < ds_list_size(outputs); i++ ) {
+			if(outputs[| i].isVisible()) {
+				if(_p) _ho += junction_draw_hei_y;
+				_p = true;
+			}
+		}
 		
-		h = max(min_h, _prev_surf * 128, _hi, _ho, attributes.node_height);
+		h = max(min_h, _prev_surf * 128, _hi, _ho);
+		if(attributes.node_height) h = max(h, attributes.node_height);
+		
 		fix_h = h;
 		
-	} #endregion
+	}
 	
 	static getJunctionList = function() { #region ////getJunctionList
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
@@ -1186,10 +1208,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_h *= _s;
 		
 		_w -= max(draw_padding, draw_pad_w) * 2;
-		_h -= max(draw_padding, draw_pad_h) * 2 + 20 * pad_label;
+		_h -= max(draw_padding, draw_pad_h) * 2 + name_height * _s * pad_label;
 		
 		var _xc = xx +  w * _s / 2;
-		var _yc = yy + _h / 2 + pad_label * 20 + draw_padding;
+		var _yc = yy + _h / 2 + pad_label * name_height * _s + draw_padding;
 		
 		_w *= display_parameter.preview_scale / 100;
 		_h *= display_parameter.preview_scale / 100;
@@ -1208,11 +1230,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		draw_name = true;
 		
-		var ts = clamp(power(_s, 0.5), 0.5, 1);
 		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph());
 		var cc = getColor();
+		var nh = previewable? name_height * _s : h * _s;
 		
-		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), cc, aa);
+		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, nh, cc, aa);
 		
 		var cc = COLORS._main_text;
 		if(PREFERENCES.node_show_render_status && !rendered)
@@ -1220,11 +1242,24 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		aa += 0.25;
 		
-		if(icon) draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10),,, aa);
+		var tx = xx     + 6 * _s;
+		var tw = w * _s - 6 * _s;
 		
-		draw_set_text(f_p1, fa_left, fa_center, cc, aa);
-			var _xpd = ui(8 + (icon != noone) * 16);
-			draw_text_cut(round(xx + _xpd), round(yy + ui(10)), _name, w * _s - _xpd, ts);
+		if(!previewable) {
+			tx += _s * 4;
+			tw -= _s * 4;
+		}
+		
+		if(icon) {
+			tx += _s * 6;
+			draw_sprite_ui_uniform(icon, 0, round(tx), round(yy + nh / 2), _s, c_white, aa);
+			tx += _s * 12;
+			
+			tw -= _s * (6 + 12);
+		}
+		
+		draw_set_text(f_sdf, fa_left, fa_center, cc, aa);
+			draw_text_cut(round(tx), round(yy + nh / 2 + 1), _name, tw, _s * 0.275);
 		draw_set_alpha(1);
 	}
 	
@@ -1302,7 +1337,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		h_param = h;
 	} #endregion
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		if(!active) return;
 		var hover = noone;
 		
@@ -1335,13 +1370,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		onDrawJunctions(_x, _y, _mx, _my, _s);
 		
 		return hover;
-	} #endregion
+	}
 	
-	static drawJunctions_fast = function(_x, _y, _mx, _my, _s) { #region
+	static drawJunctions_fast = function(_x, _y, _mx, _my, _s) {
 		if(!active) return;
 		var hover = noone;
-		
-		_s = _s * 6;
 		
 		draw_set_circle_precision(4);
 		
@@ -1371,10 +1404,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(updatedOutTrigger.drawJunction_fast(_s, _mx, _my)) hover = updatedOutTrigger;
 		}
 		
-		onDrawJunctions(_x, _y, _mx, _my, _s / 6);
+		onDrawJunctions(_x, _y, _mx, _my, _s);
 		
 		return hover;
-	} #endregion
+	}
 	
 	static onDrawJunctions = function(_x, _y, _mx, _my, _s) {}
 	
@@ -1390,9 +1423,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var _hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == self);
 		
-		show_input_name  = _hov && point_in_rectangle(_mx, _my, xx - 12 * _s, yy + 20 * _s, xx + 12 * _s, yy + h * _s);
-		show_output_name = _hov && point_in_rectangle(_mx, _my, xx + (w - 12) * _s, yy + 20 * _s, xx + (w + 12) * _s, yy + h * _s);
+		show_input_name  = _hov;
+		show_output_name = _hov;
 		
+		var _y0 = previewable? yy + name_height * _s : yy;
+		var _y1 = yy + h * _s;
+		
+		show_input_name  &= point_in_rectangle(_mx, _my, xx - (    12) * _s, _y0, xx + (    12) * _s, _y1);
+		show_output_name &= point_in_rectangle(_mx, _my, xx + (w - 12) * _s, _y0, xx + (w + 12) * _s, _y1);
+
 		if(PANEL_GRAPH.value_dragging && PANEL_GRAPH.node_hovering == self) {
 			if(PANEL_GRAPH.value_dragging.connect_type == JUNCTION_CONNECT.input) 
 				show_output_name = true;
@@ -1599,8 +1638,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawDimension = function(xx, yy, _s) { #region
 		if(draw_graph_culled) return;
-		if(!active) return;
-		if(_s * w < 64) return;
+		if(!active)           return;
+		if(_s * w < 64)       return;
+		if(!previewable)      return;
 		
 		draw_set_text(f_p3, fa_center, fa_top, COLORS.panel_graph_node_dimension);
 		var tx = xx + w * _s / 2;
@@ -1686,7 +1726,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(show_parameter) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus);
 		
 		draw_name = false;
-		if(_s >= 0.75) drawNodeName(xx, yy, _s);
+		if((previewable && _s >= 0.75) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s);
 		
 		if(attributes.annotation != "") {
 			draw_set_text(f_sdf_medium, fa_left, fa_bottom, COLORS._main_text_sub);
@@ -1714,6 +1754,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		drawNodeOverlay(xx, yy, _mx, _my, _s);
 		
+		if(!previewable) return drawJunctions_fast(xx, yy, _mx, _my, _s);
 		return _s > 0.5? drawJunctions(xx, yy, _mx, _my, _s) : drawJunctions_fast(xx, yy, _mx, _my, _s);
 	} #endregion
 	
@@ -2262,7 +2303,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		INLINE
 		
 		min_w = _w; 
-		min_h = _h; 
+		min_h = _h;
+		min_h = name_height; ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		if(_apply) {
 			w = _w;
