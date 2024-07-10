@@ -223,17 +223,17 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _pathStr = _rtStr;
 				var _pathEnd = _rtMax;
 					
-				var _stepLen = min(_pathEnd, 1 / _seg); //Distance to move per step
+				var _stepLen = min(_pathEnd, 1 / _seg); 				// Distance to move per step
 				if(_stepLen <= 0.00001) continue;
 					
-				var _total		= _pathEnd;	//Length remaining
-				var _total_prev = _total;	//Use to prevent infinite loop
-				var _freeze		= 0;		//Use to prevent infinite loop
+				var _total		= _pathEnd;								// Length remaining
+				var _total_prev = _total;								// Use to prevent infinite loop
+				var _freeze		= 0;									// Use to prevent infinite loop
 					
-				var _prog_curr	= _clamp? _shift : frac(_shift);		//Pointer to the current position
+				var _prog_curr	= _clamp? _shift : frac(_shift);		// Pointer to the current position
 				var _prog_next  = 0;
-				var _prog		= _prog_curr + 1;	//Record previous position to delete from _total
-				var _prog_total	= 0;				//Record the distance the pointer has moved so far
+				var _prog		= _prog_curr + 1;						// Record previous position to delete from _total
+				var _prog_total	= 0;									// Record the distance the pointer has moved so far
 				var points		= [];
 				var pointAmo    = 0;
 				var wght;

@@ -1,11 +1,13 @@
-function L_Turtle(x = 0, y = 0, ang = 90, w = 1, color = c_white) constructor {
+function L_Turtle(x = 0, y = 0, ang = 90, w = 1, color = c_white, itr = 0) constructor {
 	self.x     = x;
 	self.y     = y;
 	self.ang   = ang;
 	self.w     = w;
 	self.color = color;
 	
-	static clone = function() { return new L_Turtle(x, y, ang, w, color); }
+	self.itr   = itr;
+	
+	static clone = function() { return new L_Turtle(x, y, ang, w, color, itr); }
 }
 
 function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -70,14 +72,15 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			draw_sprite_ui(THEME.arrow, 0, tx + _tw + ui(16), ty + _th / 2,,,, COLORS._main_icon);
 			
 			_rule.editWidget.setFocusHover(_focus, _hover);
-			_rule.editWidget.draw(tx + _tw + ui(32), ty, _w - (_tw + ui(8 + 24 + 32)), _th, _rule.showValue(), _m, _rule.display_type);
+			var wh = max(_th, _rule.editWidget.draw(tx + _tw + ui(32), ty, _w - (_tw + ui(8 + 24 + 32)), _th, _rule.showValue(), _m, _rule.display_type));
 			
-			ty += _th + ui(6);
-			hh += _th + ui(6);
+			ty += wh + ui(6);
+			hh += wh + ui(6);
 		}
 		
 		return hh;
-	}, function(parent = noone) {
+	}, 
+	function(parent = noone) {
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _name = inputs[| i + 0];
 			var _rule = inputs[| i + 1];
@@ -292,6 +295,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		len = _len;
 		st  = ds_stack_create();
 		t   = new L_Turtle(_pos[0], _pos[1], _san);
+		maxItr = 0;
 		
 		string_foreach(cache_data.result, function(_ch, _) {
 			switch(_ch) {
@@ -299,10 +303,13 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					var nx = t.x + lengthdir_x(len, t.ang);
 					var ny = t.y + lengthdir_y(len, t.ang);
 					
-					ds_queue_enqueue(lineq, [ [t.x, t.y, t.w], [nx, ny, t.w] ]);
+					ds_queue_enqueue(lineq, [ [ t.x, t.y, t.w, t.itr ], [ nx, ny, t.w, t.itr + 1 ] ]);
 					
 					t.x = nx;
 					t.y = ny;
+					t.itr++;
+					maxItr = max(maxItr, t.itr);
+					
 					break;
 					
 				case "G": 
@@ -314,10 +321,12 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					var nx = t.x + lengthdir_x(len * frac(itr), t.ang);
 					var ny = t.y + lengthdir_y(len * frac(itr), t.ang);
 					
-					ds_queue_enqueue(lineq, [ [t.x, t.y, t.w], [nx, ny, t.w] ]);
+					ds_queue_enqueue(lineq, [ [ t.x, t.y, t.w, t.itr ], [ nx, ny, t.w, t.itr + 1 ] ]);
 					
 					t.x = nx;
 					t.y = ny;
+					t.itr++;
+					maxItr = max(maxItr, t.itr);
 					break;
 					
 				case "+": t.ang += ang; break;
@@ -333,7 +342,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				case ">": t.w += 0.1; break;
 				case "<": t.w -= 0.1; break;
 				
-				default : noti_warning($"L-system: Invalid rule '{_ch}'"); 
+				// default : noti_warning($"L-system: Invalid rule '{_ch}'"); 
 			}
 		});
 		
@@ -343,9 +352,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		lines = array_create(ds_queue_size(lineq));
 		var i = 0;
+		var a = ds_queue_size(lineq);
 		
-		while(!ds_queue_empty(lineq)) {
+		repeat(a) {
 			var _l = ds_queue_dequeue(lineq);
+			
 			lines[i++] = _l;
 			boundary.addPoint(_l[0][0], _l[0][1], _l[1][0], _l[1][1]);
 		}

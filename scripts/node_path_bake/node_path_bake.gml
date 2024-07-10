@@ -13,7 +13,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	path_amount = 1;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path = getInputData(0);
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
@@ -36,9 +36,9 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				oy = ny;
 			}
 		}
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		var _path = getInputData(0);
 		var _dist = getInputData(1);
 		
@@ -66,10 +66,10 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(_amo == 1) _segs = _segs[0];
 		outputs[| 0].setValue(_segs);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(THEME.node_draw_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 }
