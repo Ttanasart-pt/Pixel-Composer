@@ -107,7 +107,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onValueFromUpdate = function() { _inSurf = noone; }
 	static onValueUpdate     = function() { _inSurf = noone; }
 	
-	function getSpritePosition(index) { #region
+	function getSpritePosition(index) {
 		var _dim = curr_dim;
 		var _off = curr_off;
 		var _spa = surf_space;
@@ -131,9 +131,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _y = _off[1] + _irow * (_dim[1] + _spa[1]);
 		
 		return [ _x, _y ];
-	} #endregion 
+	} 
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _inSurf  = getInputData(0);
 		if(!is_surface(_inSurf)) return;
 		
@@ -281,18 +281,18 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				}
 			}
 		#endregion
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _out  = getInputData(7);
 		var _flty = getInputData(13);
 		
 		inputs[| 11].setVisible(!_out);
 		inputs[|  8].setVisible(!_out);
 		inputs[| 14].setVisible(_flty);
-	} #endregion
+	}
 	
-	static spliceSprite = function() { #region
+	static spliceSprite = function() {
 		var _inSurf = getInputData(0);
 		if(!is_surface(_inSurf)) return;
 		
@@ -410,9 +410,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(_out == 1) outputs[| 0].setValue(surf_array);
 		outputs[| 1].setValue(atls_array);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		spliceSprite();
 		
 		var _out = getInputData(7);
@@ -428,5 +428,5 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var ind = safe_mod(CURRENT_FRAME * _spd, array_length(surf_array));
 			outputs[| 0].setValue(array_safe_get_fast(surf_array, ind));
 		}
-	} #endregion
+	}
 }

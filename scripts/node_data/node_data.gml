@@ -600,7 +600,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return output_display_list[index];
 	} #endregion
 	
-	static updateIO = function() { #region
+	static updateIO = function() {
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
 			inputs[| i].visible_in_list = false;
 		
@@ -621,7 +621,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		outputs_amount = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
 		outputs_index  = array_create_ext(outputs_amount, function(index) { return getOutputJunctionIndex(index); });
-	} #endregion
+	} run_in(1, function() /*=>*/ { updateIO() });
 	
 	static setHeight = function() { #region
 		w = show_parameter? attributes.node_param_width : min_w;
