@@ -1,7 +1,7 @@
 function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() constructor {
 	title = "";
-	w = min(WIN_W - ui(64), ui(800));
-	h = ui(480);
+	w     = min(WIN_W - ui(64), ui(800));
+	h     = ui(480);
 	auto_pin = true;
 	
 	self._textArea = new textArea(_textArea.input, _textArea.onModify);
@@ -51,10 +51,11 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 			_textArea.apply();
 		bx -= bs + ui(4);
 		
-		var tx = ui(8);
+		var pd = ui(8 - in_dialog * 6);
+		var tx = pd;
 		var ty = ui(4 + 36);
-		var tw = w - ui(8 + 8);
-		var th = h - ui(4 + 36 + 8);
+		var tw = w - pd * 2;
+		var th = h - pd - ty;
 		
 		var _text    = inputFunc();
 		var _prevBox = _textArea.boxColor;
@@ -63,7 +64,7 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 		_textArea.register();
 		_textArea.setFocusHover(pFOCUS, pHOVER);
 		_textArea.shift_new_line = shift_new_line;
-		_textArea.boxColor = CDEF.main_ltgrey;
+		_textArea.boxColor = merge_color(CDEF.main_white, CDEF.main_ltgrey, .5);
 		
 		_textArea.drawParam(new widgetParam(tx, ty, tw, th, _text, {}, [ mx, my ], x, y));
 		

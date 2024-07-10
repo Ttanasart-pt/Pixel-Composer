@@ -1340,7 +1340,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_array[0] = true;
 		}
 		
-		var _dep = array_get_depth(val) > array_depth + typeArray(display_type);
+		var _dep = __array_get_depth(val) > array_depth + typeArray(display_type);
 		if(_cac) cache_array[1] = _dep;
 		return _dep;
 	} #endregion
