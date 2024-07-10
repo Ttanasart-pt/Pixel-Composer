@@ -79,7 +79,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			shader_set_i("gamma",         _data[12]);
 			shader_set_i("sampleMode",	  struct_try_get(attributes, "oversample"));
 			
-			draw_surface_safe(_data[0], 0, 0);
+			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);

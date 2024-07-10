@@ -92,7 +92,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("overColor",     colToVec4(_overc));
 			shader_set_f("angle",         degtorad(_dirr));
 			
-			draw_surface_safe(_surf, 0, 0);
+			draw_surface_safe(_surf);
 			shader_reset();
 		surface_reset_target();
 		
@@ -106,7 +106,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_i("size",       _size_v);
 			shader_set_i("horizontal", 0);
 			
-			draw_surface_safe(temp_surface[0], 0, 0);
+			draw_surface_safe(temp_surface[0]);
 			shader_reset();
 		surface_reset_target();
 		
@@ -114,7 +114,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(_isovr? _overc : 0, 0);
-			draw_surface(temp_surface[1], 0, 0);
+			draw_surface_safe(temp_surface[1]);
 		surface_reset_target();
 		BLEND_NORMAL;
 		

@@ -127,7 +127,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					shader_set_f("fdimension", sw, sh);
 					shader_set_f("position",   sx + _padd[PADDING.left], sy + _padd[PADDING.top]);
 					
-					draw_surface(temp_surface[ppind], 0, 0);
+					draw_surface_safe(temp_surface[ppind]);
 					
 					BLEND_NORMAL
 				surface_reset_shader();
@@ -143,7 +143,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			DRAW_CLEAR 
 			BLEND_OVERRIDE
 			
-			draw_surface(temp_surface[ppind], 0, 0);
+			draw_surface_safe(temp_surface[ppind]);
 			
 			BLEND_NORMAL
 		surface_reset_target();

@@ -48,7 +48,7 @@ function canvas_tool_resize() : canvas_tool() constructor {
 			BLEND_NORMAL
 		surface_reset_target();
 		
-		draw_surface(overlay_surface, 0, 0);
+		draw_surface_safe(overlay_surface);
 		
 		draw_set_color(c_black);
 		draw_rectangle(x0, y0, x1, y1, true);

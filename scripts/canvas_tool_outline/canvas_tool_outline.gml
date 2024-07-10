@@ -23,7 +23,7 @@ function canvas_tool_outline() : canvas_tool_shader() constructor {
 			shader_set_i("filter",         array_create(9, 1));
 			shader_set_color("borderColor", CURRENT_COLOR);
 			
-			draw_surface(preview_surface[0], 0, 0);
+			draw_surface_safe(preview_surface[0]);
 		surface_reset_shader();
 	}
 	
@@ -43,7 +43,7 @@ function canvas_tool_outline() : canvas_tool_shader() constructor {
 				shader_set_i("filter",         array_create(9, 1));
 				shader_set_color("borderColor", c_white);
 			
-				draw_surface(preview_surface[0], 0, 0);
+				draw_surface_safe(preview_surface[0]);
 			surface_reset_shader();
 			
 			mask_boundary[0] = mask_boundary_init[0] - _thck;
@@ -59,7 +59,7 @@ function canvas_tool_outline() : canvas_tool_shader() constructor {
 				shader_set_i("border",     0);
 				shader_set_i("alpha",      1);
 				
-				draw_surface(preview_surface[0], 0, 0);
+				draw_surface_safe(preview_surface[0]);
 			surface_reset_shader();
 			
 			mask_boundary[0] = mask_boundary_init[0] + _thck;

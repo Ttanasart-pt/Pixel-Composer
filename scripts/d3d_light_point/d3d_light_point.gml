@@ -110,16 +110,16 @@ function __3dLightPoint() : __3dLight() constructor {
 			draw_clear(c_black);
 			gpu_set_blendmode_ext(bm_one, bm_one);
 			
-			draw_surface(shadow_maps[0], 0, 0);
+			draw_surface_safe(shadow_maps[0]);
 			draw_surface(shadow_maps[3], shadow_map_size, 0);
 			
 			shader_set(sh_channel_R2G);
-			draw_surface(shadow_maps[1], 0, 0);
+			draw_surface_safe(shadow_maps[1]);
 			draw_surface(shadow_maps[4], shadow_map_size, 0);
 			shader_reset();
 			
 			shader_set(sh_channel_R2B);
-			draw_surface(shadow_maps[2], 0, 0);
+			draw_surface_safe(shadow_maps[2]);
 			draw_surface(shadow_maps[5], shadow_map_size, 0);
 			shader_reset();
 			

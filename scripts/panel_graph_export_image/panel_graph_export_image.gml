@@ -108,7 +108,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 					nodeList[i].drawConnections(param, true);
 			surface_reset_target();
 		
-			draw_surface(cs, 0, 0);
+			draw_surface_safe(cs);
 		#endregion
 			
 		#region draw node
@@ -135,7 +135,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 				draw_clear_alpha(0, 0);
 			
 			BLEND_OVERRIDE
-			draw_surface(s, 0, 0);
+			draw_surface_safe(s);
 			BLEND_NORMAL
 			
 			gpu_set_colorwriteenable(1, 1, 1, 1);

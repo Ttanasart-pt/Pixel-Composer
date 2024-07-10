@@ -700,7 +700,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			}
 			
 			gpu_set_blendmode(bm_subtract);
-			draw_surface_safe(mask_surface, 0, 0);
+			draw_surface_safe(mask_surface);
 			gpu_set_blendmode(bm_normal);
 		surface_reset_target();
 		

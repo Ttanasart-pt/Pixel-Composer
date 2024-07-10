@@ -370,7 +370,7 @@
 		surface_set_target(dst);
 		DRAW_CLEAR
 		BLEND_OVERRIDE;
-			draw_surface_safe(src, 0, 0);
+			draw_surface_safe(src);
 		BLEND_NORMAL
 		surface_reset_target();
 	} #endregion
@@ -387,7 +387,7 @@
 		surface_set_target(destination);
 		DRAW_CLEAR
 		BLEND_OVERRIDE;
-			draw_surface_safe(surface, 0, 0);
+			draw_surface_safe(surface);
 		BLEND_NORMAL
 		surface_reset_target();
 	
@@ -448,7 +448,7 @@
 			shader_set_i("keys",    array_length(PROJECT.attributes.palette));
 			shader_set_i("alpha",   1);
 				
-			draw_surface(surf, 0, 0);
+			draw_surface_safe(surf);
 		surface_reset_shader();
 		
 		surface_free(surf);
@@ -650,7 +650,7 @@
 			case surface_rgba16float :
 			case surface_rgba32float :
 				surface_set_shader(s, sh_draw_normal);
-					draw_surface(surface, 0, 0);
+					draw_surface_safe(surface);
 				surface_reset_shader();
 				surface_save(s, path);
 				return;
@@ -661,7 +661,7 @@
 		}
 	
 		surface_set_shader(s, sh_draw_single_channel);
-			draw_surface(surface, 0, 0);
+			draw_surface_safe(surface);
 		surface_reset_shader();
 	
 		surface_save(s, path);
@@ -689,7 +689,7 @@
 			break;
 	}
 			
-	draw_surface(surface, 0, 0);
+	draw_surface_safe(surface);
 	surface_reset_shader();
 	
 	return target;

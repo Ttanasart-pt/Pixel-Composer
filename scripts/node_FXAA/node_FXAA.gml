@@ -29,7 +29,7 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("cornerDis", _data[2]);
 			shader_set_f("mixAmo",    _data[3]);
 			
-			draw_surface_safe(_data[0], 0, 0);
+			draw_surface_safe(_data[0]);
 		gpu_set_tex_filter(false);
 		surface_reset_shader();
 		

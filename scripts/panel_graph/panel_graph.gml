@@ -1382,12 +1382,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			surface_set_shader(connection_surface_aa, sh_downsample);
 				shader_set_f("down", aa);
 				shader_set_dim("dimension", connection_surface);
-				draw_surface(connection_surface, 0, 0);
+				draw_surface_safe(connection_surface);
 			surface_reset_shader();
 			gpu_set_texfilter(false);
 			
 			BLEND_ALPHA_MULP
-			draw_surface(connection_surface_aa, 0, 0);
+			draw_surface_safe(connection_surface_aa);
 			BLEND_NORMAL
 			
 			junction_hovering = node_hovering == noone? hov : noone;

@@ -1128,7 +1128,7 @@ function Panel_Preview() : PanelContent() constructor {
 				shader_set(sh_d3d_outline);
 					shader_set_dim("dimension", d3_surface_outline);
 					shader_set_color("outlineColor", COLORS._main_accent);
-					draw_surface(d3_surface_outline, 0, 0);
+					draw_surface_safe(d3_surface_outline);
 				shader_reset();
 			}
 		#endregion
@@ -2101,7 +2101,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		surface_set_target(s);
 			shader_set(sh_BGR);
-			draw_surface(prevS, 0, 0);
+			draw_surface_safe(prevS);
 			shader_reset();
 		surface_reset_target();
 		

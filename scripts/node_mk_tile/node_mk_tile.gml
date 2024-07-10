@@ -182,9 +182,9 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				DRAW_CLEAR
 				BLEND_ALPHA_MULP
 				
-				if(_use1) draw_surface(_tex1, 0, 0);
+				if(_use1) draw_surface_safe(_tex1);
 				
-				if(_index == 255) draw_surface(_tex0, 0, 0);
+				if(_index == 255) draw_surface_safe(_tex0);
 				else         draw_surface_part(_tex0, l, t, _sw - l - r, _sh - t - b, l, t);
 				
 				if(_index & 0b0100_0000 >= 0b0100_0000) draw_surface_part(_tex0, l, t, _sw - l - r, _sh - t, l, t);
@@ -286,8 +286,8 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				DRAW_CLEAR
 				BLEND_ALPHA_MULP
 				
-				if(_index == 15) draw_surface(_tex0, 0, 0);
-				else if(_use1)	 draw_surface(_tex1, 0, 0);
+				if(_index == 15) draw_surface_safe(_tex0);
+				else if(_use1)	 draw_surface_safe(_tex1);
 				
 				if(_index & 0b0001) draw_surface_part(_tex0, 0, 0, _sw - r, _sh - b, 0, 0);
 				if(_index & 0b0010) draw_surface_part(_tex0, l, 0, _sw - l, _sh - b, l, 0);
@@ -406,7 +406,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			__edge_uniform[3] = surface_verify(__edge_uniform[3], _esh, _esw);
 			
 			surface_set_shader(__edge_uniform[0], noone);
-				draw_surface(_data[6], 0, 0);
+				draw_surface_safe(_data[6]);
 			surface_reset_shader();
 			
 			surface_set_shader(__edge_uniform[1], noone);
@@ -448,7 +448,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					BLEND_OVERRIDE
 					
 					if(_edgSprt == 0) { 
-						draw_surface(_ed, 0, 0); 
+						draw_surface_safe(_ed); 
 					} else if(_edgSprt == 1) { // flip side
 						switch(j) {
 							case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;

@@ -53,7 +53,7 @@ function Node_BW(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		surface_set_shader(_outSurf, sh_bw);
 			shader_set_f_map("brightness", _data[1], _data[ 9], inputs[| 1]);
 			shader_set_f_map("contrast",   _data[2], _data[10], inputs[| 2]);
-			draw_surface_safe(_data[0], 0, 0);
+			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);

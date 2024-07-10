@@ -44,7 +44,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		_outSurf = surface_verify(_outSurf, sw, sh, cDep);
 		
 		surface_set_shader(temp_surface[0], sh_sdf_tex);
-			draw_surface_safe(inSurf, 0, 0);
+			draw_surface_safe(inSurf);
 		surface_reset_shader();
 		
 		var _step    = ceil(log2(_n));
@@ -59,14 +59,14 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 				shader_set_uniform_f(uniform_sdf_dim, _n, _n );
 				shader_set_uniform_f(uniform_sdf_stp, stepSize);
 				shader_set_uniform_i(uniform_sdf_sid, _side);
-				draw_surface_safe(temp_surface[!bg], 0, 0);
+				draw_surface_safe(temp_surface[!bg]);
 			surface_reset_shader();
 		}
 		
 		surface_set_shader(_outSurf, sh_sdf_dist);
 			shader_set_uniform_i(uniform_dst_sid, _side);
 			shader_set_uniform_f(uniform_dst_dst, _dist);
-			draw_surface_safe(temp_surface[bg], 0, 0);
+			draw_surface_safe(temp_surface[bg]);
 		surface_reset_shader();
 		
 		return _outSurf;

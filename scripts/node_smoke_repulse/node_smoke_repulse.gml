@@ -64,7 +64,7 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 		
 		with(_dom) {
 			fd_rectangle_set_target(id, _mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
-			draw_surface_safe(vSurface, 0, 0);
+			draw_surface_safe(vSurface);
 			fd_rectangle_reset_target(id);
 		}
 		

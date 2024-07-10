@@ -183,7 +183,7 @@ function Biterator(node) : VCT(node) constructor {
 				var p   = point_rotate(0, 0, _dim / 2, _dim / 2, ang);
 				draw_surface_ext_safe(shap, p[0], p[1], 1, 1, ang, c_white, 1);
 			} else
-				draw_surface(shap, 0, 0);
+				draw_surface_safe(shap);
 		surface_reset_target();
 		
 		surface_free(shap);

@@ -891,7 +891,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			shader_set_f("cornerDis",  0.5);
 			shader_set_f("mixAmo",     1);
 			
-			draw_surface(_surf, 0, 0);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		surface_free(_surf);

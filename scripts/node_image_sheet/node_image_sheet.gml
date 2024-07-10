@@ -341,7 +341,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				shader_set_color("color",	 _flcl);
 				shader_set_i("empty",		 !_fltp);
 				
-				draw_surface(_inSurf, 0, 0);
+				draw_surface_safe(_inSurf);
 			surface_reset_shader();
 		}
 		

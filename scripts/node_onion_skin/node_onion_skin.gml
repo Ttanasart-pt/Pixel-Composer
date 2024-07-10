@@ -74,7 +74,7 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				draw_surface_ext_safe(surf, 0, 0, 1, 1, 0, cc, aa);
 			}
 			
-			if(_top) draw_surface_safe(_surf, 0, 0);
+			if(_top) draw_surface_safe(_surf);
 		surface_reset_target();
 	}
 }

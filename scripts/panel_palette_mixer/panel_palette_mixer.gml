@@ -679,7 +679,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					shader_set_f("influence", node_size / ui(4));
 					shader_set_f("progress",  shade_mode);
 					
-					draw_surface(connect_surf, 0, 0);
+					draw_surface_safe(connect_surf);
 				surface_reset_shader();
 				
 				draw_surface(connect_blend_surf, px, py);

@@ -60,7 +60,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 		surface_reset_target();
 		
 		fd_rectangle_set_target(_dom, _mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
-		draw_surface_safe(vSurface, 0, 0);
+		draw_surface_safe(vSurface);
 		fd_rectangle_reset_target(_dom);
 		
 		surface_free(vSurface);

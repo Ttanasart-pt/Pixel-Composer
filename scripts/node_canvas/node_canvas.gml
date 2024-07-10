@@ -584,7 +584,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _newCanvas = surface_create(_dim[0], _dim[1]);
 			surface_set_target(_newCanvas);
 				DRAW_CLEAR
-				draw_surface(_canvas_surface, 0, 0);
+				draw_surface_safe(_canvas_surface);
 			surface_reset_target();
 			
 			setCanvasSurface(_newCanvas, index);
@@ -649,7 +649,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _spx * 2 + _spw - _spx, _spy * 2 + _sph - _spy, -1, -1);
 				
 				BLEND_MULTIPLY
-					draw_surface(tool_selection.selection_mask, 0, 0);
+					draw_surface_safe(tool_selection.selection_mask);
 				BLEND_NORMAL
 			surface_reset_target();
 			
@@ -663,7 +663,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				DRAW_CLEAR
 				BLEND_OVERRIDE
 				
-				draw_surface(drawing_surface, 0, 0);
+				draw_surface_safe(drawing_surface);
 				
 				BLEND_ALPHA
 					if(tool_attribute.mirror[0] == false) {
@@ -853,7 +853,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(_tool) _tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
 			surface_set_shader(preview_draw_surface, noone,, BLEND.alpha);
-				draw_surface_safe(_drawing_surface, 0, 0);
+				draw_surface_safe(_drawing_surface);
 				
 				if(tool_selection.is_selected) {
 					var _spx = tool_selection.selection_position[0];
@@ -1054,7 +1054,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			surface_set_shader(output_surface[0], noone,, BLEND.alpha);
 				if(_bgr && is_surface(_bg))
 					draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
-				draw_surface_safe(_canvas_surface, 0, 0);
+				draw_surface_safe(_canvas_surface);
 			surface_reset_shader();
 			
 			outputs[| 0].setValue(output_surface[0]);
@@ -1067,7 +1067,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_set_shader(output_surface[i], noone,, BLEND.alpha);
 					if(_bgr && is_surface(_bgArray))
 						draw_surface_stretched_ext(_bgArray, 0, 0, _dim[0], _dim[1], c_white, _bga);
-					draw_surface_safe(_canvas_surface, 0, 0);
+					draw_surface_safe(_canvas_surface);
 				surface_reset_shader();
 			}
 			

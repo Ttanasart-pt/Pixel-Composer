@@ -116,7 +116,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			warpSurface( warp_surface[0], warp_surface[1], params.w, params.h, tl, tr, bl, br, true );
 			
 			BLEND_ADD
-				draw_surface(warp_surface[0], 0, 0);
+				draw_surface_safe(warp_surface[0]);
 			BLEND_NORMAL
 		#endregion
 		

@@ -61,13 +61,13 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				shader_set_f("blend"    , clamp(_data[6], 0.001, 0.999));
 				shader_set_f("smooth"   , _data[7]);
 				
-				draw_surface(_data[0], 0, 0);
+				draw_surface_safe(_data[0]);
 			surface_reset_shader();
 			
 			surface_set_shader(_outSurf, sh_blend_edge);
 				shader_set_i("edge"     , 1);
 				
-				draw_surface(temp_surface[0], 0, 0);
+				draw_surface_safe(temp_surface[0]);
 			surface_reset_shader();
 			
 		} else {
@@ -77,7 +77,7 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				shader_set_i("edge"     , _edg - 1);
 				shader_set_f("blend"    , clamp(_data[6], 0.001, 0.999));
 				
-				draw_surface(_data[0], 0, 0);
+				draw_surface_safe(_data[0]);
 			surface_reset_shader();
 			
 		}

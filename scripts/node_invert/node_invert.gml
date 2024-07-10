@@ -34,7 +34,7 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		BLEND_OVERRIDE;
 		
 		shader_set(sh_invert);
-			draw_surface_safe(_data[0], 0, 0);
+			draw_surface_safe(_data[0]);
 		shader_reset();
 		
 		BLEND_NORMAL;

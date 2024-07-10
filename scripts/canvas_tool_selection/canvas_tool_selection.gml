@@ -51,14 +51,14 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		surface_set_target(selection_surface);
 			DRAW_CLEAR
 			BLEND_OVERRIDE
-			draw_surface(surface, 0, 0);
+			draw_surface_safe(surface);
 			BLEND_NORMAL
 		surface_reset_target();
 		
 		surface_set_target(selection_mask);
 			DRAW_CLEAR
 			BLEND_OVERRIDE
-			draw_surface(surface, 0, 0);
+			draw_surface_safe(surface);
 			BLEND_NORMAL
 		surface_reset_target();
 		
@@ -140,13 +140,13 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 			draw_surface_safe(_canvas_surface, -sel_x0, -sel_y0);
 							
 			BLEND_MULTIPLY
-				draw_surface_safe(_mask, 0, 0);
+				draw_surface_safe(_mask);
 			BLEND_NORMAL
 		surface_reset_target();
 		
 		surface_set_target(selection_mask);
 			DRAW_CLEAR
-			draw_surface_safe(_mask, 0, 0);
+			draw_surface_safe(_mask);
 		surface_reset_target();
 		
 		node.storeAction();
@@ -172,7 +172,7 @@ function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
 		
 		surface_set_target(selection_surface);
 			DRAW_CLEAR
-			draw_surface_safe(_canvas_surface, 0, 0);
+			draw_surface_safe(_canvas_surface);
 		surface_reset_target();
 		
 		surface_set_target(selection_mask);

@@ -120,7 +120,7 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 			surface_set_target(_nbox.mask);
 				if(is_surface(_pbox.mask)) {
 					draw_clear_alpha(0, 0);
-					draw_surface_safe(_pbox.mask, 0, 0);
+					draw_surface_safe(_pbox.mask);
 				} else 
 					draw_clear(c_white);
 				

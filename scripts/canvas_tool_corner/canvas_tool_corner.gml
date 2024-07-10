@@ -29,7 +29,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 			surface_set_shader(temp_surface[0], sh_image_trace);
 				shader_set_f("dimension", _dim);
 				shader_set_i("diagonal",  0);
-				draw_surface(_surf, 0, 0);
+				draw_surface_safe(_surf);
 			surface_reset_shader();
 			
 			var _w   = _dim[0], _h  = _dim[1];
@@ -288,7 +288,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		
 		if(amount == 0) {
 			surface_set_shader(preview_surface[1]);
-				draw_surface(preview_surface[0], 0, 0);
+				draw_surface_safe(preview_surface[0]);
 			surface_reset_shader();
 			return;
 		}
@@ -372,10 +372,10 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		surface_reset_shader();
 		
 		surface_set_shader(preview_surface[1], noone);
-			draw_surface(preview_surface[0], 0, 0);
+			draw_surface_safe(preview_surface[0]);
 			
 			BLEND_MULTIPLY
-				draw_surface(temp_surface[1], 0, 0);
+				draw_surface_safe(temp_surface[1]);
 			BLEND_NORMAL
 			
 		surface_reset_shader();
@@ -386,7 +386,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		// 	shader_set_f("amount",     amount);
 		// 	shader_set_surface("base", _suf);
 			
-		// 	draw_surface(preview_surface[0], 0, 0);
+		// 	draw_surface_safe(preview_surface[0]);
 		// surface_reset_shader();
 		
 	}

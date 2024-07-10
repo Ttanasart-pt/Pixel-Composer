@@ -97,7 +97,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 					dx += (sw + 2) * scale;
 			}
 		surface_reset_target();
-		draw_surface_safe(content_surface, 0, 0);
+		draw_surface_safe(content_surface);
 	
 		if(panning) {
 			panx = pan_sx + (mouse_mx - pan_mx);

@@ -90,7 +90,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		surface_set_target(_surf);
 			DRAW_CLEAR
 			
-			draw_surface(temp_surface[0], 0, 0);
+			draw_surface_safe(temp_surface[0]);
 			
 			if(!is_surface(_bsurf)) {
 				if(IS_FIRST_FRAME || brush_prev == noone)

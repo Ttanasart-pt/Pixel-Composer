@@ -59,7 +59,7 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f_map("treshold",  _data[2], _data[10], inputs[| 2]);
 			shader_set_i("invert",        _data[6]);
 			
-			draw_surface_safe(_data[0], 0, 0);
+			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);

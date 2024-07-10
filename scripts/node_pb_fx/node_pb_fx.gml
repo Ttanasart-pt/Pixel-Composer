@@ -34,7 +34,7 @@ function Node_PB_Fx(_x, _y, _group = noone) : Node_PB(_x, _y, _group) constructo
 																												\
 			_pbox.mask = surface_create(_pbox.w, _pbox.h);														\
 			surface_set_shader(_pbox.mask, sh_pb_to_mask);														\
-				draw_surface_safe(_surf, 0, 0);																	\
+				draw_surface_safe(_surf);																	\
 			surface_reset_shader();																				\
 																												\
 			return _pbox;																						\

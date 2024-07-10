@@ -111,7 +111,7 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 			
 			shader_set_color("color", CURRENT_COLOR);
 			
-			draw_surface(preview_surface[0], 0, 0);
+			draw_surface_safe(preview_surface[0]);
 		surface_reset_shader();
 		
 	}

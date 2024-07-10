@@ -237,7 +237,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					
 				} else if(_outp == NODE_BLEND_OUTPUT.foreground) {
 					surface_set_shader(_foreDraw, noone,, BLEND.over);
-						draw_surface_safe(_fore, 0, 0);
+						draw_surface_safe(_fore);
 					surface_reset_shader();
 					
 					surface_set_shader(_backDraw, noone,, BLEND.over);

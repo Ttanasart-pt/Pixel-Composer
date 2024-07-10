@@ -44,7 +44,7 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) { #region
 							draw_vertex(round(p2.x), round(p2.y));
 						}							 
 					draw_primitive_end();
-					draw_surface(drawing_surface, 0, 0);
+					draw_surface_safe(drawing_surface);
 				surface_reset_target();
 					
 				surface_set_shader(drawing_surface, sh_freeform_fill_cleanup);

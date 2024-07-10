@@ -29,7 +29,7 @@ function fd_rectangle_update_material(domain) {
 	                        shader_set_uniform_f(shader_get_uniform(sh_fd_advect_material_a_8_glsl, "precalculated_1"), sf_material_texel_width * 0.5, sf_material_texel_height * 0.5,
 	                                    sf_material_texel_width * -0.5, sf_material_texel_height * -0.5);
 	                        shader_set_uniform_f(shader_get_uniform(sh_fd_advect_material_a_8_glsl, "precalculated_2"), material_dissipation_type, material_dissipation_value, material_maccormack_weight * 0.5);
-	                        draw_surface(sf_material_0, 0, 0);
+	                        draw_surface_safe(sf_material_0);
 	                    shader_reset();
 	                surface_reset_target();
 	                temporary = sf_material_0; sf_material_0 = sf_material_0_temporary; sf_material_0_temporary = temporary;
@@ -47,7 +47,7 @@ function fd_rectangle_update_material(domain) {
 	                        shader_set_uniform_f(shader_get_uniform(sh_fd_advect_material_rgba_8_glsl, "precalculated"), material_time_step * sf_material_texel_width, material_time_step * sf_material_texel_height);
 	                        shader_set_uniform_f(shader_get_uniform(sh_fd_advect_material_rgba_8_glsl, "precalculated_1"), sf_material_texel_width * 0.5, sf_material_texel_height * 0.5,
 	                                    sf_material_texel_width * -0.5, sf_material_texel_height * -0.5);
-	                        draw_surface(sf_material_0, 0, 0);
+	                        draw_surface_safe(sf_material_0);
 	                    shader_reset();
 	                surface_reset_target();
 	                temporary = sf_material_0; sf_material_0 = sf_material_0_temporary; sf_material_0_temporary = temporary;
@@ -63,7 +63,7 @@ function fd_rectangle_update_material(domain) {
 	                        shader_set_uniform_f(shader_get_uniform(sh_fd_advect_material_a_16_glsl, "precalculated_1"), sf_material_texel_width * 0.5, sf_material_texel_height * 0.5,
 	                                    sf_material_texel_width * -0.5, sf_material_texel_height * -0.5);
 	                        shader_set_uniform_f(shader_get_uniform(sh_fd_advect_material_a_16_glsl, "precalculated_2"), material_dissipation_type, material_dissipation_value, material_maccormack_weight * 0.5);
-	                        draw_surface(sf_material_0, 0, 0);
+	                        draw_surface_safe(sf_material_0);
 	                    shader_reset();
 	                surface_reset_target();
 	                temporary = sf_material_0; sf_material_0 = sf_material_0_temporary; sf_material_0_temporary = temporary;
@@ -84,12 +84,12 @@ function fd_rectangle_update_material(domain) {
                     
 	                    surface_set_target(sf_material_0_temporary);
 	                        shader_set_uniform_f(shader_get_uniform(sh_fd_advect_material_rgba_16_glsl, "target"), 0);
-	                        draw_surface(sf_material_0, 0, 0);    
+	                        draw_surface_safe(sf_material_0);    
 	                    surface_reset_target();
                         
 	                    surface_set_target(sf_material_1_temporary);
 	                        shader_set_uniform_f(shader_get_uniform(sh_fd_advect_material_rgba_16_glsl, "target"), 1);
-	                        draw_surface(sf_material_0, 0, 0);
+	                        draw_surface_safe(sf_material_0);
 	                    surface_reset_target();
                         
 	                    temporary = sf_material_0; sf_material_0 = sf_material_0_temporary; sf_material_0_temporary = temporary;

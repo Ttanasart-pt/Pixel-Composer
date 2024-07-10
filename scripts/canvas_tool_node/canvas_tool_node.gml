@@ -191,7 +191,7 @@ function canvas_tool_node(canvas, node) : canvas_tool() constructor {
 			surface_set_shader(maskedSurface);
 				draw_surface_safe(_surf);
 				BLEND_MULTIPLY
-					draw_surface_safe(canvas.tool_selection.selection_mask, 0, 0);
+					draw_surface_safe(canvas.tool_selection.selection_mask);
 				BLEND_NORMAL
 			surface_reset_shader();
 			

@@ -24,12 +24,12 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_PB(_x, _y, _group) construc
 
 #macro PB_DRAW_CREATE_MASK _nbox.mask = surface_verify(_nbox.mask, _nbox.w, _nbox.h);								\
 		surface_set_shader(_nbox.mask, sh_pb_to_mask);																\
-			draw_surface_safe(_nbox.content, 0, 0);																	\
+			draw_surface_safe(_nbox.content);																	\
 		surface_reset_shader();
 		
 #macro PB_DRAW_APPLY_MASK if(_mask) {																				\
 				BLEND_MULTIPLY																						\
 					if(is_surface(_pbox.mask)) 																		\
-						draw_surface_safe(_pbox.mask, 0, 0);														\
+						draw_surface_safe(_pbox.mask);														\
 				BLEND_NORMAL																						\
 			}

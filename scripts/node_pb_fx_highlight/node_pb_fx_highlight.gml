@@ -105,7 +105,7 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 			shader_set_f("seed", _seed);
 			DRAW_CLEAR
 			
-			draw_surface_safe(_pbox.content, 0, 0);
+			draw_surface_safe(_pbox.content);
 		surface_reset_shader();
 		
 		return _nbox;

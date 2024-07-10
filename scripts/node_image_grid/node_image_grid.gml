@@ -123,7 +123,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				shader_set_f("fdimension", sw, sh);
 				shader_set_f("position",   sx + _padd[PADDING.left], sy + _padd[PADDING.top]);
 					
-				draw_surface(temp_surface[ppind], 0, 0);
+				draw_surface_safe(temp_surface[ppind]);
 			surface_reset_shader();
 			ppind = !ppind;
 			
@@ -140,7 +140,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		surface_set_shader(_outSurf, noone);
-			draw_surface(temp_surface[ppind], 0, 0);
+			draw_surface_safe(temp_surface[ppind]);
 		surface_reset_shader();
 		
 		outputs[| 0].setValue(_outSurf);

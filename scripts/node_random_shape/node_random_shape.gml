@@ -117,10 +117,10 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				if(random(1) < 0.5) {
 					shader_set(sh_rsh_rotate);
 					shader_set_f("dimension", _dim[0], _dim[1]);
-					draw_surface_safe(_surf, 0, 0);
+					draw_surface_safe(_surf);
 					shader_reset();
 				} else
-					draw_surface_safe(_surf, 0, 0);
+					draw_surface_safe(_surf);
 					
 				BLEND_SUBTRACT
 					draw_surface_safe(_subs, _sx - _size[0] / 2, _sy - _size[1] / 2);
@@ -144,7 +144,7 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f("dimension", _dim[0], _dim[1]);
 			shader_set_i("type", choose(0, 0, 1, 1, 1));
 			
-			draw_surface_safe(_prog, 0, 0);
+			draw_surface_safe(_prog);
 			if(_side == 1) draw_surface_ext_safe(_prog, 0, _dim[1], 1, -1, 0, c_white, 1);
 			if(_side == 2) draw_surface_ext_safe(_prog, _dim[0], 0, -1, 1, 0, c_white, 1);
 		surface_reset_shader();

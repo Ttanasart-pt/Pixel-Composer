@@ -32,7 +32,7 @@ if !ready exit;
 			content.drawContent(panel);
 			
 			gpu_set_blendmode(bm_subtract);
-			draw_surface_safe(mask_surface, 0, 0);
+			draw_surface_safe(mask_surface);
 			gpu_set_blendmode(bm_normal);
 		surface_reset_target();
 		

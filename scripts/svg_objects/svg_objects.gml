@@ -666,7 +666,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 			
 		}
 		
-		draw_surface(_temp[!(i % 2)], 0, 0);
+		draw_surface_safe(_temp[!(i % 2)]);
 		
 		surface_free(_surf);
 		surface_free(_temp[0]);

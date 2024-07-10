@@ -259,7 +259,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		if(_gint > 0) { #region
 			surface_set_target(temp_surface[1]);
 				draw_clear(c_black);
-				draw_surface(temp_surface[0], 0, 0);
+				draw_surface_safe(temp_surface[0]);
 			surface_reset_target();	
 		
 			temp_surface[2] = surface_apply_gaussian(temp_surface[1], _grad, false, 0, 1);
@@ -273,12 +273,12 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set(sh_mk_saber_glow);
 					shader_set_color("color", _colr.eval(1));
 					shader_set_f("intensity", _gint);
-					draw_surface(temp_surface[2], 0, 0);
+					draw_surface_safe(temp_surface[2]);
 				shader_reset();
 			}
 			
 			BLEND_ALPHA_MULP
-			draw_surface(temp_surface[0], 0, 0);
+			draw_surface_safe(temp_surface[0]);
 			
 			BLEND_NORMAL
 		surface_reset_target(); #endregion

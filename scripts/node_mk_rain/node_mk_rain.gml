@@ -118,7 +118,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			
-			draw_surface(_surf, 0, 0);
+			draw_surface_safe(_surf);
 			var _lcc = _cc;
 			
 			if(_afad) BLEND_ADD

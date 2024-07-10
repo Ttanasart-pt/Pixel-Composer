@@ -37,7 +37,7 @@ function fd_rectangle_update_velocity(domain) {
 	                        shader_set_uniform_f(shader_get_uniform(sh_fd_advect_velocity_1_glsl, "acceleration"), acceleration_x, acceleration_y, acceleration_a, acceleration_b);
 	                        break;
 	                }
-	                draw_surface(sf_velocity, 0, 0);
+	                draw_surface_safe(sf_velocity);
 	                shader_reset();
 	            surface_reset_target();
 	            temporary = sf_velocity; sf_velocity = sf_velocity_temporary; sf_velocity_temporary = temporary;
@@ -56,7 +56,7 @@ function fd_rectangle_update_velocity(domain) {
 	                    shader_set_uniform_f(shader_get_uniform(sh_fd_calculate_pressure_jacobi_glsl, "texel_size"), sf_pressure_texel_width, sf_pressure_texel_height);
 	                    repeat (pressure_iteration_type) {
 	                        surface_set_target(sf_pressure_temporary);
-	                            draw_surface(sf_pressure, 0, 0);
+	                            draw_surface_safe(sf_pressure);
 	                        surface_reset_target();
 	                        temporary = sf_pressure; sf_pressure = sf_pressure_temporary; sf_pressure_temporary = temporary;
 	                    }
@@ -68,7 +68,7 @@ function fd_rectangle_update_velocity(domain) {
 	                    for (var i = 0; i < length; ++i) {
 	                        if (pressure_relaxation_parameter[i] != -1) shader_set_uniform_f(shader_get_uniform(sh_fd_calculate_pressure_srj_glsl, "precalculated"), 1 - pressure_relaxation_parameter[i], 0.25 * pressure_relaxation_parameter[i]);
 	                        surface_set_target(sf_pressure_temporary);
-	                            draw_surface(sf_pressure, 0, 0);
+	                            draw_surface_safe(sf_pressure);
 	                        surface_reset_target();
 	                        temporary = sf_pressure; sf_pressure = sf_pressure_temporary; sf_pressure_temporary = temporary;
 	                    }
@@ -80,7 +80,7 @@ function fd_rectangle_update_velocity(domain) {
 	                shader_set(sh_fd_subtract_pressure_gradient_glsl);
 	                    texture_set_stage(shader_get_sampler_index(sh_fd_subtract_pressure_gradient_glsl, "texture_pressure"), surface_get_texture(sf_pressure));
 	                    shader_set_uniform_f(shader_get_uniform(sh_fd_subtract_pressure_gradient_glsl, "texel_size"), sf_pressure_texel_width, sf_pressure_texel_height);
-	                    draw_surface(sf_velocity, 0, 0);
+	                    draw_surface_safe(sf_velocity);
 	                shader_reset();
 	            surface_reset_target();
 	            temporary = sf_velocity; sf_velocity = sf_velocity_temporary; sf_velocity_temporary = temporary;

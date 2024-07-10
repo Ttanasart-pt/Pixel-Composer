@@ -22,7 +22,7 @@ function fd_rectangle_set_target(domain, type) {
 	        case FD_TARGET_TYPE.REPLACE_MATERIAL_ADVANCED:
 				surface_set_target(sf_material_0_temporary);
 				draw_enable_alphablend(false);
-				draw_surface(sf_material_0, 0, 0);
+				draw_surface_safe(sf_material_0);
 	            shader_set(sh_fd_replace_material_advanced_glsl);
 				shader_set_uniform_f(shader_get_uniform(sh_fd_replace_material_advanced_glsl, "addend"), 0.5 + 0.5 * sf_material_texel_width, 0.5 + 0.5 * sf_material_texel_height);
 	            texture_set_stage(shader_get_sampler_index(sh_fd_replace_material_advanced_glsl, "texture_material_0"), surface_get_texture(sf_material_0));
@@ -40,7 +40,7 @@ function fd_rectangle_set_target(domain, type) {
 	        case FD_TARGET_TYPE.ADD_VELOCITY:
 	            surface_set_target(sf_velocity_temporary);
 	            draw_enable_alphablend(false);
-	            draw_surface(sf_velocity, 0, 0);
+	            draw_surface_safe(sf_velocity);
 				
 	            shader_set(sh_fd_add_velocity_glsl);
 	            shader_set_uniform_f(shader_get_uniform(sh_fd_add_velocity_glsl, "addend"), 0.5 + 0.5 * sf_velocity_texel_width, 0.5 + 0.5 * sf_velocity_texel_height);

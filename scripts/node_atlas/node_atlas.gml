@@ -35,7 +35,7 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			repeat(_itr) {
 				surface_set_shader(temp_surface[_bg], sh_atlas);
 					shader_set_f("dimension", _dim);
-					draw_surface(temp_surface[!_bg], 0, 0);
+					draw_surface_safe(temp_surface[!_bg]);
 				surface_reset_shader();
 			
 				_bg = !_bg;

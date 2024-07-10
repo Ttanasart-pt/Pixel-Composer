@@ -125,7 +125,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg)
 		
 		surface_set_shader(_outSurf, _type == PARTICLE_RENDER_TYPE.surface? sh_sample : noone);
-			if(is_surface(_bg))  draw_surface(_bg, 0, 0);
+			if(is_surface(_bg))  draw_surface_safe(_bg);
 			
 			switch(_blend) {
 				case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;

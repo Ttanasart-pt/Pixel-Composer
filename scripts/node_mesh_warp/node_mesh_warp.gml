@@ -451,7 +451,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 				shader_set_uniform_f_array_safe(uniform_dim, [ww, hh]);
 				shader_set_uniform_f_array_safe(uniform_sam, [gw, gh]);
-				draw_surface_safe(surf, 0, 0);
+				draw_surface_safe(surf);
 				shader_reset();
 			surface_reset_target();
 		} #endregion

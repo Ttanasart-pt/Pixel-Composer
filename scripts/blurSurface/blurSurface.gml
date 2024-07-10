@@ -57,7 +57,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		shader_set_i("overrideColor", overColor != noone);
 		shader_set_f("overColor",     colToVec4(overColor));
 		
-		draw_surface_safe(surface, 0, 0);
+		draw_surface_safe(surface);
 		shader_reset();
 	surface_reset_target();
 	
@@ -70,7 +70,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		shader_set_i("size",       _size_v);
 		shader_set_i("horizontal", 0);
 			
-		draw_surface_safe(__blur_hori, 0, 0);
+		draw_surface_safe(__blur_hori);
 		shader_reset();
 	surface_reset_target();
 	gpu_set_tex_filter(false);

@@ -48,7 +48,7 @@ function panelDisplayDraw() {
 			BLEND_NORMAL
 		surface_reset_target();
 		
-		draw_surface(focusing_surface, 0, 0);
+		draw_surface_safe(focusing_surface);
 		draw_sprite_stretched_ext(THEME.ui_panel_active, 1, x0, y0, ww, hh, COLORS._main_accent, 1);
 	}
 	

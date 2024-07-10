@@ -346,7 +346,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		shader_set_uniform_f(uni_dim, ww, hh);
 		shader_set_uniform_f(uni_com, cmX, cmY);
-		draw_surface_safe(_tex, 0, 0);
+		draw_surface_safe(_tex);
 		
 		shader_reset();
 		surface_reset_target();

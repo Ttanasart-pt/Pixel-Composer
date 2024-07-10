@@ -162,7 +162,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_set_target(_outSurf);
 			if(_output_index == 0) {
 				DRAW_CLEAR
-				draw_surface_safe(_data[0], 0, 0);
+				draw_surface_safe(_data[0]);
 			} else
 				draw_clear_alpha(c_black, 1);
 			

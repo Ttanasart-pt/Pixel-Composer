@@ -56,7 +56,7 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_f("treshold",  _tres);
 			shader_set_i("gamma",     _gam);
 			
-			draw_surface_safe(_surf, 0, 0);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);

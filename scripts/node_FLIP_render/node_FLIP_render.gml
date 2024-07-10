@@ -243,10 +243,10 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			if(_thr) {
 				shader_set(sh_FLIP_render_threshold);
 					shader_set_f("threshold", 1 - _bln);
-					draw_surface(temp_surface[0], 0, 0);
+					draw_surface_safe(temp_surface[0]);
 				shader_reset();
 			} else 
-				draw_surface(temp_surface[0], 0, 0);
+				draw_surface_safe(temp_surface[0]);
 			
 			if(_obs)
 			for( var i = 0, n = array_length(domain.obstracles); i < n; i++ )

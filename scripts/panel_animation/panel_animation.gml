@@ -742,7 +742,7 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 		
 		gpu_set_blendmode(bm_subtract);
-		draw_surface_safe(timeline_mask, 0, 0);
+		draw_surface_safe(timeline_mask);
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
 		
@@ -1734,7 +1734,7 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 		
 		gpu_set_blendmode(bm_subtract);
-		draw_surface_safe(dope_sheet_name_mask, 0, 0);
+		draw_surface_safe(dope_sheet_name_mask);
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
 	} #endregion
@@ -2371,7 +2371,7 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 		
 		gpu_set_blendmode(bm_subtract);
-		draw_surface_safe(dope_sheet_mask, 0, 0);
+		draw_surface_safe(dope_sheet_mask);
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
 		

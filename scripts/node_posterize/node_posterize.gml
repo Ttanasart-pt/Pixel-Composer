@@ -80,11 +80,11 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					temp_surface[i] = surface_verify(temp_surface[i], _sw, _sh);
 				
 				surface_set_shader(temp_surface[0]);
-					draw_surface(_surf, 0, 0);
+					draw_surface_safe(_surf);
 				surface_reset_shader();
 				
 				surface_set_shader(temp_surface[1]);
-					draw_surface(_surf, 0, 0);
+					draw_surface_safe(_surf);
 				surface_reset_shader();
 				
 				surface_clear(temp_surface[2]);

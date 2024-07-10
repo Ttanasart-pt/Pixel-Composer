@@ -55,7 +55,7 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			
 			shader_set_uniform_f(uniform_min, i * ste);	
 			shader_set_uniform_f(uniform_max, i * ste + ste);	
-			draw_surface_safe(s, 0, 0);
+			draw_surface_safe(s);
 		}
 		
 		surface_reset_shader();

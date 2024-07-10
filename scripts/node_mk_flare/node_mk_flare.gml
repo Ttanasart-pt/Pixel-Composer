@@ -574,11 +574,11 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			if(_bg) {
 				BLEND_OVERRIDE
-					draw_surface(_surf, 0, 0);
+					draw_surface_safe(_surf);
 			}
 			
 			BLEND_ADD
-				draw_surface(flares[_array_index], 0, 0);
+				draw_surface_safe(flares[_array_index]);
 				
 			BLEND_NORMAL
 		surface_reset_target();
