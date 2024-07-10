@@ -56,12 +56,18 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 		var tw = w - ui(8 + 8);
 		var th = h - ui(4 + 36 + 8);
 		
-		var _text = inputFunc();
+		var _text    = inputFunc();
+		var _prevBox = _textArea.boxColor;
+		
 		_textArea.setMaxHieght(th);
 		_textArea.register();
 		_textArea.setFocusHover(pFOCUS, pHOVER);
 		_textArea.shift_new_line = shift_new_line;
-		_textArea.drawParam(new widgetParam(tx, ty, tw, th, _text,, [mx, my], x, y));
+		_textArea.boxColor = CDEF.main_ltgrey;
+		
+		_textArea.drawParam(new widgetParam(tx, ty, tw, th, _text, {}, [ mx, my ], x, y));
+		
+		_textArea.boxColor = _prevBox;
 	}
 	
 	static checkClosable = function() {

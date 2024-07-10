@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"textArea",
   "isCompatibility":false,
   "isDnD":false,

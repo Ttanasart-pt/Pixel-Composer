@@ -46,17 +46,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	code_line_width = 48;
 	
-	parser_server = noone;
-	
-	autocomplete_delay   = 0;
-	autocomplete_modi    = false;	
-	use_autocomplete	 = true;
-	autocomplete_server	 = noone;
-	autocomplete_object	 = noone;
-	autocomplete_context = {};
-	
-	function_guide_server	   = noone;
-	
 	shift_new_line   = true;
 	show_line_number = true;
 	

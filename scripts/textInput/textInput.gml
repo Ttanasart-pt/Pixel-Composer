@@ -5,6 +5,17 @@ function textInput(_input, _onModify) : widget() constructor {
 	
 	typing      = false;
 	
+	parser_server = noone;
+	
+	autocomplete_delay   = 0;
+	autocomplete_modi    = false;	
+	use_autocomplete	 = true;
+	autocomplete_server	 = noone;
+	autocomplete_object	 = noone;
+	autocomplete_context = {};
+	
+	function_guide_server	   = noone;
+	
 	static _resetFocus = function() { resetFocus();	}
 	
 	static onKey = function(key) {}
