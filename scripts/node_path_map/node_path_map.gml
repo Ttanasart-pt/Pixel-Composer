@@ -11,6 +11,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	inputs[| 2] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 3] = nodeValue("Subdivision", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16)
+		.setValidator(VV_min(1))
 		.rejectArray();
 		
 	outputs[| 0] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -19,12 +20,12 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		["Mapping", false], 1, 2, 3, 
 	]
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path = getInputData(0);
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	} #endregion
+	}
 		
-	static update = function() { #region
+	static update = function() {
 		var _path = getInputData(0);
 		if(_path == noone) return;
 		
@@ -44,8 +45,10 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _p   = array_create(_sub + 1);
 			var _ind = 0;
 			
-			for( var j = 0; j <= 1; j += _isb ) {
-				_pp = _path.getPointRatio(j, i, _pp);
+			for( var j = 0; j <= _sub; j++ ) {
+				var _prog = clamp(j * _isb, 0., 0.999);
+				
+				_pp = _path.getPointRatio(_prog, i, _pp);
 				_p[_ind++] = [ _pp.x, _pp.y ];
 			}
 			
@@ -84,5 +87,5 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		surface_reset_shader();
 		
 		outputs[| 0].setValue(_out);
-	} #endregion
+	}
 } 
