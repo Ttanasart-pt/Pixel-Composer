@@ -2006,17 +2006,18 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		var _prev_node = getNodePreview();
 		d3_active      = _prev_node != noone && _prev_node.is_3D != NODE_3D.none;
+		bg_color       = lerp_color(bg_color, d3_active? COLORS.panel_3d_bg : COLORS.panel_bg_clear, 0.3);
 		
 		draw_clear(bg_color);
-		if(canvas_bg == -1 && canvas_s >= 0.1) 
-			draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, COLORS.panel_preview_transparent, 1);
-		else
+		if(canvas_bg == -1)  {
+			if(canvas_s >= 0.1) draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, COLORS.panel_preview_transparent, 1);
+		} else
 			draw_clear(canvas_bg);
+		
 		draw_set_color(COLORS._main_icon_dark);
 		draw_line_width(canvas_x, 0, canvas_x, h, 1);
 		draw_line_width(0, canvas_y, w, canvas_y, 1);
 		
-		bg_color = lerp_color(bg_color, d3_active? COLORS.panel_3d_bg : COLORS.panel_bg_clear, 0.3);
 		title = __txt("Preview");
 		
 		getPreviewData();
