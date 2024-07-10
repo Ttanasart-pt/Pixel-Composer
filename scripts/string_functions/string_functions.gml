@@ -129,7 +129,7 @@ function draw_text_match(_x, _y, _text, _search) {
 		} else 
 			draw_set_color(cc);
 		
-		draw_text(xx, yy, ch);
+		draw_text(ceil(xx), ceil(yy), ch);
 		xx += string_width(ch);
 		j++;
 	}
@@ -149,12 +149,13 @@ function draw_text_match_ext(_x, _y, _text, _w, _search) {
 	var line_w = 0;
 	var words  = string_split(_text, " ");
 	var amo    = array_length(words);
+	var spw    = string_width(" ");
 	
 	for( var i = 0; i < amo; i++ ) {
 		var wr = words[i] + " ";
 		var ww = string_width(wr);
 		
-		if(line_w + ww > _w) {
+		if(line_w + ww - spw > _w) {
 			array_push(lines, line);
 			line   = wr;
 			line_w = ww;
@@ -215,7 +216,7 @@ function draw_text_match_ext(_x, _y, _text, _w, _search) {
 			} else 
 				draw_set_color(cc);
 			
-			draw_text(xx, yy, ch);
+			draw_text(ceil(xx), ceil(yy), ch);
 			xx += string_width(ch);
 			j++;
 		}

@@ -57,6 +57,7 @@
 	
 		PREFERENCES.dialog_add_node_w				= 532;
 		PREFERENCES.dialog_add_node_h				= 400;
+		PREFERENCES.dialog_add_node_search_high		= true;
 		
 		PREFERENCES.add_node_remember				= true;
 		

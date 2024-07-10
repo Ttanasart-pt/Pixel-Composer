@@ -1,12 +1,12 @@
-function L_Turtle(x = 0, y = 0, ang = 90, w = 1, color = c_white) constructor { #region
-	self.x   = x;
-	self.y   = y;
-	self.ang = ang;
-	self.w   = w;
+function L_Turtle(x = 0, y = 0, ang = 90, w = 1, color = c_white) constructor {
+	self.x     = x;
+	self.y     = y;
+	self.ang   = ang;
+	self.w     = w;
 	self.color = color;
 	
 	static clone = function() { return new L_Turtle(x, y, ang, w, color); }
-} #endregion
+}
 
 function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "L System";
@@ -45,7 +45,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
-	rule_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	rule_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		rule_renderer.x = _x;
 		rule_renderer.y = _y;
 		rule_renderer.w = _w;
@@ -85,7 +85,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_name.editWidget.register(parent);
 			_rule.editWidget.register(parent);
 		}
-	}); #endregion
+	});
 	
 	input_display_list = [
 		["Origin",		false], 2, 6, 
@@ -107,15 +107,15 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	boundary = new BoundingBox();
 	
 	cache_data = {
-		start: "",
-		rules: {},
-		end_rule: "",
-		iteration: 0,
-		seed: 0,
-		result: ""
+		start     : "",
+		rules     : {},
+		end_rule  : "",
+		iteration : 0,
+		seed      : 0,
+		result    : ""
 	}
 	
-	static refreshDynamicInput = function() { #region
+	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -138,14 +138,14 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		inputs = _l;
 		
 		createNewInput();
-	} #endregion
+	}
 	
-	static onValueUpdate = function(index) { #region
+	static onValueUpdate = function(index) {
 		if(index > input_fix_len && !LOADING && !APPENDING) 
 			refreshDynamicInput();
 	}
 		
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_accent);
@@ -165,7 +165,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 			draw_line(x0, y0, x1, y1);
 		}
-	} #endregion
+	}
 	
 	static getLineCount		= function() { return array_length(lines); }
 	static getSegmentCount	= function() { return 1; }
@@ -173,11 +173,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static getLength		= function() { return current_length; }
 	static getAccuLength	= function() { return [ 0, current_length ]; }
 	
-	static getWeightDistance = function (_dist, _ind = 0) { #region
+	static getWeightDistance = function (_dist, _ind = 0) {
 		return getWeightRatio(_dist / current_length, _ind); 
-	} #endregion
+	}
 	
-	static getWeightRatio = function (_rat, _ind = 0) { #region
+	static getWeightRatio = function (_rat, _ind = 0) {
 		var _p0 = lines[_ind][0];
 		var _p1 = lines[_ind][1];
 		
@@ -185,9 +185,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!is_array(_p1) || array_length(_p1) < 2) return 1;
 		
 		return lerp(_p0[2], _p1[2], _rat);
-	} #endregion
+	}
 	
-	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
+	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
 		var _p0 = lines[_ind][0];
@@ -200,13 +200,13 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		out.y  = lerp(_p0[1], _p1[1], _rat);
 		
 		return out;
-	} #endregion
+	}
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) { return getPointRatio(_dist / current_length, _ind, out); }
 	
 	static getBoundary	= function() { return boundary; }
 	
-	static l_system = function(_start, _rules, _end_rule, _iteration, _seed) { #region
+	static l_system = function(_start, _rules, _end_rule, _iteration, _seed) {
 		if(isEqual(cache_data.rules, _rules, true)
 			&& cache_data.start	     == _start
 			&& cache_data.end_rule	 == _end_rule
@@ -256,9 +256,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		return cache_data.result;
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		var _len = getInputData(0);
 		var _ang = getInputData(1);
 		var _pos = getInputData(2);
@@ -267,7 +267,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _end = getInputData(5);
 		var _san = getInputData(6);
 		var _sad = getInputData(7);
-		lineq = ds_queue_create();
+		lineq    = ds_queue_create();
 		
 		random_set_seed(_sad);
 		current_length = _len;
@@ -304,10 +304,12 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					t.x = nx;
 					t.y = ny;
 					break;
+					
 				case "G": 
 					t.x = t.x + lengthdir_x(len, t.ang);
 					t.y = t.y + lengthdir_y(len, t.ang);
 					break;
+					
 				case "f": 
 					var nx = t.x + lengthdir_x(len * frac(itr), t.ang);
 					var ny = t.y + lengthdir_y(len * frac(itr), t.ang);
@@ -317,14 +319,21 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					t.x = nx;
 					t.y = ny;
 					break;
+					
 				case "+": t.ang += ang; break;
 				case "-": t.ang -= ang; break;
 				case "|": t.ang += 180; break;
+				
 				case "[": ds_stack_push(st, t.clone()); break;
-				case "]": t = ds_stack_pop(st);			break;
+				case "]": 
+					if(ds_stack_empty(st)) noti_warning("L-system: Trying to pop an empty stack. Make sure that all close brackets ']' has a corresponding open bracket '['.");
+				    else t = ds_stack_pop(st);
+				    break;
 				
 				case ">": t.w += 0.1; break;
 				case "<": t.w -= 0.1; break;
+				
+				default : noti_warning($"L-system: Invalid rule '{_ch}'"); 
 			}
 		});
 		
@@ -344,7 +353,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		ds_queue_destroy(lineq);
 		
 		outputs[| 0].setValue(self);
-	} #endregion
+	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

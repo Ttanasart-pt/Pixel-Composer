@@ -10,6 +10,11 @@ if !ready exit;
 	WIDGET_CURRENT = tb_search;
 	tb_search.setFocusHover(sFOCUS, sHOVER);
 	
+	var tw = dialog_w - ui(96);
+	var th = ui(32);
+	var tx = dialog_x + ui(14);
+	var ty = dialog_y + ui(14);
+	
 	if(search_string == "") {
 		catagory_pane.setFocusHover(sFOCUS, sHOVER);
 		catagory_pane.draw(dialog_x + ui(14), dialog_y + ui(52));
@@ -24,12 +29,13 @@ if !ready exit;
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(14), dialog_y + ui(52), dialog_w - ui(28), dialog_h - ui(66));
 		search_pane.setFocusHover(sFOCUS, sHOVER);
 		search_pane.draw(dialog_x + ui(16), dialog_y + ui(52));
+		
+		tw -= ui(32);
 	}
 	
-	var tw = dialog_w - ui(96);
-	if(node_called != noone || junction_hovering != noone)
-		tw -= ui(32);
-	tb_search.draw(dialog_x + ui(14), dialog_y + ui(14), tw, ui(32), search_string, mouse_ui);
+	if(node_called != noone || junction_hovering != noone) tw -= ui(32);
+	
+	tb_search.draw(tx, ty, tw, th, search_string, mouse_ui);
 	
 	var bx = dialog_x + dialog_w - ui(44);
 	var by = dialog_y + ui(16);
@@ -50,9 +56,15 @@ if !ready exit;
 		var txt = node_show_connectable? __txtx("add_node_show_connect", "Showing connectable") : __txtx("add_node_show_all", "Showing all");
 		var cc  = node_show_connectable? COLORS._main_accent : COLORS._main_icon;
 		bx -= ui(32);
-		var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.filter_type, node_show_connectable, cc);
-		if(b == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.filter_type, node_show_connectable, cc) == 2) 
 			node_show_connectable = !node_show_connectable;
+	}
+	
+	if(search_string != "") {
+		var txt = __txtx("add_node_highlight", "Hightlight Query");
+		bx -= ui(32);
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.add_node_search_high, PREFERENCES.dialog_add_node_search_high, COLORS._main_icon) == 2) 
+			PREFERENCES.dialog_add_node_search_high = !PREFERENCES.dialog_add_node_search_high;
 	}
 #endregion
 

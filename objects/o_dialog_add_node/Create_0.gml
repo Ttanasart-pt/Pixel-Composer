@@ -58,7 +58,7 @@ event_inherited();
 		category_width = maxLen + ui(56);
 	#endregion
 	
-	function rightClick(node) { #region
+	function rightClick(node) {
 		if(!is_instanceof(node, NodeObject)) return;
 		
 		node_menu_selecting = node;
@@ -76,9 +76,9 @@ event_inherited();
 		];
 		
 		menuCall("add_node_window_manu",,, menu,, node_menu_selecting);
-	} #endregion
+	}
 	
-	function filtered(node) { #region
+	function filtered(node) {
 		if(!node_show_connectable) return true;
 		if(node_called == noone && junction_hovering == noone) return true;
 		if(!struct_has(node, "node")) return true;
@@ -129,9 +129,9 @@ event_inherited();
 		}
 		
 		return false;
-	} #endregion
+	}
 	
-	function buildNode(_node, _param = {}) { #region
+	function buildNode(_node, _param = {}) {
 		instance_destroy();
 		instance_destroy(o_dialog_menubox);
 		
@@ -278,7 +278,7 @@ event_inherited();
 				}
 			}
 		}
-	} #endregion
+	}
 	
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) { #region catagory_pane
 		draw_clear_alpha(COLORS._main_text, 0);
@@ -813,7 +813,9 @@ event_inherited();
 		var grid_size  = ui(64);
 		var grid_width = ui(80);
 		var grid_space = ui(16);
-			
+		
+		var highlight  = PREFERENCES.dialog_add_node_search_high;
+		
 		if(equation) { #region
 			var eq = string_replace(search_string, "=", "");
 			
@@ -934,13 +936,19 @@ event_inherited();
 					
 					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 					var _qhh = string_height_ext(_query, -1, grid_width);
-					if(_drw) _qhh = draw_text_match_ext(_boxx + grid_size / 2, _nmy, _query, grid_width, search_string); 
+					if(_drw) {
+						if(highlight) _qhh = draw_text_match_ext(_boxx + grid_size / 2, _nmy, _query, grid_width, search_string); 
+						else                 draw_text_ext(      _boxx + grid_size / 2, _nmy, _query, -1, grid_width); 
+					}
 					_nmy += _qhh;
 					_nmh += _qhh;
 					
 				} else {
 					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-					if(_drw) _nmh = draw_text_match_ext(_boxx + grid_size / 2, _nmy, _name, grid_width, search_string);
+					if(_drw) {
+						if(highlight) _nmh = draw_text_match_ext(_boxx + grid_size / 2, _nmy, _name, grid_width, search_string);
+						else                 draw_text_ext(      _boxx + grid_size / 2, _nmy, _name, -1, grid_width);
+					}
 				}
 				
 				name_height = max(name_height, _nmh);
@@ -1035,7 +1043,8 @@ event_inherited();
 					}
 					
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-					draw_text_match(list_height + ui(40), yy + list_height / 2, _node.getName(), search_string);
+					if(highlight) draw_text_match(list_height + ui(40), yy + list_height / 2, _node.getName(), search_string);
+					else          draw_text(      list_height + ui(40), yy + list_height / 2, _node.getName());
 				}
 				
 				if(node_focusing == i) search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
