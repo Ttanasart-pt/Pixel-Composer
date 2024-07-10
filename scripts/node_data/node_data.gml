@@ -361,15 +361,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return self;
 	} #endregion
 	
-	static getFullName = function() { #region
-		INLINE
-		return renamed? "[" + name + "] " + display_name : name;
-	} #endregion
-	
-	static getDisplayName = function() { #region
-		INLINE
-		return renamed? display_name : name;
-	} #endregion
+	static getFullName    = function() { return renamed? $"[{name}] " + display_name : name; }
+	static getDisplayName = function() { return renamed? display_name : name; }
 	
 	/////========== DYNAMIC IO ==========
 	
@@ -378,7 +371,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	dyna_input_check_shift = 0;
 	static createNewInput  = -1;
 	
-	static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) { #region
+	static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) {
 		is_dynamic_input	= true;						
 		auto_input			= _auto_input;
 		dummy_type	 		= _dummy_type;
@@ -397,9 +390,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		attributes.size = 0;
-	} #endregion
+	}
 	
-	static refreshDynamicInput = function() { #region
+	static refreshDynamicInput = function() {
 		var _in = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -446,7 +439,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		ds_list_destroy(inputs);
 		inputs = _in;
 		
-	} #endregion
+	}
 
 	static getInputAmount = function() { return (ds_list_size(inputs) - input_fix_len) / data_length; }
 	
@@ -553,7 +546,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static doStepBegin = function() {}
 	
-	static triggerCheck = function() { #region
+	static triggerCheck = function() {
 		var i = 0;
 		
 		repeat( input_button_length ) {
@@ -574,7 +567,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			onInspector2Update();
 			inspectInput2.setValue(false);
 		}
-	} #endregion
+	}
 	
 	static step = function() {}
 	static focusStep = function() {}
@@ -582,7 +575,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////========== JUNCTIONS ==========
 	
-	static getInputJunctionIndex = function(index) { #region
+	static getInputJunctionIndex = function(index) {
 		INLINE 
 		
 		if(input_display_list == -1 || !use_display_list)
@@ -593,13 +586,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(is_struct(jun_list_arr)) return noone;
 		
 		return jun_list_arr;
-	} #endregion
+	}
 	
-	static getOutputJunctionIndex = function(index) { #region
+	static getOutputJunctionIndex = function(index) {
 		if(output_display_list == -1)
 			return index;
 		return output_display_list[index];
-	} #endregion
+	}
 	
 	static updateIO = function() {
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
@@ -694,7 +687,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(auto_input && dummy_input) array_push(inputDisplayList, dummy_input);
 	}#endregion
 	
-	static onValidate = function() { #region
+	static onValidate = function() {
 		value_validation[VALIDATION.pass]	 = 0;
 		value_validation[VALIDATION.warning] = 0;
 		value_validation[VALIDATION.error]   = 0;
@@ -704,16 +697,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(jun.value_validation)
 				value_validation[jun.value_validation]++;
 		}
-	} #endregion
+	}
 	
-	static getJunctionTos = function() { #region
+	static getJunctionTos = function() {
 		var _vto = array_create(ds_list_size(outputs));
 		for (var j = 0, m = ds_list_size(outputs); j < m; j++)
 			_vto[j] = array_clone(outputs[| j].value_to);
 		return _vto;
-	} #endregion
+	}
 	
-	static checkConnectGroup = function(_io) { #region
+	static checkConnectGroup = function(_io) {
 		var _y  = y;
 		var _n  = noone;
 		
@@ -749,7 +742,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					_io.outputs[$ _ind ] = [ _to ];
 			}
 		}
-	} #endregion
+	}
 	
 	/////============ INPUTS ============
 	
@@ -769,29 +762,29 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		doUpdate();
 	} if(!APPENDING && !LOADING) run_in(1, method(self, resetDefault));
 	
-	static addInput = function(junctionFrom, shift = input_fix_len) { #region
+	static addInput = function(junctionFrom, shift = input_fix_len) {
 		var targ = getInput(y, junctionFrom, shift);
 		if(targ == noone) return;
 		
 		targ.setFrom(junctionFrom);
-	} #endregion
+	}
 	
-	static getInputData = function(index, def = 0) { #region
+	static getInputData = function(index, def = 0) {
 		INLINE
 		
 		var _dat = array_safe_get_fast(inputs_data, index, def);
 		return _dat;
-	} #endregion
+	}
 	
-	static setInputData = function(index, value) { #region
+	static setInputData = function(index, value) {
 		INLINE
 		
 		var _inp = inputs[| index];
 		inputs_data[index] = value;
 		if(is_struct(_inp)) input_value_map[$ _inp.internalName] = value;
-	} #endregion
+	}
 	
-	static getInputs = function(frame = CURRENT_FRAME) { #region
+	static getInputs = function(frame = CURRENT_FRAME) {
 		inputs_data	= array_verify(inputs_data, ds_list_size(inputs));
 		
 		for(var i = 0; i < ds_list_size(inputs); i++) {
@@ -801,18 +794,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var val = _inp.getValue(frame);
 			setInputData(i, val);
 		}
-	} #endregion
+	}
 	
 	/////============ UPDATE ============
 	
-	static forceUpdate = function() { #region
+	static forceUpdate = function() {
 		input_hash = "";
 		doUpdate();
-	} #endregion
+	}
 	
 	static postUpdate = function(frame = CURRENT_FRAME) {}
 	
-	static doUpdate = function(frame = CURRENT_FRAME) { #region
+	static doUpdate = function(frame = CURRENT_FRAME) {
 		if(PROJECT.safeMode) return;
 		if(NODE_EXTRACT)     return;
 		
@@ -864,17 +857,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		refreshNodeDisplay();
 		LOG_BLOCK_END();
-	} #endregion
+	}
 	
-	static valueUpdate = function(index) { #region
+	static valueUpdate = function(index) {
 		
 		onValueUpdate(index);
 		
 		if(is_dynamic_input) will_setHeight = true;
 		cacheCheck();
-	} #endregion
+	}
 	
-	static valueFromUpdate = function(index) { #region
+	static valueFromUpdate = function(index) {
 		onValueFromUpdate(index);
 		
 		if(auto_input && !LOADING && !APPENDING) 
@@ -884,14 +877,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			will_setHeight = true;
 			
 		cacheCheck();
-	} #endregion
+	}
 	
 	static onValueUpdate = function(index = 0) {}
 	static onValueFromUpdate = function(index) {}
 	
 	/////============ RENDER ============
 	
-	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
+	static isActiveDynamic = function(frame = CURRENT_FRAME) {
 		if(update_on_frame) return true;
 		if(!rendered)       return true;
 		
@@ -900,9 +893,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(inputs[| i].isActiveDynamic(frame)) return true;
 		
 		return false;
-	} #endregion
+	}
 	
-	static triggerRender = function() { #region
+	static triggerRender = function() {
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"Trigger render for {self}");
 		
@@ -919,11 +912,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		LOG_BLOCK_END();
-	} #endregion
+	}
 	
 	static clearTopoSorted = function() { INLINE topoSorted = false; }
 	
-	static forwardPassiveDynamic = function() { #region
+	static forwardPassiveDynamic = function() {
 		rendered = false;
 		
 		for( var i = 0, n = ds_list_size(outputs); i < n; i++ ) {
@@ -938,14 +931,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				_to.node.rendered = false;
 			}
 		}
-	} #endregion
+	}
 	
-	static resetRender = function(_clearCache = false) {  #region
+	static resetRender = function(_clearCache = false) { 
 		setRenderStatus(false); 
 		if(_clearCache) clearInputCache();
-	} #endregion
+	}
 	
-	static isLeaf = function() { #region
+	static isLeaf = function() {
 		INLINE 
 		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
@@ -954,9 +947,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		return true;
-	} #endregion
+	}
 	
-	static isLeafList = function(list = noone) { #region
+	static isLeafList = function(list = noone) {
 		INLINE 
 		
 		if(list == noone) return isLeaf();
@@ -970,7 +963,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		return true;
-	} #endregion
+	}
 	
 	static isRenderActive = function() { return renderActive || (PREFERENCES.render_all_export && IS_RENDERING); }
 	
@@ -984,16 +977,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return true;
 	}
 	
-	static setRenderStatus = function(result) { #region
+	static setRenderStatus = function(result) {
 		INLINE
 		
 		if(rendered == result) return;
 		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {self} : {result}");
 		
 		rendered = result;
-	} #endregion
+	}
 	
-	static getPreviousNodes = function() { #region
+	static getPreviousNodes = function() {
 		var prev = [];
 		
 		if(attributes.show_update_trigger && updatedInTrigger.value_from) 
@@ -1018,11 +1011,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		onGetPreviousNodes(prev);
 		return prev;
-	} #endregion
+	}
 	
 	static onGetPreviousNodes = function(arr) {}
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function() {
 		var nodes = [];
 		var nodeNames = [];
 		
@@ -1058,9 +1051,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		LOG_BLOCK_END();
 		return nodes;
-	} #endregion
+	}
 	
-	static getNextNodesRaw = function() { #region
+	static getNextNodesRaw = function() {
 		var nodes = [];
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
@@ -1082,20 +1075,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}	
 		
 		return nodes;
-	} #endregion
+	}
 	
 	/////============= DRAW =============
 	
 	static onInspect = function() {}
 	
-	static pointIn = function(_x, _y, _mx, _my, _s) { #region
+	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
 		return point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
-	} #endregion
+	}
 	
-	static cullCheck = function(_x, _y, _s, minx, miny, maxx, maxy) { #region
+	static cullCheck = function(_x, _y, _s, minx, miny, maxx, maxy) {
 		var x0 = x * _s + _x;
 		var y0 = y * _s + _y;
 		var x1 = (x + w) * _s + _x;
@@ -1107,18 +1100,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_boundary[3] = maxy;
 		
 		draw_graph_culled = !rectangle_in_rectangle(minx, miny, maxx, maxy, x0, y0, x1, y1);
-	} #endregion
+	}
 	
-	static refreshNodeDisplay = function() { #region
+	static refreshNodeDisplay = function() {
 		if(IS_PLAYING) return;
 		INLINE
 		
 		updateIO();
 		setHeight();
 		getJunctionList();
-	} run_in(1, function() { refreshNodeDisplay(); }); #endregion
+	} run_in(1, function() { refreshNodeDisplay(); });
 	
-	static preDraw = function(_x, _y, _s) { #region
+	static preDraw = function(_x, _y, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		var jun;
@@ -1181,15 +1174,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(show_parameter) h = h_param;
 		
 		onPreDraw(_x, _y, _s, _iny, _outy);
-	} #endregion
+	}
 	
 	static onPreDraw = function(_x, _y, _s, _iny, _outy) {}
 	
-	static isHighlightingInGraph = function() { #region
+	static isHighlightingInGraph = function() {
 		var  high = display_parameter.highlight;
 		var _selc = active_draw_index == 0 || branch_drawing;
 		return !high || _selc;
-	} #endregion
+	}
 	
 	static getColor = function() { INLINE return attributes.color == -1? color : attributes.color; }
 	
@@ -1198,7 +1191,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {}
 	
 	__draw_bbox = BBOX();
-	static drawGetBbox = function(xx, yy, _s) { #region
+	static drawGetBbox = function(xx, yy, _s) {
 		var pad_label = draw_name && display_parameter.avoid_label;
 		
 		var _w = w;
@@ -1222,7 +1215,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var y1 = _yc + _h / 2;
 		
 		return __draw_bbox.fromPoints(x0, y0, x1, y1);
-	} #endregion
+	}
 	
 	static drawNodeName = function(xx, yy, _s) {
 		var _name = renamed? display_name : name;
@@ -1263,7 +1256,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_set_alpha(1);
 	}
 	
-	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus) { #region
+	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus) {
 		
 		var hover = noone;
 		
@@ -1335,7 +1328,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		h = fix_h + extY;
 		h_param = h;
-	} #endregion
+	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		if(!active) return;
@@ -1411,7 +1404,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onDrawJunctions = function(_x, _y, _mx, _my, _s) {}
 	
-	static drawJunctionNames = function(_x, _y, _mx, _my, _s) { #region
+	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {
 		if(draw_graph_culled) return;
 		if(!active) return;
 		
@@ -1469,10 +1462,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			inspectInput2.drawNameBG(_s);
 			inspectInput2.drawName(_s, _mx, _my);
 		}
-	} #endregion
+	}
 	
 	__draw_inputs = []
-	static drawConnections = function(params = {}) { #region
+	static drawConnections = function(params = {}) {
 		if(!active) return;
 		
 		var hovering = noone;
@@ -1546,9 +1539,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		return hovering;
-	} #endregion
+	}
 	
-	static getGraphPreviewSurface = function() { #region
+	static getGraphPreviewSurface = function() {
 		var _node = outputs[| preview_channel];
 		if(!is_instanceof(_node, NodeValue)) return noone;
 		
@@ -1560,18 +1553,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		return noone;
-	} #endregion
+	}
 	
 	__preview_surf = false;
 	__preview_sw   = noone;
 	__preview_sh   = noone;
 	
-	static setPreview = function(_surf) { #region
+	static setPreview = function(_surf) {
 		preview_surface = _surf;
 		__preview_surf  = is_surface(_surf);
-	} #endregion
+	}
 	
-	static drawPreview = function(xx, yy, _s) { #region
+	static drawPreview = function(xx, yy, _s) {
 		var surf = getGraphPreviewSurface();
 		if(surf == noone) return;
 		
@@ -1609,9 +1602,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_ps = array_safe_get_fast(_ps.surfaces, 0, noone);
 			
 		draw_surface_ext_safe(_ps, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss);
-	} #endregion
+	}
 	
-	static getNodeDimension = function(showFormat = true) { #region
+	static getNodeDimension = function(showFormat = true) {
 		if(!__preview_surf) return preview_array;
 		
 		var pw = surface_get_width_safe(preview_surface);
@@ -1634,9 +1627,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		txt += "]";
 		
 		return txt;
-	} #endregion
+	}
 	
-	static drawDimension = function(xx, yy, _s) { #region
+	static drawDimension = function(xx, yy, _s) {
 		if(draw_graph_culled) return;
 		if(!active)           return;
 		if(_s * w < 64)       return;
@@ -1679,7 +1672,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			draw_text(round(tx), round(ty), $"{rt} {unit}");
 		}
-	} #endregion
+	}
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) {}
 	
@@ -1691,7 +1684,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return false; 
 	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) { #region
+	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) {
 		if(draw_graph_culled) return;
 		if(!active) return;
 		
@@ -1756,9 +1749,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(!previewable) return drawJunctions_fast(xx, yy, _mx, _my, _s);
 		return _s > 0.5? drawJunctions(xx, yy, _mx, _my, _s) : drawJunctions_fast(xx, yy, _mx, _my, _s);
-	} #endregion
+	}
 	
-	static drawNodeBehind = function(_x, _y, _mx, _my, _s) { #region
+	static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
 		if(draw_graph_culled) return;
 		if(!active) return;
 		
@@ -1766,7 +1759,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var yy = y * _s + _y;
 		
 		onDrawNodeBehind(_x, _y, _mx, _my, _s);
-	} #endregion
+	}
 	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {}
 	
@@ -1776,7 +1769,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawPreviewBackground = function(_x, _y, _mx, _my, _s) { return false; }
 	
-	static drawBadge = function(_x, _y, _s) { #region
+	static drawBadge = function(_x, _y, _s) {
 		if(!active) return;
 		var xx = x * _s + _x + w * _s;
 		var yy = y * _s + _y;
@@ -1801,9 +1794,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		inspecting = false;
 		previewing = 0;
-	} #endregion
+	}
 	
-	static drawBranch = function(_depth = 0) { #region
+	static drawBranch = function(_depth = 0) {
 		if(branch_drawing) return;
 		branch_drawing = true;
 		
@@ -1813,12 +1806,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(inputs[| i].value_from == noone) continue;
 			inputs[| i].value_from.node.drawBranch(_depth + 1);
 		}
-	} #endregion
+	}
 	
-	static drawActive = function(_x, _y, _s, ind = 0) { #region
+	static drawActive = function(_x, _y, _s, ind = 0) {
 		active_draw_index = ind; 
 		if(display_parameter.highlight) drawBranch();
-	} #endregion
+	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
@@ -1828,7 +1821,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////============ PREVIEW ============
 	
-	static getPreviewValues = function() { #region
+	static getPreviewValues = function() {
 		if(preview_channel >= ds_list_size(outputs)) return noone;
 		
 		var _type = outputs[| preview_channel].type;
@@ -1840,39 +1833,39 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			val = array_safe_get_fast(val.surfaces, 0, noone);
 		
 		return val;
-	} #endregion
+	}
 	
-	static getPreviewBoundingBox = function() { #region
+	static getPreviewBoundingBox = function() {
 		var _surf = getPreviewValues();
 		if(is_array(_surf)) 
 			_surf = array_safe_get_fast(_surf, preview_index, noone);
 		if(!is_surface(_surf)) return noone;
 		
 		return BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
-	} #endregion
+	}
 	
 	/////============= CACHE =============
 	
-	static cacheCheck = function() { #region
+	static cacheCheck = function() {
 		INLINE
 		
 		if(cache_group) cache_group.enableNodeGroup();
 		if(group != noone) group.cacheCheck();
-	} #endregion
+	}
 	
 	static getAnimationCacheExist = function(frame) { return cacheExist(frame); }
 	
-	static clearInputCache = function() { #region
+	static clearInputCache = function() {
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			inputs[| i].cache_value[0] = false;
-	} #endregion
+	}
 	
-	static cacheArrayCheck = function() { #region
+	static cacheArrayCheck = function() {
 		cached_output = array_verify(cached_output, TOTAL_FRAMES);
 		cache_result  = array_verify(cache_result,  TOTAL_FRAMES);
-	} #endregion
+	}
 	
-	static cacheCurrentFrame = function(_frame) { #region
+	static cacheCurrentFrame = function(_frame) {
 		cacheArrayCheck();
 		if(CURRENT_FRAME < 0) return;
 		if(CURRENT_FRAME >= array_length(cached_output)) return;
@@ -1883,9 +1876,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		array_safe_set(cache_result, CURRENT_FRAME, true);
 		
 		return cached_output[CURRENT_FRAME];
-	} #endregion
+	}
 	
-	static cacheExist = function(frame = CURRENT_FRAME) { #region
+	static cacheExist = function(frame = CURRENT_FRAME) {
 		if(frame < 0) return false;
 		
 		if(frame >= array_length(cached_output)) return false;
@@ -1894,26 +1887,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var s = array_safe_get_fast(cached_output, frame);
 		return is_array(s) || surface_exists(s);
-	} #endregion
+	}
 	
-	static getCacheFrame = function(frame = CURRENT_FRAME) { #region
+	static getCacheFrame = function(frame = CURRENT_FRAME) {
 		if(frame < 0) return false;
 		
 		if(!cacheExist(frame)) return noone;
 		var surf = array_safe_get_fast(cached_output, frame);
 		return surf;
-	} #endregion
+	}
 	
-	static recoverCache = function(frame = CURRENT_FRAME) { #region
+	static recoverCache = function(frame = CURRENT_FRAME) {
 		if(!cacheExist(frame)) return false;
 		
 		var _s = cached_output[CURRENT_FRAME];
 		outputs[| 0].setValue(_s);
 			
 		return true;
-	} #endregion
+	}
 	
-	static clearCache = function(_force = false) { #region
+	static clearCache = function(_force = false) {
 		clearInputCache();
 		
 		if(!_force) {
@@ -1931,22 +1924,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			cached_output[i] = 0;
 			cache_result[i] = false;
 		}
-	} #endregion
+	}
 	
-	static clearCacheForward = function() { #region
+	static clearCacheForward = function() {
 		_clearCacheForward(); 
-	} #endregion
+	}
 	
-	static _clearCacheForward = function() { #region
+	static _clearCacheForward = function() {
 		if(!isRenderActive()) return;
 		
 		clearCache();
 		var arr = getNextNodesRaw();
 		for( var i = 0, n = array_length(arr); i < n; i++ )
 			arr[i]._clearCacheForward();
-	} #endregion
+	}
 	
-	static cachedPropagate = function(_group = group) { #region
+	static cachedPropagate = function(_group = group) {
 		if(group != _group) return;
 		setRenderStatus(true);
 		
@@ -1956,18 +1949,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			_input.value_from.node.cachedPropagate(_group);
 		}
-	} #endregion
+	}
 	
-	static clearInputCache = function() { #region
+	static clearInputCache = function() {
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(!is_instanceof(inputs[| i], NodeValue)) continue;
 			inputs[| i].resetCache();
 		}
-	} #endregion
+	}
 	
 	/////============= TOOLS =============
 	
-	static isUsingTool = function(index = undefined, subtool = noone) { #region
+	static isUsingTool = function(index = undefined, subtool = noone) {
 		if(tools == -1) 
 			return false;
 		
@@ -1988,7 +1981,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			return true;
 			
 		return _tool.selecting == subtool;
-	} #endregion
+	}
 	
 	static isNotUsingTool = function() { return PANEL_PREVIEW.tool_current == noone; }
 	
@@ -1996,7 +1989,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getToolSettings = function() { return tool_settings; }
 	
-	static setTool = function(tool) { #region
+	static setTool = function(tool) {
 		if(!tool) {
 			isTool = false;
 			return;
@@ -2006,13 +1999,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			group.nodes[i].isTool = false;
 		
 		isTool = true;
-	} #endregion
+	}
 	
 	static drawTools = noone;
 	
 	/////=========== SERIALIZE ===========
 	
-	static serialize = function(scale = false, preset = false) { #region
+	static serialize = function(scale = false, preset = false) {
 		if(!active) return;
 		
 		var _map = {};
@@ -2069,7 +2062,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		doSerialize(_map);
 		processSerialize(_map);
 		return _map;
-	} #endregion
+	}
 	
 	static attributeSerialize = function() { return attributes; }
 	static doSerialize		  = function(_map) {}
@@ -2077,7 +2070,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////========== DESERIALIZE ==========
 	
-	static deserialize = function(_map, scale = false, preset = false) { #region
+	static deserialize = function(_map, scale = false, preset = false) {
 		load_map   = _map;
 		load_scale = scale;
 		renamed    = struct_try_get(load_map, "renamed", false);
@@ -2134,9 +2127,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(anim_timeline && attributes.show_timeline) refreshTimeline();
-	} #endregion
+	}
 	
-	static inputBalance = function() { #region //Cross version compatibility for dynamic input nodes
+	static inputBalance = function() { //Cross version compatibility for dynamic input nodes
 		if(!struct_has(load_map, "data_length")) 
 			return;
 		
@@ -2167,25 +2160,25 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		repeat(_pad_fix) 
 			array_insert(load_map.inputs, _input_fix_len, noone);
 			
-	} #endregion
+	}
 	
-	static inputGenerate = function() { #region //Generate input for dynamic input nodes
+	static inputGenerate = function() { //Generate input for dynamic input nodes
 		if(createNewInput == noone) 
 			return;
 		
 		var _dynamic_inputs = (array_length(load_map.inputs) - input_fix_len) / data_length;
 		repeat(_dynamic_inputs)
 			createNewInput();
-	} #endregion
+	}
 	
-	static attributeDeserialize = function(attr) { #region
+	static attributeDeserialize = function(attr) {
 		struct_append(attributes, attr); 
-	} #endregion
+	}
 	
 	static processDeserialize = function() {}
 	static postDeserialize = function() {}
 	
-	static applyDeserialize = function(preset = false) { #region
+	static applyDeserialize = function(preset = false) {
 		preApplyDeserialize();
 		
 		var _inputs = load_map.inputs;
@@ -2223,12 +2216,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		//print($"Applying deserialzie for {name} complete");
 		
 		doApplyDeserialize();
-	} #endregion
+	}
 	
 	static preApplyDeserialize = function() {}
 	static doApplyDeserialize  = function() {}
 	
-	static loadGroup = function(context = noone) { #region
+	static loadGroup = function(context = noone) {
 		if(load_group == noone) {
 			if(context != noone) context.add(self);
 		} else {
@@ -2248,11 +2241,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		onLoadGroup();
-	} #endregion
+	}
 	
 	static onLoadGroup = function() {}
 	
-	static connect = function(log = false) { #region
+	static connect = function(log = false) {
 		var connected = true;
 		for(var i = 0; i < ds_list_size(inputs); i++)
 			connected &= inputs[| i].connect(log);
@@ -2265,7 +2258,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		refreshTimeline();
 		
 		return connected;
-	} #endregion
+	}
 	
 	static preConnect = function() {}
 	static postConnect = function() {}
@@ -2274,7 +2267,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////=========== CLEAN UP ===========
 	
-	static cleanUp = function() { #region
+	static cleanUp = function() {
 		if(ds_exists(inputs, ds_type_list))
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			inputs[| i].cleanUp();
@@ -2293,13 +2286,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			surface_free(temp_surface[i]);
 		
 		onCleanUp();
-	} #endregion
+	}
 	
 	static onCleanUp = function() {}
 	
 	/////============ ACTION ============
 	
-	static setDimension = function(_w = 128, _h = 128, _apply = true) { #region
+	static setDimension = function(_w = 128, _h = 128, _apply = true) {
 		INLINE
 		
 		min_w = _w; 
@@ -2310,22 +2303,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			w = _w;
 			h = _h;
 		}
-	} #endregion
+	}
 	
-	static move = function(_x, _y, _s) { #region
+	static move = function(_x, _y, _s) {
 		if(x == _x && y == _y) return;
 		
 		x = _x;
 		y = _y; 
 		if(!LOADING) PROJECT.modified = true;
-	} #endregion
+	}
 	
 	static enable  = function() { INLINE active = true;  timeline_item.active = true;  }
 	static disable = function() { INLINE active = false; timeline_item.active = false; }
 	
 	static onDestroy = function() {}
 	
-	static destroy = function(_merge = false, record = true) { #region
+	static destroy = function(_merge = false, record = true) {
 		if(!active) return;
 		disable();
 		
@@ -2371,11 +2364,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(record) recordAction(ACTION_TYPE.node_delete, self);
 		
 		RENDER_ALL_REORDER
-	} #endregion
+	}
 	
 	static onRestore = function() {}
 	
-	static restore = function() { #region
+	static restore = function() {
 		if(active) return;
 		enable();
 		
@@ -2385,18 +2378,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(group) group.refreshNodes();
 		
 		RENDER_ALL_REORDER
-	} #endregion
+	}
 	
-	static droppable = function(dragObj) { #region
+	static droppable = function(dragObj) {
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(dragObj.type == inputs[| i].drop_key)
 				return true;
 		}
 		return false;
-	} #endregion
+	}
 	
 	on_drop_file = noone;
-	static onDrop = function(dragObj) { #region
+	static onDrop = function(dragObj) {
 		if(dragObj.type == "Asset" && is_callable(on_drop_file)) {
 			on_drop_file(dragObj.data.path);
 			return;
@@ -2408,11 +2401,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				return;
 			}
 		}
-	} #endregion
+	}
 	
 	static dropPath = noone;
 	
-	static clone = function(target = PANEL_GRAPH.getCurrentContext()) { #region
+	static clone = function(target = PANEL_GRAPH.getCurrentContext()) {
 		CLONING = true;
 		var _type = instanceof(self);
 		var _node = nodeBuild(_type, x, y, target);
@@ -2437,28 +2430,28 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		onClone(_node, target);
 		
 		return _node;
-	} #endregion
+	}
 	
 	static onClone = function(_NewNode, target = PANEL_GRAPH.getCurrentContext()) {}
 	
 	/////============= MISC =============
 	
-	static isInLoop = function() { #region
+	static isInLoop = function() {
 		return array_exists(global.loop_nodes, instanceof(group));
-	} #endregion
+	}
 	
-	static isTerminal = function() { #region
+	static isTerminal = function() {
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
 			var _to = outputs[| i].getJunctionTo();
 			if(array_length(_to)) return false;
 		}
 		
 		return true;
-	} #endregion
+	}
 	
 	static resetAnimation = function() {}
 	
-	static attrDepth = function() { #region
+	static attrDepth = function() {
 		if(struct_has(attributes, "color_depth")) {
 			var form = attributes.color_depth;
 			if(inputs[| 0].type == VALUE_TYPE.surface) 
@@ -2472,7 +2465,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!is_surface(_s)) 
 			return surface_rgba8unorm;
 		return surface_get_format(_s);
-	} #endregion
+	}
 	
 	static toString = function() { return $"Node [{internalName}]: {node_id}"; }
 }

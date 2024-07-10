@@ -9,10 +9,7 @@ uniform int   iteration;
 ///////////////////// PERLIN START /////////////////////
 
 float random  (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
-vec2  random2 (in vec2 st) { 
-	float a = random(st);
-	return vec2(cos(a), sin(a));
-}
+vec2  random2 (in vec2 st) { float a = random(st); return vec2(cos(a), sin(a)); }
 
 float noise (in vec2 st) {
     vec2 i = floor(st);

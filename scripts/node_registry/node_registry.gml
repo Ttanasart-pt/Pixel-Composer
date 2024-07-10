@@ -638,6 +638,7 @@ function __initNodes() {
 		addNodeObject(filter, "Alpha Cutoff",		s_node_alpha_cut,		"Node_Alpha_Cutoff",	[1, Node_Alpha_Cutoff], ["remove alpha"], "Remove pixel with low alpha value.");
 		addNodeObject(filter, "Normalize",			s_node_normalize,		"Node_Normalize",		[1, Node_Normalize]).setVersion(11710);
 		addNodeObject(filter, "Gamma Map",			s_node_gamma_map,		"Node_Gamma_Map",		[1, Node_Gamma_Map]).setVersion(11660);
+		addNodeObject(filter, "Grain",				s_node_grain,			"Node_Grain",			[1, Node_Grain]).setVersion(11770);
 		addNodeObject(filter, "ACE",				s_node_ace,				"Node_Tonemap_ACE",		[1, Node_Tonemap_ACE],, "Apply ACE tonemapping.").setVersion(11710);
 		
 		ds_list_add(filter, "Conversions");
