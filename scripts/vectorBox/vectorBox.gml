@@ -8,8 +8,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
 	unit	 = _unit;
 	
-	linkable = true;
-	per_line = false;
+	linkable      = true;
+	per_line      = false;
 	current_value = [];
 	linked        = false;
 	side_button   = noone;
@@ -48,25 +48,25 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		tb[i].slidable = true;
 	}
 	
-	static apply = function() { #region
+	static apply = function() {
 		for( var i = 0; i < size; i++ ) {
 			tb[i].apply();
 			current_value[i] = toNumber(tb[i]._input_text);
 		}
-	} #endregion
+	}
 	
-	static setLinkInactiveColor = function(color) { #region
+	static setLinkInactiveColor = function(color) {
 		link_inactive_color = color;
 		return self;
-	} #endregion
+	}
 	
-	static setSlideSpeed = function(speed) { #region
+	static setSlideSpeed = function(speed) {
 		for(var i = 0; i < size; i++)
 			tb[i].setSlidable(speed);
 		return self;
-	} #endregion
+	}
 	
-	static setInteract = function(interactable) { #region
+	static setInteract = function(interactable) {
 		self.interactable = interactable;
 		
 		if(side_button) 
@@ -74,9 +74,9 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			
 		for( var i = 0; i < size; i++ ) 
 			tb[i].interactable = interactable;
-	} #endregion
+	}
 	
-	static register = function(parent = noone) { #region
+	static register = function(parent = noone) {
 		for( var i = 0; i < size; i++ ) 
 			tb[i].register(parent);
 		
@@ -85,21 +85,21 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);
-	} #endregion
+	}
 	
-	static isHovering = function() { #region
+	static isHovering = function() {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;
-	} #endregion
+	}
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		for(var i = 0; i < 4; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { #region
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -117,6 +117,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		var sz  = min(size, array_length(_data));
 		var _bs = min(_h, ui(32));
+		
+		if(unit) for(var i = 0; i < sz; i++) tb[i].slide_int = unit.mode == VALUE_UNIT.constant? true : false;
 		
 		if((_w - _bs) / sz > ui(48)) {
 			if(side_button) {
@@ -174,14 +176,14 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new vectorBox(size, onModify, unit);
 		
 		cln.linkable = linkable;
 		cln.per_line = per_line;
 		
 		return cln;
-	} #endregion
+	}
 }

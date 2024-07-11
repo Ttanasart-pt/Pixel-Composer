@@ -638,10 +638,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_ho = name_height;
 		}
 		
-		var _prev_surf = previewable && preview_draw && 
-			(	is_surface(getGraphPreviewSurface()) || 
-				(preview_channel >= 0 && preview_channel < ds_list_size(outputs) && outputs[| preview_channel].type == VALUE_TYPE.surface)
-			);
+		var _ss = getGraphPreviewSurface();
+		var _ps = is_surface(_ss);
+		var _ou = preview_channel >= 0 && preview_channel < ds_list_size(outputs) && outputs[| preview_channel].type == VALUE_TYPE.surface;
+		
+		// print($"{previewable} && {preview_draw} && ([{_ss}] {_ps} || {_ou})");
+		var _prev_surf = previewable && preview_draw && (_ps || _ou);
 		var _p = previewable;
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {

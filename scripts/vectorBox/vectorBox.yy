@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"vectorBox",
   "isCompatibility":false,
   "isDnD":false,

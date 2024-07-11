@@ -302,8 +302,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) { #region
 		express_edit.side_button = unit.triggerButton;
 		
-		if(is_instanceof(editWidget, textBox)) 
-			editWidget.side_button = unit.triggerButton;
+		if(editWidget) {
+			editWidget.unit = unit;
+			
+			if(is_instanceof(editWidget, textBox))
+				editWidget.side_button = unit.triggerButton;
+		}
 		
 		unit.reference  = ref;
 		unit.mode		= mode;

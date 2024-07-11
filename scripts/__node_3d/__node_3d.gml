@@ -70,17 +70,19 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	static postProcess = function() { refreshPreview(); }
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) { #region
-		if(!is_surface(mesh_prev_surface)) return;
-		if(!previewable) return;
+	static getGraphPreviewSurface = function() { return mesh_prev_surface; }
+	
+	// static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) { #region
+	// 	if(!is_surface(mesh_prev_surface)) return;
+	// 	if(!previewable) return;
 		
-		var bbox = drawGetBbox(xx, yy, _s);
-		var aa   = 0.5 + 0.5 * renderActive;
-		if(!isHighlightingInGraph()) aa *= 0.25;
+	// 	var bbox = drawGetBbox(xx, yy, _s);
+	// 	var aa   = 0.5 + 0.5 * renderActive;
+	// 	if(!isHighlightingInGraph()) aa *= 0.25;
 		
-		draw_surface_bbox(mesh_prev_surface, bbox,, aa);
-		onDrawNodeOver(xx, yy, _mx, _my, _s, _hover, _focus);
-	} #endregion
+	// 	draw_surface_bbox(mesh_prev_surface, bbox,, aa);
+	// 	onDrawNodeOver(xx, yy, _mx, _my, _s, _hover, _focus);
+	// } #endregion
 	
 	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) { }
 }

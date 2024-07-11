@@ -30,10 +30,15 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	inputs[| in_mesh + 9] = nodeValue("Texture Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	inputs[| in_mesh + 10] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	
+	inputs[| in_mesh + 11] = nodeValue("Inverted", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	
 	input_display_list = [
-		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 6, in_mesh + 1, in_mesh + 7, in_mesh + 8, in_mesh + 5, 
+		["Path",		false], 	in_mesh + 0, in_mesh + 10,
+		__d3d_input_list_mesh,		in_mesh + 6, in_mesh + 1, in_mesh + 7, in_mesh + 8, in_mesh + 5, in_mesh + 11, 
 		__d3d_input_list_transform,
-		["Material",	false], in_mesh + 4, in_mesh + 2, in_mesh + 3, in_mesh + 9, 
+		["Material",	false], 	in_mesh + 4, in_mesh + 2, in_mesh + 3, in_mesh + 9, 
 	]
 	
 	static step = function() {
@@ -43,16 +48,18 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {
-		var _path    = _data[in_mesh + 0];
-		var _sides   = _data[in_mesh + 1];
-		var _mat_sid = _data[in_mesh + 2];
-		var _mat_cap = _data[in_mesh + 3];
-		var _smt     = _data[in_mesh + 4];
-		var _caps    = _data[in_mesh + 5];
-		var _samp    = _data[in_mesh + 6];
-		var _rad     = _data[in_mesh + 7];
-		var _radOv   = _data[in_mesh + 8];
-		var _uvScale = _data[in_mesh + 9];
+		var _path    = _data[in_mesh +  0];
+		var _sides   = _data[in_mesh +  1];
+		var _mat_sid = _data[in_mesh +  2];
+		var _mat_cap = _data[in_mesh +  3];
+		var _smt     = _data[in_mesh +  4];
+		var _caps    = _data[in_mesh +  5];
+		var _samp    = _data[in_mesh +  6] + 1;
+		var _rad     = _data[in_mesh +  7];
+		var _radOv   = _data[in_mesh +  8];
+		var _uvScale = _data[in_mesh +  9];
+		var _loop    = _data[in_mesh + 10];
+		var _invert  = _data[in_mesh + 11];
 		
 		if(_path == noone) return noone;
 		
@@ -94,6 +101,8 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 			points : _points, 
 			radius : _rad, 
 			radiusOverPath: _radPath, 
+			loop   : _loop,
+			invert : _invert,
 			
 			uvProg  : _uvProg, 
 			uvScale : _uvScale,

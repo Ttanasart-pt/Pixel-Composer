@@ -67,9 +67,20 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 22] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Additive", "Multiply", "Screen", "Overlay" ])
+		
+	inputs[| 23] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Additive", "Multiply", "Screen" ])
+		
+	inputs[| 24] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Additive", "Multiply", "Screen" ])
+		
 	input_display_list = [ 3, 4, 9, 
-		["Surfaces", true], 0, 1, 2, 5, 6, 
-		["Grain",	false], 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 
+		["Surfaces",	 true], 0, 1, 2, 5, 6, 
+		["Brightness",	false], 22, /**/  7,  8, 
+		["RGB",			false], 23, /**/ 10, 11, 12, 13, 14, 15, 
+		["HSV",			false], 24, /**/ 16, 17, 18, 19, 20, 21, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -94,6 +105,10 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_f_map("hue",        _data[16], _data[17], inputs[| 16]);
 			shader_set_f_map("sat",        _data[18], _data[19], inputs[| 18]);
 			shader_set_f_map("val",        _data[20], _data[21], inputs[| 20]);
+			
+			shader_set_i("bmBright", _data[22]);
+			shader_set_i("bmRGB",    _data[23]);
+			shader_set_i("bmHSV",    _data[24]);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

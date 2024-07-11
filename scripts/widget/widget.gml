@@ -20,6 +20,7 @@ function widget() constructor {
 	
 	font     = f_p0;
 	sep_axis = false;
+	unit     = noone;
 	
 	x = 0; 
 	y = 0;
