@@ -22,7 +22,6 @@ function Node_Array_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		_arr = array_reverse(_arr);
-		
 		outputs[| 0].setValue(_arr);
 	}
 	

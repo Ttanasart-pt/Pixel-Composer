@@ -323,20 +323,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static rejectArray = function() { #region
-		accept_array = false;
-		return self;
-	} #endregion
-	
-	static setArrayDepth = function(aDepth) { #region
-		array_depth = aDepth;
-		return self;
-	} #endregion
-	
-	static setArrayDynamic = function() { #region
-		dynamic_array = true;
-		return self;
-	} #endregion
+	static rejectArray     = function()       { accept_array = false; return self; } 
+	static setArrayDepth   = function(aDepth) { array_depth = aDepth; return self; }
+	static setArrayDynamic = function()       { dynamic_array = true; return self; }
 	
 	static rejectArrayProcess = function() { #region
 		process_array = false;

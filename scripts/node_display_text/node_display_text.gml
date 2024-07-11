@@ -3,6 +3,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(16, 16);
 	
 	bg_spr = THEME.node_frame_bg;
+	previewable = false;
 	
 	size_dragging = false;
 	size_dragging_w = w;
@@ -61,7 +62,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	mm_press   = 0;
 	mm_release = 0;
 	
-	static move = function(_x, _y, _s) { #region
+	static move = function(_x, _y, _s) {
 		if(x == _x && y == _y) return;
 		if(!LOADING) PROJECT.modified = true;
 		
@@ -70,9 +71,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(inputs[| 5].setValue([ _x, _y ]))
 			UNDO_HOLDING = true;
-	} #endregion
+	}
 	
-	static button_reactive_update = function() { #region
+	static button_reactive_update = function() {
 		ml_press   = lerp_float(ml_press  , 0, 5);
 		ml_release = lerp_float(ml_release, 0, 5);
 		ml_double  = lerp_float(ml_double,  0, 5);
@@ -88,9 +89,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(mouse_release(mb_right))  mr_release = 2;
 		if(mouse_press(mb_middle))   mm_press   = 2;
 		if(mouse_release(mb_middle)) mm_release = 2;
-	} #endregion
+	}
 	
-	static button_reactive = function(key) { #region
+	static button_reactive = function(key) {
 		switch(key) {
 			case "left_mouse_click" :		 return clamp(ml_press, 0, 1);
 			case "left_mouse_double_click" : return clamp(ml_double, 0, 1);
@@ -127,9 +128,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(string_length(key) == 1) return keyboard_check(ord(string_upper(key)));
 		
 		return 0;
-	} #endregion
+	}
 	
-	static draw_text_style = function(_x, _y, txt, _s, _mx, _my) { #region
+	static draw_text_style = function(_x, _y, txt, _s, _mx, _my) {
 		var _tx   = _x;
 		var index = 1;
 		var _len  = string_length(txt);
@@ -261,9 +262,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		return width;
-	} #endregion
+	}
 	
-	static string_raw = function(txt) { #region
+	static string_raw = function(txt) {
 		var index  = 1;
 		var _len   = string_length(txt);
 		var _ch    = "";
@@ -307,9 +308,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		return ss;
-	} #endregion
+	}
 	
-	static line_update = function(txt, line_width = -1) { #region
+	static line_update = function(txt, line_width = -1) {
 		_prev_text = txt;
 		_lines = [];
 		
@@ -344,13 +345,13 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		if(ss != "") array_push(_lines, ss);
-	} #endregion
+	}
 	
-	static onValueUpdate = function(index = 0) { #region
+	static onValueUpdate = function(index = 0) {
 		if(index == 1 || index == 4) line_update(getInputData(1), getInputData(4));
-	} #endregion
+	}
 	
-	static preDraw = function(_x, _y, _s) { #region
+	static preDraw = function(_x, _y, _s) {
 		var xx = (x - 3) * _s + _x;
 		var yy = y * _s + _y;
 		var jun;
@@ -373,9 +374,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			jun.y = _iny;
 			_iny += junction_draw_hei_y * _s;
 		}
-	} #endregion
+	}
 	
-	static drawNodeBase = function(xx, yy, mx, my, _s) { #region
+	static drawNodeBase = function(xx, yy, mx, my, _s) {
 		var color  = getInputData(0);
 		var txt    = getInputData(1);
 		if(txt == "") txt = "..."
@@ -437,9 +438,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_scale = _s;
 		w = ww + 8;
 		h = hh + 8;
-	} #endregion
+	}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		if(!active) return;
 		
 		var hover = noone;
@@ -448,14 +449,14 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
 			
-			if(jun.drawJunction_fast(_s * 4, _mx, _my))
+			if(jun.drawJunction_fast(_s, _mx, _my))
 				hover = jun;
 		}
 		
 		return hover;
-	} #endregion
+	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) { #region
+	static drawNode = function(_x, _y, _mx, _my, _s) {
 		x = smooth? lerp_float(x, pos_x, 4) : pos_x;
 		y = smooth? lerp_float(y, pos_y, 4) : pos_y;
 		
@@ -471,5 +472,5 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		drawNodeBase(xx, yy, _mx, _my, _s);
 		
 		return drawJunctions(xx, yy, _mx, _my, _s);
-	} #endregion
+	}
 }

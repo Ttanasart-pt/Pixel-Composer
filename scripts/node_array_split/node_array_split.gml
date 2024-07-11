@@ -1,10 +1,10 @@
-function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { #region
+function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 
 	name  = "Array Split";
 	setDimension(96, 0);
 	
 	draw_padding = 4;
 	
-	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [  ])
+	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [])
 		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue("val 0", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
@@ -55,5 +55,4 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			_ind++;
 		}
 	}
-	
-} #endregion
+} 

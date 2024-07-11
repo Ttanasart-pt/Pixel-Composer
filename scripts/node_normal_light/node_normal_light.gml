@@ -55,11 +55,11 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _hei = _data[2];
 		var _amb = _data[3];
 		
-		var _light_pos = _data[4];
-		var _light_ran = _data[5];
-		var _light_int = _data[6];
-		var _light_col = _data[7];
-		var _light_typ = _data[8];
+		var _light_pos = _data[ 4];
+		var _light_ran = _data[ 5];
+		var _light_int = _data[ 6];
+		var _light_col = _data[ 7];
+		var _light_typ = _data[ 8];
 		var _light_hei = _data[10];
 		
 		var _dim = surface_get_dimension(_data[0]);

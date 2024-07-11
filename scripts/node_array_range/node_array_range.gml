@@ -1,4 +1,4 @@
-function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Array Range";
 	setDimension(96, 48);
 	
@@ -13,10 +13,10 @@ function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, []);
 	
-	static update = function(frame = CURRENT_FRAME) {
-		var st  = getInputData(0);
-		var ed  = getInputData(1);
-		var stp = getInputData(2);
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var st  = _data[0];
+		var ed  = _data[1];
+		var stp = _data[2];
 		var arr = [];
 		
 		if(st == ed) {
@@ -28,14 +28,14 @@ function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				array_push(arr, st + i * stp);
 		}
 		
-		outputs[| 0].setValue(arr);
+		return arr;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var str = getInputData(0);
-		var edd = getInputData(1);
-		var stp = getInputData(2);
+		var str = getSingleValue(0);
+		var edd = getSingleValue(1);
+		var stp = getSingleValue(2);
 		var arr = outputs[| 0].getValue();
 		
 		var str	= "";
@@ -49,7 +49,6 @@ function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		var bbox = drawGetBbox(xx, yy, _s);
-		var ss	 = string_scale(str, bbox.w, bbox.h);
-		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
+		draw_text_bbox(bbox, str);
 	}
 }
