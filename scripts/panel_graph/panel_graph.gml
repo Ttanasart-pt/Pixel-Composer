@@ -2217,6 +2217,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		if(is_string(_node)) node = nodeBuild(_node, _mx, _my);
 		else                 node = _node(_mx, _my, getCurrentContext(), _param);
 		
+		if(node == noone) return;
+		
 		mouse_create_y = ceil((mouse_create_y + node.h + _gs / 2) / _gs) * _gs;
 		
 		if(value_dragging == noone) return;
