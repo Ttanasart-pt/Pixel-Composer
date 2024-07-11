@@ -27,11 +27,18 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	__init_mask_modifier(6); // inputs 9, 10
 	
+	inputs[| 11] = nodeValue("Positioning", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Shift", "Light" ]);
+	
+	inputs[| 12] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(index); });
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8, 
 		["Surfaces", true], 0, 6, 7, 9, 10, 
-		["Shadow",	false], 1, 2, 3, 4, 5, 
+		["Shadow",	false], 1, 2, 11, 3, 12, 4, 5, 
 	];
 	
 	surface_blur_init();
@@ -54,34 +61,52 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return _hov;
 	}
 	
-	static step = function() { #region
+	static step = function() { 
 		__step_mask_modifier();
-	} #endregion
+		
+		var _typ = getSingleValue(11);
+		
+		inputs[|  3].setVisible(_typ == 0);
+		inputs[| 12].setVisible(_typ == 1);
+	} 
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var _surf   = _data[0];
 		var cl      = _data[1];
 		var _stre   = _data[2];
-		var _shf    = _data[3];
 		var _border = _data[4];
 		var _size   = _data[5];
 		
-		var pass1   = surface_create_valid(surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf), attrDepth());	
+		var _posi   = _data[11];
+		var _shf    = _data[ 3];
+		var _lgh    = _data[12];
+		var _dim    = surface_get_dimension(_surf);
+		
+		var pass1 = surface_create_valid(_dim[0], _dim[1], attrDepth());	
+		var _shax = _shf[0], 
+		var _shay = _shf[1];
+		
+		if(_posi == 1) {
+			_shax = _lgh[0] - _dim[0] / 2;
+			_shay = _lgh[1] - _dim[1] / 2;
+		}
 		
 		surface_set_shader(pass1, sh_outline_only);
-			shader_set_f("dimension",   [ surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf) ]);
+			shader_set_f("dimension",   _dim);
 			shader_set_f("borderSize",  _border);
-			shader_set_f("borderColor", [1., 1., 1., 1.0]);
+			shader_set_f("borderColor", [ 1., 1., 1., 1. ]);
 				
-			draw_surface_safe(_data[0], _shf[0], _shf[1]);
+			draw_surface_safe(_data[0], _shax, _shay);
 		surface_reset_shader();
 		
 		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-			draw_surface_ext_safe(surface_apply_gaussian(pass1, _size, false, cl), 0, 0, 1, 1, 0, cl, _stre * _color_get_alpha(cl));
-		BLEND_NORMAL;
-			draw_surface_safe(_data[0]);
+			DRAW_CLEAR
+			BLEND_OVERRIDE;
+				draw_surface_ext_safe(surface_apply_gaussian(pass1, _size, false, cl), 0, 0, 1, 1, 0, cl, _stre * _color_get_alpha(cl));
+			BLEND_NORMAL;
+				draw_surface_safe(_surf);
 		surface_reset_target();
+		
 		surface_free(pass1);
 		
 		__process_mask_modifier(_data);

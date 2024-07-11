@@ -451,9 +451,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		];
 		
 		toolbars_valign = [
-			[ THEME.object_valign, function() /*=>*/ {return 2}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_valign(nodes_selecting, fa_top);    } ],
+			[ THEME.object_valign, function() /*=>*/ {return 2}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_valign(nodes_selecting, fa_bottom); } ],
 			[ THEME.object_valign, function() /*=>*/ {return 1}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_valign(nodes_selecting, fa_middle); } ],
-			[ THEME.object_valign, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_valign(nodes_selecting, fa_bottom); } ],
+			[ THEME.object_valign, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_valign(nodes_selecting, fa_top);    } ],
 		];
 		
 		toolbars_distrib = [

@@ -16,7 +16,7 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	__init_mask_modifier(1); // inputs 5, 6
 	
-	inputs[| 7] = nodeValue("Include Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 7] = nodeValue("Include Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [ 3, 4, 7, 
 		["Surfaces",	 true], 0, 1, 2, 5, 6, 
