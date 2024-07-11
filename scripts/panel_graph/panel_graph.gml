@@ -269,7 +269,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		node_hover			= noone;
 		
 		junction_hovering	  = noone;
-		junction_hover_direct = noone;
 		add_node_draw_junc	  = false;
 		add_node_draw_x_fix   = 0;
 		add_node_draw_y_fix   = 0;
@@ -284,6 +283,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		connection_draw_target = noone;
 		
 		value_focus     = noone;
+		_value_focus    = noone;
 		value_dragging  = noone;
 		value_draggings = [];
 		
@@ -1391,11 +1391,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			BLEND_NORMAL
 			
 			junction_hovering = node_hovering == noone? hov : noone;
-			value_focus = noone;
 		#endregion
 		printIf(log, $"Draw connection: {get_timer() - t}"); t = get_timer();
 		
 		#region draw node
+			_value_focus = value_focus;
+			 value_focus = noone;
+			 
 			var t = get_timer();
 			for(var i = 0; i < array_length(nodes_list); i++)
 				nodes_list[i].drawNodeBehind(gr_x, gr_y, mx, my, graph_s);
@@ -1569,6 +1571,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 				drag_locking = false;
 			}
+			
 		#endregion
 		printIf(log, $"Draw selection frame : {get_timer() - t}"); t = get_timer();
 	} #endregion

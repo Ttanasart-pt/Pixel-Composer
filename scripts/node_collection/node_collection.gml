@@ -543,7 +543,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _bx = (xx + w * _s) - 10;
 		var _by = (yy + h * _s) - 10;
 		
-		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self;
+		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && PANEL_GRAPH._value_focus == noone;
 		    _hv &= point_in_circle(_mx, _my, _bx, _by, 8);
 		
 		BLEND_ADD

@@ -148,7 +148,7 @@ enum LINE_STYLE {
 	dashed
 }
 
-function value_color(i) { #region
+function value_color(i) {
 	static JUNCTION_COLORS = [ 
 		#ff9166, //int 
 		#ffe478, //float
@@ -192,13 +192,13 @@ function value_color(i) { #region
 	if(i == 99) return #8fde5d;
 	
 	return JUNCTION_COLORS[i];
-} #endregion
+}
 
-function value_color_bg(i) { #region
+function value_color_bg(i) {
 	return #3b3b4e;
-} #endregion
+}
 
-function value_color_bg_array(i) { #region
+function value_color_bg_array(i) {
 	static JUNCTION_COLORS = [ 
 		#e36956, //int 
 		#ff9166, //float
@@ -239,9 +239,9 @@ function value_color_bg_array(i) { #region
 	
 	if(i == 99) return $5dde8f;
 	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
-} #endregion
+}
 
-function value_bit(i) { #region
+function value_bit(i) {
 	switch(i) {
 		case VALUE_TYPE.integer		: return 1 << 0 | 1 << 1;
 		case VALUE_TYPE.float		: return 1 << 2 | 1 << 1;
@@ -285,12 +285,14 @@ function value_bit(i) { #region
 		case VALUE_TYPE.fdomain 	: return 1 << 36;
 		case VALUE_TYPE.sdf 		: return 1 << 37;
 		
+		case VALUE_TYPE.curve 		: return 1 << 38;
+		
 		case VALUE_TYPE.any			: return ~0 & ~(1 << 32);
 	}
 	return 0;
-} #endregion
+}
 
-function value_type_directional(f, t) { #region
+function value_type_directional(f, t) {
 	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.integer)	return true;
 	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.float)	return true;
 	
@@ -313,9 +315,9 @@ function value_type_directional(f, t) { #region
 	if(f == VALUE_TYPE.surface  && t == VALUE_TYPE.d3Material ) return true;
 	
 	return false;
-} #endregion
+}
 
-function value_type_from_string(str) { #region
+function value_type_from_string(str) {
 	switch(str) {
 		case "integer"	: return VALUE_TYPE.integer;
 		case "float"	: return VALUE_TYPE.float;
@@ -365,9 +367,9 @@ function value_type_from_string(str) { #region
 	}
 	
 	return VALUE_TYPE.any;
-} #endregion
+}
 
-function typeArray(_type) { #region
+function typeArray(_type) {
 	switch(_type) {
 		case VALUE_DISPLAY.range :
 		case VALUE_DISPLAY.vector_range :
@@ -396,17 +398,17 @@ function typeArray(_type) { #region
 			return 1;
 	}
 	return 0;
-} #endregion
+}
 
-function typeCompatible(fromType, toType, directional_cast = true) { #region
+function typeCompatible(fromType, toType, directional_cast = true) {
 	if(value_bit(fromType) & value_bit(toType) != 0)
 		return true;
 	if(!directional_cast) 
 		return false;
 	return value_type_directional(fromType, toType);
-} #endregion
+}
 
-function typeIncompatible(from, to) { #region
+function typeIncompatible(from, to) {
 	if(from.type == VALUE_TYPE.surface && (to.type == VALUE_TYPE.integer || to.type == VALUE_TYPE.float)) {
 		switch(to.display_type) {
 			case VALUE_DISPLAY.area : 
@@ -420,9 +422,9 @@ function typeIncompatible(from, to) { #region
 	}
 	
 	return false;
-} #endregion
+}
 
-function isGraphable(prop) { #region
+function isGraphable(prop) {
 	if(prop.type == VALUE_TYPE.integer || prop.type == VALUE_TYPE.float) {
 		if(prop.display_type == VALUE_DISPLAY.puppet_control)
 			return false;
@@ -432,9 +434,9 @@ function isGraphable(prop) { #region
 		return true;
 		
 	return false;
-} #endregion
+}
 
-function nodeValueUnit(_nodeValue) constructor { #region
+function nodeValueUnit(_nodeValue) constructor {
 	self._nodeValue = _nodeValue;
 	
 	mode = VALUE_UNIT.constant;
@@ -449,7 +451,7 @@ function nodeValueUnit(_nodeValue) constructor { #region
 	triggerButton.icon       = THEME.unit_ref;
 	triggerButton.tooltip    = new tooltipSelector("Unit", ["Pixel", "Fraction"]);
 	
-	static setMode = function(type) { #region
+	static setMode = function(type) {
 		if(type == "constant" && mode == VALUE_UNIT.constant) return;
 		if(type == "relative" && mode == VALUE_UNIT.reference) return;
 		
@@ -457,32 +459,32 @@ function nodeValueUnit(_nodeValue) constructor { #region
 		_nodeValue.cache_value[0] = false;
 		_nodeValue.unitConvert(mode);
 		_nodeValue.node.doUpdate();
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _m) { #region
+	static draw = function(_x, _y, _w, _h, _m) {
 		triggerButton.icon_index = mode;
 		triggerButton.tooltip.index = mode;
 		
 		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide);
-	} #endregion
+	}
 	
-	static invApply = function(value, index = 0) { #region
+	static invApply = function(value, index = 0) {
 		if(mode == VALUE_UNIT.constant) 
 			return value;
 		if(reference == noone)
 			return value;
 		
 		return convertUnit(value, VALUE_UNIT.reference, index);
-	} #endregion
+	}
 	
-	static apply = function(value, index = 0) { #region
+	static apply = function(value, index = 0) {
 		if(mode == VALUE_UNIT.constant) return value;
 		if(reference == noone)			return value;
 		
 		return convertUnit(value, VALUE_UNIT.constant, index);
-	} #endregion
+	}
 	
-	static convertUnit = function(value, unitTo, index = 0) { #region
+	static convertUnit = function(value, unitTo, index = 0) {
 		var disp = _nodeValue.display_type;
 		var base = reference(index);
 		var inv  = unitTo == VALUE_UNIT.reference;
@@ -526,5 +528,5 @@ function nodeValueUnit(_nodeValue) constructor { #region
 		
 		return value;
 		
-	} #endregion
-} #endregion
+	}
+}
