@@ -1,6 +1,7 @@
 global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
 #macro INAME internalName == ""? name : internalName
+#macro SHOW_PARAM (show_parameter && previewable)
 
 enum CACHE_USE {
 	none,
@@ -94,11 +95,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		y = _y;
 		
 		name_height = 16;
-		w = 128;
-		h = 128;
+		w     = 128;
+		h     = 128;
 		min_w = w;
 		min_h = name_height;
-		fix_h = h;
+		con_h = 0;
+		
 		h_param = h;
 		will_setHeight = false;
 		
@@ -618,17 +620,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} run_in(1, function() /*=>*/ { updateIO() });
 	
 	static setHeight = function() {
-		w = show_parameter? attributes.node_param_width : min_w;
+		w = SHOW_PARAM? attributes.node_param_width : min_w;
 		
 		if(!auto_height) return;
-		junction_draw_hei_y = show_parameter? 32 : 24;
-		junction_draw_pad_y = show_parameter? min_h : 32;
+		junction_draw_hei_y = SHOW_PARAM? 32 : 24;
+		junction_draw_pad_y = SHOW_PARAM? min_h : 32;
 		
 		var _hi, _ho;
 		
 		if(previewable) {
-			_hi = junction_draw_pad_y + show_parameter * 4;
-			_ho = junction_draw_pad_y + show_parameter * 4;
+			_hi = junction_draw_pad_y + SHOW_PARAM * 4;
+			_ho = junction_draw_pad_y + SHOW_PARAM * 4;
 			
 		} else {
 			junction_draw_hei_y = 16;
@@ -666,8 +668,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		h = max(min_h, _prev_surf * 128, _hi, _ho);
 		if(attributes.node_height) h = max(h, attributes.node_height);
-		
-		fix_h = h;
 		
 	}
 	
@@ -1145,7 +1145,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			out_cache_len = ds_list_size(outputs);
 		}
 			
-		var _iny = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * show_parameter) * _s;
+		var _iny = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM) * _s;
 		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 			jun = inputs[| i];
@@ -1162,7 +1162,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		xx = xx + w * _s;
-		var _outy = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * show_parameter) * _s;
+		var _outy = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM) * _s;
 		
 		for(var i = 0; i < outputs_amount; i++) {
 			var idx = outputs_index[i];
@@ -1173,7 +1173,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_outy += junction_draw_hei_y * _s * jun.isVisible();
 		}
 		
-		if(show_parameter) h = h_param;
+		if(SHOW_PARAM) h = h_param;
 		
 		onPreDraw(_x, _y, _s, _iny, _outy);
 	}
@@ -1196,25 +1196,32 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawGetBbox = function(xx, yy, _s) {
 		var pad_label = draw_name && display_parameter.avoid_label;
 		
-		var _w = w;
-		var _h = show_parameter? min_h : h;
+		var x0 = xx;
+		var x1 = xx + w * _s;
+		var y0 = yy;
+		var y1 = yy + h * _s;
 		
-		_w *= _s;
-		_h *= _s;
+		if(pad_label)  y0 += name_height * _s;
+		if(SHOW_PARAM) y1  = yy + con_h * _s;
 		
-		_w -= max(draw_padding, draw_pad_w) * 2;
-		_h -= max(draw_padding, draw_pad_h) * 2 + name_height * _s * pad_label;
+		x0 += max(draw_padding, draw_pad_w); 
+		x1 -= max(draw_padding, draw_pad_w);
+		y0 += max(draw_padding, draw_pad_h); 
+		y1 -= max(draw_padding, draw_pad_h);
 		
-		var _xc = xx +  w * _s / 2;
-		var _yc = yy + _h / 2 + pad_label * name_height * _s + draw_padding;
+		var _w = x1 - x0;
+		var _h = y1 - y0;
+		
+		var _xc = (x0 + x1) / 2;
+		var _yc = (y0 + y1) / 2;
 		
 		_w *= display_parameter.preview_scale / 100;
 		_h *= display_parameter.preview_scale / 100;
 		
-		var x0 = _xc - _w / 2;
-		var x1 = _xc + _w / 2;
-		var y0 = _yc - _h / 2;
-		var y1 = _yc + _h / 2;
+		x0 = _xc - _w / 2;
+		x1 = _xc + _w / 2;
+		y0 = _yc - _h / 2;
+		y1 = _yc + _h / 2;
 		
 		return __draw_bbox.fromPoints(x0, y0, x1, y1);
 	}
@@ -1272,12 +1279,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var rx = PANEL_GRAPH.x;
 		var ry = PANEL_GRAPH.y;
 		
-		var jy = _y + junction_draw_pad_y * _s + wh / 2;
+		var jy = _y + con_h * _s + wh / 2;
 		
-		var boundH = _x > draw_boundary[0] - w * _s && _x < draw_boundary[2];
-		var boundV = 1;//_y > draw_boundary[1] - h * _s && _y < draw_boundary[3];
-		var extY   = 0;
-		var drawText = _s > 0.5;
+		var extY = 0;
+		var drwT = _s > 0.5;
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
@@ -1285,7 +1290,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			jun.y = jy;
 			
-			if(drawText) {
+			if(drwT) {
 				draw_set_text(f_sdf, fa_left, fa_center, jun.color_display);
 				draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
 				
@@ -1305,13 +1310,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_param.h    = wh - 4 * _s;
 			_param.x    = wx;
 			_param.y    = jy - _param.h / 2;
-				
+			
 			_param.data = jun.showValue();
 			_param.m	= _m;
 			_param.rx	= rx;
 			_param.ry	= ry;
 			_param.s    = wh;
 			_param.font = f_p2;
+			_param.color = getColor();
 			
 			if(is_instanceof(jun, checkBox))
 				_param.halign = fa_center;
@@ -1321,14 +1327,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _h = wd.drawParam(_param);
 			jun.graphWidgetH = _h / _s;
 					
-			extY += max(0, (jun.graphWidgetH + 4) - junction_draw_hei_y);
-					
-			if(wd.isHovering()) draggable = false;
+			extY += max(0, jun.graphWidgetH + 4);
+			jy   += (jun.graphWidgetH + 4) * _s;
 			
-			jy += (jun.graphWidgetH + 4) * _s;
+			if(wd.isHovering()) draggable = false;
 		}
 		
-		h = fix_h + extY;
+		h       = con_h + extY + 4;
 		h_param = h;
 	}
 	
@@ -1718,7 +1723,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
 		} 
 		
-		if(show_parameter) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus);
+		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus);
 		
 		draw_name = false;
 		if((previewable && _s >= 0.75) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s);
@@ -2298,13 +2303,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		INLINE
 		
 		min_w = _w; 
-		min_h = _h;
-		min_h = name_height; ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		con_h = _h;
 		
-		if(_apply) {
-			w = _w;
-			h = _h;
-		}
+		if(_apply) { w = _w; h = _h; }
 	}
 	
 	static move = function(_x, _y, _s) {

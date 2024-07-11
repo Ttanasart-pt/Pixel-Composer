@@ -17,25 +17,25 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	
 	halign = fa_center;
 	
-	static setInteract = function(interactable = noone) { #region
+	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
 		tb_value.interactable = interactable;
-	} #endregion
+	}
 	
-	static register = function(parent = noone) { #region
+	static register = function(parent = noone) {
 		tb_value.register(parent);
-	} #endregion
+	}
 	
 	static isHovering = function() { return dragging || tb_value.hovering; }
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		tb_value.setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _m, draw_tb = true) { #region
+	static draw = function(_x, _y, _w, _h, _data, _m, draw_tb = true) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -56,8 +56,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		var _tx = _drawRot? _x + _r + ui(4) : _x;
 		var _tw = _drawRot? _w - _r - ui(4) : _w;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		tb_value.setFocusHover(active, hover);
 		tb_value.draw(_tx, _y, _tw, _h, _data, _m);
@@ -123,11 +123,11 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new rotator(onModify, valStep);
 		
 		return cln;
-	} #endregion
+	}
 }

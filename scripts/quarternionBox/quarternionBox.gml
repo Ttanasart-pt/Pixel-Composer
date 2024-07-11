@@ -124,8 +124,8 @@ function quarternionBox(_onModify) : widget() constructor {
 		
 		var _dispDat = _data;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		for(var i = 0; i < size; i++) {
 			var _a = _dispDat[i];
@@ -143,8 +143,8 @@ function quarternionBox(_onModify) : widget() constructor {
 		return _h;
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new quarternionBox(onModify);
 		return cln;
-	} #endregion
+	}
 }

@@ -88,9 +88,9 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new pathAnchorBox(onModify);
 		
 		return cln;
-	} #endregion
+	}
 }

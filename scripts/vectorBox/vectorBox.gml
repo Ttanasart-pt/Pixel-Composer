@@ -156,8 +156,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		var ww = per_line? _w : _w / sz;
 		
 		if(!per_line) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		}
 			
 		for(var i = 0; i < sz; i++) {

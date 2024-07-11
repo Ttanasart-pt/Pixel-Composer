@@ -86,16 +86,16 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 			h = _h + array_length(_color) * _colr_h + ui(2);
 		
 		if(hoverRect) {
-			draw_sprite_stretched(THEME.button_def, 1, _x, _y, _w, h);	
+			draw_sprite_stretched_ext(THEME.button_def, 1, _x, _y, _w, h, boxColor);	
 			if(mouse_press(mb_left, iactive))
 				trigger();
 			
 			if(mouse_click(mb_left, iactive)) {
-				draw_sprite_stretched(THEME.button_def, 2, _x, _y, _w, h);	
+				draw_sprite_stretched_ext(THEME.button_def, 2, _x, _y, _w, h, boxColor);	
 				draw_sprite_stretched_ext(THEME.button_def, 3, _x, _y, _w, h, COLORS._main_accent, 1);	
 			}
 		} else {
-			draw_sprite_stretched(THEME.button_def, 0, _x, _y, _w, h);		
+			draw_sprite_stretched_ext(THEME.button_def, 0, _x, _y, _w, h, boxColor);		
 			if(mouse_press(mb_left)) deactivate();
 		}
 		

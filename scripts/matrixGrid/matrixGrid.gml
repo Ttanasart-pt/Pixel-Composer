@@ -129,8 +129,8 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		
 		var ww = _w / size;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, ww * size, _h * size, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, ww * size, _h * size, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, ww * size, _h * size, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, ww * size, _h * size, boxColor, 0.5 + 0.5 * interactable);	
 		
 		for(var i = 0; i < size; i++)
 		for(var j = 0; j < size; j++) {
@@ -150,9 +150,9 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		return h;
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new matrixGrid(type, size, onModify, unit);
 		
 		return cln;
-	} #endregion
+	}
 }

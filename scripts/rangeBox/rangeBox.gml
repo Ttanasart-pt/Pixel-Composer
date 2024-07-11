@@ -35,38 +35,38 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		tb[i].label    = labels[i];
 	}
 	
-	static setSlideSpeed = function(speed) { #region
+	static setSlideSpeed = function(speed) { 
 		tb[0].setSlidable(speed);
 		tb[1].setSlidable(speed);
-	} #endregion
+	} 
 	
-	static setInteract = function(interactable = noone) { #region
+	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
 		
 		tb[0].interactable = interactable;
 		if(!linked) 
 			tb[1].interactable = interactable;
-	} #endregion
+	} 
 	
-	static register = function(parent = noone) { #region
+	static register = function(parent = noone) { 
 		tb[0].register(parent);
 		if(!linked)
 			tb[1].register(parent);
-	} #endregion
+	} 
 	
-	static isHovering = function() { #region
+	static isHovering = function() { 
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;
-	} #endregion
+	} 
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) { 
 		setParam(params);
 		for(var i = 0; i < 2; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
-	} #endregion
+	} 
 	
-	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { #region
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { 
 		x = _x;
 		y = _y;
 		w = _w;
@@ -104,8 +104,8 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		var ww = linked? _w : _w / 2;
 		disp_w = disp_w == 0? ww : lerp_float(disp_w, ww, 5);
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 			
 		if(linked) {
 			tb[0].setFocusHover(active, hover);
@@ -123,11 +123,11 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	} #endregion
+	} 
 	
-	static clone = function() { #region
+	static clone = function() { 
 		var cln = new rangeBox(type, onModify);
 		
 		return cln;
-	} #endregion
+	} 
 }

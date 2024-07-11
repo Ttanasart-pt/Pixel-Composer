@@ -72,13 +72,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static setOnRelease = function(release) { onRelease = release; return self; }
 	
-	static modifyValue = function(value) { #region
+	static modifyValue = function(value) {
 		if(input == TEXTBOX_INPUT.number) {
 			if(use_range) value = clamp(value, range_min, range_max);
 		}
 		
 		onModify(value);
-	} #endregion
+	}
 	
 	static setSlidable = function(slideStep = slide_speed, _slide_int = false, _slide_range = noone) { 
 		slidable    = true;
@@ -90,13 +90,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		return self;
 	} 
 	
-	static setRange = function(_rng_min, _rng_max) { #region
+	static setRange = function(_rng_min, _rng_max) {
 		use_range = true;
 		range_min = _rng_min;
 		range_max = _rng_max;
 		
 		return self;
-	} #endregion
+	}
 	
 	static setFont		= function(font)		{ self.font 		= font; 		return self; }
 	static setLabel 	= function(label)		{ self.label		= label;		return self; }
@@ -104,7 +104,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setPadding	= function(padding) 	{ self.padding		= padding;		return self; }
 	static setEmpty 	= function()			{ no_empty			= false;		return self; }
 	
-	static activate = function() { #region
+	static activate = function() {
 		WIDGET_CURRENT = self;
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
@@ -120,9 +120,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		keyboard_lastkey = -1;
 		
 		if(PEN_USE) keyboard_virtual_show(input == TEXTBOX_INPUT.number? kbv_type_numbers : kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, true);
-	} #endregion
+	}
 	
-	static deactivate = function() { #region
+	static deactivate = function() {
 		if(WIDGET_CURRENT != self) return;
 		
 		apply();
@@ -133,9 +133,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		UNDO_HOLDING = false;
 		
 		if(PEN_USE) keyboard_virtual_hide();
-	} #endregion
+	}
 	
-	static onKey = function(key) { #region
+	static onKey = function(key) {
 		if(KEYBOARD_PRESSED == vk_left) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
@@ -155,9 +155,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			move_cursor(1);
 		}
-	} #endregion
+	}
 	
-	static apply = function(release = false) { #region
+	static apply = function(release = false) {
 		var _val = _input_text;
 		disp_x_to = 0;
 		
@@ -184,14 +184,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
 		return false;
-	} #endregion
+	}
 	
-	static move_cursor = function(delta) { #region
+	static move_cursor = function(delta) {
 		var ll = string_length(_input_text) + 1;
 		cursor = safe_mod(cursor + delta + ll, ll);
-	} #endregion
+	}
 	
-	static editText = function() { #region
+	static editText = function() {
 		var edited = false;
 		
 		#region text editor
@@ -341,9 +341,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		} else if(auto_update && (edited || keyboard_check_pressed(vk_anykey))) {
 			apply();
 		}
-	} #endregion
+	}
 	
-	static display_text = function(_x, _y, _text, _w, _m = -1) { #region
+	static display_text = function(_x, _y, _text, _w, _m = -1) {
 		draw_set_alpha(0.5 + 0.5 * interactable);
 		_y += ui(1); //Huh?
 		
@@ -389,13 +389,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(mouse_release(mb_left, active))
 				click_block	  = false;
 		}
-	} #endregion
+	}
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.halign, params.valign);
-	} #endregion
+	}
 	
 	static draw = function(_x, _y, _w, _h, _text = "", _m = mouse_ui, halign = fa_left, valign = fa_top) { #region
 		x = _x;

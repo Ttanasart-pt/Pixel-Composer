@@ -22,6 +22,8 @@ function widget() constructor {
 	sep_axis = false;
 	unit     = noone;
 	
+	boxColor = c_white;
+	
 	x = 0; 
 	y = 0;
 	w = 0; 
@@ -30,69 +32,71 @@ function widget() constructor {
 	rx = 0;
 	ry = 0;
 	
-	static setLua = function(_lua_thread, _lua_key, _lua_func) { #region
+	static setLua = function(_lua_thread, _lua_key, _lua_func) {
 		lua_thread = _lua_thread;
 		lua_thread_key = _lua_key;
 		onModify = method(self, _lua_func);
-	} #endregion
+	}
 	
-	static setInteract = function(interactable = noone) { #region
+	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
-	} #endregion
+	}
 	
-	static register = function(parent = noone) { #region
+	static register = function(parent = noone) {
 		if(!interactable) return;
 		
 		array_push(WIDGET_ACTIVE, self); 
 		self.parent = parent;
-	} #endregion
+	}
 	
-	static setParam = function(params) { #region
+	static setParam = function(params) {
 		font = params.font;
 		rx   = params.rx;
 		ry   = params.ry;
 		
 		sep_axis = params.sep_axis;
-	} #endregion
+		
+		boxColor = params.color;
+	}
 	
 	static trigger = function() { }
 	
-	static parentFocus = function() { #region
+	static parentFocus = function() {
 		if(parent == noone) return;
 		
 		if(y < 0)
 			parent.scroll_y_to += abs(y) + ui(16);
 		else if(y + ui(16) > parent.surface_h)
 			parent.scroll_y_to -= abs(parent.surface_h - y) + h + ui(16);
-	} #endregion
+	}
 	
 	static isHovering = function() { return hovering; }
 	
-	static activate = function() { #region
+	static activate = function() {
 		if(!interactable) return;
 		
 		WIDGET_CURRENT = self;
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
-	} #endregion
+	}
 	
-	static deactivate = function() { #region
+	static deactivate = function() {
 		if(WIDGET_CURRENT != self) return;
 		WIDGET_CURRENT = noone;
 		WIDGET_CURRENT_SCROLL = noone;
-	} #endregion
+	}
 	
-	static setFocusHover = function(active = false, hover = false) { #region
+	static setFocusHover = function(active = false, hover = false) {
 		self.active  = interactable && active;
 		self.hover   = interactable && hover;
 		self.iactive = active;
 		self.ihover  = hover;
-	} #endregion
+	}
 	
-	static resetFocus = function() { #region
+	static resetFocus = function() {
 		active = false;
 		hover  = false;
-	} #endregion
+	}
 	
 	static clone = function() { return variable_clone(self); }
 	
@@ -119,5 +123,6 @@ function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, 
 	
 	self.font       = f_p0;
 	
-	sep_axis        = false;
+	color    = c_white;
+	sep_axis = false;
 }

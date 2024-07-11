@@ -19,56 +19,56 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	toggled = false;
 	context = noone;
 	
-	static setContext = function(struct) { #region
+	static setContext = function(struct) {
 		onClick = method(struct, onClick);
 		return self;
-	} #endregion
+	}
 	
-	static setLua = function(_lua_thread, _lua_key, _lua_func) { #region
+	static setLua = function(_lua_thread, _lua_key, _lua_func) {
 		lua_thread = _lua_thread;
 		lua_thread_key = _lua_key;
 		onClick = method(self, _lua_func);
-	} #endregion
+	}
 	
-	static trigger = function() { #region
+	static trigger = function() {
 		clicked = true;
 		
 		if(!is_callable(onClick))
 			return noone;
 		triggered = true;
 		onClick();
-	} #endregion
+	}
 	
-	static isTriggered = function() { #region
+	static isTriggered = function() {
 		var t = triggered;
 		triggered = false;
 		return t;
-	} #endregion
+	}
 	
-	static setIcon = function(_icon, _index = 0, _blend = c_white) { #region
+	static setIcon = function(_icon, _index = 0, _blend = c_white) {
 		icon       = _icon; 
 		icon_index = _index;
 		icon_blend = _blend;
 		return self; 
-	} #endregion
+	}
 	
-	static setText = function(_text) { #region
+	static setText = function(_text) {
 		text = _text; 
 		return self; 
-	} #endregion
+	}
 	
-	static setTooltip = function(_tip) { #region
+	static setTooltip = function(_tip) {
 		tooltip = _tip; 
 		return self; 
-	} #endregion
+	}
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.m);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _m, spr = THEME.button_def, blend = c_white) { #region
+	static draw = function(_x, _y, _w, _h, _m, spr = THEME.button_def, blend = c_white) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -120,9 +120,9 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		if(mouse_release(mb_left)) pressed = false;
 		
 		return _h;
-	} #endregion
+	}
 		
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new buttonClass(onClick);
 		
 		cln.icon	   = icon;
@@ -134,7 +134,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		cln.blend   = blend;
 		
 		return cln;
-	} #endregion
+	}
 }
 
 function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1) {

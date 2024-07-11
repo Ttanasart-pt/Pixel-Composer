@@ -88,11 +88,11 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 			_x += _bs + ui(4);
 		}
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y + _h + ui(4), _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y + _h + ui(4), _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y + _h + ui(4), _w, _h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y + _h + ui(4), _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		var tb_w = _w / 2;
 		var tb_h = _h;
@@ -120,9 +120,9 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new cornerBox(onModify, unit);
 		
 		return cln;
-	} #endregion
+	}
 }

@@ -37,14 +37,14 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	outputs[| 0] = nodeValue("Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var __ax = getInputData(0);
 		if(is_array(__ax)) return;
 		
 		inputs[| 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var int  = getInputData(1);
 		var disp = getInputData(2);
 		
@@ -78,7 +78,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-	} #endregion
+	}
 	
 	static processNumber = function(_val, _int) { 
 		if(is_string(_val))  return _int? round(toNumber(_val)) : toNumber(_val);
@@ -92,13 +92,13 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return _val;
 	}
 	
-	static update = function() { #region
+	static update = function() {
 		var _dat = getInputData(0);
 		var _int = getInputData(1);
 		
 		var _res = processNumber(_dat, _int);
 		outputs[| 0].setValue(_res);
-	} #endregion
+	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);

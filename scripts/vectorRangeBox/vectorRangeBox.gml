@@ -31,44 +31,44 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	
 	extras = -1;
 	
-	for(var i = 0; i < size; i++) { #region
+	for(var i = 0; i < size; i++) {
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
 		tb[i].hide     = true;
-	} #endregion
+	}
 	
-	static setSlideSpeed = function(speed) { #region
+	static setSlideSpeed = function(speed) {
 		for(var i = 0; i < size; i++)
 			tb[i].setSlidable(speed);
-	} #endregion
+	}
 	
-	static setInteract = function(interactable = noone) { #region
+	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
 		
 		var _step = linked? 2 : 1;
 		for( var i = 0; i < size; i += _step ) 
 			tb[i].interactable = interactable;
-	} #endregion
+	}
 	
-	static register = function(parent = noone) { #region
+	static register = function(parent = noone) {
 		var _step = linked? 2 : 1;
 		for( var i = 0; i < size; i += _step ) 
 			tb[i].register(parent);
-	} #endregion
+	}
 	
 	static isHovering = function() { 
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;
 	}
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		for(var i = 0; i < size; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { #region
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -112,8 +112,8 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		var ww = _w / 2;
 		
 		if(linked) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
 			for( var i = 0; i < 2; i++ ) {
 				var bx = _x + ww * i;
@@ -127,8 +127,8 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			for( var j = 0; j < 2; j++ ) {
 				var by = _y + (_h + ui(4)) * j;
 				
-				draw_sprite_stretched_ext(THEME.textbox, 3, _x, by, _w, _h, c_white, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _x, by, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+				draw_sprite_stretched_ext(THEME.textbox, 3, _x, by, _w, _h, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, by, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 			
 				for( var i = 0; i < 2; i++ ) {
 					var bx = _x + ww * i;
@@ -143,14 +143,14 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		resetFocus();
 		
 		return h;
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new vectorRangeBox(size, type, onModify, unit);
 		
 		cln.axis   = axis;
 		cln.extras = extras;
 		
 		return cln;
-	} #endregion
+	}
 }

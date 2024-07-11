@@ -8,13 +8,13 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 	hide = false;
 	open = false;
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.m, params.rx, params.ry);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _m, _rx = 0, _ry = 0) { #region
+	static draw = function(_x, _y, _w, _h, _m, _rx = 0, _ry = 0) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -39,13 +39,13 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 		
 		h = th;
 		
-		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, th);
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, th, boxColor);
 		
 		if(open) { 
 			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, th, COLORS._main_accent, 1);
 		} else {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + th)) {
-				draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, th, c_white, 0.5 + !hide * 0.5);	
+				draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, th, boxColor, 0.5 + !hide * 0.5);	
 				if(mouse_press(mb_left, active)) {
 					with(dialogCall(o_dialog_arrayBox, _rx + _x, _ry + _y + th)) {
 						arrayBox = other;	
@@ -53,7 +53,7 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 					}
 				}
 			} else if(!hide)
-				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, th, c_white, 0.5 + 0.5 * interactable);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, th, boxColor, 0.5 + 0.5 * interactable);
 		}
 		
 		var tx = _x + ui(4);
@@ -76,11 +76,11 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 		
 		resetFocus();
 		return th;
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new textArrayBox(getArray, data, onModify);
 		
 		return cln;
-	} #endregion
+	}
 }

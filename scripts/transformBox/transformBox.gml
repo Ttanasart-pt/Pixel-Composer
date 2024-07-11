@@ -25,13 +25,13 @@ function transformBox(_onModify) : widget() constructor {
 		tb[i].label    = labels[i];
 	}
 	
-	static setInteract = function(interactable = noone) { #region
+	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
 		
 		for( var i = 0, n = array_length(tb); i < n; i++ ) 
 			tb[i].setInteract(interactable);
 		rot.setInteract(interactable);
-	} #endregion
+	}
 	
 	static register = function(parent = noone) {
 		tb[TRANSFORM.pos_x].register(parent);
@@ -41,20 +41,20 @@ function transformBox(_onModify) : widget() constructor {
 		tb[TRANSFORM.sca_y].register(parent);
 	}
 	
-	static isHovering = function() { #region 
+	static isHovering = function() { 
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return hovering;
-	} #endregion
+	}
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		rot.setParam(params);
 		for(var i = 0; i < 5; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m); 
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _m) { #region
+	static draw = function(_x, _y, _w, _h, _data, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -82,8 +82,8 @@ function transformBox(_onModify) : widget() constructor {
 		
 		if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Position"));
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x + lbw, _y, _w - lbw, tbh, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x + lbw, _y, _w - lbw, tbh, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x + lbw, _y, _w - lbw, tbh, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x + lbw, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);	
 		
 		tb[TRANSFORM.pos_x].draw(_x + lbw,		 _y, tbw, tbh, _data[TRANSFORM.pos_x], _m);
 		tb[TRANSFORM.pos_y].draw(_x + lbw + tbw, _y, tbw, tbh, _data[TRANSFORM.pos_y], _m);
@@ -97,8 +97,8 @@ function transformBox(_onModify) : widget() constructor {
 		draw_set_text(font, fa_left, fa_center, CDEF.main_dkgrey);
 		if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Scale"));
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x + lbw, _y, _w - lbw, tbh, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x + lbw, _y, _w - lbw, tbh, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x + lbw, _y, _w - lbw, tbh, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x + lbw, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);	
 		
 		tbw = array_length(_data) > 4? (_w - lbw) / 2 : _w - lbw;
 		
@@ -109,11 +109,11 @@ function transformBox(_onModify) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new transformBox(onModify);
 		
 		return cln;
-	} #endregion
+	}
 }

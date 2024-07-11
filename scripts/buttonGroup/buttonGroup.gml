@@ -51,6 +51,9 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		setParam(params);
 		sb_small.setParam(params);
 		
+		for(var i = 0; i < array_length(data); i++) 
+			buttons[i].setParam(params);
+			
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
 	}
 	
@@ -105,7 +108,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
 				
 				if(_selecting == i) {
-					draw_sprite_stretched(spr, 2, floor(bx), _y, ceil(bww), _h);
+					draw_sprite_stretched_ext(spr, 2, floor(bx), _y, ceil(bww), _h, boxColor);
 					draw_sel = [spr, bx];
 				} else {
 					buttons[i].draw(floor(bx), _y, ceil(bww), _h, _m, spr);

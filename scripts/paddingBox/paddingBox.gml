@@ -42,15 +42,15 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		
 	static setSlideSpeed = function(speed) { for(var i = 0; i < 4; i++) tb[i].setSlidable(speed); }
 	
-	static setInteract = function(interactable = noone) { #region
+	static setInteract = function(interactable = noone) { 
 		self.interactable   = interactable;
 		b_link.interactable = interactable;
 		
 		for( var i = 0; i < 4; i++ ) 
 			tb[i].interactable = interactable;
-	} #endregion
+	} 
 	
-	static register = function(parent = noone) { #region
+	static register = function(parent = noone) { 
 		b_link.register();
 		
 		if(unit != noone && unit.reference != noone)
@@ -60,7 +60,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		tb[0].register(parent);
 		tb[1].register(parent);
 		tb[3].register(parent);
-	} #endregion
+	} 
 	
 	static isHovering = function() { 
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
@@ -103,11 +103,11 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 			}
 		}
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y + _h + ui(4), _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y + _h + ui(4), _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y + _h + ui(4), _w, _h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y + _h + ui(4), _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		var tb_w = _w / 2;
 		var tb_h = _h;
@@ -134,9 +134,9 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
+	static clone = function() { 
 		var cln = new paddingBox(onModify, unit);
 		
 		return cln;
-	} #endregion
+	} 
 }

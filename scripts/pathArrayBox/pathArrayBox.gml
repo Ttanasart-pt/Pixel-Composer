@@ -39,11 +39,11 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		}
 		
 		var click = false;
-		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			hovering = true;
-			draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);
+			draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor);
 			
 			if(mouse_press(mb_left, active)) {
 				trigger();
@@ -53,7 +53,7 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 			if(mouse_click(mb_left, active))
 				draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, _h);
 		} else {
-			draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, _h);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor);
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
@@ -82,9 +82,9 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new pathArrayBox(target, data, onClick);
 		
 		return cln;
-	} #endregion
+	}
 }

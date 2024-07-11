@@ -61,7 +61,7 @@ function controlPointBox(_onModify) : widget() constructor {
 		return false;
 	}
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		tbCx.setParam(params);
 		tbCy.setParam(params);
@@ -74,7 +74,7 @@ function controlPointBox(_onModify) : widget() constructor {
 		scMode.setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry); 
-	} #endregion
+	}
 	
 	static draw = function(_x, _y, _w, _h, _data, _m, _rx, _ry) {
 		x = _x;
@@ -101,8 +101,8 @@ function controlPointBox(_onModify) : widget() constructor {
 		var _ww = _w / 2;
 		var _wh = _h;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, boxColor, 0.5 + 0.5 * interactable);	
 		
 		tbCx.draw(_x,	    yy, _ww, _wh, _cx, _m);
 		tbCy.draw(_x + _ww, yy, _ww, _wh, _cy, _m);
@@ -112,8 +112,8 @@ function controlPointBox(_onModify) : widget() constructor {
 			case PUPPET_FORCE_MODE.move: 
 			case PUPPET_FORCE_MODE.puppet: 
 			
-				draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, c_white, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, c_white, 0.5 + 0.5 * interactable);	
+				draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, boxColor, 0.5 + 0.5 * interactable);	
 		
 				tbFx.label = "fx";
 				tbFy.label = "fy";
@@ -132,8 +132,8 @@ function controlPointBox(_onModify) : widget() constructor {
 				
 			case PUPPET_FORCE_MODE.wind: 
 			
-				draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, c_white, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, c_white, 0.5 + 0.5 * interactable);	
+				draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, _wh, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, _wh, boxColor, 0.5 + 0.5 * interactable);	
 		
 				tbFx.label = __txt("strength");
 				tbW.label  = __txt("width");
@@ -151,9 +151,9 @@ function controlPointBox(_onModify) : widget() constructor {
 		return yy - _y;
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new controlPointBox(onModify);
 		
 		return cln;
-	} #endregion
+	}
 }

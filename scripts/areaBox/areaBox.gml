@@ -35,7 +35,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		__txtx("widget_area_two_points",  "Two points"),
 	]);
 	
-	onModifySingle[0] = function(val) { #region
+	onModifySingle[0] = function(val) {
 		var v = toNumber(val);
 		var m = onModify(v, 0);
 		
@@ -47,9 +47,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		m |= onModify(v, 3);
 		
 		return m;
-	} #endregion
+	}
 	
-	onModifySingle[1] = function(val) { #region
+	onModifySingle[1] = function(val) {
 		var v = toNumber(val);
 		var m = onModify(v, 1);
 		
@@ -61,9 +61,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		m |= onModify(v, 3);
 		
 		return m;
-	} #endregion
+	}
 	
-	onModifySingle[2] = function(val) { #region
+	onModifySingle[2] = function(val) {
 		var v = toNumber(val);
 		var m = onModify(v, 2);
 		
@@ -75,9 +75,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		m |= onModify(v, 3);
 		
 		return m;
-	} #endregion
+	}
 	
-	onModifySingle[3] = function(val) { #region
+	onModifySingle[3] = function(val) {
 		var v = toNumber(val);
 		var m = onModify(v, 3);
 		
@@ -89,26 +89,26 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		m |= onModify(v, 2);
 		
 		return m;
-	} #endregion
+	}
 	
-	for(var i = 0; i < 4; i++) { #region
+	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
 		tb[i].slidable = true;
 		tb[i].hide     = true;
-	} #endregion
+	}
 	
-	static setSlideSpeed = function(speed) { #region
+	static setSlideSpeed = function(speed) {
 		for(var i = 0; i < 4; i++)
 			tb[i].setSlidable(speed);
-	} #endregion
+	}
 	
-	static setInteract = function(interactable = noone) { #region
+	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
 		for(var i = 0; i < 4; i++) 
 			tb[i].interactable = interactable;
-	} #endregion
+	}
 	
-	static register = function(parent = noone) { #region
+	static register = function(parent = noone) {
 		switch(mode) {
 			case AREA_MODE.two_point :
 			case AREA_MODE.area :	   
@@ -125,21 +125,21 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);
-	} #endregion
+	}
 	
-	static isHovering = function() { #region
+	static isHovering = function() {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;
-	} #endregion
+	}
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		for(var i = 0; i < 4; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { #region
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { 
 		x = _x;
 		y = _y;
 		w = _w;
@@ -172,7 +172,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			var _bx   = _x + _w - _bs;
 			var _by   = _y + _h / 2 - _bs / 2;
 			
-			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, tooltip, THEME.inspector_area_type, mode) == 2) { #region
+			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, tooltip, THEME.inspector_area_type, mode) == 2) { 
 				switch(mode) {
 					case AREA_MODE.area : //area to padding
 						var cx = array_safe_get_fast(_data, 0);
@@ -214,13 +214,13 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				}
 				
 				onModify((mode + 1) % 3, 5);
-			} #endregion
+			} 
 			
 			var _bx   = _x + _w - _bs;
 			var _by   = _y + _h + ui(4) + _h / 2 - _bs / 2;
 			var _btxt = __txtx("widget_area_fill_surface", "Fill surface");
 			
-			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, _btxt, THEME.fill, 0) == 2) { #region
+			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, _btxt, THEME.fill, 0) == 2) { 
 				var cnvt = unit != noone && unit.mode == VALUE_UNIT.reference;
 				
 				switch(mode) {
@@ -246,12 +246,12 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						onModify(cnvt? 1 : ss[1], 3);
 						break;
 				}
-			} #endregion
+			} 
 			
 			_w -= _bs + ui(4);
 		} 
 		
-		if(_w - _bs > ui(100)) { #region
+		if(_w - _bs > ui(100)) { 
 			var _bx   = _x;
 			var _by   = _y + _h / 2 - _bs / 2;
 				
@@ -274,13 +274,13 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				_x +=_bs + ui(4);
 			}
 			
-		} #endregion
+		} 
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y + _h + ui(4), _w, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y + _h + ui(4), _w, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y + _h + ui(4), _w, _h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y + _h + ui(4), _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		for(var i = 0; i < 4; i++)
 			tb[i].setFocusHover(active, hover);
@@ -290,7 +290,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		var tb_w = _w / 2;
 		var tb_h = _h;
 			
-		if(mode == AREA_MODE.area) { #region
+		if(mode == AREA_MODE.area) { 
 			var tb_x0 = _x;
 			var tb_y0 = _y;
 			
@@ -308,9 +308,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		
 			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
 			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
-		#endregion
 		
-		} else if(mode == AREA_MODE.padding) { #region
+		
+		} else if(mode == AREA_MODE.padding) { 
 			var tb_lx = _x;
 			var tb_ly = _y;
 			
@@ -334,9 +334,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			
 			tb[1].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
 			tb[3].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
-		#endregion
 		
-		} else if(mode == AREA_MODE.two_point) { #region
+		
+		} else if(mode == AREA_MODE.two_point) { 
 			var tb_x0 = _x;
 			var tb_y0 = _y;
 			
@@ -354,17 +354,17 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		
 			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
 			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
-		#endregion
+		
 		}
 		
 		resetFocus();
 		
 		return h;
-	} #endregion
+	} 
 	
-	static clone = function() { #region
+	static clone = function() { 
 		var cln = new areaBox(onModify, unit);
 		
 		return cln;
-	} #endregion
+	} 
 }

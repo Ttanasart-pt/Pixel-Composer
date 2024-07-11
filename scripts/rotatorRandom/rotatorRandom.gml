@@ -21,26 +21,26 @@ function rotatorRandom(_onModify) : widget() constructor {
 		__txtx("widget_rotator_random_double_span",  "Double Span")
 	]);
 	
-	static setInteract = function(interactable = noone) { #region
+	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
 		tb_min_0.interactable = interactable;
 		tb_max_0.interactable = interactable;
 		
 		if(mode == 2 || mode == 3)	tb_min_1.interactable = interactable;
 		if(mode == 2)				tb_max_1.interactable = interactable;
-	} #endregion
+	}
 	
-	static register = function(parent = noone) { #region
+	static register = function(parent = noone) {
 		tb_min_0.register(parent);
 		tb_max_0.register(parent);
 		
 		if(mode == 2 || mode == 3)	tb_min_1.register(parent);
 		if(mode == 2)				tb_max_1.register(parent);
-	} #endregion
+	}
 	
 	static isHovering = function() { return dragging || tb_min_0.hovering || tb_max_0.hovering || tb_min_1.hovering || tb_max_1.hovering; }
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		tb_min_0.setParam(params);
 		tb_max_0.setParam(params);
@@ -48,9 +48,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 		tb_max_1.setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _m) { #region
+	static draw = function(_x, _y, _w, _h, _data, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -69,17 +69,17 @@ function rotatorRandom(_onModify) : widget() constructor {
 		
 		switch(mode) {
 			case 2 :
-				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y + _h + ui(4), _tw, _h, c_white, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y + _h + ui(4), _tw, _h, c_white, 0.5 + 0.5 * interactable);	
+				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y + _h + ui(4), _tw, _h, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y + _h + ui(4), _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
 			case 0 :
 			case 1 :
-				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, c_white, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, c_white, 0.5 + 0.5 * interactable);	
+				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
 				break;
 				
 			case 3 :
-				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, h, c_white, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, h, c_white, 0.5 + 0.5 * interactable);	
+				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, h, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, h, boxColor, 0.5 + 0.5 * interactable);	
 		}
 		
 		if(_drawRot) {
@@ -458,11 +458,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	} #endregion
+	}
 		
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new rotatorRandom(onModify);
-		
 		return cln;
-	} #endregion
+	}
 }

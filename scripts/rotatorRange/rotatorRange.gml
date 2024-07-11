@@ -11,28 +11,28 @@ function rotatorRange(_onModify) : widget() constructor {
 	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 0); } ).setSlidable([ 0.1, 15 ], true); tb_min.hide = true;
 	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 1); } ).setSlidable([ 0.1, 15 ], true); tb_max.hide = true;
 	
-	static setInteract = function(interactable = noone) { #region
+	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
 		tb_min.interactable = interactable;
 		tb_max.interactable = interactable;
-	} #endregion
+	}
 	
-	static register = function(parent = noone) { #region
+	static register = function(parent = noone) {
 		tb_min.register(parent);
 		tb_max.register(parent);
-	} #endregion
+	}
 	
 	static isHovering = function() { return dragging || tb_min.hovering || tb_max.hovering; }
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		tb_min.setParam(params);
 		tb_max.setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _m) { #region
+	static draw = function(_x, _y, _w, _h, _data, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -46,8 +46,8 @@ function rotatorRange(_onModify) : widget() constructor {
 		var _tx = _drawRot? _x + _r + ui(4) : _x;
 		var _tw = _drawRot? _w - _r - ui(4) : _w;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, c_white, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		_tw /= 2;
 		
@@ -125,11 +125,10 @@ function rotatorRange(_onModify) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	} #endregion
+	}
 		
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new rotatorRange(onModify);
-		
 		return cln;
-	} #endregion
+	}
 }
