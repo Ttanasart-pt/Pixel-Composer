@@ -16,7 +16,9 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	__init_mask_modifier(1); // inputs 5, 6
 	
-	input_display_list = [ 3, 4, 
+	inputs[| 7] = nodeValue("Include Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
+	input_display_list = [ 3, 4, 7, 
 		["Surfaces",	 true], 0, 1, 2, 5, 6, 
 	]
 	
@@ -24,26 +26,22 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(sh_invert);
+	static processData = function(_outSurf, _data, _output_index, _array_index) {	
+	
+		surface_set_shader(_outSurf, sh_invert);
+			shader_set_i("alpha", _data[7]);
+			
 			draw_surface_safe(_data[0]);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[1], _data[2]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[4]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }
