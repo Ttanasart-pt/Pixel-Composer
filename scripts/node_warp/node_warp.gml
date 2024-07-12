@@ -46,7 +46,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	warp_surface = array_create(2);
 	
-	static onValueFromUpdate = function(index) { #region
+	static onValueFromUpdate = function(index) { 
 		if(index == 0 && attributes.initalset == false) {
 			var _surf = getInputData(0);
 			if(!is_surface(_surf)) return;
@@ -61,18 +61,16 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			attributes.initalset = true;
 		}
-	} if(!LOADING && !APPENDING) run_in(1, function() { onValueFromUpdate(0); }) #endregion
+	} if(!LOADING && !APPENDING) run_in(1, function() { onValueFromUpdate(0); }) 
 	
-	static step = function() { #region
+	static step = function() { 
 		var _useDim = getInputData(6);
 		
 		inputs[| 7].setVisible(_useDim);
 		dimension_index = _useDim? 7 : 0;
-	} #endregion
+	} 
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
-		PROCESSOR_OVERLAY_CHECK
-		
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _surf = outputs[| 0].getValue();
@@ -80,6 +78,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(array_length(_surf) == 0) return;
 			_surf = _surf[preview_index];
 		}
+		
+		if(!is_surface(_surf)) return;
 		
 		var tl = array_clone(current_data[1]);
 		var tr = array_clone(current_data[2]);
@@ -244,9 +244,9 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			return _hov;
 		#endregion
-	} #endregion
+	}
 	
-	static warpSurface = function(surf, warp, sw, sh, tl, tr, bl, br, filt = false) { #region
+	static warpSurface = function(surf, warp, sw, sh, tl, tr, bl, br, filt = false) {
 		var teq = round(tl[1]) == round(tr[1]);
 		var beq = round(bl[1]) == round(br[1]);
 		var leq = round(tl[0]) == round(bl[0]);
@@ -276,9 +276,9 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(filt) gpu_set_tex_filter(false);
 			surface_reset_shader();
 		}
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var tl = _data[1];
 		var tr = _data[2];
 		var bl = _data[3];
@@ -287,11 +287,13 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _useDim = _data[6];
 		var _dim    = _data[7];
 		
+		if(!is_surface(_data[0])) return _outSurf;
+		
 		var sw = _useDim? _dim[0] : surface_get_width_safe(_data[0]);
 		var sh = _useDim? _dim[1] : surface_get_height_safe(_data[0]);
 		
 		warpSurface(_outSurf, _data[0], sw, sh, tl, tr, bl, br);
 		
 		return _outSurf;
-	} #endregion
+	}
 }
