@@ -1,6 +1,7 @@
 function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _group) constructor {
 	name = "3D Camera Set";
 	
+	dimension_index = in_d3d + 2;
 	light_key  = new __3dLightDirectional();
 	light_fill = new __3dLightDirectional();
 	

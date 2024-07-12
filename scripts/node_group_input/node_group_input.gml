@@ -1,3 +1,71 @@
+globalvar GROUP_IO_TYPE_NAME, GROUP_IO_TYPE_MAP, GROUP_IO_DISPLAY;
+
+#region data
+	GROUP_IO_TYPE_NAME = [	"Integer",				"Float",				"Boolean",				"Color",				"Surface", 
+							"File Path",			"Curve",				"Text",					"Object",				"Node", 
+							-1,						"Any",					"Path",					"Particle", 			"Rigidbody Object", 
+							"Domain",				"Struct",				"Strands",				"Mesh",					"Trigger",
+							
+							-1,						"3D Mesh",				"3D Light",				"3D Camera",			"3D Scene",	
+							"3D Material",  		-1,						"PCX",					"Audio",				"Fluid Domain", 
+							"SDF",
+						 ];
+	
+	GROUP_IO_TYPE_MAP  = [	VALUE_TYPE.integer,		VALUE_TYPE.float,		VALUE_TYPE.boolean,		VALUE_TYPE.color,		VALUE_TYPE.surface, 
+							VALUE_TYPE.path,		VALUE_TYPE.curve,		VALUE_TYPE.text,		VALUE_TYPE.object,		VALUE_TYPE.node, 
+							noone,					VALUE_TYPE.any,			VALUE_TYPE.pathnode,	VALUE_TYPE.particle,	VALUE_TYPE.rigid, 
+							VALUE_TYPE.sdomain,		VALUE_TYPE.struct,		VALUE_TYPE.strands,		VALUE_TYPE.mesh,		VALUE_TYPE.trigger,
+							
+							noone,					VALUE_TYPE.d3Mesh,		VALUE_TYPE.d3Light,		VALUE_TYPE.d3Camera,	VALUE_TYPE.d3Scene,		
+							VALUE_TYPE.d3Material,  noone,					VALUE_TYPE.PCXnode,		VALUE_TYPE.audioBit,	VALUE_TYPE.fdomain,
+							VALUE_TYPE.sdf,
+						 ];
+	
+	GROUP_IO_DISPLAY = [
+		
+	/*Integer*/	    [ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area", "Enum button", "Menu scroll" ],
+	/*Float*/	    [ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area" ],
+	/*Boolean*/	    0,
+	/*Color*/	    [ "Default", "Gradient", "Palette" ],
+	/*Surface*/	    0,
+	    
+	/*Path*/	    0,
+	/*Curve*/	    [ "Curve", ],
+	/*Text*/	    0,
+	/*Object*/	    0,
+	/*Node*/	    0,
+	    
+	/*3D*/		    0,
+	/*Any*/		    0,
+	/*Pathnode*/    0,
+	/*Particle*/    0,
+	/*Rigid*/	    0,
+	    
+	/*Sdomain*/	    0,
+	/*Struct*/	    0,
+	/*Strand*/	    0,
+	/*Mesh*/	    0,
+	/*Trigger*/	    0,
+	
+	//=========================//
+	
+	/*Noone*/	    0,
+	/*3D Mesh*/     0,
+	/*3D Light*/    0,
+	/*3D Camera*/   0,
+	/*3D Scene*/    0,
+	
+	/*3D Material*/ 0,
+	/*noone*/	    0,
+	/*PCX*/         0,
+	/*Audio*/       0,
+	/*Fdomain*/     0,
+	
+	/*SDF*/         0,
+	
+	];
+#endregion
+
 function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Group Input";
 	color = COLORS.node_blend_collection;
@@ -8,69 +76,15 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inParent = undefined;
 	setDimension(96, 32 + 24);
 	
-	#region data
-	data_type_list = [	"Integer",		"Float",	"Boolean",	"Color",	"Surface", 
-						"File Path",	"Curve",	"Text",		"Object",	"Node", 
-						-1,				"Any",		"Path",		"Particle", "Rigidbody Object", 
-						"Domain",		"Struct",	"Strands",	"Mesh",		"Trigger",
-						-1,				"3D Mesh",	"3D Light",	"3D Scene",	"3D Material",
-						-1,				"Audio"
-					 ];
-	
-	data_type_map  = [	VALUE_TYPE.integer,		VALUE_TYPE.float,		VALUE_TYPE.boolean,		VALUE_TYPE.color,		VALUE_TYPE.surface, 
-						VALUE_TYPE.path,		VALUE_TYPE.curve,		VALUE_TYPE.text,		VALUE_TYPE.object,		VALUE_TYPE.node, 
-						noone,					VALUE_TYPE.any,			VALUE_TYPE.pathnode,	VALUE_TYPE.particle,	VALUE_TYPE.rigid, 
-						VALUE_TYPE.sdomain,		VALUE_TYPE.struct,		VALUE_TYPE.strands,		VALUE_TYPE.mesh,		VALUE_TYPE.trigger,
-						
-						noone,					VALUE_TYPE.d3Mesh,		VALUE_TYPE.d3Light,		VALUE_TYPE.d3Scene,		VALUE_TYPE.d3Material,
-						noone,					VALUE_TYPE.audioBit,
-					 ];
-	
-	display_list = [
-		/*Integer*/	[ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area", "Enum button", "Menu scroll" ],
-		/*Float*/	[ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area" ],
-		/*Boolean*/	0,
-		/*Color*/	[ "Default", "Gradient", "Palette" ],
-		/*Surface*/	0,
-		
-		/*Path*/	0,
-		/*Curve*/	[ "Curve", ],
-		/*Text*/	0,
-		/*Object*/	0,
-		/*Node*/	0,
-		
-		/*3D*/		0,
-		/*Any*/		0,
-		/*Pathnode*/0,
-		/*Particle*/0,
-		/*Rigid*/	0,
-		
-		/*Fdomain*/	0,
-		/*Struct*/	0,
-		/*Strand*/	0,
-		/*Mesh*/	0,
-		/*Trigger*/	0,
-		
-		/*noone*/	    0,
-		/*3D Mesh*/     0,
-		/*3D Light*/    0,
-		/*3D Scene*/    0,
-		/*3D Material*/ 0,
-		
-		/*noone*/	0,
-		/*Audio*/   0,
-	];
-	#endregion
-	
 	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: display_list[0], update_hover: false });
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: GROUP_IO_DISPLAY[0], update_hover: false });
 	
 	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.range)
 		.setVisible(false);
 	
 	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 11)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: data_type_list, update_hover: false });
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: GROUP_IO_TYPE_NAME, update_hover: false });
 	
 	inputs[| 3] = nodeValue("Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(false);
@@ -132,7 +146,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!attributes.inherit_type) return;
 		attributes.inherit_type = false;
 		
-		var ind = array_find(data_type_map, juncTo.type);
+		var ind = array_find(GROUP_IO_TYPE_MAP, juncTo.type);
 		if(ind == -1) return;
 		
 		if(ind == inputs[| 2].getValue()) return;
@@ -194,7 +208,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _dtype	    = getInputData(0);
 		var _range	    = getInputData(1);
 		var _type		= getInputData(2);
-		var _val_type   = array_safe_get_fast(data_type_map, _type, VALUE_TYPE.any);
+		var _val_type   = array_safe_get_fast(GROUP_IO_TYPE_MAP, _type, VALUE_TYPE.any);
 		var _enum_label = getInputData(3);
 		var _vec_size	= getInputData(4);
 		var _step		= getInputData(7);
@@ -213,7 +227,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			attributes.inherit_type = false;
 		}
 		
-		_dtype = array_safe_get_fast(array_safe_get_fast(display_list, _val_type), _dtype);
+		_dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_TYPE_NAME, _val_type), _dtype);
 		
 		inParent.setType(_val_type);
 		outputs[| 0].setType(_val_type);
@@ -389,8 +403,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(is_undefined(inParent)) return;
 		
 		var _type		= getInputData(2);
-		var _val_type   = array_safe_get_fast(data_type_map, _type, VALUE_TYPE.any);
-		var _dsList     = array_safe_get_fast(display_list, _val_type);
+		var _val_type   = array_safe_get_fast(GROUP_IO_TYPE_MAP,  _type, VALUE_TYPE.any);
+		var _dsList     = array_safe_get_fast(GROUP_IO_TYPE_NAME, _val_type);
 		if(_dsList == 0) _dsList = [ "Default" ];
 		inputs[| 0].display_data.data    = _dsList;
 		inputs[| 0].editWidget.data_list = _dsList;
@@ -412,10 +426,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _dstype = getInputData(0);
 		var _data   = getInputData(2);
-		var _dsList = array_safe_get_fast(display_list, _data);
+		var _dsList = array_safe_get_fast(GROUP_IO_TYPE_NAME, _data);
 		_dstype = _dsList == 0? "Default" : array_safe_get_fast(_dsList, _dstype);
 		
-		var _datype = array_safe_get_fast(data_type_map, _data, VALUE_TYPE.any);
+		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _data, VALUE_TYPE.any);
 		
 		inputs[| 1].setVisible(false);
 		inputs[| 3].setVisible(false);

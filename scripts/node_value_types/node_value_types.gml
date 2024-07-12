@@ -14,43 +14,44 @@ enum JUNCTION_CONNECT {
 }
 
 enum VALUE_TYPE {
-	integer   = 0,
-	float     = 1,
-	boolean   = 2,
-	color     = 3,
-	surface   = 4,
+	integer     =  0,
+	float       =  1,
+	boolean     =  2,
+	color       =  3,
+	surface     =  4,
 	
-	path      = 5,
-	curve     = 6,
-	text      = 7,
-	object    = 8,
-	node      = 9,
-	d3object  = 10,
+	path        =  5,
+	curve       =  6,
+	text        =  7,
+	object      =  8,
+	node        =  9,
+	d3object    = 10,
 	
-	any       = 11,
+	any         = 11,
 	
-	pathnode  = 12,
-	particle  = 13,
-	rigid     = 14,
-	sdomain   = 15,
-	struct    = 16,
-	strands   = 17,
-	mesh	  = 18,
-	trigger	  = 19,
-	atlas	  = 20,
+	pathnode    = 12,
+	particle    = 13,
+	rigid       = 14,
 	
-	d3vertex  = 21,
-	gradient  = 22,
-	armature  = 23,
-	buffer    = 24,
+	sdomain     = 15,
+	struct      = 16,
+	strands     = 17,
+	mesh	    = 18,
+	trigger	    = 19,
+	atlas	    = 20,
 	
-	pbBox     = 25,
+	d3vertex    = 21,
+	gradient    = 22,
+	armature    = 23,
+	buffer      = 24,
 	
-	d3Mesh	  = 26,
-	d3Light	  = 27,
-	d3Camera  = 28,
-	d3Scene	  = 29,
-	d3Material = 30,
+	pbBox       = 25,
+	
+	d3Mesh	    = 26,
+	d3Light	    = 27,
+	d3Camera    = 28,
+	d3Scene	    = 29,
+	d3Material  = 30,
 	
 	dynaSurface = 31,
 	PCXnode     = 32,
@@ -58,7 +59,7 @@ enum VALUE_TYPE {
 	fdomain     = 34,
 	sdf         = 35,
 	
-	action	  = 99,
+	action	    = 99,
 }
 
 enum VALUE_DISPLAY {

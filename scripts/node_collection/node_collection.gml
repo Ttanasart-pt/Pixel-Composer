@@ -80,8 +80,10 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 			_x = value_snap(_x - 64 - 128, 32);
 			_y = value_snap(_y / m, 32);
 			
-			var _n = new Node_Group_Input(_x, _y, _group);
-			_n.inputs[| 2].setValue(_frm.type);
+			var _n  = new Node_Group_Input(_x, _y, _group);
+			var _ti = array_find(GROUP_IO_TYPE_MAP, _frm.type);
+			if(_ti >= 0) _n.inputs[| 2].setValue(_ti);
+			
 			_n.onValueUpdate(0);
 			_n.inParent.setFrom(_frm);
 				
@@ -177,9 +179,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	combine_render_time = true;
 	previewable         = true;
 	
-	reset_all_child = false;
-	isInstancer		= false;
-	instanceBase	= noone;
+	reset_all_child 	= false;
+	isInstancer			= false;
+	instanceBase		= noone;
 	
 	input_display_list_def = [];
 	custom_input_index     = 0;
@@ -187,10 +189,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	metadata = new MetaDataManager();
 	
-	group_input_display_list  = [];
-	group_output_display_list = [];
-	attributes.input_display_list  = [];
-	attributes.output_display_list = [];
+	group_input_display_list		= [];
+	group_output_display_list		= [];
+	attributes.input_display_list   = [];
+	attributes.output_display_list  = [];
 	
 	managedRenderOrder = false;
 	
