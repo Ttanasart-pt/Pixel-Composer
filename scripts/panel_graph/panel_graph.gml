@@ -81,7 +81,18 @@
 	function panel_graph_copy()					{ CALL("graph_copy");				PANEL_GRAPH.doCopy();					}
 	function panel_graph_paste()				{ CALL("graph_paste");				PANEL_GRAPH.doPaste();					}
 	
-	function panel_graph_auto_align()			{ CALL("graph_auto_align");			node_auto_align(PANEL_GRAPH.nodes_selecting);}
+	function panel_graph_auto_align()			{ CALL("graph_auto_align");			node_auto_align(PANEL_GRAPH.nodes_selecting);         }
+	
+	function panel_graph_search() { 
+		CALL("graph_search");
+		PANEL_GRAPH.is_searching = !PANEL_GRAPH.is_searching; 
+		
+		if(PANEL_GRAPH.is_searching) {
+			PANEL_GRAPH.search_string   = "";
+			WIDGET_CURRENT  = PANEL_GRAPH.tb_search;
+			KEYBOARD_RESET
+		}
+	}
 																															
 	function panel_graph_pan() { 
 		CALL("graph_pan");
@@ -313,6 +324,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		context_frame_sy = 0; context_frame_ey = 0;
 	#endregion
 	
+	#region ---- search ----
+		is_searching  = false;
+		search_string = "";
+		search_index  = 0;
+		search_result = [];
+		
+		tb_search				= new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); searchNodes(); });
+		tb_search.align			= fa_left;
+		tb_search.auto_update	= true;
+	#endregion
+	
 	toolbar_height = ui(40);
 	
 	function toCenterNode(_arr = nodes_list) {
@@ -406,6 +428,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		addHotkey("Graph", "Zoom",					"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_graph_zoom);
 		
 		addHotkey("Graph", "Auto Align",			"L", MOD_KEY.none,					panel_graph_auto_align);
+		
+		addHotkey("Graph", "Search",				"F", MOD_KEY.shift,					panel_graph_search);
 	#endregion
 	
 	#region ++++ toolbars ++++
@@ -605,11 +629,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		pan.content.setInspecting(node_hover);
 		pan.content.locked = true;
 	});
-	menu_send_export	= menuItem(__txtx("panel_graph_send_to_export", "Send to export"),			function() { setCurrentExport(node_hover); },	noone, ["Graph", "Export"]);
-	menu_toggle_preview = menuItem(__txtx("panel_graph_toggle_preview", "Toggle node preview"),		function() { setTriggerPreview(); },			noone, ["Graph", "Toggle preview"]);
-	menu_toggle_render  = menuItem(__txtx("panel_graph_toggle_render", "Toggle node render"),		function() { setTriggerRender(); },				noone, ["Graph", "Toggle render"]);
-	menu_toggle_param   = menuItem(__txtx("panel_graph_toggle_parameter", "Toggle node parameters"),function() { setTriggerParameter(); },			noone, ["Graph", "Toggle parameters"]);
-	menu_open_group     = menuItem(__txtx("panel_graph_enter_group", "Open group"),					function() { PANEL_GRAPH.addContext(node_hover); }, THEME.group);
+	menu_send_export	   = menuItem(__txtx("panel_graph_send_to_export", "Send to export"),			function() { setCurrentExport(node_hover); },	noone, ["Graph", "Export"]);
+	menu_toggle_preview    = menuItem(__txtx("panel_graph_toggle_preview", "Toggle node preview"),		function() { setTriggerPreview(); },			noone, ["Graph", "Toggle preview"]);
+	menu_toggle_render     = menuItem(__txtx("panel_graph_toggle_render", "Toggle node render"),		function() { setTriggerRender(); },				noone, ["Graph", "Toggle render"]);
+	menu_toggle_param      = menuItem(__txtx("panel_graph_toggle_parameter", "Toggle node parameters"), function() { setTriggerParameter(); },			noone, ["Graph", "Toggle parameters"]);
+	menu_open_group        = menuItem(__txtx("panel_graph_enter_group", "Open group"),					function() { PANEL_GRAPH.addContext(node_hover); }, THEME.group);
 	
 	function openGroupTab(group) {
 		var graph = new Panel_Graph(project);
@@ -755,7 +779,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	function fullView() { #region
 		INLINE
 		toCenterNode(array_empty(nodes_selecting)? nodes_list : nodes_selecting);
-		graph_s_to = 1;
 	} #endregion
 	
 	function dragGraph() { #region
@@ -1079,7 +1102,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			for(var i = 0; i < array_length(nodes_list); i++) {
 				var _nl = nodes_list[i];
 				
-				if(_nl.drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter))
+				if(_nl.drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter, self))
 					frame_hovering = _nl;
 			}
 		#endregion
@@ -1407,7 +1430,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				
 				if(is_instanceof(_node, Node_Frame)) continue;
 				try {
-					var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
+					var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter, self);
 					if(val) {
 						value_focus = val;
 						if(key_mod_press(SHIFT)) TOOLTIP = [ val.getValue(), val.type ];
@@ -1418,8 +1441,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			}
 			
 			for(var i = 0; i < array_length(nodes_list); i++)
-				nodes_list[i].drawBadge(gr_x, gr_y, graph_s);	
+				if(!is_instanceof(nodes_list[i], Node_Frame)) 
+					nodes_list[i].drawBadge(gr_x, gr_y, graph_s);
 				
+			for(var i = 0; i < array_length(nodes_list); i++)
+				nodes_list[i].drawNodeFG(gr_x, gr_y, mx, my, graph_s, display_parameter, self);
+			
 			if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
 				value_focus = PANEL_INSPECTOR.prop_hover;
 		#endregion
@@ -1982,7 +2009,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var mini_hover = false;
 		if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx1, my1)) {
 			mouse_on_graph = false;
-			mini_hover = true;
+			mini_hover     = true;
 		}
 		
 		var hover = mini_hover && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
@@ -2082,6 +2109,86 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(2), my0 + ui(2), 0.5, 0.5, 180, c_white, 0.3);
 	} #endregion
 	
+	function searchNodes() {
+		nodes_selecting = [];
+		search_result   = [];
+		search_index    = 0;
+		
+		if(search_string == "") return;
+		
+		var _search = string_lower(search_string);
+		
+		for(var i = 0; i < array_length(nodes_list); i++) {
+			var _nl   = nodes_list[i];
+			var _name = string_lower(_nl.getDisplayName());
+			
+			var _match = string_full_match(_name, _search);
+			_nl.search_match = _match;
+			
+			if( _match == -9999) continue;
+			
+			array_push(nodes_selecting, _nl);
+			array_push(search_result,   _nl);
+		}
+		
+		if(!array_empty(nodes_selecting))
+			toCenterNode(nodes_selecting);
+	}
+	
+	function drawSearch() {
+		if(!is_searching) return;
+		
+		var tw = ui(200);
+		var th = line_get_height(f_p2, 6);
+		
+		var pd = ui(6);
+		var ww = tw + pd * 2 + (ui(4) + ui(24)) * 3;
+		var hh = th + pd * 2;
+		
+		var x1 = w - ui(8);
+		var x0 = x1 - ww;
+		
+		var y0 = ui(8);
+		var y1 = y0 + hh;
+		
+		draw_sprite_stretched(    THEME.ui_panel_bg, 3, x0, y0, ww, hh);
+		draw_sprite_stretched_add(THEME.ui_panel_fg, 0, x0, y0, ww, hh, c_white, 0.25);
+		draw_sprite_stretched(    THEME.button_hide_fill, 1, x0 + pd, y0 + pd, tw, th);
+		
+		tb_search.font = f_p2;
+		tb_search.setFocusHover(pFOCUS, pHOVER);
+		tb_search.draw(x0 + pd, y0 + pd, tw, th, search_string, [ mx, my ]);
+		
+		var bs = ui(24);
+		var bx = x1 - bs - pd;
+		var by = y0 + pd;
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pFOCUS, pHOVER, "", THEME.cross_16) == 2
+		|| keyboard_check_pressed(vk_escape)
+		|| keyboard_check_pressed(vk_enter))
+			is_searching = false;
+		
+		bx -= bs + ui(4);
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pFOCUS, pHOVER, "", THEME.arrow_wire_16, 0) == 2) {
+			if(!array_empty(search_result)) {
+				search_index    = safe_mod(search_index + 1, array_length(search_result));
+				nodes_selecting = [ search_result[search_index] ];
+				toCenterNode(nodes_selecting);
+			}
+		}
+		
+		bx -= bs + ui(4);
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pFOCUS, pHOVER, "", THEME.arrow_wire_16, 2) == 2) {
+			if(!array_empty(search_result)) {
+				search_index    = safe_mod(search_index - 1 + array_length(search_result), array_length(search_result));
+				nodes_selecting = [ search_result[search_index] ];
+				toCenterNode(nodes_selecting);
+			}
+		}
+		
+		if(point_in_rectangle(mx, my, x0, y0, x1, y1))
+			mouse_on_graph = false;
+	}
+	
 	function drawContextFrame() { #region
 		if(!context_framing) return;
 		context_frame_progress = lerp_float(context_frame_progress, 1, 5);
@@ -2133,12 +2240,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		drawGrid();
 		
 		var ovy = ui(8);
-		if(show_view_control == 2)
-			ovy += ui(36);
-		draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
-		draw_text(w - ui(8), ovy, $"x{graph_s_to}");
+		if(show_view_control == 2) ovy += ui(36);
 		
 		drawNodes();
+		
+		draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
+		draw_text_add(w - ui(8), ovy, $"x{graph_s_to}");
+		
 		drawJunctionConnect();
 		drawContextFrame();
 		
@@ -2155,6 +2263,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		graph_dragging_key = false;
 		graph_zooming_key  = false;
+		
+		drawSearch()
 		
 		if(LIVE_UPDATE) {
 			draw_set_text(f_p0b, fa_right, fa_bottom, COLORS._main_value_negative);

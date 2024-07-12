@@ -5,6 +5,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	w      = 240;
 	h      = 160;
 	bg_spr = THEME.node_frame_bg;
+	nm_spr = THEME.node_frame_name;
 	  
 	size_dragging    = false;
 	size_dragging_w  = w;
@@ -12,14 +13,21 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	size_dragging_mx = w;
 	size_dragging_my = h;
 	
-	auto_height    = false;
-	name_hover     = false;
-	hover_progress = 0;
+	auto_height      = false;
+	name_hover       = false;
+	hover_progress   = 0;
 	
-	color = c_white;
-	alpha = 1;
-	scale = 1;
-	label_color = false;
+	color  = c_white;
+	alpha  = 1;
+	scale  = 1;
+	lcolor = false;
+	
+	name_height = 16;
+	
+	draw_x0 = 0;
+	draw_y0 = 0;
+	draw_x1 = 0;
+	draw_y1 = 0;
 	
 	inputs[| 0] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 240, 160 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -42,43 +50,83 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	input_display_list = [ 0, 1, 3, 4 ];
 	
-	static onValueUpdate = function(index = 3) { #region
+	static onValueUpdate = function(index = 3) {
 		global.__FRAME_LABEL_SCALE = getInputData(3);
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var si = getInputData(0);
 		w = si[0];
 		h = si[1];
 		
-		color = getInputData(1);
-		alpha = _color_get_alpha(color);
-		scale = getInputData(3);
-		label_color = getInputData(4);
-	} #endregion
+		color  = getInputData(1);
+		alpha  = _color_get_alpha(color);
+		
+		scale  = getInputData(3);
+		lcolor = getInputData(4);
+	}
 	
-	static drawNodeBase = function(xx, yy, _s) { #region
-		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, alpha);
+	static drawNodeBase = function(xx, yy, _s, _panel) {
+		
+		var px0 =  3;
+		var py0 =  3;
+		var px1 = -3 + _panel.w;
+		var py1 = -0 + _panel.h - _panel.toolbar_height;
+		
+		var _yy = yy - name_height;
+		
+		var x0 =  xx;
+		var y0 = _yy;
+		var x1 =  xx + w * _s;
+		var y1 = _yy + name_height + h * _s;
+		
+		draw_x0 = max(x0, px0);
+		draw_x1 = min(x1, px1);
+		draw_y0 = max(y0, py0);
+		draw_y1 = min(y1, py1);
+		
+		var _h  = max(draw_y1 - draw_y0, name_height);
+		
+		if(y0 > 0)	draw_y1 = draw_y0 + _h;
+		else		draw_y0 = draw_y1 - _h;
+		
+		if(draw_x1 - draw_x0 < 4) return;
+		
+		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, x1 - x0, y1 - y0,     color, alpha);
+	}
+	
+	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel) {
+		
+		if(draw_x1 - draw_x0 < 4) return;
+		
+		var _w = draw_x1 - draw_x0;
+		var _h = draw_y1 - draw_y0;
+		
+		draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h,          color,   alpha * .50);
+		draw_sprite_stretched_ext(nm_spr, 0, draw_x0, draw_y0, _w, name_height, color,   alpha * .75);
+		draw_sprite_stretched_add(bg_spr, 1, draw_x0, draw_y0, _w, _h,          c_white,         .20);
+		
 		var txt = renamed? display_name : name;
+		draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
+		draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 2, txt, _w - 4);
 		
-		hover_progress = lerp_float(hover_progress, name_hover, 2);
+		if(active_draw_index > -1) {
+			draw_sprite_stretched_ext(bg_sel_spr, 0, draw_x0, draw_y0, _w, _h, COLORS._main_accent, 1);
+			active_draw_index = -1;
+		}
 		
-		draw_set_text(f_h5, fa_left, fa_top, merge_color(COLORS._main_text, color, label_color));
-		draw_set_alpha(clamp(alpha + name_hover * 0.5, 0, 1));
-		draw_text_cut(xx + 8 + 16 * hover_progress, yy + 4 * _s, txt, (w - 8) * _s - 24, scale);
-		draw_set_alpha(1);
-	} #endregion
+		drawBadge(_x, _y, _s);
+	}
 	
-	draw_scale = 1;
-	static drawNodeBG = function(_x, _y, _mx, _my, _s) { #region
-		draw_scale = _s;
+	static drawNodeBG = function(_x, _y, _mx, _my, _s, _dparam, _panel) {
 		
 		if(size_dragging) {
 			w = size_dragging_w + (mouse_mx - size_dragging_mx) / _s;
 			h = size_dragging_h + (mouse_my - size_dragging_my) / _s;
+			
 			if(!key_mod_press(CTRL)) {
-				w = round(w / 32) * 32;
-				h = round(h / 32) * 32;
+				w = value_snap(w, 16);
+				h = value_snap(h, 16);
 			}
 			
 			if(mouse_release(mb_left)) {
@@ -89,52 +137,44 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
-		drawNodeBase(xx, yy, _s);
+		drawNodeBase(xx, yy, _s, _panel);
 		
-		if(active_draw_index > -1) {
-			draw_sprite_stretched_ext(bg_sel_spr, 0, x * _s + _x, y * _s + _y, w * _s, h * _s, COLORS._main_accent, 1);
-			active_draw_index = -1;
-		}
-		
-		var x1 = xx + w * _s;
-		var y1 = yy + h * _s;
-		var x0 = x1 - 16;
-		var y0 = y1 - 16;
+		var x1  = xx + w * _s;
+		var y1  = yy + h * _s;
+		var x0  = x1 - 16;
+		var y0  = y1 - 16;
 		var ics = 0.5;
 		
-		if(name_hover) draw_sprite_ext(THEME.node_move, 0, xx + 4, yy + 4 * _s, ics, ics * scale, 0, color, 0.4);
+		if(w * _s < 32 || h * _s < 32) return point_in_rectangle(_mx, _my, xx, yy, x1, y1);
 		
 		if(point_in_rectangle(_mx, _my, xx, yy, x1, y1) || size_dragging)
-			draw_sprite_ext(THEME.node_resize, 0, x1 - 4, y1 - 4, ics, ics, 0, c_white, 0.5);
+			draw_sprite_ext_add(THEME.node_resize, 0, x1 - 4, y1 - 4, ics, ics, 0, c_white, 0.5);
 		
 		if(!name_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-			draw_sprite_ext(THEME.node_resize, 0, x1 - 4, y1 - 4, ics, ics, 0, c_white, 1);
+			draw_sprite_ext_add(THEME.node_resize, 0, x1 - 4, y1 - 4, ics, ics, 0, c_white, 1);
+			
 			PANEL_GRAPH.drag_locking = true;
 			
 			if(mouse_press(mb_left)) {
-				size_dragging	= true;
-				size_dragging_w = w;
-				size_dragging_h = h;
+				size_dragging	 = true;
+				size_dragging_w  = w;
+				size_dragging_h  = h;
 				size_dragging_mx = mouse_mx;
 				size_dragging_my = mouse_my;
 			}
 		}
 		
 		return point_in_rectangle(_mx, _my, xx, yy, x1, y1);
-	} #endregion
+	}
 	
-	static pointIn = function(_x, _y, _mx, _my, _s) { #region
+	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
+		var y0 = yy - name_height;
 		
-		var txt = renamed? display_name : name;
-		draw_set_font(f_h5);
-		var ww  = string_width(txt) + 24 + 8;
-		var hh  = string_height("l") + 8;
-		
-		var hover = point_in_rectangle(_mx, _my, xx, yy, xx + ww, yy + hh);
+		var hover  = point_in_rectangle(_mx, _my, xx, y0, xx + w * _s, yy);
 		name_hover = hover;
 		
 		return hover;
-	} #endregion
+	}
 }

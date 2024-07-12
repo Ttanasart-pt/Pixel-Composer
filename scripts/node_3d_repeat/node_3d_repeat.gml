@@ -57,15 +57,15 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		inputs[| 2].setVisible(_mode == 0);
 	} #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _object = _data[0];
-		var _mode = _data[1];
-		var _Spos = _data[3];
-		var _Srot = _data[4];
-		var _Ssca = _data[5];
-		var _Rpos = _data[6];
-		var _Rrot = _data[7];
-		var _Rsca = _data[8];
+		var _mode   = _data[1];
+		var _Spos   = _data[3];
+		var _Srot   = _data[4];
+		var _Ssca   = _data[5];
+		var _Rpos   = _data[6];
+		var _Rrot   = _data[7];
+		var _Rsca   = _data[8];
 		
 		var _Apos = _data[ 9];
 		var _Arot = _data[10];
@@ -79,7 +79,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		
 		for( var i = 0; i < _amo; i++ ) {
 			var _obj = _mode == 1? _object[i] : _object;
-			if(_obj == noone) continue;
+			if(!is_struct(_obj)) continue;
 			
 			//if(!_inst) _obj = _obj.clone(false, true);
 			
@@ -121,5 +121,5 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		}
 		
 		return _scene;
-	} #endregion
+	}
 }

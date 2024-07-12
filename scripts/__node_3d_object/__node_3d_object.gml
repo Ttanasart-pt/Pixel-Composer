@@ -586,7 +586,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		} #endregion
 	} #endregion
 	
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { #region
+	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { 
 		var _rot = inputs[| 1].display_data.angle_display;
 		tools = _rot == QUARTERNION_DISPLAY.quarterion? tool_quate : tool_euler;
 		if(_rot == QUARTERNION_DISPLAY.euler && isUsingTool("Rotate"))
@@ -599,19 +599,19 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		var _pos  = inputs[| 0].getValue(,,, true);
 		var _vpos = new __vec3( _pos[0], _pos[1], _pos[2] );
 		
-		if(isUsingTool("Transform"))	drawGizmoPosition(0, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
-		else if(isUsingTool("Rotate"))	drawGizmoRotation(1, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
-		else if(isUsingTool("Scale"))	drawGizmoScale(2, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
+			 if(isUsingTool("Transform"))	drawGizmoPosition(0, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
+		else if(isUsingTool("Rotate"))		drawGizmoRotation(1, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
+		else if(isUsingTool("Scale"))		drawGizmoScale(2, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
 		
 		if(drag_axis != noone && mouse_release(mb_left)) {
 			drag_axis = noone;
 			UNDO_HOLDING = false;
 		}
 		
-		if(onDrawOverlay3D != 0) onDrawOverlay3D(active, params, _mx, _my, _snx, _sny, _panel);
-	} #endregion
+		onDrawOverlay3D(active, params, _mx, _my, _snx, _sny, _panel);
+	} 
 	
-	static onDrawOverlay3D = 0;
+	static onDrawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
 	
 	static setTransform = function(object, _data) { #region
 		if(object == noone) return;

@@ -67,6 +67,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		if(align == 0) {
 			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
 			draw_text_ext_add(xx + w * _s / 2, yy - 2 + hid * ((1 - hover_state) * 8), _name, -1, 128 * _s);
+			
 		} else if(align == 1) {
 			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 			draw_text_ext_add(xx + w * _s / 2, yy + h * _s - hid * ((1 - hover_state) * 8), _name, -1, 128 * _s);

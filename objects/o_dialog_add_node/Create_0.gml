@@ -735,14 +735,9 @@ event_inherited();
 #region search
 	search_string		= "";
 	search_list			= ds_list_create();
-	keyboard_lastchar	= "";
-	KEYBOARD_STRING		= "";
-	keyboard_lastkey	= -1;
+	KEYBOARD_RESET
 	
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
-		search_string = string(str); 
-		searchNodes();
-	});
+	tb_search				= new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); searchNodes(); });
 	tb_search.align			= fa_left;
 	tb_search.auto_update	= true;
 	WIDGET_CURRENT			= tb_search;

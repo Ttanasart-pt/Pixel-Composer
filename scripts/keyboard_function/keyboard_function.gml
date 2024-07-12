@@ -1,0 +1,1 @@
+#macro KEYBOARD_RESET keyboard_lastchar	= ""; KEYBOARD_STRING		= ""; keyboard_lastkey	= -1;

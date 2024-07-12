@@ -988,6 +988,7 @@
     {"id":{"name":"json_minify","path":"scripts/json_minify/json_minify.yy",},},
     {"id":{"name":"json_prettify","path":"scripts/json_prettify/json_prettify.yy",},},
     {"id":{"name":"key_press","path":"scripts/key_press/key_press.yy",},},
+    {"id":{"name":"keyboard_function","path":"scripts/keyboard_function/keyboard_function.yy",},},
     {"id":{"name":"lcd_function","path":"scripts/lcd_function/lcd_function.yy",},},
     {"id":{"name":"lerp_float","path":"scripts/lerp_float/lerp_float.yy",},},
     {"id":{"name":"line_intersect","path":"scripts/line_intersect/line_intersect.yy",},},

@@ -90,7 +90,7 @@ function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false)
 function draw_text_bbox(bbox, text, scale = 1) {
 	INLINE
 	var ss = min(bbox.w / string_width(text), bbox.h / string_height(text));
-	    ss = max(0.5, ss);
+	if(ss <= 0) return;
 	
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_center);

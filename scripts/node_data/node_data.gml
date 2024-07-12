@@ -45,6 +45,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		modifiable    = true;
 		modify_parent = noone;
+		search_match  = -9999;
 		
 		onDoubleClick = -1;
 	#endregion
@@ -1226,7 +1227,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return __draw_bbox.fromPoints(x0, y0, x1, y1);
 	}
 	
-	static drawNodeName = function(xx, yy, _s) {
+	static drawNodeName = function(xx, yy, _s, _panel = noone) {
 		var _name = renamed? display_name : name;
 		if(_name == "") return;
 		
@@ -1252,16 +1253,25 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			tw -= _s * 4;
 		}
 		
+		if(_panel && _panel.is_searching && _panel.search_string != "" && search_match == -9999)
+			aa *= .15;
+				
 		if(icon) {
 			tx += _s * 6;
 			draw_sprite_ui_uniform(icon, 0, round(tx), round(yy + nh / 2), _s, c_white, aa);
 			tx += _s * 12;
-			
 			tw -= _s * (6 + 12);
 		}
 		
+		var _ts  = _s * 0.275;
+		var _tx  = round(tx);
+		var _ty  = round(yy + nh / 2 + 1);
+		var _txt = string_cut(_name, tw, "...", _ts);
+		
 		draw_set_text(f_sdf, fa_left, fa_center, cc, aa);
-			draw_text_cut(round(tx), round(yy + nh / 2 + 1), _name, tw, _s * 0.275);
+			BLEND_ALPHA_MULP
+			draw_text_transformed(_tx, _ty, _txt, _ts, _ts, 0);
+			BLEND_NORMAL
 		draw_set_alpha(1);
 	}
 	
@@ -1683,7 +1693,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) {}
 	
-	static drawNodeBG = function(_x, _y, _mx, _my, _s, display_parameter = noone) { 
+	static drawNodeBG = function(_x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -1691,7 +1701,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return false; 
 	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) {
+	static drawNodeFG = function(_x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { }
+	
+	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) {
 		if(draw_graph_culled) return;
 		if(!active) return;
 		
@@ -1726,7 +1738,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus);
 		
 		draw_name = false;
-		if((previewable && _s >= 0.75) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s);
+		if((previewable && _s >= 0.75) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s, _panel);
 		
 		if(attributes.annotation != "") {
 			draw_set_text(f_sdf_medium, fa_left, fa_bottom, COLORS._main_text_sub);

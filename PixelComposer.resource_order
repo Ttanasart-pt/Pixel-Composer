@@ -636,6 +636,7 @@
     {"name":"json_functions","order":8,"path":"scripts/json_functions/json_functions.yy",},
     {"name":"json_minify","order":6,"path":"scripts/json_minify/json_minify.yy",},
     {"name":"json_prettify","order":7,"path":"scripts/json_prettify/json_prettify.yy",},
+    {"name":"keyboard_function","order":2,"path":"scripts/keyboard_function/keyboard_function.yy",},
     {"name":"lcd_function","order":2,"path":"scripts/lcd_function/lcd_function.yy",},
     {"name":"lerp_float","order":1,"path":"scripts/lerp_float/lerp_float.yy",},
     {"name":"line_intersect","order":11,"path":"scripts/line_intersect/line_intersect.yy",},

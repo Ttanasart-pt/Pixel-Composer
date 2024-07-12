@@ -56,6 +56,8 @@ function array_to_string(arr) {
 	return s + "]";
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function string_partial_match(str, key) {
 	if(str == key) return 9999;
 	
@@ -88,7 +90,7 @@ function string_partial_match(str, key) {
 	return -9999;
 }
 
-function draw_text_match(_x, _y, _text, _search) {
+function draw_text_match(_x, _y, _text, _search, _scale = 1) {
 	INLINE
 	_x = round(_x);
 	_y = round(_y);
@@ -107,7 +109,7 @@ function draw_text_match(_x, _y, _text, _search) {
 	
 	BLEND_ALPHA_MULP;
 	var aa = string_length(_text);
-	var lw = string_width(_text);
+	var lw = string_width(_text) * _scale;
 	var tl = string_lower(_text);
 	
 	switch(ha) {
@@ -129,8 +131,9 @@ function draw_text_match(_x, _y, _text, _search) {
 		} else 
 			draw_set_color(cc);
 		
-		draw_text(ceil(xx), ceil(yy), ch);
-		xx += string_width(ch);
+		if(_scale == 1) draw_text(ceil(xx), ceil(yy), ch);
+		else            draw_text_transformed(ceil(xx), ceil(yy), ch, _scale, _scale, 0);
+		xx += string_width(ch) * _scale;
 		j++;
 	}
 	
@@ -230,3 +233,12 @@ function draw_text_match_ext(_x, _y, _text, _w, _search) {
 	
 	return hh;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function string_full_match(str, key) {
+	if(string_pos(key, str)) return 1;
+	return -9999;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
