@@ -950,6 +950,8 @@ function Panel_Preview() : PanelContent() constructor {
 	} #endregion
 	
 	function draw3DPolygon(_node) { #region
+		surface_depth_disable(false);
+		
 		_node.previewing = 1;
 		
 		d3_scene_preview = struct_has(_node, "scene")? _node.scene : d3_scene;
@@ -1134,6 +1136,8 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 		
 		d3_scene_preview.camera.resetCamera();
+		
+		surface_depth_disable(true);
 	} #endregion
 	
 	function draw3DSdf(_node) { #region

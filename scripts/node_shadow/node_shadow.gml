@@ -56,7 +56,10 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var ww = surface_get_width_safe(_surf) * _s;
 		var hh = surface_get_height_safe(_surf) * _s;
 		
-		var hv = inputs[| 3].drawOverlay(hover, active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var _typ = getSingleValue(11);
+		
+			 if(_typ == 0) { var hv = inputs[|  3].drawOverlay(hover, active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny); _hov |= hv; }
+		else if(_typ == 1) { var hv = inputs[| 12].drawOverlay(hover, active, _x,          _y,          _s, _mx, _my, _snx, _sny); _hov |= hv; }
 		
 		return _hov;
 	}
@@ -87,8 +90,8 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _shay = _shf[1];
 		
 		if(_posi == 1) {
-			_shax = _lgh[0] - _dim[0] / 2;
-			_shay = _lgh[1] - _dim[1] / 2;
+			_shax = _dim[0] / 2 - _lgh[0];
+			_shay = _dim[1] / 2 - _lgh[1];
 		}
 		
 		surface_set_shader(pass1, sh_outline_only);

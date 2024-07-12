@@ -41,6 +41,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static getSingleValue = function(_index, _arr = preview_index, output = false) { 
 		var _l  = output? outputs : inputs;
+		if(_index < 0  || _index >= ds_list_size(_l)) return 0;
+		
 		var _n  = _l[| _index];
 		var _in = output? _n.getValue() : getInputData(_index);
 		
