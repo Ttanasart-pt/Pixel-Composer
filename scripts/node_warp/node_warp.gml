@@ -79,7 +79,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			_surf = _surf[preview_index];
 		}
 		
-		if(!is_surface(_surf)) return;
+		var _ss = current_data[0];
+		if(!is_surface(_ss)) return;
 		
 		var tl = array_clone(current_data[1]);
 		var tr = array_clone(current_data[2]);
@@ -115,9 +116,9 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			warpSurface( warp_surface[0], warp_surface[1], params.w, params.h, tl, tr, bl, br, true );
 			
-			BLEND_ADD
-				draw_surface_safe(warp_surface[0]);
-			BLEND_NORMAL
+			// BLEND_ADD
+			// 	draw_surface_safe(warp_surface[0]);
+			// BLEND_NORMAL
 		#endregion
 		
 		draw_set_color(COLORS._main_accent);

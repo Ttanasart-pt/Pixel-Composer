@@ -64,7 +64,7 @@
 																															
 	function panel_graph_export()				{ CALL("graph_export");				PANEL_GRAPH.setCurrentExport();			}
 	
-	function panel_graph_add_transform()		{ CALL("graph_add_transform");		PANEL_GRAPH.doTransform();	 }
+	function panel_graph_add_transform()		{ CALL("graph_add_transform");		PANEL_GRAPH.doTransform();				}
 	function panel_graph_blend()				{ CALL("graph_blend");				PANEL_GRAPH.doBlend();					}
 	function panel_graph_compose()				{ CALL("graph_compose");			PANEL_GRAPH.doCompose();				}
 	function panel_graph_array()				{ CALL("graph_array");				PANEL_GRAPH.doArray();					}
@@ -81,18 +81,9 @@
 	function panel_graph_copy()					{ CALL("graph_copy");				PANEL_GRAPH.doCopy();					}
 	function panel_graph_paste()				{ CALL("graph_paste");				PANEL_GRAPH.doPaste();					}
 	
-	function panel_graph_auto_align()			{ CALL("graph_auto_align");			node_auto_align(PANEL_GRAPH.nodes_selecting);         }
-	
-	function panel_graph_search() { 
-		CALL("graph_search");
-		PANEL_GRAPH.is_searching = !PANEL_GRAPH.is_searching; 
-		
-		if(PANEL_GRAPH.is_searching) {
-			PANEL_GRAPH.search_string   = "";
-			WIDGET_CURRENT  = PANEL_GRAPH.tb_search;
-			KEYBOARD_RESET
-		}
-	}
+	function panel_graph_auto_align()			{ CALL("graph_auto_align");			node_auto_align(PANEL_GRAPH.nodes_selecting);			}
+	function panel_graph_search()				{ CALL("graph_search"); 			PANEL_GRAPH.toggleSearch(); 							}
+	function panel_graph_toggle_minimap()		{ CALL("graph_toggle_minimap");		PANEL_GRAPH.minimap_show = !PANEL_GRAPH.minimap_show;	}
 																															
 	function panel_graph_pan() { 
 		CALL("graph_pan");
@@ -428,12 +419,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		addHotkey("Graph", "Zoom",					"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_graph_zoom);
 		
 		addHotkey("Graph", "Auto Align",			"L", MOD_KEY.none,					panel_graph_auto_align);
-		
 		addHotkey("Graph", "Search",				"F", MOD_KEY.shift,					panel_graph_search);
+		addHotkey("Graph", "Toggle Minimap",		"M", MOD_KEY.ctrl,					panel_graph_toggle_minimap);
 	#endregion
 	
 	#region ++++ toolbars ++++
 		tooltip_center   = new tooltipHotkey(__txtx("panel_graph_center_to_nodes", "Center to nodes"), "Graph", "Focus content");
+		tooltip_search   = new tooltipHotkey(__txt("Search"), "Graph", "Search");
+		tooltip_minimap  = new tooltipHotkey(__txtx("panel_graph_toggle_minimap", "Toggle minimap"), "Graph", "Toggle Minimap");
 	
 		toolbars_general = [
 			[ 
@@ -442,13 +435,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				function(param) /*=>*/ { dialogPanelCall(new Panel_Graph_Export_Image(self)); }
 			],
 			[ 
+				THEME.search_24,
+				function() /*=>*/ {return 0}, function() /*=>*/ {return tooltip_search}, 
+				function(param) /*=>*/ { toggleSearch(); }
+			],
+			[ 
 				THEME.icon_center_canvas,
 				function() /*=>*/ {return 0}, function() /*=>*/ {return tooltip_center}, 
 				function(param) /*=>*/ { toCenterNode(); } 
 			],
 			[ 
 				THEME.icon_minimap,
-				function() /*=>*/ {return minimap_show}, function() /*=>*/ {return minimap_show? __txtx("panel_graph_minimap_enabled", "Minimap enabled") : __txtx("panel_graph_minimap_disabled", "Minimap disabled")}, 
+				function() /*=>*/ {return minimap_show}, function() /*=>*/ {return tooltip_minimap}, 
 				function(param) /*=>*/ { minimap_show = !minimap_show; } 
 			],
 			[ 
@@ -2109,32 +2107,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(2), my0 + ui(2), 0.5, 0.5, 180, c_white, 0.3);
 	} #endregion
 	
-	function searchNodes() {
-		nodes_selecting = [];
-		search_result   = [];
-		search_index    = 0;
-		
-		if(search_string == "") return;
-		
-		var _search = string_lower(search_string);
-		
-		for(var i = 0; i < array_length(nodes_list); i++) {
-			var _nl   = nodes_list[i];
-			var _name = string_lower(_nl.getDisplayName());
-			
-			var _match = string_full_match(_name, _search);
-			_nl.search_match = _match;
-			
-			if( _match == -9999) continue;
-			
-			array_push(nodes_selecting, _nl);
-			array_push(search_result,   _nl);
-		}
-		
-		if(!array_empty(nodes_selecting))
-			toCenterNode(nodes_selecting);
-	}
-	
 	function drawSearch() {
 		if(!is_searching) return;
 		
@@ -2240,7 +2212,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		drawGrid();
 		
 		var ovy = ui(8);
-		if(show_view_control == 2) ovy += ui(36);
+		if(show_view_control == 2)	ovy += ui(36);
+		// if(is_searching)			ovy += line_get_height(f_p2, 20);
 		
 		drawNodes();
 		
@@ -2821,6 +2794,42 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	static onFullScreen = function() { run_in(1, fullView); }
+	
+	function searchNodes() {
+		nodes_selecting = [];
+		search_result   = [];
+		search_index    = 0;
+		
+		if(search_string == "") return;
+		
+		var _search = string_lower(search_string);
+		
+		for(var i = 0; i < array_length(nodes_list); i++) {
+			var _nl   = nodes_list[i];
+			var _name = string_lower(_nl.getDisplayName());
+			
+			var _match = string_full_match(_name, _search);
+			_nl.search_match = _match;
+			
+			if( _match == -9999) continue;
+			
+			array_push(nodes_selecting, _nl);
+			array_push(search_result,   _nl);
+		}
+		
+		if(!array_empty(nodes_selecting))
+			toCenterNode(nodes_selecting);
+	}
+	
+	function toggleSearch() {
+		is_searching = !is_searching; 
+		
+		if(is_searching) {
+			search_string  = "";
+			WIDGET_CURRENT = tb_search;
+			KEYBOARD_RESET
+		}
+	}
 	
 	//// =========== Serialize ===========
 	
