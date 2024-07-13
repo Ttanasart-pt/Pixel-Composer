@@ -406,7 +406,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		addHotkey("Graph", "Canvas",				"C", MOD_KEY.ctrl | MOD_KEY.shift,	panel_graph_canvas);
 		addHotkey("Graph", "Canvas blend",			"C", MOD_KEY.ctrl | MOD_KEY.alt,	panel_graph_canvas_blend);
 													
-		addHotkey("Graph", "Frame",					"F", MOD_KEY.ctrl,					panel_graph_frame);
+		addHotkey("Graph", "Frame",					"F", MOD_KEY.shift,					panel_graph_frame);
 	
 		addHotkey("Graph", "Delete (break)",		vk_delete, MOD_KEY.shift,			panel_graph_delete_break);
 		addHotkey("Graph", "Delete (merge)",		vk_delete, MOD_KEY.none,			panel_graph_delete_merge);
@@ -419,7 +419,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		addHotkey("Graph", "Zoom",					"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_graph_zoom);
 		
 		addHotkey("Graph", "Auto Align",			"L", MOD_KEY.none,					panel_graph_auto_align);
-		addHotkey("Graph", "Search",				"F", MOD_KEY.shift,					panel_graph_search);
+		addHotkey("Graph", "Search",				"F", MOD_KEY.ctrl,					panel_graph_search);
 		addHotkey("Graph", "Toggle Minimap",		"M", MOD_KEY.ctrl,					panel_graph_toggle_minimap);
 	#endregion
 	

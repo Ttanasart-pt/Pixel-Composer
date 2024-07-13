@@ -235,52 +235,54 @@
 #endregion
 
 #region save load
-	function PREF_SAVE() { #region
+	function PREF_SAVE() {
 		if(IS_CMD) return;
-		var map = {};
-		
-		var save_l = [];
-		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
-			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
-			
-			for(var i = 0; i < ds_list_size(ll); i++)
-				array_push(save_l, ll[| i].serialize());
-		}
-		
-		map.key = save_l;
 		
 		PREFERENCES.window_maximize	= window_is_maximized;
 		PREFERENCES.window_width	= max(960, window_minimize_size[0]);
 		PREFERENCES.window_height	= max(600, window_minimize_size[1]);
 		PREFERENCES.window_monitor  = window_monitor;
 		
-		map.preferences = PREFERENCES;
+		var _hotkey = [];
+		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
+			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
+			
+			for(var i = 0; i < ds_list_size(ll); i++) {
+				var _hk = ll[| i];
+				if(_hk.dKey == _hk.key && _hk.dModi == _hk.modi) continue;
+				
+				array_push(_hotkey, _hk.serialize());
+			}
+		}
 		
-		json_save_struct(DIRECTORY + "keys.json",       		map);
+		json_save_struct(DIRECTORY + "keys.json",       		PREFERENCES);
+		json_save_struct(DIRECTORY + "hotkeys.json",       		_hotkey);
 		json_save_struct(DIRECTORY + "Nodes/fav.json",			global.FAV_NODES);
 		json_save_struct(DIRECTORY + "Nodes/recent.json",		global.RECENT_NODES);
 		json_save_struct(DIRECTORY + "key_nodes.json",  		HOTKEYS_CUSTOM);
 		json_save_struct(DIRECTORY + "default_project.json",    PROJECT_ATTRIBUTES);
-	} #endregion
+	}
 	
-	function PREF_LOAD() { #region
+	function PREF_LOAD() {
 		var path = DIRECTORY + "keys.json";
-		if(!file_exists_empty(path)) return;
-		
-		var map = json_load_struct(path);
-		if(array_empty(variable_struct_get_names(map))) return;
-		
-		HOTKEYS_DATA = {};
-		
-		for(var i = 0; i < array_length(map.key); i++) {
-			var key_list    = map.key[i];
-			var _context	= is_struct(key_list)? key_list.context : key_list[0];
-			var name		= is_struct(key_list)? key_list.name    : key_list[1];
-			
-			HOTKEYS_DATA[$ $"{_context}_{name}"] = key_list;
+		if(file_exists(path)) {
+			var map = json_load_struct(path);
+			struct_override(PREFERENCES, map);
 		}
 		
-		struct_override(PREFERENCES, map.preferences);
+		var path = DIRECTORY + "hotkeys.json";
+		if(file_exists(path)) {
+			var map = json_load_struct(path);
+			HOTKEYS_DATA = {};
+			
+			for(var i = 0; i < array_length(map); i++) {
+				var key_list    = map[i];
+				var _context	= is_struct(key_list)? key_list.context : key_list[0];
+				var name		= is_struct(key_list)? key_list.name    : key_list[1];
+				
+				HOTKEYS_DATA[$ $"{_context}_{name}"] = key_list;
+			}
+		}
 		
 		if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
 			PREFERENCES.theme = "default";
@@ -299,9 +301,9 @@
 		var f = json_load_struct(DIRECTORY + "default_project.json");
 		struct_override(PROJECT_ATTRIBUTES, f);
 		
-	} #endregion
+	}
 	
-	function PREF_APPLY() { #region
+	function PREF_APPLY() {
 		if(PREFERENCES.double_click_delay > 1)
 			PREFERENCES.double_click_delay /= 60;
 		
@@ -347,5 +349,5 @@
 		
 		var grav = struct_try_get(PREFERENCES, "physics_gravity", [ 0, 10 ]);
 		physics_world_gravity(array_safe_get_fast(grav, 0, 0), array_safe_get_fast(grav, 1, 10));
-	} #endregion
+	}
 #endregion
