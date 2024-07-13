@@ -267,7 +267,8 @@
 		var path = DIRECTORY + "keys.json";
 		if(file_exists(path)) {
 			var map = json_load_struct(path);
-			struct_override(PREFERENCES, map);
+			if(struct_has(map, "preferences")) struct_override(PREFERENCES, map.preferences);
+			else                               struct_override(PREFERENCES, map);
 		}
 		
 		var path = DIRECTORY + "hotkeys.json";
