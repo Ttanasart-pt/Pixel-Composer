@@ -6,7 +6,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	h      = 160;
 	bg_spr = THEME.node_frame_bg;
 	nm_spr = THEME.node_frame_name;
-	  
+	
 	size_dragging    = false;
 	size_dragging_w  = w;
 	size_dragging_h  = h;

@@ -2,8 +2,13 @@
 event_inherited();
 
 #region 
-	max_h	  = 640;
-	align	  = fa_center;
+	max_h	 = 640;
+	
+	font     = f_p0
+	align	 = fa_center;
+	text_pad = ui(8);
+	item_pad = ui(8);
+	
 	draggable = false;
 	destroy_on_click_out = true;
 	
@@ -54,7 +59,7 @@ event_inherited();
 	}
 	
 	function setSize() {
-		var hght = line_get_height(f_p0, 8);
+		var hght = line_get_height(font) + item_pad;
 		var hh	 = ui(16 + 24);
 		
 		for( var i = 0, n = array_length(data); i < n; i++ )
@@ -68,7 +73,7 @@ event_inherited();
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var hght = line_get_height(f_p0, 8);
+		var hght = line_get_height(font) + item_pad;
 		var _dw  = sc_content.surface_w;
 		var _h   = 0;
 		var _ly  = _y;
@@ -110,13 +115,13 @@ event_inherited();
 				}
 			}
 				
-			draw_set_text(f_p0, align, fa_center, clickable? COLORS._main_text : COLORS._main_text_sub);
+			draw_set_text(font, align, fa_center, clickable? COLORS._main_text : COLORS._main_text_sub);
 			if(align == fa_center) {
 				var _xc = _spr? hght + (_dw - hght) / 2 : _dw / 2;
 				draw_text_cut(_xc, _ly + hght / 2, txt, _dw);
 				
 			} else if(align == fa_left) 
-				draw_text_cut(ui(8) + _spr * hght, _ly + hght / 2, txt, _dw);
+				draw_text_cut(text_pad + _spr * hght, _ly + hght / 2, txt, _dw);
 			
 			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
 			

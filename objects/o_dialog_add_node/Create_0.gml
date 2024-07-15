@@ -490,14 +490,16 @@ event_inherited();
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				var cc    = c_white;
 				
-				if(is_instanceof(_node, NodeObject))		cc = c_white;
+					 if(is_instanceof(_node, NodeObject))	cc = c_white;
 				else if(is_instanceof(_node, NodeAction))	cc = COLORS.add_node_blend_action;
 				else if(is_instanceof(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
 				else										cc = COLORS.dialog_add_node_collection;
 				
-				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, cc, 1);
-				BLEND_NORMAL
+				if(!struct_try_get(_node, "hide_bg", false)) {
+					BLEND_OVERRIDE
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, cc, 1);
+					BLEND_NORMAL
+				}
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
@@ -527,7 +529,7 @@ event_inherited();
 					if(sprite_exists(_node.spr)) 
 						draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y, 0.5);
 					
-					if(is_instanceof(_node, NodeAction))
+					if(is_instanceof(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 						draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
 				}
 				
@@ -649,7 +651,7 @@ event_inherited();
 						draw_sprite_ext(_node.spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
 					}
 					
-					if(is_instanceof(_node, NodeAction))
+					if(is_instanceof(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 						draw_sprite_ui_uniform(THEME.play_action, 0, spr_x + list_height / 2 - 8, spr_y + list_height / 2 - 8, 0.5, COLORS.add_node_blend_action);
 					
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
@@ -829,6 +831,7 @@ event_inherited();
 		
 		if(PREFERENCES.dialog_add_node_view == 0) { // grid
 			
+			var cc;
 			var col    = floor(search_pane.surface_w / (grid_width + grid_space));
 			var yy     = _y + grid_space;
 			var index  = 0;
@@ -856,12 +859,17 @@ event_inherited();
 				var _drw = yy > -grid_size && yy < search_pane.h;
 				
 				if(_drw) {
-					BLEND_OVERRIDE;
-						 if(is_instanceof(_node, NodeObject))	draw_sprite_stretched(    THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-					else if(is_instanceof(_node, NodeAction))	draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_action);
-					else if(is_instanceof(_node, AddNodeItem))	draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.add_node_blend_generic);
-					else										draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection);
-					BLEND_NORMAL;
+					
+						 if(is_instanceof(_node, NodeObject))	cc = c_white;
+					else if(is_instanceof(_node, NodeAction))	cc = COLORS.add_node_blend_action;
+					else if(is_instanceof(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
+					else										cc = COLORS.dialog_add_node_collection;
+					
+					if(!struct_try_get(_node, "hide_bg", false)) {
+						BLEND_OVERRIDE
+						draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, cc, 1);
+						BLEND_NORMAL
+					}
 					
 					if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_size, yy + grid_size)) {
 						node_selecting = i;
@@ -909,7 +917,7 @@ event_inherited();
 							draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 						}
 					
-						if(is_instanceof(_node, NodeAction))
+						if(is_instanceof(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 							draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
 					}
 				}
@@ -1033,7 +1041,7 @@ event_inherited();
 				
 						draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 					
-						if(is_instanceof(_node, NodeAction))
+						if(is_instanceof(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 							draw_sprite_ui_uniform(THEME.play_action, 0, _sx + list_height / 2 - 8, _sy + list_height / 2 - 8, 0.5, COLORS.add_node_blend_action);
 					}
 					

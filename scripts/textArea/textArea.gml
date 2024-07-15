@@ -13,8 +13,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	color    = COLORS._main_text;
 	boxColor = c_white;
 	
-	auto_update = false;
-	
 	_input_text_line       = [];
 	_input_text_line_index = [];
 	

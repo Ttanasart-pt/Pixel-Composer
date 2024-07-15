@@ -2,18 +2,9 @@ function actionStep() constructor {
 	type = "";
 	data = {};
 	
-	static trigger = function() {
-		
-	}
+	static trigger = function() {}
 	
-	static serialize = function() {
-		var map = {};
-		
-		map.type = type;
-		map.data = data;
-		
-		return map;
-	}
+	static serialize = function() { return { type, data }; }
 	
 	static deserialize = function(map) {
 		type = map.type;

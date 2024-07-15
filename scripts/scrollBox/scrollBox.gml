@@ -25,30 +25,37 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	open_ry = 0;
 	
 	align        = fa_center;
+	horizontal   = false;
 	extra_button = noone;
+	padding      = ui(8);
+	item_pad     = ui(8);
 	
-	static trigger = function() { #region
+	static trigger = function() {
 		if(is_method(data_list)) data = data_list();
 		else					 data = data_list;
 		
 		var ind = array_find(data, curr_text);
 		open    = true;
 		
-		with(dialogCall(o_dialog_scrollbox, x + open_rx, y + open_ry)) {
-			initScroll(other);
+		with(dialogCall(horizontal? o_dialog_scrollbox_horizontal : o_dialog_scrollbox, x + open_rx, y + open_ry)) {
 			initVal      = ind;
+			font         = other.font;
 			align        = other.align;
+			text_pad     = other.padding;
+			item_pad     = other.item_pad;
 			update_hover = other.update_hover;
+			
+			initScroll(other);
 		}
-	} #endregion
+	}
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _val, _m = mouse_ui, _rx = 0, _ry = 0) { #region
+	static draw = function(_x, _y, _w, _h, _val, _m = mouse_ui, _rx = 0, _ry = 0) {
 		x = _x;
 		y = _y;
 		open_rx = _rx;
@@ -64,6 +71,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		if(is_numeric(_val)) _selVal = array_safe_get_fast(data, _val);
 		
 		var _text = is_instanceof(_selVal, scrollItem)? _selVal.name : _selVal;
+		_text     = string_trim_start(_text, ["-", ">", " "]);
 		curr_text = _text;
 		
 		w = _w;
@@ -115,7 +123,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		if(_h >= line_get_height()) {
 			draw_set_alpha(0.5 + 0.5 * interactable);
 					 if(align == fa_center) draw_text_add((_x0 + _x1) / 2, _yc, _text, _sps);
-				else if(align == fa_left)   draw_text_add(_x0 + ui(8),     _yc, _text, _sps);
+				else if(align == fa_left)   draw_text_add(_x0 + padding,   _yc, _text, _sps);
 			draw_set_alpha(1);
 		}
 		
@@ -129,11 +137,11 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		resetFocus();
 		
 		return h;
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new scrollBox(data, onModify, update_hover);
 		
 		return cln;
-	} #endregion
+	}
 }

@@ -277,7 +277,8 @@ function addNodePCXCatagory(name, list, filter = []) { #region
 } #endregion
 
 function __initNodes() {
-	global.__currPage = "";
+	global.__currPage  = "";
+	global.__startPage = 0;
 	
 	if(!IS_CMD) {
 		var favPath = DIRECTORY + "Nodes/fav.json";
@@ -488,6 +489,8 @@ function __initNodes() {
 	#endregion
 	
 	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+	
+	global.__startPage = ds_list_size(NODE_CATEGORY);
 	
 	var input = ds_list_create(); #region //io
 	addNodeCatagory("IO", input);

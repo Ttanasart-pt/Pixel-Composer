@@ -2,6 +2,7 @@ function textInput(_input, _onModify) : widget() constructor {
 	input		= _input;
 	onModify	= _onModify;
 	selecting   = false;
+	auto_update = false;
 	
 	typing      = false;
 	
@@ -20,12 +21,11 @@ function textInput(_input, _onModify) : widget() constructor {
 	
 	static onKey = function(key) {}
 	
-	static setSideButton = function(_button) { #region
-		self.side_button = _button;
-		return self;
-	} #endregion
+	static setAutoUpdate = function() /*=>*/ { auto_update = true; return self; } 
 	
-	static breakCharacter = function(ch) { return ch == " " || ch == "\n"; }
+	static setSideButton = function(_button) /*=>*/ { self.side_button = _button; return self; } 
+	
+	static breakCharacter = function(ch) /*=>*/ { return ch == " " || ch == "\n"; }
 	
 	static clone = function() { 
 		var _onModify = onModify;

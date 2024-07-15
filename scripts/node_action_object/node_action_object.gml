@@ -34,18 +34,30 @@
 				
 				if(struct_has(__n, "setValues")) {
 					var _setVals = __n.setValues;
-					for(var j = 0, m = array_length(_setVals); j < m; j++ ) {
-						var _setVal = _setVals[j];
-						var _input  = is_string(_setVal.index)? _node.inputMap[? _setVal.index] : _node.inputs[| _setVal.index];
-						
-						if(_input == undefined) continue;
-						
-						if(struct_has(_setVal, "value"))
-							_input.setValue(_setVal.value);
-						if(struct_has(_setVal, "unit"))
-							_input.unit.setMode(_setVal.unit);
-						if(struct_has(_setVal, "expression"))
-							_input.setExpression(_setVal.expression);
+					
+					if(is_array(_setVals)) {
+						for(var j = 0, m = array_length(_setVals); j < m; j++ ) {
+							var _setVal = _setVals[j];
+							var _input  = is_string(_setVal.index)? _node.inputMap[? _setVal.index] : _node.inputs[| _setVal.index];
+							if(_input == undefined) continue;
+							
+							if(struct_has(_setVal, "value"))		_input.setValue(_setVal.value);
+							if(struct_has(_setVal, "unit"))			_input.unit.setMode(_setVal.unit);
+							if(struct_has(_setVal, "expression"))	_input.setExpression(_setVal.expression);
+						}
+					} else if(is_struct(_setVals)) {
+						var _keys = struct_get_names(_setVals);
+						for (var j = 0, m = array_length(_keys); j < m; j++) {
+							var _key   = _keys[j];
+							var _input = _node.inputs[| _key];
+							if(_input == undefined) continue;
+							
+							var _setVal = _setVals[$ _key];
+							
+							if(struct_has(_setVal, "value"))		_input.setValue(_setVal.value);
+							if(struct_has(_setVal, "unit"))			_input.unit.setMode(_setVal.unit);
+							if(struct_has(_setVal, "expression"))	_input.setExpression(_setVal.expression);
+						}
 					}
 				}
 			}
@@ -97,6 +109,14 @@
 			return self;
 		} #endregion
 	}
+	
+	function NodeAction_create() : NodeAction() constructor {
+		name    = "Create Action...";
+		spr     = s_action_add;
+		hide_bg = true;
+		
+		static build = function() { PANEL_GRAPH.createAction(); }
+	}
 
 	function __initNodeActions(list) {
 		var root = $"{DIRECTORY}Actions";
@@ -104,6 +124,8 @@
 		
 		root += "/Nodes";
 		directory_verify(root);
+		
+		ds_list_add(list, new NodeAction_create());
 		
 		var f = file_find_first(root + "/*", 0);
 		
@@ -113,8 +135,8 @@
 				ds_list_add(list, _c);
 				
 				if(_c.location != noone) {
-					var _cat = _c.location[0];
-					var _grp = _c.location[1];
+					var _cat = array_safe_get(_c.location, 0, "");
+					var _grp = array_safe_get(_c.location, 1, "");
 					
 					for( var i = 0, n = ds_list_size(NODE_CATEGORY); i < n; i++ ) {
 						if(NODE_CATEGORY[| i].name != _cat) continue;

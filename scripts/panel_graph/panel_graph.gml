@@ -2897,6 +2897,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		_ji.setFrom(_to.outputs[| 0]);
 	}
 	
+	function createAction() {
+		if(array_empty(nodes_selecting)) return;
+		
+		var pan = new Panel_Action_Create();
+		    pan.setNodes(nodes_selecting);
+		    pan.spr = PANEL_PREVIEW.getNodePreviewSurface();
+		    
+		var dia = dialogPanelCall(pan);
+	}
+	
 	//// =========== Serialize ===========
 	
 	static serialize = function() { 

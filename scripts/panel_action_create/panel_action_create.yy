@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"panel_action_create",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_action_create",
+  "parent":{
+    "name":"graph",
+    "path":"folders/panels/graph.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

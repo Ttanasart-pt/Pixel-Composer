@@ -17,7 +17,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	suffix = "";
 	
 	no_empty    = true;
-	auto_update = false;
 	
 	slidable    = false;
 	sliding     = false;
