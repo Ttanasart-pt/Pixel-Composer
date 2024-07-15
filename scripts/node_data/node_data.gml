@@ -1147,11 +1147,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 			
 		var _iny = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM) * _s;
+		var rx = x, ry = y + junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM;
 		
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
 			jun = inputs[| i];
 			jun.x = xx;
 			jun.y = _iny;
+			
+			jun.rx = rx;
+			jun.ry = ry;
 		}
 		
 		for(var i = 0; i < in_cache_len; i++) {
@@ -1160,18 +1164,27 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun.x = xx;
 			jun.y = _iny;
 			_iny += junction_draw_hei_y * _s;
+			
+			jun.rx = rx;
+			jun.ry = ry;
+			ry    += junction_draw_hei_y;
 		}
 		
 		xx = xx + w * _s;
 		var _outy = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM) * _s;
+		var rx = x + w, ry = y + junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM;
 		
 		for(var i = 0; i < outputs_amount; i++) {
 			var idx = outputs_index[i];
 			jun = outputs[| idx];
 			
-			jun.x = xx;
-			jun.y = _outy;
+			jun.x  = xx;
+			jun.y  = _outy;
 			_outy += junction_draw_hei_y * _s * jun.isVisible();
+			
+			jun.rx = rx;
+			jun.ry = ry;
+			ry    += junction_draw_hei_y * jun.isVisible();
 		}
 		
 		if(SHOW_PARAM) h = h_param;
@@ -1790,25 +1803,25 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawBadge = function(_x, _y, _s) {
 		if(!active) return;
-		var xx = x * _s + _x + w * _s;
-		var yy = y * _s + _y;
 		
 		badgePreview = lerp_float(badgePreview, !!previewing, 2);
 		badgeInspect = lerp_float(badgeInspect,   inspecting, 2);
 		
-		if(badgePreview > 0) {
-			draw_sprite_ext(THEME.node_state, is_3D? 3 : 0, xx, yy, badgePreview, badgePreview, 0, c_white, 1);
-			xx -= 28 * badgePreview;
-		}
-		
-		if(badgeInspect > 0) {
-			draw_sprite_ext(THEME.node_state, 1, xx, yy, badgeInspect, badgeInspect, 0, c_white, 1);
-			xx -= 28 * badgeInspect;
-		}
-		
-		if(isTool) {
-			draw_sprite_ext(THEME.node_state, 2, xx, yy, 1, 1, 0, c_white, 1);
-			xx -= 28 * 2;
+		if(previewable) {
+			var xx = x * _s + _x + w * _s;
+			var yy = y * _s + _y;
+			
+			if(badgePreview > 0) { draw_sprite_ext(THEME.node_state, is_3D? 3 : 0, xx, yy, badgePreview, badgePreview, 0, c_white, 1); 	xx -= 28 * badgePreview;	}
+			if(badgeInspect > 0) { draw_sprite_ext(THEME.node_state, 1, xx, yy, badgeInspect, badgeInspect, 0, c_white, 1);				xx -= 28 * badgeInspect;	}
+			if(isTool)           { draw_sprite_ext(THEME.node_state, 2, xx, yy, 1, 1, 0, c_white, 1);									xx -= 28 * 2;				}
+			
+		} else {
+			var xx = _x + _s * (x + w - 10);
+			var yy = _y + _s *  y;
+			
+			if(badgePreview > 0) { draw_sprite_ext(THEME.circle_16, 0, xx, yy, .5 * _s, .5 * _s, 0, CDEF.orange); xx -= 12 * _s; }
+			if(badgeInspect > 0) { draw_sprite_ext(THEME.circle_16, 0, xx, yy, .5 * _s, .5 * _s, 0, CDEF.lime);   xx -= 12 * _s; }
+			if(isTool)           { draw_sprite_ext(THEME.circle_16, 0, xx, yy, .5 * _s, .5 * _s, 0, CDEF.blue);   xx -= 12 * _s; }
 		}
 		
 		inspecting = false;

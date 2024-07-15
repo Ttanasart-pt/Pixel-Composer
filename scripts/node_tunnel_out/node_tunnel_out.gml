@@ -27,28 +27,28 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	insp2UpdateTooltip = "Goto tunnel in";
 	insp2UpdateIcon    = [ THEME.tunnel, 1, c_white ];
 	
-	static onInspector2Update = function() { #region
+	static onInspector2Update = function() {
 		var _key = inputs[| 0].getValue();
 		if(!ds_map_exists(TUNNELS_IN, _key)) return;
 		
 		var _node = TUNNELS_IN[? _key].node;
 		graphFocusNode(_node);
-	} #endregion
+	}
 	
-	static isRenderable = function() { #region
+	static isRenderable = function() {
 		var _key = inputs[| 0].getValue();
 		if(!ds_map_exists(TUNNELS_IN, _key)) return false;
 		
 		return TUNNELS_IN[? _key].node.rendered;
-	} #endregion
+	}
 	
-	static onValueUpdate = function(index = -1) { #region
+	static onValueUpdate = function(index = -1) {
 		var _key = inputs[| 0].getValue();
 		
 		if(index == 0) { RENDER_ALL_REORDER }
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _key = inputs[| 0].getValue();
 		TUNNELS_OUT[? node_id] = _key;
 		
@@ -59,25 +59,25 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			outputs[| 0].setType(VALUE_TYPE.any);
 			outputs[| 0].display_type = VALUE_DISPLAY._default;
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _key = inputs[| 0].getValue();
 		
 		if(ds_map_exists(TUNNELS_IN, _key))
 			outputs[| 0].setValue(TUNNELS_IN[? _key].getValue());
-	} #endregion
+	}
 	
 	/////////////////////////////////////////////////////////////////////////////
 	
-	static pointIn = function(_x, _y, _mx, _my, _s) { #region
+	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
 		return point_in_circle(_mx, _my, xx, yy, _s * 24);
-	} #endregion
+	}
 	
-	static preDraw = function(_x, _y, _s) { #region
+	static preDraw = function(_x, _y, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -86,12 +86,12 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		outputs[| 0].x = xx;
 		outputs[| 0].y = yy;
-	} #endregion
+	}
 	
 	static drawBadge = function(_x, _y, _s) {}
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {}
 	
-	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) { #region
+	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {
 		var xx = _x + x * _s;
 		var yy = _y + y * _s;
 		
@@ -117,9 +117,9 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_line_dotted(frx, fry, xx, yy, 2 * _s, current_time / 10, 3);
 		
 		draw_set_alpha(1);
-	} #endregion
+	}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
@@ -129,9 +129,9 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		hover_scale_to = 1;
 		return jhov? outputs[| 0] : noone;
-	} #endregion
+	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) { #region
+	static drawNode = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -178,10 +178,10 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		hover_scale_to = 0;
 		
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
-		draw_text_transformed(xx, yy - 12 * _s, string(inputs[| 0].getValue()), _s * 0.4, _s * 0.4, 0);
+		draw_text_transformed(xx, yy - 12 * _s, string(inputs[| 0].getValue()), _s * .3, _s * .3, 0);
 		
 		return drawJunctions(_x, _y, _mx, _my, _s);
-	} #endregion
+	}
 	
 	static onClone = function() { onValueUpdate(0); }
 	

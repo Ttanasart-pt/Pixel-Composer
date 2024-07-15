@@ -22,12 +22,18 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	scale  = 1;
 	lcolor = false;
 	
-	name_height = 16;
+	tb_name	= new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { setDisplayName(txt); });
+	tb_name.font   = f_p2;
+	tb_name.hide   = true;
+	tb_name.align  = fa_center;
+	
+	name_height  = 16;
 	
 	draw_x0 = 0;
 	draw_y0 = 0;
 	draw_x1 = 0;
 	draw_y1 = 0;
+	
 	
 	inputs[| 0] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 240, 160 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -50,14 +56,14 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	input_display_list = [ 0, 1, 3, 4 ];
 	
-	static onValueUpdate = function(index = 3) {
-		global.__FRAME_LABEL_SCALE = getInputData(3);
-	}
+	static onValueUpdate = function(index = 3) { global.__FRAME_LABEL_SCALE = getInputData(3); }
 	
 	static step = function() {
-		var si = getInputData(0);
-		w = si[0];
-		h = si[1];
+		previewable = true;
+		
+		var sz = getInputData(0);
+		w = sz[0];
+		h = sz[1];
 		
 		color  = getInputData(1);
 		alpha  = _color_get_alpha(color);
@@ -67,7 +73,6 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static drawNodeBase = function(xx, yy, _s, _panel) {
-		
 		var px0 =  3;
 		var py0 =  3;
 		var px1 = -3 + _panel.w;
@@ -92,23 +97,39 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(draw_x1 - draw_x0 < 4) return;
 		
-		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, x1 - x0, y1 - y0,     color, alpha);
+		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, x1 - x0, y1 - y0, color, alpha);
 	}
 	
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel) {
 		
 		if(draw_x1 - draw_x0 < 4) return;
 		
-		var _w = draw_x1 - draw_x0;
-		var _h = draw_y1 - draw_y0;
-		
-		draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h,          color,   alpha * .50);
-		draw_sprite_stretched_ext(nm_spr, 0, draw_x0, draw_y0, _w, name_height, color,   alpha * .75);
-		draw_sprite_stretched_add(bg_spr, 1, draw_x0, draw_y0, _w, _h,          c_white,         .20);
-		
+		var _w  = draw_x1 - draw_x0;
+		var _h  = draw_y1 - draw_y0;
 		var txt = renamed? display_name : name;
-		draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
-		draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 2, txt, _w - 4);
+		
+		draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h, color, alpha * .50);
+		
+		if(WIDGET_CURRENT == tb_name) {
+			var nh = 24;
+			draw_sprite_stretched_ext(nm_spr, 0, draw_x0, draw_y0, _w, nh, color, alpha * .75);
+			
+			tb_name.setFocusHover(PANEL_GRAPH.pFOCUS, PANEL_GRAPH.pHOVER);
+			tb_name.draw(draw_x0, draw_y0, _w, nh, txt, [ _mx, _my ]);
+			
+		} else {
+			draw_sprite_stretched_ext(nm_spr, 0, draw_x0, draw_y0, _w, name_height, color, alpha * .75);
+			
+			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
+			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 2, txt, _w - 4);
+			
+			if(point_in_rectangle(_mx, _my, draw_x0, draw_y0, draw_x0 + _w, draw_y0 + name_height)) {
+				if(PANEL_GRAPH.pFOCUS && DOUBLE_CLICK)
+					tb_name.activate();
+			}
+		}
+		
+		draw_sprite_stretched_add(bg_spr, 1, draw_x0, draw_y0, _w, _h, c_white, .20);
 		
 		if(active_draw_index > -1) {
 			draw_sprite_stretched_ext(bg_sel_spr, 0, draw_x0, draw_y0, _w, _h, COLORS._main_accent, 1);

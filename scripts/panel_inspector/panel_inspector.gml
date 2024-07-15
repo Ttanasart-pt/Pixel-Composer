@@ -86,11 +86,9 @@ function Panel_Inspector() : PanelContent() constructor {
 	drawWidgetInit();
 	
 	#region ---- header labels ----
-		tb_node_name	= new textBox(TEXTBOX_INPUT.text, function(txt) {
-			if(inspecting) inspecting.setDisplayName(txt);
-		})
+		tb_node_name	= new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); });
 	
-		tb_prop_filter	= new textBox(TEXTBOX_INPUT.text, function(txt) { filter_text = txt; })
+		tb_prop_filter	= new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { filter_text = txt; });
 		tb_prop_filter.no_empty		= false;
 		tb_prop_filter.auto_update	= true;
 		tb_prop_filter.font			= f_p0;
@@ -99,7 +97,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		tb_prop_filter.hide			= true;
 		filter_text = "";
 	
-		prop_page_button = new buttonGroup([ "Properties", "Settings", THEME.message_16 ], function(val) { prop_page = val; });
+		prop_page_button = new buttonGroup([ "Properties", "Settings", THEME.message_16 ], function(val) /*=>*/ { prop_page = val; });
 		prop_page_button.buttonSpr	= [ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ];
 		prop_page_button.font		= f_p2;
 		prop_page_button.fColor		= COLORS._main_text_sub;

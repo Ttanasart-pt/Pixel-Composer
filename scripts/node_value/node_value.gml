@@ -11,6 +11,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node    = _node;
 		x	    = node.x;
 		y       = node.y;
+		rx      = x;
+		ry      = y;
+		
 		index   = _connect == JUNCTION_CONNECT.input? ds_list_size(node.inputs) : ds_list_size(node.outputs);
 		type    = _type;
 		forward = true;

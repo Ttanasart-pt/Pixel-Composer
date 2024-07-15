@@ -1559,7 +1559,7 @@ function Panel_Animation() : PanelContent() constructor {
 			tx = tool_width - ui(16);
 			if(pHOVER && point_in_rectangle(msx, msy, tx - ui(9), ty - ui(10), tx + ui(10), ty + ui(8))) {
 				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, COLORS._main_icon_on_inner, _tool_a);
-				TOOLTIP = __txtx("panel_animation_show_graph", "Show graph");
+				TOOLTIP = _graph_show? __txtx("panel_animation_hide_graph", "Hide graph") : __txtx("panel_animation_show_graph", "Show graph");
 				
 				if(mouse_press(mb_left, pFOCUS)) {
 					if(prop.sep_axis) prop.show_graphs[animator.index] = !_graph_show;

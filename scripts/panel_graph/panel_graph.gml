@@ -686,6 +686,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	menu_node_copy_prop  = menuItem(__txtx("panel_graph_copy_prop",  "Copy all properties"),	function() /*=>*/ { doCopyProp();  });
 	menu_node_paste_prop = menuItem(__txtx("panel_graph_paste_prop", "Paste all properties"),	function() /*=>*/ { doPasteProp(); });
 	
+	menu_connection_tunnel = menuItem(__txtx("panel_graph_tunnel", "Create tunnels"),	function() /*=>*/ { createTunnel(); });
+	
 	#region node color
 		function setSelectingNodeColor(color) { 
 			__temp_color = color;
@@ -912,9 +914,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		toCenterNode();
 	} #endregion
 	
-	function addContext(node) { #region
+	function addContext(node) {
 		var _node = node.getNodeBase();
-		setContextFrame(false, _node);
 		
 		nodes_list = _node.nodes;
 		array_push(node_context, _node);
@@ -923,18 +924,29 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		nodes_selecting = [];
 		selection_block   = 1;
 		
+		setContextFrame(false, _node);
 		toCenterNode();
-	} #endregion
+	}
 	
-	function setContextFrame(dirr, node) { #region
+	function setContextFrame(dirr, node) {
 		context_framing = true;
-		context_frame_direct   = dirr;
-		context_frame_progress = 0;
-		context_frame_sx = w / 2 - 8;
-		context_frame_sy = h / 2 - 8;
-		context_frame_ex = context_frame_sx + 16;
-		context_frame_ey = context_frame_sy + 16;
-	} #endregion
+		
+		context_frame_direct	= dirr;
+		context_frame_progress	= 0;
+		
+		context_frame_sx		= w / 2 - 8;
+		context_frame_sy		= h / 2 - 8;
+		context_frame_ex		= context_frame_sx + 16;
+		context_frame_ey		= context_frame_sy + 16;
+		
+		var gr_x = graph_x * graph_s;
+		var gr_y = graph_y * graph_s;
+		
+		context_frame_sx		= gr_x + node.x * graph_s;
+		context_frame_sy		= gr_y + node.y * graph_s;
+		context_frame_ex		= context_frame_sx + node.w * graph_s;
+		context_frame_ey		= context_frame_sy + node.h * graph_s;
+	}
 	
 	//// ============ Step ============
 	
@@ -1159,11 +1171,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									array_push(nodes_selecting, node_hovering);
 							} else
 								nodes_selecting = [];
+								
 						} else if(value_focus || node_hovering == noone) {
 							nodes_selecting = [];
 							
 							if(DOUBLE_CLICK && !PANEL_INSPECTOR.locked)
 								PANEL_INSPECTOR.inspecting = noone;
+								
 						} else {
 							if(is_instanceof(node_hovering, Node_Frame)) {
 								var fx0 = (node_hovering.x + graph_x) * graph_s;
@@ -1188,6 +1202,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									if(_w && _h && rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
 										array_push_unique(nodes_selecting, _node);	
 								}
+								
 							} else if(DOUBLE_CLICK) {
 								PANEL_PREVIEW.setNodePreview(node_hovering);
 								
@@ -1195,6 +1210,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									if(PANEL_INSPECTOR.panel && struct_has(PANEL_INSPECTOR.panel, "switchContent"))
 										PANEL_INSPECTOR.panel.switchContent(PANEL_INSPECTOR);
 								}
+								
 							} else {
 								var hover_selected = false;	
 								for( var i = 0; i < array_length(nodes_selecting); i++ ) {
@@ -1203,6 +1219,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 									hover_selected = true;
 									break;
 								}
+								
 								if(!hover_selected)
 									nodes_selecting = [ node_hovering ];
 									
@@ -1235,38 +1252,33 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								if(!sep) { array_push(menu, -1); sep = true; }
 								
 								var _to = value_focus.value_to[i];
-								array_push(menu, menuItem($"[{_to.node.display_name}] {_to.getName()}", function(data) {
-									data.params.juncTo.removeFrom();
-								}, THEME.cross,,, { juncTo: _to }));
+								var _lb = $"[{_to.node.display_name}] {_to.getName()}";
+								array_push(menu, menuItem(_lb, function(data) /*=>*/ { data.params.juncTo.removeFrom(); }, THEME.cross, noone, noone, { juncTo: _to }));
 							}
 							
 							for( var i = 0, n = array_length(value_focus.value_to_loop); i < n; i++ ) {
 								if(!sep) { array_push(menu, -1); sep = true; }
 								
 								var _to = value_focus.value_to_loop[i];
-								array_push(menu, menuItem($"[{_to.junc_in.node.display_name}] {_to.junc_in.getName()}", function(data) {
-									data.params.juncTo.destroy();
-								}, _to.icon_24,,, { juncTo: _to }));
+								var _lb = $"[{_to.junc_in.node.display_name}] {_to.junc_in.getName()}";
+								array_push(menu, menuItem(_lb, function(data) /*=>*/ { data.params.juncTo.destroy(); }, _to.icon_24, noone, noone, { juncTo: _to }));
 							}
 						} else {
 							var sep = false;
-							
+							var _lb = $"[{_jun.node.display_name}] {_jun.getName()}";
+								
 							if(value_focus.value_from) {
 								if(!sep) { array_push(menu, -1); sep = true; }
 								
 								var _jun = value_focus.value_from;
-								array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", function(data) {
-									__junction_hovering.removeFrom();
-								}, THEME.cross));
+								array_push(menu, menuItem(_lb, function(data) /*=>*/ { __junction_hovering.removeFrom(); }, THEME.cross));
 							}
 								
 							if(value_focus.value_from_loop) {
 								if(!sep) { array_push(menu, -1); sep = true; }
 								
 								var _jun = value_focus.value_from_loop.junc_out;
-								array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", function(data) {
-									__junction_hovering.removeFromLoop();
-								}, value_focus.value_from_loop.icon_24));
+								array_push(menu, menuItem(_lb, function(data) /*=>*/ { __junction_hovering.removeFromLoop(); }, value_focus.value_from_loop.icon_24));
 							}
 						}
 						
@@ -1298,6 +1310,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							array_push(menu, -1, menu_nodes_align, menu_nodes_blend, menu_nodes_compose, menu_nodes_array);
 					
 						menuCall("graph_node_selected_multiple_menu",,, menu );
+						
 					} else if(node_hover == noone) {
 						// print($"Right click not node hover");
 						
@@ -1305,7 +1318,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						
 						__junction_hovering = junction_hovering;
 						if(junction_hovering != noone) 
-							array_push(menu, menu_junc_color, -1);
+							array_push(menu, menu_junc_color, menu_connection_tunnel, -1);
 						
 						array_push(menu, menuItem(__txt("Copy"),  function() { doCopy(); },  THEME.copy,  ["Graph", "Copy"]).setActive(array_length(nodes_selecting)));
 						array_push(menu, menuItem(__txt("Paste"), function() { doPaste(); }, THEME.paste, ["Graph", "Paste"]).setActive(clipboard_get_text() != ""));
@@ -1590,6 +1603,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					nodes_junction_d	= junction_hovering;
 					nodes_junction_dx	= junction_hovering.draw_line_shift_x;
 					nodes_junction_dy	= junction_hovering.draw_line_shift_y;
+					
 				} else if(array_empty(nodes_selecting) && !value_focus && !drag_locking) {
 					nodes_select_drag  = 1;
 					nodes_select_frame = frame_hovering == noone;
@@ -1907,8 +1921,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					node_hover		  = noone;
 					nodes_selecting = [];
 					PANEL_PREVIEW.resetNodePreview();
-					setContextFrame(true, node_context[i + 1]);
-					var _nodeFocus = node_context[i + 1];
+					
+					var _ctx = node_context[i + 1];
+					var _nodeFocus = _ctx;
 					
 					if(i == -1)
 						resetContext();
@@ -1919,6 +1934,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					
 					nodes_selecting = [ _nodeFocus ];
 					toCenterNode(nodes_selecting);
+					setContextFrame(true, _ctx);
 					break;
 				}
 				
@@ -2164,14 +2180,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			mouse_on_graph = false;
 	}
 	
-	function drawContextFrame() { #region
+	function drawContextFrame() { 
 		if(!context_framing) return;
-		context_frame_progress = lerp_float(context_frame_progress, 1, 5);
+		context_frame_progress = lerp_float(context_frame_progress, 1, 8);
 		if(context_frame_progress == 1) 
 			context_framing = false;
 		
-		var _fr_x0 = 0, _fr_y0 = 0;
-		var _fr_x1 = w, _fr_y1 = h;
+		var _fr_x0 = 0; 
+		var _fr_y0 = 0;
+		var _fr_x1 = w;
+		var _fr_y1 = h - toolbar_height;
 		
 		var _to_x0 = context_frame_sx;
 		var _to_y0 = context_frame_sy;
@@ -2185,10 +2203,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var frm_y1 = lerp(_fr_y1, _to_y1, prog);
 		
 		draw_set_color(COLORS._main_accent);
-		draw_set_alpha(0.5);
+		draw_set_alpha(0.8);
 		draw_roundrect_ext(frm_x0, frm_y0, frm_x1, frm_y1, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, true);
 		draw_set_alpha(1);
-	} #endregion
+	} 
 	
 	function drawContent(panel) { #region //// Main Draw
 		if(!project.active) return;
@@ -2858,6 +2876,25 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			_node.will_setHeight = true;
 		}
+	}
+	
+	function createTunnel() {
+		if(__junction_hovering == noone) return;
+		if(__junction_hovering.value_from == noone) return;
+		
+		var _jo = __junction_hovering.value_from;
+		var _ji = __junction_hovering;
+		
+		var _key = $"{__junction_hovering.name} {seed_random(3)}";
+		
+		var _ti = nodeBuild("Node_Tunnel_In",  _jo.rx + 32, _jo.ry);
+		var _to = nodeBuild("Node_Tunnel_Out", _ji.rx - 32, _ji.ry);
+		
+		_to.inputs[| 0].setValue(_key);
+		_ti.inputs[| 0].setValue(_key);
+		
+		_ti.inputs[| 1].setFrom(_jo);
+		_ji.setFrom(_to.outputs[| 0]);
 	}
 	
 	//// =========== Serialize ===========
