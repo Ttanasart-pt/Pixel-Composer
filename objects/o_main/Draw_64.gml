@@ -2,7 +2,7 @@
 if(winMan_isMinimized()) exit;
 
 _MOUSE_BLOCK = MOUSE_BLOCK;
-MOUSE_BLOCK  = false;
+if(MOUSE_BLOCK) MOUSE_BLOCK--;
 
 if(APP_SURF_OVERRIDE) {
 	APP_SURF      = surface_verify(APP_SURF,      WIN_W, WIN_H);

@@ -4,6 +4,7 @@ event_inherited();
 #region 
 	max_h	 = 640;
 	
+	horizon  = true;
 	font     = f_p0
 	align	 = fa_center;
 	text_pad = ui(8);
@@ -63,7 +64,7 @@ event_inherited();
 		var hght = line_get_height(font) + item_pad;
 		var sh   = ui(40);
 		
-		var ww = 0;
+		var ww = 0, tw;
 		var hh = 0;
 		
 		var lw = 0;
@@ -75,32 +76,45 @@ event_inherited();
 		draw_set_text(font, fa_left, fa_top);
 		
 		for( var i = 0, n = array_length(data); i < n; i++ ) {
-			var _dat = data[i];
-			var  txt = is_instanceof(_dat, scrollItem)? _dat.name : _dat;
+			var _val = data[i];
+			var  txt = is_instanceof(_val, scrollItem)? _val.name : _val;
+			var _spr = is_instanceof(_val, scrollItem) && _val.spr;
 			
-			if(_dat == -1 || i == n - 1) {
-				if(_emp) {
-					array_push(widths, 0);
-				} else {	
-					array_push(widths, lw);
-					ww += lw;
-					hh  = max(hh, lh);
+			if(horizon) {
+				if(_val == -1 || i == n - 1) {
+					if(_emp) {
+						array_push(widths, 0);
+					} else {	
+						array_push(widths, lw);
+						ww += lw;
+						hh  = max(hh, lh);
+					}
+					
+					lw = 0;
+					lh = item_pad;
+					continue;
 				}
-				
-				lw = 0;
-				lh = item_pad;
+			} else if(_val == -1) {
+				lh += ui(8);
 				continue;
 			}
 			
 			_emp = false;
-			lw  = max(lw, string_width(txt) + text_pad * 2);
+			
+			tw  = string_width(txt) + _spr * (hght + text_pad * 2);
+			lw  = max(lw, tw + text_pad * 2);
 			lh += hght;
 		}
 		
-		dialog_w = max(scrollbox.w, ww);
-		dialog_h = min(max_h, sh + hh);
+		if(horizon) {
+			dialog_w = max(scrollbox.w, ww) + text_pad * 2;
+			dialog_h = min(max_h, sh + hh);
+		} else {
+			dialog_w = max(scrollbox.w, lw);
+			dialog_h = min(max_h, sh + lh);
+		}
 		
-		sc_content.resize(dialog_w, dialog_h - ui(40));
+		sc_content.resize(dialog_w - text_pad * 2, dialog_h - ui(40));
 		
 		resetPosition();
 	}
@@ -117,22 +131,31 @@ event_inherited();
 		var _col = 0;
 		
 		for( var i = 0, n = array_length(data); i < n; i++ ) {
-			var _dw  = widths[_col];
+			var _dw  = horizon? widths[_col] : sc_content.surface_w;
 			var _val = data[i];
 			
-			if(data[i] == -1 || i == n -1) {
-				_lx += _dw;
-				_ly  = _y;
-				_col++;
+			if(horizon) {
+				if(_val == -1 || i == n -1) {
+					_lx += _dw;
+					_ly  = _y;
+					_col++;
+					
+					_h   = max(_h, _lh);
+					_lh  = 0;
+					_lw  = 0;
+					
+					continue;
+				}
 				
-				_h   = max(_h, _lh);
-				_lh  = 0;
-				_lw  = 0;
+				if(_dw == 0) continue;
+				
+			} else if(_val == -1) {
+				draw_sprite_stretched(THEME.menu_separator, 0, ui(8), _ly, _dw - ui(16), ui(6));
+				_ly += ui(8);
+				_h  += ui(8);
 				
 				continue;
 			}
-			
-			if(_dw == 0) continue;
 			
 			var  txt = is_instanceof(_val, scrollItem)? _val.name : _val;
 			var _spr = is_instanceof(_val, scrollItem) && _val.spr;
@@ -142,8 +165,11 @@ event_inherited();
 			var subitem   =  string_starts_with(txt, ">");
 			txt = string_trim_start(txt, ["-", ">", " "]);
 			
+			var _hov = false;
+			
 			if(clickable) {
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], _lx, _ly, _lx + _dw, _ly + hght - 1)) {
+					_hov = true;
 					selecting = i;
 					hovering  = data[i];
 					
@@ -153,20 +179,22 @@ event_inherited();
 				if(selecting == i) {
 					draw_sprite_stretched_ext(THEME.textbox, 3, _lx, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
-					if(sc_content.active && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
+					if(sc_content.active && (mouse_press(mb_left, _hov) || keyboard_check_pressed(vk_enter))) {
 						initVal = array_find(scrollbox.data, _val);
 						instance_destroy();
 					}
 				}
 			}
 				
+			align = fa_left;
+			
 			draw_set_text(font, align, fa_center, subitem? COLORS._main_text_sub : COLORS._main_text);
 			if(align == fa_center) {
 				var _xc = _spr? hght + (_dw - hght) / 2 : _dw / 2;
 				draw_text_add(_lx + _xc, _ly + hght / 2, txt);
 				
 			} else if(align == fa_left) 
-				draw_text_add(_lx + text_pad + _spr * hght, _ly + hght / 2, txt);
+				draw_text_add(text_pad + _lx + _spr * (text_pad * 2 + hght), _ly + hght / 2, txt);
 			
 			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, _lx + ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
 			

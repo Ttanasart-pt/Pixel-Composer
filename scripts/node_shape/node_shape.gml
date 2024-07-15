@@ -38,26 +38,23 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 1] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	shape_types     = [ "Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
-						-1, 
-						"Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", 
-						-1, 
-						"Regular polygon", "Star", "Cross", "Rounded Cross",  
-						-1, 
-						"Teardrop", "Leaf", "Heart", "Arrow", "Gear", 
-					];
+	shape_types     = [ 
+		"Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
+		-1, 
+		"Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", 
+		-1, 
+		"Regular polygon", "Star", "Cross", "Rounded Cross",  
+		-1, 
+		"Teardrop", "Leaf", "Heart", "Arrow", "Gear", 
+	];
 	shape_types_str = [];
 	
 	var _ind = 0;
-	for( var i = 0, n = array_length(shape_types); i < n; i++ ) {
-		if(shape_types[i] == -1) 
-			shape_types_str[i] = -1;
-		else 
-			shape_types_str[i] = new scrollItem(shape_types[i], s_node_shape_type, _ind++);
-	}
+	for( var i = 0, n = array_length(shape_types); i < n; i++ )
+		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_type, _ind++);
 	
 	inputs[| 2] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, shape_types_str);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: shape_types_str, horizontal: true, text_pad: ui(16) });
 	
 	inputs[| 3] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA_REF)
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)

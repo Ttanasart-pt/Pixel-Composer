@@ -694,12 +694,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(!is_struct(display_data)) display_data = { data: display_data };
 						var choices = __txt_junction_data(instanceof(node), connect_type, index, display_data.data);
 						
-						editWidget = new scrollBox(choices, function(val) {
-							if(val == -1) return;
-							return setValueInspector(toNumber(val)); 
-						} );
-						if(struct_has(display_data, "update_hover"))
-							editWidget.update_hover = display_data.update_hover;
+						editWidget = new scrollBox(choices, function(val) /*=>*/ { if(val == -1) return; return setValueInspector(toNumber(val)); } );
+						
+						if(struct_has(display_data, "update_hover")) editWidget.update_hover = display_data.update_hover;
+						if(struct_has(display_data, "horizontal"))   editWidget.horizontal   = display_data.horizontal;
+						if(struct_has(display_data, "item_pad"))     editWidget.item_pad     = display_data.item_pad;
+						if(struct_has(display_data, "text_pad"))     editWidget.text_pad     = display_data.text_pad;
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
