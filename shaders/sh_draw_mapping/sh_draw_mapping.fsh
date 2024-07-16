@@ -82,7 +82,7 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 /////////////// SAMPLING ///////////////
 
 void main() {
-	vec2 cpos = v_vTexcoord - vec2(0.5);
+	vec2 cpos = v_vTexcoord.yx - vec2(0.5);
 	vec2 pos;
 	pos.x = cpos.x * cos(rotation) - cpos.y * sin(rotation);
 	pos.y = cpos.x * sin(rotation) + cpos.y * cos(rotation);

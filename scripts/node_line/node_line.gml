@@ -74,20 +74,23 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(2);
 		
+	inputs[| 29] = nodeValue("Scale texture to length", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	
 	input_display_list = [
 		["Output",			true],	0, 1, 
 		["Line data",		false], 27, 6, 7, 28, 19, 2, 20, 
 		["Line settings",	false], 17, 3, 11, 12, 8, 25, 9, 26, 13, 14, 
 		["Wiggle",			false], 4, 5, 
 		["Render",			false], 10, 24, 15, 16, 
-		["Texture",			false], 18, 21, 22, 23, 
+		["Texture",			false], 18, 21, 22, 23, 29, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Width Pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	lines = [];
+	lines     = [];
+	line_data = [];
 	
 	widthMap = ds_map_create();
 	
@@ -183,8 +186,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _ratInv = _data[25];
 			var _clamp  = _data[26];
 			
-			var _dtype  = _data[27];
-			var _segs   = _data[28];
+			var _dtype    = _data[27];
+			var _segs     = _data[28];
+			var _scaleTex = _data[29];
 		#endregion
 		
 		/////// Guard clauses
@@ -260,7 +264,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_oy = _ny;
 				}
 					
-				lines = [ points ];
+				lines     = [ points ];
+				line_data = [ { length: 1 } ];
 				break;
 				
 			case 1 :
@@ -395,16 +400,22 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					array_resize(points, pointAmo);
 					
-					lines[_lineAmo++] = points;
+					lines[_lineAmo]     = points;
+					line_data[_lineAmo] = { length: _pathLength };
+					
+					_lineAmo++;
 				}
 				
-				array_resize(lines, _lineAmo);
+				array_resize(lines,     _lineAmo);
+				array_resize(line_data, _lineAmo);
 				break;
 				
 			case 2 :
 				if(!is_array(_segs[0][0])) //spreaded single path
 					_segs = [ _segs ];
-				lines = array_create(array_length(_segs));
+					
+				lines     = array_create(array_length(_segs));
+				line_data = array_create(array_length(_segs));
 				
 				for (var i = 0, n = array_length(_segs); i < n; i++) {
 					var _seg    = _segs[i];
@@ -413,35 +424,37 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var _uselen = array_length(_seg[0]) >= 3;
 					var _lin    = array_create(array_length(_seg));
 					
+					var _l, _len = [ 0 ], _lenTotal = 0;
+					var ox = _seg[0][0], oy = _seg[0][1], nx, ny;
+					
+					for (var j = 1, m = array_length(_seg); j < m; j++) {
+						nx = _seg[j][0];
+						ny = _seg[j][1];
+						_l = point_distance(ox, oy, nx, ny);
+						
+						_len[j]    = _l;
+						_lenTotal += _l;
+						
+						ox = nx;
+						oy = ny;
+					}
+					
 					if(_uselen) {
 						for (var j = 0, m = array_length(_seg); j < m; j++)
 							_lin[j] = { x: _seg[j][0], y: _seg[j][1], prog: _seg[j][2], progCrop: _seg[j][2], weight: 1 };
 							
 					} else {
-						
-						var _l, _len = [ 0 ], _lenTotal = 0;
-						var ox = _seg[0][0], oy = _seg[0][1], nx, ny;
-						
-						for (var j = 1, m = array_length(_seg); j < m; j++) {
-							nx = _seg[j][0];
-							ny = _seg[j][1];
-							_l = point_distance(ox, oy, nx, ny);
-							
-							_len[j]    = _l;
-							_lenTotal += _l;
-							
-							ox = nx;
-							oy = ny;
-						}
-						
 						for (var j = 0, m = array_length(_seg); j < m; j++)
 							_lin[j] = { x: _seg[j][0], y: _seg[j][1], prog: _len[j] / _lenTotal, progCrop: _len[j] / _lenTotal, weight: 1 };
 					}
 					
-					lines[i] = _lin;
+					lines[i]     = _lin;
+					line_data[i] = { length: _lenTotal };
 				}
 				break;
 		}
+		
+		/////// Draw
 		
 		surface_set_target(_colorPass);
 			if(_bg) draw_clear_alpha(0, 1);
@@ -462,7 +475,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var points = lines[i];
 				if(array_length(points) < 2) continue;
 				
-				var _caps = [];
+				var _ldata = line_data[i];
+				var _len   = _ldata.length;
+				var _caps  = [];
+				
+				if(_scaleTex) shader_set_2("scale",    [ _texSca[0] * _len, _texSca[1] ]);
 				
 				if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
 				else        draw_primitive_begin(pr_trianglestrip);
