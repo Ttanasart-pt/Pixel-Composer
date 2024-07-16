@@ -273,11 +273,11 @@ function Panel_Action_Create() : PanelContent() constructor {
 		var _hh = tb_tooltip.draw(_wx, _wy, _ww, _wh * 2, tooltip, [ mx, my ]);	_wy += _hh + ui(8); _th += _hh + ui(8);
 		
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(_tx, _wy + _wh / 2, __txt("Categories"));
+		draw_text_add(_tx, _wy + _wh / 2, __txt("Category"));
 		var _hh = tb_location.draw(_wx, _wy, _ww, _wh, cat_index, [ mx, my ], x, y); _wy += _hh + ui(8); _th += _hh + ui(8);
 		
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(_tx, _wy + _wh / 2, __txt("Sprite"));
+		draw_text_add(_tx, _wy + _wh / 2, __txt("Icon"));
 		
 		var spx = _wx;
 		var spy = _wy;

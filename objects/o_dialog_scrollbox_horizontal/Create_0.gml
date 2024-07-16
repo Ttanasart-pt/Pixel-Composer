@@ -61,8 +61,9 @@ event_inherited();
 	
 	function setSize() {
 		
-		var hght = line_get_height(font) + item_pad;
-		var sh   = ui(40);
+		var _tpad = horizon? text_pad : ui(8);
+		var hght  = line_get_height(font) + item_pad;
+		var sh    = ui(40);
 		
 		var ww = 0, tw;
 		var hh = 0;
@@ -101,20 +102,20 @@ event_inherited();
 			
 			_emp = false;
 			
-			tw  = string_width(txt) + _spr * (hght + text_pad * 2);
-			lw  = max(lw, tw + text_pad * 2);
+			tw  = string_width(txt) + _spr * (hght + _tpad * 2);
+			lw  = max(lw, tw + _tpad * 2);
 			lh += hght;
 		}
 		
 		if(horizon) {
-			dialog_w = max(scrollbox.w, ww) + text_pad * 2;
+			dialog_w = max(scrollbox.w, ww) + _tpad * 2;
 			dialog_h = min(max_h, sh + hh);
 		} else {
 			dialog_w = max(scrollbox.w, lw);
 			dialog_h = min(max_h, sh + lh);
 		}
 		
-		sc_content.resize(dialog_w - text_pad * 2, dialog_h - ui(40));
+		sc_content.resize(dialog_w - _tpad * 2, dialog_h - ui(40));
 		
 		resetPosition();
 	}
@@ -127,8 +128,9 @@ event_inherited();
 		var _lw  = 0;
 		var _lh  = 0;
 		var _h   = 0;
-		var hovering  = "";
 		var _col = 0;
+		var hovering  = "";
+		var _tpad     = horizon? text_pad : ui(8);
 		
 		for( var i = 0, n = array_length(data); i < n; i++ ) {
 			var _dw  = horizon? widths[_col] : sc_content.surface_w;
@@ -152,7 +154,7 @@ event_inherited();
 			} else if(_val == -1) {
 				draw_sprite_stretched(THEME.menu_separator, 0, ui(8), _ly, _dw - ui(16), ui(6));
 				_ly += ui(8);
-				_h  += ui(8);
+				_lh += ui(8);
 				
 				continue;
 			}
@@ -194,13 +196,15 @@ event_inherited();
 				draw_text_add(_lx + _xc, _ly + hght / 2, txt);
 				
 			} else if(align == fa_left) 
-				draw_text_add(text_pad + _lx + _spr * (text_pad * 2 + hght), _ly + hght / 2, txt);
+				draw_text_add(_tpad + _lx + _spr * (_tpad * 2 + hght), _ly + hght / 2, txt);
 			
 			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, _lx + ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
 			
 			_ly += hght;
 			_lh += hght;
 		}
+		
+		if(!horizon) _h = _lh + ui(8);
 		
 		if(update_hover) {
 			UNDO_HOLDING = true;
