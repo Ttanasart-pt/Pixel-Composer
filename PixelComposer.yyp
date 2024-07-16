@@ -1457,6 +1457,7 @@
     {"id":{"name":"node_scatter_points","path":"scripts/node_scatter_points/node_scatter_points.yy",},},
     {"id":{"name":"node_scatter","path":"scripts/node_scatter/node_scatter.yy",},},
     {"id":{"name":"node_sdf","path":"scripts/node_sdf/node_sdf.yy",},},
+    {"id":{"name":"node_segment_filter","path":"scripts/node_segment_filter/node_segment_filter.yy",},},
     {"id":{"name":"node_seperate_shape","path":"scripts/node_seperate_shape/node_seperate_shape.yy",},},
     {"id":{"name":"node_sequence_anim","path":"scripts/node_sequence_anim/node_sequence_anim.yy",},},
     {"id":{"name":"node_shadow_cast","path":"scripts/node_shadow_cast/node_shadow_cast.yy",},},

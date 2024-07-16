@@ -1,13 +1,15 @@
 function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Bake Path";
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Segment length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	outputs[| 0] = nodeValue("Segment", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [[]])
+	inputs[| 2] = nodeValue("Spread single path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
+	outputs[| 0] = nodeValue("Segments", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [[]])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(1);
 	
@@ -20,7 +22,9 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _segs = outputs[| 0].getValue();
 		var ox, oy, nx, ny;
 		
-		if(path_amount == 1) _segs = [ _segs ];
+		if(array_invalid(_segs) || array_invalid(_segs[0])) return;
+		if(!is_array(_segs[0][0])) _segs = [ _segs ];
+		
 		draw_set_color(COLORS._main_icon);
 		
 		for( var i = 0, n = array_length(_segs); i < n; i++ ) {
@@ -41,6 +45,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static update = function() {
 		var _path = getInputData(0);
 		var _dist = getInputData(1);
+		var _sped = getInputData(2);
 		
 		if(_path == noone)	return;
 		if(_dist <= 0)		return;
@@ -54,17 +59,17 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for( var i = 0; i < _amo; i++ ) {
 			var _len = _path.getLength(i);
 			var _seg = [];
+			_segs[i] = _seg;
+			
+			if(_len == 0) continue;
 			
 			for( var j = 0; j <= _len; j += _dist ) {
 				_p = _path.getPointDistance(j, i, _p);
-				
-				_seg[j] = [ _p.x, _p.y ];
+				array_push(_seg, [ _p.x, _p.y, j / _len ]);
 			}
-			
-			_segs[i] = _seg;
 		}
 		
-		if(_amo == 1) _segs = _segs[0];
+		if(_sped && _amo == 1) _segs = _segs[0];
 		outputs[| 0].setValue(_segs);
 	}
 	

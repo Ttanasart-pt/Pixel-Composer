@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_segment_filter",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_segment_filter",
+  "parent":{
+    "name":"path",
+    "path":"folders/nodes/data/value/path.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

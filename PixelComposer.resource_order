@@ -1047,6 +1047,7 @@
     {"name":"node_scale","order":8,"path":"scripts/node_scale/node_scale.yy",},
     {"name":"node_scatter_points","order":6,"path":"scripts/node_scatter_points/node_scatter_points.yy",},
     {"name":"node_scatter","order":6,"path":"scripts/node_scatter/node_scatter.yy",},
+    {"name":"node_segment_filter","order":21,"path":"scripts/node_segment_filter/node_segment_filter.yy",},
     {"name":"node_sequence_anim","order":5,"path":"scripts/node_sequence_anim/node_sequence_anim.yy",},
     {"name":"node_shadow_cast","order":14,"path":"scripts/node_shadow_cast/node_shadow_cast.yy",},
     {"name":"node_shadow","order":13,"path":"scripts/node_shadow/node_shadow.yy",},

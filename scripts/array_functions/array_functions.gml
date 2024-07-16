@@ -135,10 +135,8 @@ function array_overlap(arr0, arr1) {
 	});
 }
 
-function array_empty(arr) {
-	INLINE
-	return is_array(arr) && array_length(arr) == 0;
-}
+function array_empty(arr)   { INLINE return  is_array(arr) && array_length(arr) == 0; }
+function array_invalid(arr) { INLINE return !is_array(arr) || array_length(arr) == 0; }
 
 function array_find(arr, val) {
 	INLINE
