@@ -128,9 +128,9 @@ function Panel_Menu() : PanelContent() constructor {
 			menuItem(__txtx("panel_menu_center_preview", "Center preview"), function() { PANEL_PREVIEW.do_fullView = true; }, THEME.icon_center_canvas, ["Preview", "Focus content"]), 
 			menuItem(__txtx("panel_menu_save_current_preview_as", "Save current preview as..."), function() { PANEL_PREVIEW.saveCurrentFrame(); }, noone, ["Preview", "Save current frame"]), 
 			menuItemGroup(__txtx("panel_menu_preview_background", "Preview background"), [
-				[ s_menu_transparent,	function() { PANEL_PREVIEW.canvas_bg = -1; } ],
-				[ s_menu_white,			function() { PANEL_PREVIEW.canvas_bg = c_white; } ],
-				[ s_menu_black,			function() { PANEL_PREVIEW.canvas_bg = c_black; } ],
+				[ s_preview_transparent,	function() { PANEL_PREVIEW.canvas_bg = -1; } ],
+				[ s_preview_white,			function() { PANEL_PREVIEW.canvas_bg = c_white; } ],
+				[ s_preview_black,			function() { PANEL_PREVIEW.canvas_bg = c_black; } ],
 			]),
 		]], 
 		

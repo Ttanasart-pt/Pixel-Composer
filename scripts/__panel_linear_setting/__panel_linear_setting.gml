@@ -1,4 +1,4 @@
-function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, getDefault = noone) constructor { #region
+function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, getDefault = noone) constructor {
 	self.name       = name;
 	self.editWidget = editWidget;
 	self.data       = data;
@@ -9,36 +9,24 @@ function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, get
 	self.is_patreon = false;
 	
 	static patreon = function() { is_patreon = true; return self; }
-} #endregion
+}
 
-function __Panel_Linear_Setting_Item_Preference(name, key, editWidget, _data = noone) : __Panel_Linear_Setting_Item(name, editWidget, _data) constructor { #region
+function __Panel_Linear_Setting_Item_Preference(name, key, editWidget, _data = noone) : __Panel_Linear_Setting_Item(name, editWidget, _data) constructor {
 	self.key = key;
 	
-	data = function() {
-		INLINE
-		return PREFERENCES[$ key];
-	}
-	
-	onEdit = function(val) {
-		INLINE
-		PREFERENCES[$ key] = val;
-		PREF_SAVE();
-	}
-	
-	getDefault = function() {
-		INLINE
-		return PREFERENCES_DEF[$ key];
-	}
-} #endregion
+	data       = function()    { return PREFERENCES[$ key];             }
+	onEdit     = function(val) { PREFERENCES[$ key] = val; PREF_SAVE(); }
+	getDefault = function()    { return PREFERENCES_DEF[$ key];         }
+}
 
-function __Panel_Linear_Setting_Label(name, sprite, s_index = 0, s_color = c_white) constructor { #region
+function __Panel_Linear_Setting_Label(name, sprite, _index = 0, _color = c_white) constructor {
 	self.name    = name;
 	self.sprite  = sprite;
-	self.s_index = s_index;
-	self.s_color = s_color;
-} #endregion
+	self.index   = _index;
+	self.color   = _color;
+}
 
-function Panel_Linear_Setting() : PanelContent() constructor { #region
+function Panel_Linear_Setting() : PanelContent() constructor {
 	title = __txtx("preview_3d_settings", "3D Preview Settings");
 	
 	w = ui(400);
@@ -50,7 +38,7 @@ function Panel_Linear_Setting() : PanelContent() constructor { #region
 	properties = []
 	static setHeight = function() { h = ui(12 + 36 * array_length(properties)); }
 	
-	static drawSettings = function(panel) { #region
+	static drawSettings = function(panel) {
 		var yy = ui(24);
 		var th = ui(36);
 		var ww = w - ui(180);
@@ -65,8 +53,8 @@ function Panel_Linear_Setting() : PanelContent() constructor { #region
 			if(is_instanceof(_prop, __Panel_Linear_Setting_Label)) {
 				var _text = _prop.name;
 				var _spr  = _prop.sprite;
-				var _ind  = _prop.s_index;
-				var _colr = _prop.s_color;
+				var _ind  = _prop.index;
+				var _colr = _prop.color;
 				
 				draw_sprite_stretched_ext(THEME.group_label, 0, ui(4), yy - th / 2 + ui(2), w - ui(8), th - ui(4), _colr, 1);
 				draw_sprite_ui(_spr, _ind, ui(4) + th / 2, yy);
@@ -134,7 +122,7 @@ function Panel_Linear_Setting() : PanelContent() constructor { #region
 		
 		if(bg_y == -1) bg_y = bg_y_to;
 		else           bg_y = lerp_float(bg_y, bg_y_to, 2);
-	} #endregion
+	}
 	
 	function drawContent(panel) { drawSettings(panel); }
-} #endregion
+}

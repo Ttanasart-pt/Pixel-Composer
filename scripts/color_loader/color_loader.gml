@@ -6,95 +6,76 @@
 	THEME_VALUE = new ThemeValue();
 #endregion
 
-function loadColor(theme = "default") { #region
+function loadColor(theme = "default") {
 	CDEF		= new ThemeColorDef();
 	COLORS		= new ThemeColor();
 	THEME_VALUE = new ThemeValue();
 	
-	_loadColor("default", true);
-	
-	if(!THEME_DEF) _loadColor(theme);
-} #endregion
+	_loadColor(theme);
+}
 
-function _loadColor(theme = "default", replace = false) { #region
-	var dirr = DIRECTORY + "Themes/" + theme;
+function _loadColor(theme = "default", replace = false) {
+	var t = get_timer();
+		
+	var dirr  = DIRECTORY + "Themes/" + theme;
 	var path  = dirr + "/values.json";
 	var pathO = dirr + "/override.json";
 	
-	if(!file_exists_empty(path)) {
-		noti_status("Colors not defined at " + path + ", rollback to default color.");
+	if(theme == "default" && !file_exists_empty(pathO)) {
+		COLOR_KEYS = variable_struct_get_names(COLORS);
+		array_sort(COLOR_KEYS, true);
 		return;
 	}
+		
+	if(!file_exists_empty(path)) { noti_status($"Colors not defined at {path}, rollback to default color."); return; }
 	
 	var clrs = json_load_struct(path);
-	var oclr = file_exists_empty(pathO)? json_load_struct(pathO) : {};
 	
-	if(!struct_has(clrs, "values")) {
-		print("Load color error");
-		return;
-	}
+	if(file_exists_empty(pathO)) {
+		var oclr = json_load_struct(pathO);
+		struct_override(clrs, oclr);
+	} 
+	
+	if(!struct_has(clrs, "values")) { print("Load color error"); return; }
 	
 	var valkeys = variable_struct_get_names(clrs.values);
+	var defkeys = variable_struct_get_names(clrs.define);
+	var clrkeys = variable_struct_get_names(clrs.colors);
+	var arrkeys = variable_struct_get_names(clrs.array);
+	
 	if(replace)	THEME_VALUE = clrs.values;
 	else		struct_override(THEME_VALUE, clrs.values);
 	
-	var defkeys = variable_struct_get_names(clrs.define);
-	COLOR_KEYS = defkeys;
+	COLOR_KEYS = defkeys; 
 	array_sort(COLOR_KEYS, true);
-	
-	var clrkeys = variable_struct_get_names(clrs.colors);
 	
 	for( var i = 0, n = array_length(clrkeys); i < n; i++ ) {
 		var key = clrkeys[i];
-		var str = variable_struct_get(clrs.colors, key);
+		var str = struct_get(clrs.colors, key);
 		
-		var c = color_from_rgb(str);
-		variable_struct_set(CDEF, key, c);
+		CDEF[$ key] = color_from_rgb(str);
 	}
 	
 	for( var i = 0, n = array_length(defkeys); i < n; i++ ) {
 		var key = defkeys[i];
+		var def = struct_get(clrs.define, key);
 		var c   = c_white;
+	
+		if(is_array(def)) c = merge_color(struct_get(CDEF, def[0]), struct_get(CDEF, def[1]), def[2]);
+		else              c = struct_has(CDEF, def)? struct_get(CDEF, def) : color_from_rgb(def);
 		
-		if(variable_struct_exists(oclr, key)) {
-			c = variable_struct_get(oclr, key);
-		} else if(variable_struct_exists(clrs.define, key)) {
-			var def = variable_struct_get(clrs.define, key);
-		
-			if(is_array(def)) {
-				var c0 = variable_struct_get(CDEF, def[0]);
-				var c1 = variable_struct_get(CDEF, def[1]);
-				var t  = def[2];
-				c  = merge_color(c0, c1, t);
-			} else if(variable_struct_exists(CDEF, def))
-				c = variable_struct_get(CDEF, def);
-			else 
-				c = color_from_rgb(def);
-		}
-		
-		variable_struct_set(COLORS, key, c);
+		COLORS[$ key] = c;
 	}
 	
-	for( var i = 0, n = array_length(valkeys); i < n; i++ ) {
-		var key = valkeys[i];
-		if(variable_struct_exists(oclr, key)) {
-			var c = variable_struct_get(oclr, key);
-			variable_struct_set(THEME_VALUE, key, c);
-		}
-	}
-	
-	var arrkeys = variable_struct_get_names(clrs.array);
 	for( var i = 0, n = array_length(arrkeys); i < n; i++ ) {
 		var key = arrkeys[i];
-		var def = variable_struct_get(clrs.array, key);
+		var def = struct_get(clrs.array, key);
 		
-		var c = [];
-		for( var j = 0; j < array_length(def); j++ ) {
-			if(variable_struct_exists(CDEF, def[j]))
-				c[j] = variable_struct_get(CDEF, def[j]);
-			else
-				c[j] = color_from_rgb(def[j]);
-		}
-		variable_struct_set(COLORS, key, c);
+		var c = array_create(array_length(def));
+		for( var j = 0; j < array_length(def); j++ )
+			c[j] = struct_has(CDEF, def[j])? struct_get(CDEF, def[j]) : color_from_rgb(def[j]);
+		
+		COLORS[$ key] = c;
 	}
-} #endregion
+	
+}

@@ -623,15 +623,16 @@ event_inherited();
 	
 	sp_colors = new scrollPane(dialog_w - ui(padding + padding) - page_width, dialog_h - (title_height + ui(padding) + ui(40)), function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var hh		= 0;
-		var th		= ui(28);
-		var x1		= sp_colors.surface_w;
-		var yy		= _y + ui(8);
-		var padd	= ui(6);
-		var ind		= 0;
+		var hh	 = 0;
+		var th   = line_get_height(f_p0);
+		var x1	 = sp_colors.surface_w;
+		var yy	 = _y + ui(8);
+		var padd = ui(6);
+		var ind	 = 0;
 		
+		var cp = ui(0)
 		var cw = ui(100);
-		var ch = th - ui(4);
+		var ch = th - cp * 2;
 		var cx = x1 - cw - ui(8);
 		var category = "";
 		
@@ -665,9 +666,7 @@ event_inherited();
 				ind = 0;
 			}
 			
-			if(ind % 2 == 0)
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, 
-					sp_colors.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+			if(ind % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_colors.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 					
 			var keyStr = string_replace_all(key, "_", " ");
 			keyStr = string_replace(keyStr, cat + " ", "");
@@ -676,8 +675,8 @@ event_inherited();
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(24), yy + th / 2, keyStr);
 			
-			var b = buttonInstant(THEME.button_def, cx, yy + ui(2), cw, ch, _m, sFOCUS, sHOVER && sp_colors.hover);
-			draw_sprite_stretched_ext(THEME.color_picker_sample, 0, cx + ui(2), yy + ui(2 + 2), cw - ui(4), ch - ui(4), val, 1);
+			var b = buttonInstant(THEME.button_def, cx, yy + cp, cw, ch, _m, sFOCUS, sHOVER && sp_colors.hover);
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, cx + ui(2), yy + ui(2), cw - ui(4), ch - ui(4), val, 1);
 			
 			if(b == 2) {
 				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);

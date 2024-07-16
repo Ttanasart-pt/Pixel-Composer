@@ -1,3 +1,4 @@
+/*
 function __sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	minn = _min;
 	maxx = _max;
