@@ -2589,6 +2589,7 @@
     {"id":{"name":"s_node_scatter_point","path":"sprites/s_node_scatter_point/s_node_scatter_point.yy",},},
     {"id":{"name":"s_node_scatter","path":"sprites/s_node_scatter/s_node_scatter.yy",},},
     {"id":{"name":"s_node_sdf","path":"sprites/s_node_sdf/s_node_sdf.yy",},},
+    {"id":{"name":"s_node_segment_filter","path":"sprites/s_node_segment_filter/s_node_segment_filter.yy",},},
     {"id":{"name":"s_node_separate_file_path","path":"sprites/s_node_separate_file_path/s_node_separate_file_path.yy",},},
     {"id":{"name":"s_node_sepearte_shape","path":"sprites/s_node_sepearte_shape/s_node_sepearte_shape.yy",},},
     {"id":{"name":"s_node_shadow_cast","path":"sprites/s_node_shadow_cast/s_node_shadow_cast.yy",},},

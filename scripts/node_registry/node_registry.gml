@@ -914,6 +914,7 @@ function __initNodes() {
 		addNodeObject(values, "Map Path",		s_node_path_mapp,		"Node_Path_Map",		[1, Node_Path_Map]).setVersion(11640);
 		addNodeObject(values, "Scatter Path",	s_node_path_scatter,	"Node_Path_Scatter",	[1, Node_Path_Scatter]).setVersion(11740);
 		addNodeObject(values, "3D Path",		s_node_path_3d,			"Node_Path_3D",			[1, Node_Path_3D], [ "path 3d" ]).setVersion(11750);
+		addNodeObject(values, "Filter Segments",s_node_segment_filter,			"Node_Segment_Filter",	[1, Node_Segment_Filter]).setVersion(11780);
 		
 		ds_list_add(values, "Boolean");
 		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",		[1, Node_Boolean]);

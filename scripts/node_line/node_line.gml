@@ -72,7 +72,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 28] = nodeValue("Segments", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [[]])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setArrayDepth(1);
+		.setArrayDepth(2);
 		
 	input_display_list = [
 		["Output",			true],	0, 1, 
@@ -190,7 +190,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		/////// Guard clauses
 		if(_dtype == 1 && _pat == noone) return _outData;
 		if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) return _outData; 
-		
 		
 		if(IS_FIRST_FRAME || inputs[| 11].is_anim)
 			ds_map_clear(widthMap);

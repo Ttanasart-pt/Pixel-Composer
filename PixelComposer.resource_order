@@ -2043,6 +2043,7 @@
     {"name":"s_node_scatter_point","order":9,"path":"sprites/s_node_scatter_point/s_node_scatter_point.yy",},
     {"name":"s_node_scatter","order":19,"path":"sprites/s_node_scatter/s_node_scatter.yy",},
     {"name":"s_node_sdf","order":47,"path":"sprites/s_node_sdf/s_node_sdf.yy",},
+    {"name":"s_node_segment_filter","order":21,"path":"sprites/s_node_segment_filter/s_node_segment_filter.yy",},
     {"name":"s_node_separate_file_path","order":14,"path":"sprites/s_node_separate_file_path/s_node_separate_file_path.yy",},
     {"name":"s_node_sepearte_shape","order":48,"path":"sprites/s_node_sepearte_shape/s_node_sepearte_shape.yy",},
     {"name":"s_node_shadow_cast","order":50,"path":"sprites/s_node_shadow_cast/s_node_shadow_cast.yy",},

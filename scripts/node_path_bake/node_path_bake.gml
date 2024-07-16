@@ -11,7 +11,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	outputs[| 0] = nodeValue("Segments", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [[]])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setArrayDepth(1);
+		.setArrayDepth(2);
 	
 	path_amount = 1;
 	
@@ -50,6 +50,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(_path == noone)	return;
 		if(_dist <= 0)		return;
 		
+		var _loop   = struct_try_get(_path, "path_loop", false);
 		var _amo    = _path.getLineCount();
 		path_amount = _amo;
 		var _segs   = array_create(_amo);
@@ -67,6 +68,8 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				_p = _path.getPointDistance(j, i, _p);
 				array_push(_seg, [ _p.x, _p.y, j / _len ]);
 			}
+			
+			if(_loop) array_push(_seg, [ _seg[0][0], _seg[0][1], 1 ]);
 		}
 		
 		if(_sped && _amo == 1) _segs = _segs[0];
@@ -75,6 +78,6 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(THEME.node_draw_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_bbox_uniform(THEME.node_draw_path, 0, bbox);
 	}
 }
