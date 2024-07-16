@@ -196,17 +196,16 @@
 	}
 	
 	function checkMouse() {
-		if(!active)               return;
-		if(!DIALOG_CLICK)         return;
+		if(!active)       return;
+		if(!DIALOG_CLICK) return;
 		
 		if(!init_pressing && mouse_press(mb_any)) {
-			if(!isTop())              return;
+			if(!isTop())  return;
 			
 			for( var i = 0, n = array_length(children); i < n; i++ )
 				if(instance_exists(children[i])) return; 
 			
-			if(checkClosable() && destroy_on_click_out)
-			if(!point_in(mouse_mx, mouse_my)) {
+			if(checkClosable() && destroy_on_click_out && !point_in(mouse_mx, mouse_my)) {
 				instance_destroy(self);
 				onDestroy();
 				DIALOG_CLICK = false;

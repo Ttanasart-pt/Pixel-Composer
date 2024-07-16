@@ -13,7 +13,7 @@ event_inherited();
 	content		 = noone;
 	destroy_on_click_out = true;
 	
-	function setContent(content) { #region
+	function setContent(content) {
 		self.content = content;
 		
 		if(struct_has(content, "title_height"))
@@ -29,14 +29,14 @@ event_inherited();
 		content.in_dialog = true;
 		
 		if(content.auto_pin) destroy_on_click_out = false;
-	} #endregion
+	}
 	
-	function contentResize() { #region
+	function contentResize() {
 		dialog_w = content.w + content.showHeader * padding * 2;
 		dialog_h = content.h + content.showHeader * (padding * 2 + title_height);
-	} #endregion
+	}
 	
-	function resetMask() { #region
+	function resetMask() {
 		if(!content) return;
 		mask_surface = surface_verify(mask_surface, dialog_w - content.showHeader * padding * 2, 
 											        dialog_h - content.showHeader * (padding * 2 + title_height));
@@ -48,9 +48,9 @@ event_inherited();
 														  dialog_h - content.showHeader * (padding * 2 + title_height));
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
-	} resetMask(); #endregion
+	} resetMask();
 	
-	onResize = function() { #region
+	onResize = function() {
 		panel = surface_verify(panel, dialog_w, dialog_h);
 		resetMask();
 		
@@ -60,21 +60,21 @@ event_inherited();
 		
 			content.onResize();
 		}
-	} #endregion
+	}
 	
-	function checkClosable() { #region
+	function checkClosable() {
 		if(!content) return true;
 		return content.checkClosable();
-	} #endregion
+	}
 	
-	function onDestroy() { #region
+	function onDestroy() {
 		if(content == noone) return;
 		content.onClose();
-	} #endregion
+	}
 	
-	function remove() { #region
+	function remove() {
 		instance_destroy();
-	} #endregion
+	}
 		
 	function onFocusBegin() { if(content) content.onFocusBegin(); }
 	function onFocusEnd()   { if(content) content.onFocusEnd();   }

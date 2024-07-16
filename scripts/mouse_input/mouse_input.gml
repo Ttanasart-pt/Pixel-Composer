@@ -6,7 +6,7 @@
 	MOUSE_WRAPPING = false;
 	MOUSE_BLOCK    = false;
 	_MOUSE_BLOCK   = false;
-	PEN_RELEASED = false;
+	PEN_RELEASED   = false;
 	
 	#macro SCROLL_SPEED PREFERENCES.mouse_wheel_speed
 	#macro MOUSE_MOVED (window_mouse_get_delta_x() || window_mouse_get_delta_y())
@@ -43,7 +43,7 @@ function mouse_release(mouse, focus = true) { #region
 	
 	if(PEN_RIGHT_RELEASE) return mouse == mb_right;
 	
-	return mouse_check_button_released(mouse) || (mouse == mb_left && PEN_RELEASED);
+	return mouse_check_button_released(mouse) || ((mouse == mb_left || mouse == mb_any) && PEN_RELEASED);
 } #endregion
 
 function mouse_lclick(focus = true) { #region
