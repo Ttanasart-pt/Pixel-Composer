@@ -133,7 +133,7 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 		environ.surface = temp_surface[0];
 		environ.bgEnv   = _env;
 		
-		environ.projection = _ort;
+		environ.projection = _pro;
 		environ.fov        = _fov;
 		environ.orthoScale = _ort;
 		environ.viewRange  = _vrn;

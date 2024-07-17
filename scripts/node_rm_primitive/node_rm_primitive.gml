@@ -599,29 +599,29 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		var _shpI  = 0;
 		
 		switch(_shape) {
-			case "Plane" :				_shpI = 100;												break;
-			case "Box" :				_shpI = 101;												break;
-			case "Box Frame" :      	_shpI = 102;												break;
-			case "Box Round" :      	_shpI = 103;												break;
+			case "Plane" :				_shpI = 100;							break;
+			case "Box" :				_shpI = 101;							break;
+			case "Box Frame" :      	_shpI = 102;							break;
+			case "Box Round" :      	_shpI = 103;							break;
 								
-			case "Sphere" :         	_shpI = 200;												break;
-			case "Ellipse" :        	_shpI = 201;												break;
-			case "Cut Sphere" :     	_shpI = 202;												break;
-			case "Cut Hollow Sphere" :	_shpI = 203; _crop = _crop / pi * 2.15;						break;
-			case "Torus" :          	_shpI = 204;												break;
-			case "Capped Torus" :   	_shpI = 205;												break;
+			case "Sphere" :         	_shpI = 200;							break;
+			case "Ellipse" :        	_shpI = 201;							break;
+			case "Cut Sphere" :     	_shpI = 202;							break;
+			case "Cut Hollow Sphere" :	_shpI = 203; _crop = _crop / pi * 2.15;	break;
+			case "Torus" :          	_shpI = 204;							break;
+			case "Capped Torus" :   	_shpI = 205;							break;
 			
-			case "Cylinder" :       	_shpI = 300;												break;
-			case "Capsule" :        	_shpI = 301;												break;
-			case "Cone" :           	_shpI = 302;												break;
-			case "Capped Cone" :    	_shpI = 303;												break;
-			case "Round Cone" :     	_shpI = 304;												break;
-			case "3D Arc" :         	_shpI = 305;												break;
-			case "Prism" :         		_shpI = 306;												break;
-			case "Pie" :         		_shpI = 307;												break;
+			case "Cylinder" :       	_shpI = 300;							break;
+			case "Capsule" :        	_shpI = 301;							break;
+			case "Cone" :           	_shpI = 302;							break;
+			case "Capped Cone" :    	_shpI = 303;							break;
+			case "Round Cone" :     	_shpI = 304;							break;
+			case "3D Arc" :         	_shpI = 305;							break;
+			case "Prism" :         		_shpI = 306;							break;
+			case "Pie" :         		_shpI = 307;							break;
 			
-			case "Octahedron" :     	_shpI = 400;												break;
-			case "Pyramid" :        	_shpI = 401;												break;
+			case "Octahedron" :     	_shpI = 400;							break;
+			case "Pyramid" :        	_shpI = 401;							break;
 		}
 		
 		object.operations    = -1;
