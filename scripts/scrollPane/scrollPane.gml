@@ -24,6 +24,11 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	is_scrolling = false;
 	scroll_ms   = 0;
 	
+	pen_scrolling = false;
+	pen_scroll_my = 0;
+	pen_scroll_sy = 0;
+	pen_scroll_py = 0;
+	
 	static resize = function(_w, _h) {
 		w = _w;
 		h = _h;
@@ -31,18 +36,19 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		surface_h   = _h;
 	}
 	
-	static setScroll = function(_scroll_y) { #region
+	static setScroll = function(_scroll_y) {
 		INLINE
-		
 		scroll_y_to  = clamp(_scroll_y, -content_h, 0);
-	} #endregion
+	}
 	
 	static draw = function(x, y, _mx = mouse_mx - x, _my = mouse_my - y) {
 		self.x = x;
 		self.y = y;
 		
 		var mx = _mx, my = _my;
+		
 		hover  &= point_in_rectangle(mx, my, 0, 0, surface_w, surface_h);
+		hover  &= pen_scrolling != 2;
 		surface = surface_verify(surface, surface_w, surface_h);
 		
 		surface_set_target(surface);
@@ -65,8 +71,32 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			if(mouse_wheel_down())	scroll_y_to -= scroll_step * SCROLL_SPEED;
 			if(mouse_wheel_up())	scroll_y_to += scroll_step * SCROLL_SPEED;
 		}
-		
 		scroll_lock = false;
+		
+		
+		if(hover && PEN_USE && mouse_press(mb_left)) {
+			pen_scrolling = 1;
+			pen_scroll_my = 0;
+		}
+		
+		if(pen_scrolling == 1) {
+			pen_scroll_my += PEN_Y_DELTA;
+			if(abs(pen_scroll_my) > 16)
+				pen_scrolling = 2;
+			if(mouse_release(mb_left)) pen_scrolling = 0;
+			
+		} else if(pen_scrolling == 2) {
+			scroll_y_to  = clamp(scroll_y_to + PEN_Y_DELTA * 2, -content_h, 0);
+			scroll_y_raw = scroll_y_to;
+			scroll_y	 = round(scroll_y_raw);
+			
+			pen_scroll_py = abs(PEN_Y_DELTA) > abs(pen_scroll_py)? PEN_Y_DELTA : lerp_float(pen_scroll_py, PEN_Y_DELTA, 10);
+			if(mouse_release(mb_left)) pen_scrolling = 0;
+			
+		} else {
+			pen_scroll_py = lerp_float(pen_scroll_py, 0, 30, 1);
+			scroll_y_to += pen_scroll_py;
+		}
 		
 		if(show_scroll && (abs(content_h) > 0 || always_scroll)) {
 			var scr_w = sprite_get_width(THEME.ui_scrollbar);

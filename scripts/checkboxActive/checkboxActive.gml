@@ -21,12 +21,10 @@ function checkBoxActive(_onClick) : widget() constructor {
 		var bx = x + w / 2 - bw / 2;
 		var by = y;
 		
-		draw_sprite_stretched_ext(spr, _value, bx - 8, by - 8, bw + 16, bh + 16, c_white, 1);
+		draw_sprite_stretched_ext(spr, _value, bx - 8, by - 8, bw + 16, bh + 16);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh)) {
-			BLEND_ADD
-			draw_sprite_stretched_ext(THEME.slider_def, 3, bx, by, bw, bh, COLORS._main_icon_dark, 1);
-			BLEND_NORMAL
+			draw_sprite_stretched_add(spr, _value, bx - 8, by - 8, bw + 16, bh + 16, COLORS._main_icon_dark);
 			
 			if(mouse_press(mb_left, active))
 				trigger();
@@ -39,16 +37,11 @@ function checkBoxActive(_onClick) : widget() constructor {
 		draw_text_add(bx + bw / 2, by + bh / 2, _value? "ACTIVE" : "INACTIVE");
 		
 		if(WIDGET_CURRENT == self)
-			draw_sprite_stretched_ext(THEME.widget_selecting, 0, bx - ui(3), by - ui(3), bw + ui(6), bh + ui(6), COLORS._main_accent, 1);	
-		
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, bx - ui(3), by - ui(3), bw + ui(6), bh + ui(6), COLORS._main_accent);
 		resetFocus();
 		
 		return h;
 	}
 	
-	static clone = function() { #region
-		var cln = new checkBoxActive(onClick);
-		
-		return cln;
-	} #endregion
+	static clone = function() { return new checkBoxActive(onClick); }
 }

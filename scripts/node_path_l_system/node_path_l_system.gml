@@ -10,7 +10,7 @@ function L_Turtle(x = 0, y = 0, ang = 90, w = 1, color = c_white, itr = 0) const
 	static clone = function() { return new L_Turtle(x, y, ang, w, color, itr); }
 }
 
-function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "L System";
 	setDimension(96, 48);
 	
@@ -95,7 +95,6 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Properties",  false], 0, 1, 7, 
 		["Rules",		false], 3, 4, rule_renderer, 5, 
 	];
-	lines = [];
 	
 	attributes.rule_length_limit = 10000;
 	array_push(attributeEditors, "L System");
@@ -105,9 +104,6 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			cache_data.start = "";
 			triggerRender();
 		}) ]);
-	
-	current_length  = 0;
-	boundary = new BoundingBox();
 	
 	cache_data = {
 		start     : "",
@@ -147,14 +143,17 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(index > input_fix_len && !LOADING && !APPENDING) 
 			refreshDynamicInput();
 	}
-		
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
+		var _out = getSingleValue(0, preview_index, true);
+		if(!is_struct(_out)) return;
+		
 		draw_set_color(COLORS._main_accent);
-		for( var i = 0, n = array_length(lines); i < n; i++ ) {
-			var p0 = lines[i][0];
-			var p1 = lines[i][1];
+		for( var i = 0, n = array_length(_out.lines); i < n; i++ ) {
+			var p0 = _out.lines[i][0];
+			var p1 = _out.lines[i][1];
 			
 			var x0 = p0[0];
 			var y0 = p0[1];
@@ -170,44 +169,54 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	}
 	
-	static getLineCount		= function() { return array_length(lines); }
-	static getSegmentCount	= function() { return 1; }
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	static getLength		= function() { return current_length; }
-	static getAccuLength	= function() { return [ 0, current_length ]; }
-	
-	static getWeightDistance = function (_dist, _ind = 0) {
-		return getWeightRatio(_dist / current_length, _ind); 
+	function Path_LSystem() constructor {
+		lines          = [];
+		current_length = 0;
+		boundary       = new BoundingBox();
+		
+		static getLineCount		= function() { return array_length(lines); }
+		static getSegmentCount	= function() { return 1; }
+		
+		static getLength		= function() { return current_length; }
+		static getAccuLength	= function() { return [ 0, current_length ]; }
+		
+		static getWeightDistance = function (_dist, _ind = 0) {
+			return getWeightRatio(_dist / current_length, _ind); 
+		}
+		
+		static getWeightRatio = function (_rat, _ind = 0) {
+			var _p0 = lines[_ind][0];
+			var _p1 = lines[_ind][1];
+			
+			if(!is_array(_p0) || array_length(_p0) < 2) return 1;
+			if(!is_array(_p1) || array_length(_p1) < 2) return 1;
+			
+			return lerp(_p0[2], _p1[2], _rat);
+		}
+		
+		static getPointRatio = function(_rat, _ind = 0, out = undefined) {
+			if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+			
+			var _p0 = lines[_ind][0];
+			var _p1 = lines[_ind][1];
+			
+			if(!is_array(_p0) || array_length(_p0) < 2) return out;
+			if(!is_array(_p1) || array_length(_p1) < 2) return out;
+			
+			out.x  = lerp(_p0[0], _p1[0], _rat);
+			out.y  = lerp(_p0[1], _p1[1], _rat);
+			
+			return out;
+		}
+		
+		static getPointDistance = function(_dist, _ind = 0, out = undefined) { return getPointRatio(_dist / current_length, _ind, out); }
+		
+		static getBoundary	= function() { return boundary; }
 	}
 	
-	static getWeightRatio = function (_rat, _ind = 0) {
-		var _p0 = lines[_ind][0];
-		var _p1 = lines[_ind][1];
-		
-		if(!is_array(_p0) || array_length(_p0) < 2) return 1;
-		if(!is_array(_p1) || array_length(_p1) < 2) return 1;
-		
-		return lerp(_p0[2], _p1[2], _rat);
-	}
-	
-	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
-		
-		var _p0 = lines[_ind][0];
-		var _p1 = lines[_ind][1];
-		
-		if(!is_array(_p0) || array_length(_p0) < 2) return out;
-		if(!is_array(_p1) || array_length(_p1) < 2) return out;
-		
-		out.x  = lerp(_p0[0], _p1[0], _rat);
-		out.y  = lerp(_p0[1], _p1[1], _rat);
-		
-		return out;
-	}
-	
-	static getPointDistance = function(_dist, _ind = 0, out = undefined) { return getPointRatio(_dist / current_length, _ind, out); }
-	
-	static getBoundary	= function() { return boundary; }
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	static l_system = function(_start, _rules, _end_rule, _iteration, _seed) {
 		if(isEqual(cache_data.rules, _rules, true)
@@ -261,26 +270,29 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return cache_data.result;
 	}
 	
-	static update = function() {
-		var _len = getInputData(0);
-		var _ang = getInputData(1);
-		var _pos = getInputData(2);
-		var _itr = getInputData(3);
-		var _sta = getInputData(4);
-		var _end = getInputData(5);
-		var _san = getInputData(6);
-		var _sad = getInputData(7);
+	__curr_path = noone;
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		
+		var _len = _data[0];
+		var _ang = _data[1];
+		var _pos = _data[2];
+		var _itr = _data[3];
+		var _sta = _data[4];
+		var _end = _data[5];
+		var _san = _data[6];
+		var _sad = _data[7];
 		lineq    = ds_queue_create();
 		
 		random_set_seed(_sad);
-		current_length = _len;
+		__curr_path = new Path_LSystem();
+		__curr_path.current_length = _len;
 		
-		if(ds_list_size(inputs) < input_fix_len + 2) return;
+		if(ds_list_size(inputs) < input_fix_len + 2) return __curr_path;
 		
 		var rules = {};
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			var _name = getInputData(i + 0);
-			var _rule = getInputData(i + 1);
+			var _name = _data[i + 0];
+			var _rule = _data[i + 1];
 			if(_name == "") continue;
 			
 			if(!struct_has(rules, _name))
@@ -290,11 +302,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		l_system(_sta, rules, _end, _itr, _sad);
-		itr = _itr;
-		ang = _ang;
-		len = _len;
-		st  = ds_stack_create();
-		t   = new L_Turtle(_pos[0], _pos[1], _san);
+		itr    = _itr;
+		ang    = _ang;
+		len    = _len;
+		st     = ds_stack_create();
+		t      = new L_Turtle(_pos[0], _pos[1], _san);
 		maxItr = 0;
 		
 		string_foreach(cache_data.result, function(_ch, _) {
@@ -348,22 +360,22 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		ds_stack_destroy(st);
 		
-		boundary = new BoundingBox();
+		__curr_path.boundary = new BoundingBox();
+		__curr_path.lines    = array_create(ds_queue_size(lineq));
 		
-		lines = array_create(ds_queue_size(lineq));
 		var i = 0;
 		var a = ds_queue_size(lineq);
 		
 		repeat(a) {
 			var _l = ds_queue_dequeue(lineq);
 			
-			lines[i++] = _l;
-			boundary.addPoint(_l[0][0], _l[0][1], _l[1][0], _l[1][1]);
+			__curr_path.lines[i++] = _l;
+			__curr_path.boundary.addPoint(_l[0][0], _l[0][1], _l[1][0], _l[1][1]);
 		}
 		
 		ds_queue_destroy(lineq);
 		
-		outputs[| 0].setValue(self);
+		return __curr_path;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

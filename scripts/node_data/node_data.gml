@@ -2380,15 +2380,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun.value_to = [];
 		}
 		
-		for( var i = 0; i < ds_list_size(inputs); i++ )
-			inputs[| i].destroy();
-		
-		for( var i = 0; i < ds_list_size(outputs); i++ )
-			outputs[| i].destroy();
+		for( var i = 0; i < ds_list_size( inputs); i++ )  inputs[| i].destroy();
+		for( var i = 0; i < ds_list_size(outputs); i++ ) outputs[| i].destroy();
 		
 		onDestroy();
-		if(group) group.refreshNodes();
-		
+		if(group)  group.refreshNodes();
 		if(record) recordAction(ACTION_TYPE.node_delete, self);
 		
 		RENDER_ALL_REORDER

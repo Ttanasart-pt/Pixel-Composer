@@ -889,7 +889,7 @@ function __initNodes() {
 		addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path]);
 		addNodeObject(values, "Smooth Path",	s_node_path_smooth,		"Node_Path_Smooth",		[1, Node_Path_Smooth], ["path smooth"]).setVersion(11640);
 		addNodeObject(values, "Path Anchor",	s_node_path_anchor,		"Node_Path_Anchor",		[1, Node_Path_Anchor]).setVersion(1140);
-		addNodeObject(values, "Path Array",		s_node_path_array,		"Node_Path_Array",		[1, Node_Path_Array], ["array path"]).setVersion(1137);
+		addNodeObject(values, "Path Combine",	s_node_path_array,		"Node_Path_Array",		[1, Node_Path_Array], ["array path"]).setVersion(1137);
 		addNodeObject(values, "Sample Path",	s_node_path_sample,		"Node_Path_Sample",		[1, Node_Path_Sample], ["path sample"], "Sample a 2D position from a path");
 		addNodeObject(values, "Blend Path",		s_node_path_blend,		"Node_Path_Blend",		[1, Node_Path_Blend],, "Blend between 2 paths.");
 		addNodeObject(values, "Remap Path",		s_node_path_map,		"Node_Path_Map_Area",	[1, Node_Path_Map_Area],, "Scale path to fit a given area.").setVersion(1130);
