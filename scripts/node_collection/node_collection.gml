@@ -196,20 +196,19 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	managedRenderOrder = false;
 	
-	input_dummy = nodeValue("Add to group", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
 	draw_dummy  = false;
-	
+	input_dummy = nodeValue("Add to group", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
+	input_dummy.is_dummy  = true;
 	input_dummy.onSetFrom = function(juncFrom) {
 		array_remove(juncFrom.value_to, input_dummy);
 		input_dummy.value_from = noone;
 		
 		var input = nodeBuild("Node_Group_Input", 0, 0, self);
 		var _type = juncFrom.type;
-		var _tind = array_find(input.data_type_map, juncFrom.type);
+		var _tind = array_find(GROUP_IO_TYPE_MAP, _type);
 		
 		input.attributes.inherit_type = false;
-		if(_tind != -1)
-			input.inputs[| 2].setValue(_tind);
+		if(_tind != -1) input.inputs[| 2].setValue(_tind);
 			
 		input.inParent.setFrom(juncFrom);
 		
@@ -586,19 +585,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	/////============= CACHE =============
 	
-	static clearCache = function() {
-		array_foreach(getNodeList(), function(node) { node.clearCache(); });
-	}
+	static clearCache = function() { array_foreach(getNodeList(), function(node) /*=>*/ { node.clearCache(); }); }
 	
 	/////========== INSTANCING ===========
 	
-	static setInstance = function(node) {
-		instanceBase = node;
-	}
-	
-	static resetInstance = function() {
-		instanceBase = noone;
-	}
+	static setInstance   = function(node) { instanceBase = node; }
+	static resetInstance = function() { instanceBase = noone; }
 	
 	/////========= SERIALIZATION =========
 	

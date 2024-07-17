@@ -1612,7 +1612,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region ////Set from
 		
-		if(is_dummy) {
+		if(is_dummy && dummy_get != noone) {
 			var _targ    = dummy_get();
 			dummy_target = _targ;
 			UNDO_HOLDING = true;
