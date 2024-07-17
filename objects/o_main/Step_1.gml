@@ -60,7 +60,9 @@ FILE_DROPPED      = false;
 		watcher_surface = surface_create(1, 1);
 	}
 	
-	PEN_USE = false;
+	if(PEN_POOL <= 0) PEN_USE = false;
+	else              PEN_POOL--;
+	
 	PEN_RELEASED      = false;
 	PEN_RIGHT_PRESS   = false;
 	PEN_RIGHT_RELEASE = false;

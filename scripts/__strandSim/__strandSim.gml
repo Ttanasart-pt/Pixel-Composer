@@ -1,4 +1,4 @@
-function StrandPoint(x, y) constructor {
+function StrandPoint(x = 0, y = 0) constructor {
 	self.x = x;
 	self.y = y;
 	
@@ -16,10 +16,7 @@ function StrandPoint(x, y) constructor {
 	
 	air_resist = 0.5;
 	
-	static set = function(x ,y) {
-		self.x = x;
-		self.y = y;
-	}
+	static set = function(x ,y) { self.x = x; self.y = y; }
 	
 	static motionDelta = function() {
 		dx = x - px;
@@ -35,22 +32,44 @@ function StrandPoint(x, y) constructor {
 	}
 	
 	static clone = function() { return new StrandPoint(x, y); }
+	
+	static serialize = function(s) {
+		x = s.x;
+		y = s.y;
+		
+		px = s.px;
+		py = s.py;
+		
+		ppx = s.ppx;
+		ppy = s.ppy;
+		
+		dx = s.dx;
+		dy = s.dy;
+		
+		ikx = s.ikx;
+		iky = s.iky;
+		
+		air_resist = s.air_resist;
+		
+		return self;
+	}
 }
 
-function Strand(sx = 0, sy = 0, amount = 5, _length = 8, direct = 0, curlFreq = 4, curlSize = 8) constructor {
-	points = [];
+function Strand(sx = 0, sy = 0, amount = 5, _length = 8, _direct = 0, curlFreq = 4, curlSize = 8) constructor {
 	id = irandom_range(10000, 99999);
-	self.length = array_create(amount, _length);
-	self.direct = direct;
+	
+	points    = [];
+	length    = array_create(amount, _length);
+	direct    = _direct;
 	curl_freq = curlFreq;
 	curl_size = curlSize;
 	
-	tension = 0.8;
-	spring  = 0.1;
+	tension        = 0.8;
+	spring         = 0.1;
 	angularTension = 0.1;
+	rootStrength   = -1;
+	rootForce      = 0;
 	
-	rootStrength = -1;
-	rootForce    = 0;
 	free = false;
 	
 	var _sx = sx;
@@ -62,8 +81,8 @@ function Strand(sx = 0, sy = 0, amount = 5, _length = 8, direct = 0, curlFreq = 
 	}
 	
 	setOrigin(_sx, _sy);
-	for( var i = 1; i < array_length(points); i++ )
-		restAngle[i] = 0;
+	
+	restAngle    = array_create(array_length(points), 0);
 	restAngle[0] = direct;
 	
 	static motionDelta = function() {
@@ -361,24 +380,24 @@ function Strand(sx = 0, sy = 0, amount = 5, _length = 8, direct = 0, curlFreq = 
 		var s = new Strand(points[0].x, points[0].y, array_length(points), length[0], direct, curl_freq, curl_size);
 		for( var i = 0, n = array_length(points); i < n; i++ )
 			s.points[i] = points[i].clone();
+			
 		s.restAngle = array_clone(restAngle);
 		s.length    = array_clone(length);
 		
 		return s;
 	}
 	
-	static serialize = function()  { 
-		return {
-			points: points,
-			restAngle: restAngle,
-			length: length,
-		}; 
-	}
+	static serialize = function() { return { points, restAngle, length }; }
 	
 	static deserialize = function(s) { 
-		points    = s.points;
 		restAngle = s.restAngle;
 		length    = s.length;
+		
+		var _p = s.points;
+		points = array_create(array_length(_p));
+		for (var i = 0, n = array_length(_p); i < n; i++) 
+			points[i] = new StrandPoint().serialize(_p[i]);
+		
 		return self;
 	}
 }

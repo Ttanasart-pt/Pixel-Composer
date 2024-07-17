@@ -163,6 +163,12 @@ event_inherited();
 			new checkBox(function() /*=>*/ { PREFERENCES.slider_lock_mouse = !PREFERENCES.slider_lock_mouse; PREF_SAVE(); })
 		));
 		
+		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_pen_pool_delay", "Pen leave delay"),
+			"pen_pool_delay",
+			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.pen_pool_delay = max(0, val); PREF_SAVE(); })
+		));
+		
 	ds_list_add(pref_global, __txt("Save/Load"));
 		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(

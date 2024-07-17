@@ -44,4 +44,7 @@ if(PEN_RIGHT_CLICK && !b2) PEN_RIGHT_RELEASE = true;
 PEN_RIGHT_CLICK = b2;
 
 //print($"{PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
-PEN_USE = true;
+if(f & 0x2) {
+	PEN_POOL = PREFERENCES.pen_pool_delay;
+	PEN_USE  = true;
+}
