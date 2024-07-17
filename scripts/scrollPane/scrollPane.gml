@@ -28,6 +28,10 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	pen_scroll_my = 0;
 	pen_scroll_sy = 0;
 	pen_scroll_py = 0;
+	pen_scroll_lock = false;
+	
+	scroll_s = sprite_get_width(THEME.ui_scrollbar);
+	scroll_w = scroll_s;
 	
 	static resize = function(_w, _h) {
 		w = _w;
@@ -41,26 +45,25 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		scroll_y_to  = clamp(_scroll_y, -content_h, 0);
 	}
 	
-	static draw = function(x, y, _mx = mouse_mx - x, _my = mouse_my - y) {
+	static draw = function(x, y, mx = mouse_mx - x, my = mouse_my - y) {
 		self.x = x;
 		self.y = y;
 		
-		var mx = _mx, my = _my;
-		
-		hover  &= point_in_rectangle(mx, my, 0, 0, surface_w, surface_h);
+		hover  &= point_in_rectangle( mx, my, 0, 0, surface_w, surface_h);
 		hover  &= pen_scrolling != 2;
 		surface = surface_verify(surface, surface_w, surface_h);
 		
 		surface_set_target(surface);
 			draw_clear(COLORS.panel_bg_clear);
-			var hh = drawFunc(scroll_y, [mx, my], [x, y]);
+			var hh = drawFunc(scroll_y, [ mx, my ], [ x, y ]);
 			content_h = max(0, hh - surface_h);
 		surface_reset_target();
 		
 		var sc = is_scroll;
 		is_scroll = hh > surface_h;
-		if(sc != is_scroll)
-			resize(w, h);
+		if(sc != is_scroll) resize(w, h);
+		
+		//// Scrolling
 		
 		scroll_y_to  = clamp(scroll_y_to, -content_h, 0);
 		scroll_y_raw = lerp_float(scroll_y_raw, scroll_y_to, 4);
@@ -71,13 +74,12 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			if(mouse_wheel_down())	scroll_y_to -= scroll_step * SCROLL_SPEED;
 			if(mouse_wheel_up())	scroll_y_to += scroll_step * SCROLL_SPEED;
 		}
-		scroll_lock = false;
 		
-		
-		if(hover && PEN_USE && mouse_press(mb_left)) {
-			pen_scrolling = 1;
-			pen_scroll_my = 0;
-		}
+		// if(pen_scroll_lock) pen_scrolling = 0;
+		// else if(hover && PEN_USE && mouse_press(mb_left)) {
+		// 	pen_scrolling = 1;
+		// 	pen_scroll_my = 0;
+		// }
 		
 		if(pen_scrolling == 1) {
 			pen_scroll_my += PEN_Y_DELTA;
@@ -99,32 +101,37 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		}
 		
 		if(show_scroll && (abs(content_h) > 0 || always_scroll)) {
-			var scr_w = sprite_get_width(THEME.ui_scrollbar);
-			draw_scroll(x + w - scr_w, y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), 
-				COLORS.scrollbar_bg, COLORS.scrollbar_idle, COLORS.scrollbar_hover, x + _mx, y + _my);
+			var _p   = PEN_USE && (is_scrolling || point_in_rectangle(x + mx, y + my, x + w - scroll_w - 2, y, x + w, y + surface_h));
+			scroll_w = lerp_float(scroll_w, _p? 12 : scroll_s, 5);
+			
+			draw_scroll(x + w - scroll_w, y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), 
+				COLORS.scrollbar_bg, COLORS.scrollbar_idle, COLORS.scrollbar_hover, x + mx, y + my, scroll_w);
 		}
+		
+		scroll_lock     = false;
+		pen_scroll_lock = false;
 	}
 	
-	static draw_scroll = function(scr_x, scr_y, is_vert, scr_s, scr_prog, scr_ratio, bg_col, bar_col, bar_hcol, mx, my) {
+	static draw_scroll = function(scr_x, scr_y, is_vert, scr_s, scr_prog, scr_ratio, bg_col, bar_col, bar_hcol, mx, my, bar_spr_w) {
 		var scr_scale_s = scr_s * scr_ratio;
 		var scr_prog_s  = scr_prog * (scr_s - scr_scale_s);
 		var scr_w, scr_h, bar_w, bar_h, bar_x, bar_y;
 		
 		if(is_vert) {
-			scr_w	= ui(sprite_get_width(THEME.ui_scrollbar));
+			scr_w	= bar_spr_w;
 			scr_h	= scr_s;
 			
-			bar_w	= ui(sprite_get_width(THEME.ui_scrollbar));
+			bar_w	= bar_spr_w;
 			bar_h   = scr_scale_s;
 			
 			bar_x	= scr_x;
 			bar_y	= scr_y + scr_prog_s;
 		} else {
 			scr_w	= scr_s;
-			scr_h	= ui(sprite_get_width(THEME.ui_scrollbar));
+			scr_h	= bar_spr_w;
 			
 			bar_w	= scr_scale_s;
-			bar_h   = ui(sprite_get_width(THEME.ui_scrollbar));
+			bar_h   = bar_spr_w;
 			
 			bar_x	= scr_x + scr_prog_s;
 			bar_y	= scr_y;

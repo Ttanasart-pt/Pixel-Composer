@@ -718,12 +718,16 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(target != undefined) {
 			if(!click_block) {
 				if(mouse_press(mb_left, active) && HOVER != o_dialog_textbox_autocomplete.id) {
+					if(parent) parent.pen_scroll_lock = true;
 					cursor_select = target;
 					cursor		  = target;
 					
 					o_dialog_textbox_autocomplete.deactivate(self);
-				} else if(mouse_click(mb_left, active))
+					
+				} else if(mouse_click(mb_left, active)) {
+					if(parent) parent.pen_scroll_lock = true;
 					cursor = target;
+				}
 			}
 		}
 		
@@ -993,6 +997,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				var bar_y = scr_y + (scr_h - bar_h) * abs(text_y / text_y_max);
 					
 				if(text_scrolling) {
+					if(parent) parent.pen_scroll_lock = true;
 					text_y_to = text_scroll_sy - (_m[1] - text_scroll_my) / bar_h * scr_h;
 					text_y_to = clamp(text_y_to, -text_y_max, 0);
 					

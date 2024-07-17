@@ -98,6 +98,10 @@ function Panel_Animation() : PanelContent() constructor {
 		timeline_preview	= noone;
 		
 		timeline_contents = [];
+		
+		scroll_s = sprite_get_width(THEME.ui_scrollbar);
+		scroll_w = scroll_s;
+		
 	#endregion
 	
 	#region ---- keyframes ----
@@ -1750,7 +1754,7 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		#region scroll
 			dope_sheet_y = lerp_float(dope_sheet_y, dope_sheet_y_to, 4);
-					
+				
 			if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), bar_x, ui(8) + dope_sheet_h)) {
 				if(mouse_wheel_down())	dope_sheet_y_to = clamp(dope_sheet_y_to - ui(32) * SCROLL_SPEED, -dope_sheet_y_max, 0);
 				if(mouse_wheel_up())	dope_sheet_y_to = clamp(dope_sheet_y_to + ui(32) * SCROLL_SPEED, -dope_sheet_y_max, 0);
@@ -1765,9 +1769,9 @@ function Panel_Animation() : PanelContent() constructor {
 			var scr_scale_s = scr_s * scr_size;
 			var scr_prog_s  = scr_prog * (scr_s - scr_scale_s);
 				
-			var scr_w	= ui(sprite_get_width(THEME.ui_scrollbar));
+			var scr_w	= scroll_w;
 			var scr_h	= scr_s;
-			var s_bar_w	= ui(sprite_get_width(THEME.ui_scrollbar));
+			var s_bar_w	= scroll_w;
 			var s_bar_h   = scr_scale_s;
 			var s_bar_x	= scr_x;
 			var s_bar_y	= scr_y + scr_prog_s;
@@ -1786,6 +1790,9 @@ function Panel_Animation() : PanelContent() constructor {
 			} else {
 				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, s_bar_x, s_bar_y, s_bar_w, s_bar_h, COLORS.scrollbar_idle, 1);	
 			}
+			
+			var _p   = PEN_USE && (is_scrolling || point_in_rectangle(mx, my, scr_x - ui(2), scr_y - ui(2), scr_x + scr_w + ui(2), scr_y + scr_h + ui(2)));
+			scroll_w = lerp_float(scroll_w, _p? 12 : scroll_s, 5);
 		#endregion
 				
 		surface_set_target(dope_sheet_surface);	

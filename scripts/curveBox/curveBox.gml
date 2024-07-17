@@ -42,26 +42,25 @@ function curveBox(_onModify) : widget() constructor {
 	static get_x = function(val) { return cw *      (val - minx) / (maxx - minx); }
 	static get_y = function(val) { return ch * (1 - (val - miny) / (maxy - miny)); }
 	
-	static register = function() {}
-	
-	static setInteract = function(interactable = noone) { #region
+	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
 		
 		tb_shift.setInteract(interactable);
 		tb_scale.setInteract(interactable);
-	} #endregion
+	}
 	
 	static register = function(parent = noone) {
+		self.parent = parent;
 		tb_shift.register(parent);
 		tb_scale.register(parent);
 	}
 	
-	static isHovering = function() { #region 
+	static isHovering = function() { 
 		if(tb_shift.isHovering()) return true;
 		if(tb_scale.isHovering()) return true;
 		
 		return hovering;
-	} #endregion
+	}
 	
 	static drawParam = function(params) {
 		rx = params.rx;
@@ -109,6 +108,7 @@ function curveBox(_onModify) : widget() constructor {
 		curve_surface = surface_verify(curve_surface, cw, ch);
 		
 		if(node_dragging != -1) { #region editing
+			if(parent) parent.pen_scroll_lock = true;
 			
 			show_coord = true;
 			_data = array_clone(_data);
@@ -540,8 +540,8 @@ function curveBox(_onModify) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new curveBox(onModify);
 		return cln;
-	} #endregion
+	}
 }

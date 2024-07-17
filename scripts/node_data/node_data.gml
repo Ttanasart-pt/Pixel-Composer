@@ -95,7 +95,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		x = _x;
 		y = _y;
 		
-		name_height = 16;
+		name_height = ui(16);
 		w     = 128;
 		h     = 128;
 		min_w = w;
