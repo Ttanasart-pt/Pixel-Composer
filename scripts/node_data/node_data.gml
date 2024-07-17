@@ -537,7 +537,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			updatedOutTrigger.setValue(false);
 		}
 		
-		if(will_setHeight) {
+		if(will_setHeight) { 
 			setHeight();
 			getJunctionList();
 			will_setHeight = false;
@@ -876,9 +876,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(auto_input && !LOADING && !APPENDING) 
 			refreshDynamicInput();
 			
-		if(is_dynamic_input) 
-			will_setHeight = true;
-			
+		if(is_dynamic_input) will_setHeight = true;
 		cacheCheck();
 	}
 	

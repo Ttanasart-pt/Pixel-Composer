@@ -77,7 +77,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDimension(96, 32 + 24);
 	
 	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: GROUP_IO_DISPLAY[0], update_hover: false });
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: GROUP_IO_DISPLAY[11], update_hover: false });
 	
 	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.range)
@@ -227,7 +227,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			attributes.inherit_type = false;
 		}
 		
-		_dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_TYPE_NAME, _val_type), _dtype);
+		_dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _val_type), _dtype);
 		
 		inParent.setType(_val_type);
 		outputs[| 0].setType(_val_type);
@@ -403,9 +403,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(is_undefined(inParent)) return;
 		
 		var _type		= getInputData(2);
-		var _val_type   = array_safe_get_fast(GROUP_IO_TYPE_MAP,  _type, VALUE_TYPE.any);
-		var _dsList     = array_safe_get_fast(GROUP_IO_TYPE_NAME, _val_type);
+		var _dsList     = array_safe_get_fast(GROUP_IO_DISPLAY, _type);
 		if(_dsList == 0) _dsList = [ "Default" ];
+		
 		inputs[| 0].display_data.data    = _dsList;
 		inputs[| 0].editWidget.data_list = _dsList;
 			
@@ -426,7 +426,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _dstype = getInputData(0);
 		var _data   = getInputData(2);
-		var _dsList = array_safe_get_fast(GROUP_IO_TYPE_NAME, _data);
+		var _dsList = array_safe_get_fast(GROUP_IO_DISPLAY, _data);
 		_dstype = _dsList == 0? "Default" : array_safe_get_fast(_dsList, _dstype);
 		
 		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _data, VALUE_TYPE.any);
@@ -465,9 +465,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		visibleCheck();
 	}
 	
-	static getGraphPreviewSurface = function() {
-		return inputs[| 0].getValue();
-	}
+	static getGraphPreviewSurface = function() { return inputs[| 0].getValue(); }
 	
 	static postDeserialize = function() { createInput(false); }
 	
@@ -501,8 +499,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	}
 		
-	static onLoadGroup = function() {
-		if(group == noone) destroy();
-	}
+	static onLoadGroup = function() { if(group == noone) destroy(); }
 	
 }
