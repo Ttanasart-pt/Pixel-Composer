@@ -1,59 +1,43 @@
 function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Group Output";
-	color = COLORS.node_blend_collection;
-	is_group_io  = true;
-	
+	name		= "Group Output";
+	color		= COLORS.node_blend_collection;
+	is_group_io = true;
 	destroy_when_upgroup = true;
+	
 	setDimension(96, 32 + 24);
 	
 	inputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
 		.uncache()
 		.setVisible(true, true);
+	inputs[| 0].onSetFrom = function(juncFrom) /*=>*/ { if(attributes.inherit_name && !LOADING && !APPENDING) setDisplayName(juncFrom.name); }
 	
 	attributes.inherit_name = true;
-	outParent    = undefined;
-	output_index = -1;
+	outParent   			= undefined;
+	output_index			= -1;
 	
-	onSetDisplayName = function() { attributes.inherit_name = false; }
+	onSetDisplayName = function() /*=>*/ { attributes.inherit_name = false; }
 	
-	inputs[| 0].onSetFrom = function(juncFrom) {
-		if(attributes.inherit_name && !LOADING && !APPENDING)
-			setDisplayName(juncFrom.name);
-	}
-	
-	static setRenderStatus = function(result) { #region
+	static setRenderStatus = function(result) {
 		if(rendered == result) return;
 		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
 		
 		rendered = result;
 		if(group) group.setRenderStatus(result);
-	} #endregion
+	}
 	
-	static onValueUpdate = function(index = 0) { #region
-		if(is_undefined(outParent)) return;
-	} #endregion
+	static onValueUpdate = function(index = 0) { if(is_undefined(outParent)) return; }
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function() {
 		if(is_undefined(outParent)) return [];
 		
 		LOG_BLOCK_START();
 		var nodes = [];
 		for(var j = 0; j < array_length(outParent.value_to); j++) {
 			var _to = outParent.value_to[j];
-			if(!_to.node.isRenderActive()) continue;
-			//printIf(global.FLAG.render, "Value to " + _to.name);
 			
-			if(!_to.node.active || _to.value_from == noone) {
-				//printIf(global.FLAG.render, "no value from");
-				continue; 
-			}
-			
-			if(_to.value_from.node != group) {
-				//printIf(global.FLAG.render, "value from not equal group");
-				continue; 
-			}
-				
-			//printIf(global.FLAG.render, "Group output ready " + string(_to.node.isRenderable()));
+			if(!_to.node.isRenderActive())					continue;
+			if(!_to.node.active || _to.value_from == noone) continue;
+			if(_to.value_from.node != group)				continue;
 			
 			array_push(nodes, _to.node);
 			LOG_IF(global.FLAG.render == 1, $"Check complete, push {_to.node.internalName} to queue.");
@@ -61,60 +45,55 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		LOG_BLOCK_END();
 		
 		return nodes;
-	} #endregion
+	}
 	
-	static createOutput = function() { #region
+	static createOutput = function() {
 		if(group == noone) return;
 		if(!is_struct(group)) return;
 		
-		if(!is_undefined(outParent))
-			ds_list_remove(group.outputs, outParent);
+		if(!is_undefined(outParent)) ds_list_remove(group.outputs, outParent);
 			
 		outParent = nodeValue("Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.any, -1)
 			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;
-			
+		
 		ds_list_add(group.outputs, outParent);
 		
 		if(!LOADING && !APPENDING) {
 			group.refreshNodeDisplay();
 			group.sortIO();
+			group.setHeight();
 		}
 		
 		outParent.setFrom(inputs[| 0]);
-	} if(!LOADING && !APPENDING) createOutput(); #endregion
+		
+	} if(!LOADING && !APPENDING) createOutput();
 	
-	static step = function() { #region
+	static step = function() {
 		if(is_undefined(outParent)) return;
 		
 		outParent.name = display_name; 
 		
-		inputs[| 0].setType(VALUE_TYPE.any);
-		if(inputs[| 0].value_from != noone) {
-			inputs[| 0].setType(inputs[| 0].value_from.type);
-			inputs[| 0].display_type = inputs[| 0].value_from.display_type;
-		} 
+		var _in0 = inputs[| 0];
+		var _pty = _in0.type;
+		var _typ = _in0.value_from == noone? VALUE_TYPE.any         : _in0.value_from.type;
+		var _dis = _in0.value_from == noone? VALUE_DISPLAY._default : _in0.value_from.display_type;
 		
-		outParent.setType(inputs[| 0].type);
-		outParent.display_type = inputs[| 0].display_type;
-	} #endregion
-	
-	static getGraphPreviewSurface = function() { #region
-		return inputs[| 0].getValue();
-	} #endregion
-	
-	static postDeserialize = function() { #region
-		if(group == noone) return;
+		_in0.setType(_typ);
+		_in0.display_type = _dis;
 		
-		createOutput(false);
-	} #endregion
-	
-	static doApplyDeserialize = function() { #region
+		outParent.setType(_in0.type);
+		outParent.display_type = _in0.display_type;
 		
-	} #endregion
+		if(group && _pty != _typ) group.setHeight();
+	}
 	
-	static onDestroy = function() { #region
+	static getGraphPreviewSurface = function() { return inputs[| 0].getValue(); }
+	static postDeserialize		  = function() { if(group == noone) return; createOutput(false); }
+	static doApplyDeserialize	  = function() {}
+	
+	static onDestroy = function() {
 		if(is_undefined(outParent)) return;
 		
 		ds_list_remove(group.outputs, outParent);
@@ -126,9 +105,9 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for (var i = 0, n = array_length(_tos); i < n; i++) 
 			_tos[i].removeFrom();
 		
-	} #endregion
+	}
 	
-	static onUngroup = function() { #region
+	static onUngroup = function() {
 		var fr = inputs[| 0].value_from;
 		
 		for( var i = 0; i < array_length(outParent.value_to); i++ ) {
@@ -137,9 +116,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			to.setFrom(fr);
 		}
-	} #endregion
+	}
 		
-	static onLoadGroup = function() { #region
-		if(group == noone) destroy();
-	} #endregion
+	static onLoadGroup = function() { if(group == noone) destroy(); }
 }

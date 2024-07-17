@@ -237,7 +237,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	#macro NODE_ADD_CAT if(!IS_CMD) addNodeCatagory
 #endregion
 	
-function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) { #region
+function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	INLINE
 	
 	if(!ds_map_exists(ALL_NODES, _name)) {
@@ -245,11 +245,13 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) { #r
 		return noone;
 	}
 	
-	var _node = ALL_NODES[? _name];
-	return _node.build(_x, _y, _group);
-} #endregion
+	var _node  = ALL_NODES[? _name];
+	var _bnode = _node.build(_x, _y, _group);
 	
-function addNodeObject(_list, _name, _spr, _node, _fun, _tag = [], tooltip = "") { #region
+	return _bnode;
+}
+	
+function addNodeObject(_list, _name, _spr, _node, _fun, _tag = [], tooltip = "") {
 	if(ds_map_exists(ALL_NODES, _node)) {
 		var _n = ALL_NODES[? _node];
 		ds_list_add(_list, _n);
@@ -261,20 +263,11 @@ function addNodeObject(_list, _name, _spr, _node, _fun, _tag = [], tooltip = "")
 	
 	ds_list_add(_list, _n);
 	return _n;
-} #endregion
+}
 	
-function addNodeCatagory(name, list, filter = [], color = noone) { #region
-	global.__currPage = name;
-	ds_list_add(NODE_CATEGORY, { name, list, filter, color });
-} #endregion
-	
-function addNodePBCatagory(name, list, filter = []) { #region
-	ds_list_add(NODE_PB_CATEGORY, { name: name, list: list, filter: filter });
-} #endregion
-	
-function addNodePCXCatagory(name, list, filter = []) { #region
-	ds_list_add(NODE_PCX_CATEGORY, { name: name, list: list, filter: filter });
-} #endregion
+function addNodeCatagory(    name, list, filter = [], color = noone) { global.__currPage = name; ds_list_add(NODE_CATEGORY,     { name, list, filter, color }); }
+function addNodePBCatagory(  name, list, filter = [])                {                           ds_list_add(NODE_PB_CATEGORY,  { name, list, filter        }); }
+function addNodePCXCatagory( name, list, filter = [])                {                           ds_list_add(NODE_PCX_CATEGORY, { name, list, filter        }); }
 
 function __initNodes() {
 	global.__currPage  = "";
