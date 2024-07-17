@@ -43,9 +43,9 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 		}
 	}
 	
+	var _hov = [ 0, 0, 0, 0 ], _hovPos = 0;
+	
 	if(interact) {
-		var _hov = [ 0, 0, 0, 0 ], _hovPos = 0;
-		
 		     if(drag_type == 1) _r = value_snap(drag_sx - (_mx - drag_mx) / _s, _snx);
 		else if(drag_type == 2) _t = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 		else if(drag_type == 3) _l = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
@@ -164,10 +164,10 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 		}
 	}
 	
+	var _hov = [ 0, 0, 0 ];
+	var _r   = 10;
+	
 	if(interact) {
-		var _hov = [ 0, 0, 0 ];
-		var _r   = 10;
-		
 		if(drag_type) {
 			var _sval = array_clone(showValue());
 			if(unit.mode == VALUE_UNIT.reference) {

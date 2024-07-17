@@ -252,9 +252,9 @@ function Theme() constructor {
     node_junction_inspector         = s_node_junction_inspector;
 
     node_junctions_single           = s_node_junctions_single;
-    node_junctions_bg_x2            = s_node_junctions_bg;
-    node_junctions_outline_x2       = s_node_junctions_outline;
-    node_junctions_outline_hover_x2 = s_node_junctions_outline_hover;
+    node_junctions_bg_x2            = s_node_junctions_bg_2x;
+    node_junctions_outline_x2       = s_node_junctions_outline_2x;
+    node_junctions_outline_hover_x2 = s_node_junctions_outline_hover_2x;
     node_junctions_bg               = s_node_junctions_bg;
     node_junctions_outline          = s_node_junctions_outline;
     node_junctions_outline_hover    = s_node_junctions_outline_hover;

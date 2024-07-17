@@ -1836,6 +1836,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_cbg = merge_color(draw_blend_color, _cbg, draw_blend);
 		
 			__draw_sprite_ext(THEME.node_junction_inspector, is_hover, x, y, _s, _s, 0, _cbg, 1);
+			
 		} else {
 			var _cbg = draw_bg;
 			var _cfg = draw_fg;

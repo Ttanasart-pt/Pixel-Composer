@@ -581,7 +581,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					miny = min(miny, _ny); maxy = max(maxy, _ny);
 					
 					if(j) {
-						if((key_mod_press(CTRL) || isUsingTool(1)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
+						if(hover && (key_mod_press(CTRL) || isUsingTool(1)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
 							_line_hover = i;
 						draw_line_width(_ox, _oy, _nx, _ny, 1 + 2 * (line_hover == i));
 					}
@@ -592,7 +592,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			} #endregion
 			
 			#region draw anchor
-				if(!isUsingTool(0))
+				if(hover != -1 && !isUsingTool(0))
 				for(var i = 0; i < ansize; i++) {
 					var _a   = anchors[i];
 					var xx   = _x + _a[0] * _s;
@@ -624,15 +624,18 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 					if(drag_point == i) {
 						draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
-					} else if(point_in_circle(_mx, _my, xx, yy, 8)) {
+						
+					} else if(hover && point_in_circle(_mx, _my, xx, yy, 8)) {
 						draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
 						anchor_hover = i;
 						hover_type   = 0;
-					} else if(cont && point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
+						
+					} else if(cont && hover && point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
 						draw_sprite_colored(THEME.anchor_selector, 0, _ax0, _ay0);
 						anchor_hover = i;
 						hover_type   = 1;
-					} else if(cont && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
+						
+					} else if(cont && hover && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
 						draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1);
 						anchor_hover =  i;
 						hover_type   = -1;
@@ -641,17 +644,18 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			#endregion
 		}
 		
+		if(hover == -1) return;
 		line_hover = _line_hover;
 		
 		/////////////////////////////////////////////////////// TOOLS ///////////////////////////////////////////////////////
 		
 		if(isUsingTool(0)) {								#region transform tools
 			var hov = 0;
-				 if(point_in_circle(_mx, _my, minx, miny, 8)) hov = 1;
-			else if(point_in_circle(_mx, _my, maxx, miny, 8)) hov = 2;
-			else if(point_in_circle(_mx, _my, minx, maxy, 8)) hov = 3;
-			else if(point_in_circle(_mx, _my, maxx, maxy, 8)) hov = 4;
-			else if(point_in_rectangle(_mx, _my, minx, miny, maxx, maxy)) hov = 5;
+				 if(hover && point_in_circle(_mx, _my, minx, miny, 8)) hov = 1;
+			else if(hover && point_in_circle(_mx, _my, maxx, miny, 8)) hov = 2;
+			else if(hover && point_in_circle(_mx, _my, minx, maxy, 8)) hov = 3;
+			else if(hover && point_in_circle(_mx, _my, maxx, maxy, 8)) hov = 4;
+			else if(hover && point_in_rectangle(_mx, _my, minx, miny, maxx, maxy)) hov = 5;
 			
 			draw_set_color(COLORS._main_accent);
 			draw_rectangle_border(minx, miny, maxx, maxy, 1 + (hov == 5));
