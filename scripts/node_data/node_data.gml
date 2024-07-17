@@ -1257,7 +1257,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		aa += 0.25;
 		
 		var tx = xx     + 6 * _s;
-		var tw = w * _s - 6 * _s;
+		var tw = w * _s - 8 * _s;
 		
 		if(!previewable) {
 			tx += _s * 4;
@@ -1270,20 +1270,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(icon) {
 			tx += _s * 6;
 			draw_sprite_ui_uniform(icon, 0, round(tx), round(yy + nh / 2), _s, c_white, aa);
-			tx += _s * 12;
-			tw -= _s * (6 + 12);
+			tx += _s *  12;
+			tw -= _s * (12 + 6);
 		}
 		
 		var _ts  = _s * 0.275;
 		var _tx  = round(tx);
 		var _ty  = round(yy + nh / 2 + 1);
-		var _txt = string_cut(_name, tw, "...", _ts);
 		
 		draw_set_text(f_sdf, fa_left, fa_center, cc, aa);
+			var _txt = string_cut(_name, tw, "...", _ts);
 			BLEND_ALPHA_MULP
 			draw_text_transformed(_tx, _ty, _txt, _ts, _ts, 0);
 			BLEND_NORMAL
 		draw_set_alpha(1);
+		
+		// draw_line_width(_tx, _ty, _tx + tw, _ty, 4);
 	}
 	
 	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus) {
