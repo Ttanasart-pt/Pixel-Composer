@@ -265,9 +265,9 @@ function addNodeObject(_list, _name, _spr, _node, _fun, _tag = [], tooltip = "")
 	return _n;
 }
 	
-function addNodeCatagory(    name, list, filter = [], color = noone) { global.__currPage = name; ds_list_add(NODE_CATEGORY,     { name, list, filter, color }); }
-function addNodePBCatagory(  name, list, filter = [])                {                           ds_list_add(NODE_PB_CATEGORY,  { name, list, filter        }); }
-function addNodePCXCatagory( name, list, filter = [])                {                           ds_list_add(NODE_PCX_CATEGORY, { name, list, filter        }); }
+function addNodeCatagory(    name, list, filter = [], color = noone) { ds_list_add(NODE_CATEGORY,     { name, list, filter, color }); global.__currPage = name; }
+function addNodePBCatagory(  name, list, filter = [])                { ds_list_add(NODE_PB_CATEGORY,  { name, list, filter        }); }
+function addNodePCXCatagory( name, list, filter = [])                { ds_list_add(NODE_PCX_CATEGORY, { name, list, filter        }); }
 
 function __initNodes() {
 	global.__currPage  = "";

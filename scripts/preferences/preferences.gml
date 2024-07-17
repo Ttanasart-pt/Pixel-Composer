@@ -38,6 +38,7 @@
 				
 		PREFERENCES.double_click_delay				= 0.25;
 		PREFERENCES.mouse_wheel_speed				= 1.00;
+		PREFERENCES.slider_lock_mouse				= true;
 		
 		PREFERENCES.keyboard_repeat_start			= 0.50;
 		PREFERENCES.keyboard_repeat_speed			= 0.10;

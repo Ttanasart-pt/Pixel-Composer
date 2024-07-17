@@ -402,9 +402,9 @@ function preview_overlay_area(interact, active, _x, _y, _s, _mx, _my, _snx, _sny
 	__overlay_hover = array_verify(__overlay_hover, 5);
 	
 	switch(mode) {
-		case AREA_MODE.area :	   return preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
-		case AREA_MODE.padding :   return preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data);
-		case AREA_MODE.two_point : return preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
+		case AREA_MODE.area :	   return preview_overlay_area_span(      interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
+		case AREA_MODE.padding :   return preview_overlay_area_padding(   interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data);
+		case AREA_MODE.two_point : return preview_overlay_area_two_point( interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
 	}
 	
 	return hover;

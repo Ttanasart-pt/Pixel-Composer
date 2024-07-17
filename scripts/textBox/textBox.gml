@@ -522,8 +522,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 			
 			if(sliding == 2) {
-				if(!slidePen)
-					CURSOR_LOCK = true;
+				if(!slidePen && PREFERENCES.slider_lock_mouse) CURSOR_LOCK = true;
 
 				if(mouse_press(mb_right)) {
 					_input_text = string_real(slider_def_val);

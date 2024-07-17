@@ -43,8 +43,7 @@
 				nx = mlx + i;
 				ny = WIN_H - 4 - mouse_left[i] * 24;
 				
-				if(i)
-					draw_line(ox, oy, nx, ny);
+				if(i) draw_line(ox, oy, nx, ny);
 				
 				ox = nx;
 				oy = ny;
@@ -58,15 +57,19 @@
 				nx = mlx + i;
 				ny = WIN_H - 64 - 4 - mouse_right[i] * 24;
 				
-				if(i)
-					draw_line(ox, oy, nx, ny);
+				if(i) draw_line(ox, oy, nx, ny);
 				
 				ox = nx;
 				oy = ny;
 			}
 			
-			for( var i = 1, n = array_length(mouse_pos); i < n; i++ )
-				draw_line(mouse_pos[i - 1][0], mouse_pos[i - 1][1], mouse_pos[i][0], mouse_pos[i][1]);
+			// draw_set_color(PEN_USE? c_yellow : c_white);
+			// draw_set_alpha(0.75);
+			// BLEND_ADD
+			// for( var i = 1, n = array_length(mouse_pos); i < n; i++ )
+			// 	draw_line(mouse_pos[i - 1][0], mouse_pos[i - 1][1], mouse_pos[i][0], mouse_pos[i][1]);
+			// BLEND_NORMAL
+			// draw_set_alpha(1);
 			
 			var mp = 0;
 			if(DOUBLE_CLICK)				 mp = 2;
@@ -108,25 +111,21 @@
 			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, dcx, dcy, _dcw, dch, COLORS._main_icon_light, 1.0);
 		}
 		
-		draw_sprite_ext(s_key_display_mouse, 0, mxs, mys, 1, 1, 0, c_white, 0.5);
-		if(DOUBLE_CLICK)
-			draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_value_positive, 1);
-		else if(mouse_click(mb_left))
-			draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
-	
-		if(mouse_click(mb_right))
-			draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
-	
-		if(mouse_click(mb_middle))
-			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
+		var cc = PEN_USE? COLORS._main_accent : c_white;
+		
+			 if(DOUBLE_CLICK)       	draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_value_positive, 1);
+		else if(mouse_click(mb_left))	draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
+		
+		if(mouse_click(mb_right))		draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
+		if(mouse_click(mb_middle))		draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
 			
-		if(mouse_wheel_up())
-			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
-		if(mouse_wheel_down())
-			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+		if(mouse_wheel_up())			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+		if(mouse_wheel_down())			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+		
+		draw_sprite_ext_add(s_key_display_mouse, 0, mxs, mys, 1, 1, 0, cc, 0.5);
 	#endregion
 	
-	if(alpha > 0) { #region
+	if(alpha > 0) {
 		draw_set_text(_f_h5, fa_right, fa_bottom, COLORS._main_icon_dark);
 		var pd = ui(4);
 		var ww = string_width(disp_text)  + pd * 3;
@@ -141,5 +140,5 @@
 		draw_set_alpha(alpha);
 		draw_text(x1 - pd * 1.5, y1 - pd, disp_text);
 		draw_set_alpha(1);
-	} #endregion
+	}
 #endregion
