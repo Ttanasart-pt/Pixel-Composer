@@ -19,25 +19,22 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone );
 	
 	obstracle = new FLIP_Obstracle();
-	index     = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(inputs[| 1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var domain = getInputData(0);
+		var _area  = getInputData(1);
 		if(!instance_exists(domain)) return;
 		
 		outputs[| 0].setValue(domain);
-		
-		var _area = getInputData(1);
-		
-		FLIP_setSolid_rectangle(domain.domain, index, _area[0], _area[1], _area[2], _area[3]);
-	} #endregion
+		FLIP_setSolid_rectangle(domain.domain, _area[0], _area[1], _area[2], _area[3]);
+	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_fluidSim_wall, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_bbox_uniform(s_node_fluidSim_wall, 0, bbox);
 	}
 }

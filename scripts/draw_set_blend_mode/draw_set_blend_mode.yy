@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"draw_set_blend_mode",
   "isCompatibility":true,
   "isDnD":false,
   "name":"draw_set_blend_mode",
   "parent":{
     "name":"draw",
-    "path":"folders/functions/fluid_sim/Compat/draw.yy",
+    "path":"folders/functions/smokesim/Compat/draw.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"fd_rectangle_set_visualization_shader",
   "isCompatibility":false,
   "isDnD":false,
   "name":"fd_rectangle_set_visualization_shader",
   "parent":{
     "name":"Set_scripts",
-    "path":"folders/functions/fluid_sim/API/Set_scripts.yy",
+    "path":"folders/functions/smokesim/API/Set_scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

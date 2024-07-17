@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"texture_set_interpolation",
   "isCompatibility":true,
   "isDnD":false,
   "name":"texture_set_interpolation",
   "parent":{
     "name":"texture",
-    "path":"folders/functions/fluid_sim/Compat/texture.yy",
+    "path":"folders/functions/smokesim/Compat/texture.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"object_get_depth",
   "isCompatibility":true,
   "isDnD":false,
   "name":"object_get_depth",
   "parent":{
     "name":"object",
-    "path":"folders/functions/fluid_sim/Compat/object.yy",
+    "path":"folders/functions/smokesim/Compat/object.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -2367,13 +2367,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				if(_vt.value_from == noone) break;
 				if(_vt.value_from.node != self) break;
 				
-				_vt.removeFrom(false);
-				
-				if(!_merge) continue;
-				
-				for( var k = 0; k < ds_list_size(inputs); k++ ) {
-					if(inputs[| k].value_from == noone) continue;
-					if(_vt.setFrom(inputs[| k].value_from)) break;
+				if(_merge) {
+					for( var k = 0; k < ds_list_size(inputs); k++ ) {
+						if(inputs[| k].value_from == noone) continue;
+						if(_vt.setFrom(inputs[| k].value_from)) break;
+					}
+				} else {
+					_vt.removeFrom(false);
 				}
 			}
 			

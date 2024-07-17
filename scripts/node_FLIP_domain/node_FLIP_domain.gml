@@ -164,10 +164,10 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		outputs[| 0].setValue(domain);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_bbox(s_node_fluidSim_domain, 0, bbox);
-	} #endregion
+		draw_sprite_bbox_uniform(s_node_fluidSim_domain, 0, bbox);
+	} 
 		
 	static getPreviewValues = function() { return domain.domain_preview; }
 	

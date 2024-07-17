@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"fd_GUIDE",
   "isCompatibility":false,
   "isDnD":false,
   "name":"fd_GUIDE",
   "parent":{
-    "name":"fluid_sim",
-    "path":"folders/functions/fluid_sim.yy",
+    "name":"smokesim",
+    "path":"folders/functions/smokesim.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

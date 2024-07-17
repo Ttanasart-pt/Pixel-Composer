@@ -4,14 +4,14 @@ function FLIP_Obstracle() constructor {
 	
 	texture = noone;
 	
-	static draw = function() { #region
+	static draw = function() {
 		if(!is_surface(texture)) return;
 		
 		var _sw = surface_get_width_safe(texture);
 		var _sh = surface_get_height_safe(texture);
 		
 		draw_surface(texture, x - _sw / 2, y - _sh / 2);
-	} #endregion
+	}
 }
 
 function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -58,7 +58,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		return [ domain.width, domain.height ];
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		var _shp   = getInputData(3);
@@ -86,16 +86,16 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		if(inputs[| 1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
 		
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _shp = getInputData(3);
 		
 		inputs[| 2].setVisible(_shp == 0);
 		inputs[| 4].setVisible(_shp == 1);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		
@@ -120,12 +120,12 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		     if(_shp == 0) FLIP_setObstracle_circle(domain.domain, index, _posit[0], _posit[1], _rad);
 		else if(_shp == 1) FLIP_setObstracle_rectangle(domain.domain, index, _posit[0], _posit[1], _siz[0], _siz[1]);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_bbox(s_node_fluidSim_add_collider, 0, bbox);
-	} #endregion
+		draw_sprite_bbox_uniform(s_node_fluidSim_add_collider, 0, bbox);
+	}
 	
 	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }
 }

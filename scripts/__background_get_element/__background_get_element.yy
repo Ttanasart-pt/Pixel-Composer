@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"__background_get_element",
   "isCompatibility":true,
   "isDnD":false,
   "name":"__background_get_element",
   "parent":{
     "name":"background",
-    "path":"folders/functions/fluid_sim/Compat/background.yy",
+    "path":"folders/functions/smokesim/Compat/background.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

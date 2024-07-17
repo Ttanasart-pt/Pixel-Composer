@@ -408,23 +408,25 @@ function StrandMesh() constructor {
 	mesh  = noone;
 	
 	static step = function(iteration = 4) {
-		for( var i = 0, n = array_length(hairs); i < n; i++ )
-			hairs[i].step(iteration);
+		__iteration = iteration;
+		array_foreach(hairs, function(h) /*=>*/ { h.step(__iteration); });
 	}
 	
 	static draw = function(_x, _y, _s, drawAngle = false, baked = false) {
-		for( var i = 0, n = array_length(hairs); i < n; i++ )
-			hairs[i].draw(_x, _y, _s, drawAngle, baked);
+		__x = _x;
+		__y = _y;
+		__s = _s;
+		__d = drawAngle;
+		__b = baked;
+		
+		array_foreach(hairs, function(h) /*=>*/ { h.draw(__x, __y, __s, __d, __b); });
 	}
 	
-	static store = function() {
-		for( var i = 0, n = array_length(hairs); i < n; i++ )
-			hairs[i].store();
-	}
+	static store = function() { array_foreach(hairs, function(h) /*=>*/ { h.store(); }); }
 	
 	static freeze = function(fixLength = false) {
-		for( var i = 0, n = array_length(hairs); i < n; i++ )
-			hairs[i].freeze(fixLength);
+		__fixLength = fixLength;
+		array_foreach(hairs, function(h) /*=>*/ { h.freeze(fixLength); });
 	}
 	
 	static getPointRatio = function(rat, ind = 0) {
@@ -440,16 +442,9 @@ function StrandMesh() constructor {
 		return new __vec2(lerp(p0.x, p1.x, fr), lerp(p0.y, p1.y, fr));
 	}
 	
-	static getLineCount = function() {
-		return array_length(hairs);
-	}
+	static getLineCount = function() { return array_length(hairs); }
 	
-	static set = function() {
-		for( var i = 0, n = array_length(hairs); i < n; i++ )
-			hairs[i].set();
-		
-		return self;
-	}
+	static set = function() { array_foreach(hairs, function(h) /*=>*/ { h.set(); }); return self; }
 	
 	static clone = function() {
 		var s = new StrandMesh();

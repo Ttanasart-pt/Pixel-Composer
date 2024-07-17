@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"fd_rectangle_get_acceleration_x",
   "isCompatibility":false,
   "isDnD":false,
   "name":"fd_rectangle_get_acceleration_x",
   "parent":{
     "name":"Get_scripts",
-    "path":"folders/functions/fluid_sim/API/Get_scripts.yy",
+    "path":"folders/functions/smokesim/API/Get_scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

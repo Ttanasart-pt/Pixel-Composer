@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"fd_rectangle_material_surface_was_created",
   "isCompatibility":false,
   "isDnD":false,
   "name":"fd_rectangle_material_surface_was_created",
   "parent":{
     "name":"API",
-    "path":"folders/functions/fluid_sim/API.yy",
+    "path":"folders/functions/smokesim/API.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

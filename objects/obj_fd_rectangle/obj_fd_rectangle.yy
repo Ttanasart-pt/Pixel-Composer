@@ -6,8 +6,8 @@
   "name":"obj_fd_rectangle",
   "overriddenProperties":[],
   "parent":{
-    "name":"fluid_sim",
-    "path":"folders/functions/fluid_sim.yy",
+    "name":"smokesim",
+    "path":"folders/functions/smokesim.yy",
   },
   "parentObjectId":null,
   "persistent":true,

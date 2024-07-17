@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"fd_x",
   "isCompatibility":false,
   "isDnD":false,
   "name":"fd_x",
   "parent":{
     "name":"Internal",
-    "path":"folders/functions/fluid_sim/Internal.yy",
+    "path":"folders/functions/smokesim/Internal.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

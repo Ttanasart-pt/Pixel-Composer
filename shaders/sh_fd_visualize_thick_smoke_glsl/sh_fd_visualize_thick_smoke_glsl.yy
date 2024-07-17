@@ -4,7 +4,7 @@
   "name":"sh_fd_visualize_thick_smoke_glsl",
   "parent":{
     "name":"Shaders",
-    "path":"folders/functions/fluid_sim/Shaders.yy",
+    "path":"folders/functions/smokesim/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

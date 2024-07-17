@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"draw_background_stretched",
   "isCompatibility":true,
   "isDnD":false,
   "name":"draw_background_stretched",
   "parent":{
     "name":"background",
-    "path":"folders/functions/fluid_sim/Compat/background.yy",
+    "path":"folders/functions/smokesim/Compat/background.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

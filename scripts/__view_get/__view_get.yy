@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"__view_get",
   "isCompatibility":true,
   "isDnD":false,
   "name":"__view_get",
   "parent":{
     "name":"view",
-    "path":"folders/functions/fluid_sim/Compat/view.yy",
+    "path":"folders/functions/smokesim/Compat/view.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
