@@ -160,6 +160,9 @@
 		PREFERENCES.file_explorer       = "";
 		PREFERENCES.dialog_path         = "";
 		
+		PREFERENCES.path_assets         = [];
+		PREFERENCES.path_fonts          = [];
+		
 		PREFERENCES.versions			= {};
 	
 	#endregion

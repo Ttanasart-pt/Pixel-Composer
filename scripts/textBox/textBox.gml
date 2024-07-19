@@ -68,6 +68,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	text_surface = surface_create(1, 1);
 	
 	shake_amount = 0;
+	onDeactivate = -1;
 	
 	static setOnRelease = function(release) { onRelease = release; return self; }
 	
@@ -132,6 +133,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		UNDO_HOLDING = false;
 		
 		if(PEN_USE) keyboard_virtual_hide();
+		
+		if(onDeactivate != -1) onDeactivate();
 	}
 	
 	static onKey = function(key) {

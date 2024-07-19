@@ -30,6 +30,7 @@ uniform int   gradient_use;
 uniform vec2  level;
 
 uniform int   diagonal;
+uniform int   uniformSize;
 
 uniform int   textureTruchet;
 uniform float truchetSeed;
@@ -261,7 +262,7 @@ void main() { #region
 	vec2 sqSt  = floor(_pos * sca) / sca;
 	vec2 _dist = _pos - sqSt;
 	vec2 nPos  = abs(_dist * sca - vec2(0.5)) * 2.; //distance in x, y axis
-	float rat  = sca.y / sca.x;
+	float rat  = uniformSize == 1? sca.y / sca.x : 1.;
 	float dist = 1. - max((nPos.x - 1.) * rat + 1., nPos.y);
 	
 	vec4 colr;

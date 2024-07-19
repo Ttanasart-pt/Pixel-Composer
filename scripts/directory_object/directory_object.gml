@@ -15,7 +15,7 @@ function FileObject(_name, _path) constructor { #region
 	meta	   = noone;
 	type	   = FILE_TYPE.collection;
 	
-	switch(filename_ext_raw(path)) { #region
+	switch(filename_ext_raw(path)) {
 		case "png" :	
 		case "jpg" :	
 		case "gif" :	
@@ -26,7 +26,7 @@ function FileObject(_name, _path) constructor { #region
 		case "cpxc" : 
 			type = FILE_TYPE.project;
 			break;
-	} #endregion
+	}
 	
 	retrive_data	= false;
 	thumbnail_data	= -1;
@@ -35,7 +35,7 @@ function FileObject(_name, _path) constructor { #region
 	
 	static getName = function() { return name; }
 	
-	static getThumbnail = function() { #region
+	static getThumbnail = function() {
 		if(thumbnail != noone && is_surface(thumbnail)) return thumbnail;	// Thumbnail loaded
 		
 		if(size > 100000) return noone;										// File too large
@@ -45,9 +45,9 @@ function FileObject(_name, _path) constructor { #region
 		
 		thumbnail = surface_decode(thumbnail_data);
 		return thumbnail;
-	} #endregion
+	}
 	
-	static getSpr = function() { #region
+	static getSpr = function() {
 		if(spr != -1 && sprite_exists(spr))	
 			return spr;
 			
@@ -87,9 +87,9 @@ function FileObject(_name, _path) constructor { #region
 		}
 		
 		return spr;
-	} #endregion
+	}
 	
-	static getMetadata = function(_createnew = false) { #region
+	static getMetadata = function(_createnew = false) {
 		retrive_data = true;
 		
 		if(meta != noone)			 return meta;  
@@ -119,7 +119,7 @@ function FileObject(_name, _path) constructor { #region
 		}
 		
 		return meta;
-	} #endregion
+	}
 } #endregion
 
 function DirectoryObject(name, path) constructor { #region
@@ -135,7 +135,7 @@ function DirectoryObject(name, path) constructor { #region
 	static destroy = function() { ds_list_destroy(subDir); }
 	static getName = function() { return name; }
 	
-	static scan = function(file_type) { #region
+	static scan = function(file_type) {
 		scanned = true;
 		
 		var _temp_name = [];
@@ -189,9 +189,9 @@ function DirectoryObject(name, path) constructor { #region
 				}
 			}
 		}
-	} #endregion
+	}
 	
-	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _params = {}) { #region
+	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _params = {}) {
 		var hg = ui(28);
 		var hh = 0;
 		
@@ -199,15 +199,20 @@ function DirectoryObject(name, path) constructor { #region
 		
 		if(!ds_list_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, ui(32), _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, CDEF.main_white, 1);
-			if(mouse_press(mb_left, _focus))
+			if(mouse_press(mb_left, _focus)) {
 				open = !open;
+				MOUSE_BLOCK = true;
+			}
 		}
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _x + ui(32), _y, _w, _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(36), hg, CDEF.main_white, 1);
-			if(!triggered && mouse_click(mb_left, _focus)) {
-				if(!ds_list_empty(subDir))
+			if(!triggered && mouse_press(mb_left, _focus)) {
+				if(!ds_list_empty(subDir)) {
 					open = !open;
+					MOUSE_BLOCK = true;
+				}
+				
 				parent.setContext(parent.context == self? _homedir : self);
 				triggered = true;
 			}
@@ -240,5 +245,5 @@ function DirectoryObject(name, path) constructor { #region
 		}
 		
 		return hh;
-	} #endregion
+	}
 } #endregion

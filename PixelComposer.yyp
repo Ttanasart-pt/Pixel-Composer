@@ -976,6 +976,7 @@
     {"id":{"name":"FirebaseREST_firestore_value","path":"scripts/FirebaseREST_firestore_value/FirebaseREST_firestore_value.yy",},},
     {"id":{"name":"FirebaseREST_HTTP_Failed_Firestore","path":"scripts/FirebaseREST_HTTP_Failed_Firestore/FirebaseREST_HTTP_Failed_Firestore.yy",},},
     {"id":{"name":"FirebaseREST_HTTP_Success_Firestore","path":"scripts/FirebaseREST_HTTP_Success_Firestore/FirebaseREST_HTTP_Success_Firestore.yy",},},
+    {"id":{"name":"folderArrayBox","path":"scripts/folderArrayBox/folderArrayBox.yy",},},
     {"id":{"name":"font_data","path":"scripts/font_data/font_data.yy",},},
     {"id":{"name":"font_loader","path":"scripts/font_loader/font_loader.yy",},},
     {"id":{"name":"font_sprite_loader","path":"scripts/font_sprite_loader/font_sprite_loader.yy",},},

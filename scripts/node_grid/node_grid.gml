@@ -76,9 +76,11 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 27] = nodeValue("Diagonal", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 28] = nodeValue("Uniform height", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
 	input_display_list = [
 		["Output",  false], 0,
-		["Pattern",	false], 1, 4, 15, 2, 13, 3, 26, 27, 14, 9, 8, 16,
+		["Pattern",	false], 1, 4, 15, 2, 13, 28, 3, 26, 27, 14, 9, 8, 16,
 		["Render",	false], 10, 11, 5, 20, 6, 7, 25, 12, 24, 
 		["Truchet",  true, 17], 18, 19, 22, 23, 
 	];
@@ -155,6 +157,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_2("level",          _data[24]);
 			shader_set_f("gapAcc",         _data[26]);
 			shader_set_i("diagonal",       _data[27]);
+			shader_set_i("uniformSize",    _data[28]);
 			
 			shader_set_color("gapCol",  _col_gap);
 			

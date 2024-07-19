@@ -28,14 +28,14 @@ global.LINE_HEIGHTS = {};
 	FONT_ISLOADED = false;
 #endregion
 
-function __font_add_height(font) { #region
+function __font_add_height(font) {
 	INLINE 
 	
 	draw_set_font(font);
 	global.LINE_HEIGHTS[$ font] = string_height("l");
-} #endregion
+}
 
-function __font_refresh() { #region
+function __font_refresh() {
 	__font_add_height(f_h1);
 	__font_add_height(f_h2);
 	__font_add_height(f_h3);
@@ -52,9 +52,9 @@ function __font_refresh() { #region
 	__font_add_height(f_code);
 	__font_add_height(f_sdf);
 	__font_add_height(f_sdf_medium);
-} #endregion
+}
 
-function _font_add(path, size, sdf = false, custom = false) { #region
+function _font_add(path, size, sdf = false, custom = false) {
 	var _cache = custom? FONT_CUST_CACHE : FONT_CACHE;
 	var font_cache_dir = DIRECTORY + "font_cache";
 	directory_verify(font_cache_dir);
@@ -71,9 +71,9 @@ function _font_add(path, size, sdf = false, custom = false) { #region
 	_font_extend_locale(_f, _f);
 	
 	return _f;
-} #endregion
+}
 
-function _font_extend_locale(baseFont, localFont, override = false) { #region
+function _font_extend_locale(baseFont, localFont, override = false) {
 	if(!struct_exists(GLYPH_MAP, baseFont))
 		GLYPH_MAP[$ baseFont] = {};
 	
@@ -89,9 +89,9 @@ function _font_extend_locale(baseFont, localFont, override = false) { #region
 		if(override || !struct_has(Gmap, _g))
 			Gmap[$ _g] = localFont;
 	}
-} #endregion
+}
 
-function _font_path(rel) { #region
+function _font_path(rel) {
 	rel = string_replace_all(rel, "./", "");
 	var defPath = $"{DIRECTORY}Themes/{PREFERENCES.theme}/fonts/{rel}";
 	
@@ -103,9 +103,9 @@ function _font_path(rel) { #region
 		return overridePath;
 	
 	return defPath;
-} #endregion
+}
 
-function _font_load_from_struct(str, name, def, over = true) { #region
+function _font_load_from_struct(str, name, def, over = true) {
 	if(!struct_has(str, name)) return def;
 	
 	var font = str[$ name];
@@ -126,11 +126,11 @@ function _font_load_from_struct(str, name, def, over = true) { #region
 	var _font = _font_add(path, round(font.size * UI_SCALE), _sdf);
 	
 	return _font;
-} #endregion
+}
 
 function font_clear(font) { if(font_exists(font)) font_delete(font); }
 
-function loadFonts() { #region
+function loadFonts() {
 	if(FONT_ISLOADED) {
 		font_clear(f_h1);
 		font_clear(f_h2);
@@ -196,7 +196,7 @@ function loadFonts() { #region
 	FONT_ISLOADED = true;
 	
 	__font_refresh();
-} #endregion
+}
 
 #region unused font cache
 	//function __fontCache() { 

@@ -14,6 +14,7 @@ event_inherited();
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		
 		var hght = line_get_height(f_p0, 8);
 		var data = FONT_INTERNAL;
 		var _h   = array_length(data) * hght;
@@ -21,7 +22,7 @@ event_inherited();
 		
 		for(var i = 0; i < array_length(data); i++) {
 			var _ly = _y + i * hght;	
-			var fullpath = DIRECTORY + "Fonts/" + data[i];
+			var fullpath = data[i];
 			
 			if(sHOVER && sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
 				selecting = i;
@@ -37,7 +38,7 @@ event_inherited();
 			}
 					
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			draw_text_cut(ui(8), _ly + hght / 2, data[i], _dw);
+			draw_text_cut(ui(8), _ly + hght / 2, filename_name_only(data[i]), _dw);
 			
 			if(ds_map_exists(FONT_SPRITES, fullpath)) {
 				var spr = FONT_SPRITES[? fullpath];

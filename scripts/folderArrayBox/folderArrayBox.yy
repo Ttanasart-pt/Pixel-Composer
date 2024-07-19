@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"folderArrayBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"folderArrayBox",
+  "parent":{
+    "name":"text",
+    "path":"folders/widgets/text.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

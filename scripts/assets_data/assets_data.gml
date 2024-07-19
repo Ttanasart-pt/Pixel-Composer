@@ -1,8 +1,9 @@
 #region assets
-	global.ASSET_MAP = ds_map_create();
+	global.ASSET_MAP   = ds_map_create();
 	global.ASSET_CACHE = ds_map_create();
 	
 	function __initAssets() {
+		global.ASSETS = new DirectoryObject("Assets", "");
 		ds_map_clear(global.ASSET_MAP);
 		
 		var root = DIRECTORY + "Assets";
@@ -10,12 +11,22 @@
 		
 		if(check_version($"{root}/version"))
 			zip_unzip("data/Assets.zip", root);
+		
+		__initAssetsFolder(root);
+		for( var i = 0, n = array_length(PREFERENCES.path_assets); i < n; i++ ) 
+			__initAssetsFolder(PREFERENCES.path_assets[i]);
+	}
 	
-		global.ASSETS = new DirectoryObject("Assets", root);
-		global.ASSETS.scan([".png"]);
+	function __initAssetsFolder(_dir) {
+	
+		var _folder = new DirectoryObject(filename_name_only(_dir), _dir);
+		    _folder.scan([".png"]);
+		    _folder.open = true;
+		    
+		ds_list_add(global.ASSETS.subDir, _folder);
 		
 		var st = ds_stack_create();
-		ds_stack_push(st, global.ASSETS);
+		ds_stack_push(st, _folder);
 		
 		while(!ds_stack_empty(st)) {
 			var _st = ds_stack_pop(st);

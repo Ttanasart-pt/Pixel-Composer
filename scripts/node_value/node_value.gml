@@ -841,7 +841,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.path_font :
-						editWidget = new fontScrollBox( function(val) { return setValueInspector(DIRECTORY + "Fonts/" + FONT_INTERNAL[val]); } );
+						editWidget = new fontScrollBox( function(val) { return setValueInspector(FONT_INTERNAL[val]); } );
 						break;
 				}
 				break; #endregion

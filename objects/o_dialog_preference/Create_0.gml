@@ -102,29 +102,6 @@ event_inherited();
 #region general
 	pref_global = ds_list_create();
 	
-	ds_list_add(pref_global, __txt("Paths"));
-		
-		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-			__txtx("pref_directory", "Main directory path" + "*"),
-			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PRESIST_PREF.path = txt; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); })
-				.setSideButton(button(function() /*=>*/ { 
-					PRESIST_PREF.path = get_directory(PRESIST_PREF.path);
-					json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
-				}, THEME.button_path_icon)).setFont(f_p2).setEmpty(),
-				
-			function(   ) /*=>*/ { return PRESIST_PREF.path; },
-			function(val) /*=>*/ { PRESIST_PREF.path = val; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); },
-			APP_DIRECTORY,
-		));
-		
-		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_directory_temp", "Temp directory path" + "*"),
-			"temp_path",
-			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.temp_path = txt; PREF_SAVE(); })
-				.setSideButton(button(function() /*=>*/ { PREFERENCES.temp_path = get_directory(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
-				.setFont(f_p2).setEmpty(),
-		));
-	
 	ds_list_add(pref_global, __txt("Inputs"));
 	
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
@@ -215,6 +192,41 @@ event_inherited();
 			__txtx("pref_enable_test_mode", "Enable developer mode" + "*"),
 			"test_mode",
 			new checkBox(function() /*=>*/ { PREFERENCES.test_mode = !PREFERENCES.test_mode; should_restart = true; PREF_SAVE(); })
+		));
+	
+	ds_list_add(pref_global, __txt("Paths"));
+		
+		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
+			__txtx("pref_directory", "Main directory path" + "*"),
+			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PRESIST_PREF.path = txt; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); })
+				.setSideButton(button(function() /*=>*/ { 
+					PRESIST_PREF.path = get_directory(PRESIST_PREF.path);
+					json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
+				}, THEME.button_path_icon)).setFont(f_p2).setEmpty(),
+				
+			function(   ) /*=>*/ { return PRESIST_PREF.path; },
+			function(val) /*=>*/ { PRESIST_PREF.path = val; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); },
+			APP_DIRECTORY,
+		));
+		
+		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_directory_temp", "Temp directory path" + "*"),
+			"temp_path",
+			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.temp_path = txt; PREF_SAVE(); })
+				.setSideButton(button(function() /*=>*/ { PREFERENCES.temp_path = get_directory(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
+				.setFont(f_p2).setEmpty(),
+		));
+	
+		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_directory_assets", "Assets directory path" + "*"),
+			"path_assets",
+			new folderArrayBox(PREFERENCES.path_assets, function() /*=>*/ { PREF_SAVE(); }).setFont(f_p2),
+		));
+	
+		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_directory_font", "Font directory path" + "*"),
+			"path_fonts",
+			new folderArrayBox(PREFERENCES.path_fonts, function() /*=>*/ { PREF_SAVE(); }).setFont(f_p2),
 		));
 	
 	ds_list_add(pref_global, __txt("Libraries"));
@@ -947,7 +959,7 @@ event_inherited();
 			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
 				continue;
 			
-			if(ind % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+			if(ind % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.surface_w, max(_pref.editWidget.h, th) + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(24), yy + th / 2, name);
@@ -970,8 +982,8 @@ event_inherited();
 			var widget_w = ui(260);
 			var widget_h = th;
 			
-			if(is_instanceof(_pref.editWidget, textBox)) 
-				widget_w = _pref.editWidget.input == TEXTBOX_INPUT.text? ui(400) : widget_w;
+				 if(is_instanceof(_pref.editWidget, textBox))         widget_w = _pref.editWidget.input == TEXTBOX_INPUT.text? ui(400) : widget_w;
+			else if(is_instanceof(_pref.editWidget, folderArrayBox))  widget_w = ui(400);
 			
 			var widget_x = x1 - ui(4) - widget_w;
 			var widget_y = yy;
