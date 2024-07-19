@@ -133,13 +133,13 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		}
 		
 		if(linked) {
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x      + ww / 2 - ui(3), _y + _h / 2, ui(6), _h + ui(4), COLORS._main_accent, .2);
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww + ww / 2 - ui(3), _y + _h / 2, ui(6), _h + ui(4), COLORS._main_accent, .2);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x      + ww / 2 - ui(2), _y + _h / 2, ui(4), _h + ui(4), COLORS._main_accent, .2);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww + ww / 2 - ui(2), _y + _h / 2, ui(4), _h + ui(4), COLORS._main_accent, .2);
 		}
 		
 		if(!ranged) {
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2, _y +              _h / 2 - ui(3), ww, ui(6), COLORS._main_accent, .2);
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2, _y + _h + ui(4) + _h / 2 - ui(3), ww, ui(6), COLORS._main_accent, .2);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2, _y +              _h / 2 - ui(2), ww, ui(4), COLORS._main_accent, .2);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2, _y + _h + ui(4) + _h / 2 - ui(2), ww, ui(4), COLORS._main_accent, .2);
 		}
 		
 		for( var j = 0; j < 2; j++ ) {

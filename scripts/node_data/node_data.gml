@@ -896,11 +896,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return false;
 	}
 	
-	static triggerRender = function() {
+	static triggerRender = function(resetSelf = true) {
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"Trigger render for {self}");
 		
-		resetRender(false);
+		if(resetSelf) resetRender(false);
 		RENDER_PARTIAL
 		
 		if(is_instanceof(group, Node_Collection)) {
