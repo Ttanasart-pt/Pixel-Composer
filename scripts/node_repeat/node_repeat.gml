@@ -1,3 +1,21 @@
+global.node_repeat_keys = [ "repeat polar", "repeat circular" ];
+
+function Node_create_Repeat(_x, _y, _group = noone, _param = {}) {
+	var _node = new Node_Repeat(_x, _y, _group);
+	var query = struct_try_get(_param, "query", "");
+	
+	switch(query) {
+		case "repeat polar" : 
+		case "repeat circular" : 
+			_node.inputs[| 3].setValue(2);
+			_node.inputs[| 9].unit.setMode(VALUE_UNIT.reference);
+			_node.inputs[| 9].setValueDirect([ 0.5, 0.5 ]);
+			break;
+	}
+	
+	return _node;
+} 
+
 function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Repeat";
 	dimension_index = 1;
@@ -95,11 +113,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 32] = nodeValue("Start rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surfaces",	 true],	0, 1, 16, 17,
-		["Pattern",		false],	3, 9, 2, 18, 7, 8, 
+		["Pattern",		false],	3, 9, 32, 2, 18, 7, 8, 
 		["Path",		 true],	11, 12, 13, 
 		["Position",	false],	4, 26, 19, 
 		["Rotation",	false],	5, 
@@ -142,6 +163,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[| 18].setVisible( _pat == 1);
 		inputs[| 19].setVisible( _pat == 1);
 		inputs[| 26].setVisible( _pat == 0);
+		inputs[| 32].setVisible( _pat == 2);
 		
 		inputs[| 14].mappableStep();
 	} #endregion
@@ -154,6 +176,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _pat  = _data[ 3];
 							  
 		var _spos = _data[ 9];
+		var _srot = _data[32];
 		
 		var _rpos = _data[ 4];
 		var _rsta = _data[26];
@@ -222,8 +245,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					
 					posx = _spos[0] + _rpos[0] * col + _cls[0] * row;
 					posy = _spos[1] + _rpos[1] * col + _cls[1] * row;
+					
 				} else if(_pat == 2) {
-					var aa = _aran[0] + (_aran[1] - _aran[0]) * i / _amo;
+					var aa = _srot + lerp(_aran[0], _aran[1], i / _amo);
 					posx = _spos[0] + lengthdir_x(_arad, aa);
 					posy = _spos[1] + lengthdir_y(_arad, aa);
 				}

@@ -453,10 +453,10 @@ function nodeValueUnit(_nodeValue) constructor {
 	triggerButton.tooltip    = new tooltipSelector("Unit", ["Pixel", "Fraction"]);
 	
 	static setMode = function(type) {
-		if(type == "constant" && mode == VALUE_UNIT.constant) return;
-		if(type == "relative" && mode == VALUE_UNIT.reference) return;
+		if((type == "constant" || type == VALUE_UNIT.constant)  && mode == VALUE_UNIT.constant) return;
+		if((type == "relative" || type == VALUE_UNIT.reference) && mode == VALUE_UNIT.reference) return;
 		
-		mode = type == "constant"? VALUE_UNIT.constant : VALUE_UNIT.reference;
+		mode = (type == "constant" || type == VALUE_UNIT.constant)? VALUE_UNIT.constant : VALUE_UNIT.reference;
 		_nodeValue.cache_value[0] = false;
 		_nodeValue.unitConvert(mode);
 		_nodeValue.node.doUpdate();
