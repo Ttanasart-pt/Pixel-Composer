@@ -261,8 +261,9 @@ void main() { #region
 	vec2 sqSt  = floor(_pos * sca) / sca;
 	vec2 _dist = _pos - sqSt;
 	vec2 nPos  = abs(_dist * sca - vec2(0.5)) * 2.; //distance in x, y axis
-	float dist = 1. - max(nPos.x, nPos.y);
-		
+	float rat  = sca.y / sca.x;
+	float dist = 1. - max((nPos.x - 1.) * rat + 1., nPos.y);
+	
 	vec4 colr;
 	
 	if(mode == 2) {
