@@ -382,7 +382,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					break;
 					
 				case 1 : BLEND_ADD; break;
-				case 2 : gpu_set_blendmode(bm_max); break;
+				case 2 : 
+					BLEND_ALPHA_MULP
+					gpu_set_blendequation(bm_eq_max);
+					break;
 			}
 			
 			var positions = array_create(_amount);
@@ -654,6 +657,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			}
 			
 			BLEND_NORMAL
+			gpu_set_blendequation(bm_eq_add);
 			gpu_set_tex_filter(false);
 		surface_reset_target(); 
 		
