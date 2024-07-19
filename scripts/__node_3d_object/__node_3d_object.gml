@@ -523,11 +523,12 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 					switch(drag_axis) {
 						case 0 : nor = new __vec3(0, 1, 0); prj = new __vec3(1,  0,  0); break;
 						case 1 : nor = new __vec3(0, 0, 1); prj = new __vec3(0,  1,  0); break;
-						case 2 : nor = new __vec3(1, 0, 0); prj = new __vec3(0,  0,  1); break;
+						case 2 : nor = new __vec3(0, 1, 0); prj = new __vec3(0,  0,  1); break;
 					}
 						
 					nor = _qrot.Rotate(nor);
-				
+					prj = _qrot.Rotate(prj);
+					
 					var pln = new __plane(drag_original, nor);
 					mAdj = d3d_intersect_ray_plane(ray, pln);
 						
@@ -535,7 +536,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						var _diff = mAdj.subtract(drag_prev);
 						var _dist = _diff.dot(prj);
 							
-						drag_val[drag_axis] += prj.getIndex(drag_axis) * _dist;
+						drag_val[drag_axis] += _dist;
 							
 						if(inputs[| index].setValue(value_snap(drag_val, _snx))) 
 							UNDO_HOLDING = true;

@@ -24,8 +24,6 @@ event_inherited();
 		[ "Pixel sort", "Ciphrd" ],
 		[ "Simplex noise", "Ian McEwan" ],
 		[ "BBMOD", "BlueBurn" ],
-		
-		[ "Additional help", "ChatGPT by OpenAI" ],
 	];
 	
 	patreons = "";

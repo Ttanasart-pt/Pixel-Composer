@@ -8,28 +8,29 @@ if !ready exit;
 
 #region content
 	draw_sprite_ui_uniform(THEME.icon_64, 0, dialog_x + ui(56), dialog_y + ui(56));
-	draw_set_text(f_h5, fa_left, fa_center, COLORS._main_text_accent);
-	draw_text(dialog_x + ui(56 + 48), dialog_y + ui(56), "Pixel Composer");
+	draw_set_text(_f_ico_h5, fa_left, fa_bottom, COLORS._main_text_accent);
+	draw_text(dialog_x + ui(56 + 48), dialog_y + ui(56 + 4), "Pixel Composer");
 	
-	var bx = dialog_x + ui(56 + 48) + string_width("Pixel Composer") + ui(16);
-	var by = dialog_y + ui(56);
-	var txt = "v. " + VERSION_STRING;
-	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-	var ww = string_width(txt) + ui(16);
-	var hh = line_get_height(, 16);
-	if(buttonInstant(THEME.button_hide, bx, by - hh / 2, ww, hh, mouse_ui, sFOCUS, sHOVER) == 2) {
+	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_sub);
+	var bx  = dialog_x + ui(56 + 48);
+	var by  = dialog_y + ui(56 + 4);
+	var txt = VERSION_STRING;
+	var ww  = string_width(txt) + ui(8);
+	var hh  = line_get_height(, 4);
+	if(buttonInstant(THEME.button_hide_fill, bx - ui(4), by - ui(2), ww, hh, mouse_ui, sFOCUS, sHOVER) == 2)
 		dialogCall(o_dialog_release_note, WIN_W / 2, WIN_H / 2);
-	}
-	draw_text(bx + ui(8), by, txt);
 	
-	var bx = dialog_x + dialog_w - ui(52);
+	draw_text(bx, by, txt);
+	
+	var bs = ui(32);
+	var bx = dialog_x + dialog_w - ui(16) - bs;
 	var by = dialog_y + ui(16);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(36), ui(36), mouse_ui, sFOCUS, sHOVER, __txt("Preferences"), THEME.gear) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txt("Preferences"), THEME.gear) == 2) {
 		dialogCall(o_dialog_preference, WIN_W / 2, WIN_H / 2);
 	}
 	
-	bx -= ui(40);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(36), ui(36), mouse_ui, sFOCUS, sHOVER, __txt("Show on startup"), THEME.icon_splash_show_on_start, PREFERENCES.show_splash) == 2) {
+	bx -= bs + ui(4);
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txt("Show on startup"), THEME.icon_splash_show_on_start, PREFERENCES.show_splash) == 2) {
 		PREFERENCES.show_splash = !PREFERENCES.show_splash;
 		PREF_SAVE();
 	}
@@ -59,6 +60,7 @@ if !ready exit;
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.splash_thumbnail, recent_thumbnail) == 2) {
 		recent_thumbnail = !recent_thumbnail;
 	}
+	
 	bx -= ui(28 + 4);
 	txt = __txtx("splash_open_autosave", "Open autosave folder");
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.save_auto, 0) == 2) {
@@ -81,6 +83,7 @@ if !ready exit;
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
 	bx = x0;
+	
 	var tab_cover = noone;
 	var th = ui(36) + THEME_VALUE.panel_tab_extend;
 	
@@ -161,26 +164,24 @@ if !ready exit;
 		case "Welcome Files" :
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0);
-	
-			if(!expand) {
-				draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
-				draw_text(x1 - ui(0), y0 - ui(4), __txt("Art by Kenney"));
-			}
 			break;
+			
 		case "Workshop" : 
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0);
 			
+			var bs = ui(32);
 			var bx = x1 - ui(32);
-			var by = y0 - ui(32);
-		
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, __txtx("workshop_open", "Open Steam Workshop"), THEME.steam) == 2)
+			var by = y0 - ui(36);
+			
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txtx("workshop_open", "Open Steam Workshop"), THEME.steam) == 2)
 				steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
 		
-			bx -= ui(36);
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh_icon) == 2)
+			bx -= bs + ui(4);
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh_icon) == 2)
 				steamUCGload();
 			break;
+			
 		case "Contests" : 
 			sp_contest.setFocusHover(sFOCUS, sHOVER);
 			sp_contest.draw(x0 + ui(6), y0 + 1);

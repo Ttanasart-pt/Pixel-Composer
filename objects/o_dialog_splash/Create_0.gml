@@ -24,14 +24,14 @@ event_inherited();
 	function resize() {
 		var x0 = dialog_x + ui(16);
 		var x1 = x0 + recent_width;
-		var y0 = dialog_y + ui(128);
+		var y0 = dialog_y + ui(48);
 		var y1 = dialog_y + dialog_h - ui(16);
 		
 		sp_recent.resize(x1 - x0 - ui(12), y1 - y0);
 		
 		x0 = x1 + ui(16);
 		x1 = dialog_x + dialog_w - ui(16);
-	
+		
 		sp_sample.resize( x1 - x0 - ui(12), y1 - y0 - 1);
 		sp_contest.resize(x1 - x0 - ui(12), y1 - y0 - 2);
 	}
@@ -344,7 +344,13 @@ event_inherited();
 				}
 				
 				draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
-				draw_text_add(pd + ui(32), _yy + ui(12), lb.text);
+				draw_text_add(pd + ui(32), _yy + ui(12), string_titlecase(lb.text));
+				
+				if(lb.text == "Sample Projects") {
+					draw_set_text(f_p2, fa_right, fa_center, CDEF.main_grey);
+					draw_text_add(pd + ww - ui(20), _yy + ui(12), __txt("Art by Kenney"));
+
+				}
 			}
 		}
 			

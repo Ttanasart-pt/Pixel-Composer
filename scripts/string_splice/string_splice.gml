@@ -32,7 +32,21 @@ function string_splice(str, delim = " ", keep = false, empty = true) {
 function string_title(str) {
 	str = string_replace_all(str, "_", " ");
 	var ch = string_char_at(str, 1);
-	ch = string_upper(ch);
+	    ch = string_upper(ch);
 	var rs = string_copy(str, 2, string_length(str) - 1);
 	return ch + rs;
+}
+
+function string_titlecase(str) {
+	var ch = "", ind = 1, len = string_length(str);
+	var tt = "";
+	var sp = true;
+	
+	repeat(len) {
+		ch = string_char_at(str, ind++);
+		tt += sp? string_upper(ch) : ch;
+		sp = ch == " ";
+	}
+	
+	return tt;
 }
