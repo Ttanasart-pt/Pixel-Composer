@@ -591,6 +591,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
+						if(!struct_has(display_data, "ranged")) display_data.ranged = false;
 						
 							 if(array_length(val) == 2) extract_node = "Node_Vector2";
 						else if(array_length(val) == 3) extract_node = "Node_Vector3";

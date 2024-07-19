@@ -207,6 +207,7 @@ function Theme() constructor {
     unit_audio                      = s_unit_audio;
     unit_ref                        = s_unit_ref;
     value_link                      = s_padding_link;
+    value_range                     = s_value_range;
     value_use_surface               = s_value_use_surface;
     vct                             = s_vct;
     vfx                             = s_vfx;

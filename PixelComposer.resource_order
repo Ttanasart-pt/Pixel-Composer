@@ -2588,6 +2588,7 @@
     {"name":"s_unit_angle","order":205,"path":"sprites/s_unit_angle/s_unit_angle.yy",},
     {"name":"s_unit_audio","order":206,"path":"sprites/s_unit_audio/s_unit_audio.yy",},
     {"name":"s_unit_ref","order":207,"path":"sprites/s_unit_ref/s_unit_ref.yy",},
+    {"name":"s_value_range","order":229,"path":"sprites/s_value_range/s_value_range.yy",},
     {"name":"s_value_use_surface","order":208,"path":"sprites/s_value_use_surface/s_value_use_surface.yy",},
     {"name":"s_vct","order":209,"path":"sprites/s_vct/s_vct.yy",},
     {"name":"s_vfx","order":210,"path":"sprites/s_vfx/s_vfx.yy",},
