@@ -254,7 +254,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 				scax = eval_curve_x(_msca, i / (_amo - 1)) * _rsca;
 				scay = scax;
-				rot = _rrot[0] + (_rrot[1] - _rrot[0]) * i / (_amo - 1);
+				rot = _rrot[0] + (_rrot[1] - _rrot[0]) * i / _amo;
 				
 				var _an_dist = abs(i - _an_mid * (_amo - 1));
 				var _inf = 0;
