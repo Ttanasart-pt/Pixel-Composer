@@ -30,10 +30,15 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	__init_mask_modifier(7); // inputs 11, 12
 	
-	input_display_list = [ 9, 10, 
+	inputs[| 13] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Closet", "Random" ]);
+	
+	inputs[| 14] = nodeValueSeed(self, VALUE_TYPE.float);
+	
+	input_display_list = [ 9, 10, 14, 
 		["Surfaces",	 true], 0, 7, 8, 11, 12, 
 		["Palette",		false], 1, 2, 
-		["Comparison",	false], 3, 5, 
+		["Comparison",	false], 13, 3, 5, 
 		["Render",		false], 4, 6
 	];
 	
@@ -41,18 +46,20 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
-		var fr  = _data[1];
-		var to  = _data[2];
-		var tr  = _data[3];
-		var in  = _data[4];
-		var alp = _data[5];
-		var hrd = _data[6];
-		var msk = _data[7];
+	static processData = function(_outSurf, _data, _output_index, _array_index) {	
+		var fr  = _data[ 1];
+		var to  = _data[ 2];
+		var tr  = _data[ 3];
+		var in  = _data[ 4];
+		var alp = _data[ 5];
+		var hrd = _data[ 6];
+		var msk = _data[ 7];
+		var mde = _data[13];
+		var sed = _data[14];
 		
 		var _colorFrom = paletteToArray(fr);
 		var _colorTo   = paletteToArray(to);
@@ -63,6 +70,8 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_f("colorTo",		  _colorTo);
 			shader_set_i("colorTo_amo",   array_length(to));
 			
+			shader_set_f("seed",	    sed);
+			shader_set_i("mode",	    mde);
 			shader_set_i("alphacmp",	alp);
 			shader_set_i("hardReplace", hrd);
 			shader_set_f("treshold",	tr);
@@ -79,5 +88,5 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		_outSurf = channel_apply(_data[0], _outSurf, _data[10]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

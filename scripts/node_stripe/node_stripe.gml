@@ -59,9 +59,11 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 18] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black, c_white ] )
 		.setDisplay(VALUE_DISPLAY.palette);
 		
+	inputs[| 19] = nodeValueSeed(self, VALUE_TYPE.float);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	input_display_list = [ 
+	input_display_list = [ 19, 
 		["Output",	true],	0,  
 		["Pattern",	false], 1, 11, 10, 14, 2, 12, 4, 5, 13, 17, 
 		["Render",	false], 3, 6, 7, 15, 8, 9, 18, 
@@ -107,12 +109,14 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _clr1 = _data[9];
 		var _prg  = _data[17];
 		var _pal  = _data[18];
+		var _seed = _data[19];
 		
 		var _color = _data[6];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
 		surface_set_shader(_outSurf, sh_stripe);
+			shader_set_f("seed",		 _seed);
 			shader_set_f("dimension",	 _dim[0], _dim[1]);
 			shader_set_f("position",	 _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_i("blend",		 _bnd);

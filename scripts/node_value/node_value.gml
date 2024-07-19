@@ -1,6 +1,14 @@
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
 function nodeValueMap(_name, _node, _junc = noone)						 { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false, false).setMapped(_junc); }
-function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ]).setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
+function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
+																						.setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
+																						
+function nodeValueSeed(_node, _type) { 
+	var _val = new NodeValue("Seed", _node, JUNCTION_CONNECT.input, _type, seed_random(6), "");
+	__node_seed_input_value = _val;
+	_val.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() /*=>*/ { randomize(); __node_seed_input_value.setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	return _val; 
+}
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
 	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "unit", "atlas_crop" ];

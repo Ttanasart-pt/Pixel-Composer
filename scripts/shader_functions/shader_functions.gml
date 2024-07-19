@@ -1,4 +1,4 @@
-function shader_set_i(uniform, value) { #region
+function shader_set_i(uniform, value) {
 	INLINE
 	
 	var shader = shader_current();
@@ -19,13 +19,13 @@ function shader_set_i(uniform, value) { #region
 				array[i - 1] = argument[i];
 			shader_set_i_array(shader, uniform, array)
 	}
-} #endregion
+}
 
-function shader_set_i_array(shader, uniform, array) { #region
+function shader_set_i_array(shader, uniform, array) {
 	INLINE
 	
 	shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array);
-} #endregion
+}
 
 function shader_set_2(uniform, v) { INLINE var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1)); } 
 function shader_set_3(uniform, v) { INLINE var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2)); } 
@@ -39,7 +39,7 @@ function shader_set_f_array(uniform, value, max_length = 128) {
 	shader_set_uniform_f_array_safe(shader_get_uniform(shader, uniform), value, max_length);
 }
 
-function shader_set_f(uniform, value) { #region
+function shader_set_f(uniform, value) {
 	INLINE
 	
 	var shader = shader_current();
@@ -75,9 +75,9 @@ function shader_set_f(uniform, value) { #region
 			array[i - 1] = argument[i];
 		shader_set_uniform_f_array(shader_get_uniform(shader, uniform), array);
 	}
-} #endregion
+}
 
-function shader_set_f_map(uniform, value, surface = noone, junc = noone) { #region
+function shader_set_f_map(uniform, value, surface = noone, junc = noone) {
 	INLINE
 	
 	shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
@@ -88,16 +88,16 @@ function shader_set_f_map(uniform, value, surface = noone, junc = noone) { #regi
 		shader_set_i(      uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
 		shader_set_surface(uniform + "Surf",    surface);
 	}
-} #endregion
+}
 
-function shader_set_f_map_s(uniform, value, surface, junc) { #region
+function shader_set_f_map_s(uniform, value, surface, junc) {
 	INLINE
 	
 	shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
 	shader_set_i(uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
-} #endregion
+}
 
-function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) { #region
+function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) {
 	INLINE
 	
 	if(!is_array(array)) return;
@@ -107,9 +107,9 @@ function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) { #re
 	if(_len > max_length) array_resize(array, max_length)
 	
 	shader_set_uniform_f_array(uniform, array);
-} #endregion
+}
 
-function shader_set_surface(sampler, surface, linear = false, _repeat = false) { #region
+function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 	INLINE
 	
 	var shader = shader_current();
@@ -126,9 +126,9 @@ function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 	gpu_set_tex_repeat_ext(t, _repeat);
 	
 	return t;
-} #endregion
+}
 
-function shader_set_surface_dimension(uniform, surface) { #region
+function shader_set_surface_dimension(uniform, surface) {
 	INLINE
 	
 	var shader = shader_current();
@@ -143,22 +143,22 @@ function shader_set_surface_dimension(uniform, surface) { #region
 	th = 2048;
 	
 	shader_set_uniform_f(shader_get_uniform(shader, uniform), tw, th);
-} #endregion
+}
 
-function shader_set_dim(uniform = "dimension", surf = noone) { #region
+function shader_set_dim(uniform = "dimension", surf = noone) {
 	INLINE
 	
 	if(!is_surface(surf)) return;
 	shader_set_f(uniform, surface_get_width_safe(surf), surface_get_height_safe(surf));
-} #endregion
+}
 
-function shader_set_color(uniform, col, alpha = 1) { #region
+function shader_set_color(uniform, col, alpha = 1) {
 	INLINE
 	
 	shader_set_f(uniform, colToVec4(col, alpha));
-} #endregion
+}
 
-function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 128) { #region
+function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 128) {
 	INLINE
 	
 	shader_set_i(amo_uni, min(max_length, array_length(pal)));
@@ -169,7 +169,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	
 	if(array_length(_pal))
 		shader_set_f(pal_uni, _pal);
-} #endregion
+}
 
 #region prebuild
 	enum BLEND {

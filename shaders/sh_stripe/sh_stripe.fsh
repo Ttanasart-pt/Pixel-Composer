@@ -4,6 +4,7 @@ varying vec4 v_vColour;
 #define PI 3.14159265359
 #define PALETTE_LIMIT 128
 
+uniform float seed;
 uniform vec2  dimension;
 uniform vec2  position;
 uniform int   blend;
@@ -167,7 +168,7 @@ uniform int   paletteAmount;
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
-float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
+float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (seed + 43758.5453123)); }
 
 void main() { #region
 	#region params

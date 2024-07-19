@@ -133,6 +133,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		if(_tex_dim) _dim = surface_get_dimension(_sam);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		
 		surface_set_shader(_outSurf, sh_grid);
 			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f("dimension",	_dim[0], _dim[1]);

@@ -116,6 +116,12 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 32] = nodeValue("Start rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
+	inputs[| 33] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+		
+	inputs[| 34] = nodeValue("Blend Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive", "Maximum" ]);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
@@ -123,15 +129,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Pattern",		false],	3, 9, 32, 2, 18, 7, 8, 
 		["Path",		 true],	11, 12, 13, 
 		["Position",	false],	4, 26, 19, 
-		["Rotation",	false],	5, 
+		["Rotation",	false],	33, 5, 
 		["Scale",		false],	6, 10, 
-		["Render",		false],	14, 30,
+		["Render",		false],	34, 14, 30, 
 		["Animator",	 true, 29],	20, 21, 25, 22, 23, 24, 27, 
 	];
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _hov = false;
@@ -149,9 +156,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var hv = inputs[| 31].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !hv; _hov |= hv;
 		
 		return _hov;
-	} #endregion
+	}
 	
-	static preGetInputs = function() { #region
+	static preGetInputs = function() {
 		var _arr = getSingleValue(16);
 		var _pat = getSingleValue(3);
 		
@@ -166,9 +173,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[| 32].setVisible( _pat == 2);
 		
 		inputs[| 14].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {	
 		
 		var _iSrf = _data[ 0];
 		var _dim  = _data[ 1];
@@ -181,6 +188,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _rpos = _data[ 4];
 		var _rsta = _data[26];
 		var _rrot = _data[ 5];
+		var _rots = _data[33];
 		var _rsca = _data[ 6];
 		var _msca = _data[10];
 		
@@ -213,12 +221,17 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _an_bld = _data[27];
 		var _an_alp = _color_get_alpha(_an_bld);
 		
+		var _bld_md = _data[34];
+		
 		var _surf, runx, runy, posx, posy, scax, scay, rot;
 				   
 		random_set_seed(_sed);
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
+		surface_set_shader(_outSurf);
+			     if(_bld_md == 0)   BLEND_ALPHA_MULP
+			else if(_bld_md == 1)   BLEND_ADD
+			else if(_bld_md == 2) { BLEND_ALPHA_MULP gpu_set_blendequation(bm_eq_max); }
+			
 			runx = 0;
 			runy = 0;
 			
@@ -254,7 +267,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 				scax = eval_curve_x(_msca, i / (_amo - 1)) * _rsca;
 				scay = scax;
-				rot = _rrot[0] + (_rrot[1] - _rrot[0]) * i / _amo;
+				rot = _rots + _rrot[0] + (_rrot[1] - _rrot[0]) * i / _amo;
 				
 				var _an_dist = abs(i - _an_mid * (_amo - 1));
 				var _inf = 0;
@@ -306,13 +319,17 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					aa += _an_alp * _inf;
 				}
 				
+				shader_set_interpolation(_surf);
 				draw_surface_ext_safe(_surf, posx + pos[0], posy + pos[1], scax, scay, rot, cc, aa);
 				
 				if(_rsta == 1)	runx += _sw / 2;
 				if(_rsta == 2)	runy += _sh / 2;
 			}
-		surface_reset_target();
+			
+			BLEND_NORMAL
+			gpu_set_blendequation(bm_eq_add);
+		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 }
