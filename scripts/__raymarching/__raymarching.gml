@@ -66,9 +66,11 @@ function RM_Object() constructor {
 		var tx = 1024;
 		
 		surface_set_shader(textureAtlas);
-			for (var i = 0; i < shapeAmount; i++)
+			for (var i = 0; i < shapeAmount; i++) {
 				draw_surface_stretched_safe(texture[i], tx * (i % 8), tx * floor(i / 8), tx, tx);
+			}
 		surface_reset_shader();
+		
 		
 		textureAtl = textureAtlas;
 	}

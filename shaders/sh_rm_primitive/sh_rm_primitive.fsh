@@ -13,9 +13,10 @@ const float EPSILON = 1e-5;
 const float PI = 3.14159265358979323846;
 
 const float SUBTEXTURE_SIZE = 1024.;
-const float TEXTURE_N = 8192. / SUBTEXTURE_SIZE;
-const float TEXTURE_S = TEXTURE_N * TEXTURE_N;
-const float TEXTURE_T = SUBTEXTURE_SIZE / 8192.;
+const float TEXTURE_N  = 8192. / SUBTEXTURE_SIZE;
+const float TEXTURE_S  = TEXTURE_N * TEXTURE_N;
+const float TEXTURE_T  = SUBTEXTURE_SIZE / 8192.;
+const float TEXTURE_TX = 1. / SUBTEXTURE_SIZE;
 
 uniform sampler2D texture0;
 uniform sampler2D texture1;
@@ -158,7 +159,7 @@ float influences[MAX_SHAPES];
 	float dot2( in vec3 v ) { return dot(v,v); }
 	float ndot( in vec2 a, in vec2 b ) { return a.x*b.x - a.y*b.y; }
 	
-	vec4 sampleTexture(int textureIndex, vec2 coord) {
+	vec4 sampleTexture(int textureIndex, vec2 coord, int interpolation) { 
 		if(coord.x < 0. || coord.y < 0. || coord.x > 1. || coord.y > 1.) return vec4(0.);
 		
 		float i = float(textureIndex);
@@ -169,15 +170,34 @@ float influences[MAX_SHAPES];
 		float row     = floor(stcInd / TEXTURE_N);
 		float col     = stcInd - row * TEXTURE_N;
 		
-		vec2 tx = vec2(col, row) * TEXTURE_T;
-		vec2 sm = tx + coord * TEXTURE_T;
+		vec2 cl = vec2(col, row);
+		vec2 sm = (cl + coord) * TEXTURE_T;
 		
-			 if(txIndex == 0.) return texture2D(texture0, sm);
-		else if(txIndex == 1.) return texture2D(texture1, sm);
-		else if(txIndex == 2.) return texture2D(texture2, sm);
-		else if(txIndex == 3.) return texture2D(texture3, sm);
+		if(interpolation == 0) {
+			     if(txIndex == 0.) return texture2D(texture0, sm);
+			else if(txIndex == 1.) return texture2D(texture1, sm);
+			else if(txIndex == 2.) return texture2D(texture2, sm);
+			else				   return texture2D(texture3, sm);
+			
+			
+		} else if(interpolation == 1) {
+			vec2 fr  = fract(coord * SUBTEXTURE_SIZE); 
+			vec2 sm1 = (cl + clamp(coord + vec2(TEXTURE_TX,         0.), 0., 1.)) * TEXTURE_T;
+			vec2 sm2 = (cl + clamp(coord + vec2(        0., TEXTURE_TX), 0., 1.)) * TEXTURE_T;
+			vec2 sm3 = (cl + clamp(coord + vec2(TEXTURE_TX, TEXTURE_TX), 0., 1.)) * TEXTURE_T;
+			
+				 if(txIndex == 0.) return mix(mix(texture2D(texture0, sm ), texture2D(texture0, sm1), fr.x), 
+                                              mix(texture2D(texture0, sm2), texture2D(texture0, sm3), fr.x), fr.y);
+			else if(txIndex == 1.) return mix(mix(texture2D(texture1, sm ), texture2D(texture1, sm1), fr.x), 
+                                              mix(texture2D(texture1, sm2), texture2D(texture1, sm3), fr.x), fr.y);
+			else if(txIndex == 2.) return mix(mix(texture2D(texture2, sm ), texture2D(texture2, sm1), fr.x), 
+                                              mix(texture2D(texture2, sm2), texture2D(texture2, sm3), fr.x), fr.y);
+			else				   return mix(mix(texture2D(texture3, sm ), texture2D(texture3, sm1), fr.x), 
+                                              mix(texture2D(texture3, sm2), texture2D(texture3, sm3), fr.x), fr.y);
+			
+		}
 		
-		return texture2D(texture0, sm);
+		return vec4(0.);
 	}
 	
 	vec2 equirectangularUv(vec3 dir) {
@@ -493,9 +513,9 @@ float influences[MAX_SHAPES];
 	
 	vec4 boxmap( in int textureIndex, in vec3 p, in vec3 n, in float k ) {
 	    // project+fetch
-	    vec4 x = sampleTexture( textureIndex, fract(p.yz) );
-	    vec4 y = sampleTexture( textureIndex, fract(p.zx) );
-	    vec4 z = sampleTexture( textureIndex, fract(p.xy) );
+	    vec4 x = sampleTexture( textureIndex, fract(p.yz), 0 );
+	    vec4 y = sampleTexture( textureIndex, fract(p.zx), 0 );
+	    vec4 z = sampleTexture( textureIndex, fract(p.xy), 0 );
 	    
 	    // blend weights
 	    vec3 w = pow( abs(n), vec3(k) );
@@ -865,7 +885,7 @@ vec4 scene() {
     
     if(useEnv == 1) {
     	vec3 ref  = reflect(dir, norm);
-		vec4 refC = sampleTexture(0, equirectangularUv(ref));
+		vec4 refC = sampleTexture(0, equirectangularUv(ref), 0);
 		c = mix(c, c * refC.rgb, refl);
     }
 	
@@ -913,7 +933,7 @@ void main() {
 	    dir  = normalize(camIrotMatrix * dir);
 	    
 	    vec2 envUV = equirectangularUv(dir);
-		vec4 endC  = sampleTexture(0, envUV);
+		vec4 endC  = sampleTexture(0, envUV, 0);
 		bg = endC;
 	}
 	

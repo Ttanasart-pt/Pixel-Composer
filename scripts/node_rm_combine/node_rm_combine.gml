@@ -56,6 +56,8 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 	
 	inputs[| 17] = nodeValue("Render", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
+	inputs[| 18] = nodeValue("Env Interpolation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Shape Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdf, noone);
@@ -63,7 +65,7 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 	input_display_list = [ 0,
 		["Combine", false], 15, 16, 13, 14, 
 		["Camera",  false], 11, 12, 1, 2, 3, 4, 5, 
-		["Render",  false, 17], 6, 7, 8, 10, 9, 
+		["Render",  false, 17], 6, 7, 8, 10, 18, 9, 
 	]
 	
 	temp_surface = [ 0, 0 ];
@@ -104,6 +106,8 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 		var _mer = _data[16];
 		var _ren = _data[17];
 		
+		var _eint = _data[18];
+		
 		var _outSurf = _outData[0];
 		
 		if(!is_instanceof(_sh0, RM_Object)) return [ _outSurf, noone ];
@@ -116,7 +120,9 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 		
 		var tx = 1024;
 		surface_set_shader(temp_surface[0]);
+			gpu_set_tex_filter(_eint);
 			draw_surface_stretched_safe(_env, tx * 0, tx * 0, tx, tx);
+			gpu_set_tex_filter(false);
 		surface_reset_shader();
 		
 		switch(_typ) {

@@ -45,11 +45,13 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 14] = nodeValue("Env Interpolation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 13, 
 		["Camera",  false], 11, 12, 1, 2, 3, 4, 5, 
-		["Render",  false], 6, 7, 8, 10, 9, 
+		["Render",  false], 6, 7, 8, 10, 14, 9, 
 	]
 	
 	temp_surface = [ 0, 0 ];
@@ -81,7 +83,8 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 		var _crt = _data[11];
 		var _csa = _data[12];
 		
-		var _shp = _data[13];
+		var _shp  = _data[13];
+		var _eint = _data[14];
 		
 		if(!is_instanceof(_shp, RM_Object)) return _outSurf;
 		
@@ -92,7 +95,9 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 		
 		var tx = 1024;
 		surface_set_shader(temp_surface[0]);
+			gpu_set_tex_filter(_eint);
 			draw_surface_stretched_safe(_env, tx * 0, tx * 0, tx, tx);
+			gpu_set_tex_filter(false);
 		surface_reset_shader();
 		
  		object = _shp;

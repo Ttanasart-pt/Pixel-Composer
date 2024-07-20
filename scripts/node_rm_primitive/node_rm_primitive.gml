@@ -163,6 +163,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	inputs[| 49] = nodeValue("Env Interpolation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Shape Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdf, noone);
@@ -176,7 +178,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		["Material",   false],  9, 36, 35, 37, 38, 
 		
 		["Camera",     false], 42, 43, 13, 14,  5,  6, 
-		["Render",     false, 44], 31, 30, 34, 10,  7,  8, 
+		["Render",     false, 44], 31, 30, 34, 49, 10,  7,  8, 
 		["Volumetric",  true, 32], 33, 
 	];
 	
@@ -585,6 +587,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		var _tileRot     = _data[47];
 		var _tileSca     = _data[48];
 		
+		var _eint        = _data[49];
+		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		for (var i = 0, n = array_length(temp_surface); i < n; i++)
@@ -592,7 +596,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		
 		var tx = 1024;
 		surface_set_shader(temp_surface[0]);
+			gpu_set_tex_filter(_eint);
 			draw_surface_stretched_safe(bgEnv, tx * 0, tx * 0, tx, tx);
+			gpu_set_tex_filter(false);
 		surface_reset_shader();
 		
 		var _shape = shape_types[_shp];
