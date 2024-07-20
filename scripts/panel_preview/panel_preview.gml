@@ -166,6 +166,7 @@ function Panel_Preview() : PanelContent() constructor {
 		d3_preview_channel = 0;
 		
 		d3_deferData = noone;
+		d3_drawBG    = false;
 		
 		global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
 		
@@ -308,19 +309,30 @@ function Panel_Preview() : PanelContent() constructor {
 		toolbars_3d = [
 			[ 
 				THEME.d3d_preview_settings,
-				function() { return 0; },
-				function() { return __txt("3D Preview Settings") }, 
-				function(param) { 
-					var dia = dialogPanelCall(new Panel_Preview_3D_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-				} 
+				function() /*=>*/ {return 0},
+				function() /*=>*/ {return __txt("3D Preview Settings")},
+				function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
 			],
 			[ 
 				THEME.d3d_snap_settings,
-				function() { return 0; },
-				function() { return __txt("3D Snap Settings") }, 
-				function(param) { 
-					var dia = dialogPanelCall(new Panel_Preview_Snap_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-				} 
+				function() /*=>*/ {return 0},
+				function() /*=>*/ {return __txt("3D Snap Settings")},
+				function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
+			],
+		];
+		
+		toolbars_3d_sdf = [
+			[ 
+				THEME.d3d_preview_settings,
+				function() /*=>*/ {return 0},
+				function() /*=>*/ {return __txt("3D SDF Preview Settings")},
+				function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
+			],
+			[ 
+				THEME.d3d_snap_settings,
+				function() /*=>*/ {return 0},
+				function() /*=>*/ {return __txt("3D Snap Settings")},
+				function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
 			],
 		];
 		
@@ -1202,7 +1214,7 @@ function Panel_Preview() : PanelContent() constructor {
 			_env.apply();
 			if(_obj) _obj.apply();
 			
-			shader_set_i("drawBg",  	0);
+			shader_set_i("drawBg",  	d3_drawBG);
 			shader_set_f("depthInt",    0);
 			
 			var _scale = zm / 2;
@@ -1795,13 +1807,13 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 	} #endregion
 	
-	function drawToolBar(_tool) { #region
+	function drawToolBar(_tool, _node) { #region
 		var ty = h - toolbar_height;
 		var aa = d3_active? 0.8 : 1;
 		draw_sprite_stretched_ext(THEME.toolbar, 1, 0,  0, w, topbar_height, c_white, aa);
 		draw_sprite_stretched_ext(THEME.toolbar, 0, 0, ty, w, toolbar_height, c_white, aa);
 		
-		if(_tool && tool_current != noone) { #region tool settings
+		if(_tool && tool_current != noone) { // tool settings
 			var settings = array_merge(_tool.getToolSettings(), tool_current.settings);
 			
 			tool_x = lerp_float(tool_x, tool_x_to, 5);
@@ -1873,8 +1885,8 @@ function Panel_Preview() : PanelContent() constructor {
 				if(mouse_wheel_up())   tool_x_to = clamp(tool_x_to + ui(64) * SCROLL_SPEED, -tol_max_w, 0);
 				if(mouse_wheel_down()) tool_x_to = clamp(tool_x_to - ui(64) * SCROLL_SPEED, -tol_max_w, 0);
 			}
-		#endregion
-		} else { #region color sampler
+		
+		} else { // color sampler
 			var cx = ui(8);
 			var cy = ui(8);
 			var cw = ui(32);
@@ -1899,13 +1911,19 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_set_color(COLORS._main_text_sub);
 				draw_text(tx, cy + ch / 2, $"({color_get_alpha(sample_color)})");
 			}
-		#endregion
 		}
 		
 		var tbx = toolbar_height / 2;
 		var tby = ty + toolbar_height / 2;
 		
-		var _toolbars = d3_active? toolbars_3d : toolbars;
+		var _toolbars = toolbars;
+
+		if(_node)
+		switch(_node.is_3D) {
+			case NODE_3D.none : 	_toolbars = toolbars;			break;
+			case NODE_3D.polygon :	_toolbars = toolbars_3d;		break;
+			case NODE_3D.sdf :		_toolbars = toolbars_3d_sdf;	break;
+		}
 		
 		for( var i = 0, n = array_length(_toolbars); i < n; i++ ) {
 			var tb = _toolbars[i];
@@ -2056,7 +2074,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(!d3_active) drawSplitView();
 		
-		drawToolBar(tool);
+		drawToolBar(tool, _prev_node);
 		
 		if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
 			menuCall("preview_context_menu",,, [ 

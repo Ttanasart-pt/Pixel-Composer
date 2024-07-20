@@ -1653,6 +1653,7 @@
     {"id":{"name":"panel_palette_mixer","path":"scripts/panel_palette_mixer/panel_palette_mixer.yy",},},
     {"id":{"name":"panel_palette","path":"scripts/panel_palette/panel_palette.yy",},},
     {"id":{"name":"panel_patreon","path":"scripts/panel_patreon/panel_patreon.yy",},},
+    {"id":{"name":"panel_preview_3d_sdf_setting","path":"scripts/panel_preview_3d_sdf_setting/panel_preview_3d_sdf_setting.yy",},},
     {"id":{"name":"panel_preview_3d_setting","path":"scripts/panel_preview_3d_setting/panel_preview_3d_setting.yy",},},
     {"id":{"name":"panel_preview_grid_setting","path":"scripts/panel_preview_grid_setting/panel_preview_grid_setting.yy",},},
     {"id":{"name":"panel_preview_histogram","path":"scripts/panel_preview_histogram/panel_preview_histogram.yy",},},

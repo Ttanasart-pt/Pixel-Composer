@@ -43,6 +43,7 @@ function RM_Object() constructor {
 	
 	texture       = [];
 	useTexture    = [];
+	textureFilter = [];
 	textureScale  = [];
 	triplanar     = [];
 	
@@ -56,7 +57,7 @@ function RM_Object() constructor {
 					  "tileActive", "tileAmount", "tileSpace", "tilePos", "tileRot", "tileSca", 
 					  "diffuseColor", "reflective", 
 					  "volumetric", "volumeDensity", 
-					  "texture", "useTexture", "textureScale", "triplanar" 
+					  "texture", "textureFilter", "useTexture", "textureScale", "triplanar" 
 					];
 	textureAtl    = noone;
 	
@@ -67,7 +68,9 @@ function RM_Object() constructor {
 		
 		surface_set_shader(textureAtlas);
 			for (var i = 0; i < shapeAmount; i++) {
+				gpu_set_tex_filter(textureFilter[i]);
 				draw_surface_stretched_safe(texture[i], tx * (i % 8), tx * floor(i / 8), tx, tx);
+				gpu_set_tex_filter(false);
 			}
 		surface_reset_shader();
 		

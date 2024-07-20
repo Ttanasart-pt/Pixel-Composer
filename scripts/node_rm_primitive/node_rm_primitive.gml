@@ -165,6 +165,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	inputs[| 49] = nodeValue("Env Interpolation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 50] = nodeValue("Texture Interpolation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Shape Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdf, noone);
@@ -175,7 +177,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		["Deform",      true], 15, 16, 17, 18, 19, 
 		["Transform",  false],  2,  3,  4, 
 		["Tile",       false, 45], 20, 29, /*46, 47, 48,*/
-		["Material",   false],  9, 36, 35, 37, 38, 
+		["Material",   false],  9, 36, 50, 35, 37, 38, 
 		
 		["Camera",     false], 42, 43, 13, 14,  5,  6, 
 		["Render",     false, 44], 31, 30, 34, 49, 10,  7,  8, 
@@ -588,6 +590,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		var _tileSca     = _data[48];
 		
 		var _eint        = _data[49];
+		var _textFilter  = _data[50];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
@@ -673,6 +676,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		object.volumeDensity = _vden;
 		    
 		object.texture       = [ _text ];
+		object.textureFilter = [ _textFilter ];
 		object.useTexture    = is_surface(_text);
 		object.textureScale  = _texs;
 		object.triplanar     = _triS;
