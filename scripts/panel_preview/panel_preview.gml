@@ -1954,8 +1954,10 @@ function Panel_Preview() : PanelContent() constructor {
 		draw_set_color(COLORS.panel_toolbar_separator);
 		draw_line_width(tbx + ui(12), tby - toolbar_height / 2 + ui(8), tbx + ui(12), tby + toolbar_height / 2 - ui(8), 2);
 		
-		if(d3_active)	drawNodeChannel3D(tbx, tby);
-		else			drawNodeChannel(tbx, tby);
+		if(d3_active && _node && _node.is_3D == NODE_3D.polygon)	
+			drawNodeChannel3D(tbx, tby);
+		else
+			drawNodeChannel(tbx, tby);
 	} #endregion
 	
 	function drawSplitView() { #region

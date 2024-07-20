@@ -874,17 +874,23 @@ vec4 scene() {
 	    }
     }
     
+    vec3 ref   = reflect(dir, norm);
+    vec3 bgClr = background.rgb;
+  //  if(useEnv == 1) {
+  //  	vec4 refC = sampleTexture(0, equirectangularUv(norm), 0);
+		// bgClr *= refC.rgb;
+  //  }
+    
     ///////////////////////////////////////////////////////////
     
     float distNorm = (depth - viewRange.x) / (viewRange.y - viewRange.x);
     distNorm = 1. - distNorm;
     distNorm = smoothstep(.0, .3, distNorm);
-    c = mix(c * background.rgb, c, mix(1., distNorm, depthInt));
+    c = mix(c * bgClr, c, mix(1., distNorm, depthInt));
     
     ///////////////////////////////////////////////////////////
     
     if(useEnv == 1) {
-    	vec3 ref  = reflect(dir, norm);
 		vec4 refC = sampleTexture(0, equirectangularUv(ref), 0);
 		c = mix(c, c * refC.rgb, refl);
     }
@@ -893,7 +899,7 @@ vec4 scene() {
     
     vec3 light = normalize(lightPosition);
     float lamo = min(1., max(0., dot(norm, light)) + ambientIntns);
-    c = mix(c * background.rgb, c, lamo);
+    c = mix(c * bgClr, c, lamo);
     
     ///////////////////////////////////////////////////////////
     
