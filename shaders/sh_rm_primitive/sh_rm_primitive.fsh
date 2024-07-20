@@ -799,7 +799,6 @@ vec4 scene() {
     
     dir  = normalize(camIrotMatrix * dir);
 	eye  = camIrotMatrix * eye;
-    
     eye /= camScale;
 	
 	if(volumetric[0] == 1) { 
@@ -833,7 +832,8 @@ vec4 scene() {
     for(int i = 0; i < shapeAmount; i++)
     	totalInfluences += influences[i];
     
-    vec3 c = vec3(0.);
+    vec3  c    = vec3(0.);
+    float refl = 0.;
     
     if(totalInfluences > 0.) {
 	    for(int i = 0; i < shapeAmount; i++) {
@@ -849,7 +849,8 @@ vec4 scene() {
 		    	boxmap(int(TEXTURE_S) + i, irotMatrix * coll * textureScale[i], irotMatrix * norm, triplanar[i]).rgb * diffuseColor[i].rgb : 
 		    	diffuseColor[i].rgb;
 		    
-		    c += _c * (influences[i] / totalInfluences);
+		    c    += _c * (influences[i] / totalInfluences);
+		    refl += reflective[i] * (influences[i] / totalInfluences);
 	    }
     }
     
@@ -865,7 +866,7 @@ vec4 scene() {
     if(useEnv == 1) {
     	vec3 ref  = reflect(dir, norm);
 		vec4 refC = sampleTexture(0, equirectangularUv(ref));
-		c = mix(c, c * refC.rgb, mix(reflective[idx0], reflective[idx1], rat));
+		c = mix(c, c * refC.rgb, refl);
     }
 	
     ///////////////////////////////////////////////////////////
@@ -888,10 +889,30 @@ void main() {
 	
 	vec4 bg = background;
 	if(useEnv == 1) {
-		float  edz  = 1. / tan(radians(fov * 2.) / 2.);
-		vec3   edir = normalize(vec3((v_vTexcoord - .5) * 2., -edz));
+		// float  edz  = 1. / tan(radians(fov * 2.) / 2.);
+		// vec3   edir = normalize(vec3((v_vTexcoord - .5) * 2., -edz));
 		
-		vec2 envUV = equirectangularUv(edir);
+		mat3 rx = rotateX(camRotation.x);
+	    mat3 ry = rotateY(camRotation.y);
+	    mat3 rz = rotateZ(camRotation.z);
+	    mat3 camRotMatrix  = rx * ry * rz;
+	    mat3 camIrotMatrix = inverse(camRotMatrix);
+	    
+		vec3 dir;
+		vec2 cps = (v_vTexcoord - .5) * 2.;
+		cps.x *= camRatio;
+    		  
+    	if(ortho == 0) {
+		    float dz  = 1. / tan(radians(fov) / 2.);
+		    dir = vec3(cps, -dz);
+		    
+	    } else if(ortho == 1) {
+	    	dir = vec3(0., 0., -1.);
+	    }
+	    
+	    dir  = normalize(camIrotMatrix * dir);
+	    
+	    vec2 envUV = equirectangularUv(dir);
 		vec4 endC  = sampleTexture(0, envUV);
 		bg = endC;
 	}

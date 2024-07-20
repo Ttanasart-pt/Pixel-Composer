@@ -58,6 +58,12 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
 	
+	static step = function() {
+		var _pro = getSingleValue( 1);
+		
+		inputs[| 3].setVisible(_pro == 1);
+	}
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) {
 		var _dim = _data[0];
 		
