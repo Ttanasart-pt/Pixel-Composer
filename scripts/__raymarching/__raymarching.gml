@@ -130,6 +130,7 @@ function RM_Object() constructor {
 		///////////////////////////////////////////////////////////////
 		
 		shader_set_surface("texture1",   textureAtl);
+		shader_set_i("textureFilter",    textureFilter);
 		shader_set_i("useTexture",       useTexture);
 		shader_set_f("textureScale",     textureScale);
 		shader_set_f("triplanar",        triplanar);
@@ -228,6 +229,7 @@ function RM_Environment() constructor {
 	surface = noone;
 	bgEnv   = noone;
 	
+	envFilter  = false;
 	projection = 0;
 	fov        = 0;
 	orthoScale = 1;
@@ -256,6 +258,7 @@ function RM_Environment() constructor {
 		shader_set_f("ambientIntns",   ambInten);
 		shader_set_f("lightPosition",  light);
 		
+		shader_set_i("envFilter",   envFilter);
 		shader_set_i("useEnv",      is_surface(bgEnv));
 		shader_set_i("drawGrid",  	false);
 		

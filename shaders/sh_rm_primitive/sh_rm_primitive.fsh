@@ -72,6 +72,7 @@ uniform int   volumetric[MAX_SHAPES]                              ;
 uniform float volumeDensity[MAX_SHAPES]                           ;
 
 uniform int   useTexture[MAX_SHAPES]                              ;
+uniform int   textureFilter[MAX_SHAPES]                           ;
 uniform float textureScale[MAX_SHAPES]                            ;
 uniform float triplanar[MAX_SHAPES]                               ;
 
@@ -93,6 +94,7 @@ uniform float ambientIntns;
 uniform vec3  lightPosition;
 
 uniform int   useEnv;
+uniform int   envFilter;
 uniform int   drawGrid;
 uniform float gridStep;
 uniform float gridScale;
@@ -511,11 +513,11 @@ float influences[MAX_SHAPES];
 
 #region ////=========== Texturing ============
 	
-	vec4 boxmap( in int textureIndex, in vec3 p, in vec3 n, in float k ) {
+	vec4 boxmap( in int textureIndex, in vec3 p, in vec3 n, in float k, int interpolation ) {
 	    // project+fetch
-	    vec4 x = sampleTexture( textureIndex, fract(p.yz), 0 );
-	    vec4 y = sampleTexture( textureIndex, fract(p.zx), 0 );
-	    vec4 z = sampleTexture( textureIndex, fract(p.xy), 0 );
+	    vec4 x = sampleTexture( textureIndex, fract(p.yz), interpolation );
+	    vec4 y = sampleTexture( textureIndex, fract(p.zx), interpolation );
+	    vec4 z = sampleTexture( textureIndex, fract(p.xy), interpolation );
 	    
 	    // blend weights
 	    vec3 w = pow( abs(n), vec3(k) );
@@ -865,9 +867,16 @@ vec4 scene() {
 		    mat3 rotMatrix  = rx * ry * rz;
 		    mat3 irotMatrix = inverse(rotMatrix);
 		    
-		    vec3 _c = useTexture[i] == 1? 
-		    	boxmap(int(TEXTURE_S) + i, irotMatrix * coll * textureScale[i], irotMatrix * norm, triplanar[i]).rgb * diffuseColor[i].rgb : 
-		    	diffuseColor[i].rgb;
+		    vec3 _c = diffuseColor[i].rgb;
+		    
+		    if(useTexture[i] == 1) {
+		    	int indx = int(TEXTURE_S) + i;
+		    	vec3 pos = irotMatrix * (coll - position[i]) * textureScale[i];
+		    	vec3 nor = irotMatrix * norm;
+		    	
+		    	_c  = boxmap(indx, pos, nor, triplanar[i], textureFilter[i]).rgb;
+		    	_c *= diffuseColor[i].rgb;
+		    }
 		    
 		    c    += _c * (influences[i] / totalInfluences);
 		    refl += reflective[i] * (influences[i] / totalInfluences);
@@ -891,7 +900,7 @@ vec4 scene() {
     ///////////////////////////////////////////////////////////
     
     if(useEnv == 1) {
-		vec4 refC = sampleTexture(0, equirectangularUv(ref), 0);
+		vec4 refC = sampleTexture(0, equirectangularUv(ref), envFilter);
 		c = mix(c, c * refC.rgb, refl);
     }
 	
@@ -939,7 +948,7 @@ void main() {
 	    dir  = normalize(camIrotMatrix * dir);
 	    
 	    vec2 envUV = equirectangularUv(dir);
-		vec4 endC  = sampleTexture(0, envUV, 0);
+		vec4 endC  = sampleTexture(0, envUV, envFilter);
 		bg = endC;
 	}
 	

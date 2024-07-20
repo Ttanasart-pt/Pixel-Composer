@@ -110,7 +110,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	inputs[| 30] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 31] = nodeValue("Draw BG", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 31] = nodeValue("Draw BG", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -683,8 +683,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			
 		object.setTexture(temp_surface[1]);
 		
-		environ.surface = temp_surface[0];
-		environ.bgEnv   = bgEnv;
+		environ.surface   = temp_surface[0];
+		environ.bgEnv     = bgEnv;
+		environ.envFilter = _eint;
 		
 		environ.projection = _ort;
 		environ.fov        = _fov;
