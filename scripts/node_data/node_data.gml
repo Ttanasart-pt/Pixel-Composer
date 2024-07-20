@@ -86,8 +86,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		bg_sel_spr     = THEME.node_active;
 	
 		name = "";
-		display_name = "";
-		internalName = "";
+		display_name     = "";
+		internalName     = "";
 		onSetDisplayName = noone;
 		renamed = false;
 		

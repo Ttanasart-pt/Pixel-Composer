@@ -40,7 +40,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	inputs[| 7] = nodeValue("Depth", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -.5, -.5, 1 ])
+	inputs[| 8] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -.4, -.5, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 9] = nodeValue("Base Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
@@ -682,8 +682,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		environ.viewRange  = _rng;
 		environ.depthInt   = _dpi;
 		
-		environ.bgColor    = _bgd;
-		environ.bgDraw     = _bgc;
+		environ.bgColor    = _bgc;
+		environ.bgDraw     = _bgd;
 		environ.ambInten   = _ambI;
 		environ.light      = _lPos;
 		
