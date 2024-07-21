@@ -313,6 +313,7 @@ function Theme() constructor {
     ui_selection_range_sim_hori     = s_ui_selection_range_sim_hori;
     ui_selection                    = s_ui_selection;
     ui_panel_selection              = s_ui_panel_selection;
+	add_node_bg                     = s_add_node_bg;
     
     anchor_arrow                    = s_anchor_arrow;
     anchor_bone_stick               = s_anchor_bone_stick;

@@ -32,14 +32,14 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static step = function() { #region
+	static step = function() {
 		var _typ = getInputData(2);
 		
 		inputs[| 5].setVisible(_typ == 1);
 		inputs[| 6].setVisible(_typ == 1);
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
 		var _typ  = _data[2];
 		var _axs  = _data[3];
@@ -227,6 +227,8 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				break;
 		}
 		
+		if(_maxx == undefined) return _outSurf; 
+		
 		#region render
 			for( var i = 0; i < array_length(mesh); i++ ) {
 				var _t = mesh[i];
@@ -248,6 +250,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 				var  n = array_length(mesh);
 			
+				gpu_set_texfilter(attributes.interpolate);
 				for( var k = 0; k < n; k += 100 ) {
 					draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
 				
@@ -261,9 +264,10 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 					draw_primitive_end();
 				}
+				gpu_set_texfilter(false);
 			surface_reset_shader();
 		#endregion
 		
 		return _outSurf;
-	} #endregion
+	}
 }

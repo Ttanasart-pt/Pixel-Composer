@@ -150,7 +150,7 @@ function __initNodeData() {
 	
 	directory_verify(nodeDir);
 	if(check_version($"{nodeDir}version")) {
-		zip_unzip("data/tooltip.zip", nodeDir);
+		zip_unzip("data/Tooltip.zip", nodeDir);
 	
 		file_delete(nodeDir + "nodes.json");
 		file_copy_override("data/nodes.json", nodeDir + "nodes.json");

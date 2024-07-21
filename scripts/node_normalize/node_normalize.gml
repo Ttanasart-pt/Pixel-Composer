@@ -14,11 +14,11 @@ function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	
-	static step = function() { #region
+	static step = function() {
 		
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
 		var _mode = _data[1];
 		
@@ -90,23 +90,22 @@ function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		buffer_delete(_bMax);
 		buffer_delete(_bMin);
-	#endregion
 	
-	if(_mode == 0) {
-		var _bmax = (_max[0] + _max[1] + _max[2]) / 2;
-		var _bmin = (_min[0] + _min[1] + _min[2]) / 2;
+		if(_mode == 0) {
+			var _bmax = (_max[0] + _max[1] + _max[2]) / 3;
+			var _bmin = (_min[0] + _min[1] + _min[2]) / 3;
+			
+			_max = [ _bmax, _bmax, _bmax ];
+			_min = [ _bmin, _bmin, _bmin ];
+		}
 		
-		_max = [ _bmax, _bmax, _bmax ];
-		_min = [ _bmin, _bmin, _bmin ];
-	}
-	
-	surface_set_shader(_outSurf, sh_normalize);
-		shader_set_f("cMax",       _max);
-		shader_set_f("cMin",       _min);
-		
-		draw_surface_safe(_surf);
-	surface_reset_shader();
+		surface_set_shader(_outSurf, sh_normalize);
+			shader_set_f("cMax",       _max);
+			shader_set_f("cMin",       _min);
+			
+			draw_surface_safe(_surf);
+		surface_reset_shader();
 			
 		return _outSurf;
-	} #endregion
+	}
 }

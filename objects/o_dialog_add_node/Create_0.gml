@@ -37,6 +37,8 @@ event_inherited();
 	
 	is_global = PANEL_GRAPH.getCurrentContext() == noone;
 	
+	tooltip_surface = -1;
+	
 	#region ---- category ----
 		category = NODE_CATEGORY;
 		switch(instanceof(context)) {
@@ -509,7 +511,7 @@ event_inherited();
 						rightClick(_node);
 				}
 				
-				if(_node.getTooltip() != "") {
+				if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
 					if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
 						node_tooltip   = _node;
@@ -624,7 +626,7 @@ event_inherited();
 				}
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
-					if(_node.getTooltip() != "") {
+					if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
 						node_tooltip   = _node;
 						node_tooltip_x = content_pane.x + ui(16);
 						node_tooltip_y = content_pane.y + yy
@@ -700,6 +702,8 @@ event_inherited();
 	
 	content_pane.always_scroll = true;
 	
+	
+	
 	#region ---- set page ----
 		function setPage(pageIndex) {
 			ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);
@@ -714,7 +718,6 @@ event_inherited();
 			
 		setPage(ADD_NODE_PAGE);
 	#endregion
-	
 #endregion
 
 #region resize
@@ -886,7 +889,7 @@ event_inherited();
 							buildNode(_node, _param);
 					}
 					
-					if(struct_has(_node, "tooltip") && _node.getTooltip() != "") {
+					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.tooltip_spr != noone)) {
 						if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
 							node_tooltip   = _node;
@@ -1002,7 +1005,7 @@ event_inherited();
 				}
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
-					if(struct_has(_node, "tooltip") && _node.getTooltip() != "") {
+					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.tooltip_spr != noone)) {
 						node_tooltip   = _node;
 						node_tooltip_x = search_pane.x + 0;
 						node_tooltip_y = search_pane.y + yy

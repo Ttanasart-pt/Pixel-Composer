@@ -77,25 +77,39 @@ if !ready exit;
 		var spr = node_tooltip.tooltip_spr;
 		
 		draw_set_font(f_p1);
+		var _th = string_height_ext(txt, -1, ww - ui(16));
 		
 		if(spr) {
-			ww = ui(8) + sprite_get_width(spr);
-			hh = ui(8) + sprite_get_height(spr);
+			ww = sprite_get_width(spr);
+			hh = sprite_get_height(spr) + (_th - ui(8)) * (txt != "");
 		} else 
 			hh = ui(16) + string_height_ext(txt, -1, ww - ui(16));
 		
+		tooltip_surface = surface_verify(tooltip_surface, ww, hh);
+		surface_set_shader(tooltip_surface, noone);
+			draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text)
+			
+			if(spr) {
+				draw_sprite(spr, 0, 0, 0);
+				
+				BLEND_NORMAL
+				if(txt != "") draw_sprite_stretched_ext(THEME.add_node_bg, 0, 0, hh - _th - 32, ww, _th + 32, CDEF.main_dkblack);
+			} else
+				draw_clear_alpha(c_white, 0);
+			
+			draw_text_ext_add(ui(8), hh - ui(8), txt, -1, ww - ui(16));
+			
+			BLEND_MULTIPLY
+			draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, ww, hh);
+			BLEND_NORMAL
+		surface_reset_shader();
+		
 		var x0 = min(node_tooltip_x, WIN_W - ww - ui(8));
-		var x1 = node_tooltip_x + ww;
-		var y1 = node_tooltip_y - ui(8);
-		var y0 = y1 - hh;
+		var y0 = node_tooltip_y - hh - ui(8);
 		
 		draw_sprite_stretched(THEME.textbox, 3, x0, y0, ww, hh);
+		draw_surface(tooltip_surface, x0, y0);
 		draw_sprite_stretched(THEME.textbox, 0, x0, y0, ww, hh);
-		
-		if(spr) draw_sprite(spr, 0, x0 + ui(4), y0 + ui(4));
-		
-		draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text)
-		draw_text_line(x0 + ui(8), y1 - ui(8), txt, -1, ww - ui(16));
 	}
 	
 	node_tooltip = noone;

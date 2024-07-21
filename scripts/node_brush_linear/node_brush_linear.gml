@@ -20,16 +20,30 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 6] = nodeValue("Circulation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.8)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
+	inputs[| 7] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	
+	inputs[| 8] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	inputs[| 9] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
+		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	
+	__init_mask_modifier(7); // inputs 10, 11
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1,
-		["Surface", false], 0, 
+		["Surface", false], 0, 7, 8, 9, 10, 11, 
 		["Effect",  false], 2, 4, 5, 6, 
 	];
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static step = function() {
+		__step_mask_modifier();
+	}
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_brush_linear);
 			shader_set_f("dimension",             surface_get_dimension(_data[0]));
@@ -42,6 +56,10 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
+		__process_mask_modifier(_data);
+		_outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);
+		_outSurf = channel_apply(_data[0], _outSurf, _data[9]);
+		
 		return _outSurf;
-	} #endregion
+	}
 }

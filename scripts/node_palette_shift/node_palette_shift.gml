@@ -43,8 +43,8 @@ function Node_Palette_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		for(var i = 0; i < array_length(_pal); i++)
 			array_append(_colors, colToVec4(_pal[i]));
 		
-		inputs[| 2].editWidget.minn = -array_length(_pal);
-		inputs[| 2].editWidget.maxx =  array_length(_pal);
+		inputs[| 2].editWidget.slide_range[0] = -array_length(_pal);
+		inputs[| 2].editWidget.slide_range[1] =  array_length(_pal);
 		
 		surface_set_shader(_outSurf, sh_palette_shift);
 			shader_set_f("palette", _colors);

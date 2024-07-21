@@ -20,7 +20,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	is_patreon_extra = false;
 	
 	if(!IS_CMD) {
-		var pth = DIRECTORY + "Nodes/tooltip/" + node + ".png";
+		var pth = DIRECTORY + $"Nodes/Tooltip/{node}.png";
 		if(file_exists_empty(pth)) tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
 		
 		if(struct_has(global.NODE_GUIDE, node)) {
@@ -537,7 +537,7 @@ function __initNodes() {
 		ds_list_add(transform, "Warps");
 		addNodeObject(transform, "Crop",			s_node_crop,			"Node_Crop",			[1, Node_Crop],, "Crop out image to create smaller ones.");
 		addNodeObject(transform, "Crop Content",	s_node_crop_content,	"Node_Crop_Content",	[1, Node_Crop_Content],, "Crop out empty pixel from the image.");
-		addNodeObject(transform, "Bend",			s_node_bend,			"Node_Bend",			[1, Node_Bend], ["wrap"]).setVersion(11650);
+		addNodeObject(transform, "Bend",			s_node_bend,			"Node_Bend",			[1, Node_Bend], ["wrap"], "Warp an image into a predefined shape.").setVersion(11650);
 		addNodeObject(transform, "Warp",			s_node_warp,			"Node_Warp",			[1, Node_Warp], ["warp corner"], "Warp image by freely moving the corners.");
 		addNodeObject(transform, "Skew",			s_node_skew,			"Node_Skew",			[1, Node_Skew], ["shear"], "Skew image horizontally, or vertically.");
 		addNodeObject(transform, "Mesh Warp",		s_node_warp_mesh,		"Node_Mesh_Warp",		[1, Node_Mesh_Warp], ["mesh wrap"], "Wrap image by converting it to mesh, and using control points.");
@@ -548,7 +548,7 @@ function __initNodes() {
 		addNodeObject(transform, "Composite",		s_node_compose,			"Node_Composite",		[1, Node_Composite], ["merge"], "Combine multiple images with controllable position, rotation, scale.");
 		addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9 slice", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");
 		addNodeObject(transform, "Padding",			s_node_padding,			"Node_Padding",			[1, Node_Padding],, "Make image bigger by adding space in 4 directions.");
-		addNodeObject(transform, "Tile Random",		s_node_padding,			"Node_Tile_Random",		[1, Node_Tile_Random]);
+		addNodeObject(transform, "Tile Random",		s_node_tile_random,		"Node_Tile_Random",		[1, Node_Tile_Random]).setVersion(11780);
 	#endregion
 	
 	var filter = ds_list_create(); #region //filter

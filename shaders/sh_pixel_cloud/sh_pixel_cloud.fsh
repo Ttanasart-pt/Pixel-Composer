@@ -66,11 +66,23 @@ float eval_curve_segment_x(in float _y0, in float ax0, in float ay0, in float bx
 } #endregion
 
 float curveEval(in float _x) { #region
+	
+	int   _shf  = int(mod(float(curve_amount), 6.));
+	float shift = 0.;
+	float scale = 1.;
+	
+	if(_shf > 0) {
+		shift = alpha_curve[0];
+		scale = alpha_curve[1];
+	}
+	
+	_x = _x / scale - shift;
 	_x = clamp(_x, 0., 1.);
-	int segments = curve_amount / 6 - 1;
+	
+	int segments = (curve_amount - _shf) / 6 - 1;
 	
 	for( int i = 0; i < segments; i++ ) {
-		int ind = i * 6;
+		int ind   = _shf + i * 6;
 		float _x0 = alpha_curve[ind + 2];
 		float _y0 = alpha_curve[ind + 3];
 	  //float bx0 = _x0 + alpha_curve[ind + 0];
@@ -229,16 +241,16 @@ float curveEval(in float _x) { #region
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
-float frandom (in vec2 st, in float _seed) { #region
+float frandom (in vec2 st, in float _seed) {
 	float f = fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(15.15 + seed, 32.156 + _seed) * 12.588) * 43758.5453123);
     return mix(-1., 1., f);
-} #endregion
+}
 
-vec2 vrandom (in vec2 st) { #region
+vec2 vrandom (in vec2 st) {
     return vec2(frandom(st, 165.874), frandom(st, 98.601));
-} #endregion
+}
 
-void main() { #region
+void main() {
 	vec2 _pos = v_vTexcoord;
 	float str = strength;
 	
@@ -264,4 +276,4 @@ void main() { #region
 	}
 	
     gl_FragColor = _col;
-} #endregion
+}
