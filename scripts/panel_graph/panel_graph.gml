@@ -2291,7 +2291,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				// draw_sprite_stretched_ext(THEME.node_bg, 1, _mx, _my, 128 * graph_s, 128 * graph_s, COLORS._main_value_positive, 1);
 				draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
 			}
-				
+			
 			if(FILE_DROPPED && !array_empty(FILE_DROPPING)) {
 				_gx = mx / graph_s - graph_x;
 				_gy = my / graph_s - graph_y;

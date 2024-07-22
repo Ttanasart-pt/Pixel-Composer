@@ -617,7 +617,7 @@ function __initNodes() {
 		
 		ds_list_add(filter, "Colors");
 		addNodeObject(filter, "Replace Palette",	s_node_replace_palette,	"Node_Color_replace",	[1, Node_Color_replace], ["isolate color", "select color", "palette swap", "color replace"], "Match image to a palette then remap it to another palette.");
-		addNodeObject(filter, "Replace Colors",		s_node_color_replace,	"Node_Colors_Replace",	[1, Node_Colors_Replace], ["isolate color", "select color", "palette swap", "color replace"], "Detect all colors in an image then replace it with a new one.");
+		addNodeObject(filter, "Replace Colors",		s_node_color_replace,	"Node_Colors_Replace",	[1, Node_Colors_Replace], ["isolate color", "select color", "palette swap", "color replace"], "Replace selected colors with a new one.");
 		addNodeObject(filter, "Remove Color",		s_node_color_remove,	"Node_Color_Remove",	[1, Node_Color_Remove], ["delete color"], "Remove color that match a palette.");
 		addNodeObject(filter, "Colorize",			s_node_colorize,		"Node_Colorize",		[1, Node_Colorize], ["recolor"], "Map brightness of a pixel to a color from a gradient.");
 		addNodeObject(filter, "Posterize",			s_node_posterize,		"Node_Posterize",		[1, Node_Posterize],, "Reduce and remap color to match a palette.");

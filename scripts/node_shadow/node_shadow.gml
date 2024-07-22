@@ -104,10 +104,11 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
-			BLEND_OVERRIDE;
+			BLEND_OVERRIDE
 				draw_surface_ext_safe(surface_apply_gaussian(pass1, _size, false, cl), 0, 0, 1, 1, 0, cl, _stre * _color_get_alpha(cl));
-			BLEND_NORMAL;
+			BLEND_ALPHA_MULP
 				draw_surface_safe(_surf);
+			BLEND_NORMAL
 		surface_reset_target();
 		
 		surface_free(pass1);

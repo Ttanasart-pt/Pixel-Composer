@@ -48,7 +48,7 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _dim  = surface_get_dimension(_surf);
 		
 		surface_set_shader(_outSurf, sh_interlaced);
-			shader_set_i("useSurf", CURRENT_FRAME > 1);
+			shader_set_i("useSurf", CURRENT_FRAME >= 1);
 			shader_set_surface("prevFrame", array_safe_get(temp_surface, _array_index));
 			shader_set_2("dimension", _dim);
 			shader_set_i("axis",      _axis);

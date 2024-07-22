@@ -13,7 +13,7 @@ switch(ev_type) {
 		break;
 	
 	case "file_drop_end" :
-		FILE_DROPPED     = true;
+		_FILE_DROPPED    = true;
 		FILE_IS_DROPPING = false;
 		break;
 		

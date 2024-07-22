@@ -142,6 +142,7 @@
 	FILE_DROPPING_Y  = 0;
 	FILE_DROPPING    = [];
 	FILE_DROPPED     = false;
+	_FILE_DROPPED    = false;
 #endregion
 
 #region undo
