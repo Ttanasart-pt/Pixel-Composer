@@ -158,7 +158,10 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		tag_renderer.h = _h;
 		return _h;
 	}); 
-
+	
+	temp_surface = [ 0, 0, 0 ];
+	blend_temp_surface = noone;
+	
 	input_display_list = [
 		["File",	 true], 0,
 		["Layers",	false], 1, 3, layer_renderer, 
@@ -166,6 +169,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	];
 	
 	attributes.layer_visible = [];
+	attributes.interpolate   = 0;
+	attributes.oversample    = 0;
 	
 	edit_time = 0;
 	attributes.file_checker = true;
@@ -356,25 +361,38 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		    surf = surface_verify(surf, ww, hh);
 		outputs[| 0].setValue(surf);
 		
-		surface_set_target(surf);
-			DRAW_CLEAR
+		for (var i = 0, n = array_length(temp_surface); i < n; i++) {
+			temp_surface[i] = surface_verify(temp_surface[i], ww, hh);
+			surface_clear(temp_surface[i]);
+		}
 		
-			for( var i = 0, n = array_length(layers); i < n; i++ ) {
-				layers[i].tag = tag;
-				var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay);
-				if(!cel) continue;
-				if(!array_safe_get_fast(vis, i, true)) continue;
+		var _bg = 0;
+		blend_temp_surface = temp_surface[2];
+		
+		for( var i = 0, n = array_length(layers); i < n; i++ ) {
+			layers[i].tag = tag;
+			var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay);
+			if(!cel) continue;
+			if(!array_safe_get_fast(vis, i, true)) continue;
+		
+			var _inSurf = cel.getSurface();
+			if(!is_surface(_inSurf)) 
+				continue;
+		
+			var xx = cel.data[$ "X"];
+			var yy = cel.data[$ "Y"];
 			
-				var _inSurf = cel.getSurface();
-				if(!is_surface(_inSurf)) 
-					continue;
+			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
+				draw_surface_blend_ext(temp_surface[!_bg], _inSurf, xx, yy);
+			surface_reset_shader();
 			
-				var xx = cel.data[$ "X"];
-				var yy = cel.data[$ "Y"];
-			
-				draw_surface_safe(_inSurf, xx, yy);
-			}
-		surface_reset_target();
+			_bg = !_bg;
+		}
+		
+		surface_set_shader(surf);
+			DRAW_CLEAR
+			draw_surface_safe(temp_surface[!_bg]);
+		surface_reset_shader();
 	} 
 	
 	static attributeSerialize = function() { 

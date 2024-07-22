@@ -57,7 +57,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	tb_rename.hide = true;
 	
 	layer_height    = 0;
-	layer_renderer	= new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	layer_renderer	= new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var amo = getInputAmount();
@@ -367,7 +367,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		return layer_height;
-	}); #endregion
+	});
 	
 	input_display_list = [
 		["Output",	 true],	0, 1, 2,
@@ -377,7 +377,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list_len = array_length(input_display_list);
 	
-	function deleteLayer(index) { #region
+	function deleteLayer(index) {
 		var idx = input_fix_len + index * data_length;
 		
 		if(canvas_group) {
@@ -409,7 +409,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			array_push(input_display_list, i);
 		
 		doUpdate();
-	} #endregion
+	}
 	
 	static createNewInput = function() { 
 		var index = ds_list_size(inputs);
@@ -476,7 +476,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	overlay_w = 0;
 	overlay_h = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var pad = current_data[0];
@@ -746,18 +746,18 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _dim_type = getSingleValue(1);
 		
 		inputs[| 2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
 		
 		if(canvas_draw != noone && surface_selecting == noone && getInputAmount())
 			surface_selecting = input_fix_len;
-	} #endregion
+	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index) { #region
+	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _outSurf  = _outData[0];
 		
 		if(array_length(_data) <= input_fix_len) return [ _outSurf, noone, [1, 1] ];
@@ -851,17 +851,17 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		surface_reset_shader();
 		
 		return [ _outSurf, _atlas, [ww, hh] ];
-	} #endregion
+	}
 	
-	static attributeSerialize = function() { #region
+	static attributeSerialize = function() {
 		var att = {};
 		att.layer_visible    = attributes.layer_visible;
 		att.layer_selectable = attributes.layer_selectable;
 		
 		return att;
-	} #endregion
+	}
 	
-	static attributeDeserialize = function(attr) { #region
+	static attributeDeserialize = function(attr) {
 		struct_append(attributes, attr); 
 		
 		if(struct_has(attributes, "use_project_dimension") && !struct_has(attr, "use_project_dimension"))
@@ -872,6 +872,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 		if(struct_has(attr, "layer_selectable"))
 			attributes.layer_selectable = attr.layer_selectable;
-	} #endregion
+	}
 }
 
