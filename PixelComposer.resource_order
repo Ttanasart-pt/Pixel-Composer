@@ -2455,6 +2455,7 @@
     {"name":"s_node_vfx","order":9,"path":"sprites/s_node_vfx/s_node_vfx.yy",},
     {"name":"s_node_vignette","order":58,"path":"sprites/s_node_vignette/s_node_vignette.yy",},
     {"name":"s_node_voronoi_extra","order":36,"path":"sprites/s_node_voronoi_extra/s_node_voronoi_extra.yy",},
+    {"name":"s_node_warp_area","order":23,"path":"sprites/s_node_warp_area/s_node_warp_area.yy",},
     {"name":"s_node_warp_mesh","order":10,"path":"sprites/s_node_warp_mesh/s_node_warp_mesh.yy",},
     {"name":"s_node_warp","order":9,"path":"sprites/s_node_warp/s_node_warp.yy",},
     {"name":"s_node_wav_file_read","order":16,"path":"sprites/s_node_wav_file_read/s_node_wav_file_read.yy",},

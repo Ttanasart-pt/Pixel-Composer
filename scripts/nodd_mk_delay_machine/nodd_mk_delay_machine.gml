@@ -70,8 +70,8 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				if(!is_surface(_s)) continue;
 				
 				switch(_psel) {
-					case 0 : cc = array_safe_get_fast(_pal, i, c_white, ARRAY_OVERFLOW.loop);     break;
-					case 1 : cc = array_safe_get_fast(_pal, i, c_white, ARRAY_OVERFLOW.pingpong); break;
+					case 0 : cc = array_safe_get(_pal, i, c_white, ARRAY_OVERFLOW.loop);          break;
+					case 1 : cc = array_safe_get(_pal, i, c_white, ARRAY_OVERFLOW.pingpong);      break;
 					case 2 : cc = array_safe_get_fast(_pal, irandom(_psiz), c_white);             break;
 				}
 				

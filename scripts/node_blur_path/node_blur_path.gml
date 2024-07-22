@@ -27,9 +27,12 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 11] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 	
+	inputs[| 12] = nodeValue("Path Origin", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true],	0, 3, 4, 7, 8, 
-		["Path",	false],	1, 11, 
+		["Path",	false],	1, 12, 11, 
 		["Blur",	false],	2, 9, 10, 
 	];
 	
@@ -52,6 +55,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _intn = _data[9];
 		var _curv = _data[10];
 		var _rang = _data[11];
+		var _orig = _data[12];
 		
 		var _pntc = clamp(_reso, 2, 128);
 		if(!is_struct(_path)) return _outSurf;
@@ -66,7 +70,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _rrr = _red - _rst;
 		
 		var ox = 0, oy = 0;
-		_p = _path.getPointRatio(0, 0, _p);
+		_p = _path.getPointRatio(_orig, 0, _p);
 		ox = _p.x;
 		oy = _p.y;
 		

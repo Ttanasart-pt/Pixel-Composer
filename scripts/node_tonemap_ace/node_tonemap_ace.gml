@@ -24,11 +24,11 @@ function Node_Tonemap_ACE(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_ace);
 			draw_surface_safe(_data[0]);
@@ -39,5 +39,5 @@ function Node_Tonemap_ACE(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outSurf = channel_apply(_data[0], _outSurf, _data[4]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }
