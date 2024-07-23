@@ -411,8 +411,15 @@ function Panel_Inspector() : PanelContent() constructor {
 						draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
 						draw_text_over(ui(16), viewMode == INSP_VIEW_MODE.spacious? yy : yy + ui(3), __txt("Show Avatar"));
 						
+						if(viewMode == INSP_VIEW_MODE.spacious) {
+							_lh = line_get_height();
+							yy += _lh + ui(6);
+							hh += _lh + ui(6);
+						}
+						
 						var _param = new widgetParam(_wdx, yy, _wdw, TEXTBOX_HEIGHT, STEAM_UGC_ITEM_AVATAR, {}, _m, rx, ry);
 						_param.font = _font;
+						
 						wh = meta_steam_avatar.drawParam(_param);
 						
 						yy += wh + ui(6); hh += wh + ui(6);
