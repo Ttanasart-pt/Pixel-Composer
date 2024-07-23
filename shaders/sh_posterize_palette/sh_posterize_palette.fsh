@@ -1,7 +1,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-#define PALETTE_LIMIT 128
+#define PALETTE_LIMIT 1024
 
 uniform vec4 palette[PALETTE_LIMIT];
 uniform int keys;

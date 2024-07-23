@@ -2,7 +2,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 #define PI 3.14159265359
-#define PALETTE_LIMIT 128
+#define PALETTE_LIMIT 1024
 
 uniform float seed;
 uniform vec2  dimension;

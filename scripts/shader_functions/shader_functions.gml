@@ -158,7 +158,7 @@ function shader_set_color(uniform, col, alpha = 1) {
 	shader_set_f(uniform, colToVec4(col, alpha));
 }
 
-function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 128) {
+function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 1024) {
 	INLINE
 	
 	shader_set_i(amo_uni, min(max_length, array_length(pal)));

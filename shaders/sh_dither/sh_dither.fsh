@@ -15,7 +15,7 @@ uniform int useConMap;
 uniform float ditherSize;
 uniform float dither[64];
 uniform vec2  dimension;
-uniform vec4  palette[32];
+uniform vec4  palette[1024];
 uniform int   keys;
 uniform float seed;
 

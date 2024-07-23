@@ -5,7 +5,7 @@ uniform float tolerance;
 uniform int   useMask;
 uniform sampler2D mask;
 
-#define PALETTE_LIMIT 128
+#define PALETTE_LIMIT 1024
 
 uniform vec4 colorTarget[PALETTE_LIMIT];
 uniform int colorTargetAmount;

@@ -1,4 +1,4 @@
-#define PALETTE_LIMIT 128
+#define PALETTE_LIMIT 1024
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;

@@ -2359,22 +2359,27 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		PANEL_PREVIEW.removeNodePreview(self);
 		
+		var val_from_map = {};
+		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+			var _i = inputs[| i];
+			if(_i.value_from == noone) continue;
+			
+			val_from_map[$ _i.type] = _i.value_from;
+		}
+		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
 			
-			for(var j = 0; j < array_length(jun.value_to); j++) {
+			for(var j = array_length(jun.value_to) - 1; j >= 0; j--) {
 				var _vt = jun.value_to[j];
-				if(_vt.value_from == noone) break;
-				if(_vt.value_from.node != self) break;
 				
-				if(_merge) {
-					for( var k = 0; k < ds_list_size(inputs); k++ ) {
-						if(inputs[| k].value_from == noone) continue;
-						if(_vt.setFrom(inputs[| k].value_from)) break;
-					}
-				} else {
+				if(_vt.value_from == noone || _vt.value_from.node != self) 
+					continue;
+				
+				if(_merge && struct_has(val_from_map, _vt.type))
+					_vt.setFrom(val_from_map[$ _vt.type]);
+				else
 					_vt.removeFrom(false);
-				}
 			}
 			
 			jun.value_to = [];
