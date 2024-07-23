@@ -21,21 +21,13 @@ function _loadColor(theme = "default", replace = false) {
 	var path  = dirr + "/values.json";
 	var pathO = dirr + "/override.json";
 	
-	if(theme == "default" && !file_exists_empty(pathO)) {
-		COLOR_KEYS = variable_struct_get_names(COLORS);
-		array_sort(COLOR_KEYS, true);
-		return;
-	}
+	COLOR_KEYS = variable_struct_get_names(COLORS);
+	array_sort(COLOR_KEYS, true);
 		
+	if(theme == "default" && !file_exists_empty(pathO)) return;
 	if(!file_exists_empty(path)) { noti_status($"Colors not defined at {path}, rollback to default color."); return; }
 	
 	var clrs = json_load_struct(path);
-	
-	if(file_exists_empty(pathO)) {
-		var oclr = json_load_struct(pathO);
-		struct_override(clrs, oclr);
-	} 
-	
 	if(!struct_has(clrs, "values")) { print("Load color error"); return; }
 	
 	var valkeys = variable_struct_get_names(clrs.values);
@@ -78,4 +70,5 @@ function _loadColor(theme = "default", replace = false) {
 		COLORS[$ key] = c;
 	}
 	
+	if(file_exists_empty(pathO)) struct_override(COLORS, json_load_struct(pathO));
 }
