@@ -49,10 +49,55 @@ output.color = surfaceColor;")
 	
 	argumentRenderer();
 	
+	vs_string = @"#define MATRIX_WORLD                 0
+#define MATRIX_WORLD_VIEW            1
+#define MATRIX_WORLD_VIEW_PROJECTION 2
+
+cbuffer Matrices : register(b0) {
+    float4x4 gm_Matrices[3];
+};
+
+struct VertexShaderInput {
+    float3 pos      : POSITION;
+    float3 color    : COLOR0;
+    float2 uv       : TEXCOORD0;
+};
+
+struct VertexShaderOutput {
+    float4 pos      : SV_POSITION;
+    float2 uv       : TEXCOORD0;
+};
+
+void main(in VertexShaderInput input, out VertexShaderOutput output) {
+    output.pos  = mul(gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION], float4(input.pos, 1.0f));
+    output.uv   = input.uv;   
+}";
+		
+	_fs_preString  = @"Texture2D gm_BaseTextureObject : register(t0);
+SamplerState gm_BaseTexture    : register(s0);
+
+struct VertexShaderOutput {
+    float4 pos      : SV_POSITION;
+    float2 uv       : TEXCOORD0;
+};
+
+struct PixelShaderOutput {
+    float4 color : SV_TARGET0;
+};
+
+void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
+    VertexShaderOutput input = _input;
+";
+	fs_preString  = _fs_preString;
+	fs_postString = "}";
+	
+	preLabel = new Inspector_Label(fs_preString);
+	
 	input_display_list = [ 2, 
-		["Shader",		false], 1,
-		["Arguments",	false], argument_renderer,
-		["Values",		 true], 
+		["Vertex Shader [read only]", true], new Inspector_Label(vs_string),
+		["Shader",		 false], preLabel, 1, new Inspector_Label(fs_postString), 
+		["Arguments",	 false], argument_renderer,
+		["Values",		  true], 
 	];
 
 	setDynamicInput(3, false);
@@ -177,57 +222,19 @@ output.color = surfaceColor;")
 	
 	static onInspector1Update = function() { refreshShader(); }
 	
-	static step = function() { #region
-		argument_renderer.showValue = input_display_list[5][1];
-	} #endregion
+	static step = function() { argument_renderer.showValue = input_display_list[9][1]; }
 	
-	static refreshShader = function() { #region
+	static refreshShader = function() {
 		var vs = getInputData(0);
 		var fs = getInputData(1);
 		
 		var _dir = TEMPDIR;
 		directory_verify(_dir);
 		
-		var vs   = @"
-#define MATRIX_WORLD                 0
-#define MATRIX_WORLD_VIEW            1
-#define MATRIX_WORLD_VIEW_PROJECTION 2
-
-cbuffer Matrices : register(b0) {
-	float4x4 gm_Matrices[3];
-};
-
-struct VertexShaderInput {
-	float3 pos		: POSITION;
-	float3 color	: COLOR0;
-	float2 uv		: TEXCOORD0;
-};
-
-struct VertexShaderOutput {
-	float4 pos		: SV_POSITION;
-	float2 uv		: TEXCOORD0;
-};
-
-void main(in VertexShaderInput input, out VertexShaderOutput output) {
-	output.pos   = mul(gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION], float4(input.pos, 1.0f));
-    output.uv    = input.uv;   
-}";
+		var vs        = vs_string;
 		file_text_write_all(_dir + "vout.shader", vs);
 		
-		var fs_pre = @"
-Texture2D gm_BaseTextureObject : register(t0);
-SamplerState gm_BaseTexture    : register(s0);
-
-struct VertexShaderOutput {
-	float4 pos		: SV_POSITION;
-	float2 uv		: TEXCOORD0;
-};
-
-struct PixelShaderOutput {
-	float4 color : SV_TARGET0;
-};
-"
-		var fs_param = "cbuffer Data : register(b10) {";
+		var fs_param  = "cbuffer Data : register(b10) {";
 		var fs_sample = "";
 		var sampler_slot = 1;
 		
@@ -258,13 +265,14 @@ struct PixelShaderOutput {
 		fs_param += "};\n";
 		fs_param += fs_sample;
 		
-		var fs_pos = "\nvoid main(in VertexShaderOutput input, out PixelShaderOutput output) {\n" + fs + "\n}";
+		fs_preString = fs_param + _fs_preString;
+		var _fs = fs_preString + fs + fs_postString;
+		file_text_write_all(_dir + "fout.shader", _fs);
 		
-		fs = fs_pre + fs_param + fs_pos;
-		file_text_write_all(_dir + "fout.shader", fs);
+		preLabel.text = fs_preString;
 		
 		//print("==================== Compiling ====================");
-		//print(fs)
+		//print(_fs)
 		//print("===================================================\n");
 		
 		shader.vs = d3d11_shader_compile_vs(_dir + "vout.shader", "main", "vs_4_0");
@@ -274,18 +282,18 @@ struct PixelShaderOutput {
 		shader.fs = d3d11_shader_compile_ps(_dir + "fout.shader", "main", "ps_4_0");
 		if (!d3d11_shader_exists(shader.fs))
 			noti_warning(d3d11_get_error_string());
-	} if(!LOADING && !APPENDING) refreshShader(); #endregion
+	} if(!LOADING && !APPENDING) refreshShader();
 	
-	static onValueUpdate = function(index) { #region
+	static onValueUpdate = function(index) {
 		var _refresh = index == 0 || index == 1 || (index >= input_fix_len && (index - input_fix_len) % data_length != 2);
 		
 		if(_refresh) {
 			refreshShader();
 			refreshDynamicInput();
 		}
-	} #endregion
+	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _surf = _data[2];
 		if(!is_surface(_surf)) return noone;
 		if(!d3d11_shader_exists(shader.vs)) return noone;
@@ -377,7 +385,7 @@ struct PixelShaderOutput {
 		surface_reset_target();
 		
 		return _output;
-	} #endregion
+	}
 	
 	static postLoad = function() { 
 		refreshShader(); 

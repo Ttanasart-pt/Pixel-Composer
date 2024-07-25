@@ -62,7 +62,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static getPreviewValues = function() { return getInputData(input_fix_len); }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _out  = outputs[| 0].getValue();
@@ -85,9 +85,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var y1 = y0 + _area[3] * 2 * _zoom * _s;
 		
 		draw_rectangle_dashed(x0, y0, x1, y1);
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _area = _data[0];
 		var _zoom = _data[1];
 		
@@ -179,10 +179,5 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
-	
-	static processDeserialize = function() { #region
-		if(LOADING_VERSION < 11690) 
-			ds_list_clear(load_map.inputs);
-	} #endregion
+	}
 }
