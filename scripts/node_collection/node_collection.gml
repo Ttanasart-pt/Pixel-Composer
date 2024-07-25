@@ -198,7 +198,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	draw_dummy  = false;
 	input_dummy = nodeValue("Add to group", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
-	input_dummy.is_dummy  = true;
+	
+	input_dummy.setDummy(function() /*=>*/ { var input = nodeBuild("Node_Group_Input", 0, 0, self); return input.inParent; },
+		function(_junc) /*=>*/ { _junc.from.destroy() }
+	);
+	
 	input_dummy.onSetFrom = function(juncFrom) {
 		array_remove(juncFrom.value_to, input_dummy);
 		input_dummy.value_from = noone;

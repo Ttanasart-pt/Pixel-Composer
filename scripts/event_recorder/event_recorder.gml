@@ -43,7 +43,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 	
 	clear_action = noone;
 	
-	static undo = function() { #region
+	static undo = function() {
 		var _n;
 		
 		switch(type) {
@@ -85,8 +85,10 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				break;
 				
 			case ACTION_TYPE.junction_connect :
+				
 				if(obj.is_dummy) {
 					data[0].setFrom(noone);
+					if(obj.dummy_undo != -1) obj.dummy_undo(data[0]);
 				} else {
 					var _d = obj.value_from;
 					obj.setFrom(data);
@@ -154,9 +156,9 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 		}
 		
 		if(trigger) trigger();
-	} #endregion
+	}
 	
-	static redo = function() { #region
+	static redo = function() {
 		var _n;
 		switch(type) {
 			case ACTION_TYPE.var_modify :
@@ -199,6 +201,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				if(obj.is_dummy) {
 					obj.setFrom(data[1]);
 					data[0] = obj.dummy_target;
+					if(obj.dummy_redo != -1) obj.dummy_redo(data[0]);
 				} else {
 					var _d = obj.value_from;
 					obj.setFrom(data);
@@ -244,9 +247,9 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 		}
 		
 		if(trigger) trigger();
-	} #endregion
+	}
 	
-	static toString = function() { #region
+	static toString = function() {
 		var ss = "";
 		switch(type) {
 			case ACTION_TYPE.var_modify :
@@ -316,15 +319,15 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				break;
 		}
 		return ss;
-	} #endregion
+	}
 	
-	static destroy = function() { #region
+	static destroy = function() {
 		if(clear_action == noone) return;
 		clear_action(data);
-	} #endregion
+	}
 }
 
-function recordAction(_type, _object, _data = -1, _trigger = 0) { #region
+function recordAction(_type, _object, _data = -1, _trigger = 0) {
 	if(IS_UNDOING)		return noone;
 	if(LOADING)			return noone;
 	if(UNDO_HOLDING)	return noone;
@@ -340,7 +343,7 @@ function recordAction(_type, _object, _data = -1, _trigger = 0) { #region
 	
 	PANEL_MENU.undoUpdate();
 	return act;
-} #endregion
+}
 
 function recordAction_variable_change(object, variable_name, variable_old_value, undo_label = "", _trigger = 0) {
 	INLINE
@@ -349,7 +352,7 @@ function recordAction_variable_change(object, variable_name, variable_old_value,
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function mergeAction(act) { #region
+function mergeAction(act) {
 	if(ds_stack_empty(UNDO_STACK)) {
 		ds_stack_push(UNDO_STACK, [ act ]);
 		PANEL_MENU.undoUpdate();
@@ -359,9 +362,9 @@ function mergeAction(act) { #region
 	var _top = ds_stack_pop(UNDO_STACK);
 	array_push(_top, act);
 	ds_stack_push(UNDO_STACK, _top);
-} #endregion
+}
 
-function UNDO() { #region
+function UNDO() {
 	CALL("undo");
 	
 	if(ds_stack_empty(UNDO_STACK))				return;
@@ -376,9 +379,9 @@ function UNDO() { #region
 	
 	ds_stack_push(REDO_STACK, actions);
 	PANEL_MENU.undoUpdate();
-} #endregion
+}
 
-function REDO() { #region
+function REDO() {
 	CALL("redo");
 	
 	if(ds_stack_empty(REDO_STACK))				return;
@@ -393,4 +396,4 @@ function REDO() { #region
 	
 	ds_stack_push(UNDO_STACK, actions);	
 	PANEL_MENU.undoUpdate();
-} #endregion
+}

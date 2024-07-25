@@ -59,8 +59,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		tags = VALUE_TAG.none;
 		
-		is_dummy  = false;
-		dummy_get = noone;
+		is_dummy   = false;
+		dummy_get  = noone;
+		dummy_undo = -1;
+		dummy_redo = -1;
 	#endregion
 	
 	#region ---- connection ----
@@ -235,9 +237,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////============= META =============
 	
-	static setDummy = function(get_node) { #region
+	static setDummy = function(get_node, _dummy_undo = -1, _dummy_redo = -1) { #region
 		is_dummy  = true;
 		dummy_get = get_node;
+		
+		dummy_undo = _dummy_undo;
+		dummy_redo = _dummy_redo;
 		
 		return self;
 	} #endregion

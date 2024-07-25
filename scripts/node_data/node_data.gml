@@ -388,7 +388,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(auto_input) {
 			dummy_input = nodeValue("Add value", self, JUNCTION_CONNECT.input, dummy_type, 0)
-						.setDummy(function() { return createNewInput(); })
+						.setDummy(function() /*=>*/ {return createNewInput()})
 						.setVisible(false, true);
 		}
 		
