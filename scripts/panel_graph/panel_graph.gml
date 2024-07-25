@@ -1265,12 +1265,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							}
 						} else {
 							var sep = false;
-							var _lb = $"[{_jun.node.display_name}] {_jun.getName()}";
 								
 							if(value_focus.value_from) {
 								if(!sep) { array_push(menu, -1); sep = true; }
 								
 								var _jun = value_focus.value_from;
+								var _lb  = $"[{_jun.node.display_name}] {_jun.getName()}";
 								array_push(menu, menuItem(_lb, function(data) /*=>*/ { __junction_hovering.removeFrom(); }, THEME.cross));
 							}
 								
@@ -1278,6 +1278,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								if(!sep) { array_push(menu, -1); sep = true; }
 								
 								var _jun = value_focus.value_from_loop.junc_out;
+								var _lb  = $"[{_jun.node.display_name}] {_jun.getName()}";
 								array_push(menu, menuItem(_lb, function(data) /*=>*/ { __junction_hovering.removeFromLoop(); }, value_focus.value_from_loop.icon_24));
 							}
 						}
