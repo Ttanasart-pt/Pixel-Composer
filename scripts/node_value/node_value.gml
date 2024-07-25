@@ -44,7 +44,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(struct_has(node, "inputMap")) {
-			if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  internalName] = self;
+				 if(_connect == JUNCTION_CONNECT.input)  node.inputMap[?  internalName] = self;
 			else if(_connect == JUNCTION_CONNECT.output) node.outputMap[? internalName] = self;
 		}
 		
@@ -1541,14 +1541,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	} #endregion
 	
-	static getString = function() { #region
+	static getString = function() {
 		var val = showValue();
 		
 		if(type == VALUE_TYPE.text) return val;
 		return json_beautify(val);
-	} #endregion
+	}
 	
-	static setString = function(str) { #region
+	static setString = function(str) {
 		if(connect_type == JUNCTION_CONNECT.output) return;
 		if(type == VALUE_TYPE.text) { setValue(str); return; }
 		
@@ -1558,7 +1558,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			_dat = [ _dat ];
 		
 		setValue(_dat);
-	} #endregion
+	}
 	
 	/////=========== CONNECT ===========
 	

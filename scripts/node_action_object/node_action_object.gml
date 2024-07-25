@@ -20,7 +20,7 @@
 		static getName    = function() { return name;	 }
 		static getTooltip = function() { return tooltip; }
 		
-		static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) { #region
+		static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
 			var _n = {};
 			
 			for( var i = 0, n = array_length(nodes); i < n; i++ ) {
@@ -40,6 +40,7 @@
 							var _setVal = _setVals[j];
 							var _input  = is_string(_setVal.index)? _node.inputMap[? _setVal.index] : _node.inputs[| _setVal.index];
 							if(_input == undefined) continue;
+							if(!value_type_direct_settable(_input.type)) continue;
 							
 							if(struct_has(_setVal, "value"))		_input.setValue(_setVal.value);
 							if(struct_has(_setVal, "unit"))			_input.unit.setMode(_setVal.unit);
@@ -51,6 +52,7 @@
 							var _key   = _keys[j];
 							var _input = _node.inputs[| _key];
 							if(_input == undefined) continue;
+							if(!value_type_direct_settable(_input.type)) continue;
 							
 							var _setVal = _setVals[$ _key];
 							
@@ -76,14 +78,14 @@
 			}
 		
 			return _n;
-		} #endregion
+		}
 	
-		static serialize = function() { #region
+		static serialize = function() {
 			var map = { name, tooltip, nodes, connections, tags };
 			return map;
-		} #endregion
+		}
 		
-		static deserialize = function(path) { #region
+		static deserialize = function(path) {
 			var map = json_load_struct(path);
 			
 			name		= struct_try_get(map, "name", "");
@@ -107,7 +109,7 @@
 			}
 		
 			return self;
-		} #endregion
+		}
 	}
 	
 	function NodeAction_create() : NodeAction() constructor {
@@ -118,21 +120,22 @@
 		static build = function() { PANEL_GRAPH.createAction(); }
 	}
 
-	function __initNodeActions(list) {
+	function __initNodeActions() {
 		var root = $"{DIRECTORY}Actions";
 		directory_verify(root);
 		
 		root += "/Nodes";
 		directory_verify(root);
 		
-		ds_list_add(list, new NodeAction_create());
+		ds_list_clear(NODE_ACTION_LIST);
+		ds_list_add(NODE_ACTION_LIST, new NodeAction_create());
 		
 		var f = file_find_first(root + "/*", 0);
 		
 		while (f != "") {
 			if(filename_ext(f) == ".json") {
 				var _c   = new NodeAction().deserialize($"{root}/{f}");
-				ds_list_add(list, _c);
+				ds_list_add(NODE_ACTION_LIST, _c);
 				
 				if(_c.location != noone) {
 					var _cat = array_safe_get(_c.location, 0, "");

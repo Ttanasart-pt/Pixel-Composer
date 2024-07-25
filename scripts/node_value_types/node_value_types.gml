@@ -370,6 +370,20 @@ function value_type_from_string(str) {
 	return VALUE_TYPE.any;
 }
 
+function value_type_direct_settable(type) {
+	switch(type) {
+		case VALUE_TYPE.integer :
+		case VALUE_TYPE.float :
+		case VALUE_TYPE.boolean :
+		case VALUE_TYPE.color :
+		case VALUE_TYPE.path :
+		case VALUE_TYPE.text :
+			return true;
+	}
+	
+	return false;
+}
+
 function typeArray(_type) {
 	switch(_type) {
 		case VALUE_DISPLAY.range :

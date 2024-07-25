@@ -27,7 +27,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	tb_name.hide   = true;
 	tb_name.align  = fa_center;
 	
-	name_height  = 16;
+	name_height  = 18;
 	
 	draw_x0 = 0;
 	draw_y0 = 0;
@@ -121,7 +121,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_sprite_stretched_ext(nm_spr, 0, draw_x0, draw_y0, _w, name_height, color, alpha * .75);
 			
 			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
-			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 2, txt, _w - 4);
+			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 1, txt, _w - 4);
 			
 			if(point_in_rectangle(_mx, _my, draw_x0, draw_y0, draw_x0 + _w, draw_y0 + name_height)) {
 				if(PANEL_GRAPH.pFOCUS && DOUBLE_CLICK)

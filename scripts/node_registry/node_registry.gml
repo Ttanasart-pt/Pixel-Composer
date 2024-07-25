@@ -1051,9 +1051,10 @@ function __initNodes() {
 		// addNodeObject(node, "DLL",				s_node_gui_out,				"Node_DLL",					[1, Node_DLL]).setVersion(11750);
 	#endregion
 	
-	var actions = ds_list_create();
-	addNodeCatagory("Action", actions);
-		__initNodeActions(actions);
+	globalvar NODE_ACTION_LIST;
+	NODE_ACTION_LIST = ds_list_create();
+	addNodeCatagory("Action", NODE_ACTION_LIST);
+		__initNodeActions();
 	
 	var customs = ds_list_create();
 	addNodeCatagory("Custom", customs);

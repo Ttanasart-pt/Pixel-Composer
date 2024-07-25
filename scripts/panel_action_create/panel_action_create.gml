@@ -73,6 +73,8 @@ function Panel_Action_Create() : PanelContent() constructor {
 			
 			if(spr) surface_save(spr, $"{DIRECTORY}Actions/Nodes/{name}.png");
 			close();
+			
+			__initNodeActions();
 		});
 		
 		b_create.text = __txtx("new_action_create", "Create");
@@ -113,6 +115,8 @@ function Panel_Action_Create() : PanelContent() constructor {
 					
 					for(var j = 0; j < ds_list_size(_n.inputs); j++) {
 						var _in   = _n.inputs[| j];
+						if(!value_type_direct_settable(_in.type)) continue;
+						
 						var _vali = _val[$ j];
 						var _ttg  = false;
 						
@@ -201,7 +205,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 				_vals[$ j] = {};
 				
 				if(_in.value_from == noone || !struct_has(_nmap, _in.value_from.node.node_id)) {
-					var _vl = _in.getValue();
+					var _vl = _in.getValue(, false);
 					if(!isEqual(_vl, _in.def_val))
 						_vals[$ j].value = _vl;
 					continue;

@@ -52,7 +52,7 @@
 		__channel_pos(surface);
 	} #endregion
 
-	function draw_surface_tiled_safe(surface, _x, _y) { #region
+	function draw_surface_tiled_safe(surface, _x = 0, _y = 0) { #region
 		INLINE
 	
 		if(is_struct(surface)) {
@@ -69,7 +69,7 @@
 		__channel_pos(surface);
 	} #endregion
 
-	function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) { #region
+	function draw_surface_tiled_ext_safe(surface, _x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) { #region
 		INLINE
 	
 		if(is_struct(surface)) {

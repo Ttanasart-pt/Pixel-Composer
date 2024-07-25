@@ -93,7 +93,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	drag_mx  = 0;
 	drag_my  = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[| 0].getValue();
 		if(is_array(_surf)) _surf = array_safe_get_fast(_surf, preview_index);
 		if(is_struct(_surf)) return;
@@ -145,9 +145,9 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			}
 		} else 
 			draw_rectangle(_rx, _ry, _rx + _rw, _ry + _rh, true);
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _back = getSingleValue(0);
 		var _fore = getSingleValue(1);
 		var _fill = getSingleValue(5);
@@ -160,9 +160,9 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[| 7].setVisible(_outp == 4);
 		
 		inputs[| 14].setVisible(_fill == 0 && !_atlas);
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _back	 = _data[0];
 		var _fore	 = _data[1];
 		var _type	 = _data[2];
@@ -264,12 +264,12 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 		} else if(_fill == NODE_BLEND_FILL.stretch) {
 			surface_set_shader(_foreDraw, noone,, BLEND.over);
-				draw_surface_stretched(_fore, 0, 0, ww, hh);
+				draw_surface_stretched_safe(_fore, 0, 0, ww, hh);
 			surface_reset_shader();
 			
 		} else if(_fill == NODE_BLEND_FILL.tile) {
 			surface_set_shader(_foreDraw, noone,, BLEND.over);
-				draw_surface_tiled(_fore, 0, 0);
+				draw_surface_tiled_safe(_fore);
 			surface_reset_shader();
 		}
 		
@@ -296,5 +296,5 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		}
 		
 		return _outSurf;
-	} #endregion
+	}
 }
