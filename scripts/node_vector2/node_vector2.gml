@@ -109,10 +109,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var int  = getInputData(2);
 		var disp = getInputData(3);
 		
-		for( var i = 0; i < 2; i++ ) {
+		for( var i = 0; i < 2; i++ ) 
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-			inputs[| i].editWidget.setSlidable(int? 0.1 : 0.01);
-		}
 		
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 		

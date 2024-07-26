@@ -16,7 +16,7 @@ function Panel_Keyframe_Driver(key) : Panel_Linear_Setting() constructor {
 		prop_linear = [
 			new __Panel_Linear_Setting_Item(
 				__txt("Speed"),
-				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.speed = val; }).setSlidable(),
+				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.speed = val; }),
 				function() { return key.drivers.speed; }
 			),
 		];
@@ -24,7 +24,7 @@ function Panel_Keyframe_Driver(key) : Panel_Linear_Setting() constructor {
 		prop_wiggle = [
 			new __Panel_Linear_Setting_Item(
 				__txt("Seed"),
-				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.seed = val; }).setSlidable(),
+				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.seed = val; }),
 				function() { return key.drivers.seed; }
 			),
 			new __Panel_Linear_Setting_Item(
@@ -34,17 +34,17 @@ function Panel_Keyframe_Driver(key) : Panel_Linear_Setting() constructor {
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("Frequency"),
-				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.frequency = val; }).setSlidable(),
+				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.frequency = val; }),
 				function() { return key.drivers.frequency; }
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("Amplitude"),
-				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.amplitude = val; }).setSlidable(),
+				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.amplitude = val; }),
 				function() { return key.drivers.amplitude; }
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("Octave"),
-				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.octave = val; }).setSlidable(),
+				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.octave = val; }),
 				function() { return key.drivers.octave; }
 			),
 		];
@@ -57,17 +57,17 @@ function Panel_Keyframe_Driver(key) : Panel_Linear_Setting() constructor {
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("Frequency"),
-				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.frequency = val; }).setSlidable(),
+				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.frequency = val; }),
 				function() { return key.drivers.frequency; }
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("Amplitude"),
-				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.amplitude = val; }).setSlidable(),
+				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.amplitude = val; }),
 				function() { return key.drivers.amplitude; }
 			),
 			new __Panel_Linear_Setting_Item(
 				__txt("Phase"),
-				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.phase = val; }).setSlidable(),
+				new textBox( TEXTBOX_INPUT.number, function(val) { key.drivers.phase = val; }),
 				function() { return key.drivers.phase ; }
 			),
 		];

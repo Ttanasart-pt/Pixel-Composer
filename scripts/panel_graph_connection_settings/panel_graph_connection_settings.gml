@@ -19,7 +19,7 @@ function Panel_Graph_Connection_Setting() : Panel_Linear_Setting() constructor {
 			new __Panel_Linear_Setting_Item_Preference(
 				__txtx("dialog_connection_radius", "Corner radius"),
 				"connection_line_corner",
-				new textBox(TEXTBOX_INPUT.number, function(str) { PREFERENCES.connection_line_corner = max(0, real(str)); }).setSlidable(),
+				new textBox(TEXTBOX_INPUT.number, function(str) { PREFERENCES.connection_line_corner = max(0, real(str)); }),
 			),
 			new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_connection_quality", "Render quality"),

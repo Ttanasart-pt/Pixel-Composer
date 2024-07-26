@@ -380,7 +380,6 @@
     {"name":"__raymarching","order":4,"path":"scripts/__raymarching/__raymarching.yy",},
     {"name":"__rectangle","order":7,"path":"scripts/__rectangle/__rectangle.yy",},
     {"name":"__shapes","order":3,"path":"scripts/__shapes/__shapes.yy",},
-    {"name":"__sliderRange","order":3,"path":"scripts/__sliderRange/__sliderRange.yy",},
     {"name":"__strandSim","order":2,"path":"scripts/__strandSim/__strandSim.yy",},
     {"name":"__surface","order":7,"path":"scripts/__surface/__surface.yy",},
     {"name":"__vec2","order":7,"path":"scripts/__vec2/__vec2.yy",},

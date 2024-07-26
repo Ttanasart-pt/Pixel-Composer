@@ -50,8 +50,6 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		tb[i].hide     = true;
 	}
 	
-	static setSlideSpeed = function(speed) { for(var i = 0; i < size; i++) tb[i].setSlidable(speed); }
-	
 	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
 		for( var i = 0; i < size; i++ ) tb[i].interactable = interactable;

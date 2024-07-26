@@ -1,7 +1,4 @@
-enum TEXTBOX_INPUT {
-	text,
-	number
-}
+enum TEXTBOX_INPUT { text, number }
 
 function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	onRelease = noone;
@@ -18,18 +15,24 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	no_empty    = true;
 	
-	slidable    = false;
+	slidable    = true;
 	sliding     = false;
 	slidePen    = false;
 	slide_delta = 0;
 	slide_int   = false;
-	slide_speed = 1 / 25;
+	slide_speed = 0.01;
+	
 	slide_snap  = 0;
 	slide_range = noone;
 	curr_range  = [ 0, 1 ];
 	
+	slider_dy      = 0;
+	slider_my      = 0;
+	slider_mulp    = 0;
 	slider_def_val = 0;
 	slider_cur_val = 0;
+	slider_cur_del = 0;
+	slider_object  = noone;
 	
 	label      = "";
 	labelColor = COLORS._main_text_sub;
@@ -80,15 +83,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		onModify(value);
 	}
 	
-	static setSlidable = function(slideStep = slide_speed, _slide_int = false, _slide_range = noone) { 
-		slidable    = true;
-		slide_speed = is_array(slideStep)? slideStep[0] : slideStep;
-		slide_snap  = is_array(slideStep)? slideStep[1] : 0;
-		slide_int   = _slide_int;
-		slide_range = _slide_range;
-		
-		return self;
-	} 
+	static setSlideType  = function(_slide_int = false) { slide_int   = _slide_int;   return self; }
+	static setSlideStep  = function(_slide_step = 0)    { slide_snap  = _slide_step;  return self; }
+	static setSlideRange = function(_min = 0, _max = 1) { slide_range = [_min, _max]; return self; }
 	
 	static setRange = function(_rng_min, _rng_max) {
 		use_range = true;
@@ -514,21 +511,38 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				var _defval = toNumber(_current_text);
 				slider_def_val = _defval;
 				slider_cur_val = _defval;
+				slider_cur_del = 0;
 				
-				slidePen = PEN_USE;
+				slidePen    = PEN_USE;
+				slider_dy   = 0;
+				slider_mulp = 0;
 				
 				if(!slidePen) {
 					CURSOR_LOCK_X = mouse_mx;
 					CURSOR_LOCK_Y = mouse_my;
 				}
 				
-				sliding  = 2;
+				sliding = 2;
+				slider_object = instance_create_depth(rx + _x, ry + _y, -16000, slider_Slider, { w: _w, h: _h });
+				slider_object.text = self;
 			}
+	
+			var _mdx = slidePen? PEN_X_DELTA : window_mouse_get_delta_x();
+			var _mdy = slidePen? PEN_Y_DELTA : window_mouse_get_delta_y();
 			
 			if(sliding == 2) {
 				if(!slidePen && PREFERENCES.slider_lock_mouse) CURSOR_LOCK = true;
-
-				if(mouse_press(mb_right)) {
+				
+				if(abs(_mdy) > abs(_mdx))
+					slider_dy += slidePen? PEN_Y_DELTA : window_mouse_get_delta_y();
+				
+				var _mulp = slider_mulp;
+				     if(slider_dy < -160 * (1 + abs(slider_mulp) * .5)) { slider_mulp = clamp(slider_mulp + 1, -2, 2); slider_dy = 0; }
+				else if(slider_dy >  160 * (1 + abs(slider_mulp) * .5)) { slider_mulp = clamp(slider_mulp - 1, -2, 2); slider_dy = 0; }
+				
+				if(_mulp != slider_mulp) slider_cur_del = 0;
+				
+				if(mouse_press(mb_right)) { //cancel
 					_input_text = string_real(slider_def_val);
 					sliding = 0;
 					apply();
@@ -538,20 +552,18 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					
 				} else {
 					MOUSE_BLOCK = true;
-					var _s   = slide_speed;
-					
-					var _mdx = slidePen? PEN_X_DELTA : window_mouse_get_delta_x();
-					var _mdy = slidePen? PEN_Y_DELTA : window_mouse_get_delta_y();
+					var _s  = slide_speed;
+					    _s *= power(10, slider_mulp);
 					
 					var _dx  = abs(_mdx) > abs(_mdy)? _mdx : -_mdy;
 					
 					if(key_mod_press(CTRL) && !slide_snap) _s *= 10;
 					if(key_mod_press(ALT))  _s /= 10;
 
-					slider_cur_val += _dx * _s;
-
-					if(slide_range != noone) 
-						slider_cur_val = clamp(slider_cur_val, curr_range[0], curr_range[1]);
+					slider_cur_del += _dx;
+					slider_cur_val  = slider_def_val + slider_cur_del * _s;
+					
+					if(slide_range != noone) slider_cur_val = clamp(slider_cur_val, curr_range[0], curr_range[1]);
 
 					var _val = value_snap(slider_cur_val, _s);
 
@@ -575,7 +587,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				_update = true;
 				UNDO_HOLDING = false;
 			}
-		} #endregion
+		
+		} else {
+			if(slider_object) {
+				slider_object.anim = 1;
+				slider_object = noone;
+			}
+		}
 		
 		if(selecting) { 
 			if(hide < 2) {

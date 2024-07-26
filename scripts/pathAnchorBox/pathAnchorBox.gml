@@ -21,11 +21,6 @@ function pathAnchorBox(_onModify) : widget() constructor {
 	tb[4].setPrecision(2).setLabel("dx1");
 	tb[5].setPrecision(2).setLabel("dy1");
 	
-	static setSlideSpeed = function(speed) {
-		for( var i = 0, n = array_length(tb); i < n; i++ )
-			tb[i].setSlidable(speed);
-	}
-	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
 		

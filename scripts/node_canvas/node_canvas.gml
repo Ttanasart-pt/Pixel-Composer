@@ -252,7 +252,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 							   ];
 		
 		tool_attribute.size = 1;
-		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.size = max(1, round(val)); }).setSlidable(0.1, true, [ 1, 999999 ])
+		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.size = max(1, round(val)); }).setSlideType(true)
 									.setFont(f_p3)
 									.setSideButton(button(function() { dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) })
 										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon));
@@ -262,7 +262,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.pressure_size = [ 1, 1 ];
 		
 		tool_attribute.thres	= 0;
-		tool_thrs_edit      	= new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.thres = clamp(val, 0, 1); }).setSlidable(0.01, false, [ 0, 1 ]).setFont(f_p3);
+		tool_thrs_edit      	= new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.thres = clamp(val, 0, 1); }).setSlideRange(0, 1).setFont(f_p3);
 		tool_thrs           	= [ "Threshold", tool_thrs_edit, "thres", tool_attribute ];
 		
 		tool_attribute.fillType = 0;

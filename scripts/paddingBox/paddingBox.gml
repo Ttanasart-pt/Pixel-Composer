@@ -39,8 +39,6 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 					  
 	tb[1].label = "t";
 	tb[3].label = "b";
-		
-	static setSlideSpeed = function(speed) { for(var i = 0; i < 4; i++) tb[i].setSlidable(speed); }
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable   = interactable;

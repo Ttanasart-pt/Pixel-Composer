@@ -74,7 +74,6 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		for( var i = 0; i < 1; i++ ) {
 			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-			inputs[| i].editWidget.setSlidable(int? 0.1 : 0.01);
 		}
 		
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);

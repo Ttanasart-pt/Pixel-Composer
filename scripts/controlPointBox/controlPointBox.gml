@@ -26,8 +26,7 @@ function controlPointBox(_onModify) : widget() constructor {
 	tbH  = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(max(0, toNumber(val)), PUPPET_CONTROL.height); });	tbH.hide  = true; tbH.slidable  = true;
 	rot  = new rotator(function(val) { return onModify(toNumber(val), PUPPET_CONTROL.fy); });
 	
-	sW   = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(toNumber(val), PUPPET_CONTROL.width); })
-			.setSlidable(0.01, false, [ 1, 32 ]);
+	sW   = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(toNumber(val), PUPPET_CONTROL.width); });
 	
 	tbCx.label = "cx";
 	tbCy.label = "cy";

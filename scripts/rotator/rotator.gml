@@ -6,13 +6,12 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	dragging = noone;
 	drag_sv  = 0;
 	real_val = 0;
-	slide_speed = 1 / 10;
 	side_button = noone;
 	
 	spr_bg   = THEME.rotator_bg;
 	spr_knob = THEME.rotator_knob;
 	
-	tb_value = new textBox(TEXTBOX_INPUT.number, onModify).setSlidable([ 0.1, 15 ], true);
+	tb_value = new textBox(TEXTBOX_INPUT.number, onModify).setSlideStep(15);
 	tb_value.hide = true;
 	
 	halign = fa_center;

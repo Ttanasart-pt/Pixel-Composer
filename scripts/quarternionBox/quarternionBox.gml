@@ -45,11 +45,6 @@ function quarternionBox(_onModify) : widget() constructor {
 		tb[i].label    = axis[i];
 	}
 	
-	static setSlideSpeed = function(speed) {
-		for(var i = 0; i < size; i++)
-			tb[i].setSlidable(speed);
-	}
-	
 	static setInteract = function(interactable) { 
 		self.interactable = interactable;
 		

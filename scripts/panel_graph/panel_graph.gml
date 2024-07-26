@@ -487,7 +487,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		toolbars_distrib_space = [
 			[ THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_hdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ],
 			[ THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_vdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ],
-			[ new textBox(TEXTBOX_INPUT.number, function(val) { distribution_spacing = value_snap(val, 4); } ).setSlidable(1).setPadding(4), function() /*=>*/ {return distribution_spacing} ],
+			[ new textBox(TEXTBOX_INPUT.number, function(val) { distribution_spacing = value_snap(val, 4); } ).setPadding(4), function() /*=>*/ {return distribution_spacing} ],
 		];
 		
 		toolbars = [ toolbars_general ];

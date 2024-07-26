@@ -35,11 +35,6 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		tb[i].label    = labels[i];
 	}
 	
-	static setSlideSpeed = function(speed) { 
-		tb[0].setSlidable(speed);
-		tb[1].setSlidable(speed);
-	} 
-	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
 		

@@ -6,16 +6,14 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 	
 	onModify = _onModify;
 	
-	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(clamp(val, curr_range[0], curr_range[1]), 0); }).setSlidable(_step, _int, _range);
-	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(clamp(val, curr_range[0], curr_range[1]), 1); }).setSlidable(_step, _int, _range);
+	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return onModify(clamp(val, curr_range[0], curr_range[1]), 0)})
+		.setSlideType(_int).setSlideStep(_step).setSlideRange(_range);
+		
+	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return onModify(clamp(val, curr_range[0], curr_range[1]), 1)})
+		.setSlideType(_int).setSlideStep(_step).setSlideRange(_range);
 	
 	tb_value_min.hide = true;
 	tb_value_max.hide = true;
-	
-	static setSlideSpeed = function(speed) {
-		tb_value_min.setSlidable(speed);
-		tb_value_max.setSlidable(speed);
-	}
 	
 	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
@@ -66,11 +64,10 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 		
 		var tb_w = _w / 2;
 		
-		if(tb_value_min.selecting || tb_value_max.selecting) {
+		if(tb_value_min.selecting || tb_value_max.selecting)
 			draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 1);	
-		} else {
+		else
 			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
-		}
 		
 		tb_value_min.curr_range[0] = curr_range[0];
 		tb_value_min.curr_range[1] = curr_range[1];

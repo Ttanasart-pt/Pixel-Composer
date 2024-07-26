@@ -33,8 +33,8 @@ function curveBox(_onModify) : widget() constructor {
 	cw = 0;
 	ch = 0;
 	
-	tb_shift = new textBox(TEXTBOX_INPUT.number, function(val) { var _data = array_clone(curr_data); _data[0] = val; onModify(_data); }).setSlidable(1 / 100);
-	tb_scale = new textBox(TEXTBOX_INPUT.number, function(val) { var _data = array_clone(curr_data); _data[1] = val; onModify(_data); }).setSlidable(1 / 100);
+	tb_shift = new textBox(TEXTBOX_INPUT.number, function(val) { var _data = array_clone(curr_data); _data[0] = val; onModify(_data); });
+	tb_scale = new textBox(TEXTBOX_INPUT.number, function(val) { var _data = array_clone(curr_data); _data[1] = val; onModify(_data); });
 	
 	tb_shift.label = "Shift";
 	tb_scale.label = "Scale";

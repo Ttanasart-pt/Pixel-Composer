@@ -148,6 +148,12 @@ event_inherited();
 		
 	ds_list_add(pref_global, __txt("Save/Load"));
 		
+		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_auto_save_time", "Autosave delay (-1 to disable)"),
+			"auto_save_time",
+			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.auto_save_time = val; PREF_SAVE(); })
+		));
+		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 			__txtx("pref_save_layout", "Save layout"),
 			"save_layout",
@@ -330,12 +336,6 @@ event_inherited();
 		));
 		
 	ds_list_add(pref_appr, __txt("Splash"));
-		
-		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_auto_save_time", "Autosave delay (-1 to disable)"),
-			"auto_save_time",
-			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.auto_save_time = val; PREF_SAVE(); })
-		));
 		
 		if(IS_PATREON)
 		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(

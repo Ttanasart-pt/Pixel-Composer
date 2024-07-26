@@ -72,11 +72,6 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 			unit.triggerButton.register(parent);
 	}
 	
-	static setSlideSpeed = function(speed) {
-		for(var i = 0; i < inputs; i++)
-			tb[i].setSlidable(speed);
-	}
-	
 	static isHovering = function() { 
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;

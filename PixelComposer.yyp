@@ -853,7 +853,6 @@
     {"id":{"name":"__raymarching","path":"scripts/__raymarching/__raymarching.yy",},},
     {"id":{"name":"__rectangle","path":"scripts/__rectangle/__rectangle.yy",},},
     {"id":{"name":"__shapes","path":"scripts/__shapes/__shapes.yy",},},
-    {"id":{"name":"__sliderRange","path":"scripts/__sliderRange/__sliderRange.yy",},},
     {"id":{"name":"__strandSim","path":"scripts/__strandSim/__strandSim.yy",},},
     {"id":{"name":"__surface","path":"scripts/__surface/__surface.yy",},},
     {"id":{"name":"__vec2","path":"scripts/__vec2/__vec2.yy",},},

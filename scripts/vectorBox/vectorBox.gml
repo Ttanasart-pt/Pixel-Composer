@@ -60,12 +60,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		return self;
 	}
 	
-	static setSlideSpeed = function(speed) {
-		for(var i = 0; i < size; i++)
-			tb[i].setSlidable(speed);
-		return self;
-	}
-	
 	static setInteract = function(interactable) {
 		self.interactable = interactable;
 		
@@ -117,8 +111,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		var sz  = min(size, array_length(_data));
 		var _bs = min(_h, ui(32));
-		
-		if(unit && unit.reference != noone) for(var i = 0; i < sz; i++) tb[i].slide_int = unit.mode == VALUE_UNIT.constant? true : false;
 		
 		if((_w - _bs) / sz > ui(48)) {
 			if(side_button) {

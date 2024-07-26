@@ -536,9 +536,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				switch(display_type) { 
 					case VALUE_DISPLAY._default :		#region
 						editWidget = new textBox(_txt, function(val) { return setValueInspector(val); } );
-						editWidget.setSlidable();
 						
-						if(struct_has(display_data, "slide_speed"))  editWidget.setSlidable(display_data.slide_speed);
 						if(struct_has(display_data, "unit"))		 editWidget.unit			= display_data.unit;
 						if(struct_has(display_data, "front_button")) editWidget.front_button	= display_data.front_button;
 						
@@ -547,8 +545,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 					case VALUE_DISPLAY.range :			#region
 						editWidget = new rangeBox(_txt, function(val, index) { return setValueInspector(val, index); } );
-						
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
@@ -569,9 +565,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							if(struct_has(display_data, "linkable"))	 editWidget.linkable    = display_data.linkable;
 							if(struct_has(display_data, "per_line"))	 editWidget.per_line    = display_data.per_line;
 							if(struct_has(display_data, "linked"))		 editWidget.linked      = display_data.linked;
-							if(struct_has(display_data, "slideSpeed"))	 editWidget.setSlideSpeed(display_data.slideSpeed);
-							
-							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 							
 							if(len == 2) {
 								var _dim = struct_try_get(display_data, "useGlobal", true);
@@ -601,7 +594,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						editWidget = new vectorRangeBox(array_length(val), _txt, function(val, index) { return setValueInspector(val, index); }, unit );
 						
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						if(!struct_has(display_data, "ranged")) display_data.ranged = false;
@@ -641,10 +633,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 					case VALUE_DISPLAY.slider :			#region
-						var _range = struct_try_get(display_data, "range", [ 0, 1, 0.01 ]);
+						var _range = struct_try_get(display_data, "range", [ 0, 1 ]);
 						
 						editWidget = new textBox(TEXTBOX_INPUT.number, function(val) { return setValueInspector(toNumber(val)); } )
-										.setSlidable(_range[2], type == VALUE_TYPE.integer, [ _range[0], _range[1] ]);
+										.setSlideRange(_range[0], _range[1]);
 						
 						if(struct_has(display_data, "update_stat"))
 							editWidget.update_stat = display_data.update_stat;
@@ -667,8 +659,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.area :			#region
 						editWidget = new areaBox(function(val, index) { return setValueInspector(val, index); }, unit);
 						
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
-						
 						editWidget.onSurfaceSize = struct_try_get(display_data, "onSurfaceSize", noone);
 						editWidget.showShape     = struct_try_get(display_data, "useShape", true);
 						
@@ -680,7 +670,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 					case VALUE_DISPLAY.padding :		#region
 						editWidget = new paddingBox(function(val, index) { return setValueInspector(val, index); }, unit);
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Padding, i);
@@ -690,7 +679,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 					case VALUE_DISPLAY.corner :			#region
 						editWidget = new cornerBox(function(val, index) { return setValueInspector(val, index); }, unit);
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Padding, i);
@@ -733,7 +721,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 					case VALUE_DISPLAY.matrix :			#region
 						editWidget = new matrixGrid(_txt, display_data.size, function(val, index) { return setValueInspector(val, index); }, unit );
-						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1 / 10);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {i}";
@@ -778,6 +765,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 						
 				}
+				
+				if(editWidget && struct_has(editWidget, "setSlideType")) editWidget.setSlideType(type == VALUE_TYPE.integer);
 				break;
 				
 			case VALUE_TYPE.boolean :	 #region

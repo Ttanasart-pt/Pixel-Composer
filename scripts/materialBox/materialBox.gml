@@ -6,7 +6,7 @@ function materialBox(_onModify) : widget() constructor {
 	
 	sb_filtering = new scrollBox(["Pixel", "Bilinear"], function(val) { currMat.texFilter = val; onModify(currMat); })
 	
-	for(var i = 0; i < 5; i++) tb[i] = new textBox(TEXTBOX_INPUT.number, noone).setSlidable();
+	for(var i = 0; i < 5; i++) tb[i] = new textBox(TEXTBOX_INPUT.number, noone);
 	
 	tb[0].onModify = function(val) { currMat.diffuse    = val; onModify(currMat); }
 	tb[1].onModify = function(val) { currMat.specular   = val; onModify(currMat); }
