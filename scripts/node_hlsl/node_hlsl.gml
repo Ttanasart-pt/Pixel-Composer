@@ -134,21 +134,22 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 				
 			var type = inp_type.getValue();
 			switch(type) {
-				case 1 : 
-					if(is_array(cur_valu)) inp_valu.overrideValue(0);
-					
-					inp_valu.setType(VALUE_TYPE.integer);	
-					inp_valu.setDisplay(VALUE_DISPLAY._default);
-					break;
-					
-				case 0 : 
+				
+				case 0 : // Float
 					if(is_array(cur_valu)) inp_valu.overrideValue(0);
 					
 					inp_valu.setType(VALUE_TYPE.float);
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
 					
-				case 2 : 
+				case 1 : // Int
+					if(is_array(cur_valu)) inp_valu.overrideValue(0);
+					
+					inp_valu.setType(VALUE_TYPE.integer);	
+					inp_valu.setDisplay(VALUE_DISPLAY._default);
+					break;
+						
+				case 2 : //Vec2
 					if(!is_array(cur_valu) || array_length(cur_valu) != 2)
 						inp_valu.overrideValue([ 0, 0 ]);
 					
@@ -156,7 +157,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
 					
-				case 3 : 
+				case 3 : //Vec3
 					if(!is_array(cur_valu) || array_length(cur_valu) != 3)
 						inp_valu.overrideValue([ 0, 0, 0 ]);
 					
@@ -164,7 +165,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
 					
-				case 4 : 
+				case 4 : //Vec4
 					if(!is_array(cur_valu) || array_length(cur_valu) != 4)
 						inp_valu.overrideValue([ 0, 0, 0, 0 ]);
 					
@@ -172,7 +173,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
 					
-				case 5 : 
+				case 5 : //Mat3
 					if(!is_array(cur_valu) || array_length(cur_valu) != 9)
 						inp_valu.overrideValue(array_create(9));
 					
@@ -180,7 +181,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 					inp_valu.setDisplay(VALUE_DISPLAY.matrix, { size: 3 });
 					break;
 					
-				case 6 : 
+				case 6 : //Mat4
 					if(!is_array(cur_valu) || array_length(cur_valu) != 16)
 						inp_valu.overrideValue(array_create(16));
 					
@@ -188,12 +189,18 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 					inp_valu.setDisplay(VALUE_DISPLAY.matrix, { size: 4 });
 					break;
 					
-				case 7 : 
+				case 7 : //Sampler2D
+					if(is_array(cur_valu))
+						inp_valu.overrideValue(noone);
+						
 					inp_valu.setType(VALUE_TYPE.surface);	
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
 					
-				case 8 : 
+				case 8 : //Color
+					if(is_array(cur_valu))
+						inp_valu.overrideValue(c_black);
+					
 					inp_valu.setType(VALUE_TYPE.color);	
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
