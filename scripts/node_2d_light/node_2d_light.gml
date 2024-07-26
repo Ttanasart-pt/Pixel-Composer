@@ -175,6 +175,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_uniform_f(uniform_attn, _attn);
 			shader_set_uniform_f_array_safe(uniform_colr, [ _color_get_red(_color), _color_get_green(_color), _color_get_blue(_color) ]);
 			
+			draw_set_circle_precision(64);
+			
 			switch(_shape) {
 				case LIGHT_SHAPE_2D.point :
 					var _rbnd = _data[12];
