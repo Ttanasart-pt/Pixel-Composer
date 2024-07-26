@@ -1572,7 +1572,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
-	static isConnectable = function(_valueFrom, checkRecur = true, _log = false) { #region
+	static isConnectable = function(_valueFrom, checkRecur = true, _log = false) { 
 		
 		if(_valueFrom == -1 || _valueFrom == undefined || _valueFrom == noone) {
 			if(_log) noti_warning($"LOAD: Cannot set node connection from {_valueFrom} to {name} of node {node.name}.",, node);
@@ -1620,7 +1620,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return 1;
-	} #endregion
+	} 
+	
+	static isConnectableStrict = function(_valueFrom) { return bool(value_bit(type) & value_bit(_valueFrom.type)); } 
 	
 	static triggerSetFrom = function() { node.valueUpdate(index); }
 	

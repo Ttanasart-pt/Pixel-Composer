@@ -205,7 +205,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			input_button_length = array_length(input_buttons);
 		});
 		
-		dummy_input = noone;
 	#endregion
 	
 	#region --- attributes ----

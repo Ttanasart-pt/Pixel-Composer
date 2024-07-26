@@ -197,15 +197,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	managedRenderOrder = false;
 	
 	draw_dummy  = false;
-	input_dummy = nodeValue("Add to group", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
+	dummy_input = nodeValue("Add to group", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
 	
-	input_dummy.setDummy(function() /*=>*/ { var input = nodeBuild("Node_Group_Input", 0, 0, self); return input.inParent; },
+	dummy_input.setDummy(function() /*=>*/ { var input = nodeBuild("Node_Group_Input", 0, 0, self); return input.inParent; },
 		function(_junc) /*=>*/ { _junc.from.destroy() }
 	);
 	
-	input_dummy.onSetFrom = function(juncFrom) {
-		array_remove(juncFrom.value_to, input_dummy);
-		input_dummy.value_from = noone;
+	dummy_input.onSetFrom = function(juncFrom) {
+		array_remove(juncFrom.value_to, dummy_input);
+		dummy_input.value_from = noone;
 		
 		var input = nodeBuild("Node_Group_Input", 0, 0, self);
 		var _type = juncFrom.type;
@@ -345,7 +345,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return _nodes;
 	}
 	
-	static getInput = function(_y = 0, junc = noone) { return input_dummy; }
+	static getInput = function(_y = 0, junc = noone) { return dummy_input; }
 	
 	static preConnect = function() {
 		sortIO();
@@ -515,8 +515,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		input_dummy.x = xx;
-		input_dummy.y = _iny;
+		dummy_input.x = xx;
+		dummy_input.y = _iny;
 		
 		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && (!PREFERENCES.panel_graph_group_require_shift || key_mod_press(SHIFT));
 		bg_spr_add = 0.1 + (0.1 * _hv);
@@ -545,11 +545,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static onDrawJunctions = function(_x, _y, _mx, _my, _s) {
-		input_dummy.visible = false;
+		dummy_input.visible = false;
 		
 		if(draw_dummy) {
-			input_dummy.visible = true;
-			input_dummy.drawJunction(_s, _mx, _my);
+			dummy_input.visible = true;
+			dummy_input.drawJunction(_s, _mx, _my);
 		}
 		
 		draw_dummy = false;
