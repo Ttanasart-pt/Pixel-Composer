@@ -315,7 +315,7 @@
 			PREFERENCES.double_click_delay /= 60;
 		
 		TESTING = struct_try_get(PREFERENCES, "test_mode", false);
-		if(TESTING) {
+		if(TESTING && GM_build_type == "run") {
 			log_message("PREFERENCE", "Test mode enabled");
 			instance_create_depth(0, 0, 0, addon_key_displayer);
 		}
