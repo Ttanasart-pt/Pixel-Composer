@@ -100,7 +100,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		h     = 128;
 		min_w = w;
 		min_h = name_height;
-		con_h = 0;
+		con_h = 128;
 		
 		h_param = h;
 		will_setHeight = false;
@@ -623,8 +623,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w = SHOW_PARAM? attributes.node_param_width : min_w;
 		
 		if(!auto_height) return;
+		
+		var _ss = getGraphPreviewSurface();
+		var _ps = is_surface(_ss);
+		var _ou = preview_channel >= 0 && preview_channel < ds_list_size(outputs) && outputs[| preview_channel].type == VALUE_TYPE.surface;
+		
+		// print($"{previewable} && {preview_draw} && ([{_ss}] {_ps} || {_ou})");
+		var _prev_surf = previewable && preview_draw && (_ps || _ou);
+		
 		junction_draw_hei_y = SHOW_PARAM? 32 : 24;
-		junction_draw_pad_y = SHOW_PARAM? min_h : 32;
+		junction_draw_pad_y = SHOW_PARAM? 128 : 32;
 		
 		var _hi, _ho;
 		
@@ -640,14 +648,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_ho = name_height;
 		}
 		
-		var _ss = getGraphPreviewSurface();
-		var _ps = is_surface(_ss);
-		var _ou = preview_channel >= 0 && preview_channel < ds_list_size(outputs) && outputs[| preview_channel].type == VALUE_TYPE.surface;
-		
-		// print($"{previewable} && {preview_draw} && ([{_ss}] {_ps} || {_ou})");
-		var _prev_surf = previewable && preview_draw && (_ps || _ou);
 		var _p = previewable;
-		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
 			if(is_instanceof(_inp, NodeValue) && _inp.isVisible()) {
@@ -660,10 +661,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _p = previewable;
 		
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			if(outputs[| i].isVisible()) {
-				if(_p) _ho += junction_draw_hei_y;
-				_p = true;
-			}
+			if(!outputs[| i].isVisible()) continue;
+			if(_p) _ho += junction_draw_hei_y;
+			_p = true;
 		}
 		
 		h = max(min_h, _prev_surf * 128, _hi, _ho);
@@ -1291,17 +1291,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var hover = noone;
 		
+		var _m = [ _mx, _my ];
+		var pd = junction_draw_pad_y * _s;
 		var wh = junction_draw_hei_y * _s;
+		
 		var ww = w * _s * 0.5;
 		var wt = w * _s * 0.25;
 		var wx = _x + w * _s - ww - 8;
 		var lx = _x + 12 * _s;
 		
-		var _m = [ _mx, _my ];
+		var jy = _y + con_h * _s + wh / 2;
+		
 		var rx = PANEL_GRAPH.x;
 		var ry = PANEL_GRAPH.y;
-		
-		var jy = _y + con_h * _s + wh / 2;
 		
 		var extY = 0;
 		var drwT = _s > 0.5;
