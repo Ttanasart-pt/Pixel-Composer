@@ -20,12 +20,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	slidePen    = false;
 	slide_delta = 0;
 	slide_int   = false;
-	slide_speed = 0.01;
+	slide_speed = 1 / 250;
 	
 	slide_snap  = 0;
 	slide_range = noone;
 	curr_range  = [ 0, 1 ];
 	
+	slider_dx      = 0;
 	slider_dy      = 0;
 	slider_my      = 0;
 	slider_mulp    = 0;
@@ -514,6 +515,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				slider_cur_del = 0;
 				
 				slidePen    = PEN_USE;
+				slider_dx   = 0;
 				slider_dy   = 0;
 				slider_mulp = 0;
 				
@@ -540,7 +542,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				     if(slider_dy < -160 * (1 + abs(slider_mulp) * .5)) { slider_mulp = clamp(slider_mulp + 1, -2, 2); slider_dy = 0; }
 				else if(slider_dy >  160 * (1 + abs(slider_mulp) * .5)) { slider_mulp = clamp(slider_mulp - 1, -2, 2); slider_dy = 0; }
 				
-				if(_mulp != slider_mulp) slider_cur_del = 0;
+				if(_mulp != slider_mulp) {
+					slider_dx      = 0;
+					slider_cur_del = 0;
+				}
 				
 				if(mouse_press(mb_right)) { //cancel
 					_input_text = string_real(slider_def_val);
@@ -553,25 +558,26 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				} else {
 					MOUSE_BLOCK = true;
 					var _s  = slide_speed;
-					    _s *= power(10, slider_mulp);
-					
-					var _dx  = abs(_mdx) > abs(_mdy)? _mdx : -_mdy;
+					var _sc = power(10, slider_mulp);
+					    _s *= _sc;
 					
 					if(key_mod_press(CTRL) && !slide_snap) _s *= 10;
-					if(key_mod_press(ALT))  _s /= 10;
-
-					slider_cur_del += _dx;
+					if(key_mod_press(ALT))                 _s /= 10;
+					
+					var _slider_cur_val = slider_cur_val;
+					slider_dx      += _mdx / w;
+					slider_cur_del += _mdx;
 					slider_cur_val  = slider_def_val + slider_cur_del * _s;
 					
-					if(slide_range != noone) slider_cur_val = clamp(slider_cur_val, curr_range[0], curr_range[1]);
-
-					var _val = value_snap(slider_cur_val, _s);
-
+					if(slide_range != noone)
+						slider_cur_val = clamp(slider_cur_val, curr_range[0], curr_range[1]);
+					
+					var _val = value_snap(slider_cur_val, _sc / 100);
+					// print($"{_slider_cur_val} > {slider_cur_val} : {curr_range} > {_val} [{_sc / 100}]");
+					
 					if(key_mod_press(CTRL) && slide_snap) _val = value_snap(slider_cur_val, slide_snap);
 					if(slide_int)  _val = round(_val);
 
-					if(abs(_val) < _s * 4) _val = 0;
-					
 					_input_text = string_real(_val);
 					if(apply()) UNDO_HOLDING = true;
 				}

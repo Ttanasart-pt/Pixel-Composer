@@ -425,5 +425,14 @@
     "panel_driver" : "Driver...", 
     "panel_preview_lock_preview" : "Lock previewing node", 
 
+    // 1.19
+    "global_variables": "Global Variables",
+    "panel_animation_keyframe_edit": "Edit Value...",
+    "panel_graph_hide_disconnected": "Hide stray junctions",
+    "panel_graph_tunnel": "Create tunnels",
+    "art_by_kenney": "Art by Kenney",
+    "panel_menu_reset_layout": "Reset layout",
+    "panel_graph_toggle_minimap": "Toggle minimap",
+
     "" : ""
 }

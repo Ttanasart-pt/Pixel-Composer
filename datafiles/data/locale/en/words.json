@@ -356,5 +356,21 @@
     "packing": "Packing",
     "resume" : "Resume", 
 
+    // 1.19
+    "histogram" : "Histogram",
+    "background": "Background",
+    "search": "Search",
+    "welcome_files": "Welcome Files",
+    "palette_mixer": "Palette Mixer",
+    "file_explorer": "File Explorer",
+    "show_avatar" : "Show Avatar",
+    "open_in_explorer" : "Open in explorer",
+    "downloads": "Downloads",
+    "label": "Label",
+    "list": "List",
+    "view_mode": "View mode",
+    "palettes_mixer": "Palettes Mixer",
+    "release_note": "Release note",
+
     "" : ""
 }
