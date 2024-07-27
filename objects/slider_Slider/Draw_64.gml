@@ -38,7 +38,3 @@ if(anim == 0) {
 		draw_text(x + w / 2, y + h + ui(18), string(0.01 * _mulp));
 	}
 }
-
-BLEND_ALPHA
-	//draw_surface_safe(text.text_surface, x + text.padding, y);
-BLEND_NORMAL

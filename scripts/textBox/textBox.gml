@@ -44,6 +44,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	_current_text = "";
 	_input_text   = "";
+	_input_value  = 0;
 	_last_text    = "";
 	current_value = "";
 	_disp_text    = "";
@@ -347,11 +348,42 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		draw_set_alpha(0.5 + 0.5 * interactable);
 		_y += ui(1); //Huh?
 		
-		var cc = color;
-		if(sliding == 2) cc = COLORS._main_accent
-		
+		var cc = sliding == 2? COLORS._main_accent : color;
 		draw_set_text(font, fa_left, fa_top, cc);
-		draw_text_add(_x + disp_x, _y, _text + suffix);
+		
+		if(input == TEXTBOX_INPUT.number) {
+			var _tx = string_pos(".", _text);
+			
+			if(_tx != 0) {
+				var _wh = string_copy(_text, 1, _tx - 1);
+				var _dc = string_copy(_text, _tx + 1, string_length(_text) - _tx);
+				
+				var _wh_w = string_width(_wh);
+				var _dt_w = string_width(".");
+				
+				var _tx = _x + disp_x;
+				if(sliding == 2) 
+					_tx = _w / 2 - _wh_w - padding;
+				
+				var _inv = _wh == "0" ||_wh == "-0";
+				
+				draw_set_alpha(0.5 + (!_inv) * 0.5);
+				draw_text_add(_tx, _y, _wh); _tx += _wh_w;
+				
+				draw_set_alpha(0.5 + (_inv) * 0.5);
+				draw_text_add(_tx, _y, "."); _tx += _dt_w;
+				draw_text_add(_tx, _y, _dc);
+				
+			} else if(sliding == 2) {
+				var _wh_w = string_width(_text);
+				draw_text_add(_w / 2 - _wh_w - padding, _y, _text);
+				
+			} else
+				draw_text_add(_x + disp_x, _y, _text + suffix);
+			
+		} else 
+			draw_text_add(_x + disp_x, _y, _text + suffix);
+		
 		draw_set_alpha(1);
 		
 		_disp_text = _text;
@@ -578,7 +610,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					if(key_mod_press(CTRL) && slide_snap) _val = value_snap(slider_cur_val, slide_snap);
 					if(slide_int)  _val = round(_val);
 
-					_input_text = string_real(_val);
+					_input_text  = string_real(_val);
+					
 					if(apply()) UNDO_HOLDING = true;
 				}
 				
@@ -663,6 +696,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				cursor_pos_to	= disp_x + tx + c_w;
 				if(cursor_pos_to < _x)  
 					disp_x_to += _w - padding * 2;
+					
 				if(cursor_pos_to > _x + _w - padding * 2)  
 					disp_x_to -= _w - padding * 2;
 				
