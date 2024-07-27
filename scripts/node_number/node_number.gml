@@ -47,35 +47,41 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static step = function() {
 		var int  = getInputData(1);
 		var disp = getInputData(2);
+		var _ch  = con_h;
 		
 		if(!show_parameter) setDimension(96, 56, false);
 		
 		switch(disp) {
 			case 0 : 
+				min_h = 0;
 				inputs[| 3].setVisible(false);
 				inputs[| 4].setVisible(false);
 				inputs[| 5].setVisible(false);
 				break;
+				
 			case 1 : 
 				if(inputs[| 0].value_from == noone && !show_parameter) setDimension(160, 96, false);
+				min_h = con_h;
 				
 				inputs[| 3].setVisible(true);
 				inputs[| 4].setVisible(true);
 				inputs[| 5].setVisible(true);
 				break;
+				
 			case 2 : 
 				if(inputs[| 0].value_from == noone && !show_parameter) setDimension(128, 128, false);
-					
+				min_h = con_h;
+				
 				inputs[| 3].setVisible(false);
 				inputs[| 4].setVisible(false);
 				inputs[| 5].setVisible(false);
 				break;
 		}
 		
-		for( var i = 0; i < 1; i++ ) {
-			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-		}
+		if(_ch != con_h) will_setHeight = true;
 		
+		for( var i = 0; i < 1; i++ )
+			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 	}
 	
