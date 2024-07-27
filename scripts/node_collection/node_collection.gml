@@ -568,23 +568,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	/////============ PREVIEW ============
 	
 	static getGraphPreviewSurface = function() {
-		var _output_junc = outputs[| preview_channel];
-		
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			if(!nodes[i].active) continue;
 			if(is_instanceof(nodes[i], Node_Group_Thumbnail))
-				_output_junc = nodes[i].inputs[| 0];
+				return nodes[i].inputs[| 0].getValue();
 		}
 		
-		if(!is_instanceof(_output_junc, NodeValue)) return noone;
-		
-		switch(_output_junc.type) {
-			case VALUE_TYPE.surface :
-			case VALUE_TYPE.dynaSurface :
-				return _output_junc.getValue();
-		}
-		
-		return noone;
+		var _fr = outputs[| preview_channel].from.inputs[| 0];
+		return _fr.value_from == noone? noone : _fr.value_from.node.getGraphPreviewSurface();
 	}
 	
 	function getPreviewingNode() {
