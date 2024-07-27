@@ -287,14 +287,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////============= VALUE ============
 	
-	static setType = function(_type) { #region
+	static setType = function(_type) {
 		if(type == _type) return false;
 		
 		type = _type;
 		draw_junction_index = type;
 		
 		return true;
-	} #endregion
+	}
 	
 	static setDefault = function(vals) { #region
 		if(LOADING || APPENDING) return self;
@@ -1626,6 +1626,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_valueFrom == noone)
 			return removeFrom();
 		
+		run_in(2, function() /*=>*/ { updateColor(getValue()); });
 		var conn = isConnectable(_valueFrom, checkRecur, log);
 		if(conn < 0) return conn;
 		
@@ -1667,6 +1668,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static removeFrom = function(_remove_list = true) {
+		run_in(2, function() /*=>*/ { updateColor(getValue()); });
+		
 		recordAction(ACTION_TYPE.junction_disconnect, self, value_from);
 		if(_remove_list && value_from != noone)
 			array_remove(value_from.value_to, self);	

@@ -251,7 +251,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		graph_preview_alpha	= 1;
 		
-		getPreviewingNode = noone;
+		getPreviewingNode = function() /*=>*/ {return self};
 		
 		preview_value = 0;
 		preview_array = "";
@@ -590,11 +590,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return jun_list_arr;
 	}
 	
-	static getOutputJunctionIndex = function(index) {
-		if(output_display_list == -1)
-			return index;
-		return output_display_list[index];
-	}
+	static getOutputJunctionAmount = function()      { return output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list); }
+	static getOutputJunctionIndex  = function(index) { return output_display_list == -1? index : output_display_list[index]; }
 	
 	static updateIO = function() {
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )

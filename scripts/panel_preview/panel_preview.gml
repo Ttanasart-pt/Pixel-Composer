@@ -142,20 +142,21 @@ function Panel_Preview() : PanelContent() constructor {
 		overlay_hovering  = false;
 		view_hovering     = false;
 		
-		sbChannel = new scrollBox([], function(index) { #region
-			var node = getNodePreview();
+		sbChannel = new scrollBox([], function(index) {
+			var node = __getNodePreview();
 			if(node == noone) return;
+			
+			node.preview_channel = sbChannelIndex[index].index; 
+			node.setHeight();
+		});
 		
-			node.preview_channel = array_safe_get_fast(sbChannelIndex, index); 
-		}); #endregion
 		sbChannelIndex  = [];
 		sbChannel.font  = f_p1;
 		sbChannel.align = fa_left;
 	#endregion
 	
 	#region ---- 3d ----
-		d3_active  = false;
-		_d3_active = false;
+		d3_active = NODE_3D.none;
 		d3_active_transition = 0;
 		
 		d3_surface = noone;
@@ -213,12 +214,6 @@ function Panel_Preview() : PanelContent() constructor {
 			d3_tool_snap = false;
 			d3_tool_snap_position = 1;
 			d3_tool_snap_rotation = 15;
-		#endregion
-		
-		#region view channel
-			d3ChannelNames = [ "Rendered", "Normal", "Depth" ];
-			d3Channel = new scrollBox(d3ChannelNames, function(index) { d3_preview_channel = index; });
-			d3Channel.align = fa_left;
 		#endregion
 	#endregion
 	
@@ -378,17 +373,14 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	////============ DATA ============
 	
-	function setNodePreview(node) { #region
+	function setNodePreview(node) {
 		if(locked) return;
 		
 		if(resetViewOnDoubleClick)
 			do_fullView = true;
 		
-		if(is_instanceof(node, Node) && node.getPreviewingNode != noone)
-			node = node.getPreviewingNode();
-		
 		preview_node[splitView? splitSelection : 0] = node;
-	} #endregion
+	}
 	
 	function removeNodePreview(node) { #region
 		if(locked) return;
@@ -402,7 +394,16 @@ function Panel_Preview() : PanelContent() constructor {
 		locked = false;
 	} #endregion
 	
-	function getNodePreview()			{ return preview_node[splitView? splitSelection : 0]; }
+	function __getNodePreview()			{ return preview_node[splitView? splitSelection : 0]; }
+	function getNodePreview() { 
+		var _node = __getNodePreview();
+		
+		if(is_instanceof(_node, Node)) 
+			_node = _node.getPreviewingNode();
+			
+		return _node;
+	}
+	
 	function getNodePreviewSurface()	{ return preview_surfaces[splitView? splitSelection : 0]; }
 	function getNodePreviewSequence()	{ return preview_sequence[splitView? splitSelection : 0]; }
 	
@@ -658,26 +659,27 @@ function Panel_Preview() : PanelContent() constructor {
 		canvas_y = h / 2 - _h * canvas_s / 2 - _y * canvas_s;
 	}
 	
-	function drawNodeChannel(_x, _y) { #region
-		var _node = getNodePreview();
-		if(_node == noone) return;
-		if(ds_list_size(_node.outputs) < 2) return;
+	function drawNodeChannel(_node, _x, _y) {
+		if(ds_list_size(_node.outputs) < 2) return 0;
 		
 		var chName = [];
 		sbChannelIndex = [];
 		
 		var currName = _node.outputs[| _node.preview_channel].name;
 		draw_set_text(sbChannel.font, fa_center, fa_center);
-		var ww = 0;
-		var hh = TEXTBOX_HEIGHT - ui(2);
+		var ww  = 0;
+		var hh  = TEXTBOX_HEIGHT - ui(2);
+		var _am = _node.getOutputJunctionAmount();
 		
-		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
-			if(_node.outputs[| i].type != VALUE_TYPE.surface) continue;
+		for( var i = 0; i < _am; i++ ) {
+			var _outi = _node.getOutputJunctionIndex(i);
+			var _outj = _node.outputs[| _outi];
 			
-			array_push(chName, _node.outputs[| i].name);
-			array_push(sbChannelIndex, i);
-			ww = max(ww, string_width(_node.outputs[| i].name) + ui(40));
+			array_push(chName, _outj.name);
+			array_push(sbChannelIndex, _outj);
+			ww = max(ww, string_width(_outj.name) + ui(40));
 		}
+		
 		
 		if(!array_empty(chName)) {
 			sbChannel.data_list = chName;
@@ -685,19 +687,9 @@ function Panel_Preview() : PanelContent() constructor {
 			sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
 			right_menu_y += ui(40);
 		}
-	} #endregion
-	
-	function drawNodeChannel3D(_x, _y) { #region
-		var _node = getNodePreview();
-		if(_node == noone) return;
 		
-		var ww = ui(128);
-		var hh = toolbar_height - ui(12);
-		
-		d3Channel.setFocusHover(pFOCUS, pHOVER);
-		d3Channel.draw(_x - ww, _y - hh / 2, ww, hh, d3ChannelNames[d3_preview_channel], [mx, my], x, y);
-		right_menu_y += ui(40);
-	} #endregion
+		return ww + ui(4);
+	}
 	
 	static onFullScreen = function() { run_in(1, fullView); }
 	
@@ -1246,15 +1238,15 @@ function Panel_Preview() : PanelContent() constructor {
 		
 	} #endregion
 	
-	function draw3D() { #region
+	function draw3D() {
 		var _node = getNodePreview();
 		if(_node == noone) return;
 		
-		switch(_node.is_3D) {
+		switch(d3_active) {
 			case NODE_3D.polygon :	draw3DPolygon(_node);	break;
 			case NODE_3D.sdf :		draw3DSdf(_node);		break;
 		}
-	} #endregion
+	}
 	
 	function drawPreviewOverlay() { #region
 		right_menu_y = toolbar_height - ui(4);
@@ -1291,7 +1283,7 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_set_color(COLORS._main_text_sub);
 				draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {CURRENT_FRAME + 1}/{TOTAL_FRAMES}");
 			
-				if(!d3_active) {
+				if(d3_active == NODE_3D.none) {
 					right_menu_y += _lh;
 					draw_text(right_menu_x, right_menu_y, $"x{canvas_s}");
 				
@@ -1568,6 +1560,7 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 			
 			mouse_free = _node.drawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
+			
 		} else {
 			if(key_mod_press(CTRL) || d3_tool_snap) {
 				_snx = d3_tool_snap_position;
@@ -1817,7 +1810,7 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 	} #endregion
 	
-	function drawToolBar(_tool, _node) { #region
+	function drawToolBar(_tool, _node) {
 		var ty = h - toolbar_height;
 		var aa = d3_active? 0.8 : 1;
 		draw_sprite_stretched_ext(THEME.toolbar, 1, 0,  0, w, topbar_height, c_white, aa);
@@ -1927,9 +1920,8 @@ function Panel_Preview() : PanelContent() constructor {
 		var tby = ty + toolbar_height / 2;
 		
 		var _toolbars = toolbars;
-
-		if(_node)
-		switch(_node.is_3D) {
+		
+		switch(d3_active) {
 			case NODE_3D.none : 	_toolbars = toolbars;			break;
 			case NODE_3D.polygon :	_toolbars = toolbars_3d;		break;
 			case NODE_3D.sdf :		_toolbars = toolbars_3d_sdf;	break;
@@ -1964,11 +1956,9 @@ function Panel_Preview() : PanelContent() constructor {
 		draw_set_color(COLORS.panel_toolbar_separator);
 		draw_line_width(tbx + ui(12), tby - toolbar_height / 2 + ui(8), tbx + ui(12), tby + toolbar_height / 2 - ui(8), 2);
 		
-		if(d3_active && _node && _node.is_3D == NODE_3D.polygon)	
-			drawNodeChannel3D(tbx, tby);
-		else
-			drawNodeChannel(tbx, tby);
-	} #endregion
+		var _nodeRaw = __getNodePreview();
+		if(_nodeRaw) tbx -= drawNodeChannel(_nodeRaw, tbx, tby);
+	}
 	
 	function drawSplitView() { #region
 		if(splitView == 0) return;
@@ -2039,8 +2029,9 @@ function Panel_Preview() : PanelContent() constructor {
 		do_fullView = false;
 		
 		var _prev_node = getNodePreview();
-		d3_active      = _prev_node != noone && _prev_node.is_3D != NODE_3D.none;
-		bg_color       = lerp_color(bg_color, d3_active? COLORS.panel_3d_bg : COLORS.panel_bg_clear, 0.3);
+		d3_active = _prev_node == noone? NODE_3D.none : _prev_node.is_3D;
+		//print($"{_prev_node} : {d3_active}")
+		bg_color  = lerp_color(bg_color, d3_active? COLORS.panel_3d_bg : COLORS.panel_bg_clear, 0.3);
 		
 		draw_clear(bg_color);
 		if(canvas_bg == -1)  {
@@ -2084,7 +2075,7 @@ function Panel_Preview() : PanelContent() constructor {
 				tool_current = noone;
 		}
 		
-		if(!d3_active) drawSplitView();
+		if(d3_active == NODE_3D.none) drawSplitView();
 		
 		drawToolBar(tool, _prev_node);
 		

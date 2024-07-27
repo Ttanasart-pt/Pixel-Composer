@@ -587,6 +587,23 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return noone;
 	}
 	
+	function getPreviewingNode() {
+		var _outJ = outputs[| preview_channel];
+		
+		switch(_outJ.type) {
+			case VALUE_TYPE.d3Mesh   : 
+			case VALUE_TYPE.d3Camera : 
+			case VALUE_TYPE.d3Light  : 
+			case VALUE_TYPE.d3Scene  : 
+			case VALUE_TYPE.d3object : 
+			case VALUE_TYPE.sdf : 
+				var _fr = _outJ.from.inputs[| 0];
+				return _fr.value_from == noone? self : _fr.value_from.node;
+		}
+		
+		return self;
+	}
+	
 	/////============= CACHE =============
 	
 	static clearCache = function() { array_foreach(getNodeList(), function(node) /*=>*/ { node.clearCache(); }); }

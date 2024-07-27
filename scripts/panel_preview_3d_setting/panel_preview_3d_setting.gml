@@ -6,6 +6,13 @@ function Panel_Preview_3D_Setting(panel) : Panel_Linear_Setting() constructor {
 	
 	properties_default = [
 		new __Panel_Linear_Setting_Item(
+			__txt("Preview Pass"),
+			new scrollBox([ "Rendered", "Normal", "Depth" ], function(index) { preview_panel.d3_preview_channel = index; }),
+			function() { return preview_panel.d3_preview_channel },
+			function(val) { preview_panel.d3_preview_channel = val; },
+			0,
+		),
+		new __Panel_Linear_Setting_Item(
 			__txt("Preview Light"),
 			new checkBox(function() { preview_panel.d3_scene_light_enabled = !preview_panel.d3_scene_light_enabled; }),
 			function() { return preview_panel.d3_scene_light_enabled },
