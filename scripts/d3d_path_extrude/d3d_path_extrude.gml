@@ -125,7 +125,7 @@ function __3dPathExtrude(radius = 0.5, sides = 8, smooth = false) : __3dObject()
 			
 			v._normalize();
 			
-				 if(v.equal(_ux)) u = v.cross(_ux);
+				 if(v.equal(_ux)) u = v.cross(_uz);
 			else if(v.equal(_uz)) u = v.cross(_uy); 
 			else                  u = v.cross(_uz);
 			
