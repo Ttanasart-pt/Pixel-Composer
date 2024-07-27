@@ -2157,6 +2157,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			applyDeserialize();
 			
 			triggerRender();
+			postLoad();
 		}
 		
 		if(anim_timeline && attributes.show_timeline) refreshTimeline();
@@ -2209,7 +2210,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static processDeserialize = function() {}
-	static postDeserialize = function() {}
+	static postDeserialize    = function() {}
 	
 	static applyDeserialize = function(preset = false) {
 		preApplyDeserialize();
