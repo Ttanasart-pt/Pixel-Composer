@@ -12,7 +12,7 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 3] = nodeValue("Surfaces", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, [ noone ] )
 		.setArrayDepth(1);
 	
-	inputs[| 4] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ c_black, c_white ]) )
+	inputs[| 4] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ cola(c_black), cola(c_white) ]) )
 		.setMappable(5);
 		
 	inputs[| 5] = nodeValueMap("Gradient map", self);

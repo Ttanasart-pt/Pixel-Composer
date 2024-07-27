@@ -33,7 +33,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 10] = nodeValue("Segments", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
-	inputs[| 11] = nodeValue("Color Over Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
+	inputs[| 11] = nodeValue("Color Over Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)));
 	
 	inputs[| 12] = nodeValue("Velocity Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 10 ])
 		.setDisplay(VALUE_DISPLAY.range);

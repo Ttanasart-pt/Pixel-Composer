@@ -15,7 +15,7 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	inputs[| 3] = nodeValue("Interpolation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "RGB", "HSV", "OKLAB", "sRGB" ]);
 	
-	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.gradient, new gradientObject(c_white) )
+	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
 	
 	_pal = -1;
 	

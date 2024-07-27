@@ -15,7 +15,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	inputs[| 2] = nodeValue("Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ])
 		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
-	inputs[| 3] = nodeValue("Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
+	inputs[| 3] = nodeValue("Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)));
 	
 	inputs[| 4] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	

@@ -8,15 +8,15 @@ enum GRADIENT_INTER {
 
 global.gradient_sort_list = ds_priority_create();
 
-function gradientKey(time, value) constructor { #region
+function gradientKey(time, value) constructor {
 	self.time  = time;
 	self.value = value;
 	
 	static clone     = function() { return new gradientKey(time, value); }
 	static serialize = function() { return { time, value }; }
-} #endregion
+}
 
-function gradientObject(color = c_black) constructor { #region
+function gradientObject(color = c_black) constructor {
 	static GRADIENT_LIMIT = 128;
 	
 	if(is_array(color)) keys = [ new gradientKey(0, cola(color[0])), new gradientKey(1, cola(color[1])) ];
@@ -39,7 +39,7 @@ function gradientObject(color = c_black) constructor { #region
 		cache();
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var g = new gradientObject();
 		for( var i = 0, n = array_length(keys); i < n; i++ )
 			g.keys[i] = keys[i].clone();
@@ -47,9 +47,9 @@ function gradientObject(color = c_black) constructor { #region
 		g.type      = type;
 		
 		return g;
-	} #endregion
+	}
 	
-	static add = function(_addkey, _deleteDup = true) { #region
+	static add = function(_addkey, _deleteDup = true) {
 		if(array_length(keys) > GRADIENT_LIMIT) return;
 		if(array_length(keys) == 0) {
 			array_push(keys, _addkey);
@@ -70,9 +70,9 @@ function gradientObject(color = c_black) constructor { #region
 		}
 		
 		array_push(keys, _addkey);
-	} #endregion
+	}
 	
-	static eval = function(position) { #region
+	static eval = function(position) {
 		var _len = array_length(keys);
 		if(_len == 0) return c_black;
 		if(_len == 1) return keys[0].value;
@@ -99,9 +99,9 @@ function gradientObject(color = c_black) constructor { #region
 		}
 	
 		return keys[array_length(keys) - 1].value; //after last color
-	} #endregion
+	}
 	
-	static evalFast = function(position) { #region
+	static evalFast = function(position) {
 		INLINE
 		var _len = array_length(keys);
 		if(position <= keys[0].time)        return keys[0].value;
@@ -109,9 +109,9 @@ function gradientObject(color = c_black) constructor { #region
 		
 		var _ind = round(position * cacheRes);
 		return caches[_ind];
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _a = 1) { #region
+	static draw = function(_x, _y, _w, _h, _a = 1) {
 		var uniform_grad_blend	= shader_get_uniform(sh_gradient_display, "gradient_blend");
 		var uniform_grad		= shader_get_uniform(sh_gradient_display, "gradient_color");
 		var uniform_grad_time	= shader_get_uniform(sh_gradient_display, "gradient_time");
@@ -177,18 +177,18 @@ function gradientObject(color = c_black) constructor { #region
 		surface_reset_target();
 		
 		draw_surface(surf, _x, _y);
-	} #endregion
+	}
 	
-	static cache = function(res = 128) { #region
+	static cache = function(res = 128) {
 		cacheRes  = res;
 		caches    = array_verify(caches, cacheRes + 1);
 		keyLength = array_length(keys);
 		
 		for( var i = 0; i <= cacheRes; i++ )
 			caches[i] = eval(i / cacheRes);
-	} #endregion
+	}
 	
-	static toArray = function() { #region
+	static toArray = function() {
 		var _grad_color = [], _grad_time = []; 
 		
 		for(var i = 0; i < array_length(keys); i++) {
@@ -203,9 +203,9 @@ function gradientObject(color = c_black) constructor { #region
 		}
 	
 		return [ _grad_color, _grad_time ];
-	} #endregion
+	}
 	
-	static lerpTo = function(target, amount) { #region
+	static lerpTo = function(target, amount) {
 		var grad = new gradientObject();
 		grad.keys = [];
 		grad.type = type;
@@ -231,9 +231,9 @@ function gradientObject(color = c_black) constructor { #region
 		}
 		
 		return grad;
-	} #endregion
+	}
 	
-	static shader_submit = function() { #region
+	static shader_submit = function() {
 		var _grad = toArray();
 		var _grad_color = _grad[0];
 		var _grad_time	= _grad[1];
@@ -242,9 +242,9 @@ function gradientObject(color = c_black) constructor { #region
 		shader_set_f_array("gradient_color", _grad_color, GRADIENT_LIMIT * 4);
 		shader_set_f("gradient_time",  _grad_time);
 		shader_set_i("gradient_keys",  array_length(keys));
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var g = new gradientObject();
 		g.keys = [];
 		g.type = type;
@@ -253,18 +253,19 @@ function gradientObject(color = c_black) constructor { #region
 			g.keys[i] = keys[i].clone();
 			
 		return g;
-	} #endregion
+	}
 	
-	static serialize = function() { #region
-		var s = { type: type };
-		s.keys = [];
+	static serialize = function() {
+		var s  = { type, keys: [] };
 		for( var i = 0, n = array_length(keys); i < n; i++ )
 			s.keys[i] = keys[i].serialize();
 			
+		// print(s);
+			
 		return json_stringify(s, false);
-	} #endregion
+	}
 	
-	static deserialize = function(str) { #region
+	static deserialize = function(str) {
 		var s;
 		
 		if(is_array(str)) {			
@@ -282,19 +283,20 @@ function gradientObject(color = c_black) constructor { #region
 		type = struct_try_get(s, "type");
 		keys = array_create(array_length(s.keys));
 		
+		// print(s.keys);
+		
 		for( var i = 0, n = array_length(s.keys); i < n; i++ ) {
-			var _time  = real(s.keys[i].time);
-			var _value = real(s.keys[i].value);
-			    _value = LOADING_VERSION < 11640 && !is_int64(_value)? cola(_value) : int64(_value);
+			var _time  = s.keys[i].time;
+			var _value = s.keys[i].value;
 			
 			keys[i] = new gradientKey(_time, _value); 
 		}
 		
 		return self;
-	} #endregion
-} #endregion
+	}
+}
 
-function loadGradient(path) { #region
+function loadGradient(path) {
 	if(path == "") return noone;
 	if(!file_exists_empty(path)) return noone;
 		
@@ -323,9 +325,9 @@ function loadGradient(path) { #region
 	file_text_close(_t);
 	
 	return grad;
-} #endregion
+}
 	
-function shader_set_gradient(gradient, surface, range, junc) { #region
+function shader_set_gradient(gradient, surface, range, junc) {
 	var use_map = junc.attributes.mapped && is_surface(surface);
 	
 	shader_set_i("gradient_use_map",           use_map);
@@ -334,9 +336,9 @@ function shader_set_gradient(gradient, surface, range, junc) { #region
 	gpu_set_tex_filter_ext(t, true);
 	
 	gradient.shader_submit();
-} #endregion
+}
 	
-function evaluate_gradient_map(_x, gradient, surface, range, junc, fast = false) { #region
+function evaluate_gradient_map(_x, gradient, surface, range, junc, fast = false) {
 	var use_map = junc.attributes.mapped;
 	
 	if(!use_map) return fast? gradient.evalFast(_x) : gradient.eval(_x);
@@ -348,12 +350,12 @@ function evaluate_gradient_map(_x, gradient, surface, range, junc, fast = false)
 	var _sy = lerp(range[1], range[3], _x) * _sh;
 		
 	return surface_getpixel_ext(surface, _sx, _sy);
-} #endregion
+}
 	
 globalvar GRADIENTS;
 GRADIENTS = [];
 
-function __initGradient() { #region
+function __initGradient() {
 	GRADIENTS = [];
 	
 	var path = DIRECTORY + "Gradients/"
@@ -367,4 +369,4 @@ function __initGradient() { #region
 		file = file_find_next();
 	}
 	file_find_close();
-} #endregion
+}

@@ -313,7 +313,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var cc  = evaluate_gradient_map(i / (_amo - 1), _grad, _grad_map, _grad_range, inputs[| 14]);
 				var aa  = _color_get_alpha(cc);
 				
-				cc = colda(cc);
 				if(_an_use) {
 					cc = merge_color(cc, colorMultiply(cc, _an_bld), _inf);
 					aa += _an_alp * _inf;

@@ -27,7 +27,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	__init_mask_modifier(6); // inputs 10, 11, 
 	
-	inputs[| 12] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ c_black, c_white ]) )
+	inputs[| 12] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ cola(c_black), cola(c_white) ]) )
 		.setMappable(13);
 	
 	inputs[| 13] = nodeValueMap("Gradient map", self);

@@ -15,7 +15,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 4] = nodeValue("Raindrop length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 5, 10 ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 5] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
+	inputs[| 5] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)));
 	
 	inputs[| 6] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);

@@ -53,7 +53,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 12] = nodeValue("Value Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 13] = nodeValue("Color Over Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white))
+	inputs[| 13] = nodeValue("Color Over Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)))
 		.setMappable(27);
 	
 	inputs[| 14] = nodeValue("Trim mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -79,7 +79,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 23] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 24] = nodeValue("Color Over Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white))
+	inputs[| 24] = nodeValue("Color Over Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)))
 		.setMappable(29);
 		
 	inputs[| 25] = nodeValue("Value range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ] )
