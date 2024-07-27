@@ -102,6 +102,20 @@ function __BBOX() constructor {
 		return self;
 	}
 	
+	static fromBoundingBox = function(box) {
+		self.x0 = box.minx; 
+		self.x1 = box.maxx; 
+		self.y0 = box.miny; 
+		self.y1 = box.maxy; 
+	
+		self.xc = (x0 + x1) / 2; 
+		self.yc = (y0 + y1) / 2;
+		self.w  = x1 - x0;
+		self.h  = y1 - y0;
+		
+		return self;
+	}
+	
 	static toSquare = function() {
 		var _span = min(w, h) / 2;
 		

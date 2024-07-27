@@ -633,20 +633,30 @@ function Panel_Preview() : PanelContent() constructor {
 		canvas_hover = point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 	} #endregion
 	
-	function fullView() { #region
+	function fullView() {
 		var bbox = noone;
 		
 		var node = getNodePreview();
 		if(node != noone) bbox = node.getPreviewBoundingBox();
 		if(bbox == noone) bbox = BBOX().fromWH(0, 0, PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
 		
+		var _x = bbox.x0, _y = bbox.y0;
+		var _w = bbox.w,  _h = bbox.h;
+		
+		if(_w == 0 || _h == 0) {
+			_x = 0;
+			_y = 0;
+			_w = DEF_SURF_W;
+			_h = DEF_SURF_H;
+		}
+		
 		var tl = tool_side_draw_l * 40;
 		var tr = tool_side_draw_r * 40;
-		var ss = min((w - 32 - tl - tr) / bbox.w, (h - 32 - toolbar_height * 2) / bbox.h);
+		var ss = min((w - 32 - tl - tr) / _w, (h - 32 - toolbar_height * 2) / _h);
 		canvas_s = ss;
-		canvas_x = w / 2 - bbox.w * canvas_s / 2 - bbox.x0 * canvas_s + (tl - tr) / 2;
-		canvas_y = h / 2 - bbox.h * canvas_s / 2 - bbox.y0 * canvas_s;
-	} #endregion
+		canvas_x = w / 2 - _w * canvas_s / 2 - _x * canvas_s + (tl - tr) / 2;
+		canvas_y = h / 2 - _h * canvas_s / 2 - _y * canvas_s;
+	}
 	
 	function drawNodeChannel(_x, _y) { #region
 		var _node = getNodePreview();

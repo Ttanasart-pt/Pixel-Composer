@@ -856,8 +856,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			lengthAccs[i] = lengthTotal;
 		}
 		
-		var minx   = boundary.minx - 8, miny = boundary.miny - 8;
-		var maxx   = boundary.maxx + 8, maxy = boundary.maxy + 8;
+		var pad    = min(8, abs(boundary.maxx - boundary.minx) * 0.1, abs(boundary.maxy - boundary.miny) * 0.1);
+		var minx   = boundary.minx - pad, miny = boundary.miny - pad;
+		var maxx   = boundary.maxx + pad, maxy = boundary.maxy + pad;
 		var rngx   = maxx - minx,   rngy = maxy - miny;
 		var prev_s = 128;
 		var _surf  = surface_create(prev_s, prev_s);
@@ -1050,4 +1051,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			gpu_set_tex_filter(false);
 		}
 	} #endregion
+	
+	static getPreviewBoundingBox = function() { return BBOX().fromBoundingBox(boundary); }
 }
