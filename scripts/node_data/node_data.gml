@@ -771,12 +771,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		targ.setFrom(junctionFrom);
 	}
 	
-	static getInputData = function(index, def = 0) {
-		INLINE
-		
-		var _dat = array_safe_get_fast(inputs_data, index, def);
-		return _dat;
-	}
+	static getInputData = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
 	
 	static setInputData = function(index, value) {
 		INLINE
@@ -837,6 +832,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				log_warning("RENDER", exception_print(exception), self);
 			}
 		}
+		
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
+			inputs[| i].updateColor(getInputData(i));
+		
+		for( var i = 0, n = ds_list_size(outputs); i < n; i++ )
+			outputs[| i].updateColor(outputs[| i].getValue());
 		
 		postUpdate(frame);
 		cached_manual = false;

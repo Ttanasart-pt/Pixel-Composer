@@ -292,7 +292,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		type = _type;
 		draw_junction_index = type;
-		updateColor();
 		
 		return true;
 	} #endregion
@@ -931,7 +930,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		setDropKey();
-		updateColor();
 	} resetDisplay(); #endregion
 	
 	/////============ RENDER ============
@@ -1097,7 +1095,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
 			
 			if(cache_hit) {
-				//global.cache_hit++;
 				return cache_value[2];
 			}
 		}
@@ -1126,8 +1123,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		cache_value[2] = val;
 		cache_value[3] = applyUnit;
-		
-		updateColor(val);
 		
 		return val;
 	}
@@ -1330,7 +1325,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	} #endregion
 	
-	static isArray = function(val = undefined) { #region
+	static isArray = function(val = undefined) {
 		var _cac = val == undefined;
 		
 		if(_cac) {
@@ -1342,7 +1337,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _dep = __array_get_depth(val) > array_depth + typeArray(display_type);
 		if(_cac) cache_array[1] = _dep;
 		return _dep;
-	} #endregion
+	}
 	
 	static arrayLength = function(val = undefined) { #region
 		val ??= getValue();
@@ -1615,7 +1610,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static triggerSetFrom = function() { node.valueUpdate(index); }
 	
-	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region ////Set from
+	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { ////Set from
 		
 		if(is_dummy && dummy_get != noone) {
 			var _targ    = dummy_get();
@@ -1669,9 +1664,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_valueFrom.onSetTo != noone) _valueFrom.onSetTo(self);
 		
 		return true;
-	} #endregion
+	}
 	
-	static removeFrom = function(_remove_list = true) { #region
+	static removeFrom = function(_remove_list = true) {
 		recordAction(ACTION_TYPE.junction_disconnect, self, value_from);
 		if(_remove_list && value_from != noone)
 			array_remove(value_from.value_to, self);	
@@ -1684,8 +1679,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		PROJECT.modified = true;
 						
 		RENDER_ALL_REORDER
+		
 		return false;
-	} #endregion
+	}
 	
 	static removeFromLoop = function(_remove_list = true) { #region
 		if(value_from_loop != noone)
@@ -1729,30 +1725,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////============= DRAW =============
 	
-	static setColor = function(col) { #region
-		color = col;
-		updateColor();
-		
-		if(value_from != noone)
-			value_from.setColor(col);
-		
-		return self;
-	} #endregion
-	
-	static updateColor = function(val = undefined) { #region
+	static updateColor = function(val = undefined) {
 		INLINE
 		
 		if(color == -1) {
-			draw_bg = isArray(val)? value_color_bg_array(draw_junction_index) : value_color_bg(draw_junction_index);
+			draw_bg = is_array(val)? value_color_bg_array(draw_junction_index) : value_color_bg(draw_junction_index);
 			draw_fg = value_color(draw_junction_index);
 		} else {
-			draw_bg = isArray(val)? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(draw_junction_index);
+			draw_bg = is_array(val)? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(draw_junction_index);
 			draw_fg = color;
 		}
 		
 		color_display = type == VALUE_TYPE.action? #8fde5d : draw_fg;
-		
-	} #endregion
+	} updateColor();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(type != VALUE_TYPE.integer && type != VALUE_TYPE.float) return -1;
@@ -1864,7 +1849,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 			
 			__draw_sprite_ext(_bgS, draw_junction_index, x, y, _s, _s, 0, _cbg, 1);
+			
+			gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one);
 			__draw_sprite_ext(_fgS, draw_junction_index, x, y, _s, _s, 0, _cfg, 1);
+			gpu_set_blendmode(bm_normal);
 		}
 		
 		return is_hover;
@@ -2077,8 +2065,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		visible = struct_try_get(_map, "visible", visible);
 		color   = struct_try_get(_map, "color", -1);
-		
-		updateColor();
 		
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return;
