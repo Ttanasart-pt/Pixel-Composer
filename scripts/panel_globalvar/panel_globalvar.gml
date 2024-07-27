@@ -1,10 +1,10 @@
 function Panel_Globalvar() : PanelContent() constructor {
-	title = __txtx("panel_globalvar", "Global Variables");
+	title       = __txtx("panel_globalvar", "Global Variables");
 	context_str = "Globalvar";
 	showHeader  = false;
 	
 	title_height = 64;
-	padding = 24;
+	padding = 20;
 		
 	w = ui(320);
 	h = ui(480);

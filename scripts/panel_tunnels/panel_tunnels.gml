@@ -2,7 +2,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 	title = __txt("Tunnels");
 	showHeader	 = false;
 	title_height = 64;
-	padding		 = 24;
+	padding		 = 20;
 		
 	#region data
 		w = ui(320);

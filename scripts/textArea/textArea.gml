@@ -920,7 +920,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					
 					if(cursor_pos_y != 0 && cursor_pos_x != 0) {
 						draw_set_color(COLORS._main_text_accent);
-						draw_set_alpha(typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000);
+						draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.75 + 0.25);
 						draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
 						draw_set_alpha(1);
 					}

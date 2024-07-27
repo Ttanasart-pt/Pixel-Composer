@@ -91,11 +91,11 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 	fs_preString  = _fs_preString;
 	fs_postString = "}";
 	
-	preLabel = new Inspector_Label(fs_preString);
+	preLabel = new Inspector_Label(fs_preString, _f_code_s);
 	
 	input_display_list = [ 2, 
-		["Vertex Shader [read only]", true], new Inspector_Label(vs_string),
-		["Shader",		 false], preLabel, 1, new Inspector_Label(fs_postString), 
+		["Vertex Shader [read only]", true], new Inspector_Label(vs_string, _f_code_s),
+		["Shader",		 false], preLabel, 1, new Inspector_Label(fs_postString, _f_code_s), 
 		["Arguments",	 false], argument_renderer,
 		["Values",		  true], 
 	];
@@ -241,7 +241,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 		var vs        = vs_string;
 		file_text_write_all(_dir + "vout.shader", vs);
 		
-		var fs_param  = "cbuffer Data : register(b10) {";
+		var fs_param  = "cbuffer Data : register(b10) {\n";
 		var fs_sample = "";
 		var sampler_slot = 1;
 		
@@ -252,20 +252,20 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 			var _arg_type = getInputData(i + 1);
 			
 			switch(_arg_type) {
-				case 0 : fs_param += $"float    {_arg_name};\n"; break;							// u_float
-				case 1 : fs_param += $"int      {_arg_name};\n"; break;							// u_int
-				case 2 : fs_param += $"float2   {_arg_name};\n"; break;							// u_vec2
-				case 3 : fs_param += $"float3   {_arg_name};\n"; break;							// u_vec3
-				case 4 : fs_param += $"float4   {_arg_name};\n"; break;							// u_vec4
-				case 5 : fs_param += $"float3x3 {_arg_name};\n"; break;							// u_mat3
-				case 6 : fs_param += $"float4x4 {_arg_name};\n"; break;							// u_mat4
-				case 7 :																		// u_sampler2D
+				case 0 : fs_param += $"    float    {_arg_name};\n"; break;							// u_float
+				case 1 : fs_param += $"    int      {_arg_name};\n"; break;							// u_int
+				case 2 : fs_param += $"    float2   {_arg_name};\n"; break;							// u_vec2
+				case 3 : fs_param += $"    float3   {_arg_name};\n"; break;							// u_vec3
+				case 4 : fs_param += $"    float4   {_arg_name};\n"; break;							// u_vec4
+				case 5 : fs_param += $"    float3x3 {_arg_name};\n"; break;							// u_mat3
+				case 6 : fs_param += $"    float4x4 {_arg_name};\n"; break;							// u_mat4
+				case 7 :																			// u_sampler2D
 					fs_sample += $"Texture2D {_arg_name}Object : register(t{sampler_slot});\n";
 					fs_sample += $"SamplerState {_arg_name} : register(s{sampler_slot});\n";
 					sampler_slot++;
 					break;
 					
-				case 8 : fs_param += $"float4 {_arg_name};\n";   break;							// u_vec4
+				case 8 : fs_param += $"    float4   {_arg_name};\n";   break;							// u_vec4 color
 			}
 		}
 		
@@ -333,43 +333,46 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 					var _uni = shader_get_uniform(shader.fs, _arg_name);
 			
 					switch(_arg_type) {
-						case 1 : 
-							d3d11_cbuffer_add_int(1); 
-							_cbSize++;
-					
-							buffer_write(_buffer, buffer_s32, _arg_valu);
-							break;
-						case 0 : 
+						case 0 :														// u_float
 							d3d11_cbuffer_add_float(1); 
 							_cbSize++;
 					
 							buffer_write(_buffer, buffer_f32, _arg_valu);
 							break;
-						case 2 : 
-						case 3 : 
-						case 4 : 
-						case 5 : 
-						case 6 : 
+						case 1 :														// u_int
+							d3d11_cbuffer_add_int(1); 
+							_cbSize++;
+					
+							buffer_write(_buffer, buffer_s32, _arg_valu);
+							break;
+							
+						case 2 :														// u_vec2
+						case 3 :														// u_vec3
+						case 4 :														// u_vec4
+						case 5 :														// u_mat3
+						case 6 :														// u_mat4
 							if(is_array(_arg_valu)) {
 								d3d11_cbuffer_add_float(array_length(_arg_valu)); 
 								_cbSize += array_length(_arg_valu);
 						
 								for( var j = 0, m = array_length(_arg_valu); j < m; j++ ) 
-									buffer_write(_buffer, buffer_f32, _arg_valu[j]);
+									buffer_write(_buffer, buffer_f32, _arg_valu[j]);		
 							}
 							break;
-						case 8 : 
-							var _clr = colToVec4(_arg_valu);
-							d3d11_cbuffer_add_float(4);
-							_cbSize += 4;
-					
-							for( var j = 0, m = 4; j < m; j++ ) 
-								buffer_write(_buffer, buffer_f32, _clr[i]);
-							break;
-						case 7 : 
+							
+						case 7 :														// u_sampler2D
 							if(is_surface(_arg_valu))
 								d3d11_texture_set_stage_ps(sampler_slot, surface_get_texture(_arg_valu));
 							sampler_slot++;
+							break;
+							
+						case 8 :														// u_vec4 color
+							var _clr = colToVec4(_arg_valu); 
+							d3d11_cbuffer_add_float(4);
+							_cbSize += 4;
+							
+							for( var j = 0; j < 4; j++ ) 
+								buffer_write(_buffer, buffer_f32, _clr[j]);
 							break;
 					}
 				}

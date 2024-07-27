@@ -1,4 +1,4 @@
-function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) { #region
+function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 	if(_x == noone) _x = WIN_SW / 2;
 	if(_y == noone) _y = WIN_SH / 2;
 	
@@ -16,9 +16,9 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) { 
 	
 	setFocus(dia.id, "Dialog");
 	return dia;
-} #endregion
+}
 
-function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) { #region
+function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) {
 	if(_x == noone) _x = WIN_SW / 2;
 	if(_y == noone) _y = WIN_SH / 2;
 	
@@ -30,14 +30,15 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) { #region
 	dia.y = _y;
 	dia.xstart = _x;
 	dia.ystart = _y;
+	dia.anchor = _panel.anchor;
 	dia.resetPosition();
 	
 	if(struct_try_get(params, "focus", true))
 		setFocus(dia.id, "Dialog");
 	return dia;
-} #endregion
+}
 
-function colorSelectorCall(defColor, onApply) { #region
+function colorSelectorCall(defColor, onApply) {
 	var dialog = dialogCall(o_dialog_color_selector);
 	
 	dialog.setDefault(defColor);
@@ -45,4 +46,4 @@ function colorSelectorCall(defColor, onApply) { #region
 	dialog.onApply          = onApply;
 	
 	return dialog;
-} #endregion
+}

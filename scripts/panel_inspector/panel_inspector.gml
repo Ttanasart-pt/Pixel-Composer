@@ -661,7 +661,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						draw_set_text(jun_disp.font, fa_left, fa_top, COLORS._main_text_sub);
 						var _sh = string_height_ext(_txt, -1, con_w - ui(16)) + ui(16);
 						draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, yy, con_w, _sh, COLORS._main_icon_light);
-						draw_text_ext(ui(8), yy + ui(8), _txt, -1, con_w - ui(16));
+						draw_text_ext_add(ui(8), yy + ui(8), _txt, -1, con_w - ui(16));
 						
 						hh += _sh + ui(8);
 						continue;
@@ -1001,7 +1001,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				locked = !locked;
 		
 			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Presets"), THEME.preset, 1) == 2)
-				dialogCall(o_dialog_preset, x + bx, y + by + ui(36), { "node": inspecting });
+				dialogPanelCall(new Panel_Presets(inspecting), x + bx, y + by + ui(36));
 		} else {
 			draw_sprite_ui_uniform(THEME.preset, 1, bx + ui(32) / 2, by + ui(32) / 2, 1, COLORS._main_icon_dark);
 		}

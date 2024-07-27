@@ -7,7 +7,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		h = ui(480);
 		
 		title_height = 64;
-		padding = 24;
+		padding = 20;
 		
 		search_string = "";
 		

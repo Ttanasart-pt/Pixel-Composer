@@ -24,7 +24,7 @@ if !ready exit;
 	var by = dialog_y + ui(16);
 			
 	if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, __txtx("preset_new", "New preset"), THEME.add, 1) == 2) {
-		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-		dia.onModify = newPresetFromNode;
+		adding = !adding;
+		if(adding) tb_add.activate();
 	}
 #endregion

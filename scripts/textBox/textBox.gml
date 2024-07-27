@@ -115,7 +115,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		cursor_select = 0;
 		click_block   = 1;
 		
-		KEYBOARD_STRING = "";
+		KEYBOARD_STRING  = "";
 		keyboard_lastkey = -1;
 		
 		if(PEN_USE) keyboard_virtual_show(input == TEXTBOX_INPUT.number? kbv_type_numbers : kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, true);
@@ -735,7 +735,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				BLEND_NORMAL
 				
 				draw_set_color(COLORS._main_text_accent);
-				draw_set_alpha(typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000);
+				draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.75 + 0.25);
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
 				draw_set_alpha(1);
 				

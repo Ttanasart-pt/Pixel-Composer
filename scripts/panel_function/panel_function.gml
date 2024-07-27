@@ -21,7 +21,7 @@
 		collection
 	}
 	
-	#macro PANEL_PADDING padding      = in_dialog? ui(24) : ui(16); \
+	#macro PANEL_PADDING padding      = in_dialog? ui(20) : ui(16); \
 						 title_height = in_dialog? ui(64) : ui(56);
 	
 	#macro PANEL_TITLE  draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text); \

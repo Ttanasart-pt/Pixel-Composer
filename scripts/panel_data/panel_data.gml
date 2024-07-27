@@ -881,6 +881,7 @@ function PanelContent() constructor {
 	expandable  = true;
 	resizable   = true;
 	
+	anchor      = ANCHOR.none;
 	auto_pin	= false;
 	panel		= noone;
 	

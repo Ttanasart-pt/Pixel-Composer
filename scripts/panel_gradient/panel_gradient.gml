@@ -2,7 +2,7 @@ function Panel_Gradient() : PanelContent() constructor {
 	title = __txt("Gradients");
 	showHeader	 = false;
 	title_height = 64;
-	padding		 = 24;
+	padding		 = 20;
 	
 	w = ui(320);
 	h = ui(480);

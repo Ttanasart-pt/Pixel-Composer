@@ -19,7 +19,7 @@
 	dialog_y  = 0;
 	
 	title_height = 64;
-	padding = 24;
+	padding      = 20;
 	
 	children = [];
 	parent   = noone;
@@ -172,7 +172,7 @@
 	}
 	
 	function onFocusBegin() {}
-	function onFocusEnd() {}
+	function onFocusEnd()   {}
 	
 	function resetPosition() {
 		if(!active) return;

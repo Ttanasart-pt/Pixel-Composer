@@ -4,7 +4,7 @@ function Panel_Notification() : PanelContent() constructor {
 	h = ui(480);
 	
 	title_height = 64;
-	padding = 24;
+	padding = 20;
 	
 	current_page = 0;
 	filter = NOTI_TYPE.log | NOTI_TYPE.warning | NOTI_TYPE.error;
