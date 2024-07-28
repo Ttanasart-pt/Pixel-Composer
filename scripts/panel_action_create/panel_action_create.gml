@@ -99,6 +99,8 @@ function Panel_Action_Create() : PanelContent() constructor {
 				var _nd   = nodes[i];
 				
 				var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _lh + ui(4));
+				
+				if(_hv) sc_node_content.hover_content = true;
 				draw_sprite_stretched_ext(THEME.group_label, _hv, 0, yy, _w, _lh + ui(4), CDEF.main_grey);
 				
 				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
@@ -124,7 +126,11 @@ function Panel_Action_Create() : PanelContent() constructor {
 						var _by = yy + _lh / 2;
 						var _tg = struct_has(_vali, "value"); _ttg |= _tg;
 						var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, 6);
-						if(_hv) TOOLTIP = "Save value";
+						if(_hv) {
+							TOOLTIP = "Save value";
+							sc_node_content.hover_content = true;
+						}
+						
 						draw_sprite_ext(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
 						if(mouse_press(mb_left, _hv)) {
 							if(_tg) struct_remove(_vali, "value");
@@ -135,7 +141,11 @@ function Panel_Action_Create() : PanelContent() constructor {
 						if(_in.expUse) {
 							var _tg = struct_has(_vali, "expression"); _ttg |= _tg;
 							var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, 6);
-							if(_hv) TOOLTIP = "Save expression";
+							if(_hv) {
+								TOOLTIP = "Save expression";
+								sc_node_content.hover_content = true;
+							}
+							
 							draw_sprite_ext(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
 							if(mouse_press(mb_left, _hv)) {
 								if(_tg) struct_remove(_vali, "expression");
@@ -147,7 +157,11 @@ function Panel_Action_Create() : PanelContent() constructor {
 						if(_in.unit.reference != noone) {
 							var _tg = struct_has(_vali, "unit"); _ttg |= _tg;
 							var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, 6);
-							if(_hv) TOOLTIP = "Save unit";
+							if(_hv) {
+								TOOLTIP = "Save unit";
+								sc_node_content.hover_content = true;
+							}
+							
 							draw_sprite_ext(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
 							if(mouse_press(mb_left, _hv)) {
 								if(_tg) struct_remove(_vali, "unit");

@@ -55,6 +55,7 @@ event_inherited();
 			if(dragging == noone) {
 				var aa = 0.5;
 				if(sHOVER && point_in_rectangle(_m[0], _m[1], 0 + padd, _y + padd, hg - padd, _y + hg - padd)) {
+					sc_group.hover_content = true;
 					aa = 1;
 					if(mouse_press(mb_left, sFOCUS)) dragging = display_list[i];
 				}
@@ -102,6 +103,7 @@ event_inherited();
 		}
 		
 		if(dragging != noone) {
+			sc_group.hover_content = true;
 			array_remove(display_list, dragging);
 			array_insert(display_list, hovr, dragging);
 			

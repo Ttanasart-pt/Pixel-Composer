@@ -38,8 +38,10 @@ function Panel_Gradient() : PanelContent() constructor {
 				var isHover = pHOVER && point_in_rectangle(_m[0], _m[1], xx, max(0, yy), xx + gw - ui(8), min(sp_gradient.h, yy + hg));
 			
 				draw_sprite_stretched(THEME.ui_panel_bg, 3, xx, yy, gw - ui(8), hg);
-				if(isHover) 
+				if(isHover) {
+					sp_gradient.hover_content = true;
 					draw_sprite_stretched_ext(THEME.node_active, 1, xx, yy, gw - ui(8), hg, COLORS._main_accent, 1);
+				}
 			
 				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text(xx + ui(10), yy + ui(2), preset.name);

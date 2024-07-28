@@ -25,6 +25,7 @@ event_inherited();
 			var _yy = _y + hh * i;
 			
 			if(sHOVER && sc_outputs.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, sc_outputs.w, _yy + hh - 1)) {
+				sc_outputs.hover_content = true;
 				BLEND_OVERRIDE;
 				draw_sprite_stretched(THEME.node_bg, 0, ui(2), _yy + ui(2), ui(32 - 4), hh - ui(4));
 				BLEND_NORMAL;

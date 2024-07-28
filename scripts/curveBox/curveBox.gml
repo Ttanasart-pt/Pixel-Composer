@@ -108,8 +108,6 @@ function curveBox(_onModify) : widget() constructor {
 		curve_surface = surface_verify(curve_surface, cw, ch);
 		
 		if(node_dragging != -1) { #region editing
-			if(parent) parent.pen_scroll_lock = true;
-			
 			show_coord = true;
 			_data = array_clone(_data);
 			

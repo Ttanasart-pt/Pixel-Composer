@@ -28,7 +28,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	pen_scroll_my = 0;
 	pen_scroll_sy = 0;
 	pen_scroll_py = 0;
-	pen_scroll_lock = false;
+	hover_content = false;
 	
 	scroll_s = sprite_get_width(THEME.ui_scrollbar);
 	scroll_w = scroll_s;
@@ -52,6 +52,9 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		hover  &= point_in_rectangle( mx, my, 0, 0, surface_w, surface_h);
 		hover  &= pen_scrolling != 2;
 		surface = surface_verify(surface, surface_w, surface_h);
+		hover_content = false;
+		
+		//// Draw
 		
 		surface_set_target(surface);
 			draw_clear(COLORS.panel_bg_clear);
@@ -75,25 +78,28 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			if(mouse_wheel_up())	scroll_y_to += scroll_step * SCROLL_SPEED;
 		}
 		
-		// if(pen_scroll_lock) pen_scrolling = 0;
-		// else if(hover && PEN_USE && mouse_press(mb_left)) {
-		// 	pen_scrolling = 1;
-		// 	pen_scroll_my = 0;
-		// }
+		//// Pen scroll
+		
+		if(pen_scrolling == 0 && mouse_press(mb_left, !hover_content && hover && PEN_USE)) {
+			pen_scrolling = 1;
+			pen_scroll_my = 0;
+		}
 		
 		if(pen_scrolling == 1) {
 			pen_scroll_my += PEN_Y_DELTA;
-			if(abs(pen_scroll_my) > 16)
+			if(abs(pen_scroll_my) > 0)
 				pen_scrolling = 2;
 			if(mouse_release(mb_left)) pen_scrolling = 0;
 			
 		} else if(pen_scrolling == 2) {
+			
 			scroll_y_to  = clamp(scroll_y_to + PEN_Y_DELTA * 2, -content_h, 0);
 			scroll_y_raw = scroll_y_to;
 			scroll_y	 = round(scroll_y_raw);
 			
 			pen_scroll_py = abs(PEN_Y_DELTA) > abs(pen_scroll_py)? PEN_Y_DELTA : lerp_float(pen_scroll_py, PEN_Y_DELTA, 10);
-			if(mouse_release(mb_left)) pen_scrolling = 0;
+			if(mouse_release(mb_left))
+				pen_scrolling = 0;
 			
 		} else {
 			pen_scroll_py = lerp_float(pen_scroll_py, 0, 30, 1);
@@ -109,7 +115,6 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		}
 		
 		scroll_lock     = false;
-		pen_scroll_lock = false;
 	}
 	
 	static draw_scroll = function(scr_x, scr_y, is_vert, scr_s, scr_prog, scr_ratio, bg_col, bar_col, bar_hcol, mx, my, bar_spr_w) {

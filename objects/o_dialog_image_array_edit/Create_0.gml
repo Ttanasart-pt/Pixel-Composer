@@ -60,6 +60,7 @@ event_inherited();
 				draw_sprite_stretched_add(THEME.ui_panel_fg, 0, xx, yy, ww, hh, c_white, 0.3);
 				
 				if(sHOVER && sp_content.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh)) {
+					sp_content.hover_content = true;
 					inb_hover = index;
 					if(dragging == -1 || dragging == index) 
 						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, ww, hh, COLORS._main_accent, 1);

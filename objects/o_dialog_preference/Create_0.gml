@@ -51,6 +51,7 @@ event_inherited();
 			else                  draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 			
 			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hg)) {
+				sp_page.hover_content = true;
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yl, ww, hg, CDEF.main_white, 1);
 				
 				if(i != page_current && mouse_click(mb_left, sFOCUS)) {
@@ -70,6 +71,7 @@ event_inherited();
 					draw_set_text(f_p1, fa_left, fa_center, section_current == sect[0]? COLORS._main_text : COLORS._main_text_sub);
 				
 					if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hs - 1)) {
+						sp_page.hover_content = true;
 						if(mouse_press(mb_left, sFOCUS))
 							sect[1].scroll_y_to = -sect[2];
 					
@@ -579,6 +581,7 @@ event_inherited();
 			var b = buttonInstant(THEME.button_def, cx, yy + cp, cw, ch, _m, sFOCUS, sHOVER && sp_colors.hover);
 			draw_sprite_stretched_ext(THEME.palette_mask, 1, cx + ui(2), yy + ui(2), cw - ui(4), ch - ui(4), val, 1);
 			
+			if(b) sp_colors.hover_content = true;
 			if(b == 2) {
 				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
 				dialog.setDefault(val);
@@ -683,7 +686,8 @@ event_inherited();
 			
 			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, val, {}, _m, sp_hotkey.x, sp_hotkey.y);
 			var _th = _pref[2].drawParam(params) ?? 0;
-				
+			if(_pref[2].inBBOX(_m)) sp_hotkey.hover_content = true;
+			
 			hh += _th + padd + ui(8);
 		}
 		
@@ -744,7 +748,10 @@ event_inherited();
 				} else {
 					var bx = key_x1 - ui(40) - kw;
 					var by = _yy;
-					if(buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th, _m, sFOCUS, sHOVER && sp_hotkey.hover) == 2) {
+					var b = buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th, _m, sFOCUS, sHOVER && sp_hotkey.hover) 
+						
+					if(b) sp_hotkey.hover_content = true;
+					if(b == 2) {
 						hk_editing = key;
 						keyboard_lastchar = pkey;
 					}
@@ -760,7 +767,9 @@ event_inherited();
 					modified = true;
 					var bx = x1 - ui(32);
 					var by = _yy;
-					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_16) == 2) {
+					var b  = buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_16);
+					if(b) sp_hotkey.hover_content = true;
+					if(b == 2) {
 						key.key  = dkey;
 						key.modi = dmod;
 						
@@ -819,7 +828,10 @@ event_inherited();
 				} else {
 					var bx = key_x1 - ui(40) - kw;
 					var by = _yy;
-					if(buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th, _m, sFOCUS, sHOVER && sp_hotkey.hover) == 2) {
+					var b  = buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th, _m, sFOCUS, sHOVER && sp_hotkey.hover)
+					
+					if(b) sp_hotkey.hover_content = true;
+					if(b == 2) {
 						hk_editing = key;
 						keyboard_lastchar = key.key;
 					}
@@ -835,8 +847,10 @@ event_inherited();
 					modified = true;
 					var bx = x1 - ui(32);
 					var by = _yy;
+					var b  = buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_16)
 					
-					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_16) == 2) {
+					if(b) sp_hotkey.hover_content = true;
+					if(b == 2) {
 						key.key  = key.dKey;
 						key.modi = key.dModi;
 						
@@ -1000,6 +1014,7 @@ event_inherited();
 			
 			if(instanceof(_pref.editWidget) == "checkBox") params.halign = fa_center;
 			var th     = _pref.editWidget.drawParam(params) ?? 0;
+			if(_pref.editWidget.inBBOX(_m)) sp_pref.hover_content = true;
 			
 			if(_pref.getDefault != noone) {
 				var _defVal = is_method(_pref.getDefault)? _pref.getDefault() : _pref.getDefault;

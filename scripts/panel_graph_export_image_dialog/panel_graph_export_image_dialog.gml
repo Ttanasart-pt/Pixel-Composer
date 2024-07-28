@@ -116,6 +116,8 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 				case "buttonColor" : _wid.draw(_tx - _ww, ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m); break;
 				case "scrollBox" :	 _wid.draw(_tx - _ww, ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m, sc_settings.x + x, sc_settings.y + y); break;
 			}
+			
+			if(_wid.inBBOX(_m)) sc_settings.hover_content = true;
 		}
 		
 		var _h = wh * array_length(widgets) + _hh;

@@ -78,8 +78,10 @@ event_inherited();
 			} : PALETTES[i];
 			var isHover = sHOVER && sp_presets.hover && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg);
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, ui(4), yy, sp_preset_w - ui(16), hg);
-			if(isHover) 
+			if(isHover) {
+				sp_presets.hover_content = true;
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), hg, COLORS._main_accent, 1);
+			}
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(16), yy + ui(8), pal.name);

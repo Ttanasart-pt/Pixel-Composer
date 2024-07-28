@@ -16,10 +16,9 @@ draw_sprite_stretched_ext(THEME.textbox, 3, x,  y + h, w, _h_bot, COLORS._main_i
 //draw_sprite_stretched_ext(THEME.textbox, 3, x,  y, w,  h, c_white,           0.9);
 draw_sprite_stretched_ext(THEME.textbox, 1, x, _y, w, _h, c_white,           1.0);
 
-var _mulp = 1;
+var _mulp = text.slide_int? 10 : 1;
 if(key_mod_press(CTRL) && !text.slide_snap) _mulp *= 10;
 if(key_mod_press(ALT))                      _mulp /= 10;
-
 
 if(anim == 0) {
 	draw_set_text(f_p4, fa_center, fa_bottom, text.slider_mulp == 1? COLORS._main_text_accent : COLORS._main_icon);

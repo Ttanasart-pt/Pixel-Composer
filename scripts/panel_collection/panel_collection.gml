@@ -222,6 +222,7 @@ function Panel_Collection() : PanelContent() constructor {
 							meta = _node.getMetadata();
 						
 						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+							contentPane.hover_content = true;
 							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 							
 							if(mouse_press(mb_left, pFOCUS)) {
@@ -314,6 +315,8 @@ function Panel_Collection() : PanelContent() constructor {
 					}
 				
 					if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+						contentPane.hover_content = true;
+						
 						draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
 						if(mouse_press(mb_left, pFOCUS))
 							DRAGGING = { type : _node.type == FILE_TYPE.collection? "Collection" : "Asset", data : _node }
@@ -360,6 +363,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var hh = ui(8);
 		_y += ui(8);
 		
+		folderPane.hover_content = true;
 		if(pHOVER && folderPane.hover && point_in_rectangle(_m[0], _m[1], ui(32), _y - ui(2), group_w - ui(32), _y + ui(24))) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(32), _y - ui(2), group_w - ui(64), ui(24), CDEF.main_white, 1);
 			if(mouse_press(mb_left, pFOCUS))

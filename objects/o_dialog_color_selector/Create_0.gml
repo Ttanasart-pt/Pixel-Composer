@@ -65,7 +65,10 @@ event_inherited();
 			var isHover = _hover && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + _height);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, ui(4), yy, sp_preset_w - ui(16), _height);
-			if(isHover) draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, ui(4), yy, sp_preset_w - ui(16), _height, COLORS._main_accent, 1);
+			if(isHover) {
+				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, ui(4), yy, sp_preset_w - ui(16), _height, COLORS._main_accent, 1);
+				sp_presets.hover_content = true;
+			}
 			
 			var x0 = ui(16) + (i == -1) * ui(8 + 6);
 			var cc = i == preset_selecting? COLORS._main_accent : COLORS._main_text_sub;

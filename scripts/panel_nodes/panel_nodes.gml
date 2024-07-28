@@ -43,6 +43,8 @@ function Panel_Nodes() : PanelContent() constructor {
 				node_collapse[? node.node_id] = false;
 			
 			if(pHOVER && point_in_rectangle(_m[0], _m[1], _x0, _y, _x1 - _x0 - ui(32), _y + hg)) {
+				sc_nodes.hover_content = true;
+				
 				var cc = merge_color(COLORS._main_icon_light, COLORS._main_icon, 0.25);
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x0, _y, _x1 - _x0, hg, cc, 1);
 				
@@ -90,13 +92,11 @@ function Panel_Nodes() : PanelContent() constructor {
 		return _h;
 	}
 	
-	#region content
-		sc_nodes = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding + 40), function(_y, _m) {
-			draw_clear_alpha(COLORS.panel_bg_clear, 0);
-			var _h = drawNodeList(PROJECT.nodes, 0, sc_nodes.surface_w, _y, _m);
-			return _h;
-		})
-	#endregion
+	sc_nodes = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding + 40), function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		var _h = drawNodeList(PROJECT.nodes, 0, sc_nodes.surface_w, _y, _m);
+		return _h;
+	});
 
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);

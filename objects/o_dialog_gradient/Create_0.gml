@@ -101,8 +101,10 @@ event_inherited();
 			var isHover   = point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, ui(4), yy, sp_preset_w - ui(16), hg);
-			if(_hover && isHover) 
+			if(_hover && isHover) {
+				sp_presets.hover_content = true;
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), hg, COLORS._main_accent, 1);
+			}
 				
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(16), yy + ui(8), _gradient.name);
@@ -177,8 +179,10 @@ event_inherited();
 			var isHover = _hover && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_palette_w - ui(16), yy + _height);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, ui(4), yy, sp_palette_w - ui(16), _height);
-			if(isHover) 
+			if(isHover) {
+				sp_palettes.hover_content = true;
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_palette_w - ui(16), _height, COLORS._main_accent, 1);
+			}
 			
 			var x0 = ui(16) + (i == -1) * ui(8 + 6);
 			var cc = i == palette_selecting? COLORS._main_accent : COLORS._main_text_sub;

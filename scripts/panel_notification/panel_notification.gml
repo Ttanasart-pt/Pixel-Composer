@@ -35,7 +35,6 @@ function Panel_Notification() : PanelContent() constructor {
 	
 	function onResize() {
 		PANEL_PADDING
-		
 		sp_noti.resize(w - ui(padding + padding), h - ui(title_height + padding));
 	}
 	
@@ -67,6 +66,7 @@ function Panel_Notification() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, _w, _h, COLORS.dialog_notification_bg, 1);
 			
 				if(pHOVER && pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h)) {
+					sp_noti.hover_content = true;
 					draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, _w, _h, COLORS.dialog_notification_bg_hover, 1);
 					
 					if(noti.tooltip != "")

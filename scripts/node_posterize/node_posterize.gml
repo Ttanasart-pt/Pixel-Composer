@@ -31,7 +31,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [ 5, 0, 
 		["Palette", false, 2], 1, 3, 4, 7, 8, 
-		["Alpha",   false, 6], 
+		["Alpha",   false], 6, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

@@ -81,6 +81,7 @@ event_inherited();
 				}
 			
 				if(sHOVER && sp_recent.hover && point_in_rectangle(_m[0], _m[1], fx, _y, fx + ww, _y + hg)) {
+					sp_recent.hover_content = true;
 					TOOLTIP = [ _dat.getThumbnail(), VALUE_TYPE.surface ];
 				
 					draw_sprite_stretched_ext(THEME.node_active, 0, fx, _y, ww, hg, COLORS._main_accent, 1);
@@ -154,9 +155,13 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.group_label, _hov, mtx, mty, mtw, mth, _sel? c_white : COLORS._main_icon, 1);
 					BLEND_NORMAL
 					
-					if(_hov && mouse_press(mb_left)) {
-						if(_sel) array_remove(meta_filter, tg);
-						else     array_push(meta_filter, tg);
+					if(_hov) {
+						sp_sample.hover_content = true;
+						
+						if(mouse_press(mb_left)) {
+							if(_sel) array_remove(meta_filter, tg);
+							else     array_push(meta_filter, tg);
+						}
 					}
 					
 					draw_text(mtx + ui(8), mty + mth / 2, tg);
@@ -228,6 +233,8 @@ event_inherited();
 			if(yy > -grid_heigh && yy < sp_sample.surface_h) {
 				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
 				if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
+					sp_sample.hover_content = true;
+					
 					var _meta = _project.getMetadata();
 					if(txt == "Workshop")
 						TOOLTIP = _meta;
@@ -338,9 +345,13 @@ event_inherited();
 				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
 				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + ui(12), 1, 1, 0, CDEF.main_ltgrey, 1);	
 				
-				if(_hov && mouse_press(mb_left)) {
-					if(_coll) array_remove(PREFERENCES.welcome_file_closed, lb.text);
-					else      array_push(PREFERENCES.welcome_file_closed, lb.text);
+				if(_hov) {
+					sp_sample.hover_content = true;
+					
+					if(mouse_press(mb_left)) {
+						if(_coll) array_remove(PREFERENCES.welcome_file_closed, lb.text);
+						else      array_push(PREFERENCES.welcome_file_closed, lb.text);
+					}
 				}
 				
 				draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
@@ -400,6 +411,7 @@ event_inherited();
 			spr_h *= ss;
 		
 			if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], bx - spr_w / 2, _y + sy, bx + spr_w / 2, _y + sy + spr_h)) {
+				sp_contest.hover_content = true;
 				TOOLTIP = "Go to Pixel Composer Discord server";
 			
 				if(mouse_press(mb_left, sFOCUS))
@@ -451,6 +463,7 @@ event_inherited();
 				}
 			
 				if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], tx, ty, tx + grid_width, ty + grid_heigh)) {
+					sp_contest.hover_content = true;
 					draw_sprite_stretched_ext(THEME.node_active, 0, tx, ty, grid_width, grid_heigh, COLORS._main_accent, 1);
 					
 					if(mouse_press(mb_left, sFOCUS))
@@ -630,6 +643,7 @@ event_inherited();
 			draw_text_add(sp_contest.surface_w - ui(44), ui(8 + 28), __txt("Submissions"));
 			
 			if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], ui(20 - 16), ui(36 - 16), ui(20 + 16), ui(36 + 16))) {
+				sp_contest.hover_content = true;
 				draw_sprite_ui(THEME.arrow_back_32, 0, ui(20), ui(36),,,, c_white);
 				if(mouse_press(mb_left, sFOCUS))
 					contest_viewing = noone;
@@ -640,6 +654,7 @@ event_inherited();
 			var by = ui(36);
 			
 			if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
+				sp_contest.hover_content = true;
 				TOOLTIP = __txtx("contest_open_discord", "Open in Discord");
 				
 				draw_sprite_ui(THEME.discord, 0, bx, by,,,, c_white);

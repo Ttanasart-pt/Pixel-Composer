@@ -11,6 +11,7 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 	var hh   = 0;
 	var lb_h = line_get_height(f_p0) + ui(8);
 	var padd = ui(8);
+	var chov = false; 
 	
 	var _node = PROJECT.globalNode;
 	
@@ -55,8 +56,9 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 				var bx = wd_x + ui(10);
 				var by = yy + ui(16);
 				if(hover && point_in_rectangle(_m[0], _m[1], bx - ui(12), by - ui(12), bx + ui(12), by + ui(12))) {
+					chov = true;
 					draw_sprite_stretched_ext(THEME.group_label, 0, bx - ui(12), by - ui(12), ui(24), ui(24), COLORS._main_icon_light, 1);
-				
+					
 					if(mouse_press(mb_left, _foc)) {
 						var_drag_disp   = j;
 						var_dragging    = j;
@@ -115,6 +117,7 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 			var widg    = drawWidget(xx, yy, ww, _m, _node.inputs[| j], true, focus, hover, _scrollPane, rx, ry);
 			var widH    = widg[0];
 			var mbRight = widg[1];
+			var widHov  = widg[2];
 						
 			if(hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + widH))
 				_HOVERING_ELEMENT = _node.inputs[| j];
@@ -124,5 +127,5 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 		}
 	}
 	
-	return hh;
+	return [ hh, chov ];
 }

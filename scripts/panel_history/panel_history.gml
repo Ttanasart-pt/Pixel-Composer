@@ -33,9 +33,7 @@ function Panel_History() : PanelContent() constructor {
 	}
 	refreshList();
 
-	onResize = function() {
-		sc_history.resize(w - padding * 2, h - padding * 2);
-	}
+	onResize = function() { sc_history.resize(w - padding * 2, h - padding * 2); }
 	
 	sc_history = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
 		draw_clear_alpha(COLORS._main_text, 0);
@@ -81,6 +79,7 @@ function Panel_History() : PanelContent() constructor {
 			
 			BLEND_OVERRIDE;
 			if(pHOVER && sc_history.hover && point_in_rectangle(_m[0], _m[1], ui(32), yy - ui(4), lw, yy + hh + ui(4) - 1)) {
+				sc_history.hover_content = true;
 				draw_sprite_stretched_ext(THEME.node_bg, 0, ui(32), yy - ui(2), lw, hh + ui(4), COLORS._main_icon_light, 1);
 				_hover = i;
 				

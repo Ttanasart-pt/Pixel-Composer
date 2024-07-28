@@ -61,9 +61,12 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon);
 			draw_text_add(_ww / 2, _y + _add_h / 2, __txt("New preset"));
 			
-			if(_hov && mouse_press(mb_left, pFOCUS)) {
-				if(!adding) tb_add.activate(); 
-				adding = true;
+			if(_hov) {
+				sc_presets.hover_content = true;
+				if(mouse_press(mb_left, pFOCUS)) {
+					if(!adding) tb_add.activate(); 
+					adding = true;
+				}
 			}
 			
 			_h += _add_h + ui(4);

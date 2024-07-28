@@ -43,6 +43,7 @@ event_inherited();
 			var _yy = _y + (hh + ui(4)) * i;
 			
 			if(sHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, sc_presets.w, _yy + hh)) {
+				sc_presets.hover_content = true;
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy, sc_presets.w - ui(12), hh, COLORS._main_icon, 0.85);
 				
 				if(mouse_click(mb_left, sFOCUS)) {

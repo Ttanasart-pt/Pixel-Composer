@@ -8,6 +8,8 @@ function widget() constructor {
 	keyframe = noone;
 	interactable = true;
 	
+	hover_content = false;
+	
 	right_click_block = true;
 	
 	side_button  = noone;
@@ -97,6 +99,8 @@ function widget() constructor {
 		active = false;
 		hover  = false;
 	}
+	
+	static inBBOX = function(_m) { return point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h); }
 	
 	static clone = function() { return variable_clone(self); }
 	

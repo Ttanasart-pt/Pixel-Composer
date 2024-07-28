@@ -7,10 +7,10 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 	onModify = _onModify;
 	
 	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return onModify(clamp(val, curr_range[0], curr_range[1]), 0)})
-		.setSlideType(_int).setSlideStep(_step).setSlideRange(_range);
+		.setSlideType(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
 		
 	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return onModify(clamp(val, curr_range[0], curr_range[1]), 1)})
-		.setSlideType(_int).setSlideStep(_step).setSlideRange(_range);
+		.setSlideType(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
 	
 	tb_value_min.hide = true;
 	tb_value_max.hide = true;

@@ -20,6 +20,8 @@ event_inherited();
 		var _h   = array_length(data) * hght;
 		var _dw  = sc_content.surface_w;
 		
+		sc_content.hover_content = true;
+		
 		for(var i = 0; i < array_length(data); i++) {
 			var _ly = _y + i * hght;	
 			var fullpath = data[i];

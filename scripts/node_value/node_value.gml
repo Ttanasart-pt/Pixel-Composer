@@ -38,9 +38,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		name_custom = false;
 		
 		switch(type) {
-			case VALUE_TYPE.PCXnode : 
-				accept_array = false; 
+			case VALUE_TYPE.color   : 
+				if(is_array(_value)) {
+					for (var i = 0, n = array_length(_value); i < n; i++)
+						_value[i] = cola(_value[i]);
+				} else 
+					_value = cola(_value); 
 				break;
+				
+			case VALUE_TYPE.PCXnode : accept_array = false; break;
 		}
 		
 		if(struct_has(node, "inputMap")) {

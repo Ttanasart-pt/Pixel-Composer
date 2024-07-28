@@ -19,15 +19,17 @@ function Panel_Globalvar() : PanelContent() constructor {
 	}
 	
 	contentPane = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding), function(_y, _m) {
-		var _hover = pHOVER && contentPane.hover;
-		
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
+		var _hover = pHOVER && contentPane.hover;
 		var hh = 0;
 		var yy = _y;
 		var _x = ui(8);
 		
-		var gvh = globalvar_viewer_draw(_x, yy, contentPane.surface_w - _x - ui(8), _m, pFOCUS, _hover, contentPane, x + _x + ui(padding), y + ui(title_height));
+		var glPar = globalvar_viewer_draw(_x, yy, contentPane.surface_w - _x - ui(8), _m, pFOCUS, _hover, contentPane, x + _x + ui(padding), y + ui(title_height));
+		var gvh = glPar[0];
+		if(glPar[1]) contentPane.hover_content = true;
+					
 		yy += gvh + ui(8);
 		hh += gvh + ui(8);
 			

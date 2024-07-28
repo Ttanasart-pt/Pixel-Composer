@@ -70,6 +70,8 @@ event_inherited();
 			_y += hg;
 		}
 		
+		folderPane.hover_content = true;
+		
 		return hh + 8;
 	});
 	folderPane.always_scroll = true;
@@ -127,6 +129,7 @@ event_inherited();
 					}
 						
 					if(sHOVER && contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
+						contentPane.hover_content = true;
 						TOOLTIP = [ spr, "sprite" ];
 						
 						draw_sprite_stretched_ext(THEME.node_active, 0, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);

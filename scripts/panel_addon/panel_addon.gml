@@ -68,8 +68,11 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				if(_addon.open) draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, 0, by, ww, hh, COLORS._main_icon_light, 1);
 				
-				if(hover) draw_sprite_stretched_ext(THEME.group_label, 0, 0, by, ww, hg, COLORS.panel_inspector_group_hover, 1);
-				else      draw_sprite_stretched_ext(THEME.group_label, 0, 0, by, ww, hg, COLORS.panel_inspector_group_bg, 1);
+				if(hover) {
+					sc_addon.hover_content = true;
+					draw_sprite_stretched_ext(THEME.group_label, 0, 0, by, ww, hg, COLORS.panel_inspector_group_hover, 1);
+				} else
+					draw_sprite_stretched_ext(THEME.group_label, 0, 0, by, ww, hg, COLORS.panel_inspector_group_bg, 1);
 				
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(44), by + hg / 2, _addon.name);
@@ -81,6 +84,8 @@ function Panel_Addon() : PanelContent() constructor {
 				var _onStart = array_exists(ADDONS_ON_START, _addon.name);
 				
 				if(pHOVER && point_in_rectangle(_m[0], _m[1], chx0, chy0, chx1, chy1)) {
+					sc_addon.hover_content = true;
+					
 					if(!_act)			TOOLTIP = __txtx("panel_addon_not_activated", "Not activated");
 					else if(!_onStart)	TOOLTIP = __txtx("panel_addon_activated", "Activated");
 					else				TOOLTIP = __txtx("panel_addon_run_on_start", "Run on start");

@@ -272,6 +272,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		context_hovering = noone;
 		draggable        = true;
 		
+		contentPane.hover_content = true;
+		
 		var _h = drawDir(rootFile, 0, _y, contentPane.surface_w, _m);
 		
 		if(frame_dragging) draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, frame_drag_mx, frame_drag_my, _m[0], _m[1], COLORS._main_accent);

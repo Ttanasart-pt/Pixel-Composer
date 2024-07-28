@@ -337,6 +337,8 @@ event_inherited();
 			var _hov = false;
 			
 			if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, ww, _y + hh + hg - 1)) {
+				catagory_pane.hover_content = true;
+				
 				BLEND_OVERRIDE
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, ww, hg, CDEF.main_white, 1);
 				BLEND_NORMAL
@@ -522,6 +524,8 @@ event_inherited();
 				}
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+					content_pane.hover_content = true;
+					
 					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node);
@@ -531,6 +535,8 @@ event_inherited();
 				
 				if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
 					if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
+						content_pane.hover_content = true;
+						
 						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
 						node_tooltip   = _node;
 						node_tooltip_x = content_pane.x + _nx;
@@ -644,6 +650,8 @@ event_inherited();
 				}
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+					content_pane.hover_content = true;
+					
 					if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
 						node_tooltip   = _node;
 						node_tooltip_x = content_pane.x + ui(16);
@@ -894,6 +902,7 @@ event_inherited();
 					}
 					
 					if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_size, yy + grid_size)) {
+						search_pane.hover_content = true;
 						node_selecting = i;
 						if(mouse_release(mb_left, sFOCUS))
 							buildNode(_node, _param);
@@ -910,6 +919,8 @@ event_inherited();
 					
 					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.tooltip_spr != noone)) {
 						if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
+							search_pane.hover_content = true;
+							
 							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
 							node_tooltip   = _node;
 							node_tooltip_x = search_pane.x + _nx;
@@ -1024,6 +1035,8 @@ event_inherited();
 				}
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+					search_pane.hover_content = true;
+					
 					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.tooltip_spr != noone)) {
 						node_tooltip   = _node;
 						node_tooltip_x = search_pane.x + 0;

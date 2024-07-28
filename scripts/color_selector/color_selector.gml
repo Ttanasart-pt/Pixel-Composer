@@ -27,19 +27,19 @@ function colorSelector(onApply = noone) constructor {
 		if(!interactable) return;
 		hue = clamp(_val, 0, 255);
 		setHSV();
-	});
+	}).setSlideType(1);
 	
 	tb_sat = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		sat = clamp(_val, 0, 255);
 		setHSV();
-	});
+	}).setSlideType(1);
 	
 	tb_val= slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		val = clamp(_val, 0, 255);
 		setHSV();
-	});
+	}).setSlideType(1);
 	
 	tb_red = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
@@ -50,7 +50,7 @@ function colorSelector(onApply = noone) constructor {
 		
 		current_color = make_color_rgba(r, g, b, a);
 		resetHSV();
-	});
+	}).setSlideType(1);
 	
 	tb_green = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
@@ -61,7 +61,7 @@ function colorSelector(onApply = noone) constructor {
 		
 		current_color = make_color_rgba(r, g, b, a);
 		resetHSV();
-	});
+	}).setSlideType(1);
 	
 	tb_blue = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
@@ -72,7 +72,7 @@ function colorSelector(onApply = noone) constructor {
 		
 		current_color = make_color_rgba(r, g, b, a);
 		resetHSV();
-	});
+	}).setSlideType(1);
 	
 	tb_alpha = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
@@ -80,7 +80,7 @@ function colorSelector(onApply = noone) constructor {
 		
 		current_color = _cola(current_color, alp);
 		resetHSV();
-	});
+	}).setSlideType(1);
 	
 	tb_hue.hdw   = ui(16);
 	tb_sat.hdw   = ui(16);

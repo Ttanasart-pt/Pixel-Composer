@@ -25,16 +25,17 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	var _name = jun.getName();
 	var wid   = jun.editWidget;
+	var cHov  = false;
 	
-	switch(instanceof(wid)) { #region
+	switch(instanceof(wid)) {
 		case "textArea" : 
 		case "controlPointBox" : 
 		case "transformBox" : 
 			breakLine = true;
-	} #endregion
+	}
 	
 	var butx = xx;
-	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) { #region animation
+	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) { // animation
 		var index = jun.hasJunctionFrom()? 2 : jun.is_anim;
 		
 		var cc = c_white;
@@ -43,6 +44,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, cc, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+			cHov  = true;
+			
 			if(anim_hold != noone)
 				jun.setAnim(anim_hold);
 				
@@ -59,16 +62,18 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 			}
 		}
-	} #endregion
+	}
 		
 	if(anim_hold != noone && mouse_release(mb_left))
 		anim_hold = noone;
 		
 	butx += ui(20);
-	if(!global_var) { #region visibility
+	if(!global_var) { // visibility
 		index = jun.visible;
 		draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+			cHov  = true;
+			
 			if(visi_hold != noone && jun.visible != visi_hold) {
 				jun.visible = visi_hold;
 				jun.node.refreshNodeDisplay();
@@ -83,7 +88,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				jun.node.refreshNodeDisplay();
 			}
 		}
-	#endregion
+	
 	} else
 		draw_sprite_ui_uniform(THEME.node_use_expression, 0, butx, lb_y, 1,, 0.8);
 		
@@ -107,13 +112,13 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var lb_w = ui(40 + 16) + string_width(_name);
 	var lb_x = ui(40)      + xx;
 	
-	if(jun.color != -1) { #region
+	if(jun.color != -1) {
 		draw_sprite_ext(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);
 		lb_x += ui(24);
 		lb_w += ui(24);
-	} #endregion
+	}
 	
-	if(!jun.active) { #region
+	if(!jun.active) {
 		draw_set_text(_font, fa_left, fa_center, COLORS._main_text_sub_inner);
 		draw_text_add(lb_x, lb_y - ui(2), _name);
 		
@@ -122,14 +127,16 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			var ty = lb_y - ui(1);
 			
 			if(point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
+				cHov  = true;
+				
 				TOOLTIP = jun.active_tooltip;
 				draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 1);
 			} else 
 				draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 0.75);
 		}
 		
-		return [ 0, true ];
-	} #endregion
+		return [ 0, true, cHov ];
+	}
 	
 	draw_text_over(lb_x, lb_y, _name);
 			
@@ -139,6 +146,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			var ty = lb_y - ui(1);
 					
 			if(point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
+				cHov  = true;
+				
 				if(is_string(jun.tooltip))
 					TOOLTIP = jun.tooltip;
 				else if(mouse_click(mb_left, _focus))
@@ -155,7 +164,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		if(jun.connect_type == JUNCTION_CONNECT.input && breakLine && jun.is_anim) {
 			var bx = xx + ww - ui(12);
 			var by = lb_y;
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "", THEME.prop_keyframe, 2) == 2) {
+			var b  = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "", THEME.prop_keyframe, 2)
+			
+			if(b) cHov = true;
+			if(b == 2) {
 				for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 					var _key = jun.animator.values[| j];
 					if(_key.time > CURRENT_FRAME) {
@@ -175,9 +187,12 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					break;
 				}
 			}
-						
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, kfFocus? __txtx("panel_inspector_remove_key", "Remove keyframe") : 
-				__txtx("panel_inspector_add_key", "Add keyframe"), THEME.prop_keyframe, 1, cc) == 2) {
+			
+			var _tlp = kfFocus? __txtx("panel_inspector_remove_key", "Remove keyframe") : __txtx("panel_inspector_add_key", "Add keyframe");
+			var b    = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, _tlp, THEME.prop_keyframe, 1, cc)
+			
+			if(b) cHov = true;
+			if(b == 2) {
 				var _add = false;
 				for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 					var _key = jun.animator.values[| j];
@@ -196,7 +211,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			}
 						
 			bx -= ui(26);
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "", THEME.prop_keyframe, 0) == 2) {
+			var b = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "", THEME.prop_keyframe, 0)
+			
+			if(b) cHov = true;
+			if(b == 2) {
 				var _t = -1;
 				for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 					var _key = jun.animator.values[| j];
@@ -215,8 +233,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					
 			bx -= ui(26 + 12);
 			tooltip_loop_type.index = jun.on_end;
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, tooltip_loop_type, THEME.prop_on_end, jun.on_end) == 2)
-				jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(THEME.prop_on_end));
+			
+			var b = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, tooltip_loop_type, THEME.prop_on_end, jun.on_end)
+			
+			if(b)      cHov = true;
+			if(b == 2) jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(THEME.prop_on_end));
 		}
 	#endregion
 		
@@ -227,14 +248,19 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 			bx -= ui(28);
 			if(jun.is_modified) {
-				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_reset", "Reset value"), THEME.refresh_16, 0, COLORS._main_icon) == 2)
-					jun.resetValue();
+				var b = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_reset", "Reset value"), THEME.refresh_16, 0, COLORS._main_icon)
+				if(b)      cHov = true;
+				if(b == 2) jun.resetValue();
+				
 			} else 
 				draw_sprite_ui(THEME.refresh_16, 0, bx, by,,,, COLORS._main_icon, 0.5);
 			
 			bx -= ui(28);
 			var ic_b = jun.expUse? c_white : COLORS._main_icon;
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_use_expression", "Use expression"), THEME.node_use_expression, jun.expUse, ic_b) == 2) {
+			var b = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_use_expression", "Use expression"), THEME.node_use_expression, jun.expUse, ic_b)
+			
+			if(b) cHov = true;
+			if(b == 2) {
 				jun.setUseExpression(!jun.expUse);
 				
 				if(!jun.expUse) WIDGET_CURRENT = noone;
@@ -243,14 +269,19 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			if(jun.expUse) {
 				bx -= ui(28);
 				var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : COLORS._main_icon;
-				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_dropper", "Node Dropper"), THEME.node_dropper, 0, cc) == 2)
-					NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
+				var b  = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_dropper", "Node Dropper"), THEME.node_dropper, 0, cc)
+				
+				if(b) cHov = true;
+				if(b == 2) NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
 			}
 			
 			if(jun.expUse || jun.type == VALUE_TYPE.text) {
 				bx -= ui(28);
 				var cc = jun.popup_dialog == noone? COLORS._main_icon : COLORS._main_value_positive;
-				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_pop_text", "Pop up Editor"), THEME.text_popup, 0, cc) == 2) {
+				var b  = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_pop_text", "Pop up Editor"), THEME.text_popup, 0, cc)
+				
+				if(b) cHov = true;
+				if(b == 2) {
 					if(jun.expUse)	jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.express_edit, function() { return context.expression;  }, jun));
 					else			jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.editWidget,   function() { return context.showValue(); }, jun));
 					jun.popup_dialog.content.title = $"{jun.node.name} - {_name}";
@@ -280,7 +311,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var widH	= widExtend? editBoxH : 0;
 	var mbRight	= true;
 		
-	if(jun.expUse) { #region expression editor
+	if(jun.expUse) { // expression editor
 		var expValid = jun.expTree != noone && jun.expTree.validate();
 		jun.express_edit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 		jun.express_edit.rx = rx;
@@ -290,17 +321,16 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		if(_focus) jun.express_edit.register(_scrollPane);
 			
 		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
-		widH = wd_h - (TEXTBOX_HEIGHT * !widExtend);
+		widH  = wd_h - (TEXTBOX_HEIGHT * !widExtend);
+		cHov |= jun.express_edit.inBBOX(_m);
 		
 		var un = jun.unit;
 		if(un.reference != noone) {
 			un.triggerButton.icon_index    = un.mode;
 			un.triggerButton.tooltip.index = un.mode;
 		}
-		
-	#endregion
 	
-	} else if(wid && jun.display_type != VALUE_DISPLAY.none) { #region edit widget
+	} else if(wid && jun.display_type != VALUE_DISPLAY.none) { // edit widget
 		wid.setFocusHover(_focus, _hover);
 		
 		if(jun.connect_type == JUNCTION_CONNECT.input) {
@@ -357,18 +387,19 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 		
 		var _widH = wid.drawParam(param) ?? 0;
-		widH = _widH - (TEXTBOX_HEIGHT * !widExtend);
+		widH  = _widH - (TEXTBOX_HEIGHT * !widExtend);
+		cHov |= wid.inBBOX(_m)
 		
 		mbRight &= wid.right_click_block;
-	#endregion
-	} else if(jun.display_type == VALUE_DISPLAY.label) { #region label
+	
+	} else if(jun.display_type == VALUE_DISPLAY.label) { // label
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 		draw_text_add(xx + ui(16), _hsy, jun.display_data.data);
 				
 		widH = string_height(jun.display_data.data);
-	#endregion
+	
 	} else
 		widH = 0;
 	
-	return [ widH, mbRight ];
+	return [ widH, mbRight, cHov ];
 }	

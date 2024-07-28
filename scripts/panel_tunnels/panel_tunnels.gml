@@ -75,6 +75,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 				var node = arr[i];
 
 				if(point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + hg)) {
+					sc_tunnel.hover_content = true;
 					var cc = merge_color(COLORS._main_icon_light, COLORS._main_icon, 0.25);
 					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y, ww, hg, cc, 1);
 					tunnel_hover  = node;
