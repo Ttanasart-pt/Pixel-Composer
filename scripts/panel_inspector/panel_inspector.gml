@@ -527,8 +527,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		_inspecting.inspecting = true;
 		prop_hover	= noone;
 		var jun		= noone;
-		var amoIn	= _inspecting.input_display_list  == -1? ds_list_size(_inspecting.inputs)  : array_length(_inspecting.input_display_list);
-		var amoOut	= _inspecting.output_display_list == -1? ds_list_size(_inspecting.outputs) : array_length(_inspecting.output_display_list);
+		var amoIn	= is_array(_inspecting.input_display_list)?  array_length(_inspecting.input_display_list)  : ds_list_size(_inspecting.inputs);
+		var amoOut	= is_array(_inspecting.output_display_list)? array_length(_inspecting.output_display_list) : ds_list_size(_inspecting.outputs);
 		var amo		= inspectGroup == 0? amoIn + 1 + amoOut : amoIn;
 		var hh		= 0;
 		
@@ -637,9 +637,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			var yy = hh + _y;
 			
 			if(i < amoIn) { // inputs
-					 if(_inspecting.input_display_list == -1)		jun = _inspecting.inputs[| i];
-				else if(is_real(_inspecting.input_display_list[i])) jun = _inspecting.inputs[| _inspecting.input_display_list[i]];
-				else												jun = _inspecting.input_display_list[i];
+					 if(!is_array(_inspecting.input_display_list))		jun = _inspecting.inputs[| i];
+				else if(is_real(_inspecting.input_display_list[i])) 	jun = _inspecting.inputs[| _inspecting.input_display_list[i]];
+				else													jun = _inspecting.input_display_list[i];
 				
 			} else if(i == amoIn) { // output label
 				hh += ui(8 + 32 + 8);
@@ -652,8 +652,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			} else { // outputs
 				var _oi = i - amoIn - 1;
 				
-					 if(_inspecting.output_display_list == -1)			jun = _inspecting.outputs[| _oi];
-				else if(is_real(_inspecting.output_display_list[i]))	jun = _inspecting.outputs[| _inspecting.output_display_list[_oi]];
+					 if(!is_array(_inspecting.output_display_list))		jun = _inspecting.outputs[| _oi];
+				else if(is_real(_inspecting.output_display_list[_oi]))	jun = _inspecting.outputs[| _inspecting.output_display_list[_oi]];
 				else													jun = _inspecting.output_display_list[_oi];
 			} 
 			

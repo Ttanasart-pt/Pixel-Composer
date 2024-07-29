@@ -389,14 +389,20 @@ function Panel_Preview() : PanelContent() constructor {
 		if(preview_node[1] == node) preview_node[1] = noone;
 	} #endregion
 	
-	function resetNodePreview() { #region
+	function resetNodePreview() {
 		preview_node = [ noone, noone ]; 
 		locked = false;
-	} #endregion
+	}
 	
 	function __getNodePreview()			{ return preview_node[splitView? splitSelection : 0]; }
 	function getNodePreview() { 
 		var _node = __getNodePreview();
+		if(_node == noone) return noone;
+		
+		if(!_node.project.active) {
+			resetNodePreview();
+			return noone;
+		}
 		
 		if(is_instanceof(_node, Node)) 
 			_node = _node.getPreviewingNode();
@@ -2030,7 +2036,6 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		var _prev_node = getNodePreview();
 		d3_active = _prev_node == noone? NODE_3D.none : _prev_node.is_3D;
-		//print($"{_prev_node} : {d3_active}")
 		bg_color  = lerp_color(bg_color, d3_active? COLORS.panel_3d_bg : COLORS.panel_bg_clear, 0.3);
 		
 		draw_clear(bg_color);

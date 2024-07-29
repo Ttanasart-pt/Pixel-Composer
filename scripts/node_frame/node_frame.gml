@@ -165,14 +165,15 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var x0  = x1 - 16;
 		var y0  = y1 - 16;
 		var ics = 0.5;
+		var shf = 8 + 8 * ics;
 		
 		if(w * _s < 32 || h * _s < 32) return point_in_rectangle(_mx, _my, xx, yy, x1, y1);
 		
 		if(point_in_rectangle(_mx, _my, xx, yy, x1, y1) || size_dragging)
-			draw_sprite_ext_add(THEME.node_resize, 0, x1 - 4, y1 - 4, ics, ics, 0, c_white, 0.5);
+			draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics, 0, c_white, 0.5);
 		
 		if(!name_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-			draw_sprite_ext_add(THEME.node_resize, 0, x1 - 4, y1 - 4, ics, ics, 0, c_white, 1);
+			draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics, 0, c_white, 1);
 			
 			PANEL_GRAPH.drag_locking = true;
 			

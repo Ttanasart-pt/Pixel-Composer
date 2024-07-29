@@ -682,7 +682,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			for( var i = 0, n = array_length(_ilist); i < n; i++ ) {
 				if(!struct_has(_inarr, _ilist[i])) continue;
 				
-				ds_list_add(inputs, _inarr[$ _ilist[i]]);
+				var _inJunc = _inarr[$ _ilist[i]];
+				_inJunc.index = ds_list_size(inputs);
+				ds_list_add(inputs, _inJunc);
 			}
 			
 		}
@@ -708,7 +710,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			for( var i = 0, n = array_length(_ilist); i < n; i++ ) {
 				if(!struct_has(_inarr, _ilist[i])) continue;
 				
-				ds_list_add(outputs, _inarr[$ _ilist[i]]);
+				var _outJunc = _inarr[$ _ilist[i]];
+				_outJunc.index = ds_list_size(outputs);
+				ds_list_add(outputs, _outJunc);
 			}
 			
 		}
