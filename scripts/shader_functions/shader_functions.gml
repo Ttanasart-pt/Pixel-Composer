@@ -97,7 +97,7 @@ function shader_set_f_map_s(uniform, value, surface, junc) {
 	shader_set_i(uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
 }
 
-function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) {
+function shader_set_uniform_f_array_safe(uniform, array, max_length = 4096) {
 	INLINE
 	
 	if(!is_array(array)) return;
@@ -161,14 +161,15 @@ function shader_set_color(uniform, col, alpha = 1) {
 function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 1024) {
 	INLINE
 	
-	shader_set_i(amo_uni, min(max_length, array_length(pal)));
+	var _amo = min(max_length, array_length(pal));
+	if(_amo == 0) return;
 	
 	var _pal = [];
-	for( var i = 0, n = min(max_length, array_length(pal)); i < n; i++ )
+	for( var i = 0, n = _amo; i < n; i++ )
 		array_append(_pal, colToVec4(pal[i]));
 	
-	if(array_length(_pal))
-		shader_set_f(pal_uni, _pal);
+	shader_set_i(amo_uni, _amo);
+	shader_set_f(pal_uni, _pal);
 }
 
 #region prebuild

@@ -32,7 +32,7 @@ function loadPalette(path) {
 		var pal = array_create(_sw * _sh);
 		for( var i = 0; i < _sh; i++ ) 
 		for( var j = 0; j < _sw; j++ ) 
-			pal[i * _sh + j] = surface_getpixel(_s, j, i);
+			pal[i * _sh + j] = cola(surface_getpixel(_s, j, i));
 		
 		surface_free(_s);
 		
@@ -54,13 +54,11 @@ function loadPalette(path) {
 				var _r = string_hexadecimal(string_copy(_w, 1, 2));
 				var _g = string_hexadecimal(string_copy(_w, 3, 2));
 				var _b = string_hexadecimal(string_copy(_w, 5, 2));
+				var _a = string_length(_w) > 6? string_hexadecimal(string_copy(_w, 7, 2)) : 255;
 				
-				if(string_length(_w) > 6) {
-					var _a = string_hexadecimal(string_copy(_w, 7, 2));
-					pal[_index++] = make_color_rgba(_r, _g, _b, _a);
-				} else 
-					pal[_index++] = make_color_rgb(_r, _g, _b);
+				pal[_index++] = make_color_rgba(_r, _g, _b, _a);
 				break;
+				
 			case ".gpl" :
 			case ".pal" :
 				if(string_char_at(_w, 1) == "#") break;
@@ -68,7 +66,7 @@ function loadPalette(path) {
 				    _c = array_filter(_c, function(s) { return s != ""; });
 				
 				if(array_length(_c) == 3) 
-					pal[_index++] = make_color_rgb(toNumber(_c[0]), toNumber(_c[1]), toNumber(_c[2]));
+					pal[_index++] = make_color_rgba(toNumber(_c[0]), toNumber(_c[1]), toNumber(_c[2]), 255);
 				else if(array_length(_c) >= 4) 
 					pal[_index++] = make_color_rgba(toNumber(_c[0]), toNumber(_c[1]), toNumber(_c[2]), toNumber(_c[3]));
 				break;

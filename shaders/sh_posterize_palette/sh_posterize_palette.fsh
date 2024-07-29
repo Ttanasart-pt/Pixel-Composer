@@ -4,9 +4,9 @@ varying vec4 v_vColour;
 #define PALETTE_LIMIT 1024
 
 uniform vec4 palette[PALETTE_LIMIT];
-uniform int keys;
-uniform int alpha;
-uniform int space;
+uniform int  keys;
+uniform int  alpha;
+uniform int  space;
 
 vec3 rgb2xyz( vec3 c ) {
     vec3 tmp;
@@ -45,7 +45,7 @@ float colorDifferentRGB(in vec4 c1, in vec4 c2) {
 }
 
 void main() {
-	vec4 _col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 _col = texture2D( gm_BaseTexture, v_vTexcoord );
 	vec4  col = alpha == 1? _col * _col.a : _col;
 	
 	int   closet_index = 0;

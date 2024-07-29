@@ -59,8 +59,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(_use_pal) {
 			surface_set_shader(_outSurf, sh_posterize_palette);
-				shader_set_f("palette", paletteToArray(_pal));
-				shader_set_i("keys", array_length(_pal));
+				shader_set_palette(_pal, "palette", "keys");
 				shader_set_i("alpha", _alp);
 				shader_set_i("space", _spce);
 				
@@ -151,10 +150,6 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 				draw_surface_safe(_surf);
 			surface_reset_shader();
-			
-			// surface_set_shader(_outSurf);
-			// 	draw_surface_safe(_sMax);
-			// surface_reset_shader();
 		}
 		
 		return _outSurf;
