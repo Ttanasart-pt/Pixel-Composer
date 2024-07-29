@@ -1,7 +1,8 @@
 #region global
 	enum ANIMATOR_END {
 		loop,
-		stop
+		stop,
+		pingpong,
 	}
 	
 	#macro ANIMATION_STATIC !(PROJECT.animator.is_playing || PROJECT.animator.frame_progress)
@@ -32,17 +33,18 @@
 		frame_progress	= false;
 		frame_range		= noone;
 		
+		play_direction  = 1;
 		is_simulating   = false;
 		
 		__debug_animator_counter = 0;
 		
 		playback  = ANIMATOR_END.loop;
 		
-		static setFrame = function(frame, _round = true) { #region
+		static setFrame = function(_frame, _round = true) {
 			var _c        = current_frame;
-			frame         = clamp(frame, 0, frames_total);
-			real_frame    = frame;
-			current_frame = _round? round(frame) : frame;
+			_frame        = clamp(_frame, 0, frames_total);
+			real_frame    = _frame;
+			current_frame = _round? round(_frame) : _frame;
 			
 			frame_progress = _c != current_frame;
 			
@@ -50,53 +52,44 @@
 				time_since_last_frame = 0;
 				RENDER_ALL
 			}
-		} #endregion
+		}
 		
-		static getFirstFrame = function(range = true) { INLINE return range && frame_range != noone? frame_range[0] - 1 : 0; }
-		static getLastFrame  = function(range = true) { INLINE return range && frame_range != noone? frame_range[1] - 1 : frames_total - 1; }
+		static getFirstFrame = function(range = true) { return range && frame_range != noone? frame_range[0] - 1 : 0; }
+		static getLastFrame  = function(range = true) { return range && frame_range != noone? frame_range[1] - 1 : frames_total - 1; }
 		
-		static firstFrame = function(range = true) { INLINE setFrame(getFirstFrame(range)); }
-		static lastFrame  = function(range = true) { INLINE setFrame(getLastFrame(range));  }
+		static firstFrame = function(range = true) { setFrame(getFirstFrame(range)); }
+		static lastFrame  = function(range = true) { setFrame(getLastFrame(range));  }
 		
-		static isFirstFrame = function() { INLINE return current_frame == getFirstFrame(); }
-		static isLastFrame  = function() { INLINE return current_frame == getLastFrame();  }
+		static isFirstFrame = function() { return current_frame == getFirstFrame(); }
+		static isLastFrame  = function() { return current_frame == getLastFrame();  }
 		
-		static resetAnimation = function() { #region
-			INLINE
-			
+		static resetAnimation = function() {
 			array_foreach(PROJECT.allNodes, function(node) { node.resetAnimation(); });
-		} #endregion
+		}
 		
-		static toggle = function() { #region
-			INLINE
-			
+		static toggle = function() {
 			is_playing			  = !is_playing;
 			frame_progress		  = true;
 			time_since_last_frame = 0;
-		} #endregion
+		}
 		
-		static pause = function() { #region
-			INLINE
-			
+		static pause = function() {
 			is_playing			  = false;
 			frame_progress		  = true;
 			time_since_last_frame = 0;
-		} #endregion
+		}
 		
-		static play = function() { #region
-			INLINE
-			
+		static play = function() {
 			if(is_simulating)	setFrame(0);
 			else				firstFrame();
 			
 			is_playing			  = true;
 			frame_progress		  = true;
 			time_since_last_frame = 0;
-		} #endregion
+			play_direction        = 1;
+		}
 		
-		static render = function() { #region
-			INLINE
-			
+		static render = function() {
 			if(is_simulating)	setFrame(0);
 			else				firstFrame();
 			
@@ -104,28 +97,22 @@
 			is_rendering		  = true;
 			frame_progress		  = true;
 			time_since_last_frame = 0;
-		} #endregion
+		}
 		
-		static resume = function() { #region
-			INLINE
-			
+		static resume = function() {
 			is_playing			  = true;
 			frame_progress		  = true;
 			time_since_last_frame = 0;
-		} #endregion
+		}
 		
-		static stop = function() { #region
-			INLINE
-			
+		static stop = function() {
 			firstFrame();
 			
 			is_playing			  = false;
 			time_since_last_frame = 0;
-		} #endregion
+		}
 		
-		static step = function() { #region
-			INLINE
-			
+		static step = function() {
 			if(frame_range != noone) {
 				var _fr0 = min(frame_range[0], frame_range[1]);
 				var _fr1 = max(frame_range[0], frame_range[1]);
@@ -142,28 +129,32 @@
 			
 			var _frTime = 1 / framerate;
 			time_since_last_frame += delta_time / 1_000_000;
-			var tslf = time_since_last_frame;
 				
-			if(0 && IS_CMD) {
-				setFrame(real_frame + 1);
-				
-			} else if(time_since_last_frame >= _frTime) {
-				var dt = time_since_last_frame - _frTime;
-				setFrame(real_frame + 1);
-				time_since_last_frame = dt;
-				
-				var _maxFrame = frame_range != noone? frame_range[1] : frames_total;
-				if(current_frame >= _maxFrame) {
-					firstFrame();
-					
-					if(playback == ANIMATOR_END.stop || is_rendering) {
-						is_playing   = false;
-						is_rendering = false;
-						time_since_last_frame = 0;
-					} 
-				}
+			if(time_since_last_frame < _frTime) return;
 			
+			var dt = time_since_last_frame - _frTime;
+			setFrame(real_frame + play_direction);
+			time_since_last_frame = dt;
+			
+			var _maxFrame = frame_range != noone? frame_range[1] : frames_total;
+			
+			if(current_frame >= _maxFrame) {
+				firstFrame();
+				
+				if(playback == ANIMATOR_END.stop || is_rendering) {
+					is_playing   = false;
+					is_rendering = false;
+					time_since_last_frame = 0;
+					
+				} else if(playback == ANIMATOR_END.pingpong) {
+					setFrame(max(0, frames_total - 2));
+					play_direction = -1;
+				}
+				
+			} else if(current_frame <= 0) {
+				if(playback == ANIMATOR_END.pingpong)
+					play_direction = 1;
 			}
-		} #endregion
+		}
 	}
 #endregion

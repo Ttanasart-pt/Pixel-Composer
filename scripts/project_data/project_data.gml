@@ -164,6 +164,7 @@
 			_anim_map.frames_total = animator.frames_total;
 			_anim_map.framerate    = animator.framerate;
 			_anim_map.frame_range  = animator.frame_range;
+			_anim_map.playback     = animator.playback;
 			_map.animator		   = _anim_map;
 			
 			_map.metadata    = meta.serialize();
@@ -204,6 +205,7 @@
 				animator.frames_total	= struct_try_get(_anim_map, "frames_total",   30);
 				animator.framerate		= struct_try_get(_anim_map, "framerate",      30);
 				animator.frame_range	= struct_try_get(_anim_map, "frame_range", noone);
+				animator.playback   	= struct_try_get(_anim_map, "playback",    ANIMATOR_END.loop);
 			}
 			
 			if(struct_has(_map, "onion_skin"))	struct_override(onion_skin,  _map.onion_skin);
