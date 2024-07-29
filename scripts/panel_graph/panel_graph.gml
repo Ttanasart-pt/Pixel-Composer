@@ -2290,10 +2290,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var _gx = _mx / graph_s - graph_x;
 			var _gy = _my / graph_s - graph_y;
 			
-			if(FILE_IS_DROPPING) {
-				// draw_sprite_stretched_ext(THEME.node_bg, 1, _mx, _my, 128 * graph_s, 128 * graph_s, COLORS._main_value_positive, 1);
+			if(FILE_IS_DROPPING)
 				draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
-			}
 			
 			if(FILE_DROPPED && !array_empty(FILE_DROPPING)) {
 				_gx = mx / graph_s - graph_x;
@@ -2964,7 +2962,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 }
 
-//// ========== Graph Drop ==========
+//// ========== File Drop ==========
 	
 function load_file_path(path, _x = undefined, _y = undefined) {
 	if(!is_array(path)) path = [ path ];
@@ -3005,59 +3003,32 @@ function load_file_path(path, _x = undefined, _y = undefined) {
 			var ext = filename_ext_raw(p);
 			
 			switch(ext) {
-				case "txt"  :
-					node = Node_create_Text_File_Read_path(_x, _y, p);
-					break;
+				case "txt"      : node = Node_create_Text_File_Read_path(_x, _y, p);								break;
+				case "csv"      : node = Node_create_CSV_File_Read_path(_x, _y, p); 								break;
+				case "json"     : node = Node_create_Json_File_Read_path(_x, _y, p);								break;
 					
-				case "csv"  :
-					node = Node_create_CSV_File_Read_path(_x, _y, p);
-					break;
+				case "ase"      :
+				case "aseprite" : node = Node_create_ASE_File_Read_path(_x, _y, p); 								break;
 					
-				case "json"  :
-					node = Node_create_Json_File_Read_path(_x, _y, p);
-					break;
+				case "png"	    :
+				case "jpg"	    :
+				case "jpeg"     : node = Node_create_Image_path(_x, _y, p); 										break;
 					
-				case "ase"  :
-				case "aseprite"  :
-					node = Node_create_ASE_File_Read_path(_x, _y, p);
-					break;
-					
-				case "png"	 :
-				case "jpg"	 :
-				case "jpeg" :
-					if(key_mod_press(SHIFT))
-						node = Node_create_Image_path(_x, _y, p);
-					else 
-						node = Node_create_Image_path(_x, _y, p);
-					break;
-					
-				case "gif" :
-					node = Node_create_Image_gif_path(_x, _y, p);
-					break;
-					
-				case "obj" :
-					node = Node_create_3D_Obj_path(_x, _y, p);
-					break;
-					
-				case "wav" :
-					node = Node_create_WAV_File_Read_path(_x, _y, p);
-					break;
-					
-				case "xml" :
-					node = Node_create_XML_File_Read_path(_x, _y, p);
-					break;
-					
-				case "svg" :
-					node = Node_create_SVG_path(_x, _y, p);
-					break;
-					
-				case "pxc" :
-				case "cpxc" :
-					LOAD_PATH(p);
-					break;
-					
-				case "pxcc" :
-					APPEND(p);
+				case "gif"      : node = Node_create_Image_gif_path(_x, _y, p);     								break;
+				case "obj"      : node = Node_create_3D_Obj_path(_x, _y, p);        								break;
+				case "wav"      : node = Node_create_WAV_File_Read_path(_x, _y, p); 								break;
+				case "xml"      : node = Node_create_XML_File_Read_path(_x, _y, p); 								break;
+				case "svg"      : node = Node_create_SVG_path(_x, _y, p);           								break;
+				
+				case "pxc"      :
+				case "cpxc"     : LOAD_PATH(p); 																	break;
+				case "pxcc"     : APPEND(p);    																	break;
+				
+				case "hex"      : 
+				case "gpl"      : 
+				case "pal"      : 
+					node = new Node_Palette(_x, _y, PANEL_GRAPH.getCurrentContext());
+					node.inputs[| 0].setValue(loadPalette(p));
 					break;
 			}
 			

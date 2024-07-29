@@ -15,7 +15,7 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Trim",	true],	1
 	];
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var pal = _data[0];
 		var ran = _data[1];
 		
@@ -27,9 +27,9 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			ar[i - st] = array_safe_get_fast(pal, i);
 		
 		return ar;
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
@@ -48,5 +48,5 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		if(_h != min_h) will_setHeight = true;
 		min_h = _h;	
-	} #endregion
+	}
 }

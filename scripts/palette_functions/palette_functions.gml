@@ -1,4 +1,4 @@
-function isPaletteFile(path) { #region
+function isPaletteFile(path) {
 	var ext = string_lower(filename_ext(path));
 	switch(ext) {
 		case ".hex" : 
@@ -9,9 +9,9 @@ function isPaletteFile(path) { #region
 	}
 	
 	return false;
-} #endregion
+}
 
-function loadPalette(path) { #region
+function loadPalette(path) {
 	if(!file_exists_empty(path)) return [];
 	if(!isPaletteFile(path))     return [];
 	
@@ -77,7 +77,7 @@ function loadPalette(path) { #region
 	file_text_close(_t);
 	
 	return pal;
-} #endregion
+}
 	
 globalvar PALETTES, PALETTE_LOSPEC;
 
@@ -103,15 +103,13 @@ function __initPalette() {
 	file_find_close();
 }
 
-#region palette generate
-	function palette_string_hex(palette, alpha = true) {
-		var _str = "";
-		
-		for (var i = 0, n = array_length(palette); i < n; i++) {
-			var _c = palette[i];
-			_str += $"{color_get_hex(_c, alpha)}\n";
-		}
-		
-		return _str;
+function palette_string_hex(palette, alpha = true) { //palette generate
+	var _str = "";
+	
+	for (var i = 0, n = array_length(palette); i < n; i++) {
+		var _c = palette[i];
+		_str += $"{color_get_hex(_c, alpha)}\n";
 	}
-#endregion
+	
+	return _str;
+}
