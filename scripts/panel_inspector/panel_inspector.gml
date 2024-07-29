@@ -949,6 +949,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		if(inspectGroup >= 0) 
 			return drawNodeProperties(_y, _m, inspecting);
 		
+		if(is_instanceof(inspecting, Node_Frame)) 
+			return drawNodeProperties(_y, _m, inspecting);
+		
 		for( var i = 0, n = min(10, array_length(inspectings)); i < n; i++ ) {
 			if(i) {
 				_y  += ui(8);
@@ -1080,7 +1083,14 @@ function Panel_Inspector() : PanelContent() constructor {
 			inspectGroup = array_length(_nodes) > 1;
 			inspectings  = array_empty(_nodes)? [ inspecting ] : _nodes;
 			
-			for( var i = 1, n = array_length(_nodes); i < n; i++ ) if(instanceof(_nodes[i]) != instanceof(_nodes[0])) { inspectGroup = -1; break; }
+			for( var i = 1, n = array_length(_nodes); i < n; i++ ) {
+				if(instanceof(_nodes[i]) != instanceof(_nodes[0])) { 
+					inspectGroup = -1; 
+					break; 
+				}
+			}
+			
+			if(is_instanceof(inspecting, Node_Frame)) inspectGroup = 0;
 			
 			title = inspecting.renamed? inspecting.display_name : inspecting.name;
 			inspecting.inspectorStep();
