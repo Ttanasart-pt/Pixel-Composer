@@ -906,6 +906,8 @@ function PanelContent() constructor {
 	dragSurface = surface_create(1, 1);
 	showHeader  = true;
 	
+	title_actions = [];
+	
 	function refresh() {
 		setPanelSize(panel);
 		onResize();

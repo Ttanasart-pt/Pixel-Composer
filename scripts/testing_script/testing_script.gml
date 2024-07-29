@@ -84,14 +84,14 @@ function __test_load_current_collections() { #region
 					break;
 				}
 			} else {
-				for( var j = 0; j < ds_list_size(coll); j++ ) {
-					coll[| j].x = xx;
-					coll[| j].y = yy;
+				for( var j = 0; j < array_length(coll); j++ ) {
+					coll[j].x = xx;
+					coll[j].y = yy;
 					
 					if(outj) 
-					for( var k = 0; k < ds_list_size(coll[| j].inputs); k++ ) {
-						if(coll[| j].inputs[| k].type != VALUE_TYPE.surface) continue;
-						coll[| j].inputs[| k].setFrom(outj);
+					for( var k = 0; k < ds_list_size(coll[j].inputs); k++ ) {
+						if(coll[j].inputs[| k].type != VALUE_TYPE.surface) continue;
+						coll[j].inputs[| k].setFrom(outj);
 						break;
 					}
 				}

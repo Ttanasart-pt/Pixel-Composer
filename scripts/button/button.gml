@@ -4,6 +4,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	icon	   = _icon;
 	icon_blend = c_white;
 	icon_index = 0;
+	icon_size  = 1;
 	
 	text	= "";
 	tooltip = "";
@@ -19,15 +20,12 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	toggled = false;
 	context = noone;
 	
-	static setContext = function(struct) {
-		onClick = method(struct, onClick);
-		return self;
-	}
+	static setContext = function(struct) { onClick = method(struct, onClick); return self; }
 	
 	static setLua = function(_lua_thread, _lua_key, _lua_func) {
-		lua_thread = _lua_thread;
+		lua_thread     = _lua_thread;
 		lua_thread_key = _lua_key;
-		onClick = method(self, _lua_func);
+		onClick        = method(self, _lua_func);
 	}
 	
 	static trigger = function() {
@@ -35,6 +33,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		if(!is_callable(onClick))
 			return noone;
+			
 		triggered = true;
 		onClick();
 	}
@@ -45,22 +44,17 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		return t;
 	}
 	
-	static setIcon = function(_icon, _index = 0, _blend = c_white) {
+	static setIcon = function(_icon, _index = 0, _blend = c_white, _size = 1) {
 		icon       = _icon; 
 		icon_index = _index;
 		icon_blend = _blend;
+		icon_size  = _size;
+		
 		return self; 
 	}
 	
-	static setText = function(_text) {
-		text = _text; 
-		return self; 
-	}
-	
-	static setTooltip = function(_tip) {
-		tooltip = _tip; 
-		return self; 
-	}
+	static setText    = function(_text) { text    = _text; return self; }
+	static setTooltip = function(_tip)  { tooltip = _tip;  return self; }
 	
 	static drawParam = function(params) {
 		setParam(params);
@@ -103,7 +97,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		var aa = interactable * 0.25 + 0.75;
 		if(icon) {
 			var ind = is_array(icon_index)? icon_index[0]() : icon_index;
-			draw_sprite_ui_uniform(icon, ind, _x + _w / 2, _y + _h / 2,, icon_blend, aa);
+			draw_sprite_ui_uniform(icon, ind, _x + _w / 2, _y + _h / 2, icon_size, icon_blend, aa);
 		}
 		
 		if(text != "") {

@@ -345,8 +345,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return _nodes;
 	}
 	
-	static getInput = function(_y = 0, junc = noone) { return dummy_input; }
-	
 	static preConnect = function() {
 		sortIO();
 		deserialize(load_map, load_scale);

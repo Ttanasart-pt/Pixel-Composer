@@ -48,10 +48,27 @@ if !ready exit;
 		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 		draw_text_cut(dialog_x + ui(32), dialog_y + ui(8), content.title, dialog_w - ui(32 + 32));
 		
+		var _bx = dialog_x + dialog_w - ui(28);
+		var _by = dialog_y + ui(8);
+		var _bs = ui(20);
+		
 		if(instanceof(content) != "Panel_Menu")
-		if(buttonInstant(THEME.button_hide, dialog_x + dialog_w - ui(28), dialog_y + ui(8), ui(20), ui(20), mouse_ui, sFOCUS, sHOVER, "", THEME.window_exit) == 2) {
+		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, mouse_ui, sFOCUS, sHOVER, "", THEME.window_exit) == 2) {
 			onDestroy();
 			instance_destroy();
+		}
+		
+		_bx -= ui(8);
+		// draw_set_color(COLORS.panel_toolbar_separator);
+		// draw_line_width(_bx + ui(4), _by, _bx + ui(4), _by + _bs, 2);
+		
+		for (var i = 0, n = array_length(content.title_actions); i < n; i++) {
+			var _b = content.title_actions[i];
+			
+			_bx -= _bs;
+			_b.setFocusHover(sFOCUS, sHOVER);
+			_b.draw(_bx, _by, _bs, _bs, mouse_ui, THEME.button_hide);
+			_bs -= ui(4);
 		}
 	} 
 	

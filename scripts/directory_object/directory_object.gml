@@ -42,6 +42,7 @@ function FileObject(_name, _path) constructor { #region
 		if(!retrive_data) getMetadata();									// Metadata not loaded
 		
 		if(thumbnail_data == -1) return noone;								// Metadata does not contains thumbnail
+		if(!is_struct(thumbnail_data)) return noone;
 		
 		thumbnail = surface_decode(thumbnail_data);
 		return thumbnail;

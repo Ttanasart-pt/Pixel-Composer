@@ -314,12 +314,14 @@ function loadGradient(path) {
 				
 			_col = toNumber(keys[0]);
 			_pos = toNumber(keys[1]);
+			
 		} else {
 			_col = toNumber(key);
 			if(file_text_eof(_t)) break;
 			_pos = toNumber(file_text_readln(_t));
 		}
 			
+		if(!is_int64(_col)) _col = cola(_col);
 		array_push(grad.keys, new gradientKey(_pos, _col));
 	}
 	file_text_close(_t);
