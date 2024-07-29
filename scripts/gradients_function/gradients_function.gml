@@ -141,7 +141,7 @@ function gradientObject(color = c_black) constructor {
 		surface_set_target(surf);
 			DRAW_CLEAR
 			var _gh = aa? _h - ui(8) : _h;
-			draw_sprite_stretched_ext(THEME.gradient_mask, 0, 0, 0, _w, _gh, c_white, _a)
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, 0, 0, _w, _gh, c_white, _a)
 			
 			if(len) {
 				BLEND_MULTIPLY
@@ -159,7 +159,7 @@ function gradientObject(color = c_black) constructor {
 			}
 			
 			if(aa) {
-				draw_sprite_stretched_ext(THEME.gradient_mask, 0, 0, _h - ui(6), _w, ui(6), c_white, _a)
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, 0, _h - ui(6), _w, ui(6), c_white, _a)
 				
 				BLEND_MULTIPLY
 				
