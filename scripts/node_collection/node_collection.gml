@@ -574,21 +574,25 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				return nodes[i].inputs[| 0].getValue();
 		}
 		
-		var _fr = outputs[| preview_channel].from.inputs[| 0];
+		var _oj = outputs[| preview_channel];
+		if(is_undefined(_oj)) return noone;
+		
+		var _fr = _oj.from.inputs[| 0];
 		return _fr.value_from == noone? noone : _fr.value_from.node.getGraphPreviewSurface();
 	}
 	
 	function getPreviewingNode() {
-		var _outJ = outputs[| preview_channel];
+		var _oj = outputs[| preview_channel];
+		if(is_undefined(_oj)) return self;
 		
-		switch(_outJ.type) {
+		switch(_oj.type) {
 			case VALUE_TYPE.d3Mesh   : 
 			case VALUE_TYPE.d3Camera : 
 			case VALUE_TYPE.d3Light  : 
 			case VALUE_TYPE.d3Scene  : 
 			case VALUE_TYPE.d3object : 
 			case VALUE_TYPE.sdf : 
-				var _fr = _outJ.from.inputs[| 0];
+				var _fr = _oj.from.inputs[| 0];
 				return _fr.value_from == noone? self : _fr.value_from.node;
 		}
 		

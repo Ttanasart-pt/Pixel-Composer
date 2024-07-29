@@ -106,6 +106,7 @@ function LOAD_AT(path, params = new __loadParams()) { #region
 	
 	var temp_path = TEMPDIR;
 	directory_verify(temp_path);
+	ds_map_clear(APPEND_MAP);
 	
 	var temp_file_path = TEMPDIR + string(UUID_generate(6));
 	if(file_exists_empty(temp_file_path)) file_delete(temp_file_path);
