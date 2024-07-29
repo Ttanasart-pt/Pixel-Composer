@@ -1,29 +1,20 @@
 function Panel_Nodes() : PanelContent() constructor {
-	#region data
-		title = __txt("Nodes");
-		showHeader  = false;
-		
-		w = ui(320);
-		h = ui(480);
-		
-		title_height = 64;
-		padding = 20;
-		
-		search_string = "";
-		
-		tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
-			search_string = string(str); 
-		});
-		tb_search.align			= fa_left;
-		tb_search.auto_update	= true;
-		tb_search.boxColor		= COLORS._main_icon_light;
-		
-		node_collapse = ds_map_create();
-	#endregion
+	title   = __txt("Nodes");
+	padding = 8;
+	
+	w = ui(320);
+	h = ui(480);
+	
+	search_string = "";
+	
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); });
+	tb_search.align			= fa_left;
+	tb_search.auto_update	= true;
+	tb_search.boxColor		= COLORS._main_icon_light;
+	
+	node_collapse = ds_map_create();
 
-	function onResize() {
-		sc_nodes.resize(w - ui(padding + padding), h - ui(padding + title_height + 40));
-	}
+	function onResize() { sc_nodes.resize(w - ui(padding + padding), h - ui(padding + padding + 40)); }
 	
 	function drawNodeList(_arr, _x0, _x1, _y, _m) {
 		var ww  = sc_nodes.surface_w;
@@ -60,6 +51,7 @@ function Panel_Nodes() : PanelContent() constructor {
 				}
 			} else 
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x0, _y, _x1 - _x0, hg, COLORS._main_icon_light, 1);
+			draw_sprite_stretched_add(THEME.ui_panel_fg, 0, _x0, _y, _x1 - _x0, hg, c_white, .3);
 			
 			var bw = ui(24);
 			var bh = ui(24);
@@ -72,12 +64,11 @@ function Panel_Nodes() : PanelContent() constructor {
 			
 			var _n  = ALL_NODES[? instanceof(node)];
 			var spr = _n.spr;
-			draw_sprite_ui(spr, 1, _x0 + ui(4 + 16), _y + hg / 2, 0.25, 0.25, 0, c_white, 0.75);
+			draw_sprite_ui(spr, 1, _x0 + ui(4 + 16), _y + hg / 2, 0.25, 0.25, 0, c_white, 1);
 			var cc  = COLORS._main_text;
 			draw_set_text(f_p1, fa_left, fa_center, cc);
 			draw_text(_x0 + hg + ui(8) + (isGroup * ui(20)), _y + hg / 2, name);
-			if(isGroup)
-				draw_sprite_ui(THEME.arrow, (!node_collapse[? node.node_id]) * 3, _x0 + hg + ui(16), _y + hg / 2,,,,, 0.75);
+			if(isGroup) draw_sprite_ui(THEME.arrow, (!node_collapse[? node.node_id]) * 3, _x0 + hg + ui(16), _y + hg / 2,,,,, 0.75);
 			
 			_y += hg + ui(4);
 			_h += hg + ui(4);
@@ -92,7 +83,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		return _h;
 	}
 	
-	sc_nodes = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding + 40), function(_y, _m) {
+	sc_nodes = new scrollPane(w - ui(padding + padding), h - ui(padding + padding + 40), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var _h = drawNodeList(PROJECT.nodes, 0, sc_nodes.surface_w, _y, _m);
 		return _h;
@@ -100,13 +91,11 @@ function Panel_Nodes() : PanelContent() constructor {
 
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		PANEL_PADDING
-		PANEL_TITLE
 		
 		var px = ui(padding);
-		var py = ui(title_height);
+		var py = ui(padding);
 		var pw = w - ui(padding + padding);
-		var ph = h - ui(title_height + padding);
+		var ph = h - ui(padding + padding);
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		tb_search.setFocusHover(pFOCUS, pHOVER);

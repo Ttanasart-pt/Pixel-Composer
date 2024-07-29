@@ -112,6 +112,11 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				aa = .75;
 				sc_presets.hover_content = true;
 				
+				if(mouse_press(mb_left, pFOCUS)) {
+					node.resetDefault();
+					if(in_dialog && panel.destroy_on_click_out) close();
+				}
+				
 				if(mouse_press(mb_right, pFOCUS))
 					menuCall("preset_window_menu",,, context_def);
 			}

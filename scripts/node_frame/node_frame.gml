@@ -122,10 +122,12 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
 			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 1, txt, _w - 4);
+			// draw_text_ext_add((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 1, txt, -1, _w - 4);
+			// name_height = max(18, string_height_ext(txt, -1, _w - 4));
 			
 			if(point_in_rectangle(_mx, _my, draw_x0, draw_y0, draw_x0 + _w, draw_y0 + name_height)) {
 				if(PANEL_GRAPH.pFOCUS && DOUBLE_CLICK)
-					tb_name.activate();
+					tb_name.activate(txt);
 			}
 		}
 		

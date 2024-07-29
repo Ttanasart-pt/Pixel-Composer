@@ -103,15 +103,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setPadding	= function(padding) 	{ self.padding		= padding;		return self; }
 	static setEmpty 	= function()			{ no_empty			= false;		return self; }
 	
-	static activate = function() {
+	static activate = function(_def_str = _current_text) {
 		WIDGET_CURRENT = self;
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
 		
-		_input_text	= _current_text;
-		_last_text  = _current_text;
+		_input_text	= _def_str;
+		_last_text  = _def_str;
 		
-		cursor        = string_length(_current_text);
+		cursor        = string_length(_def_str);
 		cursor_select = 0;
 		click_block   = 1;
 		

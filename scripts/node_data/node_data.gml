@@ -749,7 +749,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static resetDefault = function() { 
 		var folder = instanceof(self);
-		if(!ds_map_exists(global.PRESETS_MAP, folder)) return;
+		if(!ds_map_exists(global.PRESETS_MAP, folder)) {
+			for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
+				inputs[| i].resetValue();
+			return;
+		}
 		
 		var pres = global.PRESETS_MAP[? folder];
 		for( var i = 0, n = array_length(pres); i < n; i++ ) {
@@ -758,9 +762,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			deserialize(loadPreset(preset), true, true);
 			applyDeserialize(true);
+			return;
 		}
 		
-		doUpdate();
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
+			inputs[| i].resetValue();
+			
 	} if(!APPENDING && !LOADING) run_in(1, method(self, resetDefault));
 	
 	static addInput = function(junctionFrom, shift = input_fix_len) {

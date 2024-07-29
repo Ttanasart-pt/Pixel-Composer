@@ -70,7 +70,7 @@ function Panel_Globalvar() : PanelContent() constructor {
 			draw_sprite_stretched_ext(THEME.timeline_node, 0, _bx, _by, _bw, _add_h, _hov? COLORS._main_icon_light : COLORS._main_icon, .3 + _hov * .1);
 			draw_sprite_stretched_ext(THEME.timeline_node, 1, _bx, _by, _bw, _add_h, _hov? COLORS._main_icon_light : COLORS._main_icon, .6 + _hov * .25);
 			draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_icon_light : COLORS._main_icon);
-			draw_text_add(_bx + _bw / 2, _by + _add_h / 2, __txt("Exit"));
+			draw_text_add(_bx + _bw / 2, _by + _add_h / 2, __txt("Apply"));
 			
 			contentPane.hover_content |= _hov;
 			if(mouse_press(mb_left, _hov && pFOCUS))
