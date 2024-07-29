@@ -1,4 +1,4 @@
-function Node_create_Text_File_Read(_x, _y, _group = noone) { #region
+function Node_create_Text_File_Read(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
 		path = get_open_filename_pxc("text file|*.txt", "");
@@ -11,9 +11,9 @@ function Node_create_Text_File_Read(_x, _y, _group = noone) { #region
 	node.doUpdate();
 	
 	return node;
-} #endregion
+}
 
-function Node_create_Text_File_Read_path(_x, _y, path) { #region
+function Node_create_Text_File_Read_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_Text_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext());
@@ -21,7 +21,7 @@ function Node_create_Text_File_Read_path(_x, _y, path) { #region
 	node.doUpdate();
 	
 	return node;	
-} #endregion
+}
 
 function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Text File In";
@@ -47,24 +47,24 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	first_update = false;
 	
-	on_drop_file = function(path) { #region
+	on_drop_file = function(path) {
 		if(updatePaths(path)) {
 			doUpdate();
 			return true;
 		}
 		
 		return false;
-	} #endregion
+	}
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { #region
+	static onInspector1Update = function() {
 		updatePaths(path_get(getInputData(0)));
 		triggerRender();
-	} #endregion
+	}
 	
-	function updatePaths(path = path_current) { #region
+	function updatePaths(path = path_current) {
 		if(path == -1) return false;
 		
 		var ext   = string_lower(filename_ext(path));
@@ -80,9 +80,9 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		edit_time    = max(edit_time, file_get_modify_s(path_current));
 		
 		return true;
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		if(attributes.file_checker && file_exists_empty(path_current)) {
 			var _modi = file_get_modify_s(path_current);
 			
@@ -92,21 +92,28 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				run_in(2, function() { updatePaths(); triggerRender(); });
 			}
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var path = path_get(getInputData(0));
 		if(path_current != path) updatePaths(path);
 		
 		outputs[| 0].setValue(content);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		var str = filename_name(path_current);
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
-	} #endregion
+	}
+	
+	static dropPath = function(path) { 
+		if(is_array(path)) path = array_safe_get(path, 0);
+		if(!file_exists_empty(path)) return;
+		
+		inputs[| 0].setValue(path); 
+	}
 }

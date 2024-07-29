@@ -290,4 +290,9 @@ function timelineItemNode_Image_Animated(node) : timelineItemNode(node) construc
 	static onSerialize = function(_map) {
 		_map.type = "timelineItemNode_Image_Animated";
 	}
+	
+	static dropPath = function(path) { 
+		if(!is_array(path)) path = [ path ];
+		inputs[| 0].setValue(path); 
+	}
 }

@@ -2271,32 +2271,44 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		////////////////////////////////// File drop //////////////////////////////////
 		
 		if(pHOVER) {
-			if(DRAGGING) { // file dropping
-				draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
-			
-				if(node_hovering && node_hovering.droppable(DRAGGING)) {
-					node_hovering.draw_droppable = true;
-					if(mouse_release(mb_left))
-						node_hovering.onDrop(DRAGGING);
-				} else {
-					if(mouse_release(mb_left))
-						checkDropItem();
-				}
-			}
+			var gr_x = graph_x * graph_s;
+			var gr_y = graph_y * graph_s;
+			var _gx  = mx / graph_s - graph_x;
+			var _gy  = my / graph_s - graph_y;
+			var _node_hover = noone;
 			
 			var _mx = (FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx) - x;
 			var _my = (FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my) - y;
-		
-			var _gx = _mx / graph_s - graph_x;
-			var _gy = _my / graph_s - graph_y;
 			
-			if(FILE_IS_DROPPING)
+			for(var i = 0; i < array_length(nodes_list); i++) {
+				var _n = nodes_list[i];
+				if(is_instanceof(_n, Node_Frame)) continue;
+				
+				if(_n.pointIn(gr_x, gr_y, _mx, _my, graph_s))
+					_node_hover = _n;
+			}
+				
+			if(DRAGGING || FILE_IS_DROPPING)
 				draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
+				
+			if(DRAGGING) { // file dropping
+				if(_node_hover && _node_hover.droppable(DRAGGING)) {
+					_node_hover.draw_droppable = true;
+					if(mouse_release(mb_left)) _node_hover.onDrop(DRAGGING);
+					
+				} else {
+					if(mouse_release(mb_left)) checkDropItem();
+				}
+			}
+			
+			if(FILE_IS_DROPPING && _node_hover && _node_hover.dropPath != noone)
+				_node_hover.draw_droppable = true;
 			
 			if(FILE_DROPPED && !array_empty(FILE_DROPPING)) {
-				_gx = mx / graph_s - graph_x;
-				_gy = my / graph_s - graph_y;
-				run_in(1, load_file_path, [ FILE_DROPPING, _gx, _gy ]);
+				if(_node_hover && _node_hover.dropPath != noone) 
+					_node_hover.dropPath(FILE_DROPPING);
+				else
+					run_in(1, load_file_path, [ FILE_DROPPING, _gx, _gy ]);
 			}
 		}
 		

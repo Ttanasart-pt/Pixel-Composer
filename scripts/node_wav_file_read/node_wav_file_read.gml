@@ -1,4 +1,4 @@
-function Node_create_WAV_File_Read(_x, _y, _group = noone) { #region
+function Node_create_WAV_File_Read(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
 		path = get_open_filename_pxc("audio|*.wav", "");
@@ -11,9 +11,9 @@ function Node_create_WAV_File_Read(_x, _y, _group = noone) { #region
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
-} #endregion
+}
 
-function Node_create_WAV_File_Read_path(_x, _y, path) { #region
+function Node_create_WAV_File_Read_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_WAV_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext());
@@ -21,7 +21,7 @@ function Node_create_WAV_File_Read_path(_x, _y, path) { #region
 	node.doUpdate();
 	
 	return node;	
-} #endregion
+}
 
 function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "WAV File In";
@@ -89,16 +89,16 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			})]);
 	#endregion
 		
-	on_drop_file = function(path) { #region
+	on_drop_file = function(path) {
 		if(updatePaths(path)) {
 			doUpdate();
 			return true;
 		}
 		
 		return false;
-	} #endregion
+	}
 	
-	function updatePaths(path) { #region
+	function updatePaths(path) {
 		if(path == -1) return false;
 		
 		if(path_current == "") 
@@ -117,9 +117,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		content = file_read_wav(path);
 		return true;
-	} #endregion
+	}
 	
-	function readSoundComplete() { #region
+	function readSoundComplete() {
 		outputs[| 0].setValue(content);
 		outputs[| 2].setValue(content.sample);
 		outputs[| 3].setValue(content.channels);
@@ -140,7 +140,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		preview_audio = audio_create_buffer_sound(bufferId, buffer_s16, content.sample, 0, content.packet * 2, audio_mono);
 		var surf = content.checkPreview(320, 128, true);
-	} #endregion
+	}
 	
 	#region ++++ inspector ++++
 		insp1UpdateTooltip  = __txt("Refresh");
@@ -162,7 +162,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	#endregion
 	
-	static step = function() { #region
+	static step = function() {
 		if(file_read_wav_step()) {
 			print("Load audio complete");
 			readSoundComplete();
@@ -202,9 +202,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				run_in(2, function() { updatePaths(); triggerRender(); });
 			}
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var path = path_get(getInputData(0));
 		var mono = getInputData(2);
 		
@@ -212,9 +212,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!is_instanceof(content, audioObject)) return;
 		
 		content.mono = mono;
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(content == noone) return;
 		var bbox = drawGetBbox(xx, yy, _s);
 		var surf = content.checkPreview(320, 128);
@@ -248,9 +248,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.y1, str, ss, ss, 0);
-	} #endregion
+	}
 	
-	static drawAnimationTimeline = function(_shf, _w, _h, _s) { #region
+	static drawAnimationTimeline = function(_shf, _w, _h, _s) {
 		if(content == noone) return;
 		draw_set_color(COLORS._main_icon_dark);
 		draw_set_alpha(1);
@@ -274,5 +274,12 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		draw_set_alpha(1);
-	} #endregion
+	}
+	
+	static dropPath = function(path) { 
+		if(is_array(path)) path = array_safe_get(path, 0);
+		if(!file_exists_empty(path)) return;
+		
+		inputs[| 0].setValue(path); 
+	}
 }

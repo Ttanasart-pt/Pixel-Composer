@@ -160,7 +160,10 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		#endregion
 	} #endregion
 	
-	static dropPath = function(path) {
-		inputs[| 0].setValue(path);
+	static dropPath = function(path) { 
+		if(is_array(path)) path = array_safe_get(path, 0);
+		if(!file_exists_empty(path)) return;
+		
+		inputs[| 0].setValue(path); 
 	}
 }

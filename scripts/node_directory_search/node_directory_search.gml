@@ -1,4 +1,4 @@
-function Node_create_Directory_Search(_x, _y, _group = noone) { #region
+function Node_create_Directory_Search(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
 		path = get_directory("");
@@ -11,16 +11,16 @@ function Node_create_Directory_Search(_x, _y, _group = noone) { #region
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
-} #endregion
+}
 
-function Node_create_Directory_path(_x, _y, path) { #region
+function Node_create_Directory_path(_x, _y, path) {
 	if(!directory_exists(path)) return noone;
 	
 	var node = new Node_Directory_Search(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	return node;	
-} #endregion
+}
 
 function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Directory Search";
@@ -51,12 +51,12 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
-	function deleteSprite(pathObj) { #region
+	function deleteSprite(pathObj) {
 		if(sprite_exists(pathObj.spr))
 			sprite_delete(pathObj.spr);
-	} #endregion
+	}
 	
-	function refreshSprite(pathObj) { #region
+	function refreshSprite(pathObj) {
 		var path  = pathObj.path;
 		var ext   = string_lower(filename_ext(path));
 		
@@ -80,9 +80,9 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 		
 		return pathObj;
-	} #endregion
+	}
 	
-	function refreshText(pathObj) { #region
+	function refreshText(pathObj) {
 		var path  = pathObj.path;
 		var ext   = string_lower(filename_ext(path));
 		
@@ -90,9 +90,9 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		pathObj.edit_time = file_get_modify_s(path);
 		
 		return pathObj;
-	} #endregion
+	}
 	
-	function updatePaths() { #region
+	function updatePaths() {
 		var path   = getInputData(0);
 		var filter = getInputData(1);
 		var type   = getInputData(2);
@@ -121,17 +121,17 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _p = string_trim_end(path, ["/", "\\"]);
 		setDisplayName(filename_name_only(_p));
-	} #endregion
+	}
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { #region
+	static onInspector1Update = function() {
 		updatePaths();
 		triggerRender();
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		if(attributes.file_checker) {
 			var _update = false;
 			var _paths  = struct_get_names(paths);
@@ -147,9 +147,9 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			if(_update) triggerRender();
 		}
 		
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		updatePaths();
 		var type   = getInputData(2);
 	
@@ -186,5 +186,12 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		outputs[| 0].setType(type == 0? VALUE_TYPE.surface : VALUE_TYPE.text);
 		outputs[| 0].setValue(_outsurf);
 		outputs[| 1].setValue(_imgPaths);
-	} #endregion
+	}
+	
+	static dropPath = function(path) { 
+		if(is_array(path)) path = array_safe_get(path, 0);
+		if(!directory_exists(path)) return;
+		
+		inputs[| 0].setValue(path); 
+	}
 }

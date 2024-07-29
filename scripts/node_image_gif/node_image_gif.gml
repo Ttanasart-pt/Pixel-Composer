@@ -234,6 +234,9 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static dropPath = function(path) {
+		if(is_array(path)) path = array_safe_get(path, 0);
+		if(!file_exists_empty(path)) return;
+		
 		inputs[| 0].setValue(path);
 	}
 }

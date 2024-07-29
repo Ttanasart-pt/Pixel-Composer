@@ -69,7 +69,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
-	on_drop_file = function(path) { #region
+	on_drop_file = function(path) {
 		if(directory_exists(path)) {
 			with(dialogCall(o_dialog_drag_folder, WIN_W / 2, WIN_H / 2)) {
 				dir_paths = path;
@@ -87,17 +87,17 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		return false;
-	} #endregion
+	}
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { #region
+	static onInspector1Update = function() {
 		updatePaths(path_get(getInputData(0)));
 		triggerRender();
-	} #endregion
+	}
 	
-	function updatePaths(paths = path_current) { #region
+	function updatePaths(paths = path_current) {
 		for(var i = 0; i < array_length(spr); i++) {
 			if(spr[i] && sprite_exists(spr[i]))
 				sprite_delete(spr[i]);
@@ -136,9 +136,9 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[| 1].setValue(paths);
 		
 		return true;
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		if(attributes.file_checker)
 		for( var i = 0, n = array_length(path_current); i < n; i++ ) {
 			var _ed = file_get_modify_s(path_current[i]);
@@ -149,9 +149,9 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				break;
 			}
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var path = path_get(getInputData(0));
 		
 		if(!array_equals(path_current, path)) 
@@ -246,5 +246,10 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		outputs[| 0].setValue(surfs);
-	} #endregion
+	}
+	
+	static dropPath = function(path) { 
+		if(!is_array(path)) path = [ path ];
+		inputs[| 0].setValue(path); 
+	}
 }

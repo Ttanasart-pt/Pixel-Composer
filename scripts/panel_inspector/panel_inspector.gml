@@ -637,7 +637,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			var yy = hh + _y;
 			
 			if(i < amoIn) { // inputs
-				jun = _inspecting.input_display_list == -1? jun = _inspecting.inputs[| i] : _inspecting.inputs[| _inspecting.input_display_list[i]];
+					 if(_inspecting.input_display_list == -1)		jun = _inspecting.inputs[| i];
+				else if(is_real(_inspecting.input_display_list[i])) jun = _inspecting.inputs[| _inspecting.input_display_list[i]];
+				else												jun = _inspecting.input_display_list[i];
 				
 			} else if(i == amoIn) { // output label
 				hh += ui(8 + 32 + 8);
@@ -648,11 +650,15 @@ function Panel_Inspector() : PanelContent() constructor {
 				continue;
 			
 			} else { // outputs
-				var outInd = i - amoIn - 1;
-				jun = _inspecting.output_display_list == -1? _inspecting.outputs[| outInd] : _inspecting.outputs[| _inspecting.output_display_list[outInd]];
+				var _oi = i - amoIn - 1;
+				
+					 if(_inspecting.output_display_list == -1)			jun = _inspecting.outputs[| _oi];
+				else if(is_real(_inspecting.output_display_list[i]))	jun = _inspecting.outputs[| _inspecting.output_display_list[_oi]];
+				else													jun = _inspecting.output_display_list[_oi];
 			} 
 			
 			#region draw custom displayer
+			
 				if(is_instanceof(jun, Inspector_Spacer)) {					// SPACER
 					var _hh = ui(jun.h);
 					var _yy = yy + _hh / 2 - ui(2);
@@ -685,6 +691,14 @@ function Panel_Inspector() : PanelContent() constructor {
 					hh += _sh + ui(8);
 					continue;
 					
+				} else if(is_instanceof(jun, Inspector_Custom_Renderer)) {
+					jun.register(contentPane);
+					jun.rx = ui(16) + x;
+					jun.ry = top_bar_h + y;
+					
+					var _wdh = jun.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
+					if(!is_undefined(_wdh)) hh += _wdh;
+					continue;
 				} else if(is_array(jun)) {									// LABEL
 					var pad = i && _colsp == false? ui(4) : 0
 					_colsp  = false;
@@ -757,19 +771,11 @@ function Panel_Inspector() : PanelContent() constructor {
 					
 					continue;
 					
-				} else if(is_struct(jun) && is_instanceof(jun, Inspector_Custom_Renderer)) {
-					jun.register(contentPane);
-					jun.rx = ui(16) + x;
-					jun.ry = top_bar_h + y;
-					
-					var _wdh = jun.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
-					if(!is_undefined(_wdh)) hh += _wdh;
-					continue;
 				}
+			
 			#endregion
 			
-			if(!is_struct(jun)) continue;
-			if(instanceof(jun) != "NodeValue") continue;
+			if(!is_instanceof(jun, NodeValue)) continue;
 			
 			if(!jun.show_in_inspector || jun.type == VALUE_TYPE.object) continue;
 			if(filter_text != "") {
