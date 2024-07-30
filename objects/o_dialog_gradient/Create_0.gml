@@ -3,7 +3,7 @@ event_inherited();
 
 #region data
 	dialog_w = ui(1068);
-	dialog_h = ui(476);
+	dialog_h = ui(468);
 	title_height = 52;
 	
 	name = __txtx("gradient_editor_title", "Gradient editor");
@@ -23,7 +23,7 @@ event_inherited();
 		if(!interactable) return;
 		if(key_selecting == noone) return;
 		setKeyPosition(key_selecting, val / 100);
-	}, function() { removeKeyOverlap(key_selecting); })
+	}, function() { removeKeyOverlap(key_selecting); }).setLabel(__txt("Position"));
 	
 	setColor = function(color) {
 		if(key_selecting == noone) return;
@@ -87,28 +87,37 @@ event_inherited();
 
 #region preset
 	hovering_name = "";
-	sp_preset_w = ui(240 - 32 - 16);
-	sp_presets = new scrollPane(sp_preset_w, dialog_h - ui(62), function(_y, _m) {
-		var ww  = sp_preset_w - ui(40);
-		var hh = ui(32);
-		var yy = _y + ui(8);
-		var hg = ui(52);
-		var _hover = sHOVER && sp_presets.hover;
+	
+	pal_padding = ui(9);
+	sp_preset_w = ui(240) - pal_padding * 2 - ui(8);
+	
+	sp_presets = new scrollPane(sp_preset_w, dialog_h - ui(48 + 8) - pal_padding, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		
+		var ww  = sp_presets.surface_w;
+		var _gs = ui(16);
+		var hh  = ui(24);
+		var nh  = ui(20);
+		var pd  = ui(6);
+		var _ww = ww - pd * 2;
+		var hg  = nh + _gs + pd;
+		var yy  = _y;
+		
+		var _hover = sHOVER && sp_presets.hover;
 		
 		for(var i = 0; i < array_length(GRADIENTS); i++) {
 			var _gradient = GRADIENTS[i];
-			var isHover   = point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg);
+			var isHover   = point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg);
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, ui(4), yy, sp_preset_w - ui(16), hg);
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, hg);
 			if(_hover && isHover) {
 				sp_presets.hover_content = true;
-				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), hg, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.node_active, 1, 0, yy, ww, hg, COLORS._main_accent, 1);
 			}
 				
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text(ui(16), yy + ui(8), _gradient.name);
-			_gradient.gradient.draw(ui(16), yy + ui(28), ww, ui(16));
+			draw_text_add(pd, yy + ui(2), _gradient.name);
+			_gradient.gradient.draw(pd, yy + nh, _ww, _gs);
 			
 			if(_hover && isHover) {
 				if(mouse_press(mb_left, interactable && sFOCUS)) {
@@ -147,56 +156,55 @@ event_inherited();
 #region palette
 	palette_selecting = -1;
 	
-	sp_palette_w = ui(240 - 32 - 16);
-	sp_palette_size = ui(24);
-	click_block = true;
+	sp_palette_w    = ui(240) - pal_padding * 2 - ui(8);
+	sp_palette_size = ui(20);
+	click_block     = true;
 	
-	sp_palettes = new scrollPane(sp_palette_w, dialog_h - ui(62), function(_y, _m) {
-		var ww  = sp_palette_w - ui(40);
-		var hh  = ui(32);
-		var _gs = sp_palette_size;
-		var yy  = _y + ui(8);
-		var _height, pre_amo;
-		var _hover = sHOVER && sp_palettes.hover;
+	sp_palettes = new scrollPane(sp_palette_w, dialog_h - ui(48 + 8) - pal_padding, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		
+		var ww  = sp_palettes.surface_w;
+		var _gs = sp_palette_size;
+		var hh  = ui(24);
+		var nh  = ui(20);
+		var pd  = ui(6);
+		var _ww = ww - pd * 2;
+		var _bh = nh + _gs + pd;
+		var yy  = _y;
+		
+		var _height, pre_amo, _palRes;
+		var _hover = sHOVER && sp_palettes.hover;
+		var col = max(1, floor(_ww / _gs)), row;
 		
 		for(var i = -1; i < array_length(PALETTES); i++) {
 			var pal = i == -1? {
-				name: "project",
-				palette: PROJECT.attributes.palette,
-				path: ""
+				name    : "project",
+				palette : PROJECT.attributes.palette,
+				path    : ""
 			} : PALETTES[i];
 			
 			pre_amo = array_length(pal.palette);
-			var col = floor(ww / _gs);
-			var row = ceil(pre_amo / col);
+			row     = ceil(pre_amo / col);
+			_height = palette_selecting == i? nh + row * _gs + pd : _bh;
 			
-			if(palette_selecting == i)
-				_height = ui(28) + row * _gs + ui(12);
-			else
-				_height = ui(56);
+			var isHover = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + _height);
 			
-			var isHover = _hover && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_palette_w - ui(16), yy + _height);
-			
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, ui(4), yy, sp_palette_w - ui(16), _height);
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, _height);
 			if(isHover) {
 				sp_palettes.hover_content = true;
-				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_palette_w - ui(16), _height, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.node_active, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
 			}
 			
-			var x0 = ui(16) + (i == -1) * ui(8 + 6);
 			var cc = i == palette_selecting? COLORS._main_accent : COLORS._main_text_sub;
 			draw_set_text(f_p2, fa_left, fa_top, cc);
-			draw_text(x0, yy + ui(8), pal.name);
-			if(i == -1) {
-				draw_set_color(cc);
-				draw_circle_prec(ui(16) + ui(4), yy + ui(16), ui(4), false);
-			}
+			draw_text_add(pd, yy + ui(2), pal.name);
 			
-			if(palette_selecting == i)
-				var _palRes = drawPaletteGrid(pal.palette, ui(16), yy + ui(28), ww, _gs, { mx : _m[0], my : _m[1] });
+			if(i == -1) { draw_set_color(cc); draw_circle_prec(ww - ui(10), yy + ui(10), ui(4), false); }
+			
+			if(palette_selecting == i) 
+				_palRes = drawPaletteGrid(pal.palette, pd, yy + nh, _ww, _gs, { mx : _m[0], my : _m[1] });
 			else
-				drawPalette(pal.palette, ui(16), yy + ui(28), ww, ui(20));
+				drawPalette(pal.palette, pd, yy + nh, _ww, _gs);
 			
 			if(!click_block && mouse_click(mb_left, interactable && sFOCUS)) {
 				if(palette_selecting == i && _hover && _palRes.hoverIndex > noone) {
@@ -212,20 +220,18 @@ event_inherited();
 				}
 			}	
 			
-			if(isHover) {
-				if(i >= 0 && mouse_press(mb_right, interactable && sFOCUS)) {
-					hovering = pal;
-					
-					menuCall("palette_window_preset_menu",,, [
-						menuItem(__txtx("palette_editor_set_default", "Set as default"), function() { 
-							PROJECT.setPalette(array_clone(hovering.palette));
-						}),
-						menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
-							file_delete(hovering.path); 
-							__initPalette();
-						}),
-					]);
-				}
+			if(isHover && i >= 0 && mouse_press(mb_right, interactable && sFOCUS)) {
+				hovering = pal;
+				
+				menuCall("palette_window_preset_menu",,, [
+					menuItem(__txtx("palette_editor_set_default", "Set as default"), function() { 
+						PROJECT.setPalette(array_clone(hovering.palette));
+					}),
+					menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
+						file_delete(hovering.path); 
+						__initPalette();
+					}),
+				]);
 			}
 			
 			yy += _height + ui(4);

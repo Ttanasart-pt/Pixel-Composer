@@ -104,7 +104,7 @@ function Panel_Palette() : PanelContent() constructor {
 		var right_clicked = false;
 		var pd    = view_label? lerp(ui(4), ui(10), (grid_size - ui(8)) / (ui(32) - ui(8))) : ui(3);
 		var param = { color: cur, stretch : PREFERENCES.palette_stretch, mx : _m[0], my : _m[1] };
-		var _font = grid_size > ui(12)? f_p2 : f_p3;
+		var _font = f_p3;
 		
 		for(var i = 0; i < array_length(PALETTES); i++) {
 			var preset	= PALETTES[i];

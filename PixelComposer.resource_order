@@ -1427,6 +1427,7 @@
     {"name":"sh_de_corner","order":6,"path":"shaders/sh_de_corner/sh_de_corner.yy",},
     {"name":"sh_de_stray","order":7,"path":"shaders/sh_de_stray/sh_de_stray.yy",},
     {"name":"sh_default","order":6,"path":"shaders/sh_default/sh_default.yy",},
+    {"name":"sh_dialog_palette_selector","order":7,"path":"shaders/sh_dialog_palette_selector/sh_dialog_palette_selector.yy",},
     {"name":"sh_diffuse_flow","order":1,"path":"shaders/sh_diffuse_flow/sh_diffuse_flow.yy",},
     {"name":"sh_diffuse_post","order":2,"path":"shaders/sh_diffuse_post/sh_diffuse_post.yy",},
     {"name":"sh_dilate","order":4,"path":"shaders/sh_dilate/sh_dilate.yy",},

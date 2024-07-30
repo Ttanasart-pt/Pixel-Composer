@@ -40,10 +40,10 @@ if !ready exit;
 #endregion
 
 #region presets
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, presets_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, presets_x + pal_padding, dialog_y + ui(48), ui(240) - pal_padding * 2, dialog_h - ui(48) - pal_padding);
 	
 	sp_presets.setFocusHover(sFOCUS, sHOVER);
-	sp_presets.draw(presets_x + ui(16 + 8), dialog_y + ui(44));
+	sp_presets.draw(presets_x + pal_padding + ui(4), dialog_y + ui(48) + ui(4));
 	
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);
@@ -79,10 +79,10 @@ if !ready exit;
 #endregion
 
 #region palette
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, palette_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, palette_x + pal_padding, dialog_y + ui(48), ui(240) - pal_padding * 2, dialog_h - ui(48) - pal_padding);
 	
 	sp_palettes.setFocusHover(sFOCUS, sHOVER);
-	sp_palettes.draw(palette_x + ui(16 + 8), dialog_y + ui(44));
+	sp_palettes.draw(palette_x + pal_padding + ui(4), dialog_y + ui(48) + ui(4));
 	
 	var bx = palette_x + palette_w - ui(44);
 	var by = dialog_y + ui(12);
@@ -201,18 +201,16 @@ if !ready exit;
 	var op_x = content_x + ui(20);
 	var op_y = gr_y + gr_h + ui(12);
 	
-	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-	draw_text(op_x, op_y + TEXTBOX_HEIGHT / 2, __txt("Position"))
-	
 	var txt = key_selecting? key_selecting.time * 100 : 0;
 	sl_position.setFocusHover(sFOCUS, sHOVER);
 	sl_position.register();
-	sl_position.draw(op_x + ui(100), op_y, ui(content_w - 140), TEXTBOX_HEIGHT, txt, mouse_ui);
+	sl_position.setFont(f_p2);
+	sl_position.draw(op_x, op_y, ui(content_w - 40), ui(24), txt, mouse_ui);
 #endregion
 
 #region selector
 	var col_x = content_x + ui(20);
-	var col_y = dialog_y + ui(136);
+	var col_y = dialog_y + ui(128);
 	
 	if(palette_selecting > -1)
 		selector.palette = PALETTES[palette_selecting].palette;

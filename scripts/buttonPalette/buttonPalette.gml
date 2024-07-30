@@ -227,7 +227,7 @@ function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { #region
 
 function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) { #region
 	var c_color  = struct_try_get(params, "color",   -1);
-	var _stretch = struct_try_get(params, "stretch", false);
+	var _stretch = struct_try_get(params, "stretch", true);
 	var _mx      = struct_try_get(params, "mx",      -1);
 	var _my      = struct_try_get(params, "my",      -1);
 	

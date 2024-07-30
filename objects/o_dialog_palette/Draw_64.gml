@@ -34,10 +34,10 @@ if palette == 0 exit;
 #endregion
 
 #region presets
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, presets_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, presets_x + pal_padding, dialog_y + ui(48), ui(240) - pal_padding * 2, dialog_h - ui(48) - pal_padding);
 	
 	sp_presets.setFocusHover(sFOCUS, sHOVER);
-	sp_presets.draw(presets_x + ui(24), dialog_y + ui(44));
+	sp_presets.draw(presets_x + pal_padding + ui(4), dialog_y + ui(48) + ui(4));
 	
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);
@@ -76,21 +76,7 @@ if palette == 0 exit;
 #endregion
 
 #region palette
-	var pl_x = content_x + ui(60);
-	var pl_y = dialog_y + ui(54);
-	var pl_w = content_w - ui(154);
-	var pl_h = ui(24);
-	
-	var max_col = 8;
-	var col = min(array_length(palette), max_col);
-	var row = ceil(array_length(palette) / col);
-	var ww = round(pl_w / col);
-	var hh = (pl_h + ui(6)) * row;
-	dialog_h = ui(408) + hh;
-	
-	draw_sprite_stretched(THEME.textbox, 3, pl_x - ui(6), pl_y - ui(6), pl_w + ui(12), hh + ui(6));
-	draw_sprite_stretched(THEME.textbox, 0, pl_x - ui(6), pl_y - ui(6), pl_w + ui(12), hh + ui(6));
-	
+
 	#region tools
 		var bx = content_x + content_w - ui(50);
 		var by = dialog_y + ui(16);
@@ -114,99 +100,228 @@ if palette == 0 exit;
 		bx -= ui(32);
 	#endregion
 	
+	var pl_x = content_x + ui(60);
+	var pl_y = dialog_y + ui(54);
+	var pl_w = content_w - ui(154);
+	var hh   = ui(24);
+	
+	var pd   = ui(0);
+	var _len = array_length(palette);
+	
+	var min_col = 8;
+	var col  = min(_len, min_col);
+	var row  = ceil(_len / col);
+	if(row > 8) {
+		col = 16;
+		row = ceil(_len / col);
+	}
+	
+	var ww   = pl_w / col;
+	var pl_h = hh * row;
+	
+	dialog_h = ui(408) + pl_h;
+	
+	var pdd = ui(6);
+	var pl_sx = pl_x - pdd;
+	var pl_sy = pl_y - pdd;
+	var pl_sw = pl_w + pdd * 2;
+	var pl_sh = pl_h + pdd * 2;
+	
+	draw_sprite_stretched(THEME.textbox, 3, pl_sx, pl_sy, pl_sw, pl_sh);
+	draw_sprite_stretched(THEME.textbox, 0, pl_sx, pl_sy, pl_sw, pl_sh);
+	
+	selection_surface = surface_verify(selection_surface, pl_sw, pl_sh);
+	
 	var hover = -1, hvx, hvy;
-	var _pd = ui(5);
+	
+	var _pw = ceil(ww - pd * 2);
+	var _ph = ceil(hh - pd * 2);
+	
+	var _spx = pl_x - pdd;
+	var _spy = pl_y - pdd;
+	var ppos = palette_positions;
+	
+	var _hedge  = false;
+	var _clrRep = {};
+	var _palInd = [];
 	
 	for(var i = 0; i < row; i++)
 	for(var j = 0; j < col; j++) {
 		var index = i * col + j;
-		if(index >= array_length(palette)) break;
+		if(index >= _len) break;
 		
 		var _p  = palette[index];
 		var _pa = _color_get_alpha(_p);
 		var _kx = pl_x + j * ww;
-		var _ky = pl_y + i * (pl_h + ui(6));
+		var _ky = pl_y + i * hh;
 		
-		var _px = _kx + ui(2);
-		var _py = _ky;
-		var _pw = ww - ui(4);
-		var _ph = pl_h;
+		var _px = floor(_kx + pd);
+		var _py = floor(_ky + pd);
 		
-		if(index == index_dragging) {
-			index_drag_x_to = _px;
-			index_drag_y_to = _py;
-			index_drag_w_to = _pw;
-			index_drag_h_to = _ph;
-			continue;
+		var _k  = string(_p);
+		var _ii = 0;
+		while(struct_has(_clrRep, _k)) {
+			_k = $"{_p}{_ii}";
+			_ii++;
 		}
 		
-		if(_pa < 1) {
-			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py, _pw, _ph - ui(8), _p, 1);
-			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py + _ph - ui(6), _pw, ui(6), c_black, 1);
-			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py + _ph - ui(6), _pw * _pa, ui(6), c_white, 1);
-		} else 
-			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py, _pw, _ph, _p, 1);
-			
-		if(index == index_selecting)
-			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _px - _pd, _py - _pd, _pw + _pd * 2, _ph + _pd * 2, c_white, 1);
+		_clrRep[$ _k] = 1;
 		
-		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx, _ky, _kx + ww, _ky + pl_h)) {
+		if(struct_has(ppos, _k)) {
+			ppos[$ _k][0] = ppos[$ _k][0] == 0? _px : lerp_float(ppos[$ _k][0], _px, 4);
+			ppos[$ _k][1] = ppos[$ _k][1] == 0? _py : lerp_float(ppos[$ _k][1], _py, 4);
+		} else {
+			ppos[$ _k] = [ _px, _py ];
+		}
+		
+		var _pdx = ppos[$ _k][0];
+		var _pdy = ppos[$ _k][1];
+		
+		var _ind = 0;
+		if(row == 1) {
+				 if(j == 0)       _ind = 2;
+			else if(j == col - 1) _ind = 3;
+		} else {
+				 if(index == 0)     	    _ind = 6;
+			else if(i == 0 && j == col - 1) _ind = 7;
+			else if(i == row - 2) {
+			     if(j == col - 1 && _len - 1 < index + col)   _ind = 9;
+			} else if(i == row - 1) {
+				 if(j == 0)            _ind = 8;
+				 if(j == col - 1)      _ind = 7;
+				 if(index == _len - 1) _ind = 9;
+			}
+		}
+		
+		_palInd[index] = _ind;
+		drawColor(_p, _pdx, _pdy, _pw, _ph, _ind);
+		
+		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx, _ky, _kx + ww, _ky + hh)) {
 			hover = index;
 			hvx = _kx;
 			hvy = _ky;
+			
+			if(index >= index_selecting[0] && index < index_selecting[0] + index_selecting[1] 
+				&& !point_in_rectangle(mouse_mx, mouse_my, _kx + 4, _ky + 4, _kx + ww - 8, _ky + hh - 8))
+				
+				_hedge = true;
 		}
 	}
 	
-	if(index_dragging > -1) {
-		index_drag_x = index_drag_x == 0? index_drag_x_to : lerp_float(index_drag_x, index_drag_x_to, 5);
-		index_drag_y = index_drag_y == 0? index_drag_y_to : lerp_float(index_drag_y, index_drag_y_to, 5);
-		index_drag_w = index_drag_w == 0? index_drag_w_to : lerp_float(index_drag_w, index_drag_w_to, 5);
-		index_drag_h = index_drag_h == 0? index_drag_h_to : lerp_float(index_drag_h, index_drag_h_to, 5);
-		
-		_px = index_drag_x;
-		_py = index_drag_y;
-		_pw = index_drag_w;
-		_ph = index_drag_h;
-		_p  = palette[index_dragging];
-		_pa = _color_get_alpha(_p);
-		
-		if(_pa < 1) {
-			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py, _pw, _ph - ui(8), _p, 1);
-			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py + _ph - ui(6), _pw, ui(6), c_black, 1);
-			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py + _ph - ui(6), _pw * _pa, ui(6), c_white, 1);
-		} else 
-			draw_sprite_stretched_ext(THEME.palette_mask, 1, _px, _py, _pw, _ph, _p, 1);
-		draw_sprite_stretched_ext(THEME.palette_selecting, 0, _px - _pd, _py - _pd, _pw + _pd * 2, _ph + _pd * 2, c_white, 1);
-		
-		if(hover > -1 && hover != index_dragging) {
-			draw_set_color(COLORS.dialog_palette_divider);
-			var sx = hvx;
-			if(hover >= index_dragging) sx += ww;
+	surface_set_target(selection_surface);
+		DRAW_CLEAR
+		for(var i = 0; i < row; i++)
+		for(var j = 0; j < col; j++) {
+			var index = i * col + j;
+			if(index >= _len) break;
 			
-			var tt = palette[index_dragging];
+			if(index >= index_selecting[0] && index < index_selecting[0] + index_selecting[1]) {
+				var _p  = palette[index];
 				
-			array_delete(palette, index_dragging, 1);
-			array_insert(palette, hover, tt);
-			index_selecting = hover;
-			index_dragging  = hover;
+				var _px = ppos[$ _p][0] - pl_sx;
+				var _py = ppos[$ _p][1] - pl_sy;
 				
+				drawColor(_p, _px, _py, _pw, _ph, _palInd[index]);
+			}
+		}
+	surface_reset_target();
+	
+	shader_set(sh_dialog_palette_selector);
+		shader_set_f("dimension",     pl_sw, pl_sh);
+		shader_set_i("edge",          _hedge && !mouse_click(mb_left));
+		shader_set_color("edgeColor", COLORS._main_accent);
+		
+		draw_surface(selection_surface, pl_sx, pl_sy);
+	shader_reset();
+	
+	if(index_dragging != noone) {
+		if(hover > -1 && hover != index_dragging) {
+			
+			var prea = [];
+			var cont = [];
+			var posa = [];
+			
+			var _0 = index_selecting[0];
+			var _1 = index_selecting[0] + index_selecting[1];
+			var _2 = array_length(palette);
+			
+			for(var i = 0; i < _2; i++) {
+					 if(i < _0) array_push(prea, palette[i]);
+				else if(i < _1) array_push(cont, palette[i]);
+				else            array_push(posa, palette[i]);
+			}
+			
+			var _shf = clamp(hover - index_dragging, -index_selecting[0], _2 - (index_selecting[0] + index_selecting[1]));
+			var _pal = [];
+			
+			if(_shf < 0) {
+				for (var i = 0, n = array_length(prea) + _shf; i < n; i++)              		array_push(_pal, prea[i]);
+				for (var i = 0, n = array_length(cont); i < n; i++)                     		array_push(_pal, cont[i]);
+				for (var i = array_length(prea) + _shf, n = array_length(prea); i < n; i++)		array_push(_pal, prea[i]);
+				for (var i = 0, n = array_length(posa); i < n; i++)                     		array_push(_pal, posa[i]);
+				
+				palette = _pal;
+				
+			} else if(_shf > 0) {
+				for (var i = 0, n = array_length(prea); i < n; i++)                     		array_push(_pal, prea[i]);
+				for (var i = 0, n = _shf; i < n; i++)                                   		array_push(_pal, posa[i]);
+				for (var i = 0, n = array_length(cont); i < n; i++)                     		array_push(_pal, cont[i]);
+				for (var i = _shf, n = array_length(posa); i < n; i++)                  		array_push(_pal, posa[i]);
+				
+				palette = _pal;
+				
+			}
+			
+			index_selecting[0] += _shf;
+			index_dragging      = hover;
 			onApply(palette);
 		}
 		
-		if(mouse_release(mb_left))
-			index_dragging = -1;
+		if(mouse_release(mb_left)) {
+			index_selecting = [ 0, 0 ];
+			index_dragging  = noone;
+		}
+			
 	} else {
 		index_drag_x = 0;
 		index_drag_y = 0;
 		index_drag_w = 0;
 		index_drag_h = 0;
-	}
 	
-	if(mouse_press(mb_left, sFOCUS) && hover > -1) {
-		index_selecting = hover;
-		if(interactable)
-			index_dragging = hover;
-		selector.setColor(palette[hover]);
+		if(hover > -1) {
+			
+			if(mouse_press(mb_left, sFOCUS)) {
+				
+				if(interactable) {
+					if(_hedge) index_dragging = hover;
+					else {
+						index_selecting = [ hover, 1 ];
+						selector.setColor(palette[hover]);
+					}
+					
+				} else if(!interactable) {
+					index_selecting = [ hover, 1 ];
+					selector.setColor(palette[hover]);
+				}
+				
+				index_sel_start = hover;
+				
+			} else if(mouse_click(mb_left, sFOCUS)) {
+				
+				if(hover > index_sel_start) {
+					index_selecting[0] = index_sel_start;
+					index_selecting[1] = hover - index_sel_start + 1;
+					
+				} else if(hover < index_sel_start) {
+					index_selecting[0] = hover;
+					index_selecting[1] = index_sel_start - hover + 1;
+					
+				} else {
+					index_selecting[0] = hover;
+					index_selecting[1] = 1;
+				}
+			} 
+		}
 	}
 	
 	var bx = content_x + content_w - ui(50);
@@ -214,8 +329,9 @@ if palette == 0 exit;
 	
 	if(array_length(palette) > 1) {
 		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, "", THEME.minus) == 2) {
-			array_delete(palette, index_selecting, 1);
-			index_selecting = clamp(index_selecting - 1, 0, array_length(palette) - 1);
+			array_delete(palette, index_selecting[0], index_selecting[1]);
+			index_selecting = [ 0, 0 ];
+			
 			onApply(palette);
 		}
 	} else {
@@ -224,8 +340,9 @@ if palette == 0 exit;
 	
 	bx -= ui(32);
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, "", THEME.add) == 2) {
-		index_selecting = array_length(palette);
 		palette[array_length(palette)] = c_black;
+		index_selecting = [ array_length(palette), 1 ];
+		
 		onApply(palette);
 	}
 	
@@ -244,7 +361,7 @@ if palette == 0 exit;
 
 #region selector
 	var col_x = content_x + ui(20);
-	var col_y = dialog_y + ui(70) + hh;
+	var col_y = dialog_y  + ui(70) + pl_h;
 	
 	selector.draw(col_x, col_y, sFOCUS, sHOVER);
 #endregion

@@ -35,10 +35,10 @@ if !ready exit;
 #endregion
 
 #region palette
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, presets_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, presets_x + pal_padding, dialog_y + ui(48), ui(240) - pal_padding * 2, dialog_h - ui(48) - pal_padding);
 	
 	sp_presets.setFocusHover(sFOCUS, sHOVER);
-	sp_presets.draw(presets_x + ui(24), dialog_y + ui(44));
+	sp_presets.draw(presets_x + pal_padding + ui(4), dialog_y + ui(48) + ui(4));
 	
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);

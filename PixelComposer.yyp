@@ -2069,6 +2069,7 @@
     {"id":{"name":"sh_de_corner","path":"shaders/sh_de_corner/sh_de_corner.yy",},},
     {"id":{"name":"sh_de_stray","path":"shaders/sh_de_stray/sh_de_stray.yy",},},
     {"id":{"name":"sh_default","path":"shaders/sh_default/sh_default.yy",},},
+    {"id":{"name":"sh_dialog_palette_selector","path":"shaders/sh_dialog_palette_selector/sh_dialog_palette_selector.yy",},},
     {"id":{"name":"sh_diffuse_dissipate","path":"shaders/sh_diffuse_dissipate/sh_diffuse_dissipate.yy",},},
     {"id":{"name":"sh_diffuse_flow","path":"shaders/sh_diffuse_flow/sh_diffuse_flow.yy",},},
     {"id":{"name":"sh_diffuse_post","path":"shaders/sh_diffuse_post/sh_diffuse_post.yy",},},

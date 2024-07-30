@@ -18,7 +18,7 @@ function Panel_Gradient() : PanelContent() constructor {
 		
 		var pd  = ui(6);
 		var gw  = (ww + ui(8)) / col;
-		var hg  = ui(26);
+		var hg  = ui(40);
 		var yy  = _y;
 		
 		for(var i = 0; i < row; i++) {
@@ -26,23 +26,20 @@ function Panel_Gradient() : PanelContent() constructor {
 				var ind = i * col + j;
 				if(ind >= amo) break;
 			
-				var gww     = gw - ui(8);
-				var xx      = j * gw;
+				var xx  = j * gw;
+				var gww = gw - ui(8);
+				var _py = yy + ui(18);
+				var _ph = hg - ui(18 + 4);
 				var preset	= GRADIENTS[ind];
 				var isHover = pHOVER && point_in_rectangle(_m[0], _m[1], xx, max(0, yy), xx + gww, min(sp_gradient.h, yy + hg));
 				
 				draw_sprite_stretched(THEME.ui_panel_bg, 3, xx, yy, gww, hg);
 				
-				preset.gradient.draw(xx, yy, gww, hg);
-				draw_set_text(f_p2, fa_left, fa_center, c_white);
+				preset.gradient.draw(xx + ui(4), _py, gww - ui(8), _ph);
+				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+				draw_text_add(xx + pd, yy + ui(2), preset.name);
 				
-				if(_color_get_light(preset.gradient.keys[0].value) > 0.5) {
-					draw_set_color(c_black);
-					draw_text(xx + pd, yy + hg / 2, preset.name);
-				} else
-					draw_text_add(xx + pd, yy + hg / 2, preset.name);
-				
-				draw_sprite_stretched_add(THEME.ui_panel_fg, 1, xx, yy, gww, hg, c_white, 0.3);
+				draw_sprite_stretched_add(THEME.ui_panel_fg, 1, xx + ui(4), _py, gww - ui(8), _ph, c_white, 0.3);
 				if(isHover) {
 					sp_gradient.hover_content = true;
 					draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, gww, hg, COLORS._main_accent, 1);
