@@ -8,6 +8,150 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 0] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
 	
+	inputs[| 1] = nodeValueSeed(self, VALUE_TYPE.float);
+	
+	inputs[| 2] = nodeValue("Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)	
+		.setDisplay(VALUE_DISPLAY.slider)
+	
+	inputs[| 3] = nodeValue("Shade", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 4] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)	
+		.setDisplay(VALUE_DISPLAY.slider)
+		
+	inputs[| 5] = nodeValue("Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)	
+		.setDisplay(VALUE_DISPLAY.slider)
+		
+	inputs[| 6] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ cola(c_black), cola(c_white) ])	
+		.setDisplay(VALUE_DISPLAY.palette)
+		
+	inputs[| 7] = nodeValue("Additive", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)	
+		
+	inputs[| 8] = nodeValue("Diagonal", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)	
+		.setDisplay(VALUE_DISPLAY.slider)
+		
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 
+		["Surfaces", false], 0, 
+		["Sparkle",	 false], 2, 4, 5, 8, 
+		["Render",	 false, 3], 6, 7, 
+	]
+	
+	temp_surface = array_create(3);
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var _seed = _data[1];
+		
+		var _size = _data[0];
+		
+		var _sped = _data[2];
+		var _amou = _data[4];
+		var _scat = _data[5];
+		var _diag = _data[8];
+		
+		var _shad = _data[3];
+		var _palt = _data[6];
+		var _badd = _data[7];
+		
+		_outSurf = surface_verify(_outSurf, _size, _size);
+		random_set_seed(_seed);
+		
+		var st_sz = ceil( _size / 2);
+		var st_ps = floor(_size / 2);
+		temp_surface[0] = surface_verify(temp_surface[0], st_sz, st_sz);
+		temp_surface[1] = surface_verify(temp_surface[1], _size, _size);
+		temp_surface[2] = surface_verify(temp_surface[2], _size, _size);
+		
+		var f = CURRENT_FRAME * _sped;
+		
+		surface_set_target(temp_surface[0]);
+			DRAW_CLEAR
+				
+			var _amo = 3 + irandom(st_ps * _amou);
+			var _ind = 0;
+			var _sct = lerp(25, 1, power(_scat, 0.1));
+			var _pal_sz = array_length(_palt);
+			
+			draw_set_color(c_white);
+			if(_badd) BLEND_ADD
+			
+			repeat(_amo) {
+				if(_shad) {
+					var _in = _ind / (_amo - 1);
+					draw_set_color(_palt[(_pal_sz - 1) * _in]);
+				}
+				_ind++;
+				
+				var dy = power(random(1), _sct) * (st_ps / 2);
+				var dx = power(random(1), _sct) * (st_ps / 2);
+				
+				var sx = irandom_range(1, st_ps / 4);
+				var sl = irandom_range(1, st_ps / 4) * -1;
+				var ll = irandom_range(1, st_ps / 2);
+				
+				var len  = max(0, ll + f * sl);
+				var diam = random(1) < _diag * 0.2;
+				var diag = random(1) < _diag;
+				
+				if(len <= 0) continue;
+				
+				if(diam) {
+					var lx  = -1 + dx        - f * sx;
+					var ly  = st_sz - 1 - dy - f * sx;
+					
+					draw_line(lx, ly, lx - len, ly - len);
+					
+				} else if(diag) {
+					var lx  = -1 + dx        + f * sx;
+					var ly  = st_sz - 1 - dy - f * sx;
+					
+					draw_line(lx, ly, lx + len, ly - len);
+					
+				} else {
+					var ly  = st_sz - 1 - dy;
+					var lx0 = -1 + f * sx + dx;
+					var lx1 = lx0 + len;
+					
+					draw_line(lx0, ly, lx1, ly);
+				}
+			}
+		surface_reset_target();
+		BLEND_NORMAL
+		
+		surface_set_target(temp_surface[1]);
+			DRAW_CLEAR
+			
+			draw_surface_ext(temp_surface[0], st_ps, 0,  1,  1, 0, c_white, 1);
+			draw_surface_ext(temp_surface[0], st_sz, 0, -1,  1, 0, c_white, 1);
+		surface_reset_target();
+		
+		surface_set_target(temp_surface[2]);
+			DRAW_CLEAR
+			
+			draw_surface_ext(temp_surface[1], 0,     0,  1,  1, 0, c_white, 1);
+			draw_surface_ext(temp_surface[1], 0, _size,  1, -1, 0, c_white, 1);
+		surface_reset_target();
+		
+		surface_set_target(_outSurf);
+			DRAW_CLEAR
+			
+			draw_surface_ext(temp_surface[2], 0,     0, 1, 1,  0, c_white, 1);
+			draw_surface_ext(temp_surface[2], 0, _size, 1, 1, 90, c_white, 1);
+		surface_reset_target();
+		
+		return _outSurf;
+	}
+}
+
+/* Old sparkle, dunno why but I don't want to remove it yet
+
+function __Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+	name = "MK Sparkle";
+	dimension_index = -1;
+	update_on_frame = true;
+	
+	inputs[| 0] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
+	
 	inputs[| 1] = nodeValue("Sparkle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 
 			[ MKSPARK_DIRR.main, 0,  0, 2, 1, 0, 0 ], 
 			[ MKSPARK_DIRR.main, 0, -1, 1, 1, 0, 0 ], 
@@ -32,7 +176,7 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	editor_timer_mx   = 0;
 	editor_timer_sx   = 0;
 	
-	sparkleEditor = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	sparkleEditor = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _size = inputs[| 0].getValue();
 		var _sprk = inputs[| 1].getValue();
 		
@@ -208,7 +352,7 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		}
 		
 		return _h;
-	}); #endregion
+	});
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
 		["Sparkle",  false], 0, 2, 3, 
@@ -265,6 +409,7 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 					
 					if(lng == 0) draw_point(_lx, _ly);
 					else		 draw_line(_lx, _ly, _lx + lng, _ly);
+					
 				} else if(dr == MKSPARK_DIRR.diag) {
 					var _l0 = _c - 1 + sp * ff;
 					var _l1 = _l0 + lng;

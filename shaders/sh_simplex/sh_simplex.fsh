@@ -39,13 +39,13 @@ uniform vec2 colorRanB;
 vec2 sca;
 float itrMax, itr;
 
-vec3 hsv2rgb(vec3 c) { #region
+vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-} #endregion
+}
 
-float snoise(vec3 vec) { #region
+float snoise(vec3 vec) {
 	vec3 v = vec * 4.;
 	
 	const vec2 C = vec2(1.0 / 6.0, 1.0 / 3.0);
@@ -121,9 +121,9 @@ float snoise(vec3 vec) { #region
 	float n = 105.0 * dot( m * m, vec4( dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3) ) );
 	n = mix(0.0, 0.5 + 0.5 * n, smoothstep(0.0, 0.003, vec.z));
 	return n;
-} #endregion
+}
 
-float simplex(in vec2 st) { #region
+float simplex(in vec2 st) {
     vec2 p   = st;
 	float _z = 1. + position.z;
     vec3 xyz = vec3(p, _z);
@@ -144,24 +144,21 @@ float simplex(in vec2 st) { #region
 	}
 	
 	return n;
-} #endregion
+}
 
-void main() { #region
-	#region params
-		sca = scale;
-		if(scaleUseSurf == 1) {
-			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
-			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
-		}
-		
-		itr    = iteration.x;
-		itrMax = max(iteration.x, iteration.y);
-		if(iterationUseSurf == 1) {
-			vec4 _vMap = texture2D( iterationSurf, v_vTexcoord );
-			itr = mix(iteration.x, iteration.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-		}
-		
-	#endregion
+void main() {
+	sca = scale;
+	if(scaleUseSurf == 1) {
+		vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+		sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
+	}
+	
+	itr    = iteration.x;
+	itrMax = max(iteration.x, iteration.y);
+	if(iterationUseSurf == 1) {
+		vec4 _vMap = texture2D( iterationSurf, v_vTexcoord );
+		itr = mix(iteration.x, iteration.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
 	
 	vec2 pos  = position.xy / dimension;
 	float ang = rotation;
@@ -182,4 +179,4 @@ void main() { #region
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
 	}
-} #endregion
+}

@@ -700,6 +700,7 @@ function __initNodes() {
 		addNodeObject(d3d, "RM Terrain",		s_node_rm_terrain,			"Node_RM_Terrain",			[1, Node_RM_Terrain],   ["ray marching"]).setVersion(11720);
 		addNodeObject(d3d, "RM Combine",		s_node_rm_combine,			"Node_RM_Combine",			[1, Node_RM_Combine],   ["ray marching", "rm boolean"]).setVersion(11740);
 		addNodeObject(d3d, "RM Render",			s_node_rm_render,			"Node_RM_Render",			[1, Node_RM_Render],	["ray marching"]).setVersion(11740);
+		addNodeObject(d3d, "RM Cloud",			s_node_RM_Cloud,			"Node_RM_Cloud",			[1, Node_RM_Cloud],,	"Generate distance field cloud.").patreonExtra();
 		
 	#endregion
 	
@@ -778,19 +779,19 @@ function __initNodes() {
 		addNodeObject(generator, "Flood Fill",			s_node_flood_fill,			"Node_Flood_Fill",			[1, Node_Flood_Fill],,		"Filled connected pixel given position and color.").setVersion(1133);
 		
 		ds_list_add(generator, "MK Effects");
-		addNodeObject(generator, "MK Rain",				s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain],,                    "Generate deterministic rain.").setVersion(11600);
-		addNodeObject(generator, "MK GridBalls",		s_node_mk_ball_grid,		"Node_MK_GridBalls",		[1, Node_MK_GridBalls],,               "Generate controllable grid of spheres.").setVersion(11600);
-		addNodeObject(generator, "MK GridFlip",			s_node_mk_flip_grid,		"Node_MK_GridFlip",			[1, Node_MK_GridFlip],,                "Generate controllable grid of planes.").setVersion(11600);
-		addNodeObject(generator, "MK Saber",			s_node_mk_saber,			"Node_MK_Saber",			[1, Node_MK_Saber],,                   "Generate glowing saber from 2 points.").setVersion(11600);
-		addNodeObject(generator, "MK Tile",				s_node_mk_tile,				"Node_MK_Tile",				[1, Node_MK_Tile],,                    "Generate game engines-ready tileset.").setVersion(11600);
-		addNodeObject(generator, "MK Flag",				s_node_mk_flag,				"Node_MK_Flag",				[1, Node_MK_Flag],,                    "Generate waving flag.").setVersion(11600);
-		addNodeObject(generator, "MK Brownian",			s_node_mk_brownian,			"Node_MK_Brownian",			[1, Node_MK_Brownian],,                "Generate random particle.").setVersion(11630);
-		addNodeObject(generator, "MK Fall",				s_node_mk_fall,				"Node_MK_Fall",				[1, Node_MK_Fall], ["Leaf", "Leaves"], "Generate leaves falling effects.").setVersion(11630);
-		addNodeObject(generator, "MK Blinker",			s_node_mk_blinker,			"Node_MK_Blinker",			[1, Node_MK_Blinker],,                 "Flicker regions of the selected colors randomly.").setVersion(11630);
-		addNodeObject(generator, "MK Lens Flare",		s_node_mk_flare,			"Node_MK_Flare",			[1, Node_MK_Flare],,                   "Generate lens flare.").setVersion(11630);
-		addNodeObject(generator, "MK Delay Machine",	s_node_mk_delay_machine,	"Node_MK_Delay_Machine",	[1, Node_MK_Delay_Machine],,           "Combines multiple frames of animation into one.").setVersion(11680);
-		addNodeObject(generator, "MK Fracture",			s_node_mk_fracture,			"Node_MK_Fracture",			[1, Node_MK_Fracture],,                "Deterministically fracture and image and apply basic physics.").patreonExtra();
-		//addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle]).patreonExtra();
+		addNodeObject(generator, "MK Rain",				s_node_mk_rain,				"Node_MK_Rain",				[1, Node_MK_Rain],,                 	"Generate deterministic rain.").setVersion(11600);
+		addNodeObject(generator, "MK GridBalls",		s_node_mk_ball_grid,		"Node_MK_GridBalls",		[1, Node_MK_GridBalls],,            	"Generate controllable grid of spheres.").setVersion(11600);
+		addNodeObject(generator, "MK GridFlip",			s_node_mk_flip_grid,		"Node_MK_GridFlip",			[1, Node_MK_GridFlip],,             	"Generate controllable grid of planes.").setVersion(11600);
+		addNodeObject(generator, "MK Saber",			s_node_mk_saber,			"Node_MK_Saber",			[1, Node_MK_Saber],,                	"Generate glowing saber from 2 points.").setVersion(11600);
+		addNodeObject(generator, "MK Tile",				s_node_mk_tile,				"Node_MK_Tile",				[1, Node_MK_Tile],,                 	"Generate game engines-ready tileset.").setVersion(11600);
+		addNodeObject(generator, "MK Flag",				s_node_mk_flag,				"Node_MK_Flag",				[1, Node_MK_Flag],,                 	"Generate waving flag.").setVersion(11600);
+		addNodeObject(generator, "MK Brownian",			s_node_mk_brownian,			"Node_MK_Brownian",			[1, Node_MK_Brownian],,             	"Generate random particle.").setVersion(11630);
+		addNodeObject(generator, "MK Fall",				s_node_mk_fall,				"Node_MK_Fall",				[1, Node_MK_Fall], ["Leaf", "Leaves"],	"Generate leaves falling effects.").setVersion(11630);
+		addNodeObject(generator, "MK Blinker",			s_node_mk_blinker,			"Node_MK_Blinker",			[1, Node_MK_Blinker],,              	"Flicker regions of the selected colors randomly.").setVersion(11630);
+		addNodeObject(generator, "MK Lens Flare",		s_node_mk_flare,			"Node_MK_Flare",			[1, Node_MK_Flare],,                	"Generate lens flare.").setVersion(11630);
+		addNodeObject(generator, "MK Delay Machine",	s_node_mk_delay_machine,	"Node_MK_Delay_Machine",	[1, Node_MK_Delay_Machine],,        	"Combines multiple frames of animation into one.").setVersion(11680);
+		addNodeObject(generator, "MK Fracture",			s_node_mk_fracture,			"Node_MK_Fracture",			[1, Node_MK_Fracture],,             	"Deterministically fracture and image and apply basic physics.").patreonExtra();
+		addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle],,					"Generate random star animation.").patreonExtra();
 	#endregion
 	
 	var compose = ds_list_create(); #region //compose
