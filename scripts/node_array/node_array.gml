@@ -1,8 +1,6 @@
 function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array";
 	
-	setDimension(96, 48);
-	
 	attributes.spread_value = false;
 	
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
@@ -12,7 +10,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 1] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Unpack array and push the contents into the output one by one." )
 		.rejectArray();
 	
-	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
 		
 		var bw = _w / 2 - ui(4);
@@ -22,14 +20,14 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			onInputResize();
 		}
 		
-		var amo = attributes.size;
-		if(buttonTextIconInstant(attributes.size > 0, THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
+		var act = attributes.size > 0;
+		if(buttonTextIconInstant(act, THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
 			attributes.size--;
 			onInputResize();
 		}
 		
 		return _h;
-	}); #endregion
+	});
 	
 	input_display_list = [ 0, 1, ["Contents", false], array_adjust_tool, ];
 	
@@ -48,7 +46,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setDynamicInput(1);
 	
-	static getType = function() { #region
+	static getType = function() {
 		var _type = getInputData(0);
 		
 		switch(_type) {
@@ -58,9 +56,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case 4 :  return VALUE_TYPE.text; 
 			default : return VALUE_TYPE.any;
 		}
-	} #endregion
+	}
 	
-	static refreshDynamicInput = function() { #region
+	static refreshDynamicInput = function() {
 		var _l  = ds_list_create();
 		var amo = attributes.size;
 		
@@ -87,9 +85,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		getJunctionList();
 		setHeight();
 		
-	} #endregion
+	}
 	
-	static updateType = function(resetVal = false) { #region
+	static updateType = function(resetVal = false) {
 		var _typ = getType();
 		if(getInputAmount() <= 0) return;
 		
@@ -115,18 +113,18 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		refreshDynamicInput();
-	} #endregion
+	}
 	
-	static onValueUpdate = function(index = 0) { #region
+	static onValueUpdate = function(index = 0) {
 		if(LOADING || APPENDING) return;
 		
 		if(index == 0) { updateType(true); return; }
 		if(index == 1) return;
 		
 		refreshDynamicInput();
-	} #endregion
+	}
 	
-	static onValueFromUpdate = function(index) { #region
+	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING) return;
 		
 		refreshDynamicInput();
@@ -137,9 +135,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		inputs[| index].setType(inputs[| index].value_from? inputs[| index].value_from.type : _typ);
 		inputs[| index].resetDisplay();
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _typ = getType();
 		var res  = [];
 		var ind  = 0;
@@ -156,14 +154,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		outputs[| 0].setValue(res);
-		
-		if(outputs[| 0].type == VALUE_TYPE.surface)
-			w = 128;
-		else
-			setDimension(96, 48);
-	} #endregion
+	}
 	
-	static postConnect = function() { #region
-		updateType(false);
-	} #endregion
+	static postConnect = function() { updateType(false); }
 }
