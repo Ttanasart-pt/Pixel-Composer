@@ -379,10 +379,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_text_add(_w / 2 - _wh_w - padding, _y, _text);
 				
 			} else
-				draw_text_add(_x + disp_x, _y, _text + suffix);
+				draw_text_add(_x + disp_x, _y, $"{_text}{suffix}");
 			
 		} else 
-			draw_text_add(_x + disp_x, _y, _text + suffix);
+			draw_text_add(_x + disp_x, _y, $"{_text}{suffix}");
 		
 		draw_set_alpha(1);
 		
