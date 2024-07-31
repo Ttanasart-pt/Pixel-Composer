@@ -16,6 +16,10 @@ event_inherited();
 	interactable    = true;
 	drop_target     = noone;
 	
+	mouse_interact  = false;
+	
+	colors_selecting = [];
+	
 	index_drag_x = 0; index_drag_x_to = 0;
 	index_drag_y = 0; index_drag_y_to = 0;
 	index_drag_w = 0; index_drag_w_to = 0;
@@ -24,7 +28,8 @@ event_inherited();
 	palette_positions = {}
 	
 	setColor = function(color) {
-		if(index_selecting[1] == 0 || palette == 0) return;
+		if(index_selecting[1] != 1 || palette == 0) return;
+		
 		palette[index_selecting[0]] = color;
 		
 		if(onApply == noone) return;

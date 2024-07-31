@@ -322,9 +322,10 @@ if palette == 0 exit;
 					selector.setColor(palette[hover]);
 				}
 				
+				mouse_interact  = true;
 				index_sel_start = hover;
 				
-			} else if(mouse_click(mb_left, sFOCUS)) {
+			} else if(mouse_click(mb_left, sFOCUS) && mouse_interact) {
 				
 				if(hover > index_sel_start) {
 					index_selecting[0] = index_sel_start;
@@ -338,8 +339,19 @@ if palette == 0 exit;
 					index_selecting[0] = hover;
 					index_selecting[1] = 1;
 				}
-			} 
+			}
+			
 		}
+	}
+	
+	if(mouse_release(mb_left)) mouse_interact = false;
+	
+	selector.current_colors = noone;
+	if(index_selecting[1] > 1) {
+		colors_selecting = array_verify(colors_selecting, index_selecting[1]);
+		for(var i = 0; i < index_selecting[1]; i++)
+			colors_selecting[i] = palette[index_selecting[0] + i];
+		selector.current_colors = colors_selecting;
 	}
 	
 	var bx = content_x + content_w - ui(50);

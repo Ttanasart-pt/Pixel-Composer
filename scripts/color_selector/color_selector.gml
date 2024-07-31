@@ -1,7 +1,8 @@
 function colorSelector(onApply = noone) constructor {
 	self.onApply = onApply;
 	
-	current_color = c_white;
+	current_color  = c_white;
+	current_colors = noone;
 	
 	hue = 1;
 	sat = 0;
@@ -35,7 +36,7 @@ function colorSelector(onApply = noone) constructor {
 		setHSV();
 	}).setSlideType(1);
 	
-	tb_val= slider(0, 255, 1, function(_val) {
+	tb_val = slider(0, 255, 1, function(_val) {
 		if(!interactable) return;
 		val = clamp(_val, 0, 255);
 		setHSV();
@@ -132,7 +133,6 @@ function colorSelector(onApply = noone) constructor {
 	
 	function setColor(color, _apply = true) {
 		current_color = color;
-		
 		resetHSV(_apply);
 	}
 	
@@ -225,8 +225,8 @@ function colorSelector(onApply = noone) constructor {
 		draw_surface(side_surface,    sel_x,  sel_y);
 		
 		BLEND_ADD
-		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.2);
-		draw_sprite_stretched_ext(THEME.menu_button_mask, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.2);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.2);
+			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.2);
 		BLEND_NORMAL
 		
 		#region control
@@ -243,21 +243,52 @@ function colorSelector(onApply = noone) constructor {
 			var _sx = sel_x - _p;
 			var _sy = (disp_mode == 0? sel_y + ui(hue) : sel_y + ui(256 - val)) - _sh / 2;
 			
-			
 			if(discr) _sc = current_color;
 			else      _sc = disp_mode == 0? make_color_hsv(hue, 255, 255) : make_color_hsv(hue, 255, val);
 			
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _cx - 1, _cy - 1, _cs + 2, _cs + 2, c_black, 0.5);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx - 1, _sy - 1, _sw + 2, _sh + 2, c_black, 0.5);
+			if(current_colors != noone) {
+				var _csz = ui(8);
+				var _ssx = sel_x + sel_w / 2 - _csz / 2;
+				
+				BLEND_ADD
+				for (var i = 0, n = array_length(current_colors); i < n; i++) {
+					var _cc  = current_colors[i];
+					var _cch = round(color_get_hue(_cc));
+					var _ccs = round(color_get_saturation(_cc));
+					var _ccv = round(color_get_value(_cc));
+					
+					var _csy = disp_mode == 0? cont_y + ui(_cch) : cont_y + ui(256 - _ccv);
+					
+					draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _ssx, _csy - _csz / 2, _csz, _csz, c_white, 0.75);
+					
+					var _sel  = 1 - abs(disp_mode == 0? _cch - hue : _ccv - val) / 32;
+					
+					if(_sel <= 0) continue;
+					var _ccx  = disp_mode == 0? cont_x + ui(_ccs)  : cont_x + ui(_cch);
+					var _ccy  = disp_mode == 0? cont_y + ui(256 - _ccv) : cont_y + ui(256 - _ccs);
+					var _cszz = _sel == 1? ui(16) : lerp(ui(6), ui(12), _sel);
+					var _caa  = _sel == 1? 1 : lerp(0.25, 0.75, _sel);
+					
+					draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _ccx - _cszz / 2, _ccy - _cszz / 2, _cszz, _cszz, c_white, _caa);
+				}
+				BLEND_NORMAL
+				
+				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx - 1, _sy - 1, _sw + 2, _sh + 2, c_black, 0.5);
+				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx, _sy, _sw, _sh, _sc, 1);
+				
+			} else {
+				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _cx - 1, _cy - 1, _cs + 2, _cs + 2, c_black, 0.5);
+				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx - 1, _sy - 1, _sw + 2, _sh + 2, c_black, 0.5);
+				
+				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx, _sy, _sw, _sh, _sc, 1);
+				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _cx, _cy, _cs, _cs, current_color, 1);
+				
+				BLEND_ADD
+					draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _sx, _sy, _sw, _sh, c_white, 0.75);
+					draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _cx, _cy, _cs, _cs, c_white, 0.75);
+				BLEND_NORMAL
+			}
 			
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx, _sy, _sw, _sh, _sc, 1);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _cx, _cy, _cs, _cs, current_color, 1);
-			
-			BLEND_ADD
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _sx, _sy, _sw, _sh, c_white, 0.75);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _cx, _cy, _cs, _cs, c_white, 0.75);
-			BLEND_NORMAL
-		
 			if(mouse_press(mb_left, interactable && focus)) {
 				if(point_in_rectangle(mouse_mx, mouse_my, sel_x, sel_y, sel_x + ui(16), sel_y + ui(256)))
 					side_dragging = true;
