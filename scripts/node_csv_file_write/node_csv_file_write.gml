@@ -1,12 +1,12 @@
-function Node_create_CSV_File_Write(_x, _y, _group = noone) { #region
+function Node_create_CSV_File_Write(_x, _y, _group = noone) {
 	var path = "";
 	
-	var node = new Node_CSV_File_Write(_x, _y, _group);
+	var node = new Node_CSV_File_Write(_x, _y, _group).skipDefault();
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
 	return node;
-} #endregion
+}
 
 function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "CSV File Out";

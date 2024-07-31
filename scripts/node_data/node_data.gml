@@ -519,7 +519,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////============= STEP =============
 	
-	static stepBegin = function() { #region
+	static stepBegin = function() {
 		if(use_cache) cacheArrayCheck();
 		
 		doStepBegin();
@@ -546,7 +546,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		if(is_simulation) PROJECT.animator.is_simulating = true;
-	} #endregion
+	}
 	
 	static doStepBegin = function() {}
 	
@@ -747,8 +747,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////============ INPUTS ============
 	
+	set_default = true;
+	
+	static skipDefault = function() /*=>*/ { set_default = false; return self; }
+	
 	static resetDefault = function() { 
 		var folder = instanceof(self);
+		
 		if(!ds_map_exists(global.PRESETS_MAP, folder)) {
 			for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
 				inputs[| i].resetValue();
@@ -768,7 +773,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
 			inputs[| i].resetValue();
 			
-	} if(!APPENDING && !LOADING) run_in(1, method(self, resetDefault));
+	} if(!APPENDING && !LOADING) run_in(1, function() /*=>*/ { if(set_default) resetDefault() });
 	
 	static addInput = function(junctionFrom, shift = input_fix_len) {
 		var targ = getInput(y, junctionFrom, shift);
@@ -780,8 +785,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInputData = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
 	
 	static setInputData = function(index, value) {
-		INLINE
-		
 		var _inp = inputs[| index];
 		inputs_data[index] = value;
 		if(is_struct(_inp)) input_value_map[$ _inp.internalName] = value;

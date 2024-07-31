@@ -42,6 +42,7 @@
 	dialog_drag_sy  = 0;
 	dialog_drag_mx  = 0;
 	dialog_drag_my  = 0;
+	mouse_draggable = true;
 	
 	passthrough = false;
 	
@@ -59,7 +60,7 @@
 				dialog_dragging = false;
 		}
 		
-		if(point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + ui(title_height))) {
+		if(mouse_draggable && point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + ui(title_height))) {
 			mouse_active = false;
 			if(mouse_press(mb_left, sFOCUS)) {
 				dialog_dragging = true;
@@ -69,6 +70,8 @@
 				dialog_drag_my  = mouse_my;
 			}
 		}
+		
+		mouse_draggable = true;
 	}
 	
 	dialog_resizable = false;
@@ -101,8 +104,7 @@
 		
 		if(mouse_release(mb_left)) dialog_resizing = 0;
 		
-		if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_x + dialog_w, dialog_y, 
-			dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
+		if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_x + dialog_w, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
 			
 			mouse_active = false;
 			CURSOR = cr_size_we;
@@ -114,8 +116,7 @@
 			}
 		} 
 			
-		if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_x, dialog_y + dialog_h, 
-			dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
+		if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_x, dialog_y + dialog_h, dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
 			
 			mouse_active = false;
 			if(CURSOR == cr_size_we)

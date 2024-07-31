@@ -39,7 +39,7 @@
 	LATEST_VERSION	= 11700;
 	VERSION			= 11780;
 	SAVE_VERSION	= 11700;
-	VERSION_STRING  = "1.17.9.005";
+	VERSION_STRING  = "1.17.9.006";
 	BUILD_NUMBER	= 11780;
 	
 	HOTKEYS			= ds_map_create();
@@ -47,9 +47,7 @@
 	HOTKEY_CONTEXT[| 0] = "";
 	
 	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
-	global.KEYS = {
-		download_links: "",
-	};
+	global.KEYS = { download_links: "" };
 	
 	globalvar CURRENT_COLOR;
 	CURRENT_COLOR = c_white;

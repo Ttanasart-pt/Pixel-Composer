@@ -1,6 +1,6 @@
-function Node_create_Equation(_x, _y, _group = noone, _param = {}) { #region
+function Node_create_Equation(_x, _y, _group = noone, _param = {}) {
 	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Equation(_x, _y, _group);
+	var node  = new Node_Equation(_x, _y, _group).skipDefault();
 	if(query == "") return node;
 	
 	node.inputs[| 0].setValue(query);
@@ -27,7 +27,7 @@ function Node_create_Equation(_x, _y, _group = noone, _param = {}) { #region
 		node.inputs[| 1 + i * 2].setValue(vars[i]);
 	
 	return node;
-} #endregion
+}
 
 function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Equation";

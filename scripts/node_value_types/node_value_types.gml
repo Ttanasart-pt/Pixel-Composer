@@ -384,6 +384,17 @@ function value_type_direct_settable(type) {
 	return false;
 }
 
+function typeNumeric(type) {
+	switch(type) {
+		case VALUE_TYPE.integer :
+		case VALUE_TYPE.float :
+		case VALUE_TYPE.boolean :
+			return true;
+	}
+	
+	return false;
+}
+
 function typeArray(_type) {
 	switch(_type) {
 		case VALUE_DISPLAY.range :

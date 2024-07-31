@@ -599,12 +599,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 		if(_outp == -1) return;
 	
-		var _canvas = nodeBuild("Node_Canvas", _node.x, _node.y + _node.h + 64);
+		var _canvas = nodeBuild("Node_Canvas", _node.x, _node.y + _node.h + 64).skipDefault();
 	
 		_canvas.inputs[| 0].setValue([surface_get_width_safe(surf), surface_get_height_safe(surf)]);
 		_canvas.inputs[| 5].setValue(true);
 	
-		var _blend = new Node_Blend(_node.x + _node.w + 64, _node.y, getCurrentContext());
+		var _blend = new Node_Blend(_node.x + _node.w + 64, _node.y, getCurrentContext()).skipDefault();
 		_blend.inputs[| 0].setFrom(_outp);
 		_blend.inputs[| 1].setFrom(_canvas.outputs[| 0]);
 	} #endregion
@@ -2557,12 +2557,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var _j1 = _n1.outputs[| 0]; 
 			
 		if(_j0.type == VALUE_TYPE.surface && _j1.type == VALUE_TYPE.surface) {
-			var _blend = new Node_Blend(cx, cy, getCurrentContext());
+			var _blend = new Node_Blend(cx, cy, getCurrentContext()).skipDefault();
 			_blend.inputs[| 0].setFrom(_j0);
 			_blend.inputs[| 1].setFrom(_j1);
 			
 		} else if((_j0.type == VALUE_TYPE.integer || _j0.type == VALUE_TYPE.float) && (_j1.type == VALUE_TYPE.integer || _j1.type == VALUE_TYPE.float)) {
-			var _blend = new Node_Math(cx, cy, getCurrentContext());
+			var _blend = new Node_Math(cx, cy, getCurrentContext()).skipDefault();
 			_blend.inputs[| 1].setFrom(_j0);
 			_blend.inputs[| 2].setFrom(_j1);
 			
@@ -2596,7 +2596,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		cx = cx + 160;
 		cy = round(cy / len / 32) * 32;
 		
-		var _compose = new Node_Composite(cx, cy, getCurrentContext());
+		var _compose = new Node_Composite(cx, cy, getCurrentContext()).skipDefault();
 		
 		repeat(len) {
 			var _node = ds_priority_delete_min(pr);
@@ -2670,7 +2670,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		x1 += 64;
 		y1 += 64;
 	
-		var f = new Node_Frame(x0, y0, getCurrentContext());
+		var f = new Node_Frame(x0, y0, getCurrentContext()).skipDefault();
 		f.inputs[| 0].setValue([x1 - x0, y1 - y0]);
 	} #endregion
 
@@ -3039,7 +3039,7 @@ function load_file_path(path, _x = undefined, _y = undefined) {
 				case "hex"      : 
 				case "gpl"      : 
 				case "pal"      : 
-					node = new Node_Palette(_x, _y, PANEL_GRAPH.getCurrentContext());
+					node = new Node_Palette(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
 					node.inputs[| 0].setValue(loadPalette(p));
 					break;
 			}

@@ -80,8 +80,12 @@ if palette == 0 exit;
 	#region tools
 		var bx = content_x + content_w - ui(50);
 		var by = dialog_y + ui(16);
+		var bc = index_selecting[1] < 2? COLORS._main_icon : merge_color(COLORS._main_icon, COLORS._main_accent, 0.5);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, __txtx("palette_editor_sort", "Sort color"), THEME.sort) == 2) {
+		var _txt = index_selecting[1] < 2? __txtx("palette_editor_sort", "Sort palette") : __txtx("palette_editor_sort_selected", "Sort selected");
+		var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, _txt, THEME.sort, 0, bc);
+		if(b) mouse_draggable = false;
+		if(b == 2) {
 			menuCall("palette_window_sort_menu", bx + ui(32), by, [ 
 				menuItem(__txtx("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); }), 
 				menuItem(__txtx("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); }),
@@ -93,8 +97,23 @@ if palette == 0 exit;
 		}
 		bx -= ui(32);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, __txtx("palette_editor_reverse", "Reverse palette"), THEME.reverse) == 2) {
-			palette = array_reverse(palette);
+		var _txt = index_selecting[1] < 2? __txtx("palette_editor_reverse", "Reverse palette") : __txtx("palette_editor_reverse_selected", "Reverse selected");
+		var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, _txt, THEME.reverse, 0, bc);
+		if(b) mouse_draggable = false;
+		if(b == 2) {
+			
+			if(index_selecting[1] < 2)
+				palette = array_reverse(palette);
+			else {
+				var _arr = array_create(index_selecting[1]);
+				for(var i = 0; i < index_selecting[1]; i++)
+					_arr[i] = palette[index_selecting[0] + i];
+				_arr = array_reverse(_arr);
+				
+				for(var i = 0; i < index_selecting[1]; i++)
+					palette[index_selecting[0] + i] = _arr[i];
+			}
+			
 			onApply(palette);
 		}
 		bx -= ui(32);
@@ -160,6 +179,8 @@ if palette == 0 exit;
 		
 		var _k  = string(_p);
 		var _ii = 0;
+		var _selecting = index >= index_selecting[0] && index < index_selecting[0] + index_selecting[1];
+		
 		while(struct_has(_clrRep, _k)) {
 			_k = $"{_p}{_ii}";
 			_ii++;
@@ -168,14 +189,14 @@ if palette == 0 exit;
 		_clrRep[$ _k] = 1;
 		
 		if(struct_has(ppos, _k)) {
-			ppos[$ _k][0] = ppos[$ _k][0] == 0? _px : lerp_float(ppos[$ _k][0], _px, 4);
-			ppos[$ _k][1] = ppos[$ _k][1] == 0? _py : lerp_float(ppos[$ _k][1], _py, 4);
+			ppos[$ _k][0] = (ppos[$ _k][0] == 0 || !_selecting)? _px - dialog_x : lerp_float(ppos[$ _k][0], _px - dialog_x, 4);
+			ppos[$ _k][1] = (ppos[$ _k][1] == 0 || !_selecting)? _py - dialog_y : lerp_float(ppos[$ _k][1], _py - dialog_y, 4);
 		} else {
-			ppos[$ _k] = [ _px, _py ];
+			ppos[$ _k] = [ _px - dialog_x, _py - dialog_y ];
 		}
 		
-		var _pdx = ppos[$ _k][0];
-		var _pdy = ppos[$ _k][1];
+		var _pdx = dialog_x + ppos[$ _k][0];
+		var _pdy = dialog_y + ppos[$ _k][1];
 		
 		var _ind = 0;
 		if(row == 1) {
@@ -194,16 +215,14 @@ if palette == 0 exit;
 		}
 		
 		_palInd[index] = _ind;
-		drawColor(_p, _pdx, _pdy, _pw, _ph, _ind);
+		drawColor(_p, _pdx, _pdy, _pw, _ph, true, _ind);
 		
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx, _ky, _kx + ww, _ky + hh)) {
 			hover = index;
 			hvx = _kx;
 			hvy = _ky;
 			
-			if(index >= index_selecting[0] && index < index_selecting[0] + index_selecting[1] 
-				&& !point_in_rectangle(mouse_mx, mouse_my, _kx + 4, _ky + 4, _kx + ww - 8, _ky + hh - 8))
-				
+			if(_selecting && !point_in_rectangle(mouse_mx, mouse_my, _kx + 4, _ky + 4, _kx + ww - 8, _ky + hh - 8))
 				_hedge = true;
 		}
 	}
@@ -217,18 +236,17 @@ if palette == 0 exit;
 			
 			if(index >= index_selecting[0] && index < index_selecting[0] + index_selecting[1]) {
 				var _p  = palette[index];
+				var _px = dialog_x + ppos[$ _p][0] - pl_sx;
+				var _py = dialog_y + ppos[$ _p][1] - pl_sy;
 				
-				var _px = ppos[$ _p][0] - pl_sx;
-				var _py = ppos[$ _p][1] - pl_sy;
-				
-				drawColor(_p, _px, _py, _pw, _ph, _palInd[index]);
+				drawColor(_p, _px, _py, _pw, _ph, true, _palInd[index]);
 			}
 		}
 	surface_reset_target();
 	
 	shader_set(sh_dialog_palette_selector);
 		shader_set_f("dimension",     pl_sw, pl_sh);
-		shader_set_i("edge",          _hedge && !mouse_click(mb_left));
+		shader_set_i("edge",          (_hedge && !mouse_click(mb_left)) || index_dragging != noone);
 		shader_set_color("edgeColor", COLORS._main_accent);
 		
 		draw_surface(selection_surface, pl_sx, pl_sy);

@@ -6,7 +6,7 @@ function Node_create_CSV_File_Read(_x, _y, _group = noone) {
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_CSV_File_Read(_x, _y, _group);
+	var node = new Node_CSV_File_Read(_x, _y, _group).skipDefault();
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
@@ -16,7 +16,7 @@ function Node_create_CSV_File_Read(_x, _y, _group = noone) {
 function Node_create_CSV_File_Read_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
-	var node = new Node_CSV_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext());
+	var node = new Node_CSV_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	

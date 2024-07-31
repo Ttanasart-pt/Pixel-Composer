@@ -1,4 +1,4 @@
-function Node_create_Image_gif(_x, _y, _group = noone) { #region
+function Node_create_Image_gif(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
 		path = get_open_filename_pxc("animated gif|*.gif", "");
@@ -6,22 +6,22 @@ function Node_create_Image_gif(_x, _y, _group = noone) { #region
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_Image_gif(_x, _y, _group);
+	var node = new Node_Image_gif(_x, _y, _group).skipDefault();
 	node.inputs[| 0].setValue(path);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
-} #endregion
+}
 
-function Node_create_Image_gif_path(_x, _y, path) { #region
+function Node_create_Image_gif_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
-	var node = new Node_Image_gif(_x, _y, PANEL_GRAPH.getCurrentContext());
+	var node = new Node_Image_gif(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
 	return node;
-} #endregion
+}
 
 function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name			= "Image GIF";

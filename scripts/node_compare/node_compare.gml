@@ -14,7 +14,7 @@ enum COMPARE_OPERATOR {
 
 	function Node_create_Compare(_x, _y, _group = noone, _param = {}) {
 		var query = struct_try_get(_param, "query", "");
-		var node  = new Node_Compare(_x, _y, _group);
+		var node  = new Node_Compare(_x, _y, _group).skipDefault();
 		var ind   = -1;
 		
 		switch(query) {

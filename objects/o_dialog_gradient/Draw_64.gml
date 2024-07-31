@@ -93,10 +93,6 @@ if !ready exit;
 #endregion
 
 #region gradient
-	var gr_x = content_x + ui(22);
-	var gr_y = dialog_y + ui(54);
-	var gr_w = content_w - ui(44);
-	var gr_h = ui(20);
 	
 	#region tools
 		var bx = content_x + content_w - ui(50);
@@ -122,38 +118,63 @@ if !ready exit;
 		bx -= ui(32);
 	#endregion
 	
+	var gr_x = content_x + ui(22);
+	var gr_y = dialog_y + ui(54);
+	var gr_w = content_w - ui(44);
+	var gr_h = ui(20);
 	draw_sprite_stretched(THEME.textbox, 3, gr_x - ui(6), gr_y - ui(6), gr_w + ui(12), gr_h + ui(12));
 	draw_sprite_stretched(THEME.textbox, 0, gr_x - ui(6), gr_y - ui(6), gr_w + ui(12), gr_h + ui(12));
 	gradient.draw(gr_x, gr_y, gr_w, gr_h);
+	draw_sprite_stretched_add(THEME.ui_panel_fg, 1, gr_x, gr_y, gr_w, gr_h, c_white, 0.25);
 	
 	var hover = noone;
+	
 	for(var i = 0; i < array_length(gradient.keys); i++) {
 		var _k  = gradient.keys[i];
 		var _c  = _k.value;
 		var _kx = gr_x + _k.time * gr_w; 
+		var _ky = gr_y + gr_h / 2;
 		var _in = _k == key_selecting? 1 : 0;
 		
-		draw_sprite_ui_uniform(THEME.prop_gradient, _in, _kx, gr_y + gr_h / 2, 1, _c);
+		var _hov  = sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx - ui(6), gr_y, _kx + ui(6), gr_y + gr_h);
+		    _hov |= key_dragging == _k;
+		_k._hover = lerp_float(_k._hover, _hov, 5);
 		
-		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx - ui(6), gr_y, _kx + ui(6), gr_y + gr_h)) {
-			draw_sprite_ui_uniform(THEME.prop_gradient, _in, _kx, gr_y + gr_h / 2, 1.2, _c);
-			hover = _k;
+		var _kw = ui(12);
+		var _kh = lerp(ui(24), ui(32), _k._hover);
+		
+		var _kdx = _kx - _kw / 2;
+		var _kdy = _ky - _kh / 2;
+		var _aa  = key_dragging == _k && key_deleting? 0.3 : 1;
+		
+		draw_sprite_stretched_ext(THEME.prop_gradient, 0, _kdx, _kdy, _kw, _kh, _c, _aa);
+		
+		if(key_selecting == _k || key_dragging == _k) {
+			draw_sprite_stretched_ext(THEME.prop_gradient, 1, _kdx, _kdy, _kw, _kh, COLORS._main_accent, _aa);
+			
+		} else {
+			if(_color_get_light(_c) < 0.75) draw_sprite_stretched_ext(THEME.prop_gradient, 1, _kdx, _kdy, _kw, _kh, c_white, _aa);
+			else                            draw_sprite_stretched_ext(THEME.prop_gradient, 1, _kdx, _kdy, _kw, _kh, c_black, _aa);
 		}
+		
+		if(_hov) hover = _k;
 	}
 	
 	if(key_dragging) {
 		if(abs(mouse_mx - key_drag_mx) > 4)
 			key_drag_dead = false;
+		key_deleting = abs(mouse_my - key_drag_my) > ui(32) && array_length(gradient.keys) > 1;
 		
-		if(!key_drag_dead) {
-			var newT = key_drag_sx + (mouse_mx - key_drag_mx) / gr_w;
-			newT = clamp(newT, 0, 1);
+		if(!key_drag_dead && !key_deleting) {
+			var newT = clamp(key_drag_sx + (mouse_mx - key_drag_mx) / gr_w, 0, 1);
 			setKeyPosition(key_dragging, newT);
 		}
 		
 		if(mouse_release(mb_left)) {
-			removeKeyOverlap(key_dragging);
-			key_dragging = noone;	
+			if(key_deleting) array_remove(gradient.keys, key_dragging);
+			else             removeKeyOverlap(key_dragging);
+			
+			key_dragging = noone;
 		}
 	}
 	
@@ -165,16 +186,21 @@ if !ready exit;
 	if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _x0, _y0, _x1, _y1)) {
 		if(mouse_press(mb_left, sFOCUS)) {
 			widget_clear();
+			
 			if(hover) {
 				key_selecting = hover;
 				if(interactable) {
 					key_dragging  = hover;
+					key_drag_dead = true;
+					key_deleting  = false;
+					
 					key_drag_sx	  = hover.time;
 					key_drag_mx	  = mouse_mx;
-					key_drag_dead = true;
+					key_drag_my	  = mouse_my;
 				}
 				
 				selector.setColor(hover.value);
+				
 			} else if(interactable) {
 				key_selecting = noone;
 				
@@ -184,11 +210,14 @@ if !ready exit;
 				var _newkey = new gradientKey(tt, cc);
 				gradient.add(_newkey, true);
 				
-				key_selecting  = _newkey;
-				key_dragging   = _newkey;
+				key_selecting = _newkey;
+				key_dragging  = _newkey;
+				key_drag_dead = true;
+				key_deleting  = false;
+				
 				key_drag_sx	  = tt;
 				key_drag_mx	  = mouse_mx;
-				key_drag_dead = false;
+				key_drag_my	  = mouse_my;
 				
 				selector.setColor(key_dragging.value);
 			}

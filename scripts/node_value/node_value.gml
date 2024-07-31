@@ -37,18 +37,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		name_custom = false;
 		
-		switch(type) {
-			case VALUE_TYPE.color   : 
-				if(is_array(_value)) {
-					for (var i = 0, n = array_length(_value); i < n; i++)
-						_value[i] = cola(_value[i]);
-				} else 
-					_value = cola(_value); 
-				break;
-				
-			case VALUE_TYPE.PCXnode : accept_array = false; break;
-		}
-		
 		if(struct_has(node, "inputMap")) {
 				 if(_connect == JUNCTION_CONNECT.input)  node.inputMap[?  internalName] = self;
 			else if(_connect == JUNCTION_CONNECT.output) node.outputMap[? internalName] = self;
@@ -90,11 +78,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	#region ---- animation ----
 		if(_type == VALUE_TYPE.color) {
-			if(is_array(_value)) {
-				for( var i = 0, n = array_length(_value); i < n; i++ ) 
-					_value[i] = cola(_value[i], _color_get_alpha(_value[i]));
-			} else 
-				_value = cola(_value, _color_get_alpha(_value));
+			if(is_array(_value)) for( var i = 0, n = array_length(_value); i < n; i++ ) _value[i] = cola(_value[i]);
+			else                 _value = cola(_value);
 		}
 		
 		key_inter   = CURVE_TYPE.linear;
@@ -983,37 +968,33 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////============== GET =============
 	
-	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) { #region
+	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
 		
 		if(applyUnit && display_type == VALUE_DISPLAY.d3quarternion && display_data.angle_display == QUARTERNION_DISPLAY.euler)
 			return quarternionFromEuler(value[0], value[1], value[2]);
 		
-		#region color compatibility [ color, palette, gradient ]
-			if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { 
-				if(is_instanceof(value, gradientObject))
-					return value;
-					
-				if(is_array(value)) {
-					var amo = array_length(value);
-					var grad = array_create(amo);
-					for( var i = 0; i < amo; i++ )
-						grad[i] = new gradientKey(i / amo, value[i]);
-					var g = new gradientObject();
-					g.keys = grad;
-					return g;
-				} 
+		if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { // color compatibility [ color, palette, gradient ]
+			if(is_instanceof(value, gradientObject)) return value;
 				
-				if(is_real(value)) return new gradientObject(value);
-				return new gradientObject(0);
-			}
+			if(is_array(value)) {
+				var amo  = array_length(value);
+				var grad = array_create(amo);
+				
+				for( var i = 0; i < amo; i++ )
+					grad[i] = new gradientKey(i / amo, value[i]);
+					
+				var g = new gradientObject();
+				g.keys = grad;
+				return g;
+			} 
+			
+			return is_real(value)? new gradientObject(value) : new gradientObject(cola(c_black));
+		}
+	
+		if(display_type == VALUE_DISPLAY.palette && !is_array(value)) return [ value ];
 		
-			if(display_type == VALUE_DISPLAY.palette && !is_array(value)) {
-				return [ value ];
-			}
-		#endregion
-		
-		if(display_type == VALUE_DISPLAY.area) { #region
+		if(display_type == VALUE_DISPLAY.area) {
 			
 			if(!is_undefined(nodeFrom) && struct_has(nodeFrom.display_data, "onSurfaceSize")) {
 				var surf     = nodeFrom.display_data.onSurfaceSize();
@@ -1047,51 +1028,40 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 			
 			return applyUnit? unit.apply(value, arrIndex) : value;
-		} #endregion
+		}
 		
-		if(type == VALUE_TYPE.text) { #region
-			switch(display_type) {
-				case VALUE_DISPLAY.text_array : return value;
-				default: return string_real(value);
-			}
-		} #endregion
+		if(type == VALUE_TYPE.text) return display_type == VALUE_DISPLAY.text_array? value : string_real(value);
 		
-		if((typeFrom == VALUE_TYPE.integer || typeFrom == VALUE_TYPE.float || typeFrom == VALUE_TYPE.boolean) && type == VALUE_TYPE.color)
-			return value >= 1? value : make_color_hsv(0, 0, value * 255);
+		if(typeNumeric(typeFrom) && type == VALUE_TYPE.color) return value >= 1? value : make_color_rgb(value * 255, value * 255, value * 255);
 		
-		if(typeFrom == VALUE_TYPE.boolean && type == VALUE_TYPE.text)
-			return value? "true" : "false";
+		if(typeFrom == VALUE_TYPE.boolean && type == VALUE_TYPE.text) return value? "true" : "false";
 		
-		if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) { #region
-			if(typeFrom == VALUE_TYPE.text)
-				value = toNumber(value);
+		if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
+			if(typeFrom == VALUE_TYPE.text) value = toNumber(value);
 			
 			value = applyUnit? unit.apply(value, arrIndex) : value;
 			
-			if(value_tag == "dimension") {
-				for( var i = 0, n = array_length(value); i < n; i++ ) 
-					value[i] = clamp(value[i], 0, 8192);
-			}
+			if(value_tag == "dimension")
+				for( var i = 0, n = array_length(value); i < n; i++ ) value[i] = clamp(value[i], 0, 8192);
 			
-			if(validator != noone)
-				value = validator.validate(value);
+			if(validator != noone) value = validator.validate(value);
 			
 			return value;
-		} #endregion
+		}
 		
 		if(type == VALUE_TYPE.surface && connect_type == JUNCTION_CONNECT.input && !is_surface(value) && def_val == USE_DEF)
 			return DEF_SURFACE;
 		
 		return value;
-	} #endregion
+	}
 	
 	static getStaticValue = function() { INLINE return ds_list_empty(animator.values)? 0 : animator.values[| 0].value; } 
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+		draw_junction_index = type;
 		if(type == VALUE_TYPE.trigger)
 			return _getValue(_time, false, 0, false);
 		
-		//global.cache_call++;
 		if(useCache && use_cache) {
 			var cache_hit = cache_value[0];
 			cache_hit &= !isActiveDynamic(_time) || cache_value[1] == _time;
@@ -1100,25 +1070,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
 			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
 			
-			if(cache_hit) {
-				return cache_value[2];
-			}
+			if(cache_hit) return cache_value[2];
 		}
 		
 		var val = _getValue(_time, applyUnit, arrIndex, log);
 		
-		if(!accept_array && array_get_depth(val) > def_depth) {
-			noti_warning($"{name} does not accept array data.",, node);
-			return 0;
-		}
+		if(!accept_array && array_get_depth(val) > def_depth) { noti_warning($"{name} does not accept array data.", noone, node); return 0; }
 		
-		draw_junction_index = type;
 		if(type == VALUE_TYPE.surface || type == VALUE_TYPE.any) {
-			var _sval = val;
-			if(is_array(_sval) && !array_empty(_sval)) 
-				_sval = _sval[0];
+			var _sval = array_valid(val)? val[0] : val;
 				
-			if(is_instanceof(_sval, SurfaceAtlas))     
+			if(is_instanceof(_sval, SurfaceAtlas)) 
 				draw_junction_index = VALUE_TYPE.atlas;
 		}
 		
@@ -1142,8 +1104,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var typ = nod.type;
 		var dis = nod.display_type;
 		
-		if(connect_type == JUNCTION_CONNECT.output)
-			return val;
+		if(connect_type == JUNCTION_CONNECT.output) return val;
 		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { // Dimension conversion
 			if(is_array(val)) {
@@ -1194,14 +1155,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var _val = array_create(array_length(val));
 			for( var i = 0, n = array_length(val); i < n; i++ )
 				_val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
+			
 			return _val;
 			
 		}
 		
-		return valueProcess(val, nod, applyUnit, arrIndex);
+		var _val = valueProcess(val, nod, applyUnit, arrIndex);
+		
+		return _val;
 	}
 	
-	static getValueRecursive = function(arr = __curr_get_val, _time = CURRENT_FRAME) { #region
+	static getValueRecursive = function(arr = __curr_get_val, _time = CURRENT_FRAME) {
 		
 		arr[@ 0] = __getAnimValue(_time);
 		arr[@ 1] = self;
@@ -1241,7 +1205,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			global.EVALUATE_HEAD = noone;
 		}
-	} #endregion
+	}
 	
 	static arrayBalance = function(val) { #region
 		if(!is_array(def_val))
@@ -1386,17 +1350,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							str = $"File not exist: {path}";
 						}
 						break;
+						
 					case VALUE_DISPLAY.path_array: 
 						var paths = animator.getValue();
 						if(is_array(paths)) {
 							for( var i = 0, n = array_length(paths); i < n; i++ ) {
 								if(path_get(paths[i]) != -1) continue;
 								value_validation = VALIDATION.error;	
-								str = "File not exist: " + string(paths[i]);
+								str = $"File not exist: {paths[i]}";
 							} 
 						} else {
 							value_validation = VALIDATION.error;	
-							str = "File not exist: " + string(paths);
+							str = $"File not exist: {paths}";
 						}
 						break;
 				}
@@ -1422,10 +1387,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
-	static setValue = function(val = 0, record = true, time = CURRENT_FRAME, _update = true) { #region ////Set value
+	static setValue = function(val = 0, record = true, time = CURRENT_FRAME, _update = true) { ////Set value
 		val = unit.invApply(val);
 		return setValueDirect(val, noone, record, time, _update);
-	} #endregion
+	}
 	
 	static overrideValue = function(_val) { #region
 		ds_list_clear(animator.values);

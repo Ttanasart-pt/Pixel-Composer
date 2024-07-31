@@ -12,6 +12,8 @@ function gradientKey(time, value) constructor {
 	self.time  = time;
 	self.value = value;
 	
+	_hover = 0;
+	
 	static clone     = function() { return new gradientKey(time, value); }
 	static serialize = function() { return { time, value }; }
 }

@@ -11,7 +11,7 @@ MPEG-4 (.mp4)|*.mp4",
 		key_release();
 	}
 	
-	var node = new Node_Export(_x, _y, _group);
+	var node = new Node_Export(_x, _y, _group).skipDefault();
 	node.inputs[| 1].setValue(path);
 	if(NODE_NEW_MANUAL) node.extensionCheck();
 	

@@ -74,6 +74,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	destroy_when_upgroup = true;
 	inParent = undefined;
+	
+	skipDefault();
 	setDimension(96, 32 + 24);
 	
 	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)

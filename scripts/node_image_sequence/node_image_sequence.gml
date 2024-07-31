@@ -1,4 +1,4 @@
-function Node_create_Image_Sequence(_x, _y, _group = noone) { #region
+function Node_create_Image_Sequence(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
 		path = get_open_filenames_compat("image|*.png;*.jpg", "");
@@ -6,20 +6,22 @@ function Node_create_Image_Sequence(_x, _y, _group = noone) { #region
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_Image_Sequence(_x, _y, _group);
+	var node  = new Node_Image_Sequence(_x, _y, _group).skipDefault();
 	var paths = string_splice(path, "\n");
+	
 	node.inputs[| 0].setValue(paths);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
-} #endregion
+}
 
-function Node_create_Image_Sequence_path(_x, _y, _path) { #region
-	var node = new Node_Image_Sequence(_x, _y, PANEL_GRAPH.getCurrentContext());
-	node.inputs[| 0].setValue(_path);
-	node.doUpdate();
+function Node_create_Image_Sequence_path(_x, _y, _path) {
+	var node = new Node_Image_Sequence(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
+	    node.inputs[| 0].setValue(_path);
+	    node.doUpdate();
+
 	return node;
-} #endregion
+}
 
 enum CANVAS_SIZE {
 	individual,
@@ -81,7 +83,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var paths = paths_to_array_ext(path);
 		
 		inputs[| 0].setValue(path);
-		if(updatePaths(paths)) {
+		if(updatePaths()) {
 			doUpdate();
 			return true;
 		}
@@ -93,24 +95,25 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {
-		updatePaths(path_get(getInputData(0)));
+		updatePaths();
 		triggerRender();
 	}
 	
-	function updatePaths(paths = path_current) {
+	function updatePaths() {
+		var _paths   = getInputData(0);
+		var paths    = path_get(_paths);
+		path_current = array_clone(paths);
+		
 		for(var i = 0; i < array_length(spr); i++) {
 			if(spr[i] && sprite_exists(spr[i]))
 				sprite_delete(spr[i]);
 		}
 		
 		spr = [];
-		path_current = [];
 		
 		for( var i = 0, n = array_length(paths); i < n; i++ )  {
-			var path = path_get(paths[i]);
+			var path = paths[i];
 			if(path == -1) continue;
-			
-			array_push(path_current, path);
 			
 			var ext = string_lower(filename_ext(path));
 			setDisplayName(filename_name_only(path));
@@ -152,10 +155,10 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var path = path_get(getInputData(0));
+		var path = inputs[| 0].getValue();
 		
 		if(!array_equals(path_current, path)) 
-			updatePaths(path);
+			updatePaths();
 		
 		var pad = getInputData(1);
 		var can = getInputData(2);
@@ -163,13 +166,14 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var siz = getInputData(3);
 		
-		var ww = -1, hh = -1;
+		var  ww = -1,  hh = -1;
 		var _ww = -1, _hh = -1;
 		
 		var surfs = outputs[| 0].getValue();
 		var amo   = array_length(spr);
 		for(var i = amo; i < array_length(surfs); i++)
 			surface_free(surfs[i]);
+			
 		array_resize(surfs, amo);
 		
 		for(var i = 0; i < amo; i++) {
@@ -179,19 +183,17 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			switch(can) {
 				case CANVAS_SIZE.minimum :
-					if(ww == -1)	ww = _w;
-					else			ww = min(ww, _w);
-					if(hh == -1)	hh = _h;
-					else			hh = min(hh, _h);
+					ww = ww == -1? _w : min(ww, _w);
+					hh = hh == -1? _h : min(hh, _h);
 					break;
+					
 				case CANVAS_SIZE.maximum :
-					if(ww == -1)	ww = _w;
-					else			ww = max(ww, _w);
-					if(hh == -1)	hh = _h;
-					else			hh = max(hh, _h);
+					ww = ww == -1? _w : max(ww, _w);
+					hh = hh == -1? _h : max(hh, _h);
 					break;
 			}
 		}
+		
 		_ww = ww;
 		_hh = hh;
 		ww += pad[0] + pad[2];
@@ -201,7 +203,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _spr = spr[i];
 			switch(can) {
 				case CANVAS_SIZE.individual :
-					ww = sprite_get_width(_spr) + pad[0] + pad[2];
+					ww = sprite_get_width(_spr)  + pad[0] + pad[2];
 					hh = sprite_get_height(_spr) + pad[1] + pad[3];
 					
 					surfs[i] = surface_verify(surfs[i], ww, hh, attrDepth());
@@ -212,6 +214,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						BLEND_NORMAL;
 					surface_reset_target();
 					break;
+					
 				case CANVAS_SIZE.maximum :
 				case CANVAS_SIZE.minimum :
 					surfs[i] = surface_verify(surfs[i], ww, hh, attrDepth());
@@ -229,6 +232,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 							draw_sprite_ext(_spr, 0, sw, sh, ss, ss, 0, c_white, 1);
 							BLEND_NORMAL;
 						surface_reset_target();
+						
 					} else {
 						var xx = (ww - _w) / 2;
 						var yy = (hh - _h) / 2;

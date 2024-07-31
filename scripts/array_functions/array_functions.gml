@@ -136,6 +136,7 @@ function array_overlap(arr0, arr1) {
 }
 
 function array_empty(arr)   { INLINE return  is_array(arr) && array_length(arr) == 0; }
+function array_valid(arr)   { INLINE return  is_array(arr) && array_length(arr) > 0;  }
 function array_invalid(arr) { INLINE return !is_array(arr) || array_length(arr) == 0; }
 
 function array_find(arr, val) {
@@ -211,6 +212,7 @@ function array_clone(arr, _depth = -1) {
 	var _res = [];
 	 for( var i = 0, n = array_length(arr); i < n; i++ )
 		 _res[i] = array_clone(arr[i], _depth--);
+		 
 	 return _res;
 }
 

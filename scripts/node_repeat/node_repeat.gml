@@ -1,7 +1,7 @@
 global.node_repeat_keys = [ "repeat polar", "repeat circular" ];
 
 function Node_create_Repeat(_x, _y, _group = noone, _param = {}) {
-	var _node = new Node_Repeat(_x, _y, _group);
+	var _node = new Node_Repeat(_x, _y, _group).skipDefault();
 	var query = struct_try_get(_param, "query", "");
 	
 	switch(query) {

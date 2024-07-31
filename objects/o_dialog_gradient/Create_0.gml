@@ -13,9 +13,12 @@ event_inherited();
 	
 	key_selecting = noone;
 	key_dragging  = noone;
-	key_drag_sx   = 0;
-	key_drag_mx   = 0;
+	key_deleting  = false;
 	key_drag_dead = true;
+	key_drag_sx   = 0;
+	key_drag_sy   = 0;
+	key_drag_mx   = 0;
+	key_drag_my   = 0;
 	
 	destroy_on_click_out = true;
 	
@@ -220,16 +223,17 @@ event_inherited();
 				}
 			}	
 			
-			if(isHover && i >= 0 && mouse_press(mb_right, interactable && sFOCUS)) {
+			if(isHover && mouse_press(mb_right, interactable && sFOCUS)) {
 				hovering = pal;
 				
 				menuCall("palette_window_preset_menu",,, [
-					menuItem(__txtx("palette_editor_set_default", "Set as default"), function() { 
-						PROJECT.setPalette(array_clone(hovering.palette));
-					}),
-					menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
-						file_delete(hovering.path); 
-						__initPalette();
+					menuItem(__txtx("gradient_set_palette", "Convert to Gradient"), function() { 
+						var _p = hovering.palette;
+						if(array_length(_p) < 2) return;
+						
+						gradient.keys = [];
+						for( var i = 0, n = array_length(_p); i < n; i++ )
+							gradient.keys[i] = new gradientKey(i / (n - 1), _p[i]);
 					}),
 				]);
 			}

@@ -140,15 +140,22 @@ event_inherited();
 
 #region tools
 	function sortPalette(sortFunc) {
-		array_sort(palette, sortFunc);
+		if(index_selecting[1] < 2)
+			array_sort(palette, sortFunc);
+		else {
+			var _arr = array_create(index_selecting[1]);
+			for(var i = 0; i < index_selecting[1]; i++)
+				_arr[i] = palette[index_selecting[0] + i];
+			array_sort(_arr, sortFunc);
+			
+			for(var i = 0; i < index_selecting[1]; i++)
+				palette[index_selecting[0] + i] = _arr[i];
+		}
 		onApply(palette);
 	}
 #endregion
 
 #region action
-	onResize = function() {
-		sp_presets.resize(sp_preset_w, dialog_h - ui(62));
-	}
-	
+	function onResize()   { sp_presets.resize(sp_preset_w, dialog_h - ui(62)); }
 	function checkMouse() {}
 #endregion

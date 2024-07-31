@@ -1,6 +1,6 @@
 function Node_create_Scale_Algo(_x, _y, _group = noone, _param = {}) {
 	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Scale_Algo(_x, _y, _group);
+	var node  = new Node_Scale_Algo(_x, _y, _group).skipDefault();
 	
 	switch(query) {
 		case "scale2x" :    node.inputs[| 1].setValue(0); break;	

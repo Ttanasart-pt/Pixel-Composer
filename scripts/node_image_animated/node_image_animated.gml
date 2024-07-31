@@ -1,4 +1,4 @@
-function Node_create_Image_Animated(_x, _y, _group = noone) { #region
+function Node_create_Image_Animated(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
 		path = get_open_filenames_compat("image|*.png;*.jpg", "");
@@ -6,22 +6,22 @@ function Node_create_Image_Animated(_x, _y, _group = noone) { #region
 		if(path == "") return noone;
 	}
 	
-	var node  = new Node_Image_Animated(_x, _y, _group);
+	var node  = new Node_Image_Animated(_x, _y, _group).skipDefault();
 	var paths = string_splice(path, "\n");
 	node.inputs[| 0].setValue(paths);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
-} #endregion
+}
 
-function Node_create_Image_Animated_path(_x, _y, _path) { #region
-	var node = new Node_Image_Animated(_x, _y, PANEL_GRAPH.getCurrentContext());
+function Node_create_Image_Animated_path(_x, _y, _path) {
+	var node = new Node_Image_Animated(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
 	
 	node.inputs[| 0].setValue(_path);
 	node.doUpdate();
 	
 	return node;
-} #endregion
+}
 
 enum ANIMATION_END {
 	loop,

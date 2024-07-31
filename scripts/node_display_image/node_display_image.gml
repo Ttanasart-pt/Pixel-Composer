@@ -1,4 +1,4 @@
-function Node_create_Display_Image(_x, _y, _group = noone) { #region
+function Node_create_Display_Image(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
 		path = get_open_filename_pxc("image|*.png;*.jpg", "");
@@ -6,21 +6,21 @@ function Node_create_Display_Image(_x, _y, _group = noone) { #region
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_Display_Image(_x, _y, _group);
+	var node = new Node_Display_Image(_x, _y, _group).skipDefault();
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	return node;
-} #endregion
+}
 
-function Node_create_Display_Image_path(_x, _y, path) { #region
+function Node_create_Display_Image_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
-	var node = new Node_Display_Image(_x, _y, PANEL_GRAPH.getCurrentContext());
+	var node = new Node_Display_Image(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
 	return node;	
-} #endregion
+}
 
 function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Display Image";
