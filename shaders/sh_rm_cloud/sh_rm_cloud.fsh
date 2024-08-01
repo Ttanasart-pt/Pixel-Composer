@@ -15,6 +15,7 @@ uniform float objectScale;
 uniform float fov;
 uniform vec2  viewRange;
 
+uniform int   type;
 uniform float density;
 uniform int   iteration;
 uniform float threshold;
@@ -195,7 +196,10 @@ float volume(vec3 pos, float ratio) {
 	
 	ds *= d1;
 	
-	return ds;
+		 if(type == 0) return ds;
+	else if(type == 1) return smoothstep(-.1, .1, pos.y) * ds;
+	
+	return 0.;
 }
 
 float marchDensity(vec3 camera, vec3 direction) {
@@ -224,10 +228,6 @@ void main() {
     float z = 1. / tan(radians(fov) / 2.);
     dir = normalize(vec3((v_vTexcoord - .5) * 2., -z));
     eye = vec3(0., 0., 5.);
-	
-    // vec2  cps = (v_vTexcoord - .5) * 2.;
-	// dir = vec3(0., 0., -1.);
-	// eye = vec3(cps, 5.);
 	
 	dir  = normalize(irotMatrix * dir) / objectScale;
 	eye  = irotMatrix * eye;

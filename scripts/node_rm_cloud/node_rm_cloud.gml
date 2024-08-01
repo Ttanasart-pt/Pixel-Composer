@@ -32,12 +32,16 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 10] = nodeValue("Detail Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
+	inputs[| 11] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Volume", "Plane" ]);
+		
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
 		["Transform", false], 1, 2, 3, 
 		["Camera",    false], 4, 5, 
-		["Cloud",     false], 6, 8, 7, 9, 10, 
+		["Cloud",     false], 11, 6, 8, 
+		["Noise",     false], 7, 9, 10, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
@@ -56,10 +60,12 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _fov  = _data[4];
 		var _rng  = _data[5];
 		
-		var _dens = _data[6];
-		var _itrr = _data[7];
-		var _thrs = _data[8];
-		var _dsca = _data[9];
+		var _type = _data[11];
+		var _dens = _data[ 6];
+		var _thrs = _data[ 8];
+		
+		var _itrr = _data[ 7];
+		var _dsca = _data[ 9];
 		var _datt = _data[10];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
@@ -73,9 +79,11 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_f("fov",         _fov);
 			shader_set_2("viewRange",   _rng);
 			
-			shader_set_i("iteration",   _itrr);
+			shader_set_i("type",        _type);
 			shader_set_f("density",     _dens);
 			shader_set_f("threshold",   _thrs);
+			
+			shader_set_i("iteration",   _itrr);
 			shader_set_f("detailScale", _dsca);
 			shader_set_f("detailAtten", _datt);
 			

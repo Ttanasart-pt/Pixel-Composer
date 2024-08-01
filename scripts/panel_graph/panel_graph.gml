@@ -187,11 +187,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			highlight     : false,
 		}
 		
-		connection_param = new connectionParameter();
+		connection_param  = new connectionParameter();
+		show_view_control = 1;
 		
 		bg_color = c_black;
-		
-		show_view_control = 1;
 	#endregion
 	
 	#region ---- position ----
@@ -842,9 +841,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(mouse_press(PREFERENCES.pan_mouse_key)) {
 				_doDragging = true;
 				drag_key = PREFERENCES.pan_mouse_key;
+				
 			} else if(mouse_press(mb_left) && graph_dragging_key) {
 				_doDragging = true;
 				drag_key = mb_left;
+				
 			} else if(mouse_press(mb_left) && graph_zooming_key) {
 				_doZooming = true;
 				drag_key = mb_left;

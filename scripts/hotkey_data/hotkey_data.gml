@@ -132,8 +132,7 @@
 	}
 	
 	function addHotkey(_context, _name, _key, _mod, _action) {
-		if(is_string(_key))
-			_key = key_get_index(_key);
+		if(is_string(_key)) _key = key_get_index(_key);
 		
 		var key = new hotkeyObject(_context, _name, _key, _mod, _action);
 		
