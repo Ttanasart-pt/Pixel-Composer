@@ -197,7 +197,7 @@ event_inherited();
 		));
 		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_enable_test_mode", "Enable developer mode" + "*"),
+			__txtx("pref_enable_test_mode", "Enable developer mode*"),
 			"test_mode",
 			new checkBox(function() /*=>*/ { PREFERENCES.test_mode = !PREFERENCES.test_mode; should_restart = true; PREF_SAVE(); })
 		));
@@ -205,7 +205,7 @@ event_inherited();
 	ds_list_add(pref_global, __txt("Paths"));
 		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-			__txtx("pref_directory", "Main directory path" + "*"),
+			__txtx("pref_directory", "Main directory path*"),
 			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PRESIST_PREF.path = txt; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); })
 				.setSideButton(button(function() /*=>*/ { 
 					PRESIST_PREF.path = get_directory(PRESIST_PREF.path);
@@ -218,7 +218,7 @@ event_inherited();
 		));
 		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_directory_temp", "Temp directory path" + "*"),
+			__txtx("pref_directory_temp", "Temp directory path*"),
 			"temp_path",
 			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.temp_path = txt; PREF_SAVE(); })
 				.setSideButton(button(function() /*=>*/ { PREFERENCES.temp_path = get_directory(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -226,13 +226,13 @@ event_inherited();
 		));
 	
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_directory_assets", "Assets directory path" + "*"),
+			__txtx("pref_directory_assets", "Assets directory path*"),
 			"path_assets",
 			new folderArrayBox(PREFERENCES.path_assets, function() /*=>*/ { PREF_SAVE(); }).setFont(f_p2),
 		));
 	
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_directory_font", "Font directory path" + "*"),
+			__txtx("pref_directory_font", "Font directory path*"),
 			"path_fonts",
 			new folderArrayBox(PREFERENCES.path_fonts, function() /*=>*/ { PREF_SAVE(); }).setFont(f_p2),
 		));
@@ -240,7 +240,7 @@ event_inherited();
 	ds_list_add(pref_global, __txt("Libraries"));
 	
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_directory_ImageMagick", "ImageMagick path" + "*"),
+			__txtx("pref_directory_ImageMagick", "ImageMagick path*"),
 			"ImageMagick_path",
 			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.ImageMagick_path = txt; PREF_SAVE(); })
 				.setSideButton(button(function() /*=>*/ { PREFERENCES.ImageMagick_path = get_directory(PREFERENCES.ImageMagick_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -248,7 +248,7 @@ event_inherited();
 		));
 		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_directory_webp", "Webp path" + "*"),
+			__txtx("pref_directory_webp", "Webp path*"),
 			"webp_path",
 			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.webp_path = txt; PREF_SAVE(); })
 				.setSideButton(button(function() /*=>*/ { PREFERENCES.webp_path = get_directory(PREFERENCES.webp_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -256,7 +256,7 @@ event_inherited();
 		));
 		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_directory_gifski", "Gifski path" + "*"),
+			__txtx("pref_directory_gifski", "Gifski path*"),
 			"gifski_path",
 			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.gifski_path = txt; PREF_SAVE(); })
 				.setSideButton(button(function() /*=>*/ { PREFERENCES.gifski_path = get_directory(PREFERENCES.gifski_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -264,7 +264,7 @@ event_inherited();
 		));
 		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_directory_FFmpeg", "FFmpeg path" + "*"),
+			__txtx("pref_directory_FFmpeg", "FFmpeg path*"),
 			"ffmpeg_path",
 			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.gifski_path = txt; PREF_SAVE(); })
 				.setSideButton(button(function() /*=>*/ { PREFERENCES.ffmpeg_path = get_directory(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -314,7 +314,7 @@ event_inherited();
 		file_find_close();
 		
 		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_interface_language", "Interface Language" + "*"),
+			__txtx("pref_interface_language", "Interface Language*"),
 			"local",
 			new scrollBox(locals, function(str) /*=>*/ { 
 				if(str < 0) return;

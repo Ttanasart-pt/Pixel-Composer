@@ -27,6 +27,8 @@
 	function panel_preview_3d_view_left()				{ CALL("preview_3d_view_left");		PANEL_PREVIEW.d3_view_action_left(); }
 	function panel_preview_3d_view_top()				{ CALL("preview_3d_view_top");		PANEL_PREVIEW.d3_view_action_top();   }
 	function panel_preview_3d_view_bottom()				{ CALL("preview_3d_view_bottom");	PANEL_PREVIEW.d3_view_action_bottom();   }
+	
+	function panel_preview_set_zoom(zoom)				{ CALL("preview_preview_set_zoom");	PANEL_PREVIEW.fullView(zoom); }
 #endregion
 
 function Panel_Preview() : PanelContent() constructor {
@@ -236,6 +238,11 @@ function Panel_Preview() : PanelContent() constructor {
 		addHotkey("Preview", "3D Left view ",	vk_numpad3,	MOD_KEY.alt,	panel_preview_3d_view_left);
 		addHotkey("Preview", "3D Top view",		vk_numpad7,	MOD_KEY.none,	panel_preview_3d_view_top);
 		addHotkey("Preview", "3D Bottom view",	vk_numpad7,	MOD_KEY.alt,	panel_preview_3d_view_bottom);
+		
+		addHotkey("Preview", "Scale x1",		"1",	MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(1); });
+		addHotkey("Preview", "Scale x2",		"2",	MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(2); });
+		addHotkey("Preview", "Scale x4",		"3",	MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(4); });
+		addHotkey("Preview", "Scale x8",		"4",	MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(8); });
 	#endregion
 	
 	#region ++++ toolbars & actions ++++
@@ -476,10 +483,13 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(canvas_zooming) {
 			if(!MOUSE_WRAPPING) {
-				var dy = -(my - canvas_zoom_m) / 200;
+				// var mdx = mx - canvas_zoom_mx;
+				var mdy = my - canvas_zoom_m;
+				
+				var dd = -(mdy) / 200;
 				
 				var _s = canvas_s;
-				canvas_s = clamp(canvas_s * (1 + dy), 0.10, 64);
+				canvas_s = clamp(canvas_s * (1 + dd), 0.10, 64);
 				
 				if(_s != canvas_s) {
 					var dx = (canvas_s - _s) * ((canvas_zoom_mx - canvas_x) / _s);
@@ -505,9 +515,11 @@ function Panel_Preview() : PanelContent() constructor {
 			if(mouse_press(PREFERENCES.pan_mouse_key, pFOCUS)) {
 				_doDragging = true;
 				canvas_drag_key = PREFERENCES.pan_mouse_key;
+				
 			} else if(mouse_press(mb_left, pFOCUS) && canvas_dragging_key) {
 				_doDragging = true;
 				canvas_drag_key = mb_left;
+				
 			} else if(mouse_press(mb_left, pFOCUS) && canvas_zooming_key) {
 				_doZooming = true;
 				canvas_drag_key = mb_left;
@@ -612,10 +624,13 @@ function Panel_Preview() : PanelContent() constructor {
 			if(mouse_press(PREFERENCES.pan_mouse_key, pFOCUS)) {
 				_doDragging = true;
 				canvas_drag_key = PREFERENCES.pan_mouse_key;
+				
 			} else if(mouse_press(mb_left, pFOCUS) && canvas_dragging_key) {
+				
 				_doDragging = true;
 				canvas_drag_key = mb_left;
 			} else if(mouse_press(mb_left, pFOCUS) && canvas_zooming_key) {
+				
 				_doZooming = true;
 				canvas_drag_key = mb_left;
 			}
@@ -640,7 +655,7 @@ function Panel_Preview() : PanelContent() constructor {
 		canvas_hover = point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 	} #endregion
 	
-	function fullView() {
+	function fullView(scale = 0) {
 		var bbox = noone;
 		
 		var node = getNodePreview();
@@ -659,7 +674,8 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		var tl = tool_side_draw_l * 40;
 		var tr = tool_side_draw_r * 40;
-		var ss = min((w - 32 - tl - tr) / _w, (h - 32 - toolbar_height * 2) / _h);
+		var ss = scale == 0? min((w - 32 - tl - tr) / _w, (h - 32 - toolbar_height * 2) / _h) : scale;
+		
 		canvas_s = ss;
 		canvas_x = w / 2 - _w * canvas_s / 2 - _x * canvas_s + (tl - tr) / 2;
 		canvas_y = h / 2 - _h * canvas_s / 2 - _y * canvas_s;
@@ -1545,13 +1561,10 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		overHover &= !view_hovering;
 		overHover &= tool_hovering == noone && !overlay_hovering;
-		overHover &= !(view_pan_tool || view_zoom_tool);
+		overHover &= !canvas_dragging && !canvas_zooming;
 		overHover &= point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
 		
 		var overActive =  active && overHover;
-		
-		var _dragging = key_mod_press(CTRL) && !key_mod_press(SHIFT) && !key_mod_press(ALT);
-		overActive &= !_dragging;
 			
 		var params     = { w, h, toolbar_height };
 		var mouse_free = false;
@@ -1578,7 +1591,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		#region node overlay
 			overlay_hovering = false;
-		
+			
 			if(_node.drawPreviewToolOverlay(pHOVER, pFOCUS, _mx, _my, { x, y, w, h, toolbar_height, 
 				x0: _node.tools == -1? 0 : ui(40),
 				x1: w,

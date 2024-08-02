@@ -24,7 +24,7 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 7] = nodeValue("Detail", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
 	
-	inputs[| 8] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 8] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.4)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 9] = nodeValue("Detail Scaling", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2.);
@@ -34,14 +34,19 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 11] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Volume", "Plane" ]);
-		
+	
+	inputs[| 12] = nodeValue("Use Fog", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0)
+	
+	inputs[| 13] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ cola(c_black), cola(c_white) ]) )
+	
 	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
-		["Transform", false], 1, 2, 3, 
-		["Camera",    false], 4, 5, 
-		["Cloud",     false], 11, 6, 8, 
-		["Noise",     false], 7, 9, 10, 
+		["Transform", false],  1,  2,  3, 
+		["Camera",    false],  4,  5, 
+		["Cloud",     false], 11,  6,  8, 
+		["Noise",     false],  7,  9, 10, 
+		["Render",    false], 13, 12, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
@@ -67,6 +72,8 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _itrr = _data[ 7];
 		var _dsca = _data[ 9];
 		var _datt = _data[10];
+		var _fogu = _data[12];
+		var _colr = _data[13];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
@@ -83,9 +90,12 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_f("density",     _dens);
 			shader_set_f("threshold",   _thrs);
 			
+			shader_set_i("fogUse",      _fogu);
 			shader_set_i("iteration",   _itrr);
 			shader_set_f("detailScale", _dsca);
 			shader_set_f("detailAtten", _datt);
+			
+			_colr.shader_submit();
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
