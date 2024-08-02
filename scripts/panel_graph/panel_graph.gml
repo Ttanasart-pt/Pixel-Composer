@@ -285,6 +285,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		_value_focus    = noone;
 		value_dragging  = noone;
 		value_draggings = [];
+		value_drag_from = noone;
 		
 		frame_hovering  = noone;
 		_frame_hovering = noone;
@@ -794,8 +795,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	function dragGraph() {
 		if(graph_autopan) {
-			graph_x = lerp_float(graph_x, graph_pan_x_to, 16, 1);
-			graph_y = lerp_float(graph_y, graph_pan_y_to, 16, 1);
+			graph_x = lerp_float(graph_x, graph_pan_x_to, 32, 1);
+			graph_y = lerp_float(graph_y, graph_pan_y_to, 32, 1);
 			
 			if(graph_x == graph_pan_x_to && graph_y == graph_pan_y_to)
 				graph_autopan = false;
@@ -1737,6 +1738,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						target.node.addInput(value_draggings[i]);
 						
 				} else {
+					if(value_drag_from && target.value_from && value_drag_from.node == target.node)
+						value_drag_from.setFrom(target.value_from);
+						
 					_connect = [ target.setFrom(value_dragging), target, value_dragging ];
 				}
 			}
@@ -1894,7 +1898,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		} 
 	}
 	
-	function drawJunctionConnect() { #region
+	function drawJunctionConnect() {
 		var _focus = pFOCUS && !view_hovering;
 		
 		if(value_dragging)
@@ -1903,6 +1907,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		if(value_dragging == noone && value_focus && mouse_press(mb_left, _focus) && !key_mod_press(ALT)) {
 			value_dragging  = value_focus;
 			value_draggings = [];
+			value_drag_from = noone;
 			
 			if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
 				if(key_mod_press(CTRL)) {
@@ -1946,6 +1951,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
 				if(key_mod_press(CTRL) && value_dragging.value_from) {
+					value_drag_from = value_dragging;
+					
 					var fr = value_dragging.value_from;
 					value_dragging.removeFrom();
 					value_dragging = fr;
@@ -1964,7 +1971,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			_node.drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
 		}
 		
-	} #endregion
+	}
 	
 	function callAddDialog(ctx = getCurrentContext()) { #region
 		var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
