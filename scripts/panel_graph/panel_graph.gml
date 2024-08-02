@@ -162,19 +162,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		title = title_raw + (project.modified? "*" : ""); 
 	}
 	
-	static setProject = function(project) {
-		self.project = project;
-		nodes_list   = project.nodes;
-		
-		setTitle();
-	}
-	
 	static reset = function() {
 		onFocusBegin();
 		resetContext();
 	}
-	
-	setProject(project);
 	
 	#region ---- display ----
 		display_parameter = {
@@ -182,9 +173,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			show_dimension  : true,
 			show_compute    : true,
 		
-			avoid_label   : true,
-			preview_scale : 100,
-			highlight     : false,
+			avoid_label     : true,
+			preview_scale   : 100,
+			highlight       : false,
+			
+			show_control    : false,
 		}
 		
 		connection_param  = new connectionParameter();
@@ -198,6 +191,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		graph_y  = 0;
 		graph_cx = 0;
 		graph_cy = 0;
+		
+		graph_autopan  = false;
+		graph_pan_x_to = 0;
+		graph_pan_y_to = 0;
 		
 		scale			= [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.50, 0.65, 0.80, 1, 1.2, 1.35, 1.5, 2.0 ];
 		graph_s			= 1;
@@ -244,6 +241,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	#region ---- nodes ----
 		node_context  = [];
+		nodes_list    = [];
 		
 		node_dragging = noone;
 		node_drag_mx  = 0;
@@ -371,7 +369,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		// print($"{cx}, {cy} / {graph_x}, {graph_y}");
 	}
 	
-	function initSize() { toCenterNode(); } initSize();
+	function initSize() { toCenterNode(); }
 	
 	#region ++++ hotkeys ++++
 		addHotkey("Graph", "Add node",			    "A", MOD_KEY.none,					panel_graph_add_node);
@@ -759,6 +757,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		menu_junc_color.spacing = ui(24);
 	#endregion
 	
+	//// ============ Project ============
+	
+	static setProject = function(project) {
+		self.project = project;
+		nodes_list   = project.nodes;
+		
+		setTitle();
+		run_in(2, function() /*=>*/ { setSlideShow(0, true); });
+		struct_override(display_parameter, project.graph_display_parameter);
+	} 
+	
 	//// ============ Views ============
 	
 	function onFocusBegin() { #region
@@ -778,12 +787,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		fullView();
 	} #endregion
 	
-	function fullView() { #region
+	function fullView() {
 		INLINE
 		toCenterNode(array_empty(nodes_selecting)? nodes_list : nodes_selecting);
-	} #endregion
+	}
 	
-	function dragGraph() { #region
+	function dragGraph() {
+		if(graph_autopan) {
+			graph_x = lerp_float(graph_x, graph_pan_x_to, 16, 1);
+			graph_y = lerp_float(graph_y, graph_pan_y_to, 16, 1);
+			
+			if(graph_x == graph_pan_x_to && graph_y == graph_pan_y_to)
+				graph_autopan = false;
+			return;
+		}
+		
 		if(graph_dragging) {
 			if(!MOUSE_WRAPPING) {
 				var dx = mx - graph_drag_mx; 
@@ -905,15 +923,53 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		graph_draggable = true;
 		graph_x = round(graph_x);
 		graph_y = round(graph_y);
-	} #endregion
+	}
+	
+	function autoPanTo(_x, _y) {
+		graph_autopan  = true;
+		graph_pan_x_to = _x;
+		graph_pan_y_to = _y;
+	}
+	
+	function setSlideShow(index, skip = false) {
+		var _targ = project.slideShowSet(index);
+		
+		if(_targ == noone) return;
+		
+		var _gx = w / 2 / graph_s;
+		var _gy = h / 2 / graph_s;
+		
+		var _tx = _gx;
+		var _ty = _gy;
+		
+		switch(_targ.slide_anchor) {
+			case 0 :
+				_tx = _gx - _targ.x;
+				_ty = _gy - _targ.y;
+				break;
+				
+			case 1 :
+				_tx = 64 * graph_s - _targ.x;
+				_ty = 64 * graph_s - _targ.y;
+				break;
+				
+		}
+		
+		if(skip) {
+			graph_x = _tx;
+			graph_y = _ty;
+			
+		} else
+			autoPanTo(_tx, _ty, skip);
+	}
 	
 	//// =========== Context ==========
 	
-	function resetContext() { #region
+	function resetContext() {
 		node_context = [];
 		nodes_list = project.nodes;
 		toCenterNode();
-	} #endregion
+	}
 	
 	function addContext(node) {
 		var _node = node.getNodeBase();
@@ -1105,19 +1161,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		frame_hovering  = noone;
 		
 		for(var i = 0; i < array_length(nodes_list); i++) {
-			var _nl = nodes_list[i];
+			var _node = nodes_list[i];
+			if(!display_parameter.show_control && _node.is_controller) continue;
 			
-			_nl.cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
-			_nl.preDraw(gr_x, gr_y, graph_s, gr_x, gr_y);
+			_node.cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
+			_node.preDraw(gr_x, gr_y, graph_s, gr_x, gr_y);
 		}
 		printIf(log, $"Predraw time: {get_timer() - t}"); t = get_timer();
 		
 		#region draw frame
 			for(var i = 0; i < array_length(nodes_list); i++) {
-				var _nl = nodes_list[i];
+				var _node = nodes_list[i];
+				if(!display_parameter.show_control && _node.is_controller) continue;
 				
-				if(_nl.drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter, self))
-					frame_hovering = _nl;
+				if(_node.drawNodeBG(gr_x, gr_y, mx, my, graph_s, display_parameter, self))
+					frame_hovering = _node;
 			}
 		#endregion
 		printIf(log, $"Frame draw time: {get_timer() - t}"); t = get_timer();
@@ -1127,6 +1185,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(pHOVER)
 			for(var i = 0; i < array_length(nodes_list); i++) {
 				var _node = nodes_list[i];
+				if(!display_parameter.show_control && _node.is_controller) continue;
+				
 				_node.branch_drawing = false;
 				
 				if(_node.pointIn(gr_x, gr_y, mx, my, graph_s))
@@ -1192,6 +1252,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								for(var i = 0; i < array_length(nodes_list); i++) { //select content
 									var _node = nodes_list[i];
 									if(_node == node_hovering) continue;
+									if(!display_parameter.show_control && _node.is_controller) continue;
 									
 									if(!_node.selectable) continue;
 									
@@ -1390,9 +1451,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			param.setDraw(aa, bg_color);
 			
 			for(var i = 0; i < array_length(nodes_list); i++) {
+				var _node = nodes_list[i];
+				if(!display_parameter.show_control && _node.is_controller) continue;
+				
 				param.cur_layer = i + 1;
 				
-				var _hov = nodes_list[i].drawConnections(param);
+				var _hov = _node.drawConnections(param);
 				if(_hov != noone && is_struct(_hov)) hov = _hov;
 			}
 		
@@ -1438,12 +1502,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			 value_focus = noone;
 			 
 			var t = get_timer();
-			for(var i = 0; i < array_length(nodes_list); i++)
+			for(var i = 0; i < array_length(nodes_list); i++) {
+				var _node = nodes_list[i];
+				
+				if(!display_parameter.show_control && _node.is_controller) continue;
 				nodes_list[i].drawNodeBehind(gr_x, gr_y, mx, my, graph_s);
+			}
 			
 			for(var i = 0; i < array_length(nodes_list); i++) {
 				var _node = nodes_list[i];
 				
+				if(!display_parameter.show_control && _node.is_controller) continue;
 				if(is_instanceof(_node, Node_Frame)) continue;
 				try {
 					var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter, self);
@@ -1456,12 +1525,20 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			for(var i = 0; i < array_length(nodes_list); i++)
+			for(var i = 0; i < array_length(nodes_list); i++) {
+				var _node = nodes_list[i];
+				
+				if(!display_parameter.show_control && _node.is_controller) continue;
 				if(!is_instanceof(nodes_list[i], Node_Frame)) 
 					nodes_list[i].drawBadge(gr_x, gr_y, graph_s);
+			}
 				
-			for(var i = 0; i < array_length(nodes_list); i++)
+			for(var i = 0; i < array_length(nodes_list); i++) {
+				var _node = nodes_list[i];
+				
+				if(!display_parameter.show_control && _node.is_controller) continue;
 				nodes_list[i].drawNodeFG(gr_x, gr_y, mx, my, graph_s, display_parameter, self);
+			}
 			
 			if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
 				value_focus = PANEL_INSPECTOR.prop_hover;
@@ -1563,6 +1640,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					for(var i = 0; i < array_length(nodes_list); i++) {
 						var _node = nodes_list[i];
 						
+						if(!display_parameter.show_control && _node.is_controller) continue;
 						if(!_node.selectable) continue;
 						if(is_instanceof(_node, Node_Frame) && !nodes_select_frame) continue;
 						
@@ -1879,8 +1957,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		var gr_x = graph_x * graph_s;
 		var gr_y = graph_y * graph_s;
-		for(var i = 0; i < array_length(nodes_list); i++)
-			nodes_list[i].drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
+		for(var i = 0; i < array_length(nodes_list); i++) {
+			var _node = nodes_list[i];
+			
+			if(!display_parameter.show_control && _node.is_controller) continue;
+			_node.drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
+		}
 		
 	} #endregion
 	
@@ -2212,6 +2294,70 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		draw_set_alpha(1);
 	} 
 	
+	function drawSlideShow() {
+		if(!project.useSlideShow) return;
+		
+		var amo = project.slideShow_amount;
+		var ind = project.slideShow_index;
+		var cur = project.slideShow_current;
+		
+		var _sl_w = (amo - 1) * ui(16) + ui(16 * 2);
+		var _sl_h = ui(32);
+		
+		var _sl_x = w / 2 - _sl_w / 2;
+		var _ss_x = _sl_x;
+		
+		var _sl_y = h - toolbar_height - ui(8) - _sl_h;
+		var _ss_y = _sl_y + _sl_h - ui(16);
+		
+		if(cur != noone) {
+			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_icon_light);
+			var _txtw = string_width(cur.slide_title) + ui(32);
+			_sl_w = max(_sl_w, _txtw);
+			_sl_h = _sl_h + ui(8 + 12);
+			
+			_sl_x = w / 2 - _sl_w / 2;
+			_sl_y = h - toolbar_height - ui(8) - _sl_h;
+		}
+		
+		draw_sprite_stretched(THEME.ui_panel_bg, 3, _sl_x, _sl_y, _sl_w, _sl_h);
+		
+		if(cur != noone) draw_text_add(round(w / 2), round(_sl_y + ui(8)), cur.slide_title);
+		
+		var _hv = false;
+		
+		for(var i = 0; i < amo; i++) {
+			var _sx = _ss_x + ui(16) + i * ui(16);
+			var _sy = _ss_y;
+			
+			var cc = i == ind? COLORS._main_accent : COLORS._main_icon;
+			var aa = i == ind? 1 : .5;
+			var ss = i == ind? 1 : .8;
+			
+			if(pHOVER && point_in_circle(mx, my, _sx, _sy, ui(8))) {
+				_hv = true;
+				aa  = 1;
+				
+				if(mouse_press(mb_left, pFOCUS)) 
+					setSlideShow(i);
+			}
+			
+			draw_sprite_ext(THEME.circle, 0, _sx, _sy, ss, ss, 0, cc, aa);
+		}
+		
+		if(point_in_rectangle(mx, my, _sl_x, _sl_y, _sl_x + _sl_w, _sl_y + _sl_h)) { 
+			mouse_on_graph = false;
+			
+			if(pHOVER && !_hv) {
+				draw_sprite_stretched_add(THEME.ui_panel_bg, 4, _sl_x, _sl_y, _sl_w, _sl_h, COLORS._main_icon, 0.05);
+				draw_sprite_stretched_add(THEME.ui_panel_fg, 1, _sl_x, _sl_y, _sl_w, _sl_h, c_white, 0.1);
+				
+				if(mouse_press(mb_left, pFOCUS)) 
+					setSlideShow((ind + 1) % amo);
+			}
+		}
+	}
+	
 	function drawContent(panel) { #region //// Main Draw
 		if(!project.active) return;
 		
@@ -2268,6 +2414,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			draw_set_text(f_p0b, fa_right, fa_bottom, COLORS._main_value_negative);
 			draw_text(w - 8, h - toolbar_height, "Live Update");
 		}
+		
+		drawSlideShow();
 		
 		////////////////////////////////// File drop //////////////////////////////////
 		
@@ -2973,6 +3121,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var dia = dialogCall(o_dialog_save);
 		dia.project = project;
 	} #endregion
+	
+	setProject(project);
+	initSize();
 }
 
 //// ========== File Drop ==========

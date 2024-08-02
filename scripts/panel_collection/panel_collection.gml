@@ -34,7 +34,9 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	view_tooltip = new tooltipSelector("View", [ "Grid", "List" ])
 	
-	static initMenu = function() { #region
+	PANEL_COLLECTION = self;
+	
+	static initMenu = function() {
 		if(_menu_node == noone) return;
 		var meta = _menu_node.getMetadata();
 		
@@ -131,7 +133,7 @@ function Panel_Collection() : PanelContent() constructor {
 				}));
 			}
 		}
-	} #endregion
+	}
 	initMenu();
 	
 	search_string = "";
@@ -145,7 +147,7 @@ function Panel_Collection() : PanelContent() constructor {
 	grid_size_to = grid_size;
 	
 	contentView = 0;
-	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) { #region
+	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
 		var content;
@@ -356,9 +358,9 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 		
 		return hh;
-	}); #endregion
+	});
 	
-	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) { #region
+	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var hh = ui(8);
 		_y += ui(8);
@@ -386,34 +388,33 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 		
 		return hh + ui(28);
-	}); #endregion
+	});
 	
 	function onFocusBegin() { PANEL_COLLECTION = self; }
 	
-	function onResize() { #region
+	function onResize() { 
 		initSize();
 		
 		folderPane.resize(group_w - ui(8), content_h);
 		
 		if(mode == 2)	contentPane.resize(w - ui(16), content_h);
 		else			contentPane.resize(content_w - ui(6), content_h);
-	} #endregion
+	} 
 	
-	function setContext(cont) { #region
+	function setContext(cont) { 
 		context = cont;
 		contentPane.scroll_y_raw = 0;
 		contentPane.scroll_y_to	 = 0;
-	} #endregion
+	} 
 	
-	function refreshContext() { #region
+	function refreshContext() { 
 		if(mode == 0)		context.scan([ ".json", ".pxcc" ]);	
 		else if(mode == 1)	context.scan([ ".png", ".jpg", ".gif" ]);	
 		
-		if(STEAM_ENABLED)
-			steamUCGload();
-	} #endregion
+		if(STEAM_ENABLED) steamUCGload();
+	} 
 	
-	function drawContent(panel) { #region
+	function drawContent(panel) { 
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var content_y = ui(48);
@@ -433,27 +434,25 @@ function Panel_Collection() : PanelContent() constructor {
 			folderPane.setFocusHover(pFOCUS, pHOVER);
 			folderPane.draw(0, content_y, mx, my - content_y);
 			
-			#region resize width
-				if(group_w_dragging) {
-					CURSOR  = cr_size_we;
-					group_w = max(ui(128), group_w_sx + (mx - group_w_mx));
-				
-					onResize();
-				
-					if(mouse_release(mb_left))
-						group_w_dragging = false;
-				}
+			if(group_w_dragging) {
+				CURSOR  = cr_size_we;
+				group_w = max(ui(128), group_w_sx + (mx - group_w_mx));
 			
-				if(pHOVER && point_in_rectangle(mx, my, group_w - ui(2), content_y, group_w + ui(2), content_y + content_h)) {
-					CURSOR = cr_size_we;
-					if(pFOCUS && mouse_press(mb_left)) {
-						group_w_dragging = true;
-						group_w_mx = mx;
-						group_w_sx = group_w;
-					}
-				}
-			#endregion
+				onResize();
+			
+				if(mouse_release(mb_left))
+					group_w_dragging = false;
+			}
 		
+			if(pHOVER && point_in_rectangle(mx, my, group_w - ui(2), content_y, group_w + ui(2), content_y + content_h)) {
+				CURSOR = cr_size_we;
+				if(pFOCUS && mouse_press(mb_left)) {
+					group_w_dragging = true;
+					group_w_mx = mx;
+					group_w_sx = group_w;
+				}
+			}
+			
 		}
 		   
 		var _x    = ui(20);
@@ -488,7 +487,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var by = ui(9);
 		var bs = ui(32);
 		
-		if(search_string == "") { #region
+		if(search_string == "") { 
 			if(bx > rootx) {
 				view_tooltip.index = contentView;
 				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, view_tooltip, THEME.view_mode, contentView) == 2)
@@ -551,14 +550,14 @@ function Panel_Collection() : PanelContent() constructor {
 					dialogPanelCall(new Panel_Collections_Setting(), x + bx, y + by - 8, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 			}
 			bx -= ui(36);
-		#endregion
-		} else { #region
+		
+		} else { 
 			var tb_w = ui(200);
 			var tb_x = w - ui(10) - tb_w;
 			var tb_y = ui(10);
 			
 			tb_search.draw(tb_x, tb_y, tb_w, TEXTBOX_HEIGHT, search_string, [mx, my]);
-		#endregion
+		
 		}
-	} #endregion
+	} 
 }

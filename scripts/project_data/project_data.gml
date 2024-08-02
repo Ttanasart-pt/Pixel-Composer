@@ -38,7 +38,7 @@
 		
 		load_layout = false;
 		
-		previewGrid = { #region
+		previewGrid = {
 			show	: false,
 			snap	: false,
 			size	: [ 16, 16 ],
@@ -46,9 +46,9 @@
 			color   : COLORS.panel_preview_grid,
 			
 			pixel   : false,
-		} #endregion
+		}
 		
-		graphGrid = { #region
+		graphGrid = {
 			show	: true,
 			show_origin : false,
 			snap	: true,
@@ -56,18 +56,29 @@
 			opacity : 0.05,
 			color   : c_white,
 			highlight : 12,
-		} #endregion
+		}
+		graph_display_parameter = {
+			show_grid	    : true,
+			show_dimension  : true,
+			show_compute    : true,
+		
+			avoid_label     : true,
+			preview_scale   : 100,
+			highlight       : false,
+			
+			show_control    : false,
+		}
 		
 		addons = {};
 		
-		onion_skin = { #region
+		onion_skin = {
 			enabled: false,
 			range: [ -1, 1 ],
 			step: 1,
 			color: [ c_red, c_blue ],
 			alpha: 0.5,
 			on_top: true,
-		}; #endregion
+		};
 		
 		#region =================== ATTRIBUTES ===================
 			attributes = variable_clone(PROJECT_ATTRIBUTES);
@@ -142,7 +153,42 @@
 		
 		notes = [];
 		
-		static cleanup = function() { #region
+		static step = function() {
+			slideShowPreStep();
+			
+			animator.step();
+			globalNode.step();
+		}
+		
+		static postStep = function() {
+			slideShowPostStep();
+		}
+		
+		useSlideShow      = false;
+		slideShow         = {};
+		slideShow_keys    = 0;
+		slideShow_index   = 0;
+		slideShow_amount  = 0;
+		slideShow_current = noone;
+		
+		static slideShowPreStep = function() { slideShow = {}; }
+		
+		static slideShowPostStep = function() {
+			slideShow_keys = variable_struct_get_names(slideShow);
+			array_sort(slideShow_keys, true);
+			
+			slideShow_amount  = array_length(slideShow_keys);
+			useSlideShow      = slideShow_amount > 0;
+			slideShow_current = struct_try_get(slideShow, array_safe_get(slideShow_keys, slideShow_index, 0), noone);
+		}
+		
+		static slideShowSet = function(index) { 
+			slideShow_index   = index;
+			slideShow_current = struct_try_get(slideShow, array_safe_get(slideShow_keys, slideShow_index, 0), noone);
+			return slideShow_current;
+		}
+		
+		static cleanup = function() {
 			array_foreach(allNodes, function(_node) { 
 				_node.active = false; 
 				_node.cleanUp(); 
@@ -152,7 +198,7 @@
 			ds_map_destroy(nodeNameMap);
 			
 			gc_collect();
-		} #endregion
+		}
 			
 		static toString = function() { return $"ProjectObject [{path}]"; }
 	
@@ -180,6 +226,8 @@
 			
 			_map.composer    = composer;
 			_map.load_layout = load_layout;
+			
+			_map.graph_display_parameter = graph_display_parameter;
 			
 			__node_list = [];
 			array_foreach(allNodes, function(node) { if(node.active) array_push(__node_list, node.serialize()); })
@@ -214,6 +262,8 @@
 			if(struct_has(_map, "attributes"))	struct_override(attributes,  _map.attributes);
 			if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
 			if(struct_has(_map, "composer"))	composer = _map.composer;
+			
+			if(struct_has(_map, "graph_display_parameter"))	struct_override(graph_display_parameter,  _map.graph_display_parameter);
 			
 			load_layout	= struct_try_get(_map, "load_layout", load_layout);
 			

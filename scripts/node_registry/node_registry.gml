@@ -1037,6 +1037,7 @@ function __initNodes() {
 		addNodeObject(node, "Print",			s_node_print,		"Node_Print",			[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
 		addNodeObject(node, "Widget Test",		s_node_print,		"Node_Widget_Test",		[1, Node_Widget_Test]);
 		addNodeObject(node, "Graph Preview",	s_node_image,		"Node_Graph_Preview",	[1, Node_Graph_Preview]);
+		addNodeObject(node, "Slideshow",		s_node_image,		"Node_Slideshow",		[1, Node_Slideshow]);
 		//addNodeObject(node, "Module Test",	s_node_print,		"Node_Module_Test",	[1, Node_Module_Test]);
 		
 		ds_list_add(node, "Project");

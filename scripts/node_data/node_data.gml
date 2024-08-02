@@ -50,9 +50,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		search_match  = -9999;
 		
 		onDoubleClick = -1;
+		is_controller = false;
 	#endregion
 	
-	static resetInternalName = function() { #region
+	static resetInternalName = function() {
 		var str = string_replace_all(name, " ", "_");
 			str = string_replace_all(str,  "/", "");
 			str = string_replace_all(str,  "-", "");
@@ -60,9 +61,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		ds_map_delete(PROJECT.nodeNameMap, internalName);
 		internalName = str + string(irandom_range(10000, 99999)); 
 		PROJECT.nodeNameMap[? internalName] = self;
-	} #endregion
+	}
 	
-	if(!LOADING && !APPENDING) { #region
+	if(!LOADING && !APPENDING) {
 		recordAction(ACTION_TYPE.node_added, self);
 		PROJECT.nodeMap[? node_id] = self;
 		PROJECT.modified = true;
@@ -76,7 +77,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		});
 		
 		RENDER_ALL_REORDER
-	} #endregion
+	}
 	
 	#region ---- display ----
 		color   = c_white;

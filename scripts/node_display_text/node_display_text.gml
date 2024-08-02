@@ -151,9 +151,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			index++;
 			
 			switch(_ch) {
-				case "<" : 
-					_mode = 1; 
-					continue;
+				case "<" : _mode = 1; continue;
+					
 				case ">" : 
 					var _c = string_splice(_cmd, " ");
 					
@@ -161,12 +160,14 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						switch(_c[0]) {
 							case "bt" :
 								var _bch = "";
-								for( var i = 1; i < array_length(_c); i++ ) {
-									if(i > 1) _bch += " ";
-									_bch += _c[i];
-								}
-								_tw = string_width(_bch)  * _s * fsize;
-								_th = string_height(_bch) * _s * fsize;
+								for( var i = 1; i < array_length(_c); i++ )
+									_bch += i > 1? " " + _c[i] : _c[i];
+								
+								var _bw = string_width(_bch);
+								
+								_tx += 4 * _s;
+								_tw  = _bw * _s * fsize;
+								_th  = string_height(_bch) * _s * fsize;
 								
 								draw_sprite_stretched_points(THEME.ui_panel_bg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_icon_light);
 								draw_sprite_stretched_points(THEME.ui_panel_fg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4);
@@ -185,9 +186,31 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 									draw_set_color(_cc);
 								} 
 								
-								_tx += _tw;
-								width += string_width(_bch) * fsize;
+								_tx   += _tw + 4 * _s;
+								width += _bw * fsize + 8;
 								break;
+							
+							case "node" :
+								var _bch = "";
+								for( var i = 1; i < array_length(_c); i++ )
+									_bch += i > 1? " " + _c[i] : _c[i];
+								
+								var _bw = string_width(_bch);
+								
+								_tx += 4 * _s;
+								_tw  = _bw * _s * fsize;
+								_th  = string_height(_bch) * _s * fsize;
+								
+								draw_sprite_stretched_ext(THEME.node_bg, 0, _tx - 4, _y - 4, _tw + 8, _th + 8, c_white, .75);
+								draw_sprite_stretched_add(THEME.node_bg, 0, _tx - 4, _y - 4, _tw + 8, _th + 8, c_white, .10);
+								
+								draw_set_color(_cc);
+								draw_text_add_float(_tx, _y, _bch, _s * fsize);
+								
+								_tx   += _tw + 4 * _s;
+								width += _bw * fsize + 8;
+								break;
+								
 							case "panel" :
 								var _key = _c[1] + " panel";
 								var _tss = 11 / 32;
@@ -207,19 +230,20 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 										case "preview" :    FOCUSING_PANEL = PANEL_PREVIEW;    break;
 										case "inspector" :  FOCUSING_PANEL = PANEL_INSPECTOR;  break;
 										case "animation" :  FOCUSING_PANEL = PANEL_ANIMATION;  break;
-										case "collection" : FOCUSING_PANEL = findPanel("Panel_Collection"); break;
+										case "collection" : FOCUSING_PANEL = PANEL_COLLECTION; break;
 									}
 								}
 								
 								draw_text_add_float(_tx, _y, _key, _s * _tss);
 								
-								_tx += _tw;
+								_tx   += _tw;
 								width += string_width(_key) * _tss;
 								
 								draw_set_font(_ff);
 								draw_set_color(_cc);
 								draw_set_alpha(_aa);
 								break;
+								
 							case "spr" :
 								var _spr_t = _c[1];
 								if(!variable_struct_exists(THEME, _spr_t)) break;
@@ -235,7 +259,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								
 								draw_sprite_ext(_spr, _spr_i, _tx + _ow, _y + _ch_h / 2 - _th / 2 + _oh, _spr_s, _spr_s, 0, c_white, 1);
 								
-								_tx += _tw * _spr_s;
+								_tx   += _tw * _spr_s;
 								width += _tw;
 								break;
 						}
@@ -251,13 +275,19 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					_tw = string_width(_ch);
 					_th = string_height(_ch);
 			
-					draw_text_add_float(_tx, _y, _ch, _s * fsize);
-					_tx += _tw * _s * fsize;
+					gpu_set_colorwriteenable(1, 1, 1, 0);
+						BLEND_OVERRIDE
+						draw_text_add_float(_tx, _y, _ch, _s * fsize);
+						BLEND_NORMAL
+						
+					gpu_set_colorwriteenable(1, 1, 1, 1);
+						draw_text_add_float(_tx, _y, _ch, _s * fsize);
+					
+					_tx   += _tw * _s * fsize;
 					width += _tw * fsize;
 					break;
-				case 1 : 
-					_cmd += _ch;
-					break;
+					
+				case 1 : _cmd += _ch; break;
 			}
 		}
 		
@@ -269,29 +299,29 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _len   = string_length(txt);
 		var _ch    = "";
 		var _mode  = 0;
-		var ss     = "";
 		var ch_str = "";
+		
+		var b = buffer_create(1, buffer_grow, 1);
 		
 		while(index <= _len) {
 			_ch = string_char_at(txt, index);
 			index++;
 			
 			switch(_ch) {
-				case "<" : 
-					_mode = 1; continue;
+				case "<" : _mode = 1; continue;
+				
 				case ">" : 
 					var _c = string_splice(ch_str, " ");
 					
 					if(array_length(_c) > 1) {
 						switch(_c[0]) {
-							case "bt" :
+							case "bt"   :
+							case "node" : 
 								var _bch = "";
-								for( var i = 1; i < array_length(_c); i++ ) {
-									if(i > 1) _bch += " ";
-									_bch += _c[i];
-								}
+								for( var i = 1; i < array_length(_c); i++ )
+									_bch += i > 1? " " + _c[i] : _c[i];
 								
-								ss += _bch;
+								buffer_write(b, buffer_text, _bch);
 								break;
 						}
 					}
@@ -302,10 +332,14 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			
 			switch(_mode) {
-				case 0 : ss += _ch; break;
+				case 0 : buffer_write(b, buffer_text, _ch); break;
 				case 1 : ch_str += _ch; break;
 			}
 		}
+		
+		buffer_to_start(b);
+		var ss = buffer_read(b, buffer_text);
+		buffer_delete(b);
 		
 		return ss;
 	}
@@ -330,13 +364,15 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 				var _ps = string_copy(_tx, 1, sp);
 				_tx = string_copy(_tx, sp + 1, string_length(_tx) - sp);
-			
-				if(line_width > 0 && string_width(string_raw(ss + _ps)) * fsize >= line_width) {
+				
+				var fullStr = ss + _ps;
+				
+				if(line_width > 0 && string_width(string_raw(fullStr)) * fsize >= line_width) {
 					array_push(_lines, ss);
 					ss = _ps;
 					
 				} else if(string_length(_tx) <= 0) {
-					array_push(_lines, ss + _ps);
+					array_push(_lines, fullStr);
 					ss = "";
 					
 				} else 
@@ -365,7 +401,10 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 		var _iny = yy + (junction_draw_hei_y * 0.5) * _s;
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) { inputs[| i].x = xx; inputs[| i].y = _iny; }
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) { 
+			inputs[| i].x = xx; 
+			inputs[| i].y = _iny; 
+		}
 		
 		for(var i = 0; i < in_cache_len; i++) {
 			jun = inputDisplayList[i];

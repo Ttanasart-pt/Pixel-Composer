@@ -314,7 +314,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var aa  = _color_get_alpha(cc);
 				
 				if(_an_use) {
-					cc = merge_color(cc, colorMultiply(cc, _an_bld), _inf);
+					cc = merge_color_a(cc, colorMultiply(cc, _an_bld), _inf);
 					aa += _an_alp * _inf;
 				}
 				

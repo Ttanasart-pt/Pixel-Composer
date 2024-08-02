@@ -187,48 +187,48 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		parts[i] = new __part(self);
 		
 	static spawn = function(_time = CURRENT_FRAME, _pos = -1) { #region
-		var _inSurf = getInputData( 0);
+		var _inSurf     	= getInputData( 0);
 		
 		var _spawn_amount	= getInputData( 2);
 		
-		var _spawn_area	= getInputData( 3);
-		var _distrib	= getInputData( 4);
-		var _dist_map	= getInputData(30);
-		var _scatter	= getInputData(24);
+		var _spawn_area 	= getInputData( 3);
+		var _distrib    	= getInputData( 4);
+		var _dist_map   	= getInputData(30);
+		var _scatter    	= getInputData(24);
 		
-		var _life			= getInputData( 5);
-		var _direction		= getInputData( 6);
+		var _life       	= getInputData( 5);
+		var _direction  	= getInputData( 6);
 		var _directCenter	= getInputData(29);
-		var _velocity		= getInputData(18);
+		var _velocity   	= getInputData(18);
 		
-		var _accel	= getInputData( 7);
-		var _grav	= getInputData(19);
-		var _gvDir	= getInputData(33);
-		var _turn	= getInputData(34);
-		var _turnBi	= getInputData(35);
-		var _turnSc	= getInputData(36);
+		var _accel      	= getInputData( 7);
+		var _grav       	= getInputData(19);
+		var _gvDir      	= getInputData(33);
+		var _turn       	= getInputData(34);
+		var _turnBi     	= getInputData(35);
+		var _turnSc     	= getInputData(36);
 		
-		var _follow			= getInputData(15);
-		var _rotation		= getInputData( 8);
+		var _follow     	= getInputData(15);
+		var _rotation   	= getInputData( 8);
 		var _rotation_speed	= getInputData( 9);
-		var _scale			= getInputData(10);
-		var _size 			= getInputData(17);
+		var _scale      	= getInputData(10);
+		var _size       	= getInputData(17);
 		
-		var _color	= getInputData(12);
-		var _blend	= getInputData(28);
-		var _alpha	= getInputData(13);
+		var _color      	= getInputData(12);
+		var _blend      	= getInputData(28);
+		var _alpha      	= getInputData(13);
 		
-		var _arr_type	= getInputData(22);
-		var _anim_speed	= getInputData(23);
-		var _anim_stre	= getInputData(49);
-		var _anim_end	= getInputData(26);
+		var _arr_type   	= getInputData(22);
+		var _anim_speed 	= getInputData(23);
+		var _anim_stre  	= getInputData(49);
+		var _anim_end   	= getInputData(26);
 		
-		var _ground			= getInputData(37);
+		var _ground     	= getInputData(37);
 		var _ground_offset	= getInputData(38);
 		var _ground_bounce	= getInputData(39);
-		var _ground_frict   = getInputData(40);
+		var _ground_frict	= getInputData(40);
 		
-		var _path = getInputData(46);
+		var _path       	= getInputData(46);
 		
 		var _posDist = [];
 		

@@ -4,14 +4,13 @@ winManStep()
 
 //print("===== Step start =====");
 
-if(PROJECT.active && !PROJECT.safeMode) { #region node step
-	PROJECT.animator.step();
-	PROJECT.globalNode.step();
+if(PROJECT.active && !PROJECT.safeMode) { //node step
+	PROJECT.step();
 	LIVE_UPDATE = false;
 	
 	try {
 		if(PANEL_MAIN != 0) PANEL_MAIN.step();
-		array_foreach(PROJECT.allNodes, function(_node) { 
+		array_foreach(PROJECT.allNodes, function(_node) /*=>*/ { 
 			if(!_node.active) return; 
 			_node.triggerCheck(); 
 			_node.step(); 
@@ -20,8 +19,9 @@ if(PROJECT.active && !PROJECT.safeMode) { #region node step
 		noti_warning("Step error: " + exception_print(e));
 	}
 	
+	PROJECT.postStep();
 	IS_SAVING = false;
-} #endregion
+}
 
 #region hotkey
 	if(!instance_exists(o_dialog_preference) && !HOTKEY_BLOCK) {

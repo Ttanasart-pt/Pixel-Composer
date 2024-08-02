@@ -26,6 +26,30 @@ function draw_text_add_float(_x, _y, _text, scale = 1) {
 	BLEND_NORMAL;
 }
 
+function draw_text_bm_add(_x, _y, _text, scale = 1) {
+	INLINE
+		
+	if(scale == 1) {
+		gpu_set_colorwriteenable(1, 1, 1, 0);
+			BLEND_OVERRIDE
+			draw_text(_x, _y, _text);
+			BLEND_NORMAL
+			
+		gpu_set_colorwriteenable(1, 1, 1, 1);
+			draw_text(_x, _y, _text);
+		
+	} else {
+		gpu_set_colorwriteenable(1, 1, 1, 0);
+			BLEND_OVERRIDE
+			draw_text_transformed(_x, _y, _text, scale, scale, 0);
+			BLEND_NORMAL
+			
+		gpu_set_colorwriteenable(1, 1, 1, 1);
+			draw_text_transformed(_x, _y, _text, scale, scale, 0);
+		
+	}
+}
+
 function draw_text_lang_add(_x, _y, _text, scale = 1) {
 	INLINE
 	BLEND_ALPHA_MULP;

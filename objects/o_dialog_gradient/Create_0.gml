@@ -233,7 +233,7 @@ event_inherited();
 						
 						gradient.keys = [];
 						for( var i = 0, n = array_length(_p); i < n; i++ )
-							gradient.keys[i] = new gradientKey(i / (n - 1), _p[i]);
+							gradient.keys[i] = new gradientKey(i / (n - 1), cola(_p[i]));
 					}),
 				]);
 			}

@@ -22,7 +22,7 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 				true,
 			),
 			new __Panel_Linear_Setting_Item(
-				__txtx("graph_visibility_compute", "Compute time"),
+				__txtx("graph_visibility_compute", "Compute Time"),
 				new checkBox(function() { display_parameter.show_compute = !display_parameter.show_compute; }),
 				function() { return display_parameter.show_compute },
 				function(val) { display_parameter.show_compute = val; },
@@ -35,6 +35,16 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 				function(val) { display_parameter.avoid_label = val; },
 				true,
 			),
+			new __Panel_Linear_Setting_Item(
+				__txtx("graph_visibility_slideshow", "Show Controller"),
+				new checkBox(function() { display_parameter.show_control = !display_parameter.show_control; }),
+				function() { return display_parameter.show_control },
+				function(val) { display_parameter.show_control = val; },
+				false,
+			),
+			
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
 			new __Panel_Linear_Setting_Item(
 				__txtx("graph_visibility_preview_scale", "Preview Scale"),
 				slider(50, 100, 1, function(val) { display_parameter.preview_scale = val; }),

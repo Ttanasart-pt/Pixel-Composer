@@ -10,27 +10,23 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| input_len + 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.rejectArray()
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| input_len + 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Round position to the closest integer value to avoid jittering.")
-		.rejectArray();
+	inputs[| input_len + 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Round position to the closest integer value to avoid jittering.");
 	
 	inputs[| input_len + 2] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.rejectArray()
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Alpha", "Additive" ]);
 	
-	inputs[| input_len + 3] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
-		.rejectArray();
+	inputs[| input_len + 3] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
 	inputs[| input_len + 4] = nodeValue("Render Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, PARTICLE_RENDER_TYPE.surface )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Surface", "Line" ])
-		.rejectArray();
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Surface", "Line" ]);
 	
-	inputs[| input_len + 5] = nodeValue("Line life", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 )
-		.rejectArray()
+	inputs[| input_len + 5] = nodeValue("Line life", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 );
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	for(var i = input_len, n = ds_list_size(inputs); i < n; i++) inputs[| i].rejectArray();
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -48,7 +44,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static onValueUpdate = function(index = 0) { #region
+	static onValueUpdate = function(index = 0) {
 		if(index == input_len + 0) {
 			var _dim		= getInputData(input_len + 0);
 			var _outSurf	= outputs[| 0].getValue();
@@ -59,9 +55,9 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		if(PROJECT.animator.is_playing)
 			PROJECT.animator.firstFrame();
-	} #endregion
+	}
 	
-	static reLoop = function() { #region
+	static reLoop = function() {
 		var _loop = getInputData(21);
 		var _type = getInputData(input_len + 4);
 		
@@ -73,9 +69,9 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		}
 		
 		seed = getInputData(32);
-	} #endregion
+	}
 	
-	static onStep = function() { #region
+	static onStep = function() {
 		var _dim = getInputData(input_len + 0);
 		var _typ = getInputData(input_len + 4);
 		
@@ -87,9 +83,9 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			curr_dimension[0] = _dim[0];
 			curr_dimension[1] = _dim[1];
 		}
-	} #endregion
+	}
 	
-	static onUpdate = function(frame = CURRENT_FRAME) { #region
+	static onUpdate = function(frame = CURRENT_FRAME) {
 		var _inSurf   = getInputData(0);
 		var _dim	  = getInputData(input_len + 0);
 		var _bg 	  = getInputData(input_len + 3);
@@ -109,9 +105,9 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		}
 		
 		if(IS_PLAYING) runVFX(frame);
-	} #endregion
+	}
 	
-	function render(_time = CURRENT_FRAME) { #region
+	function render(_time = CURRENT_FRAME) {
 		var _dim   = inputs[| input_len + 0].getValue(_time);
 		var _exact = inputs[| input_len + 1].getValue(_time);
 		var _blend = inputs[| input_len + 2].getValue(_time);
@@ -146,5 +142,5 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		if(PROJECT.animator.is_playing)
 			cacheCurrentFrame(_outSurf);
-	} #endregion	
+	}	
 }

@@ -191,7 +191,7 @@ _FILE_DROPPED     = false;
 	dc_check -= DELTA_TIME;
 #endregion
 
-#region step
+#region actions
 	if(array_length(action_last_frame) > 0) {
 		ds_stack_push(UNDO_STACK, action_last_frame);
 		ds_stack_clear(REDO_STACK);

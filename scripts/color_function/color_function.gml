@@ -230,8 +230,18 @@ function color_diff(c1, c2) {
 
 	function merge_color_ext(c0, c1, t) {
 		INLINE
-		if(is_real(c0)) return __merge_color(c0, c1, t);
+		if(is_real(c0) && is_real(c1)) return __merge_color(c0, c1, t);
+		
+		return make_color_rgba(
+			clamp(round(lerp(color_get_red(c0),   color_get_red(c1),   t)), 0, 255),
+			clamp(round(lerp(color_get_green(c0), color_get_green(c1), t)), 0, 255),
+			clamp(round(lerp(color_get_blue(c0),  color_get_blue(c1),  t)), 0, 255),
+			clamp(round(lerp(color_get_alpha(c0), color_get_alpha(c1), t)), 0, 255),
+		);
+	}
 	
+	function merge_color_a(c0, c1, t) {
+		INLINE
 		return make_color_rgba(
 			clamp(round(lerp(color_get_red(c0),   color_get_red(c1),   t)), 0, 255),
 			clamp(round(lerp(color_get_green(c0), color_get_green(c1), t)), 0, 255),

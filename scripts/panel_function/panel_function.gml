@@ -49,13 +49,13 @@
 	
 	function getPanelFromName(name, create = false, focus = true) { #region
 		switch(name) {
-			case "Panel_Menu"       : var p = (create || findPanel(name))? new Panel_Menu()		 : PANEL_MENU;		if(focus) { PANEL_MENU	    = p; } return p;
-			case "Panel_Inspector"  : var p = (create || findPanel(name))? new Panel_Inspector() : PANEL_INSPECTOR; if(focus) { PANEL_INSPECTOR = p; } return p;
-			case "Panel_Animation"  : var p = (create || findPanel(name))? new Panel_Animation() : PANEL_ANIMATION; if(focus) { PANEL_ANIMATION = p; } return p;
-			case "Panel_Preview"    : var p = (create || findPanel(name))? new Panel_Preview()	 : PANEL_PREVIEW;	if(focus) { PANEL_PREVIEW	= p; } return p;
-			case "Panel_Graph"      : var p = (create || findPanel(name))? new Panel_Graph()	 : PANEL_GRAPH;		if(focus) { PANEL_GRAPH		= p; } return p;
+			case "Panel_Menu"       : var p = (create || findPanel(name))? new Panel_Menu()		 : PANEL_MENU;		if(focus) { PANEL_MENU	     = p; } return p;
+			case "Panel_Inspector"  : var p = (create || findPanel(name))? new Panel_Inspector() : PANEL_INSPECTOR; if(focus) { PANEL_INSPECTOR  = p; } return p;
+			case "Panel_Animation"  : var p = (create || findPanel(name))? new Panel_Animation() : PANEL_ANIMATION; if(focus) { PANEL_ANIMATION  = p; } return p;
+			case "Panel_Preview"    : var p = (create || findPanel(name))? new Panel_Preview()	 : PANEL_PREVIEW;	if(focus) { PANEL_PREVIEW	 = p; } return p;
+			case "Panel_Graph"      : var p = (create || findPanel(name))? new Panel_Graph()	 : PANEL_GRAPH;		if(focus) { PANEL_GRAPH		 = p; } return p;
+			case "Panel_Collection"	: var p = (create || findPanel(name))? new Panel_Collection(): PANEL_COLLECTION;if(focus) { PANEL_COLLECTION = p; } return p;
 			
-			case "Panel_Collection"		: return new Panel_Collection();
 			case "Panel_Workspace"		: return new Panel_Workspace();
 			case "Panel_Tunnels"		: return new Panel_Tunnels();
 			case "Panel_History"		: return new Panel_History();

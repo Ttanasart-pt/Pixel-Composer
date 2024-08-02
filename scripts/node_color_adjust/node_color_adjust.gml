@@ -177,11 +177,13 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				var r = _color_get_red(_c);
 				var g = _color_get_green(_c);
 				var b = _color_get_blue(_c);
+				var a =  color_get_alpha(_c);
 				
-				_c = make_color_rgb(
+				_c = make_color_rgba(
 					clamp((.5 + _con * 2 * (r - .5) + _bri) * _exp, 0, 1) * 255,
 					clamp((.5 + _con * 2 * (g - .5) + _bri) * _exp, 0, 1) * 255,
 					clamp((.5 + _con * 2 * (b - .5) + _bri) * _exp, 0, 1) * 255,
+					a
 				);
 				
 				var h = _color_get_hue(_c);
@@ -193,8 +195,8 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				v = clamp((v + _val) * (1 + _sat * s * 0.5), 0, 1);
 				s = clamp(s * (_sat + 1), 0, 1);
 				
-				_c = make_color_hsv(h * 255, s * 255, v * 255);
-				_c = merge_color(_c, _bl, _bla);
+				_c = make_color_hsva(h * 255, s * 255, v * 255, a);
+				_c = merge_color_a(_c, _bl, _bla);
 				_col[i] = _c;
 			}
 			

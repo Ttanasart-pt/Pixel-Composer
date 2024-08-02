@@ -5,7 +5,7 @@ function __loadParams(readonly = false, override = false, apply_layout = false) 
 	self.apply_layout = apply_layout;
 }
 
-function LOAD(safe = false) { #region
+function LOAD(safe = false) {
 	if(DEMO) return false;
 	
 	var path = get_open_filename_pxc("Pixel Composer project (.pxc)|*.pxc;*.cpxc", "");
@@ -15,18 +15,18 @@ function LOAD(safe = false) { #region
 				
 	gc_collect();
 	var proj = LOAD_PATH(path, false, safe);
-} #endregion
+}
 
-function TEST_PATH(path) { #region
+function TEST_PATH(path) {
 	TESTING    = true;
 	TEST_ERROR = true;
 	
 	PROJECT.cleanup();
 	PROJECT = new Project();
-	PANEL_GRAPH.setProject(PROJECT);
 	
 	LOAD_AT(path);
-} #endregion
+	PANEL_GRAPH.setProject(PROJECT);
+}
 
 function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	var _rep = false;
@@ -43,6 +43,9 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	
 	var _PROJECT = PROJECT;
 	PROJECT = new Project();
+	
+	var res = LOAD_AT(path, new __loadParams(readonly));
+	if(!res) return false;
 	
 	if(_PROJECT == noone) {
 		PROJECTS = [ PROJECT ];
@@ -62,9 +65,6 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 		}
 		array_push(PROJECTS, PROJECT);
 	}
-	
-	var res = LOAD_AT(path, new __loadParams(readonly));
-	if(!res) return false;
 	
 	PROJECT.safeMode = safe_mode;
 	if(!IS_CMD) setFocus(PANEL_GRAPH.panel);

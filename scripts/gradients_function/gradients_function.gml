@@ -92,7 +92,7 @@ function gradientObject(color = c_black) constructor {
 			var rat = (position - _pkey.time) / (_key.time - _pkey.time);
 			
 			switch(type) {
-				case GRADIENT_INTER.smooth : return merge_color      (_pkey.value, _key.value, rat);
+				case GRADIENT_INTER.smooth : return merge_color_a    (_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.hue    : return merge_color_hsv  (_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.oklab  : return merge_color_oklab(_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.srgb   : return merge_color_srgb (_pkey.value, _key.value, rat);
@@ -261,9 +261,7 @@ function gradientObject(color = c_black) constructor {
 		var s  = { type, keys: [] };
 		for( var i = 0, n = array_length(keys); i < n; i++ )
 			s.keys[i] = keys[i].serialize();
-			
-		// print(s);
-			
+		
 		return json_stringify(s, false);
 	}
 	
@@ -284,8 +282,6 @@ function gradientObject(color = c_black) constructor {
 		
 		type = struct_try_get(s, "type");
 		keys = array_create(array_length(s.keys));
-		
-		// print(s.keys);
 		
 		for( var i = 0, n = array_length(s.keys); i < n; i++ ) {
 			var _time  = s.keys[i].time;

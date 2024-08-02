@@ -1653,6 +1653,7 @@
     {"id":{"name":"node_shard_noise","path":"scripts/node_shard_noise/node_shard_noise.yy",},},
     {"id":{"name":"node_shell","path":"scripts/node_shell/node_shell.yy",},},
     {"id":{"name":"node_skew","path":"scripts/node_skew/node_skew.yy",},},
+    {"id":{"name":"node_slideshow","path":"scripts/node_slideshow/node_slideshow.yy",},},
     {"id":{"name":"node_smear","path":"scripts/node_smear/node_smear.yy",},},
     {"id":{"name":"node_smoke_add_collider","path":"scripts/node_smoke_add_collider/node_smoke_add_collider.yy",},},
     {"id":{"name":"node_smoke_add","path":"scripts/node_smoke_add/node_smoke_add.yy",},},

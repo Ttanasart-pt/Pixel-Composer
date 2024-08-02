@@ -1073,6 +1073,7 @@
     {"name":"node_shard_noise","order":12,"path":"scripts/node_shard_noise/node_shard_noise.yy",},
     {"name":"node_shell","order":13,"path":"scripts/node_shell/node_shell.yy",},
     {"name":"node_skew","order":11,"path":"scripts/node_skew/node_skew.yy",},
+    {"name":"node_slideshow","order":28,"path":"scripts/node_slideshow/node_slideshow.yy",},
     {"name":"node_smear","order":12,"path":"scripts/node_smear/node_smear.yy",},
     {"name":"node_smoke_add_collider","order":6,"path":"scripts/node_smoke_add_collider/node_smoke_add_collider.yy",},
     {"name":"node_smoke_add","order":4,"path":"scripts/node_smoke_add/node_smoke_add.yy",},

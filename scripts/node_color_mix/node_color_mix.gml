@@ -28,7 +28,7 @@ function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		return c;
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
@@ -40,5 +40,5 @@ function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
-	} #endregion
+	}
 }

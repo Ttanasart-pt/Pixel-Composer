@@ -372,3 +372,15 @@
 		log_console($"Open port: {TCP_PORT}");
 	}
 #endregion
+
+#region random debug
+	// var s = "1,2,23423,423,423,543,564,6,435,34,5"
+	
+	// var t = get_timer();
+	// repeat(1000000) { string_split(s, ","); }
+	// print($"{(get_timer() - t) / 1000} ms");
+	
+	// var t = get_timer();
+	// repeat(1000000) { string_splice(s, ","); }
+	// print($"{(get_timer() - t) / 1000} ms");
+#endregion
