@@ -44,9 +44,6 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	var _PROJECT = PROJECT;
 	PROJECT = new Project();
 	
-	var res = LOAD_AT(path, new __loadParams(readonly));
-	if(!res) return false;
-	
 	if(_PROJECT == noone) {
 		PROJECTS = [ PROJECT ];
 		
@@ -65,6 +62,9 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 		}
 		array_push(PROJECTS, PROJECT);
 	}
+	
+	var res = LOAD_AT(path, new __loadParams(readonly));
+	if(!res) return false;
 	
 	PROJECT.safeMode = safe_mode;
 	if(!IS_CMD) setFocus(PANEL_GRAPH.panel);

@@ -20,10 +20,11 @@ function draw_text_over(_x, _y, _text, scale = 1) {
 
 function draw_text_add_float(_x, _y, _text, scale = 1) {
 	INLINE
-	BLEND_ALPHA_MULP;
-	if(scale == 1) draw_text(_x, _y, _text);
-	else           draw_text_transformed(_x, _y, _text, scale, scale, 0);
+	
+	BLEND_ADD;
+	if(scale == 1) draw_text(_x, _y, _text); else draw_text_transformed(_x, _y, _text, scale, scale, 0);
 	BLEND_NORMAL;
+	if(scale == 1) draw_text(_x, _y, _text); else draw_text_transformed(_x, _y, _text, scale, scale, 0);
 }
 
 function draw_text_bm_add(_x, _y, _text, scale = 1) {

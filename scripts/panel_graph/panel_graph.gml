@@ -184,6 +184,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		show_view_control = 1;
 		
 		bg_color = c_black;
+		
+		slider_width = 0;
 	#endregion
 	
 	#region ---- position ----
@@ -609,12 +611,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	function getFocusingNode() { return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
 	
-	function getCurrentContext() { return array_empty(node_context)? noone : node_context[array_length(node_context) - 1]; }
-	
-	function getNodeList(cont = getCurrentContext()) { #region
-		return cont == noone? project.nodes : cont.getNodeList();
-	} #endregion
-	
 	//// =========== Menus ===========
 	
 	menu_sent_to_preview   = menuItem(__txtx("panel_graph_send_to_preview", "Send to preview"),			function() /*=>*/ { setCurrentPreview(node_hover); });
@@ -765,8 +761,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		nodes_list   = project.nodes;
 		
 		setTitle();
-		run_in(2, function() /*=>*/ { setSlideShow(0); });
-		struct_override(display_parameter, project.graph_display_parameter);
+		run_in(2, function() /*=>*/ { 
+			setSlideShow(0); 
+			struct_override(display_parameter, project.graph_display_parameter);
+		});
 	} 
 	
 	//// ============ Views ============
@@ -934,8 +932,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	function setSlideShow(index, skip = false) {
 		var _targ = project.slideShowSet(index);
-		
 		if(_targ == noone) return;
+		
+		setContext(_targ);
 		
 		var _gx = w / 2 / graph_s;
 		var _gy = h / 2 / graph_s;
@@ -965,6 +964,29 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	}
 	
 	//// =========== Context ==========
+	
+	
+	function getCurrentContext() { return array_empty(node_context)? noone : node_context[array_length(node_context) - 1]; }
+	
+	function getNodeList(cont = getCurrentContext()) { return cont == noone? project.nodes : cont.getNodeList(); }
+	
+	function setContext(context) {
+		if(context.group == getCurrentContext()) return;
+		
+		node_context = [];
+		nodes_list   = project.nodes;
+		
+		var _ctxs = [];
+		var _ctx  = context;
+		
+		while(_ctx.group != noone) {
+			array_insert(_ctxs, 0, _ctx.group);
+			_ctx = _ctx.group;
+		}
+		
+		for (var i = 0, n = array_length(_ctxs); i < n; i++) 
+			addContext(_ctxs[i]);
+	}
 	
 	function resetContext() {
 		node_context = [];
@@ -2336,17 +2358,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var _sl_y = h - toolbar_height - ui(8) - _sl_h;
 		var _ss_y = _sl_y + _sl_h - ui(16);
 		
-		if(cur != noone) {
+		if(cur != noone && cur.slide_title != "") {
 			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_icon_light);
 			var _txtw = string_width(cur.slide_title) + ui(32);
 			_sl_w = max(_sl_w, _txtw);
 			_sl_h = _sl_h + ui(8 + 12);
-			
-			_sl_x = w / 2 - _sl_w / 2;
-			_sl_y = h - toolbar_height - ui(8) - _sl_h;
 		}
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, 3, _sl_x, _sl_y, _sl_w, _sl_h);
+		slider_width = slider_width == 0? _sl_w : lerp_float(slider_width, _sl_w, 10);
+		_sl_x = w / 2 - slider_width / 2;
+		_sl_y = h - toolbar_height - ui(8) - _sl_h;
+		
+		draw_sprite_stretched(THEME.ui_panel_bg, 3, _sl_x, _sl_y, slider_width, _sl_h);
 		
 		if(cur != noone) draw_text_add(round(w / 2), round(_sl_y + ui(8)), cur.slide_title);
 		
@@ -2374,12 +2397,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			draw_sprite_ext(THEME.circle, 0, _sx, _sy, ss, ss, 0, cc, aa);
 		}
 		
-		if(point_in_rectangle(mx, my, _sl_x, _sl_y, _sl_x + _sl_w, _sl_y + _sl_h)) { 
+		if(point_in_rectangle(mx, my, _sl_x, _sl_y, _sl_x + slider_width, _sl_y + _sl_h)) { 
 			mouse_on_graph = false;
 			
 			if(pHOVER && !_hv) {
-				draw_sprite_stretched_add(THEME.ui_panel_bg, 4, _sl_x, _sl_y, _sl_w, _sl_h, COLORS._main_icon, 0.05);
-				draw_sprite_stretched_add(THEME.ui_panel_fg, 1, _sl_x, _sl_y, _sl_w, _sl_h, c_white, 0.1);
+				draw_sprite_stretched_add(THEME.ui_panel_bg, 4, _sl_x, _sl_y, slider_width, _sl_h, COLORS._main_icon, 0.05);
+				draw_sprite_stretched_add(THEME.ui_panel_fg, 1, _sl_x, _sl_y, slider_width, _sl_h, c_white, 0.1);
 				
 				if(mouse_press(mb_left, pFOCUS)) 
 					setSlideShow((ind + 1) % amo);

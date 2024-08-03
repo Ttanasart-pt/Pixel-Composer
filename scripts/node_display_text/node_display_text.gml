@@ -14,6 +14,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	auto_height = false;
 	name_hover  = false;
 	draw_scale  = 1;
+	init_size   = true;
 	
 	ta_editor   = new textArea(TEXTBOX_INPUT.text, function(val) { inputs[| 1].setValue(val); })
 	
@@ -37,20 +38,21 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.vector)
 		.rejectArray();
 	
-	inputs[| 6]  = nodeValue("Smooth transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 6] = nodeValue("Line height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.rejectArray();
-	
+		
 	input_display_list = [1, 
-		["Styling", false], 2, 0, 4,
-		["Display", false], 5, 6, 
+		["Styling", false], 2, 0, 4, 6, 
+		["Display", false], 5, 
 	];
 	
 	_prev_text = "";
 	font   = f_sdf_medium;
 	fsize  = 1;
+	line_h = 0;
 	_lines = [];
+	draw_simple = false;
 	
-	smooth = true;
 	pos_x  = x;
 	pos_y  = y;
 	
@@ -131,13 +133,22 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static draw_text_style = function(_x, _y, txt, _s, _mx, _my) {
+		var _ss = _s * fsize;
+		
+		if(draw_simple) {
+			draw_text_add_float(_x, _y, txt, _ss);
+			return string_width(txt) * fsize;
+		}
+		
 		var _tx   = _x;
 		var index = 1;
 		var _len  = string_length(txt);
 		var _ch   = "";
-		var _ch_h = string_height("l") * _s * fsize;
+		var _ch_h = string_height("l") * _ss;
 		var _mode = 0;
+		
 		var _cmd  = "";
+		var _str  = "";
 		var width = 0;
 		
 		var _tw, _th;
@@ -146,7 +157,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _cc = draw_get_color();
 		var _aa = draw_get_alpha();
 		
-		while(index <= _len) {
+		repeat(_len) {
 			_ch = string_char_at(txt, index);
 			index++;
 			
@@ -166,14 +177,14 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								var _bw = string_width(_bch);
 								
 								_tx += 4 * _s;
-								_tw  = _bw * _s * fsize;
-								_th  = string_height(_bch) * _s * fsize;
+								_tw  = _bw * _ss;
+								_th  = string_height(_bch) * _ss;
 								
 								draw_sprite_stretched_points(THEME.ui_panel_bg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_icon_light);
 								draw_sprite_stretched_points(THEME.ui_panel_fg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4);
 									
 								draw_set_color(_cc);
-								draw_text_add_float(_tx, _y, _bch, _s * fsize);
+								draw_text_add_float(_tx, _y, _bch, _ss);
 								
 								var _reac = button_reactive(string_to_var(_bch));
 								if(_reac > 0) {
@@ -181,7 +192,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 									
 									draw_set_color(merge_color(0, COLORS.panel_bg_clear_inner, 0.5));
 									draw_set_alpha(_reac);
-									draw_text_transformed(_tx, _y, _bch, _s * fsize, _s * fsize, 0);
+									draw_text_transformed(_tx, _y, _bch, _ss, _ss, 0);
 									draw_set_alpha(_aa);
 									draw_set_color(_cc);
 								} 
@@ -198,14 +209,14 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								var _bw = string_width(_bch);
 								
 								_tx += 4 * _s;
-								_tw  = _bw * _s * fsize;
-								_th  = string_height(_bch) * _s * fsize;
+								_tw  = _bw * _ss;
+								_th  = string_height(_bch) * _ss;
 								
 								draw_sprite_stretched_ext(THEME.node_bg, 0, _tx - 4, _y - 4, _tw + 8, _th + 8, c_white, .75);
 								draw_sprite_stretched_add(THEME.node_bg, 0, _tx - 4, _y - 4, _tw + 8, _th + 8, c_white, .10);
 								
 								draw_set_color(_cc);
-								draw_text_add_float(_tx, _y, _bch, _s * fsize);
+								draw_text_add_float(_tx, _y, _bch, _ss);
 								
 								_tx   += _tw + 4 * _s;
 								width += _bw * fsize + 8;
@@ -271,24 +282,32 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			
 			switch(_mode) {
-				case 0 :	
-					_tw = string_width(_ch);
-					_th = string_height(_ch);
-			
-					gpu_set_colorwriteenable(1, 1, 1, 0);
-						BLEND_OVERRIDE
-						draw_text_add_float(_tx, _y, _ch, _s * fsize);
-						BLEND_NORMAL
-						
-					gpu_set_colorwriteenable(1, 1, 1, 1);
-						draw_text_add_float(_tx, _y, _ch, _s * fsize);
-					
-					_tx   += _tw * _s * fsize;
-					width += _tw * fsize;
+				case 0 : 
+					_str += _ch; 
 					break;
 					
-				case 1 : _cmd += _ch; break;
+				case 1 : 
+					if(_str != "") {
+						draw_text_add_float(_tx, _y, _str, _ss);
+						_tw = string_width(_str);
+						
+						_tx   += _tw * _ss;
+						width += _tw * fsize;
+						_str = "";
+					}
+						
+					_cmd += _ch; 
+					break;
 			}
+		}
+		
+		if(_str != "") {
+			draw_text_add_float(_tx, _y, _str, _ss);
+			_tw = string_width(_str);
+			
+			_tx   += _tw * _ss;
+			width += _tw * fsize;
+			_str = "";
 		}
 		
 		return width;
@@ -378,6 +397,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				} else 
 					ss += _ps;	
 			}
+			
+			array_push(_lines, "/");
 		}
 		
 		if(ss != "") array_push(_lines, ss);
@@ -416,15 +437,18 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static drawNodeBase = function(xx, yy, mx, my, _s) {
+		if(draw_graph_culled && !init_size) return;
+		
 		var color  = getInputData(0);
 		var txt    = getInputData(1);
 		if(txt == "") txt = "..."
+		draw_simple = string_pos("<", txt) == 0;
 		
 		var sty  = getInputData(2);
 		var alp  = _color_get_alpha(color);
 		var wid  = getInputData(4);
 		var posi = getInputData(5);
-		smooth   = getInputData(6);
+		line_h   = getInputData(6);
 		
 		pos_x = posi[0];
 		pos_y = posi[1];
@@ -457,7 +481,13 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_set_text(font, fa_left, fa_top, color);
 			for( var i = 0, n = array_length(_lines); i < n; i++ ) {
 				var _line = _lines[i];
-				var _h = line_get_height(font) * fsize;
+				if(_line == "/") {
+					hh += 8;
+					ty += 8 * _s;
+					continue;
+				}
+				
+				var _h = line_get_height(font) * fsize + line_h;
 				var _w = draw_text_style(tx, ty, _line, _s, mx, my);
 			
 				ww = max(ww, _w);
@@ -477,6 +507,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_scale = _s;
 		w = ww + 8;
 		h = hh + 8;
+		
+		init_size = false;
 	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
@@ -495,20 +527,21 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return hover;
 	}
 	
+	static update = function() {
+		init_size = true;
+	}
+	
 	static drawNode = function(_x, _y, _mx, _my, _s) {
-		x = smooth? lerp_float(x, pos_x, 4) : pos_x;
-		y = smooth? lerp_float(y, pos_y, 4) : pos_y;
-		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
+		
+		button_reactive_update();
+		drawNodeBase(xx, yy, _mx, _my, _s);
 		
 		if(active_draw_index > -1) {
 			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, w * _s, h * _s, COLORS._main_accent, 1);
 			active_draw_index = -1;
 		}
-		
-		button_reactive_update();
-		drawNodeBase(xx, yy, _mx, _my, _s);
 		
 		return drawJunctions(xx, yy, _mx, _my, _s);
 	}

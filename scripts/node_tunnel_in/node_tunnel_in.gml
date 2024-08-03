@@ -248,7 +248,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static onClone = function() { onValueUpdate(0); }
 	
-	static postConnect = function() { onValueUpdate(0); }
+	static postConnect = function() { step(); onValueUpdate(0); }
 	
 	static onDestroy = function() {
 		if(error_notification != noone)

@@ -654,5 +654,4 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	static getPreviewObjects		= function() { return [ getPreviewObject(), gizmo ]; }
 	static getPreviewObjectOutline  = function() { return [ getPreviewObject(), gizmo ]; }
-	
 }
