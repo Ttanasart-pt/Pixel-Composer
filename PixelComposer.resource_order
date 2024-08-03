@@ -2165,6 +2165,7 @@
     {"name":"s_node_junction_add","order":18,"path":"sprites/s_node_junction_add/s_node_junction_add.yy",},
     {"name":"s_node_junction_inspector","order":19,"path":"sprites/s_node_junction_inspector/s_node_junction_inspector.yy",},
     {"name":"s_node_junction_name_bg","order":20,"path":"sprites/s_node_junction_name_bg/s_node_junction_name_bg.yy",},
+    {"name":"s_node_junction_selecting","order":33,"path":"sprites/s_node_junction_selecting/s_node_junction_selecting.yy",},
     {"name":"s_node_junctions_bg_2x","order":11,"path":"sprites/s_node_junctions_bg_2x/s_node_junctions_bg_2x.yy",},
     {"name":"s_node_junctions_bg","order":12,"path":"sprites/s_node_junctions_bg/s_node_junctions_bg.yy",},
     {"name":"s_node_junctions_outline_2x","order":13,"path":"sprites/s_node_junctions_outline_2x/s_node_junctions_outline_2x.yy",},

@@ -259,6 +259,7 @@ function Theme() constructor {
     node_junctions_bg               = s_node_junctions_bg;
     node_junctions_outline          = s_node_junctions_outline;
     node_junctions_outline_hover    = s_node_junctions_outline_hover;
+    node_junction_selecting         = s_node_junction_selecting;
 
     node_active                     = s_node_active;
     node_bg_name                    = s_node_bg_name;

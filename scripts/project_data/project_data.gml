@@ -166,7 +166,7 @@
 		
 		useSlideShow      = false;
 		slideShow         = {};
-		slideShow_keys    = 0;
+		slideShow_keys    = [];
 		slideShow_index   = 0;
 		slideShow_amount  = 0;
 		slideShow_current = noone;

@@ -2882,6 +2882,7 @@
     {"id":{"name":"s_node_junction_add","path":"sprites/s_node_junction_add/s_node_junction_add.yy",},},
     {"id":{"name":"s_node_junction_inspector","path":"sprites/s_node_junction_inspector/s_node_junction_inspector.yy",},},
     {"id":{"name":"s_node_junction_name_bg","path":"sprites/s_node_junction_name_bg/s_node_junction_name_bg.yy",},},
+    {"id":{"name":"s_node_junction_selecting","path":"sprites/s_node_junction_selecting/s_node_junction_selecting.yy",},},
     {"id":{"name":"s_node_junctions_bg_2x","path":"sprites/s_node_junctions_bg_2x/s_node_junctions_bg_2x.yy",},},
     {"id":{"name":"s_node_junctions_bg","path":"sprites/s_node_junctions_bg/s_node_junctions_bg.yy",},},
     {"id":{"name":"s_node_junctions_outline_2x","path":"sprites/s_node_junctions_outline_2x/s_node_junctions_outline_2x.yy",},},

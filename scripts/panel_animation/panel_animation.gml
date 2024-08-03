@@ -439,13 +439,14 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	#endregion ++++ context menu ++++
 	
-	function deleteKeys() { #region
+	function deleteKeys() {
 		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var k  = keyframe_selecting[i];
 			k.anim.removeKey(k);
 		}
+		
 		keyframe_selecting = [];
-	} #endregion
+	}
 	
 	function alignKeys(halign = fa_left) { #region
 		if(array_empty(keyframe_selecting)) return;

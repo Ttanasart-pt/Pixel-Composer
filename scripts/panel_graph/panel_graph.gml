@@ -765,7 +765,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		nodes_list   = project.nodes;
 		
 		setTitle();
-		run_in(2, function() /*=>*/ { setSlideShow(0, true); });
+		run_in(2, function() /*=>*/ { setSlideShow(0); });
 		struct_override(display_parameter, project.graph_display_parameter);
 	} 
 	
@@ -1510,6 +1510,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				nodes_list[i].drawNodeBehind(gr_x, gr_y, mx, my, graph_s);
 			}
 			
+			for( var i = 0, n = array_length(value_draggings); i < n; i++ )
+				value_draggings[i].graph_selecting = true;
+			
 			for(var i = 0; i < array_length(nodes_list); i++) {
 				var _node = nodes_list[i];
 				
@@ -1699,9 +1702,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		printIf(log, $"Draw selection frame : {get_timer() - t}"); t = get_timer();
 	} #endregion
 	
-	function connectDraggingValueTo(target) { #region
+	function connectDraggingValueTo(target) {
 		var _connect = [ 0, noone, noone ];
-			
+		
 		if(is_instanceof(PANEL_INSPECTOR, Panel_Inspector) && PANEL_INSPECTOR.attribute_hovering != noone) {
 			PANEL_INSPECTOR.attribute_hovering(value_dragging);
 			
@@ -1726,9 +1729,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				var _addInput = target.value_from == noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input;
 				
 				if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
-					if(array_empty(value_draggings)) {
+					if(array_empty(value_draggings))
 						_connect = [ value_dragging.setFrom(target), value_dragging, target ];
-					} else {
+						
+					else {
 						for( var i = 0, n = array_length(value_draggings); i < n; i++ )
 							value_draggings[i].setFrom(target);
 					}
@@ -1740,8 +1744,20 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				} else {
 					if(value_drag_from && target.value_from && value_drag_from.node == target.node)
 						value_drag_from.setFrom(target.value_from);
+					
+					if(array_empty(value_draggings))
+						_connect = [ target.setFrom(value_dragging), target, value_dragging ];
 						
-					_connect = [ target.setFrom(value_dragging), target, value_dragging ];
+					else {
+						var _node = target.node;
+						var _indx = target.index;
+						
+						for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
+							_node.inputs[| _indx].setFrom(value_draggings[i]);
+							if(++_indx > ds_list_size(_node.inputs)) break;
+						}
+					}
+					
 				}
 			}
 			
@@ -1801,11 +1817,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			menuCall(,,, menu);
 		}
-	} #endregion
+	}
 	
 	function draggingValue() {
 		if(!value_dragging.node.active) { 
-			value_dragging = noone; 
+			value_dragging  = noone; 
+			value_draggings = [];
 			return; 
 		}
 		
@@ -1896,6 +1913,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(mouse_release(mb_left)) 
 				connectDraggingValueTo(target);
 		} 
+		
+		if(mouse_release(mb_left)) value_draggings = [];
 	}
 	
 	function drawJunctionConnect() {
@@ -2341,7 +2360,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var aa = i == ind? 1 : .5;
 			var ss = i == ind? 1 : .8;
 			
+			var slid = struct_try_get(project.slideShow, project.slideShow_keys[i], noone);
+			
 			if(pHOVER && point_in_circle(mx, my, _sx, _sy, ui(8))) {
+				if(slid) TOOLTIP = slid.slide_title;
 				_hv = true;
 				aa  = 1;
 				

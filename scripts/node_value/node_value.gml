@@ -166,6 +166,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		__overlay_hover   = [];
 		overlay_draw_text = true;
+		
+		graph_selecting   = false;
 	#endregion
 	
 	#region ---- timeline ----
@@ -1821,6 +1823,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
 				_s  *= 2;
 			}
+			
+			if(graph_selecting)
+				__draw_sprite_ext(THEME.node_junction_selecting, 0, x, y, _s, _s, 0, _cfg, .8);
+			graph_selecting   = false;
 			
 			__draw_sprite_ext(_bgS, draw_junction_index, x, y, _s, _s, 0, _cbg, 1);
 			
