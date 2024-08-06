@@ -38,15 +38,15 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		if(recoverCache() || !PROJECT.animator.is_playing)
 			return;
 		
-		var _dim = inputs[| 1].getValue(frame);
+		var _dim = getInputData(1);
 		var _outSurf = outputs[| 0].getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
-		var _dom = inputs[| 0].getValue(frame);
-		var _int = inputs[| 2].getValue(frame);
-		var _drw = inputs[| 3].getValue(frame);
-		var _upd = inputs[| 4].getValue(frame);
+		var _dom = getInputData(0);
+		var _int = getInputData(2);
+		var _drw = getInputData(3);
+		var _upd = getInputData(4);
 		
 		FLUID_DOMAIN_CHECK
 		

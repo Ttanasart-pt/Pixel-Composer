@@ -41,11 +41,11 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dom = inputs[| 0].getValue(frame);
-		var _mat = inputs[| 1].getValue(frame);
-		var _pos = inputs[| 2].getValue(frame);
-		var _vel = inputs[| 3].getValue(frame);
-		var _act = inputs[| 4].getValue(frame);
+		var _dom = getInputData(0);
+		var _mat = getInputData(1);
+		var _pos = getInputData(2);
+		var _vel = getInputData(3);
+		var _act = getInputData(4);
 		
 		FLUID_DOMAIN_CHECK
 		outputs[| 0].setValue(_dom);

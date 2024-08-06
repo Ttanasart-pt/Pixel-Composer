@@ -26,7 +26,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	
 	UPDATE_PART_FORWARD
 	
-	static onUpdate = function(frame = CURRENT_FRAME) { #region
+	static onUpdate = function(frame = CURRENT_FRAME) {
 		if(IS_PLAYING) runVFX(frame);
 		
 		if(attributes.Output_pool) {
@@ -40,13 +40,13 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			}
 			outputs[| 0].setValue(_parts);
 		}
-	} #endregion
+	}
 	
-	static onSpawn = function(_time, part) { #region
+	static onSpawn = function(_time, part) {
 		part.step_int = inputs[| input_len + 1].getValue(_time);
-	} #endregion
+	}
 	
-	static onPartCreate = function(part) { #region
+	static onPartCreate = function(part) {
 		var vt = outputs[| 1];
 		if(array_empty(vt.value_to)) return;
 		
@@ -57,9 +57,9 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			if(_n.value_from != vt) continue;
 			_n.node.spawn(part.frame, pv);
 		}
-	} #endregion
+	}
 	
-	static onPartStep = function(part) { #region
+	static onPartStep = function(part) {
 		var vt = outputs[| 2];
 		if(array_empty(vt.value_to)) return;
 		
@@ -70,9 +70,9 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			if(_n.value_from != vt) continue;
 			_n.node.spawn(part.frame, pv);
 		}
-	} #endregion
+	}
 	
-	static onPartDestroy = function(part) { #region
+	static onPartDestroy = function(part) {
 		var vt = outputs[| 3];
 		if(array_empty(vt.value_to)) return;
 		
@@ -83,7 +83,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			if(_n.value_from != vt) continue;
 			_n.node.spawn(part.frame, pv);
 		}
-	} #endregion
+	}
 	
 	static getGraphPreviewSurface = function() { return getInputData(0); }
 		

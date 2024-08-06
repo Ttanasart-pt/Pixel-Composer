@@ -254,7 +254,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 							var _bx = _mtx + ui(12);
 							var _by = _mdy + mh / 2;
 							
-							var _acti = _modi.inputs[| _modi.active_index].getValue();
+							var _acti = _modi.getInputData(_modi.active_index);
 							
 							if(_hover && point_in_circle(_m[0], _m[1], _bx, _by, ui(12))) {
 								draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, c_white);

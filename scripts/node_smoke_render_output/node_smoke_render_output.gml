@@ -34,7 +34,7 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static createOutput = function() { #region
+	static createOutput = function() {
 		if(group == noone) return;
 		if(!is_struct(group)) return;
 			
@@ -49,25 +49,25 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		ds_list_add(group.outputs, outParent);
 		group.refreshNodeDisplay();
 		group.sortIO();
-	} if(!LOADING && !APPENDING) createOutput(); #endregion
+	} if(!LOADING && !APPENDING) createOutput();
 	
-	static step = function() { #region
+	static step = function() {
 		if(!is_instanceof(outParent, NodeValue)) return noone;
 		outParent.name = display_name;
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		if(!is_instanceof(outParent, NodeValue)) return noone;
 		
-		var _dim = inputs[| 1].getValue(frame);
+		var _dim = getInputData(1);
 		var _outSurf = outParent.getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outParent.setValue(_outSurf);
 		
-		var _dom = inputs[| 0].getValue(frame);
-		var _int = inputs[| 2].getValue(frame);
-		var _drw = inputs[| 3].getValue(frame);
-		var _upd = inputs[| 4].getValue(frame);
+		var _dom = getInputData(0);
+		var _int = getInputData(2);
+		var _drw = getInputData(3);
+		var _upd = getInputData(4);
 		
 		FLUID_DOMAIN_CHECK
 		
@@ -88,9 +88,9 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		
 		group.outputNode = self;
 		cacheCurrentFrame(_outSurf);
-	} #endregion
+	}
 	
-	static recoverCache = function(frame = CURRENT_FRAME) { #region
+	static recoverCache = function(frame = CURRENT_FRAME) {
 		if(!is_instanceof(outParent, NodeValue)) return false;
 		if(!cacheExist(frame)) return false;
 		
@@ -98,15 +98,15 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		outParent.setValue(_s);
 			
 		return true;
-	} #endregion
+	}
 	
-	static getGraphPreviewSurface = function() { #region
+	static getGraphPreviewSurface = function() {
 		if(!is_instanceof(outParent, NodeValue)) return noone;
 		return outParent.getValue();
-	} #endregion
+	}
 	
-	static getPreviewValues = function() { #region
+	static getPreviewValues = function() {
 		if(!is_instanceof(outParent, NodeValue)) return noone;
 		return outParent.getValue();
-	} #endregion
+	}
 }

@@ -50,20 +50,20 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Points", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	static step = function() { #region
+	static step = function() {
 		var _dist = getInputData(1);
 		
 		inputs[| 2].setVisible(_dist != 2);
 		inputs[| 4].setVisible(_dist == 2, _dist == 2);
-	} #endregion
+	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	} #endregion
+	}
 	
-	static getPreviewValues = function() { return inputs[| 8].getValue(); }
+	static getPreviewValues = function() { return getInputData(8); }
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _area	 = getInputData(0);
 		var _dist	 = getInputData(1);
 		var _scat	 = getInputData(2);
@@ -131,10 +131,10 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		});
 		
 		outputs[| 0].setValue(pos);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_scatter_point, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 }

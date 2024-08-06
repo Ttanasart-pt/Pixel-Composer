@@ -927,7 +927,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////============ RENDER ============
 	
-	static isRendered = function() { #region
+	static isRendered = function() {
 		if(type == VALUE_TYPE.node)	return true;
 		
 		if(value_from == noone) return true;
@@ -937,9 +937,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!controlNode.isRenderActive()) return true;
 		
 		return controlNode.rendered;
-	} #endregion
+	}
 	
-	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
+	static isActiveDynamic = function() {
 		INLINE
 		
 		if(value_from_loop)     return true;
@@ -957,7 +957,30 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return is_anim;
-	} #endregion
+	}
+	
+	__init_dynamic = true;
+	static isDynamic = function() {
+		INLINE
+		
+		if(__init_dynamic)    { __init_dynamic = false; return true; }
+		if(!IS_PLAYING)         return true;
+		if(value_from_loop)     return true;
+		if(value_from != noone) return true;
+		
+		if(expUse) {
+			if(!is_struct(expTree)) return false;
+			var res = expTree.isDynamic();
+			
+			switch(res) {
+				case EXPRESS_TREE_ANIM.none :		return false;
+				case EXPRESS_TREE_ANIM.base_value : force_requeue = true; return is_anim;
+				case EXPRESS_TREE_ANIM.animated :	force_requeue = true; return true;
+			}
+		}
+		
+		return is_anim;
+	}
 	
 	/////============= CACHE ============
 	
@@ -1178,35 +1201,36 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		else if(value_from && value_from != self)
 			value_from.getValueRecursive(arr, _time);
 		
-		if(expUse && is_struct(expTree) && expTree.validate()) {
+		if(!expUse || !expTree.validate()) return;
 			
-			if(global.EVALUATE_HEAD == self)  {
-				noti_warning($"Expression evaluation error : recursive call detected.");
-				
-			} else if(global.EVALUATE_HEAD == noone) {
-				
-				global.EVALUATE_HEAD = self;
-				expContext = { 
-					name :        name,
-					node_name :   node.display_name,
-					value :       arr[0],
-					node_values : node.input_value_map,
-				};
-				
-				var _exp_res = expTree.eval(variable_clone(expContext));
-				
-				printIf(global.LOG_EXPRESSION, $">>>> Result = {_exp_res}");
-				
-				if(is_undefined(_exp_res)) {
-					arr[@ 0] = 0;
-					noti_warning("Expression returns undefine values.");
-					
-				} else 
-					arr[@ 0] = _exp_res;
-			}
+		if(global.EVALUATE_HEAD == self)  {
+			noti_warning($"Expression evaluation error : recursive call detected.");
+			return;
+		} 
+		
+		if(global.EVALUATE_HEAD == noone) {
 			
-			global.EVALUATE_HEAD = noone;
+			global.EVALUATE_HEAD = self;
+			expContext = { 
+				name :        name,
+				node_name :   node.display_name,
+				value :       arr[0],
+				node_values : node.input_value_map,
+			};
+			
+			var _exp_res = expTree.eval(variable_clone(expContext));
+			
+			printIf(global.LOG_EXPRESSION, $">>>> Result = {_exp_res}");
+			
+			if(is_undefined(_exp_res)) {
+				arr[@ 0] = 0;
+				noti_warning("Expression returns undefine values.");
+				
+			} else 
+				arr[@ 0] = _exp_res;
 		}
+		
+		global.EVALUATE_HEAD = noone;
 	}
 	
 	static arrayBalance = function(val) {
@@ -1259,7 +1283,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static isTimelineVisible = function() { INLINE return is_anim && value_from == noone; }
 	
 	show_val = [];
-	static showValue = function() { #region ////showValue
+	static showValue = function() { ////showValue
 		INLINE
 		
 		var val = 0;
@@ -1276,16 +1300,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			val = ds_list_empty(animator.values)? 0 : animator.processType(animator.values[| 0].value);
 		
 		return val;
-	} #endregion
+	}
 	
-	static unitConvert = function(mode) { #region
+	static unitConvert = function(mode) {
 		var _v = animator.values;
 		
 		for( var i = 0; i < ds_list_size(_v); i++ )
 			_v[| i].value = unit.convertUnit(_v[| i].value, mode);
-	} #endregion
+	}
 	
-	static isDynamicArray = function() { #region
+	static isDynamicArray = function() {
 		if(dynamic_array) return true;
 		
 		switch(display_type) {
@@ -1295,7 +1319,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return false;
-	} #endregion
+	}
 	
 	static isArray = function(val = undefined) {
 		var _cac = val == undefined;
@@ -1311,7 +1335,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return _dep;
 	}
 	
-	static arrayLength = function(val = undefined) { #region
+	static arrayLength = function(val = undefined) {
 		val ??= getValue();
 		
 		if(!isArray(val)) 
@@ -1326,7 +1350,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			ar = ar[0];
 		
 		return array_length(ar);
-	} #endregion
+	}
 	
 	/////============== SET =============
 	
@@ -1427,7 +1451,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return res;
 	} #endregion
 	
-	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) { #region
+	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) {
 		is_modified = true;
 		var updated = false;
 		var _val    = val;
@@ -1459,6 +1483,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		for( var i = 0, n = array_length(value_to_loop); i < n; i++ )
 			value_to_loop[i].updateValue();
 		
+		if(connect_type == JUNCTION_CONNECT.input && self.index >= 0) {
+			var _val = animator.getValue(time);
+			
+			// setInputData(self.index, _val);
+			node.inputs_data[self.index]         = _val;
+			node.input_value_map[$ internalName] = _val;
+		}
+		
 		if(!updated) return false;
 		
 		if(value_tag == "dimension")
@@ -1482,14 +1514,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return;
 		}
 		
-		if(is_instanceof(node, Node) && self.index >= 0) {
-			var _val = animator.getValue(time);
-			
-			// setInputData(self.index, _val);
-			node.inputs_data[self.index]         = _val;
-			node.input_value_map[$ internalName] = _val;
-		}
-		
 		if(tags == VALUE_TAG.updateInTrigger || tags == VALUE_TAG.updateOutTrigger) return true;
 		
 		if(_update) {
@@ -1506,7 +1530,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		onValidate();
 		
 		return true;
-	} #endregion
+	}
 	
 	static getString = function() {
 		var val = showValue();

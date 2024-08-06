@@ -54,18 +54,18 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	static update = function(frame = CURRENT_FRAME) { #region
 		RETURN_ON_REST
 		
-		var _dim	= inputs[|  0].getValue(frame);
-		var coll	= inputs[|  1].getValue(frame);
-		var mdisTyp = inputs[|  2].getValue(frame);
-		var mdis    = inputs[|  3].getValue(frame);
-		var vdisTyp = inputs[|  4].getValue(frame);
-		var vdis    = inputs[|  5].getValue(frame);
-		var acc     = inputs[|  6].getValue(frame);
-		var matInr  = inputs[|  7].getValue(frame);
-		var inPress = inputs[|  8].getValue(frame);
-		var mMac	= inputs[|  9].getValue(frame);
-		var vMac	= inputs[| 10].getValue(frame);
-		var wrap	= inputs[| 11].getValue(frame);
+		var _dim	= getInputData( 0);
+		var coll	= getInputData( 1);
+		var mdisTyp = getInputData( 2);
+		var mdis    = getInputData( 3);
+		var vdisTyp = getInputData( 4);
+		var vdis    = getInputData( 5);
+		var acc     = getInputData( 6);
+		var matInr  = getInputData( 7);
+		var inPress = getInputData( 8);
+		var mMac	= getInputData( 9);
+		var vMac	= getInputData(10);
+		var wrap	= getInputData(11);
 		
 		if(IS_FIRST_FRAME || !is_surface(domain.sf_world)) {
 			fd_rectangle_clear(domain);

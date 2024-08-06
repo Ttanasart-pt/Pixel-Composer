@@ -56,14 +56,14 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dom = inputs[| 0].getValue(frame);
-		var _mat = inputs[| 1].getValue(frame);
-		var _pos = inputs[| 2].getValue(frame);
-		var _act = inputs[| 3].getValue(frame);
-		var _inh = inputs[| 4].getValue(frame);
-		var _den = inputs[| 5].getValue(frame);
-		var _msk = inputs[| 6].getValue(frame);
-		var _vel = inputs[| 7].getValue(frame);
+		var _dom = getInputData(0);
+		var _mat = getInputData(1);
+		var _pos = getInputData(2);
+		var _act = getInputData(3);
+		var _inh = getInputData(4);
+		var _den = getInputData(5);
+		var _msk = getInputData(6);
+		var _vel = getInputData(7);
 		
 		FLUID_DOMAIN_CHECK
 		outputs[| 0].setValue(_dom);

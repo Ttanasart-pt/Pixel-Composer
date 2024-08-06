@@ -19,7 +19,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	rotator_p = 0;
 	rotator_m = 0;
 	
-	inputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 0] = nodeValue_Float("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Integer", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
@@ -34,7 +34,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 5] = nodeValue("Clamp to range", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	outputs[| 0] = nodeValue("Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue_Output("Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var __ax = getInputData(0);
@@ -98,13 +98,16 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static update = function() {
 		var _dat = getInputData(0);
+		outputs[| 0].setValue(_dat);
+		
+	
 		var _int = getInputData(1);
 		
 		var _res = processNumber(_dat, _int);
 		outputs[| 0].setValue(_res);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var val  = getInputData(0);
 		var _int = getInputData(1);
@@ -122,7 +125,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		switch(disp) {
 			
-			case 1 : #region
+			case 1 :
 				draw_set_text(f_sdf, fa_center, fa_center, _col);
 				draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, string(_int? round(val) : val), _s * 0.5, _s * 0.5, 0);
 				
@@ -183,9 +186,9 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					draggable = false;
 				}
 				
-				break; #endregion
+				break;
 				
-			case 2 : #region
+			case 2 :
 				var _ss  = min(bbox.w, bbox.h);
 				var c0   = (draggable && !rotator_dragging)? colorMultiply(CDEF.main_grey, _col) : colorMultiply(CDEF.main_white, _col);
 				var c1   = colorMultiply(CDEF.main_dkgrey, _col);
@@ -235,8 +238,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				draw_set_text(f_sdf, fa_center, fa_center, colorMultiply(CDEF.main_white, _col));
 				draw_text_transformed(bbox.xc, bbox.yc, _int? string(round(val)) : string_format(val, -1, 2), _s * .5, _s * .5, 0);
-				break; #endregion
+				break;
 		}
-	} #endregion
+	}
 
 }

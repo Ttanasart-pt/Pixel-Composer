@@ -106,7 +106,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	use_mod = 0;
 	use_deg = false;
 	
-	static _eval = function(a, b, c = 0) { #region
+	static _eval = function(a, b, c = 0) {
 		switch(use_mod) {
 			case MATH_OPERATOR.add :		return a + b;    
 			case MATH_OPERATOR.subtract :	return a - b;
@@ -132,9 +132,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.snap :		return value_snap(a, b);
 		}
 		return 0;
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var mode = getInputData(0);
 		
 		switch(mode) {
@@ -219,9 +219,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 			default: return;
 		}
-	} #endregion
+	}
 	
-	function evalArray(a, b, c = 0) { #region
+	function evalArray(a, b, c = 0) {
 		var _as = is_array(a);
 		var _bs = is_array(b);
 		var _cs = is_array(c);
@@ -248,9 +248,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			);
 		
 		return val;
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		use_mod = getInputData(0);
 		use_deg = getInputData(3);
 		
@@ -260,9 +260,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var val = evalArray(a, b, c);
 		outputs[| 0].setValue(val);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		switch(getInputData(0)) {
@@ -293,5 +293,5 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss * 0.8, ss * 0.8, 0);
-	} #endregion
+	}
 }

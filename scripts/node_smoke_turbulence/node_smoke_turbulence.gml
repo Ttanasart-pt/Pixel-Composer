@@ -34,12 +34,12 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dom = inputs[| 0].getValue(frame);
-		var _are = inputs[| 1].getValue(frame);
-		var _str = inputs[| 2].getValue(frame);
-		var _sca = inputs[| 3].getValue(frame);
-		var _sed = inputs[| 4].getValue(frame);
-		var _mod = inputs[| 5].getValue(frame);
+		var _dom = getInputData(0);
+		var _are = getInputData(1);
+		var _str = getInputData(2);
+		var _sca = getInputData(3);
+		var _sed = getInputData(4);
+		var _mod = getInputData(5);
 		
 		FLUID_DOMAIN_CHECK
 		outputs[| 0].setValue(_dom);

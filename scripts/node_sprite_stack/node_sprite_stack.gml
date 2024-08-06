@@ -55,7 +55,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	preview_custom_x_to  = 0;
 	preview_custom_x_max = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var pos = current_data[4];
@@ -74,9 +74,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var  hv  = inputs[| 5].drawOverlay(hover, active, px, py, _s,     _mx, _my, _snx, _sny);	active &= hv; _hov |= hv;
 		
 		return _hov;
-	} #endregion
+	}
 	
-	static drawPreviewToolOverlay = function(hover, active, _mx, _my, _panel) { #region
+	static drawPreviewToolOverlay = function(hover, active, _mx, _my, _panel) {
 		var _surf = getInputData(0);
 		if(!is_array(_surf)) return false;
 		
@@ -128,16 +128,16 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		preview_custom_x    = lerp_float(preview_custom_x, preview_custom_x_to, 5);
 		
 		return hov;
-	} #endregion
+	}
 	
-	static preGetInputs = function() { #region
+	static preGetInputs = function() {
 		var _surf = inputs[|  0].getValue();
 		var _arry = inputs[| 12].getValue();
 		
 		inputs[| 0].setArrayDepth(is_array(_surf) && _arry);
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _high = getInputData(9);
 		var _surf = getInputData(0);
 		var _arry = getInputData(12);
@@ -149,13 +149,12 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		inputs[| 12].setVisible(is_array(_surf));
 		
-		#region custom preview
-			preview_custom = preview_custom_index != noone && is_array(_surf) && _arry;
-			if(preview_custom) drawPreviewCustom();
-		#endregion
-	} #endregion
+		// custom preview
+		preview_custom = preview_custom_index != noone && is_array(_surf) && _arry;
+		if(preview_custom) drawPreviewCustom();
+	}
 	
-	static drawPreviewCustom = function() { #region
+	static drawPreviewCustom = function() {
 		var _in  = getSingleValue(0);
 		var _dim = getSingleValue(1);
 		var _shf = getSingleValue(3);
@@ -205,9 +204,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			if(is_surface(_prev_s))
 				draw_surface_ext_safe(_prev_s, _prev_x, _prev_y, 1, 1, _rot, _col, 1);
 		surface_reset_target();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _in  = _data[0];
 		var _dim = _data[1];
 		var _amo = _data[2];
@@ -282,9 +281,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_reset_target();
 		
 		return _outSurf;
-	} #endregion
+	}
 	
-	static getPreviewValues = function() { #region
+	static getPreviewValues = function() {
 		if(preview_custom && is_surface(preview_custom_surface)) return preview_custom_surface;
 		if(preview_channel >= ds_list_size(outputs)) return noone;
 		
@@ -297,5 +296,5 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		}
 		
 		return outputs[| preview_channel].getValue();
-	} #endregion
+	}
 }

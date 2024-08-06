@@ -784,23 +784,24 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getInputData = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
 	
-	static setInputData = function(index, value) {
-		var _inp = inputs[| index];
-		inputs_data[index] = value;
-		if(is_struct(_inp)) input_value_map[$ _inp.internalName] = value;
-	}
+	// static setInputData = function(index, value) {
+	// 	var _inp = inputs[| index];
+	// 	inputs_data[index] = value;
+	// 	if(is_struct(_inp)) input_value_map[$ _inp.internalName] = value;
+	// }
 	
 	static getInputs = function(frame = CURRENT_FRAME) {
 		var i = -1;
 		var n = ds_list_size(inputs);
 		inputs_data	= array_verify(inputs_data, n);
 		
-		repeat(n) { i++;
-			var _inp = inputs[| i];
+		repeat(n) { 
+			var _inp = inputs[| ++i];
+			
 			if(!is_instanceof(_inp, NodeValue)) continue;
+			if(!_inp.isDynamic())               continue;
 			
 			var val = _inp.getValue(frame);
-			
 			// setInputData(i, val);
 			inputs_data[i] = val;
 			input_value_map[$ _inp.internalName] = val;

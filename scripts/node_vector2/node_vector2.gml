@@ -44,8 +44,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			wd_maxy		=  1;
 		}),
 		menuItem(__txt("Focus value"),  function() {
-			var _x = inputs[| 0].getValue();
-			var _y = inputs[| 1].getValue();
+			var _x = getInputData(0);
+			var _y = getInputData(1);
 			
 			wd_minx		= _x - 1;
 			wd_miny		= _y - 1;

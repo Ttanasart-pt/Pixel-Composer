@@ -100,7 +100,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	tool_lookat = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
 	
-	static getToolSettings = function() { #region
+	static getToolSettings = function() {
 		var _posm = getInputData(in_d3d + 9);
 		
 		switch(_posm) {
@@ -110,9 +110,9 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		}
 		
 		return [];
-	} #endregion
+	}
 	
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { #region
+	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
 	var _rot = inputs[| 1].display_data.angle_display;
 		tools = _rot == QUARTERNION_DISPLAY.quarterion? tool_quate : tool_euler;
 		if(_rot == QUARTERNION_DISPLAY.euler && isUsingTool("Rotate"))
@@ -160,7 +160,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			draw_set_color(COLORS._main_icon);
 			draw_rectangle(_px, _py, _px + _pws, _py + _phs, true);
 		#endregion
-	} #endregion
+	}
 	
 	static onValueUpdate = function(index) { #region
 		if(index == in_d3d + 9) PANEL_PREVIEW.tool_current = noone;

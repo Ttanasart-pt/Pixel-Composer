@@ -38,7 +38,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return inputs[| index];
 	} setDynamicInput(1, false);
 	
-	static setBone = function() { #region
+	static setBone = function() {
 		//print("Setting dem bones...");
 		var _b = getInputData(0);
 		if(_b == noone) return;
@@ -89,7 +89,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		input_display_list = _input_display_list;
 		
 		//print(_input_display_list);
-	} #endregion
+	}
 	
 	tools = [];
 	
@@ -103,7 +103,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	posing_mx = 0;
 	posing_my = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _b = outputs[| 0].getValue();
 		if(_b == noone) return;
 		
@@ -115,7 +115,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var smx = value_snap(mx, _snx);
 		var smy = value_snap(my, _sny);
 		
-		if(posing_bone) { #region
+		if(posing_bone) {
 			if(posing_type == 0 && posing_bone.parent) { //move
 				var ang = posing_bone.parent.pose_angle;
 				var pp  = point_rotate(smx - posing_mx, smy - posing_my, 0, 0, -ang);
@@ -161,9 +161,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				posing_type = noone;
 				UNDO_HOLDING = false;
 			}
-		} #endregion
+		}
 		
-		if(anchor_selecting != noone && mouse_press(mb_left, active)) { #region
+		if(anchor_selecting != noone && mouse_press(mb_left, active)) {
 			if(anchor_selecting[1] == 0 || anchor_selecting[0].IKlength) { // move
 				posing_bone = anchor_selecting[0];
 				if(!ds_map_exists(boneMap, posing_bone.ID))
@@ -211,11 +211,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				posing_mx = mx;
 				posing_my = my;
 			}
-		} #endregion
-	} #endregion
+		}
+	}
 	
 	bone_prev = noone;
-	static step = function() { #region
+	static step = function() {
 		var _b = getInputData(0);
 		if(_b == noone) return;
 		if(bone_prev != _b) {
@@ -226,9 +226,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var _boneCount = ds_list_size(inputs) - input_fix_len;
 		if(_boneCount != _b.childCount()) setBone();
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _b = getInputData(0);
 		if(_b == noone) return;
 		
@@ -262,9 +262,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		_bone_pose.setPose();
 		
 		outputs[| 0].setValue(_bone_pose);
-	} #endregion
+	}
 	
-	static getPreviewBoundingBox = function() { #region
+	static getPreviewBoundingBox = function() {
 		var minx =  9999999;
 		var miny =  9999999;
 		var maxx = -9999999;
@@ -297,9 +297,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(minx == 9999999) return noone;
 		return BBOX().fromPoints(minx, miny, maxx, maxy);
-	} #endregion
+	}
 	
-	static doApplyDeserialize = function() { #region
+	static doApplyDeserialize = function() {
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var inp = inputs[| i];
 			var idx = struct_try_get(inp.display_data, "bone_id");
@@ -308,11 +308,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		setBone();
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_armature_pose, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 }
 

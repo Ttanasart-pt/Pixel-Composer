@@ -37,9 +37,9 @@ function Node_Smoke_Add_Collider(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dom  = inputs[| 0].getValue(frame);
-		var _mat  = inputs[| 1].getValue(frame);
-		var _area = inputs[| 2].getValue(frame);
+		var _dom  = getInputData(0);
+		var _mat  = getInputData(1);
+		var _area = getInputData(2);
 		
 		FLUID_DOMAIN_CHECK
 		outputs[| 0].setValue(_dom);

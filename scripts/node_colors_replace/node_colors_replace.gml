@@ -25,7 +25,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	palette_selecting = noone;
 	palette_select    = [ -1, -1 ];
 	
-	function setColor(colr) { #region
+	function setColor(colr) {
 		palette_selecting = noone;
 		
 		var _to = array_clone(getInputData(2));
@@ -34,7 +34,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			_to[i] = colr;
 		
 		inputs[| 2].setValue(_to);			// Not necessary due to array reference
-	} #endregion
+	}
 		
 	sort_menu = [
 		new MenuItem("Sort Brightness", function() /*=>*/ { sortPalette(0) }),
@@ -49,7 +49,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		new MenuItem("Sort Blue",		function() /*=>*/ { sortPalette(7) }),
 	];
 	
-	render_palette = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	render_palette = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var bx = _x;
 		var by = _y;
 		
@@ -179,7 +179,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		}
 		
 		return hh;
-	}); #endregion
+	});
 	
 	input_display_list = [ 6, 
 		["Surfaces",	 true], 0, 4, 5, 7, 8, 
@@ -200,8 +200,8 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		})]);
 		
 	static sortPalette = function(type) {
-		var palFrom = inputs[| 1].getValue();
-		var palTo   = inputs[| 2].getValue();
+		var palFrom = getInputData(1);
+		var palTo   = getInputData(2);
 		
 		var _map = ds_map_create();
 		for (var i = 0, n = array_length(palFrom); i < n; i++)
@@ -229,8 +229,8 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		inputs[| 2].setValue(palTo);
 	}
 			
-	static refreshPalette = function() { #region
-		var _surf = inputs[| 0].getValue();
+	static refreshPalette = function() {
+		var _surf = getInputData(0);
 		
 		inputs[| 1].setValue([]);
 		inputs[| 2].setValue([]);
@@ -269,19 +269,19 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		inputs[| 1].setValue(palette);
 		inputs[| 2].setValue(palette);
-	} #endregion
+	}
 	
-	static onValueFromUpdate = function(index) { #region
+	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING || CLONING) return;
 		
 		if(index == 0 && attributes.auto_refresh) refreshPalette();
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region		
+	static processData = function(_outSurf, _data, _output_index, _array_index) {		
 		var fr  = _data[1];
 		var to  = _data[2];
 		var tr  = _data[3];
@@ -302,5 +302,5 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }
