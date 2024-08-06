@@ -10,9 +10,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	hover_scale_to = 0;
 	hover_alpha    = 0;
 	
-	bg_spr     = THEME.node_pin_bg;
 	bg_spr_add = 0;
-	bg_sel_spr = THEME.node_pin_bg_active;
 	
 	inputs[| 0] = nodeValue("In", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(true, true);

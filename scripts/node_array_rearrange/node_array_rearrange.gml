@@ -42,7 +42,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			var _ffx = _fx + ui(32 + 4);
 			var _ffy = _fy + ui(4);
 			
-			draw_sprite_stretched_ext(THEME.timeline_node, 0, _fx, _fy, _w, _fh, CDEF.main_dkblack, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _fx, _fy, _w, _fh, CDEF.main_dkblack, 1);
 			var hv = ordering == noone && _hover && point_in_rectangle(_m[0], _m[1], _fx, _fy, _fx + ui(32), _fy + _fh);
 			var cc = hv? COLORS._main_icon : COLORS.node_composite_bg;
 			draw_sprite_ext(THEME.hamburger_s, 0, _fx + ui(16), _fy + _fh / 2, 1, 1, 0, cc, 1);
@@ -63,7 +63,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 					var _sx = _ffcx            - _sw / 2;
 					var _sy = _ffy  + _fsh / 2 - _sh / 2;
 					
-					draw_sprite_stretched_ext(THEME.timeline_node, 0, _ffcx - _fsh / 2, _ffy, _fsh, _fsh, merge_color(COLORS._main_icon_dark, COLORS.node_composite_bg, 0.25), 1);
+					draw_sprite_stretched_ext(THEME.ui_panel, 0, _ffcx - _fsh / 2, _ffy, _fsh, _fsh, merge_color(COLORS._main_icon_dark, COLORS.node_composite_bg, 0.25), 1);
 					draw_surface_ext_safe(_val, _sx, _sy, _ss, _ss);
 					draw_set_color(COLORS.node_composite_bg);
 					break;

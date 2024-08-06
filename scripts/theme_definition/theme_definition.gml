@@ -1,12 +1,10 @@
 function Theme() constructor {
     
     icon_24                         = s_icon_24;
-    icon_32                         = s_icon_32;
     icon_64                         = s_icon_64;
     
     color_3d                        = s_color_3d;
     color_3d_selected               = s_color_3d_selected;
-    button_color_overlay            = s_color_picker_sample;
     color_picker_box                = s_color_picker_box;
     color_picker_sample             = s_color_picker_sample;
     dialog_active                   = s_dialog_active;
@@ -20,17 +18,14 @@ function Theme() constructor {
     ac_node                         = s_ac_node;
     accept_16                       = s_icon_accept_16;
     accept                          = s_icon_accept_24;
-    action_history                  = s_action_history;
     add_16                          = s_add_16;
     add_20                          = s_add_20;
-    add_64                          = s_add_64;
     add                             = s_add_24;
     add_node_search_high            = s_add_node_search_high;
     addon_icon                      = s_addon;
     addon_setting                   = s_addon_setting;
     animate_clock                   = s_animate_clock;
     animate_node_go                 = s_animate_node_go;
-    animate_onion_skin              = s_animate_onion_skin;
     animate_prop_go                 = s_animate_prop_go;
     animation_setting               = s_animation_setting;
     animation_stretch               = s_animation_stretch;
@@ -40,7 +35,6 @@ function Theme() constructor {
     arrow_wire_16                   = s_arrow_wire_16;
     bone                            = s_bone;
     button_path_icon                = s_button_path_icon;
-    button_path_not_found_icon      = s_button_path_not_found_icon;
     cache_group                     = s_cache_group;
     cache                           = s_cache;
     canvas_20                       = s_canvas_20;
@@ -49,7 +43,6 @@ function Theme() constructor {
     circle_16                       = s_circle_16;
     circle                          = s_circle_8;
     circle_toggle_8                 = s_circle_toggle_8;
-    close_16                        = s_close_16;
     code_show_auto                  = s_code_show_auto;
     code_show_line                  = s_code_show_line;
     code_syntax_highlight           = s_code_syntax_highlight;
@@ -67,7 +60,6 @@ function Theme() constructor {
     display_palette                 = s_display_palette;
     duplicate                       = s_duplicate;
     explorer                        = s_file_explorer;
-    export_package                  = s_icon_export_package;
     feedback_24                     = s_feedback_24;
     feedback                        = s_feedback_16;
     file                            = s_file;
@@ -81,7 +73,6 @@ function Theme() constructor {
     frame_range                     = s_frame_range;
     gear                            = s_gear_24;
     grad_blend                      = s_grad_blend;
-    graph                           = s_graph;
     group_s                         = s_group_16;
     group                           = s_group_24;
     hamburger_s                     = s_hamburger_s;
@@ -89,7 +80,6 @@ function Theme() constructor {
     heart                           = s_heart;
     icon_3d_anchor                  = s_3d_anchor;
     icon_active_split               = s_panel_active_split;
-    icon_array_processor            = s_icon_array_processor;
     icon_canvas                     = s_icon_canvas;
     icon_center_canvas              = s_icon_center_canvas;
     icon_cmd_enter                  = s_icon_cmd_enter;
@@ -97,7 +87,6 @@ function Theme() constructor {
     icon_delete                     = s_delete_16;
     icon_font                       = s_icon_font;
     icon_grid_setting               = s_icon_grid_setting;
-    icon_grid                       = s_icon_grid;
     icon_minimap                    = s_icon_minimap;
     icon_preview_export             = s_icon_preview_export;
     icon_random                     = s_random;
@@ -111,7 +100,6 @@ function Theme() constructor {
     image_20                        = s_image_20;
     info                            = s_info;
     inspector_view                  = s_icon_inspector_view;
-    itch                            = s_itch;
     junc_visible                    = s_junc_visible;
     keyframe_override               = s_icon_keyframe_override;
     loading_s                       = s_loading_s;
@@ -123,26 +111,17 @@ function Theme() constructor {
     message_16_grey_bubble          = s_icon_message_16_grey_bubble;
     message_16_grey                 = s_icon_message_16_grey;
     message_16                      = s_icon_message_16;
-    message_20                      = s_icon_message_20;
-    message_24                      = s_icon_message_24;
     minus_16                        = s_minus_16;
-    minus_20                        = s_minus_20;
     minus                           = s_minus_24;
     new_file                        = s_new;
     new_line_shift                  = s_new_line_shift;
-    node_create                     = s_node_create;
     node_dropper                    = s_icon_node_dropper;
     node_goto                       = s_node_goto;
-    node_move                       = s_node_move;
     node_name_type                  = s_node_name_type;
-    node_output_visible             = s_icon_output_visibility;
     node_processor_icon             = s_node_processor;
     node_resize                     = s_node_resize;
     node_use_expression             = s_node_use_experssion;
-    node_use_global                 = s_node_use_global;
     node_use_project                = s_node_use_project;
-    noti_icon_console_failed        = s_noti_icon_console_failed;
-    noti_icon_console               = s_noti_icon_console;
     noti_icon_error                 = s_noti_icon_error;
     noti_icon_file_load             = s_noti_icon_file_load;
     noti_icon_file_save             = s_noti_icon_file_save;
@@ -166,10 +145,6 @@ function Theme() constructor {
     play_all                        = s_play_all;
     play_sound                      = s_icon_play_sound;
     preset                          = s_preset;
-    preview_hide                    = s_hide_preview;
-    preview_light                   = s_icon_preview_light;
-    project_fix_palette             = s_project_fix_palette;
-    project                         = s_project;
     redo                            = s_redo;
     refresh_16                      = s_refresh_16;
     refresh_20                      = s_refresh_20;
@@ -195,10 +170,7 @@ function Theme() constructor {
     tab_exit                        = s_tab_exit;
     text_bullet                     = s_text_bullet;
     text_popup                      = s_text_popup;
-    text_slider                     = s_slider;
     text                            = s_name;
-    three_dots                      = s_three_dots;
-    timeline_clock                  = s_timeline_clock;
     timeline_graph                  = s_timeline_graph;
     trophy                          = s_trophy;
     tunnel                          = s_tunnel;
@@ -218,14 +190,12 @@ function Theme() constructor {
     view_zoom                       = s_view_zoom;
     visible_12                      = s_visible_12;
     visible                         = s_visible;
-    websocket                       = s_websocket;
     wiki                            = s_wiki;
     window_exit                     = s_window_exit;
     window_fullscreen               = s_window_fullscreen;
     window_maximize                 = s_window_maximize;
     window_minimize                 = s_window_minimize;
     workshop_collection             = s_group_workshop;
-    workshop_download               = s_workshop_download;
     workshop_project                = s_project_workshop;
     workshop_update                 = s_workshop_update;
     workshop_upload                 = s_workshop_upload;
@@ -233,8 +203,6 @@ function Theme() constructor {
 
     inspector_area_type             = s_prop_area_type;
     inspector_area                  = s_inspector_area;
-    inspector_corner                = s_inspector_corner;
-    inspector_padding               = s_inspector_padding;
     inspector_surface_halign        = s_inspector_surface_halign;
     inspector_surface_valign        = s_inspector_surface_valign;
     inspector_text_halign           = s_inspector_text_halign;
@@ -264,50 +232,29 @@ function Theme() constructor {
     node_active                     = s_node_active;
     node_bg_name                    = s_node_bg_name;
     node_frame_name                 = s_node_frame_name;
-    node_bg_pill                    = s_node_bg_pill;
     node_bg                         = s_node_bg;
-    node_checkbox                   = s_node_checkbox;
     node_coor_pin                   = s_node_coor_pin;
     node_deprecated_badge           = s_node_deprecated_badge;
     node_frame_bg                   = s_node_frame_bg;
-    node_frame_title                = s_node_frame_title;
     node_glow_border                = s_node_bg_glow;
     node_junction_name_bg           = s_node_junction_name_bg;
     node_new_badge                  = s_node_new_badge;
-    node_note_bg                    = s_node_note_bg;
-    node_note_pin                   = s_node_note_pin;
-    node_note_resize                = s_node_note_resize;
-    node_note_selecting             = s_node_note_selecting;
-    node_note_title                 = s_node_note_title;
-    node_pin_bg_active              = s_node_bg_pin_active;
-    node_pin_bg                     = s_node_bg_pin;
-    node_rotator_bg                 = s_node_rotator_bg;
-    node_rotator_knob               = s_node_rotator_knob;
-    node_slider                     = s_node_slider;
     node_state                      = s_node_state;
     node_trigger_icon               = s_node_bg_trigger;
     node_websocket_receive          = s_websocket_receive;
     node_websocket_send             = s_websocket_send;
 
-    gradient_mask                   = s_gradient_mask;
     key_display                     = s_key_display;
     menu_button_mask                = s_menu_white;
     menu_button                     = s_menu_button;
-    menu_separator                  = s_menu_separator;
     palette_mask                    = s_palette_mask;
     palette_selecting               = s_palette_selecting;
-    palette_separator               = s_palette_separator;
     timeline_color                  = s_ui_timeline_color;
-    timeline_dopesheet_bg           = s_timeline_dopesheet_bg;
-    timeline_folder                 = s_ui_timeline_folder;
-    timeline_node                   = s_ui_timeline_node;
     tool_side                       = s_tool_side;
-    toolbar_shadow                  = s_toolbar_shadow;
     toolbar                         = s_toolbar;
-    ui_panel_active                 = s_ui_panel_active;
+    ui_panel                        = s_ui_panel;
     ui_panel_bg_cover               = s_empty;
     ui_panel_bg                     = s_ui_panel_bg;
-    ui_panel_fg                     = s_ui_panel_fg;
     ui_panel_tab                    = s_ui_panel_tab;
     ui_scrollbar                    = s_ui_scroll_bar;
     ui_selection_range_hori         = s_ui_selection_range_hori;
@@ -322,20 +269,16 @@ function Theme() constructor {
     anchor_scale_hori               = s_anchor_scale_hori;
     anchor_scale                    = s_anchor_scale;
     anchor_selector                 = s_anchor_selector;
-    anchor_solid_hori               = s_anchor_solid;
     anchor                          = s_anchor;
     cursor_path_add                 = s_cursor_path_add;
     cursor_path_anchor              = s_cursor_path_anchor;
     cursor_path_move                = s_cursor_path_move;
     cursor_path_remove              = s_cursor_path_remove;
     preview_bone_IK                 = s_bone_IK;
-    preview_crosshair               = s_preview_crosshair;
 
     timeline_ease                   = s_timeline_ease;
-    timeline_elastic                = s_timeline_elastic;
     timeline_key_ease               = s_timelime_key_ease;
     timeline_key_empty              = s_timelime_key_empty;
-    timeline_keyframe_outline       = s_timeline_keyframe_outline;
     timeline_keyframe_selecting     = s_timeline_keyframe_selecting;
     timeline_keyframe               = s_timeline_keyframes;
     timeline_onion_skin             = s_timeline_onion_skin;
@@ -358,7 +301,6 @@ function Theme() constructor {
     bone_tool_move                  = s_bone_tool_move;
     bone_tool_remove                = s_bone_tool_remove;
     bone_tool_scale                 = s_bone_tool_scale;
-    bone_tool_transform             = s_bone_tool_transform;
     canvas_draw_layer               = s_canvas_draw_layer;
     canvas_iso_angle                = s_canvas_iso_angle;
     canvas_fill_type                = s_canvas_fill_type;
@@ -394,8 +336,6 @@ function Theme() constructor {
     canvas_tools_skew               = s_canvas_tools_skew;
     control_add                     = s_control_add;
     control_pin                     = s_control_pin;
-    control_remove                  = s_control_remove;
-    control_unpin                   = s_control_unpin;
     crop_fit_height                 = s_crop_fit_height;
     crop_fit_width                  = s_crop_fit_width;
     crop_tool                       = s_crop_tool;
@@ -407,7 +347,6 @@ function Theme() constructor {
     path_tools_draw                 = s_path_tools_draw;
     path_tools_rectangle            = s_path_tools_rectangle;
     path_tools_transform            = s_path_tools_transform;
-    splice_draw                     = s_splice_draw;
     strand_comb                     = s_strand_tool_comb;
     strand_cut                      = s_strand_tool_cut;
     strand_grab                     = s_strand_tool_grab;
@@ -421,7 +360,6 @@ function Theme() constructor {
     tools_canvas_channel            = s_canvas_channel;
 
     button_def                      = s_button;
-    button_hide_circle_28           = s_button_hide_circle_28;
     button_hide_fill                = s_button_hide_fill;
     button_hide_left                = s_button_hide_left;
     button_hide_middle              = s_button_hide_middle;
@@ -575,9 +513,10 @@ function ThemeColor() constructor {
 
     panel_animation_dope_blend_default  = merge_color(CDEF.blue, CDEF.main_dkblack, 0.5);
     panel_animation_dope_blend          = CDEF.main_dkblack;
-
+	
     panel_bg_clear_inner                = CDEF.main_dkblack;
     panel_bg_clear                      = CDEF.main_black;
+    panel_frame                         = CDEF.main_dkgrey;
     panel_prop_bg                       = CDEF.main_ltgrey;
     panel_tab                           = CDEF.white;
     panel_tab_hover                     = CDEF.white;

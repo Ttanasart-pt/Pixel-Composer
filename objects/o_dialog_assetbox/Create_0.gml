@@ -124,7 +124,7 @@ event_inherited();
 						var _nx = xx + grid_size - 1 - _tw;
 						var _ny = yy + grid_size - _th;
 						
-						draw_sprite_stretched_ext(THEME.timeline_node, 0, _nx, _ny, _tw, _th - 1, COLORS.panel_bg_clear_inner, 0.85);
+						draw_sprite_stretched_ext(THEME.ui_panel, 0, _nx, _ny, _tw, _th - 1, COLORS.panel_bg_clear_inner, 0.85);
 						draw_text_add(xx + grid_size - ui(3), yy + grid_size + ui(1), _txt);
 					}
 						

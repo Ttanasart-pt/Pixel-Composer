@@ -7,7 +7,6 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	hover_state_to = 0;
 	
 	wd_checkBox = new checkBox( function() { inputs[| 0].setValue(!getInputData(0)); } );
-	wd_checkBox.spr = THEME.node_checkbox;
 	
 	inputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.setVisible(true, true);

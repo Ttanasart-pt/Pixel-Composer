@@ -135,7 +135,7 @@ event_inherited();
 			draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
 			
 			if(dl.status == 0 && hov) {
-				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 				if(mouse_press(mb_left, sFOCUS)) {
 					var path = get_save_filename_ext("Compressed zip (.zip)| *.zip", $"PixelComposer {vr}.zip", "", "Download location");
 					if(path != "") {
@@ -148,17 +148,17 @@ event_inherited();
 				}
 			
 			} else if(dl.status == 2 && hov) {
-				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 				if(mouse_press(mb_left, sFOCUS)) 
 					shellOpenExplorer(filename_dir(dl.download_path));
 			
 			} else if(dl.status == -1 && hov) {
-				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 				if(mouse_press(mb_left, sFOCUS)) 
 					url_open(dl.download_path);
 				
 			} else 
-				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
 			
 			draw_set_text(f_p0b, fa_left, fa_top, dl.status == 2? COLORS._main_text : COLORS._main_text_sub);
 			draw_text(xx + ui(8), yy + ui(8), vr);

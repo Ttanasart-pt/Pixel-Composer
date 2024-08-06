@@ -71,7 +71,7 @@ event_inherited();
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, _height);
 			if(isHover) {
-				draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
 				sp_presets.hover_content = true;
 			}
 			

@@ -39,10 +39,10 @@ function Panel_Gradient() : PanelContent() constructor {
 				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text_add(xx + pd, yy + ui(2), preset.name);
 				
-				draw_sprite_stretched_add(THEME.ui_panel_fg, 1, xx + ui(4), _py, gww - ui(8), _ph, c_white, 0.3);
+				draw_sprite_stretched_add(THEME.ui_panel, 1, xx + ui(4), _py, gww - ui(8), _ph, c_white, 0.3);
 				if(isHover) {
 					sp_gradient.hover_content = true;
-					draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, xx, yy, gww, hg, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, gww, hg, COLORS._main_accent, 1);
 				}
 				
 				if(isHover && mouse_press(mb_left, pFOCUS)) {

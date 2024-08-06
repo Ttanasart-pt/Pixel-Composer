@@ -533,7 +533,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				
 				if(contentPane.hover && point_in_rectangle(_m[0], _m[1], _px, _py, _px + _tw, _py + _ph)) {
 					if(!mouse_click(mb_left)) {
-						draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, _px, _py, _tw, _ph, COLORS._main_icon_light, 1);
+						draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _tw, _ph, COLORS._main_icon_light, 1);
 						if(!instance_exists(o_dialog_menubox))
 							TOOLTIP = [ _th, "sprite" ];
 					}
@@ -616,7 +616,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				
 				if(contentPane.hover && point_in_rectangle(_m[0], _m[1], _px, _py, _px + _pw, _py + _ph)) {
 					if(!mouse_click(mb_left)) {
-						draw_sprite_stretched_ext(THEME.ui_panel_fg, 1, _px, _py, _pw, _ph, COLORS._main_icon_light, 1);
+						draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_icon_light, 1);
 						if(!instance_exists(o_dialog_menubox))
 							TOOLTIP = [ _th, "sprite" ];
 					}

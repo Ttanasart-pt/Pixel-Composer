@@ -152,7 +152,9 @@ event_inherited();
 				if(_dw == 0) continue;
 				
 			} else if(_val == -1) {
-				draw_sprite_stretched(THEME.menu_separator, 0, ui(8), _ly, _dw - ui(16), ui(6));
+				draw_set_color(CDEF.main_mdblack);
+				draw_line_width(ui(8), _ly + ui(3), _dw - ui(8), _ly + ui(3), 2);
+				
 				_ly += ui(8);
 				_lh += ui(8);
 				

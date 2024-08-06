@@ -101,7 +101,7 @@ function materialBox(_onModify) : widget() constructor {
 				var _nx = sx1 - _tw;
 				var _ny = sy1 - _th;
 						
-				draw_sprite_stretched_ext(THEME.timeline_node, 0, _nx, _ny, _tw, _th, COLORS.panel_bg_clear_inner, 0.85);
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _nx, _ny, _tw, _th, COLORS.panel_bg_clear_inner, 0.85);
 				draw_text_add(sx1 - ui(3), sy1 + ui(1), _txt);
 			}
 			

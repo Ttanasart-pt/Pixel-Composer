@@ -181,7 +181,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								_th  = string_height(_bch) * _ss;
 								
 								draw_sprite_stretched_points(THEME.ui_panel_bg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_icon_light);
-								draw_sprite_stretched_points(THEME.ui_panel_fg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4);
+								draw_sprite_stretched_points(THEME.ui_panel, 1, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4);
 									
 								draw_set_color(_cc);
 								draw_text_add_float(_tx, _y, _bch, _ss);
@@ -234,7 +234,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								draw_set_color(COLORS._main_accent);
 								
 								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4)) {
-									draw_sprite_stretched_points(THEME.ui_panel_fg, 1, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_accent, 1);
+									draw_sprite_stretched_points(THEME.ui_panel, 1, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_accent, 1);
 									
 									switch(string_lower(_c[1])) {
 										case "graph" :      FOCUSING_PANEL = PANEL_GRAPH;      break;

@@ -15,7 +15,8 @@ if(!ready) exit;
 		if(_menuItem == -1) { #region
 			var bx = dialog_x + ui(8);
 			var bw = dialog_w - ui(16);
-			draw_sprite_stretched(THEME.menu_separator, 0, bx, yy, bw, ui(6));
+			draw_set_color(CDEF.main_mdblack);
+			draw_line_width(bx, yy + ui(3), bx + bw, yy + ui(3), 2);
 			yy += ui(8);
 			
 			continue;

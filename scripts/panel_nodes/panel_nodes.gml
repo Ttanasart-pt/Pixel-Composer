@@ -51,7 +51,7 @@ function Panel_Nodes() : PanelContent() constructor {
 				}
 			} else 
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x0, _y, _x1 - _x0, hg, COLORS._main_icon_light, 1);
-			draw_sprite_stretched_add(THEME.ui_panel_fg, 0, _x0, _y, _x1 - _x0, hg, c_white, .3);
+			draw_sprite_stretched_add(THEME.ui_panel, 1, _x0, _y, _x1 - _x0, hg, c_white, .3);
 			
 			var bw = ui(24);
 			var bh = ui(24);

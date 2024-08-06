@@ -83,10 +83,10 @@ function Panel_Color() : PanelContent() constructor {
 					draw_sprite_stretched_ext(THEME.menu_button_mask, 0, cx + ui(4), cy + ui(4), ui(16), ui(16), CURRENT_COLOR, _color_get_alpha(CURRENT_COLOR));
 					draw_sprite_stretched_add(THEME.menu_button_mask, 1, cx + ui(4), cy + ui(4), ui(16), ui(16), c_white, 0.3);
 					
-					draw_sprite_stretched_ext(THEME.ui_panel_active, 0, cx, cy, ui(24), ui(24), c_white, 0.5);
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, cx, cy, ui(24), ui(24), c_white, 0.5);
 					
 					if(pHOVER && point_in_rectangle(mx, my, cx, cy, cx + ui(24), cy + ui(24))) {
-						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, cx, cy, ui(24), ui(24), c_white, 1);
+						draw_sprite_stretched_ext(THEME.ui_panel, 1, cx, cy, ui(24), ui(24), c_white, 1);
 						if(mouse_press(mb_left, pFOCUS)) {
 							array_insert(colors, 0, CURRENT_COLOR);
 							
@@ -320,7 +320,7 @@ function Panel_Color() : PanelContent() constructor {
 		BLEND_NORMAL
 		
 		if(DRAGGING && DRAGGING.type == "Color" && pHOVER) {
-			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, 2, 2, w - 4, h - 4, COLORS._main_value_positive, 1);	
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, 2, 2, w - 4, h - 4, COLORS._main_value_positive, 1);	
 			if(mouse_release(mb_left)) 
 				setColor(DRAGGING.data);
 		}

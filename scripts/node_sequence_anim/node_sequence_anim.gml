@@ -35,7 +35,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && inputs[| 2].value_from == noone) {
-			draw_sprite_stretched_add(THEME.ui_panel_fg, 1, _x, _y, _w, _h, c_white, 0.2);
+			draw_sprite_stretched_add(THEME.ui_panel, 1, _x, _y, _w, _h, c_white, 0.2);
 			
 			if(mouse_press(mb_left, _focus)) 
 				dialogPanelCall(new Panel_Array_Sequence(self));

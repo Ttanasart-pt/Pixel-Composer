@@ -342,7 +342,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						var widh = viewMode == INSP_VIEW_MODE.spacious? _lh + ui(6) + wh + ui(4) : max(wh, _lh);
 						
 						if(jun != noone && _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
-							draw_sprite_stretched_ext(THEME.ui_panel_active, 0, widx, widy, widw, widh, COLORS._main_value_positive, 1);
+							draw_sprite_stretched_ext(THEME.ui_panel, 1, widx, widy, widw, widh, COLORS._main_value_positive, 1);
 							attribute_hovering = drpFn;
 						}
 						
@@ -815,7 +815,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					if(prop_highlight_time == 60)
 						contentPane.setScroll(_y - yy);
 					var aa = min(1, prop_highlight_time / 30);
-					draw_sprite_stretched_ext(THEME.ui_panel_active, 0, ui(4), yy, contentPane.surface_w - ui(4), _selH, COLORS._main_accent, aa);
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, ui(4), yy, contentPane.surface_w - ui(4), _selH, COLORS._main_accent, aa);
 				}
 				
 				if(_hover && lbHov && prop_dragging == noone && mouse_press(mb_left, pFOCUS)) {
@@ -837,7 +837,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				var hov = PANEL_GRAPH.value_dragging != noone || (NODE_DROPPER_TARGET != noone && NODE_DROPPER_TARGET != jun);
 				
 				if(hov) {
-					draw_sprite_stretched_ext(THEME.ui_panel_active, 0, ui(4), _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_value_positive, 1);
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, ui(4), _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_value_positive, 1);
 					if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN)) {
 						NODE_DROPPER_TARGET.expression += $"{jun.node.internalName}.{jun.connect_type == JUNCTION_CONNECT.input? "inputs" : "outputs"}.{jun.internalName}";
 						NODE_DROPPER_TARGET.expressionUpdate(); 
@@ -926,7 +926,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		return hh;
 	}
 	
-	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
+	contentPane = new scrollPane(content_w, content_h, function(_y, _m) { 
 		var con_w  = contentPane.surface_w - ui(4);
 		
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);

@@ -809,7 +809,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
-			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _w, _h, COLORS._main_value_positive, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, _h, COLORS._main_value_positive, 1);
 			if(mouse_release(mb_left))
 				onModify(DRAGGING.data);
 		}

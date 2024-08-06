@@ -63,8 +63,8 @@ function Panel_Palette() : PanelContent() constructor {
 			var _add_h = ui(28);
 			var _hov = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + _add_h);
 			
-			draw_sprite_stretched_ext(THEME.timeline_node, 0, 0, yy, ww, _add_h, COLORS._main_value_positive, .4);
-			draw_sprite_stretched_ext(THEME.timeline_node, 1, 0, yy, ww, _add_h, COLORS._main_value_positive, .7 + _hov * .25);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, 0, yy, ww, _add_h, COLORS._main_value_positive, .4);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, yy, ww, _add_h, COLORS._main_value_positive, .7 + _hov * .25);
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
 			draw_text_add(ww / 2, yy + _add_h / 2, __txt("New palette"));
 			
@@ -89,9 +89,9 @@ function Panel_Palette() : PanelContent() constructor {
 			var _add_w = ui(64);
 			var _add_x = ww / 2 + sin(current_time / 400) * (ww - _add_w) / 2 - _add_w / 2;
 			
-			draw_sprite_stretched_ext(THEME.timeline_node, 0, 0, yy, ww, _add_h, COLORS._main_value_positive, .4);
-			draw_sprite_stretched_ext(THEME.timeline_node, 0, _add_x, yy, _add_w, _add_h, COLORS._main_value_positive, .3);
-			draw_sprite_stretched_ext(THEME.timeline_node, 1, 0, yy, ww, _add_h, COLORS._main_value_positive, .7);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, 0, yy, ww, _add_h, COLORS._main_value_positive, .4);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _add_x, yy, _add_w, _add_h, COLORS._main_value_positive, .3);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, yy, ww, _add_h, COLORS._main_value_positive, .7);
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
 			draw_text_add(ww / 2, yy + _add_h / 2, __txt("Loading Lospec Palette..."));
 			

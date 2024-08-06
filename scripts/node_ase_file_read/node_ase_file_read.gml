@@ -120,22 +120,22 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _tgh = hh  - ui(4);
 			
 			if(tag[$ "Name"] == current_tag) {
-				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, _w - 16, _tgh, cc, 0.5);
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _x + 8, _tgy, _w - 16, _tgh, cc, 0.5);
 				
-				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, (_w - 16) * prog, _tgh, cc, 0.85);
-				draw_sprite_stretched_add(THEME.timeline_node, 1, _x + 8, _tgy, (_w - 16) * prog, _tgh, c_white, 0.1);
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _x + 8, _tgy, (_w - 16) * prog, _tgh, cc, 0.85);
+				draw_sprite_stretched_add(THEME.ui_panel, 1, _x + 8, _tgy, (_w - 16) * prog, _tgh, c_white, 0.1);
 				
 				txt = $"{progFr}/{rn}";
 				
 			} else {
-				draw_sprite_stretched_ext(THEME.timeline_node, 0, _x + 8, _tgy, 10, _tgh, cc, 0.85);
-				draw_sprite_stretched_add(THEME.timeline_node, 1, _x + 8, _tgy, 10, _tgh, c_white, 0.1);
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _x + 8, _tgy, 10, _tgh, cc, 0.85);
+				draw_sprite_stretched_add(THEME.ui_panel, 1, _x + 8, _tgy, 10, _tgh, c_white, 0.1);
 				
 				txt = $"{rn}";
 			}
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x + 8, _yy, _x + _w - 8, _yy + hh)) {
-				draw_sprite_stretched_add(THEME.timeline_node, 0, _x + 8, _tgy, _w - 16, _tgh, c_white, 0.1);
+				draw_sprite_stretched_add(THEME.ui_panel, 0, _x + 8, _tgy, _w - 16, _tgh, c_white, 0.1);
 				
 				if(mouse_press(mb_left, _focus)) {
 					var _currTag = getInputData(2);

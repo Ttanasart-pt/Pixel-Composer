@@ -57,13 +57,13 @@ event_inherited();
 				var xx   = pad + (ww + pad) * j;
 				
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
-				draw_sprite_stretched_add(THEME.ui_panel_fg, 0, xx, yy, ww, hh, c_white, 0.3);
+				draw_sprite_stretched_add(THEME.ui_panel, 1, xx, yy, ww, hh, c_white, 0.3);
 				
 				if(sHOVER && sp_content.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh)) {
 					sp_content.hover_content = true;
 					inb_hover = index;
 					if(dragging == -1 || dragging == index) 
-						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, ww, hh, COLORS._main_accent, 1);
+						draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 					
 					if(mouse_press(mb_left, sFOCUS))
 						dragging = index;

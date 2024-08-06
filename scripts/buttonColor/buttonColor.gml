@@ -186,7 +186,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x, _y, _cw, _h, COLORS._main_accent, 1);
 		
 		if(DRAGGING && DRAGGING.type == "Color" && hover && hoverRect) {
-			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _cw, _h, COLORS._main_value_positive, 1);	
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _cw, _h, COLORS._main_value_positive, 1);	
 			if(mouse_release(mb_left))
 				onApply(DRAGGING.data);
 		}

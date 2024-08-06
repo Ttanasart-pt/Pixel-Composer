@@ -125,7 +125,7 @@ if !ready exit;
 	draw_sprite_stretched(THEME.textbox, 3, gr_x - ui(6), gr_y - ui(6), gr_w + ui(12), gr_h + ui(12));
 	draw_sprite_stretched(THEME.textbox, 0, gr_x - ui(6), gr_y - ui(6), gr_w + ui(12), gr_h + ui(12));
 	gradient.draw(gr_x, gr_y, gr_w, gr_h);
-	draw_sprite_stretched_add(THEME.ui_panel_fg, 1, gr_x, gr_y, gr_w, gr_h, c_white, 0.25);
+	draw_sprite_stretched_add(THEME.ui_panel, 1, gr_x, gr_y, gr_w, gr_h, c_white, 0.25);
 	
 	var hover = noone;
 	

@@ -705,14 +705,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		surface_reset_target();
 		
 		draw_surface_safe(content_surface, tx, ty);
-		draw_sprite_stretched(THEME.ui_panel_fg, 0, tx + padding, ty + padding, _tw, _th);
+		draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, _tw, _th, COLORS.panel_frame);
 		if(tab) draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 		
 		if(FOCUS == self && parent != noone) {
-			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_accent, 1);	
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_accent, 1);	
 			
 			if(hasContent() && !m_in && m_ot) {
-				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, c_white, 0.4);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, c_white, 0.4);
 				
 				if(DOUBLE_CLICK) {
 					extract();
@@ -728,7 +728,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		} 
 		
 		if(draw_droppable) {
-			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_value_positive, 1);	
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_value_positive, 1);	
 			draw_droppable = false;
 		}
 		

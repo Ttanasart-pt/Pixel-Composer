@@ -45,7 +45,7 @@ if !ready exit;
 	
 	sp_recent.setFocusHover(sFOCUS, sHOVER);
 	sp_recent.draw(x0 + ui(6), y0);
-	draw_sprite_stretched(THEME.ui_panel_fg, 0, x0, y0, x1 - x0, y1 - y0);
+	draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
 	
 	var bx  = x1 - ui(28);
 	var by  = y0 - ui(28 + 4);
@@ -146,7 +146,7 @@ if !ready exit;
 			var _btc = COLORS._main_icon_light;
 			
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), _btw, _bth, _btc, 1);
-			draw_sprite_stretched_add(THEME.ui_panel_fg, 1, _btx, y0 - ui(26), _btw, _bth, _btc, 0.1);
+			draw_sprite_stretched_add(THEME.ui_panel, 1, _btx, y0 - ui(26), _btw, _bth, _btc, 0.1);
 			
 			_btx += ui(4);
 			draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text_sub);
@@ -157,7 +157,7 @@ if !ready exit;
 	} #endregion
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
-	draw_sprite_stretched(THEME.ui_panel_fg, 0, x0, y0, x1 - x0, y1 - y0);
+	draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
 	draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 	
 	switch(pages[project_page]) {

@@ -10,9 +10,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	hover_scale_to = 0;
 	hover_alpha    = 0;
 	
-	bg_spr     = THEME.node_pin_bg;
 	bg_spr_add = 0;
-	bg_sel_spr = THEME.node_pin_bg_active;
 	
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	

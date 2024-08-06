@@ -49,7 +49,7 @@ function panelDisplayDraw() {
 		surface_reset_target();
 		
 		draw_surface_safe(focusing_surface);
-		draw_sprite_stretched_ext(THEME.ui_panel_active, 1, x0, y0, ww, hh, COLORS._main_accent, 1);
+		draw_sprite_stretched_ext(THEME.ui_panel, 2, x0, y0, ww, hh, COLORS._main_accent, 1);
 	}
 	
 	FOCUSING_PANEL = noone;

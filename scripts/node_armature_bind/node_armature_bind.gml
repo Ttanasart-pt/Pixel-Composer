@@ -167,7 +167,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					
 				if(point_in_rectangle(_m[0], _m[1], _x, ty, _x + _w, ty + _hh - 1)) {
 					if(layer_dragging != noone) {
-						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, ty, _w, _hh, COLORS._main_accent, 1);
+						draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, ty, _w, _hh, COLORS._main_accent, 1);
 						hovering = _bone;
 					}
 						                                         
@@ -191,7 +191,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 			
 			if(layer_dragging != noone && !hovering)
-				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _ty, _w, bh - ui(32), COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _ty, _w, bh - ui(32), COLORS._main_accent, 1);
 		#endregion
 		
 		var amo = floor((ds_list_size(inputs) - input_fix_len) / data_length);

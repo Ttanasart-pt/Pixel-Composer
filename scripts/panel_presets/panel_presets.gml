@@ -221,8 +221,8 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		} else {
 			var _hov   = pHOVER && point_in_rectangle(mx, my, _bx, _by, _bx + _ww, _by + _add_h);
 			
-			draw_sprite_stretched_ext(THEME.timeline_node, 0, _bx, _by, _ww, _add_h, _hov? COLORS._main_value_positive : COLORS._main_icon, .3 + _hov * .1);
-			draw_sprite_stretched_ext(THEME.timeline_node, 1, _bx, _by, _ww, _add_h, _hov? COLORS._main_value_positive : COLORS._main_icon, .6 + _hov * .25);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, _by, _ww, _add_h, _hov? COLORS._main_value_positive : COLORS._main_icon, .3 + _hov * .1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _ww, _add_h, _hov? COLORS._main_value_positive : COLORS._main_icon, .6 + _hov * .25);
 			draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon);
 			draw_text_add(_ww / 2, _by + _add_h / 2, __txt("New preset"));
 			

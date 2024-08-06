@@ -68,8 +68,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	static __frame = function(_x, _y, _w, _h, _m, _hover) {  
 		var _hv = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && _hover;
 		
-		draw_sprite_stretched_ext(THEME.timeline_node, 0, _x, _y, _w, _h, _hv? CDEF.main_black : CDEF.main_mdblack,  1);
-		draw_sprite_stretched_ext(THEME.timeline_node, 1, _x, _y, _w, _h, CDEF.main_dkgrey, 1);
+		draw_sprite_stretched_ext(THEME.ui_panel, 0, _x, _y, _w, _h, _hv? CDEF.main_black : CDEF.main_mdblack,  1);
+		draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, _h, CDEF.main_dkgrey, 1);
 		
 		return _hv;
 	}
@@ -143,10 +143,10 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _ffy = _fy + ui(4);
 			var _ffw = _ffh;
 			
-			draw_sprite_stretched_ext(THEME.timeline_node, 0, _fx, _fy, _w,  _fh, CDEF.main_dkblack, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _fx, _fy, _w,  _fh, CDEF.main_dkblack, 1);
 			
 			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
-			draw_sprite_stretched_ext(THEME.timeline_node, 0, _ffx, _ffy, _ffw * _flare.a, _ffh, CDEF.main_dkgrey, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _ffx, _ffy, _ffw * _flare.a, _ffh, CDEF.main_dkgrey, 1);
 			draw_sprite_ext(s_flare_type, _flare.type, _ffx + _ffh / 2, _ffy + _ffh / 2, 1, 1, 0, c_white, 1);
 			if(_hov && mouse_press(mb_left, _focus)) {
 				flare_editing = i;
@@ -177,7 +177,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_ffw  = ui(40);
 			
 			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
-			draw_sprite_stretched_ext(THEME.timeline_node, 0, _ffx, _ffy, _ffw * clamp(_flare.t, 0., 2.) / 2, _ffh, CDEF.main_dkgrey, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _ffx, _ffy, _ffw * clamp(_flare.t, 0., 2.) / 2, _ffh, CDEF.main_dkgrey, 1);
 			draw_text(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.t));
 			if(_hov && mouse_press(mb_left, _focus)) {
 				flare_editing = i;
@@ -214,7 +214,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			_ffw  = ui(80);
 			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
-			draw_sprite_stretched_ext(THEME.timeline_node, 0, _ffx + _ffw * _flare.shade[0], _ffy, _ffw * (_flare.shade[1] - _flare.shade[0]), _ffh, CDEF.main_dkgrey, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _ffx + _ffw * _flare.shade[0], _ffy, _ffw * (_flare.shade[1] - _flare.shade[0]), _ffh, CDEF.main_dkgrey, 1);
 			draw_text(_ffx + _ffw / 4,     _ffy + _ffh / 2, string(_flare.shade[0]));
 			draw_text(_ffx + _ffw / 4 * 3, _ffy + _ffh / 2, string(_flare.shade[1]));
 			if(_hov && mouse_press(mb_left, _focus)) {
@@ -283,8 +283,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _fdw = _fh - ui(8);
 			var _fdh = _fdw * FLARE_TYPE.size;
 			
-			draw_sprite_stretched_ext(THEME.timeline_node, 0, _fdx, _fdy, _fdw, _fdh, CDEF.main_mdblack, 1);
-			draw_sprite_stretched_ext(THEME.timeline_node, 1, _fdx, _fdy, _fdw, _fdh, CDEF.main_dkgrey,  1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _fdx, _fdy, _fdw, _fdh, CDEF.main_mdblack, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _fdx, _fdy, _fdw, _fdh, CDEF.main_dkgrey,  1);
 			
 			var _flare = _flares[flare_editing];
 			
@@ -293,7 +293,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var _ddy = _fdy + _fdw * i;
 				
 				if(i == _flare.type)
-					draw_sprite_stretched_ext(THEME.timeline_node, 0, _ddx, _ddy, _fdw, _fdw, CDEF.main_dkgrey, 1);
+					draw_sprite_stretched_ext(THEME.ui_panel, 0, _ddx, _ddy, _fdw, _fdw, CDEF.main_dkgrey, 1);
 				draw_sprite_ext(s_flare_type, i, _ddx + _fdw / 2, _ddy + _fdw / 2, 1, 1, 0, i == _flare.type? c_white : COLORS._main_icon, 1);
 			}
 		}

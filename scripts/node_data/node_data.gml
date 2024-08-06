@@ -1783,7 +1783,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(draw_droppable) {
-			// draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, w * _s, h * _s, COLORS._main_value_positive, 1);
+			// draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, w * _s, h * _s, COLORS._main_value_positive, 1);
 			draw_sprite_stretched_ext(THEME.color_picker_box, 0, xx - 2 * _s, yy - 2 * _s, w * _s + 4 * _s, h * _s + 4 * _s, COLORS._main_value_positive, 1);
 			
 			draw_droppable = false;

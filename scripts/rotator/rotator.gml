@@ -8,9 +8,6 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	real_val = 0;
 	side_button = noone;
 	
-	spr_bg   = THEME.rotator_bg;
-	spr_knob = THEME.rotator_knob;
-	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onModify).setSlideStep(15);
 	tb_value.hide = true;
 	

@@ -89,10 +89,10 @@ function steam_ugc_project_generate(file, dest_path = TEMPDIR + "steamUGCthumbna
 	    	BLEND_NORMAL
 	    		draw_sprite_ext(STEAM_AVATAR, 0, avx, avy, ss, ss, 0, c_white, 1);
 	    	BLEND_MULTIPLY
-	    		draw_sprite_stretched(THEME.timeline_node, 0, avx, avy, avw, avh);
+	    		draw_sprite_stretched(THEME.ui_panel, 0, avx, avy, avw, avh);
 	    	BLEND_NORMAL
 	    	
-	    	draw_sprite_stretched_add(THEME.timeline_node, 1, avx, avy, avw, avh, c_white, 0.3);
+	    	draw_sprite_stretched_add(THEME.ui_panel, 1, avx, avy, avw, avh, c_white, 0.3);
 	    	
 	    surface_reset_target();
 	}
