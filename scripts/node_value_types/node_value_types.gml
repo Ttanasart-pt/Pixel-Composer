@@ -195,9 +195,7 @@ function value_color(i) {
 	return JUNCTION_COLORS[i];
 }
 
-function value_color_bg(i) {
-	return #3b3b4e;
-}
+function value_color_bg(i) { return CDEF.main_dkgrey; }
 
 function value_color_bg_array(i) {
 	static JUNCTION_COLORS = [ 

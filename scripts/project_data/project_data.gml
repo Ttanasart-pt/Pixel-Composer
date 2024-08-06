@@ -43,7 +43,7 @@
 			snap	: false,
 			size	: [ 16, 16 ],
 			opacity : 0.5,
-			color   : COLORS.panel_preview_grid,
+			color   : cola(COLORS.panel_preview_grid),
 			
 			pixel   : false,
 		}
@@ -54,9 +54,10 @@
 			snap	: true,
 			size	: 16,
 			opacity : 0.05,
-			color   : c_white,
+			color   : cola(c_white),
 			highlight : 12,
 		}
+		
 		graph_display_parameter = {
 			show_grid	    : true,
 			show_dimension  : true,
@@ -75,7 +76,7 @@
 			enabled: false,
 			range: [ -1, 1 ],
 			step: 1,
-			color: [ c_red, c_blue ],
+			color: [ cola(c_red), cola(c_blue) ],
 			alpha: 0.5,
 			on_top: true,
 		};

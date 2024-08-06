@@ -114,9 +114,7 @@ event_inherited();
 	meta_filter = [];
 	
 	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 1, function(_y, _m) { #region
-		draw_clear_alpha(CDEF.main_black, 0);
-		draw_set_color(CDEF.main_black);
-		draw_rectangle(0, 1, sp_sample.surface_w, sp_sample.surface_h - 1, false);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var txt = pages[project_page];
 		var list, _group_label;

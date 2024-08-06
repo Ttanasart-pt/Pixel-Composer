@@ -1414,14 +1414,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							
 							if(is_instanceof(junction_hovering, Node_Feedback_Inline)) {
 								var _jun = junction_hovering.junc_out;
-								array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", function(data) {
-									__junction_hovering.destroy();
-								}, THEME.feedback));
+								array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", function(data) /*=>*/ { __junction_hovering.destroy(); }, THEME.feedback));
+								
 							} else {
 								var _jun = junction_hovering.value_from;
-								array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", function(data) {
-									__junction_hovering.removeFrom();
-								}, THEME.cross));
+								array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", function(data) /*=>*/ { __junction_hovering.removeFrom(); }, THEME.cross));
 							}
 						}
 						
@@ -1805,10 +1802,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			}
 		}
 		
-		value_dragging        = noone;
-		connection_draw_mouse = noone;
-		
-		if(_connect[0] == -7) {
+		if(_connect[0] == -7 && !is_instanceof(value_dragging.node, Node_Pin)) {
 			if(_connect[1].value_from_loop != noone)
 				_connect[1].value_from_loop.destroy();
 				
@@ -1839,6 +1833,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			menuCall(,,, menu);
 		}
+		
+		value_dragging        = noone;
+		connection_draw_mouse = noone;
 	}
 	
 	function draggingValue() {
