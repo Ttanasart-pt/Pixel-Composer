@@ -1,12 +1,12 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_functions",
   "isCompatibility":false,
   "isDnD":false,
   "name":"node_functions",
   "parent":{
     "name":"__base__",
-    "path":"folders/nodes/data/__base__.yy",
+    "path":"folders/nodes/__base__.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

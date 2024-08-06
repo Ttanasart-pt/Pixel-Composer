@@ -9,6 +9,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	hover_scale    = 0;
 	hover_scale_to = 0;
 	hover_alpha    = 0;
+	hover_junction = noone;
 	
 	bg_spr_add = 0;
 	
@@ -57,14 +58,18 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var hover = _dval == noone || _dval.connect_type == JUNCTION_CONNECT.input? outputs[| 0] : inputs[| 0];
 		var xx	  = x * _s + _x;
 		var yy	  = y * _s + _y;
-		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
+		
+		isHovering     = point_in_circle(_mx, _my, xx, yy, _s * 24);
+		hover_junction = noone;
 		
 		var jhov = hover.drawJunction(_s, _mx, _my);
 		
 		if(!isHovering) return noone;
 		
+		hover_junction = jhov? hover : noone; 
 		hover_scale_to = 1;
-		return jhov? hover : noone;
+		
+		return hover_junction;
 	}
 	
 	static drawNode = function(_x, _y, _mx, _my, _s) {
@@ -72,17 +77,22 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var yy = y * _s + _y;
 		
 		hover_alpha = 0.5;
+		
 		if(active_draw_index > -1) {
 			hover_alpha		  =  1;
 			hover_scale_to	  =  1;
 			active_draw_index = -1;
-		}
+		} 
 		
 		if(hover_scale > 0) {
-			var _r = hover_scale * _s * 16;
+			var _r = _s * 16;
 			shader_set(sh_node_circle);
 				shader_set_color("color", COLORS._main_accent, hover_alpha);
+				shader_set_f("radius", .5 * hover_scale);
+				
 				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
+				
+				shader_set_f("radius", 0);
 			shader_reset();
 		}
 		

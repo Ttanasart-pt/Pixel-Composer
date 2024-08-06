@@ -1209,7 +1209,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	}
 	
-	static arrayBalance = function(val) { #region
+	static arrayBalance = function(val) {
 		if(!is_array(def_val))
 			return val;
 			
@@ -1226,9 +1226,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			array_resize(val, def_length);
 		
 		return val;
-	} #endregion
+	}
 	
-	static __getAnimValue = function(_time = CURRENT_FRAME) { #region
+	static __getAnimValue = function(_time = CURRENT_FRAME) {
 		
 		if(value_tag == "dimension" && node.attributes.use_project_dimension)
 			return PROJECT.attributes.surface_dimension;
@@ -1254,7 +1254,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} 
 		
 		return animator.getValue(_time);
-	} #endregion
+	}
 	
 	static isTimelineVisible = function() { INLINE return is_anim && value_from == noone; }
 	
@@ -1482,8 +1482,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return;
 		}
 		
-		if(is_instanceof(node, Node) && self.index >= 0)
-			node.setInputData(self.index, animator.getValue(time));
+		if(is_instanceof(node, Node) && self.index >= 0) {
+			var _val = animator.getValue(time);
+			
+			// setInputData(self.index, _val);
+			node.inputs_data[self.index]         = _val;
+			node.input_value_map[$ internalName] = _val;
+		}
 		
 		if(tags == VALUE_TAG.updateInTrigger || tags == VALUE_TAG.updateOutTrigger) return true;
 		

@@ -5,12 +5,14 @@ uniform vec4  color;
 uniform int   fill;
 uniform float thickness;
 uniform float antialias;
+uniform float radius;
 
 void main() {
 	float th = thickness == 0.? 0.05 : thickness;
 	float aa = antialias == 0.? 0.05 : antialias;
+	float rr = radius == 0.? 0.5 : radius; 
 	
-	float dist = length(v_vTexcoord - .5) * 2. - (1. - th - aa);
+	float dist = length(v_vTexcoord - .5) / rr - (1. - th - aa);
 	float a;
 	
 	if(fill == 0) {

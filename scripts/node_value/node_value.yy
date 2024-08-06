@@ -6,7 +6,7 @@
   "name":"node_value",
   "parent":{
     "name":"values",
-    "path":"folders/nodes/data/__base__/values.yy",
+    "path":"folders/nodes/values.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

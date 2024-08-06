@@ -791,14 +791,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static getInputs = function(frame = CURRENT_FRAME) {
-		inputs_data	= array_verify(inputs_data, ds_list_size(inputs));
+		var i = -1;
+		var n = ds_list_size(inputs);
+		inputs_data	= array_verify(inputs_data, n);
 		
-		for(var i = 0; i < ds_list_size(inputs); i++) {
+		repeat(n) { i++;
 			var _inp = inputs[| i];
 			if(!is_instanceof(_inp, NodeValue)) continue;
 			
 			var val = _inp.getValue(frame);
-			setInputData(i, val);
+			
+			// setInputData(i, val);
+			inputs_data[i] = val;
+			input_value_map[$ _inp.internalName] = val;
 		}
 	}
 	
