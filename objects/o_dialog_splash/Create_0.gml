@@ -84,7 +84,7 @@ event_inherited();
 					sp_recent.hover_content = true;
 					TOOLTIP = [ _dat.getThumbnail(), VALUE_TYPE.surface ];
 				
-					draw_sprite_stretched_ext(THEME.node_active, 0, fx, _y, ww, hg, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, fx, _y, ww, hg, COLORS._main_accent, 1);
 				
 					if(mouse_press(mb_left, sFOCUS)) {
 						LOAD_PATH(_rec);
@@ -152,7 +152,7 @@ event_inherited();
 					var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], mtx, mty, mtx + mtw, mty + mth);
 					
 					BLEND_OVERRIDE
-					draw_sprite_stretched_ext(THEME.group_label, _hov, mtx, mty, mtw, mth, _sel? c_white : COLORS._main_icon, 1);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, _hov, mtx, mty, mtw, mth, _sel? c_white : COLORS._main_icon, 1);
 					BLEND_NORMAL
 					
 					if(_hov) {
@@ -190,6 +190,7 @@ event_inherited();
 		var _curr_tag = "";
 		var _cur_col  = 0;
 		var _nx, _boxx;
+		var _meta;
 		
 		for(var i = 0; i < node_count; i++) {
 			var _project = list[| i];
@@ -235,11 +236,12 @@ event_inherited();
 				if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
 					sp_sample.hover_content = true;
 					
-					var _meta = _project.getMetadata();
-					if(txt == "Workshop")
+					if(txt == "Workshop") {
+						_meta = _project.getMetadata();
 						TOOLTIP = _meta;
+					}
 					
-					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, sFOCUS)) {
 						LOAD_PATH(_project.path, true);
 						PROJECT.thumbnail = array_safe_get_fast(_project.spr_path, 0);
@@ -339,7 +341,7 @@ event_inherited();
 				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, pd + ww, _yy + ui(24));
 				
 				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.group_label, _hov, pd, _yy, ww - pd * 2, ui(24), c_white, 0.3 + _hov * 0.2);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, _hov, pd, _yy, ww - pd * 2, ui(24), c_white, 0.3 + _hov * 0.2);
 				BLEND_NORMAL
 				
 				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
@@ -464,12 +466,12 @@ event_inherited();
 			
 				if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], tx, ty, tx + grid_width, ty + grid_heigh)) {
 					sp_contest.hover_content = true;
-					draw_sprite_stretched_ext(THEME.node_active, 0, tx, ty, grid_width, grid_heigh, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, grid_width, grid_heigh, COLORS._main_accent, 1);
 					
 					if(mouse_press(mb_left, sFOCUS))
 						contest_viewing = contest;
 				} else 
-					draw_sprite_stretched_ext(THEME.node_active, 0, tx, ty, grid_width, grid_heigh, COLORS._main_icon, 0.75);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, grid_width, grid_heigh, COLORS._main_icon, 0.75);
 			
 				//draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
 				//draw_text_ext_add(tx + ui(12), ty + ui(8), contest.name, -1, grid_width - ui(24));

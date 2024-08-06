@@ -1644,7 +1644,7 @@ function Panel_Preview() : PanelContent() constructor {
 			if(tool.subtools > 0 && _tool == tool) { #region hovering subtools
 				var s_ww = tool_size * tool.subtools;
 				var s_hh = tool_size;
-				draw_sprite_stretched(THEME.menu_bg, 0, _x0 - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
+				draw_sprite_stretched(THEME.s_box_r2_clr, 0, _x0 - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
 					
 				var stool = tool.spr;
 						
@@ -1759,7 +1759,7 @@ function Panel_Preview() : PanelContent() constructor {
 					var s_ww  = tool_size * tool.subtools;
 					var s_hh  = tool_size;
 					var tx    = _x0 - s_ww + tool_size;
-					draw_sprite_stretched(THEME.menu_bg, 0, tx - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
+					draw_sprite_stretched(THEME.s_box_r2_clr, 0, tx - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
 					
 					var _am = array_length(stool);
 					

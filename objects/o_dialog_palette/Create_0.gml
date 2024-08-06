@@ -102,7 +102,7 @@ event_inherited();
 			
 			if(isHover) {
 				sp_presets.hover_content = true;
-				draw_sprite_stretched_ext(THEME.node_active, 1, 0, yy, ww, hg, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, yy, ww, hg, COLORS._main_accent, 1);
 			}
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);

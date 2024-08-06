@@ -143,7 +143,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		draw_sprite_stretched_ext(spr, 0, xx, yy, w * _s, h * _s, c_white, 1);
 		
 		if(active_draw_index > -1) {
-			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, w * _s, h * _s, COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, h * _s, COLORS._main_accent, 1);
 			active_draw_index = -1;
 		}
 		return noone;

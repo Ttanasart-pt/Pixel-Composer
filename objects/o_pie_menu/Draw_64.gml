@@ -46,7 +46,7 @@
 		var _bx1 = _bx + _spw / 2;
 		var _by1 = _by + _sph / 2;
 			
-		draw_sprite_stretched(THEME.menu_bg, 0, _bx0, _by0, _spw, _sph);
+		draw_sprite_stretched(THEME.s_box_r2_clr, 0, _bx0, _by0, _spw, _sph);
 		
 		var _hov = _sel && abs(angle_difference(_ang, _ba)) < _r / 2;
 		
@@ -92,7 +92,7 @@
 		draw_text(tx, _by0 + _sph / 2, label);
 		draw_set_alpha(1);
 		
-		draw_sprite_stretched(THEME.menu_bg, 1, _bx0, _by0, _spw, _sph);
+		draw_sprite_stretched(THEME.s_box_r2_clr, 1, _bx0, _by0, _spw, _sph);
 	}
 	
 	if(mouse_release(mb_left)) {

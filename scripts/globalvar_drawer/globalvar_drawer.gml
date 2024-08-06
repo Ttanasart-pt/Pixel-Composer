@@ -57,7 +57,7 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 				var by = yy + ui(16);
 				if(hover && point_in_rectangle(_m[0], _m[1], bx - ui(12), by - ui(12), bx + ui(12), by + ui(12))) {
 					chov = true;
-					draw_sprite_stretched_ext(THEME.group_label, 0, bx - ui(12), by - ui(12), ui(24), ui(24), COLORS._main_icon_light, 1);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, bx - ui(12), by - ui(12), ui(24), ui(24), COLORS._main_icon_light, 1);
 					
 					if(mouse_press(mb_left, _foc)) {
 						var_drag_disp   = j;
@@ -65,7 +65,7 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 						var_drag_insert = j;
 					}
 				} else 
-					draw_sprite_stretched_ext(THEME.group_label, 0, bx - ui(12), by - ui(12), ui(24), ui(24), COLORS._main_icon_light, 0.75);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, bx - ui(12), by - ui(12), ui(24), ui(24), COLORS._main_icon_light, 0.75);
 			
 				draw_sprite_ext(THEME.hamburger, 0, bx, by, 0.5, 0.5, 0, COLORS._main_icon_light, 1);
 			}

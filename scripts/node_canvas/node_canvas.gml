@@ -113,7 +113,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _ssh = _sh * _ss;
 				
 				draw_surface_ext(_surf, _sx, _sy, _ss, _ss, 0, c_white, 1);
-				draw_sprite_stretched_add(THEME.menu_button_mask, 1, _sx, _sy, _ssw, _ssh, i == preview_index? COLORS._main_accent : COLORS.panel_toolbar_outline, 1);
+				draw_sprite_stretched_add(THEME.s_box_r2, 1, _sx, _sy, _ssw, _ssh, i == preview_index? COLORS._main_accent : COLORS.panel_toolbar_outline, 1);
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _x0, _y0, _x1, _y1)) {
 					var _del_x = _sx + _fr_w  - 10;
@@ -134,7 +134,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					
 					if(_del_a != noone) {
 						draw_sprite_ext(THEME.cross_12, 0, _del_x, _del_y, 1, 1, 0, c_white, .5 + _del_a * .5);
-						draw_sprite_stretched_add(THEME.menu_button_mask, 1, _sx, _sy, _ssw, _ssh, c_white, .2);
+						draw_sprite_stretched_add(THEME.s_box_r2, 1, _sx, _sy, _ssw, _ssh, c_white, .2);
 					}
 				}
 				
@@ -1240,19 +1240,19 @@ function timelineItemNode_Canvas(node) : timelineItemNode(node) constructor {
 			var _sh = surface_get_height_safe(_surf);
 			var _ss = _h / max(_sw, _sh);
 			
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _rx0, _ry0, _h, _h, CDEF.main_dkblack);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, _rx0, _ry0, _h, _h, CDEF.main_dkblack);
 			
 			if(i == node.preview_index) {
 				draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
-				draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _rx0, _ry0, _h, _h, COLORS._main_accent);
+				draw_sprite_stretched_ext(THEME.s_box_r2, 1, _rx0, _ry0, _h, _h, COLORS._main_accent);
 				
 			} else {
 				draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, 0.1);
-				draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _rx0, _ry0, _h, _h, COLORS._main_icon, 0.3);
+				draw_sprite_stretched_ext(THEME.s_box_r2, 1, _rx0, _ry0, _h, _h, COLORS._main_icon, 0.3);
 			}
 			
 			if(_hover && point_in_rectangle(_msx, _msy, _rx0, _ry0, _rx0 + _h, _ry0 + _h)) {
-				draw_sprite_stretched_add(THEME.menu_button_mask, 1, _rx0, _ry0, _h, _h, c_white, 0.3);
+				draw_sprite_stretched_add(THEME.s_box_r2, 1, _rx0, _ry0, _h, _h, c_white, 0.3);
 				_hov = true;
 				
 				if(mouse_press(mb_left, _focus))
@@ -1267,8 +1267,8 @@ function timelineItemNode_Canvas(node) : timelineItemNode(node) constructor {
 			_rx  = _x + _fr * _s;
 			_rx0 = _rx - _h / 2;
 			
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _rx0, _ry0, _h, _h, CDEF.main_dkblack);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _rx0, _ry0, _h, _h, COLORS._main_value_positive, 0.75);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, _rx0, _ry0, _h, _h, CDEF.main_dkblack);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 1, _rx0, _ry0, _h, _h, COLORS._main_value_positive, 0.75);
 			
 			if(mouse_press(mb_left, _focus)) {
 				node.attributes.frames = _fr;

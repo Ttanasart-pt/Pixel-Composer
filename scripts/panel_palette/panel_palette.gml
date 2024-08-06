@@ -120,7 +120,7 @@ function Panel_Palette() : PanelContent() constructor {
 			var isHover = pHOVER && point_in_rectangle(_m[0], _m[1], 0, max(0, yy), ww, min(sp_palettes.h, yy + _height));
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, _height);
-			if(isHover) draw_sprite_stretched_ext(THEME.node_active, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
+			if(isHover) draw_sprite_stretched_ext(THEME.node_bg, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
 			
 			var _palRes = drawPaletteGrid(preset.palette, pd, _paly, ww - pd * 2, _palh, param);
 			if(view_label) {
@@ -133,7 +133,7 @@ function Panel_Palette() : PanelContent() constructor {
 				
 				if(_palRes.hoverIndex > noone) {
 					var _box = _palRes.hoverBBOX;
-					draw_sprite_stretched_add(THEME.menu_button_mask, 1, _box[0] + 1, _box[1] + 1, _box[2] - 2, _box[3] - 2, c_white, 0.3);
+					draw_sprite_stretched_add(THEME.s_box_r2, 1, _box[0] + 1, _box[1] + 1, _box[2] - 2, _box[3] - 2, c_white, 0.3);
 				}
 				
 				if(mouse_press(mb_left, pFOCUS)) {

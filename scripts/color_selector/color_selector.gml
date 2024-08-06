@@ -182,7 +182,7 @@ function colorSelector(onApply = noone) constructor {
 		surface_set_target(content_surface);			
 			DRAW_CLEAR
 			
-			draw_sprite_stretched(THEME.menu_button_mask, 0, 0, 0, cont_w, cont_h);
+			draw_sprite_stretched(THEME.s_box_r2, 0, 0, 0, cont_w, cont_h);
 			gpu_set_colorwriteenable(1, 1, 1, 0);
 			shader_set(sh_color_select_content);
 				shader_set_i("mode", disp_mode);
@@ -201,7 +201,7 @@ function colorSelector(onApply = noone) constructor {
 		surface_set_target(side_surface);
 			DRAW_CLEAR
 			
-			draw_sprite_stretched(THEME.menu_button_mask, 0, 0, 0, sel_w, sel_h);
+			draw_sprite_stretched(THEME.s_box_r2, 0, 0, 0, sel_w, sel_h);
 			gpu_set_colorwriteenable(1, 1, 1, 0);
 			shader_set(sh_color_select_side);
 				shader_set_i("mode", disp_mode);
@@ -225,8 +225,8 @@ function colorSelector(onApply = noone) constructor {
 		draw_surface(side_surface,    sel_x,  sel_y);
 		
 		BLEND_ADD
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.2);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.2);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.2);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.2);
 		BLEND_NORMAL
 		
 		#region control
@@ -259,7 +259,7 @@ function colorSelector(onApply = noone) constructor {
 					
 					var _csy = disp_mode == 0? cont_y + ui(_cch) : cont_y + ui(256 - _ccv);
 					
-					draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _ssx, _csy - _csz / 2, _csz, _csz, c_white, 0.75);
+					draw_sprite_stretched_ext(THEME.s_box_r2, 1, _ssx, _csy - _csz / 2, _csz, _csz, c_white, 0.75);
 					
 					var _sel  = 1 - abs(disp_mode == 0? _cch - hue : _ccv - val) / 32;
 					
@@ -269,23 +269,23 @@ function colorSelector(onApply = noone) constructor {
 					var _cszz = _sel == 1? ui(16) : lerp(ui(6), ui(12), _sel);
 					var _caa  = _sel == 1? 1 : lerp(0.25, 0.75, _sel);
 					
-					draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _ccx - _cszz / 2, _ccy - _cszz / 2, _cszz, _cszz, c_white, _caa);
+					draw_sprite_stretched_ext(THEME.s_box_r2, 1, _ccx - _cszz / 2, _ccy - _cszz / 2, _cszz, _cszz, c_white, _caa);
 				}
 				BLEND_NORMAL
 				
-				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx - 1, _sy - 1, _sw + 2, _sh + 2, c_black, 0.5);
-				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx, _sy, _sw, _sh, _sc, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r2, 0, _sx - 1, _sy - 1, _sw + 2, _sh + 2, c_black, 0.5);
+				draw_sprite_stretched_ext(THEME.s_box_r2, 0, _sx, _sy, _sw, _sh, _sc, 1);
 				
 			} else {
-				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _cx - 1, _cy - 1, _cs + 2, _cs + 2, c_black, 0.5);
-				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx - 1, _sy - 1, _sw + 2, _sh + 2, c_black, 0.5);
+				draw_sprite_stretched_ext(THEME.s_box_r2, 0, _cx - 1, _cy - 1, _cs + 2, _cs + 2, c_black, 0.5);
+				draw_sprite_stretched_ext(THEME.s_box_r2, 0, _sx - 1, _sy - 1, _sw + 2, _sh + 2, c_black, 0.5);
 				
-				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _sx, _sy, _sw, _sh, _sc, 1);
-				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _cx, _cy, _cs, _cs, current_color, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r2, 0, _sx, _sy, _sw, _sh, _sc, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r2, 0, _cx, _cy, _cs, _cs, current_color, 1);
 				
 				BLEND_ADD
-					draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _sx, _sy, _sw, _sh, c_white, 0.75);
-					draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _cx, _cy, _cs, _cs, c_white, 0.75);
+					draw_sprite_stretched_ext(THEME.s_box_r2, 1, _sx, _sy, _sw, _sh, c_white, 0.75);
+					draw_sprite_stretched_ext(THEME.s_box_r2, 1, _cx, _cy, _cs, _cs, c_white, 0.75);
 				BLEND_NORMAL
 			}
 			

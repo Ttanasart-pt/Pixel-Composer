@@ -54,7 +54,7 @@ event_inherited();
 						var  _h = string_height_ext(_line, -1, ww);
 						yy += (!!i) * ui(16);
 						
-						draw_sprite_stretched_ext(THEME.group_label, 1, xx, _y + yy - ui(4), ww, _h + ui(8), COLORS._main_icon, 1);
+						draw_sprite_stretched_ext(THEME.s_box_r5_clr, 1, xx, _y + yy - ui(4), ww, _h + ui(8), COLORS._main_icon, 1);
 						draw_text_line(xx + ui(16), _y + yy, _line, -1, ww);
 						yy += ui(8);
 						break;

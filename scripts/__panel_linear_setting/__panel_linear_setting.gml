@@ -56,7 +56,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				var _ind  = _prop.index;
 				var _colr = _prop.color;
 				
-				draw_sprite_stretched_ext(THEME.group_label, 0, ui(4), yy - th / 2 + ui(2), w - ui(8), th - ui(4), _colr, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(4), yy - th / 2 + ui(2), w - ui(8), th - ui(4), _colr, 1);
 				draw_sprite_ui(_spr, _ind, ui(4) + th / 2, yy);
 				
 				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);

@@ -337,11 +337,11 @@ function curveBox(_onModify) : widget() constructor {
 			else if(point_in_rectangle(_m[0], _m[1], bx, zy1 - bs / 2, bx + bs, zy0 + bs / 2))
 				hov = 3;
 				
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, bx, by, bs, byH, CDEF.main_black, 1);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, bx, zy1, bs, zy0 - zy1, drag_h == 3? merge_color(CDEF.main_dkgrey, CDEF.main_grey, 0.4) : CDEF.main_dkgrey, 1);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, bx, by, bs, byH, CDEF.main_black, 1);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, bx, zy1, bs, zy0 - zy1, drag_h == 3? merge_color(CDEF.main_dkgrey, CDEF.main_grey, 0.4) : CDEF.main_dkgrey, 1);
 			
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, bx, zy0 - bs / 2, bs, bs, drag_h == 1? COLORS._main_icon_light : COLORS._main_icon, 1);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, bx, zy1 - bs / 2, bs, bs, drag_h == 2? COLORS._main_icon_light : COLORS._main_icon, 1);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, bx, zy0 - bs / 2, bs, bs, drag_h == 1? COLORS._main_icon_light : COLORS._main_icon, 1);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, bx, zy1 - bs / 2, bs, bs, drag_h == 2? COLORS._main_icon_light : COLORS._main_icon, 1);
 			
 			var zminx = 0;
 			var zmaxx = 1;
@@ -370,11 +370,11 @@ function curveBox(_onModify) : widget() constructor {
 			else if(point_in_rectangle(_m[0], _m[1], zx0 - bs / 2, by, zx1 + bs / 2, by + bs))
 				hov = 6;
 				
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, bx, by, bxW, bs, CDEF.main_black, 1);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, zx0, by, zx1 - zx0, bs, drag_h == 6? merge_color(CDEF.main_dkgrey, CDEF.main_grey, 0.4) : CDEF.main_dkgrey, 1);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, bx, by, bxW, bs, CDEF.main_black, 1);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, zx0, by, zx1 - zx0, bs, drag_h == 6? merge_color(CDEF.main_dkgrey, CDEF.main_grey, 0.4) : CDEF.main_dkgrey, 1);
 			
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, zx0 - bs / 2, by, bs, bs, drag_h == 4? COLORS._main_icon_light : COLORS._main_icon, 1);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, zx1 - bs / 2, by, bs, bs, drag_h == 5? COLORS._main_icon_light : COLORS._main_icon, 1);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, zx0 - bs / 2, by, bs, bs, drag_h == 4? COLORS._main_icon_light : COLORS._main_icon, 1);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, zx1 - bs / 2, by, bs, bs, drag_h == 5? COLORS._main_icon_light : COLORS._main_icon, 1);
 			
 			drag_h = hov;
 			if(mouse_press(mb_left, hov && active)) {
@@ -424,7 +424,7 @@ function curveBox(_onModify) : widget() constructor {
 				}
 				
 			}
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _bhx, _bhy, bs, bs, _hov? COLORS._main_icon : CDEF.main_dkgrey, 1);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, _bhx, _bhy, bs, bs, _hov? COLORS._main_icon : CDEF.main_dkgrey, 1);
 			
 			if(height_drag) {
 				h = height_ss + _m[1] - height_my;

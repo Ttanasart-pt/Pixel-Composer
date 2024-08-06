@@ -86,7 +86,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		bg_spr  = THEME.node_bg;
 		bg_spr_add     = 0.1;
 		bg_spr_add_clr = c_white;
-		bg_sel_spr     = THEME.node_active;
 	
 		name = "";
 		display_name     = "";
@@ -1258,7 +1257,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var cc = getColor();
 		var nh = previewable? name_height * _s : h * _s;
 		
-		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, nh, cc, aa);
+		draw_sprite_stretched_ext(THEME.node_bg, 2, xx, yy, w * _s, nh, cc, aa);
 		
 		var cc = COLORS._main_text;
 		if(PREFERENCES.node_show_render_status && !rendered)
@@ -1774,16 +1773,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(active_draw_index > -1) {
-			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, round(w * _s), round(h * _s), active_draw_index > 1? COLORS.node_border_file_drop : COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, round(w * _s), round(h * _s), active_draw_index > 1? COLORS.node_border_file_drop : COLORS._main_accent, 1);
 			
-			if(active_draw_anchor) draw_sprite_stretched_add(bg_sel_spr, 0, xx, yy, round(w * _s), round(h * _s), COLORS._main_accent, 0.5);
+			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 1, xx, yy, round(w * _s), round(h * _s), COLORS._main_accent, 0.5);
 			
 			active_draw_anchor = false;
 			active_draw_index  = -1;
 		}
 		
 		if(draw_droppable) {
-			// draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, w * _s, h * _s, COLORS._main_value_positive, 1);
 			draw_sprite_stretched_ext(THEME.color_picker_box, 0, xx - 2 * _s, yy - 2 * _s, w * _s + 4 * _s, h * _s + 4 * _s, COLORS._main_value_positive, 1);
 			
 			draw_droppable = false;

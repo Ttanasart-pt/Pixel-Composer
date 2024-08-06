@@ -86,7 +86,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			var preset = defPres;
 			
 			if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _ww, _yy + _hh)) {
-				draw_sprite_stretched_ext(THEME.node_active, 1, 0, _yy, _ww, _hh, COLORS._main_icon, 1);
+				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, _yy, _ww, _hh, COLORS._main_icon, 1);
 				sc_presets.hover_content = true;
 				
 				if(mouse_press(mb_left, pFOCUS)) {
@@ -143,7 +143,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, _yy, _ww, _hh);
 			
 			if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _ww, _yy + _hh)) {
-				draw_sprite_stretched_ext(THEME.node_active, 1, 0, _yy, _ww, _hh, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, _yy, _ww, _hh, COLORS._main_accent, 1);
 				sc_presets.hover_content = true;
 				
 				if(mouse_press(mb_left, pFOCUS)) {

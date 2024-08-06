@@ -410,7 +410,7 @@ function Panel_Menu() : PanelContent() constructor {
 			
 				if(pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
 					_draggable = false;
-					draw_sprite_stretched(THEME.menu_button, 0, x0, y0, x1 - x0, y1 - y0);
+					draw_sprite_stretched(THEME.s_box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0);
 					
 					if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
 						if(hori) menuCall($"main_{_name}_menu", x + x0, y + y1, _menu[1]);
@@ -466,7 +466,7 @@ function Panel_Menu() : PanelContent() constructor {
 			
 			if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - nh / 2, nx0 + nw, ny0 + nh / 2)) {
 				_draggable = false;
-				draw_sprite_stretched_ext(THEME.menu_button, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r2_clr, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
 				if(mouse_press(mb_left, pFOCUS)) {
 					var dia = dialogPanelCall(new Panel_Notification(), nx0, ny0 + nh / 2 + ui(4));
 					dia.anchor = ANCHOR.left | ANCHOR.top;
@@ -477,7 +477,7 @@ function Panel_Menu() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh / 2, nw, nh, cc, 1);
 			
 			gpu_set_blendmode(bm_add);
-			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, nx0, ny0 - nh / 2, nw, nh, cc, ev / 2);
+			draw_sprite_stretched_ext(THEME.s_box_r2, 0, nx0, ny0 - nh / 2, nw, nh, cc, ev / 2);
 			gpu_set_blendmode(bm_normal);
 			
 			if(noti_icon_show > 0)
@@ -509,7 +509,7 @@ function Panel_Menu() : PanelContent() constructor {
 				if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
 					_draggable = false;
 					TOOLTIP = __txt("Addons");
-					draw_sprite_stretched(THEME.menu_button, 1, nx0, ny0 - wh / 2, ww, wh);
+					draw_sprite_stretched(THEME.s_box_r2_clr, 0, nx0, ny0 - wh / 2, ww, wh);
 					if(mouse_press(mb_left, pFOCUS))
 						dialogPanelCall(new Panel_Addon());
 				} else 

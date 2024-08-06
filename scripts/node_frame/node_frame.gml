@@ -5,7 +5,6 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	w      = 240;
 	h      = 160;
 	bg_spr = THEME.node_frame_bg;
-	nm_spr = THEME.node_frame_name;
 	
 	size_dragging    = false;
 	size_dragging_w  = w;
@@ -112,13 +111,13 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(WIDGET_CURRENT == tb_name) {
 			var nh = 24;
-			draw_sprite_stretched_ext(nm_spr, 0, draw_x0, draw_y0, _w, nh, color, alpha * .75);
+			draw_sprite_stretched_ext(bg_spr, 2, draw_x0, draw_y0, _w, nh, color, alpha * .75);
 			
 			tb_name.setFocusHover(PANEL_GRAPH.pFOCUS, PANEL_GRAPH.pHOVER);
 			tb_name.draw(draw_x0, draw_y0, _w, nh, txt, [ _mx, _my ]);
 			
 		} else {
-			draw_sprite_stretched_ext(nm_spr, 0, draw_x0, draw_y0, _w, name_height, color, alpha * .75);
+			draw_sprite_stretched_ext(bg_spr, 2, draw_x0, draw_y0, _w, name_height, color, alpha * .75);
 			
 			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
 			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 1, txt, _w - 4);
@@ -134,7 +133,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		draw_sprite_stretched_add(bg_spr, 1, draw_x0, draw_y0, _w, _h, c_white, .20);
 		
 		if(active_draw_index > -1) {
-			draw_sprite_stretched_ext(bg_sel_spr, 0, draw_x0, draw_y0, _w, _h, COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h, COLORS._main_accent, 1);
 			active_draw_index = -1;
 		}
 		

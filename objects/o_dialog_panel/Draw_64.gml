@@ -90,7 +90,7 @@ if !ready exit;
 		if(!m_in && m_ot) {
 			var p  = DIALOG_PAD;
 			var p2 = DIALOG_PAD * 2;
-			draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x - p, dialog_y - p, dialog_w + p2, dialog_h + p2, c_white, 0.4);
+			draw_sprite_stretched_ext(THEME.dialog, 1, dialog_x - p, dialog_y - p, dialog_w + p2, dialog_h + p2, c_white, 0.4);
 				
 			if(DOUBLE_CLICK) {
 				content.dragSurface = surface_clone(panel);

@@ -34,11 +34,11 @@ For your convenience we have develop a node credit system which allows you to to
 			var cc = i == 1? COLORS._main_text_accent : COLORS._main_text;
 			
 			if(pHOVER && point_in_rectangle(mx, my, _bx, _by, _bx + _w, _by + _h)) {
-				draw_sprite_stretched_ext(THEME.group_label, 1, _bx, _by, _w, _h, cc, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 1, _bx, _by, _w, _h, cc, 1);
 				if(mouse_press(mb_left, pFOCUS))
 					url_open("https://ko-fi.com/makhamdev");
 			} else
-				draw_sprite_stretched_ext(THEME.group_label, 0, _bx, _by, _w, _h, cc, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, _bx, _by, _w, _h, cc, 1);
 				
 			draw_set_text(f_h5, fa_center, fa_top, cc);
 			draw_text_add(_bx + _w / 2, _by + 8, bundles[i][0]);

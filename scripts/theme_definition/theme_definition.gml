@@ -7,10 +7,7 @@ function Theme() constructor {
     color_3d_selected               = s_color_3d_selected;
     color_picker_box                = s_color_picker_box;
     color_picker_sample             = s_color_picker_sample;
-    dialog_active                   = s_dialog_active;
-    dialog_bg                       = s_dialog_bg;
-    group_label                     = s_group_label;
-    menu_bg                         = s_menu_box_bg;
+    dialog                          = s_dialog;
     shadow_drop_down_24             = s_shadow_drop_down_24;
     
     ac_constant                     = s_ac_constant;
@@ -229,9 +226,6 @@ function Theme() constructor {
     node_junctions_outline_hover    = s_node_junctions_outline_hover;
     node_junction_selecting         = s_node_junction_selecting;
 
-    node_active                     = s_node_active;
-    node_bg_name                    = s_node_bg_name;
-    node_frame_name                 = s_node_frame_name;
     node_bg                         = s_node_bg;
     node_coor_pin                   = s_node_coor_pin;
     node_deprecated_badge           = s_node_deprecated_badge;
@@ -244,9 +238,11 @@ function Theme() constructor {
     node_websocket_receive          = s_websocket_receive;
     node_websocket_send             = s_websocket_send;
 
+    s_box_r2                        = s_menu_white;
+    s_box_r2_clr                    = s_menu_box_bg;
+    s_box_r5_clr                    = s_group_label;
+    
     key_display                     = s_key_display;
-    menu_button_mask                = s_menu_white;
-    menu_button                     = s_menu_button;
     palette_mask                    = s_palette_mask;
     palette_selecting               = s_palette_selecting;
     timeline_color                  = s_ui_timeline_color;

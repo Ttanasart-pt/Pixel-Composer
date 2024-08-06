@@ -63,11 +63,11 @@ function Panel_Notification() : PanelContent() constructor {
 			_h += pad * 2;
 			
 			if(yy >= -_h && yy <= sp_noti.h) {
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, _w, _h, COLORS.dialog_notification_bg, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, _w, _h, COLORS.dialog_notification_bg, 1);
 			
 				if(pHOVER && pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h)) {
 					sp_noti.hover_content = true;
-					draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, _w, _h, COLORS.dialog_notification_bg_hover, 1);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, _w, _h, COLORS.dialog_notification_bg_hover, 1);
 					
 					if(noti.tooltip != "")
 						TOOLTIP = noti.tooltip;
@@ -93,10 +93,10 @@ function Panel_Notification() : PanelContent() constructor {
 					var _nwx = sp_noti.w - ui(12) - ui(40);
 					var _nw  = _nwx * noti.life / noti.life_max;
 				
-					draw_sprite_stretched_ext(THEME.group_label, 0, ui(40), yy, _nw, _h, COLORS.dialog_notification_icon_bg, 1);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(40), yy, _nw, _h, COLORS.dialog_notification_icon_bg, 1);
 				}
 			
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, ui(48), _h, noti.color, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, ui(48), _h, noti.color, 1);
 			
 				if(noti.icon_end != noone)
 					draw_sprite_ui(noti.icon_end, 1, _w - ui(24), yy + _h / 2,,,, COLORS._main_icon);
@@ -128,7 +128,7 @@ function Panel_Notification() : PanelContent() constructor {
 					var bx = _w - ui(0) - bw;
 					var by = yy + ui(0) + ui(1);
 					
-					draw_sprite_stretched_ext(THEME.group_label, 0, bx, by, bw, bh, COLORS._main_icon_dark, 0.75);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, bx, by, bw, bh, COLORS._main_icon_dark, 0.75);
 					
 					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_accent);
 					draw_text(bx + bw / 2, by + bh / 2, noti.amount);

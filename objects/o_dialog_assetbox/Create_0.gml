@@ -132,7 +132,7 @@ event_inherited();
 						contentPane.hover_content = true;
 						TOOLTIP = [ spr, "sprite" ];
 						
-						draw_sprite_stretched_ext(THEME.node_active, 0, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+						draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 						if(mouse_press(mb_left, sFOCUS)) {
 							target.onModify(content.path);
 							instance_destroy();

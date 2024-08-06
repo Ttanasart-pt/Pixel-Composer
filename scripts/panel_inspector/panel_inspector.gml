@@ -270,12 +270,12 @@ function Panel_Inspector() : PanelContent() constructor {
 			var _x1   = con_w - (_b != noone) * ui(30);
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_hover, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_hover, 1);
 						
 				if(mouse_press(mb_left, pFOCUS))
 					meta_display[i][1] = !meta_display[i][1];
 			} else
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_bg, 1);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_bg, 1);
 			
 			if(_b != noone) {
 				_b.setFocusHover(pFOCUS, _hover);
@@ -644,7 +644,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			} else if(i == amoIn) { // output label
 				hh += ui(8 + 32 + 8);
 				
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.8);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.8);
 				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
 				draw_text_add(xc, yy + ui(8 + 16), __txt("Outputs"));
 				continue;
@@ -716,14 +716,14 @@ function Panel_Inspector() : PanelContent() constructor {
 					
 					if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, con_w, yy + lbh)) {
 						contentPane.hover_content = true;
-						draw_sprite_stretched_ext(THEME.group_label, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
+						draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
 					
 						if(mouse_press(mb_left, pFOCUS))
 							jun[@ 1] = !coll;
 						if(mouse_press(mb_right, pFOCUS))
 							menuCall("inspector_group_menu",,, group_menu,, _inspecting);
 					} else
-						draw_sprite_stretched_ext(THEME.group_label, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_bg, 1);
+						draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_bg, 1);
 				
 					if(filter_text == "") 
 						draw_sprite_ui(THEME.arrow, 0, lbx + ui(16), yy + lbh / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);
@@ -733,12 +733,12 @@ function Panel_Inspector() : PanelContent() constructor {
 					if(togl != noone) {
 						if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, ui(32), yy + lbh)) {
 							contentPane.hover_content = true;
-							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_hover, 1);
+							draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_hover, 1);
 							
 							if(mouse_press(mb_left, pFOCUS))
 								_inspecting.inputs[| togl].setValue(!toging);
 						} else 
-							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_bg, 1);
+							draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_bg, 1);
 						
 						cc = toging? COLORS._main_accent : COLORS.panel_inspector_group_bg;
 						aa = 0.5 + toging * 0.5;
@@ -959,7 +959,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 			
 			if(n > 1) {
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, _y, con_w, ui(32), COLORS.panel_inspector_output_label, 0.9);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, _y, con_w, ui(32), COLORS.panel_inspector_output_label, 0.9);
 				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
 				
 				var _tx = inspectings[i].getFullName();

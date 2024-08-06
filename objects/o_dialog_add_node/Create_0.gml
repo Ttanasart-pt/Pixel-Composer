@@ -526,7 +526,7 @@ event_inherited();
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					content_pane.hover_content = true;
 					
-					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node);
 					else if(mouse_release(mb_right, right_free && sFOCUS))
@@ -590,7 +590,7 @@ event_inherited();
 					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 					
 					BLEND_OVERRIDE;
-					draw_sprite_stretched_ext(THEME.group_label, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24), c_white, 0.3);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24), c_white, 0.3);
 					BLEND_NORMAL;
 					
 					draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
@@ -658,7 +658,7 @@ event_inherited();
 						node_tooltip_y = content_pane.y + yy
 					}
 					
-					draw_sprite_stretched_ext(THEME.node_active, 0, ui(16), yy, list_width - ui(32), list_height, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, ui(16), yy, list_width - ui(32), list_height, COLORS._main_accent, 1);
 					if(mouse_release(mb_left, sFOCUS))
 						buildNode(_node);
 					else if(mouse_release(mb_right, right_free && sFOCUS))
@@ -704,7 +704,7 @@ event_inherited();
 					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				
 					BLEND_OVERRIDE;
-					draw_sprite_stretched_ext(THEME.group_label, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24), c_white, 0.3);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24), c_white, 0.3);
 					BLEND_NORMAL;
 					
 					draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
@@ -912,7 +912,7 @@ event_inherited();
 					}
 					
 					if(node_selecting == i) {
-						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+						draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 						if(keyboard_check_pressed(vk_enter))
 							buildNode(_node, _param);
 					}
@@ -1051,7 +1051,7 @@ event_inherited();
 				}
 				
 				if(node_selecting == i) {
-					draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
 					if(keyboard_check_pressed(vk_enter))
 						buildNode(_node, _param);
 				}

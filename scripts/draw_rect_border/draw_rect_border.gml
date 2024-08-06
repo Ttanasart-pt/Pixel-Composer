@@ -7,17 +7,17 @@ function draw_rectangle_border(x1, y1, x2, y2, thick) {
 }
 
 function ui_rect(x1, y1, x2, y2, color, alpha = 1) {
-	INLINE draw_sprite_stretched_ext(THEME.menu_button_mask, 1, x1, y1, x2 - x1, y2 - y1, color, 1);
+	INLINE draw_sprite_stretched_ext(THEME.s_box_r2, 1, x1, y1, x2 - x1, y2 - y1, color, 1);
 }
 
 function ui_rect_wh(x1, y1, w, h, color, alpha = 1) {
-	INLINE draw_sprite_stretched_ext(THEME.menu_button_mask, 1, x1, y1, w, h, color, 1);
+	INLINE draw_sprite_stretched_ext(THEME.s_box_r2, 1, x1, y1, w, h, color, 1);
 }
 
 function ui_fill_rect(x1, y1, x2, y2, color, alpha = 1) {
-	INLINE draw_sprite_stretched_ext(THEME.menu_button_mask, 0, x1, y1, x2 - x1, y2 - y1, color, 1);
+	INLINE draw_sprite_stretched_ext(THEME.s_box_r2, 0, x1, y1, x2 - x1, y2 - y1, color, 1);
 }
 
 function ui_fill_rect_wh(x1, y1, w, h, color, alpha = 1) {
-	INLINE draw_sprite_stretched_ext(THEME.menu_button_mask, 0, x1, y1, w, h, color, 1);
+	INLINE draw_sprite_stretched_ext(THEME.s_box_r2, 0, x1, y1, w, h, color, 1);
 }

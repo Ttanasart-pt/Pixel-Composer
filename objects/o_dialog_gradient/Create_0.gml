@@ -115,7 +115,7 @@ event_inherited();
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, hg);
 			if(_hover && isHover) {
 				sp_presets.hover_content = true;
-				draw_sprite_stretched_ext(THEME.node_active, 1, 0, yy, ww, hg, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, yy, ww, hg, COLORS._main_accent, 1);
 			}
 				
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
@@ -195,7 +195,7 @@ event_inherited();
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, _height);
 			if(isHover) {
 				sp_palettes.hover_content = true;
-				draw_sprite_stretched_ext(THEME.node_active, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
 			}
 			
 			var cc = i == palette_selecting? COLORS._main_accent : COLORS._main_text_sub;

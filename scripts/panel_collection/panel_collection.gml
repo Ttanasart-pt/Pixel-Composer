@@ -225,7 +225,7 @@ function Panel_Collection() : PanelContent() constructor {
 						
 						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 							contentPane.hover_content = true;
-							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+							draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 							
 							if(mouse_press(mb_left, pFOCUS)) {
 								var _typ = "";
@@ -319,7 +319,7 @@ function Panel_Collection() : PanelContent() constructor {
 					if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 						contentPane.hover_content = true;
 						
-						draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
+						draw_sprite_stretched_ext(THEME.node_bg, 1, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
 						if(mouse_press(mb_left, pFOCUS))
 							DRAGGING = { type : _node.type == FILE_TYPE.collection? "Collection" : "Asset", data : _node }
 						

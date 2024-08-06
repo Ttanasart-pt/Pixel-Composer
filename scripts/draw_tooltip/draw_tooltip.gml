@@ -34,8 +34,8 @@ function draw_tooltip_color(clr) { #region
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
 	
-	draw_sprite_stretched_ext(THEME.menu_button_mask, 0, mx + pd, my + pd, ww, hh, clr, 1);
-	draw_sprite_stretched_add(THEME.menu_button_mask, 1, mx + pd, my + pd, ww, hh, c_white, 0.3);
+	draw_sprite_stretched_ext(THEME.s_box_r2, 0, mx + pd, my + pd, ww, hh, clr, 1);
+	draw_sprite_stretched_add(THEME.s_box_r2, 1, mx + pd, my + pd, ww, hh, c_white, 0.3);
 } #endregion
 
 function draw_tooltip_palette(clr) { #region
@@ -64,7 +64,7 @@ function draw_tooltip_palette(clr) { #region
 		_y += ph;
 	}
 	
-	draw_sprite_stretched_add(THEME.menu_button_mask, 1, mx + pd, my + pd, ww, hh, c_white, 0.3);
+	draw_sprite_stretched_add(THEME.s_box_r2, 1, mx + pd, my + pd, ww, hh, c_white, 0.3);
 } #endregion
 
 function draw_tooltip_gradient(clr) { #region

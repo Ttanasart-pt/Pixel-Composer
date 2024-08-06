@@ -49,11 +49,11 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				var _ssy = _sy + (_ns - _sh * _ss) / 2;
 				
 				if(pHOVER && point_in_rectangle(msx, msy, _sx, _sy, _sx + _ns, _sy + _ns)) {
-					draw_sprite_stretched(THEME.group_label, 1, _sx, _sy, _ns, _ns);
+					draw_sprite_stretched(THEME.s_box_r5_clr, 1, _sx, _sy, _ns, _ns);
 					if(mouse_press(mb_left, pFOCUS))
 						content_drag = i;
 				} else 
-					draw_sprite_stretched(THEME.group_label, 0, _sx, _sy, _ns, _ns);
+					draw_sprite_stretched(THEME.s_box_r5_clr, 0, _sx, _sy, _ns, _ns);
 					
 				draw_surface_ext_safe(_s, _ssx, _ssy, _ss, _ss);
 			}

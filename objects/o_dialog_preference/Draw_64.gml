@@ -25,7 +25,7 @@ if !ready exit;
 		var _rw = string_width(_txt);
 		var _rh = string_height(_txt);
 		
-		draw_sprite_stretched_ext(THEME.group_label, 0, _rx - ui(8), _ry - ui(4), _rw + ui(16), _rh + ui(8), COLORS._main_accent, 1);
+		draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, _rx - ui(8), _ry - ui(4), _rw + ui(16), _rh + ui(8), COLORS._main_accent, 1);
 		draw_text(_rx, _ry, _txt);
 	}
 #endregion

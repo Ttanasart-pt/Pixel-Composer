@@ -19,13 +19,13 @@ if !ready exit;
 	var p  = DIALOG_PAD;
 	var p2 = DIALOG_PAD * 2;
 	
-	draw_sprite_stretched(THEME.dialog_bg, 0, presets_x - p, dialog_y - p, presets_w + p2, dialog_h + p2);
+	draw_sprite_stretched(THEME.dialog, 0, presets_x - p, dialog_y - p, presets_w + p2, dialog_h + p2);
 	if(sFOCUS) 
-		draw_sprite_stretched_ext(THEME.dialog_active, 0, presets_x - p, dialog_y - p, presets_w + p2, dialog_h + p2, COLORS._main_accent, 1);
+		draw_sprite_stretched_ext(THEME.dialog, 1, presets_x - p, dialog_y - p, presets_w + p2, dialog_h + p2, COLORS._main_accent, 1);
 	
-	draw_sprite_stretched(THEME.dialog_bg, 0, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2);
+	draw_sprite_stretched(THEME.dialog, 0, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2);
 	if(sFOCUS)
-		draw_sprite_stretched_ext(THEME.dialog_active, 0, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2, COLORS._main_accent, 1);
+		draw_sprite_stretched_ext(THEME.dialog, 1, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(presets_x + ui(24), dialog_y + ui(16), __txt("Palettes"));

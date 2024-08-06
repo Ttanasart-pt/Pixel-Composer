@@ -137,7 +137,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				var _hi = noone;
 				var _hover_index = hover_index;
 				
-				draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _ggx, _cy, _ggw, _ch, CDEF.main_mdblack, 1);	
+				draw_sprite_stretched_ext(THEME.s_box_r2, 0, _ggx, _cy, _ggw, _ch, CDEF.main_mdblack, 1);	
 				
 				for (var i = 0, n = array_length(_gradient.keys); i < n; i++) {
 					var _k  = _gradient.keys[i];
@@ -156,7 +156,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 					
 					_kx = clamp(_kx, _ggx + _ks / 2, _ggx + _ggw - _ks / 2);
 					
-					draw_sprite_stretched_ext(THEME.menu_button_mask, 0, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, _k.value, 1);
+					draw_sprite_stretched_ext(THEME.s_box_r2, 0, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, _k.value, 1);
 					var _ka = 0.3;
 					
 					if(hover && point_in_rectangle(_m[0], _m[1], _kx - _ks / 2, _ky - _ks / 2, _kx + _ks / 2, _ky + _ks / 2)) {
@@ -175,7 +175,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 					}
 					
 					if(_hover_index == i && DRAGGING && DRAGGING.type == "Color") {
-						draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_value_positive, 1);
+						draw_sprite_stretched_ext(THEME.s_box_r2, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_value_positive, 1);
 						if(mouse_release(mb_left)) {
 							_k.value = DRAGGING.data;
 							apply(current_gradient);
@@ -183,9 +183,9 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 						
 					} else {
 						if(drag_color_index == _k || edit_color_index == _k)
-							draw_sprite_stretched_ext(THEME.menu_button_mask, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_accent, 1);
+							draw_sprite_stretched_ext(THEME.s_box_r2, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_accent, 1);
 						else
-							draw_sprite_stretched_add(THEME.menu_button_mask, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, c_white, _ka);
+							draw_sprite_stretched_add(THEME.s_box_r2, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, c_white, _ka);
 					}
 				}
 				

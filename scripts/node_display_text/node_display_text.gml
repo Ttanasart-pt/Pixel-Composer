@@ -2,12 +2,11 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Display Text";
 	setDimension(16, 16);
 	
-	bg_spr = THEME.node_frame_bg;
 	previewable = false;
 	
-	size_dragging = false;
-	size_dragging_w = w;
-	size_dragging_h = h;
+	size_dragging    = false;
+	size_dragging_w  = w;
+	size_dragging_h  = h;
 	size_dragging_mx = w;
 	size_dragging_my = h;
 	
@@ -181,7 +180,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								_th  = string_height(_bch) * _ss;
 								
 								draw_sprite_stretched_points(THEME.ui_panel_bg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_icon_light);
-								draw_sprite_stretched_points(THEME.ui_panel, 1, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4);
+								draw_sprite_stretched_points(THEME.ui_panel, 1, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, CDEF.main_dkgrey);
 									
 								draw_set_color(_cc);
 								draw_text_add_float(_tx, _y, _bch, _ss);
@@ -539,7 +538,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		drawNodeBase(xx, yy, _mx, _my, _s);
 		
 		if(active_draw_index > -1) {
-			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, w * _s, h * _s, COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, h * _s, COLORS._main_accent, 1);
 			active_draw_index = -1;
 		}
 		

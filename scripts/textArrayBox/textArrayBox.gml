@@ -68,7 +68,7 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 				ty += hh + ui(2);
 			}
 			
-			draw_sprite_stretched_ext(THEME.group_label, 0, tx, ty, ww, hh, COLORS._main_icon, 1);
+			draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, tx, ty, ww, hh, COLORS._main_icon, 1);
 			draw_text(tx + ui(8), ty + hh / 2, arraySet[i]);
 			
 			tx += ww + ui(2);
