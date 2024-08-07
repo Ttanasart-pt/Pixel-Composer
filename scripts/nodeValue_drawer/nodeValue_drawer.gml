@@ -69,22 +69,24 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 	butx += ui(20);
 	if(!global_var) { // visibility
-		index = jun.visible;
-		draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
+		var _visi = jun.isVisible();
+		
+		draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, 1,, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 			cHov  = true;
 			
-			if(visi_hold != noone && jun.visible != visi_hold) {
-				jun.visible = visi_hold;
+			if(visi_hold != noone && jun.visible_manual != visi_hold) {
+				jun.visible_manual = visi_hold;
 				jun.node.refreshNodeDisplay();
 			}
-					
-			draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
+			
+			draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, 1,, 1);
 			TOOLTIP = __txt("Visibility");
 				
 			if(mouse_press(mb_left, _focus)) {
-				jun.visible = !jun.visible;
-				visi_hold = jun.visible;
+				jun.visible_manual = _visi? -1 : 1;
+				
+				visi_hold = jun.visible_manual;
 				jun.node.refreshNodeDisplay();
 			}
 		}

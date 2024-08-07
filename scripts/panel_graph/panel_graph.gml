@@ -3071,18 +3071,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
 				var _jun = _node.inputs[| j];
-				if(!_jun.visible) continue;
+				if(!_jun.isVisible()) continue;
 				
 				if(_jun.value_from == noone)
-					_jun.visible = false;
+					_jun.visible_manual = -1;
 			}
 			
 			for(var j = 0; j < ds_list_size(_node.outputs); j++) {
 				var _jun = _node.outputs[| j];
-				if(!_jun.visible) continue;
+				if(!_jun.isVisible()) continue;
 				
 				if(array_empty(_jun.getJunctionTo()))
-					_jun.visible = false;
+					_jun.visible_manual = -1;
 			}
 			
 			_node.will_setHeight = true;

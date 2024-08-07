@@ -237,7 +237,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return _hov;
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim	= _data[0];
 		var _bg		= _data[1];
 		var _shape	= _data[2];
@@ -364,7 +364,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var _shp = array_safe_get(shape_types, _shape, "");
 			if(is_struct(_shp)) _shp = _shp.data;
 			
-			switch(_shp) { #region
+			switch(_shp) {
 				case "Rectangle" :
 					inputs[|  9].setVisible( true);
 					inputs[| 18].setVisible(false);
@@ -547,7 +547,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_f("teethAngle",	_data[27]);
 					break;
 					
-			} #endregion
+			}
 			
 			shader_set_f("dimension", _dim);
 			shader_set_f("bgColor",   _bgcol);
@@ -565,5 +565,5 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 }

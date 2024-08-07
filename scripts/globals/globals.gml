@@ -53,7 +53,7 @@
 	CURRENT_COLOR = c_white;
 #endregion
 
-#region inputsdis
+#region input
 	globalvar FOCUS, FOCUS_STR, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
 	globalvar DOUBLE_CLICK, DOUBLE_CLICK_POS;
 	globalvar DIALOG_CLICK;

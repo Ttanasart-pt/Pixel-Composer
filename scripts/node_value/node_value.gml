@@ -178,9 +178,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	#region ---- inspector ----
 		visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || _type == VALUE_TYPE.PCXnode;
+		visible_manual    = 0;
 		show_in_inspector = true;
 		visible_in_list   = true;
-	
+		
 		display_type = VALUE_DISPLAY._default;
 		if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
 		else if(_type == VALUE_TYPE.d3vertex)	display_type = VALUE_DISPLAY.d3vertex;
@@ -490,6 +491,34 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		node.will_setHeight |= visible != v;
 		return self;
+	}
+	
+	static forceVisible = function(_vis) {
+		visible           = _vis;
+		show_in_inspector = _vis;
+		visible_manual    = 0;
+		
+		node.will_setHeight = true;
+		return self;
+	}
+	
+	static isVisible = function() {
+		if(!node.active) return false;
+		
+		if(connect_type == JUNCTION_CONNECT.output) {
+			if(!array_empty(value_to)) return true;
+			if(visible_manual != 0)    return visible_manual == 1;
+			
+			return visible;
+		}
+		
+		if(value_from)           return true;
+		if(visible_manual != 0)  return visible_manual == 1;
+		if(!visible)        	 return false;
+		
+		if(index == -1) return true;
+		
+		return visible_in_list;
 	}
 	
 	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) { #region
@@ -1985,20 +2014,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	} #endregion
 	
-	static isVisible = function() { #region
-		if(!node.active) return false;
-		
-		if(connect_type == JUNCTION_CONNECT.output)
-			return visible || !array_empty(value_to);
-		
-		if(value_from) return true;
-		if(!visible)   return false;
-		
-		if(index == -1) return true;
-		
-		return visible_in_list;
-	} #endregion
-	
 	/////========== EXPRESSION ==========
 	
 	static setUseExpression = function(useExp) { #region
@@ -2025,8 +2040,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static serialize = function(scale = false, preset = false) { #region
 		var _map = {};
 		
-		_map.visible = visible;
-		_map.color   = color;
+		_map.visible		= visible;
+		_map.visible_manual = visible_manual;
+		_map.color  		= color;
 		
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return _map;
@@ -2072,8 +2088,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_map == noone)     return;
 		if(!is_struct(_map))  return;
 		
-		visible = struct_try_get(_map, "visible", visible);
-		color   = struct_try_get(_map, "color", -1);
+		visible 	   = struct_try_get(_map, "visible", visible);
+		visible_manual = struct_try_get(_map, "visible_manual", visible_manual);
+		color   	   = struct_try_get(_map, "color", -1);
 		
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return;

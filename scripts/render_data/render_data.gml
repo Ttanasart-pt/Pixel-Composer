@@ -13,6 +13,8 @@ enum RENDER_TYPE {
 	#macro RENDER_ALL_REORDER	UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
 	#macro RENDER_ALL									    UPDATE |= RENDER_TYPE.full;
 	#macro RENDER_PARTIAL								    UPDATE |= RENDER_TYPE.partial;
+	
+	global.getvalue_hit = 0;
 #endregion
 
 function ResetAllNodesRender() { #region
@@ -172,6 +174,8 @@ function Render(partial = false, runAction = false) { #region
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render, $"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {CURRENT_FRAME}] ==============================");
 	
+	// global.getvalue_hit = 0;
+	
 	try {
 		var t  = get_timer();
 		var t1 = get_timer();
@@ -258,6 +262,9 @@ function Render(partial = false, runAction = false) { #region
 	} catch(e) {
 		noti_warning(exception_print(e));
 	}
+	
+	// print("\n============== render stat ==============");
+	// print($"Get value hit: {global.getvalue_hit}");
 	
 	LOG_END();
 	

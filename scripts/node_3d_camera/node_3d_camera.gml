@@ -162,9 +162,9 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		#endregion
 	}
 	
-	static onValueUpdate = function(index) { #region
+	static onValueUpdate = function(index) {
 		if(index == in_d3d + 9) PANEL_PREVIEW.tool_current = noone;
-	} #endregion
+	}
 		
 	static step = function() { #region
 		var _proj = getInputData(in_d3d +  3);

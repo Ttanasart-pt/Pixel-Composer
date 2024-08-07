@@ -454,7 +454,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _dy   = 9999;
 		
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			if(!outputs[| i].visible) continue;
+			if(!outputs[| i].isVisible()) continue;
 			if(junc != noone && !junc.isConnectable(outputs[| i], true)) continue;
 			
 			var _ddy = abs(outputs[| i].y - _y);
@@ -473,7 +473,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = shift; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
 			
-			if(!_inp.visible) continue;
+			if(!_inp.isVisible()) continue;
 			if(_inp.value_from != noone) continue;
 			if(junc != noone && (value_bit(junc.type) & value_bit(_inp.type)) == 0) continue;
 			
@@ -802,8 +802,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!_inp.isDynamic())               continue;
 			
 			var val = _inp.getValue(frame);
-			// setInputData(i, val);
-			inputs_data[i] = val;
+			
+			inputs_data[i] = val;								// setInputData(i, val);
 			input_value_map[$ _inp.internalName] = val;
 		}
 	}
@@ -878,7 +878,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static valueUpdate = function(index) {
-		
 		onValueUpdate(index);
 		
 		if(is_dynamic_input) will_setHeight = true;
@@ -887,6 +886,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static valueFromUpdate = function(index) {
 		onValueFromUpdate(index);
+		onValueUpdate(index);
 		
 		if(auto_input && !LOADING && !APPENDING) 
 			refreshDynamicInput();
@@ -1494,10 +1494,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(show_output_name) {
 			for(var i = 0; i < ds_list_size(outputs); i++)
-				if(outputs[| i].visible) outputs[| i].drawNameBG(_s);
+				if(outputs[| i].isVisible()) outputs[| i].drawNameBG(_s);
 			
 			for(var i = 0; i < ds_list_size(outputs); i++)
-				if(outputs[| i].visible) outputs[| i].drawName(_s, _mx, _my);
+				if(outputs[| i].isVisible()) outputs[| i].drawName(_s, _mx, _my);
 		}
 		
 		if(hasInspector1Update() && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
