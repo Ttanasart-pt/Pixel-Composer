@@ -3,10 +3,10 @@ function Node_Edge_Shade(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue_Bool("Active", self, true);
 		active_index = 1;
 	
-	inputs[| 2] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject( [ cola(c_black), cola(c_white) ] ))
+	inputs[| 2] = nodeValue_Gradient("Colors", self, new gradientObject( [ cola(c_black), cola(c_white) ] ))
 		.setMappable(3);
 	
 	//////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +17,7 @@ function Node_Edge_Shade(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1, 
 		["Surfaces",	false], 0, 

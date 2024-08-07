@@ -62,7 +62,7 @@ function Node_Custom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		for( var i = 0, n = array_length(info.outputs); i < n; i++ ) {
 			var _output = info.outputs[i];
-			outputs[| i] = nodeValue(_output.name, self, JUNCTION_CONNECT.output, value_type_from_string(_output.type), _output.value)
+			outputs[| i] = nodeValue_Output(_output.name, self, value_type_from_string(_output.type), _output.value)
 							.setVisible(_output.show_in_graph);
 			output_index_map[? _output.name] = i;
 			

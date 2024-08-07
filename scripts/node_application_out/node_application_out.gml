@@ -8,7 +8,7 @@ function Node_Application_Out(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "GUI Out";
 	update_on_frame = true;
 	
-	outputs[| 0] = nodeValue("GUI", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("GUI", self, VALUE_TYPE.surface, noone);
 	
 	APP_SURF_OVERRIDE = true;
 	

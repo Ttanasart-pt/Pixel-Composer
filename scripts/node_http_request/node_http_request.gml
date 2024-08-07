@@ -2,13 +2,13 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "HTTP";
 	setDimension(96, 72);
 	
-	inputs[| 0] = nodeValue("Address", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 0] = nodeValue_Text("Address", self, "");
 	
 	inputs[| 1] = nodeValue_Enum_Scroll("Type", self,  0, [ "Get", "Post" ]);
 	
-	inputs[| 2] = nodeValue("Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
+	inputs[| 2] = nodeValue_Text("Content", self, "")
 	
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
+	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.text, "");
 	
 	address_domain = "";
 	

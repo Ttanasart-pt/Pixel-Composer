@@ -3,24 +3,24 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	inputs[| 0] = nodeValue_Surface("Seed", self);
 	
-	inputs[| 1] = nodeValue("Kill rate", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.058)
+	inputs[| 1] = nodeValue_Float("Kill rate", self, 0.058)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.001] })
 		.setMappable(8);
 	
-	inputs[| 2] = nodeValue("Feed rate", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.043)
+	inputs[| 2] = nodeValue_Float("Feed rate", self, 0.043)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.001] })
 		.setMappable(9);
 	
-	inputs[| 3] = nodeValue("Timestep", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue_Float("Timestep", self, 1)
 		.setMappable(10);
 	
-	inputs[| 4] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
+	inputs[| 4] = nodeValue_Int("Iteration", self, 16);
 	
-	inputs[| 5] = nodeValue("Diffusion A", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
+	inputs[| 5] = nodeValue_Float("Diffusion A", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(11);
 	
-	inputs[| 6] = nodeValue("Diffusion B", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .2)
+	inputs[| 6] = nodeValue_Float("Diffusion B", self, .2)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(12);
 	
@@ -45,12 +45,12 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 13] = nodeValue("Diffusion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
+	inputs[| 13] = nodeValue_Float("Diffusion", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	outputs[| 0] = nodeValue("Reacted", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Reacted", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
 	
 	preview_channel = 1;
 	

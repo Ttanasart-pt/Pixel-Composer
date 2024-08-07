@@ -29,10 +29,10 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Image_gif(self));
 	
-	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0] = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
 		
-	inputs[| 1] = nodeValue("Set animation length to gif", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 1] = nodeValue_Trigger("Set animation length to gif", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() { 
 				if(!spr) return;
 				if(!sprite_exists(spr)) return;
@@ -40,21 +40,21 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				PROJECT.animator.framerate = 12;
 			} });
 	
-	inputs[| 2]  = nodeValue("Output as array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 2]  = nodeValue_Bool("Output as array", self, false);
 	
 	inputs[| 3]  = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
 		.rejectArray();
 	
-	inputs[| 4]  = nodeValue("Start frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 4]  = nodeValue_Int("Start frame", self, 0);
 	
-	inputs[| 5]  = nodeValue("Custom frame order", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 5]  = nodeValue_Bool("Custom frame order", self, false);
 	
-	inputs[| 6]  = nodeValue("Frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 6]  = nodeValue_Int("Frame", self, 0);
 	
-	inputs[| 7]  = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 7]  = nodeValue_Float("Animation speed", self, 1);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
-	outputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 		
 	input_display_list = [ 

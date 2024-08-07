@@ -11,7 +11,7 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	inputs[| 0] = nodeValue("Value out", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue("Array out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, [] );
+	outputs[| 0] = nodeValue_Output("Array out", self, VALUE_TYPE.any, [] );
 	
 	static getNextNodes = function() { #region
 		if(loop.bypassNextNode())

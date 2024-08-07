@@ -1,12 +1,12 @@
 function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Audio Window";
 	
-	inputs[| 0] = nodeValue("Audio data", self, JUNCTION_CONNECT.input, VALUE_TYPE.audioBit, noone)
+	inputs[| 0] = nodeValue_AudioBit("Audio data", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4096, "Amount of bits to extract.");
+	inputs[| 1] = nodeValue_Int("Width", self, 4096, "Amount of bits to extract.");
 	
-	inputs[| 2] = nodeValue("Location", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue_Float("Location", self, 0)
 		.setDisplay(VALUE_DISPLAY._default, { unit: 0, side_button: button(function() { 
 					inputs[| 2].display_data.unit = (inputs[| 2].display_data.unit + 1) % 3; 
 					inputs[| 2].display_data.side_button.tooltip.index = inputs[| 2].display_data.unit; 
@@ -18,11 +18,11 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	inputs[| 3] = nodeValue_Enum_Button("Cursor location", self,  1, [ "Start", "Middle", "End" ]);
 	
-	inputs[| 4] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
+	inputs[| 4] = nodeValue_Int("Step", self, 16);
 	
-	inputs[| 5] = nodeValue("Match timeline", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Set window cursor to match animation timeline.");
+	inputs[| 5] = nodeValue_Bool("Match timeline", self, true, "Set window cursor to match animation timeline.");
 	
-	outputs[| 0] = nodeValue("Bit Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
+	outputs[| 0] = nodeValue_Output("Bit Array", self, VALUE_TYPE.float, [])
 		.setArrayDepth(1);
 		
 	input_display_list = [ 0, 

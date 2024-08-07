@@ -14,12 +14,12 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[| 1] = nodeValue_Surface("Map", self)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Max life",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
+	inputs[| 2] = nodeValue_Int("Max life",   self, 3)
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 3] = nodeValue_Bool("Loop", self, false)
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
 		["Surfaces", false], 0, 1, 

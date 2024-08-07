@@ -5,7 +5,7 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	reset_all_child = true;
 	draw_input_overlay = false;
 	
-	outputs[| 0] = nodeValue("dynaSurf", self, JUNCTION_CONNECT.output, VALUE_TYPE.dynaSurface, noone);
+	outputs[| 0] = nodeValue_Output("dynaSurf", self, VALUE_TYPE.dynaSurface, noone);
 	
 	custom_input_index  = ds_list_size(inputs);
 	custom_output_index = ds_list_size(outputs);

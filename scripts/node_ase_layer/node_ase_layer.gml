@@ -5,10 +5,10 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setVisible(false, true)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Crop Output", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 1] = nodeValue_Bool("Crop Output", self, false)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	layer_object = noone;
 	_name = "";

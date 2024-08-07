@@ -3,15 +3,13 @@ function Node_Vector_Dot(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Point 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 0] = nodeValue_Vector("Point 1", self, [ 0, 0 ])
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Point 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Point 2", self, [ 0, 0 ])
 		.setVisible(true, true);
 		
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 );
+	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.float, 0 );
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var _pnt1 = _data[0];

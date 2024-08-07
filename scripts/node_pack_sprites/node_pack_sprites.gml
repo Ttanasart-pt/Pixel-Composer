@@ -5,15 +5,15 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[| 1] = nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false });
 	
-	inputs[| 2] = nodeValue("Max width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 128);
+	inputs[| 2] = nodeValue_Int("Max width", self, 128);
 	
-	inputs[| 3] = nodeValue("Max height", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 128);
+	inputs[| 3] = nodeValue_Int("Max height", self, 128);
 	
-	inputs[| 4] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 4] = nodeValue_Int("Spacing", self, 0);
 	
-	outputs[| 0] = nodeValue("Packed image", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Packed image", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
+	outputs[| 1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []);
 	
 	input_display_list = [ 0, 4, 1, 2, 3 ];
 	

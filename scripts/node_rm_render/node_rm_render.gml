@@ -7,45 +7,42 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	
 	inputs[| 1] = nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]);
 	
-	inputs[| 2] = nodeValue("FOV", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30)
+	inputs[| 2] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	inputs[| 3] = nodeValue("Ortho Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 5.)
+	inputs[| 3] = nodeValue_Float("Ortho Scale", self, 5.)
 	
-	inputs[| 4] = nodeValue("View Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 3, 6 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("View Range", self, [ 3, 6 ]);
 	
-	inputs[| 5] = nodeValue("Depth", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 5] = nodeValue_Float("Depth", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 6] = nodeValue("Draw BG", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 6] = nodeValue_Bool("Draw BG", self, false);
 	
-	inputs[| 7] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 7] = nodeValue_Color("Background", self, c_black);
 	
-	inputs[| 8] = nodeValue("Ambient Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 8] = nodeValue_Float("Ambient Level", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -.4, -.5, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 9] = nodeValue_Vector("Light Position", self, [ -.4, -.5, 1 ]);
 	
 	inputs[| 10] = nodeValue_Surface("Environment", self);
 	
-	inputs[| 11] = nodeValue("Camera Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 30, 45, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 11] = nodeValue_Vector("Camera Rotation", self, [ 30, 45, 0 ]);
 	
-	inputs[| 12] = nodeValue("Camera Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 12] = nodeValue_Float("Camera Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 13] = nodeValue("SDF Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdf, {})
+	inputs[| 13] = nodeValue_SDF("SDF Object", self, {})
 		.setVisible(true, true);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 14] = nodeValue("Env Interpolation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 14] = nodeValue_Bool("Env Interpolation", self, false);
 	
-	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 13, 
 		["Camera",  false], 11, 12, 1, 2, 3, 4, 5, 

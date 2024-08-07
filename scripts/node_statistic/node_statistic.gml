@@ -35,7 +35,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -1 )
+		inputs[| index] = nodeValue_Float("Input", self, -1 )
 			.setVisible(false, true);
 			
 		return inputs[| index];
@@ -43,7 +43,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDynamicInput(1, true, VALUE_TYPE.float);
 	
-	outputs[| 0] = nodeValue("Statistic", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1);
+	outputs[| 0] = nodeValue_Output("Statistic", self, VALUE_TYPE.float, -1);
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var type = getInputData(0);

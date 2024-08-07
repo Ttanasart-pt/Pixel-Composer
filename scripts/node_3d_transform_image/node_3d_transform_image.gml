@@ -28,7 +28,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	]
 	
 	outputs[| 0].setVisible(false);
-	outputs[| 1] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
 	
 	output_display_list = [ 1 ]
 	

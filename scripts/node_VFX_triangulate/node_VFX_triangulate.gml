@@ -14,21 +14,20 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Vector("Output dimension", self, DEF_SURF );
 		
-	inputs[| 1] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
+	inputs[| 1] = nodeValue_Particle("Particles", self, -1 )
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue("Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
+	inputs[| 2] = nodeValue_Float("Thickness", self, 1 );
 		
-	inputs[| 3] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 3] = nodeValue_Color("Color", self, c_white );
 		
-	inputs[| 4] = nodeValue("Inherit Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 4] = nodeValue_Bool("Inherit Thickness", self, false );
 		
-	inputs[| 5] = nodeValue("Inherit Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 5] = nodeValue_Bool("Inherit Color", self, false );
 	
-	outputs[| 0] = nodeValue("Triangles", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Triangles", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 
 		[ "Particles", false], 1, 

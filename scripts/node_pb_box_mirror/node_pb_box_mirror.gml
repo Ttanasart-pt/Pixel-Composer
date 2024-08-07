@@ -4,11 +4,11 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 	inputs[| 1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue("Horizontal", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 2] = nodeValue_Bool("Horizontal", self, false );
 		
-	inputs[| 3] = nodeValue("Vertical", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 3] = nodeValue_Bool("Vertical", self, false );
 		
-	outputs[| 0] = nodeValue("pBox", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, noone );
+	outputs[| 0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone );
 	
 	input_display_list = [ 0, 1,
 		["Mirror",	false], 2, 3, 

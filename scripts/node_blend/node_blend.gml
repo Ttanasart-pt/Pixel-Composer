@@ -39,7 +39,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Blend mode", self, 0, BLEND_TYPES );
 	
-	inputs[| 3] = nodeValue("Opacity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue_Float("Opacity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 4] = nodeValue_Surface("Mask", self);
@@ -49,13 +49,12 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 6] = nodeValue_Enum_Scroll("Output dimension", self, 0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue("Constant dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 7] = nodeValue_Vector("Constant dimension", self, DEF_SURF);
 	
-	inputs[| 8] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 8] = nodeValue_Bool("Active", self, true);
 		active_index = 8;
 		
-	inputs[| 9] = nodeValue("Preserve alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 9] = nodeValue_Bool("Preserve alpha", self, false);
 		
 	inputs[| 10] = nodeValue_Enum_Button("Horizontal Align", self, 0, 
 		[ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
@@ -63,15 +62,14 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 11] = nodeValue_Enum_Button("Vertical Align", self, 0, 
 		[ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign]);
 	
-	inputs[| 12] = nodeValue("Invert mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 12] = nodeValue_Bool("Invert mask", self, false);
 	
-	inputs[| 13] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 13] = nodeValue_Float("Mask feather", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	inputs[| 14] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 14] = nodeValue_Vector("Position", self, [ 0.5, 0.5 ]);
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8, 
 		["Surfaces",	 true],	0, 1, 4, 12, 13, 6, 7,

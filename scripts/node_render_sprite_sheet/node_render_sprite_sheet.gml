@@ -20,7 +20,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	inputs[| 1] = nodeValue_Enum_Scroll("Sprite set", self,  0, [ "Animation", "Sprite array" ])
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Frame step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")
+	inputs[| 2] = nodeValue_Int("Frame step", self, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue_Enum_Scroll("Packing type", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
@@ -28,30 +28,28 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 												 new scrollItem("Grid",       s_node_alignment, 2), ])
 		.rejectArray();
 		
-	inputs[| 4] = nodeValue("Grid column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+	inputs[| 4] = nodeValue_Int("Grid column", self, 4)
 		.rejectArray();
 	
 	inputs[| 5] = nodeValue_Enum_Button("Alignment", self,  0, [ "First", "Middle", "Last" ])
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 6] = nodeValue_Int("Spacing", self, 0);
 	
-	inputs[| 7] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.padding)
+	inputs[| 7] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
 	
-	inputs[| 8] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ], "Starting/ending frames, set end to 0 to default to last frame.")
-		.setDisplay(VALUE_DISPLAY.slider_range)
+	inputs[| 8] = nodeValue_Slider_Range("Range", self, [ 0, 0 ])
+		.setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
 		
-	inputs[| 9] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 9] = nodeValue_Vector("Spacing", self, [ 0, 0 ]);
 	
-	inputs[| 10] = nodeValue("Overlappable", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 10] = nodeValue_Bool("Overlappable", self, false);
 	
-	inputs[| 11] = nodeValue("Custom Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 11] = nodeValue_Bool("Custom Range", self, false);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue("Atlas Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
+	outputs[| 1] = nodeValue_Output("Atlas Data", self, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
 		["Surfaces",  false], 0, 1, 2,

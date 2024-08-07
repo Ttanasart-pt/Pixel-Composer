@@ -3,25 +3,25 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 1] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
-	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 2] = nodeValue_Float("Strength", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
 	
 	inputs[| 3] = nodeValue_Surface("Strength map", self);
 	
-	inputs[| 4] = nodeValue("Color over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
+	inputs[| 4] = nodeValue_Gradient("Color over lifetime", self, new gradientObject(cola(c_white)))
 		.setMappable(9);
 	
-	inputs[| 5] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 5] = nodeValue_Float("Distance", self, 1);
 	
 	inputs[| 6] = nodeValue("Alpha over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 7] = nodeValue("Random blending", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 7] = nodeValue_Float("Random blending", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 8] = nodeValue_Bool("Active", self, true);
 		active_index = 8;
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Color",		true],	4, 9, 6, 7
 	]
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

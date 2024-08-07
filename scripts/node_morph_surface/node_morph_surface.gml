@@ -5,13 +5,13 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	inputs[| 1] = nodeValue_Surface("Surface to", self);
 	
-	inputs[| 2] = nodeValue("Morph amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue_Float("Morph amount", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 3] = nodeValue_Float("Threshold", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
 		["Surfaces", true],	0, 1,

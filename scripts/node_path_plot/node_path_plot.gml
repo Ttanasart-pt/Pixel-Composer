@@ -3,8 +3,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	length = 0;
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue("Output scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Vector("Output scale", self, [ 8, 8 ]);
 	
 	inputs[| 1] = nodeValue_Enum_Scroll("Coordinate", self,  0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
 												 new scrollItem("Polar",     s_node_axis_type, 1),  ]);
@@ -13,22 +12,18 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	eq_type_pol = [ "r function", "O function", "parametric" ];
 	inputs[| 2] = nodeValue_Enum_Scroll("Equation type", self,  0, eq_type_car);
 	
-	inputs[| 3] = nodeValue("0 function", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
-	inputs[| 4] = nodeValue("1 function", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 3] = nodeValue_Text("0 function", self, "");
+	inputs[| 4] = nodeValue_Text("1 function", self, "");
 	
-	inputs[| 5] = nodeValue("Origin", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 5] = nodeValue_Vector("Origin", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] );
 		
-	inputs[| 6] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, { range: [ -1, 1, 0.01 ] });
+	inputs[| 6] = nodeValue_Slider_Range("Range", self, [ 0, 1 ], { range: [ -1, 1, 0.01 ] });
 		
-	inputs[| 7] = nodeValue("Input scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 7] = nodeValue_Vector("Input scale", self, [ 1, 1 ]);
 		
-	inputs[| 8] = nodeValue("Input shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 8] = nodeValue_Vector("Input shift", self, [ 0, 0 ]);
 		
-	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	input_display_list = [
 		[ "Variable",  false ], 5, 7, 8, 0, 

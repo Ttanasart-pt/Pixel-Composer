@@ -5,49 +5,47 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[|  0] = nodeValue_Dimension(self);
 	
-	inputs[|  1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
-	inputs[|  2] = nodeValue("Brush size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
+	inputs[|  1] = nodeValue_Color("Color", self, c_white );
+	inputs[|  2] = nodeValue_Int("Brush size", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	inputs[|  3] = nodeValue("Fill threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[|  3] = nodeValue_Float("Fill threshold", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[|  4] = nodeValue_Enum_Scroll("Fill type", self,  0, ["4 connect", "8 connect", "Entire canvas"]);
 	
-	inputs[|  5] = nodeValue("Draw preview overlay", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[|  5] = nodeValue_Bool("Draw preview overlay", self, true);
 	
 	inputs[|  6] = nodeValue_Surface("Brush", self)
 		.setVisible(true, false);
 	
-	inputs[|  7] = nodeValue("Surface amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[|  7] = nodeValue_Int("Surface amount", self, 1);
 	
 	inputs[|  8] = nodeValue_Surface("Background", self);
 	
-	inputs[|  9] = nodeValue("Background alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
+	inputs[|  9] = nodeValue_Float("Background alpha", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 10] = nodeValue("Render background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 10] = nodeValue_Bool("Render background", self, true);
 	
-	inputs[| 11] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| 11] = nodeValue_Float("Alpha", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue("Frames animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| 12] = nodeValue_Bool("Frames animation", self, true );
 	
-	inputs[| 13] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
+	inputs[| 13] = nodeValue_Float("Animation speed", self, 1 );
 	
-	inputs[| 14] = nodeValue("Use background dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| 14] = nodeValue_Bool("Use background dimension", self, true );
 	
-	inputs[| 15] = nodeValue("Brush distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 15] = nodeValue_Range("Brush distance", self, [ 1, 1 ] , { linked : true });
 	
-	inputs[| 16] = nodeValue("Rotate brush by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 16] = nodeValue_Bool("Rotate brush by direction", self, false );
 	
-	inputs[| 17] = nodeValue("Random direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.rotation_random);
+	inputs[| 17] = nodeValue_Rotation_Random("Random direction", self, [ 0, 0, 0, 0, 0 ] );
 	
 	inputs[| 18] = nodeValue_Enum_Scroll("Animation Type", self,  0, [ "Loop", "Hold", "Clear" ]);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	frame_renderer_x     = 0;
 	frame_renderer_x_to  = 0;

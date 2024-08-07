@@ -3,9 +3,9 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	inputs[| 0] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 1] = nodeValue("Smooth angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 15);
+	inputs[| 1] = nodeValue_Float("Smooth angle", self, 15);
 		
-	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	temp_surface = [ surface_create(1, 1) ];
 	

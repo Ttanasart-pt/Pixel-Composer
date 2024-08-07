@@ -45,17 +45,16 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 1] = nodeValue_Enum_Scroll("Shape", self, 0, [ "Point", "Band" ]);
 	
-	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
-	inputs[| 3] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
+	inputs[| 3] = nodeValue_Float("Range", self, 4);
 	
 	inputs[| 4] = nodeValue_Rotation("Direction", self, 0);
 	
-	inputs[| 5] = nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 5] = nodeValue_Float("Falloff", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.output, VALUE_TYPE.strands, noone);
+	outputs[| 0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);
 	
 	input_fix_len = ds_list_size(inputs);
 	

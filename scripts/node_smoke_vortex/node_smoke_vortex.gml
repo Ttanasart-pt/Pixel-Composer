@@ -7,15 +7,14 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 0])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Vector("Position", self, [0, 0]);
 	
-	inputs[| 2] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8);
+	inputs[| 2] = nodeValue_Float("Radius", self, 8);
 	
-	inputs[| 3] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.10)
+	inputs[| 3] = nodeValue_Float("Strength", self, 0.10)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
-	inputs[| 4] = nodeValue("Attraction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 4] = nodeValue_Float("Attraction", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
 	inputs[| 5] = nodeValue_Enum_Button("Mode", self,  0, [ "Override", "Add" ]);
@@ -25,8 +24,8 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		["Vortex",	false], 5, 1, 2, 3, 4
 	];
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdomain, noone);
-	outputs[| 1] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
+	outputs[| 1] = nodeValue_Output("Domain", self, VALUE_TYPE.surface, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pos = getInputData(1);

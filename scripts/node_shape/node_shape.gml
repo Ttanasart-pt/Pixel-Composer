@@ -35,7 +35,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 1] = nodeValue_Bool("Background", self, false);
 	
 	shape_types     = [ 
 		"Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
@@ -54,78 +54,70 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Shape", self,  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) });
 	
-	inputs[| 3] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA_REF)
-		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
-		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize, useShape : false });
+	inputs[| 3] = nodeValue_Area("Position", self, DEF_AREA_REF, { onSurfaceSize, useShape : false })
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
-	inputs[| 4] = nodeValue("Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
+	inputs[| 4] = nodeValue_Int("Sides", self, 3)
 		.setVisible(false);
 	
-	inputs[| 5] = nodeValue("Inner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 5] = nodeValue_Float("Inner radius", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false);
 	
-	inputs[| 6] = nodeValue("Anti-aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 6] = nodeValue_Bool("Anti-aliasing", self, false);
 	
 	inputs[| 7] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 8] = nodeValue("Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 180 ])
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 8] = nodeValue_Rotation_Range("Angle range", self, [ 0, 180 ]);
 	
-	inputs[| 9] = nodeValue("Corner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 9] = nodeValue_Float("Corner radius", self, 0)
 		.setValidator(VV_clamp(0, .5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
 	inputs[| 9].overlay_draw_text = false;
 	
-	inputs[| 10] = nodeValue("Shape color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 10] = nodeValue_Color("Shape color", self, c_white);
 	
-	inputs[| 11] = nodeValue("Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 11] = nodeValue_Color("Background color", self, c_black);
 	
-	inputs[| 12] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 12] = nodeValue_Bool("Height", self, false);
 	
-	inputs[| 13] = nodeValue("Start radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 13] = nodeValue_Float("Start radius", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false);
 	
-	inputs[| 14] = nodeValue("Shape path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+	inputs[| 14] = nodeValue_PathNode("Shape path", self, noone)
 		.setVisible(true, true);
 	
 	inputs[| 15] = nodeValue_Enum_Scroll("Positioning Mode", self,  0, [ "Area", "Center + Scale", "Full Image" ])
 		
-	inputs[| 16] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 16] = nodeValue_Vector("Center", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
 		.setUnitRef(onSurfaceSize);
 		
-	inputs[| 17] = nodeValue("Half Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 17] = nodeValue_Vector("Half Size", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
 		.setUnitRef(onSurfaceSize);
 		
-	inputs[| 18] = nodeValue("Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 18] = nodeValue_Bool("Tile", self, false);
 	
 	inputs[| 19] = nodeValue_Rotation("Shape rotation", self, 0);
 		
-	inputs[| 20] = nodeValue("Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 20] = nodeValue_Slider_Range("Level", self, [ 0, 1 ]);
 		
-	inputs[| 21] = nodeValue("Angles", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 1.0 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 21] = nodeValue_Slider_Range("Angles", self, [ 0.5, 1.0 ]);
 		
-	inputs[| 22] = nodeValue("Skew", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| 22] = nodeValue_Float("Skew", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 23] = nodeValue("Arrow Sizes", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.2, 0.3 ] )
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 23] = nodeValue_Slider_Range("Arrow Sizes", self, [ 0.2, 0.3 ] );
 		
-	inputs[| 24] = nodeValue("Arrow Head", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3 );
+	inputs[| 24] = nodeValue_Float("Arrow Head", self, 3 );
 		
-	inputs[| 25] = nodeValue("Teeth Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 6 );
+	inputs[| 25] = nodeValue_Int("Teeth Amount", self, 6 );
 		
-	inputs[| 26] = nodeValue("Teeth Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.2, 0.2 ] )
-		.setDisplay(VALUE_DISPLAY.vector, { slideSpeed : 0.01 });
+	inputs[| 26] = nodeValue_Vector("Teeth Size", self, [ 0.2, 0.2 ] , { slideSpeed : 0.01 });
 		
 	inputs[| 27] = nodeValue_Rotation("Teeth Rotation", self, 0);
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",     false], 0, 6, 

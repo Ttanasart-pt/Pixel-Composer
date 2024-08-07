@@ -6,34 +6,33 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 1] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
 	inputs[| 3] = nodeValue_Enum_Button("Pin side", self,  0, [ "Left", "Right", "Up", "Down" ]);
 	
-	inputs[| 4] = nodeValue("Subdivision", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
+	inputs[| 4] = nodeValue_Int("Subdivision", self, 8);
 	
-	inputs[| 5] = nodeValue("Wind speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2);
+	inputs[| 5] = nodeValue_Float("Wind speed", self, 2);
 	
-	inputs[| 6] = nodeValue("Wave width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 6] = nodeValue_Float("Wave width", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
 	
-	inputs[| 7] = nodeValue("Wave size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 7] = nodeValue_Float("Wave size", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 8] = nodeValue_Float("Phase", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue("Clip", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 9] = nodeValue_Float("Clip", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 10] = nodeValue("Shadow", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 10] = nodeValue_Float("Shadow", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue("Shadow threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 11] = nodeValue_Float("Shadow threshold", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.1, 0.1, 0.001] });
 	
-	inputs[| 12] = nodeValue("Invert shadow", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0);
+	inputs[| 12] = nodeValue_Bool("Invert shadow", self, 0);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		["Flag",	    false], 4, 1, 2, 3, 
@@ -41,7 +40,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Rendering",	false], 10, 11, 12, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attributes.iteration = 4;
 	array_push(attributeEditors, "Verlet solver");

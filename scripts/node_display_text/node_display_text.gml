@@ -17,26 +17,25 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	ta_editor   = new textArea(TEXTBOX_INPUT.text, function(val) { inputs[| 1].setValue(val); })
 	
-	inputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+	inputs[| 0] = nodeValue_Color("Color", self, c_white )
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Text");
+	inputs[| 1] = nodeValue_Text("Text", self, "Text");
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Style", self,  2, [ "Header", "Sub header", "Normal" ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75)
+	inputs[| 3] = nodeValue_Float("Alpha", self, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Line width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -1)
+	inputs[| 4] = nodeValue_Float("Line width", self, -1)
 		.rejectArray();
 	
-	inputs[| 5]  = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ x, y ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 5]  = nodeValue_Vector("Position", self, [ x, y ])
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue("Line height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 6] = nodeValue_Float("Line height", self, 0)
 		.rejectArray();
 		
 	input_display_list = [1, 

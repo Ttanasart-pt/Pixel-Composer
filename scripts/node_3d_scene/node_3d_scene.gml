@@ -1,13 +1,13 @@
 function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name = "3D Scene";
 	
-	outputs[| 0] = nodeValue("Scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Scene, noone);
+	outputs[| 0] = nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone);
 	
 	object_lists = [];
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Mesh, noone )
+		inputs[| index] = nodeValue_D3Mesh("Object", self, noone)
 			.setVisible(true, true);
 		
 		return inputs[| index];

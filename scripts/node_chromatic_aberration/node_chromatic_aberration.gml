@@ -3,15 +3,14 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Center", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 2] = nodeValue_Float("Strength", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-16, 16, 0.01] })
 		.setMappable(4);
 	
-	inputs[| 3] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 3] = nodeValue_Bool("Active", self, true);
 		active_index = 3;
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +19,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3, 
 		["Surface",  false], 0, 

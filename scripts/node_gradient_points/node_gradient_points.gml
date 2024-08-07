@@ -3,46 +3,41 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Center 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Center 1", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
-	inputs[| 2] = nodeValue("Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 2] = nodeValue_Color("Color 1", self, c_white );
 	
-	inputs[| 3] = nodeValue("Center 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 3] = nodeValue_Vector("Center 2", self, [ DEF_SURF_W, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
-	inputs[| 4] = nodeValue("Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 4] = nodeValue_Color("Color 2", self, c_white );
 	
-	inputs[| 5] = nodeValue("Center 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, DEF_SURF_H ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 5] = nodeValue_Vector("Center 3", self, [ 0, DEF_SURF_H ] )
 		.setUnitRef(function(index) { return getDimension(index); });
-	inputs[| 6] = nodeValue("Color 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 6] = nodeValue_Color("Color 3", self, c_white );
 	
-	inputs[| 7] = nodeValue("Center 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector, { useGlobal : false })
+	inputs[| 7] = nodeValue_Vector("Center 4", self, DEF_SURF , { useGlobal : false })
 		.setUnitRef(function(index) { return getDimension(index); });
-	inputs[| 8] = nodeValue("Color 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 8] = nodeValue_Color("Color 4", self, c_white );
 	
-	inputs[| 9] = nodeValue("Use palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 9] = nodeValue_Bool("Use palette", self, false );
 	
-	inputs[| 10] = nodeValue("Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))
-		.setDisplay(VALUE_DISPLAY.palette);
+	inputs[| 10] = nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE));
 	
-	inputs[| 11] = nodeValue("Falloff 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
+	inputs[| 11] = nodeValue_Float("Falloff 1", self, 6 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
 	
-	inputs[| 12] = nodeValue("Falloff 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
+	inputs[| 12] = nodeValue_Float("Falloff 2", self, 6 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
 	
-	inputs[| 13] = nodeValue("Falloff 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
+	inputs[| 13] = nodeValue_Float("Falloff 3", self, 6 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
 	
-	inputs[| 14] = nodeValue("Falloff 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
+	inputs[| 14] = nodeValue_Float("Falloff 4", self, 6 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
 		
-	inputs[| 15] = nodeValue("Normalize weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+	inputs[| 15] = nodeValue_Bool("Normalize weight", self, false )
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",		 true],	0,

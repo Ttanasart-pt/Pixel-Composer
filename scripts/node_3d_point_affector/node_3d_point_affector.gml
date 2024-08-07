@@ -5,24 +5,21 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 	gizmo_plane  = [ new __3dGizmoPlaneFalloff(,, 0.75) ];
 	gizmo_object = noone;
 	
-	inputs[| in_d3d + 0] = nodeValue("Points", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setVisible(true, true)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| in_d3d + 0] = nodeValue_Vector("Points", self, [ 0, 0, 0 ])
+		.setVisible(true, true);
 	
-	inputs[| in_d3d + 1] = nodeValue("Initial value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| in_d3d + 1] = nodeValue_Vector("Initial value", self, [ 0, 0, 0 ]);
 	
-	inputs[| in_d3d + 2] = nodeValue("Final value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| in_d3d + 2] = nodeValue_Vector("Final value", self, [ 0, 0, 0 ]);
 	
-	inputs[| in_d3d + 3] = nodeValue("Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5);
+	inputs[| in_d3d + 3] = nodeValue_Float("Falloff distance", self, 0.5);
 	
 	inputs[| in_d3d + 4] = nodeValue("Falloff curve", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
 	
 	inputs[| in_d3d + 5] = nodeValue_Enum_Scroll("Shape", self, 0, [ new scrollItem("Sphere", s_node_3d_affector_shape, 0), 
 																	 new scrollItem("Plane",  s_node_3d_affector_shape, 1), ]);
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0 ])
+	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 

@@ -1,7 +1,6 @@
 function nodeValue_Palette(_name, _node, _value, _tooltip = "") { return new NodeValue_Palette(_name, _node, _value, _tooltip); }
 
-function NodeValue_Palette(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.color, _value, _tooltip) constructor {
-	setDisplay(VALUE_DISPLAY.palette);
+function NodeValue_Palette(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.color, _value, _tooltip) constructor {;
 	
 	/////============== GET =============
 	

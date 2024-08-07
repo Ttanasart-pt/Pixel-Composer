@@ -3,34 +3,32 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 2 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 2] = nodeValue_Vector("Scale", self, [ 2, 2 ])
 		.setMappable(11);
 	
 	inputs[| 3] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(12);
 	
-	inputs[| 4] = nodeValue("Gap", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 4] = nodeValue_Float("Gap", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(13);
 	
-	inputs[| 5] = nodeValue("Tile color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
+	inputs[| 5] = nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white)))
 		.setMappable(17);
 	
-	inputs[| 6] = nodeValue("Gap color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 6] = nodeValue_Color("Gap color", self, c_black);
 	
 	inputs[| 7] = nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]);
 		
-	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+	inputs[| 8] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
 	inputs[| 9] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 10] = nodeValue("Anti aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 10] = nodeValue_Bool("Anti aliasing", self, false);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -42,11 +40,11 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 14] = nodeValue("Truchet", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 14] = nodeValue_Bool("Truchet", self, false);
 	
-	inputs[| 15] = nodeValue("Truchet seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random());
+	inputs[| 15] = nodeValue_Int("Truchet seed", self, seed_random());
 	
-	inputs[| 16] = nodeValue("Truchet threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 16] = nodeValue_Float("Truchet threshold", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,13 +55,11 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 19] = nodeValue("Texture angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 19] = nodeValue_Rotation_Range("Texture angle", self, [ 0, 0 ]);
 		
-	inputs[| 20] = nodeValue("Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 20] = nodeValue_Slider_Range("Level", self, [ 0, 1 ]);
 	
-	inputs[| 21] = nodeValue("Use Texture Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 21] = nodeValue_Bool("Use Texture Dimension", self, true);
 	
 	input_display_list = [
 		["Output",  false], 0,
@@ -72,7 +68,7 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Truchet",  true, 14], 15, 16, 19, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

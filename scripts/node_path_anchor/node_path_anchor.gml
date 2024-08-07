@@ -3,19 +3,16 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 		
-	inputs[| 0] = nodeValue("Postion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 0] = nodeValue_Vector("Postion", self, [ 0, 0 ] )
 		.setVisible(true, true);
 		
-	inputs[| 1] = nodeValue("Control point 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -16, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Vector("Control point 1", self, [ -16, 0 ] );
 		
-	inputs[| 2] = nodeValue("Control point 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Control point 2", self, [ 16, 0 ] );
 		
-	inputs[| 3] = nodeValue("Mirror control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| 3] = nodeValue_Bool("Mirror control point", self, true );
 	
-	outputs[| 0] = nodeValue("Anchor", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0, 0, 0 ])
+	outputs[| 0] = nodeValue_Output("Anchor", self, VALUE_TYPE.float, [ 0, 0, 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	tools = [

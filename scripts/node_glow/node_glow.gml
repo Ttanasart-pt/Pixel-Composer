@@ -3,30 +3,30 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Border", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue_Float("Border", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
 	
-	inputs[| 2] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
+	inputs[| 2] = nodeValue_Float("Size", self, 3)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	inputs[| 3] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue_Float("Strength", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ]});
 	
-	inputs[| 4] = nodeValue("Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 4] = nodeValue_Color("Color",   self, c_white);
 	
 	inputs[| 5] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 6] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 6] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 7] = nodeValue_Bool("Active", self, true);
 		active_index = 7;
 	
 	__init_mask_modifier(5); // inputs 8, 9, 
 	
 	inputs[| 10] = nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Alpha" ]);
 		
-	inputs[| 11] = nodeValue("Draw original", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 11] = nodeValue_Bool("Draw original", self, true);
 	
 	inputs[| 12] = nodeValue_Enum_Button("Side", self,  0, [ "Outer", "Inner" ]);
 		
@@ -36,7 +36,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Render",	false], 4, 11, 
 	]
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

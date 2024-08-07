@@ -5,18 +5,15 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
 	inputs[| 2] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 3] = nodeValue_Vector("Scale", self, [ 1, 1 ]);
 	
-	inputs[| 4] = nodeValue("Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("Anchor", self, [ 0, 0 ]);
 	
-	outputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.output, VALUE_TYPE.mesh, noone);
+	outputs[| 0] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var imesh = getInputData(0);

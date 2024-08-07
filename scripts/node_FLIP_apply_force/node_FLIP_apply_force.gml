@@ -22,20 +22,18 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone )
+	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(); });
 	
-	inputs[| 2] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )	
+	inputs[| 2] = nodeValue_Float("Radius", self, 4 )	
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	inputs[| 3] = nodeValue_Enum_Scroll("Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]);
 		
-	inputs[| 4] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("Size", self, [ 4, 4 ] );
 		
 	inputs[| 5] = nodeValue_Surface("Texture", self)
 	
@@ -44,7 +42,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Obstracle",	false], 1, 5, 
 	]
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone );
+	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
 	
 	obstracle = new FLIP_Obstracle();
 	index     = 0;

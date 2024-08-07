@@ -15,12 +15,12 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	inputs[| input_len + 0] = nodeValue("Spawn trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, false)
 		.setVisible(true, true);
 	
-	inputs[| input_len + 1] = nodeValue("Step interval", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "How often the 'on step' event is triggered.\nWith 1 being trigger every frame, 2 means triggered once every 2 frames.");
+	inputs[| input_len + 1] = nodeValue_Int("Step interval", self, 1, "How often the 'on step' event is triggered.\nWith 1 being trigger every frame, 2 means triggered once every 2 frames.");
 	
-	outputs[| 0] = nodeValue("Particles",	self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, [] );
-	outputs[| 1] = nodeValue("On create",	self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
-	outputs[| 2] = nodeValue("On step",		self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
-	outputs[| 3] = nodeValue("On destroy",	self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
+	outputs[| 0] = nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] );
+	outputs[| 1] = nodeValue_Output("On create",	self, VALUE_TYPE.node, noone );
+	outputs[| 2] = nodeValue_Output("On step",		self, VALUE_TYPE.node, noone );
+	outputs[| 3] = nodeValue_Output("On destroy",	self, VALUE_TYPE.node, noone );
 	
 	array_insert(input_display_list, 0, ["Trigger", true], input_len + 0, input_len + 1);
 	

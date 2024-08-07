@@ -6,7 +6,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	is_root  = false;
 	topoList = [];
 	
-	inputs[| 0] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
+	inputs[| 0] = nodeValue_Bool("Loop", self, true )
 		.rejectArray();
 	
 	is_simulation      = true;

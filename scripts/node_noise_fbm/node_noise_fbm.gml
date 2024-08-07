@@ -3,27 +3,22 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+	inputs[| 1] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
-	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 3] = nodeValue_Vector("Scale", self, [ 4, 4 ]);
 	
-	inputs[| 4] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 4] = nodeValue_Int("Iteration", self, 4);
 	
 	inputs[| 5] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
 	
-	inputs[| 6] = nodeValue("Color R range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 6] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
 	
-	inputs[| 7] = nodeValue("Color G range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 7] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
 	
-	inputs[| 8] = nodeValue("Color B range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 8] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
 	
 	input_display_list = [
 		["Output",	false], 0, 
@@ -31,7 +26,7 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Color",	false], 5, 6, 7, 8, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

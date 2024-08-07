@@ -9,34 +9,33 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Particle Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 1] = nodeValue_Int("Particle Size", self, 1);
 	
-	inputs[| 2] = nodeValue("Particle Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 10);
+	inputs[| 2] = nodeValue_Int("Particle Density", self, 10);
 	
-	inputs[| 3] = nodeValue("FLIP Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.8)
+	inputs[| 3] = nodeValue_Float("FLIP Ratio", self, 0.8)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 4] = nodeValue("Resolve accelerator", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.5);
+	inputs[| 4] = nodeValue_Float("Resolve accelerator", self, 1.5);
 	
-	inputs[| 5] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
+	inputs[| 5] = nodeValue_Int("Iteration", self, 8);
 	
-	inputs[| 6] = nodeValue("Damping", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.8)
+	inputs[| 6] = nodeValue_Float("Damping", self, 0.8)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 5);
+	inputs[| 7] = nodeValue_Float("Gravity", self, 5);
 	
-	inputs[| 8] = nodeValue("Time Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05);
+	inputs[| 8] = nodeValue_Float("Time Step", self, 0.05);
 	
-	inputs[| 9] = nodeValue("Wall", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
-		.setDisplay(VALUE_DISPLAY.toggle, { data:  [ "T", "B", "L", "R" ] });
+	inputs[| 9] = nodeValue_Toggle("Wall", self, 0b1111, { data:  [ "T", "B", "L", "R" ] });
 	
-	inputs[| 10] = nodeValue("Viscosity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[| 10] = nodeValue_Float("Viscosity", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	inputs[| 11] = nodeValue("Friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[| 11] = nodeValue_Float("Friction", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 12] = nodeValue("Wall Elasticity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[| 12] = nodeValue_Float("Wall Elasticity", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 	
 	inputs[| 13] = nodeValue_Rotation("Gravity Direction", self, 0);
@@ -47,7 +46,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Physics", false], 7, 13, 10, 11, 
 	]
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
+	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone);
 	
 	#region attributes
 		array_push(attributeEditors, "FLIP Solver");

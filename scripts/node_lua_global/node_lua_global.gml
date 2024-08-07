@@ -2,7 +2,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Lua Global";
 	preview_channel = 1;
 	
-	inputs[| 0]  = nodeValue("Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", o_dialog_lua_reference)
+	inputs[| 0]  = nodeValue_Text("Lua code", self, "", o_dialog_lua_reference)
 		.setDisplay(VALUE_DISPLAY.codeLUA);
 		
 	inputs[| 1]  = nodeValue_Enum_Scroll("Run order", self,  0, [ "On start", "Every frame" ]);
@@ -10,7 +10,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[| 2]  = nodeValue("Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
 		.setVisible(false, true);
 	
-	outputs[| 0] = nodeValue("Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
+	outputs[| 0] = nodeValue_Output("Execution thread", self, VALUE_TYPE.node, noone );
 	
 	input_display_list = [ 
 		["Main", false], 2, 1, 0,

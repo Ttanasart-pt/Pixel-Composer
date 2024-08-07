@@ -2,38 +2,36 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Shadow";
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
-	inputs[| 1] = nodeValue("Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 1] = nodeValue_Color("Color",   self, c_black);
 	
-	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .5)
+	inputs[| 2] = nodeValue_Float("Strength", self, .5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
 	
-	inputs[| 3] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 3] = nodeValue_Vector("Shift", self, [ 4, 4 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 4] = nodeValue("Grow", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
+	inputs[| 4] = nodeValue_Float("Grow", self, 3)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
-	inputs[| 5] = nodeValue("Blur", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
+	inputs[| 5] = nodeValue_Float("Blur", self, 3)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	inputs[| 6] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 7] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 7] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 8] = nodeValue_Bool("Active", self, true);
 		active_index = 8;
 	
 	__init_mask_modifier(6); // inputs 9, 10
 	
 	inputs[| 11] = nodeValue_Enum_Scroll("Positioning", self,  0, [ "Shift", "Light" ]);
 	
-	inputs[| 12] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 12] = nodeValue_Vector("Light Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8, 
 		["Surfaces", true], 0, 6, 7, 9, 10, 

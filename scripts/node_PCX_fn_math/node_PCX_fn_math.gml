@@ -13,7 +13,7 @@ function Node_PCX_fn_Math(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) con
 	
 	inputs[| 3] = nodeValue("z", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
 	
-	outputs[| 0] = nodeValue("PCX", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone);
+	outputs[| 0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone);
 	
 	static update = function() {
 		static syms = [ "+", "-", "*", "/", "$", "%", "abs", -1, "round", "floor", "ceil", 

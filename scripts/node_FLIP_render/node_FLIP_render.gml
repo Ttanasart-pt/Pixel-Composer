@@ -5,37 +5,34 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
+	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Merge threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75)
+	inputs[| 1] = nodeValue_Float("Merge threshold", self, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 2] = nodeValue("Lifespan", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 2] = nodeValue_Range("Lifespan", self, [ 0, 0 ], { linked : true });
 	
-	inputs[| 3] = nodeValue("Particle expansion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 20);
+	inputs[| 3] = nodeValue_Float("Particle expansion", self, 20);
 	
-	inputs[| 4] = nodeValue("Draw obstracles", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 4] = nodeValue_Bool("Draw obstracles", self, true);
 	
 	inputs[| 5] = nodeValue_Surface("Fluid particle", self);
 	
 	inputs[| 6] = nodeValue_Enum_Scroll("Render type", self,  0, [ new scrollItem("Particle", s_node_flip_render, 0), 
 												 new scrollItem("Line",     s_node_flip_render, 1), ] );
 	
-	inputs[| 7] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 7] = nodeValue_Bool("Threshold", self, true);
 	
-	inputs[| 8] = nodeValue("Additive", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 8] = nodeValue_Bool("Additive", self, true);
 	
-	inputs[| 9] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 9] = nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]);
 	
-	inputs[| 10] = nodeValue("Segments", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 10] = nodeValue_Int("Segments", self, 1);
 	
-	inputs[| 11] = nodeValue("Color Over Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)));
+	inputs[| 11] = nodeValue_Gradient("Color Over Velocity", self, new gradientObject(cola(c_white)));
 	
-	inputs[| 12] = nodeValue("Velocity Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 10 ])
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 12] = nodeValue_Range("Velocity Map", self, [ 0, 10 ]);
 	
 	input_display_list = [ 0, 5, 
 		["Rendering", false], 6, 10, 3, 4, 9, 
@@ -43,7 +40,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Post Processing", false], 8, 7, 1, 
 	];
 	
-	outputs[| 0] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
 	
 	seed = irandom_range(100000, 999999);
 	temp_surface = [ noone ];

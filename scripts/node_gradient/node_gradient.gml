@@ -3,7 +3,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ cola(c_black), cola(c_white) ]) )
+	inputs[| 1] = nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ]))
 		.setMappable(15);
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Linear",   s_node_gradient_type, 0),
@@ -13,22 +13,21 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 3] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(10);
 
-	inputs[| 4] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .5)
+	inputs[| 4] = nodeValue_Float("Radius", self, .5)
 		.setMappable(11);
 		
-	inputs[| 5] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 5] = nodeValue_Float("Shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-2, 2, 0.01] })
 		.setMappable(12);
 	
-	inputs[| 6] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 6] = nodeValue_Vector("Center", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[| 7] = nodeValue_Enum_Button("Loop", self,  0, [ "None", "Loop", "Pingpong" ]);
 	
 	inputs[| 8] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 9] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 9] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] })
 		.setMappable(13);
 	
@@ -44,7 +43,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 14] = nodeValue("Uniform ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 14] = nodeValue_Bool("Uniform ratio", self, true);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -54,7 +53,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",		true],	0, 8, 

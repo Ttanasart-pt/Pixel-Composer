@@ -3,14 +3,14 @@ function Node_Struct_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Struct", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {})
+	inputs[| 0] = nodeValue_Struct("Struct", self, {})
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Key", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 1] = nodeValue_Text("Key", self, "");
 	
 	inputs[| 2] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
 	
-	outputs[| 0] = nodeValue("Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
+	outputs[| 0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
 	
 	static update = function() { 
 		var str = getInputData(0);

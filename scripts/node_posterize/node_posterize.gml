@@ -3,22 +3,21 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))
-		.setDisplay(VALUE_DISPLAY.palette);
+	inputs[| 1] = nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE));
 	
-	inputs[| 2] = nodeValue("Use palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 2] = nodeValue_Bool("Use palette", self, true);
 	
-	inputs[| 3] = nodeValue("Steps", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+	inputs[| 3] = nodeValue_Int("Steps", self, 4)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
 	
-	inputs[| 4] = nodeValue("Gamma", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 4] = nodeValue_Float("Gamma", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] })
 		.setMappable(7);
 	
-	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 5] = nodeValue_Bool("Active", self, true);
 		active_index = 5;
 		
-	inputs[| 6] = nodeValue("Posterize alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 6] = nodeValue_Bool("Posterize alpha", self, true);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -33,7 +32,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Alpha",   false], 6, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

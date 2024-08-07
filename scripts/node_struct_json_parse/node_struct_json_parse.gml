@@ -2,10 +2,10 @@ function Node_Struct_JSON_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name = "JSON Parse";
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue("JSON string", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, 0)
+	inputs[| 0] = nodeValue_Text("JSON string", self, 0)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue("Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {} );
+	outputs[| 0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {} );
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _str = getInputData(0);

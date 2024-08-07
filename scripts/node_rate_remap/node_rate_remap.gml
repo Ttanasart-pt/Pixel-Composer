@@ -4,13 +4,13 @@ function Node_Rate_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 0] = nodeValue_Surface("Surface", self);
 	
-	inputs[| 1] = nodeValue("Framerate", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 10)
+	inputs[| 1] = nodeValue_Float("Framerate", self, 10)
 		.setValidator(VV_min(1));
 	
-	inputs[| 2] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 2] = nodeValue_Bool("Active", self, true);
 		active_index = 2;
 	
-	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 2,
 		["Remap",  false], 0, 1

@@ -1,7 +1,7 @@
 function Node_PB_Fx_Radial(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Radial";
 	
-	inputs[| 1] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 )
+	inputs[| 1] = nodeValue_Int("Amount", self, 4 )
 		.setVisible(true, true);
 		
 	input_display_list = [ 0, 

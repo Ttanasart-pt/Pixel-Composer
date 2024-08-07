@@ -156,7 +156,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspectInput2.index = -1;
 		
 		updatedInTrigger   = nodeValue("Update",  self, JUNCTION_CONNECT.input,  VALUE_TYPE.trigger, false).setVisible(true, true);
-		updatedOutTrigger  = nodeValue("Updated", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false).setVisible(true, true);
+		updatedOutTrigger  = nodeValue_Output("Updated", self, VALUE_TYPE.trigger, false).setVisible(true, true);
 		
 		updatedInTrigger.index  = -1;
 		updatedOutTrigger.index = -1;

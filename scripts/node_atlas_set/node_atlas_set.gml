@@ -7,21 +7,19 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	inputs[| 1] = nodeValue_Surface("Surface", self);
 	
-	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
 	inputs[| 3] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 4] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("Scale", self, [ 0, 0 ]);
 		
-	inputs[| 5] = nodeValue("Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 5] = nodeValue_Color("Blend", self, c_white);
 		
-	inputs[| 6] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 6] = nodeValue_Float("Alpha", self, 1);
 	
-	inputs[| 7] = nodeValue("Recalculate Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 7] = nodeValue_Bool("Recalculate Position", self, true);
 	
-	outputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Atlas", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		0, 1, 2, 3, 7, 4, 5, 6, 

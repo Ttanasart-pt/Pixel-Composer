@@ -1,11 +1,11 @@
 function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group) constructor {
 	name = "Set Material";
 	
-	inputs[| in_mesh + 0] = nodeValue("Materials", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 0] = nodeValue_D3Material("Materials", self, new __d3dMaterial())
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	inputs[| in_mesh + 1] = nodeValue("Single material", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| in_mesh + 1] = nodeValue_Bool("Single material", self, true)
 	
 	static preGetInputs = function() { #region
 		var _sing = inputs[| in_mesh + 1].getValue();

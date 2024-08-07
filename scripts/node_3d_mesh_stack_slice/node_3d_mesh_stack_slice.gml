@@ -1,20 +1,18 @@
 function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Slice Stack";
 	
-	inputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Mesh, noone)
+	inputs[| 0] = nodeValue_D3Mesh("Mesh", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Output Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 16, 16 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Vector("Output Dimension", self, [ 16, 16 ]);
 	
-	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 2] = nodeValue_Float("Scale", self, 1);
 	
-	inputs[| 3] = nodeValue("Slices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 3] = nodeValue_Int("Slices", self, 4);
 	
-	inputs[| 4] = nodeValue("BBOX Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("BBOX Padding", self, [ 0, 0, 0 ]);
 		
-	outputs[| 0] = nodeValue("Outputs", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
+	outputs[| 0] = nodeValue_Output("Outputs", self, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
 	mesh_data = new Inspector_Label("", f_code);

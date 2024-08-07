@@ -2,7 +2,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Non-Uniform Blur";
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
-	inputs[| 1] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
+	inputs[| 1] = nodeValue_Float("Size", self, 3)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
@@ -10,33 +10,32 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 3] = nodeValue_Surface("Blur mask", self);
 	
-	inputs[| 4] = nodeValue("Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
+	inputs[| 4] = nodeValue_Bool("Override color", self, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
 	
-	inputs[| 5] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 5] = nodeValue_Color("Color", self, c_black);
 	
 	inputs[| 6] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 7] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 7] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 8] = nodeValue_Bool("Active", self, true);
 		active_index = 8;
 	
-	inputs[| 9] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
-		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	inputs[| 9] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
 	__init_mask_modifier(6); // inputs 10, 11, 
 	
-	inputs[| 12] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ cola(c_black), cola(c_white) ]) )
+	inputs[| 12] = nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ]))
 		.setMappable(13);
 	
 	inputs[| 13] = nodeValueMap("Gradient map", self);
 	
 	inputs[| 14] = nodeValueGradientRange("Gradient map range", self, inputs[| 1]);
 	
-	inputs[| 15] = nodeValue("Use Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 15] = nodeValue_Bool("Use Gradient", self, false);
 	
-	inputs[| 16] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 16] = nodeValue_Bool("Gamma Correction", self, false);
 	
 	input_display_list = [ 8, 9, 
 		["Surfaces", true],	0, 6, 7, 10, 11, 
@@ -44,7 +43,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Effects",	false, 15],	12, 13, 14, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	attribute_oversample();

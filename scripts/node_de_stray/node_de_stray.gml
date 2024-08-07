@@ -3,26 +3,26 @@ function Node_De_Stray(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue_Float("Tolerance", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 2] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 2] = nodeValue_Bool("Active", self, true);
 		active_index = 2;
 	
-	inputs[| 3] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
+	inputs[| 3] = nodeValue_Int("Iteration", self, 2)
 	
 	inputs[| 4] = nodeValue_Enum_Button("Strictness", self,  0, [ "Low", "High", "Stray-only" ]);
 	
 	inputs[| 5] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 6] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 6] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	__init_mask_modifier(5); // inputs 7, 8, 
 	
-	inputs[| 9] = nodeValue("Fill Empty", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 9] = nodeValue_Bool("Fill Empty", self, false);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 2, 
 		["Surfaces",  true], 0, 5, 6, 7, 8, 

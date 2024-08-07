@@ -1,21 +1,21 @@
 function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Websocket Sender";
 	
-	inputs[| 0] = nodeValue("Port", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 22800);
+	inputs[| 0] = nodeValue_Int("Port", self, 22800);
 	
 	inputs[| 1] = nodeValue_Enum_Scroll("Data type", self,  0, [ "Struct", "Surface", "File", "Buffer" ]);
 	
-	inputs[| 2] = nodeValue("Struct", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {});
+	inputs[| 2] = nodeValue_Struct("Struct", self, {});
 	
 	inputs[| 3] = nodeValue_Surface("Surface", self);
 	
-	inputs[| 4] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 4] = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load)
 		.nonValidate();
 	
-	inputs[| 5] = nodeValue("Target", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "127.0.0.1");
+	inputs[| 5] = nodeValue_Text("Target", self, "127.0.0.1");
 	
-	inputs[| 6] = nodeValue("Buffer", self, JUNCTION_CONNECT.input, VALUE_TYPE.buffer, noone);
+	inputs[| 6] = nodeValue_Buffer("Buffer", self, noone);
 	
 	input_display_list = [ 5, 0, 1, 2, 3, 4, 6 ];
 	

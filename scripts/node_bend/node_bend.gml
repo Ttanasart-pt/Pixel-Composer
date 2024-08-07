@@ -3,7 +3,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue_Bool("Active", self, true);
 		active_index = 1;
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Type", self, 0, [ new scrollItem("Arc",  s_node_bend_type, 0),
@@ -11,14 +11,14 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 3] = nodeValue_Enum_Button("Axis", self,  0, [ "x", "y" ]);
 	
-	inputs[| 4] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.25)
+	inputs[| 4] = nodeValue_Float("Amount", self, 0.25)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
-	inputs[| 5] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 5] = nodeValue_Float("Scale", self, 1);
 	
-	inputs[| 6] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.);
+	inputs[| 6] = nodeValue_Float("Shift", self, 0.);
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1, 
 		["Surfaces", false], 0, 

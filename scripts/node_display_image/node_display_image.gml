@@ -26,20 +26,18 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name		= "Display Image";
 	auto_height	= false;
 	
-	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0]  = nodeValue_Text("Path", self, "")
 		.setVisible(false)
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" })
 		.rejectArray();
 	
-	inputs[| 1]  = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ x, y ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1]  = nodeValue_Vector("Position", self, [ x, y ])
 		.rejectArray();
 	
-	inputs[| 2]  = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 2]  = nodeValue_Vector("Scale", self, [ 1, 1 ])
 		.rejectArray();
 	
-	inputs[| 3]  = nodeValue("Smooth transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 3]  = nodeValue_Bool("Smooth transform", self, true)
 		.rejectArray();
 	
 	input_display_list = [ 0,

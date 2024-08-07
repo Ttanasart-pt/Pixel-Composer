@@ -1,22 +1,20 @@
 function Node_PB_Fx_Brick(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Brick";
 	
-	inputs[| 1] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 4, 1 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Vector("Scale", self, [ 4, 1 ] );
 	
 	inputs[| 2] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ] );
 	
-	inputs[| 3] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 3] = nodeValue_Int("Shift", self, 0);
 	
-	inputs[| 4] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 4] = nodeValue_Color("Color", self, c_white );
 	
-	inputs[| 5] = nodeValue("Dissolve", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0. )
+	inputs[| 5] = nodeValue_Float("Dissolve", self, 0. )
 		.setDisplay(VALUE_DISPLAY.slider)
 	
-	inputs[| 6] = nodeValue("Detail", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
+	inputs[| 6] = nodeValue_Int("Detail", self, 1 )
 	
-	inputs[| 7] = nodeValue("Dissolve Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 7] = nodeValue_Vector("Dissolve Scale", self, [ 4, 4 ] );
 		
 	input_display_list = [ 0,
 		["Effect",	 false], 1, 2, 3, 4, 

@@ -14,28 +14,27 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name		= "L System";
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8);
+	inputs[| 0] = nodeValue_Float("Length", self, 8);
 	
 	inputs[| 1] = nodeValue_Rotation("Angle", self, 45);
 		
-	inputs[| 2] = nodeValue("Starting position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Starting position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]);
 	
-	inputs[| 3] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 3] = nodeValue_Int("Iteration", self, 4);
 	
-	inputs[| 4] = nodeValue("Starting rule", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", o_dialog_l_system);
+	inputs[| 4] = nodeValue_Text("Starting rule", self, "", o_dialog_l_system);
 	
-	inputs[| 5] = nodeValue("End replacement", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
+	inputs[| 5] = nodeValue_Text("End replacement", self, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
 	
 	inputs[| 6] = nodeValue_Rotation("Starting Angle", self, 90);
 	
-	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 7] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue("Name " + string(index - input_fix_len), self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
-		inputs[| index + 1] = nodeValue("Rule " + string(index - input_fix_len), self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+		inputs[| index + 0] = nodeValue_Text("Name " + string(index - input_fix_len), self, "" );
+		inputs[| index + 1] = nodeValue_Text("Rule " + string(index - input_fix_len), self, "" );
 		
 		return inputs[| index + 0];
 	}
@@ -43,7 +42,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	setDynamicInput(2, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	rule_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		rule_renderer.x = _x;

@@ -8,55 +8,52 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 1] = nodeValue_Bool("Background", self, false);
 	
-	inputs[| 2] = nodeValue("Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 2] = nodeValue_Color("Background color", self, c_black);
 	
-	inputs[| 3] = nodeValue("Shape color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 3] = nodeValue_Color("Shape color", self, c_white);
 	
 	inputs[| 4] = nodeValue_Enum_Scroll("Shape", self,  0, shapesArray);
 	
-	inputs[| 5] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 5] = nodeValue_Vector("Position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[| 6] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 7] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 7] = nodeValue_Vector("Scale", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 8] = nodeValue("Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16)
+	inputs[| 8] = nodeValue_Int("Sides", self, 16)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 64, 0.1] });
 	
-	inputs[| 9] = nodeValue("Inner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 9] = nodeValue_Float("Inner radius", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 10] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 10] = nodeValue_Float("Radius", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue("Teeth", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 6)
+	inputs[| 11] = nodeValue_Int("Teeth", self, 6)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [3, 16, 0.1] });
 	
-	inputs[| 12] = nodeValue("Teeth height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 12] = nodeValue_Float("Teeth height", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 13] = nodeValue("Teeth taper", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 13] = nodeValue_Float("Teeth taper", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 	
-	inputs[| 14] = nodeValue("Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 360 ])
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 14] = nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]);
 	
-	inputs[| 15] = nodeValue("Round cap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 15] = nodeValue_Bool("Round cap", self, false);
 	
 	inputs[| 16] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
 		.setVisible(true, true);
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue("Mesh", self, JUNCTION_CONNECT.output, VALUE_TYPE.mesh, noone);
+	outputs[| 1] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
 		
-	outputs[| 2] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, noone);
+	outputs[| 2] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone);
 	
 	input_display_list = [ 16, 
 		["Output", 		false], 0, 

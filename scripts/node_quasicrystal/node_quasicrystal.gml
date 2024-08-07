@@ -3,20 +3,19 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16)
+	inputs[| 1] = nodeValue_Float("Scale", self, 16)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 64, 0.1] })
 		.setMappable(6);
 	
 	inputs[| 2] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(7);
 	
-	inputs[| 3] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 3] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 4] = nodeValue("Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 4] = nodeValue_Color("Color 1", self, c_white);
 	
-	inputs[| 5] = nodeValue("Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 5] = nodeValue_Color("Color 2", self, c_black);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -26,16 +25,15 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 8] = nodeValue("Phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 8] = nodeValue_Float("Phase", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(8);
 	
 	inputs[| 9] = nodeValueMap("Phasemap", self);
 	
-	inputs[| 10] = nodeValue("Angle Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 180 ])
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 10] = nodeValue_Rotation_Range("Angle Range", self, [ 0, 180 ]);
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
 		["Output",	 true],	0,  

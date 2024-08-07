@@ -6,52 +6,46 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 3] = nodeValue("Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 180, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 3] = nodeValue_Vector("Object rotation", self, [ 0, 180, 0 ]);
 	
-	inputs[| 4] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 0.1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("Object scale", self, [ 1, 1, 0.1 ]);
 	
-	inputs[| 5] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 5] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef( function() { return getInputData(1); }, VALUE_UNIT.reference);
 		
-	inputs[| 6] = nodeValue("Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 6] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 7] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 7] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
 	
-	inputs[| 8] = nodeValue("Manual generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 8] = nodeValue_Trigger("Manual generate", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { generateMesh(); doUpdate(); } });
 		
 	inputs[| 9] = nodeValue_Rotation("Light direction", self, 0);
 		
-	inputs[| 10] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 10] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
-	inputs[| 11] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 11] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
-	inputs[| 13] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
+	inputs[| 12] = nodeValue_Color("Light color", self, c_white);
+	inputs[| 13] = nodeValue_Color("Ambient color", self, c_grey);
 	
 	inputs[| 14] = nodeValue_Surface("Height map", self);
 	
-	inputs[| 15] = nodeValue("Always update", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 15] = nodeValue_Bool("Always update", self, false);
 	
 	inputs[| 16] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
-	inputs[| 17] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+	inputs[| 17] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[| 18] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 18] = nodeValue_Bool("Scale view with dimension", self, true)
 	
-	inputs[| 19] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 19] = nodeValue_Bool("Smooth", self, false)
 	
 	input_display_list = [
 		["Output",			 false], 1, 18, 
@@ -61,13 +55,13 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Light",			 false], 9, 10, 11, 12, 13,
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("3D scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
+	outputs[| 1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
 	
-	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 3] = nodeValue("3D vertex", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3vertex, []);
+	outputs[| 3] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
 	
 	output_display_list = [
 		0, 2, 1, 3

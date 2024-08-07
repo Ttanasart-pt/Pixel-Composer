@@ -1,45 +1,39 @@
 function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Repeat";
 		
-	inputs[| 0] = nodeValue("Objects", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Mesh, noone )
+	inputs[| 0] = nodeValue_D3Mesh("Objects", self, noone)
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue_Enum_Button("Object Mode", self,  0 , [ "Duplicate", "Array" ] )
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
+	inputs[| 2] = nodeValue_Int("Amount", self, 1 );
 	
-	inputs[| 3] = nodeValue("Starting Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 3] = nodeValue_Vector("Starting Position", self, [ 0, 0, 0 ] );
 	
-	inputs[| 4] = nodeValue("Starting Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )
-		.setDisplay(VALUE_DISPLAY.d3quarternion);
+	inputs[| 4] = nodeValue_Quaternion("Starting Rotation", self, [ 0, 0, 0, 1 ] );
 	
-	inputs[| 5] = nodeValue("Starting Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 5] = nodeValue_Vector("Starting Scale", self, [ 1, 1, 1 ] );
 	
-	inputs[| 6] = nodeValue("Shift Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 6] = nodeValue_Vector("Shift Position", self, [ 0, 0, 0 ] );
 	
-	inputs[| 7] = nodeValue("Shift Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )
-		.setDisplay(VALUE_DISPLAY.d3quarternion);
+	inputs[| 7] = nodeValue_Quaternion("Shift Rotation", self, [ 0, 0, 0, 1 ] );
 	
-	inputs[| 8] = nodeValue("Shift Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 8] = nodeValue_Vector("Shift Scale", self, [ 0, 0, 0 ] );
 	
-	inputs[| 9] = nodeValue("Positions", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [] )
+	inputs[| 9] = nodeValue_Float("Positions", self, [] )
 		.setArrayDepth(2);
 	
-	inputs[| 10] = nodeValue("Rotations", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [] )
+	inputs[| 10] = nodeValue_Float("Rotations", self, [] )
 		.setArrayDepth(2);
 	
-	inputs[| 11] = nodeValue("Scales", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [] )
+	inputs[| 11] = nodeValue_Float("Scales", self, [] )
 		.setArrayDepth(2);
 	
-	inputs[| 12] = nodeValue("Use Instance", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
+	inputs[| 12] = nodeValue_Bool("Use Instance", self, true )
 	
-	outputs[| 0] = nodeValue("Scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Scene, noone);
+	outputs[| 0] = nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone);
 	
 	input_display_list = [
 		["Objects",		false], 0, 3, 4, 5, 

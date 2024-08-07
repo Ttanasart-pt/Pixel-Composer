@@ -8,7 +8,7 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inParent = undefined;
 	
-	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone);
+	outputs[| 0] = nodeValue_Output("Value", self, VALUE_TYPE.PCXnode, noone);
 	
 	static createInput = function() { #region
 		if(group == noone || !is_struct(group)) return noone;

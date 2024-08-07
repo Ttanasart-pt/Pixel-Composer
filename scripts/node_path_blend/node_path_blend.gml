@@ -3,19 +3,19 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setDimension(96, 48);;
 	length = 0;
 	
-	inputs[| 0] = nodeValue("Path 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+	inputs[| 0] = nodeValue_PathNode("Path 1", self, noone)
 		.setVisible(true, true)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Path 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+	inputs[| 1] = nodeValue_PathNode("Path 2", self, noone)
 		.setVisible(true, true)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue_Float("Ratio", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	cached_pos = ds_map_create();
 	

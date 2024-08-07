@@ -3,34 +3,33 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	inputs[| 0] = nodeValue_Surface("Density field", self);
 	
-	inputs[| 1] = nodeValue("Dissipation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05)
+	inputs[| 1] = nodeValue_Float("Dissipation", self, 0.05)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.2, 0.2, 0.001] });
 	
-	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 2] = nodeValue_Float("Scale", self, 1);
 	
-	inputs[| 3] = nodeValue("Randomness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 3] = nodeValue_Float("Randomness", self, 1);
 	
-	inputs[| 4] = nodeValue("Flow rate", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 4] = nodeValue_Float("Flow rate", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 1, 0.01] });
 	
-	inputs[| 5] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.7 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 5] = nodeValue_Slider_Range("Threshold", self, [ 0.5, 0.7 ]);
 		
-	inputs[| 6] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 6] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 7] = nodeValue_Surface("External", self);
 	
-	inputs[| 8] = nodeValue("External Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 8] = nodeValue_Float("External Strength", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.25, 0.25, 0.01] });
 	
-	inputs[| 9] = nodeValue("Detail", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 9] = nodeValue_Int("Detail", self, 1)
 	
 	inputs[| 10] = nodeValue_Enum_Scroll("External Type", self,  0, [ "Point", "Vector" ]);
 		
 	inputs[| 11] = nodeValue_Rotation("External Direction", self, 0);
 	
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 6, 
 		["Diffuse",		false], 1, 

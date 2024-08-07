@@ -3,50 +3,44 @@ function __Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	batch_output = false;
 	dimension_index = 1;
 	
-	inputs[| 0] = nodeValue("Subdivisions", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [8, 4], "Amount of polygon in X and Y axis.")
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Vector("Subdivisions", self, [8, 4])
+		.setTooltip("Amount of polygon in X and Y axis.");
 	
 	inputs[| 1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 2] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 3] = nodeValue("Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 3] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 4] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
 	
 	inputs[| 5] = nodeValue_Surface("Textures",	self);
 	
-	inputs[| 6] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 6] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
 	
 	inputs[| 7] = nodeValue_Rotation("Light direction", self, 0);
 		
-	inputs[| 8] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 8] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
-	inputs[| 9] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 9] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 10] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
-	inputs[| 11] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
+	inputs[| 10] = nodeValue_Color("Light color", self, c_white);
+	inputs[| 11] = nodeValue_Color("Ambient color", self, c_grey);
 	
-	inputs[| 12] = nodeValue("Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 12] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
 		
-	inputs[| 13] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 13] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
 	
 	inputs[| 14] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
-	inputs[| 15] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+	inputs[| 15] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[| 16] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 16] = nodeValue_Bool("Scale view with dimension", self, true)
 	
 	input_display_list = [
 		["Output",				false], 1, 16, 
@@ -57,13 +51,13 @@ function __Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Light",				false], 7, 8, 9, 10, 11,
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("3D scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[| 1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
-	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 3] = nodeValue("3D vertex", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3vertex, []);
+	outputs[| 3] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
 	output_display_list = [
 		0, 2, 1, 3
 	]

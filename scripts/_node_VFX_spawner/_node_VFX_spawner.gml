@@ -4,133 +4,116 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 0] = nodeValue_Surface("Particle sprite", self);
 	
-	inputs[| 1] = nodeValue("Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4, "Frames delay between each particle spawn." );
+	inputs[| 1] = nodeValue_Int("Spawn delay", self, 4, "Frames delay between each particle spawn." );
 	
-	inputs[| 2] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 2, 2 ], "Amount of particle spawn in that frame." )
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 2] = nodeValue_Range("Spawn amount", self, [ 2, 2 ] , { linked : true })
+		.setTooltip("Amount of particle spawn in that frame.");
 	
-	inputs[| 3] = nodeValue("Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA )
-		.setDisplay(VALUE_DISPLAY.area);
+	inputs[| 3] = nodeValue_Area("Spawn area", self, DEF_AREA );
 	
 	inputs[| 4] = nodeValue_Enum_Scroll("Spawn distribution", self, 0, [ "Area", "Border", "Map" ] );
 	
-	inputs[| 5] = nodeValue("Lifespan", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 20, 30 ] )
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 5] = nodeValue_Range("Lifespan", self, [ 20, 30 ] );
 	
-	inputs[| 6] = nodeValue("Spawn direction", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 45, 135, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.rotation_random); 
+	inputs[| 6] = nodeValue_Rotation_Random("Spawn direction", self, [ 0, 45, 135, 0, 0 ] ); 
 	
-	inputs[| 7] = nodeValue("Acceleration", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 7] = nodeValue_Range("Acceleration", self, [ 0, 0 ] , { linked : true });
 	
-	inputs[| 8] = nodeValue("Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.rotation_random);
+	inputs[| 8] = nodeValue_Rotation_Random("Orientation", self, [ 0, 0, 0, 0, 0 ] );
 		
-	inputs[| 9] = nodeValue("Rotational speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 9] = nodeValue_Range("Rotational speed", self, [ 0, 0 ] , { linked : true });
 	
-	inputs[| 10] = nodeValue("Spawn scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.vector_range, { linked : true });
+	inputs[| 10] = nodeValue_Vec2_Range("Spawn scale", self, [ 1, 1, 1, 1 ] , { linked : true });
 	
 	inputs[| 11] = nodeValue("Scale over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 12] = nodeValue("Color over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) );
+	inputs[| 12] = nodeValue_Gradient("Color over lifetime", self, new gradientObject(cola(c_white)));
 	
-	inputs[| 13] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 13] = nodeValue_Range("Alpha", self, [ 1, 1 ], { linked : true });
 	
 	inputs[| 14] = nodeValue("Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 15] = nodeValue("Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make the particle rotates to follow its movement.");
+	inputs[| 15] = nodeValue_Bool("Rotate by direction", self, false, "Make the particle rotates to follow its movement.");
 	
 	inputs[| 16] = nodeValue_Enum_Button("Spawn type", self,  0, [ "Stream", "Burst", "Trigger" ]);
 	
-	inputs[| 17] = nodeValue("Spawn size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 17] = nodeValue_Range("Spawn size", self, [ 1, 1 ] , { linked : true });
 	
-	inputs[| 18] = nodeValue("Spawn velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 2 ] )
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 18] = nodeValue_Range("Spawn velocity", self, [ 1, 2 ] );
 	
-	inputs[| 19] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 19] = nodeValue_Range("Gravity", self, [ 0, 0 ] , { linked : true });
 	
-	inputs[| 20] = nodeValue("Direction wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
+	inputs[| 20] = nodeValue_Vector("Direction wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
 	
-	inputs[| 21] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| 21] = nodeValue_Bool("Loop", self, true );
 	
 	inputs[| 22] = nodeValue_Enum_Scroll("Surface array", self, 0, [ "Random", "Order", "Animation", "Scale" ])
 		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.")
 		.setVisible(false);
 	
-	inputs[| 23] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.range, { linked : true })
+	inputs[| 23] = nodeValue_Range("Animation speed", self, [ 1, 1 ] , { linked : true })
 		.setVisible(false);
 	
 	inputs[| 24] = nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]);
 	
-	inputs[| 25] = nodeValue("Boundary data", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
+	inputs[| 25] = nodeValue_Int("Boundary data", self, [])
 		.setArrayDepth(1)
 		.setVisible(false, true);
 	
 	inputs[| 26] = nodeValue_Enum_Button("On animation end", self,  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ])
 		.setVisible(false);
 		
-	inputs[| 27] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 27] = nodeValue_Bool("Spawn", self, true);
 	
-	inputs[| 28] = nodeValue("Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) );
+	inputs[| 28] = nodeValue_Gradient("Random blend", self, new gradientObject(cola(c_white)));
 		
-	inputs[| 29] = nodeValue("Directed from center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make particle move away from the spawn center.");
+	inputs[| 29] = nodeValue_Bool("Directed from center", self, false, "Make particle move away from the spawn center.");
 	
 	inputs[| 30] = nodeValue_Surface("Distribution map", self)
 	
 	inputs[| 31] = nodeValue_Surface("Atlas", self,  [])
 		.setArrayDepth(1);
 	
-	inputs[| 32] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+	inputs[| 32] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 32].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 33] = nodeValue_Rotation("Gravity direction", self, -90);
 	
-	inputs[| 34] = nodeValue("Turning", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 34] = nodeValue_Range("Turning", self, [ 0, 0 ] , { linked : true });
 	
-	inputs[| 35] = nodeValue("Turn both directions", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply randomized 1, -1 multiplier to the turning speed." );
+	inputs[| 35] = nodeValue_Bool("Turn both directions", self, false, "Apply randomized 1, -1 multiplier to the turning speed." );
 	
-	inputs[| 36] = nodeValue("Turn scale with speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, false );
+	inputs[| 36] = nodeValue_Float("Turn scale with speed", self, false );
 	
-	inputs[| 37] = nodeValue("Collide ground", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 37] = nodeValue_Bool("Collide ground", self, false );
 	
-	inputs[| 38] = nodeValue("Ground offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
+	inputs[| 38] = nodeValue_Float("Ground offset", self, 0 );
 	
-	inputs[| 39] = nodeValue("Bounce amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| 39] = nodeValue_Float("Bounce amount", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 40] = nodeValue("Bounce friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1, "Apply horizontal friction once particle stop bouncing." )
+	inputs[| 40] = nodeValue_Float("Bounce friction", self, 0.1, "Apply horizontal friction once particle stop bouncing." )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 41] = nodeValue("Position wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
+	inputs[| 41] = nodeValue_Vector("Position wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
 		
-	inputs[| 42] = nodeValue("Rotation wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
+	inputs[| 42] = nodeValue_Vector("Rotation wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
 		
-	inputs[| 43] = nodeValue("Scale wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
+	inputs[| 43] = nodeValue_Vector("Scale wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
 		
-	inputs[| 44] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger,  false )
+	inputs[| 44] = nodeValue_Trigger("Spawn", self,  false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
-	inputs[| 45] = nodeValue("Follow Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 45] = nodeValue_Bool("Follow Path", self, false );
 	
-	inputs[| 46] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone );
+	inputs[| 46] = nodeValue_PathNode("Path", self, noone );
 	
 	inputs[| 47] = nodeValue("Path Deviation", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 48] = nodeValue("Reset Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 48] = nodeValue_Trigger("Reset Seed", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
 	
-	inputs[| 49] = nodeValue("Stretch Animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 49] = nodeValue_Bool("Stretch Animation", self, false );
 	
 	for (var i = 2, n = ds_list_size(inputs); i < n; i++)
 		inputs[| i].rejectArray();

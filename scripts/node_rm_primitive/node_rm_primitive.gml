@@ -20,151 +20,134 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	inputs[| 1] = nodeValue_Enum_Scroll("Shape", self,  1, { data: shape_types_str, horizontal: true, text_pad: ui(16) });
 	
-	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 3] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 3] = nodeValue_Vector("Rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 4] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 4] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	inputs[| 5] = nodeValue("FOV", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30)
+	inputs[| 5] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	inputs[| 6] = nodeValue("View Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 3, 6 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 6] = nodeValue_Vector("View Range", self, [ 3, 6 ]);
 	
-	inputs[| 7] = nodeValue("Depth", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 7] = nodeValue_Float("Depth", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -.4, -.5, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 8] = nodeValue_Vector("Light Position", self, [ -.4, -.5, 1 ]);
 	
-	inputs[| 9] = nodeValue("Base Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 9] = nodeValue_Color("Base Color", self, c_white);
 	
-	inputs[| 10] = nodeValue("Ambient Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 10] = nodeValue_Float("Ambient Level", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue("Elongate", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 11] = nodeValue_Vector("Elongate", self, [ 0, 0, 0 ]);
 	
-	inputs[| 12] = nodeValue("Rounded", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[| 12] = nodeValue_Float("Rounded", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 13] = nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]);
 	
-	inputs[| 14] = nodeValue("Ortho Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
+	inputs[| 14] = nodeValue_Float("Ortho Scale", self, 1.)
 	
-	inputs[| 15] = nodeValue("Wave Amplitude", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 15] = nodeValue_Vector("Wave Amplitude", self, [ 4, 4, 4 ]);
 	
-	inputs[| 16] = nodeValue("Wave Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 16] = nodeValue_Vector("Wave Intensity", self, [ 0, 0, 0 ]);
 	
-	inputs[| 17] = nodeValue("Wave Phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 17] = nodeValue_Vector("Wave Phase", self, [ 0, 0, 0 ]);
 	
 	inputs[| 18] = nodeValue_Enum_Button("Twist Axis", self,  0, [ "X", "Y", "Z" ]);
 	
-	inputs[| 19] = nodeValue("Twist Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 19] = nodeValue_Float("Twist Amount", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 8, 0.1 ] });
 	
-	inputs[| 20] = nodeValue("Tile Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 20] = nodeValue_Vector("Tile Distance", self, [ 1, 1, 1 ]);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 21] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 21] = nodeValue_Vector("Size", self, [ 1, 1, 1 ]);
 	
-	inputs[| 22] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .7)
+	inputs[| 22] = nodeValue_Float("Radius", self, .7)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 23] = nodeValue("Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .2)
+	inputs[| 23] = nodeValue_Float("Thickness", self, .2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 24] = nodeValue("Crop", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[| 24] = nodeValue_Float("Crop", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
 	inputs[| 25] = nodeValue_Rotation("Angle", self, 30);
 	
-	inputs[| 26] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .5)
+	inputs[| 26] = nodeValue_Float("Height", self, .5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 27] = nodeValue("Radius Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ .7, .1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 27] = nodeValue_Slider_Range("Radius Range", self, [ .7, .1 ]);
 	
-	inputs[| 28] = nodeValue("Uniform Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 28] = nodeValue_Float("Uniform Size", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 29] = nodeValue("Tile Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 29] = nodeValue_Vector("Tile Amount", self, [ 1, 1, 1 ]);
 	
-	inputs[| 30] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 30] = nodeValue_Color("Background", self, c_black);
 	
-	inputs[| 31] = nodeValue("Draw BG", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 31] = nodeValue_Bool("Draw BG", self, false);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 32] = nodeValue("Volumetric", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 32] = nodeValue_Bool("Volumetric", self, false);
 	
-	inputs[| 33] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.3)
+	inputs[| 33] = nodeValue_Float("Density", self, 0.3)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 34] = nodeValue_Surface("Environment", self);
 	
-	inputs[| 35] = nodeValue("Reflective", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[| 35] = nodeValue_Float("Reflective", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 36] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 37] = nodeValue("Triplanar Smoothing", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
+	inputs[| 37] = nodeValue_Float("Triplanar Smoothing", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 10, 0.1 ] });
 	
-	inputs[| 38] = nodeValue("Texture Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.);
+	inputs[| 38] = nodeValue_Float("Texture Scale", self, 1.);
 	
-	inputs[| 39] = nodeValue("Corner", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.25, 0.25, 0.25, 0.25 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 39] = nodeValue_Vector("Corner", self, [ 0.25, 0.25, 0.25, 0.25 ]);
 	
-	inputs[| 40] = nodeValue("2D Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 40] = nodeValue_Vector("2D Size", self, [ 0.5, 0.5 ]);
 	
-	inputs[| 41] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3);
+	inputs[| 41] = nodeValue_Int("Side", self, 3);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-	inputs[| 42] = nodeValue("Camera Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 30, 45, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 42] = nodeValue_Vector("Camera Rotation", self, [ 30, 45, 0 ]);
 	
-	inputs[| 43] = nodeValue("Camera Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 43] = nodeValue_Float("Camera Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	inputs[| 44] = nodeValue("Render", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 44] = nodeValue_Bool("Render", self, true);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 45] = nodeValue("Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 45] = nodeValue_Bool("Tile", self, false);
 		
-	inputs[| 46] = nodeValue("Tiled Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 46] = nodeValue_Vector("Tiled Shift", self, [ 0, 0, 0 ]);
 		
-	inputs[| 47] = nodeValue("Tiled Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 47] = nodeValue_Vector("Tiled Rotation", self, [ 0, 0, 0 ]);
 		
-	inputs[| 48] = nodeValue("Tiled Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 48] = nodeValue_Float("Tiled Scale", self, 0);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 49] = nodeValue("Env Interpolation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 49] = nodeValue_Bool("Env Interpolation", self, false);
 	
-	inputs[| 50] = nodeValue("Texture Interpolation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 50] = nodeValue_Bool("Texture Interpolation", self, false);
 	
-	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Shape Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdf, noone);
+	outputs[| 1] = nodeValue_Output("Shape Data", self, VALUE_TYPE.sdf, noone);
 	
 	input_display_list = [ 0,
 		["Primitive",  false],  1, 21, 22, 23, 24, 25, 26, 27, 28, 39, 40, 41, 

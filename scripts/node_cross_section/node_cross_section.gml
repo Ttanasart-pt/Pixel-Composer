@@ -5,14 +5,14 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	inputs[| 1] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]);
 	
-	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+	inputs[| 2] = nodeValue_Float("Position", self, 0 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue("Anti Aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 3] = nodeValue_Bool("Anti Aliasing", self, false );
 	
 	inputs[| 4] = nodeValue_Enum_Button("Mode", self,  0 , [ "BW", "Colored" ]);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone );
 	
 	input_display_list = [
 		["Surfaces", false], 0, 

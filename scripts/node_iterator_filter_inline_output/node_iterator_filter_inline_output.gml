@@ -11,10 +11,10 @@ function Node_Iterator_Filter_Inline_Output(_x, _y, _group = noone) : Node(_x, _
 	inputs[| 0] = nodeValue("Value out", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Filter result", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+	inputs[| 1] = nodeValue_Bool("Filter result", self, false )
 		.setVisible(true, true);
 		
-	outputs[| 0] = nodeValue("Array out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, [] );
+	outputs[| 0] = nodeValue_Output("Array out", self, VALUE_TYPE.any, [] );
 	
 	static getNextNodes = function() { #region
 		if(loop.bypassNextNode())

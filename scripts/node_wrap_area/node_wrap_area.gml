@@ -4,14 +4,13 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 
 	onSurfaceSize = function() { return surface_get_dimension(getInputData(0)); };
-	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA_REF )
-		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
-		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize, useShape : false });
+	inputs[| 1] = nodeValue_Area("Area", self, DEF_AREA_REF, { onSurfaceSize, useShape : false })
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
-	inputs[| 2] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 2] = nodeValue_Bool("Active", self, true);
 		active_index = 2;
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 2,
 		["Surfaces", false], 0, 

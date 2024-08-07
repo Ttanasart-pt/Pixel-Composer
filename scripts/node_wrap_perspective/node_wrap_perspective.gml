@@ -3,42 +3,34 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue_Bool("Active", self, true);
 		active_index = 1;
 		
-	inputs[| 2] = nodeValue("Top left", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 2] = nodeValue_Vector("Top left", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 3] = nodeValue("Top right", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 3] = nodeValue_Vector("Top right", self, [ DEF_SURF_W, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 4] = nodeValue("Bottom left", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, DEF_SURF_H ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 4] = nodeValue_Vector("Bottom left", self, [ 0, DEF_SURF_H ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 5] = nodeValue("Bottom right", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 5] = nodeValue_Vector("Bottom right", self, DEF_SURF )
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 6] = nodeValue("Top left", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 6] = nodeValue_Vector("Top left", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 7] = nodeValue("Top right", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 7] = nodeValue_Vector("Top right", self, [ DEF_SURF_W, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 8] = nodeValue("Bottom left", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, DEF_SURF_H ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 8] = nodeValue_Vector("Bottom left", self, [ 0, DEF_SURF_H ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 9] = nodeValue("Bottom right", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 9] = nodeValue_Vector("Bottom right", self, DEF_SURF )
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1,
 		["Surfaces", false], 0,

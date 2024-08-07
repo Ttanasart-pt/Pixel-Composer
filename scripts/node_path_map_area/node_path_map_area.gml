@@ -2,14 +2,13 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Remap Path";
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_AREA)
-		.setDisplay(VALUE_DISPLAY.area, { useShape : false });
+	inputs[| 1] = nodeValue_Area("Area", self, DEF_AREA, { useShape : false });
 	inputs[| 1].editWidget.adjust_shape = false;
 	
-	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	cached_pos = ds_map_create();
 	

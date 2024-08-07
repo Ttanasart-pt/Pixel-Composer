@@ -16,11 +16,11 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	inputs[| 0] = nodeValue_Enum_Scroll("Input", self,  0, { data: _miniNames, update_hover: false })
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue("Raw Message", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, []);
+	outputs[| 0] = nodeValue_Output("Raw Message", self, VALUE_TYPE.float, []);
 	
-	outputs[| 1] = nodeValue("Pressing notes", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, []);
+	outputs[| 1] = nodeValue_Output("Pressing notes", self, VALUE_TYPE.float, []);
 	
-	outputs[| 2] = nodeValue("Direct values", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
+	outputs[| 2] = nodeValue_Output("Direct values", self, VALUE_TYPE.struct, {});
 	
 	watcher_controllers = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var _h = ui(48);
@@ -97,12 +97,12 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _index = ds_list_size(inputs);
 		index_watching = _index;
 		
-		var _inp = nodeValue("Index", self, JUNCTION_CONNECT.input,  VALUE_TYPE.integer, -1 );
+		var _inp = nodeValue_Int("Index", self, -1 );
 		_inp.editWidget.slidable = false;
 		ds_list_add(inputs,  _inp);
 		ds_list_add(inputs,  nodeValue("Normalize", self, JUNCTION_CONNECT.input,  VALUE_TYPE.boolean, false ));
 		
-		ds_list_add(outputs, nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1 ));
+		ds_list_add(outputs, nodeValue_Output("Value", self, VALUE_TYPE.float, -1 ));
 		
 		return _inp;
 	} setDynamicInput(2, false);

@@ -1,7 +1,7 @@
 function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name	= "IsoSurf";
 	
-	inputs[| 0] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+	inputs[| 0] = nodeValue_Int("Direction", self, 4)
 		.setValidator(VV_min(1));
 	
 	inputs[| 1] = nodeValue_Surface("Surfaces", self)
@@ -10,15 +10,14 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 2] = nodeValue_Rotation("Angle Shift", self, 0);
 	
-	inputs[| 3] = nodeValue("Angle Split", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0 * 90, 1 * 90, 2 * 90, 3 * 90 ])
+	inputs[| 3] = nodeValue_Float("Angle Split", self, [ 0 * 90, 1 * 90, 2 * 90, 3 * 90 ])
 		.setArrayDynamic()
 		.setArrayDepth(1);
 	
-	inputs[| 4] = nodeValue("Offsets", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 4] = nodeValue_Vector("Offsets", self, [])
 		.setArrayDepth(1);
 	
-	outputs[| 0] = nodeValue("IsoSurf", self, JUNCTION_CONNECT.output, VALUE_TYPE.dynaSurface, noone);
+	outputs[| 0] = nodeValue_Output("IsoSurf", self, VALUE_TYPE.dynaSurface, noone);
 	
 	knob_select   = noone;
 	knob_hover    = noone;

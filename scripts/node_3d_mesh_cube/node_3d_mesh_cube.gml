@@ -2,24 +2,24 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	name = "3D Cube";
 	object_class = noone;
 	
-	inputs[| in_mesh + 0] = nodeValue("Material per side", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| in_mesh + 0] = nodeValue_Bool("Material per side", self, false );
 	
-	inputs[| in_mesh + 1] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 1] = nodeValue_D3Material("Material", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 2] = nodeValue("Material Bottom", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 2] = nodeValue_D3Material("Material Bottom", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 3] = nodeValue("Material Left", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 3] = nodeValue_D3Material("Material Left", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 4] = nodeValue("Material Right", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 4] = nodeValue_D3Material("Material Right", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 5] = nodeValue("Material Back", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 5] = nodeValue_D3Material("Material Back", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 6] = nodeValue("Material Front", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 6] = nodeValue_D3Material("Material Front", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
 	input_display_list = [

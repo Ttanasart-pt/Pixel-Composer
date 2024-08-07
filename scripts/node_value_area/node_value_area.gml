@@ -21,10 +21,10 @@ enum AREA_INDEX {
 #macro DEF_AREA_REF [ 0.5, 0.5, 0.5, 0.5, AREA_SHAPE.rectangle, AREA_MODE.area ]
 #macro AREA_ARRAY_LENGTH 6
 
-function nodeValue_Area(_name, _node, _value, _tooltip = "") { return new NodeValue_Area(_name, _node, _value, _tooltip); }
+function nodeValue_Area(_name, _node, _value, _data = {}) { return new NodeValue_Area(_name, _node, _value, _data); }
 
-function NodeValue_Area(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, _tooltip) constructor {
-	setDisplay(VALUE_DISPLAY.area);
+function NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, "") constructor {
+	setDisplay(VALUE_DISPLAY.area, _data);
 	
 	/////============== GET =============
 	

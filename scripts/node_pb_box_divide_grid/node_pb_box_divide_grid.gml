@@ -4,14 +4,13 @@ function Node_PB_Box_Divide_Grid(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _
 	inputs[| 1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 2, 2 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Amount", self, [ 2, 2 ] );
 		
-	inputs[| 3] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
+	inputs[| 3] = nodeValue_Int("Spacing", self, 1 );
 	
-	inputs[| 4] = nodeValue("Mirror", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0 )
+	inputs[| 4] = nodeValue_Bool("Mirror", self, 0 )
 	
-	outputs[| 0] = nodeValue("pBox", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, [ noone ] );
+	outputs[| 0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, [ noone ] );
 	
 	input_display_list = [ 0, 1, 
 		["Divide",	false], 2, 3, 4, 

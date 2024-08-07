@@ -5,25 +5,22 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 1] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ] );
 	
 	inputs[| 3] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 4] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("Scale", self, [ 1, 1 ] );
 	
-	inputs[| 5] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 5] = nodeValue_Color("Color", self, c_white );
 	
-	inputs[| 6] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| 6] = nodeValue_Float("Alpha", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| 7] = nodeValue_Bool("Active", self, true );
 	
-	inputs[| 8] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 8] = nodeValue_Range("Distance", self, [ 1, 1 ] , { linked : true });
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
+	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone );
 	
 	input_display_list = [ 0,
 		[ "Brush transform",  false ], 7, 2, 3, 4,

@@ -3,26 +3,24 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Point 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Vector("Point 1", self, [ 0, 0 ]);
 	
-	inputs[| 2] = nodeValue("Point 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Point 2", self, [ 16, 16 ]);
 	
-	inputs[| 3] = nodeValue("Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
+	inputs[| 3] = nodeValue_Int("Thickness", self, 2)
 	
-	inputs[| 4] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)))
+	inputs[| 4] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)))
 	
-	inputs[| 5] = nodeValue("Trace", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 5] = nodeValue_Int("Trace", self, 0);
 	
-	inputs[| 6] = nodeValue("Fix length", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 6] = nodeValue_Bool("Fix length", self, false);
 	
-	inputs[| 7] = nodeValue("Gradient step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 7] = nodeValue_Int("Gradient step", self, 1);
 	
-	inputs[| 8] = nodeValue("Glow intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 8] = nodeValue_Float("Glow intensity", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue("Glow radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 9] = nodeValue_Int("Glow radius", self, 0);
 	
 	inputs[| 10] = nodeValue_Surface("Trace texture", self)
 		.setVisible(true, true);
@@ -32,7 +30,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Render",		false], 4, 7, 5, 8, 9, 10,
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	prev_points  = noone;
 	fixed_length = 0;

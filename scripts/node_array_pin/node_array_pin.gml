@@ -12,7 +12,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	bg_spr_add = 0;
 	
-	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
+	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.any, []);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);

@@ -5,27 +5,26 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	inputs[| 1] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 2] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 2] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 3] = nodeValue_Bool("Active", self, true);
 		active_index = 3;
 		
-	inputs[| 4] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("Position", self, [ 1, 1 ]);
 		
-	inputs[| 5] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, cola(c_black) );
+	inputs[| 5] = nodeValue_Color("Colors", self, cola(c_black) );
 	
-	inputs[| 6] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 6] = nodeValue_Float("Threshold", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue("Diagonal", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 7] = nodeValue_Bool("Diagonal", self, false);
 	
 	__init_mask_modifier(1); // inputs 8, 9
 	
 	inputs[| 10] = nodeValue_Enum_Scroll("Blend", self,  0, [ "Override", "Multiply" ]);
 	
-	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3,
 		["Surfaces", false], 0, 1, 2, 8, 9, 

@@ -2,12 +2,12 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Shift Path";
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 1] = nodeValue_Float("Distance", self, 0);
 	
-	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	cached_pos = ds_map_create();
 	

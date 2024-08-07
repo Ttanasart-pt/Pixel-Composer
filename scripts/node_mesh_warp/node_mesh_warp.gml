@@ -156,36 +156,36 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
+	inputs[| 1] = nodeValue_Int("Sample", self, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 2, 32, 0.1 ] });
 	
-	inputs[| 2] = nodeValue("Spring Force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 2] = nodeValue_Float("Spring Force", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 3] = nodeValue_Trigger("Mesh", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { Mesh_setTriangle(); } });
 	
-	inputs[| 4] = nodeValue("Diagonal Link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Include diagonal link to prevent drastic grid deformation.");
+	inputs[| 4] = nodeValue_Bool("Diagonal Link", self, false, "Include diagonal link to prevent drastic grid deformation.");
 	
-	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 5] = nodeValue_Bool("Active", self, true);
 		active_index = 5;
 	
-	inputs[| 6] = nodeValue("Link Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Link length preservation, setting it to 1 will prevent any stretching, contraction.")
+	inputs[| 6] = nodeValue_Float("Link Strength", self, 0, "Link length preservation, setting it to 1 will prevent any stretching, contraction.")
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 7] = nodeValue("Full Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 7] = nodeValue_Bool("Full Mesh", self, false);
 		
 	inputs[| 8] = nodeValue_Enum_Scroll("Mesh Type", self,  0, [ new scrollItem("Grid",   s_node_mesh_type, 0), 
 												 new scrollItem("Custom", s_node_mesh_type, 1), ] );
 	
-	inputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 9] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 9].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Mesh data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, mesh_data);
+	outputs[| 1] = nodeValue_Output("Mesh data", self, VALUE_TYPE.object, mesh_data);
 	
 	input_display_list = [ 5, 
 		["Mesh",			false],	0, 8, 9, 1, 7, 3, 
@@ -197,7 +197,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	function createControl() { #region
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue("Control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ])
+		inputs[| index] = nodeValue_Float("Control point", self, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ])
 			.setDisplay(VALUE_DISPLAY.puppet_control)
 		
 		array_push(input_display_list, index);

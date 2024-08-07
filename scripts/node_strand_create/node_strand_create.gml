@@ -9,42 +9,40 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 0] = nodeValue_Enum_Scroll("Type", self,  0, [ "Point", "Path", "Mesh" ]);
 	
-	inputs[| 1] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8, "How many strands to generate.");
+	inputs[| 1] = nodeValue_Int("Density", self, 8, "How many strands to generate.");
 	
-	inputs[| 2] = nodeValue("Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Length", self, [ 4, 4 ]);
 	
-	inputs[| 3] = nodeValue("Segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 3] = nodeValue_Int("Segment", self, 4);
 	
-	inputs[| 4] = nodeValue("Elasticity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05, "Length preservation, the higher the value the easier it is to stretch each segment.")
+	inputs[| 4] = nodeValue_Float("Elasticity", self, 0.05, "Length preservation, the higher the value the easier it is to stretch each segment.")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 5] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone);
+	inputs[| 5] = nodeValue_PathNode("Path", self, noone);
 	
-	inputs[| 6] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 6] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
 	inputs[| 7] = nodeValue_Enum_Button("Side", self,  0, [ "Inner", "Outer", "Both" ]);
 	
-	inputs[| 8] = nodeValue("Spring", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.8, "Angular stiffness, the higher the value the easier it is to bend each segment.")
+	inputs[| 8] = nodeValue_Float("Spring", self, 0.8, "Angular stiffness, the higher the value the easier it is to bend each segment.")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue("Structure", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2, "The ability to keep its original shape.")
+	inputs[| 9] = nodeValue_Float("Structure", self, 0.2, "The ability to keep its original shape.")
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 10] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 10] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 10].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 11] = nodeValue("Curl frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 11] = nodeValue_Float("Curl frequency", self, 0);
 	
-	inputs[| 12] = nodeValue("Curliness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 12] = nodeValue_Float("Curliness", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 13] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone);
 	
 	inputs[| 14] = nodeValue_Enum_Scroll("Distribution", self,  0, [ "Uniform", "Random" ]);
 	
-	inputs[| 15] = nodeValue("Bake hair", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes.")
+	inputs[| 15] = nodeValue_Trigger("Bake hair", self, false, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes.")
 		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", UI : true, onClick: function() { 
 			attributes.use_groom = !attributes.use_groom; 
 			if(attributes.use_groom)
@@ -52,12 +50,12 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			strandUpdate(true);
 		} });
 	
-	inputs[| 16] = nodeValue("View fix hair", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 16] = nodeValue_Bool("View fix hair", self, false);
 	
-	inputs[| 17] = nodeValue("Root strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [-1, -1], "The force required to break strand from its root. Set to -1 to make strand infinitely strong.")
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 17] = nodeValue_Vector("Root strength", self, [-1, -1])
+		.setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
 	
-	outputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.output, VALUE_TYPE.strands, noone);
+	outputs[| 0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);
 	
 	input_display_list = [ 10, 
 		["Generation",	false], 0, 1, 5, 6, 7, 13, 14, 15, 

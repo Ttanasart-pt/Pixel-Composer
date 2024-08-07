@@ -5,7 +5,7 @@ function Node_Iterator_Each_Input(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	manual_deletable = false;
 	
-	outputs[| 0] = nodeValue("Value in", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0 );
+	outputs[| 0] = nodeValue_Output("Value in", self, VALUE_TYPE.any, 0 );
 	
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
 	

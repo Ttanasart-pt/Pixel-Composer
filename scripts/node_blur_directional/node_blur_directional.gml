@@ -3,7 +3,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 1] = nodeValue_Float("Strength", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(9);
 	
@@ -12,14 +12,13 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	inputs[| 3] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 4] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 4] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 5] = nodeValue_Bool("Active", self, true);
 		active_index = 5;
 	
-	inputs[| 6] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
-		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	inputs[| 6] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
 	__init_mask_modifier(3); // inputs 7, 8
 	
@@ -31,16 +30,16 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 11] = nodeValue("Single direction",   self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 11] = nodeValue_Bool("Single direction",   self, false);
 	
-	inputs[| 12] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 12] = nodeValue_Bool("Gamma Correction", self, false);
 	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true], 0, 3, 4, 7, 8, 
 		["Blur",	false], 1, 9, 2, 10, 11, 12, 
 	]
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	attribute_oversample();

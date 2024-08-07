@@ -11,17 +11,16 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	inputs[| 1] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue("Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ])
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 2] = nodeValue_Range("Thickness", self, [ 8, 8 ], { linked : true });
 	
-	inputs[| 3] = nodeValue("Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)));
+	inputs[| 3] = nodeValue_Gradient("Random color", self, new gradientObject(cola(c_white)));
 	
 	inputs[| 4] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+	inputs[| 5] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 5, 
 		["Output",  false], 0,

@@ -4,14 +4,13 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	inputs[| 1] = nodeValue_Enum_Button("Axis", self,  0, ["x", "y"]);
 	
-	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue_Float("Strength", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] })
 		.setMappable(12);
 		
-	inputs[| 3] = nodeValue("Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 3] = nodeValue_Bool("Wrap", self, false);
 	
-	inputs[| 4] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
-		.setDisplay(VALUE_DISPLAY.vector, { side_button : button(function() { centerAnchor(); })
+	inputs[| 4] = nodeValue_Vector("Center", self, [0, 0] , { side_button : button(function() { centerAnchor(); })
 															.setIcon(THEME.anchor)
 															.setTooltip(__txt("Set to center")) });
 	
@@ -20,14 +19,13 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 6] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 7] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 7] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 8] = nodeValue_Bool("Active", self, true);
 		active_index = 8;
 	
-	inputs[| 9] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
-		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	inputs[| 9] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
 	__init_mask_modifier(6); // inputs 10, 11
 	
@@ -42,7 +40,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Skew",	false],	1, 2, 12, 4,
 	]
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	attribute_oversample();

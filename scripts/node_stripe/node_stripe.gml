@@ -3,7 +3,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 1] = nodeValue_Float("Amount", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(11);
 	
@@ -12,24 +12,23 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 3] = nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]);
 	
-	inputs[| 4] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 4] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 5] = nodeValue("Random", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 5] = nodeValue_Float("Random", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(13);
 		
 	inputs[| 6] = nodeValue_Enum_Button("Coloring", self,  0, [ "Alternate", "Palette", "Random" ]);
 	
-	inputs[| 7] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
+	inputs[| 7] = nodeValue_Gradient("Colors", self, new gradientObject(cola(c_white)))
 		.setMappable(15);
 	
-	inputs[| 8] = nodeValue("Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 8] = nodeValue_Color("Color 1", self, c_white);
 	
-	inputs[| 9] = nodeValue("Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 9] = nodeValue_Color("Color 2", self, c_black);
 	
-	inputs[| 10] = nodeValue("Strip ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 10] = nodeValue_Float("Strip ratio", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(14);
 	
@@ -49,15 +48,14 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 17] = nodeValue("Progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 17] = nodeValue_Float("Progress", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 18] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black, c_white ] )
-		.setDisplay(VALUE_DISPLAY.palette);
+	inputs[| 18] = nodeValue_Palette("Colors", self, [ c_black, c_white ] );
 		
 	inputs[| 19] = nodeValueSeed(self, VALUE_TYPE.float);
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 19, 
 		["Output",	true],	0,  

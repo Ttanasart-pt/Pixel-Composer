@@ -6,7 +6,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 0] = nodeValue_Enum_Scroll("Type", self, 0, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Unpack array and push the contents into the output one by one." )
+	inputs[| 1] = nodeValue_Bool("Spread array", self, false, "Unpack array and push the contents into the output one by one." )
 		.rejectArray();
 	
 	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -30,7 +30,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	input_display_list = [ 0, 1, ["Contents", false], array_adjust_tool, ];
 	
-	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
+	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.any, []);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);

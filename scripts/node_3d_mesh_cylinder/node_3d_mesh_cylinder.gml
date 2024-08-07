@@ -3,21 +3,21 @@ function Node_3D_Mesh_Cylinder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _g
 	
 	object_class = __3dCylinder;
 	
-	inputs[| in_mesh + 0] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 )
+	inputs[| in_mesh + 0] = nodeValue_Int("Side", self, 8 )
 		.setValidator(VV_min(3));
 	
-	inputs[| in_mesh + 1] = nodeValue("Material Top", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 1] = nodeValue_D3Material("Material Top", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 2] = nodeValue("Material Bottom", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 2] = nodeValue_D3Material("Material Bottom", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 3] = nodeValue("Material Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 3] = nodeValue_D3Material("Material Side", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 4] = nodeValue("Smooth Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| in_mesh + 4] = nodeValue_Bool("Smooth Side", self, false );
 	
-	inputs[| in_mesh + 5] = nodeValue("End caps", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| in_mesh + 5] = nodeValue_Bool("End caps", self, true );
 	
 	input_display_list = [
 		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 4, in_mesh + 5, 

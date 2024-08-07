@@ -3,12 +3,12 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue_Bool("Active", self, true);
 	
-	inputs[| 2] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
+	inputs[| 2] = nodeValue_Int("Radius", self, 3)
 		.setValidator(VV_min(0));
 	
-	inputs[| 3] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 3] = nodeValue_Float("Threshold", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	active_index = 1;
@@ -18,7 +18,7 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Blobify", false], 2, 3, 
 	]
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

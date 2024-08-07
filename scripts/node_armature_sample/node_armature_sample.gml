@@ -2,16 +2,16 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "Armature Sample";
 	setDimension(96, 72);
 	
-	inputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.input, VALUE_TYPE.armature, noone)
+	inputs[| 0] = nodeValue_Armature("Armature", self, noone)
 		.setVisible(true, true)
 		.rejectArray();
 		
-	inputs[| 1] = nodeValue("Bone name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 1] = nodeValue_Text("Bone name", self, "");
 		
-	inputs[| 2] = nodeValue("Sample point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue_Float("Sample point", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 0, 0 ])
+	outputs[| 0] = nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	#region ++++ attributes ++++

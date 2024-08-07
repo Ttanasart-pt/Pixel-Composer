@@ -6,17 +6,16 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone )
+	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA )
-		.setDisplay(VALUE_DISPLAY.area, { useShape : false });
+	inputs[| 1] = nodeValue_Area("Area", self, DEF_AREA , { useShape : false });
 	
 	input_display_list = [ 0, 
 		["Collider",	false], 1
 	]
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone );
+	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
 	
 	obstracle = new FLIP_Obstracle();
 	

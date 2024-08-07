@@ -3,13 +3,13 @@ function Node_3D_Light_Directional(_x, _y, _group = noone) : Node_3D_Light(_x, _
 	
 	object_class = __3dLightDirectional;
 	
-	inputs[| in_light + 0] = nodeValue("Cast Shadow", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| in_light + 0] = nodeValue_Bool("Cast Shadow", self, false);
 	
-	inputs[| in_light + 1] = nodeValue("Shadow Map Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1024);
+	inputs[| in_light + 1] = nodeValue_Int("Shadow Map Size", self, 1024);
 	
-	inputs[| in_light + 2] = nodeValue("Shadow Map Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| in_light + 2] = nodeValue_Int("Shadow Map Scale", self, 4);
 	
-	inputs[| in_light + 3] = nodeValue("Shadow Bias", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .001);
+	inputs[| in_light + 3] = nodeValue_Float("Shadow Bias", self, .001);
 	
 	input_display_list = [
 		["Transform", false], 0,

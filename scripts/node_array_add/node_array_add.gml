@@ -5,10 +5,10 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+	inputs[| 1] = nodeValue_Bool("Spread array", self, false )
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
+	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.integer, 0);
 	
 	input_display_list = [ 1, 0 ];
 	

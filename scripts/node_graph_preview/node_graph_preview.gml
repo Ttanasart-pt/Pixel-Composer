@@ -5,17 +5,16 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 0]  = nodeValue_Surface("Surface", self)
 		.rejectArray();
 	
-	inputs[| 1]  = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1]  = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.rejectArray();
 	
-	inputs[| 2]  = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 2]  = nodeValue_Float("Scale", self, 1)
 		.rejectArray();
 
-	inputs[| 3]  = nodeValue("Sticky", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 3]  = nodeValue_Bool("Sticky", self, true)
 		.rejectArray();
 		
-	inputs[| 4]  = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 4]  = nodeValue_Float("Alpha", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 		

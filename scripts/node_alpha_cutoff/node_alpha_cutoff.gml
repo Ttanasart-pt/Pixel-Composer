@@ -3,15 +3,15 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Minimum", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2, "Any pixel with less alpha (more transparent) than this will be removed.")
+	inputs[| 1] = nodeValue_Float("Minimum", self, 0.2, "Any pixel with less alpha (more transparent) than this will be removed.")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 2] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 3] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 4] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 4] = nodeValue_Bool("Active", self, true);
 		active_index = 4;
 	
 	__init_mask_modifier(2); // inputs 5, 6, 
@@ -21,7 +21,7 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Cutoff",	false], 1, 
 	]
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

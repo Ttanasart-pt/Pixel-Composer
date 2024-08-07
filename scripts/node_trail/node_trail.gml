@@ -5,21 +5,21 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	inputs[| 0] = nodeValue_Surface("Surface in",		self);
 	
-	inputs[| 1] = nodeValue("Max life",			self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
+	inputs[| 1] = nodeValue_Int("Max life",			self, 5);
 	
-	inputs[| 2] = nodeValue("Loop",				self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 2] = nodeValue_Bool("Loop",				self, false);
 	
-	inputs[| 3] = nodeValue("Max distance",		self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1, "Maximum distance to search for movement, set to -1 to search the entire image.");
+	inputs[| 3] = nodeValue_Int("Max distance",		self, -1, "Maximum distance to search for movement, set to -1 to search the entire image.");
 	
-	inputs[| 4] = nodeValue("Match color",		self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Make trail track pixels of the same color, instead of the closet pixels.");
+	inputs[| 4] = nodeValue_Bool("Match color",		self, true, "Make trail track pixels of the same color, instead of the closet pixels.");
 	
-	inputs[| 5] = nodeValue("Blend color",		self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Blend color between two pixel smoothly.");
+	inputs[| 5] = nodeValue_Bool("Blend color",		self, true, "Blend color between two pixel smoothly.");
 	
 	inputs[| 6] = nodeValue("Alpha over life",	self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	outputs[| 0] = nodeValue("Surface out",		self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out",		self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Trail UV",		self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue_Output("Trail UV",		self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surfaces",		 true], 0, 

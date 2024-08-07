@@ -2,15 +2,15 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "DLL";
 	setDimension(96, 32 + 24 * 1);
 	
-	inputs[| 0] = nodeValue("DLL File", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0] = nodeValue_Text("DLL File", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Dynamic-link library (.dll)|*.dll" })
 		.setVisible(true, false);
 	
-	inputs[| 1] = nodeValue("Function name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 1] = nodeValue_Text("Function name", self, "");
 	
 	inputs[| 2] = nodeValue_Enum_Button("Return type", self,  0, [ "Number", "Buffer" ]);
 	
-	outputs[| 0] = nodeValue("Return Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue_Output("Return Value", self, VALUE_TYPE.float, 0);
 	
 	ext_cache       = "";
 	ext_function    = -1;
@@ -47,7 +47,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		inputs[| index + 0] = nodeValue_Enum_Button("Parameter type", self,  0, [ "Number", "Buffer" ]);
 		
-		inputs[| index + 1] = nodeValue("Parameter value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		inputs[| index + 1] = nodeValue_Float("Parameter value", self, 0 )
 			.setVisible(true, true);
 		
 		array_push(input_display_list, index + 0, index + 1);

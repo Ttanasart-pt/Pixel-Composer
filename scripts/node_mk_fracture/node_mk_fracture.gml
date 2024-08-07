@@ -3,38 +3,36 @@ function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Subdivision", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Vector("Subdivision", self, [ 4, 4 ]);
 	
-	inputs[| 2] = nodeValue("Progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 2] = nodeValue_Float("Progress", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(3);
 	
 	inputs[| 3] = nodeValueMap("Progress map", self);
 	
-	inputs[| 4] = nodeValue("Movement", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 4] = nodeValue_Vector("Movement", self, [ 0, 0 ])
 		.setMappable(9, true);
 	
 	inputs[| 5] = nodeValue_Rotation("Rotation", self, 180)
 		.setMappable(10);
 	
-	inputs[| 6] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[| 6] = nodeValue_Float("Scale", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
+	inputs[| 7] = nodeValue_Float("Alpha", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.);
+	inputs[| 8] = nodeValue_Float("Gravity", self, 0.);
 	
 	inputs[| 9] = nodeValueMap("Movement map", self);
 	
 	inputs[| 10] = nodeValueMap("Rotation map", self);
 	
-	inputs[| 11] = nodeValue("Brick Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[| 11] = nodeValue_Float("Brick Shift", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue("Skew", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[| 12] = nodeValue_Float("Skew", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range : [ -1, 1, 0.01 ] });
 	
 	inputs[| 13] = nodeValue_Enum_Button("Brick Axis", self,  0, [ "X", "Y" ]);
@@ -45,7 +43,7 @@ function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Render",		false], 7, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		

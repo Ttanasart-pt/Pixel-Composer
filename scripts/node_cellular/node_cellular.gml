@@ -3,34 +3,33 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4)
+	inputs[| 2] = nodeValue_Float("Scale", self, 4)
 		.setMappable(11);
 	
-	inputs[| 3] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+	inputs[| 3] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 4] = nodeValue_Enum_Scroll("Type", self,  0, [ "Point", "Edge", "Cell", "Crystal" ]);
 	
-	inputs[| 5] = nodeValue("Contrast", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 5] = nodeValue_Float("Contrast", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.01] });
 	
 	inputs[| 6] = nodeValue_Enum_Button("Pattern", self,  0, [ "Tiled", "Uniform", "Radial" ]);
 	
-	inputs[| 7] = nodeValue("Middle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 7] = nodeValue_Float("Middle", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0., 1., 0.01] });
 	
-	inputs[| 8] = nodeValue("Radial scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
+	inputs[| 8] = nodeValue_Float("Radial scale", self, 2)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1., 10., 0.01] });
 	
-	inputs[| 9] = nodeValue("Radial shatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 9] = nodeValue_Float("Radial shatter", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-10., 10., 0.01] })
 		.setVisible(false);
 	
-	inputs[| 10] = nodeValue("Colored", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 10] = nodeValue_Bool("Colored", self, false)
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
@@ -47,7 +46,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Rendering",	false], 5, 7, 10, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

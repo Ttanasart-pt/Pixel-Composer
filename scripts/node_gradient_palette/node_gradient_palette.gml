@@ -2,19 +2,18 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Palette to Gradient";
 	setDimension(96);
 	
-	inputs[| 0] = nodeValue("Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))
-		.setDisplay(VALUE_DISPLAY.palette)
+	inputs[| 0] = nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE))
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Custom positions", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 1] = nodeValue_Bool("Custom positions", self, false);
 	
-	inputs[| 2] = nodeValue("Positions", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [], "Array of number indicating color position (0 - 1).")
+	inputs[| 2] = nodeValue_Float("Positions", self, [], "Array of number indicating color position (0 - 1).")
 		.setVisible(true, true);
 	inputs[| 2].array_depth = 1;
 	
 	inputs[| 3] = nodeValue_Enum_Button("Interpolation", self,  1, [ "None", "RGB", "HSV", "OKLAB", "sRGB" ]);
 	
-	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
+	outputs[| 0] = nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
 	
 	_pal = -1;
 	

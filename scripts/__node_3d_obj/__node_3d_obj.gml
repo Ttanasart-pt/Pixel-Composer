@@ -1,11 +1,11 @@
 function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "3D Object";
 	
-	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0] = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" })
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 1] = nodeValue_Trigger("Generate", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { 
 			updateObj();
 			doUpdate(); 
@@ -13,53 +13,47 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	inputs[| 2] = nodeValue_Dimension(self);
 	
-	inputs[| 3] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 3] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef( function() { return getInputData(2); }, VALUE_UNIT.reference);
 		
-	inputs[| 4] = nodeValue("Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 5] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
 		
 	inputs[| 6] = nodeValue_Rotation("Light direction", self, 0)
 		.rejectArray();
 		
-	inputs[| 7] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 7] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] })
 		.rejectArray();
 		
-	inputs[| 8] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 8] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	inputs[| 9] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+	inputs[| 9] = nodeValue_Color("Light color", self, c_white)
 		.rejectArray();
 	
-	inputs[| 10] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey)
+	inputs[| 10] = nodeValue_Color("Ambient color", self, c_grey)
 		.rejectArray();
 	
-	inputs[| 11] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 11] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
 		
-	inputs[| 12] = nodeValue("Flip UV", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Flip UV axis, can be use to fix some texture mapping error.")
+	inputs[| 12] = nodeValue_Bool("Flip UV", self, true, "Flip UV axis, can be use to fix some texture mapping error.")
 		.rejectArray();
 	
-	inputs[| 13] = nodeValue("Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 180 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 13] = nodeValue_Vector("Object rotation", self, [ 0, 0, 180 ]);
 		
-	inputs[| 14] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 14] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
 	
 	inputs[| 15] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
-	inputs[| 16] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+	inputs[| 16] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 0.1 ] })
 		.rejectArray();
 	
-	inputs[| 17] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 17] = nodeValue_Bool("Scale view with dimension", self, true)
 	
 	input_display_list = [ 
 		["Output", 				false], 2, 17, 
@@ -72,11 +66,11 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	input_length = ds_list_size(inputs);
 	input_display_len = array_length(input_display_list);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("3D scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[| 1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
-	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
 	
 	output_display_list = [
 		0, 2, 1
@@ -109,7 +103,7 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	function createMaterial(m_index) {
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue(materialNames[m_index] + " texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, tex_surface);
+		inputs[| index] = nodeValue_Surface(materialNames[m_index] + " texture", self, tex_surface);
 		inputs[| index].setVisible(true);
 		
 		input_display_list[input_display_len + m_index] = index;

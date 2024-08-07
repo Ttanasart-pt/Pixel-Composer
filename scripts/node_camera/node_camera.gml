@@ -3,21 +3,20 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	preview_alpha = 0.5;
 	
 	onSurfaceSize = function() { return surface_get_dimension(getInputData(0)); };
-	inputs[| 0] = nodeValue("Focus area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_AREA)
-		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize, useShape : false });
+	inputs[| 0] = nodeValue_Area("Focus area", self, DEF_AREA, { onSurfaceSize, useShape : false });
 	
-	inputs[| 1] = nodeValue("Zoom", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 1] = nodeValue_Float("Zoom", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	inputs[| 2] = nodeValue("Depth of Field", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 2] = nodeValue_Bool("Depth of Field", self, false);
 	
-	inputs[| 3] = nodeValue("Focal distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 3] = nodeValue_Float("Focal distance", self, 0);
 	
-	inputs[| 4] = nodeValue("Defocus", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 4] = nodeValue_Float("Defocus", self, 1);
 	
-	inputs[| 5] = nodeValue("Focal range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 5] = nodeValue_Float("Focal range", self, 0);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Camera",		false], 0, 1, 
@@ -35,12 +34,11 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		if(_s) array_push(input_display_list, new Inspector_Spacer(20, true));
 		
-		inputs[| index + 0] = nodeValue($"Element {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+		inputs[| index + 0] = nodeValue_Surface($"Element {_s}", self, noone);
 		
 		inputs[| index + 1] = nodeValue_Enum_Button($"Positioning {_s}", self,  false, [ "Space", "Camera" ]);
 	
-		inputs[| index + 2] = nodeValue($"Position {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-			.setDisplay(VALUE_DISPLAY.vector)
+		inputs[| index + 2] = nodeValue_Vector($"Position {_s}", self, [ 0, 0 ] )
 			.setUnitRef(function(index) { return getDimension(index); });
 		
 		inputs[| index + 3] = nodeValue_Enum_Scroll($"Oversample {_s}", self,  0, [ new scrollItem("Empty ",   s_node_camera_repeat, 0), 
@@ -48,8 +46,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 													 new scrollItem("Repeat X", s_node_camera_repeat, 2), 
 													 new scrollItem("Repeat Y", s_node_camera_repeat, 3), ]);
 		
-		inputs[| index + 4] = nodeValue($"Parallax {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-			.setDisplay(VALUE_DISPLAY.vector);
+		inputs[| index + 4] = nodeValue_Vector($"Parallax {_s}", self, [ 0, 0 ]);
 		
 		inputs[| index + 5] = nodeValue($"Depth {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 		

@@ -1,19 +1,19 @@
 function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Highlight";
 	
-	inputs[| 1] = nodeValue("Highlight Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, array_create(9) )
+	inputs[| 1] = nodeValue_Int("Highlight Area", self, array_create(9) )
 		.setDisplay(VALUE_DISPLAY.matrix, { size: 3 });
 		
-	inputs[| 2] = nodeValue("Light Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 2] = nodeValue_Color("Light Color", self, c_white );
 		
-	inputs[| 3] = nodeValue("Shadow Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black );
+	inputs[| 3] = nodeValue_Color("Shadow Color", self, c_black );
 		
-	inputs[| 4] = nodeValue("Roughness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+	inputs[| 4] = nodeValue_Float("Roughness", self, 0 )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 5] = nodeValue("Roughness Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
+	inputs[| 5] = nodeValue_Float("Roughness Scale", self, 1 );
 		
-	inputs[| 6] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+	inputs[| 6] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	holding_side = noone;

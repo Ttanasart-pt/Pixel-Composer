@@ -10,15 +10,14 @@ function Node_Smoke_Add_Collider(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	
 	inputs[| 1] = nodeValue_Surface("Collider", self);
 	
-	inputs[| 2] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA )
-		.setDisplay(VALUE_DISPLAY.area, { useShape : false });
+	inputs[| 2] = nodeValue_Area("Area", self, DEF_AREA , { useShape : false });
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 
 		["Collider",	false], 1, 2,
 	];
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdomain, noone);
+	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _mat = getInputData(1);

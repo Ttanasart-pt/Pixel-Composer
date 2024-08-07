@@ -4,13 +4,13 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Start frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1, "Frame index to start caching, set to -1 to start at the first frame.");
+	inputs[| 1] = nodeValue_Int("Start frame", self, -1, "Frame index to start caching, set to -1 to start at the first frame.");
 	
-	inputs[| 2] = nodeValue("Stop frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1, "Frame index to stop caching (inclusive), set to -1 to stop at the last frame.");
+	inputs[| 2] = nodeValue_Int("Stop frame", self, -1, "Frame index to stop caching (inclusive), set to -1 to stop at the last frame.");
 	
-	inputs[| 3] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Cache every N frames, set to 1 to cache every frame.");
+	inputs[| 3] = nodeValue_Int("Step", self, 1, "Cache every N frames, set to 1 to cache every frame.");
 	
-	outputs[| 0] = nodeValue("Cache array", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
+	outputs[| 0] = nodeValue_Output("Cache array", self, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
 		["Surfaces",  true], 0, 

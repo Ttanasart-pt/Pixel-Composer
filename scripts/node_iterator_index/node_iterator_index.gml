@@ -6,7 +6,7 @@ function Node_Iterator_Index(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setDimension(96, 48);
 	
-	outputs[| 0] = nodeValue("Loop index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
+	outputs[| 0] = nodeValue_Output("Loop index", self, VALUE_TYPE.integer, 0);
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var gr = is_instanceof(group, Node_Iterator)? group : noone;

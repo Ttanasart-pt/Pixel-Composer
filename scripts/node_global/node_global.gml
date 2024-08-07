@@ -196,7 +196,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	static valueUpdate = function(index) { RENDER_ALL }
 	
 	static createValue = function() { #region
-		var _in    = nodeValue("NewValue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+		var _in    = nodeValue_Float("NewValue", self, 0);
 		_in.editor = new variable_editor(_in);
 		ds_list_add(inputs, _in);
 		

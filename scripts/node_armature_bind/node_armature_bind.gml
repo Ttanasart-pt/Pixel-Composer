@@ -14,26 +14,25 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Armature", self, JUNCTION_CONNECT.input, VALUE_TYPE.armature, noone)
+	inputs[| 1] = nodeValue_Armature("Armature", self, noone)
 		.setVisible(true, true)
 		.rejectArray();
 		
-	inputs[| 2] = nodeValue("Bind data", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, noone)
+	inputs[| 2] = nodeValue_Struct("Bind data", self, noone)
 		.setVisible(true, true)
 		.setArrayDepth(1); 
 		
-	inputs[| 3] = nodeValue("Bone transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 3] = nodeValue_Vector("Bone transform", self, [ 0, 0 ]);
 		
-	inputs[| 4] = nodeValue("Bone scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 4] = nodeValue_Float("Bone scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.1, 2, 0.01 ] });
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
+	outputs[| 1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, [])
 		.rejectArrayProcess();
 	
-	outputs[| 2] = nodeValue("Bind data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, [])
+	outputs[| 2] = nodeValue_Output("Bind data", self, VALUE_TYPE.struct, [])
 		.setArrayDepth(1);
 	
 	attribute_surface_depth();
@@ -401,13 +400,13 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		inputs[| index + 0].hover_effect  = 0;
 		inputs[| index + 0].display_data.bone_id = "";
 		
-		inputs[| index + 1] = nodeValue("Transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1, 1 ] )
+		inputs[| index + 1] = nodeValue_Float("Transform", self, [ 0, 0, 0, 1, 1 ] )
 			.setDisplay(VALUE_DISPLAY.transform);
-		inputs[| index + 2] = nodeValue("Inherit Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
-		inputs[| index + 3] = nodeValue("Apply Bone Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+		inputs[| index + 2] = nodeValue_Bool("Inherit Rotation", self, true );
+		inputs[| index + 3] = nodeValue_Bool("Apply Bone Rotation", self, false );
 		
-		inputs[| index + 4] = nodeValue("Inherit Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
-		inputs[| index + 5] = nodeValue("Apply Bone Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+		inputs[| index + 4] = nodeValue_Bool("Inherit Scale", self, false );
+		inputs[| index + 5] = nodeValue_Bool("Apply Bone Scale", self, false );
 		
 		for( var i = 0; i < data_length; i++ )
 			array_push(input_display_list, index + i);

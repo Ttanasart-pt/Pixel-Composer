@@ -3,17 +3,16 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 1] = nodeValue_Float("Width", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(5);
 	
 	inputs[| 2] = nodeValue_Enum_Button("Types",self,  0, [ "Both", "Horizontal", "Vertical" ]);
 	
-	inputs[| 3] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 3] = nodeValue_Bool("Active", self, true);
 		active_index = 3;
 	
-	inputs[| 4] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
-		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	inputs[| 4] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -22,10 +21,10 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 6] = nodeValue("Blending", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 6] = nodeValue_Float("Blending", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 7] = nodeValue("Smoothness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 7] = nodeValue_Float("Smoothness", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	input_display_list = [ 3, 4, 
@@ -33,7 +32,7 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Blend",	false], 2, 1, 5, 6, 7, 
 	]
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	temp_surface = array_create(1);
 	

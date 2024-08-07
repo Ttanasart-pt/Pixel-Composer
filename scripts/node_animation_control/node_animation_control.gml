@@ -2,19 +2,19 @@ function Node_Animation_Control(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name = "Animation Control";
 	setDimension(96, 96);
 	
-	inputs[| 0] = nodeValue("Toggle Play / Pause", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
+	inputs[| 0] = nodeValue_Trigger("Toggle Play / Pause", self, false );
 	
-	inputs[| 1] = nodeValue("Pause", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
+	inputs[| 1] = nodeValue_Trigger("Pause", self, false );
 	
-	inputs[| 2] = nodeValue("Resume", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
+	inputs[| 2] = nodeValue_Trigger("Resume", self, false );
 	
-	inputs[| 3] = nodeValue("Play From Beginning", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
+	inputs[| 3] = nodeValue_Trigger("Play From Beginning", self, false );
 	
-	inputs[| 4] = nodeValue("Play once", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
+	inputs[| 4] = nodeValue_Trigger("Play once", self, false );
 	
-	inputs[| 5] = nodeValue("Skip Frames", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false );
+	inputs[| 5] = nodeValue_Trigger("Skip Frames", self, false );
 	
-	inputs[| 6] = nodeValue("Skip Frames Count", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 6] = nodeValue_Int("Skip Frames Count", self, 1);
 	
 	static step = function() { 
 		if(getInputData(0))

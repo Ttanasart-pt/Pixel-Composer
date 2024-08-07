@@ -4,17 +4,17 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 0] = nodeValue_Float("Start", self, 1);
 	
-	inputs[| 1] = nodeValue("Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 1] = nodeValue_Float("Speed", self, 1);
 	
-	inputs[| 2] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, @"Counting mode
+	inputs[| 2] = nodeValue_Int("Mode", self, 0, @"Counting mode
     - Frame count: Count value up/down per frame.
     - Animation progress: Count from 0 (first frame) to 1 (last frame). ")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Frame count", "Animation progress"])
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue_Output("Value", self, VALUE_TYPE.float, 0);
 	
 	input_display_list = [
 		2, 0, 1

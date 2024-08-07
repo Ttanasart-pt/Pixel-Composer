@@ -4,20 +4,18 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 0] = nodeValue_Vector("Point", self, [ 0, 0, ])
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue_Enum_Scroll("Mode", self,  0, [ "XY Shift", "Direction + Distance" ]);
 	
-	inputs[| 2] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Shift", self, [ 0, 0 ]);
 	
 	inputs[| 3] = nodeValue_Rotation("Direction", self, 0);
 	
-	inputs[| 4] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
+	inputs[| 4] = nodeValue_Float("Distance", self, 4 );
 	
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
+	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static step = function() {

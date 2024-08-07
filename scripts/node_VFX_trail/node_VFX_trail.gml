@@ -10,14 +10,14 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	lineLength = [];
 	lineData   = [];
 	
-	inputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
+	inputs[| 0] = nodeValue_Particle("Particles", self, -1 )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Life", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 );
+	inputs[| 1] = nodeValue_Int("Life", self, 4 );
 	
-	inputs[| 2] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 2] = nodeValue_Bool("Color", self, false );
 	
-	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		draw_set_color(COLORS._main_accent);

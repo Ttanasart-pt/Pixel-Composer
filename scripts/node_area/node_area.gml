@@ -3,12 +3,10 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 0] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Span", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Span", self, [ 16, 16 ] )
 		.setVisible(true, true);
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Shape", self, AREA_SHAPE.rectangle, [ 
@@ -18,7 +16,7 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 3] = nodeValue_Enum_Scroll("Type", self, 0, [ "Center Span", "Two Point" ]);
 	
-	outputs[| 0] = nodeValue("Area", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ])
+	outputs[| 0] = nodeValue_Output("Area", self, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 3, 

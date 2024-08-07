@@ -29,23 +29,23 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	w = 128;
 	
-	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
 		
-	inputs[| 1]  = nodeValue("Generate layers", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 1]  = nodeValue_Trigger("Generate layers", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { refreshLayers(); } });
 	
-	inputs[| 2]  = nodeValue("Current tag", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 2]  = nodeValue_Text("Current tag", self, "");
 	
-	inputs[| 3]  = nodeValue("Use cel dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 3]  = nodeValue_Bool("Use cel dimension", self, false);
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Content", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, self);
+	outputs[| 1] = nodeValue_Output("Content", self, VALUE_TYPE.object, self);
 	
-	outputs[| 2] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "");
+	outputs[| 2] = nodeValue_Output("Path", self, VALUE_TYPE.path, "");
 	
-	outputs[| 3] = nodeValue("Palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
+	outputs[| 3] = nodeValue_Output("Palette", self, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	hold_visibility = true;

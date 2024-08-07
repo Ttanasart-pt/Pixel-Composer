@@ -4,9 +4,9 @@ function Node_VFX_Turbulence(_x, _y, _group = noone) : Node_VFX_effector(_x, _y,
 	
 	inputs[| 4].setVisible(false, false);
 	
-	inputs[| effector_input_length + 0] = nodeValue("Turbulence scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
+	inputs[| effector_input_length + 0] = nodeValue_Float("Turbulence scale", self, 1 );
 	
-	inputs[| effector_input_length + 1] = nodeValue("Constant seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| effector_input_length + 1] = nodeValue_Bool("Constant seed", self, false );
 		
 	array_push(input_display_list, effector_input_length + 0, effector_input_length + 1);
 	

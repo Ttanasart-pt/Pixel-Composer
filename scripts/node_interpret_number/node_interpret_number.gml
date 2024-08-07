@@ -2,16 +2,15 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Interpret Number";
 	dimension_index = -1;
 	
-	inputs[| 0] = nodeValue("Number", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [] )
+	inputs[| 0] = nodeValue_Float("Number", self, [] )
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
 	inputs[| 1] = nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Gradient" ]);
 	
-	inputs[| 2] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ] )
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 2] = nodeValue_Range("Range", self, [ 0, 1 ] );
 	
-	inputs[| 3] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
+	inputs[| 3] = nodeValue_Gradient("Gradient", self, new gradientObject(cola(c_white)))
 		.setMappable(4);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +21,7 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
 		["Interpret",	false], 1, 2, 3, 4, 

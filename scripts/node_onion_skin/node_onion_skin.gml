@@ -5,21 +5,20 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [-1, 1])
-		.setDisplay(VALUE_DISPLAY.slider_range, { range: [ -16, 16, 0.1 ] });
+	inputs[| 1] = nodeValue_Slider_Range("Range", self, [-1, 1], { range: [ -16, 16, 0.1 ] });
 	
-	inputs[| 2] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 2] = nodeValue_Float("Alpha", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 3] = nodeValue("Color pre", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_red)
+	inputs[| 3] = nodeValue_Color("Color pre", self, c_red)
 	
-	inputs[| 4] = nodeValue("Color post", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_blue)
+	inputs[| 4] = nodeValue_Color("Color post", self, c_blue)
 	
-	inputs[| 5] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 5] = nodeValue_Int("Step", self, 1)
 	
-	inputs[| 6] = nodeValue("On top", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Render current frame on top of all frames.")
+	inputs[| 6] = nodeValue_Bool("On top", self, true, "Render current frame on top of all frames.")
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surface", false], 0, 1, 5,  

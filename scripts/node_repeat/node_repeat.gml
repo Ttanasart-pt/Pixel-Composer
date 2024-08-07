@@ -24,42 +24,38 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
+	inputs[| 2] = nodeValue_Int("Amount", self, 2)
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue_Enum_Scroll("Pattern", self,  0, [ new scrollItem("Linear",   s_node_repeat_axis, 0), 
 												 new scrollItem("Grid",     s_node_repeat_axis, 1), 
 												 new scrollItem("Circular", s_node_repeat_axis, 2), ]);
 	
-	inputs[| 4] = nodeValue("Shift position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 4] = nodeValue_Vector("Shift position", self, [ DEF_SURF_W / 2, 0 ])
 		.setUnitRef(function() { return getDimension(); });
 	
-	inputs[| 5] = nodeValue("Repeat rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0])
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 5] = nodeValue_Rotation_Range("Repeat rotation", self, [0, 0]);
 	
-	inputs[| 6] = nodeValue("Scale multiply", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 6] = nodeValue_Float("Scale multiply", self, 1);
 	
-	inputs[| 7] = nodeValue("Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 360])
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 7] = nodeValue_Rotation_Range("Angle range", self, [0, 360]);
 	
-	inputs[| 8] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 8] = nodeValue_Float("Radius", self, 1);
 		
-	inputs[| 9] = nodeValue("Start position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 0])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 9] = nodeValue_Vector("Start position", self, [0, 0])
 		.setUnitRef(function(index) { return getInputData(1); });
 		
 	inputs[| 10] = nodeValue("Scale over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 11] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone, "Make each copy follow along path." )
+	inputs[| 11] = nodeValue_PathNode("Path", self, noone, "Make each copy follow along path." )
 		.setVisible(true, true);
 	
-	inputs[| 12] = nodeValue("Path range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1], "Range of the path to follow.")
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 12] = nodeValue_Slider_Range("Path range", self, [0, 1])
+		.setTooltip("Range of the path to follow.");
 	
-	inputs[| 13] = nodeValue("Path shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 13] = nodeValue_Float("Path shift", self, 0);
 	
-	inputs[| 14] = nodeValue("Color over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
+	inputs[| 14] = nodeValue_Gradient("Color over copy", self, new gradientObject(cola(c_white)))
 		.setMappable(30);
 		
 	inputs[| 15] = nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
@@ -67,40 +63,37 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 16] = nodeValue_Enum_Button("Array select", self, 0, [ "Order", "Random", "Spread" ])
 		.setTooltip("Whether to select image from an array in order, at random, or spread or each image to one output.");
 	
-	inputs[| 17] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 17] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 17].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 18] = nodeValue("Column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 18] = nodeValue_Int("Column", self, 4);
 	
-	inputs[| 19] = nodeValue("Column shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, DEF_SURF_H / 2])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 19] = nodeValue_Vector("Column shift", self, [0, DEF_SURF_H / 2])
 		.setUnitRef(function() { return getDimension(); });
 	
-	inputs[| 20] = nodeValue("Animator midpoint", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 20] = nodeValue_Float("Animator midpoint", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 2, 0.01] });
 	
-	inputs[| 21] = nodeValue("Animator range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 21] = nodeValue_Float("Animator range", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 22] = nodeValue("Animator position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 22] = nodeValue_Vector("Animator position", self, [ 0, 0 ]);
 	
 	inputs[| 23] = nodeValue_Rotation("Animator rotation", self, 0);
 		
-	inputs[| 24] = nodeValue("Animator scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 24] = nodeValue_Vector("Animator scale", self, [ 0, 0 ]);
 		
 	inputs[| 25] = nodeValue("Animator falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_10);
 	 
 	inputs[| 26] = nodeValue_Enum_Button("Stack", self,  0, [ "None", "X", "Y" ])
 		.setTooltip("Place each copy next to each other, taking surface dimension into account.");
 	
-	inputs[| 27] = nodeValue("Animator blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, cola(c_white));
+	inputs[| 27] = nodeValue_Color("Animator blend", self, cola(c_white));
 	
-	inputs[| 28] = nodeValue("Animator alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 28] = nodeValue_Float("Animator alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 29] = nodeValue("Animator", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 29] = nodeValue_Bool("Animator", self, false)
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -116,7 +109,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	inputs[| 34] = nodeValue_Enum_Scroll("Blend Mode", self,  0, [ "Normal", "Additive", "Maximum" ]);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surfaces",	 true],	0, 1, 16, 17,

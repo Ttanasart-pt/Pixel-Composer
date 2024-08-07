@@ -6,17 +6,15 @@ function Node_Area(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	w = 96;
 	
 	
-	inputs[| 0] = nodeValue(0, "Postion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 0] = nodeValue_vector(0, "Postion", self, [ 0, 0 ] )
 		.setVisible(true, true);
-	inputs[| 1] = nodeValue(1, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_vector(1, "Size", self, [ 16, 16 ] )
 		.setVisible(true, true);
 	
 	inputs[| 2] = nodeValue(2, "Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, AREA_SHAPE.rectangle )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Rectangle", "Elipse"]);
 	
-	outputs[| 0] = nodeValue(0, "Area", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ])
+	outputs[| 0] = nodeValue_Output(0, "Area", self, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {

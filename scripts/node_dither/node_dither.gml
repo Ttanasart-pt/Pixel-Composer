@@ -18,15 +18,14 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))
-		.setDisplay(VALUE_DISPLAY.palette);
+	inputs[| 1] = nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE));
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Pattern", self,  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]);
 	
 	inputs[| 3] = nodeValue_Surface("Dither map", self)
 		.setVisible(false);
 	
-	inputs[| 4] = nodeValue("Contrast", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 4] = nodeValue_Float("Contrast", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 5, 0.1] });
 	
 	inputs[| 5] = nodeValue_Surface("Contrast map", self);
@@ -35,26 +34,25 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 7] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 8] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 8] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 9] = nodeValue_Bool("Active", self, true);
 		active_index = 9;
 	
-	inputs[| 10] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
-		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	inputs[| 10] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
 	__init_mask_modifier(7); // inputs 11, 12, 
 	
-	inputs[| 13] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 13] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 13].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
-	inputs[| 14] = nodeValue("Use palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 14] = nodeValue_Bool("Use palette", self, true);
 	
-	inputs[| 15] = nodeValue("Steps", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+	inputs[| 15] = nodeValue_Int("Steps", self, 4)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 9, 10, 13, 
 		["Surfaces", true], 0, 7, 8, 11, 12, 

@@ -9,10 +9,10 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Physics activated", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 1] = nodeValue_Bool("Physics activated", self, true)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, noone);
+	outputs[| 0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone);
 	
 	input_display_list = [
 		["Object",		 true],	0,

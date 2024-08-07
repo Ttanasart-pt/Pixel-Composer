@@ -3,7 +3,7 @@ function Node_3D_Mesh(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) c
 	
 	in_mesh = ds_list_size(inputs);
 	
-	outputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Mesh, noone);
+	outputs[| 0] = nodeValue_Output("Mesh", self, VALUE_TYPE.d3Mesh, noone);
 	
 	#macro __d3d_input_list_mesh ["Mesh", false]
 	

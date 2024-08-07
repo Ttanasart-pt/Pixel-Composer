@@ -4,18 +4,16 @@ function Node_Transform_Array(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Postion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 0] = nodeValue_Vector("Postion", self, [ 0, 0 ] )
 		.setVisible(true, true);
 		
 	inputs[| 1] = nodeValue_Rotation("Rotation", self, 0)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 2] = nodeValue_Vector("Scale", self, [ 1, 1 ] )
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue("Transform", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 1, 1 ])
+	outputs[| 0] = nodeValue_Output("Transform", self, VALUE_TYPE.float, [ 0, 0, 0, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

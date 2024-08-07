@@ -1,7 +1,7 @@
-function nodeValue_Range(_name, _node, _value, _tooltip = "") { return new NodeValue_Range(_name, _node, _value, _tooltip); }
+function nodeValue_Range(_name, _node, _value, _data = {}) { return new NodeValue_Range(_name, _node, _value, _data); }
 
-function NodeValue_Range(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, _tooltip) constructor {
-	setDisplay(VALUE_DISPLAY.range);
+function NodeValue_Range(_name, _node, _value, _data) : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, "") constructor {
+	setDisplay(VALUE_DISPLAY.range, _data);
 	
 	/////============== GET =============
 	

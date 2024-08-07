@@ -3,21 +3,19 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 6 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Scale", self, [ 4, 6 ]);
 	
-	inputs[| 3] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3);
+	inputs[| 3] = nodeValue_Int("Iteration", self, 3);
 	
-	inputs[| 4] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 4] = nodeValue_Float("Brightness", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 5] = nodeValue_Rotation("Rotation", self, 0);
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",		false], 0, 

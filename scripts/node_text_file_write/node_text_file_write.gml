@@ -4,11 +4,11 @@ function Node_Text_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	w = 128;
 	
-	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "text file|*.txt" })
 		.rejectArray();
 		
-	inputs[| 1] = nodeValue("Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
+	inputs[| 1] = nodeValue_Text("Content", self, "")
 		.setVisible(true, true);
 	
 	static writeFile = function() {

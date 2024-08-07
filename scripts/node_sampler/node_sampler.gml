@@ -4,16 +4,15 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 2] = nodeValue("Sampling size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Size of square around the position to sample and average pixel color.")
+	inputs[| 2] = nodeValue_Int("Sampling size", self, 1, "Size of square around the position to sample and average pixel color.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 3, 0.1] });
 	
-	inputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 3] = nodeValue_Bool("Alpha", self, false);
 	
-	outputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
+	outputs[| 0] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	

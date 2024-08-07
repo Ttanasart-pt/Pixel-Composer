@@ -2,11 +2,11 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Armature Path";
 	setDimension(96, 72);
 	
-	inputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.input, VALUE_TYPE.armature, noone)
+	inputs[| 0] = nodeValue_Armature("Armature", self, noone)
 		.setVisible(true, true)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	lines = [];
 	

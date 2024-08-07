@@ -2,13 +2,12 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Trim Path";
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 1] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
 	
-	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	cached_pos = ds_map_create();
 	

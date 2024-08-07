@@ -3,41 +3,38 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 2] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	inputs[| 4] = nodeValue("FOV", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30)
+	inputs[| 4] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	inputs[| 5] = nodeValue("View Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 6 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 5] = nodeValue_Vector("View Range", self, [ 0, 6 ]);
 	
-	inputs[| 6] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 6] = nodeValue_Float("Density", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue("Detail", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
+	inputs[| 7] = nodeValue_Int("Detail", self, 8);
 	
-	inputs[| 8] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.4)
+	inputs[| 8] = nodeValue_Float("Threshold", self, 0.4)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue("Detail Scaling", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2.);
+	inputs[| 9] = nodeValue_Float("Detail Scaling", self, 2.);
 	
-	inputs[| 10] = nodeValue("Detail Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 10] = nodeValue_Float("Detail Attenuation", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 11] = nodeValue_Enum_Scroll("Shape", self,  0, [ "Volume", "Plane" ]);
 	
-	inputs[| 12] = nodeValue("Use Fog", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0)
+	inputs[| 12] = nodeValue_Bool("Use Fog", self, 0)
 	
-	inputs[| 13] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ cola(c_black), cola(c_white) ]) )
+	inputs[| 13] = nodeValue_Gradient("Colors", self, new gradientObject([ cola(c_black), cola(c_white) ]))
 	
-	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
 		["Transform", false],  1,  2,  3, 

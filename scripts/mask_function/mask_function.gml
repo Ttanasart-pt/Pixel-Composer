@@ -1,9 +1,9 @@
 function __init_mask_modifier(_mask_index) { #region
 	var _ind = ds_list_size(inputs);
 	
-	inputs[| _ind + 0] = nodeValue("Invert mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| _ind + 0] = nodeValue_Bool("Invert mask", self, false);
 	
-	inputs[| _ind + 1] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| _ind + 1] = nodeValue_Float("Mask feather", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 32, 0.1] });
 		
 	__mask_index     = _mask_index;

@@ -48,11 +48,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 0] = nodeValue_Surface("Surface", self);
 	
-	inputs[| 1] = nodeValue("Paths",   self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 1] = nodeValue_Text("Paths",   self, "")
 		.setDisplay(VALUE_DISPLAY.path_save, _format_still)
 		.setVisible(true);
 	
-	inputs[| 2] = nodeValue("Template",  self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "%d%n")
+	inputs[| 2] = nodeValue_Text("Template",  self, "%d%n")
 		.rejectArray();
 	inputs[| 2].editWidget.format		= TEXT_AREA_FORMAT.path_template;
 	inputs[| 2].editWidget.auto_update	= true;
@@ -63,7 +63,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 3] = nodeValue_Enum_Scroll("Type", self,  0, { data: format_single, update_hover: false })
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Template guides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue_Int("Template guides", self, 0)
 		.setDisplay(VALUE_DISPLAY.label, 
 @"%d          Directory
 %1d        Goes up 1 level
@@ -71,20 +71,20 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 %f           Frame
 %i           Array index" );
 
-	inputs[| 5] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 5] = nodeValue_Bool("Loop", self, true)
 		.setVisible(false)
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue("Frame optimization", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 6] = nodeValue_Bool("Frame optimization", self, false)
 		.setVisible(false)
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue("Color merge", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.02)
+	inputs[| 7] = nodeValue_Float("Color merge", self, 0.02)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false)
 		.rejectArray();
 	
-	inputs[| 8] = nodeValue("Framerate", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 30)
+	inputs[| 8] = nodeValue_Int("Framerate", self, 30)
 		.rejectArray();
 	
 	format_image     = [ ".png", ".jpg", ".webp" ];
@@ -93,26 +93,25 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 9] = nodeValue_Enum_Scroll("Format", self,  0, { data: format_image, update_hover: false })
 		.rejectArray();
 	
-	inputs[| 10] = nodeValue("Quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 23)
+	inputs[| 10] = nodeValue_Float("Quality", self, 23)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 100, 0.1 ] })
 		.rejectArray();
 	
-	inputs[| 11] = nodeValue("Sequence begin", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 11] = nodeValue_Int("Sequence begin", self, 0);
 	
-	inputs[| 12] = nodeValue("Frame range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, -1])
-		.setDisplay(VALUE_DISPLAY.slider_range, { range: [0, TOTAL_FRAMES, 0.1] });
+	inputs[| 12] = nodeValue_Slider_Range("Frame range", self, [0, -1], { range: [0, TOTAL_FRAMES, 0.1] });
 	
 	png_format   = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
 	inputs[| 13] = nodeValue_Enum_Scroll("Subformat", self,  2, { data: png_format, update_hover: false });
 	
-	inputs[| 14] = nodeValue("Frame step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 14] = nodeValue_Int("Frame step", self, 1);
 	
-	inputs[| 15] = nodeValue("Custom Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 15] = nodeValue_Bool("Custom Range", self, false)
 		.rejectArray();
 	
-	inputs[| 16] = nodeValue("Export on Save", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 16] = nodeValue_Bool("Export on Save", self, false)
 	
-	outputs[| 0] = nodeValue("Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Preview", self, VALUE_TYPE.surface, noone);
 	
 	template_guide = [
 		["%d",  "Directory"],

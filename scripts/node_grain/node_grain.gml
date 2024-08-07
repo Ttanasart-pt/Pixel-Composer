@@ -5,41 +5,40 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 1] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 2] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 2] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 3] = nodeValue_Bool("Active", self, true);
 		active_index = 3;
 	
-	inputs[| 4] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
-		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	inputs[| 4] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
 	__init_mask_modifier(1); // inputs 5, 6
 	
-	inputs[| 7] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 7] = nodeValue_Float("Brightness", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(8);
 	
 	inputs[| 8] = nodeValueMap("Brightness map", self);
 	
-	inputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+	inputs[| 9] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 9].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 10] = nodeValue("Red", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 10] = nodeValue_Float("Red", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(11);
 	
 	inputs[| 11] = nodeValueMap("Red map", self);
 		
-	inputs[| 12] = nodeValue("Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 12] = nodeValue_Float("Green", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(13);
 	
 	inputs[| 13] = nodeValueMap("Green map", self);
 		
-	inputs[| 14] = nodeValue("Blue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 14] = nodeValue_Float("Blue", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(15);
 	
@@ -47,19 +46,19 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 16] = nodeValue("Hue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 16] = nodeValue_Float("Hue", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(17);
 	
 	inputs[| 17] = nodeValueMap("Hue map", self);
 		
-	inputs[| 18] = nodeValue("Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 18] = nodeValue_Float("Saturation", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(19);
 	
 	inputs[| 19] = nodeValueMap("Saturation map", self);
 		
-	inputs[| 20] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 20] = nodeValue_Float("Value", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(21);
 	
@@ -80,7 +79,7 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["HSV",			false], 24, /**/ 16, 17, 18, 19, 20, 21, 
 	]
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

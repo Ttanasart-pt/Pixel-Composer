@@ -4,16 +4,16 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 	if(!LOADING && !APPENDING)
 		inputs[| 0].setValue([ 0, 0, 1 ]);
 	
-	inputs[| in_d3d + 0] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| in_d3d + 0] = nodeValue_Bool("Active", self, true);
 	
-	inputs[| in_d3d + 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| in_d3d + 1] = nodeValue_Color("Color", self, c_white);
 	
-	inputs[| in_d3d + 2] = nodeValue("Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| in_d3d + 2] = nodeValue_Float("Intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	in_light = ds_list_size(inputs);
 	
-	outputs[| 0] = nodeValue("Light", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Light, noone);
+	outputs[| 0] = nodeValue_Output("Light", self, VALUE_TYPE.d3Light, noone);
 	
 	#macro __d3d_input_list_light ["Light", false], in_d3d + 0, in_d3d + 1, in_d3d + 2
 	

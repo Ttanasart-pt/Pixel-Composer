@@ -1,11 +1,11 @@
 function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Spout Send";
 	
-	inputs[| 0] = nodeValue("Sender name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "PixelComposer");
+	inputs[| 0] = nodeValue_Text("Sender name", self, "PixelComposer");
 	
 	inputs[| 1] = nodeValue_Surface("Surface", self);
 	
-	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
+	outputs[| 0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone)
 		.setVisible(false);
 	
 	spoutIndex = spoutSenderInit();

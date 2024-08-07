@@ -10,8 +10,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 3] = nodeValue_Enum_Button("Output type", self,  0, [ "Sheet", "Array" ] );
 	
-	inputs[| 4] = nodeValue("Crop", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 8, 8, 8, 8 ])
-		.setDisplay(VALUE_DISPLAY.padding);
+	inputs[| 4] = nodeValue_Padding("Crop", self, [ 8, 8, 8, 8 ]);
 	
 	inputs[| 5] = nodeValue_Enum_Button("Edge type", self,  0, [ "Uniform", "Individual" ] );
 	
@@ -20,17 +19,15 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 8] = nodeValue_Surface("Edge left",	self);
 	inputs[| 9] = nodeValue_Surface("Edge right",	self);
 	
-	inputs[| 10] = nodeValue("Edge shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.padding);
+	inputs[| 10] = nodeValue_Padding("Edge shift", self, [ 0, 0, 0, 0 ]);
 		
-	inputs[| 11] = nodeValue("Full edge", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.toggle, { data: [ "T", "B", "L", "R" ] });
+	inputs[| 11] = nodeValue_Toggle("Full edge", self, 0, { data: [ "T", "B", "L", "R" ] });
 	
 	inputs[| 12] = nodeValue_Enum_Scroll("Edge sprite", self,  0, [ "Single", "Side + Center", "Side + Center + Side" ] );
 	
 	inputs[| 13] = nodeValue_Enum_Button("Edge transform", self,  0, [ "Flip", "Rotate" ] );
 		
-	inputs[| 14] = nodeValue("Sort array by bit", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 14] = nodeValue_Bool("Sort array by bit", self, true)
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
 		["Surfaces",	  true], 0, 1, 
@@ -40,7 +37,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Output",		 false], 3, 14, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	temp_surface = array_create(55);
 	for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 

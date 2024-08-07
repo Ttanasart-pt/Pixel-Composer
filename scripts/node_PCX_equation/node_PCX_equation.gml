@@ -4,9 +4,9 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	setDimension(96, 48);
 	ast = noone;
 	
-	inputs[| 0] = nodeValue("Equation", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 0] = nodeValue_Text("Equation", self, "");
 	
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone );
+	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.PCXnode, noone );
 	
 	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		argument_renderer.x = _x;
@@ -50,7 +50,7 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+		inputs[| index + 0] = nodeValue_Text("Argument name", self, "" )
 			.setDisplay(VALUE_DISPLAY.text_box);
 		
 		inputs[| index + 1] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone )

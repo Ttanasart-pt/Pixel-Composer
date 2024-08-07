@@ -18,68 +18,66 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
 	
-	inputs[| in_d3d + 0] = nodeValue("FOV", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 60 )
+	inputs[| in_d3d + 0] = nodeValue_Int("FOV", self, 60 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 10, 90, 0.1 ] });
 	
-	inputs[| in_d3d + 1] = nodeValue("Clipping Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 10 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| in_d3d + 1] = nodeValue_Vector("Clipping Distance", self, [ 1, 10 ] );
 	 
 	inputs[| in_d3d + 2] = nodeValue_Dimension(self);
 	
 	inputs[| in_d3d + 3] = nodeValue_Enum_Button("Projection", self,  1 , [ "Perspective", "Orthographic" ]);
 	
-	inputs[| in_d3d + 4] = nodeValue("Scene", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Scene, noone )
+	inputs[| in_d3d + 4] = nodeValue_D3Scene("Scene", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| in_d3d + 5] = nodeValue("Ambient Light", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_dkgrey );
+	inputs[| in_d3d + 5] = nodeValue_Color("Ambient Light", self, c_dkgrey );
 	
-	inputs[| in_d3d + 6] = nodeValue("Show Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| in_d3d + 6] = nodeValue_Bool("Show Background", self, false );
 	
 	inputs[| in_d3d + 7] = nodeValue_Enum_Button("Backface Culling", self,  2 , [ "None", "CW", "CCW" ]);
 	
-	inputs[| in_d3d + 8] = nodeValue("Orthographic Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| in_d3d + 8] = nodeValue_Float("Orthographic Scale", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
 	inputs[| in_d3d + 9] = nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] );
 	
-	inputs[| in_d3d + 10] = nodeValue("Lookat Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| in_d3d + 10] = nodeValue_Vector("Lookat Position", self, [ 0, 0, 0 ] );
 	
 	inputs[| in_d3d + 11] = nodeValue_Rotation("Roll", self, 0);
 	
 	inputs[| in_d3d + 12] = nodeValue_Rotation("Horizontal Angle", self, 45 );
 	
-	inputs[| in_d3d + 13] = nodeValue("Vertical Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30 )
+	inputs[| in_d3d + 13] = nodeValue_Float("Vertical Angle", self, 30 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	inputs[| in_d3d + 14] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
+	inputs[| in_d3d + 14] = nodeValue_Float("Distance", self, 4 );
 	
-	inputs[| in_d3d + 15] = nodeValue("Gamma Adjust", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| in_d3d + 15] = nodeValue_Bool("Gamma Adjust", self, false );
 	
 	inputs[| in_d3d + 16] = nodeValue_Surface("Environment Texture", self);
 	
-	inputs[| in_d3d + 17] = nodeValue("Ambient Occlusion", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| in_d3d + 17] = nodeValue_Bool("Ambient Occlusion", self, false );
 	
-	inputs[| in_d3d + 18] = nodeValue("AO Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.25 );
+	inputs[| in_d3d + 18] = nodeValue_Float("AO Radius", self, 0.25 );
 	
-	inputs[| in_d3d + 19] = nodeValue("AO Bias", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05 );
+	inputs[| in_d3d + 19] = nodeValue_Float("AO Bias", self, 0.05 );
 	
-	inputs[| in_d3d + 20] = nodeValue("AO Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1. )
+	inputs[| in_d3d + 20] = nodeValue_Float("AO Strength", self, 1. )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	inputs[| in_d3d + 21] = nodeValue("Round Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+	inputs[| in_d3d + 21] = nodeValue_Int("Round Normal", self, 0 )
 		.setWindows();
 	
 	inputs[| in_d3d + 22] = nodeValue_Enum_Button("Blend mode", self,  0 , [ "Normal", "Additive" ]);
 		
 	in_cam = ds_list_size(inputs);
 	
-	outputs[| 0] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
+	outputs[| 0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone );
 	
-	outputs[| 1] = nodeValue("Normal", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone )
+	outputs[| 1] = nodeValue_Output("Normal", self, VALUE_TYPE.surface, noone )
 		.setVisible(false);
 	
-	outputs[| 2] = nodeValue("Depth", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone )
+	outputs[| 2] = nodeValue_Output("Depth", self, VALUE_TYPE.surface, noone )
 		.setVisible(false);
 	
 	input_display_list = [ in_d3d + 4,

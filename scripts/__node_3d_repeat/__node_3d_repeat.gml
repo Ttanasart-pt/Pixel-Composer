@@ -3,65 +3,56 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 2] = nodeValue("Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 3] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 3] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
 	
-	inputs[| 4] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 4] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef( function() { return getInputData(0); }, VALUE_UNIT.reference);
 	
-	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 5] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
 		
 	inputs[| 6] = nodeValue_Rotation("Light direction", self, 0);
 		
-	inputs[| 7] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 7] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
-	inputs[| 8] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 8] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 9] = nodeValue_Color("Light color", self, c_white);
 	
-	inputs[| 10] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
+	inputs[| 10] = nodeValue_Color("Ambient color", self, c_grey);
 		
 	inputs[| 11] = nodeValue("3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone)
 		.setVisible(true, true);
 	
-	inputs[| 12] = nodeValue("Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Amount of copies to be generated.");
+	inputs[| 12] = nodeValue_Int("Repeat", self, 1, "Amount of copies to be generated.");
 	
-	inputs[| 13] = nodeValue("Repeat position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 13] = nodeValue_Vector("Repeat position", self, [ 1, 0, 0 ]);
 	
-	inputs[| 14] = nodeValue("Repeat rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 14] = nodeValue_Vector("Repeat rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 15] = nodeValue("Repeat scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 15] = nodeValue_Vector("Repeat scale", self, [ 1, 1, 1 ]);
 	
 	inputs[| 16] = nodeValue_Enum_Button("Repeat pattern", self,  0, [ "Linear", "Circular" ])
 		.rejectArray();
 	
 	inputs[| 17] = nodeValue_Enum_Button("Axis", self,  0, [ "x", "y", "z" ]);
 	
-	inputs[| 18] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 18] = nodeValue_Float("Radius", self, 1);
 	
-	inputs[| 19] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 360 ])
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 19] = nodeValue_Rotation_Range("Rotation", self, [ 0, 360 ]);
 	
 	inputs[| 20] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
-	inputs[| 21] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+	inputs[| 21] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[| 22] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 22] = nodeValue_Bool("Scale view with dimension", self, true)
 	
 	input_display_list = [ 11,
 		["Output",			false], 0, 22, 
@@ -72,11 +63,11 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	];
 	
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("3D objects", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[| 1] = nodeValue_Output("3D objects", self, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
-	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
 	
 	output_display_list = [
 		0, 2, 1

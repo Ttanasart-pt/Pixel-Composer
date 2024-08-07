@@ -3,15 +3,14 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 	
 	inputs[| 3] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Uniform", "Per Corner" ]);
 	
-	inputs[| 4] = nodeValue("Corner Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
+	inputs[| 4] = nodeValue_Int("Corner Radius", self, 1 );
 	
-	inputs[| 5] = nodeValue("Corner Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 1, 1, 1, 1 ] )
-		.setArrayDepth(1)
-		.setDisplay(VALUE_DISPLAY.corner);
+	inputs[| 5] = nodeValue_Corner("Corner Radius", self, [ 1, 1, 1, 1 ] )
+		.setArrayDepth(1);
 	
-	inputs[| 6] = nodeValue("Relative", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 6] = nodeValue_Bool("Relative", self, false );
 	
-	inputs[| 7] = nodeValue("Cut Corner", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 7] = nodeValue_Bool("Cut Corner", self, false );
 	
 	input_display_list = [
 		["Draw",	false], 0, 1, 2, 

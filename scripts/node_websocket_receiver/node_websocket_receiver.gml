@@ -1,17 +1,17 @@
 function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Websocket Receiver";
 		
-	inputs[| 0] = nodeValue("Port", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 22400);
+	inputs[| 0] = nodeValue_Int("Port", self, 22400);
 	
-	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue_Bool("Active", self, true);
 	
 	inputs[| 2] = nodeValue_Enum_Button("Mode", self,  1, [ "Client", "Server" ]);
 	
-	inputs[| 3] = nodeValue("Url", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 3] = nodeValue_Text("Url", self, "");
 	
-	outputs[| 0] = nodeValue("Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
+	outputs[| 0] = nodeValue_Output("Data", self, VALUE_TYPE.struct, {});
 	
-	outputs[| 1] = nodeValue("Receive data", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false);
+	outputs[| 1] = nodeValue_Output("Receive data", self, VALUE_TYPE.trigger, false);
 	
 	input_display_list = [ 1, 2,
 		["Connection", false], 0, 3,

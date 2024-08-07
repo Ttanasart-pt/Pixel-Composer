@@ -3,14 +3,14 @@ function Node_String_Regex_Replace(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
+	inputs[| 0] = nodeValue_Text("Text", self, "")
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Regex", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 1] = nodeValue_Text("Regex", self, "");
 	
-	inputs[| 2] = nodeValue("Replacement", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 2] = nodeValue_Text("Replacement", self, "");
 	
-	outputs[| 0] = nodeValue("Results", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
+	outputs[| 0] = nodeValue_Output("Results", self, VALUE_TYPE.text, "");
 	
 	input_display_list = [
 		0, 1, 2, 

@@ -2,33 +2,29 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Wave Path";
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 1] = nodeValue_Range("Frequency", self, [ 4, 4 ], { linked : true });
 	
-	inputs[| 2] = nodeValue("Amplitude", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 2] = nodeValue_Range("Amplitude", self, [ 4, 4 ], { linked : true });
 	
-	inputs[| 3] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 3] = nodeValue_Range("Shift", self, [ 0, 0 ], { linked : true });
 	
-	inputs[| 4] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 4] = nodeValue_Bool("Smooth", self, false);
 	
-	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+	inputs[| 5] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 6] = nodeValue("Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 6] = nodeValue_Bool("Wiggle", self, false);
 	
-	inputs[| 7] = nodeValue("Wiggle Amplitude", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -2, 2 ])
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 7] = nodeValue_Range("Wiggle Amplitude", self, [ -2, 2 ]);
 	
-	inputs[| 8] = nodeValue("Wiggle Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8);
+	inputs[| 8] = nodeValue_Float("Wiggle Frequency", self, 8);
 	
 	inputs[| 9] = nodeValue("Amplitude over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	input_display_list = [ 5, 
 		["Path",	 true], 0,

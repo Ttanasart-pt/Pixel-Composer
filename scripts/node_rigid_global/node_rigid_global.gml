@@ -8,8 +8,7 @@ function Node_Rigid_Global(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	object = noone;
 	
-	inputs[| 0] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 10 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Vector("Gravity", self, [ 0, 10 ]);
 	
 	current_gra = [0, 0];
 	

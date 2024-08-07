@@ -2,7 +2,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _gr
 	name = "3D Particle";
 	update_on_frame = true;
 	
-	inputs[| in_mesh + 0] = nodeValue("Amounts", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| in_mesh + 0] = nodeValue_Int("Amounts", self, 1);
 	
 	part_pool_size = 128;
 	parts = array_create(part_pool_size);

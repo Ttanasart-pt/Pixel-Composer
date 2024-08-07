@@ -4,12 +4,12 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	color  = COLORS.node_blend_vct;
 	vct    = new VCT(self);
 	
-	inputs[| 0] = nodeValue("Editor", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 0] = nodeValue_Int("Editor", self, 0)
 		.setDisplay(VALUE_DISPLAY.button, { name: "Editor", onClick: function() {
 			vct.createDialog();
 		} });
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
 	input_display_list = [ 0, 
 		["Automations", false], 

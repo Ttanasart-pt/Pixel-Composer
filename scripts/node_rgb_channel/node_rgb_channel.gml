@@ -6,14 +6,14 @@ function Node_RGB_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 1] = nodeValue_Enum_Scroll("Output Type", self,  0, [ "Channel value", "Greyscale" ]);
 		
-	inputs[| 2] = nodeValue("Keep Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 2] = nodeValue_Bool("Keep Alpha", self, false);
 	
-	inputs[| 3] = nodeValue("Output Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 3] = nodeValue_Bool("Output Array", self, false);
 	
-	outputs[| 0] = nodeValue("Red",   self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
-	outputs[| 1] = nodeValue("Green", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
-	outputs[| 2] = nodeValue("Blue",  self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
-	outputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Red",   self, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue_Output("Green", self, VALUE_TYPE.surface, noone);
+	outputs[| 2] = nodeValue_Output("Blue",  self, VALUE_TYPE.surface, noone);
+	outputs[| 3] = nodeValue_Output("Alpha", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

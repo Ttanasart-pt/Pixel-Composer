@@ -4,41 +4,33 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 2] = nodeValue("Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 3] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 3] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
 	
 	inputs[| 4] = nodeValue_Enum_Scroll("Output dimension", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input" ])
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue("Constant dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 5] = nodeValue_Vector("Constant dimension", self, DEF_SURF);
 	
-	inputs[| 6] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 6] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 7] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 7] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
 	
 	inputs[| 8] = nodeValue_Enum_Button("Projection", self, 0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
-	inputs[| 9] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+	inputs[| 9] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[| 10] = nodeValue("Texture scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 10] = nodeValue_Vector("Texture scale", self, [ 1, 1 ]);
 	
-	inputs[| 11] = nodeValue("Texture shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 11] = nodeValue_Vector("Texture shift", self, [ 0, 0 ]);
 		
-	inputs[| 12] = nodeValue("Subdiviion", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 12] = nodeValue_Int("Subdiviion", self, 1)
 		
 	inputs[| 13] = nodeValue_Enum_Button("Normal axis", self, 2, [ "X", "Y", "Z" ]);
 	
@@ -50,11 +42,11 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Texture",			 false], 10, 11,
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("3D scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[| 1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
-	outputs[| 2] = nodeValue("3D vertex", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3vertex, []);
+	outputs[| 2] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
 	
 	output_display_list = [
 		0, 1, 2

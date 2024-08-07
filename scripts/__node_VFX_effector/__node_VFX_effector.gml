@@ -20,35 +20,31 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	seed  = 1;
 	
-	inputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
+	inputs[| 0] = nodeValue_Particle("Particles", self, -1 )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA)
-		.setDisplay(VALUE_DISPLAY.area)
+	inputs[| 1] = nodeValue_Area("Area", self, DEF_AREA)
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 )
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )
+	inputs[| 3] = nodeValue_Float("Falloff distance", self, 4 )
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Effect Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -1, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 4] = nodeValue_Vector("Effect Vector", self, [ -1, 0 ] )
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| 5] = nodeValue_Float("Strength", self, 1 )
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue("Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.rotation_range)
+	inputs[| 6] = nodeValue_Rotation_Range("Rotate particle", self, [ 0, 0 ] )
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue("Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector_range, { linked : true })
+	inputs[| 7] = nodeValue_Vec2_Range("Scale particle", self, [ 0, 0, 0, 0 ] , { linked : true })
 		.rejectArray();
 	
-	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 8] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 		
@@ -59,7 +55,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Effect",	false], 8, 4, 5, 6, 7,
 	];
 	
-	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, -1 );
+	outputs[| 0] = nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 );
 	
 	UPDATE_PART_FORWARD
 	

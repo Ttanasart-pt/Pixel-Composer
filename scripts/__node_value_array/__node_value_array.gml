@@ -1,3 +1,15 @@
+function nodeValue_Vector(_name, _node, _value, _data = {}) {
+	var _len = array_length(_value);
+	
+	switch(_len) {
+		case 2 : return new NodeValue_Vec2(_name, _node, _value, _data);
+		case 3 : return new NodeValue_Vec3(_name, _node, _value, _data);
+		case 4 : return new NodeValue_Vec4(_name, _node, _value, _data);
+	}
+	
+	return new NodeValue_Array(_name, _node, _value, "", _len);
+}
+
 function NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, _tooltip) constructor {
 	
 	data_array_length = _length;

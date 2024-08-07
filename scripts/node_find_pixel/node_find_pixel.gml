@@ -4,21 +4,21 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Search color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 1] = nodeValue_Color("Search color", self, c_black);
 	
-	inputs[| 2] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue_Float("Tolerance", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue("Find all", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 3] = nodeValue_Bool("Find all", self, false);
 	
-	inputs[| 4] = nodeValue("Include alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 4] = nodeValue_Bool("Include alpha", self, false);
 	
-	inputs[| 5] = nodeValue("Alpha tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 5] = nodeValue_Float("Alpha tolerance", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	// inputs[| 6] = nodeValue_Enum_Button("Axis", self,  1, [ "X", "Y" ]);
 	
-	outputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 0, 0 ])
+	outputs[| 0] = nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0, 

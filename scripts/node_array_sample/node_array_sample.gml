@@ -2,14 +2,14 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Array Sample";
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
+	inputs[| 0] = nodeValue_Float("Array", self, [])
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 1] = nodeValue_Float("Step", self, 1)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0)
+	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.float, 0)
 		.setArrayDepth(1);
 		
 	static sample = function(arr, stp) {

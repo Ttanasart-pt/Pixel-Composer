@@ -80,26 +80,25 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 0] = nodeValue_Enum_Scroll("Display type", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false });
 	
-	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.range)
+	inputs[| 1] = nodeValue_Range("Range", self, [ 0, 1 ])
 		.setVisible(false);
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Input type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false });
 	
-	inputs[| 3] = nodeValue("Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
+	inputs[| 3] = nodeValue_Text("Enum label", self, "")
 		.setVisible(false);
 	
 	inputs[| 4] = nodeValue_Enum_Button("Vector size", self,  0, [ "2", "3", "4" ])
 		.setVisible(false);
 	
-	inputs[| 5] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 5] = nodeValue_Int("Order", self, 0);
 	
-	inputs[| 6] = nodeValue("Display preview gizmo", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 6] = nodeValue_Bool("Display preview gizmo", self, true);
 		
-	inputs[| 7] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.01)
+	inputs[| 7] = nodeValue_Float("Step", self, 0.01)
 		.setVisible(false);
 		
-	inputs[| 8] = nodeValue("Button Label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Trigger")
+	inputs[| 8] = nodeValue_Text("Button Label", self, "Trigger")
 		.setVisible(false);
 	
 	inputs[| 9] = nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Show", "Hide", /* 2 */ new scrollItem("Equal",			s_node_condition_type, 0), 
@@ -109,9 +108,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 												        		 /* 6 */ new scrollItem("Lesser",			s_node_condition_type, 2), 
 												        		 /* 7 */ new scrollItem("Lesser or equal",	s_node_condition_type, 3), ]);
 	
-	inputs[| 10] = nodeValue("Visible Check", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 10] = nodeValue_Float("Visible Check", self, 0);
 	
-	inputs[| 11] = nodeValue("Visible Check To", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 11] = nodeValue_Float("Visible Check To", self, 0);
 	
 	inputs[| 10].setFrom_condition = function(_valueFrom) {
 		if(is_instanceof(_valueFrom.node, Node_Group_Input)) return true;
@@ -128,7 +127,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Data",	false], 2, 0, 4, 1, 7, 3, 8, 
 	];
 	
-	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0)
+	outputs[| 0] = nodeValue_Output("Value", self, VALUE_TYPE.any, 0)
 		.uncache();
 	
 	attributes.inherit_name = true;

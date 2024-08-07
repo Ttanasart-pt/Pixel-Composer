@@ -7,9 +7,9 @@ function Node_Module_SubModule(parent) : NodeModule(parent) constructor {
 function Node_Module_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Module test";
 	
-	inputs[| 0] = nodeValue("Static input", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 0] = nodeValue_Float("Static input", self, 0);
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.float, 0);
 	
 	//input_display_list = [ 0 ];
 	

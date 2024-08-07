@@ -11,32 +11,30 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	inputs[| 2] = nodeValue_Enum_Button("Material dissipation type", self,  1, [ "Multiply", "Subtract" ]);
 	
-	inputs[| 3] = nodeValue("Material dissipation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.02)
+	inputs[| 3] = nodeValue_Float("Material dissipation", self, 0.02)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
 	
 	inputs[| 4] = nodeValue_Enum_Button("Velocity dissipation type", self,  1, [ "Multiply", "Subtract" ]);
 	
-	inputs[| 5] = nodeValue("Velocity dissipation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.00)
+	inputs[| 5] = nodeValue_Float("Velocity dissipation", self, 0.00)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
 	
-	inputs[| 6] = nodeValue("Acceleration", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 6] = nodeValue_Vector("Acceleration", self, [ 0, 0 ]);
 	
-	inputs[| 7] = nodeValue("Material intertia", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, -0.2 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 7] = nodeValue_Vector("Material intertia", self, [ 1, -0.2 ]);
 	
-	inputs[| 8] = nodeValue("Initial pressure", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75)
+	inputs[| 8] = nodeValue_Float("Initial pressure", self, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue("Material Maccormack weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 9] = nodeValue_Float("Material Maccormack weight", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 10] = nodeValue("Velocity Maccormack weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 10] = nodeValue_Float("Velocity Maccormack weight", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue("Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 11] = nodeValue_Bool("Wrap", self, false);
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdomain, noone);
+	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 11, 1,

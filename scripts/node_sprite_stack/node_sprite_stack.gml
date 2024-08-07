@@ -6,35 +6,33 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue("Stack amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 2] = nodeValue_Int("Stack amount", self, 4);
 	
-	inputs[| 3] = nodeValue("Stack shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 3] = nodeValue_Vector("Stack shift", self, [ 0, 1 ] );
 	
-	inputs[| 4] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 4] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 		
 	inputs[| 5] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 6] = nodeValue("Stack blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 6] = nodeValue_Color("Stack blend", self, c_white );
 	
-	inputs[| 7] = nodeValue("Alpha end", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1, "Alpha value for the last copy." )
+	inputs[| 7] = nodeValue_Float("Alpha end", self, 1, "Alpha value for the last copy." )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Move base", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make each copy move the original image." );
+	inputs[| 8] = nodeValue_Bool("Move base", self, false, "Make each copy move the original image." );
 	
 	inputs[| 9] = nodeValue_Enum_Scroll("Highlight", self,  0, [ "None", "Color", "Inner pixel" ]);
 	
-	inputs[| 10] = nodeValue("Highlight color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 10] = nodeValue_Color("Highlight color", self, c_white);
 	
-	inputs[| 11] = nodeValue("Highlight alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 11] = nodeValue_Float("Highlight alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue("Array process", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 12] = nodeValue_Float("Array process", self, 1)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "Combined" ]);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surface",	false],	0, 1, 12, 

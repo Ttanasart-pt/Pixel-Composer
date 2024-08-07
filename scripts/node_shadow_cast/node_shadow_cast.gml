@@ -6,8 +6,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 1] = nodeValue_Surface("Solid", self);
 	
-	inputs[| 2] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 2] = nodeValue_Vector("Light Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { 
 			var _surf = getInputData(0);
 			if(is_array(_surf) && array_length(_surf) == 0)
@@ -22,32 +21,32 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
 		}, VALUE_UNIT.reference);
 		
-	inputs[| 3] = nodeValue("Soft light radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue_Float("Soft light radius", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
 	
-	inputs[| 4] = nodeValue("Light density", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 4] = nodeValue_Int("Light density", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	inputs[| 5] = nodeValue_Enum_Scroll("Light type", self,  0, [ new scrollItem("Point", s_node_shadow_type, 0), 
 												 new scrollItem("Sun",   s_node_shadow_type, 1) ]);
 	
-	inputs[| 6] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
+	inputs[| 6] = nodeValue_Color("Ambient color", self, c_grey);
 	
-	inputs[| 7] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 7] = nodeValue_Color("Light color", self, c_white);
 	
-	inputs[| 8] = nodeValue("Light radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
+	inputs[| 8] = nodeValue_Float("Light radius", self, 16);
 	
-	inputs[| 9] = nodeValue("Render solid", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 9] = nodeValue_Bool("Render solid", self, true);
 	
-	inputs[| 10] = nodeValue("Use BG color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "If checked, background color will be used as shadow caster.");
+	inputs[| 10] = nodeValue_Bool("Use BG color", self, false, "If checked, background color will be used as shadow caster.");
 	
-	inputs[| 11] = nodeValue("BG threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 11] = nodeValue_Float("BG threshold", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 12] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
 	
-	inputs[| 13] = nodeValue("Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 13] = nodeValue_Int("Banding", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
 	inputs[| 14] = nodeValue_Enum_Scroll("Attenuation", self,  0, [ new scrollItem("Quadratic",			s_node_curve, 0),
@@ -55,18 +54,18 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 																	new scrollItem("Linear",			s_node_curve, 2), ])
 		.setTooltip("Control how light fade out over distance.");
 	
-	inputs[| 15] = nodeValue("Ambient occlusion", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 15] = nodeValue_Int("Ambient occlusion", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 		
-	inputs[| 16] = nodeValue("Ambient occlusion strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 16] = nodeValue_Float("Ambient occlusion strength", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
 	
-	inputs[| 17] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 17] = nodeValue_Bool("Active", self, true);
 		active_index = 17;
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Light mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue_Output("Light mask", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 17, 
 		["Surfaces",		   true], 0, 1, 

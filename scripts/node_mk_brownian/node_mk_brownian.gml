@@ -6,38 +6,32 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 1] = nodeValue_Surface("Sprite", self);
 	
-	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 10);
+	inputs[| 2] = nodeValue_Int("Amount", self, 10);
 	
-	inputs[| 3] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA)
-		.setDisplay(VALUE_DISPLAY.area);
+	inputs[| 3] = nodeValue_Area("Area", self, DEF_AREA);
 	
-	inputs[| 4] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 45, 135, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.rotation_random);
+	inputs[| 4] = nodeValue_Rotation_Random("Direction", self, [ 0, 45, 135, 0, 0 ] );
 	
-	inputs[| 5] = nodeValue("Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])	
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 5] = nodeValue_Range("Speed", self, [ 1, 1 ]);
 	
-	inputs[| 6] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)));
+	inputs[| 6] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)));
 	
 	inputs[| 7] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 8] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 9] = nodeValue("Angular speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -45, 45 ])
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 9] = nodeValue_Range("Angular speed", self, [ -45, 45 ]);
 	
-	inputs[| 10] = nodeValue("Angular acceleration", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -2, 2 ])
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 10] = nodeValue_Range("Angular acceleration", self, [ -2, 2 ]);
 		
-	inputs[| 11] = nodeValue("Turn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 11] = nodeValue_Bool("Turn", self, false);
 	
 	inputs[| 12] = nodeValue_Dimension(self);
 		
-	inputs[| 13] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.range, { linked : true });
+	inputs[| 13] = nodeValue_Range("Size", self, [ 1, 1 ], { linked : true });
 		
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 8, 
 		["Dimension", false], 0, 12, 

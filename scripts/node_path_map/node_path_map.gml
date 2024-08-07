@@ -1,7 +1,7 @@
 function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Map Path";
 	
-	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true)
 		.rejectArray();
 	
@@ -9,11 +9,11 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	inputs[| 2] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 3] = nodeValue("Subdivision", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16)
+	inputs[| 3] = nodeValue_Int("Subdivision", self, 16)
 		.setValidator(VV_min(2))
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 
 		["Mapping", false], 1, 2, 3, 

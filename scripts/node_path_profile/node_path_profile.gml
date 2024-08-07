@@ -3,24 +3,24 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone )
+	inputs[| 1] = nodeValue_PathNode("Path", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue("Resolution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 64 );
+	inputs[| 2] = nodeValue_Int("Resolution", self, 64 );
 	
 	inputs[| 3] = nodeValue_Enum_Button("Side", self,  0 , [ "L", "R", "T", "D" ]);
 	
-	inputs[| 4] = nodeValue("Mirror", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 4] = nodeValue_Bool("Mirror", self, false );
 	
-	inputs[| 5] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 5] = nodeValue_Color("Color", self, c_white );
 	
-	inputs[| 6] = nodeValue("Anti Aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 6] = nodeValue_Bool("Anti Aliasing", self, false );
 	
-	inputs[| 7] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 7] = nodeValue_Bool("Background", self, false );
 	
-	inputs[| 8] = nodeValue("BG Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black );
+	inputs[| 8] = nodeValue_Color("BG Color", self, c_black );
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
+	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone );
 	
 	input_display_list = [ 0,
 		[ "Profile",    false ], 1, 2, 

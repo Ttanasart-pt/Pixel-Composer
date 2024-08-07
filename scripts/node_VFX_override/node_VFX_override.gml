@@ -7,23 +7,23 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	manual_ungroupable = false;
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
+	inputs[| 0] = nodeValue_Particle("Particles", self, -1 )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Positions", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, noone );
+	inputs[| 1] = nodeValue_Float("Positions", self, noone );
 	
-	inputs[| 2] = nodeValue("Rotations", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, noone );
+	inputs[| 2] = nodeValue_Float("Rotations", self, noone );
 	
-	inputs[| 3] = nodeValue("Scales", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, noone );
+	inputs[| 3] = nodeValue_Float("Scales", self, noone );
 	
-	inputs[| 4] = nodeValue("Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, noone );
+	inputs[| 4] = nodeValue_Color("Blend", self, noone );
 	
-	inputs[| 5] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, noone );
+	inputs[| 5] = nodeValue_Float("Alpha", self, noone );
 	
 	inputs[| 6] = nodeValue_Surface("Surface", self)
 		.setVisible(true, false);
 	
-	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, -1 );
+	outputs[| 0] = nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 );
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var parts = getInputData(0);

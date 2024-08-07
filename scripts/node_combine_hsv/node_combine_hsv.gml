@@ -6,12 +6,12 @@ function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 2] = nodeValue_Surface("Value",      self);
 	inputs[| 3] = nodeValue_Surface("Alpha",      self);
 	
-	inputs[| 4] = nodeValue("Array Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 4] = nodeValue_Bool("Array Input", self, false);
 	
 	inputs[| 5] = nodeValue_Surface("HSV Array", self, [])
 		.setArrayDepth(1);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surfaces",	 true], 4, 0, 1, 2, 3, 5, 

@@ -3,21 +3,21 @@ function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	batch_output = false;
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+	inputs[| 0] = nodeValue_Color("Color", self, c_white)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Normalize", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue_Bool("Normalize", self, true);
 	
-	outputs[| 0] = nodeValue("Red", 		self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
-	outputs[| 1] = nodeValue("Green",		self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
-	outputs[| 2] = nodeValue("Blue",		self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue_Output("Red", 		self, VALUE_TYPE.float, 0);
+	outputs[| 1] = nodeValue_Output("Green",		self, VALUE_TYPE.float, 0);
+	outputs[| 2] = nodeValue_Output("Blue",		self, VALUE_TYPE.float, 0);
 	
-	outputs[| 3] = nodeValue("Hue", 		self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0).setVisible(false);
-	outputs[| 4] = nodeValue("Saturation",	self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0).setVisible(false);
-	outputs[| 5] = nodeValue("Value",		self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0).setVisible(false);
+	outputs[| 3] = nodeValue_Output("Hue", 		self, VALUE_TYPE.float, 0).setVisible(false);
+	outputs[| 4] = nodeValue_Output("Saturation",	self, VALUE_TYPE.float, 0).setVisible(false);
+	outputs[| 5] = nodeValue_Output("Value",		self, VALUE_TYPE.float, 0).setVisible(false);
 	
-	outputs[| 6] = nodeValue("Brightness",	self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0).setVisible(false);
-	outputs[| 7] = nodeValue("Alpha",		self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0).setVisible(false);
+	outputs[| 6] = nodeValue_Output("Brightness",	self, VALUE_TYPE.float, 0).setVisible(false);
+	outputs[| 7] = nodeValue_Output("Alpha",		self, VALUE_TYPE.float, 0).setVisible(false);
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var _c = _data[0];

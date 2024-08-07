@@ -21,67 +21,64 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Data", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
+	inputs[| 1] = nodeValue_Float("Data", self, [])
 		.setArrayDepth(1)
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range);
+	inputs[| 2] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
 		
-	inputs[| 3] = nodeValue("Sample frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 3] = nodeValue_Float("Sample frequency", self, 1);
 	
-	inputs[| 4] = nodeValue("Origin", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, DEF_SURF_H / 2 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue_Vector("Origin", self, [ 0, DEF_SURF_H / 2 ]);
 		
-	inputs[| 5] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF_W / 2);
+	inputs[| 5] = nodeValue_Float("Scale", self, DEF_SURF_W / 2);
 	
-	inputs[| 6] = nodeValue("Base Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 6] = nodeValue_Color("Base Color", self, c_white);
 		
-	inputs[| 7] = nodeValue("Graph Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 7] = nodeValue_Float("Graph Thickness", self, 1);
 	
-	inputs[| 8] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 8] = nodeValue_Bool("Background", self, false);
 		
-	inputs[| 9] = nodeValue("Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 9] = nodeValue_Color("Background color", self, c_black);
 	
 	inputs[| 10] = nodeValue_Rotation("Direction", self, 0);
 	
 	inputs[| 11] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Bar chart", s_node_plot_linear_type, 0), 
 												 new scrollItem("Graph",	 s_node_plot_linear_type, 1), ]);
 	
-	inputs[| 12] = nodeValue("Value Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 12] = nodeValue_Float("Value Offset", self, 0);
 	
-	inputs[| 13] = nodeValue("Color Over Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)))
+	inputs[| 13] = nodeValue_Gradient("Color Over Sample", self, new gradientObject(cola(c_white)))
 		.setMappable(27);
 	
 	inputs[| 14] = nodeValue_Enum_Scroll("Trim mode", self,  0, [ "Range", "Window" ]);
 	
-	inputs[| 15] = nodeValue("Window Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
+	inputs[| 15] = nodeValue_Int("Window Size", self, 8);
 	
-	inputs[| 16] = nodeValue("Window Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 16] = nodeValue_Float("Window Offset", self, 0);
 	
-	inputs[| 17] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 17] = nodeValue_Float("Spacing", self, 1);
 	
-	inputs[| 18] = nodeValue("Bar Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
+	inputs[| 18] = nodeValue_Float("Bar Width", self, 4);
 	
-	inputs[| 19] = nodeValue("Rounded Bar", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 19] = nodeValue_Bool("Rounded Bar", self, false);
 	
-	inputs[| 20] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+	inputs[| 20] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 21] = nodeValue("Flip Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 21] = nodeValue_Bool("Flip Value", self, false);
 	
-	inputs[| 22] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 22] = nodeValue_Bool("Loop", self, false);
 	
-	inputs[| 23] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 23] = nodeValue_Float("Smooth", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 24] = nodeValue("Color Over Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)))
+	inputs[| 24] = nodeValue_Gradient("Color Over Value", self, new gradientObject(cola(c_white)))
 		.setMappable(29);
 		
-	inputs[| 25] = nodeValue("Value range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ] )
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 25] = nodeValue_Range("Value range", self, [ 0, 1 ] );
 	
-	inputs[| 26] = nodeValue("Absolute", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 26] = nodeValue_Bool("Absolute", self, false);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -95,7 +92,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 
 		["Data", 	 true], 1, 12, 21, 14, 2, 3, 15, 16, 

@@ -3,7 +3,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Check value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+	inputs[| 0] = nodeValue_Float("Check value", self, 0 )
 		.setVisible(true, true);
 		
 	inputs[| 1] = nodeValue_Enum_Scroll("Condition", self,  0 , [ new scrollItem("Equal",			s_node_condition_type, 0), 
@@ -14,7 +14,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 												 new scrollItem("Greater or equal", s_node_condition_type, 5), ])
 		.rejectArray();
 		
-	inputs[| 2] = nodeValue("Compare to", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+	inputs[| 2] = nodeValue_Float("Compare to", self, 0 )
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("True", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
@@ -26,21 +26,21 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 5] = nodeValue_Enum_Scroll("Eval mode", self,  0 , ["Boolean", "Number compare", "Text compare" ])
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue("Boolean", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+	inputs[| 6] = nodeValue_Bool("Boolean", self, false )
 		.setVisible(true, true)
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue("Text 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+	inputs[| 7] = nodeValue_Text("Text 1", self, "" );
 	
-	inputs[| 8] = nodeValue("Text 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+	inputs[| 8] = nodeValue_Text("Text 2", self, "" );
 		
 	input_display_list = [ 5,
 		["Condition", false], 0, 1, 2, 6, 7, 8, 
 		["Result",	  true], 3, 4
 	]
 	
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
-	outputs[| 1] = nodeValue("Bool", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
+	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.any, []);
+	outputs[| 1] = nodeValue_Output("Bool", self, VALUE_TYPE.boolean, false);
 	
 	static step = function() { #region
 		var _mode = getInputData(5);

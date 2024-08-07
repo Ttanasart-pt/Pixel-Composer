@@ -6,9 +6,9 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(128, 32);
 	
-	inputs[| 0] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 0] = nodeValue_Int("Order", self, 0);
 	
-	inputs[| 1] = nodeValue("Title", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 1] = nodeValue_Text("Title", self, "");
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Anchor", self,  0, [ "Center", "Top left" ]);
 	

@@ -8,10 +8,9 @@ function Node_Monitor_Capture(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	inputs[| 1] = nodeValue_Enum_Scroll("Monitor", self,  0, array_create_ext(array_length(monitors), function(ind) { return monitors[ind][9]; }));
 	
-	inputs[| 2] = nodeValue("Region", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, display_get_width(), display_get_height() ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Region", self, [ 0, 0, display_get_width(), display_get_height() ]);
 	
-	outputs[| 0] = nodeValue("GUI", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("GUI", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		0, 1, 2,

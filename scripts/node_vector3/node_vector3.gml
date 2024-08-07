@@ -3,18 +3,18 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	color = COLORS.node_blend_number;
 	setDimension(96, 32 + 24 * 3);
 	
-	inputs[| 0] = nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 0] = nodeValue_Float("x", self, 0)
 		.setVisible(true, true);
 		
-	inputs[| 1] = nodeValue("y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue_Float("y", self, 0)
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue("z", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue_Float("z", self, 0)
 		.setVisible(true, true);
 	
-	inputs[| 3] = nodeValue("Integer", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 3] = nodeValue_Bool("Integer", self, false);
 	
-	outputs[| 0] = nodeValue("Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0 ])
+	outputs[| 0] = nodeValue_Output("Vector", self, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static step = function() {

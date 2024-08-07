@@ -4,15 +4,13 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 
 	onSurfaceSize = function() { return getInputData(input_len, DEF_SURF); };
 	
-	inputs[| 3] = nodeValue("Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA_REF )
+	inputs[| 3] = nodeValue_Area("Spawn area", self, DEF_AREA_REF, { onSurfaceSize } )
 		.rejectArray()
-		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
-		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
-	inputs[| input_len + 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| input_len + 0] = nodeValue_Vector("Output dimension", self, DEF_SURF);
 		
-	inputs[| input_len + 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Round position to the closest integer value to avoid jittering.");
+	inputs[| input_len + 1] = nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering.");
 	
 	inputs[| input_len + 2] = nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ]);
 	
@@ -20,9 +18,9 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	inputs[| input_len + 4] = nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]);
 	
-	inputs[| input_len + 5] = nodeValue("Line life", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 );
+	inputs[| input_len + 5] = nodeValue_Int("Line life", self, 4 );
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	for(var i = input_len, n = ds_list_size(inputs); i < n; i++) inputs[| i].rejectArray();
 	

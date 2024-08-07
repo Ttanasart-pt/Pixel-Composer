@@ -2,9 +2,9 @@ function Node_PB_Layer(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	name = "PB Layer";
 	icon = THEME.pixel_builder;
 	
-	inputs[| 0] = nodeValue("Layer", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 );
+	inputs[| 0] = nodeValue_Int("Layer", self, 0 );
 	
-	outputs[| 0] = nodeValue("pBox", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, noone );
+	outputs[| 0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone );
 	
 	static update = function() {
 		var _dim = group.getInputData(0);

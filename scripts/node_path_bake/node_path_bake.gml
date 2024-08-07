@@ -2,14 +2,14 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Bake Path";
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Segment length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 1] = nodeValue_Float("Segment length", self, 1);
 	
-	inputs[| 2] = nodeValue("Spread single path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 2] = nodeValue_Bool("Spread single path", self, true);
 	
-	outputs[| 0] = nodeValue("Segments", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [[]])
+	outputs[| 0] = nodeValue_Output("Segments", self, VALUE_TYPE.float, [[]])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(2);
 	

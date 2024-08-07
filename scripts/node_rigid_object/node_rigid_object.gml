@@ -15,23 +15,23 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	object = [];
 	attributes.mesh = [];
 	
-	inputs[| 0] = nodeValue("Affect by force", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 0] = nodeValue_Bool("Affect by force", self, true)
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 1] = nodeValue("Weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 1] = nodeValue_Float("Weight", self, 0.5)
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 2] = nodeValue("Contact friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 2] = nodeValue_Float("Contact friction", self, 0.2)
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 3] = nodeValue("Air resistance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 3] = nodeValue_Float("Air resistance", self, 0.2)
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 4] = nodeValue("Rotation resistance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 4] = nodeValue_Float("Rotation resistance", self, 0.2)
 		.rejectArray()
 		.setAnimable(false);
 	
@@ -42,30 +42,29 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 6] = nodeValue_Surface("Texture", self)
 		.setAnimable(false);
 	
-	inputs[| 7] = nodeValue("Start position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 7] = nodeValue_Vector("Start position", self, [ 16, 16 ])
 		.setAnimable(false);
 	
-	inputs[| 8] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Make object spawn when start.")
+	inputs[| 8] = nodeValue_Bool("Spawn", self, true, "Make object spawn when start.")
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 9] = nodeValue("Generate mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 9] = nodeValue_Trigger("Generate mesh", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { generateAllMesh(); } });
 	
-	inputs[| 10] = nodeValue("Mesh expansion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 10] = nodeValue_Float("Mesh expansion", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -2, 2, 0.1 ] })
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 11] = nodeValue("Add pixel collider", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 11] = nodeValue_Bool("Add pixel collider", self, true)
 		.rejectArray()
 		.setAnimable(false);
 		
-	inputs[| 12] = nodeValue("Collision group", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 12] = nodeValue_Int("Collision group", self, 1)
 		.rejectArray()
 		
-	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, object);
+	outputs[| 0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, object);
 	
 	input_display_list = [ 8, 12, 
 		["Texture",	false],	6, 

@@ -3,15 +3,14 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue_Bool("Active", self, true);
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Array Sizing", self,  1, [ "Largest, same size", "Independent" ])
 		.setTooltip("Cropping mode for dealing with image array.");
 	
-	inputs[| 3] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ], "Add padding back after crop.")
-		.setDisplay(VALUE_DISPLAY.padding);
+	inputs[| 3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ], "Add padding back after crop.");
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1,
 		["Surfaces", false], 0, 2, 

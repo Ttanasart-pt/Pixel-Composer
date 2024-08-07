@@ -2,37 +2,36 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Blur";
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
-	inputs[| 1] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
+	inputs[| 1] = nodeValue_Int("Size", self, 3)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 32, 0.1 ] });
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 		
-	inputs[| 3] = nodeValue("Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
+	inputs[| 3] = nodeValue_Bool("Override color", self, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
 	
-	inputs[| 4] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 4] = nodeValue_Color("Color", self, c_black);
 	
 	inputs[| 5] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 6] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 6] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 7] = nodeValue_Bool("Active", self, true);
 		active_index = 7;
 	
-	inputs[| 8] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
-		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	inputs[| 8] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
 	__init_mask_modifier(5); // inputs 9, 10
 	
-	inputs[| 11] = nodeValue("Gamma Correction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 11] = nodeValue_Bool("Gamma Correction", self, false);
 	
-	inputs[| 12] = nodeValue("Aspect Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 12] = nodeValue_Float("Aspect Ratio", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 13] = nodeValue_Rotation("Direction", self, 0);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 7, 8, 
 		["Surfaces",	 true],	0, 5, 6, 9, 10, 

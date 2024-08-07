@@ -5,9 +5,8 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDimension(96, 48);
 	
 	onSurfaceSize = function() { return getInputData(7, DEF_SURF); };
-	inputs[| 0] = nodeValue("Point area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA_REF )
-		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
-		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
+	inputs[| 0] = nodeValue_Area("Point area", self, DEF_AREA_REF, { onSurfaceSize } )
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
 	inputs[| 1] = nodeValue_Enum_Button("Point distribution", self,  0, [ "Area", "Border", "Map" ])
 		.rejectArray();
@@ -15,28 +14,27 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 2] = nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Point amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2, "Amount of particle spawn in that frame.")
+	inputs[| 3] = nodeValue_Int("Point amount", self, 2, "Amount of particle spawn in that frame.")
 		.rejectArray();
 	
 	inputs[| 4] = nodeValue_Surface("Distribution map", self)
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+	inputs[| 5] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue("Fixed position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Fix point position, and only select point in the area.");
+	inputs[| 6] = nodeValue_Bool("Fixed position", self, false, "Fix point position, and only select point in the area.");
 	
-	inputs[| 7] = nodeValue("Reference dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 7] = nodeValue_Vector("Reference dimension", self, DEF_SURF);
 	
 	inputs[| 8] = nodeValue_Surface("Reference value", self);
 	
-	inputs[| 9] = nodeValue("Output 3D", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 9] = nodeValue_Bool("Output 3D", self, false);
 	
 	inputs[| 10] = nodeValue_Enum_Button("Normal", self,  0, [ "X", "Y", "Z" ]);
 	
-	inputs[| 11] = nodeValue("Plane position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 11] = nodeValue_Float("Plane position", self, 0);
 	
 	input_display_list = [ 
 		["Base",	false], 5, 6, 7, 
@@ -44,7 +42,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["3D",		 true, 9], 10, 11
 	];
 	
-	outputs[| 0] = nodeValue("Points", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ ])
+	outputs[| 0] = nodeValue_Output("Points", self, VALUE_TYPE.float, [ ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static step = function() {

@@ -1,19 +1,18 @@
 function Node_PB_Fx_Hash(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Hash";
 	
-	inputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 1] = nodeValue_Color("Color", self, c_white );
 	
-	inputs[| 2] = nodeValue("Hash", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2. );
+	inputs[| 2] = nodeValue_Float("Hash", self, 2. );
 	
-	inputs[| 3] = nodeValue("Invert", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 3] = nodeValue_Bool("Invert", self, false );
 	
-	inputs[| 4] = nodeValue("Dissolve", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0. )
+	inputs[| 4] = nodeValue_Float("Dissolve", self, 0. )
 		.setDisplay(VALUE_DISPLAY.slider)
 	
-	inputs[| 5] = nodeValue("Detail", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
+	inputs[| 5] = nodeValue_Int("Detail", self, 1 )
 	
-	inputs[| 6] = nodeValue("Dissolve Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 6] = nodeValue_Vector("Dissolve Scale", self, [ 4, 4 ] );
 	
 	input_display_list = [ 0,
 		["Effect",	 false], 2, 1, 3, 

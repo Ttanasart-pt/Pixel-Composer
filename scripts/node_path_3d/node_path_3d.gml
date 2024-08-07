@@ -10,6 +10,7 @@ enum _ANCHOR3 {
 	c2z,
 	
 	ind,
+	amount
 }
 
 function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -18,24 +19,24 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Path progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Sample position from path.")
+	inputs[| 0] = nodeValue_Float("Path progress", self, 0, "Sample position from path.")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 1] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 1] = nodeValue_Bool("Loop", self, false)
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Progress mode", self,  0, ["Entire line", "Segment"])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Round anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 3] = nodeValue_Bool("Round anchor", self, false)
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue("Position out", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
+	outputs[| 0] = nodeValue_Output("Position out", self, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	outputs[| 1] = nodeValue("Path data", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 1] = nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self);
 		
-	outputs[| 2] = nodeValue("Anchors", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
+	outputs[| 2] = nodeValue_Output("Anchors", self, VALUE_TYPE.float, [])
 		.setVisible(false)
 		.setArrayDepth(1);
 	
@@ -113,8 +114,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		var index = ds_list_size(inputs);
 		
-		inputs[| index] = nodeValue("Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, _z, _dxx, _dxy, _dxz, _dyx, _dyy, _dyz, false ])
-			.setDisplay(VALUE_DISPLAY.path_anchor);
+		inputs[| index] = nodeValue_Path_Anchor_3D("Anchor", self, [ _x, _y, _z, _dxx, _dxy, _dxz, _dyx, _dyy, _dyz, false ]);
 		
 		if(!rec) return inputs[| index];
 		

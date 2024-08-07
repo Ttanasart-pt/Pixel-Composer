@@ -39,11 +39,10 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	spr   = [];
 	color = COLORS.node_blend_input;
 	
-	inputs[| 0]  = nodeValue("Paths", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
+	inputs[| 0]  = nodeValue_Text("Paths", self, [])
 		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
 	
-	inputs[| 1]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
-		.setDisplay(VALUE_DISPLAY.padding)
+	inputs[| 1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue_Enum_Scroll("Canvas size", self,  0, [ "Individual", "Minimum", "Maximum" ])
@@ -56,8 +55,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["Array settings",	false], 0, 1, 2, 3
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
-	outputs[| 1] = nodeValue("Paths", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, [] ).
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, []);
+	outputs[| 1] = nodeValue_Output("Paths", self, VALUE_TYPE.path, [] ).
 		setVisible(true, true);
 	
 	attribute_surface_depth();

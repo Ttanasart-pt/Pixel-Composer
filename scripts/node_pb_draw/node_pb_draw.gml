@@ -4,11 +4,11 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_PB(_x, _y, _group) construc
 	inputs[| 0] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 1] = nodeValue_Color("Color", self, c_white );
 	
-	inputs[| 2] = nodeValue("Apply Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| 2] = nodeValue_Bool("Apply Mask", self, true );
 	
-	outputs[| 0] = nodeValue("pBox", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, noone);
+	outputs[| 0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone);
 	
 	static getGraphPreviewSurface = function() {
 		var _nbox = outputs[| 0].getValue();

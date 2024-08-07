@@ -3,24 +3,24 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Red", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 0] = nodeValue_Float("Red", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 1] = nodeValue_Float("Green", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue("Blue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 2] = nodeValue_Float("Blue", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
-	inputs[| 3] = nodeValue("Normalized", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 1);
+	inputs[| 3] = nodeValue_Bool("Normalized", self, 1);
 	
-	inputs[| 4] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 4] = nodeValue_Float("Alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
+	outputs[| 0] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);
 	
 	input_display_list = [ 3, 0, 1, 2, 4 ];
 	

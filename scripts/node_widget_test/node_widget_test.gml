@@ -9,7 +9,7 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[|  3] = nodeValue("vectorRangeBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 0, 0, 0])                    .setDisplay(VALUE_DISPLAY.vector_range)
 	inputs[|  4] = nodeValue("rotator", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)                                      .setDisplay(VALUE_DISPLAY.rotation)
 	inputs[|  5] = nodeValue("rotatorRange", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 0])                            .setDisplay(VALUE_DISPLAY.rotation_range)
-	inputs[|  6] = nodeValue("rotatorRandom", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 0, 0, 0, 0])                  .setDisplay(VALUE_DISPLAY.rotation_random)
+	inputs[|  6] = nodeValue_Float("rotatorRandom", self, [0, 0, 0, 0, 0])                  .setDisplay(VALUE_DISPLAY.rotation_random)
 	inputs[|  7] = nodeValue("slider", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)                                       .setDisplay(VALUE_DISPLAY.slider)
 	inputs[|  8] = nodeValue("sliderRange", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])                           .setDisplay(VALUE_DISPLAY.slider_range)
 	inputs[|  9] = nodeValue("areaBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA)						        .setDisplay(VALUE_DISPLAY.area)
@@ -23,11 +23,11 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 17] = nodeValue("transformBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0, 0 ])                 .setDisplay(VALUE_DISPLAY.transform)
 	inputs[| 18] = nodeValue("quarternionBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ])                  .setDisplay(VALUE_DISPLAY.d3quarternion)
 
-	inputs[| 19] = nodeValue("checkBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)                               .setDisplay(VALUE_DISPLAY._default)
+	inputs[| 19] = nodeValue_Bool("checkBox", self, false)                               .setDisplay(VALUE_DISPLAY._default)
 
-	inputs[| 20] = nodeValue("buttonColor", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, 0)                                  .setDisplay(VALUE_DISPLAY._default)
-	inputs[| 21] = nodeValue("buttonPalette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))                     .setDisplay(VALUE_DISPLAY.palette)
-	inputs[| 22] = nodeValue("buttonGradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)))  .setDisplay(VALUE_DISPLAY._default)
+	inputs[| 20] = nodeValue_Color("buttonColor", self, 0)                                  .setDisplay(VALUE_DISPLAY._default)
+	inputs[| 21] = nodeValue_Palette("buttonPalette", self, array_clone(DEF_PALETTE))                     .setDisplay(VALUE_DISPLAY.palette)
+	inputs[| 22] = nodeValue_Gradient("buttonGradient", self, new gradientObject(cola(c_white)))  .setDisplay(VALUE_DISPLAY._default)
 
 	inputs[| 23] = nodeValue("pathArrayBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])                                 .setDisplay(VALUE_DISPLAY.path_array, { filter: [ "image|*.png;*.jpg", "" ] })
 	inputs[| 24] = nodeValue("pathLoad", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")                                      .setDisplay(VALUE_DISPLAY.path_load)
@@ -36,11 +36,11 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 
 	inputs[| 27] = nodeValue("curveBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11)                          .setDisplay(VALUE_DISPLAY._default)
 
-	inputs[| 28] = nodeValue("textArea", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")                                     .setDisplay(VALUE_DISPLAY._default)
-	inputs[| 29] = nodeValue("textBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")                                      .setDisplay(VALUE_DISPLAY.text_box)
-	inputs[| 30] = nodeValue("textArea", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")                                     .setDisplay(VALUE_DISPLAY.codeLUA)
-	inputs[| 31] = nodeValue("textArea", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")                                     .setDisplay(VALUE_DISPLAY.codeHLSL)
-	inputs[| 32] = nodeValue("textArrayBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, [])                                 .setDisplay(VALUE_DISPLAY.text_array, { data: [ "Choice 1", "Choice 2" ] })
+	inputs[| 28] = nodeValue_Text("textArea", self, "")                                     .setDisplay(VALUE_DISPLAY._default)
+	inputs[| 29] = nodeValue_Text("textBox", self, "")                                      .setDisplay(VALUE_DISPLAY.text_box)
+	inputs[| 30] = nodeValue_Text("textArea", self, "")                                     .setDisplay(VALUE_DISPLAY.codeLUA)
+	inputs[| 31] = nodeValue_Text("textArea", self, "")                                     .setDisplay(VALUE_DISPLAY.codeHLSL)
+	inputs[| 32] = nodeValue_Text("textArrayBox", self, [])                                 .setDisplay(VALUE_DISPLAY.text_array, { data: [ "Choice 1", "Choice 2" ] })
 
 	inputs[| 33] = nodeValue_Surface("surfaceBox", self)                             .setDisplay(VALUE_DISPLAY._default)
 	

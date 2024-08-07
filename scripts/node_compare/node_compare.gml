@@ -40,13 +40,13 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 												 new scrollItem("Lesser",			s_node_condition_type, 2), 
 												 new scrollItem("Lesser or equal",	s_node_condition_type, 3), ]);
 	
-	inputs[| 1] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue_Float("a", self, 0)
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue("b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue_Float("b", self, 0)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
+	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.boolean, false);
 	
 	static _compare = function(mode, a, b) {
 		switch(mode) {

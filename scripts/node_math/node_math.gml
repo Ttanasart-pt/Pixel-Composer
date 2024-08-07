@@ -84,23 +84,23 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			/*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap" ])
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue_Float("a", self, 0)
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue("b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue_Float("b", self, 0)
 		.setVisible(true, true);
 		
-	inputs[| 3] = nodeValue("Degree angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 3] = nodeValue_Bool("Degree angle", self, true);
 	
-	inputs[| 4] = nodeValue("To integer", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 4] = nodeValue_Bool("To integer", self, false);
 	
-	inputs[| 5] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 5] = nodeValue_Float("Amount", self, 0);
 	
 	input_display_list = [
 		0, 1, 2, 5, 3, 4,
 	]
 		
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.float, 0);
 	
 	use_mod = 0;
 	use_deg = false;

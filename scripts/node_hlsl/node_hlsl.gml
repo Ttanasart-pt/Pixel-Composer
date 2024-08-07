@@ -20,11 +20,11 @@ function Node_HLSL(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name   = "HLSL";
 	shader = { vs: -1, fs: -1 };
 	
-	inputs[| 0] = nodeValue("Vertex", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, @"")
+	inputs[| 0] = nodeValue_Text("Vertex", self, @"")
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Fragment", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, 
+	inputs[| 1] = nodeValue_Text("Fragment", self, 
 @"float4 surfaceColor = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);
 output.color = surfaceColor;")
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
@@ -32,16 +32,16 @@ output.color = surfaceColor;")
 	
 	inputs[| 2] = nodeValue_Surface("Base Texture", self);
 	
-	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
+	outputs[| 0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone );
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+		inputs[| index + 0] = nodeValue_Text("Argument name", self, "" );
 		
 		inputs[| index + 1] = nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false });
 		inputs[| index + 1].editWidget.interactable = false;
 		
-		inputs[| index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		inputs[| index + 2] = nodeValue_Float("Argument value", self, 0 )
 			.setVisible(true, true);
 		inputs[| index + 2].editWidget.interactable = false;
 	}

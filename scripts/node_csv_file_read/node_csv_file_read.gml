@@ -29,16 +29,16 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	w = 128;
 	
-	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "CSV file|*.csv" })
 		.rejectArray();
 		
-	inputs[| 1]  = nodeValue("Convert to number", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 1]  = nodeValue_Bool("Convert to number", self, false)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Content", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
+	outputs[| 0] = nodeValue_Output("Content", self, VALUE_TYPE.text, "");
 	
-	outputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
+	outputs[| 1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
 	content      = "";

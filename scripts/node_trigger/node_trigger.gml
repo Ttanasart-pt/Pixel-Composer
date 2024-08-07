@@ -2,10 +2,10 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name = "Trigger";
 	setDimension(96, 56);
 	
-	inputs[| 0] = nodeValue("Trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 0] = nodeValue_Trigger("Trigger", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
-	outputs[| 0] = nodeValue("Trigger", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false );
+	outputs[| 0] = nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false );
 	
 	insp2UpdateTooltip   = "Trigger";
 	insp2UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];

@@ -6,7 +6,7 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	inputs[| 0] = nodeValue_Enum_Scroll("Display", self,  1 , [ "Number", "Graph" ]);
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.float, 0);
 	
 	inl = ds_list_size(inputs);
 	

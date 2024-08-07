@@ -14,38 +14,38 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Width",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1] = nodeValue_Int("Width",   self, 0)
 		.setDisplay(VALUE_DISPLAY._default, { front_button : filter_button })
 		.setValidator(VV_min(0))
 		.setMappable(15);
 	
-	inputs[| 2] = nodeValue("Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 2] = nodeValue_Color("Color",   self, c_white);
 	
-	inputs[| 3] = nodeValue("Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0, "Blend outline color with the original color.");
+	inputs[| 3] = nodeValue_Bool("Blend",   self, 0, "Blend outline color with the original color.");
 	
-	inputs[| 4] = nodeValue("Blend alpha",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 4] = nodeValue_Float("Blend alpha",   self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(16);
 	
 	inputs[| 5] = nodeValue_Enum_Button("Position",   self,  1, ["Inside", "Outside"]);
 	
-	inputs[| 6] = nodeValue("Anti aliasing",   self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0);
+	inputs[| 6] = nodeValue_Bool("Anti aliasing",   self, 0);
 	
 	inputs[| 7] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 		
-	inputs[| 8] = nodeValue("Start",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Shift outline inside, outside the shape.")
+	inputs[| 8] = nodeValue_Int("Start",   self, 0, "Shift outline inside, outside the shape.")
 		.setMappable(17);
 	
 	inputs[| 9] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 10] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 10] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 11] = nodeValue_Bool("Active", self, true);
 		active_index = 11;
 	
-	inputs[| 12] = nodeValue("Crop border", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 12] = nodeValue_Bool("Crop border", self, false);
 	
 	__init_mask_modifier(9); // inputs 13, 14
 	
@@ -59,9 +59,9 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Outline", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue_Output("Outline", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 11, 
 		["Surfaces", true], 0, 9, 10, 13, 14, 

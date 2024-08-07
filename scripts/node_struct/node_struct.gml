@@ -20,7 +20,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [ size_adjust_tool, ];
 	
-	outputs[| 0] = nodeValue("Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
+	outputs[| 0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
 	
 	#region //////////////////////////////// Dynamic IO ////////////////////////////////
 	
@@ -30,7 +30,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var bDel = button(function() { node.deleteInput(index); })
 					.setIcon(THEME.minus_16, 0, COLORS._main_icon);
 			
-			list[| index + 0] = nodeValue("Key", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+			list[| index + 0] = nodeValue_Text("Key", self, "" )
 				.setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel })
 				.setAnimable(false);
 			bDel.setContext(list[| index + 0]);

@@ -4,12 +4,12 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	cached_pos = ds_map_create();
 	
-	outputs[| 0] = nodeValue("Combined Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	outputs[| 0] = nodeValue_Output("Combined Path", self, VALUE_TYPE.pathnode, self);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		
-		inputs[| index] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone )
+		inputs[| index] = nodeValue_PathNode("Path", self, noone )
 			.setVisible(true, true);
 		
 		return inputs[| index];

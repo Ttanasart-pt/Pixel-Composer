@@ -2,22 +2,21 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Sort Palette";	
 	setDimension(96);
 	
-	inputs[| 0] = nodeValue("Palette in", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))
-		.setDisplay(VALUE_DISPLAY.palette)
+	inputs[| 0] = nodeValue_Palette("Palette in", self, array_clone(DEF_PALETTE))
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue_Enum_Button("Order", self,  0, [ "Brightness", -1, "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", -1, "Red (RGB)", "Green (GBR)", "Blue (BRG)", -1, "Custom" ])
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Reverse", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 2] = nodeValue_Bool("Reverse", self, false);
 	
-	inputs[| 3] = nodeValue("Sort Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "RGB", @"Compose sorting algorithm using string.
+	inputs[| 3] = nodeValue_Text("Sort Order", self, "RGB", @"Compose sorting algorithm using string.
     - RGB: Red/Green/Blur channel
     - HSV: Hue/Saturation/Value
     - L:   Brightness
     - Use small letter for ascending, capital letter for descending order.");
 	
-	outputs[| 0] = nodeValue("Sorted palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
+	outputs[| 0] = nodeValue_Output("Sorted palette", self, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [

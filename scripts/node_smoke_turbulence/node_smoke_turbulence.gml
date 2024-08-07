@@ -7,16 +7,15 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Effect area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA)
-		.setDisplay(VALUE_DISPLAY.area, { useShape : false });
+	inputs[| 1] = nodeValue_Area("Effect area", self, DEF_AREA, { useShape : false });
 	
-	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.10)
+	inputs[| 2] = nodeValue_Float("Strength", self, 0.10)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
-	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4)
+	inputs[| 3] = nodeValue_Float("Scale", self, 4)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.01] });
 	
-	inputs[| 4] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
+	inputs[| 4] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 4].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 5] = nodeValue_Enum_Button("Mode", self,  0, [ "Override", "Add" ]);
@@ -26,7 +25,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 		["Turbulence",	false], 5, 1, 2, 4, 3
 	];
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.sdomain, noone);
+	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);

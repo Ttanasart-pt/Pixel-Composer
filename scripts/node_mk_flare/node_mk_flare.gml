@@ -27,18 +27,17 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 0] = nodeValue_Surface("Background", self);
 	
-	inputs[| 1] = nodeValue("Origin", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Origin", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[| 2] = nodeValue_Dimension(self);
 		
-	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue_Float("Scale", self, 1)
 		
-	inputs[| 4] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 4] = nodeValue_Float("Alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 5] = nodeValue("Flares", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, [
+	inputs[| 5] = nodeValue_Struct("Flares", self, [
 																							new __FlarePart( FLARE_TYPE.circle,   0,  8,   0.75, 16, false, , [ 0, 1 ] ),
 																							new __FlarePart( FLARE_TYPE.circle,   0, 16,   0.5,  16, false, , [ 0, 1 ] ),
 																							new __FlarePart( FLARE_TYPE.star,     0, 14,   0.3,   8, true,  , [ 0.2, 0.8 ], 2, 0.85 ),
@@ -56,13 +55,12 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setArrayDepth(1)
 		.setArrayDynamic();
 		
-	inputs[| 6] = nodeValue("Focus", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 6] = nodeValue_Vector("Focus", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue("Light only", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone);
 	
 	static __frame = function(_x, _y, _w, _h, _m, _hover) {  
 		var _hv = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && _hover;

@@ -7,7 +7,7 @@ function Node_PCX_Condition(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) c
 	
 	inputs[| 2] = nodeValue("False", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
 	
-	outputs[| 0] = nodeValue("PCX", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone);
+	outputs[| 0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone);
 	
 	static update = function() {
 		var _cond = getInputData(0);

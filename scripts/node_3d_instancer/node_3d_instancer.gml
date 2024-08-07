@@ -1,10 +1,9 @@
 function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group) constructor {
 	name = "3D Instancer";
 	
-	inputs[| in_mesh + 0] = nodeValue("Amounts", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| in_mesh + 0] = nodeValue_Int("Amounts", self, 1);
 	
-	inputs[| in_mesh + 1] = nodeValue("Positions", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| in_mesh + 1] = nodeValue_Vector("Positions", self, [ 0, 0, 0 ])
 		.setArrayDepth(1);
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {

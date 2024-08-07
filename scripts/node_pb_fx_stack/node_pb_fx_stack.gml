@@ -1,17 +1,17 @@
 function Node_PB_Fx_Stack(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Stack";
 	
-	inputs[| 1] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 );
+	inputs[| 1] = nodeValue_Int("Amount", self, 4 );
 	
 	inputs[| 2] = nodeValue_Enum_Button("Direction", self,  0 , array_create(4, THEME.obj_direction) );
 	
-	inputs[| 3] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 3] = nodeValue_Color("Color", self, c_white );
 	
-	inputs[| 4] = nodeValue("Highlight", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 4] = nodeValue_Bool("Highlight", self, false );
 	
-	inputs[| 5] = nodeValue("Highlight Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 5] = nodeValue_Color("Highlight Color", self, c_white );
 	
-	inputs[| 6] = nodeValue("Invert", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 6] = nodeValue_Bool("Invert", self, false );
 	
 	input_display_list = [ 0,
 		["Effect",	false], 1, 2, 6, 3, 4, 5, 

@@ -18,11 +18,11 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	if(!LOADING && !APPENDING && !ds_map_empty(TUNNELS_IN))
 		tname = ds_map_find_first(TUNNELS_IN);
 	
-	inputs[| 0] = nodeValue("Name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, tname )
+	inputs[| 0] = nodeValue_Text("Name", self, tname )
 		.setDisplay(VALUE_DISPLAY.text_tunnel)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Value out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, noone );
+	outputs[| 0] = nodeValue_Output("Value out", self, VALUE_TYPE.any, noone );
 	
 	insp2UpdateTooltip = "Goto tunnel in";
 	insp2UpdateIcon    = [ THEME.tunnel, 1, c_white ];

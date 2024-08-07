@@ -3,36 +3,35 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	object_class = __3dPathExtrude;
 	
-	inputs[| in_mesh + 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone )
+	inputs[| in_mesh + 0] = nodeValue_PathNode("Path", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 1] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 )
+	inputs[| in_mesh + 1] = nodeValue_Int("Side", self, 8 )
 		.setValidator(VV_min(2));
 	
-	inputs[| in_mesh + 2] = nodeValue("Material Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 2] = nodeValue_D3Material("Material Side", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 3] = nodeValue("Material Cap", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
+	inputs[| in_mesh + 3] = nodeValue_D3Material("Material Cap", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 4] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| in_mesh + 4] = nodeValue_Bool("Smooth", self, false );
 	
-	inputs[| in_mesh + 5] = nodeValue("End caps", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| in_mesh + 5] = nodeValue_Bool("End caps", self, true );
 	
-	inputs[| in_mesh + 6] = nodeValue("Subdivision", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 )
+	inputs[| in_mesh + 6] = nodeValue_Int("Subdivision", self, 8 )
 		.setValidator(VV_min(2));
 	
-	inputs[| in_mesh + 7] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.25 )
+	inputs[| in_mesh + 7] = nodeValue_Float("Radius", self, 0.25 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| in_mesh + 8] = nodeValue("Radius Over Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| in_mesh + 9] = nodeValue("Texture Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| in_mesh + 9] = nodeValue_Vector("Texture Scale", self, [ 1, 1 ] );
 	
-	inputs[| in_mesh + 10] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| in_mesh + 10] = nodeValue_Bool("Loop", self, false );
 	
-	inputs[| in_mesh + 11] = nodeValue("Inverted", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| in_mesh + 11] = nodeValue_Bool("Inverted", self, false );
 	
 	input_display_list = [
 		["Path",		false], 	in_mesh + 0, in_mesh + 10,

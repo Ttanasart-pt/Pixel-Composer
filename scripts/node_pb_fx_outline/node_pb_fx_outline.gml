@@ -1,9 +1,9 @@
 function Node_PB_Fx_Outline(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Outline";
 	
-	inputs[| 1] = nodeValue("Corner", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 1] = nodeValue_Bool("Corner", self, false );
 		
-	inputs[| 2] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 2] = nodeValue_Color("Color", self, c_white );
 	
 	inputs[| 3] = nodeValue_Enum_Button("Side", self,  0, [ "Inside", "Outside" ]);
 	

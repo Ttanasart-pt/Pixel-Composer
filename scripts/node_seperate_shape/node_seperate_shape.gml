@@ -4,24 +4,24 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 0] = nodeValue_Surface("Surface in", self)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 1] = nodeValue_Float("Tolerance", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release })
 		.rejectArray();
 		
-	inputs[| 2] = nodeValue("Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 2] = nodeValue_Bool("Override color", self, false)
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+	inputs[| 3] = nodeValue_Color("Color", self, c_white)
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Ignore blank", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Skip empty and black shape.")
+	inputs[| 4] = nodeValue_Bool("Ignore blank", self, true, "Skip empty and black shape.")
 		.rejectArray();
 	
 	inputs[| 5] = nodeValue_Enum_Button("Mode", self,  0 , [ "Greyscale", "Alpha" ] )
 		
-	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
+	outputs[| 1] = nodeValue_Output("Atlas",	self, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
 		["Shape",	false], 0, 5, 1, 4,

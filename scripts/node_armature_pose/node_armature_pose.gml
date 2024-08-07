@@ -2,14 +2,14 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Armature Pose";
 	setDimension(96, 72);
 	
-	inputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.input, VALUE_TYPE.armature, noone)
+	inputs[| 0] = nodeValue_Armature("Armature", self, noone)
 		.setVisible(true, true);
 	
 	input_display_list = [ 0,
 		["Bones", false]
 	]
 	
-	outputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.output, VALUE_TYPE.armature, noone);
+	outputs[| 0] = nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone);
 	
 	boneMap = ds_map_create();
 	

@@ -6,20 +6,20 @@ function Node_FLIP_Update(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
+	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Update", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue_Bool("Update", self, true);
 	
-	inputs[| 2] = nodeValue("Override timestep", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 2] = nodeValue_Bool("Override timestep", self, false);
 	
-	inputs[| 3] = nodeValue("Timestep", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.01);
+	inputs[| 3] = nodeValue_Float("Timestep", self, 0.01);
 	
 	input_display_list = [ 0, 1,
 		["Timestep", false], 2, 3, 
 	];
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
+	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var domain  = getInputData(0);

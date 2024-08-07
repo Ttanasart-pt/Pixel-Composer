@@ -3,15 +3,15 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Position x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 2] = nodeValue("Position y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 3] = nodeValue("Anchor x",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 4] = nodeValue("Anchor y",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 5] = nodeValue("Rotation",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 6] = nodeValue("Scale x",    self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
-	inputs[| 7] = nodeValue("Scale y",    self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 1] = nodeValue_Float("Position x", self, 0);
+	inputs[| 2] = nodeValue_Float("Position y", self, 0);
+	inputs[| 3] = nodeValue_Float("Anchor x",   self, 0);
+	inputs[| 4] = nodeValue_Float("Anchor y",   self, 0);
+	inputs[| 5] = nodeValue_Float("Rotation",   self, 0);
+	inputs[| 6] = nodeValue_Float("Scale x",    self, 1);
+	inputs[| 7] = nodeValue_Float("Scale y",    self, 1);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var pos_x = _data[1];

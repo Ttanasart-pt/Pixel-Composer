@@ -9,16 +9,15 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 1] = nodeValue_Enum_Button("Align", self,  1, [ "Start", "Middle", "End"])
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue_Int("Spacing", self, 0)
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.padding)
+	inputs[| 3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
+	outputs[| 1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []);
 	
 	temp_surface = [ noone, noone ];
 	

@@ -4,11 +4,11 @@ function Node_XML_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	w = 128;
 	
-	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "xml file|*.xml" })
 		.rejectArray();
 		
-	inputs[| 1]  = nodeValue("Struct", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {})
+	inputs[| 1]  = nodeValue_Struct("Struct", self, {})
 		.setVisible(true, true);
 	
 	input_display_list = [ 0, 1 ]

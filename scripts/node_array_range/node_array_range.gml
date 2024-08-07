@@ -2,16 +2,16 @@ function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Array Range";
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 0] = nodeValue_Float("Start", self, 0)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("End", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 10)
+	inputs[| 1] = nodeValue_Float("End", self, 10)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 2] = nodeValue_Float("Step", self, 1)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, []);
+	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.float, []);
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var st  = _data[0];

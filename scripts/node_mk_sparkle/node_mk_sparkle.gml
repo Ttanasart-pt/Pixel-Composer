@@ -6,30 +6,29 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	dimension_index = -1;
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
+	inputs[| 0] = nodeValue_Int("Size", self, 5);
 	
 	inputs[| 1] = nodeValueSeed(self, VALUE_TYPE.float);
 	
-	inputs[| 2] = nodeValue("Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)	
+	inputs[| 2] = nodeValue_Float("Speed", self, 1)	
 		.setDisplay(VALUE_DISPLAY.slider)
 	
-	inputs[| 3] = nodeValue("Shade", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 3] = nodeValue_Bool("Shade", self, false);
 	
-	inputs[| 4] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)	
+	inputs[| 4] = nodeValue_Float("Amount", self, 0.5)	
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	inputs[| 5] = nodeValue("Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)	
+	inputs[| 5] = nodeValue_Float("Scatter", self, 0.5)	
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	inputs[| 6] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ cola(c_black), cola(c_white) ])	
-		.setDisplay(VALUE_DISPLAY.palette)
+	inputs[| 6] = nodeValue_Palette("Colors", self, [ cola(c_black), cola(c_white) ])	
 		
-	inputs[| 7] = nodeValue("Additive", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)	
+	inputs[| 7] = nodeValue_Bool("Additive", self, false)	
 		
-	inputs[| 8] = nodeValue("Diagonal", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)	
+	inputs[| 8] = nodeValue_Float("Diagonal", self, 0.2)	
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 
 		["Surfaces", false], 0, 
@@ -150,20 +149,20 @@ function __Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	dimension_index = -1;
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
+	inputs[| 0] = nodeValue_Int("Size", self, 5);
 	
-	inputs[| 1] = nodeValue("Sparkle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 
+	inputs[| 1] = nodeValue_Float("Sparkle", self, [ 
 			[ MKSPARK_DIRR.main, 0,  0, 2, 1, 0, 0 ], 
 			[ MKSPARK_DIRR.main, 0, -1, 1, 1, 0, 0 ], 
 		])
 		.setArrayDepth(2)
 		.setArrayDynamic();
 	
-	inputs[| 2] = nodeValue("Start frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 2] = nodeValue_Int("Start frame", self, 0);
 	
-	inputs[| 3] = nodeValue("Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 3] = nodeValue_Float("Speed", self, 1);
 	
-	inputs[| 4] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
+	inputs[| 4] = nodeValue_Int("Loop", self, [])
 		.setArrayDepth(1)
 		.setArrayDynamic();
 	
@@ -359,7 +358,7 @@ function __Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		sparkleEditor
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	temp_surface = [ noone, noone ];
 	

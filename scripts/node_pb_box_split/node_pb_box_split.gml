@@ -7,18 +7,18 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 		
 	inputs[| 2] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Ratio", "Fix Left", "Fix Right" ]);
 	
-	inputs[| 3] = nodeValue("Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| 3] = nodeValue_Float("Ratio", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 4] = nodeValue("Fix width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 )
+	inputs[| 4] = nodeValue_Int("Fix width", self, 8 )
 	
 	inputs[| 5] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]);
 	
-	inputs[| 6] = nodeValue("Mirror", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0 )
+	inputs[| 6] = nodeValue_Bool("Mirror", self, 0 )
 	
-	outputs[| 0] = nodeValue("pBox Left", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, noone );
+	outputs[| 0] = nodeValue_Output("pBox Left", self, VALUE_TYPE.pbBox, noone );
 	
-	outputs[| 1] = nodeValue("pBox Right", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, noone );
+	outputs[| 1] = nodeValue_Output("pBox Right", self, VALUE_TYPE.pbBox, noone );
 	
 	input_display_list = [ 0, 1,
 		["Split",	false], 5, 2, 3, 4, 6, 

@@ -5,10 +5,9 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Vector("Amount", self, [ 4, 4 ]);
 		
-	inputs[| 3] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 3] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	inputs[| 4] = nodeValue_Surface("Surface back", self);
@@ -17,11 +16,11 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 6] = nodeValue_Enum_Button("Axis", self,  0, [ "X", "Y" ]);
 	
-	inputs[| 7] = nodeValue("Sweep", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 7] = nodeValue_Float("Sweep", self, 0);
 	
 	inputs[| 8] = nodeValue_Rotation("Sweep direction", self, 0);
 		
-	inputs[| 9] = nodeValue("Sweep shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 9] = nodeValue_Float("Sweep shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
 	inputs[| 10] = nodeValue_Enum_Scroll("Flip limit", self,  0, [ new scrollItem("None", s_node_mk_grid_flip, 0), 
@@ -34,7 +33,7 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Flip",		false], 6, 10, 5, 7, 8, 9, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

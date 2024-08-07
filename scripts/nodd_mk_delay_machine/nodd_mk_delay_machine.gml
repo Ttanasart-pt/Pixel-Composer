@@ -6,21 +6,20 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 0] = nodeValue_Surface("Surface", self);
 	
-	inputs[| 1] = nodeValue("Delay Amounts", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 1] = nodeValue_Int("Delay Amounts", self, 4);
 	
-	inputs[| 2] = nodeValue("Delay Frames", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 2] = nodeValue_Int("Delay Frames", self, 1);
 	
-	inputs[| 3] = nodeValue("Blend over Delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ])
-		.setDisplay(VALUE_DISPLAY.palette);
+	inputs[| 3] = nodeValue_Palette("Blend over Delay", self, [ c_white ]);
 	
 	inputs[| 4] = nodeValue("Alpha over Delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
 	inputs[| 5] = nodeValue_Enum_Scroll("Palette Select", self, 0, [ "Loop", "Pingpong", "Random" ]);
 	
-	inputs[| 6] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 6] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
 		["Delay",	false], 1, 2, 

@@ -3,10 +3,10 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 0] = nodeValue_Dimension(self);
 		
-	inputs[| 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 1] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 
-	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
 		["Output",	 false], 0,

@@ -5,13 +5,12 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue("Splice", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.padding)
+	inputs[| 2] = nodeValue_Padding("Splice", self, [ 0, 0, 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 3] = nodeValue_Enum_Scroll("Filling modes", self, 0, [ "Scale", "Repeat" ]);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	attribute_interpolation();

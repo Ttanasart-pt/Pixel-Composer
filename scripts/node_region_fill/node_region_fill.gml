@@ -5,17 +5,16 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 1] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 2] = nodeValue("Fill Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))
-		.setDisplay(VALUE_DISPLAY.palette);
+	inputs[| 2] = nodeValue_Palette("Fill Colors", self, array_clone(DEF_PALETTE));
 	
-	inputs[| 3] = nodeValue("Fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 3] = nodeValue_Bool("Fill", self, true);
 	
-	inputs[| 4] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 4] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 4].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 5] = nodeValue("Target Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 5] = nodeValue_Color("Target Color", self, c_white);
 	
-	inputs[| 6] = nodeValue("Inner only", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Only fill regions with surrounding pixels.");
+	inputs[| 6] = nodeValue_Bool("Inner only", self, false, "Only fill regions with surrounding pixels.");
 	
 	inputs[| 7] = nodeValue_Enum_Scroll("Draw original", self,  0, [ "None", "Above", "Behind" ]);
 	
@@ -25,9 +24,9 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 10] = nodeValue_Surface("Texture map", self);
 	
-	inputs[| 11] = nodeValue("Color Filter", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 11] = nodeValue_Bool("Color Filter", self, false);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 4, 
 		["Surfaces", false], 0, 1, 

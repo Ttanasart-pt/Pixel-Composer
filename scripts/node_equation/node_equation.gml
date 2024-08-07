@@ -39,9 +39,9 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attributes.size = 0;
 	
-	inputs[| 0] = nodeValue("Equation", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 0] = nodeValue_Text("Equation", self, "");
 	
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.float, 0);
 	
 	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		argument_renderer.x = _x;
@@ -104,10 +104,10 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+		inputs[| index + 0] = nodeValue_Text("Argument name", self, "" )
 			.setDisplay(VALUE_DISPLAY.text_box);
 		
-		inputs[| index + 1] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		inputs[| index + 1] = nodeValue_Float("Argument value", self, 0 )
 			.setVisible(true, true);
 		
 		return inputs[| index + 0];

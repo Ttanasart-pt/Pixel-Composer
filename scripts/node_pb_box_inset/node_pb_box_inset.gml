@@ -5,26 +5,25 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	inputs[| 1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue("Inset", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 2, 2, 2, 2 ] )
-		.setDisplay(VALUE_DISPLAY.padding);
+	inputs[| 2] = nodeValue_Padding("Inset", self, [ 2, 2, 2, 2 ] );
 		
 	inputs[| 3] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Padding", "Ratio" ]);
 		
-	inputs[| 4] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| 4] = nodeValue_Float("Width", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 5] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| 5] = nodeValue_Float("Height", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 6] = nodeValue("Horizontal alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| 6] = nodeValue_Float("Horizontal alignment", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue("Vertical alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| 7] = nodeValue_Float("Vertical alignment", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	outputs[| 0] = nodeValue("pBox Inset", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, noone );
+	outputs[| 0] = nodeValue_Output("pBox Inset", self, VALUE_TYPE.pbBox, noone );
 	
-	outputs[| 1] = nodeValue("pBox Frame", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, noone );
+	outputs[| 1] = nodeValue_Output("pBox Frame", self, VALUE_TYPE.pbBox, noone );
 	
 	input_display_list = [ 0, 1,
 		["Inset",	false], 3, 2, 4, 5, 6, 7, 

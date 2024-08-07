@@ -7,11 +7,10 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	previewable = true;
 	
-	inputs[| 0] = nodeValue("Render dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 0] = nodeValue_Vector("Render dimension", self, DEF_SURF)
 		.rejectArray();
 		
-	inputs[| 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 1] = nodeValue_Bool("Round position", self, false)
 	
 	attribute_surface_depth();
 	

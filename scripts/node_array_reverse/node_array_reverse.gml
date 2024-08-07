@@ -5,7 +5,7 @@ function Node_Array_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);
 		
-	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);

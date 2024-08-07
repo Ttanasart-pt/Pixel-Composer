@@ -3,14 +3,14 @@ function Node_Path_Separate_Folder(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0] = nodeValue_Text("Path", self, "")
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Keep extension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue_Bool("Keep extension", self, true);
 	
-	outputs[| 0] = nodeValue("Directory", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "");
+	outputs[| 0] = nodeValue_Output("Directory", self, VALUE_TYPE.path, "");
 	
-	outputs[| 1] = nodeValue("File Name", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "");
+	outputs[| 1] = nodeValue_Output("File Name", self, VALUE_TYPE.path, "");
 	
 	static processData = function(_output, _data, _index = 0) { 
 		if(_index == 0)

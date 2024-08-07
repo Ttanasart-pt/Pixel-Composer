@@ -2,22 +2,20 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Replace Colors";
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
-	inputs[| 1] = nodeValue("Palette from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [])
-		.setDisplay(VALUE_DISPLAY.palette);
+	inputs[| 1] = nodeValue_Palette("Palette from", self, []);
 	
-	inputs[| 2] = nodeValue("Palette to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [])
-		.setDisplay(VALUE_DISPLAY.palette)
+	inputs[| 2] = nodeValue_Palette("Palette to", self, [])
 		.setVisible(false, false);
 	
-	inputs[| 3] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 3] = nodeValue_Float("Threshold", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 4] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 5] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 5] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 6] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 6] = nodeValue_Bool("Active", self, true);
 		active_index = 6;
 		
 	__init_mask_modifier(4); // inputs 7, 8, 
@@ -187,7 +185,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		//["Comparison",	false], 3, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

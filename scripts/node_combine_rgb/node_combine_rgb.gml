@@ -9,7 +9,7 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 4] = nodeValue_Enum_Scroll("Sampling type", self,  0, ["Channel value", "Greyscale"]);
 	
-	inputs[| 5] = nodeValue("Base value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Set value to the unconnected color channels.")
+	inputs[| 5] = nodeValue_Float("Base value", self, 0, "Set value to the unconnected color channels.")
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(6);
 	
@@ -19,12 +19,12 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 7] = nodeValue("Array Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 7] = nodeValue_Bool("Array Input", self, false);
 	
 	inputs[| 8] = nodeValue_Surface("RGBA Array", self, [])
 		.setArrayDepth(1);
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Sampling",	false], 4, 5, 6, 

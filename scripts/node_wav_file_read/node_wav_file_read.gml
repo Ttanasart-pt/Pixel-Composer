@@ -27,30 +27,30 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "WAV File In";
 	color = COLORS.node_blend_input;
 	
-	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "audio|*.wav" })
 		.rejectArray();
 	
-	inputs[| 1]  = nodeValue("Sync length", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 1]  = nodeValue_Trigger("Sync length", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", UI : true, onClick: function() { 
 			if(content == noone) return;
 			TOTAL_FRAMES = max(1, ceil(content.duration * PROJECT.animator.framerate));
 		} });
 		
-	inputs[| 2]  = nodeValue("Mono", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 2]  = nodeValue_Bool("Mono", self, false);
 		
-	outputs[| 0] = nodeValue("Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.audioBit, noone)
+	outputs[| 0] = nodeValue_Output("Data", self, VALUE_TYPE.audioBit, noone)
 		.setArrayDepth(1);
 	
-	outputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "");
+	outputs[| 1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "");
 	
-	outputs[| 2] = nodeValue("Sample rate", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 44100)
+	outputs[| 2] = nodeValue_Output("Sample rate", self, VALUE_TYPE.integer, 44100)
 		.setVisible(false);
 	
-	outputs[| 3] = nodeValue("Channels", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 2)
+	outputs[| 3] = nodeValue_Output("Channels", self, VALUE_TYPE.integer, 2)
 		.setVisible(false);
 	
-	outputs[| 4] = nodeValue("Duration (s)", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0)
+	outputs[| 4] = nodeValue_Output("Duration (s)", self, VALUE_TYPE.float, 0)
 		.setVisible(false);
 	
 	content      = noone;

@@ -8,28 +8,28 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 	inputs[| in_cam + 0] = nodeValue_Rotation("L1 H angle", self, 30)
 		.setName("Horizontal angle");
 	
-	inputs[| in_cam + 1] = nodeValue("L1 V angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
+	inputs[| in_cam + 1] = nodeValue_Float("L1 V angle", self, 45 )
 		.setName("Vertical angle")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	inputs[| in_cam + 2] = nodeValue("L1 Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+	inputs[| in_cam + 2] = nodeValue_Color("L1 Color", self, c_white )
 		.setName("Color")
 	
-	inputs[| in_cam + 3] = nodeValue("L1 Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| in_cam + 3] = nodeValue_Float("L1 Intensity", self, 1 )
 		.setName("Intensity")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| in_cam + 4] = nodeValue_Rotation("L2 H angle", self, -45)
 		.setName("Horizontal angle");
 	
-	inputs[| in_cam + 5] = nodeValue("L2 V angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
+	inputs[| in_cam + 5] = nodeValue_Float("L2 V angle", self, 45 )
 		.setName("Vertical angle")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	inputs[| in_cam + 6] = nodeValue("L2 Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+	inputs[| in_cam + 6] = nodeValue_Color("L2 Color", self, c_white )
 		.setName("Color")
 	
-	inputs[| in_cam + 7] = nodeValue("L2 Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.25 )
+	inputs[| in_cam + 7] = nodeValue_Float("L2 Intensity", self, 0.25 )
 		.setName("Intensity")
 		.setDisplay(VALUE_DISPLAY.slider);
 	

@@ -12,31 +12,29 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	inputs[| 1] = nodeValue_Enum_Scroll("Force type", self,  0, [ "Constant", "Impulse", "Torque", "Explode" ])
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Torque", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 3] = nodeValue_Float("Torque", self, 0)
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Apply frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Frame index to apply force.")
+	inputs[| 4] = nodeValue_Int("Apply frame", self, 0, "Frame index to apply force.")
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue("Force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.1, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 5] = nodeValue_Vector("Force", self, [ 0.1, 0 ])
 		.rejectArray();
 	
 	inputs[| 6] = nodeValue_Enum_Button("Scope", self,  0, [ "Global", "Local" ])
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 7] = nodeValue_Float("Strength", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] })
 		.rejectArray();
 	
-	inputs[| 8] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8)
+	inputs[| 8] = nodeValue_Float("Range", self, 8)
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, noone);
+	outputs[| 0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone);
 	
 	input_display_list = [
 		["Object",	 true],	0,

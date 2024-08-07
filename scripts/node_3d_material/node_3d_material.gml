@@ -5,27 +5,27 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	inputs[| 0] = nodeValue_Surface("Texture", self)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Diffuse", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| 1] = nodeValue_Float("Diffuse", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 2] = nodeValue("Specular", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+	inputs[| 2] = nodeValue_Float("Specular", self, 0 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue("Shininess", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
+	inputs[| 3] = nodeValue_Float("Shininess", self, 1 );
 	
-	inputs[| 4] = nodeValue("Metalic", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 4] = nodeValue_Bool("Metalic", self, false );
 	
 	inputs[| 5] = nodeValue_Surface("Normal Map", self);
 	
-	inputs[| 6] = nodeValue("Normal Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| 6] = nodeValue_Float("Normal Strength", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 		
-	inputs[| 7] = nodeValue("Roughness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| 7] = nodeValue_Float("Roughness", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Anti aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 8] = nodeValue_Bool("Anti aliasing", self, false );
 	
-	outputs[| 0] = nodeValue("Material", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Material, noone);
+	outputs[| 0] = nodeValue_Output("Material", self, VALUE_TYPE.d3Material, noone);
 	
 	input_display_list = [ 0, 8, 
 		["Properties",	false], 1, 2, 3, 4, 7,

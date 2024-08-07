@@ -11,29 +11,28 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Spawn area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA)
-		.setDisplay(VALUE_DISPLAY.area)
+	inputs[| 1] = nodeValue_Area("Spawn area", self, DEF_AREA)
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue_Enum_Button("Spawn type", self,  0, [ "Stream", "Burst" ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Spawn delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+	inputs[| 3] = nodeValue_Int("Spawn delay", self, 4)
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 4] = nodeValue_Int("Spawn amount", self, 1)
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue("Spawn frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 5] = nodeValue_Int("Spawn frame", self, 0)
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 6] = nodeValue_Bool("Spawn", self, true)
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
+	inputs[| 7] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, object);
+	outputs[| 0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, object);
 	
 	input_display_list = [ 0, 7, 
 		["Spawn",	false],	6, 1, 2, 3, 5, 4,

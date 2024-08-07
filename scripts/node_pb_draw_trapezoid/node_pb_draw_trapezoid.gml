@@ -6,16 +6,16 @@ function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _
 	
 	inputs[| 4] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Symmetric", "Independent" ]);
 	
-	inputs[| 5] = nodeValue("Bevel", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| 5] = nodeValue_Float("Bevel", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 6] = nodeValue("Bevel 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| 6] = nodeValue_Float("Bevel 1", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue("Bevel 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+	inputs[| 7] = nodeValue_Float("Bevel 2", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue("Invert", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 8] = nodeValue_Bool("Invert", self, false );
 	
 	input_display_list = [
 		["Draw",	false], 0, 1, 2, 

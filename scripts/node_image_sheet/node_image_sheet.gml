@@ -3,30 +3,25 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1]  = nodeValue("Sprite size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 32 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1]  = nodeValue_Vector("Sprite size", self, [ 32, 32 ]);
 	
-	inputs[| 2]  = nodeValue("Row", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1); //unused
-	inputs[| 3]  = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2]  = nodeValue_Int("Row", self, 1); //unused
+	inputs[| 3]  = nodeValue_Vector("Amount", self, [ 1, 1 ]);
 	
-	inputs[| 4]  = nodeValue("Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4]  = nodeValue_Vector("Offset", self, [ 0, 0 ]);
 	
-	inputs[| 5]  = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 5]  = nodeValue_Vector("Spacing", self, [ 0, 0 ]);
 	
-	inputs[| 6]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
-		.setDisplay(VALUE_DISPLAY.padding);
+	inputs[| 6]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0]);
 	
 	inputs[| 7]  = nodeValue_Enum_Scroll("Output", self,  1, [ "Animation", "Array" ]);
 	
-	inputs[| 8]  = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 8]  = nodeValue_Float("Animation speed", self, 1);
 	
 	inputs[| 9]  = nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), ]);
 	
-	inputs[| 10] = nodeValue("Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false, "Automatically set amount based on sprite size.")
+	inputs[| 10] = nodeValue_Trigger("Auto fill", self, false, "Automatically set amount based on sprite size.")
 		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", UI : true, onClick: function() { #region
 			var _sur = getInputData(0);
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
@@ -48,18 +43,18 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			doUpdate();
 		} }); #endregion
 		
-	inputs[| 11] = nodeValue("Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 11] = nodeValue_Trigger("Sync animation", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", UI : true, onClick: function() { 
 			var _atl = outputs[| 1].getValue();
 			var _spd = getInputData(8);
 			TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
 		} });
 		
-	inputs[| 12] = nodeValue("Filter empty output", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 12] = nodeValue_Bool("Filter empty output", self, false);
 		
 	inputs[| 13] = nodeValue_Enum_Scroll("Filtered Pixel", self,  0, [ "Transparent", "Color" ]);
 	
-	inputs[| 14] = nodeValue("Filtered Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black)
+	inputs[| 14] = nodeValue_Color("Filtered Color", self, c_black)
 	
 	input_display_list = [
 		["Sprite", false],	0, 1, 6, 
@@ -68,9 +63,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Filter Empty", true, 12], 13, 14, 
 	];
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
+	outputs[| 1] = nodeValue_Output("Atlas Data", self, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
 	attribute_surface_depth();

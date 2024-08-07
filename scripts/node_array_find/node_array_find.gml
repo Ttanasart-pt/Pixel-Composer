@@ -9,7 +9,7 @@ function Node_Array_Find(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.setVisible(true, true)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
+	outputs[| 0] = nodeValue_Output("Index", self, VALUE_TYPE.integer, 0);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);

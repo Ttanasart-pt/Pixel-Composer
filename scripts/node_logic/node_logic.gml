@@ -40,13 +40,13 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 												 new scrollItem("Xor" , s_node_logic, 5), ])
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
+	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.boolean, false);
 	
 	static createNewInput = function()  {
 		var index = ds_list_size(inputs);
 		
 		var jname = chr(ord("a") + index - 1);
-		inputs[| index] = nodeValue(jname,  self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+		inputs[| index] = nodeValue_Bool(jname,  self, false )
 			.setVisible(true, true);
 		
 		return inputs[| index];

@@ -4,59 +4,57 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue_Float("Brightness", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(18);
 	
-	inputs[| 2] = nodeValue("Contrast",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 2] = nodeValue_Float("Contrast",   self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(19);
 	
-	inputs[| 3] = nodeValue("Hue",        self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 3] = nodeValue_Float("Hue",        self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(20);
 	
-	inputs[| 4] = nodeValue("Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 4] = nodeValue_Float("Saturation", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(21);
 	
-	inputs[| 5] = nodeValue("Value",      self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 5] = nodeValue_Float("Value",      self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(22);
 	
-	inputs[| 6] = nodeValue("Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, cola(c_white));
+	inputs[| 6] = nodeValue_Color("Blend",   self, cola(c_white));
 	
-	inputs[| 7] = nodeValue("Blend amount",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 7] = nodeValue_Float("Blend amount",  self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(23);
 	
 	inputs[| 8] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 9] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 9] = nodeValue_Float("Alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(24);
 	
-	inputs[| 10] = nodeValue("Exposure", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 10] = nodeValue_Float("Exposure", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] })
 		.setMappable(25);
 	
-	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 11] = nodeValue_Bool("Active", self, true);
 		active_index = 11;
 		
 	inputs[| 12] = nodeValue_Enum_Button("Input Type", self,  0, [ "Surface", "Color" ]);
 	
-	inputs[| 13] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))
-		.setDisplay(VALUE_DISPLAY.palette)
+	inputs[| 13] = nodeValue_Palette("Color", self, array_clone(DEF_PALETTE))
 		.setVisible(true, true);
 	
 	inputs[| 14] = nodeValue_Enum_Scroll("Blend mode", self,  0, BLEND_TYPES);
 		
-	inputs[| 15] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
-		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
+	inputs[| 15] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
-	inputs[| 16] = nodeValue("Invert mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 16] = nodeValue_Bool("Invert mask", self, false);
 	
-	inputs[| 17] = nodeValue("Mask feather", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 17] = nodeValue_Float("Mask feather", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	////////////////////////////////////////////////////////////////////////////////////////
@@ -87,9 +85,9 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 	////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Color out", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
+	outputs[| 1] = nodeValue_Output("Color out", self, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [11, 12, 15, 9, 24, 

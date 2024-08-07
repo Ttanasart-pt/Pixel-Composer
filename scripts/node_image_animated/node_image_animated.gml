@@ -38,36 +38,35 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	update_on_frame = true;
 	
-	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
+	inputs[| 0]  = nodeValue_Text("Path", self, [])
 		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
 	
-	inputs[| 1]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
-		.setDisplay(VALUE_DISPLAY.padding)
+	inputs[| 1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
 		.rejectArray();
 		
-	inputs[| 2] = nodeValue("Stretch frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Stretch animation speed to match project length.")
+	inputs[| 2] = nodeValue_Bool("Stretch frame", self, false, "Stretch animation speed to match project length.")
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue_Float("Animation speed", self, 1)
 		.rejectArray();
 		
 	inputs[| 4] = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
 		.rejectArray();
 		
-	inputs[| 5] = nodeValue("Set animation length to match", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
+	inputs[| 5] = nodeValue_Trigger("Set animation length to match", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() { 
 				if(array_length(spr) == 0) return;
 				TOTAL_FRAMES = array_length(spr);
 			} });
 	
-	inputs[| 6]  = nodeValue("Custom frame order", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 6]  = nodeValue_Bool("Custom frame order", self, false);
 	
-	inputs[| 7]  = nodeValue("Frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 7]  = nodeValue_Int("Frame", self, 0);
 
 	inputs[| 8] = nodeValue_Enum_Scroll("Canvas size", self,  2, [ "First", "Minimum", "Maximum" ])
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Image", false],		0, 1, 8, 

@@ -6,26 +6,25 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone )
+	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(); });
 	
-	inputs[| 2] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
+	inputs[| 2] = nodeValue_Float("Radius", self, 4 );
 	
-	inputs[| 3] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )
+	inputs[| 3] = nodeValue_Float("Strength", self, 4 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -8, 8, 0.01 ] });
 	
-	inputs[| 4] = nodeValue("Attraction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+	inputs[| 4] = nodeValue_Float("Attraction", self, 0 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -8, 8, 0.01 ] });
 		
 	input_display_list = [ 0, 
 		["Vertex",	false], 1, 2, 3, 4, 
 	]
 	
-	outputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone );
+	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
 	
 	static getDimension = function() { #region
 		var domain = getInputData(0);
