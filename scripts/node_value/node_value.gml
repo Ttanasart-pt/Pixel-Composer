@@ -594,7 +594,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 								if(_dim && array_equals(def_val, DEF_SURF)) {
 									value_tag = "dimension";
 									node.attributes.use_project_dimension = true;
-									editWidget.side_button = button(function() {
+									
+									editWidget.side_button = button(function() /*=>*/ {
 										node.attributes.use_project_dimension = !node.attributes.use_project_dimension;
 										node.triggerRender();
 									}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).setTooltip("Use project dimension");
@@ -1095,9 +1096,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			value = applyUnit? unit.apply(value, arrIndex) : value;
 			
-			if(value_tag == "dimension")
-				for( var i = 0, n = array_length(value); i < n; i++ ) value[i] = clamp(value[i], 0, 8192);
-			
+			if(value_tag == "dimension") for( var i = 0, n = array_length(value); i < n; i++ ) value[i] = clamp(value[i], 0, 8192);
 			if(validator != noone) value = validator.validate(value);
 			
 			return value;
@@ -1283,8 +1282,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
 		
-		if(value_tag == "dimension" && node.attributes.use_project_dimension)
-			return PROJECT.attributes.surface_dimension;
+		if(value_tag == "dimension" && node.attributes.use_project_dimension) return PROJECT.attributes.surface_dimension;
 		
 		if(!is_anim) {
 			if(sep_axis) {
@@ -1522,8 +1520,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!updated) return false;
 		
-		if(value_tag == "dimension")
-			node.attributes.use_project_dimension = false;
+		if(value_tag == "dimension") node.attributes.use_project_dimension = false;
 		
 		draw_junction_index = type;
 		if(type == VALUE_TYPE.surface) {

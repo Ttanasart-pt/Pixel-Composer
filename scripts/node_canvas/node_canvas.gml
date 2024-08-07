@@ -286,7 +286,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_brush ]),
 			
 			new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
-				.setSetting(tool_thrs, tool_fil8)
+				.setSetting(tool_thrs)
+				.setSetting(tool_fil8)
 				.setToolObject(tool_sel_magic),
 			
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
@@ -306,7 +307,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setToolObject(tool_ellipse),
 			
 			new NodeTool( "Iso Cube",	[ THEME.canvas_tools_iso_cube, THEME.canvas_tools_iso_cube_wire, THEME.canvas_tools_iso_cube_fill ])
-				.setSetting(tool_size, tool_iso_settings)
+				.setSetting(tool_size)
+				.setSetting(tool_iso_settings)
 				.setToolObject(tool_iso_cube),
 			
 			new NodeTool( "Curve",		  THEME.canvas_tool_curve_icon)
@@ -373,11 +375,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			/*  0 */ -1,
 			/*  1 */ new NodeTool( "Make/Reset Brush", THEME.canvas_tools_pencil ).setToolFn( __action_make_brush ),
 			/*  2 */ -1,
-			/*  3 */ new NodeTool( "Outline", THEME.canvas_tools_outline ).setSetting(tool_thrs, tool_fil8).setToolObject( new canvas_tool_outline() ),
-			/*  4 */ new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setSetting(tool_thrs, tool_fil8).setToolObject( new canvas_tool_extrude() ),
-			/*  5 */ new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setSetting(tool_thrs, tool_fil8).setToolObject( new canvas_tool_inset()   ),
-			/*  6 */ new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setSetting(tool_thrs, tool_fil8).setToolObject( new canvas_tool_skew()    ),
-			/*  7 */ new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setSetting(tool_thrs, tool_fil8).setToolObject( new canvas_tool_corner()   ),
+			/*  3 */ new NodeTool( "Outline", THEME.canvas_tools_outline ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_outline() ),
+			/*  4 */ new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_extrude() ),
+			/*  5 */ new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_inset()   ),
+			/*  6 */ new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_skew()    ),
+			/*  7 */ new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_corner()   ),
 		];
 		
 		rightTools_not_selection = [ 
@@ -415,7 +417,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		else                                        brush.colors[color_3d_selected - 1] = color;
 	}
 	
-	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) { #region
+	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {
 		var _sx0 = xx - tool_size / 2;
 		var _sx1 = xx + tool_size / 2;
 		var hh   = ui(8);
@@ -501,9 +503,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _sel[0] - _pd, _sel[1] - _pd, _cw + _pd * 2, _ch + _pd * 2, c_white, 1);
 		
 		return hh + ui(4);
-	} #endregion
+	}
 	
-	static removeFrame = function(index = 0) { #region
+	static removeFrame = function(index = 0) {
 		if(attributes.frames <= 1) return;
 		
 		if(preview_index == attributes.frames) 
@@ -513,9 +515,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		array_delete(canvas_surface, index, 1);
 		array_delete(canvas_buffer,  index, 1);
 		update();
-	} #endregion
+	}
 	
-	static refreshFrames = function() { #region
+	static refreshFrames = function() {
 		var fr   = attributes.frames;
 		var _dim = attributes.dimension;
 		
@@ -539,13 +541,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 			array_resize(canvas_buffer, fr);
 		}
-	} #endregion
+	}
 	
 	function getCanvasSurface(index = preview_index) { INLINE return array_safe_get_fast(canvas_surface, index); }
 	
 	function setCanvasSurface(surface, index = preview_index) { INLINE canvas_surface[index] = surface; }
 	
-	static storeAction = function() { #region
+	static storeAction = function() {
 		
 		var action = recordAction(ACTION_TYPE.custom, function(data) { 
 			if(tool_selection.is_selected) tool_selection.apply();
@@ -559,14 +561,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			data.surface = _canvas;
 		}, { surface: surface_clone(getCanvasSurface(preview_index)), tooltip: $"Modify canvas {preview_index}", index: preview_index });
 		
-	} #endregion
+	}
 	
-	static apply_surfaces = function() { #region
+	static apply_surfaces = function() {
 		for( var i = 0; i < attributes.frames; i++ )
 			apply_surface(i);
-	} #endregion
+	}
 	
-	function apply_surface(index = preview_index) { #region
+	function apply_surface(index = preview_index) {
 		var _dim = attributes.dimension;
 		var cDep = attrDepth();
 		
@@ -593,14 +595,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		drawing_surface = surface_verify(drawing_surface, _dim[0], _dim[1], cDep);
 		surface_clear(drawing_surface);
-	} #endregion
+	}
 	
-	static surface_store_buffers = function(index = preview_index) { #region
+	static surface_store_buffers = function(index = preview_index) {
 		for( var i = 0; i < attributes.frames; i++ )
 			surface_store_buffer(i);
-	} #endregion
+	}
 	
-	static surface_store_buffer = function(index = preview_index) { #region
+	static surface_store_buffer = function(index = preview_index) {
 		if(index >= attributes.frames) return;
 		
 		buffer_delete_safe(canvas_buffer[index]);
@@ -615,7 +617,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		triggerRender();
 		apply_surface(index);
-	} #endregion
+	}
 	
 	static tool_pick_color = function(_x, _y) {
 		tool_attribute.pickColor = tool_selection.is_selected?
@@ -623,7 +625,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_get_pixel_ext(getCanvasSurface(), _x, _y);
 	}
 	
-	function apply_draw_surface(_applyAlpha = true) { #region
+	function apply_draw_surface(_applyAlpha = true) {
 		var _can = getCanvasSurface();
 		var _drw = drawing_surface;
 		var _dim = attributes.dimension;
@@ -711,19 +713,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			surface_store_buffer();
 		}
 		
-	} #endregion
+	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
 		if(instance_exists(o_dialog_color_picker)) return;
 		
 		brush.node = self;
 		brush.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
-		if(!tool_selection.is_selected && active && key_mod_press(ALT)) { #region color selector
+		if(!tool_selection.is_selected && active && key_mod_press(ALT)) { // color selector
 			var dialog     = instance_create(0, 0, o_dialog_color_picker);
 			dialog.onApply = setToolColor;
 			dialog.def_c   = CURRENT_COLOR;
-		} #endregion
+		}
 		
 		var _canvas_surface = getCanvasSurface();
 		if(!surface_exists(_canvas_surface)) return;
@@ -816,7 +818,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_color(isUsingTool("Eraser")? c_white : CURRENT_COLOR);
 		draw_set_alpha(1);
 		
-		if(_tool) { #region tool step
+		if(_tool) { // tool step
 			
 			_tool.drawing_surface    = drawing_surface;
 			_tool._canvas_surface    = _canvas_surface;
@@ -846,7 +848,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				brush.sizing(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			} 
 			
-		} #endregion
+		}
 		
 		#region preview
 			if(tool_selection.is_selected) tool_selection.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -979,7 +981,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		#endregion
 		
-		if(DRAGGING && hover&& mouse_release(mb_left)) { #region drag n drop
+		if(DRAGGING && hover&& mouse_release(mb_left)) { //drag n drop
 			if(DRAGGING.type == "Color") {
 				var mouse_cur_x = round((_mx - _x) / _s - 0.5);
 				var mouse_cur_y = round((_my - _y) / _s - 0.5);
@@ -996,11 +998,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_reset_target();
 				surface_store_buffer();
 			}
-		} #endregion
+		}
 		
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var fram  = attributes.frames;
 		var brush = getInputData(6);
 		var anim  = getInputData(12);
@@ -1017,9 +1019,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(atype == 0)  preview_index = safe_mod(CURRENT_FRAME * anims, fram);
 			else			preview_index = min(CURRENT_FRAME * anims, fram - 1);
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _dim   = getInputData(0);
 		var _bg    = getInputData(8);
 		var _bga   = getInputData(9);
@@ -1037,6 +1039,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(is_surface(_bgDim)) _dim = surface_get_dimension(_bgDim);
 		}
 		attributes.dimension = _dim;
+		
 		apply_surfaces();
 		
 		var _frames  = attributes.frames;
@@ -1101,9 +1104,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			_fileO.refreshThumbnail();
 		}
 		
-	} #endregion
+	}
 	
-	static doSerialize = function(_map) { #region
+	static doSerialize = function(_map) {
 		surface_store_buffers();
 		var _buff = array_create(attributes.frames);
 		
@@ -1113,9 +1116,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 			
 		_map.surfaces = _buff;
-	} #endregion
+	}
 	
-	static doApplyDeserialize = function() { #region
+	static doApplyDeserialize = function() {
 		var _dim     = struct_has(attributes, "dimension")? attributes.dimension : getInputData(0);
 		
 		if(!struct_has(load_map, "surfaces")) {
@@ -1139,20 +1142,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		apply_surfaces();
-	} #endregion
+	}
 	
-	static onCleanUp = function() { #region
+	static onCleanUp = function() {
 		surface_array_free(canvas_surface);
-	} #endregion
+	}
 	
 	///////////////////////////////////
 	
-	on_drop_file = function(path) { #region
+	on_drop_file = function(path) {
 		loadImagePath(path);
 		return true;
-	} #endregion
+	}
 	
-	static loadImagePath = function(path) { #region
+	static loadImagePath = function(path) {
 		if(!file_exists_empty(path)) return noone;
 		
 		var _spr = sprite_add(path, 0, 0, 0, 0, 0);
@@ -1177,7 +1180,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		live_target = path;
 	
 		return self;
-	} #endregion 
+	} 
 	
 	static dropPath = function(path) {
 		if(is_array(path)) path = array_safe_get(path, 0);
@@ -1211,7 +1214,6 @@ function timelineItemNode_Canvas(node) : timelineItemNode(node) constructor {
 	static drawDopesheet = function(_x, _y, _s, _msx, _msy) {
 		if(!is_instanceof(node, Node_Canvas)) return;
 		if(!node.attributes.show_timeline) return;
-		
 	}
 	
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {

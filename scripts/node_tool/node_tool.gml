@@ -32,7 +32,7 @@ function NodeTool(name, spr, contextString = instanceof(other)) constructor {
 		return new tooltipHotkey(_nme).setKey(_key.getName());
 	}
 	
-	static setSetting = function() { for(var i = 0; i < argument_count; i++) array_push(settings, argument[i]); return self; }
+	static setSetting = function(setting) { for(var i = 0; i < argument_count; i++) array_push(settings, argument[i]); return self; }
 	
 	static addSetting = function(name, type, onEdit, keyAttr, val) {
 		var w;

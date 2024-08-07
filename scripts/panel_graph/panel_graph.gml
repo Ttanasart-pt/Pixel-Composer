@@ -495,13 +495,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	//// =========== Get Set ===========
 	
-	function setCurrentPreview(_node = getFocusingNode()) { #region
+	function setCurrentPreview(_node = getFocusingNode()) {
 		if(!_node) return;
 	
 		PANEL_PREVIEW.setNodePreview(_node);
-	} #endregion
+	}
 
-	function setCurrentExport(_node = getFocusingNode()) { #region
+	function setCurrentExport(_node = getFocusingNode()) {
 		if(DEMO) return;
 		if(!_node) return;
 	
@@ -522,9 +522,35 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			_export.inputs[| 1].setFrom(_path);
 	
 		_export.inputs[| 0].setFrom(_outp);
-	} #endregion
+	}
 
-	function setCurrentCanvas(_node = getFocusingNode()) { #region
+	function setTriggerPreview() {
+		__temp_show = false;
+		array_foreach(nodes_selecting, function(node, index) {
+			if(index == 0) __temp_show = !node.previewable;
+			node.previewable = __temp_show;
+			node.refreshNodeDisplay();
+		});
+	}
+
+	function setTriggerParameter() {
+		__temp_show = false;
+		array_foreach(nodes_selecting, function(node, index) {
+			if(index == 0) __temp_show = !node.show_parameter;
+			node.show_parameter = __temp_show;
+			node.refreshNodeDisplay();
+		});
+	}
+
+	function setTriggerRender() {
+		__temp_active = false;
+		array_foreach(nodes_selecting, function(node, index) {
+			if(index == 0) __temp_active = !node.renderActive;
+			node.renderActive = __temp_active;
+		});
+	}
+
+	function setCurrentCanvas(_node = getFocusingNode()) {
 		if(!_node) return;
 	
 		var _outp = -1;
@@ -541,45 +567,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		if(_outp == -1) return;
 		if(!is_array(surf)) surf = [ surf ];
 		
-		var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y);
+		var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y).skipDefault();
 		var _dim    = surface_get_dimension(surf[0]);
 		
+		_canvas.inputs[| 0].setValue(_dim);
 		_canvas.attributes.dimension = _dim;
 		_canvas.attributes.frames    = array_length(surf);
 		_canvas.canvas_surface       = surface_array_clone(surf);
-		_canvas.inputs[| 0].setValue(_dim);
 		
 		_canvas.apply_surfaces();
-		
-	} #endregion
+	}
 
-	function setTriggerPreview() { #region
-		__temp_show = false;
-		array_foreach(nodes_selecting, function(node, index) {
-			if(index == 0) __temp_show = !node.previewable;
-			node.previewable = __temp_show;
-			node.refreshNodeDisplay();
-		});
-	} #endregion
-
-	function setTriggerParameter() { #region
-		__temp_show = false;
-		array_foreach(nodes_selecting, function(node, index) {
-			if(index == 0) __temp_show = !node.show_parameter;
-			node.show_parameter = __temp_show;
-			node.refreshNodeDisplay();
-		});
-	} #endregion
-
-	function setTriggerRender() { #region
-		__temp_active = false;
-		array_foreach(nodes_selecting, function(node, index) {
-			if(index == 0) __temp_active = !node.renderActive;
-			node.renderActive = __temp_active;
-		});
-	} #endregion
-
-	function setCurrentCanvasBlend(_node = getFocusingNode()) { #region
+	function setCurrentCanvasBlend(_node = getFocusingNode()) {
 		if(!_node) return;
 	
 		var _outp = -1;
@@ -607,7 +606,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var _blend = new Node_Blend(_node.x + _node.w + 64, _node.y, getCurrentContext()).skipDefault();
 		_blend.inputs[| 0].setFrom(_outp);
 		_blend.inputs[| 1].setFrom(_canvas.outputs[| 0]);
-	} #endregion
+	}
 	
 	function getFocusingNode() { return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
 	
