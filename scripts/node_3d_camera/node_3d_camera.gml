@@ -24,11 +24,9 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	inputs[| in_d3d + 1] = nodeValue("Clipping Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 10 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	 
-	inputs[| in_d3d + 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| in_d3d + 2] = nodeValue_Dimension(self);
 	
-	inputs[| in_d3d + 3] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Perspective", "Orthographic" ]);
+	inputs[| in_d3d + 3] = nodeValue_Enum_Button("Projection", self,  1 , [ "Perspective", "Orthographic" ]);
 	
 	inputs[| in_d3d + 4] = nodeValue("Scene", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Scene, noone )
 		.setVisible(true, true);
@@ -37,23 +35,19 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	inputs[| in_d3d + 6] = nodeValue("Show Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
-	inputs[| in_d3d + 7] = nodeValue("Backface Culling", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "CW", "CCW" ]);
+	inputs[| in_d3d + 7] = nodeValue_Enum_Button("Backface Culling", self,  2 , [ "None", "CW", "CCW" ]);
 	
 	inputs[| in_d3d + 8] = nodeValue("Orthographic Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	inputs[| in_d3d + 9] = nodeValue("Postioning Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] );
+	inputs[| in_d3d + 9] = nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] );
 	
 	inputs[| in_d3d + 10] = nodeValue("Lookat Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| in_d3d + 11] = nodeValue("Roll", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| in_d3d + 11] = nodeValue_Rotation("Roll", self, 0);
 	
-	inputs[| in_d3d + 12] = nodeValue("Horizontal Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| in_d3d + 12] = nodeValue_Rotation("Horizontal Angle", self, 45 );
 	
 	inputs[| in_d3d + 13] = nodeValue("Vertical Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
@@ -62,7 +56,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	inputs[| in_d3d + 15] = nodeValue("Gamma Adjust", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
-	inputs[| in_d3d + 16] = nodeValue("Environment Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| in_d3d + 16] = nodeValue_Surface("Environment Texture", self);
 	
 	inputs[| in_d3d + 17] = nodeValue("Ambient Occlusion", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
@@ -76,8 +70,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	inputs[| in_d3d + 21] = nodeValue("Round Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setWindows();
 	
-	inputs[| in_d3d + 22] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Normal", "Additive" ]);
+	inputs[| in_d3d + 22] = nodeValue_Enum_Button("Blend mode", self,  0 , [ "Normal", "Additive" ]);
 		
 	in_cam = ds_list_size(inputs);
 	

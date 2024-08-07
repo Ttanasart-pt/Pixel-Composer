@@ -6,8 +6,7 @@ function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 	inputs[| in_mesh + 0] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 1] = nodeValue("Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y", "Z" ]);
+	inputs[| in_mesh + 1] = nodeValue_Enum_Button("Normal", self,  2 , [ "X", "Y", "Z" ]);
 	
 	inputs[| in_mesh + 2] = nodeValue("Both side", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
 	

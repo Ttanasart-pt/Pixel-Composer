@@ -19,8 +19,7 @@
 function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Bar / Graph";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Data", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
 		.setArrayDepth(1)
@@ -44,11 +43,9 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 	inputs[| 9] = nodeValue("Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 10] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 10] = nodeValue_Rotation("Direction", self, 0);
 	
-	inputs[| 11] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Bar chart", s_node_plot_linear_type, 0), 
+	inputs[| 11] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Bar chart", s_node_plot_linear_type, 0), 
 												 new scrollItem("Graph",	 s_node_plot_linear_type, 1), ]);
 	
 	inputs[| 12] = nodeValue("Value Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
@@ -56,8 +53,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 13] = nodeValue("Color Over Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)))
 		.setMappable(27);
 	
-	inputs[| 14] = nodeValue("Trim mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Range", "Window" ]);
+	inputs[| 14] = nodeValue_Enum_Scroll("Trim mode", self,  0, [ "Range", "Window" ]);
 	
 	inputs[| 15] = nodeValue("Window Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
 	

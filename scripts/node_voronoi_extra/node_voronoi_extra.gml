@@ -18,16 +18,14 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	inputs[| 4] = nodeValue("Progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		addShaderProp(SHADER_UNIFORM.float, "progress");
 				
-	inputs[| 5] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Block", "Triangle" ]);
+	inputs[| 5] = nodeValue_Enum_Scroll("Mode", self,  0, [ "Block", "Triangle" ]);
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 	
 	inputs[| 6] = nodeValue("Parameter A", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 		addShaderProp(SHADER_UNIFORM.float, "paramA");
 		
-	inputs[| 7] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 7] = nodeValue_Rotation("Rotation", self, 0);
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 			
 	input_display_list = [

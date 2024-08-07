@@ -6,8 +6,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);

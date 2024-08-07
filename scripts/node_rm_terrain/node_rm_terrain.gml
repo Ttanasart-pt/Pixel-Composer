@@ -1,10 +1,9 @@
 function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RM Terrain";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 1] = nodeValue_Surface("Surface", self);
 	
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -31,11 +30,11 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 10] = nodeValue("Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
-	inputs[| 11] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 11] = nodeValue_Surface("Texture", self);
 	
 	inputs[| 12] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 13] = nodeValue("Reflection", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 13] = nodeValue_Surface("Reflection", self);
 	
 	inputs[| 14] = nodeValue("Sun Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ .5, 1, .5 ])
 		.setDisplay(VALUE_DISPLAY.vector);

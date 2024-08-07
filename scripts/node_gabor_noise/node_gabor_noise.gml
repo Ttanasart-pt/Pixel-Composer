@@ -30,8 +30,7 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		.setDisplay(VALUE_DISPLAY.vector);
 		addShaderProp(SHADER_UNIFORM.float, "augment");
 		
-	inputs[| 7] = nodeValue("Phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation)
+	inputs[| 7] = nodeValue_Rotation("Phase", self, 0)
 		.setMappable(11);
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 		
@@ -47,8 +46,7 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 12] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 12] = nodeValue_Rotation("Rotation", self, 0);
 		addShaderProp(SHADER_UNIFORM.float, "trRotation");
 			
 	input_display_list = [

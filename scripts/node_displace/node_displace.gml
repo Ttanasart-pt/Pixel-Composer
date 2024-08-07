@@ -1,9 +1,9 @@
 function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Displace";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Displace map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 1] = nodeValue_Surface("Displace map", self);
 	
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 0 ], "Vector to displace pixel by." )
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -15,20 +15,20 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 4] = nodeValue("Mid value",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0., "Brightness value to be use as a basis for 'no displacement'.")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 5] = nodeValue("Mode",  self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, @"Use color data for extra information.
+	inputs[| 5] = nodeValue_Enum_Button("Mode", self, 0, [ "Linear", "Vector", "Angle", "Gradient" ])
+		.setTooltip(@"Use color data for extra information.
     - Linear: Displace along a single line (defined by the position value).
     - Vector: Use red as X displacement, green as Y displacement.
     - Angle: Use red as angle, green as distance.
-    - Gradient: Displace down the brightness value defined by the Displace map.")
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Linear", "Vector", "Angle", "Gradient" ]);
+    - Gradient: Displace down the brightness value defined by the Displace map.");
 	
 	inputs[| 6] = nodeValue("Iterate",  self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, @"If not set, then strength value is multiplied directly to the displacement.
 If set, then strength value control how many times the effect applies on itself.");
 	
-	inputs[| 7] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
+	inputs[| 7] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
+		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
-	inputs[| 8] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 8] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 9] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -36,8 +36,7 @@ If set, then strength value control how many times the effect applies on itself.
 	inputs[| 10] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 10;
 	
-	inputs[| 11] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Overwrite", "Min", "Max" ]);
+	inputs[| 11] = nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Overwrite", "Min", "Max" ]);
 		
 	inputs[| 12] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
@@ -46,14 +45,14 @@ If set, then strength value control how many times the effect applies on itself.
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 15] = nodeValue("Strength map",   self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 15] = nodeValue_Surface("Strength map",   self)
 		.setVisible(false, false);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	inputs[| 16] = nodeValue("Separate axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 17] = nodeValue("Displace map 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 17] = nodeValue_Surface("Displace map 2", self);
 	
 	input_display_list = [ 10, 12, 
 		["Surfaces",	  true], 0, 8, 9, 13, 14, 

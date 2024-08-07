@@ -1,16 +1,14 @@
 function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Active Canvas";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 1] = nodeValue_Surface("Texture", self);
 	
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 3] = nodeValue_Rotation("Rotation", self, 0);
 	
 	inputs[| 4] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector);

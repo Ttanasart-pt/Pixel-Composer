@@ -8,8 +8,7 @@ function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	inputs[| 1] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 1] = nodeValue_Rotation("Angle", self, 0);
 	
 	inputs[| 2] = nodeValue("Spread", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 15);
 	

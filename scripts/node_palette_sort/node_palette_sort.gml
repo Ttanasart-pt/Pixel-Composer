@@ -6,8 +6,7 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.palette)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Brightness", -1, "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", -1, "Red (RGB)", "Green (GBR)", "Blue (BRG)", -1, "Custom" ])
+	inputs[| 1] = nodeValue_Enum_Button("Order", self,  0, [ "Brightness", -1, "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", -1, "Red (RGB)", "Green (GBR)", "Blue (BRG)", -1, "Custom" ])
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Reverse", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);

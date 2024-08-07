@@ -1,18 +1,16 @@
 function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Cross Section";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y" ]);
+	inputs[| 1] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]);
 	
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 3] = nodeValue("Anti Aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
-	inputs[| 4] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "BW", "Colored" ]);
+	inputs[| 4] = nodeValue_Enum_Button("Mode", self,  0 , [ "BW", "Colored" ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
 	

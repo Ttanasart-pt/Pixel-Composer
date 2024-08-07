@@ -1,8 +1,7 @@
 function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "3D Repeat";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -20,8 +19,7 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 6] = nodeValue("Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 6] = nodeValue_Rotation("Light direction", self, 0);
 		
 	inputs[| 7] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
@@ -47,20 +45,17 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 15] = nodeValue("Repeat scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 16] = nodeValue("Repeat pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Linear", "Circular" ])
+	inputs[| 16] = nodeValue_Enum_Button("Repeat pattern", self,  0, [ "Linear", "Circular" ])
 		.rejectArray();
 	
-	inputs[| 17] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "x", "y", "z" ]);
+	inputs[| 17] = nodeValue_Enum_Button("Axis", self,  0, [ "x", "y", "z" ]);
 	
 	inputs[| 18] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
 	inputs[| 19] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 360 ])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
-	inputs[| 20] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ])
+	inputs[| 20] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
 	inputs[| 21] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)

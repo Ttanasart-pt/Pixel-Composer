@@ -1,7 +1,7 @@
 function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Separate Shape";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 0] = nodeValue_Surface("Surface in", self)
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
@@ -17,8 +17,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 4] = nodeValue("Ignore blank", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Skip empty and black shape.")
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "Alpha" ] )
+	inputs[| 5] = nodeValue_Enum_Button("Mode", self,  0 , [ "Greyscale", "Alpha" ] )
 		
 	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

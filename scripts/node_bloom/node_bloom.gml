@@ -1,7 +1,7 @@
 function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bloom";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	inputs[| 1] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3, "Bloom blur radius.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
@@ -11,9 +11,9 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 3] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .25, "Blend intensity.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
 		
-	inputs[| 4] = nodeValue("Bloom mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 4] = nodeValue_Surface("Bloom mask", self);
 	
-	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 5] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 6] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -29,11 +29,9 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 11] = nodeValue("Aspect Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 12] = nodeValue_Rotation("Direction", self, 0);
 	
-	inputs[| 13] = nodeValue("Types", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Gaussian", "Zoom" ]);
+	inputs[| 13] = nodeValue_Enum_Scroll("Types", self, 0, [ "Gaussian", "Zoom" ]);
 	
 	inputs[| 14] = nodeValue("Zoom Origin", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)

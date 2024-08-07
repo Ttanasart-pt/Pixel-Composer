@@ -1,7 +1,7 @@
 function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shadow";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	inputs[| 1] = nodeValue("Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
 	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .5)
@@ -17,7 +17,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 5] = nodeValue("Blur", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	inputs[| 6] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 6] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 7] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -27,8 +27,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	__init_mask_modifier(6); // inputs 9, 10
 	
-	inputs[| 11] = nodeValue("Positioning", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Shift", "Light" ]);
+	inputs[| 11] = nodeValue_Enum_Scroll("Positioning", self,  0, [ "Shift", "Light" ]);
 	
 	inputs[| 12] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)

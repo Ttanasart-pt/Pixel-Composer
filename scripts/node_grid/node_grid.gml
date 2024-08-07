@@ -1,8 +1,7 @@
 function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -16,8 +15,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(14);
 	
-	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation)
+	inputs[| 4] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(15);
 		
 	inputs[| 5] = nodeValue("Tile color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
@@ -25,17 +23,15 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	inputs[| 6] = nodeValue("Gap color",  self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 7] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 7] = nodeValue_Surface("Texture", self);
 	
 	inputs[| 8] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] })
 		.setMappable(16);
 		
-	inputs[| 9] = nodeValue("Shift axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, ["X", "Y"]);
+	inputs[| 9] = nodeValue_Enum_Button("Shift axis", self,  0, ["X", "Y"]);
 		
-	inputs[| 10] = nodeValue("Render type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]);
+	inputs[| 10] = nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]);
 		
 	inputs[| 11] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 11].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });

@@ -10,8 +10,7 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	inputs[| 1] = nodeValue("Title", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
-	inputs[| 2] = nodeValue("Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Center", "Top left" ]);
+	inputs[| 2] = nodeValue_Enum_Scroll("Anchor", self,  0, [ "Center", "Top left" ]);
 	
 	slide_title  = "";
 	slide_anchor = 0;

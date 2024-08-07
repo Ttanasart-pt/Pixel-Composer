@@ -120,6 +120,19 @@ function draw_text_bbox(bbox, text, scale = 1) {
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_center);
 	
+	// BLEND_ALPHA_MULP
+	draw_text_transformed(bbox.xc, bbox.yc, text, ss * scale, ss * scale, 0);
+	// BLEND_NORMAL
+}
+
+function draw_text_bbox_cut(bbox, text, scale = 1) {
+	INLINE
+	var ss = min(bbox.w / string_width(text), bbox.h / string_height(text));
+	if(ss <= 0) return;
+	
+	draw_set_halign(fa_center);
+	draw_set_valign(fa_center);
+	
 	draw_text_cut(bbox.xc, bbox.yc, text, bbox.w, ss * scale);
 }
 

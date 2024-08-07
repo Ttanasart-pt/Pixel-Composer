@@ -2,7 +2,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name = "Spawner";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 0] = nodeValue_Surface("Particle sprite", self);
 	
 	inputs[| 1] = nodeValue("Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4, "Frames delay between each particle spawn." );
 	
@@ -12,8 +12,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 3] = nodeValue("Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_AREA )
 		.setDisplay(VALUE_DISPLAY.area);
 	
-	inputs[| 4] = nodeValue("Spawn distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map" ] );
+	inputs[| 4] = nodeValue_Enum_Scroll("Spawn distribution", self, 0, [ "Area", "Border", "Map" ] );
 	
 	inputs[| 5] = nodeValue("Lifespan", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 20, 30 ] )
 		.setDisplay(VALUE_DISPLAY.range);
@@ -44,8 +43,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 15] = nodeValue("Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make the particle rotates to follow its movement.");
 	
-	inputs[| 16] = nodeValue("Spawn type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst", "Trigger" ]);
+	inputs[| 16] = nodeValue_Enum_Button("Spawn type", self,  0, [ "Stream", "Burst", "Trigger" ]);
 	
 	inputs[| 17] = nodeValue("Spawn size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.range, { linked : true });
@@ -61,23 +59,21 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 21] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	
-	inputs[| 22] = nodeValue("Surface array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, at random, or treat array as animation." )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation", "Scale" ])
+	inputs[| 22] = nodeValue_Enum_Scroll("Surface array", self, 0, [ "Random", "Order", "Animation", "Scale" ])
+		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.")
 		.setVisible(false);
 	
 	inputs[| 23] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.range, { linked : true })
 		.setVisible(false);
 	
-	inputs[| 24] = nodeValue("Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random" ]);
+	inputs[| 24] = nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]);
 	
 	inputs[| 25] = nodeValue("Boundary data", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
 		.setArrayDepth(1)
 		.setVisible(false, true);
 	
-	inputs[| 26] = nodeValue("On animation end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, ANIM_END_ACTION.loop)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Loop", "Ping pong", "Destroy" ])
+	inputs[| 26] = nodeValue_Enum_Button("On animation end", self,  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ])
 		.setVisible(false);
 		
 	inputs[| 27] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
@@ -86,16 +82,15 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 	inputs[| 29] = nodeValue("Directed from center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make particle move away from the spawn center.");
 	
-	inputs[| 30] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 30] = nodeValue_Surface("Distribution map", self)
 	
-	inputs[| 31] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface,  [] )
+	inputs[| 31] = nodeValue_Surface("Atlas", self,  [])
 		.setArrayDepth(1);
 	
 	inputs[| 32] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 32].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 33] = nodeValue("Gravity direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -90 )
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 33] = nodeValue_Rotation("Gravity direction", self, -90);
 	
 	inputs[| 34] = nodeValue("Turning", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.range, { linked : true });

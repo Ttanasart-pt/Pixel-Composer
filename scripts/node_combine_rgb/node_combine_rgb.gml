@@ -2,13 +2,12 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "RGB Combine";
 	dimension_index = -1;
 	
-	inputs[| 0] = nodeValue("Red",   self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	inputs[| 1] = nodeValue("Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	inputs[| 2] = nodeValue("Blue",  self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	inputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Red",   self);
+	inputs[| 1] = nodeValue_Surface("Green", self);
+	inputs[| 2] = nodeValue_Surface("Blue",  self);
+	inputs[| 3] = nodeValue_Surface("Alpha", self);
 	
-	inputs[| 4] = nodeValue("Sampling type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Channel value", "Greyscale"]);
+	inputs[| 4] = nodeValue_Enum_Scroll("Sampling type", self,  0, ["Channel value", "Greyscale"]);
 	
 	inputs[| 5] = nodeValue("Base value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Set value to the unconnected color channels.")
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -22,7 +21,7 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 7] = nodeValue("Array Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 8] = nodeValue("RGBA Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, [])
+	inputs[| 8] = nodeValue_Surface("RGBA Array", self, [])
 		.setArrayDepth(1);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

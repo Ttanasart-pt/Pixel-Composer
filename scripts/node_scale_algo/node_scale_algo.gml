@@ -16,10 +16,9 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	manage_atlas = false;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Scale2x", "Scale3x", "CleanEdge" ]);
+	inputs[| 1] = nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Scale2x", "Scale3x", "CleanEdge" ]);
 		
 	inputs[| 2] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);

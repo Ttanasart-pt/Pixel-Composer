@@ -2,7 +2,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Color Adjust";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
@@ -30,7 +30,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(23);
 	
-	inputs[| 8] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 8] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 9] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -43,15 +43,13 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 11;
 		
-	inputs[| 12] = nodeValue("Input Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Surface", "Color" ]);
+	inputs[| 12] = nodeValue_Enum_Button("Input Type", self,  0, [ "Surface", "Color" ]);
 	
 	inputs[| 13] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))
 		.setDisplay(VALUE_DISPLAY.palette)
 		.setVisible(true, true);
 	
-	inputs[| 14] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES);
+	inputs[| 14] = nodeValue_Enum_Scroll("Blend mode", self,  0, BLEND_TYPES);
 		
 	inputs[| 15] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
@@ -63,28 +61,28 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 18] = nodeValue("Brightness map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 18] = nodeValue_Surface("Brightness map", self)
 		.setVisible(false, false);
 	
-	inputs[| 19] = nodeValue("Contrast map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 19] = nodeValue_Surface("Contrast map", self)
 		.setVisible(false, false);
 	
-	inputs[| 20] = nodeValue("Hue map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 20] = nodeValue_Surface("Hue map", self)
 		.setVisible(false, false);
 	
-	inputs[| 21] = nodeValue("Saturation map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 21] = nodeValue_Surface("Saturation map", self)
 		.setVisible(false, false);
 	
-	inputs[| 22] = nodeValue("Value map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 22] = nodeValue_Surface("Value map", self)
 		.setVisible(false, false);
 	
-	inputs[| 23] = nodeValue("Blend map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 23] = nodeValue_Surface("Blend map", self)
 		.setVisible(false, false);
 	
-	inputs[| 24] = nodeValue("Alpha map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 24] = nodeValue_Surface("Alpha map", self)
 		.setVisible(false, false);
 	
-	inputs[| 25] = nodeValue("Exposure map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 25] = nodeValue_Surface("Exposure map", self)
 		.setVisible(false, false);
 		
 	////////////////////////////////////////////////////////////////////////////////////////

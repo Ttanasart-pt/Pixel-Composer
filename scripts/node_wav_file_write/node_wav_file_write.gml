@@ -14,8 +14,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	inputs[| 2]  = nodeValue("Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 44100);
 	
-	inputs[| 3]  = nodeValue("Bit Depth", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "8 bit positive", "16 bit integer" ]);
+	inputs[| 3]  = nodeValue_Enum_Scroll("Bit Depth", self,  0, [ "8 bit positive", "16 bit integer" ]);
 		
 	inputs[| 4]  = nodeValue("Remap Data", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	

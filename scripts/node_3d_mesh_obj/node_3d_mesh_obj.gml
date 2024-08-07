@@ -35,8 +35,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	inputs[| in_mesh + 2] = nodeValue("Import Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.rejectArray();
 		
-	inputs[| in_mesh + 3] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "XYZ", "XZ-Y", "X-ZY" ])
+	inputs[| in_mesh + 3] = nodeValue_Enum_Scroll("Axis", self, 0, [ "XYZ", "XZ-Y", "X-ZY" ])
 		.rejectArray();
 		
 	input_display_list = [

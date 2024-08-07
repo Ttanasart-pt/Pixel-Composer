@@ -1,7 +1,7 @@
 function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Reaction Diffusion";
 	
-	inputs[| 0] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 0] = nodeValue_Surface("Seed", self);
 	
 	inputs[| 1] = nodeValue("Kill rate", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.058)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.001] })
@@ -24,23 +24,23 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(12);
 	
-	inputs[| 7] = nodeValue("Add B", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 7] = nodeValue_Surface("Add B", self);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 8] = nodeValue("Kill map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 8] = nodeValue_Surface("Kill map", self)
 		.setVisible(false, false);
 	
-	inputs[| 9] = nodeValue("Feed map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 9] = nodeValue_Surface("Feed map", self)
 		.setVisible(false, false);
 	
-	inputs[| 10] = nodeValue("Time map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 10] = nodeValue_Surface("Time map", self)
 		.setVisible(false, false);
 	
-	inputs[| 11] = nodeValue("DfA map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 11] = nodeValue_Surface("DfA map", self)
 		.setVisible(false, false);
 	
-	inputs[| 12] = nodeValue("DfB map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 12] = nodeValue_Surface("DfB map", self)
 		.setVisible(false, false);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////

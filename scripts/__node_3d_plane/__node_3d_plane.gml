@@ -2,7 +2,7 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "3D Plane";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -14,8 +14,7 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 3] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 4] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input" ])
+	inputs[| 4] = nodeValue_Enum_Scroll("Output dimension", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input" ])
 		.rejectArray();
 	
 	inputs[| 5] = nodeValue("Constant dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
@@ -27,8 +26,7 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 7] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 8] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ])
+	inputs[| 8] = nodeValue_Enum_Button("Projection", self, 0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
 	inputs[| 9] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
@@ -42,8 +40,7 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	inputs[| 12] = nodeValue("Subdiviion", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		
-	inputs[| 13] = nodeValue("Normal axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y", "Z" ])
+	inputs[| 13] = nodeValue_Enum_Button("Normal axis", self, 2, [ "X", "Y", "Z" ]);
 	
 	input_display_list = [0, 
 		["Geometry",		  true], 13, 12, 

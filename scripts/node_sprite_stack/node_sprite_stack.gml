@@ -2,10 +2,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Sprite Stack";
 	dimension_index = 1;
 	
-	inputs[| 0] = nodeValue("Base shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Base shape", self);
 	
-	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Dimension(self);
 	
 	inputs[| 2] = nodeValue("Stack amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
 	
@@ -16,8 +15,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 5] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 5] = nodeValue_Rotation("Rotation", self, 0);
 	
 	inputs[| 6] = nodeValue("Stack blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	
@@ -26,8 +24,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 8] = nodeValue("Move base", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make each copy move the original image." );
 	
-	inputs[| 9] = nodeValue("Highlight", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "None", "Color", "Inner pixel" ]);
+	inputs[| 9] = nodeValue_Enum_Scroll("Highlight", self,  0, [ "None", "Color", "Inner pixel" ]);
 	
 	inputs[| 10] = nodeValue("Highlight color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	

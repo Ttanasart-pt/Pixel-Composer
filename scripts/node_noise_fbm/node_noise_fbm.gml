@@ -1,8 +1,7 @@
 function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "FBM Noise";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
@@ -15,8 +14,7 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 4] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
 	
-	inputs[| 5] = nodeValue("Color mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "RGB", "HSV" ]);
+	inputs[| 5] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
 	
 	inputs[| 6] = nodeValue("Color R range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);

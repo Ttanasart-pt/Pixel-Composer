@@ -22,12 +22,10 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
 		addShaderProp(SHADER_UNIFORM.float, "amplitude");
 		
-	inputs[| 6] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "Map" ]);
+	inputs[| 6] = nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Map" ]);
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 				
-	inputs[| 7] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 7] = nodeValue_Rotation("Rotation", self, 0);
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 		
 	input_display_list = [

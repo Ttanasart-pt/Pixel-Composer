@@ -3,12 +3,11 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 0] = nodeValue("Port", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 22800);
 	
-	inputs[| 1] = nodeValue("Data type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Struct", "Surface", "File", "Buffer" ]);
+	inputs[| 1] = nodeValue_Enum_Scroll("Data type", self,  0, [ "Struct", "Surface", "File", "Buffer" ]);
 	
 	inputs[| 2] = nodeValue("Struct", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {});
 	
-	inputs[| 3] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 3] = nodeValue_Surface("Surface", self);
 	
 	inputs[| 4] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load)

@@ -24,8 +24,7 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 		addShaderProp(SHADER_UNIFORM.float, "gamma");
 		
-	inputs[| 7] = nodeValue("Phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30 )
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 7] = nodeValue_Rotation("Phase", self, 0);
 		addShaderProp(SHADER_UNIFORM.float, "phase");
 		
 	input_display_list = [ 3, 

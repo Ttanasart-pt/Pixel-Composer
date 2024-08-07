@@ -5,8 +5,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 2] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Client", "Server" ]);
+	inputs[| 2] = nodeValue_Enum_Button("Mode", self,  1, [ "Client", "Server" ]);
 	
 	inputs[| 3] = nodeValue("Url", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	

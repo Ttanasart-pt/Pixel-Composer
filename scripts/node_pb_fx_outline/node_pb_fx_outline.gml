@@ -5,8 +5,7 @@ function Node_PB_Fx_Outline(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group)
 		
 	inputs[| 2] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	
-	inputs[| 3] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Inside", "Outside" ]);
+	inputs[| 3] = nodeValue_Enum_Button("Side", self,  0, [ "Inside", "Outside" ]);
 	
 	input_display_list = [ 0, 
 		["Effect",	false], 3, 1, 2, 

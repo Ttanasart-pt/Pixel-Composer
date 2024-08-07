@@ -43,16 +43,14 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Point", "Band" ]);
+	inputs[| 1] = nodeValue_Enum_Scroll("Shape", self, 0, [ "Point", "Band" ]);
 	
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 3] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
 	
-	inputs[| 4] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 4] = nodeValue_Rotation("Direction", self, 0);
 	
 	inputs[| 5] = nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);

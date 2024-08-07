@@ -6,7 +6,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	inputs[| in_mesh + 0] = nodeValue("Front Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 1] = nodeValue("Front Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| in_mesh + 1] = nodeValue_Surface("Front Height", self);
 	
 	inputs[| in_mesh + 2] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
@@ -17,7 +17,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	inputs[| in_mesh + 5] = nodeValue("Back Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 6] = nodeValue("Back Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| in_mesh + 6] = nodeValue_Surface("Back Height", self);
 	
 	inputs[| in_mesh + 7] = nodeValue("Front Height Level", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);

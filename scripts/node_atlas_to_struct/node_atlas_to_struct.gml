@@ -2,7 +2,7 @@ function Node_Atlas_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Atlas to Struct";
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 0] = nodeValue_Surface("Atlas", self)
 		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue("Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, [])

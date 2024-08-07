@@ -42,8 +42,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	inputs[| 2]  = nodeValue("Output as array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 3]  = nodeValue("Loop modes", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Loop", "Ping pong", "Hold last frame", "Hide"])
+	inputs[| 3]  = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
 		.rejectArray();
 	
 	inputs[| 4]  = nodeValue("Start frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);

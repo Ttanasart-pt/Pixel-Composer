@@ -12,19 +12,16 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	
 	outputNode = noone;
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Collision", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 1] = nodeValue_Surface("Collision", self);
 	
-	inputs[| 2] = nodeValue("Material dissipation type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Multiply", "Subtract" ]);
+	inputs[| 2] = nodeValue_Enum_Button("Material dissipation type", self,  1, [ "Multiply", "Subtract" ]);
 	
 	inputs[| 3] = nodeValue("Material dissipation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.02)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
 	
-	inputs[| 4] = nodeValue("Velocity dissipation type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Multiply", "Subtract" ]);
+	inputs[| 4] = nodeValue_Enum_Button("Velocity dissipation type", self,  1, [ "Multiply", "Subtract" ]);
 	
 	inputs[| 5] = nodeValue("Velocity dissipation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.00)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });

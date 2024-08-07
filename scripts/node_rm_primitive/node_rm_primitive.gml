@@ -1,8 +1,7 @@
 function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constructor {
 	name  = "RM Primitive";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	shape_types = [ 
 		"Plane", "Box", "Box Frame", "Box Round", 
@@ -19,8 +18,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	for( var i = 0, n = array_length(shape_types); i < n; i++ )
 		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_3d, _ind++, COLORS._main_icon_light);
 	
-	inputs[| 1] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: shape_types_str, horizontal: true, text_pad: ui(16) });
+	inputs[| 1] = nodeValue_Enum_Scroll("Shape", self,  1, { data: shape_types_str, horizontal: true, text_pad: ui(16) });
 	
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -54,8 +52,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	inputs[| 12] = nodeValue("Rounded", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 13] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Perspective", "Orthographic" ]);
+	inputs[| 13] = nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]);
 	
 	inputs[| 14] = nodeValue("Ortho Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
 	
@@ -68,8 +65,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	inputs[| 17] = nodeValue("Wave Phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 18] = nodeValue("Twist Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y", "Z" ]);
+	inputs[| 18] = nodeValue_Enum_Button("Twist Axis", self,  0, [ "X", "Y", "Z" ]);
 	
 	inputs[| 19] = nodeValue("Twist Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 8, 0.1 ] });
@@ -91,8 +87,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	inputs[| 24] = nodeValue("Crop", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	inputs[| 25] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30.)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 25] = nodeValue_Rotation("Angle", self, 30);
 	
 	inputs[| 26] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .5)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -119,12 +114,12 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	inputs[| 33] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.3)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 34] = nodeValue("Environment", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, false);
+	inputs[| 34] = nodeValue_Surface("Environment", self);
 	
 	inputs[| 35] = nodeValue("Reflective", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 36] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, false);
+	inputs[| 36] = nodeValue_Surface("Texture", self);
 	
 	inputs[| 37] = nodeValue("Triplanar Smoothing", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 10, 0.1 ] });

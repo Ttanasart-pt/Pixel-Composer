@@ -3,8 +3,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	attributes.spread_value = false;
 	
-	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })
+	inputs[| 0] = nodeValue_Enum_Scroll("Type", self, 0, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Unpack array and push the contents into the output one by one." )

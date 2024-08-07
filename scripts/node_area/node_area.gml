@@ -11,11 +11,12 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, AREA_SHAPE.rectangle )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Rectangle", s_node_shape_rectangle, 0), new scrollItem("Elipse", s_node_shape_circle, 0) ]);
+	inputs[| 2] = nodeValue_Enum_Scroll("Shape", self, AREA_SHAPE.rectangle, [ 
+			new scrollItem("Rectangle", s_node_shape_rectangle, 0), 
+			new scrollItem("Elipse",	s_node_shape_circle,	0) 
+		]);
 	
-	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Center Span", "Two Point" ]);
+	inputs[| 3] = nodeValue_Enum_Scroll("Type", self, 0, [ "Center Span", "Two Point" ]);
 	
 	outputs[| 0] = nodeValue("Area", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.vector);

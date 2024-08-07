@@ -6,8 +6,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 0] = nodeValue("Check value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 		.setVisible(true, true);
 		
-	inputs[| 1] = nodeValue("Condition", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Equal",			s_node_condition_type, 0), 
+	inputs[| 1] = nodeValue_Enum_Scroll("Condition", self,  0 , [ new scrollItem("Equal",			s_node_condition_type, 0), 
 												 new scrollItem("Not equal",		s_node_condition_type, 1), 
 												 new scrollItem("Less ",			s_node_condition_type, 2), 
 												 new scrollItem("Less or equal ",	s_node_condition_type, 3), 
@@ -24,8 +23,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 4] = nodeValue("False", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
 		.setVisible(true, true);
 	
-	inputs[| 5] = nodeValue("Eval mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Boolean", "Number compare", "Text compare" ])
+	inputs[| 5] = nodeValue_Enum_Scroll("Eval mode", self,  0 , ["Boolean", "Number compare", "Text compare" ])
 		.rejectArray();
 	
 	inputs[| 6] = nodeValue("Boolean", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )

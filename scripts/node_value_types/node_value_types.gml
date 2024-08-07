@@ -67,7 +67,7 @@ enum VALUE_DISPLAY {
 	none,
 	range,
 	
-	//Int
+	//Number
 	enum_scroll,
 	enum_button,
 	rotation,
@@ -79,7 +79,7 @@ enum VALUE_DISPLAY {
 	//Color
 	palette,
 	
-	//Int array
+	//Number array
 	padding,
 	vector,
 	vector_range,

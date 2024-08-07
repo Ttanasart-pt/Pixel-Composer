@@ -2,10 +2,9 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Rain";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 45)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 1] = nodeValue_Rotation("Direction", self, 45);
 	
 	inputs[| 2] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 5);
 	
@@ -26,15 +25,14 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 9] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
+	inputs[| 9] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
 												 new scrollItem("Snow",    s_node_mk_rain_type, 1),
 												 new scrollItem("Texture", s_node_mk_rain_type, 2) ]);
 	
 	inputs[| 10] = nodeValue("Snow size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 3, 4 ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 11] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 11] = nodeValue_Surface("Texture", self);
 	
 	inputs[| 12] = nodeValue("Track extension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.slider_range, { range: [ 0, 10, 0.01 ] });

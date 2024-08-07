@@ -1,5 +1,5 @@
 function Node_Module_SubModule(parent) : NodeModule(parent) constructor {
-	inputs[| 0] = nodeValue("Module input 0", parent, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Module input 0", parent);
 
 	inputs[| 1] = nodeValue("Module input 1", parent, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 }

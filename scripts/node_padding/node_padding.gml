@@ -2,31 +2,27 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Padding";
 	dimension_index = -1;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue("Fill method", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Solid" ]);
+	inputs[| 2] = nodeValue_Enum_Scroll("Fill method", self,  0, [ "Empty", "Solid" ]);
 	
 	inputs[| 3] = nodeValue("Fill color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
 	inputs[| 4] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 4;
 		
-	inputs[| 5] = nodeValue("Pad mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Pad out", "Pad to size" ]);
+	inputs[| 5] = nodeValue_Enum_Button("Pad mode", self,  0, [ "Pad out", "Pad to size" ]);
 	
 	inputs[| 6] = nodeValue("Target dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector)
 	
-	inputs[| 7] = nodeValue("Horizontal alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
+	inputs[| 7] = nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
 	
-	inputs[| 8] = nodeValue("Vertical alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign ]);
+	inputs[| 8] = nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign ]);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

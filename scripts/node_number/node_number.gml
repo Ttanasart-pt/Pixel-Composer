@@ -19,22 +19,20 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	rotator_p = 0;
 	rotator_m = 0;
 	
-	inputs[| 0] = nodeValue_Float("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 0] = nodeValue_Float("Value", self, 0)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Integer", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 1] = nodeValue_Bool("Integer", self, false);
 	
-	inputs[| 2] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Number", "Slider", "Rotator" ], update_hover: false });
+	inputs[| 2] = nodeValue_Enum_Scroll("Display", self, 0, { data: [ "Number", "Slider", "Rotator" ], update_hover: false });
 	
-	inputs[| 3] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 3] = nodeValue_Range("Range", self, [ 0, 1 ]);
 	
-	inputs[| 4] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.01)
+	inputs[| 4] = nodeValue_Float("Step", self, 0.01);
 	
-	inputs[| 5] = nodeValue("Clamp to range", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 5] = nodeValue_Bool("Clamp to range", self, true);
 	
-	outputs[| 0] = nodeValue_Output("Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue_Output("Number", self, VALUE_TYPE.float, 0);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var __ax = getInputData(0);

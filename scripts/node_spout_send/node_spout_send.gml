@@ -3,7 +3,7 @@ function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	inputs[| 0] = nodeValue("Sender name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "PixelComposer");
 	
-	inputs[| 1] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 1] = nodeValue_Surface("Surface", self);
 	
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
 		.setVisible(false);

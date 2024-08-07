@@ -1,8 +1,7 @@
 function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "3D Combine";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 0] = nodeValue_Dimension(self)
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
@@ -26,8 +25,7 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.vector)
 		.rejectArray();
 		
-	inputs[| 6] = nodeValue("Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation)
+	inputs[| 6] = nodeValue_Rotation("Light direction", self, 0)
 		.rejectArray();
 		
 	inputs[| 7] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
@@ -44,8 +42,7 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 10] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey)
 		.rejectArray();
 		
-	inputs[| 11] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ])
+	inputs[| 11] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
 	inputs[| 12] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)

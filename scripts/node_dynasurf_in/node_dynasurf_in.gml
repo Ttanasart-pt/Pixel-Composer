@@ -16,7 +16,7 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!is_undefined(inParent))
 			ds_list_remove(group.inputs, inParent);
 		
-		inParent = nodeValue("Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		inParent = nodeValue_Surface("Value", group)
 			.uncache()
 			.setVisible(true, true);
 		inParent.from = self;

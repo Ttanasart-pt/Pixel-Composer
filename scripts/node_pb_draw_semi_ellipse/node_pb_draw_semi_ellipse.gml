@@ -1,8 +1,7 @@
 function Node_PB_Draw_Semi_Ellipse(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Semi Ellipse";
 	
-	inputs[| 3] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, array_create(4, THEME.obj_hemicircle) );
+	inputs[| 3] = nodeValue_Enum_Button("Side", self,  0 , array_create(4, THEME.obj_hemicircle) );
 	
 	input_display_list = [
 		["Draw",	false], 0, 1, 2, 

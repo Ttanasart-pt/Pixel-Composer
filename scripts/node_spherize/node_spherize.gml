@@ -1,7 +1,7 @@
 function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Spherize";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -15,10 +15,10 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(12);
 	
-	inputs[| 4] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
+	inputs[| 4] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
+		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
-	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 5] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 6] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -33,10 +33,10 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 11] = nodeValue("Strength map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 11] = nodeValue_Surface("Strength map", self)
 		.setVisible(false, false);
 	
-	inputs[| 12] = nodeValue("Radius map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 12] = nodeValue_Surface("Radius map", self)
 		.setVisible(false, false);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////

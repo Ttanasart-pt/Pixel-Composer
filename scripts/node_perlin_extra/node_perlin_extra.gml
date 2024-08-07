@@ -22,8 +22,7 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 		
-	inputs[| 6] = nodeValue("Color mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "RGB", "HSV" ]);
+	inputs[| 6] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
 		addShaderProp(SHADER_UNIFORM.integer, "colored");
 	
 	inputs[| 7] = nodeValue("Color R range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
@@ -38,8 +37,7 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		.setDisplay(VALUE_DISPLAY.slider_range);
 		addShaderProp(SHADER_UNIFORM.float, "colorRanB");
 	
-	inputs[| 10] = nodeValue("Noise type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ]);
+	inputs[| 10] = nodeValue_Enum_Scroll("Noise type", self,  0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ]);
 		addShaderProp(SHADER_UNIFORM.integer, "type");
 		
 	inputs[| 11] = nodeValue("Parameter A", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -61,8 +59,7 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 16] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 16] = nodeValue_Rotation("Rotation", self, 0);
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 			
 	input_display_list = [

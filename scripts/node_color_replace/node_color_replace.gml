@@ -1,7 +1,7 @@
 function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Palette";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	inputs[| 1] = nodeValue("Palette from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE), "Color to be replaced.")
 		.setDisplay(VALUE_DISPLAY.palette);
 	
@@ -17,7 +17,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	inputs[| 6] = nodeValue("Hard replace", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Completely override pixel with new color instead of blending between it.");
 	
-	inputs[| 7] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 7] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 8] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -30,8 +30,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	__init_mask_modifier(7); // inputs 11, 12
 	
-	inputs[| 13] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Closet", "Random" ]);
+	inputs[| 13] = nodeValue_Enum_Scroll("Mode", self,  0, [ "Closet", "Random" ]);
 	
 	inputs[| 14] = nodeValueSeed(self, VALUE_TYPE.float);
 	

@@ -1,10 +1,9 @@
 function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK GridFlip";
 	
-	inputs[| 0] = nodeValue("Surface front", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface front", self);
 	
-	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Dimension(self);
 	
 	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 4, 4 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -12,24 +11,20 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 3] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 4] = nodeValue("Surface back", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 4] = nodeValue_Surface("Surface back", self);
 	
-	inputs[| 5] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 5] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 6] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y" ]);
+	inputs[| 6] = nodeValue_Enum_Button("Axis", self,  0, [ "X", "Y" ]);
 	
 	inputs[| 7] = nodeValue("Sweep", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 8] = nodeValue("Sweep direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 8] = nodeValue_Rotation("Sweep direction", self, 0);
 		
 	inputs[| 9] = nodeValue("Sweep shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	inputs[| 10] = nodeValue("Flip limit", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("None", s_node_mk_grid_flip, 0), 
+	inputs[| 10] = nodeValue_Enum_Scroll("Flip limit", self,  0, [ new scrollItem("None", s_node_mk_grid_flip, 0), 
 												 new scrollItem("90",   s_node_mk_grid_flip, 1), 
 												 new scrollItem("180",  s_node_mk_grid_flip, 2), ]);
 	

@@ -18,10 +18,9 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 4] = nodeValue("Draw obstracles", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 5] = nodeValue("Fluid particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 5] = nodeValue_Surface("Fluid particle", self);
 	
-	inputs[| 6] = nodeValue("Render type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Particle", s_node_flip_render, 0), 
+	inputs[| 6] = nodeValue_Enum_Scroll("Render type", self,  0, [ new scrollItem("Particle", s_node_flip_render, 0), 
 												 new scrollItem("Line",     s_node_flip_render, 1), ] );
 	
 	inputs[| 7] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);

@@ -1,8 +1,7 @@
 function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid Noise";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -17,13 +16,11 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 4] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 		
-	inputs[| 5] = nodeValue("Texture sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 5] = nodeValue_Surface("Texture sample", self);
 	
-	inputs[| 6] = nodeValue("Shift axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, ["x", "y"]);
+	inputs[| 6] = nodeValue_Enum_Button("Shift axis", self,  0, ["x", "y"]);
 	
-	inputs[| 7] = nodeValue("Color mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "RGB", "HSV" ]);
+	inputs[| 7] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
 	
 	inputs[| 8] = nodeValue("Color R range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);

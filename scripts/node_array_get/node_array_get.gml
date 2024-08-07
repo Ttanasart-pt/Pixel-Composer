@@ -8,8 +8,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 1] = nodeValue("Index", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue("Overflow", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Clamp", "Loop", "Ping Pong"])
+	inputs[| 2] = nodeValue_Enum_Scroll("Overflow", self, 0, [ "Clamp", "Loop", "Ping Pong" ])
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);

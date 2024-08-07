@@ -1,13 +1,13 @@
 function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Path Blur";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	inputs[| 1] = nodeValue("Blur Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
 		.setVisible(true, true);
 	
 	inputs[| 2] = nodeValue("Resolution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 32);
 	
-	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 3] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 4] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

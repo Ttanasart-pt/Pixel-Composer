@@ -1,7 +1,7 @@
 function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "De-Corner";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 1;
@@ -11,10 +11,9 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 3] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
 	
-	inputs[| 4] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Double", "Diagonal" ]);
+	inputs[| 4] = nodeValue_Enum_Button("Type", self,  0, [ "Double", "Diagonal" ]);
 	
-	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 5] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 6] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

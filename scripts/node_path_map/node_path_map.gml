@@ -5,10 +5,9 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		.setVisible(true, true)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 2] = nodeValue_Surface("Texture", self);
 	
 	inputs[| 3] = nodeValue("Subdivision", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16)
 		.setValidator(VV_min(2))

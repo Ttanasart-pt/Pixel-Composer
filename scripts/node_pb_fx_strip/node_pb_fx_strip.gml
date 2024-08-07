@@ -7,8 +7,7 @@ function Node_PB_Fx_Strip(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 		
 	inputs[| 3] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 );
 		
-	inputs[| 4] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y" ]);
+	inputs[| 4] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]);
 	
 	input_display_list = [ 0, 
 		["Effect",	false], 1, 4, 2, 3, 

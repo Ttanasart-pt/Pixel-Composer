@@ -33,12 +33,10 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	inputs[| 8] = nodeValue("Curve shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
 		addShaderProp(SHADER_UNIFORM.float, "curveShift");
 		
-	inputs[| 9] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )	
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "x", "y" ] );
+	inputs[| 9] = nodeValue_Enum_Button("Axis", self,  0 , [ "x", "y" ] );
 		addShaderProp(SHADER_UNIFORM.integer, "axis");
 		
-	inputs[| 10] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )	
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Line", "Area" ] );
+	inputs[| 10] = nodeValue_Enum_Button("Mode", self,  0 , [ "Line", "Area" ] );
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 		
 	inputs[| 11] = nodeValue("Opacity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0., 1. ] )

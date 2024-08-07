@@ -16,8 +16,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	inputs[| 0] = nodeValue("Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8);
 	
-	inputs[| 1] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 1] = nodeValue_Rotation("Angle", self, 45);
 		
 	inputs[| 2] = nodeValue("Starting position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -28,8 +27,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	inputs[| 5] = nodeValue("End replacement", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
 	
-	inputs[| 6] = nodeValue("Starting angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 90)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 6] = nodeValue_Rotation("Starting Angle", self, 90);
 	
 	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });

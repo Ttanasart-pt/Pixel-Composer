@@ -2,13 +2,12 @@ function Node_Repeat_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Repeat Texture";
 	dimension_index = 1;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Target dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 2] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Tile", "Scatter", "Cell" ]);
+	inputs[| 2] = nodeValue_Enum_Scroll("Type", self,  1, [ "Tile", "Scatter", "Cell" ]);
 	
 	inputs[| 3] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })

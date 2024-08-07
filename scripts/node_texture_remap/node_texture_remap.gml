@@ -4,15 +4,14 @@ function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	shader = sh_texture_remap;
 	uniform_map = shader_get_sampler_index(shader, "map");
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("RG Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone, "Displacement map where red retermine the X position, and green determine the Y position.");
+	inputs[| 1] = nodeValue_Surface("RG Map", self, "Displacement map where red retermine the X position, and green determine the Y position.");
 	
 	inputs[| 2] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 2;
 	
-	inputs[| 3] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Surface", "RG Map" ]);
+	inputs[| 3] = nodeValue_Enum_Button("Dimension Source", self,  0, [ "Surface", "RG Map" ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

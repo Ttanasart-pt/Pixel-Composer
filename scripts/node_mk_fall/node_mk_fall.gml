@@ -2,10 +2,9 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name = "MK Fall";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Background", self);
 	
-	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Dimension(self);
 		
 	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
@@ -61,8 +60,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	inputs[| 21] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
-	inputs[| 22] = nodeValue("Render Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Leaf", s_node_shape_leaf, 0), new scrollItem("Circle", s_node_shape_circle, 0) ]);
+	inputs[| 22] = nodeValue_Enum_Scroll("Render Type", self,  0, [ new scrollItem("Leaf", s_node_shape_leaf, 0), new scrollItem("Circle", s_node_shape_circle, 0) ]);
 	
 	inputs[| 23] = nodeValue("Twist Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.7)
 		.setDisplay(VALUE_DISPLAY.slider);

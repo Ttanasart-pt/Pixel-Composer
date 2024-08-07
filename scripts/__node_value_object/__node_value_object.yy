@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"__node_value_object",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__node_value_object",
+  "parent":{
+    "name":"object",
+    "path":"folders/nodes/values/types/object.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

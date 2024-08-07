@@ -30,7 +30,7 @@ output.color = surfaceColor;")
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Base Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 2] = nodeValue_Surface("Base Texture", self);
 	
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
 	
@@ -38,8 +38,7 @@ output.color = surfaceColor;")
 		var index = ds_list_size(inputs);
 		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
-		inputs[| index + 1] = nodeValue("Argument type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-			.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false });
+		inputs[| index + 1] = nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false });
 		inputs[| index + 1].editWidget.interactable = false;
 		
 		inputs[| index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )

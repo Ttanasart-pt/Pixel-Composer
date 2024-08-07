@@ -8,13 +8,12 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	uniform_dst_sid = shader_get_uniform(sh_sdf_dist, "side");
 	uniform_dst_dst = shader_get_uniform(sh_sdf_dist, "max_distance");
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 1;
 	
-	inputs[| 2] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Inside", "Outside", "Both" ]);
+	inputs[| 2] = nodeValue_Enum_Button("Side", self,  2, [ "Inside", "Outside", "Both" ]);
 	
 	inputs[| 3] = nodeValue("Max distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });

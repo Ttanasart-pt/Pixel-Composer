@@ -12,8 +12,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Armature Bind";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Armature", self, JUNCTION_CONNECT.input, VALUE_TYPE.armature, noone)
 		.setVisible(true, true)
@@ -397,7 +396,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		inputs[| index + 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+		inputs[| index + 0] = nodeValue_Surface("Surface", self);
 		inputs[| index + 0].surface_index = index;
 		inputs[| index + 0].hover_effect  = 0;
 		inputs[| index + 0].display_data.bone_id = "";

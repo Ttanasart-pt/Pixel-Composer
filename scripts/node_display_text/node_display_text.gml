@@ -22,8 +22,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[| 1] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Text");
 	
-	inputs[| 2] = nodeValue("Style", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Header", "Sub header", "Normal" ])
+	inputs[| 2] = nodeValue_Enum_Scroll("Style", self,  2, [ "Header", "Sub header", "Normal" ])
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75)

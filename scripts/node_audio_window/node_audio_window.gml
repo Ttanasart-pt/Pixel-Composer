@@ -16,8 +16,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		);
 		
-	inputs[| 3] = nodeValue("Cursor location", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Start", "Middle", "End" ]);
+	inputs[| 3] = nodeValue_Enum_Button("Cursor location", self,  1, [ "Start", "Middle", "End" ]);
 	
 	inputs[| 4] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
 	

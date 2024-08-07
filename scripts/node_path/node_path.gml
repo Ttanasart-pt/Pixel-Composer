@@ -7,6 +7,7 @@ enum _ANCHOR {
 	c2y,
 	
 	ind,
+	amount
 }
 
 function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -20,8 +21,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 1] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Progress mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Entire line", "Segment"])
+	inputs[| 2] = nodeValue_Enum_Scroll("Progress mode", self,  0, ["Entire line", "Segment"])
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Round anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)

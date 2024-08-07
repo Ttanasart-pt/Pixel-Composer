@@ -1,8 +1,7 @@
 function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Line";
 	
-	inputs[| 3] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.obj_draw_line, THEME.obj_draw_line, THEME.obj_draw_line, THEME.obj_draw_line ] );
+	inputs[| 3] = nodeValue_Enum_Button("Direction", self,  0 , [ THEME.obj_draw_line, THEME.obj_draw_line, THEME.obj_draw_line, THEME.obj_draw_line ] );
 	
 	inputs[| 4] = nodeValue("Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2 )
 	

@@ -18,16 +18,14 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		.setDisplay(VALUE_DISPLAY.slider);
 		addShaderProp(SHADER_UNIFORM.float, "thickness");
 		
-	inputs[| 5] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )	
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Line", "Fill" ] );
+	inputs[| 5] = nodeValue_Enum_Button("Mode", self,  0 , [ "Line", "Fill" ] );
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 		
 	inputs[| 6] = nodeValue("Opacity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0., 1. ] )
 		.setDisplay(VALUE_DISPLAY.slider_range);
 		addShaderProp(SHADER_UNIFORM.float, "alpha");
 		
-	inputs[| 7] = nodeValue("Blending", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )	
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Max", "Add" ] );
+	inputs[| 7] = nodeValue_Enum_Scroll("Blending", self,  0 , [ "Max", "Add" ] );
 		addShaderProp(SHADER_UNIFORM.integer, "render");
 		
 	input_display_list = [ 2, 

@@ -1,14 +1,12 @@
 function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Stack";
 	
-	inputs[| 0] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+	inputs[| 0] = nodeValue_Enum_Scroll("Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), 
 												 new scrollItem("On top",     s_node_alignment, 3), ])
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue("Align", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Start", "Middle", "End"])
+	inputs[| 1] = nodeValue_Enum_Button("Align", self,  1, [ "Start", "Middle", "End"])
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -26,7 +24,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1 )
+		inputs[| index] = nodeValue_Surface("Input", self)
 			.setVisible(true, true);
 			
 		return inputs[| index];

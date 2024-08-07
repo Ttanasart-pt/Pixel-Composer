@@ -13,8 +13,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 1] = nodeValue("Hide Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 2] = nodeValue("Name location", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Top", "Bottom" ]);
+	inputs[| 2] = nodeValue_Enum_Button("Name location", self,  1, [ "Top", "Bottom" ]);
 	
 	outputs[| 0] = nodeValue("Boolean", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
 	

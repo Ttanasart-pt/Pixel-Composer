@@ -8,8 +8,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	inputs[| 1] = nodeValue("Function name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
-	inputs[| 2] = nodeValue("Return type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Number", "Buffer" ]);
+	inputs[| 2] = nodeValue_Enum_Button("Return type", self,  0, [ "Number", "Buffer" ]);
 	
 	outputs[| 0] = nodeValue("Return Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
@@ -46,8 +45,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		
-		inputs[| index + 0] = nodeValue("Parameter type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Number", "Buffer" ]);
+		inputs[| index + 0] = nodeValue_Enum_Button("Parameter type", self,  0, [ "Number", "Buffer" ]);
 		
 		inputs[| index + 1] = nodeValue("Parameter value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);

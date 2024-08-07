@@ -1,8 +1,7 @@
 function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {	
 	name = "Draw Line";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -17,8 +16,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 5] = nodeValue("Random seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 6] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 6] = nodeValue_Rotation("Rotation", self, 0);
 	
 	inputs[| 7] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone, "Draw line along path.")
 		.setVisible(true, true);
@@ -45,7 +43,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 17] = nodeValue("1px mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Render pixel perfect 1px line.");
 	
-	inputs[| 18] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 18] = nodeValue_Surface("Texture", self);
 	
 	inputs[| 19] = nodeValue("Fix length", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Fix length of each segment instead of segment count.");
 	
@@ -54,8 +52,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 21] = nodeValue("Texture position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 22] = nodeValue("Texture rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 22] = nodeValue_Rotation("Texture Rotation", self, 0);
 	
 	inputs[| 23] = nodeValue("Texture scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -66,8 +63,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 26] = nodeValue("Clamp range", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
-	inputs[| 27] = nodeValue("Data Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "None", "Path", "Segments" ]);
+	inputs[| 27] = nodeValue_Enum_Scroll("Data Type", self,  1, [ "None", "Path", "Segments" ]);
 	
 	inputs[| 28] = nodeValue("Segments", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [[]])
 		.setDisplay(VALUE_DISPLAY.vector)

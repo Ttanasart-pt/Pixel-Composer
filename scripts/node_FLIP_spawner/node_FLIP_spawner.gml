@@ -9,15 +9,13 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Spawn Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ]);
+	inputs[| 1] = nodeValue_Enum_Scroll("Spawn Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ]);
 	
 	inputs[| 2] = nodeValue("Spawn Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.25 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(); }, VALUE_UNIT.reference);
 	
-	inputs[| 3] = nodeValue("Spawn Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Splash" ]);
+	inputs[| 3] = nodeValue_Enum_Button("Spawn Type", self,  0 , [ "Stream", "Splash" ]);
 	
 	inputs[| 4] = nodeValue("Spawn Frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 );
 	
@@ -26,7 +24,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 6] = nodeValue("Spawn Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 7] = nodeValue("Spawn Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 7] = nodeValue_Surface("Spawn Surface", self);
 	
 	inputs[| 8] = nodeValue("Spawn Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2 )	
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });

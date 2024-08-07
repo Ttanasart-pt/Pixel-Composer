@@ -4,11 +4,9 @@ function Node_Monitor_Capture(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	monitors = display_measure_all();
 	
-	inputs[| 0] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Monitor", "Region" ]);
+	inputs[| 0] = nodeValue_Enum_Scroll("Mode", self,  0, [ "Monitor", "Region" ]);
 	
-	inputs[| 1] = nodeValue("Monitor", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, array_create_ext(array_length(monitors), function(ind) { return monitors[ind][9]; }));
+	inputs[| 1] = nodeValue_Enum_Scroll("Monitor", self,  0, array_create_ext(array_length(monitors), function(ind) { return monitors[ind][9]; }));
 	
 	inputs[| 2] = nodeValue("Region", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, display_get_width(), display_get_height() ])
 		.setDisplay(VALUE_DISPLAY.vector);

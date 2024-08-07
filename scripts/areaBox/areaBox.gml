@@ -1,25 +1,3 @@
-enum AREA_SHAPE {
-	rectangle,
-	elipse
-}
-
-enum AREA_MODE {
-	area,
-	padding,
-	two_point,
-}
-
-enum AREA_INDEX {
-	center_x,
-	center_y,
-	half_w,
-	half_h,
-	shape
-}
-
-#macro DEF_AREA [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle, AREA_MODE.area ]
-#macro DEF_AREA_REF [ 0.5, 0.5, 0.5, 0.5, AREA_SHAPE.rectangle, AREA_MODE.area ]
-
 function areaBox(_onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
 	unit	 = _unit;

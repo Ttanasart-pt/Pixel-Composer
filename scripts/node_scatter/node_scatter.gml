@@ -12,10 +12,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	batch_output = false;
 	dimension_index = 1;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Dimension(self);
 	
 	inputs[| 2] = nodeValue("Amount", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8)
 		.setValidator(VV_min(0));
@@ -31,15 +30,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
 		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
-	inputs[| 6] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]);
+	inputs[| 6] = nodeValue_Enum_Scroll("Distribution", self,  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]);
 	
 	inputs[| 7] = nodeValue("Point at center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Rotate each copy to face the spawn center.");
 	
 	inputs[| 8] = nodeValue("Uniform scaling", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 9] = nodeValue("Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random" ]);
+	inputs[| 9] = nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]);
 	
 	inputs[| 10] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 10].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
@@ -50,7 +47,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 12] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 		
-	inputs[| 13] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 13] = nodeValue_Surface("Distribution map", self);
 	
 	inputs[| 14] = nodeValue("Distribution data", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -66,8 +63,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 17] = nodeValue("Use value", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties.")
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale",  "Rotation", "Color" ] });
 		
-	inputs[| 18] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Add", "Max" ]);
+	inputs[| 18] = nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Normal", "Add", "Max" ]);
 		
 	inputs[| 19] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone);
 		
@@ -83,13 +79,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 24] = nodeValue("Array indices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
 		.setArrayDepth(1);
 	
-	inputs[| 25] = nodeValue("Array texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 25] = nodeValue_Surface("Array texture", self);
 	
 	inputs[| 26] = nodeValue("Animated array", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
-	inputs[| 27] = nodeValue("Animated array end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Loop", "Ping Pong" ]);
+	inputs[| 27] = nodeValue_Enum_Scroll("Animated array end", self,  0, [ "Loop", "Ping Pong" ]);
 		
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -104,8 +99,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 31] = nodeValue("Auto amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 32] = nodeValue("Rotate per radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)	
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 32] = nodeValue_Rotation("Rotate per radius", self, 0);
 	
 	inputs[| 33] = nodeValue("Random position", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector_range);
@@ -121,8 +115,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 37] = nodeValue("Exact", self,  JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
-	inputs[| 38] = nodeValue("Spacing", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "After", "Between", "Around" ]);
+	inputs[| 38] = nodeValue_Enum_Button("Spacing", self,   0, [ "After", "Between", "Around" ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		

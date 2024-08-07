@@ -46,12 +46,10 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.padding)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Canvas size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0) 
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "Minimum", "Maximum" ])
+	inputs[| 2] = nodeValue_Enum_Scroll("Canvas size", self,  0, [ "Individual", "Minimum", "Maximum" ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Sizing method", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Padding / Crop", "Scale" ])
+	inputs[| 3] = nodeValue_Enum_Scroll("Sizing method", self,  0, [ "Padding / Crop", "Scale" ])
 		.rejectArray();
 	
 	input_display_list = [

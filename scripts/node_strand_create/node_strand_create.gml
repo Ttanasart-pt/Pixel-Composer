@@ -7,8 +7,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame      = true;
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Point", "Path", "Mesh" ]);
+	inputs[| 0] = nodeValue_Enum_Scroll("Type", self,  0, [ "Point", "Path", "Mesh" ]);
 	
 	inputs[| 1] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8, "How many strands to generate.");
 	
@@ -25,8 +24,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 6] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 7] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Inner", "Outer", "Both" ]);
+	inputs[| 7] = nodeValue_Enum_Button("Side", self,  0, [ "Inner", "Outer", "Both" ]);
 	
 	inputs[| 8] = nodeValue("Spring", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.8, "Angular stiffness, the higher the value the easier it is to bend each segment.")
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -44,8 +42,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 13] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone);
 	
-	inputs[| 14] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Uniform", "Random" ]);
+	inputs[| 14] = nodeValue_Enum_Scroll("Distribution", self,  0, [ "Uniform", "Random" ]);
 	
 	inputs[| 15] = nodeValue("Bake hair", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes.")
 		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", UI : true, onClick: function() { 

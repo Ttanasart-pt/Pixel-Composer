@@ -2,8 +2,7 @@ function __Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "3D Displace";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -21,8 +20,7 @@ function __Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 6] = nodeValue("Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 6] = nodeValue_Rotation("Light direction", self, 0);
 		
 	inputs[| 7] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
@@ -37,8 +35,7 @@ function __Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 11] = nodeValue("3D vertex", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3vertex, [])
 		.setVisible(true, true);
 		
-	inputs[| 12] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ])
+	inputs[| 12] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
 	inputs[| 13] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
@@ -46,7 +43,7 @@ function __Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	inputs[| 14] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 15] = nodeValue("Displacement map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 15] = nodeValue_Surface("Displacement map", self);
 	
 	inputs[| 16] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });

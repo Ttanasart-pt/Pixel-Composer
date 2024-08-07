@@ -2,7 +2,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	name = "3D Material";
 	solid_surf = noone;
 	
-	inputs[| 0] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
+	inputs[| 0] = nodeValue_Surface("Texture", self)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Diffuse", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
@@ -15,7 +15,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	
 	inputs[| 4] = nodeValue("Metalic", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
-	inputs[| 5] = nodeValue("Normal Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 5] = nodeValue_Surface("Normal Map", self);
 	
 	inputs[| 6] = nodeValue("Normal Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });

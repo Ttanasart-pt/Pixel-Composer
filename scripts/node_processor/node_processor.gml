@@ -85,7 +85,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _pAtl   = noone;
 		var _data   = array_create(ds_list_size(inputs));
 		
-		if(process_amount == 1) { #region render single data
+		if(process_amount == 1) { // render single data
 			if(_output.type == VALUE_TYPE.d3object) //passing 3D vertex call
 				return _out;
 			
@@ -142,7 +142,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			
 			return data;
-		} #endregion
+		} 
 		
 		#region ++++ array preparation ++++
 			if(!is_array(_out))
@@ -318,7 +318,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for(var i = 0; i < _len; i++) {
 			var _in = inputs[| i];
 			
-			var raw = _in._getValue();
+			var raw = _in.getValue();
 			var amo = _in.arrayLength(raw);
 			var val = raw;
 			

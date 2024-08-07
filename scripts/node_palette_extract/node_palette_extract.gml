@@ -2,7 +2,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Palette Extract";
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Max colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5, "Amount of color in a palette.")
 		.rejectArray();
@@ -11,12 +11,10 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "K-mean", "Frequency", "All colors" ], update_hover: false })
+	inputs[| 3] = nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All colors" ], update_hover: false })
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Color Space", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "RGB", "HSV" ], update_hover: false })
+	inputs[| 4] = nodeValue_Enum_Scroll("Color Space", self,  1, { data: [ "RGB", "HSV" ], update_hover: false })
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [ ])

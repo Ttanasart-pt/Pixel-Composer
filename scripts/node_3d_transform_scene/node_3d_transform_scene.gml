@@ -13,14 +13,11 @@ function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
 		.setArrayDepth(2);
 		
-	inputs[| 4] = nodeValue("Positioning type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Additive", "Override" ]);
+	inputs[| 4] = nodeValue_Enum_Scroll("Positioning type", self, 0, [ "Additive", "Override" ]);
 		
-	inputs[| 5] = nodeValue("Rotating type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Additive", "Override" ]);
+	inputs[| 5] = nodeValue_Enum_Scroll("Rotating type", self, 0, [ "Additive", "Override" ]);
 	
-	inputs[| 6] = nodeValue("Scaling type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Additive", "Multiplicative", "Override" ]);
+	inputs[| 6] = nodeValue_Enum_Scroll("Scaling type", self, 0, [ "Additive", "Multiplicative", "Override" ]);
 	
 	outputs[| 0] = nodeValue("Scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Scene, noone);
 	

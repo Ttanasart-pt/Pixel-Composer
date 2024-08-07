@@ -2,7 +2,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Find pixel";
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Search color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
@@ -16,8 +16,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 5] = nodeValue("Alpha tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	// inputs[| 6] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-	// 	.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y" ]);
+	// inputs[| 6] = nodeValue_Enum_Button("Axis", self,  1, [ "X", "Y" ]);
 	
 	outputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

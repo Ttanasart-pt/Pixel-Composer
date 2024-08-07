@@ -8,8 +8,7 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 1] = nodeValue("Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
 	
-	inputs[| 2] = nodeValue("Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Ear Clipping", "Convex Fan", "Delaunay" ]);
+	inputs[| 2] = nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Ear Clipping", "Convex Fan", "Delaunay" ]);
 	
 	outputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.output, VALUE_TYPE.mesh, noone);
 	

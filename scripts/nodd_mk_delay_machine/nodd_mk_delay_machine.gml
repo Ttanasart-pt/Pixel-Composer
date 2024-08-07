@@ -4,7 +4,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	is_simulation = true;
 	
-	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface", self);
 	
 	inputs[| 1] = nodeValue("Delay Amounts", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
 	
@@ -15,8 +15,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 4] = nodeValue("Alpha over Delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 5] = nodeValue("Palette Select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Loop", "Pingpong", "Random" ]);
+	inputs[| 5] = nodeValue_Enum_Scroll("Palette Select", self, 0, [ "Loop", "Pingpong", "Random" ]);
 	
 	inputs[| 6] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });

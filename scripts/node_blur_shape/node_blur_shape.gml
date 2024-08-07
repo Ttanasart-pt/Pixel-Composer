@@ -1,12 +1,12 @@
 function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shape Blur";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	inputs[| 1] = nodeValue("Blur Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[| 1] = nodeValue_Surface("Blur Shape", self);
 	
-	inputs[| 2] = nodeValue("Blur mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 2] = nodeValue_Surface("Blur mask", self);
 	
-	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 3] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 4] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -17,8 +17,7 @@ function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 6] = nodeValue("Channel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0b1111)
 		.setDisplay(VALUE_DISPLAY.toggle, { data: array_create(4, THEME.inspector_channel) });
 	
-	inputs[| 7] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Blur", "Max" ]);
+	inputs[| 7] = nodeValue_Enum_Button("Mode", self,  0, [ "Blur", "Max" ]);
 	
 	__init_mask_modifier(3); // inputs 8, 9, 
 	

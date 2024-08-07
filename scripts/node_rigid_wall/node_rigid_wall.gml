@@ -13,8 +13,7 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 	inputs[| 1] = nodeValue("Contact Friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2);
 		
-	inputs[| 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Dimension(self);
 	
 	inputs[| 3] = nodeValue("Collision Group", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 		

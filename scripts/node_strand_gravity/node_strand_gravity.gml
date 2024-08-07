@@ -11,8 +11,7 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	inputs[| 1] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 2] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -90)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 2] = nodeValue_Rotation("Direction", self, 0);
 	
 	outputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.output, VALUE_TYPE.strands, noone);
 	

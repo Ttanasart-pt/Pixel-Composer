@@ -1,33 +1,23 @@
-function nodeValue_Float(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue_Float(_name, _node, _connect, _type, _value, _tooltip); }
+function nodeValue_Float(_name, _node, _value, _tooltip = "") { return new NodeValue_Float(_name, _node, _value, _tooltip); }
 
-function NodeValue_Float(_name, _node, _connect, _type, _value, _tooltip = "") : NodeValue(_name, _node, _connect, _type, _value, _tooltip) constructor {
+function NodeValue_Float(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, _tooltip) constructor {
 	
 	/////============== GET =============
 	
-	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
-		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
-		
-		if(typeFrom == VALUE_TYPE.text) value = toNumber(value);
-		if(validator != noone)          value = validator.validate(value);
-		
-		return value;
-	}
-	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
-		draw_junction_index = type;
-		return _getValue(_time, applyUnit, arrIndex, log);
-	}
-	
-	static _getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) {
-		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
 		
-		var typ = nod.type;
+		var typ = nod == undefined? VALUE_TYPE.any : nod.type;
 		var dis = nod.display_type;
 		
-		if(typ != VALUE_TYPE.surface) return valueProcess(val, nod, applyUnit, arrIndex);
+		if(typ != VALUE_TYPE.surface) {
+			if(typ == VALUE_TYPE.text) val = toNumber(val);
+			if(validator != noone)     val = validator.validate(val);
+		
+			return val;
+		}
 		
 		// Dimension conversion
 		if(is_array(val)) {

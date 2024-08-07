@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_value_text",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_value_text",
+  "parent":{
+    "name":"types",
+    "path":"folders/nodes/values/types.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

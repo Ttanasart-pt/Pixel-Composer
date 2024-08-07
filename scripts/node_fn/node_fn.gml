@@ -4,8 +4,7 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	update_on_frame = true;
 	setDimension(96, 96);
 	
-	inputs[| 0] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Graph" ]);
+	inputs[| 0] = nodeValue_Enum_Scroll("Display", self,  1 , [ "Number", "Graph" ]);
 	
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	

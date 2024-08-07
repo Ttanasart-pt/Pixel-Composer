@@ -1,14 +1,13 @@
 function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Solid";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, cola(c_white));
 	
 	inputs[| 2] = nodeValue("Empty", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 3] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 4] = nodeValue("Use mask dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	

@@ -2,11 +2,9 @@ function Node_MK_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	name = "MK Flame";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 45)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 1] = nodeValue_Rotation("Direction", self, 45);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0,  
 		["Shape",	false], 1, 

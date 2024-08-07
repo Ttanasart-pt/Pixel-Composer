@@ -1,8 +1,7 @@
 //function Node_3D_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 //	name = "3D Render";
 	
-//	inputs[| 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-//		.setDisplay(VALUE_DISPLAY.vector);
+//	inputs[| 2] = nodeValue_Dimension(self);
 	
 //	inputs[| 3] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 //		.setDisplay(VALUE_DISPLAY.vector)
@@ -32,8 +31,7 @@
 //	inputs[| 10] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey)
 //		.rejectArray();
 	
-//	inputs[| 15] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-//		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ])
+//	inputs[| 15] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 //		.rejectArray();
 		
 //	inputs[| 16] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)

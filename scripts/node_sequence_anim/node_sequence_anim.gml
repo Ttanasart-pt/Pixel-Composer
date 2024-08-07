@@ -3,7 +3,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Sequence_Anim(self));
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, [])
+	inputs[| 0] = nodeValue_Surface("Surface in", self, [])
 		.setArrayDepth(1);
 	
 	inputs[| 1] = nodeValue("Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
@@ -13,8 +13,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setVisible(true, true)
 		.setArrayDepth(1);
 		
-	inputs[| 3] = nodeValue("Overflow", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Hold", "Loop", "Ping Pong", "Empty" ]);
+	inputs[| 3] = nodeValue_Enum_Scroll("Overflow", self,  0, [ "Hold", "Loop", "Ping Pong", "Empty" ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

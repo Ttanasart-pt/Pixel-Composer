@@ -5,8 +5,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Object Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Duplicate", "Array" ] )
+	inputs[| 1] = nodeValue_Enum_Button("Object Mode", self,  0 , [ "Duplicate", "Array" ] )
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );

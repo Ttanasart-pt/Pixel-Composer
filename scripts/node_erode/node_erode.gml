@@ -1,7 +1,7 @@
 function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Erode";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setValidator(VV_min(0))
@@ -11,7 +11,7 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 3] = nodeValue("Use alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 4] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 5] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -26,7 +26,7 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 10] = nodeValue("Width map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 10] = nodeValue_Surface("Width map", self)
 		.setVisible(false, false);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////

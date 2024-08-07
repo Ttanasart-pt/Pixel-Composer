@@ -24,8 +24,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 7] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 45, 135, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_random);
 	
-	inputs[| 8] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Uniform", "Random" ]);
+	inputs[| 8] = nodeValue_Enum_Scroll("Distribution", self,  0 , [ "Uniform", "Random" ]);
 	
 	inputs[| 9] = nodeValue("Trim over Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
@@ -34,8 +33,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 11] = nodeValue("Flip if Negative", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
-	inputs[| 12] = nodeValue("Origin", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "First", "Zero" ]);
+	inputs[| 12] = nodeValue_Enum_Scroll("Origin", self,  0 , [ "Individual", "First", "Zero" ]);
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	

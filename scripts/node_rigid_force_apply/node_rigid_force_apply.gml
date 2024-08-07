@@ -9,8 +9,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Force type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Constant", "Impulse", "Torque", "Explode" ])
+	inputs[| 1] = nodeValue_Enum_Scroll("Force type", self,  0, [ "Constant", "Impulse", "Torque", "Explode" ])
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
@@ -27,8 +26,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.vector)
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue("Scope", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Global", "Local" ])
+	inputs[| 6] = nodeValue_Enum_Button("Scope", self,  0, [ "Global", "Local" ])
 		.rejectArray();
 	
 	inputs[| 7] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)

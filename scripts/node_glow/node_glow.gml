@@ -1,7 +1,7 @@
 function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Glow";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Border", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
@@ -14,7 +14,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 4] = nodeValue("Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 5] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 6] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -24,13 +24,11 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	__init_mask_modifier(5); // inputs 8, 9, 
 	
-	inputs[| 10] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "Alpha" ]);
+	inputs[| 10] = nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Alpha" ]);
 		
 	inputs[| 11] = nodeValue("Draw original", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 12] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Outer", "Inner" ]);
+	inputs[| 12] = nodeValue_Enum_Button("Side", self,  0, [ "Outer", "Inner" ]);
 		
 	input_display_list = [ 7, 
 		["Surfaces", true], 0, 5, 6, 8, 9, 

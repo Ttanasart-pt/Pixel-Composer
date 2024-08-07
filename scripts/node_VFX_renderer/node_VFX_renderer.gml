@@ -12,8 +12,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Round position to the closest integer value to avoid jittering.")
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Render Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, PARTICLE_RENDER_TYPE.surface )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Surface", "Line" ])
+	inputs[| 2] = nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ])
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Line life", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 )
@@ -30,8 +29,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		
-		inputs[| index + 0] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Alpha", "Additive" ])
+		inputs[| index + 0] = nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ])
 			.rejectArray();
 		
 		inputs[| index + 1] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, noone )

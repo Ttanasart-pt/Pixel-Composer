@@ -1,15 +1,14 @@
 function Node_Override_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Override Channel";
 	
-	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface", self);
 	
-	inputs[| 1] = nodeValue("Red",   self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	inputs[| 2] = nodeValue("Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	inputs[| 3] = nodeValue("Blue",  self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	inputs[| 4] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 1] = nodeValue_Surface("Red",   self);
+	inputs[| 2] = nodeValue_Surface("Green", self);
+	inputs[| 3] = nodeValue_Surface("Blue",  self);
+	inputs[| 4] = nodeValue_Surface("Alpha", self);
 	
-	inputs[| 5] = nodeValue("Sampling type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Brightness", "Channel value"]);
+	inputs[| 5] = nodeValue_Enum_Scroll("Sampling type", self,  0, ["Brightness", "Channel value"]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

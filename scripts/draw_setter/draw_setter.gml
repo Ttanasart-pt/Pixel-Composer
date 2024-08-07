@@ -34,3 +34,8 @@ function draw_set_text(font, halign, valign) {
 	draw_set_halign(halign);
 	draw_set_valign(valign);
 }
+
+function draw_set_align(halign, valign) {
+	INLINE
+	draw_set_halign(halign); draw_set_valign(valign);
+}

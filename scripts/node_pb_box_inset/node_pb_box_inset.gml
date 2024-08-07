@@ -8,8 +8,7 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	inputs[| 2] = nodeValue("Inset", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 2, 2, 2, 2 ] )
 		.setDisplay(VALUE_DISPLAY.padding);
 		
-	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Padding", "Ratio" ]);
+	inputs[| 3] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Padding", "Ratio" ]);
 		
 	inputs[| 4] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);

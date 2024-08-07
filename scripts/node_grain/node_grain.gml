@@ -1,9 +1,9 @@
 function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grain";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 1] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 2] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -67,14 +67,11 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 22] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Additive", "Multiply", "Screen", "Overlay" ])
+	inputs[| 22] = nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Additive", "Multiply", "Screen", "Overlay" ])
 		
-	inputs[| 23] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Additive", "Multiply", "Screen" ])
+	inputs[| 23] = nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Additive", "Multiply", "Screen" ])
 		
-	inputs[| 24] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Additive", "Multiply", "Screen" ])
+	inputs[| 24] = nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Additive", "Multiply", "Screen" ])
 		
 	input_display_list = [ 3, 4, 9, 
 		["Surfaces",	 true], 0, 1, 2, 5, 6, 

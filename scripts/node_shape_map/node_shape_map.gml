@@ -1,13 +1,12 @@
 function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shape Map";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 1;
 	
-	inputs[| 2] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Circle",  s_node_shape_circle, 0), 
+	inputs[| 2] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Circle",  s_node_shape_circle, 0), 
 												 new scrollItem("Polygon", s_node_shape_misc,   1), ]);
 	
 	inputs[| 3] = nodeValue("Map Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 1 ])
@@ -20,8 +19,7 @@ function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 6] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 	
-	inputs[| 7] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 7] = nodeValue_Rotation("Angle", self, 0);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

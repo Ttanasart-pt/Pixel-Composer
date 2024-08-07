@@ -46,7 +46,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	_format_still = { filter: "Portable Network Graphics (.png)|*.png|Joint Photographic Experts Group (.jpg)|*.jpg" };
 	_format_anim  = { filter: "Graphics Interchange Format (.gif)|*.gif|Animated WebP (.webp)|*.webp" };
 	
-	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface", self);
 	
 	inputs[| 1] = nodeValue("Paths",   self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_save, _format_still)
@@ -60,8 +60,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	format_single = ["Single image", "Image sequence", "Animation"];
 	format_array  = ["Multiple images", "Image sequences", "Animations"];
 	
-	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: format_single, update_hover: false })
+	inputs[| 3] = nodeValue_Enum_Scroll("Type", self,  0, { data: format_single, update_hover: false })
 		.rejectArray();
 	
 	inputs[| 4] = nodeValue("Template guides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -91,8 +90,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	format_image     = [ ".png", ".jpg", ".webp" ];
 	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
 	
-	inputs[| 9] = nodeValue("Format", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: format_image, update_hover: false })
+	inputs[| 9] = nodeValue_Enum_Scroll("Format", self,  0, { data: format_image, update_hover: false })
 		.rejectArray();
 	
 	inputs[| 10] = nodeValue("Quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 23)
@@ -105,8 +103,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.setDisplay(VALUE_DISPLAY.slider_range, { range: [0, TOTAL_FRAMES, 0.1] });
 	
 	png_format   = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
-	inputs[| 13] = nodeValue("Subformat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: png_format, update_hover: false });
+	inputs[| 13] = nodeValue_Enum_Scroll("Subformat", self,  2, { data: png_format, update_hover: false });
 	
 	inputs[| 14] = nodeValue("Frame step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	

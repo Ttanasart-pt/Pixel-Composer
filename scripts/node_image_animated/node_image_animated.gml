@@ -51,8 +51,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 3] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.rejectArray();
 		
-	inputs[| 4] = nodeValue("Loop modes", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Loop", "Ping pong", "Hold last frame", "Hide"])
+	inputs[| 4] = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
 		.rejectArray();
 		
 	inputs[| 5] = nodeValue("Set animation length to match", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false )
@@ -65,8 +64,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	inputs[| 7]  = nodeValue("Frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 
-	inputs[| 8] = nodeValue("Canvas size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2) 
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "First", "Minimum", "Maximum" ])
+	inputs[| 8] = nodeValue_Enum_Scroll("Canvas size", self,  2, [ "First", "Minimum", "Maximum" ])
 		.rejectArray();
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

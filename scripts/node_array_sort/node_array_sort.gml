@@ -6,8 +6,7 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[| 0] = nodeValue("Array in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [])
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Ascending", "Descending" ])
+	inputs[| 1] = nodeValue_Enum_Button("Order", self,  0, [ "Ascending", "Descending" ])
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Sorted array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);

@@ -2,9 +2,9 @@ function Node_Surface_data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name	= "Surface data";
 	color	= COLORS.node_blend_number;
 	
-	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface", self);
 	
-	outputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 1, 1 ])
+	outputs[| 0] = nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	outputs[| 1] = nodeValue("Array length", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);

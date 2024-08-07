@@ -6,8 +6,7 @@ function Node_Argument(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	inputs[| 0] = nodeValue("Tag", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
-	inputs[| 1] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "String", "Number" ]);
+	inputs[| 1] = nodeValue_Enum_Scroll("Type", self, 0, [ "String", "Number" ]);
 	
 	inputs[| 2] = nodeValue("Default value", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	

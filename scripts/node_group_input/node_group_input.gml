@@ -78,21 +78,18 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	skipDefault();
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: GROUP_IO_DISPLAY[11], update_hover: false });
+	inputs[| 0] = nodeValue_Enum_Scroll("Display type", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false });
 	
 	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.range)
 		.setVisible(false);
 	
-	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 11)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: GROUP_IO_TYPE_NAME, update_hover: false });
+	inputs[| 2] = nodeValue_Enum_Scroll("Input type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false });
 	
 	inputs[| 3] = nodeValue("Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(false);
 	
-	inputs[| 4] = nodeValue("Vector size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "2", "3", "4" ])
+	inputs[| 4] = nodeValue_Enum_Button("Vector size", self,  0, [ "2", "3", "4" ])
 		.setVisible(false);
 	
 	inputs[| 5] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
@@ -105,8 +102,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 8] = nodeValue("Button Label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Trigger")
 		.setVisible(false);
 	
-	inputs[| 9] = nodeValue("Visible Condition", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Show", "Hide", /* 2 */ new scrollItem("Equal",			s_node_condition_type, 0), 
+	inputs[| 9] = nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Show", "Hide", /* 2 */ new scrollItem("Equal",			s_node_condition_type, 0), 
 												        		 /* 3 */ new scrollItem("Not equal",		s_node_condition_type, 1), 
 												        		 /* 4 */ new scrollItem("Greater ",			s_node_condition_type, 4), 
 												        		 /* 5 */ new scrollItem("Greater or equal",	s_node_condition_type, 5), 

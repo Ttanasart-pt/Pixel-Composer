@@ -1,12 +1,12 @@
 function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Interlace";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 1;
 	
-	inputs[| 2] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 2] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 3] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -16,8 +16,7 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	__init_mask_modifier(2); // inputs 5, 6
 	
-	inputs[| 7] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y" ]);
+	inputs[| 7] = nodeValue_Enum_Button("Axis", self,  0, [ "X", "Y" ]);
 	
 	inputs[| 8] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	

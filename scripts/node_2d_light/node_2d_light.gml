@@ -15,13 +15,12 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	uniform_band = shader_get_uniform(shader, "band");
 	uniform_attn = shader_get_uniform(shader, "atten");
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Light shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Point",           s_node_2d_light_shape, 0), 
-												 new scrollItem("Line",            s_node_2d_light_shape, 1), 
-												 new scrollItem("Line asymmetric", s_node_2d_light_shape, 2), 
-												 new scrollItem("Spot",            s_node_2d_light_shape, 3), ]);
+	inputs[| 1] = nodeValue_Enum_Scroll("Light shape", self, 0, [	new scrollItem("Point",           s_node_2d_light_shape, 0), 
+																	new scrollItem("Line",            s_node_2d_light_shape, 1), 
+																	new scrollItem("Line asymmetric", s_node_2d_light_shape, 2), 
+																	new scrollItem("Spot",            s_node_2d_light_shape, 3), ]);
 	
 	inputs[| 2] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -49,16 +48,16 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 10] = nodeValue("Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
-	inputs[| 11] = nodeValue("Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Quadratic",		s_node_curve, 0),
+	inputs[| 11] = nodeValue_Enum_Scroll("Attenuation", self, 0, 
+											   [ new scrollItem("Quadratic",		s_node_curve, 0),
 												 new scrollItem("Invert quadratic", s_node_curve, 1),
-												 new scrollItem("Linear",			s_node_curve, 2), ]);
+												 new scrollItem("Linear",			s_node_curve, 2), ])
+		 .setTooltip("Control how light fade out over distance.");
 	
 	inputs[| 12] = nodeValue("Radial banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
-	inputs[| 13] = nodeValue("Radial start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 13] = nodeValue_Rotation("Radial start", self, 0);
 	
 	inputs[| 14] = nodeValue("Radial band ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);

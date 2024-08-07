@@ -3,10 +3,9 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	batch_output = false;
 	dimension_index = 1;
 	
-	inputs[| 0] = nodeValue("Main texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, USE_DEF);
+	inputs[| 0] = nodeValue_Surface("Main texture", self);
 	
-	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Dimension(self);
 	
 	inputs[| 2] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -20,18 +19,17 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 5] = nodeValue("Textures per face", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[|  6] = nodeValue("Textures 0", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
-	inputs[|  7] = nodeValue("Textures 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
-	inputs[|  8] = nodeValue("Textures 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
-	inputs[|  9] = nodeValue("Textures 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
-	inputs[| 10] = nodeValue("Textures 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
-	inputs[| 11] = nodeValue("Textures 5", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false);
+	inputs[|  6] = nodeValue_Surface("Textures 0", self).setVisible(false);
+	inputs[|  7] = nodeValue_Surface("Textures 1", self).setVisible(false);
+	inputs[|  8] = nodeValue_Surface("Textures 2", self).setVisible(false);
+	inputs[|  9] = nodeValue_Surface("Textures 3", self).setVisible(false);
+	inputs[| 10] = nodeValue_Surface("Textures 4", self).setVisible(false);
+	inputs[| 11] = nodeValue_Surface("Textures 5", self).setVisible(false);
 	
 	inputs[| 12] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 13] = nodeValue("Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 13] = nodeValue_Rotation("Light direction", self, 0);
 		
 	inputs[| 14] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
@@ -49,8 +47,7 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 19] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 20] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ])
+	inputs[| 20] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
 	inputs[| 21] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)

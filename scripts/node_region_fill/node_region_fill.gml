@@ -1,9 +1,9 @@
 function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Region Fill";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 1] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 2] = nodeValue("Fill Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, array_clone(DEF_PALETTE))
 		.setDisplay(VALUE_DISPLAY.palette);
@@ -17,15 +17,13 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 6] = nodeValue("Inner only", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Only fill regions with surrounding pixels.");
 	
-	inputs[| 7] = nodeValue("Draw original", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "None", "Above", "Behind" ]);
+	inputs[| 7] = nodeValue_Enum_Scroll("Draw original", self,  0, [ "None", "Above", "Behind" ]);
 	
-	inputs[| 8] = nodeValue("Fill type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Color map", "Texture map" ]);
+	inputs[| 8] = nodeValue_Enum_Scroll("Fill type", self,  0, [ "Random", "Color map", "Texture map" ]);
 	
-	inputs[| 9] = nodeValue("Color map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 9] = nodeValue_Surface("Color map", self);
 	
-	inputs[| 10] = nodeValue("Texture map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 10] = nodeValue_Surface("Texture map", self);
 	
 	inputs[| 11] = nodeValue("Color Filter", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	

@@ -1,7 +1,7 @@
 function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Diffuse";
 	
-	inputs[| 0] = nodeValue("Density field", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 0] = nodeValue_Surface("Density field", self);
 	
 	inputs[| 1] = nodeValue("Dissipation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.2, 0.2, 0.001] });
@@ -19,18 +19,16 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	inputs[| 6] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 7] = nodeValue("External", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 7] = nodeValue_Surface("External", self);
 	
 	inputs[| 8] = nodeValue("External Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.25, 0.25, 0.01] });
 	
 	inputs[| 9] = nodeValue("Detail", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 	
-	inputs[| 10] = nodeValue("External Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Point", "Vector" ]);
+	inputs[| 10] = nodeValue_Enum_Scroll("External Type", self,  0, [ "Point", "Vector" ]);
 		
-	inputs[| 11] = nodeValue("External Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 11] = nodeValue_Rotation("External Direction", self, 0);
 	
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

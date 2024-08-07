@@ -8,14 +8,12 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "XY Shift", "Direction + Distance" ]);
+	inputs[| 1] = nodeValue_Enum_Scroll("Mode", self,  0, [ "XY Shift", "Direction + Distance" ]);
 	
 	inputs[| 2] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 3] = nodeValue_Rotation("Direction", self, 0);
 	
 	inputs[| 4] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
 	

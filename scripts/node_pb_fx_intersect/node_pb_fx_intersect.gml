@@ -1,7 +1,7 @@
 function Node_PB_Fx_Intersect(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Subtract";
 	
-	inputs[| 1] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
+	inputs[| 1] = nodeValue_Surface("Surface", self)
 		.setVisible(true, true);
 		
 	input_display_list = [ 0, 

@@ -5,16 +5,14 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	inputs[| 1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Ratio", "Fix Left", "Fix Right" ]);
+	inputs[| 2] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Ratio", "Fix Left", "Fix Right" ]);
 	
 	inputs[| 3] = nodeValue("Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 4] = nodeValue("Fix width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 )
 	
-	inputs[| 5] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y" ]);
+	inputs[| 5] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]);
 	
 	inputs[| 6] = nodeValue("Mirror", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0 )
 	

@@ -6,14 +6,12 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 0] = nodeValue("Output scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue("Coordinate", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
+	inputs[| 1] = nodeValue_Enum_Scroll("Coordinate", self,  0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
 												 new scrollItem("Polar",     s_node_axis_type, 1),  ]);
 	
 	eq_type_car = [ "x function", "y function", "parametric" ];
 	eq_type_pol = [ "r function", "O function", "parametric" ];
-	inputs[| 2] = nodeValue("Equation type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, eq_type_car);
+	inputs[| 2] = nodeValue_Enum_Scroll("Equation type", self,  0, eq_type_car);
 	
 	inputs[| 3] = nodeValue("0 function", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	inputs[| 4] = nodeValue("1 function", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");

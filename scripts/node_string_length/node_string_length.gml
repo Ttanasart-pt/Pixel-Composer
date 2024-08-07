@@ -6,8 +6,7 @@ function Node_String_Length(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Character", "Word"]);
+	inputs[| 1] = nodeValue_Enum_Scroll("Mode", self,  0, ["Character", "Word"]);
 	
 	outputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	

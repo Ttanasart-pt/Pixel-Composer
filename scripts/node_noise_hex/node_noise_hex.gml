@@ -11,8 +11,7 @@ function Node_Noise_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	uniform_sam    = shader_get_uniform(shader, "useSampler");
 	uniform_samTyp = shader_get_uniform(shader, "sampleMode");
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
@@ -23,10 +22,9 @@ function Node_Noise_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 4] = nodeValue("Texture sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 4] = nodeValue_Surface("Texture sample", self);
 		
-	inputs[| 5] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
+	inputs[| 5] = nodeValue_Enum_Scroll("Oversample mode", self,  2, [ "Empty", "Clamp", "Repeat" ]);
 	
 	input_display_list = [
 		["Output",	false], 0, 

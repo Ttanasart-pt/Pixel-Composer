@@ -1,12 +1,12 @@
 function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Crop Content";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 2] = nodeValue("Array Sizing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Cropping mode for dealing with image array.")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Largest, same size", "Independent" ]);
+	inputs[| 2] = nodeValue_Enum_Scroll("Array Sizing", self,  1, [ "Largest, same size", "Independent" ])
+		.setTooltip("Cropping mode for dealing with image array.");
 	
 	inputs[| 3] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ], "Add padding back after crop.")
 		.setDisplay(VALUE_DISPLAY.padding);

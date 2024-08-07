@@ -1,8 +1,7 @@
 function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Round Rectangle";
 	
-	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Uniform", "Per Corner" ]);
+	inputs[| 3] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Uniform", "Per Corner" ]);
 	
 	inputs[| 4] = nodeValue("Corner Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
 	

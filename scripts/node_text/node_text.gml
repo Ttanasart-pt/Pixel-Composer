@@ -21,14 +21,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(true, false);
 	
-	inputs[| 7] = nodeValue("Horizontal alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]);
+	inputs[| 7] = nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]);
 	
-	inputs[| 8] = nodeValue("Vertical alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]);
+	inputs[| 8] = nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]);
 	
-	inputs[| 9] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Fixed", "Dynamic" ]);
+	inputs[| 9] = nodeValue_Enum_Scroll("Output dimension", self,  1 , [ "Fixed", "Dynamic" ]);
 	
 	inputs[| 10] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding);
@@ -54,8 +51,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 20] = nodeValue("Wave scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30);
 	
-	inputs[| 21] = nodeValue("Wave phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 21] = nodeValue_Rotation("Wave phase", self, 0);
 	
 	inputs[| 22] = nodeValue("Wave shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 3, 0.01 ] });
@@ -65,8 +61,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 24] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range);
 	
-	inputs[| 25] = nodeValue("Trim type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Character", "Word", "Line" ]);
+	inputs[| 25] = nodeValue_Enum_Button("Trim type", self,  0 , [ "Character", "Word", "Line" ]);
 	
 	inputs[| 26] = nodeValue("Use full text size", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	

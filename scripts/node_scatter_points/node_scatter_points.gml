@@ -9,18 +9,16 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
 		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
-	inputs[| 1] = nodeValue("Point distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Area", "Border", "Map" ])
+	inputs[| 1] = nodeValue_Enum_Button("Point distribution", self,  0, [ "Area", "Border", "Map" ])
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random" ])
+	inputs[| 2] = nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ])
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Point amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2, "Amount of particle spawn in that frame.")
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 4] = nodeValue_Surface("Distribution map", self)
 		.rejectArray();
 	
 	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
@@ -32,12 +30,11 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 7] = nodeValue("Reference dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 8] = nodeValue("Reference value", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 8] = nodeValue_Surface("Reference value", self);
 	
 	inputs[| 9] = nodeValue("Output 3D", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 10] = nodeValue("Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y", "Z" ]);
+	inputs[| 10] = nodeValue_Enum_Button("Normal", self,  0, [ "X", "Y", "Z" ]);
 	
 	inputs[| 11] = nodeValue("Plane position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	

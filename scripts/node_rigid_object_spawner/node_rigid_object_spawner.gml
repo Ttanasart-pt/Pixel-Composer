@@ -15,8 +15,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		.setDisplay(VALUE_DISPLAY.area)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Spawn type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst" ])
+	inputs[| 2] = nodeValue_Enum_Button("Spawn type", self,  0, [ "Stream", "Burst" ])
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Spawn delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)

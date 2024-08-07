@@ -1,15 +1,13 @@
 function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Checker";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(6);
 	
-	inputs[| 2] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation)
+	inputs[| 2] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(7);
 	
 	inputs[| 3] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
@@ -28,8 +26,7 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 8] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Solid", "Smooth", "AA" ]);
+	inputs[| 8] = nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

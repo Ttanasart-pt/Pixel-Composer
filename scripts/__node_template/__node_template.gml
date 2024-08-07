@@ -1,7 +1,7 @@
 function Node_Template(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "";
 	
-	inputs[| 0] = nodeValue("", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("", self);
 	
 	outputs[| 0] = nodeValue("", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

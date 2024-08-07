@@ -30,8 +30,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Sum", "Mean", "Median", "Max", "Min" ])
+	inputs[| 0] = nodeValue_Enum_Scroll("Type", self,  0, [ "Sum", "Mean", "Median", "Max", "Min" ])
 		.rejectArray();
 	
 	static createNewInput = function() {

@@ -2,15 +2,15 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Atlas Set";
 	previewable = true;
 	
-	inputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 0] = nodeValue_Surface("Atlas", self)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 1] = nodeValue_Surface("Surface", self);
 	
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 3] = nodeValue_Rotation("Rotation", self, 0);
 	
 	inputs[| 4] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

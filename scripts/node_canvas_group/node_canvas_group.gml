@@ -8,8 +8,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	
 	modifiable = false;
 	
-	inputs[|  0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[|  0] = nodeValue_Dimension(self);
 	
 	custom_input_index = ds_list_size(inputs);
 	

@@ -2,7 +2,7 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	name	  = "Cache";
 	use_cache = CACHE_USE.auto;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	outputs[| 0] = nodeValue("Cache surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

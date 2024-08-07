@@ -19,8 +19,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	inputs[| 4] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 4].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 5] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Override", "Add" ]);
+	inputs[| 5] = nodeValue_Enum_Button("Mode", self,  0, [ "Override", "Add" ]);
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 

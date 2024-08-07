@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_value_float",
   "parent":{
-    "name":"types",
-    "path":"folders/nodes/values/types.yy",
+    "name":"numeric",
+    "path":"folders/nodes/values/types/numeric.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

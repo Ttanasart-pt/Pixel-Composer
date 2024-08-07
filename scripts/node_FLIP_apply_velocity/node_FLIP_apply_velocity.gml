@@ -19,8 +19,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	inputs[| 3] = nodeValue("Velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 4] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0) ]);
+	inputs[| 4] = nodeValue_Enum_Scroll("Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0) ]);
 		
 	inputs[| 5] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ] )
 		.setDisplay(VALUE_DISPLAY.vector);

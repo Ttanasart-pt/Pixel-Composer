@@ -4,8 +4,7 @@ function Node_PB_Fx_Brick(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 	inputs[| 1] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 4, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y" ] );
+	inputs[| 2] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ] );
 	
 	inputs[| 3] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	

@@ -3,10 +3,10 @@ function Node_Group_Thumbnail(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	destroy_when_upgroup = true;
 	color = COLORS.node_blend_collection;
 	
-	inputs[| 0] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 0] = nodeValue_Surface("Input", self)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	outputs[| 0] = nodeValue_Surface("Output", self)
 		.setVisible(false, false);
 		
 	static getGraphPreviewSurface = function() { #region

@@ -1,17 +1,16 @@
 function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Smear";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(9);
 	
-	inputs[| 2] = nodeValue("Direction",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.rotation)
+	inputs[| 2] = nodeValue_Rotation("Direction", self, 0)
 		.setMappable(10);
 	
-	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 3] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 4] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -32,11 +31,9 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 11] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "Alpha" ]);
+	inputs[| 11] = nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Alpha" ]);
 	
-	inputs[| 12] = nodeValue("Modulate strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Distance", "Color", "None" ]);
+	inputs[| 12] = nodeValue_Enum_Button("Modulate strength", self,  0, [ "Distance", "Color", "None" ]);
 	
 	inputs[| 13] = nodeValue("Spread", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range : [ 0, 30, 1 ] });

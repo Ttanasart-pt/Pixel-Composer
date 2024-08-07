@@ -6,10 +6,9 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	inputs[| in_mesh + 0] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, new __d3dMaterial() )
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 1] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Surface", "Array" ]);
+	inputs[| in_mesh + 1] = nodeValue_Enum_Button("Input type", self,  0 , [ "Surface", "Array" ]);
 	
-	inputs[| in_mesh + 2] = nodeValue("Height map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| in_mesh + 2] = nodeValue_Surface("Height map", self);
 	
 	inputs[| in_mesh + 3] = nodeValue("Subdivision", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 );
 	

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_value_palette",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_value_palette",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/values/types/colors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

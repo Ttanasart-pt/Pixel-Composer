@@ -3,7 +3,6 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	setDimension(96, 48);
 	
-	
 	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(true, true);
 	
@@ -11,11 +10,10 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 2] = nodeValue("Tail", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
-	inputs[| 3] = nodeValue("Trim", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Character", "Word"]);
+	inputs[| 3] = nodeValue_Enum_Scroll("Trim", self,  0, ["Character", "Word"]);
 	
-	inputs[| 4] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Set to progress to use ratio, where 0 means no change and 1 means the entire length of the text.")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Counter", "Progress"]);
+	inputs[| 4] = nodeValue_Enum_Scroll("Mode", self,  0, ["Counter", "Progress"])
+		.setTooltip("Set to progress to use ratio, where 0 means no change and 1 means the entire length of the text.");
 	
 	outputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	

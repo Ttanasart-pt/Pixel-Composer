@@ -1,10 +1,9 @@
 function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Pack Sprites";
 	
-	inputs[| 0] = nodeValue("Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Sprites", self);
 	
-	inputs[| 1] = nodeValue("Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false });
+	inputs[| 1] = nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false });
 	
 	inputs[| 2] = nodeValue("Max width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 128);
 	

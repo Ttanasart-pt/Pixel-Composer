@@ -1,8 +1,7 @@
 function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Zigzag";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
@@ -16,8 +15,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 4] = nodeValue("Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 5] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Solid", "Smooth", "AA" ]);
+	inputs[| 5] = nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]);
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
@@ -27,8 +25,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 8] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation)
+	inputs[| 8] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(7);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

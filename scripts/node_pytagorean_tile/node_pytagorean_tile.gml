@@ -1,8 +1,7 @@
 function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pytagorean Tile";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -12,8 +11,7 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setMappable(11);
 	
-	inputs[| 3] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation)
+	inputs[| 3] = nodeValue_Rotation("Rotation", self, 0)
 		.setMappable(12);
 	
 	inputs[| 4] = nodeValue("Gap", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.25)
@@ -25,13 +23,12 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	inputs[| 6] = nodeValue("Gap color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 7] = nodeValue("Render type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Colored tile", "Height map", "Texture grid"]);
+	inputs[| 7] = nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Height map", "Texture grid"]);
 		
 	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
-	inputs[| 9] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 9] = nodeValue_Surface("Texture", self);
 	
 	inputs[| 10] = nodeValue("Anti aliasing", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -52,8 +49,7 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	inputs[| 16] = nodeValue("Truchet threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	inputs[| 17] = nodeValue("Phase", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 90)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 17] = nodeValue_Rotation("Phase", self, 90);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	

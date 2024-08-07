@@ -34,22 +34,19 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	name = "Blend";
 	manage_atlas = false;
 	
-	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	inputs[| 1] = nodeValue("Foreground", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Background", self);
+	inputs[| 1] = nodeValue_Surface("Foreground", self);
 	
-	inputs[| 2] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES );
+	inputs[| 2] = nodeValue_Enum_Scroll("Blend mode", self, 0, BLEND_TYPES );
 	
 	inputs[| 3] = nodeValue("Opacity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 4] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 5] = nodeValue("Fill mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "None", "Stretch", "Tile" ]);
+	inputs[| 5] = nodeValue_Enum_Scroll("Fill mode", self, 0, [ "None", "Stretch", "Tile" ]);
 	
-	inputs[| 6] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])
+	inputs[| 6] = nodeValue_Enum_Scroll("Output dimension", self, 0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])
 		.rejectArray();
 	
 	inputs[| 7] = nodeValue("Constant dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
@@ -60,11 +57,11 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	inputs[| 9] = nodeValue("Preserve alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 		
-	inputs[| 10] = nodeValue("Horizontal Align", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
+	inputs[| 10] = nodeValue_Enum_Button("Horizontal Align", self, 0, 
+		[ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
 		
-	inputs[| 11] = nodeValue("Vertical Align", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign]);
+	inputs[| 11] = nodeValue_Enum_Button("Vertical Align", self, 0, 
+		[ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign]);
 	
 	inputs[| 12] = nodeValue("Invert mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	

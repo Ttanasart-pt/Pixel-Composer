@@ -20,16 +20,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Repeat";
 	dimension_index = 1;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 1] = nodeValue_Dimension(self);
 	
 	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Linear",   s_node_repeat_axis, 0), 
+	inputs[| 3] = nodeValue_Enum_Scroll("Pattern", self,  0, [ new scrollItem("Linear",   s_node_repeat_axis, 0), 
 												 new scrollItem("Grid",     s_node_repeat_axis, 1), 
 												 new scrollItem("Circular", s_node_repeat_axis, 2), ]);
 	
@@ -66,8 +64,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	inputs[| 15] = nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 16] = nodeValue("Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, at random, or spread or each image to one output." )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Order", "Random", "Spread" ]);
+	inputs[| 16] = nodeValue_Enum_Button("Array select", self, 0, [ "Order", "Random", "Spread" ])
+		.setTooltip("Whether to select image from an array in order, at random, or spread or each image to one output.");
 	
 	inputs[| 17] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 17].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
@@ -87,16 +85,15 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 22] = nodeValue("Animator position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 23] = nodeValue("Animator rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 23] = nodeValue_Rotation("Animator rotation", self, 0);
 		
 	inputs[| 24] = nodeValue("Animator scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	inputs[| 25] = nodeValue("Animator falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_10);
 	 
-	inputs[| 26] = nodeValue("Stack", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Place each copy next to each other, taking surface dimension into account.")
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "X", "Y" ]);
+	inputs[| 26] = nodeValue_Enum_Button("Stack", self,  0, [ "None", "X", "Y" ])
+		.setTooltip("Place each copy next to each other, taking surface dimension into account.");
 	
 	inputs[| 27] = nodeValue("Animator blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, cola(c_white));
 	
@@ -113,14 +110,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 32] = nodeValue("Start rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 32] = nodeValue_Rotation("Start rotation", self, 0);
 		
-	inputs[| 33] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 33] = nodeValue_Rotation("Rotation", self, 0);
 		
-	inputs[| 34] = nodeValue("Blend Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive", "Maximum" ]);
+	inputs[| 34] = nodeValue_Enum_Scroll("Blend Mode", self,  0, [ "Normal", "Additive", "Maximum" ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

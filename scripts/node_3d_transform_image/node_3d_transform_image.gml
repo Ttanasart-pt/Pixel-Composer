@@ -19,7 +19,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	projMat = matrix_build_projection_ortho(1, 1, 0.001, 10);
 	
 	
-	inputs[| in_mesh + 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
+	inputs[| in_mesh + 0] = nodeValue_Surface("Surface", self)
 		.setVisible(true, true);
 	
 	input_display_list = [

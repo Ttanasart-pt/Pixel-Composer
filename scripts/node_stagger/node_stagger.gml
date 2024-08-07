@@ -1,7 +1,7 @@
 function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Stagger";
 	
-	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface", self);
 	
 	inputs[| 1] = nodeValue("Delay Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
@@ -9,8 +9,7 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 3] = nodeValue("Stagger Curve", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
 	
-	inputs[| 4] = nodeValue("Overflow", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Hide", "Clamp" ]);
+	inputs[| 4] = nodeValue_Enum_Button("Overflow", self,  0, [ "Hide", "Clamp" ]);
 	
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

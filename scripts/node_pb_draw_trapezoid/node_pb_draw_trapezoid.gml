@@ -1,12 +1,10 @@
 function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Trapezoid";
 	
-	inputs[| 3] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+	inputs[| 3] = nodeValue_Enum_Scroll("Axis", self,  0 , [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), ]);
 	
-	inputs[| 4] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Symmetric", "Independent" ]);
+	inputs[| 4] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Symmetric", "Independent" ]);
 	
 	inputs[| 5] = nodeValue("Bevel", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);

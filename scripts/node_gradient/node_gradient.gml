@@ -1,19 +1,16 @@
 function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Gradient";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject([ cola(c_black), cola(c_white) ]) )
 		.setMappable(15);
 	
-	inputs[| 2] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Linear",   s_node_gradient_type, 0),
+	inputs[| 2] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Linear",   s_node_gradient_type, 0),
 												 new scrollItem("Circular", s_node_gradient_type, 1),
 												 new scrollItem("Radial",   s_node_gradient_type, 2) ]);
 	
-	inputs[| 3] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation)
+	inputs[| 3] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(10);
 
 	inputs[| 4] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .5)
@@ -27,10 +24,9 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 7] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "Loop", "Pingpong" ]);
+	inputs[| 7] = nodeValue_Enum_Button("Loop", self,  0, [ "None", "Loop", "Pingpong" ]);
 	
-	inputs[| 8] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 8] = nodeValue_Surface("Mask", self);
 	
 	inputs[| 9] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] })

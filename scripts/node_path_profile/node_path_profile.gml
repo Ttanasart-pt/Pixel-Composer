@@ -1,16 +1,14 @@
 function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Path Profile";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone )
 		.setVisible(true, true);
 	
 	inputs[| 2] = nodeValue("Resolution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 64 );
 	
-	inputs[| 3] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "L", "R", "T", "D" ]);
+	inputs[| 3] = nodeValue_Enum_Button("Side", self,  0 , [ "L", "R", "T", "D" ]);
 	
 	inputs[| 4] = nodeValue("Mirror", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	

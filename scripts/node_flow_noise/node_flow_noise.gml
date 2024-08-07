@@ -18,8 +18,7 @@ function Node_Flow_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 		.setDisplay(VALUE_DISPLAY.slider_range, { range: [ 1, 16, 0.1 ] });
 		addShaderProp(SHADER_UNIFORM.float, "detail");
 			
-	inputs[| 5] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 5] = nodeValue_Rotation("Rotation", self, 0);
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 			
 	input_display_list = [

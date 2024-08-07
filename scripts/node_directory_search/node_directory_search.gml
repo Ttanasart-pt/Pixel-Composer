@@ -31,8 +31,7 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 	inputs[| 1]  = nodeValue("Extensions", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, ".png");
 	
-	inputs[| 2]  = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Surface", "Text" ]);
+	inputs[| 2]  = nodeValue_Enum_Scroll("Type", self,  0, [ "Surface", "Text" ]);
 	
 	inputs[| 3]  = nodeValue("Recursive", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		

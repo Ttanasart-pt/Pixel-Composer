@@ -8,8 +8,7 @@ function Node_Transform_Array(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(true, true);
 		
-	inputs[| 1] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-		.setDisplay(VALUE_DISPLAY.rotation)
+	inputs[| 1] = nodeValue_Rotation("Rotation", self, 0)
 		.setVisible(true, true);
 	
 	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )

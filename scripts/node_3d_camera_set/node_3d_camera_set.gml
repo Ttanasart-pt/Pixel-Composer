@@ -5,9 +5,8 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 	light_key  = new __3dLightDirectional();
 	light_fill = new __3dLightDirectional();
 	
-	inputs[| in_cam + 0] = nodeValue("L1 H angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 30 )
-		.setName("Horizontal angle")
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| in_cam + 0] = nodeValue_Rotation("L1 H angle", self, 30)
+		.setName("Horizontal angle");
 	
 	inputs[| in_cam + 1] = nodeValue("L1 V angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
 		.setName("Vertical angle")
@@ -20,9 +19,8 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 		.setName("Intensity")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| in_cam + 4] = nodeValue("L2 H angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -45 )
-		.setName("Horizontal angle")
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| in_cam + 4] = nodeValue_Rotation("L2 H angle", self, -45)
+		.setName("Horizontal angle");
 	
 	inputs[| in_cam + 5] = nodeValue("L2 V angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
 		.setName("Vertical angle")

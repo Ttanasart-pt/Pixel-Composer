@@ -35,12 +35,11 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 5] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Box", s_node_shape_rectangle, 0), new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Custom", s_node_shape_misc, 1) ])
+	inputs[| 5] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Box", s_node_shape_rectangle, 0), new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Custom", s_node_shape_misc, 1) ])
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 6] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 6] = nodeValue_Surface("Texture", self)
 		.setAnimable(false);
 	
 	inputs[| 7] = nodeValue("Start position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ])

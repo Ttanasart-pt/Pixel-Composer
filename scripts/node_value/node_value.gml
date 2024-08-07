@@ -256,6 +256,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
+	static setTooltip = function(_tip) { tooltip = _tip; return self; }
+	
 	static nonValidate = function() { #region
 		validateValue = false;
 		return self;
@@ -1154,7 +1156,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
 		
-		var typ = nod.type;
+		var typ = nod == undefined? VALUE_TYPE.any : nod.type;
 		var dis = nod.display_type;
 		
 		if(connect_type == JUNCTION_CONNECT.output) return val;
@@ -1510,15 +1512,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		for( var i = 0, n = array_length(value_to_loop); i < n; i++ )
 			value_to_loop[i].updateValue();
 		
+		if(!updated) return false; /////////////////////////////////////////////////////////////////////////////////
+		
 		if(connect_type == JUNCTION_CONNECT.input && self.index >= 0) {
 			var _val = animator.getValue(time);
 			
-			// setInputData(self.index, _val);
-			node.inputs_data[self.index]         = _val;
+			node.inputs_data[self.index]         = _val; // setInputData(self.index, _val);
 			node.input_value_map[$ internalName] = _val;
 		}
-		
-		if(!updated) return false;
 		
 		if(value_tag == "dimension") node.attributes.use_project_dimension = false;
 		

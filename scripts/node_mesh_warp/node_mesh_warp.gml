@@ -154,7 +154,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 2, 32, 0.1 ] });
@@ -175,8 +175,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	inputs[| 7] = nodeValue("Full Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 		
-	inputs[| 8] = nodeValue("Mesh Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Grid",   s_node_mesh_type, 0), 
+	inputs[| 8] = nodeValue_Enum_Scroll("Mesh Type", self,  0, [ new scrollItem("Grid",   s_node_mesh_type, 0), 
 												 new scrollItem("Custom", s_node_mesh_type, 1), ] );
 	
 	inputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, seed_random(6))

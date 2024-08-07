@@ -7,8 +7,7 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	inputs[| 1] = nodeValue("Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2);
 		
-	inputs[| 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 2] = nodeValue_Dimension(self);
 	
 	inputs[| 3] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -20,15 +19,14 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 6] = nodeValue("Textures top",	self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	inputs[| 7] = nodeValue("Textures bottom", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
-	inputs[| 8] = nodeValue("Textures side",	self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 6] = nodeValue_Surface("Textures top",	self);
+	inputs[| 7] = nodeValue_Surface("Textures bottom", self);
+	inputs[| 8] = nodeValue_Surface("Textures side",	self);
 	
 	inputs[| 9] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 10] = nodeValue("Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
+	inputs[| 10] = nodeValue_Rotation("Light direction", self, 0);
 		
 	inputs[| 11] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
@@ -45,8 +43,7 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 16] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 17] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ])
+	inputs[| 17] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
 	inputs[| 18] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)

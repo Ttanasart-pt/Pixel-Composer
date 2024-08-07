@@ -16,11 +16,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 0] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.padding);
 	
-	inputs[| 1] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, COMPOSE_OUTPUT_SCALING.first)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "First surface", "Largest surface", "Constant" ]);
+	inputs[| 1] = nodeValue_Enum_Scroll("Output dimension", self,  COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]);
 	
-	inputs[| 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 2] = nodeValue_Dimension(self)
 		.setVisible(false);
 	
 	attribute_surface_depth();
@@ -422,14 +420,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			.setDisplay(VALUE_DISPLAY.vector)
 			.setUnitRef(function(index) { return [ overlay_w, overlay_h ]; });
 		
-		inputs[| index + 2] = nodeValue($"Rotation {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-			.setDisplay(VALUE_DISPLAY.rotation);
+		inputs[| index + 2] = nodeValue_Rotation($"Rotation {_s}", self, 0);
 		
 		inputs[| index + 3] = nodeValue($"Scale {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 			.setDisplay(VALUE_DISPLAY.vector);
 		
-		inputs[| index + 4] = nodeValue($"Blend {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-			.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES );
+		inputs[| index + 4] = nodeValue_Enum_Scroll($"Blend {_s}", self,  0, BLEND_TYPES );
 		
 		inputs[| index + 5] = nodeValue($"Opacity {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 			.setDisplay(VALUE_DISPLAY.slider);
@@ -454,7 +450,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
 	
-	outputs[| 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [1, 1])
+	outputs[| 2] = nodeValue_Dimension(self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [1, 1])
 		.setVisible(false)
 		.setDisplay(VALUE_DISPLAY.vector);
 	

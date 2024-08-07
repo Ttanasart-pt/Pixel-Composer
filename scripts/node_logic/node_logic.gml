@@ -32,8 +32,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("And" , s_node_logic, 0), 
+	inputs[| 0] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("And" , s_node_logic, 0), 
 												 new scrollItem("Or"  ,	s_node_logic, 1), 
 												 new scrollItem("Not" , s_node_logic, 2), 
 												 new scrollItem("Nand", s_node_logic, 3), 

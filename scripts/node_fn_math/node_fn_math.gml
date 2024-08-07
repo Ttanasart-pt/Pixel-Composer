@@ -2,8 +2,7 @@ function Node_Fn_Math(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 	name       = "Math";
 	time_based = false;
 	
-	inputs[| inl + 0] = nodeValue("Operation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Add", "Minus", "Multiply" ] );
+	inputs[| inl + 0] = nodeValue_Enum_Scroll("Operation", self,  2 , [ "Add", "Minus", "Multiply" ] );
 	
 	inputs[| inl + 1] = nodeValue("Value 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 		.setVisible(true, true);

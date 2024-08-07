@@ -2,10 +2,9 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Draw Atlas";
 	previewable = true;
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 1] = nodeValue_Surface("Atlas", self)
 		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

@@ -1,8 +1,7 @@
 function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Saber";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Point 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -25,7 +24,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 9] = nodeValue("Glow radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
-	inputs[| 10] = nodeValue("Trace texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 10] = nodeValue_Surface("Trace texture", self)
 		.setVisible(true, true);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 

@@ -3,8 +3,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	color	= COLORS.node_blend_canvas;
 	setAlwaysTimeline(new timelineItemNode_Canvas(self));
 	
-	inputs[|  0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[|  0] = nodeValue_Dimension(self);
 	
 	inputs[|  1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	inputs[|  2] = nodeValue("Brush size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
@@ -13,17 +12,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[|  3] = nodeValue("Fill threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[|  4] = nodeValue("Fill type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["4 connect", "8 connect", "Entire canvas"]);
+	inputs[|  4] = nodeValue_Enum_Scroll("Fill type", self,  0, ["4 connect", "8 connect", "Entire canvas"]);
 	
 	inputs[|  5] = nodeValue("Draw preview overlay", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[|  6] = nodeValue("Brush", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[|  6] = nodeValue_Surface("Brush", self)
 		.setVisible(true, false);
 	
 	inputs[|  7] = nodeValue("Surface amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
-	inputs[|  8] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1);
+	inputs[|  8] = nodeValue_Surface("Background", self);
 	
 	inputs[|  9] = nodeValue("Background alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -47,8 +45,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 17] = nodeValue("Random direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_random);
 	
-	inputs[| 18] = nodeValue("Animation Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Loop", "Hold", "Clear" ]);
+	inputs[| 18] = nodeValue_Enum_Scroll("Animation Type", self,  0, [ "Loop", "Hold", "Clear" ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	

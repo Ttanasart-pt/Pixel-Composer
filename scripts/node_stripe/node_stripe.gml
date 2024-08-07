@@ -1,19 +1,16 @@
 function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Stripe";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(11);
 	
-	inputs[| 2] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.rotation)
+	inputs[| 2] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(12);
 	
-	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Solid", "Smooth", "AA" ]);
+	inputs[| 3] = nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]);
 	
 	inputs[| 4] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -23,8 +20,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(13);
 		
-	inputs[| 6] = nodeValue("Coloring", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Alternate", "Palette", "Random" ]);
+	inputs[| 6] = nodeValue_Enum_Button("Coloring", self,  0, [ "Alternate", "Palette", "Random" ]);
 	
 	inputs[| 7] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
 		.setMappable(15);

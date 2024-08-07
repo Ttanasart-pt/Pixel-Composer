@@ -4,12 +4,11 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	manage_atlas = false;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 2] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Upscale", "Scale to fit" ]);
+	inputs[| 2] = nodeValue_Enum_Button("Mode", self,  0, [ "Upscale", "Scale to fit" ]);
 	
 	inputs[| 3] = nodeValue("Target dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);

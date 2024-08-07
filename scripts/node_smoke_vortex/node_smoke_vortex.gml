@@ -18,8 +18,7 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	inputs[| 4] = nodeValue("Attraction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
-	inputs[| 5] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Override", "Add" ]);
+	inputs[| 5] = nodeValue_Enum_Button("Mode", self,  0, [ "Override", "Add" ]);
 	
 	input_display_list = [ 
 		["Domain",	false], 0, 

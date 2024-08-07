@@ -9,13 +9,11 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 		
 	inputs[| 3] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
 	
-	inputs[| 4] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y" ]);
+	inputs[| 4] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]);
 		
 	inputs[| 5] = nodeValue("Mirror", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0 )
 		
-	inputs[| 6] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Space Between", "Space Around", "Begin", "End" ]);
+	inputs[| 6] = nodeValue_Enum_Button("Spacing", self,  0 , [ "Space Between", "Space Around", "Begin", "End" ]);
 	
 	outputs[| 0] = nodeValue("pBox Content", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, [ noone ] );
 		

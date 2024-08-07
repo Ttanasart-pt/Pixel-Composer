@@ -14,13 +14,11 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 	inputs[| input_len + 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Round position to the closest integer value to avoid jittering.");
 	
-	inputs[| input_len + 2] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Alpha", "Additive" ]);
+	inputs[| input_len + 2] = nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ]);
 	
-	inputs[| input_len + 3] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| input_len + 3] = nodeValue_Surface("Background", self);
 	
-	inputs[| input_len + 4] = nodeValue("Render Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, PARTICLE_RENDER_TYPE.surface )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Surface", "Line" ]);
+	inputs[| input_len + 4] = nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]);
 	
 	inputs[| input_len + 5] = nodeValue("Line life", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 );
 		

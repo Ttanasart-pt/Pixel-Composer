@@ -42,7 +42,7 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 31] = nodeValue("textArea", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")                                     .setDisplay(VALUE_DISPLAY.codeHLSL)
 	inputs[| 32] = nodeValue("textArrayBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, [])                                 .setDisplay(VALUE_DISPLAY.text_array, { data: [ "Choice 1", "Choice 2" ] })
 
-	inputs[| 33] = nodeValue("surfaceBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)                             .setDisplay(VALUE_DISPLAY._default)
+	inputs[| 33] = nodeValue_Surface("surfaceBox", self)                             .setDisplay(VALUE_DISPLAY._default)
 	
 	input_display_list = [
 		["Number",  false], 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18,

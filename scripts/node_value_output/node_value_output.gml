@@ -1,16 +1,12 @@
-function nodeValue_Output(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue_Output(_name, _node, _connect, _type, _value, _tooltip); }
+function nodeValue_Output(_name, _node, _type, _value, _tooltip = "") { return new NodeValue_Output(_name, _node, _type, _value, _tooltip); }
 
-function NodeValue_Output(_name, _node, _connect, _type, _value, _tooltip = "") : NodeValue(_name, _node, _connect, _type, _value, _tooltip) constructor {
+function NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.output, _type, _value, _tooltip) constructor {
 	
 	/////============== GET =============
 	
 	output_value = 0;
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
-		return output_value;
-	}
-	
-	static _getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		return output_value;
 	}
 	

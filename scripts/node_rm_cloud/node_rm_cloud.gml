@@ -1,8 +1,7 @@
 function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RM CLoud";
 	
-	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue_Dimension(self);
 	
 	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -32,8 +31,7 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 10] = nodeValue("Detail Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Volume", "Plane" ]);
+	inputs[| 11] = nodeValue_Enum_Scroll("Shape", self,  0, [ "Volume", "Plane" ]);
 	
 	inputs[| 12] = nodeValue("Use Fog", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0)
 	

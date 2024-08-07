@@ -1,17 +1,15 @@
 function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bend";
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue_Surface("Surface in", self);
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 1;
 	
-	inputs[| 2] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ new scrollItem("Arc",  s_node_bend_type, 0),
-		                                         new scrollItem("Wave", s_node_bend_type, 1) ]);
+	inputs[| 2] = nodeValue_Enum_Scroll("Type", self, 0, [ new scrollItem("Arc",  s_node_bend_type, 0),
+		                                        		   new scrollItem("Wave", s_node_bend_type, 1) ]);
 	
-	inputs[| 3] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "x", "y" ]);
+	inputs[| 3] = nodeValue_Enum_Button("Axis", self,  0, [ "x", "y" ]);
 	
 	inputs[| 4] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.25)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
