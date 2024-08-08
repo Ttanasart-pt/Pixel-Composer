@@ -708,8 +708,8 @@ function Panel_Animation() : PanelContent() constructor {
 				for( var j = 0, m = array_length(_anims); j < m; j++ ) {
 					var _anim = _anims[j];
 					
-					for(var k = 0; k < ds_list_size(_anim.values); k++) {
-						var _keyframe = _anim.values[| k];
+					for(var k = 0; k < array_length(_anim.values); k++) {
+						var _keyframe = _anim.values[k];
 						
 						var t = (_keyframe.time + 1) * timeline_scale + timeline_shift;
 						_keyframe.dopesheet_x = t;
@@ -830,13 +830,13 @@ function Panel_Animation() : PanelContent() constructor {
 		var _gy0 = key_y + ui(8);
 		var _gy1 = _gy0 + _gh;
 		
-		var amo = ds_list_size(animator.values);
+		var amo = array_length(animator.values);
 		
 		#region get range
 			var _prevDelt = [ 0, 0 ];
 			
 			for(var k = 0; k < amo; k++) { 
-				var key     = animator.values[| k];
+				var key     = animator.values[k];
 				var key_val = key.value;
 				
 				var _minn = _gy_val_min;
@@ -858,7 +858,7 @@ function Panel_Animation() : PanelContent() constructor {
 				
 				switch(key.drivers.type) {
 					case DRIVER_TYPE.linear :
-						var nk = k + 1 < amo? animator.values[| k + 1].time : TOTAL_FRAMES;
+						var nk = k + 1 < amo? animator.values[k + 1].time : TOTAL_FRAMES;
 					
 						var spd = key.drivers.speed * (nk - key.time);
 						_minn += min(spd, 0);
@@ -878,7 +878,7 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 		#endregion
 		
-		var valArray = is_array(animator.values[| 0].value);
+		var valArray = is_array(animator.values[0].value);
 		var ox  = 0;
 		var nx  = 0;
 		var ny  = noone;
@@ -888,7 +888,7 @@ function Panel_Animation() : PanelContent() constructor {
 		var _kv, _kn;
 		var sy;
 		
-		var _oy  = animator.values[| 0].value;
+		var _oy  = animator.values[0].value;
 		if(!valArray) _oy = [ _oy ];
 		
 		var oy = array_create(array_length(_oy));
@@ -896,9 +896,9 @@ function Panel_Animation() : PanelContent() constructor {
 			oy[ki] = value_map(_oy[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
 		
 		for(var k = 0; k < amo - 1; k++) { // draw line in between
-			var key      = animator.values[| k];
+			var key      = animator.values[k];
 			var t        = key.dopesheet_x;
-			var key_next = animator.values[| k + 1];
+			var key_next = animator.values[k + 1];
 			var dx       = key_next.time - key.time;
 			
 			if(key.drivers.type) { // driver
@@ -996,8 +996,8 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 		} // draw line in between
 		
-		if(animator.prop.show_graph && ds_list_size(animator.values) > 0) { // draw line outside keyframe range
-			var key_first = animator.values[| 0];
+		if(animator.prop.show_graph && array_length(animator.values) > 0) { // draw line outside keyframe range
+			var key_first = animator.values[0];
 			var t_first  = (key_first.time + 1) * timeline_scale + timeline_shift;
 			
 			_kv = key_first.value;
@@ -1014,10 +1014,10 @@ function Panel_Animation() : PanelContent() constructor {
 				sy = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
 				draw_line(0, sy, t_first, sy);
 					
-				if(ds_list_size(animator.values) == 1) oy[ki] = sy;
+				if(array_length(animator.values) == 1) oy[ki] = sy;
 			}
 				
-			var key_last = animator.values[| ds_list_size(animator.values) - 1];
+			var key_last = animator.values[array_length(animator.values) - 1];
 			var t_last = (key_last.time + 1) * timeline_scale + timeline_shift;
 				
 			if(key_last.time < TOTAL_FRAMES) {
@@ -1071,7 +1071,7 @@ function Panel_Animation() : PanelContent() constructor {
 		#region // draw key
 			
 			for(var i = 0; i < amo; i++) { 
-				var key = animator.values[| i];
+				var key = animator.values[i];
 				var px  = key.dopesheet_x;
 				
 				var v   = key.value;
@@ -1154,8 +1154,8 @@ function Panel_Animation() : PanelContent() constructor {
 			var _gy0 = key_y - ui(4);
 			var _gy1 = key_y + ui(4);
 			
-			var amo = ds_list_size(prop.animator.values);
-			var _prevKey = prop.animator.values[| 0];
+			var amo = array_length(prop.animator.values);
+			var _prevKey = prop.animator.values[0];
 			
 			draw_set_color(_prevKey.value);
 			draw_rectangle(0, _gy0, _prevKey.dopesheet_x, _gy1, 0);
@@ -1163,8 +1163,8 @@ function Panel_Animation() : PanelContent() constructor {
 			var ox, nx, oc, nc;
 			
 			for(var k = 0; k < amo - 1; k++) {
-				var key      = prop.animator.values[| k];
-				var key_next = prop.animator.values[| k + 1];
+				var key      = prop.animator.values[k];
+				var key_next = prop.animator.values[k + 1];
 				var dx		 = key_next.time - key.time;
 				var _step	 = 1 / dx;
 				
@@ -1180,7 +1180,7 @@ function Panel_Animation() : PanelContent() constructor {
 				}
 			}
 			
-			key_next = prop.animator.values[| ds_list_size(prop.animator.values) - 1];
+			key_next = prop.animator.values[array_length(prop.animator.values) - 1];
 			if(key_next.time < TOTAL_FRAMES) {
 				draw_set_color(key_next.value);
 				draw_rectangle(key_next.dopesheet_x, _gy0, bar_show_w, _gy1, 0);
@@ -1232,8 +1232,8 @@ function Panel_Animation() : PanelContent() constructor {
 					if(!prop.show_graphs[i]) continue;
 					
 					var animator = prop.animators[i];
-					for(var k = 0; k < ds_list_size(animator.values); k++) {
-						var key_val = animator.values[| k].value;
+					for(var k = 0; k < array_length(animator.values); k++) {
+						var key_val = animator.values[k].value;
 						if(is_array(key_val)) {
 							for( var ki = 0; ki < array_length(key_val); ki++ ) {
 								_min = min(_min, key_val[ki]);
@@ -1326,7 +1326,7 @@ function Panel_Animation() : PanelContent() constructor {
 					key_hover = key;
 					draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
 					if(mouse_press(mb_left, pFOCUS) && !key_mod_press(SHIFT)) {
-						keyframe_dragging  = animator.values[| k];
+						keyframe_dragging  = animator.values[k];
 						keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
 					}
 				} else 
@@ -1342,7 +1342,7 @@ function Panel_Animation() : PanelContent() constructor {
 					key_hover = key;
 					draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
 					if(mouse_press(mb_left, pFOCUS) && !key_mod_press(SHIFT)) {
-						keyframe_dragging  = animator.values[| k];
+						keyframe_dragging  = animator.values[k];
 						keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
 					}
 				} else
@@ -1362,8 +1362,8 @@ function Panel_Animation() : PanelContent() constructor {
 		var anim_set  = true;
 		var key_hover = noone;
 		
-		for(var k = 0; k < ds_list_size(animator.values); k++) {
-			var keyframe = animator.values[| k];
+		for(var k = 0; k < array_length(animator.values); k++) {
+			var keyframe = animator.values[k];
 			var t = keyframe.dopesheet_x;
 			
 			for( var j = 0, n = array_length(_cont.contexts); j < n; j++ ) {
@@ -1382,7 +1382,7 @@ function Panel_Animation() : PanelContent() constructor {
 				if(k == 0)
 					animator.prop.loop_range = -1;
 				else
-					animator.prop.loop_range = ds_list_size(animator.values) - k;
+					animator.prop.loop_range = array_length(animator.values) - k;
 				anim_set = false;
 			}
 			
@@ -1519,8 +1519,8 @@ function Panel_Animation() : PanelContent() constructor {
 			tx = tool_width - ui(20 + 16 * 3);
 			if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 0, [COLORS._main_icon, COLORS._main_icon_on_inner], _tool_a) == 2) {
 				var _t = -1;
-				for(var k = 0; k < ds_list_size(animator.values); k++) {
-					var _key = animator.values[| k];
+				for(var k = 0; k < array_length(animator.values); k++) {
+					var _key = animator.values[k];
 					if(_key.time < CURRENT_FRAME)
 						_t = _key.time;
 				}
@@ -1529,8 +1529,8 @@ function Panel_Animation() : PanelContent() constructor {
 				
 			tx = tool_width - ui(20 + 16 * 1);
 			if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 2, [COLORS._main_icon, COLORS._main_icon_on_inner], _tool_a) == 2) {
-				for(var k = 0; k < ds_list_size(animator.values); k++) {
-					var _key = animator.values[| k];
+				for(var k = 0; k < array_length(animator.values); k++) {
+					var _key = animator.values[k];
 					if(_key.time > CURRENT_FRAME) {
 						PROJECT.animator.setFrame(_key.time);
 						break;
@@ -1543,20 +1543,20 @@ function Panel_Animation() : PanelContent() constructor {
 			tx = tool_width - ui(20 + 16 * 2);
 			if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 1, [COLORS._main_accent, COLORS._main_icon_on_inner], _tool_a) == 2) {
 				var _add = false;
-				for(var k = 0; k < ds_list_size(animator.values); k++) {
-					var _key = animator.values[| k];
+				for(var k = 0; k < array_length(animator.values); k++) {
+					var _key = animator.values[k];
 					if(_key.time == CURRENT_FRAME) {
-						if(ds_list_size(animator.values) > 1)
-							ds_list_delete(animator.values, k);
+						if(array_length(animator.values) > 1)
+							array_delete(animator.values, k, 1);
 						_add = true;
 						break;
 					} else if(_key.time > CURRENT_FRAME) {
-						ds_list_insert(animator.values, k, new valueKey(CURRENT_FRAME, variable_clone(animator.getValue()), animator));
+						array_insert(animator.values, k, new valueKey(CURRENT_FRAME, variable_clone(animator.getValue()), animator));
 						_add = true;
 						break;	
 					}
 				}
-				if(!_add) ds_list_add(animator.values, new valueKey(CURRENT_FRAME, variable_clone(animator.getValue(, false)), animator));	
+				if(!_add) array_push(animator.values, new valueKey(CURRENT_FRAME, variable_clone(animator.getValue(, false)), animator));	
 			}
 		#endregion
 				
@@ -2335,14 +2335,14 @@ function Panel_Animation() : PanelContent() constructor {
 							var in = _node.inputs[i];
 							if(!in.is_anim) continue;
 							
-							for(var j = 0; j < ds_list_size(in.animator.values); j++) {
-								var t = in.animator.values[| j];
+							for(var j = 0; j < array_length(in.animator.values); j++) {
+								var t = in.animator.values[j];
 								t.time = t.ratio * (len - 1);
 							}
 							
 							for( var k = 0; k < array_length(in.animators); k++ )
-							for(var j = 0; j < ds_list_size(in.animators[k].values); j++) {
-								var t = in.animators[k].values[| j];
+							for(var j = 0; j < array_length(in.animators[k].values); j++) {
+								var t = in.animators[k].values[j];
 								t.time = t.ratio * (len - 1);
 							}
 						}

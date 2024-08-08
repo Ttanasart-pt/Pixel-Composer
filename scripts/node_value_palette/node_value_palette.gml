@@ -17,6 +17,6 @@ function NodeValue_Palette(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
 		if(is_anim) return animator.getValue(_time);
-		return ds_list_empty(animator.values)? 0 : animator.values[| 0].value;
+		return array_empty(animator.values)? 0 : animator.values[0].value;
 	}
 }

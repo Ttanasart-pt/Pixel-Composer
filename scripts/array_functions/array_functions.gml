@@ -307,7 +307,24 @@ function array_verify(arr, length) {
 	array_resize(arr, length);
 	return arr;
 }
+
+function array_verify_ext(arr, length, generator) {
+	INLINE
 	
+	if(!is_array(arr)) return array_create_ext(length, generator);
+	
+	var _len = array_length(arr);
+	if(_len == length) return arr;
+	
+	array_resize(arr, length);
+	var i = _len;
+	
+	repeat(length - _len) 
+		arr[i++] = generator();
+	
+	return arr;
+}
+
 function array_insert_after(arr, before, values) {
 	INLINE
 	

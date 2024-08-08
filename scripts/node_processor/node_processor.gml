@@ -313,8 +313,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		process_amount	= 1;
 		inputs_data		= array_verify(inputs_data,		_len);
 		inputs_is_array	= array_verify(inputs_is_array, _len);
-		process_length  = array_verify(process_length,	_len);
 		all_inputs      = array_verify(all_inputs,		_len);
+		process_length  = array_verify_ext(process_length,	_len, function() /*=>*/ {return [ 0, 0 ]});
 		
 		array_foreach(inputs, function(_in, i) /*=>*/ {
 			var raw = _in.getValue();
@@ -342,7 +342,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					break;
 			}
 			
-			process_length[i] = [ amo, process_amount ];
+			process_length[i][0] = amo;
+			process_length[i][1] = process_amount;
 		});
 		
 		var amoMax = process_amount;

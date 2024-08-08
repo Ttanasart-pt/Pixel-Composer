@@ -13,7 +13,9 @@ function __NodeValue_Object(_name, _node, _type, _value, _tooltip = "") : NodeVa
 		return val;
 	}
 	
-	static __getAnimValue = function(_time = CURRENT_FRAME) { return ds_list_empty(animator.values)? 0 : animator.values[| 0].value; } 
+	static __getAnimValue = function(_time = CURRENT_FRAME) { return array_empty(animator.values)? 0 : animator.values[0].value; } 
+	
+	static arrayLength = arrayLengthSimple;
 }
 
 function NodeValue_Object(_name, _node, _value, _tooltip = "") : __NodeValue_Object(_name, _node, VALUE_TYPE.object, _value, _tooltip) constructor {

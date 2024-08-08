@@ -14,6 +14,8 @@ function NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name, _
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
 		if(is_anim) return animator.getValue(_time);
-		return ds_list_empty(animator.values)? 0 : animator.values[| 0].value;
+		return array_empty(animator.values)? 0 : animator.values[0].value;
 	}
+	
+	static arrayLength = arrayLengthSimple;
 }

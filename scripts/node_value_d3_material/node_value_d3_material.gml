@@ -33,6 +33,8 @@ function NodeValue_D3Material(_name, _node, _value, _tooltip = "") : NodeValue(_
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		return ds_list_empty(animator.values)? 0 : animator.values[| 0].value;
+		return array_empty(animator.values)? 0 : animator.values[0].value;
 	}
+	
+	static arrayLength = arrayLengthSimple;
 }

@@ -150,6 +150,8 @@ enum LINE_STYLE {
 }
 
 function value_color(i) {
+	INLINE
+	
 	static JUNCTION_COLORS = [ 
 		#ff9166, //int 
 		#ffe478, //float
@@ -195,9 +197,11 @@ function value_color(i) {
 	return JUNCTION_COLORS[i];
 }
 
-function value_color_bg(i) { return CDEF.main_dkgrey; }
+function value_color_bg(i) { INLINE return CDEF.main_dkgrey; }
 
 function value_color_bg_array(i) {
+	INLINE
+	
 	static JUNCTION_COLORS = [ 
 		#e36956, //int 
 		#ff9166, //float
@@ -241,6 +245,8 @@ function value_color_bg_array(i) {
 }
 
 function value_bit(i) {
+	INLINE
+	
 	switch(i) {
 		case VALUE_TYPE.integer		: return 1 << 0 | 1 << 1;
 		case VALUE_TYPE.float		: return 1 << 2 | 1 << 1;
@@ -292,6 +298,8 @@ function value_bit(i) {
 }
 
 function value_type_directional(f, t) {
+	INLINE
+	
 	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.integer)	return true;
 	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.float)	return true;
 	
@@ -317,6 +325,8 @@ function value_type_directional(f, t) {
 }
 
 function value_type_from_string(str) {
+	INLINE
+	
 	switch(str) {
 		case "integer"	: return VALUE_TYPE.integer;
 		case "float"	: return VALUE_TYPE.float;
@@ -369,6 +379,8 @@ function value_type_from_string(str) {
 }
 
 function value_type_direct_settable(type) {
+	INLINE
+	
 	switch(type) {
 		case VALUE_TYPE.integer :
 		case VALUE_TYPE.float :
@@ -383,6 +395,8 @@ function value_type_direct_settable(type) {
 }
 
 function typeNumeric(type) {
+	INLINE
+	
 	switch(type) {
 		case VALUE_TYPE.integer :
 		case VALUE_TYPE.float :
@@ -394,6 +408,8 @@ function typeNumeric(type) {
 }
 
 function typeArray(_type) {
+	INLINE
+	
 	switch(_type) {
 		case VALUE_DISPLAY.range :
 		case VALUE_DISPLAY.vector_range :
@@ -425,14 +441,20 @@ function typeArray(_type) {
 }
 
 function typeCompatible(fromType, toType, directional_cast = true) {
+	INLINE
+	
 	if(value_bit(fromType) & value_bit(toType) != 0)
 		return true;
+		
 	if(!directional_cast) 
 		return false;
+		
 	return value_type_directional(fromType, toType);
 }
 
 function typeIncompatible(from, to) {
+	INLINE
+	
 	if(from.type == VALUE_TYPE.surface && (to.type == VALUE_TYPE.integer || to.type == VALUE_TYPE.float)) {
 		switch(to.display_type) {
 			case VALUE_DISPLAY.area : 
@@ -449,11 +471,14 @@ function typeIncompatible(from, to) {
 }
 
 function isGraphable(prop) {
+	INLINE
+	
 	if(prop.type == VALUE_TYPE.integer || prop.type == VALUE_TYPE.float) {
 		if(prop.display_type == VALUE_DISPLAY.puppet_control)
 			return false;
 		return true;
 	}
+	
 	if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY._default) 
 		return true;
 		
@@ -461,6 +486,8 @@ function isGraphable(prop) {
 }
 
 function nodeValueUnit(_nodeValue) constructor {
+	INLINE
+	
 	self._nodeValue = _nodeValue;
 	
 	mode = VALUE_UNIT.constant;

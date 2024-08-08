@@ -38,6 +38,7 @@
 		
 		load_layout = false;
 		
+		previewNode = "";
 		previewGrid = {
 			show	: false,
 			snap	: false,
@@ -218,6 +219,9 @@
 			_map.global_node = globalNode.serialize();
 			_map.onion_skin  = onion_skin;
 			
+			var _prev_node = PANEL_PREVIEW? PANEL_PREVIEW.getNodePreview() : noone;
+			_map.previewNode = _prev_node? _prev_node.node_id : noone;
+			
 			_map.previewGrid = previewGrid;
 			_map.graphGrid   = graphGrid;
 			_map.attributes  = attributes;
@@ -258,7 +262,10 @@
 			}
 			
 			if(struct_has(_map, "onion_skin"))	struct_override(onion_skin,  _map.onion_skin);
+			
+			previewNode	= struct_try_get(_map, "previewNode", noone);
 			if(struct_has(_map, "previewGrid")) struct_override(previewGrid, _map.previewGrid);
+			
 			if(struct_has(_map, "graphGrid"))	struct_override(graphGrid,	 _map.graphGrid);
 			if(struct_has(_map, "attributes"))	struct_override(attributes,  _map.attributes);
 			if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
@@ -287,6 +294,15 @@
 				addons = _addon;
 				struct_foreach(_addon, function(_name, _value) { addonLoad(_name, false); });
 			}
+			
+			if(PANEL_PREVIEW && previewNode != "") {
+				var _node = nodeMap[? previewNode];
+				if(_node) PANEL_PREVIEW.setNodePreview(_node);
+			}
+		}
+		
+		static postDeserialize = function() {
+			
 		}
 	}
 	

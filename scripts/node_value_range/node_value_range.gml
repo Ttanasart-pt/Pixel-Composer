@@ -16,8 +16,8 @@ function NodeValue_Range(_name, _node, _value, _data) : NodeValue(_name, _node, 
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
 		if(!is_anim) {
-			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return animators[i].processType(animators[i].values[| 0].value)});
-			return ds_list_empty(animator.values)? 0 : animator.processType(animator.values[| 0].value);
+			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return animators[i].processType(animators[i].values[0].value)});
+			return array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
 		}
 		
 		if(sep_axis) {

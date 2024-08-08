@@ -19,6 +19,8 @@ function NodeValue_Surface(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		return ds_list_empty(animator.values)? noone : animator.values[| 0].value;
+		return array_empty(animator.values)? noone : animator.values[0].value;
 	}
+	
+	static arrayLength = arrayLengthSimple;
 }

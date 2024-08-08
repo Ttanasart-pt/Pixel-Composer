@@ -172,8 +172,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 			if(b) cHov = true;
 			if(b == 2) {
-				for(var j = 0; j < ds_list_size(_anim.values); j++) {
-					var _key = _anim.values[| j];
+				for(var j = 0; j < array_length(_anim.values); j++) {
+					var _key = _anim.values[j];
 					if(_key.time > CURRENT_FRAME) {
 						PROJECT.animator.setFrame(_key.time);
 						break;
@@ -185,8 +185,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			var cc = COLORS.panel_animation_keyframe_unselected;
 			var kfFocus = false;
 			
-			for(var j = 0; j < ds_list_size(_anim.values); j++) {
-				if(_anim.values[| j].time == CURRENT_FRAME) {
+			for(var j = 0; j < array_length(_anim.values); j++) {
+				if(_anim.values[j].time == CURRENT_FRAME) {
 					cc = COLORS.panel_animation_keyframe_selected;
 					kfFocus = true;
 					break;
@@ -199,8 +199,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			if(b) cHov = true;
 			if(b == 2) {
 				var _remv = false;
-				for(var j = 0; j < ds_list_size(_anim.values); j++) {
-					var _key = _anim.values[| j];
+				for(var j = 0; j < array_length(_anim.values); j++) {
+					var _key = _anim.values[j];
 					
 					if(_key.time == CURRENT_FRAME) {
 						_anim.removeKey(_key);
@@ -218,8 +218,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			if(b) cHov = true;
 			if(b == 2) {
 				var _t = -1;
-				for(var j = 0; j < ds_list_size(_anim.values); j++) {
-					var _key = _anim.values[| j];
+				for(var j = 0; j < array_length(_anim.values); j++) {
+					var _key = _anim.values[j];
 					if(_key.time < CURRENT_FRAME)
 						_t = _key.time;
 				}

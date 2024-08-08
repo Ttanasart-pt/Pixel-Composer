@@ -31,12 +31,12 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		};
 	#endregion
 	
-	static setTime = function(time) { #region
+	static setTime = function(time) {
 		self.time = time;	
 		ratio = time / (TOTAL_FRAMES - 1);
-	} #endregion
+	}
 	
-	static clone = function(target = noone) { #region
+	static clone = function(target = noone) {
 		var key = new valueKey(time, value, target);
 		key.ease_in			= ease_in;
 		key.ease_out		= ease_out;
@@ -44,9 +44,9 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		key.ease_out_type	= ease_out_type;
 		
 		return key;
-	} #endregion
+	}
 	
-	static cloneAnimator = function(shift = 0, anim = noone, removeDup = true) { #region
+	static cloneAnimator = function(shift = 0, anim = noone, removeDup = true) {
 		if(anim != noone) { //check value compat between animator
 			if(value_bit(self.anim.prop.type) & value_bit(anim.prop.type) == 0) {
 				noti_warning("Type incompatible");
@@ -66,13 +66,13 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		key.ease_out		= ease_out;
 		key.ease_in_type	= ease_in_type;
 		key.ease_out_type	= ease_out_type;
-		ds_list_add(anim.values, key);
+		array_push(anim.values, key);
 		anim.setKeyTime(key, time + shift, removeDup);
 		
 		return key;
-	} #endregion
+	}
 	
-	static getDrawIndex = function() { #region
+	static getDrawIndex = function() {
 		if(anim.prop.type == VALUE_TYPE.trigger)
 			return 1;
 		
@@ -83,7 +83,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 			return 1;
 		
 		return 0;
-	} #endregion
+	}
 	
 	static toString = function() { return $"[Keyframe] {time}: {value}"; }
 }
@@ -91,7 +91,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	#region ---- main ----
 		suffix      = "";
-		values	    = ds_list_create();
+		values	    = [];
 		//staticValue = 0;
 		
 		length   = 1;
@@ -106,44 +106,46 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		animate_frames = [];
 		
 		if(_prop.type != VALUE_TYPE.trigger)
-			ds_list_add(values, new valueKey(0, _val, self));
+			array_push(values, new valueKey(0, _val, self));
 	#endregion
 	
-	static refreshAnimation = function() { #region
+	static refreshAnimation = function() {
 		animate_frames = array_verify(animate_frames, TOTAL_FRAMES);
 		
 		var _anim = false;
 		var _fr   = noone;
 		
-		for( var i = 0, n = ds_list_size(values); i < n; i++ ) {
-			var _key = values[| i];
+		for( var i = 0, n = array_length(values); i < n; i++ ) {
+			var _key = values[i];
 			
-			if(_fr == noone) {
+			if(_fr == noone)
 				array_fill(animate_frames, 0, _key.time, 0);
-			} else {
-				if(array_equals(_fr.ease_out, [0, 0]) && array_equals(_fr.ease_in, [0, 1]) && isEqual(_fr.value, _key.value))
-					array_fill(animate_frames, _fr.time, _key.time, 0);
-				else
-					array_fill(animate_frames, _fr.time, _key.time, 1);
+			
+			else {
+				var frInd = array_equals(_fr.ease_out, [0, 0]) && array_equals(_fr.ease_in, [0, 1]) && isEqual(_fr.value, _key.value);
+				array_fill(animate_frames, _fr.time, _key.time, !frInd);
+				
+				// if(frInd) array_fill(animate_frames, _fr.time, _key.time, 0);
+				// else      array_fill(animate_frames, _fr.time, _key.time, 1);
 			}
 			
 			_fr = _key;
 		}
 		
 		if(_fr) array_fill(animate_frames, _fr.time, TOTAL_FRAMES, 0);
-	} #endregion
+	}
 	
-	static updateKeyMap = function() { #region
-		length = ds_list_size(values);
+	static updateKeyMap = function() {
+		length = array_length(values);
 		
 		if(!prop.is_anim && !LOADING && !APPENDING) return;
 		
-		if(ds_list_empty(values)) { 
+		if(array_empty(values)) { 
 			array_resize(key_map, TOTAL_FRAMES); 
 			return; 
 		}
 		
-		var _len = max(TOTAL_FRAMES, values[| ds_list_size(values) - 1].time);
+		var _len = max(TOTAL_FRAMES, values[array_length(values) - 1].time);
 		key_map_mode = prop.on_end;
 		
 		if(array_length(key_map) != _len)
@@ -151,39 +153,42 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(prop.type == VALUE_TYPE.trigger) {
 			array_fill(key_map, 0, _len, 0);
-			for( var i = 0, n = ds_list_size(values); i < n; i++ )
-				key_map[values[| i].time] = true;
+			for( var i = 0, n = array_length(values); i < n; i++ )
+				key_map[values[i].time] = true;
 			return;
 		} 
 		
-		if(ds_list_size(values) < 2) {
+		if(array_length(values) < 2) {
 			array_fill(key_map, 0, _len, 0);
 			return;
 		}
 		
-		var _firstKey = values[| 0].time;
+		var _firstKey = values[0].time;
 		array_fill(key_map, 0, _firstKey, -1);
 		var _keyIndex = _firstKey;
 		
-		for( var i = 1, n = ds_list_size(values); i < n; i++ ) {
-			var _k1 = values[| i].time;
+		for( var i = 1, n = array_length(values); i < n; i++ ) {
+			var _k1 = values[i].time;
 			array_fill(key_map, _keyIndex, _k1, i - 1);
 			_keyIndex = _k1;
 		}
 		
 		array_fill(key_map, _keyIndex, _len, 999_999);
-	} #endregion
+	}
 	
-	static interpolate = function(from, to, rat) { #region
+	static interpolate = function(from, to, rat) {
 		if(prop.type == VALUE_TYPE.boolean)
 			return 0;
 			
 		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) 
 			return rat;
+			
 		if(to.ease_in_type == CURVE_TYPE.cut) 
 			return 0;
+			
 		if(from.ease_out_type == CURVE_TYPE.cut) 
 			return 1;
+			
 		if(rat == 0 || rat == 1) 
 			return rat;
 		
@@ -194,9 +199,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		var bz = [0, eox, eoy, 1. - eix, eiy, 1];
 		return eval_curve_segment_x(bz, rat);
-	} #endregion
+	}
 	
-	static lerpValue = function(from, to, _lrp) { #region
+	static lerpValue = function(from, to, _lrp) {
 		var _f = from.value;
 		var _t = to.value;
 		
@@ -249,13 +254,13 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return processType(_f);
 		
 		return processType(lerp(_f, _t, _lrp));
-	} #endregion
+	}
 	
 	static getName = function() { return prop.name + suffix; }
 	
-	static getValue = function(_time = CURRENT_FRAME) { #region
+	static getValue = function(_time = CURRENT_FRAME) {
 		//if(!prop.is_anim) return staticValue;
-		length = ds_list_size(values);
+		length = array_length(values);
 		
 		///////////////////////////////////////////////////////////// TRIGGER TYPE /////////////////////////////////////////////////////////////
 		
@@ -271,7 +276,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(length == 0) return processTypeDefault();
 		if(length == 1) {
-			var _key = values[| 0];
+			var _key = values[0];
 			
 			if(_key.drivers.type && _time >= _key.time)
 				return processType(processDriver(_time, _key));
@@ -279,13 +284,13 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return processType(_key.value);
 		}
 		
-		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
-		if(!prop.is_anim)				 return processType(values[| 0].value);
-		var _len = max(TOTAL_FRAMES, values[| length - 1].time);
+		if(prop.type == VALUE_TYPE.path) return processType(values[0].value);
+		if(!prop.is_anim)				 return processType(values[0].value);
+		var _len = max(TOTAL_FRAMES, values[length - 1].time);
 		if(array_length(key_map) != _len) updateKeyMap();
 		
-		var _time_first = prop.loop_range == -1? values[| 0].time : values[| length - 1 - prop.loop_range].time;
-		var _time_last  = values[| length - 1].time;
+		var _time_first = prop.loop_range == -1? values[0].time : values[length - 1 - prop.loop_range].time;
+		var _time_last  = values[length - 1].time;
 		var _time_dura  = _time_last - _time_first;
 			
 		////////////////////////////////////////////////////////////// LOOP TIME ///////////////////////////////////////////////////////////////
@@ -314,8 +319,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(_keyIndex == -1) {
 			if(prop.on_end == KEYFRAME_END.wrap) {
-				var from = values[| length - 1];
-				var to   = values[| 0];
+				var from = values[length - 1];
+				var to   = values[0];
 				
 				var fTime = from.time;
 				var tTime = to.time;
@@ -329,20 +334,20 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				return lerpValue(from, to, _lrp);
 			}
 			
-			return processType(values[| 0].value); //First frame
+			return processType(values[0].value); //First frame
 		}
 		
 		///////////////////////////////////////////////////////////// AFTER LAST ///////////////////////////////////////////////////////////////
 		
 		if(_keyIndex == 999_999) {
-			var _lstKey = values[| length - 1];
+			var _lstKey = values[length - 1];
 			
 			if(_lstKey.drivers.type)
 				return processType(processDriver(_time, _lstKey));
 			
 			if(prop.on_end == KEYFRAME_END.wrap) {
 				var from = _lstKey;
-				var to   = values[| 0];
+				var to   = values[0];
 				var prog = _time - from.time;
 				var totl = TOTAL_FRAMES - from.time + to.time;
 				
@@ -357,8 +362,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		///////////////////////////////////////////////////////////// INBETWEEN ////////////////////////////////////////////////////////////////
 		
-		var from = values[| _keyIndex];
-		var to   = values[| _keyIndex + 1];
+		var from = values[_keyIndex];
+		var to   = values[_keyIndex + 1];
 			
 		var rat  = (_time - from.time) / (to.time - from.time);
 		var _lrp = interpolate(from, to, rat);
@@ -368,14 +373,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 		return lerpValue(from, to, _lrp);
 		
-	} #endregion
+	}
 	
-	static processTypeDefault = function() { #region
+	static processTypeDefault = function() {
 		if(!sep_axis && typeArray(prop.display_type)) return [];
 		return 0;
-	} #endregion
+	}
 	
-	static processDriver = function(_time, _key, _val = undefined, _intp = 0) { #region
+	static processDriver = function(_time, _key, _val = undefined, _intp = 0) {
 		
 		static _processDriver = function(val, drivers, _t, _index = 0, _intp = 0) {
 			switch(drivers.type) {
@@ -408,9 +413,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		return _res;
-	} #endregion
+	}
 	
-	static processType = function(_val) { #region
+	static processType = function(_val) {
 		INLINE
 		
 		if(PROJECT.attributes.strict) return processValue(_val);
@@ -423,9 +428,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			_res = processValue(_val);
 		
 		return _res;
-	} #endregion
+	}
 	
-	static processValue = function(_val) { #region
+	static processValue = function(_val) {
 		INLINE
 		
 		if(is_array(_val))     return _val;
@@ -440,14 +445,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		return _val;
-	} #endregion
+	}
 	
-	static insertKey = function(_key, _index) { ds_list_insert(values, _index, _key); }
+	static insertKey = function(_key, _index) { array_push(values, _index, _key); }
 	
 	function onUndo() { updateKeyMap(); prop.triggerSetFrom(); }
 	
-	static setKeyTime = function(_key, _time, _replace = true, record = false) { #region
-		if(!ds_list_exist(values, _key))	return 0;
+	static setKeyTime = function(_key, _time, _replace = true, record = false) {
+		if(!array_exists(values, _key))	    return 0;
 		if(_key.time == _time && !_replace)	return 0;
 		
 		if(!LOADING) PROJECT.modified = true;
@@ -455,11 +460,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var _prevTime = _key.time;
 		_time = max(_time, 0);
 		_key.setTime(_time);
-		ds_list_remove(values, _key);
+		array_remove(values, _key);
 		
 		if(_replace)
-		for( var i = 0; i < ds_list_size(values); i++ ) {
-			if(values[| i].time != _time) continue;
+		for( var i = 0; i < array_length(values); i++ ) {
+			if(values[i].time != _time) continue;
 			
 			if(record) {
 				var act = new Action(ACTION_TYPE.custom, function(data) { 
@@ -467,17 +472,17 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					updateKeyMap();
 					
 					data.undo = !data.undo;
-				}, { overKey : values[| i], index : i, undo : true });
+				}, { overKey : values[i], index : i, undo : true });
 				mergeAction(act);
 			}
 			
-			values[| i] = _key;
+			values[i] = _key;
 			updateKeyMap();
 			return 2;
 		}
 		
-		for( var i = 0; i < ds_list_size(values); i++ ) { //insert key before the last key
-			if(values[| i].time < _time) continue;
+		for( var i = 0; i < array_length(values); i++ ) { //insert key before the last key
+			if(values[i].time < _time) continue;
 			
 			if(record) recordAction(ACTION_TYPE.custom, function(data) { 
 				var _prevTime = data.key.time; 
@@ -486,7 +491,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				data.time = _prevTime;
 			}, { key : _key, time : _prevTime }, onUndo);
 			
-			ds_list_insert(values, i, _key);
+			array_insert(values, i, _key);
 			if(_replace) updateKeyMap();
 			return 1;
 		}
@@ -498,23 +503,23 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			data.time = _prevTime;
 		}, { key : _key, time : _prevTime }, onUndo);
 			
-		ds_list_add(values, _key);
+		array_push(values, _key);
 		if(_replace) updateKeyMap();
 		return 1;
-	} #endregion
+	}
 	
-	static setValue = function(_val = 0, _record = true, _time = CURRENT_FRAME, ease_in = 0, ease_out = 0) { #region
+	static setValue = function(_val = 0, _record = true, _time = CURRENT_FRAME, ease_in = 0, ease_out = 0) {
 		//staticValue = _val;
 		
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(!prop.is_anim) {
-				values[| 0] = new valueKey(0, _val, self);
+				values[0] = new valueKey(0, _val, self);
 				updateKeyMap();
 				return true;
 			}
 			
-			for(var i = 0; i < ds_list_size(values); i++) { //Find trigger
-				var _key = values[| i];
+			for(var i = 0; i < array_length(values); i++) { //Find trigger
+				var _key = values[i];
 				if(_key.time == _time)  {
 					if(!global.FLAG.keyframe_override) return false;
 					
@@ -522,37 +527,37 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					return false;
 					
 				} else if(_key.time > _time) {
-					ds_list_insert(values, i, new valueKey(_time, _val, self));
+					array_insert(values, i, new valueKey(_time, _val, self));
 					updateKeyMap();
 					return true;
 				}
 			}
 			
 			//print($"{_time}: {_val} | Insert last");
-			ds_list_add(values, new valueKey(_time, _val, self));
+			array_push(values, new valueKey(_time, _val, self));
 			updateKeyMap();
 			return true;
 		}
 		
 		if(!prop.is_anim) {
-			if(isEqual(values[| 0].value, _val)) 
+			if(isEqual(values[0].value, _val)) 
 				return false;
 			
-			if(_record) recordAction(ACTION_TYPE.var_modify, values[| 0], [ values[| 0].value, "value", prop.name ], onUndo);
+			if(_record) recordAction(ACTION_TYPE.var_modify, values[0], [ values[0].value, "value", prop.name ], onUndo);
 			
-			values[| 0].value = _val;
+			values[0].value = _val;
 			return true;
 		}
 		
-		if(ds_list_size(values) == 0) { // Should not be called normally
+		if(array_length(values) == 0) { // Should not be called normally
 			var k = new valueKey(_time, _val, self, ease_in, ease_out);
-			ds_list_add(values, k);
-			if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values) - 1, $"add {prop.name} keyframe" ], onUndo);
+			array_push(values, k);
+			if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, array_length(values) - 1, $"add {prop.name} keyframe" ], onUndo);
 			return true;
 		}
 		
-		for(var i = 0; i < ds_list_size(values); i++) {
-			var _key = values[| i];
+		for(var i = 0; i < array_length(values); i++) {
+			var _key = values[i];
 			if(_key.time == _time) {
 				if(!global.FLAG.keyframe_override) return false;
 				
@@ -564,7 +569,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				return false;
 			} else if(_key.time > _time) {
 				var k = new valueKey(_time, _val, self, ease_in, ease_out);
-				ds_list_insert(values, i, k);
+				array_insert(values, i, k);
 				if(_record) recordAction(ACTION_TYPE.list_insert, values, [k, i, $"add {prop.name} keyframe" ], onUndo);
 				updateKeyMap();
 				return true;
@@ -572,31 +577,26 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		var k = new valueKey(_time, _val, self, ease_in, ease_out);
-		if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values), $"add {prop.name} keyframe" ], onUndo);
-		ds_list_add(values, k);
+		if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, array_length(values), $"add {prop.name} keyframe" ], onUndo);
+		array_push(values, k);
 		updateKeyMap();
 		return true;
-	} #endregion
+	}
 	
-	static removeKey = function(key) { #region
-		if(ds_list_size(values) > 1)
-			ds_list_remove(values, key);
-		else
-			prop.is_anim = false;
+	static removeKey = function(key) {
+		if(array_length(values) > 1) array_remove(values, key);
+		else						 prop.is_anim = false;
 		updateKeyMap();
-	} #endregion
+	}
 	
-	static serialize = function(scale = false) { #region
+	static serialize = function(scale = false) {
 		var _data = [];
 		
-		for(var i = 0; i < ds_list_size(values); i++) {
+		for(var i = 0; i < array_length(values); i++) {
 			var _value_list = [];
-			if(scale)
-				_value_list[0] = values[| i].time / (TOTAL_FRAMES - 1);
-			else
-				_value_list[0] = values[| i].time;
+			_value_list[0] = scale? values[i].time / (TOTAL_FRAMES - 1) : values[i].time;
 			
-			var val = values[| i].value;
+			var val = values[i].value;
 			
 			if(prop.type == VALUE_TYPE.struct) {
 				val = json_stringify(val);
@@ -617,23 +617,23 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			}
 			
 			_value_list[1] = val;
-			_value_list[2] = values[| i].ease_in;
-			_value_list[3] = values[| i].ease_out;
-			_value_list[4] = values[| i].ease_in_type;
-			_value_list[5] = values[| i].ease_out_type;
-			_value_list[6] = values[| i].ease_y_lock;
-			_value_list[7] = values[| i].drivers;
+			_value_list[2] = values[i].ease_in;
+			_value_list[3] = values[i].ease_out;
+			_value_list[4] = values[i].ease_in_type;
+			_value_list[5] = values[i].ease_out_type;
+			_value_list[6] = values[i].ease_y_lock;
+			_value_list[7] = values[i].drivers;
 			
 			array_push(_data, _value_list);
 		}
 		
 		return _data;
-	} #endregion
+	}
 	
-	static deserialize = function(_data, scale = false) { #region
-		ds_list_clear(values);
+	static deserialize = function(_data, scale = false) {
+		values = [];
 		
-		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { #region //backward compat: Gradient
+		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
 			var _val = [];
 			var value = _data[0][1];
 			
@@ -648,11 +648,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 			var grad = new gradientObject();
 			grad.keys = _val;
-			ds_list_add(values, new valueKey(0, grad, self));
+			array_push(values, new valueKey(0, grad, self));
 			
 			updateKeyMap();
 			return;
-		} #endregion
+		}
 					
 		var base = prop.def_val;
 		
@@ -720,14 +720,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			vk.ease_y_lock   = ease_y_lock;
 			struct_override(vk.drivers, driver);
 			
-			ds_list_add(values, vk);
+			array_push(values, vk);
 		}
 		
-		//staticValue = ds_list_empty(values)? 0 : values[| 0].value;
 		updateKeyMap();
-	} #endregion
+	}
 	
-	static cleanUp = function() { #region
-		ds_list_destroy(values);
-	} #endregion
+	static cleanUp = function() {}
 }

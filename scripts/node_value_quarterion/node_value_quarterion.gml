@@ -13,8 +13,16 @@ function NodeValue_Quaternion(_name, _node, _value, _tooltip = "") : NodeValue_A
 		var typ = nod == undefined? VALUE_TYPE.any : nod.type;
 		var dis = nod.display_type;
 		
-		if(applyUnit && display_data.angle_display == QUARTERNION_DISPLAY.euler)
-			return quarternionFromEuler(val[0], val[1], val[2]);
+		if(!is_array(val)) return [ val, val, val, val ];
+		
+		var _convert = applyUnit && display_data.angle_display == QUARTERNION_DISPLAY.euler;
+		if(!_convert) return val;
+		
+		var _d = array_get_depth(val);
+		
+		if(_d == 1) return quarternionFromEuler(val[0], val[1], val[2]);
+		if(_d == 2) return array_map(val, function(v) /*=>*/ {return quarternionFromEuler(v[0], v[1], v[2])});
+		
 		return val;
 	}
 }

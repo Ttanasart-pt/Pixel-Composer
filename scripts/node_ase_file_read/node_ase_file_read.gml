@@ -348,7 +348,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		_tag_delay = 0;
 		for( var i = 0; i < array_length(inputs[2].animator.values); i++ ) {
-			var kf = inputs[2].animator.values[| i];
+			var kf = inputs[2].animator.values[i];
 			if(kf.time > CURRENT_FRAME) break;
 			_tag_delay = kf.time;
 		}

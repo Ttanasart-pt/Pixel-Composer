@@ -297,9 +297,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setDefault = function(vals) { #region
 		if(LOADING || APPENDING) return self;
 		
-		ds_list_clear(animator.values);
+		animator.values = [];
 		for( var i = 0, n = array_length(vals); i < n; i++ )
-			ds_list_add(animator.values, new valueKey(vals[i][0], vals[i][1], animator));
+			array_push(animator.values, new valueKey(vals[i][0], vals[i][1], animator));
 			
 		return self;
 	} #endregion
@@ -451,27 +451,27 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		is_anim = anim;
 		
 		if(is_anim) {
-			if(ds_list_empty(animator.values))
-				ds_list_add(animator.values, new valueKey(CURRENT_FRAME, animator.getValue(), animator));
-			animator.values[| 0].time = CURRENT_FRAME;
+			if(array_empty(animator.values))
+				array_push(animator.values, new valueKey(CURRENT_FRAME, animator.getValue(), animator));
+			animator.values[0].time = CURRENT_FRAME;
 			animator.updateKeyMap();
 			
 			for( var i = 0, n = array_length(animators); i < n; i++ ) {
-				if(ds_list_empty(animators[i].values))
-					ds_list_add(animators[i].values, new valueKey(CURRENT_FRAME, animators[i].getValue(), animators[i]));
-				animators[i].values[| 0].time = CURRENT_FRAME;
+				if(array_length(animators[i].values))
+					array_push(animators[i].values, new valueKey(CURRENT_FRAME, animators[i].getValue(), animators[i]));
+				animators[i].values[0].time = CURRENT_FRAME;
 				animators[i].updateKeyMap();
 			}
 		} else {
 			var _val = animator.getValue();
-			ds_list_clear(animator.values);
-			animator.values[| 0] = new valueKey(0, _val, animator);
+			animator.values = [];
+			animator.values[0] = new valueKey(0, _val, animator);
 			animator.updateKeyMap();
 			
 			for( var i = 0, n = array_length(animators); i < n; i++ ) {
 				var _val = animators[i].getValue();
-				ds_list_clear(animators[i].values);
-				animators[i].values[| 0] = new valueKey(0, _val, animators[i]);
+				animators[i].values = [];
+				animators[i].values[0] = new valueKey(0, _val, animators[i]);
 				animators[i].updateKeyMap();
 			}
 		}
@@ -916,7 +916,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					
 					case VALUE_DISPLAY.text_array :
-						editWidget = new textArrayBox(function() { return animator.values[| 0].value; }, display_data.data, function() { node.doUpdate(); });
+						editWidget = new textArrayBox(function() { return animator.values[0].value; }, display_data.data, function() { node.doUpdate(); });
 						break;
 				}
 				break; #endregion
@@ -952,9 +952,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidgetRaw = editWidget;
 		if(editWidget) graphWidget = editWidget.clone();
 		
-		for( var i = 0, n = ds_list_size(animator.values); i < n; i++ ) {
-			animator.values[| i].ease_in_type   = key_inter;
-			animator.values[| i].ease_out_type  = key_inter;
+		for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
+			animator.values[i].ease_in_type   = key_inter;
+			animator.values[i].ease_out_type  = key_inter;
 		}
 		
 		setDropKey();
@@ -1113,7 +1113,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return value;
 	}
 	
-	static getStaticValue = function() { INLINE return ds_list_empty(animator.values)? 0 : animator.values[| 0].value; } 
+	static getStaticValue = function() { INLINE return array_empty(animator.values)? 0 : animator.values[0].value; } 
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		draw_junction_index = type;
@@ -1295,13 +1295,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(sep_axis) {
 				var val = array_create(array_length(animators));
 				for( var i = 0, n = array_length(animators); i < n; i++ )
-					val[i] = animators[i].processType(animators[i].values[| 0].value);
+					val[i] = animators[i].processType(animators[i].values[0].value);
 				return val;
 			}
 			
-			if(ds_list_empty(animator.values)) return 0;
+			if(array_empty(animator.values)) return 0;
 			
-			return animator.processType(animator.values[| 0].value);
+			return animator.processType(animator.values[0].value);
 		}
 		
 		if(sep_axis) {
@@ -1328,10 +1328,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		else if(sep_axis) {
 			show_val = array_verify(show_val, array_length(animators));
 			for( var i = 0, n = array_length(animators); i < n; i++ )
-				show_val[i] = ds_list_empty(animators[i].values)? 0 : animators[i].processType(animators[i].values[| 0].value);
+				show_val[i] = array_empty(animators[i].values)? 0 : animators[i].processType(animators[i].values[0].value);
 			val = show_val;
 		} else 
-			val = ds_list_empty(animator.values)? 0 : animator.processType(animator.values[| 0].value);
+			val = array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
 		
 		return val;
 	}
@@ -1355,12 +1355,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	}
 	
-	__is_array = false;
 	static isArray = function(val = undefined) {
 		val ??= getValue();
 		return __array_get_depth(val) > array_depth + type_array;
 	}
 	
+	__is_array = false;
 	static arrayLength = function(val = undefined) {
 		val ??= getValue();
 		
@@ -1378,6 +1378,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		repeat(_depth) ar = ar[0];
 		
 		return array_length(ar);
+	}
+	
+	static arrayLengthSimple = function(val = undefined) {
+		val ??= getValue();
+		
+		__is_array = is_array(val);
+		return __is_array? array_length(val) : -1;
 	}
 	
 	/////============== SET =============
@@ -1447,12 +1454,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static overrideValue = function(_val) { #region
-		ds_list_clear(animator.values);
-		ds_list_add(animator.values, new valueKey(0, _val, animator));
+		animator.values = [];
+		array_push(animator.values, new valueKey(0, _val, animator));
 		
 		for( var i = 0, n = array_length(animators); i < n; i++ ) {
-			ds_list_clear(animators[i].values);
-			ds_list_add(animators[i].values, new valueKey(0, array_safe_get_fast(_val, i), animators[i]));
+			animators[i].values = [];
+			array_push(animators[i].values, new valueKey(0, array_safe_get_fast(_val, i), animators[i]));
 		}
 	} #endregion
 	
