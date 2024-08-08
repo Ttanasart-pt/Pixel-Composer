@@ -38,7 +38,9 @@
 		
 		load_layout = false;
 		
-		previewNode = "";
+		previewNode   = "";
+		inspectingNode = "";
+		
 		previewGrid = {
 			show	: false,
 			snap	: false,
@@ -222,6 +224,9 @@
 			var _prev_node = PANEL_PREVIEW? PANEL_PREVIEW.getNodePreview() : noone;
 			_map.previewNode = _prev_node? _prev_node.node_id : noone;
 			
+			var _insp_node = PANEL_INSPECTOR? PANEL_INSPECTOR.getInspecting() : noone;
+			_map.inspectingNode = _insp_node? _insp_node.node_id : noone;
+			
 			_map.previewGrid = previewGrid;
 			_map.graphGrid   = graphGrid;
 			_map.attributes  = attributes;
@@ -262,10 +267,7 @@
 			}
 			
 			if(struct_has(_map, "onion_skin"))	struct_override(onion_skin,  _map.onion_skin);
-			
-			previewNode	= struct_try_get(_map, "previewNode", noone);
 			if(struct_has(_map, "previewGrid")) struct_override(previewGrid, _map.previewGrid);
-			
 			if(struct_has(_map, "graphGrid"))	struct_override(graphGrid,	 _map.graphGrid);
 			if(struct_has(_map, "attributes"))	struct_override(attributes,  _map.attributes);
 			if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
@@ -295,9 +297,16 @@
 				struct_foreach(_addon, function(_name, _value) { addonLoad(_name, false); });
 			}
 			
+			previewNode  	= struct_try_get(_map, "previewNode", noone);
 			if(PANEL_PREVIEW && previewNode != "") {
 				var _node = nodeMap[? previewNode];
 				if(_node) PANEL_PREVIEW.setNodePreview(_node);
+			}
+			
+			inspectingNode	= struct_try_get(_map, "inspectingNode", noone);
+			if(PANEL_INSPECTOR && inspectingNode != "") {
+				var _node = nodeMap[? inspectingNode];
+				if(_node) PANEL_INSPECTOR.setInspecting(_node);
 			}
 		}
 		

@@ -1219,7 +1219,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		var _val = valueProcess(val, nod, applyUnit, arrIndex);
-		
 		return _val;
 	}
 	
